@@ -8,5 +8,14 @@ export const MESSAGE_TYPES = [
 export type MessageType = (typeof MESSAGE_TYPES)[number];
 export const MESSAGE_TYPE_SET: ReadonlySet<string> = new Set(MESSAGE_TYPES);
 
-export const COMPLETION_OUTCOMES = ["SUCCEEDED", "FAILED", "CANCELLED"] as const;
+export const BOUNDARY_MODES = ["IN_PROCESS", "OUT_OF_PROCESS"] as const;
+export type BoundaryMode = (typeof BOUNDARY_MODES)[number];
+
+export const COMPLETION_MODES = ["DISPATCH_ONLY", "WAIT_FOR_ACTION_COMPLETION"] as const;
+export type CompletionMode = (typeof COMPLETION_MODES)[number];
+
+export const RECEIPT_STATUSES = ["DISPATCHED", "COMPLETED_SYNC", "NOT_SUPPORTED", "ADAPTER_ERROR"] as const;
+export type ReceiptStatus = (typeof RECEIPT_STATUSES)[number];
+
+export const COMPLETION_OUTCOMES = ["SUCCEEDED", "FAILED", "CANCELLED", "REJECTED"] as const;
 export type CompletionOutcome = (typeof COMPLETION_OUTCOMES)[number];

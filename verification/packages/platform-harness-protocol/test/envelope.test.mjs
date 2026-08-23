@@ -16,11 +16,11 @@ const base = (messageType, payload, sequence = 42) => ({
 });
 
 const roundTripCases = [
-  base("HELLO", { adapter: "reference", capabilities: ["capture"] }, 1),
+  base("HELLO", { adapterInstanceId: "adapter:reference:001", supportedProtocolVersions: [1], boundaryMode: "IN_PROCESS" }, 1),
   base("OPEN_SESSION", { client: "unit-test" }, 2),
-  base("ACTION_REQUEST", { actionId: "action:001", action: "render", parameters: { frame: 1 } }, 3),
-  base("ACTION_RECEIPT", { actionId: "action:001", accepted: true }, 4),
-  base("ACTION_COMPLETION", { actionId: "action:001", outcome: "SUCCEEDED", artifacts: ["captures/frame.rgba"] }, 5),
+  base("ACTION_REQUEST", { actionId: "action:001", stepId: "step:001", commandSeq: "u64:0000000000000001", completionMode: "WAIT_FOR_ACTION_COMPLETION", action: "render", parameters: { frame: 1 } }, 3),
+  base("ACTION_RECEIPT", { actionId: "action:001", commandSeq: "u64:0000000000000001", receiptStatus: "DISPATCHED", tokenId: "completion:001" }, 4),
+  base("ACTION_COMPLETION", { tokenId: "completion:001", actionId: "action:001", outcome: "SUCCEEDED", artifacts: ["captures/frame.rgba"] }, 5),
   base("EVENT_DRAFT", { event: "surface-ready", data: { width: 800 } }, 6),
 ];
 
