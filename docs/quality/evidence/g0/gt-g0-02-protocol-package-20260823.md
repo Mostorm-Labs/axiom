@@ -3,7 +3,7 @@
 > 任务：`GT-G0-02`（Notion locator：`WP-G0-02 / IH-02`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-23（Asia/Shanghai）  
-> 基线提交：`c466232`（GT-G0-01 revalidation；本任务修改仍按用户要求未提交）
+> 实现提交：`d8e4fbecc0ca8d1b38402d1a274550a156bb84c1`
 
 ## 1. 范围
 
@@ -76,8 +76,26 @@ TypeScript 7.0.2 build/typecheck: passed
 
 ## 4. 状态与限制
 
-实现、类型检查和测试均通过，`GT-G0-02` 当前任务结果为 `Pass`。本轮按用户要求未创建提交；
-因此该结果是基于 `c466232` 加当前工作树的可复现本地 Evidence，不能单独宣称 G0 Gate Pass 或
-R1 Accepted。提交协议包后应重新生成 commit-bound hashes，并再次运行同一命令。
+实现、类型检查和测试均通过，`GT-G0-02` 当前任务结果为 `Pass`。结果已绑定到实现提交
+`d8e4fbecc0ca8d1b38402d1a274550a156bb84c1`；本 Evidence 文件的收口修改随后独立提交，不改变
+以下实现对象摘要。
 
-`GT-G0-03` 及后续任务保持 `Not Started`。
+## 5. Commit-bound identity 与文件摘要
+
+| 项目 | SHA-1/SHA-256 |
+| --- | --- |
+| implementation commit | `d8e4fbecc0ca8d1b38402d1a274550a156bb84c1` |
+| implementation tree | `4fd19b41040f60dd689fde0ed6778daa27b59f32` |
+| `git archive`（implementation commit, SHA-256） | `dceb6d885e5e983b637f1e6cbb99210dae11a92694bea72f7495c5b351f37265` |
+| `verification/package.json` | `c0735032165a872f932c7d8def91636906db4b6c5a087d8c4285400ff4b94920` |
+| `verification/package-lock.json` | `8b6a5a1e61443a739e76d35cd7af2fead02031fc131ceb2ed71d9142fe7a3b66` |
+| `verification/tsconfig.json` | `fd7a1117386de08505e6882d30e876100a44e14ddbd6b2945b3437a4ca417459` |
+| `platform-harness-envelope.schema.json` | `f07dc3e2e55779aa9afc4fe104c78ee2121c34722c3587d9bbcab8b02f431113` |
+| `platform-harness-envelope.valid.json` | `aaa9c17b8ff6e19d99756c812f77140a774daf623eaa37624d5a31addab55481` |
+| `platform-harness-protocol/package.json` | `9344a161e8cc7ef5f3aa54914420133653ebf8e0e103b944e9dfb55a25cec257` |
+| `platform-harness-protocol/src/envelope.ts` | `8039207957d46dc78a52ba7ce3b2cc14c34416fe993e3a03fb89c733562a2394` |
+| `platform-harness-protocol/src/ids.ts` | `52ca698d7083fb1913136e463a67a512b6e77c647969900dc2ae9baa0cddaec1` |
+| `platform-harness-protocol/test/envelope.test.mjs` | `9d18d369088d380e9ed48b4e877293cf3a3b6987770540ec9ae71c3a219c58ce` |
+| `platform-harness-protocol/test/dependencies.test.mjs` | `d0aac869f61c71559c4ce13ab92b93b83011797e7d5e6f4a82e4bfe4d4e8356b` |
+
+`GT-G0-03` 及后续任务保持 `Not Started`。该任务 Pass 不代表 G0 Gate Pass 或 R1 Accepted。

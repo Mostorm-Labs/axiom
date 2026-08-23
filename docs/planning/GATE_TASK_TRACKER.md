@@ -65,7 +65,7 @@ Decision/Contract 简写：
 | Gate | 状态 | 任务覆盖 | 晋级剩余条件 |
 | --- | --- | --- | --- |
 | AR-0 | Pass | 6 tasks; validation evidence is commit-bound and architecture review is approved | Dependency for `GT-G0-00` is satisfied |
-| G0 | Validating | `GT-G0-00..GT-G0-02` Pass; all later G0 tasks remain Not Started | Make GT-G0-02 Evidence commit-bound, complete `GT-G0-03..GT-G0-16`, produce reproducible G0 Evidence, then perform `GT-G0-17` review |
+| G0 | Validating | `GT-G0-00..GT-G0-02` Pass; all later G0 tasks remain Not Started | Complete `GT-G0-03..GT-G0-16`, produce reproducible G0 Evidence, then perform `GT-G0-17` review |
 | G1 | Not Started | 8 tasks | G0 Pass |
 | G2 | Not Started | 7 tasks | G1 Pass |
 | G3 | Not Started | 10 tasks including 2 repository scope supplements | G2 Pass |
@@ -107,7 +107,7 @@ Evidence 列记录任务通过时必须生成的目标路径。标为 `planned` 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-G0-00 / IH-00 | `GT-G0-00` | Repository and branch reconciliation | R1 | REQ-GAP-VER | D-G0 | AR-0 Pass | Modify | Pass | Pass | Pass | [仓库与分支基线对账记录](../quality/evidence/g0/gt-g0-00-repository-reconciliation-20260823.md) | — | Pass |
 | WP-G0-01 / IH-01 | `GT-G0-01` | Schema and verification workspace skeleton | R1 | REQ-GAP-VER | D-G0 | GT-G0-00 | Modify | Pass | Pass | Pass | [验证工作区骨架记录](../quality/evidence/g0/gt-g0-01-verification-workspace-skeleton-20260823.md)；[IH-01/02 依赖纠错记录](../quality/evidence/g0/gt-g0-02-protocol-package-blocked-20260823.md) | — | Pass |
-| WP-G0-02 / IH-02 | `GT-G0-02` | Protocol package and envelope codec | R1 | REQ-GAP-VER | D-G0 | GT-G0-01 | Modify | Pass | Pass | Pass | [历史 preflight 阻塞记录](../quality/evidence/g0/gt-g0-02-protocol-package-blocked-20260823.md)；[协议包与 Envelope Codec Evidence](../quality/evidence/g0/gt-g0-02-protocol-package-20260823.md) | 当前 Evidence 基于 `c466232` 加未提交工作树；提交后需重新生成 commit-bound hashes | Pass |
+| WP-G0-02 / IH-02 | `GT-G0-02` | Protocol package and envelope codec | R1 | REQ-GAP-VER | D-G0 | GT-G0-01 | Modify | Pass | Pass | Pass | [历史 preflight 阻塞记录](../quality/evidence/g0/gt-g0-02-protocol-package-blocked-20260823.md)；[协议包与 Envelope Codec Evidence](../quality/evidence/g0/gt-g0-02-protocol-package-20260823.md) | implementation commit `d8e4fbe`; commit-bound hashes recorded in Evidence | Pass |
 | WP-G0-03 / IH-03 | `GT-G0-03` | Runner core A: handshake, session, action, completion | R1 | REQ-GAP-VER | D-G0 | GT-G0-02 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-03/ (planned)` | — | Not Started |
 | WP-G0-04 / IH-04 | `GT-G0-04` | Runner core B: event, source, fault, fence, finalization | R1 | REQ-GAP-VER | D-G0 | GT-G0-03 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-04/ (planned)` | — | Not Started |
 | WP-G0-05 / IH-05 | `GT-G0-05` | Scripted adapter and transport | R1 | REQ-GAP-VER | D-G0 | GT-G0-03 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-05/ (planned)` | — | Not Started |
