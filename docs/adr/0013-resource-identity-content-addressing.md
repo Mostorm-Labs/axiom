@@ -41,8 +41,9 @@
   明确身份。
 - ResourceManifest 虽由独立模块管理和持久化，但属于可保存/协作的语义状态；这不让
   Document node 依赖 ResourceManager。
-- 需要 blob GC、manifest transaction、missing/corrupt resource、hash mismatch 和资源
-  替换语料。
+- 需要 blob GC、manifest 更新的 storage-local 原子性、missing/corrupt resource、hash
+  mismatch 和资源替换语料。这里的 storage-local 原子性不构成 Document 的第二种
+  canonical mutation 语义；Document 仍只通过 Operation 更新 manifest binding。
 - Package/blob availability 可以与 Document operations 分阶段传输，但打开文档必须能
   区分“语义引用存在”和“内容当前不可用”。
 

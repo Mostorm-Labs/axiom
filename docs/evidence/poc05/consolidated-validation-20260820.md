@@ -2,6 +2,19 @@
 
 Status: **Accepted as an experimental future-capability architecture risk proof.**
 
+Lineage note: from the 2026-08-23 architecture rebase onward, the product shell,
+Page/Document and Gate mapping are governed by ADR-0025 and the G0～G9 route. This
+historical report is not rewritten: its measurements, platform observations and
+risk evidence remain valid inputs, while product acceptance is re-evaluated by G6
+under the current RNW/RN matrix.
+
+The POC does **not** validate the Windows local screen-annotation product host.
+In particular, its RNW/Fabric and controlled WebView/video Overlay evidence does
+not cover transparent topmost/click-through drawing windows, multi-monitor/DPI
+transitions, desktop focus and pen capture, display-change recovery or Arc
+handoff/fallback. Those behaviors are tracked separately by G3/G4 seams and
+`GT-G9-15`; they cannot inherit this POC's Passed result.
+
 This report consolidates the POC-05 evidence for the controlled external
 surface boundary. It supersedes the status wording in the earlier scoped
 reports, but keeps those reports and their raw artifacts as the audit trail.
@@ -49,12 +62,12 @@ boundaries in the product Web Shell.
 
 ## Deliberate boundaries
 
-This evidence validates RNW and RN/Fabric as viable Shell implementations; it
-does not silently replace the accepted Product Tier A Shell decision in
-ADR-0015. Windows React/Tauri remains the current product choice, while RNW is
-now an evidence-backed alternative subject to a separate product/platform
-decision. Likewise, Apple RN/Fabric validation proves portability and the
-native data-plane boundary, not an Apple V1 release commitment.
+This evidence originally validated RNW and RN/Fabric only as viable Shell
+implementations under the historical ADR-0015 matrix. ADR-0025 has since
+superseded that matrix: Windows RNW and iOS/iPadOS RN/Fabric are current Tier A
+product targets. The POC still proves only its scoped Overlay/native-data-plane
+risk; it does not make the private Scene bridge a product ABI or make this
+historical POC report a G3/G6/G9 product Gate PASS.
 
 The Windows and Android physical runners currently link the experimental
 POC-03 C++ `RuntimeScene` implementation to exercise the 100K scene. The

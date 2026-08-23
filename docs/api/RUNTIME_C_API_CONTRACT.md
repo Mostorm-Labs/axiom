@@ -3,6 +3,9 @@
 > Status: **Accepted contract baseline**；适用范围：R1 Runtime Foundation、R2 V1 Local
 > Runtime、R3 Product Tier A Shell；POC-01 的 `canvas_poc_*` ABI 仍是独立的 Experimental
 > ABI，不承诺源码或二进制兼容。
+> AR-0 clarification：本文件冻结 C ABI 的结构和生命周期方向，不再冻结旧的 canonical
+> Transaction 外层。产品 Operation/Batch/DataBridge 命名与签名须在 G1/G7 按 ADR-0025
+> 生成新版 manifest；当前头文件仍是实现输入，不是已发布 SDK。
 
 本文确定 Canvas Runtime 的唯一跨语言公共边界。它描述 ABI、所有权、生命周期、控制面、
 Native Hot Path、事件、Persistence/Sync/Resource port 和渲染时序；它不把当前 POC 的
@@ -20,6 +23,8 @@ NDJSON、文件格式、Operation payload、Snapshot codec、协作算法或具�
 flowchart TB
   Shell[Product Shell / UI] --> Control[Control Path]
   Host[Platform Host] --> Hot[Native Hot Path]
+  Host --> Compose[Composition / lifecycle]
+  Compose --> DataRuntime[Shared Data Runtime]
   Control --> CApi[Canvas Runtime C ABI]
   Hot --> CApi
   CApi --> Runtime[RuntimeFacade]
@@ -30,9 +35,17 @@ flowchart TB
   Events --> Persistence[Persistence Port]
   Events --> Sync[Sync Port]
   Events --> Resources[Resource Provider]
+  DataRuntime <--> Persistence
+  DataRuntime <--> Sync
+  DataRuntime <--> Resources
   Host --> Surface[Platform Surface Adapter]
   Surface --> Render
 ```
+
+`Shared Data Runtime` 是数据侧的外部编排边界；它通过 Persistence/Sync/Resource ports 消费
+Runtime 事件并提供已验证的 Snapshot、Operation continuation 和资源 bytes。`Platform Host` 是
+组合根，不是万能数据 owner；具体实现语言、包边界、Bridge ABI、数据库和网络协议留给后续
+RFC/Gate。图中的 ports 不是 C++ Core 内部的持久化或协作模块。
 
 核心原则：
 
@@ -384,7 +397,7 @@ ServerAcknowledged）；Runtime 可以拒绝非法回退，但不假设本地持
 
 ### 4.3 Control command
 
-用户行为通过 command→transaction→Operation→Document 唯一写路径完成；不公开
+用户行为通过 command/intent→Operation→Atomic Operation Apply→Document 唯一写路径完成；不公开
 `applyOperation(Document*)` 或 `RuntimeScene` mutation。稳定的 command envelope 为：
 
 ```c
@@ -426,8 +439,9 @@ CanvasStatus canvas_view_cancel_command_batch(CanvasViewHandle view);
 
 Command payload schema与Operation payload分离并各自版本化。未知 command/payload 必须拒绝，
 不能对 Scene 做近似修改。Command/Undo/Redo 属于每 View `EditorSession`；command batch 只把
-一项高层业务行为合并为一个 undo intention/atomic transaction，不向 Shell 暴露原始
-Operation builder，nested batch 必须拒绝。
+一项高层业务行为归为一个 undo intention，可产生一个或多个各自原子 apply 的 Operations，
+不向 Shell 暴露原始 Operation builder。OperationBatch 只是传输容器，不天然跨 Operation 原子；
+nested batch 必须拒绝。
 
 ## 5. View、Camera 与 Surface
 

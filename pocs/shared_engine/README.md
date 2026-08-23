@@ -16,8 +16,10 @@ architecture and evidence; it does not promote these experimental interfaces
 to product contracts. See the [final gate audit](reports/poc01/FINAL_GATE_AUDIT_2026-08-18.md).
 
 POC-01 is also the minimal operation-driven Document proof: two independent
-empty Documents that consume the same transactional create/move/delete replay
-must end at the same sequence and digest. It does not implement or stabilize a
+empty Documents that consume the same historical POC create/move/delete replay
+with atomic whole-batch rejection must end at the same sequence and digest. This
+does not define a product Transaction model; ADR-0025 makes Operation the sole
+canonical product mutation unit. POC-01 does not implement or stabilize a
 `DocumentSnapshot` codec, persistent operation log, compaction, undo/redo, or
 collaboration protocol; those follow ADR-0020 and later R1/R2/R4 evidence.
 

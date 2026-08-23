@@ -69,11 +69,11 @@ Arc presentation 是可降级派生状态。backend 不可用、队列耗尽、s
 过期 generation 或 Arc 内部错误只能：
 
 1. 记录结构化诊断；
-2. 关闭受影响 Preview target 或切换 Default/Null backend；
+2. 关闭受影响 Preview target 或切换内部 no-preview/null backend，使产品进入 Canonical-only；
 3. 请求 Canonical redraw；
 4. 保留或安全退役当前 Preview，避免空白。
 
-Presentation 错误不得作为 `InkEngine`/Document transaction 失败返回，不得取消已确认输入、
+Presentation 错误不得作为 `InkEngine`/Atomic Operation Apply 失败返回，不得取消已确认输入、
 撤销已经提交的 `AddStroke` 或改变 Stroke/Document digest。输入采集故障属于独立 failure
 domain：Arc Input Source 必须显式报告 source loss；Host/InputRouter 对 active Stroke 做原子
 cancel，不允许提交部分 confirmed input，并可切回平台默认输入 source。
@@ -141,15 +141,16 @@ resample、smooth、pressure mapping、prediction、rollback 或 brush semantics
 | Web | pointer adapter + WASM/WebGL Preview target | Tier A 完整功能、物理真笔、延迟与 handoff 门禁 |
 | Windows | WM_POINTER/history + D3D/DXGI/DirectComposition Preview target | Tier A 完整功能、硬件 GPU/真笔与延迟门禁 |
 | Android | MotionEvent/history + JNI + low-latency Preview target | Tier A 完整功能、真机/真笔与延迟门禁；不得经过 RN JS |
-| macOS | NSEvent/tablet input + Metal Preview target | Tier B 实现、conformance、生命周期与代表设备报告 |
-| iOS/iPadOS | coalesced touch input + Metal Preview target | Tier B 实现、conformance、生命周期与代表设备报告 |
+| macOS | 已有 NSEvent/tablet input + Metal Preview reference target | Deferred/core conformance；不建立 native 产品延迟与发布门禁 |
+| iOS/iPadOS | RN Host + coalesced touch input + Metal Preview target | Tier A 完整功能、真机/真笔、延迟、handoff 与生命周期门禁；不得经过 RN JS |
 | ChromiumOS | 复用 Web backend；可选 system capability | Reuse 实现；Web conformance，系统能力失败必须回退 |
 | Headless | deterministic input + Null/trace Preview backend | Utility 实现；协议、状态机、replay、fuzz，无显示延迟门禁 |
 | 自有 Android/Linux 设备 | Raw Input/service/direct-plane backend | 条件式实现；光电 raw-input→scanout，不阻塞普通应用路线 |
 
 Web 高频路径可以经过必要的浏览器 JS adapter，但不得进入 React state/SyntheticEvent 数据
 流；首版不要求 Worker、pthread、SharedArrayBuffer 或 COOP/COEP。ChromiumOS 的 Web 复用
-不等于另复制一套算法。Apple Tier B 实现不升级为 V1 产品 Shell 承诺。
+不等于另复制一套算法。iOS/iPadOS 已由 ADR-0025 纳入产品目标；macOS 仅保留 reference/core
+conformance，不由该实现产生 native 产品承诺。
 
 ## Consequences
 
@@ -171,7 +172,8 @@ POC-06 必须证明：
    最终 Stroke/Document digest 完全一致；
 4. duplicate/reordered/stale ack、慢 consumer、queue overrun、多指交错、快速连续笔、cancel、
    resize、background、surface/device loss 和 generation replacement 不丢 Canonical Stroke；
-5. Tier A 真机达到阶段延迟和 handoff 门禁；Tier B 产出代表设备 conformance/lifecycle 报告；
+5. Web、Windows、Android、iOS/iPadOS 产品目标达到各自适用的真机延迟和 handoff 门禁；
+   macOS 产出 reference/core conformance 报告；
 6. Presentation failure 注入只导致 Arc 降级，不能向 Document/Canonical path 传播失败；
 7. Canonical 与 Preview target ownership 可由静态依赖检查和平台 lifecycle trace 证明分离。
 

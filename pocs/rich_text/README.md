@@ -17,9 +17,11 @@ contract shared with POC-02 or POC-03.
   logical positions, revision, and the committed operation sequence.
 - `TextEditSession` owns selection, caret, focus, composition preview, undo and
   redo. Composition never enters the document before commit.
-- Each commit is one `TextTransaction`; cancel creates no transaction. Undo and
-  redo apply replayable transactions instead of mutating text through a side
-  door.
+- In this historical POC, each commit is one `TextTransaction`; cancel creates no
+  POC transaction. Undo and redo replay the same POC envelope instead of mutating
+  text through a side channel. ADR-0025 supersedes this product-model inference:
+  G1/G6 must use a RichText Operation payload and Atomic Operation Apply; the
+  `TextTransaction` type is not a collaboration, persistence or public ABI unit.
 - `FontResourceResolver` accepts only declared `FontResourceId + SHA-256 +
   bytes`; no canonical path calls a system font manager.
 - A committed `TextStyle` carries an ordered content-addressed fallback chain.

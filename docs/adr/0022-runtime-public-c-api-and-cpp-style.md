@@ -110,6 +110,7 @@ R1 必须：
    stale generation handle、NaN/Infinity、callback lifetime/reentrancy 和 exception translation
    运行 contract tests。
 3. 在 Web/WASM、Windows、Android、macOS/iOS/iPadOS 运行同一 symbol/struct/enum manifest
-   检查；core/public ABI 变更同时运行 Tier A + Tier B。
+   检查；core/public ABI 变更同时运行 Web、Windows RNW、Android RN、iOS/iPadOS RN 与
+   macOS core/Web-reuse harness。
 4. 运行 `clang-format` check、C/C++ public-header self-containment、module dependency、
    `git diff --check` 和 sanitizer/lifecycle tests。

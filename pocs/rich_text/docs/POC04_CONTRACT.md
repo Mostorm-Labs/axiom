@@ -49,15 +49,17 @@ UTF-16 storage contract.
 ## Operation and collaboration boundary
 
 One IME commit, direct input event, paste, deletion, undo, or redo is one
-`TextTransaction` containing one or more ordered replacements. A future
-Collaboration MVP may transport this transaction as one atomic object. This POC
-does not define CRDT/OT semantics, network encoding, concurrent RichText merge,
-or server compaction.
+historical POC `TextTransaction` containing one or more ordered replacements.
+This name and envelope do not define a future collaboration or product mutation
+unit. ADR-0025 supersedes that inference: the product path is Operation-only,
+and G1/G6 must map this behavior to a RichText Operation payload plus Atomic
+Operation Apply. This POC does not define CRDT/OT semantics, network encoding,
+concurrent RichText merge, or server compaction.
 
 The invariant under test is:
 
 ```text
-Snapshot N + TextTransactions N+1..M = Document State M
+Snapshot N + historical POC TextTransactions N+1..M = POC Text State M
 ```
 
 Replaying committed operations from an empty document and snapshot

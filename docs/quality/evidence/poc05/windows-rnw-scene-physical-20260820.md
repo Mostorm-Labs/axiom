@@ -33,4 +33,8 @@ The structured copy is [windows-rnw-scene-physical-20260820.json](windows-rnw-sc
 
 This is a Windows validation bridge, not final Runtime C ABI conformance:
 `runtime_c_abi_binary_conformance` remains `false`, and the private POC-03 C++
-Scene dependency must be removed before POC-05 can be accepted.
+Scene dependency must be removed before product G3/G6 integration can pass.
+This 96-DPI single-window WebView2/video run also makes no claim about the
+Windows screen-annotation product host: transparent topmost/click-through,
+multi-monitor/mixed-DPI, desktop focus/pen capture, display/surface recovery and
+Arc handoff/fallback remain for `GT-G9-15` physical validation.

@@ -1,41 +1,47 @@
-# Canvas v2
+# Axiom
 
-Canvas v2 is a cross-platform **Visual Document Runtime** built with C++20 and
-Skia Ganesh. It provides one semantic document, editor, ink, text, scene,
-rendering, persistence, and collaboration foundation for replaceable product
-shells. The shared C++20 Runtime is validated on Web, Windows, macOS, iOS,
-iPadOS, and Android; the initial product shells remain Web, Windows, and
-Android.
+Axiom is a cross-platform **Visual Document Runtime** built with C++20 and
+Skia Ganesh. It owns the semantic Document, Operation-only editing path,
+EditorSession, RichText, InkEngine, SceneCompiler, RuntimeScene and canonical
+rendering. The Product Layer owns navigation, Page collections and product
+workflow. The external Shared Data Runtime only provides the approved
+repository/storage/sync custody for those product concepts; neither layer
+duplicates Canvas semantics or the native input/render hot path.
 
-POC-01 is accepted. POC-02 is Integration Ready / Validating, so POC-03 scene
-work, POC-06 FastInk experiments, and R1 foundation work may consume its
-experimental contracts while its final latency and physical-device gates
-remain Pending. POC-05 is accepted as a future-capability architecture risk
-proof: Web, Windows RNW, Android RN and Apple RN/Fabric all validated the
-controlled WebView/video Overlay boundary. Its experimental C++ scene bridges
-are not product ABI. This branch implements POC-03 and remains `Validating`
-until its physical Windows/Web/Android and integrated-ink gates have recorded
-evidence. POC-04 can advance independently before R1 acceptance. The delivery
-order is six focused POCs followed by five productization stages; no production
-code should bypass their documented exit gates.
+The current product targets are Web, Windows, Android, iOS and iPadOS. Web uses
+React/TypeScript + WASM/WebGL; Windows uses React Native for Windows (RNW) with
+a Native Canvas/Overlay Host; Android, iOS and iPadOS use React Native Shells
+with native Canvas data paths. macOS native productization is deferred and is
+accessed through Web, while the shared Runtime keeps a core/Metal conformance
+harness. ChromiumOS reuses Web and Headless remains a reference/test target.
+
+The sole promotion order is `AR-0 → G0 → G1 → G2 → G3 → G4 → G5 → G6 → G7 →
+G8 → G9 → R5-B`. Existing POC/RF/R1～R5 labels remain evidence and delivery
+work packages mapped onto that order; they are not a competing route. POC-03's
+historical Windows Integrated D3D12 performance failure and POC-02/POC-06
+physical latency gates remain visible until their own evidence closes.
 
 ## Fixed architecture baseline
 
-- Product Tier A: Web, Windows, and Android receive complete product, device,
-  performance, release, and support gates.
+- Product targets: Web, Windows RNW, Android RN, iOS/iPadOS RN receive complete
+  product, device, performance, release, and support gates.
 - Web reference/product shell: React/TypeScript + WASM + WebGL.
-- Windows reference/product shell: React/Tauri + native canvas region + C ABI.
+- Windows product shell: React Native for Windows + Native Canvas/Overlay Host;
+  local screen annotation uses the native overlay path.
 - Android reference/product shell: React Native + native `CanvasView` + JNI. Pen input and canvas
   rendering never pass through React Native JS.
-- Portability Tier B: native macOS/iOS/iPadOS harnesses + C ABI + Ganesh Metal
-  continuously validate the shared Runtime; Apple product shells are deferred.
+- iOS/iPadOS product shell: React Native + native Canvas/ObjC++/Metal data path;
+  Pencil, IME and rendering do not pass through RN JS.
+- macOS: deferred native Shell; Web is the product entry point and a core/Metal
+  conformance harness remains available.
 - ChromiumOS reuses the Web target. Headless is a V1 test/reference utility,
   not yet a supported public server or batch-rendering product API.
 - Runtime: C++20 modules for RuntimeFacade, InputRouter, Document, Operations,
   EditorSession, RichText, InkEngine, Geometry, Layout, HitTest, SceneCompiler,
   shared RuntimeScene, per-view FrameState, FrameBuilder, FrameGraph,
   Compositor, RendererBackend, FrameInvalidationSink, TileCache,
-  ResourceBudgetCoordinator, Resources, Persistence, and Collaboration.
+  ResourceBudgetCoordinator and Resources. Persistence, Offline/Sync and
+  Collaboration are external data ports coordinated by Shared Data Runtime.
 - Renderer: Skia Ganesh for v1; Graphite/WebGPU is a future backend.
 - Surfaces: platform adapters own native window/surface/context lifecycles and
   provide generation-bound RenderTargets; RendererBackend does not own them.
@@ -43,7 +49,7 @@ code should bypass their documented exit gates.
   connected through one shared Preview Model and `FastInkBridge`.
 - Determinism: canonical numeric storage/encoding, deterministic clock/random,
   semantic ChangeSets, and cross-platform replay are explicit contracts.
-- Recovery: an immutable DocumentSnapshot plus committed operation continuation
+- Recovery: an immutable DocumentSnapshot plus committed Operation continuation
   deterministically restores a target frontier; snapshots never bypass the
   normal Operation path for editing or undo/redo.
 - Scheduling: the Runtime emits revision-bound frame invalidations; platform
@@ -52,8 +58,14 @@ code should bypass their documented exit gates.
 
 ## Documents
 
+- [Axiom architecture review workspace (Draft)](docs/architecture/review/README.md)
 - [Project framework](docs/PROJECT_FRAMEWORK.md)
 - [System architecture](docs/architecture/SYSTEM_ARCHITECTURE.md)
+- [Notion v0.3 / repository gap audit](docs/architecture/review/NOTION_V03_REPOSITORY_GAP_AUDIT.md)
+- [G0～G9 implementation and verification route](docs/planning/AXIOM_GATES_AND_STAGES.md)
+- [AR-0 reconciliation report](docs/planning/AR0_RECONCILIATION_REPORT.md)
+- [Gate task tracker](docs/planning/GATE_TASK_TRACKER.md)
+- [R1～R5 milestone status](docs/planning/R_MILESTONE_STATUS.md)
 - [RF-01 Scene rendering foundation](docs/architecture/RF01_SCENE_RENDERING_FOUNDATION.md)
 - [Runtime Public C API contract](docs/api/RUNTIME_C_API_CONTRACT.md)
 - [Canvas C++ / C ABI style](docs/CPP_STYLE.md)
@@ -73,15 +85,17 @@ Canvas CI downloads SDK assets and never runs Skia GN/Ninja.
 
 ## Current sequence
 
-The accepted `POC-01 Shared Engine` has unlocked parallel Ink, Scene, and
-RichText work. POC-02 is Integration Ready / Validating: POC-06 may consume its
-Preview Model, and POC-03's integrated ink experience gate may consume its Ink
-outputs without treating POC-02 as Accepted. POC-05 is accepted as a
-controlled-overlay risk proof; its cross-platform evidence and explicit
-non-goals are recorded in the [consolidated report](docs/evidence/poc05/consolidated-validation-20260820.md).
+`AR-0` reconciles the Notion v0.3 direction with repository evidence. G0～G3
+establish the semantic kernel, RuntimeScene and basic canonical canvas; G4/G5
+close interaction, Ink/Arc and large-canvas performance; G6 adds RichText,
+complex objects, controlled ExternalSurface and platform lifecycle; G7/G8 add
+local durability, offline/sync and recovery; G9 produces the integrated product
+gate, followed by R5-B release hardening.
 
-R1 foundation acceptance is blocked by POC-01 through POC-04. POC-05 is a
-future-capability risk proof and does not enter V1 product scope. POC-06 may run
-alongside R1 but blocks FastInk productization in R3. Product stages then proceed
-through the local V1 Runtime, Tier A rendering and shells, Collaboration MVP,
-and release hardening.
+Arc/FastInk is a product requirement, but its presentation backend is isolated
+from canonical mutation. Any Arc failure must automatically fall back to
+Canonical-only rendering without dropping confirmed input, changing the digest
+or blocking save/recovery. POC-05's controlled Overlay evidence is a G6 input;
+its private scene bridge is not the product ABI. See the [consolidated
+report](docs/evidence/poc05/consolidated-validation-20260820.md) for the scoped
+historical evidence.

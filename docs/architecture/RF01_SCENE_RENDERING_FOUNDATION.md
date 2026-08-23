@@ -9,7 +9,7 @@
 > [Runtime Public C API](../api/RUNTIME_C_API_CONTRACT.md)、
 > [Canvas C++ / C ABI 风格](../CPP_STYLE.md)
 
-本文把 RF-01 从路线图中的方向性描述收敛为可实现的 C++20 模块接口、所有权、事务时序、
+本文把 RF-01 从路线图中的方向性描述收敛为可实现的 C++20 模块接口、所有权、原子应用时序、
 错误恢复、测试门禁和 POC-03 迁移批次。本文定义的是 Runtime 内部 C++ contract，不新增或
 修改产品 C ABI；SkSG、SkCanvas、SkPaint、GPU handle 和平台 surface 都不能进入这些接口。
 
@@ -81,7 +81,8 @@ Runtime
 - View、FrameBuilder 和 HitTest 只持有某一 Scene revision 的借用 read view，不拥有 Scene。
 - Render DAG、index 和 damage 都是派生状态，随时可以从 full compiled snapshot 重建。
 - Runtime 当前为 single-owner thread；`apply()` 期间不调用 host callback，也不允许另一个线程
-  读取中间状态。未来线程拓扑只能在保持本事务边界后另建 ADR。
+  读取中间状态。未来线程拓扑只能在保持 `Atomic Scene Apply` 边界后另建 ADR；该边界不是
+  Document 的 canonical Transaction 或第二条写路径。
 
 ## 3. 目标模块与 include 边界
 
@@ -248,8 +249,8 @@ struct CompiledSceneDelta {
 不变量：
 
 - Snapshot 中 `ObjectId` 唯一，`orderKey + objectId` 形成稳定 total order。
-- Delta 必须连续：`beforeRevision == Scene.revision()` 且 `afterRevision` 是此次已提交
-  Document transaction 的目标 revision。
+- Delta 必须连续：`beforeRevision == Scene.revision()` 且 `afterRevision` 是此次成功
+  Operation apply 的目标 revision；该 apply 的内部原子边界称为 Atomic Operation Apply。
 - Insert 只有 `after`；Remove 只有 `before`；Update 同时有 `before/after`。
 - `before` 必须逐字段匹配当前 SceneRecord，`after` 必须匹配 DocumentReadView 的权威投影。
 - Reorder、visibility、style、resource 或 bounds 改变统一表达为 Update，不创建旁路 mutation。
@@ -642,7 +643,7 @@ RF-01 不增加 C symbol。现有调用映射为：
 ```text
 canvas_view_push_pointer_batch / execute_command
     → EditorSession / Operation
-    → Document transaction + ChangeSet
+    → Atomic Operation Apply + ChangeSet
     → SceneBinding::synchronize
     → Scene::apply
     → DamageSet + FrameInvalidationSink

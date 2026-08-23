@@ -17,9 +17,9 @@ WASM/native target 上产生相同 Document、Stroke 和 Scene digest。仅声�
 - V1 Document geometry、Canonical Stroke geometry 和进入语义 digest 的几何标量使用
   IEEE-754 binary32 作为 canonical storage type。它是存储/交换契约，不要求所有中间
   计算只能使用 binary32。
-- 进入 Document transaction、Canonical Stroke commit 或 canonical Scene record 前，数值
-  必须是 finite；NaN、Infinity、不可逆矩阵和超出声明坐标范围的结果整笔/整事务拒绝，
-  不产生部分修改。`-0` 在这些边界规范化为 `+0`。
+- 进入 Operation 的 Atomic Operation Apply、Canonical Stroke commit 或 canonical Scene
+  record 前，数值必须是 finite；NaN、Infinity、不可逆矩阵和超出声明坐标范围的结果整笔
+  Operation 拒绝，不产生部分修改。`-0` 在这些边界规范化为 `+0`。
 - 输入适配器或算法可以使用 binary64 中间值，但每个持久或可回放算法版本必须固定操作
   次序、中间精度、舍入边界和输出 canonicalization。不能依赖不同平台可能给出不同末位
   的未约束 `libm` 行为；需要三角、幂或随机数学时使用版本化确定实现或保存足以重建
