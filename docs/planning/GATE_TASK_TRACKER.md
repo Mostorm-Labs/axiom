@@ -65,7 +65,7 @@ Decision/Contract 简写：
 | Gate | 状态 | 任务覆盖 | 晋级剩余条件 |
 | --- | --- | --- | --- |
 | AR-0 | Pass | 6 tasks; validation evidence is commit-bound and architecture review is approved | Dependency for `GT-G0-00` is satisfied |
-| G0 | Validating | 18 tasks; `GT-G0-00` is Pass and all later G0 tasks remain Not Started | Complete `GT-G0-01..GT-G0-16`, produce reproducible G0 Evidence, then perform `GT-G0-17` review |
+| G0 | Validating | 18 tasks; `GT-G0-00..GT-G0-01` are Pass and all later G0 tasks remain Not Started | Complete `GT-G0-02..GT-G0-16`, produce reproducible G0 Evidence, then perform `GT-G0-17` review |
 | G1 | Not Started | 8 tasks | G0 Pass |
 | G2 | Not Started | 7 tasks | G1 Pass |
 | G3 | Not Started | 10 tasks including 2 repository scope supplements | G2 Pass |
@@ -106,7 +106,7 @@ Evidence 列记录任务通过时必须生成的目标路径。标为 `planned` 
 | Notion Task ID / source locator | Gate Task ID | Task | R contribution | Requirement | ADR/RFC/Contract | Dependencies | Disposition | Design | Implementation | Validation | Evidence path | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-G0-00 / IH-00 | `GT-G0-00` | Repository and branch reconciliation | R1 | REQ-GAP-VER | D-G0 | AR-0 Pass | Modify | Pass | Pass | Pass | [仓库与分支基线对账记录](../quality/evidence/g0/gt-g0-00-repository-reconciliation-20260823.md) | — | Pass |
-| WP-G0-01 / IH-01 | `GT-G0-01` | Schema and verification workspace skeleton | R1 | REQ-GAP-VER | D-G0 | GT-G0-00 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-01/ (planned)` | — | Not Started |
+| WP-G0-01 / IH-01 | `GT-G0-01` | Schema and verification workspace skeleton | R1 | REQ-GAP-VER | D-G0 | GT-G0-00 | Missing | Pass | Pass | Pass | [验证工作区骨架记录](../quality/evidence/g0/gt-g0-01-verification-workspace-skeleton-20260823.md) | — | Pass |
 | WP-G0-02 / IH-02 | `GT-G0-02` | Protocol package and envelope codec | R1 | REQ-GAP-VER | D-G0 | GT-G0-01 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-02/ (planned)` | — | Not Started |
 | WP-G0-03 / IH-03 | `GT-G0-03` | Runner core A: handshake, session, action, completion | R1 | REQ-GAP-VER | D-G0 | GT-G0-02 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-03/ (planned)` | — | Not Started |
 | WP-G0-04 / IH-04 | `GT-G0-04` | Runner core B: event, source, fault, fence, finalization | R1 | REQ-GAP-VER | D-G0 | GT-G0-03 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-04/ (planned)` | — | Not Started |

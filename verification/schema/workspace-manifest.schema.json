@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mostorm-labs.github.io/axiom/schema/verification/workspace-manifest-v1.json",
+  "title": "Axiom Verification Workspace Manifest",
+  "description": "G0-01 workspace ownership; not a product IDL, operation wire schema, or Gate Report schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "format",
+    "workspace_id",
+    "repository",
+    "promotion_route",
+    "gate",
+    "state",
+    "directories",
+    "corpus",
+    "services",
+    "policies"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "format": { "const": "axiom-verification-workspace" },
+    "workspace_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+    "promotion_route": { "type": "string", "minLength": 1 },
+    "gate": { "const": "G0" },
+    "state": { "enum": ["skeleton", "active"] },
+    "directories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["corpus", "fixtures", "runners", "reports", "evidence", "schema"],
+      "properties": {
+        "corpus": { "$ref": "#/$defs/relativePath" },
+        "fixtures": { "$ref": "#/$defs/relativePath" },
+        "runners": { "$ref": "#/$defs/relativePath" },
+        "reports": { "$ref": "#/$defs/relativePath" },
+        "evidence": { "$ref": "#/$defs/relativePath" },
+        "schema": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "corpus": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/corpusEntry" }
+    },
+    "services": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/serviceEntry" }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoding", "canonical_json", "expected_artifacts", "absolute_paths", "generated_outputs"],
+      "properties": {
+        "encoding": { "const": "UTF-8" },
+        "canonical_json": { "type": "string", "minLength": 1 },
+        "expected_artifacts": { "type": "string", "minLength": 1 },
+        "absolute_paths": { "const": "forbidden" },
+        "generated_outputs": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)[^\\s]+$"
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^GT-G0-(0[1-9]|1[0-7])$"
+    },
+    "corpusEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "owner", "status", "expected_policy"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "owner": { "$ref": "#/$defs/taskId" },
+        "status": { "const": "reserved" },
+        "expected_policy": { "enum": ["reviewed", "explicit-review"] }
+      }
+    },
+    "serviceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "owner", "status"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+        "owner": { "const": "GT-G0-01" },
+        "status": { "const": "reserved" }
+      }
+    }
+  }
+}

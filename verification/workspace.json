@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "format": "axiom-verification-workspace",
+  "workspace_id": "axiom-g0-verification",
+  "repository": "Mostorm-Labs/axiom",
+  "promotion_route": "AR-0 -> G0 -> G1 -> G2 -> G3 -> G4 -> G5 -> G6 -> G7 -> G8 -> G9 -> R5-B",
+  "gate": "G0",
+  "state": "skeleton",
+  "directories": {
+    "corpus": "verification/corpus",
+    "fixtures": "verification/fixtures",
+    "runners": "verification/runners",
+    "reports": "verification/reports",
+    "evidence": "verification/evidence",
+    "schema": "verification/schema"
+  },
+  "corpus": [
+    {
+      "id": "protocol",
+      "path": "verification/corpus/protocol",
+      "owner": "GT-G0-02",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    },
+    {
+      "id": "semantic",
+      "path": "verification/corpus/semantic",
+      "owner": "GT-G0-06",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    },
+    {
+      "id": "platform",
+      "path": "verification/corpus/platform",
+      "owner": "GT-G0-09",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    },
+    {
+      "id": "golden",
+      "path": "verification/corpus/golden",
+      "owner": "GT-G0-08",
+      "status": "reserved",
+      "expected_policy": "explicit-review"
+    },
+    {
+      "id": "performance",
+      "path": "verification/corpus/performance",
+      "owner": "GT-G0-09",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    },
+    {
+      "id": "fault",
+      "path": "verification/corpus/fault",
+      "owner": "GT-G0-04",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    },
+    {
+      "id": "physical",
+      "path": "verification/corpus/physical",
+      "owner": "GT-G0-13",
+      "status": "reserved",
+      "expected_policy": "reviewed"
+    }
+  ],
+  "services": [
+    {
+      "id": "fake-clock",
+      "owner": "GT-G0-01",
+      "status": "reserved"
+    },
+    {
+      "id": "deterministic-random",
+      "owner": "GT-G0-01",
+      "status": "reserved"
+    },
+    {
+      "id": "stable-id-fixture",
+      "owner": "GT-G0-01",
+      "status": "reserved"
+    },
+    {
+      "id": "fake-resource-provider",
+      "owner": "GT-G0-01",
+      "status": "reserved"
+    }
+  ],
+  "policies": {
+    "encoding": "UTF-8",
+    "canonical_json": "workspace-v1 UTF-8 JSON with recursively sorted object keys and compact separators",
+    "expected_artifacts": "read-only in blocking CI; update requires a separate reviewed change",
+    "absolute_paths": "forbidden",
+    "generated_outputs": "outside versioned verification source directories"
+  }
+}
