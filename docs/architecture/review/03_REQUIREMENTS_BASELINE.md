@@ -8,7 +8,9 @@
 > 建立日期：2026-08-21
 > 输入：SRC-REPO-MAIN-20260821、SRC-NOTION-FUNCTIONS-V01、
 > SRC-NOTION-COMPETITIVE-20260821、SRC-CHAT-07，以及步骤 0～2 已审核的用户输入；第三组
-> 另接收 2026-08-22 增量来源 SRC-CHAT-08、SRC-CHAT-09、SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01
+> 另接收 2026-08-22 增量来源 SRC-CHAT-08、SRC-CHAT-09、SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01；
+> 当前路线与平台范围另引用 SRC-NOTION-ARCH-V03-CAPTURE-20260823、
+> SRC-USER-ARCH-REBASE-CONFIRMATION-20260823
 > 现行规范：在本文形成并获得明确批准前，仍以
 > [项目总体框架](../../PROJECT_FRAMEWORK.md)、
 > [系统架构](../SYSTEM_ARCHITECTURE.md)和[现有 ADR](../../adr/README.md)为准
@@ -268,13 +270,13 @@ C ABI、SDK/API、Capability 和 Migration 等独立域，不能复用一个含�
 
 用户已明确裁决两个方向：每个 Page 对应一个独立 Document；canonical mutation 采用
 Operation-only，不存在全局 `Transaction → operations[]` canonical 外层。因而 Schema 草案中
-把 Page 作为 Document 内 `ObjectKind` 或 synthetic root 的结构不能进入现行需求方向；现行
-Accepted 文档中的 Document Transaction 暂只解释为单个 Operation apply 的内部原子
+把 Page 作为 Document 内 `ObjectKind` 或 synthetic root 的结构不能进入现行需求方向；旧
+Accepted 文档中的 `Document Transaction` 只按历史称呼解释为单个 Operation apply 的内部原子
 `validate → commit` 边界，不是持久化、同步、Undo 或 wire schema 的第二层事实。
 
-步骤 5/6 仍须用新 ADR 明确替代或澄清 ADR-0014/0019/0020/0022 中旧的 transaction/batch
-措辞，并决定 Operation payload 粒度、multi-object 原子修改、Undo grouping、transport batch、
-replay envelope 和 ABI 的映射；这些问题不会重新开放 Operation-only 方向。候选 `axiom_*`、
+ADR-0025 已正式替代 ADR-0014/0019/0020/0022 中把 transaction/batch 解释成 canonical 外层
+的旧读法。G1/G7 仍须决定 Operation payload 粒度、multi-object 原子修改、Undo grouping、
+transport batch、replay envelope、ABI 和存储映射；这些问题不会重新开放 Operation-only 方向。候选 `axiom_*`、
 TS facade、Shared Data Runtime owner、Product SDK 与现行 `canvas_*` C ABI 的关系按用户要求
 留给后续步骤修改。
 
@@ -400,34 +402,35 @@ Runtime conformance”作为默认范围。
 
 | Requirement ID | 已定界需求陈述 | Intake / 现行约束 | Target Gate / Milestone Mapping | 当前成熟度 |
 | --- | --- | --- | --- | --- |
-| `REQ-FUNC-CAN-001` | 产品可以管理多个 Page；每个 Page 恰对应一个独立 Document，拥有独立 revision、对象顺序、资源绑定和 digest，并关联彼此隔离的 EditorSession/History。Page 的创建、复制、删除、重命名、排序、切换和恢复不把多个 Page 伪装成同一 Document 内的子树。 | `INT-CAN-001`；用户确认；现行 Page≠Viewport、History 不属于 Document | R2/R3 | Requirement `Framed`；产品实现 `Absent`；contract mechanism `Planned`；Evidence `Pending` |
-| `REQ-EDIT-VIEW-001` | 用户在每个 Page/Document 的无限画布中平移、缩放或适配视图后，可以继续定位、查看和命中同一语义对象；Viewport 变化不修改 Document。 | `INT-CAN-002/003`；用户确认；ADR-0012 | R2/R3 | `Framed`；POC implementation；mechanism exists；Evidence `Partial`，POC-03 性能仍 Failed |
-| `REQ-EDIT-VIEW-002` | 同一 Document 的多个 View 不共享 Viewport、Selection、History、composition 或 Active Stroke；销毁一个 View 不破坏其他 View。 | `INT-CAN-003` | R2 | `Framed`；POC/Partial；mechanism exists；Evidence `Partial` |
-| `REQ-FUNC-OBJ-001` | 用户可以创建、编辑几何/样式、变换、排序和删除 Shape，并通过保存/重放保持相同语义结果。 | `INT-OBJ-001`；V1 Shape | R2 | `Framed`；POC only；mechanism exists；Evidence `Partial` |
-| `REQ-FUNC-OBJ-002` | 用户可以插入、替换、布局/变换和删除 Image；资源不可用时不得静默换成别的内容。 | `INT-OBJ-001`；V1 Image | R2/R3 | `Framed`；POC only；mechanism exists；Evidence `Partial`；资源与色彩移交第三/五组 |
-| `REQ-FUNC-OBJ-003` | 用户可以创建、编辑和变换 VectorPath，同时保留可重放的矢量语义，而非退化为 bitmap。 | `INT-OBJ-001`；V1 VectorPath | R2 | `Framed`；最小 POC render；产品编辑深度和 Evidence `Pending` |
-| `REQ-FUNC-OBJ-004` | 用户可以创建、编辑、嵌套/解除嵌套、选择、变换和删除 Group/Frame 容器；容器与子对象的层级、裁剪/承载关系、命中、排序、保存、重放和撤销结果一致。 | `INT-OBJ-005`；用户范围修正；现行扩展边界待重审 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-FUNC-OBJ-005` | 用户可以创建、编辑、选择、变换和删除 Sticky；其文本、样式、尺寸、层级、命中、保存、重放和 Undo/Redo 结果保持一致。 | `INT-OBJ-005`；用户范围修正 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-FUNC-OBJ-006` | 用户可以创建、编辑、连接、移动端点和删除 Connector；连接关系、端点命中、路径更新、渲染、排序、保存、重放和撤销不得退化为普通 VectorPath。 | `INT-OBJ-006`；用户范围修正 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-FUNC-OBJ-007` | 用户可以导入并使用 PDF 内容；在声明的分页/页内模型下可查看、选择（若适用）、变换、保存和重放，且损坏或缺失资源有确定错误结果。 | `INT-OBJ-007`；用户范围修正 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-EDIT-SEL-001` | 用户可以按明确的 SelectionPolicy 选择和多选可编辑对象；Selection/hover/handles 不进入 Document。 | `INT-OBJ-002/003` | R2/R3 | `Framed`；POC harness；mechanism exists；产品 Evidence `Pending` |
-| `REQ-EDIT-SEL-002` | 用户可以使用 Lasso 选择符合 SelectionPolicy 的对象；点选、框选、Lasso 和多选对 locked/hidden/container/Connector 对象的结果可预测且不产生部分选择状态。 | `INT-OBJ-002/003/006/008`；用户范围修正 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-EDIT-XFORM-001` | 对象移动、缩放、旋转和已声明样式修改作为原子语义编辑提交；取消或失败不暴露部分修改。 | `INT-OBJ-002`；Operation 唯一写路径 | R2 | `Framed`；POC variants；mechanism exists；Evidence `Partial` |
-| `REQ-EDIT-XFORM-002` | 用户可以对选中的对象执行 Align/Distribute；参考系、间距、容器边界、最小对象数、舍入和失败行为明确，结果通过原子 Operation 提交并可撤销/重放。 | `INT-OBJ-002/003/005/008`；用户范围修正 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-EDIT-SNAP-001` | 变换和绘制过程中提供可关闭的 Smart Snap；候选、阈值、优先级、参考系和跨容器行为确定且可重放，未命中或取消不改变 Document。 | `INT-OBJ-002/003/005/006/008`；用户范围修正；ADR-0021 边界 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-EDIT-ORDER-001` | 用户调整对象前后顺序后，渲染、HitTest、保存和重放使用同一稳定顺序；并发排序算法不在本组冻结。 | `INT-OBJ-003` | R2 | `Framed`；implementation `Partial/Absent`；Evidence `Pending` |
-| `REQ-EDIT-HIST-001` | 用户可以撤销/重做本地已承诺编辑；系统生成新的原子 compensating Operations，并明确报告 applied/no-op/rejected/conflicted。 | `INT-OBJ-004`；ADR-0014 | R2；协作交错 R4 | `Framed`；Text POC partial；mechanism exists；通用 Evidence `Pending` |
-| `REQ-INK-001` | 有效 confirmed 输入产生可编辑、保存和重放的 VectorStroke 或 DabStroke；历史样本不被静默丢失、重复或用新 Viewport 重解释。 | `INT-INK-001`；ADR-0004/0012/0018 | R2/R3 | `Framed`；POC；mechanism exists；Evidence `Partial/Pending` |
-| `REQ-INK-002` | 书写过程中提供可降级的即时 Preview；prediction 不进入 Document，cancel/overrun/fallback 不留下部分 Stroke，最终显示与 Canonical Stroke 一致。 | `INT-INK-002`；ADR-0011/0024 | R3 | `Framed`；POC；mechanism exists；物理延迟/visible handoff `Failed/Pending` |
-| `REQ-INK-003` | Vector/Dab Stroke 保存版本化 Brush 语义，并支持本组确认的最小颜色、宽度、透明度和输入映射；跨端重放结果一致。 | `INT-INK-003` | R2 | `Framed`；POC；mechanism exists；产品 brush matrix `Pending` |
-| `REQ-INK-004` | 用户选择“对象擦除”并命中 Stroke 时，删除整个 Stroke 对象；操作原子、可撤销、可保存和可重放，且不留下孤立的 Stroke/资源引用。 | `INT-INK-004`；用户确认 | R2 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-INK-005` | 用户对适合矢量切分的细笔 Stroke 使用“部分擦除”时，系统采用 Segment erase；未命中部分被保留，fragment identity、几何分裂、空间索引、渲染、Undo/Redo、保存和 replay 语义确定。 | `INT-INK-004`；用户确认 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-INK-006` | 用户对较粗、Dab/纹理或不适合矢量切分的 Stroke 使用“部分擦除”时，系统采用 Pixel/Dab erase；擦除区域、mask/覆盖表示、质量、资源和缓存语义确定，可撤销、保存、重放并跨端得到一致结果。 | `INT-INK-004`；用户确认 | R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
-| `REQ-INK-007` | Tier A 必须提供 Arc Preview backend，并与 Canonical Renderer 共享版本化 Stroke 语义；Arc 不可用或 presentation 失败时自动切换 Canonical-only rendering，不丢失 confirmed input、不取消 Canonical 提交、不污染 Document 或改变 digest。 | `INT-INK-002/006`；ADR-0004/0011/0024；用户范围修正 | R3 | `Framed`；Arc `POC/Integration Ready`；mechanism exists；物理设备 Evidence `Pending` |
-| `REQ-TEXT-001` | RichText 从 V1 保存有序 paragraphs、runs、styles 和 attributes；平台 widget、JS state 或系统字体不能成为第二份文本真相。 | `INT-STRUCT-001`；ADR-0006 | R2 | `Framed`；POC；mechanism exists；POC feasibility Evidence `Passed` |
-| `REQ-TEXT-002` | 用户可以编辑 selection/caret，输入、替换、换行、删除并完成 IME begin/update/commit/cancel；commit 产生一次原子可重放编辑，cancel 不改 Document。 | `INT-STRUCT-002` | R2/R3 | `Framed`；POC；mechanism exists；POC-04 Evidence `Passed`，产品完整度 `Pending` |
-| `REQ-TEXT-003` | 给定声明的字体资源和 fallback，文本换行、selection/caret geometry 与最终语义可重复；缺字体/hash mismatch 有确定诊断。 | `INT-STRUCT-001/002` | R2/R3 | `Framed`；POC；mechanism exists；POC-04 Evidence `Passed`，产品资源集成 `Pending` |
-| `REQ-TEXT-004` | V1 提供经本组确认的有限 run/paragraph 样式集合，并能保存、重放、撤销且跨 Tier A 得到相同语义。 | `INT-STRUCT-003` | R2/R3 | `Framed`；POC `Partial`；具体范围和产品 Evidence `Pending` |
+| `REQ-FUNC-CAN-001` | 产品可以管理多个 Page；每个 Page 恰对应一个独立 Document，拥有独立 revision、对象顺序、资源绑定和 digest，并关联彼此隔离的 EditorSession/History。Page 的创建、复制、删除、重命名、排序、切换和恢复不把多个 Page 伪装成同一 Document 内的子树。 | `INT-CAN-001`；用户确认；现行 Page≠Viewport、History 不属于 Document | G7/G9；R2/R5 | Requirement `Framed`；产品实现 `Absent`；contract mechanism `Planned`；Evidence `Pending` |
+| `REQ-EDIT-VIEW-001` | 用户在每个 Page/Document 的无限画布中平移、缩放或适配视图后，可以继续定位、查看和命中同一语义对象；Viewport 变化不修改 Document。 | `INT-CAN-002/003`；用户确认；ADR-0012 | G3；R2/R3 | `Framed`；POC implementation；mechanism exists；Evidence `Partial`，POC-03 性能仍 Failed |
+| `REQ-EDIT-VIEW-002` | 同一 Document 的多个 View 不共享 Viewport、Selection、History、composition 或 Active Stroke；销毁一个 View 不破坏其他 View。 | `INT-CAN-003` | G3；R2 | `Framed`；POC/Partial；mechanism exists；Evidence `Partial` |
+| `REQ-FUNC-OBJ-001` | 用户可以创建、编辑几何/样式、变换、排序和删除 Shape，并通过保存/重放保持相同语义结果。 | `INT-OBJ-001`；V1 Shape | G1/G3/G4；R2 | `Framed`；POC only；mechanism exists；Evidence `Partial` |
+| `REQ-FUNC-OBJ-002` | 用户可以插入、替换、布局/变换和删除 Image；资源不可用时不得静默换成别的内容。 | `INT-OBJ-001`；V1 Image | G1/G3/G4/G7；R2/R3 | `Framed`；POC only；mechanism exists；Evidence `Partial`；资源与色彩移交第三/五组 |
+| `REQ-FUNC-OBJ-003` | 用户可以创建、编辑和变换 VectorPath，同时保留可重放的矢量语义，而非退化为 bitmap。 | `INT-OBJ-001`；V1 VectorPath | G1/G3/G4；R2 | `Framed`；最小 POC render；产品编辑深度和 Evidence `Pending` |
+| `REQ-FUNC-OBJ-004` | 用户可以创建、编辑、嵌套/解除嵌套、选择、变换和删除 Group/Frame 容器；容器与子对象的层级、裁剪/承载关系、命中、排序、保存、重放和撤销结果一致。 | `INT-OBJ-005`；用户范围修正；现行扩展边界待重审 | G1/G3/G4/G6；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-FUNC-OBJ-005` | 用户可以创建、编辑、选择、变换和删除 Sticky；其文本、样式、尺寸、层级、命中、保存、重放和 Undo/Redo 结果保持一致。 | `INT-OBJ-005`；用户范围修正 | G1/G3/G4/G6；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-FUNC-OBJ-006` | 用户可以创建、编辑、连接、移动端点和删除 Connector；连接关系、端点命中、路径更新、渲染、排序、保存、重放和撤销不得退化为普通 VectorPath。 | `INT-OBJ-006`；用户范围修正 | G1/G3/G4/G6；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-FUNC-OBJ-007` | 用户可以导入并使用 PDF 内容；在声明的分页/页内模型下可查看、选择（若适用）、变换、保存和重放，且损坏或缺失资源有确定错误结果。 | `INT-OBJ-007`；用户范围修正 | G1/G3/G4/G6/G7；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-EDIT-SEL-001` | 用户可以按明确的 SelectionPolicy 选择和多选可编辑对象；Selection/hover/handles 不进入 Document。 | `INT-OBJ-002/003` | G4；R2/R3 | `Framed`；POC harness；mechanism exists；产品 Evidence `Pending` |
+| `REQ-EDIT-SEL-002` | 用户可以使用 Lasso 选择符合 SelectionPolicy 的对象；点选、框选、Lasso 和多选对 locked/hidden/container/Connector 对象的结果可预测且不产生部分选择状态。 | `INT-OBJ-002/003/006/008`；用户范围修正 | G4；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-EDIT-XFORM-001` | 对象移动、缩放、旋转和已声明样式修改作为原子语义编辑提交；取消或失败不暴露部分修改。 | `INT-OBJ-002`；Operation 唯一写路径 | G1/G4；R2 | `Framed`；POC variants；mechanism exists；Evidence `Partial` |
+| `REQ-EDIT-XFORM-002` | 用户可以对选中的对象执行 Align/Distribute；参考系、间距、容器边界、最小对象数、舍入和失败行为明确，结果通过原子 Operation 提交并可撤销/重放。 | `INT-OBJ-002/003/005/008`；用户范围修正 | G4；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-EDIT-SNAP-001` | 变换和绘制过程中提供可关闭的 Smart Snap；候选、阈值、优先级、参考系和跨容器行为确定且可重放，未命中或取消不改变 Document。 | `INT-OBJ-002/003/005/006/008`；用户范围修正；ADR-0021 边界 | G4；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-EDIT-ORDER-001` | 用户调整对象前后顺序后，渲染、HitTest、保存和重放使用同一稳定顺序；并发排序算法不在本组冻结。 | `INT-OBJ-003` | G1/G4；R2 | `Framed`；implementation `Partial/Absent`；Evidence `Pending` |
+| `REQ-EDIT-HIST-001` | 用户可以撤销/重做本地已承诺编辑；系统生成新的原子 compensating Operations，并明确报告 applied/no-op/rejected/conflicted。 | `INT-OBJ-004`；ADR-0014 | G1/G4（本地）、G8（协作交错）；R2/R4 | `Framed`；Text POC partial；mechanism exists；通用 Evidence `Pending` |
+| `REQ-INK-001` | 有效 confirmed 输入产生可编辑、保存和重放的 VectorStroke 或 DabStroke；历史样本不被静默丢失、重复或用新 Viewport 重解释。 | `INT-INK-001`；ADR-0004/0012/0018 | G4；R2/R3 | `Framed`；POC；mechanism exists；Evidence `Partial/Pending` |
+| `REQ-INK-002` | 书写过程中提供可降级的即时 Preview；prediction 不进入 Document，cancel/overrun/fallback 不留下部分 Stroke，最终显示与 Canonical Stroke 一致。 | `INT-INK-002`；ADR-0011/0024 | G4；R3 | `Framed`；POC；mechanism exists；物理延迟/visible handoff `Failed/Pending` |
+| `REQ-INK-003` | Vector/Dab Stroke 保存版本化 Brush 语义，并支持本组确认的最小颜色、宽度、透明度和输入映射；跨端重放结果一致。 | `INT-INK-003` | G4；R2 | `Framed`；POC；mechanism exists；产品 brush matrix `Pending` |
+| `REQ-INK-004` | 用户选择“对象擦除”并命中 Stroke 时，删除整个 Stroke 对象；操作原子、可撤销、可保存和可重放，且不留下孤立的 Stroke/资源引用。 | `INT-INK-004`；用户确认 | G4；R2 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-INK-005` | 用户对适合矢量切分的细笔 Stroke 使用“部分擦除”时，系统采用 Segment erase；未命中部分被保留，fragment identity、几何分裂、空间索引、渲染、Undo/Redo、保存和 replay 语义确定。 | `INT-INK-004`；用户确认 | G4/G5；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-INK-006` | 用户对较粗、Dab/纹理或不适合矢量切分的 Stroke 使用“部分擦除”时，系统采用 Pixel/Dab erase；擦除区域、mask/覆盖表示、质量、资源和缓存语义确定，可撤销、保存、重放并跨端得到一致结果。 | `INT-INK-004`；用户确认 | G4/G5；R2/R3 | `Framed`；实现 `Absent`；机制 `Planned`；Evidence `Pending` |
+| `REQ-INK-007` | Tier A 必须提供 Arc Preview backend，并与 Canonical Renderer 共享版本化 Stroke 语义；Arc 不可用或 presentation 失败时自动切换 Canonical-only rendering，不丢失 confirmed input、不取消 Canonical 提交、不污染 Document 或改变 digest。 | `INT-INK-002/006`；ADR-0004/0011/0024；用户范围修正 | G4/G9；R3/R5 | `Framed`；Arc `POC/Integration Ready`；mechanism exists；物理设备 Evidence `Pending` |
+| `REQ-TEXT-001` | RichText 从 V1 保存有序 paragraphs、runs、styles 和 attributes；平台 widget、JS state 或系统字体不能成为第二份文本真相。 | `INT-STRUCT-001`；ADR-0006 | G1/G6；R2 | `Framed`；POC；mechanism exists；POC feasibility Evidence `Passed` |
+| `REQ-TEXT-002` | 用户可以编辑 selection/caret，输入、替换、换行、删除并完成 IME begin/update/commit/cancel；commit 产生一次原子可重放编辑，cancel 不改 Document。 | `INT-STRUCT-002` | G6；R2/R3 | `Framed`；POC；mechanism exists；POC-04 Evidence `Passed`，产品完整度 `Pending` |
+| `REQ-TEXT-003` | 给定声明的字体资源和 fallback，文本换行、selection/caret geometry 与最终语义可重复；缺字体/hash mismatch 有确定诊断。 | `INT-STRUCT-001/002` | G6/G7；R2/R3 | `Framed`；POC；mechanism exists；POC-04 Evidence `Passed`，产品资源集成 `Pending` |
+| `REQ-TEXT-004` | V1 提供经本组确认的有限 run/paragraph 样式集合，并能保存、重放、撤销且跨 Tier A 得到相同语义。 | `INT-STRUCT-003` | G1/G6；R2/R3 | `Framed`；POC `Partial`；具体范围和产品 Evidence `Pending` |
+| `REQ-PLAT-WIN-ANNOTATION-001` | Windows 产品提供独立的本地屏幕批注 special host：由 RNW 产品层进入和退出，但透明 topmost window、click-through/绘制模式切换、多显示器与 DPI、焦点/笔捕获、surface 与 composition 生命周期保持 Native；复用同一 Axiom、Arc 和 DataBridge 语义，RN/TS 不进入 Pointer/Preview/Render 热路径。 | 用户明确产品需求；ADR-0025；Notion Cross-platform Contract Matrix；POC-05 仅证明 RNW/native host 与 Overlay 可行性 | G3（host seam）、G4（input/Arc）、G9（产品物理验收）；R3/R5 | `Framed`；POC feasibility `Partial`；产品实现与物理 Evidence `Pending`；DComp/HWND/swapchain、multi-monitor/DPI 和进程拓扑仍 Open |
 
 本轮已经分别建立对象擦除、Segment partial erase 和 Pixel/Dab partial erase 需求，以及 Arc
 Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C ABI、POC enum 或算法已经
@@ -466,7 +469,18 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 - 生成或验证失败时整个补偿 Operation 原子失败；协作交错的冲突语料留 R4，但返回结果
   vocabulary 不能在产品实现中缺失。
 
-### 4. Ink
+### 4. Windows 本地屏幕批注
+
+- 在至少双显示器、不同 DPI/缩放和主副屏切换语料下验证 overlay bounds、坐标变换和 canonical
+  stroke 不漂移；显示器增删、DPI change、resize 与 surface recreate 不丢 Document；
+- 分别验证 click-through 与 draw mode，焦点转移、pen capture、Alt-Tab、锁屏/恢复、挂起/恢复和
+  surface/device loss；迟到的旧 generation 输入或 presentation proof 必须拒绝；
+- Arc 可用时验证 preview/canonical handoff，Arc unavailable/timeout/presentation failure 时验证
+  Canonical-only fallback；confirmed input、Operation、digest、保存和恢复结果不得变化；
+- trace 必须证明 RN/TS 只走 control path，PointerSample/Preview/Frame 不逐事件经过 JS；POC-05
+  的 RNW/Fabric、Native Canvas 与受控 Overlay Evidence 只能作为可行性输入，不能替代上述物理门禁。
+
+### 5. Ink
 
 - 录制 60/120/240 Hz、历史点、pressure/tilt 有/无、zoom/pan/DPR 与非法 transform 语料；
 - Vector/Dab 的 confirmed input、BrushDescriptor、Stroke/Document digest 和跨端回放一致；
@@ -480,7 +494,7 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 - 输入到 Preview、handoff 帧数和 Human Ink 的产品 SLO 在第五组绑定设备、刷新率和 Evidence
   level；本组不以 POC 数字替用户作承诺。
 
-### 5. RichText 与 IME
+### 6. RichText 与 IME
 
 - 固定语料覆盖英文、中文拼音、直接输入、selection/caret、replacement、换行、删除、粘贴、
   composition commit/cancel、Undo/Redo 和 focus/view lifecycle；
@@ -507,5 +521,7 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 
 以上第二组需求方向已于 2026-08-22 获得用户逐项确认，Requirement Status 已从 `Candidate`
 进入 `Framed`。P0/P1/P2 和最终 `Baseline Accepted` 仍留到第六组；这次确认不会把现行实现、
-实验 ABI 或 Evidence 成熟度升级为 Product/Passed。Page 集合的 owner/持久格式、Brush 到部分
-擦除策略的版本化表示，以及具体算法仍进入后续架构步骤和 ADR/RFC。
+实验 ABI 或 Evidence 成熟度升级为 Product/Passed。Page Collection 的产品语义 owner 已由
+ADR-0025 固定为上层产品层；仍待决定的是 repository schema、Shared Data Runtime custody、
+持久格式、跨 Document 操作和迁移规则。Brush 到部分擦除策略的版本化表示及具体算法也仍进入
+后续架构步骤和 ADR/RFC。

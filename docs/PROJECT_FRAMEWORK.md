@@ -174,8 +174,9 @@ flowchart TB
 
   Skia["Skia Ganesh"]
   Target["RenderTarget"]
-  FastBridge["FastInkBridge"]
-  FastPlatform["Platform FastInk"]
+  ArcProtocol["Arc::Protocol"]
+  ArcCore["Arc::Core"]
+  ArcPlatform["Arc Platform Preview Backend"]
   Durable["Local Store / Cloud / Blob Store"]
 
   Web --> Host
@@ -188,7 +189,7 @@ flowchart TB
   Host --> SurfaceAdapter
   Host --> FrameScheduler
   Host -.->|compose lifecycle| DataRuntime
-  Host -.->|compose preview| FastBridge
+  Host -.->|compose preview| ArcCore
   Shells --> DataRuntime
   DataRuntime <--> DataBridge
   DataBridge <--> AppAPI
@@ -241,8 +242,9 @@ flowchart TB
   AppAPI --> Text
   AppAPI --> Ink
   Ink --> Ops
-  Ink --> FastBridge
-  FastBridge --> FastPlatform
+  Ink -.->|emits PreviewStrokeUpdate| ArcProtocol
+  ArcCore -.->|consumes| ArcProtocol
+  ArcCore --> ArcPlatform
   Resources --> Compiler
   Resources --> Renderer
   Doc -.->|exports verified DocumentSnapshot| DataBridge
@@ -521,8 +523,9 @@ canvas/
 └── docs/
 ```
 
-`arc/` 是 POC-06 的正式模块边界，必须可独立 configure/build/test；`pocs/fastink/` 只保存实验
-消费者和证据。产品 backend 覆盖 Web、Windows、Android、iOS/iPadOS、ChromiumOS 和
+`arc/` 是 Arc 产品能力的候选模块边界，必须可独立 configure/build/test；POC-06 只是该边界的
+实验消费者和历史证据，不能据此把目录形态或 ABI 自动升级为 Accepted 产品契约。
+`pocs/fastink/` 只保存实验消费者和证据。产品 backend 覆盖 Web、Windows、Android、iOS/iPadOS、ChromiumOS 和
 Headless；macOS 维持已有 core/Web/reference conformance，不建立 native 产品目录或发布门禁。
 其余产品目录在对应 Gate 开始时创建。
 
@@ -563,28 +566,20 @@ Physical/Demo 证据。POC-03 的 Windows 失败、POC-02/06 的未闭合物理�
 | POC-05 | Hybrid Surface | **Accepted scoped risk proof**：Web、Windows RNW、Android RN、Apple RN/Fabric 的受控 Overlay 与 z-order 边界可行；作为 G6 产品化输入 |
 | POC-06 | FastInk / Arc | 全平台实现、独立 Preview target、错误隔离、分阶段 handoff 与 Canonical 交接可行 |
 
-下图只保存历史 POC/RF Evidence lineage，表示某份实验成果可能为哪份后续证据提供输入；
-它不是任务依赖图、启动条件或 promotion 路线：
-
-```mermaid
-flowchart LR
-  P1["POC-01 Shared Engine"] --> P2["POC-02 Ink"]
-  P1 --> P3["POC-03 Scene core"]
-  P1 --> P4["POC-04 RichText"]
-  P2 -->|"Integration Ready contracts"| P6["POC-06 FastInk"]
-  P2 -->|"Integration Ready Ink"| P3Gate["POC-03 integrated ink gate"]
-  P3 --> P3Gate
-  P3 --> RF1["RF-01 Scene rendering foundation"]
-  RF1 --> RF2["RF-02 Dynamic spatial query"]
-  RF2 --> RF3["RF-03 Tiled raster"]
-  P3 --> P5["POC-05 Hybrid Surface risk proof"]
-```
+历史 POC/RF 之间不再使用箭头图表示，避免被误解为任务依赖或启动顺序。它们与 G0～G9 的
+many-to-many Evidence 输入关系以 [Gate 总路线](planning/AXIOM_GATES_AND_STAGES.md) 和
+[任务账本](planning/GATE_TASK_TRACKER.md) 为唯一记录。
 
 POC-02/03/04 的核心证据可被下游 Gate 消费，但 `Integration Ready` 不等于 POC Accepted 或
 产品 ABI 冻结。POC-03 的 direct Skia、Linear/Uniform Grid 和 L1 原型只作为 baseline；RF-01～03
 分别进入 G2/G5。POC-05 证明受控 Overlay 和 RN Shell 边界可行，G6 仍须建立产品 Schema、稳定
 bridge、lifecycle 与真实 ExternalSurface；任意 DOM/native 穿插和 zero-copy texture 不在承诺内。
-POC-06/Arc 是 G4/R3 的硬依赖；backend 失败必须 Canonical-only fallback。
+它没有验证 Windows 本地屏幕批注的 transparent topmost、click-through/draw mode、多显示器/
+DPI、focus/pen capture、display/surface lifecycle 或 Arc fallback；这些由 G3/G4 建立 seam，并由
+G9 的独立物理门禁验收。Page Collection 同样不是隐含在 G7 persistence 中：G7 必须闭合产品
+层 ownership 下的 repository/custody contract，G9 必须闭合多 Page 导航、隔离与恢复。
+Arc 产品能力是 G4 的硬需求，并贡献 R3 里程碑；POC-06 只是其历史 Evidence 输入。backend
+失败必须 Canonical-only fallback，POC-06 本身不解锁 G4 或 R3。
 
 ### 产品里程碑覆盖层
 

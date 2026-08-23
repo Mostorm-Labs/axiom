@@ -1,6 +1,6 @@
 # AR-0 架构对账报告与晋级前置
 
-> 状态：Analyzing
+> 状态：Validating / 待绑定 commit-bound Evidence
 >
 > 规范性：本报告是 AR-0 的过程与追踪基线；它不宣称 G0～G9、R1～R5 或任何产品实现已经通过。
 >
@@ -76,9 +76,9 @@ G0 页面使用稳定的 `IH-00～IH-15 / WP-G0-00～16`；G1～G9 页面目前�
 | `Blocked` | 缺少上游决定、权威任务或外部条件，当前不能正确实现。 |
 
 任务的四个状态字段统一使用：`Not Started`、`Analyzing`、`Ready`、`Implementing`、
-`Validating`、`Pass`、`Fail`、`Blocked`。本次初始化只把 `GT-G0-00` 置为 `Analyzing`；
-其他尚未开始的任务为 `Not Started`，明确存在上游开放冲突的任务另在状态/阻塞列标为
-`Blocked`，不把“尚未轮到”误写成 Blocked。
+`Validating`、`Pass`、`Fail`、`Blocked`。AR-0 通过前，G0～G9 的 Gate Task 全部保持
+`Not Started`；来源重读与预分析归入 AR-0，不冒充 G0 已经启动。明确存在上游开放冲突的任务
+另在状态/阻塞列标为 `Blocked`，不把“尚未轮到”误写成 Blocked。
 
 ## 4. 已确认的架构不变量
 
@@ -102,15 +102,17 @@ G0 页面使用稳定的 `IH-00～IH-15 / WP-G0-00～16`；G1～G9 页面目前�
 
 | ID | 冲突/缺口 | 当前处理 | 影响与下一步 |
 | --- | --- | --- | --- |
-| AR0-C01 | G2 Notion Task 7 要求固定 100K representative candidate gate；仓库旧文档曾把它软化成 baseline 并推到 G5A。 | 恢复为 G2 的可复现 benchmark/candidate gate；它不是通用 Product SLO，G5A 仍负责 production spatial/performance。 | G2-07 必须保留固定 profile、candidate 统计和阈值；POC-03 Windows 历史性能 Fail 原样保留，不能伪造 G2 Pass。 |
+| AR0-C01 | G2 Notion Task 7 要求完整 100K production scene gate；仓库旧文档曾把它缩写成 candidate baseline 并推到 G5A。 | 恢复多规模 baseline、oracle parity、局部更新、固定 profile candidate limit 和 Gate Report；它不是通用 Product SLO，G5A 仍负责 production spatial/performance。 | G2-07 绑定 algorithm 1、固定 seed/scene/viewport/DPR/600-frame trace 与 `<= 5,000` candidate；POC-03 Windows 历史性能 Fail 原样保留，不能伪造 G2 Pass。 |
 | AR0-C02 | G3 子计划只列 Headless/Windows/Web，用户基线要求 Android、iOS、iPadOS Tier A。 | 在账本增加仓库对账任务 `GT-G3-09/10`，并把 Android/Apple host evidence 纳入 G3 的完成边界。 | 在平台任务和证据契约补齐前，G3 不能 Pass；macOS 只做 shared Core/Web-reuse conformance。 |
-| AR0-C03 | G4 子计划对 Lasso、Align/Distribute、Smart Snap、三类擦除和 Apple Ink 证据不完整。 | 扩展 `GT-G4-06/07/08/09` 的任务说明，不改变 Notion 原 Task locator。 | G4 必须验证 Arc unavailable/failure→Canonical-only，且 confirmed input、Operation、digest 不变。 |
+| AR0-C03 | G4 子计划对 marquee、resize/rotate、z-order、Lasso、Align/Distribute、Smart Snap、三类擦除和 Apple Ink 证据不完整。 | 扩展 `GT-G4-06/07/08/09` 的任务说明，不改变 Notion 原 Task locator。 | G4 必须验证 Arc unavailable/timeout/presentation/internal failure→Canonical-only，且 confirmed input、Operation、digest 不变；`CanonicalVisible` 只能来自真实 PresentedProof。 |
 | AR0-C04 | G6 子计划缺少 Connector/Group/Frame/Sticky/PDF 和 iOS/iPadOS Text/IME/lifecycle 任务。 | 增加 `GT-G6-10/11` repository reconciliation tasks，标记 Conflict/Blocked。 | 未形成权威任务与对象契约前不能宣称 G6 完整。 |
 | AR0-C05 | G7 页面采用 TS-first Data Runtime；用户只确认中性的 Shared Data Runtime 职责。 | `GT-G7-01` 标为 Conflict/Blocked；语言、物理 owner、Bridge、数据库和发布形态交给后续 RFC。 | 不得在 G7 之前实现者临时选择 TS facade 或包边界。 |
 | AR0-C06 | G8 collision/merge、AXTP、retry 和 conflict policy 仍 Open。 | 相关任务保留 `ConflictPolicyRequired` 阻塞项；不得选 CRDT/OT/local-wins 冒充结论。 | G8 只能在相应 ADR/Contract 接受后验证；Open 必须生成 Gate `BLOCKED`。 |
 | AR0-C07 | G9 子计划缺 Apple host/evidence，Master 仍有 Tauri/Apple portability 旧文字。 | 增加 `GT-G9-13` Apple Tier-A integrated host/evidence 对账任务；现行仓库基线以 RNW/RN 为准。 | G9 不得把 Apple 视为仅 portability；Windows Tauri 只作为历史来源。 |
-| AR0-C08 | R5-B 在 Notion Master 下没有独立任务页。 | 只建立仓库派生的 R5B work-package placeholders，明确 `Missing / Blocked`。 | 需要后续权威任务清单或用户批准的仓库派生拆分，不能伪造 Notion Task ID。 |
-| AR0-C09 | `STAGED_DELIVERY_PLAN`、`PROJECT_FRAMEWORK` 仍保留 POC→RF→R 的视觉 DAG。 | 降级为历史 evidence lineage，并把唯一 promotion 链接回本报告和总路线。 | 任何 POC/RF/R 文字不得表达第二条依赖、解锁或晋级路线。 |
+| AR0-C08 | 一 Page 一 Document 已接受，但来源 Gate 表没有完整 Page Collection/Repository 纵切面。 | 增加 `GT-G7-12` 和 `GT-G9-14`，分别闭合 repository/custody contract 与多 Page 产品集成恢复。 | 不得在 Axiom Document 中补 synthetic root，也不得把 Page Collection 产品 ownership 下沉给 Data Runtime。 |
+| AR0-C09 | POC-05 证明 RNW/native Canvas/Overlay 可行，但没有验证 Windows 本地屏幕批注产品行为。 | 增加 `GT-G9-15`，并把 G3/G4 的 host/input/Arc seam 作为前置证据。 | 不得用 POC-05 替代 transparent topmost、click-through、多屏/DPI、focus/pen capture、lifecycle 和 fallback 的物理验收。 |
+| AR0-C10 | R5-B 在 Notion Master 下没有独立任务页。 | 只建立仓库派生的 R5B work-package placeholders，明确 `Missing / Blocked`。 | 需要后续权威任务清单或用户批准的仓库派生拆分，不能伪造 Notion Task ID。 |
+| AR0-C11 | `STAGED_DELIVERY_PLAN`、`PROJECT_FRAMEWORK` 仍保留 POC→RF→R 的视觉 DAG。 | 降级为历史 evidence lineage，并把唯一 promotion 链接回本报告和总路线。 | 任何 POC/RF/R 文字不得表达第二条依赖、解锁或晋级路线。 |
 
 ## 6. AR-0 追踪链与 Gate Report 约束
 
@@ -133,11 +135,14 @@ fixture、workflow 或“Self-Review PASS”不能替代实际运行 Evidence。
 - [x] 用户确认的唯一 `AR-0 → G0 → … → G9 → R5-B` 路线已写入仓库总路线。
 - [x] R1～R5 被定义为 many-to-many 里程碑覆盖层，而非第二条晋级路线。
 - [x] Notion G0～G9 任务已重新读取；G0 的 IH/WP 和 G1～G9 的 `Gx/Task N` 定位规则已记录。
-- [ ] 全部 G0～G9 任务已在账本中登记，并完成仓库/来源对账分类。
-- [ ] 现行规划文档不再产生第二条可晋级 DAG，且 R 阶段退出条件均显式引用 Gate PASS。
-- [ ] 所有已知平台、Page/Document、Operation-only、Arc/Erase、Data Runtime 和任务来源冲突
+- [x] 全部 G0～G9 任务已在账本中登记，并完成仓库/来源对账分类。
+- [x] 现行规划文档不再产生第二条可晋级 DAG，且 R 阶段退出条件均显式引用 Gate PASS。
+- [x] 所有已知平台、Page/Document、Operation-only、Arc/Erase、Data Runtime 和任务来源冲突
   都有明确处置、owner 和下一步。
-- [ ] Markdown、链接、Mermaid、私有来源泄漏和工作区范围检查通过。
+- [x] Markdown、链接、Mermaid、私有来源泄漏和工作区范围检查通过；命令与结果已记录到
+  [AR-0 文档验证记录](../quality/evidence/ar0/reconciliation-validation-20260823.md)。
+- [ ] AR-0 Evidence 已绑定目标 Git commit、实际命令/结果和 artifact hash，并经最终审核。
 
-因此 AR-0 当前仍是 `Analyzing`，G0 不得标为 `Ready` 或 `Pass`。本轮最小工作包是完成任务
-账本、R 状态表和规划文档对账；完成后才进入 G0-00 的仓库分支/版本/来源 reconciliation。
+因此 AR-0 当前是 `Validating`，G0 不得标为 `Ready` 或 `Pass`。本轮最小工作包是完成最终
+文档校验、写入可复核结果，并在用户允许 commit 后把 Evidence 绑定到目标 commit；之后才可
+评审 AR-0 是否 Pass，并进入 `GT-G0-00` 的仓库分支/版本/来源 reconciliation。

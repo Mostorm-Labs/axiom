@@ -13,34 +13,25 @@
 > [R 里程碑状态表](R_MILESTONE_STATUS.md) 维护。
 
 本文把工作包分为历史技术验证 POC-01～06、RF 参考输入和产品里程碑 R1～R5。编号不表达
-产品晋级顺序；G0～G9 对这些工作包作 many-to-many 映射。下图只表达“某份历史结果曾为
-哪份后续工作提供输入”的 Evidence lineage，不是现行任务依赖、启动条件或晋级图：
+产品晋级顺序；G0～G9 对这些工作包作 many-to-many 映射。为避免箭头被误读为第二套任务
+依赖图，历史输入关系只使用下表记录：
 
-```mermaid
-flowchart LR
-  P1["POC-01 Shared Engine"] --> P2["POC-02 Ink"]
-  P1 --> P3["POC-03 Scene core"]
-  P1 --> P4["POC-04 RichText"]
-  P2 -->|"Integration Ready contracts"| P6["POC-06 FastInk"]
-  P2 -->|"Integration Ready Ink"| P3Gate["POC-03 integrated ink gate"]
-  P3 --> P3Gate
-  P3 --> RF1["RF-01 Scene rendering foundation"]
-  RF1 --> RF2["RF-02 Dynamic spatial query"]
-  RF2 --> RF3["RF-03 Tiled raster"]
-  RF3 --> R3["R3 Production rendering"]
-  P3 --> P5["POC-05 Hybrid Surface risk proof"]
-  P1 --> R1["R1 foundation work"]
-  P2 -->|"Integration Ready contracts"| R1Accept["R1 acceptance"]
-  P3Gate --> R1Accept
-  P4 --> R1Accept
-  R1 --> R1Accept
-  P6 --> R3Fast["R3 FastInk productization"]
-```
+| 历史 Evidence/参考工作包 | 可以输入的 Gate | 不产生的结论 |
+| --- | --- | --- |
+| POC-01 | G0、G1、G3 | 不把 POC ABI、NDJSON 或 Scene 升级为产品契约 |
+| POC-02 | G4 | `Integration Ready` 不等于 G4 Pass |
+| POC-03 | G2、G3、G4、G5 | 不掩盖 Windows D3D12 历史 Fail，不把 direct path 当 production path |
+| POC-04 | G6 | 不把 `TextTransaction` 或 POC schema 升级为产品接口 |
+| POC-05 | G4 辅助、G6 主要输入 | 不把 private scene bridge 升级为产品 ABI |
+| POC-06 / Arc | G4、G5、G9 | 不替代产品物理延迟、handoff 和 fallback Evidence |
+| RF-01 | G2，并由 G5 复用 contract | 不单独解锁 G2 或 G5 |
+| RF-02 / RF-03 | G5 | 不形成独立 promotion 或 R3 acceptance |
 
 POC-02/03/04 的核心工作可在历史层面并行，但产品 Gate 仍按总路线晋级。POC-02 达到
 `Integration Ready / Validating` 后可以提供实验性输入；不等于 G4 PASS。POC-05 的受控
-Overlay 证据进入 G6 产品 contract；POC-only scene bridge 不成为稳定 C ABI。POC-06/Arc 是
-G4/R3 硬需求，任何 backend 失败都必须进入 Canonical-only fallback。任何未通过 POC 的接口
+Overlay 证据进入 G6 产品 contract；POC-only scene bridge 不成为稳定 C ABI。Arc 是 G4 的
+硬需求并贡献 R3 里程碑，POC-06 只是历史 Evidence；任何 backend 失败都必须进入
+Canonical-only fallback。任何未通过 POC 的接口
 都不能因并行开发或合并而被提前视为稳定产品契约。
 
 每个性能结果必须记录设备、系统、编译器、构建模式、Skia commit/backend、场景版本、分辨率和采样方法。下文阈值是当前门禁；如基准设备变化，只能通过 ADR 修订。
@@ -217,7 +208,7 @@ semantic digest。ADR-0017～0019 分别在首次消费帧调度、输入队列�
 - AddStroke Operation 的空 Document replay 语料与 digest 报告。
 - 延迟追踪、handoff 录屏/帧序列和压力曲线报告。
 - Windows/Web/Android Human Ink Gate 报告，包含固定动作 rubric、设备/笔/刷新率、体验结论和关联 trace。
-- POC-06 使用的 FastInkBridge 上游契约。
+- POC-06 使用的、后来由 Arc 产品协议重建的 Preview bridge 上游契约。
 
 ### 退出条件
 
@@ -332,9 +323,9 @@ D3D12 Integrated Playground 的真实设备门禁失败必须保留为架构风�
 
 ### 与 POC-03 有 Evidence lineage 的生产渲染基础（不改变 POC 编号）
 
-POC-03 完成基础验证后，按 [ADR-0021](../adr/0021-render-scene-spatial-index-tiling-boundaries.md)
-进入三个可独立审查的渲染基础工作包。它们是 R3 前的必要技术准备，不把 POC-03 的 direct
-Skia baseline 误称为生产方案：
+与 POC-03 有 lineage 的三个渲染参考工作包按
+[ADR-0021](../adr/0021-render-scene-spatial-index-tiling-boundaries.md) 保留。它们分别映射到
+G2/G5，不是“POC-03 完成后”自动启动的阶段，也不是 R3 之前的独立晋级条件：
 
 | 工作包 | 设计项 | 验证语料 | 实现项 | 交付物 | 退出条件 |
 | --- | --- | --- | --- | --- | --- |
@@ -342,8 +333,8 @@ Skia baseline 误称为生产方案：
 | RF-02 Dynamic spatial query | `ISpatialIndex` 动态 insert/remove/update/query、viewport culling、Selection/Eraser 查询 | brute-force oracle、20 万次随机增删改、负坐标、局部更新扫描量和命中顺序 | DynamicRTreeSpatialIndex、索引诊断和迁移 fallback | R-tree/Hybrid 评估报告、查询基准和失败缩减语料 | 结果逐字节等价；局部操作不全量扫描；内存和退化策略有界 |
 | RF-03 Tiled raster and scheduling | TileGrid、TilingSet/LOD、TilePriority、IRasterSource、TileManager、RasterTaskScheduler、MemoryBudget/Eviction | 1K～100K 多 zoom/pan、prefetch/取消、cache clear、device loss、内存压力、负世界坐标 | 分层 Tile renderer、raster task queue、prefetch 和可观测 eviction | Tile/LOD 设计 ADR、frame/memory/raster trace、R3 迁移报告 | visible tile 及时可用；不出现无界增长；清缓存/设备丢失后 digest 与视觉恢复；固定 Windows/Web 门禁重新通过 |
 
-RF-01～RF-03 只允许在证据完整后接入 R3 Production Rendering。POC-03 的 `Validating`
-状态、Windows 失败和 Android/Web 观察值继续按本阶段报告保留。
+RF-01～RF-03 只有在对应 G2/G5 任务明确引用、重建并验证后才能成为产品实现输入。POC-03
+的 `Validating` 状态、Windows 失败和 Android/Web 观察值继续按历史报告保留。
 
 RF-01 的可实现接口、prepare→commit 原子更新、revisioned DamageTracker、两阶段 HitTest、
 Direct/SkSG shadow migration、POC-03 类型映射、分批实施与量化退出条件见
@@ -737,15 +728,19 @@ RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G
 - 冻结 Web、Windows RNW、Android RN、iOS/iPadOS RN 的 release/支持矩阵、macOS shared
   conformance 与 Headless Utility Target 责任；不把 macOS harness 误作 V1 产品 Shell。
 - 冻结生产 FrameGraph logical/physical pass 优化、Compositor、L1 cache 和多视口策略。
-- 在进入产品实现前关闭 RF-01～RF-03：冻结 Scene/RenderScene/SkSG 私有边界、动态
-  SpatialIndex、DamageTracker、signed TileGrid/TilingSet/LOD、IRasterSource、TileManager、
-  priority/prefetch/raster scheduling 和有界 eviction。
+- 由 G2/G5 的对应任务重建并验证 RF-01～RF-03 所描述的 Scene/RenderScene/SkSG 私有边界、
+  动态 SpatialIndex、DamageTracker、signed TileGrid/TilingSet/LOD、IRasterSource、TileManager、
+  priority/prefetch/raster scheduling 和有界 eviction；RF 工作包本身不构成独立前置 Gate。
 - 冻结 `ResourceBudgetCoordinator` 作为单一 Global Resource Budget owner 的 telemetry/soft-hard limit/eviction/memory-pressure
   规则，统一归因 decoded image/font、Canvas cache、Skia GPU cache、FrameGraph transient
   和 platform surface；不假设 Runtime 完全控制 Skia 内部 cache。
 - 冻结 Human Performance Gate 的设备、动作 rubric、签署角色和 trace/录屏归档规则。
 - 冻结 React Web、RNW、RN Android/iOS/iPadOS Native CanvasView 的 surface、input、IME、clipboard、file 和 accessibility contracts。
-- Arc backend 与 Canonical-only fallback 在 G4/R3 冻结；Hybrid Surface 的受控 Overlay 在 G6 产品化，任意 DOM/native 穿插和 zero-copy 仍不支持。
+- Windows RNW 同时冻结本地屏幕批注 special-host seam：RNW 只走 control path，Native Host
+  拥有 transparent topmost、click-through/draw-mode、multi-monitor/DPI、focus/pen capture、
+  surface/composition generation；R3 不把 POC-05 的受控 WebView/video Overlay 当作该能力已通过。
+- Arc backend 与 Canonical-only fallback 在 G4 冻结并贡献 R3 里程碑；Hybrid Surface 的受控
+  Overlay 在 G6 产品化，任意 DOM/native 穿插和 zero-copy 仍不支持。
 
 ### 验证
 
@@ -760,6 +755,8 @@ RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G
 - Input→Preview、Text/IME 和 FastInk handoff 不低于对应 POC 门禁。
 - 四个产品平台在 Integrated Performance Playground 与核心真实编辑流上完成人工体验签署；主观
   缺陷必须关联量化 trace 并有处置结论。
+- Windows 产品 target 验证 screen-annotation host 的 attach/detach、mode switch、DPI/display
+  generation、native pen capture 与 Arc fallback seam；完整双物理显示器/2 小时产品门禁在 G9。
 - 每个产品平台连续运行 2 小时混合编辑无 crash，稳定期内存增长 < 5%。
 
 ### 实现
@@ -770,6 +767,8 @@ RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G
   Chromium cc 不作为链接依赖。
 - 完成 Web、Windows RNW、Android RN、iOS/iPadOS RN shell/bridge、native surfaces、输入、IME、
   clipboard、file 和 accessibility。
+- 实现 Windows `ScreenAnnotationHost` 产品 seam 与诊断，使 RN JS per-sample/per-frame 事件为 0；
+  不在 R3 以 POC-05 private Scene bridge 代替产品 ABI。
 - 产品化 FastInk app backend；集成 G6 已接受的 controlled Overlay ExternalSurface contract，
   但不实现任意 DOM/native 穿插、zero-copy texture 或复杂 mask/effect。
 - 实现帧诊断、cache/dirty overlay、device recovery 和性能追踪导出。
@@ -782,6 +781,7 @@ RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G
 - 全视觉、性能、内存、生命周期和可访问性报告。
 - FastInk 产品限制与 fallback 手册；G6 controlled Overlay contract、placement/focus/lifecycle
   报告和明确排除项纳入 R3 交付。
+- Windows screen-annotation special-host seam、generation/fault trace 与 G9 物理验收 runbook。
 
 ### 退出条件
 
@@ -790,12 +790,15 @@ RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G
 - [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN V1 用户流与生命周期测试全部通过；macOS
   shared core conformance 无回归。
 - [ ] 100K、视觉、输入、文本和 FastInk 门禁无回归。
-- [ ] RF-01～RF-03 退出条件全部通过，Windows/Web Integrated Performance Playground 在
-  固定设备重新达到既有 p95/p99 门禁。
+- [ ] G2/G5 中映射 RF-01～RF-03 契约的全部必需任务和 Reference comparison 通过，Windows/Web
+  Integrated Performance Playground 在固定设备重新达到既有 p95/p99 门禁；RF 历史状态本身
+  不作为 promotion 条件。
 - [ ] 四个产品平台的 Human Ink/Integrated Performance Gate 已使用产品 target 签署，未关闭
   问题均有关联 trace、负责人和处置结论。
 - [ ] 2 小时稳定性测试无 crash，内存增长 < 5%。
 - [ ] Surface/device/cache 丢失均能恢复且不改变 Document。
+- [ ] Windows screen-annotation host seam、native input/Arc fallback 和 hot-path trace 通过；此条
+  不代替 G9 的双显示器、混合 DPI、100 次 lifecycle 与 2 小时物理验收。
 - [ ] 全局内存预算和 memory-pressure gate 通过，所有主要内存类别可归因且无双重预算漏洞。
 
 ## R4 — Collaboration MVP
@@ -906,7 +909,7 @@ utility 不构成额外产品发布承诺。
 
 1. 任一阻断退出条件失败时，对应任务/Gate/R 里程碑不能标记 Pass/Accepted；状态只能在任务
    账本与 R 状态表更新。
-2. POC 结论被推翻时，停止依赖实现并新增 ADR；不得仅改代码掩盖架构变化。
+2. POC 结论被推翻时，停止消费该 Evidence 的 Gate 任务并新增 ADR；不得仅改代码掩盖架构变化。
 3. 性能阈值调整必须附设备/场景变化和重复基准，不接受“当前实现达不到”作为理由。
 4. 产品功能要求扩张到 V1 边界之外时，先修订项目框架和阶段门禁，再开始实现。
 5. POC 代码默认可丢弃；产品实现必须按对应 Gate 接受的接口和质量要求重建。

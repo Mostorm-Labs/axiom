@@ -88,7 +88,7 @@ Apple RN/Fabric 证据是当前 Shell 决定的输入；其 POC-only bridge 仍�
   fragments；粗笔、Dab/texture 笔部分擦除生成 object-local Pixel/Dab erase mask。Brush 到
  策略的 resolver 必须版本化并有 golden/replay 证据。
 - Arc 是产品硬需求，负责 transient low-latency preview；任一 backend 不可用或失败时，
-  Platform Host 必须切换为 Canonical-only / inline preview，不得阻断输入、Operation commit 或
+  Platform Host 必须切换为 Canonical-only rendering，不得阻断输入、Operation commit 或
   Canonical Renderer。
 
 ## Consequences

@@ -329,6 +329,10 @@ R5-B Hardening/Release。任务级状态与 R 条目必须分别更新
 [R 里程碑状态表](../planning/R_MILESTONE_STATUS.md)。
 G9 适用平台包含 Web、Windows RNW、Android RN、iOS/iPadOS RN 和 Headless；macOS native
 不作为发布门禁。Apple 仍须在 G3/G4/G6/G7/G9 的适用 conformance/产品证据中保持共享语义。
+Page Collection 必须通过 G7 repository/custody 与 G9 多 Page 集成恢复门禁。Windows 本地屏幕
+批注必须通过独立的 G9 物理 Evidence；POC-05 只证明 RNW/native Canvas 与受控 ExternalSurface
+边界可行，不能替代 transparent topmost、click-through、多显示器/DPI、focus/pen capture、
+lifecycle 和 Arc fallback 验收。
 
 ### R1
 
@@ -357,6 +361,9 @@ G9 适用平台包含 Web、Windows RNW、Android RN、iOS/iPadOS RN 和 Headles
   surface memory；memory pressure 无未归因峰值、无无界增长或 OOM。
 - device/cache/surface 丢失恢复不改变 Document digest。
 - Product Tier A Human Ink/Integrated Performance Gate 使用正式产品 target 完成签署，主观问题均有关联 trace 和处置结论。
+- Windows RNW 的 screen-annotation special-host surface/input/Arc seam 在 G3/G4 使用产品 contract
+  验证；POC-05 结果不能替代。完整 transparent topmost、click-through、多显示器/混合 DPI、
+  focus/pen capture、100 次 lifecycle 和 2 小时 soak 作为 G9 Windows 物理产品门禁。
 
 ### R4
 
@@ -407,6 +414,8 @@ G9 适用平台包含 Web、Windows RNW、Android RN、iOS/iPadOS RN 和 Headles
 
 - 锁定 commit、Skia/依赖、资源和构建配置。
 - Product Tier A 运行全量真实设备性能、视觉、稳定性、迁移、恢复、安装/升级和支持门禁。
+- Windows 发布矩阵包含本地屏幕批注 special host 的双物理显示器/混合 DPI、input ownership、
+  generation rejection、Arc fallback、保存重开 digest 和 RN JS hot-path isolation Evidence。
 - iOS/iPadOS RN 运行产品 conformance、Metal render/readback 与生命周期；macOS 运行 core/Web
   reuse conformance，不宣称 native macOS 产品发布。
 - Headless 只验收 test/reference/golden 与内部受控 export；不发布公共 server/batch API。

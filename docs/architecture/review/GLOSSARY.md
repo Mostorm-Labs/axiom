@@ -31,7 +31,7 @@
 | --- | --- | --- | --- |
 | 权威状态 | Authoritative State | 系统允许用来裁定语义真相的状态。Document 是文档语义权威；Scene、Preview、cache 和 GPU 状态不能反向修正文档。 | 现行规范，ADR-0003 |
 | 规范结果 | Canonical Result | 按版本化规则从已确认输入产生、可确定重放的稳定语义或渲染结果。`Canonical` 不自动表示已持久化、已同步或已显示。 | 现行规范，ADR-0003/0004/0016 |
-| 已提交 | Committed | 一个 Operation 已通过完整验证并原子发布到 Document，不会暴露半应用状态。它不等于本地已落盘或服务器已确认。 | 用户已确认 Operation-only；需由后续 ADR 澄清旧 transaction 措辞 |
+| 已提交 | Committed | 一个 Operation 已通过完整验证并原子发布到 Document，不会暴露半应用状态。它不等于本地已落盘或服务器已确认。 | 现行规范，ADR-0025；payload、Batch、ABI 和存储映射待 G1/G7 冻结 |
 | 已持久化 | Durable / Persisted | 对应 Operation 或 checkpoint 已经满足所声明的本地 durability contract。精确 WAL/fsync 顺序仍由 Persistence RFC 决定。 | 边界现行；具体顺序待审 |
 | 已同步 | Synced / Acknowledged | 外部 Sync 层已确认对应语义数据到达所声明的远端前沿。它不改变 Document digest。 | 边界现行；协议待审 |
 | 已显示 | Visible / Presented | 与目标 revision、handoff token、surface generation 匹配的画面已有 presentation evidence；仅完成 draw、GPU submit 或调用 `present()` 不足以自动证明可见。 | 现行规范，ADR-0017/0024 |
@@ -78,7 +78,7 @@
 | 文档修订号 | Document Revision | 某个 Runtime 实例内单调的发布和失效标记，用于隔离读取、Scene 和 frame；不等于 Operation sequence、RecoveryFrontier、服务器版本或 surface generation。 | 现行规范 |
 | 文档只读视图 | `DocumentReadView` | Canonical executor 在一个明确 revision 上提供的不可变进程内读取视图，供 compile/snapshot 等操作使用；它不是持久化格式。 | 现行规范 |
 | 视口快照 | `ViewportSnapshot` | Pointer batch 绑定的 ViewId、viewport revision 和坐标变换快照，保证历史 sample 不被较新的 camera 重新解释；它不是 DocumentSnapshot。 | 现行规范，ADR-0012 |
-| 文档快照 | `DocumentSnapshot` | 已提交 Operation 边界上的完整、不可变语义检查点，逻辑上绑定 ResourceManifest、Document identity/schema/capability、revision、RecoveryFrontier 和 digest；不能用于普通编辑或 Undo。 | ADR-0020 恢复语义现行；边界措辞按 Operation-only 待澄清 |
+| 文档快照 | `DocumentSnapshot` | 已提交 Operation 边界上的完整、不可变语义检查点，逻辑上绑定 ResourceManifest、Document identity/schema/capability、revision、RecoveryFrontier 和 digest；不能用于普通编辑或 Undo。 | 现行规范，ADR-0020/0025；codec、持久容器和 compaction 待 G1/G7 冻结 |
 | 恢复前沿 | `RecoveryFrontier` | 可持久化或同步的不透明、版本化恢复位置；单机可以暂用连续 sequence，但 Core 不假设未来永远是单一全局序号。 | 现行规范，ADR-0020 |
 | 操作续段 | `OperationContinuation` | 从 Snapshot base frontier 到目标 frontier 的已提交 Operation 序列；gap、duplicate、乱序或 identity/frontier mismatch 必须原子拒绝。 | 现行规范，ADR-0020 |
 | 持久性事实 | Durability Facts | `AppliedLocally`、`PersistedLocally`、`QueuedForSync`、`ServerAcknowledged` 等可独立报告的事实；不是强制线性、不可逆的全局状态机。 | 现行 Contract 边界，ADR-0022 |

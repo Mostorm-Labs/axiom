@@ -86,7 +86,10 @@
 
 ### 6.1 Runtime，而不是 Renderer
 
-项目定义为 Visual Document Runtime。Skia 只是 GFX backend；Document、EditorSession、InkEngine、RichText、SceneCompiler、FrameGraph、Cache 和 Persistence 都是一等模块。
+项目定义为 Visual Document Runtime。Skia 只是 GFX backend；Document、EditorSession、InkEngine、
+RichText、SceneCompiler、FrameGraph 和 Cache 是 Axiom Runtime 的一等边界。早期研究曾把
+Persistence 列为 Runtime 模块；现行方案由 ADR-0025 改为 Axiom 外部的 Shared Data Runtime，
+通过窄 Persistence/Sync/Resource ports 消费 Operation、Snapshot 与资源数据。
 
 ### 6.2 Shell 可替换
 
@@ -94,6 +97,7 @@
 - 历史早期 Windows Shell 观察是 React/Tauri + native canvas region；现行 Axiom 产品方案已由
   ADR-0025 改为 RNW + Native Canvas/Overlay Host，本条仅保留来源历史。
 - Android 使用 React Native + Native CanvasView/JNI。
+- iOS/iPadOS 使用 React Native + Native Canvas/ObjC++/Metal；macOS native 暂缓并从 Web 使用。
 - 高频 pen path、RichText model 和 Document operations 不进入 JS 数据面。
 
 ### 6.3 Semantic Document 与 RuntimeScene 分离

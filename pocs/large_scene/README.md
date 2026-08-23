@@ -18,8 +18,10 @@ only a reserved empty pass for POC-05.
 - A versioned deterministic generator (`algorithm version 1`, explicit seed)
   creates 100K mixed records without wall-clock or container-order inputs.
 - `Document::Apply(Operation)` is the sole semantic mutation path. A successful
-  transaction emits authoritative `SemanticChange` records and optional,
-  disposable `InvalidationHints`.
+  historical POC write emits authoritative `SemanticChange` records and optional,
+  disposable `InvalidationHints`. ADR-0025 governs the product lineage: Operation
+  is the sole canonical mutation unit; there is no product
+  `Transaction → operations[]` outer layer.
 - `SceneCompiler` supports full compile and incremental create/update/delete/
   reorder. Invalid semantic/revision input safely falls back to full compile;
   missing, enlarged, stale, or corrupt hints cannot change Scene correctness.

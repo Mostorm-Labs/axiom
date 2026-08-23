@@ -69,7 +69,32 @@ G0 verification infrastructure 可以与历史 POC physical evidence 收尾并�
 
 缺少其中任一部分，Gate 都不能 `PASS`。
 
-### 2.3 证据等级
+### 2.3 每个 Gate 的控制字段
+
+下面的控制表把每个 Gate 必须单独维护、但不适合重复散落在长段落中的字段固定下来。表中的
+`Final` 是当前仓库状态，不是 Notion 页面自称状态；`Open` 和 `Blocker` 只要仍存在，就不能
+把对应 Gate 标为 `PASS`。每个 Gate 的任务级细节、Requirement、ADR/RFC/Contract、依赖和
+Evidence 目标路径继续以 [Gate Task Tracker](GATE_TASK_TRACKER.md) 为准。
+
+| Gate | 目标 / 非目标 | 适用平台 | 上游依赖 | 开放决定 | 当前阻塞项 | R1～R5 贡献 | Evidence 要求 | Final |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| AR-0 | 对账唯一路线、来源、冲突和追踪链；不实现产品代码或 ABI | 仓库文档、已登录 Notion 来源、CI 文档检查 | 用户确认路线、Notion capture、现行 ADR/Contract | 动态 Notion 无不可变 revision；R5-B 权威任务清单缺失 | 文档校验和 commit-bound evidence 尚未绑定 | R1～R5 追踪基线 | Markdown/link/fence/privacy、任务枚举、Route/DL 映射、commit 与 artifact hash | `Validating` |
+| G0 | 建立统一 conformance/corpus/runner/report；不冻结产品语义或协作算法 | Headless、Web、Windows、Android、iOS/iPadOS；macOS core conformance | AR-0 PASS | Gate Report schema 的具体版本需 G0 冻结 | AR-0 未 PASS | R1 | E1/E2 protocol vectors、E3 report aggregation、适用平台 harness artifact | `Not Started` |
+| G1 | 建立 Operation-only Semantic Kernel；不实现 Scene/GPU/网络同步 | Headless、native/reference/WASM runners | G0 PASS | Schema/IDL 字段、RichText 单位、资源 codec 需 G1/RFC 接受 | 上游验证基础未通过 | R1、R2 | codec/property/replay/digest、Reference/Indexed differential、snapshot+tail evidence | `Not Started` |
+| G2 | 建立可重建 RuntimeScene、Full/Incremental 与空间 oracle；不宣称生产性能 | Headless；适用 Web/Windows/Android/iOS/iPadOS structural runners | G1 PASS | candidate index 具体算法留 G5A | 上游 G1 与固定 100K profile 尚未验证 | R1 | full/incremental、Linear/candidate differential、固定 100K profile（`<=5,000` candidates） | `Not Started` |
+| G3 | 建立 canonical canvas/render-neutral frame 与基础 Shell；不实现 Ink/RichText/协作 | Headless、Web、Windows RNW、Android RN、iOS/iPadOS RN；macOS core/Web reuse | G2 PASS | backend/surface 细节按 Contract 继续收敛 | Tier-A host 与 golden 尚无产品实现 | R1、R2、R3 | structural/golden/readback、camera/hit/select、平台 lifecycle/build artifacts | `Not Started` |
+| G4 | 建立交互、三类擦除、Arc Preview 与 fallback；不决定协作冲突算法 | Web、Windows RNW、Android RN、iOS/iPadOS RN；macOS conformance | G3 PASS | Arc ABI/设备级延迟细节仍需 RFC/实测 | Tier-A physical Ink 与 Arc failure evidence 缺失 | R2、R3 | PointerTrace/replay、erase oracle、Human Ink、handoff/fallback physical evidence | `Not Started` |
+| G5 | 建立 production spatial/damage/cache/tile/scheduler；不修改语义 oracle | Web、Windows、Android、iOS/iPadOS；macOS shared conformance | G4 PASS；G5A～G5E 顺序 | L2/L3 cache、线程拓扑和 history slope 仍开放 | POC-03 Windows p95/p99 历史 Fail 未闭合 | R3 | Reference parity、100K、frame/memory/tile seam、device-loss、bounded queue evidence | `Not Started` |
+| G6 | 建立 RichText/IME、复杂对象、ExternalSurface 和生命周期；不改变 Operation-only | Web、Windows RNW、Android RN、iOS/iPadOS RN；macOS core conformance | G5 PASS | Frame/PDF/Connector 细节和 Platform lifecycle contract 需逐项接受 | Apple/复杂对象产品契约与设备证据缺失 | R2、R3 | IME/clipboard/object/overlay/lifecycle/recovery corpus 与真实设备 bundle | `Not Started` |
+| G7 | 建立 local-first Shared Data Runtime；不接真实 Cloud 或选择协作 winner | Web、Windows、Android、iOS/iPadOS native stores；Headless reference | G6 PASS | 语言、物理 owner、Bridge、包和 storage format 需 RFC/ADR | Shared Data Runtime physical form Open | R2 | crash matrix、snapshot+tail、journal/checkpoint、store adapter、reopen evidence | `Blocked` |
+| G8 | 建立 offline/sync/recovery/Presence；不临时决定冲突策略 | Headless FakeServer、Web、Windows、Android、iOS/iPadOS applicable adapters | G7 PASS | collision/merge、AXTP、ACK/retry、RichText conflict policy Open | GT-G8-06/09 blocked by accepted decisions | R4 | FakeServer fault corpus、3/5 replica convergence、outbox/inbox and bootstrap artifacts | `Blocked` |
+| G9 | 集成既有能力并形成 Internal Alpha；不增加新语义旁路 | Headless、Web、Windows RNW、Android RN、iOS/iPadOS RN | G8 PASS | 只允许使用已接受的 G0～G8 contracts | G0～G8 尚未通过，Apple integration evidence 缺失 | R5 | IntegratedScenario、failure/recovery、cross-platform digest、2h soak、hash-complete bundle | `Not Started` |
+| R5-B | G9 后完成 hardening/release；不绕过 G9 或伪造 Notion task | Tier-A release targets；macOS 非 native release target | G9 PASS + 权威 R5-B task authority | compatibility/security/release task authority 尚未接受 | 没有权威 Notion R5-B 任务页 | R5 | fuzz/soak/migration/security/SBOM/signing/rollback and RC evidence | `Blocked` |
+
+这张表是 Gate 级控制面；它不替代每个 Gate 下方的设计、验证语料、实现、交付物和量化退出
+条件，也不把“目标”写成已完成。G5A～G5E 还必须各自生成独立子报告，且只能按顺序晋级。
+
+### 2.4 证据等级
 
 | 等级 | 名称 | 证明内容 | 典型产物 |
 | --- | --- | --- | --- |
@@ -82,7 +107,7 @@ E4 只在该 Gate 的目标包含真实产品交互、真实设备或真实生�
 `applicable` 或 `not_applicable` 及理由；不适用时不得伪造物理证据，也不能用 `N/A` 掩盖本应适用的
 设备门禁。物理 input-to-display 延迟不能由 headless、WARP、SwiftShader 或模拟时间推断。
 
-### 2.4 Gate Report 与状态纪律
+### 2.5 Gate Report 与状态纪律
 
 Gate Report 至少记录：
 
@@ -123,7 +148,9 @@ Notion 10 使用的 `OPEN → BLOCKED_OPEN` 在仓库中映射为：上游行为
 | Headless | reference/test utility | 非公开产品 Shell；提供 conformance、golden、inspector 和 fault runner。 |
 
 Windows RNW 和 Apple RN/Fabric 的 POC-05 证据证明受控 Overlay/Shell 边界可行，但其中的
-private POC Scene bridge 不能进入产品 ABI。
+private POC Scene bridge 不能进入产品 ABI。POC-05 没有验证 Windows 屏幕批注产品行为；
+transparent topmost、click-through/draw-mode、multi-monitor/DPI、焦点/笔捕获、display/surface
+lifecycle 和 Arc fallback 必须由 G3/G4 建立 seam，并在 G9 以物理 Windows Evidence 验收。
 
 ### 3.2 Page、Document 与写入模型
 
@@ -318,8 +345,8 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 ### 设计
 
 - 定义 encoding-neutral Object/Field/Operation registry 与 strict codec boundary；
-- 写路径固定为 `Wire → Decode → Validate → Prepare ApplyPlan → Atomic Apply →
-  SemanticDocument → ChangeSet`；
+- 写路径固定为 `Wire → Decode → Normalize → Validate → Idempotency → Prepare ApplyPlan →
+  Atomic Apply → SemanticDocument → ChangeSet`；
 - 使用 `ReferenceObjectStore` 作为简单 oracle，`IndexedObjectStore` 作为产品路径；
 - 一个 Operation 对应一个逻辑 ChangeSet；传输 batch 不改变原子边界；
 - `Normalize` 必须在验证前把等价输入归一化到 canonical representation；idempotency guard
@@ -384,15 +411,25 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 - SemanticChanges 是正确性输入，InvalidationHints 只允许扩大或触发 full rebuild；
 - RF-01 Scene/Binding/participant、Damage journal 和两阶段 HitTest 接入同一 revision contract。
 
+G2 的固定 100K profile identity 必须完整记录为：generator algorithm version `1`、seed
+`0x43414e5641533033`、`100,000` nodes、`1,000` columns、`32` binary32 world-unit cell，及
+600 帧固定 trace。代表性 viewport 按每帧
+`pan_x=(frame×37) mod 28000`、`pan_y=(frame×17) mod 2200`、
+`zoom=0.75+(frame mod 8)×0.125` 生成，逻辑尺寸为 `1920×1080`、DPR `1`；Gate Report
+必须保存 viewport/trace/sampling identity。任一参数变化都形成新的 profile，不能沿用本门禁的
+`<= 5,000` 结论。
+
 ### 验证语料
 
 - 随机 Document + create/delete/move/transform/property/resource/parent/order sequence；
 - correct/empty/enlarged/stale/corrupt hints；负坐标、退化 bounds、巨大对象和复杂 stroke；
 - Full vs Incremental records/bounds/order/resource refs/query/hit-test；
 - Linear/candidate spatial 的 viewport/selection/eraser/tile/point-neighborhood 查询；G2 固定
-  profile 的 candidate threshold 作为 Gate 条件，通用 Product SLO 和 production backend
-  complexity 仍由 G5A 验收；
-- 固定 100K 场景、单对象更新和多 View 隔离。
+  POC-03 scene profile 的 representative viewport candidate count `<= 5,000` 作为 Gate 条件；
+  该阈值只约束这个固定 profile，不是通用 Product SLO，production backend complexity 仍由
+  G5A 验收；
+- 1K/10K/50K/100K 多规模诊断、固定 100K 场景、单对象更新和多 View 隔离；多规模 timing
+  只作为基线 observation，不在 G2 伪装成 production SLO。
 
 ### 实现
 
@@ -409,14 +446,14 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 - Product RuntimeScene correctness path、Scene Inspector、100K headless runner；这里不宣称
   production spatial/performance 已完成；
 - full/incremental 与 spatial differential corpus；
-- G2 Gate Report 和 RF-01 closure 映射。
+- G2 Gate Report（含多规模结果、固定 profile identity、candidate 统计）和 RF-01 closure 映射。
 
 ### 退出条件
 
 - [ ] 任意相同 revision 上 Full 与 Incremental observable result 100% 一致；
 - [ ] Linear 与 G2 candidate spatial query 结果集合和稳定顺序一致；
-- [ ] 固定 100K workload 的代表 viewport candidate 统计可复现，并达到来源计划中已绑定该
-  profile 的 candidate gate；该数字不自动升级为通用 Product SLO；
+- [ ] 固定 100K POC-03 scene profile 的 representative viewport candidate count 可复现且
+  `<= 5,000`；该数字不自动升级为通用 Product SLO；
 - [ ] 单对象正常更新不重建完整 Scene；是否达到 production spatial 复杂度由 G5A 验收；
 - [ ] invalid/stale hints 只造成诊断或性能降级，不改变结果；
 - [ ] Scene Inspector 可从 semantic object 追到 record/index/hit/damage；
@@ -440,6 +477,9 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 - z-order、camera transform、clip、DPR、negative world coordinates；
 - Headless raster golden；Web WASM/WebGL2、Windows RNW native canvas、Android RN CanvasView
   和 iOS/iPadOS RN/Metal 的 canonical surface/readback contract；
+- Windows RNW 同时建立本地屏幕批注 special-host seam：透明 topmost native overlay 的
+  attach/detach、click-through/draw-mode 切换、坐标/DPI generation 与 surface lifecycle；G3
+  只验收 host/surface 边界，不在此宣称完整屏幕批注产品门禁通过；
 - semantic digest exact、scene structural exact 和 pixel tolerance 三类比较；
 - visible set 已给出时的 render traversal scan counter。
 
@@ -448,6 +488,8 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 - 建立产品 `runtime/render` 和 NonTiledReferenceRenderer；
 - 实现 Ganesh adapter、Headless host、Windows RNW native surface host、Web WASM/WebGL2 host、
   Android Native CanvasView/JNI host 和 iOS/iPadOS RN/ObjC++/Metal host 的最小 canonical path；
+- 为 Windows RNW 提供独立的 ScreenAnnotationHost adapter seam，保持 RN/TS 只走 control path；
+  DComp/HWND/swapchain 与是否独立进程仍按平台 Contract/POC 决定；
 - 实现 Canvas Demo 0.1、camera controller、HUD/runtime stats 和 golden exporter。
 
 ### 交付物
@@ -492,9 +534,15 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
   圆、prediction correction、cancel、queue overrun；
 - 同一 PointerTrace 连续 10 次以及跨端 canonical geometry/digest；
 - Arc unavailable、surface/device loss、stale generation、duplicate/reordered visible ack；
+- Arc timeout、presentation failure/internal error 与 fault-hook failure；每条 fault case 都验证
+  confirmed input 无丢失、Operation commit 不取消也不阻断、最终 Document digest 不变；
+- `CanonicalVisible` 必须来自真实 presentation proof；GPU submit、flush 或 render-return 只能作为
+  较低等级 observation，不能伪造 PresentedProof 或触发 Preview retire；
 - Selection/Lasso/Transform/Align/Distribute/Snap 的几何 oracle；
 - 三条擦除路径分别覆盖 identity、fragment/mask、Undo/Redo、replay、full Scene rebuild、资源/
   cache invalidation；
+- Brush family → erase strategy 的版本化 dispatch、旧版本 replay compatibility 和 unknown-version
+  rejection；
 - Web、Windows RNW、Android RN、iOS RN、iPadOS RN 代表设备 Human Ink，记录刷新率、frame
   count、queue age 和 presentation evidence level；iPhone 与 iPadOS 分别出具适用的设备报告，
   不适用项必须给出可审核理由。
@@ -503,7 +551,8 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 
 - 建立产品 `runtime/input`、`runtime/ink`、`runtime/editor`；
 - 实现 deterministic incremental Vector/Dab brush、PreviewModel、Arc adapter 和 commit controller；
-- 实现 Selection/Transform/Lasso/Align/Distribute/Snap 与 EraserSession；
+- 实现 click/tap、marquee、Lasso、move/resize/rotate、z-order、Align/Distribute、Smart Snap 与
+  EraserSession；
 - 实现 Ink Playground 0.1 和各 Tier A native input adapter；
 - Windows/Android/iOS/iPadOS 输入数据面不得逐 sample 经过 RN JS；Web 使用薄批量 adapter。
 
@@ -521,7 +570,10 @@ R 阶段不是 G 阶段的替代门禁，但每个 R 阶段仍有自己的设计
 - [ ] 现行 Preview p95/p99 与 handoff ≤ 2 帧门禁在适用真实设备通过；
 - [ ] cancel/overrun/prediction/旧 generation 不留下半个 canonical Stroke；
 - [ ] Arc 任意失败都自动 Canonical-only，且最终 Stroke/digest 不变；
-- [ ] Selection/Transform/Lasso/Align/Distribute/Snap 和三条 erase 路径的 Operation/replay 通过；
+- [ ] Arc timeout、unavailable、presentation/internal error 下 confirmed input 不丢，Operation commit
+  不取消也不阻断；只有真实 PresentedProof 可以产生 `CanonicalVisible` 并 retire Preview；
+- [ ] click/tap、marquee、Lasso、move/resize/rotate、z-order、Align/Distribute、Smart Snap 和三条
+  erase 路径的 Operation/replay 通过；brush-family dispatch 的版本兼容与未知版本拒绝通过；
 - [ ] Tier A Human Ink Gate 无未分类中断、闪烁、双重加深或残影；
 - [ ] G4 Gate Report PASS。
 
@@ -722,6 +774,9 @@ trace/artifact 与阻断退出条件；前一子 Gate 未 `PASS` 时，后一子
 - reference integrated shell 组合 Axiom、Arc、Shared Data Runtime 和 Tier A adapters；
 - 标准场景覆盖 100K Document 下的 Ink、Shape、RichText、Connector/Group/Sticky/Frame/PDF、
   Selection、三类 Erase、optimized render、lifecycle、local durability 与 offline sync；
+- 标准产品场景包含多 Page Collection 与 Windows 屏幕批注 special host，但它们不改变
+  Axiom 的单 Document 语义：Page Collection 由产品层拥有，屏幕批注 host 复用同一
+  Axiom/Arc/DataBridge contract；
 - 平台范围包含 Headless、Windows RNW、Web WASM、Android RN、iOS/iPadOS RN；macOS 不建立
   原生产品 host，只保持 Web 使用和 core portability 不回归。
 
@@ -729,6 +784,13 @@ trace/artifact 与阻断退出条件；前一子 Gate 未 `PASS` 时，后一子
 
 - basic edit、long ink、100K pan/zoom、crash/reopen、offline catch-up、device/surface loss、
   memory pressure、store failure、snapshot corruption、network drop、ACK delay、server gap；
+- 多 Page create/duplicate/delete/rename/reorder/open/close/restart recovery，验证稳定
+  `PageId → DocumentId`、独立 revision/history/resource/digest 和无 synthetic root；
+- Windows 屏幕批注至少覆盖两台缩放不同的物理显示器（含负 virtual-screen 坐标与主屏切换）、
+  transparent topmost、click-through/draw mode、焦点/pen capture、display change、suspend/resume、
+  surface loss、Arc handoff/fallback 与 native hot path；overlay bounds/pen mapping 误差 `≤1 device
+  pixel`，generation 切换后旧事件 100% 拒绝；100 次 mode/display/surface lifecycle 和 2 小时
+  soak 无 crash/confirmed-sample loss，稳定期内存增长 `<5%`，RN JS per-sample/per-frame 事件为 0；
 - 每个 checkpoint 记录 action index、semantic revision/digest、platform generation、local/
   remote frontier；
 - G0～G8 全量 regression sweep；
@@ -755,6 +817,8 @@ trace/artifact 与阻断退出条件；前一子 Gate 未 `PASS` 时，后一子
 - [ ] deterministic failure/recovery corpus 全部 PASS；
 - [ ] 跨平台相同 Operation checkpoint 的 semantic digest 完全一致；
 - [ ] Arc failure profile 证明 Canonical-only 后仍可继续书写和保存；
+- [ ] 多 Page 产品集合的导航与恢复通过，任一 Page 操作不污染其他 Document；
+- [ ] Windows 屏幕批注 special host 的物理 Evidence 通过，且 POC-05 不被当作产品验收替代物；
 - [ ] 2 小时 mixed editing soak 无 crash、无 divergence、无队列/内存无界增长；
 - [ ] evidence bundle schema-valid、hash 完整、可追溯到 commit/设备/工具链；
 - [ ] 没有新的未评审 ownership、POC ABI 或 hot-path bridge 旁路；

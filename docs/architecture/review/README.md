@@ -15,6 +15,11 @@
 它们先作为当前架构工作台的对账结果；代码尚未按 G1/G2 生产目标迁移，Notion 中 Draft、Open
 或 Freeze Candidate 的内容仍需对应 Gate 复现。
 
+本次动态读取按 `SRC-NOTION-ARCH-V03-CAPTURE-20260823` 登记；用户明确裁决按
+`SRC-USER-ARCH-REBASE-CONFIRMATION-20260823` 登记。`Complete` 只适用于来源目录中写明的
+本次 capture 范围，不表示 Notion 修订历史、评论、附件、外链或不可见子页已审，也不会重开
+2026-08-21 已完成的六组来源身份审核。
+
 ### 2026-08-23 对账说明
 
 本工作台的 `02_CURRENT_STATE_AUDIT.md` 仍然是以 `main@74c28b1`、2026-08-21 为基线的
@@ -96,7 +101,7 @@ Native React Native Shell 和 Shared TypeScript Data Runtime 边界，其中一�
 | 步骤 | 独立文档 | 要回答的问题 | 主要产出 | 退出条件 | 状态 |
 | --- | --- | --- | --- | --- | --- |
 | 0 | 本文、[文档工作流](DOCUMENTATION_WORKFLOW.md)、[术语表](GLOSSARY.md) | 怎样讨论、批准和保存架构决定？ | 文档类型、状态、编号、隐私和评审规则 | 工作流和术语表分别获得用户明确确认 | Completed（2026-08-21） |
-| 1 | [来源目录](SOURCE_CATALOG.md) | 当前有哪些可靠输入，可以怎样引用？ | 来源 ID、覆盖主题、访问/读取范围、证据角色和引用限制 | 来源全集可复算；每项五个维度齐全；缺口和影响明确；用户逐组确认；校验通过 | Completed（2026-08-21） |
+| 1 | [来源目录](SOURCE_CATALOG.md) | 当前有哪些可靠输入，可以怎样引用？ | 来源 ID、覆盖主题、访问/读取范围、证据角色和引用限制 | 来源全集可复算；每项五个维度齐全；缺口和影响明确；用户逐组确认；校验通过 | Completed（2026-08-21 historical snapshot）；增量来源审核至 2026-08-23 |
 | 2 | `02_CURRENT_STATE_AUDIT.md` | 仓库、Notion 和讨论中已经有哪些决定、矛盾和缺口？ | 逐文件迁移表、ADR 对账、冲突清单 | 每个现有规范和 ADR 都有处理建议 | Completed（2026-08-21） |
 | 3 | [需求基线](03_REQUIREMENTS_BASELINE.md) | V1 产品到底必须做什么？ | 带稳定 ID 的功能与非功能需求、Vibe 对齐、非目标 | 每个 P0/P1 需求有平台范围和验收方法 | In progress：第二组已确认；第三组候选待 A/B/C 审核 |
 | 4 | `04_SYSTEM_CONTEXT_AND_BOUNDARIES.md` | Axiom、Arc、Shell、Host、Data Runtime 和外部系统分别拥有何种状态？ | 系统语境、所有权、生命周期和信任边界 | 顶层模块没有重叠的权威状态 | Not started |
@@ -194,6 +199,11 @@ PageId→DocumentId 映射，不重新把 Page 放回 Axiom Document。
 - [来源目录](SOURCE_CATALOG.md)
 - [步骤 2：当前状态审计](02_CURRENT_STATE_AUDIT.md)
 - [步骤 3：需求基线](03_REQUIREMENTS_BASELINE.md)
+- [Notion v0.3 与仓库差距对账](NOTION_V03_REPOSITORY_GAP_AUDIT.md)
+- [AR-0 架构对账报告](../../planning/AR0_RECONCILIATION_REPORT.md)
+- [唯一 G0～G9 晋级路线](../../planning/AXIOM_GATES_AND_STAGES.md)
+- [Gate 任务追踪账本](../../planning/GATE_TASK_TRACKER.md)
+- [R1～R5 里程碑状态表](../../planning/R_MILESTONE_STATUS.md)
 
 步骤 2 已完成五组审核，现状、冲突和 Decision Backlog 输入见[当前状态审计](02_CURRENT_STATE_AUDIT.md)。
 步骤 3 的需求接收、编号、状态和去重规则，以及 Canvas、Page/Viewport、对象、本地编辑、

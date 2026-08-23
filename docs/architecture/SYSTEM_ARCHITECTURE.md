@@ -67,7 +67,9 @@ flowchart TB
 
   Ganesh["Skia Ganesh"]
   Target["RenderTarget"]
-  FastInk["FastInkBridge → Platform FastInk"]
+  ArcProtocol["Arc::Protocol"]
+  ArcCore["Arc::Core"]
+  ArcPlatform["Arc Platform Preview Backend"]
   Durable["Local Store / Cloud / Blob Store"]
 
   ReactWeb --> Host
@@ -86,7 +88,7 @@ flowchart TB
   Host --> SurfaceAdapter
   Host --> FrameScheduler
   Host -.->|compose lifecycle| DataRuntime
-  Host -.->|compose preview| FastInk
+  Host -.->|compose preview| ArcCore
   Product --> DataRuntime
   DataRuntime <--> DataBridge
   DataBridge <--> CApi
@@ -141,7 +143,9 @@ flowchart TB
   Ops -.->|local committed event| DataBridge
   DataBridge -.->|remote / replay Operation| Facade
   DataBridge -.->|resource response| Resources
-  Ink --> FastInk
+  Ink -.->|emits PreviewStrokeUpdate| ArcProtocol
+  ArcCore -.->|consumes| ArcProtocol
+  ArcCore --> ArcPlatform
 ```
 
 图中的 `Platform Host` 是组合根：它负责把 Shell、Axiom、Shared Data Runtime、Arc、平台
@@ -205,7 +209,11 @@ POC-03 迁移批次见 [Scene Rendering Foundation](RF01_SCENE_RENDERING_FOUNDAT
 
 ### 2.2 Windows / RNW
 
-- React Native for Windows 负责产品 UI，C++ Runtime 在 Native Canvas Region 中绘制；本地屏幕批注使用 Native Overlay Host。
+- React Native for Windows 负责产品 UI，C++ Runtime 在 Native Canvas Region 中绘制；本地屏幕
+  批注是独立 Native Overlay Host special host。RNW 只控制进入/退出和低频产品状态；transparent
+  topmost window、click-through/draw mode、multi-monitor/DPI、focus/pen capture、surface、Arc 与
+  composition 保持 native hot path。POC-05 只证明 RNW/native Canvas 与受控 ExternalSurface
+  可行性，不构成屏幕批注产品验收。
 - C ABI 版本化，使用不透明 handle；C++ 对象、STL 容器和异常不跨 ABI。
 - Windows adapter 拥有 HWND、DXGI swapchain/backbuffer、resize、present 与 device-loss 生命周期；这些类型不进入 Runtime Core。
 - DOM/WebView2 与 native canvas 使用固定层级区域，不允许单个 DOM 元素穿插在画布对象之间。
@@ -525,16 +533,18 @@ flowchart LR
   Protocol --> Bridge["Arc::Core"]
   Bridge --> Platform["Arc Platform Preview Backend"]
   Platform --> Host["Platform Host"]
-  Host -.->|backend unavailable / presentation failure| Canonical
+  Host -.->|backend failure: request canonical redraw| Renderer
   Canonical --> Ops["Operation"]
   Ops --> Doc["Document"]
   Doc --> Scene["RuntimeScene"]
-  Scene --> Skia["Canonical Skia Renderer"]
-  Canonical --> Skia
+  Scene --> Renderer["Canonical Renderer"]
+  Renderer --> Skia["Skia Ganesh backend"]
 ```
 
-这里的虚线只表示呈现失败后的控制回退，不表示 Arc 可以写入 Document 或接管 Canonical
-Renderer；Canonical Stroke 始终沿 `Operation → Document → Scene → Skia` 路径提交和呈现。
+这里的虚线只表示呈现失败后由 Host 请求 Canonical Renderer 重绘，不携带 Stroke 语义写入，
+也不允许 Arc 写入 Document 或接管 Canonical Renderer。Canonical Stroke 始终沿
+`Operation → Document → RuntimeScene → Canonical Renderer → Skia backend` 路径提交和呈现，
+不存在 `Canonical Stroke → Skia` 旁路。
 
 Arc 是与 Axiom 同仓、但可独立构建、测试和抽取的 input-to-display 模块。Axiom Ink 与
 Arc Core/平台 backend 只共同依赖版本化 `Arc::Protocol`，由 Platform Host 组装。Arc 不

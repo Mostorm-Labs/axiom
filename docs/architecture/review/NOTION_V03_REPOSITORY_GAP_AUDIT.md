@@ -4,6 +4,7 @@
 > 对账日期：2026-08-23
 > 作用：记录输入、差距和迁移建议；规范性结论以 ADR-0025 和后续 Contract 为准
 > 隐私：只保存脱敏标题和结论，不保存私有页面 URL、页面 ID、评论或本机路径
+> 来源：SRC-NOTION-ARCH-V03-CAPTURE-20260823、SRC-USER-ARCH-REBASE-CONFIRMATION-20260823
 
 ## 本文用语
 
@@ -22,8 +23,9 @@ Capability Traceability、02 Product Object Model、03 Interaction / Behavior Mo
 Schema / Operation Model、05 Runtime Capability Architecture、06 Module Detailed Design、07 Runtime
 Data Flow、08 Platform Contract、09 Engineering、10 Verification、G0～G9 Master Plan 与最新
 Collaboration / Sync handoff register。读取范围是采集时可见正文和表格；不能替代不可变快照，
-也不包含评论、历史修订、附件或外部链接正文。09 Engineering 当前没有子文档，这是来源自身
-尚未提供工程落地内容的明确缺口，而不是仓库已经实现了该部分。
+也不包含评论、历史修订、附件或外部链接正文。在本次 dated capture 中未观察到 09 Engineering
+的可见子文档；这只是动态目录观察，表示该 capture 没有提供可审读的工程落地内容，不是稳定
+架构事实，更不表示仓库已经实现了该部分。
 
 Notion 内部状态并不统一：根页含 Accepted/Current Direction/Superseded/Open；Schema Final
 Gate 自称 Release Candidate Lock；Runtime Capability 是 Proposed Freeze；Platform/Public
@@ -60,6 +62,7 @@ ADR-0025 为当前仓库方向；不为了让来源看起来一致而静默改�
 | 来源内冲突 | 当前仓库处理 | 后续动作 |
 | --- | --- | --- |
 | Arc/Platform 部分页面把 Native Preview 写成 optional，或认为 Web V1 不需要 Arc | Tier A Arc Preview 是硬需求；任何 backend 失败都进入 Canonical-only rendering | G4 统一验证 required capability、fallback 与实际 `CanonicalVisible` 交接 |
+| 根页/Master 仍残留 Windows Tauri 与 Apple portability-only | 现行产品矩阵是 Windows RNW、Android/iOS/iPadOS RN、Web；macOS native deferred | G3/G4/G6/G9 按完整产品矩阵出 Evidence，旧措辞只保留为来源冲突 |
 | Data Runtime 页面采用 TS-first / Shared TypeScript Data Runtime | 只接受中性的 `Shared Data Runtime` 职责；语言和物理 owner 未冻结 | G7 RFC 比较 TS、Native 或组合方案及 Bridge/发布代价 |
 | Module closure 建议把 Host 统一命名为 `Axiom Platform Runtime` / `axiom_platform` | 只冻结 `Platform Host` 组合根角色；`Host Runtime` 仍是候选物理模块 | 步骤 4/6 再决定包名、target 和公开 SDK，不让候选命名倒推 owner |
 | 07 closure 使用“implementation-complete”一类完成措辞 | 只解释为该页面的数据流设计闭环，不表示代码、平台矩阵、协作或 Evidence 已完成 | 以仓库实现和 G0～G9 Gate Report 判断完成度 |
@@ -96,8 +99,10 @@ Gate 通过而临时选择 CRDT/OT、local-wins 或更新 golden。
 
 ## 6. 完成度比较
 
-Notion G0～G9 约有 92 个细粒度任务，明显强于仓库旧路线中的纵向实现切片、永久 reference
-oracle、Inspector/Demo、统一 Gate Report、Local Data/Sync fault path。仓库则在以下方面更
+本次重读登记了 106 个 Notion 来源任务：G0 的 18 个追踪单元，以及 G1～G9 的 88 个页面
+Task。仓库另补 8 个范围对账任务，因此 G0～G9 账本共有 114 个 Gate Task；R5-B 另保留 8 个
+非 Notion、当前 Blocked 的占位任务。Notion 明显强于仓库旧路线中的纵向实现切片、永久 reference
+oracle、Inspector/Demo、统一 Gate Report、Local Data/Sync fault path；仓库则在以下方面更
 完整：六端 POC 可移植性证据；Ink/100K/RichText/Arc 的量化门禁和失败历史；Public C ABI、
 Skia SDK supply chain 与 C++ style；随机多副本收敛；安全、迁移、SBOM、回滚、fuzz、soak
 和性能回归。
@@ -111,8 +116,8 @@ POC-03 Windows 性能门禁改成 PASS。
 
 | Gate | 主要仓库输入 | 迁移关系 |
 | --- | --- | --- |
-| G0 Verification Foundation | 现有 Verification、POC harness/evidence | R1 前置横切层；建立统一 CLI/corpus/report |
-| G1 Semantic Kernel | POC-01 replay/digest、ADR-0014/0020 | R1→R2 产品语义底座；POC schema/ABI 不升级 |
+| G0 Verification Foundation | 现有 Verification、POC harness/evidence | 建立统一 CLI/corpus/report，并向 R1 提供验证基础贡献 |
+| G1 Semantic Kernel | POC-01 replay/digest、ADR-0014/0020 | 向 R1/R2 提供产品语义底座；POC schema/ABI 不升级 |
 | G2 RuntimeScene Foundation | POC-03、RF-01 | 建立 Full/Incremental 与 Linear/optimized oracle |
 | G3 Basic Canonical Canvas | POC-01 renderer、POC-03 direct path | 生产 Canvas vertical slice，不重复 POC-01 |
 | G4 Interaction + Ink | POC-02、POC-06/Arc、POC-03 integrated ink；POC-05 仅作 host/input 辅助证据 | 吸收选择/变换/吸附/三类擦除与 Arc fallback |
@@ -121,6 +126,11 @@ POC-03 Windows 性能门禁改成 PASS。
 | G7 Local Data Runtime | ADR-0013/0020、R2 | Shared Data Runtime、Snapshot/journal、LocalReady |
 | G8 Sync + Recovery | R4 | Outbox/Inbox、gap/bootstrap、faults、conflict seam |
 | G9 Integrated Product Gate | R5（G9/Internal Alpha） | 全产品集成与 Internal Alpha 证据；不是最终发布全部工作 |
+
+三项新增的仓库补充不构成第二条路线：G7 的 Page repository/Collection custody、G9 的多 Page
+产品集成，以及 G9 的 Windows RNW 屏幕批注物理门禁。前两项闭合“一 Page 一 Document、集合
+由上层产品层拥有”的端到端可执行性；后一项闭合 Notion 已接受但 POC-05 尚未验证的
+transparent topmost、click-through、multi-monitor/DPI、focus/pen capture 与 lifecycle 行为。
 
 反向看，POC-01 是 G0/G1/G3 的实验输入；POC-02 是 G4 输入；POC-03 是 G2/G3/G4/G5
 输入；POC-04 是 G6 输入；POC-05 是 G4 的辅助边界证据和 G6 的主要输入；POC-06 是

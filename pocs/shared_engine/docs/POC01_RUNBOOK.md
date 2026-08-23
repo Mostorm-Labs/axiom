@@ -82,7 +82,7 @@ digest drift, anything other than 100 lifecycle iterations and a 60-second
 smoke, an empty smoke, or a reported frame above 100 ms.
 The same result contains the versioned `core_conformance` oracle. It covers
 canonical signed zero, subnormal and rounding boundaries, maximum finite input,
-non-finite/overflow rejection with transaction atomicity, and equivalent replay
+non-finite/overflow rejection with atomic whole-fixture rejection, and equivalent replay
 into two independent empty Documents. The final job compares the complete
 object, including result/error digest, revision, and operation sequence, across
 native x64, native arm64, and WASM; visual tolerance never applies to this

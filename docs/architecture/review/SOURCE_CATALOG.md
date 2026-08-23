@@ -163,6 +163,14 @@ Public ABI 和 Host 材料的重合内容按 claim 去重。Notion 草案与这�
 | SRC-NOTION-ARCH-V03-CAPTURE-20260823 | Restricted Notion dynamic capture；captured 2026-08-23 | 当前可见的 01～10 架构目录、Product Object Model、Operation 深化页、Module Detailed Design Closure、Runtime Data Flow/Platform Contract/Verification 索引与 G0～G9 Master/Gate plans | Restricted | Complete：仅指本行明确列出的页面正文和已加载表格已读；不含评论、修订历史、附件、外部链接正文或不可见子页，未固定不可变 revision/hash | Reviewed | Architecture recommendations + execution-plan input / Non-normative | Sanitized summary only；这是已有动态页面的 dated recapture，不是与旧 capture 相互独立的新证据。内部 Draft/Accepted/Freeze/Complete 状态不能覆盖仓库 ADR、Contract 或运行 Evidence；细粒度任务用 `Gx/Task N` 定位，不为每个任务新增 Source ID。 |
 | SRC-USER-ARCH-REBASE-CONFIRMATION-20260823 | Direct user architecture decision，2026-08-23 | RNW/RN/Web/macOS deferred、Operation-only、一 Page 一 Document、Arc required + Canonical-only fallback、V1 对象/交互/擦除范围，以及 G0～G9 与 POC/RF/R 路线取并集 | Restricted | Complete：对应本轮用户明确裁决 | Reviewed | Direct user input / Normative for the explicitly listed architecture directions | Sanitized summary only；不批准 Notion Draft/Open 字段、具体 ABI/schema、算法、线程、存储方案，也不表示代码、Gate 或物理验证已经完成。 |
 
+本轮用户随后把执行关系进一步收敛为唯一的
+`AR-0 → G0 → G1 → G2 → G3 → G4 → G5 → G6 → G7 → G8 → G9 → R5-B`。
+这属于 `SRC-USER-ARCH-REBASE-CONFIRMATION-20260823` 同一决策来源的增量澄清，不另增 Source ID：
+G0～G9 是唯一任务依赖和 promotion 路线；R1～R5 只作 many-to-many 里程碑视图；POC/RF 只作
+风险验证、参考实现和历史 Evidence。动态 Notion capture 的明确范围包含 Master Plan、G0～G9
+Gate pages 和 G0 Implementation Backlog；账本按 capture 中可定位的 106 个 source task rows
+登记，不能据此声称存在不可变 Notion revision 或永久全集。
+
 ## 四、第二组审核结论：仓库与直接用户输入
 
 本节只审核来源角色，不批准仓库里的具体技术结论。

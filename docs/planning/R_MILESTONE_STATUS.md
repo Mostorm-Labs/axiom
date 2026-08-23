@@ -39,7 +39,7 @@ R 条目的贡献状态使用任务状态词：`Not Started`、`Analyzing`、`Re
 | View/canonical interaction foundation | `GT-G3-04,08` | Not Started | `verification/evidence/gates/G3/<commit>/`（planned） | Camera/View/Hit/Select 与跨平台 structural evidence 通过。 |
 | Interaction, Ink and local editing | `GT-G4-01..09` | Not Started | `verification/evidence/gates/G4/<commit>/`（planned） | Arc required/fallback、Selection/Lasso/Align/Snap 和三条 erase 路径通过。 |
 | RichText, complex objects and editing lifecycle | `GT-G6-01..04,08..11` | Not Started | `verification/evidence/gates/G6/<commit>/`（planned） | RichText/IME/Clipboard 及 Connector/Group/Frame/Sticky/PDF 产品行为通过。 |
-| Local data runtime and recovery | `GT-G7-01..11` | Blocked | `verification/evidence/gates/G7/<commit>/`（planned） | 先接受 Shared Data Runtime 物理形态 RFC，并通过 journal/checkpoint/recovery/fault gate。 |
+| Local data runtime, Page repository and recovery | `GT-G7-01..12` | Blocked | `verification/evidence/gates/G7/<commit>/`（planned） | 先接受 Shared Data Runtime 物理形态 RFC，并通过 journal/checkpoint/recovery/fault gate；Page Collection 产品语义仍由上层产品层拥有。 |
 | R2 cross-task integration and exit | G1、G3、G4、G6、G7 的 R2 贡献任务 | Not Started | `verification/evidence/milestones/R2/<commit>/`（planned） | 全部必需任务 Pass；每种 V1 节点、Undo/Redo、save/replay/recovery 与数据丢失门禁通过。 |
 
 **R2 当前状态：Blocked；Accepted：否。** 阻塞项是 Shared Data Runtime 语言/物理 owner/包与
@@ -74,7 +74,7 @@ CRDT/OT、local-wins 或到达顺序来换取通过。
 
 | R 阶段条目 | 来源 Gate/Task | 状态 | Evidence | 剩余条件 |
 | --- | --- | --- | --- | --- |
-| Integrated Product Gate / Internal Alpha | `GT-G9-01..13` | Not Started | `verification/evidence/gates/G9/<commit>/`（planned） | G0～G8 Pass；Tier A integrated scenario、failure injection、comparison、soak 和 regression 通过。 |
+| Integrated Product Gate / Internal Alpha | `GT-G9-01..15` | Not Started | `verification/evidence/gates/G9/<commit>/`（planned） | G0～G8 Pass；Tier A integrated scenario、多 Page Collection、Windows 屏幕批注 special host、failure injection、comparison、soak 和 regression 通过。 |
 | Hardening and release work package | `GT-R5B-01..08` | Blocked | `verification/evidence/gates/R5-B/<commit>/`（planned） | G9 Pass；先形成权威 R5-B 任务清单，再完成安全、迁移、诊断、fuzz/soak、SBOM 和 RC 演练。 |
 | R5 cross-task integration and exit | G9 + R5-B 全部必需任务 | Blocked | `verification/evidence/milestones/R5/<commit>/`（planned） | 无静默数据丢失/未归类 divergence；性能回归、升级、恢复、签名和回滚门禁全部通过。 |
 
