@@ -8,8 +8,9 @@
     "typescript": "7.0.2"
   },
   "scripts": {
-    "validate": "node --test tests/schema_meta.test.mjs && node tools/validate_schemas.mjs",
-    "build": "tsc -p tsconfig.json --noEmit && node tools/workspace_build.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "validate": "node --test tests/schema_meta.test.mjs && node tools/validate_schemas.mjs && npm run test --workspaces --if-present",
+    "build": "tsc -p tsconfig.json --noEmit && npm run build --workspaces --if-present && node tools/workspace_build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
   }
 }
