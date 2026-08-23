@@ -1,6 +1,6 @@
 # Canvas v2 验证策略
 
-> 状态：Accepted Quality Baseline / AR-0 Directionally Reconciled，Closure Pending；适用范围：G0～G9、POC/RF/R1～R5；阶段阈值来源：[G0～G9 与 POC/RF/R 并集路线](../planning/AXIOM_GATES_AND_STAGES.md)
+> 状态：Accepted Quality Baseline / AR-0 Pass；适用范围：G0～G9、POC/RF/R1～R5；阶段阈值来源：[G0～G9 与 POC/RF/R 并集路线](../planning/AXIOM_GATES_AND_STAGES.md)
 
 Canvas v2 的首要风险不是“Skia 能不能画”，而是 Document、Ink、RichText、RuntimeScene、FrameGraph 和 Cache 的边界能否在跨平台、低延迟、大场景与协作条件下保持一致。本策略规定每个结论使用什么 oracle、语料和门禁证明。
 

@@ -1,6 +1,6 @@
 # AR-0 架构对账文档验证记录 — 2026-08-23
 
-> 状态：Validating / 已绑定文档内容提交，待 AR-0 架构评审
+> 状态：Pass / 已绑定提交并经用户架构评审批准
 >
 > 范围：AR-0 文档重构，不包含产品代码、G0 实现或运行时门禁
 
@@ -20,15 +20,14 @@
 | --- | --- |
 | 工作分支 | `codex/axiom-architecture-workflow` |
 | 验证基点 HEAD | `a567b44`（开始本次合并准备时的 `origin/main`） |
-| 文档内容提交 | `f5fd9c541b2e55f272c220f793de50b0f1e4ad6b` |
-| 内容 tree | `8d5799d27e66d9887cf3de0edd35f786b78f8296` |
-| 内容归档 SHA-256 | `69a788e77d7473f405815ec28841f4bc18fa0c2460d552587a04696664097f29` |
+| 文档内容提交 | `65645bc22797908c8b33f8e1620795bfe3d9bd07`（已合并到 `main`） |
+| 内容 tree | `808218a36632030f1439ee897586383b3e7927cb` |
+| 内容归档 SHA-256 | `5f6e0ff9d2737bdb58a15344e861108f09b6a0e466545e5498cf7f9a577d1f46` |
 | 验证日期 | 2026-08-23 |
 | 内容范围 | 仓库跟踪/待跟踪的 README、`docs/` 与本轮历史 POC 说明；排除未跟踪 `.deps/` |
 
-当前验证证明上述内容提交中的 AR-0 文档集合自洽。此 Evidence 身份更新位于其后续提交中，
-不会改变被验证内容的 tree。绑定 commit 仍不等于架构评审批准，因而本记录不能自行使
-`AR0-01～06` 或 AR-0 变成 `Pass`，G0 继续保持 `Not Started`。
+当前验证证明上述合并提交中的 AR-0 文档集合自洽。用户已在 2026-08-23 明确批准 AR-0
+通过；本记录只将该人工评审结论绑定到已合并提交，不把任何 G0 实现或后续 Gate 结果提前标记。
 
 ## 3. 已执行验证
 
@@ -93,13 +92,13 @@ second_promotion_route_check=PASS
 
 ## 4. 结果与晋级结论
 
-工作树级文档验证结果为 **Pass**，但 AR-0 Gate 状态仍为 **Validating**：
+工作树级文档验证结果为 **Pass**，且用户架构评审已批准 AR-0 Gate：
 
-- `AR0-01～06`：Design/Implementation 已完成；Validation/Final 仍为 `Validating`；
+- `AR0-01～06`：Design/Implementation/Validation/Final 均为 `Pass`；
 - R1、R3：`Not Started`；
 - R2、R4、R5：因后续已知决定/任务 authority 缺失而为 `Blocked`；
 - G0：`Not Started`；
-- promotion：**不允许**。
+- promotion：允许进入 `GT-G0-00`，但 G0 仍不得提前标记为 `Pass`。
 
-剩余条件是由用户/架构评审明确批准 AR-0 Pass，并在批准提交上更新任务和 Gate 状态；在此
-之前不得进入 `GT-G0-00`。
+下一步是创建并执行 `GT-G0-00`；其分支、来源和工作区 reconciliation 必须生成独立 G0
+Evidence，不能复用 AR-0 的 Pass 作为 G0 结果。

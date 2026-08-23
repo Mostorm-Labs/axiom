@@ -1,6 +1,6 @@
 # Canvas v2 系统架构
 
-> 状态：Accepted Baseline / AR-0 Directionally Reconciled，Closure Pending；适用范围：G0～G9、POC/RF/R1～R5；相关 ADR：[ADR 索引](../adr/README.md)
+> 状态：Accepted Baseline / AR-0 Pass；适用范围：G0～G9、POC/RF/R1～R5；相关 ADR：[ADR 索引](../adr/README.md)
 
 本文档定义 Visual Document Runtime 的模块边界、数据流和接口语义。具体容器、序列化库、协作算法和最终线程拓扑仍由对应 POC/ADR 决定，但实现不得绕过这里规定的所有权和依赖方向。
 
