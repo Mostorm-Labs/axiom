@@ -1,6 +1,6 @@
 # AR-0 架构对账文档验证记录 — 2026-08-23
 
-> 状态：Validating / 待绑定 Git commit
+> 状态：Validating / 已绑定文档内容提交，待 AR-0 架构评审
 >
 > 范围：AR-0 文档重构，不包含产品代码、G0 实现或运行时门禁
 
@@ -19,13 +19,16 @@
 | 字段 | 值 |
 | --- | --- |
 | 工作分支 | `codex/axiom-architecture-workflow` |
-| 验证基点 HEAD | `3b14af2`（本轮 AR-0 文档仍在其后未提交） |
-| 目标 Git commit | `pending`；用户尚未授权 commit |
+| 验证基点 HEAD | `a567b44`（开始本次合并准备时的 `origin/main`） |
+| 文档内容提交 | `f5fd9c541b2e55f272c220f793de50b0f1e4ad6b` |
+| 内容 tree | `8d5799d27e66d9887cf3de0edd35f786b78f8296` |
+| 内容归档 SHA-256 | `69a788e77d7473f405815ec28841f4bc18fa0c2460d552587a04696664097f29` |
 | 验证日期 | 2026-08-23 |
 | 内容范围 | 仓库跟踪/待跟踪的 README、`docs/` 与本轮历史 POC 说明；排除未跟踪 `.deps/` |
 
-当前验证证明工作树中的 AR-0 文档集合自洽，但尚未形成 commit-bound Evidence。因而本记录不能
-使 `AR0-01～06` 或 AR-0 变成 `Pass`，G0 继续保持 `Not Started`。
+当前验证证明上述内容提交中的 AR-0 文档集合自洽。此 Evidence 身份更新位于其后续提交中，
+不会改变被验证内容的 tree。绑定 commit 仍不等于架构评审批准，因而本记录不能自行使
+`AR0-01～06` 或 AR-0 变成 `Pass`，G0 继续保持 `Not Started`。
 
 ## 3. 已执行验证
 
@@ -98,6 +101,5 @@ second_promotion_route_check=PASS
 - G0：`Not Started`；
 - promotion：**不允许**。
 
-剩余条件只有两步：在用户授权后提交当前 AR-0 文档集合，把本记录的 `pending` 替换为实际
-commit，并复跑相同验证；随后由用户/架构评审明确批准 AR-0 Pass。任何一步未完成都不得进入
-`GT-G0-00`。
+剩余条件是由用户/架构评审明确批准 AR-0 Pass，并在批准提交上更新任务和 Gate 状态；在此
+之前不得进入 `GT-G0-00`。
