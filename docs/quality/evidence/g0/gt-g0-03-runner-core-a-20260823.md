@@ -3,7 +3,7 @@
 > 任务：`GT-G0-03`（Notion locator：`WP-G0-03 / IH-03`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-23（Asia/Shanghai）  
-> 基线提交：`0ab6ac0`；本任务按用户约束尚未提交
+> 实现提交：`78e4d082c25c7376cfa9e820f2b63aca75ac3a1c`
 
 ## 1. 术语与范围
 
@@ -105,20 +105,36 @@ Runner Core A 的 13 项测试覆盖：
 | E3 Integration / Golden | not applicable | Scripted Adapter、transport 和 56 vectors 属后续任务 |
 | E4 Physical / Demo | not applicable | Runner Core A 无平台设备依赖 |
 
-关键未提交工作树文件 SHA-256：
+实现、类型检查和测试结果已绑定到实现提交
+`78e4d082c25c7376cfa9e820f2b63aca75ac3a1c`。本 Evidence 的收口修改随后独立提交，不改变
+以下实现对象摘要。
+
+关键 commit-bound identity 与文件 SHA-256：
 
 | 文件 | SHA-256 |
 | --- | --- |
+| implementation commit | `78e4d082c25c7376cfa9e820f2b63aca75ac3a1c` |
+| implementation tree | `886f235fda54246a147e77eeb4d91f1f60bd6fa0` |
+| `git archive`（implementation commit） | `34eeb7d2386e50603556c75b43ec55089745cbd3042656aa3f915f8d3f40f845` |
+| `verification/package-lock.json` | `e0ecec160d7f307a22fdd85050d0813d76e492fbd6d2550a6ea4afda539aeb9e` |
+| `platform-harness-runner/package.json` | `7c7883eeaebd8efce5193be831751d2a34e8e8a7fbfe71ad245c3f039e03c546` |
 | `platform-harness-runner/src/ReferencePlatformRunner.ts` | `ec624f29c7240ae2648bcb07d60cf17acbb3a28367f1538095f7367c188d0edd` |
+| `codec/HarnessEnvelopeCodec.ts` | `174b5cfb3d7dc4da15f0cdb95a0e5759014afb7a9b3291c100c47d6d723ccf62` |
+| `validation/ProtocolSchemaValidator.ts` | `4938a71178ba972cedfb1265a97fe41aef7494d1b298d82efa3dce51ab37a33d` |
 | `diagnostics/ProtocolViolationCollector.ts` | `ae291b3a93711293ecc8d8477f8b180b0695be570a86972f232e861c06b88840` |
+| `handshake/AdapterHandshake.ts` | `688c6956d0e032b3a4a471739fbfc27d48e6b940a36744ed06c363fd67f407aa` |
 | `registry/SessionRegistry.ts` | `a45f3b457e17547ae280090b3a286bfc5b8c42c10a7f7df428e5526af2e7bca5` |
 | `registry/ActionRegistry.ts` | `27324b188b85a7c06c8fa62da9da5a95f62bce056fb9cdd42ab65480518f1053` |
 | `registry/CompletionRegistry.ts` | `263c1a48d08840b2eb2414216a43dd26a2da03dca32791b56c142b65023094e6` |
+| `sequencing/CommandSequencer.ts` | `c5816ffc35f51fbbfab245f637c240b55ade65831b435369c465eba11b81fe54` |
 | `test/core-a.test.mjs` | `dfbb85d15266b8746857ac6256f86538fdf743eb2a65cf889624adea022e6d8e` |
 
-提交前若继续修改必须重新计算这些摘要；它们当前不是 commit-bound identity。
+协议包同步修改的关键摘要：`action.ts` =
+`8c543135f54e1d5466d1378b4dc8096b5a3fff1c98cf15e88fc1d5af4cfa6bfd`，`completion.ts` =
+`f9eb98960c8b598ef948d33ea908dde34f5c0880810aebcec2dccb63013d1bfd`，`session.ts` =
+`09c58eee9cce8f538b88cac4e05876008d89deb08075bf1ada5a195c9501d856`。
 
 ## 6. 状态
 
-`GT-G0-03` 的设计、实现和本地验证均为 `Pass`。G0 与 R1 Verification Foundation 继续为
+`GT-G0-03` 的设计、实现和 commit-bound 验证均为 `Pass`。G0 与 R1 Verification Foundation 继续为
 `Validating`；单任务 Pass 不代表 G0 Pass 或 R1 Accepted。`GT-G0-04` 保持 `Not Started`。
