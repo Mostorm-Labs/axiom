@@ -6,4 +6,8 @@ export * from "./registry/ActionRegistry.js";
 export * from "./registry/CompletionRegistry.js";
 export * from "./registry/SessionRegistry.js";
 export * from "./sequencing/CommandSequencer.js";
+export * from "./sequencing/EventSequencer.js";
+export * from "./registry/SourceLeaseRegistry.js";
+export * from "./registry/FaultRegistry.js";
+export * from "./fence/LateEventFence.js";
 export * from "./validation/ProtocolSchemaValidator.js";
