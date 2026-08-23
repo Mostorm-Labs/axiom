@@ -22,14 +22,14 @@ R 条目的贡献状态使用任务状态词：`Not Started`、`Analyzing`、`Re
 
 | R 阶段条目 | 来源 Gate/Task | 状态 | Evidence | 剩余条件 |
 | --- | --- | --- | --- | --- |
-| Verification Foundation | `GT-G0-00..17` | Not Started | `verification/evidence/gates/G0/<commit>/`（planned） | AR-0 Pass；G0 全任务、统一 corpus/runner/report 和 G0 集成门禁通过。 |
+| Verification Foundation | `GT-G0-00..17` | Validating | [GT-G0-00 仓库与分支基线对账](../quality/evidence/g0/gt-g0-00-repository-reconciliation-20260823.md)；`verification/evidence/gates/G0/<commit>/`（其余 planned） | `GT-G0-00` Pass；仍需完成 `GT-G0-01..17`、统一 corpus/runner/report 和 G0 集成门禁。 |
 | Semantic foundation | `GT-G1-01..08` | Not Started | `verification/evidence/gates/G1/<commit>/`（planned） | G0 Pass；Operation-only Semantic Kernel、oracle、replay 和 Gate Report 通过。 |
 | RuntimeScene foundation | `GT-G2-01..07` | Not Started | `verification/evidence/gates/G2/<commit>/`（planned） | G1 Pass；Full/Incremental、Linear/baseline spatial、100K candidate gate 通过。 |
 | Canonical canvas foundation | `GT-G3-01..10` | Not Started | `verification/evidence/gates/G3/<commit>/`（planned） | G2 Pass；Headless、Web、RNW、Android、iOS/iPadOS canonical path 与 cross-platform golden 通过。 |
 | R1 cross-task integration and exit | G0～G3 的 R1 贡献任务 | Not Started | `verification/evidence/milestones/R1/<commit>/`（planned） | 所有必需任务 Pass；ABI/dependency/build/sanitizer/POC migration 退出条件通过。 |
 
-**R1 当前状态：Not Started；Accepted：否。** 当前没有产品 Gate Task Pass。已有 POC/RF 结果
-只作为任务对账输入。
+**R1 当前状态：Validating；Accepted：否。** `GT-G0-00` 已通过仓库基线对账，但 G0 及其余
+R1 贡献任务尚未完成；已有 POC/RF 结果只作为任务对账输入。
 
 ## 3. R2 — V1 Local Visual Document Runtime
 
