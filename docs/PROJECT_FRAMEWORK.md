@@ -1,6 +1,6 @@
 # Canvas v2 项目总体框架
 
-> 状态：Architecture Baseline v1.5 / AR-0 Directionally Reconciled，Closure Pending；当前执行主线：G0～G9 Evidence-Gated Vertical Build；POC/RF/R1～R5 保留为证据与交付工作包。POC-03 Windows Integrated D3D12 门禁仍为 `Validating`；主路线：C++20 + Skia Ganesh + Web React/WASM + Native React Native Shell
+> 状态：Architecture Baseline v1.5 / AR-0 Pass；当前执行主线：G0～G9 Evidence-Gated Vertical Build；POC/RF/R1～R5 保留为证据与交付工作包。POC-03 Windows Integrated D3D12 门禁仍为 `Validating`；主路线：C++20 + Skia Ganesh + Web React/WASM + Native React Native Shell
 
 Canvas v2 的正式定义是 **Visual Document Runtime**。它不是一个单纯的白板应用、Skia Renderer 或跨平台 UI 框架，而是整个产品体系共享的语义文档、编辑、笔迹、文本、场景、渲染、持久化与协作运行时。
 

@@ -1,6 +1,6 @@
 # AR-0 架构对账报告与晋级前置
 
-> 状态：Validating / 待绑定 commit-bound Evidence
+> 状态：Pass / 用户架构评审已批准（2026-08-23）
 >
 > 规范性：本报告是 AR-0 的过程与追踪基线；它不宣称 G0～G9、R1～R5 或任何产品实现已经通过。
 >
@@ -141,8 +141,7 @@ fixture、workflow 或“Self-Review PASS”不能替代实际运行 Evidence。
   都有明确处置、owner 和下一步。
 - [x] Markdown、链接、Mermaid、私有来源泄漏和工作区范围检查通过；命令与结果已记录到
   [AR-0 文档验证记录](../quality/evidence/ar0/reconciliation-validation-20260823.md)。
-- [ ] AR-0 Evidence 已绑定目标 Git commit、实际命令/结果和 artifact hash，并经最终审核。
+- [x] AR-0 Evidence 已绑定目标 Git commit、实际命令/结果和 artifact hash，并经用户架构评审批准。
 
-因此 AR-0 当前是 `Validating`，G0 不得标为 `Ready` 或 `Pass`。本轮最小工作包是完成最终
-文档校验、写入可复核结果，并在用户允许 commit 后把 Evidence 绑定到目标 commit；之后才可
-评审 AR-0 是否 Pass，并进入 `GT-G0-00` 的仓库分支/版本/来源 reconciliation。
+因此 AR-0 当前是 `Pass`。G0 仍为 `Not Started`，但已满足进入 `GT-G0-00` 仓库分支/版本/来源
+reconciliation 的晋级条件；G0 不得因 AR-0 通过而自动标记为 Ready 或 Pass。

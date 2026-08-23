@@ -1,6 +1,6 @@
 # Axiom Gate Task Tracker
 
-> 状态：AR-0 / Validating
+> 状态：AR-0 / Pass
 >
 > 规范性：Task-tracking baseline。它记录任务身份、依赖和状态，不把计划或历史 Evidence
 > 升级为实现完成。
@@ -64,8 +64,8 @@ Decision/Contract 简写：
 
 | Gate | 状态 | 任务覆盖 | 晋级剩余条件 |
 | --- | --- | --- | --- |
-| AR-0 | Validating | 6 tasks; document outputs exist, but no commit-bound Gate Evidence exists | Complete validation, bind the evidence to a Git commit, then review AR-0 |
-| G0 | Not Started | 18 tasks; pre-Gate source analysis is recorded under AR-0, no G0 task has started | AR-0 Pass |
+| AR-0 | Pass | 6 tasks; validation evidence is commit-bound and architecture review is approved | Begin `GT-G0-00`; G0 remains Not Started until its own work starts |
+| G0 | Not Started | 18 tasks; AR-0 dependency is satisfied, but no G0 task has started | Begin `GT-G0-00` and produce its own Evidence |
 | G1 | Not Started | 8 tasks | G0 Pass |
 | G2 | Not Started | 7 tasks | G1 Pass |
 | G3 | Not Started | 10 tasks including 2 repository scope supplements | G2 Pass |
@@ -93,19 +93,19 @@ Evidence 列记录任务通过时必须生成的目标路径。标为 `planned` 
 
 | Notion Task ID / source locator | Gate Task ID | Task | R contribution | Requirement | ADR/RFC/Contract | Dependencies | Disposition | Design | Implementation | Validation | Evidence path | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| User route baseline | `AR0-01` | Freeze the sole promotion route and R milestone semantics | R1–R5 | AR0-REQ-ROUTE | D-AR0 | — | Modify | Pass | Pass | Validating | [总路线](AXIOM_GATES_AND_STAGES.md)；[对账报告](AR0_RECONCILIATION_REPORT.md) | Awaiting commit-bound Gate Evidence | Validating |
-| Notion G0–G9 latest plans | `AR0-02` | Re-read and enumerate every source task | R1–R5 | AR0-REQ-SOURCE | D-AR0 | AR0-01 | Modify | Pass | Pass | Validating | [来源目录](../architecture/review/SOURCE_CATALOG.md)；[Notion/仓库差距对账](../architecture/review/NOTION_V03_REPOSITORY_GAP_AUDIT.md) | Dynamic source has no immutable revision; awaiting commit binding | Validating |
-| Repository reconciliation | `AR0-03` | Create stable Gate task identities and dependency ledger | R1–R5 | AR0-REQ-TRACE | D-AR0 | AR0-01, AR0-02 | Missing | Pass | Pass | Validating | [本任务账本](GATE_TASK_TRACKER.md) | Awaiting commit-bound Gate Evidence | Validating |
-| Repository reconciliation | `AR0-04` | Create Gate-to-R milestone and end-to-end trace views | R1–R5 | AR0-REQ-TRACE | D-AR0 | AR0-03 | Missing | Pass | Pass | Validating | [R 里程碑状态表](R_MILESTONE_STATUS.md)；[本任务账本](GATE_TASK_TRACKER.md) | Awaiting commit-bound Gate Evidence | Validating |
-| Repository reconciliation | `AR0-05` | Remove competing promotion routes and close baseline conflicts | R1–R5 | AR0-REQ-ROUTE | D-AR0 | AR0-01, AR0-02 | Modify | Pass | Pass | Validating | [总路线](AXIOM_GATES_AND_STAGES.md)；[历史工作包视图](STAGED_DELIVERY_PLAN.md) | Awaiting final route scan and commit binding | Validating |
-| Repository validation | `AR0-06` | Validate Markdown, links, fences, privacy and diff scope | R1–R5 | AR0-REQ-DOC | D-AR0 | AR0-03, AR0-04, AR0-05 | Modify | Pass | Pass | Validating | [AR-0 文档验证记录](../quality/evidence/ar0/reconciliation-validation-20260823.md) | Final results must be rerun after all edits and bound to a commit | Validating |
+| User route baseline | `AR0-01` | Freeze the sole promotion route and R milestone semantics | R1–R5 | AR0-REQ-ROUTE | D-AR0 | — | Modify | Pass | Pass | Pass | [总路线](AXIOM_GATES_AND_STAGES.md)；[对账报告](AR0_RECONCILIATION_REPORT.md) | — | Pass |
+| Notion G0–G9 latest plans | `AR0-02` | Re-read and enumerate every source task | R1–R5 | AR0-REQ-SOURCE | D-AR0 | AR0-01 | Modify | Pass | Pass | Pass | [来源目录](../architecture/review/SOURCE_CATALOG.md)；[Notion/仓库差距对账](../architecture/review/NOTION_V03_REPOSITORY_GAP_AUDIT.md) | — | Pass |
+| Repository reconciliation | `AR0-03` | Create stable Gate task identities and dependency ledger | R1–R5 | AR0-REQ-TRACE | D-AR0 | AR0-01, AR0-02 | Missing | Pass | Pass | Pass | [本任务账本](GATE_TASK_TRACKER.md) | — | Pass |
+| Repository reconciliation | `AR0-04` | Create Gate-to-R milestone and end-to-end trace views | R1–R5 | AR0-REQ-TRACE | D-AR0 | AR0-03 | Missing | Pass | Pass | Pass | [R 里程碑状态表](R_MILESTONE_STATUS.md)；[本任务账本](GATE_TASK_TRACKER.md) | — | Pass |
+| Repository reconciliation | `AR0-05` | Remove competing promotion routes and close baseline conflicts | R1–R5 | AR0-REQ-ROUTE | D-AR0 | AR0-01, AR0-02 | Modify | Pass | Pass | Pass | [总路线](AXIOM_GATES_AND_STAGES.md)；[历史工作包视图](STAGED_DELIVERY_PLAN.md) | — | Pass |
+| Repository validation | `AR0-06` | Validate Markdown, links, fences, privacy and diff scope | R1–R5 | AR0-REQ-DOC | D-AR0 | AR0-03, AR0-04, AR0-05 | Modify | Pass | Pass | Pass | [AR-0 文档验证记录](../quality/evidence/ar0/reconciliation-validation-20260823.md) | — | Pass |
 
 
 ### G0
 
 | Notion Task ID / source locator | Gate Task ID | Task | R contribution | Requirement | ADR/RFC/Contract | Dependencies | Disposition | Design | Implementation | Validation | Evidence path | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-G0-00 / IH-00 | `GT-G0-00` | Repository and branch reconciliation | R1 | REQ-GAP-VER | D-G0 | AR-0 Pass | Modify | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-00/ (planned)` | AR-0 must pass first | Not Started |
+| WP-G0-00 / IH-00 | `GT-G0-00` | Repository and branch reconciliation | R1 | REQ-GAP-VER | D-G0 | AR-0 Pass | Modify | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-00/ (planned)` | — | Not Started |
 | WP-G0-01 / IH-01 | `GT-G0-01` | Schema and verification workspace skeleton | R1 | REQ-GAP-VER | D-G0 | GT-G0-00 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-01/ (planned)` | — | Not Started |
 | WP-G0-02 / IH-02 | `GT-G0-02` | Protocol package and envelope codec | R1 | REQ-GAP-VER | D-G0 | GT-G0-01 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-02/ (planned)` | — | Not Started |
 | WP-G0-03 / IH-03 | `GT-G0-03` | Runner core A: handshake, session, action, completion | R1 | REQ-GAP-VER | D-G0 | GT-G0-02 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-03/ (planned)` | — | Not Started |
