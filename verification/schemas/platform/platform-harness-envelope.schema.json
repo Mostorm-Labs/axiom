@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-harness-envelope:v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "formatVersion", "protocol", "messageType", "session"],
+  "properties": {
+    "format": { "const": "axiom-platform-harness-envelope-v1" }, "formatVersion": { "const": 1 },
+    "protocol": { "const": "PLATFORM_HARNESS" }, "messageType": { "type": "string", "minLength": 1 },
+    "session": { "type": "object" }, "payload": { "type": "object" }
+  }
+}

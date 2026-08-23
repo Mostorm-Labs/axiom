@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-profile:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "profileId", "platformFamily", "platformVariant", "capabilities", "realization"],
+  "properties": {
+    "format": { "const": "axiom-platform-profile-v1" },
+    "formatVersion": { "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+    "platformFamily": { "enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"] },
+    "platformVariant": { "type": "string", "minLength": 1 },
+    "capabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "realization": { "type": "object" }
+  }
+}

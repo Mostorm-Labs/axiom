@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-observation:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "profileId", "platformFamily", "execution", "capabilities", "terminal", "steps", "artifacts", "semanticCheckpoints", "stateCheckpoints", "targetBindings", "realization", "diagnostics"],
+  "properties": {
+    "format": { "const": "axiom-platform-observation-v1" },
+    "formatVersion": { "const": 1 },
+    "scenarioId": { "type": "string" },
+    "profileId": { "type": "string" },
+    "platformFamily": { "enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"] },
+    "execution": { "type": "object" },
+    "capabilities": { "type": "array", "items": { "type": "string" } },
+    "terminal": { "type": "object" },
+    "steps": { "type": "array", "items": { "type": "object" } },
+    "artifacts": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "lifecycleTrace": { "$ref": "#/$defs/safePath" },
+        "surfaceTrace": { "$ref": "#/$defs/safePath" },
+        "bridgeTrace": { "$ref": "#/$defs/safePath" }
+      }
+    },
+    "semanticCheckpoints": { "type": "array", "items": { "type": "object" } },
+    "stateCheckpoints": { "type": "array", "items": { "type": "object" } },
+    "targetBindings": { "type": "array", "items": { "type": "object" } },
+    "realization": { "type": "object" },
+    "diagnostics": { "type": "array" }
+  },
+  "$defs": {
+    "safePath": { "type": "string", "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)[^\\s]+$" }
+  }
+}

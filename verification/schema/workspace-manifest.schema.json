@@ -29,14 +29,17 @@
     "directories": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["corpus", "fixtures", "runners", "reports", "evidence", "schema"],
+      "required": ["corpus", "fixtures", "runners", "reports", "evidence", "schema", "schemas", "platform", "packages"],
       "properties": {
         "corpus": { "$ref": "#/$defs/relativePath" },
         "fixtures": { "$ref": "#/$defs/relativePath" },
         "runners": { "$ref": "#/$defs/relativePath" },
         "reports": { "$ref": "#/$defs/relativePath" },
         "evidence": { "$ref": "#/$defs/relativePath" },
-        "schema": { "$ref": "#/$defs/relativePath" }
+        "schema": { "$ref": "#/$defs/relativePath" },
+        "schemas": { "$ref": "#/$defs/relativePath" },
+        "platform": { "$ref": "#/$defs/relativePath" },
+        "packages": { "$ref": "#/$defs/relativePath" }
       }
     },
     "corpus": {

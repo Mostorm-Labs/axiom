@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-result:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "requirementStatus", "result", "participants", "checks", "openObservations", "divergence", "diagnostics"],
+  "properties": {
+    "format": { "const": "axiom-platform-conformance-result-v1" },
+    "formatVersion": { "const": 1 },
+    "scenarioId": { "type": "string" },
+    "requirementStatus": { "enum": ["SPEC_REQUIREMENT", "FREEZE_CANDIDATE", "BENCHMARK_TARGET", "EXPERIMENTAL_TARGET", "OPEN"] },
+    "result": { "enum": ["PASS", "FAIL_SCENARIO_EXPECTATION", "FAIL_CROSS_PLATFORM_DIVERGENCE", "FAIL_CAPABILITY_MISSING", "FAIL_IMPLEMENTATION_ERROR", "BLOCKED_OPEN", "OBSERVED_AGREEMENT_OPEN", "OBSERVED_DIVERGENCE_OPEN", "HARNESS_ERROR"] },
+    "participants": { "type": "array", "items": { "type": "object" } },
+    "checks": { "type": "array", "items": { "type": "object" } },
+    "openObservations": { "type": "array" },
+    "divergence": { "type": ["object", "null"] },
+    "diagnostics": { "type": "array" }
+  }
+}

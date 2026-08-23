@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-late-event-fence:v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "formatVersion", "sessionId", "epoch", "generation", "decision"],
+  "properties": { "format": { "const": "axiom-platform-late-event-fence-v1" }, "formatVersion": { "const": 1 }, "sessionId": { "type": "string" }, "epoch": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" }, "generation": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" }, "decision": { "enum": ["ACCEPT", "REJECT_LATE"] } }
+}

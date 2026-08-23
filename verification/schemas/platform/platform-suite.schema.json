@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-suite:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "id", "scenarioRefs"],
+  "properties": {
+    "format": { "const": "axiom-platform-suite-v1" },
+    "formatVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "scenarioRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-trace:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "profileId", "traceKind", "events"],
+  "properties": {
+    "format": { "const": "axiom-platform-trace-v1" },
+    "formatVersion": { "const": 1 },
+    "scenarioId": { "type": "string", "minLength": 1 },
+    "profileId": { "type": "string", "minLength": 1 },
+    "traceKind": { "enum": ["LIFECYCLE", "SURFACE", "BRIDGE"] },
+    "events": { "type": "array", "items": { "$ref": "#/$defs/event" } }
+  },
+  "$defs": {
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventSeq", "event", "source"],
+      "properties": {
+        "eventSeq": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" },
+        "event": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "stepId": { "type": "string" },
+        "correlationId": { "type": "string" },
+        "surfaceGeneration": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" },
+        "metricsGeneration": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" },
+        "deviceGeneration": { "type": "string", "pattern": "^u64:[0-9a-f]{16}$" },
+        "target": { "type": "string" },
+        "details": { "type": "object" }
+      }
+    }
+  }
+}

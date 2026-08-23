@@ -6,7 +6,9 @@
 >
 > 执行时间：2026-08-23（Asia/Shanghai）
 >
-> 结果：**PASS（仅限 GT-G0-01）**
+> 原始结果：**PASS（已由后续依赖审计判定为不完整）**
+>
+> 现行结果：**PASS（完成 revalidation）**。原始误判、补齐和复核过程保留在本记录中。
 >
 > 基线提交：`1579a6e364680acbc0b46d1a2cecb89fb9196c4a`
 
@@ -22,7 +24,7 @@
   runner。Reserved 不能被解释为实现或验证已完成。
 
 `GT-G0-00` 已在提交 `1579a6e` 标记为 `Pass`，因此本任务上游依赖满足。本任务只建立
-`verification/` 骨架及其自验证；`GT-G0-02` 保持 `Not Started`。
+`verification/` 骨架及其自验证；本次复核后 `GT-G0-02` 的上游条件已满足。
 
 ## 2. 设计与实现结果
 
@@ -36,6 +38,9 @@
 | `verification/reports/` | 后续 Gate Report 及聚合结果 | `reserved` |
 | `verification/evidence/` | 可复现验证产物索引 | `reserved` |
 | `verification/schema/` | 验证基础自身 schema | workspace manifest v1 已建立 |
+| `verification/schemas/platform/` | Platform/Protocol JSON Schema Draft 2020-12 | 13 份 schema 已建立 |
+| `verification/platform/` | 平台验证协议说明与后续 adapter 边界 | `reserved` |
+| `verification/packages/` | 验证 workspace packages 根目录 | `reserved` |
 
 工作区 manifest 使用 `schema_version = 1` 和
 `format = axiom-verification-workspace`。它不保存绝对路径、机器时间、临时 runner 状态或构建
@@ -43,13 +48,18 @@
 当前 manifest canonical SHA-256 为：
 
 ```text
-9a418326afc384286947c62ed22e9dc1e5331b5a047c7ca69dd14470e01f1f9c
+4988903650a231b7e67a53646602018fed8327fa308d721be7f5cee51fe1efc2
 ```
 
 `workspace-manifest.schema.json` 使用 JSON Schema Draft 2020-12，拒绝未知字段，并限制版本、
 格式、相对路径、corpus entry、service entry 与 policy。仓库不新增第三方 JSON Schema runtime
 依赖；G0-01 的无依赖 Python validator 解析 schema 元数据并显式执行本版全部工作区不变量。
 以后若引入通用 schema engine，仍必须保留相同拒绝语料，不能放宽现有约束。
+
+IH-01 的 Platform/Protocol schema 清单已 materialize 为 13 个文件（来源标题中的“12”按清单
+与上层实施计划解释为计数笔误），每个 schema 均有一个合法 fixture。统一入口为
+`cd verification && npm run validate`；workspace 还提供 `npm run build` 与 `npm run typecheck`。
+本次使用仓库既无既有 package-manager convention，故采用 npm，并锁定 TypeScript `7.0.2`。
 
 ## 3. Ownership 与后续任务隔离
 
@@ -75,13 +85,17 @@ Golden policy 已在 manifest 和目录说明中固定为：blocking CI 只读 e
 python3 verification/tools/validate_workspace.py --print-digest
 python3 -m unittest discover -s verification/tests -p 'test_*.py' -v
 python3 -m py_compile verification/tools/validate_workspace.py verification/tests/test_workspace.py
+cd verification && npm run validate && npm run build && npm run typecheck
 ```
 
 最终结果：
 
 ```text
+schema validation: 13 schemas and 13 fixtures valid
+4 schema meta-tests passed
+workspace build/typecheck scaffold: valid
 workspace: valid
-manifest_sha256: 9a418326afc384286947c62ed22e9dc1e5331b5a047c7ca69dd14470e01f1f9c
+manifest_sha256: 4988903650a231b7e67a53646602018fed8327fa308d721be7f5cee51fe1efc2
 Ran 9 tests
 OK
 ```
@@ -115,19 +129,27 @@ owner 的固定映射。随后改为显式 `CORPUS_OWNERS` 映射并增加重复
 
 | 文件 | SHA-256 |
 | --- | --- |
-| `verification/workspace.json` | `64376327b28d7b313bbb4d1140cedde17e72f8e1277a71fd7098c591956db341` |
-| `verification/schema/workspace-manifest.schema.json` | `80f874cc6cfe20396825e3dfc68f2a04e44725fab5c31d8a8e7df48becbcc110` |
-| `verification/tools/validate_workspace.py` | `cb00fcd1c3dd1f70ce7af23bbc835a90c2d51f53631386d97cb6a332eb1ef9b3` |
-| `verification/tests/test_workspace.py` | `675a8bac6588a044322960243f44996432309ec7b9a33bdde3ee9a1da7f5f1ba` |
+| `verification/workspace.json` | `1b1452b566c0f0a2f648fcf78fcca15558f0a70437ae0be3b7ac61ac3103deb6` |
+| `verification/schema/workspace-manifest.schema.json` | `36db2b6891ac9affecc03a3dde86f74847fadb4677f7fb67f7784fb993290bfc` |
+| `verification/tools/validate_workspace.py` | `191e89ed61355fd76b97b685aaef9f8e7b1e79e49bf74a188061a712be5810` |
+| `verification/tests/test_workspace.py` | `ac6d685297ad1925de32ac9427ba43b404b65eeb0d7bdf70c0fe283f82692263` |
+| `verification/package.json` | `8ab00da53aebda58f9e6ca453ad547ab81cd719e50f582e545e8632e677aa670` |
+| `verification/package-lock.json` | `9fb7967aa22da0d87d51b4a2e34840e2f0f74fe9f338924b47c2cb397fe58cf1` |
+| `verification/tools/validate_schemas.mjs` | `80f69e96b73438d00e1f3fc51793d315d7b04451463c0113be49222134f4ae3a` |
+| `verification/tests/schema_meta.test.mjs` | `5b80c5bed474cf53b09fdcdb29592ae068537552ecbd539c09ed1138de2b81d7` |
 
-这些是执行验证时的工作区字节摘要。由于用户要求本轮不提交，最终 Git commit 尚不存在；未来
-若提交前修改了文件，必须重新运行验证并更新摘要，不能沿用本记录中的旧值。
+这些是执行验证时的工作区字节摘要。提交前若修改了文件，必须重新运行验证并更新摘要，不能
+沿用本记录中的旧值。最终提交身份在提交完成后由 Git 历史提供。
 
 ## 6. 状态结论
 
-`GT-G0-01` 的设计、实现和验证均为 `Pass`，最终状态为 `Pass`。没有发现阻塞该任务的 Open
-决定。G0 继续为 `Validating`，R1 Verification Foundation 继续为 `Validating`，R1 不
-Accepted。`GT-G0-02` 仍是下一最小工作包，但本轮不进入。
+本节保留 2026-08-23 首轮验收时的历史结论：当时按照仓库内已抽取的范围，曾将
+`GT-G0-01` 记录为 `Pass`。开始 `GT-G0-02` 前重读最新 IH-01 正文后确认，本记录遗漏了
+TypeScript workspace、完整 Platform/Protocol schema 集、每 schema 合法 fixture、统一 validate
+命令和 build/typecheck，因此该 Pass 曾被后续审计推翻。随后已按 IH-01 补齐并重新运行全部检查；
+现行状态恢复为 `Pass`。
 
-本轮未修改产品 Runtime、POC、platform shell、CMake 或 workflow；未执行 commit、push、merge
-或创建 PR。
+失败历史不删除、不改写成从未发生。G0 和 R1 Verification Foundation 继续为 `Validating`，
+R1 不 Accepted；`GT-G0-02` 的上游阻塞已关闭。
+
+本轮未修改产品 Runtime、POC、platform shell、CMake 或 workflow，也未进入 `GT-G0-02` 的实现。

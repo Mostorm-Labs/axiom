@@ -67,6 +67,10 @@ class WorkspaceManifestTest(unittest.TestCase):
         schema = json.loads((ROOT / "verification/schema/workspace-manifest.schema.json").read_text())
         self.assertEqual(schema["$schema"], "https://json-schema.org/draft/2020-12/schema")
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(set(schema["properties"]["directories"]["required"]), {
+            "corpus", "fixtures", "runners", "reports", "evidence", "schema",
+            "schemas", "platform", "packages",
+        })
 
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+{
+  "name": "@axiom/verification-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["packages/*"],
+  "devDependencies": {
+    "typescript": "7.0.2"
+  },
+  "scripts": {
+    "validate": "node --test tests/schema_meta.test.mjs && node tools/validate_schemas.mjs",
+    "build": "tsc -p tsconfig.json --noEmit && node tools/workspace_build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

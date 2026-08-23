@@ -5,10 +5,11 @@ Axiom 产品 Runtime，也不是产品公共 ABI。
 
 ## 当前任务边界
 
-`GT-G0-01` 只建立目录 ownership、workspace manifest、manifest schema 和静态校验器。
+`GT-G0-01` 只建立 TypeScript workspace、目录 ownership、workspace manifest、13 份
+Platform/Protocol schema 及合法 fixture，以及静态校验器。
 下列内容由后续任务负责，本轮不提前实现：
 
-- `GT-G0-02`：protocol package、envelope codec 和 wire schema；
+- `GT-G0-02`：protocol package、envelope codec 和 typed semantic parse；
 - `GT-G0-03..05`：runner、transport、fault/fence 行为；
 - `GT-G0-06`：56 个 protocol vectors；
 - `GT-G0-07`：共享 CLI 和 CI gate；
@@ -23,6 +24,8 @@ Axiom 产品 Runtime，也不是产品公共 ABI。
   Operation wire format 或 Gate Report schema。
 - `tools/validate_workspace.py` 只做结构、路径 ownership 和确定性检查，不执行产品测试，
   也不自动生成 golden expected。
+- `npm run validate` 统一加载 13 份 Draft 2020-12 schema、合法 fixture 和负向 meta-tests；
+  `npm run build`、`npm run typecheck` 验证 TypeScript workspace。
 - 每类语料目录先由 `README.md` 声明 owner 和 expected policy，再由后续任务填充版本化语料。
 
 运行检查：
@@ -30,4 +33,8 @@ Axiom 产品 Runtime，也不是产品公共 ABI。
 ```text
 python3 verification/tools/validate_workspace.py
 python3 -m unittest discover -s verification/tests -p 'test_*.py' -v
+cd verification
+npm run validate
+npm run build
+npm run typecheck
 ```

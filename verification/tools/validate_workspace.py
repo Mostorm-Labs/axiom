@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "verification/workspace.json"
 SCHEMA = ROOT / "verification/schema/workspace-manifest.schema.json"
 PATH = re.compile(r"^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\.\.(?:/|$))(?!.*//)[^\s]+$")
-REQUIRED_DIRS = ("corpus", "fixtures", "runners", "reports", "evidence", "schema")
+REQUIRED_DIRS = ("corpus", "fixtures", "runners", "reports", "evidence", "schema", "schemas", "platform", "packages")
 CORPUS_OWNERS = {
     "protocol": "GT-G0-02",
     "semantic": "GT-G0-06",
