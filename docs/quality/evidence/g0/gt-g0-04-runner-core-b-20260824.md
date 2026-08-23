@@ -3,7 +3,7 @@
 > 任务：`GT-G0-04`（Notion locator：`WP-G0-04 / IH-04`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 基线提交：`9cb0191`；本任务按用户约束尚未提交
+> 实现提交：`eeb02b1654d06caa6a3a07b09325d1e29b836d0e`
 
 ## 1. 范围与来源对账
 
@@ -50,11 +50,23 @@ eventSeq、generation monotonicity、fault activate/clear、finalization unresol
 | E3 Integration / Golden | not applicable | transport、adapter 与 vectors 尚未进入本任务 |
 | E4 Physical / Demo | not applicable | Runner Core B 无平台设备依赖 |
 
-当前结果基于 `9cb0191` 加本任务工作树，尚不是 commit-bound Evidence。提交实现后必须重新执行验证，
-并记录 implementation commit、tree、`git archive` SHA-256 和关键文件 SHA-256；在此之前不进入
-`GT-G0-05`。
+实现、类型检查和测试结果已在实现提交上重新执行并绑定到以下 identity：
+
+| 对象 | SHA-256 / Git identity |
+| --- | --- |
+| implementation commit | `eeb02b1654d06caa6a3a07b09325d1e29b836d0e` |
+| implementation tree | `4966640e3c0b691943f3ae827f525be00a1df752` |
+| `git archive`（implementation commit） | `cbda5629fbc98c98031504a15931d0f5340383dd805de467a3113a221096c5b8` |
+| `verification/package-lock.json` | `e0ecec160d7f307a22fdd85050d0813d76e492fbd6d2550a6ea4afda539aeb9e` |
+| `ReferencePlatformRunner.ts` | `7d2d6e9a3b76428730293f583d631bae8ba462239f61fdf7beb5841bd135ac47` |
+| `ProtocolViolationCollector.ts` | `61a2923ebf66a1620e549895767562126fc8df4d46fe803aac328c72d05d0c80` |
+| `LateEventFence.ts` | `c3835861871f2709801e4c262a323d76ce55795c1d760075f1636a6025a08488` |
+| `FaultRegistry.ts` | `e2e038f944e28250e2ba4fc62957eea94bf60efead4129bfb66e7583136ffe8f` |
+| `SourceLeaseRegistry.ts` | `1a552a6cab13bdadab89bfae0af371f5c4f4e56ea8d86422864affe94a90213c` |
+| `EventSequencer.ts` | `992ac208d1b31d16736c5e00ef46671d515feced4eac2eac66442e6cefa366f1` |
+| `test/core-b.test.mjs` | `570eacb888a7975ee5e6755676131cf58993074ec7ce5f114fda8cee2dd456fb` |
 
 ## 5. 状态
 
-`GT-G0-04` 的设计、实现和工作树验证为 `Pass`，commit-bound Evidence 为 `Pending`。G0 与 R1
-Verification Foundation 继续为 `Validating`；`GT-G0-05` 保持 `Not Started`。
+`GT-G0-04` 的设计、实现和 commit-bound 验证均为 `Pass`。G0 与 R1 Verification Foundation
+继续为 `Validating`；Evidence 收口时 `GT-G0-05` 尚未开始。
