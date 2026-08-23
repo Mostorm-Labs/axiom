@@ -91,7 +91,8 @@
 ### 6.2 Shell 可替换
 
 - Web 使用 React/TypeScript + WASM。
-- Windows 使用 React/Tauri + native canvas region。
+- 历史早期 Windows Shell 观察是 React/Tauri + native canvas region；现行 Axiom 产品方案已由
+  ADR-0025 改为 RNW + Native Canvas/Overlay Host，本条仅保留来源历史。
 - Android 使用 React Native + Native CanvasView/JNI。
 - 高频 pen path、RichText model 和 Document operations 不进入 JS 数据面。
 

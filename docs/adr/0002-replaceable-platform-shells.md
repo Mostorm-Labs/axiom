@@ -3,19 +3,24 @@
 - Status: Accepted
 - Date: 2026-08-16
 - Related stages: POC-01, POC-04～06, R1, R3
+- Superseded in part by: ADR-0025（当前产品 Shell/平台矩阵）
 
 ## Context
 
-产品目标同时包含 Web、Windows 和 Android。强求同一 UI framework 会牺牲 Web/DOM 产品能力或原生输入、Surface、IME 与设备集成。真正需要共享的是文档和画布运行时。
+当前产品目标包含 Web、Windows、Android、iOS 和 iPadOS。强求同一 UI framework 会牺牲
+Web/DOM 产品能力或原生输入、Surface、IME 与设备集成。真正需要共享的是文档和画布运行时。
 
-## Decision
+## Historical Decision
+
+下列 Windows/Tauri 与三平台范围记录 POC 阶段的已接受选择；当前产品矩阵已由 ADR-0025
+替代。Runtime 可替换、窄 Bridge 和 native hot path 原则继续有效。
 
 - Web：React/TypeScript + WASM + WebGL。
 - Windows：React/Tauri + native canvas region + versioned C ABI。
 - Android：React Native Shell + Native `CanvasView` + JNI。
 - ChromiumOS：复用 Web Shell，并按能力接入平台 FastInk。
 
-Toolbar、Inspector、Dialog、Share、Account 和 Navigation 属于 Shell。Document、Operations、Ink、RichText、Scene、HitTest、Renderer 和 Persistence 属于 C++ Runtime。
+Toolbar、Inspector、Dialog、Share、Account 和 Navigation 属于 Shell。Document、Operations、Ink、RichText、Scene、HitTest 与 Renderer 属于 C++ Runtime。本段初版还把 Persistence 列为 Runtime 模块；该数据侧 owner 已由 ADR-0025 替代为外部 Shared Data Runtime/ports。
 
 Android pen 数据固定走 `MotionEvent/history → Native CanvasView → PointerSampleBatch → C++`，不得通过 RN JS。Windows/Web 也采用批量输入，避免高频跨边界逐点调用。
 
@@ -28,4 +33,6 @@ Android pen 数据固定走 `MotionEvent/history → Native CanvasView → Point
 
 ## Validation
 
-POC-01 验证 Windows/Web shared engine；POC-04 验证三平台 IME；POC-05 验证 overlay；R3 要求三平台运行同一用户流和 Bridge 契约测试。
+POC-01 验证六端 shared engine；POC-04 验证跨端 IME；POC-05 验证 overlay。当前 R3/G6
+要求 Web、Windows RNW、Android RN、iOS/iPadOS RN 运行适用的共同用户流和 Bridge 契约测试，
+macOS 运行 core/Web-reuse conformance。

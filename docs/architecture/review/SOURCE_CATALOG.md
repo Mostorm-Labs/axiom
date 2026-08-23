@@ -1,10 +1,10 @@
 # Axiom 架构重审来源目录
 
-> 状态：Reviewed / Source inventory complete
-> 步骤状态：Completed / Source inventory closed
+> 状态：Reviewed / Source inventory complete，持续接收增量来源
+> 步骤状态：Completed / 2026-08-21 快照已关闭；2026-08-22 与 2026-08-23 增量已审核
 > 输入：当前仓库快照、用户直接要求与批准、受限 Notion、历史对话及其本地导出
 > 评审记录：2026-08-21 15:11（UTC+08:00）确认第一组五条目录规则；随后确认第二组仓库与直接用户输入、第三组 Notion、第四组历史对话、第五组竞品矩阵来源及第六组来源全集/缺口规则
-> 更新日期：2026-08-21
+> 更新日期：2026-08-23
 > 说明：本目录只保存脱敏来源 ID，不保存私有 Notion/ChatGPT URL、原始消息或附件路径
 
 ## 本文用语
@@ -13,7 +13,7 @@
 | --- | --- |
 | 来源记录 | Source Record | 对一个可定位 artifact、页面、消息或来源集合的目录登记；记录数不表示独立证据数。 |
 | 来源行 | Source Row | 竞品矩阵中的原始表格行；可能是复合能力，不等于正式 Requirement。 |
-| Intake ID | Intake ID | 步骤 3 为来源行分配的稳定接收编号，用于拆分、去重和需求评审；当前尚未建立。 |
+| Intake ID | Intake ID | 步骤 3 为来源行分配的稳定接收编号，用于拆分、去重和需求评审；第三组候选已在 [需求基线](03_REQUIREMENTS_BASELINE.md) 建立，仍不是正式 Requirement。 |
 | Owner Mapping | Owner Mapping | 来源建议的 Axiom/Arc/Data/Shell 责任映射，只是 Architecture Recommendation。 |
 | Primary-source Gap | Primary-source Gap | 来源引用产品行为或历史决定，但缺少能直接核验该 claim 的一手材料。 |
 | Reported Observation | Reported Observation | 来源声称观察到的产品行为；绑定版本、平台、日期和一手方法后才能升级为已核验事实。 |
@@ -58,7 +58,7 @@
 
 ## 二、来源组覆盖表
 
-截至 2026-08-21，当前已定位的输入及步骤 1 审核批准按 artifact/集合登记如下。不同 artifact
+截至 2026-08-21，步骤 1 已定位的输入及审核批准按 artifact/集合登记如下。不同 artifact
 如果只是同一来源的 representation，则共用一个来源 ID，也不会被当成多份独立佐证。第三组
 已经确认 Notion 的 inclusion/stopping rule，并按
 确认当日的精确页面清单封闭；后续发现的实质材料作为目录增量处理。第六组的最终批准只写入
@@ -69,11 +69,17 @@
 | Git 仓库快照 | 1 | 1 | 已覆盖 `main@74c28b1`；逐文件权威性在步骤 2 审计。 |
 | 用户转交的流程材料 | 1 | 1 | 已覆盖；用户已确认它与 `SRC-CHAT-07` 不是同一来源。 |
 | 用户直接任务要求与明确批准 | 7 | 7 | 架构重审 brief、工作流批准、术语批准、目录规则批准，以及第二、三、四/五组批准。 |
-| Notion 根页及直接子页面 | 26 | 26 | 1 个根页和 25 个直接子页面均已登记；只读索引者保留 `Index-only`。 |
+| Notion 根页及直接子页面 | 26 | 26 | 2026-08-21 capture 当时的 1 个根页和 25 个直接子页面均已登记；只读索引者保留当时的 `Index-only`。 |
 | Notion 间接或索引引用页面 | 10 | 10 | 按 2026-08-21 确认的 inclusion/stopping rule 纳入并逐项登记。 |
 | 竞品矩阵引用的官方资料集合 | 1 | 1 | 21 个链接仅作 Evidence lead，尚未逐项审读。 |
 | 历史对话 | 7 | 7 | 六份局部架构/产品讨论及一份同类产品需求调研对话。 |
 | **合计** | **53** | **53** | ID 全部唯一；记录数不证明逻辑独立性。 |
+
+这 53 条是步骤 1 关闭时的历史快照，不因后续补充材料而反写。2026-08-22，用户又提供两份
+本地历史对话导出和一份受限 Notion 草案，形成 3 条已审核增量来源。2026-08-23 又新增 1 个
+动态 Notion capture 集合和 1 条直接用户架构裁决来源。因此当前目录共有 58 条唯一来源记录：
+2026-08-21 历史快照 53 条、2026-08-22 增量 3 条、2026-08-23 增量 2 条。记录数不表示 58 份
+逻辑独立证据；增量也不会重开已经完成的六组确认。
 
 ## 三、已登记来源
 
@@ -88,7 +94,7 @@
 | SRC-USER-SOURCE-GROUP2-CONFIRMATION-20260821 | Explicit user approval and correction，2026-08-21 | 确认第二组第 1～3 条；明确 `SRC-CHAT-07` 是同类产品需求调研，而非架构重置流程 | Restricted | Complete：对应批准与更正消息 | Reviewed | Direct user input / Process-normative for source identity | Sanitized summary only；只批准第二组来源分类。`SRC-CHAT-07` 可进入需求发现、Roadmap 和架构问题定界，但不能单独或直接支撑架构决定。 |
 | SRC-USER-SOURCE-GROUP3-CONFIRMATION-20260821 | Explicit user approval and clarification，2026-08-21 | 确认第三组 Notion 来源规则、10 个间接页面纳入范围及三份竞品需求材料的 lineage | Restricted | Complete：对应批准与澄清消息 | Reviewed | Direct user input / Process-normative for source scope and lineage | Sanitized summary only；确认 `SRC-CHAT-07`、产品功能基线和竞品矩阵之间不存在直接生成或继承关系，不表示其重合 claim 可重复计权。 |
 | SRC-USER-SOURCE-GROUP4-5-CONFIRMATION-20260821 | Explicit user approval，2026-08-21 | 确认第四组 6 条历史对话规则，并确认第五组竞品矩阵的两条核心边界 | Restricted | Complete：对应批准消息 | Reviewed | Direct user input / Process-normative for source roles | Sanitized summary only；确认 178 个 source rows 只是需求输入而非正式需求，21 个官方链接只是 Evidence leads；不表示矩阵中的产品 claim 已核验。 |
-| SRC-NOTION-BASELINE-V03 | Restricted Notion；来源自称标题 `Axiom 整体架构基线 v0.3`；captured 2026-08-21 | 总体基线、模块所有权、Shell、Scene/Render、Arc、Data、Persistence/Sync 和 open decisions | Restricted | Complete：本轮可见根页正文已读；不含链接子页正文或修订历史，未固定不可变快照 | Reviewed | Historical context + architecture recommendations / Non-normative | Sanitized summary only；已核实为 25 个直接子页面的导航父页，导航层级不证明内容派生关系。 |
+| SRC-NOTION-BASELINE-V03 | Restricted Notion；来源自称标题 `Axiom 整体架构基线 v0.3`；captured 2026-08-21 | 总体基线、模块所有权、Shell、Scene/Render、Arc、Data、Persistence/Sync 和 open decisions | Restricted | Complete：本轮可见根页正文已读；不含链接子页正文或修订历史，未固定不可变快照 | Reviewed | Historical context + architecture recommendations / Non-normative | Sanitized summary only；2026-08-21 capture 当时观察为 25 个直接子页面的导航父页；导航层级不证明内容派生关系，后续层级变化见 dated capture。 |
 | SRC-NOTION-LEDGER-V03 | Restricted Notion；来源自称标题 `Axiom Decision Ledger v0.3`；captured 2026-08-21 | DL-001～021、Superseded、Source Conflict 和 Open Decisions | Restricted | Complete：本轮可见页面正文已读；不含链接目标或修订历史 | Reviewed | Historical context / Non-normative | Sanitized summary only；具体 DL/OD/Superseded/Source Conflict claim 进入步骤 2 时建立 child ID。 |
 | SRC-NOTION-ADR-V03 | Restricted Notion；来源自称标题 `Axiom Architecture Decision Records v0.3`；captured 2026-08-21 | Notion 内部 ADR 索引 | Restricted | Index-only：步骤 1 只读取索引；步骤 2 后续读取 ADR-001～013 的可见正文，边界见步骤 2 child locator | Reviewed | Evidence lead + historical context / Non-normative | Sanitized summary only；正文审计不改变本索引来源的权威性，也不增加顶层来源数。 |
 | SRC-NOTION-RFC-V03 | Restricted Notion；来源自称标题 `Axiom RFCs v0.3`；captured 2026-08-21 | Persistence、Sync、Arc ABI 等 RFC 索引 | Restricted | Index-only：步骤 1 只读取索引；步骤 2 后续读取三份 RFC 的可见正文，边界见步骤 2 child locator | Reviewed | Evidence lead + historical context / Non-normative | Sanitized summary only；正文审计不把 Draft RFC 升级为现行规范，也不增加顶层来源数。 |
@@ -132,6 +138,30 @@
 | SRC-CHAT-05 | Restricted ChatGPT share + local HTML representation，fingerprint 见下表 | 多端、Persistence/Sync、Scene/Tile、Ink/Erase、Arc 和 Host | Restricted | Partial：HTML artifact 已读完，但多数早期内容仅由模型回顾保留 | Reviewed | User-reported observations + model synthesis + requirement candidates / Non-normative | Sanitized summary + local fingerprint only；Vibe 粗细笔与橡皮擦行为未经核验，缺产品版本、平台和观察日期。 |
 | SRC-CHAT-06 | Restricted ChatGPT share + local HTML representation，fingerprint 见下表 | Vibe 产品价值、能力、AI、Semantic Graph、Overlay 和候选 POC | Restricted | Partial：HTML artifact 已读完，但最初 Vibe 输入缺失 | Reviewed | Reported observations + model synthesis + requirement candidates / Non-normative | Sanitized summary + local fingerprint only；存在 Primary-source gap，不能直接支撑架构或 POC 优先级。 |
 | SRC-CHAT-07 | Restricted ChatGPT share，captured 2026-08-21 | 市面同类型产品调研、能力归纳、需求候选，以及 Roadmap/架构问题的输入线索 | Restricted | Complete：仅指采集时可见正文已读；不证明原始会话完整，未固定不可变快照 | Reviewed | Competitive requirements research：reported observations + model synthesis + requirement candidates / Non-normative | Sanitized summary only；可用于需求发现、Roadmap 和问题定界，不能绕过需求确认与方案评审直接支撑 ADR；与两份 Notion 需求材料无直接生成或继承关系，重合 claim 仍须去重。 |
+
+### 2026-08-22 增量来源
+
+以下三项是在步骤 1 快照关闭后按增量规则登记的新输入。两份 HTML 是标题和会话身份不同的
+历史对话，不作为同一来源的两个 representation；它们与已有 Data、Runtime Flow、Binding、
+Public ABI 和 Host 材料的重合内容按 claim 去重。Notion 草案与这些对话之间存在“曾要求整理
+成页面”的来源内陈述，但缺少不可变 revision 能证明精确生成关系，因此 lineage 记为
+`Reported / not independently fixed`，不能把重合内容当成独立佐证。
+
+| 来源 ID | 类型、版本与采集点 | 覆盖主题 | 访问级别 | 读取范围 | 审核状态 | 证据角色 / 权威性 | 保留、引用、缺口与后续 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| SRC-CHAT-08 | Restricted ChatGPT local HTML representation；正式标题为“设计数据流模型”；captured 2026-08-22，fingerprint 见下表 | Semantic Schema、Operation、Snapshot/replay、Stroke/RichText/EraseMask 以及候选数据流 | Local-only | Partial：导出内可见 5 条消息已读；原会话前 5 个 turn 缺失，一个虚拟化代码块尾部未固化 | Reviewed | User request + model synthesis + architecture recommendations / Non-normative | Sanitized summary + local fingerprint only；用户要求形成一版 Notion 草案，不等于批准 Schema。它未定义完整 C ABI 或云端存储方案，并与一 Page 一 Document 的已确认需求存在待对账冲突。 |
+| SRC-CHAT-09 | Restricted ChatGPT local HTML representation；正式标题为“设计稳定 API 契约”；captured 2026-08-22，fingerprint 见下表 | 模块职责、Binding/C ABI 候选、版本化 envelope、Runtime/Arc/Data/Host 数据流 | Local-only | Partial：导出只保留 turn 6～10；开头缺失，首条模型回复的 4 个大型图块未完整固化，其余可见正文已读 | Reviewed | User question + model synthesis + architecture recommendations / Non-normative | Sanitized summary + local fingerprint only；可见用户只询问 RN 与 Web bridge 的差异并要求整理文档，没有批准具体 ABI。候选 `axiom_*`、TS facade、Data owner 和 Native Runtime Host 不覆盖现行 C ABI、Platform Host 或 SDK 边界。 |
+| SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01 | Restricted Notion；来源自称标题 `Axiom Semantic Schema Spec + IDL v0.1`，页面自称 `Draft for Review / Schema Freeze Candidate`；captured 2026-08-22 | encoding-neutral Semantic Schema、12 类 Operation、Object/Placement/Stroke/RichText/EraseMask、canonicalization、版本域和 persistence/sync mapping | Restricted | Complete：本轮可见当前页正文、表格、图和 reference IDL 已读；不含链接子页、评论或修订历史，未固定不可变快照 | Reviewed | Architecture/schema recommendation + model synthesis / Non-normative | Sanitized summary only；页面自称 authority、freeze candidate 或 supersession 不产生仓库权威性。字段、ID、Operation vocabulary 和版本规则进入 RFC/Schema 评审；不能覆盖 Accepted ADR/C API Contract。 |
+
+### 2026-08-23 增量来源
+
+本次增量把“同一批动态页面再次读取的 observation”和“用户本轮明确裁决”分开登记。capture
+不增加重复 claim 的证据权重；它只说明 2026-08-23 实际读到了哪些动态内容。
+
+| 来源 ID | 类型、版本与采集点 | 覆盖主题 | 访问级别 | 读取范围 | 审核状态 | 证据角色 / 权威性 | 保留、引用、缺口与后续 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| SRC-NOTION-ARCH-V03-CAPTURE-20260823 | Restricted Notion dynamic capture；captured 2026-08-23 | 当前可见的 01～10 架构目录、Product Object Model、Operation 深化页、Module Detailed Design Closure、Runtime Data Flow/Platform Contract/Verification 索引与 G0～G9 Master/Gate plans | Restricted | Complete：仅指本行明确列出的页面正文和已加载表格已读；不含评论、修订历史、附件、外部链接正文或不可见子页，未固定不可变 revision/hash | Reviewed | Architecture recommendations + execution-plan input / Non-normative | Sanitized summary only；这是已有动态页面的 dated recapture，不是与旧 capture 相互独立的新证据。内部 Draft/Accepted/Freeze/Complete 状态不能覆盖仓库 ADR、Contract 或运行 Evidence；细粒度任务用 `Gx/Task N` 定位，不为每个任务新增 Source ID。 |
+| SRC-USER-ARCH-REBASE-CONFIRMATION-20260823 | Direct user architecture decision，2026-08-23 | RNW/RN/Web/macOS deferred、Operation-only、一 Page 一 Document、Arc required + Canonical-only fallback、V1 对象/交互/擦除范围，以及 G0～G9 与 POC/RF/R 路线取并集 | Restricted | Complete：对应本轮用户明确裁决 | Reviewed | Direct user input / Normative for the explicitly listed architecture directions | Sanitized summary only；不批准 Notion Draft/Open 字段、具体 ABI/schema、算法、线程、存储方案，也不表示代码、Gate 或物理验证已经完成。 |
 
 ## 四、第二组审核结论：仓库与直接用户输入
 
@@ -184,7 +214,8 @@
 
 ### 1. 导航关系与内容派生关系
 
-`Axiom 整体架构基线 v0.3` 当前可确认是 25 个直接子页面的导航根页。这个事实只能建立
+`Axiom 整体架构基线 v0.3` 在 2026-08-21 capture 当时可确认为 25 个直接子页面的导航根页。
+这个 dated observation 只能建立
 `navigation_parent`，不能据此声称子页面由根页派生、彼此独立，或者版本随根页同步。
 
 页面之间只有在正文、修订记录或用户确认明确说明时，才登记 `derived_from`、`supersedes`、
@@ -206,15 +237,18 @@
 
 | 页面范围 | 读取范围与审核状态 |
 | --- | --- |
-| 根页、Decision Ledger、产品功能基线、Platform Host Contract、竞品矩阵 | 按各行写明边界的 `Complete / Reviewed`；其中 Ledger 已读 DL-001～021、Superseded、Source Conflict 和 Open Decisions。 |
-| ADR 与 RFC 汇总页 | `Index-only / Reviewed`；没有据此声称各链接正文已读。 |
-| 只从根页确认标题和链接的其他直接子页面 | `Index-only / Reviewed`；正文仍未读。 |
+| 根页、Decision Ledger、产品功能基线、Platform Host Contract、竞品矩阵 | 2026-08-21 按各行写明边界的 `Complete / Reviewed`；其中 Ledger 当时已读 DL-001～021、Superseded、Source Conflict 和 Open Decisions。 |
+| ADR 与 RFC 汇总页 | 2026-08-21 为 `Index-only / Reviewed`；没有据此声称各链接正文当时已读。 |
+| 只从根页确认标题和链接的其他直接子页面 | 2026-08-21 为 `Index-only / Reviewed`；该历史读取状态不因后续重读而被原位改写。 |
 
 这里的 `Reviewed` 只表示来源元数据与引用规则已经审核，仍不表示页面内容正确或其中决定有效。
+2026-08-23 已读取的正文统一通过 `SRC-NOTION-ARCH-V03-CAPTURE-20260823` 引用；它不能反向
+伪造 2026-08-21 已经读取这些正文。
 
 ### 4. 目录之外发现的引用页面
 
-文档索引和限定 Notion 搜索当前精确发现了以下 10 个不在根页 25 个直接子页面集合内的页面：
+2026-08-21 capture 与当时的限定 Notion 搜索精确发现了以下 10 个不在当时根页 25 个直接
+子页面集合内的页面：
 
 - `Axiom Public Runtime Facade v0.1`；
 - `Axiom Canvas Command & State Contract v0.1`；
@@ -238,7 +272,7 @@
 - 步骤 2 对可独立定位的 `DL-*`、`OD-*`、Superseded、Source Conflict 及 Notion ADR/RFC 条目
   建立 child source ID；不能独立定位的 claim 使用父 `SRC-*` 加来源原生条目 ID，不强造 source；
 - child ID 建立前按 Notion page identity 与间接发现页面去重，避免同一页面得到两个 `SRC-*`；
-- 步骤 3 对产品功能基线和竞品矩阵的具体能力行建立 `Intake ID`，用于拆分、去重和需求审核，
+- 步骤 3 已按需对产品功能基线、竞品矩阵和仓库约束建立 `Intake ID`，用于拆分、去重和需求审核，
   不把每个表格行伪装成一份独立 source；若某行实际链接到独立页面，该页面仍可另有 source ID；
 - 用户已确认 `SRC-CHAT-07`、产品功能基线和竞品矩阵之间没有直接生成或继承关系；这三项仍
   可能包含重合 claim，须在步骤 2/3 去重，不能仅凭来源数量累加证据权重。
@@ -330,7 +364,7 @@ Observation；产品版本、平台和观察日期仍是 Primary-source gap。
 
 来源自称 177 项，Collaboration 标题自称 31 项；实际分别是 178 行和 32 行。来源建议的
 `source-priority` 为 P0 53、P1 74、P2 51，合计 178。这里不修正来源，也不把 178 行当成
-178 个正式或独立需求，也不为每行建立一个 `SRC-*`。步骤 3 将按需建立 `Intake ID`，并另建
+178 个正式或独立需求，也不为每行建立一个 `SRC-*`。步骤 3 已按需建立 `Intake ID`，并另建
 `baseline-priority`；步骤 7 的问题严重度使用
 `issue-severity`，三者不得混用。
 
@@ -348,6 +382,8 @@ Requirement Candidate，owner 是 Architecture Recommendation。`○` 只表示�
 | SRC-CHAT-04 | `de470e25d93334a274ef50ef60f366bc94211591de633c4227351204e1deafab` |
 | SRC-CHAT-05 | `3d51224679bdc2cd64f13174844cee26593910302fc9196c46d6c14a30bb5709` |
 | SRC-CHAT-06 | `f299ffb5a979e368fea2b169e9a1fdfcc48924f3ec14232e597e9fa659c47531` |
+| SRC-CHAT-08 | `ae0ca28357a849f96205b6519d6bb5e391fafd8a69090176d25115f526aeec46` |
+| SRC-CHAT-09 | `ddf5339d65772cceed91a23a7ca59f91c0ca4051dfaa238b669d0e89274d8752` |
 
 这些 hash 只定位本轮读取的本地 HTML bytes，不证明内容正确。原件和提取文本都不提交。
 Notion 与 `SRC-CHAT-07` 没有不可变 fingerprint；目录已经明确记录采集日和这一限制。
@@ -358,6 +394,11 @@ Notion 与 `SRC-CHAT-07` 没有不可变 fingerprint；目录已经明确记录�
 
 - `SRC-CHAT-01～06` 缺失的原始回合；
 - `SRC-CHAT-07` 与动态 Notion 页面缺少不可变导出/revision/hash；
+- `SRC-CHAT-08/09` 缺少原始会话开头，且虚拟化代码块没有完整固化；这两个导出中可见的
+  用户消息不足以证明具体 Schema、ABI、模块 owner 或云端方案已经获批；
+- `SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01` 缺少不可变 revision/hash、评论和修订历史；相关页面
+  的 2026-08-21 记录继续保留当时 `Index-only` 状态，2026-08-23 已实际重读的范围改由新的
+  capture source 表达；
 - 步骤 1 关闭时 Notion ADR/RFC 只读索引；步骤 2 已逐项读取 13 份 ADR 与 3 份 RFC 的可见正文，
   但仍缺不可变 revision/hash、评论、修订历史和外链正文；
 - 用户已确认 `SRC-CHAT-07`、产品功能基线和竞品矩阵无直接生成或继承关系；三者仍可能有
@@ -397,10 +438,26 @@ Axiom 自身的明确产品决定与独立实验可以形成新的证据链，�
 
 ### 4. 来源快照与后续增量
 
-本轮冻结的是截至 2026-08-21 已登记的 53 条目录记录，不是对未来资料的永久封闭。以后出现
+本轮冻结的是截至 2026-08-21 已登记的 53 条历史目录记录，不是对未来资料的永久封闭。以后出现
 新的仓库 commit、Notion 页面、用户直接需求或一手产品证据时，以新 `SRC-*` 增量登记，并注明
 采集点和对现有 Requirement/Decision 的影响。第六组最终批准只关闭本次目录审核，不作为第
-54 条输入来源；批准日期和范围写入评审记录即可。
+54 条输入来源；批准日期和范围写入评审记录即可。2026-08-22 已按这条规则加入
+`SRC-CHAT-08/09` 和 `SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01`；2026-08-23 又加入动态 capture 与
+用户架构裁决。因此当前总数是 58；这不改变 2026-08-21 退出检查表记录的历史事实，也不表示
+同一动态页面被重复读取后成为两份独立证据。
+
+### 5. 2026-08-22 增量来源的下游路由
+
+新增材料不会直接进入 Accepted ADR、Stable Contract 或实现规格，而按主题拆开进入后续步骤：
+
+| 来源主题 | 先进入哪里 | 后续形成什么 | 不能直接形成什么 |
+| --- | --- | --- | --- |
+| 保存、恢复、离线、同步、云端可见结果 | 步骤 3 第三组 | `INT-DATA/COL`、可观察需求与失败行为 | 云数据库、对象存储或同步协议选型 |
+| 模块划分、状态 owner、信任与生命周期 | 步骤 4、5 | System Context、Decision DAG | 由一张数据流图直接决定 owner |
+| Semantic Schema、Operation vocabulary、canonicalization | 步骤 5、6 主题 3 | Problem/RFC、ADR、Schema Spec、迁移与 replay validation | 因页面名含 `Spec/IDL` 就视为 Frozen schema |
+| Runtime C ABI、Binding、Product SDK | 步骤 4、5、6 主题 2/8 | 边界 RFC、Contract 和 ABI conformance | 把候选 `axiom_*` 或 TS facade 覆盖现行 C API |
+| 数据流、Persistence/Sync/Cloud | 步骤 4、6 主题 3/4/9/10、步骤 7 | 端到端一致性审查、故障模型和安全/恢复设计 | 用流程图替代各边界契约 |
+| 兼容、版本与迁移 | 步骤 5～8、10 | 分版本域的 policy、版本矩阵、迁移和回滚门禁 | 用单个 `version` 同时代表 ABI、Schema、Wire 与 SDK |
 
 ## 十一、步骤 1 退出检查表
 
@@ -415,5 +472,9 @@ Axiom 自身的明确产品决定与独立实验可以形成新的证据链，�
 - [x] 用户确认第六组：来源全集、缺口及其阻塞级别；
 - [x] `tools/check_docs.py`、`git diff --check` 和私有 locator 泄漏扫描通过。
 
+2026-08-22 的 3 条和 2026-08-23 的 2 条增量来源另行完成了身份、读取范围、权威角色、引用
+限制和主题路由审核；它们不属于上面 2026-08-21 六组退出确认的范围。校验结果在本次文档
+变更完成后重新运行。
+
 步骤 1 完成只表示 Source inventory 已审核，不表示来源中的 claims 已核验或技术结论已接受。
-第六组确认不新增来源 ID；本轮来源快照仍为 53 条，后续新增材料按增量登记。
+第六组确认本身不新增来源 ID；2026-08-21 历史快照仍为 53 条，当前目录含后续增量共 58 条。

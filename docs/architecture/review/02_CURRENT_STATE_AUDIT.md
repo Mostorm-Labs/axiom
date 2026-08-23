@@ -9,11 +9,36 @@
 > [来源目录](SOURCE_CATALOG.md)
 > 评审记录：2026-08-21 五组审核全部确认；第五组确认文档迁移边界与 Decision Backlog 移交
 > 最后评审：2026-08-21
+> 增量对账：2026-08-23（重新读取 Notion v0.3，并记录用户已确认的 P0 方向；不改写下方快照）
 
 本文回答一个看似简单、实际很容易混淆的问题：截至审计基线，仓库和受限历史材料究竟已经
 决定了什么、实现了什么、验证了什么，又有哪些说法不能同时成立。本文不会选择新方案，
 也不会把 Notion 中自称 `Accepted` 的结论直接写回仓库。需要改变现行决定的事项进入后续
 Problem、RFC 和 ADR；在那之前，仓库现有规范继续有效。
+
+## 2026-08-23 增量对账说明
+
+本节是对 2026-08-21 审计快照的附加说明，不是对快照的原位修订。原始审计中的基线 commit、
+文件盘点、冲突分类、失败记录和证据成熟度均保持其采集时的含义；需要复核当日现状时，仍应
+引用 `main@74c28b1` 的快照，而不能用本节倒推当时已经作出的决定。
+
+重新遍历 Notion v0.3 并结合用户本轮裁决后，部分冲突的**方向**已经收敛，并由
+[ADR-0025](../../adr/0025-product-shell-page-operation-data-runtime.md) 记录：
+
+| 原审计条目 | 2026-08-23 方向性对账 | 尚未闭合的部分 |
+| --- | --- | --- |
+| `C-SHELL` | Web React/WASM、Windows RNW、Android/iOS/iPadOS React Native；macOS native 暂缓；Platform Host 为组合根 | RNW/各移动端的产品集成、生命周期、设备和发布证据仍待 G3/G4/G6/G9；不把 POC 可行性当成生产完成 |
+| `C-DATA-OWNERSHIP` | Shared Data Runtime 负责数据侧 custody/同步编排，Axiom 保持 Document/Operation/Snapshot 语义 | 实现语言、Bridge、物理 owner、线程、数据库、codec、wire 和安全边界仍由 RFC/Gate 冻结 |
+| `C-OPERATION-WRITE-PATH` | `Operation` 唯一 canonical mutation；内部边界为 `Atomic Operation Apply` | 现有 POC/代码中的 mutable escape hatch、旧 transaction 术语和产品 replay/undo 实现仍需迁移与验证 |
+| Page topology（原审计开放项） | 一个 Product Page 对应一个独立 Document；Page 集合由上层产品层管理 | Page repository、复制/删除/导航、跨 Page 生命周期和正式 schema/迁移尚未实现或验收 |
+| `C-PUBLIC-BOUNDARY` | 继续区分 Runtime C ABI 与产品最终公开 SDK | ABI layout、Bridge contract、兼容窗口、绑定和发布包仍为 Open |
+| `C-ARC-EVOLUTION` | Arc 为产品级 transient preview；backend 失败必须 Canonical-only fallback | 真实设备 input-to-present、handoff、故障恢复和延迟证据仍 Pending |
+
+上述对账只改变“下一步沿哪一方向验证”的标注，不把 Notion Draft/Open/Freeze Candidate、
+POC 接口或计划文字升级为已实现的产品 Contract。Schema 完整性、实现、恢复、性能、协作和
+物理平台 Evidence 仍须按 [G0～G9 总路线](../../planning/AXIOM_GATES_AND_STAGES.md) 逐项
+复现；原审计表中的 `Unresolved`/`Open` 若涉及物理实现或证据，不因方向收敛而自动改成
+`Resolved`。
 
 ## 本文用语
 

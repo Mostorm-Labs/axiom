@@ -13,13 +13,13 @@ Operation 应用结果既需要表达“哪些语义字段发生变化”，也�
 
 ## Decision
 
-- `Operation` 是可验证、持久化和协作同步的语义事实；`ChangeSet` 是成功 Document
-  transaction 针对明确 before/after revision 产生的 Runtime 内部派生结果。
+- `Operation` 是可验证、持久化和协作同步的唯一 canonical mutation；`ChangeSet` 是成功
+  Atomic Operation Apply 针对明确 before/after revision 产生的 Runtime 内部派生结果。
 - `ChangeSet` 逻辑上包含：
   - `SemanticChanges`：创建/删除实体、字段、层级/order、ResourceManifest binding 和明确
     的 layout-affecting semantic facts；
   - `InvalidationHints`：旧/新 bounds、dirty region、layout/cache/spatial hints 和优先级。
-- `SemanticChanges` 必须由 transaction 结果确定，可用于增量编译校验；
+- `SemanticChanges` 必须由 Operation apply 结果确定，可用于增量编译校验；
   `InvalidationHints` 非权威、可丢弃、可扩大、可重新计算，不能进入 Document digest、
   operation log 或 collaboration envelope。
 - SceneCompiler 收到缺失、冲突或无法证明安全的 hints 时必须扩大失效或回退 full compile；
@@ -34,6 +34,6 @@ Operation 应用结果既需要表达“哪些语义字段发生变化”，也�
 
 ## Validation
 
-POC-03 对每组 transaction 使用正确 hints、空 hints、扩大 hints、损坏/过期 hints 和 full
+POC-03 对每组实验 operation batch 使用正确 hints、空 hints、扩大 hints、损坏/过期 hints 和 full
 compile 比较 Scene digest、bounds、hit-test order 与视觉输出。R2 验证 DocumentSnapshot/operation
 log 不包含 invalidation-only 字段；R3 验证丢弃 hints 只影响性能，不影响正确性。

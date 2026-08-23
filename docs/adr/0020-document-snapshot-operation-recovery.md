@@ -15,7 +15,7 @@ Undo/Redo、crash recovery 和未来 Collaboration 仍会形成多条不一致�
 
 ## Decision
 
-- `DocumentSnapshot` 是某个已提交 transaction 边界上的完整、不可变语义检查点；
+- `DocumentSnapshot` 是某个已提交 Operation 边界上的完整、不可变语义检查点；
   `OperationContinuation` 是该检查点之后、到目标恢复位置为止的一系列已提交 Operations。
   恢复关系为：
 
@@ -44,7 +44,7 @@ Undo/Redo、crash recovery 和未来 Collaboration 仍会形成多条不一致�
 - Snapshot restore 只允许创建/恢复一个 Document、执行显式 migration 或 collaboration
   bootstrap；运行期编辑、Undo/Redo 和普通远端变化仍必须生成并应用 Operations。禁止用
   `replaceState(arbitrary_state)`、恢复旧 Snapshot 或直接修改 Scene/Document internals 绕过
-  validation、transaction、ChangeSet、Persistence 或 Collaboration。
+  validation、Atomic Operation Apply、ChangeSet、Persistence 或 Collaboration。
 - 恢复先原子验证 Snapshot identity/schema/capability/digest/frontier，再按顺序验证并应用
   continuation。gap、duplicate、out-of-order、frontier mismatch、未知 required capability、
   损坏 operation 或 digest mismatch 必须在发布新 Document 实例前失败；不能暴露部分恢复
@@ -53,7 +53,7 @@ Undo/Redo、crash recovery 和未来 Collaboration 仍会形成多条不一致�
   资源暂时 missing 不使有效 Snapshot 语义失效；RuntimeScene/GPU/cache 从恢复后的 Document
   重建。
 - Snapshot 必须从同一已提交 revision/frontier 的不可变 `DocumentReadView` 导出，不能在
-  transaction 中途或跨两个 revision 拼接。只有当 Snapshot、其 ResourceManifest binding、
+  Operation apply 中途或跨两个 revision 拼接。只有当 Snapshot、其 ResourceManifest binding、
   continuation 起点和恢复所需元数据已经持久化、校验且可读取后，才允许删除/压缩 frontier
   F 之前的 Operation prefix；blob 的保留/GC 仍按 manifest/content reachability 决定。
 - 以下术语必须区分：`DocumentSnapshot` 是可持久化语义检查点；`ViewportSnapshot` 是解释

@@ -21,7 +21,8 @@
 
 ## 1. 文档不是按标题决定权威性
 
-一份名称带有 “v1.0” 或 “Contract” 的文档不一定已经被接受。每份文档开头都必须写明：
+一份名称带有 “v1.0”、“Contract”、“Spec”、“IDL” 或 “Stable API” 的文档不一定已经被接受，
+更不会仅凭标题产生兼容承诺。每份文档开头都必须写明：
 
 - 文档状态；
 - 是否规范性；
@@ -174,6 +175,19 @@ Architecture Spec 描述系统当前应该如何工作；Contract 描述边界�
 内存、线程和生命周期、错误如何传播、版本怎样演进。它们必须引用决定来源，不能反过来
 偷偷创造新架构决定。
 
+接口和数据不能只用一个含糊的 `version`。进入 Contract/Spec 时至少分别判断是否需要：
+
+- C ABI major/minor 与可扩展 struct 版本；
+- Product SDK/API 版本；
+- Semantic Document 和 ObjectKind schema 版本；
+- Operation kind/payload 版本；
+- Snapshot codec 与持久化格式版本；
+- Sync/transport protocol 版本；
+- capability negotiation、迁移版本和最低 reader/writer 兼容范围。
+
+某一版本域升级不得被默认为其他域同时升级。每个域都要说明未知值是拒绝、只读保留、降级、
+迁移还是可安全忽略，并为已经发布的 numeric ID 规定保留和禁止复用规则。
+
 ### 4.6 Validation Plan
 
 每个重要不变量至少要有一种可执行验证。计划需列出：
@@ -212,6 +226,14 @@ Architecture Spec 描述系统当前应该如何工作；Contract 描述边界�
 一个来源若只有部分 claim 被吸收，由
 下游规范逐项引用，不改变整份来源的审核状态。
 
+同一动态页面被重新读取时，页面身份与采集观察分开记录：旧采集点的读取范围不原位改写；
+新的 dated capture 记录本次实际读取范围，并以目录中的页面身份或 `recapture_of` 关系关联旧
+记录。重新读取不会自动产生一份独立证据，也不会增加重复 claim 的权重。只有发现新的 page
+identity 时才新增页面级 `SRC-*`；一个 capture 集合可以使用一个来源 ID，并用稳定页面标题或
+来源原生条目号定位内部 claim。导航父子关系、页面改名或移动只作为 dated observation，不
+自动证明 `derived_from`、`supersedes` 或属于同一次受控发布。动态来源的 `Complete` 永远只对
+该 capture 明确列出的范围成立。
+
 ## 6. 中文写作约定
 
 - 正文以自然中文为主，避免为了显得正式而大量使用模板化短句；
@@ -234,7 +256,26 @@ Architecture Spec 描述系统当前应该如何工作；Contract 描述边界�
   和技术冲突进入后续步骤裁决；
 - 每一步退出前都执行本地链接、Markdown fence、Mermaid、术语和差异检查。
 
-## 8. 旧文档迁移记录
+## 8. 跨主题数据流与云端方案
+
+数据流图用于核对同一事实怎样跨边界流动，不单独决定模块 owner、公共接口或持久化格式。
+每条重要流程应标出 canonical/derived/lifecycle state、同步或异步边界、线程、ownership、
+revision、失败点、重试/去重和降级；图中每条跨模块箭头最终都要能回到 Contract 或明确的
+内部接口。
+
+云端存储、同步和协作属于 L3：它们改变权威状态、持久化、信任、兼容和恢复语义，必须遵循
+`Problem → RFC → ADR → Contract/Spec → Validation`。讨论至少分开：
+
+- 用户需要的 durability、offline、recovery、sync 和 collaboration 结果；
+- Semantic Document、Operation、Snapshot、Resource/Blob 的 canonical schema；
+- 本地 store、outbox、云端 journal、blob store、compaction 与 backup 的物理方案；
+- auth、tenant、permission、encryption、retention、data residency 与灾难恢复；
+- ACK/retry/dedupe/order/conflict、协议版本、迁移以及故障注入门禁。
+
+因此，一份 Schema 草案可以成为云端方案的输入，却不能证明服务拓扑、数据库、权限或恢复
+方案已经完成；同样，一张端到端图也不能替代 ABI、Persistence Port 和 Sync Contract。
+
+## 9. 旧文档迁移记录
 
 步骤 2 会为每份旧文档建立以下记录：
 
@@ -250,7 +291,7 @@ Architecture Spec 描述系统当前应该如何工作；Contract 描述边界�
 移动旧路径时优先保留链接桩，避免历史 PR、证据报告和外部引用失效。Accepted ADR 和原始
 验证证据原则上保留原路径；未完成审计前不进行批量 `git mv`。
 
-## 9. 每份步骤文档的最小模板
+## 10. 每份步骤文档的最小模板
 
 ```markdown
 # 标题

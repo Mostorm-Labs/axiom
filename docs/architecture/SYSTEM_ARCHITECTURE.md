@@ -1,10 +1,12 @@
 # Canvas v2 系统架构
 
-> 状态：Accepted Baseline；适用范围：POC-01 至 R5；相关 ADR：[ADR 索引](../adr/README.md)
+> 状态：Accepted Baseline / AR-0 Directionally Reconciled，Closure Pending；适用范围：G0～G9、POC/RF/R1～R5；相关 ADR：[ADR 索引](../adr/README.md)
 
 本文档定义 Visual Document Runtime 的模块边界、数据流和接口语义。具体容器、序列化库、协作算法和最终线程拓扑仍由对应 POC/ADR 决定，但实现不得绕过这里规定的所有权和依赖方向。
 
-V1 产品发布目标是 Web、Windows、Android（Product Tier A）。macOS/iOS/iPadOS 是 Portability Tier B，持续验证共享 Runtime 与 Ganesh/Metal，但不承诺 V1 产品 Shell；ChromiumOS 复用 Web target；Headless 是 test/reference Utility Target。完整责任见 ADR-0015。
+产品发布目标是 Web、Windows、Android、iOS 和 iPadOS。Web 使用 React/TypeScript + WASM；
+Windows 使用 RNW；Android、iOS/iPadOS 使用 React Native + Native Canvas 数据面。macOS native
+产品化暂缓，通过 Web 使用；ChromiumOS 复用 Web，Headless 是 test/reference target。见 ADR-0025。
 
 ## 1. 系统分层
 
@@ -12,10 +14,14 @@ V1 产品发布目标是 Web、Windows、Android（Product Tier A）。macOS/iOS
 flowchart TB
   subgraph Product["Product Layer"]
     ReactWeb["React / TypeScript Web"]
-    Tauri["React / Tauri Windows"]
+    RNW["React Native Windows"]
     RN["React Native Android"]
-    Apple["Apple Native POC Harness"]
+    Apple["React Native iOS / iPadOS"]
   end
+
+  Host["Platform Host<br/>composition root"]
+  DataRuntime["Shared Data Runtime<br/>DocumentSession / LocalStore / Outbox / Sync / Blob"]
+  DataBridge["Axiom Data Bridge + Runtime ports<br/>opaque Operation / Snapshot / Resource bytes + events"]
 
   subgraph Bridge["Platform Integration Boundary"]
     Wasm["WASM exports + host callbacks"]
@@ -57,37 +63,34 @@ flowchart TB
     Cache["RasterCache / TileCache / TileStore"]
     Budget["ResourceBudgetCoordinator"]
     Resources["Resources"]
-    Persistence["Persistence"]
-    Collab["Collaboration"]
   end
 
   Ganesh["Skia Ganesh"]
   Target["RenderTarget"]
   FastInk["FastInkBridge → Platform FastInk"]
+  Durable["Local Store / Cloud / Blob Store"]
 
-  ReactWeb --> Wasm
-  Tauri --> CAbi
-  RN --> Jni
-  Apple --> CAbi
+  ReactWeb --> Host
+  RNW --> Host
+  RN --> Host
+  Apple --> Host
+  Host --> Wasm
+  Host --> CAbi
+  Host --> Jni
   Wasm --> CApi
   CAbi --> CApi
   Jni --> CApi
   CApi --> Facade
-  ReactWeb --> Pointer
-  Tauri --> Pointer
-  RN --> Pointer
-  Apple --> Pointer
-  ReactWeb --> TextInput
-  Tauri --> TextInput
-  RN --> TextInput
-  ReactWeb --> SurfaceAdapter
-  Tauri --> SurfaceAdapter
-  RN --> SurfaceAdapter
-  Apple --> SurfaceAdapter
-  ReactWeb --> FrameScheduler
-  Tauri --> FrameScheduler
-  RN --> FrameScheduler
-  Apple --> FrameScheduler
+  Host --> Pointer
+  Host --> TextInput
+  Host --> SurfaceAdapter
+  Host --> FrameScheduler
+  Host -.->|compose lifecycle| DataRuntime
+  Host -.->|compose preview| FastInk
+  Product --> DataRuntime
+  DataRuntime <--> DataBridge
+  DataBridge <--> CApi
+  DataRuntime <--> Durable
   Pointer --> Input
   TextInput --> Text
   Facade --> Editor
@@ -102,7 +105,6 @@ flowchart TB
   Text --> Ops
   Ink --> Ops
   Ops --> Doc
-  Collab <--> Ops
   Doc --> Compiler
   Compiler --> RuntimeScene
   RuntimeScene --> Binding
@@ -135,18 +137,25 @@ flowchart TB
   SurfaceAdapter --> Target
   Resources --> Compiler
   Resources --> Renderer
-  Doc -.->|exports DocumentSnapshot| Persistence
-  Persistence -.->|verified restore input| Facade
-  Ops -.->|committed operations| Persistence
+  Doc -.->|exports verified DocumentSnapshot| DataBridge
+  Ops -.->|local committed event| DataBridge
+  DataBridge -.->|remote / replay Operation| Facade
+  DataBridge -.->|resource response| Resources
   Ink --> FastInk
 ```
+
+图中的 `Platform Host` 是组合根：它负责把 Shell、Axiom、Shared Data Runtime、Arc、平台
+surface 和 frame scheduler 组合起来，但不复制任何一个运行时的语义状态机。`DataBridge`、
+Persistence/Sync/Resource ports 是 Axiom 与 Shared Data Runtime 之间的窄边界；数据库、文件、
+网络和云端服务仍在图外。Arc 的 Preview presentation 失败时，Host 必须关闭或绕过该
+Preview backend，并让已经确认的输入继续沿 Canonical Renderer 路径呈现。
 
 依赖只能自上而下：Shell 的低频产品命令依赖 Runtime Public C ABI；Pointer、VSync 与 IME
 分别通过专用 adapter 进入 InputRouter、FrameScheduler 和 TextEditSession。C ABI 只提供
 generation handles、fixed-width values、explicit-length spans、caller buffers 和 borrowed
 events；Bridge 依赖 Runtime 的公开 facade，Document 不依赖 Editor、ResourceManager、
 Persistence、Skia、网络或平台，Renderer 不拥有 Document 写入口或 platform surface 生命周期。
-Persistence、Sync 和 Resource provider 通过 port/event 与 Runtime 连接，不进入 Runtime Core。
+Shared Data Runtime 的 Persistence/Sync 编排和 Resource provider 通过 port/event 与 Runtime 连接，不进入 Runtime Core。
 Serialization 是 Bridge、Operations 和 Persistence 使用的版本化 codec 机制，不是独立权威状态模块。
 
 ## 2. 平台边界
@@ -194,14 +203,14 @@ POC-03 迁移批次见 [Scene Rendering Foundation](RF01_SCENE_RENDERING_FOUNDAT
 - HTML/DOM 不插入 RuntimeScene 的任意深度。ExternalSurface 只通过受控 Overlay 层出现。
 - React/TypeScript 是当前 Tier A 产品选择；架构不变量是 WASM 窄接口、WebGL surface ownership 和共享 Runtime，不是某个具体 React/Vite 版本。
 
-### 2.2 Windows
+### 2.2 Windows / RNW
 
-- React/Tauri 负责产品 UI，C++ Runtime 在 native canvas region 中绘制。
+- React Native for Windows 负责产品 UI，C++ Runtime 在 Native Canvas Region 中绘制；本地屏幕批注使用 Native Overlay Host。
 - C ABI 版本化，使用不透明 handle；C++ 对象、STL 容器和异常不跨 ABI。
 - Windows adapter 拥有 HWND、DXGI swapchain/backbuffer、resize、present 与 device-loss 生命周期；这些类型不进入 Runtime Core。
 - DOM/WebView2 与 native canvas 使用固定层级区域，不允许单个 DOM 元素穿插在画布对象之间。
 - Pen/Pointer 输入由 native region 收集并批量进入 InputRouter。
-- React/Tauri 是当前 Tier A 产品选择。更换产品壳若保持 C ABI、native canvas region 和高频数据面边界，只需新的产品/平台决策与 contract evidence；改变这些不变量才需要 Architecture ADR。
+- RNW 是当前 Tier A 产品选择。更换产品壳若保持 C ABI、native canvas region 和高频数据面边界，只需新的产品/平台决策与 contract evidence；改变这些不变量才需要 Architecture ADR。
 
 ### 2.3 Android
 
@@ -211,18 +220,22 @@ POC-03 迁移批次见 [Scene Rendering Foundation](RF01_SCENE_RENDERING_FOUNDAT
 - JNI 只传递 opaque handle、批量结构、命令和事件；高频路径不得逐 sample 跨 JNI。
 - React Native 是当前 Tier A 产品选择。替换 JS Shell 不得改变 Native CanvasView/JNI、IME 与 Pointer 的 native 数据面不变量。
 
-### 2.4 Apple POC
+### 2.4 iOS / iPadOS RN
 
-- macOS/iOS/iPadOS adapter 拥有 native view、CAMetalLayer/Metal drawable、resize、前后台与 drawable failure 生命周期。
-- Apple 平台属于 Portability Tier B：POC-01 验证共享 Runtime 与 Ganesh/Metal，后续维持 core conformance；产品 Shell、发布和支持范围另行 ADR。
+- iOS/iPadOS adapter 拥有 native view、CAMetalLayer/Metal drawable、resize、前后台与 drawable failure 生命周期。
+- React Native 负责产品 Shell，Native Canvas/ObjC++ 负责 Canvas、Pencil、IME 与 Metal surface 数据面；高频事件不经过 RN JS。POC-01/POC-04/POC-06 的 Apple 证据迁移为产品纵切面证据。
 
-### 2.5 ChromiumOS 与自有设备
+### 2.5 macOS deferred
+
+- macOS 保留 core/Metal portability harness；当前产品通过 Web Shell 使用，不建立 native 产品发布门禁。
+
+### 2.6 ChromiumOS 与自有设备
 
 - ChromiumOS 默认复用 Web Shell 和 WASM Runtime。
 - 系统 FastInk 是平台能力，通过 FastInkBackend 注入；Runtime 不依赖 ChromiumOS、Android BSP 或 DRM 类型。
 - 自有设备预研可以拥有 RawInputSource 和 system service，但它们不进入通用 Runtime target。
 
-### 2.6 Headless
+### 2.7 Headless
 
 - V1 Headless 是 test/reference/golden 与内部受控 export Utility Target，不是公开 server/batch rendering 产品 API。
 - Headless 使用同一 Document、SceneCompiler、FrameBuilder 和 Renderer 语义，但没有 Editor viewport UI、Platform Pointer/IME 或 native overlay。
@@ -234,7 +247,7 @@ POC-03 迁移批次见 [Scene Rendering Foundation](RF01_SCENE_RENDERING_FOUNDAT
 
 Document 是唯一可保存、迁移和协作同步的业务真相，包含：
 
-- Document/Page identity、schema version 和带命名空间的 DocumentCapability requirements。
+- Document identity、schema version 和带命名空间的 DocumentCapability requirements；一个 Product Page 与该 Document 一一对应，但 Page 集合不属于 Document。
 - V1 节点、稳定 ID、层级、z-order、几何、样式和资源引用。
 - RichText 内容、Vector/Dab Stroke 的语义数据。
 - 操作与迁移需要的最小版本/因果元数据。
@@ -251,7 +264,7 @@ Document semantic state 同时包含版本化 ResourceManifest；节点只保存
 
 EditorSession 可根据产品需要局部恢复，但不作为 Document collaboration state。
 
-History/Undo intention 属于 EditorSession。Undo/Redo 选择本地 intention，并针对当前 Document revision 产生新的 compensating Operation transaction；不能倒退 Document state pointer、operation sequence 或改写旧 Operation。
+History/Undo intention 属于 EditorSession。Undo/Redo 选择本地 intention，并针对当前 Document revision 产生新的 compensating Operations；单个 Operation 的内部 Atomic Apply 不是 canonical Transaction 外层，不能倒退 Document state pointer、operation sequence 或改写旧 Operation。
 
 同一 Document 可被多个 View/EditorSession 同时观察，但生命周期不能隐式共享：
 
@@ -297,13 +310,19 @@ display list、纹理、字形、图片、raster tile 和 persistent tile 都是
 ### 4.1 V1 节点
 
 ```text
-Page
-├── Shape
-├── Image
-├── VectorPath
-├── RichText
-├── VectorStroke
-└── DabStroke
+Product Page (owned by Product Layer)
+└── one independent Axiom Document
+    ├── Shape
+    ├── Image
+    ├── VectorPath
+    ├── RichText
+    ├── VectorStroke
+    ├── DabStroke
+    ├── Connector
+    ├── Group
+    ├── Sticky
+    ├── Frame (staged schema)
+    └── PDF (staged resource/object schema)
 ```
 
 所有节点具有稳定 ID、局部变换、可见/锁定状态、稳定排序键和版本化属性集合。ID 保持
@@ -315,21 +334,24 @@ Page
 稳定排序键必须支持层级内中间插入、确定遍历/摘要及不修改无关节点；不能把容器迭代顺序
 或每次插入后全量重新编号当作语义。R2 前用实验型 ADR 冻结本地 order schema 和 migration，
 R4 再决定并发插入/移动的合并算法；当前基线不预选 fractional indexing、RGA、LSEQ 或其他
-CRDT。V1 的 `Page` 是语义内容根，可声明内容/导出边界，但不是 Viewport。Viewport 始终
-属于 `EditorSession`。V1 不允许一般节点拥有跨 Page 的隐式父子引用；`Document` 长期采用
-单 Page 还是 `DocumentRoot → Page*`，由 R2 schema/migration ADR 在产品语义明确后决定。
+CRDT。每个 Axiom Document 本身就是一个 Product Page 的语义内容根；没有 Page ObjectKind
+或 `DocumentRoot → Page*` synthetic root。Viewport 属于 `EditorSession`，跨 Page 的导航、
+排序、复制和生命周期由上层产品层的 Page Collection 管理；Shared Data Runtime 只按产品层
+契约保管并查询 PageId→DocumentId 等 repository 数据。
 
-### 4.2 扩展类别
+### 4.2 已确认的分阶段 V1 对象与未来扩展
 
 ```text
-Structural: Section / Frame / Group / Table / Sticky
-Graphics:   PDF / Connector
-Ink:        HybridStroke
-Domain:     Comment + Anchor
+V1 staged:  Frame / Group / Sticky / PDF / Connector
+Future:     Section / Table / HybridStroke / Comment + Anchor
 External:   Embed / Video / ExternalSurface
 ```
 
-V1 不实现这些节点，但 extension registry、资源引用、SceneCompiler visitor 和 unknown capability 处理必须允许未来添加。未知必需能力要显式拒绝，不能静默降级为丢失内容。
+Frame、Group、Sticky、PDF 和 Connector 已进入 V1 实施范围，按 G1/G4/G6 分阶段关闭；其中
+Frame/PDF 的具体 schema 仍需兼容契约，未闭合不等于从 V1 删除。Section、Table、HybridStroke、
+Comment/Anchor、Embed、Video 和 ExternalSurface 按各自需求与 Gate 分期；extension registry、
+资源引用、SceneCompiler visitor 和 unknown capability 处理必须允许未来添加。未知必需能力要
+显式拒绝，不能静默降级为丢失内容。
 
 ## 5. Operations
 
@@ -339,7 +361,7 @@ V1 不实现这些节点，但 extension registry、资源引用、SceneCompiler
 - **Operation**：已规范化、可回放、可持久化、可同步的确定性变化。
 - **ChangeSet**：Operation 应用结果，描述受影响节点、字段、资源、布局和 dirty hints。
 
-`ChangeSet` 不是第二种持久化事实。它由一次成功的 Document transaction 针对明确的
+`ChangeSet` 不是第二种持久化事实。它由一次成功的 Atomic Operation Apply 针对明确的
 before/after revision 派生，并逻辑上分为 `SemanticChanges` 与 `InvalidationHints`：前者
 描述创建/删除、字段、层级/order 和 ResourceManifest 等语义变化，后者描述 dirty bounds、
 layout、spatial 或 cache 优化提示。Hints 可丢弃、扩大或重算，不进入 Document digest、
@@ -353,7 +375,7 @@ Normalized Input
   → Editor/Text/Ink intent
   → command validation
   → deterministic Operation
-  → Document transaction
+  → Operation validate → Atomic Operation Apply
       ├→ committed Operation → persistence/collaboration queue
       └→ ChangeSet → SceneCompiler incremental update
 ```
@@ -372,7 +394,7 @@ DocumentSnapshot at RecoveryFrontier F
     = Document state at target frontier T
 ```
 
-`DocumentSnapshot` 是已提交 transaction 边界上的完整、不可变语义检查点，包含 Document
+`DocumentSnapshot` 是已提交 Operation 边界上的完整、不可变语义检查点，包含 Document
 identity/schema/capability、语义 graph、RichText/Canonical Stroke、ResourceManifest、
 Document revision、版本化 `RecoveryFrontier` 和可验证 digest。它不包含 EditorSession/
 History UI、Presence、Viewport、composition/Preview、RuntimeScene、GPU/cache、平台句柄、
@@ -426,9 +448,9 @@ Platform Screen
 
 Document geometry、Canonical Stroke geometry 和进入 canonical Scene digest 的几何标量以
 IEEE-754 binary32 作为 canonical storage；这不限制算法使用经过声明的 binary64 中间值。
-进入 Document transaction、Canonical commit 或 canonical Scene record 前必须是 finite，
+进入 Atomic Operation Apply、Canonical commit 或 canonical Scene record 前必须是 finite，
 `-0` 规范化为 `+0`；NaN、Infinity、不可逆矩阵、checked arithmetic 溢出和超出 schema/
-algorithm version 声明范围的结果必须整笔/整事务拒绝。Canonical serialization 使用版本化
+algorithm version 声明范围的结果必须整笔/整个 Operation 拒绝。Canonical serialization 使用版本化
 字段顺序和 little-endian bit pattern，不得 hash C++ 对象布局或依赖 locale 十进制格式。
 FMA、fast-math、flush-to-zero、libm 和算法 quantization 规则必须由算法版本声明；视觉
 golden 容差不能替代语义 digest 一致性。完整边界见 [ADR-0016](../adr/0016-numeric-geometry-determinism.md)。
@@ -502,11 +524,17 @@ flowchart LR
   Preview --> Protocol["Arc::Protocol"]
   Protocol --> Bridge["Arc::Core"]
   Bridge --> Platform["Arc Platform Preview Backend"]
+  Platform --> Host["Platform Host"]
+  Host -.->|backend unavailable / presentation failure| Canonical
   Canonical --> Ops["Operation"]
   Ops --> Doc["Document"]
   Doc --> Scene["RuntimeScene"]
   Scene --> Skia["Canonical Skia Renderer"]
+  Canonical --> Skia
 ```
+
+这里的虚线只表示呈现失败后的控制回退，不表示 Arc 可以写入 Document 或接管 Canonical
+Renderer；Canonical Stroke 始终沿 `Operation → Document → Scene → Skia` 路径提交和呈现。
 
 Arc 是与 Axiom 同仓、但可独立构建、测试和抽取的 input-to-display 模块。Axiom Ink 与
 Arc Core/平台 backend 只共同依赖版本化 `Arc::Protocol`，由 Platform Host 组装。Arc 不
@@ -535,16 +563,17 @@ class ArcPreviewBackend {
   StrokeSession/Operations 决定。多个 sealed Stroke 可以分别等待自己的 handoff。
 - Canonical 对应 revision 通过实际 presentation evidence 可见后，Preview 才能移除；GPU
   submit、render/swap 返回或一次 rAF 不能自动等同 visible。失败时保留、安全退役或切换
-  Default/Null backend，不出现空白帧或双重加深。
+  内部 no-preview/null backend，产品可见结果进入 Canonical-only rendering，不出现空白帧或双重加深。
 - Arc presentation failure 不得返回成 InkEngine/Document failure，不得取消 confirmed input
   或改变最终 Stroke/Document digest。
 - Arc Preview target 与 Axiom Canonical target 不得共享 presentable backbuffer ownership；
   可以通过 Platform Host 的不透明 capability 选择性共享 GPU device/queue/context。
 - 通用 Runtime 不引用 DirectComposition、SurfaceControl、DRM、HWC、DMA-BUF 或 plane 类型。
 
-Arc 的平台实现矩阵覆盖 Web、Windows、Android、macOS、iOS/iPadOS、ChromiumOS 和
-Headless；平台 Tier 只决定性能/真机门禁强度。自有 Android/Linux direct-plane backend 是
-条件式实现，不阻塞普通应用路线。完整决定见
+Arc 的产品实现矩阵覆盖 Web、Windows、Android、iOS/iPadOS 和复用 Web 的 ChromiumOS；
+Headless 提供 deterministic reference/trace backend。macOS 只保留 core/Metal/Web-reuse
+conformance，不承诺 native 产品 backend。自有 Android/Linux direct-plane backend 是条件式
+实现，不阻塞普通应用路线。完整决定见
 [ADR-0024](../adr/0024-arc-fastink-module-boundary.md)。
 
 ### 7.1 输入设备与编辑策略边界
@@ -558,8 +587,10 @@ eraser tip、pressure/tilt 是否真实可用及平台已有的 palm 判定；In
 locked/invisible、group-vs-child、透明对象、Text character position 等属于
 EditorSession 的 SelectionPolicy/Tool 语义。SnapEngine 属于 Editor subsystem，使用
 RuntimeScene/SpatialIndex 的 query primitives；Document 和 SceneCompiler 不知道当前
-selection 或 snap 策略。Eraser 在 POC-02 冻结为扩展语义（whole-stroke、segment、pixel/
-dab 的边界及其 Operation/ID 影响），不因本轮审查扩大最小实现。
+selection 或 snap 策略。POC-02 历史范围只冻结了 whole-stroke、segment、pixel/dab 的扩展
+边界；产品 G4 必须实现对象擦除、细矢量 Stroke 的 Segment partial erase，以及粗笔/Dab/纹理
+Stroke 的 Pixel/Dab erase mask，并分别验证 Operation、Undo/Redo、replay、Scene/Spatial/Cache
+失效和跨端结果。
 
 设备级预研分层为 `RawInputSource → FastInk Service → PreviewStrokeRenderer → ScanoutBuffer → DisplayPlane`。该 target 需要受控硬件、系统权限和 BSP，不是普通 App fallback。
 
@@ -585,7 +616,7 @@ Canonical text style 使用 `FontResourceId`/ContentHash 与规范化 fallback c
 - surrounding text 和 replacement range。
 - clipboard、快捷键和平台文本服务请求。
 
-Web、Windows、Android 运行同一文本行为语料；平台只能适配 IME，不得复制 RichText 模型。
+Web、Windows、Android、iOS 和 iPadOS 运行同一文本行为语料；平台只能适配 IME，不得复制 RichText 模型。
 
 ## 9. SceneCompiler 与渲染管线
 
@@ -713,7 +744,8 @@ eviction order、memory-pressure fallback 和计费归属必须在真实设备�
 
 ## 11. Hybrid Surface
 
-POC-05 固定使用 Overlay 做未来能力的 architecture risk proof；ExternalSurface/Video/Embed 不进入 V1 产品实现：
+POC-05 固定使用 Overlay 完成 scoped architecture risk proof；G6 在同一受控 Overlay 原则上
+产品化 ExternalSurface/Video/Embed 的 identity、placement、focus 和 lifecycle：
 
 POC-05 已由 Web（POC-01 WASM/WebGL2 Canvas + POC-05 DOM Overlay）、Windows
 RNW、Android RN 与 Apple RN/Fabric 的真实 Web/video surface 验证并标记
@@ -741,12 +773,12 @@ bitset。具体编码由 R1 contract 冻结。
 
 - 节点只保存稳定、不可复用的 ResourceId。ResourceManifest 是版本化 Document semantic state，将 ResourceId 映射到 ResourceRevision、`sha256:<content-hash>`、kind、长度和必要语义元数据；manifest binding 改变必须改变 Document digest。
 - Blob 按 ContentHash 不可变寻址。Resources 负责 resolve、hash verify、decode、版本、placeholder、CPU/GPU upload 协调；资源 missing/corrupt 只能产生诊断和派生状态，不能反向修改 Document。
-- Persistence 作为服务原子保存 `DocumentSnapshot`、committed operation continuation、
+- Shared Data Runtime 的 Persistence service 原子保存 `DocumentSnapshot`、committed operation continuation、
   resource manifest 和 blobs，并负责 migration/crash recovery；Document 本身不发起 IO。
   Snapshot 具体编码、log 分段/compaction 与 migration 格式由 R2 前实验型 ADR 决定，但
   必须保持 ADR-0020 的 frontier、原子验证和恢复关系。下载 URL、本地路径、decode/GPU/
   cache state 不进入 Document digest。
-- Resources 与 Persistence 可以共享 blob/content-addressed storage 接口，但生命周期和模块所有权保持独立。
+- Resources 与外部 Persistence service 可以共享 blob/content-addressed storage port，但生命周期和模块所有权保持独立。
 
 图片 decoder 必须在进入 canonical Image semantics 前提供一致的 decoded metadata。POC-01
 固定 fixture 不引入 EXIF/ICC 变量；R2/R3 的实验型 ADR 需要决定 EXIF orientation 是否在
@@ -757,7 +789,7 @@ codec 不得静默作出互不一致的 Document 语义。
 
 ## 13. Collaboration MVP
 
-Collaboration 只传输 Operation 和独立 Presence：
+Shared Data Runtime 的 Collaboration/Sync 能力只传输 Operation 和独立 Presence：
 
 - 本地 Operation 乐观应用后进入 durable outbound queue。
 - 远端 envelope 先做版本、大小、身份、去重和算法校验，再进入单一 Document 写入口。
@@ -787,7 +819,7 @@ POC-01 至 POC-06 默认在 canonical deterministic executor 上单线程有序�
 - FastInk backend 失败：关闭 preview path，继续 Canonical Renderer。
 - 资源加载失败：Document 保留引用，RuntimeScene 输出明确 placeholder/diagnostic。
 - Scene 增量校验失败：记录 revision，回退全量 compile。
-- 文件或远端操作损坏：在 Document transaction 前拒绝，不产生部分修改。
+- 文件或远端操作损坏：在 Atomic Operation Apply 前拒绝，不产生部分修改。
 - IME/手势取消：清理 session 临时状态，不产生 Operation。
 
 ## 16. 架构不变量
@@ -820,7 +852,8 @@ POC-01 至 POC-06 默认在 canonical deterministic executor 上单线程有序�
 - FastInkBackend 消费共享 Preview Model，不重新定义 Stroke 平滑、预测或笔刷语义。
 - Arc 与 Canonical Renderer 不共享 presentable backbuffer ownership；Platform Host 是唯一 composition root。
 - Arc presentation error 与 Canonical/Document failure domain 隔离；匹配 handoff token 与 generation 前不得 retire Preview。
-- 所有 Axiom target 均有 Arc 实现；平台支持分级只改变验收强度，不省略 backend。
+- 所有 Product Tier A target 均有 Arc 产品实现；ChromiumOS 复用 Web，Headless 与 macOS 只提供
+  适用的 reference/conformance adapter，不把 macOS 变成 native 产品 backend。
 - BrushDescriptor 是版本化、可回放的语义，不是未标版本的运行时参数。
 - Undo/Redo 通过新 compensating Operations 进入唯一 Document 写入口。
 - Android 高频 pen path 不经过 RN JS。

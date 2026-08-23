@@ -29,9 +29,8 @@ surface 当作普通 Scene node 或允许它们任意穿插 Canvas draw pass，�
   生命周期由 native/platform frame scheduler 驱动，不经过逐帧 RN/React JS。
 - Windows、Android 和 Apple 的 POC-03 C++ scene bridge 仅用于实验验证；
   产品化时必须替换为稳定 Runtime C ABI/SDK 消费路径。
-- POC-05 对 RNW 和 Apple RN/Fabric 的验证是 Shell 可行性证据，不改变
-  ADR-0015 已接受的 Windows React/Tauri Product Tier A 选择，也不构成
-  Apple V1 产品承诺；更换产品 Shell 需另行产品/平台决策。
+- POC-05 对 RNW 和 Apple RN/Fabric 的验证是 Shell 可行性证据；该证据已被 ADR-0025 用于
+  当前 Windows RNW 与 iOS/iPadOS RN 产品选择。POC-only bridge 仍不构成产品 ABI。
 
 ## Consequences
 

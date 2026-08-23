@@ -7,7 +7,7 @@ ADR 记录会长期影响 Runtime 边界、平台集成、兼容性或性能演�
 | ADR | 状态 | 决策 |
 | --- | --- | --- |
 | [0001](0001-visual-document-runtime.md) | Accepted | 项目定义为 C++20 Visual Document Runtime |
-| [0002](0002-replaceable-platform-shells.md) | Accepted | 当前 Tier A Shell 选择；长期边界由 ADR-0015 澄清 |
+| [0002](0002-replaceable-platform-shells.md) | Accepted / historical shell snapshot | 早期 Tauri/三平台选择；当前产品矩阵由 ADR-0025 替代 |
 | [0003](0003-semantic-document-runtime-scene.md) | Accepted | Semantic Document 与 RuntimeScene 分离 |
 | [0004](0004-dual-path-ink-fastink.md) | Accepted | Canonical 与 FastInk Preview 双路径 |
 | [0005](0005-skia-ganesh-v1.md) | Accepted | V1 使用 Skia Ganesh，Graphite 仅作未来 backend |
@@ -20,7 +20,7 @@ ADR 记录会长期影响 Runtime 边界、平台集成、兼容性或性能演�
 | [0012](0012-coordinate-spaces-dpi-transforms.md) | Accepted | 坐标空间、DPI、输入逆变换和 overlay placement 使用统一契约 |
 | [0013](0013-resource-identity-content-addressing.md) | Accepted | ResourceId、ContentHash、Manifest 和 blob identity 分离 |
 | [0014](0014-history-undo-compensating-operations.md) | Accepted | Undo/Redo 通过新的补偿 Operations 进入唯一写路径 |
-| [0015](0015-platform-support-tiers-shell-policy.md) | Accepted | Tier A 产品、Tier B 可移植性、Reuse 和 Headless 责任分级 |
+| [0015](0015-platform-support-tiers-shell-policy.md) | Accepted / historical tier snapshot | 早期 Tier A/Tier B、Reuse 和 Headless 分级；当前产品矩阵由 ADR-0025 替代 |
 | [0016](0016-numeric-geometry-determinism.md) | Accepted | canonical 数值存储、舍入、非法值和摘要编码遵循跨平台确定性契约 |
 | [0017](0017-platform-frame-scheduling.md) | Accepted | Runtime invalidation 与平台 VSync/frame scheduler 分离 |
 | [0018](0018-input-backpressure-coalescing.md) | Accepted | confirmed input、Preview 更新与帧请求采用分级背压/合并规则 |
@@ -30,6 +30,7 @@ ADR 记录会长期影响 Runtime 边界、平台集成、兼容性或性能演�
 | [0022](0022-runtime-public-c-api-and-cpp-style.md) | Accepted | 产品 Runtime 使用稳定 C ABI；固定 Control/Hot Path、ports、ABI versioning 与 Canvas C++ 风格 |
 | [0023](0023-hybrid-surface-controlled-overlays.md) | Accepted | Web、Windows RNW、Android RN、Apple RN/Fabric 统一采用受控 Overlay；固定 z-order 与 native hot path |
 | [0024](0024-arc-fastink-module-boundary.md) | Accepted | Arc 是可抽取、全平台实现的 input-to-display 模块 |
+| [0025](0025-product-shell-page-operation-data-runtime.md) | Accepted | RNW/RN 产品 Shell、一 Page 一 Document、Operation-only、Shared Data Runtime 与 Arc fallback 再基线 |
 
 ## 必须后续建立的实验型 ADR
 
@@ -41,7 +42,7 @@ ADR 记录会长期影响 Runtime 边界、平台集成、兼容性或性能演�
 | 产品线程拓扑与 WASM pthread | 引入 worker 前 | profiling、所有权、revision 失效和回归语料 |
 | 复杂 RichText 并发语义 | V1 MVP 后 | 字符级冲突、IME、undo intention 与收敛测试 |
 | 系统级 FastInk target | 设备产品化前 | 硬件/BSP、权限、光电延迟、plane/fallback 测试 |
-| DocumentRoot、单 Page/多 Page schema | R2 | 产品模型、导出/坐标语义、迁移与兼容测试 |
+| Page Collection repository/schema | R2/G7 | 一 Page 一 Document 已接受；验证上层集合、Document 映射、导航与迁移 |
 | Headless 公共产品 API | 产品化前 | server/batch/export 用例、安全、资源预算、稳定性和兼容性 |
 | Entity/Operation/Actor ID 与 stable order/z-order schema | R2；协作扩展在 R4 | domain/collision/replay、离线创建、中间插入、并发排序、迁移和收敛语料 |
 | V1 color/image canonicalization | R2/R3 | sRGB/P3 产品范围、ICC/EXIF、派生 decode metadata identity、export/golden 与跨平台 codec 语料；不改变 ADR-0013 blob ContentHash |

@@ -1,8 +1,20 @@
-# Canvas v2 分阶段交付计划
+# Axiom 历史 POC/RF Evidence 与 R 里程碑工作包视图
 
-> 状态：Accepted Delivery Baseline v1.1；当前阶段：POC-01 / Accepted，POC-02 / Integration Ready / Validating，POC-03 / Validating（Windows Integrated D3D12 门禁可复现失败），POC-04 / Accepted，POC-05 / Accepted（跨 Web、Windows RNW、Android RN、Apple RN/Fabric 的受控 Overlay 风险验证）；原则：按证据依赖 DAG 验证高风险边界，产品化不得越过其实际依赖
+> 状态：Historical Evidence and Milestone View；非 promotion 路线。当前历史状态：POC-01 /
+> Accepted，POC-02 / Integration Ready / Validating，POC-03 / Validating（Windows Integrated
+> D3D12 门禁可复现失败），POC-04 / Accepted，POC-05 / Accepted scoped risk proof。
 
-路线图分为技术验证层 POC-01～06 和产品化层 R1～R5。编号表达工作包，不表达无条件串行关系；设计、实现和验收遵循以下 evidence DAG：
+> 2026-08-23 再基线：本文保留 POC/RF/R 工作包的历史设计、阈值和证据状态；唯一的产品
+> promotion 顺序已改为 [AR-0 → G0～G9 → R5-B](AXIOM_GATES_AND_STAGES.md)。若本文的 Shell、
+> Page topology、旧 Transaction 外层语义、产品对象或 POC-05/06 定位与新总路线冲突，以 ADR-0025
+> 和新总路线为准；历史 POC 中的 transaction 仅保留为实验事实。
+> 历史失败和量化阈值继续有效。任务与 Gate 状态只在
+> [Gate Task Tracker](GATE_TASK_TRACKER.md) 维护；R1～R5 状态只在
+> [R 里程碑状态表](R_MILESTONE_STATUS.md) 维护。
+
+本文把工作包分为历史技术验证 POC-01～06、RF 参考输入和产品里程碑 R1～R5。编号不表达
+产品晋级顺序；G0～G9 对这些工作包作 many-to-many 映射。下图只表达“某份历史结果曾为
+哪份后续工作提供输入”的 Evidence lineage，不是现行任务依赖、启动条件或晋级图：
 
 ```mermaid
 flowchart LR
@@ -25,20 +37,26 @@ flowchart LR
   P6 --> R3Fast["R3 FastInk productization"]
 ```
 
-POC-02/03/04 的核心工作可在 POC-01 后并行。POC-02 达到 `Integration Ready / Validating` 后，POC-03 integrated ink gate、POC-06 和 R1 foundation 可以消费其实验性契约，无需等待 POC-02 最终延迟验收；POC-02 的规模性能由 POC-03 integrated ink gate 联合验证，平台级低延迟 Preview 由 POC-06 验证。POC-05 已通过跨端受控 Overlay 风险验证并标记 `Accepted`，但只冻结 future-capability 边界，不把 ExternalSurface 加入 V1，也不把 POC-only scene bridge 当作稳定 C ABI。R1 工程准备可在证据收集期间进行，但 R1 acceptance 仍要求依赖图中的功能、规模与产品门禁全部满足。POC-05 的产品化 bridge、任意 DOM/native 穿插和 zero-copy texture 仍需后续 ADR；POC-06 可与 R1 并行，但在通过前阻塞 R3 FastInk 产品化。任何未通过 POC 的接口都不能因并行开发或合并而被提前视为稳定产品契约。
+POC-02/03/04 的核心工作可在历史层面并行，但产品 Gate 仍按总路线晋级。POC-02 达到
+`Integration Ready / Validating` 后可以提供实验性输入；不等于 G4 PASS。POC-05 的受控
+Overlay 证据进入 G6 产品 contract；POC-only scene bridge 不成为稳定 C ABI。POC-06/Arc 是
+G4/R3 硬需求，任何 backend 失败都必须进入 Canonical-only fallback。任何未通过 POC 的接口
+都不能因并行开发或合并而被提前视为稳定产品契约。
 
 每个性能结果必须记录设备、系统、编译器、构建模式、Skia commit/backend、场景版本、分辨率和采样方法。下文阈值是当前门禁；如基准设备变化，只能通过 ADR 修订。
 
-## 阶段状态
+## 历史工作包状态词
 
 - `Not started`：没有形成阶段契约。
 - `Designing`：接口、语料、基准和失败模式正在冻结。
 - `Validating`：用可丢弃 POC 获取证据。
-- `Implementing`：POC 已通过，正在构建产品实现。
-- `Accepted`：全部退出条件有可重复证据。
+- `Implementing`：历史工作包曾使用的“产品实现进行中”状态；不解锁任何 Gate。
+- `Accepted`：只表示该历史工作包在其声明范围内有重复证据；不等于 Gate 或 R 里程碑通过。
 - `Rejected`：假设被推翻，必须 ADR 记录替代路线。
 
-`Integration Ready` 不是新的终态，而是可与 `Validating` 并存的非终态集成资格：表示已列明的功能、确定性和契约证据足以解除下游实验阻塞，但尚未满足该 POC 的全部退出条件。它不等于 `Accepted`，不冻结产品 ABI，也不允许删除或降低剩余门禁。
+`Integration Ready` 不是新的终态，而是可与 `Validating` 并存的历史证据标签：表示已列明
+内容可以成为后续 Gate 的输入，但尚未满足该 POC 的全部退出条件。它不等于 `Accepted`，
+不冻结产品 ABI，不解锁 Gate，也不允许删除或降低剩余门禁。
 
 # 第一层：技术验证
 
@@ -58,11 +76,14 @@ semantic digest。ADR-0017～0019 分别在首次消费帧调度、输入队列�
 
 - 定义最小 `CanvasRuntime` facade、opaque runtime/document/view handles 和 host callbacks。
 - 定义 WASM API 与版本化 C ABI 的错误、字符串、数组、所有权和生命周期规则。
-- 定义最小场景：Page、Rect/Shape、Image、VectorPath、只读 Text。
+- 定义最小场景：外层 Product Page 对应的独立 Document context，以及 Rect/Shape、Image、
+  VectorPath、只读 Text；Page 不是 Document 内的 ObjectKind。
 - 定义固定坐标、颜色空间、DPI、资源、字体和逻辑摘要格式。
 - 应用 ADR-0016 的 canonical binary32、finite-only、canonical zero、little-endian digest
   和 checked overflow；POC-01 继续使用固定 sRGB fixture，但不据此决定 V1 产品色彩范围。
-- POC fixture 使用 Page/World、View Logical 与 Device Pixel 的显式元数据；固定 DPR 1 只用于 POC-01 golden，不替代 ADR-0012 的长期坐标契约。
+- POC fixture 使用 Document 的 Page/World、View Logical 与 Device Pixel 显式元数据；这里的
+  Page/World 是外层 Product Page 对应 Document 的坐标空间，不是 Document 内的 Page 节点。
+  固定 DPR 1 只用于 POC-01 golden，不替代 ADR-0012 的长期坐标契约。
 - 定义单线程 event loop：command → document → scene → frame。
 - 定义 WebGL2、D3D12、Metal 和 Android GLES3 `PlatformSurfaceAdapter`；adapter 拥有 native surface/context 的 acquire/resize/present/recover，平台句柄不得进入通用 Runtime 或 `RenderTarget` 公共契约。
 - 选择并登记 Windows/Web 基准设备与浏览器，作为 POC-01～03 性能基线；Apple/Android 记录验证设备但不替代该性能基线。
@@ -74,8 +95,8 @@ semantic digest。ADR-0017～0019 分别在首次消费帧调度、输入队列�
 - create/move/delete 操作回放 10 次，digest 和 operation sequence 全部一致。
 - 从两个独立空 Document 应用相同 create/move/delete sequence，最终 revision/sequence/
   digest 一致，证明 POC Core 由 Operation 驱动；本阶段不实现正式 DocumentSnapshot codec。
-- x64、arm64、WASM 对 `-0/+0`、NaN/Infinity、极端 finite 值和溢出 transaction 的接受/
-  拒绝结果一致；拒绝不产生部分修改。
+- x64、arm64、WASM 对 `-0/+0`、NaN/Infinity、极端 finite 值和 Operation apply checked
+  overflow 的接受/拒绝结果一致；拒绝不产生部分修改。
 - 连续创建/销毁 runtime、document、view 100 次，sanitizer/浏览器控制台无泄漏错误或 use-after-free。
 - Release 构建连续渲染 1,000 节点 60 秒，不出现崩溃、无限增长和单帧 > 100 ms。
 - Web 构建不得要求 SharedArrayBuffer、COOP/COEP 或 pthread。
@@ -109,7 +130,9 @@ semantic digest。ADR-0017～0019 分别在首次消费帧调度、输入队列�
 
 ## POC-02 — Ink Engine
 
-> 当前结论：**Integration Ready / Validating**。POC-03 integrated ink gate、POC-06 和 R1 foundation 已解除启动阻塞；延迟、正式真机 Human Ink Gate 和联合规模性能仍是 Pending，不因分支合并而视为通过。
+> 当前结论：**Integration Ready / Validating**。其已列明输出可作为 G4/G5 的实验输入；
+> 延迟、正式真机 Human Ink Gate 和联合规模性能仍是 Pending，不因分支合并而视为通过，
+> 也不解锁任何 Gate 或 R 里程碑。
 
 ### 目标
 
@@ -204,7 +227,8 @@ semantic digest。ADR-0017～0019 分别在首次消费帧调度、输入队列�
 - [ ] Preview p95/p99 延迟达到 16.7/33.3 ms。
 - [ ] 延迟报告同时包含毫秒、刷新率、frame intervals、sample-to-visible frame count 和 queue age；高刷体验没有被 60 Hz baseline 掩盖。
 - [ ] 所有 handoff/cancel/prediction 语料无空白和 Document 污染。
-- [ ] 三平台 Human Ink Gate 已在代表性设备完成，无未分类的书写中断、明显抖动或 handoff 缺陷；所有主观问题均能关联 trace/录屏。
+- [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN Human Ink Gate 已在代表性设备完成，无未分类
+  的书写中断、明显抖动或 handoff 缺陷；所有主观问题均能关联 trace/录屏。
 - [ ] Stroke 模型没有退化为只保存 `SkPath` 或 bitmap。
 - [ ] 长笔迹没有 pointer-up 集中计算尖峰；BrushDescriptor 与坐标/viewport 语料通过确定性门禁。
 - [ ] 数值边界、deterministic PRNG、burst/backpressure、过载取消和过期 frame generation 语料全部通过。
@@ -301,11 +325,12 @@ D3D12 Integrated Playground 的真实设备门禁失败必须保留为架构风�
 - [ ] 空/错误/过期 InvalidationHints 不改变 Scene 正确性；logical pass 优化不改变视觉结果。
 - [ ] device loss/cache clear 可完整恢复。
 - [ ] 多 View frame scheduling、target generation 和 deterministic scene generator 语料通过。
-- [ ] Integrated Performance Playground 完成三平台评审；Android 真机不存在未分类的输入中断、交互冻结或内存无界增长。
+- [ ] Integrated Performance Playground 完成 Web、Windows RNW、Android RN、iOS/iPadOS RN 评审；
+  Android 真机不存在未分类的输入中断、交互冻结或内存无界增长。
 - [ ] Windows、Chrome Stable Web、Pixel 7 在 1K/10K/50K/100K 完成 pan/zoom/write/select/drag 证据；普通节点 drag 不伪造 MoveStroke。
 - [ ] POC-03 未提前实现 RichText 编辑或 ExternalSurface placement；仅 simple Text 和 reserved pass 进入 Scene POC。
 
-### POC-03 之后的生产渲染基础（不改变 POC 编号）
+### 与 POC-03 有 Evidence lineage 的生产渲染基础（不改变 POC 编号）
 
 POC-03 完成基础验证后，按 [ADR-0021](../adr/0021-render-scene-spatial-index-tiling-boundaries.md)
 进入三个可独立审查的渲染基础工作包。它们是 R3 前的必要技术准备，不把 POC-03 的 direct
@@ -349,7 +374,7 @@ macOS、iOS 和 iPadOS 上完成统一的真实 IME 编辑闭环。POC-04 只有
 
 - Web、Windows、Android 运行同一 canonical 行为矩阵：英文、简体中文、中文拼音、换行、混合 runs、selection、caret、clipboard、undo/redo。
 - Web、Windows、Android、macOS、iOS、iPadOS 分别提交真实 native IME 回调、组合/提交/取消、最终文本、selection/caret 和 view 生命周期证据；平台回调名称不要求相同。
-- composition cancel 不产生 Operation；commit 只产生一次可回放事务。
+- composition cancel 不产生 Operation；commit 只产生一次可回放 Text Operation。
 - 同一已提交编辑序列的 TextDocument digest 在 Web/Windows/Android canonical 轨道 100% 一致；Apple 设备提交独立 digest 证据。
 - 使用固定字体时，layout line/cluster/selection geometry 与黄金数据一致；允许的像素差异按黄金图门禁处理。
 - 同一 FontResourceId/ContentHash/fallback chain 在 Web/Windows/Android 产生相同 canonical shaping、换行、caret 与 selection geometry；系统安装字体差异不能改变结果。
@@ -388,14 +413,19 @@ macOS、iOS 和 iPadOS 上完成统一的真实 IME 编辑闭环。POC-04 只有
 
 ### 目标
 
-证明 WebView/Video 等未来外部内容可以通过受控 Overlay 与 Native/WASM Canvas 共存，而不破坏 RuntimeScene、输入和 z-order 边界。本 POC 是 architecture risk proof；ExternalSurface/Video/Embed 不进入 V1 产品实现，也不阻塞 R1～R5。跨 Web、Windows RNW、Android RN、iOS/iPadOS RN/Fabric 的证据已在 [POC-05 收敛报告](../evidence/poc05/consolidated-validation-20260820.md) 中完成。
+证明 WebView/Video 等外部内容可以通过受控 Overlay 与 Native/WASM Canvas 共存，而不破坏
+RuntimeScene、输入和 z-order 边界。本 POC 是 architecture risk proof；它为 G6/R3 重新建立
+ExternalSurface/Video/Embed 的产品 contract 提供证据，但 POC-only scene bridge 不直接晋升为
+稳定 ABI 或完整产品 schema。任意 DOM/native 穿插、zero-copy texture 和复杂 mask/effect 仍不在
+当前承诺内。跨 Web、Windows RNW、Android RN、iOS/iPadOS RN/Fabric 的证据已在
+[POC-05 收敛报告](../evidence/poc05/consolidated-validation-20260820.md) 中完成。
 
 ### 设计
 
 - 定义 ExternalSurface semantic placeholder、surface ID、bounds、clip、opacity 和 lifecycle。
 - 定义 RuntimeScene `ExternalSurfaceId` 与平台 `ExternalSurfaceRegistry` 的映射；native handle 不进入 RuntimeScene、FrameState 或 frame plan。
 - 定义 FrameGraph 中 ExternalSurface pass 与平台 overlay placement。
-- 定义 DOM/native canvas、RN native view 和 Tauri/WebView2 的固定 z-order 规则。
+- 定义 DOM/native canvas、RN native view 和 WebView2/Windows native overlay 的固定 z-order 规则。
 - 定义移动、缩放、滚动、隐藏、页面切换、前后台和销毁行为。
 - 明确首版不支持 texture import、zero-copy、复杂 mask/effect 和任意节点间 DOM 插入。
 
@@ -427,15 +457,19 @@ macOS、iOS 和 iPadOS 上完成统一的真实 IME 编辑闭环。POC-04 只有
 - [x] Web 100 次 lifecycle 及 native runner lifecycle corpus 通过；平台报告记录 surface 计数、失败恢复和资源生命周期。
 - [x] focus/input/failure 语料在各平台 adapter 的实际范围内通过；WebView 内单指输入归 WebView 所有，Canvas 双指手势由 native owner 接管。
 - [x] 产品架构接受“受控 Overlay、不任意穿插”的限制。
-- [x] POC 结果只冻结未来扩展边界，没有把 ExternalSurface 加入 V1 schema、R3 产品 target 或发布门禁。
+- [x] POC 结果冻结受控 Overlay 的证据边界，并作为 G6/R3 产品 contract 的输入；POC-only
+  scene bridge 未进入稳定 ABI。任意 DOM/native 穿插、zero-copy texture 和复杂 mask/effect
+  仍明确排除，不能由本报告推导出未验证的产品能力。
 
 ## POC-06 — FastInk / Arc
 
 ### 目标
 
-证明 Arc 可以作为可抽取的 input-to-display 模块，在所有 Axiom target 上通过独立 Preview
-Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独立演进。普通应用路线
-必须可用，设备级 Direct Plane 作为条件式预研。
+证明 Arc 可以作为可抽取的 input-to-display 模块，在 Web、Windows RNW、Android RN、iOS/iPadOS
+RN 四类产品目标上通过独立 Preview Presentation Target 消费同一 Stroke 语义，并与 Canonical
+Renderer 独立演进。macOS 只保留共享 Core/Metal/Web-reuse conformance，不形成 native 产品
+发布目标；ChromiumOS 复用 Web，Headless 作为协议与回放 oracle。普通应用路线必须可用，设备级
+Direct Plane 作为条件式预研。
 
 ### 设计
 
@@ -444,20 +478,29 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - 将 POC-02 共享 Preview Model 适配为版本化 C/POD 协议；固定宽度类型、`struct_size + abi_version/schema_version`、坐标空间、viewport transform/revision、DPR、target generation 和调用期 buffer lifetime。
 - 冻结可靠控制面 `begin/push/sealInput/canonicalCommitted/canonicalVisible/cancel`，以及 matching HandoffToken 后 retire 的多 Stroke 状态机；duplicate 幂等、stale/reordered ack 不得误清 Preview。
 - 保持 POC-02 Preview Model 不变；Arc backend 只负责低延迟显示，不重新实现 smooth/prediction/brush。Preview 数据面可有界合并，lifecycle/handoff 控制面不可丢弃。
-- 冻结错误域：Arc presentation failure 只降级 Default/Null Preview 并请求 Canonical redraw，不能取消 confirmed input、阻断 Document commit 或改变最终 digest。
-- 为 Web、Windows、Android、macOS、iOS/iPadOS、ChromiumOS 和 Headless 定义 Arc 实现；分级只影响验收强度，不省略 target。设备分轨定义可选 RawInputSource、Arc Service、PreviewStrokeRenderer、ScanoutBuffer、DisplayPlane 边界。
+- 冻结错误域：Arc presentation failure 关闭 Preview 或切换内部 no-preview/null backend，并使
+  产品可见结果进入 Canonical-only rendering；不能取消 confirmed input、阻断 Document commit
+  或改变最终 digest。
+- 为 Web、Windows RNW、Android RN、iOS/iPadOS RN 定义产品 Arc 实现；ChromiumOS 复用 Web，
+  Headless 提供协议/回放/fuzz/null backend。macOS 仅在共享 ABI 或 Metal/Web-reuse 变更时运行
+  可选 conformance，不作为 native 产品 target 或发布门禁。设备分轨定义可选 RawInputSource、
+  Arc Service、PreviewStrokeRenderer、ScanoutBuffer、DisplayPlane 边界。
 - 定义 presentation receipt 的证据等级，区分 render complete、GPU submit、present accepted、compositor visible 和光电 input-to-photon；不得用前者冒充后者。
 
 ### 验证
 
-- 所有 target 使用相同 Pointer/Stroke 语料验证 lifecycle、Stroke ID、Preview revision、HandoffToken、generation 和最终 digest；Headless 是确定性协议 oracle。
+- 四类产品目标、macOS conformance、Web reuse 和 Headless 使用相同 Pointer/Stroke 语料验证
+  lifecycle、Stroke ID、Preview revision、HandoffToken、generation 和最终 digest；Headless 是
+  确定性协议 oracle。
 - Default 与 Arc sink 消费相同 replay 后的控制事件和 confirmed/predicted revision 序列一致；backend 没有第二套 Stroke 算法。
 - Tier A 基准设备上 Preview absolute p95 ≤ 16.7 ms、p99 ≤ 33.3 ms，同时记录 refresh rate、sample-to-visible frame count、missed presentation、queue age 和 evidence level。
 - Canonical 接管不超过 2 帧，无空白、双重加深、残影或位置跳变超过 1 device pixel。
 - 覆盖 duplicate/reordered/stale ack、慢 consumer、queue overrun、多指交错、快速连续笔、cancel、resize、app background、surface/device loss 和 generation replacement；只允许 Arc 降级，不丢最终 Stroke。
 - Web A/B 验证 normal WebGL2 与 `desynchronized`，高频输入走薄 JS adapter、`pointerrawupdate`/fallback 与 coalesced batch，不进入 React state，不强制 Worker/SAB。
 - Windows 使用 WM_POINTER/history 与独立 D3D/DXGI/DirectComposition Preview target；Android 使用 MotionEvent/history→Native CanvasView→JNI 与 low-latency target，证明不经过 RN JS。
-- macOS、iOS/iPadOS 分别完成 Native/coalesced input、Metal Preview target、生命周期和代表设备 conformance；Apple prediction 只能作为 InkEngine hint，不能由 backend 直接产生另一套 Preview。
+- iOS/iPadOS RN 分别完成 Native/coalesced input、Metal Preview target、生命周期和代表设备
+  conformance；macOS 只完成共享 Core/Metal/Web-reuse conformance，不设 native 产品门禁。Apple
+  prediction 只能作为 InkEngine hint，不能由 backend 直接产生另一套 Preview。
 - ChromiumOS 通过 Web reuse conformance 与 optional system capability fallback；Headless 完成 state-machine/replay/fuzz/null-backend。
 - 若具备自有设备/BSP，额外测量 raw input → scanout 光电延迟、plane 生命周期和系统回退；结果不作为普通应用 R1 阻断项。
 
@@ -465,7 +508,9 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 - 在顶层 `arc/` 实现可 standalone configure/build/install 的 `Arc::Protocol`、`Arc::Core`、Null/fallback、诊断和 external-consumer smoke；在 `pocs/fastink/` 实现 POC-06 harness 与报告。
 - 实现 per-Stroke 幂等状态机、可靠控制面、有界可合并数据面、HandoffToken、presentation receipt、错误隔离和 backend capability query。
-- 实现 Web、Windows、Android、macOS/iOS/iPadOS、ChromiumOS reuse 与 Headless backend。Web/Android 可以与 Host 聚合成单 WASM/`.so`，不强制动态库边界。
+- 实现 Web、Windows RNW、Android RN、iOS/iPadOS RN、ChromiumOS Web reuse 与 Headless backend；
+  macOS 仅实现共享 Core/Metal/Web-reuse conformance harness。Web/Android 可以与 Host 聚合成单
+  WASM/`.so`，不强制动态库边界。
 - 为 POC-02 Preview Model 实现 protocol adapter；presentation error 由 Arc Bridge 吸收，不能反向成为 Ink/Document error。
 - 实现 Canonical/Preview 独立 target ownership 与 lifecycle trace；平台公共头之外不得泄漏 native/GPU 类型。
 - 条件式设备 POC 使用 `Raw Input → service → Skia Raster/GPU → DMA-BUF/GBM → DRM atomic overlay`，不把设备类型泄漏到 Runtime。
@@ -474,34 +519,47 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 - Arc Protocol/API、依赖图、presentation ownership、时序图、capability、receipt 与 fallback 规范。
 - 可独立消费的 Arc targets、全平台 backend/harness 和 dependency-boundary 检查。
-- Tier A latency/handoff/failure 真机报告；Tier B Apple 代表设备 conformance/lifecycle 报告；Reuse/Headless 自动化报告。
+- Web、Windows RNW、Android RN、iOS/iPadOS RN 的 latency/handoff/failure 真机报告；macOS
+  shared Core/Metal/Web-reuse conformance 报告；ChromiumOS reuse 与 Headless 自动化报告。
 - 普通应用 backend demo；条件满足时附设备级研究报告与原型。
 - R3 产品级 Arc preview backend 的输入契约。
 
 ### 退出条件
 
-- [ ] Web、Windows、Android Preview 延迟达到 16.7/33.3 ms 门禁。
-- [ ] Tier A 延迟报告同时包含毫秒、刷新率、frame count、missed presentation、queue age 和 evidence level；高刷体验通过 Human Ink Gate。
+- [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN Preview 延迟达到 16.7/33.3 ms 门禁。
+- [ ] 各产品目标的延迟报告同时包含毫秒、刷新率、frame count、missed presentation、queue age
+  和 evidence level；高刷体验通过 Human Ink Gate。
 - [ ] handoff ≤ 2 帧且视觉/位置门禁通过。
 - [ ] 所有 fallback 语料保留 Canonical Stroke。
-- [ ] Web、Windows、Android、macOS、iOS/iPadOS、ChromiumOS 和 Headless 均有可构建 Arc 实现；Apple 代表设备 conformance/lifecycle 报告完成。
+- [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN、ChromiumOS reuse 和 Headless 均有可构建
+  Arc 实现；macOS shared Core/Metal/Web-reuse conformance 完成。macOS 不产生 native 产品
+  发布门禁。
 - [ ] Arc 可独立 configure/build/test，external consumer 只链接 namespaced target；平台依赖没有进入通用 Document/Scene/Renderer。
 - [ ] Canonical 与 Preview 不共享 presentable backbuffer ownership，presentation failure 不能传播为 Canonical failure。
 - [ ] Default 与 FastInk sink 消费同一 Preview replay 后的 confirmed/predicted revision 序列一致，平台没有第二套 Stroke 算法。
 - [ ] 多 Stroke handoff、乱序/重复/旧 generation ack、快速连续笔和多指语料均无误清、卡死、丢线或部分 Document。
-- [ ] 设备级研究的完成与否不阻断进入 R1。
+- [ ] 设备级研究不属于普通应用 Gate 的适用退出条件时，Gate Report 必须写
+  `not_applicable` 及理由；不能用本条表达对 R1 或任何 Gate 的解锁。
 
-# 第二层：产品化
+# R1～R5 产品里程碑历史说明
+
+以下 R1～R5 章节保存设计意图、语料和既有阈值，不构成第二条产品执行路线。每个 R 的实际
+接受都必须先满足 [唯一 Gate 路线](AXIOM_GATES_AND_STAGES.md) 中映射的全部必需任务、跨任务
+集成测试和里程碑退出条件，并在 [R 里程碑状态表](R_MILESTONE_STATUS.md) 记录 Evidence。
 
 ## R1 — Runtime Foundation
 
 ### 目标
 
-将 POC-01～04 已验证的共享 Runtime、Ink、Scene 与 Text 接口重建为可维护的产品工程基础，而不是直接复制 POC 代码。POC-06 可并行完成并在接受后迁入；POC-05 是非 V1 future-capability risk proof。
+建立由 G0～G3 贡献的可维护 Runtime Foundation：工程、验证基础、Semantic Kernel、
+RuntimeScene 和最小 canonical Canvas 纵切面。Ink/Arc 的产品行为由 G4 验收，RichText/IME
+产品行为由 G6 验收；R1 不因复用 POC-02/04 而提前验收它们。POC bridge 不能升级为产品 ABI。
 
 ### 设计
 
-- 冻结 core module 依赖图、公开 facade、CMake targets 和 third-party policy，包括 render、View/Frame、Resources 与 Persistence 的独立边界。
+- 冻结 core module 依赖图、公开 facade、CMake targets 和 third-party policy，包括 render、View/Frame、
+  Resources 与 Persistence ports 的独立边界；具体 LocalStore、journal/checkpoint、Blob 和 Sync
+  物理实现由 Shared Data Runtime 负责，不归 Axiom Core 所有。
 - 以 [Runtime Public C API Contract](../api/RUNTIME_C_API_CONTRACT.md) 和
   [规范性 v1 header](../api/canvas_runtime_api_v1.h) 冻结 WASM/C ABI/JNI 的 symbol、
   generation handle domain、`struct_size + abi_version`、count/stride、capability、borrowed
@@ -525,12 +583,13 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 验证
 
-- Product Tier A 从干净环境构建；公开头文件和 Bridge contract tests 100% 通过。core/public ABI 变更同时编译 Portability Tier B。
+- Web、Windows RNW、Android RN、iOS/iPadOS RN 从干净环境构建；公开头文件和 Bridge contract tests 100% 通过。core/public ABI 变更同时运行 macOS core/Web-reuse harness。
 - 规范性 C header 在 C11/C++20/ObjC++ 下 self-contained compile，WASM/JNI wrapper 使用同一
   symbol/struct/enum manifest；short/long struct、unknown enum、stale/wrong-domain handle、
   buffer-too-small、callback lifetime/reentrancy 和 exception translation 语料通过。
 - 核心依赖检查确保 Document 不依赖 Skia/platform/network/ResourceManager/Persistence，Renderer 无 Document 写接口或 native surface 类型。
-- POC-01～04 的阻断语料在产品骨架中继续通过；POC-06 已完成时一并迁入，未完成时不得建立 FastInk 产品特例。POC-05 作为非 V1 risk proof 不阻塞 R1。
+- 与 G0～G3 实际任务相关的 POC 阻断语料在产品骨架中继续通过；Ink/Arc、RichText/IME 与
+  ExternalSurface 的完整产品语料分别留给 G4/G6，不得作为 R1 的独立验收或解锁条件。
 - Numeric/Geometry、clock/random、input backpressure、frame scheduling、ChangeSet/hints 和
   capability namespace contract tests 100% 通过。
 - Snapshot restore 只能创建/恢复 Document；普通 edit/undo/redo 通过唯一 Operation 写入口的
@@ -549,7 +608,8 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
   capability negotiation 和 PlatformFrameScheduler contract harness。
 - 建立格式无关的 DocumentSnapshot/RecoveryFrontier facade 与 mock recovery harness；不在
   R1 提前选择数据库、文件 codec、日志 compaction 或 collaboration frontier 实现。
-- 实现 Web/Windows/Android 最小 shell integration 与生命周期框架。
+- 实现 Web、Windows RNW、Android RN、iOS/iPadOS RN 最小 shell integration 与生命周期框架；
+  macOS 运行 shared Core/Web-reuse conformance harness，不建立 native 产品 shell。
 - 迁入测试资产和 benchmark runner，不迁入未评审 POC 快捷实现。
 
 ### 交付物
@@ -562,13 +622,15 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 退出条件
 
-- [ ] Product Tier A clean build 和 contract tests 全部通过；core/public ABI 变更的 Tier B build/conformance 通过。
+- [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN 的 clean build 和 contract tests 全部通过；
+  core/public ABI 变更的 macOS shared Core/Web-reuse conformance 通过。
 - [ ] C ABI C11/C++20 self-containment、handle domain、struct versioning、caller buffer、callback
   lifetime/reentrancy、exception translation 和跨平台 ABI manifest 全部通过。
 - [ ] Pointer/VSync/IME hot path 没有逐 sample JS/QML/JSON bridge；Runtime public header 不包含
   Skia、STL、platform、network、database 或 thread headers。
 - [ ] clang-format check 和 Canvas naming/dependency lint 在产品目录强制执行。
-- [ ] POC-01～04 的阻断语料在产品骨架中无回归；已接受的 POC-06 语料必须迁入，POC-05 不作为 V1/R1 门禁。
+- [ ] G0～G3 的全部 R1 必需任务、跨任务集成和 R1 里程碑退出条件通过；只有映射到这些任务
+  的 POC/RF 语料作为输入迁入。G4/G6 产品语料不在 R1 提前验收。
 - [ ] 核心依赖图符合架构不变量。
 - [ ] 没有 POC-only 平台特例进入公开 Runtime API。
 - [ ] ID/capability domain 不混用，wall clock/平台 random 不进入 semantic digest，队列与
@@ -580,17 +642,23 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 目标
 
-完成 V1 本地节点、Operations、EditorSession、RichText、Ink、Persistence 和资源管理的产品语义。完整 V1 产品范围在 R4 Collaboration MVP 通过后闭合。
+完成 V1 本地节点、Operations、EditorSession、RichText、Ink、Axiom Persistence semantic ports、
+资源语义与 Shared Data Runtime 本地保存/恢复集成。完整 V1 产品范围在 R4 Collaboration MVP
+通过后闭合。
 
 ### 设计
 
-- 在实现前通过 schema/migration ADR 决定单 Page 还是 `DocumentRoot → Page*`，并冻结 Page、Shape、Image、VectorPath、RichText、VectorStroke、DabStroke schema；Page 不承担 Viewport 状态。
+- 按 ADR-0025 固定一 Page 一 Document；在实现前冻结 Shape、Image、VectorPath、RichText、
+  VectorStroke、DabStroke、Connector、Group、Frame、Sticky、PDF 的产品 schema 与行为边界。
+  Frame/PDF 可以用独立兼容契约分批实现，但不能从已确认产品范围中后置或删除；Page 不承担
+  Viewport 状态。
 - 在实现前通过实验型 ADR 冻结强类型 Entity/Operation/Actor ID 的编码、范围、离线生成、
   collision/reuse/replay，以及支持中间插入且不重编号无关节点的本地 stable order/z-order
   schema；R4 再冻结并发排序算法。
 - 定义层级、排序、变换、样式、资源引用、分层 capability 和扩展 registry。
 - 定义 ResourceId、ResourceManifest、ResourceRevision、ContentHash、不可变 blob、资源替换与 Document digest；遵循 ADR-0013。
-- 定义 command/operation/change-set、事务、History/undo grouping、compensating undo/redo 和 crash recovery；遵循 ADR-0014。
+- 定义 command/operation/change-set、Atomic Operation Apply、History/undo grouping、compensating
+  undo/redo 和 crash recovery；遵循 ADR-0014。Command/undo group 不成为第二个 canonical 写入口。
 - 遵循 ADR-0020 定义 DocumentSnapshot + committed OperationContinuation 恢复流程；在实现
   前用实验型格式 ADR 冻结具体 codec、文件/数据库布局、日志分段/本地 compaction、资源包
   和 migration，不重新开放 Snapshot 写入语义。
@@ -609,7 +677,9 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
   frontier/digest 一致；从同一 Snapshot 应用相同 continuation 得到 C/D，C/D revision/
   frontier/digest 一致。
 - resource replace/dedup/missing/corrupt/offline/save/reopen 后 graph+manifest digest、blob availability 和 placeholder 结果符合 ADR-0013。
-- Undo/Redo 通过新 Operations 回放；create/edit/delete/move/style/text/resource 的补偿事务在故障和重启后原子一致。
+- Undo/Redo 通过新 Operations 回放；create/edit/delete/move/style/text/resource 的补偿 Operations
+  在故障和重启后保持 Atomic Operation Apply 一致。数据库或文件写入可使用 storage-local
+  transaction，但不得把它解释为 Document 的第二种 canonical mutation。
 - full/incremental SceneCompiler 和 input/operation replay 语料全部通过。
 - local middle insert、批量 reorder、保存/迁移和多 View 编辑不依赖容器迭代顺序；ID 不碰撞/
   不复用，stable order digest 可回放。
@@ -626,10 +696,13 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 ### 实现
 
 - 实现 V1 Document/ResourceManifest schema、Operations、EditorSession 和生成 compensating Operations 的 History。
-- 产品化 RichText、InkEngine、SceneCompiler、Resources 和 Persistence。
-- 实现原子 DocumentSnapshot、committed operation continuation、operation log、migration、
-  document digest 和恢复诊断工具。
-- 为扩展节点提供分层 capability/registry 边界，不实现其产品行为。
+- 产品化 RichText、InkEngine、SceneCompiler、Resources，以及 Axiom 的 Persistence semantic
+  ports；具体 LocalStore、journal/checkpoint、Blob custody 和 recovery ordering 由 Shared Data
+  Runtime 实现。
+- 实现原子 DocumentSnapshot、committed OperationContinuation、语义 codec、migration、document
+  digest 和恢复诊断工具；不把物理 operation log/journal 作为 Axiom Core 的独占模块。
+- 为上述已确认产品对象实现对应产品行为；对它们之外的未知扩展节点提供分层 capability/
+  registry、拒绝与无损保留边界，不伪造未知类型的产品行为。
 
 ### 交付物
 
@@ -639,6 +712,9 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - 能完成 V1 编辑、保存、重开和回放的内部 demo。
 
 ### 退出条件
+
+> 这些条件只在 G1、G3、G4、G6、G7 的全部 R2 必需任务已 Pass 后评定；满足本列表本身不形成
+> 第二条 Accepted 路线。
 
 - [ ] V1 节点行为与不变量测试 100% 通过。
 - [ ] round-trip/migration/replay digest 全部一致。
@@ -653,12 +729,13 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 目标
 
-把 POC renderer、cache、FastInk 和 Product Tier A 三平台外壳提升到真实产品规模与生命周期；同时保持 Portability Tier B 的共享 Runtime conformance。
+把 POC renderer、cache、FastInk 和 Web/Windows RNW/Android RN/iOS/iPadOS RN 产品壳提升到真实产品规模与生命周期；同时保持 macOS shared Runtime/Web-reuse conformance。
 
 ### 设计
 
 - 冻结 Ganesh backend matrix、V1 color/DPI、device loss、资源预算和 golden tolerance。
-- 冻结 Tier A release/支持矩阵、Tier B portability conformance 和 Headless Utility Target 责任；不把 Apple harness 误作 V1 产品 Shell。
+- 冻结 Web、Windows RNW、Android RN、iOS/iPadOS RN 的 release/支持矩阵、macOS shared
+  conformance 与 Headless Utility Target 责任；不把 macOS harness 误作 V1 产品 Shell。
 - 冻结生产 FrameGraph logical/physical pass 优化、Compositor、L1 cache 和多视口策略。
 - 在进入产品实现前关闭 RF-01～RF-03：冻结 Scene/RenderScene/SkSG 私有边界、动态
   SpatialIndex、DamageTracker、signed TileGrid/TilingSet/LOD、IRasterSource、TileManager、
@@ -667,8 +744,8 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
   规则，统一归因 decoded image/font、Canvas cache、Skia GPU cache、FrameGraph transient
   和 platform surface；不假设 Runtime 完全控制 Skia 内部 cache。
 - 冻结 Human Performance Gate 的设备、动作 rubric、签署角色和 trace/录屏归档规则。
-- 冻结 React Web、React/Tauri、RN Native CanvasView 的 surface、input、IME、clipboard、file 和 accessibility contracts。
-- 在 POC-06 Accepted 后冻结应用级 FastInk backend 和 fallback；Hybrid Surface 保持 POC-05 future-capability 结论，不在 R3 产品化。
+- 冻结 React Web、RNW、RN Android/iOS/iPadOS Native CanvasView 的 surface、input、IME、clipboard、file 和 accessibility contracts。
+- Arc backend 与 Canonical-only fallback 在 G4/R3 冻结；Hybrid Surface 的受控 Overlay 在 G6 产品化，任意 DOM/native 穿插和 zero-copy 仍不支持。
 
 ### 验证
 
@@ -676,12 +753,14 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - RF-02 动态索引与 brute-force oracle 在负坐标、增删改、HitTest/Selection/Eraser 上等价；
   RF-03 Tile/LOD 通过 cache clear、device loss、prefetch cancel 和内存压力语料。
 - 全视觉矩阵、CPU reference 与产品 GPU backend 在规定容差内通过。
-- Tier A 三平台完成核心用户流、生命周期、resize、前后台、device loss、低内存和 surface 重建；Tier B 完成 core conformance、Metal render/readback 和生命周期回归。
+- 四个产品平台完成核心用户流、生命周期、resize、前后台、device loss、低内存和 surface 重建；
+  macOS 完成 shared core conformance、Metal render/readback 和生命周期回归。
 - 注入平台内存压力时，各类资源按统一预算有界回收，Skia/Canvas 双重缓存不会造成未归因
   峰值或 Android OOM；恢复后 Document/Scene semantic digest 不变。
 - Input→Preview、Text/IME 和 FastInk handoff 不低于对应 POC 门禁。
-- Tier A 在 Integrated Performance Playground 与核心真实编辑流上完成人工体验签署；主观缺陷必须关联量化 trace 并有处置结论。
-- 每个 Tier A 平台连续运行 2 小时混合编辑无 crash，稳定期内存增长 < 5%。
+- 四个产品平台在 Integrated Performance Playground 与核心真实编辑流上完成人工体验签署；主观
+  缺陷必须关联量化 trace 并有处置结论。
+- 每个产品平台连续运行 2 小时混合编辑无 crash，稳定期内存增长 < 5%。
 
 ### 实现
 
@@ -689,24 +768,32 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - 产品化 Canvas-owned Scene facade、SkSGRenderScene adapter、DynamicRTreeSpatialIndex、
   DamageTracker、TileManager/IRasterSource、LOD/raster scheduler 和 memory-aware eviction；
   Chromium cc 不作为链接依赖。
-- 完成 Tier A shell/bridge、native surfaces、输入、IME、clipboard、file 和 accessibility。
-- 产品化 FastInk app backend；不实现 ExternalSurface/Hybrid Surface 产品功能。
+- 完成 Web、Windows RNW、Android RN、iOS/iPadOS RN shell/bridge、native surfaces、输入、IME、
+  clipboard、file 和 accessibility。
+- 产品化 FastInk app backend；集成 G6 已接受的 controlled Overlay ExternalSurface contract，
+  但不实现任意 DOM/native 穿插、zero-copy texture 或复杂 mask/effect。
 - 实现帧诊断、cache/dirty overlay、device recovery 和性能追踪导出。
 - 实现全局资源预算协调/telemetry，以及 logical pass merge/elide/reuse 的可诊断 backend 优化。
 
 ### 交付物
 
-- Tier A 三平台内部产品版本、集成指南和 capability matrix；Tier B portability conformance 报告。
+- Web、Windows RNW、Android RN、iOS/iPadOS RN 内部产品版本、集成指南和 capability matrix；
+  macOS shared conformance 报告。
 - 全视觉、性能、内存、生命周期和可访问性报告。
-- FastInk 产品限制与 fallback 手册；POC-05 Hybrid Surface 报告继续作为未来版本的架构输入。
+- FastInk 产品限制与 fallback 手册；G6 controlled Overlay contract、placement/focus/lifecycle
+  报告和明确排除项纳入 R3 交付。
 
 ### 退出条件
 
-- [ ] Tier A V1 用户流与生命周期测试全部通过，Tier B core conformance 无回归。
+> 这些条件只在 G3、G4、G5、G6 的全部 R3 必需任务已 Pass 后评定；POC/RF 历史状态不能替代。
+
+- [ ] Web、Windows RNW、Android RN、iOS/iPadOS RN V1 用户流与生命周期测试全部通过；macOS
+  shared core conformance 无回归。
 - [ ] 100K、视觉、输入、文本和 FastInk 门禁无回归。
 - [ ] RF-01～RF-03 退出条件全部通过，Windows/Web Integrated Performance Playground 在
   固定设备重新达到既有 p95/p99 门禁。
-- [ ] Tier A Human Ink/Integrated Performance Gate 已使用产品 target 签署，未关闭问题均有关联 trace、负责人和处置结论。
+- [ ] 四个产品平台的 Human Ink/Integrated Performance Gate 已使用产品 target 签署，未关闭
+  问题均有关联 trace、负责人和处置结论。
 - [ ] 2 小时稳定性测试无 crash，内存增长 < 5%。
 - [ ] Surface/device/cache 丢失均能恢复且不改变 Document。
 - [ ] 全局内存预算和 memory-pressure gate 通过，所有主要内存类别可归因且无双重预算漏洞。
@@ -723,7 +810,8 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - 定义 operation envelope、actor/op ID、版本、因果/排序、去重和大小限制。
 - 将 R2 的本地 stable order schema 扩展为并发插入/移动语义，并以收敛证据决定具体排序/
   sequence 算法；不允许以到达顺序或平台容器顺序作为 tie-breaker。
-- 定义本地乐观应用、durable outbound queue、ack、重试、snapshot bootstrap 和 reconnect。
+- 定义本地乐观应用、durable outbound queue、ack、重试、snapshot bootstrap 和 reconnect；队列、
+  ACK/retry 与恢复编排由 Shared Data Runtime 拥有，Axiom 只提供 Operation/Snapshot 语义端口。
 - 将 ADR-0020 的不透明 RecoveryFrontier 扩展为选定协议需要的 causal frontier/version
   representation，并定义 server snapshot bootstrap/compaction；普通编辑仍不得绕过 Operation。
 - 定义对象属性、删除/编辑、z-order 和 V1 RichText 原子操作的冲突语义。
@@ -739,9 +827,11 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 实现
 
-- 实现 collaboration engine、operation envelope、去重、merge 和 protocol negotiation。
-- 实现 durable outbound queue、ack/retry、snapshot bootstrap 和 reconnect。
-- 实现 transport abstraction、测试 transport、presence channel 和故障模拟器。
+- 实现 Shared Data Runtime 的 SyncCoordinator、operation envelope、去重、merge 和 protocol
+  negotiation；Axiom 仅实现 Operation decode/validate/apply、semantic digest 与 capability。
+- 实现 Shared Data Runtime 的 durable Outbox/Inbox、ack/retry、snapshot bootstrap 和 reconnect。
+- 实现 transport abstraction、测试 transport、presence channel 和故障模拟器；Presence 不进入
+  Document 或 History。
 - 实现 convergence digest、随机多副本 runner 和可诊断 divergence bundle。
 
 ### 交付物
@@ -751,6 +841,8 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 - 用户可见同步/离线/失败状态契约。
 
 ### 退出条件
+
+> 这些条件只在 G8 全部必需任务已 Pass 后评定；Open conflict policy 必须使 G8 Blocked。
 
 - [ ] 100K 随机 operations 在 3/5 副本上全部收敛。
 - [ ] 网络/服务故障语料无已确认操作丢失。
@@ -762,11 +854,15 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 目标
 
-形成可发布、可升级、可恢复、可观测和可回滚的 Canvas v2 Product Tier A；Tier B、Reuse 和 Utility targets 按各自责任保持 conformance，不构成额外产品发布承诺。
+只描述 G9 Pass 之后的 R5-B Hardening/Release 里程碑内容；它不是与 R5-B 并列的第二阶段。
+形成可发布、可升级、可恢复、可观测和可回滚的 Axiom 产品目标（Web、Windows RNW、Android
+RN、iOS/iPadOS RN）；macOS 仅保持 shared Runtime/Web-reuse conformance，Reuse 和 Headless
+utility 不构成额外产品发布承诺。
 
 ### 设计
 
-- 定义 Tier A 支持平台/设备、Tier B portability matrix、格式/协议兼容窗口、版本号和回滚策略。
+- 定义 Web、Windows RNW、Android RN、iOS/iPadOS RN 的支持平台/设备、macOS conformance
+  matrix、格式/协议兼容窗口、版本号和回滚策略。
 - 定义崩溃、卡顿、同步失败、数据恢复和性能回归指标。
 - 完成不可信文件、operation、资源解码、内存/CPU 滥用和系统 FastInk 的威胁建模。
 - 定义诊断导出、隐私、依赖清单、构建追溯和发布清单。
@@ -775,9 +871,11 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 - 运行全量回归、24 小时 fuzz、8 小时混合编辑 soak 和 5 客户端协作 soak。
 - 执行旧文件迁移、损坏文件、磁盘满、崩溃恢复、设备丢失、服务重启和客户端升级演练。
-- Tier A 真实基准设备上性能不得比 R3 accepted baseline 回归超过 5%，除非有到期豁免；Tier B core conformance 不得因 Tier A 特例分叉。
+- 四个产品平台真实基准设备上性能不得比 R3 accepted baseline 回归超过 5%，除非有到期豁免；
+  macOS shared core conformance 不得因产品平台特例分叉。
 - 执行 static analysis、sanitizer、依赖/许可证和不可信负载限制检查。
-- Tier A 发布候选完成安装、升级、兼容拒绝、诊断导出和回滚演练；Headless 公共 server/batch API 不在 V1 发布声明中。
+- 四个产品平台发布候选完成安装、升级、兼容拒绝、诊断导出和回滚演练；macOS 不在 native
+  发布声明中，Headless 公共 server/batch API 也不在 V1 发布声明中。
 
 ### 实现
 
@@ -795,16 +893,20 @@ Presentation Target 消费同一 Stroke 语义，并与 Canonical Renderer 独�
 
 ### 退出条件
 
+> 必须先有 G9 Pass，再完成权威 R5-B 任务、集成和以下里程碑条件；当前 Notion Master 尚无
+> R5-B 任务页，因此 R5 仍为 Blocked。
+
 - [ ] 无已知静默数据丢失或未归类 convergence 问题。
 - [ ] 24 小时 fuzz、8 小时编辑 soak 和协作 soak 通过。
 - [ ] 升级、恢复、服务故障和回滚演练通过。
 - [ ] 性能回归 ≤ 5%，所有豁免有负责人和到期时间。
 - [ ] 构建、依赖、版本、诊断和发布链路可追溯。
 
-## 阶段变更规则
+## 历史工作包与里程碑变更规则
 
-1. 任一阻断退出条件失败时，阶段不能标记 Accepted。
+1. 任一阻断退出条件失败时，对应任务/Gate/R 里程碑不能标记 Pass/Accepted；状态只能在任务
+   账本与 R 状态表更新。
 2. POC 结论被推翻时，停止依赖实现并新增 ADR；不得仅改代码掩盖架构变化。
 3. 性能阈值调整必须附设备/场景变化和重复基准，不接受“当前实现达不到”作为理由。
 4. 产品功能要求扩张到 V1 边界之外时，先修订项目框架和阶段门禁，再开始实现。
-5. POC 代码默认可丢弃；R1 必须按接受的接口和产品质量要求重建。
+5. POC 代码默认可丢弃；产品实现必须按对应 Gate 接受的接口和质量要求重建。

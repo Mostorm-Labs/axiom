@@ -49,12 +49,12 @@ boundaries in the product Web Shell.
 
 ## Deliberate boundaries
 
-This evidence validates RNW and RN/Fabric as viable Shell implementations; it
-does not silently replace the accepted Product Tier A Shell decision in
-ADR-0015. Windows React/Tauri remains the current product choice, while RNW is
-now an evidence-backed alternative subject to a separate product/platform
-decision. Likewise, Apple RN/Fabric validation proves portability and the
-native data-plane boundary, not an Apple V1 release commitment.
+This evidence originally validated RNW and RN/Fabric only as viable Shell
+implementations under the historical ADR-0015 matrix. ADR-0025 has since
+superseded that matrix: Windows RNW and iOS/iPadOS RN/Fabric are current Tier A
+product targets. The POC still proves only its scoped Overlay/native-data-plane
+risk; it does not make the private Scene bridge a product ABI or make this
+historical POC report a G3/G6/G9 product Gate PASS.
 
 The Windows and Android physical runners currently link the experimental
 POC-03 C++ `RuntimeScene` implementation to exercise the 100K scene. The

@@ -1,12 +1,14 @@
 # 步骤 3：Axiom V1 需求基线
 
 > 状态：In Review / Non-normative
-> 当前评审：第二组已确认；待进入第三组 Resource、保存、Snapshot/Recovery、Offline、Sync 与 Collaboration
+> 当前评审：第二组已确认；第三组分为 A（Resource/Blob）、B（保存与
+> Snapshot/Recovery）和 C（Offline/Sync/Collaboration）三个审核回合，候选已形成
 > 评审记录：2026-08-21，第一组八条需求接收规则已由用户明确确认；2026-08-22，第二组需求
-> 方向已由用户逐项审核并确认为 `Framed`；两次确认都不批准 P0/P1、实现状态或最终架构 owner
+> 方向已由用户逐项审核并确认为 `Framed`；第三组审计尚未批准 P0/P1、实现状态或最终架构 owner
 > 建立日期：2026-08-21
 > 输入：SRC-REPO-MAIN-20260821、SRC-NOTION-FUNCTIONS-V01、
-> SRC-NOTION-COMPETITIVE-20260821、SRC-CHAT-07，以及步骤 0～2 已审核的用户输入
+> SRC-NOTION-COMPETITIVE-20260821、SRC-CHAT-07，以及步骤 0～2 已审核的用户输入；第三组
+> 另接收 2026-08-22 增量来源 SRC-CHAT-08、SRC-CHAT-09、SRC-NOTION-SEMANTIC-SCHEMA-IDL-V01
 > 现行规范：在本文形成并获得明确批准前，仍以
 > [项目总体框架](../../PROJECT_FRAMEWORK.md)、
 > [系统架构](../SYSTEM_ARCHITECTURE.md)和[现有 ADR](../../adr/README.md)为准
@@ -18,7 +20,7 @@
 
 步骤 3 的第一组接收规则和第二组本地核心编辑需求方向已经确认。第二组把本地核心能力改写成
 可逐项验收的 `Framed` 需求；它仍不决定 P0/P1，也不借产品需求决定模块 owner、协议或物理
-实现。下一轮进入第三组的数据、保存与协作需求审核。
+实现。第三组的数据、保存与协作候选已形成，下面按三个相邻但独立的审核回合逐项确认。
 
 ## 本文用语
 
@@ -28,7 +30,7 @@
 | 需求 | Requirement / `REQ-*` | 对 Axiom 产品行为、质量或约束的可追溯陈述，必须有平台范围和验收方法。 |
 | 基线优先级 | Baseline Priority | 经本轮评审确定的 `P0/P1/P2`；与来源自己标注的优先级分开。 |
 | 来源优先级 | Source Priority | 功能表或竞品材料中的原始 P0/P1/P2，只保留为来源 claim，不自动进入 Axiom 基线。 |
-| 平台范围 | Platform Scope | 该需求适用于 Product Tier A、Portability Tier B、Reuse Target 或 Utility Target 中的哪些目标。 |
+| 平台范围 | Platform Scope | 该需求适用于 Web、Windows RNW、Android RN、iOS/iPadOS RN、macOS Deferred/Web reuse、ChromiumOS Reuse 或 Headless Utility 中的哪些目标；历史材料中的 Tier B 只按来源快照记录。 |
 | 验收方法 | Acceptance Method | 用用户场景、契约、语料、设备、指标或故障注入判断需求是否满足的方法。 |
 | 非目标 | Non-goal | 本版本明确不承诺实现的能力；“冻结扩展边界”也属于非实现承诺。 |
 
@@ -38,9 +40,17 @@ RFC 与 ADR 中决定。
 
 ## 一、这份基线覆盖什么
 
-### 1. V1 与交付阶段不是同一个维度
+### 1. V1、Gate 与产品里程碑不是同一个维度
 
-V1 是产品范围，R1～R5 是交付阶段。当前路线中：
+V1 是产品范围，G0～G9 是按序晋级的实现与验证 Gate，R1～R5 是横跨多个 Gate 的产品
+里程碑覆盖层。唯一晋级顺序是：
+
+```text
+AR-0 → G0 → G1 → G2 → G3 → G4 → G5 → G6 → G7 → G8 → G9 → R5-B
+```
+
+POC 与 RF 只提供历史实验、参考实现和 Evidence，不能形成第二条启动或晋级路线。当前里程碑
+映射如下：
 
 | 阶段 | 与 V1 的关系 |
 | --- | --- |
@@ -50,8 +60,8 @@ V1 是产品范围，R1～R5 是交付阶段。当前路线中：
 | R4 Collaboration MVP | 闭合 V1 的对象同步、Presence、离线队列、重连与基本收敛。 |
 | R5 Hardening and Release | 完成发布、迁移、诊断、恢复、安全和回归门禁。 |
 
-所以，一条 V1 需求可以以 R4 为目标阶段；不能因为 R2 名称中出现“V1”就把协作从产品范围
-删除，也不能因为 R1 已经开始就声称 V1 已进入验收。
+所以，一条 V1 需求既要记录最晚通过的 `Target Gate`，也要记录归属的 R milestone；不能因为
+R2 名称中出现“V1”就把协作从产品范围删除，也不能因为 R1 已经开始就声称 V1 已进入验收。
 
 ### 2. 本步骤记录五种不同内容
 
@@ -165,7 +175,8 @@ CRDT 或 TypeScript Data Runtime”是候选方案。类似地，低延迟书写
 | 类型 | 功能、非功能、约束、平台或验证需求。 |
 | Baseline Priority | `P0/P1/P2`，只能由本轮评审决定。 |
 | Platform Scope | 明确 Tier、平台变体和不适用项。 |
-| Target Stage | R1～R5 中最晚必须交付的阶段，不等于实现 owner。 |
+| Target Gate | G0～G9 中最晚必须通过的 Gate；这是唯一实现与验证晋级坐标。 |
+| Milestone Mapping | R1～R5 中汇总该需求的产品里程碑；它不是第二条执行顺序，也不等于实现 owner。 |
 | Acceptance Method | 场景、oracle、语料、设备、阈值和失败行为；未知项明确写缺口。 |
 | 依赖与风险 | 关联 Requirement、Conflict、ADR/RFC 和 Primary-source gap。 |
 | Requirement Status | 见下一节；不能由代码或 POC 状态反推。 |
@@ -222,6 +233,7 @@ Preview p95/p99、黄金图容差和内存预算都要保留测试背景、目�
 | Notion 竞品矩阵 | 8 个域、实际 178 个 source rows | 发现能力、差距和需要验证的问题 | 178 个正式需求，或竞品产品行为已经核验 |
 | 竞品矩阵中的官方入口 | 21 个 Evidence leads | 后续逐 claim 寻找一手证据 | 链接本身证明某项产品能力 |
 | `SRC-CHAT-07` | 来源角色已由用户确认；正文当前不可核验 | 待补齐 artifact 后增量接收 | 目前可从中提取具体能力行 |
+| 2026-08-22 Semantic Schema / 数据流 / API 增量 | 2 份 Partial HTML + 1 份动态 Notion Draft | 第三组的数据结果取证，以及步骤 4～8 的边界、Schema、ABI、数据流与验证输入 | 页面中的字段、ID、Operation 清单、owner、ABI 或云端布局已经批准 |
 
 竞品矩阵来源自称 177 项、Collaboration 标题自称 31 项；实际表格分别为 178 行和 32 行。
 这是一项来源数据质量差异，不在仓库中替来源改写。其 source-priority 统计为 P0 53、P1 74、
@@ -241,6 +253,31 @@ Canvas/Skia 讨论，不能据此补造竞品需求。
 获得正确 artifact、可定位回合或用户提供的脱敏摘要后，再作为来源增量接收并与已有接收项
 重新去重。步骤 3 可以继续处理仓库和两份已审核的 Notion 需求材料。
 
+### 2026-08-22 增量来源怎样进入第三组
+
+新增材料可以帮助第三组发现和校准以下用户可观察结果：Snapshot 加后续 Operation 能恢复
+同一 Document；本地已承诺保存的编辑在崩溃和重启后不丢失；离线编辑可继续并在重连后追赶；
+重复、乱序、损坏或不兼容数据不会产生半应用状态；Resource/Blob 缺失或损坏有确定行为；
+本地与远端 apply 不产生 echo；跨端 replay 得到一致语义结果。
+
+第三组不会因此直接接受 `ObjectRecord` 字段、FieldId 数值、12 类 Operation、ID 生成、
+`axiom_*` 函数、TS facade、Shared Data Runtime owner、数据库/对象存储布局或具体 wire codec。
+这些属于步骤 4 的边界、步骤 5 的决策项、步骤 6 的 Schema/ABI/Persistence RFC 与 Contract，
+以及步骤 7/8 的一致性和故障验证。材料里的版本也必须拆成 Semantic/Operation/Snapshot/Wire、
+C ABI、SDK/API、Capability 和 Migration 等独立域，不能复用一个含糊的 `version`。
+
+用户已明确裁决两个方向：每个 Page 对应一个独立 Document；canonical mutation 采用
+Operation-only，不存在全局 `Transaction → operations[]` canonical 外层。因而 Schema 草案中
+把 Page 作为 Document 内 `ObjectKind` 或 synthetic root 的结构不能进入现行需求方向；现行
+Accepted 文档中的 Document Transaction 暂只解释为单个 Operation apply 的内部原子
+`validate → commit` 边界，不是持久化、同步、Undo 或 wire schema 的第二层事实。
+
+步骤 5/6 仍须用新 ADR 明确替代或澄清 ADR-0014/0019/0020/0022 中旧的 transaction/batch
+措辞，并决定 Operation payload 粒度、multi-object 原子修改、Undo grouping、transport batch、
+replay envelope 和 ABI 的映射；这些问题不会重新开放 Operation-only 方向。候选 `axiom_*`、
+TS facade、Shared Data Runtime owner、Product SDK 与现行 `canvas_*` C ABI 的关系按用户要求
+留给后续步骤修改。
+
 ## 七、具体需求的审核顺序
 
 第一组规则确认后，按以下小组推进，避免一次批准掩盖范围差异：
@@ -249,8 +286,8 @@ Canvas/Skia 讨论，不能据此补造竞品需求。
 | --- | --- | --- | --- |
 | 第一组 | 本文一～六节的范围、编号、状态、去重和来源边界 | 固定 Intake/Requirement 处理规则 | Confirmed（2026-08-21） |
 | 第二组 | Canvas、Page/Viewport、对象、Selection、History、Ink 与 RichText | 本地核心用户流和节点深度 | Confirmed / Framed（2026-08-22） |
-| 第三组 | Resource、保存、Snapshot/Recovery、Offline、Sync 与 Collaboration | 数据结果、失败行为和 V1 协作边界 | Not started；下一组 |
-| 第四组 | Web/Windows/Android、Apple portability、输入、Shell、Clipboard、Import/Export 与 Accessibility | 平台范围和产品体验差异 | Not started |
+| 第三组 | Resource、保存、Snapshot/Recovery、Offline、Sync 与 Collaboration | 数据结果、失败行为和 V1 协作边界 | In review；候选已形成，待逐组确认 |
+| 第四组 | Web、Windows RNW、Android RN、iOS/iPadOS RN、macOS Deferred/Web reuse、输入、Shell、Clipboard、Import/Export 与 Accessibility | 平台范围和产品体验差异 | Not started |
 | 第五组 | 确定性、规模、延迟、内存、生命周期、安全、诊断与发布 | 可量化非功能需求和验证缺口 | Not started |
 | 第六组 | P0/P1/P2、非目标、冲突和追溯矩阵 | 最终 V1 Requirement baseline | Not started |
 
@@ -318,7 +355,7 @@ Notion 产品功能基线和竞品矩阵中的相关能力。引用规则保持�
 
 | Intake ID | 规范化结果 | 主要来源与去重 | 当前处理 |
 | --- | --- | --- | --- |
-| `INT-CAN-001` | 产品支持多个 Page，但语义拓扑是一 Page 对应一 Document；多 Page 集合、导航和顺序位于独立的上层 Page 集合之上，不采用 `DocumentRoot → Page*`。 | 用户确认；仓库 V1 Page；功能基线 CAN-03；矩阵多 Page/duplicate page | `Split`：Page/Document 一一对应已确认；上层集合 owner/持久格式后续决定 |
+| `INT-CAN-001` | 产品支持多个 Page，但语义拓扑是一 Page 对应一 Document；多 Page 集合、导航和顺序位于独立的上层 Page 集合之上，不采用 `DocumentRoot → Page*`。 | 用户确认；仓库 V1 Page；功能基线 CAN-03；矩阵多 Page/duplicate page | `Split`：Page/Document 一一对应及上层产品层 owner 已确认；repository schema、Data Runtime custody 与持久格式后续决定 |
 | `INT-CAN-002` | 每个 Page/Document 都是无限画布；用户可以在没有固定可见页边界的连续 world space 中平移、缩放、适配内容，并在负坐标、DPR/resize 后保持对象位置和命中稳定。 | 用户确认；功能基线 CAN-01/02；矩阵 Canvas/Navigation；ADR-0012 | `Received`；产品边界已确认；“无限”不承诺无限数值精度、内存或资源，安全边界留第五组 |
 | `INT-CAN-003` | Viewport、Selection、History、composition 与 Active Stroke 按 View 隔离；View 的销毁不改共享 Document。 | 仓库 EditorSession/多 View；功能基线 CAN-04 | `Split` 为导航和生命周期候选 |
 | `INT-CAN-004` | Mini-map、outline、第二窗口和 presentation view 是独立产品能力。 | 功能基线 CAN-05；矩阵 overview/presentation | `Deferred`；不能由多 View conformance 自动推出 V1 UI |
@@ -361,7 +398,7 @@ Notion 产品功能基线和竞品矩阵中的相关能力。引用规则保持�
 不是 `Baseline Accepted`。平台范围在第四组还会细化；本组先使用“Tier A 产品行为 + 共享
 Runtime conformance”作为默认范围。
 
-| Requirement ID | 已定界需求陈述 | Intake / 现行约束 | 最晚阶段 | 当前成熟度 |
+| Requirement ID | 已定界需求陈述 | Intake / 现行约束 | Target Gate / Milestone Mapping | 当前成熟度 |
 | --- | --- | --- | --- | --- |
 | `REQ-FUNC-CAN-001` | 产品可以管理多个 Page；每个 Page 恰对应一个独立 Document，拥有独立 revision、对象顺序、资源绑定和 digest，并关联彼此隔离的 EditorSession/History。Page 的创建、复制、删除、重命名、排序、切换和恢复不把多个 Page 伪装成同一 Document 内的子树。 | `INT-CAN-001`；用户确认；现行 Page≠Viewport、History 不属于 Document | R2/R3 | Requirement `Framed`；产品实现 `Absent`；contract mechanism `Planned`；Evidence `Pending` |
 | `REQ-EDIT-VIEW-001` | 用户在每个 Page/Document 的无限画布中平移、缩放或适配视图后，可以继续定位、查看和命中同一语义对象；Viewport 变化不修改 Document。 | `INT-CAN-002/003`；用户确认；ADR-0012 | R2/R3 | `Framed`；POC implementation；mechanism exists；Evidence `Partial`，POC-03 性能仍 Failed |
@@ -426,7 +463,7 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 
 - Shape/Image/VectorPath/Stroke/RichText 的本组已接受编辑都能按 intention grouping 撤销/重做；
 - Undo/Redo 产生新 Operation ID/sequence，经保存和重放得到相同 digest，不替换旧 Snapshot；
-- 生成或验证失败时整个补偿 transaction 原子失败；协作交错的冲突语料留 R4，但返回结果
+- 生成或验证失败时整个补偿 Operation 原子失败；协作交错的冲突语料留 R4，但返回结果
   vocabulary 不能在产品实现中缺失。
 
 ### 4. Ink
@@ -447,7 +484,7 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 
 - 固定语料覆盖英文、中文拼音、直接输入、selection/caret、replacement、换行、删除、粘贴、
   composition commit/cancel、Undo/Redo 和 focus/view lifecycle；
-- commit 恰好生成一个原子 Text transaction，cancel/blur 不产生 Document Operation；
+- commit 恰好生成一个原子 Text Operation，cancel/blur 不产生 Document Operation；
 - 字体按 ResourceId/ContentHash/fallback 解析；跨 Tier A 比较最终文本、digest、换行、cluster、
   selection/caret geometry 和缺字诊断；
 - 中文/英文是当前最小已验证语料，不自动代表日文、韩文、BiDi、Indic、完整 typography 或
@@ -457,7 +494,7 @@ Preview backend/fallback 需求。它们是 `Framed`，不表示当前实验 C A
 
 | ID | 需要决定的问题 | 建议基线 | 不这样决定的影响 |
 | --- | --- | --- | --- |
-| `G2-D01` | Page、Document 和多 Page 产品体验采用什么拓扑？每个 Page 是否为连续工作区？ | 已确认产品支持多 Page，但采用一 Page 对应一 Document，而不是 `DocumentRoot → Page*`；每个 Page/Document 是支持连续 pan/zoom 和负坐标的无限画布。多 Page 集合、导航、顺序和生命周期位于独立的上层 Page 集合之上；具体 owner、schema 与持久格式由后续 ADR 决定。 | 若把多个 Page 放进一个 Document，会混合 revision、History、digest、资源和协作边界；若没有上层集合契约，又无法验收多 Page 导航和恢复。 |
+| `G2-D01` | Page、Document 和多 Page 产品体验采用什么拓扑？每个 Page 是否为连续工作区？ | 已确认产品支持多 Page，但采用一 Page 对应一 Document，而不是 `DocumentRoot → Page*`；每个 Page/Document 是支持连续 pan/zoom 和负坐标的无限画布。多 Page 集合、导航、顺序和生命周期由上层产品层拥有；repository schema、Shared Data Runtime custody 与持久格式由后续 ADR/RFC 决定。 | 若把多个 Page 放进一个 Document，会混合 revision、History、digest、资源和协作边界；若没有上层集合契约，又无法验收多 Page 导航和恢复。 |
 | `G2-D02` | 是否扩大现行 V1 节点？ | 用户已确认 Shape、Image、VectorPath、RichText、VectorStroke、DabStroke 之外，Connector、Group、Frame、Sticky、PDF 也进入实现范围；对象 schema、容器关系、PDF 资源/分页深度和分阶段交付仍需拆解。 | 若不拆分容器、连接器和 PDF 的语义，后续会把布局、routing、资源、迁移和协作问题混成一个不可验收的“大对象”。 |
 | `G2-D03` | Selection 和对象变换的最小可用范围是什么？ | 接受 click/tap、marquee、additive multi-select、Lasso、move/resize/rotate、Align/Distribute、前后顺序和 Smart Snap；locked 对象不可变换，hidden 对象不可命中。具体几何 oracle、阈值、参考系和 opt-out 仍待确认。 | 这些工具属于已确认的实现范围；若不先定义失败原子性和确定性，交互结果会跨平台漂移。 |
 | `G2-D04` | VectorPath 与 Connector 的可编辑深度是什么？ | V1 支持 VectorPath 的整体变换和 anchor/control-point 移动/增删；Connector 作为独立对象实现连接关系、端点命中和路径更新。boolean operations、自动描摹以及 routing 的具体算法/级别另行验证，不把 Connector 整体后置。 | 只把 Connector 当普通路径会丢失连接语义；一次冻结完整 routing 算法又会越过方案评审。 |

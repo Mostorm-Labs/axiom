@@ -15,11 +15,11 @@ EditorSession 拥有本地 History/Undo intention，而 Operations 是 Document 
 - `History` 属于 EditorSession，记录本地 authored intentions、undo grouping、关联 Operation
   IDs 和生成补偿所需的受控 preimage；它不是 Document 或 Presence 状态。
 - Undo command 选择一个仍可撤销的本地 intention，针对**当前** Document revision 生成一组
-  新的 compensating Operations，经正常 validation 和原子 Document transaction 应用。
+  新的 compensating Operations；每个 Operation 经正常 validation 和 Atomic Operation Apply 应用。
   它不是指针回退，也不删除或改写既有 Operation。
-- Redo 同样产生新的 Operation transaction；它可以补偿上一次 undo，也可以按当前状态
+- Redo 同样产生新的 Operations；它可以补偿上一次 undo，也可以按当前状态
   重新表达原 intention，但不得复用旧 sequence/operation ID。
-- 补偿 transaction 带稳定 intent/group reference 以及 `undo_of`/`redo_of` 诊断关系，作为
+- 补偿 Operations 带稳定 intent/group reference 以及 `undo_of`/`redo_of` 诊断关系，作为
   普通 Operations 持久化和同步。具体 collaboration envelope/causal ordering 仍由 R4 ADR
   决定。
 - 如果 concurrent edits、删除、权限或 schema 使 intention 不再完整适用，Undo 必须得到
