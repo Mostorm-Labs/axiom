@@ -4,7 +4,7 @@
 > Branch: `docs/notion-bridge-bootstrap`
 > Source root: Notion `10 Verification` (`3c44c57a-590c-8029-ab4f-c016e29c4156`)
 > Repository root: `docs/notion/authority/10-verification/`
-> Verdict: **FULL NARRATIVE AUTHORITY MIGRATION COMPLETE / MACHINE-READABLE CLOSURE PARTIAL**
+> Verdict: **FULL NARRATIVE AUTHORITY MIGRATION COMPLETE / MACHINE-READABLE CLOSURE IN PROGRESS**
 
 ## 1. Scope and non-goals
 
@@ -32,131 +32,75 @@ The source `10 Verification` page contains exactly 15 child authority/execution 
 | 10-13 | Implementation Backlog / Issue Pack v0.1 | `implementation-backlog-issue-pack-v0.1.md` | Execution Pack derived from Freeze Candidate contracts | proposed |
 | 10-14 | Implementation Verification Design — Evidence-Gated Vertical Build + G0–G9 v0.1 | `evidence-gated-vertical-build-g0-g9-v0.1.md` | Design Approved / Freeze Candidate | proposed-freeze |
 
-All snapshots record source page URL, snapshot date and original source status. `docs/notion/manifest.yaml` now enumerates the full set with source page IDs and normalized migration statuses.
+All snapshots record source page URL, snapshot date and original source status. `docs/notion/manifest.yaml` enumerates the full set with source page IDs and normalized migration statuses.
 
 ## 3. Authority precedence and ownership
 
 Layer 10 owns verification strategy, oracle/evidence format, conformance/harness contracts, corpus governance and implementation-gate evidence design. It does **not** own the runtime semantics it tests.
 
-When verification exposes a contradiction:
-
-1. Semantic/wire conflict returns to 04.
-2. Runtime ownership/module conflict returns to 05/06.
-3. Runtime ordering/generation/persist/no-echo/presentation conflict returns to 07.
-4. Platform physical contract conflict returns to 08.
-5. Sync/collaboration policy that is still OPEN remains OPEN at its real owner.
-6. 10 records the blocked/failed evidence and must not silently patch the tested contract.
-
-The 07 Final Closure intake is therefore an evidence backlog, not permission for 10 to redefine those invariants.
+When verification exposes a contradiction: semantic/wire conflict returns to 04; runtime ownership/module conflict returns to 05/06; runtime ordering/generation/persist/no-echo/presentation conflict returns to 07; platform physical contract conflict returns to 08; OPEN sync/collaboration policy remains OPEN at its real owner. Layer 10 records blocked/failed evidence and must not silently patch the tested contract.
 
 ## 4. Narrative migration verdict
 
-**Complete.** A clean implementation agent with GitHub access can now recover the layer-10 verification architecture, semantic conformance model, cross-language runner/vector contract, seed corpus design, artifact schemas, fixture trust model, CI governance, platform parity/harness contracts, execution backlog and G0–G9 evidence model without reading Notion.
+**Complete.** A clean implementation agent with GitHub access can recover the layer-10 verification architecture, semantic conformance model, cross-language runner/vector contract, seed corpus design, artifact schemas, fixture trust model, CI governance, platform parity/harness contracts, execution backlog and G0–G9 evidence model without reading Notion.
 
 This supersedes only the layer-10 finding in `00-10-authority-completeness-audit-v0.1.md`, which described an earlier repository state as `Index-only`. The historical audit remains intact.
 
-## 5. Executable / machine-readable inventory
+## 5. Machine-Readable Authority Closure ledger
 
-Already present:
+### MR-10-01 — Semantic Artifact Schema Closure — CLOSED (owner accepted 2026-08-24)
 
-- semantic verification root under `verification/`;
-- `verification/schemas/corpus.schema.json`;
-- `verification/schemas/suite.schema.json`;
-- `verification/schemas/projection.schema.json`;
-- `verification/golden/v1/corpus.json`;
-- `verification/golden/v1/suites/seed-v0.1.json` with exactly 60 stable case IDs;
-- `verification/golden/v1/suites/codec-binary-seed-v0.1.json`;
-- C++ / WASM / TS adapter roots;
-- conformance coordinator bootstrap;
-- fixture-author verification bootstrap;
-- `conformance-seed-v1.yml` and `codec-binary-seed-v1.yml` CI workflows.
+Closed scope includes both the originally listed artifact-schema gap and the separately listed IDL-aware projection gap:
 
-These assets are implementation of the proposed-freeze verification authority. They are not allowed to become self-authorizing specifications.
+- materialized `case.schema.json`, `observation.schema.json`, `result.schema.json`, `run.schema.json` in addition to existing corpus/suite/projection schemas;
+- JSON Schema Draft 2020-12 validation is executable rather than syntax-only;
+- `ImplementationObservation` and `ConformanceResult` remain separate machine contracts;
+- projection validation is two-layer: JSON Schema envelope/shape plus frozen-IDL descriptor validation;
+- CI compiles the 12 frozen Axiom V1 proto sources, verifies descriptor SHA-256, and exposes the descriptor to coordinator tests;
+- rootType resolution, field existence, scalar width/type, repeated shape, oneof exclusivity and canonical tagged scalar representations are descriptor-aware;
+- fail-closed coordinator tests exercise malformed nested artifacts and projection/IDL mismatches.
 
-## 6. Machine-Readable Authority Closure gaps
+The old ledger item `MR-10-02 — IDL-aware projection validation` is therefore **SUBSUMED / CLOSED BY MR-10-01**. No second competing projection validator should be introduced.
 
-### MR-10-01 — Semantic artifact schema closure
+Evidence chain is retained rather than rewritten:
 
-10-03/10-04 require machine contracts beyond the currently materialized three schemas. Missing at minimum:
+- successful pre-closure baseline: Actions run `32711119942`;
+- RED / transition evidence: `32712157978`, `32712233085`, `32712293819`;
+- final known test-expectation commit for schema-first rejection: `6f5a8740ec9f0633765bc16900cbb3d6b525d074`.
 
-- `case.schema.json`
-- `observation.schema.json`
-- `result.schema.json`
-- `run.schema.json`
+Closure status here is an implementation/machine-readable gap closure. The source 10-03/10-04 authority remains Freeze Candidate / `proposed-freeze`; this audit does **not** promote architecture authority.
 
-`observation` and `result` are especially important because the authority explicitly separates adapter-observed facts from coordinator PASS/FAIL judgment.
+### MR-10-03 — First-Divergence Result Lock — IN PROGRESS
 
-### MR-10-02 — IDL-aware projection validation
+Required closure:
 
-`projection.schema.json` can validate envelope/JSON shape only. The authority requires a second validation layer resolving `rootType` against the frozen 04 Reference IDL and enforcing f32/f64/u64/Id128/bytes, presence, oneof and canonical collection semantics.
+- deterministic `DivergenceRecord` schema/semantic validation;
+- earliest meaningful divergence ordering across stage, replay checkpoint/operation, semantic path and canonical byte offset;
+- stable Golden vs Cross-Implementation comparison basis;
+- coordinator-owned PASS/FAIL judgment only;
+- deterministic self-tests including ties and repeated execution;
+- no redefinition of 04 semantic equality or 07 runtime behavior.
 
-### MR-10-03 — First-divergence result lock
+### MR-10-04 — Platform Machine Contract Set — OPEN
 
-`ImplementationObservation`, `ConformanceResult` and `DivergenceRecord` need checked-in schemas plus coordinator validation and deterministic self-tests for first meaningful divergence by stage/checkpoint/operation/path/byte offset.
+Required six platform schemas: `platform-suite`, `platform-scenario`, `platform-profile`, `platform-trace`, `platform-observation`, `platform-result`.
 
-### MR-10-04 — Platform machine contract set
+### MR-10-05 — Platform Corpus / Harness Materialization — OPEN
 
-10-08 requires six platform schemas not yet present:
+Requires `verification/platform/v1/`, platform seed scenarios, adapters/reference runner, normalized lifecycle/bridge/surface/presentation traces and deterministic fault hooks from 10-09–10-12.
 
-- `platform-suite.schema.json`
-- `platform-scenario.schema.json`
-- `platform-profile.schema.json`
-- `platform-trace.schema.json`
-- `platform-observation.schema.json`
-- `platform-result.schema.json`
+### MR-10-06 — 07 Invariant Executable Intake — OPEN
 
-### MR-10-05 — Platform corpus / harness materialization
+Needs explicit suites/oracles for operation atomicity/idempotency, identity namespace separation, same-revision Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first crash windows, LocalRecoveryClosure, external no-echo, missing-resource closure, active-session conflict/multi-op compensation, PresentedFeedback/stale-generation/canonical-coverage/exactly-once handoff, lifecycle late-event rejection, and benchmark candidates without inventing Product SLOs.
 
-The repository still needs `verification/platform/v1/`, platform seed scenarios, adapters/reference runner, normalized lifecycle/bridge/surface/presentation traces and deterministic fault hooks from 10-09–10-12.
+### MR-10-07 — G0–G9 Evidence Binding — OPEN
 
-### MR-10-06 — 07 invariant executable intake
+Each Gate must resolve repo-locally to Authority Input → Codex Implementation Package → Mock/Oracle → Automated Verification → Runnable Demo → Performance characterization/threshold only where authority exists → Evidence → Exit Criteria.
 
-The following need explicit suites/oracles rather than only narrative references:
+## 6. Conflict / duplication findings
 
-- whole-operation atomicity + idempotency/collision;
-- identity namespace separation;
-- same-revision Incremental RuntimeScene ≡ Full Rebuild RuntimeScene;
-- remote persist-first crash windows;
-- LocalRecoveryClosure;
-- external no-echo;
-- missing resource/materialization closure;
-- active-session conflict and multi-op compensation;
-- PresentedFeedback / stale generation / canonical coverage / exactly-once handoff;
-- surface/device/background late-event rejection;
-- benchmark candidates for Scene/Render/Bridge without inventing Product SLOs.
+No architecture blocker is currently recorded. Coordinator implementation language remains non-frozen/experimental; Python implementation does not supersede the logical tooling contract. The 60-case semantic seed remains the stable seed identity set; codec-binary additions are extensions, not replacements. Adapter observations never self-authorize PASS/FAIL. Platform verification remains downstream of 08.
 
-### MR-10-07 — G0–G9 evidence binding
+## 7. Final verdict
 
-Each Gate must resolve repo-locally to Authority Input → Codex Implementation Package → Mock/Oracle → Automated Verification → Runnable Demo → Performance characterization/threshold only where authority exists → Evidence → Exit Criteria. Gate documents must reference concrete local authority/artifact paths rather than Notion-only sources.
-
-## 7. Conflict / duplication findings
-
-No architecture blocker was found in the 15-page migration set.
-
-Known non-blocking distinctions that must remain explicit:
-
-- 10-00 uses requirement-status vocabulary where performance numbers are benchmark/experimental unless upstream freezes them; no invented Product SLO.
-- 10-03's logical scaffold suggested a TS coordinator, while the current repository contains a Python coordinator bootstrap. The source explicitly marks coordinator implementation language as non-frozen / experimental, so this is **not** an authority conflict.
-- 10-03 defines exactly 60 semantic seed IDs and the checked-in suite matches that count. Additional codec-binary seed material is an implementation extension, not a replacement of `seed-v0.1`.
-- 10-04 requires Observation and Result to remain separate. Any runner that directly lets adapters decide PASS/FAIL would be non-conformant even if tests currently pass.
-- Platform verification remains downstream of 08. OPEN platform realization choices cannot be converted to PASS criteria by 10.
-
-## 8. Exit criteria for 10 Full Authority Migration
-
-Narrative migration exit criteria are met:
-
-- all 15 Notion child pages have repository snapshots;
-- source page IDs and snapshot date are known;
-- original source status is preserved;
-- reading order is explicit;
-- 07 Final Closure intake is represented without moving ownership;
-- manifest enumerates the complete layer-10 snapshot set;
-- historical Index-only audit is explicitly superseded for layer 10.
-
-Machine-readable closure is **not** declared complete until MR-10-01 through MR-10-07 are addressed or explicitly deferred by the appropriate authority owner.
-
-## 9. Final verdict
-
-`10 Verification` is now **Full Authority Migration complete at the narrative/offline-authority layer** and is suitable as repo-local verification Source of Truth for Codex planning and implementation.
-
-The immediate next phase is **10 Machine-Readable Authority Closure**, beginning with semantic artifact schema closure (`case / observation / result / run`) and coordinator validation, then platform schema/corpus/harness materialization, followed by executable intake of the 07 correctness invariants and G0–G9 evidence binding.
+`10 Verification` remains **Full Authority Migration complete at the narrative/offline-authority layer**. Machine-readable closure has advanced through MR-10-01, including the IDL-aware validation boundary formerly tracked separately as MR-10-02. The active next closure is **MR-10-03 First-Divergence Result Lock**.
