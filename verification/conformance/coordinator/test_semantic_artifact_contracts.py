@@ -88,6 +88,24 @@ class SemanticArtifactContractTests(unittest.TestCase):
     @unittest.skipUnless(os.environ.get("AXIOM_V1_DESCRIPTOR"), "CI supplies frozen descriptor evidence")
     def test_projection_f32_uses_tagged_canonical_scalar(self): ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.PropertyValue", {"f32Value": "f32:3f800000"}))
 
+    @unittest.skipUnless(os.environ.get("AXIOM_V1_DESCRIPTOR"), "CI supplies frozen descriptor evidence")
+    def test_projection_u64_uses_16_hex_digits(self):
+        ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.StrokeRecord", {"deterministicSeed": "u64:0000000000000001"}))
+
+    @unittest.skipUnless(os.environ.get("AXIOM_V1_DESCRIPTOR"), "CI supplies frozen descriptor evidence")
+    def test_projection_u64_decimal_legacy_form_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "tagged u64"):
+            ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.StrokeRecord", {"deterministicSeed": "u64:1"}))
+
+    @unittest.skipUnless(os.environ.get("AXIOM_V1_DESCRIPTOR"), "CI supplies frozen descriptor evidence")
+    def test_projection_order_key_uses_hex_tag(self):
+        ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.OrderKey", "hex:2080"))
+
+    @unittest.skipUnless(os.environ.get("AXIOM_V1_DESCRIPTOR"), "CI supplies frozen descriptor evidence")
+    def test_projection_order_key_legacy_prefix_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "hex tagged scalar"):
+            ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.OrderKey", "orderkey:2080"))
+
     def test_pass_with_divergence_rejected(self):
         result = self.result(); result["divergence"] = self.golden_divergence()
         with self.assertRaisesRegex(ValueError, "JSON Schema|PASS requires divergence=null"): ac.validate_result_semantics(result)
