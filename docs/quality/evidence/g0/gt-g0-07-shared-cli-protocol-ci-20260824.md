@@ -3,7 +3,7 @@
 > 任务：`GT-G0-07`（Notion locator：`WP-G0-07 / IH-07`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 状态：`Validating`；工作树验证通过，`commit-bound` 与托管 CI 结果待本轮提交后收口
+> 状态：`Validating`；本地 commit-bound 验证已收口，托管 CI 结果待完成
 
 ## 1. 目标与边界
 
@@ -81,16 +81,23 @@ CLI package tests：7/7；覆盖帮助/未知命令、保留 stub、禁止 bless
 
 ## 6. Evidence 身份与剩余条件
 
-本轮工作树验证结果已经生成，但由于用户要求本轮不提交 G0-07，尚不能填写实现 commit、tree、
-archive 和 commit-bound artifact hash。提交后必须重新运行同一命令，填写以下身份并将状态更新为
-`Pass`（若托管 CI 尚未完成，则保持 `Validating`）：
+实现提交后已重新运行同一命令并填写 commit-bound 身份。由于托管 CI 尚未完成，任务状态继续保持
+`Validating`；CI 通过后再追加 run、artifact 和最终任务状态：
 
 | 对象 | 当前值 |
 | --- | --- |
-| implementation commit | `Pending — GT-G0-07 未提交` |
-| implementation tree / git archive | `Pending` |
-| CLI package / executor / workflow SHA-256 | `Pending — commit-bound 收口时生成` |
-| protocol integrity SHA-256 | `ee2f85dd532ee59abb5bb8e1079fd92f95f0541797ebdd5bc3e187a3b89decfb`（本地复现） |
+| implementation commit | `2292c16c1fbeb90a5f1cb434d25263ff99de2919` |
+| implementation tree | `8ee8db129766fbd01a3b61fef5daced5820ad539` |
+| `git archive` SHA-256 | `703f6fa950c6b296d52482d3e28284b74c4041e9d04e6893edfff3bb242bbdb8` |
+| CLI package SHA-256 | `184833d6a7bc5dae5b328889c66dd30d163a956db93aee7feb40cd839f4be52b` |
+| CLI entry SHA-256 | `b709ce7f35464eb8cb35bd4e6b6b577da1d99c62cae272fa54943cdca4a3ceb4` |
+| protocol verifier SHA-256 | `f1d5027c2a290a49eabe8ba1b910b54a7d689e684e2f5905b88b2eaa421c9fa3` |
+| vector executor SHA-256 | `281681189379ac0100d5758638e6c975453dc84718295c940c69cf783717bc7e` |
+| workflow SHA-256 | `9ad25ca35f2093c0f3776411036dd9e9d53e02173e691a54e4d02169d4044d9d` |
+| summary.json SHA-256 | `510077a2490df57faed43049919f330512d969fd6b49a727431ff45066e5a9a0` |
+| corpus-integrity.json SHA-256 | `9c2417d2e08081410d49a2ff555cf5f847ee7fe35de46badf5de3d822ebb5ba4` |
+| protocol.log SHA-256 | `5909cee682480dce9a23ca04dc58d9a86284dfd72856c0d0df25c85d4df8cad4` |
+| protocol integrity SHA-256 | `ee2f85dd532ee59abb5bb8e1079fd92f95f0541797ebdd5bc3e187a3b89decfb` |
 | hosted CI run / artifact | `Pending` |
 
 `GT-G0-08` 保持 `Not Started`。G0 与 R1 仍不能晋级；必须完成后续 G0 任务并执行 G0 Gate
