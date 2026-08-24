@@ -1,53 +1,234 @@
 # Semantic Projection Schema + Conformance Result JSON Schema v0.1
 
 > Source page: https://app.notion.com/p/3c44c57a590c8165a197c6f50e1434d3
+> Source page id: `3c44c57a-590c-8165-a197-c6f50e1434d3`
 > Snapshot date: 2026-08-24
 > Source status: Freeze Candidate — Machine-readable Verification Contract
+> Migration note: expanded during MR-10-03 to preserve the source first-divergence contract at implementation-useful fidelity.
 
 ## Scope
 
-Field-level machine contract for `axiom-verification-projection-v1`, `ImplementationObservation`, `ConformanceResult` and `DivergenceRecord`. Verification-only; not Product wire, ABI, Snapshot storage, Data Runtime or Sync/AXTP.
+This authority freezes **verification artifact / tooling schema only**. It does not change Product wire, Axiom public ABI, Snapshot storage, Shared Data Runtime, Sync/AXTP, 04 semantic equality, or 07 runtime semantics.
 
-## Schema baseline
+Adapter and coordinator ownership remains strict:
 
-JSON Schema Draft 2020-12. Top-level contracts carry `formatVersion=1`, fixed format identifier and default `additionalProperties:false`; unknown machine fields are not silently ignored.
+```text
+case.json
+   ↓
+adapter
+   ↓
+ImplementationObservation v1      # observed facts only
+   ↓
+coordinator comparator
+   ↓
+ConformanceResult v1
+   └── DivergenceRecord v1 when needed
+```
 
-URN identifiers include:
+Adapters must not declare their own semantic PASS/FAIL. Coordinator judgment is based on golden authority and/or cross-implementation evidence.
+
+## Machine schema baseline
+
+Verification JSON uses JSON Schema Draft 2020-12. Top-level contracts carry `formatVersion = 1`, a fixed format identifier, and default `additionalProperties: false`. Unknown machine-readable fields are not silently ignored.
+
+Relevant schema identifiers:
 
 - `urn:auditoryworks:axiom:verification:projection:v1`
 - `urn:auditoryworks:axiom:verification:observation:v1`
 - `urn:auditoryworks:axiom:verification:result:v1`
 
-UTF-8 no BOM; checked-in JSON LF, two-space indent, final newline. Artifact paths are run-relative POSIX, never absolute or escaping via `..`. Object member order is not semantic; array order is.
+Artifacts are UTF-8 without BOM. Checked-in golden JSON uses LF, two-space indentation and final newline. JSON object member order is not semantic; array order is semantic. Artifact references are run-relative POSIX paths and may not be absolute or escape through `..`.
 
-## Shared enums
+## Shared verification enums
 
-Requirement status: SPEC_REQUIREMENT, FREEZE_CANDIDATE, BENCHMARK_TARGET, EXPERIMENTAL_TARGET, OPEN.
+Requirement status:
 
-Implementation kind: CPP_NATIVE, WASM, TS_REFERENCE.
+`SPEC_REQUIREMENT / FREEZE_CANDIDATE / BENCHMARK_TARGET / EXPERIMENTAL_TARGET / OPEN`
 
-Stages: DECODE, NORMALIZE, VALIDATE, APPLY, PROJECTION, ENCODE, REPLAY, ORDER_KEY_COMPARE, ORDER_KEY_ALLOCATE, HARNESS. Semantic stage order is Decode→Normalize→Validate→Apply→Projection→Encode; Replay orchestrates operation/checkpoint location.
+Implementation kind:
 
-Observation outcomes: ACCEPTED, REJECTED, NOT_SUPPORTED, HARNESS_ERROR, INTERNAL_ERROR. These are verification enums, not Axiom public errors.
+`CPP_NATIVE / WASM / TS_REFERENCE`
 
-Semantic error categories are populated only where upstream freezes them, including InvalidEnvelope, UnsupportedSchemaVersion/PayloadVersion, InvalidPayload/ObjectKind/Field/Reference, InvariantViolation, ObjectAlreadyExists/NotFound and ProtocolCorruption. Library exceptions remain diagnostics.
+Stage names:
 
-## Projection envelope
+`DECODE / NORMALIZE / VALIDATE / APPLY / PROJECTION / ENCODE / REPLAY / ORDER_KEY_COMPARE / ORDER_KEY_ALLOCATE / HARNESS`
 
-Required fields: `format=axiom-verification-projection-v1`, `formatVersion=1`, semanticSchemaVersion, rootType, form (`DECODED/NORMALIZED/CANONICAL`), value.
+For single-value / single-Operation first divergence, the semantic stage order is fixed:
 
-Exact scalar mapping: bool JSON boolean; u32/enum/registry ID JSON integer; u64/fixed64 `u64:` + 16 lowercase hex; f32 `f32:` + 8 lowercase IEEE bits; f64 `f64:` + 16 lowercase bits; Id128 `id128:` + 32 lowercase hex; arbitrary bytes/OrderKey `hex:`; strings ordinary JSON strings.
+```text
+DECODE → NORMALIZE → VALIDATE → APPLY → PROJECTION → ENCODE
+```
 
-DECODED may retain raw -0/NaN/Inf if decoder produced them. NORMALIZED/CANONICAL requires -0→+0 and forbids NaN/Inf; f32 width must not silently widen to f64.
+`REPLAY` is an orchestration stage. A replay divergence should still narrow to an Operation index and semantic stage when evidence permits.
 
-Optional absence is key absence, not null. Present(default) remains present. oneof exposes only active member in canonical form. OrderedSequence is array in semantic order; CanonicalSet is sorted unique array; CanonicalMap is ordered entry array; keyed batches/PropertyBag/EraseMask follow authority comparators.
+## Projection v1 contract relevant to divergence
 
-Projection validation is two-layer: generic JSON Schema for envelope/shape plus IDL-aware validator for rootType field typing, form legality and canonical collection rules.
+Projection envelope fields are:
 
-## Observation vs Result
+- `format = axiom-verification-projection-v1`
+- `formatVersion = 1`
+- `semanticSchemaVersion`
+- `rootType`
+- `form = DECODED | NORMALIZED | CANONICAL`
+- `value`
 
-Adapter produces ImplementationObservation only. Coordinator validates observation and compares it against golden/cross-implementation evidence to produce ConformanceResult. Result carries stable case/implementation identity, requirement status, execution status, expected/observed outcome, artifact refs and optional first divergence. Agreement among implementations cannot override golden mismatch.
+Projection validation is two-layer:
 
-## Divergence
+1. generic JSON Schema validates envelope / JSON shape;
+2. IDL-aware validation resolves `rootType` against the frozen Reference IDL and validates field types, presence, oneof and form-specific canonical rules.
 
-Divergence is machine-readable and identifies earliest meaningful stage/checkpoint/operation/path or byte offset plus expected/observed references. Diagnostics can contain implementation-specific detail but do not redefine semantic error authority.
+Canonical scalar projection uses exact tagged representations. In the current source authority this includes:
+
+- u64/fixed64: `u64:` + 16 lowercase hex digits;
+- f32: `f32:` + 8 lowercase IEEE-754 bits;
+- f64: `f64:` + 16 lowercase IEEE-754 bits;
+- Id128: `id128:` + 32 lowercase hex digits;
+- arbitrary bytes / OrderKey: `hex:` + even-count lowercase hex;
+- u32 / enums / registry IDs: JSON integer;
+- bool: JSON boolean;
+- strings: JSON string.
+
+`NORMALIZED / CANONICAL` apply Common Wire normalization: `-0 → +0`, NaN/±Infinity forbidden, f32 width is preserved, and semantic equality is exact after normalization rather than epsilon-based.
+
+Presence and collections remain semantic: absent optional = missing key, not null; present(default) remains present; canonical oneof has only its active member; OrderedSequence is order-sensitive; CanonicalSet / CanonicalMap use authority-defined ordering and uniqueness.
+
+## DivergenceRecord v1
+
+The older Runner example used `expectedArtifact + actualArtifacts`. The current source normalizes that into `basis + reference? + observed[]` so OPEN/cross-implementation evidence does not invent a fake expected implementation.
+
+Representative shape:
+
+```json
+{
+  "kind": "SEMANTIC_PROJECTION",
+  "basis": "GOLDEN",
+  "stage": "APPLY",
+  "operationIndex": 42,
+  "operationId": "id128:0000000000000000000000000000002a",
+  "semanticPath": "$.placement.parentId",
+  "reference": {
+    "source": "GOLDEN",
+    "artifact": "expected/final.projection.json"
+  },
+  "observed": [
+    {
+      "implementationId": "axiom-cpp-native",
+      "artifact": "observations/cpp/final.projection.json"
+    }
+  ],
+  "summary": "parentId differs after SetPlacements"
+}
+```
+
+### Divergence kinds
+
+- `TERMINAL_STAGE`
+- `OUTCOME`
+- `SEMANTIC_ERROR_CATEGORY`
+- `STAGE_PROJECTION`
+- `SEMANTIC_PROJECTION`
+- `CANONICAL_BYTES`
+- `REPLAY_CHECKPOINT`
+- `CAPABILITY`
+- `IMPLEMENTATION_ERROR`
+
+### Comparison basis
+
+`GOLDEN` and `CROSS_IMPLEMENTATION` are distinct.
+
+Rules:
+
+- `basis = GOLDEN` → `reference` is required and `reference.source = GOLDEN`;
+- `basis = CROSS_IMPLEMENTATION` → `reference` is absent and `observed[]` contains at least two implementations;
+- OPEN cross-implementation divergence uses `CROSS_IMPLEMENTATION`; coordinator must not choose cpp/wasm/ts as a synthetic expected implementation.
+
+### Location fields
+
+- `operationIndex?` — zero-based opstream frame index;
+- `operationId?` — tagged Id128 of that Operation;
+- `semanticPath?` — typed verification semantic path;
+- `byteOffset?` — zero-based byte offset for canonical-byte comparison.
+
+If an Operation/replay divergence is localized to a concrete operation, `operationIndex` and `operationId` appear together. Semantic projection mismatch should report `semanticPath` when it can be localized. Canonical-byte mismatch should report `byteOffset` when it can be localized. Terminal/capability errors may have no operation location.
+
+### Operand rules
+
+A comparison operand contains at least one of `artifact` or scalar `value`. Scalar `value` is for compact terminal stage / outcome / semantic error-category evidence. Projection and canonical-byte divergence should prefer artifact references instead of embedding full projection data inside `DivergenceRecord`.
+
+## Semantic Path Grammar v1
+
+The source defines one language-neutral diagnostic grammar so C++ / TS / other coordinator implementations do not invent different first-difference paths:
+
+```text
+$                         root projection value
+.field                    struct field
+[N]                       OrderedSequence zero-based index
+[key=value]               CanonicalSet / CanonicalMap selector
+```
+
+Examples:
+
+```text
+$.placement.parentId
+$.objects[id=id128:00000000000000000000000000000011].transform.tx
+$.patches[objectId=id128:...,fieldId=42]
+```
+
+The path is verification diagnostics only. It must not contain host-language pointers, C++ addresses or generated-protobuf field indices and must not enter Axiom public API.
+
+## First-divergence comparison order
+
+The coordinator comparison order is authority, not an implementation preference:
+
+```text
+0 Harness / corpus validity
+1 Capability availability
+2 Terminal stage
+3 Accepted vs Rejected outcome
+4 Semantic error category when upstream authority specifies it
+5 Stage projection when captured
+6 Final semantic projection
+7 Canonical protobuf bytes when required
+8 Replay checkpoints
+```
+
+For a single Operation, find the first mismatch using the fixed semantic stage order.
+
+For short replay with `EVERY_OPERATION` checkpoints, the first differing checkpoint index is the first differing Operation index.
+
+For long replay, coarse checkpoints only narrow the interval. The runner then re-executes with `--stop-after-operation M` and binary-searches to the first mismatching Operation. If final projection differs but coarse checkpoints did not identify the concrete first Operation, `diagnose --first-divergence` must re-run localization; reporting only `final mismatch` is insufficient.
+
+Deterministic replay is a prerequisite for this localization method.
+
+OPEN / Experimental cases may use the same localization process across implementations. The result remains observation (`OBSERVED_DIVERGENCE_OPEN`) and does not choose a semantic winner.
+
+## Result invariants
+
+At minimum:
+
+- `PASS` → `divergence = null`;
+- `FAIL_GOLDEN_MISMATCH` → `divergence.basis = GOLDEN`;
+- `OBSERVED_DIVERGENCE_OPEN` → `divergence.basis = CROSS_IMPLEMENTATION`;
+- `BLOCKED_OPEN` / `OBSERVED_AGREEMENT_OPEN` → no divergence;
+- required participant/capability failures remain explicit;
+- implementation/harness errors do not masquerade as semantic mismatches.
+
+Diagnostics may contain implementation-specific text, but diagnostic text is not semantic authority and does not replace stable `DivergenceRecord` fields.
+
+## Validation layering
+
+A trustworthy result is not established by `JSON Schema validate=true` alone. The verification pipeline is:
+
+```text
+JSON Schema structural validation
+        ↓
+IDL-aware projection validation
+        ↓
+cross-artifact semantic validation
+        ↓
+coordinator comparison
+        ↓
+ConformanceResult + deterministic DivergenceRecord
+```
+
+MR-10-01 materialized the first three schema/IDL boundaries. MR-10-03 owns the repo-local lock of the first-divergence result contract; it does not require implementing the complete 60-case semantic engine or all adapters during authority migration.
