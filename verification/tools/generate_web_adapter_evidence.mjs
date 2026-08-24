@@ -9,7 +9,7 @@ import { WebReferenceAdapter, WEB_PROFILE } from "../packages/platform-harness-w
 
 const verificationRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const outputRoot = resolve(verificationRoot, "evidence/g0/gt-g0-10");
-const sourceCommit = "be70b0cbfbb85d7a40eb88048c40740d740ac2e9";
+const sourceCommit = process.env.AXIOM_EVIDENCE_SOURCE_COMMIT ?? "UNBOUND";
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const writeJson = async (path, value) => {
@@ -38,7 +38,7 @@ await writeJson(join(outputRoot, "applicability.json"), {
   notApplicable: notApplicable.map((scenario) => ({ scenarioId: scenario.id, reason: scenario.expected.applicability?.WEB ?? "NOT_APPLICABLE_BY_CONTRACT" })),
 });
 await writeJson(join(outputRoot, "summary.json"), {
-  format: "axiom-platform-web-run-summary-v1", sourceCommit, implementationState: "WORKTREE_UNCOMMITTED",
+  format: "axiom-platform-web-run-summary-v1", sourceCommit, implementationState: sourceCommit === "UNBOUND" ? "UNBOUND" : "COMMITTED",
   adapter: "web", suite: "platform-seed-v0.1", corpusDigest: corpus.digest,
   applicableCount: applicable.length, notApplicableCount: notApplicable.length, resultCount: corpus.scenarios.length,
   observationPolicy: "facts-only; comparison-owned-by-shared-runner",

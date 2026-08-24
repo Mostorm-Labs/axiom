@@ -3,7 +3,7 @@
 > 任务：`GT-G0-10`（Notion locator：`WP-G0-10 / IH-10`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 当前状态：`Validating`（实现已完成；待提交后重新生成 commit-bound Evidence）
+> 当前状态：`Pass`；实现提交：`6cbc2969bca6ddb1a1ba9b7450a401498dc55477`
 
 ## 1. 来源与边界
 
@@ -28,7 +28,7 @@ Notion 私有 URL 和 page ID 不写入仓库；仓库只保留脱敏来源语�
 | Modify | conformance CLI 增加 Web profile/run；verification workspace 增加 Web package |
 | Missing（已补齐） | browser Canvas host seam、Web profile、logical action mapping、facts-only observation、Web N/A applicability report |
 | Conflict（已避免） | 不把 Web Arc 缺失伪装成失败；不让 adapter 读取 expected 或输出 PASS/FAIL |
-| Blocked | commit-bound final Evidence 需要本轮工作提交；当前按用户要求未 commit |
+| Blocked | — |
 
 ## 3. 实现交付物
 
@@ -60,11 +60,19 @@ adapter result 只标记 `OBSERVED_AGREEMENT_OPEN`，比较仍由 Shared Runner 
 
 结构化 Evidence：[`verification/evidence/g0/gt-g0-10/`](../../../../verification/evidence/g0/gt-g0-10/)
 
-当前 Evidence 的 `sourceCommit` 绑定到最近已提交基线
-`be70b0cbfbb85d7a40eb88048c40740d740ac2e9`，并明确标注
-`implementationState: WORKTREE_UNCOMMITTED`。提交本轮改动后，必须重新生成 manifest 和
-commit-bound SHA-256，才可将任务从 `Validating` 改为 `Pass`。
+Evidence 的 `sourceCommit` 绑定到实现提交
+`6cbc2969bca6ddb1a1ba9b7450a401498dc55477`，`implementationState` 为 `COMMITTED`。
+本 Evidence 提交只补充绑定产物和状态追踪，不改变实现提交内容。
 
-因此 `GT-G0-10` 的设计、实现和本地 reference validation 已完成，但 commit-bound Evidence
-尚未绑定本轮实现。G0、R1 继续 `Validating`，不得晋级 G0-11 或 G1。本轮未执行 commit、push
-或 PR。
+实现提交绑定摘要：
+
+| 对象 | 值 |
+| --- | --- |
+| commit | `6cbc2969bca6ddb1a1ba9b7450a401498dc55477` |
+| tree | `0b9de2bacb4fb84f37b51c9178df96fca862f20f` |
+| `git archive` SHA-256 | `d6192db3ec3a6b9d0b593bd8674c7e6164588e06ba64ca9b80b678a0f1203b94` |
+| Evidence `summary.json` SHA-256 | `ca6cebd8165f4a305b6fb7b4bcca3113c7e229e088623ff33639f817b2a4a46b` |
+| Evidence `manifest.json` SHA-256 | `f39f1ccfad7db0251b632674aa28ab879abc0beecd448cc01f2c027280821b19` |
+
+`GT-G0-10` 已满足本任务退出条件并标记为 `Pass`。G0 与 R1 仍为 `Validating`，因为
+`GT-G0-11..17` 尚未完成；本轮不进入下一任务。

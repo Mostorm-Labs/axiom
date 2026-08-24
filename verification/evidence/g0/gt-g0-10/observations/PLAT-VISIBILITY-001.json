@@ -1,0 +1,84 @@
+{
+  "format": "axiom-platform-observation-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-VISIBILITY-001",
+  "profileId": "web-reference-v0-1",
+  "platformFamily": "WEB",
+  "execution": {
+    "adapter": "web-reference-v0.1",
+    "boundary": "IN_PROCESS",
+    "deterministic": true
+  },
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "platform.state.capture",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "terminal": {
+    "state": "OBSERVED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "event": "CANVAS_CREATED"
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "event": "HOST_ATTACHED"
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "event": "DOCUMENT_ATTACHED"
+    },
+    {
+      "stepId": "s04",
+      "kind": "SEMANTIC",
+      "event": "CANONICAL_FIXTURE_REPLAYED"
+    },
+    {
+      "stepId": "s05",
+      "kind": "METRICS_UPDATE",
+      "event": "METRICS_CHANGED",
+      "details": {
+        "visible": false,
+        "occluded": true
+      }
+    },
+    {
+      "stepId": "s06",
+      "kind": "METRICS_UPDATE",
+      "event": "METRICS_CHANGED",
+      "details": {
+        "visible": true,
+        "occluded": false
+      }
+    }
+  ],
+  "artifacts": {},
+  "semanticCheckpoints": [],
+  "stateCheckpoints": [],
+  "targetBindings": [],
+  "realization": {
+    "host": "DOM_CANVAS",
+    "runtime": "WASM",
+    "renderer": "WEBGL2",
+    "arc": "DISABLED_BY_CONTRACT",
+    "surfaceGeneration": "u64:0000000000000001",
+    "inputPath": "PointerEvents.coalescedEvents→WASM.batch"
+  },
+  "diagnostics": []
+}
