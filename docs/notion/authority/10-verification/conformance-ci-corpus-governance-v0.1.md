@@ -1,8 +1,10 @@
 # Conformance CI Gates + Corpus Governance v0.1
 
 > Source page: https://app.notion.com/p/3c44c57a590c81e0be88edb90845e05a
+> Source page id: `3c44c57a-590c-81e0-be88-edb90845e05a`
 > Snapshot date: 2026-08-24
 > Source status: Freeze Candidate — Conformance CI / Corpus Governance Contract
+> MR-10-03 note: evidence-retention rules expanded from source; no source status promotion.
 
 ## Three-layer decision model
 
@@ -36,7 +38,48 @@ Clean checkout + checked-in corpus. Re-runs all release-scope Spec/Freeze Candid
 
 ## Aggregation
 
-Validate in order: corpus/schema/provenance; required implementation/capability availability; blocking Spec; blocking Freeze Candidate; OPEN observations; Experimental observations; benchmark references. Invalid evidence takes precedence over apparent pass. All implementations agreeing against golden is still golden mismatch failure.
+Validate in order:
+
+```text
+A. corpus / schema / provenance validity
+B. required implementation / capability availability
+C. blocking Spec Requirement results
+D. blocking Freeze Candidate results
+E. OPEN observations
+F. Experimental observations
+G. Benchmark / measurement references
+```
+
+Invalid evidence takes precedence over apparent pass. All implementations agreeing against golden remains a golden mismatch failure.
+
+## Failure / observation evidence retention
+
+A conformance failure is not sufficiently evidenced by a red CI badge or a textual stack trace. The source authority requires retaining the evidence needed to reproduce and localize the result. An evidence bundle may contain:
+
+```text
+run.json
+execution-plan.json
+summary / GateDecision
+ConformanceResult for failing cases
+ImplementationObservation for participating implementations
+DivergenceRecord / first-divergence output
+referenced projection / canonical bytes / checkpoint artifacts
+adapter stdout/stderr or structured diagnostics
+build + compiler/runtime + git commit metadata
+corpusId / corpus version / case ID / provenance reference
+```
+
+The stable machine-readable `DivergenceRecord` is therefore part of gate evidence, not optional reporter decoration.
+
+For long replay, retaining only final projection mismatch is insufficient when first-divergence localization has run. The evidence set should retain the relevant coarse checkpoint interval and/or rerun artifacts required to explain the reported first differing Operation.
+
+OPEN/Experimental behavior drift that is important enough to surface must retain enough evidence to reproduce its first divergence. It remains non-blocking according to requirement status, but evidence infrastructure failure is still `INVALID_EVIDENCE`.
+
+## Deterministic repeat
+
+Where a gate claims deterministic first divergence, repeated execution against the same corpus/input/revision must produce the same stable divergence location fields. Reporter prose, stack traces or timing metadata may vary and are not part of semantic authority.
+
+A mismatch in stable first-divergence location for identical deterministic replay evidence is a verification-tooling defect until explained; it must not be silently accepted as implementation nondeterminism.
 
 ## Golden Change Gate
 
@@ -47,3 +90,7 @@ No blocking CI `--bless`/`--update-golden` path.
 ## Platform dependency
 
 Platform evidence has its own protocol trusted-root requirement: the 56 platform-harness protocol vectors must pass before real platform scenario evidence can be considered trustworthy. This is separate from the 60 semantic seed corpus.
+
+## MR-10-03 ownership note
+
+This page owns evidence lifecycle and CI retention policy. It does not own the current `DivergenceRecord` field schema or replay bisection algorithm; those remain in 10-04 and 10-02/10-03 respectively. MR-10-03 closes those sources together rather than duplicating them into a new semantic authority.
