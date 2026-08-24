@@ -3,7 +3,7 @@
 > 任务：`GT-G0-09`（Notion locator：`WP-G0-09 / IH-09`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 状态：`Validating`；28 个场景已落盘，等待 implementation commit 后生成 commit-bound Evidence
+> 状态：`Pass`；实现与 Evidence 已绑定到 implementation commit `2efe743c591fee6778e96ea9fb86fc90b8a89247`
 
 ## 1. 目标、边界与术语
 
@@ -77,18 +77,21 @@ present hold、预置 LateEventFence、positive stale-source attempt 和 drain�
 | deterministic stale-work recipe | Pass；present hold + pre-armed fence + stale attempt + drain |
 | adapter / Surface / GPU execution | 本任务不适用；由 `GT-G0-10..13` 承接 |
 
-当前 worktree Evidence identity：
+commit-bound Evidence identity：
 
 | 对象 | SHA-256 |
 | --- | --- |
+| implementation commit | `2efe743c591fee6778e96ea9fb86fc90b8a89247` |
+| implementation tree | `3b004af6c7b3fab1415bb20211ef2fa52baef908` |
+| implementation archive | `5b67ae16c361c9fb8e57b27d2672df57ac851fd888fe39b1352e86e0a09ae282` |
 | platform seed canonical digest | `20d358607f04c7eed5843129ab5b9e33f612b216740c7de4d8d434aa57718741` |
-| scenario validation report | `67c25eab160d6f19c3feaaac943d68fe8be49c9ffb73b27d9c6758e2724ca079` |
-| suite manifest | `c12cbbfdd98ea3150fb5681d3360f5d12ee48bc4eecadb5c6c4b86b3b0a1a183` |
-| case→requirement/capability matrix | `4a326e984dbab41014227a81da5ec390897f75d46d80695c50f0a303234f877b` |
-| fixture integrity report | `4208aa7f4110d99c3937273942957f04194facc31af9fa266939d0b0e4286ad1` |
+| scenario validation report | `5d1ebaa6a9755d2a2b909d4f1206f19de131733651d40bc11368421dff707a5b` |
+| suite manifest | `ffb1b4596011ae50da7d4463154172b23b9eed9c0692d3857a5017658bae5287` |
+| case→requirement/capability matrix | `e23d05a26222bfa42ed525c7a194dbf50de9390ca0e03979a1c8faca94b6e361` |
+| fixture integrity report | `17ef1d724e7e7aff05bd88504679698313bd328edc27423a674b88801510b487` |
 
-这些值尚未绑定 implementation commit；提交时必须从已提交实现重新生成四份 Evidence，记录
-implementation commit/tree/archive hash，并再次运行完整 workspace 与文档校验。
+四份 JSON 的 `sourceCommit` 均为上述 implementation commit；提交 Evidence 绑定后还会再次运行
+完整 workspace 与文档校验。
 
 ## 5. Evidence 等级与任务状态
 
@@ -99,6 +102,6 @@ implementation commit/tree/archive hash，并再次运行完整 workspace 与文
 | E3 Integration / Golden | pending downstream | 真实 adapter 执行由 `GT-G0-10..13` 负责 |
 | E4 Physical / Demo | not applicable to IH-09 | 本任务明确不运行 Surface/GPU/设备 |
 
-因此 `GT-G0-09` 当前为 `Validating`，不是 `Pass`：implementation 已完整物化，但还没有在
-implementation commit 上重新生成最终 Evidence。G0 与 R1 保持 `Validating`；本轮不进入
-`GT-G0-10`。
+因此 `GT-G0-09` 为 `Pass`：28 个场景、结构和语义门禁、负向 mutation guards、fixture integrity
+以及 commit-bound Evidence 均已完成。G0 与 R1 仍保持 `Validating`，因为单任务 Pass 不等于
+Gate Pass；本轮不进入 `GT-G0-10`。

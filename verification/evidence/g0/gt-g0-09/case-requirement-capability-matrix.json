@@ -1,0 +1,1319 @@
+{
+  "format": "axiom-platform-case-requirement-capability-matrix-v1",
+  "formatVersion": 1,
+  "sourceCommit": "2efe743c591fee6778e96ea9fb86fc90b8a89247",
+  "suiteId": "platform-seed-v0.1",
+  "rows": [
+    {
+      "id": "PLAT-CREATE-CANVAS-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I02",
+        "VER-20"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-HOST-ATTACH-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I02"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "surface.generation"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "surface.generation"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "surface.generation"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "surface.generation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DOCUMENT-ATTACH-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I02"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "platform.state.capture",
+            "semantic.projection.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-CANONICAL-REPLAY-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I01",
+        "VER-07"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-METRICS-RESIZE-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I03"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-METRICS-DPI-SCALE-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I03"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-METRICS-ORIENTATION-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I03"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-VISIBILITY-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I03"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "metrics.generation",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-APP-BACKGROUND-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I09"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-APP-FOREGROUND-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I09"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-CANVAS-SUSPEND-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I10"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-CANVAS-RESUME-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I10"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-SURFACE-LOST-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I05"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-SURFACE-REBIND-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I05",
+        "PC-I06"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-STALE-GENERATION-REJECT-001",
+      "requirementStatus": "FREEZE_CANDIDATE",
+      "requirementIds": [
+        "PC-I04"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "fault.stale_generation.inject"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "fault.stale_generation.inject"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "fault.stale_generation.inject"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "fault.stale_generation.inject"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DEVICE-LOST-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I07",
+        "VER-19"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DEVICE-RECOVER-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I08",
+        "VER-19"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-HOST-DETACH-REATTACH-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I02",
+        "VER-20"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DATABRIDGE-NO-ECHO-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I18"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-CALLBACK-NONREENTRANT-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I16",
+        "PC-I18"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "bridge.data_bridge",
+            "bridge.callback_trace",
+            "input.pointer_sample_batch"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-INPUT-BATCH-NORMALIZED-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I17",
+        "VER-07"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-INPUT-HOTPATH-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I14",
+        "PC-I17"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "bridge.data_bridge",
+            "bridge.public_facade"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "bridge.data_bridge",
+            "bridge.public_facade"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "bridge.data_bridge",
+            "bridge.public_facade"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "input.pointer_sample_batch",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "bridge.data_bridge",
+            "bridge.public_facade"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-ARC-PREVIEW-FALLBACK-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I12"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "arc.preview.loss.inject",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "arc.preview.loss.inject",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "arc.preview.loss.inject",
+            "surface.ownership.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-ARC-CANONICAL-HANDOFF-001",
+      "requirementStatus": "FREEZE_CANDIDATE",
+      "requirementIds": [
+        "PC-I13"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-SURFACE-OWNERSHIP-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I11"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED_WHEN_CAPABLE",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "arc.preview",
+            "surface.ownership.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DESTROY-CANVAS-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "VER-20"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-DESTROY-STALE-WORK-001",
+      "requirementStatus": "FREEZE_CANDIDATE",
+      "requirementIds": [
+        "PC-I20"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "harness.completion_tokens",
+            "harness.source_lease_registry",
+            "harness.late_event_fence",
+            "harness.source_attempt_trace"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "harness.completion_tokens",
+            "harness.source_lease_registry",
+            "harness.late_event_fence",
+            "harness.source_attempt_trace"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "harness.completion_tokens",
+            "harness.source_lease_registry",
+            "harness.late_event_fence",
+            "harness.source_attempt_trace"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "presentation.feedback",
+            "fault.present_completion_hold",
+            "harness.completion_tokens",
+            "harness.source_lease_registry",
+            "harness.late_event_fence",
+            "harness.source_attempt_trace"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAT-RECOVERY-REPEATED-001",
+      "requirementStatus": "SPEC_REQUIREMENT",
+      "requirementIds": [
+        "PC-I05",
+        "PC-I06",
+        "PC-I07",
+        "PC-I08"
+      ],
+      "targets": [
+        {
+          "platformFamily": "WEB",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "WINDOWS",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "ANDROID",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        },
+        {
+          "platformFamily": "APPLE",
+          "policy": "REQUIRED",
+          "requiredCapabilities": [
+            "semantic.projection.capture",
+            "platform.state.capture",
+            "surface.generation",
+            "surface.loss.inject",
+            "device.loss.inject",
+            "presentation.feedback"
+          ]
+        }
+      ]
+    }
+  ]
+}
