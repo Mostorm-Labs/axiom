@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-trace:v1",
+  "title": "Axiom Platform Trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "profileId", "traceKind", "events"],
+  "properties": {
+    "format": {"const": "axiom-platform-trace-v1"},
+    "formatVersion": {"const": 1},
+    "scenarioId": {"type": "string", "minLength": 1},
+    "profileId": {"type": "string", "minLength": 1},
+    "traceKind": {"enum": ["LIFECYCLE", "SURFACE", "BRIDGE"]},
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["eventSeq", "event"],
+        "properties": {
+          "eventSeq": {"type": "string", "pattern": "^u64:[0-9a-f]{16}$"},
+          "event": {"enum": ["CANVAS_CREATED", "HOST_ATTACHED", "HOST_DETACHED", "DOCUMENT_ATTACHED", "DOCUMENT_DETACHED", "APP_BACKGROUND", "APP_FOREGROUND", "CANVAS_SUSPEND_REQUESTED", "CANVAS_SUSPENDED", "CANVAS_RESUME_REQUESTED", "CANVAS_RUNNING", "CANVAS_DESTROY_REQUESTED", "CANVAS_DESTROYED", "SYNC_SUSPENDED", "SYNC_RECONNECT", "SYNC_CATCH_UP", "SURFACE_BOUND", "SURFACE_UNAVAILABLE", "SURFACE_REBOUND", "METRICS_CHANGED", "DEVICE_LOST", "DEVICE_RECOVERY_STARTED", "DEVICE_RECOVERED", "ARC_PREVIEW_DEGRADED", "ARC_PREVIEW_RECOVERED", "CANONICAL_FRAME_SUBMITTED", "CANONICAL_FRAME_PRESENTED", "PREVIEW_FRAME_SUBMITTED", "PREVIEW_FRAME_PRESENTED", "CANONICAL_VISIBLE_ACKNOWLEDGED", "PREVIEW_CLEAR_REQUESTED", "PREVIEW_CLEARED", "STALE_GENERATION_REJECTED", "FACADE_CALL_ISSUED", "FACADE_CALL_COMPLETED", "DATA_BRIDGE_APPLY_ISSUED", "DATA_BRIDGE_APPLY_COMPLETED", "LOCAL_CANONICAL_EVENT_PUBLISHED", "INPUT_BATCH_DELIVERED", "CALLBACK_DISPATCHED"]},
+          "source": {"type": "string"},
+          "stepId": {"type": "string"},
+          "canvasTag": {"type": "string"},
+          "correlationId": {"type": "string"},
+          "callId": {"type": "string"},
+          "callbackId": {"type": "string"},
+          "batchId": {"type": "string"},
+          "target": {"type": "string"},
+          "surfaceGeneration": {"type": "string", "pattern": "^u64:[0-9a-f]{16}$"},
+          "metricsGeneration": {"type": "string", "pattern": "^u64:[0-9a-f]{16}$"},
+          "deviceGeneration": {"type": "string", "pattern": "^u64:[0-9a-f]{16}$"},
+          "generationKind": {"enum": ["SURFACE", "METRICS", "DEVICE"]},
+          "reentrant": {"type": "boolean"},
+          "metrics": {"type": "object", "additionalProperties": true},
+          "monotonicTimeNs": {"type": ["integer", "string"]},
+          "threadTag": {"type": "string"},
+          "processTag": {"type": "string"},
+          "details": {"type": "object", "additionalProperties": true}
+        }
+      }
+    }
+  }
+}
