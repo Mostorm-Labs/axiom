@@ -3,7 +3,7 @@
 > Audit date: 2026-08-24
 > Branch: `docs/notion-bridge-bootstrap`
 > Layer: `10-verification`
-> Status: **AUTHORITY RECONCILIATION COMPLETE / CORE SIX READY FOR MATERIALIZATION**
+> Status: **CORE SIX MATERIALIZED / TARGETED LOCAL VALIDATION PASS / CI EVIDENCE PENDING**
 
 ## 1. Purpose
 
@@ -30,80 +30,125 @@ Relevant 08 owners reviewed:
 - `OPEN Platform Decisions v0.1`
 - source dependencies identified by 10-08: Surface/GPU, ABI/Bridge and Thread matrices.
 
-All 10-07 through 10-12 source pages remain Freeze Candidate. 08 uses its own `Accepted / Current Direction / Proposal / Superseded / OPEN` status vocabulary. This closure does not promote either layer.
+All 10-07 through 10-12 source pages remain Freeze Candidate. 08 uses its own `Accepted / Current Direction / Proposal / Superseded / OPEN` vocabulary. Materialization does not promote either layer.
 
 ## 3. Core six contract inventory
 
-| Contract | Primary source owner | Source completeness | 08 dependency | MR-10-04 verdict |
-|---|---|---|---|---|
-| `platform-suite` | 10-09 correction | format/id/version + ordered scenario membership + runner/scenario format requirements defined | none beyond referenced scenario authority | **READY** |
-| `platform-scenario` | 10-08, corrected by 10-09 | field-level target/precondition/step/expected/capture model defined | references 08 requirement/invariant authority; does not choose physical realization | **READY** |
-| `platform-profile` | 10-08 | family/variant/capability/realization shape defined | physical realization values deliberately remain profile-local / OPEN metadata | **READY** |
-| `platform-trace` | 10-08, event correction in 10-09 | envelope, trace kind, global eventSeq, event/generation/correlation semantics defined | normalized observables derive from 08 lifecycle/ownership; exact OS callback/API excluded | **READY** |
-| `platform-observation` | 10-08 | fact-only profile/scenario execution, steps, artifacts, semantic/state checkpoints, target binding, realization, diagnostics defined | observed implementation metadata may differ while 08 is OPEN | **READY** |
-| `platform-result` | 10-08 | result statuses, participants/checks/open observations/divergence and deterministic comparison order defined | evaluates scenario authority; must not convert OPEN realization into winner | **READY** |
+| Contract | Primary source owner | 08 dependency | Status |
+|---|---|---|---|
+| `platform-suite` | 10-09 correction | scenario authority only | **MATERIALIZED** |
+| `platform-scenario` | 10-08 + 10-09 correction | references 08 invariants; no physical winner | **MATERIALIZED** |
+| `platform-profile` | 10-08 | OPEN realization stays metadata | **MATERIALIZED** |
+| `platform-trace` | 10-08 + 10-09 event correction | normalized observable vocabulary only | **MATERIALIZED** |
+| `platform-observation` | 10-08 | fact-only evidence; realization may differ | **MATERIALIZED** |
+| `platform-result` | 10-08 | evaluates scenario authority, not OPEN realization | **MATERIALIZED** |
 
-No unresolved 08 physical decision prevents structural materialization of the six core schemas.
+Repository files:
+
+```text
+verification/schemas/platform-suite.schema.json
+verification/schemas/platform-scenario.schema.json
+verification/schemas/platform-profile.schema.json
+verification/schemas/platform-trace.schema.json
+verification/schemas/platform-observation.schema.json
+verification/schemas/platform-result.schema.json
+```
+
+All six use JSON Schema Draft 2020-12, fixed verification URNs, fixed format/version identifiers and top-level `additionalProperties: false`.
 
 ## 4. Why 08 OPEN decisions do not block schema materialization
 
-08 explicitly separates stable semantic/ownership/lifecycle meaning from unresolved platform realization.
+08 explicitly separates stable semantic/ownership/lifecycle meaning from unresolved platform realization. Still-OPEN examples include Windows composition profile, Android Surface primitive/backend, Apple exact layer hierarchy, Web realm/worker/backend choice, exact native input executor, runtime/render/worker topology, special-host process topology and exact PlatformSurfaceAdapter descriptor ABI.
 
-Examples of still-OPEN physical decisions include:
-
-- Windows DComp/DXGI/surface composition profile;
-- Android SurfaceView/TextureView/SurfaceControl and GPU backend;
-- Apple exact CAMetalLayer hierarchy;
-- Web main-realm vs Worker / future backend;
-- exact native input APIs/executors;
-- ordered-runtime/render/worker thread topology;
-- special-host process topology;
-- PlatformSurfaceAdapter exact descriptor ABI.
-
-MR-10-04 does not need to choose any of them. 10-08 already provides two explicit non-authoritative channels:
+MR-10-04 does not choose any of them. 10-08 provides explicit non-authoritative channels:
 
 1. `PlatformProfile.realization` — observed/profile metadata;
-2. `openObservations[]` — explicit P3 realization requests.
+2. `openObservations[]` — explicit realization observations.
 
-Those values are not blocking cross-platform expected equality. A Spec/Freeze scenario may PASS while different profiles report different OPEN realization metadata.
+Therefore schema materialization freezes **how evidence is represented**, not the physical implementation winner.
 
-Therefore materializing a schema for the **container and vocabulary** is not equivalent to accepting a physical implementation choice.
+A regression test explicitly confirms that arbitrary profile-local experimental backend/surface strings remain structurally valid realization metadata rather than becoming enum-frozen platform authority.
 
-## 5. 08 semantics that *are* valid schema inputs
+## 5. Source evolution / correction precedence
 
-The following inputs are sufficiently owned upstream to be represented by Verification:
+10-08 establishes the six-contract set and field-level model. 10-09 provides later corrections that are incorporated here:
 
-- Web/Windows/Android/Apple family roles;
-- one canonical semantic authority and canonical surface ownership by Axiom;
-- optional Arc preview ownership separation;
-- Host attachment and Document attachment orthogonality;
-- App / Canvas / Document / Surface / GPU lifecycle separation;
-- background/suspend != destroy;
-- resize/DPI/orientation do not mutate Semantic Document;
-- surface/device loss preserves semantic continuity and rebuilds derived state;
-- stale generation must not publish valid presentation;
-- bridge/input observable semantics are compared independently of physical JNI/JSI/WASM/ObjC++ implementation;
-- OPEN/Current Direction requirements remain explicitly non-promoted through requirement status and observation channels.
+- independent `platform-suite.schema.json` using `axiom-platform-suite-v1`;
+- `PREVIEW_CLEAR_REQUESTED` and `PREVIEW_CLEARED` normalized events;
+- seed-required capability vocabulary for state/ownership/stale-generation/completion/source/fence/source-attempt evidence.
 
-Where upstream status is Current Direction rather than Accepted, 10-07 maps resulting parity evidence to Freeze Candidate rather than silently promoting it to Spec Requirement.
+These are refinements, not architecture conflicts.
 
-## 6. Source evolution / correction precedence
+## 6. Machine-readable rules now represented
 
-10-08 establishes the six-contract set and field-level model.
+The materialized schemas/validator preserve at minimum:
 
-10-09 is later and provides three corrections that MR-10-04 must apply:
+- Platform families `WEB / WINDOWS / ANDROID / APPLE`;
+- participant policy `REQUIRED / REQUIRED_WHEN_CAPABLE`;
+- requirement status vocabulary shared with Verification;
+- exact `u64:` + 16 lowercase hex generation/event sequence representation;
+- PlatformScenario target/precondition/step/expected/capture envelope;
+- event-bound waits instead of correctness sleeps;
+- normalized lifecycle/surface/bridge event vocabulary;
+- 10-09 Arc preview-clear event correction;
+- fact-only PlatformObservation;
+- opaque target binding evidence and no native-handle leakage policy;
+- PlatformResult status separation, including OPEN result restrictions;
+- profile `realization` as non-authoritative open metadata;
+- safe run-relative artifact paths.
 
-- independent `platform-suite.schema.json` with `axiom-platform-suite-v1` manifest;
-- `PREVIEW_CLEAR_REQUESTED` and `PREVIEW_CLEARED` normalized events for Arc handoff proof;
-- seed-required capability IDs for state/ownership/stale-generation/completion/source/fence/source-attempt evidence.
+## 7. Semantic validation layer materialized
 
-These are refinements to the same machine contract, not a conflict.
+`verification/conformance/coordinator/platform_contracts.py` now owns the minimal MR-10-04 semantic-validator boundary rather than expanding the semantic coordinator into a platform runtime.
 
-## 7. Core six vs harness/protocol schemas
+Materialized checks include:
 
-MR-10-04 is intentionally bounded to the six platform evidence contracts.
+- six-schema inventory + Draft 2020-12/URN validation;
+- suite/scenario/capability/assertion identity uniqueness where locally decidable;
+- duplicate step-ID rejection;
+- non-empty Spec/Freeze correctness oracle;
+- exact eventSeq parsing and per-trace strict monotonic uniqueness;
+- event-specific required facts for surface/metrics/device/DataBridge/callback/input/stale-generation observations;
+- requested trace artifact presence;
+- profile/scenario/observation identity consistency;
+- native-handle leakage rejection for `bindingTag` evidence;
+- OPEN scenario cannot emit semantic PASS;
+- REQUIRED missing/not-capable participant must produce `FAIL_CAPABILITY_MISSING`.
 
-10-10 / 10-11 introduce a second set for the Shared Runner execution protocol:
+The validator deliberately does **not** enum-freeze `PlatformProfile.realization` values.
+
+## 8. Meta-contract tests materialized
+
+`verification/conformance/coordinator/test_platform_machine_contracts.py` now covers the MR-10-04 self-test layer needed before platform corpus materialization, including:
+
+```text
+core-six schema inventory
+META-PLATFORM-SCENARIO-UNKNOWN-FIELD-REJECT
+META-PLATFORM-SCENARIO-DUPLICATE-STEP-ID-REJECT
+META-PLATFORM-SCENARIO-SPEC-WITHOUT-ORACLE-REJECT
+META-PLATFORM-TRACE-DUPLICATE-EVENTSEQ-REJECT
+META-PLATFORM-TRACE-NONMONOTONIC-EVENTSEQ-REJECT
+META-PLATFORM-TRACE-SURFACE-BOUND-WITHOUT-GENERATION-REJECT
+META-PLATFORM-OBS-MISSING-REQUESTED-TRACE-REJECT
+META-PLATFORM-OBS-REAL-HANDLE-IN-BINDINGTAG-REJECT-BY-POLICY
+META-PLATFORM-RESULT-PASS-WITH-DIVERGENCE-REJECT
+META-PLATFORM-RESULT-OPEN-SCENARIO-PASS-REJECT
+META-PLATFORM-RESULT-REQUIRED-NOTCAPABLE-WITHOUT-FAIL-REJECT
+OPEN physical realization remains metadata
+```
+
+Two source meta-contract families intentionally remain cross-artifact/downstream rather than being faked during schema-only closure:
+
+- `META-PLATFORM-SCENARIO-MISSING-FIXTURE-REJECT` needs the discovered semantic/platform corpus namespace;
+- `META-PLATFORM-PARTIALORDER-MISSING-EVENT-FAIL` needs actual normalized trace artifacts/comparator execution.
+
+They become executable during MR-10-05 corpus/harness materialization. Their authority is already preserved in the 10-08 snapshot and is not forgotten.
+
+## 9. Core six vs harness/protocol schemas
+
+MR-10-04 remains bounded to the six platform evidence contracts.
+
+10-10 / 10-11 introduce a separate Shared Runner protocol family:
 
 ```text
 platform-harness-envelope
@@ -115,108 +160,59 @@ platform-protocol-vector
 platform-protocol-meta-result
 ```
 
-Those schemas prove the harness itself and support the 56-vector protocol trusted root. They are **not** aliases for the six Platform Scenario/Observation contracts and must not be merged into them.
+Those support the 56-vector protocol trusted root and belong MR-10-05 / a subordinate harness-protocol closure. They are not aliases for the core six.
 
-They belong the subsequent platform corpus/harness materialization closure (currently ledgered after MR-10-04).
+## 10. Validation evidence
 
-## 8. Machine contract rules to preserve during materialization
+TDD evidence retained:
 
-All six core schemas must preserve:
+- initial test-first commit: `a6b49c09f3e0613ecabd0930e2b3f0db00717239`;
+- local RED reproduced: `test_core_six_platform_schemas_are_materialized` failed specifically because `platform-suite.schema.json` did not exist;
+- six schema files were then materialized;
+- targeted local GREEN subsequently exercised schema inventory, a valid PlatformScenario/PlatformTrace and the MR-10-04 negative policy checks, ending with `MR-10-04 meta-contract targeted suite: PASS`.
 
-- JSON Schema Draft 2020-12;
-- fixed `format` + `formatVersion = 1`;
-- top-level `additionalProperties: false`;
-- exact tagged u64 generation/event sequence representation;
-- safe root-relative POSIX artifact paths;
-- adapter observation vs coordinator judgment separation;
-- no platform-specific expected semantic copies;
-- no arbitrary sleep as correctness synchronization;
-- one global normalized `eventSeq` namespace per PlatformObservation;
-- scenario-declared partial order instead of full trace total-order equality;
-- opaque Verification `bindingTag`, never native handles;
-- OPEN scenario cannot produce semantic PASS;
-- profile realization metadata cannot silently become correctness oracle.
+The GitHub workflow already discovers all `test_*.py`. `.github/workflows/conformance-seed-v1.yml` was relabeled so the same step clearly covers Verification artifact contracts rather than only MR-10-01.
 
-## 9. Required semantic validation beyond JSON Schema
-
-Source authority explicitly requires a second validation layer. Structural JSON Schema alone cannot prove:
-
-- scenario/step/checkpoint/requirement reference uniqueness;
-- referenced semantic fixture existence;
-- suite scenario existence and format compatibility;
-- event-specific required fields;
-- global eventSeq uniqueness and monotonicity across trace artifacts;
-- requested capture completeness;
-- generation semantic assertions;
-- participant capability policy;
-- non-empty Spec/Freeze correctness oracle;
-- OPEN scenario result restrictions;
-- safe bindingTag policy;
-- referenced semantic projection schema + IDL-aware validity.
-
-Materialization should therefore preserve a future API boundary equivalent to:
-
-```text
-validatePlatformScenarioStructure / Semantics
-validatePlatformProfileStructure / Semantics
-validatePlatformTraceStructure / Semantics
-validatePlatformObservationStructure / Semantics
-validatePlatformResultStructure / Semantics
-```
-
-## 10. Source-required meta-contract tests
-
-The source already names a minimum machine-contract test set, including:
-
-```text
-META-PLATFORM-SCENARIO-UNKNOWN-FIELD-REJECT
-META-PLATFORM-SCENARIO-DUPLICATE-STEP-ID-REJECT
-META-PLATFORM-SCENARIO-MISSING-FIXTURE-REJECT
-META-PLATFORM-SCENARIO-SPEC-WITHOUT-ORACLE-REJECT
-META-PLATFORM-TRACE-DUPLICATE-EVENTSEQ-REJECT
-META-PLATFORM-TRACE-NONMONOTONIC-EVENTSEQ-REJECT
-META-PLATFORM-TRACE-SURFACE-BOUND-WITHOUT-GENERATION-REJECT
-META-PLATFORM-PARTIALORDER-MISSING-EVENT-FAIL
-META-PLATFORM-OBS-MISSING-REQUESTED-TRACE-REJECT
-META-PLATFORM-OBS-REAL-HANDLE-IN-BINDINGTAG-REJECT-BY-POLICY
-META-PLATFORM-RESULT-PASS-WITH-DIVERGENCE-REJECT
-META-PLATFORM-RESULT-OPEN-SCENARIO-PASS-REJECT
-META-PLATFORM-RESULT-REQUIRED-NOTCAPABLE-WITHOUT-FAIL-REJECT
-```
-
-These are tooling self-tests and do not count toward the 28 stable platform scenarios.
+This targeted local evidence is **not** substituted for the full GitHub Actions run.
 
 ## 11. Explicitly out of MR-10-04
 
-Still OPEN/downstream:
+Still downstream:
 
 - full `platform-run.json` environment/device-farm schema;
-- concrete browser/Windows SKU/Android OEM/Apple device support matrix;
+- concrete browser/Windows SKU/Android OEM/Apple device matrix;
 - numeric timeout policy;
 - CI/device farm provider orchestration;
 - physical Surface/GPU/backend/thread/process winner;
 - pixel bit-exact rendering;
 - 28 scenario file materialization;
 - four real platform adapters;
-- 56 protocol vectors and reference protocol runner;
-- deterministic fault implementation hooks.
+- 56 protocol vectors/reference runner;
+- deterministic fault implementation hooks;
+- cross-artifact fixture discovery and actual partial-order comparison execution.
 
-## 12. Exit from authority-reconciliation phase
+## 12. Current exit status
 
-**PASS.** The six core Platform Machine Contracts are source-defined sufficiently to materialize without inventing platform architecture.
+Authority reconciliation: **complete**.
 
-Next MR-10-04 substep:
+Core six schema materialization: **complete as repo artifacts**.
+
+Minimal semantic validator/meta-test materialization: **complete as repo artifacts**.
+
+Targeted local validation: **PASS**.
+
+Full GitHub Actions evidence: **PENDING / not observable through the current connector's push-run query path**.
+
+Therefore MR-10-04 is **not yet recorded CLOSED**. Final transition remains:
 
 ```text
-Authority snapshots reconciled
+current repo materialization
     ↓
-materialize six Draft 2020-12 schemas
+full conformance-seed-v1 GitHub Actions green
     ↓
-add structural + semantic meta-tests
-    ↓
-CI lock
+record run URL / commit evidence
     ↓
 MR-10-04 CLOSED
 ```
 
-Any implementation decision that would enum-freeze an 08 OPEN physical winner is a blocker and must return to 08 rather than be invented in Verification.
+Any future change that would enum-freeze an 08 OPEN physical winner is an authority blocker and must return to 08 rather than be invented in Verification.
