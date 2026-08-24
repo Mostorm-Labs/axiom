@@ -50,26 +50,38 @@ PlatformQualified presentation proof must ensure `PresentSubmitted`, `Approximat
 
 ## Machine-readable / executable closure map
 
-Already materialized in the repository:
+### Closed
 
-- `verification/schemas/{corpus,suite,projection}.schema.json`
-- `verification/golden/v1/corpus.json`
-- `verification/golden/v1/suites/seed-v0.1.json` — exactly 60 stable semantic seed cases
-- `verification/golden/v1/suites/codec-binary-seed-v0.1.json`
-- `verification/conformance/adapters/{cpp,wasm,ts}/`
-- `verification/conformance/coordinator/`
-- `verification/fixture-author/`
-- `.github/workflows/conformance-seed-v1.yml`
-- `.github/workflows/codec-binary-seed-v1.yml`
+**MR-10-01 — Semantic Artifact Schema Closure — CLOSED (owner accepted, 2026-08-24).**
 
-Still required for Machine-Readable Authority Closure:
+Materialized and wired:
 
-1. Semantic verification artifact schemas required by 10-03 / 10-04 but not yet materialized: `case.schema.json`, `observation.schema.json`, `result.schema.json`, `run.schema.json`.
-2. IDL-aware projection validation and schema-backed `ImplementationObservation` / `ConformanceResult` / `DivergenceRecord` validation in the coordinator.
-3. Platform verification schemas required by 10-08: `platform-suite`, `platform-scenario`, `platform-profile`, `platform-trace`, `platform-observation`, `platform-result`.
-4. `verification/platform/v1/` seed suite + scenario corpus and the platform harness adapters / normalized trace contracts from 10-09 through 10-12.
-5. CI lock/governance that binds the above machine contracts to the proposed-freeze authority without allowing implementation behavior to become the specification.
-6. G0–G9 evidence-package binding so each Gate points to concrete authority, oracle, runnable proof, performance characterization where applicable, and exit evidence.
+- `verification/schemas/{corpus,suite,case,projection,observation,result,run}.schema.json`
+- real JSON Schema Draft 2020-12 validation via `jsonschema.Draft202012Validator`
+- frozen Axiom V1 descriptor compilation and SHA-256 verification in CI
+- descriptor-backed `rootType` resolution
+- IDL-aware message/scalar/enum/repeated/oneof validation
+- canonical tagged scalar validation for f32/f64/i64/u64/bytes plus Id128 / OrderKey projection representations
+- schema-backed `ImplementationObservation` / `ConformanceResult` validation
+- fail-closed meta-tests in `verification/conformance/coordinator/test_semantic_artifact_contracts.py`
+
+The earlier audit item **MR-10-02 — IDL-aware projection validation** was implemented as part of MR-10-01 rather than left as a second independent closure. It is therefore **SUBSUMED / CLOSED BY MR-10-01** and must not be reimplemented as a parallel validator.
+
+Evidence history intentionally preserves the TDD progression: successful pre-closure baseline run `32711119942`; intermediate RED/transition runs `32712157978`, `32712233085`, `32712293819`; final known implementation commit `6f5a8740ec9f0633765bc16900cbb3d6b525d074`. Source authority remains Freeze Candidate / `proposed-freeze`; closing this implementation gap does not promote it to Frozen/Accepted.
+
+### Current next closure
+
+**MR-10-03 — First-Divergence Result Lock — IN PROGRESS.**
+
+Goal: make `DivergenceRecord` deterministic and machine-enforced so the coordinator locates the earliest meaningful mismatch by semantic stage, replay checkpoint / operation, semantic path, or canonical byte offset, with stable Golden vs Cross-Implementation basis rules. This is a verification-result lock only; it must not redefine 04 semantic equality or 07 runtime semantics.
+
+### Remaining after MR-10-03
+
+1. Platform verification schemas required by 10-08: `platform-suite`, `platform-scenario`, `platform-profile`, `platform-trace`, `platform-observation`, `platform-result`.
+2. `verification/platform/v1/` seed suite + scenario corpus and platform harness adapters / normalized trace contracts from 10-09 through 10-12.
+3. CI lock/governance binding machine contracts to proposed-freeze authority without allowing implementation behavior to become specification.
+4. Executable intake of 07 correctness invariants, including Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first, recovery/no-echo and presentation-generation invariants.
+5. G0–G9 evidence-package binding to concrete repo-local authority, oracle, runnable proof and exit evidence.
 
 ## Migration / supersession note
 
