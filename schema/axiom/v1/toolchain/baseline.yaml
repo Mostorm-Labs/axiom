@@ -1,0 +1,33 @@
+schema: auditoryworks.axiom.v1.toolchain-baseline
+version: 1
+status: authority-bootstrap
+proto_edition: '2024'
+package: auditoryworks.axiom.v1
+source_root: schema/axiom/v1/proto
+proto_import_root: schema/axiom/v1/proto
+files:
+  - auditoryworks/axiom/v1/common.proto
+  - auditoryworks/axiom/v1/geometry.proto
+  - auditoryworks/axiom/v1/paint.proto
+  - auditoryworks/axiom/v1/property.proto
+  - auditoryworks/axiom/v1/vector_path.proto
+  - auditoryworks/axiom/v1/brush_stroke.proto
+  - auditoryworks/axiom/v1/erase_mask.proto
+  - auditoryworks/axiom/v1/rich_text.proto
+  - auditoryworks/axiom/v1/connector.proto
+  - auditoryworks/axiom/v1/object.proto
+  - auditoryworks/axiom/v1/operation.proto
+  - auditoryworks/axiom/v1/snapshot.proto
+derived_outputs:
+  cpp: generated/cpp/axiom/v1
+  ts: generated/ts/axiom/v1
+  descriptor: schema/axiom/v1/descriptor/axiom_v1.descriptor.pb
+rules:
+  generated_code_is_authority: false
+  generated_code_manual_edit: forbidden
+  circular_import: forbidden
+  import_public: forbidden
+  weak_import: forbidden
+  protobuf_map: forbidden
+  protobuf_any: forbidden
+  rpc_service: forbidden
