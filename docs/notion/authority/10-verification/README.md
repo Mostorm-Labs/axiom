@@ -44,8 +44,6 @@ The `10-xx` labels above are a stable local reading order for the migration set.
 
 10 consumes, but does not redefine, the frozen Semantic Schema / Operation Model in `../04-semantic-schema/`, runtime-data-flow contracts in `../07-runtime-data-flow/`, or physical platform ownership/realization decisions in `../08-platform-contract/`.
 
-Priority evidence inherited from 07 includes semantic apply/idempotency, identity namespace separation, Incremental vs Full RuntimeScene equivalence, persist-first crash windows, LocalRecoveryClosure, external no-echo, missing-resource closure, active-session conflict / multi-op compensation, PresentedFeedback / stale-generation / canonical-coverage behavior and lifecycle late-event rejection.
-
 08 continues to own Accepted / Current Direction / Proposal / OPEN physical realization choices such as Surface primitive/backend/thread/process topology. Verification may encode those as profile/observation evidence but cannot select a winner.
 
 ## Machine-readable / executable closure map
@@ -62,37 +60,32 @@ Materialized semantic artifact schemas, real Draft 2020-12 validation, frozen-ID
 
 Primary audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
 
-The repo now preserves runner/replay localization behavior, current `DivergenceRecord v1`, GOLDEN vs CROSS_IMPLEMENTATION basis, semantic-path grammar, byte-offset/location constraints and deterministic comparison order. Full comparator/runtime execution remains a later implementation package.
-
-### Current closure
-
-**MR-10-04 — Platform Machine Contract Set — AUTHORITY RECONCILIATION COMPLETE / CORE SIX READY FOR MATERIALIZATION.**
+**MR-10-04 — Platform Machine Contract Set — CORE SIX MATERIALIZED / TARGETED LOCAL VALIDATION PASS / CI EVIDENCE PENDING.**
 
 Primary audit: `docs/notion/audits/mr-10-04-platform-machine-contract-set-v0.1.md`.
 
-Core set:
+Materialized core set:
 
 ```text
-platform-suite
-platform-scenario
-platform-profile
-platform-trace
-platform-observation
-platform-result
+verification/schemas/platform-suite.schema.json
+verification/schemas/platform-scenario.schema.json
+verification/schemas/platform-profile.schema.json
+verification/schemas/platform-trace.schema.json
+verification/schemas/platform-observation.schema.json
+verification/schemas/platform-result.schema.json
+verification/conformance/coordinator/platform_contracts.py
+verification/conformance/coordinator/test_platform_machine_contracts.py
 ```
 
-Authority reconciliation result:
+10-08 supplies the field-level base contract; 10-09 supplies the later suite/Arc-event/capability corrections. 08 OPEN physical realization remains `PlatformProfile.realization` / `openObservations` metadata and is not enum-frozen into a winner. 10-10/10-11 execution-protocol schemas remain a separate harness/protocol trusted-root layer.
 
-- 10-08 supplies the field-level base contract;
-- 10-09 supplies later corrections for the suite manifest, Arc preview-clear trace vocabulary and seed-required capabilities;
-- 08 OPEN physical realization does **not** block schema materialization because physical backend/surface/bridge/topology values remain `PlatformProfile.realization` / `openObservations` metadata rather than expected winners;
-- 10-10/10-11 execution-protocol schemas are a separate harness/protocol trusted-root layer and are not merged into the core six.
+The source-required cross-artifact checks for missing referenced fixtures and actual partial-order evaluation remain deliberately downstream because they need discovered corpus/trace artifacts; their authority is preserved and they enter MR-10-05 rather than being faked in schema-only closure.
 
-Next MR-10-04 substep is six Draft 2020-12 schema files + source-defined structural/semantic meta-contract tests + CI lock.
+Full GitHub Actions evidence is the remaining MR-10-04 close condition.
 
 ### Remaining after MR-10-04
 
-1. Platform corpus / harness materialization: `verification/platform/v1/`, 28 stable scenarios, four adapters, normalized trace artifacts and deterministic fault hooks.
+1. MR-10-05 Platform Corpus / Harness Materialization: `verification/platform/v1/`, 28 stable scenarios, four adapters, normalized trace artifacts and deterministic fault hooks.
 2. Harness protocol trusted root: execution-protocol schemas + 56 protocol vectors + reference runner meta-conformance.
 3. CI/governance lock binding platform evidence to proposed-freeze authority without allowing implementation behavior to become specification.
 4. Executable intake of 07 correctness invariants, including Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first, recovery/no-echo and presentation-generation invariants.
