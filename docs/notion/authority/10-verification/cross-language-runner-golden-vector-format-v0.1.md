@@ -1,8 +1,10 @@
 # Cross-language Conformance Runner + Golden Vector File Format v0.1
 
 > Source page: https://app.notion.com/p/3c44c57a590c81a89ac2d3dc36f16787
+> Source page id: `3c44c57a-590c-81a8-9ac2-d3dc36f16787`
 > Snapshot date: 2026-08-24
 > Source status: Freeze Candidate — Verification Tooling Contract
+> MR-10-03 note: first-divergence runner details expanded from the source page; no authority status promotion.
 
 ## Boundary
 
@@ -10,7 +12,23 @@ Verification artifact/tooling contract only. Axiom semantic apply authority rema
 
 ## Topology
 
-Golden Corpus → coordinator → C++/TS/WASM adapters → ImplementationObservation → coordinator comparator → ConformanceResult + divergence artifacts. Adapters report observed facts only; coordinator owns PASS/FAIL.
+```text
+Golden Corpus
+    ↓
+axiom-conformance coordinator
+    ↓
+C++ / TS / WASM adapters
+    ↓
+ImplementationObservation
+    ↓
+coordinator golden + cross-implementation comparison
+    ↓
+ConformanceResult
+    ↓
+checkpoint + binary-search first divergence
+```
+
+Adapters report observed facts only; coordinator owns PASS/FAIL.
 
 ## Logical repository contract
 
@@ -44,9 +62,72 @@ Verification-only `AXOPSTR1` framing: 8-byte magic, u32 little-endian frame coun
 
 Adapters expose capability metadata and deterministic observations. Coordinator validates schema/capabilities, dispatches selected cases, captures stage observations, compares expected and cross-implementation results, emits first divergence and stable machine-readable result. Unsupported capability is explicit, not false PASS.
 
-## First divergence
+Replay diagnostic adds:
 
-Divergence should identify case, implementation, stage, replay operation/checkpoint where relevant, semantic path or byte offset, expected vs observed and artifact references. Long replay uses checkpoints and narrowing rather than reporting only final mismatch.
+```text
+<adapter> run-case ... --stop-after-operation <N>
+```
+
+`--stop-after-operation N` means apply Operation indices `[0..N]`, then emit the requested projection/checkpoint. This capability exists specifically so first divergence can be localized without changing the canonical replay order.
+
+Coordinator implementation language is not frozen. Tooling language must not become architecture authority.
+
+## First Divergence Algorithm — Freeze Candidate
+
+### Single value / single Operation
+
+When stage capture is enabled, compare the fixed semantic stage sequence:
+
+```text
+DECODE → NORMALIZE → VALIDATE → APPLY → PROJECTION → ENCODE
+```
+
+The earliest mismatch stage is the first divergence.
+
+### Short replay
+
+With `EVERY_OPERATION` checkpoints, compare checkpoints in Operation order. The first different checkpoint is the first differing Operation index.
+
+### Long replay
+
+Long streams use two-level localization:
+
+```text
+A. Compare coarse checkpoints
+   ↓
+B. Find first mismatching interval [L, R]
+   ↓
+C. Re-run adapters with --stop-after-operation M
+   ↓
+D. Binary search first mismatch index
+   ↓
+E. Capture detailed stage artifacts around that Operation
+```
+
+Source pseudocode:
+
+```text
+lo = last_matching_checkpoint + 1
+hi = first_mismatching_checkpoint
+while lo < hi:
+    mid = floor((lo + hi) / 2)
+    replay prefix through mid on compared implementations
+    if projections agree with golden/reference at mid:
+        lo = mid + 1
+    else:
+        hi = mid
+first = lo
+```
+
+Deterministic replay is a prerequisite. Bisection must not reorder, skip, merge or reinterpret canonical Operations.
+
+### OPEN / Experimental comparison
+
+If no golden semantic winner exists but implementations diverge, the same replay localization may be used. The result is `OBSERVED_DIVERGENCE_OPEN`; no compared implementation is promoted to expected authority.
+
+## Divergence representation evolution
+
+The older Runner example used `expectedArtifact` plus `actualArtifacts`. The later 10-04 machine-readable authority normalizes this to `basis + reference? + observed[]`. For MR-10-03, **10-04 is authoritative for the current DivergenceRecord field shape**, while this page remains authoritative for runner/replay localization behavior. This is an explicit supersession relationship, not a conflict.
 
 ## Golden trust rule
 
