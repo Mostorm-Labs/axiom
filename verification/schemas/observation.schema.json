@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:observation:v1",
+  "title": "Axiom ImplementationObservation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "runnerProtocolVersion", "vectorId", "implementationId", "implementationKind", "execution", "terminal", "stages", "artifacts", "checkpoints", "diagnostics"],
+  "properties": {
+    "format": {"const": "axiom-conformance-observation-v1"},
+    "formatVersion": {"const": 1},
+    "runnerProtocolVersion": {"type": "integer", "minimum": 1},
+    "vectorId": {"type": "string", "minLength": 1},
+    "implementationId": {"type": "string", "minLength": 1},
+    "implementationKind": {"$ref": "#/$defs/implementationKind"},
+    "execution": {"$ref": "#/$defs/executionMetadata"},
+    "terminal": {"$ref": "#/$defs/terminalObservation"},
+    "stages": {"type": "array", "items": {"$ref": "#/$defs/stageObservation"}},
+    "artifacts": {"$ref": "#/$defs/observationArtifacts"},
+    "checkpoints": {"type": "array", "items": {"$ref": "#/$defs/checkpointObservation"}},
+    "diagnostics": {"type": "array", "items": {"$ref": "#/$defs/diagnosticRecord"}}
+  },
+  "$defs": {
+    "implementationKind": {"enum": ["CPP_NATIVE", "WASM", "TS_REFERENCE"]},
+    "stageName": {"enum": ["DECODE", "NORMALIZE", "VALIDATE", "APPLY", "PROJECTION", "ENCODE", "REPLAY", "ORDER_KEY_COMPARE", "ORDER_KEY_ALLOCATE", "HARNESS"]},
+    "outcome": {"enum": ["ACCEPTED", "REJECTED", "NOT_SUPPORTED", "HARNESS_ERROR", "INTERNAL_ERROR"]},
+    "semanticErrorCategory": {"enum": ["InvalidEnvelope", "UnsupportedSchemaVersion", "UnsupportedPayloadVersion", "InvalidPayload", "InvalidObjectKind", "InvalidField", "InvalidReference", "InvariantViolation", "ObjectAlreadyExists", "ObjectNotFound", "ProtocolCorruption"]},
+    "artifactPath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+    "executionMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runnerVersion", "runtimeVersion", "platform", "buildProfile"],
+      "properties": {
+        "runnerVersion": {"type": "string", "minLength": 1},
+        "runtimeVersion": {"type": "string", "minLength": 1},
+        "gitCommit": {"type": "string", "minLength": 1},
+        "platform": {"type": "string", "minLength": 1},
+        "buildProfile": {"type": "string", "minLength": 1}
+      }
+    },
+    "terminalObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "outcome"],
+      "properties": {
+        "stage": {"$ref": "#/$defs/stageName"},
+        "outcome": {"$ref": "#/$defs/outcome"},
+        "semanticErrorCategory": {"$ref": "#/$defs/semanticErrorCategory"}
+      }
+    },
+    "stageObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "outcome"],
+      "properties": {
+        "stage": {"$ref": "#/$defs/stageName"},
+        "outcome": {"$ref": "#/$defs/outcome"},
+        "semanticErrorCategory": {"$ref": "#/$defs/semanticErrorCategory"},
+        "projection": {"$ref": "#/$defs/artifactPath"},
+        "canonicalBytes": {"$ref": "#/$defs/artifactPath"}
+      }
+    },
+    "observationArtifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "finalProjection": {"$ref": "#/$defs/artifactPath"},
+        "canonicalBytes": {"$ref": "#/$defs/artifactPath"}
+      }
+    },
+    "checkpointObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operationIndex", "operationId", "projection"],
+      "properties": {
+        "operationIndex": {"type": "integer", "minimum": 0},
+        "operationId": {"type": "string", "pattern": "^id128:[0-9a-f]{32}$"},
+        "projection": {"$ref": "#/$defs/artifactPath"}
+      }
+    },
+    "diagnosticRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": {"enum": ["INFO", "WARNING", "ERROR"]},
+        "stage": {"$ref": "#/$defs/stageName"},
+        "code": {"type": "string", "minLength": 1},
+        "message": {"type": "string"},
+        "stack": {"type": "string"},
+        "details": {}
+      }
+    }
+  }
+}
