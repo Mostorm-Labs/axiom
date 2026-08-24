@@ -54,11 +54,11 @@ Detailed audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.m
 
 10-02 owns replay localization, 10-03 CLI diagnosis, 10-04 current DivergenceRecord/basis/path/order and 10-06 evidence retention. Full comparator execution is later implementation work. Final close condition remains fresh successful CI evidence.
 
-### MR-10-04 — Platform Machine Contract Set — CORE SIX MATERIALIZED / TARGETED LOCAL VALIDATION PASS / CI EVIDENCE PENDING
+### MR-10-04 — Platform Machine Contract Set — CLOSED (CI VERIFIED 2026-08-24)
 
 Detailed audit: `docs/notion/audits/mr-10-04-platform-machine-contract-set-v0.1.md`.
 
-Materialized:
+Materialized and verified:
 
 ```text
 verification/schemas/platform-suite.schema.json
@@ -71,21 +71,50 @@ verification/conformance/coordinator/platform_contracts.py
 verification/conformance/coordinator/test_platform_machine_contracts.py
 ```
 
-Authority findings remain:
+Final evidence:
 
-1. 10-08 is the field-level base machine authority.
-2. 10-09 supplies later corrections for independent platform-suite manifest, Arc preview-clear events and seed-required capabilities.
-3. 08 OPEN physical realization does not block core schema materialization: backend/surface/bridge/thread/process choices remain profile/observation metadata, not expected winners.
-4. 10-10/10-11 harness-envelope/session/fault/fence and protocol-suite/vector/meta-result are a separate execution-protocol trusted-root family and are not merged into the core six.
-5. JSON Schema and semantic validation remain two layers.
+- GitHub Actions run `32742201698`
+- workflow `Axiom V1 Conformance Seed Bootstrap`
+- head `9d408191a760a2f769015b355b9cd67347f512a7`
+- run/job conclusion `success`
+- `Validate verification artifact contracts` success
+- JSON syntax / descriptor compilation / 60 seed identity / adapter bootstrap safety / fail-closed run / whitespace checks all success.
 
-TDD/local evidence is recorded in the dedicated MR-10-04 audit. The complete GitHub Actions push-run remains unavailable through the current connector, so this ledger does **not** claim MR-10-04 CLOSED.
+10-08 remains the field-level base machine authority; 10-09 remains the later suite/Arc-event/capability correction. 08 OPEN physical realization remains profile/observation metadata rather than expected winner. Source authority remains Freeze Candidate / `proposed-freeze`.
 
-Cross-artifact checks requiring discovered corpus/trace artifacts—especially referenced fixture existence and actual partial-order missing-event comparison—remain explicit inputs to MR-10-05 rather than being fabricated during schema-only closure.
+The two deferred cross-artifact meta-contracts—missing referenced fixture rejection and actual partial-order missing-event failure—now transfer explicitly into MR-10-05.
 
-### MR-10-05 — Platform Corpus / Harness Materialization — OPEN
+### MR-10-05 — Platform Corpus / Harness Materialization — IN PROGRESS
 
-Requires `verification/platform/v1/`, 28 stable scenarios, four platform adapters, normalized lifecycle/bridge/surface/presentation traces, deterministic fault hooks and the execution-protocol trusted root (or a subordinate closure under MR-10-05).
+Primary source intake:
+
+```text
+10-09  28 stable platform scenarios + common bootstrap + logical adapter surface
+10-10  HarnessSession / envelope / action / completion / event / source / fault / late-fence protocol
+10-11  56-vector protocol trusted root + scripted adapter/reference runner meta-conformance
+10-12  corpus/shared-tooling/platform-test-host physical package plan + logical CI DAG
+```
+
+MR-10-05 must keep these three corpora distinct:
+
+```text
+60 semantic vectors
+28 platform scenarios
+56 harness protocol vectors
+```
+
+Immediate machine-readable closure order:
+
+1. materialize `verification/platform/v1/suites/platform-seed-v0.1.json` with exactly 28 stable IDs;
+2. materialize repo-local `verification/platform/v1/scenarios/<PLAT-...>/scenario.json` skeletons from 10-09 without platform-specific expected copies;
+3. bind semantic `canonicalFixtureRef` / input fixture discovery so missing references fail closed;
+4. execute the deferred partial-order missing-event meta-contract against normalized trace artifacts;
+5. materialize 10-10 harness protocol schemas;
+6. materialize 10-11 protocol suite/vector/meta-result schemas and 56-vector trusted-root corpus;
+7. scaffold shared runner/scripted adapter/transport boundaries without claiming real platform adapters exist;
+8. add CI trusted-root ordering: protocol meta-conformance must pass before platform scenario evidence can be trusted.
+
+Physical Web/Windows/Android/Apple adapters, native verification hooks and deterministic OS/runtime fault realization remain implementation packages inside MR-10-05 and must continue to report observed facts only.
 
 ### MR-10-06 — 07 Invariant Executable Intake — OPEN
 
@@ -104,7 +133,8 @@ No architecture blocker is currently recorded.
 - Platform verification remains downstream of 08.
 - Core-six platform schemas and harness protocol schemas are separate contract families.
 - Tooling implementation language does not become architecture authority.
+- Protocol trusted-root failure invalidates platform evidence; platform evidence cannot self-certify the runner that interprets it.
 
 ## 7. Final verdict
 
-`10 Verification` remains **Full Authority Migration complete at the narrative/offline-authority layer**. Machine-readable closure has completed MR-10-01, materialized MR-10-03 pending CI evidence, and materialized the MR-10-04 core-six Platform Machine Contract set pending full CI evidence. The next substantive authority/corpus phase after MR-10-04 closure is MR-10-05.
+`10 Verification` remains **Full Authority Migration complete at the narrative/offline-authority layer**. Machine-readable closure has completed MR-10-01 and MR-10-04; MR-10-03 remains separately ledgered pending its explicit final evidence closure; the active substantive phase is now **MR-10-05 Platform Corpus / Harness Materialization**.
