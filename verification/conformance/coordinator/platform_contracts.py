@@ -44,17 +44,9 @@ def validate_platform_schema_inventory() -> None:
         schema = _load_json(SCHEMAS / f"{name}.schema.json")
         if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
             raise ValueError(f"{name}: must use JSON Schema Draft 2020-12")
-        if schema.get("$id") != f"urn:auditoryworks:axiom:verification:{name.removeprefix('platform-') if False else name}:v1":
-            expected = {
-                "platform-suite": "urn:auditoryworks:axiom:verification:platform-suite:v1",
-                "platform-scenario": "urn:auditoryworks:axiom:verification:platform-scenario:v1",
-                "platform-profile": "urn:auditoryworks:axiom:verification:platform-profile:v1",
-                "platform-trace": "urn:auditoryworks:axiom:verification:platform-trace:v1",
-                "platform-observation": "urn:auditoryworks:axiom:verification:platform-observation:v1",
-                "platform-result": "urn:auditoryworks:axiom:verification:platform-result:v1",
-            }[name]
-            if schema.get("$id") != expected:
-                raise ValueError(f"{name}: unexpected schema $id {schema.get('$id')!r}")
+        expected_id = f"urn:auditoryworks:axiom:verification:{name}:v1"
+        if schema.get("$id") != expected_id:
+            raise ValueError(f"{name}: unexpected schema $id {schema.get('$id')!r}; expected {expected_id!r}")
         try:
             Draft202012Validator.check_schema(schema)
         except SchemaError as exc:
