@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MR-10-01 semantic artifact contract tests."""
+"""MR-10-01 / MR-10-03 semantic artifact contract tests."""
 from __future__ import annotations
 
 import copy
@@ -28,6 +28,15 @@ class SemanticArtifactContractTests(unittest.TestCase):
             "participants": [{"implementationId": "axiom-cpp-native", "implementationKind": "CPP_NATIVE", "policy": "REQUIRED", "participation": "RAN", "observation": "observations/axiom-cpp-native.json"}],
             "comparison": {"golden": "CHECKED", "crossImplementation": "NOT_ENOUGH_PARTICIPANTS", "comparedImplementations": ["axiom-cpp-native"]},
             "divergence": None, "diagnostics": [],
+        }
+
+    def golden_divergence(self, kind="OUTCOME"):
+        return {
+            "kind": kind,
+            "basis": "GOLDEN",
+            "reference": {"source": "GOLDEN", "value": "ACCEPTED"},
+            "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}],
+            "summary": "expected mismatch",
         }
 
     def projection(self, root_type="auditoryworks.axiom.v1.Vec2", value=None, form="CANONICAL"):
@@ -80,7 +89,7 @@ class SemanticArtifactContractTests(unittest.TestCase):
     def test_projection_f32_uses_tagged_canonical_scalar(self): ac.validate_projection_against_idl(self.projection("auditoryworks.axiom.v1.PropertyValue", {"f32Value": "f32:3f800000"}))
 
     def test_pass_with_divergence_rejected(self):
-        result = self.result(); result["divergence"] = {"kind": "OUTCOME", "basis": "GOLDEN", "reference": {"source": "GOLDEN", "value": "ACCEPTED"}, "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}], "summary": "unexpected mismatch"}
+        result = self.result(); result["divergence"] = self.golden_divergence()
         with self.assertRaisesRegex(ValueError, "JSON Schema|PASS requires divergence=null"): ac.validate_result_semantics(result)
 
     def test_open_cross_implementation_divergence_cannot_claim_golden_basis(self):
@@ -94,6 +103,30 @@ class SemanticArtifactContractTests(unittest.TestCase):
     def test_cross_implementation_divergence_cannot_have_reference(self):
         divergence = {"kind": "OUTCOME", "basis": "CROSS_IMPLEMENTATION", "reference": {"source": "GOLDEN", "value": "ACCEPTED"}, "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}, {"implementationId": "axiom-wasm", "value": "ACCEPTED"}], "summary": "implementations differ"}
         with self.assertRaisesRegex(ValueError, "reference must be absent"): ac.validate_divergence_semantics(divergence)
+
+    def test_mr1003_golden_divergence_requires_reference(self):
+        result = self.result(); result["result"] = "FAIL_GOLDEN_MISMATCH"; result["divergence"] = self.golden_divergence(); del result["divergence"]["reference"]
+        with self.assertRaisesRegex(ValueError, "JSON Schema"): ac.validate_result_semantics(result)
+
+    def test_mr1003_cross_implementation_requires_two_observed_operands(self):
+        result = self.result(); result["requirementStatus"] = "OPEN"; result["result"] = "OBSERVED_DIVERGENCE_OPEN"; result["participants"] = []; result["comparison"] = {"golden": "NOT_APPLICABLE", "crossImplementation": "CHECKED", "comparedImplementations": ["axiom-cpp-native", "axiom-wasm"]}; result["divergence"] = {"kind": "OUTCOME", "basis": "CROSS_IMPLEMENTATION", "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}], "summary": "only one operand"}
+        with self.assertRaisesRegex(ValueError, "JSON Schema"): ac.validate_result_semantics(result)
+
+    def test_mr1003_operation_index_and_id_are_atomic_location_pair(self):
+        result = self.result(); result["result"] = "FAIL_GOLDEN_MISMATCH"; result["divergence"] = self.golden_divergence(); result["divergence"]["operationIndex"] = 42
+        with self.assertRaisesRegex(ValueError, "JSON Schema"): ac.validate_result_semantics(result)
+
+    def test_mr1003_semantic_path_uses_verification_path_grammar(self):
+        result = self.result(); result["result"] = "FAIL_GOLDEN_MISMATCH"; result["divergence"] = self.golden_divergence("SEMANTIC_PROJECTION"); result["divergence"]["semanticPath"] = "document->objects[0]"
+        with self.assertRaisesRegex(ValueError, "JSON Schema"): ac.validate_result_semantics(result)
+
+    def test_mr1003_byte_offset_is_only_for_canonical_bytes(self):
+        result = self.result(); result["result"] = "FAIL_GOLDEN_MISMATCH"; result["divergence"] = self.golden_divergence("SEMANTIC_PROJECTION"); result["divergence"]["byteOffset"] = 7
+        with self.assertRaisesRegex(ValueError, "JSON Schema"): ac.validate_result_semantics(result)
+
+    def test_mr1003_valid_semantic_path_selector_is_accepted(self):
+        result = self.result(); result["result"] = "FAIL_GOLDEN_MISMATCH"; result["divergence"] = self.golden_divergence("SEMANTIC_PROJECTION"); result["divergence"]["semanticPath"] = "$.objects[id=id128:00000000000000000000000000000011].transform.tx"; result["divergence"]["reference"] = {"source": "GOLDEN", "artifact": "expected/final.projection.json"}; result["divergence"]["observed"] = [{"implementationId": "axiom-cpp-native", "artifact": "observations/cpp/final.projection.json"}]
+        ac.validate_result_semantics(result)
 
     def test_case_open_policy_cannot_claim_frozen_expected(self):
         case = {"formatVersion": 1, "id": "OP-DELETE-CONNECTOR-OPEN-001", "title": "OPEN policy observation", "status": "OPEN", "category": "operation.delete.connector", "authorityRefs": ["Semantic Schema authority"], "entrypoint": "APPLY", "requiredCapabilities": ["APPLY_OPERATION"], "input": {"kind": "ENCODED_OPERATION", "rootType": "auditoryworks.axiom.v1.Operation", "artifact": "input/op.pb"}, "expected": {"outcome": "ACCEPTED"}, "capture": {}, "blockedByOpenPolicy": True, "notes": ""}
