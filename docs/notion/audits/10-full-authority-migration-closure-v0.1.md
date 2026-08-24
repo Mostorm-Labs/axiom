@@ -32,7 +32,7 @@ The source `10 Verification` page contains exactly 15 child authority/execution 
 | 10-13 | Implementation Backlog / Issue Pack v0.1 | `implementation-backlog-issue-pack-v0.1.md` | Execution Pack derived from Freeze Candidate contracts | proposed |
 | 10-14 | Implementation Verification Design — Evidence-Gated Vertical Build + G0–G9 v0.1 | `evidence-gated-vertical-build-g0-g9-v0.1.md` | Design Approved / Freeze Candidate | proposed-freeze |
 
-All snapshots record source page URL, snapshot date and original source status. `docs/notion/manifest.yaml` enumerates the full set with source page IDs and normalized migration statuses.
+All snapshots record source page URL, snapshot date and original source status. `docs/notion/manifest.yaml` enumerates the full source snapshot set with source page IDs and normalized migration statuses.
 
 ## 3. Authority precedence and ownership
 
@@ -62,24 +62,44 @@ Closed scope includes both the originally listed artifact-schema gap and the sep
 
 The old ledger item `MR-10-02 — IDL-aware projection validation` is therefore **SUBSUMED / CLOSED BY MR-10-01**. No second competing projection validator should be introduced.
 
-Evidence chain is retained rather than rewritten:
+Evidence chain is retained rather than rewritten: successful pre-closure baseline `32711119942`; RED/transition runs `32712157978`, `32712233085`, `32712293819`; final known schema-first expectation commit `6f5a8740ec9f0633765bc16900cbb3d6b525d074`.
 
-- successful pre-closure baseline: Actions run `32711119942`;
-- RED / transition evidence: `32712157978`, `32712233085`, `32712293819`;
-- final known test-expectation commit for schema-first rejection: `6f5a8740ec9f0633765bc16900cbb3d6b525d074`.
+Closure status here is a machine-readable gap closure. Source 10-03/10-04 authority remains Freeze Candidate / `proposed-freeze`; this audit does **not** promote architecture authority.
 
-Closure status here is an implementation/machine-readable gap closure. The source 10-03/10-04 authority remains Freeze Candidate / `proposed-freeze`; this audit does **not** promote architecture authority.
+### MR-10-03 — First-Divergence Result Lock — AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING
 
-### MR-10-03 — First-Divergence Result Lock — IN PROGRESS
+Detailed audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
 
-Required closure:
+Source ownership has been reconciled rather than redesigned:
 
-- deterministic `DivergenceRecord` schema/semantic validation;
-- earliest meaningful divergence ordering across stage, replay checkpoint/operation, semantic path and canonical byte offset;
-- stable Golden vs Cross-Implementation comparison basis;
-- coordinator-owned PASS/FAIL judgment only;
-- deterministic self-tests including ties and repeated execution;
-- no redefinition of 04 semantic equality or 07 runtime behavior.
+- 10-02 owns runner protocol, semantic-stage order, checkpoint narrowing, `--stop-after-operation` and replay bisection;
+- 10-03 owns coordinator CLI / `diagnose --first-divergence` behavior and bootstrap self-test expectation;
+- 10-04 owns current `DivergenceRecord v1`, GOLDEN vs CROSS_IMPLEMENTATION basis, location fields, Semantic Path Grammar v1 and fixed comparison order;
+- 10-06 owns first-divergence evidence retention and deterministic-repeat evidence lifecycle.
+
+The older 10-02 `expectedArtifact / actualArtifacts` result example is explicitly superseded at the result-shape layer by 10-04 `basis + reference? + observed[]`. No architecture conflict remains.
+
+Repo-local migration now preserves the exact comparison order:
+
+```text
+0 Harness / corpus validity
+1 Capability availability
+2 Terminal stage
+3 Accepted vs Rejected outcome
+4 Semantic error category when authority specifies
+5 Stage projection when captured
+6 Final semantic projection
+7 Canonical protobuf bytes when required
+8 Replay checkpoints
+```
+
+For long replay, GitHub now preserves coarse-checkpoint → mismatching interval → `--stop-after-operation` → binary-search → detailed evidence localization. Deterministic replay is a prerequisite; reporting only final mismatch is insufficient when first-op localization is required.
+
+`verification/schemas/result.schema.json` machine-locks the structural source constraints for basis/reference, cross-implementation observed count, paired Operation location, semantic-path grammar and byte-offset kind. `test_semantic_artifact_contracts.py` contains corresponding MR-10-03 schema meta-tests.
+
+MR-10-03 does **not** require authority migration to implement the complete comparator engine, all 60 fixtures, all adapters or production replay bisection. Those are later Codex implementation-package concerns.
+
+Final close condition: successful CI evidence for the current schema/meta-test state. Until that evidence is available this ledger does not claim MR-10-03 CLOSED.
 
 ### MR-10-04 — Platform Machine Contract Set — OPEN
 
@@ -103,4 +123,4 @@ No architecture blocker is currently recorded. Coordinator implementation langua
 
 ## 7. Final verdict
 
-`10 Verification` remains **Full Authority Migration complete at the narrative/offline-authority layer**. Machine-readable closure has advanced through MR-10-01, including the IDL-aware validation boundary formerly tracked separately as MR-10-02. The active next closure is **MR-10-03 First-Divergence Result Lock**.
+`10 Verification` remains **Full Authority Migration complete at the narrative/offline-authority layer**. Machine-readable closure has advanced through MR-10-01 and has materially completed the authority/schema portion of MR-10-03. The next transition is either (a) close MR-10-03 when its current CI is green, or (b) if CI exposes a contract defect, fix that defect without expanding into the full comparator implementation.
