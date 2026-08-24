@@ -28,7 +28,7 @@
 | 10-13 | `implementation-backlog-issue-pack-v0.1.md` | Execution Pack — derived from G3 Freeze Candidate contracts | `proposed` |
 | 10-14 | `evidence-gated-vertical-build-g0-g9-v0.1.md` | Design Approved / Freeze Candidate — Implementation Verification Architecture | `proposed-freeze` |
 
-The `10-xx` labels above are a stable local reading order for the migration set. They do not rename the source pages and do not imply an acceptance hierarchy that is absent in Notion.
+The `10-xx` labels above are a stable local reading order for the migration set. They do not rename source pages and do not imply an acceptance hierarchy absent in Notion.
 
 ## Verification principles
 
@@ -42,7 +42,7 @@ The `10-xx` labels above are a stable local reading order for the migration set.
 
 ## 04 / 07 authority intake
 
-10 consumes, but does not redefine, the frozen Semantic Schema / Operation Model in `../04-semantic-schema/` and the runtime-data-flow contracts in `../07-runtime-data-flow/`.
+10 consumes, but does not redefine, the frozen Semantic Schema / Operation Model in `../04-semantic-schema/` and runtime-data-flow contracts in `../07-runtime-data-flow/`.
 
 Priority evidence inherited from 07 Final Closure includes semantic apply/idempotency, identity namespace separation, Incremental vs Full RuntimeScene equivalence, persist-first crash windows, LocalRecoveryClosure, external no-echo, missing resource closure, active-session conflict / multi-op compensation, PresentedFeedback / stale-generation / canonical-coverage behavior, lifecycle late-event rejection and performance candidates.
 
@@ -65,15 +65,26 @@ Materialized and wired:
 - schema-backed `ImplementationObservation` / `ConformanceResult` validation
 - fail-closed meta-tests in `verification/conformance/coordinator/test_semantic_artifact_contracts.py`
 
-The earlier audit item **MR-10-02 — IDL-aware projection validation** was implemented as part of MR-10-01 rather than left as a second independent closure. It is therefore **SUBSUMED / CLOSED BY MR-10-01** and must not be reimplemented as a parallel validator.
+The earlier audit item **MR-10-02 — IDL-aware projection validation** was implemented as part of MR-10-01. It is **SUBSUMED / CLOSED BY MR-10-01** and must not be reimplemented as a parallel validator.
 
-Evidence history intentionally preserves the TDD progression: successful pre-closure baseline run `32711119942`; intermediate RED/transition runs `32712157978`, `32712233085`, `32712293819`; final known implementation commit `6f5a8740ec9f0633765bc16900cbb3d6b525d074`. Source authority remains Freeze Candidate / `proposed-freeze`; closing this implementation gap does not promote it to Frozen/Accepted.
+### Current closure
 
-### Current next closure
+**MR-10-03 — First-Divergence Result Lock — AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING.**
 
-**MR-10-03 — First-Divergence Result Lock — IN PROGRESS.**
+Primary audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
 
-Goal: make `DivergenceRecord` deterministic and machine-enforced so the coordinator locates the earliest meaningful mismatch by semantic stage, replay checkpoint / operation, semantic path, or canonical byte offset, with stable Golden vs Cross-Implementation basis rules. This is a verification-result lock only; it must not redefine 04 semantic equality or 07 runtime semantics.
+MR-10-03 is intentionally an authority/schema lock, not premature implementation of the full conformance engine. The following source-owned contracts are now repo-local at implementation-useful fidelity:
+
+- 10-02: fixed semantic-stage order, replay checkpoints, `--stop-after-operation`, long-replay binary-search localization;
+- 10-03: `diagnose --first-divergence`, compare-without-rerun behavior and deterministic diagnostic expectation;
+- 10-04: current `DivergenceRecord v1`, GOLDEN vs CROSS_IMPLEMENTATION basis, location fields, Semantic Path Grammar v1 and first-divergence comparator order;
+- 10-06: failure/observation evidence retention and deterministic-repeat expectations.
+
+The old Runner `expectedArtifact / actualArtifacts` example is explicitly superseded at the result-shape layer by 10-04 `basis + reference? + observed[]`. 10-02 still owns runner/replay behavior.
+
+`verification/schemas/result.schema.json` now machine-locks the structural portion of that source contract, including basis/reference rules, cross-implementation participant count, operation location pairing, semantic-path grammar and byte-offset kind constraints. Meta-tests cover those rules.
+
+**Not part of MR-10-03 migration closure:** implementing recursive semantic diff across every Axiom type, materializing all 60 fixtures/adapters, or building production replay bisection. Those belong to later Codex implementation packages after authority closure.
 
 ### Remaining after MR-10-03
 
@@ -85,4 +96,4 @@ Goal: make `DivergenceRecord` deterministic and machine-enforced so the coordina
 
 ## Migration / supersession note
 
-The historical `docs/notion/audits/00-10-authority-completeness-audit-v0.1.md` recorded 10 as `Index-only`. That statement describes an earlier repository state and is superseded for layer 10 by `docs/notion/audits/10-full-authority-migration-closure-v0.1.md`. The historical audit is retained rather than rewritten.
+The historical `docs/notion/audits/00-10-authority-completeness-audit-v0.1.md` recorded 10 as `Index-only`. That statement describes an earlier repository state and is superseded for layer 10 by `docs/notion/audits/10-full-authority-migration-closure-v0.1.md`. Historical audits are retained rather than rewritten.
