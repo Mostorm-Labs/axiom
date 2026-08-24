@@ -1,0 +1,31 @@
+{
+  "format": "axiom-platform-fixture-integrity-report-v1",
+  "formatVersion": 1,
+  "sourceCommit": "2efe743c591fee6778e96ea9fb86fc90b8a89247",
+  "suiteId": "platform-seed-v0.1",
+  "status": "PASS",
+  "fixtureCount": 3,
+  "fixtures": [
+    {
+      "id": "OP-SETTRANSFORMS-VALID-001",
+      "format": "axiom-canonical-fixture-v1",
+      "path": "verification/platform/v1/fixtures/semantic/OP-SETTRANSFORMS-VALID-001.json",
+      "sha256": "55387d57d5a482d25668253647d4acfade0b507000d8b4f509d9a01c83342f68",
+      "bytes": 366
+    },
+    {
+      "id": "POINTER-PEN-MOVE-COALESCED-001",
+      "format": "axiom-pointer-sample-batch-fixture-v1",
+      "path": "verification/platform/v1/fixtures/input/POINTER-PEN-MOVE-COALESCED-001.json",
+      "sha256": "47fe0c9a639f93fb87e21c9e5703d71eb9f12b69581d070614e5e7728d587daa",
+      "bytes": 611
+    },
+    {
+      "id": "REPLAY-MIXED-OPERATIONS-001",
+      "format": "axiom-canonical-fixture-v1",
+      "path": "verification/platform/v1/fixtures/semantic/REPLAY-MIXED-OPERATIONS-001.json",
+      "sha256": "494867fd3981072788ec8b40c19249200c812871d4d2bccd1100834389a1e800",
+      "bytes": 383
+    }
+  ]
+}

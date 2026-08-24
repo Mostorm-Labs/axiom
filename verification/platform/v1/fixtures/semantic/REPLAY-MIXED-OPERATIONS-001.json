@@ -1,0 +1,10 @@
+{
+  "format": "axiom-canonical-fixture-v1",
+  "id": "REPLAY-MIXED-OPERATIONS-001",
+  "operations": [
+    {"kind": "CREATE", "objectId": "u64:0000000000000001", "nodeType": "RECT"},
+    {"kind": "MOVE", "objectId": "u64:0000000000000001", "x": 48, "y": 32},
+    {"kind": "DELETE", "objectId": "u64:0000000000000001"}
+  ],
+  "oracle": {"type": "document-digest", "digestVersion": 1}
+}

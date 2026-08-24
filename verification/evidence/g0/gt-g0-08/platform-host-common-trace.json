@@ -1,0 +1,8 @@
+{
+  "schema_version":1,
+  "trace_kind":"verification-platform-host-common",
+  "build_manifest":{"product_public_abi":false,"protocol_version":1,"verification_only":true},
+  "profile":{"capabilities":["fault.surface.loss","fault.device.loss","harness.source_attempt"],"platform_family":"HEADLESS","profile_id":"headless-reference-v0.1"},
+  "facts":[{"kind":"SESSION_OPENED","primary_id":"session:1","related_id":"adapter:test:1"},{"kind":"ACTION_REGISTERED","primary_id":"action:1","related_id":""},{"kind":"COMPLETION_BOUND","primary_id":"action:1","related_id":"completion:1"},{"kind":"COMPLETION_OBSERVED","primary_id":"completion:1","related_id":"action:1"},{"kind":"SESSION_CLOSED","primary_id":"session:1","related_id":""},{"kind":"SESSION_OPENED","primary_id":"session:2","related_id":"adapter:test:1"},{"kind":"PROFILE_REPORTED","primary_id":"headless-reference-v0.1","related_id":""}],
+  "rejections":["DUPLICATE_COMPLETION","UNKNOWN_ACTION_BINDING","ACTION_AFTER_CLOSE","REUSED_SESSION_EPOCH"]
+}

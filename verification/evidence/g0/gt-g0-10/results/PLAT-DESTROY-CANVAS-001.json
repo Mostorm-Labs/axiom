@@ -1,0 +1,26 @@
+{
+  "format": "axiom-platform-conformance-result-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-DESTROY-CANVAS-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "result": "OBSERVED_AGREEMENT_OPEN",
+  "participants": [
+    {
+      "profileId": "web-reference-v0-1"
+    }
+  ],
+  "checks": [
+    {
+      "kind": "OBSERVATION_CAPTURED",
+      "status": "OBSERVED"
+    }
+  ],
+  "openObservations": [
+    {
+      "kind": "COMPARATOR_DEFERRED",
+      "reason": "shared runner owns expected comparison"
+    }
+  ],
+  "divergence": null,
+  "diagnostics": []
+}

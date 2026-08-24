@@ -10,9 +10,17 @@ Platform/Protocol schema、协议包、Reference Runner、scripted adapter/trans
 vectors，以及共享 CLI 与 protocol CI gate。任务状态和 commit-bound Evidence 以
 `docs/planning/GATE_TASK_TRACKER.md` 为准。
 
+`GT-G0-10` 已增加 Web reference adapter：它只负责 browser/WASM host facts 和 normalized
+observation，不读取 expected 或判定 PASS/FAIL；Web Arc-only 场景按共享 contract 输出 N/A。
+
+`GT-G0-11` 已增加 Windows native reference adapter：它只负责 Win32/D3D12 profile、host/surface/device
+generation、DPI/metrics、pointer history normalization、Arc ownership 和 stale-scope facts，不读取
+expected 或判定 PASS/FAIL。macOS host-side 只验证可移植 logical contract；真实 Win32/D3D12 编译、28 个
+Windows 场景和物理 Evidence 必须在 Windows runner 上完成，当前任务保持 `Validating`。
+
 下列内容仍由后续任务负责，不由共享 CLI 的存在提前声明完成：
 
-- `GT-G0-08..13`：native/platform adapters 与平台场景；
+- `GT-G0-12..13`：Android/Apple native/platform adapters 与平台场景；
 - `GT-G0-14..16`：CI wiring、Gate Report schema 和 aggregator。
 
 ## 骨架约定

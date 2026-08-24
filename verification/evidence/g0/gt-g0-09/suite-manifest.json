@@ -1,0 +1,184 @@
+{
+  "format": "axiom-platform-suite-manifest-v1",
+  "formatVersion": 1,
+  "sourceCommit": "2efe743c591fee6778e96ea9fb86fc90b8a89247",
+  "suite": {
+    "id": "platform-seed-v0.1",
+    "format": "axiom-platform-suite-v1",
+    "formatVersion": 1,
+    "requiredScenarioFormatVersion": 1,
+    "requiredRunnerProtocolVersion": 1,
+    "path": "verification/platform/v1/suites/platform-seed-v0.1.json"
+  },
+  "seedSha256": "20d358607f04c7eed5843129ab5b9e33f612b216740c7de4d8d434aa57718741",
+  "scenarios": [
+    {
+      "id": "PLAT-CREATE-CANVAS-001",
+      "path": "verification/platform/v1/scenarios/PLAT-CREATE-CANVAS-001/scenario.json",
+      "sha256": "674c712775c5efa4536387b08adbe267d778c4ddb4f9d2d42579f700704eee33",
+      "bytes": 2262
+    },
+    {
+      "id": "PLAT-HOST-ATTACH-001",
+      "path": "verification/platform/v1/scenarios/PLAT-HOST-ATTACH-001/scenario.json",
+      "sha256": "dc768f303edc5d780ac823688e99783669ed0355b6eeaab8b325a0a3810de4df",
+      "bytes": 2552
+    },
+    {
+      "id": "PLAT-DOCUMENT-ATTACH-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DOCUMENT-ATTACH-001/scenario.json",
+      "sha256": "cab318ab442a725746b4deb75740139c8367e47cb138b847cbd4a818d0ad6b8f",
+      "bytes": 2962
+    },
+    {
+      "id": "PLAT-CANONICAL-REPLAY-001",
+      "path": "verification/platform/v1/scenarios/PLAT-CANONICAL-REPLAY-001/scenario.json",
+      "sha256": "72b25f695701155cd71087c3d373ee28a01a038183ff2ccfd4bc5a8c166ab2f8",
+      "bytes": 3113
+    },
+    {
+      "id": "PLAT-METRICS-RESIZE-001",
+      "path": "verification/platform/v1/scenarios/PLAT-METRICS-RESIZE-001/scenario.json",
+      "sha256": "14de88fa10add2b56ff2a2c2d825005ce32829e3a620a5bef7f21627f574ada9",
+      "bytes": 3987
+    },
+    {
+      "id": "PLAT-METRICS-DPI-SCALE-001",
+      "path": "verification/platform/v1/scenarios/PLAT-METRICS-DPI-SCALE-001/scenario.json",
+      "sha256": "9c623e4f646880afa31437b998641fc56ca82fe5a31fd328453d42c2499e6b7e",
+      "bytes": 3990
+    },
+    {
+      "id": "PLAT-METRICS-ORIENTATION-001",
+      "path": "verification/platform/v1/scenarios/PLAT-METRICS-ORIENTATION-001/scenario.json",
+      "sha256": "4ed599aa48633837bd83448182e00405b218913e9bf5e457b4e0d04f13878058",
+      "bytes": 4019
+    },
+    {
+      "id": "PLAT-VISIBILITY-001",
+      "path": "verification/platform/v1/scenarios/PLAT-VISIBILITY-001/scenario.json",
+      "sha256": "d6ea6fe5329d3a1e168bbf9fe646ce0cccd33049c4be6c11d9419622c801101b",
+      "bytes": 4064
+    },
+    {
+      "id": "PLAT-APP-BACKGROUND-001",
+      "path": "verification/platform/v1/scenarios/PLAT-APP-BACKGROUND-001/scenario.json",
+      "sha256": "b49fcef8edfaa62d536e782ed30fa70ea7ba55e991ace60147ef8f6e2a90362a",
+      "bytes": 3607
+    },
+    {
+      "id": "PLAT-APP-FOREGROUND-001",
+      "path": "verification/platform/v1/scenarios/PLAT-APP-FOREGROUND-001/scenario.json",
+      "sha256": "2ac3224f0246266c5457a371e8abbef26c5259d8f5b44407bb4186415ef540cb",
+      "bytes": 4067
+    },
+    {
+      "id": "PLAT-CANVAS-SUSPEND-001",
+      "path": "verification/platform/v1/scenarios/PLAT-CANVAS-SUSPEND-001/scenario.json",
+      "sha256": "8b8fb9d5f3646439669faa49055274a43003567ae22cee14403e757bb04d29cc",
+      "bytes": 3574
+    },
+    {
+      "id": "PLAT-CANVAS-RESUME-001",
+      "path": "verification/platform/v1/scenarios/PLAT-CANVAS-RESUME-001/scenario.json",
+      "sha256": "533f6c660885a54ea030b66decf1d65aa2372b42ab23866d800eca4d6939a121",
+      "bytes": 4004
+    },
+    {
+      "id": "PLAT-SURFACE-LOST-001",
+      "path": "verification/platform/v1/scenarios/PLAT-SURFACE-LOST-001/scenario.json",
+      "sha256": "b322bb5ec0b277263acba275b4fe89b66707562d3e1bf344243b692766cc6f75",
+      "bytes": 3992
+    },
+    {
+      "id": "PLAT-SURFACE-REBIND-001",
+      "path": "verification/platform/v1/scenarios/PLAT-SURFACE-REBIND-001/scenario.json",
+      "sha256": "c4722556f0446189e5acb11376e0465fa6e56c877c6b2335e1da26f988c317a0",
+      "bytes": 4595
+    },
+    {
+      "id": "PLAT-STALE-GENERATION-REJECT-001",
+      "path": "verification/platform/v1/scenarios/PLAT-STALE-GENERATION-REJECT-001/scenario.json",
+      "sha256": "4587fafb596424f21fae9a037b4b331f443bdfcda5f4e0d003001009b5db9eb6",
+      "bytes": 4415
+    },
+    {
+      "id": "PLAT-DEVICE-LOST-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DEVICE-LOST-001/scenario.json",
+      "sha256": "fd66066b02240a7e86ab6e329a197781a3fc2cd9996ba868207f4147d706ba01",
+      "bytes": 3829
+    },
+    {
+      "id": "PLAT-DEVICE-RECOVER-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DEVICE-RECOVER-001/scenario.json",
+      "sha256": "d8962c4000b39ae6714786a4f86c19c2abe1f35f2b2a84233677d036a57e1bb3",
+      "bytes": 4676
+    },
+    {
+      "id": "PLAT-HOST-DETACH-REATTACH-001",
+      "path": "verification/platform/v1/scenarios/PLAT-HOST-DETACH-REATTACH-001/scenario.json",
+      "sha256": "c1b6297a26a38f220fc7ffdd3177d1116ab7d690b5e0d64f4e2fdbf3271cd4cc",
+      "bytes": 4210
+    },
+    {
+      "id": "PLAT-DATABRIDGE-NO-ECHO-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DATABRIDGE-NO-ECHO-001/scenario.json",
+      "sha256": "93abffe11c58bfe4294b04683632aad2a84219cc0bb6c480db5c4e8d1df9a635",
+      "bytes": 4321
+    },
+    {
+      "id": "PLAT-CALLBACK-NONREENTRANT-001",
+      "path": "verification/platform/v1/scenarios/PLAT-CALLBACK-NONREENTRANT-001/scenario.json",
+      "sha256": "3fa9aa0012eee16c7165363400d056e1cc54aa475e0a15d7441aa6a9282bc2de",
+      "bytes": 4408
+    },
+    {
+      "id": "PLAT-INPUT-BATCH-NORMALIZED-001",
+      "path": "verification/platform/v1/scenarios/PLAT-INPUT-BATCH-NORMALIZED-001/scenario.json",
+      "sha256": "4e8bba7fbae49bc2985e7e80b7c3bb4074f4ad832d50921f24698870e8db81f4",
+      "bytes": 3847
+    },
+    {
+      "id": "PLAT-INPUT-HOTPATH-001",
+      "path": "verification/platform/v1/scenarios/PLAT-INPUT-HOTPATH-001/scenario.json",
+      "sha256": "f44e6682df5b60b12007982445cecb482785435f39384bb31950d8093ab9a2d2",
+      "bytes": 5158
+    },
+    {
+      "id": "PLAT-ARC-PREVIEW-FALLBACK-001",
+      "path": "verification/platform/v1/scenarios/PLAT-ARC-PREVIEW-FALLBACK-001/scenario.json",
+      "sha256": "d11675c4ebdd7bfe97206b6ed0da617aa9fa00d51b13dabdcd19cb5d4020b0a4",
+      "bytes": 4812
+    },
+    {
+      "id": "PLAT-ARC-CANONICAL-HANDOFF-001",
+      "path": "verification/platform/v1/scenarios/PLAT-ARC-CANONICAL-HANDOFF-001/scenario.json",
+      "sha256": "69341a75024c4e9e3e28939019fc7bd40516c8ea1876a50ea538f62cb29caddb",
+      "bytes": 4109
+    },
+    {
+      "id": "PLAT-SURFACE-OWNERSHIP-001",
+      "path": "verification/platform/v1/scenarios/PLAT-SURFACE-OWNERSHIP-001/scenario.json",
+      "sha256": "cc16c0eaf78aa20c40ae990924c6eb31fec83af72fe53bb25f5a025505be41a2",
+      "bytes": 3704
+    },
+    {
+      "id": "PLAT-DESTROY-CANVAS-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DESTROY-CANVAS-001/scenario.json",
+      "sha256": "df3b471f8ea4604fbfcc2d6f0e26565c438021fd7c950ad752c2f948cc267ebf",
+      "bytes": 3666
+    },
+    {
+      "id": "PLAT-DESTROY-STALE-WORK-001",
+      "path": "verification/platform/v1/scenarios/PLAT-DESTROY-STALE-WORK-001/scenario.json",
+      "sha256": "cbe7feb7e639796815802c513157c9193f56a63e9a2d16edada99e4c45c3129a",
+      "bytes": 6377
+    },
+    {
+      "id": "PLAT-RECOVERY-REPEATED-001",
+      "path": "verification/platform/v1/scenarios/PLAT-RECOVERY-REPEATED-001/scenario.json",
+      "sha256": "04ae3a3d9845cd8bcee8306f5551ee63acd9b5655e0367f865db9262b8460a1b",
+      "bytes": 6441
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "format": "axiom-platform-profile-v1",
+  "formatVersion": 1,
+  "profileId": "web-reference-v0-1",
+  "platformFamily": "WEB",
+  "platformVariant": "browser-wasm-webgl2",
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "platform.state.capture",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "realization": {
+    "host": "DOM_CANVAS",
+    "runtime": "WASM",
+    "renderer": "WEBGL2",
+    "arc": "DISABLED_BY_CONTRACT"
+  }
+}

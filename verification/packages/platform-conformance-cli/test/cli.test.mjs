@@ -37,3 +37,42 @@ test("protocol classifies missing evidence and does not accept a partial bundle"
 test("protocol refuses output inside the versioned corpus", () => {
   const corpus = resolve(fileURLToPath(new URL("../../../platform/protocol/v1", import.meta.url))); assert.equal(run(protocolArgs(corpus)).status, 2);
 });
+
+test("web profile reports the browser/WASM realization without Arc", () => {
+  const result = run(["profile", "--adapter", "web"]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const profile = JSON.parse(result.stdout);
+  assert.equal(profile.platformFamily, "WEB");
+  assert.equal(profile.realization.runtime, "WASM");
+  assert.equal(profile.capabilities.includes("arc.preview"), false);
+});
+
+test("windows profile reports native D3D12 and Arc realization", () => {
+  const result = run(["profile", "--adapter", "windows"]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const profile = JSON.parse(result.stdout);
+  assert.equal(profile.platformFamily, "WINDOWS");
+  assert.equal(profile.realization.host, "WIN32_NATIVE");
+  assert.equal(profile.realization.backend, "D3D12");
+  assert.equal(profile.capabilities.includes("arc.preview"), true);
+});
+
+test("web run uses the shared seed and emits applicability plus observation facts", async () => {
+  const output = await mkdtemp(join(tmpdir(), "axiom-web-adapter-"));
+  const result = run(["run", "--suite", "platform-seed-v0.1", "--adapter", "web", "--output", output]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const summary = JSON.parse(await readFile(join(output, "summary.json"), "utf8"));
+  assert.equal(summary.adapter, "web");
+  assert.equal(summary.applicableCount, 25);
+  assert.equal(summary.notApplicableCount, 3);
+  assert.equal(summary.resultCount, 28);
+  assert.ok((await readdir(join(output, "observations"))).length === 25);
+  const applicability = JSON.parse(await readFile(join(output, "applicability.json"), "utf8"));
+  assert.deepEqual(applicability.notApplicable.map((entry) => entry.scenarioId).sort(), [
+    "PLAT-ARC-CANONICAL-HANDOFF-001", "PLAT-ARC-PREVIEW-FALLBACK-001", "PLAT-SURFACE-OWNERSHIP-001",
+  ]);
+  const observation = JSON.parse(await readFile(join(output, "observations", "PLAT-CREATE-CANVAS-001.json"), "utf8"));
+  assert.equal(observation.platformFamily, "WEB");
+  assert.equal(Object.hasOwn(observation, "expected"), false);
+  assert.equal(Object.hasOwn(observation, "result"), false);
+});

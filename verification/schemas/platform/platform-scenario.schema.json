@@ -25,7 +25,7 @@
       "properties": {
         "platformFamily": { "enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"] },
         "policy": { "enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"] },
-        "requiredCapabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z0-9]+)+$" } }
+        "requiredCapabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z0-9_]+)+$" } }
       }
     },
     "step": {
