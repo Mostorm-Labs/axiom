@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "trace_kind": "verification-native-hooks",
+  "normalized_loss": [
+    {"fault_id":"fault:surface","generation":7,"state":"CLEARED","type":"SURFACE_LOST"},
+    {"fault_id":"fault:device","generation":8,"state":"CLEARED","type":"DEVICE_LOST"}
+  ],
+  "present_hold": {"captured":["attempt:held:1","attempt:held:2"],"release_order":[1,2],"release_dispositions":["DROPPED_STALE_GENERATION","DROPPED_STALE_GENERATION"]},
+  "source_attempts": [
+    {"attempt_id":"attempt:held:1","disposition":"DROPPED_STALE_GENERATION","generation":3},
+    {"attempt_id":"attempt:held:2","disposition":"DROPPED_STALE_GENERATION","generation":3},
+    {"attempt_id":"attempt:stale","disposition":"DROPPED_STALE_GENERATION","generation":3},
+    {"attempt_id":"attempt:current","disposition":"FORWARDED","generation":4},
+    {"attempt_id":"attempt:immediate","disposition":"FORWARDED","generation":4},
+    {"attempt_id":"attempt:stale-scope","disposition":"DROPPED_STALE_SCOPE","generation":4}
+  ],
+  "event_tap": [{"generation":4,"source_lease_id":"source:present:1"},{"generation":4,"source_lease_id":"source:present:1"}],
+  "closed_scope": {"all_leases_closed":true,"late_lease_rejected":true}
+}
