@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MR-10-04 platform verification artifact validators.
+"""Platform verification artifact and corpus validators.
 
 This module validates verification-only Platform contracts. It must not turn
 08 Platform OPEN physical realization into a semantic winner.
@@ -14,6 +14,7 @@ from jsonschema.exceptions import SchemaError, ValidationError
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMAS = ROOT / "schemas"
+SEMANTIC_SUITES = ROOT / "golden" / "v1" / "suites"
 
 PLATFORM_SCHEMA_NAMES = (
     "platform-suite",
@@ -77,6 +78,28 @@ def _u64_value(tag: str) -> int:
     return int(tag[4:], 16)
 
 
+def semantic_case_ids() -> set[str]:
+    """Return the checked-in Semantic Golden case namespace.
+
+    Suite manifests are the current repo-local namespace authority while many
+    individual semantic case fixtures remain intentionally unmaterialized.
+    """
+    if not SEMANTIC_SUITES.is_dir():
+        raise ValueError(f"semantic suite directory is missing: {SEMANTIC_SUITES}")
+    case_ids: set[str] = set()
+    suite_files = sorted(SEMANTIC_SUITES.glob("*.json"))
+    if not suite_files:
+        raise ValueError("semantic suite namespace is empty")
+    for path in suite_files:
+        suite = _load_json(path)
+        cases = suite.get("cases")
+        if isinstance(cases, list):
+            case_ids.update(case for case in cases if isinstance(case, str))
+    if not case_ids:
+        raise ValueError("semantic suite namespace contains no case IDs")
+    return case_ids
+
+
 def validate_platform_suite_semantics(suite: dict) -> None:
     validate_platform_structure("platform-suite", suite)
     _require_unique(suite["scenarios"], "platform suite scenarios")
@@ -96,6 +119,30 @@ def validate_platform_scenario_semantics(scenario: dict) -> None:
     correctness_oracles = sum(len(expected[name]) for name in ("requiredEvents", "forbiddenEvents", "partialOrder", "stateAssertions"))
     if scenario["requirementStatus"] in {"SPEC_REQUIREMENT", "FREEZE_CANDIDATE"} and correctness_oracles == 0:
         raise ValueError("platform scenario: Spec/Freeze correctness scenario requires at least one oracle")
+
+
+def validate_platform_scenario_references(scenario: dict) -> None:
+    """Resolve PlatformScenario references against trusted repo-local namespaces."""
+    validate_platform_scenario_semantics(scenario)
+    known_semantic = semantic_case_ids()
+    refs: list[tuple[str, str]] = []
+
+    canonical_ref = scenario.get("canonicalFixtureRef")
+    if canonical_ref:
+        refs.append(("canonicalFixtureRef", canonical_ref))
+
+    for step in scenario["steps"]:
+        if step["kind"] != "SEMANTIC":
+            continue
+        fixture_ref = step["action"].get("fixtureRef")
+        if not fixture_ref:
+            raise ValueError(f"platform scenario step {step['stepId']}: SEMANTIC action requires semantic fixtureRef")
+        refs.append((f"step {step['stepId']} fixtureRef", fixture_ref))
+
+    missing = [(where, ref) for where, ref in refs if ref not in known_semantic]
+    if missing:
+        rendered = ", ".join(f"{where}={ref!r}" for where, ref in missing)
+        raise ValueError(f"platform scenario: missing semantic fixture reference(s): {rendered}")
 
 
 def validate_platform_profile_semantics(profile: dict) -> None:
