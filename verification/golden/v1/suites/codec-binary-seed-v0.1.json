@@ -1,0 +1,18 @@
+{
+  "formatVersion": 1,
+  "id": "codec-binary-seed-v0.1",
+  "authority": "Canonical Codec Implementation Skeleton + Binary Golden Seed v0.1",
+  "status": "FROZEN_SOURCE_BYTES",
+  "cases": [
+    {"id":"BG-001","type":"Id128","path":"wire/codec/BG-001-id128/expected/canonical.pb","expectedHex":"0a1000112233445566778899aabbccddeeff"},
+    {"id":"BG-002","type":"OrderKey","path":"wire/codec/BG-002-order-key/expected/canonical.pb","expectedHex":"0a030180ff"},
+    {"id":"BG-003","type":"Vec2","path":"wire/codec/BG-003-vec2/expected/canonical.pb","expectedHex":"09000000000000f03f110000000000000040"},
+    {"id":"BG-004","type":"Transform2D","path":"wire/codec/BG-004-transform-identity/expected/canonical.pb","expectedHex":"09000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000"},
+    {"id":"BG-005","type":"PropertyValue","path":"wire/codec/BG-005-property-f32/expected/canonical.pb","expectedHex":"150000003f"},
+    {"id":"BG-006","type":"ColorValue","path":"wire/codec/BG-006-color/expected/canonical.pb","expectedHex":"0d0000803f150000003f1d00000000250000803f"},
+    {"id":"BG-007","type":"Placement","path":"wire/codec/BG-007-root-placement/expected/canonical.pb","expectedHex":"12030a0101"},
+    {"id":"BG-008","type":"Placement","path":"wire/codec/BG-008-parented-placement/expected/canonical.pb","expectedHex":"0a120a1000112233445566778899aabbccddeeff12030a0101"},
+    {"id":"BG-009","type":"DashPattern","path":"wire/codec/BG-009-dash-pattern/expected/canonical.pb","expectedHex":"0a10000000000000f03f000000000000004011000000000000e03f"},
+    {"id":"BG-010","type":"DocumentSnapshot","path":"wire/codec/BG-010-minimal-snapshot/expected/canonical.pb","expectedHex":"0a120a1000112233445566778899aabbccddeeff1001"}
+  ]
+}
