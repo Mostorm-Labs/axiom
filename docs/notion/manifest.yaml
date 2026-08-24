@@ -1,0 +1,31 @@
+schema_version: 1
+
+project: axiom
+
+source:
+  type: notion
+  role: living_architecture_authority
+
+repository_snapshot:
+  role: frozen_implementation_contract
+  root: docs/notion/authority
+
+implementation_packages:
+  root: docs/notion/implementation
+
+evidence:
+  root: docs/evidence
+
+rules:
+  frozen_authority_editable_by_implementation_agent: false
+  architecture_conflict_requires_refreeze: true
+  implementation_requires_authority_snapshot: true
+
+authority_statuses:
+  - draft
+  - proposed
+  - proposed-freeze
+  - frozen
+  - superseded
+
+documents: []
