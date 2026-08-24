@@ -27,10 +27,9 @@ IMPLEMENTATION_KINDS = {"CPP_NATIVE", "WASM", "TS_REFERENCE"}
 F32_TAG = re.compile(r"^f32:[0-9a-f]{8}$")
 F64_TAG = re.compile(r"^f64:[0-9a-f]{16}$")
 I64_TAG = re.compile(r"^i64:-?(?:0|[1-9][0-9]*)$")
-U64_TAG = re.compile(r"^u64:(?:0|[1-9][0-9]*)$")
-BYTES_TAG = re.compile(r"^bytes:[0-9a-f]*$")
+U64_TAG = re.compile(r"^u64:[0-9a-f]{16}$")
+HEX_TAG = re.compile(r"^hex:(?:[0-9a-f]{2})*$")
 ID128_TAG = re.compile(r"^id128:[0-9a-f]{32}$")
-ORDER_KEY_TAG = re.compile(r"^orderkey:[0-9a-f]{2,64}$")
 
 
 def load_json(path: Path):
@@ -126,7 +125,7 @@ def _validate_scalar(field: FieldDescriptor, value, path: str, form: str) -> Non
         if not isinstance(value, str): raise ValueError(f"{path}: expected string")
     elif t == FieldDescriptor.TYPE_BYTES:
         if form == "CANONICAL":
-            if not isinstance(value, str) or not BYTES_TAG.fullmatch(value): raise ValueError(f"{path}: expected tagged bytes scalar")
+            if not isinstance(value, str) or not HEX_TAG.fullmatch(value): raise ValueError(f"{path}: expected hex tagged scalar")
         elif not isinstance(value, str): raise ValueError(f"{path}: expected bytes representation string")
     elif t == FieldDescriptor.TYPE_ENUM:
         if not isinstance(value, str) or value not in field.enum_type.values_by_name: raise ValueError(f"{path}: expected enum name from {field.enum_type.full_name}")
@@ -141,7 +140,7 @@ def _validate_message(desc, value, path: str, form: str) -> None:
         if not isinstance(value, str) or not ID128_TAG.fullmatch(value): raise ValueError(f"{path}: expected id128 tagged scalar")
         return
     if desc.full_name == "auditoryworks.axiom.v1.OrderKey":
-        if not isinstance(value, str) or not ORDER_KEY_TAG.fullmatch(value): raise ValueError(f"{path}: expected orderkey tagged scalar")
+        if not isinstance(value, str) or not HEX_TAG.fullmatch(value): raise ValueError(f"{path}: expected hex tagged scalar")
         return
     if not isinstance(value, dict):
         raise ValueError(f"{path}: expected object for {desc.full_name}")
