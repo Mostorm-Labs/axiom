@@ -47,6 +47,16 @@ test("web profile reports the browser/WASM realization without Arc", () => {
   assert.equal(profile.capabilities.includes("arc.preview"), false);
 });
 
+test("windows profile reports native D3D12 and Arc realization", () => {
+  const result = run(["profile", "--adapter", "windows"]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const profile = JSON.parse(result.stdout);
+  assert.equal(profile.platformFamily, "WINDOWS");
+  assert.equal(profile.realization.host, "WIN32_NATIVE");
+  assert.equal(profile.realization.backend, "D3D12");
+  assert.equal(profile.capabilities.includes("arc.preview"), true);
+});
+
 test("web run uses the shared seed and emits applicability plus observation facts", async () => {
   const output = await mkdtemp(join(tmpdir(), "axiom-web-adapter-"));
   const result = run(["run", "--suite", "platform-seed-v0.1", "--adapter", "web", "--output", output]);

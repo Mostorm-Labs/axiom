@@ -1,0 +1,81 @@
+name: G0 Windows Native Adapter
+
+on:
+  pull_request:
+    paths:
+      - "verification/native/platform/**"
+      - "verification/tools/generate_windows_adapter_evidence.mjs"
+      - "verification/platform/v1/**"
+      - ".github/workflows/g0-windows-native-adapter.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: g0-windows-native-adapter-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows-native:
+    name: GT-G0-11 Win32/D3D12 WARP
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Configure native verification host
+        shell: pwsh
+        run: >-
+          cmake -S . -B out/g0-11-windows -G Ninja
+          -DAXIOM_BUILD_VERIFICATION=ON
+          -DBUILD_TESTING=ON
+          -DCANVAS_BUILD_POC01=OFF
+          -DCANVAS_BUILD_POC02=OFF
+          -DCANVAS_BUILD_POC03=OFF
+          -DCANVAS_BUILD_POC05=OFF
+          -DCANVAS_BUILD_POC06=OFF
+          -DCANVAS_BUILD_RF01=OFF
+      - name: Build native adapter
+        run: cmake --build out/g0-11-windows --parallel
+      - name: Run native CTest and require Win32/D3D12 surface
+        run: ctest --test-dir out/g0-11-windows --output-on-failure
+      - name: Capture native trace
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out/g0-11-windows/trace | Out-Null
+          python verification/native/platform/windows/tests/validate_windows_trace.py `
+            --probe out/g0-11-windows/verification/native/platform/windows/axiom_verification_platform_windows_test.exe `
+            --output out/g0-11-windows/trace/windows-adapter-trace.json `
+            --require-native
+      - name: Validate platform seed and generate physical Evidence
+        shell: pwsh
+        env:
+          AXIOM_EVIDENCE_SOURCE_COMMIT: ${{ github.sha }}
+          AXIOM_WINDOWS_PHYSICAL_EXECUTION: "true"
+          AXIOM_WINDOWS_NATIVE_TRACE: ${{ github.workspace }}\out\g0-11-windows\trace\windows-adapter-trace.json
+        run: |
+          node verification/tools/generate_windows_adapter_evidence.mjs
+          python verification/tools/validate_workspace.py
+      - name: Upload GT-G0-11 physical Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g0-11-windows-native-${{ github.sha }}
+          path: |
+            verification/evidence/g0/gt-g0-11
+            out/g0-11-windows/trace/windows-adapter-trace.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Verify documentation whitespace
+        run: git diff --check

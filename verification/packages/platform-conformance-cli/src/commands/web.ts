@@ -19,8 +19,20 @@ const valueAfter = (args: string[], flag: string): string | null => {
 };
 
 export function profile(args: string[]): number {
-  if (args.length !== 2 || args[0] !== "--adapter" || args[1] !== "web") return ExitCode.INVALID_ARGUMENTS;
-  process.stdout.write(`${JSON.stringify(WEB_PROFILE)}\n`);
+  if (args.length !== 2 || args[0] !== "--adapter") return ExitCode.INVALID_ARGUMENTS;
+  if (args[1] === "web") process.stdout.write(`${JSON.stringify(WEB_PROFILE)}\n`);
+  else if (args[1] === "windows") process.stdout.write(`${JSON.stringify({
+    format: "axiom-platform-profile-v1", formatVersion: 1, profileId: "windows-native-reference-v0-1",
+    platformFamily: "WINDOWS", platformVariant: "win32-d3d12", capabilities: [
+      "semantic.projection.capture", "surface.generation", "metrics.generation", "surface.loss.inject",
+      "device.loss.inject", "presentation.feedback", "bridge.public_facade", "bridge.data_bridge",
+      "bridge.callback_trace", "input.pointer_sample_batch", "arc.preview", "arc.preview.loss.inject",
+      "platform.state.capture", "surface.ownership.capture", "fault.stale_generation.inject",
+      "harness.completion_tokens", "harness.source_lease_registry", "harness.late_event_fence",
+      "harness.source_attempt_trace",
+    ], realization: { host: "WIN32_NATIVE", surface: "DXGI_SWAPCHAIN", backend: "D3D12", arc: "ENABLED" },
+  })}\n`);
+  else return ExitCode.INVALID_ARGUMENTS;
   return ExitCode.SUCCESS;
 }
 

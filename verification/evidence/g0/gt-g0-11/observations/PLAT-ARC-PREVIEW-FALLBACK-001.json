@@ -1,0 +1,52 @@
+{
+  "format": "axiom-platform-observation-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-ARC-PREVIEW-FALLBACK-001",
+  "profileId": "windows-native-reference-v0-1",
+  "platformFamily": "WINDOWS",
+  "execution": {
+    "adapter": "windows-native-reference-v0.1",
+    "boundary": "IN_PROCESS",
+    "deterministic": true,
+    "physicalExecution": false
+  },
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "presentation.feedback",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "arc.preview",
+    "arc.preview.loss.inject",
+    "platform.state.capture",
+    "surface.ownership.capture",
+    "fault.stale_generation.inject",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "terminal": {
+    "state": "REFERENCE_READY"
+  },
+  "steps": [],
+  "artifacts": {},
+  "semanticCheckpoints": [],
+  "stateCheckpoints": [],
+  "targetBindings": [],
+  "realization": {
+    "host": "WIN32_NATIVE",
+    "surface": "DXGI_SWAPCHAIN",
+    "backend": "D3D12",
+    "arc": "ENABLED",
+    "device": "UNREALIZED"
+  },
+  "diagnostics": [
+    "WINDOWS_NATIVE_EXECUTION_PENDING"
+  ]
+}

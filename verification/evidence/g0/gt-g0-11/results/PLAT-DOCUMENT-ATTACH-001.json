@@ -1,0 +1,21 @@
+{
+  "format": "axiom-platform-conformance-result-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-DOCUMENT-ATTACH-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "result": "BLOCKED_OPEN",
+  "participants": [
+    {
+      "profileId": "windows-native-reference-v0-1"
+    }
+  ],
+  "checks": [],
+  "openObservations": [
+    {
+      "kind": "WINDOWS_NATIVE_EXECUTION_PENDING",
+      "reason": "requires Windows runner with Win32/D3D12 toolchain"
+    }
+  ],
+  "divergence": null,
+  "diagnostics": []
+}
