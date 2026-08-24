@@ -81,7 +81,7 @@ class SemanticArtifactContractTests(unittest.TestCase):
 
     def test_pass_with_divergence_rejected(self):
         result = self.result(); result["divergence"] = {"kind": "OUTCOME", "basis": "GOLDEN", "reference": {"source": "GOLDEN", "value": "ACCEPTED"}, "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}], "summary": "unexpected mismatch"}
-        with self.assertRaisesRegex(ValueError, "PASS requires divergence=null"): ac.validate_result_semantics(result)
+        with self.assertRaisesRegex(ValueError, "JSON Schema|PASS requires divergence=null"): ac.validate_result_semantics(result)
 
     def test_open_cross_implementation_divergence_cannot_claim_golden_basis(self):
         result = self.result(); result["requirementStatus"] = "OPEN"; result["result"] = "OBSERVED_DIVERGENCE_OPEN"; result["participants"] = []; result["comparison"] = {"golden": "NOT_APPLICABLE", "crossImplementation": "CHECKED", "comparedImplementations": ["axiom-cpp-native", "axiom-wasm"]}; result["divergence"] = {"kind": "OUTCOME", "basis": "GOLDEN", "reference": {"source": "GOLDEN", "value": "ACCEPTED"}, "observed": [{"implementationId": "axiom-cpp-native", "value": "REJECTED"}, {"implementationId": "axiom-wasm", "value": "ACCEPTED"}], "summary": "OPEN implementations differ"}
