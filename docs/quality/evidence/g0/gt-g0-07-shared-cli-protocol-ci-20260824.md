@@ -3,7 +3,7 @@
 > 任务：`GT-G0-07`（Notion locator：`WP-G0-07 / IH-07`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 状态：`Validating`；本地 commit-bound 验证已收口，托管 CI 结果待完成
+> 状态：`Pass`；本地 commit-bound 验证与托管 CI 均已收口
 
 ## 1. 目标与边界
 
@@ -98,7 +98,14 @@ CLI package tests：7/7；覆盖帮助/未知命令、保留 stub、禁止 bless
 | corpus-integrity.json SHA-256 | `9c2417d2e08081410d49a2ff555cf5f847ee7fe35de46badf5de3d822ebb5ba4` |
 | protocol.log SHA-256 | `5909cee682480dce9a23ca04dc58d9a86284dfd72856c0d0df25c85d4df8cad4` |
 | protocol integrity SHA-256 | `ee2f85dd532ee59abb5bb8e1079fd92f95f0541797ebdd5bc3e187a3b89decfb` |
-| hosted CI run / artifact | `Pending` |
+| hosted CI run | [G0 Platform Protocol Seed #32686530146](https://github.com/Mostorm-Labs/axiom/actions/runs/32686530146)；job `platform/protocol-seed` / `97312567918` / `success` |
+| hosted CI artifact | `g0-platform-protocol-seed-bfa8e15f32d1f69d32dcae247784a1dd06b68086`；artifact ID `9505842778`；49,376 bytes |
+| hosted CI artifact ZIP SHA-256 | `03d180febe7990fa8f79715945508bef0c68fba52b9ca7ca6a7dcfc0fa968b9c` |
+
+托管 CI 在 `bfa8e15f32d1f69d32dcae247784a1dd06b68086` 上完成 clean checkout、Node 24.18.0
+install/build、schema/corpus validation、workspace ownership validation、双 boundary protocol、corpus
+read-only assertion 和 artifact upload，全部为 `success`。下载后的 summary、integrity 和 protocol log
+与本地 commit-bound 文件 SHA-256 完全一致。
 
 `GT-G0-08` 保持 `Not Started`。G0 与 R1 仍不能晋级；必须完成后续 G0 任务并执行 G0 Gate
 Review，不能以本任务单独 Pass 代替 Gate Pass。
