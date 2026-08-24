@@ -1,0 +1,280 @@
+{
+  "format": "axiom-platform-scenario-v1",
+  "formatVersion": 1,
+  "id": "PLAT-RECOVERY-REPEATED-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "requirementIds": [
+    "PC-I05",
+    "PC-I06",
+    "PC-I07",
+    "PC-I08"
+  ],
+  "authorityRefs": [
+    "SRC-NOTION-G0-IH09-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SCENARIO-FORMAT-V01-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SEED-V01-CAPTURE-20260824"
+  ],
+  "canonicalFixtureRef": "REPLAY-MIXED-OPERATIONS-001",
+  "targets": [
+    {
+      "platformFamily": "WEB",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "surface.generation",
+        "surface.loss.inject",
+        "device.loss.inject",
+        "presentation.feedback"
+      ]
+    },
+    {
+      "platformFamily": "WINDOWS",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "surface.generation",
+        "surface.loss.inject",
+        "device.loss.inject",
+        "presentation.feedback"
+      ]
+    },
+    {
+      "platformFamily": "ANDROID",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "surface.generation",
+        "surface.loss.inject",
+        "device.loss.inject",
+        "presentation.feedback"
+      ]
+    },
+    {
+      "platformFamily": "APPLE",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "surface.generation",
+        "surface.loss.inject",
+        "device.loss.inject",
+        "presentation.feedback"
+      ]
+    }
+  ],
+  "preconditions": {
+    "appState": "FOREGROUND",
+    "canvasState": "NOT_CREATED",
+    "hostState": "DETACHED",
+    "documentState": "AVAILABLE",
+    "surfaceState": "UNBOUND",
+    "deviceState": "READY",
+    "arcPreviewMode": "DISABLED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "CREATE_CANVAS"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "ATTACH_HOST"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "ATTACH_DOCUMENT"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s04",
+      "kind": "SEMANTIC",
+      "action": {
+        "operation": "REPLAY_CANONICAL_FIXTURE",
+        "fixtureRef": "REPLAY-MIXED-OPERATIONS-001"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s05",
+      "kind": "FAULT",
+      "action": {
+        "faultId": "fault-s05",
+        "mode": "PULSE",
+        "type": "SURFACE_LOST",
+        "target": "CANONICAL_PRESENTATION",
+        "reasonCategory": "FAULT_INJECTION"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "SURFACE_UNAVAILABLE"
+        }
+      }
+    },
+    {
+      "stepId": "s06",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "PROVIDE_SURFACE_REBIND"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "SURFACE_REBOUND"
+        }
+      }
+    },
+    {
+      "stepId": "s07",
+      "kind": "FAULT",
+      "action": {
+        "faultId": "fault-s07",
+        "mode": "ACTIVATE",
+        "type": "DEVICE_LOST",
+        "target": "GPU_DEVICE",
+        "reasonCategory": "FAULT_INJECTION"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "DEVICE_LOST"
+        }
+      }
+    },
+    {
+      "stepId": "s08",
+      "kind": "FAULT",
+      "action": {
+        "faultId": "fault-s08",
+        "mode": "CLEAR",
+        "type": "DEVICE_LOST",
+        "target": "GPU_DEVICE",
+        "reasonCategory": "FAULT_INJECTION"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "DEVICE_RECOVERED"
+        }
+      }
+    },
+    {
+      "stepId": "s09",
+      "kind": "FAULT",
+      "action": {
+        "faultId": "fault-s09",
+        "mode": "PULSE",
+        "type": "SURFACE_LOST",
+        "target": "CANONICAL_PRESENTATION",
+        "reasonCategory": "FAULT_INJECTION"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "SURFACE_UNAVAILABLE"
+        }
+      }
+    },
+    {
+      "stepId": "s10",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "PROVIDE_SURFACE_REBIND"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_EVENT",
+        "event": {
+          "traceKind": "SURFACE",
+          "event": "SURFACE_REBOUND"
+        }
+      }
+    }
+  ],
+  "expected": {
+    "requiredEvents": [
+      "CANVAS_CREATED",
+      "HOST_ATTACHED",
+      "DOCUMENT_ATTACHED",
+      "CANONICAL_FIXTURE_REPLAYED",
+      "SURFACE_UNAVAILABLE",
+      "SURFACE_REBOUND",
+      "DEVICE_LOST",
+      "DEVICE_RECOVERED",
+      "CANONICAL_FRAME_PRESENTED"
+    ],
+    "forbiddenEvents": [],
+    "partialOrder": [
+      [
+        "CANVAS_CREATED",
+        "HOST_ATTACHED"
+      ],
+      [
+        "HOST_ATTACHED",
+        "DOCUMENT_ATTACHED"
+      ]
+    ],
+    "stateAssertions": [
+      {
+        "selector": "semantic.document",
+        "operator": "EQUALS_CANONICAL_FIXTURE",
+        "value": "REPLAY-MIXED-OPERATIONS-001"
+      },
+      {
+        "selector": "surface.generation",
+        "operator": "STRICTLY_INCREASES",
+        "value": true
+      },
+      {
+        "selector": "device.generation",
+        "operator": "STRICTLY_INCREASES",
+        "value": true
+      }
+    ]
+  },
+  "capture": {
+    "lifecycleTrace": true,
+    "surfaceTrace": true,
+    "bridgeTrace": true,
+    "diagnostics": true,
+    "semanticCheckpoints": [
+      {
+        "id": "after-bootstrap",
+        "afterStepId": "s04"
+      }
+    ],
+    "stateCheckpoints": [
+      {
+        "id": "after-scenario",
+        "afterStepId": "s10"
+      }
+    ],
+    "ownershipSnapshot": false
+  }
+}

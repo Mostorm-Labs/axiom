@@ -1,0 +1,174 @@
+{
+  "format": "axiom-platform-scenario-v1",
+  "formatVersion": 1,
+  "id": "PLAT-ARC-CANONICAL-HANDOFF-001",
+  "requirementStatus": "FREEZE_CANDIDATE",
+  "requirementIds": [
+    "PC-I13"
+  ],
+  "authorityRefs": [
+    "SRC-NOTION-G0-IH09-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SCENARIO-FORMAT-V01-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SEED-V01-CAPTURE-20260824"
+  ],
+  "canonicalFixtureRef": "REPLAY-MIXED-OPERATIONS-001",
+  "targets": [
+    {
+      "platformFamily": "WINDOWS",
+      "policy": "REQUIRED_WHEN_CAPABLE",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "presentation.feedback",
+        "arc.preview",
+        "surface.ownership.capture"
+      ]
+    },
+    {
+      "platformFamily": "ANDROID",
+      "policy": "REQUIRED_WHEN_CAPABLE",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "presentation.feedback",
+        "arc.preview",
+        "surface.ownership.capture"
+      ]
+    },
+    {
+      "platformFamily": "APPLE",
+      "policy": "REQUIRED_WHEN_CAPABLE",
+      "requiredCapabilities": [
+        "semantic.projection.capture",
+        "platform.state.capture",
+        "presentation.feedback",
+        "arc.preview",
+        "surface.ownership.capture"
+      ]
+    }
+  ],
+  "preconditions": {
+    "appState": "FOREGROUND",
+    "canvasState": "NOT_CREATED",
+    "hostState": "DETACHED",
+    "documentState": "AVAILABLE",
+    "surfaceState": "UNBOUND",
+    "deviceState": "READY",
+    "arcPreviewMode": "REQUIRED_IF_CAPABLE"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "CREATE_CANVAS"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "ATTACH_HOST"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "ATTACH_DOCUMENT"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s04",
+      "kind": "SEMANTIC",
+      "action": {
+        "operation": "REPLAY_CANONICAL_FIXTURE",
+        "fixtureRef": "REPLAY-MIXED-OPERATIONS-001"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s05",
+      "kind": "INPUT",
+      "action": {
+        "operation": "DELIVER_POINTER_SAMPLE_BATCH",
+        "fixtureRef": "POINTER-PEN-MOVE-COALESCED-001"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    }
+  ],
+  "expected": {
+    "requiredEvents": [
+      "CANVAS_CREATED",
+      "HOST_ATTACHED",
+      "DOCUMENT_ATTACHED",
+      "CANONICAL_FIXTURE_REPLAYED",
+      "PREVIEW_FRAME_PRESENTED",
+      "CANONICAL_FRAME_PRESENTED",
+      "CANONICAL_VISIBLE_ACKNOWLEDGED",
+      "PREVIEW_CLEAR_REQUESTED",
+      "PREVIEW_CLEARED"
+    ],
+    "forbiddenEvents": [],
+    "partialOrder": [
+      [
+        "PREVIEW_FRAME_PRESENTED",
+        "CANONICAL_FRAME_PRESENTED"
+      ],
+      [
+        "CANONICAL_FRAME_PRESENTED",
+        "CANONICAL_VISIBLE_ACKNOWLEDGED"
+      ],
+      [
+        "CANONICAL_VISIBLE_ACKNOWLEDGED",
+        "PREVIEW_CLEAR_REQUESTED"
+      ],
+      [
+        "PREVIEW_CLEAR_REQUESTED",
+        "PREVIEW_CLEARED"
+      ]
+    ],
+    "stateAssertions": [
+      {
+        "selector": "semantic.document",
+        "operator": "EQUALS_CANONICAL_FIXTURE",
+        "value": "REPLAY-MIXED-OPERATIONS-001"
+      }
+    ],
+    "applicability": {
+      "WEB": "NOT_APPLICABLE_BY_CONTRACT"
+    }
+  },
+  "capture": {
+    "lifecycleTrace": true,
+    "surfaceTrace": true,
+    "bridgeTrace": true,
+    "diagnostics": true,
+    "semanticCheckpoints": [
+      {
+        "id": "after-bootstrap",
+        "afterStepId": "s04"
+      }
+    ],
+    "stateCheckpoints": [
+      {
+        "id": "after-scenario",
+        "afterStepId": "s05"
+      }
+    ],
+    "ownershipSnapshot": false
+  }
+}

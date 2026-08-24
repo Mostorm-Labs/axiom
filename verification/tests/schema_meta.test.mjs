@@ -39,3 +39,12 @@ test("invalid tagged u64 generation is rejected", async () => {
     assert.throws(() => validateValue(schema, value), /pattern mismatch/);
   }
 });
+
+test("published lowercase namespaced capabilities with underscores are accepted", async () => {
+  const { schema, value } = await pair("platform-scenario");
+  value.targets[0].requiredCapabilities = [
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+  ];
+  assert.doesNotThrow(() => validateValue(schema, value));
+});

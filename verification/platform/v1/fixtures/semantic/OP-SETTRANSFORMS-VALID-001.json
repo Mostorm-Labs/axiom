@@ -1,0 +1,12 @@
+{
+  "format": "axiom-canonical-fixture-v1",
+  "id": "OP-SETTRANSFORMS-VALID-001",
+  "operations": [
+    {
+      "kind": "SET_TRANSFORM",
+      "objectId": "u64:0000000000000001",
+      "transform": {"translation": {"x": 48, "y": 32}, "rotation": 0, "scale": {"x": 1, "y": 1}}
+    }
+  ],
+  "oracle": {"type": "operation-apply", "operationCount": 1, "atomic": true}
+}

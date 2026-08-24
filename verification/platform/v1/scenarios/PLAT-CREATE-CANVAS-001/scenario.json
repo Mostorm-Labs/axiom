@@ -1,0 +1,107 @@
+{
+  "format": "axiom-platform-scenario-v1",
+  "formatVersion": 1,
+  "id": "PLAT-CREATE-CANVAS-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "requirementIds": [
+    "PC-I02",
+    "VER-20"
+  ],
+  "authorityRefs": [
+    "SRC-NOTION-G0-IH09-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SCENARIO-FORMAT-V01-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SEED-V01-CAPTURE-20260824"
+  ],
+  "targets": [
+    {
+      "platformFamily": "WEB",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture"
+      ]
+    },
+    {
+      "platformFamily": "WINDOWS",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture"
+      ]
+    },
+    {
+      "platformFamily": "ANDROID",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture"
+      ]
+    },
+    {
+      "platformFamily": "APPLE",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture"
+      ]
+    }
+  ],
+  "preconditions": {
+    "appState": "FOREGROUND",
+    "canvasState": "NOT_CREATED",
+    "hostState": "DETACHED",
+    "documentState": "AVAILABLE",
+    "surfaceState": "UNBOUND",
+    "deviceState": "READY",
+    "arcPreviewMode": "DISABLED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "CREATE_CANVAS"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    }
+  ],
+  "expected": {
+    "requiredEvents": [
+      "CANVAS_CREATED"
+    ],
+    "forbiddenEvents": [
+      "HOST_ATTACHED",
+      "DOCUMENT_ATTACHED"
+    ],
+    "partialOrder": [],
+    "stateAssertions": [
+      {
+        "selector": "canvas.state",
+        "operator": "EQUALS",
+        "value": "CREATED"
+      },
+      {
+        "selector": "host.state",
+        "operator": "EQUALS",
+        "value": "DETACHED"
+      }
+    ]
+  },
+  "capture": {
+    "lifecycleTrace": true,
+    "surfaceTrace": true,
+    "bridgeTrace": true,
+    "diagnostics": true,
+    "semanticCheckpoints": [
+      {
+        "id": "after-bootstrap",
+        "afterStepId": "s01"
+      }
+    ],
+    "stateCheckpoints": [
+      {
+        "id": "after-scenario",
+        "afterStepId": "s01"
+      }
+    ],
+    "ownershipSnapshot": false
+  }
+}

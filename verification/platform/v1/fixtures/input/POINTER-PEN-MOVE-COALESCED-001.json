@@ -1,0 +1,10 @@
+{
+  "format": "axiom-pointer-sample-batch-fixture-v1",
+  "id": "POINTER-PEN-MOVE-COALESCED-001",
+  "samples": [
+    {"x": 10.0, "y": 20.0, "pressure": 0.2, "tiltX": 0.0, "tiltY": 0.0, "timestampNs": "u64:0000000000000001", "device": "stylus"},
+    {"x": 12.0, "y": 22.0, "pressure": 0.6, "tiltX": 4.0, "tiltY": -2.0, "timestampNs": "u64:0000000000000002", "device": "stylus"},
+    {"x": 16.0, "y": 26.0, "pressure": 0.9, "tiltX": 8.0, "tiltY": -4.0, "timestampNs": "u64:0000000000000003", "device": "stylus"}
+  ],
+  "oracle": {"sampleCount": 3, "inputPath": "native-hot-path", "coalescing": "preserve-order"}
+}

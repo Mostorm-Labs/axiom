@@ -1,0 +1,133 @@
+{
+  "format": "axiom-platform-scenario-v1",
+  "formatVersion": 1,
+  "id": "PLAT-DOCUMENT-ATTACH-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "requirementIds": [
+    "PC-I02"
+  ],
+  "authorityRefs": [
+    "SRC-NOTION-G0-IH09-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SCENARIO-FORMAT-V01-CAPTURE-20260824",
+    "SRC-NOTION-PLATFORM-SEED-V01-CAPTURE-20260824"
+  ],
+  "canonicalFixtureRef": "REPLAY-MIXED-OPERATIONS-001",
+  "targets": [
+    {
+      "platformFamily": "WEB",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture",
+        "semantic.projection.capture"
+      ]
+    },
+    {
+      "platformFamily": "WINDOWS",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture",
+        "semantic.projection.capture"
+      ]
+    },
+    {
+      "platformFamily": "ANDROID",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture",
+        "semantic.projection.capture"
+      ]
+    },
+    {
+      "platformFamily": "APPLE",
+      "policy": "REQUIRED",
+      "requiredCapabilities": [
+        "platform.state.capture",
+        "semantic.projection.capture"
+      ]
+    }
+  ],
+  "preconditions": {
+    "appState": "FOREGROUND",
+    "canvasState": "NOT_CREATED",
+    "hostState": "DETACHED",
+    "documentState": "AVAILABLE",
+    "surfaceState": "UNBOUND",
+    "deviceState": "READY",
+    "arcPreviewMode": "DISABLED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "SEMANTIC",
+      "action": {
+        "operation": "RESTORE_CANONICAL_FIXTURE",
+        "fixtureRef": "REPLAY-MIXED-OPERATIONS-001"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "CREATE_CANVAS"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "action": {
+        "operation": "ATTACH_DOCUMENT"
+      },
+      "completion": {
+        "mode": "WAIT_FOR_ACTION_COMPLETION"
+      }
+    }
+  ],
+  "expected": {
+    "requiredEvents": [
+      "CANVAS_CREATED",
+      "DOCUMENT_ATTACHED"
+    ],
+    "forbiddenEvents": [
+      "HOST_ATTACHED",
+      "SURFACE_BOUND"
+    ],
+    "partialOrder": [
+      [
+        "CANVAS_CREATED",
+        "DOCUMENT_ATTACHED"
+      ]
+    ],
+    "stateAssertions": [
+      {
+        "selector": "semantic.document",
+        "operator": "EQUALS_CANONICAL_FIXTURE",
+        "value": "REPLAY-MIXED-OPERATIONS-001"
+      }
+    ]
+  },
+  "capture": {
+    "lifecycleTrace": true,
+    "surfaceTrace": true,
+    "bridgeTrace": true,
+    "diagnostics": true,
+    "semanticCheckpoints": [
+      {
+        "id": "after-bootstrap",
+        "afterStepId": "s03"
+      }
+    ],
+    "stateCheckpoints": [
+      {
+        "id": "after-scenario",
+        "afterStepId": "s03"
+      }
+    ],
+    "ownershipSnapshot": false
+  }
+}
