@@ -3,7 +3,7 @@
 > 任务：`GT-G0-11`（Notion locator：`WP-G0-11 / IH-11`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 当前状态：`Validating`
+> 当前状态：`Pass`（Windows WARP/D3D12 原生验证已通过）
 
 ## 1. 来源与边界
 
@@ -49,23 +49,37 @@ topology 与 Screen Annotation 专用 profile 不在本任务冻结。
 | CTest | Pass；6/6，包括 Windows adapter、trace、hooks/common host、build boundary 和 native trace |
 | Windows profile CLI tests | Pass；10/10 |
 | Platform seed validation | Pass；13 schemas/fixtures valid，Windows applicable 28 |
-| Reference Evidence generation | Pass；28 applicable，所有 result 为 `BLOCKED_OPEN`，未产生部分 PASS |
-| Windows physical execution | Pending；需要 Windows runner、Win32/D3D12 toolchain 和 28 场景物理 Evidence |
+| Evidence generation | Pass；28 applicable，物理模式下均记录 native observation，结果保持 `OBSERVED_AGREEMENT_OPEN`，最终比较仍由 Shared Runner 负责 |
+| Windows physical execution | Pass；GitHub Actions `windows-2025` 使用 Win32 hidden host、D3D12 WARP、DXGI swapchain，28 个 Windows applicable scenario 已生成物理 observation/result |
 
 ## 5. Evidence 与状态
 
 结构化 Evidence：[`verification/evidence/g0/gt-g0-11/`](../../../../verification/evidence/g0/gt-g0-11/)。
 
-当前工作区尚未提交，`summary.json`、`manifest.json` 和相关产物的 `sourceCommit` 为 `UNBOUND`，因此
-本轮不生成伪造的 commit-bound hash。Windows runner 完成后，应重新生成并绑定实现 commit、工具链、设备
-信息、28 场景结果和 artifact hashes。
+Windows runner job：[`GT-G0-11 Win32/D3D12 WARP`](https://github.com/Mostorm-Labs/axiom/actions/runs/32709913423/job/97378893349)。
+该 job 的 PR merge ref 为 `bfeadfc01eec30a90bca93f8195364484012b78a`；为保持实现身份稳定，仓库 Evidence
+按实现提交 `090553f7655010bb0df4c4b250e6637735cc34ca` 重新生成并绑定。Evidence 中的
+`native-trace.json` 保留真实 Windows runner 的 `native_surface_ready: true`、D3D12 backend、WARP
+device、generation、Arc ownership 和 stale-scope 结果。
 
 GT-G0-11 当前状态为：
 
 - Design：`Pass`
 - Implementation：`Pass`
-- Validation：`Validating`
-- Final：`Validating`
+- Validation：`Pass`
+- Final：`Pass`
 
-阻塞项是 Windows runner 上的真实 Win32/D3D12 执行；在此之前不得进入 `GT-G0-12`，G0 与 R1 继续保持
-`Validating`。
+GT-G0-11 已完成其 Windows native adapter 退出条件；G0 与 R1 仍保持 `Validating`，因为后续
+`GT-G0-12..17` 尚未完成。本轮不进入 `GT-G0-12`。
+
+实现与 Evidence 绑定摘要：
+
+| 对象 | 值 |
+| --- | --- |
+| implementation commit | `090553f7655010bb0df4c4b250e6637735cc34ca` |
+| GitHub Actions run | `32709913423` |
+| Windows job | `97378893349` |
+| runner | `windows-2025` |
+| native backend/device | Win32 + DXGI swapchain + D3D12 WARP |
+| corpus digest | `20d358607f04c7eed5843129ab5b9e33f612b216740c7de4d8d434aa57718741` |
+| applicable scenarios | 28 |

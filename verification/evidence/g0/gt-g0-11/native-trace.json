@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "trace_kind": "verification-windows-native-adapter",
+  "profile": {
+    "profile_id": "windows-native-reference-v0.1",
+    "platform_family": "WINDOWS",
+    "backend": "D3D12",
+    "arc_enabled": true
+  },
+  "generations": {
+    "metrics": 2,
+    "surface": 2,
+    "device": 2
+  },
+  "document_continuity": {
+    "attached_after_rebind": true,
+    "semantic_revision": 1
+  },
+  "pointer_batch": {
+    "correlation_id": "batch:1",
+    "count": 2
+  },
+  "arc_ownership": {
+    "canonical_owner": "AXIOM",
+    "preview_owner": "ARC",
+    "distinct": true
+  },
+  "native_surface_ready": true,
+  "destroy_stale": {
+    "disposition": "DROPPED_STALE_SCOPE",
+    "events_after_destroy": 0
+  }
+}

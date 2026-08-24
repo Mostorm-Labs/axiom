@@ -3,17 +3,22 @@
   "formatVersion": 1,
   "scenarioId": "PLAT-CREATE-CANVAS-001",
   "requirementStatus": "SPEC_REQUIREMENT",
-  "result": "BLOCKED_OPEN",
+  "result": "OBSERVED_AGREEMENT_OPEN",
   "participants": [
     {
       "profileId": "windows-native-reference-v0-1"
     }
   ],
-  "checks": [],
+  "checks": [
+    {
+      "kind": "NATIVE_HOST_TRACE_CAPTURED",
+      "status": "OBSERVED"
+    }
+  ],
   "openObservations": [
     {
-      "kind": "WINDOWS_NATIVE_EXECUTION_PENDING",
-      "reason": "requires Windows runner with Win32/D3D12 toolchain"
+      "kind": "COMPARATOR_DEFERRED",
+      "reason": "shared runner owns expected comparison"
     }
   ],
   "divergence": null,

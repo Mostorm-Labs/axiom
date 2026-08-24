@@ -8,7 +8,7 @@
     "adapter": "windows-native-reference-v0.1",
     "boundary": "IN_PROCESS",
     "deterministic": true,
-    "physicalExecution": false
+    "physicalExecution": true
   },
   "capabilities": [
     "semantic.projection.capture",
@@ -32,7 +32,7 @@
     "harness.source_attempt_trace"
   ],
   "terminal": {
-    "state": "REFERENCE_READY"
+    "state": "PHYSICAL_REFERENCE_READY"
   },
   "steps": [],
   "artifacts": {},
@@ -44,9 +44,9 @@
     "surface": "DXGI_SWAPCHAIN",
     "backend": "D3D12",
     "arc": "ENABLED",
-    "device": "UNREALIZED"
+    "device": "D3D12_WARP"
   },
   "diagnostics": [
-    "WINDOWS_NATIVE_EXECUTION_PENDING"
+    "NATIVE_WIN32_D3D12_TRACE_CAPTURED"
   ]
 }

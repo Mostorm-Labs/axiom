@@ -58,7 +58,7 @@ for (const scenario of applicable) {
 await writeJson(join(outputRoot, "profile.json"), profile);
 await writeJson(join(outputRoot, "summary.json"), {
   format: "axiom-platform-windows-run-summary-v1", sourceCommit,
-  implementationState: sourceCommit === "UNBOUND" ? "UNBOUND" : "WORKTREE_OR_HOST_PENDING",
+  implementationState: sourceCommit === "UNBOUND" ? "UNBOUND" : (physicalExecution ? "COMMITTED_PHYSICAL" : "WORKTREE_OR_HOST_PENDING"),
   adapter: "windows", suite: "platform-seed-v0.1", corpusDigest: corpus.digest,
   applicableCount: applicable.length, resultCount: applicable.length,
   physicalExecution, blockedReason: physicalExecution ? null : "Windows native/D3D12 execution requires a Windows runner",
@@ -74,4 +74,4 @@ async function collect(dir, relativeRoot = "") {
 }
 await collect(outputRoot);
 await writeJson(join(outputRoot, "manifest.json"), { format: "axiom-platform-windows-evidence-manifest-v1", sourceCommit, files });
-console.log(`Windows adapter evidence: ${applicable.length} applicable; physical execution pending`);
+console.log(`Windows adapter evidence: ${applicable.length} applicable; physical execution ${physicalExecution ? "captured" : "pending"}`);
