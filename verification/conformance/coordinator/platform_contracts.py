@@ -132,12 +132,30 @@ def validate_platform_scenario_references(scenario: dict) -> None:
         refs.append(("canonicalFixtureRef", canonical_ref))
 
     for step in scenario["steps"]:
-        if step["kind"] != "SEMANTIC":
-            continue
-        fixture_ref = step["action"].get("fixtureRef")
-        if not fixture_ref:
-            raise ValueError(f"platform scenario step {step['stepId']}: SEMANTIC action requires semantic fixtureRef")
-        refs.append((f"step {step['stepId']} fixtureRef", fixture_ref))
+        action = step["action"]
+        fixture_ref = None
+
+        if step["kind"] == "SEMANTIC":
+            fixture_ref = action.get("fixtureRef")
+            if not fixture_ref:
+                raise ValueError(
+                    f"platform scenario step {step['stepId']}: "
+                    "SEMANTIC action requires semantic fixtureRef"
+                )
+        elif (
+            step["kind"] == "BRIDGE"
+            and action.get("contract") == "DATA_BRIDGE"
+            and action.get("operation") == "APPLY_EXTERNAL"
+        ):
+            fixture_ref = action.get("fixtureRef")
+            if not fixture_ref:
+                raise ValueError(
+                    f"platform scenario step {step['stepId']}: "
+                    "DATA_BRIDGE APPLY_EXTERNAL requires semantic fixtureRef"
+                )
+
+        if fixture_ref:
+            refs.append((f"step {step['stepId']} fixtureRef", fixture_ref))
 
     missing = [(where, ref) for where, ref in refs if ref not in known_semantic]
     if missing:
