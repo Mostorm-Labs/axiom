@@ -1,0 +1,62 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+import "auditoryworks/axiom/v1/property.proto";
+import "auditoryworks/axiom/v1/vector_path.proto";
+import "auditoryworks/axiom/v1/erase_mask.proto";
+import "auditoryworks/axiom/v1/rich_text.proto";
+import "auditoryworks/axiom/v1/connector.proto";
+import "auditoryworks/axiom/v1/object.proto";
+
+message InsertObjectsOp { repeated ObjectRecord objects = 1; }
+message DeleteObjectsOp { repeated Id128 object_ids = 1; }
+message RestoreObjectsOp { repeated ObjectRecord objects = 1; }
+message PlacementItem { Id128 object_id = 1; Placement placement = 2; }
+message SetPlacementsOp { repeated PlacementItem items = 1; }
+message TransformItem { Id128 object_id = 1; Transform2D transform = 2; }
+message SetTransformsOp { repeated TransformItem items = 1; }
+enum PropertyPatchAction { PROPERTY_PATCH_INVALID = 0; PROPERTY_PATCH_SET = 1; PROPERTY_PATCH_CLEAR = 2; }
+message PropertyPatch { Id128 object_id = 1; uint32 field_id = 2; PropertyPatchAction action = 3; PropertyValue value = 4; }
+message PatchPropertiesOp { repeated PropertyPatch patches = 1; }
+message ObjectSizeItem { Id128 object_id = 1; double width = 2; double height = 3; }
+message SetObjectSizeOp { repeated ObjectSizeItem items = 1; }
+message SetVectorPathGeometryOp { Id128 object_id = 1; VectorPathGeometry geometry = 2; }
+message SetImageContentOp { Id128 object_id = 1; ImageContent content = 2; }
+message AddStrokeOp { ObjectRecord object = 1; }
+message StrokeSplit { Id128 source_stroke_id = 1; repeated ObjectRecord replacements = 2; }
+message SplitStrokesOp { repeated StrokeSplit splits = 1; }
+message EraseMaskAddItem { Id128 object_id = 1; repeated EraseMaskRecord masks = 2; }
+message AddEraseMasksOp { repeated EraseMaskAddItem items = 1; }
+message EraseMaskRemoveItem { Id128 object_id = 1; repeated Id128 mask_ids = 2; }
+message RemoveEraseMasksOp { repeated EraseMaskRemoveItem items = 1; }
+message EditRichTextOp { Id128 object_id = 1; RichTextDelta delta = 2; }
+message SetConnectorContentOp { Id128 object_id = 1; ConnectorContent content = 2; }
+
+message OperationPayload {
+  oneof payload {
+    InsertObjectsOp insert_objects = 1;
+    DeleteObjectsOp delete_objects = 2;
+    RestoreObjectsOp restore_objects = 3;
+    SetPlacementsOp set_placements = 4;
+    SetTransformsOp set_transforms = 5;
+    PatchPropertiesOp patch_properties = 6;
+    SetObjectSizeOp set_object_size = 7;
+    SetVectorPathGeometryOp set_vector_path_geometry = 8;
+    SetImageContentOp set_image_content = 9;
+    AddStrokeOp add_stroke = 10;
+    SplitStrokesOp split_strokes = 11;
+    AddEraseMasksOp add_erase_masks = 12;
+    RemoveEraseMasksOp remove_erase_masks = 13;
+    EditRichTextOp edit_rich_text = 14;
+    SetConnectorContentOp set_connector_content = 15;
+  }
+}
+message Operation {
+  Id128 operation_id = 1;
+  Id128 document_id = 2;
+  uint32 schema_version = 3;
+  uint32 payload_version = 4;
+  OperationPayload payload = 5;
+}
