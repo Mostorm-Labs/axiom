@@ -27,6 +27,9 @@ jobs:
           set -euo pipefail
           find verification -name '*.json' -print0 | sort -z | xargs -0 -n1 python3 -m json.tool >/dev/null
 
+      - name: Validate MR-10-01 semantic artifact contracts
+        run: python3 -m unittest discover -s verification/conformance/coordinator -p 'test_*.py' -v
+
       - name: Validate seed-v0.1 identity
         run: python3 verification/conformance/coordinator/axiom_conformance.py validate-corpus
 
