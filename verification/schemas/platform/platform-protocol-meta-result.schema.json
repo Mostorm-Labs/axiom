@@ -2,6 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:auditoryworks:axiom:verification:platform-protocol-meta-result:v1",
   "type": "object", "additionalProperties": false,
-  "required": ["format", "formatVersion", "vectorId", "status", "checks"],
-  "properties": { "format": { "const": "axiom-platform-protocol-meta-result-v1" }, "formatVersion": { "const": 1 }, "vectorId": { "type": "string" }, "status": { "enum": ["PASS", "FAIL", "REJECTED"] }, "checks": { "type": "array" } }
+  "required": ["format", "formatVersion", "vectorId", "boundaryMode", "status", "checks", "firstDivergence"],
+  "properties": { "format": { "const": "axiom-platform-protocol-meta-result-v1" }, "formatVersion": { "const": 1 }, "vectorId": { "type": "string" }, "boundaryMode": { "enum": ["IN_PROCESS", "OUT_OF_PROCESS"] }, "status": { "enum": ["PASS", "FAIL", "REJECTED"] }, "checks": { "type": "array" }, "firstDivergence": { "type": ["object", "null"] } }
 }
