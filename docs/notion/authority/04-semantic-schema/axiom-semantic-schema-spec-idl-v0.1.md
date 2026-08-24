@@ -4,123 +4,72 @@
 > Source page: https://app.notion.com/p/3c34c57a590c813fb942d2b874bd1276
 > Snapshot date: 2026-08-24
 > Source status: V1 Release Candidate Schema Lock
-> Repository status: proposed-freeze
+> Repository status: frozen
 
 ## Authority / supersession
 
-The earlier `Schema Freeze Candidate` wording is superseded for V1 by the Semantic Schema V1 Release Candidate Final Gate. Historical OPEN/review text is design history when later release authorities close or defer it.
+The earlier `Schema Freeze Candidate` wording is superseded for V1 by `Axiom Semantic Schema V1 Release Candidate Final Gate v0.1`. Historical OPEN/review text is design history where later release authorities close or defer it.
 
 This authority supersedes the old global `Transaction → operations[]` canonical mutation model. **Operation is the only canonical delta.**
 
-Semantic Schema is encoding-neutral. C++ types, TS types, and Wire IDL map from the semantic contract; Protobuf/FlatBuffers/custom encoding must not redefine the Document Model.
+Semantic Schema is encoding-neutral at the semantic-model level. The V1 concrete wire/codec release is separately frozen as **Protobuf + Axiom Canonical Protobuf**; generated protobuf structure must not redefine the Document Model.
 
 ## Core semantic invariants
 
 An Operation is one complete, deterministic, atomic, serializable, persistable, syncable, replayable semantic state mutation.
 
-Operations must:
-
-- leave the Document in a valid state after apply;
-- replay headlessly without UI/Selection/Viewport/Skia/Network;
-- describe final semantic mutation rather than gesture or renderer command;
-- exclude runtime/derived/sync lifecycle state;
-- apply idempotently for the same OperationId; same ID with different payload is protocol corruption.
+Operations must leave the Document valid after apply; replay headlessly without UI/Selection/Viewport/Skia/Network; describe final semantic mutation rather than gesture/renderer command; exclude runtime/derived/sync lifecycle state; and apply idempotently for the same OperationId. Same OperationId with a different payload is protocol corruption.
 
 Command/Intent may depend on selection/tool/viewport; Operation may not.
 
 ## Canonical vs derived
 
-Never enter canonical schema:
+Never enter canonical schema: world/visual bounds; SpatialIndex/Tile data; Skia/mesh/GPU handles; Selection/Hover/Viewport/Camera/Active Tool; Arc preview/prediction; server revision/sync/retry/local DB metadata.
 
-- world/visual bounds
-- SpatialIndex records, Tile IDs/generations
-- SkPath/SkPaint/SkImage/mesh/GPU handles
-- Selection/Hover/Viewport/Camera/Active Tool
-- Arc Preview/predicted tail/PreviewRevision
-- server revision/sync state/retry state/local DB row ID
-
-## Six frozen schema boundaries
+## Frozen schema boundaries
 
 ### ObjectRecord
 
-Complete canonical state of one Semantic Document object:
-
-`ObjectId + ObjectKindId + KindVersion + Placement + Transform2D + PropertyBag + ObjectContent + EraseMasks[]`.
-
-Placement, Transform, Content, and EraseMask are not generic properties.
+Complete canonical state of one Semantic Document object: `ObjectId + ObjectKindId + KindVersion + Placement + Transform2D + PropertyBag + ObjectContent + EraseMasks[]`. Placement, Transform, Content and EraseMask are not generic properties.
 
 ### FieldId + PropertyValue
 
-FieldId is only for small, stable, independently patchable semantic properties such as visibility, locked, opacity, fill, stroke style, blend mode. Placement, Transform, ObjectKind, Stroke/Path geometry, RichText, and EraseMask are not fields. Published FieldIds are permanent; retired IDs are reserved and never reused.
+Only small stable independently patchable semantic properties. Placement, Transform, ObjectKind, Stroke/Path geometry, RichText and EraseMask are not fields. Published FieldIds are permanent; retired IDs are reserved.
 
 ### Placement
 
-`parentId + orderKey` is one atomic structural value. Reparent and reorder are represented by `SetPlacements`, not independent SetParent/SetZOrder operations.
+`parentId + orderKey` is one atomic structural value. Reparent/reorder use `SetPlacements`.
 
 ### StrokeRecord
 
-Renderer-neutral canonical stroke content: `BrushDescriptor + deterministicSeed + VectorStrokeData | DabStrokeData`. ObjectId/Placement/Transform remain in ObjectRecord. Preview, prediction, SkPath, mesh, StrokeChunk, Tile, and GPU buffers are derived.
+Renderer-neutral canonical stroke content: BrushDescriptor + deterministic seed + VectorStrokeData or DabStrokeData. Preview/prediction/SkPath/mesh/StrokeChunk/Tile/GPU data are derived.
 
 ### RichTextDelta
 
-One committed RichText semantic mutation. It may contain internal steps such as InsertText/DeleteText/SplitParagraph/MergeParagraph/SetInlineStyle/SetParagraphStyle, but these steps do not recreate a global Transaction layer. Caret/selection/focus/IME intermediate composition are non-canonical.
+One committed RichText semantic mutation. Internal RichText steps do not recreate a global Transaction layer. Caret/selection/focus/IME intermediate composition are non-canonical.
 
 ### EraseMaskGeometry
 
-Object-local, renderer-neutral canonical erase region. Runtime may compile it to vector clip, R8 texture, sparse mask tiles, etc.; those representations never change Document schema.
+Object-local renderer-neutral canonical erase region. Runtime compilation is derived.
 
 ## Common primitive rules
 
-Stable IDs are opaque 128-bit identities: DocumentId, ObjectId, OperationId, ResourceId, EraseMaskId, ParagraphId. They are client-generatable offline, stable forever, and independent of server round-trip. Generation algorithm is not frozen.
-
-Canonical numeric direction:
-
-- geometry/position/transform/size: f64;
-- normalized appearance coefficients: f32;
-- NaN/Infinity forbidden;
-- `-0` canonicalized to `+0`;
-- explicit rotation uses radians;
-- color channels use `[0,1]`.
-
-`OrderKey` is opaque bytes compared by unsigned-byte lexicographic order. Generation algorithm is outside protocol contract.
+Stable IDs are opaque 128-bit identities. Canonical numeric rules reject NaN/Infinity, canonicalize `-0` to `+0`, use released precision/ranges, and use radians for explicit rotation. `OrderKey` is opaque bytes compared by unsigned-byte lexicographic order.
 
 ## Operation envelope
 
-Conceptually:
+Conceptually contains OperationId, DocumentId, schemaVersion, payloadVersion and OperationPayload. Server revision/local sequence/sync/retry/transport metadata belongs to Shared TS Data Runtime.
 
-- operationId: OperationId
-- documentId: DocumentId
-- schemaVersion: u32
-- payloadVersion: u32
-- payload: OperationPayload
+## V1 Operation vocabulary — release reconciliation
 
-Server revision, local sequence, sync state, retry count, and transport request ID belong to Shared TS Data Runtime envelopes, not canonical Operation.
+The early version of this overview listed 12 operations. The ObjectContent/Field review found three mutation-coverage gaps; downstream Operation Payload, Reference IDL and Generated Proto authorities close them. **The released V1 vocabulary contains 15 Operation kinds, with OperationPayload oneof tags 1..15.**
 
-## V1 Operation vocabulary
-
-1. `InsertObjects`
-2. `DeleteObjects`
-3. `RestoreObjects`
-4. `SetPlacements`
-5. `SetTransforms`
-6. `PatchProperties`
-7. `SetVectorPathGeometry`
-8. `AddStroke`
-9. `SplitStrokes`
-10. `AddEraseMasks`
-11. `RemoveEraseMasks`
-12. `EditRichText`
-
-Resource upload/binary lifecycle is not a V1 canonical Operation; objects reference stable ResourceId/BlobRef.
+Therefore implementation MUST consume the exact 15-kind table from `02-operation-model/operation-payload-validation-v0.1.md` plus `04-reference-idl/reference-idl-codec-mapping-v0.1.md` / generated proto. The historical 12-item list is not implementation authority.
 
 ## Release reconciliation
 
-Later release authorities override historical draft text inside this spec. Current release reconciliation includes dedicated Shape, Image, RichText font, Stroke/Brush, RichText wire, Reference IDL, and conformance authorities. The repository migration must preserve those as separate authority snapshots rather than silently folding them into this overview.
+Later release authorities override historical draft text inside this overview. Current release set includes ObjectContent/Field Registry, Shape, Image, Connector, Brush/Stroke, BrushFamily/interpreter, Pressure/Tilt, RichText wire/font, Common Wire, OrderKey, Reference IDL, Generated Proto/Canonical Codec, and Semantic Hard Limits.
 
-## Remaining implementation-facing rule
+## Implementation-facing rule
 
-Runtime/Render/Sync structures are derived or lifecycle state and may evolve independently. Any implementation contradiction with this schema must be raised as an architecture blocker and resolved through refreeze rather than by silently changing the authority in code.
-
-## Migration note
-
-This snapshot is marked `proposed-freeze`, not `frozen`, until its release-authority dependency set is migrated and reconciled in the repository manifest.
+Runtime/Render/Sync structures are derived/lifecycle state and may evolve independently. Any implementation contradiction with this locked schema must be raised as an architecture blocker and resolved through refreeze rather than silently changing authority in code.
