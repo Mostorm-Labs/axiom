@@ -3,7 +3,7 @@
 > Audit date: 2026-08-24
 > Branch: `docs/notion-bridge-bootstrap`
 > Layer: `10-verification`
-> Status: **CORE SIX MATERIALIZED / TARGETED LOCAL VALIDATION PASS / CI EVIDENCE PENDING**
+> Status: **CLOSED — CORE SIX MATERIALIZED / CI VERIFIED**
 
 ## 1. Purpose
 
@@ -36,12 +36,12 @@ All 10-07 through 10-12 source pages remain Freeze Candidate. 08 uses its own `A
 
 | Contract | Primary source owner | 08 dependency | Status |
 |---|---|---|---|
-| `platform-suite` | 10-09 correction | scenario authority only | **MATERIALIZED** |
-| `platform-scenario` | 10-08 + 10-09 correction | references 08 invariants; no physical winner | **MATERIALIZED** |
-| `platform-profile` | 10-08 | OPEN realization stays metadata | **MATERIALIZED** |
-| `platform-trace` | 10-08 + 10-09 event correction | normalized observable vocabulary only | **MATERIALIZED** |
-| `platform-observation` | 10-08 | fact-only evidence; realization may differ | **MATERIALIZED** |
-| `platform-result` | 10-08 | evaluates scenario authority, not OPEN realization | **MATERIALIZED** |
+| `platform-suite` | 10-09 correction | scenario authority only | **MATERIALIZED + VERIFIED** |
+| `platform-scenario` | 10-08 + 10-09 correction | references 08 invariants; no physical winner | **MATERIALIZED + VERIFIED** |
+| `platform-profile` | 10-08 | OPEN realization stays metadata | **MATERIALIZED + VERIFIED** |
+| `platform-trace` | 10-08 + 10-09 event correction | normalized observable vocabulary only | **MATERIALIZED + VERIFIED** |
+| `platform-observation` | 10-08 | fact-only evidence; realization may differ | **MATERIALIZED + VERIFIED** |
+| `platform-result` | 10-08 | evaluates scenario authority, not OPEN realization | **MATERIALIZED + VERIFIED** |
 
 Repository files:
 
@@ -79,7 +79,7 @@ A regression test explicitly confirms that arbitrary profile-local experimental 
 
 These are refinements, not architecture conflicts.
 
-## 6. Machine-readable rules now represented
+## 6. Machine-readable rules represented
 
 The materialized schemas/validator preserve at minimum:
 
@@ -99,7 +99,7 @@ The materialized schemas/validator preserve at minimum:
 
 ## 7. Semantic validation layer materialized
 
-`verification/conformance/coordinator/platform_contracts.py` now owns the minimal MR-10-04 semantic-validator boundary rather than expanding the semantic coordinator into a platform runtime.
+`verification/conformance/coordinator/platform_contracts.py` owns the minimal MR-10-04 semantic-validator boundary rather than expanding the semantic coordinator into a platform runtime.
 
 Materialized checks include:
 
@@ -119,7 +119,7 @@ The validator deliberately does **not** enum-freeze `PlatformProfile.realization
 
 ## 8. Meta-contract tests materialized
 
-`verification/conformance/coordinator/test_platform_machine_contracts.py` now covers the MR-10-04 self-test layer needed before platform corpus materialization, including:
+`verification/conformance/coordinator/test_platform_machine_contracts.py` covers the MR-10-04 self-test layer needed before platform corpus materialization, including:
 
 ```text
 core-six schema inventory
@@ -162,22 +162,33 @@ platform-protocol-meta-result
 
 Those support the 56-vector protocol trusted root and belong MR-10-05 / a subordinate harness-protocol closure. They are not aliases for the core six.
 
-## 10. Validation evidence
+## 10. Verification evidence
 
 TDD evidence retained:
 
 - initial test-first commit: `a6b49c09f3e0613ecabd0930e2b3f0db00717239`;
 - local RED reproduced: `test_core_six_platform_schemas_are_materialized` failed specifically because `platform-suite.schema.json` did not exist;
 - six schema files were then materialized;
-- targeted local GREEN subsequently exercised schema inventory, a valid PlatformScenario/PlatformTrace and the MR-10-04 negative policy checks, ending with `MR-10-04 meta-contract targeted suite: PASS`.
+- targeted local GREEN exercised schema inventory, a valid PlatformScenario/PlatformTrace and the MR-10-04 negative policy checks.
 
-The GitHub workflow already discovers all `test_*.py`. `.github/workflows/conformance-seed-v1.yml` was relabeled so the same step clearly covers Verification artifact contracts rather than only MR-10-01.
+Final CI evidence:
 
-This targeted local evidence is **not** substituted for the full GitHub Actions run.
+- GitHub Actions run: `https://github.com/Mostorm-Labs/axiom/actions/runs/32742201698`
+- workflow: `Axiom V1 Conformance Seed Bootstrap`
+- run number: `35`
+- head branch: `docs/notion-bridge-bootstrap`
+- head commit: `9d408191a760a2f769015b355b9cd67347f512a7`
+- run status: `completed`
+- run conclusion: `success`
+- job `validate-seed-contract`: `success`
+- step `Validate verification artifact contracts`: `success`
+- JSON syntax, frozen descriptor compilation, 60 seed identity, bootstrap adapter safety, fail-closed run and whitespace verification: all `success`.
+
+This is the final evidence required to close MR-10-04.
 
 ## 11. Explicitly out of MR-10-04
 
-Still downstream:
+Downstream scope remains:
 
 - full `platform-run.json` environment/device-farm schema;
 - concrete browser/Windows SKU/Android OEM/Apple device matrix;
@@ -191,28 +202,22 @@ Still downstream:
 - deterministic fault implementation hooks;
 - cross-artifact fixture discovery and actual partial-order comparison execution.
 
-## 12. Current exit status
+## 12. Closure verdict
 
-Authority reconciliation: **complete**.
+**MR-10-04 — CLOSED.**
 
-Core six schema materialization: **complete as repo artifacts**.
-
-Minimal semantic validator/meta-test materialization: **complete as repo artifacts**.
-
-Targeted local validation: **PASS**.
-
-Full GitHub Actions evidence: **PENDING / not observable through the current connector's push-run query path**.
-
-Therefore MR-10-04 is **not yet recorded CLOSED**. Final transition remains:
+Exit criteria are all satisfied:
 
 ```text
-current repo materialization
-    ↓
-full conformance-seed-v1 GitHub Actions green
-    ↓
-record run URL / commit evidence
-    ↓
-MR-10-04 CLOSED
+Authority reconciliation                    PASS
+Core six Draft 2020-12 schemas              MATERIALIZED
+Platform semantic-validator boundary         MATERIALIZED
+Source-defined schema/meta-contract tests    MATERIALIZED
+Targeted RED/GREEN evidence                  PASS
+Full GitHub Actions CI                       PASS — run 32742201698
+08 OPEN realization preserved as OPEN        PASS
 ```
 
-Any future change that would enum-freeze an 08 OPEN physical winner is an authority blocker and must return to 08 rather than be invented in Verification.
+Source authority remains Freeze Candidate / `proposed-freeze`; this machine-readable closure does not promote 08 or 10 architecture status.
+
+The next closure is **MR-10-05 — Platform Corpus / Harness Materialization**.
