@@ -3,16 +3,15 @@
 这是 G0 验证基础的受控工作区。它是验证工具、语料和 Evidence 的仓库边界，不是
 Axiom 产品 Runtime，也不是产品公共 ABI。
 
-## 当前任务边界
+## 当前实现边界
 
-`GT-G0-01` 只建立 TypeScript workspace、目录 ownership、workspace manifest、13 份
-Platform/Protocol schema 及合法 fixture，以及静态校验器。
-下列内容由后续任务负责，本轮不提前实现：
+`GT-G0-01..07` 已依次建立 TypeScript workspace、目录 ownership、workspace manifest、13 份
+Platform/Protocol schema、协议包、Reference Runner、scripted adapter/transport、56 条 protocol
+vectors，以及共享 CLI 与 protocol CI gate。任务状态和 commit-bound Evidence 以
+`docs/planning/GATE_TASK_TRACKER.md` 为准。
 
-- `GT-G0-02`：protocol package、envelope codec 和 typed semantic parse；
-- `GT-G0-03..05`：runner、transport、fault/fence 行为；
-- `GT-G0-06`：56 个 protocol vectors；
-- `GT-G0-07`：共享 CLI 和 CI gate；
+下列内容仍由后续任务负责，不由共享 CLI 的存在提前声明完成：
+
 - `GT-G0-08..13`：native/platform adapters 与平台场景；
 - `GT-G0-14..16`：CI wiring、Gate Report schema 和 aggregator。
 

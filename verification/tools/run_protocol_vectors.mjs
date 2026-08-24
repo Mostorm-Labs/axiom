@@ -12,6 +12,9 @@ const suite = JSON.parse(await readFile(resolve(root, "platform/protocol/v1/suit
 const evidenceRoot = process.env.AXIOM_PROTOCOL_EVIDENCE_ROOT ? resolve(process.env.AXIOM_PROTOCOL_EVIDENCE_ROOT) : resolve(root, "evidence/g0/gt-g0-06");
 const outputRoot = resolve(evidenceRoot, "protocol-meta-results");
 const mutation = process.env.AXIOM_PROTOCOL_MUTATION ?? "";
+const evidenceMutation = process.env.AXIOM_PROTOCOL_EVIDENCE_MUTATION ?? "";
+const boundaries = (process.env.AXIOM_PROTOCOL_BOUNDARIES ?? "IN_PROCESS,OUT_OF_PROCESS").split(",").filter(Boolean);
+if (boundaries.some((value) => !["IN_PROCESS","OUT_OF_PROCESS"].includes(value))) throw new Error("unsupported boundary mode");
 const source = asSourceId("source:touch");
 const error = (fn) => { try { fn(); return null; } catch (value) { return value; } };
 
@@ -68,5 +71,5 @@ function execute(vector, boundary) {
 }
 
 const results=[];
-for (const ref of suite.vectorRefs) { const vector=JSON.parse(await readFile(resolve(root, ref.replace(/^verification\//,"")), "utf8")); for (const boundary of vector.input.boundaryModes) { const result=execute(vector,boundary); results.push(result); const target=resolve(outputRoot, boundary, `${vector.id}.json`); await mkdir(dirname(target), {recursive:true}); await writeFile(target, `${JSON.stringify(result)}\n`); } }
-const lines=results.map((r)=>JSON.stringify(r)).join("\n")+"\n"; const manifest={format:"axiom-platform-protocol-corpus-integrity-v1",suiteId:suite.id,resultCount:results.length,sha256:createHash("sha256").update(lines).digest("hex"),results:results.map((r)=>({vectorId:r.vectorId,boundaryMode:r.boundaryMode,status:r.status}))}; await mkdir(evidenceRoot,{recursive:true}); await writeFile(resolve(evidenceRoot,"corpus-integrity.json"),`${JSON.stringify(manifest)}\n`); if(results.some((r)=>r.status === "FAIL")) process.exitCode=1; console.log(`protocol vector execution: ${results.filter((r)=>r.status !== "FAIL").length}/${results.length} passed`);
+for (const ref of suite.vectorRefs) { const vector=JSON.parse(await readFile(resolve(root, ref.replace(/^verification\//,"")), "utf8")); for (const boundary of vector.input.boundaryModes.filter((value)=>boundaries.includes(value))) { const result=execute(vector,boundary); results.push(result); const target=resolve(outputRoot, boundary, `${vector.id}.json`); await mkdir(dirname(target), {recursive:true}); await writeFile(target, `${JSON.stringify(result)}\n`); } }
+const lines=results.map((r)=>JSON.stringify(r)).join("\n")+"\n"; const manifest={format:"axiom-platform-protocol-corpus-integrity-v1",suiteId:suite.id,resultCount:results.length,sha256:createHash("sha256").update(lines).digest("hex"),results:results.map((r)=>({vectorId:r.vectorId,boundaryMode:r.boundaryMode,status:r.status}))}; await mkdir(evidenceRoot,{recursive:true}); if(evidenceMutation !== "missing-integrity") await writeFile(resolve(evidenceRoot,"corpus-integrity.json"),`${JSON.stringify(manifest)}\n`); if(results.some((r)=>r.status === "FAIL")) process.exitCode=1; console.log(`protocol vector execution: ${results.filter((r)=>r.status !== "FAIL").length}/${results.length} passed`);

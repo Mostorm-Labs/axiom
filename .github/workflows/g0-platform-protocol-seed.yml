@@ -1,0 +1,56 @@
+name: G0 Platform Protocol Seed
+
+on:
+  pull_request:
+    paths:
+      - "verification/**"
+      - ".github/workflows/g0-platform-protocol-seed.yml"
+  push:
+    branches: [main]
+    paths:
+      - "verification/**"
+      - ".github/workflows/g0-platform-protocol-seed.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: g0-platform-protocol-seed-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform-protocol-seed:
+    name: platform/protocol-seed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Build verification workspace
+        working-directory: verification
+        run: npm run build
+      - name: Validate schema and corpus
+        working-directory: verification
+        run: npm exec -- axiom-platform-conformance validate
+      - name: Validate workspace ownership and determinism
+        run: python3 verification/tools/validate_workspace.py
+      - name: Execute protocol seed on both boundaries
+        working-directory: verification
+        run: npm exec -- axiom-platform-conformance protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output evidence-ci/platform-protocol-seed
+      - name: Assert versioned corpus remained read-only
+        run: git diff --exit-code -- verification/platform/protocol/v1
+      - name: Upload protocol evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g0-platform-protocol-seed-${{ github.sha }}
+          path: verification/evidence-ci/platform-protocol-seed
+          if-no-files-found: error
+          retention-days: 14
+      - name: Check documentation whitespace
+        run: git diff --check

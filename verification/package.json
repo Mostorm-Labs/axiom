@@ -3,8 +3,14 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": ["packages/*"],
+  "bin": {
+    "axiom-platform-conformance": "packages/platform-conformance-cli/dist/main.js"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
+    "@types/node": "24.0.0",
     "typescript": "7.0.2"
   },
   "scripts": {
