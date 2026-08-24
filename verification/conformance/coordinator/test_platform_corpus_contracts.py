@@ -11,37 +11,15 @@ import platform_contracts as pc
 
 
 PLATFORM_SEED_IDS = [
-    "PLAT-CREATE-CANVAS-001",
-    "PLAT-HOST-ATTACH-001",
-    "PLAT-DOCUMENT-ATTACH-001",
-    "PLAT-CANONICAL-REPLAY-001",
-    "PLAT-METRICS-RESIZE-001",
-    "PLAT-METRICS-DPI-SCALE-001",
-    "PLAT-METRICS-ORIENTATION-001",
-    "PLAT-VISIBILITY-001",
-    "PLAT-APP-BACKGROUND-001",
-    "PLAT-APP-FOREGROUND-001",
-    "PLAT-CANVAS-SUSPEND-001",
-    "PLAT-CANVAS-RESUME-001",
-    "PLAT-SURFACE-LOST-001",
-    "PLAT-SURFACE-REBIND-001",
-    "PLAT-STALE-GENERATION-REJECT-001",
-    "PLAT-DEVICE-LOST-001",
-    "PLAT-DEVICE-RECOVER-001",
-    "PLAT-HOST-DETACH-REATTACH-001",
-    "PLAT-DATABRIDGE-NO-ECHO-001",
-    "PLAT-CALLBACK-NONREENTRANT-001",
-    "PLAT-INPUT-BATCH-NORMALIZED-001",
-    "PLAT-INPUT-HOTPATH-001",
-    "PLAT-ARC-PREVIEW-FALLBACK-001",
-    "PLAT-ARC-CANONICAL-HANDOFF-001",
-    "PLAT-SURFACE-OWNERSHIP-001",
-    "PLAT-DESTROY-CANVAS-001",
-    "PLAT-DESTROY-STALE-WORK-001",
-    "PLAT-RECOVERY-REPEATED-001",
+    "PLAT-CREATE-CANVAS-001", "PLAT-HOST-ATTACH-001", "PLAT-DOCUMENT-ATTACH-001", "PLAT-CANONICAL-REPLAY-001",
+    "PLAT-METRICS-RESIZE-001", "PLAT-METRICS-DPI-SCALE-001", "PLAT-METRICS-ORIENTATION-001", "PLAT-VISIBILITY-001",
+    "PLAT-APP-BACKGROUND-001", "PLAT-APP-FOREGROUND-001", "PLAT-CANVAS-SUSPEND-001", "PLAT-CANVAS-RESUME-001",
+    "PLAT-SURFACE-LOST-001", "PLAT-SURFACE-REBIND-001", "PLAT-STALE-GENERATION-REJECT-001", "PLAT-DEVICE-LOST-001",
+    "PLAT-DEVICE-RECOVER-001", "PLAT-HOST-DETACH-REATTACH-001", "PLAT-DATABRIDGE-NO-ECHO-001", "PLAT-CALLBACK-NONREENTRANT-001",
+    "PLAT-INPUT-BATCH-NORMALIZED-001", "PLAT-INPUT-HOTPATH-001", "PLAT-ARC-PREVIEW-FALLBACK-001", "PLAT-ARC-CANONICAL-HANDOFF-001",
+    "PLAT-SURFACE-OWNERSHIP-001", "PLAT-DESTROY-CANVAS-001", "PLAT-DESTROY-STALE-WORK-001", "PLAT-RECOVERY-REPEATED-001",
 ]
 
-# Exact status/requirement ownership copied from 10-09 Seed Scenario Matrix.
 SCENARIO_AUTHORITY = {
     "PLAT-CREATE-CANVAS-001": ("SPEC_REQUIREMENT", ["PC-I02", "VER-20"], "ALL"),
     "PLAT-HOST-ATTACH-001": ("SPEC_REQUIREMENT", ["PC-I02"], "ALL"),
@@ -83,23 +61,12 @@ class PlatformCorpusContractTests(unittest.TestCase):
 
     def scenario(self):
         return {
-            "format": "axiom-platform-scenario-v1",
-            "formatVersion": 1,
-            "id": "PLAT-CANONICAL-REPLAY-001",
-            "requirementStatus": "SPEC_REQUIREMENT",
-            "requirementIds": ["PC-I01", "VER-07"],
+            "format": "axiom-platform-scenario-v1", "formatVersion": 1, "id": "PLAT-CANONICAL-REPLAY-001",
+            "requirementStatus": "SPEC_REQUIREMENT", "requirementIds": ["PC-I01", "VER-07"],
             "authorityRefs": ["https://app.notion.com/p/3c44c57a590c8196ac7acd5215dcbf1d"],
             "canonicalFixtureRef": "REPLAY-MIXED-OPERATIONS-001",
             "targets": [{"platformFamily": "WEB", "policy": "REQUIRED", "requiredCapabilities": ["semantic.projection.capture"]}],
-            "preconditions": {
-                "appState": "FOREGROUND",
-                "canvasState": "NOT_CREATED",
-                "hostState": "DETACHED",
-                "documentState": "AVAILABLE",
-                "surfaceState": "UNBOUND",
-                "deviceState": "READY",
-                "arcPreviewMode": "DISABLED",
-            },
+            "preconditions": {"appState": "FOREGROUND", "canvasState": "NOT_CREATED", "hostState": "DETACHED", "documentState": "AVAILABLE", "surfaceState": "UNBOUND", "deviceState": "READY", "arcPreviewMode": "DISABLED"},
             "steps": [{"stepId": "s01", "kind": "SEMANTIC", "action": {"operation": "REPLAY_CANONICAL_FIXTURE", "fixtureRef": "REPLAY-MIXED-OPERATIONS-001"}, "completion": {"mode": "WAIT_FOR_ACTION_COMPLETION"}}],
             "expected": {"requiredEvents": [{"id": "evt-running", "selector": {"traceKind": "LIFECYCLE", "event": "CANVAS_RUNNING", "occurrence": "ANY"}, "minCount": 1}], "forbiddenEvents": [], "partialOrder": [], "stateAssertions": [], "openObservations": []},
             "capture": {"lifecycleTrace": True, "surfaceTrace": False, "bridgeTrace": False, "semanticCheckpoints": [], "stateCheckpoints": [], "ownershipSnapshot": False},
@@ -124,8 +91,7 @@ class PlatformCorpusContractTests(unittest.TestCase):
         self.assertEqual(len(set(suite["scenarios"])), 28)
 
     def test_phase_b_all_28_scenario_bodies_are_materialized_and_valid(self):
-        suite = self._load_suite()
-        for scenario_id in suite["scenarios"]:
+        for scenario_id in self._load_suite()["scenarios"]:
             scenario = self._load_materialized_scenario(scenario_id)
             self.assertEqual(scenario["id"], scenario_id)
             pc.validate_platform_scenario_semantics(scenario)
@@ -153,18 +119,14 @@ class PlatformCorpusContractTests(unittest.TestCase):
                 self.assertTrue(all("arc.preview" in t["requiredCapabilities"] for t in targets.values()), scenario_id)
 
     def test_phase_b_has_one_shared_scenario_body_per_id_and_no_platform_authority_variants(self):
-        root = self.scenarios_root()
-        variants = sorted(root.glob("*/scenario.*.json")) if root.exists() else []
+        variants = sorted(self.scenarios_root().glob("*/scenario.*.json")) if self.scenarios_root().exists() else []
         self.assertEqual(variants, [], f"platform-specific scenario authority variants are forbidden: {variants}")
 
     def test_phase_b_common_running_scenarios_do_not_hide_runtime_bootstrap(self):
-        # 10-09 PSS-04: scenarios authored from a running canvas must explicitly create/attach/replay.
-        running_ids = PLATFORM_SEED_IDS[3:]  # Foundation 01-03 are explicitly special-cased by 10-09.
-        for scenario_id in running_ids:
+        for scenario_id in PLATFORM_SEED_IDS[3:]:
             scenario = self._load_materialized_scenario(scenario_id)
             operations = [step.get("action", {}).get("operation") for step in scenario["steps"]]
             if scenario_id in {"PLAT-DATABRIDGE-NO-ECHO-001", "PLAT-INPUT-BATCH-NORMALIZED-001"}:
-                # These recipes are authority-defined special paths and are not required to begin from Running Canvas.
                 continue
             self.assertIn("CREATE_CANVAS", operations, scenario_id)
             self.assertIn("ATTACH_HOST", operations, scenario_id)
@@ -172,26 +134,31 @@ class PlatformCorpusContractTests(unittest.TestCase):
             self.assertIn("REPLAY_CANONICAL_FIXTURE", operations, scenario_id)
 
     def test_semantic_case_namespace_contains_seed_references_used_by_platform_authority(self):
-        self.assertTrue(hasattr(pc, "semantic_case_ids"), "semantic_case_ids resolver must exist")
         ids = pc.semantic_case_ids()
         self.assertIn("REPLAY-MIXED-OPERATIONS-001", ids)
         self.assertIn("OP-SETTRANSFORMS-VALID-001", ids)
 
     def test_meta_platform_scenario_missing_fixture_reject(self):
-        self.assertTrue(hasattr(pc, "validate_platform_scenario_references"), "platform reference validator must exist")
-        scenario = self.scenario()
-        scenario["canonicalFixtureRef"] = "MISSING-SEMANTIC-FIXTURE-001"
+        scenario = self.scenario(); scenario["canonicalFixtureRef"] = "MISSING-SEMANTIC-FIXTURE-001"
         with self.assertRaisesRegex(ValueError, "semantic fixture"):
             pc.validate_platform_scenario_references(scenario)
 
     def test_known_canonical_fixture_reference_passes(self):
-        self.assertTrue(hasattr(pc, "validate_platform_scenario_references"), "platform reference validator must exist")
         pc.validate_platform_scenario_references(self.scenario())
 
     def test_missing_semantic_step_fixture_rejects_even_when_canonical_fixture_exists(self):
-        self.assertTrue(hasattr(pc, "validate_platform_scenario_references"), "platform reference validator must exist")
         scenario = copy.deepcopy(self.scenario())
         scenario["steps"][0]["action"]["fixtureRef"] = "MISSING-STEP-FIXTURE-001"
+        with self.assertRaisesRegex(ValueError, "semantic fixture"):
+            pc.validate_platform_scenario_references(scenario)
+
+    def test_missing_databridge_apply_external_fixture_rejects(self):
+        scenario = copy.deepcopy(self.scenario())
+        scenario["steps"] = [{
+            "stepId": "s01", "kind": "BRIDGE",
+            "action": {"contract": "DATA_BRIDGE", "operation": "APPLY_EXTERNAL", "correlationId": "bridge-apply-01", "fixtureRef": "MISSING-BRIDGE-FIXTURE-001"},
+            "completion": {"mode": "WAIT_FOR_ACTION_COMPLETION"},
+        }]
         with self.assertRaisesRegex(ValueError, "semantic fixture"):
             pc.validate_platform_scenario_references(scenario)
 
