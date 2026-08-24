@@ -40,13 +40,13 @@ The `10-xx` labels above are a stable local reading order for the migration set.
 - Test harnesses prove runtime authority; they do not redefine it.
 - Agreement among implementations cannot override a mismatch against a trusted golden.
 
-## 04 / 07 authority intake
+## 04 / 07 / 08 authority intake
 
-10 consumes, but does not redefine, the frozen Semantic Schema / Operation Model in `../04-semantic-schema/` and runtime-data-flow contracts in `../07-runtime-data-flow/`.
+10 consumes, but does not redefine, the frozen Semantic Schema / Operation Model in `../04-semantic-schema/`, runtime-data-flow contracts in `../07-runtime-data-flow/`, or physical platform ownership/realization decisions in `../08-platform-contract/`.
 
-Priority evidence inherited from 07 Final Closure includes semantic apply/idempotency, identity namespace separation, Incremental vs Full RuntimeScene equivalence, persist-first crash windows, LocalRecoveryClosure, external no-echo, missing resource closure, active-session conflict / multi-op compensation, PresentedFeedback / stale-generation / canonical-coverage behavior, lifecycle late-event rejection and performance candidates.
+Priority evidence inherited from 07 includes semantic apply/idempotency, identity namespace separation, Incremental vs Full RuntimeScene equivalence, persist-first crash windows, LocalRecoveryClosure, external no-echo, missing-resource closure, active-session conflict / multi-op compensation, PresentedFeedback / stale-generation / canonical-coverage behavior and lifecycle late-event rejection.
 
-PlatformQualified presentation proof must ensure `PresentSubmitted`, `Approximate`, stale `SurfaceGeneration` / `MetricsGeneration`, or stale coverage cannot emit `CanonicalVisible(token)`; only qualified evidence with valid coverage may produce the exactly-once canonical-visible handoff.
+08 continues to own Accepted / Current Direction / Proposal / OPEN physical realization choices such as Surface primitive/backend/thread/process topology. Verification may encode those as profile/observation evidence but cannot select a winner.
 
 ## Machine-readable / executable closure map
 
@@ -54,46 +54,50 @@ PlatformQualified presentation proof must ensure `PresentSubmitted`, `Approximat
 
 **MR-10-01 — Semantic Artifact Schema Closure — CLOSED (owner accepted, 2026-08-24).**
 
-Materialized and wired:
+Materialized semantic artifact schemas, real Draft 2020-12 validation, frozen-IDL descriptor validation and fail-closed meta-tests. The formerly separate IDL-aware projection item is **SUBSUMED / CLOSED BY MR-10-01**.
 
-- `verification/schemas/{corpus,suite,case,projection,observation,result,run}.schema.json`
-- real JSON Schema Draft 2020-12 validation via `jsonschema.Draft202012Validator`
-- frozen Axiom V1 descriptor compilation and SHA-256 verification in CI
-- descriptor-backed `rootType` resolution
-- IDL-aware message/scalar/enum/repeated/oneof validation
-- canonical tagged scalar validation for f32/f64/i64/u64/bytes plus Id128 / OrderKey projection representations
-- schema-backed `ImplementationObservation` / `ConformanceResult` validation
-- fail-closed meta-tests in `verification/conformance/coordinator/test_semantic_artifact_contracts.py`
-
-The earlier audit item **MR-10-02 — IDL-aware projection validation** was implemented as part of MR-10-01. It is **SUBSUMED / CLOSED BY MR-10-01** and must not be reimplemented as a parallel validator.
-
-### Current closure
+### Evidence pending
 
 **MR-10-03 — First-Divergence Result Lock — AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING.**
 
 Primary audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
 
-MR-10-03 is intentionally an authority/schema lock, not premature implementation of the full conformance engine. The following source-owned contracts are now repo-local at implementation-useful fidelity:
+The repo now preserves runner/replay localization behavior, current `DivergenceRecord v1`, GOLDEN vs CROSS_IMPLEMENTATION basis, semantic-path grammar, byte-offset/location constraints and deterministic comparison order. Full comparator/runtime execution remains a later implementation package.
 
-- 10-02: fixed semantic-stage order, replay checkpoints, `--stop-after-operation`, long-replay binary-search localization;
-- 10-03: `diagnose --first-divergence`, compare-without-rerun behavior and deterministic diagnostic expectation;
-- 10-04: current `DivergenceRecord v1`, GOLDEN vs CROSS_IMPLEMENTATION basis, location fields, Semantic Path Grammar v1 and first-divergence comparator order;
-- 10-06: failure/observation evidence retention and deterministic-repeat expectations.
+### Current closure
 
-The old Runner `expectedArtifact / actualArtifacts` example is explicitly superseded at the result-shape layer by 10-04 `basis + reference? + observed[]`. 10-02 still owns runner/replay behavior.
+**MR-10-04 — Platform Machine Contract Set — AUTHORITY RECONCILIATION COMPLETE / CORE SIX READY FOR MATERIALIZATION.**
 
-`verification/schemas/result.schema.json` now machine-locks the structural portion of that source contract, including basis/reference rules, cross-implementation participant count, operation location pairing, semantic-path grammar and byte-offset kind constraints. Meta-tests cover those rules.
+Primary audit: `docs/notion/audits/mr-10-04-platform-machine-contract-set-v0.1.md`.
 
-**Not part of MR-10-03 migration closure:** implementing recursive semantic diff across every Axiom type, materializing all 60 fixtures/adapters, or building production replay bisection. Those belong to later Codex implementation packages after authority closure.
+Core set:
 
-### Remaining after MR-10-03
+```text
+platform-suite
+platform-scenario
+platform-profile
+platform-trace
+platform-observation
+platform-result
+```
 
-1. Platform verification schemas required by 10-08: `platform-suite`, `platform-scenario`, `platform-profile`, `platform-trace`, `platform-observation`, `platform-result`.
-2. `verification/platform/v1/` seed suite + scenario corpus and platform harness adapters / normalized trace contracts from 10-09 through 10-12.
-3. CI lock/governance binding machine contracts to proposed-freeze authority without allowing implementation behavior to become specification.
+Authority reconciliation result:
+
+- 10-08 supplies the field-level base contract;
+- 10-09 supplies later corrections for the suite manifest, Arc preview-clear trace vocabulary and seed-required capabilities;
+- 08 OPEN physical realization does **not** block schema materialization because physical backend/surface/bridge/topology values remain `PlatformProfile.realization` / `openObservations` metadata rather than expected winners;
+- 10-10/10-11 execution-protocol schemas are a separate harness/protocol trusted-root layer and are not merged into the core six.
+
+Next MR-10-04 substep is six Draft 2020-12 schema files + source-defined structural/semantic meta-contract tests + CI lock.
+
+### Remaining after MR-10-04
+
+1. Platform corpus / harness materialization: `verification/platform/v1/`, 28 stable scenarios, four adapters, normalized trace artifacts and deterministic fault hooks.
+2. Harness protocol trusted root: execution-protocol schemas + 56 protocol vectors + reference runner meta-conformance.
+3. CI/governance lock binding platform evidence to proposed-freeze authority without allowing implementation behavior to become specification.
 4. Executable intake of 07 correctness invariants, including Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first, recovery/no-echo and presentation-generation invariants.
 5. G0–G9 evidence-package binding to concrete repo-local authority, oracle, runnable proof and exit evidence.
 
 ## Migration / supersession note
 
-The historical `docs/notion/audits/00-10-authority-completeness-audit-v0.1.md` recorded 10 as `Index-only`. That statement describes an earlier repository state and is superseded for layer 10 by `docs/notion/audits/10-full-authority-migration-closure-v0.1.md`. Historical audits are retained rather than rewritten.
+The historical `docs/notion/audits/00-10-authority-completeness-audit-v0.1.md` recorded 10 as `Index-only`. That statement describes an earlier repository state and is superseded for layer 10 by the current closure audits. Historical audits are retained rather than rewritten.
