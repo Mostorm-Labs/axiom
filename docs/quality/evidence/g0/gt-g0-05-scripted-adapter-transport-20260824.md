@@ -3,7 +3,7 @@
 > 任务：`GT-G0-05`（Notion locator：`WP-G0-05 / IH-05`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
 > 执行时间：2026-08-24（Asia/Shanghai）  
-> 基线提交：`2bb1ae9`；本任务按用户约束尚未提交
+> 实现提交：`512cc7b155e0706ccd09d4bda8df300cf02678b1`
 
 ## 1. 范围与术语
 
@@ -72,6 +72,27 @@ reconnect 测试因在同一 Runner 上先制造 HELLO failure 而触发既定 f
 
 ## 5. 状态
 
-`GT-G0-05` 的设计、实现和工作树验证为 `Pass`，commit-bound Evidence 为 `Pending`。G0 与 R1
-Verification Foundation 继续为 `Validating`；`GT-G0-06` 保持 `Not Started`。提交实现后必须重新
-执行验证并记录 implementation commit、tree、`git archive` 与关键文件 SHA-256。
+提交后的完整验证结果已绑定到以下 commit identity：
+
+| 对象 | SHA-256 / Git identity |
+| --- | --- |
+| implementation commit | `512cc7b155e0706ccd09d4bda8df300cf02678b1` |
+| implementation tree | `97c608086874b1423d94f153bf4f12709155588b` |
+| `git archive`（implementation commit） | `a5899024d40456d0638c211ff115c724cd16451835c656bf36abd8b4f610d4e2` |
+| `verification/package-lock.json` | `0bdd46cfac18ef0f87f2510713eb6b237d8c6a81357005128f3ef745595e2c72` |
+| `platform-harness-transport/package.json` | `2c1db2884079582c8a0f3a25d159aec01225a75869963a29cafd810e4013c072` |
+| `InProcessTransport.ts` | `22ebfdd8b5051642f460b297accfa04c1b979e282f63d8af20da5d7eb4f15530` |
+| `SerializedLoopbackTransport.ts` | `4089af8342319f06abbb578a156c93f449440dd853d8d972f3efbf4d6b9d9d5c` |
+| `JsonLineCodec.ts` | `95f1511cffb8a0da27aed5020a5a46e86b7ad8fb55ee750148b6cec045e3e3c1` |
+| `transport.test.mjs` | `a7998dc2d5573907eae537e5b0219b4a886b305a82af7afde58dc3f27f0e0c8e` |
+| `platform-harness-scripted-adapter/package.json` | `d98e2b7e2edb0a07759efd443c006029354e81fd3c0fb959b95cb182ac187e7d` |
+| `ScriptedAdapter.ts` | `faaa1c3a46c7d0e06da64ef957877b64f0022b8203e0c9544c79e0092380c174` |
+| `ScriptProgram.ts` | `925cd9cce38ba00c0a6bd39f42e88d51422ddd27da72bafbaeea459eadaa6d13` |
+| `MalformedScriptCatalog.ts` | `22967f6441b33004fa7baba7f5d2dcccd9d941cf040a2ff3fa81900e0f10609b` |
+| `scripted-adapter.test.mjs` | `7644b0bb2e1ea2b573cd016636de0f011fbd809894488b0b10aea1ffd125a8b5` |
+| `dependencies.test.mjs` | `8b38dde2202ae1574c1c82b3f341d2931dc2a17054d6be0d729d02333ac71b54` |
+| Runner `ReferencePlatformRunner.ts` | `bd8fd9cc595faa7db4503a9413c0b85928b42f772f7e7733a941bfd4e7f30ac1` |
+| Runner `SessionRegistry.ts` | `cc14898853da60cc71532ce6abb859b22bb02a28b34fc05e6b88868b0bca538a` |
+
+`GT-G0-05` 的设计、实现和 commit-bound 验证均为 `Pass`。G0 与 R1 Verification Foundation
+继续为 `Validating`；`GT-G0-06` 保持 `Not Started`。
