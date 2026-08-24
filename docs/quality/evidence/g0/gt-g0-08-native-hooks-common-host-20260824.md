@@ -3,7 +3,7 @@
 > 任务：`GT-G0-08`（Notion locator：`WP-G0-08 / IH-08`）
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation
 > 执行时间：2026-08-24（Asia/Shanghai）
-> 状态：`Validating`；verification seam 的本地实现和验证已完成，尚未绑定提交与托管 CI
+> 状态：`Pass`；verification seam 已完成 commit-bound 本地验证
 
 ## 1. 目标、边界与术语
 
@@ -84,14 +84,20 @@ profile/capability report 与四类非法 transition 拒绝。输出 fact 类型
 
 | 对象 | SHA-256 / Git identity |
 | --- | --- |
-| 当前基线 commit | `ed64da74331bfcc92bef4f252ca98de708f6f046` |
-| 当前基线 tree | `079d4eaec6679fe59a0f677de96352989c025734` |
+| implementation commit | `1d38785b2ebc37e493da125219031a6eb31bd13d` |
+| implementation tree | `7c3688528a7a0f6243a1293cde334e15e0d83f49` |
+| `git archive`（implementation commit） | `c5db8794efe5f75a9bbc18f6c2ad8e2a5e85a984e262f2cb025721f046c8a093` |
+| `CMakeLists.txt` | `83e7094435446df12bb659e8c564843d4364e78347f4d61007a0a83918fa4fd8` |
+| hooks contract | `a73c431a2b7f07037088534692f8bf4edb2c020f3aa894dcbb82c25431128b87` |
+| common host contract | `eaa655fbada8f6e483510fbbcdc81494c4d17580977032d86049ebc83118b422` |
+| build-boundary validator | `8e89df088520c49f298bc30654f8ae0cd5b2127f005c4144cb4f8206efdb9fb9` |
+| native trace validator | `3f154ffe2f03167bdf271ac0e9b953e304c34e4b58b2805266bb13cdc3fee5ad` |
 | build boundary | `99fccd790a7eae3e9046f5290e152d481faa01d5885f9610847fb38aebae5f52` |
 | native hooks trace | `097df2236f311fb82a0155f553ad2be28551fbcaa40ef1dbdd8cf113edd826ab` |
 | common host trace | `49b25b73253932b2e5c69c64ae4b30b36e97ada9160523fc437578e9f15bdb25` |
 
-当前工作树尚未提交，因此上表基线 commit 仅说明起点，不是实现 commit。提交后必须重新执行全部
-验证并追加 implementation commit/tree/archive 与重新生成的 Evidence hash，才可将任务改为 `Pass`。
+以上结果均在 implementation commit 后重新生成并验证。IH-08 是 verification-only 本地构建
+基础设施任务，不要求独立物理设备或平台 adapter CI；托管平台 job 由后续 `GT-G0-10..15` 负责。
 
 | 等级 | 适用性 | 结果 |
 | --- | --- | --- |
@@ -118,5 +124,6 @@ verification hook → product normalized loss ingress → production recovery/re
 double 把它改写成产品 recovery `Pass`。该缺口将由后续平台 adapter / canonical host 任务接入并
 留下 E3/E4 Evidence。
 
-因此 `GT-G0-08` 当前为 `Validating`：设计与本地实现/验证已完成，等待提交后的 commit-bound
-复验和适用的 hosted CI。`GT-G0-09` 保持 `Not Started`；G0 和 R1 均不晋级。
+因此 `GT-G0-08` 为 `Pass`：设计、实现与适用的 commit-bound E1/E2 验证均已完成。产品恢复链
+集成缺口由后续平台 adapter/canonical host 任务继续追踪，不反向伪装成 IH-08 未完成。
+`GT-G0-09` 尚未实施；G0 和 R1 均不因单任务通过而晋级。
