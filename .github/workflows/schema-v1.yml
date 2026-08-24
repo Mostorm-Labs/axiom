@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           ROOT="schema/axiom/v1/proto"
-          OUT="schema/axiom/v1/descriptor"
+          OUT="$RUNNER_TEMP/axiom-v1-descriptor"
           mkdir -p "$OUT"
           mapfile -t FILES < <(find "$ROOT/auditoryworks/axiom/v1" -maxdepth 1 -name '*.proto' -printf '%P\n' | sort)
           test "${#FILES[@]}" -eq 12
@@ -58,13 +58,17 @@ jobs:
             "${ARGS[@]}"
           test -s "$OUT/axiom_v1.descriptor.pb"
 
-      - name: Lock descriptor fingerprint
+      - name: Verify frozen descriptor fingerprint
         shell: bash
         run: |
           set -euo pipefail
-          cd schema/axiom/v1/descriptor
-          sha256sum axiom_v1.descriptor.pb | awk '{print $1}' > axiom_v1.descriptor.sha256
-          printf 'sha256  %s\n' "$(cat axiom_v1.descriptor.sha256)"
+          OUT="$RUNNER_TEMP/axiom-v1-descriptor"
+          EXPECTED="$(tr -d '[:space:]' < schema/axiom/v1/descriptor/axiom_v1.descriptor.sha256)"
+          ACTUAL="$(sha256sum "$OUT/axiom_v1.descriptor.pb" | awk '{print $1}')"
+          printf 'expected sha256  %s\n' "$EXPECTED"
+          printf 'actual   sha256  %s\n' "$ACTUAL"
+          test -n "$EXPECTED"
+          test "$ACTUAL" = "$EXPECTED"
 
       - name: Verify operation tags 1 through 15
         shell: bash
@@ -81,13 +85,11 @@ jobs:
           print('operation tags:', tags)
           PY
 
-      - name: Upload descriptor lock candidate
+      - name: Upload compiled descriptor evidence
         uses: actions/upload-artifact@v4
         with:
-          name: axiom-v1-descriptor-lock
-          path: |
-            schema/axiom/v1/descriptor/axiom_v1.descriptor.pb
-            schema/axiom/v1/descriptor/axiom_v1.descriptor.sha256
+          name: axiom-v1-descriptor-evidence
+          path: ${{ runner.temp }}/axiom-v1-descriptor/axiom_v1.descriptor.pb
           if-no-files-found: error
           retention-days: 30
 
