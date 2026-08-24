@@ -3,26 +3,17 @@
 > Audit date: 2026-08-24
 > Branch: `docs/notion-bridge-bootstrap`
 > Layer: `10-verification`
-> Status: **IN PROGRESS — PHASE A CORPUS NAMESPACE MATERIALIZED / TARGETED LOCAL PASS / CI PENDING**
+> Status: **IN PROGRESS — PHASE A + PHASE B MATERIALIZED / PHASE B CI EVIDENCE PENDING**
 
 ## 1. Purpose
 
-MR-10-05 turns the already-authoritative Platform verification design into repo-local executable corpus and harness artifacts.
-
-It consumes, but does not redesign:
-
-- 10-09 `Platform Scenario Seed Set + Harness Adapter Skeleton v0.1`;
-- 10-10 `Platform Harness Execution Protocol + Fault Hook Contract v0.1`;
-- 10-11 `Platform Harness Reference Runner + Protocol Test Vectors v0.1`;
-- 10-12 `Platform Harness Implementation Plan + CI Job Wiring v0.1`;
-- MR-10-04 closed core-six schemas;
-- 08 Platform Contract physical realization status.
+MR-10-05 turns the already-authoritative Platform verification design into repo-local executable corpus and harness artifacts. It consumes, but does not redesign, 10-09 through 10-12, the MR-10-04 closed core-six schemas, or 08 Platform physical-realization authority.
 
 Source pages remain Freeze Candidate / `proposed-freeze`.
 
 ## 2. Non-negotiable corpus separation
 
-Three independently governed corpora exist:
+Three independently governed corpora remain separate:
 
 ```text
 60 semantic vectors
@@ -30,90 +21,39 @@ Three independently governed corpora exist:
 56 harness protocol vectors
 ```
 
-They are not aliases and must never be collapsed into one seed.
-
-- semantic vectors prove canonical semantic/wire behavior;
-- platform scenarios prove cross-platform observable contract;
-- harness protocol vectors prove the Shared Runner itself interprets evidence correctly.
-
-A protocol trusted-root failure invalidates platform evidence; a platform adapter cannot certify the runner that evaluates it.
+Semantic vectors prove canonical semantic/wire behavior. Platform scenarios prove cross-platform observable behavior. Protocol vectors prove the Shared Runner/harness itself. None may silently replace another.
 
 ## 3. MR-10-05 decomposition
 
 ### Phase A — Platform Corpus Namespace + Reference Resolution
 
-Goal:
-
 - lock `platform-seed-v0.1` to exactly 28 stable IDs;
-- establish the repo-local platform corpus path;
-- resolve `canonicalFixtureRef` and `SEMANTIC` step `fixtureRef` against the checked-in Semantic Golden case namespace;
-- execute the deferred `META-PLATFORM-SCENARIO-MISSING-FIXTURE-REJECT` contract.
+- resolve Platform semantic references against the checked-in Semantic Golden namespace;
+- execute `META-PLATFORM-SCENARIO-MISSING-FIXTURE-REJECT`.
 
 ### Phase B — 28 Scenario Body Materialization
 
-Materialize:
-
-```text
-verification/platform/v1/scenarios/<PLAT-...>/scenario.json
-```
-
-No Web/Windows/Android/Apple-specific expected semantic copies are allowed. Target differences remain `targets[].policy`, required capabilities, profile metadata and OPEN observations.
+- materialize exactly one shared `scenario.json` per stable scenario ID;
+- preserve 10-09 requirement status, requirement IDs, target policy and authoring recipe;
+- make common Running-Canvas bootstrap explicit;
+- reference the shared Semantic Golden instead of copying per-platform semantic expected truth;
+- keep 08 OPEN physical realization in profile/open-observation channels only.
 
 ### Phase C — Normalized Trace Comparator Closure
 
-Materialize comparator/oracle behavior for required/forbidden events, partial order, state/generation/ownership assertions and deterministic first divergence.
-
-This phase executes the deferred:
-
-```text
-META-PLATFORM-PARTIALORDER-MISSING-EVENT-FAIL
-```
+Materialize required/forbidden event, partial-order, state/generation/ownership assertions and deterministic first-divergence evaluation. This phase executes `META-PLATFORM-PARTIALORDER-MISSING-EVENT-FAIL`.
 
 ### Phase D — Harness Execution Protocol Schemas
 
-Materialize 10-10 contracts:
-
-```text
-platform-harness-envelope
-platform-harness-session
-platform-fault-hook
-platform-late-event-fence
-```
-
-Action dispatch, completion and Platform event remain distinct. Source leases and LateEventFence replace quiet-time correctness heuristics.
+Materialize the 10-10 envelope/session/fault/fence contract family.
 
 ### Phase E — Protocol Trusted Root
 
-Materialize 10-11:
-
-```text
-platform-protocol-suite
-platform-protocol-vector
-platform-protocol-meta-result
-protocol-seed-v0.1   # exactly 56 stable vectors
-```
-
-Reference runner + scripted adapter must prove duplicate completion, stale epoch, source leak, fault-state and fence-race handling before real platform scenario evidence is trusted.
+Materialize the 56 stable protocol vectors, protocol meta-result and reference runner/scripted adapter.
 
 ### Phase F — Platform Adapters / Hooks / CI Ordering
 
-Implement verification-only platform host seams and deterministic fault hooks without entering Product public ABI.
-
-Logical CI dependency remains:
-
-```text
-schema/workspace
-  ↓
-protocol package / runner
-  ↓
-56 protocol seed trusted root
-  ↓
-platform scenario corpus
-  ↓
-platform adapters / real hosts
-  ↓
-G3 aggregation
-```
+Implement Web / Windows / Android / Apple verification adapters and deterministic verification-only hooks without entering Product public ABI.
 
 ## 4. Phase A materialization
 
@@ -125,146 +65,226 @@ verification/conformance/coordinator/test_platform_corpus_contracts.py
 verification/conformance/coordinator/platform_contracts.py
 ```
 
-`platform-seed-v0.1.json` contains exactly the 28 stable IDs from 10-09, in source order:
+`platform-seed-v0.1.json` contains exactly the 28 stable IDs from 10-09, in source order. `semantic_case_ids()` derives the current repo-local Semantic Golden namespace from checked-in suite manifests. `validate_platform_scenario_references()` fail-closes unpublished top-level `canonicalFixtureRef` and `SEMANTIC` step fixture references.
 
-```text
-PLAT-CREATE-CANVAS-001
-PLAT-HOST-ATTACH-001
-PLAT-DOCUMENT-ATTACH-001
-PLAT-CANONICAL-REPLAY-001
-PLAT-METRICS-RESIZE-001
-PLAT-METRICS-DPI-SCALE-001
-PLAT-METRICS-ORIENTATION-001
-PLAT-VISIBILITY-001
-PLAT-APP-BACKGROUND-001
-PLAT-APP-FOREGROUND-001
-PLAT-CANVAS-SUSPEND-001
-PLAT-CANVAS-RESUME-001
-PLAT-SURFACE-LOST-001
-PLAT-SURFACE-REBIND-001
-PLAT-STALE-GENERATION-REJECT-001
-PLAT-DEVICE-LOST-001
-PLAT-DEVICE-RECOVER-001
-PLAT-HOST-DETACH-REATTACH-001
-PLAT-DATABRIDGE-NO-ECHO-001
-PLAT-CALLBACK-NONREENTRANT-001
-PLAT-INPUT-BATCH-NORMALIZED-001
-PLAT-INPUT-HOTPATH-001
-PLAT-ARC-PREVIEW-FALLBACK-001
-PLAT-ARC-CANONICAL-HANDOFF-001
-PLAT-SURFACE-OWNERSHIP-001
-PLAT-DESTROY-CANVAS-001
-PLAT-DESTROY-STALE-WORK-001
-PLAT-RECOVERY-REPEATED-001
-```
+Phase A test-first commit: `a62aeb8a24d0c56b5789c4a357040dbea15523c6`.
 
-## 5. Semantic fixture namespace policy
-
-Individual 60-case Semantic Golden bodies are still not all materialized. Therefore MR-10-05A does **not** pretend fixture files exist.
-
-Current repo-local semantic case namespace is derived from checked-in suite manifests under:
-
-```text
-verification/golden/v1/suites/*.json
-```
-
-This is sufficient to answer whether a Platform Scenario references a published semantic case ID without fabricating expected content.
-
-`semantic_case_ids()` resolves that namespace. `validate_platform_scenario_references()` checks:
-
-- optional top-level `canonicalFixtureRef`;
-- every `SEMANTIC` step `action.fixtureRef`;
-- missing `fixtureRef` on a `SEMANTIC` step;
-- referenced ID membership in the checked-in semantic suite namespace.
-
-Bridge artifact paths and normalized pointer input fixtures are separate namespaces and are intentionally not conflated with semantic case IDs.
-
-## 6. Deferred MR-10-04 meta-contract intake
-
-The first deferred MR-10-04 cross-artifact check is now executable:
-
-```text
-META-PLATFORM-SCENARIO-MISSING-FIXTURE-REJECT
-```
-
-A scenario referencing an unpublished semantic fixture now fails closed with a stable validation error rather than being silently accepted.
-
-The second deferred check remains Phase C:
-
-```text
-META-PLATFORM-PARTIALORDER-MISSING-EVENT-FAIL
-```
-
-It requires actual normalized trace/comparator execution and is not faked during namespace materialization.
-
-## 7. TDD / validation evidence
-
-Test-first commit:
-
-```text
-a62aeb8a24d0c56b5789c4a357040dbea15523c6
-```
-
-Observed RED before production materialization:
+Observed RED before materialization:
 
 ```text
 test_platform_seed_suite_is_materialized ... FAIL
-AssertionError: False is not true : platform-seed-v0.1.json must be materialized
+AssertionError: platform-seed-v0.1.json must be materialized
 ```
 
-Then materialized:
+Targeted local GREEN later confirmed exact 28 IDs, namespace resolution, known reference acceptance and missing semantic fixture rejection.
 
-- suite manifest commit `68ef69febc81f1767d4e15c1028dc11b9128e5fb`;
-- semantic reference resolver commit `e839a20d8f1c5cb31ffd700e28bbba77130b695f`.
+## 5. Phase B authority mapping
 
-Targeted local GREEN verified:
+The Phase B body set is owned by 10-09 `Platform Scenario Seed Set + Harness Adapter Skeleton v0.1`, with field vocabulary inherited from 10-08. The 28 matrix rows preserve their source status and requirement IDs exactly.
 
-- suite ID = `platform-seed-v0.1`;
-- exactly 28 unique IDs;
-- semantic namespace contains `REPLAY-MIXED-OPERATIONS-001` and `OP-SETTRANSFORMS-VALID-001`;
-- known references pass;
-- missing semantic fixture reference fails closed.
-
-Targeted command result:
+The three target shorthands are materialized as follows:
 
 ```text
-MR-10-05A targeted corpus namespace checks: PASS
+ALL
+  WEB / WINDOWS / ANDROID / APPLE = REQUIRED
+
+ORIENTATION
+  ANDROID / APPLE = REQUIRED
+  WEB / WINDOWS = REQUIRED_WHEN_CAPABLE
+
+NATIVE_ARC
+  WINDOWS / ANDROID / APPLE = REQUIRED_WHEN_CAPABLE
+  requires arc.preview
+  WEB absent
 ```
 
-Full GitHub Actions evidence for these new commits is still pending; Phase A is therefore not yet recorded CI-closed.
+No target policy implies that a physical backend/surface/bridge/thread/process choice is frozen.
 
-## 8. Authority boundaries preserved
+## 6. Phase B repo layout
 
-MR-10-05 must not:
+Materialized exactly one body for every suite ID:
+
+```text
+verification/platform/v1/scenarios/
+  <PLAT-...>/
+    scenario.json
+```
+
+There are no platform-specific authority copies such as:
+
+```text
+scenario.web.json
+scenario.windows.json
+scenario.android.json
+scenario.apple.json
+```
+
+GitHub staging was intentionally used so the main authority branch did not expose a half-materialized corpus. The staging branch started at test-first commit:
+
+```text
+31178a1c6b79f0a8a4beb48e7393086e21bd2678
+```
+
+After all bodies were written, GitHub compare proved:
+
+```text
+status: ahead
+ahead_by: 28
+behind_by: 0
+files changed: exactly 28
+all files: added verification/platform/v1/scenarios/<ID>/scenario.json
+```
+
+The main branch was then fast-forwarded in one ref update to:
+
+```text
+0db1f91668c87cb8a1795abc01cdf8242a1251ae
+```
+
+## 7. Phase B authoring invariants
+
+### 7.1 Shared semantic authority
+
+The common non-trivial document fixture remains:
+
+```text
+REPLAY-MIXED-OPERATIONS-001
+```
+
+The DataBridge external-apply smoke references the existing semantic case:
+
+```text
+OP-SETTRANSFORMS-VALID-001
+```
+
+Platform scenarios do not contain Web/Windows/Android/Apple-specific semantic expected projections.
+
+### 7.2 Explicit runtime bootstrap
+
+10-09 PSS-04 is materialized: scenarios authored from a Running Canvas explicitly perform the required setup rather than relying on hidden harness state:
+
+```text
+CREATE_CANVAS
+→ ATTACH_HOST
+→ ATTACH_DOCUMENT
+→ REPLAY_CANONICAL_FIXTURE
+```
+
+The Foundation cases and source-defined DataBridge / normalized-input special paths remain explicit exceptions rather than being forcibly rewritten into the common recipe.
+
+### 7.3 OPEN realization preservation
+
+`PLAT-SURFACE-REBIND-001` requests `SURFACE_PRIMITIVE` and `RENDER_BACKEND` only through `openObservations`. Arc cases encode capability/ownership requirements without selecting a platform-native implementation primitive.
+
+### 7.4 No wall-clock correctness oracle
+
+Input hot-path, Arc handoff and recovery bodies use event completion / partial-order assertions. No correctness `sleep`, fixed millisecond latency requirement or arbitrary quiet-time threshold was introduced.
+
+## 8. Representative Phase B coverage
+
+The 28 bodies now cover the source-defined groups:
+
+- Foundation: create, host attach, document attach, canonical replay;
+- Metrics: resize, DPI/scale, orientation, visibility;
+- App/Canvas lifecycle: background, foreground, suspend, resume;
+- Surface: lost, rebind, stale-generation rejection;
+- Device: lost, recovery;
+- Host lifecycle: detach/reattach;
+- DataBridge/callback: no-echo, non-reentrant callback;
+- Input: normalized batch, hot path;
+- Arc/native ownership: preview fallback, canonical handoff, target ownership;
+- Teardown/recovery: destroy, stale work, repeated recovery.
+
+Freeze Candidate rows remain Freeze Candidate in the body files; materialization does not upgrade them.
+
+## 9. Phase B TDD / validation evidence
+
+Test-first body requirement commit:
+
+```text
+31178a1c6b79f0a8a4beb48e7393086e21bd2678
+```
+
+Observed RED before body materialization:
+
+```text
+test_phase_b_all_28_scenario_bodies_are_materialized_and_valid ... FAIL
+AssertionError: missing materialized scenario body: PLAT-CREATE-CANVAS-001
+```
+
+The Phase B test set now checks:
+
+- all 28 bodies exist;
+- scenario ID matches directory/suite ID;
+- JSON Schema + platform semantic validation;
+- semantic fixture references;
+- exact 10-09 status/requirement mapping;
+- exact ALL / ORIENTATION / NATIVE_ARC target policy;
+- no `scenario.<platform>.json` authority variants;
+- explicit bootstrap on common Running scenarios.
+
+Local Draft 2020-12 preflight against the current `platform-scenario.schema.json` reported:
+
+```text
+files 28 failed 0
+```
+
+Full GitHub Actions for the Phase B branch head remains the final Phase B close evidence. Until that run is green, Phase B is recorded **MATERIALIZED / CI EVIDENCE PENDING**, not CLOSED.
+
+## 10. Deliberately deferred dependencies
+
+Phase B does not fabricate evidence that belongs to later closures.
+
+### Pointer input fixture bodies
+
+10-09 names the following checked-in fixture paths but does not define their complete body contract in the Phase B authority text:
+
+```text
+pointer-pen-down-001.json
+pointer-pen-move-coalesced-001.json
+pointer-pen-up-001.json
+```
+
+Scenario references are materialized, but fixture content is not invented here.
+
+### Destroy stale-work protocol-grade proof
+
+`PLAT-DESTROY-STALE-WORK-001` materializes the PlatformScenario-expressible core lifecycle/fault path and declares the required source-lease/fence/source-attempt capabilities. Full `DROPPED_STALE_*`, SourceLease closure and LateEventFence proof remain owned by the 10-10/10-11 protocol layer and are not faked as new 10-08 state assertion kinds.
+
+### Actual partial-order comparison
+
+Scenario partial-order declarations are now materialized, but executing those oracles against normalized trace artifacts is Phase C.
+
+## 11. Authority boundaries preserved
+
+MR-10-05 still must not:
 
 - promote 08 OPEN physical realization;
-- make adapters read `expected` or decide PASS/FAIL;
-- create platform-specific semantic goldens;
+- let adapters read `expected` or decide PASS/FAIL;
+- create per-platform semantic golden truth;
 - use arbitrary sleep as correctness synchronization;
-- turn verification-only fault/source/fence objects into Product ABI;
-- make current runner implementation behavior specification authority;
-- let platform scenario evidence bypass the protocol trusted root once Phase E is materialized.
+- expose verification fault/source/fence objects through Product public ABI;
+- let implementation behavior become specification authority;
+- let platform scenario evidence bypass the protocol trusted root after Phase E exists.
 
-## 9. Current verdict
+## 12. Current verdict
 
-MR-10-04 is formally closed with green run `32742201698`.
+MR-10-04 is CLOSED / CI VERIFIED by run `32742201698`.
 
-MR-10-05 is **IN PROGRESS**.
-
-Current state:
+MR-10-05 remains **IN PROGRESS**:
 
 ```text
-Phase A corpus namespace            MATERIALIZED
-28-ID stable suite                  MATERIALIZED
-Semantic reference fail-close       MATERIALIZED
-Missing-fixture meta-contract       MATERIALIZED
-Targeted RED/GREEN                  PASS
-Full CI evidence                    PENDING
-28 scenario bodies                  NOT YET MATERIALIZED
-Partial-order comparator             NOT YET MATERIALIZED
-Harness protocol schemas             NOT YET MATERIALIZED
-56 protocol vectors / runner         NOT YET MATERIALIZED
-Real platform adapters/hooks         NOT YET MATERIALIZED
+Phase A corpus namespace             MATERIALIZED
+28-ID stable suite                   MATERIALIZED
+Semantic fixture fail-close          MATERIALIZED
+Phase B 28 scenario bodies           MATERIALIZED
+Phase B schema preflight             PASS (28/28)
+Phase B exact Git diff               PASS (28 added files only)
+Phase B full CI evidence             PENDING
+Phase C trace comparator             NOT YET MATERIALIZED
+Phase D protocol schemas             NOT YET MATERIALIZED
+Phase E 56 vectors/reference runner  NOT YET MATERIALIZED
+Phase F real adapters/hooks          NOT YET MATERIALIZED
 ```
 
-Next executable step after Phase A CI is **Phase B — 28 Scenario Body Materialization**.
+Next transition after Phase B CI is **Phase C — Normalized Trace Comparator + Partial-order Oracle**.
