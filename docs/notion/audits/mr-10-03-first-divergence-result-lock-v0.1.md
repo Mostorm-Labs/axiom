@@ -197,7 +197,42 @@ It is verification-only and must never expose host-language pointer/address/gene
 
 `verification/conformance/coordinator/test_semantic_artifact_contracts.py` contains MR-10-03 schema meta-tests. These tests validate the machine contract; they are not the full future first-divergence comparator engine.
 
-## 9. Explicit non-goals / deferred implementation
+## 9. MR-10-01 implementation erratum discovered during MR-10-03
+
+Re-reading the full 10-04 source authority exposed a pre-existing implementation drift in the MR-10-01 projection validator. The authority already required:
+
+```text
+u64 / fixed64       u64: + exactly 16 lowercase hex digits
+arbitrary bytes     hex: + even-count lowercase hex
+OrderKey            hex: + even-count lowercase hex
+Id128               id128: + 32 lowercase hex digits
+```
+
+The earlier Python implementation instead accepted decimal `u64:` payloads and used `bytes:` / `orderkey:` prefixes. This was an implementation defect, not an authority ambiguity and not a 04 Semantic Schema change.
+
+The drift was verified locally before correction:
+
+```text
+authority_u64_hex=False
+legacy_u64_decimal=True
+authority_orderkey_hex=False
+legacy_orderkey_prefix=True
+authority_bytes_hex=False
+```
+
+Regression tests were added in commit `af4b3045bccf9fcbcc76065bbe27a4bd6d02f3de`. The validator was corrected in commit `66d0ee150ed2074d39cccafdba92f2fc0bf207ff` to use the source-owned forms. The same exact representation checks then produced:
+
+```text
+authority_u64_hex=True
+legacy_u64_decimal=False
+authority_orderkey_hex=True
+legacy_orderkey_prefix=False
+authority_bytes_hex=True
+```
+
+The 10-04 Notion authority page also records this erratum. MR-10-01 remains closed as a closure phase, with this correction appended to its implementation evidence history; the source authority status remains Freeze Candidate.
+
+## 10. Explicit non-goals / deferred implementation
 
 MR-10-03 authority migration does **not** require, at this stage:
 
@@ -210,7 +245,7 @@ MR-10-03 authority migration does **not** require, at this stage:
 
 Those are implementation-package concerns after authority closure.
 
-## 10. Exit criteria
+## 11. Exit criteria
 
 Authority-side criteria are met:
 
@@ -221,8 +256,10 @@ Authority-side criteria are met:
 - replay bisection contract is repo-local;
 - CLI diagnostic contract is repo-local;
 - CI evidence-retention contract is repo-local;
-- result schema reflects the source field constraints.
+- result schema reflects the source field constraints;
+- verification-tooling self-test IDs are repo-local;
+- the projection-tag implementation drift found during reconciliation is corrected and documented.
 
-Final MR-10-03 closure still requires the current schema/meta-test commit to receive successful CI evidence. Until then the status remains:
+The only remaining MR-10-03 exit evidence is a successful CI run covering the current result schema, meta-tests and projection-tag erratum. Until that evidence is available the status remains:
 
 **AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING**.
