@@ -1,0 +1,63 @@
+name: Axiom V1 Conformance Seed Bootstrap
+
+on:
+  push:
+    branches: ["docs/notion-bridge-bootstrap", main]
+    paths:
+      - "verification/**"
+      - ".github/workflows/conformance-seed-v1.yml"
+  pull_request:
+    paths:
+      - "verification/**"
+      - ".github/workflows/conformance-seed-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-seed-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          find verification -name '*.json' -print0 | sort -z | xargs -0 -n1 python3 -m json.tool >/dev/null
+
+      - name: Validate seed-v0.1 identity
+        run: python3 verification/conformance/coordinator/axiom_conformance.py validate-corpus
+
+      - name: Verify exactly 60 stable seed IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 verification/conformance/coordinator/axiom_conformance.py list --suite seed-v0.1 | wc -l)" -eq 60
+
+      - name: Verify adapters do not claim unimplemented capabilities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for p in sorted(Path('verification/conformance/adapters').glob('*/capabilities.json')):
+              d = json.loads(p.read_text())
+              assert d['status'] == 'NOT_MATERIALIZED', (p, d['status'])
+              assert d['capabilities'] == [], (p, d['capabilities'])
+              print(p, 'bootstrap-safe')
+          PY
+
+      - name: Verify run is fail-closed before adapters exist
+        shell: bash
+        run: |
+          set +e
+          python3 verification/conformance/coordinator/axiom_conformance.py run --suite seed-v0.1
+          rc=$?
+          set -e
+          test "$rc" -eq 3
+
+      - name: Verify patch whitespace
+        run: git diff --check
