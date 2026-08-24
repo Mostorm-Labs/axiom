@@ -21,7 +21,7 @@ rules:
   architecture_conflict_requires_refreeze: true
   implementation_requires_authority_snapshot: true
 
-authority_statuses: [draft, proposed, proposed-freeze, frozen, superseded]
+authority_statuses: [draft, proposed, proposed-freeze, frozen, superseded, current-direction]
 
 documents:
   - {id: axiom-product-capability-traceability-v0.1, layer: 01-capability-traceability, status: proposed, path: docs/notion/authority/01-capability-traceability/axiom-product-capability-traceability-v0.1.md, notion_page_id: 3c44c57a-590c-8178-a397-f11d9675a210, snapshot_date: 2026-08-24}
@@ -57,3 +57,21 @@ documents:
   - {id: semantic-hard-limits-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/06-release-safety/semantic-hard-limits-v0.1.md, notion_page_id: 3c54c57a-590c-81d3-bb6e-f58905e1ebf2, snapshot_date: 2026-08-24}
 
   - {id: axiom-architecture-baseline-v0.3, layer: 05-runtime-architecture, status: frozen, path: docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.3.md, notion_page_id: 3c14c57a-590c-817b-bac7-d6b05d264dbf, snapshot_date: 2026-08-24}
+
+  - {id: runtime-data-flow-07-00-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-00-runtime-data-flow-overview-v0.1.md, notion_page_id: 3c44c57a-590c-817c-a1e6-feca469443cd, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-01-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-01-pointer-preview-v0.1.md, notion_page_id: 3c44c57a-590c-8110-be4d-dd4d078be6e7, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-02-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-02-intent-canonical-operation-v0.1.md, notion_page_id: 3c44c57a-590c-81d4-87ce-d53f9be0a9c2, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-03-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md, notion_page_id: 3c44c57a-590c-81dc-9f65-ec33c8109492, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-04-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-04-document-runtime-scene-v0.1.md, notion_page_id: 3c44c57a-590c-81e5-b859-fe6168157f26, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-05-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-05-render-presented-v0.1.md, notion_page_id: 3c44c57a-590c-81a4-94d0-e8e1fe772bcc, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-06-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-06-commit-local-storage-cloud-v0.1.md, notion_page_id: 3c44c57a-590c-814b-a015-f9be9b95d494, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-07-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-07-remote-apply-v0.1.md, notion_page_id: 3c44c57a-590c-8177-a8a4-dde14e4623f2, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-08-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-08-open-restore-catchup-v0.1.md, notion_page_id: 3c44c57a-590c-8179-9137-fdb6e1f97817, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-09-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-09-special-flows-v0.1.md, notion_page_id: 3c44c57a-590c-817c-9d82-f742542a572d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-10-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-10-runtime-data-model-matrix-v0.1.md, notion_page_id: 3c44c57a-590c-814b-af98-d17393a7473f, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-11-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-11-generation-changeset-apply-batch-v0.1.md, notion_page_id: 3c44c57a-590c-815d-8d3c-c74bfce15196, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-12-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-12-sync-frontier-ack-v0.1.md, notion_page_id: 3c44c57a-590c-8149-8611-e1c87d6e694f, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-13-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-13-resource-materialization-v0.1.md, notion_page_id: 3c44c57a-590c-8193-90f7-f7e6ea46c57d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-14-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-14-interaction-conflict-multi-op-v0.1.md, notion_page_id: 3c44c57a-590c-8102-8a5f-f4a974c9240d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-15-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-15-presented-proof-arc-handoff-v0.1.md, notion_page_id: 3c44c57a-590c-815f-94fc-c97756051977, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-final-closure-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/final-closure-open-owner-handoff-v0.1.md, notion_page_id: 3c44c57a-590c-81db-854b-f3ab3dbb26fd, snapshot_date: 2026-08-24}
