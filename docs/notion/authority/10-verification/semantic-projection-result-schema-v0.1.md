@@ -231,4 +231,38 @@ coordinator comparison
 ConformanceResult + deterministic DivergenceRecord
 ```
 
-MR-10-01 materialized the first three schema/IDL boundaries. MR-10-03 owns the repo-local lock of the first-divergence result contract; it does not require implementing the complete 60-case semantic engine or all adapters during authority migration.
+Operationally, source authority requires:
+
+- `validate-corpus` validates projection structure plus IDL-aware semantics where relevant;
+- `run` schema-validates an `ImplementationObservation` immediately after collection;
+- `compare` schema-validates generated `ConformanceResult` before it becomes evidence;
+- schema-invalid artifacts never enter semantic comparison as trusted evidence.
+
+## Required verification-tooling self-tests
+
+The source authority defines the following minimum meta-conformance set for the schema/runner itself:
+
+```text
+META-PROJECTION-NULL-REJECT
+META-PROJECTION-FRACTIONAL-JSON-NUMBER-REJECT
+META-PROJECTION-F32-TAG-VALID
+META-PROJECTION-U64-TAG-VALID
+META-PROJECTION-ABSENT-KEY-PRESERVED
+META-OBS-UNKNOWN-TOPLEVEL-FIELD-REJECT
+META-OBS-DUPLICATE-STAGE-REJECT
+META-OBS-CHECKPOINT-ORDER-REJECT
+META-RESULT-PASS-WITH-DIVERGENCE-REJECT
+META-RESULT-OPEN-DIVERGENCE-WITH-GOLDEN-BASIS-REJECT
+META-RESULT-CAPABILITY-FAIL-WITHOUT-MISSING-PARTICIPANT-REJECT
+META-DIVERGENCE-CROSS-IMPL-WITH-REFERENCE-REJECT
+```
+
+These are **Verification tooling self-tests**. They do not count toward the Axiom semantic `seed-v0.1` total of exactly 60 cases.
+
+The checked-in Python meta-tests may implement these logical cases with language-native test names; the logical META IDs above remain the source-derived coverage contract. Future tooling languages should prove equivalent behavior rather than treating current Python test method names as architecture authority.
+
+## Open / not frozen by this page
+
+This authority does not freeze coordinator implementation language, public Product JSON, CI provider, or a second semantic engine. Full environment metadata details for run outputs and later platform-verification contracts remain owned by their respective authority pages.
+
+MR-10-01 materialized the schema/IDL validation boundaries. MR-10-03 owns the repo-local lock of the first-divergence result contract; it does not require implementing the complete 60-case semantic engine or all adapters during authority migration.
