@@ -54,17 +54,11 @@ The `10-xx` labels above are a stable local reading order for the migration set.
 
 Materialized semantic artifact schemas, real Draft 2020-12 validation, frozen-IDL descriptor validation and fail-closed meta-tests. The formerly separate IDL-aware projection item is **SUBSUMED / CLOSED BY MR-10-01**.
 
-### Evidence pending
-
-**MR-10-03 — First-Divergence Result Lock — AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING.**
-
-Primary audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
-
-**MR-10-04 — Platform Machine Contract Set — CORE SIX MATERIALIZED / TARGETED LOCAL VALIDATION PASS / CI EVIDENCE PENDING.**
+**MR-10-04 — Platform Machine Contract Set — CLOSED (CI verified, 2026-08-24).**
 
 Primary audit: `docs/notion/audits/mr-10-04-platform-machine-contract-set-v0.1.md`.
 
-Materialized core set:
+Materialized and verified:
 
 ```text
 verification/schemas/platform-suite.schema.json
@@ -77,19 +71,44 @@ verification/conformance/coordinator/platform_contracts.py
 verification/conformance/coordinator/test_platform_machine_contracts.py
 ```
 
-10-08 supplies the field-level base contract; 10-09 supplies the later suite/Arc-event/capability corrections. 08 OPEN physical realization remains `PlatformProfile.realization` / `openObservations` metadata and is not enum-frozen into a winner. 10-10/10-11 execution-protocol schemas remain a separate harness/protocol trusted-root layer.
+Final evidence: GitHub Actions run `32742201698`, workflow `Axiom V1 Conformance Seed Bootstrap`, head `9d408191a760a2f769015b355b9cd67347f512a7`, conclusion `success`; `validate-seed-contract` and `Validate verification artifact contracts` both succeeded.
 
-The source-required cross-artifact checks for missing referenced fixtures and actual partial-order evaluation remain deliberately downstream because they need discovered corpus/trace artifacts; their authority is preserved and they enter MR-10-05 rather than being faked in schema-only closure.
+10-08 remains the field-level base contract; 10-09 remains the later suite/Arc-event/capability correction. 08 OPEN physical realization remains `PlatformProfile.realization` / `openObservations` metadata and is not enum-frozen into a winner. Source status remains Freeze Candidate / `proposed-freeze`.
 
-Full GitHub Actions evidence is the remaining MR-10-04 close condition.
+### Evidence pending
 
-### Remaining after MR-10-04
+**MR-10-03 — First-Divergence Result Lock — AUTHORITY MIGRATION + MACHINE SCHEMA LOCK MATERIALIZED / CI EVIDENCE PENDING.**
 
-1. MR-10-05 Platform Corpus / Harness Materialization: `verification/platform/v1/`, 28 stable scenarios, four adapters, normalized trace artifacts and deterministic fault hooks.
-2. Harness protocol trusted root: execution-protocol schemas + 56 protocol vectors + reference runner meta-conformance.
-3. CI/governance lock binding platform evidence to proposed-freeze authority without allowing implementation behavior to become specification.
-4. Executable intake of 07 correctness invariants, including Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first, recovery/no-echo and presentation-generation invariants.
-5. G0–G9 evidence-package binding to concrete repo-local authority, oracle, runnable proof and exit evidence.
+Primary audit: `docs/notion/audits/mr-10-03-first-divergence-result-lock-v0.1.md`.
+
+### Current closure
+
+**MR-10-05 — Platform Corpus / Harness Materialization — IN PROGRESS.**
+
+Primary intake:
+
+```text
+10-09  28 stable platform scenarios + adapter logical surface
+10-10  harness execution/session/completion/source/fault/fence protocol
+10-11  56-vector protocol trusted root + reference runner meta-conformance
+10-12  target repo packages / test-only native hooks / logical CI DAG
+```
+
+MR-10-05 must keep three artifact families distinct:
+
+```text
+60 semantic vectors
+28 platform scenarios
+56 harness protocol vectors
+```
+
+The immediate closure work is to materialize the repo-local platform corpus namespace, execute the two deferred cross-artifact meta-contracts from MR-10-04, then materialize the harness protocol trusted root without pretending that real Web/Windows/Android/Apple adapters already exist.
+
+### Remaining after MR-10-05
+
+1. CI/governance lock binding platform evidence to proposed-freeze authority without allowing implementation behavior to become specification.
+2. Executable intake of 07 correctness invariants, including Incremental RuntimeScene ≡ Full Rebuild RuntimeScene, persist-first, recovery/no-echo and presentation-generation invariants.
+3. G0–G9 evidence-package binding to concrete repo-local authority, oracle, runnable proof and exit evidence.
 
 ## Migration / supersession note
 
