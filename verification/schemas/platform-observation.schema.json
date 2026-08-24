@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-observation:v1",
+  "title": "Axiom Platform Observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "profileId", "platformFamily", "execution", "terminal", "steps", "artifacts", "semanticCheckpoints", "stateCheckpoints", "targetBindings", "realization", "diagnostics"],
+  "properties": {
+    "format": {"const": "axiom-platform-observation-v1"},
+    "formatVersion": {"const": 1},
+    "scenarioId": {"type": "string", "minLength": 1},
+    "profileId": {"type": "string", "minLength": 1},
+    "platformFamily": {"enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"]},
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runnerVersion", "runtimeVersion", "platformHarnessVersion", "buildProfile"],
+      "properties": {
+        "runnerVersion": {"type": "string"},
+        "runtimeVersion": {"type": "string"},
+        "platformHarnessVersion": {"type": "string"},
+        "buildProfile": {"type": "string"},
+        "gitCommit": {"type": "string"},
+        "osVersion": {"type": "string"},
+        "browserVersion": {"type": "string"},
+        "architecture": {"type": "string"},
+        "deviceClass": {"type": "string"}
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": {
+        "outcome": {"enum": ["COMPLETED", "NOT_SUPPORTED", "HARNESS_ERROR", "IMPLEMENTATION_ERROR"]},
+        "failedStepId": {"type": "string"},
+        "code": {"type": "string"},
+        "message": {"type": "string"}
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stepId", "outcome"],
+        "properties": {
+          "stepId": {"type": "string"},
+          "outcome": {"enum": ["COMPLETED", "REJECTED", "NOT_SUPPORTED", "ERROR"]},
+          "code": {"type": "string"},
+          "message": {"type": "string"}
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lifecycleTrace": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+        "surfaceTrace": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+        "bridgeTrace": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+        "diagnostics": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"}
+      }
+    },
+    "semanticCheckpoints": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "stateCheckpoints": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "targetBindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "bindingTag", "owner", "surfaceGeneration"],
+        "properties": {
+          "role": {"enum": ["CANONICAL", "PREVIEW"]},
+          "bindingTag": {"type": "string", "minLength": 1},
+          "owner": {"enum": ["AXIOM", "ARC", "PLATFORM_HOST", "OS_COMPOSITOR"]},
+          "surfaceGeneration": {"type": "string", "pattern": "^u64:[0-9a-f]{16}$"}
+        }
+      }
+    },
+    "realization": {"type": "object", "additionalProperties": true},
+    "diagnostics": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+  }
+}
