@@ -29,6 +29,7 @@ export class ReferencePlatformRunner {
   private ingress = 0n;
 
   connect(boundary: "IN_PROCESS" | "OUT_OF_PROCESS"): void { this.connectionBoundary = boundary; this.handshake.reset(); }
+  transportLost(location = "transport.lost"): void { this.handshake.reset(); this.sessions.transportLost(location); }
   acceptHello(payload: HelloPayload, location = "handshake.hello"): void { if (!this.connectionBoundary) throw new Error("connect required"); this.handshake.accept(payload, this.connectionBoundary, location); }
   openSession(sessionId: string, sessionEpoch: string, adapterInstanceId: string, location = "session.open"): void {
     this.handshake.assertAdapter(adapterInstanceId, location); this.sessions.open(adapterInstanceId, asSessionId(sessionId), asTaggedU64(sessionEpoch), location);

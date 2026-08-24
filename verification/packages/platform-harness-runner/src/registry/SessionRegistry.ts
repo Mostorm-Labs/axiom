@@ -29,6 +29,10 @@ export class SessionRegistry {
     this.onTransition({ component: "SESSION", id: sessionId, from: "OPEN", to: "CLOSING", location });
     this.active!.state = "CLOSED"; this.onTransition({ component: "SESSION", id: sessionId, from: "CLOSING", to: "CLOSED", location });
   }
+  transportLost(location: string): void {
+    if (!this.active || this.active.state !== "OPEN") return;
+    this.active.state = "CLOSED"; this.onTransition({ component: "SESSION", id: this.active.sessionId, from: "OPEN", to: "CLOSED", reason: "TRANSPORT_LOST", location });
+  }
   state(): SessionState { return this.active?.state ?? "NEW"; }
   snapshot(): object { return this.active ? { ...this.active } : { state: "NEW" }; }
 }

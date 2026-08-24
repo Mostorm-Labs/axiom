@@ -1,0 +1,10 @@
+import { asMessageId, asSessionId, asTaggedU64, type BoundaryMode, type HarnessEnvelope } from "@axiom/platform-harness-protocol";
+import type { ScriptProgram } from "./ScriptProgram.js";
+const envelope = (mode: BoundaryMode, id: string, type: HarnessEnvelope["messageType"], epoch: string, payload: HarnessEnvelope["payload"]): HarnessEnvelope => ({ protocol:"axiom-platform-harness-exec-v1", protocolVersion:1, messageId:asMessageId(id), messageType:type, sessionId:asSessionId("session:001"), sessionEpoch:asTaggedU64(epoch), payload });
+export const MalformedScriptCatalog = {
+  staleEpoch(mode: BoundaryMode): ScriptProgram { return {steps:[{kind:"SEND",location:"catalog.stale-epoch",envelope:envelope(mode,"msg:00010","SOURCE_ATTEMPT","u64:0000000000000000",{sourceId:"source:touch"})}]}; },
+  duplicateCompletion(mode: BoundaryMode, commandSeq: string): ScriptProgram { const receipt=envelope(mode,"msg:00011","ACTION_RECEIPT","u64:0000000000000001",{actionId:"action:001",commandSeq,receiptStatus:"DISPATCHED",tokenId:"completion:001"}); const completion=envelope(mode,"msg:00012","ACTION_COMPLETION","u64:0000000000000001",{tokenId:"completion:001",actionId:"action:001",outcome:"SUCCEEDED",artifacts:[]}); return {steps:[{kind:"SEND",location:"catalog.receipt",envelope:receipt},{kind:"SEND",location:"catalog.completion.first",envelope:completion},{kind:"SEND",location:"catalog.completion.duplicate",envelope:{...completion,messageId:asMessageId("msg:00013")}}]}; },
+  leaseLeak(mode: BoundaryMode): ScriptProgram { return {steps:[{kind:"SEND",location:"catalog.lease.open",envelope:envelope(mode,"msg:00014","SOURCE_LEASE_OPEN","u64:0000000000000001",{sourceId:"source:touch"})}]}; },
+  faultPulseMismatch(mode: BoundaryMode): ScriptProgram { return {steps:[{kind:"SEND",location:"catalog.fault.clear-without-activate",envelope:envelope(mode,"msg:00015","FAULT_STATUS","u64:0000000000000001",{fault:"SURFACE_LOST",active:false})}]}; },
+  malformedPayload(): ScriptProgram { return {steps:[{kind:"INJECT",location:"catalog.malformed-payload",bytes:new TextEncoder().encode("{not-json}\n")}]}; },
+};
