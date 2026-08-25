@@ -31,4 +31,8 @@ test("Android instrumentation build declares ELF and APK 16 KB gates", async () 
   assert.match(workflow, /app-debug-androidTest\.apk/);
   assert.match(workflow, /out\/g0-12-android-alignment/);
   assert.match(workflow, /sha256sum/);
+  assert.match(workflow, /test\s+-e\s+\/dev\/kvm/);
+  assert.match(workflow, /chmod\s+a\+rw\s+\/dev\/kvm/);
+  assert.match(workflow, /test\s+-r\s+\/dev\/kvm/);
+  assert.match(workflow, /test\s+-w\s+\/dev\/kvm/);
 });
