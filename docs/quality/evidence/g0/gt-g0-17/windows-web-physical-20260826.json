@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "dc05153a8078b936e7b5867d802beac0e309558a",
+  "branch": "codex/gt-g0-17-windows-physical",
+  "fixture": {
+    "manifest": "pocs/shared_engine/fixtures/manifest.json",
+    "scene": "pocs/shared_engine/fixtures/scene.ndjson",
+    "golden": "pocs/shared_engine/goldens/reference.rgba",
+    "digest": "47826449b895ac4f4a57b4f386379775",
+    "visualGate": "99.9% pixels per channel delta <= 2"
+  },
+  "skia": {"commit": "b6d106297ff9ef2ff8094033695d045e87775581", "windowsSdkId": "7022f980c80e4786d8f883103552952c0aa27d8fdab9fd0c555850156ac3eec4", "webSdkId": "394a46256239b3a0a332e8c514205759d22ca4a6fff27b51eb113e721e5f3c6e"},
+  "nativeWindows": {"result": "windows-web-physical-20260826/windows-result.json", "environment": "windows-web-physical-20260826/windows-environment.json", "hardware": true, "warp": false, "visual": "windows-web-physical-20260826/windows-visual/metrics.json", "memory": "windows-web-physical-20260826/windows-memory-series.json"},
+  "chromeStableWeb": {"result": "windows-web-physical-20260826/web-result.json", "environment": "windows-web-physical-20260826/web-environment.json", "hardware": true, "warp": false, "visual": "windows-web-physical-20260826/web-visual/metrics.json", "memory": "windows-web-physical-20260826/web-memory-series.json", "gpuSnapshot": "windows-web-physical-20260826/chrome-gpu.txt"},
+  "failures": [],
+  "retries": 2,
+  "unavailable": ["chrome://gpu Runtime snapshot returned unavailable because Chrome internal pages do not expose document text through this CDP target; WebGL2 renderer was recorded from the headed run."],
+  "reproduction": {"native": "out/windows-release/pocs/shared_engine/platform/windows/canvas_poc01_windows.exe --hardware --offscreen --lifecycle=100 --smoke=60 --output=windows-actual.rgba", "web": "tools/gt_g0_17_cdp_runner.mjs --chrome <system Chrome Stable> --url http://127.0.0.1:4173/ --output web-result.json --rgba web-actual.rgba --gpu chrome-gpu.txt"}
+}
