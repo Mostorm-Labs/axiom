@@ -43,7 +43,7 @@ jobs:
             git diff --name-only HEAD^ HEAD > out/g0-14/schema/changed-paths.txt
           fi
           cd verification
-          npm exec -- axiom-platform-conformance classify \
+          node packages/platform-conformance-cli/dist/main.js classify \
             --changed-paths ../out/g0-14/schema/changed-paths.txt \
             --output ../out/g0-14/schema/run-set.json
           platforms=$(jq -c '[.selectedPlatforms[] as $p | if $p == "web" then {platform:$p, os:"ubuntu-24.04", workspace:"@axiom/platform-harness-web"} elif $p == "windows" then {platform:$p, os:"windows-2025", workspace:"native-windows"} elif $p == "android" then {platform:$p, os:"ubuntu-24.04", workspace:"@axiom/platform-harness-android"} else {platform:$p, os:"macos-15", workspace:"@axiom/platform-harness-apple"} end]' ../out/g0-14/schema/run-set.json)
@@ -52,7 +52,7 @@ jobs:
         id: schema
         continue-on-error: true
         working-directory: verification
-        run: npm exec -- axiom-platform-conformance validate > ../out/g0-14/schema/validation.log 2>&1
+        run: node packages/platform-conformance-cli/dist/main.js validate > ../out/g0-14/schema/validation.log 2>&1
       - name: Write schema layer record
         shell: bash
         run: |
@@ -91,7 +91,9 @@ jobs:
         id: protocol
         continue-on-error: true
         working-directory: verification
-        run: npm exec -- axiom-platform-conformance protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output ../out/g0-14/protocol
+        run: |
+          mkdir -p ../out/g0-14/protocol
+          node packages/platform-conformance-cli/dist/main.js protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output ../out/g0-14/protocol > ../out/g0-14/protocol/execution.log 2>&1
       - name: Write protocol layer record
         shell: bash
         run: |
@@ -250,7 +252,7 @@ jobs:
           find out/g0-14/downloaded -name '*.json' -path '*/records/*' -exec cp {} out/g0-14/aggregate-records/ \;
       - name: Aggregate provider-neutral PR decision
         working-directory: verification
-        run: npm exec -- axiom-platform-conformance aggregate --records ../out/g0-14/aggregate-records --output ../out/g0-14/pr-decision.json
+        run: node packages/platform-conformance-cli/dist/main.js aggregate --records ../out/g0-14/aggregate-records --output ../out/g0-14/pr-decision.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
