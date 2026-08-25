@@ -16,7 +16,7 @@ GT-G0-16 消费 GT-G0-00～GT-G0-15 的已接受 Evidence，生成唯一的 `axi
 
 GT-G0-15 的 **Platform Release Decision** 只描述 Nightly/Release wiring 的 provider-neutral 结果，
 authority 是 `G0_WIRING_ONLY`。GT-G0-16 将其作为输入：hosted Nightly PASS 可以使 E3 通过，
-但 hosted Release 不能替代物理设备 authority；缺少物理 Evidence 时 E4 必须为 `BLOCKED`，
+但 hosted Release 不能替代物理设备 authority。E4 接受 package-bound physical authority：不要求每次由当前 main 重建安装包，但必须记录 package identity、fixture/corpus digest、artifact hash、设备环境和原始结果；缺少这些物理 Evidence 时 E4 必须为 `BLOCKED`，
 总报告也必须为 `BLOCKED`。
 
 ## 输入与输出
@@ -59,5 +59,5 @@ GT-G0-00～15 lineage、artifact metadata、issues 和 promotion。平台的详�
 | E1/unit | 16 个 G0 task 齐全、状态和路径合法、报告 schema-valid |
 | E2/reference | 五个平台 profile 分开记录，平台来源可定位 |
 | E3/integration | Nightly PASS、reproducibility PASS，hosted 运行结果可重放 |
-| E4/physical | Release authority 为 PASS 才能通过；hosted-only 必须 BLOCKED |
+| E4/physical | Web、Windows、Android、iPhone、iPadOS 均有 package-bound physical authority 才能通过；hosted-only 必须 BLOCKED。当前 main 的代码覆盖由 commit-bound E1～E3 负责。 |
 | Integrity | 缺失、路径穿越、符号链接越界、字节数或 SHA-256 漂移全部拒绝 |

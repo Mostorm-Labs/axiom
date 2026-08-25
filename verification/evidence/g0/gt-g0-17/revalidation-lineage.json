@@ -1,0 +1,174 @@
+{
+  "corpus": {
+    "schemaSha256": "df0ad6e43880f09c90ebf95f19110178aba6890df0010ebda7485029e2b543b4",
+    "corpusSha256": "6b17b8fcc411a533c822a5117e33cf73fa6766739d7d36ac86dc4bea883af4fe",
+    "runnerVersion": "0.1.0",
+    "runtimeVersion": "0.1.0"
+  },
+  "platforms": [
+    {
+      "subject": "android",
+      "platformFamily": "ANDROID",
+      "profileId": "android-instrumentation-reference-v0-1",
+      "reality": "PHYSICAL",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-17/mobile-physical-package-bound-20260817.md",
+      "environment": {
+        "packageIdentity": "android-installed-5ab8b16-skia-debcbb7",
+        "fixtureDigest": "47826449b895ac4f4a57b4f386379775",
+        "artifactSha256": "99a1ab7f60787c1e87273384557690da066188155a16d56c4e611b50a4cd6e88",
+        "device": "OPPO PKD130 / Android 15"
+      }
+    },
+    {
+      "subject": "ios",
+      "platformFamily": "APPLE",
+      "profileId": "ios-rn-objcxx-reference-v0-1",
+      "reality": "PHYSICAL",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-17/mobile-physical-package-bound-20260817.md",
+      "environment": {
+        "packageIdentity": "ios-installed-5ab8b16-skia-debcbb7",
+        "fixtureDigest": "47826449b895ac4f4a57b4f386379775",
+        "artifactSha256": "e8843f293d449d2654ad155a24c73ffb16988cf9d6252bb4c17ad40e27209937",
+        "device": "iPhone 15 Pro / A17 Pro"
+      }
+    },
+    {
+      "subject": "ipados",
+      "platformFamily": "APPLE",
+      "profileId": "ipados-rn-objcxx-reference-v0-1",
+      "reality": "PHYSICAL",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-17/mobile-physical-package-bound-20260817.md",
+      "environment": {
+        "packageIdentity": "ipados-installed-5ab8b16-skia-debcbb7",
+        "fixtureDigest": "47826449b895ac4f4a57b4f386379775",
+        "artifactSha256": "6fcda738c3448aee8f99f0c6a4510e633baa3461161a36329993373857665098",
+        "device": "iPad Air 4 / A14"
+      }
+    },
+    {
+      "subject": "web",
+      "platformFamily": "WEB",
+      "profileId": "web-reference-v0-1",
+      "reality": "PHYSICAL",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-17/windows-web-physical-20260826.md",
+      "environment": {
+        "packageIdentity": "web-windows-physical-20260826",
+        "fixtureDigest": "47826449b895ac4f4a57b4f386379775",
+        "artifactSha256": "c054825dc0ff34149ac5bccc4d803563cecef59d4159caf6d560cd4e4e47ae83",
+        "device": "Windows UHD 630 / Chrome Stable 151"
+      }
+    },
+    {
+      "subject": "windows",
+      "platformFamily": "WINDOWS",
+      "profileId": "windows-native-reference-v0-1",
+      "reality": "PHYSICAL",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-17/windows-web-physical-20260826.md",
+      "environment": {
+        "packageIdentity": "windows-windows-physical-20260826",
+        "fixtureDigest": "47826449b895ac4f4a57b4f386379775",
+        "artifactSha256": "c054825dc0ff34149ac5bccc4d803563cecef59d4159caf6d560cd4e4e47ae83",
+        "device": "Windows UHD 630 / D3D12"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "taskId": "GT-G0-00",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-00-repository-reconciliation-20260823.md",
+      "evidenceSha256": "e49050a70fd457ad40bf78b098df6979716499749db0b9e0bf7f1517846c3871"
+    },
+    {
+      "taskId": "GT-G0-01",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-01-verification-workspace-skeleton-20260823.md",
+      "evidenceSha256": "c2cd6eeb8d0809606c3708bb42243181f97bc0e3ab45dd89ea8b15a4dc8fee1c"
+    },
+    {
+      "taskId": "GT-G0-02",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-02-protocol-package-20260823.md",
+      "evidenceSha256": "33588dd7d8746339461e1926ab4d07c2ac6cb3a493c49a080687338af800af9f"
+    },
+    {
+      "taskId": "GT-G0-03",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-03-runner-core-a-20260823.md",
+      "evidenceSha256": "81dfb72b835a89d35273a044a52d61e055fb61f9f927f79149760ad39aae9663"
+    },
+    {
+      "taskId": "GT-G0-04",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-04-runner-core-b-20260824.md",
+      "evidenceSha256": "617d0fffb9aa7a58ebfdc4ae7cc7769b962f1c70b52600b757010efe836af5ec"
+    },
+    {
+      "taskId": "GT-G0-05",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-05-scripted-adapter-transport-20260824.md",
+      "evidenceSha256": "c2c1dbbf89faf66f4c2c8b6a5bf1741fad4dff6bd71bfde5d8c4ccd55fe455ed"
+    },
+    {
+      "taskId": "GT-G0-06",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-06-protocol-vectors-20260824.md",
+      "evidenceSha256": "6a7c456624a5ec6776c0e57354d96e321416c0989467fd13c44d7560cd2cda2c"
+    },
+    {
+      "taskId": "GT-G0-07",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-07-shared-cli-protocol-ci-20260824.md",
+      "evidenceSha256": "eded817ce1413e75ce112de3e19f768a737bbd134bca7b77ceecaf2c7a383639"
+    },
+    {
+      "taskId": "GT-G0-08",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-08-native-hooks-common-host-20260824.md",
+      "evidenceSha256": "43cb45c1022227114543812fc22980810d7cff695a68748930154da5ecafdfee"
+    },
+    {
+      "taskId": "GT-G0-09",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-09-platform-scenarios-20260824.md",
+      "evidenceSha256": "2ea0aa9bf45178f1f1e7176f67e239c6a66a125c1a5681e2f7ed566e568f481c"
+    },
+    {
+      "taskId": "GT-G0-10",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-10-web-reference-adapter-20260824.md",
+      "evidenceSha256": "564f80928afd8d1e3243d102768b5103e046cdf504fe5691af539db032a9d613"
+    },
+    {
+      "taskId": "GT-G0-11",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-11-windows-native-adapter-20260824.md",
+      "evidenceSha256": "22adfcb924f6bd79f736f3567db76bd1475a9e8fd8a69be14c52e52d0c1fff19"
+    },
+    {
+      "taskId": "GT-G0-12",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-12-android-instrumentation-adapter-20260824.md",
+      "evidenceSha256": "830b7a63070b19925e432c3abb5fe082bde0d36c27d8a5316640e9aac884c764"
+    },
+    {
+      "taskId": "GT-G0-13",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-13-apple-xctest-adapter-20260824.md",
+      "evidenceSha256": "3d67f4086cff347f6c8696b967b71726b8fd65bd3bd29524f7588fa05344829a"
+    },
+    {
+      "taskId": "GT-G0-14",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-14-pr-ci-dag-20260825.md",
+      "evidenceSha256": "beca6939a2d3be56ac8d038f4c74710de60cc25d39ae0a3d235d74a66db4cd08"
+    },
+    {
+      "taskId": "GT-G0-15",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-15-nightly-release-wiring-20260825.md",
+      "evidenceSha256": "4156bb45c884902946e702e8735e3d2afc598a2b1729a1d496ab1035add487bf"
+    }
+  ],
+  "sourceCommit": "a8d72489028e650def33630a979d05a2bbc0bf26"
+}

@@ -27,7 +27,7 @@
       "reality": { "enum": ["HOSTED", "PHYSICAL", "EMULATOR", "SIMULATOR", "NOT_APPLICABLE"] },
       "evidencePath": { "type": "string", "minLength": 1 },
       "environment": { "type": "object" }
-    } } },
+    }, "allOf": [{ "if": { "properties": { "reality": { "const": "PHYSICAL" } } }, "then": { "properties": { "environment": { "type": "object", "required": ["packageIdentity", "fixtureDigest", "artifactSha256"] } } } }] } },
     "checks": { "type": "array", "minItems": 4, "items": { "type": "object", "additionalProperties": false, "required": ["level", "status", "applicable", "reason", "firstDivergence", "issues"], "properties": {
       "level": { "enum": ["E1", "E2", "E3", "E4"] },
       "status": { "enum": ["PASS", "FAIL", "BLOCKED"] },

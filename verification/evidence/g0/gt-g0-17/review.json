@@ -1,0 +1,28 @@
+{
+  "format": "axiom-gt-g0-17-review-v1",
+  "taskId": "GT-G0-17",
+  "reviewCommit": "dc05153a8078b936e7b5867d802beac0e309558a",
+  "gateReport": {
+    "path": "verification/evidence/g0/gt-g0-16/g0-gate-report.json",
+    "sourceCommit": "25fa3a950d91a7e4fa1b9664d14be66ee6b1c359",
+    "status": "BLOCKED",
+    "e4Issue": "PHYSICAL_RELEASE_AUTHORITY_BLOCKED"
+  },
+  "lineage": { "requiredTasks": 16, "passTasks": 16 },
+  "exitConditions": {
+    "cppRunnerSeedInvalidCorpus": "BLOCKED",
+    "tenRunDeterminism": "BLOCKED",
+    "firstDivergenceMachineReadable": "PASS",
+    "gateReportAndArtifactHashes": "PASS",
+    "cleanCheckoutRebuild": "BLOCKED",
+    "g0Total": "BLOCKED"
+  },
+  "decision": "BLOCKED",
+  "promotion": { "allowed": false, "nextGate": "G1" },
+  "blockingIssues": [
+    "G0-17-B01_PHYSICAL_RELEASE_AUTHORITY",
+    "G0-17-B02_CPP_RUNNER_EVIDENCE_MISSING",
+    "G0-17-B03_FULL_CORPUS_TEN_RUN_EVIDENCE_MISSING",
+    "G0-17-B04_CLEAN_CHECKOUT_GATE_REPORT_EVIDENCE_MISSING"
+  ]
+}
