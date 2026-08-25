@@ -1,0 +1,28 @@
+{
+  "format": "axiom-platform-conformance-result-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-DATABRIDGE-NO-ECHO-001",
+  "requirementStatus": "SPEC_REQUIREMENT",
+  "result": "OBSERVED_AGREEMENT_OPEN",
+  "participants": [
+    {
+      "profileId": "ios-rn-objcxx-reference-v0-1"
+    }
+  ],
+  "checks": [
+    {
+      "kind": "OBSERVATION_CAPTURED",
+      "status": "OBSERVED"
+    }
+  ],
+  "openObservations": [
+    {
+      "kind": "COMPARATOR_DEFERRED",
+      "reason": "shared runner owns expected comparison"
+    }
+  ],
+  "divergence": null,
+  "diagnostics": [
+    "PHYSICAL_DEVICE_REPORT_ATTACHED"
+  ]
+}

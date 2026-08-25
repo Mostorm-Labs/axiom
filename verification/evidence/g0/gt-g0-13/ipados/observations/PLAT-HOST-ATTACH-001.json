@@ -1,0 +1,69 @@
+{
+  "format": "axiom-platform-observation-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-HOST-ATTACH-001",
+  "profileId": "ipados-rn-objcxx-reference-v0-1",
+  "platformFamily": "APPLE",
+  "execution": {
+    "adapter": "apple-xctest-reference-v0.1",
+    "boundary": "OUT_OF_PROCESS",
+    "deterministic": true,
+    "host": "XCTest-style",
+    "physicalExecution": true,
+    "deviceEvidence": "ipados/ipados-physical-report.json"
+  },
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "presentation.feedback",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "arc.preview",
+    "arc.preview.loss.inject",
+    "platform.state.capture",
+    "surface.ownership.capture",
+    "fault.stale_generation.inject",
+    "fault.present_completion_hold",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "terminal": {
+    "state": "OBSERVED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "event": "CANVAS_CREATED"
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "event": "HOST_ATTACHED"
+    }
+  ],
+  "artifacts": {},
+  "semanticCheckpoints": [],
+  "stateCheckpoints": [],
+  "targetBindings": [],
+  "realization": {
+    "host": "RN_FABRIC_OBJCXX",
+    "surface": "UIVIEW_CAMETAL_LAYER",
+    "backend": "METAL",
+    "deviceClass": "IPAD",
+    "arc": "ENABLED",
+    "inputPath": "UITouch.coalescedTouches→ObjC++→PointerSampleBatch",
+    "surfaceGeneration": "u64:0000000000000001",
+    "surfacePrimitive": "CAMETAL_LAYER"
+  },
+  "diagnostics": [
+    "APPLE_PHYSICAL_EVIDENCE_ATTACHED"
+  ]
+}

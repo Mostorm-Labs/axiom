@@ -57,6 +57,29 @@ test("windows profile reports native D3D12 and Arc realization", () => {
   assert.equal(profile.capabilities.includes("arc.preview"), true);
 });
 
+test("android profile reports Activity/View/JNI, GLES3 and Arc realization", () => {
+  const result = run(["profile", "--adapter", "android"]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const profile = JSON.parse(result.stdout);
+  assert.equal(profile.platformFamily, "ANDROID");
+  assert.equal(profile.realization.host, "ACTIVITY_VIEW_JNI");
+  assert.equal(profile.realization.backend, "GLES3");
+  assert.equal(profile.capabilities.includes("input.pointer_sample_batch"), true);
+});
+
+test("Apple profiles report separate iPhone and iPadOS RN/ObjC++ Metal realizations", () => {
+  const ios = run(["profile", "--adapter", "ios"]);
+  const ipados = run(["profile", "--adapter", "ipados"]);
+  assert.equal(ios.status, 0, ios.stdout + ios.stderr);
+  assert.equal(ipados.status, 0, ipados.stdout + ipados.stderr);
+  const iphone = JSON.parse(ios.stdout);
+  const ipad = JSON.parse(ipados.stdout);
+  assert.equal(iphone.platformFamily, "APPLE");
+  assert.equal(iphone.realization.deviceClass, "IPHONE");
+  assert.equal(ipad.realization.deviceClass, "IPAD");
+  assert.notEqual(iphone.profileId, ipad.profileId);
+});
+
 test("web run uses the shared seed and emits applicability plus observation facts", async () => {
   const output = await mkdtemp(join(tmpdir(), "axiom-web-adapter-"));
   const result = run(["run", "--suite", "platform-seed-v0.1", "--adapter", "web", "--output", output]);
@@ -76,3 +99,35 @@ test("web run uses the shared seed and emits applicability plus observation fact
   assert.equal(Object.hasOwn(observation, "expected"), false);
   assert.equal(Object.hasOwn(observation, "result"), false);
 });
+
+test("android run consumes all 28 shared scenarios and emits facts only", async () => {
+  const output = await mkdtemp(join(tmpdir(), "axiom-android-adapter-"));
+  const result = run(["run", "--suite", "platform-seed-v0.1", "--adapter", "android", "--output", output]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const summary = JSON.parse(await readFile(join(output, "summary.json"), "utf8"));
+  assert.equal(summary.adapter, "android");
+  assert.equal(summary.applicableCount, 28);
+  assert.equal(summary.notApplicableCount, 0);
+  assert.equal(summary.resultCount, 28);
+  assert.equal((await readdir(join(output, "observations"))).length, 28);
+  const observation = JSON.parse(await readFile(join(output, "observations", "PLAT-INPUT-BATCH-NORMALIZED-001.json"), "utf8"));
+  assert.equal(observation.platformFamily, "ANDROID");
+  assert.equal(Object.hasOwn(observation, "expected"), false);
+  assert.equal(Object.hasOwn(observation, "result"), false);
+});
+
+for (const adapter of ["ios", "ipados"]) {
+  test(`${adapter} run keeps 28 shared scenarios facts-only`, async () => {
+    const output = await mkdtemp(join(tmpdir(), `axiom-${adapter}-adapter-`));
+    const result = run(["run", "--suite", "platform-seed-v0.1", "--adapter", adapter, "--output", output]);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const summary = JSON.parse(await readFile(join(output, "summary.json"), "utf8"));
+    assert.equal(summary.adapter, adapter);
+    assert.equal(summary.applicableCount, 28);
+    assert.equal((await readdir(join(output, "observations"))).length, 28);
+    const observation = JSON.parse(await readFile(join(output, "observations", "PLAT-INPUT-BATCH-NORMALIZED-001.json"), "utf8"));
+    assert.equal(observation.platformFamily, "APPLE");
+    assert.equal(Object.hasOwn(observation, "expected"), false);
+    assert.equal(Object.hasOwn(observation, "result"), false);
+  });
+}
