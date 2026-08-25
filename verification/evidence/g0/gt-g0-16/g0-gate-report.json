@@ -1,0 +1,247 @@
+{
+  "format": "axiom-gate-report-v1",
+  "formatVersion": 1,
+  "authority": "G0_GATE_REPORT",
+  "gate": "G0",
+  "status": "BLOCKED",
+  "sourceCommit": "25fa3a950d91a7e4fa1b9664d14be66ee6b1c359",
+  "branch": "codex/gt-g0-16-gate-report",
+  "schemaVersion": "axiom-gate-report-v1",
+  "generatorVersion": "0.1.0",
+  "corpus": {
+    "schemaSha256": "df0ad6e43880f09c90ebf95f19110178aba6890df0010ebda7485029e2b543b4",
+    "corpusSha256": "6b17b8fcc411a533c822a5117e33cf73fa6766739d7d36ac86dc4bea883af4fe",
+    "runnerVersion": "0.1.0",
+    "runtimeVersion": "0.1.0"
+  },
+  "checks": [
+    {
+      "level": "E1",
+      "status": "PASS",
+      "applicable": true,
+      "reason": "Contract, schema, runner and corpus foundations",
+      "firstDivergence": null,
+      "issues": []
+    },
+    {
+      "level": "E2",
+      "status": "PASS",
+      "applicable": true,
+      "reason": "Reference platform adapters",
+      "firstDivergence": null,
+      "issues": []
+    },
+    {
+      "level": "E3",
+      "status": "PASS",
+      "applicable": true,
+      "reason": "PR, Nightly and reproducibility integration evidence",
+      "firstDivergence": null,
+      "issues": []
+    },
+    {
+      "level": "E4",
+      "status": "BLOCKED",
+      "applicable": true,
+      "reason": "Physical release authority is required for platform promotion",
+      "firstDivergence": null,
+      "issues": [
+        "PHYSICAL_RELEASE_AUTHORITY_BLOCKED"
+      ]
+    }
+  ],
+  "lineage": [
+    {
+      "taskId": "GT-G0-00",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-00-repository-reconciliation-20260823.md",
+      "evidenceSha256": "e49050a70fd457ad40bf78b098df6979716499749db0b9e0bf7f1517846c3871"
+    },
+    {
+      "taskId": "GT-G0-01",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-01-verification-workspace-skeleton-20260823.md",
+      "evidenceSha256": "c2cd6eeb8d0809606c3708bb42243181f97bc0e3ab45dd89ea8b15a4dc8fee1c"
+    },
+    {
+      "taskId": "GT-G0-02",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-02-protocol-package-20260823.md",
+      "evidenceSha256": "33588dd7d8746339461e1926ab4d07c2ac6cb3a493c49a080687338af800af9f"
+    },
+    {
+      "taskId": "GT-G0-03",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-03-runner-core-a-20260823.md",
+      "evidenceSha256": "81dfb72b835a89d35273a044a52d61e055fb61f9f927f79149760ad39aae9663"
+    },
+    {
+      "taskId": "GT-G0-04",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-04-runner-core-b-20260824.md",
+      "evidenceSha256": "617d0fffb9aa7a58ebfdc4ae7cc7769b962f1c70b52600b757010efe836af5ec"
+    },
+    {
+      "taskId": "GT-G0-05",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-05-scripted-adapter-transport-20260824.md",
+      "evidenceSha256": "c2c1dbbf89faf66f4c2c8b6a5bf1741fad4dff6bd71bfde5d8c4ccd55fe455ed"
+    },
+    {
+      "taskId": "GT-G0-06",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-06-protocol-vectors-20260824.md",
+      "evidenceSha256": "6a7c456624a5ec6776c0e57354d96e321416c0989467fd13c44d7560cd2cda2c"
+    },
+    {
+      "taskId": "GT-G0-07",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-07-shared-cli-protocol-ci-20260824.md",
+      "evidenceSha256": "eded817ce1413e75ce112de3e19f768a737bbd134bca7b77ceecaf2c7a383639"
+    },
+    {
+      "taskId": "GT-G0-08",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-08-native-hooks-common-host-20260824.md",
+      "evidenceSha256": "43cb45c1022227114543812fc22980810d7cff695a68748930154da5ecafdfee"
+    },
+    {
+      "taskId": "GT-G0-09",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-09-platform-scenarios-20260824.md",
+      "evidenceSha256": "2ea0aa9bf45178f1f1e7176f67e239c6a66a125c1a5681e2f7ed566e568f481c"
+    },
+    {
+      "taskId": "GT-G0-10",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-10-web-reference-adapter-20260824.md",
+      "evidenceSha256": "564f80928afd8d1e3243d102768b5103e046cdf504fe5691af539db032a9d613"
+    },
+    {
+      "taskId": "GT-G0-11",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-11-windows-native-adapter-20260824.md",
+      "evidenceSha256": "22adfcb924f6bd79f736f3567db76bd1475a9e8fd8a69be14c52e52d0c1fff19"
+    },
+    {
+      "taskId": "GT-G0-12",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-12-android-instrumentation-adapter-20260824.md",
+      "evidenceSha256": "830b7a63070b19925e432c3abb5fe082bde0d36c27d8a5316640e9aac884c764"
+    },
+    {
+      "taskId": "GT-G0-13",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-13-apple-xctest-adapter-20260824.md",
+      "evidenceSha256": "3d67f4086cff347f6c8696b967b71726b8fd65bd3bd29524f7588fa05344829a"
+    },
+    {
+      "taskId": "GT-G0-14",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-14-pr-ci-dag-20260825.md",
+      "evidenceSha256": "beca6939a2d3be56ac8d038f4c74710de60cc25d39ae0a3d235d74a66db4cd08"
+    },
+    {
+      "taskId": "GT-G0-15",
+      "status": "Pass",
+      "evidencePath": "docs/quality/evidence/g0/gt-g0-15-nightly-release-wiring-20260825.md",
+      "evidenceSha256": "4156bb45c884902946e702e8735e3d2afc598a2b1729a1d496ab1035add487bf"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "bytes": 8321,
+      "sha256": "888e3fea879373fa9b32e6c4b6a846d0c205a2fadd87a5900e29fc44d26eb1e3"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/hosted/nightly/platform-release-decision-1.json",
+      "bytes": 1080,
+      "sha256": "f4dc8c9e5b23094bd7c6dde0812540f2cceed39c1171001d9e42d17fdbf8ae5c"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/hosted/nightly/platform-release-decision-2.json",
+      "bytes": 1080,
+      "sha256": "f4dc8c9e5b23094bd7c6dde0812540f2cceed39c1171001d9e42d17fdbf8ae5c"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/hosted/nightly/reproducibility-comparison.json",
+      "bytes": 250,
+      "sha256": "20f745174807c24b2acce82aafd17ef8e0d913958277397cb6f150469efcc5b1"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/hosted/release/platform-release-decision-1.json",
+      "bytes": 1337,
+      "sha256": "86030782c65be08f417bd35cb52cf86e148d02fbcbacba8390623b2c13507dd6"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/hosted/runs.json",
+      "bytes": 1063,
+      "sha256": "651784142c448966a5f6807549cc1578229e6a164734b17da2b0b8135b51994a"
+    },
+    {
+      "path": "verification/evidence/g0/gt-g0-15/manifest.json",
+      "bytes": 2346,
+      "sha256": "6aae3e64ee628e7a92cbfd713e39997eb469e66b08658b3172040b2030c3ffe1"
+    }
+  ],
+  "issues": [
+    "PHYSICAL_RELEASE_AUTHORITY_BLOCKED"
+  ],
+  "platforms": [
+    {
+      "subject": "android",
+      "platformFamily": "ANDROID",
+      "profileId": "android-instrumentation-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": {
+        "runnerName": "hosted"
+      }
+    },
+    {
+      "subject": "ios",
+      "platformFamily": "APPLE",
+      "profileId": "ios-rn-objcxx-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": {
+        "runnerName": "hosted"
+      }
+    },
+    {
+      "subject": "ipados",
+      "platformFamily": "APPLE",
+      "profileId": "ipados-rn-objcxx-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": {
+        "runnerName": "hosted"
+      }
+    },
+    {
+      "subject": "web",
+      "platformFamily": "WEB",
+      "profileId": "web-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": {
+        "runnerName": "hosted"
+      }
+    },
+    {
+      "subject": "windows",
+      "platformFamily": "WINDOWS",
+      "profileId": "windows-native-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": {
+        "runnerName": "hosted"
+      }
+    }
+  ],
+  "promotion": {
+    "allowed": false,
+    "reason": "Gate is not eligible for promotion"
+  }
+}

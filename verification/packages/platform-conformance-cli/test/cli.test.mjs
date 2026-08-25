@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -208,4 +209,56 @@ test("compare-full rejects different source revisions", async () => {
   await writeFile(left, JSON.stringify(decision("a".repeat(40)))); await writeFile(right, JSON.stringify(decision("e".repeat(40))));
   assert.equal(run(["compare-full", "--left", left, "--right", right, "--output", output]).status, 20);
   assert.equal(JSON.parse(await readFile(output, "utf8")).status, "INVALID_EVIDENCE");
+});
+
+test("gate-report aggregates commit-bound G0 lineage and blocks physical promotion", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-g0-gate-report-"));
+  const lineage = join(root, "lineage.json"); const hosted = join(root, "hosted.json"); const artifacts = join(root, "artifacts.json"); const output = join(root, "report.json");
+  const hash = "b".repeat(64); const sourceCommit = "a".repeat(40); const evidenceBytes = Buffer.from("evidence");
+  const evidenceHash = createHash("sha256").update(evidenceBytes).digest("hex");
+  await mkdir(join(root, "evidence"));
+  for (let i = 0; i < 16; i += 1) await writeFile(join(root, "evidence", `${i}.json`), evidenceBytes);
+  const artifactBytes = Buffer.from("artifact"); const artifactHash = createHash("sha256").update(artifactBytes).digest("hex");
+  await writeFile(join(root, "artifact.json"), artifactBytes);
+  await writeFile(lineage, JSON.stringify({ corpus: { schemaSha256: hash, corpusSha256: hash, runnerVersion: "0.1.0", runtimeVersion: "0.1.0" }, platforms: [{ subject: "web", platformFamily: "WEB", profileId: "web-reference-v0-1", reality: "HOSTED", evidencePath: "evidence/0.json", environment: {} }], tasks: Array.from({ length: 16 }, (_, i) => ({ taskId: `GT-G0-${String(i).padStart(2, "0")}`, status: "Pass", evidencePath: `evidence/${i}.json`, evidenceSha256: evidenceHash })) }));
+  await writeFile(hosted, JSON.stringify({ nightlyDecision: "PASS", releaseDecision: "BLOCKED_AUTHORITY", reproducibility: "PASS" }));
+  await writeFile(artifacts, JSON.stringify([{ path: "artifact.json", bytes: artifactBytes.byteLength, sha256: artifactHash }]));
+  const result = run(["gate-report", "--source-commit", sourceCommit, "--branch", "main", "--lineage", lineage, "--hosted", hosted, "--artifacts", artifacts, "--repository-root", root, "--output", output]);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.equal(JSON.parse(await readFile(output, "utf8")).status, "BLOCKED");
+});
+
+test("gate-report rejects drifted evidence and artifacts", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-g0-gate-integrity-"));
+  const lineage = join(root, "lineage.json"); const hosted = join(root, "hosted.json"); const artifacts = join(root, "artifacts.json"); const output = join(root, "report.json");
+  const hash = "b".repeat(64); const sourceCommit = "a".repeat(40); const evidence = join(root, "evidence.json"); const artifact = join(root, "artifact.json");
+  await writeFile(evidence, "actual-evidence"); await writeFile(artifact, "actual-artifact");
+  const taskLineage = Array.from({ length: 16 }, (_, i) => ({ taskId: `GT-G0-${String(i).padStart(2, "0")}`, status: "Pass", evidencePath: "evidence.json", evidenceSha256: hash }));
+  await writeFile(lineage, JSON.stringify({ corpus: { schemaSha256: hash, corpusSha256: hash, runnerVersion: "0.1.0", runtimeVersion: "0.1.0" }, platforms: [{ subject: "web", platformFamily: "WEB", profileId: "web-reference-v0-1", reality: "HOSTED", evidencePath: "evidence.json", environment: {} }], tasks: taskLineage }));
+  await writeFile(hosted, JSON.stringify({ nightlyDecision: "PASS", releaseDecision: "BLOCKED_AUTHORITY", reproducibility: "PASS" }));
+  await writeFile(artifacts, JSON.stringify([{ path: "artifact.json", bytes: 14, sha256: hash }]));
+  const result = run(["gate-report", "--source-commit", "a".repeat(40), "--branch", "main", "--lineage", lineage, "--hosted", hosted, "--artifacts", artifacts, "--repository-root", root, "--output", output]);
+  assert.equal(result.status, 20);
+  assert.match(result.stderr, /evidence hash mismatch/);
+
+  const validEvidenceHash = createHash("sha256").update("actual-evidence").digest("hex");
+  taskLineage.forEach((task) => { task.evidenceSha256 = validEvidenceHash; });
+  await writeFile(lineage, JSON.stringify({ corpus: { schemaSha256: hash, corpusSha256: hash, runnerVersion: "0.1.0", runtimeVersion: "0.1.0" }, platforms: [{ subject: "web", platformFamily: "WEB", profileId: "web-reference-v0-1", reality: "HOSTED", evidencePath: "evidence.json", environment: {} }], tasks: taskLineage }));
+  await writeFile(artifacts, JSON.stringify([{ path: "artifact.json", bytes: 999, sha256: createHash("sha256").update("actual-artifact").digest("hex") }]));
+  const bytes = run(["gate-report", "--source-commit", sourceCommit, "--branch", "main", "--lineage", lineage, "--hosted", hosted, "--artifacts", artifacts, "--repository-root", root, "--output", output]);
+  assert.equal(bytes.status, 20);
+  assert.match(bytes.stderr, /byte count mismatch/);
+});
+
+test("gate-report rejects missing files and path traversal", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-g0-gate-paths-"));
+  const lineage = join(root, "lineage.json"); const hosted = join(root, "hosted.json"); const artifacts = join(root, "artifacts.json"); const output = join(root, "report.json");
+  const hash = "b".repeat(64);
+  await writeFile(join(root, "evidence.json"), "platform-evidence");
+  const base = { corpus: { schemaSha256: hash, corpusSha256: hash, runnerVersion: "0.1.0", runtimeVersion: "0.1.0" }, platforms: [{ subject: "web", platformFamily: "WEB", profileId: "web-reference-v0-1", reality: "HOSTED", evidencePath: "evidence.json", environment: {} }], tasks: Array.from({ length: 16 }, (_, i) => ({ taskId: `GT-G0-${String(i).padStart(2, "0")}`, status: "Pass", evidencePath: "missing.json", evidenceSha256: hash })) };
+  await writeFile(lineage, JSON.stringify(base)); await writeFile(hosted, JSON.stringify({ nightlyDecision: "PASS", releaseDecision: "BLOCKED_AUTHORITY", reproducibility: "PASS" })); await writeFile(artifacts, "[]");
+  const args = ["gate-report", "--source-commit", "a".repeat(40), "--branch", "main", "--lineage", lineage, "--hosted", hosted, "--artifacts", artifacts, "--repository-root", root, "--output", output];
+  const missing = run(args); assert.equal(missing.status, 20); assert.match(missing.stderr, /file is missing/);
+  base.tasks[0].evidencePath = "../outside.json"; base.tasks[1].evidencePath = "evidence.json"; base.tasks[1].evidenceSha256 = createHash("sha256").update("platform-evidence").digest("hex"); await writeFile(lineage, JSON.stringify(base));
+  const traversal = run(args); assert.equal(traversal.status, 20); assert.match(traversal.stderr, /unsafe relative path/);
 });

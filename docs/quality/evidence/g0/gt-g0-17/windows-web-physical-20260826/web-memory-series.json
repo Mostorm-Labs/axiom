@@ -1,0 +1,20 @@
+{
+  "decision_rule": {
+    "maximum_tail_growth_ratio": 0.05,
+    "method": "compare medians of the first and last quartile windows",
+    "minimum_samples": 10,
+    "minimum_span_ms": 50000
+  },
+  "head_median_bytes": 6536066,
+  "maximum_bytes": 6777600,
+  "minimum_bytes": 3194417,
+  "passed": true,
+  "sample_count": 13,
+  "schema_version": 1,
+  "span_ms": 59993,
+  "sustained_growth_observed": false,
+  "tail_growth_bytes": -2885817,
+  "tail_growth_ratio": -0.441522010334657,
+  "tail_median_bytes": 3650249,
+  "window_samples": 4
+}

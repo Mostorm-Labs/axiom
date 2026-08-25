@@ -26,9 +26,10 @@ Windows 场景和物理 Evidence 已在 Windows runner 上完成，`GT-G0-11` �
   分开记录，emulator 不得冒充 physical PASS。
 - `GT-G0-13` 已增加独立的 iPhone/iPadOS RN/Fabric + ObjC++/Metal facts-only adapter；两端 profile、
   observation 和 Evidence 必须分开，macOS 只保留 shared-core logical conformance。
-- `GT-G0-14`：PR CI DAG、Shared Platform Comparator、semantic bootstrap、run-set 与 PR decision；
-- `GT-G0-15`：Nightly/Release wiring、Full Run-set、Platform Evidence Index、Platform Release Decision 与 reproducibility contract；当前仍等待 commit-bound hosted validation。
-- `GT-G0-16`：Gate Report schema 和 G0 aggregator，尚未实现。
+- `GT-G0-14`：PR CI DAG、Shared Platform Comparator、semantic bootstrap、run-set 与 PR decision，已记录为 Pass；
+- `GT-G0-15`：Nightly/Release wiring、Full Run-set、Platform Evidence Index、Platform Release Decision 与 reproducibility contract，已记录 hosted Nightly Pass、Release BLOCKED_AUTHORITY 和 reproducibility Pass；
+- `GT-G0-16`：Gate Report schema、G0 aggregator 和 CLI integrity boundary 已实现并验证中；
+  当前报告因缺少 physical release authority 保持 `BLOCKED`，且最终实现 commit-bound Evidence 尚待提交后重生成。
 
 ## 骨架约定
 
