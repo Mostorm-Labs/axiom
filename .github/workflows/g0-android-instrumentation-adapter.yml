@@ -60,6 +60,9 @@ jobs:
       - name: Install verification workspace
         working-directory: verification
         run: npm ci --ignore-scripts
+      - name: Install Playwright Chromium for shared Web checks
+        working-directory: verification
+        run: npx playwright install chromium
       - name: Build verification workspace
         working-directory: verification
         run: npm run build

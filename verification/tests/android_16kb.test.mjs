@@ -44,4 +44,5 @@ test("Android instrumentation build declares ELF and APK 16 KB gates", async () 
   assert.equal(executableLines.length, 1, "emulator action script must not depend on sh multiline continuation");
   assert.match(executableLines[0], /python3 verification\/tools\/run_android_instrumentation\.py --app-apk/);
   assert.match(executableLines[0], /&& env AXIOM_EVIDENCE_SOURCE_COMMIT=/);
+  assert.match(workflow, /npx playwright install chromium/);
 });
