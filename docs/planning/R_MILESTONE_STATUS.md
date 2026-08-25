@@ -21,7 +21,7 @@ R 条目的贡献状态使用任务状态词：`Not Started`、`Analyzing`、`Re
 ## 2. R1 — Runtime Foundation
 
 GT-G0-13 的 iPhone 与 iPadOS 独立物理 Evidence 和 commit-bound Evidence 均已通过。GT-G0-14
-已完成本地实现与验证，正在等待 hosted PR DAG 和 commit-bound Evidence。
+已完成本地实现、验证与 commit-bound Evidence，正在等待 hosted PR DAG。
 
 | R 阶段条目 | 来源 Gate/Task | 状态 | Evidence | 剩余条件 |
 | --- | --- | --- | --- | --- |

@@ -35,7 +35,7 @@ test("PR workflow exposes the accepted dependency layers and aggregate always ru
 test("checked-in GT-G0-14 worktree evidence retains four failure layers and hashes", async () => {
   const evidence = join(root, "verification/evidence/g0/gt-g0-14");
   const manifest = JSON.parse(await readFile(join(evidence, "manifest.json"), "utf8"));
-  assert.equal(manifest.sourceCommit, "WORKTREE");
+  assert.equal(manifest.sourceCommit, "96bed11e573b48a2aa3efc63648c24ea9ba2624c");
   for (const layer of ["schema", "protocol", "semantic", "platform"]) {
     const decision = JSON.parse(await readFile(join(evidence, "failure-attribution", `${layer}-failure.json`), "utf8"));
     assert.equal(decision.failedLayer, layer);
