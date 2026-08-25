@@ -3,6 +3,18 @@ name: G0 PR CI DAG
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      failure_layer:
+        description: Deliberately fail one layer to verify error attribution
+        required: true
+        default: none
+        type: choice
+        options:
+          - none
+          - schema
+          - protocol
+          - semantic
+          - platform
 
 concurrency:
   group: g0-pr-ci-dag-${{ github.ref }}
@@ -52,7 +64,9 @@ jobs:
         id: schema
         continue-on-error: true
         working-directory: verification
-        run: node packages/platform-conformance-cli/dist/main.js validate > ../out/g0-14/schema/validation.log 2>&1
+        run: |
+          node packages/platform-conformance-cli/dist/main.js validate > ../out/g0-14/schema/validation.log 2>&1
+          if [ "${{ inputs.failure_layer }}" = schema ]; then exit 42; fi
       - name: Write schema layer record
         shell: bash
         run: |
@@ -94,6 +108,7 @@ jobs:
         run: |
           mkdir -p ../out/g0-14/protocol
           node packages/platform-conformance-cli/dist/main.js protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output ../out/g0-14/protocol > ../out/g0-14/protocol/execution.log 2>&1
+          if [ "${{ inputs.failure_layer }}" = protocol ]; then exit 42; fi
       - name: Write protocol layer record
         shell: bash
         run: |
@@ -133,6 +148,7 @@ jobs:
         run: |
           mkdir -p out/g0-14
           ctest --preset host-debug --output-on-failure --output-junit "$GITHUB_WORKSPACE/out/g0-14/semantic-ctest.xml"
+          if [ "${{ inputs.failure_layer }}" = semantic ]; then exit 42; fi
       - name: Generate semantic bootstrap summary
         id: summary
         continue-on-error: true
@@ -185,7 +201,9 @@ jobs:
         id: logical
         continue-on-error: true
         working-directory: verification
-        run: npm run test --workspace "${{ matrix.workspace }}"
+        run: |
+          npm run test --workspace "${{ matrix.workspace }}"
+          if [ "${{ inputs.failure_layer }}" = platform ] && [ "${{ matrix.platform }}" = web ]; then exit 42; fi
       - name: Execute Shared Platform Comparator contract
         id: comparator
         continue-on-error: true
