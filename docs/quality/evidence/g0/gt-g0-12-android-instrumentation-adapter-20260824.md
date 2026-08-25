@@ -2,7 +2,7 @@
 
 > 任务：`GT-G0-12`（Notion locator：`WP-G0-12 / IH-12`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
-> 当前状态：`Validating`
+> 当前状态：`Pass`
 
 ## 1. 来源与边界
 
@@ -18,7 +18,7 @@ Surface 生命周期与 Runtime/Document 生命周期分离；surface lost/rebin
 | Modify | verification CMake、conformance CLI、workspace lock、Android package、instrumentation host 和 Evidence generator |
 | Missing（本轮补齐） | Activity/View/JNI host、MotionEvent history→JNI→PointerSampleBatch、surface/device generation、facts-only 28-case adapter Evidence |
 | Conflict（已避免） | 不把 Android adapter 变成产品 Runtime；不在 Kotlin/Java 复制场景期望；不把 emulator 结果写成 physical device PASS |
-| Blocked | Hosted Android emulator workflow 尚未在远端运行；GitHub Actions artifact 待 workflow 所在提交进入远端后取得 |
+| Blocked | — |
 
 ## 3. 实现交付物
 
@@ -40,18 +40,20 @@ Surface 生命周期与 Runtime/Document 生命周期分离；surface lost/rebin
 | Evidence generator | Pass；28 applicable、无 expected/PASS 越权字段、manifest SHA-256 完整 |
 | workspace/schema/diff checks | Pass；workspace valid、13 schemas/fixtures valid、`git diff --check` clean |
 | Android instrumentation APK build | Pass；Gradle 8.11.1 + Temurin 17 + NDK 27.2.12479018；clean build 后 `libaxiom_verification_android_jni.so` 的三个 ELF `LOAD` 段均为 `0x4000`，app/test APK 的 `zipalign -P 16` 均通过；app APK SHA-256 为 `102f42e97ac32934df58f70df7b49ed8521cf32b578365fc0f20cf17d543de21` |
-| Hosted Android emulator | Pending；workflow 已加入 16 KB ELF 检查，需 GitHub Actions 实际运行并取得 artifact |
+| Hosted Android emulator | Pass；GitHub Actions run `32804707374` / job `97672420475`，API 35 x86_64 emulator，`HARNESS_STARTED`，28 applicable scenarios；ELF `0x4000` 与 app/test APK `zipalign -P 16` 均通过；artifact `9547783443`，digest `sha256:54ddcbbcb14ad48af352a3670967a5cbbf52c11564b821cdee56e44db5343c40` |
 | Android physical device | Pass（instrumentation seam）；Pixel 7 / Android 17 / arm64-v8a，`HARNESS_STARTED`，`emulator=false`，28 applicable scenarios；修复包从设备回拉后 ELF/APK 对齐复验通过，冷启动未再次出现 `PageSizeMismatchDialog`；独立 physical Evidence 已生成 |
 
 ## 5. Evidence 与状态
 
-结构化 Evidence：[`verification/evidence/g0/gt-g0-12/`](../../../../verification/evidence/g0/gt-g0-12/)。当前工作区 Evidence 使用 `sourceCommit: WORKTREE`，不能作为最终 commit-bound Evidence。真实 Android instrumentation 结果通过 `AXIOM_ANDROID_INSTRUMENTATION_RESULT` 注入；只有结果状态为 `HARNESS_STARTED` 且 physical 模式明确 `device.emulator: false` 时，才可记录物理设备证据。16 KB ELF 校验脚本为 `verification/tools/check_android_16kb_elf.py`，APK 与 ELF 对齐必须同时满足。当前 Pixel 7 内核页大小为 4 KB；它证明兼容包可安装、可加载且不再报警，但 16 KB 兼容结论仍由 ELF `0x4000`、APK `zipalign -P 16` 和后续 hosted CI 静态门禁共同约束，不能把这台 4 KB 设备写成 16 KB 物理设备 Evidence。
+结构化 Evidence：[`verification/evidence/g0/gt-g0-12/`](../../../../verification/evidence/g0/gt-g0-12/)。物理真机与 hosted emulator Evidence 均绑定实现提交 `5518d504a696ad059bb8b51cf76062772d770198`；根 manifest 汇总 126 个文件并逐文件记录 SHA-256。Hosted CI 见 [run 32804707374](https://github.com/Mostorm-Labs/axiom/actions/runs/32804707374)，下载后的 artifact 元数据和 digest 保存在 `hosted-emulator/hosted-run.json`。
+
+真实 Android instrumentation 结果通过 `AXIOM_ANDROID_INSTRUMENTATION_RESULT` 注入；只有结果状态为 `HARNESS_STARTED` 且 physical 模式明确 `device.emulator: false` 时，才可记录物理设备证据。28 个 result 保持 `OBSERVED_AGREEMENT_OPEN`，这是 adapter 不越权读取 `expected` 的预期结果；本任务的 Pass 表示 Android adapter、双执行环境和 Evidence 边界通过，不提前宣告后续跨平台 comparator Gate 通过。16 KB ELF 校验脚本为 `verification/tools/check_android_16kb_elf.py`，APK 与 ELF 对齐必须同时满足。当前 Pixel 7 内核页大小为 4 KB；它证明兼容包可安装、可加载且不再报警，16 KB 兼容结论由 hosted CI 的 ELF `0x4000` 与 APK `zipalign -P 16` 静态门禁支撑，不能把这台 4 KB 设备写成 16 KB 物理设备 Evidence。
 
 GT-G0-12 当前状态：
 
 - Design：`Pass`
-- Implementation：`Validating`
-- Validation：`Validating`
-- Final：`Validating`
+- Implementation：`Pass`
+- Validation：`Pass`
+- Final：`Pass`
 
-G0 与 R1 继续保持 `Validating`；本轮不进入 `GT-G0-13`。
+GT-G0-12 已满足 Android instrumentation adapter 退出条件。G0 与 R1 继续保持 `Validating`，因为 `GT-G0-13..17` 尚未全部完成；本轮不进入下一任务。
