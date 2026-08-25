@@ -2,17 +2,23 @@
   "format": "axiom-platform-release-decision-v1",
   "formatVersion": 1,
   "authority": "G0_WIRING_ONLY",
-  "cadence": "NIGHTLY",
-  "decision": "FAIL",
-  "failedSubject": "web",
-  "blockingReasons": [],
+  "cadence": "RELEASE",
+  "decision": "BLOCKED_AUTHORITY",
+  "failedSubject": "PHYSICAL",
+  "blockingReasons": [
+    "REQUIRED_REALITY_MISSING:web:PHYSICAL",
+    "REQUIRED_REALITY_MISSING:windows:PHYSICAL",
+    "REQUIRED_REALITY_MISSING:android:PHYSICAL",
+    "REQUIRED_REALITY_MISSING:ios:PHYSICAL",
+    "REQUIRED_REALITY_MISSING:ipados:PHYSICAL"
+  ],
   "identity": {
     "sourceCommit": "1eacf380e52f2c036aa4cdb164562c291b67fbdd",
-    "schemaSha256": "df0ad6e43880f09c90ebf95f19110178aba6890df0010ebda7485029e2b543b4",
-    "corpusSha256": "6b17b8fcc411a533c822a5117e33cf73fa6766739d7d36ac86dc4bea883af4fe",
+    "schemaSha256": "f6c48d37e1a9962619707bf5b01e664f031d7e77d13c205a9ebda72c1d812a3d",
+    "corpusSha256": "222967b71f1e3a160fe6906b40c1c009e5bdbdd30f3ba5bdcead46c4ccba2c7a",
     "runnerVersion": "0.1.0",
     "runtimeVersion": "0.1.0",
-    "repeat": 2,
+    "repeat": 1,
     "seed": 17
   },
   "pgStatuses": [
