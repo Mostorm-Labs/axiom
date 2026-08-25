@@ -1,0 +1,38 @@
+{
+  "format": "axiom-pr-decision-v1",
+  "formatVersion": 1,
+  "decision": "FAIL",
+  "failedLayer": "semantic",
+  "attempts": [
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "schema",
+      "subject": "schema",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "086124b5bf5714424f483f892287a5ed46274c162a79d12f602930659ccea512",
+      "diagnostics": []
+    },
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "protocol",
+      "subject": "protocol-seed-v0.1",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "b3b95d2f3191677c35163c05160428b7d3cb6d505d03fe3ae9a16cc7f2c7117c",
+      "diagnostics": []
+    },
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "semantic",
+      "subject": "g0-bootstrap",
+      "attempt": 1,
+      "status": "FAIL",
+      "evidenceSha256": "0336b5036669be90585a74400fee83206eb17989f86df970635287ee9b8341ab",
+      "diagnostics": []
+    }
+  ]
+}

@@ -1,0 +1,491 @@
+{
+  "format": "axiom-platform-apple-evidence-manifest-v1",
+  "formatVersion": 1,
+  "sourceCommit": "5c630da199bd52526c808f0e0541bfcc32cbb1a6",
+  "targets": [
+    "ios",
+    "ipados"
+  ],
+  "files": [
+    {
+      "path": "applicability.json",
+      "sha256": "7ed509da772b09941b4cde3f7bd7f2a2ef9f215d127a0d64cd6be6fe2ae74a21"
+    },
+    {
+      "path": "ios/ios-physical-report.json",
+      "sha256": "c0791fb9b803c8f165439df9b5d78afe87866dcc06428ccbb26c2747f2fe742f"
+    },
+    {
+      "path": "ios/observations/PLAT-APP-BACKGROUND-001.json",
+      "sha256": "3b33aca93c97d9a1917fb5744bf471d320a2555f4b99ad9ced2bc0b3a7bdfad1"
+    },
+    {
+      "path": "ios/observations/PLAT-APP-FOREGROUND-001.json",
+      "sha256": "2f5578555b93bcf8cf673b8112c902d3cc3b14db3a8975de4a3a5a216222f743"
+    },
+    {
+      "path": "ios/observations/PLAT-ARC-CANONICAL-HANDOFF-001.json",
+      "sha256": "4fae913501eb35226d2503880ea0fa8e00735ac912d5cfda253d1ce998a4a094"
+    },
+    {
+      "path": "ios/observations/PLAT-ARC-PREVIEW-FALLBACK-001.json",
+      "sha256": "6ed5d71bb4be2827d2eaea65023750d5e2ec4eb2b1423108b52d6d761f7b59c6"
+    },
+    {
+      "path": "ios/observations/PLAT-CALLBACK-NONREENTRANT-001.json",
+      "sha256": "9755d562e9a48112f78e7eb5ffbe610f186c4c6907bc0a7b1df79f3dfd6ea315"
+    },
+    {
+      "path": "ios/observations/PLAT-CANONICAL-REPLAY-001.json",
+      "sha256": "7020d69965dc982b04aa0065a52e43546ff9d8c0b71e3cb147567decd460f641"
+    },
+    {
+      "path": "ios/observations/PLAT-CANVAS-RESUME-001.json",
+      "sha256": "0b703eb28adbf8005a145bb861a3605b6edfc5679a893418e69ee9c33b18fd62"
+    },
+    {
+      "path": "ios/observations/PLAT-CANVAS-SUSPEND-001.json",
+      "sha256": "a081c766d361fe8cbdd76c9cb3e9ca79a5ee31f156ddae2966f59e88e80fdc01"
+    },
+    {
+      "path": "ios/observations/PLAT-CREATE-CANVAS-001.json",
+      "sha256": "93fb4269f52ec024d77f345f27286f85b2cb057fb21c0f32ac925b06c3c92b26"
+    },
+    {
+      "path": "ios/observations/PLAT-DATABRIDGE-NO-ECHO-001.json",
+      "sha256": "74d2d484f5b6f127687b4104a2e53aefb3068ef2e164b23fb7bf4cd39cefd668"
+    },
+    {
+      "path": "ios/observations/PLAT-DESTROY-CANVAS-001.json",
+      "sha256": "1090a154efc2a1b44868b3e1edbb0079be89240d5cedd9f26f42493ccc768cc9"
+    },
+    {
+      "path": "ios/observations/PLAT-DESTROY-STALE-WORK-001.json",
+      "sha256": "27841dc53ed12ec3b1b4d38079b737b1dd0ad30228cc7c7e9a531af909013511"
+    },
+    {
+      "path": "ios/observations/PLAT-DEVICE-LOST-001.json",
+      "sha256": "68b33c2c74e34d8ad4493461ba4fcfbe67f3a0d310ed5b5bbbc8aa43edd7ce0a"
+    },
+    {
+      "path": "ios/observations/PLAT-DEVICE-RECOVER-001.json",
+      "sha256": "31f6e97e88fb0ea7af1af73573d4078e0f7dcea12174e11362a52cb1a9ab40bf"
+    },
+    {
+      "path": "ios/observations/PLAT-DOCUMENT-ATTACH-001.json",
+      "sha256": "265b4b9a346ccd5f32f2e462cba28be594fa6c01a8d0cdae76ea2fe3e26c5df7"
+    },
+    {
+      "path": "ios/observations/PLAT-HOST-ATTACH-001.json",
+      "sha256": "f079bb2e3e9329608121d1b082a8c035433f825ed51fef59350bf2442a1fa794"
+    },
+    {
+      "path": "ios/observations/PLAT-HOST-DETACH-REATTACH-001.json",
+      "sha256": "3b8e4c324f00ea8e4cba6bef28674dc111e08bef40ef425f476ae9bd793fa411"
+    },
+    {
+      "path": "ios/observations/PLAT-INPUT-BATCH-NORMALIZED-001.json",
+      "sha256": "82568aac125ecb2c7e052683753a62a419a178b07cc073fb2551bde9b7a17dd9"
+    },
+    {
+      "path": "ios/observations/PLAT-INPUT-HOTPATH-001.json",
+      "sha256": "f3d8c4c91cecfc4ba351ad50c25ac7f5b2563f9d5a26c1046f8304d1c6788591"
+    },
+    {
+      "path": "ios/observations/PLAT-METRICS-DPI-SCALE-001.json",
+      "sha256": "d2ee48dd680226bae916f028dec783f31b711610a8d1aa7cf74b6f99d0c5f25d"
+    },
+    {
+      "path": "ios/observations/PLAT-METRICS-ORIENTATION-001.json",
+      "sha256": "fc1f6d01270f925fb6b761b14c0132c3fa12d7f4ee60e0e2e10f784bbd6f1c93"
+    },
+    {
+      "path": "ios/observations/PLAT-METRICS-RESIZE-001.json",
+      "sha256": "b6773b7c3ee9e329d01f5297162baee3255375193107a8e6b9592038da6dd4bc"
+    },
+    {
+      "path": "ios/observations/PLAT-RECOVERY-REPEATED-001.json",
+      "sha256": "37caf0e975fd311bf511e7b64b909c0225a3a03a6cbdee89749e2572b0b4ab1a"
+    },
+    {
+      "path": "ios/observations/PLAT-STALE-GENERATION-REJECT-001.json",
+      "sha256": "785802f9e8b5f3e12a2ab67d3b884d20ec8c0e2c83bb8fb9eb669a54ea87c8e9"
+    },
+    {
+      "path": "ios/observations/PLAT-SURFACE-LOST-001.json",
+      "sha256": "6a20473278f30c11d7413fb46cfec4530c34af3ed5247cde380b61941e290d96"
+    },
+    {
+      "path": "ios/observations/PLAT-SURFACE-OWNERSHIP-001.json",
+      "sha256": "de5015620a8703051e84954d58465f73bc98be0c54b260f8080eb5e514157b1c"
+    },
+    {
+      "path": "ios/observations/PLAT-SURFACE-REBIND-001.json",
+      "sha256": "9866ef3bdd47747b73d40182894fa6985cf712c69c02e3d6119a70f8dcaf3d6c"
+    },
+    {
+      "path": "ios/observations/PLAT-VISIBILITY-001.json",
+      "sha256": "7ac64e145e50b90af28651dcb69e0530a09270ef2ccd4a866d719081fa988173"
+    },
+    {
+      "path": "ios/profile.json",
+      "sha256": "279f2d5c5565aa1b65118210ab02c319f6d1feb8889bcfce53096b161f94cd76"
+    },
+    {
+      "path": "ios/results/PLAT-APP-BACKGROUND-001.json",
+      "sha256": "6f39d5ece946948841dcd954f2d20cb649760ad7015da8c303d7d503d957ea3d"
+    },
+    {
+      "path": "ios/results/PLAT-APP-FOREGROUND-001.json",
+      "sha256": "4c381df2b045d6dc4f22cff6c16a3d069909f12bda5084c8c1087a01ea632e7c"
+    },
+    {
+      "path": "ios/results/PLAT-ARC-CANONICAL-HANDOFF-001.json",
+      "sha256": "f323236253c971983f6761884ef4f3c31e3d8c9cb934c071f11c75b0341d9096"
+    },
+    {
+      "path": "ios/results/PLAT-ARC-PREVIEW-FALLBACK-001.json",
+      "sha256": "5e910ea0c00c065a5fbb43b13bb718a38a764e55ce982a9c993d0fcf60a59b65"
+    },
+    {
+      "path": "ios/results/PLAT-CALLBACK-NONREENTRANT-001.json",
+      "sha256": "c5e2a3cc45601855ca8a8c73f6403212ba6602d791b52c8c63ef036dcaf5751f"
+    },
+    {
+      "path": "ios/results/PLAT-CANONICAL-REPLAY-001.json",
+      "sha256": "20d020c8cbba2c1838c2a76103dd009047b3e45e7ff7a3ec2da137526e2b4001"
+    },
+    {
+      "path": "ios/results/PLAT-CANVAS-RESUME-001.json",
+      "sha256": "dafffae862588c3d2f89f38719d82014d3375b20019998b412b8ae926c1909fe"
+    },
+    {
+      "path": "ios/results/PLAT-CANVAS-SUSPEND-001.json",
+      "sha256": "81f1338da8046dcd38c465139b64bf9f3c28508e21f236c11df02a47bbe923b6"
+    },
+    {
+      "path": "ios/results/PLAT-CREATE-CANVAS-001.json",
+      "sha256": "d815068563b665cf97a4dd3efe3b7afa91cd4ab64432cdcabe44b0a6fcf34f15"
+    },
+    {
+      "path": "ios/results/PLAT-DATABRIDGE-NO-ECHO-001.json",
+      "sha256": "0b40822d44fd141d4c4a23c45cb5c8301d53fa26243c9a798bdbaf87467de777"
+    },
+    {
+      "path": "ios/results/PLAT-DESTROY-CANVAS-001.json",
+      "sha256": "61db1e60046049fa09fa733d85e71b2c89dfbc755c9e8949c26eb94a31c731f8"
+    },
+    {
+      "path": "ios/results/PLAT-DESTROY-STALE-WORK-001.json",
+      "sha256": "ac22455894143e96f3081c2fd14cc3be26340f15ec1eab77a06cb2437d61b96d"
+    },
+    {
+      "path": "ios/results/PLAT-DEVICE-LOST-001.json",
+      "sha256": "71d14384892ed4cdc21595e1317e01b9df860703be114b0658ef4f783989db45"
+    },
+    {
+      "path": "ios/results/PLAT-DEVICE-RECOVER-001.json",
+      "sha256": "8c6527dba5c22cf50d9da73b631fa8e025b5b25f86396b5a99adb423e5827d4b"
+    },
+    {
+      "path": "ios/results/PLAT-DOCUMENT-ATTACH-001.json",
+      "sha256": "40ace9af9dd37d98203f81b948a55d227f6eed31012f3e73f7252856560d42ac"
+    },
+    {
+      "path": "ios/results/PLAT-HOST-ATTACH-001.json",
+      "sha256": "58c024b2a92877808adaa7f7c5c0f053b78b45ec6a54f3d173a22c9d9ce0981b"
+    },
+    {
+      "path": "ios/results/PLAT-HOST-DETACH-REATTACH-001.json",
+      "sha256": "3bccc8da8d17cbb1259103764baa4610d1b678b91bea9509cac6b56bf8397451"
+    },
+    {
+      "path": "ios/results/PLAT-INPUT-BATCH-NORMALIZED-001.json",
+      "sha256": "7351ad80fde4f08fd30b95141a56c0b396150387fab6ebe0eeef4cb2f6ede8ba"
+    },
+    {
+      "path": "ios/results/PLAT-INPUT-HOTPATH-001.json",
+      "sha256": "87b75b11ff7551c2d62521d6cf286d446f59ce40851b7d73168ef22c2090cba3"
+    },
+    {
+      "path": "ios/results/PLAT-METRICS-DPI-SCALE-001.json",
+      "sha256": "6a47b502f1d9c444d7828b7d9779218427eeb07ac83be4f93d3cb7fcc746a8fb"
+    },
+    {
+      "path": "ios/results/PLAT-METRICS-ORIENTATION-001.json",
+      "sha256": "c70b09514fdc37aac0b5439742cf7cc39de000afba5e29635926be9557a77859"
+    },
+    {
+      "path": "ios/results/PLAT-METRICS-RESIZE-001.json",
+      "sha256": "a54d340e8688e05752cfcdb7a06f3088c906ec2ed2b1274c6ef7b200b7e35372"
+    },
+    {
+      "path": "ios/results/PLAT-RECOVERY-REPEATED-001.json",
+      "sha256": "04254ad8a5a1378ce2992b38637e5f13358c90f19856900669754312389381dd"
+    },
+    {
+      "path": "ios/results/PLAT-STALE-GENERATION-REJECT-001.json",
+      "sha256": "6ec169009e059ad4839815f9c476cb43f80ad16bcce81670b2a71195443e499a"
+    },
+    {
+      "path": "ios/results/PLAT-SURFACE-LOST-001.json",
+      "sha256": "f670dcea096636e1a9c954dd6154a7243677062dbe59b982d73e8c570e5ba1b6"
+    },
+    {
+      "path": "ios/results/PLAT-SURFACE-OWNERSHIP-001.json",
+      "sha256": "4d59b5c12352bf66b2c3bf03e9e26e801c10c21c7d5fb46a4e64a7f9385858a6"
+    },
+    {
+      "path": "ios/results/PLAT-SURFACE-REBIND-001.json",
+      "sha256": "6f2dd2689ea2245f1726df35e55f7eaf0a55ea1297bb728b79b460fae82768c1"
+    },
+    {
+      "path": "ios/results/PLAT-VISIBILITY-001.json",
+      "sha256": "283fed9842fa49602293e16d8f5681dc721d95b4675254e92e2d195640ddfa40"
+    },
+    {
+      "path": "ios/summary.json",
+      "sha256": "e5857a2f8f62cdb2e588b0874ae7f1346892b9121cc5e62e9276366a43ff5306"
+    },
+    {
+      "path": "ipados/ipados-physical-report.json",
+      "sha256": "96e411eb3f8a10755c5dbb2323ff01338f0ee031195e0ef22839ce7de1a2ab83"
+    },
+    {
+      "path": "ipados/observations/PLAT-APP-BACKGROUND-001.json",
+      "sha256": "cd06c87698d351b8a45cbd74794cacc77f0571b2da8683818b13d7277ad81ce1"
+    },
+    {
+      "path": "ipados/observations/PLAT-APP-FOREGROUND-001.json",
+      "sha256": "b0c0af8c8e159f97fae65191f803d8b34e805e22c2489c6ec17cc83a1cfcf22d"
+    },
+    {
+      "path": "ipados/observations/PLAT-ARC-CANONICAL-HANDOFF-001.json",
+      "sha256": "31ec96f921d493b8ef5ae85c24e8595af8f8189a01c87a11cc1877090a4b11ad"
+    },
+    {
+      "path": "ipados/observations/PLAT-ARC-PREVIEW-FALLBACK-001.json",
+      "sha256": "b0f95b3a04cc195652e72f872d5444e1c64f2921a00e8a0711d7754d29199a28"
+    },
+    {
+      "path": "ipados/observations/PLAT-CALLBACK-NONREENTRANT-001.json",
+      "sha256": "f6ccda5855cd20e8eb0b05ef7ab4e4f122144ab4eaf8cd4a27b4607bfcd4fc8f"
+    },
+    {
+      "path": "ipados/observations/PLAT-CANONICAL-REPLAY-001.json",
+      "sha256": "307d3107415ca744511b975f8eed5866f587fe89aa892a2a9117fcde694668cc"
+    },
+    {
+      "path": "ipados/observations/PLAT-CANVAS-RESUME-001.json",
+      "sha256": "97e48d8e2da1cf0a194188d19382112fa623815d491fa739a58bf777d6c36c2d"
+    },
+    {
+      "path": "ipados/observations/PLAT-CANVAS-SUSPEND-001.json",
+      "sha256": "6f4a0fb16c754ff81fdf5e0c953aa026c4d677dfdc41743f819aea11dc13db7a"
+    },
+    {
+      "path": "ipados/observations/PLAT-CREATE-CANVAS-001.json",
+      "sha256": "9026d52b7fc7dd395408683c5df0721ec35c9a499c6223354cfd0f5d3139cffd"
+    },
+    {
+      "path": "ipados/observations/PLAT-DATABRIDGE-NO-ECHO-001.json",
+      "sha256": "96a34d65fd005ff7fe00c335063cea59dee99fe5c9505674af9d264acf125121"
+    },
+    {
+      "path": "ipados/observations/PLAT-DESTROY-CANVAS-001.json",
+      "sha256": "b83c1a07d81a57ba995bd1fa2e4babfe30d0f6d4c77ebbfffc926512c2b06d46"
+    },
+    {
+      "path": "ipados/observations/PLAT-DESTROY-STALE-WORK-001.json",
+      "sha256": "bff0058c48494df97ef6f632efd051dbed839a3528fb877867740c73433320c5"
+    },
+    {
+      "path": "ipados/observations/PLAT-DEVICE-LOST-001.json",
+      "sha256": "816ef0fc2b70105684bf2a8b49a62a1a9961bf662854bb1dd87baf2c8a408e59"
+    },
+    {
+      "path": "ipados/observations/PLAT-DEVICE-RECOVER-001.json",
+      "sha256": "ddae0013a7206d5b9fdf83a30ae979bf4818036cd6389936fd4a55d3dc895856"
+    },
+    {
+      "path": "ipados/observations/PLAT-DOCUMENT-ATTACH-001.json",
+      "sha256": "0a56dc5612bd13a0b2106c6aa9821773efc54588b83ed38675acba75a3aee474"
+    },
+    {
+      "path": "ipados/observations/PLAT-HOST-ATTACH-001.json",
+      "sha256": "a555d180db2df232c6e32193f8af4228a9c143ef01ff902f3fc217cd0ce67322"
+    },
+    {
+      "path": "ipados/observations/PLAT-HOST-DETACH-REATTACH-001.json",
+      "sha256": "f8e0637e568970a4bb4502b7516e85ca0203838e461722660c6185aeeec59319"
+    },
+    {
+      "path": "ipados/observations/PLAT-INPUT-BATCH-NORMALIZED-001.json",
+      "sha256": "220e2ab6bb91efc219007d5294502c8af636a846c4c1d2c49601c1f67466f17b"
+    },
+    {
+      "path": "ipados/observations/PLAT-INPUT-HOTPATH-001.json",
+      "sha256": "028470610373e95e8faa08c45a4398f9205b0db86752fb82d94d4a2b2ef7d5c6"
+    },
+    {
+      "path": "ipados/observations/PLAT-METRICS-DPI-SCALE-001.json",
+      "sha256": "5e4c9c4056d09bb874ddd2421cffa019beaff1a8e021fa393766d9fd36bb4a7b"
+    },
+    {
+      "path": "ipados/observations/PLAT-METRICS-ORIENTATION-001.json",
+      "sha256": "2d11750aec353b3457e0fab12820a2bf38d824f42d570a90c7c1b27128456f2d"
+    },
+    {
+      "path": "ipados/observations/PLAT-METRICS-RESIZE-001.json",
+      "sha256": "9b9af0d5fdcc6db30b13a5596b2ddd79ea6029ee4d04343a61d1f6f6a89c4907"
+    },
+    {
+      "path": "ipados/observations/PLAT-RECOVERY-REPEATED-001.json",
+      "sha256": "fc685ececeb681cec939436f1d8b0665ac4edd4ad2cb5fa5f9a3448b6b4f6a74"
+    },
+    {
+      "path": "ipados/observations/PLAT-STALE-GENERATION-REJECT-001.json",
+      "sha256": "9bd0b053740e5cca7ecd6eebca8c19fe5dcd03ce68c71a748a14e70e01081232"
+    },
+    {
+      "path": "ipados/observations/PLAT-SURFACE-LOST-001.json",
+      "sha256": "8b1e16d0424c5cd97185748f1554a9e30849f239cee609e5a60aef059a956095"
+    },
+    {
+      "path": "ipados/observations/PLAT-SURFACE-OWNERSHIP-001.json",
+      "sha256": "1a69bcb1ee2093e77fd8ab9e060786d514a24856669bee9239b940bd021a49af"
+    },
+    {
+      "path": "ipados/observations/PLAT-SURFACE-REBIND-001.json",
+      "sha256": "a0166866d15e4aa457b61dc1be95125790cb588f8a322125bfce7ed38d6c06d2"
+    },
+    {
+      "path": "ipados/observations/PLAT-VISIBILITY-001.json",
+      "sha256": "30e33e66199702589c1db940f3f005b3a0f1f1283f59cdadccdd3cd70aebc3fd"
+    },
+    {
+      "path": "ipados/profile.json",
+      "sha256": "e9a8b3607c917d203d97620fc9e5d8dd30c1c5dd1a56f37c26c95ed996f189be"
+    },
+    {
+      "path": "ipados/results/PLAT-APP-BACKGROUND-001.json",
+      "sha256": "c3d5b2756c1282b33818ae55e27103bea0a5255edd888d3f4347bcf103ac6459"
+    },
+    {
+      "path": "ipados/results/PLAT-APP-FOREGROUND-001.json",
+      "sha256": "0238c61cbfc7809dbb79dd1d4951c50ec0649a4c7fd1e0fe6d17afe2c09786d8"
+    },
+    {
+      "path": "ipados/results/PLAT-ARC-CANONICAL-HANDOFF-001.json",
+      "sha256": "c44f16c62ee5faee72b138b6a02fbdae65b1d7908618b3ac67a7eb2bb3995c3d"
+    },
+    {
+      "path": "ipados/results/PLAT-ARC-PREVIEW-FALLBACK-001.json",
+      "sha256": "ee10d87b60bc547374f911867262be3824e510f6f9905eb64401dd93887f8cd8"
+    },
+    {
+      "path": "ipados/results/PLAT-CALLBACK-NONREENTRANT-001.json",
+      "sha256": "403f48bcfae6a6c94ea1e8dd57abfb7773bc7e4dab82c4cd42bca874a37fa29c"
+    },
+    {
+      "path": "ipados/results/PLAT-CANONICAL-REPLAY-001.json",
+      "sha256": "de40c71cd63dc44d4e7530d885624f74bdd8db12c92782eaddc96451bb17de91"
+    },
+    {
+      "path": "ipados/results/PLAT-CANVAS-RESUME-001.json",
+      "sha256": "7f55713c582846fa86b26cf2fc18cbab1d99125e88739c99ad275e704871d14f"
+    },
+    {
+      "path": "ipados/results/PLAT-CANVAS-SUSPEND-001.json",
+      "sha256": "e6e131b622ed8ca0dd7aa007c12c0b595197bb393722a8ac8463a8b61c7c7ce0"
+    },
+    {
+      "path": "ipados/results/PLAT-CREATE-CANVAS-001.json",
+      "sha256": "535e1bfe310782784da2b19afaf82a7d2da6f6e307b24be5b0fdda18bed67fba"
+    },
+    {
+      "path": "ipados/results/PLAT-DATABRIDGE-NO-ECHO-001.json",
+      "sha256": "db1c932c633fca343a1da5aaf7a9d3f891f9210a36772920b72dd6099580a374"
+    },
+    {
+      "path": "ipados/results/PLAT-DESTROY-CANVAS-001.json",
+      "sha256": "6fc4e36cfed95b94af70e3392c5b9674b5bed3a3eb679380f82282b9170e094a"
+    },
+    {
+      "path": "ipados/results/PLAT-DESTROY-STALE-WORK-001.json",
+      "sha256": "e6b0e6a842bc92440b1e61512acaa1167211b05cc9dcdf9654c534430b350133"
+    },
+    {
+      "path": "ipados/results/PLAT-DEVICE-LOST-001.json",
+      "sha256": "b2fd0123a125a91f75d522a6885d390f05699240d2fb1a7c381cea93689d57e3"
+    },
+    {
+      "path": "ipados/results/PLAT-DEVICE-RECOVER-001.json",
+      "sha256": "0d7144cf00cc39403ce73652550a3931ac031857f35e911661041446820ff99b"
+    },
+    {
+      "path": "ipados/results/PLAT-DOCUMENT-ATTACH-001.json",
+      "sha256": "975d7e29bd8d3cb0cfa750bda3699dfffed9d25bd9c5b00905dfed7c73c4383c"
+    },
+    {
+      "path": "ipados/results/PLAT-HOST-ATTACH-001.json",
+      "sha256": "f80abedf5043e082c6c661ea497fd3c3c468d2d7ae01be65369328b7123c1393"
+    },
+    {
+      "path": "ipados/results/PLAT-HOST-DETACH-REATTACH-001.json",
+      "sha256": "5a0eead55217e27a0a26b520fdaa3496571d387c18ec1f7bc418080f7f4dd968"
+    },
+    {
+      "path": "ipados/results/PLAT-INPUT-BATCH-NORMALIZED-001.json",
+      "sha256": "880e3eed8cc97e6ca8539bec2de232d722861cee5e1e2943b2c69b42b28435f4"
+    },
+    {
+      "path": "ipados/results/PLAT-INPUT-HOTPATH-001.json",
+      "sha256": "d025ecff920775656f122bebac54bcae0eb0e7bb3a5f27f42e97f6447c824e76"
+    },
+    {
+      "path": "ipados/results/PLAT-METRICS-DPI-SCALE-001.json",
+      "sha256": "e1beea84526cc191e0bf19340f783bd8639b50d86a2a9bd01d21db8ad1a429d7"
+    },
+    {
+      "path": "ipados/results/PLAT-METRICS-ORIENTATION-001.json",
+      "sha256": "cd337f714ffc0ff760d6481d9aca87233cec9e71eed05dce9bb5716847d6a457"
+    },
+    {
+      "path": "ipados/results/PLAT-METRICS-RESIZE-001.json",
+      "sha256": "1170e968588b08fad0c01aa2939fbdb4f3c290e3f57d7e213dfb391717280dde"
+    },
+    {
+      "path": "ipados/results/PLAT-RECOVERY-REPEATED-001.json",
+      "sha256": "c26162454f2ac73477329417b5af40ce8a3b54c223623c022392e7931e2661c4"
+    },
+    {
+      "path": "ipados/results/PLAT-STALE-GENERATION-REJECT-001.json",
+      "sha256": "a2ba90905faff0e37f5d90c86dfb246c9ce9aa3386e9fc607076699a1f6f5c21"
+    },
+    {
+      "path": "ipados/results/PLAT-SURFACE-LOST-001.json",
+      "sha256": "b0b6e1cd667d80f07ae7b45729adf07cee643a72700c0e337bb0dcd194adff18"
+    },
+    {
+      "path": "ipados/results/PLAT-SURFACE-OWNERSHIP-001.json",
+      "sha256": "062807db525680bf20b35feace0c5a700866dc7a27d52e9502d1ee2df2434c4d"
+    },
+    {
+      "path": "ipados/results/PLAT-SURFACE-REBIND-001.json",
+      "sha256": "63d2d74451cd172d830da29dc39f58002cee7bc9a626f5cb146d7b710e6392fa"
+    },
+    {
+      "path": "ipados/results/PLAT-VISIBILITY-001.json",
+      "sha256": "e2b037fc27c4e961dfb90780ec2def0bf06030877b2ea05c0ab7ee6b4418db48"
+    },
+    {
+      "path": "ipados/summary.json",
+      "sha256": "b3310dbb6c499dcf5883ea7e2efe09ab534418e6f2caefa7429bb5e8c77e1425"
+    },
+    {
+      "path": "macos-core-summary.json",
+      "sha256": "99182590ec7eb1c912b4142a29c7f228ac923a83472b144f566d90e2ac06dade"
+    }
+  ]
+}

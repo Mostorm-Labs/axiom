@@ -1,0 +1,280 @@
+name: G0 PR CI DAG
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      failure_layer:
+        description: Deliberately fail one layer to verify error attribution
+        required: true
+        default: none
+        type: choice
+        options:
+          - none
+          - schema
+          - protocol
+          - semantic
+          - platform
+
+concurrency:
+  group: g0-pr-ci-dag-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  schema-validate:
+    name: verification/schema-validate
+    runs-on: ubuntu-24.04
+    outputs:
+      platforms: ${{ steps.run-set.outputs.platforms }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Build tooling
+        working-directory: verification
+        run: npm run build
+      - name: Classify changed paths
+        id: run-set
+        shell: bash
+        run: |
+          mkdir -p out/g0-14/schema
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD > out/g0-14/schema/changed-paths.txt
+          else
+            git diff --name-only HEAD^ HEAD > out/g0-14/schema/changed-paths.txt
+          fi
+          cd verification
+          node packages/platform-conformance-cli/dist/main.js classify \
+            --changed-paths ../out/g0-14/schema/changed-paths.txt \
+            --output ../out/g0-14/schema/run-set.json
+          platforms=$(jq -c '[.selectedPlatforms[] as $p | if $p == "web" then {platform:$p, os:"ubuntu-24.04", workspace:"@axiom/platform-harness-web"} elif $p == "windows" then {platform:$p, os:"windows-2025", workspace:"native-windows"} elif $p == "android" then {platform:$p, os:"ubuntu-24.04", workspace:"@axiom/platform-harness-android"} else {platform:$p, os:"macos-15", workspace:"@axiom/platform-harness-apple"} end]' ../out/g0-14/schema/run-set.json)
+          echo "platforms=$platforms" >> "$GITHUB_OUTPUT"
+      - name: Validate schemas and corpus
+        id: schema
+        continue-on-error: true
+        working-directory: verification
+        run: |
+          node packages/platform-conformance-cli/dist/main.js validate > ../out/g0-14/schema/validation.log 2>&1
+          if [ "${{ inputs.failure_layer }}" = schema ]; then exit 42; fi
+      - name: Write schema layer record
+        shell: bash
+        run: |
+          status=PASS
+          if [ "${{ steps.schema.outcome }}" != "success" ]; then status=INVALID_EVIDENCE; fi
+          python3 verification/tools/write_pr_layer_record.py --layer schema --subject schema --status "$status" --evidence out/g0-14/schema --output out/g0-14/records/schema.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-layer-schema-${{ github.sha }}
+          path: |
+            out/g0-14/schema
+            out/g0-14/records/schema.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce schema result
+        if: steps.schema.outcome != 'success'
+        run: exit 1
+
+  protocol-seed:
+    name: platform/protocol-seed
+    needs: schema-validate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: verification
+      - run: npm run build
+        working-directory: verification
+      - name: Execute 56-vector protocol seed on both boundaries
+        id: protocol
+        continue-on-error: true
+        working-directory: verification
+        run: |
+          mkdir -p ../out/g0-14/protocol
+          node packages/platform-conformance-cli/dist/main.js protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output ../out/g0-14/protocol > ../out/g0-14/protocol/execution.log 2>&1
+          if [ "${{ inputs.failure_layer }}" = protocol ]; then exit 42; fi
+      - name: Write protocol layer record
+        shell: bash
+        run: |
+          status=PASS
+          if [ "${{ steps.protocol.outcome }}" != "success" ]; then status=FAIL; fi
+          python3 verification/tools/write_pr_layer_record.py --layer protocol --subject protocol-seed-v0.1 --status "$status" --evidence out/g0-14/protocol --output out/g0-14/records/protocol.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-layer-protocol-${{ github.sha }}
+          path: |
+            out/g0-14/protocol
+            out/g0-14/records/protocol.json
+          if-no-files-found: error
+          retention-days: 14
+      - if: steps.protocol.outcome != 'success'
+        run: exit 1
+
+  semantic-seed:
+    name: conformance/pr-seed
+    needs: schema-validate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bootstrap locked host-core dependencies
+        run: python3 tools/bootstrap_deps.py --core
+      - name: Configure and build semantic bootstrap
+        run: |
+          cmake --preset host-debug
+          cmake --build --preset host-debug --parallel
+      - name: Execute operation/replay/digest/projection bootstrap
+        id: semantic
+        continue-on-error: true
+        run: |
+          mkdir -p out/g0-14
+          ctest --preset host-debug --output-on-failure --output-junit "$GITHUB_WORKSPACE/out/g0-14/semantic-ctest.xml"
+          if [ "${{ inputs.failure_layer }}" = semantic ]; then exit 42; fi
+      - name: Generate semantic bootstrap summary
+        id: summary
+        continue-on-error: true
+        run: python3 verification/tools/generate_semantic_bootstrap.py --junit out/g0-14/semantic-ctest.xml --output out/g0-14/semantic/summary.json --source-commit "${{ github.sha }}"
+      - name: Write semantic layer record
+        shell: bash
+        run: |
+          status=PASS
+          if [ "${{ steps.semantic.outcome }}" != "success" ] || [ "${{ steps.summary.outcome }}" != "success" ]; then status=FAIL; fi
+          python3 verification/tools/write_pr_layer_record.py --layer semantic --subject g0-bootstrap --status "$status" --evidence out/g0-14/semantic --output out/g0-14/records/semantic.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-layer-semantic-${{ github.sha }}
+          path: |
+            out/g0-14/semantic*
+            out/g0-14/records/semantic.json
+          if-no-files-found: error
+          retention-days: 14
+      - if: steps.semantic.outcome != 'success' || steps.summary.outcome != 'success'
+        run: exit 1
+
+  platform-contract:
+    name: platform/pr-contract (${{ matrix.platform }})
+    needs: [schema-validate, protocol-seed, semantic-seed]
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.schema-validate.outputs.platforms) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Install Web contract browser
+        if: matrix.platform == 'web'
+        working-directory: verification
+        run: npx playwright install --with-deps chromium
+      - name: Execute logical adapter contract
+        if: matrix.platform != 'windows'
+        id: logical
+        continue-on-error: true
+        working-directory: verification
+        run: |
+          npm run test --workspace "${{ matrix.workspace }}"
+          if [ "${{ inputs.failure_layer }}" = platform ] && [ "${{ matrix.platform }}" = web ]; then exit 42; fi
+      - name: Execute Shared Platform Comparator contract
+        id: comparator
+        continue-on-error: true
+        working-directory: verification
+        run: npm run test --workspace @axiom/platform-harness-runner
+      - name: Configure Windows native contract
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: cmake -S . -B out/g0-14/windows -G Ninja -DAXIOM_BUILD_VERIFICATION=ON -DBUILD_TESTING=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=OFF
+      - name: Execute Windows native contract
+        if: matrix.platform == 'windows'
+        id: native
+        continue-on-error: true
+        run: cmake --build out/g0-14/windows --parallel && ctest --test-dir out/g0-14/windows --output-on-failure
+      - name: Capture platform log
+        shell: bash
+        run: |
+          mkdir -p "out/g0-14/platform/${{ matrix.platform }}"
+          printf '%s\n' "comparator=${{ steps.comparator.outcome }}" "logical=${{ steps.logical.outcome }}" "native=${{ steps.native.outcome }}" > "out/g0-14/platform/${{ matrix.platform }}/outcome.txt"
+      - name: Write platform layer record
+        shell: bash
+        run: |
+          status=PASS
+          if [ "${{ matrix.platform }}" = windows ]; then outcome="${{ steps.native.outcome }}"; else outcome="${{ steps.logical.outcome }}"; fi
+          if [ "${{ steps.comparator.outcome }}" != success ] || [ "$outcome" != success ]; then status=FAIL; fi
+          python3 verification/tools/write_pr_layer_record.py --layer platform --subject "${{ matrix.platform }}" --status "$status" --evidence "out/g0-14/platform/${{ matrix.platform }}" --output "out/g0-14/records/platform-${{ matrix.platform }}.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-layer-platform-${{ matrix.platform }}-${{ github.sha }}
+          path: |
+            out/g0-14/platform/${{ matrix.platform }}
+            out/g0-14/records/platform-${{ matrix.platform }}.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce platform result
+        shell: bash
+        run: |
+          test "${{ steps.comparator.outcome }}" = success
+          if [ "${{ matrix.platform }}" = windows ]; then test "${{ steps.native.outcome }}" = success; else test "${{ steps.logical.outcome }}" = success; fi
+
+  platform-gate:
+    name: platform/pr-gate
+    if: ${{ always() }}
+    needs: [schema-validate, protocol-seed, semantic-seed, platform-contract]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+      - run: npm ci --ignore-scripts
+        working-directory: verification
+      - run: npm run build
+        working-directory: verification
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pr-layer-*-${{ github.sha }}
+          path: out/g0-14/downloaded
+          merge-multiple: true
+      - name: Collect layer records
+        run: |
+          mkdir -p out/g0-14/aggregate-records
+          find out/g0-14/downloaded -name '*.json' -path '*/records/*' -exec cp {} out/g0-14/aggregate-records/ \;
+      - name: Aggregate provider-neutral PR decision
+        working-directory: verification
+        run: node packages/platform-conformance-cli/dist/main.js aggregate --records ../out/g0-14/aggregate-records --output ../out/g0-14/pr-decision.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-gate-decision-${{ github.sha }}
+          path: out/g0-14/pr-decision.json
+          if-no-files-found: error
+          retention-days: 30

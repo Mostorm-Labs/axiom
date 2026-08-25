@@ -1,0 +1,92 @@
+{
+  "format": "axiom-platform-observation-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-METRICS-ORIENTATION-001",
+  "profileId": "ios-rn-objcxx-reference-v0-1",
+  "platformFamily": "APPLE",
+  "execution": {
+    "adapter": "apple-xctest-reference-v0.1",
+    "boundary": "OUT_OF_PROCESS",
+    "deterministic": true,
+    "host": "XCTest-style",
+    "physicalExecution": true,
+    "deviceEvidence": "ios/ios-physical-report.json"
+  },
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "presentation.feedback",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "arc.preview",
+    "arc.preview.loss.inject",
+    "platform.state.capture",
+    "surface.ownership.capture",
+    "fault.stale_generation.inject",
+    "fault.present_completion_hold",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "terminal": {
+    "state": "OBSERVED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "event": "CANVAS_CREATED"
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "event": "HOST_ATTACHED"
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "event": "DOCUMENT_ATTACHED"
+    },
+    {
+      "stepId": "s04",
+      "kind": "SEMANTIC",
+      "event": "CANONICAL_FIXTURE_REPLAYED"
+    },
+    {
+      "stepId": "s05",
+      "kind": "METRICS_UPDATE",
+      "event": "METRICS_CHANGED",
+      "details": {
+        "logicalWidth": 1280,
+        "logicalHeight": 720,
+        "deviceScale": 1,
+        "visible": true,
+        "occluded": false,
+        "orientation": "ROTATE_90"
+      }
+    }
+  ],
+  "artifacts": {},
+  "semanticCheckpoints": [],
+  "stateCheckpoints": [],
+  "targetBindings": [],
+  "realization": {
+    "host": "RN_FABRIC_OBJCXX",
+    "surface": "UIVIEW_CAMETAL_LAYER",
+    "backend": "METAL",
+    "deviceClass": "IPHONE",
+    "arc": "ENABLED",
+    "inputPath": "UITouch.coalescedTouches→ObjC++→PointerSampleBatch",
+    "surfaceGeneration": "u64:0000000000000001",
+    "surfacePrimitive": "CAMETAL_LAYER"
+  },
+  "diagnostics": [
+    "APPLE_PHYSICAL_EVIDENCE_ATTACHED"
+  ]
+}

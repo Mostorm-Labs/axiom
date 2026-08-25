@@ -1,0 +1,91 @@
+{
+  "format": "axiom-gt-g0-14-hosted-runs-v1",
+  "formatVersion": 1,
+  "implementationCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+  "normalRun": {
+    "runId": 32828480021,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32828480021",
+    "event": "pull_request",
+    "headCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+    "conclusion": "success",
+    "decision": "PASS",
+    "failedLayer": null,
+    "artifact": {
+      "id": 9555878618,
+      "name": "pr-gate-decision-6a4308d2f19becd5cf3e3e20f5c5976e4a7e8dc8",
+      "digest": "sha256:2e5b6c7948417345b5fd1e37dc777ece7ef3652fffe98d89e0d4864e090d0850",
+      "sizeInBytes": 631,
+      "expiresAt": "2026-09-24T08:50:11Z"
+    }
+  },
+  "deliberateFailureRuns": [
+    {
+      "injectedLayer": "schema",
+      "runId": 32828892491,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32828892491",
+      "event": "workflow_dispatch",
+      "headCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+      "conclusion": "failure",
+      "decision": "INVALID_EVIDENCE",
+      "failedLayer": "schema",
+      "artifact": {
+        "id": 9555974429,
+        "name": "pr-gate-decision-7d9c22df422e8e983d49cf3011865804aa09189c",
+        "digest": "sha256:d1cc40414925750524d2335a2f4d72a10cfa5caab7073d3da22ddf28ae73cf2d",
+        "sizeInBytes": 390,
+        "expiresAt": "2026-09-24T08:53:08Z"
+      }
+    },
+    {
+      "injectedLayer": "protocol",
+      "runId": 32829019242,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32829019242",
+      "event": "workflow_dispatch",
+      "headCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+      "conclusion": "failure",
+      "decision": "FAIL",
+      "failedLayer": "protocol",
+      "artifact": {
+        "id": 9556036461,
+        "name": "pr-gate-decision-7d9c22df422e8e983d49cf3011865804aa09189c",
+        "digest": "sha256:55d6ef28301f57ef63de3c4e379ac305d34b778cc781cd454b99f6484c6bd9cb",
+        "sizeInBytes": 527,
+        "expiresAt": "2026-09-24T08:55:03Z"
+      }
+    },
+    {
+      "injectedLayer": "semantic",
+      "runId": 32829201294,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32829201294",
+      "event": "workflow_dispatch",
+      "headCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+      "conclusion": "failure",
+      "decision": "FAIL",
+      "failedLayer": "semantic",
+      "artifact": {
+        "id": 9556101380,
+        "name": "pr-gate-decision-7d9c22df422e8e983d49cf3011865804aa09189c",
+        "digest": "sha256:e47b936396f6465eed3b924dfb3b247d236dc4211502d121e7818688891cb6cb",
+        "sizeInBytes": 526,
+        "expiresAt": "2026-09-24T08:57:06Z"
+      }
+    },
+    {
+      "injectedLayer": "platform",
+      "runId": 32829356171,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32829356171",
+      "event": "workflow_dispatch",
+      "headCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+      "conclusion": "failure",
+      "decision": "FAIL",
+      "failedLayer": "platform",
+      "artifact": {
+        "id": 9556208676,
+        "name": "pr-gate-decision-7d9c22df422e8e983d49cf3011865804aa09189c",
+        "digest": "sha256:440da70d7cefad17c886c39350ab77d161dd6c5b62f5a9c8a9261d27fc71e2af",
+        "sizeInBytes": 683,
+        "expiresAt": "2026-09-24T09:00:27Z"
+      }
+    }
+  ]
+}

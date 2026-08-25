@@ -16,12 +16,18 @@ observation，不读取 expected 或判定 PASS/FAIL；Web Arc-only 场景按共
 `GT-G0-11` 已增加 Windows native reference adapter：它只负责 Win32/D3D12 profile、host/surface/device
 generation、DPI/metrics、pointer history normalization、Arc ownership 和 stale-scope facts，不读取
 expected 或判定 PASS/FAIL。macOS host-side 只验证可移植 logical contract；真实 Win32/D3D12 编译、28 个
-Windows 场景和物理 Evidence 必须在 Windows runner 上完成，当前任务保持 `Validating`。
+Windows 场景和物理 Evidence 已在 Windows runner 上完成，`GT-G0-11` 已记录为 `Pass`。
 
 下列内容仍由后续任务负责，不由共享 CLI 的存在提前声明完成：
 
-- `GT-G0-12..13`：Android/Apple native/platform adapters 与平台场景；
-- `GT-G0-14..16`：CI wiring、Gate Report schema 和 aggregator。
+- `GT-G0-12` 已增加 Android Activity/View/JNI instrumentation adapter：它只负责 Android surface/device
+  generation、MotionEvent history 到 `PointerSampleBatch` 的事实归一化和 Arc ownership observation；
+  Shared Runner 仍负责 expected/comparator。Hosted emulator 与 physical Android device 的 Evidence 必须
+  分开记录，emulator 不得冒充 physical PASS。
+- `GT-G0-13` 已增加独立的 iPhone/iPadOS RN/Fabric + ObjC++/Metal facts-only adapter；两端 profile、
+  observation 和 Evidence 必须分开，macOS 只保留 shared-core logical conformance。
+- `GT-G0-14`：PR CI DAG、Shared Platform Comparator、semantic bootstrap、run-set 与 PR decision；
+- `GT-G0-15..16`：nightly/release wiring、Gate Report schema 和 G0 aggregator。
 
 ## 骨架约定
 

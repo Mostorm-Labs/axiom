@@ -1,0 +1,123 @@
+name: G0 Android Instrumentation Adapter
+
+on:
+  pull_request:
+    paths:
+      - "verification/native/platform/android/**"
+      - "verification/packages/platform-harness-android/**"
+      - "verification/packages/platform-conformance-cli/**"
+      - "verification/tools/run_android_instrumentation.py"
+      - "verification/tools/check_android_16kb_elf.py"
+      - "verification/tools/generate_android_adapter_evidence.mjs"
+      - "verification/platform/v1/**"
+      - "verification/tests/android_16kb.test.mjs"
+      - "verification/tests/android_evidence.test.mjs"
+      - ".github/workflows/g0-android-instrumentation-adapter.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: g0-android-instrumentation-adapter-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  android-instrumentation:
+    name: GT-G0-12 Android instrumentation (emulator)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Enable KVM for Android emulator
+        run: |
+          test -e /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+      - name: Install Android toolchain
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-35" "build-tools;35.0.0" "cmake;3.30.5" \
+            "ndk;27.2.12479018" "emulator" "platform-tools" \
+            "system-images;android-35;default;x86_64"
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Install Playwright Chromium for shared Web checks
+        working-directory: verification
+        run: npx playwright install chromium
+      - name: Build verification workspace
+        working-directory: verification
+        run: npm run build
+      - name: Build native Android instrumentation APKs
+        working-directory: verification/native/platform/android/instrumentation
+        run: |
+          gradle :app:assembleDebug :app:assembleDebugAndroidTest \
+            -PaxiomAndroidAbi=x86_64 --no-daemon
+      - name: Check Android ELF 16 KB page alignment
+        run: |
+          mkdir -p out/g0-12-android-alignment
+          ELF_ROOT="verification/native/platform/android/instrumentation/app/build/intermediates/cxx/Debug"
+          mapfile -t ELFS < <(find "$ELF_ROOT" -type f -name 'libaxiom_verification_android_jni.so' -print)
+          test "${#ELFS[@]}" -gt 0
+          for ELF in "${ELFS[@]}"; do
+            python3 verification/tools/check_android_16kb_elf.py "$ELF"
+          done | tee out/g0-12-android-alignment/elf-16kb.txt
+      - name: Check Android APK 16 KB zip alignment
+        run: |
+          ZIPALIGN="$ANDROID_HOME/build-tools/35.0.0/zipalign"
+          "$ZIPALIGN" -c -P 16 -v 4 \
+            verification/native/platform/android/instrumentation/app/build/outputs/apk/debug/app-debug.apk \
+            | tee out/g0-12-android-alignment/app-apk-16kb.txt
+          "$ZIPALIGN" -c -P 16 -v 4 \
+            verification/native/platform/android/instrumentation/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            | tee out/g0-12-android-alignment/test-apk-16kb.txt
+          sha256sum \
+            verification/native/platform/android/instrumentation/app/build/outputs/apk/debug/app-debug.apk \
+            verification/native/platform/android/instrumentation/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            > out/g0-12-android-alignment/SHA256SUMS
+      - name: Run instrumentation and generate facts-only Evidence
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          disable-linux-hw-accel: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: |
+            python3 verification/tools/run_android_instrumentation.py --app-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/debug/app-debug.apk --test-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --output out/g0-12-android-instrumentation && env AXIOM_EVIDENCE_SOURCE_COMMIT="$GITHUB_SHA" AXIOM_ANDROID_PHYSICAL_EXECUTION=false AXIOM_ANDROID_INSTRUMENTATION_RESULT="$GITHUB_WORKSPACE/out/g0-12-android-instrumentation/instrumentation-result.json" node verification/tools/generate_android_adapter_evidence.mjs
+      - name: Validate schemas, workspace, and Evidence
+        run: |
+          python3 verification/tools/validate_workspace.py
+          git diff --check
+          cd verification
+          npm run validate
+          node --test tests/android_evidence.test.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gt-g0-12-android-instrumentation-${{ github.sha }}
+          path: |
+            verification/evidence/g0/gt-g0-12
+            out/g0-12-android-instrumentation
+            out/g0-12-android-alignment
+          if-no-files-found: error
+          retention-days: 30

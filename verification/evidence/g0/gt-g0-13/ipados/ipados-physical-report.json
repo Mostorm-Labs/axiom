@@ -1,0 +1,174 @@
+{
+  "artifacts": {
+    "rgba_sha256": "1e1aa97f011e1d991b4f025c8df45cd96bd0b54ee0e746f0b8c8d4a58ca955a8"
+  },
+  "backend": "ganesh-metal",
+  "build": {
+    "app_executable_sha256": "463a5e742434f2692b898ec633eb79c8f53dc36c1b80fe2d242abf42f545156b",
+    "configuration": "Release"
+  },
+  "core_conformance": {
+    "case_count": 10,
+    "corpus_digest": "e8f3bc4f06282fc0a2348aa5059d56fa",
+    "failure": "",
+    "passed": true,
+    "replay_digest": "bcdb19afb9eccbf68cec4a7f442b1cd2",
+    "replay_revision": 1,
+    "replay_sequence": 4,
+    "version": 1
+  },
+  "device": "Apple A14 GPU",
+  "digest": "47826449b895ac4f4a57b4f386379775",
+  "lifecycle": 100,
+  "max_frame_ms": 5.26979,
+  "memory_analysis": {
+    "decision_rule": {
+      "maximum_tail_growth_ratio": 0.05,
+      "method": "compare medians of the first and last quartile windows",
+      "minimum_samples": 10,
+      "minimum_span_ms": 50000
+    },
+    "head_median_bytes": 24184384,
+    "maximum_bytes": 26789440,
+    "minimum_bytes": 24118848,
+    "passed": true,
+    "sample_count": 13,
+    "schema_version": 1,
+    "span_ms": 60003,
+    "sustained_growth_observed": false,
+    "tail_growth_bytes": -65536,
+    "tail_growth_ratio": -0.0027098478092309483,
+    "tail_median_bytes": 24118848,
+    "window_samples": 4
+  },
+  "memory_samples": [
+    {
+      "bytes": 26789440,
+      "elapsed_ms": 0
+    },
+    {
+      "bytes": 24184384,
+      "elapsed_ms": 5006
+    },
+    {
+      "bytes": 24184384,
+      "elapsed_ms": 10004
+    },
+    {
+      "bytes": 24135232,
+      "elapsed_ms": 15006
+    },
+    {
+      "bytes": 24135232,
+      "elapsed_ms": 20006
+    },
+    {
+      "bytes": 24135232,
+      "elapsed_ms": 25005
+    },
+    {
+      "bytes": 24135232,
+      "elapsed_ms": 30006
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 35007
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 40006
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 45007
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 50007
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 55007
+    },
+    {
+      "bytes": 24118848,
+      "elapsed_ms": 60003
+    }
+  ],
+  "memory_sampling_interval_ms": 5000,
+  "memory_scope": "process-physical-footprint",
+  "performance_environment": {
+    "browser_throttling": {
+      "observation_method": "native Metal runner",
+      "status": "not_applicable"
+    },
+    "display_refresh": {
+      "availability": "maximum-only",
+      "maximum_hz": 60,
+      "observation_method": "platform display API"
+    },
+    "low_power_mode": false,
+    "power_observation_method": "NSProcessInfo.lowPowerModeEnabled",
+    "target_frame_interval_ms": 16.667,
+    "thermal_state_after": "nominal",
+    "thermal_state_before": "nominal",
+    "vrr": {
+      "observation_method": "no public API exposes active VRR state",
+      "status": "unavailable"
+    }
+  },
+  "physical_environment": {
+    "cpu": "arm64e",
+    "developer_mode": "enabled",
+    "display": {
+      "backlight_state": "activeOn",
+      "panels": [
+        {
+          "name": "LCD",
+          "native_size": [
+            1640,
+            2360
+          ],
+          "point_scale": 2,
+          "primary": true
+        }
+      ],
+      "refresh_observation": "maximumFramesPerSecond is recorded by the in-app runner"
+    },
+    "marketing_name": "iPad Air (4th generation)",
+    "os_build": "23G71",
+    "os_version": "26.6",
+    "platform": "iOS",
+    "privacy": {
+      "excluded": [
+        "device identifier",
+        "UDID",
+        "ECID",
+        "serial number",
+        "user-assigned name",
+        "hostnames and IP addresses",
+        "signing team and identity"
+      ],
+      "redacted": true
+    },
+    "product_type": "iPad13,1",
+    "reality": "physical",
+    "transport": "wired"
+  },
+  "pixel_hash": "32186d8e0c941ec118342f811a0a555e",
+  "platform": "ipados",
+  "smoke_frames": 3600,
+  "smoke_seconds": 60,
+  "visual": {
+    "backend": "ganesh-metal-ipados-physical",
+    "height": 600,
+    "matching_pixels": 479917,
+    "matching_ratio": 0.9998270833333334,
+    "maximum_channel_delta": 184,
+    "passed": true,
+    "skia_commit": "b6d106297ff9ef2ff8094033695d045e87775581",
+    "tolerance": 2,
+    "total_pixels": 480000,
+    "width": 800
+  }
+}

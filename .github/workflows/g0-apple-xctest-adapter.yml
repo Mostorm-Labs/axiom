@@ -1,0 +1,67 @@
+name: G0 Apple XCTest-style Adapter
+
+on:
+  pull_request:
+    paths:
+      - "verification/native/platform/apple/**"
+      - "verification/packages/platform-harness-apple/**"
+      - "verification/packages/platform-conformance-cli/**"
+      - "verification/tools/generate_apple_adapter_evidence.mjs"
+      - "verification/platform/v1/**"
+      - "verification/tests/apple_evidence.test.mjs"
+      - ".github/workflows/g0-apple-xctest-adapter.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: g0-apple-xctest-adapter-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  apple-host:
+    name: GT-G0-13 Apple host/reference (iPhone + iPadOS)
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - name: Build verification workspace
+        working-directory: verification
+        run: npm run build
+      - name: Build and test Apple native adapter
+        run: |
+          cmake -S . -B out/g0-13-apple -G Ninja \
+            -DAXIOM_BUILD_VERIFICATION=ON -DBUILD_TESTING=ON \
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_POC02=OFF \
+            -DCANVAS_BUILD_POC03=OFF -DCANVAS_BUILD_POC05=OFF \
+            -DCANVAS_BUILD_POC06=OFF -DCANVAS_BUILD_RF01=OFF
+          cmake --build out/g0-13-apple --parallel
+          ctest --test-dir out/g0-13-apple --output-on-failure
+      - name: Generate separate iPhone and iPadOS logical Evidence
+        env:
+          AXIOM_EVIDENCE_SOURCE_COMMIT: ${{ github.sha }}
+          AXIOM_APPLE_PHYSICAL_EXECUTION: "false"
+        run: node verification/tools/generate_apple_adapter_evidence.mjs
+      - name: Validate Evidence and documentation
+        run: |
+          python3 verification/tools/validate_workspace.py
+          python3 tools/check_docs.py
+          git diff --check
+          cd verification
+          node --test tests/apple_evidence.test.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gt-g0-13-apple-xctest-${{ github.sha }}
+          path: verification/evidence/g0/gt-g0-13
+          if-no-files-found: error
+          retention-days: 30

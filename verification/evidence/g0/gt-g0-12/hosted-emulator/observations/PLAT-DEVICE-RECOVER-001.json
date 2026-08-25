@@ -1,0 +1,87 @@
+{
+  "format": "axiom-platform-observation-v1",
+  "formatVersion": 1,
+  "scenarioId": "PLAT-DEVICE-RECOVER-001",
+  "profileId": "android-instrumentation-reference-v0-1",
+  "platformFamily": "ANDROID",
+  "execution": {
+    "adapter": "android-instrumentation-reference-v0.1",
+    "boundary": "OUT_OF_PROCESS",
+    "deterministic": true,
+    "instrumentation": "Activity/View/JNI",
+    "physicalExecution": false,
+    "instrumentationResult": "instrumentation-result.json"
+  },
+  "capabilities": [
+    "semantic.projection.capture",
+    "surface.generation",
+    "metrics.generation",
+    "surface.loss.inject",
+    "device.loss.inject",
+    "presentation.feedback",
+    "bridge.public_facade",
+    "bridge.data_bridge",
+    "bridge.callback_trace",
+    "input.pointer_sample_batch",
+    "arc.preview",
+    "arc.preview.loss.inject",
+    "platform.state.capture",
+    "surface.ownership.capture",
+    "fault.stale_generation.inject",
+    "harness.completion_tokens",
+    "harness.source_lease_registry",
+    "harness.late_event_fence",
+    "harness.source_attempt_trace"
+  ],
+  "terminal": {
+    "state": "OBSERVED"
+  },
+  "steps": [
+    {
+      "stepId": "s01",
+      "kind": "CONTROL",
+      "event": "CANVAS_CREATED"
+    },
+    {
+      "stepId": "s02",
+      "kind": "CONTROL",
+      "event": "HOST_ATTACHED"
+    },
+    {
+      "stepId": "s03",
+      "kind": "CONTROL",
+      "event": "DOCUMENT_ATTACHED"
+    },
+    {
+      "stepId": "s04",
+      "kind": "SEMANTIC",
+      "event": "CANONICAL_FIXTURE_REPLAYED"
+    },
+    {
+      "stepId": "s05",
+      "kind": "FAULT",
+      "event": "DEVICE_LOST"
+    },
+    {
+      "stepId": "s06",
+      "kind": "FAULT",
+      "event": "DEVICE_RECOVERED"
+    }
+  ],
+  "artifacts": {},
+  "semanticCheckpoints": [],
+  "stateCheckpoints": [],
+  "targetBindings": [],
+  "realization": {
+    "host": "ACTIVITY_VIEW_JNI",
+    "surface": "NATIVE_CANVAS_VIEW",
+    "backend": "GLES3",
+    "arc": "ENABLED",
+    "inputPath": "MotionEvent.history→JNI→PointerSampleBatch",
+    "surfaceGeneration": "u64:0000000000000001",
+    "surfacePrimitive": "NATIVE_CANVAS_VIEW"
+  },
+  "diagnostics": [
+    "ANDROID_EMULATOR_INSTRUMENTATION_CAPTURED"
+  ]
+}

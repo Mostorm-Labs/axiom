@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:pr-decision:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "decision", "failedLayer", "attempts"],
+  "properties": {
+    "format": { "const": "axiom-pr-decision-v1" },
+    "formatVersion": { "const": 1 },
+    "decision": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] },
+    "failedLayer": { "type": ["string", "null"], "enum": ["schema", "protocol", "semantic", "platform", null] },
+    "attempts": { "type": "array", "minItems": 1, "items": { "type": "object" } }
+  }
+}
