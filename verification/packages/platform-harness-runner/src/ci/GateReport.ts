@@ -16,7 +16,11 @@ export type GatePlatformRecord = {
   profileId: string | null;
   reality: "HOSTED" | "PHYSICAL" | "EMULATOR" | "SIMULATOR" | "NOT_APPLICABLE";
   evidencePath: string;
-  environment: Record<string, unknown>;
+  environment: Record<string, unknown> & {
+    packageIdentity?: string;
+    fixtureDigest?: string;
+    artifactSha256?: string;
+  };
 };
 
 export type G0GateReportInput = {
@@ -62,6 +66,7 @@ export type G0GateReport = {
 const sha256 = /^[0-9a-f]{64}$/u;
 const commit = /^[0-9a-f]{40}$/u;
 const requiredTasks = Array.from({ length: 16 }, (_, index) => `GT-G0-${String(index).padStart(2, "0")}`);
+const requiredPhysicalSubjects = ["android", "ios", "ipados", "web", "windows"];
 const taskNumber = (taskId: string): number => Number(taskId.slice(-2));
 
 function validateInput(input: G0GateReportInput): void {
@@ -110,10 +115,14 @@ export function createG0GateReport(input: G0GateReportInput): G0GateReport {
     level: "E3", status: hostedIssues.length ? "FAIL" : "PASS", applicable: true,
     reason: "PR, Nightly and reproducibility integration evidence", firstDivergence: null, issues: hostedIssues,
   };
+  const missingPhysical = requiredPhysicalSubjects.filter((subject) => {
+    const record = input.platforms.find((platform) => platform.subject === subject);
+    return !record || record.reality !== "PHYSICAL";
+  });
   const e4: GateCheck = {
-    level: "E4", status: input.hosted.releaseDecision === "BLOCKED_AUTHORITY" ? "BLOCKED" : input.hosted.releaseDecision === "PASS" ? "PASS" : "FAIL",
+    level: "E4", status: missingPhysical.length > 0 ? "BLOCKED" : input.hosted.releaseDecision === "FAIL" ? "FAIL" : "PASS",
     applicable: true, reason: "Physical release authority is required for platform promotion", firstDivergence: null,
-    issues: input.hosted.releaseDecision === "BLOCKED_AUTHORITY" ? ["PHYSICAL_RELEASE_AUTHORITY_BLOCKED"] : [],
+    issues: missingPhysical.length > 0 ? ["PHYSICAL_RELEASE_AUTHORITY_BLOCKED", `MISSING_PHYSICAL_SUBJECTS:${missingPhysical.join(",")}`] : [],
   };
   const checks = [e1, e2, e3, e4];
   const issues = checks.flatMap(({ issues: values }) => values);

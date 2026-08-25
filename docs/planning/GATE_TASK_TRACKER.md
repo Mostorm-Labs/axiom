@@ -65,7 +65,7 @@ Decision/Contract 简写：
 | Gate | 状态 | 任务覆盖 | 晋级剩余条件 |
 | --- | --- | --- | --- |
 | AR-0 | Pass | 6 tasks; validation evidence is commit-bound and architecture review is approved | Dependency for `GT-G0-00` is satisfied |
-| G0 | Validating | `GT-G0-00..GT-G0-15` Pass; `GT-G0-16` implementation/evidence validating | Final commit-bound `GT-G0-16` Evidence, then perform `GT-G0-17` review |
+| G0 | Pass | `GT-G0-00..GT-G0-17` Pass | G0 Gate Report E1～E4 全部通过；进入 G1 |
 | G1 | Not Started | 8 tasks | G0 Pass |
 | G2 | Not Started | 7 tasks | G1 Pass |
 | G3 | Not Started | 10 tasks including 2 repository scope supplements | G2 Pass |
@@ -122,7 +122,7 @@ Evidence 列记录任务通过时必须生成的目标路径。标为 `planned` 
 | WP-G0-14 / IH-14 | `GT-G0-14` | PR CI dependency graph | R1 | REQ-GAP-VER | D-G0 | GT-G0-07, GT-G0-10..GT-G0-13 | Modify | Pass | Pass | Pass | [PR CI DAG Evidence](../quality/evidence/g0/gt-g0-14-pr-ci-dag-20260825.md)；`verification/evidence/g0/gt-g0-14/`；[hosted normal DAG](https://github.com/Mostorm-Labs/axiom/actions/runs/32828480021) | implementation `7d9c22d`；commit-bound Evidence 与四类 hosted deliberate-failure artifacts 已记录 | Pass |
 | WP-G0-15 / IH-15 | `GT-G0-15` | Nightly and release wiring | R1 | REQ-GAP-VER | D-G0 | GT-G0-10..GT-G0-14 | Modify | Pass | Pass | Pass | [GT-G0-15 Nightly/Release Evidence](../quality/evidence/g0/gt-g0-15-nightly-release-wiring-20260825.md); `verification/evidence/g0/gt-g0-15/` | Nightly hosted PASS；Release hosted run 按 authority 规则为 `BLOCKED_AUTHORITY`；physical Evidence 仍由后续设备报告提供 | Pass |
 | WP-G0-16 | `GT-G0-16` | Gate Report schema and G0 aggregator | R1 | REQ-GAP-VER | D-G0 | GT-G0-07, GT-G0-10..GT-G0-15 | Modify | Pass | Pass | Pass | [GT-G0-16 Gate Report Evidence](../quality/evidence/g0/gt-g0-16-gate-report-20260825.md)；`verification/evidence/g0/gt-g0-16/` | Generated G0 report remains E4 `BLOCKED` until physical release authority is supplied; this is a Gate-level blocker, not an implementation failure | Pass |
-| G0/Task 4 | `GT-G0-17` | G0 Gate review | R1 | REQ-GAP-VER | D-G0 | GT-G0-00..GT-G0-16 | Blocked | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-17/ (planned)` | All G0 tasks and reproducible evidence are prerequisites | Not Started |
+| G0/Task 4 | `GT-G0-17` | G0 Gate review | R1 | REQ-GAP-VER | D-G0 | GT-G0-00..GT-G0-16 | Modify | Pass | Pass | Pass | [历史 GT-G0-17 Review](../quality/evidence/g0/gt-g0-17-gate-review-20260825.md)；[package-bound physical authority](../quality/evidence/g0/gt-g0-17/mobile-physical-package-bound-20260817.md)；[2026-08-26 revalidation](../quality/evidence/g0/gt-g0-17-revalidation-20260826.md)；`verification/evidence/g0/gt-g0-17/` | — | Pass |
 
 
 ### G1

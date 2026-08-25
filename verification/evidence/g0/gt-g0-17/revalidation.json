@@ -1,0 +1,26 @@
+{
+  "format": "axiom-gt-g0-17-revalidation-v1",
+  "taskId": "GT-G0-17",
+  "reviewCommit": "a8d72489028e650def33630a979d05a2bbc0bf26",
+  "branch": "main",
+  "gateReport": {
+    "path": "verification/evidence/g0/gt-g0-17/g0-gate-report-main-a8d7248.json",
+    "sourceCommit": "a8d72489028e650def33630a979d05a2bbc0bf26",
+    "status": "PASS",
+    "sha256": "65303b45497387ddc6e2d82eb6ca33cc7cfe1f0eca7fc7acf75b1bcfb670e497",
+    "checks": { "E1": "PASS", "E2": "PASS", "E3": "PASS", "E4": "PASS" }
+  },
+  "lineage": { "requiredTasks": 16, "passTasks": 16 },
+  "physicalAuthority": {
+    "windows": "PASS",
+    "web": "PASS",
+    "android": "PASS",
+    "ios": "PASS",
+    "ipados": "PASS"
+  },
+  "promotion": { "allowed": true, "reason": "All applicable checks passed" },
+  "evidence": {
+    "markdown": "docs/quality/evidence/g0/gt-g0-17-revalidation-20260826.md",
+    "manifest": "verification/evidence/g0/gt-g0-17/revalidation-manifest.json"
+  }
+}
