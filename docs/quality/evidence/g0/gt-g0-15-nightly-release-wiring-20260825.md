@@ -2,7 +2,7 @@
 
 > 任务：`GT-G0-15`（Notion locator：`WP-G0-15 / IH-15`）
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation
-> 当前状态：`Validating`
+> 当前状态：`Pass`
 
 ## 本轮边界
 
@@ -37,32 +37,30 @@
 | WORKTREE Evidence generator | Pass；五 profile、四 family、六 PG、五类 deliberate failure、manifest hash |
 | Workspace build/typecheck | Pass |
 | Workspace validate/test | Pass；完整 workspace suite，包括 Web Playwright |
-| `git diff --check` | Pending final run |
+| `git diff --check` | Pass；最终 Evidence 绑定 `1eacf380e52f2c036aa4cdb164562c291b67fbdd` |
 
-本地 Evidence 位于 `verification/evidence/g0/gt-g0-15/`。当前 `summary.json` 明确标记：
+Evidence 位于 `verification/evidence/g0/gt-g0-15/`，包括 hosted decision、reproducibility 和 artifact 元数据。最终 `summary.json` 明确标记：
 
-- `sourceCommit: WORKTREE`；
-- `hostedValidation: PENDING`；
+- `sourceCommit: 1eacf380e52f2c036aa4cdb164562c291b67fbdd`；
+- `hostedValidation: PASS`；
 - `physicalReleaseValidation: BLOCKED_AUTHORITY`；
-- `NOT_COMMIT_BOUND`、`NOT_G0_GATE_REPORT`、`NOT_G3_GATE_DECISION`。
+- `NOT_G0_GATE_REPORT`、`NOT_G3_GATE_DECISION`。
 
-因此本地结果不能替代提交后的 hosted Nightly/Release workflow。最终 Evidence 必须在实现提交后重新生成，并绑定 hosted run/artifact hash。
+其中 `NOT_COMMIT_BOUND` 已在最终 Evidence 中移除；`NOT_G0_GATE_REPORT` 和 `NOT_G3_GATE_DECISION` 仍是本任务边界。
+
+Hosted 结果：
+
+- Nightly run [32856254241](https://github.com/Mostorm-Labs/axiom/actions/runs/32856254241)：五个 profile、两次 repeat、aggregate 和 reproducibility 均为 `PASS`。
+- Release run [32856512494](https://github.com/Mostorm-Labs/axiom/actions/runs/32856512494)：workflow 成功完成，但 decision 为预期的 `BLOCKED_AUTHORITY`；hosted runner 不能替代 Web/Windows/Android/iPhone/iPadOS physical Evidence。
+- artifact digest、run ID、source commit 和 decision 保存在 `verification/evidence/g0/gt-g0-15/hosted/runs.json`。
 
 ## 当前状态与剩余条件
 
 - Design：`Pass`（设计已获用户确认）；
-- Implementation：`Validating`；
-- Validation：`Validating`；
-- Final：`Validating`；
+- Implementation：`Pass`；
+- Validation：`Pass`（Nightly hosted PASS；Release 按规则 BLOCKED_AUTHORITY）；
+- Final：`Pass`；
 - G0：`Validating`；
 - R1：`Validating`。
 
-剩余条件：
-
-1. 提交实现后重新生成 commit-bound Evidence；
-2. 在 GitHub hosted runner 上运行 Nightly workflow；
-3. 验证 Release Conformance 对缺少物理 Evidence 产生预期 `BLOCKED_AUTHORITY`，而非 PASS；
-4. 记录 workflow run URL、source commit、schema/corpus/profile identity、artifact hash 和 reproducibility comparison；
-5. 由 `GT-G0-16` 消费本任务 Evidence，生成 G0 Gate Report。
-
-`GT-G0-15` 未满足最终 Gate 晋级条件；本轮不进入 `GT-G0-16`。
+`GT-G0-15` 已满足本任务退出条件。`GT-G0-16` 负责消费本 Evidence 并生成 G0 Gate Report；它不是本任务的隐式产物。

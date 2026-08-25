@@ -2,7 +2,7 @@
   "format": "axiom-gt-g0-15-evidence-summary-v1",
   "formatVersion": 1,
   "taskId": "GT-G0-15",
-  "sourceCommit": "3e583a2ffe553681f833a9b539527edeca2d791f",
+  "sourceCommit": "1eacf380e52f2c036aa4cdb164562c291b67fbdd",
   "status": "COMMIT_BOUND_VALIDATED",
   "authority": "G0_WIRING_ONLY",
   "cadence": "NIGHTLY",
@@ -16,10 +16,13 @@
     "PG-05",
     "PG-06"
   ],
-  "hostedValidation": "PENDING",
+  "hostedValidation": "PASS",
   "physicalReleaseValidation": "BLOCKED_AUTHORITY",
+  "hostedRuns": {
+    "nightly": "https://github.com/Mostorm-Labs/axiom/actions/runs/32856254241",
+    "release": "https://github.com/Mostorm-Labs/axiom/actions/runs/32856512494"
+  },
   "limitations": [
-    "HOSTED_NIGHTLY_PENDING",
     "PHYSICAL_RELEASE_EVIDENCE_REQUIRED",
     "NOT_G0_GATE_REPORT",
     "NOT_G3_GATE_DECISION"
