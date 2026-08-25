@@ -177,10 +177,10 @@ jobs:
         shell: bash
         run: |
           mkdir -p out/g0-15/records
-          cp out/g0-15/downloaded/roots/run-set.json out/g0-15/run-set.json
+          cp out/g0-15/downloaded/run-set.json out/g0-15/run-set.json
           for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
             mkdir -p "out/g0-15/records/repeat-$repeat"
-            cp out/g0-15/downloaded/roots/records/*.json "out/g0-15/records/repeat-$repeat/"
+            cp out/g0-15/downloaded/records/*.json "out/g0-15/records/repeat-$repeat/"
             find out/g0-15/downloaded -path "*/repeat-$repeat/record.json" -exec cp {} "out/g0-15/records/repeat-$repeat/" \;
             node -e 'const fs=require("fs"); const p=process.argv[1]; const a=fs.readdirSync(p).filter(x=>x.endsWith(".json")); if(a.length<8) process.exit(20);' "out/g0-15/records/repeat-$repeat"
           done

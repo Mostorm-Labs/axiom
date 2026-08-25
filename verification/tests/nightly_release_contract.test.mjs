@@ -40,6 +40,14 @@ test("every platform runner builds the verification CLI before invoking adapters
   assert.match(platformJob, /working-directory: verification\s+run: npm ci --ignore-scripts && npm run build/);
 });
 
+test("aggregate consumes the flattened artifact layout produced by upload-artifact", async () => {
+  const workflow = await readWorkflow("g0-full-platform-conformance.yml");
+  const aggregateJob = workflow.slice(workflow.indexOf("  aggregate:"));
+  assert.match(aggregateJob, /cp out\/g0-15\/downloaded\/run-set\.json out\/g0-15\/run-set\.json/);
+  assert.doesNotMatch(aggregateJob, /downloaded\/roots\/run-set\.json/);
+  assert.match(aggregateJob, /cp out\/g0-15\/downloaded\/records\/\*\.json/);
+});
+
 test("workflow matrix never blesses or updates checked-in corpus", async () => {
   for (const name of ["g0-full-platform-conformance.yml", "g0-nightly.yml", "g0-release-conformance.yml"]) {
     const workflow = await readWorkflow(name);
