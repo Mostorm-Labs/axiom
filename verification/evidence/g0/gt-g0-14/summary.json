@@ -1,0 +1,26 @@
+{
+  "format": "axiom-gt-g0-14-evidence-summary-v1",
+  "formatVersion": 1,
+  "taskId": "GT-G0-14",
+  "sourceCommit": "WORKTREE",
+  "status": "WORKTREE_VALIDATED",
+  "workflow": ".github/workflows/g0-pr-ci-dag.yml",
+  "selectedPlatforms": [
+    "web",
+    "windows",
+    "android",
+    "apple"
+  ],
+  "deliberateFailureLayers": [
+    "schema",
+    "protocol",
+    "semantic",
+    "platform"
+  ],
+  "semanticAuthority": "GT-G0-14_BOOTSTRAP_ONLY",
+  "limitations": [
+    "HOSTED_PR_DAG_PENDING",
+    "NOT_G1_SEMANTIC_ACCEPTANCE",
+    "NOT_G0_GATE_REPORT"
+  ]
+}

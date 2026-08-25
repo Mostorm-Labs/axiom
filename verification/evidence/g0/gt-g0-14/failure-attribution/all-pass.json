@@ -1,0 +1,48 @@
+{
+  "format": "axiom-pr-decision-v1",
+  "formatVersion": 1,
+  "decision": "PASS",
+  "failedLayer": null,
+  "attempts": [
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "schema",
+      "subject": "schema",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "086124b5bf5714424f483f892287a5ed46274c162a79d12f602930659ccea512",
+      "diagnostics": []
+    },
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "protocol",
+      "subject": "protocol-seed-v0.1",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "b3b95d2f3191677c35163c05160428b7d3cb6d505d03fe3ae9a16cc7f2c7117c",
+      "diagnostics": []
+    },
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "semantic",
+      "subject": "g0-bootstrap",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "5d84533cf4f605c1b9ff904e71f68d70d45f5f58dd3161f18f27a9dd9139bb68",
+      "diagnostics": []
+    },
+    {
+      "format": "axiom-pr-layer-record-v1",
+      "formatVersion": 1,
+      "layer": "platform",
+      "subject": "web",
+      "attempt": 1,
+      "status": "PASS",
+      "evidenceSha256": "45a27013e0802d01b0f6efb4f6ef35065a4f717acbfaa38fa3ce978519eed367",
+      "diagnostics": []
+    }
+  ]
+}

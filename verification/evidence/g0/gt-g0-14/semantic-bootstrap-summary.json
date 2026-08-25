@@ -1,0 +1,40 @@
+{
+  "format": "axiom-semantic-bootstrap-summary-v1",
+  "formatVersion": 1,
+  "authority": "GT-G0-14_BOOTSTRAP_ONLY",
+  "scope": "POC01_HOST_CORE_OPERATION_REPLAY_DIGEST_PROJECTION",
+  "sourceCommit": "WORKTREE",
+  "status": "PASS",
+  "tests": [
+    "AssetRegistryTest.RejectsDuplicateRegistration",
+    "CApiTest.BatchFailureDoesNotPartiallyMutateDocument",
+    "CApiTest.DetailedErrorUsesCallerProvidedBuffer",
+    "CApiTest.GenerationHandleRejectsUseAfterDestroy",
+    "CApiTest.OffscreenViewRendersIntoCallerProvidedRgbaBuffer",
+    "CApiTest.RuntimeDocumentViewLifecycleRepeatsOneHundredTimes",
+    "CApiTest.StructSizeAndVersionAreValidated",
+    "CoreConformanceTest.CanonicalEncoderNormalizesNegativeZero",
+    "CoreConformanceTest.NumericAndReplayCorpusPasses",
+    "DocumentTest.DigestIsIdenticalAcrossTenFreshReplays",
+    "DocumentTest.FixedReplayHasStableDigest",
+    "DocumentTest.TwoFreshReplaysHaveEquivalentStateAndMetadata",
+    "OperationsTest.CreateMoveDeleteMutateExpectedState",
+    "OperationsTest.DuplicateIdRejectsWholeBatch",
+    "OperationsTest.MissingAssetRejectsCreate",
+    "OperationsTest.MissingNodeRejectsWholeBatch",
+    "OperationsTest.MoveOverflowRejectsWholeBatch",
+    "OperationsTest.NegativeZeroIsCanonicalizedAtDocumentBoundary",
+    "OperationsTest.NonFiniteAndOverflowFloatsAreRejected",
+    "OperationsTest.SequenceGapRejectsWholeBatch",
+    "OperationsTest.Uint64NodeIdsAreNotNarrowedThroughFloat",
+    "OperationsTest.UnknownTypeAndFieldsAreRejected",
+    "SceneCompilerTest.RebuildPreservesOrderGeometryAndRevision",
+    "canvas_poc01_determinism_10"
+  ],
+  "corpusSha256": "8cc375f597cd72e1295c6d7a7c7db10be363ba7a940fa5a18e5dc9262f3bdfc5",
+  "limitations": [
+    "NOT_G1_SEMANTIC_ACCEPTANCE",
+    "NO_PRODUCT_SEMANTIC_KERNEL",
+    "NO_60_CASE_SEMANTIC_CORPUS"
+  ]
+}

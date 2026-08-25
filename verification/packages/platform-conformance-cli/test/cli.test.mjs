@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -90,6 +90,7 @@ test("web run uses the shared seed and emits applicability plus observation fact
   assert.equal(summary.notApplicableCount, 3);
   assert.equal(summary.resultCount, 28);
   assert.ok((await readdir(join(output, "observations"))).length === 25);
+  await assert.rejects(() => readdir(join(output, "results")), /ENOENT/);
   const applicability = JSON.parse(await readFile(join(output, "applicability.json"), "utf8"));
   assert.deepEqual(applicability.notApplicable.map((entry) => entry.scenarioId).sort(), [
     "PLAT-ARC-CANONICAL-HANDOFF-001", "PLAT-ARC-PREVIEW-FALLBACK-001", "PLAT-SURFACE-OWNERSHIP-001",
@@ -131,3 +132,38 @@ for (const adapter of ["ios", "ipados"]) {
     assert.equal(Object.hasOwn(observation, "result"), false);
   });
 }
+
+test("compare is runner-owned and writes deterministic first-divergence results", async () => {
+  const runOutput = await mkdtemp(join(tmpdir(), "axiom-compare-run-"));
+  const compareOutput = await mkdtemp(join(tmpdir(), "axiom-compare-results-"));
+  assert.equal(run(["run", "--suite", "platform-seed-v0.1", "--adapter", "web", "--output", runOutput]).status, 0);
+  const compared = run(["compare", "--suite", "platform-seed-v0.1", "--observations", join(runOutput, "observations"), "--output", compareOutput]);
+  assert.equal(compared.status, 21);
+  const result = JSON.parse(await readFile(join(compareOutput, "PLAT-HOST-ATTACH-001.json"), "utf8"));
+  assert.equal(result.divergence.category, "REQUIRED_EVENT_MISSING");
+  assert.notEqual(result.openObservations?.[0]?.kind, "COMPARATOR_DEFERRED");
+});
+
+test("aggregate emits provider-neutral PR decision and rejects missing layers", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-pr-aggregate-"));
+  const records = join(root, "records"); await mkdir(records);
+  for (const layer of ["schema", "protocol", "semantic", "platform"]) {
+    await writeFile(join(records, `${layer}.json`), JSON.stringify({
+      format: "axiom-pr-layer-record-v1", formatVersion: 1, layer, subject: layer, attempt: 1,
+      status: "PASS", evidenceSha256: "a".repeat(64), diagnostics: [],
+    }));
+  }
+  const output = join(root, "decision.json");
+  assert.equal(run(["aggregate", "--records", records, "--output", output]).status, 0);
+  assert.equal(JSON.parse(await readFile(output, "utf8")).decision, "PASS");
+  await rm(join(records, "protocol.json"));
+  assert.equal(run(["aggregate", "--records", records, "--output", output]).status, 20);
+});
+
+test("classify produces a conservative provider-neutral run set", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-pr-classify-"));
+  const changed = join(root, "changed.txt"); const output = join(root, "run-set.json");
+  await writeFile(changed, "verification/packages/platform-harness-android/src/index.ts\n");
+  assert.equal(run(["classify", "--changed-paths", changed, "--output", output]).status, 0);
+  assert.deepEqual(JSON.parse(await readFile(output, "utf8")).selectedPlatforms, ["android"]);
+});

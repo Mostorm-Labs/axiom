@@ -60,8 +60,6 @@ export async function runWeb(root: string, args: string[]): Promise<number> {
     const adapter = adapterName === "android" ? new AndroidReferenceAdapter() : adapterName === "ios" ? new AppleReferenceAdapter(IOS_PROFILE) : adapterName === "ipados" ? new AppleReferenceAdapter(IPADOS_PROFILE) : new WebReferenceAdapter();
     const observation = adapter.execute(scenario as never);
     await writeFile(join(out, "observations", `${scenario.id}.json`), `${JSON.stringify(observation, null, 2)}\n`);
-    await mkdir(join(out, "results"), { recursive: true });
-    await writeFile(join(out, "results", `${scenario.id}.json`), `${JSON.stringify({ format: "axiom-platform-conformance-result-v1", formatVersion: 1, scenarioId: scenario.id, requirementStatus: scenario.requirementStatus, result: "OBSERVED_AGREEMENT_OPEN", participants: [{ profileId: selectedProfile.profileId }], checks: [{ kind: "OBSERVATION_CAPTURED", status: "OBSERVED" }], openObservations: [{ kind: "COMPARATOR_DEFERRED", reason: "shared runner owns expected comparison" }], divergence: null, diagnostics: [] }, null, 2)}\n`);
   }
   await writeFile(join(out, "profile.json"), JSON.stringify(selectedProfile, null, 2) + "\n");
   await writeFile(join(out, "applicability.json"), JSON.stringify({ format: "axiom-platform-adapter-applicability-v1", adapter: adapterName, platformFamily, notApplicable: notApplicable.map((scenario) => ({ scenarioId: scenario.id, reason: (scenario.expected.applicability as Record<string, string> | undefined)?.[platformFamily] ?? "NOT_APPLICABLE_BY_CONTRACT" })) }, null, 2) + "\n");

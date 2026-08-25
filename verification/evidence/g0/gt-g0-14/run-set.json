@@ -1,0 +1,27 @@
+{
+  "format": "axiom-pr-run-set-v1",
+  "formatVersion": 1,
+  "schema": true,
+  "protocol": true,
+  "semantic": true,
+  "selectedPlatforms": [
+    "web",
+    "windows",
+    "android",
+    "apple"
+  ],
+  "changedPaths": [
+    "docs/planning/GATE_TASK_TRACKER.md",
+    "docs/planning/R_MILESTONE_STATUS.md",
+    "verification/README.md",
+    "verification/package-lock.json",
+    "verification/package.json",
+    "verification/packages/platform-conformance-cli/package.json",
+    "verification/packages/platform-conformance-cli/src/commands/web.ts",
+    "verification/packages/platform-conformance-cli/src/main.ts",
+    "verification/packages/platform-conformance-cli/test/cli.test.mjs",
+    "verification/packages/platform-harness-runner/src/index.ts",
+    "verification/tools/validate_schemas.mjs"
+  ],
+  "selectionReason": "BROAD_VERIFICATION_BOUNDARY"
+}

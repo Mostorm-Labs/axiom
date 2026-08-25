@@ -11,3 +11,6 @@ export * from "./registry/SourceLeaseRegistry.js";
 export * from "./registry/FaultRegistry.js";
 export * from "./fence/LateEventFence.js";
 export * from "./validation/ProtocolSchemaValidator.js";
+export * from "./conformance/PlatformComparator.js";
+export * from "./ci/ChangeClassifier.js";
+export * from "./ci/PrDecision.js";

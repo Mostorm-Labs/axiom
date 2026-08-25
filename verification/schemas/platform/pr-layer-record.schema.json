@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:pr-layer-record:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "layer", "subject", "attempt", "status", "evidenceSha256", "diagnostics"],
+  "properties": {
+    "format": { "const": "axiom-pr-layer-record-v1" },
+    "formatVersion": { "const": 1 },
+    "layer": { "enum": ["schema", "protocol", "semantic", "platform"] },
+    "subject": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer" },
+    "status": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] },
+    "evidenceSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "diagnostics": { "type": "array" }
+  }
+}

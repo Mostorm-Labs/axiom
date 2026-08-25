@@ -26,7 +26,8 @@ Windows 场景和物理 Evidence 已在 Windows runner 上完成，`GT-G0-11` �
   分开记录，emulator 不得冒充 physical PASS。
 - `GT-G0-13` 已增加独立的 iPhone/iPadOS RN/Fabric + ObjC++/Metal facts-only adapter；两端 profile、
   observation 和 Evidence 必须分开，macOS 只保留 shared-core logical conformance。
-- `GT-G0-14..16`：CI wiring、Gate Report schema 和 aggregator。
+- `GT-G0-14`：PR CI DAG、Shared Platform Comparator、semantic bootstrap、run-set 与 PR decision；
+- `GT-G0-15..16`：nightly/release wiring、Gate Report schema 和 G0 aggregator。
 
 ## 骨架约定
 

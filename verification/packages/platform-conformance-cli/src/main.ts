@@ -7,6 +7,9 @@ import { protocol } from "./commands/protocol.js";
 import { notImplemented } from "./commands/stubs.js";
 import { validate } from "./commands/validate.js";
 import { profile, runWeb } from "./commands/web.js";
+import { compare } from "./commands/compare.js";
+import { aggregate } from "./commands/aggregate.js";
+import { classify } from "./commands/classify.js";
 import { ExitCode } from "./exit_codes.js";
 
 const usage = `axiom-platform-conformance <command>
@@ -14,7 +17,10 @@ const usage = `axiom-platform-conformance <command>
 Commands:
   validate
   protocol --suite protocol-seed-v0.1 --boundary in-process|serialized-loopback [--boundary ...] [--output PATH]
-  list | compare | aggregate (reserved)
+  compare --suite platform-seed-v0.1 --observations PATH --output PATH
+  aggregate --records PATH --output PATH
+  classify --changed-paths PATH --output PATH
+  list (reserved)
 
 Exit codes: 0 success, 2 invalid arguments, 10 invalid schema/corpus, 20 invalid evidence, 21 runner mismatch, 30 reserved command.`;
 
@@ -42,7 +48,10 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   }
   if (command === "profile") return profile(args);
   if (command === "run") return runWeb(verificationRoot(), args);
-  if (["list", "compare", "aggregate"].includes(command)) {
+  if (command === "compare") return compare(verificationRoot(), args);
+  if (command === "aggregate") return aggregate(args);
+  if (command === "classify") return classify(args);
+  if (command === "list") {
     return args.length === 0 ? notImplemented() : ExitCode.INVALID_ARGUMENTS;
   }
   return ExitCode.INVALID_ARGUMENTS;
