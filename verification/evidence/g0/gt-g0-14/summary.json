@@ -2,9 +2,11 @@
   "format": "axiom-gt-g0-14-evidence-summary-v1",
   "formatVersion": 1,
   "taskId": "GT-G0-14",
-  "sourceCommit": "96bed11e573b48a2aa3efc63648c24ea9ba2624c",
-  "status": "COMMIT_BOUND_VALIDATED",
+  "sourceCommit": "7d9c22df422e8e983d49cf3011865804aa09189c",
+  "status": "COMMIT_BOUND_HOSTED_VALIDATED",
   "workflow": ".github/workflows/g0-pr-ci-dag.yml",
+  "hostedValidation": "PASS",
+  "hostedRunCount": 5,
   "selectedPlatforms": [
     "web",
     "windows",
@@ -19,7 +21,6 @@
   ],
   "semanticAuthority": "GT-G0-14_BOOTSTRAP_ONLY",
   "limitations": [
-    "HOSTED_PR_DAG_PENDING",
     "NOT_G1_SEMANTIC_ACCEPTANCE",
     "NOT_G0_GATE_REPORT"
   ]

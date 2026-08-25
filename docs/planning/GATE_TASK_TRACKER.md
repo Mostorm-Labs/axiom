@@ -65,7 +65,7 @@ Decision/Contract 简写：
 | Gate | 状态 | 任务覆盖 | 晋级剩余条件 |
 | --- | --- | --- | --- |
 | AR-0 | Pass | 6 tasks; validation evidence is commit-bound and architecture review is approved | Dependency for `GT-G0-00` is satisfied |
-| G0 | Validating | `GT-G0-00..GT-G0-13` Pass；`GT-G0-14` implementation complete, hosted validation pending | Complete hosted `GT-G0-14`, then `GT-G0-15..16`, produce reproducible G0 Evidence, and perform `GT-G0-17` review |
+| G0 | Validating | `GT-G0-00..GT-G0-14` Pass | Complete `GT-G0-15..16`, produce reproducible G0 Evidence, and perform `GT-G0-17` review |
 | G1 | Not Started | 8 tasks | G0 Pass |
 | G2 | Not Started | 7 tasks | G1 Pass |
 | G3 | Not Started | 10 tasks including 2 repository scope supplements | G2 Pass |
@@ -119,7 +119,7 @@ Evidence 列记录任务通过时必须生成的目标路径。标为 `planned` 
 | WP-G0-11 / IH-11 | `GT-G0-11` | Windows native adapter | R1 | REQ-GAP-VER, REQ-GAP-PLAT | D-G0 | GT-G0-08, GT-G0-09 | Modify | Pass | Pass | Pass | [Windows Native Adapter Evidence](../quality/evidence/g0/gt-g0-11-windows-native-adapter-20260824.md)；`verification/evidence/g0/gt-g0-11/` | — | Pass |
 | WP-G0-12 / IH-12 | `GT-G0-12` | Android instrumentation adapter | R1 | REQ-GAP-VER, REQ-GAP-PLAT | D-G0 | GT-G0-08, GT-G0-09 | Modify | Pass | Pass | Pass | [Android Instrumentation Adapter Evidence](../quality/evidence/g0/gt-g0-12-android-instrumentation-adapter-20260824.md)；`verification/evidence/g0/gt-g0-12/`；[hosted CI](https://github.com/Mostorm-Labs/axiom/actions/runs/32804707374) | — | Pass |
 | WP-G0-13 / IH-13 | `GT-G0-13` | Apple XCTest-style adapter for iPhone and iPadOS | R1 | REQ-GAP-VER, REQ-GAP-PLAT | D-G0 | GT-G0-08, GT-G0-09 | Modify | Pass | Pass | Pass | [Apple XCTest-style Adapter Evidence](../quality/evidence/g0/gt-g0-13-apple-xctest-adapter-20260824.md)；`verification/evidence/g0/gt-g0-13/` | — | Pass |
-| WP-G0-14 / IH-14 | `GT-G0-14` | PR CI dependency graph | R1 | REQ-GAP-VER | D-G0 | GT-G0-07, GT-G0-10..GT-G0-13 | Modify | Pass | Pass | Validating | [PR CI DAG Evidence](../quality/evidence/g0/gt-g0-14-pr-ci-dag-20260825.md)；`verification/evidence/g0/gt-g0-14/` | implementation `96bed11`；commit-bound Evidence 完成；hosted PR DAG 与 deliberate-failure artifacts 待完成 | Validating |
+| WP-G0-14 / IH-14 | `GT-G0-14` | PR CI dependency graph | R1 | REQ-GAP-VER | D-G0 | GT-G0-07, GT-G0-10..GT-G0-13 | Modify | Pass | Pass | Pass | [PR CI DAG Evidence](../quality/evidence/g0/gt-g0-14-pr-ci-dag-20260825.md)；`verification/evidence/g0/gt-g0-14/`；[hosted normal DAG](https://github.com/Mostorm-Labs/axiom/actions/runs/32828480021) | implementation `7d9c22d`；commit-bound Evidence 与四类 hosted deliberate-failure artifacts 已记录 | Pass |
 | WP-G0-15 / IH-15 | `GT-G0-15` | Nightly and release wiring | R1 | REQ-GAP-VER | D-G0 | GT-G0-10..GT-G0-14 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-15/ (planned)` | — | Not Started |
 | WP-G0-16 | `GT-G0-16` | Gate Report schema and G0 aggregator | R1 | REQ-GAP-VER | D-G0 | GT-G0-07, GT-G0-10..GT-G0-15 | Missing | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-16/ (planned)` | — | Not Started |
 | G0/Task 4 | `GT-G0-17` | G0 Gate review | R1 | REQ-GAP-VER | D-G0 | GT-G0-00..GT-G0-16 | Blocked | Not Started | Not Started | Not Started | `verification/evidence/gates/G0/<commit>/GT-G0-17/ (planned)` | All G0 tasks and reproducible evidence are prerequisites | Not Started |

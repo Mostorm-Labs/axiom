@@ -38,10 +38,28 @@ test("PR workflow exposes the accepted dependency layers and aggregate always ru
   assert.match(protocolWorkflow, /node packages\/platform-conformance-cli\/dist\/main\.js protocol/);
 });
 
-test("checked-in GT-G0-14 worktree evidence retains four failure layers and hashes", async () => {
+test("checked-in GT-G0-14 evidence binds hosted success and four failure layers", async () => {
   const evidence = join(root, "verification/evidence/g0/gt-g0-14");
   const manifest = JSON.parse(await readFile(join(evidence, "manifest.json"), "utf8"));
-  assert.equal(manifest.sourceCommit, "96bed11e573b48a2aa3efc63648c24ea9ba2624c");
+  assert.equal(manifest.sourceCommit, "7d9c22df422e8e983d49cf3011865804aa09189c");
+  const summary = JSON.parse(await readFile(join(evidence, "summary.json"), "utf8"));
+  assert.equal(summary.status, "COMMIT_BOUND_HOSTED_VALIDATED");
+  assert.equal(summary.hostedValidation, "PASS");
+  assert.equal(summary.hostedRunCount, 5);
+  assert.ok(!summary.limitations.includes("HOSTED_PR_DAG_PENDING"));
+  const hosted = JSON.parse(await readFile(join(evidence, "hosted-runs.json"), "utf8"));
+  assert.equal(hosted.implementationCommit, manifest.sourceCommit);
+  assert.equal(hosted.normalRun.decision, "PASS");
+  assert.equal(hosted.normalRun.conclusion, "success");
+  const expected = new Map([["schema", "INVALID_EVIDENCE"], ["protocol", "FAIL"], ["semantic", "FAIL"], ["platform", "FAIL"]]);
+  for (const run of hosted.deliberateFailureRuns) {
+    assert.equal(run.conclusion, "failure");
+    assert.equal(run.failedLayer, run.injectedLayer);
+    assert.equal(run.decision, expected.get(run.injectedLayer));
+    assert.match(run.artifact.digest, /^sha256:[0-9a-f]{64}$/);
+    expected.delete(run.injectedLayer);
+  }
+  assert.equal(expected.size, 0);
   for (const layer of ["schema", "protocol", "semantic", "platform"]) {
     const decision = JSON.parse(await readFile(join(evidence, "failure-attribution", `${layer}-failure.json`), "utf8"));
     assert.equal(decision.failedLayer, layer);

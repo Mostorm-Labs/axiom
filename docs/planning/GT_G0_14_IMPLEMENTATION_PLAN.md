@@ -1,6 +1,6 @@
 # GT-G0-14 实施计划
 
-状态：`Implementing`
+状态：`Pass`（实现提交 `7d9c22df422e8e983d49cf3011865804aa09189c`；hosted 验证见 Evidence）
 任务范围：只完成 PR CI dependency graph，不进入 `GT-G0-15`。
 
 ## 工作包
@@ -21,8 +21,8 @@
    - 建立 `schema → protocol + semantic → selected platform → aggregate` workflow。
    - 添加静态 DAG 检查和四类 deliberate-failure meta tests。
 6. **Evidence 与追踪**
-   - 生成 worktree Evidence，记录设计、实现、验证和限制。
-   - 更新 Gate Task Tracker 与 R1 覆盖状态；在 commit-bound Evidence 完成前保持 `Validating`。
+   - 生成 commit-bound Evidence，记录设计、实现、验证和限制。
+   - 保存 hosted 正常 DAG 与四类故意失败归层产物，更新 Gate Task Tracker 与 R1 覆盖状态。
 
 ## 验证命令
 
@@ -40,4 +40,5 @@ python3 tools/check_docs.py
 git diff --check
 ```
 
-最终还要在 GitHub PR 上保存绿色 DAG bundle 以及 schema、protocol、semantic、platform 四类故意失败的归层 Evidence；本地成功不替代 hosted CI。
+GitHub PR 绿色 DAG bundle 以及 schema、protocol、semantic、platform 四类故意失败归层 Evidence
+已保存；本地成功未被用于替代 hosted CI。
