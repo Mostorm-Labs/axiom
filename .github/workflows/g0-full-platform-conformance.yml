@@ -103,9 +103,9 @@ jobs:
           node-version: "24.18.0"
           cache: npm
           cache-dependency-path: verification/package-lock.json
-      - name: Install verification workspace
+      - name: Install and build verification workspace
         working-directory: verification
-        run: npm ci --ignore-scripts
+        run: npm ci --ignore-scripts && npm run build
       - uses: actions/download-artifact@v4
         with:
           name: full-roots-${{ inputs.cadence }}-${{ inputs.source_commit }}
