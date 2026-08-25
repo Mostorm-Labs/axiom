@@ -48,3 +48,21 @@ test("published lowercase namespaced capabilities with underscores are accepted"
   ];
   assert.doesNotThrow(() => validateValue(schema, value));
 });
+
+test("full run-set rejects unknown fields and invalid source identity", async () => {
+  const { schema, value } = await pair("full-run-set");
+  value.unexpected = true;
+  assert.throws(() => validateValue(schema, value), /unknown unexpected/);
+  delete value.unexpected;
+  value.sourceCommit = "WORKTREE";
+  assert.throws(() => validateValue(schema, value), /pattern mismatch/);
+});
+
+test("release decision requires wiring-only authority and reproducibility uses lowercase hashes", async () => {
+  const decision = await pair("platform-release-decision");
+  decision.value.authority = "G3_GATE";
+  assert.throws(() => validateValue(decision.schema, decision.value), /const mismatch/);
+  const comparison = await pair("reproducibility-comparison");
+  comparison.value.correctnessDifferences = ["not-a-stable-difference"];
+  assert.doesNotThrow(() => validateValue(comparison.schema, comparison.value));
+});

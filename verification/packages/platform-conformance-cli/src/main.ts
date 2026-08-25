@@ -10,6 +10,9 @@ import { profile, runWeb } from "./commands/web.js";
 import { compare } from "./commands/compare.js";
 import { aggregate } from "./commands/aggregate.js";
 import { classify } from "./commands/classify.js";
+import { fullRunSet } from "./commands/full_run_set.js";
+import { aggregateFull } from "./commands/aggregate_full.js";
+import { compareFull } from "./commands/compare_full.js";
 import { ExitCode } from "./exit_codes.js";
 
 const usage = `axiom-platform-conformance <command>
@@ -20,6 +23,9 @@ Commands:
   compare --suite platform-seed-v0.1 --observations PATH --output PATH
   aggregate --records PATH --output PATH
   classify --changed-paths PATH --output PATH
+  full-run-set --cadence nightly|release --source-commit SHA --schema-sha256 SHA --corpus-sha256 SHA --runner-version V --runtime-version V --repeat N --seed N --output PATH
+  aggregate-full --run-set PATH --records PATH --output PATH
+  compare-full --left PATH --right PATH --output PATH
   list (reserved)
 
 Exit codes: 0 success, 2 invalid arguments, 10 invalid schema/corpus, 20 invalid evidence, 21 runner mismatch, 30 reserved command.`;
@@ -51,6 +57,9 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   if (command === "compare") return compare(verificationRoot(), args);
   if (command === "aggregate") return aggregate(args);
   if (command === "classify") return classify(args);
+  if (command === "full-run-set") return fullRunSet(args);
+  if (command === "aggregate-full") return aggregateFull(args);
+  if (command === "compare-full") return compareFull(args);
   if (command === "list") {
     return args.length === 0 ? notImplemented() : ExitCode.INVALID_ARGUMENTS;
   }

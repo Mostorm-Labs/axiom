@@ -14,7 +14,7 @@
     "typescript": "7.0.2"
   },
   "scripts": {
-    "validate": "node --test tests/schema_meta.test.mjs tests/protocol_vectors.test.mjs tests/protocol_execution.test.mjs tests/protocol_mutation.test.mjs tests/platform_scenarios.test.mjs tests/platform_evidence.test.mjs tests/android_16kb.test.mjs tests/android_evidence.test.mjs tests/apple_evidence.test.mjs tests/pr_ci_contract.test.mjs && node tools/validate_schemas.mjs && node tools/validate_platform_scenarios.mjs && npm run test --workspaces --if-present",
+    "validate": "node --test tests/schema_meta.test.mjs tests/protocol_vectors.test.mjs tests/protocol_execution.test.mjs tests/protocol_mutation.test.mjs tests/platform_scenarios.test.mjs tests/platform_evidence.test.mjs tests/android_16kb.test.mjs tests/android_evidence.test.mjs tests/apple_evidence.test.mjs tests/pr_ci_contract.test.mjs tests/nightly_release_contract.test.mjs tests/g0_15_evidence.test.mjs && node tools/validate_schemas.mjs && node tools/validate_platform_scenarios.mjs && npm run test --workspaces --if-present",
     "build": "tsc -p tsconfig.json --noEmit && npm run build --workspaces --if-present && node tools/workspace_build.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"

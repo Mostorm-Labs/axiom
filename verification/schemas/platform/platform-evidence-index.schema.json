@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-evidence-index:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "authority", "sourceCommit", "corpusSha256", "runnerVersion", "runtimeVersion", "records", "missingSubjects", "validationIssues"],
+  "properties": {
+    "format": { "const": "axiom-platform-evidence-index-v1" },
+    "formatVersion": { "const": 1 },
+    "authority": { "const": "G0_WIRING_ONLY" },
+    "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "corpusSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "runnerVersion": { "type": "string", "minLength": 1 },
+    "runtimeVersion": { "type": "string", "minLength": 1 },
+    "records": { "type": "array", "items": { "type": "object" } },
+    "missingSubjects": { "type": "array", "items": { "type": "string" } },
+    "validationIssues": { "type": "array", "items": { "type": "string" } }
+  }
+}

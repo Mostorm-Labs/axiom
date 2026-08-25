@@ -167,3 +167,45 @@ test("classify produces a conservative provider-neutral run set", async () => {
   assert.equal(run(["classify", "--changed-paths", changed, "--output", output]).status, 0);
   assert.deepEqual(JSON.parse(await readFile(output, "utf8")).selectedPlatforms, ["android"]);
 });
+
+test("full-run-set emits deterministic five-profile release identity", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-full-run-set-"));
+  const output = join(root, "run-set.json");
+  const args = ["full-run-set", "--cadence", "release", "--source-commit", "a".repeat(40), "--schema-sha256", "b".repeat(64), "--corpus-sha256", "c".repeat(64), "--runner-version", "0.1.0", "--runtime-version", "0.1.0", "--repeat", "1", "--seed", "17", "--output", output];
+  assert.equal(run(args).status, 0);
+  const value = JSON.parse(await readFile(output, "utf8"));
+  assert.equal(value.authority, "G0_WIRING_ONLY");
+  assert.deepEqual(value.requiredProfiles.map(({ profileKey }) => profileKey), ["web", "windows", "android", "ios", "ipados"]);
+  assert.equal(value.requiredProfiles.every(({ requiredReality }) => requiredReality === "PHYSICAL"), true);
+});
+
+test("aggregate-full returns blocked authority when release records are hosted", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-full-aggregate-"));
+  const runSetPath = join(root, "run-set.json");
+  const recordsPath = join(root, "records");
+  const indexPath = join(root, "index.json");
+  const output = join(root, "decision.json");
+  await mkdir(recordsPath);
+  const sourceCommit = "a".repeat(40);
+  const runSet = { format: "axiom-full-run-set-v1", formatVersion: 1, authority: "G0_WIRING_ONLY", cadence: "RELEASE", sourceCommit, schemaSha256: "b".repeat(64), corpusSha256: "c".repeat(64), runnerVersion: "0.1.0", runtimeVersion: "0.1.0", repeat: 1, seed: 17, requiredProfiles: [
+    ["web", "WEB", "web-reference-v0-1"], ["windows", "WINDOWS", "windows-native-reference-v0-1"], ["android", "ANDROID", "android-instrumentation-reference-v0-1"], ["ios", "APPLE", "ios-rn-objcxx-reference-v0-1"], ["ipados", "APPLE", "ipados-rn-objcxx-reference-v0-1"],
+  ].map(([profileKey, platformFamily, profileId]) => ({ profileKey, platformFamily, profileId, requiredReality: "PHYSICAL" })) };
+  await writeFile(runSetPath, JSON.stringify(runSet));
+  for (const subject of ["schema", "protocol", "semantic", "web", "windows", "android", "ios", "ipados"]) {
+    const profile = { web: ["WEB", "web-reference-v0-1"], windows: ["WINDOWS", "windows-native-reference-v0-1"], android: ["ANDROID", "android-instrumentation-reference-v0-1"], ios: ["APPLE", "ios-rn-objcxx-reference-v0-1"], ipados: ["APPLE", "ipados-rn-objcxx-reference-v0-1"] }[subject];
+    await writeFile(join(recordsPath, `${subject}.json`), JSON.stringify({ format: "axiom-platform-evidence-record-v1", formatVersion: 1, subject, category: ["schema", "protocol", "semantic"].includes(subject) ? "PREREQUISITE" : "PROFILE", platformFamily: profile?.[0] ?? null, profileId: profile?.[1] ?? null, sourceCommit, corpusSha256: "c".repeat(64), runnerVersion: "0.1.0", runtimeVersion: "0.1.0", reality: profile ? "HOSTED" : "NOT_APPLICABLE", status: "PASS", evidenceSha256: "d".repeat(64), pgStatuses: [], diagnostics: [], environment: {} }));
+  }
+  assert.equal(run(["aggregate-full", "--run-set", runSetPath, "--records", recordsPath, "--output", output]).status, 21);
+  const decision = JSON.parse(await readFile(output, "utf8"));
+  assert.equal(decision.decision, "BLOCKED_AUTHORITY");
+  await writeFile(indexPath, JSON.stringify({}));
+});
+
+test("compare-full rejects different source revisions", async () => {
+  const root = await mkdtemp(join(tmpdir(), "axiom-full-compare-"));
+  const left = join(root, "left.json"); const right = join(root, "right.json"); const output = join(root, "comparison.json");
+  const decision = (sourceCommit) => ({ format: "axiom-platform-release-decision-v1", formatVersion: 1, authority: "G0_WIRING_ONLY", cadence: "NIGHTLY", decision: "PASS", failedSubject: null, blockingReasons: [], identity: { sourceCommit, schemaSha256: "b".repeat(64), corpusSha256: "c".repeat(64), runnerVersion: "0.1.0", runtimeVersion: "0.1.0", repeat: 1, seed: 1 }, pgStatuses: [], evidenceSubjects: [] });
+  await writeFile(left, JSON.stringify(decision("a".repeat(40)))); await writeFile(right, JSON.stringify(decision("e".repeat(40))));
+  assert.equal(run(["compare-full", "--left", left, "--right", right, "--output", output]).status, 20);
+  assert.equal(JSON.parse(await readFile(output, "utf8")).status, "INVALID_EVIDENCE");
+});

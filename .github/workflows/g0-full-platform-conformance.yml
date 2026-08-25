@@ -1,0 +1,205 @@
+name: G0 Full Platform Conformance
+
+on:
+  workflow_call:
+    inputs:
+      cadence:
+        required: true
+        type: string
+      source_commit:
+        required: true
+        type: string
+      repeat_count:
+        required: true
+        type: number
+  workflow_dispatch:
+    inputs:
+      cadence:
+        required: true
+        default: NIGHTLY
+        type: choice
+        options: [NIGHTLY, RELEASE]
+      source_commit:
+        required: true
+        type: string
+      repeat_count:
+        required: true
+        default: 2
+        type: number
+
+permissions:
+  contents: read
+
+jobs:
+  trusted-roots:
+    name: full/trusted-roots
+    runs-on: ubuntu-24.04
+    outputs:
+      source_commit: ${{ steps.identity.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_commit }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install and build verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts && npm run build
+      - name: Validate trusted roots
+        working-directory: verification
+        run: node packages/platform-conformance-cli/dist/main.js validate
+      - name: Create fixed full run-set
+        id: identity
+        shell: bash
+        env:
+          CADENCE: ${{ inputs.cadence }}
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+          REPEAT_COUNT: ${{ inputs.repeat_count }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          mkdir -p out/g0-15/roots/records
+          schema_sha=$(find verification/schemas verification/platform -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
+          corpus_sha=$(find verification/platform/v1 -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d' ' -f1)
+          node verification/packages/platform-conformance-cli/dist/main.js full-run-set \
+            --cadence "$CADENCE" --source-commit "$SOURCE_COMMIT" --schema-sha256 "$schema_sha" --corpus-sha256 "$corpus_sha" \
+            --runner-version "0.1.0" --runtime-version "0.1.0" --repeat "$REPEAT_COUNT" --seed 17 --output out/g0-15/roots/run-set.json
+          python3 verification/tools/write_full_evidence_record.py --subject schema --category PREREQUISITE --reality NOT_APPLICABLE --source-commit "$SOURCE_COMMIT" --corpus-sha256 "$corpus_sha" --runner-version 0.1.0 --runtime-version 0.1.0 --evidence verification/schemas --output out/g0-15/roots/records/schema.json
+          python3 verification/tools/write_full_evidence_record.py --subject protocol --category PREREQUISITE --reality NOT_APPLICABLE --source-commit "$SOURCE_COMMIT" --corpus-sha256 "$corpus_sha" --runner-version 0.1.0 --runtime-version 0.1.0 --evidence verification/platform/protocol --output out/g0-15/roots/records/protocol.json
+          python3 verification/tools/write_full_evidence_record.py --subject semantic --category PREREQUISITE --reality NOT_APPLICABLE --source-commit "$SOURCE_COMMIT" --corpus-sha256 "$corpus_sha" --runner-version 0.1.0 --runtime-version 0.1.0 --evidence verification --output out/g0-15/roots/records/semantic.json
+          echo "source_commit=$SOURCE_COMMIT" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-roots-${{ inputs.cadence }}-${{ inputs.source_commit }}
+          path: out/g0-15/roots
+          if-no-files-found: error
+          retention-days: 14
+
+  platform:
+    name: full/platform-${{ matrix.profile }}
+    needs: trusted-roots
+    if: ${{ always() && needs.trusted-roots.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { profile: web, adapter: web, os: ubuntu-24.04 }
+          - { profile: windows, adapter: windows, os: windows-2025 }
+          - { profile: android, adapter: android, os: ubuntu-24.04 }
+          - { profile: ios, adapter: ios, os: macos-15 }
+          - { profile: ipados, adapter: ipados, os: macos-15 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_commit }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: full-roots-${{ inputs.cadence }}-${{ inputs.source_commit }}
+          path: out/g0-15/roots
+      - name: Execute facts-only platform adapter
+        id: adapter
+        continue-on-error: true
+        shell: bash
+        run: |
+          for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
+            mkdir -p "out/g0-15/platform/${{ matrix.profile }}/repeat-$repeat"
+            if [ "${{ matrix.adapter }}" = windows ]; then
+              cd verification
+              node packages/platform-conformance-cli/dist/main.js profile --adapter windows > "../out/g0-15/platform/${{ matrix.profile }}/repeat-$repeat/profile.json"
+              cd ..
+            else
+              cd verification
+              node packages/platform-conformance-cli/dist/main.js run --suite platform-seed-v0.1 --adapter "${{ matrix.adapter }}" --output "../out/g0-15/platform/${{ matrix.profile }}/repeat-$repeat"
+              cd ..
+            fi
+          done
+      - name: Write provider-neutral profile record
+        if: always()
+        shell: bash
+        run: |
+          source_commit="${{ inputs.source_commit }}"
+          corpus_sha=$(python3 -c 'import json; print(json.load(open("out/g0-15/roots/run-set.json"))["corpusSha256"])')
+          for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
+            profile_id=$(python3 -c 'import json; print(json.load(open("out/g0-15/platform/${{ matrix.profile }}/repeat-'"$repeat"'/profile.json"))["profileId"])')
+            platform_family=$(python3 -c 'import json; print(json.load(open("out/g0-15/platform/${{ matrix.profile }}/repeat-'"$repeat"'/profile.json"))["platformFamily"])')
+            status=PASS
+            if [ "${{ steps.adapter.outcome }}" != success ]; then status=FAIL; fi
+            python3 verification/tools/write_full_evidence_record.py --subject "${{ matrix.profile }}" --category PROFILE --reality HOSTED --platform-family "$platform_family" --profile-id "$profile_id" --status "$status" --source-commit "$source_commit" --corpus-sha256 "$corpus_sha" --runner-version 0.1.0 --runtime-version 0.1.0 --evidence "out/g0-15/platform/${{ matrix.profile }}/repeat-$repeat" --output "out/g0-15/platform/${{ matrix.profile }}/repeat-$repeat/record.json"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-profile-${{ matrix.profile }}-${{ inputs.cadence }}-${{ inputs.source_commit }}
+          path: out/g0-15/platform/${{ matrix.profile }}
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce adapter result
+        if: steps.adapter.outcome != 'success'
+        run: exit 1
+
+  aggregate:
+    name: full/aggregate
+    if: ${{ always() }}
+    needs: [trusted-roots, platform]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_commit }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Install and build verification workspace
+        working-directory: verification
+        run: npm ci --ignore-scripts && npm run build
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: full-*
+          path: out/g0-15/downloaded
+          merge-multiple: true
+      - name: Collect provider-neutral records
+        shell: bash
+        run: |
+          mkdir -p out/g0-15/records
+          cp out/g0-15/downloaded/roots/run-set.json out/g0-15/run-set.json
+          for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
+            mkdir -p "out/g0-15/records/repeat-$repeat"
+            cp out/g0-15/downloaded/roots/records/*.json "out/g0-15/records/repeat-$repeat/"
+            find out/g0-15/downloaded -path "*/repeat-$repeat/record.json" -exec cp {} "out/g0-15/records/repeat-$repeat/" \;
+            node -e 'const fs=require("fs"); const p=process.argv[1]; const a=fs.readdirSync(p).filter(x=>x.endsWith(".json")); if(a.length<8) process.exit(20);' "out/g0-15/records/repeat-$repeat"
+          done
+      - name: Aggregate Platform Release Decision
+        id: aggregate
+        continue-on-error: true
+        working-directory: verification
+        run: |
+          for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
+            node packages/platform-conformance-cli/dist/main.js aggregate-full --run-set ../out/g0-15/run-set.json --records "../out/g0-15/records/repeat-$repeat" --output "../out/g0-15/platform-release-decision-$repeat.json" || true
+          done
+      - name: Compare repeated runs when requested
+        if: ${{ always() && inputs.repeat_count > 1 }}
+        continue-on-error: true
+        run: node verification/packages/platform-conformance-cli/dist/main.js compare-full --left out/g0-15/platform-release-decision-1.json --right out/g0-15/platform-release-decision-2.json --output out/g0-15/reproducibility-comparison.json || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-decision-${{ inputs.cadence }}-${{ inputs.source_commit }}
+          path: out/g0-15
+          if-no-files-found: error
+          retention-days: 30

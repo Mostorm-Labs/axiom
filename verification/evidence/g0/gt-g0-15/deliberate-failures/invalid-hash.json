@@ -1,0 +1,56 @@
+{
+  "format": "axiom-platform-release-decision-v1",
+  "formatVersion": 1,
+  "authority": "G0_WIRING_ONLY",
+  "cadence": "NIGHTLY",
+  "decision": "INVALID_EVIDENCE",
+  "failedSubject": "web",
+  "blockingReasons": [
+    "INVALID_EVIDENCE_HASH:web"
+  ],
+  "identity": {
+    "sourceCommit": "3e583a2ffe553681f833a9b539527edeca2d791f",
+    "schemaSha256": "df0ad6e43880f09c90ebf95f19110178aba6890df0010ebda7485029e2b543b4",
+    "corpusSha256": "6b17b8fcc411a533c822a5117e33cf73fa6766739d7d36ac86dc4bea883af4fe",
+    "runnerVersion": "0.1.0",
+    "runtimeVersion": "0.1.0",
+    "repeat": 2,
+    "seed": 17
+  },
+  "pgStatuses": [
+    {
+      "group": "PG-01",
+      "status": "PASS"
+    },
+    {
+      "group": "PG-02",
+      "status": "PASS"
+    },
+    {
+      "group": "PG-03",
+      "status": "PASS"
+    },
+    {
+      "group": "PG-04",
+      "status": "PASS"
+    },
+    {
+      "group": "PG-05",
+      "status": "PASS"
+    },
+    {
+      "group": "PG-06",
+      "status": "PASS"
+    }
+  ],
+  "evidenceSubjects": [
+    "android",
+    "ios",
+    "ipados",
+    "protocol",
+    "schema",
+    "semantic",
+    "web",
+    "windows"
+  ]
+}

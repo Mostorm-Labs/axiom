@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:reproducibility-comparison:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "authority", "comparable", "status", "blockingConclusionMatch", "correctnessDifferences", "environmentDifferences"],
+  "properties": {
+    "format": { "const": "axiom-reproducibility-comparison-v1" },
+    "formatVersion": { "const": 1 },
+    "authority": { "const": "G0_WIRING_ONLY" },
+    "comparable": { "type": "boolean" },
+    "status": { "enum": ["PASS", "INVALID_EVIDENCE"] },
+    "blockingConclusionMatch": { "type": "boolean" },
+    "correctnessDifferences": { "type": "array", "items": { "type": "string" } },
+    "environmentDifferences": { "type": "array", "items": { "type": "string" } }
+  }
+}
