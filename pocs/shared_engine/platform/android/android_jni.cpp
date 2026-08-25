@@ -136,6 +136,72 @@ Java_dev_mostorm_canvas_CanvasPocView_nativeLoad(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
+Java_dev_mostorm_canvas_CanvasVisualSmokeView_nativeRunVisualSmoke(
+    JNIEnv* env, jobject, jobject surface, jint width, jint height,
+    jbyteArray checker_array, jbyteArray font_array, jbyteArray replay_array,
+    jstring output_path) {
+  if (width != 800 || height != 600 || surface == nullptr) {
+    canvas::poc01::SetLastError("Android visual smoke requires 800x600 surface");
+    return Failure(env, "visual arguments", CANVAS_POC_STATUS_INVALID_ARGUMENT);
+  }
+  ANativeWindow* window = ANativeWindow_fromSurface(env, surface);
+  if (window == nullptr) {
+    canvas::poc01::SetLastError("Android visual smoke native window unavailable");
+    return Failure(env, "visual native window", CANVAS_POC_STATUS_PLATFORM_ERROR);
+  }
+  struct ReleaseWindow {
+    ANativeWindow* window;
+    ~ReleaseWindow() { ANativeWindow_release(window); }
+  } release_window{window};
+  const std::vector<uint8_t> checker = Bytes(env, checker_array);
+  const std::vector<uint8_t> font = Bytes(env, font_array);
+  const std::vector<uint8_t> replay = Bytes(env, replay_array);
+  const canvas_poc_status_t load_status = LoadState(checker, font, replay);
+  if (load_status != CANVAS_POC_STATUS_OK) return Failure(env, "visual load", load_status);
+  canvas::poc01::AndroidGlesAdapter adapter;
+  canvas_poc_status_t status = adapter.Attach(window, static_cast<uint32_t>(width),
+                                              static_cast<uint32_t>(height));
+  if (status != CANVAS_POC_STATUS_OK) return Failure(env, "visual attach", status);
+  const std::shared_ptr<canvas::poc01::Document> document =
+      canvas::poc01::ResolveDocumentForPlatform(g_document);
+  std::vector<uint8_t> rgba;
+  status = adapter.Render(*document, &rgba);
+  if (status != CANVAS_POC_STATUS_OK) return Failure(env, "visual render", status);
+  const char* raw_path = env->GetStringUTFChars(output_path, nullptr);
+  const std::string rgba_path(raw_path);
+  env->ReleaseStringUTFChars(output_path, raw_path);
+  std::ofstream output(rgba_path, std::ios::binary | std::ios::trunc);
+  if (!output) {
+    canvas::poc01::SetLastError("Android visual RGBA artifact could not be created");
+    return Failure(env, "visual artifact", CANVAS_POC_STATUS_PLATFORM_ERROR);
+  }
+  output.write(reinterpret_cast<const char*>(rgba.data()),
+               static_cast<std::streamsize>(rgba.size()));
+  const std::string pixel_hash =
+      canvas::poc01::HashHex(canvas::poc01::HashBytes(rgba));
+  std::ostringstream result;
+  result << "{\"platform\":\"android\",\"backend\":\"ganesh-gles3\","
+            "\"digest\":\""
+         << g_digest << "\",\"pixel_hash\":\"" << pixel_hash
+         << "\",\"rgba_bytes\":" << rgba.size() << "}";
+  Reset();
+  return env->NewStringUTF(result.str().c_str());
+}
+
+// The visual-smoke host has its own JNI lifecycle symbols.  Keep them
+// separate from CanvasPocView's established acceptance symbols so destroying
+// the additional Activity cannot tear down or alter the old entry point.
+extern "C" JNIEXPORT void JNICALL
+Java_dev_mostorm_canvas_CanvasVisualSmokeView_nativeDetach(JNIEnv*, jobject) {
+  g_surface.reset();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_dev_mostorm_canvas_CanvasVisualSmokeView_nativeDestroy(JNIEnv*, jobject) {
+  Reset();
+}
+
+extern "C" JNIEXPORT jstring JNICALL
 Java_dev_mostorm_canvas_CanvasPocView_nativeAttach(
     JNIEnv* env, jobject, jobject surface, jint width, jint height) {
   ANativeWindow* window = ANativeWindow_fromSurface(env, surface);
