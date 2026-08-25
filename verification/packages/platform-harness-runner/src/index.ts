@@ -14,3 +14,4 @@ export * from "./validation/ProtocolSchemaValidator.js";
 export * from "./conformance/PlatformComparator.js";
 export * from "./ci/ChangeClassifier.js";
 export * from "./ci/PrDecision.js";
+export * from "./ci/FullConformance.js";

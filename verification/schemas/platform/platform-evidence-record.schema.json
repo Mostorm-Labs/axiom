@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-evidence-record:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "subject", "category", "platformFamily", "profileId", "sourceCommit", "corpusSha256", "runnerVersion", "runtimeVersion", "reality", "status", "evidenceSha256", "pgStatuses", "diagnostics", "environment"],
+  "properties": {
+    "format": { "const": "axiom-platform-evidence-record-v1" },
+    "formatVersion": { "const": 1 },
+    "subject": { "type": "string", "minLength": 1 },
+    "category": { "enum": ["PREREQUISITE", "PROFILE"] },
+    "platformFamily": { "type": ["string", "null"], "enum": ["WEB", "WINDOWS", "ANDROID", "APPLE", null] },
+    "profileId": { "type": ["string", "null"] },
+    "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "corpusSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "runnerVersion": { "type": "string", "minLength": 1 },
+    "runtimeVersion": { "type": "string", "minLength": 1 },
+    "reality": { "enum": ["HOSTED", "PHYSICAL", "EMULATOR", "SIMULATOR", "NOT_APPLICABLE"] },
+    "status": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] },
+    "evidenceSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "pgStatuses": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["group", "status"], "properties": {
+      "group": { "enum": ["PG-01", "PG-02", "PG-03", "PG-04", "PG-05", "PG-06"] },
+      "status": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] }
+    } } },
+    "diagnostics": { "type": "array" },
+    "environment": { "type": "object" }
+  }
+}

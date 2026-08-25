@@ -27,7 +27,8 @@ Windows 场景和物理 Evidence 已在 Windows runner 上完成，`GT-G0-11` �
 - `GT-G0-13` 已增加独立的 iPhone/iPadOS RN/Fabric + ObjC++/Metal facts-only adapter；两端 profile、
   observation 和 Evidence 必须分开，macOS 只保留 shared-core logical conformance。
 - `GT-G0-14`：PR CI DAG、Shared Platform Comparator、semantic bootstrap、run-set 与 PR decision；
-- `GT-G0-15..16`：nightly/release wiring、Gate Report schema 和 G0 aggregator。
+- `GT-G0-15`：Nightly/Release wiring、Full Run-set、Platform Evidence Index、Platform Release Decision 与 reproducibility contract；当前仍等待 commit-bound hosted validation。
+- `GT-G0-16`：Gate Report schema 和 G0 aggregator，尚未实现。
 
 ## 骨架约定
 

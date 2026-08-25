@@ -1,0 +1,12 @@
+{
+  "format": "axiom-full-run-set-v1", "formatVersion": 1, "authority": "G0_WIRING_ONLY", "cadence": "NIGHTLY",
+  "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "schemaSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "corpusSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "runnerVersion": "0.1.0", "runtimeVersion": "0.1.0", "repeat": 2, "seed": 17,
+  "requiredProfiles": [
+    { "profileKey": "web", "platformFamily": "WEB", "profileId": "web-reference-v0-1", "requiredReality": "HOSTED" },
+    { "profileKey": "windows", "platformFamily": "WINDOWS", "profileId": "windows-native-reference-v0-1", "requiredReality": "HOSTED" },
+    { "profileKey": "android", "platformFamily": "ANDROID", "profileId": "android-instrumentation-reference-v0-1", "requiredReality": "HOSTED" },
+    { "profileKey": "ios", "platformFamily": "APPLE", "profileId": "ios-rn-objcxx-reference-v0-1", "requiredReality": "HOSTED" },
+    { "profileKey": "ipados", "platformFamily": "APPLE", "profileId": "ipados-rn-objcxx-reference-v0-1", "requiredReality": "HOSTED" }
+  ]
+}

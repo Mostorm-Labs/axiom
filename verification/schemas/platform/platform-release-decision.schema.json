@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-release-decision:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "authority", "cadence", "decision", "failedSubject", "blockingReasons", "identity", "pgStatuses", "evidenceSubjects"],
+  "properties": {
+    "format": { "const": "axiom-platform-release-decision-v1" },
+    "formatVersion": { "const": 1 },
+    "authority": { "const": "G0_WIRING_ONLY" },
+    "cadence": { "enum": ["NIGHTLY", "RELEASE"] },
+    "decision": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] },
+    "failedSubject": { "type": ["string", "null"] },
+    "blockingReasons": { "type": "array", "items": { "type": "string" } },
+    "identity": { "type": "object", "additionalProperties": false, "required": ["sourceCommit", "schemaSha256", "corpusSha256", "runnerVersion", "runtimeVersion", "repeat", "seed"], "properties": {
+      "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+      "schemaSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+      "corpusSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+      "runnerVersion": { "type": "string", "minLength": 1 },
+      "runtimeVersion": { "type": "string", "minLength": 1 },
+      "repeat": { "type": "integer" },
+      "seed": { "type": "integer" }
+    } },
+    "pgStatuses": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["group", "status"], "properties": {
+      "group": { "enum": ["PG-01", "PG-02", "PG-03", "PG-04", "PG-05", "PG-06"] },
+      "status": { "enum": ["PASS", "PASS_WITH_OBSERVATIONS", "FAIL", "INVALID_EVIDENCE", "BLOCKED_AUTHORITY"] }
+    } } },
+    "evidenceSubjects": { "type": "array", "items": { "type": "string" } }
+  }
+}

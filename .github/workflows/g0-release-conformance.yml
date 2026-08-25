@@ -1,0 +1,42 @@
+name: G0 Release Conformance
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Full 40-character commit on main to freeze for release conformance
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate-source:
+    runs-on: ubuntu-24.04
+    outputs:
+      source_commit: ${{ steps.source.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Validate source_commit is an exact main revision
+        id: source
+        shell: bash
+        env:
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+        run: |
+          printf '%s\n' "$SOURCE_COMMIT" | grep -Eq '^[A-Fa-f0-9]{40}$'
+          git fetch origin main --no-tags
+          git merge-base --is-ancestor "$SOURCE_COMMIT" origin/main
+          echo "source_commit=$SOURCE_COMMIT" >> "$GITHUB_OUTPUT"
+  release:
+    needs: validate-source
+    uses: ./.github/workflows/g0-full-platform-conformance.yml
+    with:
+      cadence: RELEASE
+      source_commit: ${{ needs.validate-source.outputs.source_commit }}
+      repeat_count: 1
+    permissions:
+      contents: read
