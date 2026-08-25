@@ -1,0 +1,54 @@
+{
+  "format": "axiom-gate-report-v1",
+  "formatVersion": 1,
+  "authority": "G0_GATE_REPORT",
+  "gate": "G0",
+  "status": "BLOCKED",
+  "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "branch": "main",
+  "schemaVersion": "axiom-gate-report-v1",
+  "generatorVersion": "0.1.0",
+  "corpus": {
+    "schemaSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "corpusSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "runnerVersion": "0.1.0",
+    "runtimeVersion": "0.1.0"
+  },
+  "platforms": [
+    {
+      "subject": "web",
+      "platformFamily": "WEB",
+      "profileId": "web-reference-v0-1",
+      "reality": "HOSTED",
+      "evidencePath": "verification/evidence/g0/gt-g0-15/evidence-index.json",
+      "environment": { "runnerName": "hosted" }
+    }
+  ],
+  "checks": [
+    { "level": "E1", "status": "PASS", "applicable": true, "reason": "foundation", "firstDivergence": null, "issues": [] },
+    { "level": "E2", "status": "PASS", "applicable": true, "reason": "adapters", "firstDivergence": null, "issues": [] },
+    { "level": "E3", "status": "PASS", "applicable": true, "reason": "integration", "firstDivergence": null, "issues": [] },
+    { "level": "E4", "status": "BLOCKED", "applicable": true, "reason": "physical authority", "firstDivergence": null, "issues": ["PHYSICAL_RELEASE_AUTHORITY_BLOCKED"] }
+  ],
+  "lineage": [
+    { "taskId": "GT-G0-00", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-00.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-01", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-01.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-02", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-02.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-03", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-03.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-04", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-04.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-05", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-05.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-06", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-06.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-07", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-07.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-08", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-08.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-09", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-09.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-10", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-10.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-11", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-11.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-12", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-12.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-13", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-13.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-14", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-14.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+    { "taskId": "GT-G0-15", "status": "Pass", "evidencePath": "verification/evidence/g0/gt-g0-15.json", "evidenceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }
+  ],
+  "artifacts": [],
+  "issues": ["PHYSICAL_RELEASE_AUTHORITY_BLOCKED"],
+  "promotion": { "allowed": false, "reason": "Gate is not eligible for promotion" }
+}

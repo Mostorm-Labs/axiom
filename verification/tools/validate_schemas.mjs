@@ -14,7 +14,7 @@ const expected = [
   "pr-layer-record.schema.json", "pr-decision.schema.json",
   "semantic-bootstrap-summary.schema.json", "full-run-set.schema.json",
   "platform-evidence-record.schema.json", "platform-evidence-index.schema.json",
-  "platform-release-decision.schema.json", "reproducibility-comparison.schema.json"
+  "platform-release-decision.schema.json", "reproducibility-comparison.schema.json", "gate-report.schema.json"
 ].sort();
 const actual = (await readdir(dir)).filter((name) => name.endsWith(".schema.json")).sort();
 if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new Error(`schema inventory mismatch: ${actual.length}/${expected.length}`);
