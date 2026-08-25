@@ -14,7 +14,8 @@ import {
 const verificationRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(process.env.AXIOM_G0_15_OUTPUT ?? join(verificationRoot, "evidence/g0/gt-g0-15"));
 const sourceLabel = process.env.AXIOM_EVIDENCE_SOURCE_COMMIT ?? "WORKTREE";
-const sourceCommit = /^[0-9a-f]{40}$/u.test(sourceLabel) ? sourceLabel : "a".repeat(40);
+const commitBound = /^[0-9a-f]{40}$/u.test(sourceLabel);
+const sourceCommit = commitBound ? sourceLabel : "a".repeat(40);
 const sha = (value) => createHash("sha256").update(value).digest("hex");
 const writeJson = (path, value) => writeFile(path, `${JSON.stringify(value, null, 2)}\n`);
 const profileDefinitions = [
@@ -71,7 +72,10 @@ await writeJson(join(output, "summary.json"), {
   status: sourceLabel === "WORKTREE" ? "WORKTREE_VALIDATED" : "COMMIT_BOUND_VALIDATED",
   authority: "G0_WIRING_ONLY", cadence: "NIGHTLY", profileCount: 5, platformFamilyCount: 4,
   pgGroups: groups, hostedValidation: "PENDING", physicalReleaseValidation: "BLOCKED_AUTHORITY",
-  limitations: ["NOT_COMMIT_BOUND", "HOSTED_NIGHTLY_PENDING", "PHYSICAL_RELEASE_EVIDENCE_REQUIRED", "NOT_G0_GATE_REPORT", "NOT_G3_GATE_DECISION"],
+  limitations: [
+    ...(commitBound ? [] : ["NOT_COMMIT_BOUND"]),
+    "HOSTED_NIGHTLY_PENDING", "PHYSICAL_RELEASE_EVIDENCE_REQUIRED", "NOT_G0_GATE_REPORT", "NOT_G3_GATE_DECISION",
+  ],
 });
 
 const files = [];
