@@ -30,6 +30,9 @@ test("PR workflow exposes the accepted dependency layers and aggregate always ru
   assert.match(workflow, /needs:\s*\[schema-validate, protocol-seed, semantic-seed\]/);
   assert.match(workflow, /if:\s*\$\{\{ always\(\) \}\}/);
   assert.match(workflow, /npm run test --workspace @axiom\/platform-harness-runner/);
+  const protocolWorkflow = await readFile(join(root, ".github/workflows/g0-platform-protocol-seed.yml"), "utf8");
+  assert.doesNotMatch(protocolWorkflow, /npm exec -- axiom-platform-conformance/);
+  assert.match(protocolWorkflow, /node packages\/platform-conformance-cli\/dist\/main\.js protocol/);
 });
 
 test("checked-in GT-G0-14 worktree evidence retains four failure layers and hashes", async () => {

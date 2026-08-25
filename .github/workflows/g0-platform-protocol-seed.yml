@@ -36,12 +36,12 @@ jobs:
         run: npm run build
       - name: Validate schema and corpus
         working-directory: verification
-        run: npm exec -- axiom-platform-conformance validate
+        run: node packages/platform-conformance-cli/dist/main.js validate
       - name: Validate workspace ownership and determinism
         run: python3 verification/tools/validate_workspace.py
       - name: Execute protocol seed on both boundaries
         working-directory: verification
-        run: npm exec -- axiom-platform-conformance protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output evidence-ci/platform-protocol-seed
+        run: node packages/platform-conformance-cli/dist/main.js protocol --suite protocol-seed-v0.1 --boundary in-process --boundary serialized-loopback --output evidence-ci/platform-protocol-seed
       - name: Assert versioned corpus remained read-only
         run: git diff --exit-code -- verification/platform/protocol/v1
       - name: Upload protocol evidence
