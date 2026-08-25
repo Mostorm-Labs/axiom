@@ -172,16 +172,21 @@ jobs:
         with:
           pattern: full-*
           path: out/g0-15/downloaded
-          merge-multiple: true
+          merge-multiple: false
       - name: Collect provider-neutral records
         shell: bash
         run: |
           mkdir -p out/g0-15/records
-          cp out/g0-15/downloaded/run-set.json out/g0-15/run-set.json
+          run_set=$(find out/g0-15/downloaded -path "*/full-roots-*/run-set.json" -print -quit)
+          test -n "$run_set"
+          cp "$run_set" out/g0-15/run-set.json
           for repeat in $(seq 1 "${{ inputs.repeat_count }}"); do
             mkdir -p "out/g0-15/records/repeat-$repeat"
-            cp out/g0-15/downloaded/records/*.json "out/g0-15/records/repeat-$repeat/"
-            find out/g0-15/downloaded -path "*/repeat-$repeat/record.json" -exec cp {} "out/g0-15/records/repeat-$repeat/" \;
+            find out/g0-15/downloaded -path "*/full-roots-*/records/*.json" -exec cp {} "out/g0-15/records/repeat-$repeat/" \;
+            while IFS= read -r profile_record; do
+              artifact_name=$(basename "$(dirname "$(dirname "$profile_record")")")
+              cp "$profile_record" "out/g0-15/records/repeat-$repeat/${artifact_name}.json"
+            done < <(find out/g0-15/downloaded -path "*/full-profile-*/repeat-$repeat/record.json" -print)
             node -e 'const fs=require("fs"); const p=process.argv[1]; const a=fs.readdirSync(p).filter(x=>x.endsWith(".json")); if(a.length<8) process.exit(20);' "out/g0-15/records/repeat-$repeat"
           done
       - name: Aggregate Platform Release Decision
