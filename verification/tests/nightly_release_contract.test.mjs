@@ -33,6 +33,13 @@ test("reusable graph enumerates trusted roots, five profiles, aggregate and arti
   assert.match(workflow, /repeat_count/);
 });
 
+test("every platform runner builds the verification CLI before invoking adapters", async () => {
+  const workflow = await readWorkflow("g0-full-platform-conformance.yml");
+  const platformJob = workflow.slice(workflow.indexOf("  platform:"), workflow.indexOf("  aggregate:"));
+  assert.match(platformJob, /name: Install and build verification workspace/);
+  assert.match(platformJob, /working-directory: verification\s+run: npm ci --ignore-scripts && npm run build/);
+});
+
 test("workflow matrix never blesses or updates checked-in corpus", async () => {
   for (const name of ["g0-full-platform-conformance.yml", "g0-nightly.yml", "g0-release-conformance.yml"]) {
     const workflow = await readWorkflow(name);
