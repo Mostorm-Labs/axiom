@@ -29,7 +29,7 @@
 - [x] runner 和 CLI 的报告/完整性测试通过；
 - [x] E1、E2、E3 可由当前 GT-G0-00～15 Evidence 重建；
 - [x] hosted-only Release 明确输出 E4 `BLOCKED`，promotion=false；
-- [x] 实现提交 `d335c7a4aa5bb3e934434f8c551b88f3ab3c6a62` 后重新生成 commit-bound report，并记录最终文件 hash；
+- [x] 实现提交 `25fa3a950d91a7e4fa1b9664d14be66ee6b1c359` 后重新生成 commit-bound report，并记录最终文件 hash；
 - [ ] GT-G0-17 独立 review 通过（不属于本任务）。
 
 当前 Gate 状态：`Validating`。在未形成最终 implementation commit 前，不宣称 GT-G0-16 Pass。

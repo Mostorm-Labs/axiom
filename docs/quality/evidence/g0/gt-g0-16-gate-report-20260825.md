@@ -2,7 +2,7 @@
 
 ## 结论
 
-本轮实现已提交为 `d335c7a`（完整 SHA 见 Evidence manifest），并以该实现提交重新生成
+本轮实现已提交为 `25fa3a950d91a7e4fa1b9664d14be66ee6b1c359`，并以该实现提交重新生成
 `verification/evidence/g0/gt-g0-16/g0-gate-report.json`。报告 authority 为 `G0_GATE_REPORT`，
 当前结果为 `BLOCKED`：E1/E2/E3 为 `PASS`，E4 因 Release 仍只有 hosted 证据而为
 `PHYSICAL_RELEASE_AUTHORITY_BLOCKED`。这与 GT-G0-15 的保守 authority 规则一致。
@@ -38,6 +38,6 @@
 
 ## 未关闭项
 
-当前报告的 `sourceCommit` 绑定实现提交 `d335c7a4aa5bb3e934434f8c551b88f3ab3c6a62`；Evidence manifest
+当前报告的 `sourceCommit` 绑定实现提交 `25fa3a950d91a7e4fa1b9664d14be66ee6b1c359`；Evidence manifest
 记录输入和报告的字节数与 SHA-256。E4 仍因缺少 physical release authority 为 `BLOCKED`，因此 GT-G0-16
 保持 `Validating`，不能标记 `Pass`。GT-G0-17 review 和 G0 晋级不在本轮执行。
