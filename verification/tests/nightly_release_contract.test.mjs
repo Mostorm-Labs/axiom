@@ -43,9 +43,11 @@ test("every platform runner builds the verification CLI before invoking adapters
 test("aggregate consumes the flattened artifact layout produced by upload-artifact", async () => {
   const workflow = await readWorkflow("g0-full-platform-conformance.yml");
   const aggregateJob = workflow.slice(workflow.indexOf("  aggregate:"));
-  assert.match(aggregateJob, /cp out\/g0-15\/downloaded\/run-set\.json out\/g0-15\/run-set\.json/);
-  assert.doesNotMatch(aggregateJob, /downloaded\/roots\/run-set\.json/);
-  assert.match(aggregateJob, /cp out\/g0-15\/downloaded\/records\/\*\.json/);
+  assert.match(aggregateJob, /pattern: full-\*/);
+  assert.match(aggregateJob, /merge-multiple: false/);
+  assert.match(aggregateJob, /find out\/g0-15\/downloaded -path "\*\/full-roots-\*\/run-set\.json"/);
+  assert.match(aggregateJob, /full-profile-\*\/repeat-\$repeat\/record\.json/);
+  assert.doesNotMatch(aggregateJob, /merge-multiple: true/);
 });
 
 test("workflow matrix never blesses or updates checked-in corpus", async () => {
