@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-scenario:v1",
+  "title": "Axiom Platform Scenario v1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "eventSelector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["traceKind", "event", "occurrence"],
+      "properties": {
+        "traceKind": {"enum": ["LIFECYCLE", "SURFACE", "BRIDGE"]},
+        "event": {"enum": ["CANVAS_CREATED", "HOST_ATTACHED", "HOST_DETACHED", "DOCUMENT_ATTACHED", "DOCUMENT_DETACHED", "APP_BACKGROUND", "APP_FOREGROUND", "CANVAS_SUSPEND_REQUESTED", "CANVAS_SUSPENDED", "CANVAS_RESUME_REQUESTED", "CANVAS_RUNNING", "CANVAS_DESTROY_REQUESTED", "CANVAS_DESTROYED", "SYNC_SUSPENDED", "SYNC_RECONNECT", "SYNC_CATCH_UP", "SURFACE_BOUND", "SURFACE_UNAVAILABLE", "SURFACE_REBOUND", "METRICS_CHANGED", "DEVICE_LOST", "DEVICE_RECOVERY_STARTED", "DEVICE_RECOVERED", "ARC_PREVIEW_DEGRADED", "ARC_PREVIEW_RECOVERED", "CANONICAL_FRAME_SUBMITTED", "CANONICAL_FRAME_PRESENTED", "PREVIEW_FRAME_SUBMITTED", "PREVIEW_FRAME_PRESENTED", "CANONICAL_VISIBLE_ACKNOWLEDGED", "PREVIEW_CLEAR_REQUESTED", "PREVIEW_CLEARED", "STALE_GENERATION_REJECTED", "FACADE_CALL_ISSUED", "FACADE_CALL_COMPLETED", "DATA_BRIDGE_APPLY_ISSUED", "DATA_BRIDGE_APPLY_COMPLETED", "LOCAL_CANONICAL_EVENT_PUBLISHED", "INPUT_BATCH_DELIVERED", "CALLBACK_DISPATCHED"]},
+        "occurrence": {"enum": ["FIRST", "LAST", "ANY"]},
+        "match": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "targetPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platformFamily", "policy", "requiredCapabilities"],
+      "properties": {
+        "platformFamily": {"enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"]},
+        "policy": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]},
+        "requiredCapabilities": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[._][a-z0-9]+)+$"}}
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["DISPATCH_ONLY", "WAIT_FOR_ACTION_COMPLETION", "WAIT_FOR_EVENT"]},
+        "event": {"$ref": "#/$defs/eventSelector"}
+      },
+      "allOf": [{"if": {"properties": {"mode": {"const": "WAIT_FOR_EVENT"}}}, "then": {"required": ["event"]}}]
+    },
+    "requiredEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "selector", "minCount"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "selector": {"$ref": "#/$defs/eventSelector"},
+        "minCount": {"type": "integer", "minimum": 0},
+        "maxCount": {"type": "integer", "minimum": 0}
+      }
+    },
+    "forbiddenEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "selector"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "selector": {"$ref": "#/$defs/eventSelector"}}
+    },
+    "partialOrder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "relation", "before", "after"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "relation": {"const": "HAPPENS_BEFORE"},
+        "before": {"$ref": "#/$defs/eventSelector"},
+        "after": {"$ref": "#/$defs/eventSelector"}
+      }
+    },
+    "stateAssertion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "kind"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"type": "string", "minLength": 1}}
+    },
+    "openObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "key"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "key": {"type": "string", "minLength": 1}}
+    }
+  },
+  "required": ["format", "formatVersion", "id", "requirementStatus", "requirementIds", "authorityRefs", "targets", "preconditions", "steps", "expected", "capture"],
+  "properties": {
+    "format": {"const": "axiom-platform-scenario-v1"},
+    "formatVersion": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "requirementStatus": {"enum": ["SPEC_REQUIREMENT", "FREEZE_CANDIDATE", "BENCHMARK_TARGET", "EXPERIMENTAL_TARGET", "OPEN"]},
+    "requirementIds": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "authorityRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "canonicalFixtureRef": {"type": "string", "minLength": 1},
+    "targets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/targetPolicy"}},
+    "preconditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["appState", "canvasState", "hostState", "documentState", "surfaceState", "deviceState", "arcPreviewMode"],
+      "properties": {
+        "appState": {"enum": ["FOREGROUND", "BACKGROUND"]},
+        "canvasState": {"enum": ["NOT_CREATED", "CREATED", "MOUNTED", "RUNNING", "SUSPENDED", "DESTROYED"]},
+        "hostState": {"enum": ["DETACHED", "ATTACHED"]},
+        "documentState": {"enum": ["NONE", "AVAILABLE", "ATTACHED"]},
+        "surfaceState": {"enum": ["UNBOUND", "BOUND", "UNAVAILABLE", "REBINDING"]},
+        "deviceState": {"enum": ["READY", "LOST", "RECOVERING"]},
+        "arcPreviewMode": {"enum": ["DISABLED", "ENABLED", "REQUIRED_IF_CAPABLE"]}
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stepId", "kind", "action", "completion"],
+        "properties": {
+          "stepId": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["CONTROL", "APP_LIFECYCLE", "METRICS_UPDATE", "SEMANTIC", "BRIDGE", "INPUT", "FAULT", "WAIT"]},
+          "action": {"type": "object", "additionalProperties": true},
+          "completion": {"$ref": "#/$defs/completion"}
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredEvents", "forbiddenEvents", "partialOrder", "stateAssertions", "openObservations"],
+      "properties": {
+        "requiredEvents": {"type": "array", "items": {"$ref": "#/$defs/requiredEvent"}},
+        "forbiddenEvents": {"type": "array", "items": {"$ref": "#/$defs/forbiddenEvent"}},
+        "partialOrder": {"type": "array", "items": {"$ref": "#/$defs/partialOrder"}},
+        "stateAssertions": {"type": "array", "items": {"$ref": "#/$defs/stateAssertion"}},
+        "openObservations": {"type": "array", "items": {"$ref": "#/$defs/openObservation"}}
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lifecycleTrace", "surfaceTrace", "bridgeTrace", "semanticCheckpoints", "stateCheckpoints", "ownershipSnapshot"],
+      "properties": {
+        "lifecycleTrace": {"type": "boolean"},
+        "surfaceTrace": {"type": "boolean"},
+        "bridgeTrace": {"type": "boolean"},
+        "semanticCheckpoints": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+        "stateCheckpoints": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+        "ownershipSnapshot": {"type": "boolean"}
+      }
+    }
+  }
+}

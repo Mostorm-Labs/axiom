@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:projection:v1",
+  "title": "Axiom Verification Projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "semanticSchemaVersion", "rootType", "form", "value"],
+  "properties": {
+    "format": {"const": "axiom-verification-projection-v1"},
+    "formatVersion": {"const": 1},
+    "semanticSchemaVersion": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "rootType": {"type": "string", "minLength": 1},
+    "form": {"enum": ["DECODED", "NORMALIZED", "CANONICAL"]},
+    "value": {}
+  }
+}

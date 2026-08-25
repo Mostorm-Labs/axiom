@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:suite:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "id", "description", "cases", "implementationPolicy"],
+  "properties": {
+    "formatVersion": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "cases": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z0-9-]+$"}},
+    "implementationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpp", "wasm", "ts"],
+      "properties": {
+        "cpp": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]},
+        "wasm": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]},
+        "ts": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]}
+      }
+    }
+  }
+}

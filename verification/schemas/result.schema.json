@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:result:v1",
+  "title": "Axiom ConformanceResult v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "vectorId", "requirementStatus", "result", "participants", "comparison", "divergence", "diagnostics"],
+  "properties": {
+    "format": {"const": "axiom-conformance-result-v1"},
+    "formatVersion": {"const": 1},
+    "vectorId": {"type": "string", "minLength": 1},
+    "requirementStatus": {"$ref": "#/$defs/requirementStatus"},
+    "result": {"$ref": "#/$defs/resultStatus"},
+    "participants": {"type": "array", "items": {"$ref": "#/$defs/participant"}},
+    "comparison": {"$ref": "#/$defs/comparison"},
+    "divergence": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/divergence"}]},
+    "diagnostics": {"type": "array", "items": {"$ref": "#/$defs/diagnosticRecord"}}
+  },
+  "allOf": [
+    {"if": {"properties": {"result": {"const": "PASS"}}, "required": ["result"]}, "then": {"properties": {"divergence": {"type": "null"}}}},
+    {"if": {"properties": {"result": {"const": "FAIL_GOLDEN_MISMATCH"}}, "required": ["result"]}, "then": {"properties": {"divergence": {"allOf": [{"$ref": "#/$defs/divergence"}, {"properties": {"basis": {"const": "GOLDEN"}}}]}}}},
+    {"if": {"properties": {"result": {"const": "OBSERVED_DIVERGENCE_OPEN"}}, "required": ["result"]}, "then": {"properties": {"divergence": {"allOf": [{"$ref": "#/$defs/divergence"}, {"properties": {"basis": {"const": "CROSS_IMPLEMENTATION"}}}]}}}},
+    {"if": {"properties": {"result": {"enum": ["BLOCKED_OPEN", "OBSERVED_AGREEMENT_OPEN"]}}, "required": ["result"]}, "then": {"properties": {"divergence": {"type": "null"}}}}
+  ],
+  "$defs": {
+    "requirementStatus": {"enum": ["SPEC_REQUIREMENT", "FREEZE_CANDIDATE", "BENCHMARK_TARGET", "EXPERIMENTAL_TARGET", "OPEN"]},
+    "implementationKind": {"enum": ["CPP_NATIVE", "WASM", "TS_REFERENCE"]},
+    "resultStatus": {"enum": ["PASS", "FAIL_GOLDEN_MISMATCH", "FAIL_IMPLEMENTATION_DIVERGENCE", "FAIL_IMPLEMENTATION_ERROR", "FAIL_CAPABILITY_MISSING", "BLOCKED_OPEN", "OBSERVED_AGREEMENT_OPEN", "OBSERVED_DIVERGENCE_OPEN", "HARNESS_ERROR"]},
+    "stageName": {"enum": ["DECODE", "NORMALIZE", "VALIDATE", "APPLY", "PROJECTION", "ENCODE", "REPLAY", "ORDER_KEY_COMPARE", "ORDER_KEY_ALLOCATE", "HARNESS"]},
+    "artifactPath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"},
+    "semanticPath": {"type": "string", "pattern": "^\\$(?:(?:\\.[A-Za-z_][A-Za-z0-9_]*)|(?:\\[(?:[0-9]+|[^\\]\\r\\n=]+=[^\\]\\r\\n]+)\\]))*$"},
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementationId", "implementationKind", "policy", "participation"],
+      "properties": {
+        "implementationId": {"type": "string", "minLength": 1},
+        "implementationKind": {"$ref": "#/$defs/implementationKind"},
+        "policy": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]},
+        "participation": {"enum": ["RAN", "NOT_CAPABLE", "MISSING", "IMPLEMENTATION_ERROR"]},
+        "observation": {"$ref": "#/$defs/artifactPath"}
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["golden", "crossImplementation", "comparedImplementations"],
+      "properties": {
+        "golden": {"enum": ["CHECKED", "NOT_APPLICABLE", "BLOCKED_OPEN"]},
+        "crossImplementation": {"enum": ["CHECKED", "NOT_ENOUGH_PARTICIPANTS", "NOT_APPLICABLE"]},
+        "comparedImplementations": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "divergence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "basis", "observed", "summary"],
+      "properties": {
+        "kind": {"enum": ["TERMINAL_STAGE", "OUTCOME", "SEMANTIC_ERROR_CATEGORY", "STAGE_PROJECTION", "SEMANTIC_PROJECTION", "CANONICAL_BYTES", "REPLAY_CHECKPOINT", "CAPABILITY", "IMPLEMENTATION_ERROR"]},
+        "basis": {"enum": ["GOLDEN", "CROSS_IMPLEMENTATION"]},
+        "stage": {"$ref": "#/$defs/stageName"},
+        "operationIndex": {"type": "integer", "minimum": 0},
+        "operationId": {"type": "string", "pattern": "^id128:[0-9a-f]{32}$"},
+        "semanticPath": {"$ref": "#/$defs/semanticPath"},
+        "byteOffset": {"type": "integer", "minimum": 0},
+        "reference": {"$ref": "#/$defs/referenceOperand"},
+        "observed": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/observedOperand"}},
+        "summary": {"type": "string"}
+      },
+      "dependentRequired": {
+        "operationIndex": ["operationId"],
+        "operationId": ["operationIndex"]
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"basis": {"const": "GOLDEN"}}, "required": ["basis"]},
+          "then": {"required": ["reference"], "properties": {"reference": {"properties": {"source": {"const": "GOLDEN"}}}}}
+        },
+        {
+          "if": {"properties": {"basis": {"const": "CROSS_IMPLEMENTATION"}}, "required": ["basis"]},
+          "then": {"not": {"required": ["reference"]}, "properties": {"observed": {"minItems": 2}}}
+        },
+        {
+          "if": {"required": ["byteOffset"]},
+          "then": {"properties": {"kind": {"const": "CANONICAL_BYTES"}}}
+        },
+        {
+          "if": {"required": ["semanticPath"]},
+          "then": {"properties": {"kind": {"enum": ["STAGE_PROJECTION", "SEMANTIC_PROJECTION", "REPLAY_CHECKPOINT"]}}}
+        }
+      ]
+    },
+    "referenceOperand": {
+      "type": "object", "additionalProperties": false, "required": ["source"],
+      "properties": {
+        "source": {"const": "GOLDEN"},
+        "artifact": {"$ref": "#/$defs/artifactPath"},
+        "value": {"type": ["string", "number", "integer", "boolean"]}
+      },
+      "anyOf": [{"required": ["artifact"]}, {"required": ["value"]}]
+    },
+    "observedOperand": {
+      "type": "object", "additionalProperties": false, "required": ["implementationId"],
+      "properties": {
+        "implementationId": {"type": "string", "minLength": 1},
+        "artifact": {"$ref": "#/$defs/artifactPath"},
+        "value": {"type": ["string", "number", "integer", "boolean"]}
+      },
+      "anyOf": [{"required": ["artifact"]}, {"required": ["value"]}]
+    },
+    "diagnosticRecord": {
+      "type": "object", "additionalProperties": false, "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": {"enum": ["INFO", "WARNING", "ERROR"]},
+        "stage": {"$ref": "#/$defs/stageName"},
+        "code": {"type": "string", "minLength": 1},
+        "message": {"type": "string"},
+        "stack": {"type": "string"},
+        "details": {}
+      }
+    }
+  }
+}

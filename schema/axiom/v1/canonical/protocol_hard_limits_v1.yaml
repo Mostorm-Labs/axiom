@@ -1,0 +1,30 @@
+schema: auditoryworks.axiom.v1.protocol-hard-limits
+version: 1
+status: frozen
+source_authority: Axiom V1 Semantic Hard Limits + Protocol Safety Budget v0.1
+limits:
+  operation_encoded_bytes: 33554432
+  object_record_encoded_bytes: 16777216
+  generic_utf8_string_bytes: 1048576
+  edit_rich_text_inserted_utf8_bytes_aggregate: 8388608
+  generic_keyed_batch_items: 65535
+  erase_masks_per_object: 65535
+  geometry_point_like_elements_per_operation_aggregate: 2000000
+  order_key_bytes_min: 1
+  order_key_bytes_max: 32
+rules:
+  overflow: reject
+  truncate: reject
+  clamp: forbidden
+  partial_apply: forbidden
+  duplicate_canonical_key: reject
+  snapshot_total_decode_budget: caller_supplied_required
+error_categories:
+  - WIRE_SIZE_LIMIT_EXCEEDED
+  - OBJECT_SIZE_LIMIT_EXCEEDED
+  - COLLECTION_LIMIT_EXCEEDED
+  - GEOMETRY_LIMIT_EXCEEDED
+  - STRING_LIMIT_EXCEEDED
+  - DECODE_BUDGET_EXCEEDED
+  - INTEGER_OVERFLOW
+  - TRUNCATED_LENGTH_DELIMITED_FIELD

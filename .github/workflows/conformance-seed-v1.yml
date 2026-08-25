@@ -1,0 +1,96 @@
+name: Axiom V1 Conformance Seed Bootstrap
+
+on:
+  push:
+    branches: ["docs/notion-bridge-bootstrap", main]
+    paths:
+      - "verification/**"
+      - "schema/axiom/v1/**"
+      - ".github/workflows/conformance-seed-v1.yml"
+  pull_request:
+    paths:
+      - "verification/**"
+      - "schema/axiom/v1/**"
+      - ".github/workflows/conformance-seed-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-seed-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install verification validation dependencies
+        run: python3 -m pip install --disable-pip-version-check -r verification/conformance/coordinator/requirements.txt
+
+      - name: Install protoc 35.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-linux-x86_64.zip
+          unzip -q /tmp/protoc.zip -d /tmp/protoc
+          echo "/tmp/protoc/bin" >> "$GITHUB_PATH"
+
+      - name: Compile frozen Axiom V1 descriptor evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="schema/axiom/v1/proto"
+          OUT="$RUNNER_TEMP/axiom-v1-descriptor"
+          mkdir -p "$OUT"
+          mapfile -t FILES < <(find "$ROOT/auditoryworks/axiom/v1" -maxdepth 1 -name '*.proto' -printf '%P\n' | sort)
+          test "${#FILES[@]}" -eq 12
+          ARGS=()
+          for f in "${FILES[@]}"; do ARGS+=("auditoryworks/axiom/v1/$f"); done
+          protoc --proto_path="$ROOT" --descriptor_set_out="$OUT/axiom_v1.descriptor.pb" --include_imports --include_source_info "${ARGS[@]}"
+          EXPECTED="$(tr -d '[:space:]' < schema/axiom/v1/descriptor/axiom_v1.descriptor.sha256)"
+          ACTUAL="$(sha256sum "$OUT/axiom_v1.descriptor.pb" | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+          echo "AXIOM_V1_DESCRIPTOR=$OUT/axiom_v1.descriptor.pb" >> "$GITHUB_ENV"
+
+      - name: Validate JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          find verification -name '*.json' -print0 | sort -z | xargs -0 -n1 python3 -m json.tool >/dev/null
+
+      - name: Validate verification artifact contracts
+        run: python3 -m unittest discover -s verification/conformance/coordinator -p 'test_*.py' -v
+
+      - name: Validate seed-v0.1 identity
+        run: python3 verification/conformance/coordinator/axiom_conformance.py validate-corpus
+
+      - name: Verify exactly 60 stable seed IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(python3 verification/conformance/coordinator/axiom_conformance.py list --suite seed-v0.1 | wc -l)" -eq 60
+
+      - name: Verify adapters do not claim unimplemented capabilities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for p in sorted(Path('verification/conformance/adapters').glob('*/capabilities.json')):
+              d = json.loads(p.read_text())
+              assert d['status'] == 'NOT_MATERIALIZED', (p, d['status'])
+              assert d['capabilities'] == [], (p, d['capabilities'])
+              print(p, 'bootstrap-safe')
+          PY
+
+      - name: Verify run is fail-closed before adapters exist
+        shell: bash
+        run: |
+          set +e
+          python3 verification/conformance/coordinator/axiom_conformance.py run --suite seed-v0.1
+          rc=$?
+          set -e
+          test "$rc" -eq 3
+
+      - name: Verify patch whitespace
+        run: git diff --check

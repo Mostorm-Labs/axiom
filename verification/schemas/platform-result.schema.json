@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:platform-result:v1",
+  "title": "Axiom Platform Conformance Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "scenarioId", "requirementStatus", "result", "participants", "checks", "openObservations", "divergence", "diagnostics"],
+  "properties": {
+    "format": {"const": "axiom-platform-conformance-result-v1"},
+    "formatVersion": {"const": 1},
+    "scenarioId": {"type": "string", "minLength": 1},
+    "requirementStatus": {"enum": ["SPEC_REQUIREMENT", "FREEZE_CANDIDATE", "BENCHMARK_TARGET", "EXPERIMENTAL_TARGET", "OPEN"]},
+    "result": {"enum": ["PASS", "FAIL_SCENARIO_EXPECTATION", "FAIL_CROSS_PLATFORM_DIVERGENCE", "FAIL_CAPABILITY_MISSING", "FAIL_IMPLEMENTATION_ERROR", "BLOCKED_OPEN", "OBSERVED_AGREEMENT_OPEN", "OBSERVED_DIVERGENCE_OPEN", "HARNESS_ERROR"]},
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["platformFamily", "profileId", "policy", "participation"],
+        "properties": {
+          "platformFamily": {"enum": ["WEB", "WINDOWS", "ANDROID", "APPLE"]},
+          "profileId": {"type": "string", "minLength": 1},
+          "policy": {"enum": ["REQUIRED", "REQUIRED_WHEN_CAPABLE"]},
+          "participation": {"enum": ["RAN", "NOT_CAPABLE", "MISSING", "IMPLEMENTATION_ERROR"]},
+          "observation": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"}
+        },
+        "allOf": [
+          {"if": {"properties": {"participation": {"const": "RAN"}}}, "then": {"required": ["observation"]}},
+          {"if": {"properties": {"participation": {"enum": ["NOT_CAPABLE", "MISSING", "IMPLEMENTATION_ERROR"]}}}, "then": {"not": {"required": ["observation"]}}}
+        ]
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["checkId", "kind", "status", "participants", "evidence"],
+        "properties": {
+          "checkId": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "status": {"enum": ["PASS", "FAIL", "OBSERVED", "NOT_APPLICABLE", "BLOCKED_OPEN"]},
+          "participants": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "evidence": {"type": "array", "items": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"}}
+        }
+      }
+    },
+    "openObservations": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "divergence": {"type": ["object", "null"], "properties": {"kind": {"type": "string"}, "summary": {"type": "string"}}, "additionalProperties": true},
+    "diagnostics": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+  },
+  "allOf": [
+    {"if": {"properties": {"result": {"const": "PASS"}}}, "then": {"properties": {"divergence": {"type": "null"}}}},
+    {"if": {"properties": {"result": {"enum": ["BLOCKED_OPEN", "OBSERVED_AGREEMENT_OPEN"]}}}, "then": {"properties": {"divergence": {"type": "null"}}}}
+  ]
+}

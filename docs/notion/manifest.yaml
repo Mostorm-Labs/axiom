@@ -1,0 +1,93 @@
+schema_version: 1
+
+project: axiom
+
+source:
+  type: notion
+  role: living_architecture_authority
+
+repository_snapshot:
+  role: frozen_implementation_contract
+  root: docs/notion/authority
+
+implementation_packages:
+  root: docs/notion/implementation
+
+evidence:
+  root: docs/evidence
+
+rules:
+  frozen_authority_editable_by_implementation_agent: false
+  architecture_conflict_requires_refreeze: true
+  implementation_requires_authority_snapshot: true
+
+authority_statuses: [draft, proposed, proposed-freeze, frozen, superseded, current-direction]
+
+documents:
+  - {id: axiom-product-capability-traceability-v0.1, layer: 01-capability-traceability, status: proposed, path: docs/notion/authority/01-capability-traceability/axiom-product-capability-traceability-v0.1.md, notion_page_id: 3c44c57a-590c-8178-a397-f11d9675a210, snapshot_date: 2026-08-24}
+  - {id: axiom-product-object-model-v0.1, layer: 02-product-object-model, status: proposed, path: docs/notion/authority/02-product-object-model/axiom-product-object-model-v0.1.md, notion_page_id: 3c44c57a-590c-819c-b0e3-c5b00e0b54a7, snapshot_date: 2026-08-24}
+  - {id: axiom-interaction-behavior-model-v0.1, layer: 03-interaction-behavior, status: proposed, path: docs/notion/authority/03-interaction-behavior/axiom-interaction-behavior-model-v0.1.md, notion_page_id: 3c44c57a-590c-81a2-acda-d26855d666f5, snapshot_date: 2026-08-24}
+
+  - {id: axiom-semantic-schema-spec-idl-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/axiom-semantic-schema-spec-idl-v0.1.md, notion_page_id: 3c34c57a-590c-813f-b942-d2b874bd1276, snapshot_date: 2026-08-24}
+  - {id: semantic-schema-v1-final-gate-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/00-overview/v1-release-candidate-final-gate-v0.1.md, notion_page_id: 3c54c57a-590c-8136-89c3-f2b7cdb87625, snapshot_date: 2026-08-24}
+  - {id: schema-freeze-review-v0.1, layer: 04-semantic-schema, status: superseded, path: docs/notion/authority/04-semantic-schema/00-overview/schema-freeze-review-v0.1.md, notion_page_id: 3c44c57a-590c-8150-8e53-db145015a2f7, snapshot_date: 2026-08-24}
+  - {id: semantic-schema-gap-closure-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/semantic-schema-gap-closure-v0.1.md, notion_page_id: 3c44c57a-590c-8121-b6a0-fbf4afdcc45f, snapshot_date: 2026-08-24}
+  - {id: object-content-v1-field-table-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/object-content-v1-field-table-v0.1.md, notion_page_id: 3c44c57a-590c-811f-981f-debd9d8198ec, snapshot_date: 2026-08-24}
+  - {id: fieldid-propertyvalue-registry-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/fieldid-propertyvalue-registry-v0.1.md, notion_page_id: 3c44c57a-590c-81c5-8d21-e6f93c824f06, snapshot_date: 2026-08-24}
+  - {id: field-registry-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/field-registry-v1-release-v0.1.md, notion_page_id: 3c44c57a-590c-81d9-a77d-c51bd00419e1, snapshot_date: 2026-08-24}
+  - {id: shape-kind-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/shape-kind-registry-v1-release-v0.1.md, notion_page_id: 3c44c57a-590c-81c0-ab80-d6a8d6aa0778, snapshot_date: 2026-08-24}
+  - {id: image-content-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/image-content-v1-release-v0.1.md, notion_page_id: 3c44c57a-590c-8194-8870-c4f266a39861, snapshot_date: 2026-08-24}
+  - {id: connector-anchor-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/01-object-schema/connector-anchor-contract-v1-release-v0.1.md, notion_page_id: 3c44c57a-590c-8173-84de-dc221b023bde, snapshot_date: 2026-08-24}
+  - {id: operation-payload-validation-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/02-operation-model/operation-payload-validation-v0.1.md, notion_page_id: 3c44c57a-590c-81b7-8f2c-e18ff60bb6c0, snapshot_date: 2026-08-24}
+  - {id: common-wire-rules-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/03-wire-contract/common-wire-rules-v0.1.md, notion_page_id: 3c44c57a-590c-81f9-a6d0-e1ec2a9bcab7, snapshot_date: 2026-08-24}
+  - {id: order-key-rfc-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/03-wire-contract/order-key-rfc-v0.1.md, notion_page_id: 3c44c57a-590c-813e-b61f-c24b0ddee194, snapshot_date: 2026-08-24}
+  - {id: reference-idl-codec-mapping-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/04-reference-idl/reference-idl-codec-mapping-v0.1.md, notion_page_id: 3c44c57a-590c-8161-bd08-d1dedd37ef5c, snapshot_date: 2026-08-24}
+  - {id: leaf-schema-reconciliation-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/04-reference-idl/leaf-schema-reconciliation-v0.1.md, notion_page_id: 3c44c57a-590c-81a1-902b-e95a889f68e0, snapshot_date: 2026-08-24}
+  - {id: generated-proto-canonical-codec-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md, notion_page_id: 3c44c57a-590c-81c2-9b93-c774869cff99, snapshot_date: 2026-08-24}
+  - {id: geometry-types-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/geometry-types-v0.1.md, notion_page_id: 3c44c57a-590c-8157-a657-c7f796ebcdac, snapshot_date: 2026-08-24}
+  - {id: paint-style-types-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/paint-style-value-types-v0.1.md, notion_page_id: 3c44c57a-590c-8103-9162-fddc4ff8bbe3, snapshot_date: 2026-08-24}
+  - {id: vector-path-geometry-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/vector-path-geometry-v0.1.md, notion_page_id: 3c44c57a-590c-810e-83ef-f3f5645b9703, snapshot_date: 2026-08-24}
+  - {id: erase-mask-geometry-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/erase-mask-geometry-v0.1.md, notion_page_id: 3c44c57a-590c-8109-98a0-c9d4250e0c19, snapshot_date: 2026-08-24}
+  - {id: brush-stroke-wire-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-stroke-wire-schema-v0.1.md, notion_page_id: 3c44c57a-590c-81fa-b32e-c6c82321aa1f, snapshot_date: 2026-08-24}
+  - {id: brush-family-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-family-registry-v1-release-v0.1.md, notion_page_id: 3c44c57a-590c-8132-ade5-e6488e27a4df, snapshot_date: 2026-08-24}
+  - {id: brush-interpreter-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-interpreter-v1-release-v0.1.md, notion_page_id: 3c54c57a-590c-81ff-a7c5-c6080fe940d4, snapshot_date: 2026-08-24}
+  - {id: pressure-tilt-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/pressure-tilt-v1-release-v0.1.md, notion_page_id: 3c54c57a-590c-81d4-a46f-f149c10ceadd, snapshot_date: 2026-08-24}
+  - {id: richtext-wire-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/richtext-wire-schema-v0.1.md, notion_page_id: 3c44c57a-590c-8163-9c2e-d63028f984b4, snapshot_date: 2026-08-24}
+  - {id: richtext-font-v1-release-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/richtext-font-v1-release-v0.1.md, notion_page_id: 3c54c57a-590c-81d8-befa-cf2228f81fd6, snapshot_date: 2026-08-24}
+  - {id: semantic-hard-limits-v0.1, layer: 04-semantic-schema, status: frozen, path: docs/notion/authority/04-semantic-schema/06-release-safety/semantic-hard-limits-v0.1.md, notion_page_id: 3c54c57a-590c-81d3-bb6e-f58905e1ebf2, snapshot_date: 2026-08-24}
+
+  - {id: axiom-architecture-baseline-v0.3, layer: 05-runtime-architecture, status: frozen, path: docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.3.md, notion_page_id: 3c14c57a-590c-817b-bac7-d6b05d264dbf, snapshot_date: 2026-08-24}
+
+  - {id: runtime-data-flow-07-00-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-00-runtime-data-flow-overview-v0.1.md, notion_page_id: 3c44c57a-590c-817c-a1e6-feca469443cd, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-01-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-01-pointer-preview-v0.1.md, notion_page_id: 3c44c57a-590c-8110-be4d-dd4d078be6e7, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-02-v0.1, layer: 07-runtime-data-flow, status: current-direction, path: docs/notion/authority/07-runtime-data-flow/07-02-intent-canonical-operation-v0.1.md, notion_page_id: 3c44c57a-590c-81d4-87ce-d53f9be0a9c2, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-03-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md, notion_page_id: 3c44c57a-590c-81dc-9f65-ec33c8109492, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-04-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-04-document-runtime-scene-v0.1.md, notion_page_id: 3c44c57a-590c-81e5-b859-fe6168157f26, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-05-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-05-render-presented-v0.1.md, notion_page_id: 3c44c57a-590c-81a4-94d0-e8e1fe772bcc, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-06-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-06-commit-local-storage-cloud-v0.1.md, notion_page_id: 3c44c57a-590c-814b-a015-f9be9b95d494, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-07-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-07-remote-apply-v0.1.md, notion_page_id: 3c44c57a-590c-8177-a8a4-dde14e4623f2, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-08-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-08-open-restore-catchup-v0.1.md, notion_page_id: 3c44c57a-590c-8179-9137-fdb6e1f97817, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-09-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-09-special-flows-v0.1.md, notion_page_id: 3c44c57a-590c-817c-9d82-f742542a572d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-10-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-10-runtime-data-model-matrix-v0.1.md, notion_page_id: 3c44c57a-590c-814b-af98-d17393a7473f, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-11-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-11-generation-changeset-apply-batch-v0.1.md, notion_page_id: 3c44c57a-590c-815d-8d3c-c74bfce15196, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-12-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-12-sync-frontier-ack-v0.1.md, notion_page_id: 3c44c57a-590c-8149-8611-e1c87d6e694f, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-13-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-13-resource-materialization-v0.1.md, notion_page_id: 3c44c57a-590c-8193-90f7-f7e6ea46c57d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-14-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-14-interaction-conflict-multi-op-v0.1.md, notion_page_id: 3c44c57a-590c-8102-8a5f-f4a974c9240d, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-07-15-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/07-15-presented-proof-arc-handoff-v0.1.md, notion_page_id: 3c44c57a-590c-815f-94fc-c97756051977, snapshot_date: 2026-08-24}
+  - {id: runtime-data-flow-final-closure-v0.1, layer: 07-runtime-data-flow, status: proposed-freeze, path: docs/notion/authority/07-runtime-data-flow/final-closure-open-owner-handoff-v0.1.md, notion_page_id: 3c44c57a-590c-81db-854b-f3ab3dbb26fd, snapshot_date: 2026-08-24}
+
+  - {id: verification-strategy-matrix-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/verification-strategy-matrix-v0.1.md, notion_page_id: 3c44c57a-590c-8178-b629-e305a4b2fe93, snapshot_date: 2026-08-24}
+  - {id: semantic-conformance-golden-corpus-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/semantic-conformance-golden-corpus-v0.1.md, notion_page_id: 3c44c57a-590c-81d9-a2ea-f77cc4fb67c2, snapshot_date: 2026-08-24}
+  - {id: cross-language-runner-golden-vector-format-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/cross-language-runner-golden-vector-format-v0.1.md, notion_page_id: 3c44c57a-590c-81a8-9ac2-d3dc36f16787, snapshot_date: 2026-08-24}
+  - {id: golden-corpus-seed-cli-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/golden-corpus-seed-cli-v0.1.md, notion_page_id: 3c44c57a-590c-81be-adae-ec834eb54fbd, snapshot_date: 2026-08-24}
+  - {id: semantic-projection-result-schema-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/semantic-projection-result-schema-v0.1.md, notion_page_id: 3c44c57a-590c-8165-a197-c6f50e1434d3, snapshot_date: 2026-08-24}
+  - {id: golden-authoring-fixture-pipeline-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/golden-authoring-fixture-pipeline-v0.1.md, notion_page_id: 3c44c57a-590c-81b7-8a6c-f4a73768cd19, snapshot_date: 2026-08-24}
+  - {id: conformance-ci-corpus-governance-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/conformance-ci-corpus-governance-v0.1.md, notion_page_id: 3c44c57a-590c-81e0-be88-edb90845e05a, snapshot_date: 2026-08-24}
+  - {id: cross-platform-parity-conformance-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/cross-platform-parity-conformance-v0.1.md, notion_page_id: 3c44c57a-590c-81d1-9eba-cc7546070191, snapshot_date: 2026-08-24}
+  - {id: platform-scenario-observation-schema-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/platform-scenario-observation-schema-v0.1.md, notion_page_id: 3c44c57a-590c-816c-825a-c93d1cc168a6, snapshot_date: 2026-08-24}
+  - {id: platform-scenario-seed-adapter-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/platform-scenario-seed-adapter-v0.1.md, notion_page_id: 3c44c57a-590c-8196-ac7a-cd5215dcbf1d, snapshot_date: 2026-08-24}
+  - {id: platform-harness-execution-fault-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/platform-harness-execution-fault-v0.1.md, notion_page_id: 3c44c57a-590c-81c3-b5b4-ca44c86863ae, snapshot_date: 2026-08-24}
+  - {id: platform-harness-reference-runner-protocol-vectors-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/platform-harness-reference-runner-protocol-vectors-v0.1.md, notion_page_id: 3c44c57a-590c-818d-894c-f7b73cd0f42a, snapshot_date: 2026-08-24}
+  - {id: platform-harness-implementation-ci-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/platform-harness-implementation-ci-v0.1.md, notion_page_id: 3c44c57a-590c-818e-a1f3-d795ed42136a, snapshot_date: 2026-08-24}
+  - {id: implementation-backlog-issue-pack-v0.1, layer: 10-verification, status: proposed, path: docs/notion/authority/10-verification/implementation-backlog-issue-pack-v0.1.md, notion_page_id: 3c44c57a-590c-81a4-8bd8-c605fc5fe88a, snapshot_date: 2026-08-24}
+  - {id: evidence-gated-vertical-build-g0-g9-v0.1, layer: 10-verification, status: proposed-freeze, path: docs/notion/authority/10-verification/evidence-gated-vertical-build-g0-g9-v0.1.md, notion_page_id: 3c44c57a-590c-814c-9364-d030a35752a7, snapshot_date: 2026-08-24}

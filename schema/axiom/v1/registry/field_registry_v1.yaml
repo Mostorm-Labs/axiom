@@ -1,0 +1,75 @@
+schema: auditoryworks.axiom.v1.field-registry
+version: 1
+status: frozen
+source_authority: Field Registry V1 Release Table + Default Semantics Closure v0.1
+object_kinds:
+  1: Shape
+  2: Image
+  3: VectorPath
+  4: RichText
+  5: VectorStroke
+  6: DabStroke
+  7: Connector
+  8: Sticky
+  9: Group
+fields:
+  - id: 0x00000001
+    name: visible
+    value_type: Bool
+    applicable_kinds: [1,2,3,4,5,6,7,8,9]
+    default: true
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000002
+    name: locked
+    value_type: Bool
+    applicable_kinds: [1,2,3,4,5,6,7,8,9]
+    default: false
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000003
+    name: opacity
+    value_type: F32_0_1
+    applicable_kinds: [1,2,3,4,7,8]
+    default: 1.0
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000004
+    name: blendMode
+    value_type: BlendModeValue
+    applicable_kinds: [1,2,3,4,7,8]
+    default: BLEND_MODE_NORMAL
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000100
+    name: fillStyle
+    value_type: FillStyleValue
+    applicable_kinds: [1,3,8]
+    default: FillStyleValue.None
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000101
+    name: strokeStyle
+    value_type: StrokeStyleValue
+    applicable_kinds: [1,3,7,8]
+    default: StrokeStyleValue.None
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000200
+    name: connectorStartDecoration
+    value_type: ConnectorDecorationValue
+    applicable_kinds: [7]
+    default: CONNECTOR_DECORATION_NONE
+    clear: remove_entry
+    absent_equals_default: true
+  - id: 0x00000201
+    name: connectorEndDecoration
+    value_type: ConnectorDecorationValue
+    applicable_kinds: [7]
+    default: CONNECTOR_DECORATION_NONE
+    clear: remove_entry
+    absent_equals_default: true
+normalization:
+  property_bag_order: field_id_ascending
+  duplicate_field_id: reject
+  explicit_default: elide_from_canonical_property_bag

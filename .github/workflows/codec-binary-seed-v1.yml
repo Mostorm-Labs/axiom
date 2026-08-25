@@ -1,0 +1,38 @@
+name: Axiom V1 Codec Binary Seed
+
+on:
+  push:
+    branches: ["docs/notion-bridge-bootstrap", main]
+    paths:
+      - "verification/golden/v1/wire/codec/**"
+      - "verification/golden/v1/suites/codec-binary-seed-v0.1.json"
+      - "verification/fixture-author/**"
+      - ".github/workflows/codec-binary-seed-v1.yml"
+  pull_request:
+    paths:
+      - "verification/golden/v1/wire/codec/**"
+      - "verification/golden/v1/suites/codec-binary-seed-v0.1.json"
+      - "verification/fixture-author/**"
+      - ".github/workflows/codec-binary-seed-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-binary-seed:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify BG-001 through BG-010 exact bytes
+        run: python3 verification/fixture-author/verify_codec_seed.py
+      - name: Verify no production codec dependency in fixture author bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE 'AxiomSemanticCore|semantic/codec|runtime/' verification/fixture-author; then
+            echo 'fixture-author must remain independent from production semantic/runtime codec' >&2
+            exit 1
+          fi
+      - name: Verify patch whitespace
+        run: git diff --check

@@ -1,0 +1,10 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+message Id128 {
+  bytes value = 1; // exactly 16 bytes; all-zero invalid by semantic validation
+}
+
+message OrderKey {
+  bytes value = 1; // 1..32 bytes; trailing byte != 0 by semantic validation
+}

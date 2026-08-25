@@ -1,0 +1,36 @@
+schema: auditoryworks.axiom.v1.canonical-protobuf-profile
+version: 1
+status: frozen
+source_authority: Generated Proto Baseline + Canonical Codec Freeze v0.1
+proto:
+  edition: '2024'
+  package: auditoryworks.axiom.v1
+  enum_parser_policy: open
+  semantic_unknown_enum_policy: fail_closed
+canonical_writer:
+  normalize_before_encode: true
+  singular_field_once: true
+  field_order: numeric_tag_ascending
+  protobuf_map: forbidden
+  canonical_maps: sorted_repeated_entries
+  canonical_sets: authority_comparator
+  negative_zero: positive_zero
+  nan: reject
+  infinity: reject
+  utf8_validate: true
+  oneof: exactly_one_when_semantically_required
+  unknown_semantic_field_kind_version: reject_from_editor_canonical_output
+  default_elision: only_when_authority_declares_absent_equals_default
+  protobuf_deterministic_option_is_protocol_authority: false
+ids:
+  encoding: bytes
+  length: 16
+  all_zero: invalid
+order_key:
+  comparator: unsigned_byte_lexicographic
+  min_bytes: 1
+  max_bytes: 32
+  trailing_zero: invalid
+collections:
+  property_bag: field_id_ascending_unique
+  erase_masks: erase_mask_id_unsigned_lexicographic_unique

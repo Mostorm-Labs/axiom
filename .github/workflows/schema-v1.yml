@@ -1,0 +1,97 @@
+name: Axiom V1 Schema Compile
+
+on:
+  push:
+    branches: ["docs/notion-bridge-bootstrap", main]
+    paths:
+      - "schema/axiom/v1/**"
+      - ".github/workflows/schema-v1.yml"
+  pull_request:
+    paths:
+      - "schema/axiom/v1/**"
+      - ".github/workflows/schema-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiom-schema-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile-descriptor:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install protoc 35.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL -o /tmp/protoc.zip \
+            https://github.com/protocolbuffers/protobuf/releases/download/v35.1/protoc-35.1-linux-x86_64.zip
+          unzip -q /tmp/protoc.zip -d /tmp/protoc
+          echo "/tmp/protoc/bin" >> "$GITHUB_PATH"
+
+      - name: Show compiler version
+        run: protoc --version
+
+      - name: Compile Axiom V1 descriptor set
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="schema/axiom/v1/proto"
+          OUT="$RUNNER_TEMP/axiom-v1-descriptor"
+          mkdir -p "$OUT"
+          mapfile -t FILES < <(find "$ROOT/auditoryworks/axiom/v1" -maxdepth 1 -name '*.proto' -printf '%P\n' | sort)
+          test "${#FILES[@]}" -eq 12
+          ARGS=()
+          for f in "${FILES[@]}"; do
+            ARGS+=("auditoryworks/axiom/v1/$f")
+          done
+          protoc \
+            --proto_path="$ROOT" \
+            --descriptor_set_out="$OUT/axiom_v1.descriptor.pb" \
+            --include_imports \
+            --include_source_info \
+            "${ARGS[@]}"
+          test -s "$OUT/axiom_v1.descriptor.pb"
+
+      - name: Verify frozen descriptor fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/axiom-v1-descriptor"
+          EXPECTED="$(tr -d '[:space:]' < schema/axiom/v1/descriptor/axiom_v1.descriptor.sha256)"
+          ACTUAL="$(sha256sum "$OUT/axiom_v1.descriptor.pb" | awk '{print $1}')"
+          printf 'expected sha256  %s\n' "$EXPECTED"
+          printf 'actual   sha256  %s\n' "$ACTUAL"
+          test -n "$EXPECTED"
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Verify operation tags 1 through 15
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          p = Path('schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto').read_text()
+          block = re.search(r'message OperationPayload\s*\{\s*oneof payload\s*\{(.*?)\n\s*\}\s*\n\}', p, re.S)
+          assert block, 'OperationPayload oneof payload not found'
+          tags = [int(x) for x in re.findall(r'=\s*(\d+)\s*;', block.group(1))]
+          assert tags == list(range(1, 16)), f'operation tags are {tags}'
+          print('operation tags:', tags)
+          PY
+
+      - name: Upload compiled descriptor evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: axiom-v1-descriptor-evidence
+          path: ${{ runner.temp }}/axiom-v1-descriptor/axiom_v1.descriptor.pb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Verify patch whitespace
+        run: git diff --check
