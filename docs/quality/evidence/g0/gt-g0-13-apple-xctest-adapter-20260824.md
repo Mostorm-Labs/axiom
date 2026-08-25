@@ -2,7 +2,7 @@
 
 > 任务：`GT-G0-13`（Notion locator：`WP-G0-13 / IH-13`）  
 > Gate：G0；R 里程碑贡献：R1 / Verification Foundation  
-> 当前状态：`Validating`
+> 当前状态：`Pass`
 
 ## 1. 来源与边界
 
@@ -22,7 +22,7 @@ conformance，不建立 native 产品门禁。
 | Modify | verification CMake、Apple C++ adapter、ObjC++ CAMetalLayer seam、TypeScript Apple package、CLI、Evidence generator 和 workflow |
 | Missing（本轮补齐） | iPhone/iPadOS 独立 profile、surface/device generation、coalesced Pencil batch、Arc ownership、facts-only Apple Evidence |
 | Conflict（已避免） | 不把 macOS 当作 native 产品目标；不合并 iPhone/iPadOS 报告；不把 POC Apple runner 或 RN POC bridge 升级为产品 ABI |
-| Blocked | iPadOS 物理设备当前不可用；iPhone 真机已独立采集，不能替代 iPadOS Evidence |
+| Blocked | — |
 
 ## 3. 实现交付物
 
@@ -51,16 +51,19 @@ POC runner 或其接口升级为产品 ABI，也不把它表述为完整 RN Fabr
 
 ## 5. Evidence 与状态
 
-结构化 Evidence：[`verification/evidence/g0/gt-g0-13/`](../../../../verification/evidence/g0/gt-g0-13/)。本轮
-Evidence 使用 `sourceCommit: WORKTREE`，只能作为工作区验证结果；实现提交后仍需重新生成
-commit-bound Evidence。`ios/ios-physical-report.json` 与 `ipados/ipados-physical-report.json` 是
-两份独立物理报告，不能合并成一个平台报告。
+结构化 Evidence：[`verification/evidence/g0/gt-g0-13/`](../../../../verification/evidence/g0/gt-g0-13/)。最终
+Evidence 绑定实现提交 `5c630da199bd52526c808f0e0541bfcc32cbb1a6`；根 manifest 汇总 120 个文件并逐文件记录
+SHA-256。`ios/ios-physical-report.json` 与 `ipados/ipados-physical-report.json` 是两份独立物理报告，
+没有合并成一个平台报告。适配器的 56 个 result 继续保持 `OBSERVED_AGREEMENT_OPEN`，因为跨平台
+expected 比较由 shared runner 拥有；本任务 Pass 只表示 Apple adapter、独立物理执行和 Evidence
+边界满足退出条件。
 
 GT-G0-13 当前状态：
 
 - Design：`Pass`
-- Implementation：`Validating`
+- Implementation：`Pass`
 - Validation：`Pass`（iPhone 与 iPadOS physical 均 Pass；两份 Evidence 独立）
-- Final：`Validating`
+- Final：`Pass`
 
-G0 与 R1 继续保持 `Validating`；本轮不进入 `GT-G0-14`。
+GT-G0-13 已满足 Apple XCTest-style adapter 退出条件。G0 与 R1 继续保持 `Validating`，因为
+`GT-G0-14..17` 尚未全部完成；下一任务为 `GT-G0-14 — PR CI dependency graph`。
