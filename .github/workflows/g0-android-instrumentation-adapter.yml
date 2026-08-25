@@ -100,14 +100,7 @@ jobs:
           disable-linux-hw-accel: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
-            python3 verification/tools/run_android_instrumentation.py \
-              --app-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/debug/app-debug.apk \
-              --test-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-              --output out/g0-12-android-instrumentation
-            AXIOM_EVIDENCE_SOURCE_COMMIT="$GITHUB_SHA" \
-            AXIOM_ANDROID_PHYSICAL_EXECUTION=false \
-            AXIOM_ANDROID_INSTRUMENTATION_RESULT="$GITHUB_WORKSPACE/out/g0-12-android-instrumentation/instrumentation-result.json" \
-              node verification/tools/generate_android_adapter_evidence.mjs
+            python3 verification/tools/run_android_instrumentation.py --app-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/debug/app-debug.apk --test-apk verification/native/platform/android/instrumentation/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk --output out/g0-12-android-instrumentation && env AXIOM_EVIDENCE_SOURCE_COMMIT="$GITHUB_SHA" AXIOM_ANDROID_PHYSICAL_EXECUTION=false AXIOM_ANDROID_INSTRUMENTATION_RESULT="$GITHUB_WORKSPACE/out/g0-12-android-instrumentation/instrumentation-result.json" node verification/tools/generate_android_adapter_evidence.mjs
       - name: Validate schemas, workspace, and Evidence
         run: |
           python3 verification/tools/validate_workspace.py

@@ -35,4 +35,13 @@ test("Android instrumentation build declares ELF and APK 16 KB gates", async () 
   assert.match(workflow, /chmod\s+a\+rw\s+\/dev\/kvm/);
   assert.match(workflow, /test\s+-r\s+\/dev\/kvm/);
   assert.match(workflow, /test\s+-w\s+\/dev\/kvm/);
+  const instrumentationScript = workflow.match(/script:\s*\|\n((?:\s{12}.*\n?)+)/)?.[1];
+  assert.ok(instrumentationScript, "emulator action must define a script");
+  const executableLines = instrumentationScript
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  assert.equal(executableLines.length, 1, "emulator action script must not depend on sh multiline continuation");
+  assert.match(executableLines[0], /python3 verification\/tools\/run_android_instrumentation\.py --app-apk/);
+  assert.match(executableLines[0], /&& env AXIOM_EVIDENCE_SOURCE_COMMIT=/);
 });
