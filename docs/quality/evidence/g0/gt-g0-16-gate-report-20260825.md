@@ -40,4 +40,5 @@
 
 当前报告的 `sourceCommit` 绑定实现提交 `25fa3a950d91a7e4fa1b9664d14be66ee6b1c359`；Evidence manifest
 记录输入和报告的字节数与 SHA-256。E4 仍因缺少 physical release authority 为 `BLOCKED`，因此 GT-G0-16
-保持 `Validating`，不能标记 `Pass`。GT-G0-17 review 和 G0 晋级不在本轮执行。
+GT-G0-16 实现、验证和 commit-bound Evidence 已满足，任务状态为 `Pass`；但 G0 Gate Report
+仍为 `BLOCKED`，所以 G0 保持 `Validating`，GT-G0-17 review 和 G0 晋级不在本轮执行。

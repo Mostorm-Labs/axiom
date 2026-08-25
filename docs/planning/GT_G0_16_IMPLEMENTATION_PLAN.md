@@ -32,4 +32,5 @@
 - [x] 实现提交 `25fa3a950d91a7e4fa1b9664d14be66ee6b1c359` 后重新生成 commit-bound report，并记录最终文件 hash；
 - [ ] GT-G0-17 独立 review 通过（不属于本任务）。
 
-当前 Gate 状态：`Validating`。在未形成最终 implementation commit 前，不宣称 GT-G0-16 Pass。
+GT-G0-16 任务状态：`Pass`。生成的 G0 Gate Report 仍为 `BLOCKED`（E4 physical authority），
+因此 G0 总状态保持 `Validating`，且不得开始 GT-G0-17。
