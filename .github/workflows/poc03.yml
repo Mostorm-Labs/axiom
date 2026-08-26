@@ -6,24 +6,24 @@ on:
       - "r1-full-skia-sdk.lock.json"
       - "pocs/large_scene/**"
       - "pocs/ink_engine/**"
-      - "runtime/**"
+      - "runtime/foundation/**"
+      - "runtime/scene/**"
       - "docs/api/canvas_runtime_api_v1.h"
       - "docs/api/canvas_runtime_api_v1.manifest.json"
       - "tools/check_runtime_abi_manifest.py"
       - "tools/check_runtime_boundaries.py"
-      - "tools/bootstrap_deps.py"
   push:
     branches: [main, "codex/poc-03-100k-scene"]
     paths:
       - "r1-full-skia-sdk.lock.json"
       - "pocs/large_scene/**"
       - "pocs/ink_engine/**"
-      - "runtime/**"
+      - "runtime/foundation/**"
+      - "runtime/scene/**"
       - "docs/api/canvas_runtime_api_v1.h"
       - "docs/api/canvas_runtime_api_v1.manifest.json"
       - "tools/check_runtime_abi_manifest.py"
       - "tools/check_runtime_boundaries.py"
-      - "tools/bootstrap_deps.py"
   workflow_dispatch:
 
 concurrency:

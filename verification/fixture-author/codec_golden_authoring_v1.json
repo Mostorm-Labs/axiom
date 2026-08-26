@@ -1,0 +1,27 @@
+{
+  "formatVersion": 1,
+  "authority": {
+    "semantic": "Canonical Codec Golden Authority Closure v0.1",
+    "verification": "Canonical Codec Golden Fixture Authoring Set v0.1"
+  },
+  "cases": [
+    {"id":"BG-001","slug":"id128","rootType":"Id128","projection":{"value":"00112233445566778899aabbccddeeff"},"canonicalHex":"0a1000112233445566778899aabbccddeeff"},
+    {"id":"BG-002","slug":"order-key","rootType":"OrderKey","projection":{"value":"0180ff"},"canonicalHex":"0a030180ff"},
+    {"id":"BG-003","slug":"vec2","rootType":"Vec2","projection":{"x":"f64:3ff0000000000000","y":"f64:4000000000000000"},"canonicalHex":"09000000000000f03f110000000000000040"},
+    {"id":"BG-004","slug":"transform2d","rootType":"Transform2D","projection":{"a":"f64:3ff0000000000000","b":"f64:0000000000000000","c":"f64:0000000000000000","d":"f64:3ff0000000000000","tx":"f64:0000000000000000","ty":"f64:0000000000000000"},"canonicalHex":"09000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000"},
+    {"id":"BG-005","slug":"property-value-f32","rootType":"PropertyValue","projection":{"f32Value":"f32:3f000000"},"canonicalHex":"150000003f"},
+    {"id":"BG-006","slug":"color-value","rootType":"ColorValue","projection":{"r":"f32:3f800000","g":"f32:3f000000","b":"f32:00000000","a":"f32:3f800000"},"canonicalHex":"0d0000803f150000003f1d00000000250000803f"},
+    {"id":"BG-007","slug":"placement-root","rootType":"Placement","projection":{"orderKey":"01"},"canonicalHex":"12030a0101"},
+    {"id":"BG-008","slug":"placement-parented","rootType":"Placement","projection":{"parentId":"00112233445566778899aabbccddeeff","orderKey":"01"},"canonicalHex":"0a120a1000112233445566778899aabbccddeeff12030a0101"},
+    {"id":"BG-009","slug":"dash-pattern","rootType":"DashPattern","projection":{"segments":["f64:3ff0000000000000","f64:4000000000000000"],"offset":"f64:3fe0000000000000"},"canonicalHex":"0a10000000000000f03f000000000000004011000000000000e03f"},
+    {"id":"BG-010","slug":"minimal-document-snapshot","rootType":"DocumentSnapshot","projection":{"documentId":"00112233445566778899aabbccddeeff","schemaVersion":1,"objects":[]},"canonicalHex":"0a120a1000112233445566778899aabbccddeeff1001"},
+    {"id":"BG-N01","slug":"vec2-field-order","baseCase":"BG-003","recipe":[{"op":"REPLACE_RANGE","offset":0,"length":18,"valueHex":"11000000000000004009000000000000f03f"}],"canonicalCase":"BG-003","outcome":{"stage":"CANONICAL_ENCODE","canonicality":"NON_CANONICAL_INPUT"}},
+    {"id":"BG-N02","slug":"vec2-negative-zero","baseCase":"BG-003","recipe":[{"op":"REPLACE_RANGE","offset":1,"length":8,"valueHex":"0000000000000080"}],"canonicalHex":"090000000000000000110000000000000040","outcome":{"stage":"NORMALIZE","canonicality":"NON_CANONICAL_INPUT"}},
+    {"id":"BG-N03","slug":"dash-pattern-unpacked","baseCase":"BG-009","recipe":[{"op":"REPLACE_RANGE","offset":0,"length":18,"valueHex":"09000000000000f03f090000000000000040"}],"canonicalCase":"BG-009","outcome":{"stage":"WIRE_PREFLIGHT","canonicality":"NON_CANONICAL_INPUT","strictCategory":"NON_CANONICAL_PACKED_ENCODING"}},
+    {"id":"BG-N04","slug":"transform-duplicate-a","baseCase":"BG-004","recipe":[{"op":"APPEND_HEX","valueHex":"09000000000000f03f"}],"outcome":{"stage":"WIRE_PREFLIGHT","category":"DUPLICATE_SINGULAR_FIELD"}},
+    {"id":"BG-N05","slug":"property-oneof-multiple","baseCase":"BG-005","recipe":[{"op":"INSERT_HEX","offset":0,"valueHex":"0801"}],"outcome":{"stage":"WIRE_PREFLIGHT","category":"MULTIPLE_ONEOF_MEMBERS"}},
+    {"id":"BG-N06","slug":"id128-unknown-field","baseCase":"BG-001","recipe":[{"op":"APPEND_HEX","valueHex":"f80701"}],"outcome":{"stage":"WIRE_PREFLIGHT","category":"UNKNOWN_WIRE_FIELD"}},
+    {"id":"BG-N07","slug":"id128-fifteen-byte","baseCase":"BG-001","recipe":[{"op":"SET_BYTE","offset":1,"valueHex":"0f"},{"op":"TRUNCATE","length":17}],"outcome":{"stage":"DTO_MAP","category":"INVALID_ID"}},
+    {"id":"BG-N08","slug":"order-key-empty","baseCase":"BG-002","recipe":[{"op":"REPLACE_RANGE","offset":0,"length":5,"valueHex":"0a00"}],"outcome":{"stage":"VALIDATE","category":"INVARIANT_VIOLATION"}}
+  ]
+}

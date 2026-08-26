@@ -1,0 +1,16 @@
+{
+  "formatVersion": 1,
+  "baseCase": "BG-001",
+  "baseArtifact": "expected/canonical.pb",
+  "operations": [
+    {
+      "op": "SET_BYTE",
+      "offset": 1,
+      "valueHex": "0f"
+    },
+    {
+      "op": "TRUNCATE",
+      "length": 17
+    }
+  ]
+}

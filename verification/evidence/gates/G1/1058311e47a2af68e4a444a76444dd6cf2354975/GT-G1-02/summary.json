@@ -1,0 +1,798 @@
+{
+  "format": "axiom-gt-g1-02-commit-bound-evidence-v1",
+  "taskId": "GT-G1-02",
+  "sourceCommit": "1058311e47a2af68e4a444a76444dd6cf2354975",
+  "status": "BLOCKED",
+  "blockingReasons": [
+    "hosted semantic-codec workflow URL is missing"
+  ],
+  "hostedWorkflowUrl": null,
+  "runtimeStatus": "PASS",
+  "authorityBaseline": "25332232f41b5973ca7057e3c84b0038573982b5",
+  "authority": [
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md",
+      "sha256": "e6dfed7df9716070cb0a6ade00a92429d15c1934c4544f3781ee144a806d18dd"
+    },
+    {
+      "path": "docs/notion/authority/10-verification/canonical-codec-golden-fixture-authoring-set-v0.1.md",
+      "sha256": "8fbb0c55f04bcf00b2b69fb234b4c2e55aec070351d0ccb17f27d32a4c92993c"
+    }
+  ],
+  "descriptorPath": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+  "descriptorSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+  "generatedCodeSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+  "corpus": {
+    "fixtureManifestPath": "verification/corpus/semantic/v1/fixture-manifest.json",
+    "fixtureManifestSha256": "00d6fe0a7e89696154e2e70c771559741e117aee9316667e1ea06a314fde5184",
+    "caseCount": 18,
+    "caseIds": [
+      "BG-001",
+      "BG-002",
+      "BG-003",
+      "BG-004",
+      "BG-005",
+      "BG-006",
+      "BG-007",
+      "BG-008",
+      "BG-009",
+      "BG-010",
+      "BG-N01",
+      "BG-N02",
+      "BG-N03",
+      "BG-N04",
+      "BG-N05",
+      "BG-N06",
+      "BG-N07",
+      "BG-N08"
+    ],
+    "fixtureCompilerSourceCommit": "1058311e47a2af68e4a444a76444dd6cf2354975",
+    "regeneration": "PASS"
+  },
+  "differential": {
+    "format": "axiom-gt-g1-02-semantic-differential-v2",
+    "taskId": "GT-G1-02",
+    "status": "PASS",
+    "blockingReasons": [],
+    "manifestStatus": "promoted",
+    "binaryCorpus": {
+      "fileCount": 83,
+      "files": [
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/authoring/input.projection.json",
+          "sha256": "5406a8d7291f463feed13d8185997f85343d9d47567d06f2fea4c6e917455d1f",
+          "bytes": 185
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/case.json",
+          "sha256": "0c380020b35af44f2fa90b350d5a2e59bfaefd1c81c840f3ac43fb6cdd58447f",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/expected/canonical.pb",
+          "sha256": "b18a210ac3a675ecb29838963694028d8e14076debbdc1fd17721f9881a135bc",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/provenance.json",
+          "sha256": "032c71440e15de938de83740b3c052a290a5281588f4b0e83b10814aa7a18d57",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/authoring/input.projection.json",
+          "sha256": "0289952736e0ed53a365ed053ce9b13241ad87d09cd47cef9fca4c0474135cfe",
+          "bytes": 162
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/case.json",
+          "sha256": "9a81fa34a97b21671bef48503b1d8670feb45a8919e46c2d095a4c6fb7f11409",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/expected/canonical.pb",
+          "sha256": "2ad6353dbc3ad35bebb001d62894021ae4a315e01970b574843e74a03718b432",
+          "bytes": 5
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/provenance.json",
+          "sha256": "8940abbe3c28ed4bccda14f53c5a1f3c5c6cec654366526ca98e299ea6c79c53",
+          "bytes": 1113
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-003-vec2/authoring/input.projection.json",
+          "sha256": "620b5c2806a0226119c15c0e2b7ef416f851c9513d57798d861748737edf2472",
+          "bytes": 201
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-003-vec2/case.json",
+          "sha256": "17525e50388cf56a38b7b13e638b9aaed06204fc2af86f81f2f17cca816cf413",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-003-vec2/expected/canonical.pb",
+          "sha256": "f56c7efa4b0095bda41c4de664dbcf84d9102dc582989532f0a58f46ae499fb0",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-003-vec2/provenance.json",
+          "sha256": "128b74b62e59bdeceab9f7f7a551f2baf8e072b5a69801e8e9cd0e733100cad5",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/authoring/input.projection.json",
+          "sha256": "bef72c663407cba25df890c8a72db4610c1e7c145195deba7859fc2b4b04c1a1",
+          "bytes": 342
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/case.json",
+          "sha256": "ccb4ff22a7613fe0e3c2f2da934c0d50db5dbe77ef5d0916860c565e9da6be28",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/expected/canonical.pb",
+          "sha256": "e222ab6a7433d665d8e3fe69dbb3d81c1402b51801438ee0a3c93bb98982049e",
+          "bytes": 54
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/provenance.json",
+          "sha256": "f7c4975846b593a59639b2c1be59aaa58d868853cce5d08c4959805f5d6e622f",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-005-property-value-f32/authoring/input.projection.json",
+          "sha256": "b34631e846a7e8be1f58058777047730706ad21ad26cff7d5e320aa2756cb2b9",
+          "bytes": 176
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-005-property-value-f32/case.json",
+          "sha256": "742743f013aae2007b4383f73423d2d4e9ce4632fda611a2e2f4bca7c8b32e40",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-005-property-value-f32/expected/canonical.pb",
+          "sha256": "986e012ceddba1b4b6f17fef5980ae1a50e42a6fc87695071ef6357b0083e9a7",
+          "bytes": 5
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-005-property-value-f32/provenance.json",
+          "sha256": "4f93da80d0b897f98978a05aa2674888f23a694870c800e69e198cb0c48348fd",
+          "bytes": 1113
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-006-color-value/authoring/input.projection.json",
+          "sha256": "4df91adba5ff2ffd8cfdd307d47bffbe849c6893c2e91718b5160300bfa214ab",
+          "bytes": 241
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-006-color-value/case.json",
+          "sha256": "6ce88d3685090e17019776066ba824cc9e6363bc7eea767e5a08b8b03e736d48",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-006-color-value/expected/canonical.pb",
+          "sha256": "d70f469c22c734c78550e46b27792d52cac9b6d958e717398302528d8dbb8064",
+          "bytes": 20
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-006-color-value/provenance.json",
+          "sha256": "e357d3db74af2ddbc0927c4cba148320639ba3de2555faf6f08c2058bc4b80eb",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/authoring/input.projection.json",
+          "sha256": "cca33b543bd7c6633a8db2ffa8495d0636bd92b5328ad0514e957f5ee10224dc",
+          "bytes": 162
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/case.json",
+          "sha256": "a7371dee32d2447225ea61b5ca87fb670b05b7954e7f7d823d8bfdbed5ac9522",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/expected/canonical.pb",
+          "sha256": "0daf14ceccfcd7081ff615a70b8633337af0021ac8e76b1164b7eb57132f9f0b",
+          "bytes": 5
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/provenance.json",
+          "sha256": "bdeec5739108a65fd80629361381f413007713b1393e064b0fcc9f28dce221a1",
+          "bytes": 1113
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/authoring/input.projection.json",
+          "sha256": "e96f141386f266393c36875f02f851301bb06cb10b11c0fea859136c0d16e5ad",
+          "bytes": 214
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/case.json",
+          "sha256": "d5e14f82397ad16a79fa07817c5974ea84184fe7332a09ca450cdbbe5ac8c8b1",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/expected/canonical.pb",
+          "sha256": "fbb862a66bc45dfdda8b0fe50308759c115b4fff8cfdc867e0a4145849a029fc",
+          "bytes": 25
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/provenance.json",
+          "sha256": "4c01a2148a55e410b3c7bbfe8f57c79421f0f3b08df991daca9800f54a003d84",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-009-dash-pattern/authoring/input.projection.json",
+          "sha256": "87014b6b6c035c78a4cdf5d2aceb9cd94c0146dbc69f1b42c3a433b6443945f3",
+          "bytes": 264
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-009-dash-pattern/case.json",
+          "sha256": "37c4c33b501b7106716c2ac09a673f504122ab0d5dada63472ebfd50ab1bc655",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-009-dash-pattern/expected/canonical.pb",
+          "sha256": "cca07df96f82a79be96d87986af0566efa089974771822fcd63b13dc07aa6d18",
+          "bytes": 27
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-009-dash-pattern/provenance.json",
+          "sha256": "2f619de2583d1c315cc0eb1b14b398ec438b3e3a37474602f373bbec2c169b1b",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/authoring/input.projection.json",
+          "sha256": "bb9d08ac1a6fbabfd1b45f6ef9a0b80795f629ea80b87eaa3398e177aa77ec89",
+          "bytes": 244
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/case.json",
+          "sha256": "167f2ae158ff404439bf15b2b82277e85661040b0e78c664985addcf880114af",
+          "bytes": 468
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/expected/canonical.pb",
+          "sha256": "6ef4a17794afe7f249cc0ba60c5e3c208776487df56f15310d57cf5923350837",
+          "bytes": 22
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/provenance.json",
+          "sha256": "362c616c562cbcf6887ede1f10de20027cae2c069ed6c99f33061254e83c2128",
+          "bytes": 1114
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/authoring/wire.recipe.json",
+          "sha256": "6bf531b4eea4c0789cb0c1540b98a92e31876d23bdcbd72f30cf2647702a7f67",
+          "bytes": 252
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/case.json",
+          "sha256": "b361b864f8290cf88d7be586cbecf44c218009cd5aa15acb1d3786150f711e95",
+          "bytes": 527
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/expected/canonical.pb",
+          "sha256": "f56c7efa4b0095bda41c4de664dbcf84d9102dc582989532f0a58f46ae499fb0",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/expected/outcome.json",
+          "sha256": "8d8873633289b740c358632b5b3438ee6eda650769fa89a35dc18f86826c1995",
+          "bytes": 75
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/input/value.pb",
+          "sha256": "ff4c6d3c8284ca1b10acd18f611e2e0113f830907b9e9318d12080617a938e8b",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N01-vec2-field-order/provenance.json",
+          "sha256": "1d2275113badbbe2d9a84ade901d1a33810f45d96dca3f9bea1e05c391b502a9",
+          "bytes": 1410
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/authoring/wire.recipe.json",
+          "sha256": "78ca25bab1c542c91f466eddbe4493d4342f6d91bae071308f492acf02f6eb80",
+          "bytes": 231
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/case.json",
+          "sha256": "76f3e6259d85aa926cbf8d6430c8fce75f18f1c864ad8c3daa5d854a476ec36b",
+          "bytes": 520
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/expected/canonical.pb",
+          "sha256": "65f70991ef17f2a62cfe456644d42d13e93b29554a75de760da503c4025e06ab",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/expected/outcome.json",
+          "sha256": "c86d7e0be5805195bc695388bbbaff6ce9834b4b2c6bbea1c5f34c43d51639ec",
+          "bytes": 68
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/input/value.pb",
+          "sha256": "e8f73c657859a5afa843ac99ccfe54afa905aa724b96b9d5f6a01725fb6baa26",
+          "bytes": 18
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N02-vec2-negative-zero/provenance.json",
+          "sha256": "8ead3d3392049f551f0ab966e6eed48c51367a4ae1907f6869795d7196271bf9",
+          "bytes": 1410
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/authoring/wire.recipe.json",
+          "sha256": "1734564ab6302a9bbf7b264cf3f5d0985138cdda7e4b03e08a0572ca46b980f3",
+          "bytes": 252
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/case.json",
+          "sha256": "70814b1f80dab94295c36eec7c715840bde0df6f4212860ecc30427ee8b34c8b",
+          "bytes": 580
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/expected/canonical.pb",
+          "sha256": "cca07df96f82a79be96d87986af0566efa089974771822fcd63b13dc07aa6d18",
+          "bytes": 27
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/expected/outcome.json",
+          "sha256": "787c85c53ca5340ecead0b4835a05c233571dad901fa7b398cfc0783220b7268",
+          "bytes": 126
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/input/value.pb",
+          "sha256": "023c3f413e51dc331c7558de452e047eb6f1df7719a077408aa8b6f85711d53a",
+          "bytes": 27
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N03-dash-pattern-unpacked/provenance.json",
+          "sha256": "e7390a8500869af0312995edc60355c746763c6f36bdbf5b35750581e488ea88",
+          "bytes": 1411
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/authoring/wire.recipe.json",
+          "sha256": "5394284cd0968a697e5d32918fad943199416e69ee8fa2c6d3205c9ae96bdf99",
+          "bytes": 192
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/case.json",
+          "sha256": "b5464922eb0457c19987377bef11c78789ccb31af406e7fd272fe664c083accf",
+          "bytes": 476
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/expected/outcome.json",
+          "sha256": "d993e4cdc55abe8b924a67fb2cca366b4ff3f71dd4811d0ef6b025d2597427ca",
+          "bytes": 74
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/input/value.pb",
+          "sha256": "cedf6a84f55c646b9ed4ad986c4a2524e5fa43daef5b83cb03ff764b3107f054",
+          "bytes": 63
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/provenance.json",
+          "sha256": "17d36417ec7d428f15dd9ea1ccd95b1496449b241a8cecfbc0e5349a2a7417de",
+          "bytes": 1256
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N05-property-oneof-multiple/authoring/wire.recipe.json",
+          "sha256": "66ca9cdb2b9778c479136d326a8a4e915b45be72aa0c7ed10aec98131c6ad096",
+          "bytes": 197
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N05-property-oneof-multiple/case.json",
+          "sha256": "cbb3db8f4978b81d7f6b77382bb27d5c33e7708482c2fe0e819582e3b589108e",
+          "bytes": 474
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N05-property-oneof-multiple/expected/outcome.json",
+          "sha256": "bb461d0171386e216af2d6877e29960f70f364a2db0646456629b110880d17a3",
+          "bytes": 72
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N05-property-oneof-multiple/input/value.pb",
+          "sha256": "0f093d5ede6ccb4d66a86b126eb217592ad78960be9d2535e4d591976deed19a",
+          "bytes": 7
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N05-property-oneof-multiple/provenance.json",
+          "sha256": "21750d0d6a88510264bdff8f817ef4865934cc32b2cf24a8f6f4e8dbc387d976",
+          "bytes": 1255
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/authoring/wire.recipe.json",
+          "sha256": "2d5dd6936b6901d594bfdf63467b587fcb5bac7befc2d3f712c6ee9fbb6219f7",
+          "bytes": 180
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/case.json",
+          "sha256": "1f32e6a5ca2c2e553d1bc864d06c3442a92b0436a26514c175b3e12cd41e6aaa",
+          "bytes": 470
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/expected/outcome.json",
+          "sha256": "8f74b2341bc965e67eadf2b84939865fe55e8543af570dcc0cbeba858664816b",
+          "bytes": 68
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/input/value.pb",
+          "sha256": "190eb8577c354f7e783649750f4ab33fd8438be8afec122580b174f6d2963233",
+          "bytes": 21
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/provenance.json",
+          "sha256": "ab13494eac5c8e563d02b061366f1a550271de22ca1f2d26068e9a5fde6970bd",
+          "bytes": 1256
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/authoring/wire.recipe.json",
+          "sha256": "aa404c134afee934c3a8c55b690e3441a001a2a0179070dd2965651635eba750",
+          "bytes": 249
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/case.json",
+          "sha256": "f745e5ca0670ce9775e95c5bd797a99688c7b4d90c6bba81383d724a54090cc3",
+          "bytes": 455
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/expected/outcome.json",
+          "sha256": "37d0e619ac664a7a42590f0c3ac7c53d626e1b9c58d7356a1205326260236a9d",
+          "bytes": 53
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/input/value.pb",
+          "sha256": "65790e541f7b800b8a19a7516c14e67b5c27f343e32a594498d585ada4c2d264",
+          "bytes": 17
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/provenance.json",
+          "sha256": "c024e665d7e27a3a0b29a0369b8b4a45903dbfc9111699daa604238cde04ce5b",
+          "bytes": 1256
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/authoring/wire.recipe.json",
+          "sha256": "484f5c271b3fd9f1c8d42fab885c194f3e588d74e215c04fd8417d1b6482b979",
+          "bytes": 219
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/case.json",
+          "sha256": "2dc8ad879ff53ab4e287c9c269cb449043298565154dd796a3052d3e262d896e",
+          "bytes": 465
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/expected/outcome.json",
+          "sha256": "4559e914fe3e7bebc23963d3c5210c1b49dbc8d46d26a20a983ac5594de73799",
+          "bytes": 63
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/input/value.pb",
+          "sha256": "102b51b9765a56a3e899f7cf0ee38e5251f9c503b357b330a49183eb7b155604",
+          "bytes": 2
+        },
+        {
+          "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/provenance.json",
+          "sha256": "df064693e44525522c32b4bfecd91688abbd0ce5717f15e1470e194d9c5fe9b9",
+          "bytes": 1255
+        }
+      ],
+      "inventorySha256": "78e665be02f2b2df1fe57ab4b5d4c4ee3f5c770dede660a8d3544ee8a01e970a"
+    },
+    "differential": {
+      "decoder": "production SemanticCodec golden probe",
+      "firstDivergence": null,
+      "observations": [
+        {
+          "caseId": "BG-001",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a1000112233445566778899aabbccddeeff"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a1000112233445566778899aabbccddeeff"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-002",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a030180ff"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a030180ff"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-003",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "09000000000000f03f110000000000000040"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "09000000000000f03f110000000000000040"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-004",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "09000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "09000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-005",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "150000003f"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "150000003f"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-006",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0d0000803f150000003f1d00000000250000803f"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0d0000803f150000003f1d00000000250000803f"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-007",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "12030a0101"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "12030a0101"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-008",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a120a1000112233445566778899aabbccddeeff12030a0101"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a120a1000112233445566778899aabbccddeeff12030a0101"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-009",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a10000000000000f03f000000000000004011000000000000e03f"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a10000000000000f03f000000000000004011000000000000e03f"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-010",
+          "expected": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a120a1000112233445566778899aabbccddeeff1001"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "CANONICAL",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "0a120a1000112233445566778899aabbccddeeff1001"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N01",
+          "expected": {
+            "category": "",
+            "accepted": true,
+            "canonicality": "NON_CANONICAL_INPUT",
+            "stage": "CANONICAL_ENCODE",
+            "canonicalHex": "09000000000000f03f110000000000000040"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "NON_CANONICAL_INPUT",
+            "stage": "CANONICAL_ENCODE",
+            "category": "",
+            "canonicalHex": "09000000000000f03f110000000000000040"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N02",
+          "expected": {
+            "category": "",
+            "accepted": true,
+            "canonicality": "NON_CANONICAL_INPUT",
+            "stage": "NORMALIZE",
+            "canonicalHex": "090000000000000000110000000000000040"
+          },
+          "actual": {
+            "accepted": true,
+            "canonicality": "NON_CANONICAL_INPUT",
+            "stage": "NORMALIZE",
+            "category": "",
+            "canonicalHex": "090000000000000000110000000000000040"
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N03",
+          "expected": {
+            "category": "NON_CANONICAL_PACKED_ENCODING",
+            "accepted": false,
+            "stage": "WIRE_PREFLIGHT"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "WIRE_PREFLIGHT",
+            "category": "NON_CANONICAL_PACKED_ENCODING",
+            "canonicalHex": ""
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N04",
+          "expected": {
+            "category": "DUPLICATE_SINGULAR_FIELD",
+            "accepted": false,
+            "stage": "WIRE_PREFLIGHT"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "WIRE_PREFLIGHT",
+            "category": "DUPLICATE_SINGULAR_FIELD",
+            "canonicalHex": ""
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N05",
+          "expected": {
+            "category": "MULTIPLE_ONEOF_MEMBERS",
+            "accepted": false,
+            "stage": "WIRE_PREFLIGHT"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "WIRE_PREFLIGHT",
+            "category": "MULTIPLE_ONEOF_MEMBERS",
+            "canonicalHex": ""
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N06",
+          "expected": {
+            "category": "UNKNOWN_WIRE_FIELD",
+            "accepted": false,
+            "stage": "WIRE_PREFLIGHT"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "WIRE_PREFLIGHT",
+            "category": "UNKNOWN_WIRE_FIELD",
+            "canonicalHex": ""
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N07",
+          "expected": {
+            "category": "INVALID_ID",
+            "accepted": false,
+            "stage": "DTO_MAP"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "DTO_MAP",
+            "category": "INVALID_ID",
+            "canonicalHex": ""
+          },
+          "pass": true
+        },
+        {
+          "caseId": "BG-N08",
+          "expected": {
+            "category": "INVARIANT_VIOLATION",
+            "accepted": false,
+            "stage": "VALIDATE"
+          },
+          "actual": {
+            "accepted": false,
+            "canonicality": "CANONICAL",
+            "stage": "VALIDATE",
+            "category": "INVARIANT_VIOLATION",
+            "canonicalHex": ""
+          },
+          "pass": true
+        }
+      ]
+    }
+  }
+}

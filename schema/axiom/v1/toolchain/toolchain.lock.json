@@ -1,0 +1,16 @@
+{
+  "format": "axiom-semantic-toolchain-lock-v1",
+  "protobuf": {
+    "protoc": "36.0",
+    "release": "v36.0",
+    "asset": "protoc-36.0-osx-universal_binary.zip",
+    "assetSha256": "c4d0f49ab3b0778eaef0c20871d21547d5fc982a1d6f1571d33ec2754ef180b6",
+    "edition": "2024"
+  },
+  "descriptor": {
+    "generatorArgs": "--include_imports --proto_path=schema/axiom/v1/proto",
+    "sourceRoot": "schema/axiom/v1/proto",
+    "output": "schema/axiom/v1/descriptor/descriptor.lock.pb"
+  },
+  "status": "candidate-toolchain-lock; runtime codegen remains subject to hosted verification"
+}

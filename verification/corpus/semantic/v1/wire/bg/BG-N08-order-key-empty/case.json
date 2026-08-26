@@ -1,0 +1,22 @@
+{
+  "formatVersion": 1,
+  "id": "BG-N08",
+  "status": "SPEC_REQUIREMENT",
+  "authorityRefs": [
+    "Canonical Codec Golden Authority Closure v0.1#BG-N08"
+  ],
+  "entrypoint": "DECODE",
+  "requiredCapabilities": [
+    "CANONICAL_ENCODE",
+    "STRICT_WIRE_PREFLIGHT"
+  ],
+  "input": {
+    "artifact": "input/value.pb"
+  },
+  "expected": {
+    "outcome": "REJECTED",
+    "stage": "VALIDATE",
+    "category": "INVARIANT_VIOLATION"
+  },
+  "blockedByOpenPolicy": false
+}

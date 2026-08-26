@@ -1,0 +1,13 @@
+{
+  "format": "axiom-gt-g1-02-descriptor-evidence-v1",
+  "taskId": "GT-G1-02",
+  "sourceCommit": "6fbbd8f2401f733412c23045606c21856a549ad9",
+  "toolchain": "protoc 36.0",
+  "edition": "2024",
+  "descriptorPath": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+  "descriptorSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+  "reproducibility": "PASS",
+  "runtimeCodegen": "BLOCKED",
+  "runtimeCodegenBlocker": "protobuf C++ runtime Abseil linkage was not verified on the macOS host; hosted toolchain must complete this acceptance.",
+  "privateGeneratedTypesInPublicHeaders": false
+}

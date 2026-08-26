@@ -1,0 +1,143 @@
+name: Semantic Toolchain Producer
+
+on:
+  pull_request:
+    paths:
+      - "deps.lock.json"
+      - "tools/bootstrap_deps.py"
+      - "tools/semantic_sdk.py"
+      - "tools/semantic_fetch.py"
+      - "tools/update_semantic_lock.py"
+      - "verification/tests/test_semantic_sdk.py"
+      - "verification/tests/test_semantic_lock.py"
+      - ".github/workflows/semantic-toolchain-producer.yml"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish an immutable prerelease asset
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      sdk_id: ${{ steps.package.outputs.sdk_id }}
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y ninja-build zstd
+      - name: Build pinned semantic toolchain
+        run: python3 tools/bootstrap_deps.py --semantic-codec
+      - name: Package and verify deterministic asset
+        id: package
+        shell: bash
+        run: |
+          python3 - <<'PY' > toolchain.json
+          import json
+          import platform
+          import subprocess
+          def version(*command):
+              return subprocess.check_output(command, text=True).splitlines()[0]
+          print(json.dumps({
+              "runner": "ubuntu-24.04",
+              "arch": platform.machine(),
+              "compiler": version("c++", "--version"),
+              "cmake": version("cmake", "--version"),
+              "ninja": version("ninja", "--version"),
+              "cxxStandard": 20,
+          }, sort_keys=True))
+          PY
+          mkdir -p out/semantic-sdk
+          mkdir -p .deps/protobuf/licenses
+          tar -xOf .deps/downloads/protobuf-36.0.tar.gz protobuf-36.0/LICENSE > .deps/protobuf/licenses/Protobuf.txt
+          tar -xOf .deps/downloads/protobuf-36.0.tar.gz protobuf-36.0/third_party/utf8_range/LICENSE > .deps/protobuf/licenses/utf8_range.txt
+          tar -xOf .deps/downloads/abseil-20250512.1.tar.gz abseil-cpp-20250512.1/LICENSE > .deps/protobuf/licenses/Abseil.txt
+          python3 tools/semantic_sdk.py package --root .deps/protobuf --toolchain-json toolchain.json --output out/semantic-sdk/toolchain-a.zip > out/semantic-sdk/package.json
+          python3 tools/semantic_sdk.py package --root .deps/protobuf --toolchain-json toolchain.json --output out/semantic-sdk/toolchain-b.zip > /tmp/semantic-toolchain-package-b.json
+          cmp out/semantic-sdk/toolchain-a.zip out/semantic-sdk/toolchain-b.zip
+          # Rename the deterministic archive after deriving its content identity.
+          python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          data = json.loads(Path("out/semantic-sdk/package.json").read_text())
+          source = Path(data["archive"])
+          target = source.with_name(f"semantic-toolchain-linux-x86_64-{data['sdkId']}.zip")
+          if source != target:
+              shutil.move(source, target)
+          Path("out/semantic-sdk/toolchain-b.zip").unlink()
+          data["archive"] = str(target)
+          Path("out/semantic-sdk/package.json").write_text(json.dumps(data, sort_keys=True) + "\n")
+          print(f"sdk_id={data['sdkId']}")
+          print(f"archive_sha256={__import__('hashlib').sha256(target.read_bytes()).hexdigest()}")
+          Path("out/semantic-sdk/asset-name.txt").write_text(target.name + "\n")
+          Path("out/semantic-sdk/sdk-id.txt").write_text(data["sdkId"] + "\n")
+          PY
+          sdk_id=$(cat out/semantic-sdk/sdk-id.txt)
+          archive="out/semantic-sdk/semantic-toolchain-linux-x86_64-${sdk_id}.zip"
+          python3 tools/semantic_sdk.py verify --archive "$archive" --destination "$(mktemp -d)" --sdk-id "$sdk_id"
+          unzip -p "$archive" manifest.json > out/semantic-sdk/semantic-toolchain-manifest.json
+          sha256sum "$archive" out/semantic-sdk/semantic-toolchain-manifest.json | tee out/semantic-sdk/SHA256SUMS
+          echo "sdk_id=$sdk_id" >> "$GITHUB_OUTPUT"
+          echo "archive_sha256=$(sha256sum "$archive" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - name: Run package contract tests
+        run: python3 -m unittest verification.tests.test_semantic_sdk verification.tests.test_semantic_lock -v
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-toolchain-linux-x86_64-${{ steps.package.outputs.sdk_id }}
+          path: out/semantic-sdk
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: semantic-toolchain-linux-x86_64-${{ needs.build.outputs.sdk_id }}
+          path: out/semantic-sdk
+      - name: Publish immutable prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          sdk_id='${{ needs.build.outputs.sdk_id }}'
+          tag="semantic-toolchain-poc01-${sdk_id:0:16}"
+          asset="semantic-toolchain-linux-x86_64-${sdk_id}.zip"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            metadata=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isPrerelease,targetCommitish,assets)
+            test "$(jq -r .isPrerelease <<<"$metadata")" = true
+            test "$(jq -r .targetCommitish <<<"$metadata")" = "$GITHUB_SHA"
+            test "$(jq -r '.assets[].name' <<<"$metadata" | sort)" = "$(printf '%s\n' "$asset" SHA256SUMS semantic-toolchain-manifest.json | sort)"
+            tmp=$(mktemp -d)
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --dir "$tmp"
+            cmp "$tmp/$asset" "out/semantic-sdk/$asset"
+            cmp "$tmp/SHA256SUMS" out/semantic-sdk/SHA256SUMS
+            cmp "$tmp/semantic-toolchain-manifest.json" out/semantic-sdk/semantic-toolchain-manifest.json
+            echo "Existing immutable release is byte-identical: $tag"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --prerelease \
+              --target "$GITHUB_SHA" --title "$tag" \
+              --notes "Immutable hosted Linux semantic toolchain asset." \
+              "out/semantic-sdk/$asset" "out/semantic-sdk/semantic-toolchain-manifest.json" "out/semantic-sdk/SHA256SUMS"
+          fi
+      - name: Attest release asset provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            out/semantic-sdk/semantic-toolchain-linux-x86_64-${{ needs.build.outputs.sdk_id }}.zip
+            out/semantic-sdk/SHA256SUMS

@@ -2,6 +2,11 @@ name: G0 PR CI DAG
 
 on:
   pull_request:
+    paths:
+      - "verification/**"
+      - "schema/**"
+      - "runtime/semantic/**"
+      - ".github/workflows/g0-pr-ci-dag.yml"
   workflow_dispatch:
     inputs:
       failure_layer:
@@ -32,7 +37,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # The PR base SHA is not guaranteed to be one of the two commits
+          # in a shallow checkout. The run-set classifier compares against the
+          # exact base, so keep the complete history available.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "24.18.0"

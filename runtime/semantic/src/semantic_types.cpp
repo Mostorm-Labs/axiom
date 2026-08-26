@@ -1,5 +1,4 @@
 #include "canvas/semantic/operation.hpp"
-
 namespace canvas::semantic {
 
 bool isKnownObjectKind(ObjectKind kind) noexcept {

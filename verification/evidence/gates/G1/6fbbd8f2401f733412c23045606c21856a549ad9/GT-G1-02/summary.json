@@ -1,0 +1,17 @@
+{
+  "format": "axiom-gt-g1-02-summary-v1",
+  "taskId": "GT-G1-02",
+  "sourceCommit": "6fbbd8f2401f733412c23045606c21856a549ad9",
+  "status": "BLOCKED",
+  "passed": [
+    "Edition 2024 descriptor generation",
+    "descriptor reproducibility",
+    "60-case seed identity",
+    "strict decode boundary tests"
+  ],
+  "blocked": [
+    "protobuf C++ runtime/codegen linkage with pinned Abseil dependency",
+    "full BG/BGX generated codec differential corpus"
+  ],
+  "nextAction": "Run hosted toolchain job with protobuf 36.0 and its pinned Abseil runtime, then replace candidate codec with generated runtime adapter."
+}
