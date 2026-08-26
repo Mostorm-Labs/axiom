@@ -123,7 +123,7 @@ def generate(
             "hostedWorkflowUrl": ci_boundary_url,
         },
         "regression": {
-            "semanticCTest": {"status": "PASS", "testCount": 30},
+            "semanticCTest": {"status": "PASS", "testCount": 33},
             "runtimeBoundaryCheck": "PASS",
             "gtG102": "PASS",
             "gtG101R": "PASS",

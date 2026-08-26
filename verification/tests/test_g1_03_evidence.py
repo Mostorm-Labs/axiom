@@ -37,6 +37,7 @@ class G103EvidenceTest(unittest.TestCase):
             self.assertEqual(result["propertyValueRepresentation"], "TYPED_CLOSED_UNION")
             self.assertEqual(result["objectContentRepresentation"], "TYPED_NINE_WAY_UNION")
             self.assertEqual(result["eraseMaskRepresentation"], "TYPED_GEOMETRY_UNION")
+            self.assertEqual(result["regression"]["semanticCTest"]["testCount"], 33)
             self.assertEqual(result["objectIndex"]["authorityRole"], "PRIVATE_REBUILDABLE_ACCELERATION")
             self.assertEqual(result["objectIndex"]["families"], ["parent_children"])
             self.assertEqual(result["ordering"]["allObjects"], "OBJECT_ID_BYTE_ORDER_IMPLEMENTATION_CONVENTION")
