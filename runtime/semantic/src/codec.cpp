@@ -127,7 +127,7 @@ std::string preflightCategory(const std::string& root_type, const std::vector<st
     return {};
 }
 
-bool finite(double value) { return std::isfinite(value); }
+bool isFiniteValue(double value) { return std::isfinite(value); }
 
 template <typename StringLike>
 bool validId(const StringLike& value) { return value.size() == 16U; }
@@ -324,14 +324,14 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
     } else if (root_type == "Vec2") {
         auditoryworks::axiom::v1::Vec2 value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
-        if (!value.has_x() || !value.has_y() || !finite(value.x()) || !finite(value.y())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
+        if (!value.has_x() || !value.has_y() || !isFiniteValue(value.x()) || !isFiniteValue(value.y())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
         appendFixed64(canonical, 1U, value.x());
         appendFixed64(canonical, 2U, value.y());
     } else if (root_type == "Transform2D") {
         auditoryworks::axiom::v1::Transform2D value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
         if (!value.has_a() || !value.has_b() || !value.has_c() || !value.has_d() || !value.has_tx() || !value.has_ty() ||
-            !finite(value.a()) || !finite(value.b()) || !finite(value.c()) || !finite(value.d()) || !finite(value.tx()) || !finite(value.ty())) {
+            !isFiniteValue(value.a()) || !isFiniteValue(value.b()) || !isFiniteValue(value.c()) || !isFiniteValue(value.d()) || !isFiniteValue(value.tx()) || !isFiniteValue(value.ty())) {
             return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
         }
         appendFixed64(canonical, 1U, value.a()); appendFixed64(canonical, 2U, value.b());
@@ -340,13 +340,13 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
     } else if (root_type == "PropertyValue") {
         auditoryworks::axiom::v1::PropertyValue value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
-        if (!value.has_f32_value() || !finite(value.f32_value())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
+        if (!value.has_f32_value() || !isFiniteValue(value.f32_value())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
         appendFixed32(canonical, 2U, value.f32_value());
     } else if (root_type == "ColorValue") {
         auditoryworks::axiom::v1::ColorValue value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
         if (!value.has_r() || !value.has_g() || !value.has_b() || !value.has_a() ||
-            !finite(value.r()) || !finite(value.g()) || !finite(value.b()) || !finite(value.a())) {
+            !isFiniteValue(value.r()) || !isFiniteValue(value.g()) || !isFiniteValue(value.b()) || !isFiniteValue(value.a())) {
             return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
         }
         appendFixed32(canonical, 1U, value.r()); appendFixed32(canonical, 2U, value.g());
@@ -369,11 +369,11 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
     } else if (root_type == "DashPattern") {
         auditoryworks::axiom::v1::DashPattern value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
-        if (!value.has_offset() || !finite(value.offset())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
+        if (!value.has_offset() || !isFiniteValue(value.offset())) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
         std::vector<std::uint8_t> packed;
         for (const auto raw_segment : value.segments()) {
             auto segment = raw_segment;
-            if (!finite(segment)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
+            if (!isFiniteValue(segment)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_NUMERIC", {}};
             if (segment == 0.0) segment = 0.0;
             const auto bits = std::bit_cast<std::uint64_t>(segment);
             for (unsigned shift = 0; shift < 64U; shift += 8U) packed.push_back(static_cast<std::uint8_t>(bits >> shift));
