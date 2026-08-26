@@ -1,0 +1,41 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+import "auditoryworks/axiom/v1/property.proto";
+import "auditoryworks/axiom/v1/vector_path.proto";
+import "auditoryworks/axiom/v1/brush_stroke.proto";
+import "auditoryworks/axiom/v1/erase_mask.proto";
+import "auditoryworks/axiom/v1/rich_text.proto";
+import "auditoryworks/axiom/v1/connector.proto";
+
+message Placement { Id128 parent_id = 1; OrderKey order_key = 2; }
+message ShapeContent { uint32 shape_kind = 1; double width = 2; double height = 3; }
+enum ImageContentMode { IMAGE_CONTENT_MODE_INVALID = 0; IMAGE_CONTENT_MODE_STRETCH = 1; IMAGE_CONTENT_MODE_FIT = 2; IMAGE_CONTENT_MODE_FILL = 3; }
+message ImageContent { Id128 resource_id = 1; double intrinsic_width = 2; double intrinsic_height = 3; NormalizedRect source_rect = 4; ImageContentMode content_mode = 5; double width = 6; double height = 7; }
+message StickyContent { double width = 1; double height = 2; }
+message GroupContent {}
+message ObjectContent {
+  oneof value {
+    ShapeContent shape = 1;
+    ImageContent image = 2;
+    VectorPathContent vector_path = 3;
+    RichTextContent rich_text = 4;
+    VectorStrokeContent vector_stroke = 5;
+    DabStrokeContent dab_stroke = 6;
+    ConnectorContent connector = 7;
+    StickyContent sticky = 8;
+    GroupContent group = 9;
+  }
+}
+message ObjectRecord {
+  Id128 id = 1;
+  uint32 kind_id = 2;
+  uint32 kind_version = 3;
+  Placement placement = 4;
+  Transform2D transform = 5;
+  PropertyBag properties = 6;
+  ObjectContent content = 7;
+  repeated EraseMaskRecord erase_masks = 8;
+}

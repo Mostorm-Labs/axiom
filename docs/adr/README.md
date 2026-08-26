@@ -31,6 +31,7 @@ ADR 记录会长期影响 Runtime 边界、平台集成、兼容性或性能演�
 | [0023](0023-hybrid-surface-controlled-overlays.md) | Accepted | Web、Windows RNW、Android RN、Apple RN/Fabric 统一采用受控 Overlay；固定 z-order 与 native hot path |
 | [0024](0024-arc-fastink-module-boundary.md) | Accepted | Arc 是可抽取、全平台实现的 input-to-display 模块 |
 | [0025](0025-product-shell-page-operation-data-runtime.md) | Accepted | RNW/RN 产品 Shell、一 Page 一 Document、Operation-only、Shared Data Runtime 与 Arc fallback 再基线 |
+| [0026](0026-semantic-v1-numeric-contract.md) | Accepted | G1 Semantic V1 使用 f64 durable scalar；渲染/POC float 仅是派生或实验表示 |
 
 ## 必须后续建立的实验型 ADR
 

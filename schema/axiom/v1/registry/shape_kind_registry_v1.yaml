@@ -1,0 +1,23 @@
+schema: auditoryworks.axiom.v1.shape-kind-registry
+version: 1
+status: frozen
+source_authority: ShapeKind Registry V1 Release v0.1
+invalid_id: 0
+unknown_policy: fail_closed
+released:
+  - id: 1
+    symbol: RECTANGLE
+    version: 1
+    required_parameters: [width, height]
+    geometry: closed_axis_aligned_rectangle
+    size_rule: finite_and_strictly_positive_f64
+  - id: 2
+    symbol: ELLIPSE
+    version: 1
+    required_parameters: [width, height]
+    geometry: analytical_ellipse_inscribed_in_base_box
+    size_rule: finite_and_strictly_positive_f64
+unassigned_range: [3, 4294967295]
+reconciliation:
+  standalone_line: Connector
+  circle: ELLIPSE_with_equal_width_height

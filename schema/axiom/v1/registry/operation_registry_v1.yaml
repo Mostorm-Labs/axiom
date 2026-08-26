@@ -1,0 +1,30 @@
+schema: auditoryworks.axiom.v1.operation-registry
+version: 1
+status: frozen
+source_authority: Operation Payload + Validation Rules v0.1
+identity_rule: operation_id
+atomicity: whole_operation_all_or_nothing
+operations:
+  - {id: 1, tag: 1, symbol: InsertObjects, payload: InsertObjectsOp}
+  - {id: 2, tag: 2, symbol: DeleteObjects, payload: DeleteObjectsOp}
+  - {id: 3, tag: 3, symbol: RestoreObjects, payload: RestoreObjectsOp}
+  - {id: 4, tag: 4, symbol: SetPlacements, payload: SetPlacementsOp}
+  - {id: 5, tag: 5, symbol: SetTransforms, payload: SetTransformsOp}
+  - {id: 6, tag: 6, symbol: PatchProperties, payload: PatchPropertiesOp}
+  - {id: 7, tag: 7, symbol: SetObjectSize, payload: SetObjectSizeOp}
+  - {id: 8, tag: 8, symbol: SetVectorPathGeometry, payload: SetVectorPathGeometryOp}
+  - {id: 9, tag: 9, symbol: SetImageContent, payload: SetImageContentOp}
+  - {id: 10, tag: 10, symbol: AddStroke, payload: AddStrokeOp}
+  - {id: 11, tag: 11, symbol: SplitStrokes, payload: SplitStrokesOp}
+  - {id: 12, tag: 12, symbol: AddEraseMasks, payload: AddEraseMasksOp}
+  - {id: 13, tag: 13, symbol: RemoveEraseMasks, payload: RemoveEraseMasksOp}
+  - {id: 14, tag: 14, symbol: EditRichText, payload: EditRichTextOp}
+  - {id: 15, tag: 15, symbol: SetConnectorContent, payload: SetConnectorContentOp}
+validation_pipeline:
+  - wire_preflight
+  - envelope_validation
+  - payload_validation
+  - reference_kind_invariant_validation
+  - prepare_apply_plan
+  - atomic_apply
+  - revision_advance_and_changeset

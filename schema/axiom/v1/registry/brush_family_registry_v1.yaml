@@ -1,0 +1,34 @@
+schema: auditoryworks.axiom.v1.brush-family-registry
+version: 1
+status: frozen
+source_authority: BrushFamily Registry V1 Release v0.1
+invalid_family_id: 0
+unknown_policy: fail_closed
+version_policy: exact_pair_no_fallback
+released:
+  - family_id: 1
+    symbol: FINE_PEN
+    brush_version: 1
+    representation: VectorStrokeData
+    blend_mode: NORMAL
+    texture_resource_id: absent
+    pressure: released_v1_contract
+    tilt: disabled
+  - family_id: 2
+    symbol: HIGHLIGHTER
+    brush_version: 1
+    representation: VectorStrokeData
+    blend_mode: HIGHLIGHTER
+    texture_resource_id: absent
+    pressure: released_v1_contract
+    tilt: disabled
+  - family_id: 3
+    symbol: TEXTURED_MARKER
+    brush_version: 1
+    representation: DabStrokeData
+    blend_mode: NORMAL
+    texture_resource_id: required_non_zero
+    pressure: baked_into_resolved_dabs
+    tilt: disabled
+    creation_prng: AXIOM_SPLITMIX64_V1
+unassigned_family_range: [4, 4294967295]
