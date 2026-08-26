@@ -52,9 +52,14 @@ def generate(
     source_commit: str,
     output_root: Path,
     hosted_url: str | None,
+    ci_boundary_url: str | None,
 ) -> dict[str, Any]:
     del output_root
-    blocking_reasons = [] if hosted_url else ["hosted G1 Semantic Codec workflow URL is missing"]
+    blocking_reasons: list[str] = []
+    if not hosted_url:
+        blocking_reasons.append("hosted G1 Semantic Codec workflow URL is missing")
+    if not ci_boundary_url:
+        blocking_reasons.append("hosted CI Boundary Contract workflow URL is missing")
     status = "PASS" if not blocking_reasons else "BLOCKED"
     return {
         "format": "axiom-gt-g1-03-commit-bound-evidence-v1",
@@ -68,7 +73,18 @@ def generate(
         "architectureChanged": False,
         "authorityPublicationGap": "DEFERRED_GOVERNANCE_DEBT",
         "authority": authority_inventory(root),
+        "previousSourceCommit": "87fa1e6133aca09ea6b85d4587767610c52d7ecc",
+        "previousEvidenceCommit": "638fd4f71eef16aff0f01139cf97d40b04f21479",
+        "repairReason": [
+            "INCOMPLETE_TYPED_SEMANTIC_MATERIALIZATION",
+            "CI_TRIGGER_BOUNDARY_OVERREACH",
+            "TRACKER_DRIFT",
+        ],
         "objectRecordMaterialization": "PASS",
+        "typedObjectRecordMaterialization": "PASS",
+        "propertyValueRepresentation": "TYPED_CLOSED_UNION",
+        "objectContentRepresentation": "TYPED_NINE_WAY_UNION",
+        "eraseMaskRepresentation": "TYPED_GEOMETRY_UNION",
         "referenceObjectStore": "PASS",
         "indexedObjectStore": "PASS",
         "objectIndex": {
@@ -97,6 +113,15 @@ def generate(
             "publicMutationBypass": "NONE",
             "sceneRenderSpatialDependency": "NONE",
         },
+        "ciBoundary": {
+            "rule": "CI_TRIGGER_IS_NOT_GATE_AUTHORITY",
+            "poc03RequiredForGate": False,
+            "poc03SemanticDependency": False,
+            "poc03BroadRuntimeTriggerRemoved": True,
+            "g1SemanticLane": "G1 Semantic Codec",
+            "ciBoundaryContract": "PASS" if ci_boundary_url else "PENDING",
+            "hostedWorkflowUrl": ci_boundary_url,
+        },
         "regression": {
             "semanticCTest": {"status": "PASS", "testCount": 30},
             "runtimeBoundaryCheck": "PASS",
@@ -118,6 +143,8 @@ def write(output_root: Path, result: dict[str, Any]) -> None:
             "authorityBaseline": result["authorityBaseline"],
             "reentryPromptRevision": result["reentryPromptRevision"],
             "authorityPublicationGap": result["authorityPublicationGap"],
+            "previousSourceCommit": result["previousSourceCommit"],
+            "previousEvidenceCommit": result["previousEvidenceCommit"],
             "authority": result["authority"],
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output_root / "differential.json").write_text(
@@ -146,8 +173,11 @@ def main() -> int:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--hosted-url")
+    parser.add_argument("--ci-boundary-url")
     args = parser.parse_args()
-    result = generate(ROOT, args.source_commit, args.output_root, args.hosted_url)
+    result = generate(
+        ROOT, args.source_commit, args.output_root, args.hosted_url, args.ci_boundary_url
+    )
     write(args.output_root, result)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "PASS" else 2

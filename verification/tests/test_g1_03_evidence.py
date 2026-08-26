@@ -20,7 +20,11 @@ class G103EvidenceTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
             result = generator.generate(
-                ROOT, "a" * 40, output, "https://github.com/example/actions/runs/3"
+                ROOT,
+                "a" * 40,
+                output,
+                "https://github.com/example/actions/runs/3",
+                "https://github.com/example/actions/runs/4",
             )
 
             self.assertEqual(result["taskId"], "GT-G1-03")
@@ -29,21 +33,34 @@ class G103EvidenceTest(unittest.TestCase):
             self.assertEqual(result["reentryPromptRevision"], "v2")
             self.assertFalse(result["architectureChanged"])
             self.assertEqual(result["authorityPublicationGap"], "DEFERRED_GOVERNANCE_DEBT")
+            self.assertEqual(result["typedObjectRecordMaterialization"], "PASS")
+            self.assertEqual(result["propertyValueRepresentation"], "TYPED_CLOSED_UNION")
+            self.assertEqual(result["objectContentRepresentation"], "TYPED_NINE_WAY_UNION")
+            self.assertEqual(result["eraseMaskRepresentation"], "TYPED_GEOMETRY_UNION")
             self.assertEqual(result["objectIndex"]["authorityRole"], "PRIVATE_REBUILDABLE_ACCELERATION")
             self.assertEqual(result["objectIndex"]["families"], ["parent_children"])
             self.assertEqual(result["ordering"]["allObjects"], "OBJECT_ID_BYTE_ORDER_IMPLEMENTATION_CONVENTION")
             self.assertEqual(result["ordering"]["equalOrderKeyTieBreak"], "OBJECT_ID_IMPLEMENTATION_ONLY")
             self.assertEqual(result["differential"]["firstDivergence"], None)
+            self.assertEqual(result["ciBoundary"]["rule"], "CI_TRIGGER_IS_NOT_GATE_AUTHORITY")
+            self.assertFalse(result["ciBoundary"]["poc03RequiredForGate"])
+            self.assertEqual(result["ciBoundary"]["ciBoundaryContract"], "PASS")
             self.assertFalse(result["gtG104Authorized"])
 
     def test_evidence_requires_hosted_validation_and_hashes_written_files(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
-            blocked = generator.generate(ROOT, "b" * 40, output, None)
+            blocked = generator.generate(ROOT, "b" * 40, output, None, None)
             self.assertEqual(blocked["status"], "BLOCKED")
             self.assertIn("hosted", " ".join(blocked["blockingReasons"]))
 
-            generator.write(output, generator.generate(ROOT, "c" * 40, output, "https://example.test/run"))
+            generator.write(output, generator.generate(
+                ROOT,
+                "c" * 40,
+                output,
+                "https://example.test/run",
+                "https://example.test/boundary",
+            ))
             manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["taskId"], "GT-G1-03")
             self.assertEqual(manifest["sourceCommit"], "c" * 40)
