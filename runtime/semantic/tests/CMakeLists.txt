@@ -21,11 +21,56 @@ endif()
 
 gtest_discover_tests(canvas_semantic_codec_test)
 
+add_executable(canvas_semantic_reference_object_store_test reference_object_store_test.cpp)
+target_link_libraries(canvas_semantic_reference_object_store_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_reference_object_store_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_reference_object_store_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_reference_object_store_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_reference_object_store_test)
+
+add_executable(canvas_semantic_indexed_object_store_test indexed_object_store_test.cpp)
+target_link_libraries(canvas_semantic_indexed_object_store_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_indexed_object_store_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_indexed_object_store_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_indexed_object_store_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_indexed_object_store_test)
+
+add_executable(canvas_semantic_object_store_differential_test object_store_differential_test.cpp)
+target_link_libraries(canvas_semantic_object_store_differential_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_object_store_differential_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_object_store_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_object_store_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_object_store_differential_test)
+
 foreach(header IN ITEMS
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
         canvas/semantic/change_set.hpp
+        canvas/semantic/object_store.hpp
         canvas/semantic/object_record.hpp
+        canvas/semantic/indexed_object_store.hpp
+        canvas/semantic/reference_object_store.hpp
         canvas/semantic/operation_id.hpp
         canvas/semantic/operation.hpp
         canvas/semantic/order_key.hpp

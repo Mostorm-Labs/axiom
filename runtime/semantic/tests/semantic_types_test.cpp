@@ -132,11 +132,36 @@ TEST(SemanticTypes, ChangeSetExpressesCreatedAndDeletedObjects) {
 
 TEST(SemanticTypes, PublicTypesDoNotRequireSceneOrRenderer) {
     static_assert(std::is_trivially_copyable_v<Operation>);
-    ObjectRecord record{ObjectId::fromUint64(1), ObjectKind::kShape, OrderKey({1})};
+    ObjectRecord record{};
+    record.id = ObjectId::fromUint64(1U);
+    record.kind = ObjectKind::kShape;
+    record.placement.order_key = OrderKey({1U});
     const ChangeSet changes = ChangeSet::fromChanges(
         SemanticGeneration(0U), SemanticGeneration(1U),
         {{record.id, SemanticChangeFlags::kCreated, {}}});
     EXPECT_EQ(changes.objects().size(), 1U);
+}
+
+TEST(SemanticTypes, ObjectRecordCarriesEveryFrozenCanonicalField) {
+    ObjectRecord record{};
+    record.id = ObjectId::fromUint64(1U);
+    record.kind = ObjectKind::kShape;
+    record.kind_version = 1U;
+    record.placement = Placement{ObjectId::fromUint64(9U), OrderKey({0x10U})};
+    record.transform = Transform2D{1.0, 0.0, 0.0, 1.0, 12.0, 24.0};
+    record.properties = PropertyBag{{PropertyEntry{7U, PropertyValue{SemanticValue{{0x42U}}}}}};
+    record.content = ObjectContent{ObjectKind::kShape, SemanticValue{{0x01U, 0x02U}}};
+    record.erase_masks = {EraseMaskRecord{ObjectId::fromUint64(2U), SemanticValue{{0x03U}}}};
+
+    EXPECT_EQ(record.kind_version, 1U);
+    ASSERT_TRUE(record.placement.parent_id.has_value());
+    EXPECT_EQ(*record.placement.parent_id, ObjectId::fromUint64(9U));
+    EXPECT_EQ(record.transform.tx, 12.0);
+    ASSERT_EQ(record.properties.entries.size(), 1U);
+    EXPECT_EQ(record.properties.entries.front().field_id, 7U);
+    EXPECT_EQ(record.content.kind, ObjectKind::kShape);
+    ASSERT_EQ(record.erase_masks.size(), 1U);
+    EXPECT_EQ(record.erase_masks.front().id, ObjectId::fromUint64(2U));
 }
 
 } // namespace canvas::semantic
