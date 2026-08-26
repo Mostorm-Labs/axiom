@@ -28,7 +28,13 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          map=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | python3 tools/skia/classify_r1_changes.py)
+          git show "$BASE_SHA:deps.lock.json" > /tmp/canvas-lock-base.json 2>/dev/null || true
+          git show "$HEAD_SHA:deps.lock.json" > /tmp/canvas-lock-head.json 2>/dev/null || true
+          lock_args=()
+          if [[ -s /tmp/canvas-lock-base.json && -s /tmp/canvas-lock-head.json ]]; then
+            lock_args+=(--lock-base /tmp/canvas-lock-base.json --lock-head /tmp/canvas-lock-head.json)
+          fi
+          map=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | python3 tools/skia/classify_r1_changes.py "${lock_args[@]}")
           echo "classification=$map" >> "$GITHUB_STEP_SUMMARY"
           echo "mode=$(python3 -c 'import json,sys; print(json.load(sys.stdin)["mode"])' <<< "$map")" >> "$GITHUB_OUTPUT"
           echo "targets=$(python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["targets"], separators=(",",":")))' <<< "$map")" >> "$GITHUB_OUTPUT"

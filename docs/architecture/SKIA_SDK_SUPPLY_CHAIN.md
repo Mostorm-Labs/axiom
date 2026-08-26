@@ -163,7 +163,9 @@ workflow 只进入
 变更分类由
 [`classify_r1_changes.py`](../../tools/skia/classify_r1_changes.py) 完成：profile、Skia
 lock、构建/打包/identity/aggregate/publish recipe 或 Producer workflow 选择完整 24
-job；平台专属 producer 路径只选择对应平台的 3 个 variant；fetch、consumer、lock 校验
+job；`deps.lock.json` 会比较变更前后的依赖子树，只有 Skia、Skia 构建参数、平台工具链
+或 SDK 字体身份变化才选择 Producer；仅 Protobuf/Abseil 等 Semantic Codec 依赖变化不
+启动 Skia Producer。平台专属 producer 路径只选择对应平台的 3 个 variant；fetch、consumer、lock 校验
 和 consumer workflow 只运行 source-free consumer validation。普通 PR 仅获得
 `contents: read`；Actions artifact 只负责 matrix 与聚合 job 之间的短期传递。
 
