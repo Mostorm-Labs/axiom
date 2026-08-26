@@ -1,0 +1,165 @@
+{
+  "format": "axiom-gt-g1-03-commit-bound-evidence-v1",
+  "taskId": "GT-G1-03",
+  "sourceCommit": "3c6cbbc6abe1dfb7b716e4c32e6546e476917c54",
+  "status": "PASS",
+  "blockingReasons": [],
+  "authorityBaseline": "06b60dffad8fdbbd6254f40ca4c65147881d445c",
+  "reentryPromptRevision": "v2",
+  "previousBlockerClassification": "EXECUTION_PACKAGE_OVERCONSTRAINT",
+  "architectureChanged": false,
+  "authorityPublicationGap": "DEFERRED_GOVERNANCE_DEBT",
+  "authority": [
+    {
+      "path": "docs/notion/authority/04-semantic-schema/axiom-semantic-schema-spec-idl-v0.1.md",
+      "sha256": "87de44c45b252bcf5e12bcad9d479afdbfa51a7b905c9764e8ae9dfc865e2420"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/connector-anchor-contract-v1-release-v0.1.md",
+      "sha256": "071ce14d67d967f2f564b45b73a123efd65d6c71ca3225869c91bdf985888a01"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/field-registry-v1-release-v0.1.md",
+      "sha256": "2857a76e7570ca04e2ba424ec53ebc5c1d18dbd3b92b27d8dc4644de55c4365b"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/fieldid-propertyvalue-registry-v0.1.md",
+      "sha256": "77f003e947671a10744b1e0a524403611bfbf88e9fe393ece969ac0bb87702b7"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/image-content-v1-release-v0.1.md",
+      "sha256": "e35a9277427777bbcf70785b3a79a6e7a54c127416ada6ec3eb20a067200bafa"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/object-content-v1-field-table-v0.1.md",
+      "sha256": "5dd031e7cec28d133def79b452c56776a2f90332cceaace8635ae266d8659ab8"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/semantic-schema-gap-closure-v0.1.md",
+      "sha256": "3f3c96191d931504a2723e430442789b4aa64209db8166611c9379dd30b0f1c1"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/shape-kind-registry-v1-release-v0.1.md",
+      "sha256": "37b50fa57a87781724042880db18f8b98fa9c2eaadad917b7c212e458ae7d30a"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-payload-validation-v0.1.md",
+      "sha256": "700d273043a813204aa115e6310d1338a5ec139da160485d6124029647017d74"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/03-wire-contract/common-wire-rules-v0.1.md",
+      "sha256": "e9ae043c79af88935aac47727c0da0c985682d77ccb9e6c381b7bbfdb56c1c62"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/03-wire-contract/order-key-rfc-v0.1.md",
+      "sha256": "95d6dca252a99340412e77668427507b570ce6be266afb2971f4ea222c81c11f"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md",
+      "sha256": "e6dfed7df9716070cb0a6ade00a92429d15c1934c4544f3781ee144a806d18dd"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-implementation-binary-golden-seed-v0.1.md",
+      "sha256": "1f36ddee8630d6ee254c8956cb2ea5d951a231d351157e69a1a1c422a31a7091"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md",
+      "sha256": "33cc24de01990e266fba4ce3f677ad0498c6f4e82936e421f68a9d4801c15793"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/leaf-schema-reconciliation-v0.1.md",
+      "sha256": "d2198a8a3552654276f7f325092834c802d59a02045ce94127d5c78f2c97944d"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/reference-idl-codec-mapping-v0.1.md",
+      "sha256": "5deb8b1fedcf1ed9c331f0065515df0a9b56a6e2278f44dffc67f1ba71e4d951"
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/module-design-closure-v0.1.md",
+      "sha256": "627bcf9a0983e40544a2749fa95399096db3a71e31480fb44c6977b6a77daecf"
+    },
+    {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md",
+      "sha256": "3e1f36afa9b150c644fbc39330de8feeff66bd217feb8ef8c793d2705602a80f"
+    },
+    {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-04-document-runtime-scene-v0.1.md",
+      "sha256": "40a8802762b4b05523143c16d1c6bb982bdd7756f0b1b28c2e7a4f5d130719c5"
+    },
+    {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-11-generation-changeset-apply-batch-v0.1.md",
+      "sha256": "427b8528ab27ae7c599c713fa253d4bf1e5b71588890bda8a2c8026dbc580af1"
+    }
+  ],
+  "previousSourceCommit": "87fa1e6133aca09ea6b85d4587767610c52d7ecc",
+  "previousEvidenceCommit": "638fd4f71eef16aff0f01139cf97d40b04f21479",
+  "repairReason": [
+    "INCOMPLETE_TYPED_SEMANTIC_MATERIALIZATION",
+    "CI_TRIGGER_BOUNDARY_OVERREACH",
+    "TRACKER_DRIFT"
+  ],
+  "objectRecordMaterialization": "PASS",
+  "typedObjectRecordMaterialization": "PASS",
+  "propertyValueRepresentation": "TYPED_CLOSED_UNION",
+  "objectContentRepresentation": "TYPED_NINE_WAY_UNION",
+  "eraseMaskRepresentation": "TYPED_GEOMETRY_UNION",
+  "referenceObjectStore": "PASS",
+  "indexedObjectStore": "PASS",
+  "objectIndex": {
+    "status": "PASS",
+    "authorityRole": "PRIVATE_REBUILDABLE_ACCELERATION",
+    "families": [
+      "parent_children"
+    ],
+    "serialized": false,
+    "canonicalRecordOwner": false,
+    "rebuildEquivalence": "PASS"
+  },
+  "ordering": {
+    "allObjects": "OBJECT_ID_BYTE_ORDER_IMPLEMENTATION_CONVENTION",
+    "siblingSemanticOrder": "ORDER_KEY_UNSIGNED_LEXICOGRAPHIC",
+    "equalOrderKeyTieBreak": "OBJECT_ID_IMPLEMENTATION_ONLY"
+  },
+  "differential": {
+    "status": "PASS",
+    "cases": [
+      "empty",
+      "one_root",
+      "multiple_roots",
+      "multiple_kinds",
+      "parent_children",
+      "sibling_reorder",
+      "reparent",
+      "content_property_replace",
+      "erase_leaf",
+      "deterministic_rebuild",
+      "equal_order_key_tie_break"
+    ],
+    "firstDivergence": null
+  },
+  "boundary": {
+    "publicMutationBypass": "NONE",
+    "sceneRenderSpatialDependency": "NONE"
+  },
+  "ciBoundary": {
+    "rule": "CI_TRIGGER_IS_NOT_GATE_AUTHORITY",
+    "poc03RequiredForGate": false,
+    "poc03SemanticDependency": false,
+    "poc03BroadRuntimeTriggerRemoved": true,
+    "g1SemanticLane": "G1 Semantic Codec",
+    "ciBoundaryContract": "PASS",
+    "hostedWorkflowUrl": "https://github.com/Mostorm-Labs/axiom/actions/runs/32984990130"
+  },
+  "regression": {
+    "semanticCTest": {
+      "status": "PASS",
+      "testCount": 30
+    },
+    "runtimeBoundaryCheck": "PASS",
+    "gtG102": "PASS",
+    "gtG101R": "PASS"
+  },
+  "hostedWorkflowUrl": "https://github.com/Mostorm-Labs/axiom/actions/runs/32984986249",
+  "hostedValidation": "PASS",
+  "gtG104Authorized": false
+}

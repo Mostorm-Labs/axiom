@@ -1,5 +1,8 @@
 add_library(canvas_runtime_semantic STATIC
     src/change_set.cpp
+    src/indexed_object_store.cpp
+    src/object_index.cpp
+    src/reference_object_store.cpp
     src/semantic_types.cpp
     src/codec.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)

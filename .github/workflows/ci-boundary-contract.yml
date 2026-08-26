@@ -1,0 +1,38 @@
+name: CI Boundary Contract
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "verification/tests/test_ci_trigger_boundaries.py"
+      - "verification/tools/generate_g1_03_evidence.py"
+      - "pocs/large_scene/tools/check_ci.py"
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "cmake/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/**"
+      - "verification/tests/test_ci_trigger_boundaries.py"
+      - "verification/tools/generate_g1_03_evidence.py"
+      - "pocs/large_scene/tools/check_ci.py"
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "cmake/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-contract:
+    name: ci-boundary / static-contract
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate workflow routing boundaries
+        run: python3 -m unittest verification.tests.test_ci_trigger_boundaries -v
