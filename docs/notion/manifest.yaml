@@ -42,6 +42,27 @@ current_authority:
     status: current
     path: docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md
 
+  canonical_codec_golden_authority:
+    version: v0.1
+    status: current
+    notion_page_id: 3c84c57a-590c-814a-ba1b-d9435d0b451e
+    path: docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md
+    scope:
+      positive_cases: BG-001..BG-010
+      negative_cases: BG-N01..BG-N08
+      gt_g1_02_role: authority-unblocker
+
+  canonical_codec_golden_verification:
+    version: v0.1
+    status: current-verification-authority
+    notion_page_id: 3c84c57a-590c-8152-b536-fc23cd564b73
+    path: docs/notion/authority/10-verification/canonical-codec-golden-fixture-authoring-set-v0.1.md
+    requires:
+      - canonical_codec_golden_authority
+      - docs/notion/authority/10-verification/golden-authoring-fixture-pipeline-v0.1.md
+    corpus_target: verification/corpus/semantic/v1/wire/bg
+    fixture_compiler_target: verification/fixture-author
+
   first_batch_implementation_contract:
     status: proposed-freeze
     parent:
