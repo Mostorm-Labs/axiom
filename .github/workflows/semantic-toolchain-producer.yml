@@ -87,7 +87,7 @@ jobs:
           unzip -p "$archive" manifest.json > out/semantic-sdk/semantic-toolchain-manifest.json
           sha256sum "$archive" out/semantic-sdk/semantic-toolchain-manifest.json | tee out/semantic-sdk/SHA256SUMS
           echo "sdk_id=$sdk_id" >> "$GITHUB_OUTPUT"
-          echo "archive_sha256=$(cut -d' ' -f1 out/semantic-sdk/SHA256SUMS)" >> "$GITHUB_OUTPUT"
+          echo "archive_sha256=$(sha256sum "$archive" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
       - name: Run package contract tests
         run: python3 -m unittest verification.tests.test_semantic_sdk verification.tests.test_semantic_lock -v
       - uses: actions/upload-artifact@v4
