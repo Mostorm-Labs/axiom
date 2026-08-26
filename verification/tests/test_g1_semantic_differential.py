@@ -63,6 +63,22 @@ class SemanticDifferentialTest(unittest.TestCase):
         self.assertEqual(result["binaryCorpus"]["fileCount"], 3)
         self.assertEqual(len(result["binaryCorpus"]["inventorySha256"]), 64)
 
+    def test_promoted_manifest_without_the_complete_authority_case_set_is_not_a_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            corpus = root / "verification/corpus/semantic/v1"
+            (corpus / "wire/bg/BG-001-id128").mkdir(parents=True)
+            (corpus / "wire/bg/BG-001-id128/case.json").write_text("{}\n", encoding="utf-8")
+            (corpus / "corpus.json").write_text(json.dumps({
+                "format": "axiom-semantic-v1-corpus-manifest",
+                "version": 1,
+                "status": "promoted",
+                "differentialOracle": "authority_promoted",
+            }) + "\n", encoding="utf-8")
+            result = module.run_differential(root)
+        self.assertNotEqual(result["status"], "PASS")
+        self.assertIn("18", " ".join(result["blockingReasons"]))
+
 
 if __name__ == "__main__":
     unittest.main()

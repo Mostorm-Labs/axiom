@@ -46,6 +46,7 @@ if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
   target_include_directories(canvas_runtime_semantic PRIVATE "${AXIOM_PROTO_GENERATED_ROOT}")
   target_link_libraries(canvas_runtime_semantic PRIVATE protobuf::libprotobuf)
   target_compile_definitions(canvas_runtime_semantic PUBLIC CANVAS_SEMANTIC_PROTOBUF=1)
+  add_subdirectory(tools)
 endif()
 
 if(MSVC)

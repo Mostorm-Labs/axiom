@@ -8,11 +8,14 @@ on:
       - "schema/axiom/v1/**"
       - "runtime/semantic/**"
       - "verification/corpus/semantic/**"
+      - "verification/fixture-author/**"
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
       - "verification/tools/generate_g1_02_evidence.py"
       - "verification/tests/test_semantic_*.py"
       - "verification/tests/test_g1_02_evidence.py"
+      - "verification/tests/test_g1_semantic_differential.py"
+      - "verification/tests/test_codec_fixture_author.py"
       - ".github/workflows/g1-semantic-codec.yml"
   push:
     branches: [main]
@@ -22,11 +25,14 @@ on:
       - "schema/axiom/v1/**"
       - "runtime/semantic/**"
       - "verification/corpus/semantic/**"
+      - "verification/fixture-author/**"
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
       - "verification/tools/generate_g1_02_evidence.py"
       - "verification/tests/test_semantic_*.py"
       - "verification/tests/test_g1_02_evidence.py"
+      - "verification/tests/test_g1_semantic_differential.py"
+      - "verification/tests/test_codec_fixture_author.py"
       - ".github/workflows/g1-semantic-codec.yml"
   workflow_dispatch:
 
@@ -91,30 +97,39 @@ jobs:
           cmake --build out/g1-hosted --parallel
           ctest --test-dir out/g1-hosted --output-on-failure
           find out/g1-hosted/runtime/semantic/generated -type f -print 2>/dev/null | sort > evidence-ci/g1-semantic-codec/generated-files.txt || true
-      - name: Run semantic contract and differential checks
+      - name: Regenerate and compare authority golden fixtures
+        run: |
+          fixture_commit=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("verification/corpus/semantic/v1/fixture-manifest.json").read_text())
+          first = manifest["cases"][0]["path"]
+          print(json.loads((Path("verification/corpus/semantic/v1") / first / "provenance.json").read_text())["fixtureCompiler"]["sourceCommit"])
+          PY
+          )
+          mkdir -p evidence-ci/g1-semantic-codec/fixture-a evidence-ci/g1-semantic-codec/fixture-b
+          python3 verification/fixture-author/compile_codec_golden.py --root . --verify-independence
+          python3 verification/fixture-author/compile_codec_golden.py --root . --source-commit "$fixture_commit" --output-root evidence-ci/g1-semantic-codec/fixture-a
+          python3 verification/fixture-author/compile_codec_golden.py --root . --source-commit "$fixture_commit" --output-root evidence-ci/g1-semantic-codec/fixture-b
+          diff -ru verification/corpus/semantic/v1/fixture-manifest.json evidence-ci/g1-semantic-codec/fixture-a/fixture-manifest.json
+          diff -ru verification/corpus/semantic/v1/wire/bg evidence-ci/g1-semantic-codec/fixture-a/wire/bg
+          diff -ru evidence-ci/g1-semantic-codec/fixture-a evidence-ci/g1-semantic-codec/fixture-b
+      - name: Run semantic contract and production differential checks
         run: |
           python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc
-          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential -v
-          set +e
-          python3 verification/tools/run_g1_semantic_differential.py --root . --output evidence-ci/g1-semantic-codec/differential.json
-          status=$?
-          set -e
-          test "$status" -eq 2
-          grep -q 'BLOCKED_AUTHORITY' evidence-ci/g1-semantic-codec/differential.json
+          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_02_evidence -v
+          python3 verification/tools/run_g1_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --output evidence-ci/g1-semantic-codec/differential.json
+          grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/differential.json
       - name: Generate commit-bound codec Evidence
         run: |
           generated_hash=$(sha256sum evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt | cut -d' ' -f1)
-          set +e
           python3 verification/tools/generate_g1_02_evidence.py \
             --source-commit "$GITHUB_SHA" \
             --output-root evidence-ci/g1-semantic-codec \
             --hosted-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             --runtime-status PASS \
             --generated-code-sha256 "$generated_hash"
-          status=$?
-          set -e
-          test "$status" -eq 2
-          grep -q '"status": "BLOCKED"' evidence-ci/g1-semantic-codec/summary.json
+          grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/summary.json
       - name: Upload semantic codec evidence
         if: always()
         uses: actions/upload-artifact@v4

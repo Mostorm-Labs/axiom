@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "id": "BG-N03",
+  "status": "SPEC_REQUIREMENT",
+  "authorityRefs": [
+    "Canonical Codec Golden Authority Closure v0.1#BG-N03"
+  ],
+  "entrypoint": "DECODE",
+  "requiredCapabilities": [
+    "CANONICAL_ENCODE",
+    "STRICT_WIRE_PREFLIGHT"
+  ],
+  "input": {
+    "artifact": "input/value.pb"
+  },
+  "expected": {
+    "outcome": "REJECTED",
+    "canonicalArtifact": "expected/canonical.pb",
+    "stage": "WIRE_PREFLIGHT",
+    "canonicality": "NON_CANONICAL_INPUT",
+    "strictCategory": "NON_CANONICAL_PACKED_ENCODING"
+  },
+  "blockedByOpenPolicy": false
+}

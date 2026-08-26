@@ -1,0 +1,34 @@
+{
+  "formatVersion": 1,
+  "caseId": "BG-010",
+  "authority": {
+    "semantic": "Canonical Codec Golden Authority Closure v0.1",
+    "verification": "Canonical Codec Golden Fixture Authoring Set v0.1"
+  },
+  "sources": [
+    "verification/fixture-author/codec_golden_authoring_v1.json",
+    "docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md",
+    "docs/notion/authority/10-verification/canonical-codec-golden-fixture-authoring-set-v0.1.md"
+  ],
+  "artifacts": [
+    {
+      "path": "authoring/input.projection.json",
+      "sha256": "bb9d08ac1a6fbabfd1b45f6ef9a0b80795f629ea80b87eaa3398e177aa77ec89",
+      "bytes": 244
+    },
+    {
+      "path": "case.json",
+      "sha256": "167f2ae158ff404439bf15b2b82277e85661040b0e78c664985addcf880114af",
+      "bytes": 468
+    },
+    {
+      "path": "expected/canonical.pb",
+      "sha256": "6ef4a17794afe7f249cc0ba60c5e3c208776487df56f15310d57cf5923350837",
+      "bytes": 22
+    }
+  ],
+  "fixtureCompiler": {
+    "identity": "verification-only",
+    "sourceCommit": "282d0680a43a291debff4341ea2fe3f43087a68c"
+  }
+}

@@ -13,6 +13,12 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 DESCRIPTOR = "schema/axiom/v1/descriptor/descriptor.lock.pb"
+AUTHORITY_BASELINE = "25332232f41b5973ca7057e3c84b0038573982b5"
+AUTHORITY_PATHS = (
+    "docs/notion/authority/04-semantic-schema/04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md",
+    "docs/notion/authority/10-verification/canonical-codec-golden-fixture-authoring-set-v0.1.md",
+)
+FIXTURE_MANIFEST = "verification/corpus/semantic/v1/fixture-manifest.json"
 
 
 def sha256(path: Path) -> str:
@@ -33,6 +39,15 @@ def generate(
 ) -> dict[str, Any]:
     descriptor_path = root / DESCRIPTOR
     descriptor_hash = sha256(descriptor_path)
+    fixture_manifest_path = root / FIXTURE_MANIFEST
+    fixture_manifest = json.loads(fixture_manifest_path.read_text(encoding="utf-8"))
+    fixture_compiler_commits = {
+        json.loads((root / "verification/corpus/semantic/v1" / entry["path"] / "provenance.json").read_text(encoding="utf-8"))
+        ["fixtureCompiler"]["sourceCommit"]
+        for entry in fixture_manifest["cases"]
+    }
+    if len(fixture_compiler_commits) != 1:
+        raise RuntimeError("fixture corpus does not have one compiler source commit")
     differential_path = output_root / "differential.json"
     if differential_path.exists():
         differential = json.loads(differential_path.read_text(encoding="utf-8"))
@@ -50,7 +65,9 @@ def generate(
     if not hosted_url:
         reasons.append("hosted semantic-codec workflow URL is missing")
     if differential.get("status") != "PASS":
-        reasons.append("BG/BGX authority-promoted corpus and differential oracle are missing")
+        reasons.append("BG/BGX authority-promoted corpus and production differential are missing or failed")
+    if differential.get("differential", {}).get("firstDivergence") is not None:
+        reasons.append("production differential reported a first divergence")
     status = "PASS" if not reasons else "BLOCKED"
     result: dict[str, Any] = {
         "format": "axiom-gt-g1-02-commit-bound-evidence-v1",
@@ -60,9 +77,19 @@ def generate(
         "blockingReasons": reasons,
         "hostedWorkflowUrl": hosted_url,
         "runtimeStatus": runtime_status,
+        "authorityBaseline": AUTHORITY_BASELINE,
+        "authority": [{"path": path, "sha256": sha256(root / path)} for path in AUTHORITY_PATHS],
         "descriptorPath": DESCRIPTOR,
         "descriptorSha256": descriptor_hash,
         "generatedCodeSha256": generated_code_sha256,
+        "corpus": {
+            "fixtureManifestPath": FIXTURE_MANIFEST,
+            "fixtureManifestSha256": sha256(fixture_manifest_path),
+            "caseCount": len(fixture_manifest["cases"]),
+            "caseIds": [entry["id"] for entry in fixture_manifest["cases"]],
+            "fixtureCompilerSourceCommit": fixture_compiler_commits.pop(),
+            "regeneration": "PASS",
+        },
         "differential": differential,
     }
     output_root.mkdir(parents=True, exist_ok=True)
