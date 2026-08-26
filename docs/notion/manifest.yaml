@@ -1,0 +1,120 @@
+schema_version: 2
+project: axiom
+snapshot_date: 2026-08-26
+
+source:
+  type: notion
+  role: living_architecture_authority
+  governance_page_id: 3c84c57a-590c-817f-ba08-ef31bc420beb
+  architecture_baseline_page_id: 3c84c57a-590c-8148-82f9-f1f809752346
+
+repository_snapshot:
+  role: codex_facing_authority_mirror
+  root: docs/notion/authority
+  normative_only_when_listed_current: true
+
+implementation_packages:
+  root: docs/notion/implementation
+
+evidence:
+  root: docs/evidence
+
+rules:
+  current_authority_only: true
+  historical_versions_are_normative: false
+  superseded_versions_are_normative: false
+  stale_evidence_is_current_evidence: false
+  frozen_authority_editable_by_implementation_agent: false
+  architecture_conflict_requires_refreeze: true
+  implementation_requires_authority_snapshot: true
+  authority_gap_policy: stop_affected_path_and_report
+  generator_may_read_superseded_sources: false
+
+current_authority:
+  documentation_governance:
+    version: v0.2
+    notion_page_id: 3c84c57a-590c-817f-ba08-ef31bc420beb
+    status: current
+
+  architecture_baseline:
+    version: v0.4
+    notion_page_id: 3c84c57a-590c-8148-82f9-f1f809752346
+    status: current
+    path: docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md
+
+  first_batch_implementation_contract:
+    status: proposed-freeze
+    parent:
+      version: v0.1
+      notion_page_id: 3c44c57a-590c-8121-9784-d246bbd9ccb6
+      path: docs/notion/authority/06-module-design/implementation-contract-freeze/README.md
+    exact_source_set:
+      - contract: ICF-00
+        version: v0.3
+        notion_page_id: 3c84c57a-590c-812b-882f-d65b965373c7
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-00-binding-idl-profile-v0.3.md
+      - contract: ICF-01
+        version: v0.1
+        notion_page_id: 3c44c57a-590c-81b8-b47b-cf3c12f1ec2b
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-01-data-bridge-v0.1.md
+      - contract: ICF-02
+        version: v0.2
+        notion_page_id: 3c84c57a-590c-81a0-a33b-ccb7f5541ee3
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-02-platform-runtime-v0.2.md
+      - contract: ICF-03
+        version: v0.2
+        notion_page_id: 3c84c57a-590c-8157-839a-fb8778815537
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-03-canvas-document-binding-v0.2.md
+      - contract: ICF-04
+        version: v0.2
+        notion_page_id: 3c84c57a-590c-81e7-b376-d66279c4be84
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-04-presented-feedback-v0.2.md
+      - contract: ICF-05
+        version: v0.1
+        notion_page_id: 3c44c57a-590c-81ed-9f17-d127e3c6106d
+        path: docs/notion/authority/06-module-design/implementation-contract-freeze/icf-05-document-close-v0.1.md
+    current_gate: source_contract_closure_ready_repo_rematerialization_reverification_pending
+
+  derived_materialization:
+    implementation_contract_skeleton:
+      version: v0.2
+      status: blueprint-ready-repo-evidence-pending
+      notion_page_id: 3c84c57a-590c-81d8-b892-fb484ee170aa
+      path: docs/notion/authority/06-module-design/implementation-contract-freeze/implementation-contract-skeleton-v0.2.md
+      verification_evidence: false
+
+  verification_specification:
+    contract_linter_golden_matrix:
+      version: v0.2
+      status: current-verification-specification
+      notion_page_id: 3c84c57a-590c-8179-9d56-e8ec2cf33e91
+      path: docs/notion/authority/06-module-design/implementation-contract-freeze/contract-linter-golden-matrix-v0.2.md
+      verification_evidence: false
+
+machine_rules:
+  canonical_ordering_annotation: input_field_path
+  allowed_ordering_examples:
+    - input.document
+    - input.canvas
+    - input.binding
+  type_name_ordering_inference_allowed: false
+  standalone_native_api_families:
+    - AxiomDataBridgeApiV1
+    - AxiomPlatformRuntimeApiV1
+    - AxiomCanvasDocumentApiV1
+  forbidden_duplicate_api_families:
+    - AxiomPresentedFeedbackApiV1
+    - AxiomDocumentCloseApiV1
+  required_fingerprints:
+    - AuthoritySetFingerprint
+    - NormalizedIDLHash
+    - CAbiShapeHash
+    - GeneratedTSBindingHash
+    - BehaviorVectorHash
+
+codex_start_rule:
+  - read docs/notion/manifest.yaml first
+  - read only current authority documents referenced by this manifest
+  - treat superseded historical and stale material as provenance only
+  - do not infer missing current authority from historical documents
+  - if current authority is incomplete or contradictory stop the affected implementation path and report the authority gap
