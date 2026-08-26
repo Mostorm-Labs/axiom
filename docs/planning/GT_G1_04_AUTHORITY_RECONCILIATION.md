@@ -1,6 +1,7 @@
 # GT-G1-04 Authority 与任务对账
 
-> 状态：`Ready`（实施前对账完成；最终验证语料尚未物化）
+> 状态：`Blocked — BLOCKED_AUTHORITY`（实施前对账完成；GT-G1-04-A Contract Matrix
+> 已确认缺少无状态 payload 结构验证所需的最小 authority closure）
 >
 > Gate Task：`GT-G1-04`
 >
@@ -83,12 +84,15 @@ Decode / typed view
 
 | Notion Task ID | Gate Task ID | 子工作包 | R 贡献 | 关联 Requirement | ADR / Contract | 依赖 | 分类 | 设计 | 实现 | 验证 | Evidence | 阻塞项 | 最终状态 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| G1/Task 4 | GT-G1-04-A | typed operation input、normalizer 与 envelope/payload validation | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1；ADR-0025、ADR-0026；Common Wire | G1-02, G1-03 | Modify | Ready | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-04/operation-matrix.json` | — | Not Started |
+| G1/Task 4 | GT-G1-04-A | typed operation input、normalizer 与 envelope/payload validation | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1；ADR-0025、ADR-0026；Common Wire | G1-02, G1-03 | Modify | Blocked | Not Started | Blocked | [Contract Matrix](GT_G1_04_A_CONTRACT_MATRIX.md)；`verification/evidence/gates/G1/<commit>/GT-G1-04/operation-matrix.json`（未产生） | schema/payload version、repeated payload、kind_version、VectorPath、NormalizedRect、RichText/Stroke/Connector 规则及审阅式 negative intent 尚未由 authority 物化 | Blocked |
 | G1/Task 4 | GT-G1-04-B | idempotency classifier、reference/kind/resulting-state validation 与 read-only ApplyPlan | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | 07-03；operation validation；connector/field/leaf contracts | GT-G1-04-A | Missing | Ready | Not Started | Not Started | `negative-results.json`、`no-mutation-results.json` | Apply semantics only; no commit/publication before G1-05 | Not Started |
 | G1/Task 4 | GT-G1-04-C | 15-operation golden intent、independent fixtures、negative stage/path/result records | R1,R2 | REQ-GAP-VER；REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | semantic conformance；golden authoring pipeline | GT-G1-04-A/B | Missing | Analyzing | Not Started | Blocked | `summary.json` | human-reviewed case intent / frozen semantic error outcomes are not yet materialized in repository | Blocked |
 
-`GT-G1-04` 的实施可从 A 开始；在 C 的审阅式语料存在并被 runner 消费前，整个任务不得标记
-`Pass`。这不是由 production codec 自动 bless 语料可以绕过的条件。
+此前的对账认为 A 可开始，是因为它只识别到了最终 C 的审阅式语料缺口。A 的 Contract Matrix
+现已进一步证明：在未定义 version/presence、repeated payload 和若干 leaf structural rule 前，
+连无状态 payload structural validation 也不能合法 materialize。故 GT-G1-04-A 的产品实现
+现为 `BLOCKED_AUTHORITY`；这不改变 G1-02/G1-03 已通过的 evidence，也不授权通过 production
+codec 生成 authority。C 的审阅式语料仍是整个 GT-G1-04 的独立必需条件。
 
 ## 5. 验证与 Evidence 设计
 
