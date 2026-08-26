@@ -1,0 +1,21 @@
+{
+  "format": "axiom-semantic-v1-corpus-manifest",
+  "version": 1,
+  "status": "candidate",
+  "seedSuite": "verification/corpus/semantic/v1/suites/seed-v0.1.json",
+  "wireRoots": [
+    "verification/corpus/semantic/v1/wire/bg",
+    "verification/corpus/semantic/v1/wire/bgx"
+  ],
+  "suites": [
+    "shape-kind-v1.json",
+    "image-content-v1.json",
+    "connector-v1.json",
+    "brush-family-v1.json",
+    "brush-interpreter-v1.json",
+    "pressure-tilt-v1.json",
+    "richtext-font-v1.json",
+    "protocol-hard-limits-v1.json"
+  ],
+  "promotion": "GT-G1-02 only; not a product file format"
+}

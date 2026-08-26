@@ -1,5 +1,6 @@
 add_library(canvas_runtime_semantic STATIC
-    src/semantic_types.cpp)
+    src/semantic_types.cpp
+    src/codec.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)
 target_link_libraries(canvas_runtime_semantic PUBLIC canvas_runtime_foundation)
 target_compile_features(canvas_runtime_semantic PUBLIC cxx_std_20)
