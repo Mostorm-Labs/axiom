@@ -7,6 +7,7 @@ on:
       - "tools/bootstrap_deps.py"
       - "tools/semantic_sdk.py"
       - "tools/semantic_fetch.py"
+      - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
@@ -29,6 +30,7 @@ on:
       - "tools/bootstrap_deps.py"
       - "tools/semantic_sdk.py"
       - "tools/semantic_fetch.py"
+      - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
@@ -70,11 +72,7 @@ jobs:
           cmake --version
           ninja --version
           g++ --version
-      - name: Bootstrap pinned semantic toolchain
-        if: hashFiles('semantic-toolchain.lock.json') == ''
-        run: python3 tools/bootstrap_deps.py --semantic-codec
       - name: Fetch locked semantic toolchain Release asset
-        if: hashFiles('semantic-toolchain.lock.json') != ''
         run: python3 tools/semantic_fetch.py --target linux-x86_64
       - name: Record toolchain manifest
         run: |
