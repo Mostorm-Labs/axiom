@@ -1,0 +1,300 @@
+{
+  "format": "axiom-gt-g1-01-authority-reconciliation-v1",
+  "formatVersion": 1,
+  "taskId": "GT-G1-01",
+  "sourceCommit": "33491f82cea8db4411a2afb8f37f974008955913",
+  "retrievedAt": "2026-08-26T02:37:33Z",
+  "sources": [
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Axiom Semantic Schema V1 Release Candidate Final Gate v0.1",
+      "authorityRole": "ObjectKind and Operation release-candidate set",
+      "classification": "REUSE",
+      "notes": "Promotes the current 9 ObjectKinds and 15 Operations after reconciliation."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Schema Freeze Review + V1 Release Candidate Gate v0.1",
+      "authorityRole": "freeze and gate conditions",
+      "classification": "REUSE",
+      "notes": "Used for status and promotion discipline; not treated as a repository merge by itself."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Axiom Semantic Schema Spec + IDL v0.1",
+      "authorityRole": "structural schema candidate",
+      "classification": "REGENERATE",
+      "notes": "Machine-readable candidates are retained as inputs and must be regenerated/verified by GT-G1-02."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Axiom Reference IDL + Codec Mapping v0.1",
+      "authorityRole": "codec mapping candidate",
+      "classification": "REGENERATE",
+      "notes": "No codec or descriptor is accepted by GT-G1-01."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Generated Proto Baseline + Canonical Codec Freeze v0.1",
+      "authorityRole": "canonical encoding candidate",
+      "classification": "REGENERATE",
+      "notes": "Edition 2024 remains a candidate path until codec and descriptor verification."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Canonical Codec Differential Runner + Descriptor Lock v0.1",
+      "authorityRole": "future codec verification",
+      "classification": "REJECT",
+      "notes": "Not promoted into GT-G1-01; owned by GT-G1-02."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Canonical Codec Binary Golden Corpus",
+      "authorityRole": "future executable codec evidence",
+      "classification": "REJECT",
+      "notes": "Not promoted into GT-G1-01; owned by GT-G1-02."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "RichText Font Semantic Baseline",
+      "authorityRole": "RichText field semantics",
+      "classification": "REUSE",
+      "notes": "font_resource_id non-zero; finite f64 font_size; weight 100..900; explicit italic, underline and color."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Semantic Hard Limits",
+      "authorityRole": "validation ceilings",
+      "classification": "REUSE",
+      "notes": "Consumed as semantic validation inputs; implementation belongs to later G1 tasks."
+    },
+    {
+      "retrievedAt": "2026-08-26T02:37:33Z",
+      "sourceStatus": "Reviewed",
+      "privateLocatorIncluded": false,
+      "title": "Product Object Model / Product Capability Traceability",
+      "authorityRole": "product scope cross-check",
+      "classification": "REUSE",
+      "notes": "Used to retain Connector, Sticky and Group while keeping Frame/PDF outside this RC registry."
+    }
+  ],
+  "candidateInputs": [
+    {
+      "path": "schema/axiom/v1/canonical/canonical_profile_v1.yaml",
+      "sha256": "d6326914b65b8d96eab34c5d3bb88b07e87d912812c2ee3250f90a2bac9ba76a"
+    },
+    {
+      "path": "schema/axiom/v1/canonical/protocol_hard_limits_v1.yaml",
+      "sha256": "5ddf7c6dbb537d8a32c964adbfd2bebfbf0f0dafd72800c92f540916f87969b9"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "sha256": "3182adfcbf2fb8742c969590dca986c88c7d9d107b647df87f385e1dbb458b91"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/common.proto",
+      "sha256": "c4ae15df0603bd47ad458dc21e48347842728856c789db36f1d06539ff831f4f"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/connector.proto",
+      "sha256": "fda2af65ddf673ea3f432330c50521eebc6e013dc300056bae6b9c6d237129b1"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/erase_mask.proto",
+      "sha256": "7396300fefe1c501aa8063cb91cde0fe0e45a0cc47528e6e6df6458978dbb844"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/geometry.proto",
+      "sha256": "0cad1d9b78c3153488023d693f7676899bafac3f240913cf1ea6fd3113e97a80"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+      "sha256": "686a77049697d4d1e8712f500f5fff21b81687376f6cbeb55d06ac512732bb08"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "sha256": "71b57785543c08c36148a89103cdf7b88cc646aecf1ace5b0531a1a9006fdeaf"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/paint.proto",
+      "sha256": "b19b9c8c97af0c95582405c2f75de08fe685e9d713daefad1b6b0367211259ac"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/property.proto",
+      "sha256": "8a5422742d0c9822a145e5548e2eb660ce8663158fb963727b66caaec2e5cb68"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/rich_text.proto",
+      "sha256": "ec440c3fdf754caa9444af72144f7ccb6417a4b8aa87696399ca872ca87d8661"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "sha256": "25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/vector_path.proto",
+      "sha256": "4b1621e376e68762b000bafcdf4d4ce87116ecdc3db9c2c2a4e7fd90f4a9d88b"
+    },
+    {
+      "path": "schema/axiom/v1/registry/brush_family_registry_v1.yaml",
+      "sha256": "1c81f153c4d9035117fa9d25dfb15573c701adcd1abe70ae93d96b38bc7799b7"
+    },
+    {
+      "path": "schema/axiom/v1/registry/field_registry_v1.yaml",
+      "sha256": "0d7edb27c955971f4382a7d6519add9caed2aebbcbdc2d5ec58db2549accce2d"
+    },
+    {
+      "path": "schema/axiom/v1/registry/operation_registry_v1.yaml",
+      "sha256": "0997b0c74d96cd7abf703c252131038cfd1ed4db64477ad7c7168682b826da66"
+    },
+    {
+      "path": "schema/axiom/v1/registry/shape_kind_registry_v1.yaml",
+      "sha256": "b726c4edf5cf04cacec7ef98722d19403bce42681a51094e74ebb992e8bbc7b4"
+    }
+  ],
+  "promotedSemanticRegistry": {
+    "objectKinds": [
+      {
+        "id": 1,
+        "symbol": "Shape"
+      },
+      {
+        "id": 2,
+        "symbol": "Image"
+      },
+      {
+        "id": 3,
+        "symbol": "VectorPath"
+      },
+      {
+        "id": 4,
+        "symbol": "RichText"
+      },
+      {
+        "id": 5,
+        "symbol": "VectorStroke"
+      },
+      {
+        "id": 6,
+        "symbol": "DabStroke"
+      },
+      {
+        "id": 7,
+        "symbol": "Connector"
+      },
+      {
+        "id": 8,
+        "symbol": "Sticky"
+      },
+      {
+        "id": 9,
+        "symbol": "Group"
+      }
+    ],
+    "operations": [
+      {
+        "id": 1,
+        "symbol": "InsertObjects"
+      },
+      {
+        "id": 2,
+        "symbol": "DeleteObjects"
+      },
+      {
+        "id": 3,
+        "symbol": "RestoreObjects"
+      },
+      {
+        "id": 4,
+        "symbol": "SetPlacements"
+      },
+      {
+        "id": 5,
+        "symbol": "SetTransforms"
+      },
+      {
+        "id": 6,
+        "symbol": "PatchProperties"
+      },
+      {
+        "id": 7,
+        "symbol": "SetObjectSize"
+      },
+      {
+        "id": 8,
+        "symbol": "SetVectorPathGeometry"
+      },
+      {
+        "id": 9,
+        "symbol": "SetImageContent"
+      },
+      {
+        "id": 10,
+        "symbol": "AddStroke"
+      },
+      {
+        "id": 11,
+        "symbol": "SplitStrokes"
+      },
+      {
+        "id": 12,
+        "symbol": "AddEraseMasks"
+      },
+      {
+        "id": 13,
+        "symbol": "RemoveEraseMasks"
+      },
+      {
+        "id": 14,
+        "symbol": "EditRichText"
+      },
+      {
+        "id": 15,
+        "symbol": "SetConnectorContent"
+      }
+    ],
+    "registryDecision": "PROMOTED_AFTER_AUTHORITY_RECONCILIATION"
+  },
+  "boundaries": {
+    "pageDocument": "one Product Page maps to one independent Document",
+    "forbidden": [
+      "Page ObjectKind",
+      "DocumentRoot -> Page* synthetic root",
+      "multi-Page semantic Document"
+    ],
+    "pageCollectionOwner": "upper Product Shell",
+    "resourceIdentity": [
+      "ResourceId",
+      "ResourceManifest",
+      "ContentHash"
+    ],
+    "resourceAvailabilityIsSemanticMutation": false,
+    "numericContract": "finite IEEE-754 binary64/f64; -0 canonicalizes to +0",
+    "operationModel": "Operation-only; no global canonical Transaction wrapper",
+    "runtimeSceneTypes": "rejected from semantic public headers; derived in later projection work",
+    "framePdf": "Frame/PDF product scope retained; excluded from current 9-kind RC until compatible schema/behavior review"
+  },
+  "limitations": [
+    "No protobuf descriptor or generated codec is promoted by GT-G1-01",
+    "No ObjectStore, Normalize, ApplyPlan or Snapshot implementation is promoted by GT-G1-01",
+    "POC/RF types are not product semantic ABI"
+  ]
+}

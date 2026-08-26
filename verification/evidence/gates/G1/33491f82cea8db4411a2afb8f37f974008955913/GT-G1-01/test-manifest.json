@@ -1,0 +1,26 @@
+{
+  "format": "axiom-gt-g1-01-test-manifest-v1",
+  "taskId": "GT-G1-01",
+  "sourceCommit": "33491f82cea8db4411a2afb8f37f974008955913",
+  "tests": [
+    {
+      "name": "semantic_types",
+      "status": "PASS",
+      "scope": "ObjectId/OrderKey/f64/closed types"
+    },
+    {
+      "name": "runtime_boundaries",
+      "status": "PASS",
+      "scope": "semantic headers have no Scene/Skia/platform/storage/network dependency"
+    },
+    {
+      "name": "workspace",
+      "status": "PASS",
+      "scope": "repository verification workspace"
+    }
+  ],
+  "notStarted": [
+    "GT-G1-02",
+    "GT-G1-03"
+  ]
+}

@@ -33,7 +33,7 @@ implementation PR carries the same minimum traceability fields instead of relyin
 
 | Notion Task ID | Gate Task ID | R contribution | Requirements | ADR/RFC/Contract | Dependencies | Design | Implementation | Validation | Evidence | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| G1/Task 1 | `GT-G1-01` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; semantic authority reconciliation | G0 Pass | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-01/` | authority reconciliation | Not Started |
+| G1/Task 1 | `GT-G1-01` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; semantic authority reconciliation | G0 Pass | Pass | Pass | Pass | `verification/evidence/gates/G1/33491f82cea8db4411a2afb8f37f974008955913/GT-G1-01/` | — | Pass |
 | G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-02/` | — | Not Started |
 | G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-03/` | — | Not Started |
 | G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract | GT-G1-02, GT-G1-03 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-04/` | — | Not Started |
