@@ -20,8 +20,15 @@ This directory is the implementation-facing mirror of the Notion `04 Semantic Sc
 14. `04-reference-idl/reference-idl-codec-mapping-v0.1.md`
 15. `04-reference-idl/leaf-schema-reconciliation-v0.1.md`
 16. `04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md`
-17. `05-leaf-schemas/*`
-18. `06-release-safety/semantic-hard-limits-v0.1.md`
+17. `04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md`
+18. `05-leaf-schemas/*`
+19. `06-release-safety/semantic-hard-limits-v0.1.md`
+
+## Current GT-G1-02 authority closure
+
+`04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md` is the current case-level semantic authority for `BG-001..BG-010` and `BG-N01..BG-N08`. It closes the semantic projection, exact canonical bytes, canonicality-only outcomes, deterministic wire defect intent, and stable rejection stage/category needed to unblock GT-G1-02 corpus materialization.
+
+The corresponding verification-side authoring contract is `../10-verification/canonical-codec-golden-fixture-authoring-set-v0.1.md`. Both are normative only when registered as current by `docs/notion/manifest.yaml`.
 
 ## Authority rule
 
@@ -29,7 +36,7 @@ The current 04 status is **V1 Release Candidate Schema Lock**. Historical draft/
 
 When two snapshots conflict, use this precedence:
 
-`Final Gate / V1 Release authority > release-specific registry/leaf authority > Generated Proto/Reference IDL > overview/history`.
+`Final Gate / V1 Release authority > release-specific registry/leaf authority > current case-level codec closure > Generated Proto/Reference IDL > overview/history`.
 
 Do not silently redesign semantic contracts while implementing. If code cannot satisfy a locked authority, record an architecture blocker and request a refreeze.
 
