@@ -1,0 +1,126 @@
+{
+  "format": "axiom-gt-g1-01r-reconciliation-evidence-v1",
+  "taskId": "GT-G1-01R",
+  "sourceCommit": "42562d90a9403d8c3286cd0fa9972bac79a60bae",
+  "authorityBaseline": "8367e9c2853c89dc4fe8f65dc97994f9b81eaee9",
+  "architectureChanged": false,
+  "reconciliationReason": "Replace the pre-07-11 SemanticRevision/SemanticChangeSet public boundary with the current SemanticGeneration/ChangeSet v1 contract.",
+  "authority": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "cc19bfd166388557aff37f7fff68c501fb860f4a0a4fa675be71ee1ff5058eb9",
+      "privateLocatorIncluded": false
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "privateLocatorIncluded": false
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/implementation-contract-freeze/icf-01-data-bridge-v0.1.md",
+      "sha256": "614a95a21e86e4c065e806f1ae747042c586e05d4cdab949fe05a53df058eeb8",
+      "privateLocatorIncluded": false
+    },
+    {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md",
+      "sha256": "3e1f36afa9b150c644fbc39330de8feeff66bd217feb8ef8c793d2705602a80f",
+      "privateLocatorIncluded": false
+    },
+    {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-11-generation-changeset-apply-batch-v0.1.md",
+      "sha256": "427b8528ab27ae7c599c713fa253d4bf1e5b71588890bda8a2c8026dbc580af1",
+      "privateLocatorIncluded": false
+    }
+  ],
+  "existingWorkReused": [
+    "9 ObjectKinds",
+    "15 OperationKinds",
+    "one Product Page to one Document",
+    "no Page ObjectKind or synthetic DocumentRoot to Page root",
+    "finite numeric validation and negative-zero normalization",
+    "Operation-only canonical mutation boundary",
+    "G1-02 descriptor, protobuf toolchain, corpus, and differential closure"
+  ],
+  "semanticBoundary": {
+    "semanticGeneration": "runtime-local strong canonical post-state token",
+    "canonicalCommitStamp": "separate runtime-epoch plus ordinal bridge ordering identity",
+    "serverRevisionCursor": "not materialized in the Semantic Core public boundary; owned by Shared Data Runtime and not aliased",
+    "changeSet": "unique ObjectId changes with merged flags and sorted, deduplicated FieldIds",
+    "derivedRuntimeExcluded": true
+  },
+  "oldBoundaryRemoved": [
+    "SemanticRevision",
+    "SemanticChangeSet"
+  ],
+  "tests": [
+    "SemanticTypes.SemanticGenerationIsASeparateStrongRuntimeLocalToken",
+    "SemanticTypes.OperationIdZeroPredicateSupportsConstantEvaluation",
+    "SemanticTypes.ChangeSetMergesObjectChangesInDeterministicOrder",
+    "SemanticTypes.ChangeSetExpressesCreatedAndDeletedObjects",
+    "canvas_semantic_runtime_boundaries",
+    "verification.tests.test_semantic_public_boundary",
+    "GT-G1-02 semantic codec regression suite"
+  ],
+  "redEvidence": {
+    "command": "cmake --build /tmp/axiom-g1-01r-build --target canvas_semantic_types_test --parallel 4",
+    "exitCode": 2,
+    "testCount": 1,
+    "result": "EXPECTED_FAIL",
+    "firstFailure": "OperationId::isZero() could not be evaluated as a constant expression because ObjectId::isZero() was not constexpr."
+  },
+  "greenEvidence": {
+    "command": "cmake -S . -B /tmp/axiom-g1-01r-clean -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON; cmake --build /tmp/axiom-g1-01r-clean --parallel 4; ctest --test-dir /tmp/axiom-g1-01r-clean --output-on-failure",
+    "exitCode": 0,
+    "testCount": 22,
+    "result": "PASS"
+  },
+  "regression": {
+    "command": "python3 -m unittest G1 semantic regression suite -v",
+    "exitCode": 0,
+    "testCount": 29,
+    "result": "PASS"
+  },
+  "publicDependencyCheck": {
+    "command": "python3 tools/check_runtime_boundaries.py --root .",
+    "exitCode": 0,
+    "contractFilesChecked": 29,
+    "result": "PASS"
+  },
+  "filesChanged": [
+    ".github/workflows/g1-semantic-codec.yml",
+    ".github/workflows/semantic-toolchain-producer.yml",
+    "runtime/foundation/include/canvas/foundation/object_id.hpp",
+    "runtime/semantic/CMakeLists.txt",
+    "runtime/semantic/include/canvas/semantic/canonical_commit_stamp.hpp",
+    "runtime/semantic/include/canvas/semantic/change_set.hpp",
+    "runtime/semantic/include/canvas/semantic/operation.hpp",
+    "runtime/semantic/include/canvas/semantic/operation_id.hpp",
+    "runtime/semantic/include/canvas/semantic/semantic_generation.hpp",
+    "runtime/semantic/include/canvas/semantic/semantic_revision.hpp",
+    "runtime/semantic/src/change_set.cpp",
+    "runtime/semantic/src/codec.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/semantic_types_test.cpp",
+    "tools/check_runtime_boundaries.py",
+    "tools/semantic/classify_producer_changes.py",
+    "tools/semantic/tests/test_producer_change_classifier.py",
+    "verification/evidence/gates/G1/5dee9ba519ac61e40ae9a62f52cab92e72701ec2/GT-G1-01R/manifest.json",
+    "verification/evidence/gates/G1/5dee9ba519ac61e40ae9a62f52cab92e72701ec2/GT-G1-01R/reconciliation.json",
+    "verification/evidence/gates/G1/5dee9ba519ac61e40ae9a62f52cab92e72701ec2/GT-G1-01R/summary.json",
+    "verification/tests/test_g1_01r_evidence.py",
+    "verification/tests/test_semantic_public_boundary.py",
+    "verification/tools/generate_g1_01r_evidence.py"
+  ],
+  "hostedValidation": {
+    "status": "PASS",
+    "runId": 32955449019,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/32955449019"
+  },
+  "gtG102": {
+    "status": "PASS",
+    "sourceCommit": "fa5b17ca3e8a10cf5ae9641d036d25adf65d7851",
+    "hostedRun": "https://github.com/Mostorm-Labs/axiom/actions/runs/32949931979",
+    "releaseTag": "semantic-toolchain-poc01-82c7ccc56b861d7b"
+  },
+  "gtG103Authorized": false
+}
