@@ -15,7 +15,7 @@
 Before each task, re-read the applicable current Notion pages by title and record retrieval timestamp in Evidence. Do not commit private Notion URLs/page IDs.
 
 Core authority set:
-- `G1 Semantic Kernel Implementation Plan v0.1`
+- `G1 Semantic Kernel Implementation Plan v0.1` *(historical execution-plan provenance; it does not override current Architecture Authority or reconciliation)*
 - `Axiom Semantic Schema V1 Release Candidate Final Gate v0.1`
 - `Schema Freeze Review + V1 Release Candidate Gate v0.1`
 - `Axiom Semantic Schema Spec + IDL v0.1`
@@ -54,7 +54,7 @@ Current `main` intentionally contains only a semantic bootstrap. `verification/t
 
 - Candidate reuse: `canvas::foundation::ObjectId` after byte-layout/zero-ID tests.
 - Pattern reuse only: `canvas::foundation::Result<T>`; do not reuse its RF01 error enum as semantic codec taxonomy.
-- Do not reinterpret `SceneRevision` or `ContentRevision` as SemanticDocument revision.
+- Do not reinterpret `SceneRevision` or `ContentRevision` as `SemanticGeneration`.
 - Do not use `canvas::foundation::StableOrderKey`: it is `uint64_t`, while semantic OrderKey is opaque 1..32 bytes.
 - Do not use `WorldPoint` / `WorldRect` as durable semantic geometry: they are `float`, while canonical semantic numbers are finite binary64/f64 with authority-defined normalization.
 
@@ -80,17 +80,17 @@ For every candidate artifact from `docs/notion-bridge-bootstrap`:
 - Promotion route remains `G0 Pass → G1 → G2`.
 - V1 canonical mutation is Operation-only; no global canonical Transaction.
 - GT-G1-01 reconciliation and the frozen registries establish 9 V1 ObjectKinds and 15 canonical Operations. Their IDs/tags are protocol identities, not implementation-local enumerations; any change requires authority refreeze and regenerated registry/descriptor Evidence.
-- Reject-before-mutate: any rejected operation leaves state, revision, indexes and emitted ChangeSet unchanged.
+- Reject-before-mutate: any rejected operation leaves state, `SemanticGeneration`, indexes and emitted `ChangeSet v1` unchanged.
 - Unknown semantic kind/enum/operation fails closed. Unknown-field/version behavior follows Common Wire Rules, not protobuf defaults.
 - Canonical durable numerics are finite binary64/f64; normalize `-0 → +0` where authority requires.
 - Semantic OrderKey is opaque 1..32 bytes; sibling total order is `(OrderKey unsigned lexicographic, ObjectId)`.
 - Production single-object lookup must not perform an O(N) object scan.
 - `runtime/semantic/include/**` must not include Scene, Skia, Arc, platform, persistence/sync, networking or product-shell ABI dependencies.
-- A Product Page maps to exactly one Axiom `Document`. G1 does not create a Page `ObjectKind`, a `DocumentRoot → Page*` synthetic root, or a multi-Page semantic document. Page Collection ownership, navigation and lifecycle remain in the upper Product Shell; snapshots, revisions, projections, digests and replay are bound to one Document identity.
+- A Product Page maps to exactly one Axiom `Document`. G1 does not create a Page `ObjectKind`, a `DocumentRoot → Page*` synthetic root, or a multi-Page semantic document. Page Collection ownership, navigation and lifecycle remain in the upper Product Shell; snapshots, `SemanticGeneration`, projections, digests and replay are bound to one Document identity.
 - Resource identity is semantic (`ResourceId`, `ResourceManifest`, `ContentHash`); resource availability, blob storage and cache state are not semantic object mutations.
 - RichText, VectorStroke, DabStroke, EraseMask, Connector, Group, Sticky and any other V1 surface are covered only when their authority-reconciled registry entries exist. This plan must not infer a final surface from a file count or historical POC subset.
 - Snapshot restore reconstructs canonical state and does not synthesize user-edit Operations.
-- `SemanticChangeSet` contains semantic IDs/hints only; no RuntimeScene/GPU/renderer pointers.
+- `ChangeSet v1` contains semantic IDs/hints only; no RuntimeScene/GPU/renderer pointers.
 - Historical POC/G0 Evidence is preserved; G1 creates new lineage.
 - Every task writes Evidence under `verification/evidence/gates/G1/<commit>/GT-G1-XX/`.
 
@@ -179,7 +179,7 @@ Create runtime:
 - `runtime/semantic/CMakeLists.txt`
 - `runtime/semantic/include/canvas/semantic/canonical_numeric.hpp`
 - `runtime/semantic/include/canvas/semantic/order_key.hpp`
-- `runtime/semantic/include/canvas/semantic/semantic_revision.hpp`
+- `runtime/semantic/include/canvas/semantic/semantic_generation.hpp`
 - `runtime/semantic/include/canvas/semantic/object_record.hpp`
 - `runtime/semantic/include/canvas/semantic/operation.hpp`
 - `runtime/semantic/include/canvas/semantic/change_set.hpp`
@@ -408,7 +408,7 @@ Decoded/typed Operation
 → Invariant Validation
 → Prepare ApplyPlan
 ```
-No stage before commit mutates ObjectStore, indexes, revision or history.
+No stage before commit mutates ObjectStore, indexes, `SemanticGeneration` or history.
 
 ### Tests
 RED first:
@@ -445,7 +445,7 @@ Then implement the minimal stages and run the entire semantic negative corpus th
 - all 15 Operations have positive/negative coverage;
 - stage order and first failure are deterministic;
 - idempotent replay matches authority;
-- every rejection leaves state/revision/indexes unchanged;
+- every rejection leaves state/`SemanticGeneration`/indexes unchanged;
 - ApplyPlan fully resolves commit inputs without mutation.
 
 ---
@@ -470,17 +470,17 @@ Modify:
 
 ### Observable result contract
 SemanticDocument Apply has three observable outcomes:
-- `APPLIED`: exactly one revision advance + one ChangeSet;
-- `IDEMPOTENT_NOOP`: no revision advance, explicit no-op result;
-- `REJECTED`: no state/revision/index mutation, SemanticError.
+- `APPLIED`: exactly one `SemanticGeneration` advance + one `ChangeSet v1`;
+- `IDEMPOTENT_NOOP`: no `SemanticGeneration` advance, explicit no-op result;
+- `REJECTED`: no state/`SemanticGeneration`/index mutation, SemanticError.
 
 The exact C++ type/member spelling is chosen once in this task and frozen by tests; the three outcome semantics are mandatory.
 
 ### Tests
 1. RED apply cases for all 15 operation families.
-2. RED commit-time fault injection at store/index seams; require no partial state/revision/ChangeSet.
-3. RED idempotent replay; require no second revision.
-4. RED ChangeSet added/removed/modified IDs and semantic invalidation hints; forbid RuntimeScene/GPU fields.
+2. RED commit-time fault injection at store/index seams; require no partial state/`SemanticGeneration`/`ChangeSet v1`.
+3. RED idempotent replay; require no second `SemanticGeneration` advance.
+4. RED `ChangeSet v1` Created/Deleted/Placement/Transform/Properties/Content/EraseMasks flags and semantic invalidation hints; forbid RuntimeScene/GPU fields.
 5. Implement commit of a prevalidated ApplyPlan.
 6. Run operation streams against Reference-backed and Indexed-backed documents and compare canonical state.
 7. Extend boundary checks to `document.hpp`.
@@ -498,7 +498,7 @@ The exact C++ type/member spelling is chosen once in this task and frozen by tes
 
 ### Exit Criteria
 - all 15 operation families apply correctly;
-- success advances revision once; reject/idempotent no-op does not;
+- success advances `SemanticGeneration` once; reject/idempotent no-op does not;
 - injected commit failures leave canonical state unchanged;
 - Reference/Indexed documents converge;
 - ChangeSet is G2-usable and downstream-runtime-free.
@@ -531,12 +531,12 @@ Modify:
 
 ### Tests
 RED first:
-- direct revision N == snapshot(R)+tail(R+1..N);
+- direct `SemanticGeneration` N == snapshot(R)+tail(R+1..N);
 - snapshot restore into Reference/Indexed stores has equal projection;
 - same corpus repeated 100 times has identical projection bytes;
 - sibling OrderKey tie-break by ObjectId;
 - all canonical collection orderings;
-- snapshot identity, revision, frontier and digest remain bound to one Document; no Page ObjectKind or synthetic multi-Page root is emitted;
+- snapshot identity, `SemanticGeneration`, frontier and digest remain bound to one Document; no Page ObjectKind or synthetic multi-Page root is emitted;
 - ResourceId/ResourceManifest/ContentHash bindings survive projection and replay without treating blob availability or cache state as Document mutation;
 - malformed/unknown snapshot fail-closed.
 
@@ -694,7 +694,7 @@ E8 commit-bound hashes + clean CI + lineage
 | validate-before-mutate | — | — | — | ✓ | ✓ | — | observe | gate |
 | idempotency no second mutation | — | — | — | ✓ | ✓ | ✓ | observe | gate |
 | Reference == Indexed | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
-| atomic revision + ChangeSet | — | — | — | plan | ✓ | ✓ | observe | gate |
+| atomic `SemanticGeneration` + ChangeSet v1 | — | — | — | plan | ✓ | ✓ | observe | gate |
 | snapshot-tail == direct replay | — | — | — | — | — | ✓ | ✓ | gate |
 | no ObjectId full scan | — | — | ✓ | ✓ | ✓ | observe | — | gate |
 | one Page = one Document; no Page ObjectKind/synthetic root | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
@@ -739,7 +739,7 @@ Normalize and Idempotency are mandatory. Decode/Normalize/Validate/Prepare must 
 ### Wave 4
 ```text
 Execute GT-G1-05 only. Use XL / Very High reasoning.
-Focus on atomic SemanticDocument state transition, exact revision semantics and downstream-safe SemanticChangeSet. Inject deterministic commit failures and prove no partial visibility.
+Focus on atomic SemanticDocument state transition, exact `SemanticGeneration` semantics and downstream-safe `ChangeSet v1`. Inject deterministic commit failures and prove no partial visibility.
 ```
 
 ### Wave 5
@@ -790,7 +790,7 @@ G1 is Pass only when all conditions hold on one accepted `main` lineage:
 5. strict decode/canonical encode and normalized negative-error corpus pass;
 6. Reference/Indexed stores are canonically equivalent and production lookup/mutation reports zero full scans;
 7. Normalize→Validate→Idempotency→ApplyPlan is deterministic and reject-safe;
-8. SemanticDocument apply is atomic with exact revision semantics and correct G2-facing ChangeSet;
+8. SemanticDocument apply is atomic with exact `SemanticGeneration` semantics and correct G2-facing `ChangeSet v1`;
 9. snapshot restore, canonical projection and replay are deterministic; snapshot-tail equals direct replay;
 10. Replay Inspector is runnable and deterministic;
 11. E1..E8 Evidence is commit-bound, hash-verified and reproducible;
