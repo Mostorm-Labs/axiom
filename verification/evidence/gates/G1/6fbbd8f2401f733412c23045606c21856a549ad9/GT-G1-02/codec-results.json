@@ -1,0 +1,20 @@
+{
+  "format": "axiom-gt-g1-02-codec-results-v1",
+  "taskId": "GT-G1-02",
+  "sourceCommit": "6fbbd8f2401f733412c23045606c21856a549ad9",
+  "strictDecodeBoundary": "PASS",
+  "positiveNegativeTests": "PASS",
+  "testCount": 15,
+  "testedFailures": [
+    "truncated wire",
+    "unsupported version",
+    "unknown operation",
+    "duplicate canonical key",
+    "non-canonical order",
+    "non-finite value",
+    "hard-limit violation"
+  ],
+  "canonicalNegativeZero": "PASS",
+  "documentMutationOnDecodeFailure": "NOT_APPLICABLE_IN_G1-02_BOUNDARY",
+  "protobufGeneratedRuntimeCodec": "BLOCKED"
+}
