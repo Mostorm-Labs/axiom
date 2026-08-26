@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reject forbidden dependencies in RF-01 contracts and the normative public C ABI."""
+"""Reject forbidden dependencies in RF-01/G1 contracts and the public C ABI."""
 
 from __future__ import annotations
 
@@ -60,8 +60,11 @@ def main() -> int:
     contract_roots = [
         root / "runtime/foundation/include",
         root / "runtime/scene/include",
+        root / "runtime/semantic/include",
     ]
-    contract_files = [path for directory in contract_roots for path in source_files(directory)]
+    contract_files = [
+        path for directory in contract_roots if directory.exists() for path in source_files(directory)
+    ]
     failures = check_files(contract_files, FORBIDDEN_CONTRACT_PATTERNS, root)
 
     public_header = root / "docs/api/canvas_runtime_api_v1.h"
@@ -72,13 +75,21 @@ def main() -> int:
     if forbidden_targets.search(scene_cmake):
         failures.append("runtime/scene/CMakeLists.txt: forbidden renderer/platform target dependency")
 
+    semantic_cmake = root / "runtime/semantic/CMakeLists.txt"
+    if semantic_cmake.exists():
+        semantic_cmake_text = semantic_cmake.read_text(encoding="utf-8")
+        if forbidden_targets.search(semantic_cmake_text):
+            failures.append(
+                "runtime/semantic/CMakeLists.txt: forbidden renderer/platform target dependency"
+            )
+
     if failures:
         print("RF-01 module boundary check failed:", file=sys.stderr)
         for failure in failures:
             print(f"- {failure}", file=sys.stderr)
         return 1
 
-    print(f"RF-01 module boundary check passed ({len(contract_files)} contract files)")
+    print(f"Runtime module boundary check passed ({len(contract_files)} contract files)")
     return 0
 
 

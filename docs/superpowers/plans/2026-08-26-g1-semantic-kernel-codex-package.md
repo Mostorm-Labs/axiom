@@ -6,7 +6,7 @@
 
 **Architecture:** Create `runtime/semantic/` as a production module depending on `runtime/foundation/` and forbidden from depending on `runtime/scene/`, Skia, Arc, native platform APIs, storage/sync, networking, or renderer state. Notion remains the living design authority. GitHub receives only executable contracts, code, tests, corpus and Evidence promoted for G1. The closed `docs/notion-bridge-bootstrap` branch is comparison/reference material only.
 
-**Tech Stack:** C++20, CMake 3.30+, CTest, Edition 2024 protobuf toolchain frozen by semantic authority, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding.
+**Tech Stack:** C++20, CMake 3.30+, CTest, the protobuf/Edition 2024 path currently proposed by the Notion release-candidate material, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding. Protobuf/Edition 2024 becomes an accepted repository codec contract only after GT-G1-01 authority reconciliation, GT-G1-02 codec validation and descriptor reproducibility; this plan does not pre-accept it.
 
 **Normative task source:** `docs/planning/GATE_TASK_TRACKER.md` on the accepted `main` lineage.
 
@@ -25,6 +25,22 @@ Core authority set:
 - `Canonical Codec Binary Golden Corpus v0.1 — Operation / Object / Snapshot Expansion`
 - current Field Registry, ShapeKind Registry, BrushFamily Registry, Operation Registry, Common Wire Rules, OrderKey, RichText, Stroke, Connector and hard-limit authorities
 - GitHub ADR-0001, ADR-0003, ADR-0014, ADR-0016, ADR-0019, ADR-0020, ADR-0025
+
+## G1 Task Matrix
+
+The tracker remains the normative repository task source. This compact matrix is repeated here so each
+implementation PR carries the same minimum traceability fields instead of relying on a file list alone.
+
+| Notion Task ID | Gate Task ID | R contribution | Requirements | ADR/RFC/Contract | Dependencies | Design | Implementation | Validation | Evidence | Blocker | Final |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| G1/Task 1 | `GT-G1-01` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; semantic authority reconciliation | G0 Pass | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-01/` | authority reconciliation | Not Started |
+| G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-02/` | — | Not Started |
+| G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-03/` | — | Not Started |
+| G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract | GT-G1-02, GT-G1-03 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-04/` | — | Not Started |
+| G1/Task 5 | `GT-G1-05` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; ChangeSet contract | GT-G1-04 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-05/` | — | Not Started |
+| G1/Task 6 | `GT-G1-06` | R1,R2 | REQ-GAP-DATA, REQ-EDIT-HIST-001 | D-G1; Snapshot/Projection contract | GT-G1-05 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-06/` | — | Not Started |
+| G1/Task 7 | `GT-G1-07` | R1,R2 | REQ-GAP-VER | D-G1; public semantic APIs | GT-G1-06 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-07/` | — | Not Started |
+| G1/Task 8 | `GT-G1-08` | R1,R2 | REQ-GAP-VER | D-G1; G1 Gate Report contract | GT-G1-01..GT-G1-07 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-08/` | — | Not Started |
 
 ---
 
@@ -63,13 +79,16 @@ For every candidate artifact from `docs/notion-bridge-bootstrap`:
 - G1 contains exactly `GT-G1-01..GT-G1-08`.
 - Promotion route remains `G0 Pass → G1 → G2`.
 - V1 canonical mutation is Operation-only; no global canonical Transaction.
-- V1 surface is exactly 9 ObjectKinds and 15 canonical Operations from the current V1 RC authority.
+- V1 ObjectKinds and canonical Operations are the sets produced by GT-G1-01 authority reconciliation. The current Notion RC material proposes 9 ObjectKinds and 15 Operations, but those counts are candidate inputs until the reconciliation artifact records source status and promotion decision; they are not pre-frozen by this plan.
 - Reject-before-mutate: any rejected operation leaves state, revision, indexes and emitted ChangeSet unchanged.
 - Unknown semantic kind/enum/operation fails closed. Unknown-field/version behavior follows Common Wire Rules, not protobuf defaults.
 - Canonical durable numerics are finite binary64/f64; normalize `-0 → +0` where authority requires.
 - Semantic OrderKey is opaque 1..32 bytes; sibling total order is `(OrderKey unsigned lexicographic, ObjectId)`.
 - Production single-object lookup must not perform an O(N) object scan.
 - `runtime/semantic/include/**` must not include Scene, Skia, Arc, platform, persistence/sync, networking or product-shell ABI dependencies.
+- A Product Page maps to exactly one Axiom `Document`. G1 does not create a Page `ObjectKind`, a `DocumentRoot → Page*` synthetic root, or a multi-Page semantic document. Page Collection ownership, navigation and lifecycle remain in the upper Product Shell; snapshots, revisions, projections, digests and replay are bound to one Document identity.
+- Resource identity is semantic (`ResourceId`, `ResourceManifest`, `ContentHash`); resource availability, blob storage and cache state are not semantic object mutations.
+- RichText, VectorStroke, DabStroke, EraseMask, Connector, Group, Sticky and any other V1 surface are covered only when their authority-reconciled registry entries exist. This plan must not infer a final surface from a file count or historical POC subset.
 - Snapshot restore reconstructs canonical state and does not synthesize user-edit Operations.
 - `SemanticChangeSet` contains semantic IDs/hints only; no RuntimeScene/GPU/renderer pointers.
 - Historical POC/G0 Evidence is preserved; G1 creates new lineage.
@@ -173,7 +192,7 @@ Modify:
 
 ### Tests / RED → GREEN
 
-1. Write `semantic_types_test.cpp` first. RED must cover: 16-byte ObjectId compatibility, zero ID, OrderKey lengths 0/1/32/33, unsigned lexicographic ordering, canonical negative-zero normalization, exactly 9 ObjectKinds, exactly 15 Operations, and encoding-neutral construction without protobuf/Scene headers.
+1. Write `semantic_types_test.cpp` first. RED must cover: 16-byte ObjectId compatibility, zero ID, OrderKey lengths 0/1/32/33, unsigned lexicographic ordering, canonical negative-zero normalization, the ObjectKind/Operation registry generated by GT-G1-01, and encoding-neutral construction without protobuf/Scene headers. A hard-coded count is invalid before reconciliation.
 2. Extend `tools/check_runtime_boundaries.py` before implementation. RED must reject a deliberate semantic header fixture containing Scene/Skia/platform/storage/network symbols.
 3. Run:
    ```bash
@@ -201,7 +220,7 @@ Create:
 `authority-reconciliation.json` records title, retrieval timestamp, candidate path, classification `REUSE|REGENERATE|REJECT`, and promoted SHA-256; no private source URL.
 
 ### Exit Criteria
-- 12 proto + six registry/profile sources promoted only after comparison.
+- The candidate proto and registry/profile sources are promoted only after comparison; the current Notion inventory of 12 proto files and six registry/profile files is a candidate inventory, not a pre-approved repository manifest.
 - semantic target builds warnings-clean without forbidden dependencies.
 - ID/OrderKey/numeric/type-surface tests pass.
 - public semantic headers are self-contained.
@@ -517,6 +536,8 @@ RED first:
 - same corpus repeated 100 times has identical projection bytes;
 - sibling OrderKey tie-break by ObjectId;
 - all canonical collection orderings;
+- snapshot identity, revision, frontier and digest remain bound to one Document; no Page ObjectKind or synthetic multi-Page root is emitted;
+- ResourceId/ResourceManifest/ContentHash bindings survive projection and replay without treating blob availability or cache state as Document mutation;
 - malformed/unknown snapshot fail-closed.
 
 Then implement projection independent of internal container iteration order. Digest algorithm/width must come from current authority; if product digest is not frozen, G1 uses canonical projection bytes plus a verification-only SHA-256 in Evidence and records no product compatibility promise.
@@ -666,7 +687,7 @@ E8 commit-bound hashes + clean CI + lineage
 | Invariant | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | no Scene/Skia/platform dependency | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
-| 9 ObjectKinds / 15 Operations | ✓ | ✓ | — | ✓ | ✓ | ✓ | consume | gate |
+| authority-reconciled ObjectKinds / Operations | ✓ | ✓ | — | ✓ | ✓ | ✓ | consume | gate |
 | f64 finite / -0 canonical | ✓ | ✓ | — | ✓ | ✓ | ✓ | observe | gate |
 | OrderKey bytes 1..32 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | observe | gate |
 | unknown semantic fail closed | — | ✓ | — | ✓ | ✓ | ✓ | report | gate |
@@ -676,6 +697,10 @@ E8 commit-bound hashes + clean CI + lineage
 | atomic revision + ChangeSet | — | — | — | plan | ✓ | ✓ | observe | gate |
 | snapshot-tail == direct replay | — | — | — | — | — | ✓ | ✓ | gate |
 | no ObjectId full scan | — | — | ✓ | ✓ | ✓ | observe | — | gate |
+| one Page = one Document; no Page ObjectKind/synthetic root | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
+| ResourceId/ResourceManifest/ContentHash boundary | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | observe | gate |
+| RichText/Stroke/EraseMask/Connector/Group/Frame/PDF authority coverage | ✓ | ✓ | — | ✓ | ✓ | ✓ | consume | gate |
+| Snapshot identity binds one Document; Page Collection stays above runtime | — | — | — | — | — | ✓ | ✓ | gate |
 
 ---
 

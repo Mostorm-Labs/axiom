@@ -1,0 +1,11 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/object.proto";
+
+message DocumentSnapshot {
+  Id128 document_id = 1;
+  uint32 schema_version = 2;
+  repeated ObjectRecord objects = 3;
+}
