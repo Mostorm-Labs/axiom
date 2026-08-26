@@ -1,15 +1,16 @@
 #pragma once
 
-#include "canvas/foundation/object_id.hpp"
+#include "canvas/semantic/erase_mask.hpp"
+#include "canvas/semantic/object_content.hpp"
 #include "canvas/semantic/order_key.hpp"
+#include "canvas/semantic/property_value.hpp"
+#include "canvas/semantic/semantic_id.hpp"
 
 #include <cstdint>
 #include <optional>
 #include <vector>
 
 namespace canvas::semantic {
-
-using ObjectId = canvas::foundation::ObjectId;
 
 enum class ObjectKind : std::uint8_t {
     kShape = 1,
@@ -43,51 +44,6 @@ struct Transform2D final {
     double ty = 0.0;
 
     bool operator==(const Transform2D&) const = default;
-};
-
-// A semantic leaf value is owned by the domain record, never by a protobuf
-// DTO. GT-G1-03 preserves its value and equality only; field-/kind-specific
-// validation and mutation semantics begin in GT-G1-04.
-struct SemanticValue final {
-    std::vector<std::uint8_t> value;
-
-    bool operator==(const SemanticValue&) const = default;
-};
-
-struct PropertyValue final {
-    SemanticValue semantic_value{};
-
-    bool operator==(const PropertyValue&) const = default;
-};
-
-struct PropertyEntry final {
-    std::uint32_t field_id = 0;
-    PropertyValue value{};
-
-    bool operator==(const PropertyEntry&) const = default;
-};
-
-struct PropertyBag final {
-    std::vector<PropertyEntry> entries;
-
-    bool operator==(const PropertyBag&) const = default;
-};
-
-// ObjectContent carries the released ObjectKind branch and its semantic leaf
-// value. It intentionally contains no renderer, scene, storage, or protobuf
-// object; future validation establishes branch/kind compatibility.
-struct ObjectContent final {
-    ObjectKind kind = ObjectKind::kShape;
-    SemanticValue semantic_value{};
-
-    bool operator==(const ObjectContent&) const = default;
-};
-
-struct EraseMaskRecord final {
-    ObjectId id{};
-    SemanticValue geometry{};
-
-    bool operator==(const EraseMaskRecord&) const = default;
 };
 
 struct ObjectRecord final {

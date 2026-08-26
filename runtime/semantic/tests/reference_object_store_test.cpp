@@ -21,7 +21,15 @@ ObjectRecord makeRecord(
     record.kind = kind;
     record.kind_version = 1U;
     record.placement = Placement{parent, OrderKey(std::move(order_key))};
-    record.content = ObjectContent{kind, SemanticValue{{static_cast<std::uint8_t>(id)}}};
+    if (kind == ObjectKind::kGroup) {
+        record.content = GroupContent{};
+    } else if (kind == ObjectKind::kSticky) {
+        record.content = StickyContent{static_cast<double>(id), static_cast<double>(id + 1U)};
+    } else {
+        record.content = ShapeContent{static_cast<std::uint32_t>(id),
+                                      static_cast<double>(id),
+                                      static_cast<double>(id + 1U)};
+    }
     return record;
 }
 

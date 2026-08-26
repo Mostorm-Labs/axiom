@@ -67,14 +67,19 @@ foreach(header IN ITEMS
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
         canvas/semantic/change_set.hpp
+        canvas/semantic/erase_mask.hpp
+        canvas/semantic/object_content.hpp
         canvas/semantic/object_store.hpp
         canvas/semantic/object_record.hpp
         canvas/semantic/indexed_object_store.hpp
+        canvas/semantic/property_value.hpp
         canvas/semantic/reference_object_store.hpp
         canvas/semantic/operation_id.hpp
         canvas/semantic/operation.hpp
         canvas/semantic/order_key.hpp
         canvas/semantic/semantic_generation.hpp
+        canvas/semantic/semantic_geometry.hpp
+        canvas/semantic/semantic_id.hpp
         canvas/semantic/semantic_error.hpp
         canvas/semantic/codec.hpp)
   string(REPLACE "/" "_" target_suffix ${header})

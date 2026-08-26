@@ -22,7 +22,12 @@ ObjectRecord makeRecord(
     record.kind = kind;
     record.kind_version = 1U;
     record.placement = Placement{parent, OrderKey(std::move(order_key))};
-    record.content = ObjectContent{kind, SemanticValue{{content_tag}}};
+    if (kind == ObjectKind::kGroup) {
+        record.content = GroupContent{};
+    } else {
+        record.content = ShapeContent{content_tag, static_cast<double>(content_tag),
+                                      static_cast<double>(content_tag + 1U)};
+    }
     return record;
 }
 
@@ -45,7 +50,7 @@ TEST(IndexedObjectStore, KeepsPrivateParentChildrenIndexSynchronizedWithRecords)
 
     ObjectRecord reparented = child;
     reparented.placement = Placement{second_parent.id, OrderKey({0x05U})};
-    reparented.content = ObjectContent{ObjectKind::kShape, SemanticValue{{0x99U}}};
+    reparented.content = ShapeContent{0x99U, 99.0, 100.0};
     ASSERT_TRUE(internal::ObjectStoreMutator::replaceExisting(store, reparented));
     EXPECT_TRUE(store.children(first_parent.id).empty());
     children = store.children(second_parent.id);

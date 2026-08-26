@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import re
 import unittest
 
 
@@ -46,6 +47,19 @@ class SemanticPublicBoundaryTest(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/g1-semantic-codec.yml").read_text(encoding="utf-8")
         self.assertIn("verification.tests.test_semantic_public_boundary", workflow)
         self.assertIn("verification.tests.test_g1_01r_evidence", workflow)
+
+    def test_object_record_leaf_values_are_typed_and_not_opaque_blobs(self):
+        contracts = {
+            "property_value.hpp": "PropertyValue",
+            "object_content.hpp": "ObjectContent",
+            "erase_mask.hpp": "EraseMaskGeometry",
+        }
+        for name, type_name in contracts.items():
+            text = (PUBLIC_HEADERS / name).read_text(encoding="utf-8")
+            self.assertIn(type_name, text)
+            self.assertIn("std::variant", text)
+            self.assertNotIn("SemanticValue", text)
+            self.assertIsNone(re.search(r"(?:std::)?vector\s*<\s*(?:std::)?uint8_t", text))
 
 
 if __name__ == "__main__":

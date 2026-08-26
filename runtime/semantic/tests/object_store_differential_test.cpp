@@ -13,6 +13,56 @@ namespace canvas::semantic {
 
 namespace {
 
+ObjectContent makeContent(ObjectKind kind, std::uint8_t content_tag) {
+    const double value = static_cast<double>(content_tag);
+    switch (kind) {
+        case ObjectKind::kShape:
+            return ShapeContent{content_tag, value, value + 1.0};
+        case ObjectKind::kImage:
+            return ImageContent{
+                ResourceId{ObjectId::fromUint64(content_tag)}, value + 100.0, value + 50.0,
+                NormalizedRect{0.0, 0.0, 1.0, 1.0}, ImageContentMode::kFit, value, value + 1.0};
+        case ObjectKind::kVectorPath:
+            return VectorPathContent{
+                VectorPathGeometry{FillRule::kNonZero, {MoveTo{Vec2{value, value + 1.0}}}}};
+        case ObjectKind::kRichText:
+            return RichTextContent{RichTextDocument{{
+                Paragraph{ObjectId::fromUint64(content_tag), ParagraphStyle{1U},
+                          {TextRun{"typed", TextStyle{}}}}}}};
+        case ObjectKind::kVectorStroke:
+            return VectorStrokeContent{
+                StrokeRecord{BrushDescriptor{}, content_tag,
+                             VectorStrokeData{{StrokeSample{Vec2{value, value}, 1.0F,
+                                                            Vec2{0.0, 0.0}}}}}};
+        case ObjectKind::kDabStroke:
+            return DabStrokeContent{
+                StrokeRecord{BrushDescriptor{}, content_tag,
+                             DabStrokeData{{Dab{Vec2{value, value}, value + 1.0, 0.0F, 1.0F}}}}};
+        case ObjectKind::kConnector:
+            return ConnectorContent{
+                ConnectorEndpoint{FreePointEndpoint{Vec2{value, 0.0}}},
+                ConnectorEndpoint{FreePointEndpoint{Vec2{value + 1.0, 1.0}}},
+                ConnectorRouting::kStraight};
+        case ObjectKind::kSticky:
+            return StickyContent{value + 10.0, value + 20.0};
+        case ObjectKind::kGroup:
+            return GroupContent{};
+    }
+    return ShapeContent{};
+}
+
+EraseMaskRecord makeEraseMask(std::uint64_t id, std::uint8_t content_tag) {
+    const double value = static_cast<double>(content_tag);
+    return EraseMaskRecord{
+        ObjectId::fromUint64(id + 1000U),
+        SweptCircleMask{{EraseCubicSegment{
+            EraseKnot{Vec2{value, value}, value + 1.0},
+            EraseKnot{Vec2{value + 2.0, value + 2.0}, value + 1.0},
+            Vec2{value + 0.5, value},
+            Vec2{value + 1.5, value + 2.0},
+        }}}};
+}
+
 ObjectRecord makeRecord(
     std::uint64_t id,
     ObjectKind kind,
@@ -26,10 +76,9 @@ ObjectRecord makeRecord(
     record.placement = Placement{parent, OrderKey(std::move(order_key))};
     record.transform = Transform2D{1.0, 0.0, 0.0, 1.0, static_cast<double>(id), -2.0};
     record.properties.entries = {
-        PropertyEntry{17U, PropertyValue{SemanticValue{{0x11U, content_tag}}}}};
-    record.content = ObjectContent{kind, SemanticValue{{content_tag, 0xC0U}}};
-    record.erase_masks = {
-        EraseMaskRecord{ObjectId::fromUint64(id + 1000U), SemanticValue{{0xE0U, content_tag}}}};
+        PropertyEntry{17U, ColorValue{0.1F, static_cast<float>(content_tag), 0.3F, 1.0F}}};
+    record.content = makeContent(kind, content_tag);
+    record.erase_masks = {makeEraseMask(id, content_tag)};
     return record;
 }
 
@@ -126,9 +175,11 @@ TEST(ObjectStoreDifferential, MatchesReferenceAfterPreparedValidMutations) {
 
     ObjectRecord content_only = reordered;
     content_only.transform.tx = 123.0;
-    content_only.properties.entries[0].value.semantic_value.value = {0xF0U};
-    content_only.content.semantic_value.value = {0xFAU, 0xCEU};
-    content_only.erase_masks[0].geometry.value = {0xABU, 0xCDU};
+    content_only.properties.entries[0].value = ColorValue{0.9F, 0.8F, 0.7F, 1.0F};
+    std::get<ShapeContent>(content_only.content).width = 250.0;
+    std::get<SweptCircleMask>(content_only.erase_masks[0].geometry)
+        .segments[0]
+        .p0.radius = 42.0;
     replaceExisting(reference, content_only);
     replaceExisting(indexed, content_only);
     expectEquivalent(reference, indexed, scopes);

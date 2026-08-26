@@ -1,7 +1,10 @@
 #include "canvas/semantic/canonical_numeric.hpp"
 #include "canvas/semantic/canonical_commit_stamp.hpp"
 #include "canvas/semantic/change_set.hpp"
+#include "canvas/semantic/erase_mask.hpp"
+#include "canvas/semantic/object_content.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/property_value.hpp"
 #include "canvas/semantic/operation.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 
@@ -11,6 +14,7 @@
 #include <limits>
 #include <type_traits>
 #include <vector>
+#include <variant>
 
 namespace canvas::semantic {
 
@@ -149,9 +153,16 @@ TEST(SemanticTypes, ObjectRecordCarriesEveryFrozenCanonicalField) {
     record.kind_version = 1U;
     record.placement = Placement{ObjectId::fromUint64(9U), OrderKey({0x10U})};
     record.transform = Transform2D{1.0, 0.0, 0.0, 1.0, 12.0, 24.0};
-    record.properties = PropertyBag{{PropertyEntry{7U, PropertyValue{SemanticValue{{0x42U}}}}}};
-    record.content = ObjectContent{ObjectKind::kShape, SemanticValue{{0x01U, 0x02U}}};
-    record.erase_masks = {EraseMaskRecord{ObjectId::fromUint64(2U), SemanticValue{{0x03U}}}};
+    record.properties = PropertyBag{{PropertyEntry{7U, ColorValue{0.25F, 0.5F, 0.75F, 1.0F}}}};
+    record.content = ShapeContent{7U, 48.0, 24.0};
+    record.erase_masks = {EraseMaskRecord{
+        ObjectId::fromUint64(2U),
+        SweptCircleMask{{EraseCubicSegment{
+            EraseKnot{Vec2{1.0, 2.0}, 3.0},
+            EraseKnot{Vec2{4.0, 5.0}, 6.0},
+            Vec2{2.0, 3.0},
+            Vec2{3.0, 4.0},
+        }}}}};
 
     EXPECT_EQ(record.kind_version, 1U);
     ASSERT_TRUE(record.placement.parent_id.has_value());
@@ -159,9 +170,71 @@ TEST(SemanticTypes, ObjectRecordCarriesEveryFrozenCanonicalField) {
     EXPECT_EQ(record.transform.tx, 12.0);
     ASSERT_EQ(record.properties.entries.size(), 1U);
     EXPECT_EQ(record.properties.entries.front().field_id, 7U);
-    EXPECT_EQ(record.content.kind, ObjectKind::kShape);
+    EXPECT_TRUE(std::holds_alternative<ShapeContent>(record.content));
     ASSERT_EQ(record.erase_masks.size(), 1U);
     EXPECT_EQ(record.erase_masks.front().id, ObjectId::fromUint64(2U));
+}
+
+TEST(SemanticTypes, PropertyValueIsAClosedTypedUnion) {
+    const PropertyValue boolean = true;
+    const PropertyValue scalar = 1.25F;
+    const PropertyValue color = ColorValue{0.1F, 0.2F, 0.3F, 1.0F};
+    const PropertyValue fill = FillStyleValue{SolidFill{ColorValue{1.0F, 0.0F, 0.0F, 1.0F}}};
+    const PropertyValue stroke = StrokeStyleValue{NoStroke{}};
+    const PropertyValue blend = BlendModeValue::kNormal;
+    const PropertyValue decoration = ConnectorDecorationValue::kArrow;
+
+    EXPECT_TRUE(std::holds_alternative<bool>(boolean));
+    EXPECT_TRUE(std::holds_alternative<float>(scalar));
+    EXPECT_TRUE(std::holds_alternative<ColorValue>(color));
+    EXPECT_TRUE(std::holds_alternative<FillStyleValue>(fill));
+    EXPECT_TRUE(std::holds_alternative<StrokeStyleValue>(stroke));
+    EXPECT_TRUE(std::holds_alternative<BlendModeValue>(blend));
+    EXPECT_TRUE(std::holds_alternative<ConnectorDecorationValue>(decoration));
+}
+
+TEST(SemanticTypes, ObjectContentIsAClosedNineWayTypedUnion) {
+    const ResourceId resource_id{ObjectId::fromUint64(2U)};
+    const ObjectContent shape = ShapeContent{7U, 12.0, 24.0};
+    const ObjectContent image = ImageContent{
+        resource_id, 1920.0, 1080.0, NormalizedRect{0.0, 0.0, 1.0, 1.0},
+        ImageContentMode::kFit, 320.0, 180.0};
+    const ObjectContent path = VectorPathContent{
+        VectorPathGeometry{FillRule::kNonZero, {MoveTo{Vec2{1.0, 2.0}}}}};
+    const ObjectContent rich_text = RichTextContent{RichTextDocument{{
+        Paragraph{ObjectId::fromUint64(3U), ParagraphStyle{1U},
+                  {TextRun{"typed", TextStyle{}}}}}}};
+    const ObjectContent vector_stroke = VectorStrokeContent{
+        StrokeRecord{BrushDescriptor{}, 5U, VectorStrokeData{}}};
+    const ObjectContent dab_stroke = DabStrokeContent{
+        StrokeRecord{BrushDescriptor{}, 6U, DabStrokeData{}}};
+    const ObjectContent connector = ConnectorContent{
+        ConnectorEndpoint{FreePointEndpoint{Vec2{0.0, 0.0}}},
+        ConnectorEndpoint{FreePointEndpoint{Vec2{1.0, 1.0}}},
+        ConnectorRouting::kStraight};
+    const ObjectContent sticky = StickyContent{80.0, 60.0};
+    const ObjectContent group = GroupContent{};
+
+    EXPECT_TRUE(std::holds_alternative<ShapeContent>(shape));
+    EXPECT_TRUE(std::holds_alternative<ImageContent>(image));
+    EXPECT_TRUE(std::holds_alternative<VectorPathContent>(path));
+    EXPECT_TRUE(std::holds_alternative<RichTextContent>(rich_text));
+    EXPECT_TRUE(std::holds_alternative<VectorStrokeContent>(vector_stroke));
+    EXPECT_TRUE(std::holds_alternative<DabStrokeContent>(dab_stroke));
+    EXPECT_TRUE(std::holds_alternative<ConnectorContent>(connector));
+    EXPECT_TRUE(std::holds_alternative<StickyContent>(sticky));
+    EXPECT_TRUE(std::holds_alternative<GroupContent>(group));
+}
+
+TEST(SemanticTypes, EraseMaskGeometryIsAClosedTypedUnion) {
+    const EraseMaskGeometry swept = SweptCircleMask{{EraseCubicSegment{
+        EraseKnot{Vec2{0.0, 0.0}, 2.0}, EraseKnot{Vec2{4.0, 4.0}, 2.0},
+        Vec2{1.0, 0.0}, Vec2{3.0, 4.0}}}};
+    const EraseMaskGeometry filled = FilledPathMask{
+        VectorPathGeometry{FillRule::kEvenOdd, {ClosePath{}}}};
+
+    EXPECT_TRUE(std::holds_alternative<SweptCircleMask>(swept));
+    EXPECT_TRUE(std::holds_alternative<FilledPathMask>(filled));
 }
 
 } // namespace canvas::semantic
