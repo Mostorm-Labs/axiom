@@ -80,6 +80,11 @@ SKIA_LOCK_KEYS = {
     "noto_sans_cjk_subset",
 }
 SEMANTIC_LOCK_KEYS = {"protobuf", "abseil"}
+CLASSIFICATION_ONLY_PATHS = {
+    "tools/skia/classify_r1_changes.py",
+    "tools/skia/tests/test_change_classifier.py",
+    ".github/workflows/r1-full-producer-contract.yml",
+}
 
 
 def classify_lock_documents(before: dict[str, Any], after: dict[str, Any]) -> dict[str, object]:
@@ -189,10 +194,13 @@ def classify(
         "r1-full-skia-sdk.lock.json",
         ".github/workflows/r1-full-consumer-validation.yml",
     )
-    if any(path == prefix or path.startswith(prefix) for path in normalized for prefix in consumer_prefixes):
+    if any(
+        (path == prefix or path.startswith(prefix)) and path not in CLASSIFICATION_ONLY_PATHS
+        for path in normalized for prefix in consumer_prefixes
+    ):
         return {"mode": "consumer", "targets": [], "reason": "consumer or schema validation"}
 
-    if any(path in {"tools/skia/classify_r1_changes.py", ".github/workflows/r1-full-producer-contract.yml"} for path in normalized):
+    if any(path in CLASSIFICATION_ONLY_PATHS for path in normalized):
         return {"mode": "none", "targets": [], "reason": "classification orchestration change"}
 
     return {"mode": "none", "targets": [], "reason": "documentation or unrelated change"}
