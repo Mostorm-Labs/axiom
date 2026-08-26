@@ -6,10 +6,9 @@ on:
       - "deps.lock.json"
       - "tools/bootstrap_deps.py"
       - "tools/semantic_sdk.py"
-      - "tools/semantic_fetch.py"
-      - "tools/update_semantic_lock.py"
       - "verification/tests/test_semantic_sdk.py"
-      - "verification/tests/test_semantic_lock.py"
+      - "tools/semantic/classify_producer_changes.py"
+      - "tools/semantic/tests/test_producer_change_classifier.py"
       - ".github/workflows/semantic-toolchain-producer.yml"
   workflow_dispatch:
     inputs:
@@ -23,7 +22,44 @@ permissions:
   contents: read
 
 jobs:
+  classify:
+    runs-on: ubuntu-24.04
+    outputs:
+      should_build: ${{ steps.classify.outputs.should_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify producer change classification
+        run: python3 -m unittest tools.semantic.tests.test_producer_change_classifier -v
+      - name: Classify semantic Producer inputs
+        id: classify
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            result='{"should_build":true,"reason":"manual producer dispatch"}'
+          else
+            result=$(python3 tools/semantic/classify_producer_changes.py \
+              --base-ref "${{ github.event.pull_request.base.sha }}" \
+              --head-ref "${{ github.event.pull_request.head.sha }}")
+          fi
+          printf '%s\n' "$result" | tee semantic-producer-classification.json
+          should_build=$(python3 -c 'import json, sys; print(str(json.load(sys.stdin)["should_build"]).lower())' <<<"$result")
+          echo "should_build=$should_build" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Semantic Toolchain Producer classification"
+            echo
+            echo '```json'
+            echo "$result"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
   build:
+    needs: classify
+    if: needs.classify.outputs.should_build == 'true'
     runs-on: ubuntu-24.04
     outputs:
       sdk_id: ${{ steps.package.outputs.sdk_id }}

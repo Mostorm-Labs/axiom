@@ -265,7 +265,7 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         first = false;
     }
     if (offset != bytes.size()) return {{}, {}, SemanticError::kMalformedWire};
-    return {Operation{kind}, std::move(fields), SemanticError::kNone};
+    return {Operation{OperationId{}, kind}, std::move(fields), SemanticError::kNone};
 }
 
 CodecResult SemanticCodec::encodeCanonicalF64(double value) {
