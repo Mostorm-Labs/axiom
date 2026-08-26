@@ -18,7 +18,9 @@ on:
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
       - "verification/tools/generate_g1_02_evidence.py"
+      - "verification/tools/generate_g1_01r_evidence.py"
       - "verification/tests/test_semantic_*.py"
+      - "verification/tests/test_g1_01r_evidence.py"
       - "verification/tests/test_g1_02_evidence.py"
       - "verification/tests/test_g1_semantic_differential.py"
       - "verification/tests/test_codec_fixture_author.py"
@@ -41,7 +43,9 @@ on:
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
       - "verification/tools/generate_g1_02_evidence.py"
+      - "verification/tools/generate_g1_01r_evidence.py"
       - "verification/tests/test_semantic_*.py"
+      - "verification/tests/test_g1_01r_evidence.py"
       - "verification/tests/test_g1_02_evidence.py"
       - "verification/tests/test_g1_semantic_differential.py"
       - "verification/tests/test_codec_fixture_author.py"
@@ -129,7 +133,7 @@ jobs:
       - name: Run semantic contract and production differential checks
         run: |
           python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc
-          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_02_evidence -v
+          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_semantic_public_boundary -v
           python3 verification/tools/run_g1_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --output evidence-ci/g1-semantic-codec/differential.json
           grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/differential.json
       - name: Generate commit-bound codec Evidence

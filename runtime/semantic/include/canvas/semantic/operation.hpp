@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/operation_id.hpp"
 
 #include <cstdint>
 
@@ -25,6 +26,7 @@ enum class OperationKind : std::uint8_t {
 };
 
 struct Operation final {
+    OperationId id{};
     OperationKind kind = OperationKind::kInsertObjects;
 };
 

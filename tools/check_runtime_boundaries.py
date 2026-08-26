@@ -15,6 +15,8 @@ FORBIDDEN_CONTRACT_PATTERNS = {
     "Apple platform": re.compile(r"(?:#\s*include\s*[<\"](?:UIKit|AppKit|Metal)/|\bUIView\b|\bCAMetalLayer\b)"),
     "Android/JNI": re.compile(r"(?:#\s*include\s*[<\"]jni\.h|\bJNIEnv\b|\bANativeWindow\b)"),
     "Emscripten": re.compile(r"(?:#\s*include\s*[<\"]emscripten/|\bEM_JS\b|\bEM_ASM\b)"),
+    "derived scene": re.compile(r"(?:#\s*include\s*[<\"]canvas/scene/|\bRuntimeScene\b|\bSceneCompiler\b)"),
+    "Arc": re.compile(r"(?:#\s*include\s*[<\"]arc/|\bArc(?:CanonicalToken|Preview|Input)?\b)"),
     "network/storage/thread": re.compile(r"(?:#\s*include\s*[<\"](?:sqlite3\.h|pthread\.h|thread|mutex|condition_variable|boost/|sys/socket\.h))"),
     "callback/reentrancy": re.compile(r"(?:std::function|\bCallback\b)"),
     "public C ABI": re.compile(r"docs/api/canvas_runtime_api_v1\.h"),
@@ -26,6 +28,8 @@ FORBIDDEN_C_ABI_PATTERNS = {
     "Skia": FORBIDDEN_CONTRACT_PATTERNS["Skia"],
     "platform": re.compile(r"(?:windows\.h|UIKit|AppKit|jni\.h|emscripten/|HWND|JNIEnv)"),
 }
+
+SEMANTIC_ONLY_CONTRACT_PATTERNS = {"derived scene", "Arc"}
 
 
 def source_files(directory: pathlib.Path) -> list[pathlib.Path]:
@@ -42,12 +46,16 @@ def check_files(
     failures: list[str] = []
     for path in paths:
         text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(root)
+        is_semantic_public_header = relative.as_posix().startswith("runtime/semantic/include/")
         for label, pattern in patterns.items():
+            if label in SEMANTIC_ONLY_CONTRACT_PATTERNS and not is_semantic_public_header:
+                continue
             match = pattern.search(text)
             if match is None:
                 continue
             line = text.count("\n", 0, match.start()) + 1
-            failures.append(f"{path.relative_to(root)}:{line}: forbidden {label} dependency")
+            failures.append(f"{relative}:{line}: forbidden {label} dependency")
     return failures
 
 

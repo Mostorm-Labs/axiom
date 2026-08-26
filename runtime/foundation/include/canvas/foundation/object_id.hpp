@@ -18,7 +18,7 @@ struct ObjectId final {
         return result;
     }
 
-    [[nodiscard]] bool isZero() const {
+    [[nodiscard]] constexpr bool isZero() const {
         return *this == ObjectId{};
     }
     auto operator<=>(const ObjectId&) const = default;

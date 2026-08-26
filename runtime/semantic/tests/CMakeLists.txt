@@ -23,11 +23,13 @@ gtest_discover_tests(canvas_semantic_codec_test)
 
 foreach(header IN ITEMS
         canvas/semantic/canonical_numeric.hpp
+        canvas/semantic/canonical_commit_stamp.hpp
         canvas/semantic/change_set.hpp
         canvas/semantic/object_record.hpp
+        canvas/semantic/operation_id.hpp
         canvas/semantic/operation.hpp
         canvas/semantic/order_key.hpp
-        canvas/semantic/semantic_revision.hpp
+        canvas/semantic/semantic_generation.hpp
         canvas/semantic/semantic_error.hpp
         canvas/semantic/codec.hpp)
   string(REPLACE "/" "_" target_suffix ${header})
