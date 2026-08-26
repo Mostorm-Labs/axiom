@@ -34,4 +34,16 @@ TEST(SemanticCodec, StableSeedContainsExactlySixtyCases) {
     EXPECT_EQ(seed.back().stable_id, "g1-seed-v0.1-059");
 }
 
+TEST(SemanticCodec, ProtobufRuntimeRoundTripsAllReconciledOperations) {
+    for (unsigned value = 1; value <= 15; ++value) {
+        const auto result = SemanticCodec::encodeProtobufOperation(static_cast<OperationKind>(value));
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+        ASSERT_TRUE(result.ok()) << value;
+        ASSERT_FALSE(result.bytes.empty()) << value;
+#else
+        EXPECT_EQ(result.error, SemanticError::kRuntimeUnavailable) << value;
+#endif
+    }
+}
+
 } // namespace canvas::semantic

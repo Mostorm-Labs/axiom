@@ -14,6 +14,7 @@ enum class SemanticError : std::uint8_t {
     kNonFiniteValue,
     kLimitExceeded,
     kMalformedWire,
+    kRuntimeUnavailable,
 };
 
 } // namespace canvas::semantic

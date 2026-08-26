@@ -157,6 +157,174 @@ def verify_sha256(path: Path, expected: str) -> None:
         raise RuntimeError(f"{path}: expected SHA-256 {expected}, got {digest}")
 
 
+def semantic_platform_asset_key(system: str | None = None, machine: str | None = None) -> str:
+    """Return the explicitly supported protoc asset key for semantic-codec builds.
+
+    Windows is intentionally not handled here: the hosted semantic-codec job is
+    Linux-based and the Windows toolchain is owned by its separate CI contract.
+    Keeping this mapping explicit prevents silently selecting an ABI-incompatible
+    binary on a developer machine.
+    """
+    system = system or platform.system()
+    machine = machine or platform.machine()
+    normalized_system = system.lower()
+    normalized_machine = machine.lower()
+    if normalized_system == "linux" and normalized_machine in {"x86_64", "amd64"}:
+        return "linux-x86_64"
+    if normalized_system == "darwin" and normalized_machine in {"arm64", "aarch64", "x86_64", "amd64"}:
+        return "darwin-universal"
+    raise RuntimeError(f"semantic-codec protoc asset is unsupported on {system}/{machine}")
+
+
+def semantic_dependency_plan(lock: dict, system: str | None = None, machine: str | None = None) -> dict:
+    protobuf = lock["dependencies"]["protobuf"]
+    abseil = lock["dependencies"]["abseil"]
+    asset_key = semantic_platform_asset_key(system, machine)
+    asset = protobuf["protoc_assets"][asset_key]
+    return {
+        "protobuf_version": protobuf["version"],
+        "protobuf_edition": protobuf["edition"],
+        "protobuf_source_url": protobuf["source_url"],
+        "protobuf_source_sha256": protobuf["source_sha256"],
+        "protobuf_asset_key": asset_key,
+        "protobuf_asset_url": asset["url"],
+        "protobuf_asset_sha256": asset["sha256"],
+        "abseil_version": abseil["version"],
+        "abseil_source_url": abseil["source_url"],
+        "abseil_source_sha256": abseil["source_sha256"],
+    }
+
+
+def _safe_member_path(destination: Path, name: str) -> Path:
+    if not name or Path(name).is_absolute():
+        raise RuntimeError(f"archive contains an unsafe absolute path: {name!r}")
+    target = (destination / Path(name)).resolve()
+    root = destination.resolve()
+    if target != root and root not in target.parents:
+        raise RuntimeError(f"archive contains a path traversal entry: {name!r}")
+    return target
+
+
+def safe_extract_zip(archive: Path, destination: Path) -> None:
+    destination.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(archive) as source:
+        for info in source.infolist():
+            target = _safe_member_path(destination, info.filename)
+            if info.is_dir():
+                target.mkdir(parents=True, exist_ok=True)
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with source.open(info) as input_file, target.open("wb") as output_file:
+                shutil.copyfileobj(input_file, output_file)
+
+
+def safe_extract_tar(archive: Path, destination: Path) -> None:
+    destination.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(archive, "r:gz") as source:
+        for member in source.getmembers():
+            target = _safe_member_path(destination, member.name)
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+                continue
+            if not member.isfile():
+                raise RuntimeError(f"archive contains unsupported entry: {member.name!r}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            extracted = source.extractfile(member)
+            if extracted is None:
+                raise RuntimeError(f"archive member cannot be read: {member.name!r}")
+            with extracted, target.open("wb") as output_file:
+                shutil.copyfileobj(extracted, output_file)
+
+
+def _single_directory(root: Path, label: str) -> Path:
+    children = [child for child in root.iterdir() if child.is_dir()]
+    if len(children) != 1:
+        raise RuntimeError(f"unexpected {label} archive layout")
+    return children[0]
+
+
+def _replace_directory(source: Path, destination: Path) -> None:
+    temporary = destination.with_name(destination.name + ".staging")
+    if temporary.exists():
+        shutil.rmtree(temporary)
+    shutil.move(str(source), temporary)
+    backup = destination.with_name(destination.name + ".previous")
+    if backup.exists():
+        shutil.rmtree(backup)
+    if destination.exists():
+        destination.rename(backup)
+    temporary.rename(destination)
+    if backup.exists():
+        shutil.rmtree(backup)
+
+
+def bootstrap_semantic(lock: dict) -> Path:
+    """Build and atomically install the pinned semantic protobuf toolchain."""
+    plan = semantic_dependency_plan(lock)
+    downloads = DEPS / "downloads"
+    downloads.mkdir(parents=True, exist_ok=True)
+    protobuf_archive = downloads / f"protobuf-{plan['protobuf_version']}.tar.gz"
+    abseil_archive = downloads / f"abseil-{plan['abseil_version']}.tar.gz"
+    protoc_archive = downloads / f"protoc-{plan['protobuf_version']}-{plan['protobuf_asset_key']}.zip"
+    download(plan["protobuf_source_url"], protobuf_archive, plan["protobuf_source_sha256"])
+    download(plan["abseil_source_url"], abseil_archive, plan["abseil_source_sha256"])
+    download(plan["protobuf_asset_url"], protoc_archive, plan["protobuf_asset_sha256"])
+
+    staging_root = Path(tempfile.mkdtemp(prefix="canvas-semantic-", dir=DEPS))
+    try:
+        source_root = staging_root / "sources"
+        source_root.mkdir()
+        safe_extract_tar(protobuf_archive, source_root / "protobuf")
+        safe_extract_tar(abseil_archive, source_root / "abseil")
+        protobuf_source = _single_directory(source_root / "protobuf", "protobuf source")
+        abseil_source = _single_directory(source_root / "abseil", "abseil source")
+        build_root = staging_root / "build"
+        install_root = staging_root / "install"
+        abseil_build = build_root / "abseil"
+        run(
+            "cmake", "-S", str(abseil_source), "-B", str(abseil_build), "-G", "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_CXX_STANDARD=20",
+            f"-DCMAKE_INSTALL_PREFIX={install_root}",
+            "-DABSL_BUILD_TESTING=OFF", "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+        )
+        run("cmake", "--build", str(abseil_build), "--target", "install")
+
+        protobuf_build = build_root / "protobuf"
+        absl_config = install_root / "lib" / "cmake" / "absl"
+        run(
+            "cmake", "-S", str(protobuf_source), "-B", str(protobuf_build), "-G", "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_CXX_STANDARD=20",
+            f"-DCMAKE_INSTALL_PREFIX={install_root}",
+            "-Dprotobuf_BUILD_TESTS=OFF", "-Dprotobuf_BUILD_CONFORMANCE=OFF",
+            "-Dprotobuf_BUILD_EXAMPLES=OFF", "-Dprotobuf_BUILD_LIBPROTOC=ON",
+            "-Dprotobuf_BUILD_PROTOC_BINARIES=ON", "-Dprotobuf_ABSL_PROVIDER=package",
+            f"-DCMAKE_PREFIX_PATH={install_root}", f"-Dabsl_DIR={absl_config}",
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON", "-Dprotobuf_BUILD_SHARED_LIBS=OFF",
+        )
+        run("cmake", "--build", str(protobuf_build), "--target", "install")
+
+        # The release binary is still checked and retained as a reproducible
+        # generator fixture. The installed source build is the runtime used by
+        # CMake consumers, so generator and runtime come from one lock.
+        protoc_staging = staging_root / "protoc"
+        safe_extract_zip(protoc_archive, protoc_staging)
+        packaged_protoc = protoc_staging / "bin" / ("protoc.exe" if os.name == "nt" else "protoc")
+        if not packaged_protoc.exists():
+            raise RuntimeError(f"protoc archive did not contain {packaged_protoc}")
+        installed_protoc = install_root / "bin" / ("protoc.exe" if os.name == "nt" else "protoc")
+        if not installed_protoc.exists():
+            raise RuntimeError(f"protobuf install did not produce {installed_protoc}")
+        marker = install_root / ".canvas-semantic-toolchain.json"
+        marker.write_text(json.dumps({"format": "canvas-semantic-toolchain-v1", **plan}, indent=2) + "\n", encoding="utf-8")
+        destination = DEPS / "protobuf"
+        _replace_directory(install_root, destination)
+        return destination
+    except Exception:
+        shutil.rmtree(staging_root, ignore_errors=True)
+        raise
+    finally:
+        if staging_root.exists():
+            shutil.rmtree(staging_root, ignore_errors=True)
 def download(url: str, path: Path, sha256: str | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and sha256:
@@ -329,6 +497,10 @@ def main() -> int:
     parser.add_argument("--node", action="store_true", help="Install pinned Node into .deps/node")
     parser.add_argument("--windows-llvm", action="store_true", help="Download and verify LLVM on Windows")
     parser.add_argument(
+        "--semantic-codec", action="store_true",
+        help="Build and install the pinned Abseil/Protobuf semantic codec toolchain",
+    )
+    parser.add_argument(
         "--github-api-archives",
         action="store_true",
         help="Use gh API source archives for core deps when HTTPS Git is blocked",
@@ -339,7 +511,7 @@ def main() -> int:
         help="Use immutable raw GitHub files for header/source-only core deps",
     )
     args = parser.parse_args()
-    if not any((args.core, args.skia, args.skia_archive, args.font_only, args.sync_skia, args.web, args.node, args.windows_llvm)):
+    if not any((args.core, args.skia, args.skia_archive, args.font_only, args.sync_skia, args.web, args.node, args.windows_llvm, args.semantic_codec)):
         args.core = True
     DEPS.mkdir(parents=True, exist_ok=True)
     lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
@@ -357,6 +529,8 @@ def main() -> int:
         bootstrap_node(lock)
     if args.windows_llvm:
         bootstrap_windows_llvm(lock)
+    if args.semantic_codec:
+        bootstrap_semantic(lock)
     return 0
 
 

@@ -34,6 +34,9 @@ struct StableSeedCase final {
 class SemanticCodec final {
   public:
     static CodecResult encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields);
+    // Experimental G1-02 probe. Protobuf types remain private to codec.cpp;
+    // this returns the canonical runtime bytes without exposing that ABI.
+    static CodecResult encodeProtobufOperation(OperationKind kind);
     static DecodedOperation decodeOperation(const std::vector<std::uint8_t>& bytes);
     static CodecResult encodeCanonicalF64(double value);
     static std::vector<StableSeedCase> stableSeedV01();

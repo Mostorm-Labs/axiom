@@ -5,6 +5,10 @@
 #include <cstdio>
 #include <utility>
 
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+#include "auditoryworks/axiom/v1/operation.pb.h"
+#endif
+
 namespace {
 constexpr std::uint8_t kMagic0 = 0x41U;
 constexpr std::uint8_t kMagic1 = 0x58U;
@@ -49,6 +53,45 @@ CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector
         first = false;
     }
     return {SemanticError::kNone, std::move(out)};
+}
+
+CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)kind;
+    return {SemanticError::kRuntimeUnavailable, {}};
+#else
+    if (!isKnownOperationKind(kind)) return {SemanticError::kUnknownOperation, {}};
+    auditoryworks::axiom::v1::Operation operation;
+    operation.set_schema_version(1U);
+    operation.set_payload_version(1U);
+    operation.mutable_operation_id()->set_value(std::string(16, '\x01'));
+    operation.mutable_document_id()->set_value(std::string(16, '\x02'));
+    switch (kind) {
+        case OperationKind::kInsertObjects: operation.mutable_payload()->mutable_insert_objects(); break;
+        case OperationKind::kDeleteObjects: operation.mutable_payload()->mutable_delete_objects(); break;
+        case OperationKind::kRestoreObjects: operation.mutable_payload()->mutable_restore_objects(); break;
+        case OperationKind::kSetPlacements: operation.mutable_payload()->mutable_set_placements(); break;
+        case OperationKind::kSetTransforms: operation.mutable_payload()->mutable_set_transforms(); break;
+        case OperationKind::kPatchProperties: operation.mutable_payload()->mutable_patch_properties(); break;
+        case OperationKind::kSetObjectSize: operation.mutable_payload()->mutable_set_object_size(); break;
+        case OperationKind::kSetVectorPathGeometry: operation.mutable_payload()->mutable_set_vector_path_geometry(); break;
+        case OperationKind::kSetImageContent: operation.mutable_payload()->mutable_set_image_content(); break;
+        case OperationKind::kAddStroke: operation.mutable_payload()->mutable_add_stroke(); break;
+        case OperationKind::kSplitStrokes: operation.mutable_payload()->mutable_split_strokes(); break;
+        case OperationKind::kAddEraseMasks: operation.mutable_payload()->mutable_add_erase_masks(); break;
+        case OperationKind::kRemoveEraseMasks: operation.mutable_payload()->mutable_remove_erase_masks(); break;
+        case OperationKind::kEditRichText: operation.mutable_payload()->mutable_edit_rich_text(); break;
+        case OperationKind::kSetConnectorContent: operation.mutable_payload()->mutable_set_connector_content(); break;
+    }
+    std::string bytes;
+    if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
+    auditoryworks::axiom::v1::Operation decoded;
+    if (!decoded.ParseFromString(bytes) ||
+        decoded.payload().payload_case() != operation.payload().payload_case()) {
+        return {SemanticError::kMalformedWire, {}};
+    }
+    return {SemanticError::kNone, {bytes.begin(), bytes.end()}};
+#endif
 }
 
 DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>& bytes) {

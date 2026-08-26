@@ -55,6 +55,27 @@
       "version": "0.8.3",
       "commit": "e626a72bc2321cd320e953a0ccf1584cad60f363"
     },
+    "protobuf": {
+      "version": "36.0",
+      "source_url": "https://github.com/protocolbuffers/protobuf/releases/download/v36.0/protobuf-36.0.tar.gz",
+      "source_sha256": "399931c793f4ac6db81045b00b06dd07c877b48aeecf36c797f65c541fb533e7",
+      "protoc_assets": {
+        "linux-x86_64": {
+          "url": "https://github.com/protocolbuffers/protobuf/releases/download/v36.0/protoc-36.0-linux-x86_64.zip",
+          "sha256": "bc8211ce760bd43ee21ddc145d6d9dbaeeabae205267a79d9054a240e367d4b4"
+        },
+        "darwin-universal": {
+          "url": "https://github.com/protocolbuffers/protobuf/releases/download/v36.0/protoc-36.0-osx-universal_binary.zip",
+          "sha256": "c4d0f49ab3b0778eaef0c20871d21547d5fc982a1d6f1571d33ec2754ef180b6"
+        }
+      },
+      "edition": "2024"
+    },
+    "abseil": {
+      "version": "20250512.1",
+      "source_url": "https://github.com/abseil/abseil-cpp/archive/refs/tags/20250512.1.tar.gz",
+      "source_sha256": "9b7a064305e9fd94d124ffa6cc358592eb42b5da588fb4e07d09254aa40086db"
+    },
     "roboto_regular": {
       "source": "skia/resources/fonts/Roboto-Regular.ttf",
       "sha256": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f"
