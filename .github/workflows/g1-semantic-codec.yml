@@ -5,6 +5,11 @@ on:
     paths:
       - "deps.lock.json"
       - "tools/bootstrap_deps.py"
+      - "tools/semantic_sdk.py"
+      - "tools/semantic_fetch.py"
+      - "semantic-toolchain.lock.json"
+      - "verification/tests/test_semantic_sdk.py"
+      - "verification/tests/test_semantic_lock.py"
       - "schema/axiom/v1/**"
       - "runtime/semantic/**"
       - "verification/corpus/semantic/**"
@@ -22,6 +27,11 @@ on:
     paths:
       - "deps.lock.json"
       - "tools/bootstrap_deps.py"
+      - "tools/semantic_sdk.py"
+      - "tools/semantic_fetch.py"
+      - "semantic-toolchain.lock.json"
+      - "verification/tests/test_semantic_sdk.py"
+      - "verification/tests/test_semantic_lock.py"
       - "schema/axiom/v1/**"
       - "runtime/semantic/**"
       - "verification/corpus/semantic/**"
@@ -61,7 +71,11 @@ jobs:
           ninja --version
           g++ --version
       - name: Bootstrap pinned semantic toolchain
+        if: hashFiles('semantic-toolchain.lock.json') == ''
         run: python3 tools/bootstrap_deps.py --semantic-codec
+      - name: Fetch locked semantic toolchain Release asset
+        if: hashFiles('semantic-toolchain.lock.json') != ''
+        run: python3 tools/semantic_fetch.py --target linux-x86_64
       - name: Record toolchain manifest
         run: |
           mkdir -p evidence-ci/g1-semantic-codec
