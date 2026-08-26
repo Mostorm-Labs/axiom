@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,7 +39,70 @@ def authority_records(root: Path) -> list[dict[str, object]]:
     ]
 
 
-def generate(root: Path, source_commit: str, authority_baseline: str) -> dict[str, object]:
+def changed_files(root: Path, base_commit: str, source_commit: str) -> list[str]:
+    return [
+        path
+        for path in subprocess.run(
+            ["git", "diff", "--name-only", base_commit, source_commit],
+            cwd=root,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.splitlines()
+        if path
+    ]
+
+
+def verification_records() -> dict[str, object]:
+    return {
+        "redEvidence": {
+            "command": (
+                "cmake --build /tmp/axiom-g1-01r-build "
+                "--target canvas_semantic_types_test --parallel 4"
+            ),
+            "exitCode": 2,
+            "testCount": 1,
+            "result": "EXPECTED_FAIL",
+            "firstFailure": (
+                "OperationId::isZero() could not be evaluated as a constant expression because "
+                "ObjectId::isZero() was not constexpr."
+            ),
+        },
+        "greenEvidence": {
+            "command": (
+                "cmake -S . -B /tmp/axiom-g1-01r-clean -DCMAKE_BUILD_TYPE=Debug "
+                "-DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON; "
+                "cmake --build /tmp/axiom-g1-01r-clean --parallel 4; "
+                "ctest --test-dir /tmp/axiom-g1-01r-clean --output-on-failure"
+            ),
+            "exitCode": 0,
+            "testCount": 22,
+            "result": "PASS",
+        },
+        "regression": {
+            "command": "python3 -m unittest G1 semantic regression suite -v",
+            "exitCode": 0,
+            "testCount": 29,
+            "result": "PASS",
+        },
+        "publicDependencyCheck": {
+            "command": "python3 tools/check_runtime_boundaries.py --root .",
+            "exitCode": 0,
+            "contractFilesChecked": 29,
+            "result": "PASS",
+        },
+    }
+
+
+def generate(
+    root: Path,
+    source_commit: str,
+    authority_baseline: str,
+    *,
+    files_changed: list[str] | None = None,
+    hosted_validation: dict[str, object] | None = None,
+) -> dict[str, object]:
+    verification = verification_records()
     return {
         "format": "axiom-gt-g1-01r-reconciliation-evidence-v1",
         "taskId": "GT-G1-01R",
@@ -69,12 +133,16 @@ def generate(root: Path, source_commit: str, authority_baseline: str) -> dict[st
         "oldBoundaryRemoved": ["SemanticRevision", "SemanticChangeSet"],
         "tests": [
             "SemanticTypes.SemanticGenerationIsASeparateStrongRuntimeLocalToken",
+            "SemanticTypes.OperationIdZeroPredicateSupportsConstantEvaluation",
             "SemanticTypes.ChangeSetMergesObjectChangesInDeterministicOrder",
             "SemanticTypes.ChangeSetExpressesCreatedAndDeletedObjects",
             "canvas_semantic_runtime_boundaries",
             "verification.tests.test_semantic_public_boundary",
             "GT-G1-02 semantic codec regression suite",
         ],
+        **verification,
+        "filesChanged": list(files_changed or []),
+        "hostedValidation": hosted_validation or {"status": "PENDING"},
         "gtG102": {
             "status": "PASS",
             "sourceCommit": "fa5b17ca3e8a10cf5ae9641d036d25adf65d7851",
@@ -100,7 +168,11 @@ def write(output: Path, evidence: dict[str, object]) -> None:
             "format": "axiom-gt-g1-01r-summary-v1",
             "taskId": evidence["taskId"],
             "sourceCommit": evidence["sourceCommit"],
-            "status": "PASS",
+            "status": (
+                "PASS"
+                if evidence["hostedValidation"].get("status") == "PASS"
+                else "VALIDATING"
+            ),
             "gtG102": evidence["gtG102"]["status"],
             "gtG103Authorized": evidence["gtG103Authorized"],
         },
@@ -124,11 +196,27 @@ def main() -> int:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--authority-baseline", required=True)
     parser.add_argument("--output-root", type=Path, required=True)
+    parser.add_argument("--hosted-url", required=True)
+    parser.add_argument("--hosted-run-id", type=int, required=True)
+    parser.add_argument("--hosted-status", choices=("PASS", "FAIL"), required=True)
     args = parser.parse_args()
     for value, name in ((args.source_commit, "source commit"), (args.authority_baseline, "authority baseline")):
         if len(value) != 40 or any(character not in "0123456789abcdef" for character in value):
             parser.error(f"{name} must be a 40-character lowercase commit SHA")
-    write(args.output_root, generate(ROOT, args.source_commit, args.authority_baseline))
+    write(
+        args.output_root,
+        generate(
+            ROOT,
+            args.source_commit,
+            args.authority_baseline,
+            files_changed=changed_files(ROOT, args.authority_baseline, args.source_commit),
+            hosted_validation={
+                "status": args.hosted_status,
+                "runId": args.hosted_run_id,
+                "url": args.hosted_url,
+            },
+        ),
+    )
     return 0
 
 

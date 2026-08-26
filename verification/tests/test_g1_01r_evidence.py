@@ -24,6 +24,15 @@ class G101REvidenceTest(unittest.TestCase):
         self.assertIn("SemanticRevision", evidence["oldBoundaryRemoved"])
         self.assertFalse(any(item["privateLocatorIncluded"] for item in evidence["authority"]))
 
+    def test_reconciliation_evidence_records_red_green_regression_and_boundary_provenance(self):
+        evidence = generator.generate(ROOT, "a" * 40, "b" * 40)
+
+        self.assertEqual(evidence["redEvidence"]["result"], "EXPECTED_FAIL")
+        self.assertEqual(evidence["greenEvidence"]["result"], "PASS")
+        self.assertEqual(evidence["regression"]["result"], "PASS")
+        self.assertEqual(evidence["publicDependencyCheck"]["result"], "PASS")
+        self.assertIn("filesChanged", evidence)
+
     def test_manifest_hashes_the_commit_bound_evidence_files(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)

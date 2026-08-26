@@ -85,6 +85,14 @@ TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
     EXPECT_EQ(successor.value(), 1U);
 }
 
+TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {
+    constexpr OperationId zero{};
+    static_assert(zero.isZero());
+
+    EXPECT_TRUE(zero.isZero());
+    EXPECT_FALSE(OperationId(ObjectId::fromUint64(42U)).isZero());
+}
+
 TEST(SemanticTypes, ChangeSetMergesObjectChangesInDeterministicOrder) {
     const ObjectId first = ObjectId::fromUint64(1U);
     const ObjectId second = ObjectId::fromUint64(2U);
