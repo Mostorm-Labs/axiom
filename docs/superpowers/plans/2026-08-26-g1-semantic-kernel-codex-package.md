@@ -6,7 +6,7 @@
 
 **Architecture:** Create `runtime/semantic/` as a production module depending on `runtime/foundation/` and forbidden from depending on `runtime/scene/`, Skia, Arc, native platform APIs, storage/sync, networking, or renderer state. Notion remains the living design authority. GitHub receives only executable contracts, code, tests, corpus and Evidence promoted for G1. The closed `docs/notion-bridge-bootstrap` branch is comparison/reference material only.
 
-**Tech Stack:** C++20, CMake 3.30+, CTest, the protobuf/Edition 2024 path currently proposed by the Notion release-candidate material, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding. Protobuf/Edition 2024 becomes an accepted repository codec contract only after GT-G1-01 authority reconciliation, GT-G1-02 codec validation and descriptor reproducibility; this plan does not pre-accept it.
+**Tech Stack:** C++20, CMake 3.30+, CTest, accepted Protobuf/Edition 2024 canonical codec baseline, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding. GT-G1-01 authority reconciliation and GT-G1-02 descriptor/hosted differential Evidence have accepted this repository codec contract; later semantic apply work must consume it rather than replace it.
 
 **Normative task source:** `docs/planning/GATE_TASK_TRACKER.md` on the accepted `main` lineage.
 
@@ -34,9 +34,9 @@ implementation PR carries the same minimum traceability fields instead of relyin
 | Notion Task ID | Gate Task ID | R contribution | Requirements | ADR/RFC/Contract | Dependencies | Design | Implementation | Validation | Evidence | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | G1/Task 1 | `GT-G1-01` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; semantic authority reconciliation | G0 Pass | Pass | Pass | Pass | `verification/evidence/gates/G1/33491f82cea8db4411a2afb8f37f974008955913/GT-G1-01/` | — | Pass |
-| G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Pass | Pass | Validating | `verification/evidence/gates/G1/<commit>/GT-G1-02/` | 本机已验证固定 Protobuf/Abseil runtime/codegen 与 round-trip；仍需 hosted Linux toolchain Evidence，且权威 BG/BGX 二进制及 differential oracle 尚未提供；缺失时必须保持 `BLOCKED_AUTHORITY` | Blocked |
-| G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-03/` | — | Not Started |
-| G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract | GT-G1-02, GT-G1-03 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-04/` | — | Not Started |
+| G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Pass | Pass | Pass | `verification/evidence/gates/G1/1058311e47a2af68e4a444a76444dd6cf2354975/GT-G1-02/`；[hosted revalidation](https://github.com/Mostorm-Labs/axiom/actions/runs/32947427280) | historical Blocked Evidence remains preserved; promoted corpus, independent oracle and hosted toolchain have passed | Pass |
+| G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-02, GT-G1-01R | Pass | Pass | Pass | `verification/evidence/gates/G1/3c6cbbc6abe1dfb7b716e4c32e6546e476917c54/GT-G1-03/` | — | Pass |
+| G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract; ADR-0025/0026; 07-03 | GT-G1-02, GT-G1-03 | Ready | Not Started | Blocked | [authority/task reconciliation](../../planning/GT_G1_04_AUTHORITY_RECONCILIATION.md) | Normalize/Idempotency are confirmed by current authority; final 15-operation reviewed apply corpus is still unmaterialized | Ready |
 | G1/Task 5 | `GT-G1-05` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; ChangeSet contract | GT-G1-04 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-05/` | — | Not Started |
 | G1/Task 6 | `GT-G1-06` | R1,R2 | REQ-GAP-DATA, REQ-EDIT-HIST-001 | D-G1; Snapshot/Projection contract | GT-G1-05 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-06/` | — | Not Started |
 | G1/Task 7 | `GT-G1-07` | R1,R2 | REQ-GAP-VER | D-G1; public semantic APIs | GT-G1-06 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-07/` | — | Not Started |
@@ -79,7 +79,7 @@ For every candidate artifact from `docs/notion-bridge-bootstrap`:
 - G1 contains exactly `GT-G1-01..GT-G1-08`.
 - Promotion route remains `G0 Pass → G1 → G2`.
 - V1 canonical mutation is Operation-only; no global canonical Transaction.
-- V1 ObjectKinds and canonical Operations are the sets produced by GT-G1-01 authority reconciliation. The current Notion RC material proposes 9 ObjectKinds and 15 Operations, but those counts are candidate inputs until the reconciliation artifact records source status and promotion decision; they are not pre-frozen by this plan.
+- GT-G1-01 reconciliation and the frozen registries establish 9 V1 ObjectKinds and 15 canonical Operations. Their IDs/tags are protocol identities, not implementation-local enumerations; any change requires authority refreeze and regenerated registry/descriptor Evidence.
 - Reject-before-mutate: any rejected operation leaves state, revision, indexes and emitted ChangeSet unchanged.
 - Unknown semantic kind/enum/operation fails closed. Unknown-field/version behavior follows Common Wire Rules, not protobuf defaults.
 - Canonical durable numerics are finite binary64/f64; normalize `-0 → +0` where authority requires.
@@ -375,7 +375,7 @@ One ObjectStore contract supports Find/Insert/Replace/Erase and deterministic ca
 
 **Model:** `XL` / **Very High**; mandatory fresh `XL` correctness review.
 
-**Authority Inputs:** Operation Payload + Validation Rules; Field Registry; Object/Placement/Connector/RichText/Stroke/Erase authorities; Common Wire; ADR-0014/0016/0019/0025. Tracker correction is binding: Normalize and Idempotency are required.
+**Authority Inputs:** Operation Payload + Validation Rules; Field Registry; Object/Placement/Connector/RichText/Stroke/Erase authorities; Common Wire; ADR-0014/0019/0025/0026; [GT-G1-04 authority/task reconciliation](../../planning/GT_G1_04_AUTHORITY_RECONCILIATION.md). Normalize and Idempotency are required.
 
 ### Exact files
 Create:
@@ -402,10 +402,10 @@ Decoded/typed Operation
 → Normalize
 → Envelope Validation
 → Payload Validation
+→ OperationId Idempotency Classification
 → Reference Validation
 → Kind Validation
 → Invariant Validation
-→ Idempotency Classification
 → Prepare ApplyPlan
 ```
 No stage before commit mutates ObjectStore, indexes, revision or history.
