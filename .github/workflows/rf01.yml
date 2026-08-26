@@ -3,7 +3,8 @@ name: RF-01 Scene Foundation
 on:
   pull_request:
     paths:
-      - "runtime/**"
+      - "runtime/foundation/**"
+      - "runtime/scene/**"
       - "pocs/large_scene/rf01/**"
       - "pocs/large_scene/tests/rf01_scene_source_test.cpp"
       - "docs/api/canvas_runtime_api_v1.h"
@@ -13,7 +14,8 @@ on:
   push:
     branches: [main, "codex/poc-03-100k-scene"]
     paths:
-      - "runtime/**"
+      - "runtime/foundation/**"
+      - "runtime/scene/**"
       - "pocs/large_scene/rf01/**"
       - "pocs/large_scene/tests/rf01_scene_source_test.cpp"
       - "docs/api/canvas_runtime_api_v1.h"
