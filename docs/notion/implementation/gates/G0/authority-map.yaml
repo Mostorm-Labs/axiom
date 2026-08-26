@@ -1,0 +1,196 @@
+schema_version: 1
+gate: G0
+name: Verification Foundation
+authority_only: true
+implementation_owner: Codex
+source_plan:
+  title: G0 Verification Foundation Implementation Plan v0.1
+  notion_page_id: 3c44c57a-590c-8104-ad0c-c31d9b9e2b60
+source_issue_pack:
+  title: Implementation Backlog / Issue Pack v0.1
+  notion_page_id: 3c44c57a-590c-81a4-8bd8-c605fc5fe88a
+notes:
+  - G0-00..G0-15 are direct mappings to IH-00..IH-15.
+  - G0-16 and G0-17 are derived from G0 plan Task 3 and Task 4; they are not IH-16/IH-17.
+  - Golden expected is read-only; no blocking-CI auto-bless.
+  - Verification-only hooks must not enter product public ABI.
+  - Protocol seed precedes trust in platform seed.
+
+global_authority:
+  - docs/notion/authority/10-verification/README.md
+  - docs/notion/authority/08-platform-contract/README.md
+  - docs/notion/authority/07-runtime-data-flow/README.md
+  - docs/notion/authority/06-module-design/module-design-closure-v0.1.md
+  - docs/notion/authority/05-runtime-architecture/runtime-capability-architecture-v0.1.md
+
+work_packages:
+  G0-00:
+    source: IH-00
+    title: Repo / Branch Reconciliation
+    depends_on: []
+    authority:
+      - docs/notion/authority/10-verification/README.md
+    output_contract: real repository/build/CI/path mapping; do not force logical target paths onto incompatible production tree
+
+  G0-01:
+    source: IH-01
+    title: Schema + Workspace Skeleton
+    depends_on: [G0-00]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - verification/schemas/
+      - schema/axiom/v1/
+    output_contract: verification schemas validate by one command and workspace builds
+
+  G0-02:
+    source: IH-02
+    title: Protocol Package + Envelope Codec
+    depends_on: [G0-01]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/04-semantic-schema/
+      - schema/axiom/v1/
+      - verification/schemas/
+    output_contract: typed verification protocol plus strict parse/version rejection; verification protocol is not product ABI
+
+  G0-03:
+    source: IH-03
+    title: Runner Core A — Handshake / Session / Action / Completion
+    depends_on: [G0-02]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - verification/schemas/
+    output_contract: deterministic runner state machines with machine-readable failure
+
+  G0-04:
+    source: IH-04
+    title: Runner Core B — Event / Source / Fault / Fence / Finalization
+    depends_on: [G0-03]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/07-runtime-data-flow/README.md
+      - verification/schemas/
+    output_contract: event/source/fault/fence/finalization state machines preserve runtime ordering authority
+
+  G0-05:
+    source: IH-05
+    title: Scripted Adapter + Transport
+    depends_on: [G0-03]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+    output_contract: in-process and serialized-loopback adapter can drive malformed behavior without becoming production transport
+
+  G0-06:
+    source: IH-06
+    title: Materialize protocol-seed-v0.1 — 56 vectors
+    depends_on: [G0-04, G0-05]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - verification/golden/
+      - verification/schemas/
+    output_contract: exactly the source-defined blocking protocol vector set passes; expected data remains read-only
+
+  G0-07:
+    source: IH-07
+    title: Shared CLI + Protocol CI Gate
+    depends_on: [G0-06]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - .github/workflows/
+    output_contract: clean checkout can run protocol seed and emit evidence
+
+  G0-08:
+    source: IH-08
+    title: Verification Native Hooks / Common Host
+    depends_on: [G0-00, G0-07]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+      - docs/notion/authority/06-module-design/module-design-closure-v0.1.md
+    output_contract: test-only fault/source seams; production targets do not depend on verification targets
+
+  G0-09:
+    source: IH-09
+    title: Materialize platform-seed-v0.1 — 28 scenarios
+    depends_on: [G0-01]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+      - docs/notion/authority/07-runtime-data-flow/README.md
+    output_contract: 28 stable platform scenarios are schema-valid and semantically valid
+
+  G0-10:
+    source: IH-10
+    title: Web Reference Adapter
+    depends_on: [G0-08, G0-09]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+    output_contract: applicable Web scenarios emit complete observation/result; unsupported is explicit
+
+  G0-11:
+    source: IH-11
+    title: Windows Native Adapter
+    depends_on: [G0-08, G0-09]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+    output_contract: minimal Windows host runs applicable scenario set and emits evidence
+
+  G0-12:
+    source: IH-12
+    title: Android Instrumentation Adapter
+    depends_on: [G0-08, G0-09]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+    output_contract: Activity/View/JNI harness runs applicable scenario set and emits evidence
+
+  G0-13:
+    source: IH-13
+    title: Apple XCTest-style Adapter
+    depends_on: [G0-08, G0-09]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+    output_contract: UIView/ObjC++ harness runs applicable scenario set and emits evidence
+
+  G0-14:
+    source: IH-14
+    title: PR CI DAG
+    depends_on: [G0-07, G0-10]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - .github/workflows/
+    output_contract: schema -> protocol -> semantic -> platform -> aggregate dependency DAG is enforced
+
+  G0-15:
+    source: IH-15
+    title: Nightly / Release Wiring
+    depends_on: [G0-10, G0-11, G0-12, G0-13, G0-14]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+    output_contract: repeatable evidence across available platform families; no false PASS for unsupported scenarios
+
+  G0-16:
+    source: G0-plan-task-3
+    title: Gate Report Schema + Aggregator
+    mapping_kind: derived_from_g0_plan
+    depends_on: [G0-07, G0-15]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - verification/schemas/
+    output_contract: aggregate protocol/semantic/platform/CI evidence into schema-valid G0 gate-report with PASS/BLOCKED/FAIL only
+
+  G0-17:
+    source: G0-plan-task-4
+    title: G0 Gate Review
+    mapping_kind: derived_from_g0_plan
+    depends_on: [G0-16]
+    authority:
+      - docs/notion/authority/10-verification/README.md
+      - docs/notion/authority/07-runtime-data-flow/README.md
+      - docs/notion/authority/08-platform-contract/README.md
+      - verification/golden/
+    output_contract: record G0 PASS only with protocol/platform evidence, first divergence, deterministic repeat, CI wiring, schema-valid gate report, no auto-bless, and product/verification dependency isolation
