@@ -1,27 +1,27 @@
 # 05 Runtime Capability Architecture — Authority Index
 
 > Source root: Notion `05 Runtime Capability Architecture`
-> Source page: https://app.notion.com/p/3c44c57a590c8040a512c4a941bdc3a8
-> Snapshot date: 2026-08-24
+>
+> Current root baseline: `Axiom Architecture Baseline v0.4`
+>
+> Snapshot date: 2026-08-26
 
-## Repository authority
+## Start here
 
-Start with `runtime-capability-architecture-v0.1.md` for the implementation-facing reconciliation of the 05 authority set.
+Repository/Codex authority resolution starts from `docs/notion/manifest.yaml`, then this layer uses:
 
-The Notion source root contains:
+1. `axiom-architecture-baseline-v0.4.md` for the current cross-layer architecture baseline and routing rules;
+2. `runtime-capability-architecture-v0.1.md` for 05 capability ownership/dependency details where not superseded by later current authority;
+3. 06/07/08 current authority for more specific implementation/data-flow/platform contracts.
 
-- Runtime Capability Overview v0.1
-- Ownership Matrix v0.1
-- Dependency Graph v0.1
-- Public Boundary Contract v0.1
-- Platform Host Runtime Contract v0.1 — historical Axiom-internal host identity
+`axiom-architecture-baseline-v0.3.md` is retained only as historical provenance and MUST NOT override v0.4.
 
-## Precedence rule
+## Current ownership interpretation
 
-The current architecture-level `Platform Host = Composition Root` interpretation from the Runtime Capability Overview and later 06 Platform Host closure takes precedence over the older document's identity of `Platform Host = Axiom Host Runtime`.
+Platform Host is the platform composition/lifecycle/orchestration root. Axiom Platform Runtime is the Axiom-side platform integration layer; they are not two names for the same ownership boundary.
 
-The older document remains useful for retained native surface/frame/Arc details, but its identity/layering must not override the newer architecture baseline.
+05 defines capability ownership and allowed dependency direction. It does not authorize implementation agents to move semantic, storage, render, Arc or platform responsibilities across subsystem boundaries for convenience.
 
-## Codex rule
+## Precedence
 
-05 defines capability ownership and allowed dependency direction. It does not authorize an implementation agent to move semantic, storage, render, Arc, or platform responsibilities across subsystem boundaries for convenience.
+When this index or an older 05 snapshot conflicts with a more specific current 06/07/08 contract, follow `docs/notion/manifest.yaml` and the more specific current authority. Historical material may explain design evolution but is not a fallback source for missing current semantics.
