@@ -32,6 +32,17 @@ endif()
 
 gtest_discover_tests(canvas_semantic_normalization_test)
 
+add_executable(canvas_semantic_envelope_validation_test envelope_validation_test.cpp)
+target_link_libraries(canvas_semantic_envelope_validation_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_envelope_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_envelope_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_envelope_validation_test)
+
 add_executable(canvas_semantic_reference_object_store_test reference_object_store_test.cpp)
 target_link_libraries(canvas_semantic_reference_object_store_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)

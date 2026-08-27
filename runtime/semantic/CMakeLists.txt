@@ -5,6 +5,7 @@ add_library(canvas_runtime_semantic STATIC
     src/reference_object_store.cpp
     src/semantic_types.cpp
     src/normalizer.cpp
+    src/validator.cpp
     src/codec.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)
 target_link_libraries(canvas_runtime_semantic PUBLIC canvas_runtime_foundation)
