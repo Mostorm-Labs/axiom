@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "id": "RTW-003",
+  "status": "SPEC_REQUIREMENT",
+  "authorityRefs": [
+    "RichText + Stroke Semantic / Wire Reconciliation Matrix v0.1",
+    "Golden Corpus Authoring Rules + Fixture Generation Pipeline v0.1"
+  ],
+  "entrypoint": "ENCODE",
+  "requiredCapabilities": [
+    "CANONICAL_ENCODE",
+    "STRICT_WIRE_PREFLIGHT",
+    "SEMANTIC_PROJECTION"
+  ],
+  "input": {
+    "artifact": "authoring/input.projection.json"
+  },
+  "expected": {
+    "outcome": "ACCEPTED",
+    "canonicalArtifact": "expected/canonical.pb",
+    "semanticProjectionArtifact": "expected/semantic.projection.json"
+  },
+  "blockedByOpenPolicy": false
+}

@@ -1,0 +1,41 @@
+{
+  "formatVersion": 1,
+  "caseId": "RTW-009",
+  "authority": {
+    "semantic": "RichText + Stroke Semantic / Wire Reconciliation Matrix v0.1",
+    "verification": "Golden Corpus Authoring Rules + Fixture Generation Pipeline v0.1"
+  },
+  "sources": [
+    "verification/fixture-author/g1_02r_leaf_authoring_v1.json",
+    "docs/notion/authority/04-semantic-schema/04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/richtext-wire-schema-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-stroke-wire-schema-v0.1.md",
+    "docs/notion/authority/10-verification/golden-authoring-fixture-pipeline-v0.1.md"
+  ],
+  "artifacts": [
+    {
+      "path": "authoring/input.projection.json",
+      "sha256": "03f142def60189e299f01a991b138805c67ba524ac7af58fa7adc17456047e78",
+      "bytes": 504
+    },
+    {
+      "path": "case.json",
+      "sha256": "b69bf0643cf74796ba25e635c0bb85ada9c904d097efdc16a197596052fa92be",
+      "bytes": 647
+    },
+    {
+      "path": "expected/canonical.pb",
+      "sha256": "5c007a10714f1e06292107f83b9fd3873ceacf7a2c7d53d6ad71d5590a88d299",
+      "bytes": 67
+    },
+    {
+      "path": "expected/semantic.projection.json",
+      "sha256": "799cde8a03d653778c7b885a670b3d8e9cb16379b3f256220fd1245bf2301afe",
+      "bytes": 303
+    }
+  ],
+  "fixtureCompiler": {
+    "identity": "verification-only-generic-wire-author",
+    "sourceCommit": "f122e321480db9fad23f45a7b7f944dddc7effaf"
+  }
+}

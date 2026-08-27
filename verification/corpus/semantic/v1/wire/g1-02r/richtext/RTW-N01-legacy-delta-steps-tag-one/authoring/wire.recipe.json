@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "baseCase": "RTW-002",
+  "baseArtifact": "expected/canonical.pb",
+  "operations": [
+    {
+      "op": "SET_BYTE",
+      "offset": 0,
+      "valueHex": "0a"
+    },
+    {
+      "op": "SET_BYTE",
+      "offset": 1,
+      "valueHex": "00"
+    },
+    {
+      "op": "TRUNCATE",
+      "length": 2
+    }
+  ]
+}

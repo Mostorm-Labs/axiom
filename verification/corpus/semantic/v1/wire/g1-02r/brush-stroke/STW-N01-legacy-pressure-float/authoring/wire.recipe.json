@@ -1,0 +1,16 @@
+{
+  "formatVersion": 1,
+  "baseCase": "STW-001",
+  "baseArtifact": "expected/canonical.pb",
+  "operations": [
+    {
+      "op": "SET_BYTE",
+      "offset": 2,
+      "valueHex": "15"
+    },
+    {
+      "op": "TRUNCATE",
+      "length": 7
+    }
+  ]
+}
