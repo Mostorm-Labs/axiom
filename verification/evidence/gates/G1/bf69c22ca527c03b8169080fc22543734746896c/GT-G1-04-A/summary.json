@@ -1,0 +1,42 @@
+{
+  "format": "axiom-gt-g1-04-a-commit-bound-evidence-v3",
+  "taskId": "GT-G1-04-A",
+  "status": "READY_FOR_P34_REVIEW",
+  "sourceCommit": "bf69c22ca527c03b8169080fc22543734746896c",
+  "testedCommit": "bf69c22ca527c03b8169080fc22543734746896c",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorityBaseline": "17ff844f3b72e1976dee248550aa80f59ad38990",
+  "authorityManifest": "docs/notion/manifest.yaml",
+  "approvalToken": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "scope": "A0 typed semantic carrier, A1 canonical normalization, A2 envelope/wire preflight, A3 stateless payload and leaf structural validation",
+  "historicalReviewSource": "b806ee37408b199bd0fca72bd935dfb397889816",
+  "historicalReviewEvidence": "76b214fb3079698036aa54dbb79fe78a9007ea7e",
+  "closedFindings": ["P34-R09", "P34-R10", "P34-R11", "P34-R12", "P34-R13", "P34-R14", "P34-R15", "P34-R16", "P34-R17"],
+  "authorityCoverage": {
+    "totalRules": 38,
+    "A0Covered": 4,
+    "A1Covered": 12,
+    "A2Covered": 5,
+    "A3Covered": 27,
+    "deferredB": 2,
+    "deferredC": 2,
+    "missing": 0,
+    "wrongOracle": 0,
+    "blockedCarrier": 0
+  },
+  "verification": {
+    "protobufOff": {"build": "PASS", "ctestTotal": 82, "ctestPassed": 80, "ctestSkipped": 2, "ctestFailed": 0},
+    "protobufOn": {"build": "PASS", "ctestTotal": 82, "ctestPassed": 82, "ctestSkipped": 0, "ctestFailed": 0},
+    "pythonRegression": {"total": 17, "passed": 17, "failed": 0},
+    "projectionContract": "PASS",
+    "semanticContract": "PASS",
+    "descriptorRefreeze": "PASS",
+    "runtimeBoundary": "PASS",
+    "linkageIsolation": "PASS",
+    "docs": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "deferredLanes": ["GT-G1-04-B stateful validation and ApplyPlan", "GT-G1-04-C outcome/golden authority", "GT-G1-05"],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"],
+  "gateInterpretation": "A0-A3 is prepared for independent P34 review; this is not a Gate PASS and does not authorize B/C/G1-05."
+}
