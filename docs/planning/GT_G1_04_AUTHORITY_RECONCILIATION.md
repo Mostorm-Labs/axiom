@@ -46,7 +46,7 @@ Snapshot、replay、Scene、Arc 或产品 Shell。这些分别属于 GT-G1-05 �
 | numeric / collection 规范化 | Common Wire、`canonical_profile_v1.yaml`、ADR-0026、field registry | 已冻结：finite f64、`-0 → +0`、PropertyBag 按 FieldId 排序且重复拒绝。 |
 | 注册表与 hard limit | field/operation registry、`protocol_hard_limits_v1.yaml` | 已冻结；实现须从集中表读取，不能在 C++/TS 各自复制规则。 |
 | resulting-state / connector delete | `07-03-operation-semantic-document-v0.1.md`、connector contract、semantic conformance source | 已冻结：验证 resultant state；delete 必须预先解析到 connector fixed-point cascade closure。 |
-| 负例的稳定错误代码 | `semantic-conformance-golden-corpus-v0.1.md` 仍是 Draft / Freeze Candidate；现有 corpus 仅有 codec BG/BG-N 与 `seed-v0.1`，没有 15-operation apply case set | 不能把实现自定义 code 升格为协议 authority。内部诊断可稳定，但 GT-G1-04 最终 golden 需新增人工审阅的 case intent、stage/path/outcome。 |
+| 负例的稳定错误代码（GT-G1-04-C） | `semantic-conformance-golden-corpus-v0.1.md` 仍是 Draft / Freeze Candidate；现有 corpus 仅有 codec BG/BG-N 与 `seed-v0.1`，没有 15-operation apply case set | 这是 verification authority / materialization 缺口，不能把实现自定义 code 升格为协议 authority；它阻塞 GT-G1-04 最终验证，但不阻塞 A 的 semantic implementation readiness。 |
 
 ### 已修正的计划漂移
 
@@ -79,22 +79,23 @@ Decode / typed view
 | Private mutation seam | `internal::ObjectStoreMutator` | Reuse with restriction | 仅由 GT-G1-05 的 Atomic Apply 消费；G1-04 任意阶段不得调用。 |
 | Normalizer / validator / idempotency / ApplyPlan 公共 API | 不存在 | Missing | 新建四个 focused headers/sources；公共 header 不引入 Scene、Skia、Arc、平台、存储或网络。 |
 | Document/generation/ChangeSet publish | 只有类型定义，未有 SemanticDocument | Missing, downstream | 不在 G1-04 伪实现；由 GT-G1-05 实现。 |
-| Apply conformance corpus | 无 15-operation positive/negative/replay/no-mutation case set | Missing | 首先创建 human-reviewed authority-manual case intent，再由 verification-only fixture compiler 派生数据。 |
+| Apply conformance corpus | 无 15-operation positive/negative/replay/no-mutation case set | Missing, GT-G1-04-C | 首先创建 human-reviewed authority-manual case intent，再由 verification-only fixture compiler 派生数据；不作为 A semantic authority blocker。 |
 | 旧 Task 状态 | G1 计划和 R 表仍显示 G1-02 Blocked、G1-03 Not Started/planned | Conflict | 本次同步为已通过的 commit-bound Evidence，避免 G1-04 从错误依赖状态启动。 |
 
 ## 4. Gate Task Matrix
 
 | Notion Task ID | Gate Task ID | 子工作包 | R 贡献 | 关联 Requirement | ADR / Contract | 依赖 | 分类 | 设计 | 实现 | 验证 | Evidence | 阻塞项 | 最终状态 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| G1/Task 4 | GT-G1-04-A | typed operation input、normalizer 与 envelope/payload validation | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1；ADR-0025、ADR-0026；Common Wire | G1-02, G1-03 | Modify | Blocked | Not Started | Blocked | [Contract Matrix](GT_G1_04_A_CONTRACT_MATRIX.md)；`verification/evidence/gates/G1/<commit>/GT-G1-04/operation-matrix.json`（未产生） | schema/payload version、repeated payload、kind_version、VectorPath、NormalizedRect、RichText/Stroke/Connector 规则及审阅式 negative intent 尚未由 authority 物化 | Blocked |
+| G1/Task 4 | GT-G1-04-A | typed operation input、normalizer 与 envelope/payload validation | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1；ADR-0025、ADR-0026；Common Wire | G1-02, G1-03 | Modify | Blocked | Not Started | Blocked | [Contract Matrix](GT_G1_04_A_CONTRACT_MATRIX.md)；`verification/evidence/gates/G1/<commit>/GT-G1-04/operation-matrix.json`（未产生） | Operation structural semantics、ObjectKind version registry 与实际 stateless leaf structural gaps 尚未由 authority 物化；15-operation reviewed intent 不属于 A blocker，归 GT-G1-04-C | Blocked |
 | G1/Task 4 | GT-G1-04-B | idempotency classifier、reference/kind/resulting-state validation 与 read-only ApplyPlan | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | 07-03；operation validation；connector/field/leaf contracts | GT-G1-04-A | Missing | Ready | Not Started | Not Started | `negative-results.json`、`no-mutation-results.json` | Apply semantics only; no commit/publication before G1-05 | Not Started |
 | G1/Task 4 | GT-G1-04-C | 15-operation golden intent、independent fixtures、negative stage/path/result records | R1,R2 | REQ-GAP-VER；REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | semantic conformance；golden authoring pipeline | GT-G1-04-A/B | Missing | Analyzing | Not Started | Blocked | `summary.json` | human-reviewed case intent / frozen semantic error outcomes are not yet materialized in repository | Blocked |
 
-此前的对账认为 A 可开始，是因为它只识别到了最终 C 的审阅式语料缺口。A 的 Contract Matrix
-现已进一步证明：在未定义 version/presence、repeated payload 和若干 leaf structural rule 前，
-连无状态 payload structural validation 也不能合法 materialize。故 GT-G1-04-A 的产品实现
-现为 `BLOCKED_AUTHORITY`；这不改变 G1-02/G1-03 已通过的 evidence，也不授权通过 production
-codec 生成 authority。C 的审阅式语料仍是整个 GT-G1-04 的独立必需条件。
+此前的对账把 A 的 semantic closure 与最终 C 的审阅式语料混列。Re-entry 后已纠正 ownership：
+A 只由 Operation structural semantics、ObjectKind version registry 和 stateless leaf structural
+gaps 决定；15-operation reviewed intent、稳定 stage/path/outcome 与 independent fixture
+materialization 全部归 GT-G1-04-C。故 GT-G1-04-A 仍为 `BLOCKED_AUTHORITY`，但其 blocker 不再
+包含 C corpus；这不改变 G1-02/G1-03 已通过的 evidence，也不授权通过 production codec 生成
+authority。C 仍是整个 GT-G1-04 最终验证的独立必需条件。
 
 ## 5. 验证与 Evidence 设计
 
@@ -149,14 +150,14 @@ semantic contract/public-boundary 测试、BG 与 GT-G1-02R leaf differential �
 | GT-G1-04-A2 envelope validation | `BLOCKED_AUTHORITY` | version accepted/missing/zero policy 未有 current closure。 |
 | GT-G1-04-A3 payload structural validation | `BLOCKED_AUTHORITY` | repeated semantics、kind-version 与 leaf structural closure 未有 current closure。 |
 | GT-G1-04-B | `NOT_STARTED` | 仍是 A 的下游；不得提前实现 state/reference/invariant/ApplyPlan。 |
-| GT-G1-04-C | `BLOCKED_VERIFICATION_MATERIALIZATION` | 15-operation reviewed corpus 已移入 C，等待 authority-backed intent 与 independent fixture materialization。 |
+| GT-G1-04-C | `BLOCKED_VERIFICATION_MATERIALIZATION` | 15-operation reviewed corpus 已移入 C，等待 authority-backed intent 与 independent fixture materialization；不回阻 A。 |
 | GT-G1-05 | `NOT_AUTHORIZED` | 在 G1-04 结束前不得启动。 |
 
-当前 manifest/current authority 中尚未 materialize 的 closure 为：`Operation Structural
-Semantics V1 Closure`、`ObjectKind Version Registry V1 Release`、`Semantic Leaf Structural
-Validation Closure V1` 与 `G1-04 Semantic Authority Closure Gate`（或具备相同规范效力并被
-manifest 列为 current 的替代条目）。它们分别关闭 version/repeated policy、kind-version
-registry、leaf structural rule 和 15-operation reviewed intent/outcome。
+当前 manifest/current authority 中尚未 materialize 的三项 semantic closure 为：`Operation
+Structural Semantics V1 Closure`、`ObjectKind Version Registry V1 Release` 与 `Semantic Leaf
+Structural Validation Closure V1`（或具备相同规范效力并被 manifest 列为 current 的替代条目）。
+`G1-04 Semantic Authority Closure Gate` 是这三项语义的组合复核，不另行拥有 C 的 reviewed
+intent/outcome；15-operation reviewed intent/outcome 由 GT-G1-04-C 独立负责。
 
 ### 7.3 当前下一步与停止条件
 

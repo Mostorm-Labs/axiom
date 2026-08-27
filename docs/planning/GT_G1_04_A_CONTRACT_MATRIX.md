@@ -34,8 +34,9 @@ FieldId 升序/唯一性，以及持久 EraseMask 的 MaskId 无符号字典序/
    排序或集合语义；
 3. 完整 ObjectKind → accepted `kind_version` 表；
 4. VectorPath 命令序列语法、NormalizedRect 精确域、RichText step 结构与九级 weight 的实际域；
-5. 人工审阅的 15-operation negative intent。现有 semantic conformance 文档仍是 Draft / Freeze
-   Candidate，不能把实现诊断升格为 protocol outcome。
+5. 人工审阅的 15-operation negative intent。**这是历史上与 A 混列的 verification 缺口，
+   已由下方 Re-entry Review 纠正并移交 GT-G1-04-C**；现有 semantic conformance 文档仍是
+   Draft / Freeze Candidate，不能把实现诊断升格为 protocol outcome。
 
 因此本任务不得写出会固化这些选择的 normalizer 或 payload validator；状态为
 `BLOCKED_AUTHORITY`。未创建、未修改产品 C++、schema、registry 或 codec truth。
@@ -152,17 +153,20 @@ A；A 不应创建占位实现或查询 `ObjectStore`：
 和可调试性；但在当前没有审阅式 15-operation negative corpus 的情况下，这些内部代码、
 路径优先级和文本不是 protocol authority，也不能成为 golden expected output。
 
-### 仍然 blocked 的协议结果
+### GT-G1-04-C verification lane（不属于 A semantic blocker）
 
 `semantic-conformance-golden-corpus-v0.1.md` 仍是 Draft / Freeze Candidate。因而每个
 operation 的 negative intent、稳定的 stage/path/outcome 组合、同一阶段多个错误的优先级，
-都必须先经过人工审阅并物化到 authority corpus；不能从 production validator 的输出反向
-生成 expected answer，也不能用 protobuf exception string 充当 semantic oracle。
+都必须先经过人工审阅并物化到 GT-G1-04-C verification authority；不能从 production validator
+的输出反向生成 expected answer，也不能用 protobuf exception string 充当 semantic oracle。
+这项缺口仍然阻塞 GT-G1-04 的最终验证，但不阻塞已经由 A semantic authority 定义完整的
+A0–A3 实现。
 
 ## 8. Required authority closure
 
 要解除本 A 包的 `BLOCKED_AUTHORITY`，最小闭环不是实现更多代码，而是由 Architecture /
-Semantic Authority 发布并进入 manifest/current mirror 的下列决定：
+Semantic Authority 发布并进入 manifest/current mirror 的下列**语义**决定。15-operation
+reviewed corpus 不在本清单中；它由 GT-G1-04-C 单独拥有：
 
 1. Operation `schemaVersion` 与 `payloadVersion` 的 V1 accepted matrix，以及 missing/zero 的明确策略；
 2. 除 PropertyBag 和持久 `erase_masks` 外，每个 repeated operation payload 的空集、重复 target/key、
@@ -174,11 +178,13 @@ Semantic Authority 发布并进入 manifest/current mirror 的下列决定：
    font-weight 数值表；
 7. AddStroke 的 sample cardinality、pressure/tilt/opacity 精确域与 kind/version 适用性；
 8. SetConnectorContent 的 anchor/port/presence 规则（target existence 仍留给 B）；
-9. 人工审阅的 15-operation positive/negative case intent，以及冻结的 stage/path/outcome，供独立
-   verification-only fixture compiler 和 runner 消费。
+9. （不属于 A）人工审阅的 15-operation positive/negative case intent，以及冻结的
+   stage/path/outcome，供独立 verification-only fixture compiler 和 runner 消费；该项保留在
+   GT-G1-04-C，不作为 A 的 unblock 条件。
 
-在上述 closure 到位前，继续实现 normalizer 或 payload validator 会把未批准的行为写入
-公共语义边界，因此本工作包在 Contract Matrix 阶段停止。
+在前 1–8 项 semantic closure 到位前，继续实现 normalizer 或 payload validator 会把未批准
+的行为写入公共语义边界，因此本工作包在 Contract Matrix 阶段停止。第 9 项只决定 C 的
+verification materialization，不改变 A 的 semantic readiness。
 
 ## Re-entry Review after GT-G1-02R
 
@@ -226,8 +232,9 @@ codec 与 golden 的机器投影一致性。其 source commit 为
 
 ### 尚未物化的最小 authority closure
 
-截至当前 manifest/current authority，以下四项目标 authority 文件或等价 current manifest
-条目均未 materialize；历史、superseded 与 draft 内容只能作为 provenance，不能补齐缺口：
+截至当前 manifest/current authority，以下三项目标 semantic authority 文件或等价 current
+manifest 条目均未 materialize；历史、superseded 与 draft 内容只能作为 provenance，不能补齐
+缺口。G1-04-A closure gate 是它们的组合复核，不另行引入一套语义：
 
 1. `Operation Structural Semantics V1 Closure`：定义 envelope version policy 与每类 repeated
    payload 的 sequence/set、空集、重复和 comparator 语义。
@@ -235,12 +242,13 @@ codec 与 golden 的机器投影一致性。其 source commit 为
    registry 与适用性边界。
 3. `Semantic Leaf Structural Validation Closure V1`：关闭 VectorPath、NormalizedRect、RichText、
    Stroke 与 Connector 的尚缺 structural validation 规则。
-4. `G1-04 Semantic Authority Closure Gate`：以人工审阅的 15-operation intent、negative
-   stage/path/outcome 确认可供 independent fixture compiler 消费的最终入口。
+4. `G1-04 Semantic Authority Closure Gate`：作为三项 semantic authority 的组合复核；不得
+   把 GT-G1-04-C 的 reviewed intent、negative stage/path/outcome 当作 A 的输入。
 
-最小恢复动作是先由 authority 发布并在 `docs/notion/manifest.yaml` 的 current set 中列出这些
-closure（或其等价规范）；随后重新执行 A0–A3 对账。此时才可决定 A 是否从
-`BLOCKED_AUTHORITY` 变为 `READY`。在此之前，下一步是 authority closure，**不是 C++**。
+最小恢复动作是先由 authority 发布并在 `docs/notion/manifest.yaml` 的 current set 中列出这三
+项 semantic closure（或其等价规范），随后重新执行 A0–A3 对账。此时才可决定 A 是否从
+`BLOCKED_AUTHORITY` 变为 `READY`。C 的 reviewed corpus 仍需另行物化，但不回阻 A；在此之前，
+下一步是 authority closure，**不是 C++**。
 
 ### Re-entry 最终状态
 
