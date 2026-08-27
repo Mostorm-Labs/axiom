@@ -1,0 +1,70 @@
+{
+  "format": "axiom-g1-04-machine-projection-review-evidence-v1",
+  "gate": "GT-G1-04-A",
+  "status": "MACHINE_PROJECTION_REVIEW_CLOSED_IMPLEMENTATION_NOT_STARTED",
+  "approval_token": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "semantic_authority_commit": "8adcf8599775dcdf8852699f5f8725a7add1864e",
+  "prior_publication_evidence_commit": "2b9506077e5f76ef7a71e037f51bc7222754ffa6",
+  "projection_source_commit": "b62fb8bab950a88641721da9db2b96faea385b24",
+  "projection_source_tree": "d71e4b7d2d2fe289724957371709a9cb6466977c",
+  "authority_baseline": "26dcee011f4f35cfca7cd3f1d9a6c115e46853e2",
+  "closed_findings": [
+    {
+      "classification": "MACHINE_PROJECTION_SCOPE_CREEP",
+      "path": "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+      "closure": "removed unapproved reserved_range"
+    },
+    {
+      "classification": "MACHINE_PROJECTION_INCONSISTENCY",
+      "path": "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml",
+      "closure": "aligned ObjectRecord keys and nested SplitStrokes path with frozen Proto and authority"
+    },
+    {
+      "classification": "MACHINE_PROJECTION_INCOMPLETE",
+      "path": "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml",
+      "closure": "projected operation-wide replacement-id and erase-mask-id uniqueness"
+    },
+    {
+      "classification": "MACHINE_PROJECTION_INCOMPLETE",
+      "path": "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml",
+      "closure": "completed approved VectorPath grammar projection without changing human authority"
+    }
+  ],
+  "changed_files_from_prior_evidence": [
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml"
+  ],
+  "validation": {
+    "red_phase": {
+      "result": "EXPECTED_FAIL",
+      "reason": "one-off contract test detected scope creep, Proto path/key mismatch, missing operation-wide uniqueness, and incomplete VectorPath projection"
+    },
+    "green_phase": {
+      "command": "python3 test_projection_contract.py",
+      "result": "PASS",
+      "output": "PASS: G1-04 machine projections match frozen authority shape"
+    },
+    "yaml_syntax": {
+      "parser": "Ruby Psych safe_load_file",
+      "result": "PASS",
+      "files": 3
+    },
+    "scope_diff": {
+      "base": "2b9506077e5f76ef7a71e037f51bc7222754ffa6",
+      "head": "b62fb8bab950a88641721da9db2b96faea385b24",
+      "result": "PASS",
+      "ahead_by": 3,
+      "changed_files": 3
+    },
+    "authority_provenance": "PASS",
+    "proto_runtime_corpus_change": "NONE"
+  },
+  "sha256": {
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml": "8cd6baf73f0d9decf1ab0363d019219df5b356f0b9989b4891d51f86fba31082",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml": "9f44e3eb350d8348e9980194a529d010b87b64e1e4172ca243f799f02fb315fe",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml": "9ec8df1adcd3446ec7addb4d06c4d672893e60909ef1658bec3b9527fc173481"
+  },
+  "notion_authority_mutation": "NONE",
+  "excluded_lanes": ["GT-G1-04-B", "GT-G1-04-C", "GT-G1-05"]
+}
