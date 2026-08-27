@@ -25,11 +25,30 @@ constexpr std::size_t kMaxGenericStringBytes = 1024U * 1024U;
 constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
 constexpr std::size_t kMaxGeometryElements = 2000000U;
 
-std::size_t addGeometryElements(std::size_t total, std::size_t next) noexcept {
-    if (total > kMaxGeometryElements || next > kMaxGeometryElements - total) {
-        return kMaxGeometryElements + 1U;
+struct GeometryCount final {
+    std::size_t units = 0U;
+    ValidationIssue issue = ValidationIssue::kNone;
+};
+
+GeometryCount addGeometryUnits(GeometryCount total, GeometryCount next) noexcept {
+    if (total.issue != ValidationIssue::kNone) return total;
+    if (next.issue != ValidationIssue::kNone) return next;
+    if (next.units > std::numeric_limits<std::size_t>::max() - total.units) {
+        return {0U, ValidationIssue::kIntegerOverflow};
     }
-    return total + next;
+    const auto sum = total.units + next.units;
+    if (sum > kMaxGeometryElements) return {sum, ValidationIssue::kGeometryLimitExceeded};
+    return {sum, ValidationIssue::kNone};
+}
+
+GeometryCount multiplyGeometryUnits(std::size_t count, std::size_t weight) noexcept {
+    if (weight != 0U && count > std::numeric_limits<std::size_t>::max() / weight) {
+        return {0U, ValidationIssue::kIntegerOverflow};
+    }
+    const auto units = count * weight;
+    return units > kMaxGeometryElements
+        ? GeometryCount{units, ValidationIssue::kGeometryLimitExceeded}
+        : GeometryCount{units, ValidationIssue::kNone};
 }
 
 bool validUtf8(std::string_view text) noexcept {
@@ -157,7 +176,7 @@ bool validConnector(const ConnectorContent& value) noexcept {
                                anchor.hint->y >= 0.0 && anchor.hint->y <= 1.0 &&
                                !(anchor.hint->x == 0.5 && anchor.hint->y == 0.5);
                     } else {
-                        return anchor.port_id != 0U;
+                        return anchor.port_id >= 1U && anchor.port_id <= 4U;
                     }
                 }, item.anchor);
             }
@@ -167,46 +186,60 @@ bool validConnector(const ConnectorContent& value) noexcept {
            (value.routing == ConnectorRouting::kStraight || value.routing == ConnectorRouting::kOrthogonal);
 }
 
-std::size_t geometryElements(const ObjectContent& content) noexcept {
-    return std::visit([](const auto& value) -> std::size_t {
-        using Item = std::decay_t<decltype(value)>;
-        if constexpr (std::is_same_v<Item, VectorPathContent>) return value.geometry.commands.size();
-        else if constexpr (std::is_same_v<Item, VectorStrokeContent>) {
-            if (const auto* data = std::get_if<VectorStrokeData>(&value.stroke.data)) return data->samples.size();
-            return kMaxGeometryElements + 1U;
-        } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
-            if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return data->dabs.size();
-            return kMaxGeometryElements + 1U;
-        }
-        else return 0U;
-    }, content);
-}
-
-std::size_t geometryElements(const EraseMaskGeometry& geometry) noexcept {
-    return std::visit([](const auto& value) -> std::size_t {
-        using Item = std::decay_t<decltype(value)>;
-        if constexpr (std::is_same_v<Item, SweptCircleMask>) {
-            return value.segments.size();
-        } else {
-            return value.path.commands.size();
-        }
-    }, geometry);
-}
-
-std::size_t geometryElements(const ObjectRecord& object) noexcept {
-    std::size_t total = geometryElements(object.content);
-    for (const auto& mask : object.erase_masks) {
-        total = addGeometryElements(total, geometryElements(mask.geometry));
+GeometryCount geometryUnits(const VectorPathGeometry& path) noexcept {
+    GeometryCount total{};
+    for (const auto& command : path.commands) {
+        std::size_t units = 0U;
+        if (std::holds_alternative<MoveTo>(command) || std::holds_alternative<LineTo>(command)) units = 1U;
+        else if (std::holds_alternative<QuadTo>(command)) units = 2U;
+        else if (std::holds_alternative<CubicTo>(command)) units = 3U;
+        total = addGeometryUnits(total, {units, ValidationIssue::kNone});
+        if (total.issue != ValidationIssue::kNone) return total;
     }
     return total;
 }
 
-std::size_t geometryElements(const OperationPayload& payload) noexcept {
-    return std::visit([](const auto& value) -> std::size_t {
+GeometryCount geometryUnits(const ObjectContent& content) noexcept {
+    return std::visit([](const auto& value) -> GeometryCount {
+        using Item = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<Item, VectorPathContent>) return geometryUnits(value.geometry);
+        else if constexpr (std::is_same_v<Item, VectorStrokeContent>) {
+            if (const auto* data = std::get_if<VectorStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->samples.size(), 1U);
+            return {0U, ValidationIssue::kIntegerOverflow};
+        } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
+            if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), 3U);
+            return {0U, ValidationIssue::kIntegerOverflow};
+        }
+        else return {0U, ValidationIssue::kNone};
+    }, content);
+}
+
+GeometryCount geometryUnits(const EraseMaskGeometry& geometry) noexcept {
+    return std::visit([](const auto& value) -> GeometryCount {
+        using Item = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<Item, SweptCircleMask>) {
+            return multiplyGeometryUnits(value.segments.size(), 6U);
+        } else {
+            return geometryUnits(value.path);
+        }
+    }, geometry);
+}
+
+GeometryCount geometryUnits(const ObjectRecord& object) noexcept {
+    GeometryCount total = geometryUnits(object.content);
+    for (const auto& mask : object.erase_masks) {
+        total = addGeometryUnits(total, geometryUnits(mask.geometry));
+        if (total.issue != ValidationIssue::kNone) return total;
+    }
+    return total;
+}
+
+GeometryCount geometryUnits(const OperationPayload& payload) noexcept {
+    return std::visit([](const auto& value) -> GeometryCount {
         using Payload = std::decay_t<decltype(value)>;
-        std::size_t total = 0U;
+        GeometryCount total{};
         auto addObject = [&total](const ObjectRecord& object) {
-            total = addGeometryElements(total, geometryElements(object));
+            total = addGeometryUnits(total, geometryUnits(object));
         };
         if constexpr (std::is_same_v<Payload, InsertObjectsOp> ||
                       std::is_same_v<Payload, RestoreObjectsOp>) {
@@ -220,11 +253,11 @@ std::size_t geometryElements(const OperationPayload& payload) noexcept {
         } else if constexpr (std::is_same_v<Payload, AddEraseMasksOp>) {
             for (const auto& item : value.items) {
                 for (const auto& mask : item.masks) {
-                    total = addGeometryElements(total, geometryElements(mask.geometry));
+                    total = addGeometryUnits(total, geometryUnits(mask.geometry));
                 }
             }
         } else if constexpr (std::is_same_v<Payload, SetVectorPathGeometryOp>) {
-            total = value.geometry.commands.size();
+            total = geometryUnits(value.geometry);
         }
         return total;
     }, payload);
@@ -511,7 +544,7 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
 bool validObjectRecordStructure(const ObjectRecord& object) {
     if (!validObjectKindTriple(object) || !validPropertyBag(object.kind, object.properties)) return false;
     if (!validTransform2D(object.transform)) return false;
-    if (geometryElements(object.content) > kMaxGeometryElements) return false;
+    if (geometryUnits(object.content).issue != ValidationIssue::kNone) return false;
     if (object.placement.parent_id.has_value() && !validId(*object.placement.parent_id)) return false;
     if (!object.placement.order_key.isValid()) return false;
     if (!object.erase_masks.empty()) {
@@ -604,9 +637,8 @@ ValidationResult validateEnvelope(
 }
 
 ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
-    if (geometryElements(operation.payload) > kMaxGeometryElements) {
-        return {ValidationIssue::kInvalidLeaf};
-    }
+    const auto geometry = geometryUnits(operation.payload);
+    if (geometry.issue != ValidationIssue::kNone) return {geometry.issue};
     return std::visit(
         [](const auto& payload) -> ValidationResult {
             using Payload = std::decay_t<decltype(payload)>;

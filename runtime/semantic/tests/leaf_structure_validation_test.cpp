@@ -95,6 +95,17 @@ Operation strokeOperation(ObjectKind kind, StrokeRecord stroke) {
     return operation;
 }
 
+ObjectRecord geometryObject(std::uint64_t object_id, ObjectContent content) {
+    ObjectRecord object;
+    object.id = id(object_id);
+    object.kind_version = 1U;
+    object.placement.order_key = OrderKey({static_cast<std::uint8_t>(object_id)});
+    object.kind = std::holds_alternative<VectorPathContent>(content) ? ObjectKind::kVectorPath :
+                 (std::holds_alternative<DabStrokeContent>(content) ? ObjectKind::kDabStroke : ObjectKind::kVectorStroke);
+    object.content = std::move(content);
+    return object;
+}
+
 TEST(LeafStructureValidation, EnforcesStrokeCardinalityRepresentationAndDabDomain) {
     EXPECT_TRUE(validatePayloadStructure(strokeOperation(ObjectKind::kVectorStroke, vectorStroke())).ok());
     EXPECT_TRUE(validatePayloadStructure(strokeOperation(ObjectKind::kDabStroke, dabStroke())).ok());
@@ -211,7 +222,13 @@ TEST(LeafStructureValidation, EnforcesConnectorAnchorAndRoutingDomain) {
     content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{0U}}};
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
     content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{5U}}};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{1U}}};
     EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{4U}}};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{std::numeric_limits<std::uint32_t>::max()}}};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
     content.start = ConnectorEndpoint{FreePointEndpoint{{0.0, 0.0}}};
     content.routing = static_cast<ConnectorRouting>(0U);
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
@@ -328,6 +345,66 @@ TEST(LeafStructureValidation, EnforcesOperationGeometryAggregateLimit) {
     Operation operation;
     operation.payload = InsertObjectsOp{{std::move(first), std::move(second)}};
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
+}
+
+TEST(LeafStructureValidation, UsesGeometryAtomWeightsNotCommandCount) {
+    constexpr std::size_t kCubicCount = 666667U;
+    std::vector<PathCommand> commands;
+    commands.reserve(kCubicCount + 1U);
+    commands.emplace_back(MoveTo{{0.0, 0.0}});
+    for (std::size_t index = 0U; index < kCubicCount; ++index) {
+        commands.emplace_back(CubicTo{{1.0, 2.0}, {3.0, 4.0}, {5.0, 6.0}});
+    }
+    const auto result = validatePayloadStructure(pathOperation(std::move(commands)));
+    EXPECT_EQ(result.issue, ValidationIssue::kGeometryLimitExceeded);
+}
+
+TEST(LeafStructureValidation, CountsDabAndEraseGeometryAtoms) {
+    auto dab = dabStroke();
+    auto dab_object = geometryObject(10U, DabStrokeContent{dab});
+    Operation dab_operation;
+    dab_operation.payload = AddStrokeOp{std::move(dab_object)};
+    EXPECT_TRUE(validatePayloadStructure(dab_operation).ok());
+
+    EraseCubicSegment segment{
+        EraseKnot{Vec2{0.0, 0.0}, 1.0}, EraseKnot{Vec2{1.0, 1.0}, 1.0},
+        Vec2{0.5, 0.5}, Vec2{0.5, 0.5}};
+    Operation erase_operation;
+    erase_operation.payload = AddEraseMasksOp{{EraseMaskAddItem{
+        id(1U), {EraseMaskRecord{id(2U), SweptCircleMask{{segment}}}}}}};
+    EXPECT_TRUE(validatePayloadStructure(erase_operation).ok());
+}
+
+TEST(LeafStructureValidation, EnforcesExactGeometryAggregateBoundaries) {
+    auto make_dab_object = [](std::uint64_t object_id, std::size_t count) {
+        auto stroke = dabStroke();
+        auto& dabs = std::get<DabStrokeData>(stroke.data).dabs;
+        const auto dab = dabs.front();
+        dabs.assign(count, dab);
+        return geometryObject(object_id, DabStrokeContent{std::move(stroke)});
+    };
+    auto make_path_object = [](std::uint64_t object_id, std::size_t units) {
+        std::vector<PathCommand> commands;
+        commands.reserve(units);
+        commands.emplace_back(MoveTo{{0.0, 0.0}});
+        for (std::size_t index = 1U; index < units; ++index) {
+            commands.emplace_back(LineTo{{static_cast<double>(index), 0.0}});
+        }
+        return geometryObject(object_id, VectorPathContent{VectorPathGeometry{
+            FillRule::kNonZero, std::move(commands)}});
+    };
+
+    Operation below;
+    below.payload = InsertObjectsOp{{make_dab_object(1U, 666665U), make_path_object(2U, 4U)}};
+    EXPECT_EQ(validatePayloadStructure(below).issue, ValidationIssue::kNone);
+
+    Operation exact;
+    exact.payload = InsertObjectsOp{{make_dab_object(1U, 666665U), make_path_object(2U, 5U)}};
+    EXPECT_EQ(validatePayloadStructure(exact).issue, ValidationIssue::kNone);
+
+    Operation above;
+    above.payload = InsertObjectsOp{{make_dab_object(1U, 666665U), make_path_object(2U, 6U)}};
+    EXPECT_EQ(validatePayloadStructure(above).issue, ValidationIssue::kGeometryLimitExceeded);
 }
 
 } // namespace

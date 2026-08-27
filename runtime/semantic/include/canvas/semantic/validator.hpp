@@ -15,6 +15,8 @@ enum class ValidationIssue : std::uint8_t {
     kInvalidObjectKind,
     kInvalidPropertyPatch,
     kInvalidLeaf,
+    kGeometryLimitExceeded,
+    kIntegerOverflow,
 };
 
 // This is a local implementation diagnostic only.  GT-G1-04-C owns any

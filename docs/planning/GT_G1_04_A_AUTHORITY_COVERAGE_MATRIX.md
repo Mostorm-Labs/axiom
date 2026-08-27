@@ -26,7 +26,7 @@
 | IMG-05 | ImageContent V1 Release | enum identity `INVALID=0`, `FIT=1`, `FILL=2`, `STRETCH=3`; 0/unknown reject | A0/A3 | semantic/generated enum | object proto, semantic enum, validator | static identity + wire mapping tests | COVERED |
 | CN-V1-01 | Connector Anchor Contract | free-point endpoint finite; routing only Straight/Orthogonal | A3 | `ConnectorContent` | `validConnector` | connector leaf tests | COVERED |
 | CN-V1-05 | Connector Anchor Contract | AutoPerimeter hint absence differs from presence; present hint finite/unit-range and non-center; `-0` normalizes | A0/A1/A3 | `optional<Vec2>` hint | object carrier/normalizer/validator | presence/range tests | COVERED |
-| CN-V1-06 | Connector Anchor Contract | FixedPort `port_id != 0`; registry applicability to current target is B | A3/B | `StablePortAnchor.port_id` | validator | non-zero + arbitrary non-zero target-independent test | COVERED |
+| CN-V1-06 | Semantic Leaf Structural Validation §6 + Connector Anchor Contract | StablePort static V1 namespace is `1..4`; current-target applicability remains B | A3/B | `StablePortAnchor.port_id` | `validator.cpp::validConnector` | StablePort `0/1/4/5/UINT32_MAX` boundary test | COVERED |
 | GEO-V1-01 | Geometry Types + Common Wire | geometry scalars finite; `-0 → +0`; no clamping | A1/A3 | geometry carriers | normalizer/validator | numeric tests | COVERED |
 | GEO-V1-02 | Current Transform2D structural rule | determinant `a*d-b*c` exact non-zero; no epsilon | A3 | `Transform2D` | `validTransform2D` | identity/rotation/singular/NaN/Inf tests | COVERED |
 | ORDER-V1-01 | OrderKey RFC + canonical profile | opaque unsigned-byte lexicographic key, length 1..32; trailing zero invalid | A1/A3 | `OrderKey` | `order_key.hpp` | boundary/trailing-zero tests | COVERED |
@@ -37,12 +37,12 @@
 | ERASE-V1-02 | Reference IDL ObjectRecord | non-empty `erase_masks` only for VectorStroke or DabStroke; other kinds reject | A3 | kind + erase masks | validator | kind-applicability tests | COVERED |
 | WIRE-V1-01 | Hard Limits + Common Wire | operation encoded bytes <= 33,554,432 before expensive decode/allocation | A2 | raw wire bytes | codec wire preflight | exact/plus-one tests | COVERED |
 | WIRE-V1-02 | Hard Limits + Reference IDL | nested ObjectRecord encoded message <=16,777,216 from raw nested length, never typed-memory guess | A2/A3 | raw length-delimited field | codec preflight seam | nested boundary/seam test | COVERED |
-| WIRE-V1-03 | Hard Limits | generic UTF-8 string <=1,048,576 bytes | A3 | string carriers | validator | string boundary tests | COVERED |
+| WIRE-V1-03 | Hard Limits | generic UTF-8 string <=1,048,576 bytes | A2/A3 | raw string carrier + typed strings | codec preflight + validator | raw 1MiB/1MiB+1 and typed string boundaries | COVERED |
 | WIRE-V1-04 | Hard Limits | EditRichText inserted aggregate <=8,388,608 bytes only | A3 | `RichTextDelta` | validator | aggregate/document tests | COVERED |
-| WIRE-V1-05 | Hard Limits | keyed batch <=65,535; masks/object <=65,535; geometry aggregate <=2,000,000 | A1/A2/A3 | vectors/raw wire | normalizer/validator/codec | boundary tests | COVERED |
+| WIRE-V1-05 | Hard Limits + Geometry Aggregate Accounting | keyed batch <=65,535; masks/object <=65,535; exact geometry aggregate <=2,000,000 | A1/A2/A3 | vectors/raw wire | normalizer/validator/codec | raw collection limits + independent geometry boundaries | COVERED |
+| GAA-V1-01 | Geometry Aggregate Accounting Contract §GAA-01..05 | exact atom weights: path `1/1/2/3/0`, sample `1`, dab `3`, erase segment `6`; operation-payload-only checked aggregation | A2/A3 | `OperationPayload` geometry carriers | `validator.cpp::geometryUnits` | weighted carrier + `N-1/N/N+1` geometry tests | COVERED |
 | A0-CARRIER-01 | Reference IDL + generated Proto baseline | nested protobuf payloads map completely or fail closed; enum/descriptor identity matches authority | A0/A2 | generated DTO → typed mapper | `decodeProtobufOperation` | protobuf ON projection/descriptor tests | COVERED |
 | A0-CARRIER-02 | Operation Structural Semantics §2 | raw version-field occurrence preserved before scalar default erasure | A2 | `OperationFieldPresence` | codec preflight | protobuf presence test | COVERED |
-| P34-R09..R17 | External P34 verdict reference absent from repository | IDs retained for lineage; concrete closure is bound only to rows above, not invented from absent text | A0–A3 | matrix + Evidence | P35/P36 review package | external verdict attachment required | DEFERRED_C |
 | B-REF-01 | Connector/ObjectKind/Operation Validation | target existence/current kind/applicability, parent/reference/connectability, current mask/text state | B | stateful ObjectStore | not implemented in A | linkage poison tests | DEFERRED_B |
 | B-REF-02 | Operation Payload Validation | idempotency, cycles, delete cascade, ApplyPlan/before-image | B | stateful apply seam | not implemented in A | linkage poison tests | DEFERRED_B |
 | C-OUTCOME-01 | Verification/G1-04-C authority | stable stage/path/category, reviewed intent, independent golden differential | C | independent oracle/corpus | not production validator | C review artifacts | DEFERRED_C |
@@ -52,3 +52,12 @@
 Before fresh Evidence, every row owned by A0/A1/A2/A3 must be `COVERED`;
 `MISSING`, `WRONG_ORACLE`, `UNOWNED`, and `BLOCKED_CARRIER` must be zero.
 `DEFERRED_B`/`DEFERRED_C` are permitted only where their exact owner is shown.
+
+## P34 Review Finding Lineage
+
+| Finding ID | Review source | Evidence source | Closure authority/rule | Closure source | Status |
+| --- | --- | --- | --- | --- | --- |
+| P34-R09..R17 | External P34 verdict reference absent from repository | Historical Evidence `c073054..ac69fa8` | Normative rows above; no semantic rule inferred from missing verdict text | P35/P36 matrix review | PROVENANCE_ONLY |
+| P34-R18 | P34 review | Historical Evidence `ac69fa8` | `CN-V1-06` StablePort static namespace | Semantic Leaf Structural Validation §6 | CLOSED_IN_P36 |
+| P34-R19 | P34 review | Historical Evidence `ac69fa8` | `WIRE-V1-01..05` raw-known limit preflight | Semantic Hard Limits + Common Wire | CLOSED_IN_P36 |
+| P34-R20 | P34 review | Historical Evidence `ac69fa8` | Mechanical coverage accounting | This matrix + checker | CLOSED_IN_P36 |

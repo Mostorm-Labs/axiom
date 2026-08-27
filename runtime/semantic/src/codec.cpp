@@ -179,6 +179,256 @@ bool scanRawWire(std::span<const std::uint8_t> bytes, Visitor&& visitor) {
     return true;
 }
 
+void markLimit(std::string& category, const char* value) {
+    if (category.empty()) category = value;
+}
+
+bool richTextStepHasOversizedInsert(std::span<const std::uint8_t> bytes) {
+    std::uint32_t branch = 0U;
+    bool oversized = false;
+    const bool valid = scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number >= 1U && field.number <= 6U) {
+            if (branch != 0U) branch = 7U;
+            else branch = field.number;
+        }
+        if (field.number == 3U && field.type == 2U && field.value.size() > kMaxFieldBytes) oversized = true;
+    });
+    return valid && branch == 1U && oversized;
+}
+
+bool insertTextHasOversizedString(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 3U && field.type == 2U && field.value.size() > kMaxFieldBytes) oversized = true;
+    }) && oversized;
+}
+
+bool richTextDocumentHasOversizedString(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    return scanRawWire(bytes, [&](const RawWireField& paragraph) {
+        if (paragraph.number != 1U || paragraph.type != 2U) return;
+        if (!scanRawWire(paragraph.value, [&](const RawWireField& run) {
+                if (run.number != 3U || run.type != 2U) return;
+                if (!scanRawWire(run.value, [&](const RawWireField& text) {
+                        if (text.number == 1U && text.type == 2U && text.value.size() > kMaxFieldBytes) oversized = true;
+                    })) oversized = true;
+            })) oversized = true;
+    }) && oversized;
+}
+
+bool richTextDeltaHasOversizedString(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 2U || field.type != 2U) return;
+        if (!scanRawWire(field.value, [&](const RawWireField& step) {
+                if (step.number == 1U && step.type == 2U && insertTextHasOversizedString(step.value)) {
+                    oversized = true;
+                }
+            })) oversized = true;
+    }) && oversized;
+}
+
+bool rawKnownLimitViolation(const std::string& root_type, std::span<const std::uint8_t> bytes) {
+    if (root_type == "OrderKey") {
+        bool violation = false;
+        if (!scanRawWire(bytes, [&](const RawWireField& field) {
+                if (field.number == 1U && field.type == 2U && field.value.size() > 32U) violation = true;
+        })) return false;
+        return violation;
+    }
+    if (root_type == "RichTextStep") return richTextStepHasOversizedInsert(bytes);
+    if (root_type == "RichTextDelta") return richTextDeltaHasOversizedString(bytes);
+    if (root_type == "RichTextDocument") return richTextDocumentHasOversizedString(bytes);
+    return false;
+}
+
+bool inspectOrderKey(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 1U && field.type == 2U && field.value.size() > 32U) {
+            markLimit(category, "ORDER_KEY_LIMIT_EXCEEDED");
+        }
+    });
+}
+
+bool inspectRichTextDocument(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& paragraph) {
+        if (paragraph.number != 1U || paragraph.type != 2U) return;
+        if (!scanRawWire(paragraph.value, [&](const RawWireField& run) {
+                if (run.number != 3U || run.type != 2U) return;
+                if (!scanRawWire(run.value, [&](const RawWireField& text) {
+                        if (text.number == 1U && text.type == 2U && text.value.size() > kMaxFieldBytes) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                        }
+                    })) markLimit(category, "MALFORMED_WIRE");
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectRichTextDelta(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 2U || field.type != 2U) return;
+        if (!scanRawWire(field.value, [&](const RawWireField& step) {
+                if (step.number == 1U && step.type == 2U && insertTextHasOversizedString(step.value)) {
+                    markLimit(category, "STRING_LIMIT_EXCEEDED");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectObjectContent(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 4U || field.type != 2U) return;
+        if (!scanRawWire(field.value, [&](const RawWireField& document) {
+                if (document.number == 1U && document.type == 2U && !inspectRichTextDocument(document.value, category)) {
+                    markLimit(category, "MALFORMED_WIRE");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectPlacement(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 2U && field.type == 2U && !inspectOrderKey(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        }
+    });
+}
+
+bool inspectObjectRecord(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t erase_masks = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 4U && field.type == 2U && !inspectPlacement(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        } else if (field.number == 7U && field.type == 2U && !inspectObjectContent(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        } else if (field.number == 8U && field.type == 2U) {
+            // ObjectRecord.erase_masks is a bounded repeated collection.
+            // The caller performs the occurrence count; this branch only
+            // validates the nested record's wire span.
+            if (++erase_masks > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+            if (!scanRawWire(field.value, [](const RawWireField&) {})) markLimit(category, "MALFORMED_WIRE");
+        }
+    });
+}
+
+bool inspectObjectCollection(std::span<const std::uint8_t> bytes, std::uint32_t field_number,
+                             std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != field_number || field.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        if (field.value.size() > kMaxObjectRecordBytes) markLimit(category, "OBJECT_SIZE_LIMIT_EXCEEDED");
+        if (!inspectObjectRecord(field.value, category)) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectSplitStrokes(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& split) {
+        if (split.number != 1U || split.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        if (!scanRawWire(split.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U && !inspectObjectCollection(field.value, 2U, category)) {
+                    markLimit(category, "MALFORMED_WIRE");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectAddEraseMasks(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& item) {
+        if (item.number != 1U || item.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        std::size_t masks = 0U;
+        if (!scanRawWire(item.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U && ++masks > 65535U) {
+                    markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectRemoveEraseMasks(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& item) {
+        if (item.number != 1U || item.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        std::size_t mask_ids = 0U;
+        if (!scanRawWire(item.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U) {
+                    ++mask_ids;
+                    if (mask_ids > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool rawOperationLimitViolation(std::span<const std::uint8_t> bytes, std::string& category) {
+    bool malformed = false;
+    if (!scanRawWire(bytes, [&](const RawWireField& operation_field) {
+            if (operation_field.number != 5U || operation_field.type != 2U) return;
+            if (!scanRawWire(operation_field.value, [&](const RawWireField& payload) {
+                    if (payload.type != 2U) return;
+                    bool valid = true;
+                    switch (payload.number) {
+                        case 1U: case 3U:
+                            valid = inspectObjectCollection(payload.value, 1U, category);
+                            break;
+                        case 2U: case 4U: case 5U: case 6U: case 7U: case 9U: case 15U: {
+                            std::size_t count = 0U;
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 1U && field.type == 2U && ++count > 65535U) {
+                                    markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                                }
+                            });
+                            break;
+                        }
+                        case 11U:
+                            valid = inspectSplitStrokes(payload.value, category);
+                            break;
+                        case 12U:
+                            valid = inspectAddEraseMasks(payload.value, category);
+                            break;
+                        case 13U:
+                            valid = inspectRemoveEraseMasks(payload.value, category);
+                            break;
+                        case 14U:
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 2U && field.type == 2U && !inspectRichTextDelta(field.value, category)) {
+                                    markLimit(category, "MALFORMED_WIRE");
+                                }
+                            });
+                            break;
+                        case 10U:
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 1U && field.type == 2U) {
+                                    if (field.value.size() > kMaxObjectRecordBytes) markLimit(category, "OBJECT_SIZE_LIMIT_EXCEEDED");
+                                    if (!inspectObjectRecord(field.value, category)) markLimit(category, "MALFORMED_WIRE");
+                                }
+                            });
+                            break;
+                        default:
+                            // Non-geometry payloads may still have a bounded
+                            // keyed collection in field 1, but no nested
+                            // object-specific traversal is needed here.
+                            valid = scanRawWire(payload.value, [&](const RawWireField&) {});
+                            break;
+                    }
+                    if (!valid) malformed = true;
+                })) malformed = true;
+        })) malformed = true;
+    if (malformed) {
+        category = "MALFORMED_WIRE";
+        return true;
+    }
+    return !category.empty();
+}
+
 bool hasOversizedObjectRecord(std::span<const std::uint8_t> container, std::uint32_t object_field_number) {
     bool oversized = false;
     return scanRawWire(container, [&](const RawWireField& field) {
@@ -277,6 +527,7 @@ bool validRichTextStepPayload(std::uint32_t branch, const std::vector<std::uint8
 }
 
 std::string preflightCategory(const std::string& root_type, const std::vector<std::uint8_t>& bytes, bool strict_canonical) {
+    if (rawKnownLimitViolation(root_type, bytes)) return "LIMIT_EXCEEDED";
     std::vector<WireField> fields;
     if (!scanWire(bytes, fields)) return "MALFORMED_WIRE";
     std::vector<std::uint32_t> seen;
@@ -790,6 +1041,11 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
 #else
     if (preflightOperationBytes(bytes) != SemanticError::kNone) {
         return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
+    std::string raw_limit_category;
+    if (rawOperationLimitViolation(bytes, raw_limit_category)) {
+        return DecodedOperation({}, {}, {}, raw_limit_category == "MALFORMED_WIRE"
+            ? SemanticError::kMalformedWire : SemanticError::kLimitExceeded);
     }
     if (exceedsObjectRecordLimit(bytes)) {
         return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);

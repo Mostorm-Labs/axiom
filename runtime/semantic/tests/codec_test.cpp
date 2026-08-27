@@ -24,6 +24,24 @@ void appendBytesFieldForTest(std::vector<std::uint8_t>& bytes, std::uint32_t fie
     appendVarintForTest(bytes, value.size());
     bytes.insert(bytes.end(), value.begin(), value.end());
 }
+
+std::vector<std::uint8_t> operationWithPayloadForTest(const std::vector<std::uint8_t>& payload) {
+    std::vector<std::uint8_t> operation;
+    std::vector<std::uint8_t> id_bytes(16U, 1U);
+    appendBytesFieldForTest(operation, 1U, id_bytes);
+    id_bytes[0] = 2U;
+    appendBytesFieldForTest(operation, 2U, id_bytes);
+    operation.push_back(0x18U); operation.push_back(0x01U);
+    operation.push_back(0x20U); operation.push_back(0x01U);
+    appendBytesFieldForTest(operation, 5U, payload);
+    return operation;
+}
+
+std::vector<std::uint8_t> repeatedMessageFieldsForTest(std::uint32_t field, std::size_t count) {
+    std::vector<std::uint8_t> result;
+    for (std::size_t index = 0U; index < count; ++index) appendBytesFieldForTest(result, field, {});
+    return result;
+}
 } // namespace
 #endif
 
@@ -162,6 +180,196 @@ TEST(SemanticCodec, ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflow
     const std::vector<std::uint8_t> overflow_field{
         0x80U, 0x80U, 0x80U, 0x80U, 0x10U, 0x00U};
     EXPECT_EQ(SemanticCodec::decodeProtobufOperation(overflow_field).error, SemanticError::kMalformedWire);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const auto replacements = repeatedMessageFieldsForTest(2U, 65536U);
+    std::vector<std::uint8_t> split;
+    appendBytesFieldForTest(split, 1U, {});
+    appendBytesFieldForTest(split, 2U, replacements);
+    std::vector<std::uint8_t> split_collection;
+    appendBytesFieldForTest(split_collection, 1U, split);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 11U, split_collection);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operationWithPayloadForTest(payload)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    auto make = [](std::size_t count) {
+        const auto ids = repeatedMessageFieldsForTest(1U, count);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 2U, ids);
+        return operationWithPayloadForTest(payload);
+    };
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make(65535U)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make(65536U)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const auto mask_ids = repeatedMessageFieldsForTest(2U, 65536U);
+    std::vector<std::uint8_t> item;
+    appendBytesFieldForTest(item, 1U, {});
+    item.insert(item.end(), mask_ids.begin(), mask_ids.end());
+    std::vector<std::uint8_t> items;
+    appendBytesFieldForTest(items, 1U, item);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 13U, items);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operationWithPayloadForTest(payload)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const auto erase_masks = repeatedMessageFieldsForTest(8U, 65536U);
+    std::vector<std::uint8_t> object;
+    object.insert(object.end(), erase_masks.begin(), erase_masks.end());
+    std::vector<std::uint8_t> objects;
+    appendBytesFieldForTest(objects, 1U, object);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 1U, objects);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operationWithPayloadForTest(payload)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsNestedOrderKeyByteOverflow) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    auto make = [](std::size_t order_key_size) {
+        const std::vector<std::uint8_t> order_key(order_key_size, 0x01U);
+        std::vector<std::uint8_t> order_key_message;
+        appendBytesFieldForTest(order_key_message, 1U, order_key);
+        std::vector<std::uint8_t> placement;
+        appendBytesFieldForTest(placement, 2U, order_key_message);
+        std::vector<std::uint8_t> object;
+        appendBytesFieldForTest(object, 4U, placement);
+        std::vector<std::uint8_t> objects;
+        appendBytesFieldForTest(objects, 1U, object);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 1U, objects);
+        return operationWithPayloadForTest(payload);
+    };
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make(32U)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make(33U)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsNestedRichTextRunStringOverflow) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const std::vector<std::uint8_t> oversized_text(1024U * 1024U + 1U, 'x');
+    std::vector<std::uint8_t> run;
+    appendBytesFieldForTest(run, 1U, oversized_text);
+    std::vector<std::uint8_t> paragraph;
+    appendBytesFieldForTest(paragraph, 3U, run);
+    std::vector<std::uint8_t> document;
+    appendBytesFieldForTest(document, 1U, paragraph);
+    std::vector<std::uint8_t> rich_text;
+    appendBytesFieldForTest(rich_text, 1U, document);
+    std::vector<std::uint8_t> object_content;
+    appendBytesFieldForTest(object_content, 4U, rich_text);
+    std::vector<std::uint8_t> object;
+    appendBytesFieldForTest(object, 7U, object_content);
+    std::vector<std::uint8_t> objects;
+    appendBytesFieldForTest(objects, 1U, object);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 1U, objects);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operationWithPayloadForTest(payload)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightAllowsExactRichTextRunStringLimit) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const std::vector<std::uint8_t> exact_text(1024U * 1024U, 'x');
+    std::vector<std::uint8_t> run;
+    appendBytesFieldForTest(run, 1U, exact_text);
+    std::vector<std::uint8_t> paragraph;
+    appendBytesFieldForTest(paragraph, 3U, run);
+    std::vector<std::uint8_t> document;
+    appendBytesFieldForTest(document, 1U, paragraph);
+    std::vector<std::uint8_t> rich_text;
+    appendBytesFieldForTest(rich_text, 1U, document);
+    std::vector<std::uint8_t> object_content;
+    appendBytesFieldForTest(object_content, 4U, rich_text);
+    std::vector<std::uint8_t> object;
+    appendBytesFieldForTest(object, 7U, object_content);
+    std::vector<std::uint8_t> objects;
+    appendBytesFieldForTest(objects, 1U, object);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 1U, objects);
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(operationWithPayloadForTest(payload)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    auto make = [](std::size_t text_size) {
+        std::vector<std::uint8_t> insert_step;
+        appendBytesFieldForTest(insert_step, 3U, std::vector<std::uint8_t>(text_size, 'x'));
+        std::vector<std::uint8_t> delta_step;
+        appendBytesFieldForTest(delta_step, 1U, insert_step);
+        std::vector<std::uint8_t> delta;
+        appendBytesFieldForTest(delta, 2U, delta_step);
+        std::vector<std::uint8_t> edit;
+        appendBytesFieldForTest(edit, 2U, delta);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 14U, edit);
+        return operationWithPayloadForTest(payload);
+    };
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make(1024U * 1024U)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make(1024U * 1024U + 1U)).error,
+              SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightAllowsExactEraseMaskCollectionLimit) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    auto make = [](std::size_t count) {
+        const auto masks = repeatedMessageFieldsForTest(2U, count);
+        std::vector<std::uint8_t> item;
+        appendBytesFieldForTest(item, 1U, {});
+        item.insert(item.end(), masks.begin(), masks.end());
+        std::vector<std::uint8_t> items;
+        appendBytesFieldForTest(items, 1U, item);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 12U, items);
+        return operationWithPayloadForTest(payload);
+    };
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make(65535U)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make(65536U)).error,
+              SemanticError::kLimitExceeded);
 #else
     GTEST_SKIP() << "Protobuf runtime is unavailable";
 #endif
