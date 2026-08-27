@@ -101,4 +101,116 @@ TEST(SemanticCodec, ObservesAuthorityCanonicalityAndStableNegativeOutcomes) {
 #endif
 }
 
+TEST(SemanticCodec, RejectsUnpackedDashSegmentsWithCanonicalPackedCategory) {
+    const std::vector<std::uint8_t> unpacked_segments{
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xf0U, 0x3fU,
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x40U,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xe0U, 0x3fU,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("DashPattern", unpacked_segments, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    EXPECT_FALSE(observation.accepted);
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kWirePreflight);
+    EXPECT_EQ(observation.category, "NON_CANONICAL_PACKED_ENCODING");
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection) {
+    const std::vector<std::uint8_t> bytes{
+        0x08U, 0x01U,
+        0x12U, 0x1aU,
+        0x12U, 0x18U,
+        0x0aU, 0x12U,
+        0x0aU, 0x10U,
+        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU,
+        0x10U, 0x03U, 0x18U, 0x05U,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("RichTextDelta", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    ASSERT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+    EXPECT_EQ(
+        observation.semantic_projection_json,
+        "{\"deltaVersion\":1,\"steps\":[{\"kind\":\"DeleteText\",\"paragraphId\":\"000102030405060708090a0b0c0d0e0f\",\"startScalar\":3,\"scalarCount\":5}]}"
+    );
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, AcceptsOrderedRepeatedRichTextDeltaSteps) {
+    const std::vector<std::uint8_t> bytes{
+        0x08U, 0x01U, 0x12U, 0x1dU, 0x0aU, 0x1bU, 0x0aU, 0x12U,
+        0x0aU, 0x10U, 0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU, 0x10U, 0x01U,
+        0x1aU, 0x01U, 0x41U, 0x22U, 0x00U, 0x12U, 0x1aU, 0x12U, 0x18U, 0x0aU,
+        0x12U, 0x0aU, 0x10U, 0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U,
+        0x07U, 0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU, 0x10U,
+        0x09U, 0x18U, 0x02U,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("RichTextDelta", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    EXPECT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ObservesRichTextDocumentWithReleasedParagraphStyleProjection) {
+    const std::vector<std::uint8_t> bytes{
+        0x0aU, 0x41U, 0x0aU, 0x12U, 0x0aU, 0x10U,
+        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU,
+        0x12U, 0x1dU, 0x08U, 0x01U,
+        0x11U, 0x9aU, 0x99U, 0x99U, 0x99U, 0x99U, 0x99U, 0xf1U, 0x3fU,
+        0x19U, 0x9aU, 0x99U, 0x99U, 0x99U, 0x99U, 0x99U, 0xc9U, 0x3fU,
+        0x21U, 0x33U, 0x33U, 0x33U, 0x33U, 0x33U, 0x33U, 0xd3U, 0x3fU,
+        0x1aU, 0x0cU, 0x0aU, 0x08U, 0x72U, 0x65U, 0x6cU, 0x65U,
+        0x61U, 0x73U, 0x65U, 0x64U, 0x12U, 0x00U,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("RichTextDocument", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    ASSERT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+    EXPECT_NE(observation.semantic_projection_json.find("\"paragraphs\""), std::string::npos);
+    EXPECT_NE(observation.semantic_projection_json.find("\"released\""), std::string::npos);
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection) {
+    const std::vector<std::uint8_t> bytes{
+        0x0aU, 0x00U,
+        0x11U, 0x01U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x80U,
+        0x22U, 0x29U,
+        0x0aU, 0x27U,
+        0x0aU, 0x12U,
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xf0U, 0x3fU,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x40U,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x10U, 0x40U,
+        0x1dU, 0x00U, 0x00U, 0x00U, 0x3fU,
+        0x25U, 0x00U, 0x00U, 0x40U, 0x3fU,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("StrokeRecord", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    ASSERT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+    EXPECT_EQ(
+        observation.semantic_projection_json,
+        "{\"deterministicSeed\":\"9223372036854775809\",\"data\":{\"kind\":\"Dab\",\"dabs\":[{\"center\":{\"x\":1,\"y\":2},\"size\":4,\"rotation\":0.5,\"opacity\":0.75}]}}"
+    );
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
 } // namespace canvas::semantic

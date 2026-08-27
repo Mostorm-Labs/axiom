@@ -55,6 +55,9 @@ int main(int argc, char** argv) {
               << ",\"canonicality\":\"" << canonicalityName(observation.canonicality)
               << "\",\"stage\":\"" << stageName(observation.stage)
               << "\",\"category\":\"" << observation.category
-              << "\",\"canonicalHex\":\"" << hex(observation.canonical_bytes) << "\"}\n";
+              << "\",\"canonicalHex\":\"" << hex(observation.canonical_bytes)
+              << "\",\"semanticProjection\":"
+              << (observation.semantic_projection_json.empty() ? "null" : observation.semantic_projection_json)
+              << "}\n";
     return 0;
 }

@@ -1,0 +1,760 @@
+{
+  "afterDescriptorSha256": "18d682928b42d204ff05103d93e1fb88c9be70de9256acb595f5e3bb846f78e3",
+  "authorityBaseline": "e7a0581706b4e4370fd397ccffef81aa84e48a27",
+  "beforeDescriptorSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+  "changes": [
+    {
+      "after": null,
+      "before": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "position",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "size",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "rotation",
+            "number": 3,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "opacity",
+            "number": 4,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "Dab"
+      },
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "ST-D05"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "message",
+      "messageOrType": "Dab",
+      "wireImpact": "DabInstance center descriptor identity"
+    },
+    {
+      "after": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "x",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "y",
+            "number": 2,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "CurvePoint01"
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "ST-D01"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "message",
+      "messageOrType": "CurvePoint01",
+      "wireImpact": "curve message materialized"
+    },
+    {
+      "after": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "center",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "size",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "rotation",
+            "number": 3,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "opacity",
+            "number": 4,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "DabInstance"
+      },
+      "before": null,
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "ST-D05"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "message",
+      "messageOrType": "DabInstance",
+      "wireImpact": "DabInstance center descriptor identity"
+    },
+    {
+      "after": {
+        "fields": [
+          {
+            "label": 3,
+            "name": "points",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.CurvePoint01"
+          }
+        ],
+        "name": "PiecewiseLinearCurve01"
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "ST-D01"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "message",
+      "messageOrType": "PiecewiseLinearCurve01",
+      "wireImpact": "curve message materialized"
+    },
+    {
+      "after": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "normalized_spacing",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "SpacingSettings"
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "ST-D02"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "message",
+      "messageOrType": "SpacingSettings",
+      "wireImpact": "spacing message materialized"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "spacing",
+        "number": 9,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SpacingSettings"
+      },
+      "before": {
+        "label": 1,
+        "name": "spacing",
+        "number": 9,
+        "oneof_index": null,
+        "type": 1,
+        "type_name": ""
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D02"
+      ],
+      "fieldTag": 9,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "BrushDescriptor",
+      "wireImpact": "double carrier to SpacingSettings message"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "texture_resource_id",
+        "number": 10,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.Id128"
+      },
+      "before": {
+        "label": 1,
+        "name": "blend_mode",
+        "number": 10,
+        "oneof_index": null,
+        "type": 14,
+        "type_name": ".auditoryworks.axiom.v1.BrushBlendMode"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D03"
+      ],
+      "fieldTag": 10,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "BrushDescriptor",
+      "wireImpact": "texture and blend numeric tags corrected"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "blend_mode",
+        "number": 11,
+        "oneof_index": null,
+        "type": 14,
+        "type_name": ".auditoryworks.axiom.v1.BrushBlendMode"
+      },
+      "before": {
+        "label": 1,
+        "name": "texture_resource_id",
+        "number": 11,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.Id128"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D03"
+      ],
+      "fieldTag": 11,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "BrushDescriptor",
+      "wireImpact": "texture and blend numeric tags corrected"
+    },
+    {
+      "after": {
+        "label": 3,
+        "name": "dabs",
+        "number": 1,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.DabInstance"
+      },
+      "before": {
+        "label": 3,
+        "name": "dabs",
+        "number": 1,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.Dab"
+      },
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "ST-D05"
+      ],
+      "fieldTag": 1,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "DabStrokeData",
+      "wireImpact": "DabInstance center descriptor identity"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "size_curve",
+        "number": 2,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.PiecewiseLinearCurve01"
+      },
+      "before": {
+        "label": 1,
+        "name": "size_influence",
+        "number": 2,
+        "oneof_index": null,
+        "type": 2,
+        "type_name": ""
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D01"
+      ],
+      "fieldTag": 2,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "PressureMapping",
+      "wireImpact": "float carrier to nested curve message"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "opacity_curve",
+        "number": 3,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.PiecewiseLinearCurve01"
+      },
+      "before": {
+        "label": 1,
+        "name": "opacity_influence",
+        "number": 3,
+        "oneof_index": null,
+        "type": 2,
+        "type_name": ""
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D01"
+      ],
+      "fieldTag": 3,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "PressureMapping",
+      "wireImpact": "float carrier to nested curve message"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "deterministic_seed",
+        "number": 2,
+        "oneof_index": null,
+        "type": 6,
+        "type_name": ""
+      },
+      "before": {
+        "label": 1,
+        "name": "deterministic_seed",
+        "number": 2,
+        "oneof_index": null,
+        "type": 4,
+        "type_name": ""
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "ST-D04"
+      ],
+      "fieldTag": 2,
+      "file": "auditoryworks/axiom/v1/brush_stroke.proto",
+      "kind": "field",
+      "messageOrType": "StrokeRecord",
+      "wireImpact": "uint64 varint to fixed64"
+    },
+    {
+      "after": null,
+      "before": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "start_scalar",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "end_scalar",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextStyle"
+          }
+        ],
+        "name": "SetTextStyleStep"
+      },
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "RT-D04"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "message",
+      "messageOrType": "SetTextStyleStep",
+      "wireImpact": "released inline-style identity and count semantics"
+    },
+    {
+      "after": {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "start_scalar",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "scalar_count",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextStyle"
+          }
+        ],
+        "name": "SetInlineStyleStep"
+      },
+      "before": null,
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "RT-D04"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "message",
+      "messageOrType": "SetInlineStyleStep",
+      "wireImpact": "released inline-style identity and count semantics"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "scalar_count",
+        "number": 3,
+        "oneof_index": null,
+        "type": 13,
+        "type_name": ""
+      },
+      "before": {
+        "label": 1,
+        "name": "end_scalar",
+        "number": 3,
+        "oneof_index": null,
+        "type": 13,
+        "type_name": ""
+      },
+      "classification": "SEMANTIC_NAME_CORRECTION",
+      "defectIds": [
+        "RT-D03"
+      ],
+      "fieldTag": 3,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "DeleteTextStep",
+      "wireImpact": "same varint wire; count replaces absolute end meaning"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "alignment",
+        "number": 1,
+        "oneof_index": null,
+        "type": 14,
+        "type_name": ".auditoryworks.axiom.v1.ParagraphAlignment"
+      },
+      "before": {
+        "label": 1,
+        "name": "alignment",
+        "number": 1,
+        "oneof_index": null,
+        "type": 13,
+        "type_name": ""
+      },
+      "classification": "DESCRIPTOR_IDENTITY_CORRECTION",
+      "defectIds": [
+        "RT-D01"
+      ],
+      "fieldTag": 1,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "ParagraphStyle",
+      "wireImpact": "uint32 to enum; wire 0 retained"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "line_height",
+        "number": 2,
+        "oneof_index": null,
+        "type": 1,
+        "type_name": ""
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "RT-D02"
+      ],
+      "fieldTag": 2,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "ParagraphStyle",
+      "wireImpact": "double / fixed64 added"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "spacing_before",
+        "number": 3,
+        "oneof_index": null,
+        "type": 1,
+        "type_name": ""
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "RT-D02"
+      ],
+      "fieldTag": 3,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "ParagraphStyle",
+      "wireImpact": "double / fixed64 added"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "spacing_after",
+        "number": 4,
+        "oneof_index": null,
+        "type": 1,
+        "type_name": ""
+      },
+      "before": null,
+      "classification": "MISSING_FIELD_MATERIALIZATION",
+      "defectIds": [
+        "RT-D02"
+      ],
+      "fieldTag": 4,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "ParagraphStyle",
+      "wireImpact": "double / fixed64 added"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "delta_version",
+        "number": 1,
+        "oneof_index": null,
+        "type": 13,
+        "type_name": ""
+      },
+      "before": {
+        "label": 3,
+        "name": "steps",
+        "number": 1,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.RichTextStep"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "RT-D06"
+      ],
+      "fieldTag": 1,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "RichTextDelta",
+      "wireImpact": "version and ordered-step field tags corrected"
+    },
+    {
+      "after": {
+        "label": 3,
+        "name": "steps",
+        "number": 2,
+        "oneof_index": null,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.RichTextStep"
+      },
+      "before": null,
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "RT-D06"
+      ],
+      "fieldTag": 2,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "RichTextDelta",
+      "wireImpact": "version and ordered-step field tags corrected"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "split_paragraph",
+        "number": 3,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SplitParagraphStep"
+      },
+      "before": {
+        "label": 1,
+        "name": "set_text_style",
+        "number": 3,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SetTextStyleStep"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "RT-D05"
+      ],
+      "fieldTag": 3,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "RichTextStep",
+      "wireImpact": "oneof branch tag identity corrected"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "merge_paragraph",
+        "number": 4,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.MergeParagraphStep"
+      },
+      "before": {
+        "label": 1,
+        "name": "split_paragraph",
+        "number": 4,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SplitParagraphStep"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "RT-D05"
+      ],
+      "fieldTag": 4,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "RichTextStep",
+      "wireImpact": "oneof branch tag identity corrected"
+    },
+    {
+      "after": {
+        "label": 1,
+        "name": "set_inline_style",
+        "number": 5,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SetInlineStyleStep"
+      },
+      "before": {
+        "label": 1,
+        "name": "merge_paragraph",
+        "number": 5,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.MergeParagraphStep"
+      },
+      "classification": "WIRE_BREAKING_PRE_RELEASE_REPAIR",
+      "defectIds": [
+        "RT-D05"
+      ],
+      "fieldTag": 5,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "field",
+      "messageOrType": "RichTextStep",
+      "wireImpact": "oneof branch tag identity corrected"
+    },
+    {
+      "after": {
+        "name": "ParagraphAlignment",
+        "values": [
+          [
+            "INVALID",
+            0
+          ],
+          [
+            "LEFT",
+            1
+          ],
+          [
+            "CENTER",
+            2
+          ],
+          [
+            "RIGHT",
+            3
+          ],
+          [
+            "JUSTIFY",
+            4
+          ]
+        ]
+      },
+      "before": null,
+      "classification": "DESCRIPTOR_IDENTITY_CORRECTION",
+      "defectIds": [
+        "RT-D01"
+      ],
+      "fieldTag": null,
+      "file": "auditoryworks/axiom/v1/rich_text.proto",
+      "kind": "enum",
+      "messageOrType": "ParagraphAlignment",
+      "wireImpact": "enum identity (wire 0 values)"
+    }
+  ],
+  "format": "axiom-gt-g1-02r-descriptor-refreeze-diff-v1",
+  "outerRegistryPreserved": {
+    "ObjectContent": true,
+    "Operation": true
+  },
+  "unmappedChanges": []
+}

@@ -1,6 +1,6 @@
 schema_version: 2
 project: axiom
-snapshot_date: 2026-08-26
+snapshot_date: 2026-08-27
 
 source:
   type: notion
@@ -111,6 +111,68 @@ current_authority:
       notion_page_id: 3c84c57a-590c-8179-9d56-e8ec2cf33e91
       path: docs/notion/authority/06-module-design/implementation-contract-freeze/contract-linter-golden-matrix-v0.2.md
       verification_evidence: false
+
+  semantic_schema_04:
+    final_gate:
+      version: v0.1
+      status: current
+      notion_page_id: 3c54c57a-590c-8136-89c3-f2b7cdb87625
+      path: docs/notion/authority/04-semantic-schema/00-overview/v1-release-candidate-final-gate-v0.1.md
+    reference_idl:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-8161-bd08-d1dedd37ef5c
+      path: docs/notion/authority/04-semantic-schema/04-reference-idl/reference-idl-codec-mapping-v0.1.md
+    leaf_reconciliation:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-81a1-902b-e95a889f68e0
+      path: docs/notion/authority/04-semantic-schema/04-reference-idl/leaf-schema-reconciliation-v0.1.md
+    generated_proto_baseline:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-81c2-9b93-c774869cff99
+      path: docs/notion/authority/04-semantic-schema/04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md
+    richtext_stroke_reconciliation:
+      version: v0.1
+      status: current-reconciliation-authority
+      notion_page_id: 3c94c57a-590c-8172-a7ad-ec6bb5f7bd91
+      path: docs/notion/authority/04-semantic-schema/04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md
+      dependencies:
+        - final_gate
+        - reference_idl
+        - leaf_reconciliation
+        - generated_proto_baseline
+        - richtext_wire
+        - richtext_font
+        - brush_stroke_wire
+        - brush_family
+        - pressure_tilt
+    richtext_wire:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-8163-9c2e-d63028f984b4
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/richtext-wire-schema-v0.1.md
+    richtext_font:
+      version: v0.1
+      status: current
+      notion_page_id: 3c54c57a-590c-81d8-befa-cf2228f81fd6
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/richtext-font-v1-release-v0.1.md
+    brush_stroke_wire:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-81fa-b32e-c6c82321aa1f
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-stroke-wire-schema-v0.1.md
+    brush_family:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-8132-ade5-e6488e27a4df
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-family-registry-v1-release-v0.1.md
+    pressure_tilt:
+      version: v0.1
+      status: current
+      notion_page_id: 3c54c57a-590c-81d4-a46f-f149c10ceadd
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/pressure-tilt-v1-release-v0.1.md
 
 machine_rules:
   canonical_ordering_annotation: input_field_path

@@ -1,0 +1,877 @@
+{
+  "format": "axiom-gt-g1-02r-semantic-differential-v1",
+  "taskId": "GT-G1-02R",
+  "sourceCommit": "ac92939e70f0bbbf85f7ae126595f0e5522d4f7d",
+  "caseCount": 23,
+  "passed": true,
+  "failed": [],
+  "firstDivergence": null,
+  "status": "PASS",
+  "blockingReasons": [],
+  "cases": [
+    {
+      "caseId": "RTW-001",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080411000000000000f83f19000000000000d03f21000000000000e83f",
+        "semanticProjection": {
+          "alignment": 4,
+          "lineHeight": 1.5,
+          "spacingBefore": 0.25,
+          "spacingAfter": 0.75
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080411000000000000f83f19000000000000d03f21000000000000e83f",
+        "semanticProjection": {
+          "alignment": 4,
+          "lineHeight": 1.5,
+          "spacingBefore": 0.25,
+          "spacingAfter": 0.75
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-002",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112200a1e0a120a10000102030405060708090a0b0c0d0e0f10021a046c6561662200",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 2,
+              "text": "leaf"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112200a1e0a120a10000102030405060708090a0b0c0d0e0f10021a046c6561662200",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 2,
+              "text": "leaf"
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-003",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801121a12180a120a10000102030405060708090a0b0c0d0e0f10031805",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "DeleteText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 3,
+              "scalarCount": 5
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801121a12180a120a10000102030405060708090a0b0c0d0e0f10031805",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "DeleteText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 3,
+              "scalarCount": 5
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-004",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801122c1a2a0a120a10000102030405060708090a0b0c0d0e0f10071a120a10101112131415161718191a1b1c1d1e1f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SplitParagraph",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 7,
+              "newParagraphId": "101112131415161718191a1b1c1d1e1f"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801122c1a2a0a120a10000102030405060708090a0b0c0d0e0f10071a120a10101112131415161718191a1b1c1d1e1f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SplitParagraph",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 7,
+              "newParagraphId": "101112131415161718191a1b1c1d1e1f"
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-005",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801122a22280a120a10000102030405060708090a0b0c0d0e0f12120a10101112131415161718191a1b1c1d1e1f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "MergeParagraph",
+              "firstParagraphId": "000102030405060708090a0b0c0d0e0f",
+              "secondParagraphId": "101112131415161718191a1b1c1d1e1f"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801122a22280a120a10000102030405060708090a0b0c0d0e0f12120a10101112131415161718191a1b1c1d1e1f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "MergeParagraph",
+              "firstParagraphId": "000102030405060708090a0b0c0d0e0f",
+              "secondParagraphId": "101112131415161718191a1b1c1d1e1f"
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-006",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112562a540a120a10000102030405060708090a0b0c0d0e0f10041806223a0a120a10202122232425262728292a2b2c2d2e2f11000000000000294018d8042001280032140d0000803e150000003f1d0000403f250000803f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SetInlineStyle",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 4,
+              "scalarCount": 6
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112562a540a120a10000102030405060708090a0b0c0d0e0f10041806223a0a120a10202122232425262728292a2b2c2d2e2f11000000000000294018d8042001280032140d0000803e150000003f1d0000403f250000803f",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SetInlineStyle",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 4,
+              "scalarCount": 6
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-007",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801123532330a120a10000102030405060708090a0b0c0d0e0f121d080211000000000000f43f190000000000000040210000000000000840",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SetParagraphStyle",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801123532330a120a10000102030405060708090a0b0c0d0e0f121d080211000000000000f43f190000000000000040210000000000000840",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "SetParagraphStyle",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f"
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-008",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801121d0a1b0a120a10000102030405060708090a0b0c0d0e0f10011a01412200121a12180a120a10000102030405060708090a0b0c0d0e0f10091802",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 1,
+              "text": "A"
+            },
+            {
+              "kind": "DeleteText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 9,
+              "scalarCount": 2
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0801121d0a1b0a120a10000102030405060708090a0b0c0d0e0f10011a01412200121a12180a120a10000102030405060708090a0b0c0d0e0f10091802",
+        "semanticProjection": {
+          "deltaVersion": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "scalarOffset": 1,
+              "text": "A"
+            },
+            {
+              "kind": "DeleteText",
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "startScalar": 9,
+              "scalarCount": 2
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-009",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a410a120a10000102030405060708090a0b0c0d0e0f121d0801119a9999999999f13f199a9999999999c93f21333333333333d33f1a0c0a0872656c65617365641200",
+        "semanticProjection": {
+          "paragraphs": [
+            {
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "style": {
+                "alignment": 1,
+                "lineHeight": 1.1,
+                "spacingBefore": 0.2,
+                "spacingAfter": 0.3
+              },
+              "runs": [
+                {
+                  "text": "released"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a410a120a10000102030405060708090a0b0c0d0e0f121d0801119a9999999999f13f199a9999999999c93f21333333333333d33f1a0c0a0872656c65617365641200",
+        "semanticProjection": {
+          "paragraphs": [
+            {
+              "paragraphId": "000102030405060708090a0b0c0d0e0f",
+              "style": {
+                "alignment": 1,
+                "lineHeight": 1.1,
+                "spacingBefore": 0.2,
+                "spacingAfter": 0.3
+              },
+              "runs": [
+                {
+                  "text": "released"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-001",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112240a0a0d0000000015cdcccc3d0a0a0d0000003f150000403f0a0a0d0000803f150000803f1a180a0a0d0000000015cdcc4c3e0a0a0d0000803f156666663f",
+        "semanticProjection": {
+          "enabled": true,
+          "sizeCurve": [
+            {
+              "x": 0.0,
+              "y": 0.100000001
+            },
+            {
+              "x": 0.5,
+              "y": 0.75
+            },
+            {
+              "x": 1.0,
+              "y": 1.0
+            }
+          ],
+          "opacityCurve": [
+            {
+              "x": 0.0,
+              "y": 0.200000003
+            },
+            {
+              "x": 1.0,
+              "y": 0.899999976
+            }
+          ]
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080112240a0a0d0000000015cdcccc3d0a0a0d0000003f150000403f0a0a0d0000803f150000803f1a180a0a0d0000000015cdcc4c3e0a0a0d0000803f156666663f",
+        "semanticProjection": {
+          "enabled": true,
+          "sizeCurve": [
+            {
+              "x": 0,
+              "y": 0.100000001
+            },
+            {
+              "x": 0.5,
+              "y": 0.75
+            },
+            {
+              "x": 1,
+              "y": 1
+            }
+          ],
+          "opacityCurve": [
+            {
+              "x": 0,
+              "y": 0.200000003
+            },
+            {
+              "x": 1,
+              "y": 0.899999976
+            }
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-002",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080110014a050d0000803e5801",
+        "semanticProjection": {
+          "brushFamilyId": 1,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.25
+          },
+          "blendMode": 1
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080110014a050d0000803e5801",
+        "semanticProjection": {
+          "brushFamilyId": 1,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.25
+          },
+          "blendMode": 1
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-003",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080210014a050d0000003f5802",
+        "semanticProjection": {
+          "brushFamilyId": 2,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.5
+          },
+          "blendMode": 2
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080210014a050d0000003f5802",
+        "semanticProjection": {
+          "brushFamilyId": 2,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.5
+          },
+          "blendMode": 2
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-004",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080310014a050d0000403f52120a10202122232425262728292a2b2c2d2e2f5801",
+        "semanticProjection": {
+          "brushFamilyId": 3,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.75
+          },
+          "blendMode": 1,
+          "textureResourceId": "202122232425262728292a2b2c2d2e2f"
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "080310014a050d0000403f52120a10202122232425262728292a2b2c2d2e2f5801",
+        "semanticProjection": {
+          "brushFamilyId": 3,
+          "brushVersion": 1,
+          "pressure": {
+            "enabled": false
+          },
+          "spacing": {
+            "normalizedSpacing": 0.75
+          },
+          "blendMode": 1,
+          "textureResourceId": "202122232425262728292a2b2c2d2e2f"
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-005",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011efcdab89674523011a2f0a2d0a1209000000000000f03f110000000000000040150000003f1a12090000000000000000110000000000000000",
+        "semanticProjection": {
+          "deterministicSeed": "81985529216486895",
+          "data": {
+            "kind": "Vector"
+          }
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011efcdab89674523011a2f0a2d0a1209000000000000f03f110000000000000040150000003f1a12090000000000000000110000000000000000",
+        "semanticProjection": {
+          "deterministicSeed": "81985529216486895",
+          "data": {
+            "kind": "Vector"
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-006",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011010000000000008022290a270a1209000000000000f03f1100000000000000401100000000000010401d0000003f250000403f",
+        "semanticProjection": {
+          "deterministicSeed": "9223372036854775809",
+          "data": {
+            "kind": "Dab",
+            "dabs": [
+              {
+                "center": {
+                  "x": 1.0,
+                  "y": 2.0
+                },
+                "size": 4.0,
+                "rotation": 0.5,
+                "opacity": 0.75
+              }
+            ]
+          }
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011010000000000008022290a270a1209000000000000f03f1100000000000000401100000000000010401d0000003f250000403f",
+        "semanticProjection": {
+          "deterministicSeed": "9223372036854775809",
+          "data": {
+            "kind": "Dab",
+            "dabs": [
+              {
+                "center": {
+                  "x": 1,
+                  "y": 2
+                },
+                "size": 4,
+                "rotation": 0.5,
+                "opacity": 0.75
+              }
+            ]
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-007",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011ffffffffffffffff1a2f0a2d0a1209000000000000f03f11000000000000f03f150000803f1a12090000000000000000110000000000000000",
+        "semanticProjection": {
+          "deterministicSeed": "18446744073709551615",
+          "data": {
+            "kind": "Vector"
+          }
+        }
+      },
+      "observed": {
+        "accepted": true,
+        "canonicality": "CANONICAL",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a0011ffffffffffffffff1a2f0a2d0a1209000000000000f03f11000000000000f03f150000803f1a12090000000000000000110000000000000000",
+        "semanticProjection": {
+          "deterministicSeed": "18446744073709551615",
+          "data": {
+            "kind": "Vector"
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-N01",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "RTW-N02",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-N01",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-N02",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-N03",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-N04",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    },
+    {
+      "caseId": "STW-N05",
+      "wireMatch": true,
+      "semanticMatch": true,
+      "outcomeMatch": true,
+      "expected": {
+        "accepted": false,
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD"
+      },
+      "observed": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "UNKNOWN_WIRE_FIELD",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "pass": true
+    }
+  ]
+}

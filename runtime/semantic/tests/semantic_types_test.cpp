@@ -202,7 +202,7 @@ TEST(SemanticTypes, ObjectContentIsAClosedNineWayTypedUnion) {
     const ObjectContent path = VectorPathContent{
         VectorPathGeometry{FillRule::kNonZero, {MoveTo{Vec2{1.0, 2.0}}}}};
     const ObjectContent rich_text = RichTextContent{RichTextDocument{{
-        Paragraph{ObjectId::fromUint64(3U), ParagraphStyle{1U},
+        Paragraph{ObjectId::fromUint64(3U), ParagraphStyle{ParagraphAlignment::kLeft, 1.0, 0.0, 0.0},
                   {TextRun{"typed", TextStyle{}}}}}}};
     const ObjectContent vector_stroke = VectorStrokeContent{
         StrokeRecord{BrushDescriptor{}, 5U, VectorStrokeData{}}};
@@ -224,6 +224,41 @@ TEST(SemanticTypes, ObjectContentIsAClosedNineWayTypedUnion) {
     EXPECT_TRUE(std::holds_alternative<ConnectorContent>(connector));
     EXPECT_TRUE(std::holds_alternative<StickyContent>(sticky));
     EXPECT_TRUE(std::holds_alternative<GroupContent>(group));
+}
+
+TEST(SemanticTypes, LeafMachineProjectionUsesReleasedRichTextAndStrokeTypes) {
+    const ParagraphStyle paragraph_style{
+        ParagraphAlignment::kJustify, 1.25, 2.0, 3.0};
+    EXPECT_EQ(paragraph_style.alignment, ParagraphAlignment::kJustify);
+    EXPECT_EQ(paragraph_style.line_height, 1.25);
+    EXPECT_EQ(paragraph_style.spacing_before, 2.0);
+    EXPECT_EQ(paragraph_style.spacing_after, 3.0);
+
+    const ObjectId paragraph_id = ObjectId::fromUint64(9U);
+    const RichTextDelta delta{
+        1U,
+        {DeleteTextStep{paragraph_id, 3U, 5U},
+         SetInlineStyleStep{paragraph_id, 3U, 5U, TextStyle{}}},
+    };
+    EXPECT_EQ(delta.delta_version, 1U);
+    ASSERT_EQ(delta.steps.size(), 2U);
+    EXPECT_TRUE(std::holds_alternative<DeleteTextStep>(delta.steps.front()));
+    EXPECT_EQ(std::get<DeleteTextStep>(delta.steps.front()).scalar_count, 5U);
+
+    const PiecewiseLinearCurve01 curve{{CurvePoint01{0.0F, 0.0F}, CurvePoint01{1.0F, 1.0F}}};
+    const PressureMapping pressure{true, curve, curve};
+    const SpacingSettings spacing{0.25F};
+    const BrushDescriptor brush{
+        1U, 1U, ColorValue{}, 4.0, 1.0F, pressure, TiltMapping{}, SmoothingSettings{}, spacing,
+        BrushBlendMode::kNormal, std::nullopt,
+    };
+    EXPECT_EQ(brush.pressure.size_curve, curve);
+    EXPECT_EQ(brush.spacing.normalized_spacing, 0.25F);
+
+    const DabInstance dab{Vec2{2.0, 3.0}, 4.0, 0.5F, 0.75F};
+    const StrokeRecord record{brush, 0x8000000000000001ULL, DabStrokeData{{dab}}};
+    EXPECT_EQ(std::get<DabStrokeData>(record.data).dabs.front().center, (Vec2{2.0, 3.0}));
+    EXPECT_EQ(record.deterministic_seed, 0x8000000000000001ULL);
 }
 
 TEST(SemanticTypes, EraseMaskGeometryIsAClosedTypedUnion) {

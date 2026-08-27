@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "id": "STW-N01",
+  "status": "SPEC_REQUIREMENT",
+  "authorityRefs": [
+    "RichText + Stroke Semantic / Wire Reconciliation Matrix v0.1",
+    "Golden Corpus Authoring Rules + Fixture Generation Pipeline v0.1"
+  ],
+  "entrypoint": "DECODE",
+  "requiredCapabilities": [
+    "CANONICAL_ENCODE",
+    "STRICT_WIRE_PREFLIGHT",
+    "SEMANTIC_PROJECTION"
+  ],
+  "input": {
+    "artifact": "input/value.pb"
+  },
+  "expected": {
+    "outcome": "REJECTED",
+    "accepted": false,
+    "stage": "WIRE_PREFLIGHT",
+    "category": "UNKNOWN_WIRE_FIELD"
+  },
+  "blockedByOpenPolicy": false
+}

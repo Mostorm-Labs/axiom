@@ -49,10 +49,23 @@ enum class BrushBlendMode : std::uint8_t {
     kHighlighter = 2,
 };
 
+struct CurvePoint01 final {
+    float x = 0.0F;
+    float y = 0.0F;
+
+    bool operator==(const CurvePoint01&) const = default;
+};
+
+struct PiecewiseLinearCurve01 final {
+    std::vector<CurvePoint01> points;
+
+    bool operator==(const PiecewiseLinearCurve01&) const = default;
+};
+
 struct PressureMapping final {
     bool enabled = false;
-    float size_influence = 0.0F;
-    float opacity_influence = 0.0F;
+    std::optional<PiecewiseLinearCurve01> size_curve;
+    std::optional<PiecewiseLinearCurve01> opacity_curve;
 
     bool operator==(const PressureMapping&) const = default;
 };
@@ -71,6 +84,12 @@ struct SmoothingSettings final {
     bool operator==(const SmoothingSettings&) const = default;
 };
 
+struct SpacingSettings final {
+    float normalized_spacing = 0.0F;
+
+    bool operator==(const SpacingSettings&) const = default;
+};
+
 struct BrushDescriptor final {
     std::uint32_t brush_family_id = 0;
     std::uint32_t brush_version = 0;
@@ -80,7 +99,7 @@ struct BrushDescriptor final {
     PressureMapping pressure{};
     TiltMapping tilt{};
     SmoothingSettings smoothing{};
-    double spacing = 0.0;
+    SpacingSettings spacing{};
     BrushBlendMode blend_mode = BrushBlendMode::kNormal;
     std::optional<ResourceId> texture_resource_id;
 
@@ -101,17 +120,17 @@ struct VectorStrokeData final {
     bool operator==(const VectorStrokeData&) const = default;
 };
 
-struct Dab final {
-    Vec2 position{};
+struct DabInstance final {
+    Vec2 center{};
     double size = 0.0;
     float rotation = 0.0F;
     float opacity = 0.0F;
 
-    bool operator==(const Dab&) const = default;
+    bool operator==(const DabInstance&) const = default;
 };
 
 struct DabStrokeData final {
-    std::vector<Dab> dabs;
+    std::vector<DabInstance> dabs;
 
     bool operator==(const DabStrokeData&) const = default;
 };
@@ -149,8 +168,19 @@ struct TextStyle final {
     bool operator==(const TextStyle&) const = default;
 };
 
+enum class ParagraphAlignment : std::uint8_t {
+    kInvalid = 0,
+    kLeft = 1,
+    kCenter = 2,
+    kRight = 3,
+    kJustify = 4,
+};
+
 struct ParagraphStyle final {
-    std::uint32_t alignment = 0;
+    ParagraphAlignment alignment = ParagraphAlignment::kInvalid;
+    double line_height = 0.0;
+    double spacing_before = 0.0;
+    double spacing_after = 0.0;
 
     bool operator==(const ParagraphStyle&) const = default;
 };
@@ -180,6 +210,69 @@ struct RichTextContent final {
     RichTextDocument document{};
 
     bool operator==(const RichTextContent&) const = default;
+};
+
+struct InsertTextStep final {
+    ObjectId paragraph_id{};
+    std::uint32_t scalar_offset = 0;
+    std::string text;
+    TextStyle style{};
+
+    bool operator==(const InsertTextStep&) const = default;
+};
+
+struct DeleteTextStep final {
+    ObjectId paragraph_id{};
+    std::uint32_t start_scalar = 0;
+    std::uint32_t scalar_count = 0;
+
+    bool operator==(const DeleteTextStep&) const = default;
+};
+
+struct SplitParagraphStep final {
+    ObjectId paragraph_id{};
+    std::uint32_t scalar_offset = 0;
+    ObjectId new_paragraph_id{};
+
+    bool operator==(const SplitParagraphStep&) const = default;
+};
+
+struct MergeParagraphStep final {
+    ObjectId first_paragraph_id{};
+    ObjectId second_paragraph_id{};
+
+    bool operator==(const MergeParagraphStep&) const = default;
+};
+
+struct SetInlineStyleStep final {
+    ObjectId paragraph_id{};
+    std::uint32_t start_scalar = 0;
+    std::uint32_t scalar_count = 0;
+    TextStyle style{};
+
+    bool operator==(const SetInlineStyleStep&) const = default;
+};
+
+struct SetParagraphStyleStep final {
+    ObjectId paragraph_id{};
+    ParagraphStyle style{};
+
+    bool operator==(const SetParagraphStyleStep&) const = default;
+};
+
+using RichTextStep = std::variant<
+    InsertTextStep,
+    DeleteTextStep,
+    SplitParagraphStep,
+    MergeParagraphStep,
+    SetInlineStyleStep,
+    SetParagraphStyleStep>;
+
+struct RichTextDelta final {
+    std::uint32_t delta_version = 0;
+    std::vector<RichTextStep> steps;
+
+    bool operator==(const RichTextDelta&) const = default;
 };
 
 struct AutoPerimeterAnchor final {

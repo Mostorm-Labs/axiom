@@ -6,9 +6,16 @@ import "auditoryworks/axiom/v1/geometry.proto";
 import "auditoryworks/axiom/v1/paint.proto";
 
 enum BrushBlendMode { BRUSH_BLEND_INVALID = 0; BRUSH_BLEND_NORMAL = 1; BRUSH_BLEND_HIGHLIGHTER = 2; }
-message PressureMapping { bool enabled = 1; float size_influence = 2; float opacity_influence = 3; }
+message CurvePoint01 { float x = 1; float y = 2; }
+message PiecewiseLinearCurve01 { repeated CurvePoint01 points = 1; }
+message PressureMapping {
+  bool enabled = 1;
+  PiecewiseLinearCurve01 size_curve = 2;
+  PiecewiseLinearCurve01 opacity_curve = 3;
+}
 message TiltMapping { bool enabled = 1; float size_influence = 2; float angle_influence = 3; }
 message SmoothingSettings { float amount = 1; }
+message SpacingSettings { float normalized_spacing = 1; }
 message BrushDescriptor {
   uint32 brush_family_id = 1;
   uint32 brush_version = 2;
@@ -18,17 +25,17 @@ message BrushDescriptor {
   PressureMapping pressure = 6;
   TiltMapping tilt = 7;
   SmoothingSettings smoothing = 8;
-  double spacing = 9;
-  BrushBlendMode blend_mode = 10;
-  Id128 texture_resource_id = 11;
+  SpacingSettings spacing = 9;
+  Id128 texture_resource_id = 10;
+  BrushBlendMode blend_mode = 11;
 }
 message StrokeSample { Vec2 position = 1; float pressure = 2; Vec2 tilt = 3; }
 message VectorStrokeData { repeated StrokeSample samples = 1; }
-message Dab { Vec2 position = 1; double size = 2; float rotation = 3; float opacity = 4; }
-message DabStrokeData { repeated Dab dabs = 1; }
+message DabInstance { Vec2 center = 1; double size = 2; float rotation = 3; float opacity = 4; }
+message DabStrokeData { repeated DabInstance dabs = 1; }
 message StrokeRecord {
   BrushDescriptor brush = 1;
-  uint64 deterministic_seed = 2;
+  fixed64 deterministic_seed = 2;
   oneof data { VectorStrokeData vector = 3; DabStrokeData dab = 4; }
 }
 message VectorStrokeContent { StrokeRecord stroke = 1; }

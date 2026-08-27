@@ -31,7 +31,7 @@ class G102EvidenceTest(unittest.TestCase):
         self.assertIn("hosted", " ".join(result["blockingReasons"]))
         self.assertIn("BG/BGX", " ".join(result["blockingReasons"]))
 
-    def test_evidence_is_commit_bound_and_hashes_descriptor(self):
+    def test_evidence_is_commit_bound_and_hashes_current_descriptor_lock(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
             result = generator.generate(
@@ -43,7 +43,7 @@ class G102EvidenceTest(unittest.TestCase):
                 generated_code_sha256="d" * 64,
             )
             self.assertEqual(result["sourceCommit"], "c" * 40)
-            self.assertEqual(result["descriptorSha256"], "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239")
+            self.assertEqual(result["descriptorSha256"], generator.sha256(ROOT / generator.DESCRIPTOR))
             self.assertEqual(result["generatedCodeSha256"], "d" * 64)
             self.assertEqual(result["authorityBaseline"], "25332232f41b5973ca7057e3c84b0038573982b5")
             self.assertEqual(result["corpus"]["caseCount"], 18)

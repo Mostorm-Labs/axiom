@@ -24,6 +24,15 @@ class SemanticContractTest(unittest.TestCase):
         self.assertEqual(corpus["differentialOracle"], "authority_promoted")
         self.assertFalse(list((ROOT / "verification/corpus/semantic/v1/wire/bgx").glob("*")))
 
+    def test_g1_02r_machine_projection_contract_has_complete_independent_leaf_closure(self):
+        result = module.validate_g1_02r(ROOT)
+        self.assertEqual([], result["descriptor"]["unmappedChanges"])
+        self.assertTrue(all(result["descriptor"]["outerRegistryPreserved"].values()))
+        self.assertEqual(23, result["leafCorpus"]["caseCount"])
+        self.assertTrue(result["leafCorpus"]["fixtureAuthorIndependent"])
+        self.assertTrue(result["historicalBgManifestValid"])
+        self.assertTrue(result["authorityPathsValid"])
+
 
 if __name__ == "__main__":
     unittest.main()

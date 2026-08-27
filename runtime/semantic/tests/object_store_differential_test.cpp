@@ -27,7 +27,7 @@ ObjectContent makeContent(ObjectKind kind, std::uint8_t content_tag) {
                 VectorPathGeometry{FillRule::kNonZero, {MoveTo{Vec2{value, value + 1.0}}}}};
         case ObjectKind::kRichText:
             return RichTextContent{RichTextDocument{{
-                Paragraph{ObjectId::fromUint64(content_tag), ParagraphStyle{1U},
+                Paragraph{ObjectId::fromUint64(content_tag), ParagraphStyle{ParagraphAlignment::kLeft, 1.0, 0.0, 0.0},
                           {TextRun{"typed", TextStyle{}}}}}}};
         case ObjectKind::kVectorStroke:
             return VectorStrokeContent{
@@ -37,7 +37,7 @@ ObjectContent makeContent(ObjectKind kind, std::uint8_t content_tag) {
         case ObjectKind::kDabStroke:
             return DabStrokeContent{
                 StrokeRecord{BrushDescriptor{}, content_tag,
-                             DabStrokeData{{Dab{Vec2{value, value}, value + 1.0, 0.0F, 1.0F}}}}};
+                             DabStrokeData{{DabInstance{Vec2{value, value}, value + 1.0, 0.0F, 1.0F}}}}};
         case ObjectKind::kConnector:
             return ConnectorContent{
                 ConnectorEndpoint{FreePointEndpoint{Vec2{value, 0.0}}},
