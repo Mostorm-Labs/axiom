@@ -43,6 +43,25 @@ endif()
 
 gtest_discover_tests(canvas_semantic_envelope_validation_test)
 
+# Compile the stateless validator directly for this contract test. This target
+# intentionally does not link canvas_runtime_semantic, reference/indexed object
+# stores, or mutation helpers.
+add_executable(canvas_semantic_payload_structure_test
+  payload_structure_test.cpp
+  ../src/validator.cpp)
+target_include_directories(canvas_semantic_payload_structure_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_payload_structure_test
+  PRIVATE canvas_runtime_foundation GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_payload_structure_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_payload_structure_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_payload_structure_test)
+
 add_executable(canvas_semantic_reference_object_store_test reference_object_store_test.cpp)
 target_link_libraries(canvas_semantic_reference_object_store_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)
