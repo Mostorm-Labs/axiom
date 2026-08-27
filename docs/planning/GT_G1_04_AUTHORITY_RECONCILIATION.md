@@ -7,7 +7,9 @@
 >
 > Notion Task ID：`G1/Task 4`
 >
-> 对账基线：`origin/main @ 39d44d289680e4ddaa5ae48a06e24aa579ee6326`
+> 初始对账基线：`origin/main @ 39d44d289680e4ddaa5ae48a06e24aa579ee6326`
+>
+> Re-entry 基线：`origin/main @ 26dcee011f4f35cfca7cd3f1d9a6c115e46853e2`
 > 对账日期：2026-08-27
 
 ## 术语
@@ -105,7 +107,7 @@ G1-04 的实现提交必须至少产出：
 
 Golden 仍遵循：`authority/manual intent → verification-only fixture compiler → derived binary/provenance → checked-in corpus → production observation → differential comparison`。不得从 Semantic Core 的当前输出生成 expected bytes、projection 或错误答案。
 
-## 6. 下一最小工作包
+## 6. 历史的初始实施建议（已由 re-entry 复审取代）
 
 `GT-G1-04-A — Typed Operation / Normalizer / Envelope-Payload Validation`：
 
@@ -119,3 +121,49 @@ Golden 仍遵循：`authority/manual intent → verification-only fixture compil
    commit-bound Evidence。
 
 该工作包不实现 reference/invariant closure，也不进入 GT-G1-05。
+
+## 7. Re-entry Review after GT-G1-02R
+
+### 7.1 已核验的集成链路
+
+`GT-G1-02R` source commit
+`ac92939e70f0bbbf85f7ae126595f0e5522d4f7d` 已由 Evidence commit
+`26dcee011f4f35cfca7cd3f1d9a6c115e46853e2` 记录为 current machine baseline，并以
+fast-forward 进入 `origin/main@26dcee011f4f35cfca7cd3f1d9a6c115e46853e2`。其 exact-source
+hosted authority 是 [G1 Semantic Codec #33041434455](https://github.com/Mostorm-Labs/axiom/actions/runs/33041434455)。
+本分支通过正常 merge `aa90bd65427b98fec584dcc23079985a739123d6` 吸收 main，没有 squash、
+force-push 或重写 02R source/evidence lineage。
+
+集成前后的机器投影回归结论保持为：descriptor 双生成/lock 一致、semantic CTest、Python
+semantic contract/public-boundary 测试、BG 与 GT-G1-02R leaf differential 均通过，first divergence
+为 `null`。本节只登记仓库与 authority 对账；没有实现或修改任何 G1-04 产品代码。
+
+### 7.2 Authority re-entry classification
+
+| 范围 | 状态 | 处理结论 |
+| --- | --- | --- |
+| GT-G1-02 historical | `PASS / HISTORICAL` | 原始 machine baseline 的 Evidence 保留，不因 02R 而改写。 |
+| GT-G1-02R | `PASS / INTEGRATED / CURRENT MACHINE BASELINE` | 关闭 RichText / Stroke machine projection drift。 |
+| GT-G1-04-A0 typed domain | `READY` | typed Operation 的架构边界可作为后续实现输入。 |
+| GT-G1-04-A1 common frozen normalization | `PARTIALLY_READY` | 只能消费已冻结 numeric、PropertyBag 与 EraseMask 规则。 |
+| GT-G1-04-A2 envelope validation | `BLOCKED_AUTHORITY` | version accepted/missing/zero policy 未有 current closure。 |
+| GT-G1-04-A3 payload structural validation | `BLOCKED_AUTHORITY` | repeated semantics、kind-version 与 leaf structural closure 未有 current closure。 |
+| GT-G1-04-B | `NOT_STARTED` | 仍是 A 的下游；不得提前实现 state/reference/invariant/ApplyPlan。 |
+| GT-G1-04-C | `BLOCKED_VERIFICATION_MATERIALIZATION` | 15-operation reviewed corpus 已移入 C，等待 authority-backed intent 与 independent fixture materialization。 |
+| GT-G1-05 | `NOT_AUTHORIZED` | 在 G1-04 结束前不得启动。 |
+
+当前 manifest/current authority 中尚未 materialize 的 closure 为：`Operation Structural
+Semantics V1 Closure`、`ObjectKind Version Registry V1 Release`、`Semantic Leaf Structural
+Validation Closure V1` 与 `G1-04 Semantic Authority Closure Gate`（或具备相同规范效力并被
+manifest 列为 current 的替代条目）。它们分别关闭 version/repeated policy、kind-version
+registry、leaf structural rule 和 15-operation reviewed intent/outcome。
+
+### 7.3 当前下一步与停止条件
+
+当前下一最小工作包为 `RESUME_G1_04_ARCHITECTURE_AUTHORITY_CLOSURE`：由 Architecture /
+Semantic Authority 发布上述 closure 并加入 manifest/current mirror；之后重新读取 authority、
+更新 Contract Matrix，并重新判定 A0–A3。它不是产品代码实现包，也不授权开始
+`GT-G1-04-B`、`GT-G1-04-C` 或 `GT-G1-05`。
+
+本次 re-entry 的最终状态为 `PASS_REENTRY_BLOCKED_AUTHORITY`。审计本身完成，但
+`GT-G1-04-A` 的最终任务状态保持 `BLOCKED_AUTHORITY`；在该状态解除前必须停止。

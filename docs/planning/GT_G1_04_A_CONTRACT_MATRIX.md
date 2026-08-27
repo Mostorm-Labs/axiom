@@ -179,3 +179,71 @@ Semantic Authority 发布并进入 manifest/current mirror 的下列决定：
 
 在上述 closure 到位前，继续实现 normalizer 或 payload validator 会把未批准的行为写入
 公共语义边界，因此本工作包在 Contract Matrix 阶段停止。
+
+## Re-entry Review after GT-G1-02R
+
+### 时间线与复审边界
+
+本节不替换上述初始对账，也不将历史 `GT-G1-02` 的通过记录改写为失败。复审时间线为：
+
+```text
+初始 GT-G1-04-A 对账
+→ 识别 authority 缺口并阻塞
+→ RichText / Stroke machine projection drift
+→ authority publication
+→ GT-G1-02R machine projection refreeze
+→ GT-G1-02R exact-source hosted validation
+→ main integration
+→ 本次 G1-04-A re-entry classification
+```
+
+`GT-G1-02R` 关闭的范围仅为 RichText / Stroke 从 semantic authority 到 Proto、descriptor、
+codec 与 golden 的机器投影一致性。其 source commit 为
+`ac92939e70f0bbbf85f7ae126595f0e5522d4f7d`，durable Evidence commit 为
+`26dcee011f4f35cfca7cd3f1d9a6c115e46853e2`；该 Evidence 绑定的 hosted run 为
+[G1 Semantic Codec #33041434455](https://github.com/Mostorm-Labs/axiom/actions/runs/33041434455)。
+当前 main 是 `26dcee011f4f35cfca7cd3f1d9a6c115e46853e2`；本分支以正常 merge
+`aa90bd65427b98fec584dcc23079985a739123d6` 吸收该基线。
+
+它**没有**关闭 Operation 的 version、repeated payload、ObjectKind version 或其他 leaf
+结构语义。因而不能由“02R 已集成”推导出 `GT-G1-04-A` 已 Ready。
+
+### 当前分类
+
+| 子包 / 议题 | 当前分类 | 复审结论 |
+| --- | --- | --- |
+| GT-G1-02R RichText / Stroke machine projection | `CLOSED_BY_GT_G1_02R` | Proto、descriptor、codec、BG 与 23-case leaf differential 的投影一致性已闭合。 |
+| A0 Typed Operation Domain | `READY` | 可以继续维护 encoding-neutral typed domain 的设计边界；本轮未实现产品代码。 |
+| A1 Common Frozen Normalization | `PARTIALLY_READY` | finite、`-0`、PropertyBag、持久 EraseMask 已冻结；一般 repeated payload 仍无语义 closure。 |
+| A2 Envelope Validation | `BLOCKED_AUTHORITY` | `schemaVersion` / `payloadVersion` 的 accepted、missing、zero policy 尚未发布。 |
+| A3 Payload Structural Validation | `BLOCKED_AUTHORITY` | repeated semantics、`ObjectKind → kind_version` 与多个 leaf structural rule 尚未闭合。 |
+| VectorPath grammar | `OPEN_SEMANTIC_AUTHORITY` | command grammar、空 path、closed/count policy 未冻结。 |
+| Image / NormalizedRect | `OPEN_SEMANTIC_AUTHORITY` | 精确数值域、presence/default 与边界行为未冻结。 |
+| RichText | `OPEN_SEMANTIC_AUTHORITY` | 02R 已关闭 machine projection；完整 required/presence/cardinality/scalar-range validation 仍无 closure。 |
+| Stroke | `OPEN_SEMANTIC_AUTHORITY` | 02R 已关闭 machine projection；sample cardinality、pressure/tilt/opacity 域及 kind-version applicability 仍无 closure。 |
+| Connector | `OPEN_SEMANTIC_AUTHORITY` | tagged endpoint/static outer structure 已有；anchor/port/presence 仍待 A closure，target existence/connectability 属于 B。 |
+| 15-operation reviewed corpus | `MOVED_TO_GT_G1_04_C` / `BLOCKED_VERIFICATION_MATERIALIZATION` | 它是 GT-G1-04-C 的 verification materialization 前置，不再冒充 A0 architecture prerequisite。 |
+
+### 尚未物化的最小 authority closure
+
+截至当前 manifest/current authority，以下四项目标 authority 文件或等价 current manifest
+条目均未 materialize；历史、superseded 与 draft 内容只能作为 provenance，不能补齐缺口：
+
+1. `Operation Structural Semantics V1 Closure`：定义 envelope version policy 与每类 repeated
+   payload 的 sequence/set、空集、重复和 comparator 语义。
+2. `ObjectKind Version Registry V1 Release`：发布完整 `ObjectKind → accepted kind_version`
+   registry 与适用性边界。
+3. `Semantic Leaf Structural Validation Closure V1`：关闭 VectorPath、NormalizedRect、RichText、
+   Stroke 与 Connector 的尚缺 structural validation 规则。
+4. `G1-04 Semantic Authority Closure Gate`：以人工审阅的 15-operation intent、negative
+   stage/path/outcome 确认可供 independent fixture compiler 消费的最终入口。
+
+最小恢复动作是先由 authority 发布并在 `docs/notion/manifest.yaml` 的 current set 中列出这些
+closure（或其等价规范）；随后重新执行 A0–A3 对账。此时才可决定 A 是否从
+`BLOCKED_AUTHORITY` 变为 `READY`。在此之前，下一步是 authority closure，**不是 C++**。
+
+### Re-entry 最终状态
+
+`GT-G1-04-A = BLOCKED_AUTHORITY`。本次复审的 overall status 为
+`PASS_REENTRY_BLOCKED_AUTHORITY`：02R 的集成和 re-entry 审计均已完成，但 A 的实现路径按
+manifest authority-gap policy 必须停止。
