@@ -17,15 +17,27 @@ message TextStyle {
   bool underline = 5;
   ColorValue color = 6;
 }
-message ParagraphStyle { uint32 alignment = 1; }
+enum ParagraphAlignment {
+  INVALID = 0;
+  LEFT = 1;
+  CENTER = 2;
+  RIGHT = 3;
+  JUSTIFY = 4;
+}
+message ParagraphStyle {
+  ParagraphAlignment alignment = 1;
+  double line_height = 2;
+  double spacing_before = 3;
+  double spacing_after = 4;
+}
 message TextRun { string text = 1; TextStyle style = 2; }
 message Paragraph { Id128 paragraph_id = 1; ParagraphStyle style = 2; repeated TextRun runs = 3; }
 message RichTextDocument { repeated Paragraph paragraphs = 1; }
 message RichTextContent { RichTextDocument document = 1; }
 
 message InsertTextStep { Id128 paragraph_id = 1; uint32 scalar_offset = 2; string text = 3; TextStyle style = 4; }
-message DeleteTextStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 end_scalar = 3; }
-message SetTextStyleStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 end_scalar = 3; TextStyle style = 4; }
+message DeleteTextStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 scalar_count = 3; }
+message SetInlineStyleStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 scalar_count = 3; TextStyle style = 4; }
 message SplitParagraphStep { Id128 paragraph_id = 1; uint32 scalar_offset = 2; Id128 new_paragraph_id = 3; }
 message MergeParagraphStep { Id128 first_paragraph_id = 1; Id128 second_paragraph_id = 2; }
 message SetParagraphStyleStep { Id128 paragraph_id = 1; ParagraphStyle style = 2; }
@@ -33,10 +45,13 @@ message RichTextStep {
   oneof step {
     InsertTextStep insert_text = 1;
     DeleteTextStep delete_text = 2;
-    SetTextStyleStep set_text_style = 3;
-    SplitParagraphStep split_paragraph = 4;
-    MergeParagraphStep merge_paragraph = 5;
+    SplitParagraphStep split_paragraph = 3;
+    MergeParagraphStep merge_paragraph = 4;
+    SetInlineStyleStep set_inline_style = 5;
     SetParagraphStyleStep set_paragraph_style = 6;
   }
 }
-message RichTextDelta { repeated RichTextStep steps = 1; }
+message RichTextDelta {
+  uint32 delta_version = 1;
+  repeated RichTextStep steps = 2;
+}
