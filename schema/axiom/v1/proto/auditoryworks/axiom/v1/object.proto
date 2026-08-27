@@ -12,7 +12,7 @@ import "auditoryworks/axiom/v1/connector.proto";
 
 message Placement { Id128 parent_id = 1; OrderKey order_key = 2; }
 message ShapeContent { uint32 shape_kind = 1; double width = 2; double height = 3; }
-enum ImageContentMode { IMAGE_CONTENT_MODE_INVALID = 0; IMAGE_CONTENT_MODE_STRETCH = 1; IMAGE_CONTENT_MODE_FIT = 2; IMAGE_CONTENT_MODE_FILL = 3; }
+enum ImageContentMode { IMAGE_CONTENT_MODE_INVALID = 0; IMAGE_CONTENT_MODE_FIT = 1; IMAGE_CONTENT_MODE_FILL = 2; IMAGE_CONTENT_MODE_STRETCH = 3; }
 message ImageContent { Id128 resource_id = 1; double intrinsic_width = 2; double intrinsic_height = 3; NormalizedRect source_rect = 4; ImageContentMode content_mode = 5; double width = 6; double height = 7; }
 message StickyContent { double width = 1; double height = 2; }
 message GroupContent {}
