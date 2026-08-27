@@ -1,19 +1,29 @@
 #include "canvas/semantic/codec.hpp"
+#include "canvas/semantic/object_content.hpp"
 
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <cmath>
 #include <cstdio>
+#include <iomanip>
+#include <limits>
+#include <sstream>
+#include <type_traits>
 #include <utility>
 
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
+#include "auditoryworks/axiom/v1/brush_stroke.pb.h"
 #include "auditoryworks/axiom/v1/common.pb.h"
 #include "auditoryworks/axiom/v1/geometry.pb.h"
 #include "auditoryworks/axiom/v1/operation.pb.h"
 #include "auditoryworks/axiom/v1/object.pb.h"
 #include "auditoryworks/axiom/v1/paint.pb.h"
 #include "auditoryworks/axiom/v1/property.pb.h"
+#include "auditoryworks/axiom/v1/rich_text.pb.h"
 #include "auditoryworks/axiom/v1/snapshot.pb.h"
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #endif
 
 namespace {
@@ -43,6 +53,7 @@ std::uint32_t readU32(const std::vector<std::uint8_t>& bytes, std::size_t offset
 struct WireField final {
     std::uint32_t number = 0;
     std::uint8_t type = 0;
+    std::vector<std::uint8_t> value;
 };
 
 bool readVarint(const std::vector<std::uint8_t>& bytes, std::size_t& offset, std::uint64_t& value) {
@@ -64,27 +75,36 @@ bool scanWire(const std::vector<std::uint8_t>& bytes, std::vector<WireField>& fi
         const auto number = static_cast<std::uint32_t>(key >> 3U);
         const auto type = static_cast<std::uint8_t>(key & 0x07U);
         if (number == 0U) return false;
-        fields.push_back({number, type});
         switch (type) {
             case 0U: {
+                const auto begin = offset;
                 std::uint64_t value = 0U;
                 if (!readVarint(bytes, offset, value)) return false;
+                fields.push_back({number, type, {bytes.begin() + static_cast<std::ptrdiff_t>(begin), bytes.begin() + static_cast<std::ptrdiff_t>(offset)}});
                 break;
             }
-            case 1U:
+            case 1U: {
+                const auto begin = offset;
                 if (bytes.size() - offset < 8U) return false;
                 offset += 8U;
+                fields.push_back({number, type, {bytes.begin() + static_cast<std::ptrdiff_t>(begin), bytes.begin() + static_cast<std::ptrdiff_t>(offset)}});
                 break;
+            }
             case 2U: {
                 std::uint64_t length = 0U;
                 if (!readVarint(bytes, offset, length) || length > bytes.size() - offset) return false;
+                const auto begin = offset;
                 offset += static_cast<std::size_t>(length);
+                fields.push_back({number, type, {bytes.begin() + static_cast<std::ptrdiff_t>(begin), bytes.begin() + static_cast<std::ptrdiff_t>(offset)}});
                 break;
             }
-            case 5U:
+            case 5U: {
+                const auto begin = offset;
                 if (bytes.size() - offset < 4U) return false;
                 offset += 4U;
+                fields.push_back({number, type, {bytes.begin() + static_cast<std::ptrdiff_t>(begin), bytes.begin() + static_cast<std::ptrdiff_t>(offset)}});
                 break;
+            }
             default:
                 return false;
         }
@@ -101,7 +121,60 @@ bool allowsField(const std::string& root_type, std::uint32_t field) {
     if (root_type == "Placement") return field == 1U || field == 2U;
     if (root_type == "DashPattern") return field == 1U || field == 2U;
     if (root_type == "DocumentSnapshot") return field >= 1U && field <= 3U;
+    if (root_type == "ParagraphStyle") return field >= 1U && field <= 4U;
+    if (root_type == "RichTextDelta") return field == 1U || field == 2U;
+    if (root_type == "RichTextStep") return field >= 1U && field <= 6U;
+    if (root_type == "PressureMapping") return field >= 1U && field <= 3U;
+    if (root_type == "BrushDescriptor") return field >= 1U && field <= 11U;
+    if (root_type == "StrokeRecord") return field >= 1U && field <= 4U;
     return false;
+}
+
+bool hasExpectedWireType(const std::string& root_type, std::uint32_t field, std::uint8_t type) {
+    if (root_type == "Id128" || root_type == "OrderKey") return type == 2U;
+    if (root_type == "Vec2") return type == 1U;
+    if (root_type == "Transform2D") return type == 1U;
+    if (root_type == "PropertyValue") return (field == 2U && type == 5U) || (field != 2U && type == 0U);
+    if (root_type == "ColorValue") return type == 5U;
+    if (root_type == "Placement") return type == 2U;
+    if (root_type == "DashPattern") return (field == 1U && type == 2U) || (field == 2U && type == 1U);
+    if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U);
+    if (root_type == "ParagraphStyle") return (field == 1U && type == 0U) || (field >= 2U && type == 1U);
+    if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || (field == 2U && type == 2U);
+    if (root_type == "RichTextStep") return type == 2U;
+    if (root_type == "PressureMapping") return (field == 1U && type == 0U) || (field >= 2U && type == 2U);
+    if (root_type == "BrushDescriptor") {
+        return ((field == 1U || field == 2U || field == 11U) && type == 0U) ||
+            (field == 4U && type == 1U) || (field == 5U && type == 5U) ||
+            ((field == 3U || (field >= 6U && field <= 10U)) && type == 2U);
+    }
+    if (root_type == "StrokeRecord") return (field == 2U && type == 1U) || (field != 2U && type == 2U);
+    return false;
+}
+
+bool validRichTextStepPayload(std::uint32_t branch, const std::vector<std::uint8_t>& bytes) {
+    std::vector<WireField> fields;
+    if (!scanWire(bytes, fields) || branch < 1U || branch > 6U) return false;
+    for (const auto& field : fields) {
+        const bool is_id =
+            (branch == 1U && (field.number == 1U || field.number == 4U)) ||
+            (branch == 2U && field.number == 1U) ||
+            (branch == 3U && (field.number == 1U || field.number == 3U)) ||
+            (branch == 4U && (field.number == 1U || field.number == 2U)) ||
+            (branch == 5U && (field.number == 1U || field.number == 4U)) ||
+            (branch == 6U && (field.number == 1U || field.number == 2U));
+        const bool is_scalar =
+            (branch == 1U && field.number == 2U) ||
+            (branch == 2U && (field.number == 2U || field.number == 3U)) ||
+            (branch == 3U && field.number == 2U) ||
+            (branch == 5U && (field.number == 2U || field.number == 3U));
+        const bool is_text = branch == 1U && field.number == 3U;
+        if ((!is_id && !is_scalar && !is_text) ||
+            (is_id && field.type != 2U) || (is_scalar && field.type != 0U) || (is_text && field.type != 2U)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::string preflightCategory(const std::string& root_type, const std::vector<std::uint8_t>& bytes, bool strict_canonical) {
@@ -111,6 +184,7 @@ std::string preflightCategory(const std::string& root_type, const std::vector<st
     unsigned property_oneof_members = 0U;
     for (const auto& field : fields) {
         if (!allowsField(root_type, field.number)) return "UNKNOWN_WIRE_FIELD";
+        if (!hasExpectedWireType(root_type, field.number, field.type)) return "UNKNOWN_WIRE_FIELD";
         if (root_type == "DashPattern" && field.number == 1U && field.type != 2U && strict_canonical) {
             return "NON_CANONICAL_PACKED_ENCODING";
         }
@@ -124,6 +198,18 @@ std::string preflightCategory(const std::string& root_type, const std::vector<st
         seen.push_back(field.number);
     }
     if (root_type == "PropertyValue" && property_oneof_members > 1U) return "MULTIPLE_ONEOF_MEMBERS";
+    if (root_type == "RichTextDelta") {
+        for (const auto& field : fields) {
+            if (field.number != 2U) continue;
+            const auto nested = preflightCategory("RichTextStep", field.value, strict_canonical);
+            if (!nested.empty()) return nested;
+        }
+    }
+    if (root_type == "RichTextStep") {
+        for (const auto& field : fields) {
+            if (!validRichTextStepPayload(field.number, field.value)) return "UNKNOWN_WIRE_FIELD";
+        }
+    }
     return {};
 }
 
@@ -174,6 +260,312 @@ void appendMessage(std::vector<std::uint8_t>& output, std::uint32_t field, const
     appendVarint(output, static_cast<std::uint64_t>((field << 3U) | 2U));
     appendVarint(output, value.size());
     output.insert(output.end(), value.begin(), value.end());
+}
+
+std::string bytesHex(const std::array<std::uint8_t, 16>& bytes) {
+    constexpr char digits[] = "0123456789abcdef";
+    std::string result;
+    result.reserve(bytes.size() * 2U);
+    for (const auto byte : bytes) {
+        result.push_back(digits[byte >> 4U]);
+        result.push_back(digits[byte & 0x0fU]);
+    }
+    return result;
+}
+
+template <typename Number>
+std::string jsonNumber(Number value) {
+    if (value == static_cast<Number>(0)) value = static_cast<Number>(0);
+    std::ostringstream output;
+    output << std::setprecision(std::numeric_limits<Number>::max_digits10) << value;
+    return output.str();
+}
+
+std::string jsonString(const std::string& value) {
+    std::string result{"\""};
+    for (const unsigned char byte : value) {
+        switch (byte) {
+            case '\\': result += "\\\\"; break;
+            case '\"': result += "\\\""; break;
+            case '\n': result += "\\n"; break;
+            case '\r': result += "\\r"; break;
+            case '\t': result += "\\t"; break;
+            default:
+                if (byte < 0x20U) {
+                    constexpr char digits[] = "0123456789abcdef";
+                    result += "\\u00";
+                    result.push_back(digits[byte >> 4U]);
+                    result.push_back(digits[byte & 0x0fU]);
+                } else {
+                    result.push_back(static_cast<char>(byte));
+                }
+        }
+    }
+    result += "\"";
+    return result;
+}
+
+bool mapId(const auditoryworks::axiom::v1::Id128& source, canvas::semantic::ObjectId& destination) {
+    if (!source.has_value() || !validId(source.value())) return false;
+    for (std::size_t index = 0; index < destination.bytes.size(); ++index) {
+        destination.bytes[index] = static_cast<std::uint8_t>(source.value()[index]);
+    }
+    return true;
+}
+
+bool mapVec(const auditoryworks::axiom::v1::Vec2& source, canvas::semantic::Vec2& destination) {
+    if (!source.has_x() || !source.has_y()) return false;
+    destination = {source.x(), source.y()};
+    return true;
+}
+
+bool mapTextStyle(const auditoryworks::axiom::v1::TextStyle& source, canvas::semantic::TextStyle& destination) {
+    if (source.has_font_resource_id()) {
+        canvas::semantic::ObjectId id;
+        if (!mapId(source.font_resource_id(), id)) return false;
+        destination.font_resource_id = canvas::semantic::ResourceId{id};
+    }
+    destination.font_size = source.font_size();
+    destination.weight = source.weight();
+    destination.italic = source.italic();
+    destination.underline = source.underline();
+    if (source.has_color()) destination.color = {source.color().r(), source.color().g(), source.color().b(), source.color().a()};
+    return true;
+}
+
+bool mapParagraphStyle(const auditoryworks::axiom::v1::ParagraphStyle& source, canvas::semantic::ParagraphStyle& destination) {
+    destination.alignment = static_cast<canvas::semantic::ParagraphAlignment>(source.alignment());
+    destination.line_height = source.line_height();
+    destination.spacing_before = source.spacing_before();
+    destination.spacing_after = source.spacing_after();
+    return true;
+}
+
+bool mapRichTextStep(const auditoryworks::axiom::v1::RichTextStep& source, canvas::semantic::RichTextStep& destination) {
+    using namespace auditoryworks::axiom::v1;
+    canvas::semantic::ObjectId first;
+    canvas::semantic::ObjectId second;
+    canvas::semantic::TextStyle text_style;
+    canvas::semantic::ParagraphStyle paragraph_style;
+    if (source.has_insert_text()) {
+        const auto& item = source.insert_text();
+        if (!mapId(item.paragraph_id(), first) || !mapTextStyle(item.style(), text_style)) return false;
+        destination = canvas::semantic::InsertTextStep{
+            first, item.scalar_offset(), std::string(item.text().data(), item.text().size()), text_style};
+    } else if (source.has_delete_text()) {
+        const auto& item = source.delete_text();
+        if (!mapId(item.paragraph_id(), first)) return false;
+        destination = canvas::semantic::DeleteTextStep{first, item.start_scalar(), item.scalar_count()};
+    } else if (source.has_split_paragraph()) {
+        const auto& item = source.split_paragraph();
+        if (!mapId(item.paragraph_id(), first) || !mapId(item.new_paragraph_id(), second)) return false;
+        destination = canvas::semantic::SplitParagraphStep{first, item.scalar_offset(), second};
+    } else if (source.has_merge_paragraph()) {
+        const auto& item = source.merge_paragraph();
+        if (!mapId(item.first_paragraph_id(), first) || !mapId(item.second_paragraph_id(), second)) return false;
+        destination = canvas::semantic::MergeParagraphStep{first, second};
+    } else if (source.has_set_inline_style()) {
+        const auto& item = source.set_inline_style();
+        if (!mapId(item.paragraph_id(), first) || !mapTextStyle(item.style(), text_style)) return false;
+        destination = canvas::semantic::SetInlineStyleStep{first, item.start_scalar(), item.scalar_count(), text_style};
+    } else if (source.has_set_paragraph_style()) {
+        const auto& item = source.set_paragraph_style();
+        if (!mapId(item.paragraph_id(), first) || !mapParagraphStyle(item.style(), paragraph_style)) return false;
+        destination = canvas::semantic::SetParagraphStyleStep{first, paragraph_style};
+    } else {
+        return false;
+    }
+    return true;
+}
+
+bool mapRichTextDelta(const auditoryworks::axiom::v1::RichTextDelta& source, canvas::semantic::RichTextDelta& destination) {
+    destination.delta_version = source.delta_version();
+    destination.steps.clear();
+    destination.steps.reserve(static_cast<std::size_t>(source.steps_size()));
+    for (const auto& step : source.steps()) {
+        canvas::semantic::RichTextStep mapped;
+        if (!mapRichTextStep(step, mapped)) return false;
+        destination.steps.push_back(std::move(mapped));
+    }
+    return true;
+}
+
+bool mapCurve(const auditoryworks::axiom::v1::PiecewiseLinearCurve01& source, canvas::semantic::PiecewiseLinearCurve01& destination) {
+    destination.points.clear();
+    destination.points.reserve(static_cast<std::size_t>(source.points_size()));
+    for (const auto& point : source.points()) {
+        if (!point.has_x() || !point.has_y()) return false;
+        destination.points.push_back({point.x(), point.y()});
+    }
+    return true;
+}
+
+bool mapPressure(const auditoryworks::axiom::v1::PressureMapping& source, canvas::semantic::PressureMapping& destination) {
+    destination.enabled = source.enabled();
+    destination.size_curve.reset();
+    destination.opacity_curve.reset();
+    if (source.has_size_curve()) {
+        canvas::semantic::PiecewiseLinearCurve01 curve;
+        if (!mapCurve(source.size_curve(), curve)) return false;
+        destination.size_curve = std::move(curve);
+    }
+    if (source.has_opacity_curve()) {
+        canvas::semantic::PiecewiseLinearCurve01 curve;
+        if (!mapCurve(source.opacity_curve(), curve)) return false;
+        destination.opacity_curve = std::move(curve);
+    }
+    return true;
+}
+
+bool mapBrush(const auditoryworks::axiom::v1::BrushDescriptor& source, canvas::semantic::BrushDescriptor& destination) {
+    destination.brush_family_id = source.brush_family_id();
+    destination.brush_version = source.brush_version();
+    destination.nominal_size = source.nominal_size();
+    destination.opacity = source.opacity();
+    if (source.has_color()) destination.color = {source.color().r(), source.color().g(), source.color().b(), source.color().a()};
+    if (source.has_pressure() && !mapPressure(source.pressure(), destination.pressure)) return false;
+    if (source.has_tilt()) destination.tilt = {source.tilt().enabled(), source.tilt().size_influence(), source.tilt().angle_influence()};
+    if (source.has_smoothing()) destination.smoothing = {source.smoothing().amount()};
+    if (source.has_spacing()) destination.spacing = {source.spacing().normalized_spacing()};
+    destination.blend_mode = static_cast<canvas::semantic::BrushBlendMode>(source.blend_mode());
+    destination.texture_resource_id.reset();
+    if (source.has_texture_resource_id()) {
+        canvas::semantic::ObjectId id;
+        if (!mapId(source.texture_resource_id(), id)) return false;
+        destination.texture_resource_id = canvas::semantic::ResourceId{id};
+    }
+    return true;
+}
+
+bool mapDabStroke(const auditoryworks::axiom::v1::DabStrokeData& source, canvas::semantic::DabStrokeData& destination) {
+    destination.dabs.clear();
+    destination.dabs.reserve(static_cast<std::size_t>(source.dabs_size()));
+    for (const auto& dab : source.dabs()) {
+        canvas::semantic::Vec2 center;
+        if (!mapVec(dab.center(), center)) return false;
+        destination.dabs.push_back({center, dab.size(), dab.rotation(), dab.opacity()});
+    }
+    return true;
+}
+
+bool mapStrokeRecord(const auditoryworks::axiom::v1::StrokeRecord& source, canvas::semantic::StrokeRecord& destination) {
+    if (source.has_brush() && !mapBrush(source.brush(), destination.brush)) return false;
+    destination.deterministic_seed = source.deterministic_seed();
+    if (source.has_dab()) {
+        canvas::semantic::DabStrokeData dabs;
+        if (!mapDabStroke(source.dab(), dabs)) return false;
+        destination.data = std::move(dabs);
+    } else if (source.has_vector()) {
+        canvas::semantic::VectorStrokeData vector;
+        vector.samples.reserve(static_cast<std::size_t>(source.vector().samples_size()));
+        for (const auto& sample : source.vector().samples()) {
+            canvas::semantic::Vec2 position;
+            if (!mapVec(sample.position(), position)) return false;
+            vector.samples.push_back({position, sample.pressure(), {sample.tilt().x(), sample.tilt().y()}});
+        }
+        destination.data = std::move(vector);
+    } else {
+        return false;
+    }
+    return true;
+}
+
+std::string jsonVec(const canvas::semantic::Vec2& value) {
+    return "{\"x\":" + jsonNumber(value.x) + ",\"y\":" + jsonNumber(value.y) + "}";
+}
+
+std::string jsonRichTextStep(const canvas::semantic::RichTextStep& step) {
+    return std::visit([](const auto& item) -> std::string {
+        using Item = std::decay_t<decltype(item)>;
+        if constexpr (std::is_same_v<Item, canvas::semantic::InsertTextStep>) {
+            return "{\"kind\":\"InsertText\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) +
+                ",\"scalarOffset\":" + std::to_string(item.scalar_offset) + ",\"text\":" + jsonString(item.text) + "}";
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::DeleteTextStep>) {
+            return "{\"kind\":\"DeleteText\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) +
+                ",\"startScalar\":" + std::to_string(item.start_scalar) + ",\"scalarCount\":" + std::to_string(item.scalar_count) + "}";
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::SplitParagraphStep>) {
+            return "{\"kind\":\"SplitParagraph\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) +
+                ",\"scalarOffset\":" + std::to_string(item.scalar_offset) + ",\"newParagraphId\":" + jsonString(bytesHex(item.new_paragraph_id.bytes)) + "}";
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::MergeParagraphStep>) {
+            return "{\"kind\":\"MergeParagraph\",\"firstParagraphId\":" + jsonString(bytesHex(item.first_paragraph_id.bytes)) +
+                ",\"secondParagraphId\":" + jsonString(bytesHex(item.second_paragraph_id.bytes)) + "}";
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::SetInlineStyleStep>) {
+            return "{\"kind\":\"SetInlineStyle\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) +
+                ",\"startScalar\":" + std::to_string(item.start_scalar) + ",\"scalarCount\":" + std::to_string(item.scalar_count) + "}";
+        } else {
+            return "{\"kind\":\"SetParagraphStyle\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) + "}";
+        }
+    }, step);
+}
+
+std::string jsonRichTextDelta(const canvas::semantic::RichTextDelta& delta) {
+    std::string result = "{\"deltaVersion\":" + std::to_string(delta.delta_version) + ",\"steps\":[";
+    for (std::size_t index = 0; index < delta.steps.size(); ++index) {
+        if (index != 0U) result += ',';
+        result += jsonRichTextStep(delta.steps[index]);
+    }
+    return result + "]}";
+}
+
+std::string jsonParagraphStyle(const canvas::semantic::ParagraphStyle& style) {
+    return "{\"alignment\":" + std::to_string(static_cast<unsigned>(style.alignment)) +
+        ",\"lineHeight\":" + jsonNumber(style.line_height) +
+        ",\"spacingBefore\":" + jsonNumber(style.spacing_before) +
+        ",\"spacingAfter\":" + jsonNumber(style.spacing_after) + "}";
+}
+
+std::string jsonCurve(const canvas::semantic::PiecewiseLinearCurve01& curve) {
+    std::string result = "[";
+    for (std::size_t index = 0; index < curve.points.size(); ++index) {
+        if (index != 0U) result += ',';
+        result += "{\"x\":" + jsonNumber(curve.points[index].x) + ",\"y\":" + jsonNumber(curve.points[index].y) + "}";
+    }
+    return result + "]";
+}
+
+std::string jsonPressure(const canvas::semantic::PressureMapping& pressure) {
+    std::string result = "{\"enabled\":" + std::string(pressure.enabled ? "true" : "false");
+    if (pressure.size_curve.has_value()) result += ",\"sizeCurve\":" + jsonCurve(*pressure.size_curve);
+    if (pressure.opacity_curve.has_value()) result += ",\"opacityCurve\":" + jsonCurve(*pressure.opacity_curve);
+    return result + "}";
+}
+
+std::string jsonBrush(const canvas::semantic::BrushDescriptor& brush) {
+    std::string result = "{\"brushFamilyId\":" + std::to_string(brush.brush_family_id) +
+        ",\"brushVersion\":" + std::to_string(brush.brush_version) +
+        ",\"pressure\":" + jsonPressure(brush.pressure) +
+        ",\"spacing\":{\"normalizedSpacing\":" + jsonNumber(brush.spacing.normalized_spacing) + "}" +
+        ",\"blendMode\":" + std::to_string(static_cast<unsigned>(brush.blend_mode));
+    if (brush.texture_resource_id.has_value()) result += ",\"textureResourceId\":" + jsonString(bytesHex(brush.texture_resource_id->value.bytes));
+    return result + "}";
+}
+
+std::string jsonStrokeRecord(const canvas::semantic::StrokeRecord& record) {
+    std::string result = "{\"deterministicSeed\":" + jsonString(std::to_string(record.deterministic_seed)) + ",\"data\":";
+    if (const auto* dabs = std::get_if<canvas::semantic::DabStrokeData>(&record.data)) {
+        result += "{\"kind\":\"Dab\",\"dabs\":[";
+        for (std::size_t index = 0; index < dabs->dabs.size(); ++index) {
+            if (index != 0U) result += ',';
+            const auto& dab = dabs->dabs[index];
+            result += "{\"center\":" + jsonVec(dab.center) + ",\"size\":" + jsonNumber(dab.size) +
+                ",\"rotation\":" + jsonNumber(dab.rotation) + ",\"opacity\":" + jsonNumber(dab.opacity) + "}";
+        }
+        return result + "]}}";
+    }
+    return result + "{\"kind\":\"Vector\"}}";
+}
+
+template <typename Message>
+bool serializeCanonical(const Message& source, std::vector<std::uint8_t>& destination) {
+    std::string bytes;
+    {
+        google::protobuf::io::StringOutputStream stream(&bytes);
+        google::protobuf::io::CodedOutputStream output(&stream);
+        output.SetSerializationDeterministic(true);
+        if (!source.SerializeToCodedStream(&output) || output.HadError()) return false;
+    }
+    destination.assign(bytes.begin(), bytes.end());
+    return true;
 }
 #endif
 }
@@ -393,6 +785,51 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
         appendMessage(canonical, 1U, document_id);
         appendVarint(canonical, static_cast<std::uint64_t>(2U << 3U));
         appendVarint(canonical, value.schema_version());
+    } else if (root_type == "ParagraphStyle") {
+        auditoryworks::axiom::v1::ParagraphStyle value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::ParagraphStyle mapped;
+        if (!mapParagraphStyle(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonParagraphStyle(mapped)};
+    } else if (root_type == "RichTextDelta") {
+        auditoryworks::axiom::v1::RichTextDelta value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::RichTextDelta mapped;
+        if (!mapRichTextDelta(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonRichTextDelta(mapped)};
+    } else if (root_type == "PressureMapping") {
+        auditoryworks::axiom::v1::PressureMapping value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::PressureMapping mapped;
+        if (!mapPressure(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonPressure(mapped)};
+    } else if (root_type == "BrushDescriptor") {
+        auditoryworks::axiom::v1::BrushDescriptor value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::BrushDescriptor mapped;
+        if (!mapBrush(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonBrush(mapped)};
+    } else if (root_type == "StrokeRecord") {
+        auditoryworks::axiom::v1::StrokeRecord value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::StrokeRecord mapped;
+        if (!mapStrokeRecord(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonStrokeRecord(mapped)};
     } else {
         return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "UNSUPPORTED_GOLDEN_ROOT", {}};
     }

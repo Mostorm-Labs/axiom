@@ -101,4 +101,56 @@ TEST(SemanticCodec, ObservesAuthorityCanonicalityAndStableNegativeOutcomes) {
 #endif
 }
 
+TEST(SemanticCodec, ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection) {
+    const std::vector<std::uint8_t> bytes{
+        0x08U, 0x01U,
+        0x12U, 0x1aU,
+        0x12U, 0x18U,
+        0x0aU, 0x12U,
+        0x0aU, 0x10U,
+        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU,
+        0x10U, 0x03U, 0x18U, 0x05U,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("RichTextDelta", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    ASSERT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+    EXPECT_EQ(
+        observation.semantic_projection_json,
+        "{\"deltaVersion\":1,\"steps\":[{\"kind\":\"DeleteText\",\"paragraphId\":\"000102030405060708090a0b0c0d0e0f\",\"startScalar\":3,\"scalarCount\":5}]}"
+    );
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection) {
+    const std::vector<std::uint8_t> bytes{
+        0x0aU, 0x00U,
+        0x11U, 0x01U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x80U,
+        0x22U, 0x29U,
+        0x0aU, 0x27U,
+        0x0aU, 0x12U,
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xf0U, 0x3fU,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x40U,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x10U, 0x40U,
+        0x1dU, 0x00U, 0x00U, 0x00U, 0x3fU,
+        0x25U, 0x00U, 0x00U, 0x40U, 0x3fU,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("StrokeRecord", bytes, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    ASSERT_TRUE(observation.accepted);
+    EXPECT_EQ(observation.canonicality, GoldenCanonicality::kCanonical);
+    EXPECT_EQ(observation.canonical_bytes, bytes);
+    EXPECT_EQ(
+        observation.semantic_projection_json,
+        "{\"deterministicSeed\":\"9223372036854775809\",\"data\":{\"kind\":\"Dab\",\"dabs\":[{\"center\":{\"x\":1,\"y\":2},\"size\":4,\"rotation\":0.5,\"opacity\":0.75}]}}"
+    );
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
 } // namespace canvas::semantic

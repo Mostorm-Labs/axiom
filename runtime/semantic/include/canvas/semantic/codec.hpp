@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace canvas::semantic {
@@ -53,6 +54,25 @@ struct GoldenCodecObservation final {
     GoldenCodecStage stage = GoldenCodecStage::kNone;
     std::string category;
     std::vector<std::uint8_t> canonical_bytes;
+    // Verification-only encoding-neutral projection. Generated protobuf DTOs
+    // remain private to codec.cpp; this JSON is an observation surface for
+    // independent leaf-golden differentials, not a public SDK model.
+    std::string semantic_projection_json;
+
+    GoldenCodecObservation() = default;
+    GoldenCodecObservation(
+        bool accepted_value,
+        GoldenCanonicality canonicality_value,
+        GoldenCodecStage stage_value,
+        std::string category_value,
+        std::vector<std::uint8_t> canonical_bytes_value,
+        std::string semantic_projection_json_value = {})
+        : accepted(accepted_value),
+          canonicality(canonicality_value),
+          stage(stage_value),
+          category(std::move(category_value)),
+          canonical_bytes(std::move(canonical_bytes_value)),
+          semantic_projection_json(std::move(semantic_projection_json_value)) {}
 };
 
 class SemanticCodec final {
