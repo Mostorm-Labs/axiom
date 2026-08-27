@@ -6,7 +6,7 @@
 
 **Architecture:** Create `runtime/semantic/` as a production module depending on `runtime/foundation/` and forbidden from depending on `runtime/scene/`, Skia, Arc, native platform APIs, storage/sync, networking, or renderer state. Notion remains the living design authority. GitHub receives only executable contracts, code, tests, corpus and Evidence promoted for G1. The closed `docs/notion-bridge-bootstrap` branch is comparison/reference material only.
 
-**Tech Stack:** C++20, CMake 3.30+, CTest, accepted Protobuf/Edition 2024 canonical codec baseline, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding. GT-G1-01 authority reconciliation and GT-G1-02 descriptor/hosted differential Evidence have accepted this repository codec contract; later semantic apply work must consume it rather than replace it.
+**Tech Stack:** C++20, CMake 3.30+, CTest, the protobuf/Edition 2024 path currently proposed by the Notion release-candidate material, YAML/JSON registries, Python/Node verification tooling already present under `verification/`, SHA-256 evidence binding. Protobuf/Edition 2024 becomes an accepted repository codec contract only after GT-G1-01 authority reconciliation, GT-G1-02 codec validation and descriptor reproducibility; this plan does not pre-accept it.
 
 **Normative task source:** `docs/planning/GATE_TASK_TRACKER.md` on the accepted `main` lineage.
 
@@ -15,7 +15,7 @@
 Before each task, re-read the applicable current Notion pages by title and record retrieval timestamp in Evidence. Do not commit private Notion URLs/page IDs.
 
 Core authority set:
-- `G1 Semantic Kernel Implementation Plan v0.1` *(historical execution-plan provenance; it does not override current Architecture Authority or reconciliation)*
+- `G1 Semantic Kernel Implementation Plan v0.1`
 - `Axiom Semantic Schema V1 Release Candidate Final Gate v0.1`
 - `Schema Freeze Review + V1 Release Candidate Gate v0.1`
 - `Axiom Semantic Schema Spec + IDL v0.1`
@@ -34,9 +34,9 @@ implementation PR carries the same minimum traceability fields instead of relyin
 | Notion Task ID | Gate Task ID | R contribution | Requirements | ADR/RFC/Contract | Dependencies | Design | Implementation | Validation | Evidence | Blocker | Final |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | G1/Task 1 | `GT-G1-01` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; semantic authority reconciliation | G0 Pass | Pass | Pass | Pass | `verification/evidence/gates/G1/33491f82cea8db4411a2afb8f37f974008955913/GT-G1-01/` | — | Pass |
-| G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Pass | Pass | Pass | `verification/evidence/gates/G1/1058311e47a2af68e4a444a76444dd6cf2354975/GT-G1-02/`；[hosted revalidation](https://github.com/Mostorm-Labs/axiom/actions/runs/32947427280) | historical Blocked Evidence remains preserved; promoted corpus, independent oracle and hosted toolchain have passed | Pass |
-| G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-02, GT-G1-01R | Pass | Pass | Pass | `verification/evidence/gates/G1/3c6cbbc6abe1dfb7b716e4c32e6546e476917c54/GT-G1-03/` | — | Pass |
-| G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract; ADR-0025/0026; 07-03 | GT-G1-02, GT-G1-03 | Blocked | Not Started | Blocked | [authority/task reconciliation](../../planning/GT_G1_04_AUTHORITY_RECONCILIATION.md); [A Contract Matrix](../../planning/GT_G1_04_A_CONTRACT_MATRIX.md) | A 缺 schema/payload version、repeated payload 与 leaf structural closure；C 缺审阅式 15-operation negative corpus；两者不得由 production output 补齐 | Blocked |
+| G1/Task 2 | `GT-G1-02` | R1,R2 | REQ-OBJ, REQ-INK, REQ-TEXT | D-G1; codec/descriptor contract | GT-G1-01 | Pass | Pass | Validating | `verification/evidence/gates/G1/<commit>/GT-G1-02/` | 本机已验证固定 Protobuf/Abseil runtime/codegen 与 round-trip；仍需 hosted Linux toolchain Evidence，且权威 BG/BGX 二进制及 differential oracle 尚未提供；缺失时必须保持 `BLOCKED_AUTHORITY` | Blocked |
+| G1/Task 3 | `GT-G1-03` | R1,R2 | REQ-OBJ, REQ-EDIT | D-G1; ObjectStore contract | GT-G1-01 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-03/` | — | Not Started |
+| G1/Task 4 | `GT-G1-04` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; validation/ApplyPlan contract | GT-G1-02, GT-G1-03 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-04/` | — | Not Started |
 | G1/Task 5 | `GT-G1-05` | R1,R2 | REQ-OBJ, REQ-EDIT, REQ-INK, REQ-TEXT | D-G1; ChangeSet contract | GT-G1-04 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-05/` | — | Not Started |
 | G1/Task 6 | `GT-G1-06` | R1,R2 | REQ-GAP-DATA, REQ-EDIT-HIST-001 | D-G1; Snapshot/Projection contract | GT-G1-05 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-06/` | — | Not Started |
 | G1/Task 7 | `GT-G1-07` | R1,R2 | REQ-GAP-VER | D-G1; public semantic APIs | GT-G1-06 | Not Started | Not Started | Not Started | `verification/evidence/gates/G1/<commit>/GT-G1-07/` | — | Not Started |
@@ -54,7 +54,7 @@ Current `main` intentionally contains only a semantic bootstrap. `verification/t
 
 - Candidate reuse: `canvas::foundation::ObjectId` after byte-layout/zero-ID tests.
 - Pattern reuse only: `canvas::foundation::Result<T>`; do not reuse its RF01 error enum as semantic codec taxonomy.
-- Do not reinterpret `SceneRevision` or `ContentRevision` as `SemanticGeneration`.
+- Do not reinterpret `SceneRevision` or `ContentRevision` as SemanticDocument revision.
 - Do not use `canvas::foundation::StableOrderKey`: it is `uint64_t`, while semantic OrderKey is opaque 1..32 bytes.
 - Do not use `WorldPoint` / `WorldRect` as durable semantic geometry: they are `float`, while canonical semantic numbers are finite binary64/f64 with authority-defined normalization.
 
@@ -79,18 +79,18 @@ For every candidate artifact from `docs/notion-bridge-bootstrap`:
 - G1 contains exactly `GT-G1-01..GT-G1-08`.
 - Promotion route remains `G0 Pass → G1 → G2`.
 - V1 canonical mutation is Operation-only; no global canonical Transaction.
-- GT-G1-01 reconciliation and the frozen registries establish 9 V1 ObjectKinds and 15 canonical Operations. Their IDs/tags are protocol identities, not implementation-local enumerations; any change requires authority refreeze and regenerated registry/descriptor Evidence.
-- Reject-before-mutate: any rejected operation leaves state, `SemanticGeneration`, indexes and emitted `ChangeSet v1` unchanged.
+- V1 ObjectKinds and canonical Operations are the sets produced by GT-G1-01 authority reconciliation. The current Notion RC material proposes 9 ObjectKinds and 15 Operations, but those counts are candidate inputs until the reconciliation artifact records source status and promotion decision; they are not pre-frozen by this plan.
+- Reject-before-mutate: any rejected operation leaves state, revision, indexes and emitted ChangeSet unchanged.
 - Unknown semantic kind/enum/operation fails closed. Unknown-field/version behavior follows Common Wire Rules, not protobuf defaults.
 - Canonical durable numerics are finite binary64/f64; normalize `-0 → +0` where authority requires.
 - Semantic OrderKey is opaque 1..32 bytes; sibling total order is `(OrderKey unsigned lexicographic, ObjectId)`.
 - Production single-object lookup must not perform an O(N) object scan.
 - `runtime/semantic/include/**` must not include Scene, Skia, Arc, platform, persistence/sync, networking or product-shell ABI dependencies.
-- A Product Page maps to exactly one Axiom `Document`. G1 does not create a Page `ObjectKind`, a `DocumentRoot → Page*` synthetic root, or a multi-Page semantic document. Page Collection ownership, navigation and lifecycle remain in the upper Product Shell; snapshots, `SemanticGeneration`, projections, digests and replay are bound to one Document identity.
+- A Product Page maps to exactly one Axiom `Document`. G1 does not create a Page `ObjectKind`, a `DocumentRoot → Page*` synthetic root, or a multi-Page semantic document. Page Collection ownership, navigation and lifecycle remain in the upper Product Shell; snapshots, revisions, projections, digests and replay are bound to one Document identity.
 - Resource identity is semantic (`ResourceId`, `ResourceManifest`, `ContentHash`); resource availability, blob storage and cache state are not semantic object mutations.
 - RichText, VectorStroke, DabStroke, EraseMask, Connector, Group, Sticky and any other V1 surface are covered only when their authority-reconciled registry entries exist. This plan must not infer a final surface from a file count or historical POC subset.
 - Snapshot restore reconstructs canonical state and does not synthesize user-edit Operations.
-- `ChangeSet v1` contains semantic IDs/hints only; no RuntimeScene/GPU/renderer pointers.
+- `SemanticChangeSet` contains semantic IDs/hints only; no RuntimeScene/GPU/renderer pointers.
 - Historical POC/G0 Evidence is preserved; G1 creates new lineage.
 - Every task writes Evidence under `verification/evidence/gates/G1/<commit>/GT-G1-XX/`.
 
@@ -179,7 +179,7 @@ Create runtime:
 - `runtime/semantic/CMakeLists.txt`
 - `runtime/semantic/include/canvas/semantic/canonical_numeric.hpp`
 - `runtime/semantic/include/canvas/semantic/order_key.hpp`
-- `runtime/semantic/include/canvas/semantic/semantic_generation.hpp`
+- `runtime/semantic/include/canvas/semantic/semantic_revision.hpp`
 - `runtime/semantic/include/canvas/semantic/object_record.hpp`
 - `runtime/semantic/include/canvas/semantic/operation.hpp`
 - `runtime/semantic/include/canvas/semantic/change_set.hpp`
@@ -375,7 +375,7 @@ One ObjectStore contract supports Find/Insert/Replace/Erase and deterministic ca
 
 **Model:** `XL` / **Very High**; mandatory fresh `XL` correctness review.
 
-**Authority Inputs:** Operation Payload + Validation Rules; Field Registry; Object/Placement/Connector/RichText/Stroke/Erase authorities; Common Wire; ADR-0014/0019/0025/0026; [GT-G1-04 authority/task reconciliation](../../planning/GT_G1_04_AUTHORITY_RECONCILIATION.md). Normalize and Idempotency are required.
+**Authority Inputs:** Operation Payload + Validation Rules; Field Registry; Object/Placement/Connector/RichText/Stroke/Erase authorities; Common Wire; ADR-0014/0016/0019/0025. Tracker correction is binding: Normalize and Idempotency are required.
 
 ### Exact files
 Create:
@@ -402,13 +402,13 @@ Decoded/typed Operation
 → Normalize
 → Envelope Validation
 → Payload Validation
-→ OperationId Idempotency Classification
 → Reference Validation
 → Kind Validation
 → Invariant Validation
+→ Idempotency Classification
 → Prepare ApplyPlan
 ```
-No stage before commit mutates ObjectStore, indexes, `SemanticGeneration` or history.
+No stage before commit mutates ObjectStore, indexes, revision or history.
 
 ### Tests
 RED first:
@@ -445,7 +445,7 @@ Then implement the minimal stages and run the entire semantic negative corpus th
 - all 15 Operations have positive/negative coverage;
 - stage order and first failure are deterministic;
 - idempotent replay matches authority;
-- every rejection leaves state/`SemanticGeneration`/indexes unchanged;
+- every rejection leaves state/revision/indexes unchanged;
 - ApplyPlan fully resolves commit inputs without mutation.
 
 ---
@@ -470,17 +470,17 @@ Modify:
 
 ### Observable result contract
 SemanticDocument Apply has three observable outcomes:
-- `APPLIED`: exactly one `SemanticGeneration` advance + one `ChangeSet v1`;
-- `IDEMPOTENT_NOOP`: no `SemanticGeneration` advance, explicit no-op result;
-- `REJECTED`: no state/`SemanticGeneration`/index mutation, SemanticError.
+- `APPLIED`: exactly one revision advance + one ChangeSet;
+- `IDEMPOTENT_NOOP`: no revision advance, explicit no-op result;
+- `REJECTED`: no state/revision/index mutation, SemanticError.
 
 The exact C++ type/member spelling is chosen once in this task and frozen by tests; the three outcome semantics are mandatory.
 
 ### Tests
 1. RED apply cases for all 15 operation families.
-2. RED commit-time fault injection at store/index seams; require no partial state/`SemanticGeneration`/`ChangeSet v1`.
-3. RED idempotent replay; require no second `SemanticGeneration` advance.
-4. RED `ChangeSet v1` Created/Deleted/Placement/Transform/Properties/Content/EraseMasks flags and semantic invalidation hints; forbid RuntimeScene/GPU fields.
+2. RED commit-time fault injection at store/index seams; require no partial state/revision/ChangeSet.
+3. RED idempotent replay; require no second revision.
+4. RED ChangeSet added/removed/modified IDs and semantic invalidation hints; forbid RuntimeScene/GPU fields.
 5. Implement commit of a prevalidated ApplyPlan.
 6. Run operation streams against Reference-backed and Indexed-backed documents and compare canonical state.
 7. Extend boundary checks to `document.hpp`.
@@ -498,7 +498,7 @@ The exact C++ type/member spelling is chosen once in this task and frozen by tes
 
 ### Exit Criteria
 - all 15 operation families apply correctly;
-- success advances `SemanticGeneration` once; reject/idempotent no-op does not;
+- success advances revision once; reject/idempotent no-op does not;
 - injected commit failures leave canonical state unchanged;
 - Reference/Indexed documents converge;
 - ChangeSet is G2-usable and downstream-runtime-free.
@@ -531,12 +531,12 @@ Modify:
 
 ### Tests
 RED first:
-- direct `SemanticGeneration` N == snapshot(R)+tail(R+1..N);
+- direct revision N == snapshot(R)+tail(R+1..N);
 - snapshot restore into Reference/Indexed stores has equal projection;
 - same corpus repeated 100 times has identical projection bytes;
 - sibling OrderKey tie-break by ObjectId;
 - all canonical collection orderings;
-- snapshot identity, `SemanticGeneration`, frontier and digest remain bound to one Document; no Page ObjectKind or synthetic multi-Page root is emitted;
+- snapshot identity, revision, frontier and digest remain bound to one Document; no Page ObjectKind or synthetic multi-Page root is emitted;
 - ResourceId/ResourceManifest/ContentHash bindings survive projection and replay without treating blob availability or cache state as Document mutation;
 - malformed/unknown snapshot fail-closed.
 
@@ -694,7 +694,7 @@ E8 commit-bound hashes + clean CI + lineage
 | validate-before-mutate | — | — | — | ✓ | ✓ | — | observe | gate |
 | idempotency no second mutation | — | — | — | ✓ | ✓ | ✓ | observe | gate |
 | Reference == Indexed | — | — | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
-| atomic `SemanticGeneration` + ChangeSet v1 | — | — | — | plan | ✓ | ✓ | observe | gate |
+| atomic revision + ChangeSet | — | — | — | plan | ✓ | ✓ | observe | gate |
 | snapshot-tail == direct replay | — | — | — | — | — | ✓ | ✓ | gate |
 | no ObjectId full scan | — | — | ✓ | ✓ | ✓ | observe | — | gate |
 | one Page = one Document; no Page ObjectKind/synthetic root | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | gate |
@@ -739,7 +739,7 @@ Normalize and Idempotency are mandatory. Decode/Normalize/Validate/Prepare must 
 ### Wave 4
 ```text
 Execute GT-G1-05 only. Use XL / Very High reasoning.
-Focus on atomic SemanticDocument state transition, exact `SemanticGeneration` semantics and downstream-safe `ChangeSet v1`. Inject deterministic commit failures and prove no partial visibility.
+Focus on atomic SemanticDocument state transition, exact revision semantics and downstream-safe SemanticChangeSet. Inject deterministic commit failures and prove no partial visibility.
 ```
 
 ### Wave 5
@@ -790,7 +790,7 @@ G1 is Pass only when all conditions hold on one accepted `main` lineage:
 5. strict decode/canonical encode and normalized negative-error corpus pass;
 6. Reference/Indexed stores are canonically equivalent and production lookup/mutation reports zero full scans;
 7. Normalize→Validate→Idempotency→ApplyPlan is deterministic and reject-safe;
-8. SemanticDocument apply is atomic with exact `SemanticGeneration` semantics and correct G2-facing `ChangeSet v1`;
+8. SemanticDocument apply is atomic with exact revision semantics and correct G2-facing ChangeSet;
 9. snapshot restore, canonical projection and replay are deterministic; snapshot-tail equals direct replay;
 10. Replay Inspector is runnable and deterministic;
 11. E1..E8 Evidence is commit-bound, hash-verified and reproducible;
