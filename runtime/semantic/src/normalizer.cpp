@@ -24,6 +24,19 @@ bool normalizeVec(Vec2& value) noexcept {
     return normalizeDouble(value.x) && normalizeDouble(value.y);
 }
 
+bool normalizeSourceRect(std::optional<NormalizedRect>& source_rect) noexcept {
+    if (!source_rect.has_value()) return true;
+    auto& value = *source_rect;
+    if (!normalizeDouble(value.x) || !normalizeDouble(value.y) ||
+        !normalizeDouble(value.width) || !normalizeDouble(value.height)) {
+        return false;
+    }
+    if (value.x == 0.0 && value.y == 0.0 && value.width == 1.0 && value.height == 1.0) {
+        source_rect.reset();
+    }
+    return true;
+}
+
 bool normalizeColor(ColorValue& value) noexcept {
     return normalizeFloat(value.r) && normalizeFloat(value.g) &&
            normalizeFloat(value.b) && normalizeFloat(value.a);
@@ -282,9 +295,7 @@ bool normalizeContent(ObjectContent& content) {
                 if (!validObjectId(value.resource_id.value)) return false;
                 if (!normalizeDouble(value.intrinsic_width) || !normalizeDouble(value.intrinsic_height) ||
                     !normalizeDouble(value.width) || !normalizeDouble(value.height)) return false;
-                return !value.source_rect.has_value() ||
-                       (normalizeDouble(value.source_rect->x) && normalizeDouble(value.source_rect->y) &&
-                        normalizeDouble(value.source_rect->width) && normalizeDouble(value.source_rect->height));
+                return normalizeSourceRect(value.source_rect);
             } else if constexpr (std::is_same_v<Item, VectorPathContent>) {
                 return normalizePath(value.geometry);
             } else if constexpr (std::is_same_v<Item, RichTextContent>) {
@@ -374,9 +385,7 @@ bool normalizeOperationPayload(OperationPayload& payload) {
                 if (!normalizeDouble(value.content.intrinsic_width) ||
                     !normalizeDouble(value.content.intrinsic_height) ||
                     !normalizeDouble(value.content.width) || !normalizeDouble(value.content.height)) return false;
-                return !value.content.source_rect.has_value() ||
-                       (normalizeDouble(value.content.source_rect->x) && normalizeDouble(value.content.source_rect->y) &&
-                        normalizeDouble(value.content.source_rect->width) && normalizeDouble(value.content.source_rect->height));
+                return normalizeSourceRect(value.content.source_rect);
             } else if constexpr (std::is_same_v<Item, AddStrokeOp>) {
                 return normalizeObject(value.object);
             } else if constexpr (std::is_same_v<Item, SplitStrokesOp>) {

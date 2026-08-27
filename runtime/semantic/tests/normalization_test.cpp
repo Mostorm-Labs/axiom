@@ -100,5 +100,27 @@ TEST(OperationNormalizer, PreservesOrderedLeafSequences) {
     EXPECT_EQ(std::get<DeleteTextStep>(steps[1]).start_scalar, 2U);
 }
 
+TEST(OperationNormalizer, ElidesFullImageCropWithoutChangingPartialCrop) {
+    Operation operation;
+    operation.payload = SetImageContentOp{
+        id(5U), ImageContent{ResourceId{id(9U)}, 640.0, 480.0,
+                              NormalizedRect{0.0, 0.0, 1.0, 1.0},
+                              ImageContentMode::kFit, 320.0, 240.0}};
+
+    const auto normalized = normalizeOperation(operation);
+    ASSERT_TRUE(normalized.ok());
+    const auto& content = std::get<SetImageContentOp>(normalized.value.payload).content;
+    EXPECT_FALSE(content.source_rect.has_value());
+    EXPECT_TRUE(std::get<SetImageContentOp>(operation.payload).content.source_rect.has_value());
+
+    operation.payload = SetImageContentOp{
+        id(5U), ImageContent{ResourceId{id(9U)}, 640.0, 480.0,
+                              NormalizedRect{0.0, 0.0, 0.5, 1.0},
+                              ImageContentMode::kFit, 320.0, 240.0}};
+    const auto partial = normalizeOperation(operation);
+    ASSERT_TRUE(partial.ok());
+    EXPECT_TRUE(std::get<SetImageContentOp>(partial.value.payload).content.source_rect.has_value());
+}
+
 } // namespace
 } // namespace canvas::semantic

@@ -16,9 +16,10 @@ StrokeRecord vectorStroke() {
     StrokeRecord stroke;
     stroke.brush.brush_family_id = 1U;
     stroke.brush.brush_version = 1U;
+    stroke.brush.color = ColorValue{0.0F, 0.0F, 0.0F, 1.0F};
     stroke.brush.nominal_size = 1.0;
     stroke.brush.opacity = 1.0F;
-    stroke.data = VectorStrokeData{{StrokeSample{{1.0, 2.0}, 0.5F, {0.0, 0.0}}}};
+    stroke.data = VectorStrokeData{{StrokeSample{{1.0, 2.0}, 1.0F, {0.0, 0.0}}}};
     return stroke;
 }
 
@@ -26,6 +27,7 @@ StrokeRecord dabStroke() {
     StrokeRecord stroke;
     stroke.brush.brush_family_id = 3U;
     stroke.brush.brush_version = 1U;
+    stroke.brush.color = ColorValue{0.0F, 0.0F, 0.0F, 1.0F};
     stroke.brush.nominal_size = 1.0;
     stroke.brush.opacity = 1.0F;
     stroke.brush.texture_resource_id = ResourceId{ObjectId::fromUint64(900U)};
@@ -78,7 +80,10 @@ ObjectRecord record(ObjectKind kind, std::uint64_t identity) {
 }
 
 EraseMaskRecord mask(std::uint64_t identity) {
-    return EraseMaskRecord{id(identity), SweptCircleMask{}};
+    const EraseCubicSegment segment{
+        EraseKnot{Vec2{0.0, 0.0}, 1.0}, EraseKnot{Vec2{1.0, 1.0}, 1.0},
+        Vec2{0.5, 0.5}, Vec2{0.5, 0.5}};
+    return EraseMaskRecord{id(identity), SweptCircleMask{{segment}}};
 }
 
 Operation collectionCase(std::size_t profile, int mode) {
@@ -269,6 +274,44 @@ TEST(PayloadStructure, EnforcesPropertyPatchPresenceFieldAndValueType) {
         {id(1U), 1U, PropertyPatchAction::kSet, PropertyValue{1.0F}})).ok());
     EXPECT_FALSE(validatePayloadStructure(patchOperation(
         {id(1U), 3U, PropertyPatchAction::kSet, PropertyValue{1.25F}})).ok());
+}
+
+TEST(PayloadStructure, EnforcesFieldApplicabilityByObjectKind) {
+    auto shape = record(ObjectKind::kShape, 1U);
+    shape.properties.entries = {{0x00000200U, PropertyValue{ConnectorDecorationValue::kArrow}}};
+    Operation operation;
+    operation.payload = AddStrokeOp{shape};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+
+    auto connector = record(ObjectKind::kConnector, 2U);
+    connector.properties.entries = {{0x00000200U, PropertyValue{ConnectorDecorationValue::kArrow}}};
+    operation.payload = AddStrokeOp{connector};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+
+    auto image = record(ObjectKind::kImage, 3U);
+    image.properties.entries = {{0x00000003U, PropertyValue{0.5F}}};
+    operation.payload = AddStrokeOp{image};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+}
+
+TEST(PayloadStructure, EnforcesPatchBatchHardLimit) {
+    PatchPropertiesOp at_limit;
+    at_limit.patches.reserve(65535U);
+    const auto ordered_id = [](std::uint64_t value) {
+        const auto low = (value & 0xffU) << 56U;
+        const auto high = ((value >> 8U) & 0xffU) << 48U;
+        return id(low | high);
+    };
+    for (std::uint64_t value = 1U; value <= 65535U; ++value) {
+        at_limit.patches.push_back(PropertyPatch{ordered_id(value), 1U, PropertyPatchAction::kSet, PropertyValue{true}});
+    }
+    Operation operation;
+    operation.payload = at_limit;
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+
+    at_limit.patches.push_back(PropertyPatch{ordered_id(65536U), 1U, PropertyPatchAction::kSet, PropertyValue{true}});
+    operation.payload = std::move(at_limit);
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
 }
 
 } // namespace
