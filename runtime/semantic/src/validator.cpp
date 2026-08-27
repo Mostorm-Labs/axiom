@@ -1,4 +1,5 @@
 #include "canvas/semantic/validator.hpp"
+#include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -23,7 +24,7 @@ constexpr std::size_t kMaxKeyedBatchItems = 65535U;
 constexpr std::size_t kMaxEraseMasksPerObject = 65535U;
 constexpr std::size_t kMaxGenericStringBytes = 1024U * 1024U;
 constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
-constexpr std::size_t kMaxGeometryElements = 2000000U;
+constexpr std::size_t kMaxGeometryElements = geometry_accounting_v1::kLimit;
 
 struct GeometryCount final {
     std::size_t units = 0U;
@@ -190,9 +191,10 @@ GeometryCount geometryUnits(const VectorPathGeometry& path) noexcept {
     GeometryCount total{};
     for (const auto& command : path.commands) {
         std::size_t units = 0U;
-        if (std::holds_alternative<MoveTo>(command) || std::holds_alternative<LineTo>(command)) units = 1U;
-        else if (std::holds_alternative<QuadTo>(command)) units = 2U;
-        else if (std::holds_alternative<CubicTo>(command)) units = 3U;
+        if (std::holds_alternative<MoveTo>(command)) units = geometry_accounting_v1::kMoveToPoint;
+        else if (std::holds_alternative<LineTo>(command)) units = geometry_accounting_v1::kLineToEnd;
+        else if (std::holds_alternative<QuadTo>(command)) units = geometry_accounting_v1::kQuadTo;
+        else if (std::holds_alternative<CubicTo>(command)) units = geometry_accounting_v1::kCubicTo;
         total = addGeometryUnits(total, {units, ValidationIssue::kNone});
         if (total.issue != ValidationIssue::kNone) return total;
     }
@@ -204,10 +206,10 @@ GeometryCount geometryUnits(const ObjectContent& content) noexcept {
         using Item = std::decay_t<decltype(value)>;
         if constexpr (std::is_same_v<Item, VectorPathContent>) return geometryUnits(value.geometry);
         else if constexpr (std::is_same_v<Item, VectorStrokeContent>) {
-            if (const auto* data = std::get_if<VectorStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->samples.size(), 1U);
+            if (const auto* data = std::get_if<VectorStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->samples.size(), geometry_accounting_v1::kStrokeSample);
             return {0U, ValidationIssue::kIntegerOverflow};
         } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
-            if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), 3U);
+            if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), geometry_accounting_v1::kDabInstance);
             return {0U, ValidationIssue::kIntegerOverflow};
         }
         else return {0U, ValidationIssue::kNone};
@@ -218,7 +220,7 @@ GeometryCount geometryUnits(const EraseMaskGeometry& geometry) noexcept {
     return std::visit([](const auto& value) -> GeometryCount {
         using Item = std::decay_t<decltype(value)>;
         if constexpr (std::is_same_v<Item, SweptCircleMask>) {
-            return multiplyGeometryUnits(value.segments.size(), 6U);
+            return multiplyGeometryUnits(value.segments.size(), geometry_accounting_v1::kEraseCubicSegment);
         } else {
             return geometryUnits(value.path);
         }

@@ -23,6 +23,7 @@ class G104AuthorityCoverageTest(unittest.TestCase):
     def test_current_matrix_parses_and_counts_multi_owner_rows(self):
         summary = coverage.summarize(coverage.parse_matrix((ROOT / "docs/planning/GT_G1_04_A_AUTHORITY_COVERAGE_MATRIX.md").read_text()))
         self.assertFalse(summary["errors"])
+        self.assertEqual([], coverage.validate_geometry_projection())
         self.assertGreater(summary["ownerMemberships"]["A3"], summary["ownerMemberships"]["A0"])
         self.assertGreater(summary["normativeRuleRows"], summary["coveredARows"])
 

@@ -153,6 +153,7 @@ foreach(header IN ITEMS
         canvas/semantic/semantic_geometry.hpp
         canvas/semantic/semantic_id.hpp
         canvas/semantic/semantic_error.hpp
+        canvas/semantic/geometry_accounting_v1.hpp
         canvas/semantic/codec.hpp)
   string(REPLACE "/" "_" target_suffix ${header})
   string(REPLACE "." "_" target_suffix ${target_suffix})

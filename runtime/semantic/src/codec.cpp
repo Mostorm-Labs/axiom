@@ -33,6 +33,7 @@ constexpr std::uint8_t kMagic1 = 0x58U;
 constexpr std::uint8_t kVersion = 1U;
 constexpr std::size_t kHeaderBytes = 8U;
 constexpr std::size_t kMaxFieldBytes = 1024U * 1024U;
+constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
 constexpr std::size_t kMaxOperationBytes = 32U * 1024U * 1024U;
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
 constexpr std::size_t kMaxObjectRecordBytes = 16U * 1024U * 1024U;
@@ -196,13 +197,6 @@ bool richTextStepHasOversizedInsert(std::span<const std::uint8_t> bytes) {
     return valid && branch == 1U && oversized;
 }
 
-bool insertTextHasOversizedString(std::span<const std::uint8_t> bytes) {
-    bool oversized = false;
-    return scanRawWire(bytes, [&](const RawWireField& field) {
-        if (field.number == 3U && field.type == 2U && field.value.size() > kMaxFieldBytes) oversized = true;
-    }) && oversized;
-}
-
 bool richTextDocumentHasOversizedString(std::span<const std::uint8_t> bytes) {
     bool oversized = false;
     return scanRawWire(bytes, [&](const RawWireField& paragraph) {
@@ -216,16 +210,33 @@ bool richTextDocumentHasOversizedString(std::span<const std::uint8_t> bytes) {
     }) && oversized;
 }
 
-bool richTextDeltaHasOversizedString(std::span<const std::uint8_t> bytes) {
-    bool oversized = false;
+bool richTextDeltaHasLimitViolation(std::span<const std::uint8_t> bytes) {
+    std::size_t inserted_bytes = 0U;
+    bool violation = false;
     return scanRawWire(bytes, [&](const RawWireField& field) {
         if (field.number != 2U || field.type != 2U) return;
+        std::uint32_t branch = 0U;
         if (!scanRawWire(field.value, [&](const RawWireField& step) {
-                if (step.number == 1U && step.type == 2U && insertTextHasOversizedString(step.value)) {
-                    oversized = true;
+                if (step.number >= 1U && step.number <= 6U) {
+                    if (branch != 0U) branch = 7U;
+                    else branch = step.number;
                 }
-            })) oversized = true;
-    }) && oversized;
+                if (step.number != 1U || step.type != 2U) return;
+                if (!scanRawWire(step.value, [&](const RawWireField& insert_field) {
+                        if (insert_field.number != 3U || insert_field.type != 2U) return;
+                        if (insert_field.value.size() > kMaxFieldBytes ||
+                            inserted_bytes > kMaxRichTextInsertBytes - insert_field.value.size()) {
+                            violation = true;
+                            return;
+                        }
+                        inserted_bytes += insert_field.value.size();
+                    })) {
+                    violation = true;
+                }
+            })) {
+            violation = true;
+        }
+    }) && violation;
 }
 
 bool rawKnownLimitViolation(const std::string& root_type, std::span<const std::uint8_t> bytes) {
@@ -237,7 +248,7 @@ bool rawKnownLimitViolation(const std::string& root_type, std::span<const std::u
         return violation;
     }
     if (root_type == "RichTextStep") return richTextStepHasOversizedInsert(bytes);
-    if (root_type == "RichTextDelta") return richTextDeltaHasOversizedString(bytes);
+    if (root_type == "RichTextDelta") return richTextDeltaHasLimitViolation(bytes);
     if (root_type == "RichTextDocument") return richTextDocumentHasOversizedString(bytes);
     return false;
 }
@@ -265,14 +276,38 @@ bool inspectRichTextDocument(std::span<const std::uint8_t> bytes, std::string& c
 }
 
 bool inspectRichTextDelta(std::span<const std::uint8_t> bytes, std::string& category) {
-    return scanRawWire(bytes, [&](const RawWireField& field) {
+    std::size_t inserted_bytes = 0U;
+    bool malformed = false;
+    const bool valid = scanRawWire(bytes, [&](const RawWireField& field) {
         if (field.number != 2U || field.type != 2U) return;
+        std::uint32_t branch = 0U;
         if (!scanRawWire(field.value, [&](const RawWireField& step) {
-                if (step.number == 1U && step.type == 2U && insertTextHasOversizedString(step.value)) {
-                    markLimit(category, "STRING_LIMIT_EXCEEDED");
+                if (step.number >= 1U && step.number <= 6U) {
+                    if (branch != 0U) branch = 7U;
+                    else branch = step.number;
                 }
-            })) markLimit(category, "MALFORMED_WIRE");
+                if (step.number != 1U || step.type != 2U || branch != 1U) return;
+                if (!scanRawWire(step.value, [&](const RawWireField& insert_field) {
+                        if (insert_field.number != 3U || insert_field.type != 2U) return;
+                        if (insert_field.value.size() > kMaxFieldBytes) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                            return;
+                        }
+                        if (inserted_bytes > kMaxRichTextInsertBytes - insert_field.value.size()) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                        } else {
+                            inserted_bytes += insert_field.value.size();
+                        }
+                    })) {
+                    malformed = true;
+                }
+            })) {
+            malformed = true;
+        }
     });
+    if (inserted_bytes > kMaxRichTextInsertBytes) markLimit(category, "STRING_LIMIT_EXCEEDED");
+    if (malformed) markLimit(category, "MALFORMED_WIRE");
+    return valid && !malformed;
 }
 
 bool inspectObjectContent(std::span<const std::uint8_t> bytes, std::string& category) {

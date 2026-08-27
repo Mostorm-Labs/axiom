@@ -331,23 +331,75 @@ TEST(SemanticCodec, ProtobufPreflightAllowsExactRichTextRunStringLimit) {
 
 TEST(SemanticCodec, ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse) {
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
-    auto make = [](std::size_t text_size) {
-        std::vector<std::uint8_t> insert_step;
-        appendBytesFieldForTest(insert_step, 3U, std::vector<std::uint8_t>(text_size, 'x'));
-        std::vector<std::uint8_t> delta_step;
-        appendBytesFieldForTest(delta_step, 1U, insert_step);
+    auto make = [](const std::vector<std::size_t>& text_sizes) {
         std::vector<std::uint8_t> delta;
-        appendBytesFieldForTest(delta, 2U, delta_step);
+        for (const auto text_size : text_sizes) {
+            std::vector<std::uint8_t> insert_step;
+            appendBytesFieldForTest(insert_step, 3U, std::vector<std::uint8_t>(text_size, 'x'));
+            std::vector<std::uint8_t> delta_step;
+            appendBytesFieldForTest(delta_step, 1U, insert_step);
+            appendBytesFieldForTest(delta, 2U, delta_step);
+        }
         std::vector<std::uint8_t> edit;
         appendBytesFieldForTest(edit, 2U, delta);
         std::vector<std::uint8_t> payload;
         appendBytesFieldForTest(payload, 14U, edit);
         return operationWithPayloadForTest(payload);
     };
-    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make(1024U * 1024U)).error,
+    const auto one_mib = 1024U * 1024U;
+    // Each carrier is individually valid; only the operation aggregate is at issue.
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(make({one_mib})).error,
               SemanticError::kLimitExceeded);
-    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make(1024U * 1024U + 1U)).error,
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(make({one_mib, one_mib, one_mib, one_mib,
+                                                            one_mib, one_mib, one_mib, one_mib, 1U})).error,
               SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    auto make = [](const std::vector<std::size_t>& text_sizes, bool add_non_insert_steps) {
+        std::vector<std::uint8_t> delta;
+        for (const auto text_size : text_sizes) {
+            std::vector<std::uint8_t> insert_step;
+            appendBytesFieldForTest(insert_step, 3U, std::vector<std::uint8_t>(text_size, 'x'));
+            std::vector<std::uint8_t> delta_step;
+            appendBytesFieldForTest(delta_step, 1U, insert_step);
+            appendBytesFieldForTest(delta, 2U, delta_step);
+        }
+        if (add_non_insert_steps) {
+            std::vector<std::uint8_t> delete_step;
+            appendBytesFieldForTest(delete_step, 2U, {});
+            appendBytesFieldForTest(delta, 2U, delete_step);
+            std::vector<std::uint8_t> style_step;
+            appendBytesFieldForTest(style_step, 5U, {});
+            appendBytesFieldForTest(delta, 2U, style_step);
+        }
+        std::vector<std::uint8_t> edit;
+        appendBytesFieldForTest(edit, 2U, delta);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 14U, edit);
+        return operationWithPayloadForTest(payload);
+    };
+    const auto one_mib = 1024U * 1024U;
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(
+                  make({one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, 659967U}, true)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(
+                  make({one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib - 1U}, true)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(
+                  make({one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib}, true)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(
+                  make({one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, one_mib, 1U}, true)).error,
+              SemanticError::kLimitExceeded);
+
+    auto malformed = make({one_mib, one_mib}, false);
+    malformed.pop_back();
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(malformed).error, SemanticError::kMalformedWire);
 #else
     GTEST_SKIP() << "Protobuf runtime is unavailable";
 #endif

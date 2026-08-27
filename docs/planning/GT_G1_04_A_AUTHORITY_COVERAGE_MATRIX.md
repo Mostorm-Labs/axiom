@@ -38,7 +38,7 @@
 | WIRE-V1-01 | Hard Limits + Common Wire | operation encoded bytes <= 33,554,432 before expensive decode/allocation | A2 | raw wire bytes | codec wire preflight | exact/plus-one tests | COVERED |
 | WIRE-V1-02 | Hard Limits + Reference IDL | nested ObjectRecord encoded message <=16,777,216 from raw nested length, never typed-memory guess | A2/A3 | raw length-delimited field | codec preflight seam | nested boundary/seam test | COVERED |
 | WIRE-V1-03 | Hard Limits | generic UTF-8 string <=1,048,576 bytes | A2/A3 | raw string carrier + typed strings | codec preflight + validator | raw 1MiB/1MiB+1 and typed string boundaries | COVERED |
-| WIRE-V1-04 | Hard Limits | EditRichText inserted aggregate <=8,388,608 bytes only | A3 | `RichTextDelta` | validator | aggregate/document tests | COVERED |
+| WIRE-V1-04 | Hard Limits | EditRichText inserted aggregate <=8,388,608 bytes only; raw InsertText branch aggregate is rejected before DTO materialization | A2/A3 | `RichTextDelta` | codec raw preflight + validator | raw N-1/N/N+1 aggregate tests + typed backstop | COVERED |
 | WIRE-V1-05 | Hard Limits + Geometry Aggregate Accounting | keyed batch <=65,535; masks/object <=65,535; exact geometry aggregate <=2,000,000 | A1/A2/A3 | vectors/raw wire | normalizer/validator/codec | raw collection limits + independent geometry boundaries | COVERED |
 | GAA-V1-01 | Geometry Aggregate Accounting Contract §GAA-01..05 | exact atom weights: path `1/1/2/3/0`, sample `1`, dab `3`, erase segment `6`; operation-payload-only checked aggregation | A2/A3 | `OperationPayload` geometry carriers | `validator.cpp::geometryUnits` | weighted carrier + `N-1/N/N+1` geometry tests | COVERED |
 | A0-CARRIER-01 | Reference IDL + generated Proto baseline | nested protobuf payloads map completely or fail closed; enum/descriptor identity matches authority | A0/A2 | generated DTO → typed mapper | `decodeProtobufOperation` | protobuf ON projection/descriptor tests | COVERED |
@@ -61,3 +61,5 @@ Before fresh Evidence, every row owned by A0/A1/A2/A3 must be `COVERED`;
 | P34-R18 | P34 review | Historical Evidence `ac69fa8` | `CN-V1-06` StablePort static namespace | Semantic Leaf Structural Validation §6 | CLOSED_IN_P36 |
 | P34-R19 | P34 review | Historical Evidence `ac69fa8` | `WIRE-V1-01..05` raw-known limit preflight | Semantic Hard Limits + Common Wire | CLOSED_IN_P36 |
 | P34-R20 | P34 review | Historical Evidence `ac69fa8` | Mechanical coverage accounting | This matrix + checker | CLOSED_IN_P36 |
+| P34-R21 | P34 review | P35 defect classification | EditRichText aggregate is raw-wire knowable and owned by A2 before materialization | P36 raw preflight + aggregate boundary tests | CLOSED_IN_P36 |
+| P34-R22 | P34 review | P35 defect classification | GAA-05 production geometry mapping must equal the frozen YAML projection | Generated C++ projection + drift-negative checker | CLOSED_IN_P36 |
