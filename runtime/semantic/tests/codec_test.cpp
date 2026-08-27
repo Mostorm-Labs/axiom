@@ -101,6 +101,22 @@ TEST(SemanticCodec, ObservesAuthorityCanonicalityAndStableNegativeOutcomes) {
 #endif
 }
 
+TEST(SemanticCodec, RejectsUnpackedDashSegmentsWithCanonicalPackedCategory) {
+    const std::vector<std::uint8_t> unpacked_segments{
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xf0U, 0x3fU,
+        0x09U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x40U,
+        0x11U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0xe0U, 0x3fU,
+    };
+    const auto observation = SemanticCodec::observeGoldenFixture("DashPattern", unpacked_segments, true);
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    EXPECT_FALSE(observation.accepted);
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kWirePreflight);
+    EXPECT_EQ(observation.category, "NON_CANONICAL_PACKED_ENCODING");
+#else
+    EXPECT_EQ(observation.stage, GoldenCodecStage::kRuntimeUnavailable);
+#endif
+}
+
 TEST(SemanticCodec, ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection) {
     const std::vector<std::uint8_t> bytes{
         0x08U, 0x01U,

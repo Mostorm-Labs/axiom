@@ -186,10 +186,10 @@ std::string preflightCategory(const std::string& root_type, const std::vector<st
     unsigned property_oneof_members = 0U;
     for (const auto& field : fields) {
         if (!allowsField(root_type, field.number)) return "UNKNOWN_WIRE_FIELD";
-        if (!hasExpectedWireType(root_type, field.number, field.type)) return "UNKNOWN_WIRE_FIELD";
-        if (root_type == "DashPattern" && field.number == 1U && field.type != 2U && strict_canonical) {
+        if (root_type == "DashPattern" && field.number == 1U && field.type == 1U && strict_canonical) {
             return "NON_CANONICAL_PACKED_ENCODING";
         }
+        if (!hasExpectedWireType(root_type, field.number, field.type)) return "UNKNOWN_WIRE_FIELD";
         if (root_type == "PropertyValue" && field.number >= 1U && field.number <= 7U) {
             ++property_oneof_members;
         }
