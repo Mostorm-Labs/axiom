@@ -1,0 +1,49 @@
+{
+  "format": "axiom-gt-g1-04-a-commit-bound-evidence-v4",
+  "taskId": "GT-G1-04-A",
+  "status": "READY_FOR_P34_REVIEW",
+  "sourceCommit": "76757f01942b24d000c569a441d65a9dd598664f",
+  "testedCommit": "76757f01942b24d000c569a441d65a9dd598664f",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "preIntegrationBranchCommit": "ac69fa8f7431759844d5318cc5abd5692f4c592b",
+  "authorityMainCommit": "b3ad7e87f92f8f6ea4151f9f0a0ce97e3a2b5421",
+  "authorityIntegrationCommit": "e39d10a",
+  "authorityManifest": "docs/notion/manifest.yaml",
+  "geometryAuthority": {
+    "notionPageId": "3c94c57a-590c-81e1-aea7-eae7ea8a8c88",
+    "machineProjection": "schema/axiom/v1/canonical/geometry_accounting_v1.yaml",
+    "aggregateLimit": 2000000,
+    "preflight": {
+      "manifest": "validated",
+      "humanMirror": "validated",
+      "vpO1Closure": "validated",
+      "machineProjection": "validated",
+      "semanticIdentity": "validated",
+      "result": "P36_AUTHORIZED"
+    }
+  },
+  "closedReviewFindings": ["P34-R18", "P34-R19", "P34-R20"],
+  "authorityCoverage": {
+    "normativeRuleRows": 39,
+    "ownerMemberships": {"A0": 3, "A1": 12, "A2": 9, "A3": 30},
+    "coveredARows": 36,
+    "deferredBRows": 2,
+    "deferredCRows": 1,
+    "missingRows": [],
+    "wrongOracleRows": [],
+    "unownedRows": [],
+    "blockedCarrierRows": []
+  },
+  "descriptor": {
+    "sha256": "13fdd9834bc049894646ae0a4e103bfb43260725ad8b784a14cfdfd93083afc9",
+    "matchesPreIntegrationSource": true,
+    "reproducible": true
+  },
+  "deferredLanes": [
+    "GT-G1-04-B stateful validation and ApplyPlan",
+    "GT-G1-04-C implementation and outcome/golden authority",
+    "GT-G1-05"
+  ],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"],
+  "gateInterpretation": "A-side source is prepared for independent P34 review; P34 retains the gate decision."
+}
