@@ -20,9 +20,29 @@ This directory is the implementation-facing mirror of the Notion `04 Semantic Sc
 14. `04-reference-idl/reference-idl-codec-mapping-v0.1.md`
 15. `04-reference-idl/leaf-schema-reconciliation-v0.1.md`
 16. `04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md`
-17. `04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md`
-18. `05-leaf-schemas/*`
-19. `06-release-safety/semantic-hard-limits-v0.1.md`
+17. `04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md`
+18. `04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md`
+19. `05-leaf-schemas/*`
+20. `06-release-safety/semantic-hard-limits-v0.1.md`
+
+The RichText + Stroke reconciliation matrix is a current defect/reconciliation authority. It
+does not supersede the RichText or Brush/Stroke leaf semantic owners; it records the required
+machine-projection refreeze and the defect registry that a later GT-G1-02R repair must close.
+
+### RichText / Stroke machine reconciliation order
+
+For the affected machine projection only, read the existing leaf authority first, then the
+integration/machine projection chain:
+
+1. `05-leaf-schemas/richtext-wire-schema-v0.1.md`,
+   `richtext-font-v1-release-v0.1.md`, `brush-stroke-wire-schema-v0.1.md`,
+   `brush-family-registry-v1-release-v0.1.md`, and `pressure-tilt-v1-release-v0.1.md`;
+2. `04-reference-idl/leaf-schema-reconciliation-v0.1.md`;
+3. `04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md`;
+4. `04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md`.
+
+The final item is a reconciliation/defect authority, not a new leaf semantic owner. Current
+machine-refreeze work is authorized only after its required gate is explicitly opened.
 
 ## Current GT-G1-02 authority closure
 
