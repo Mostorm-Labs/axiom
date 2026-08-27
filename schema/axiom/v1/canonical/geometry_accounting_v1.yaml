@@ -1,0 +1,91 @@
+schema: auditoryworks.axiom.v1.geometry-accounting
+version: 1
+status: frozen
+source_authority:
+  title: Geometry Aggregate Accounting Contract V1 v0.1
+  notion_page_id: 3c94c57a-590c-81e1-aea7-eae7ea8a8c88
+  mirror_path: docs/notion/authority/04-semantic-schema/06-release-safety/geometry-aggregate-accounting-contract-v1-v0.1.md
+source_projection_contract:
+  title: Geometry Aggregate Accounting Machine Projection v1
+  notion_page_id: 3c94c57a-590c-8182-b677-df77433c5706
+limit:
+  key: geometry_point_like_elements_per_operation_aggregate
+  source_path: schema/axiom/v1/canonical/protocol_hard_limits_v1.yaml
+  source_key: limits.geometry_point_like_elements_per_operation_aggregate
+  value: 2000000
+unit:
+  name: geometry_atom
+  vec2_point_like: 1
+  scalar_geometry: 1
+  appearance_fields: excluded
+carriers:
+  "MoveTo.point": 1
+  "LineTo.end": 1
+  "QuadTo.control": 1
+  "QuadTo.end": 1
+  "CubicTo.control1": 1
+  "CubicTo.control2": 1
+  "CubicTo.end": 1
+  ClosePath: 0
+  "StrokeSample.position": 1
+  "DabInstance.center": 1
+  "DabInstance.size": 1
+  "DabInstance.rotation": 1
+  "DabInstance.opacity": 0
+  "EraseKnot.position": 1
+  "EraseKnot.radius": 1
+  "EraseCubicSegment.control1": 1
+  "EraseCubicSegment.control2": 1
+composites:
+  vector_path: sum_command_units
+  vector_stroke: count_samples
+  dab_stroke: three_times_dab_count
+  swept_circle_mask: six_times_segment_count
+  filled_path_mask: vector_path
+  erase_mask: selected_variant_units
+  object_record: content_geometry_plus_erase_masks
+operations:
+  InsertObjects: sum_object_geometry
+  DeleteObjects: zero
+  RestoreObjects: sum_object_geometry
+  SetPlacements: zero
+  SetTransforms: zero
+  PatchProperties: zero
+  SetObjectSize: zero
+  SetVectorPathGeometry: vector_path_geometry
+  SetImageContent: zero
+  AddStroke: object_geometry
+  SplitStrokes: sum_replacement_object_geometry
+  AddEraseMasks: sum_mask_geometry
+  RemoveEraseMasks: zero
+  EditRichText: zero
+  SetConnectorContent: zero
+excluded_carriers:
+  - BrushDescriptor
+  - StrokeSample.pressure
+  - StrokeSample.tilt
+  - DabInstance.opacity
+  - Color
+  - PaintStyle
+  - StrokeStyle
+  - ObjectRecord.transform
+  - ObjectRecord.placement
+  - ObjectSize
+  - ConnectorContent
+  - RichText
+  - ImageContent
+  - PropertyBag
+rules:
+  count_by_carried_occurrence: true
+  deduplicate_equal_values: false
+  read_existing_object_store: false
+  checked_unsigned_accumulation: true
+  overflow_error: INTEGER_OVERFLOW
+  exceed_error: GEOMETRY_LIMIT_EXCEEDED
+  clamp: forbidden
+  truncate: forbidden
+  partial_count: forbidden
+ownership:
+  normative_exact_validation: A3
+  early_raw_wire_rejection_when_provable: A2
+  stateful_lookup: forbidden
