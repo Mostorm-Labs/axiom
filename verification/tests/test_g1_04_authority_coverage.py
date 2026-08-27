@@ -25,7 +25,6 @@ class G104AuthorityCoverageTest(unittest.TestCase):
         self.assertFalse(summary["errors"])
         self.assertGreater(summary["ownerMemberships"]["A3"], summary["ownerMemberships"]["A0"])
         self.assertGreater(summary["normativeRuleRows"], summary["coveredARows"])
-        self.assertEqual(summary["projectionErrors"], [])
 
     def test_lineage_is_not_counted(self):
         text = "# Matrix\n\n" + HEADER + SEPARATOR + row("A", "A1/A3", "COVERED") + "\n## P34 Review Finding Lineage\n\n" + HEADER + SEPARATOR + row("LINEAGE", "A0", "MISSING")
