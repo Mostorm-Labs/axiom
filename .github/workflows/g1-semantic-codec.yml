@@ -17,13 +17,17 @@ on:
       - "verification/fixture-author/**"
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
+      - "verification/tools/run_g1_02r_semantic_differential.py"
+      - "verification/tools/descriptor_refreeze_diff.py"
       - "verification/tools/generate_g1_02_evidence.py"
+      - "verification/tools/generate_g1_02r_evidence.py"
       - "verification/tools/generate_g1_01r_evidence.py"
       - "verification/tools/generate_g1_03_evidence.py"
       - "verification/tests/test_semantic_*.py"
       - "verification/tests/test_g1_01r_evidence.py"
       - "verification/tests/test_g1_02_evidence.py"
       - "verification/tests/test_g1_03_evidence.py"
+      - "verification/tests/test_g1_02r_*.py"
       - "verification/tests/test_g1_semantic_differential.py"
       - "verification/tests/test_codec_fixture_author.py"
       - ".github/workflows/g1-semantic-codec.yml"
@@ -44,13 +48,17 @@ on:
       - "verification/fixture-author/**"
       - "verification/tools/validate_semantic_contract.py"
       - "verification/tools/run_g1_semantic_differential.py"
+      - "verification/tools/run_g1_02r_semantic_differential.py"
+      - "verification/tools/descriptor_refreeze_diff.py"
       - "verification/tools/generate_g1_02_evidence.py"
+      - "verification/tools/generate_g1_02r_evidence.py"
       - "verification/tools/generate_g1_01r_evidence.py"
       - "verification/tools/generate_g1_03_evidence.py"
       - "verification/tests/test_semantic_*.py"
       - "verification/tests/test_g1_01r_evidence.py"
       - "verification/tests/test_g1_02_evidence.py"
       - "verification/tests/test_g1_03_evidence.py"
+      - "verification/tests/test_g1_02r_*.py"
       - "verification/tests/test_g1_semantic_differential.py"
       - "verification/tests/test_codec_fixture_author.py"
       - ".github/workflows/g1-semantic-codec.yml"
@@ -68,6 +76,7 @@ jobs:
       PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
       ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
       UTF8_RANGE_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/utf8_range
+      SOURCE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -134,20 +143,72 @@ jobs:
           diff -ru verification/corpus/semantic/v1/fixture-manifest.json evidence-ci/g1-semantic-codec/fixture-a/fixture-manifest.json
           diff -ru verification/corpus/semantic/v1/wire/bg evidence-ci/g1-semantic-codec/fixture-a/wire/bg
           diff -ru evidence-ci/g1-semantic-codec/fixture-a evidence-ci/g1-semantic-codec/fixture-b
+      - name: Regenerate and compare GT-G1-02R leaf fixtures
+        run: |
+          fixture_commit=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("verification/corpus/semantic/v1/g1-02r-fixture-manifest.json").read_text())
+          first = manifest["cases"][0]["path"]
+          print(json.loads((Path("verification/corpus/semantic/v1") / first / "provenance.json").read_text())["fixtureCompiler"]["sourceCommit"])
+          PY
+          )
+          mkdir -p evidence-ci/g1-semantic-codec/g1-02r-fixture-a evidence-ci/g1-semantic-codec/g1-02r-fixture-b
+          python3 verification/fixture-author/compile_g1_02r_leaf_golden.py --root . --verify-independence
+          python3 verification/fixture-author/compile_g1_02r_leaf_golden.py --root . --source-commit "$fixture_commit" --output-root evidence-ci/g1-semantic-codec/g1-02r-fixture-a
+          python3 verification/fixture-author/compile_g1_02r_leaf_golden.py --root . --source-commit "$fixture_commit" --output-root evidence-ci/g1-semantic-codec/g1-02r-fixture-b
+          diff -ru verification/corpus/semantic/v1/g1-02r-fixture-manifest.json evidence-ci/g1-semantic-codec/g1-02r-fixture-a/g1-02r-fixture-manifest.json
+          diff -ru verification/corpus/semantic/v1/wire/g1-02r evidence-ci/g1-semantic-codec/g1-02r-fixture-a/wire/g1-02r
+          diff -ru evidence-ci/g1-semantic-codec/g1-02r-fixture-a evidence-ci/g1-semantic-codec/g1-02r-fixture-b
+      - name: Generate GT-G1-02R descriptor review artifact
+        run: |
+          git show e7a0581706b4e4370fd397ccffef81aa84e48a27:schema/axiom/v1/descriptor/descriptor.lock.pb > evidence-ci/g1-semantic-codec/descriptor-before-refreeze.pb
+          python3 verification/tools/descriptor_refreeze_diff.py \
+            --before evidence-ci/g1-semantic-codec/descriptor-before-refreeze.pb \
+            --after schema/axiom/v1/descriptor/descriptor.lock.pb \
+            --authority-baseline e7a0581706b4e4370fd397ccffef81aa84e48a27 \
+            --output evidence-ci/g1-semantic-codec/descriptor-refreeze-diff.json
       - name: Run semantic contract and production differential checks
         run: |
           python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc
-          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_03_evidence verification.tests.test_semantic_public_boundary -v
+          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_02r_evidence verification.tests.test_g1_03_evidence verification.tests.test_g1_02r_leaf_fixture_author verification.tests.test_g1_02r_semantic_differential verification.tests.test_semantic_public_boundary -v
           python3 verification/tools/run_g1_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --output evidence-ci/g1-semantic-codec/differential.json
           grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/differential.json
-      - name: Generate commit-bound codec Evidence
+          cp evidence-ci/g1-semantic-codec/differential.json evidence-ci/g1-semantic-codec/bg-differential.json
+          python3 verification/tools/run_g1_02r_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --corpus verification/corpus/semantic/v1 --output evidence-ci/g1-semantic-codec/g1-02r-differential.json
+          grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/g1-02r-differential.json
+      - name: Generate historical GT-G1-02 codec Evidence
         run: |
           generated_hash=$(sha256sum evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt | cut -d' ' -f1)
+          mkdir -p evidence-ci/g1-semantic-codec/gt-g1-02
+          cp evidence-ci/g1-semantic-codec/differential.json evidence-ci/g1-semantic-codec/gt-g1-02/differential.json
           python3 verification/tools/generate_g1_02_evidence.py \
             --source-commit "$GITHUB_SHA" \
-            --output-root evidence-ci/g1-semantic-codec \
+            --output-root evidence-ci/g1-semantic-codec/gt-g1-02 \
             --hosted-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             --runtime-status PASS \
+            --generated-code-sha256 "$generated_hash"
+          grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/gt-g1-02/summary.json
+      - name: Generate GT-G1-02R commit-bound refreeze Evidence
+        run: |
+          generated_hash=$(sha256sum evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt | cut -d' ' -f1)
+          cat > evidence-ci/g1-semantic-codec/local-verification.json <<'JSON'
+          {
+            "descriptorReproducibility": "PASS",
+            "generatedCodeReproducibility": "PASS",
+            "semanticCTest": "PASS",
+            "g1_01r": "PASS",
+            "g1_03": "PASS",
+            "publicBoundary": "PASS",
+            "fixtureDoubleBuild": "PASS"
+          }
+          JSON
+          python3 verification/tools/generate_g1_02r_evidence.py \
+            --source-commit "$SOURCE_SHA" \
+            --output-root evidence-ci/g1-semantic-codec \
+            --hosted-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --hosted-head-sha "$SOURCE_SHA" \
+            --hosted-status PASS \
             --generated-code-sha256 "$generated_hash"
           grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/summary.json
       - name: Upload semantic codec evidence
