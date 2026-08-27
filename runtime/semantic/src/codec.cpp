@@ -122,6 +122,7 @@ bool allowsField(const std::string& root_type, std::uint32_t field) {
     if (root_type == "DashPattern") return field == 1U || field == 2U;
     if (root_type == "DocumentSnapshot") return field >= 1U && field <= 3U;
     if (root_type == "ParagraphStyle") return field >= 1U && field <= 4U;
+    if (root_type == "RichTextDocument") return field == 1U;
     if (root_type == "RichTextDelta") return field == 1U || field == 2U;
     if (root_type == "RichTextStep") return field >= 1U && field <= 6U;
     if (root_type == "PressureMapping") return field >= 1U && field <= 3U;
@@ -140,6 +141,7 @@ bool hasExpectedWireType(const std::string& root_type, std::uint32_t field, std:
     if (root_type == "DashPattern") return (field == 1U && type == 2U) || (field == 2U && type == 1U);
     if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U);
     if (root_type == "ParagraphStyle") return (field == 1U && type == 0U) || (field >= 2U && type == 1U);
+    if (root_type == "RichTextDocument") return field == 1U && type == 2U;
     if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || (field == 2U && type == 2U);
     if (root_type == "RichTextStep") return type == 2U;
     if (root_type == "PressureMapping") return (field == 1U && type == 0U) || (field >= 2U && type == 2U);
@@ -191,8 +193,10 @@ std::string preflightCategory(const std::string& root_type, const std::vector<st
         if (root_type == "PropertyValue" && field.number >= 1U && field.number <= 7U) {
             ++property_oneof_members;
         }
-        const bool repeated_dash_segment = root_type == "DashPattern" && field.number == 1U && field.type == 1U;
-        if (!repeated_dash_segment && std::find(seen.begin(), seen.end(), field.number) != seen.end()) {
+        const bool repeated_field =
+            (root_type == "DashPattern" && field.number == 1U && field.type == 1U) ||
+            (root_type == "RichTextDelta" && field.number == 2U && field.type == 2U);
+        if (!repeated_field && std::find(seen.begin(), seen.end(), field.number) != seen.end()) {
             return "DUPLICATE_SINGULAR_FIELD";
         }
         seen.push_back(field.number);
@@ -338,6 +342,34 @@ bool mapParagraphStyle(const auditoryworks::axiom::v1::ParagraphStyle& source, c
     destination.line_height = source.line_height();
     destination.spacing_before = source.spacing_before();
     destination.spacing_after = source.spacing_after();
+    return true;
+}
+
+bool mapTextRun(const auditoryworks::axiom::v1::TextRun& source, canvas::semantic::TextRun& destination) {
+    destination.text.assign(source.text().data(), source.text().size());
+    return mapTextStyle(source.style(), destination.style);
+}
+
+bool mapParagraph(const auditoryworks::axiom::v1::Paragraph& source, canvas::semantic::Paragraph& destination) {
+    if (!mapId(source.paragraph_id(), destination.id) || !mapParagraphStyle(source.style(), destination.style)) return false;
+    destination.runs.clear();
+    destination.runs.reserve(static_cast<std::size_t>(source.runs_size()));
+    for (const auto& run : source.runs()) {
+        canvas::semantic::TextRun mapped;
+        if (!mapTextRun(run, mapped)) return false;
+        destination.runs.push_back(std::move(mapped));
+    }
+    return true;
+}
+
+bool mapRichTextDocument(const auditoryworks::axiom::v1::RichTextDocument& source, canvas::semantic::RichTextDocument& destination) {
+    destination.paragraphs.clear();
+    destination.paragraphs.reserve(static_cast<std::size_t>(source.paragraphs_size()));
+    for (const auto& paragraph : source.paragraphs()) {
+        canvas::semantic::Paragraph mapped;
+        if (!mapParagraph(paragraph, mapped)) return false;
+        destination.paragraphs.push_back(std::move(mapped));
+    }
     return true;
 }
 
@@ -512,6 +544,22 @@ std::string jsonParagraphStyle(const canvas::semantic::ParagraphStyle& style) {
         ",\"lineHeight\":" + jsonNumber(style.line_height) +
         ",\"spacingBefore\":" + jsonNumber(style.spacing_before) +
         ",\"spacingAfter\":" + jsonNumber(style.spacing_after) + "}";
+}
+
+std::string jsonRichTextDocument(const canvas::semantic::RichTextDocument& document) {
+    std::string result{"{\"paragraphs\":["};
+    for (std::size_t index = 0; index < document.paragraphs.size(); ++index) {
+        if (index != 0U) result += ',';
+        const auto& paragraph = document.paragraphs[index];
+        result += "{\"paragraphId\":" + jsonString(bytesHex(paragraph.id.bytes)) +
+            ",\"style\":" + jsonParagraphStyle(paragraph.style) + ",\"runs\":[";
+        for (std::size_t run_index = 0; run_index < paragraph.runs.size(); ++run_index) {
+            if (run_index != 0U) result += ',';
+            result += "{\"text\":" + jsonString(paragraph.runs[run_index].text) + "}";
+        }
+        result += "]}";
+    }
+    return result + "]}";
 }
 
 std::string jsonCurve(const canvas::semantic::PiecewiseLinearCurve01& curve) {
@@ -794,6 +842,15 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
         }
         const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
         return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonParagraphStyle(mapped)};
+    } else if (root_type == "RichTextDocument") {
+        auditoryworks::axiom::v1::RichTextDocument value;
+        if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
+        canvas::semantic::RichTextDocument mapped;
+        if (!mapRichTextDocument(value, mapped) || !serializeCanonical(value, canonical)) {
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kDtoMap, "MISSING_REQUIRED_SEMANTIC_FIELD", {}};
+        }
+        const auto canonicality = bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput;
+        return {true, canonicality, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical), jsonRichTextDocument(mapped)};
     } else if (root_type == "RichTextDelta") {
         auditoryworks::axiom::v1::RichTextDelta value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};
