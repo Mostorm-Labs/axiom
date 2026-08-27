@@ -111,20 +111,26 @@ TEST(SemanticCodec, ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne) 
 TEST(SemanticCodec, ProtobufPreflightRejectsOversizedNestedObjectRecord) {
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
     constexpr std::size_t kObjectLimit = 16U * 1024U * 1024U;
-    std::vector<std::uint8_t> object(kObjectLimit + 1U, 0U);
-    std::vector<std::uint8_t> insert;
-    appendBytesFieldForTest(insert, 1U, object);
-    std::vector<std::uint8_t> payload;
-    appendBytesFieldForTest(payload, 1U, insert);
-    std::vector<std::uint8_t> operation;
-    std::vector<std::uint8_t> id_bytes(16U, 1U);
-    appendBytesFieldForTest(operation, 1U, id_bytes);
-    id_bytes[0] = 2U;
-    appendBytesFieldForTest(operation, 2U, id_bytes);
-    operation.push_back(0x18U); operation.push_back(0x01U);
-    operation.push_back(0x20U); operation.push_back(0x01U);
-    appendBytesFieldForTest(operation, 5U, payload);
-    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operation).error, SemanticError::kLimitExceeded);
+    auto operationWithObjectSize = [](std::size_t object_size) {
+        std::vector<std::uint8_t> object(object_size, 0U);
+        std::vector<std::uint8_t> insert;
+        appendBytesFieldForTest(insert, 1U, object);
+        std::vector<std::uint8_t> payload;
+        appendBytesFieldForTest(payload, 1U, insert);
+        std::vector<std::uint8_t> operation;
+        std::vector<std::uint8_t> id_bytes(16U, 1U);
+        appendBytesFieldForTest(operation, 1U, id_bytes);
+        id_bytes[0] = 2U;
+        appendBytesFieldForTest(operation, 2U, id_bytes);
+        operation.push_back(0x18U); operation.push_back(0x01U);
+        operation.push_back(0x20U); operation.push_back(0x01U);
+        appendBytesFieldForTest(operation, 5U, payload);
+        return operation;
+    };
+    EXPECT_NE(SemanticCodec::decodeProtobufOperation(operationWithObjectSize(kObjectLimit)).error,
+              SemanticError::kLimitExceeded);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operationWithObjectSize(kObjectLimit + 1U)).error,
+              SemanticError::kLimitExceeded);
 #else
     GTEST_SKIP() << "Protobuf runtime is unavailable";
 #endif
