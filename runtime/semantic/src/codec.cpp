@@ -723,6 +723,7 @@ SemanticError SemanticCodec::preflightOperationBytes(const std::vector<std::uint
 
 CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields) {
     if (!isKnownOperationKind(kind) || fields.size() > 65535U) return {SemanticError::kUnknownOperation, {}};
+    std::size_t total_bytes = kHeaderBytes + 2U;
     std::uint32_t previous = 0;
     bool first = true;
     std::vector<std::uint8_t> out{kMagic0, kMagic1, kVersion, static_cast<std::uint8_t>(kind), 0U, 0U, 0U, 0U};
@@ -732,6 +733,8 @@ CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector
             return {field.id == previous ? SemanticError::kDuplicateCanonicalKey : SemanticError::kNonCanonicalOrder, {}};
         }
         if (field.bytes.size() > kMaxFieldBytes) return {SemanticError::kLimitExceeded, {}};
+        if (total_bytes > kMaxOperationBytes - 8U - field.bytes.size()) return {SemanticError::kLimitExceeded, {}};
+        total_bytes += 8U + field.bytes.size();
         appendU32(out, field.id);
         appendU32(out, static_cast<std::uint32_t>(field.bytes.size()));
         out.insert(out.end(), field.bytes.begin(), field.bytes.end());
@@ -873,6 +876,9 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
 }
 
 DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>& bytes) {
+    if (preflightOperationBytes(bytes) != SemanticError::kNone) {
+        return {{}, {}, SemanticError::kLimitExceeded};
+    }
     if (bytes.size() < kHeaderBytes + 2U) return {{}, {}, SemanticError::kTruncatedWire};
     if (bytes[0] != kMagic0 || bytes[1] != kMagic1) return {{}, {}, SemanticError::kMalformedWire};
     if (bytes[2] != kVersion) return {{}, {}, SemanticError::kUnsupportedVersion};
