@@ -1,0 +1,24 @@
+schema: auditoryworks.axiom.v1.object-kind-registry
+version: 1
+status: frozen
+source_authority: ObjectKind Version Registry V1 Release v0.1
+source_page_id: 3c94c57a-590c-8147-9aa2-cd70f507c441
+approval_token: APPROVE_G1_04_SEMANTIC_FREEZE_V1
+invalid_id: 0
+unknown_policy: fail_closed
+version_policy: exact_pair_no_fallback
+released:
+  - {id: 1, symbol: Shape, content_branch: shape, current_version: 1, accepted_versions: [1]}
+  - {id: 2, symbol: Image, content_branch: image, current_version: 1, accepted_versions: [1]}
+  - {id: 3, symbol: VectorPath, content_branch: vector_path, current_version: 1, accepted_versions: [1]}
+  - {id: 4, symbol: RichText, content_branch: rich_text, current_version: 1, accepted_versions: [1]}
+  - {id: 5, symbol: VectorStroke, content_branch: vector_stroke, current_version: 1, accepted_versions: [1]}
+  - {id: 6, symbol: DabStroke, content_branch: dab_stroke, current_version: 1, accepted_versions: [1]}
+  - {id: 7, symbol: Connector, content_branch: connector, current_version: 1, accepted_versions: [1]}
+  - {id: 8, symbol: Sticky, content_branch: sticky, current_version: 1, accepted_versions: [1]}
+  - {id: 9, symbol: Group, content_branch: group, current_version: 1, accepted_versions: [1]}
+reserved_range: [10, 999]
+invariants:
+  page_object_kind: forbidden
+  synthetic_document_root: forbidden
+  product_page_maps_to_document: true

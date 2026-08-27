@@ -1,0 +1,22 @@
+schema: auditoryworks.axiom.v1.semantic-leaf-constraints
+version: 1
+status: frozen
+source_authority: Semantic Leaf Structural Validation Closure V1 v0.1
+source_page_id: 3c94c57a-590c-8173-bf5f-c1418f76764a
+approval_token: APPROVE_G1_04_SEMANTIC_FREEZE_V1
+vector_path:
+  commands: {min_items: 1, first: move_to, active_subpath_required: true, close_requires_open_subpath: true, fill_rules: [NON_ZERO, EVEN_ODD]}
+  coordinates: finite
+rich_text_delta:
+  delta_version: {accepted: [1], missing: reject, zero: reject, unknown: reject}
+  steps: {min_items: 1, order: ordered_sequence, duplicate_removal: forbidden}
+  oneof_step: exactly_one
+stroke:
+  vector_samples: {min_items: 1, order: ordered_sequence}
+  dab_dabs: {min_items: 1, order: ordered_sequence}
+  dab_domain: {center: finite, size: finite_positive, rotation: finite, opacity: finite_0_1}
+excludes:
+  image: no_new_rules
+  connector: no_new_rules
+  resource_availability: GT-G1-04-B_or_later
+  reviewed_outcomes: GT-G1-04-C
