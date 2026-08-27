@@ -199,19 +199,19 @@ TEST(LeafStructureValidation, EnforcesConnectorAnchorAndRoutingDomain) {
     operation.payload = SetConnectorContentOp{
         id(4U), ConnectorContent{
             ConnectorEndpoint{FreePointEndpoint{{0.0, 0.0}}},
-            ConnectorEndpoint{AttachedEndpoint{id(8U), AutoPerimeterAnchor{{0.2, 0.8}}}},
+            ConnectorEndpoint{AttachedEndpoint{id(8U), AutoPerimeterAnchor{Vec2{0.2, 0.8}}}},
             ConnectorRouting::kOrthogonal}};
     EXPECT_TRUE(validatePayloadStructure(operation).ok());
 
     auto& content = std::get<SetConnectorContentOp>(operation.payload).content;
     content.start = ConnectorEndpoint{FreePointEndpoint{{std::numeric_limits<double>::infinity(), 0.0}}};
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
-    content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), AutoPerimeterAnchor{{0.5, 0.5}}}};
+    content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), AutoPerimeterAnchor{Vec2{0.5, 0.5}}}};
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
     content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{0U}}};
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
     content.start = ConnectorEndpoint{AttachedEndpoint{id(8U), StablePortAnchor{5U}}};
-    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
     content.start = ConnectorEndpoint{FreePointEndpoint{{0.0, 0.0}}};
     content.routing = static_cast<ConnectorRouting>(0U);
     EXPECT_FALSE(validatePayloadStructure(operation).ok());
@@ -247,6 +247,27 @@ TEST(LeafStructureValidation, EnforcesRichTextInsertedUtf8AggregateLimit) {
         steps.emplace_back(InsertTextStep{id(paragraph), 0U, std::string(1024U * 1024U, 'a'), style});
     }
     EXPECT_FALSE(validatePayloadStructure(richTextOperation(1U, std::move(steps))).ok());
+}
+
+TEST(LeafStructureValidation, RichTextDocumentTotalTextMayExceedEditInsertAggregateLimit) {
+    const TextStyle style{ResourceId{id(7U)}, 14.0, 400U, false, false,
+                          ColorValue{0.0F, 0.0F, 0.0F, 1.0F}};
+    RichTextDocument document;
+    document.paragraphs.reserve(9U);
+    for (std::uint64_t paragraph_id = 1U; paragraph_id <= 9U; ++paragraph_id) {
+        document.paragraphs.push_back(Paragraph{
+            id(paragraph_id), ParagraphStyle{ParagraphAlignment::kLeft, 1.0, 0.0, 0.0},
+            {TextRun{std::string(1024U * 1024U, 'a'), style}}});
+    }
+    ObjectRecord object;
+    object.id = id(10U);
+    object.kind = ObjectKind::kRichText;
+    object.kind_version = 1U;
+    object.placement.order_key = OrderKey({1U});
+    object.content = RichTextContent{std::move(document)};
+    Operation operation;
+    operation.payload = InsertObjectsOp{{std::move(object)}};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
 }
 
 TEST(LeafStructureValidation, EnforcesShapeKindAndPositiveSize) {

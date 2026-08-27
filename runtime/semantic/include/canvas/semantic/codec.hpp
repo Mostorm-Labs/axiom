@@ -90,6 +90,7 @@ struct GoldenCodecObservation final {
 
 class SemanticCodec final {
   public:
+    static SemanticError preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept;
     static CodecResult encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields);
     // Experimental G1-02 probe. Protobuf types remain private to codec.cpp;
     // this returns the canonical runtime bytes without exposing that ABI.

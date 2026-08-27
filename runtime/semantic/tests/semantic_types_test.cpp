@@ -41,9 +41,13 @@ TEST(SemanticTypes, ObjectIdIsOpaqueSixteenBytesAndZeroIsInvalid) {
 
 TEST(SemanticTypes, OrderKeyAcceptsOnlyAuthorityBounds) {
     EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>{}).isValid());
-    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(1, 0)).isValid());
-    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(32, 0)).isValid());
+    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>{1U}).isValid());
+    auto thirty_one = std::vector<std::uint8_t>(31, 0U);
+    thirty_one.back() = 1U;
+    EXPECT_TRUE(OrderKey(std::move(thirty_one)).isValid());
+    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(32, 0x01U)).isValid());
     EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>(33, 0)).isValid());
+    EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>{1U, 0U}).isValid());
 }
 
 TEST(SemanticTypes, OrderKeyUsesUnsignedLexicographicBytes) {
@@ -107,6 +111,18 @@ TEST(SemanticTypes, OperationCarriesClosedTypedPayloadAndStrongDocumentId) {
     Operation operation{};
     operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(7U)}};
     EXPECT_EQ(operation.kind(), OperationKind::kDeleteObjects);
+}
+
+TEST(SemanticTypes, ImageContentModeUsesReleasedWireIdentities) {
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kFit), 1U);
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kFill), 2U);
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kStretch), 3U);
+}
+
+TEST(SemanticTypes, AutoPerimeterHintPresenceIsSemantic) {
+    const AutoPerimeterAnchor absent{};
+    const AutoPerimeterAnchor present{Vec2{0.0, 0.0}};
+    EXPECT_NE(absent, present);
 }
 
 TEST(SemanticTypes, ChangeSetMergesObjectChangesInDeterministicOrder) {

@@ -9,6 +9,24 @@
 
 namespace canvas::semantic {
 
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+namespace {
+void appendVarintForTest(std::vector<std::uint8_t>& bytes, std::size_t value) {
+    while (value >= 0x80U) {
+        bytes.push_back(static_cast<std::uint8_t>(value) | 0x80U);
+        value >>= 7U;
+    }
+    bytes.push_back(static_cast<std::uint8_t>(value));
+}
+void appendBytesFieldForTest(std::vector<std::uint8_t>& bytes, std::uint32_t field,
+                             const std::vector<std::uint8_t>& value) {
+    appendVarintForTest(bytes, (static_cast<std::size_t>(field) << 3U) | 2U);
+    appendVarintForTest(bytes, value.size());
+    bytes.insert(bytes.end(), value.begin(), value.end());
+}
+} // namespace
+#endif
+
 TEST(SemanticCodec, EncodesAndDecodesCanonicalOperation) {
     const std::vector<CanonicalField> fields{{2U, {0x20U}}, {7U, {0x01U, 0x02U}}};
     const auto encoded = SemanticCodec::encodeOperation(OperationKind::kSetObjectSize, fields);
@@ -87,6 +105,28 @@ TEST(SemanticCodec, ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne) 
     EXPECT_FALSE(validateEnvelope(zero.operation, zero.presence).ok());
 #else
     EXPECT_EQ(SemanticCodec::decodeProtobufOperation({}).error, SemanticError::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsOversizedNestedObjectRecord) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    constexpr std::size_t kObjectLimit = 16U * 1024U * 1024U;
+    std::vector<std::uint8_t> object(kObjectLimit + 1U, 0U);
+    std::vector<std::uint8_t> insert;
+    appendBytesFieldForTest(insert, 1U, object);
+    std::vector<std::uint8_t> payload;
+    appendBytesFieldForTest(payload, 1U, insert);
+    std::vector<std::uint8_t> operation;
+    std::vector<std::uint8_t> id_bytes(16U, 1U);
+    appendBytesFieldForTest(operation, 1U, id_bytes);
+    id_bytes[0] = 2U;
+    appendBytesFieldForTest(operation, 2U, id_bytes);
+    operation.push_back(0x18U); operation.push_back(0x01U);
+    operation.push_back(0x20U); operation.push_back(0x01U);
+    appendBytesFieldForTest(operation, 5U, payload);
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(operation).error, SemanticError::kLimitExceeded);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
 #endif
 }
 

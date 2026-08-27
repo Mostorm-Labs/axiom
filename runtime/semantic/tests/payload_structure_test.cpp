@@ -4,6 +4,7 @@
 
 #include <array>
 #include <cstdint>
+#include <limits>
 #include <utility>
 #include <variant>
 
@@ -291,6 +292,86 @@ TEST(PayloadStructure, EnforcesFieldApplicabilityByObjectKind) {
     auto image = record(ObjectKind::kImage, 3U);
     image.properties.entries = {{0x00000003U, PropertyValue{0.5F}}};
     operation.payload = AddStrokeOp{image};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+}
+
+TEST(PayloadStructure, EnforcesSetObjectSizePositiveFiniteDimensions) {
+    Operation operation;
+    operation.payload = SetObjectSizeOp{{ObjectSizeItem{id(1U), 10.0, 20.0}}};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    for (const double width : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN(),
+                               std::numeric_limits<double>::infinity()}) {
+        std::get<SetObjectSizeOp>(operation.payload).items.front().width = width;
+        EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    }
+    std::get<SetObjectSizeOp>(operation.payload).items.front().width = 10.0;
+    for (const double height : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN(),
+                                std::numeric_limits<double>::infinity()}) {
+        std::get<SetObjectSizeOp>(operation.payload).items.front().height = height;
+        EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    }
+}
+
+TEST(PayloadStructure, EnforcesTransformFiniteAndExactNonSingularInvariant) {
+    auto object = record(ObjectKind::kShape, 1U);
+    Operation operation;
+    operation.payload = AddStrokeOp{object};
+    auto& value = std::get<AddStrokeOp>(operation.payload).object;
+    value.transform = Transform2D{1.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    value.transform = Transform2D{std::numeric_limits<double>::quiet_NaN(), 0.0, 0.0, 1.0, 0.0, 0.0};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    value.transform = Transform2D{0.0, -1.0, 1.0, 0.0, 0.0, 0.0};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+}
+
+TEST(PayloadStructure, EnforcesStickyPositiveFiniteDimensions) {
+    Operation operation;
+    operation.payload = AddStrokeOp{record(ObjectKind::kSticky, 1U)};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    auto& sticky = std::get<StickyContent>(std::get<AddStrokeOp>(operation.payload).object.content);
+    sticky.width = 0.0;
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    sticky.width = 10.0;
+    sticky.height = std::numeric_limits<double>::infinity();
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+}
+
+TEST(PayloadStructure, EnforcesEraseMaskObjectKindApplicability) {
+    Operation operation;
+    auto object = record(ObjectKind::kShape, 1U);
+    object.erase_masks = {mask(2U)};
+    operation.payload = AddStrokeOp{object};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    object = record(ObjectKind::kVectorStroke, 1U);
+    object.erase_masks = {mask(2U)};
+    operation.payload = AddStrokeOp{object};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    object = record(ObjectKind::kDabStroke, 1U);
+    object.erase_masks = {mask(2U)};
+    operation.payload = AddStrokeOp{object};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+}
+
+TEST(PayloadStructure, EnforcesCompleteStrokeStyleRanges) {
+    auto object = record(ObjectKind::kShape, 1U);
+    Operation operation;
+    operation.payload = AddStrokeOp{object};
+    auto& entries = std::get<AddStrokeOp>(operation.payload).object.properties.entries;
+    entries = {{0x00000101U, PropertyValue{StrokeStyleValue{SolidStroke{
+        ColorValue{0.0F, 0.0F, 0.0F, 1.0F}, 1.0, StrokeCap::kButt,
+        StrokeJoin{MiterJoin{1.0}}, StrokeDash{SolidDash{}}}}}}};
+    EXPECT_TRUE(validatePayloadStructure(operation).ok());
+    auto& stroke = std::get<SolidStroke>(std::get<StrokeStyleValue>(entries.front().value));
+    stroke.cap = static_cast<StrokeCap>(0U);
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    stroke.cap = StrokeCap::kButt;
+    stroke.join = MiterJoin{0.5};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    stroke.join = MiterJoin{1.0};
+    stroke.dash = DashPattern{{1.0, 2.0, 3.0}, -0.5};
+    EXPECT_FALSE(validatePayloadStructure(operation).ok());
+    stroke.dash = DashPattern{{1.0, 2.0}, -0.5};
     EXPECT_TRUE(validatePayloadStructure(operation).ok());
 }
 

@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <iomanip>
 #include <limits>
+#include <span>
 #include <sstream>
 #include <type_traits>
 #include <utility>
@@ -32,6 +33,10 @@ constexpr std::uint8_t kMagic1 = 0x58U;
 constexpr std::uint8_t kVersion = 1U;
 constexpr std::size_t kHeaderBytes = 8U;
 constexpr std::size_t kMaxFieldBytes = 1024U * 1024U;
+constexpr std::size_t kMaxOperationBytes = 32U * 1024U * 1024U;
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+constexpr std::size_t kMaxObjectRecordBytes = 16U * 1024U * 1024U;
+#endif
 
 void appendU16(std::vector<std::uint8_t>& out, std::uint16_t value) {
     out.push_back(static_cast<std::uint8_t>(value));
@@ -114,6 +119,94 @@ bool scanWire(const std::vector<std::uint8_t>& bytes, std::vector<WireField>& fi
         }
     }
     return true;
+}
+
+struct RawWireField final {
+    std::uint32_t number = 0;
+    std::uint8_t type = 0;
+    std::span<const std::uint8_t> value;
+};
+
+bool readRawVarint(std::span<const std::uint8_t> bytes, std::size_t& offset, std::uint64_t& value) {
+    value = 0U;
+    for (unsigned shift = 0U; shift < 64U; shift += 7U) {
+        if (offset >= bytes.size()) return false;
+        const auto byte = bytes[offset++];
+        value |= static_cast<std::uint64_t>(byte & 0x7fU) << shift;
+        if ((byte & 0x80U) == 0U) return true;
+    }
+    return false;
+}
+
+template <typename Visitor>
+bool scanRawWire(std::span<const std::uint8_t> bytes, Visitor&& visitor) {
+    std::size_t offset = 0U;
+    while (offset < bytes.size()) {
+        std::uint64_t key = 0U;
+        if (!readRawVarint(bytes, offset, key) || key == 0U) return false;
+        const auto wide_number = key >> 3U;
+        if (wide_number == 0U || wide_number > 0x1fffffffU) return false;
+        const auto number = static_cast<std::uint32_t>(wide_number);
+        const auto type = static_cast<std::uint8_t>(key & 0x07U);
+        const auto begin = offset;
+        switch (type) {
+            case 0U: {
+                std::uint64_t ignored = 0U;
+                if (!readRawVarint(bytes, offset, ignored)) return false;
+                break;
+            }
+            case 1U:
+                if (bytes.size() - offset < 8U) return false;
+                offset += 8U;
+                break;
+            case 2U: {
+                std::uint64_t length = 0U;
+                if (!readRawVarint(bytes, offset, length) || length > bytes.size() - offset) return false;
+                const auto payload_begin = offset;
+                offset += static_cast<std::size_t>(length);
+                visitor(RawWireField{number, type, bytes.subspan(payload_begin, static_cast<std::size_t>(length))});
+                continue;
+            }
+            case 5U:
+                if (bytes.size() - offset < 4U) return false;
+                offset += 4U;
+                break;
+            default:
+                return false;
+        }
+        visitor(RawWireField{number, type, bytes.subspan(begin, offset - begin)});
+    }
+    return true;
+}
+
+bool hasOversizedObjectRecord(std::span<const std::uint8_t> container, std::uint32_t object_field_number) {
+    bool oversized = false;
+    return scanRawWire(container, [&](const RawWireField& field) {
+        oversized = oversized || (field.number == object_field_number && field.type == 2U &&
+                                  field.value.size() > kMaxObjectRecordBytes);
+    }) && oversized;
+}
+
+bool exceedsObjectRecordLimit(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    const bool operation_ok = scanRawWire(bytes, [&](const RawWireField& operation_field) {
+        if (operation_field.number != 5U || operation_field.type != 2U) return;
+        const bool payload_ok = scanRawWire(operation_field.value, [&](const RawWireField& payload_field) {
+            if ((payload_field.number == 1U || payload_field.number == 3U || payload_field.number == 10U) &&
+                payload_field.type == 2U) {
+                oversized = oversized || hasOversizedObjectRecord(payload_field.value, 1U);
+            } else if (payload_field.number == 11U && payload_field.type == 2U) {
+                const bool splits_ok = scanRawWire(payload_field.value, [&](const RawWireField& split_field) {
+                    if (split_field.number == 1U && split_field.type == 2U) {
+                        oversized = oversized || hasOversizedObjectRecord(split_field.value, 2U);
+                    }
+                });
+                if (!splits_ok) oversized = false;
+            }
+        });
+        if (!payload_ok) oversized = false;
+    });
+    return operation_ok && oversized;
 }
 
 bool allowsField(const std::string& root_type, std::uint32_t field) {
@@ -624,6 +717,10 @@ bool serializeCanonical(const Message& source, std::vector<std::uint8_t>& destin
 
 namespace canvas::semantic {
 
+SemanticError SemanticCodec::preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept {
+    return bytes.size() <= kMaxOperationBytes ? SemanticError::kNone : SemanticError::kLimitExceeded;
+}
+
 CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields) {
     if (!isKnownOperationKind(kind) || fields.size() > 65535U) return {SemanticError::kUnknownOperation, {}};
     std::uint32_t previous = 0;
@@ -688,6 +785,12 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
     (void)bytes;
     return DecodedOperation({}, {}, {}, SemanticError::kRuntimeUnavailable);
 #else
+    if (preflightOperationBytes(bytes) != SemanticError::kNone) {
+        return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
+    if (exceedsObjectRecordLimit(bytes)) {
+        return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
     std::vector<WireField> fields;
     if (!scanWire(bytes, fields)) {
         return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);

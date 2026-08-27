@@ -44,7 +44,7 @@ TEST(OperationNormalizer, SortsPropertyBagAndRejectsDuplicateFieldIds) {
     Operation operation;
     ObjectRecord record;
     record.id = id(11U);
-    record.properties.entries = {{7U, PropertyValue{true}}, {2U, PropertyValue{false}}};
+    record.properties.entries = {{8U, PropertyValue{true}}, {7U, PropertyValue{false}}};
     InsertObjectsOp payload;
     payload.objects.push_back(record);
     operation.payload = std::move(payload);
@@ -53,11 +53,55 @@ TEST(OperationNormalizer, SortsPropertyBagAndRejectsDuplicateFieldIds) {
     ASSERT_TRUE(normalized.ok());
     const auto& entries = std::get<InsertObjectsOp>(normalized.value.payload).objects.front().properties.entries;
     ASSERT_EQ(entries.size(), 2U);
-    EXPECT_EQ(entries[0].field_id, 2U);
-    EXPECT_EQ(entries[1].field_id, 7U);
+    EXPECT_EQ(entries[0].field_id, 7U);
+    EXPECT_EQ(entries[1].field_id, 8U);
 
-    std::get<InsertObjectsOp>(operation.payload).objects.front().properties.entries.push_back({2U, PropertyValue{true}});
+    std::get<InsertObjectsOp>(operation.payload).objects.front().properties.entries.push_back({7U, PropertyValue{true}});
     EXPECT_FALSE(normalizeOperation(operation).ok());
+}
+
+TEST(OperationNormalizer, ElidesExplicitRegistryDefaultsFromPropertyBag) {
+    Operation operation;
+    ObjectRecord record;
+    record.id = id(12U);
+    record.properties.entries = {
+        {0x00000001U, PropertyValue{true}},
+        {0x00000002U, PropertyValue{false}},
+        {0x00000003U, PropertyValue{1.0F}},
+        {0x00000004U, PropertyValue{BlendModeValue::kNormal}},
+        {0x00000100U, PropertyValue{FillStyleValue{NoFill{}}}},
+        {0x00000101U, PropertyValue{StrokeStyleValue{NoStroke{}}}},
+        {0x00000200U, PropertyValue{ConnectorDecorationValue::kNone}},
+        {0x00000201U, PropertyValue{ConnectorDecorationValue::kNone}},
+    };
+    operation.payload = InsertObjectsOp{{record}};
+    const auto normalized = normalizeOperation(operation);
+    ASSERT_TRUE(normalized.ok());
+    EXPECT_TRUE(std::get<InsertObjectsOp>(normalized.value.payload).objects.front().properties.entries.empty());
+}
+
+TEST(OperationNormalizer, PreservesAutoPerimeterHintPresenceAndNormalizesNegativeZero) {
+    Operation operation;
+    operation.payload = SetConnectorContentOp{
+        id(5U), ConnectorContent{
+            ConnectorEndpoint{AttachedEndpoint{id(6U), AutoPerimeterAnchor{Vec2{-0.0, 0.5}}}},
+            ConnectorEndpoint{FreePointEndpoint{{1.0, 1.0}}}, ConnectorRouting::kStraight}};
+    const auto normalized = normalizeOperation(operation);
+    ASSERT_TRUE(normalized.ok());
+    const auto& anchor = std::get<AttachedEndpoint>(
+        std::get<SetConnectorContentOp>(normalized.value.payload).content.start.value).anchor;
+    ASSERT_TRUE(std::get<AutoPerimeterAnchor>(anchor).hint.has_value());
+    EXPECT_FALSE(std::signbit(std::get<AutoPerimeterAnchor>(anchor).hint->x));
+    operation = Operation{};
+    operation.payload = SetConnectorContentOp{
+        id(5U), ConnectorContent{
+            ConnectorEndpoint{AttachedEndpoint{id(6U), AutoPerimeterAnchor{}}},
+            ConnectorEndpoint{FreePointEndpoint{{1.0, 1.0}}}, ConnectorRouting::kStraight}};
+    const auto absent = normalizeOperation(operation);
+    ASSERT_TRUE(absent.ok());
+    const auto& absent_anchor = std::get<AutoPerimeterAnchor>(std::get<AttachedEndpoint>(
+        std::get<SetConnectorContentOp>(absent.value.payload).content.start.value).anchor);
+    EXPECT_FALSE(absent_anchor.hint.has_value());
 }
 
 TEST(OperationNormalizer, EnforcesOperationWideSplitReplacementUniqueness) {

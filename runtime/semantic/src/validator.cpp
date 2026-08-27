@@ -89,6 +89,31 @@ bool validImage(const ImageContent& value) noexcept {
            value.content_mode == ImageContentMode::kFit || value.content_mode == ImageContentMode::kFill;
 }
 
+bool validTransform2D(const Transform2D& value) noexcept {
+    return std::isfinite(value.a) && std::isfinite(value.b) && std::isfinite(value.c) &&
+           std::isfinite(value.d) && std::isfinite(value.tx) && std::isfinite(value.ty) &&
+           (value.a * value.d - value.b * value.c) != 0.0;
+}
+
+bool validStrokeStyle(const SolidStroke& stroke) noexcept {
+    if (!validColor(stroke.color) || !std::isfinite(stroke.width) || stroke.width <= 0.0) return false;
+    if (stroke.cap != StrokeCap::kButt && stroke.cap != StrokeCap::kRound && stroke.cap != StrokeCap::kSquare) return false;
+    if (const auto* miter = std::get_if<MiterJoin>(&stroke.join)) {
+        if (!std::isfinite(miter->limit) || miter->limit < 1.0) return false;
+    } else if (!std::holds_alternative<RoundJoin>(stroke.join) && !std::holds_alternative<BevelJoin>(stroke.join)) {
+        return false;
+    }
+    if (const auto* pattern = std::get_if<DashPattern>(&stroke.dash)) {
+        if (pattern->segments.size() < 2U || (pattern->segments.size() % 2U) != 0U || !std::isfinite(pattern->offset)) return false;
+        for (const auto segment : pattern->segments) {
+            if (!std::isfinite(segment) || segment <= 0.0) return false;
+        }
+    } else if (!std::holds_alternative<SolidDash>(stroke.dash)) {
+        return false;
+    }
+    return true;
+}
+
 bool validParagraphStyle(const ParagraphStyle& style) noexcept {
     return style.alignment != ParagraphAlignment::kInvalid &&
            (style.alignment == ParagraphAlignment::kLeft || style.alignment == ParagraphAlignment::kCenter ||
@@ -107,13 +132,10 @@ bool validTextStyle(const TextStyle& style) noexcept {
 }
 
 bool validRichTextDocument(const RichTextDocument& document) noexcept {
-    std::size_t string_bytes = 0;
     for (const auto& paragraph : document.paragraphs) {
         if (!validId(paragraph.id) || !validParagraphStyle(paragraph.style)) return false;
         for (const auto& run : paragraph.runs) {
             if (run.text.size() > kMaxGenericStringBytes || !validUtf8(run.text) || !validTextStyle(run.style)) return false;
-            string_bytes += run.text.size();
-            if (string_bytes > kMaxRichTextInsertBytes) return false;
         }
     }
     return true;
@@ -130,11 +152,12 @@ bool validConnector(const ConnectorContent& value) noexcept {
                 return std::visit([](const auto& anchor) -> bool {
                     using Anchor = std::decay_t<decltype(anchor)>;
                     if constexpr (std::is_same_v<Anchor, AutoPerimeterAnchor>) {
-                        return finiteVec(anchor.hint) && anchor.hint.x >= 0.0 && anchor.hint.x <= 1.0 &&
-                               anchor.hint.y >= 0.0 && anchor.hint.y <= 1.0 &&
-                               !(anchor.hint.x == 0.5 && anchor.hint.y == 0.5);
+                        if (!anchor.hint.has_value()) return true;
+                        return finiteVec(*anchor.hint) && anchor.hint->x >= 0.0 && anchor.hint->x <= 1.0 &&
+                               anchor.hint->y >= 0.0 && anchor.hint->y <= 1.0 &&
+                               !(anchor.hint->x == 0.5 && anchor.hint->y == 0.5);
                     } else {
-                        return anchor.port_id >= 1U && anchor.port_id <= 4U;
+                        return anchor.port_id != 0U;
                     }
                 }, item.anchor);
             }
@@ -262,7 +285,7 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
             return std::visit([](const auto& stroke) -> bool {
                 using Stroke = std::decay_t<decltype(stroke)>;
                 if constexpr (std::is_same_v<Stroke, NoStroke>) return true;
-                else return validColor(stroke.color) && std::isfinite(stroke.width) && stroke.width > 0.0;
+                else return validStrokeStyle(stroke);
             }, std::get<StrokeStyleValue>(value));
         case 0x00000200U:
         case 0x00000201U:
@@ -487,6 +510,7 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
 
 bool validObjectRecordStructure(const ObjectRecord& object) {
     if (!validObjectKindTriple(object) || !validPropertyBag(object.kind, object.properties)) return false;
+    if (!validTransform2D(object.transform)) return false;
     if (geometryElements(object.content) > kMaxGeometryElements) return false;
     if (object.placement.parent_id.has_value() && !validId(*object.placement.parent_id)) return false;
     if (!object.placement.order_key.isValid()) return false;
@@ -520,6 +544,12 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;
     }
+    if (const auto* sticky = std::get_if<StickyContent>(&object.content)) {
+        if (!std::isfinite(sticky->width) || sticky->width <= 0.0 ||
+            !std::isfinite(sticky->height) || sticky->height <= 0.0) return false;
+    }
+    if (!object.erase_masks.empty() && object.kind != ObjectKind::kVectorStroke &&
+        object.kind != ObjectKind::kDabStroke) return false;
     return true;
 }
 
@@ -606,6 +636,9 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if (!validCanonicalSet(payload.items, [](const TransformItem& item) { return item.object_id; })) {
                     return invalidCollection();
                 }
+                for (const auto& item : payload.items) {
+                    if (!validTransform2D(item.transform)) return {ValidationIssue::kInvalidLeaf};
+                }
             } else if constexpr (std::is_same_v<Payload, PatchPropertiesOp>) {
                 if (payload.patches.empty() || payload.patches.size() > kMaxKeyedBatchItems) return invalidCollection();
                 for (std::size_t index = 0; index < payload.patches.size(); ++index) {
@@ -622,6 +655,10 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
             } else if constexpr (std::is_same_v<Payload, SetObjectSizeOp>) {
                 if (!validCanonicalSet(payload.items, [](const ObjectSizeItem& item) { return item.object_id; })) {
                     return invalidCollection();
+                }
+                for (const auto& item : payload.items) {
+                    if (!std::isfinite(item.width) || item.width <= 0.0 ||
+                        !std::isfinite(item.height) || item.height <= 0.0) return {ValidationIssue::kInvalidLeaf};
                 }
             } else if constexpr (std::is_same_v<Payload, SetVectorPathGeometryOp> ||
                                  std::is_same_v<Payload, SetImageContentOp> ||

@@ -93,6 +93,32 @@ bool normalizePropertyValue(PropertyValue& value) {
         value);
 }
 
+bool isExplicitDefaultProperty(const PropertyEntry& entry) noexcept {
+    switch (entry.field_id) {
+        case 0x00000001U:
+            return std::holds_alternative<bool>(entry.value) && std::get<bool>(entry.value);
+        case 0x00000002U:
+            return std::holds_alternative<bool>(entry.value) && !std::get<bool>(entry.value);
+        case 0x00000003U:
+            return std::holds_alternative<float>(entry.value) && std::get<float>(entry.value) == 1.0F;
+        case 0x00000004U:
+            return std::holds_alternative<BlendModeValue>(entry.value) &&
+                   std::get<BlendModeValue>(entry.value) == BlendModeValue::kNormal;
+        case 0x00000100U:
+            return std::holds_alternative<FillStyleValue>(entry.value) &&
+                   std::holds_alternative<NoFill>(std::get<FillStyleValue>(entry.value));
+        case 0x00000101U:
+            return std::holds_alternative<StrokeStyleValue>(entry.value) &&
+                   std::holds_alternative<NoStroke>(std::get<StrokeStyleValue>(entry.value));
+        case 0x00000200U:
+        case 0x00000201U:
+            return std::holds_alternative<ConnectorDecorationValue>(entry.value) &&
+                   std::get<ConnectorDecorationValue>(entry.value) == ConnectorDecorationValue::kNone;
+        default:
+            return false;
+    }
+}
+
 template <typename Vector, typename Compare>
 bool sortUnique(Vector& values, Compare compare) {
     if (values.empty()) return false;
@@ -272,7 +298,7 @@ bool normalizeConnector(ConnectorContent& content) {
                         [](auto& anchor) -> bool {
                             using Anchor = std::decay_t<decltype(anchor)>;
                             if constexpr (std::is_same_v<Anchor, AutoPerimeterAnchor>) {
-                                return normalizeVec(anchor.hint);
+                                return !anchor.hint.has_value() || normalizeVec(*anchor.hint);
                             } else {
                                 return true;
                             }
@@ -328,6 +354,9 @@ bool normalizeObject(ObjectRecord& object) {
     for (auto& entry : object.properties.entries) {
         if (entry.field_id == 0U || !normalizePropertyValue(entry.value)) return false;
     }
+    object.properties.entries.erase(
+        std::remove_if(object.properties.entries.begin(), object.properties.entries.end(),
+                       isExplicitDefaultProperty), object.properties.entries.end());
     if (!normalizeContent(object.content) || !normalizeEraseMasks(object.erase_masks)) return false;
     return true;
 }

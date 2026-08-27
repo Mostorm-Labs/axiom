@@ -42,4 +42,12 @@ TEST(SemanticCodecNegative, RejectsNonFiniteAndOversizedValues) {
               SemanticError::kLimitExceeded);
 }
 
+TEST(SemanticCodecNegative, EnforcesOperationWireSizeBoundaryBeforeDecode) {
+    constexpr std::size_t kOperationLimit = 32U * 1024U * 1024U;
+    std::vector<std::uint8_t> exact(kOperationLimit, 0U);
+    EXPECT_EQ(SemanticCodec::preflightOperationBytes(exact), SemanticError::kNone);
+    exact.push_back(0U);
+    EXPECT_EQ(SemanticCodec::preflightOperationBytes(exact), SemanticError::kLimitExceeded);
+}
+
 } // namespace canvas::semantic
