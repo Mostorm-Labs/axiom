@@ -705,7 +705,25 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         first = false;
     }
     if (offset != bytes.size()) return {{}, {}, SemanticError::kMalformedWire};
-    return {Operation{OperationId{}, kind}, std::move(fields), SemanticError::kNone};
+    Operation operation;
+    switch (kind) {
+        case OperationKind::kInsertObjects: operation.payload = InsertObjectsOp{}; break;
+        case OperationKind::kDeleteObjects: operation.payload = DeleteObjectsOp{}; break;
+        case OperationKind::kRestoreObjects: operation.payload = RestoreObjectsOp{}; break;
+        case OperationKind::kSetPlacements: operation.payload = SetPlacementsOp{}; break;
+        case OperationKind::kSetTransforms: operation.payload = SetTransformsOp{}; break;
+        case OperationKind::kPatchProperties: operation.payload = PatchPropertiesOp{}; break;
+        case OperationKind::kSetObjectSize: operation.payload = SetObjectSizeOp{}; break;
+        case OperationKind::kSetVectorPathGeometry: operation.payload = SetVectorPathGeometryOp{}; break;
+        case OperationKind::kSetImageContent: operation.payload = SetImageContentOp{}; break;
+        case OperationKind::kAddStroke: operation.payload = AddStrokeOp{}; break;
+        case OperationKind::kSplitStrokes: operation.payload = SplitStrokesOp{}; break;
+        case OperationKind::kAddEraseMasks: operation.payload = AddEraseMasksOp{}; break;
+        case OperationKind::kRemoveEraseMasks: operation.payload = RemoveEraseMasksOp{}; break;
+        case OperationKind::kEditRichText: operation.payload = EditRichTextOp{}; break;
+        case OperationKind::kSetConnectorContent: operation.payload = SetConnectorContentOp{}; break;
+    }
+    return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }
 
 CodecResult SemanticCodec::encodeCanonicalF64(double value) {

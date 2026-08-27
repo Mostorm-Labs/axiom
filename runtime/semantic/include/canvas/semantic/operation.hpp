@@ -1,6 +1,7 @@
 #pragma once
 
-#include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/document_id.hpp"
+#include "canvas/semantic/operation_payload.hpp"
 #include "canvas/semantic/operation_id.hpp"
 
 #include <cstdint>
@@ -27,9 +28,15 @@ enum class OperationKind : std::uint8_t {
 
 struct Operation final {
     OperationId id{};
-    OperationKind kind = OperationKind::kInsertObjects;
+    DocumentId document_id{};
+    std::uint32_t schema_version = 0;
+    std::uint32_t payload_version = 0;
+    OperationPayload payload{};
+
+    [[nodiscard]] OperationKind kind() const noexcept;
 };
 
+[[nodiscard]] OperationKind operationKind(const OperationPayload&) noexcept;
 [[nodiscard]] bool isKnownOperationKind(OperationKind kind) noexcept;
 
 } // namespace canvas::semantic

@@ -21,10 +21,23 @@ struct CodecResult final {
     [[nodiscard]] bool ok() const noexcept { return error == SemanticError::kNone; }
 };
 
+struct OperationFieldPresence final {
+    bool schema_version = false;
+    bool payload_version = false;
+};
+
 struct DecodedOperation final {
     Operation operation{};
+    OperationFieldPresence presence{};
     std::vector<CanonicalField> fields;
     SemanticError error = SemanticError::kNone;
+    DecodedOperation() = default;
+    DecodedOperation(Operation operation_value, std::vector<CanonicalField> fields_value,
+                     SemanticError error_value)
+        : operation(std::move(operation_value)), fields(std::move(fields_value)), error(error_value) {}
+    DecodedOperation(Operation operation_value, OperationFieldPresence presence_value,
+                     std::vector<CanonicalField> fields_value, SemanticError error_value)
+        : operation(std::move(operation_value)), presence(presence_value), fields(std::move(fields_value)), error(error_value) {}
     [[nodiscard]] bool ok() const noexcept { return error == SemanticError::kNone; }
 };
 

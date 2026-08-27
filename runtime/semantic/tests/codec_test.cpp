@@ -14,7 +14,7 @@ TEST(SemanticCodec, EncodesAndDecodesCanonicalOperation) {
     ASSERT_TRUE(encoded.ok());
     const auto decoded = SemanticCodec::decodeOperation(encoded.bytes);
     ASSERT_TRUE(decoded.ok());
-    EXPECT_EQ(decoded.operation.kind, OperationKind::kSetObjectSize);
+    EXPECT_EQ(decoded.operation.kind(), OperationKind::kSetObjectSize);
     ASSERT_EQ(decoded.fields.size(), 2U);
     EXPECT_EQ(decoded.fields[1].id, 7U);
 }
