@@ -1,0 +1,30 @@
+{
+  "format": "axiom-gt-g1-04-a-commit-bound-evidence-v1",
+  "taskId": "GT-G1-04-A",
+  "status": "PASS_A0_A3",
+  "sourceCommit": "85b025e9f2e08c1c4ead19cbb3b309f20a136b0b",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorityBaseline": "17ff844f3b72e1976dee248550aa80f59ad38990",
+  "authorityManifest": "docs/notion/manifest.yaml",
+  "approvalToken": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "scope": "A0 typed operation, A1 canonical normalization, A2 envelope validation, A3 stateless payload and leaf structural validation",
+  "builds": {
+    "protobufDisabled": {"status": "PASS", "buildDirectory": "out/g1-04-a-source-85b025e-final-noproto", "tests": 59, "passed": 58, "skipped": 1, "failed": 0},
+    "protobufEnabled": {"status": "PASS", "buildDirectory": "out/g1-04-a-source-85b025e-final-proto", "tests": 59, "passed": 59, "skipped": 0, "failed": 0}
+  },
+  "checks": {
+    "projectionContract": "PASS",
+    "runtimeBoundary": "PASS",
+    "linkageIsolation": "PASS",
+    "docsValidation": "PASS",
+    "gitDiffCheck": "PASS",
+    "semanticContract": "PASS",
+    "pythonRegression": "PASS"
+  },
+  "testCounts": {"ctest": 59, "ctestFailures": 0, "pythonRegressionTests": 11},
+  "firstDivergence": null,
+  "remainingBlockers": [],
+  "deferredLanes": ["GT-G1-04-B stateful validation and ApplyPlan", "GT-G1-04-C verification golden/outcome authority", "GT-G1-05"],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"],
+  "gateInterpretation": "A0-A3 implementation and local validation pass; this does not claim GT-G1-04 overall Pass. B and C remain separately authorized work."
+}
