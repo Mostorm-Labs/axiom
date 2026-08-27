@@ -1,0 +1,39 @@
+schema: auditoryworks.axiom.v1.operation-structural-profile
+version: 1
+status: frozen
+source_authority: Operation Structural Semantics V1 Closure v0.1
+source_page_id: 3c94c57a-590c-81cf-97eb-f6c89fce563e
+approval_token: APPROVE_G1_04_SEMANTIC_FREEZE_V1
+envelope:
+  schema_version: {accepted: [1], missing: reject, zero: reject, unknown: reject}
+  payload_version: {accepted: [1], missing: reject, zero: reject, unknown: reject}
+batch_defaults:
+  semantic_class: keyed_canonical_set
+  empty: reject
+  duplicate: reject
+  comparator: unsigned_lexicographic_key
+  canonical_input_order: key_ascending
+collections:
+  - {path: payload.insert_objects.objects, key: id}
+  - {path: payload.delete_objects.object_ids, key: object_id}
+  - {path: payload.restore_objects.objects, key: id}
+  - {path: payload.set_placements.items, key: object_id}
+  - {path: payload.set_transforms.items, key: object_id}
+  - {path: payload.patch_properties.patches, key: [object_id, field_id]}
+  - {path: payload.set_object_size.items, key: object_id}
+  - {path: payload.split_strokes.splits, key: source_stroke_id}
+  - {path: payload.split_strokes.splits.replacements, key: id}
+  - {path: payload.add_erase_masks.items, key: object_id}
+  - {path: payload.add_erase_masks.items.masks, key: mask_id}
+  - {path: payload.remove_erase_masks.items, key: object_id}
+  - {path: payload.remove_erase_masks.items.mask_ids, key: mask_id}
+operation_wide_uniqueness:
+  - {path: payload.split_strokes.splits.replacements, key: id}
+  - {path: payload.add_erase_masks.items.masks, key: mask_id}
+property_patch:
+  set: {value: required}
+  clear: {value: forbidden}
+  invalid_action: reject
+boundaries:
+  stateful_reference_checks: GT-G1-04-B
+  reviewed_case_outcomes: GT-G1-04-C

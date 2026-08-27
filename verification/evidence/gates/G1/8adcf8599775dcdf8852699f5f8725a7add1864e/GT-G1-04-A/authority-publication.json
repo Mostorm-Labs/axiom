@@ -1,0 +1,44 @@
+{
+  "format": "axiom-g1-04-authority-publication-evidence-v1",
+  "gate": "GT-G1-04-A",
+  "status": "AUTHORITY_PUBLISHED_IMPLEMENTATION_NOT_STARTED",
+  "approval_token": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "source_commit": "8adcf8599775dcdf8852699f5f8725a7add1864e",
+  "authority_baseline": "26dcee011f4f35cfca7cd3f1d9a6c115e46853e2",
+  "notion_parent": "3c44c57a-590c-8193-a277-c1e8ffc40f8e",
+  "notion_pages": {
+    "operation_structural_semantics": "3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "objectkind_version_registry": "3c94c57a-590c-8147-9aa2-cd70f507c441",
+    "semantic_leaf_structural_validation": "3c94c57a-590c-8173-bf5f-c1418f76764a",
+    "g1_04_a_gate": "3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+  },
+  "repository_mirrors": [
+    "docs/notion/authority/04-semantic-schema/00-overview/g1-04-a-semantic-authority-closure-gate-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/01-object-schema/objectkind-version-registry-v1-release-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md"
+  ],
+  "machine_projections": [
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml"
+  ],
+  "validation": {
+    "docs": {"command": "python3 tools/check_docs.py", "result": "PASS", "markdown_files": 251},
+    "git_diff_check": {"command": "git diff --check", "result": "PASS"},
+    "yaml_syntax": {"parser": "Ruby Psych", "result": "PASS"},
+    "notion_round_trip": {"result": "PASS", "pages_checked": 4, "stale_proposed_marker": false},
+    "proto_or_wire_change": "NONE"
+  },
+  "sha256": {
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml": "286eae54f13123503541b01f182ee8128e2778de32a3aa1009279273a47cf7b0",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml": "d0e7735dea0583640a3573d91d0032ebb978d74aae03c3f8b8a5d9ce3bad8665",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml": "dce741d1a1bec131ae09029a259576a2f5b3daeb76a2cf8272fe349d813665d7",
+    "docs/notion/manifest.yaml": "88e0c40d07af585d0bf431d936d16fc4c3fcd7546b3abf0ce0a69300e3681b98",
+    "docs/notion/authority/04-semantic-schema/00-overview/g1-04-a-semantic-authority-closure-gate-v0.1.md": "4c9f9dd24aaabdc3723b5421490e8153a04015d1c7fbc6749506af2f75424eb3",
+    "docs/notion/authority/04-semantic-schema/01-object-schema/objectkind-version-registry-v1-release-v0.1.md": "583351f9035c1a42ae1bd3352a36d411a0f523de3479ab7af175ca5de8f2d6c0",
+    "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md": "8d5626650102440d531a410b3657d671badff8615068458188bc9c4bbab75db3"
+  },
+  "excluded_lanes": ["GT-G1-04-B", "GT-G1-04-C", "GT-G1-05"]
+}

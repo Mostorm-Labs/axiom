@@ -118,6 +118,32 @@ current_authority:
       status: current
       notion_page_id: 3c54c57a-590c-8136-89c3-f2b7cdb87625
       path: docs/notion/authority/04-semantic-schema/00-overview/v1-release-candidate-final-gate-v0.1.md
+    g1_04_a_closure_gate:
+      version: v0.1
+      status: current-semantic-freeze
+      notion_page_id: 3c94c57a-590c-8153-955e-dfbb4b6b7da3
+      path: docs/notion/authority/04-semantic-schema/00-overview/g1-04-a-semantic-authority-closure-gate-v0.1.md
+      approval_token: APPROVE_G1_04_SEMANTIC_FREEZE_V1
+      scope: GT-G1-04-A-only
+      excludes:
+        - GT-G1-04-B
+        - GT-G1-04-C
+        - GT-G1-05
+    operation_structural_semantics:
+      version: v0.1
+      status: current-semantic-freeze
+      notion_page_id: 3c94c57a-590c-81cf-97eb-f6c89fce563e
+      path: docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md
+    objectkind_version_registry:
+      version: v0.1
+      status: current-semantic-freeze
+      notion_page_id: 3c94c57a-590c-8147-9aa2-cd70f507c441
+      path: docs/notion/authority/04-semantic-schema/01-object-schema/objectkind-version-registry-v1-release-v0.1.md
+    semantic_leaf_structural_validation:
+      version: v0.1
+      status: current-semantic-freeze
+      notion_page_id: 3c94c57a-590c-8173-bf5f-c1418f76764a
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md
     reference_idl:
       version: v0.1
       status: current
