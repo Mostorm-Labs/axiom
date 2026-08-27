@@ -53,6 +53,7 @@ class G102REvidenceTest(unittest.TestCase):
             "descriptor_refreeze_diff.py",
             "generate_g1_02r_evidence.py",
             "test_g1_02r_evidence",
+            "fetch-depth: 0",
         ):
             self.assertIn(required, workflow)
 
