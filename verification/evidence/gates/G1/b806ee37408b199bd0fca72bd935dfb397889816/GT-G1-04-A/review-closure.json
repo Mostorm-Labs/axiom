@@ -1,0 +1,15 @@
+{
+  "format": "axiom-gt-g1-04-a-review-closure-evidence-v2",
+  "sourceCommit": "b806ee37408b199bd0fca72bd935dfb397889816",
+  "status": "PASS",
+  "closedFindings": [
+    {"id":"A3-R01","classification":"LINKAGE_ISOLATION","closure":"leaf/payload structural tests link validator/foundation only; ObjectStore symbols absent"},
+    {"id":"A3-R02","classification":"PROTOBUF_DECODE_SAFETY","closure":"Protobuf partial decode is fail-closed and rejects unknown/duplicate/wrong wire type input"},
+    {"id":"A3-R03","classification":"WIRE_INTEGER_BOUND","closure":"Wire field number 29-bit upper bound is checked before narrowing"},
+    {"id":"A3-R04","classification":"LEAF_STRUCTURAL_VALIDATION","closure":"Brush pressure curve endpoints/sample domain, V1 tilt-disabled policy, image/connector/rich-text/shape/erase structural domains and operation geometry aggregate limit are enforced"},
+    {"id":"DOC-R01","classification":"DOCUMENT_LINEAGE_INTEGRITY","closure":"Historical G1-04 relative Contract Matrix link points to archived counterpart without changing authority status"}
+  ],
+  "scopeGuard": {"statefulObjectStoreValidation":false,"idempotency":false,"resultingStateValidation":false,"applyPlan":false,"gtG105":false,"protoSchemaChange":false,"machineAuthorityChange":false},
+  "deferred": ["GT-G1-04-B","GT-G1-04-C","GT-G1-05"],
+  "untrackedPreserved": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+}

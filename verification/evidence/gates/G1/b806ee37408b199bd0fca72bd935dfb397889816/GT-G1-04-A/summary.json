@@ -1,0 +1,38 @@
+{
+  "format": "axiom-gt-g1-04-a-commit-bound-evidence-v2",
+  "taskId": "GT-G1-04-A",
+  "status": "PASS_A0_A3",
+  "sourceCommit": "b806ee37408b199bd0fca72bd935dfb397889816",
+  "testedCommit": "b806ee37408b199bd0fca72bd935dfb397889816",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorityBaseline": "17ff844f3b72e1976dee248550aa80f59ad38990",
+  "authorityManifest": "docs/notion/manifest.yaml",
+  "approvalToken": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "scope": "A0 typed operation input, A1 canonical normalization, A2 envelope validation, A3 stateless payload and leaf structural validation",
+  "builds": {
+    "protobufDisabled": {"status": "PASS", "buildDirectory": "out/g1-04-a-source-b806ee3-noproto", "tests": 69, "passed": 68, "skipped": 1, "failed": 0},
+    "protobufEnabled": {"status": "PASS", "buildDirectory": "out/g1-04-a-source-b806ee3-proto-local", "tests": 69, "passed": 69, "skipped": 0, "failed": 0}
+  },
+  "checks": {
+    "projectionContract": "PASS",
+    "runtimeBoundary": "PASS",
+    "linkageIsolation": "PASS",
+    "docsValidation": "PASS",
+    "gitDiffCheck": "PASS",
+    "semanticContract": "PASS",
+    "pythonRegression": "PASS"
+  },
+  "testCounts": {"ctestProtobufDisabled": 69, "ctestProtobufDisabledFailures": 0, "ctestProtobufEnabled": 69, "ctestProtobufEnabledFailures": 0, "pythonRegressionTests": 11},
+  "authorityProjectionHashes": {
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml": "8cd6baf73f0d9decf1ab0363d019219df5b356f0b9989b4891d51f86fba31082",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml": "9f44e3eb350d8348e9980194a529d010b87b64e1e4172ca243f799f02fb315fe",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml": "9ec8df1adcd3446ec7addb4d06c4d672893e60909ef1658bec3b9527fc173481",
+    "schema/axiom/v1/canonical/protocol_hard_limits_v1.yaml": "5ddf7c6dbb537d8a32c964adbfd2bebfbf0f0dafd72800c92f540916f87969b9"
+  },
+  "firstDivergence": null,
+  "remainingBlockers": [],
+  "deferredLanes": ["GT-G1-04-B stateful validation and ApplyPlan", "GT-G1-04-C verification golden/outcome authority", "GT-G1-05"],
+  "changedFileScope": ["docs/planning/GT_G1_04_A_AUTHORITY_COVERAGE_MATRIX.md", "runtime/semantic/src/normalizer.cpp", "runtime/semantic/src/validator.cpp", "runtime/semantic/tests/leaf_structure_validation_test.cpp", "runtime/semantic/tests/normalization_test.cpp", "runtime/semantic/tests/payload_structure_test.cpp"],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"],
+  "gateInterpretation": "A0-A3 implementation and local validation pass; this does not claim GT-G1-04 overall Pass. B and C remain separately authorized work."
+}
