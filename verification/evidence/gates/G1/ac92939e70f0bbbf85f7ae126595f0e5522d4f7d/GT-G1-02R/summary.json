@@ -1,0 +1,105 @@
+{
+  "format": "axiom-gt-g1-02r-commit-bound-evidence-v1",
+  "taskId": "GT-G1-02R",
+  "reconcilesTask": "GT-G1-02",
+  "sourceCommit": "ac92939e70f0bbbf85f7ae126595f0e5522d4f7d",
+  "status": "PASS",
+  "blockingReasons": [],
+  "authorityBaseline": "e7a0581706b4e4370fd397ccffef81aa84e48a27",
+  "reconciliationAuthority": {
+    "path": "docs/notion/authority/04-semantic-schema/04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md",
+    "sha256": "ab71e9ff4e3d475d57f5f484ac4dfa398936942d26c6624d276979decf7d7eb7",
+    "notionPageId": "3c94c57a-590c-8172-a7ad-ec6bb5f7bd91"
+  },
+  "architectureChanged": false,
+  "semanticContractChanged": false,
+  "machineProjectionRefrozen": true,
+  "historicalG1_02": {
+    "preserved": true,
+    "evidenceRefs": [
+      "verification/evidence/gates/G1/1058311e47a2af68e4a444a76444dd6cf2354975/GT-G1-02",
+      "verification/evidence/gates/G1/6fbbd8f2401f733412c23045606c21856a549ad9/GT-G1-02"
+    ]
+  },
+  "oldDescriptorSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+  "oldBgCorpusPreserved": true,
+  "descriptor": {
+    "beforeSha256": "ca3d93f126d32f22d4972e8c019f16e7e6b41068a69db9cd09f9dbf2d5547239",
+    "afterSha256": "18d682928b42d204ff05103d93e1fb88c9be70de9256acb595f5e3bb846f78e3",
+    "lockPath": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+    "lockSha256Path": "schema/axiom/v1/descriptor/descriptor.lock.sha256",
+    "reproducibility": "PASS",
+    "unmappedChanges": []
+  },
+  "defectClosure": {
+    "RT-D01": "PASS",
+    "RT-D02": "PASS",
+    "RT-D03": "PASS",
+    "RT-D04": "PASS",
+    "RT-D05": "PASS",
+    "RT-D06": "PASS",
+    "ST-D01": "PASS",
+    "ST-D02": "PASS",
+    "ST-D03": "PASS",
+    "ST-D04": "PASS",
+    "ST-D05": "PASS"
+  },
+  "corpus": {
+    "bgRegression": "PASS",
+    "bgManifestPath": "verification/corpus/semantic/v1/fixture-manifest.json",
+    "bgManifestSha256": "00d6fe0a7e89696154e2e70c771559741e117aee9316667e1ea06a314fde5184",
+    "g1_02rManifestPath": "verification/corpus/semantic/v1/g1-02r-fixture-manifest.json",
+    "g1_02rManifestSha256": "277392c3b05fa1907044dcc67027ffb409eb3d4eeeee897d1ba09fc20113aa98",
+    "caseCount": 23,
+    "caseIds": [
+      "RTW-001",
+      "RTW-002",
+      "RTW-003",
+      "RTW-004",
+      "RTW-005",
+      "RTW-006",
+      "RTW-007",
+      "RTW-008",
+      "RTW-009",
+      "STW-001",
+      "STW-002",
+      "STW-003",
+      "STW-004",
+      "STW-005",
+      "STW-006",
+      "STW-007",
+      "RTW-N01",
+      "RTW-N02",
+      "STW-N01",
+      "STW-N02",
+      "STW-N03",
+      "STW-N04",
+      "STW-N05"
+    ],
+    "fixtureCompilerSourceCommit": "f122e321480db9fad23f45a7b7f944dddc7effaf",
+    "independence": "PASS",
+    "doubleBuild": "PASS"
+  },
+  "differential": {
+    "bg": "PASS",
+    "g1_02r": "PASS",
+    "firstDivergence": null
+  },
+  "generatedCode": {
+    "reproducibility": "PASS",
+    "sha256": "5ebc5696ed4ad85ba9c07d661b2e71909e7e5addc0ef44f4bf9b3d2f441cc5b4"
+  },
+  "runtimeRegression": {
+    "semanticCTest": "PASS",
+    "G1_01R": "PASS",
+    "G1_03": "PASS",
+    "publicBoundary": "PASS"
+  },
+  "hosted": {
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33041434455",
+    "headSha": "ac92939e70f0bbbf85f7ae126595f0e5522d4f7d",
+    "status": "PASS"
+  },
+  "gtG104AUnblocked": false,
+  "gtG105Authorized": false
+}
