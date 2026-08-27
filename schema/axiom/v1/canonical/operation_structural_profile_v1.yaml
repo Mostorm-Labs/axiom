@@ -14,19 +14,22 @@ batch_defaults:
   comparator: unsigned_lexicographic_key
   canonical_input_order: key_ascending
 collections:
-  - {path: payload.insert_objects.objects, key: object_id}
+  - {path: payload.insert_objects.objects, key: id}
   - {path: payload.delete_objects.object_ids, key: object_id}
-  - {path: payload.restore_objects.objects, key: object_id}
+  - {path: payload.restore_objects.objects, key: id}
   - {path: payload.set_placements.items, key: object_id}
   - {path: payload.set_transforms.items, key: object_id}
   - {path: payload.patch_properties.patches, key: [object_id, field_id]}
   - {path: payload.set_object_size.items, key: object_id}
   - {path: payload.split_strokes.splits, key: source_stroke_id}
-  - {path: payload.split_strokes.replacements, key: object_id}
+  - {path: payload.split_strokes.splits.replacements, key: id}
   - {path: payload.add_erase_masks.items, key: object_id}
   - {path: payload.add_erase_masks.items.masks, key: mask_id}
   - {path: payload.remove_erase_masks.items, key: object_id}
   - {path: payload.remove_erase_masks.items.mask_ids, key: mask_id}
+operation_wide_uniqueness:
+  - {path: payload.split_strokes.splits.replacements, key: id}
+  - {path: payload.add_erase_masks.items.masks, key: mask_id}
 property_patch:
   set: {value: required}
   clear: {value: forbidden}
