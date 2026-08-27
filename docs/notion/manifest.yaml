@@ -1,6 +1,6 @@
 schema_version: 2
 project: axiom
-snapshot_date: 2026-08-27
+snapshot_date: 2026-08-28
 
 source:
   type: notion
@@ -144,6 +144,39 @@ current_authority:
       status: current-semantic-freeze
       notion_page_id: 3c94c57a-590c-8173-bf5f-c1418f76764a
       path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md
+    semantic_hard_limits:
+      version: v0.1
+      status: current
+      notion_page_id: 3c54c57a-590c-81d3-bb6e-f58905e1ebf2
+      path: docs/notion/authority/04-semantic-schema/06-release-safety/semantic-hard-limits-v0.1.md
+      machine_projection: schema/axiom/v1/canonical/protocol_hard_limits_v1.yaml
+    vector_path_geometry:
+      version: v0.1
+      status: current
+      notion_page_id: 3c44c57a-590c-810e-83ef-f3f5645b9703
+      path: docs/notion/authority/04-semantic-schema/05-leaf-schemas/vector-path-geometry-v0.1.md
+      vp_o1_status: closed-by-geometry-aggregate-accounting
+    geometry_aggregate_accounting:
+      version: v0.1
+      status: current-semantic-freeze
+      notion_page_id: 3c94c57a-590c-81e1-aea7-eae7ea8a8c88
+      path: docs/notion/authority/04-semantic-schema/06-release-safety/geometry-aggregate-accounting-contract-v1-v0.1.md
+      scope: GT-G1-04-A-only
+      closes:
+        authority: vector_path_geometry
+        rule: VP-O1
+      dependencies:
+        - semantic_hard_limits
+        - vector_path_geometry
+        - brush_stroke_wire
+      machine_projection:
+        status: derived-current
+        notion_page_id: 3c94c57a-590c-8182-b677-df77433c5706
+        path: schema/axiom/v1/canonical/geometry_accounting_v1.yaml
+      excludes:
+        - GT-G1-04-B
+        - GT-G1-04-C-implementation
+        - GT-G1-05
     reference_idl:
       version: v0.1
       status: current
