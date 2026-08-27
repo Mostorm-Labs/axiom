@@ -64,6 +64,141 @@ bool validPropertyBag(const PropertyBag& bag) {
     return true;
 }
 
+bool finiteVec(const Vec2& value) noexcept {
+    return std::isfinite(value.x) && std::isfinite(value.y);
+}
+
+bool validVectorPath(const VectorPathGeometry& path) noexcept {
+    if (path.commands.empty() ||
+        (path.fill_rule != FillRule::kNonZero && path.fill_rule != FillRule::kEvenOdd)) {
+        return false;
+    }
+    bool has_open_subpath = false;
+    for (std::size_t index = 0; index < path.commands.size(); ++index) {
+        const auto& command = path.commands[index];
+        if (const auto* move = std::get_if<MoveTo>(&command)) {
+            if (!finiteVec(move->point)) return false;
+            has_open_subpath = true;
+            continue;
+        }
+        if (const auto* line = std::get_if<LineTo>(&command)) {
+            if (!has_open_subpath || !finiteVec(line->end)) return false;
+            continue;
+        }
+        if (const auto* quad = std::get_if<QuadTo>(&command)) {
+            if (!has_open_subpath || !finiteVec(quad->control) || !finiteVec(quad->end)) return false;
+            continue;
+        }
+        if (const auto* cubic = std::get_if<CubicTo>(&command)) {
+            if (!has_open_subpath || !finiteVec(cubic->control1) ||
+                !finiteVec(cubic->control2) || !finiteVec(cubic->end)) {
+                return false;
+            }
+            continue;
+        }
+        if (!has_open_subpath) return false;
+        has_open_subpath = false;
+    }
+    return true;
+}
+
+bool validRichTextStep(const RichTextStep& step) noexcept {
+    return std::visit(
+        [](const auto& value) noexcept -> bool {
+            using Step = std::decay_t<decltype(value)>;
+            if constexpr (std::is_same_v<Step, InsertTextStep>) {
+                return validId(value.paragraph_id);
+            } else if constexpr (std::is_same_v<Step, DeleteTextStep> ||
+                                 std::is_same_v<Step, SetInlineStyleStep> ||
+                                 std::is_same_v<Step, SetParagraphStyleStep>) {
+                return validId(value.paragraph_id);
+            } else if constexpr (std::is_same_v<Step, SplitParagraphStep>) {
+                return validId(value.paragraph_id) && validId(value.new_paragraph_id);
+            } else {
+                return validId(value.first_paragraph_id) && validId(value.second_paragraph_id);
+            }
+        },
+        step);
+}
+
+bool validRichTextDelta(const RichTextDelta& delta) noexcept {
+    if (delta.delta_version != 1U || delta.steps.empty()) return false;
+    return std::all_of(delta.steps.begin(), delta.steps.end(), validRichTextStep);
+}
+
+bool validPressureCurve(const PiecewiseLinearCurve01& curve) noexcept {
+    if (curve.points.size() < 2U) return false;
+    for (std::size_t index = 0; index < curve.points.size(); ++index) {
+        const auto& point = curve.points[index];
+        if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+            point.x < 0.0F || point.x > 1.0F || point.y < 0.0F || point.y > 1.0F) {
+            return false;
+        }
+        if (index > 0U && !(curve.points[index - 1U].x < point.x)) return false;
+    }
+    return true;
+}
+
+bool validPressureMapping(const PressureMapping& pressure) noexcept {
+    if (!pressure.enabled) {
+        return !pressure.size_curve.has_value() && !pressure.opacity_curve.has_value();
+    }
+    return pressure.size_curve.has_value() && pressure.opacity_curve.has_value() &&
+           validPressureCurve(*pressure.size_curve) && validPressureCurve(*pressure.opacity_curve);
+}
+
+bool validBrush(const BrushDescriptor& brush, bool dab_representation) noexcept {
+    if (!std::isfinite(brush.nominal_size) || brush.nominal_size <= 0.0 ||
+        !std::isfinite(brush.opacity) || brush.opacity < 0.0F || brush.opacity > 1.0F ||
+        !validPressureMapping(brush.pressure) || brush.tilt.enabled ||
+        !std::isfinite(brush.tilt.size_influence) || !std::isfinite(brush.tilt.angle_influence) ||
+        brush.tilt.size_influence != 0.0F || brush.tilt.angle_influence != 0.0F) {
+        return false;
+    }
+    switch (brush.brush_family_id) {
+        case 1U:
+        case 2U:
+            if (brush.brush_version != 1U || dab_representation || brush.texture_resource_id.has_value()) {
+                return false;
+            }
+            return (brush.brush_family_id == 1U && brush.blend_mode == BrushBlendMode::kNormal) ||
+                   (brush.brush_family_id == 2U && brush.blend_mode == BrushBlendMode::kHighlighter);
+        case 3U:
+            return brush.brush_version == 1U && dab_representation &&
+                   brush.blend_mode == BrushBlendMode::kNormal &&
+                   brush.texture_resource_id.has_value() &&
+                   validId(brush.texture_resource_id->value);
+        default:
+            return false;
+    }
+}
+
+bool validStrokeRecord(const StrokeRecord& stroke, bool dab_representation) noexcept {
+    if (!validBrush(stroke.brush, dab_representation)) return false;
+    if (dab_representation) {
+        const auto* data = std::get_if<DabStrokeData>(&stroke.data);
+        if (data == nullptr || data->dabs.empty()) return false;
+        for (const auto& dab : data->dabs) {
+            if (!finiteVec(dab.center) || !std::isfinite(dab.size) || dab.size <= 0.0 ||
+                !std::isfinite(dab.rotation) || !std::isfinite(dab.opacity) ||
+                dab.opacity < 0.0F || dab.opacity > 1.0F) {
+                return false;
+            }
+        }
+        return true;
+    }
+    const auto* data = std::get_if<VectorStrokeData>(&stroke.data);
+    if (data == nullptr || data->samples.empty()) return false;
+    for (const auto& sample : data->samples) {
+        if (!finiteVec(sample.position) || !std::isfinite(sample.pressure) ||
+            sample.pressure < 0.0F || sample.pressure > 1.0F || !finiteVec(sample.tilt) ||
+            sample.tilt.x != 0.0 || sample.tilt.y != 0.0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (!validId(object.id) || object.kind_version != 1U) return false;
     switch (object.kind) {
@@ -97,6 +232,15 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
         if (!validCanonicalSet(object.erase_masks, [](const EraseMaskRecord& mask) { return mask.id; })) {
             return false;
         }
+    }
+    if (const auto* vector = std::get_if<VectorStrokeContent>(&object.content)) {
+        if (!validStrokeRecord(vector->stroke, false)) return false;
+    }
+    if (const auto* dab = std::get_if<DabStrokeContent>(&object.content)) {
+        if (!validStrokeRecord(dab->stroke, true)) return false;
+    }
+    if (const auto* path = std::get_if<VectorPathContent>(&object.content)) {
+        if (!validVectorPath(path->geometry)) return false;
     }
     return true;
 }
@@ -203,6 +347,12 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                                  std::is_same_v<Payload, EditRichTextOp> ||
                                  std::is_same_v<Payload, SetConnectorContentOp>) {
                 if (!validId(payload.object_id)) return invalidCollection();
+                if constexpr (std::is_same_v<Payload, SetVectorPathGeometryOp>) {
+                    if (!validVectorPath(payload.geometry)) return {ValidationIssue::kInvalidLeaf};
+                }
+                if constexpr (std::is_same_v<Payload, EditRichTextOp>) {
+                    if (!validRichTextDelta(payload.delta)) return {ValidationIssue::kInvalidLeaf};
+                }
             } else if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
                 if (!validObjectRecordStructure(payload.object)) return invalidObjectKind();
             } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {

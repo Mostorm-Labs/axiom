@@ -94,6 +94,12 @@ class SemanticCodec final {
     // Experimental G1-02 probe. Protobuf types remain private to codec.cpp;
     // this returns the canonical runtime bytes without exposing that ABI.
     static CodecResult encodeProtobufOperation(OperationKind kind);
+    // Protobuf envelope preflight seam. Generated DTOs remain private to
+    // codec.cpp; this maps identity/version/payload-branch facts needed by
+    // A0/A2. Because nested payload DTO mapping is intentionally incomplete,
+    // a structurally parsed result is returned with kInvalidSemanticValue;
+    // callers must never treat this seam's result as a complete Operation.
+    static DecodedOperation decodeProtobufOperation(const std::vector<std::uint8_t>& bytes);
     static DecodedOperation decodeOperation(const std::vector<std::uint8_t>& bytes);
     static CodecResult encodeCanonicalF64(double value);
     static std::vector<StableSeedCase> stableSeedV01();

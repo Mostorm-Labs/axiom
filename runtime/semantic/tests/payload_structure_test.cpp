@@ -24,10 +24,11 @@ StrokeRecord vectorStroke() {
 
 StrokeRecord dabStroke() {
     StrokeRecord stroke;
-    stroke.brush.brush_family_id = 1U;
+    stroke.brush.brush_family_id = 3U;
     stroke.brush.brush_version = 1U;
     stroke.brush.nominal_size = 1.0;
     stroke.brush.opacity = 1.0F;
+    stroke.brush.texture_resource_id = ResourceId{ObjectId::fromUint64(900U)};
     stroke.data = DabStrokeData{{DabInstance{{1.0, 2.0}, 2.0, 0.0F, 1.0F}}};
     return stroke;
 }

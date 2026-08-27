@@ -72,7 +72,11 @@ bool scanWire(const std::vector<std::uint8_t>& bytes, std::vector<WireField>& fi
     while (offset < bytes.size()) {
         std::uint64_t key = 0U;
         if (!readVarint(bytes, offset, key) || key == 0U) return false;
-        const auto number = static_cast<std::uint32_t>(key >> 3U);
+        const auto wide_number = key >> 3U;
+        // Protobuf field numbers are limited to 29 bits.  Validate before
+        // narrowing so an oversized key cannot alias a known field.
+        if (wide_number == 0U || wide_number > 0x1fffffffU) return false;
+        const auto number = static_cast<std::uint32_t>(wide_number);
         const auto type = static_cast<std::uint8_t>(key & 0x07U);
         if (number == 0U) return false;
         switch (type) {
@@ -676,6 +680,92 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         return {SemanticError::kMalformedWire, {}};
     }
     return {SemanticError::kNone, {bytes.begin(), bytes.end()}};
+#endif
+}
+
+DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::uint8_t>& bytes) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)bytes;
+    return DecodedOperation({}, {}, {}, SemanticError::kRuntimeUnavailable);
+#else
+    std::vector<WireField> fields;
+    if (!scanWire(bytes, fields)) {
+        return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+    }
+    OperationFieldPresence presence{};
+    std::array<unsigned, 6> occurrences{};
+    for (const auto& field : fields) {
+        if (field.number == 0U || field.number > 5U) {
+            return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+        }
+        ++occurrences[field.number];
+        const bool expected_type =
+            ((field.number == 1U || field.number == 2U || field.number == 5U) && field.type == 2U) ||
+            ((field.number == 3U || field.number == 4U) && field.type == 0U);
+        if (!expected_type || occurrences[field.number] > 1U) {
+            return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+        }
+        if (field.number == 3U) presence.schema_version = true;
+        if (field.number == 4U) presence.payload_version = true;
+    }
+
+    auditoryworks::axiom::v1::Operation decoded;
+    if (!decoded.ParseFromArray(bytes.data(), static_cast<int>(bytes.size())) ||
+        !decoded.has_operation_id() || !decoded.has_document_id() || !decoded.has_payload() ||
+        decoded.payload().payload_case() == auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET) {
+        return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+
+    canvas::semantic::ObjectId operation_id;
+    canvas::semantic::ObjectId document_id;
+    if (!mapId(decoded.operation_id(), operation_id) || !mapId(decoded.document_id(), document_id)) {
+        return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+
+    Operation operation;
+    operation.id = OperationId{operation_id};
+    operation.document_id = DocumentId{document_id};
+    operation.schema_version = decoded.schema_version();
+    operation.payload_version = decoded.payload_version();
+    switch (decoded.payload().payload_case()) {
+        case auditoryworks::axiom::v1::OperationPayload::kInsertObjects:
+            operation.payload = InsertObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kDeleteObjects:
+            operation.payload = DeleteObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kRestoreObjects:
+            operation.payload = RestoreObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetPlacements:
+            operation.payload = SetPlacementsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetTransforms:
+            operation.payload = SetTransformsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kPatchProperties:
+            operation.payload = PatchPropertiesOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetObjectSize:
+            operation.payload = SetObjectSizeOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetVectorPathGeometry:
+            operation.payload = SetVectorPathGeometryOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetImageContent:
+            operation.payload = SetImageContentOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kAddStroke:
+            operation.payload = AddStrokeOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSplitStrokes:
+            operation.payload = SplitStrokesOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kAddEraseMasks:
+            operation.payload = AddEraseMasksOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kRemoveEraseMasks:
+            operation.payload = RemoveEraseMasksOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kEditRichText:
+            operation.payload = EditRichTextOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetConnectorContent:
+            operation.payload = SetConnectorContentOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
+            return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+    // This seam intentionally does not map nested payload DTO fields yet.
+    // Fail closed instead of returning ok() with a payload whose collections
+    // are silently empty; callers may still inspect identity/version
+    // presence for A0/A2 diagnostics.
+    return DecodedOperation(std::move(operation), presence, {}, SemanticError::kInvalidSemanticValue);
 #endif
 }
 

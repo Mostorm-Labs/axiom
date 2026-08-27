@@ -1,4 +1,5 @@
 #include "canvas/semantic/codec.hpp"
+#include "canvas/semantic/validator.hpp"
 
 #include <gtest/gtest.h>
 
@@ -44,6 +45,80 @@ TEST(SemanticCodec, ProtobufRuntimeRoundTripsAllReconciledOperations) {
         EXPECT_EQ(result.error, SemanticError::kRuntimeUnavailable) << value;
 #endif
     }
+}
+
+TEST(SemanticCodec, ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const std::vector<std::uint8_t> base{
+        0x0aU, 0x12U, 0x0aU, 0x10U,
+        0x01U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x12U, 0x12U, 0x0aU, 0x10U,
+        0x02U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x2aU, 0x02U, 0x0aU, 0x00U,
+    };
+    const auto missing = SemanticCodec::decodeProtobufOperation(base);
+    EXPECT_EQ(missing.error, SemanticError::kInvalidSemanticValue);
+    EXPECT_FALSE(missing.presence.schema_version);
+    EXPECT_FALSE(missing.presence.payload_version);
+    EXPECT_EQ(missing.operation.schema_version, 0U);
+    EXPECT_EQ(missing.operation.payload_version, 0U);
+
+    auto explicit_zero = base;
+    explicit_zero.insert(explicit_zero.end() - 4, {0x18U, 0x00U, 0x20U, 0x00U});
+    const auto zero = SemanticCodec::decodeProtobufOperation(explicit_zero);
+    EXPECT_EQ(zero.error, SemanticError::kInvalidSemanticValue);
+    EXPECT_TRUE(zero.presence.schema_version);
+    EXPECT_TRUE(zero.presence.payload_version);
+    EXPECT_EQ(zero.operation.schema_version, 0U);
+    EXPECT_EQ(zero.operation.payload_version, 0U);
+
+    auto explicit_one = base;
+    explicit_one.insert(explicit_one.end() - 4, {0x18U, 0x01U, 0x20U, 0x01U});
+    const auto one = SemanticCodec::decodeProtobufOperation(explicit_one);
+    EXPECT_EQ(one.error, SemanticError::kInvalidSemanticValue);
+    EXPECT_TRUE(one.presence.schema_version);
+    EXPECT_TRUE(one.presence.payload_version);
+    EXPECT_EQ(one.operation.schema_version, 1U);
+    EXPECT_EQ(one.operation.payload_version, 1U);
+    EXPECT_TRUE(validateEnvelope(one.operation, one.presence).ok());
+    EXPECT_FALSE(validateEnvelope(missing.operation, missing.presence).ok());
+    EXPECT_FALSE(validateEnvelope(zero.operation, zero.presence).ok());
+#else
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation({}).error, SemanticError::kRuntimeUnavailable);
+#endif
+}
+
+TEST(SemanticCodec, ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    const std::vector<std::uint8_t> base{
+        0x0aU, 0x12U, 0x0aU, 0x10U,
+        0x01U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x12U, 0x12U, 0x0aU, 0x10U,
+        0x02U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x2aU, 0x02U, 0x0aU, 0x00U,
+    };
+    auto unknown = base;
+    unknown.insert(unknown.end(), {0x30U, 0x00U});
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(unknown).error, SemanticError::kMalformedWire);
+
+    auto duplicate = base;
+    duplicate.insert(duplicate.end(), {0x2aU, 0x02U, 0x0aU, 0x00U});
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(duplicate).error, SemanticError::kMalformedWire);
+
+    auto wrong_type = base;
+    wrong_type.insert(wrong_type.begin(), {0x08U, 0x00U});
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(wrong_type).error, SemanticError::kMalformedWire);
+
+    const std::vector<std::uint8_t> overflow_field{
+        0x80U, 0x80U, 0x80U, 0x80U, 0x10U, 0x00U};
+    EXPECT_EQ(SemanticCodec::decodeProtobufOperation(overflow_field).error, SemanticError::kMalformedWire);
+#else
+    GTEST_SKIP() << "Protobuf runtime is unavailable";
+#endif
 }
 
 TEST(SemanticCodec, ObservesAuthorityGoldenVec2AsCanonicalBytes) {
