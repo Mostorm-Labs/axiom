@@ -33,9 +33,9 @@ constexpr std::uint8_t kMagic1 = 0x58U;
 constexpr std::uint8_t kVersion = 1U;
 constexpr std::size_t kHeaderBytes = 8U;
 constexpr std::size_t kMaxFieldBytes = 1024U * 1024U;
-constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
 constexpr std::size_t kMaxOperationBytes = 32U * 1024U * 1024U;
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
+constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
 constexpr std::size_t kMaxObjectRecordBytes = 16U * 1024U * 1024U;
 #endif
 
