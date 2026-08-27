@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -12,7 +13,10 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_TOOL = ROOT / "verification/fixture-author/compile_g1_02r_leaf_golden.py"
 DIFFERENTIAL_TOOL = ROOT / "verification/tools/run_g1_02r_semantic_differential.py"
-PROBE = ROOT / "out/g1-02r-local/runtime/semantic/tools/canvas_semantic_golden_probe"
+PROBE = Path(os.environ.get(
+    "CANVAS_SEMANTIC_GOLDEN_PROBE",
+    str(ROOT / "out/g1-02r-local/runtime/semantic/tools/canvas_semantic_golden_probe"),
+))
 
 
 def load_module(name: str, path: Path):

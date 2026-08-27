@@ -54,6 +54,7 @@ class G102REvidenceTest(unittest.TestCase):
             "generate_g1_02r_evidence.py",
             "test_g1_02r_evidence",
             "fetch-depth: 0",
+            "CANVAS_SEMANTIC_GOLDEN_PROBE=out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe",
         ):
             self.assertIn(required, workflow)
 

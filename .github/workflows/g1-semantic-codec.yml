@@ -174,7 +174,8 @@ jobs:
       - name: Run semantic contract and production differential checks
         run: |
           python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc
-          python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_02r_evidence verification.tests.test_g1_03_evidence verification.tests.test_g1_02r_leaf_fixture_author verification.tests.test_g1_02r_semantic_differential verification.tests.test_semantic_public_boundary -v
+          CANVAS_SEMANTIC_GOLDEN_PROBE=out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe \
+            python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_02r_evidence verification.tests.test_g1_03_evidence verification.tests.test_g1_02r_leaf_fixture_author verification.tests.test_g1_02r_semantic_differential verification.tests.test_semantic_public_boundary -v
           python3 verification/tools/run_g1_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --output evidence-ci/g1-semantic-codec/differential.json
           grep -q '"status": "PASS"' evidence-ci/g1-semantic-codec/differential.json
           cp evidence-ci/g1-semantic-codec/differential.json evidence-ci/g1-semantic-codec/bg-differential.json
