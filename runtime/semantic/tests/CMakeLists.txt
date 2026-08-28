@@ -163,6 +163,20 @@ endif()
 
 gtest_discover_tests(canvas_semantic_staged_object_view_test)
 
+add_executable(canvas_semantic_idempotency_test idempotency_test.cpp)
+target_link_libraries(canvas_semantic_idempotency_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_idempotency_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_idempotency_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_idempotency_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_idempotency_test)
+
 foreach(header IN ITEMS
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
@@ -177,6 +191,7 @@ foreach(header IN ITEMS
         canvas/semantic/operation_id.hpp
         canvas/semantic/operation.hpp
         canvas/semantic/operation_fingerprint.hpp
+        canvas/semantic/idempotency.hpp
         canvas/semantic/order_key.hpp
         canvas/semantic/semantic_generation.hpp
         canvas/semantic/semantic_geometry.hpp
