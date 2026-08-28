@@ -1,0 +1,96 @@
+{
+  "format": "axiom-gt-g1-04-b-b2-state-validation-evidence-v1",
+  "taskId": "GT-G1-04-B/B2",
+  "sourceCommit": "783eef11d96e3152a5f9489ee8937faa399493b9",
+  "testedCommit": "783eef11d96e3152a5f9489ee8937faa399493b9",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "baseline": {
+    "startingHead": "e5d0d5cb1ea83ba60f089cd05fce722c10a12593",
+    "b1Source": "e81665ca27f76d91057241a235df8c77b61c364c",
+    "b1Evidence": "e5d0d5cb1ea83ba60f089cd05fce722c10a12593"
+  },
+  "authority": {
+    "b2AuthorizationRecord": "3ca4c57a-590c-8110-a752-de3dbabd96b",
+    "objectKindRegistry": "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+    "fieldRegistry": "schema/axiom/v1/registry/field_registry_v1.yaml",
+    "plan": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md"
+  },
+  "redEvidence": {
+    "observedBeforeProductionImplementation": true,
+    "reason": "B2 focused test target failed to compile because operation_state_validator.hpp/API were absent"
+  },
+  "existence": {
+    "requireExisting": {"present": "kNone", "missing": "kObjectMissing"},
+    "requireAbsent": {"absent": "kNone", "visible": "kObjectAlreadyExists"},
+    "stagedCreateVisible": true,
+    "stagedDeleteAbsent": true,
+    "stagedReplacementVisible": true
+  },
+  "kindVersion": {
+    "releasedKinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky", "Group"],
+    "acceptedVersions": [1],
+    "unsupportedVersions": "kInvalidKindVersion",
+    "unknownKind": "kInvalidKindVersion",
+    "actualRecordKindIsAuthority": true
+  },
+  "stateRuleMatrix": {
+    "dimensions": "10 StateRule values x 9 released ObjectKinds",
+    "cells": 90,
+    "oracle": "independent test-only switch table",
+    "result": "PASS"
+  },
+  "fieldApplicability": {
+    "dimensions": "8 FieldIds x 9 ObjectKinds",
+    "cells": 72,
+    "oracle": "independent test-only registry table",
+    "positiveExamples": ["visible+Group", "strokeStyle+Connector", "connectorStartDecoration+Connector"],
+    "negativeExamples": ["opacity+Group", "visible+unknownField", "connectorStartDecoration+Shape"],
+    "clearNullptrChecksApplicabilityOnly": true,
+    "nonNullTypedValueTypeCheck": true,
+    "aLaneLeafValidationDuplicated": false
+  },
+  "lookup": {
+    "singleTargetHelpersUseStagedFind": true,
+    "allObjectsCalls": 0,
+    "containsCalls": "not required by helper; staged find is used",
+    "findCalls": "bounded single-ID lookup"
+  },
+  "differential": {
+    "referenceVsIndexed": "PASS",
+    "sameStagedRecordDecision": true,
+    "indexedRebuild": "PASS"
+  },
+  "noMutation": {
+    "referenceBeforeAfter": "equal",
+    "indexedBeforeAfter": "equal",
+    "objectIndexRebuild": "equal",
+    "objectStoreMutatorInProduction": false
+  },
+  "tests": {
+    "focused": {"command": "ctest --test-dir out/g1-debug -R 'StatefulKindApplicability' --output-on-failure", "passed": 12, "failed": 0, "skipped": 0, "exitCode": 0},
+    "b1B0StoreARegression": {"command": "ctest --test-dir out/g1-debug -R 'Idempotency|StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|ALane' --output-on-failure", "passed": 32, "failed": 0, "skipped": 0, "exitCode": 0},
+    "fullSemantic": {"command": "ctest --test-dir out/g1-debug --output-on-failure", "total": 131, "passed": 119, "failed": 0, "skipped": 12, "skipReason": "protobuf-off configuration; skipped tests are not counted as passes", "exitCode": 0},
+    "runtimeBoundaries": {"command": "python3 tools/check_runtime_boundaries.py --root .", "result": "PASS: 47 contract files", "exitCode": 0},
+    "docs": {"command": "python3 tools/check_docs.py", "result": "PASS: validated 270 Markdown files", "exitCode": 0},
+    "diffCheck": {"command": "git diff --check", "result": "PASS", "exitCode": 0}
+  },
+  "scopeGuard": {
+    "b3Started": false,
+    "hierarchyValidation": "absent",
+    "connectorValidation": "absent",
+    "deleteClosure": "absent",
+    "restoreValidation": "absent",
+    "preparedApplyPlan": "absent",
+    "canonicalMutation": false,
+    "b1FilesModified": false,
+    "objectStoreAbiModified": false,
+    "objectIndexModified": false,
+    "aValidatorModified": false,
+    "registryYamlModified": false,
+    "wireSchemaChanges": false,
+    "gtG104C": "deferred",
+    "gtG105": "not authorized"
+  },
+  "unrelatedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"],
+  "blockingReasons": []
+}
