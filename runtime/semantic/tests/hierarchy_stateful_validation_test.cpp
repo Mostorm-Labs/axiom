@@ -64,9 +64,7 @@ TEST(HierarchyValidation, DescendantsAreDeterministicAndStrict) {
     StagedObjectView staged(base);
     const auto descendants = resolveDescendants(staged, ObjectId::fromUint64(1));
     ASSERT_EQ(descendants.size(), 3U);
-    EXPECT_EQ(descendants[0], ObjectId::fromUint64(3));
-    EXPECT_EQ(descendants[1], ObjectId::fromUint64(4));
-    EXPECT_EQ(descendants[2], ObjectId::fromUint64(2));
+    EXPECT_EQ(descendants, (std::vector<ObjectId>{ObjectId::fromUint64(2), ObjectId::fromUint64(3), ObjectId::fromUint64(4)}));
     EXPECT_EQ(std::find(descendants.begin(), descendants.end(), ObjectId::fromUint64(1)), descendants.end());
 }
 
@@ -79,6 +77,22 @@ TEST(HierarchyValidation, ReferenceAndIndexedParityAndNoMutation) {
     EXPECT_EQ(validateStagedHierarchy(a, edits).issue, validateStagedHierarchy(b, edits).issue);
     EXPECT_EQ(reference.allObjects(), before);
     EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(indexed));
+}
+
+TEST(HierarchyValidation, StagedCreatedParentChildAndDeletedParent) {
+    ReferenceObjectStore base; insert(base, rec(1)); StagedObjectView staged(base);
+    ASSERT_TRUE(staged.stageCreate(rec(2, ObjectId::fromUint64(1)))); ASSERT_TRUE(staged.stageCreate(rec(3, ObjectId::fromUint64(2))));
+    EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}}).ok());
+    ASSERT_TRUE(staged.stageDelete(ObjectId::fromUint64(1)));
+    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}).issue, StatefulIssue::kObjectMissing);
+}
+
+TEST(HierarchyValidation, ThreeNodeAndUntouchedAncestorCycles) {
+    ReferenceObjectStore base; insert(base, rec(1)); insert(base, rec(2, ObjectId::fromUint64(1))); insert(base, rec(3, ObjectId::fromUint64(2))); insert(base, rec(4, ObjectId::fromUint64(3)));
+    StagedObjectView staged(base);
+    std::vector<HierarchyEdit> tri{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(3), OrderKey({1U})}}, {ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}, {ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}};
+    EXPECT_EQ(validateStagedHierarchy(staged, tri).issue, StatefulIssue::kHierarchyCycle);
+    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(4), OrderKey({1U})}}}).issue, StatefulIssue::kHierarchyCycle);
 }
 
 } // namespace

@@ -1,5 +1,6 @@
 #include "canvas/semantic/hierarchy_validation.hpp"
 
+#include <algorithm>
 #include <map>
 #include <set>
 
@@ -54,6 +55,7 @@ StatefulResult validateStagedHierarchy(const StagedObjectView& staged,
 std::vector<ObjectId> resolveDescendants(const StagedObjectView& staged, ObjectId root_id) {
     std::vector<ObjectId> result;
     std::set<ObjectId> visited;
+    visited.insert(root_id);
     const auto visit = [&](const auto& self, const ObjectId& parent) -> void {
         for (const auto& child : staged.children(parent)) {
             const ObjectId id = child.id;
@@ -63,14 +65,7 @@ std::vector<ObjectId> resolveDescendants(const StagedObjectView& staged, ObjectI
         }
     };
     visit(visit, root_id);
-    /*
-    while (!stack.empty()) {
-        const ObjectId id = stack.back(); stack.pop_back();
-        if (!visited.insert(id).second) continue;
-        result.push_back(id);
-        const auto children = staged.children(id);
-        for (auto it = children.rbegin(); it != children.rend(); ++it) stack.push_back(it->id);
-    } */
+    std::sort(result.begin(), result.end());
     return result;
 }
 
