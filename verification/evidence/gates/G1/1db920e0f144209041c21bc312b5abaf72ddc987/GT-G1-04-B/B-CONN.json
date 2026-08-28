@@ -1,0 +1,54 @@
+{
+  "format": "G1 connector-stateful-validation evidence v1",
+  "task": "GT-G1-04-B / B4 connector references, connectability, and StablePort applicability",
+  "sourceCommit": "1db920e0f144209041c21bc312b5abaf72ddc987",
+  "testedCommit": "1db920e0f144209041c21bc312b5abaf72ddc987",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorizationRecord": "3ca4c57a-590c-8198-8bfa-c91dc212ac2c",
+  "planCommit": "6357f7e19426f8c7300c11595c26dbb0cf13d8ae",
+  "authorityRefs": [
+    "notion:3ca4c57a-590c-8198-8bfa-c91dc212ac2c",
+    "github:docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md@6357f7e19426f8c7300c11595c26dbb0cf13d8ae",
+    "notion:3c44c57a-590c-81dc-9f65-ec33c8109492",
+    "notion:3c44c57a-590c-81b7-8f2c-e18ff60bb6c0"
+  ],
+  "red": {
+    "command": "cmake -S . -B /tmp/axiom-b4-red.8lACFd -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b4-red.8lACFd --target canvas_semantic_connector_stateful_validation_test -j2",
+    "exit": 2,
+    "failure": "fatal error: 'canvas/semantic/connector_validation.hpp' file not found",
+    "result": "failed as expected before B4 production files existed"
+  },
+  "green": {
+    "command": "cmake -S . -B /tmp/axiom-b4-evidence.XXXXXX -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build <build>/runtime/semantic/tests/canvas_semantic_connector_stateful_validation_test -j2 && <build>/runtime/semantic/tests/canvas_semantic_connector_stateful_validation_test --gtest_color=no",
+    "result": "PASS 16/16"
+  },
+  "endpointCases": [
+    {"id": "FreeFreeIsValid", "start": "FreePoint", "end": "FreePoint", "targetObjectId": null, "targetActualKind": null, "targetActualKindVersion": null, "connectability": "not_applicable", "anchorType": null, "stablePort": null, "statefulIssue": "kNone"},
+    {"id": "ShapeV1AutoPerimeterIsValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "0a000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kNone"},
+    {"id": "ImageV1AutoPerimeterIsValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "0b000000000000000000000000000000", "targetActualKind": "Image", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kNone"},
+    {"id": "StickyV1AutoPerimeterIsValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "0c000000000000000000000000000000", "targetActualKind": "Sticky", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kNone"},
+    {"id": "ShapeV1Ports1Through4AreValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "14000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Shape", "targetKindVersion": 1, "portIds": [1, 2, 3, 4]}, "statefulIssue": "kNone"},
+    {"id": "ImageV1Ports1Through4AreValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "15000000000000000000000000000000", "targetActualKind": "Image", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Image", "targetKindVersion": 1, "portIds": [1, 2, 3, 4]}, "statefulIssue": "kNone"},
+    {"id": "StickyV1Ports1Through4AreValid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "16000000000000000000000000000000", "targetActualKind": "Sticky", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Sticky", "targetKindVersion": 1, "portIds": [1, 2, 3, 4]}, "statefulIssue": "kNone"},
+    {"id": "MissingAttachedTargetReturnsInvalidReference", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "65000000000000000000000000000000", "targetActualKind": null, "targetActualKindVersion": null, "connectability": null, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kInvalidReference", "stagedVisibility": "absent"},
+    {"id": "StagedDeletedTargetReturnsInvalidReference", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "66000000000000000000000000000000", "targetActualKind": null, "targetActualKindVersion": null, "connectability": null, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kInvalidReference", "stagedVisibility": "staged-deleted"},
+    {"id": "UnsupportedTargetKindVersionReturnsInvalidKindVersion", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "67000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 2, "connectability": "not_evaluated", "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kInvalidKindVersion"},
+    {"id": "V1NonConnectableKindsReturnConnectorInvalid", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "6e000000000000000000000000000000", "targetActualKind": "VectorPath|RichText|VectorStroke|DabStroke|Connector|Group", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kConnectorInvalid", "tableDriven": true},
+    {"id": "SameBatchStagedConnectableTargetIsVisible", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "82000000000000000000000000000000", "targetActualKind": "Shape|Image|Sticky", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "statefulIssue": "kNone", "stagedVisibility": "staged-created"},
+    {"id": "StablePortApplicabilityUsesActualTargetKindVersion", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "96000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Shape", "targetKindVersion": 1, "portId": 1}, "statefulIssue": "kNone"},
+    {"id": "StablePortNonConnectableTarget", "start": "AttachedEndpoint", "end": "FreePoint", "targetObjectId": "97000000000000000000000000000000", "targetActualKind": "VectorPath", "targetActualKindVersion": 1, "connectability": false, "anchorType": "StablePort", "stablePort": {"targetKind": "VectorPath", "targetKindVersion": 1, "portId": 1}, "statefulIssue": "kConnectorInvalid"}
+  ],
+  "diagnosticPrecedence": [
+    {"id": "StartInvalidReferenceWinsOverEndNonConnectable", "startOutcome": "kInvalidReference", "endOutcome": "kConnectorInvalid", "result": "kInvalidReference"},
+    {"id": "StartNonConnectableWinsOverEndInvalidReference", "startOutcome": "kConnectorInvalid", "endOutcome": "kInvalidReference", "result": "kConnectorInvalid"}
+  ],
+  "connectableV1": ["Shape", "Image", "Sticky"],
+  "nonConnectableV1": ["VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Group"],
+  "stablePortV1": {"identity": ["target ObjectKindId", "target kindVersion", "portId"], "registry": {"1": "TOP", "2": "RIGHT", "3": "BOTTOM", "4": "LEFT"}, "applicableTargets": ["Shape v1", "Image v1", "Sticky v1"], "aOwnedRejections": ["portId == 0", "portId >= 5"]},
+  "referenceIndexedParity": {"result": "PASS", "issues": ["kNone", "kInvalidReference", "kInvalidKindVersion", "kConnectorInvalid"], "actualKindVersionAndStablePortParity": true},
+  "noMutation": {"result": "PASS", "baseObjectStoreProjectionUnchanged": true, "stagedProjectionUnchanged": true, "indexedIndexMatchesRebuild": true},
+  "lookup": {"source_inspection": {"result": "PASS", "detail": "one staged.find(targetObjectId) expression on each AttachedEndpoint validation path; validateStablePortForTarget uses only ObjectRecord and StablePortAnchor"}, "runtime_lookup_measurement": {"result": "PASS", "measurement": "CountingObjectStore base-find calls = 2 for two existing attached endpoints; 0 for FreePoint/FreePoint; allObjects=0; children=0; contains=0", "scope": "underlying ObjectStore find calls, not a claimed StagedObjectView invocation counter"}},
+  "a_b_structural_ownership": {"b4Precondition": "A-normalized + A-stateless-structurally-valid ConnectorContent", "aOwned": ["zero targetObjectId", "malformed endpoint/anchor variant", "invalid AutoPerimeter hint", "non-finite or out-of-domain hint", "hint == center", "StablePort portId == 0", "StablePort portId >= 5", "invalid ConnectorRouting discriminant"], "b4DoesNotRedefineAFailures": true},
+  "forbiddenDependencies": {"allObjects": false, "projection": false, "children": false, "rendererGeometry": false, "routeComputation": false, "skia": false, "scene": false, "spatialIndex": false, "objectStoreMutator": false},
+  "verification": {"runtimeBoundaries": "PASS: Runtime module boundary check passed (49 contract files)", "docs": "PASS: validated 273 Markdown files", "diffCheck": "PASS"}
+}
