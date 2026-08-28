@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <optional>
 #include <vector>
@@ -28,6 +29,27 @@ ObjectRecord rec(std::uint64_t id, std::optional<ObjectId> parent = std::nullopt
 template <typename Store>
 void insert(Store& store, const ObjectRecord& value) {
     ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, value));
+}
+
+class CountingStore final : public ObjectStore {
+  public:
+    explicit CountingStore(const ObjectStore& d) : delegate_(d) {}
+    std::size_t size() const noexcept override { return delegate_.size(); }
+    bool contains(const ObjectId& id) const noexcept override { return delegate_.contains(id); }
+    const ObjectRecord* find(const ObjectId& id) const noexcept override { return delegate_.find(id); }
+    std::vector<ObjectRecord> allObjects() const override { ++all_objects_calls; return delegate_.allObjects(); }
+    std::vector<ObjectRecord> children(const std::optional<ObjectId>& p) const override { ++children_calls; return delegate_.children(p); }
+    mutable std::size_t all_objects_calls = 0;
+    mutable std::size_t children_calls = 0;
+  private: const ObjectStore& delegate_;
+};
+
+std::vector<ObjectId> oracleDesc(const ObjectStore& store, ObjectId root) {
+    std::map<ObjectId, std::vector<ObjectId>> children;
+    for (const auto& r : store.allObjects()) children[r.placement.parent_id.value_or(ObjectId{})].push_back(r.id);
+    std::vector<ObjectId> out;
+    std::function<void(ObjectId)> walk = [&](ObjectId p) { for (auto id : children[p]) { out.push_back(id); walk(id); } };
+    walk(root); std::sort(out.begin(), out.end()); return out;
 }
 
 TEST(HierarchyValidation, RootAndExistingParentValid) {
@@ -93,6 +115,15 @@ TEST(HierarchyValidation, ThreeNodeAndUntouchedAncestorCycles) {
     std::vector<HierarchyEdit> tri{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(3), OrderKey({1U})}}, {ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}, {ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}};
     EXPECT_EQ(validateStagedHierarchy(staged, tri).issue, StatefulIssue::kHierarchyCycle);
     EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(4), OrderKey({1U})}}}).issue, StatefulIssue::kHierarchyCycle);
+}
+
+TEST(HierarchyValidation, CountingStoreAvoidsAllObjectsAndUsesChildren) {
+    ReferenceObjectStore base; insert(base, rec(1)); insert(base, rec(2, ObjectId::fromUint64(1)));
+    CountingStore counting(base); StagedObjectView staged(counting);
+    EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{std::nullopt, OrderKey({1U})}}}).ok());
+    EXPECT_EQ(counting.all_objects_calls, 0U);
+    EXPECT_EQ(resolveDescendants(staged, ObjectId::fromUint64(1)), oracleDesc(base, ObjectId::fromUint64(1)));
+    EXPECT_EQ(counting.all_objects_calls, 0U); EXPECT_GT(counting.children_calls, 0U);
 }
 
 } // namespace
