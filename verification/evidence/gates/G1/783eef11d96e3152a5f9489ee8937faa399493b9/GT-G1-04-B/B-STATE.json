@@ -4,13 +4,14 @@
   "sourceCommit": "783eef11d96e3152a5f9489ee8937faa399493b9",
   "testedCommit": "783eef11d96e3152a5f9489ee8937faa399493b9",
   "branch": "codex/gt-g1-04-operation-apply",
+  "supersedesEvidenceCommit": "94d44929ff343219b9761c08f9db5ce42f3ce3e3",
   "baseline": {
     "startingHead": "e5d0d5cb1ea83ba60f089cd05fce722c10a12593",
     "b1Source": "e81665ca27f76d91057241a235df8c77b61c364c",
     "b1Evidence": "e5d0d5cb1ea83ba60f089cd05fce722c10a12593"
   },
   "authority": {
-    "b2AuthorizationRecord": "3ca4c57a-590c-8110-a752-de3dbabd96b",
+    "b2AuthorizationRecord": "3ca4c57a-590c-8110-a752-deb3dbabd96b",
     "objectKindRegistry": "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
     "fieldRegistry": "schema/axiom/v1/registry/field_registry_v1.yaml",
     "plan": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md"
@@ -24,7 +25,8 @@
     "requireAbsent": {"absent": "kNone", "visible": "kObjectAlreadyExists"},
     "stagedCreateVisible": true,
     "stagedDeleteAbsent": true,
-    "stagedReplacementVisible": true
+    "stagedReplacementVisible": true,
+    "stagedReplacementProvenance": "Accepted B0 StagedObjectView.ReplaceIsVisibleOnlyThroughOverlay; B2 consumes StagedObjectView::find; B2 regression includes the StagedObjectView suite. The B2 StageCreateDeleteAndReplaceControlVisibility case does not independently observe replacement contents before deletion."
   },
   "kindVersion": {
     "releasedKinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky", "Group"],
@@ -51,9 +53,14 @@
   },
   "lookup": {
     "singleTargetHelpersUseStagedFind": true,
-    "allObjectsCalls": 0,
-    "containsCalls": "not required by helper; staged find is used",
-    "findCalls": "bounded single-ID lookup"
+    "sourceInspection": {
+      "stagedFindCallsPerHelper": 1,
+      "helpers": ["requireExisting", "requireAbsent"]
+    },
+    "instrumentedObservation": {
+      "allObjectsCalls": 0
+    },
+    "containsCalls": "not required by helper; staged find is used"
   },
   "differential": {
     "referenceVsIndexed": "PASS",
@@ -67,6 +74,7 @@
     "objectStoreMutatorInProduction": false
   },
   "tests": {
+    "executionProvenance": "Historical source-bound execution against unchanged sourceCommit/testedCommit 783eef11d96e3152a5f9489ee8937faa399493b9; not rerun for this evidence-only repair.",
     "focused": {"command": "ctest --test-dir out/g1-debug -R 'StatefulKindApplicability' --output-on-failure", "passed": 12, "failed": 0, "skipped": 0, "exitCode": 0},
     "b1B0StoreARegression": {"command": "ctest --test-dir out/g1-debug -R 'Idempotency|StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|ALane' --output-on-failure", "passed": 32, "failed": 0, "skipped": 0, "exitCode": 0},
     "fullSemantic": {"command": "ctest --test-dir out/g1-debug --output-on-failure", "total": 131, "passed": 119, "failed": 0, "skipped": 12, "skipReason": "protobuf-off configuration; skipped tests are not counted as passes", "exitCode": 0},
