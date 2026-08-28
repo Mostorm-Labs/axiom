@@ -149,6 +149,21 @@ endif()
 
 gtest_discover_tests(canvas_semantic_stateful_context_test)
 
+add_executable(canvas_semantic_stateful_kind_applicability_test
+  stateful_kind_applicability_test.cpp)
+target_link_libraries(canvas_semantic_stateful_kind_applicability_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_stateful_kind_applicability_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_stateful_kind_applicability_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_stateful_kind_applicability_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_stateful_kind_applicability_test)
+
 add_executable(canvas_semantic_staged_object_view_test staged_object_view_test.cpp)
 target_link_libraries(canvas_semantic_staged_object_view_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)
@@ -199,6 +214,7 @@ foreach(header IN ITEMS
         canvas/semantic/semantic_error.hpp
         canvas/semantic/staged_object_view.hpp
         canvas/semantic/stateful_validation.hpp
+        canvas/semantic/operation_state_validator.hpp
         canvas/semantic/geometry_accounting_v1.hpp
         canvas/semantic/codec.hpp)
   string(REPLACE "/" "_" target_suffix ${header})

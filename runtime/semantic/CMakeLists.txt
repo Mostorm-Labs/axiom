@@ -7,6 +7,7 @@ add_library(canvas_runtime_semantic STATIC
     src/semantic_types.cpp
     src/normalizer.cpp
     src/operation_fingerprint.cpp
+    src/operation_state_validator.cpp
     src/staged_object_view.cpp
     src/stateful_validation.cpp
     src/validator.cpp
