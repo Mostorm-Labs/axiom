@@ -10,6 +10,7 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <set>
 #include <vector>
 
 namespace canvas::semantic {
@@ -84,8 +85,10 @@ TEST(HierarchyValidation, IndependentParentModelOracleMatchesRepresentativeCases
 TEST(HierarchyValidation, RootAndExistingParentValid) {
     ReferenceObjectStore base;
     insert(base, rec(1));
+    insert(base, rec(2, ObjectId::fromUint64(1)));
     StagedObjectView staged(base);
     EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{std::nullopt, OrderKey({1U})}}}).ok());
+    EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}).ok());
 }
 
 TEST(HierarchyValidation, MissingObjectsAndParents) {
@@ -144,6 +147,13 @@ TEST(HierarchyValidation, ThreeNodeAndUntouchedAncestorCycles) {
     std::vector<HierarchyEdit> tri{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(3), OrderKey({1U})}}, {ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}, {ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}};
     EXPECT_EQ(validateStagedHierarchy(staged, tri).issue, StatefulIssue::kHierarchyCycle);
     EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(4), OrderKey({1U})}}}).issue, StatefulIssue::kHierarchyCycle);
+}
+
+TEST(HierarchyValidation, DanglingUntouchedAncestorReturnsInvalidReference) {
+    ReferenceObjectStore base;
+    insert(base, rec(1, ObjectId::fromUint64(99)));
+    StagedObjectView staged(base);
+    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{std::nullopt, OrderKey({1U})}}}).issue, StatefulIssue::kInvalidReference);
 }
 
 TEST(HierarchyValidation, CountingStoreAvoidsAllObjectsAndUsesChildren) {

@@ -45,7 +45,8 @@ StatefulResult validateStagedHierarchy(const StagedObjectView& staged,
                 return StatefulResult{StatefulIssue::kHierarchyCycle};
             }
             const ObjectRecord* record = projectedFind(staged, projection, current);
-            if (record == nullptr || !record->placement.parent_id.has_value()) break;
+            if (record == nullptr) return StatefulResult{StatefulIssue::kInvalidReference};
+            if (!record->placement.parent_id.has_value()) break;
             current = *record->placement.parent_id;
         }
     }

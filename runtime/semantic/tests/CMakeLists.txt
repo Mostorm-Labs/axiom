@@ -226,6 +226,7 @@ foreach(header IN ITEMS
         canvas/semantic/semantic_error.hpp
         canvas/semantic/staged_object_view.hpp
         canvas/semantic/stateful_validation.hpp
+        canvas/semantic/hierarchy_validation.hpp
         canvas/semantic/operation_state_validator.hpp
         canvas/semantic/geometry_accounting_v1.hpp
         canvas/semantic/codec.hpp)
