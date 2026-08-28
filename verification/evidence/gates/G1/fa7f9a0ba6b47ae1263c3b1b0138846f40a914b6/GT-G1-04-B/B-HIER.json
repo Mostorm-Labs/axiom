@@ -1,0 +1,52 @@
+{
+  "format": "G1 hierarchy-validation evidence v1",
+  "task": "GT-G1-04-B / B3 staged hierarchy validation",
+  "source_commit": "fa7f9a0ba6b47ae1263c3b1b0138846f40a914b6",
+  "tested_commit": "fa7f9a0ba6b47ae1263c3b1b0138846f40a914b6",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorization_record": "3ca4c57a-590c-8101-a11d-f1d4c24ebb65",
+  "plan_record": "91314a05008e2e7357414958779221cdbb7aeaf1",
+  "authority_refs": [
+    ".superpowers/sdd/2026-08-28-gt-g1-04-b-stateful-validation/task-B3-brief.md"
+  ],
+  "red_provenance": {
+    "command": "cmake -S . -B /tmp/axiom-b3-build.L5q7t2 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b3-build.L5q7t2 --target canvas_semantic_hierarchy_stateful_validation_test -j2",
+    "result": "failed as expected (exit 2)",
+    "failure": "fatal error: 'canvas/semantic/hierarchy_validation.hpp' file not found"
+  },
+  "observations": {
+    "edited_object_visibility": "missing/staged-deleted edited objects produce kObjectMissing",
+    "parent_references": "missing/staged-deleted non-null parents produce kInvalidReference; null parent is valid root",
+    "cycles": "self and simultaneous two-node cycles produce kHierarchyCycle; projected ancestor walks detect cycles deterministically",
+    "parent_maps": "each unique edit replaces the complete Placement in a private projected overlay",
+    "cycle_witness": "1 -> 2 and 2 -> 1",
+    "descendants": "strict, deterministic DFS through staged.children; includes staged-visible creations, excludes deletes, observes reparenting, and has a visited-ID defense",
+    "reference_indexed_parity": "both stores returned equal hierarchy decisions",
+    "source_inspection": "hierarchy_validation.cpp contains no allObjects() invocation",
+    "runtime_lookup_measurements": "focused tests exercise StagedObjectView find/children paths; counting-store measurement coverage remains required for final review",
+    "no_mutation_index_rebuild": "Reference projection stayed unchanged and Indexed indexMatchesRebuild returned true"
+  },
+  "test_commands": [
+    {
+      "command": "cmake -S . -B /tmp/axiom-b3-build.tlDlT7 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b3-build.tlDlT7 --target canvas_semantic_hierarchy_stateful_validation_test -j2 && /tmp/axiom-b3-build.tlDlT7/runtime/semantic/tests/canvas_semantic_hierarchy_stateful_validation_test --gtest_color=no",
+      "result": "pass: 5/5 tests"
+    },
+    {
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "result": "pass: Runtime module boundary check passed (48 contract files)"
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass"
+    }
+  ],
+  "scope_guards": {
+    "authorized_paths_only": true,
+    "untouched_untracked_paths": [
+      "build-b2/",
+      "build-semantic-b2/",
+      "pocs/shared_engine/reports/poc01/android-visual-smoke/"
+    ],
+    "no_push": true
+  }
+}
