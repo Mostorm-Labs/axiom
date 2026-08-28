@@ -10,6 +10,7 @@ add_library(canvas_runtime_semantic STATIC
     src/operation_state_validator.cpp
     src/staged_object_view.cpp
     src/hierarchy_validation.cpp
+    src/connector_validation.cpp
     src/stateful_validation.cpp
     src/validator.cpp
     src/codec.cpp)
