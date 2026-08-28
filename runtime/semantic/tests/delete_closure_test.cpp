@@ -1,105 +1,28 @@
 #include "canvas/semantic/delete_closure.hpp"
-
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 #include "object_store_mutator.hpp"
-
 #include <gtest/gtest.h>
-
+#include <algorithm>
+#include <map>
 #include <optional>
+#include <set>
 #include <span>
 #include <vector>
-
-namespace canvas::semantic {
-namespace {
-
-ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
-
-ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
-    ObjectRecord record{};
-    record.id = id(value);
-    record.kind = ObjectKind::kShape;
-    record.kind_version = 1U;
-    record.placement.parent_id = parent;
-    record.placement.order_key = OrderKey({static_cast<std::uint8_t>(value)});
-    record.content = ShapeContent{1U, 10.0, 10.0};
-    return record;
-}
-
-ObjectRecord connector(std::uint64_t value, std::optional<ObjectId> start,
-                       std::optional<ObjectId> end = std::nullopt) {
-    ObjectRecord record{};
-    record.id = id(value);
-    record.kind = ObjectKind::kConnector;
-    record.kind_version = 1U;
-    record.placement.order_key = OrderKey({static_cast<std::uint8_t>(value)});
-    ConnectorContent content{};
-    if (start.has_value()) content.start.value = AttachedEndpoint{*start, AutoPerimeterAnchor{}};
-    if (end.has_value()) content.end.value = AttachedEndpoint{*end, AutoPerimeterAnchor{}};
-    record.content = content;
-    return record;
-}
-
-template <typename Store>
-void insert(Store& store, const ObjectRecord& record) {
-    ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, record));
-}
-
-TEST(DeleteClosure, DirectTargetAndMultiWaveIndependentOracle) {
-    ReferenceObjectStore base;
-    insert(base, shape(1));
-    insert(base, connector(10, id(1)));
-    insert(base, shape(2, id(10)));
-    insert(base, connector(20, id(2)));
-    StagedObjectView staged(base);
-
-    DeleteClosure closure{};
-    const ObjectId requested[] = {id(1)};
-    ASSERT_TRUE(resolveDeleteClosure(staged, std::span<const ObjectId>(requested), &closure).ok());
-    EXPECT_EQ(closure.requested_delete_ids, std::vector<ObjectId>({id(1)}));
-    EXPECT_EQ(closure.resolved_hierarchy_closure, std::vector<ObjectId>({id(2)}));
-    EXPECT_EQ(closure.resolved_connector_cascade_closure,
-              std::vector<ObjectId>({id(10), id(20)}));
-    EXPECT_EQ(closure.final_delete_set,
-              std::vector<ObjectId>({id(1), id(2), id(10), id(20)}));
-}
-
-TEST(DeleteClosure, MissingIsAtomicAndFreePointUnrelated) {
-    ReferenceObjectStore base;
-    insert(base, shape(1));
-    insert(base, connector(10, std::nullopt, std::nullopt));
-    StagedObjectView staged(base);
-    DeleteClosure closure{};
-    closure.final_delete_set = {id(99)};
-    const DeleteClosure before = closure;
-    const ObjectId requested[] = {id(1), id(99)};
-    const StatefulResult result =
-        resolveDeleteClosure(staged, std::span<const ObjectId>(requested), &closure);
-    EXPECT_EQ(result.issue, StatefulIssue::kObjectMissing);
-    EXPECT_EQ(closure.final_delete_set, before.final_delete_set);
-}
-
-TEST(DeleteClosure, StagedReplacementAndIndexedParity) {
-    ReferenceObjectStore reference;
-    IndexedObjectStore indexed;
-    const ObjectRecord a = shape(1);
-    const ObjectRecord c = connector(10, id(1));
-    insert(reference, a); insert(reference, c);
-    insert(indexed, a); insert(indexed, c);
-    StagedObjectView ref_staged(reference);
-    StagedObjectView idx_staged(indexed);
-    ObjectRecord replacement = c;
-    replacement.content = connector(10, std::nullopt, std::nullopt).content;
-    ASSERT_TRUE(ref_staged.stageReplace(replacement));
-    ASSERT_TRUE(idx_staged.stageReplace(replacement));
-    const ObjectId requested[] = {id(1)};
-    DeleteClosure ref{}, idx{};
-    ASSERT_TRUE(resolveDeleteClosure(ref_staged, requested, &ref).ok());
-    ASSERT_TRUE(resolveDeleteClosure(idx_staged, requested, &idx).ok());
-    EXPECT_EQ(ref.final_delete_set, idx.final_delete_set);
-    EXPECT_EQ(ref.final_delete_set, std::vector<ObjectId>({id(1)}));
-}
-
-} // namespace
-} // namespace canvas::semantic
+namespace canvas::semantic { namespace {
+ObjectId id(std::uint64_t value){ return ObjectId::fromUint64(value); }
+ObjectRecord shape(std::uint64_t value,std::optional<ObjectId> parent=std::nullopt){ ObjectRecord r{}; r.id=id(value); r.kind=ObjectKind::kShape; r.kind_version=1U; r.placement.parent_id=parent; r.placement.order_key=OrderKey({static_cast<std::uint8_t>(value)}); r.content=ShapeContent{1U,10.0,10.0}; return r; }
+ObjectRecord connector(std::uint64_t value,std::optional<ObjectId> start,std::optional<ObjectId> end=std::nullopt){ ObjectRecord r{}; r.id=id(value); r.kind=ObjectKind::kConnector; r.kind_version=1U; r.placement.order_key=OrderKey({static_cast<std::uint8_t>(value)}); ConnectorContent c{}; if(start)c.start.value=AttachedEndpoint{*start,AutoPerimeterAnchor{}}; if(end)c.end.value=AttachedEndpoint{*end,AutoPerimeterAnchor{}}; r.content=c; return r; }
+template<typename S> void insert(S& s,const ObjectRecord& r){ ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,r)); }
+DeleteClosure resolve(const StagedObjectView& s,std::initializer_list<ObjectId> q){ DeleteClosure c{}; const auto result=resolveDeleteClosure(s,std::span<const ObjectId>(q.begin(),q.size()),&c); EXPECT_TRUE(result.ok()); return c; }
+DeleteClosure oracle(const std::map<ObjectId,std::vector<ObjectId>>& h,const std::map<ObjectId,std::vector<ObjectId>>& rev,std::vector<ObjectId> req){ std::set<ObjectId> all(req.begin(),req.end()), hs, cs; std::vector<ObjectId> f=req; while(!f.empty()){ std::vector<ObjectId> n; for(auto p:f){auto hi=h.find(p);if(hi==h.end())continue;for(auto x:hi->second) if(all.insert(x).second){hs.insert(x);n.push_back(x);}} auto rel=f; rel.insert(rel.end(),n.begin(),n.end()); for(auto t:rel){auto it=rev.find(t); if(it==rev.end())continue; for(auto x:it->second) if(all.insert(x).second){cs.insert(x);n.push_back(x);}} std::sort(n.begin(),n.end()); n.erase(std::unique(n.begin(),n.end()),n.end()); f=std::move(n);} DeleteClosure c; c.requested_delete_ids=std::move(req); c.resolved_hierarchy_closure.assign(hs.begin(),hs.end()); c.resolved_connector_cascade_closure.assign(cs.begin(),cs.end()); c.final_delete_set.assign(all.begin(),all.end()); return c; }
+TEST(DeleteClosure, IndependentOracleDirectDescendantMultiple){ ReferenceObjectStore b; insert(b,shape(1));insert(b,shape(2,id(1)));insert(b,connector(10,id(1)));insert(b,connector(11,id(2))); StagedObjectView s(b); auto a=resolve(s,{id(1)}); auto e=oracle({{id(1),{id(2)}},{id(2),{}}},{{id(1),{id(10)}},{id(2),{id(11)}}},{id(1)}); EXPECT_EQ(a.final_delete_set,e.final_delete_set); EXPECT_EQ(a.resolved_hierarchy_closure,e.resolved_hierarchy_closure); EXPECT_EQ(a.resolved_connector_cascade_closure,e.resolved_connector_cascade_closure); }
+TEST(DeleteClosure, EndpointDedupFreeFree){ ReferenceObjectStore b;insert(b,shape(1));insert(b,shape(2));insert(b,connector(10,id(1),id(1)));insert(b,connector(11,std::nullopt,std::nullopt));StagedObjectView s(b);EXPECT_EQ(resolve(s,{id(1),id(2)}).resolved_connector_cascade_closure,std::vector<ObjectId>({id(10)})); }
+TEST(DeleteClosure, RequestedAndHierarchyReasons){ ReferenceObjectStore b;insert(b,shape(1));insert(b,connector(10,id(1)));insert(b,shape(2,id(10)));StagedObjectView s(b);EXPECT_TRUE(resolve(s,{id(1),id(10)}).resolved_connector_cascade_closure.empty());auto c=resolve(s,{id(10)});EXPECT_EQ(c.resolved_hierarchy_closure,std::vector<ObjectId>({id(2)}));EXPECT_TRUE(c.resolved_connector_cascade_closure.empty()); }
+TEST(DeleteClosure, MultiWave){ ReferenceObjectStore b;insert(b,shape(1));insert(b,connector(10,id(1)));insert(b,shape(2,id(10)));insert(b,connector(20,id(2)));StagedObjectView s(b);EXPECT_EQ(resolve(s,{id(1)}).final_delete_set,std::vector<ObjectId>({id(1),id(2),id(10),id(20)})); }
+TEST(DeleteClosure, DeterministicRepeatedParity){ ReferenceObjectStore a,b;IndexedObjectStore i; auto x=shape(1),y=shape(2,id(1)),c1=connector(10,id(1)),c2=connector(20,id(2));insert(a,x);insert(a,y);insert(a,c1);insert(a,c2);insert(b,c2);insert(b,y);insert(b,c1);insert(b,x);insert(i,x);insert(i,y);insert(i,c1);insert(i,c2);StagedObjectView sa(a),sb(b),si(i);auto ra=resolve(sa,{id(1)}),rb=resolve(sb,{id(1)}),ri=resolve(si,{id(1)});EXPECT_EQ(ra.final_delete_set,rb.final_delete_set);EXPECT_EQ(ra.final_delete_set,ri.final_delete_set);EXPECT_EQ(ra.final_delete_set,resolve(sa,{id(1)}).final_delete_set); }
+TEST(DeleteClosure, StagedCreateReplaceDelete){ ReferenceObjectStore b;insert(b,shape(1));insert(b,connector(10,id(1)));StagedObjectView s(b);ASSERT_TRUE(s.stageDelete(id(10)));ASSERT_TRUE(s.stageCreate(connector(20,id(1))));EXPECT_EQ(resolve(s,{id(1)}).resolved_connector_cascade_closure,std::vector<ObjectId>({id(20)}));ASSERT_TRUE(s.stageReplace(connector(20,std::nullopt,std::nullopt)));EXPECT_TRUE(resolve(s,{id(1)}).resolved_connector_cascade_closure.empty()); }
+TEST(DeleteClosure, NoMutationAndSingleProjectionScan){ class C final:public ObjectStore{public:explicit C(const ObjectStore&d):d_(d){}std::size_t size()const noexcept override{return d_.size();}bool contains(const ObjectId&x)const noexcept override{return d_.contains(x);}const ObjectRecord* find(const ObjectId&x)const noexcept override{++finds;return d_.find(x);}std::vector<ObjectRecord> allObjects()const override{++alls;return d_.allObjects();}std::vector<ObjectRecord> children(const std::optional<ObjectId>&p)const override{++childs;return d_.children(p);}mutable std::size_t alls=0,childs=0,finds=0;private:const ObjectStore&d_;};ReferenceObjectStore b;insert(b,shape(1));insert(b,connector(10,id(1)));auto before=b.allObjects();C c(b);StagedObjectView s(c);EXPECT_EQ(resolve(s,{id(1)}).final_delete_set,std::vector<ObjectId>({id(1),id(10)}));EXPECT_EQ(c.alls,1U);EXPECT_GE(c.childs,1U);EXPECT_GE(c.finds,1U);EXPECT_EQ(b.allObjects(),before); }
+TEST(DeleteClosure, MissingAtomic){ReferenceObjectStore b;insert(b,shape(1));StagedObjectView s(b);DeleteClosure c{};c.final_delete_set={id(99)};auto before=c;const ObjectId q[]={id(1),id(99)};EXPECT_EQ(resolveDeleteClosure(s,q,&c).issue,StatefulIssue::kObjectMissing);EXPECT_EQ(c.final_delete_set,before.final_delete_set);}
+}}
