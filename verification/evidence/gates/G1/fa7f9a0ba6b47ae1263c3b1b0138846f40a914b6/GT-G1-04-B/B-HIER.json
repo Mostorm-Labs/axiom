@@ -1,8 +1,8 @@
 {
   "format": "G1 hierarchy-validation evidence v1",
   "task": "GT-G1-04-B / B3 staged hierarchy validation",
-  "source_commit": "7119b0d",
-  "tested_commit": "7119b0d",
+  "source_commit": "bf70dc6a53a78ea7a690d221ad29dc6cbb787d58",
+  "tested_commit": "bf70dc6a53a78ea7a690d221ad29dc6cbb787d58",
   "branch": "codex/gt-g1-04-operation-apply",
   "authorization_record": "3ca4c57a-590c-8101-a11d-f1d4c24ebb65",
   "plan_record": "91314a05008e2e7357414958779221cdbb7aeaf1",
@@ -29,7 +29,7 @@
   "test_commands": [
     {
       "command": "cmake -S . -B /tmp/axiom-b3-build.tlDlT7 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b3-build.tlDlT7 --target canvas_semantic_hierarchy_stateful_validation_test -j2 && /tmp/axiom-b3-build.tlDlT7/runtime/semantic/tests/canvas_semantic_hierarchy_stateful_validation_test --gtest_color=no",
-      "result": "pass: 8/8 tests"
+      "result": "pass: 10/10 tests"
     },
     {
       "command": "python3 tools/check_runtime_boundaries.py --root .",
@@ -48,5 +48,13 @@
       "pocs/shared_engine/reports/poc01/android-visual-smoke/"
     ],
     "no_push": true
+  },
+  "verification_summary": {
+    "focused_b3": "PASS 10/10",
+    "regression_filter": "PASS 44/44",
+    "full_semantic_ctest": "PASS 127, FAIL 0, SKIP 12 (protobuf-off)",
+    "runtime_boundaries": "PASS 48",
+    "docs_check": "PASS 273",
+    "diff_check": "PASS"
   }
 }
