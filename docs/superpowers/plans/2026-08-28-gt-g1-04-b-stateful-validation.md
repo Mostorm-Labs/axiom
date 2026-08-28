@@ -252,13 +252,21 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 **Interfaces produced:**
 
-- `struct HierarchyEdit { ObjectId object_id; std::optional<ObjectId> parent_id; Placement placement; };`
+- `struct HierarchyEdit { ObjectId object_id; Placement placement; };`
 - `StatefulResult validateStagedHierarchy(const StagedObjectView&, std::span<const HierarchyEdit>);`
 - `std::vector<ObjectId> resolveDescendants(const StagedObjectView&, ObjectId);`
 
+**B3-P31-01 contract (frozen for P32):** `HierarchyEdit` represents the complete proposed `Placement` for one visible/staged object. The proposed parent and sibling order are both taken from `HierarchyEdit::placement`: parent authority is `edit.placement.parent_id` and sibling-order authority is `edit.placement.order_key`. There is no second parent source, parent override, expected-parent field, old-parent field, or implicit normalization rule.
+
+`validateStagedHierarchy()` owns only staged visibility/existence, parent visibility/existence, resulting parent topology, cycle rejection, and deterministic traversal/diagnostics. It does not own `ObjectKind` parent-capability semantics. Do not infer a parent-capability matrix, child-role semantics, or a Sticky primary-RichText-child role; if a later operation requires such a rule, stop with `MISSING_CONTRACT`.
+
+`resolveDescendants()` keeps the existing API and returns strict descendants only: it excludes the root `ObjectId`, returns IDs in deterministic `ObjectId` order, assumes the caller has established root existence, observes resulting-state visibility through `StagedObjectView`, and excludes staged-deleted objects.
+
+Conceptually, `validateStagedHierarchy()` builds one private resulting parent projection from the base/staged visible hierarchy plus all edit placements, then validates parent existence and cycles against that complete projection. It must not mutate canonical state or validate edits through per-edit partial mutation.
+
 **RED tests and expected failure:** Add valid parent, absent parent, self-parent, two-node staged cycle, three-node staged cycle, parent+child same InsertObjects batch, and SetPlacements cycle tests. They fail because the hierarchy validator is not yet defined.
 
-**Implementation obligations:** Apply all edits to a private overlay before traversing; treat records in the same batch as available only when staged; reject absent parent and every cycle; preserve deterministic ObjectId ordering for diagnostics and returned descendants; do not infer product Page roots or synthetic Document roots.
+**Implementation obligations:** Apply every complete `HierarchyEdit::placement` to one private resulting-state overlay before traversing; treat records in the same batch as available only when staged; reject absent parent and every cycle; preserve deterministic `ObjectId` ordering for diagnostics and returned descendants independently of unordered-map iteration, ObjectStore insertion history, platform, or Reference versus Indexed implementation; do not mutate canonical state; do not infer product Page roots, synthetic Document roots, ObjectKind parent-capability semantics, child roles, or Sticky primary-RichText-child roles.
 
 **GREEN verification:** Focused tests pass for both stores and for batches whose input order is permuted after normalization; before/after base projections are equal.
 
