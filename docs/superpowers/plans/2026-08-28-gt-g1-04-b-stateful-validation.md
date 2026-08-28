@@ -310,15 +310,60 @@ Conceptually, `validateStagedHierarchy()` builds one private resulting parent pr
 - `bool isConnectableObjectKind(ObjectKind, std::uint32_t kind_version) noexcept;`
 - `StatefulResult validateStablePortForTarget(const ObjectRecord&, const StablePortAnchor&);`
 
-**RED tests and expected failure:** Add free/free success; attached target absent; attached target Group/VectorPath/non-connectable kind; Shape/Image/Sticky v1 success; StablePort 1 and 4 success for each actual connectable v1 target; static 0/5 rejection remains A coverage; attached target created in the same staged batch; and connector target deleted by a staged closure. They fail because stateful connector interfaces do not exist.
+**B4 StatefulIssue mapping (frozen for P32):**
 
-**Implementation obligations:** Reuse A for endpoint shape and finite values; resolve attached targets through the staged view; enforce released connectability (Shape v1/Image v1/Sticky v1); validate StablePort identity as actual target ObjectKindId plus target kindVersion plus portId; accept only fixed V1 ports 1..4; reject 0 and 5..u32::MAX; do not fall back to AutoPerimeter; preserve free endpoints; never store routed paths.
+- An `AttachedEndpoint` whose target is absent or staged-deleted returns `StatefulIssue::kInvalidReference`.
+- An `AttachedEndpoint` whose target exists but whose actual `ObjectKind` is unknown, or whose actual `kindVersion` is unsupported/non-V1, returns `StatefulIssue::kInvalidKindVersion`. In particular, an actual `Shape` with `kindVersion = 2` is not a connector-invalid decision.
+- An existing target with a released V1 kind/version that is not connectable returns `StatefulIssue::kConnectorInvalid`. The V1 non-connectable set is `VectorPath`, `RichText`, `VectorStroke`, `DabStroke`, `Connector`, and `Group`.
+- A structurally A-valid `StablePortAnchor` that is not applicable to the actual released target kind/version returns `StatefulIssue::kConnectorInvalid`.
+- A `FreePoint` endpoint after A structural validation returns `StatefulIssue::kNone`.
+- An attached endpoint targeting Shape v1, Image v1, or Sticky v1 returns `StatefulIssue::kNone` when its AutoPerimeter or applicable StablePort anchor is valid.
 
-**GREEN verification:** Focused tests pass and demonstrate target+connector staged insertion succeeds only when the resulting target is connectable; no ObjectStore mutation occurs.
+Unsupported actual kind/version must not be mapped to `StatefulIssue::kConnectorInvalid`; B4 may reuse B2 actual-kind/version semantics.
 
-**Oracle/differential:** Reference and Indexed stores must produce identical connector decisions, actual target kind/version checks, and StablePort identities.
+**A/B structural boundary (frozen):** B4 consumes an A-normalized, A-stateless-structurally-valid `ConnectorContent`. The following failures remain owned by A and are not redefined or re-owned as B-CONN cases: zero `targetObjectId`; invalid endpoint variant or structural shape; invalid AutoPerimeter hint; non-finite or out-of-normalized-range hint; `hint == center`; `StablePort` `portId == 0`; `StablePort` `portId >= 5`; and invalid routing discriminant. `validateStablePortForTarget()` has the normative precondition that its `StablePortAnchor` already passed A structural validation. B4 does not turn the A `portId` 0/5..u32::MAX rejection into a second stateful rule.
 
-**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-CONN.json`.
+**Deterministic endpoint failure precedence:** For structurally valid `ConnectorContent` (`start`, `end`, `routing`), validate `start` first and return its first B4 failure; validate `end` only when `start` succeeds. This `start-before-end` rule is B-local diagnostic precedence only, not a new C golden authority, wire error ordering, or protocol-visible numeric error guarantee.
+
+**Connectable V1 matrix:**
+
+| Actual target kind/version | Connectable | B4 outcome when attached |
+| --- | --- | --- |
+| Shape v1 | yes | Continue to anchor applicability; valid anchor is `kNone` |
+| Image v1 | yes | Continue to anchor applicability; valid anchor is `kNone` |
+| Sticky v1 | yes | Continue to anchor applicability; valid anchor is `kNone` |
+| VectorPath v1 | no | `kConnectorInvalid` |
+| RichText v1 | no | `kConnectorInvalid` |
+| VectorStroke v1 | no | `kConnectorInvalid` |
+| DabStroke v1 | no | `kConnectorInvalid` |
+| Connector v1 | no | `kConnectorInvalid` |
+| Group v1 | no | `kConnectorInvalid` |
+
+No future `Frame`, `Card`, `Table`, or custom-object capability is introduced. Connector-to-Connector attachment is `kConnectorInvalid`.
+
+**StablePort V1 matrix:** StablePort semantic identity is `(target ObjectKindId, target kindVersion, portId)`. The fixed V1 registry is `1 = TOP`, `2 = RIGHT`, `3 = BOTTOM`, `4 = LEFT`. Shape v1, Image v1, and Sticky v1 accept each of ports `1`, `2`, `3`, and `4`; all other actual target kind/version combinations are not applicable. B4 must not fallback to AutoPerimeter, renumber, normalize, clamp, or derive ports from renderer geometry.
+
+**RED tests and expected failure:** Add named tests for every semantic category below; they initially fail because the stateful connector interfaces do not exist.
+
+- `FreeFreeIsValid`.
+- `ShapeV1AutoPerimeterIsValid`, `ImageV1AutoPerimeterIsValid`, and `StickyV1AutoPerimeterIsValid`.
+- `ShapeV1Ports1Through4AreValid`, `ImageV1Ports1Through4AreValid`, and `StickyV1Ports1Through4AreValid`.
+- `MissingAttachedTargetReturnsInvalidReference` and `StagedDeletedTargetReturnsInvalidReference`.
+- `UnsupportedTargetKindVersionReturnsInvalidKindVersion`, including Shape `kindVersion = 2` and any safe actual kind/version mismatch fixture.
+- A table-driven test covering VectorPath, RichText, VectorStroke, DabStroke, Connector, and Group V1 targets, each returning `kConnectorInvalid`.
+- A same-batch test where a newly staged Shape/Image/Sticky target and a Connector referencing it return `kNone`.
+- `StartInvalidReferenceWinsOverEndNonConnectable` and `StartNonConnectableWinsOverEndInvalidReference`, proving `start-before-end`.
+- StablePort not-applicable-to-actual-target returns `kConnectorInvalid`; A-only `portId` 0 and `portId >= 5` rejection remains existing A static coverage and is not duplicated as a B-CONN normative case.
+
+**Implementation obligations:** Reuse A for endpoint shape, routing discriminant, and finite-value checks; resolve each attached target through the staged view; evaluate actual staged kind/version before connectability and StablePort applicability; enforce only the released connectable table above; preserve free endpoints; and never store routed paths.
+
+**GREEN verification:** Focused tests pass for all named categories, including same-batch staged visibility and start-before-end determinism. Rejection and success paths leave the base `ObjectStore`, the base `StagedObjectView`, and any `ObjectIndex` unchanged.
+
+**Oracle/differential and no-mutation:** `ReferenceObjectStore` and `IndexedObjectStore` must produce identical decisions for `kNone`, `kInvalidReference`, `kInvalidKindVersion`, and `kConnectorInvalid`, including actual target kind/version and StablePort identity. B4 evaluation must not mutate either store projection, the staged-view base, or the index.
+
+**Lookup/performance contract:** Each `AttachedEndpoint` performs at most one staged target lookup. Evidence must distinguish source inspection from instrumented runtime measurement: only a counter-based test may be reported as a runtime measurement. B4 never calls `allObjects()`, renderer geometry, route computation, Skia, Scene, or SpatialIndex.
+
+**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-CONN.json` must record `sourceCommit`, `testedCommit`, branch, authorization record, plan commit, each endpoint case, target ObjectId, actual target ObjectKind/kindVersion, connectability decision, anchor type, StablePort identity (target kind, target kindVersion, portId), StatefulIssue, both start/end precedence cases, staged target visibility, Reference/Indexed parity, lookup measurements, no-mutation proof, and the A/B structural-boundary statement. It may reference A regression evidence for `portId` 0 and `>= 5`, but must not claim ownership of those A rejections.
 
 **Non-goals:** No route computation, renderer hit testing, geometry-derived anchor mutation, C golden expected outcome, or connector persistence.
 
