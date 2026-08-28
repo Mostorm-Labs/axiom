@@ -36,9 +36,11 @@ OperationEngine to retain ever-seen-ID historical truth.
 
 ## 4. New-OperationId identity predicate
 
-For a new OperationId, each RestoreObjects candidate ObjectId must be absent from the current
-canonical ObjectStore state and from the staged resulting state. If any candidate ObjectId already
-exists, the complete operation is rejected as ObjectAlreadyExists.
+For a new OperationId, each RestoreObjects candidate ObjectId must first be absent from the
+current canonical ObjectStore apply-base state. The candidate records are then staged, and the
+complete resulting staged state is validated for hierarchy, references, capability, and
+operation-specific invariants. If any candidate ObjectId already exists in the apply-base state,
+the complete operation is rejected as ObjectAlreadyExists.
 
 This rule applies when the existing ObjectRecord is byte-for-byte or semantically equal to the
 candidate as well as when it differs:

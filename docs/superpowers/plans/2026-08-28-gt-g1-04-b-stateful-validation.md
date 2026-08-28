@@ -99,7 +99,7 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 - Create `runtime/semantic/include/canvas/semantic/stateful_validation.hpp` and `runtime/semantic/src/stateful_validation.cpp` for `StatefulValidationContext`, `StatefulIssue`, `StatefulResult`, and read-only lookup adapters.
 - Create `runtime/semantic/include/canvas/semantic/staged_object_view.hpp` and `runtime/semantic/src/staged_object_view.cpp` for an overlay containing existing records plus planned creates/replacements/deletes, with deterministic ObjectId enumeration.
-- Create `runtime/semantic/include/canvas/semantic/operation_fingerprint.hpp` and `runtime/semantic/src/operation_fingerprint.cpp` for an encoding-neutral canonical fingerprint of a normalized typed Operation; it must not expose generated protobuf types or change wire schema.
+- Create `runtime/semantic/include/canvas/semantic/operation_fingerprint.hpp` and `runtime/semantic/src/operation_fingerprint.cpp` for an encoding-neutral canonical fingerprint plus typed semantic-equality helper for a normalized typed Operation; it must not expose generated protobuf types or change wire schema.
 - Modify `runtime/semantic/CMakeLists.txt` to compile the three new sources.
 - Test (Create) `runtime/semantic/tests/stateful_context_test.cpp` and `runtime/semantic/tests/staged_object_view_test.cpp`.
 
@@ -108,7 +108,9 @@ The decomposition keeps shared state resolution separate from operation-specific
 **Interfaces produced:**
 
 - `using OperationFingerprint = std::vector<std::uint8_t>; OperationFingerprint fingerprintOperation(const Operation& normalized);`
-- `class AppliedOperationView { virtual ~AppliedOperationView(); virtual std::optional<OperationFingerprint> find(const OperationId&) const = 0; }` (the B0 read-only seam; B1 supplies classification logic over it)
+- `bool canonicalPayloadEqual(const Operation& lhs, const Operation& rhs) noexcept;` comparing the normalized typed semantic projection (document/version fields and payload) and excluding OperationId, source metadata, ApplySource, and transport metadata.
+- `struct AppliedOperationEntry { Operation canonical_operation; std::optional<OperationFingerprint> fingerprint; };`
+- `class AppliedOperationView { virtual ~AppliedOperationView(); virtual std::optional<AppliedOperationEntry> find(const OperationId&) const = 0; }` (the B0 read-only seam; B1 supplies classification logic over it; the canonical operation is required for typed exact comparison)
 - `struct StatefulValidationContext { const ObjectStore& objects; const AppliedOperationView& applied_operations; };`
 - `class StagedObjectView { contains(id); find(id); allObjects(); children(parent); stageCreate(record); stageReplace(record); stageDelete(id); projection(); }` where all returned collections are ObjectId-deterministic.
 - `enum class StatefulIssue { kNone, kObjectMissing, kObjectAlreadyExists, kInvalidKindVersion, kInvalidApplicability, kInvalidReference, kHierarchyCycle, kConnectorInvalid, kMaskStateInvalid, kTextStateInvalid, kOperationIdCollision };`
@@ -161,7 +163,7 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 **RED tests and expected failure:** Add `NewIdIsNotFound`, `EquivalentPayloadIsAlreadyApplied`, `DifferentPayloadIsCollision`, and `RestoreEquivalentReplayStopsBeforeCollisionCheck`. They initially fail to compile because `idempotency.hpp` and the classifier are absent.
 
-**Implementation obligations:** Compute the fingerprint from the normalized typed Operation; compare only the canonical fingerprint stored for the exact OperationId; return `kAlreadyApplied` without reading ObjectStore; return `kCollision` for any different fingerprint; do not insert into the applied-operation view or mutate any state.
+**Implementation obligations:** Look up the exact OperationId, then compare the normalized canonical semantic payload with `canonicalPayloadEqual` using typed exact equality. A stored fingerprint/digest may accelerate the decision: a hash mismatch is `kCollision`, while a hash match MUST still perform typed exact equality. Never use raw transport bytes, protobuf incidental serialization ordering, source metadata, ApplySource, or transport metadata as the correctness authority. Return `kAlreadyApplied` only after typed equality; return `kCollision` for typed inequality; return `kAlreadyApplied` without reading ObjectStore; and do not insert into the applied-operation view or mutate any state.
 
 **GREEN verification:** Focused idempotency tests pass; an instrumented ObjectStore confirms equivalent replay performs zero lookups; the result is identical for LocalUndo, Replay, and Remote source labels because source metadata is outside this API.
 
@@ -342,10 +344,10 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 **Interfaces produced:**
 
-- `struct DeleteClosure { std::vector<ObjectId> object_ids; };`
+- `struct DeleteClosure { std::vector<ObjectId> requested_delete_ids; std::vector<ObjectId> resolved_hierarchy_closure; std::vector<ObjectId> resolved_connector_cascade_closure; std::vector<ObjectId> final_delete_set; };`
 - `StatefulResult resolveDeleteClosure(const StagedObjectView&, std::span<const ObjectId>, DeleteClosure* out);`
 
-**RED tests and expected failure:** Add leaf delete, nested subtree, multiple roots, missing delete target, connector attached to a direct target, connector attached to a descendant, connector that points to two deleted targets, and a connector chain requiring more than one fixed-point iteration. They fail because closure interfaces are absent.
+**RED tests and expected failure:** Add named tests for (1) a direct target referenced by a Connector, (2) a descendant target referenced by a Connector, (3) multiple Connectors referencing one deleted target, (4) one Connector whose two endpoints both hit the delete set and is deduplicated once, (5) repeated closure evaluation producing the same final set, and (6) input-order permutation producing the same closure. Do not construct Connector-to-Connector attachment chains: V1 Connectable kinds are Shape v1, Image v1, and Sticky v1, so Connector is not a legal Connector target. They fail because closure interfaces are absent.
 
 **Implementation obligations:** Start with requested existing IDs; add all descendants; repeatedly scan only the necessary connector relation until no new Connector ID is added; return unique ObjectIds sorted by unsigned identity bytes; reject a missing requested target; do not include unrelated free/free connectors; do not mutate the store.
 
@@ -353,7 +355,7 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 **Oracle/differential:** Compare against an independent graph traversal fixture and require Reference/Indexed equality. Instrument Indexed lookup to ensure hierarchy traversal uses its index rather than an ObjectId full scan.
 
-**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-DELETE.json` with requested IDs, descendants, connector additions per iteration, and final closure.
+**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-DELETE.json` with deterministic requested IDs, hierarchy closure, connector cascade closure (including additions per iteration), and final delete set.
 
 **Non-goals:** No actual erase, ChangeSet deleted flags, history before-images, generation, or publication.
 
@@ -365,7 +367,7 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 **Performance constraints:** Hierarchy traversal uses the children index; connector closure iterates until a stable fixed point and emits sorted unique IDs.
 
-**Required final report:** Report requested roots, descendant set, connector additions by iteration, final sorted closure, and store parity.
+**Required final report:** Report the deterministic `requested_delete_ids`, `resolved_hierarchy_closure`, `resolved_connector_cascade_closure`, and `final_delete_set` projections, connector additions by fixed-point iteration, and Reference/Indexed store parity.
 
 ---
 
@@ -409,7 +411,7 @@ The decomposition keeps shared state resolution separate from operation-specific
 
 These tests initially fail because the restore planner and the B idempotency/state interfaces are absent.
 
-**Implementation obligations:** Apply B1 first; for a new ID require every candidate ObjectId to be absent in current and staged state; validate all records and references in one staged graph; allow same-payload target+Connector restoration; reject Connector-only restoration; never compare against or create tombstone metadata; treat same-record collision exactly like different-record collision; preserve whole-op atomicity and deterministic create ordering.
+**Implementation obligations:** Apply B1 first; for a new ID require every candidate ObjectId to be absent in the current/apply-base ObjectStore first, then stage all candidate records and validate the complete resulting staged state; allow same-payload target+Connector restoration; reject Connector-only restoration; never compare against or create tombstone metadata; treat same-record collision exactly like different-record collision; preserve whole-op atomicity and deterministic create ordering.
 
 **GREEN verification:** All RST-B01..B12 pass for Reference and Indexed stores; operation-source parameterization proves equal results; an instrumented applied-operation view proves RST-B08 performs no existence lookup.
 
@@ -433,7 +435,7 @@ These tests initially fail because the restore planner and the B idempotency/sta
 
 ## Task Package B7 — Remaining Operation-Specific Stateful Validators
 
-**Purpose:** Add state-dependent rules for the ten non-delete/non-restore families while reusing B2–B4 primitives and preserving operation-specific reviewability.
+**Purpose:** Add state-dependent rules for the thirteen non-delete/non-restore families while reusing B2–B4 primitives and preserving operation-specific reviewability.
 
 **Authority references:** Operation Payload Validation; ObjectKind and Field registries; RichText wire/font authority; Brush/Stroke and EraseMask authorities; Image/Object Content authorities; Connector authority for SetConnectorContent.
 
@@ -509,7 +511,7 @@ Each function consumes a const state view and writes only operation-specific pla
 **Interfaces produced:**
 
 - `enum class PrepareDisposition { kPrepared, kAlreadyApplied, kRejected };`
-- `struct PreparedApplyPlan { Operation operation; PrepareDisposition disposition; std::vector<ObjectRecord> creates; std::vector<ObjectRecord> replacements; std::vector<ObjectId> deletes; std::vector<ObjectId> touched_objects; std::vector<std::uint32_t> touched_fields; };`
+- `struct PreparedApplyPlan { Operation operation; PrepareDisposition disposition; std::vector<ObjectRecord> creates; std::vector<ObjectRecord> replacements; std::vector<ObjectId> requested_delete_ids; std::vector<ObjectId> resolved_hierarchy_closure; std::vector<ObjectId> resolved_connector_cascade_closure; std::vector<ObjectId> final_delete_set; std::vector<ObjectId> touched_objects; std::vector<std::uint32_t> touched_fields; };`
 - `struct PrepareResult { PrepareDisposition disposition; StatefulResult error; std::optional<PreparedApplyPlan> plan; };`
 - `PrepareResult prepareApplyPlan(const Operation&, const StatefulValidationContext&);`
 - `class OperationEngine final { public: PrepareResult prepare(const Operation&, const StatefulValidationContext&) const; };`
@@ -524,7 +526,7 @@ Each function consumes a const state view and writes only operation-specific pla
 
 **Oracle/differential:** Compare plan projection against an independent plan recorder containing only expected IDs/records/fields. Do not treat the production plan serializer as a golden authority.
 
-**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-PLAN.json` with disposition, deterministic projection digest, stage trace, and proof that no commit-side field exists.
+**Evidence artifact:** `verification/evidence/gates/G1/<commit>/GT-G1-04-B/B-PLAN.json` with disposition, deterministic projection digest, stage trace, explicit requested/hierarchy/connector-cascade/final-delete partitions, and proof that no commit-side field exists.
 
 **Non-goals:** Atomic Apply, SemanticDocument ownership, revision/generation, ChangeSet, CanonicalCommitStamp, History, DataBridge, Outbox, local echo, or GT-G1-05 integration.
 
@@ -560,7 +562,7 @@ Each function consumes a const state view and writes only operation-specific pla
 
 **RED tests and expected failure:** Add replayed traces covering inserts, placements, connector references, delete cascades, restore batches, mask/text state, and all fifteen operation names. Before B8 exists they fail because no planning facade is available; after B8, deliberately inject a divergent indexed/reference fixture and require the test to expose the mismatch.
 
-**Implementation obligations:** Seed identical canonical records through the existing internal test/bootstrap seam; run the same normalized Operations; compare disposition, issue, sorted creates/replacements/deletes/touched IDs/fields, and unchanged base projection; separately assert indexed lookup instrumentation does not perform ObjectId full scans on single-target paths.
+**Implementation obligations:** Seed identical canonical records through the existing internal test/bootstrap seam; run the same normalized Operations; compare disposition, issue, sorted creates/replacements/requested-delete IDs/hierarchy closure/connector-cascade closure/final delete set/touched IDs/fields, and unchanged base projection; separately assert indexed lookup instrumentation does not perform ObjectId full scans on single-target paths.
 
 **GREEN verification:** Differential test passes for deterministic fixtures and randomized bounded traces; any mismatch reports the first operation index, OperationId, semantic path, and store side.
 
@@ -621,7 +623,7 @@ Each function consumes a const state view and writes only operation-specific pla
 
 **Performance constraints:** Matrix/evidence generation is deterministic and bounded; it must not require renderer, network, storage, or cloud services.
 
-**Required final report:** Report the exact source/evidence commit pair, 15/15 operation coverage, RST-B01..RST-B12 mapping, ten evidence families, no-mutation result, differential result, and `P32 = NOT AUTHORIZED`.
+**Required final report:** Report the exact source/evidence commit pair, the independent P32 Authorization Record/baseline used for execution, 15/15 operation coverage, RST-B01..RST-B12 mapping, all ten evidence families, no-mutation result, differential result, `GT-G1-04-B implementation/evidence = READY_FOR_P34_REVIEW`, `GT-G1-04-C = NOT AUTHORIZED / DEFERRED`, `GT-G1-05 = NOT AUTHORIZED`, and that P34 retains the final Gate verdict.
 
 ---
 
