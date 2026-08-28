@@ -52,6 +52,35 @@ std::vector<ObjectId> oracleDesc(const std::map<ObjectId, std::optional<ObjectId
     walk(root); std::sort(out.begin(), out.end()); return out;
 }
 
+StatefulIssue oracleIssue(const std::map<ObjectId, std::optional<ObjectId>>& parents,
+                          const std::vector<HierarchyEdit>& edits) {
+    auto model = parents;
+    for (const auto& edit : edits) {
+        if (!model.contains(edit.object_id)) return StatefulIssue::kObjectMissing;
+        model[edit.object_id] = edit.placement.parent_id;
+    }
+    for (const auto& [id, parent] : model) {
+        if (parent && !model.contains(*parent)) return StatefulIssue::kInvalidReference;
+        std::set<ObjectId> seen;
+        auto cur = id;
+        while (true) {
+            if (!seen.insert(cur).second) return StatefulIssue::kHierarchyCycle;
+            const auto it = model.find(cur);
+            if (it == model.end() || !it->second) break;
+            cur = *it->second;
+        }
+    }
+    return StatefulIssue::kNone;
+}
+
+TEST(HierarchyValidation, IndependentParentModelOracleMatchesRepresentativeCases) {
+    const std::map<ObjectId, std::optional<ObjectId>> model{{ObjectId::fromUint64(1), std::nullopt}, {ObjectId::fromUint64(2), ObjectId::fromUint64(1)}, {ObjectId::fromUint64(3), ObjectId::fromUint64(2)}};
+    ReferenceObjectStore base; insert(base, rec(1)); insert(base, rec(2, ObjectId::fromUint64(1))); insert(base, rec(3, ObjectId::fromUint64(2)));
+    StagedObjectView staged(base);
+    const std::vector<std::vector<HierarchyEdit>> cases{{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(99), OrderKey({1U})}}}, {{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}, {{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(3), OrderKey({1U})}}, {ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}, {ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}}};
+    for (const auto& edits : cases) EXPECT_EQ(validateStagedHierarchy(staged, edits).issue, oracleIssue(model, edits));
+}
+
 TEST(HierarchyValidation, RootAndExistingParentValid) {
     ReferenceObjectStore base;
     insert(base, rec(1));
