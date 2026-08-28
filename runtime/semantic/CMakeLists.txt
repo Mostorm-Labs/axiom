@@ -13,6 +13,7 @@ add_library(canvas_runtime_semantic STATIC
     src/connector_validation.cpp
     src/stateful_validation.cpp
     src/validator.cpp
+    src/delete_closure.cpp
     src/codec.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)
 target_link_libraries(canvas_runtime_semantic PUBLIC canvas_runtime_foundation)
