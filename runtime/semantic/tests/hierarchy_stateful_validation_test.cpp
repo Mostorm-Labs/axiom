@@ -151,9 +151,9 @@ TEST(HierarchyValidation, ThreeNodeAndUntouchedAncestorCycles) {
 
 TEST(HierarchyValidation, DanglingUntouchedAncestorReturnsInvalidReference) {
     ReferenceObjectStore base;
-    insert(base, rec(1, ObjectId::fromUint64(99)));
+    insert(base, rec(1, ObjectId::fromUint64(99))); insert(base, rec(2, ObjectId::fromUint64(1)));
     StagedObjectView staged(base);
-    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{std::nullopt, OrderKey({1U})}}}).issue, StatefulIssue::kInvalidReference);
+    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}).issue, StatefulIssue::kInvalidReference);
 }
 
 TEST(HierarchyValidation, CountingStoreAvoidsAllObjectsAndUsesChildren) {
