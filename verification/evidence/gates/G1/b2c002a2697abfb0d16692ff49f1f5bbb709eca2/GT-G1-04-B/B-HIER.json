@@ -1,8 +1,8 @@
 {
   "format": "G1 hierarchy-validation evidence v1",
   "task": "GT-G1-04-B / B3 staged hierarchy validation",
-  "source_commit": "fa7f9a0ba6b47ae1263c3b1b0138846f40a914b6",
-  "tested_commit": "5ce4805",
+  "source_commit": "b2c002a2697abfb0d16692ff49f1f5bbb709eca2",
+  "tested_commit": "9da5e27",
   "branch": "codex/gt-g1-04-operation-apply",
   "authorization_record": "3ca4c57a-590c-8101-a11d-f1d4c24ebb65",
   "plan_record": "91314a05008e2e7357414958779221cdbb7aeaf1",
@@ -29,7 +29,7 @@
   "test_commands": [
     {
       "command": "cmake -S . -B /tmp/axiom-b3-build.tlDlT7 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b3-build.tlDlT7 --target canvas_semantic_hierarchy_stateful_validation_test -j2 && /tmp/axiom-b3-build.tlDlT7/runtime/semantic/tests/canvas_semantic_hierarchy_stateful_validation_test --gtest_color=no",
-      "result": "pass: 11/11 tests"
+      "result": "pass: 12/12 tests"
     },
     {
       "command": "python3 tools/check_runtime_boundaries.py --root .",
@@ -50,9 +50,9 @@
     "no_push": true
   },
   "verification_summary": {
-    "focused_b3": "PASS 11/11",
+    "focused_b3": "PASS 12/12",
     "regression_filter": "PASS 44/44",
-    "full_semantic_ctest": "PASS 127, FAIL 0, SKIP 12 (protobuf-off)",
+    "full_semantic_ctest": "TOTAL 143, PASS 131, FAIL 0, SKIP 12 (protobuf-off)",
     "runtime_boundaries": "PASS 48",
     "docs_check": "PASS 273",
     "diff_check": "PASS"
