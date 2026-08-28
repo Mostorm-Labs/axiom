@@ -1,0 +1,121 @@
+{
+  "format": "axiom-gt-g1-04-b-b1-idempotency-evidence-v1",
+  "taskId": "GT-G1-04-B/B1",
+  "sourceCommit": "e81665ca27f76d91057241a235df8c77b61c364c",
+  "testedCommit": "e81665ca27f76d91057241a235df8c77b61c364c",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "baseline": {
+    "startingHead": "a5afafc489ce16364f7afe41e26792e1f8542a93",
+    "b0Source": "bab672b5862f8f688d780bc5507598f465d142c8",
+    "b0Evidence": "a5afafc489ce16364f7afe41e26792e1f8542a93"
+  },
+  "authority": {
+    "b1AuthorizationRecord": "3ca4c57a-590c-81f8-9ed7-f3afd119ac66",
+    "parentP32Authorization": "3ca4c57a-590c-8187-ad93-e61f772b5525",
+    "plan": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md",
+    "commonWireRules": "docs/notion/authority/04-semantic-schema/03-wire-contract/common-wire-rules-v0.1.md",
+    "operationRuntimeFlow": "docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md",
+    "restoreAuthority": "docs/notion/authority/04-semantic-schema/02-operation-model/restoreobjects-identity-state-tombstone-eligibility-v1-authority-closure-v0.1.md"
+  },
+  "redEvidence": {
+    "observedBeforeProductionImplementation": true,
+    "command": "cmake -S . -B out/g1-debug -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON && cmake --build out/g1-debug --target canvas_semantic_idempotency_test -j2",
+    "exitCode": 1,
+    "reason": "The B1 public header/classifier did not exist; the expected missing-idempotency API failure was observed."
+  },
+  "decisionTable": {
+    "lookupKey": "Operation.id",
+    "missingId": "kNew",
+    "sameIdTypedCanonicalEquality": "kAlreadyApplied",
+    "sameIdTypedCanonicalInequality": "kCollision",
+    "lookupCount": "exactly one AppliedOperationView::find per classification"
+  },
+  "cases": {
+    "NewIdIsNotFound": "PASS: kNew; one applied-operation lookup",
+    "EquivalentPayloadIsAlreadyApplied": "PASS: kAlreadyApplied; canonicalPayloadEqual",
+    "DifferentPayloadIsCollision": "PASS: kCollision; nested payload difference",
+    "OperationIdLookupControlsIdentity": "PASS: same payload under different ID is kNew",
+    "EnvelopeSemanticDifferenceCollides": "PASS: payload_version difference is kCollision",
+    "EquivalentRestoreReplayStopsAtIdempotency": "PASS: kAlreadyApplied with no ObjectStore input",
+    "NewOperationIdSameRestorePayloadIsNew": "PASS: kNew",
+    "NoAppliedViewMutation": "PASS: entries and fingerprints unchanged"
+  },
+  "typedEquality": {
+    "function": "canonicalPayloadEqual",
+    "authority": "B0 normalized typed semantic projection and typed exact equality",
+    "operationIdExcluded": true,
+    "rawBytesUsed": false,
+    "fingerprintImplemented": false,
+    "fingerprintRole": "optional acceleration only; not used by B1"
+  },
+  "lookupAndMutation": {
+    "appliedOperationLookups": "one exact-ID lookup per invocation",
+    "objectStoreDependency": "absent from public classifier API and classifier logic",
+    "objectStoreLookups": "structurally impossible through the B1 signature; B0 seam header retains a pre-existing transitive include",
+    "appliedOperationViewBeforeAfter": "equal; classifier performs no insert, replace, consume, or cursor advance",
+    "canonicalStateMutation": false
+  },
+  "tests": {
+    "focused": {
+      "command": "ctest --test-dir out/g1-debug -R 'Idempotency' --output-on-failure",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "b0StoreARegression": {
+      "command": "ctest --test-dir out/g1-debug -R 'StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|ALane|canvas_semantic_runtime_boundaries' --output-on-failure",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "fullSemantic": {
+      "command": "ctest --test-dir out/g1-debug --output-on-failure",
+      "total": 119,
+      "passed": 107,
+      "failed": 0,
+      "skipped": 12,
+      "skipReason": "protobuf-off configuration; skipped tests are not counted as passes",
+      "exitCode": 0
+    },
+    "runtimeBoundaries": {
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "result": "PASS",
+      "exitCode": 0
+    },
+    "docs": {
+      "command": "python3 tools/check_docs.py",
+      "result": "PASS: validated 268 Markdown files",
+      "exitCode": 0
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exitCode": 0
+    }
+  },
+  "scopeGuard": {
+    "authorizedFilesOnly": true,
+    "changedSinceBaseline": [
+      "runtime/semantic/CMakeLists.txt",
+      "runtime/semantic/include/canvas/semantic/idempotency.hpp",
+      "runtime/semantic/src/idempotency.cpp",
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/idempotency_test.cpp"
+    ],
+    "b2Started": false,
+    "preparedApplyPlan": "absent",
+    "operationEnginePlanning": "absent",
+    "objectStoreMutation": false,
+    "fingerprintImplementation": false,
+    "tombstoneOrHistory": false,
+    "wireSchemaChanges": false,
+    "gtG104C": "deferred",
+    "gtG105": "not authorized"
+  },
+  "unrelatedUntrackedData": [
+    "pocs/shared_engine/reports/poc01/android-visual-smoke/"
+  ],
+  "blockingReasons": []
+}
