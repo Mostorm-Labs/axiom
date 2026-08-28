@@ -1,0 +1,84 @@
+{
+  "format": "axiom-gt-g1-04-b-b0-p36-reverification-evidence-v1",
+  "taskId": "GT-G1-04-B/B0",
+  "sourceCommit": "bab672b5862f8f688d780bc5507598f465d142c8",
+  "testedCommit": "bab672b5862f8f688d780bc5507598f465d142c8",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "supersedesEvidenceForReviewPurpose": {
+    "historicalSource": "4bed3cb89df3c97f635b4ca9dd2e3f33bb955b17",
+    "historicalEvidence": "f0a810edd3c05c42901cea59db2e8c56ff45268b"
+  },
+  "authorityBaseline": {
+    "p32AuthorizationRecord": "3ca4c57a-590c-8189-b249-ef471e620112",
+    "p32Baseline": "b3e1c2f25cd14b08851b0cf8ed65c9a05258efc8",
+    "plan": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md"
+  },
+  "reviewFindings": {
+    "B0-R01": "CLOSED",
+    "B0-R02": "CLOSED",
+    "B0-R03": "CLOSED"
+  },
+  "redEvidence": {
+    "command": "cmake -S . -B out/g1-debug -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON && cmake --build out/g1-debug --target canvas_semantic_stateful_context_test canvas_semantic_staged_object_view_test -j2",
+    "exitCode": 1,
+    "reason": "StatefulIssue and StatefulResult were absent; the pre-repair children implementation also had no lookup instrumentation coverage."
+  },
+  "statefulResult": {
+    "issueVocabulary": [
+      "kNone", "kObjectMissing", "kObjectAlreadyExists", "kInvalidKindVersion",
+      "kInvalidApplicability", "kInvalidReference", "kHierarchyCycle", "kConnectorInvalid",
+      "kMaskStateInvalid", "kTextStateInvalid", "kOperationIdCollision"
+    ],
+    "okSemantics": "issue == kNone",
+    "stableCErrorTaxonomy": "not introduced"
+  },
+  "lookupInstrumentation": {
+    "adapter": "test-only CountingObjectStore; ObjectStore ABI unchanged",
+    "children": {"childrenCalls": 1, "allObjectsCalls": 0},
+    "find": {"allObjectsCalls": 0},
+    "contains": {"allObjectsCalls": 0},
+    "movedReplacement": {"childrenParentPAllObjectsCalls": 0, "childrenParentQAllObjectsCalls": 0},
+    "projection": {"allObjectsAllowed": true, "reason": "full staged projection API"}
+  },
+  "stagedView": {
+    "childrenImplementation": "base_.children(parent) reconciled with deletes, same-parent replacements, moved-in replacements, and creates",
+    "projectionAlgorithm": "ordered base projection merged with ordered create/replacement/delete deltas",
+    "deterministicOrdering": "ObjectId for projection; Placement.OrderKey then ObjectId for children",
+    "movedParentReplacement": "PASS",
+    "createReplaceDeleteIsolation": "PASS"
+  },
+  "typedEquality": {
+    "authority": "normalized typed semantic projection + typed exact equality",
+    "operationIdExcluded": true,
+    "fingerprint": {"implemented": false, "role": "optional acceleration only"}
+  },
+  "referenceIndexedParity": "PASS",
+  "noMutation": {
+    "reference": "before projection equals after projection",
+    "indexed": "before projection equals after projection",
+    "objectIndex": "rebuild comparison PASS"
+  },
+  "commands": {
+    "focused": "ctest --test-dir out/g1-debug -R 'StatefulValidationContext|StagedObjectView' --output-on-failure",
+    "regression": "ctest --test-dir out/g1-debug -R 'ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|ALane|runtime_boundaries' --output-on-failure",
+    "fullSemantic": "ctest --test-dir out/g1-debug --output-on-failure",
+    "boundaries": "python3 tools/check_runtime_boundaries.py --root .",
+    "docs": "python3 tools/check_docs.py",
+    "diffCheck": "git diff --check"
+  },
+  "tests": {
+    "focused": {"passed": 15, "failed": 0},
+    "regression": {"passed": 24, "failed": 0},
+    "fullSemantic": {"total": 110, "passed": 98, "failed": 0},
+    "skipped": {"count": 12, "reason": "protobuf-off configuration; not counted as pass"}
+  },
+  "scopeGuard": {
+    "B1": "NOT_STARTED",
+    "preparedApplyPlan": "absent",
+    "operationEngine": "absent",
+    "canonicalMutation": "absent",
+    "wireSchemaChanges": "none"
+  },
+  "blockingReasons": [],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+}
