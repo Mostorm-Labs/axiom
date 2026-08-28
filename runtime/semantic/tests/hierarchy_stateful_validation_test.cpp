@@ -44,11 +44,11 @@ class CountingStore final : public ObjectStore {
   private: const ObjectStore& delegate_;
 };
 
-std::vector<ObjectId> oracleDesc(const ObjectStore& store, ObjectId root) {
-    std::map<ObjectId, std::vector<ObjectId>> children;
-    for (const auto& r : store.allObjects()) children[r.placement.parent_id.value_or(ObjectId{})].push_back(r.id);
+std::vector<ObjectId> oracleDesc(const std::map<ObjectId, std::optional<ObjectId>>& parents, ObjectId root) {
     std::vector<ObjectId> out;
-    std::function<void(ObjectId)> walk = [&](ObjectId p) { for (auto id : children[p]) { out.push_back(id); walk(id); } };
+    std::function<void(ObjectId)> walk = [&](ObjectId p) {
+        for (const auto& [id, parent] : parents) if (parent == p) { out.push_back(id); walk(id); }
+    };
     walk(root); std::sort(out.begin(), out.end()); return out;
 }
 
@@ -122,8 +122,28 @@ TEST(HierarchyValidation, CountingStoreAvoidsAllObjectsAndUsesChildren) {
     CountingStore counting(base); StagedObjectView staged(counting);
     EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(1), Placement{std::nullopt, OrderKey({1U})}}}).ok());
     EXPECT_EQ(counting.all_objects_calls, 0U);
-    EXPECT_EQ(resolveDescendants(staged, ObjectId::fromUint64(1)), oracleDesc(base, ObjectId::fromUint64(1)));
+    const std::map<ObjectId, std::optional<ObjectId>> model{{ObjectId::fromUint64(1), std::nullopt}, {ObjectId::fromUint64(2), ObjectId::fromUint64(1)}};
+    EXPECT_EQ(resolveDescendants(staged, ObjectId::fromUint64(1)), oracleDesc(model, ObjectId::fromUint64(1)));
     EXPECT_EQ(counting.all_objects_calls, 0U); EXPECT_GT(counting.children_calls, 0U);
+}
+
+TEST(HierarchyValidation, DescendantsObserveCreateDeleteReparentAndIndexedParity) {
+    ReferenceObjectStore reference; IndexedObjectStore indexed;
+    for (const auto& r : {rec(1), rec(2, ObjectId::fromUint64(1)), rec(3, ObjectId::fromUint64(1))}) { insert(reference, r); insert(indexed, r); }
+    StagedObjectView a(reference), b(indexed);
+    ASSERT_TRUE(a.stageCreate(rec(4, ObjectId::fromUint64(1)))); ASSERT_TRUE(b.stageCreate(rec(4, ObjectId::fromUint64(1))));
+    ASSERT_TRUE(a.stageDelete(ObjectId::fromUint64(2))); ASSERT_TRUE(b.stageDelete(ObjectId::fromUint64(2)));
+    ASSERT_TRUE(a.stageReplace(rec(3, std::nullopt))); ASSERT_TRUE(b.stageReplace(rec(3, std::nullopt)));
+    EXPECT_EQ(resolveDescendants(a, ObjectId::fromUint64(1)), (std::vector<ObjectId>{ObjectId::fromUint64(4)}));
+    EXPECT_EQ(resolveDescendants(a, ObjectId::fromUint64(1)), resolveDescendants(b, ObjectId::fromUint64(1)));
+}
+
+TEST(HierarchyValidation, InputPermutationProducesSameDecision) {
+    ReferenceObjectStore base; insert(base, rec(1)); insert(base, rec(2)); insert(base, rec(3));
+    StagedObjectView staged(base);
+    const std::vector<HierarchyEdit> first{{ObjectId::fromUint64(1), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}, {ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(3), OrderKey({1U})}}, {ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}};
+    auto second = first; std::reverse(second.begin(), second.end());
+    EXPECT_EQ(validateStagedHierarchy(staged, first).issue, validateStagedHierarchy(staged, second).issue);
 }
 
 } // namespace
