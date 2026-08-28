@@ -84,7 +84,7 @@ TEST(HierarchyValidation, StagedCreatedParentChildAndDeletedParent) {
     ASSERT_TRUE(staged.stageCreate(rec(2, ObjectId::fromUint64(1)))); ASSERT_TRUE(staged.stageCreate(rec(3, ObjectId::fromUint64(2))));
     EXPECT_TRUE(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(3), Placement{ObjectId::fromUint64(2), OrderKey({1U})}}}).ok());
     ASSERT_TRUE(staged.stageDelete(ObjectId::fromUint64(1)));
-    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}).issue, StatefulIssue::kObjectMissing);
+    EXPECT_EQ(validateStagedHierarchy(staged, std::vector<HierarchyEdit>{{ObjectId::fromUint64(2), Placement{ObjectId::fromUint64(1), OrderKey({1U})}}}).issue, StatefulIssue::kInvalidReference);
 }
 
 TEST(HierarchyValidation, ThreeNodeAndUntouchedAncestorCycles) {
