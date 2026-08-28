@@ -15,23 +15,34 @@ const ObjectRecord* StagedObjectView::find(const ObjectId& id) const noexcept {
     return base_.find(id);
 }
 
-std::vector<ObjectRecord> StagedObjectView::materialize() const {
-    std::map<ObjectId, ObjectRecord> records;
-    for (const auto& record : base_.allObjects()) records.emplace(record.id, record);
-    for (const ObjectId& id : deletes_) records.erase(id);
-    for (const auto& [id, record] : replacements_) records[id] = record;
-    for (const auto& [id, record] : creates_) records[id] = record;
-
+std::vector<ObjectRecord> StagedObjectView::allObjects() const {
+    const std::vector<ObjectRecord> base_records = base_.allObjects();
     std::vector<ObjectRecord> result;
-    result.reserve(records.size());
-    for (auto& [id, record] : records) {
-        static_cast<void>(id);
-        result.push_back(std::move(record));
+    result.reserve(base_records.size() - std::min(base_records.size(), deletes_.size()) + creates_.size());
+
+    auto create_it = creates_.begin();
+    for (const ObjectRecord& base_record : base_records) {
+        if (deletes_.contains(base_record.id)) continue;
+        if (const auto replacement = replacements_.find(base_record.id); replacement != replacements_.end()) {
+            while (create_it != creates_.end() && create_it->first < base_record.id) {
+                result.push_back(create_it->second);
+                ++create_it;
+            }
+            result.push_back(replacement->second);
+        } else {
+            while (create_it != creates_.end() && create_it->first < base_record.id) {
+                result.push_back(create_it->second);
+                ++create_it;
+            }
+            result.push_back(base_record);
+        }
+    }
+    while (create_it != creates_.end()) {
+        result.push_back(create_it->second);
+        ++create_it;
     }
     return result;
 }
-
-std::vector<ObjectRecord> StagedObjectView::allObjects() const { return materialize(); }
 
 bool StagedObjectView::childBefore(const ObjectRecord& left, const ObjectRecord& right) {
     if (const auto order = left.placement.order_key <=> right.placement.order_key; order != 0) {
@@ -42,9 +53,28 @@ bool StagedObjectView::childBefore(const ObjectRecord& left, const ObjectRecord&
 
 std::vector<ObjectRecord> StagedObjectView::children(
     const std::optional<ObjectId>& parent_id) const {
-    std::vector<ObjectRecord> result;
-    for (auto& record : materialize()) {
-        if (record.placement.parent_id == parent_id) result.push_back(std::move(record));
+    std::vector<ObjectRecord> result = base_.children(parent_id);
+    result.erase(std::remove_if(result.begin(), result.end(), [&](const ObjectRecord& record) {
+                     return deletes_.contains(record.id) ||
+                            (replacements_.contains(record.id) &&
+                             replacements_.at(record.id).placement.parent_id != parent_id);
+                 }),
+                 result.end());
+    for (auto& record : result) {
+        if (const auto replacement = replacements_.find(record.id); replacement != replacements_.end()) {
+            record = replacement->second;
+        }
+    }
+    for (const auto& [id, record] : replacements_) {
+        const ObjectRecord* base_record = base_.find(id);
+        if (base_record != nullptr && base_record->placement.parent_id != parent_id &&
+            record.placement.parent_id == parent_id && !deletes_.contains(id)) {
+            result.push_back(record);
+        }
+    }
+    for (const auto& [id, record] : creates_) {
+        static_cast<void>(id);
+        if (record.placement.parent_id == parent_id) result.push_back(record);
     }
     std::sort(result.begin(), result.end(), childBefore);
     return result;

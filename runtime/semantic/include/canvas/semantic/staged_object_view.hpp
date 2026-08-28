@@ -25,7 +25,6 @@ class StagedObjectView final {
     [[nodiscard]] bool stageDelete(const ObjectId& id);
 
   private:
-    [[nodiscard]] std::vector<ObjectRecord> materialize() const;
     static bool childBefore(const ObjectRecord& left, const ObjectRecord& right);
 
     const ObjectStore& base_;

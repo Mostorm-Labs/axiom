@@ -4,9 +4,30 @@
 #include "canvas/semantic/operation.hpp"
 #include "canvas/semantic/operation_fingerprint.hpp"
 
+#include <cstdint>
 #include <optional>
 
 namespace canvas::semantic {
+
+enum class StatefulIssue : std::uint8_t {
+    kNone = 0,
+    kObjectMissing,
+    kObjectAlreadyExists,
+    kInvalidKindVersion,
+    kInvalidApplicability,
+    kInvalidReference,
+    kHierarchyCycle,
+    kConnectorInvalid,
+    kMaskStateInvalid,
+    kTextStateInvalid,
+    kOperationIdCollision,
+};
+
+struct StatefulResult final {
+    StatefulIssue issue = StatefulIssue::kNone;
+
+    [[nodiscard]] bool ok() const noexcept { return issue == StatefulIssue::kNone; }
+};
 
 struct AppliedOperationEntry final {
     Operation canonical_operation{};

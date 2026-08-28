@@ -28,6 +28,45 @@ void insert(Store& store, const ObjectRecord& value) {
     ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, value));
 }
 
+class CountingObjectStore final : public ObjectStore {
+  public:
+    explicit CountingObjectStore(const ObjectStore& delegate) : delegate_(delegate) {}
+
+    [[nodiscard]] std::size_t size() const noexcept override { return delegate_.size(); }
+    [[nodiscard]] bool contains(const ObjectId& id) const noexcept override {
+        ++contains_calls;
+        return delegate_.contains(id);
+    }
+    [[nodiscard]] const ObjectRecord* find(const ObjectId& id) const noexcept override {
+        ++find_calls;
+        return delegate_.find(id);
+    }
+    [[nodiscard]] std::vector<ObjectRecord> allObjects() const override {
+        ++all_objects_calls;
+        return delegate_.allObjects();
+    }
+    [[nodiscard]] std::vector<ObjectRecord> children(
+        const std::optional<ObjectId>& parent_id) const override {
+        ++children_calls;
+        return delegate_.children(parent_id);
+    }
+
+    void reset() const noexcept {
+        find_calls = 0U;
+        contains_calls = 0U;
+        children_calls = 0U;
+        all_objects_calls = 0U;
+    }
+
+    mutable std::size_t find_calls = 0U;
+    mutable std::size_t contains_calls = 0U;
+    mutable std::size_t children_calls = 0U;
+    mutable std::size_t all_objects_calls = 0U;
+
+  private:
+    const ObjectStore& delegate_;
+};
+
 } // namespace
 
 TEST(StagedObjectView, CreateIsVisibleOnlyThroughOverlay) {
@@ -148,6 +187,78 @@ TEST(StagedObjectView, StagingNeverMutatesBaseStoresOrObjectIndex) {
     EXPECT_EQ(reference.allObjects(), reference_before);
     EXPECT_EQ(indexed.allObjects(), indexed_before);
     EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(indexed));
+}
+
+TEST(StagedObjectView, MovedReplacementIsReconciledAcrossParentChildren) {
+    ReferenceObjectStore base;
+    const ObjectRecord parent_p = record(50U, std::nullopt, {0x10U});
+    const ObjectRecord parent_q = record(51U, std::nullopt, {0x20U});
+    const ObjectRecord child = record(52U, parent_p.id, {0x10U});
+    insert(base, parent_p);
+    insert(base, parent_q);
+    insert(base, child);
+
+    StagedObjectView overlay(base);
+    ObjectRecord moved = child;
+    moved.placement = Placement{parent_q.id, OrderKey({0x01U})};
+    ASSERT_TRUE(overlay.stageReplace(moved));
+
+    EXPECT_TRUE(overlay.children(parent_p.id).empty());
+    ASSERT_EQ(overlay.children(parent_q.id).size(), 1U);
+    EXPECT_EQ(overlay.children(parent_q.id).front(), moved);
+}
+
+TEST(StagedObjectView, ChildrenUsesIndexedBaseLookupWithoutAllObjectsScan) {
+    ReferenceObjectStore base;
+    const ObjectRecord parent = record(60U, std::nullopt, {0x10U});
+    const ObjectRecord child = record(61U, parent.id, {0x10U});
+    insert(base, parent);
+    insert(base, child);
+    CountingObjectStore counting(base);
+    StagedObjectView overlay(counting);
+
+    counting.reset();
+    const auto children = overlay.children(parent.id);
+    ASSERT_EQ(children.size(), 1U);
+    EXPECT_EQ(counting.children_calls, 1U);
+    EXPECT_EQ(counting.all_objects_calls, 0U);
+}
+
+TEST(StagedObjectView, FindAndContainsDoNotEnumerateBaseObjects) {
+    ReferenceObjectStore base;
+    const ObjectRecord existing = record(70U);
+    insert(base, existing);
+    CountingObjectStore counting(base);
+    StagedObjectView overlay(counting);
+
+    counting.reset();
+    ASSERT_NE(overlay.find(existing.id), nullptr);
+    EXPECT_EQ(counting.all_objects_calls, 0U);
+    counting.reset();
+    EXPECT_TRUE(overlay.contains(existing.id));
+    EXPECT_EQ(counting.all_objects_calls, 0U);
+}
+
+TEST(StagedObjectView, MovedReplacementChildrenAvoidAllObjectsScan) {
+    ReferenceObjectStore base;
+    const ObjectRecord parent_p = record(80U, std::nullopt, {0x10U});
+    const ObjectRecord parent_q = record(81U, std::nullopt, {0x20U});
+    const ObjectRecord child = record(82U, parent_p.id, {0x10U});
+    insert(base, parent_p);
+    insert(base, parent_q);
+    insert(base, child);
+    CountingObjectStore counting(base);
+    StagedObjectView overlay(counting);
+    ObjectRecord moved = child;
+    moved.placement = Placement{parent_q.id, OrderKey({0x01U})};
+    ASSERT_TRUE(overlay.stageReplace(moved));
+
+    counting.reset();
+    EXPECT_TRUE(overlay.children(parent_p.id).empty());
+    EXPECT_EQ(counting.all_objects_calls, 0U);
+    counting.reset();
+    ASSERT_EQ(overlay.children(parent_q.id).size(), 1U);
+    EXPECT_EQ(counting.all_objects_calls, 0U);
 }
 
 } // namespace canvas::semantic

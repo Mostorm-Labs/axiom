@@ -48,6 +48,28 @@ TEST(StatefulValidationContext, KeepsCanonicalStoreReadOnly) {
     EXPECT_EQ(indexed.allObjects(), indexed_before);
 }
 
+TEST(StatefulValidationContext, StatefulResultDefaultsToOkAndIssuesAreNonOk) {
+    const StatefulResult success{};
+    const StatefulResult failure{StatefulIssue::kObjectMissing};
+    EXPECT_TRUE(success.ok());
+    EXPECT_FALSE(failure.ok());
+
+    constexpr StatefulIssue required_issues[] = {
+        StatefulIssue::kNone,
+        StatefulIssue::kObjectMissing,
+        StatefulIssue::kObjectAlreadyExists,
+        StatefulIssue::kInvalidKindVersion,
+        StatefulIssue::kInvalidApplicability,
+        StatefulIssue::kInvalidReference,
+        StatefulIssue::kHierarchyCycle,
+        StatefulIssue::kConnectorInvalid,
+        StatefulIssue::kMaskStateInvalid,
+        StatefulIssue::kTextStateInvalid,
+        StatefulIssue::kOperationIdCollision,
+    };
+    EXPECT_EQ(sizeof(required_issues) / sizeof(required_issues[0]), 11U);
+}
+
 TEST(StatefulValidationContext, TypedEqualityExcludesOperationIdAndIncludesNestedPayload) {
     Operation left{};
     left.id = OperationId(ObjectId::fromUint64(1U));
