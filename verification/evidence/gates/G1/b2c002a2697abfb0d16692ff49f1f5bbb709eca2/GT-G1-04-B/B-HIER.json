@@ -6,8 +6,12 @@
   "branch": "codex/gt-g1-04-operation-apply",
   "authorization_record": "3ca4c57a-590c-8101-a11d-f1d4c24ebb65",
   "plan_record": "91314a05008e2e7357414958779221cdbb7aeaf1",
+  "supersedes_evidence_commit": "5fce101415c9b44ce6df665acfce32f88c9d2eba",
   "authority_refs": [
-    ".superpowers/sdd/2026-08-28-gt-g1-04-b-stateful-validation/task-B3-brief.md"
+    "notion:3ca4c57a-590c-8101-a11d-f1d4c24ebb65",
+    "github:docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md@91314a05008e2e7357414958779221cdbb7aeaf1",
+    "notion:3c44c57a-590c-81dc-9f65-ec33c8109492",
+    "notion:3c44c57a-590c-81b7-8f2c-e18ff60bb6c0"
   ],
   "red_provenance": {
     "command": "cmake -S . -B /tmp/axiom-b3-build.L5q7t2 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b3-build.L5q7t2 --target canvas_semantic_hierarchy_stateful_validation_test -j2",
@@ -41,13 +45,30 @@
     }
   ],
   "scope_guards": {
-    "authorized_paths_only": true,
+    "final_tree_authorized_paths_only": true,
+    "historical_transient_scope_occurrences": [
+      {
+        "commit": "a5985293cc31e46aa350424ee17d836c2724078a",
+        "path": ".superpowers/sdd/2026-08-28-gt-g1-04-b-stateful-validation/task-B3-report.md",
+        "classification": "transient_out_of_package_report",
+        "resolution_commit": "a9f013e377611692ba3a98d1f017513dd80d7be2",
+        "present_in_final_tree": false
+      }
+    ],
     "untouched_untracked_paths": [
       "build-b2/",
       "build-semantic-b2/",
       "pocs/shared_engine/reports/poc01/android-visual-smoke/"
     ],
-    "no_push": true
+    "execution_time_no_push": true,
+    "execution_time_no_push_note": "This describes the original source-bound execution occurrence, not current repository publication state."
+  },
+  "test_provenance": {
+    "results_are_historical_source_bound_execution": true,
+    "tested_commit": "9da5e276fa14e4a587f01daf362ad296da71c19b",
+    "current_p36_occurrence_changes_evidence_metadata_only": true,
+    "source_tests_rerun": false,
+    "note": "These are historical source-bound execution results for tested_commit 9da5e276fa14e4a587f01daf362ad296da71c19b. This P36 occurrence changes evidence metadata only and does not rerun source tests."
   },
   "verification_summary": {
     "focused_b3": "PASS 12/12",
