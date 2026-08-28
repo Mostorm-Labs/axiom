@@ -84,12 +84,10 @@ StatefulResult validateStablePortForTarget(
         return invalid(StatefulIssue::kConnectorInvalid);
     }
 
-    // The caller's A structural-validation precondition normally guarantees
-    // 1..4. Keep a defensive result for direct misuse without introducing a
-    // new issue or any port normalization/fallback behavior.
-    if (anchor.port_id < 1U || anchor.port_id > 4U) {
-        return invalid(StatefulIssue::kConnectorInvalid);
-    }
+    // The caller's A structural-validation precondition guarantees a released
+    // StablePort identity. B4 only evaluates target applicability and does not
+    // classify structurally invalid port IDs.
+    (void)anchor;
     return StatefulResult{};
 }
 

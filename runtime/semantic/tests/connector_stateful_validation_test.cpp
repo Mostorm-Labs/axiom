@@ -251,6 +251,20 @@ StatefulIssue runParityCase(Store& store, ObjectKind kind, std::uint32_t version
         .issue;
 }
 
+template <typename Store>
+StatefulIssue runStablePortParityCase(
+    Store& store, ObjectKind kind, std::uint32_t version, std::uint64_t target,
+    std::uint32_t port_id) {
+    if (target != 0U) insert(store, record(target, kind, version));
+    StagedObjectView staged(store);
+    return validateConnectorReferences(
+               staged,
+               content(attachedEndpoint(
+                           target == 0U ? 999U : target, StablePortAnchor{port_id}),
+                       freeEndpoint()))
+        .issue;
+}
+
 TEST(ConnectorStatefulValidation, ReferenceAndIndexedStoresHaveDecisionParity) {
     struct Case final {
         ObjectKind kind;
@@ -271,6 +285,33 @@ TEST(ConnectorStatefulValidation, ReferenceAndIndexedStoresHaveDecisionParity) {
             runParityCase(reference, test_case.kind, test_case.version, test_case.target);
         const StatefulIssue indexed_issue =
             runParityCase(indexed, test_case.kind, test_case.version, test_case.target);
+        EXPECT_EQ(reference_issue, test_case.expected);
+        EXPECT_EQ(indexed_issue, test_case.expected);
+        EXPECT_EQ(reference_issue, indexed_issue);
+    }
+}
+
+TEST(ConnectorStatefulValidation, ReferenceAndIndexedStoresHaveStablePortDecisionParity) {
+    struct Case final {
+        ObjectKind kind;
+        std::uint32_t version;
+        std::uint64_t target;
+        std::uint32_t port_id;
+        StatefulIssue expected;
+    };
+    const std::array<Case, 4> cases = {
+        Case{ObjectKind::kShape, 1U, 163U, 1U, StatefulIssue::kNone},
+        Case{ObjectKind::kShape, 1U, 0U, 2U, StatefulIssue::kInvalidReference},
+        Case{ObjectKind::kShape, 2U, 165U, 3U, StatefulIssue::kInvalidKindVersion},
+        Case{ObjectKind::kVectorPath, 1U, 166U, 4U, StatefulIssue::kConnectorInvalid}};
+
+    for (const Case& test_case : cases) {
+        ReferenceObjectStore reference;
+        IndexedObjectStore indexed;
+        const StatefulIssue reference_issue = runStablePortParityCase(
+            reference, test_case.kind, test_case.version, test_case.target, test_case.port_id);
+        const StatefulIssue indexed_issue = runStablePortParityCase(
+            indexed, test_case.kind, test_case.version, test_case.target, test_case.port_id);
         EXPECT_EQ(reference_issue, test_case.expected);
         EXPECT_EQ(indexed_issue, test_case.expected);
         EXPECT_EQ(reference_issue, indexed_issue);
