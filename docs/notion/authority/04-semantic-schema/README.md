@@ -17,17 +17,18 @@ This directory is the implementation-facing mirror of the Notion `04 Semantic Sc
 11. `01-object-schema/objectkind-version-registry-v1-release-v0.1.md`
 12. `02-operation-model/operation-payload-validation-v0.1.md`
 13. `02-operation-model/operation-structural-semantics-v1-closure-v0.1.md`
-14. `03-wire-contract/common-wire-rules-v0.1.md`
-15. `03-wire-contract/order-key-rfc-v0.1.md`
-16. `04-reference-idl/reference-idl-codec-mapping-v0.1.md`
-17. `04-reference-idl/leaf-schema-reconciliation-v0.1.md`
-18. `04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md`
-19. `04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md`
-20. `04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md`
-21. `05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md`
-22. `05-leaf-schemas/*`
-23. `06-release-safety/semantic-hard-limits-v0.1.md`
-24. `06-release-safety/geometry-aggregate-accounting-contract-v1-v0.1.md`（GT-G1-04-A geometry aggregate closure）
+14. `02-operation-model/restoreobjects-identity-state-tombstone-eligibility-v1-authority-closure-v0.1.md`（GT-G1-04-B RestoreObjects eligibility）
+15. `03-wire-contract/common-wire-rules-v0.1.md`
+16. `03-wire-contract/order-key-rfc-v0.1.md`
+17. `04-reference-idl/reference-idl-codec-mapping-v0.1.md`
+18. `04-reference-idl/leaf-schema-reconciliation-v0.1.md`
+19. `04-reference-idl/generated-proto-canonical-codec-freeze-v0.1.md`
+20. `04-reference-idl/richtext-stroke-semantic-wire-reconciliation-matrix-v0.1.md`
+21. `04-reference-idl/canonical-codec-golden-authority-closure-v0.1.md`
+22. `05-leaf-schemas/semantic-leaf-structural-validation-closure-v1-v0.1.md`
+23. `05-leaf-schemas/*`
+24. `06-release-safety/semantic-hard-limits-v0.1.md`
+25. `06-release-safety/geometry-aggregate-accounting-contract-v1-v0.1.md`（GT-G1-04-A geometry aggregate closure）
 
 ## Current G1-04 semantic freeze
 
@@ -50,6 +51,11 @@ A3 accounting remains stateless and must not read ObjectStore state.
 Together these authorities make A0–A3 implementation readiness reconcilable. They do **not**
 authorize GT-G1-04-B (stateful validation and ApplyPlan), GT-G1-04-C implementation (reviewed
 verification corpus/differential) or GT-G1-05.
+
+`02-operation-model/restoreobjects-identity-state-tombstone-eligibility-v1-authority-closure-v0.1.md`
+is a separate current P13 authority for GT-G1-04-B RestoreObjects identity-state eligibility. It
+closes the semantic tombstone/history proof question for that B rule only; it does not authorize
+GT-G1-04-A, GT-G1-04-C implementation, Atomic Apply, or GT-G1-05.
 
 The RichText + Stroke reconciliation matrix is a current defect/reconciliation authority. It
 does not supersede the RichText or Brush/Stroke leaf semantic owners; it records the required
