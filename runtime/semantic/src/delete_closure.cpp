@@ -1,6 +1,7 @@
 #include "canvas/semantic/delete_closure.hpp"
 
 #include "canvas/semantic/object_content.hpp"
+#include "delete_closure_internal.hpp"
 
 #include <algorithm>
 #include <map>
@@ -39,10 +40,14 @@ ReverseRelation buildReverseRelation(const StagedObjectView& staged) {
 
 } // namespace
 
-StatefulResult resolveDeleteClosure(
+namespace internal {
+
+StatefulResult resolveDeleteClosureWithTrace(
     const StagedObjectView& staged,
     std::span<const ObjectId> requested_ids,
-    DeleteClosure* out) {
+    DeleteClosure* out,
+    DeleteClosureTrace* trace) {
+    if (trace != nullptr) *trace = {};
     DeleteClosure result{};
     result.requested_delete_ids.assign(requested_ids.begin(), requested_ids.end());
 
@@ -59,6 +64,7 @@ StatefulResult resolveDeleteClosure(
     std::vector<ObjectId> frontier = result.requested_delete_ids;
 
     while (!frontier.empty()) {
+        DeleteClosureWave wave;
         std::vector<ObjectId> hierarchy_additions;
         for (const ObjectId& parent : frontier) {
             for (const ObjectRecord& child : staged.children(parent)) {
@@ -88,6 +94,13 @@ StatefulResult resolveDeleteClosure(
         frontier = hierarchy_additions;
         frontier.insert(frontier.end(), connector_additions.begin(), connector_additions.end());
         sortUnique(frontier);
+        if (trace != nullptr) {
+            ++trace->fixed_point_waves;
+            trace->reverse_relation_lookups += relevant.size();
+            wave.hierarchy_additions = hierarchy_additions;
+            wave.connector_additions = connector_additions;
+            trace->waves.push_back(std::move(wave));
+        }
     }
 
     result.resolved_hierarchy_closure.assign(hierarchy.begin(), hierarchy.end());
@@ -95,6 +108,15 @@ StatefulResult resolveDeleteClosure(
     result.final_delete_set.assign(admitted.begin(), admitted.end());
     if (out != nullptr) *out = std::move(result);
     return {};
+}
+
+} // namespace internal
+
+StatefulResult resolveDeleteClosure(
+    const StagedObjectView& staged,
+    std::span<const ObjectId> requested_ids,
+    DeleteClosure* out) {
+    return internal::resolveDeleteClosureWithTrace(staged, requested_ids, out, nullptr);
 }
 
 } // namespace canvas::semantic
