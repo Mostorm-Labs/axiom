@@ -1,0 +1,20 @@
+{
+  "format": "axiom-gt-g1-04-b-b7-oracle-strengthening-p36-v1",
+  "task": "GT-G1-04-B/B7",
+  "sourceCommit": "f10cdacc7f6de8b050b0fed962b7651142733f8b",
+  "testedCommit": "f10cdacc7f6de8b050b0fed962b7651142733f8b",
+  "productionImplementationBase": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "p31Ref": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-operation-specific-state-p31.md@84a95fbb46ef301833a4ce34a9503451f5d95579",
+  "firstOracleRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-behavioral-oracle-repair-p36.md@32950127b50da42a31a7d0ca7570321b1f86b2f4",
+  "oracleStrengtheningRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-oracle-strengthening-p36.md@5fa191e0ea9e15044d156e96d7158606028fde02",
+  "p34Blocker": "notion:3cb4c57a-590c-81f3-99e3-fc5ec6aec0c0",
+  "p35P36Authorization": "notion:3cb4c57a-590c-819f-a725-e04c07616785",
+  "behavioralOracle": {"operationSpecific": "PASS 78/78", "richText": "PASS 12/12", "independentExpectedFragments": true, "nonEmptyFailureSentinels": true, "referenceIndexedDifferential": true, "baseNoMutation": true, "indexedRebuild": true},
+  "caseMatrix": {"INS": "INS_B01..B08", "PLC": "PLC_B01..B09 (PLC_B09 valid final-state batch)", "TRN": "TRN_B01..B03", "PROP": "PROP_B01..B07", "SIZE": "SIZE_B01..B05", "PATH": "PATH_B01..B03", "IMG": "IMG_B01..B03", "STR": "STR_B01..B06", "SPL": "SPL_B01..B08", "MASK_ADD": "MASK_ADD_B01..B06", "MASK_REM": "MASK_REM_B01..B05", "TXT": "TXT_S01..S12", "EDIT": "EDIT_B01..B04", "CON": "CON_B01..B07"},
+  "delegated": {"DeleteObjects": {"source": "36669523ab3a5cc3e0c479cf6f0a5ae6119d240c", "evidence": "af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e"}, "RestoreObjects": {"source": "871eec8172674c8fba85548434b5e96c7c30fbf8", "evidence": "68dd235205253f7080d0a8d28daa957dfe2f0dbd"}},
+  "performance": {"countingStore": {"allObjectsCalls": 0, "instrumentedFamilies": ["SetTransforms", "SetObjectSize"], "targetLookupBounded": true}, "productionAllObjectsCalls": 0, "connectorFreePointVsAttached": "covered by CON_B07 behavioral fixture"},
+  "verification": {"focusedRichText": "PASS 12/12", "focusedB7": "PASS 78/78", "relevantRegression": "PASS 195/195", "fullSemantic": "PASS 304/304; 12 protobuf-off tests skipped", "runtimeBoundaries": "PASS (53 contract files)", "docs": "PASS (286 Markdown files)", "gitDiffCheck": "PASS"},
+  "scopeGuards": {"productionSourceChanged": false, "B2Changed": false, "B3Changed": false, "BAuth02Changed": false, "B4Changed": false, "B5Changed": false, "B6Changed": false, "B8Started": false, "PreparedApplyPlanChanged": false, "OperationEngineChanged": false, "GTG104CStarted": false, "GTG105Changed": false, "untrackedDataPreserved": true},
+  "materialization": {"sourceTestSnapshotPushed": true, "initialEvidenceCommitPushed": false, "historyRewritten": false, "forcePush": false},
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW"
+}
