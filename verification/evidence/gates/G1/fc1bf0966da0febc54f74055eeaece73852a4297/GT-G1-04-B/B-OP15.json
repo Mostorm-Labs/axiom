@@ -1,0 +1,1168 @@
+{
+  "format": "axiom-gt-g1-04-b-b7-structural-case-evidence-v2",
+  "task": "GT-G1-04-B/B7",
+  "sourceCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
+  "testedCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
+  "productionImplementationBase": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-structural-case-evidence-repair-p36.md@45f2bd53f01e5df18e82e83c3992d21cdb700dcd",
+  "p31Ref": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-operation-specific-state-p31.md@84a95fbb46ef301833a4ce34a9503451f5d95579",
+  "firstOracleRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-behavioral-oracle-repair-p36.md@32950127b50da42a31a7d0ca7570321b1f86b2f4",
+  "oracleStrengtheningRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-oracle-strengthening-p36.md@5fa191e0ea9e15044d156e96d7158606028fde02",
+  "executionCompletenessRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-execution-completeness-repair-p36.md@da28f20d22d77e5d29dfa193a3e2c5ae4e68eb53",
+  "p34Blocker": "notion:3cb4c57a-590c-8117-ab80-f5060896d0c6",
+  "p35P36Authorization": "notion:3cb4c57a-590c-8183-b0e3-df5cb7aeed78",
+  "implementedHere": [
+    "InsertObjects",
+    "SetPlacements",
+    "SetTransforms",
+    "PatchProperties",
+    "SetObjectSize",
+    "SetVectorPathGeometry",
+    "SetImageContent",
+    "AddStroke",
+    "SplitStrokes",
+    "AddEraseMasks",
+    "RemoveEraseMasks",
+    "EditRichText",
+    "SetConnectorContent"
+  ],
+  "semanticCases": [
+    {
+      "caseId": "INS-B01",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B02",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B03",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B04",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B05",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B06",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B07",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B08",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput",
+      "structuralStatus": "INTENTIONAL_DEFENSE_INVALID",
+      "expectedIssue": "kInvalidKindVersion",
+      "expectedProjection": "intentional A-invalid payload is rejected at defensive seam; B projection not claimed",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true,
+      "structuralException": "kind_version=9 intentionally exercises A defensive invalid-kind/version seam"
+    },
+    {
+      "caseId": "PLC-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B04",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kHierarchyCycle",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B05",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B06",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B07",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B08",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B09",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "TRN-B01",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "TRN-B02",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "TRN-B03",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SIZE-B01",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B02",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B03",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B04",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B04_GroupRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SIZE-B05",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PATH-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PATH-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PATH-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "IMG-B01",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "IMG-B02",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "IMG-B03",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B01",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B02",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B03",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B04",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B05",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B06",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B01",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SPL-B02",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B03",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B04",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B05",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B06",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B07",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B08",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B01",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-ADD-B02",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-ADD-B03",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B04",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B05",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kMaskStateInvalid",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B06",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B01",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-REM-B02",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kMaskStateInvalid",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B03",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B04",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B05",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B04",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B05",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B06",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B07",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B01",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "EDIT-B02",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B03",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B04",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kTextStateInvalid",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B01",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "CON-B02",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B03",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B04",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kConnectorInvalid",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B05",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "exact successful state-plan projection asserted by existing helper",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "CON-B06",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kConnectorInvalid",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B07",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kUnknown",
+      "expectedProjection": "no successful projection; exact non-empty failure sentinel preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    }
+  ],
+  "richTextHelperCases": [
+    {
+      "caseId": "TXT-S01",
+      "googleTest": "RichTextStatePlan.TXT_S01_UnicodeScalarInsertInAEmojiB",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S02",
+      "googleTest": "RichTextStatePlan.TXT_S02_DeleteAcrossRunBoundaryNormalizes",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S03",
+      "googleTest": "RichTextStatePlan.TXT_S03_SplitAtZero",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S04",
+      "googleTest": "RichTextStatePlan.TXT_S04_SplitAtEnd",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S05",
+      "googleTest": "RichTextStatePlan.TXT_S05_SplitParagraphIdCollisionRejects",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S06",
+      "googleTest": "RichTextStatePlan.TXT_S06_MergeAdjacentKeepsFirstIdAndStyle",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S07",
+      "googleTest": "RichTextStatePlan.TXT_S07_MergeNonAdjacentRejects",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S08",
+      "googleTest": "RichTextStatePlan.TXT_S08_SetInlineStyleSplitsAndMergesDeterministically",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S09",
+      "googleTest": "RichTextStatePlan.TXT_S09_SetParagraphStyleReplacesCompleteStyle",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S10",
+      "googleTest": "RichTextStatePlan.TXT_S10_SecondStepResolvesFirstStepStagedState",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S11",
+      "googleTest": "RichTextStatePlan.TXT_S11_SecondStepInvalidLeavesWholeOutputUnchanged",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S12",
+      "googleTest": "RichTextStatePlan.TXT_S12_EmptyParagraphCanonicalRunsRemainEmpty",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "exact full-value RichText helper oracle asserted",
+      "freshResult": "PASS"
+    }
+  ],
+  "supportEvidence": [
+    {
+      "test": "OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
+      "freshResult": "PASS",
+      "freePointAllObjectsCalls": 0,
+      "attachedAllObjectsCalls": 0,
+      "attachedFindCallsGreaterThanFreePoint": true
+    }
+  ],
+  "delegatedCurrentValid": {
+    "DeleteObjects": {
+      "sourceCommit": "36669523ab3a5cc3e0c479cf6f0a5ae6119d240c",
+      "evidenceCommit": "af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e"
+    },
+    "RestoreObjects": {
+      "sourceCommit": "871eec8172674c8fba85548434b5e96c7c30fbf8",
+      "evidenceCommit": "68dd235205253f7080d0a8d28daa957dfe2f0dbd"
+    }
+  },
+  "performance": [
+    {
+      "family": "InsertObjects",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetPlacements",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetTransforms",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "PatchProperties",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetObjectSize",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetVectorPathGeometry",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetImageContent",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "AddStroke",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SplitStrokes",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "AddEraseMasks",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "RemoveEraseMasks",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "EditRichText",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetConnectorContent",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    }
+  ],
+  "verification": {
+    "focusedRichText": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_rich_text_state_plan_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_rich_text_state_plan_test --gtest_color=no",
+      "result": "PASS 12/12"
+    },
+    "focusedB7": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_operation_specific_stateful_validation_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_operation_specific_stateful_validation_test --gtest_color=no",
+      "result": "PASS 78/78"
+    },
+    "relevantRegression": {
+      "command": "ctest --test-dir build-semantic-b2 -R 'StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|HierarchyValidation|HierarchyCapability|ConnectorStatefulValidation|DeleteClosure|RestoreStatefulValidation|OperationSpecific|RichTextState' --output-on-failure",
+      "result": "PASS 197/197"
+    },
+    "fullSemantic": {
+      "build": "cmake --build build-semantic-b2 -j2",
+      "command": "ctest --test-dir build-semantic-b2 --output-on-failure",
+      "result": "PASS 306/306; 12 protobuf-off tests skipped"
+    },
+    "runtimeBoundaries": {
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "result": "PASS (53 contract files)"
+    },
+    "docs": {
+      "command": "python3 tools/check_docs.py",
+      "result": "FAIL: frozen P36 plan lambda example falsely parsed as local link (known pre-existing tooling false positive; plan immutable)"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  },
+  "scopeGuards": {
+    "productionSourceChanged": false,
+    "testsChangedOnlyAuthorized": true,
+    "richTextHelperFileChanged": false,
+    "B2Changed": false,
+    "B3Changed": false,
+    "BAuth02Changed": false,
+    "B4Changed": false,
+    "B5Changed": false,
+    "B6Changed": false,
+    "B8Started": false,
+    "PreparedApplyPlanChanged": false,
+    "OperationEngineChanged": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "schemaProtobufWireChanged": false,
+    "untrackedBuildAndAndroidDataPreserved": true
+  },
+  "materialization": {
+    "sourceTestSnapshotPushed": true,
+    "initialEvidenceCommit": null,
+    "initialEvidenceCommitPushed": false,
+    "historyRewritten": false,
+    "forcePush": false
+  },
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW"
+}
