@@ -124,8 +124,12 @@
     "capabilityCardinalityNegative": ["Sticky(3)", "RichText(1) parent=Sticky(3)", "RichText(2) parent=Sticky(3)"]
   },
   "parityAndMutation": {
-    "allStateOwningHcvCasesReferenceIndexed": true,
-    "allStateOwningRstHcvCasesReferenceIndexed": true,
+    "focusedHelperParityCoverage": {
+      "HCV-B01-B14": "primarily ReferenceObjectStore focused semantic cases",
+      "HCV-B15": "explicit ReferenceObjectStore/IndexedObjectStore parity, no mutation, Indexed indexMatchesRebuild",
+      "HCV-B16": "performance/lookup instrumentation"
+    },
+    "restoreCapabilityCasesReferenceIndexed": true,
     "statefulIssueParity": true,
     "createsProjectionParity": true,
     "referenceProjectionUnchanged": true,
