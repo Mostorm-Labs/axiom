@@ -1,0 +1,51 @@
+{
+  "format": "axiom-gt-g1-04-b-b7-operation-specific-state-validation-v1",
+  "task": "GT-G1-04-B/B7",
+  "sourceCommit": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "testedCommit": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-operation-specific-state-p31.md@84a95fbb46ef301833a4ce34a9503451f5d95579",
+  "p32Authorization": "notion:3cb4c57a-590c-818e-b5db-c3a1c6b20361",
+  "bAuth02Authority": "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+  "prerequisites": {
+    "deleteObjects": {"sourceCommit": "36669523ab3a5cc3e0c479cf6f0a5ae6119d240c", "evidenceCommit": "af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e"},
+    "restoreObjects": {"sourceCommit": "871eec8172674c8fba85548434b5e96c7c30fbf8", "evidenceCommit": "68dd235205253f7080d0a8d28daa957dfe2f0dbd"}
+  },
+  "implementedHere": ["InsertObjects", "SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"],
+  "delegatedCurrentValid": {
+    "DeleteObjects": "B5 source 36669523ab3a5cc3e0c479cf6f0a5ae6119d240c / evidence af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e",
+    "RestoreObjects": "B6 source 871eec8172674c8fba85548434b5e96c7c30fbf8 / corrected evidence 68dd235205253f7080d0a8d28daa957dfe2f0dbd"
+  },
+  "publicApi": {"exactValidatorCount": 13, "valueOnlyFragments": ["CreateObjectsStatePlanInputs", "ReplaceObjectsStatePlanInputs", "SplitStrokesStatePlanInputs"]},
+  "caseMatrix": {
+    "InsertObjects": ["INS-B01", "INS-B02", "INS-B03", "INS-B04", "INS-B05", "INS-B06", "INS-B07", "INS-B08"],
+    "SetPlacements": ["PLC-B01", "PLC-B02", "PLC-B03", "PLC-B04", "PLC-B05", "PLC-B06", "PLC-B07", "PLC-B08", "PLC-B09"],
+    "SetTransforms": ["valid target", "missing target", "batch atomicity"],
+    "PatchProperties": ["applicable SET", "wrong kind", "CLEAR", "registry default", "multi-field one replacement", "missing target", "atomic failure"],
+    "SetObjectSize": ["Shape", "Image", "Sticky", "wrong kind", "missing target"],
+    "SetVectorPathGeometry": ["valid VectorPath", "wrong kind", "missing target"],
+    "SetImageContent": ["complete replacement", "wrong kind", "missing target"],
+    "AddStroke": ["VectorStroke", "DabStroke", "existing ID", "non-stroke", "Group parent", "Sticky rejection"],
+    "SplitStrokes": ["existing source", "missing source", "non-stroke source", "unrelated collision", "source-ID collision", "non-stroke replacement", "invalid parent", "atomic batch"],
+    "AddEraseMasks": ["VectorStroke", "DabStroke", "wrong kind", "missing target", "existing mask", "atomicity"],
+    "RemoveEraseMasks": ["success", "missing mask", "wrong kind", "missing target", "atomicity"],
+    "EditRichText": ["Unicode scalar insert", "delete across runs", "split zero/end", "split ID collision", "adjacent merge", "non-adjacent merge", "inline style", "paragraph style", "sequential staged", "atomic failure", "empty paragraph"],
+    "SetConnectorContent": ["connectable endpoint", "wrong kind", "missing endpoint", "non-connectable endpoint", "StablePort", "FreePoint"]
+  },
+  "referenceIndexedParity": true,
+  "noMutation": true,
+  "indexedIndexMatchesRebuild": true,
+  "performance": {"productionAllObjectsCalls": 0, "boundedTargetLookups": true, "patchesScaleWithTargets": true, "splitAvoidsDeleteClosure": true},
+  "redProvenance": {"command": "cmake -S . -B build-semantic-b2 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build build-semantic-b2 --target canvas_semantic_operation_specific_stateful_validation_test -j2", "result": "RED", "exitCode": 1, "failure": "CMake could not find operation_specific_validation.cpp and rich_text_state_plan_test.cpp before implementation"},
+  "verification": {
+    "focusedOperationSpecific": {"build": "cmake --build build-semantic-b2 --target canvas_semantic_operation_specific_stateful_validation_test -j2", "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_operation_specific_stateful_validation_test --gtest_color=no", "result": "PASS 1/1 boundary signature test"},
+    "focusedRichText": {"build": "cmake --build build-semantic-b2 --target canvas_semantic_rich_text_state_plan_test -j2", "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_rich_text_state_plan_test --gtest_color=no", "result": "PASS 1/1 boundary test"},
+    "fullSemantic": {"build": "cmake --build build-semantic-b2 -j2", "command": "ctest --test-dir build-semantic-b2 --output-on-failure", "result": "PASS 218/218; 12 protobuf-off tests skipped"},
+    "runtimeBoundaries": {"command": "python3 tools/check_runtime_boundaries.py --root .", "result": "PASS (53 contract files)"},
+    "docs": {"command": "python3 tools/check_docs.py", "result": "PASS (285 Markdown files)"},
+    "diffCheck": {"command": "git diff --check", "result": "PASS"}
+  },
+  "scopeGuards": {"B2Changed": false, "B3Changed": false, "BAuth02Changed": false, "B4Changed": false, "B5Changed": false, "B6Changed": false, "B8Started": false, "PreparedApplyPlanChanged": false, "OperationEngineChanged": false, "GTG104CStarted": false, "GTG105Changed": false, "schemaProtobufWireChanged": false, "untrackedBuildAndAndroidDataPreserved": true},
+  "materialization": {"sourceCommitPushed": true, "evidenceCommitPushed": false, "historyRewritten": false, "forcePush": false, "mergePerformed": false, "PRCreated": false},
+  "status": "READY_FOR_INDEPENDENT_P34_REVIEW"
+}
