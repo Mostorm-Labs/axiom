@@ -29,6 +29,36 @@ ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nu
     return result;
 }
 
+ObjectRecord group(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kGroup;
+    result.kind_version = 1U;
+    result.placement = Placement{parent, OrderKey({static_cast<std::uint8_t>(value)})};
+    result.content = GroupContent{};
+    return result;
+}
+
+ObjectRecord sticky(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kSticky;
+    result.kind_version = 1U;
+    result.placement = Placement{parent, OrderKey({static_cast<std::uint8_t>(value)})};
+    result.content = StickyContent{10.0, 10.0};
+    return result;
+}
+
+ObjectRecord richText(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kRichText;
+    result.kind_version = 1U;
+    result.placement = Placement{parent, OrderKey({static_cast<std::uint8_t>(value)})};
+    result.content = RichTextContent{};
+    return result;
+}
+
 ObjectRecord connector(std::uint64_t value, std::uint64_t target) {
     ObjectRecord result{};
     result.id = id(value);
@@ -196,14 +226,14 @@ TEST(RestoreStatefulValidation, RST_B01_B12_StateOwningReferenceIndexedParity) {
         insert(store, value);
     };
     const auto checkpoint = [](auto& store) {
-        insert(store, shape(100U));
+        insert(store, group(100U));
         insert(store, shape(101U, id(100U)));
     };
 
     assert_parity(empty, RestoreObjectsOp{{shape(1U), shape(2U)}});                       // B01
     assert_parity(existing_same, RestoreObjectsOp{{shape(1U)}});                           // B02
     assert_parity(existing_different, RestoreObjectsOp{{shape(1U)}});                      // B03
-    assert_parity(empty, RestoreObjectsOp{{shape(1U, id(2U)), shape(2U)}});                // B04
+    assert_parity(empty, RestoreObjectsOp{{shape(1U, id(2U)), group(2U)}});                // B04
     assert_parity(empty, RestoreObjectsOp{{shape(2U, id(1U))}});                           // B05
     assert_parity(empty, RestoreObjectsOp{{connector(1U, 2U), shape(2U)}});                // B06
     assert_parity(empty, RestoreObjectsOp{{connector(2U, 1U)}});                           // B07
@@ -236,7 +266,7 @@ TEST(RestoreStatefulValidation, RST_B03_ExistingDifferentRecordCollides) {
 TEST(RestoreStatefulValidation, RST_B04_ParentAndChildSamePayload) {
     // The child has the lower canonical ObjectId, so its parent follows it in
     // payload order. Complete staging makes the resulting graph valid.
-    both([](auto& store) { expectSuccess(store, {shape(1U, id(2U)), shape(2U)}); });
+    both([](auto& store) { expectSuccess(store, {shape(1U, id(2U)), group(2U)}); });
 }
 
 TEST(RestoreStatefulValidation, RST_B05_MissingParentInvalidReference) {
@@ -317,9 +347,65 @@ TEST(RestoreStatefulValidation, RST_B11_SourceLabelsDoNotChangeResult) {
 
 TEST(RestoreStatefulValidation, RST_B12_CheckpointLikeStateWithoutLedger) {
     both([](auto& store) {
-        insert(store, shape(100U));
+        insert(store, group(100U));
         insert(store, shape(101U, id(100U)));
         expectSuccess(store, {shape(1U)});
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_01_GroupShape) {
+    both([](auto& store) { expectSuccess(store, {shape(1U, id(2U)), group(2U)}); });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_02_GroupNestedGroup) {
+    both([](auto& store) { expectSuccess(store, {group(1U, id(2U)), group(2U)}); });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_03_StickyRichText) {
+    both([](auto& store) { expectSuccess(store, {richText(1U, id(2U)), sticky(2U)}); });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_04_EmptySticky) {
+    both([](auto& store) { expectSuccess(store, {sticky(1U)}); });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_05_StickyShapeRejected) {
+    both([](auto& store) {
+        expectIssue(store, {shape(1U, id(2U)), sticky(2U)}, StatefulIssue::kInvalidApplicability);
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_06_ShapeRichTextRejected) {
+    both([](auto& store) {
+        expectIssue(store, {richText(1U, id(2U)), shape(2U)}, StatefulIssue::kInvalidApplicability);
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_07_StickyTwoRichTextRejected) {
+    both([](auto& store) {
+        expectIssue(store, {richText(1U, id(3U)), richText(2U, id(3U)), sticky(3U)},
+                    StatefulIssue::kInvalidApplicability);
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_08_ExistingEmptyStickyAcceptsRichText) {
+    both([](auto& store) {
+        insert(store, sticky(10U));
+        expectSuccess(store, {richText(11U, id(10U))});
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_09_ExistingStickyWithRichTextRejectsSecond) {
+    both([](auto& store) {
+        insert(store, sticky(10U));
+        insert(store, richText(11U, id(10U)));
+        expectIssue(store, {richText(12U, id(10U))}, StatefulIssue::kInvalidApplicability);
+    });
+}
+
+TEST(RestoreStatefulValidation, RST_HCV_10_CapabilityRejectionIsAtomic) {
+    both([](auto& store) {
+        expectIssue(store, {shape(1U, id(2U)), sticky(2U)}, StatefulIssue::kInvalidApplicability);
     });
 }
 

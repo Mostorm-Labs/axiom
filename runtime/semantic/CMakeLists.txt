@@ -14,6 +14,7 @@ add_library(canvas_runtime_semantic STATIC
     src/stateful_validation.cpp
     src/validator.cpp
     src/delete_closure.cpp
+    src/hierarchy_capability_validation.cpp
     src/restore_planner.cpp
     src/codec.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)

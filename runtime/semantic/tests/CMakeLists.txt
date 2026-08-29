@@ -219,6 +219,19 @@ else()
 endif()
 gtest_discover_tests(canvas_semantic_hierarchy_stateful_validation_test)
 
+add_executable(canvas_semantic_hierarchy_capability_validation_test
+  hierarchy_capability_validation_test.cpp)
+target_link_libraries(canvas_semantic_hierarchy_capability_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_hierarchy_capability_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_hierarchy_capability_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_hierarchy_capability_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_hierarchy_capability_validation_test)
+
 add_executable(canvas_semantic_delete_closure_test delete_closure_test.cpp)
 target_link_libraries(canvas_semantic_delete_closure_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)
