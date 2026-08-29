@@ -113,7 +113,7 @@
     "regressionResult": "PASS 52/52",
     "fullBuildCommand": "cmake --build build-semantic-b2 -j2",
     "fullSemanticCommand": "ctest --test-dir build-semantic-b2 --output-on-failure",
-    "fullSemanticResult": "PASS 172/172; 35 protobuf tests skipped by configuration",
+    "fullSemanticResult": "PASS 172/172; 12 protobuf tests skipped by configuration (tests 24-35)",
     "runtimeBoundariesCommand": "python3 tools/check_runtime_boundaries.py --root .",
     "runtimeBoundariesResult": "PASS (50 contract files)",
     "docsCommand": "python3 tools/check_docs.py",
