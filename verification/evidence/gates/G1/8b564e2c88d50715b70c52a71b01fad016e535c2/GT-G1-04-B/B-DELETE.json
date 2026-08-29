@@ -31,7 +31,13 @@
         "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "0000000000000000000000000000000b"],
         "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "0000000000000000000000000000000b"]
       },
-      "actual": "executable test equality against independent oracle"
+      "actual": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "0000000000000000000000000000000b"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "0000000000000000000000000000000b"]
+      },
+      "oracleAssertion": "executable test equality against independent test-only oracle"
     },
     "twoDistinctConnectorsOneTarget": {
       "test": "DeleteClosure.TwoDistinctConnectorsReferencingOneTarget",
