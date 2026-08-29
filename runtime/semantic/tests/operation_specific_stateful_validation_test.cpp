@@ -79,6 +79,7 @@ TEST(OperationSpecificStatefulValidation,INS_B06_StickyTwoRichTextChildrenReject
 TEST(OperationSpecificStatefulValidation,INS_B07_EmptyStickySucceeds){auto payload = InsertObjectsOp{{{sticky(1)}}};
     expectCreateCase({}, payload, [&](const auto& payload, auto& s, auto* o) { return validateInsertObjectsState(payload, s, o); }, StatefulIssue::kNone, {{sticky(1)}}, cs());}
 TEST(OperationSpecificStatefulValidation,INS_B08_BadRecordRejectsWholeOutput){auto bad=shape(2);bad.kind_version=9;auto payload = InsertObjectsOp{{{shape(1),bad}}};
+    // Intentional A-invalid fixture: exercise the defensive invalid kind/version seam.
     expectCreateCase({}, payload, [&](const auto& payload, auto& s, auto* o) { return validateInsertObjectsState(payload, s, o); }, StatefulIssue::kInvalidKindVersion, {}, cs(), StructuralExpectation::kIntentionalDefenseInvalid);}
 TEST(OperationSpecificStatefulValidation,PLC_B01_MoveShapeUnderGroupSucceeds){auto e=shape(2,id(1));auto payload = SetPlacementsOp{{{{id(2),pl(2,id(1))}}}};
     expectReplaceCase({group(1),shape(2)}, payload, [&](const auto& payload, auto& s, auto* o) { return validateSetPlacementsState(payload, s, o); }, StatefulIssue::kNone, {{e}}, rs());}
