@@ -32,6 +32,206 @@ std::string idHex(const ObjectId& value) {
     return out.str();
 }
 
+template <typename IdT>
+std::string idHexTyped(const IdT& value) {
+    return idHex(value.value());
+}
+
+const char* dispositionName(PrepareDisposition value) {
+    switch (value) {
+        case PrepareDisposition::kPrepared: return "Prepared";
+        case PrepareDisposition::kAlreadyApplied: return "AlreadyApplied";
+        case PrepareDisposition::kRejected: return "Rejected";
+    }
+    return "Unknown";
+}
+
+const char* issueName(StatefulIssue value) {
+    switch (value) {
+        case StatefulIssue::kNone: return "kNone";
+        case StatefulIssue::kObjectMissing: return "kObjectMissing";
+        case StatefulIssue::kObjectAlreadyExists: return "kObjectAlreadyExists";
+        case StatefulIssue::kInvalidKindVersion: return "kInvalidKindVersion";
+        case StatefulIssue::kInvalidApplicability: return "kInvalidApplicability";
+        case StatefulIssue::kInvalidReference: return "kInvalidReference";
+        case StatefulIssue::kHierarchyCycle: return "kHierarchyCycle";
+        case StatefulIssue::kConnectorInvalid: return "kConnectorInvalid";
+        case StatefulIssue::kMaskStateInvalid: return "kMaskStateInvalid";
+        case StatefulIssue::kTextStateInvalid: return "kTextStateInvalid";
+        case StatefulIssue::kOperationIdCollision: return "kOperationIdCollision";
+    }
+    return "kUnknown";
+}
+
+void writePlacement(std::ostream& out, const Placement& value) {
+    out << "{\"parent_id\":";
+    if (value.parent_id.has_value()) out << '"' << idHex(*value.parent_id) << '"';
+    else out << "null";
+    out << ",\"order_key\":[";
+    for (std::size_t i = 0; i < value.order_key.bytes().size(); ++i) {
+        if (i != 0U) out << ',';
+        out << static_cast<unsigned>(value.order_key.bytes()[i]);
+    }
+    out << "]}";
+}
+
+void writeColor(std::ostream& out, const ColorValue& value) {
+    out << '[' << std::setprecision(9) << value.r << ',' << value.g << ',' << value.b << ','
+        << value.a << ']';
+}
+
+void writeTextStyle(std::ostream& out, const TextStyle& value) {
+    out << "{\"font_resource_id\":";
+    if (value.font_resource_id.has_value()) out << '"' << idHex(value.font_resource_id->value) << '"';
+    else out << "null";
+    out << ",\"font_size\":" << std::setprecision(17) << value.font_size
+        << ",\"weight\":" << value.weight << ",\"italic\":"
+        << (value.italic ? "true" : "false") << ",\"underline\":"
+        << (value.underline ? "true" : "false") << ",\"color\":";
+    writeColor(out, value.color);
+    out << '}';
+}
+
+void writeContent(std::ostream& out, const ObjectContent& content) {
+    out << "{\"variant\":" << content.index() << ",\"value\":";
+    std::visit([&out](const auto& value) {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, ShapeContent>) {
+            out << "{\"shape_kind\":" << value.shape_kind << ",\"width\":"
+                << std::setprecision(17) << value.width << ",\"height\":" << value.height << '}';
+        } else if constexpr (std::is_same_v<T, ImageContent>) {
+            out << "{\"resource_id\":\"" << idHex(value.resource_id.value)
+                << "\",\"intrinsic_width\":" << std::setprecision(17) << value.intrinsic_width
+                << ",\"intrinsic_height\":" << value.intrinsic_height << ",\"content_mode\":"
+                << static_cast<unsigned>(value.content_mode) << ",\"width\":" << value.width
+                << ",\"height\":" << value.height << '}';
+        } else if constexpr (std::is_same_v<T, VectorPathContent>) {
+            out << "{\"fill_rule\":" << static_cast<unsigned>(value.geometry.fill_rule)
+                << ",\"command_count\":" << value.geometry.commands.size() << '}';
+        } else if constexpr (std::is_same_v<T, RichTextContent>) {
+            out << "{\"paragraphs\":[";
+            for (std::size_t i = 0; i < value.document.paragraphs.size(); ++i) {
+                if (i != 0U) out << ',';
+                const auto& paragraph = value.document.paragraphs[i];
+                out << "{\"id\":\"" << idHex(paragraph.id) << "\",\"alignment\":"
+                    << static_cast<unsigned>(paragraph.style.alignment) << ",\"line_height\":"
+                    << std::setprecision(17) << paragraph.style.line_height << ",\"runs\":[";
+                for (std::size_t j = 0; j < paragraph.runs.size(); ++j) {
+                    if (j != 0U) out << ',';
+                    out << "{\"text\":\"" << paragraph.runs[j].text << "\",\"style\":";
+                    writeTextStyle(out, paragraph.runs[j].style);
+                    out << '}';
+                }
+                out << "]}";
+            }
+            out << "]}";
+        } else if constexpr (std::is_same_v<T, VectorStrokeContent> ||
+                             std::is_same_v<T, DabStrokeContent>) {
+            out << "{\"deterministic_seed\":" << value.stroke.deterministic_seed
+                << ",\"stroke_data_variant\":" << value.stroke.data.index() << '}';
+        } else if constexpr (std::is_same_v<T, ConnectorContent>) {
+            out << "{\"start_variant\":" << value.start.value.index()
+                << ",\"end_variant\":" << value.end.value.index() << ",\"routing\":"
+                << static_cast<unsigned>(value.routing) << '}';
+        } else if constexpr (std::is_same_v<T, StickyContent>) {
+            out << "{\"width\":" << std::setprecision(17) << value.width << ",\"height\":"
+                << value.height << '}';
+        } else if constexpr (std::is_same_v<T, GroupContent>) {
+            out << "{}";
+        }
+    }, content);
+    out << '}';
+}
+
+void writePropertyValue(std::ostream& out, const PropertyValue& value) {
+    out << "{\"variant\":" << value.index() << ",\"value\":";
+    std::visit([&out](const auto& item) {
+        using T = std::decay_t<decltype(item)>;
+        if constexpr (std::is_same_v<T, bool>) out << (item ? "true" : "false");
+        else if constexpr (std::is_same_v<T, float>) out << std::setprecision(9) << item;
+        else if constexpr (std::is_same_v<T, ColorValue>)
+            out << "[" << item.r << ',' << item.g << ',' << item.b << ',' << item.a << ']';
+        else if constexpr (std::is_same_v<T, BlendModeValue> ||
+                           std::is_same_v<T, ConnectorDecorationValue>)
+            out << static_cast<unsigned>(item);
+        else if constexpr (std::is_same_v<T, FillStyleValue>)
+            out << item.index();
+        else if constexpr (std::is_same_v<T, StrokeStyleValue>)
+            out << item.index();
+    }, value);
+    out << "}";
+}
+
+void writeRecords(std::ostream& out, const std::vector<ObjectRecord>& records) {
+    out << '[';
+    for (std::size_t i = 0; i < records.size(); ++i) {
+        if (i != 0U) out << ',';
+        const auto& record = records[i];
+        out << "{\"id\":\"" << idHex(record.id) << "\",\"kind\":"
+            << static_cast<unsigned>(record.kind) << ",\"kind_version\":"
+            << record.kind_version << ",\"placement\":";
+        writePlacement(out, record.placement);
+        out << ",\"transform\":[" << std::setprecision(17) << record.transform.a << ','
+            << record.transform.b << ',' << record.transform.c << ',' << record.transform.d << ','
+            << record.transform.tx << ',' << record.transform.ty << "]";
+        out << ",\"properties\":[";
+        for (std::size_t p = 0; p < record.properties.entries.size(); ++p) {
+            if (p != 0U) out << ',';
+            const auto& entry = record.properties.entries[p];
+            out << "{\"field_id\":" << entry.field_id << ",\"value\":";
+            writePropertyValue(out, entry.value);
+            out << '}';
+        }
+        out << "],\"content\":";
+        writeContent(out, record.content);
+        out << ",\"erase_masks\":[";
+        for (std::size_t m = 0; m < record.erase_masks.size(); ++m) {
+            if (m != 0U) out << ',';
+            out << "{\"id\":\"" << idHex(record.erase_masks[m].id)
+                << "\",\"geometry_variant\":" << record.erase_masks[m].geometry.index() << '}';
+        }
+        out << "]}";
+    }
+    out << ']';
+}
+
+void writeApplied(std::ostream& out, const std::map<OperationId, AppliedOperationEntry>& entries) {
+    out << '[';
+    std::size_t index = 0U;
+    for (const auto& [id_value, entry] : entries) {
+        if (index++ != 0U) out << ',';
+        out << "{\"id\":\"" << idHexTyped(id_value) << "\",\"canonical_operation_id\":\""
+            << idHexTyped(entry.canonical_operation.id) << "\"}";
+    }
+    out << ']';
+}
+
+void writeChildren(
+    std::ostream& out,
+    const std::optional<std::vector<ObjectRecord>>& children) {
+    if (!children.has_value()) { out << "null"; return; }
+    writeRecords(out, *children);
+}
+
+void writeObjectIds(std::ostream& out, const std::vector<ObjectId>& ids) {
+    out << '[';
+    for (std::size_t i = 0; i < ids.size(); ++i) {
+        if (i != 0U) out << ',';
+        out << '"' << idHex(ids[i]) << '"';
+    }
+    out << ']';
+}
+
+void writeDeleteClosure(std::ostream& out, const DeleteClosure& closure) {
+    out << "{\"requested_delete_ids\":"; writeObjectIds(out, closure.requested_delete_ids);
+    out << ",\"resolved_hierarchy_closure\":";
+    writeObjectIds(out, closure.resolved_hierarchy_closure);
+    out << ",\"resolved_connector_cascade_closure\":";
+    writeObjectIds(out, closure.resolved_connector_cascade_closure);
+    out << ",\"final_delete_set\":"; writeObjectIds(out, closure.final_delete_set);
+    out << '}';
+}
+
 Placement placement(std::uint64_t key, std::optional<ObjectId> parent = std::nullopt) {
     return Placement{parent, OrderKey({static_cast<std::uint8_t>(key)})};
 }
@@ -622,6 +822,10 @@ void recordRuntimeObservation(
     const PrepareResult& result,
     const std::vector<ObjectRecord>& before,
     const std::vector<ObjectRecord>& after,
+    const std::map<OperationId, AppliedOperationEntry>& applied_before,
+    const std::map<OperationId, AppliedOperationEntry>& applied_after,
+    const std::optional<std::vector<ObjectRecord>>& children_before,
+    const std::optional<std::vector<ObjectRecord>>& children_after,
     bool index_before,
     bool index_after) {
     const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
@@ -631,19 +835,38 @@ void recordRuntimeObservation(
         << test_case.operation_name << "\",\"polarity\":\""
         << (test_case.positive ? "positive" : "negative") << "\",\"store_implementation\":\""
         << store_name << "\",\"operation_id\":\"" << idHex(test_case.input.id.value())
-        << "\",\"actual_disposition\":" << static_cast<unsigned>(result.disposition)
-        << ",\"actual_stateful_issue\":" << static_cast<unsigned>(result.error.issue)
+        << "\",\"actual_disposition\":\"" << dispositionName(result.disposition) << '"'
+        << ",\"actual_stateful_issue\":\"" << issueName(result.error.issue) << '"'
         << ",\"plan_present\":" << (result.plan.has_value() ? "true" : "false")
-        << ",\"canonical_before_count\":" << before.size()
-        << ",\"canonical_after_count\":" << after.size()
-        << ",\"indexed_index_matches_rebuild_before\":" << (index_before ? "true" : "false")
+        << ",\"operation_document_id\":\"" << idHexTyped(test_case.input.document_id)
+        << "\",\"schema_version\":" << test_case.input.schema_version
+        << ",\"payload_version\":" << test_case.input.payload_version
+        << ",\"operation_payload_exact_typed_equality_asserted\":true"
+        << ",\"canonical_before\":"; writeRecords(out, before);
+    out << ",\"canonical_after\":"; writeRecords(out, after);
+    out << ",\"applied_before\":"; writeApplied(out, applied_before);
+    out << ",\"applied_after\":"; writeApplied(out, applied_after);
+    out << ",\"children_before\":"; writeChildren(out, children_before);
+    out << ",\"children_after\":"; writeChildren(out, children_after);
+    out << ",\"indexed_index_matches_rebuild_before\":" << (index_before ? "true" : "false")
         << ",\"indexed_index_matches_rebuild_after\":" << (index_after ? "true" : "false");
     if (result.plan.has_value()) {
         const auto& plan = *result.plan;
         out << ",\"creates_count\":" << plan.creates.size()
             << ",\"replacements_count\":" << plan.replacements.size()
             << ",\"deletes_count\":" << plan.deletes.size()
-            << ",\"delete_closure_present\":"
+            << ",\"creates\":"; writeRecords(out, plan.creates);
+        out << ",\"replacements\":"; writeRecords(out, plan.replacements);
+        out << ",\"deletes\":"; writeObjectIds(out, plan.deletes);
+        out << ",\"delete_closure\":";
+        if (plan.delete_closure.has_value()) writeDeleteClosure(out, *plan.delete_closure);
+        else out << "null";
+        out << ",\"plan_operation\":{\"id\":\"" << idHex(plan.operation.id.value())
+            << "\",\"document_id\":\"" << idHex(plan.operation.document_id.value())
+            << "\",\"schema_version\":" << plan.operation.schema_version
+            << ",\"payload_version\":" << plan.operation.payload_version
+            << ",\"payload_variant\":" << plan.operation.payload.index() << '}';
+        out << ",\"delete_closure_present\":"
             << (plan.delete_closure.has_value() ? "true" : "false");
     }
     out << "}\n";
@@ -711,6 +934,12 @@ void runCase(const MatrixCase& test_case) {
         result,
         store_before,
         store.allObjects(),
+        applied_before,
+        applied.entries,
+        children_before,
+        test_case.hierarchy_parent.has_value()
+            ? std::optional<std::vector<ObjectRecord>>(store.children(test_case.hierarchy_parent))
+            : std::nullopt,
         index_before,
         index_after);
 }
