@@ -80,12 +80,17 @@ void writeVec2(std::ostream& out, const Vec2& value) {
 }
 
 void writeString(std::ostream& out, std::string_view value) {
+    constexpr char kHex[] = "0123456789abcdef";
     out << '"';
     for (const char c : value) {
         if (c == '"' || c == '\\') out << '\\' << c;
         else if (c == '\n') out << "\\n";
         else if (c == '\r') out << "\\r";
         else if (c == '\t') out << "\\t";
+        else if (static_cast<unsigned char>(c) < 0x20U) {
+            const unsigned char byte = static_cast<unsigned char>(c);
+            out << "\\u00" << kHex[byte >> 4U] << kHex[byte & 0x0fU];
+        }
         else out << c;
     }
     out << '"';
@@ -94,6 +99,56 @@ void writeString(std::ostream& out, std::string_view value) {
 void writeColor(std::ostream& out, const ColorValue& value) {
     out << '[' << std::setprecision(9) << value.r << ',' << value.g << ',' << value.b << ','
         << value.a << ']';
+}
+
+void writeNormalizedRect(std::ostream& out, const NormalizedRect& value) {
+    out << '[' << std::setprecision(17) << value.x << ',' << value.y << ',' << value.width << ','
+        << value.height << ']';
+}
+
+void writeCurve(std::ostream& out, const std::optional<PiecewiseLinearCurve01>& value) {
+    if (!value.has_value()) {
+        out << "null";
+        return;
+    }
+    out << '[';
+    for (std::size_t i = 0; i < value->points.size(); ++i) {
+        if (i != 0U) out << ',';
+        out << '[' << std::setprecision(9) << value->points[i].x << ',' << value->points[i].y << ']';
+    }
+    out << ']';
+}
+
+void writePressureMapping(std::ostream& out, const PressureMapping& value) {
+    out << "{\"enabled\":" << (value.enabled ? "true" : "false")
+        << ",\"size_curve\":";
+    writeCurve(out, value.size_curve);
+    out << ",\"opacity_curve\":";
+    writeCurve(out, value.opacity_curve);
+    out << '}';
+}
+
+void writeBrushDescriptor(std::ostream& out, const BrushDescriptor& value) {
+    out << "{\"brush_family_id\":" << value.brush_family_id
+        << ",\"brush_version\":" << value.brush_version << ",\"color\":";
+    writeColor(out, value.color);
+    out << ",\"nominal_size\":" << std::setprecision(17) << value.nominal_size
+        << ",\"opacity\":" << std::setprecision(9) << value.opacity
+        << ",\"pressure\":";
+    writePressureMapping(out, value.pressure);
+    out << ",\"tilt\":{\"enabled\":" << (value.tilt.enabled ? "true" : "false")
+        << ",\"size_influence\":" << value.tilt.size_influence
+        << ",\"angle_influence\":" << value.tilt.angle_influence << "}"
+        << ",\"smoothing\":{\"amount\":" << value.smoothing.amount << "}"
+        << ",\"spacing\":{\"normalized_spacing\":" << value.spacing.normalized_spacing << "}"
+        << ",\"blend_mode\":" << static_cast<unsigned>(value.blend_mode)
+        << ",\"texture_resource_id\":";
+    if (value.texture_resource_id.has_value()) {
+        out << '"' << idHex(value.texture_resource_id->value) << '"';
+    } else {
+        out << "null";
+    }
+    out << '}';
 }
 
 void writeGeometry(std::ostream& out, const VectorPathGeometry& geometry) {
@@ -126,12 +181,18 @@ void writeTextStyle(std::ostream& out, const TextStyle& value) {
     out << '}';
 }
 
+void writeParagraphStyle(std::ostream& out, const ParagraphStyle& value) {
+    out << "{\"alignment\":" << static_cast<unsigned>(value.alignment)
+        << ",\"line_height\":" << std::setprecision(17) << value.line_height
+        << ",\"spacing_before\":" << value.spacing_before
+        << ",\"spacing_after\":" << value.spacing_after << '}';
+}
+
 void writeStrokeRecord(std::ostream& out, const StrokeRecord& value) {
     out << "{\"deterministic_seed\":" << value.deterministic_seed
-        << ",\"brush_family_id\":" << value.brush.brush_family_id
-        << ",\"brush_version\":" << value.brush.brush_version
-        << ",\"nominal_size\":" << std::setprecision(17) << value.brush.nominal_size
-        << ",\"opacity\":" << value.brush.opacity << ",\"data_variant\":"
+        << ",\"brush\":";
+    writeBrushDescriptor(out, value.brush);
+    out << ",\"data_variant\":"
         << value.data.index() << ",\"data\":";
     std::visit([&out](const auto& data) {
         using D = std::decay_t<decltype(data)>;
@@ -227,7 +288,10 @@ void writeContent(std::ostream& out, const ObjectContent& content) {
         } else if constexpr (std::is_same_v<T, ImageContent>) {
             out << "{\"resource_id\":\"" << idHex(value.resource_id.value)
                 << "\",\"intrinsic_width\":" << std::setprecision(17) << value.intrinsic_width
-                << ",\"intrinsic_height\":" << value.intrinsic_height << ",\"content_mode\":"
+                << ",\"intrinsic_height\":" << value.intrinsic_height << ",\"source_rect\":";
+            if (value.source_rect.has_value()) writeNormalizedRect(out, *value.source_rect);
+            else out << "null";
+            out << ",\"content_mode\":"
                 << static_cast<unsigned>(value.content_mode) << ",\"width\":" << value.width
                 << ",\"height\":" << value.height << '}';
         } else if constexpr (std::is_same_v<T, VectorPathContent>) {
@@ -237,9 +301,9 @@ void writeContent(std::ostream& out, const ObjectContent& content) {
             for (std::size_t i = 0; i < value.document.paragraphs.size(); ++i) {
                 if (i != 0U) out << ',';
                 const auto& paragraph = value.document.paragraphs[i];
-                out << "{\"id\":\"" << idHex(paragraph.id) << "\",\"alignment\":"
-                    << static_cast<unsigned>(paragraph.style.alignment) << ",\"line_height\":"
-                    << std::setprecision(17) << paragraph.style.line_height << ",\"runs\":[";
+                out << "{\"id\":\"" << idHex(paragraph.id) << "\",\"style\":";
+                writeParagraphStyle(out, paragraph.style);
+                out << ",\"runs\":[";
                 for (std::size_t j = 0; j < paragraph.runs.size(); ++j) {
                     if (j != 0U) out << ',';
             out << "{\"text\":"; writeString(out, paragraph.runs[j].text); out << ",\"style\":";
@@ -289,8 +353,27 @@ void writePropertyValue(std::ostream& out, const PropertyValue& value) {
                 using S = std::decay_t<decltype(stroke)>;
                 if constexpr (std::is_same_v<S, SolidStroke>) {
                     out << ",\"color\":"; writeColor(out, stroke.color);
-                    out << ",\"width\":" << stroke.width << ",\"cap\":" << static_cast<unsigned>(stroke.cap)
-                        << ",\"join_variant\":" << stroke.join.index() << ",\"dash_variant\":" << stroke.dash.index();
+                    out << ",\"width\":" << std::setprecision(17) << stroke.width
+                        << ",\"cap\":" << static_cast<unsigned>(stroke.cap)
+                        << ",\"join\":{";
+                    out << "\"variant\":" << stroke.join.index();
+                    std::visit([&out](const auto& join) {
+                        using J = std::decay_t<decltype(join)>;
+                        if constexpr (std::is_same_v<J, MiterJoin>) out << ",\"limit\":" << join.limit;
+                    }, stroke.join);
+                    out << "},\"dash\":{\"variant\":" << stroke.dash.index();
+                    std::visit([&out](const auto& dash) {
+                        using D = std::decay_t<decltype(dash)>;
+                        if constexpr (std::is_same_v<D, DashPattern>) {
+                            out << ",\"segments\":[";
+                            for (std::size_t i = 0; i < dash.segments.size(); ++i) {
+                                if (i != 0U) out << ',';
+                                out << std::setprecision(17) << dash.segments[i];
+                            }
+                            out << "],\"offset\":" << dash.offset;
+                        }
+                    }, stroke.dash);
+                    out << '}';
                 }
             }, item); out << '}';
         }
@@ -331,6 +414,7 @@ void writeRecords(std::ostream& out, const std::vector<ObjectRecord>& records) {
 }
 
 void writeOperationPayload(std::ostream& out, const OperationPayload& payload) {
+    out << std::setprecision(17);
     out << "{\"variant\":" << payload.index() << ",\"value\":";
     std::visit([&out](const auto& value) {
         using T = std::decay_t<decltype(value)>;
@@ -346,7 +430,45 @@ void writeOperationPayload(std::ostream& out, const OperationPayload& payload) {
         else if constexpr (std::is_same_v<T, SplitStrokesOp>) { out << "{\"splits\":["; for(std::size_t i=0;i<value.splits.size();++i){if(i)out<<',';out<<"{\"source_stroke_id\":\""<<idHex(value.splits[i].source_stroke_id)<<"\",\"replacements\":";writeRecords(out,value.splits[i].replacements);out<<'}';} out<<"]}"; }
         else if constexpr (std::is_same_v<T, AddEraseMasksOp>) { out << "{\"items\":["; for(std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"masks\":[";for(std::size_t j=0;j<value.items[i].masks.size();++j){if(j)out<<',';writeEraseMaskRecord(out,value.items[i].masks[j]);}out<<"]}";} out<<"]}"; }
         else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { out << "{\"items\":["; for(std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"mask_ids\":";writeObjectIds(out,value.items[i].mask_ids);out<<'}';} out<<"]}"; }
-        else if constexpr (std::is_same_v<T, EditRichTextOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"delta_version\":"<<value.delta.delta_version<<",\"steps\":[";for(std::size_t i=0;i<value.delta.steps.size();++i){if(i)out<<',';std::visit([&out,&value,i](const auto& step){using S=std::decay_t<decltype(step)>;out<<"{\"variant\":"<<value.delta.steps[i].index()<<",";if constexpr(std::is_same_v<S,InsertTextStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"offset\":"<<step.scalar_offset<<",\"text\":";writeString(out,step.text);}else if constexpr(std::is_same_v<S,DeleteTextStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"start\":"<<step.start_scalar<<",\"count\":"<<step.scalar_count;}else if constexpr(std::is_same_v<S,SplitParagraphStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"offset\":"<<step.scalar_offset<<",\"new_id\":\""<<idHex(step.new_paragraph_id)<<'"';}else if constexpr(std::is_same_v<S,MergeParagraphStep>){out<<"\"first\":\""<<idHex(step.first_paragraph_id)<<"\",\"second\":\""<<idHex(step.second_paragraph_id)<<'"';}else if constexpr(std::is_same_v<S,SetInlineStyleStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"start\":"<<step.start_scalar<<",\"count\":"<<step.scalar_count<<",\"style\":";writeTextStyle(out,step.style);}else{out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"style\":{\"alignment\":"<<static_cast<unsigned>(step.style.alignment)<<",\"line_height\":"<<step.style.line_height<<",\"spacing_before\":"<<step.style.spacing_before<<",\"spacing_after\":"<<step.style.spacing_after<<"}";}out<<'}';},value.delta.steps[i]);}out<<"]}"; }
+        else if constexpr (std::is_same_v<T, EditRichTextOp>) {
+            out << "{\"object_id\":\"" << idHex(value.object_id) << "\",\"delta_version\":"
+                << value.delta.delta_version << ",\"steps\":[";
+            for (std::size_t i = 0; i < value.delta.steps.size(); ++i) {
+                if (i != 0U) out << ',';
+                std::visit([&out, &value, i](const auto& step) {
+                    using S = std::decay_t<decltype(step)>;
+                    out << "{\"variant\":" << value.delta.steps[i].index() << ',';
+                    if constexpr (std::is_same_v<S, InsertTextStep>) {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id)
+                            << "\",\"offset\":" << step.scalar_offset << ",\"text\":";
+                        writeString(out, step.text);
+                        out << ",\"style\":";
+                        writeTextStyle(out, step.style);
+                    } else if constexpr (std::is_same_v<S, DeleteTextStep>) {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id)
+                            << "\",\"start\":" << step.start_scalar << ",\"count\":"
+                            << step.scalar_count;
+                    } else if constexpr (std::is_same_v<S, SplitParagraphStep>) {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id)
+                            << "\",\"offset\":" << step.scalar_offset << ",\"new_id\":\""
+                            << idHex(step.new_paragraph_id) << '"';
+                    } else if constexpr (std::is_same_v<S, MergeParagraphStep>) {
+                        out << "\"first\":\"" << idHex(step.first_paragraph_id)
+                            << "\",\"second\":\"" << idHex(step.second_paragraph_id) << '"';
+                    } else if constexpr (std::is_same_v<S, SetInlineStyleStep>) {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id)
+                            << "\",\"start\":" << step.start_scalar << ",\"count\":"
+                            << step.scalar_count << ",\"style\":";
+                        writeTextStyle(out, step.style);
+                    } else {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id) << "\",\"style\":";
+                        writeParagraphStyle(out, step.style);
+                    }
+                    out << '}';
+                }, value.delta.steps[i]);
+            }
+            out << "]}";
+        }
         else if constexpr (std::is_same_v<T, SetConnectorContentOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"content\":"; writeContent(out,ObjectContent{value.content}); out<<'}'; }
         else if constexpr (std::is_same_v<T, PatchPropertiesOp>) { out << "{\"patches\":[";for(std::size_t i=0;i<value.patches.size();++i){if(i)out<<',';const auto&p=value.patches[i];out<<"{\"object_id\":\""<<idHex(p.object_id)<<"\",\"field_id\":"<<p.field_id<<",\"action\":"<<static_cast<unsigned>(p.action)<<",\"value\":";if(std::holds_alternative<std::monostate>(p.value))out<<"null";else writePropertyValue(out,std::get<PropertyValue>(p.value));out<<'}';}out<<"]}"; }
     }, payload);
@@ -1007,17 +1129,22 @@ void recordRuntimeObservation(
     const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
     if (path == nullptr) return;
     std::ofstream out(path, std::ios::app);
+    out << std::setprecision(17);
     out << "{\"case_id\":\"" << test_case.case_id << "\",\"operation_name\":\""
         << test_case.operation_name << "\",\"polarity\":\""
         << (test_case.positive ? "positive" : "negative") << "\",\"store_implementation\":\""
         << store_name << "\",\"operation_id\":\"" << idHex(test_case.input.id.value())
+        << "\",\"state_case_id\":\"" << test_case.case_id
+        << "\",\"fixture_id\":\"" << test_case.case_id
         << "\",\"actual_disposition\":\"" << dispositionName(result.disposition) << '"'
         << ",\"actual_stateful_issue\":\"" << issueName(result.error.issue) << '"'
         << ",\"plan_present\":" << (result.plan.has_value() ? "true" : "false")
         << ",\"operation_document_id\":\"" << idHexTyped(test_case.input.document_id)
         << "\",\"schema_version\":" << test_case.input.schema_version
         << ",\"payload_version\":" << test_case.input.payload_version
-        << ",\"operation_payload_exact_typed_equality_asserted\":true"
+        << ",\"input_operation\":";
+    writeOperation(out, test_case.input);
+    out << ",\"operation_payload_exact_typed_equality_asserted\":true"
         << ",\"canonical_before\":"; writeRecords(out, before);
     out << ",\"canonical_after\":"; writeRecords(out, after);
     out << ",\"applied_before\":"; writeApplied(out, applied_before);
@@ -1041,15 +1168,10 @@ void recordRuntimeObservation(
         out << ",\"delete_closure\":";
         if (plan.delete_closure.has_value()) writeDeleteClosure(out, *plan.delete_closure);
         else out << "null";
-        out << ",\"plan_operation\":{\"id\":\"" << idHex(plan.operation.id.value())
-            << "\",\"document_id\":\"" << idHex(plan.operation.document_id.value())
-            << "\",\"schema_version\":" << plan.operation.schema_version
-            << ",\"payload_version\":" << plan.operation.payload_version
-            << ",\"payload_variant\":" << plan.operation.payload.index() << '}';
+        out << ",\"plan_operation\":";
+        writeOperation(out, plan.operation);
         out << ",\"delete_closure_present\":"
             << (plan.delete_closure.has_value() ? "true" : "false");
-        out << ",\"operation\":";
-        writeOperation(out, plan.operation);
     }
     out << "}\n";
 }
