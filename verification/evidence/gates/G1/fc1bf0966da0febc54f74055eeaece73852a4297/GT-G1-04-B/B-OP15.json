@@ -10,8 +10,8 @@
   "firstOracleRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-behavioral-oracle-repair-p36.md@32950127b50da42a31a7d0ca7570321b1f86b2f4",
   "oracleStrengtheningRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-oracle-strengthening-p36.md@5fa191e0ea9e15044d156e96d7158606028fde02",
   "executionCompletenessRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-execution-completeness-repair-p36.md@da28f20d22d77e5d29dfa193a3e2c5ae4e68eb53",
-  "p34Blocker": "notion:3cb4c57a-590c-819d-bb6f-ec5cd6f0562c",
-  "p35P36Authorization": "notion:3cb4c57a-590c-81c0-81a0-e772c6f95ed4",
+  "p34Blocker": "notion:3cb4c57a-590c-8150-a259-d510166f77b5",
+  "p35P36Authorization": "notion:3cb4c57a-590c-8116-b7db-deabc05a8f4e",
   "implementedHere": [
     "InsertObjects",
     "SetPlacements",
@@ -909,13 +909,19 @@
       "caseId": "CON-B07",
       "googleTest": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
       "structuralStatus": "PASS",
-      "expectedIssue": "kUnknown",
+      "expectedIssue": "kNone",
       "expectedProjection": "performance-only connector lookup comparison; FreePoint connector id20 succeeds without endpoint lookup, AttachedEndpoint connector id21 succeeds with greater find count; no state projection claimed",
       "freshResult": "PASS",
-      "referenceIndexedParity": true,
-      "baseNoMutation": true,
-      "indexedRebuild": true,
-      "nonEmptyFailureSentinel": true
+      "referenceIndexedParity": null,
+      "baseNoMutation": null,
+      "indexedRebuild": null,
+      "nonEmptyFailureSentinel": null,
+      "evidenceApplicability": {
+        "referenceIndexedParity": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "baseNoMutation": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "indexedRebuild": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "nonEmptyFailureSentinel": "N/A_SUCCESS_SUPPORT_CASE"
+      }
     }
   ],
   "richTextHelperCases": [
@@ -951,7 +957,7 @@
       "caseId": "TXT-S05",
       "googleTest": "RichTextStatePlan.TXT_S05_SplitParagraphIdCollisionRejects",
       "structuralStatus": "N/A_INTERNAL_HELPER",
-      "expectedValue": "split is rejected for paragraph-id collision id2; output remains byte/value-equal to the original document",
+      "expectedValue": "split is rejected because new paragraph id2 collides with existing paragraph id2; the caller-provided pre-seeded output sentinel (base doc() value) remains unchanged",
       "freshResult": "PASS"
     },
     {
@@ -965,7 +971,7 @@
       "caseId": "TXT-S07",
       "googleTest": "RichTextStatePlan.TXT_S07_MergeNonAdjacentRejects",
       "structuralStatus": "N/A_INTERNAL_HELPER",
-      "expectedValue": "non-adjacent merge id1 with id3 is rejected; output remains byte/value-equal to the original document",
+      "expectedValue": "non-adjacent merge of paragraph id1 with id3 is rejected; the caller-provided pre-seeded output sentinel (base doc() value) remains unchanged",
       "freshResult": "PASS"
     },
     {
@@ -1166,10 +1172,10 @@
   },
   "status": "READY_FOR_INDEPENDENT_P34_REREVIEW",
   "evidenceRepair": {
-    "repairType": "case-resolved expected fragment/value summary repair",
+    "repairType": "machine evidence truthfulness / applicability repair",
     "semanticExecutionReusedFromTestedCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
-    "substantiveEvidenceRepairCommit": "1bd3affc956a3965a767089fafb8a416bf553c34",
-    "substantiveEvidenceRepairCommitPushed": true,
+    "substantiveEvidenceRepairCommit": null,
+    "substantiveEvidenceRepairCommitPushed": false,
     "newSemanticExecutionPerformed": false,
     "historyRewritten": false,
     "forcePush": false
