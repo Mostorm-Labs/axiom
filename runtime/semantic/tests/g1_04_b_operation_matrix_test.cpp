@@ -206,6 +206,8 @@ void writeEndpoint(std::ostream& out, const ConnectorEndpoint& value) {
 
 void writeObjectIds(std::ostream& out, const std::vector<ObjectId>& ids);
 void writeContent(std::ostream& out, const ObjectContent& content);
+void writePropertyValue(std::ostream& out, const PropertyValue& value);
+void writeEraseMaskRecord(std::ostream& out, const EraseMaskRecord& value);
 void writeOperationPayload(std::ostream& out, const OperationPayload& payload);
 void writeOperation(std::ostream& out, const Operation& operation);
 
@@ -342,11 +344,11 @@ void writeOperationPayload(std::ostream& out, const OperationPayload& payload) {
         else if constexpr (std::is_same_v<T, SetImageContentOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"content\":"; writeContent(out,ObjectContent{value.content}); out<<'}'; }
         else if constexpr (std::is_same_v<T, AddStrokeOp>) { out << "{\"object\":"; writeRecords(out,{value.object}); out<<'}'; }
         else if constexpr (std::is_same_v<T, SplitStrokesOp>) { out << "{\"splits\":["; for(std::size_t i=0;i<value.splits.size();++i){if(i)out<<',';out<<"{\"source_stroke_id\":\""<<idHex(value.splits[i].source_stroke_id)<<"\",\"replacements\":";writeRecords(out,value.splits[i].replacements);out<<'}';} out<<"]}"; }
-        else if constexpr (std::is_same_v<T, AddEraseMasksOp>) { out << "{\"items_count\":"<<value.items.size()<<'}'; }
-        else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { out << "{\"items_count\":"<<value.items.size()<<'}'; }
-        else if constexpr (std::is_same_v<T, EditRichTextOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"delta_version\":"<<value.delta.delta_version<<",\"step_count\":"<<value.delta.steps.size()<<'}'; }
+        else if constexpr (std::is_same_v<T, AddEraseMasksOp>) { out << "{\"items\":["; for(std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"masks\":[";for(std::size_t j=0;j<value.items[i].masks.size();++j){if(j)out<<',';writeEraseMaskRecord(out,value.items[i].masks[j]);}out<<"]}";} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { out << "{\"items\":["; for(std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"mask_ids\":";writeObjectIds(out,value.items[i].mask_ids);out<<'}';} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, EditRichTextOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"delta_version\":"<<value.delta.delta_version<<",\"steps\":[";for(std::size_t i=0;i<value.delta.steps.size();++i){if(i)out<<',';std::visit([&out,&value,i](const auto& step){using S=std::decay_t<decltype(step)>;out<<"{\"variant\":"<<value.delta.steps[i].index()<<",";if constexpr(std::is_same_v<S,InsertTextStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"offset\":"<<step.scalar_offset<<",\"text\":";writeString(out,step.text);}else if constexpr(std::is_same_v<S,DeleteTextStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"start\":"<<step.start_scalar<<",\"count\":"<<step.scalar_count;}else if constexpr(std::is_same_v<S,SplitParagraphStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"offset\":"<<step.scalar_offset<<",\"new_id\":\""<<idHex(step.new_paragraph_id)<<'"';}else if constexpr(std::is_same_v<S,MergeParagraphStep>){out<<"\"first\":\""<<idHex(step.first_paragraph_id)<<"\",\"second\":\""<<idHex(step.second_paragraph_id)<<'"';}else if constexpr(std::is_same_v<S,SetInlineStyleStep>){out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"start\":"<<step.start_scalar<<",\"count\":"<<step.scalar_count<<",\"style\":";writeTextStyle(out,step.style);}else{out<<"\"paragraph_id\":\""<<idHex(step.paragraph_id)<<"\",\"style\":{\"alignment\":"<<static_cast<unsigned>(step.style.alignment)<<",\"line_height\":"<<step.style.line_height<<",\"spacing_before\":"<<step.style.spacing_before<<",\"spacing_after\":"<<step.style.spacing_after<<"}";}out<<'}';},value.delta.steps[i]);}out<<"]}"; }
         else if constexpr (std::is_same_v<T, SetConnectorContentOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"content\":"; writeContent(out,ObjectContent{value.content}); out<<'}'; }
-        else if constexpr (std::is_same_v<T, PatchPropertiesOp>) { out << "{\"patch_count\":"<<value.patches.size()<<'}'; }
+        else if constexpr (std::is_same_v<T, PatchPropertiesOp>) { out << "{\"patches\":[";for(std::size_t i=0;i<value.patches.size();++i){if(i)out<<',';const auto&p=value.patches[i];out<<"{\"object_id\":\""<<idHex(p.object_id)<<"\",\"field_id\":"<<p.field_id<<",\"action\":"<<static_cast<unsigned>(p.action)<<",\"value\":";if(std::holds_alternative<std::monostate>(p.value))out<<"null";else writePropertyValue(out,std::get<PropertyValue>(p.value));out<<'}';}out<<"]}"; }
     }, payload);
     out << '}';
 }
@@ -364,8 +366,18 @@ void writeApplied(std::ostream& out, const std::map<OperationId, AppliedOperatio
     std::size_t index = 0U;
     for (const auto& [id_value, entry] : entries) {
         if (index++ != 0U) out << ',';
-        out << "{\"id\":\"" << idHexTyped(id_value) << "\",\"canonical_operation_id\":\""
-            << idHexTyped(entry.canonical_operation.id) << "\"}";
+        out << "{\"id\":\"" << idHexTyped(id_value) << "\",\"canonical_operation\":";
+        writeOperation(out, entry.canonical_operation);
+        out << ",\"fingerprint\":";
+        if (entry.fingerprint.has_value()) {
+            out << '[';
+            for (std::size_t i = 0; i < entry.fingerprint->size(); ++i) {
+                if (i != 0U) out << ',';
+                out << static_cast<unsigned>((*entry.fingerprint)[i]);
+            }
+            out << ']';
+        } else out << "null";
+        out << '}';
     }
     out << ']';
 }
