@@ -1,0 +1,21 @@
+{
+  "format": "axiom-gt-g1-04-b10-op15-runtime-v3",
+  "evidence_family": "B-OP15",
+  "task": "GT-G1-04-B/B10",
+  "package_ref": "ff96bcb49726bdafd29ce77866c55fc21a5bdb59",
+  "source_ref": "6b3a28fad54e81ffbe90aa8fe043b5aad4b5ca7d",
+  "operation_family_count": 15,
+  "matrix_rows": {
+    "logical": 30,
+    "store_evaluations": 68
+  },
+  "runtime_observations_file": "runtime-observations.jsonl",
+  "runtime_observations": 68,
+  "exact_source_revalidation": {
+    "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_g1_04_b_operation_matrix_test --gtest_color=no",
+    "passed": 5,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "status": "PASS"
+}
