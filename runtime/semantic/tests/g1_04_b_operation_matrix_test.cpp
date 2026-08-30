@@ -9,9 +9,13 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cstdlib>
+#include <fstream>
+#include <iomanip>
 #include <map>
 #include <optional>
 #include <string_view>
+#include <sstream>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -20,6 +24,13 @@ namespace canvas::semantic {
 namespace {
 
 ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
+
+std::string idHex(const ObjectId& value) {
+    std::ostringstream out;
+    out << std::hex << std::setfill('0');
+    for (const auto byte : value.bytes) out << std::setw(2) << static_cast<unsigned>(byte);
+    return out.str();
+}
 
 Placement placement(std::uint64_t key, std::optional<ObjectId> parent = std::nullopt) {
     return Placement{parent, OrderKey({static_cast<std::uint8_t>(key)})};
@@ -579,6 +590,10 @@ void expectPlanProjection(
     const Operation& operation_input,
     const ExpectedPlan& expected) {
     EXPECT_EQ(actual.operation.id, operation_input.id);
+    EXPECT_EQ(actual.operation.document_id, operation_input.document_id);
+    EXPECT_EQ(actual.operation.schema_version, operation_input.schema_version);
+    EXPECT_EQ(actual.operation.payload_version, operation_input.payload_version);
+    EXPECT_EQ(actual.operation.payload, operation_input.payload);
     EXPECT_TRUE(canonicalPayloadEqual(actual.operation, operation_input));
     EXPECT_EQ(actual.creates, expected.creates);
     EXPECT_EQ(actual.replacements, expected.replacements);
@@ -601,6 +616,39 @@ void expectPlanProjection(
     }
 }
 
+void recordRuntimeObservation(
+    const MatrixCase& test_case,
+    std::string_view store_name,
+    const PrepareResult& result,
+    const std::vector<ObjectRecord>& before,
+    const std::vector<ObjectRecord>& after,
+    bool index_before,
+    bool index_after) {
+    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
+    if (path == nullptr) return;
+    std::ofstream out(path, std::ios::app);
+    out << "{\"case_id\":\"" << test_case.case_id << "\",\"operation_name\":\""
+        << test_case.operation_name << "\",\"polarity\":\""
+        << (test_case.positive ? "positive" : "negative") << "\",\"store_implementation\":\""
+        << store_name << "\",\"operation_id\":\"" << idHex(test_case.input.id.value())
+        << "\",\"actual_disposition\":" << static_cast<unsigned>(result.disposition)
+        << ",\"actual_stateful_issue\":" << static_cast<unsigned>(result.error.issue)
+        << ",\"plan_present\":" << (result.plan.has_value() ? "true" : "false")
+        << ",\"canonical_before_count\":" << before.size()
+        << ",\"canonical_after_count\":" << after.size()
+        << ",\"indexed_index_matches_rebuild_before\":" << (index_before ? "true" : "false")
+        << ",\"indexed_index_matches_rebuild_after\":" << (index_after ? "true" : "false");
+    if (result.plan.has_value()) {
+        const auto& plan = *result.plan;
+        out << ",\"creates_count\":" << plan.creates.size()
+            << ",\"replacements_count\":" << plan.replacements.size()
+            << ",\"deletes_count\":" << plan.deletes.size()
+            << ",\"delete_closure_present\":"
+            << (plan.delete_closure.has_value() ? "true" : "false");
+    }
+    out << "}\n";
+}
+
 template <typename Store>
 void runCase(const MatrixCase& test_case) {
     Store store;
@@ -621,8 +669,11 @@ void runCase(const MatrixCase& test_case) {
             std::optional<ObjectId>{*test_case.hierarchy_parent});
     }
 
+    bool index_before = true;
+    bool index_after = true;
     if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
         ASSERT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(store));
+        index_before = internal::ObjectStoreMutator::indexMatchesRebuild(store);
     }
 
     const OperationEngine engine;
@@ -650,9 +701,18 @@ void runCase(const MatrixCase& test_case) {
             << test_case.case_id;
     }
     if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
-        EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(store))
+        index_after = internal::ObjectStoreMutator::indexMatchesRebuild(store);
+        EXPECT_TRUE(index_after)
             << test_case.case_id;
     }
+    recordRuntimeObservation(
+        test_case,
+        std::is_same_v<Store, IndexedObjectStore> ? "IndexedObjectStore" : "ReferenceObjectStore",
+        result,
+        store_before,
+        store.allObjects(),
+        index_before,
+        index_after);
 }
 
 bool hasCaseId(const std::vector<MatrixCase>& cases, std::string_view case_id) {
