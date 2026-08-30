@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:g1-04-c-expected:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "provenance", "caseId", "authorityRuleRefs", "mutationExpected"],
+  "properties": {
+    "format": {"const": "axiom-g1-04-c-expected-v1"},
+    "formatVersion": {"const": 1},
+    "provenance": {"const": "AUTHORITY_MANUAL"},
+    "caseId": {"type": "string", "minLength": 1},
+    "authorityRuleRefs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "mutationExpected": {"const": false},
+    "disposition": {"enum": ["PLAN_READY", "ALREADY_APPLIED", "REJECTED"]},
+    "terminalPhase": {"enum": ["NORMALIZE", "STATELESS_VALIDATE", "IDEMPOTENCY", "STATEFUL_VALIDATE", "PREPARE"]},
+    "semanticErrorCategory": {"type": "string", "minLength": 1},
+    "logicalPlanProjection": {"type": "object"},
+    "openPolicy": {"type": "boolean"}
+  }
+}

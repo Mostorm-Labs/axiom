@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:g1-04-c-result:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "provenance", "caseId", "status", "expectedRef", "observationRefs"],
+  "properties": {
+    "format": {"const": "axiom-g1-04-c-result-v1"},
+    "formatVersion": {"const": 1},
+    "provenance": {"const": "CONFORMANCE_RESULT"},
+    "caseId": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "expectedRef": {"type": "string", "minLength": 1},
+    "observationRefs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "diagnostics": {"type": "array", "items": {"type": "string"}}
+  }
+}
