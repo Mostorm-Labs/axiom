@@ -1,0 +1,18 @@
+{
+  "format": "axiom-gt-g1-04-b-b8-prepared-apply-plan-v1",
+  "task": "GT-G1-04-B/B8",
+  "sourceCommit": "c78cb67fd44251c0bb76f3e2582f9f9728f75108",
+  "testedCommit": "c78cb67fd44251c0bb76f3e2582f9f9728f75108",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-30-gt-g1-04-b8-prepared-apply-plan-p31.md@534ce78a4edd0d275890ce68eb726e3d925fc06b",
+  "authorization": "B8 P32 AUTHORIZED",
+  "dispatch": "all 15 OperationPayload alternatives",
+  "shortCircuit": {"alreadyApplied": "kAlreadyApplied; no plan; no ObjectStore validation", "collision": "kRejected/kOperationIdCollision; no plan; no ObjectStore validation"},
+  "projection": {"creates": ["InsertObjects", "RestoreObjects", "AddStroke", "SplitStrokes replacements"], "replacements": ["SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"], "deletes": ["DeleteObjects final_delete_set", "SplitStrokes source_delete_ids"], "deleteClosure": "DeleteObjects only"},
+  "invariants": {"prepared": "error kNone and plan present", "alreadyApplied": "error kNone and no plan", "rejected": "error non-kNone and no plan", "noMutation": true, "noChangeSet": true, "noHistory": true, "noOutbox": true},
+  "redProvenance": {"observed": true, "result": "pre-implementation build lacked apply_plan and operation_engine targets"},
+  "verification": {"focusedApplyPlan": "PASS 3/3", "focusedOperationEngine": "PASS 1/1", "fullSemantic": "PASS 310/310 (12 protobuf-off skipped)", "gitDiffCheck": "PASS"},
+  "scopeGuards": {"B0-B7Changed": false, "productionOutsideB8Changed": false, "testsOutsideB8Changed": false, "B9Started": false, "B10Started": false, "GTG104CStarted": false, "GTG105Changed": false, "untrackedDataPreserved": true},
+  "materialization": {"sourceCommitPushed": true, "evidenceCommitPushed": false, "historyRewritten": false, "forcePush": false},
+  "status": "READY_FOR_INDEPENDENT_P34_REVIEW"
+}
