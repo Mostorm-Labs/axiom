@@ -54,7 +54,7 @@ TextStyle textStyle(float component = 1.0F) {
     style.font_resource_id = ResourceId{id(90U)};
     style.font_size = 12.0;
     style.weight = 400U;
-    style.color = ColorRgba{component, component, component, 1.0F};
+    style.color = ColorValue{component, component, component, 1.0F};
     return style;
 }
 
@@ -107,7 +107,7 @@ StrokeRecord vectorStrokeData() {
     StrokeRecord stroke{};
     stroke.brush.brush_family_id = 1U;
     stroke.brush.brush_version = 1U;
-    stroke.brush.color = ColorRgba{0.0F, 0.0F, 0.0F, 1.0F};
+    stroke.brush.color = ColorValue{0.0F, 0.0F, 0.0F, 1.0F};
     stroke.brush.nominal_size = 1.0;
     stroke.brush.opacity = 1.0F;
     stroke.data = VectorStrokeData{{StrokeSample{{1.0, 2.0}, 1.0F, {0.0F, 0.0F}}}};
