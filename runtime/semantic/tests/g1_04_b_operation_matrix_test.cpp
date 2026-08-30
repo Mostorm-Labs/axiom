@@ -848,8 +848,12 @@ void recordRuntimeObservation(
     out << ",\"applied_after\":"; writeApplied(out, applied_after);
     out << ",\"children_before\":"; writeChildren(out, children_before);
     out << ",\"children_after\":"; writeChildren(out, children_after);
-    out << ",\"indexed_index_matches_rebuild_before\":" << (index_before ? "true" : "false")
-        << ",\"indexed_index_matches_rebuild_after\":" << (index_after ? "true" : "false");
+    out << ",\"indexed_index_matches_rebuild_before\":";
+    if (store_name == "IndexedObjectStore") out << (index_before ? "true" : "false");
+    else out << "null";
+    out << ",\"indexed_index_matches_rebuild_after\":";
+    if (store_name == "IndexedObjectStore") out << (index_after ? "true" : "false");
+    else out << "null";
     if (result.plan.has_value()) {
         const auto& plan = *result.plan;
         out << ",\"creates_count\":" << plan.creates.size()
