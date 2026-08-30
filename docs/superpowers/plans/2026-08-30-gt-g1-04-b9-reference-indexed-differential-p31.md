@@ -1,6 +1,8 @@
 # GT-G1-04-B B9 Fresh P31 — ReferenceObjectStore / IndexedObjectStore Differential
 
-> **Status:** P31 READY / PACKAGE MATERIALIZATION.
+> **Status:** P31 READY / PACKAGE MATERIALIZATION — repaired after CONTROL_REVIEW findings.
+>
+> **Task:** `GT-G1-04-B / B9`
 >
 > This document supersedes **only Task Package B9** in
 > `docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md`.
@@ -13,7 +15,7 @@
 
 ## 1. Accepted baseline and repository anchor
 
-Fresh repository reconciliation before this package observed:
+Fresh repository reconciliation before the original B9 package observed:
 
 ```text
 repo:   Mostorm-Labs/axiom
@@ -23,8 +25,22 @@ observed HEAD: bc80d0a3c1376b0334f79d8e2f5e7588cefff645
 result: FRESH_BASELINE_MATCH
 ```
 
-No new remote commit, branch divergence, or repository-tree drift exists relative
-to the expected B8 materialized evidence ref.
+The first B9 P31 materialization was:
+
+```text
+3e72e6e6091c8276def6989d18b438be2533d729
+```
+
+The subsequent CONTROL_REVIEW found two P31 packaging defects only:
+
+```text
+1. preserve the parent B9 final store/index projection obligation;
+2. preserve B's normalized + structurally-valid typed Operation input boundary.
+```
+
+Those findings did not reopen Authority, B0-B8, B8 P36, or any implementation.
+This repaired package resolves only those P31 defects plus the related
+AppliedOperationView and lookup-measurement clarifications.
 
 Lifecycle state inherited without re-review:
 
@@ -72,19 +88,20 @@ task_anchor:
 resume_cursor: null
 ```
 
-`resume_cursor` is null because B9 has not executed.
+`resume_cursor` is null because B9 has never executed.
 
 ---
 
-## 2. Current Authority binding
+## 2. Current Authority binding and dependencies
 
-B9 is constrained by the following already-established repository authority and
+B9 is constrained by the following already-established repository Authority and
 accepted implementation contracts:
 
 1. `docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md`
    - B8 -> B9 DAG edge.
    - B9 purpose, oracle, trace classes, mismatch diagnostics, evidence family,
-     lookup instrumentation, and exit criteria.
+     final store/index projection obligation, lookup instrumentation, and exit
+     criteria.
    - `B-DIFF` is limited to B state decisions and plan projections and is not
      GT-G1-04-C golden authority.
 2. `docs/superpowers/plans/2026-08-26-g1-semantic-kernel-codex-package.md`
@@ -98,6 +115,21 @@ accepted implementation contracts:
    - It supersedes the historical B8 field shape without changing B9 ownership.
 4. Accepted B0-B8 source/evidence lineage represented by the trusted anchor and
    B8 refs in section 1.
+5. Existing GT-G1-03/B8 test seams, including:
+   - `runtime/semantic/tests/object_store_differential_test.cpp`;
+   - the accepted B8 test-only counting-store pattern;
+   - `internal::ObjectStoreMutator::indexMatchesRebuild(const IndexedObjectStore&)`
+     for test/bootstrap-only derived-index consistency proof.
+
+Dependencies for execution:
+
+```text
+B8 complete and accepted for downstream
+ReferenceObjectStore semantic behavior unchanged
+IndexedObjectStore semantic behavior unchanged
+existing ObjectStore differential oracle remains available
+existing internal test/bootstrap seams remain available
+```
 
 Repository implementation reality confirms the accepted B8 plan shape is:
 
@@ -120,7 +152,7 @@ resolved_connector_cascade_closure
 final_delete_set
 ```
 
-No new semantic authority is introduced by this package.
+No new semantic Authority is introduced by this package.
 
 If execution discovers that this oracle or comparison boundary materially
 conflicts with Current Authority, stop with `BLOCKED_AUTHORITY` and route the
@@ -132,11 +164,14 @@ earliest untrusted layer. Do not repair Authority inside B9.
 
 B9 proves one narrowly scoped statement:
 
-> For identical canonical base state, identical applied-operation lookup state,
-> and the same normalized Operation input, `OperationEngine::prepare` produces
-> equivalent B-lane state decisions and equivalent current
+> For identical canonical base state, identically seeded but independently
+> instantiated applied-operation lookup state, and the same **normalized and
+> structurally valid typed Operation** input, `OperationEngine::prepare`
+> produces equivalent B-lane state decisions and equivalent current
 > `PreparedApplyPlan` projections when backed by `ReferenceObjectStore` versus
-> `IndexedObjectStore`.
+> `IndexedObjectStore`, while planning leaves canonical store state and the
+> IndexedObjectStore derived index projection unchanged and internally
+> consistent.
 
 Why this oracle is valid:
 
@@ -145,12 +180,15 @@ Why this oracle is valid:
 - B9 does not ask ReferenceObjectStore to define product intent, final error
   taxonomy, commit behavior, or C golden outcomes.
 - The compared SUT boundary is B read-only planning only.
+- B9 consumes A-lane structural validity; it does not regenerate or revalidate
+  A0-A3 invalid cases.
 
 B9 therefore answers:
 
 ```text
 Does the production-oriented IndexedObjectStore change B's decision or plan
-projection compared with the accepted reference store for the same input?
+projection compared with the accepted reference store for the same valid input,
+or does B planning disturb store/index state?
 ```
 
 It does **not** answer:
@@ -166,47 +204,66 @@ That latter full matrix remains B10 / later independent conformance authority.
 
 ## 4. Differential contract
 
-### Input
+### 4.1 Input boundary
 
-Each observation receives the same:
+Each observation receives logically identical inputs:
 
 ```text
 canonical bootstrap records
-applied-operation fixture
-normalized typed Operation
+independently instantiated but identically seeded applied-operation fixtures
+same normalized + structurally valid typed Operation
 fixture/trace identifier
 fixed deterministic seed when randomized selection is used
 ```
 
-Canonical records are seeded into each store only through the existing
-internal test/bootstrap mutator seam. B9 does not add a production mutation API.
+The two store runs MUST NOT share mutable test state whose reads/counters can
+make the first run affect the second. In particular, the Reference and Indexed
+runs receive equivalent AppliedOperationView state but may use separate test
+instances.
 
-### System Under Test
+Canonical records are seeded into each store only through the existing internal
+test/bootstrap mutator seam. B9 does not add a production mutation API.
+
+B9 begins **after** A-lane normalization and structural validation. The fixture
+bank and randomized selector MUST NOT generate A0-A3 structural-invalid cases,
+including invalid wire/envelope/collection-order/leaf/hard-limit cases, as B9
+inputs.
+
+### 4.2 System Under Test
 
 ```text
 OperationEngine::prepare(
   operation,
-  StatefulValidationContext{IndexedObjectStore, AppliedOperationView})
+  StatefulValidationContext{
+    IndexedObjectStore,
+    indexed_side_applied_operation_view
+  })
 ```
 
-### Reference / Oracle
+### 4.3 Reference / Oracle
 
 ```text
 OperationEngine::prepare(
   same operation,
-  StatefulValidationContext{ReferenceObjectStore, same AppliedOperationView})
+  StatefulValidationContext{
+    ReferenceObjectStore,
+    reference_side_applied_operation_view
+  })
 ```
 
-### Normalization / accepted equivalence
+where both applied-operation views start from identical logical contents.
 
-Inputs are already normalized typed Operations. B9 does not repeat A-lane
-normalization and does not create a second semantic canonicalizer.
+### 4.4 Accepted equivalence
+
+Inputs are already normalized **and structurally valid** typed Operations. B9
+does not repeat A-lane normalization or structural validation and does not create
+a second semantic canonicalizer.
 
 Comparison is exact typed projection equality. The comparator MUST NOT sort or
 otherwise normalize emitted plan collections to hide an ordering difference;
 B8 already requires deterministic ordering.
 
-Exact comparison boundary:
+Exact B-result comparison boundary:
 
 ```text
 PrepareResult.disposition
@@ -227,16 +284,40 @@ if delete_closure present:
   final_delete_set
 ```
 
-The comparator also records canonical base-store projections before and after
-planning. Planning must leave both unchanged.
-
 No equality rule may ignore a semantic field, reorder a result, coerce an
 error, or collapse `nullopt` and an empty DeleteClosure.
 
-### Comparison output
+### 4.5 Store and derived-index projection obligation
+
+The parent B9 package requires final **store/index projection** differential
+observation. This repaired P31 preserves that requirement explicitly.
+
+For every observation:
+
+1. Before `prepare`, capture the canonical ReferenceObjectStore projection and
+   canonical IndexedObjectStore projection using the existing GT-G1-03
+   differential projection rules.
+2. Before `prepare`, require
+   `internal::ObjectStoreMutator::indexMatchesRebuild(indexed_store) == true`.
+3. Run Reference and Indexed `prepare` without canonical mutation.
+4. After `prepare`, capture the same canonical projections again.
+5. After `prepare`, require
+   `internal::ObjectStoreMutator::indexMatchesRebuild(indexed_store) == true`.
+6. Require Reference before == Reference after.
+7. Require Indexed before == Indexed after.
+8. Require the Reference and Indexed canonical projections remain equivalent.
+9. For relevant hierarchy parent scopes exercised by the fixture/operation,
+   compare `children(parent)` according to the existing GT-G1-03 differential
+   projection/equality rule before and after planning; do not invent a second
+   child-ordering authority in B9.
+
+`indexMatchesRebuild` and the existing internal bootstrap seam are test-only
+consumers. B9 does not add, modify, or expose a production ObjectIndex API.
+
+### 4.6 Comparison output
 
 A test-only `DifferentialObservation` may be defined locally inside the B9 test
-translation unit. It is not a production API or semantic authority.
+translation unit. It is not a production API or semantic Authority.
 
 It records at minimum:
 
@@ -249,11 +330,14 @@ reference disposition + issue
 indexed disposition + issue
 reference plan projection
 indexed plan projection
-before/after store projections
-lookup counters for the indexed-side observation when enabled
+reference canonical projection before/after
+indexed canonical projection before/after
+relevant parent children projections before/after
+indexed indexMatchesRebuild before/after
+lookup counters for the indexed-side prepare window when enabled
 ```
 
-### Mismatch classification
+### 4.7 Mismatch classification
 
 B9 test diagnostics classify the first observed mismatch by semantic path:
 
@@ -271,6 +355,8 @@ DELETE_CLOSURE_HIERARCHY_MISMATCH
 DELETE_CLOSURE_CONNECTOR_CASCADE_MISMATCH
 DELETE_CLOSURE_FINAL_SET_MISMATCH
 BASE_PROJECTION_MISMATCH
+INDEX_PROJECTION_MISMATCH
+INDEX_INVARIANT_MISMATCH
 PLANNING_MUTATION_OBSERVED
 INDEXED_SINGLE_TARGET_FULL_ENUMERATION
 ```
@@ -291,7 +377,7 @@ indexed-side summary
 Do not continue reporting later mismatches as though the first divergence were
 already understood.
 
-### Determinism
+### 4.8 Determinism
 
 - Hand-authored fixtures are deterministic.
 - Randomized bounded selection uses a checked-in fixed seed and fixed bound.
@@ -300,7 +386,7 @@ already understood.
 - Evidence serialization must use stable operation order and stable field order;
   volatile timestamps are metadata only and never participate in parity.
 
-### Failure artifact
+### 4.9 Evidence paths
 
 Future B9 evidence is source-bound at:
 
@@ -323,7 +409,7 @@ No GT-G1-04-C golden fixture or expected-outcome authority may be created.
 
 B9 uses two complementary suites.
 
-### A. Hand-authored deterministic differential trace
+### 5.1 Hand-authored deterministic differential trace
 
 The trace MUST include operations that exercise the parent-plan B9 families:
 
@@ -363,7 +449,7 @@ SetConnectorContent
 This is **trace-presence coverage only**. It is not the B10 requirement for at
 least one positive and one negative row for each operation family.
 
-### B. Fixed-seed bounded randomized differential trace
+### 5.2 Fixed-seed bounded randomized differential trace
 
 The P32 test must define checked-in constants equivalent to:
 
@@ -372,9 +458,10 @@ seed:        0xB9D1FF01
 trace bound: 256 prepare observations
 ```
 
-The generator/selector operates only over a bounded bank of normalized typed
-Operations and canonical bootstrap records owned by the test. It must not infer
-new product semantics or auto-bless production output.
+The generator/selector operates only over a bounded bank of **normalized and
+structurally valid typed Operations** and canonical bootstrap records owned by
+the test. It must not infer new product semantics, generate A0-A3-invalid
+inputs, or auto-bless production output.
 
 The fixed-seed run is required to detect state/store implementation drift that
 a small hand-authored trace may miss. Increasing the bound later is a test-only
@@ -410,12 +497,26 @@ allObjects_calls == 0
 is mandatory. `find`/`contains` and authority-required `children` traversal are
 allowed.
 
+The performance counter window MUST measure `OperationEngine::prepare` only:
+
+```text
+capture any required before-projection / index invariant outside the counter window
+reset lookup counters
+call Indexed-side OperationEngine::prepare
+capture lookup counters immediately
+perform after-projection / index invariant checks outside the counter window
+```
+
+Therefore `allObjects()` calls made by the test oracle to capture canonical
+before/after projections MUST NOT be counted as planner full scans.
+
 This proves the B planning layer does not introduce ObjectId full enumeration
 on indexed single-target paths while relying on the accepted GT-G1-03 store
 contract for the implementation complexity of `find`/`contains` themselves.
 
-Delete cascade, whole-store comparison at test boundaries, and bounded fixture
-enumeration are not mislabeled as single-target lookup paths.
+Delete cascade, whole-store comparison at test boundaries, derived-index rebuild
+checks, and bounded fixture enumeration are not mislabeled as single-target
+lookup paths.
 
 If satisfying this requirement would require a new production ObjectStore API
 or new production instrumentation surface, STOP with
@@ -438,7 +539,8 @@ runtime/semantic/tests/CMakeLists.txt
 ```
 
 The new test target may include `runtime/semantic/src` privately only to access
-existing test/bootstrap seams already used by accepted ObjectStore tests.
+existing test/bootstrap seams already used by accepted ObjectStore tests,
+including `ObjectStoreMutator::indexMatchesRebuild`.
 
 No production semantic source/header change is authorized by this package.
 
@@ -462,26 +564,34 @@ with the names defined in section 4.
 Future B9 P32 must start with tests that fail before the B9 differential harness
 exists and then prove all of the following:
 
-1. Same deterministic fixture + same Operation produces identical disposition
-   and exact StatefulIssue across Reference and Indexed stores.
-2. Prepared results have exact plan-presence parity.
-3. Prepared plans have exact typed equality over the current B8 projection:
+1. Same deterministic fixture + same normalized and structurally valid Operation
+   produces identical disposition and exact StatefulIssue across Reference and
+   Indexed stores.
+2. Reference and Indexed runs use independently instantiated but identically
+   seeded applied-operation lookup state.
+3. Prepared results have exact plan-presence parity.
+4. Prepared plans have exact typed equality over the current B8 projection:
    operation, creates, replacements, deletes, and DeleteClosure.
-4. DeleteObjects compares all four accepted DeleteClosure partitions.
-5. SplitStrokes compares generic `deletes + creates` and requires
+5. DeleteObjects compares all four accepted DeleteClosure partitions.
+6. SplitStrokes compares generic `deletes + creates` and requires
    `delete_closure == nullopt` on both sides.
-6. AlreadyApplied and collision decisions match across both stores.
-7. Hand-authored trace contains all fifteen Operation names at least once.
-8. Fixed-seed bounded randomized trace passes with the frozen seed/bound.
-9. Repeating the same fixed-seed trace produces identical ordered observations.
-10. Planning leaves both stores' canonical projections unchanged.
-11. A deliberately divergent **test-only fixture** is detected by the
-    comparator and reports the first mismatch path/index/OperationId/store side;
-    this must not modify production store behavior.
-12. Indexed single-target lookup suite records `allObjects_calls == 0`.
-13. Existing `object_store_differential_test`, B8 `apply_plan_test`, and
+7. AlreadyApplied and collision decisions match across both stores.
+8. Hand-authored trace contains all fifteen Operation names at least once.
+9. Fixed-seed bounded randomized trace passes with the frozen seed/bound and
+   contains no A0-A3-invalid generated inputs.
+10. Repeating the same fixed-seed trace produces identical ordered observations.
+11. Planning leaves both stores' canonical projections unchanged.
+12. Indexed derived index is rebuild-consistent before and after every observed
+    prepare, and relevant hierarchy child projections remain equivalent under
+    the existing GT-G1-03 differential rule.
+13. A deliberately divergent **test-only fixture** is detected by the comparator
+    and reports the first mismatch path/index/OperationId/store side; this must
+    not modify production store behavior.
+14. Indexed single-target lookup suite records `allObjects_calls == 0` inside the
+    prepare-only counter window.
+15. Existing `object_store_differential_test`, B8 `apply_plan_test`, and
     OperationEngine boundary tests remain green.
-14. Full semantic CTest remains green.
+16. Full semantic CTest remains green.
 
 Required verification layers for a future source/test commit:
 
@@ -513,13 +623,20 @@ ReferenceObjectStore oracle identity
 IndexedObjectStore SUT identity
 hand-authored fixture/trace IDs
 15-operation trace-presence manifest
+input-boundary assertion: normalized + structurally valid only
+applied-operation fixture equivalence / independent-instance assertion
 fixed randomized seed = 0xB9D1FF01
 random trace bound = 256
 observation count
 parity result
 first mismatch = null on PASS, otherwise full mismatch diagnostic
+reference canonical before/after projection
+indexed canonical before/after projection
+indexed indexMatchesRebuild before/after result
+relevant hierarchy children projection parity
 lookup counters / single-target allObjects result
-before/after no-mutation projection proof
+lookup counter measurement-window description
+before/after no-mutation proof
 focused/full test commands and results
 exact-head CI run IDs/status when available
 explicit non-ingress flags for B10 / C / GT-G1-05
@@ -533,7 +650,25 @@ evidence-only materialized commit.
 
 ---
 
-## 10. Explicit non-goals / authorization boundary
+## 10. Performance constraints
+
+B9 instrumentation and traces must remain deterministic and bounded:
+
+```text
+randomized prepare observations <= frozen bound 256
+no renderer/network/storage/cloud dependency
+no ObjectId full scan on named indexed single-target prepare paths
+no production-only performance instrumentation surface
+whole-store/index projection work is test-oracle work, outside the prepare-only
+lookup counter window
+```
+
+The package does not require a new asymptotic guarantee beyond the already
+accepted GT-G1-03 IndexedObjectStore contract.
+
+---
+
+## 11. Explicit non-goals / authorization boundary
 
 B9 does not authorize:
 
@@ -544,6 +679,7 @@ IndexedObjectStore semantic changes or ObjectIndex rewrite
 ObjectStore API expansion
 production instrumentation API
 new semantic validation rules
+new A-lane structural validation rules
 new PrepareResult / PreparedApplyPlan fields
 Atomic Apply
 SemanticGeneration
@@ -571,7 +707,30 @@ They are not interchangeable.
 
 ---
 
-## 11. Blocked return behavior
+## 12. Exit criteria
+
+B9 P32 may return implementation/evidence ready for later review only when:
+
+```text
+Reference and Indexed B decisions are equivalent for the frozen B9 suites
+current B8 PreparedApplyPlan projections are exactly equivalent
+all 15 operation names appear in differential trace presence coverage
+fixed seed 0xB9D1FF01 / bound 256 is deterministic
+no B9 input violates the inherited normalized + structurally-valid boundary
+canonical store projections are unchanged by planning
+Indexed ObjectIndex is rebuild-consistent before and after planning
+relevant hierarchy child projections remain equivalent under GT-G1-03 rules
+named indexed single-target prepare paths observe allObjects_calls == 0
+focused/regression/full semantic tests pass
+required exact-head hosted CI passes
+source/test result is durably materialized
+B-DIFF evidence is source-bound and independently resolvable
+no B10 / C / GT-G1-05 ingress occurred
+```
+
+---
+
+## 13. Blocked return behavior
 
 Future B9 P32 must fail closed:
 
@@ -580,25 +739,27 @@ BLOCKED_AUTHORITY
   Current Authority no longer supports the frozen oracle/comparison semantics.
 
 TEST_ORACLE_INSUFFICIENT
-  Reference/Indexed parity cannot be observed independently enough to prove B9.
+  Reference/Indexed parity or store/index projection cannot be observed
+  independently enough to prove B9.
 
 CROSS_LANE_SCOPE_REQUIRED
-  proof would require store API/production semantic changes, C golden data,
-  Atomic Apply, or another lane's ownership.
+  proof would require store API/production semantic changes, A-lane rule
+  invention, C golden data, Atomic Apply, or another lane's ownership.
 
 BLOCKED_EXECUTION_DIVERGENCE
   accepted package/anchor ancestry cannot be established or repository state
   contradicts authorized scope.
 
 BLOCKED_EVIDENCE
-  exact source/test result cannot be materialized for independent P34 review.
+  exact source/test result cannot be materialized for independent review.
 ```
 
-Do not silently repair Authority, production semantics, or another package.
+Do not silently repair Authority, production semantics, A-lane semantics, or
+another package.
 
 ---
 
-## 12. Materialization sequence and current lifecycle status
+## 14. Materialization sequence and current lifecycle status
 
 This document is a P31 package artifact only.
 
@@ -607,7 +768,7 @@ Required lifecycle remains:
 ```text
 P31 documentation-only package commit
         ↓
-CONTROL_REVIEW verifies exact package commit
+CONTROL_REVIEW verifies exact repaired package commit
         ↓
 separate B9 P32 authorization
         ↓
@@ -625,7 +786,7 @@ The future P32 surface handoff must carry:
 ```yaml
 stage: P32
 stage_owner: aegis-implementation
-package_ref: <this reviewed materialization commit>
+package_ref: <this reviewed repaired P31 materialization commit>
 task_anchor:
   revision: bc80d0a3c1376b0334f79d8e2f5e7588cefff645
   relation: ancestor
@@ -635,6 +796,7 @@ resume_cursor: null
 Until CONTROL_REVIEW explicitly authorizes that handoff:
 
 ```text
+B9 P31 = REPAIRED / MATERIALIZED / PENDING_CONTROL_REVIEW
 B9 P32 = NOT_AUTHORIZED
 B10 = NOT_AUTHORIZED
 GT-G1-04-C = DEFERRED / NOT_AUTHORIZED
