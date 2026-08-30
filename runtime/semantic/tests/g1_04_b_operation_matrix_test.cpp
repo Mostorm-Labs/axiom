@@ -1,26 +1,757 @@
+#include "canvas/semantic/indexed_object_store.hpp"
+#include "canvas/semantic/operation_engine.hpp"
+#include "canvas/semantic/operation_fingerprint.hpp"
+#include "canvas/semantic/reference_object_store.hpp"
+#include "object_store_mutator.hpp"
+
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <array>
+#include <cstdint>
+#include <map>
+#include <optional>
 #include <string_view>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 namespace canvas::semantic {
 namespace {
 
-struct MatrixRow final {
-    std::string_view operation_name;
-    std::string_view polarity;
-};
+ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
 
-constexpr std::array<MatrixRow, 1> kRedMatrix{{
-    {"InsertObjects", "positive"},
-}};
-
-} // namespace
-
-TEST(G104B10OperationMatrix, FifteenFamiliesRequirePositiveAndNegativeRows) {
-    // RED: B10 is incomplete until all 15 operation families have both a
-    // released-authority positive Prepared row and a state-rejected row.
-    EXPECT_EQ(kRedMatrix.size(), 30U);
+Placement placement(std::uint64_t key, std::optional<ObjectId> parent = std::nullopt) {
+    return Placement{parent, OrderKey({static_cast<std::uint8_t>(key)})};
 }
 
+ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kShape;
+    result.kind_version = 1U;
+    result.placement = placement(value, parent);
+    result.content = ShapeContent{1U, 10.0, 20.0};
+    return result;
+}
+
+ObjectRecord group(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kGroup;
+    result.kind_version = 1U;
+    result.placement = placement(value, parent);
+    result.content = GroupContent{};
+    return result;
+}
+
+ParagraphStyle paragraphStyle() {
+    return ParagraphStyle{ParagraphAlignment::kLeft, 1.0, 0.0, 0.0};
+}
+
+TextStyle textStyle(float component = 1.0F) {
+    TextStyle style{};
+    style.font_resource_id = ResourceId{id(90U)};
+    style.font_size = 12.0;
+    style.weight = 400U;
+    style.color = ColorRgba{component, component, component, 1.0F};
+    return style;
+}
+
+ObjectRecord richText(std::uint64_t value) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kRichText;
+    result.kind_version = 1U;
+    result.placement = placement(value);
+    Paragraph paragraph{};
+    paragraph.id = id(value * 10U);
+    paragraph.style = paragraphStyle();
+    paragraph.runs = {{"A", textStyle()}};
+    result.content = RichTextContent{{{paragraph}}};
+    return result;
+}
+
+VectorPathGeometry vectorPath(double end) {
+    return VectorPathGeometry{
+        FillRule::kNonZero,
+        {MoveTo{{0.0, 0.0}}, LineTo{{end, end}}}};
+}
+
+ObjectRecord vectorPathRecord(std::uint64_t value, double end = 1.0) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kVectorPath;
+    result.kind_version = 1U;
+    result.placement = placement(value);
+    result.content = VectorPathContent{vectorPath(end)};
+    return result;
+}
+
+ImageContent imageContent(double width = 100.0, double height = 80.0) {
+    return ImageContent{
+        ResourceId{id(80U)}, width, height, std::nullopt, ImageContentMode::kFit, 3.0, 4.0};
+}
+
+ObjectRecord imageRecord(std::uint64_t value, double width = 100.0, double height = 80.0) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kImage;
+    result.kind_version = 1U;
+    result.placement = placement(value);
+    result.content = imageContent(width, height);
+    return result;
+}
+
+StrokeRecord vectorStrokeData() {
+    StrokeRecord stroke{};
+    stroke.brush.brush_family_id = 1U;
+    stroke.brush.brush_version = 1U;
+    stroke.brush.color = ColorRgba{0.0F, 0.0F, 0.0F, 1.0F};
+    stroke.brush.nominal_size = 1.0;
+    stroke.brush.opacity = 1.0F;
+    stroke.data = VectorStrokeData{{StrokeSample{{1.0, 2.0}, 1.0F, {0.0F, 0.0F}}}};
+    return stroke;
+}
+
+ObjectRecord vectorStroke(std::uint64_t value) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kVectorStroke;
+    result.kind_version = 1U;
+    result.placement = placement(value);
+    result.content = VectorStrokeContent{vectorStrokeData()};
+    return result;
+}
+
+EraseMaskRecord eraseMask(std::uint64_t value) {
+    const EraseCubicSegment segment{
+        EraseKnot{{0.0, 0.0}, 1.0},
+        EraseKnot{{1.0, 1.0}, 1.0},
+        {0.5, 0.5},
+        {0.5, 0.5}};
+    return EraseMaskRecord{id(value), SweptCircleMask{{segment}}};
+}
+
+ConnectorContent freeConnectorContent() {
+    return ConnectorContent{
+        ConnectorEndpoint{FreePointEndpoint{{0.0, 0.0}}},
+        ConnectorEndpoint{FreePointEndpoint{{1.0, 1.0}}},
+        ConnectorRouting::kStraight};
+}
+
+ConnectorContent attachedConnectorContent(std::uint64_t target) {
+    return ConnectorContent{
+        ConnectorEndpoint{FreePointEndpoint{{0.0, 0.0}}},
+        ConnectorEndpoint{AttachedEndpoint{id(target), AutoPerimeterAnchor{}}},
+        ConnectorRouting::kStraight};
+}
+
+ObjectRecord connector(std::uint64_t value, ConnectorContent content = freeConnectorContent()) {
+    ObjectRecord result{};
+    result.id = id(value);
+    result.kind = ObjectKind::kConnector;
+    result.kind_version = 1U;
+    result.placement = placement(value);
+    result.content = std::move(content);
+    return result;
+}
+
+template <typename Payload>
+Operation operation(std::uint64_t operation_id, Payload payload) {
+    Operation result{};
+    result.id = OperationId{id(operation_id)};
+    result.document_id = DocumentId{id(7002U)};
+    result.schema_version = 1U;
+    result.payload_version = 1U;
+    result.payload = std::move(payload);
+    return result;
+}
+
+class TestAppliedOperationView final : public AppliedOperationView {
+  public:
+    std::optional<AppliedOperationEntry> find(const OperationId& operation_id) const override {
+        const auto found = entries.find(operation_id);
+        return found == entries.end() ? std::nullopt
+                                      : std::optional<AppliedOperationEntry>(found->second);
+    }
+
+    std::map<OperationId, AppliedOperationEntry> entries;
+};
+
+void expectAppliedUnchanged(
+    const std::map<OperationId, AppliedOperationEntry>& before,
+    const TestAppliedOperationView& after) {
+    ASSERT_EQ(after.entries.size(), before.size());
+    for (const auto& [operation_id, expected] : before) {
+        const auto found = after.entries.find(operation_id);
+        ASSERT_NE(found, after.entries.end());
+        EXPECT_EQ(found->second.canonical_operation.id, expected.canonical_operation.id);
+        EXPECT_TRUE(canonicalPayloadEqual(
+            found->second.canonical_operation, expected.canonical_operation));
+        EXPECT_EQ(found->second.fingerprint, expected.fingerprint);
+    }
+}
+
+struct ExpectedPlan final {
+    std::vector<ObjectRecord> creates;
+    std::vector<ObjectRecord> replacements;
+    std::vector<ObjectId> deletes;
+    std::optional<DeleteClosure> delete_closure;
+};
+
+ExpectedPlan createsPlan(std::vector<ObjectRecord> creates) {
+    ExpectedPlan result{};
+    result.creates = std::move(creates);
+    return result;
+}
+
+ExpectedPlan replacementsPlan(std::vector<ObjectRecord> replacements) {
+    ExpectedPlan result{};
+    result.replacements = std::move(replacements);
+    return result;
+}
+
+ExpectedPlan splitPlan(std::vector<ObjectRecord> creates, std::vector<ObjectId> deletes) {
+    ExpectedPlan result{};
+    result.creates = std::move(creates);
+    result.deletes = std::move(deletes);
+    return result;
+}
+
+ExpectedPlan deletePlan(std::uint64_t value) {
+    ExpectedPlan result{};
+    result.deletes = {id(value)};
+    DeleteClosure closure{};
+    closure.requested_delete_ids = {id(value)};
+    closure.final_delete_set = {id(value)};
+    result.delete_closure = closure;
+    return result;
+}
+
+struct MatrixCase final {
+    std::string_view case_id;
+    std::string_view operation_name;
+    bool positive = false;
+    std::vector<ObjectRecord> initial_objects;
+    Operation input;
+    PrepareDisposition expected_disposition = PrepareDisposition::kRejected;
+    StatefulIssue expected_issue = StatefulIssue::kNone;
+    std::optional<ExpectedPlan> expected_plan;
+    std::optional<ObjectId> hierarchy_parent;
+    std::optional<Operation> applied_operation;
+};
+
+MatrixCase preparedCase(
+    std::string_view case_id,
+    std::string_view operation_name,
+    std::vector<ObjectRecord> initial_objects,
+    Operation input,
+    ExpectedPlan expected_plan,
+    std::optional<ObjectId> hierarchy_parent = std::nullopt) {
+    return MatrixCase{
+        case_id,
+        operation_name,
+        true,
+        std::move(initial_objects),
+        std::move(input),
+        PrepareDisposition::kPrepared,
+        StatefulIssue::kNone,
+        std::move(expected_plan),
+        hierarchy_parent,
+        std::nullopt};
+}
+
+MatrixCase rejectedCase(
+    std::string_view case_id,
+    std::string_view operation_name,
+    std::vector<ObjectRecord> initial_objects,
+    Operation input,
+    StatefulIssue issue,
+    std::optional<ObjectId> hierarchy_parent = std::nullopt,
+    std::optional<Operation> applied_operation = std::nullopt) {
+    return MatrixCase{
+        case_id,
+        operation_name,
+        false,
+        std::move(initial_objects),
+        std::move(input),
+        PrepareDisposition::kRejected,
+        issue,
+        std::nullopt,
+        hierarchy_parent,
+        std::move(applied_operation)};
+}
+
+std::vector<MatrixCase> coreCases() {
+    std::vector<MatrixCase> cases;
+
+    const auto insert_parent = group(1U);
+    const auto insert_child = shape(2U, id(1U));
+    cases.push_back(preparedCase(
+        "OP15-INS-P",
+        "InsertObjects",
+        {},
+        operation(101U, InsertObjectsOp{{insert_parent, insert_child}}),
+        createsPlan({insert_parent, insert_child}),
+        id(1U)));
+    cases.push_back(rejectedCase(
+        "OP15-INS-N",
+        "InsertObjects",
+        {shape(1U)},
+        operation(102U, InsertObjectsOp{{shape(1U), shape(2U)}}),
+        StatefulIssue::kObjectAlreadyExists));
+
+    cases.push_back(preparedCase(
+        "OP15-DEL-P",
+        "DeleteObjects",
+        {shape(2U)},
+        operation(103U, DeleteObjectsOp{{id(2U)}}),
+        deletePlan(2U)));
+    cases.push_back(rejectedCase(
+        "OP15-DEL-N",
+        "DeleteObjects",
+        {},
+        operation(104U, DeleteObjectsOp{{id(2U)}}),
+        StatefulIssue::kObjectMissing));
+
+    cases.push_back(preparedCase(
+        "OP15-RST-P",
+        "RestoreObjects",
+        {},
+        operation(105U, RestoreObjectsOp{{shape(3U), shape(4U)}}),
+        createsPlan({shape(3U), shape(4U)})));
+    cases.push_back(rejectedCase(
+        "OP15-RST-N",
+        "RestoreObjects",
+        {shape(3U)},
+        operation(106U, RestoreObjectsOp{{shape(3U)}}),
+        StatefulIssue::kObjectAlreadyExists));
+
+    auto moved = shape(2U);
+    moved.placement = placement(22U, id(1U));
+    cases.push_back(preparedCase(
+        "OP15-PLC-P",
+        "SetPlacements",
+        {group(1U), shape(2U)},
+        operation(107U, SetPlacementsOp{{{id(2U), moved.placement}}}),
+        replacementsPlan({moved}),
+        id(1U)));
+    cases.push_back(rejectedCase(
+        "OP15-PLC-N",
+        "SetPlacements",
+        {},
+        operation(108U, SetPlacementsOp{{{id(2U), placement(22U)}}}),
+        StatefulIssue::kObjectMissing));
+
+    auto transformed = shape(2U);
+    transformed.transform = Transform2D{2.0, 0.0, 0.0, 2.0, 4.0, 5.0};
+    cases.push_back(preparedCase(
+        "OP15-TRN-P",
+        "SetTransforms",
+        {shape(2U)},
+        operation(109U, SetTransformsOp{{{id(2U), transformed.transform}}}),
+        replacementsPlan({transformed})));
+    cases.push_back(rejectedCase(
+        "OP15-TRN-N",
+        "SetTransforms",
+        {},
+        operation(110U, SetTransformsOp{{{id(2U), transformed.transform}}}),
+        StatefulIssue::kObjectMissing));
+
+    auto patched = shape(2U);
+    patched.properties.entries = {{1U, false}};
+    cases.push_back(preparedCase(
+        "OP15-PROP-P",
+        "PatchProperties",
+        {shape(2U)},
+        operation(
+            111U,
+            PatchPropertiesOp{{{id(2U), 1U, PropertyPatchAction::kSet, PropertyValue{false}}}}),
+        replacementsPlan({patched})));
+    cases.push_back(rejectedCase(
+        "OP15-PROP-N",
+        "PatchProperties",
+        {group(2U)},
+        operation(
+            112U,
+            PatchPropertiesOp{{{id(2U), 0x100U, PropertyPatchAction::kClear, {}}}}),
+        StatefulIssue::kInvalidApplicability));
+
+    auto resized = shape(2U);
+    std::get<ShapeContent>(resized.content).width = 30.0;
+    std::get<ShapeContent>(resized.content).height = 40.0;
+    cases.push_back(preparedCase(
+        "OP15-SIZE-P",
+        "SetObjectSize",
+        {shape(2U)},
+        operation(113U, SetObjectSizeOp{{{id(2U), 30.0, 40.0}}}),
+        replacementsPlan({resized})));
+    cases.push_back(rejectedCase(
+        "OP15-SIZE-N",
+        "SetObjectSize",
+        {group(2U)},
+        operation(114U, SetObjectSizeOp{{{id(2U), 30.0, 40.0}}}),
+        StatefulIssue::kInvalidApplicability));
+
+    auto path_updated = vectorPathRecord(3U, 2.0);
+    cases.push_back(preparedCase(
+        "OP15-PATH-P",
+        "SetVectorPathGeometry",
+        {vectorPathRecord(3U)},
+        operation(115U, SetVectorPathGeometryOp{id(3U), vectorPath(2.0)}),
+        replacementsPlan({path_updated})));
+    cases.push_back(rejectedCase(
+        "OP15-PATH-N",
+        "SetVectorPathGeometry",
+        {shape(3U)},
+        operation(116U, SetVectorPathGeometryOp{id(3U), vectorPath(2.0)}),
+        StatefulIssue::kInvalidApplicability));
+
+    auto image_updated = imageRecord(4U, 120.0, 90.0);
+    cases.push_back(preparedCase(
+        "OP15-IMG-P",
+        "SetImageContent",
+        {imageRecord(4U)},
+        operation(117U, SetImageContentOp{id(4U), imageContent(120.0, 90.0)}),
+        replacementsPlan({image_updated})));
+    cases.push_back(rejectedCase(
+        "OP15-IMG-N",
+        "SetImageContent",
+        {shape(4U)},
+        operation(118U, SetImageContentOp{id(4U), imageContent(120.0, 90.0)}),
+        StatefulIssue::kInvalidApplicability));
+
+    const auto added_stroke = vectorStroke(20U);
+    cases.push_back(preparedCase(
+        "OP15-STROKE-P",
+        "AddStroke",
+        {},
+        operation(119U, AddStrokeOp{added_stroke}),
+        createsPlan({added_stroke})));
+    cases.push_back(rejectedCase(
+        "OP15-STROKE-N",
+        "AddStroke",
+        {shape(20U)},
+        operation(120U, AddStrokeOp{added_stroke}),
+        StatefulIssue::kObjectAlreadyExists));
+
+    const auto split_a = vectorStroke(21U);
+    const auto split_b = vectorStroke(22U);
+    cases.push_back(preparedCase(
+        "OP15-SPLIT-P",
+        "SplitStrokes",
+        {vectorStroke(5U)},
+        operation(121U, SplitStrokesOp{{{id(5U), {split_a, split_b}}}}),
+        splitPlan({split_a, split_b}, {id(5U)})));
+    cases.push_back(rejectedCase(
+        "OP15-SPLIT-N",
+        "SplitStrokes",
+        {},
+        operation(122U, SplitStrokesOp{{{id(5U), {vectorStroke(21U)}}}}),
+        StatefulIssue::kObjectMissing));
+
+    auto masked = vectorStroke(5U);
+    masked.erase_masks = {eraseMask(50U)};
+    cases.push_back(preparedCase(
+        "OP15-MASK-ADD-P",
+        "AddEraseMasks",
+        {vectorStroke(5U)},
+        operation(123U, AddEraseMasksOp{{{id(5U), {eraseMask(50U)}}}}),
+        replacementsPlan({masked})));
+    cases.push_back(rejectedCase(
+        "OP15-MASK-ADD-N",
+        "AddEraseMasks",
+        {masked},
+        operation(124U, AddEraseMasksOp{{{id(5U), {eraseMask(50U)}}}}),
+        StatefulIssue::kMaskStateInvalid));
+
+    auto two_masks = vectorStroke(5U);
+    two_masks.erase_masks = {eraseMask(50U), eraseMask(51U)};
+    auto one_mask = vectorStroke(5U);
+    one_mask.erase_masks = {eraseMask(51U)};
+    cases.push_back(preparedCase(
+        "OP15-MASK-REM-P",
+        "RemoveEraseMasks",
+        {two_masks},
+        operation(125U, RemoveEraseMasksOp{{{id(5U), {id(50U)}}}}),
+        replacementsPlan({one_mask})));
+    cases.push_back(rejectedCase(
+        "OP15-MASK-REM-N",
+        "RemoveEraseMasks",
+        {masked},
+        operation(126U, RemoveEraseMasksOp{{{id(5U), {id(99U)}}}}),
+        StatefulIssue::kMaskStateInvalid));
+
+    auto edited = richText(6U);
+    auto& edited_paragraph =
+        std::get<RichTextContent>(edited.content).document.paragraphs[0];
+    edited_paragraph.runs = {{"A", textStyle()}, {"X", textStyle(0.5F)}};
+    const RichTextDelta valid_delta{
+        1U, {InsertTextStep{id(60U), 1U, "X", textStyle(0.5F)}}};
+    cases.push_back(preparedCase(
+        "OP15-TEXT-P",
+        "EditRichText",
+        {richText(6U)},
+        operation(127U, EditRichTextOp{id(6U), valid_delta}),
+        replacementsPlan({edited})));
+    const RichTextDelta invalid_delta{
+        1U,
+        {InsertTextStep{id(60U), 0U, "X", textStyle()},
+         DeleteTextStep{id(99U), 0U, 1U}}};
+    cases.push_back(rejectedCase(
+        "OP15-TEXT-N",
+        "EditRichText",
+        {richText(6U)},
+        operation(128U, EditRichTextOp{id(6U), invalid_delta}),
+        StatefulIssue::kTextStateInvalid));
+
+    auto connector_updated = connector(7U, attachedConnectorContent(2U));
+    cases.push_back(preparedCase(
+        "OP15-CON-P",
+        "SetConnectorContent",
+        {shape(2U), connector(7U)},
+        operation(129U, SetConnectorContentOp{id(7U), attachedConnectorContent(2U)}),
+        replacementsPlan({connector_updated})));
+    cases.push_back(rejectedCase(
+        "OP15-CON-N",
+        "SetConnectorContent",
+        {group(2U), connector(7U)},
+        operation(130U, SetConnectorContentOp{id(7U), attachedConnectorContent(2U)}),
+        StatefulIssue::kConnectorInvalid));
+
+    return cases;
+}
+
+std::vector<MatrixCase> specialCases() {
+    std::vector<MatrixCase> cases;
+
+    cases.push_back(rejectedCase(
+        "SPC-PLC-MISSING-PARENT",
+        "SetPlacements",
+        {shape(2U)},
+        operation(201U, SetPlacementsOp{{{id(2U), placement(22U, id(9U))}}}),
+        StatefulIssue::kInvalidReference,
+        id(9U)));
+
+    cases.push_back(rejectedCase(
+        "SPC-PLC-CYCLE",
+        "SetPlacements",
+        {group(1U), group(2U)},
+        operation(
+            202U,
+            SetPlacementsOp{{
+                {id(1U), placement(11U, id(2U))},
+                {id(2U), placement(12U, id(1U))}}}),
+        StatefulIssue::kHierarchyCycle,
+        id(1U)));
+
+    cases.push_back(rejectedCase(
+        "SPC-CON-MISSING-TARGET",
+        "SetConnectorContent",
+        {connector(7U)},
+        operation(203U, SetConnectorContentOp{id(7U), attachedConnectorContent(9U)}),
+        StatefulIssue::kInvalidReference));
+
+    const Operation previously_applied =
+        operation(204U, InsertObjectsOp{{shape(90U)}});
+    cases.push_back(rejectedCase(
+        "SPC-OPID-COLLISION",
+        "DeleteObjects",
+        {shape(2U)},
+        operation(204U, DeleteObjectsOp{{id(2U)}}),
+        StatefulIssue::kOperationIdCollision,
+        std::nullopt,
+        previously_applied));
+
+    return cases;
+}
+
+template <typename Store>
+void seed(Store& store, const std::vector<ObjectRecord>& records) {
+    for (const auto& record : records) {
+        ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, record));
+    }
+}
+
+void expectPlanProjection(
+    const PreparedApplyPlan& actual,
+    const Operation& operation_input,
+    const ExpectedPlan& expected) {
+    EXPECT_EQ(actual.operation.id, operation_input.id);
+    EXPECT_TRUE(canonicalPayloadEqual(actual.operation, operation_input));
+    EXPECT_EQ(actual.creates, expected.creates);
+    EXPECT_EQ(actual.replacements, expected.replacements);
+    EXPECT_EQ(actual.deletes, expected.deletes);
+    ASSERT_EQ(actual.delete_closure.has_value(), expected.delete_closure.has_value());
+    if (expected.delete_closure.has_value()) {
+        ASSERT_TRUE(actual.delete_closure.has_value());
+        EXPECT_EQ(
+            actual.delete_closure->requested_delete_ids,
+            expected.delete_closure->requested_delete_ids);
+        EXPECT_EQ(
+            actual.delete_closure->resolved_hierarchy_closure,
+            expected.delete_closure->resolved_hierarchy_closure);
+        EXPECT_EQ(
+            actual.delete_closure->resolved_connector_cascade_closure,
+            expected.delete_closure->resolved_connector_cascade_closure);
+        EXPECT_EQ(
+            actual.delete_closure->final_delete_set,
+            expected.delete_closure->final_delete_set);
+    }
+}
+
+template <typename Store>
+void runCase(const MatrixCase& test_case) {
+    Store store;
+    seed(store, test_case.initial_objects);
+
+    TestAppliedOperationView applied;
+    if (test_case.applied_operation.has_value()) {
+        applied.entries.emplace(
+            test_case.applied_operation->id,
+            AppliedOperationEntry{*test_case.applied_operation, std::nullopt});
+    }
+
+    const auto store_before = store.allObjects();
+    const auto applied_before = applied.entries;
+    std::optional<std::vector<ObjectRecord>> children_before;
+    if (test_case.hierarchy_parent.has_value()) {
+        children_before = store.children(
+            std::optional<ObjectId>{*test_case.hierarchy_parent});
+    }
+
+    if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
+        ASSERT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(store));
+    }
+
+    const OperationEngine engine;
+    const PrepareResult result = engine.prepare(
+        test_case.input, StatefulValidationContext{store, applied});
+
+    EXPECT_EQ(result.disposition, test_case.expected_disposition)
+        << test_case.case_id;
+    EXPECT_EQ(result.error.issue, test_case.expected_issue)
+        << test_case.case_id;
+
+    if (test_case.expected_plan.has_value()) {
+        ASSERT_TRUE(result.plan.has_value()) << test_case.case_id;
+        expectPlanProjection(*result.plan, test_case.input, *test_case.expected_plan);
+    } else {
+        EXPECT_FALSE(result.plan.has_value()) << test_case.case_id;
+    }
+
+    EXPECT_EQ(store.allObjects(), store_before) << test_case.case_id;
+    expectAppliedUnchanged(applied_before, applied);
+    if (children_before.has_value()) {
+        EXPECT_EQ(
+            store.children(std::optional<ObjectId>{*test_case.hierarchy_parent}),
+            *children_before)
+            << test_case.case_id;
+    }
+    if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
+        EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(store))
+            << test_case.case_id;
+    }
+}
+
+bool hasCaseId(const std::vector<MatrixCase>& cases, std::string_view case_id) {
+    return std::any_of(
+        cases.begin(), cases.end(), [case_id](const MatrixCase& test_case) {
+            return test_case.case_id == case_id;
+        });
+}
+
+TEST(G104B10OperationMatrix, FifteenFamiliesRequirePositiveAndNegativeRows) {
+    const auto cases = coreCases();
+    ASSERT_EQ(cases.size(), 30U);
+
+    std::map<std::string_view, std::array<std::size_t, 2>> counts;
+    for (const auto& test_case : cases) {
+        auto& family_counts = counts[test_case.operation_name];
+        ++family_counts[test_case.positive ? 0U : 1U];
+    }
+
+    ASSERT_EQ(counts.size(), 15U);
+    for (const auto& [operation_name, family_counts] : counts) {
+        EXPECT_EQ(family_counts[0], 1U) << operation_name;
+        EXPECT_EQ(family_counts[1], 1U) << operation_name;
+    }
+}
+
+TEST(G104B10OperationMatrix, CoreRowsExecuteOnReferenceAndIndexedStores) {
+    for (const auto& test_case : coreCases()) {
+        runCase<ReferenceObjectStore>(test_case);
+        runCase<IndexedObjectStore>(test_case);
+    }
+}
+
+TEST(G104B10OperationMatrix, RequiredSpecialRejectionsExecuteOnBothStores) {
+    for (const auto& test_case : specialCases()) {
+        runCase<ReferenceObjectStore>(test_case);
+        runCase<IndexedObjectStore>(test_case);
+    }
+}
+
+TEST(G104B10OperationMatrix, RequiredRejectionCoverageLabelsAreBound) {
+    struct CoverageBinding final {
+        std::string_view label;
+        std::string_view case_id;
+    };
+    constexpr std::array<CoverageBinding, 9> bindings{{
+        {"missing target", "OP15-DEL-N"},
+        {"wrong kind / invalid applicability", "OP15-PROP-N"},
+        {"missing parent or semantic reference", "SPC-PLC-MISSING-PARENT"},
+        {"hierarchy cycle", "SPC-PLC-CYCLE"},
+        {"invalid connector target/state", "OP15-CON-N"},
+        {"invalid erase-mask state", "OP15-MASK-ADD-N"},
+        {"invalid RichText state", "OP15-TEXT-N"},
+        {"whole-batch identity/state collision", "OP15-INS-N"},
+        {"OperationId collision", "SPC-OPID-COLLISION"},
+    }};
+
+    const auto core = coreCases();
+    const auto special = specialCases();
+    for (const auto& binding : bindings) {
+        EXPECT_FALSE(binding.label.empty());
+        EXPECT_TRUE(
+            hasCaseId(core, binding.case_id) || hasCaseId(special, binding.case_id))
+            << binding.label;
+    }
+}
+
+TEST(G104B10OperationMatrix, RestoreRSTB01ThroughB12ProviderMappingsAreComplete) {
+    struct RestoreBinding final {
+        std::string_view rst_id;
+        std::string_view provider_test;
+        std::string_view linked_b10_case;
+    };
+    constexpr std::array<RestoreBinding, 12> bindings{{
+        {"RST-B01", "RST_B01_AllAbsentValidRestore", "OP15-RST-P"},
+        {"RST-B02", "RST_B02_ExistingSameRecordCollides", "OP15-RST-N"},
+        {"RST-B03", "RST_B03_ExistingDifferentRecordCollides", "OP15-RST-N"},
+        {"RST-B04", "RST_B04_ParentAndChildSamePayload", "OP15-RST-P"},
+        {"RST-B05", "RST_B05_MissingParentInvalidReference", "OP15-RST-N"},
+        {"RST-B06", "RST_B06_TargetAndConnectorSamePayload", "OP15-RST-P"},
+        {"RST-B07", "RST_B07_ConnectorMissingTargetInvalidReference", "OP15-RST-N"},
+        {"RST-B08", "RST_B08_EquivalentReplayStopsAtB1", "OP15-RST-P"},
+        {"RST-B09", "RST_B09_NewOperationIdExistingCandidateCollides", "OP15-RST-N"},
+        {"RST-B10", "RST_B10_BatchCollisionIsAtomic", "OP15-RST-N"},
+        {"RST-B11", "RST_B11_SourceLabelsDoNotChangeResult", "OP15-RST-P"},
+        {"RST-B12", "RST_B12_CheckpointLikeStateWithoutLedger", "OP15-RST-P"},
+    }};
+
+    const auto core = coreCases();
+    for (std::size_t index = 0; index < bindings.size(); ++index) {
+        const auto& binding = bindings[index];
+        EXPECT_EQ(binding.rst_id.substr(0U, 5U), "RST-B");
+        EXPECT_FALSE(binding.provider_test.empty());
+        EXPECT_TRUE(hasCaseId(core, binding.linked_b10_case));
+        if (index > 0U) {
+            EXPECT_NE(binding.rst_id, bindings[index - 1U].rst_id);
+        }
+    }
+}
+
+} // namespace
 } // namespace canvas::semantic
