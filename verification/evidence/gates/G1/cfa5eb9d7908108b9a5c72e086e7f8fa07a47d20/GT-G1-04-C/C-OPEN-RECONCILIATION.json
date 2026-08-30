@@ -1,0 +1,45 @@
+{
+  "format": "axiom-g1-04-c-open-reconciliation-v1",
+  "formatVersion": 1,
+  "gate": "GT-G1-04-C",
+  "slice": "C0 Authority Schema + Trust Boundary",
+  "source_ref": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20",
+  "package_ref": "cefa97ff175de2dc7082039b653ea54300d456c9",
+  "status": "PASS",
+  "scope": "verification-only Current Authority CLOSED-policy meta-contract",
+  "test": {
+    "file": "verification/tests/g1_04_c_open_reconciliation.test.mjs",
+    "command": "cd verification && node --test tests/g1_04_c_open_reconciliation.test.mjs",
+    "passed": 4,
+    "failed": 0
+  },
+  "closed_current_policies": [
+    {
+      "key": "connector-target-delete",
+      "current_status": "CLOSED",
+      "decision": "deterministic Cascade Connector Delete",
+      "open_policy_true_rejected": true,
+      "authority_basis": "Current C Verification Authority promoted by GT-G1-04-C P23"
+    },
+    {
+      "key": "geometry-point-like-elements-per-operation-aggregate",
+      "current_status": "CLOSED",
+      "decision": "aggregate limit 2000000; 1999999 PASS, 2000000 PASS, 2000001 GEOMETRY_LIMIT_EXCEEDED; overflow INTEGER_OVERFLOW",
+      "open_policy_true_rejected": true,
+      "authority_basis": "Current geometry aggregate closure referenced by Current C Verification Authority"
+    }
+  ],
+  "unknown_policy_behavior": {
+    "unknown_policies_auto_promoted_to_closed": false,
+    "reason": "C0 helper only recognizes the two already-closed Current Authority policy keys and does not invent future policy status."
+  },
+  "trust_boundary": {
+    "helper": "verification/tools/g1_04_c_contract.mjs",
+    "production_imports": false,
+    "production_output_used_as_expected_truth": false,
+    "reference_or_indexed_output_used_as_expected_truth": false,
+    "semantic_winner_generated": false,
+    "implementation_observation_recorded": false
+  },
+  "overall_p32_note": "This OPEN reconciliation sub-evidence passes independently. Overall P32 remains BLOCKED_ENVIRONMENT until the separately required full verification workspace regression command is executed successfully."
+}
