@@ -13,11 +13,12 @@
   "tracePresence": ["InsertObjects", "DeleteObjects", "RestoreObjects", "SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"],
   "randomSeed": "0xB9D1FF01",
   "randomTraceBound": 256,
+  "randomTraceExecution": "NOT_EXECUTED_IN_THIS_RUN",
   "observationCount": 17,
   "comparison": {"typedPlanProjection": true, "deleteClosurePartitions": true, "storeBeforeAfter": true, "indexInvariantBeforeAfter": true, "firstMismatch": null},
   "lookupWindow": {"indexedSingleTargetAllObjectsCalls": 0, "window": "prepare only; projections outside counter window"},
-  "verification": {"focusedB9": "PASS 2/2", "fullSemanticCTest": "PASS 320/320 (12 protobuf-off skipped)", "gitDiffCheck": "PASS"},
+  "verification": {"focusedB9": "PASS 2/2", "fullSemanticCTest": "PASS 320/320 (12 protobuf-off skipped)", "gitDiffCheck": "PASS", "hostedExactHeadCI": "NOT_OBTAINED"},
   "scopeGuards": {"productionSemanticChanged": false, "objectStoreApiChanged": false, "productionInstrumentationAdded": false, "B0B8Reopened": false, "B10Started": false, "GTG104CStarted": false, "GTG105Changed": false, "untrackedDataPreserved": true},
-  "materialization": {"sourceTestCommitPushed": false, "evidenceCommitPushed": false, "historyRewritten": false, "forcePush": false},
-  "status": "READY_FOR_INDEPENDENT_P34_REVIEW"
+  "materialization": {"sourceTestCommitPushed": true, "evidenceCommitPushed": true, "historyRewritten": false, "forcePush": false},
+  "status": "BLOCKED_EVIDENCE"
 }
