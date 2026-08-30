@@ -1,6 +1,8 @@
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
+#include "canvas/semantic/normalizer.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "canvas/semantic/validator.hpp"
 #include "object_store_mutator.hpp"
 
 #include <gtest/gtest.h>
@@ -582,7 +584,34 @@ bool deterministicObservationEqual(
            first.indexed_single_target == second.indexed_single_target;
 }
 
+void expectNormalizedStructurallyValid(const Operation& input, const std::string& fixture_id) {
+    const auto normalized = normalizeOperation(input);
+    ASSERT_TRUE(normalized.ok()) << "fixture=" << fixture_id << " failed normalization";
+    EXPECT_TRUE(sameOperation(input, normalized.value))
+        << "fixture=" << fixture_id << " was not already normalized";
+
+    const OperationFieldPresence presence{true, true};
+    const auto envelope = validateEnvelope(input, presence);
+    EXPECT_TRUE(envelope.ok())
+        << "fixture=" << fixture_id << " envelope issue=" << static_cast<int>(envelope.issue);
+
+    const auto payload = validatePayloadStructure(input);
+    EXPECT_TRUE(payload.ok())
+        << "fixture=" << fixture_id << " payload issue=" << static_cast<int>(payload.issue);
+}
+
 } // namespace
+
+TEST(StatefulValidationDifferential, FixtureBankContainsOnlyNormalizedStructurallyValidTypedOperations) {
+    const auto fixtures = buildFixtures();
+    ASSERT_FALSE(fixtures.empty());
+    for (const auto& fixture : fixtures) {
+        expectNormalizedStructurallyValid(fixture.current, fixture.id + ":current");
+        if (fixture.prior_applied.has_value()) {
+            expectNormalizedStructurallyValid(*fixture.prior_applied, fixture.id + ":prior_applied");
+        }
+    }
+}
 
 TEST(StatefulValidationDifferential, HandAuthoredTraceCoversAllFifteenAndStateFamilies) {
     const auto fixtures = buildFixtures();
