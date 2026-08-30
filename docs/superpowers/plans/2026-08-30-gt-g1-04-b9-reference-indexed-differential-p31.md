@@ -793,6 +793,24 @@ task_anchor:
 resume_cursor: null
 ```
 
+Before returning a completed B9 P32 result to `CONTROL_REVIEW`, the executor
+MUST materialize the exact source/test/evidence result at the reviewer-accessible
+durable boundary defined by this package and return that durable ref explicitly.
+The return contract is frozen as:
+
+```yaml
+P32_return:
+  package_ref: <reviewed B9 P31 materialization commit>
+  source_ref: <exact B9 source/test commit>
+  materialized_ref: <reviewer-accessible evidence-only commit containing B-DIFF>
+```
+
+`materialized_ref` is mandatory for a review-ready success return. A local-only
+source commit, worktree state, local test transcript, or unmaterialized CI result
+MUST NOT be returned as `CONTROL_REVIEW`-ready evidence. If the exact result
+cannot be materialized at the package-defined durable boundary, return
+`BLOCKED_EVIDENCE` instead of claiming review readiness.
+
 Until CONTROL_REVIEW explicitly authorizes that handoff:
 
 ```text
