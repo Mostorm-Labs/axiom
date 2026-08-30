@@ -9,6 +9,12 @@ namespace {
 
 ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
 
+ObjectRecord object(std::uint64_t value) {
+    ObjectRecord record{};
+    record.id = id(value);
+    return record;
+}
+
 Operation deleteOperation(std::initializer_list<std::uint64_t> values) {
     Operation operation;
     DeleteObjectsOp payload;
@@ -107,8 +113,8 @@ TEST(OperationNormalizer, PreservesAutoPerimeterHintPresenceAndNormalizesNegativ
 TEST(OperationNormalizer, EnforcesOperationWideSplitReplacementUniqueness) {
     Operation operation;
     operation.payload = SplitStrokesOp{{
-        StrokeSplit{id(1U), {ObjectRecord{.id = id(10U)} }},
-        StrokeSplit{id(2U), {ObjectRecord{.id = id(10U)} }},
+        StrokeSplit{id(1U), {object(10U)}},
+        StrokeSplit{id(2U), {object(10U)}},
     }};
     EXPECT_FALSE(normalizeOperation(operation).ok());
 }
