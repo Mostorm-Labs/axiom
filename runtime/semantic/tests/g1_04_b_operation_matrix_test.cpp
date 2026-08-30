@@ -75,9 +75,43 @@ void writePlacement(std::ostream& out, const Placement& value) {
     out << "]}";
 }
 
+void writeVec2(std::ostream& out, const Vec2& value) {
+    out << "[" << std::setprecision(17) << value.x << "," << value.y << "]";
+}
+
+void writeString(std::ostream& out, std::string_view value) {
+    out << '"';
+    for (const char c : value) {
+        if (c == '"' || c == '\\') out << '\\' << c;
+        else if (c == '\n') out << "\\n";
+        else if (c == '\r') out << "\\r";
+        else if (c == '\t') out << "\\t";
+        else out << c;
+    }
+    out << '"';
+}
+
 void writeColor(std::ostream& out, const ColorValue& value) {
     out << '[' << std::setprecision(9) << value.r << ',' << value.g << ',' << value.b << ','
         << value.a << ']';
+}
+
+void writeGeometry(std::ostream& out, const VectorPathGeometry& geometry) {
+    out << "{\"fill_rule\":" << static_cast<unsigned>(geometry.fill_rule) << ",\"commands\":[";
+    for (std::size_t i = 0; i < geometry.commands.size(); ++i) {
+        if (i != 0U) out << ',';
+        std::visit([&out](const auto& command) {
+            using C = std::decay_t<decltype(command)>;
+            out << "{\"variant\":";
+            if constexpr (std::is_same_v<C, MoveTo>) { out << 0 << ",\"point\":"; writeVec2(out, command.point); }
+            else if constexpr (std::is_same_v<C, LineTo>) { out << 1 << ",\"end\":"; writeVec2(out, command.end); }
+            else if constexpr (std::is_same_v<C, QuadTo>) { out << 2 << ",\"control\":"; writeVec2(out, command.control); out << ",\"end\":"; writeVec2(out, command.end); }
+            else if constexpr (std::is_same_v<C, CubicTo>) { out << 3 << ",\"control1\":"; writeVec2(out, command.control1); out << ",\"control2\":"; writeVec2(out, command.control2); out << ",\"end\":"; writeVec2(out, command.end); }
+            else { out << 4; }
+            out << '}';
+        }, geometry.commands[i]);
+    }
+    out << "]}";
 }
 
 void writeTextStyle(std::ostream& out, const TextStyle& value) {
@@ -89,6 +123,95 @@ void writeTextStyle(std::ostream& out, const TextStyle& value) {
         << (value.italic ? "true" : "false") << ",\"underline\":"
         << (value.underline ? "true" : "false") << ",\"color\":";
     writeColor(out, value.color);
+    out << '}';
+}
+
+void writeStrokeRecord(std::ostream& out, const StrokeRecord& value) {
+    out << "{\"deterministic_seed\":" << value.deterministic_seed
+        << ",\"brush_family_id\":" << value.brush.brush_family_id
+        << ",\"brush_version\":" << value.brush.brush_version
+        << ",\"nominal_size\":" << std::setprecision(17) << value.brush.nominal_size
+        << ",\"opacity\":" << value.brush.opacity << ",\"data_variant\":"
+        << value.data.index() << ",\"data\":";
+    std::visit([&out](const auto& data) {
+        using D = std::decay_t<decltype(data)>;
+        out << '[';
+        if constexpr (std::is_same_v<D, VectorStrokeData>) {
+            for (std::size_t i = 0; i < data.samples.size(); ++i) {
+                if (i != 0U) out << ',';
+                out << "{\"position\":"; writeVec2(out, data.samples[i].position);
+                out << ",\"pressure\":" << data.samples[i].pressure << ",\"tilt\":";
+                writeVec2(out, data.samples[i].tilt); out << '}';
+            }
+        } else {
+            for (std::size_t i = 0; i < data.dabs.size(); ++i) {
+                if (i != 0U) out << ',';
+                out << "{\"center\":"; writeVec2(out, data.dabs[i].center);
+                out << ",\"size\":" << data.dabs[i].size << ",\"rotation\":"
+                    << data.dabs[i].rotation << ",\"opacity\":" << data.dabs[i].opacity << '}';
+            }
+        }
+        out << ']';
+    }, value.data);
+    out << '}';
+}
+
+void writeEraseGeometry(std::ostream& out, const EraseMaskGeometry& value) {
+    out << "{\"variant\":" << value.index() << ",\"value\":";
+    std::visit([&out](const auto& geometry) {
+        using G = std::decay_t<decltype(geometry)>;
+        if constexpr (std::is_same_v<G, SweptCircleMask>) {
+            out << "{\"segments\":[";
+            for (std::size_t i = 0; i < geometry.segments.size(); ++i) {
+                if (i != 0U) out << ',';
+                const auto& segment = geometry.segments[i];
+                out << "{\"p0\":{\"position\":"; writeVec2(out, segment.p0.position);
+                out << ",\"radius\":" << segment.p0.radius << "},\"p1\":{\"position\":";
+                writeVec2(out, segment.p1.position);
+                out << ",\"radius\":" << segment.p1.radius << "},\"control1\":";
+                writeVec2(out, segment.control1);
+                out << ",\"control2\":";
+                writeVec2(out, segment.control2);
+                out << '}';
+            }
+            out << "]}";
+        } else {
+            writeGeometry(out, geometry.path);
+        }
+    }, value);
+    out << '}';
+}
+
+void writeEndpoint(std::ostream& out, const ConnectorEndpoint& value) {
+    out << "{\"variant\":" << value.value.index() << ",\"value\":";
+    std::visit([&out](const auto& endpoint) {
+        using E = std::decay_t<decltype(endpoint)>;
+        if constexpr (std::is_same_v<E, FreePointEndpoint>) {
+            out << "{\"point\":"; writeVec2(out, endpoint.point); out << '}';
+        } else {
+            out << "{\"target_object_id\":\"" << idHex(endpoint.target_object_id)
+                << "\",\"anchor\":{\"variant\":" << endpoint.anchor.index() << ",\"value\":";
+            std::visit([&out](const auto& anchor) {
+                using A = std::decay_t<decltype(anchor)>;
+                if constexpr (std::is_same_v<A, AutoPerimeterAnchor>) {
+                    if (anchor.hint.has_value()) { out << "["; out << anchor.hint->x << ',' << anchor.hint->y << ']'; }
+                    else out << "null";
+                } else out << anchor.port_id;
+            }, endpoint.anchor);
+            out << "}}";
+        }
+    }, value.value);
+    out << '}';
+}
+
+void writeObjectIds(std::ostream& out, const std::vector<ObjectId>& ids);
+void writeContent(std::ostream& out, const ObjectContent& content);
+void writeOperationPayload(std::ostream& out, const OperationPayload& payload);
+void writeOperation(std::ostream& out, const Operation& operation);
+
+void writeEraseMaskRecord(std::ostream& out, const EraseMaskRecord& value) {
+    out << "{\"id\":\"" << idHex(value.id) << "\",\"geometry\":";
+    writeEraseGeometry(out, value.geometry);
     out << '}';
 }
 
@@ -106,8 +229,7 @@ void writeContent(std::ostream& out, const ObjectContent& content) {
                 << static_cast<unsigned>(value.content_mode) << ",\"width\":" << value.width
                 << ",\"height\":" << value.height << '}';
         } else if constexpr (std::is_same_v<T, VectorPathContent>) {
-            out << "{\"fill_rule\":" << static_cast<unsigned>(value.geometry.fill_rule)
-                << ",\"command_count\":" << value.geometry.commands.size() << '}';
+            writeGeometry(out, value.geometry);
         } else if constexpr (std::is_same_v<T, RichTextContent>) {
             out << "{\"paragraphs\":[";
             for (std::size_t i = 0; i < value.document.paragraphs.size(); ++i) {
@@ -118,7 +240,7 @@ void writeContent(std::ostream& out, const ObjectContent& content) {
                     << std::setprecision(17) << paragraph.style.line_height << ",\"runs\":[";
                 for (std::size_t j = 0; j < paragraph.runs.size(); ++j) {
                     if (j != 0U) out << ',';
-                    out << "{\"text\":\"" << paragraph.runs[j].text << "\",\"style\":";
+            out << "{\"text\":"; writeString(out, paragraph.runs[j].text); out << ",\"style\":";
                     writeTextStyle(out, paragraph.runs[j].style);
                     out << '}';
                 }
@@ -127,12 +249,11 @@ void writeContent(std::ostream& out, const ObjectContent& content) {
             out << "]}";
         } else if constexpr (std::is_same_v<T, VectorStrokeContent> ||
                              std::is_same_v<T, DabStrokeContent>) {
-            out << "{\"deterministic_seed\":" << value.stroke.deterministic_seed
-                << ",\"stroke_data_variant\":" << value.stroke.data.index() << '}';
+            out << "{\"stroke\":"; writeStrokeRecord(out, value.stroke); out << '}';
         } else if constexpr (std::is_same_v<T, ConnectorContent>) {
-            out << "{\"start_variant\":" << value.start.value.index()
-                << ",\"end_variant\":" << value.end.value.index() << ",\"routing\":"
-                << static_cast<unsigned>(value.routing) << '}';
+            out << "{\"start\":"; writeEndpoint(out, value.start);
+            out << ",\"end\":"; writeEndpoint(out, value.end);
+            out << ",\"routing\":" << static_cast<unsigned>(value.routing) << '}';
         } else if constexpr (std::is_same_v<T, StickyContent>) {
             out << "{\"width\":" << std::setprecision(17) << value.width << ",\"height\":"
                 << value.height << '}';
@@ -154,10 +275,23 @@ void writePropertyValue(std::ostream& out, const PropertyValue& value) {
         else if constexpr (std::is_same_v<T, BlendModeValue> ||
                            std::is_same_v<T, ConnectorDecorationValue>)
             out << static_cast<unsigned>(item);
-        else if constexpr (std::is_same_v<T, FillStyleValue>)
-            out << item.index();
-        else if constexpr (std::is_same_v<T, StrokeStyleValue>)
-            out << item.index();
+        else if constexpr (std::is_same_v<T, FillStyleValue>) {
+            out << "{\"variant\":" << item.index();
+            std::visit([&out](const auto& fill) {
+                using F = std::decay_t<decltype(fill)>;
+                if constexpr (std::is_same_v<F, SolidFill>) { out << ",\"color\":"; writeColor(out, fill.color); }
+            }, item); out << '}';
+        } else if constexpr (std::is_same_v<T, StrokeStyleValue>) {
+            out << "{\"variant\":" << item.index();
+            std::visit([&out](const auto& stroke) {
+                using S = std::decay_t<decltype(stroke)>;
+                if constexpr (std::is_same_v<S, SolidStroke>) {
+                    out << ",\"color\":"; writeColor(out, stroke.color);
+                    out << ",\"width\":" << stroke.width << ",\"cap\":" << static_cast<unsigned>(stroke.cap)
+                        << ",\"join_variant\":" << stroke.join.index() << ",\"dash_variant\":" << stroke.dash.index();
+                }
+            }, item); out << '}';
+        }
     }, value);
     out << "}";
 }
@@ -187,12 +321,42 @@ void writeRecords(std::ostream& out, const std::vector<ObjectRecord>& records) {
         out << ",\"erase_masks\":[";
         for (std::size_t m = 0; m < record.erase_masks.size(); ++m) {
             if (m != 0U) out << ',';
-            out << "{\"id\":\"" << idHex(record.erase_masks[m].id)
-                << "\",\"geometry_variant\":" << record.erase_masks[m].geometry.index() << '}';
+            writeEraseMaskRecord(out, record.erase_masks[m]);
         }
         out << "]}";
     }
     out << ']';
+}
+
+void writeOperationPayload(std::ostream& out, const OperationPayload& payload) {
+    out << "{\"variant\":" << payload.index() << ",\"value\":";
+    std::visit([&out](const auto& value) {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, InsertObjectsOp>) { out << "{\"objects\":"; writeRecords(out, value.objects); out << '}'; }
+        else if constexpr (std::is_same_v<T, RestoreObjectsOp>) { out << "{\"objects\":"; writeRecords(out, value.objects); out << '}'; }
+        else if constexpr (std::is_same_v<T, DeleteObjectsOp>) { out << "{\"object_ids\":"; writeObjectIds(out, value.object_ids); out << '}'; }
+        else if constexpr (std::is_same_v<T, SetPlacementsOp>) { out << "{\"items\":["; for (std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"placement\":";writePlacement(out,value.items[i].placement);out<<'}';} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, SetTransformsOp>) { out << "{\"items\":["; for (std::size_t i=0;i<value.items.size();++i){if(i)out<<',';const auto&t=value.items[i].transform;out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"transform\":["<<t.a<<','<<t.b<<','<<t.c<<','<<t.d<<','<<t.tx<<','<<t.ty<<"]}";} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, SetObjectSizeOp>) { out << "{\"items\":["; for (std::size_t i=0;i<value.items.size();++i){if(i)out<<',';out<<"{\"object_id\":\""<<idHex(value.items[i].object_id)<<"\",\"width\":"<<value.items[i].width<<",\"height\":"<<value.items[i].height<<'}';} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, SetVectorPathGeometryOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"geometry\":"; writeContent(out,ObjectContent{VectorPathContent{value.geometry}}); out<<'}'; }
+        else if constexpr (std::is_same_v<T, SetImageContentOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"content\":"; writeContent(out,ObjectContent{value.content}); out<<'}'; }
+        else if constexpr (std::is_same_v<T, AddStrokeOp>) { out << "{\"object\":"; writeRecords(out,{value.object}); out<<'}'; }
+        else if constexpr (std::is_same_v<T, SplitStrokesOp>) { out << "{\"splits\":["; for(std::size_t i=0;i<value.splits.size();++i){if(i)out<<',';out<<"{\"source_stroke_id\":\""<<idHex(value.splits[i].source_stroke_id)<<"\",\"replacements\":";writeRecords(out,value.splits[i].replacements);out<<'}';} out<<"]}"; }
+        else if constexpr (std::is_same_v<T, AddEraseMasksOp>) { out << "{\"items_count\":"<<value.items.size()<<'}'; }
+        else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { out << "{\"items_count\":"<<value.items.size()<<'}'; }
+        else if constexpr (std::is_same_v<T, EditRichTextOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"delta_version\":"<<value.delta.delta_version<<",\"step_count\":"<<value.delta.steps.size()<<'}'; }
+        else if constexpr (std::is_same_v<T, SetConnectorContentOp>) { out << "{\"object_id\":\""<<idHex(value.object_id)<<"\",\"content\":"; writeContent(out,ObjectContent{value.content}); out<<'}'; }
+        else if constexpr (std::is_same_v<T, PatchPropertiesOp>) { out << "{\"patch_count\":"<<value.patches.size()<<'}'; }
+    }, payload);
+    out << '}';
+}
+
+void writeOperation(std::ostream& out, const Operation& operation) {
+    out << "{\"id\":\"" << idHex(operation.id.value()) << "\",\"document_id\":\""
+        << idHex(operation.document_id.value()) << "\",\"schema_version\":" << operation.schema_version
+        << ",\"payload_version\":" << operation.payload_version << ",\"payload\":";
+    writeOperationPayload(out, operation.payload);
+    out << '}';
 }
 
 void writeApplied(std::ostream& out, const std::map<OperationId, AppliedOperationEntry>& entries) {
@@ -872,6 +1036,8 @@ void recordRuntimeObservation(
             << ",\"payload_variant\":" << plan.operation.payload.index() << '}';
         out << ",\"delete_closure_present\":"
             << (plan.delete_closure.has_value() ? "true" : "false");
+        out << ",\"operation\":";
+        writeOperation(out, plan.operation);
     }
     out << "}\n";
 }
