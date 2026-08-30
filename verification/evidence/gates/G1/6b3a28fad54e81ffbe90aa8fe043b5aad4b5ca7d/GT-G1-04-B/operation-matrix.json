@@ -36,7 +36,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-INS-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kAlreadyExists",
+    "expected_stateful_issue": "kObjectAlreadyExists",
       "plan_projection_ref": null
     },
     {
@@ -54,7 +54,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-DEL-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kMissingObject",
+    "expected_stateful_issue": "kObjectMissing",
       "plan_projection_ref": null
     },
     {
@@ -72,7 +72,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-RST-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kAlreadyExists",
+    "expected_stateful_issue": "kObjectAlreadyExists",
       "plan_projection_ref": null
     },
     {
@@ -90,7 +90,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-PLC-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kMissingObject",
+    "expected_stateful_issue": "kObjectMissing",
       "plan_projection_ref": null
     },
     {
@@ -108,7 +108,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-TRN-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kMissingObject",
+    "expected_stateful_issue": "kObjectMissing",
       "plan_projection_ref": null
     },
     {
@@ -126,7 +126,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-PROP-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kPropertyNotApplicable",
+    "expected_stateful_issue": "kInvalidApplicability",
       "plan_projection_ref": null
     },
     {
@@ -144,7 +144,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-SIZE-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidKindVersion",
+    "expected_stateful_issue": "kInvalidApplicability",
       "plan_projection_ref": null
     },
     {
@@ -162,7 +162,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-PATH-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidKindVersion",
+    "expected_stateful_issue": "kInvalidApplicability",
       "plan_projection_ref": null
     },
     {
@@ -180,7 +180,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-IMG-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidKindVersion",
+    "expected_stateful_issue": "kInvalidApplicability",
       "plan_projection_ref": null
     },
     {
@@ -198,7 +198,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-STROKE-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidKindVersion",
+    "expected_stateful_issue": "kObjectAlreadyExists",
       "plan_projection_ref": null
     },
     {
@@ -216,7 +216,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-SPLIT-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidKindVersion",
+    "expected_stateful_issue": "kObjectMissing",
       "plan_projection_ref": null
     },
     {
@@ -234,7 +234,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-MASK-ADD-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidReference",
+    "expected_stateful_issue": "kMaskStateInvalid",
       "plan_projection_ref": null
     },
     {
@@ -252,7 +252,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-MASK-REM-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidReference",
+    "expected_stateful_issue": "kMaskStateInvalid",
       "plan_projection_ref": null
     },
     {
@@ -270,7 +270,7 @@
       "polarity": "negative",
       "state_case_or_fixture_id": "OP15-TEXT-N",
       "expected_disposition": "Rejected",
-      "expected_stateful_issue": "kInvalidReference",
+    "expected_stateful_issue": "kTextStateInvalid",
       "plan_projection_ref": null
     },
     {
