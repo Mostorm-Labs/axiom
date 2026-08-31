@@ -62,6 +62,21 @@ endif()
 
 gtest_discover_tests(canvas_semantic_payload_structure_test)
 
+add_executable(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  g1_04_c_geometry_overflow_source_test.cpp)
+target_include_directories(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  PRIVATE canvas_runtime_foundation GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_geometry_overflow_source_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_04_c_geometry_overflow_source_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_g1_04_c_geometry_overflow_source_test)
+
 add_executable(canvas_semantic_leaf_structure_validation_test
   leaf_structure_validation_test.cpp
   ../src/validator.cpp)
