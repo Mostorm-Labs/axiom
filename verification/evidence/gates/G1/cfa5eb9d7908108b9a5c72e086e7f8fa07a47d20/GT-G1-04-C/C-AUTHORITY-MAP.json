@@ -4,7 +4,7 @@
   "gate": "GT-G1-04-C",
   "slice": "C0 Authority Schema + Trust Boundary",
   "stage": "P32",
-  "status": "BLOCKED_ENVIRONMENT",
+  "status": "PASS",
   "source_ref": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20",
   "package_ref": "cefa97ff175de2dc7082039b653ea54300d456c9",
   "execution_start_ref": "cefa97ff175de2dc7082039b653ea54300d456c9",
@@ -92,9 +92,21 @@
     ],
     "workspace_regression": {
       "command": "cd verification && npm run validate",
-      "status": "NOT_EXECUTED",
+      "status": "PASS",
       "required_for_p32_pass": true,
-      "blocker": "The available CODE_EXECUTION surface does not have an authenticated complete private-repository checkout. The verification workspace contains 13 pre-existing contract tests, platform validation, and packages/* workspace tests; a partial reconstruction cannot prove the exact command. No existing exact-source GitHub workflow runs this literal workspace regression command, so adjacent successful CI is not treated as equivalent evidence."
+      "blocker": null,
+      "exit_code": 0,
+      "source_ref": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20",
+      "node_version": "v22.14.0",
+      "npm_version": "10.9.2",
+      "dependency_install": "npm ci --ignore-scripts",
+      "tests": {
+        "workspace_validate": "111 passed, 0 failed",
+        "schema_validation": "23 schemas and 23 fixtures valid",
+        "platform_scenario_validation": "28/28 valid",
+        "workspace_packages": "platform-conformance-cli 24/24; android 2/2; apple 3/3; protocol 18/18; runner 40/40; scripted-adapter 6/6; transport 3/3; web 6/6 plus browser 1/1"
+      },
+      "stdout_summary": "literal npm run validate completed successfully after lockfile install and workspace build"
     }
   },
   "scope_proof": {
@@ -108,12 +120,12 @@
     "gt_g1_05_files_changed": false
   },
   "evidence_gap": {
-    "type": "BLOCKED_ENVIRONMENT",
-    "missing": "fresh complete execution of cd verification && npm run validate at source_ref",
-    "why_not_relaxed": "P31 explicitly requires this command. Existing successful workflows do not execute it, and verification-before-completion forbids inferring a PASS from partial or adjacent checks."
+    "type": "NONE",
+    "missing": null,
+    "why_not_relaxed": "Complete authenticated checkout regression executed at accepted source_ref."
   },
   "resume": {
-    "completed_through": "C0 implementation, RED/GREEN focused verification, exact source materialization, scope proof, and exact-source hosted CI",
-    "next_action": "On a complete authenticated checkout at source_ref, run cd verification && npm run validate. If PASS, re-check branch ancestry/scope, update evidence truthfully, and return for CONTROL_REVIEW. Do not replay C0 implementation."
+    "completed_through": "C0 implementation, RED/GREEN focused verification, exact source materialization, scope proof, exact-source hosted CI, and complete workspace regression",
+    "next_action": "Return exact evidence materialization to CONTROL_REVIEW; do not start C1."
   }
 }
