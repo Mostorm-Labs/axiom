@@ -35,6 +35,7 @@ struct CorpusReport final {
         std::string disposition;
         std::string terminalPhase;
         std::string issue;
+        std::string planProjection;
         std::string beforeProjection;
         std::string afterProjection;
         std::vector<std::uint64_t> f64Bits;

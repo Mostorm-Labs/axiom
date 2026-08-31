@@ -34,4 +34,18 @@ std::string projectStore(const canvas::semantic::ObjectStore& store) {
     return projectObjects(store.allObjects());
 }
 
+std::string projectPlan(const canvas::semantic::PreparedApplyPlan& plan) {
+    std::ostringstream out;
+    out << "creates=" << projectObjects(plan.creates);
+    out << "replacements=" << projectObjects(plan.replacements);
+    out << "deletes=";
+    for (const auto& id : plan.deletes) out << idHex(id) << ',';
+    out << "\nclosure=";
+    if (plan.delete_closure.has_value()) {
+        for (const auto& id : plan.delete_closure->final_delete_set) out << idHex(id) << ',';
+    }
+    out << '\n';
+    return out.str();
+}
+
 } // namespace canvas::verification::g1_04_c

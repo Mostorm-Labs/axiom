@@ -70,6 +70,7 @@ CorpusReport::ObservationFact observeOne(Store& store, const DecodedFixture& fix
                 const auto prepared = prepareApplyPlan(candidate, context);
                 if (prepared.disposition == PrepareDisposition::kPrepared) {
                     fact.disposition = "PLAN_READY"; fact.terminalPhase = "PREPARE";
+                    if (prepared.plan.has_value()) fact.planProjection = projectPlan(*prepared.plan);
                 } else if (prepared.disposition == PrepareDisposition::kAlreadyApplied) {
                     fact.disposition = "ALREADY_APPLIED"; fact.terminalPhase = "PREPARE";
                 } else {
