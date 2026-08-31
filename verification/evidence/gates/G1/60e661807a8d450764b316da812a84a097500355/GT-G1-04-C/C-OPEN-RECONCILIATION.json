@@ -1,0 +1,73 @@
+{
+  "gate": "GT-G1-04-C",
+  "slice": "C6",
+  "packageRef": "8a43af6ebb9b88ecefb79141eb90b5680405a449",
+  "sourceRef": "60e661807a8d450764b316da812a84a097500355",
+  "taskAnchor": {
+    "revision": "c8fe64b4b2927fb369b6735c6b6a1b45edd5d80d",
+    "relation": "ancestor"
+  },
+  "authority": {
+    "verification": "notion:3cc4c57a-590c-81ae-ab73-d75501c47169",
+    "implementationPlan": "notion:3cc4c57a-590c-81c4-9e7b-d404c3fdba4b"
+  },
+  "trustedDependencies": {
+    "p36FinalMaterializedRef": "c8fe64b4b2927fb369b6735c6b6a1b45edd5d80d",
+    "p36R1SourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+    "p36R1MaterializedRef": "2a601ab35a2294cb38d713ab001bbac7deaa9cf7",
+    "p36R2SourceRef": "1763d57e7554ec690634326b998971f0decaae28",
+    "correctedC3SourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+    "correctedC3MaterializedRef": "2a601ab35a2294cb38d713ab001bbac7deaa9cf7"
+  },
+  "authorityManualExpected": true,
+  "expectedTruthWrites": 0,
+  "providerOutputUsedAsExpected": false,
+  "productionSemanticDelta": 0,
+  "format": "axiom-gt-g1-04-c6-open-reconciliation-v1",
+  "formatVersion": 1,
+  "status": "PASS",
+  "closedGroups": [
+    "connector-target-delete",
+    "geometry-point-like-elements-per-operation-aggregate",
+    "restore-no-tombstone",
+    "hierarchy-parent-capability",
+    "sticky-direct-richtext-cardinality"
+  ],
+  "geometry": {
+    "thresholds": {
+      "C1-GEOMETRY-N-1": {
+        "units": 1999999,
+        "observed": "PLAN_READY"
+      },
+      "C1-GEOMETRY-N": {
+        "units": 2000000,
+        "observed": "PLAN_READY"
+      },
+      "C1-GEOMETRY-LIMIT": {
+        "units": 2000001,
+        "observed": "GEOMETRY_LIMIT_EXCEEDED"
+      }
+    },
+    "checkedAddition": "INTEGER_OVERFLOW",
+    "checkedDabMultiplication": "INTEGER_OVERFLOW",
+    "checkedEraseMultiplication": "INTEGER_OVERFLOW",
+    "historicalOverflowCaseUsedAsArithmeticOracle": false
+  },
+  "restore": {
+    "caseId": "C1-RESTORE-NO-TOMBSTONE",
+    "status": "PASS",
+    "hiddenTombstoneHistoryRequired": false,
+    "productionTombstoneApiAdded": false
+  },
+  "hierarchy": {
+    "status": "PASS",
+    "rules": [
+      "Root -> any",
+      "Group -> any",
+      "Sticky -> RichText only",
+      "Sticky direct RichText cardinality = 0..1",
+      "all other kinds = non-parent"
+    ]
+  },
+  "unknownFuturePolicyKeysRemainUnknown": true
+}
