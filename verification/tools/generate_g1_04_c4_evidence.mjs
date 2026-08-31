@@ -37,6 +37,33 @@ function scenario(id, mutate, expectedStatus, diagnostics = []) {
   return { id, expectedStatus, requiredDiagnostics: diagnostics, observedStatus: result.status, observedDiagnostics: result.diagnostics ?? [], contractPass };
 }
 
+function resultSchemaCompatible(result) {
+  return result.format === "axiom-g1-04-c-result-v1"
+    && result.formatVersion === 1
+    && result.provenance === "CONFORMANCE_RESULT"
+    && typeof result.caseId === "string"
+    && result.caseId.length > 0
+    && typeof result.status === "string"
+    && result.status.length > 0
+    && typeof result.expectedRef === "string"
+    && result.expectedRef.length > 0
+    && Array.isArray(result.observationRefs)
+    && result.observationRefs.length >= 1
+    && result.observationRefs.every((ref) => typeof ref === "string" && ref.length > 0)
+    && new Set(result.observationRefs).size === result.observationRefs.length;
+}
+
+function observationRefBoundaryScenario(id, mutate, expectedStatus, diagnostics = [], expectedRefs = undefined) {
+  const input = mutate(base());
+  const result = coordinateCase(input);
+  const refsMatch = expectedRefs === undefined || JSON.stringify(result.observationRefs) === JSON.stringify(expectedRefs);
+  const contractPass = result.status === expectedStatus
+    && diagnostics.every((d) => result.diagnostics?.includes(d))
+    && refsMatch
+    && resultSchemaCompatible(result);
+  return { id, expectedStatus, requiredDiagnostics: diagnostics, expectedObservationRefs: expectedRefs, observedStatus: result.status, observedDiagnostics: result.diagnostics ?? [], observedObservationRefs: result.observationRefs, resultSchemaCompatible: resultSchemaCompatible(result), contractPass };
+}
+
 function scenarios() {
   return [
     scenario("C4-T01", x => x, "PASS"),
@@ -52,11 +79,22 @@ function scenarios() {
   ];
 }
 
+function observationRefBoundaryScenarios() {
+  return [
+    observationRefBoundaryScenario("C4-R01-DISTINCT-OBSERVATION-REFS", x => x, "PASS", [], ["synthetic-reference", "synthetic-indexed"]),
+    observationRefBoundaryScenario("C4-R02-DUPLICATE-OBSERVATION-REFS", x => { x.referenceRef = "same"; x.indexedRef = "same"; return x; }, "FAIL", ["PROVIDER_SET_INVALID"], ["same"]),
+    observationRefBoundaryScenario("C4-R03-MISSING-REFERENCE-REF", x => { x.referenceRef = ""; return x; }, "FAIL", ["PROVIDER_SET_INVALID"], ["synthetic-indexed"]),
+    observationRefBoundaryScenario("C4-R04-MISSING-INDEXED-REF", x => { x.indexedRef = ""; return x; }, "FAIL", ["PROVIDER_SET_INVALID"], ["synthetic-reference"]),
+    observationRefBoundaryScenario("C4-R05-MISSING-ALL-OBSERVATION-REFS", x => { x.referenceRef = ""; x.indexedRef = ""; return x; }, "FAIL", ["PROVIDER_SET_INVALID"], ["INVALID_OBSERVATION_REF"]),
+  ];
+}
+
 export function generateEvidence(sourceRef) {
   const expectedPath = resolve(verificationRoot, "corpus/semantic/v1/g1-04-c/authoring/expected.json");
   const expected = JSON.parse(readFileSync(expectedPath, "utf8"));
   if (!Array.isArray(expected)) throw new Error("accepted expected inventory must be an array");
   const scenarioResults = scenarios();
+  const observationRefBoundaryResults = observationRefBoundaryScenarios();
   return {
     format: "axiom-gt-g1-04-c-coordinator-contract-v1",
     packageRef: PACKAGE_REF,
@@ -64,6 +102,8 @@ export function generateEvidence(sourceRef) {
     taskAnchor: { revision: TASK_ANCHOR, relation: "ancestor" },
     syntheticScenarioCount: scenarioResults.length,
     syntheticScenarioPassCount: scenarioResults.filter(x => x.contractPass).length,
+    observationRefBoundaryScenarioCount: observationRefBoundaryResults.length,
+    observationRefBoundaryScenarioPassCount: observationRefBoundaryResults.filter(x => x.contractPass).length,
     acceptedExpectedCount: expected.length,
     acceptedOpenPolicyCount: expected.filter(x => x.openPolicy === true).length,
     acceptedExpectedAllAuthorityManual: expected.every(x => x.provenance === "AUTHORITY_MANUAL"),
@@ -71,6 +111,7 @@ export function generateEvidence(sourceRef) {
     productionSemanticDependencies: 0,
     providerOutputUsedAsExpected: false,
     verification: scenarioResults,
+    observationRefBoundaryVerification: observationRefBoundaryResults,
   };
 }
 
