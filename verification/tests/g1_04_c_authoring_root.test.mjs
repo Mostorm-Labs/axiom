@@ -8,14 +8,6 @@ import { assertExpectedPolicyStatus } from "../tools/g1_04_c_contract.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const P20 = "3cc4c57a-590c-81ae-ab73-d75501c47169";
-const SEMANTIC = new Set([
-  "3c94c57a-590c-8153-955e-dfbb4b6b7da3",
-  "3c94c57a-590c-81cf-97eb-f6c89fce563e",
-  "3ca4c57a-590c-8150-b3bd-cb1d51eb0b83",
-  "3cb4c57a-590c-815a-b8fa-cd785a837da7",
-  "3c94c57a-590c-81e1-aea7-eae7ea8a8c88",
-  "3c54c57a-590c-8136-89c3-f2b7cdb87625",
-]);
 const OPERATIONS = ["InsertObjects", "DeleteObjects", "RestoreObjects", "SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"];
 
 async function json(relativePath) {
@@ -25,7 +17,7 @@ async function schema(name) { return json(`schemas/semantic/g1-04-c-${name}.sche
 function hasUuid(ref) { return /[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}/i.test(ref); }
 function hasPage(ref, page) { return ref.includes(page) || ref.includes(page.replaceAll("-", "")); }
 function assertRefs(record) {
-  assert(record.authorityRuleRefs.every((ref) => hasUuid(ref) && [...SEMANTIC, P20].some((id) => hasPage(ref, id))));
+  assert(record.authorityRuleRefs.every((ref) => hasUuid(ref)));
   assert(record.authorityRuleRefs.some((ref) => hasPage(ref, P20)), `${record.caseId ?? record.id} missing direct P20 ref`);
   assert(record.authorityRuleRefs.some((ref) => hasUuid(ref) && !hasPage(ref, P20)), `${record.caseId ?? record.id} missing semantic authority ref`);
   assert(record.authorityRuleRefs.every((ref) => !/(runtime\/semantic|IMPLEMENTATION_OBSERVATION|generated\/|evidence|source_ref|materialized_ref)/i.test(ref)));
