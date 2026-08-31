@@ -1,0 +1,1236 @@
+{
+  "acceptedAuthoringCaseCount": 90,
+  "checks": {
+    "acceptedC0C1PathsChanged": false,
+    "cleanRegenerationByteEquality": "PASS",
+    "focusedC2Test": "PASS (11/11)",
+    "generatedExpectedCount": 0,
+    "gitDiffCheck": "PASS",
+    "implementationDerivedExpectedCount": 0,
+    "minimalSourceIndependence": "PASS",
+    "noAuthoringWriteProof": "PASS",
+    "productionIndependenceStaticGuard": "PASS",
+    "recordedHashesRecomputed": "PASS",
+    "runtimeReferenceIndexedOutputUsedAsExpected": false,
+    "tempVsCommittedByteEquality": "PASS",
+    "verificationWorkspaceRegression": "PASS"
+  },
+  "committedManifest": {
+    "inventorySha256": "312f9343e3bdbcd91512b725a103b550ed92fbef0237cd92fb4231456e4bd2ff",
+    "path": "verification/corpus/semantic/v1/g1-04-c/generated/manifest.json",
+    "sha256": "533c868320bf18d825a14531cf3c348dc160d6fc1711b8053252ed0ceb4b6f92"
+  },
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "executionStartRef": "9e23eedce264b94e4435d1198ae69a5878cb1e6f",
+  "format": "axiom-g1-04-c-fixture-repro-evidence-v1",
+  "formatVersion": 1,
+  "gateId": "GT-G1-04-C/C2",
+  "generatedInputCount": 90,
+  "generatedInventory": {
+    "entries": [
+      {
+        "caseId": "C1-CONNECTOR-ANCHOR",
+        "input": {
+          "bytes": 2054,
+          "path": "inputs/C1-CONNECTOR-ANCHOR.json",
+          "sha256": "328b472afbeaae6d355f8c6c43af7139cc124118b9f5a606cafc3e5f3541016d"
+        },
+        "provenance": {
+          "bytes": 1735,
+          "path": "provenance/C1-CONNECTOR-ANCHOR.json",
+          "sha256": "e2a713a36a05e24c03bbd01e8be01eddbcf2c7508509213f94bd9c75df1e1801"
+        }
+      },
+      {
+        "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+        "input": {
+          "bytes": 2066,
+          "path": "inputs/C1-CONNECTOR-ATTACHED-ENDPOINT.json",
+          "sha256": "e516e30bce2482ce0b303aed6e133d708cdbb8909345cc34eb2297d649a3ddf4"
+        },
+        "provenance": {
+          "bytes": 1893,
+          "path": "provenance/C1-CONNECTOR-ATTACHED-ENDPOINT.json",
+          "sha256": "f217ff90d311e188badaad7eb699b7eeee02f5b1387bbd3cec6f86a75ccfec20"
+        }
+      },
+      {
+        "caseId": "C1-CONNECTOR-INVALID-END",
+        "input": {
+          "bytes": 2059,
+          "path": "inputs/C1-CONNECTOR-INVALID-END.json",
+          "sha256": "d4a8d4464768b53cf0eea722ac38acf6de2f1a0098f53de33c362c1adbfe4f48"
+        },
+        "provenance": {
+          "bytes": 1755,
+          "path": "provenance/C1-CONNECTOR-INVALID-END.json",
+          "sha256": "69b02812eb8ee4d63413e613371f9ae151d04b4231a1add3e360fcbf2b5def74"
+        }
+      },
+      {
+        "caseId": "C1-CONNECTOR-ROUTING",
+        "input": {
+          "bytes": 2056,
+          "path": "inputs/C1-CONNECTOR-ROUTING.json",
+          "sha256": "7067bde29e02fba9458f1c04af3b303078b7b6d51d015b11ed3c1f11a41bebd0"
+        },
+        "provenance": {
+          "bytes": 1739,
+          "path": "provenance/C1-CONNECTOR-ROUTING.json",
+          "sha256": "f58c8fd4fda566466f1df7b67c3901a8b8b1d49cbb9d602a27a5fff6de474f76"
+        }
+      },
+      {
+        "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+        "input": {
+          "bytes": 2064,
+          "path": "inputs/C1-CONNECTOR-TARGET-CAPABILITY.json",
+          "sha256": "90f86a02b1735d09700b638ef4db31a95b6cdcdec3eeb6b6a5f3ba9c4948831f"
+        },
+        "provenance": {
+          "bytes": 1893,
+          "path": "provenance/C1-CONNECTOR-TARGET-CAPABILITY.json",
+          "sha256": "04dbcf2865fcbcc7136cfea7988bc693b6fa1d59e38ad69580776e774cc4a23f"
+        }
+      },
+      {
+        "caseId": "C1-CONNECTOR-VALID",
+        "input": {
+          "bytes": 2054,
+          "path": "inputs/C1-CONNECTOR-VALID.json",
+          "sha256": "9f05bad52303271215a23b7a9fd7dc7ff1a03a9de36fe6d20e893ffe90de10ef"
+        },
+        "provenance": {
+          "bytes": 1731,
+          "path": "provenance/C1-CONNECTOR-VALID.json",
+          "sha256": "ad46496d530a5b8732fdb16594e77f4c77c0864723c04fd37db72f139cb6027c"
+        }
+      },
+      {
+        "caseId": "C1-DELETE-CASCADE",
+        "input": {
+          "bytes": 1851,
+          "path": "inputs/C1-DELETE-CASCADE.json",
+          "sha256": "4d7288bcf489c2b3a61b1de71276ed6b54217b26a7c057ab3b7bb31e8524d4f1"
+        },
+        "provenance": {
+          "bytes": 1835,
+          "path": "provenance/C1-DELETE-CASCADE.json",
+          "sha256": "92832675c4fe2c4e30fb104f9b0373b24e6efd25e2298ff41de58484a10126fa"
+        }
+      },
+      {
+        "caseId": "C1-DELETE-DUPLICATE-TARGET",
+        "input": {
+          "bytes": 1239,
+          "path": "inputs/C1-DELETE-DUPLICATE-TARGET.json",
+          "sha256": "4ea462cf4af5ddbefc89be8877a11a0701d5258f939279109fef98e19d165c70"
+        },
+        "provenance": {
+          "bytes": 1757,
+          "path": "provenance/C1-DELETE-DUPLICATE-TARGET.json",
+          "sha256": "9b3002c2cd705be46dff63aef4fece3d40dd65047a64b29bd921f9b526bc3644"
+        }
+      },
+      {
+        "caseId": "C1-DELETE-MISSING-TARGET",
+        "input": {
+          "bytes": 1191,
+          "path": "inputs/C1-DELETE-MISSING-TARGET.json",
+          "sha256": "49746d2166a9bd0e95a57b53786f1456e6d963a1771e8c8897379883f620348a"
+        },
+        "provenance": {
+          "bytes": 1749,
+          "path": "provenance/C1-DELETE-MISSING-TARGET.json",
+          "sha256": "64e413c13aaf505e538ed92d099005f6d0f1403637707cb5c57be4ab277e61d8"
+        }
+      },
+      {
+        "caseId": "C1-DELETE-SUBTREE",
+        "input": {
+          "bytes": 1850,
+          "path": "inputs/C1-DELETE-SUBTREE.json",
+          "sha256": "b32ce4ff9ad32f75cda9ec09b570661e877e58bae8e3e5a0348fa57e0c041ac9"
+        },
+        "provenance": {
+          "bytes": 1835,
+          "path": "provenance/C1-DELETE-SUBTREE.json",
+          "sha256": "7595dfb0df9d12515e573d5a8b4d2edb9b4f3f19eca54d6da1b9e55d52295c2e"
+        }
+      },
+      {
+        "caseId": "C1-DELETE-VALID",
+        "input": {
+          "bytes": 1182,
+          "path": "inputs/C1-DELETE-VALID.json",
+          "sha256": "4518dcf704cdb9ccfbde35ce1229446fe5076f2257995ff7382765b6af86dbc1"
+        },
+        "provenance": {
+          "bytes": 1827,
+          "path": "provenance/C1-DELETE-VALID.json",
+          "sha256": "9a9c6fca6e8a84c75a5281f05ceb4c78c36e9e728d5fca57477e33ab9da7f29f"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-ADD-CAPABILITY",
+        "input": {
+          "bytes": 2307,
+          "path": "inputs/C1-ERASE-ADD-CAPABILITY.json",
+          "sha256": "986bf8365b947898adbaea482709681463ac0be64a8326e808488f03fddbc552"
+        },
+        "provenance": {
+          "bytes": 1745,
+          "path": "provenance/C1-ERASE-ADD-CAPABILITY.json",
+          "sha256": "0157d090ae0dff0cc7e7487f669470df899ddee6e9e3bcc210701f5bb612062c"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+        "input": {
+          "bytes": 2309,
+          "path": "inputs/C1-ERASE-ADD-EXISTING-MASK.json",
+          "sha256": "b7626cdf93c3847c3c1cc24f9203fdf860005434c559ce4ed464ae8e4d1c0b58"
+        },
+        "provenance": {
+          "bytes": 1757,
+          "path": "provenance/C1-ERASE-ADD-EXISTING-MASK.json",
+          "sha256": "42c4cfa6c0960a662cb399a7d1b8c887d95cbb174fcb283ca573a526cb0c418e"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-ADD-GEOMETRY",
+        "input": {
+          "bytes": 2304,
+          "path": "inputs/C1-ERASE-ADD-GEOMETRY.json",
+          "sha256": "025fcf1a72b29c679a7ff8902ea9623dfbc11b33a5140eccd4e5213581bb58d9"
+        },
+        "provenance": {
+          "bytes": 1737,
+          "path": "provenance/C1-ERASE-ADD-GEOMETRY.json",
+          "sha256": "e438c86c7026bda0bce10e025251f10db936838d27c27e92ae9b7c5ba69b2fc9"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-ADD-UNIQUENESS",
+        "input": {
+          "bytes": 2307,
+          "path": "inputs/C1-ERASE-ADD-UNIQUENESS.json",
+          "sha256": "bf18f0fdcaceafd354e029640138d3694dfccdeaecd29909133928083fb912ca"
+        },
+        "provenance": {
+          "bytes": 1745,
+          "path": "provenance/C1-ERASE-ADD-UNIQUENESS.json",
+          "sha256": "f04b94dc812f6eca503c4995a6cc58e8b1e0925f1f2129c0535cfe24f040c315"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-ADD-VALID",
+        "input": {
+          "bytes": 2302,
+          "path": "inputs/C1-ERASE-ADD-VALID.json",
+          "sha256": "f34e20d31319b969c0e4b5b818fd5ca52bdbac72b1f1b18ed65138197cc84363"
+        },
+        "provenance": {
+          "bytes": 1725,
+          "path": "provenance/C1-ERASE-ADD-VALID.json",
+          "sha256": "cd21c3e0a31aa2afde83b29699a995110a3045377c0d25de42d8cc19de1e841b"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+        "input": {
+          "bytes": 1370,
+          "path": "inputs/C1-ERASE-REMOVE-DUPLICATE.json",
+          "sha256": "c629a9fa6cdd99a03eaed940c69189164a582c642efcb41f38ec1e40cbb47425"
+        },
+        "provenance": {
+          "bytes": 1756,
+          "path": "provenance/C1-ERASE-REMOVE-DUPLICATE.json",
+          "sha256": "688a17ccdbed2d9033a19223c76bb8a49f83520db7a0865c1e5ba9dccba1e767"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-REMOVE-MISSING",
+        "input": {
+          "bytes": 1316,
+          "path": "inputs/C1-ERASE-REMOVE-MISSING.json",
+          "sha256": "cb3510c08e1493da1240ca56daa33aa5eccddc51c6f3dbb9b121085923e1c776"
+        },
+        "provenance": {
+          "bytes": 1748,
+          "path": "provenance/C1-ERASE-REMOVE-MISSING.json",
+          "sha256": "449628011467fe1c13d0a18bcdcc3c8176dc721a7d4b51a49b5a3a12ba489a4f"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-REMOVE-VALID",
+        "input": {
+          "bytes": 1315,
+          "path": "inputs/C1-ERASE-REMOVE-VALID.json",
+          "sha256": "cd0fcd041e275d2957071681b38ee9454b169c1618038ddff6bb253eda49507f"
+        },
+        "provenance": {
+          "bytes": 1740,
+          "path": "provenance/C1-ERASE-REMOVE-VALID.json",
+          "sha256": "fbcdbe258bca78f5732843f1503b6b74972c52be8681909fb60ab71a57458b34"
+        }
+      },
+      {
+        "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+        "input": {
+          "bytes": 1322,
+          "path": "inputs/C1-ERASE-REMOVE-WHOLE-REJECT.json",
+          "sha256": "0616d5b28ca92d6586c9784091a0d8f114aee2a59c0ba5a1c645a88165bb4f56"
+        },
+        "provenance": {
+          "bytes": 1768,
+          "path": "provenance/C1-ERASE-REMOVE-WHOLE-REJECT.json",
+          "sha256": "d84b92558490228967dc16d24212cf6f8ee96122b6e8040854b7fbce5e4f0619"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-BOUNDARY",
+        "input": {
+          "bytes": 3782,
+          "path": "inputs/C1-GEOMETRY-BOUNDARY.json",
+          "sha256": "8447d11b9f30c40448174205101feaef52b22ddbe88c0a7d09e2d91d6a889541"
+        },
+        "provenance": {
+          "bytes": 1741,
+          "path": "provenance/C1-GEOMETRY-BOUNDARY.json",
+          "sha256": "f9a01a26c71756fb4047fa5072ce3a298fbe45e624b1fb01cb3ab7e921ccfaf2"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-LIMIT",
+        "input": {
+          "bytes": 3778,
+          "path": "inputs/C1-GEOMETRY-LIMIT.json",
+          "sha256": "d4ba87045d0dcef82b81d2b93c636abdb5cb1f48964d60ca5e580ffa815329f1"
+        },
+        "provenance": {
+          "bytes": 1729,
+          "path": "provenance/C1-GEOMETRY-LIMIT.json",
+          "sha256": "b28c37cbdca22f0a6ec422ea0714ea31e77baa2b7c6cfacd387067d69d1c29e5"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-N",
+        "input": {
+          "bytes": 3775,
+          "path": "inputs/C1-GEOMETRY-N.json",
+          "sha256": "3c6adf0de8a0b33a66ab67e08f9ede0e0055150c15b375e8dbb1cf03072873bb"
+        },
+        "provenance": {
+          "bytes": 1713,
+          "path": "provenance/C1-GEOMETRY-N.json",
+          "sha256": "615d29c5b69c6d2d819a71e41c2ee0b5266f6a72577216c4fac7ee44a1abbc92"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-N-1",
+        "input": {
+          "bytes": 3199,
+          "path": "inputs/C1-GEOMETRY-N-1.json",
+          "sha256": "0c627f27e33c95a23927fe6fcc0ddac6423ce892ed76aa1718f4c4e293fd372c"
+        },
+        "provenance": {
+          "bytes": 1721,
+          "path": "provenance/C1-GEOMETRY-N-1.json",
+          "sha256": "817b24ccc913cba93ff1c4a598585dabef4f6b4557772429c2de172e587713c6"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-OVERFLOW",
+        "input": {
+          "bytes": 4360,
+          "path": "inputs/C1-GEOMETRY-OVERFLOW.json",
+          "sha256": "28dc70a786aa67e49323b00192fb0df492f59bcb57c15b2d316164d0e3b22ede"
+        },
+        "provenance": {
+          "bytes": 1741,
+          "path": "provenance/C1-GEOMETRY-OVERFLOW.json",
+          "sha256": "9c20d38417d6b7b0ee38891d7703ac49954bd6f080708f74a5a236767533faad"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-STRUCTURAL",
+        "input": {
+          "bytes": 3784,
+          "path": "inputs/C1-GEOMETRY-STRUCTURAL.json",
+          "sha256": "fcc9cee94a10f97216cd734f9924457fb896e6511b114be7290cee5be007a49f"
+        },
+        "provenance": {
+          "bytes": 1749,
+          "path": "provenance/C1-GEOMETRY-STRUCTURAL.json",
+          "sha256": "2b674db538b3a51fb56ee82281c0e6450bc2fb8662cb43ace54fb626ad18f770"
+        }
+      },
+      {
+        "caseId": "C1-GEOMETRY-WRONG-KIND",
+        "input": {
+          "bytes": 3784,
+          "path": "inputs/C1-GEOMETRY-WRONG-KIND.json",
+          "sha256": "a5f8642d6dc10c083f8a87c327d19787f86e2c7b285e0739312236d06c766ee6"
+        },
+        "provenance": {
+          "bytes": 1749,
+          "path": "provenance/C1-GEOMETRY-WRONG-KIND.json",
+          "sha256": "889ba356ecbd84a941abe5d66b485a2bf81e9001403a1c8fef96be44d641213b"
+        }
+      },
+      {
+        "caseId": "C1-HIERARCHY-STICKY",
+        "input": {
+          "bytes": 1377,
+          "path": "inputs/C1-HIERARCHY-STICKY.json",
+          "sha256": "af1958eeee3111999ab8d6c71be2c3151c72cdbfa585988a0a908105c7fbc5b8"
+        },
+        "provenance": {
+          "bytes": 1843,
+          "path": "provenance/C1-HIERARCHY-STICKY.json",
+          "sha256": "dad24d5891c706575f8dd9f1e4e87aa7c9dbcdc1f646f082f3d378856219fd8a"
+        }
+      },
+      {
+        "caseId": "C1-ID-COLLISION",
+        "input": {
+          "bytes": 3000,
+          "path": "inputs/C1-ID-COLLISION.json",
+          "sha256": "a15a06b1e0cd32eadf84ad8e94e558b6d5ac019373f9b6374b64e8a25f6c8880"
+        },
+        "provenance": {
+          "bytes": 1827,
+          "path": "provenance/C1-ID-COLLISION.json",
+          "sha256": "dde99677f5065e5bc745483f2165d436fb5f7d2b5f51a0ad0eac441f7eb174c1"
+        }
+      },
+      {
+        "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+        "input": {
+          "bytes": 3007,
+          "path": "inputs/C1-IDEMPOTENT-EQUIVALENT.json",
+          "sha256": "4084cd3c085fb0ab8b169a942c02834fdd6dbb43f4b2d3ea9fc15a56b49e4088"
+        },
+        "provenance": {
+          "bytes": 1766,
+          "path": "provenance/C1-IDEMPOTENT-EQUIVALENT.json",
+          "sha256": "3ad648460b5e465aff8be4156734f895c5bbd04e47c5280e04517c6aa5882113"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+        "input": {
+          "bytes": 1561,
+          "path": "inputs/C1-IMAGE-CONTENT-PRESENCE.json",
+          "sha256": "9e27ac0b391d6e4495906b39f1d11b609fa0093aa1ade21b73c4ce9e31e2eb0e"
+        },
+        "provenance": {
+          "bytes": 1755,
+          "path": "provenance/C1-IMAGE-CONTENT-PRESENCE.json",
+          "sha256": "96a43edc1c00874c2160fe19b9aa0b2e2372a1880c6de2c05554e600c7df02b4"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-CONTENTMODE",
+        "input": {
+          "bytes": 1555,
+          "path": "inputs/C1-IMAGE-CONTENTMODE.json",
+          "sha256": "606d1f5f834f14304b96001d93d615453ebf84205c9935477fa0ae46ce78b729"
+        },
+        "provenance": {
+          "bytes": 1735,
+          "path": "provenance/C1-IMAGE-CONTENTMODE.json",
+          "sha256": "ff4b496c1496dd22fc5e563e10a80e0c46ebd38244a114e8dd0df0c0b3cf74b2"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-INTRINSIC",
+        "input": {
+          "bytes": 1555,
+          "path": "inputs/C1-IMAGE-INTRINSIC.json",
+          "sha256": "5ea212ed7fd65cbeba7d891e4c93748f5e32169884d6186704490eefccf5a98a"
+        },
+        "provenance": {
+          "bytes": 1727,
+          "path": "provenance/C1-IMAGE-INTRINSIC.json",
+          "sha256": "972692ebf7535581d4a804e468678353d9abaa12dff2662aba80f9bfeef6ab58"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-LOCAL-SIZE",
+        "input": {
+          "bytes": 1556,
+          "path": "inputs/C1-IMAGE-LOCAL-SIZE.json",
+          "sha256": "c89455e64f82f8f9454e94eb6eeb40f024383042157b008c0186b0b52ebe4bb5"
+        },
+        "provenance": {
+          "bytes": 1731,
+          "path": "provenance/C1-IMAGE-LOCAL-SIZE.json",
+          "sha256": "8cf51519420b672273e7c150b8b8fcdddd91fc696c3f40508543286b952b8525"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+        "input": {
+          "bytes": 1574,
+          "path": "inputs/C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC.json",
+          "sha256": "34768701c87acdc4a2c73fd4669df10f7f8fb020bda949fec6edf7ca23f50d6a"
+        },
+        "provenance": {
+          "bytes": 1803,
+          "path": "provenance/C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC.json",
+          "sha256": "a413d25af733205612ee3c20b7b0c4d7d2cb597edab46315fe550f782926e2e1"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-SOURCE-RECT",
+        "input": {
+          "bytes": 1692,
+          "path": "inputs/C1-IMAGE-SOURCE-RECT.json",
+          "sha256": "bc5fefad293e9d922b4090901161e6b8e026fc943fcbf19ecda76d69ab90955b"
+        },
+        "provenance": {
+          "bytes": 1735,
+          "path": "provenance/C1-IMAGE-SOURCE-RECT.json",
+          "sha256": "6a1efdfbcf5884b893554768db17c57973681d390316051c9547a01a05adb78f"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-VALID",
+        "input": {
+          "bytes": 1551,
+          "path": "inputs/C1-IMAGE-VALID.json",
+          "sha256": "dcfd23427149c5c4720f1e14f407d8722c63c02cbf326fd262a169e3f985f716"
+        },
+        "provenance": {
+          "bytes": 1711,
+          "path": "provenance/C1-IMAGE-VALID.json",
+          "sha256": "9db76a008e4884493fd6377df759e1d2e0e10c538645cafcbb9c7825628b27b6"
+        }
+      },
+      {
+        "caseId": "C1-IMAGE-WRONG-KIND",
+        "input": {
+          "bytes": 1555,
+          "path": "inputs/C1-IMAGE-WRONG-KIND.json",
+          "sha256": "e2b52efda34b102afc9a162d1c4357fc22e777c1d48b78132eac056824ec0815"
+        },
+        "provenance": {
+          "bytes": 1731,
+          "path": "provenance/C1-IMAGE-WRONG-KIND.json",
+          "sha256": "b8afb25941120393f9f0c930786c7833e14d219718f7ba1ad25eec16cdb273c7"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-EXISTING-ID",
+        "input": {
+          "bytes": 1850,
+          "path": "inputs/C1-INSERT-EXISTING-ID.json",
+          "sha256": "3d844e7d5b70c84c461502e02cd0ae21b35fb39726ebe46b4bfc9996036c6919"
+        },
+        "provenance": {
+          "bytes": 1737,
+          "path": "provenance/C1-INSERT-EXISTING-ID.json",
+          "sha256": "e204ca6f3a9477e0f67d9e2485411a287c2ffee64f9f33aef543dd12eb883571"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+        "input": {
+          "bytes": 1259,
+          "path": "inputs/C1-INSERT-HIERARCHY-CYCLE.json",
+          "sha256": "2182b23ab96940ecd388a318a6d2b3dcff722e32a28ae7dc9966254b0aa72b64"
+        },
+        "provenance": {
+          "bytes": 1867,
+          "path": "provenance/C1-INSERT-HIERARCHY-CYCLE.json",
+          "sha256": "d6fed1f67202518c73ff70807fd6a07d7a5d10ec7d24aa945440e8476df26c08"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-STAGED-CONNECTOR",
+        "input": {
+          "bytes": 2623,
+          "path": "inputs/C1-INSERT-STAGED-CONNECTOR.json",
+          "sha256": "8f04f677197b7ff051f3d146b1b2e3d307316035465bc6fd6c098df5cec77dc8"
+        },
+        "provenance": {
+          "bytes": 1985,
+          "path": "provenance/C1-INSERT-STAGED-CONNECTOR.json",
+          "sha256": "54e561a9061d03eb81f85de85f2fbba452d5922e60fa3923cb0134d0388416b1"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-STAGED-PARENT",
+        "input": {
+          "bytes": 2623,
+          "path": "inputs/C1-INSERT-STAGED-PARENT.json",
+          "sha256": "685120f6304a2a595fefde55062d7fd0dc083070bfceff5c60ba5fa3cce838a5"
+        },
+        "provenance": {
+          "bytes": 1973,
+          "path": "provenance/C1-INSERT-STAGED-PARENT.json",
+          "sha256": "9c4530f52f0bb09c834f40751d0be2f81c5a904a8575c2f8ee81ad42f0e135dd"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-STICKY-CARDINALITY",
+        "input": {
+          "bytes": 1262,
+          "path": "inputs/C1-INSERT-STICKY-CARDINALITY.json",
+          "sha256": "b0e1ae29c1dbdc39ba2ff10621d9ad8e5f3231a074595ee68593a1722979fc50"
+        },
+        "provenance": {
+          "bytes": 1879,
+          "path": "provenance/C1-INSERT-STICKY-CARDINALITY.json",
+          "sha256": "af9afda8a9ee58930559224008135cb140dbca5e0e02dbeb9983c04feaa03a4f"
+        }
+      },
+      {
+        "caseId": "C1-INSERT-VALID",
+        "input": {
+          "bytes": 1248,
+          "path": "inputs/C1-INSERT-VALID.json",
+          "sha256": "d474b45eb9c1cf08ef8b819be26cacf420c8d388325b1376f39fa847e330f05f"
+        },
+        "provenance": {
+          "bytes": 1713,
+          "path": "provenance/C1-INSERT-VALID.json",
+          "sha256": "7e8724bda5cede9a924e15b03d0849586b0cd16a505c225cdbcf1e1fac4f18c7"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-APPLICABILITY",
+        "input": {
+          "bytes": 1382,
+          "path": "inputs/C1-PATCH-APPLICABILITY.json",
+          "sha256": "098fc1d08e7907295c15ee395568798e5d2440b171fab751693b9731465b4a47"
+        },
+        "provenance": {
+          "bytes": 1743,
+          "path": "provenance/C1-PATCH-APPLICABILITY.json",
+          "sha256": "a105ef337dd3a1c006286cea0a065cc3bf1677a37b0adb6ab36326aa1180d0d5"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-BRANCH-TYPE",
+        "input": {
+          "bytes": 1380,
+          "path": "inputs/C1-PATCH-BRANCH-TYPE.json",
+          "sha256": "183009c5d153a79c51ddec2f466983810fb939aa80fce9abeddbe3f0a2d531b5"
+        },
+        "provenance": {
+          "bytes": 1735,
+          "path": "provenance/C1-PATCH-BRANCH-TYPE.json",
+          "sha256": "80d61660f42ba424ca4b0019f2fb498b49ba5b3d9b14df8602d7e033871aab5f"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-DUPLICATE-FIELD",
+        "input": {
+          "bytes": 1383,
+          "path": "inputs/C1-PATCH-DUPLICATE-FIELD.json",
+          "sha256": "2509760ddeaa325b42a321ee3d455376690040242819aee87cca63f7856a5f6a"
+        },
+        "provenance": {
+          "bytes": 1751,
+          "path": "provenance/C1-PATCH-DUPLICATE-FIELD.json",
+          "sha256": "250374d89e4b2b35ca578dc639046ad20ccba032664573d45f6940fb71a74e9a"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-FIELD-ID",
+        "input": {
+          "bytes": 1381,
+          "path": "inputs/C1-PATCH-FIELD-ID.json",
+          "sha256": "bec429e7f6ece15d64e00c08e41009a50bd117e97eaf7a5a36bb8b345ce473f8"
+        },
+        "provenance": {
+          "bytes": 1723,
+          "path": "provenance/C1-PATCH-FIELD-ID.json",
+          "sha256": "06b84bfa8dbd600cf9f2e8aeb2e23fa42c8f8a3741d656e6fba8b83680717837"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+        "input": {
+          "bytes": 1385,
+          "path": "inputs/C1-PATCH-PRESENCE-DEFAULT.json",
+          "sha256": "fa28d694ee68d8536faa9e011305625ec2e939c660d15c9bcf07b1281d58c7ac"
+        },
+        "provenance": {
+          "bytes": 1755,
+          "path": "provenance/C1-PATCH-PRESENCE-DEFAULT.json",
+          "sha256": "1365f32fb33c12998a1cf29618900295f2ab0f09f5c0d392e27023cb9995fddf"
+        }
+      },
+      {
+        "caseId": "C1-PATCH-VALID",
+        "input": {
+          "bytes": 1374,
+          "path": "inputs/C1-PATCH-VALID.json",
+          "sha256": "0597ad90ca112f16d065cbc01b9daf0af8ddc0fd411514365c864bd831e0166f"
+        },
+        "provenance": {
+          "bytes": 1711,
+          "path": "provenance/C1-PATCH-VALID.json",
+          "sha256": "78e1b8c7d9a41eaa80714b89157e7ea83e30970cf085d1e52c53ec483685c0e2"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-CYCLE",
+        "input": {
+          "bytes": 1404,
+          "path": "inputs/C1-PLACEMENT-CYCLE.json",
+          "sha256": "14f7f2a818116eac70af85be9cf48f442053c5106f62d9bd9a3f7abd388cee80"
+        },
+        "provenance": {
+          "bytes": 1839,
+          "path": "provenance/C1-PLACEMENT-CYCLE.json",
+          "sha256": "eb3647ca6afcd16f03d921e13f5a6b1849361e3e02a294ca5dec567de6b14150"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-GROUP-ANY",
+        "input": {
+          "bytes": 1382,
+          "path": "inputs/C1-PLACEMENT-GROUP-ANY.json",
+          "sha256": "a84d68dc8b894f19952283296de163f905eda0c2c55c305bd466fc863e69321a"
+        },
+        "provenance": {
+          "bytes": 1855,
+          "path": "provenance/C1-PLACEMENT-GROUP-ANY.json",
+          "sha256": "ba7a6d0743bd6173e25ccec84451b64a8602edd8600432660367d1134a63d570"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-INVALID-PARENT",
+        "input": {
+          "bytes": 1417,
+          "path": "inputs/C1-PLACEMENT-INVALID-PARENT.json",
+          "sha256": "2d9953d377c15442cefb28d45d25f5d59b6cff616a957024853389d86a65a493"
+        },
+        "provenance": {
+          "bytes": 1875,
+          "path": "provenance/C1-PLACEMENT-INVALID-PARENT.json",
+          "sha256": "c791f4c6b224887ff17ad666986fbf82e56196d3070ec3a9b9ca6729db32c9c1"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-NONPARENT",
+        "input": {
+          "bytes": 1410,
+          "path": "inputs/C1-PLACEMENT-NONPARENT.json",
+          "sha256": "eb04f1bcb8a31d987f5b578896fdc2facd539dd3d7edd454d6dc502f95b36709"
+        },
+        "provenance": {
+          "bytes": 1855,
+          "path": "provenance/C1-PLACEMENT-NONPARENT.json",
+          "sha256": "796890ee588ccfb8ddf520cb0405007e1370b99883ba002bb269be2ffd5a82cb"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-ORDERKEY",
+        "input": {
+          "bytes": 1377,
+          "path": "inputs/C1-PLACEMENT-ORDERKEY.json",
+          "sha256": "93f56a91701f32c3afe72eb61d25ac194ff22dc345b07d99a008a795c1d63cb4"
+        },
+        "provenance": {
+          "bytes": 1737,
+          "path": "provenance/C1-PLACEMENT-ORDERKEY.json",
+          "sha256": "119b3bbac2b0a1cce2aae4082e86c896f261bbe6c021234eb49abab04980d8df"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+        "input": {
+          "bytes": 1388,
+          "path": "inputs/C1-PLACEMENT-STICKY-RICHTEXT.json",
+          "sha256": "3749ad7db9504cc37e255d114bea93946bc140e94bd8b9c4b191fbc993ae151b"
+        },
+        "provenance": {
+          "bytes": 1879,
+          "path": "provenance/C1-PLACEMENT-STICKY-RICHTEXT.json",
+          "sha256": "5dbe149373a92696cf3c1ce5da14c89fc4fd4235a3b8593059d6eac56bfbe5ed"
+        }
+      },
+      {
+        "caseId": "C1-PLACEMENT-VALID",
+        "input": {
+          "bytes": 1374,
+          "path": "inputs/C1-PLACEMENT-VALID.json",
+          "sha256": "da5bc8719fef44f0285ed19dc1e8f167c33452cbf026f57da45c28ca3d8ed60b"
+        },
+        "provenance": {
+          "bytes": 1725,
+          "path": "provenance/C1-PLACEMENT-VALID.json",
+          "sha256": "8478197cd8fc1581528a8668a2d8e5499d8b5ea7cb47160b75b0efee08dd6f22"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-ABSENT-REF",
+        "input": {
+          "bytes": 1255,
+          "path": "inputs/C1-RESTORE-ABSENT-REF.json",
+          "sha256": "e456e5ea3b68cd8b9ff0830b3baade5bd5d72d11dca591ebf231dce57daeb3a7"
+        },
+        "provenance": {
+          "bytes": 1754,
+          "path": "provenance/C1-RESTORE-ABSENT-REF.json",
+          "sha256": "194ba7afb593213709ea57e86da08b17363b3ff4699e4df618c8cde6569c09f1"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+        "input": {
+          "bytes": 1856,
+          "path": "inputs/C1-RESTORE-BATCH-EXISTING-ID.json",
+          "sha256": "8528109b8e02cb8a0bd668b2adf28afedd85351a47c280f44d5dbf7349a26151"
+        },
+        "provenance": {
+          "bytes": 1896,
+          "path": "provenance/C1-RESTORE-BATCH-EXISTING-ID.json",
+          "sha256": "ffaeff5d3c29e4f5737f27e81c6edaf9f335f065d96be46617193bc251e6f52d"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+        "input": {
+          "bytes": 1269,
+          "path": "inputs/C1-RESTORE-CONNECTOR-TARGET-ABSENT.json",
+          "sha256": "22be81f21b89a39e999c96e96d38e062f927143cc4a026426e90a995526fcace"
+        },
+        "provenance": {
+          "bytes": 1920,
+          "path": "provenance/C1-RESTORE-CONNECTOR-TARGET-ABSENT.json",
+          "sha256": "b832bcab94f7db76f7d145aa6e1a701b4329e6feea416b279ab980405a4b4b9d"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-ELIGIBLE",
+        "input": {
+          "bytes": 1253,
+          "path": "inputs/C1-RESTORE-ELIGIBLE.json",
+          "sha256": "7b908010a390f33b50643bf590e2dfb9f49d8a1314fe93d679bcee281a78eec4"
+        },
+        "provenance": {
+          "bytes": 1746,
+          "path": "provenance/C1-RESTORE-ELIGIBLE.json",
+          "sha256": "5b010bc26936d8414995c9708494d6610c55ff54b7e7b165b945595d4b394806"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-EXISTING-ID",
+        "input": {
+          "bytes": 1850,
+          "path": "inputs/C1-RESTORE-EXISTING-ID.json",
+          "sha256": "b50b91dd2ee4c366244cbcb9112084452e5bcbb842d3e413c4e68dcf1855aa85"
+        },
+        "provenance": {
+          "bytes": 1758,
+          "path": "provenance/C1-RESTORE-EXISTING-ID.json",
+          "sha256": "a954d1877003c3c07f7a44a7e9c8353db13f52b24a79f9d4c6824afdc8f55c6e"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+        "input": {
+          "bytes": 1862,
+          "path": "inputs/C1-RESTORE-EXISTING-ID-DIFFERENT.json",
+          "sha256": "8601e3ae718b545b74d79b682849796190946ee5e576ce3f63230b16a30b78e9"
+        },
+        "provenance": {
+          "bytes": 1798,
+          "path": "provenance/C1-RESTORE-EXISTING-ID-DIFFERENT.json",
+          "sha256": "997c817c735797b5dccc3ee6c985106b1be14896d96a6b1bb26f26976332bdbf"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+        "input": {
+          "bytes": 2530,
+          "path": "inputs/C1-RESTORE-LOCAL-REPLAY-REMOTE.json",
+          "sha256": "b75088306dad63ec87b7b23da46ed2e535a21fdf7fee395b5ccd8eba3bef67b7"
+        },
+        "provenance": {
+          "bytes": 1790,
+          "path": "provenance/C1-RESTORE-LOCAL-REPLAY-REMOTE.json",
+          "sha256": "30684842b927ad87d957db24848c40344c3ddfe57bfddc638f9c0927bba17519"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-NO-TOMBSTONE",
+        "input": {
+          "bytes": 1258,
+          "path": "inputs/C1-RESTORE-NO-TOMBSTONE.json",
+          "sha256": "7ff323788131a541357b70a1623906e741eba5febd7791a38c1c29d20868e08f"
+        },
+        "provenance": {
+          "bytes": 1762,
+          "path": "provenance/C1-RESTORE-NO-TOMBSTONE.json",
+          "sha256": "869b433148b59163fceb5a351fa316ef87a6e9548ef0e0c2ac3321182606b645"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+        "input": {
+          "bytes": 2421,
+          "path": "inputs/C1-RESTORE-OPID-BEFORE-EXISTENCE.json",
+          "sha256": "f4b4c2873958a9896599a4c109a5c28b165ab218e165d99f24afb0717075f5dd"
+        },
+        "provenance": {
+          "bytes": 1842,
+          "path": "provenance/C1-RESTORE-OPID-BEFORE-EXISTENCE.json",
+          "sha256": "cc336dff68e4476170d2636ba82d6a5f71a9a75949fb97a2bb342a464a7a8f7c"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+        "input": {
+          "bytes": 2423,
+          "path": "inputs/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json",
+          "sha256": "15b3f83cd74b5a33a4ee6957aecc71fef5160b9422775702de30529b8c8fdeb8"
+        },
+        "provenance": {
+          "bytes": 1912,
+          "path": "provenance/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json",
+          "sha256": "03bfe17fdc1add0a66e73954b6c2772dfa0f20516d8d338cf65cc47fbbfd301e"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+        "input": {
+          "bytes": 2628,
+          "path": "inputs/C1-RESTORE-STAGED-CONNECTOR.json",
+          "sha256": "0ea2d02715a7ef4ed3a6b3c5604eeca2baf6526b7cb50a7d13e8fa34840e1e53"
+        },
+        "provenance": {
+          "bytes": 2006,
+          "path": "provenance/C1-RESTORE-STAGED-CONNECTOR.json",
+          "sha256": "d70f55b6a0e8f2c3ecea0547efeac37aedd9eaad3ec2434d24d48c23cc71f3a3"
+        }
+      },
+      {
+        "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+        "input": {
+          "bytes": 2631,
+          "path": "inputs/C1-RESTORE-STAGED-PARENT-CHILD.json",
+          "sha256": "df85f26276a8078447fccc1d18f2c0250eddcb0d7c8ad006503fcb3e4acace93"
+        },
+        "provenance": {
+          "bytes": 2018,
+          "path": "provenance/C1-RESTORE-STAGED-PARENT-CHILD.json",
+          "sha256": "0220067feb9f8afd00f51df395b8821f4ff0599d372615d4994dec126bf80093"
+        }
+      },
+      {
+        "caseId": "C1-RICHTEXT-INVALID-STEP",
+        "input": {
+          "bytes": 2298,
+          "path": "inputs/C1-RICHTEXT-INVALID-STEP.json",
+          "sha256": "9487f46a4a4cff57f31217107e22378859f9f3db6925c79a7e7d1f31d64a6848"
+        },
+        "provenance": {
+          "bytes": 1748,
+          "path": "provenance/C1-RICHTEXT-INVALID-STEP.json",
+          "sha256": "59e2df2536ac3151dea695e2fd65905b309470bba8691b009bbad0b3147547a3"
+        }
+      },
+      {
+        "caseId": "C1-RICHTEXT-STABLE-REFS",
+        "input": {
+          "bytes": 2297,
+          "path": "inputs/C1-RICHTEXT-STABLE-REFS.json",
+          "sha256": "4c0e04aaf4dc78b401c9afaa4016dde8757fa2088ef2ae5f69136f4038a9f115"
+        },
+        "provenance": {
+          "bytes": 1744,
+          "path": "provenance/C1-RICHTEXT-STABLE-REFS.json",
+          "sha256": "bf81adf82506df4544b1669fd9126e716a2b352aa4a7f76fdf293379549e7e95"
+        }
+      },
+      {
+        "caseId": "C1-RICHTEXT-UTF8-STYLE",
+        "input": {
+          "bytes": 2296,
+          "path": "inputs/C1-RICHTEXT-UTF8-STYLE.json",
+          "sha256": "11d9a3b609c953aaea5d17b7f751e0483cd7422cd70761838c502a1189a0ec51"
+        },
+        "provenance": {
+          "bytes": 1740,
+          "path": "provenance/C1-RICHTEXT-UTF8-STYLE.json",
+          "sha256": "c85c71bab6ec2edc38572dc0c6fe4389d7f039cd818d932432b176a8b17ea37d"
+        }
+      },
+      {
+        "caseId": "C1-RICHTEXT-VALID",
+        "input": {
+          "bytes": 2291,
+          "path": "inputs/C1-RICHTEXT-VALID.json",
+          "sha256": "2008ca16922a0fa2a85807aba1e3b52e7b12b7ee9b796617bf6e711e931908e7"
+        },
+        "provenance": {
+          "bytes": 1720,
+          "path": "provenance/C1-RICHTEXT-VALID.json",
+          "sha256": "2eb588ebb7c05351a953cc6995a6c609153ee2b56e7bf8b3e0a53352f043e0c8"
+        }
+      },
+      {
+        "caseId": "C1-SIZE-HARD-LIMIT",
+        "input": {
+          "bytes": 1281,
+          "path": "inputs/C1-SIZE-HARD-LIMIT.json",
+          "sha256": "5b8675602e43ec3417d9d23d0d32cd5cc48da6f958a73b9cdeca895542fb8a73"
+        },
+        "provenance": {
+          "bytes": 1725,
+          "path": "provenance/C1-SIZE-HARD-LIMIT.json",
+          "sha256": "1ef146e2354962e4e4d03042c987f31841c305b9032d7f92d07976e3044918e3"
+        }
+      },
+      {
+        "caseId": "C1-SIZE-NONFINITE",
+        "input": {
+          "bytes": 1273,
+          "path": "inputs/C1-SIZE-NONFINITE.json",
+          "sha256": "c9b068661d72839db508b07dc554d8113a8af7e8a61fe42eac25258542bc5c52"
+        },
+        "provenance": {
+          "bytes": 1721,
+          "path": "provenance/C1-SIZE-NONFINITE.json",
+          "sha256": "5ab3a3835b9a8ce4f060159fbc9317c3d59a7e65b043a29903b71a9365c82d52"
+        }
+      },
+      {
+        "caseId": "C1-SIZE-NONPOSITIVE",
+        "input": {
+          "bytes": 1274,
+          "path": "inputs/C1-SIZE-NONPOSITIVE.json",
+          "sha256": "3cc8bc301df75fc052c015ff9deb30bdcf2bd2b1af6bb1fa38d6b9079fdc67ba"
+        },
+        "provenance": {
+          "bytes": 1729,
+          "path": "provenance/C1-SIZE-NONPOSITIVE.json",
+          "sha256": "dfda3cbaa4d0d621caf92f0b62878029604d727e8cd43897e17e456340a51cea"
+        }
+      },
+      {
+        "caseId": "C1-SIZE-VALID",
+        "input": {
+          "bytes": 1269,
+          "path": "inputs/C1-SIZE-VALID.json",
+          "sha256": "f89f7e8aba316f735f6c8ac4c6e1daa2b308cc6b3ec76228180185b617aff60f"
+        },
+        "provenance": {
+          "bytes": 1705,
+          "path": "provenance/C1-SIZE-VALID.json",
+          "sha256": "0e6fbf5f9fae7a0c56e81ded0cca0473a1538ddf706e5417f03f5a9704f96a06"
+        }
+      },
+      {
+        "caseId": "C1-SIZE-WRONG-KIND",
+        "input": {
+          "bytes": 1274,
+          "path": "inputs/C1-SIZE-WRONG-KIND.json",
+          "sha256": "b0f2d894a553b689c6f0e3752abdcb3034c1e1e987873f9eaaeea3aa6aafee99"
+        },
+        "provenance": {
+          "bytes": 1725,
+          "path": "provenance/C1-SIZE-WRONG-KIND.json",
+          "sha256": "ed3f6ddf86f45571c6d030bbea08b2e78ed720def1acb520c39b29eafb29532b"
+        }
+      },
+      {
+        "caseId": "C1-SPLIT-PLAN",
+        "input": {
+          "bytes": 5620,
+          "path": "inputs/C1-SPLIT-PLAN.json",
+          "sha256": "dc936c222b15f2b4681c78086e55d5b111951c456a1e88d36af71147d5c6b0c9"
+        },
+        "provenance": {
+          "bytes": 1818,
+          "path": "provenance/C1-SPLIT-PLAN.json",
+          "sha256": "294e8fa75331431f75674fa64b03f0a69214e26558d14a9b81698153df256469"
+        }
+      },
+      {
+        "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+        "input": {
+          "bytes": 10203,
+          "path": "inputs/C1-SPLIT-REPLACEMENT-COLLISION.json",
+          "sha256": "177922c4eb1af03b320e675deec57b46f8f640e48cda97790005342278cf2137"
+        },
+        "provenance": {
+          "bytes": 1773,
+          "path": "provenance/C1-SPLIT-REPLACEMENT-COLLISION.json",
+          "sha256": "953489284686ff20dd30217bf436e5e9848408f69d7093f861de93b1d5ee73b1"
+        }
+      },
+      {
+        "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+        "input": {
+          "bytes": 5639,
+          "path": "inputs/C1-SPLIT-REPLACEMENT-STRUCTURAL.json",
+          "sha256": "9444804a41a53921b18213012fe32f45314c76975f3dbb454d3903cd1400f1a7"
+        },
+        "provenance": {
+          "bytes": 1776,
+          "path": "provenance/C1-SPLIT-REPLACEMENT-STRUCTURAL.json",
+          "sha256": "b09370b4488fd7c0662acabe8c87476580976ce90e616398804ae5240c5f7b81"
+        }
+      },
+      {
+        "caseId": "C1-SPLIT-SOURCE-MISSING",
+        "input": {
+          "bytes": 5631,
+          "path": "inputs/C1-SPLIT-SOURCE-MISSING.json",
+          "sha256": "80fd628ee1a8e42f4f794839a974a280f4f1f7e19ec215cbdddcf2c9b1b43520"
+        },
+        "provenance": {
+          "bytes": 1744,
+          "path": "provenance/C1-SPLIT-SOURCE-MISSING.json",
+          "sha256": "be883e940e92570c614fc8f74d6aa88c3c238a4e2097971fee07be3218cbaebd"
+        }
+      },
+      {
+        "caseId": "C1-STROKE-EXISTING-ID",
+        "input": {
+          "bytes": 3305,
+          "path": "inputs/C1-STROKE-EXISTING-ID.json",
+          "sha256": "8e5065eaa03782f9b8217dfc611f2cf359b336d613a0c9fb10e385b9f49dc03d"
+        },
+        "provenance": {
+          "bytes": 1733,
+          "path": "provenance/C1-STROKE-EXISTING-ID.json",
+          "sha256": "bb88413971e75c83ca8c6567563cf45c109b5c3b5efe16741f8fb3ab04368c61"
+        }
+      },
+      {
+        "caseId": "C1-STROKE-INVALID-RECORD",
+        "input": {
+          "bytes": 3312,
+          "path": "inputs/C1-STROKE-INVALID-RECORD.json",
+          "sha256": "ad58404bc9a56b1052e364cc4e70a12533620741721a97eafab9bed573abcbef"
+        },
+        "provenance": {
+          "bytes": 1745,
+          "path": "provenance/C1-STROKE-INVALID-RECORD.json",
+          "sha256": "eb3f41414f95267712251a2b487abf8cd03e612389d31c5255b717b10d7dee8d"
+        }
+      },
+      {
+        "caseId": "C1-STROKE-NEW-ID",
+        "input": {
+          "bytes": 3302,
+          "path": "inputs/C1-STROKE-NEW-ID.json",
+          "sha256": "2560e8fdb20842adfa12225f24b1d981e28e87bccf09e5fc22d772caee5d4246"
+        },
+        "provenance": {
+          "bytes": 1713,
+          "path": "provenance/C1-STROKE-NEW-ID.json",
+          "sha256": "a1ac790a42cac471444639f65455366cb1e2c99d2019e4bc67ea05cdb37f584e"
+        }
+      },
+      {
+        "caseId": "C1-STROKE-VALID",
+        "input": {
+          "bytes": 3303,
+          "path": "inputs/C1-STROKE-VALID.json",
+          "sha256": "9bbae6fba155c6c93bd4f93d7d58ed51797de63b7749700df8dd360a4ac9aad1"
+        },
+        "provenance": {
+          "bytes": 1709,
+          "path": "provenance/C1-STROKE-VALID.json",
+          "sha256": "59427c453498bb1a611680144335dad07c621537148bc0fc3ca855361575b8ea"
+        }
+      },
+      {
+        "caseId": "C1-STROKE-WRONG-CONTENT",
+        "input": {
+          "bytes": 3309,
+          "path": "inputs/C1-STROKE-WRONG-CONTENT.json",
+          "sha256": "ee1b385ba3d772fc5101cbf63dd6b5db1e80175e6c6bc6d591c2a8e756640256"
+        },
+        "provenance": {
+          "bytes": 1741,
+          "path": "provenance/C1-STROKE-WRONG-CONTENT.json",
+          "sha256": "322a10296296d9bbe46ad28e44d7a633573d8469f61c67eed23fccc6456099e3"
+        }
+      },
+      {
+        "caseId": "C1-TRANSFORM-FINITE",
+        "input": {
+          "bytes": 1375,
+          "path": "inputs/C1-TRANSFORM-FINITE.json",
+          "sha256": "cc048afa3907b09911573234eec290e623ea552bf716c646d0fcee71ea2fdb14"
+        },
+        "provenance": {
+          "bytes": 1729,
+          "path": "provenance/C1-TRANSFORM-FINITE.json",
+          "sha256": "a069dcc5e40b011e0383265c33d8a1d4ac9ea6c3a0b77ff179472f380aa07770"
+        }
+      },
+      {
+        "caseId": "C1-TRANSFORM-NAN-INF",
+        "input": {
+          "bytes": 1375,
+          "path": "inputs/C1-TRANSFORM-NAN-INF.json",
+          "sha256": "e07e993edf34f7612f532c8244f79d2b85192df415ce539d33aa508b4d68dc4f"
+        },
+        "provenance": {
+          "bytes": 1733,
+          "path": "provenance/C1-TRANSFORM-NAN-INF.json",
+          "sha256": "5ce947f6f00ca3aaa3d1d111593d5a16b690642f295f86cefdd5d2980e44abf8"
+        }
+      },
+      {
+        "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+        "input": {
+          "bytes": 1382,
+          "path": "inputs/C1-TRANSFORM-NEGATIVE-ZERO.json",
+          "sha256": "52ab0f8acfda4d3ec6472d593fdad7998c4d0c3f415ad66932311bd7d6e78892"
+        },
+        "provenance": {
+          "bytes": 1757,
+          "path": "provenance/C1-TRANSFORM-NEGATIVE-ZERO.json",
+          "sha256": "ee1c9c29a1c0414687d8481c2c954bb6cbcfab20cb980de4193ba242f70fdba5"
+        }
+      }
+    ],
+    "entryCount": 90
+  },
+  "generatedProvenanceCount": 90,
+  "packageRef": "9e23eedce264b94e4435d1198ae69a5878cb1e6f",
+  "provenance": "GATE_EVIDENCE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  },
+  "sourceRef": "78bfd50096ee42ee1f14724f13a9156d0a34d21b",
+  "task": "GT-G1-04-C/C2",
+  "taskAnchor": {
+    "relation": "ancestor",
+    "revision": "e1b3e1dbc897a4b77385e7a01f8e348af2796610"
+  },
+  "verificationCommands": [
+    "python -m unittest verification.tests.test_g1_04_c_fixture_compiler",
+    "cd verification && npm run validate",
+    "git diff --check"
+  ]
+}
