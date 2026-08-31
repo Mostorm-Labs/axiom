@@ -20,7 +20,8 @@
     "id": "C1-DELETE-CASCADE",
     "operationFamily": "DeleteObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83"
     ],
     "inputRef": "generated/inputs/C1-DELETE-CASCADE.json",
@@ -34,7 +35,7 @@
     "id": "C1-RESTORE-ELIGIBLE",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B01"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-ELIGIBLE.json",
@@ -104,7 +105,7 @@
     "id": "C1-GEOMETRY-BOUNDARY",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-BOUNDARY.json",
@@ -147,6 +148,7 @@
     "operationFamily": "SplitStrokes",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-SPLIT-PLAN.json",
@@ -216,7 +218,7 @@
     "id": "C1-IDEMPOTENT-EQUIVALENT",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B08"
     ],
     "inputRef": "generated/inputs/C1-IDEMPOTENT-EQUIVALENT.json",
@@ -230,7 +232,8 @@
     "id": "C1-ID-COLLISION",
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-ID-COLLISION.json",
@@ -244,7 +247,7 @@
     "id": "C1-GEOMETRY-LIMIT",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-LIMIT.json",
@@ -272,7 +275,8 @@
     "id": "C1-INSERT-STAGED-PARENT",
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-INSERT-STAGED-PARENT.json",
@@ -286,7 +290,8 @@
     "id": "C1-INSERT-STAGED-CONNECTOR",
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-INSERT-STAGED-CONNECTOR.json",
@@ -356,7 +361,7 @@
     "id": "C1-RESTORE-EXISTING-ID",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-EXISTING-ID.json",
@@ -370,7 +375,8 @@
     "id": "C1-RESTORE-STAGED-PARENT-CHILD",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B04"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-STAGED-PARENT-CHILD.json",
@@ -384,7 +390,8 @@
     "id": "C1-RESTORE-STAGED-CONNECTOR",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B06"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-STAGED-CONNECTOR.json",
@@ -398,7 +405,7 @@
     "id": "C1-RESTORE-ABSENT-REF",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B05"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-ABSENT-REF.json",
@@ -412,7 +419,7 @@
     "id": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#operation-id-before-existence"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-OPID-BEFORE-EXISTENCE.json",
@@ -426,7 +433,7 @@
     "id": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-LOCAL-REPLAY-REMOTE.json",
@@ -440,7 +447,7 @@
     "id": "C1-RESTORE-NO-TOMBSTONE",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B12"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-NO-TOMBSTONE.json",
@@ -510,7 +517,7 @@
     "id": "C1-TRANSFORM-NAN-INF",
     "operationFamily": "SetTransforms",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-TRANSFORM-NAN-INF.json",
@@ -524,7 +531,7 @@
     "id": "C1-PATCH-FIELD-ID",
     "operationFamily": "PatchProperties",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-PATCH-FIELD-ID.json",
@@ -538,7 +545,7 @@
     "id": "C1-PATCH-BRANCH-TYPE",
     "operationFamily": "PatchProperties",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-PATCH-BRANCH-TYPE.json",
@@ -552,7 +559,7 @@
     "id": "C1-PATCH-APPLICABILITY",
     "operationFamily": "PatchProperties",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-PATCH-APPLICABILITY.json",
@@ -566,7 +573,7 @@
     "id": "C1-PATCH-DUPLICATE-FIELD",
     "operationFamily": "PatchProperties",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-PATCH-DUPLICATE-FIELD.json",
@@ -580,7 +587,7 @@
     "id": "C1-SIZE-WRONG-KIND",
     "operationFamily": "SetObjectSize",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-SIZE-WRONG-KIND.json",
@@ -594,7 +601,7 @@
     "id": "C1-SIZE-NONFINITE",
     "operationFamily": "SetObjectSize",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-SIZE-NONFINITE.json",
@@ -608,7 +615,7 @@
     "id": "C1-SIZE-HARD-LIMIT",
     "operationFamily": "SetObjectSize",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-SIZE-HARD-LIMIT.json",
@@ -622,7 +629,7 @@
     "id": "C1-GEOMETRY-WRONG-KIND",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-WRONG-KIND.json",
@@ -636,7 +643,7 @@
     "id": "C1-GEOMETRY-STRUCTURAL",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-STRUCTURAL.json",
@@ -650,7 +657,7 @@
     "id": "C1-GEOMETRY-N-1",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-N-1.json",
@@ -664,7 +671,7 @@
     "id": "C1-GEOMETRY-N",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-N.json",
@@ -678,7 +685,7 @@
     "id": "C1-GEOMETRY-OVERFLOW",
     "operationFamily": "SetVectorPathGeometry",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
     ],
     "inputRef": "generated/inputs/C1-GEOMETRY-OVERFLOW.json",
@@ -692,7 +699,7 @@
     "id": "C1-IMAGE-WRONG-KIND",
     "operationFamily": "SetImageContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-IMAGE-WRONG-KIND.json",
@@ -706,7 +713,7 @@
     "id": "C1-IMAGE-CONTENT-PRESENCE",
     "operationFamily": "SetImageContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-IMAGE-CONTENT-PRESENCE.json",
@@ -720,7 +727,7 @@
     "id": "C1-IMAGE-SOURCE-RECT",
     "operationFamily": "SetImageContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-IMAGE-SOURCE-RECT.json",
@@ -734,7 +741,7 @@
     "id": "C1-STROKE-WRONG-CONTENT",
     "operationFamily": "AddStroke",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-STROKE-WRONG-CONTENT.json",
@@ -748,7 +755,7 @@
     "id": "C1-SPLIT-SOURCE-MISSING",
     "operationFamily": "SplitStrokes",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-SPLIT-SOURCE-MISSING.json",
@@ -762,7 +769,7 @@
     "id": "C1-SPLIT-REPLACEMENT-COLLISION",
     "operationFamily": "SplitStrokes",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-SPLIT-REPLACEMENT-COLLISION.json",
@@ -776,7 +783,7 @@
     "id": "C1-ERASE-ADD-UNIQUENESS",
     "operationFamily": "AddEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-ADD-UNIQUENESS.json",
@@ -790,7 +797,7 @@
     "id": "C1-ERASE-REMOVE-MISSING",
     "operationFamily": "RemoveEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-REMOVE-MISSING.json",
@@ -804,7 +811,7 @@
     "id": "C1-RICHTEXT-UTF8-STYLE",
     "operationFamily": "EditRichText",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-RICHTEXT-UTF8-STYLE.json",
@@ -818,7 +825,7 @@
     "id": "C1-RICHTEXT-INVALID-STEP",
     "operationFamily": "EditRichText",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-RICHTEXT-INVALID-STEP.json",
@@ -846,7 +853,7 @@
     "id": "C1-CONNECTOR-INVALID-END",
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-INVALID-END.json",
@@ -874,7 +881,8 @@
     "id": "C1-DELETE-VALID",
     "operationFamily": "DeleteObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-DELETE-VALID.json",
@@ -888,7 +896,8 @@
     "id": "C1-DELETE-SUBTREE",
     "operationFamily": "DeleteObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-DELETE-SUBTREE.json",
@@ -902,7 +911,7 @@
     "id": "C1-RESTORE-EXISTING-ID-DIFFERENT",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B03"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-EXISTING-ID-DIFFERENT.json",
@@ -916,7 +925,7 @@
     "id": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-CONNECTOR-TARGET-ABSENT.json",
@@ -930,7 +939,7 @@
     "id": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json",
@@ -944,7 +953,7 @@
     "id": "C1-RESTORE-BATCH-EXISTING-ID",
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-BATCH-EXISTING-ID.json",
@@ -958,7 +967,7 @@
     "id": "C1-PLACEMENT-GROUP-ANY",
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-GROUP-ANY.json",
@@ -972,7 +981,7 @@
     "id": "C1-PLACEMENT-STICKY-RICHTEXT",
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-STICKY-RICHTEXT.json",
@@ -1014,7 +1023,7 @@
     "id": "C1-SIZE-NONPOSITIVE",
     "operationFamily": "SetObjectSize",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-SIZE-NONPOSITIVE.json",
@@ -1084,7 +1093,7 @@
     "id": "C1-STROKE-INVALID-RECORD",
     "operationFamily": "AddStroke",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-STROKE-INVALID-RECORD.json",
@@ -1112,7 +1121,7 @@
     "id": "C1-STROKE-EXISTING-ID",
     "operationFamily": "AddStroke",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-STROKE-EXISTING-ID.json",
@@ -1126,7 +1135,7 @@
     "id": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
     "operationFamily": "SplitStrokes",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-SPLIT-REPLACEMENT-STRUCTURAL.json",
@@ -1140,7 +1149,7 @@
     "id": "C1-ERASE-ADD-GEOMETRY",
     "operationFamily": "AddEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-ADD-GEOMETRY.json",
@@ -1154,7 +1163,7 @@
     "id": "C1-ERASE-ADD-CAPABILITY",
     "operationFamily": "AddEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-ADD-CAPABILITY.json",
@@ -1168,7 +1177,7 @@
     "id": "C1-ERASE-ADD-EXISTING-MASK",
     "operationFamily": "AddEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-ADD-EXISTING-MASK.json",
@@ -1182,7 +1191,7 @@
     "id": "C1-ERASE-REMOVE-DUPLICATE",
     "operationFamily": "RemoveEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-REMOVE-DUPLICATE.json",
@@ -1196,7 +1205,7 @@
     "id": "C1-ERASE-REMOVE-WHOLE-REJECT",
     "operationFamily": "RemoveEraseMasks",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
     ],
     "inputRef": "generated/inputs/C1-ERASE-REMOVE-WHOLE-REJECT.json",
@@ -1224,7 +1233,7 @@
     "id": "C1-CONNECTOR-TARGET-CAPABILITY",
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-TARGET-CAPABILITY.json",
@@ -1238,7 +1247,7 @@
     "id": "C1-CONNECTOR-ANCHOR",
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-ANCHOR.json",
@@ -1252,7 +1261,7 @@
     "id": "C1-CONNECTOR-ROUTING",
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-ROUTING.json",
