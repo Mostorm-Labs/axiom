@@ -232,8 +232,8 @@
     "id": "C1-ID-COLLISION",
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
-      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-ID-COLLISION.json",
@@ -262,6 +262,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-HIERARCHY-STICKY.json",
@@ -306,6 +307,7 @@
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-INSERT-HIERARCHY-CYCLE.json",
@@ -320,6 +322,7 @@
     "operationFamily": "InsertObjects",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-INSERT-STICKY-CARDINALITY.json",
@@ -462,6 +465,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-CYCLE.json",
@@ -476,6 +480,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-INVALID-PARENT.json",
@@ -840,6 +845,7 @@
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-ATTACHED-ENDPOINT.json",
@@ -926,6 +932,7 @@
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-CONNECTOR-TARGET-ABSENT.json",
@@ -940,6 +947,7 @@
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json",
@@ -954,6 +962,7 @@
     "operationFamily": "RestoreObjects",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10"
     ],
     "inputRef": "generated/inputs/C1-RESTORE-BATCH-EXISTING-ID.json",
@@ -968,6 +977,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-GROUP-ANY.json",
@@ -982,6 +992,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-STICKY-RICHTEXT.json",
@@ -996,6 +1007,7 @@
     "operationFamily": "SetPlacements",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
     ],
     "inputRef": "generated/inputs/C1-PLACEMENT-NONPARENT.json",
@@ -1234,6 +1246,7 @@
     "operationFamily": "SetConnectorContent",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
       "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
     ],
     "inputRef": "generated/inputs/C1-CONNECTOR-TARGET-CAPABILITY.json",
