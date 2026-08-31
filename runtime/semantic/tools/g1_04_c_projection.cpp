@@ -1,8 +1,8 @@
 #include "g1_04_c_projection.hpp"
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
-#include <algorithm>
 
 namespace canvas::verification::g1_04_c {
 namespace {
@@ -14,38 +14,48 @@ std::string idHex(const ObjectId& id) {
     for (const auto byte : id.bytes) out << std::setw(2) << static_cast<unsigned>(byte);
     return out.str();
 }
-}
 
-std::string projectObjects(const std::vector<ObjectRecord>& objects) {
-    std::vector<ObjectRecord> sorted = objects;
-    std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) { return a.id < b.id; });
+std::string orderKeyHex(const OrderKey& orderKey) {
     std::ostringstream out;
-    for (const auto& object : sorted) {
-        out << idHex(object.id) << ':' << static_cast<unsigned>(object.kind) << ':' << object.kind_version << ':';
-        if (object.placement.parent_id.has_value()) out << idHex(*object.placement.parent_id); else out << '-';
-        out << ':';
-        for (const auto byte : object.placement.order_key.bytes()) out << std::setw(2) << std::setfill('0') << std::hex << static_cast<unsigned>(byte);
-        out << '\n';
-    }
+    out << std::hex << std::setfill('0');
+    for (const auto byte : orderKey.bytes()) out << std::setw(2) << static_cast<unsigned>(byte);
     return out.str();
 }
+} // namespace
 
-std::string projectStore(const canvas::semantic::ObjectStore& store) {
+ObjectProjection projectObjects(const std::vector<ObjectRecord>& objects) {
+    std::vector<ObjectRecord> sorted = objects;
+    std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) { return a.id < b.id; });
+    ObjectProjection projection;
+    projection.objects.reserve(sorted.size());
+    for (const auto& object : sorted) {
+        projection.objects.push_back(ObjectProjectionRecord{
+            idHex(object.id),
+            static_cast<std::uint32_t>(object.kind),
+            object.kind_version,
+            object.placement.parent_id.has_value()
+                ? std::optional<std::string>(idHex(*object.placement.parent_id)) : std::nullopt,
+            orderKeyHex(object.placement.order_key),
+        });
+    }
+    return projection;
+}
+
+ObjectProjection projectStore(const canvas::semantic::ObjectStore& store) {
     return projectObjects(store.allObjects());
 }
 
-std::string projectPlan(const canvas::semantic::PreparedApplyPlan& plan) {
-    std::ostringstream out;
-    out << "creates=" << projectObjects(plan.creates);
-    out << "replacements=" << projectObjects(plan.replacements);
-    out << "deletes=";
-    for (const auto& id : plan.deletes) out << idHex(id) << ',';
-    out << "\nclosure=";
+PlanProjection projectPlan(const canvas::semantic::PreparedApplyPlan& plan) {
+    PlanProjection projection;
+    projection.creates = projectObjects(plan.creates);
+    projection.replacements = projectObjects(plan.replacements);
+    for (const auto& id : plan.deletes) projection.deletes.push_back(idHex(id));
     if (plan.delete_closure.has_value()) {
-        for (const auto& id : plan.delete_closure->final_delete_set) out << idHex(id) << ',';
+        std::vector<std::string> closure;
+        for (const auto& id : plan.delete_closure->final_delete_set) closure.push_back(idHex(id));
+        projection.deleteClosure = std::move(closure);
     }
-    out << '\n';
-    return out.str();
+    return projection;
 }
 
 } // namespace canvas::verification::g1_04_c

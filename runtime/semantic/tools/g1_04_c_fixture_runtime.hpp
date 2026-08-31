@@ -1,6 +1,7 @@
 #pragma once
 
 #include "g1_04_c_fixture_decoder.hpp"
+#include "g1_04_c_projection.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -35,9 +36,9 @@ struct CorpusReport final {
         std::string disposition;
         std::string terminalPhase;
         std::string issue;
-        std::string planProjection;
-        std::string beforeProjection;
-        std::string afterProjection;
+        std::optional<PlanProjection> observedPlanProjection;
+        ObjectProjection beforeProjection;
+        ObjectProjection afterProjection;
         std::vector<std::uint64_t> f64Bits;
     };
     std::vector<ObservationFact> observationFacts;

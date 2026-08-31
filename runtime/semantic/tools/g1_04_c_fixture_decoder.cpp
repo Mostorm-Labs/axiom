@@ -41,7 +41,11 @@ bool parseU32(const json& value, std::uint32_t& out, std::string& error, const s
 }
 
 bool parseDouble(const json& value, double& out, std::vector<std::uint64_t>& bits, std::string& error, const std::string& path) {
-    if (value.is_number()) { out = value.get<double>(); return true; }
+    if (value.is_number()) {
+        out = value.get<double>();
+        bits.push_back(std::bit_cast<std::uint64_t>(out));
+        return true;
+    }
     if (!value.is_string()) { error = failMessage(path, "expected numeric value or f64 carrier"); return false; }
     const auto text = value.get<std::string>();
     constexpr std::string_view prefix = "f64:";

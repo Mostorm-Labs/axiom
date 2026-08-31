@@ -44,7 +44,7 @@ bool bootstrap(Store& store, const DecodedFixture& fixture) {
 
 template <typename Store>
 CorpusReport::ObservationFact observeOne(Store& store, const DecodedFixture& fixture, const char* provider) {
-    const std::string before = projectStore(store);
+    const ObjectProjection before = projectStore(store);
     FixtureAppliedOperations applied(fixture.priorOperations);
     const StatefulValidationContext context{store, applied};
     Operation candidate = fixture.operation;
@@ -70,17 +70,19 @@ CorpusReport::ObservationFact observeOne(Store& store, const DecodedFixture& fix
                 const auto prepared = prepareApplyPlan(candidate, context);
                 if (prepared.disposition == PrepareDisposition::kPrepared) {
                     fact.disposition = "PLAN_READY"; fact.terminalPhase = "PREPARE";
-                    if (prepared.plan.has_value()) fact.planProjection = projectPlan(*prepared.plan);
+                    if (prepared.plan.has_value()) fact.observedPlanProjection = projectPlan(*prepared.plan);
                 } else if (prepared.disposition == PrepareDisposition::kAlreadyApplied) {
-                    fact.disposition = "ALREADY_APPLIED"; fact.terminalPhase = "PREPARE";
+                    fact.disposition = "ALREADY_APPLIED"; fact.terminalPhase = "IDEMPOTENCY";
                 } else {
-                    fact.disposition = "REJECTED"; fact.terminalPhase = "STATEFUL_VALIDATE";
+                    fact.disposition = "REJECTED";
+                    fact.terminalPhase = prepared.error.issue == StatefulIssue::kOperationIdCollision
+                        ? "IDEMPOTENCY" : "STATEFUL_VALIDATE";
                     fact.issue = std::to_string(static_cast<unsigned>(prepared.error.issue));
                 }
             }
         }
     }
-    const std::string after = projectStore(store);
+    const ObjectProjection after = projectStore(store);
     fact.afterProjection = after;
     return fact;
 }
