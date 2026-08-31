@@ -377,6 +377,55 @@ foreach(header IN ITEMS
 endforeach()
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+add_executable(canvas_semantic_g1_04_c_fixture_decoder_test
+  g1_04_c_fixture_decoder_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp)
+target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)
+
+add_executable(canvas_semantic_g1_04_c_projection_test
+  g1_04_c_projection_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_projection_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_projection_test)
+
+add_executable(canvas_semantic_g1_04_c_observer_contract_test
+  g1_04_c_observer_contract_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_observer_contract_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_observer_contract_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_observer_contract_test)
+
+add_executable(canvas_semantic_g1_04_c_observer_coverage_test
+  g1_04_c_observer_coverage_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_observer_coverage_test)
+
 add_test(
     NAME canvas_semantic_runtime_boundaries
     COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tools/check_runtime_boundaries.py
