@@ -347,6 +347,19 @@ class G104CFixtureCompilerTest(unittest.TestCase):
             self.assertGreaterEqual(len(assertions), 2, case_id)
             self.assertTrue(all("stimulus predicate for" not in item for item in assertions), case_id)
 
+    def test_every_realization_audit_entry_has_distinguishing_descriptions(self) -> None:
+        audit = build_case_intent_audit(CASES, GENERATED)
+        self.assertEqual(90, len(audit))
+        specific = 0
+        for entry in audit:
+            assertions = entry["assertions"]
+            self.assertGreaterEqual(len(assertions), 1, entry["caseId"])
+            self.assertTrue(all(isinstance(item, str) and item.strip() for item in assertions), entry["caseId"])
+            self.assertTrue(all(not item.startswith("stimulus predicate for ") for item in assertions), entry["caseId"])
+            self.assertTrue(all(item not in {"predicate passed", "case realized", "PASS"} for item in assertions), entry["caseId"])
+            specific += 1
+        self.assertEqual(90, specific)
+
 
 def _stable_id(case_id: str, role: str) -> str:
     return hashlib.sha256(f"axiom-g1-04-c:{case_id}:{role}".encode("utf-8")).hexdigest()[:32]
@@ -619,7 +632,100 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
             assert initial_by_id[target]["kind"] == 1
     else:
         raise AssertionError(f"No explicit realization predicate for {case_id}")
-    return [f"stimulus predicate for {case_id}"]
+    try:
+        return list(_CASE_ASSERTION_DESCRIPTIONS[case_id])
+    except KeyError as error:
+        raise AssertionError(f"No explicit assertion description for {case_id}") from error
+
+
+_CASE_ASSERTION_DESCRIPTIONS = {
+    "C1-TRANSFORM-FINITE": ("all six transform components are finite numeric values",),
+    "C1-TRANSFORM-NEGATIVE-ZERO": ("translation x preserves the raw negative-zero stimulus",),
+    "C1-TRANSFORM-NAN-INF": ("transform contains frozen qNaN, positive-infinity, and negative-infinity carrier positions",),
+    "C1-PATCH-DUPLICATE-FIELD": ("two patch entries share the same object and field identifiers",),
+    "C1-PATCH-FIELD-ID": ("patch selects the deliberately unpublished field identifier",),
+    "C1-PATCH-BRANCH-TYPE": ("patch value uses the mechanically incompatible value branch",),
+    "C1-PATCH-APPLICABILITY": ("patch target kind is the accepted non-applicable combination",),
+    "C1-PATCH-PRESENCE-DEFAULT": ("patch entry omits the optional value field",),
+    "C1-SIZE-NONFINITE": ("width carries the frozen positive-infinity token while height stays finite",),
+    "C1-SIZE-NONPOSITIVE": ("size fixture includes a non-positive width dimension",),
+    "C1-SIZE-HARD-LIMIT": ("width uses the published hard-limit boundary value",),
+    "C1-SIZE-WRONG-KIND": ("size target has an incompatible initial object kind",),
+    "C1-DELETE-MISSING-TARGET": ("requested delete target is absent from initial state",),
+    "C1-DELETE-DUPLICATE-TARGET": ("delete payload repeats the same target identifier",),
+    "C1-DELETE-VALID": ("delete payload names an existing target without a child cascade",),
+    "C1-DELETE-CASCADE": ("delete payload contains an existing target and its child identifier",),
+    "C1-DELETE-SUBTREE": ("delete payload contains the subtree root and descendant identifier",),
+    "C1-PLACEMENT-CYCLE": ("placement parent reference closes the explicit cycle relation",),
+    "C1-HIERARCHY-STICKY": ("sticky target and its parent reference use the required hierarchy kinds",),
+    "C1-PLACEMENT-GROUP-ANY": ("placement parent is an object with the published group kind",),
+    "C1-PLACEMENT-STICKY-RICHTEXT": ("rich-text placement target has the required sticky kind and parent reference",),
+    "C1-PLACEMENT-INVALID-PARENT": ("placement parent identifier is absent from initial state",),
+    "C1-PLACEMENT-ORDERKEY": ("placement carries the empty order-key boundary",),
+    "C1-PLACEMENT-NONPARENT": ("placement references the deterministic unrelated-parent identifier",),
+    "C1-INSERT-STAGED-PARENT": ("staged insert records reference one another through parent_id",),
+    "C1-INSERT-STAGED-CONNECTOR": ("staged connector target resolves to a record in the same operation",),
+    "C1-INSERT-HIERARCHY-CYCLE": ("staged insert placements form a two-record parent cycle",),
+    "C1-INSERT-STICKY-CARDINALITY": ("staged insert encodes at least two sticky direct children",),
+    "C1-INSERT-EXISTING-ID": ("insert payload reuses an identifier already present in initial state",),
+    "C1-ID-COLLISION": ("prior operation reuses the operation id with a different payload",),
+    "C1-IDEMPOTENT-EQUIVALENT": ("prior operation reuses the operation id with an equivalent payload",),
+    "C1-RESTORE-SAME-PAYLOAD-NEW-OPID": ("prior restore payload matches while operation identifiers differ",),
+    "C1-RESTORE-OPID-BEFORE-EXISTENCE": ("prior operation history exists while the object state is empty",),
+    "C1-RESTORE-LOCAL-REPLAY-REMOTE": ("execution variants are ordered local, replay, then remote",),
+    "C1-RESTORE-ELIGIBLE": ("restore payload supplies objects absent from the initial state",),
+    "C1-RESTORE-EXISTING-ID": ("restore payload includes an object identifier already in initial state",),
+    "C1-RESTORE-EXISTING-ID-DIFFERENT": ("restore payload includes an existing identifier with a different record",),
+    "C1-RESTORE-BATCH-EXISTING-ID": ("restore batch includes an object identifier already in initial state",),
+    "C1-RESTORE-STAGED-PARENT-CHILD": ("restore records reference a parent staged in the same operation",),
+    "C1-RESTORE-STAGED-CONNECTOR": ("restore connector target resolves to a record staged in the same operation",),
+    "C1-RESTORE-ABSENT-REF": ("restore placement parent identifier is absent from initial state",),
+    "C1-RESTORE-CONNECTOR-TARGET-ABSENT": ("restore connector endpoint target is absent from initial state",),
+    "C1-RESTORE-NO-TOMBSTONE": ("restore supplies objects without an initial tombstone record",),
+    "C1-GEOMETRY-STRUCTURAL": ("geometry fixture contains an empty segment list structural invalidity",),
+    "C1-GEOMETRY-WRONG-KIND": ("geometry target has an incompatible initial object kind",),
+    "C1-GEOMETRY-N-1": ("geometry contains exactly N-1 segments",),
+    "C1-GEOMETRY-N": ("geometry contains exactly N segments",),
+    "C1-GEOMETRY-BOUNDARY": ("geometry contains the accepted boundary segment count",),
+    "C1-GEOMETRY-LIMIT": ("geometry contains exactly the published limit segment count",),
+    "C1-GEOMETRY-OVERFLOW": ("geometry contains one segment beyond the published limit",),
+    "C1-IMAGE-WRONG-KIND": ("image target has an incompatible initial object kind",),
+    "C1-IMAGE-CONTENT-PRESENCE": ("image content payload is intentionally empty",),
+    "C1-IMAGE-SOURCE-RECT": ("image content includes an explicit source rectangle",),
+    "C1-IMAGE-INTRINSIC": ("image content carries the deterministic intrinsic width",),
+    "C1-IMAGE-CONTENTMODE": ("image content selects the published content-mode branch",),
+    "C1-IMAGE-LOCAL-SIZE": ("image content carries deterministic positive local dimensions",),
+    "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC": ("image resource id uses the deterministic runtime-only identifier",),
+    "C1-IMAGE-VALID": ("image target and content carry a published resource, mode, and dimensions",),
+    "C1-STROKE-WRONG-CONTENT": ("stroke object uses the incompatible content branch",),
+    "C1-STROKE-INVALID-RECORD": ("stroke content record is structurally empty",),
+    "C1-STROKE-VALID": ("new stroke object has multiple points and a fresh identifier",),
+    "C1-STROKE-NEW-ID": ("new stroke object has multiple points and a fresh identifier",),
+    "C1-STROKE-EXISTING-ID": ("stroke object reuses an identifier from initial state",),
+    "C1-SPLIT-SOURCE-MISSING": ("split source stroke identifier is absent from initial state",),
+    "C1-SPLIT-REPLACEMENT-COLLISION": ("split replacement identifier collides with initial state",),
+    "C1-SPLIT-REPLACEMENT-STRUCTURAL": ("split replacement carries the intentionally empty content record",),
+    "C1-SPLIT-PLAN": ("split references an existing stroke and emits two distinct valid replacements",),
+    "C1-ERASE-ADD-UNIQUENESS": ("erase-mask additions repeat a mask identifier",),
+    "C1-ERASE-ADD-GEOMETRY": ("erase-mask geometry contains the structural empty-segment form",),
+    "C1-ERASE-ADD-CAPABILITY": ("erase-mask target has the incompatible initial object kind",),
+    "C1-ERASE-ADD-EXISTING-MASK": ("erase-mask target already owns an existing mask",),
+    "C1-ERASE-ADD-VALID": ("erase-mask add targets an existing object with one new segmented mask",),
+    "C1-ERASE-REMOVE-VALID": ("erase-mask removal selects an existing mask identifier",),
+    "C1-ERASE-REMOVE-MISSING": ("erase-mask removal targets an object with no existing masks",),
+    "C1-ERASE-REMOVE-DUPLICATE": ("erase-mask removal repeats the same mask identifier",),
+    "C1-ERASE-REMOVE-WHOLE-REJECT": ("erase-mask removal selects every existing mask identifier",),
+    "C1-RICHTEXT-VALID": ("rich-text delta references the deterministic paragraph identifier",),
+    "C1-RICHTEXT-STABLE-REFS": ("rich-text delta uses stable deterministic paragraph references",),
+    "C1-RICHTEXT-UTF8-STYLE": ("rich-text delta includes the UTF-8 lambda style text",),
+    "C1-RICHTEXT-INVALID-STEP": ("rich-text delta uses the intentionally unknown step kind",),
+    "C1-CONNECTOR-VALID": ("connector uses valid endpoint and routing discriminators",),
+    "C1-CONNECTOR-ATTACHED-ENDPOINT": ("connector endpoint target resolves to an existing object",),
+    "C1-CONNECTOR-TARGET-CAPABILITY": ("connector target resolves to an object with incompatible capability kind",),
+    "C1-CONNECTOR-INVALID-END": ("connector end uses the intentionally invalid endpoint discriminator",),
+    "C1-CONNECTOR-ANCHOR": ("connector start carries the deterministic anchor port identifier",),
+    "C1-CONNECTOR-ROUTING": ("connector routing uses the intentionally invalid discriminator",),
+}
 
 
 _REALIZATION_CASE_IDS = (
