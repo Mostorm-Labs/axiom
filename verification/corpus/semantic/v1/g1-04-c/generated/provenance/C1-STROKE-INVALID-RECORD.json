@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-STROKE-INVALID-RECORD",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "796839a589c7acb2fa144517e379842db82fe0ba660e0c06d0d94946f21e0c33",
+  "expectedRef": "authoring/expected.json#C1-STROKE-INVALID-RECORD",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 3312,
+    "path": "inputs/C1-STROKE-INVALID-RECORD.json",
+    "sha256": "ad58404bc9a56b1052e364cc4e70a12533620741721a97eafab9bed573abcbef"
+  },
+  "operationFamily": "AddStroke",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "574ec2819dad5d1a59e6179ab45e74e4469cb467d259ffd174250c1ceedda852",
+  "sourceCaseRef": "authoring/cases.json#C1-STROKE-INVALID-RECORD",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

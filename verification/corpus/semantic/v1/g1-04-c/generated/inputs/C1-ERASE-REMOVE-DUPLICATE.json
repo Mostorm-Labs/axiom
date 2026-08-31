@@ -1,0 +1,63 @@
+{
+  "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "ee070608fac0cc1c97b5a8c04639a83e",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            241,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "12056b9e52972b3e285379226eef6b12",
+    "id": "8f77825f88f190973facd0f2afe618b2",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "mask_ids": [
+              "31b77a255a4b2350555d28305424c8a6",
+              "31b77a255a4b2350555d28305424c8a6"
+            ],
+            "object_id": "ee070608fac0cc1c97b5a8c04639a83e"
+          }
+        ]
+      },
+      "variant": 12
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "RemoveEraseMasks",
+  "provenance": "DERIVED_GENERATED"
+}

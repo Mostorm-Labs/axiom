@@ -1,0 +1,88 @@
+{
+  "caseId": "C1-DELETE-CASCADE",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "891b9a08188685760fc118f7dff2fa52",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            229,
+            2
+          ],
+          "parent_id": "bed0e2f48ca23c0992a9a9ae8f8bf109"
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            240,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "08b75f1ecc32682d16c30f7970943831",
+    "id": "3181e5da02d938e753d88e7c5a7dfa20",
+    "payload": {
+      "value": {
+        "object_ids": [
+          "bed0e2f48ca23c0992a9a9ae8f8bf109",
+          "891b9a08188685760fc118f7dff2fa52"
+        ]
+      },
+      "variant": 1
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "DeleteObjects",
+  "provenance": "DERIVED_GENERATED"
+}

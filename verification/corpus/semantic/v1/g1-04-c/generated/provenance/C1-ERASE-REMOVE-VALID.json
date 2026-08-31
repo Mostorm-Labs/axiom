@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-ERASE-REMOVE-VALID",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "3edb1a71f53cc50df84116a82154f03fe849745be8155f812ca6178350cd1d91",
+  "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-VALID",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1315,
+    "path": "inputs/C1-ERASE-REMOVE-VALID.json",
+    "sha256": "cd0fcd041e275d2957071681b38ee9454b169c1618038ddff6bb253eda49507f"
+  },
+  "operationFamily": "RemoveEraseMasks",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "4ac1012b246a7f4ec8cacb1549b96f742d377bb1aa5b5bb4e457ad7545117a58",
+  "sourceCaseRef": "authoring/cases.json#C1-ERASE-REMOVE-VALID",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

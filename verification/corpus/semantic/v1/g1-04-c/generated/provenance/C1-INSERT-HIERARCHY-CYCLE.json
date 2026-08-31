@@ -1,0 +1,47 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+  ],
+  "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "5bebb1af42805b53ce7264814ced94f7bf72b568067d04e518fe2ac6101bf1e0",
+  "expectedRef": "authoring/expected.json#C1-INSERT-HIERARCHY-CYCLE",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1259,
+    "path": "inputs/C1-INSERT-HIERARCHY-CYCLE.json",
+    "sha256": "2182b23ab96940ecd388a318a6d2b3dcff722e32a28ae7dc9966254b0aa72b64"
+  },
+  "operationFamily": "InsertObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "9829130e6c3138f45562246265b4e3b83362b51b5f3e38ecf02c67aa8dfc9b5e",
+  "sourceCaseRef": "authoring/cases.json#C1-INSERT-HIERARCHY-CYCLE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

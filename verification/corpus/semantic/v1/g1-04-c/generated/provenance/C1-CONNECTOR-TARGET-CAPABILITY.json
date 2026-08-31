@@ -1,0 +1,47 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+  ],
+  "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c22a2a6044bc4942ed08b21123788c020c302dca7f0d82cf0ff7818d855221cd",
+  "expectedRef": "authoring/expected.json#C1-CONNECTOR-TARGET-CAPABILITY",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2064,
+    "path": "inputs/C1-CONNECTOR-TARGET-CAPABILITY.json",
+    "sha256": "90f86a02b1735d09700b638ef4db31a95b6cdcdec3eeb6b6a5f3ba9c4948831f"
+  },
+  "operationFamily": "SetConnectorContent",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "e355fb25386f49dbacae52588e0f399cf0b68c6bd835f4d24f4a26563cc502f6",
+  "sourceCaseRef": "authoring/cases.json#C1-CONNECTOR-TARGET-CAPABILITY",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

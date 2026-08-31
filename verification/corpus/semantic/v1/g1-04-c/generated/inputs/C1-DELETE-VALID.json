@@ -1,0 +1,57 @@
+{
+  "caseId": "C1-DELETE-VALID",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "8426ce74042e7d207d42b65558a96cec",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            216,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "9ff20f8deaffd6f0cda1f42d424fe23a",
+    "id": "af25f3471a7e2f1aa888a18292de5189",
+    "payload": {
+      "value": {
+        "object_ids": [
+          "8426ce74042e7d207d42b65558a96cec"
+        ]
+      },
+      "variant": 1
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "DeleteObjects",
+  "provenance": "DERIVED_GENERATED"
+}

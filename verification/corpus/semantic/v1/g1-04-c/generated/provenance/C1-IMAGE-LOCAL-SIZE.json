@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-IMAGE-LOCAL-SIZE",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "5789f1a33d5e287b79f2d5269eb929622e6545889212f8a83f50a54d31107ca0",
+  "expectedRef": "authoring/expected.json#C1-IMAGE-LOCAL-SIZE",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1556,
+    "path": "inputs/C1-IMAGE-LOCAL-SIZE.json",
+    "sha256": "c89455e64f82f8f9454e94eb6eeb40f024383042157b008c0186b0b52ebe4bb5"
+  },
+  "operationFamily": "SetImageContent",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "51b76055b694a1d0ab452406ca51b515acf00795ab339bb80a6fc7cb96e2feed",
+  "sourceCaseRef": "authoring/cases.json#C1-IMAGE-LOCAL-SIZE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

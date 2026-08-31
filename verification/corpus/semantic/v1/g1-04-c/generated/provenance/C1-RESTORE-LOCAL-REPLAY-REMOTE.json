@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11"
+  ],
+  "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c389c8ecfa0cbf396904fc45ad4abf6d3b5086a60ad40e70355893474c150459",
+  "expectedRef": "authoring/expected.json#C1-RESTORE-LOCAL-REPLAY-REMOTE",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2530,
+    "path": "inputs/C1-RESTORE-LOCAL-REPLAY-REMOTE.json",
+    "sha256": "b75088306dad63ec87b7b23da46ed2e535a21fdf7fee395b5ccd8eba3bef67b7"
+  },
+  "operationFamily": "RestoreObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "14f3d4b81521492af3a8d7cf2594f135db768a4413d3182d40af20f97e7a20ec",
+  "sourceCaseRef": "authoring/cases.json#C1-RESTORE-LOCAL-REPLAY-REMOTE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

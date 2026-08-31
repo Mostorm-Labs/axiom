@@ -1,0 +1,58 @@
+{
+  "caseId": "C1-DELETE-DUPLICATE-TARGET",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "a7849b01a46bf15d846160b9e7eeb12a",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            230,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "3db65bc5a4a333502ce1818057375457",
+    "id": "7fd44cf24d051ca457bc1a617e1240fe",
+    "payload": {
+      "value": {
+        "object_ids": [
+          "a7849b01a46bf15d846160b9e7eeb12a",
+          "a7849b01a46bf15d846160b9e7eeb12a"
+        ]
+      },
+      "variant": 1
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "DeleteObjects",
+  "provenance": "DERIVED_GENERATED"
+}

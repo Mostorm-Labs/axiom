@@ -1,0 +1,162 @@
+{
+  "caseId": "C1-GEOMETRY-BOUNDARY",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "geometry": {
+              "value": {
+                "segments": [
+                  {
+                    "control1": [
+                      0.25,
+                      0.25
+                    ],
+                    "control2": [
+                      0.75,
+                      0.75
+                    ],
+                    "p0": {
+                      "position": [
+                        0.0,
+                        0.0
+                      ],
+                      "radius": 1.0
+                    },
+                    "p1": {
+                      "position": [
+                        1.0,
+                        1.0
+                      ],
+                      "radius": 1.0
+                    }
+                  }
+                ]
+              },
+              "variant": 0
+            }
+          },
+          "variant": 2
+        },
+        "erase_masks": [],
+        "id": "06b176ea38b64f41b467f94575eed8ac",
+        "kind": 3,
+        "kind_version": 3,
+        "placement": {
+          "order_key": [
+            217,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "3ed6cca6176ff4718377c0c1a36db67d",
+    "id": "79d259ddffd5ca0d2c8a37e595c0753c",
+    "payload": {
+      "value": {
+        "geometry": {
+          "value": {
+            "segments": [
+              {
+                "control1": [
+                  0.25,
+                  0.25
+                ],
+                "control2": [
+                  0.75,
+                  0.75
+                ],
+                "p0": {
+                  "position": [
+                    0.0,
+                    0.0
+                  ],
+                  "radius": 1.0
+                },
+                "p1": {
+                  "position": [
+                    1.0,
+                    1.0
+                  ],
+                  "radius": 1.0
+                }
+              },
+              {
+                "control1": [
+                  1.25,
+                  0.25
+                ],
+                "control2": [
+                  1.75,
+                  0.75
+                ],
+                "p0": {
+                  "position": [
+                    1.0,
+                    0.0
+                  ],
+                  "radius": 1.0
+                },
+                "p1": {
+                  "position": [
+                    2.0,
+                    1.0
+                  ],
+                  "radius": 1.0
+                }
+              },
+              {
+                "control1": [
+                  2.25,
+                  0.25
+                ],
+                "control2": [
+                  2.75,
+                  0.75
+                ],
+                "p0": {
+                  "position": [
+                    2.0,
+                    0.0
+                  ],
+                  "radius": 1.0
+                },
+                "p1": {
+                  "position": [
+                    3.0,
+                    1.0
+                  ],
+                  "radius": 1.0
+                }
+              }
+            ]
+          },
+          "variant": 0
+        },
+        "object_id": "06b176ea38b64f41b467f94575eed8ac"
+      },
+      "variant": 7
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetVectorPathGeometry",
+  "provenance": "DERIVED_GENERATED"
+}

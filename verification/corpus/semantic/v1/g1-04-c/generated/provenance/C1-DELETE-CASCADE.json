@@ -1,0 +1,47 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83"
+  ],
+  "caseId": "C1-DELETE-CASCADE",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c4372bad768395f1069497af1bbc9bb646de4f562641455ecabf4ce228ac20e7",
+  "expectedRef": "authoring/expected.json#C1-DELETE-CASCADE",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1851,
+    "path": "inputs/C1-DELETE-CASCADE.json",
+    "sha256": "4d7288bcf489c2b3a61b1de71276ed6b54217b26a7c057ab3b7bb31e8524d4f1"
+  },
+  "operationFamily": "DeleteObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "e60292dcecd0f01783c726a6036de7898882477876d9970b2e9de3fe1a554433",
+  "sourceCaseRef": "authoring/cases.json#C1-DELETE-CASCADE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

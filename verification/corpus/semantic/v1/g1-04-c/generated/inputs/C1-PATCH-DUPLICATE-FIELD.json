@@ -1,0 +1,65 @@
+{
+  "caseId": "C1-PATCH-DUPLICATE-FIELD",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "6c59294a24577b51c8c62df57b6fb346",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            21,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "25c7011189ef8bfe20e4d6e16efb23af",
+    "id": "5dc492b521073e337a17efd0a3c3aa1b",
+    "payload": {
+      "value": {
+        "patches": [
+          {
+            "action": "set",
+            "field_id": 1,
+            "object_id": "6c59294a24577b51c8c62df57b6fb346",
+            "value": {
+              "value": "fixture",
+              "variant": 1
+            }
+          }
+        ]
+      },
+      "variant": 5
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "PatchProperties",
+  "provenance": "DERIVED_GENERATED"
+}

@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02"
+  ],
+  "caseId": "C1-RESTORE-EXISTING-ID",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c8da217c4b36c447c5dd602717bd230d56a0fb285a8fc6803cf46337d0e84ba6",
+  "expectedRef": "authoring/expected.json#C1-RESTORE-EXISTING-ID",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1850,
+    "path": "inputs/C1-RESTORE-EXISTING-ID.json",
+    "sha256": "b50b91dd2ee4c366244cbcb9112084452e5bcbb842d3e413c4e68dcf1855aa85"
+  },
+  "operationFamily": "RestoreObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "8537958e6839bed71f709ef20f5fd453ad5b2f9361f68f3306a95a02346647f0",
+  "sourceCaseRef": "authoring/cases.json#C1-RESTORE-EXISTING-ID",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

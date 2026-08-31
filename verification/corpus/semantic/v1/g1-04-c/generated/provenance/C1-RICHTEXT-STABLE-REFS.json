@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-RICHTEXT-STABLE-REFS",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "658bc8dad1be6acbd5c0b13325ad555169169eb1f214dac23c0a31c207ffe6c4",
+  "expectedRef": "authoring/expected.json#C1-RICHTEXT-STABLE-REFS",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2297,
+    "path": "inputs/C1-RICHTEXT-STABLE-REFS.json",
+    "sha256": "4c0e04aaf4dc78b401c9afaa4016dde8757fa2088ef2ae5f69136f4038a9f115"
+  },
+  "operationFamily": "EditRichText",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "0fe04344d7db155d4780d98999d7bc68ffe278be5f7dc090921a4ae9ea4cde74",
+  "sourceCaseRef": "authoring/cases.json#C1-RICHTEXT-STABLE-REFS",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

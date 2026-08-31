@@ -1,0 +1,65 @@
+{
+  "caseId": "C1-PATCH-VALID",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "0a222cd010297ce23d11a7ebc4e3462d",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            232,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "1d93d6842c58a2eae3fe8597d74133e2",
+    "id": "207037aa5a8e9498c4bbfdfe2edfe483",
+    "payload": {
+      "value": {
+        "patches": [
+          {
+            "action": "set",
+            "field_id": 1,
+            "object_id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "value": {
+              "value": "fixture",
+              "variant": 1
+            }
+          }
+        ]
+      },
+      "variant": 5
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "PatchProperties",
+  "provenance": "DERIVED_GENERATED"
+}

@@ -1,0 +1,62 @@
+{
+  "caseId": "C1-ERASE-REMOVE-MISSING",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "c5675d46be8d9929ab642f3ab00d7922",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            2,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "8748213200554039c72eb8b5160fcb0c",
+    "id": "570ee2d03908f06852526d7d2456005f",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "mask_ids": [
+              "b199296710e5a7c8a145cb3a5226ad4f"
+            ],
+            "object_id": "c5675d46be8d9929ab642f3ab00d7922"
+          }
+        ]
+      },
+      "variant": 12
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "RemoveEraseMasks",
+  "provenance": "DERIVED_GENERATED"
+}

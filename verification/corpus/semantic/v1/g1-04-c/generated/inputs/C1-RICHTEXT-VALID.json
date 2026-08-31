@@ -1,0 +1,93 @@
+{
+  "caseId": "C1-RICHTEXT-VALID",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "document": {
+              "paragraphs": [
+                {
+                  "id": "17515f25f8e6540c97b43943cf39d1bc",
+                  "runs": [
+                    {
+                      "style": {
+                        "font_size": 12.0,
+                        "italic": false,
+                        "underline": false,
+                        "weight": 400
+                      },
+                      "text": "fixture"
+                    }
+                  ],
+                  "style": {
+                    "alignment": 1,
+                    "line_height": 1.0,
+                    "spacing_after": 0.0,
+                    "spacing_before": 0.0
+                  }
+                }
+              ]
+            }
+          },
+          "variant": 3
+        },
+        "erase_masks": [],
+        "id": "de2c3f49e875c94da3759638ff189d1b",
+        "kind": 4,
+        "kind_version": 4,
+        "placement": {
+          "order_key": [
+            217,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "219df41eaf9ba6e8ab6c2aad4e7143a8",
+    "id": "89d1dc3d938bbe6645b414b3b2f64039",
+    "payload": {
+      "value": {
+        "delta": {
+          "delta_version": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraph_id": "17515f25f8e6540c97b43943cf39d1bc",
+              "scalar_offset": 0,
+              "style": {
+                "font_size": 12.0,
+                "italic": false,
+                "underline": false,
+                "weight": 400
+              },
+              "text": "fixture"
+            }
+          ]
+        },
+        "object_id": "de2c3f49e875c94da3759638ff189d1b"
+      },
+      "variant": 13
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "EditRichText",
+  "provenance": "DERIVED_GENERATED"
+}

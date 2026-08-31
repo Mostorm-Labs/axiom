@@ -1,0 +1,95 @@
+{
+  "caseId": "C1-ERASE-ADD-GEOMETRY",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "0e5907c36970c4ada8bddecc4db8207d",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            17,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "8b62f2e033a769fc12a2d52ea09decee",
+    "id": "3060db7174b2b671c573e8517d050ebc",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "masks": [
+              {
+                "geometry": {
+                  "value": {
+                    "segments": [
+                      {
+                        "control1": [
+                          0.25,
+                          0.25
+                        ],
+                        "control2": [
+                          0.75,
+                          0.75
+                        ],
+                        "p0": {
+                          "position": [
+                            0.0,
+                            0.0
+                          ],
+                          "radius": 1.0
+                        },
+                        "p1": {
+                          "position": [
+                            1.0,
+                            1.0
+                          ],
+                          "radius": 1.0
+                        }
+                      }
+                    ]
+                  },
+                  "variant": 0
+                },
+                "id": "e090aaf00d10f691849871dfbbd6d2e5"
+              }
+            ],
+            "object_id": "0e5907c36970c4ada8bddecc4db8207d"
+          }
+        ]
+      },
+      "variant": 11
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "AddEraseMasks",
+  "provenance": "DERIVED_GENERATED"
+}

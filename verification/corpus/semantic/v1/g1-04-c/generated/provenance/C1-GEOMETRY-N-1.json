@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+  ],
+  "caseId": "C1-GEOMETRY-N-1",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "bfcd97c4e6f77e4f0fe8ab6001ad1e14bdc8cbee531f3402957a3e741b7a1dc7",
+  "expectedRef": "authoring/expected.json#C1-GEOMETRY-N-1",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 3199,
+    "path": "inputs/C1-GEOMETRY-N-1.json",
+    "sha256": "0c627f27e33c95a23927fe6fcc0ddac6423ce892ed76aa1718f4c4e293fd372c"
+  },
+  "operationFamily": "SetVectorPathGeometry",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "ef13af546551c6b0566249bc30ae22cb0c5164748c107d497cc7211ee3fe98d4",
+  "sourceCaseRef": "authoring/cases.json#C1-GEOMETRY-N-1",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}

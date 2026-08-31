@@ -1,0 +1,62 @@
+{
+  "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "c34fa39547d0b46e352569023e16be37",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            78,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "0e5ed78fb8abdfae1ec85f698ec6adcf",
+    "id": "caf67ef4f4b8c0069abcd53bc5e3b844",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "mask_ids": [
+              "535a35fc9e628b7ecb287277fffad53d"
+            ],
+            "object_id": "c34fa39547d0b46e352569023e16be37"
+          }
+        ]
+      },
+      "variant": 12
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "RemoveEraseMasks",
+  "provenance": "DERIVED_GENERATED"
+}

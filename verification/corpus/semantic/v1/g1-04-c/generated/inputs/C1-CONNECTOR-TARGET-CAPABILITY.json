@@ -1,0 +1,95 @@
+{
+  "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "end": {
+              "value": {
+                "point": [
+                  10.0,
+                  10.0
+                ]
+              },
+              "variant": 0
+            },
+            "routing": 1,
+            "start": {
+              "value": {
+                "point": [
+                  0.0,
+                  0.0
+                ]
+              },
+              "variant": 0
+            }
+          },
+          "variant": 6
+        },
+        "erase_masks": [],
+        "id": "c08501b13e31f0107ba610e4395b51d8",
+        "kind": 7,
+        "kind_version": 7,
+        "placement": {
+          "order_key": [
+            1,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "a04f9c9fa5b32908087c1b17ec80a6ac",
+    "id": "ad3f7f7983885acb024548e9675f6b4e",
+    "payload": {
+      "value": {
+        "content": {
+          "end": {
+            "value": {
+              "point": [
+                10.0,
+                10.0
+              ]
+            },
+            "variant": 0
+          },
+          "routing": 1,
+          "start": {
+            "value": {
+              "anchor": {
+                "value": {
+                  "port_id": 1
+                },
+                "variant": 0
+              },
+              "target_object_id": "09f4a4423730cdf4a0ff45be73669bdb"
+            },
+            "variant": 1
+          }
+        },
+        "object_id": "c08501b13e31f0107ba610e4395b51d8"
+      },
+      "variant": 14
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetConnectorContent",
+  "provenance": "DERIVED_GENERATED"
+}

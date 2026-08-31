@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-DELETE-MISSING-TARGET",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "968cb18deab1a85d5d592d3593cba79b5e50bb04b432b4f1207549628d0db443"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "188cefebc35e4f86f7e868135ead85ee9aa98778951e0b2401d7f8009a9a57e6",
+  "expectedRef": "authoring/expected.json#C1-DELETE-MISSING-TARGET",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1191,
+    "path": "inputs/C1-DELETE-MISSING-TARGET.json",
+    "sha256": "49746d2166a9bd0e95a57b53786f1456e6d963a1771e8c8897379883f620348a"
+  },
+  "operationFamily": "DeleteObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "86c8a77995dc98c51cabcbff6141f0d106d97e8a084f106211c81dc9dd124eb6",
+  "sourceCaseRef": "authoring/cases.json#C1-DELETE-MISSING-TARGET",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "f394f09d9fee3e90666e9d75e747618fb22d3c174d0e154c70cf5da92ec03874"
+    }
+  }
+}
