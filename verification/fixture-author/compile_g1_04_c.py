@@ -19,6 +19,10 @@ DEFAULT_OUTPUT = ROOT / "verification/corpus/semantic/v1/g1-04-c/generated"
 COMPILER_IDENTITY = "g1-04-c-independent-fixture-compiler-v1"
 FORMAT = "axiom-g1-04-c-input-v1"
 FORMAT_VERSION = 1
+F64_NAN = "f64:7ff8000000000000"
+F64_POS_INF = "f64:7ff0000000000000"
+F64_NEG_INF = "f64:fff0000000000000"
+F64_NEG_ZERO = "f64:8000000000000000"
 
 
 def _sha256(data: bytes) -> str:
@@ -43,7 +47,22 @@ def _order_key(case_id: str, ordinal: int) -> list[int]:
     return [int(digest[0]) + 1, ordinal]
 
 
-def _kind_for_family(family: str) -> tuple[int, int]:
+def _kind_for_family(family: str, case_id: str = "") -> tuple[int, int]:
+    if "WRONG-KIND" in case_id:
+        if family == "SetObjectSize":
+            return 4, 4
+        if family in {"SetVectorPathGeometry", "SetImageContent"}:
+            return 1, 1
+    if case_id == "C1-PATCH-APPLICABILITY":
+        return 5, 5
+    if case_id in {"C1-ERASE-ADD-CAPABILITY", "C1-CONNECTOR-TARGET-CAPABILITY"}:
+        return 1, 1
+    if case_id in {"C1-PLACEMENT-STICKY-RICHTEXT"}:
+        return 4, 4
+    if case_id in {"C1-HIERARCHY-STICKY", "C1-INSERT-STICKY-CARDINALITY"}:
+        return 8, 8
+    if case_id == "C1-PLACEMENT-GROUP-ANY":
+        return 9, 1
     if family == "SetImageContent":
         return 2, 2
     if family == "SetVectorPathGeometry":
@@ -54,8 +73,6 @@ def _kind_for_family(family: str) -> tuple[int, int]:
         return 5, 5
     if family == "SetConnectorContent":
         return 7, 7
-    if family == "SetPlacements" and "STICKY" in family:
-        return 8, 8
     return 1, 1
 
 
@@ -66,16 +83,24 @@ def _content_for_kind(kind: int, case_id: str) -> dict[str, Any]:
         return {"variant": 2, "value": {"geometry": {"variant": 0, "value": {"segments": [{"p0": {"position": [0.0, 0.0], "radius": 1.0}, "p1": {"position": [1.0, 1.0], "radius": 1.0}, "control1": [0.25, 0.25], "control2": [0.75, 0.75]}]}}}}
     if kind == 4:
         paragraph_id = _stable_id(case_id, "paragraph")
-        return {"variant": 3, "value": {"document": {"paragraphs": [{"id": paragraph_id, "style": {"alignment": 1, "line_height": 1.0, "spacing_before": 0.0, "spacing_after": 0.0}, "runs": [{"text": "fixture", "style": {"font_size": 12.0, "weight": 400, "italic": False, "underline": False}}]}]}}}
+        text = "λ-fixture" if "UTF8" in case_id else "fixture"
+        return {"variant": 3, "value": {"document": {"paragraphs": [{"id": paragraph_id, "style": {"alignment": 1, "line_height": 1.0, "spacing_before": 0.0, "spacing_after": 0.0}, "runs": [{"text": text, "style": {"font_size": 12.0, "weight": 400, "italic": False, "underline": False}}]}]}}}
     if kind == 5:
         return {"variant": 4, "value": {"stroke": {"deterministic_seed": 1, "brush_family_id": 1, "brush_version": 1, "nominal_size": 1.0, "opacity": 1.0, "data_variant": 0, "data": [{"position": [0.0, 0.0], "pressure": 1.0, "tilt": [0.0, 0.0]}, {"position": [1.0, 1.0], "pressure": 1.0, "tilt": [0.0, 0.0]}]}}}
     if kind == 7:
         return {"variant": 6, "value": {"start": {"variant": 0, "value": {"point": [0.0, 0.0]}}, "end": {"variant": 0, "value": {"point": [10.0, 10.0]}}, "routing": 1}}
+    if kind == 8:
+        return {"variant": 7, "value": {"width": 20.0, "height": 20.0}}
+    if kind == 9:
+        return {"variant": 8, "value": {}}
     return {"variant": 0, "value": {"shape_kind": 1, "width": 32.0, "height": 24.0}}
 
 
 def _object(case_id: str, family: str, role: str, ordinal: int = 1, parent_id: str | None = None) -> dict[str, Any]:
-    kind, kind_version = _kind_for_family(family)
+    kind, kind_version = _kind_for_family(family, case_id)
+    content = _content_for_kind(kind, case_id)
+    if "WRONG-CONTENT" in case_id or "INVALID-RECORD" in case_id:
+        content = {"variant": 0, "value": {}}
     return {
         "id": _stable_id(case_id, role),
         "kind": kind,
@@ -83,26 +108,76 @@ def _object(case_id: str, family: str, role: str, ordinal: int = 1, parent_id: s
         "placement": {"parent_id": parent_id, "order_key": _order_key(case_id, ordinal)},
         "transform": [1.0, 0.0, 0.0, 1.0, 0.0, 0.0],
         "properties": [],
-        "content": _content_for_kind(kind, case_id),
+        "content": content,
         "erase_masks": [],
     }
 
 
 def _initial_objects(case_id: str, family: str) -> list[dict[str, Any]]:
     objects: list[dict[str, Any]] = []
-    needs_target = family not in {"InsertObjects", "RestoreObjects"}
-    if "EXISTING-ID" in case_id or "COLLISION" in case_id or "IDEMPOTENT" in case_id:
-        needs_target = True
-    if "SOURCE-MISSING" not in case_id and family == "SplitStrokes":
-        needs_target = True
-    if needs_target:
+    target_needed = family not in {"InsertObjects", "RestoreObjects"}
+    if case_id in {
+        "C1-DELETE-MISSING-TARGET",
+        "C1-SPLIT-SOURCE-MISSING",
+        "C1-RESTORE-ELIGIBLE",
+        "C1-RESTORE-ABSENT-REF",
+        "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+        "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+        "C1-RESTORE-NO-TOMBSTONE",
+    }:
+        target_needed = False
+    if case_id in {
+        "C1-INSERT-EXISTING-ID",
+        "C1-RESTORE-EXISTING-ID",
+        "C1-RESTORE-EXISTING-ID-DIFFERENT",
+        "C1-RESTORE-BATCH-EXISTING-ID",
+        "C1-STROKE-EXISTING-ID",
+        "C1-ERASE-ADD-EXISTING-MASK",
+        "C1-SPLIT-REPLACEMENT-COLLISION",
+    }:
+        target_needed = True
+    if target_needed:
+        target = _object(case_id, family, "target")
+        if case_id in {"C1-ERASE-ADD-EXISTING-MASK", "C1-ERASE-REMOVE-VALID", "C1-ERASE-REMOVE-DUPLICATE"}:
+            target["erase_masks"] = [{"id": _stable_id(case_id, "mask"), "geometry": _geometry(case_id)}]
+        objects.append(target)
+    if case_id in {"C1-DELETE-SUBTREE", "C1-DELETE-CASCADE"}:
+        objects.append(_object(case_id, family, "child", 2, _stable_id(case_id, "target")))
+    if case_id == "C1-RESTORE-EXISTING-ID":
         objects.append(_object(case_id, family, "target"))
-    if "SUBTREE" in case_id or "CASCADE" in case_id:
-        parent_id = _stable_id(case_id, "target")
-        objects.append(_object(case_id, family, "child", 2, parent_id))
-    if "STAGED" in case_id:
-        objects.append(_object(case_id, family, "parent", 3))
-    return sorted(objects, key=lambda value: value["id"])
+    if case_id == "C1-RESTORE-EXISTING-ID-DIFFERENT":
+        target = _object(case_id, family, "target")
+        target["transform"][0] = 2.0
+        objects.append(target)
+    if case_id == "C1-RESTORE-BATCH-EXISTING-ID":
+        objects.append(_object(case_id, family, "target"))
+    if case_id in {"C1-RESTORE-CONNECTOR-TARGET-ABSENT"}:
+        # The connector's attached target is deliberately absent.
+        pass
+    if case_id in {"C1-PLACEMENT-INVALID-PARENT", "C1-PLACEMENT-NONPARENT"}:
+        objects.append(_object(case_id, family, "unrelated-parent", 2))
+    if case_id in {"C1-HIERARCHY-STICKY", "C1-PLACEMENT-STICKY-RICHTEXT", "C1-PLACEMENT-GROUP-ANY"}:
+        parent = _object(case_id, family, "parent", 2)
+        if case_id == "C1-PLACEMENT-GROUP-ANY":
+            parent["kind"] = 9
+            parent["kind_version"] = 1
+        elif case_id == "C1-HIERARCHY-STICKY":
+            parent["kind"] = 8
+            parent["kind_version"] = 8
+        objects.append(parent)
+    if case_id in {"C1-ERASE-REMOVE-WHOLE-REJECT"}:
+        target = _object(case_id, family, "target")
+        target["erase_masks"] = [
+            {"id": _stable_id(case_id, "mask-a"), "geometry": _geometry(case_id)},
+            {"id": _stable_id(case_id, "mask-b"), "geometry": _geometry(case_id)},
+        ]
+        objects = [target]
+    if case_id in {"C1-CONNECTOR-ATTACHED-ENDPOINT", "C1-CONNECTOR-TARGET-CAPABILITY"}:
+        endpoint = _object(case_id, "Shape", "endpoint-target", 2)
+        if case_id == "C1-CONNECTOR-TARGET-CAPABILITY":
+            endpoint["kind"] = 1
+        objects.append(endpoint)
+    return sorted({value["id"]: value for value in objects}.values(), key=lambda value: value["id"])
 
 
 def _placement(case_id: str, target_id: str, parent_id: str | None = None) -> dict[str, Any]:
@@ -113,23 +188,51 @@ def _geometry(case_id: str) -> dict[str, Any]:
     count = 3
     if "N-1" in case_id:
         count = 2
-    elif "N" in case_id and "N-1" not in case_id:
+    elif case_id.endswith("GEOMETRY-N"):
         count = 3
     elif "OVERFLOW" in case_id:
+        count = 5
+    elif "LIMIT" in case_id:
         count = 4
     points = []
     for index in range(count):
         points.append({"p0": {"position": [float(index), 0.0], "radius": 1.0}, "p1": {"position": [float(index + 1), 1.0], "radius": 1.0}, "control1": [float(index) + 0.25, 0.25], "control2": [float(index) + 0.75, 0.75]})
+    if "STRUCTURAL" in case_id:
+        return {"variant": 0, "value": {"segments": []}}
+    if "WRONG-KIND" in case_id:
+        return {"variant": 1, "value": {}}
     return {"variant": 0, "value": {"segments": points}}
 
 
 def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[int, dict[str, Any]]:
     target_id = _stable_id(case_id, "target")
     if family in {"InsertObjects", "RestoreObjects"}:
-        parent_id = _stable_id(case_id, "parent") if "STAGED" in case_id else None
-        created = [_object(case_id, family, "created", 1, parent_id)]
-        if "STAGED" in case_id:
-            created.append(_object(case_id, family, "created-child", 2, parent_id))
+        if case_id in {"C1-INSERT-STAGED-PARENT", "C1-RESTORE-STAGED-PARENT-CHILD"}:
+            parent = _object(case_id, family, "staged-parent", 1)
+            created = [parent, _object(case_id, family, "staged-child", 2, parent["id"])]
+        elif case_id in {"C1-INSERT-STAGED-CONNECTOR", "C1-RESTORE-STAGED-CONNECTOR"}:
+            endpoint = _object(case_id, "Shape", "staged-endpoint", 1)
+            connector = _object(case_id, "SetConnectorContent", "staged-connector", 2)
+            connector["content"] = {"variant": 6, "value": {"start": {"variant": 1, "value": {"target_object_id": endpoint["id"], "anchor": {"variant": 0, "value": {"port_id": 1}}}}, "end": {"variant": 0, "value": {"point": [10.0, 10.0]}}, "routing": 1}}
+            created = [endpoint, connector]
+        elif case_id == "C1-INSERT-HIERARCHY-CYCLE":
+            first = _object(case_id, family, "cycle-a", 1)
+            second = _object(case_id, family, "cycle-b", 2, first["id"])
+            first["placement"]["parent_id"] = second["id"]
+            created = [first, second]
+        elif case_id == "C1-INSERT-STICKY-CARDINALITY":
+            parent = _object(case_id, family, "sticky-parent", 1)
+            created = [parent, _object(case_id, family, "sticky-child-a", 2, parent["id"]), _object(case_id, family, "sticky-child-b", 3, parent["id"])]
+        elif case_id == "C1-RESTORE-ABSENT-REF":
+            created = [_object(case_id, family, "created", 1, _stable_id(case_id, "missing-parent"))]
+        elif case_id == "C1-RESTORE-CONNECTOR-TARGET-ABSENT":
+            connector = _object(case_id, "SetConnectorContent", "created", 1)
+            connector["content"] = {"variant": 6, "value": {"start": {"variant": 1, "value": {"target_object_id": _stable_id(case_id, "missing-target"), "anchor": {"variant": 0, "value": {"port_id": 1}}}}, "end": {"variant": 0, "value": {"point": [10.0, 10.0]}}, "routing": 1}}
+            created = [connector]
+        else:
+            created = [_object(case_id, family, "created", 1)]
+            if "EXISTING-ID" in case_id:
+                created[0]["id"] = target_id
         return (0 if family == "InsertObjects" else 2), {"objects": sorted(created, key=lambda value: value["id"])}
     if family == "DeleteObjects":
         ids = [target_id]
@@ -139,27 +242,40 @@ def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[
             ids.append(_stable_id(case_id, "child"))
         return 1, {"object_ids": ids}
     if family == "SetPlacements":
-        parent_id = _stable_id(case_id, "parent") if "STAGED" in case_id or "PARENT" in case_id else None
+        parent_id = _stable_id(case_id, "parent") if "STAGED" in case_id or "PARENT" in case_id or case_id in {"C1-HIERARCHY-STICKY", "C1-PLACEMENT-STICKY-RICHTEXT", "C1-PLACEMENT-GROUP-ANY"} else None
         items = [_placement(case_id, target_id, parent_id)]
-        if "CARDINALITY" in case_id:
-            items.append(_placement(case_id, target_id, parent_id))
         if "CYCLE" in case_id:
             items[0]["placement"]["parent_id"] = target_id
+        if case_id == "C1-PLACEMENT-INVALID-PARENT":
+            items[0]["placement"]["parent_id"] = _stable_id(case_id, "missing-parent")
+        if case_id == "C1-PLACEMENT-NONPARENT":
+            items[0]["placement"]["parent_id"] = _stable_id(case_id, "unrelated-parent")
+        if case_id == "C1-PLACEMENT-ORDERKEY":
+            items[0]["placement"]["order_key"] = []
         return 3, {"items": items}
     if family == "SetTransforms":
         transform = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
         if "NEGATIVE-ZERO" in case_id:
             transform[4] = -0.0
+        if "NAN-INF" in case_id:
+            transform = [F64_NAN, 0.0, 0.0, 1.0, F64_POS_INF, F64_NEG_INF]
         return 4, {"items": [{"object_id": target_id, "transform": transform}]}
     if family == "PatchProperties":
-        field_id = 1 if "FIELD-ID" not in case_id else 999999
-        action = "set" if "CLEAR" not in case_id else "clear"
+        field_id = 999999 if "FIELD-ID" in case_id else 1
+        action = "set"
         patch: dict[str, Any] = {"object_id": target_id, "field_id": field_id, "action": action}
-        if action == "set":
+        if "PRESENCE-DEFAULT" not in case_id:
             patch["value"] = {"variant": 1, "value": "fixture"}
-        return 5, {"patches": [patch]}
+        if "BRANCH-TYPE" in case_id:
+            patch["value"] = {"variant": 2, "value": 123}
+        patches = [patch]
+        if "DUPLICATE-FIELD" in case_id:
+            patches.append(dict(patch))
+        return 5, {"patches": patches}
     if family == "SetObjectSize":
         width, height = 32.0, 24.0
+        if "NONFINITE" in case_id:
+            width = F64_POS_INF
         if "HARD-LIMIT" in case_id:
             width = height = 100000.0
         if "NONPOSITIVE" in case_id:
@@ -169,27 +285,58 @@ def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[
         return 7, {"object_id": target_id, "geometry": _geometry(case_id)}
     if family == "SetImageContent":
         content: dict[str, Any] = {"resource_id": _stable_id(case_id, "resource"), "intrinsic_width": 320.0, "intrinsic_height": 200.0, "content_mode": 1, "width": 320.0, "height": 200.0}
+        if "PRESENCE" in case_id:
+            content = {}
+        if "INTRINSIC" in case_id:
+            content["intrinsic_width"], content["intrinsic_height"] = 640.0, 480.0
+        if "CONTENTMODE" in case_id:
+            content["content_mode"] = 2
+        if "LOCAL-SIZE" in case_id:
+            content["width"], content["height"] = 64.0, 48.0
+        if "RUNTIME-RESOURCE" in case_id:
+            content["resource_id"] = _stable_id(case_id, "runtime-resource")
         if "SOURCE-RECT" in case_id:
             content["source_rect"] = {"x": 0.0, "y": 0.0, "width": 1.0, "height": 1.0}
         return 8, {"object_id": target_id, "content": content}
     if family == "AddStroke":
-        return 9, {"object": _object(case_id, family, "created")}
+        created = _object(case_id, family, "created")
+        if case_id == "C1-STROKE-EXISTING-ID":
+            created["id"] = target_id
+        return 9, {"object": created}
     if family == "SplitStrokes":
         replacements = [_object(case_id, family, "replacement-1", 1), _object(case_id, family, "replacement-2", 2)]
+        if "REPLACEMENT-COLLISION" in case_id:
+            replacements[0]["id"] = target_id
+        if "REPLACEMENT-STRUCTURAL" in case_id:
+            replacements[0]["content"] = {"variant": 0, "value": {}}
         return 10, {"splits": [{"source_stroke_id": target_id, "replacements": replacements}]}
     if family == "AddEraseMasks":
-        mask = {"id": _stable_id(case_id, "mask"), "geometry": {"variant": 0, "value": {"segments": [{"p0": {"position": [0.0, 0.0], "radius": 1.0}, "p1": {"position": [1.0, 1.0], "radius": 1.0}, "control1": [0.25, 0.25], "control2": [0.75, 0.75]}]}}}
-        return 11, {"items": [{"object_id": target_id, "masks": [mask]}]}
+        geometry = {"variant": 0, "value": {"segments": [{"p0": {"position": [0.0, 0.0], "radius": 1.0}, "p1": {"position": [1.0, 1.0], "radius": 1.0}, "control1": [0.25, 0.25], "control2": [0.75, 0.75]}]}}
+        if "GEOMETRY" in case_id:
+            geometry = {"variant": 0, "value": {"segments": []}}
+        mask = {"id": _stable_id(case_id, "mask"), "geometry": geometry}
+        masks = [mask]
+        if "UNIQUENESS" in case_id:
+            masks.append(dict(mask))
+        return 11, {"items": [{"object_id": target_id, "masks": masks}]}
     if family == "RemoveEraseMasks":
         mask_id = _stable_id(case_id, "mask")
         mask_ids = [mask_id, mask_id] if "DUPLICATE" in case_id else [mask_id]
+        if "WHOLE-REJECT" in case_id:
+            mask_ids = [_stable_id(case_id, "mask-a"), _stable_id(case_id, "mask-b")]
         return 12, {"items": [{"object_id": target_id, "mask_ids": mask_ids}]}
     if family == "EditRichText":
         paragraph_id = _stable_id(case_id, "paragraph")
-        return 13, {"object_id": target_id, "delta": {"delta_version": 1, "steps": [{"kind": "InsertText", "paragraph_id": paragraph_id, "scalar_offset": 0, "text": "fixture", "style": {"font_size": 12.0, "weight": 400, "italic": False, "underline": False}}]}}
+        step = {"kind": "InsertText", "paragraph_id": paragraph_id, "scalar_offset": 0, "text": "λ-fixture" if "UTF8" in case_id else "fixture", "style": {"font_size": 12.0, "weight": 400, "italic": False, "underline": False}}
+        if "INVALID-STEP" in case_id:
+            step["kind"] = "UnknownStep"
+        return 13, {"object_id": target_id, "delta": {"delta_version": 1, "steps": [step]}}
     if family == "SetConnectorContent":
         endpoint = {"variant": 1, "value": {"target_object_id": _stable_id(case_id, "endpoint-target"), "anchor": {"variant": 0, "value": {"port_id": 1}}}}
-        content = {"start": endpoint, "end": {"variant": 0, "value": {"point": [10.0, 10.0]}}, "routing": 1}
+        if "ANCHOR" in case_id:
+            endpoint["value"]["anchor"]["value"]["port_id"] = 0
+        invalid_end = {"variant": 99, "value": {}} if "INVALID-END" in case_id else {"variant": 0, "value": {"point": [10.0, 10.0]}}
+        content = {"start": endpoint, "end": invalid_end, "routing": 99 if "ROUTING" in case_id else 1}
         return 14, {"object_id": target_id, "content": content}
     raise ValueError(f"unsupported operation family: {family}")
 
@@ -208,7 +355,13 @@ def _operation(case_id: str, family: str, objects: list[dict[str, Any]]) -> dict
 def _prior_operations(case_id: str, operation: dict[str, Any]) -> list[dict[str, Any]]:
     if not any(token in case_id for token in ("IDEMPOTENT", "COLLISION", "OPID", "LOCAL-REPLAY-REMOTE")):
         return []
-    prior = {"operation_id": operation["id"], "document_id": operation["document_id"], "schema_version": 1, "payload_version": 1, "payload": operation["payload"]}
+    prior_id = operation["id"]
+    prior_payload = operation["payload"]
+    if case_id == "C1-RESTORE-SAME-PAYLOAD-NEW-OPID":
+        prior_id = _stable_id(case_id, "prior-operation")
+    if case_id == "C1-ID-COLLISION":
+        prior_payload = {"variant": 0, "value": {"objects": []}}
+    prior = {"operation_id": prior_id, "document_id": operation["document_id"], "schema_version": 1, "payload_version": 1, "payload": prior_payload}
     return [prior]
 
 

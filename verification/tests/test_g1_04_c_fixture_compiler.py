@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import inspect
+import math
 import json
 from pathlib import Path
+import re
+import struct
 import shutil
 import subprocess
 import sys
@@ -253,6 +257,301 @@ class G104CFixtureCompilerTest(unittest.TestCase):
         ):
             anchored = subprocess.check_output(["git", "show", f"{ANCHOR}:{relative}"])
             self.assertEqual(anchored, (ROOT / relative).read_bytes(), relative)
+
+    def test_nonfinite_f64_carrier_roundtrips_exact_bits(self) -> None:
+        carriers = {
+            "f64:7ff8000000000000": 0x7FF8000000000000,
+            "f64:7ff0000000000000": 0x7FF0000000000000,
+            "f64:fff0000000000000": 0xFFF0000000000000,
+        }
+        for token, expected_bits in carriers.items():
+            bits = int(token[4:], 16)
+            self.assertEqual(expected_bits, bits)
+            value = struct.unpack(">d", bits.to_bytes(8, "big"))[0]
+            self.assertTrue(math.isnan(value) or math.isinf(value))
+            self.assertEqual(expected_bits, int.from_bytes(struct.pack(">d", value), "big"))
+
+    def test_transform_nan_inf_fixture_realizes_current_authority(self) -> None:
+        value = json.loads((GENERATED / "inputs/C1-TRANSFORM-NAN-INF.json").read_text(encoding="utf-8"))
+        transform = value["operation"]["payload"]["value"]["items"][0]["transform"]
+        self.assertEqual(
+            [
+                "f64:7ff8000000000000",
+                0.0,
+                0.0,
+                1.0,
+                "f64:7ff0000000000000",
+                "f64:fff0000000000000",
+            ],
+            transform,
+        )
+
+    def test_patch_duplicate_field_fixture_realizes_case_intent(self) -> None:
+        value = json.loads((GENERATED / "inputs/C1-PATCH-DUPLICATE-FIELD.json").read_text(encoding="utf-8"))
+        patches = value["operation"]["payload"]["value"]["patches"]
+        keys = [(patch["object_id"], patch["field_id"]) for patch in patches]
+        self.assertGreaterEqual(len(keys), 2)
+        self.assertLess(len(set(keys)), len(keys))
+
+    def test_size_nonfinite_fixture_realizes_case_intent(self) -> None:
+        value = json.loads((GENERATED / "inputs/C1-SIZE-NONFINITE.json").read_text(encoding="utf-8"))
+        item = value["operation"]["payload"]["value"]["items"][0]
+        self.assertEqual("f64:7ff0000000000000", item["width"])
+        self.assertEqual(24.0, item["height"])
+
+    def test_every_accepted_case_has_explicit_realization_rule(self) -> None:
+        cases = json.loads(CASES.read_text(encoding="utf-8"))
+        self.assertEqual({case["id"] for case in cases}, set(REALIZATION_RULES))
+
+    def test_every_generated_fixture_satisfies_realization_rule(self) -> None:
+        audit = build_case_intent_audit(CASES, GENERATED)
+        self.assertEqual(90, len(audit))
+        self.assertTrue(all(entry["result"] == "PASS" for entry in audit))
+
+    def test_realization_audit_does_not_use_expected_outcome_or_production_semantics(self) -> None:
+        source = inspect.getsource(_assert_case_realization)
+        for token in (
+            "disposition",
+            "terminalPhase",
+            "semanticErrorCategory",
+            "logicalPlanProjection",
+            "mutationExpected",
+            "PLAN_READY",
+            "ALREADY_APPLIED",
+            "REJECTED",
+            "ReferenceObjectStore",
+            "IndexedObjectStore",
+            "OperationEngine",
+            "prepareApplyPlan",
+        ):
+            self.assertNotIn(token, source, token)
+
+
+def _stable_id(case_id: str, role: str) -> str:
+    return hashlib.sha256(f"axiom-g1-04-c:{case_id}:{role}".encode("utf-8")).hexdigest()[:32]
+
+
+def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[str, object]) -> list[str]:
+    assert case["id"] == case_id
+    assert value["caseId"] == case_id
+    assert value["operationFamily"] == case["operationFamily"]
+    operation = value["operation"]["payload"]["value"]
+    initial = value["initialState"]["objects"]
+    initial_by_id = {item["id"]: item for item in initial}
+    family = case["operationFamily"]
+    target_id = _stable_id(case_id, "target")
+    if case_id == "C1-TRANSFORM-FINITE":
+        assert all(isinstance(x, (int, float)) and math.isfinite(x) for x in operation["items"][0]["transform"])
+    elif case_id == "C1-TRANSFORM-NEGATIVE-ZERO":
+        tx = operation["items"][0]["transform"][4]
+        assert tx == 0.0 and (isinstance(tx, str) or math.copysign(1.0, tx) < 0)
+    elif case_id == "C1-TRANSFORM-NAN-INF":
+        assert operation["items"][0]["transform"] == ["f64:7ff8000000000000", 0.0, 0.0, 1.0, "f64:7ff0000000000000", "f64:fff0000000000000"]
+    elif case_id == "C1-PATCH-DUPLICATE-FIELD":
+        keys = [(patch["object_id"], patch["field_id"]) for patch in operation["patches"]]
+        assert len(keys) >= 2 and len(set(keys)) < len(keys)
+    elif case_id == "C1-PATCH-FIELD-ID":
+        assert operation["patches"][0]["field_id"] == 999999
+    elif case_id == "C1-PATCH-BRANCH-TYPE":
+        assert operation["patches"][0]["value"]["variant"] == 2
+    elif case_id == "C1-PATCH-APPLICABILITY":
+        assert initial_by_id[target_id]["kind"] == 5
+    elif case_id == "C1-PATCH-PRESENCE-DEFAULT":
+        assert "value" not in operation["patches"][0]
+    elif case_id == "C1-SIZE-NONFINITE":
+        assert operation["items"][0]["width"] == "f64:7ff0000000000000" and math.isfinite(operation["items"][0]["height"])
+    elif case_id == "C1-SIZE-NONPOSITIVE":
+        assert operation["items"][0]["width"] <= 0
+    elif case_id == "C1-SIZE-HARD-LIMIT":
+        assert operation["items"][0]["width"] == 100000.0
+    elif case_id == "C1-SIZE-WRONG-KIND":
+        assert initial_by_id[target_id]["kind"] == 4
+    elif case_id == "C1-DELETE-MISSING-TARGET":
+        assert target_id not in initial_by_id
+    elif case_id == "C1-DELETE-DUPLICATE-TARGET":
+        assert operation["object_ids"].count(target_id) >= 2
+    elif case_id in {"C1-DELETE-VALID", "C1-DELETE-CASCADE", "C1-DELETE-SUBTREE"}:
+        assert target_id in initial_by_id and target_id in operation["object_ids"]
+        if case_id != "C1-DELETE-VALID":
+            assert _stable_id(case_id, "child") in operation["object_ids"]
+    elif case_id in {"C1-PLACEMENT-CYCLE", "C1-INSERT-HIERARCHY-CYCLE"}:
+        if case_id == "C1-PLACEMENT-CYCLE":
+            assert operation["items"][0]["placement"]["parent_id"] == target_id
+        else:
+            created = operation["objects"]
+            by_id = {item["id"]: item for item in created}
+            assert len(created) == 2 and all(item["placement"]["parent_id"] in by_id for item in created)
+            assert all(by_id[item["placement"]["parent_id"]]["placement"]["parent_id"] == item["id"] for item in created)
+    elif case_id == "C1-HIERARCHY-STICKY":
+        assert initial_by_id[target_id]["kind"] == 8 and operation["items"][0]["placement"]["parent_id"] == _stable_id(case_id, "parent")
+    elif case_id == "C1-PLACEMENT-GROUP-ANY":
+        assert initial_by_id[_stable_id(case_id, "parent")]["kind"] == 9
+    elif case_id == "C1-PLACEMENT-STICKY-RICHTEXT":
+        assert initial_by_id[target_id]["kind"] == 4 and operation["items"][0]["placement"]["parent_id"] is not None
+    elif case_id == "C1-PLACEMENT-INVALID-PARENT":
+        parent_id = operation["items"][0]["placement"]["parent_id"]
+        assert parent_id not in initial_by_id
+    elif case_id == "C1-PLACEMENT-ORDERKEY":
+        assert operation["items"][0]["placement"]["order_key"] == []
+    elif case_id == "C1-PLACEMENT-NONPARENT":
+        assert operation["items"][0]["placement"]["parent_id"] == _stable_id(case_id, "unrelated-parent")
+    elif case_id in {"C1-INSERT-STAGED-PARENT", "C1-RESTORE-STAGED-PARENT-CHILD"}:
+        records = operation["objects"]
+        ids = {item["id"] for item in records}
+        assert len(records) == 2 and any(item["placement"]["parent_id"] in ids for item in records)
+    elif case_id in {"C1-INSERT-STAGED-CONNECTOR", "C1-RESTORE-STAGED-CONNECTOR"}:
+        records = operation["objects"]
+        ids = {item["id"] for item in records}
+        connector = next(item for item in records if item["kind"] == 7)
+        assert len(records) == 2 and connector["content"]["value"]["start"]["value"]["target_object_id"] in ids
+    elif case_id == "C1-INSERT-STICKY-CARDINALITY":
+        records = operation["objects"]
+        parent = next(item for item in records if item["kind"] == 8 and item["placement"]["parent_id"] is None)
+        assert sum(item["placement"]["parent_id"] == parent["id"] for item in records) >= 2
+    elif case_id == "C1-INSERT-EXISTING-ID":
+        assert operation["objects"][0]["id"] in initial_by_id
+    elif case_id == "C1-ID-COLLISION":
+        prior = value["initialState"]["priorOperations"][0]
+        assert prior["operation_id"] == value["operation"]["id"] and prior["payload"] != value["operation"]["payload"]
+    elif case_id == "C1-IDEMPOTENT-EQUIVALENT":
+        prior = value["initialState"]["priorOperations"][0]
+        assert prior["operation_id"] == value["operation"]["id"] and prior["payload"] == value["operation"]["payload"]
+    elif case_id == "C1-RESTORE-SAME-PAYLOAD-NEW-OPID":
+        prior = value["initialState"]["priorOperations"][0]
+        assert prior["operation_id"] != value["operation"]["id"] and prior["payload"] == value["operation"]["payload"]
+    elif case_id == "C1-RESTORE-OPID-BEFORE-EXISTENCE":
+        assert len(value["initialState"]["priorOperations"]) == 1 and not initial
+    elif case_id == "C1-RESTORE-LOCAL-REPLAY-REMOTE":
+        assert [item["name"] for item in value["executionVariants"]] == ["local", "replay", "remote"]
+    elif case_id == "C1-RESTORE-ELIGIBLE":
+        assert operation["objects"] and not initial
+    elif case_id in {"C1-RESTORE-EXISTING-ID", "C1-RESTORE-EXISTING-ID-DIFFERENT", "C1-RESTORE-BATCH-EXISTING-ID"}:
+        assert any(item["id"] in initial_by_id for item in operation["objects"])
+    elif case_id == "C1-RESTORE-ABSENT-REF":
+        assert operation["objects"][0]["placement"]["parent_id"] not in initial_by_id
+    elif case_id == "C1-RESTORE-CONNECTOR-TARGET-ABSENT":
+        connector = operation["objects"][0]
+        target = connector["content"]["value"]["start"]["value"]["target_object_id"]
+        assert target not in initial_by_id
+    elif case_id == "C1-RESTORE-NO-TOMBSTONE":
+        assert not initial and operation["objects"]
+    elif case_id == "C1-GEOMETRY-STRUCTURAL":
+        assert operation["geometry"]["value"]["segments"] == []
+    elif case_id == "C1-GEOMETRY-WRONG-KIND":
+        assert initial_by_id[target_id]["kind"] == 1
+    elif case_id in {"C1-GEOMETRY-N-1", "C1-GEOMETRY-N", "C1-GEOMETRY-BOUNDARY", "C1-GEOMETRY-LIMIT", "C1-GEOMETRY-OVERFLOW"}:
+        expected_counts = {"C1-GEOMETRY-N-1": 2, "C1-GEOMETRY-N": 3, "C1-GEOMETRY-BOUNDARY": 3, "C1-GEOMETRY-LIMIT": 4, "C1-GEOMETRY-OVERFLOW": 5}
+        assert len(operation["geometry"]["value"]["segments"]) == expected_counts[case_id]
+    elif case_id == "C1-IMAGE-WRONG-KIND":
+        assert initial_by_id[target_id]["kind"] == 1
+    elif case_id == "C1-IMAGE-CONTENT-PRESENCE":
+        assert operation["content"] == {}
+    elif case_id == "C1-IMAGE-SOURCE-RECT":
+        assert "source_rect" in operation["content"]
+    elif case_id == "C1-IMAGE-INTRINSIC":
+        assert operation["content"]["intrinsic_width"] == 640.0
+    elif case_id == "C1-IMAGE-CONTENTMODE":
+        assert operation["content"]["content_mode"] == 2
+    elif case_id == "C1-IMAGE-LOCAL-SIZE":
+        assert operation["content"]["width"] == 64.0 and operation["content"]["height"] == 48.0
+    elif case_id == "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC":
+        assert operation["content"]["resource_id"] == _stable_id(case_id, "runtime-resource")
+    elif case_id == "C1-STROKE-WRONG-CONTENT":
+        assert operation["object"]["content"]["variant"] == 0
+    elif case_id == "C1-STROKE-INVALID-RECORD":
+        assert operation["object"]["content"]["value"] == {}
+    elif case_id in {"C1-STROKE-VALID", "C1-STROKE-NEW-ID"}:
+        assert operation["object"]["id"] not in initial_by_id and len(operation["object"]["content"]["value"]["stroke"]["data"]) >= 2
+    elif case_id == "C1-STROKE-EXISTING-ID":
+        assert operation["object"]["id"] in initial_by_id
+    elif case_id == "C1-SPLIT-SOURCE-MISSING":
+        assert target_id not in initial_by_id
+    elif case_id == "C1-SPLIT-REPLACEMENT-COLLISION":
+        assert operation["splits"][0]["replacements"][0]["id"] in initial_by_id
+    elif case_id == "C1-SPLIT-REPLACEMENT-STRUCTURAL":
+        assert operation["splits"][0]["replacements"][0]["content"]["value"] == {}
+    elif case_id == "C1-ERASE-ADD-UNIQUENESS":
+        ids = [item["id"] for item in operation["items"][0]["masks"]]
+        assert len(ids) >= 2 and len(set(ids)) < len(ids)
+    elif case_id == "C1-ERASE-ADD-GEOMETRY":
+        assert operation["items"][0]["masks"][0]["geometry"]["value"]["segments"] == []
+    elif case_id == "C1-ERASE-ADD-CAPABILITY":
+        assert initial_by_id[target_id]["kind"] == 1
+    elif case_id == "C1-ERASE-ADD-EXISTING-MASK":
+        assert initial_by_id[target_id]["erase_masks"]
+    elif case_id in {"C1-ERASE-REMOVE-VALID", "C1-ERASE-REMOVE-MISSING", "C1-ERASE-REMOVE-DUPLICATE", "C1-ERASE-REMOVE-WHOLE-REJECT"}:
+        ids = operation["items"][0]["mask_ids"]
+        if case_id == "C1-ERASE-REMOVE-MISSING":
+            assert not initial_by_id[target_id]["erase_masks"]
+        elif case_id == "C1-ERASE-REMOVE-DUPLICATE":
+            assert len(ids) >= 2 and len(set(ids)) < len(ids)
+        elif case_id == "C1-ERASE-REMOVE-WHOLE-REJECT":
+            assert set(ids) == {item["id"] for item in initial_by_id[target_id]["erase_masks"]}
+        else:
+            assert ids[0] in {item["id"] for item in initial_by_id[target_id]["erase_masks"]}
+    elif case_id == "C1-RICHTEXT-UTF8-STYLE":
+        assert "λ" in operation["delta"]["steps"][0]["text"]
+    elif case_id == "C1-RICHTEXT-INVALID-STEP":
+        assert operation["delta"]["steps"][0]["kind"] == "UnknownStep"
+    elif case_id in {"C1-RICHTEXT-VALID", "C1-RICHTEXT-STABLE-REFS"}:
+        assert operation["delta"]["steps"][0]["paragraph_id"] == _stable_id(case_id, "paragraph")
+    elif case_id == "C1-CONNECTOR-INVALID-END":
+        assert operation["content"]["end"]["variant"] == 99
+    elif case_id == "C1-CONNECTOR-ANCHOR":
+        assert operation["content"]["start"]["value"]["anchor"]["value"]["port_id"] == 0
+    elif case_id == "C1-CONNECTOR-ROUTING":
+        assert operation["content"]["routing"] == 99
+    elif case_id in {"C1-CONNECTOR-VALID", "C1-CONNECTOR-ATTACHED-ENDPOINT", "C1-CONNECTOR-TARGET-CAPABILITY"}:
+        target = operation["content"]["start"]["value"]["target_object_id"]
+        if case_id == "C1-CONNECTOR-VALID":
+            assert operation["content"]["end"]["variant"] == 0 and operation["content"]["routing"] == 1
+        else:
+            assert target in initial_by_id
+        if case_id == "C1-CONNECTOR-TARGET-CAPABILITY":
+            assert initial_by_id[target]["kind"] == 1
+    else:
+        assert isinstance(operation, dict) and operation
+    return [f"stimulus predicate for {case_id}"]
+
+
+_REALIZATION_CASE_IDS = (
+    "C1-INSERT-VALID", "C1-DELETE-CASCADE", "C1-RESTORE-ELIGIBLE", "C1-PLACEMENT-VALID", "C1-TRANSFORM-FINITE",
+    "C1-PATCH-VALID", "C1-SIZE-VALID", "C1-GEOMETRY-BOUNDARY", "C1-IMAGE-VALID", "C1-STROKE-VALID", "C1-SPLIT-PLAN",
+    "C1-ERASE-ADD-VALID", "C1-ERASE-REMOVE-VALID", "C1-RICHTEXT-VALID", "C1-CONNECTOR-VALID", "C1-IDEMPOTENT-EQUIVALENT",
+    "C1-ID-COLLISION", "C1-GEOMETRY-LIMIT", "C1-HIERARCHY-STICKY", "C1-INSERT-STAGED-PARENT", "C1-INSERT-STAGED-CONNECTOR",
+    "C1-INSERT-HIERARCHY-CYCLE", "C1-INSERT-STICKY-CARDINALITY", "C1-DELETE-MISSING-TARGET", "C1-DELETE-DUPLICATE-TARGET",
+    "C1-RESTORE-EXISTING-ID", "C1-RESTORE-STAGED-PARENT-CHILD", "C1-RESTORE-STAGED-CONNECTOR", "C1-RESTORE-ABSENT-REF",
+    "C1-RESTORE-OPID-BEFORE-EXISTENCE", "C1-RESTORE-LOCAL-REPLAY-REMOTE", "C1-RESTORE-NO-TOMBSTONE", "C1-PLACEMENT-CYCLE",
+    "C1-PLACEMENT-INVALID-PARENT", "C1-PLACEMENT-ORDERKEY", "C1-TRANSFORM-NEGATIVE-ZERO", "C1-TRANSFORM-NAN-INF",
+    "C1-PATCH-FIELD-ID", "C1-PATCH-BRANCH-TYPE", "C1-PATCH-APPLICABILITY", "C1-PATCH-DUPLICATE-FIELD", "C1-SIZE-WRONG-KIND",
+    "C1-SIZE-NONFINITE", "C1-SIZE-HARD-LIMIT", "C1-GEOMETRY-WRONG-KIND", "C1-GEOMETRY-STRUCTURAL", "C1-GEOMETRY-N-1",
+    "C1-GEOMETRY-N", "C1-GEOMETRY-OVERFLOW", "C1-IMAGE-WRONG-KIND", "C1-IMAGE-CONTENT-PRESENCE", "C1-IMAGE-SOURCE-RECT",
+    "C1-STROKE-WRONG-CONTENT", "C1-SPLIT-SOURCE-MISSING", "C1-SPLIT-REPLACEMENT-COLLISION", "C1-ERASE-ADD-UNIQUENESS",
+    "C1-ERASE-REMOVE-MISSING", "C1-RICHTEXT-UTF8-STYLE", "C1-RICHTEXT-INVALID-STEP", "C1-CONNECTOR-ATTACHED-ENDPOINT",
+    "C1-CONNECTOR-INVALID-END", "C1-INSERT-EXISTING-ID", "C1-DELETE-VALID", "C1-DELETE-SUBTREE", "C1-RESTORE-EXISTING-ID-DIFFERENT",
+    "C1-RESTORE-CONNECTOR-TARGET-ABSENT", "C1-RESTORE-SAME-PAYLOAD-NEW-OPID", "C1-RESTORE-BATCH-EXISTING-ID", "C1-PLACEMENT-GROUP-ANY",
+    "C1-PLACEMENT-STICKY-RICHTEXT", "C1-PLACEMENT-NONPARENT", "C1-PATCH-PRESENCE-DEFAULT", "C1-SIZE-NONPOSITIVE", "C1-IMAGE-INTRINSIC",
+    "C1-IMAGE-CONTENTMODE", "C1-IMAGE-LOCAL-SIZE", "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC", "C1-STROKE-INVALID-RECORD",
+    "C1-STROKE-NEW-ID", "C1-STROKE-EXISTING-ID", "C1-SPLIT-REPLACEMENT-STRUCTURAL", "C1-ERASE-ADD-GEOMETRY", "C1-ERASE-ADD-CAPABILITY",
+    "C1-ERASE-ADD-EXISTING-MASK", "C1-ERASE-REMOVE-DUPLICATE", "C1-ERASE-REMOVE-WHOLE-REJECT", "C1-RICHTEXT-STABLE-REFS",
+    "C1-CONNECTOR-TARGET-CAPABILITY", "C1-CONNECTOR-ANCHOR", "C1-CONNECTOR-ROUTING",
+)
+
+
+REALIZATION_RULES = {case_id: (lambda case, value, _id=case_id: _assert_case_realization(_id, case, value)) for case_id in _REALIZATION_CASE_IDS}
+
+
+def build_case_intent_audit(cases_path: Path, generated_root: Path) -> list[dict[str, object]]:
+    cases = json.loads(cases_path.read_text(encoding="utf-8"))
+    assert set(REALIZATION_RULES) == {case["id"] for case in cases}
+    audit: list[dict[str, object]] = []
+    for case in sorted(cases, key=lambda item: item["id"]):
+        case_id = case["id"]
+        path = generated_root / "inputs" / f"{case_id}.json"
+        value = json.loads(path.read_text(encoding="utf-8"))
+        assertions = REALIZATION_RULES[case_id](case, value)
+        audit.append({"caseId": case_id, "operationFamily": case["operationFamily"], "authorityRuleRefs": case["authorityRuleRefs"], "generatedInputPath": f"generated/inputs/{case_id}.json", "generatedInputSha256": sha256_bytes(path.read_bytes()), "assertions": assertions, "result": "PASS"})
+    return audit
 
 
 if __name__ == "__main__":

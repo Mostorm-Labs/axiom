@@ -4,38 +4,7 @@
   "format": "axiom-g1-04-c-input-v1",
   "formatVersion": 1,
   "initialState": {
-    "objects": [
-      {
-        "content": {
-          "value": {
-            "height": 24.0,
-            "shape_kind": 1,
-            "width": 32.0
-          },
-          "variant": 0
-        },
-        "erase_masks": [],
-        "id": "d10e406e050d1c380441783d2e3a5a66",
-        "kind": 1,
-        "kind_version": 1,
-        "placement": {
-          "order_key": [
-            150,
-            3
-          ],
-          "parent_id": null
-        },
-        "properties": [],
-        "transform": [
-          1.0,
-          0.0,
-          0.0,
-          1.0,
-          0.0,
-          0.0
-        ]
-      }
-    ],
+    "objects": [],
     "priorOperations": []
   },
   "operation": {
@@ -47,22 +16,41 @@
           {
             "content": {
               "value": {
-                "height": 24.0,
-                "shape_kind": 1,
-                "width": 32.0
+                "end": {
+                  "value": {
+                    "point": [
+                      10.0,
+                      10.0
+                    ]
+                  },
+                  "variant": 0
+                },
+                "routing": 1,
+                "start": {
+                  "value": {
+                    "anchor": {
+                      "value": {
+                        "port_id": 1
+                      },
+                      "variant": 0
+                    },
+                    "target_object_id": "606de97058a90cc1d39c84c58fca0925"
+                  },
+                  "variant": 1
+                }
               },
-              "variant": 0
+              "variant": 6
             },
             "erase_masks": [],
-            "id": "5f06228f7afe9842db71a748468ad056",
-            "kind": 1,
-            "kind_version": 1,
+            "id": "02f76840b37beee24d7e13f7d1debef9",
+            "kind": 7,
+            "kind_version": 7,
             "placement": {
               "order_key": [
                 7,
                 2
               ],
-              "parent_id": "d10e406e050d1c380441783d2e3a5a66"
+              "parent_id": null
             },
             "properties": [],
             "transform": [
@@ -84,7 +72,7 @@
               "variant": 0
             },
             "erase_masks": [],
-            "id": "f2fe6ca5a07443e8f341840fe64041ad",
+            "id": "606de97058a90cc1d39c84c58fca0925",
             "kind": 1,
             "kind_version": 1,
             "placement": {
@@ -92,7 +80,7 @@
                 71,
                 1
               ],
-              "parent_id": "d10e406e050d1c380441783d2e3a5a66"
+              "parent_id": null
             },
             "properties": [],
             "transform": [
