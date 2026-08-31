@@ -1,0 +1,919 @@
+{
+  "acceptedCaseCount": 90,
+  "allBeforeAfterEqual": true,
+  "canonicalStoreProjection": "allObjects sorted by ObjectId",
+  "fixtureSetupMutation": "bootstrap-only-before-beforeProjection",
+  "format": "axiom-gt-g1-04-c-no-mutation-v1",
+  "observationCount": 180,
+  "observerMutationCalls": 0,
+  "packageRef": "a46692ac00090d0fa06397c8aa1511704d742734",
+  "providerCount": 2,
+  "records": [
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-CONNECTOR-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-CASCADE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-CASCADE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-SUBTREE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-SUBTREE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-DELETE-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-ADD-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-N",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-N",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-N-1",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-N-1",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-HIERARCHY-STICKY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-HIERARCHY-STICKY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ID-COLLISION",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-ID-COLLISION",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-INSERT-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-FIELD-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-FIELD-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PATCH-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-PLACEMENT-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-RICHTEXT-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-NONFINITE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-NONFINITE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-PLAN",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-PLAN",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-NEW-ID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-NEW-ID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-VALID",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-VALID",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-FINITE",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-FINITE",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "provider": "indexed"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "provider": "reference"
+    },
+    {
+      "beforeAfterEqual": true,
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "provider": "indexed"
+    }
+  ],
+  "sourceRef": "cef811964b31f0d9fa8e7e65d3bc6d00a7279600",
+  "taskAnchor": {
+    "relation": "ancestor",
+    "revision": "a3c957158abbe0394d22c0a43a2ad3fdb97b8dfb"
+  },
+  "unchangedObservationCount": 180
+}
