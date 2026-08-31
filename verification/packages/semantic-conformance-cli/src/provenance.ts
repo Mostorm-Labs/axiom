@@ -35,6 +35,13 @@ export function validateCoordinatorInputs(input: CoordinateCaseInput): string[] 
     diagnostics.push("PROVIDER_SET_INVALID");
   }
 
+  const observationRefs = [raw.referenceRef, raw.indexedRef].filter(
+    (ref): ref is string => typeof ref === "string" && ref.length > 0,
+  );
+  if (observationRefs.length !== 2 || new Set(observationRefs).size !== observationRefs.length) {
+    diagnostics.push("PROVIDER_SET_INVALID");
+  }
+
   if (
     expected &&
     expected.openPolicy !== true &&

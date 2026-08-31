@@ -18,6 +18,14 @@ export interface CoordinateCaseInput {
   openAuthorityDecision: OpenAuthorityDecision;
 }
 
+function resultObservationRefs(input: CoordinateCaseInput): string[] {
+  const refs = [input.referenceRef, input.indexedRef].filter(
+    (ref): ref is string => typeof ref === "string" && ref.length > 0,
+  );
+  const uniqueRefs = [...new Set(refs)];
+  return uniqueRefs.length > 0 ? uniqueRefs : ["INVALID_OBSERVATION_REF"];
+}
+
 function result(input: CoordinateCaseInput, status: ConformanceResult["status"], diagnostics: string[]): ConformanceResult {
   const value: ConformanceResult = {
     format: "axiom-g1-04-c-result-v1",
@@ -26,7 +34,7 @@ function result(input: CoordinateCaseInput, status: ConformanceResult["status"],
     caseId: input.caseIntent?.id ?? input.expected?.caseId ?? "INVALID_CASE",
     status,
     expectedRef: input.caseIntent?.expectedRef ?? "INVALID_EXPECTED_REF",
-    observationRefs: [input.referenceRef, input.indexedRef].filter((ref): ref is string => typeof ref === "string" && ref.length > 0),
+    observationRefs: resultObservationRefs(input),
   };
   if (diagnostics.length > 0) value.diagnostics = diagnostics;
   return value;

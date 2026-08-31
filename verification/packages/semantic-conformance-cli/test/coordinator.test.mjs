@@ -15,6 +15,20 @@ function base({ openPolicy = false } = {}) {
 
 function assertResult(r, status, required = []) { assert.equal(r.status, status); for (const d of required) assert.ok(r.diagnostics?.includes(d), `${d} missing`); }
 
+function assertC0ResultShape(r) {
+  assert.equal(r.format, "axiom-g1-04-c-result-v1");
+  assert.equal(r.formatVersion, 1);
+  assert.equal(r.provenance, "CONFORMANCE_RESULT");
+  assert.equal(typeof r.caseId, "string");
+  assert.equal(typeof r.status, "string");
+  assert.equal(typeof r.expectedRef, "string");
+  assert.ok(r.expectedRef.length > 0);
+  assert.ok(Array.isArray(r.observationRefs));
+  assert.ok(r.observationRefs.length >= 1);
+  assert.ok(r.observationRefs.every(ref => typeof ref === "string" && ref.length > 0));
+  assert.equal(new Set(r.observationRefs).size, r.observationRefs.length);
+}
+
 test("C4-T01 both providers match manual expected", () => assertResult(coordinateCase(base()), "PASS"));
 test("C4-T02 provider agreement cannot override manual golden", () => { const x = base(); x.reference.observedDisposition = x.indexed.observedDisposition = "REJECTED"; const r = coordinateCase(x); assertResult(r, "FAIL", ["REFERENCE_GOLDEN_MISMATCH", "INDEXED_GOLDEN_MISMATCH"]); assert.ok(!r.diagnostics?.includes("PROVIDER_DIVERGENCE")); });
 test("C4-T03 one provider differs", () => { const x = base(); x.indexed.observedDisposition = "REJECTED"; assertResult(coordinateCase(x), "FAIL", ["INDEXED_GOLDEN_MISMATCH", "PROVIDER_DIVERGENCE"]); });
@@ -25,3 +39,43 @@ test("C4-T07 current OPEN is observation only", () => { const x = base({ openPol
 test("C4-T08 stale OPEN fails closed", () => { const x = base({ openPolicy: true }); x.openAuthorityDecision = "CURRENT_CLOSED"; assertResult(coordinateCase(x), "FAIL", ["OPEN_POLICY_STALE_CLOSED"]); });
 test("C4-T09 unresolved OPEN fails closed", () => assertResult(coordinateCase(base({ openPolicy: true })), "FAIL", ["OPEN_AUTHORITY_UNRESOLVED"]));
 test("C4-T10 OPEN does not waive no mutation", () => { const x = base({ openPolicy: true }); x.openAuthorityDecision = "CURRENT_OPEN"; x.reference.afterProjection = { x: 2 }; const r = coordinateCase(x); assertResult(r, "FAIL", ["REFERENCE_MUTATION"]); assert.ok(!r.diagnostics?.includes("OPEN_POLICY_OBSERVATION_ONLY")); });
+
+test("distinct observation refs remain in a valid result", () => {
+  const r = coordinateCase(base());
+  assert.deepEqual(r.observationRefs, ["ref", "idx"]);
+  assertC0ResultShape(r);
+});
+
+test("duplicate observation refs fail closed with a schema-compatible result", () => {
+  const x = base();
+  x.referenceRef = "same";
+  x.indexedRef = "same";
+  const r = coordinateCase(x);
+  assertResult(r, "FAIL", ["PROVIDER_SET_INVALID"]);
+  assertC0ResultShape(r);
+});
+
+test("missing reference ref fails closed with a schema-compatible result", () => {
+  const x = base();
+  x.referenceRef = "";
+  const r = coordinateCase(x);
+  assertResult(r, "FAIL", ["PROVIDER_SET_INVALID"]);
+  assertC0ResultShape(r);
+});
+
+test("missing indexed ref fails closed with a schema-compatible result", () => {
+  const x = base();
+  x.indexedRef = "";
+  const r = coordinateCase(x);
+  assertResult(r, "FAIL", ["PROVIDER_SET_INVALID"]);
+  assertC0ResultShape(r);
+});
+
+test("both observation refs missing fail closed with a schema-compatible result", () => {
+  const x = base();
+  x.referenceRef = "";
+  x.indexedRef = "";
+  const r = coordinateCase(x);
+  assertResult(r, "FAIL", ["PROVIDER_SET_INVALID"]);
+  assertC0ResultShape(r);
+});
