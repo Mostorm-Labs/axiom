@@ -67,7 +67,9 @@ test("C1 authoring root is complete and authority-bound", async () => {
   assert(p20Requirements(expectedById.get("C1-RESTORE-SAME-PAYLOAD-NEW-OPID")).includes("#C-V04"));
   for (const id of ["C1-INSERT-STAGED-PARENT", "C1-INSERT-STAGED-CONNECTOR", "C1-RESTORE-STAGED-PARENT-CHILD", "C1-RESTORE-STAGED-CONNECTOR"]) {
     assert(p20Requirements(caseById.get(id)).includes("#C-V05"), `${id} must bind staged-state P20 requirement`);
+    assert(p20Requirements(caseById.get(id)).includes("#C-V06"), `${id} must bind PreparedApplyPlan closure P20 requirement`);
     assert(p20Requirements(expectedById.get(id)).includes("#C-V05"), `${id} expected must bind staged-state P20 requirement`);
+    assert(p20Requirements(expectedById.get(id)).includes("#C-V06"), `${id} expected must bind PreparedApplyPlan closure P20 requirement`);
   }
   for (const id of ["C1-PLACEMENT-CYCLE", "C1-HIERARCHY-STICKY", "C1-INSERT-HIERARCHY-CYCLE", "C1-INSERT-STICKY-CARDINALITY", "C1-PLACEMENT-INVALID-PARENT", "C1-PLACEMENT-NONPARENT", "C1-CONNECTOR-TARGET-CAPABILITY", "C1-RESTORE-CONNECTOR-TARGET-ABSENT"]) {
     assert(p20Requirements(caseById.get(id)).includes("#C-V03"), `${id} must bind rejection requirement C-V03`);
