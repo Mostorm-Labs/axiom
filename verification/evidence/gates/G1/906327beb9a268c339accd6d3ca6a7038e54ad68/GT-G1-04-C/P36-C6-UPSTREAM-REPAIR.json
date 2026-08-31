@@ -1,0 +1,81 @@
+{
+  "format": "axiom-gt-g1-04-c-p36-upstream-repair-v1",
+  "formatVersion": 1,
+  "sourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+  "taskAnchor": {
+    "revision": "c7326f31caba88bd76d7e0b2845cae325e6e508a",
+    "relation": "ancestor"
+  },
+  "p35Classification": {
+    "primary": "TEST_DEFECT",
+    "secondary": [
+      "EVIDENCE_GAP",
+      "DEPENDENCY_BLOCKER"
+    ],
+    "authorityDefect": false,
+    "productionImplementationDefect": "NOT_ESTABLISHED"
+  },
+  "changedVerificationFiles": [
+    "verification/fixture-author/compile_g1_04_c.py",
+    "verification/tests/test_g1_04_c_fixture_compiler.py",
+    "verification/corpus/semantic/v1/g1-04-c/authoring/expected.json",
+    "verification/corpus/semantic/v1/g1-04-c/generated/**",
+    "runtime/semantic/tools/g1_04_c_fixture_decoder.cpp",
+    "runtime/semantic/tools/g1_04_c_fixture_runtime.cpp",
+    "runtime/semantic/tests/g1_04_c_fixture_decoder_test.cpp",
+    "runtime/semantic/tests/g1_04_c_observer_coverage_test.cpp"
+  ],
+  "productionSemanticDelta": 0,
+  "connector": {
+    "caseId": "C1-DELETE-CASCADE",
+    "explicitDeleteTarget": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+    "attachedConnector": "14ad662e612a53fa46af20b1aa5fd0f5",
+    "expectedDeleteClosure": [
+      "14ad662e612a53fa46af20b1aa5fd0f5",
+      "bed0e2f48ca23c0992a9a9ae8f8bf109"
+    ],
+    "observedDeleteClosure": [
+      "14ad662e612a53fa46af20b1aa5fd0f5",
+      "bed0e2f48ca23c0992a9a9ae8f8bf109"
+    ],
+    "providersAgree": true
+  },
+  "sticky": {
+    "placement": "C1-PLACEMENT-STICKY-RICHTEXT = Sticky parent -> RichText target",
+    "cardinality": "C1-INSERT-STICKY-CARDINALITY = Sticky parent with two direct RichText children; rejection observed"
+  },
+  "geometry": {
+    "NMinus1Units": 1999999,
+    "NUnits": 2000000,
+    "NPlus1Units": 2000001,
+    "NMinus1Observed": "PLAN_READY",
+    "NObserved": "PLAN_READY",
+    "NPlus1Observed": "GEOMETRY_LIMIT_EXCEEDED",
+    "arithmeticOverflow": {
+      "status": "EVIDENCE_GAP",
+      "reason": "production checked accumulation reaches GEOMETRY_LIMIT_EXCEEDED before an INTEGER_OVERFLOW seam can be triggered by this fixture"
+    },
+    "productionBinding": "verification decoder expands mixed LineTo/QuadTo/CubicTo recipe into production VectorPathGeometry"
+  },
+  "fixture": {
+    "caseCount": 90,
+    "manifestSha256": "fdf8252fc749d11c7db2df0f82d83a923fa22e807c19a6a9f5f8daf81cbcb186",
+    "cleanRegeneration": "PASS",
+    "reproducibility": "PASS"
+  },
+  "C3": {
+    "observationCount": 180,
+    "providerCounts": {
+      "reference": 90,
+      "indexed": 90
+    },
+    "noMutationCount": 180,
+    "unexpectedHarnessErrors": 0
+  },
+  "historicalC5": {
+    "sourceRef": "1342dc52aaeb7e1bf09a38e08d44ef72523a9d79",
+    "pass": 51,
+    "fail": 39,
+    "retainedAsHistorical": true
+  }
+}
