@@ -11,7 +11,7 @@ const generator = fileURLToPath(new URL("../../../tools/generate_g1_04_c6_eviden
 const PACKAGE_REF = "8a43af6ebb9b88ecefb79141eb90b5680405a449";
 
 function sourceRef() {
-  const result = spawnSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" });
+  const result = spawnSync("git", ["log", "-1", "--format=%H", "--", "verification/packages/semantic-conformance-cli/src/cross-cutting.ts"], { cwd: repoRoot, encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
   return result.stdout.trim();
 }
