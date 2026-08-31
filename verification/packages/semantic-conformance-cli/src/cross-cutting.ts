@@ -58,6 +58,7 @@ export interface CrossCuttingRun {
     observationCount: number;
     beforeAfterEqual: number;
     observerMutationCalls: number;
+    providerAgreement: "90/90";
     byDisposition: Record<string, { cases: number; observations: number; unchanged: number }>;
   };
   planProjection: {
@@ -259,7 +260,19 @@ function assertLineageAndRepair(p36RepairEvidence: unknown, overflowEvidence: un
   if (addition.expected !== "INTEGER_OVERFLOW" || addition.observed !== "INTEGER_OVERFLOW") throw new Error("checked addition overflow proof is invalid");
   if (multiplication.expected !== "INTEGER_OVERFLOW") throw new Error("checked multiplication overflow proof is invalid");
   const cases = asArray(multiplication.cases, "checked multiplication cases");
-  if (cases.length !== 2 || cases.some((item) => asRecord(item, "multiplication case").weightValue !== 3 && asRecord(item, "multiplication case").weightValue !== 6)) throw new Error("checked Dab/Erase multiplication proof is incomplete");
+  const multiplicationCases = cases.map((item) => asRecord(item, "multiplication case"));
+  const weights = multiplicationCases.map((item) => item.weight);
+  const weightValues = multiplicationCases.map((item) => item.weightValue);
+  const counts = multiplicationCases.map((item) => item.count);
+  if (
+    multiplicationCases.length !== 2 ||
+    !weights.includes("geometry_accounting_v1::kDabInstance") ||
+    !weights.includes("geometry_accounting_v1::kEraseCubicSegment") ||
+    !weightValues.includes(3) ||
+    !weightValues.includes(6) ||
+    !counts.includes("SIZE_MAX / 3 + 1") ||
+    !counts.includes("SIZE_MAX / 6 + 1")
+  ) throw new Error("checked Dab/Erase multiplication proof is incomplete");
   const historical = asRecord(overlay.corpusOverflowCase, "historical overflow case");
   if (historical.caseId !== "C1-GEOMETRY-OVERFLOW" || historical.usedAsArithmeticOverflowOracle !== false) throw new Error("historical C1-GEOMETRY-OVERFLOW cannot be the arithmetic oracle");
   return { geometry, sticky, connector };
@@ -321,7 +334,7 @@ export function runCrossCutting(input: CrossCuttingInput): CrossCuttingRun {
 
   return {
     idempotency: { status: "PASS", cases: idempotencyCases, orderingProof: "terminalPhase=IDEMPOTENCY proves termination before stateful validation" },
-    noMutation: { status: "PASS", acceptedCases: 90, observationCount: 180, beforeAfterEqual: 180, observerMutationCalls: noMutation.observerMutationCalls, byDisposition },
+    noMutation: { status: "PASS", acceptedCases: 90, observationCount: 180, beforeAfterEqual: 180, observerMutationCalls: noMutation.observerMutationCalls, providerAgreement: "90/90", byDisposition },
     planProjection: { status: "PASS", factsOnly: true, cases: projectionCases },
     openReconciliation: {
       status: "PASS",

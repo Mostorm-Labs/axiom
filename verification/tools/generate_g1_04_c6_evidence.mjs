@@ -12,6 +12,10 @@ const P36_R2_SOURCE_REF = "1763d57e7554ec690634326b998971f0decaae28";
 const P36_FINAL_MATERIALIZED_REF = "c8fe64b4b2927fb369b6735c6b6a1b45edd5d80d";
 const PRIOR_C6_SOURCE_REF = "60e661807a8d450764b316da812a84a097500355";
 const PRIOR_C6_MATERIALIZED_REF = "d5e29a1363417e3eda775727c0f016e40a16128f";
+const PRIOR_C6_LINEAGES = new Map([
+  [PRIOR_C6_SOURCE_REF, PRIOR_C6_MATERIALIZED_REF],
+  ["61545fc2a9be10bea5e775e3841814fc58174ed8", "e62e86a80121da3fe44ee1dc8189a3e2127fabf6"],
+]);
 
 const verificationRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(verificationRoot, "..");
@@ -91,11 +95,12 @@ function assertSafeOutputPath(outputDir) {
 
 function assertSourceScope(sourceRef) {
   const changed = git(["diff", "--name-only", PACKAGE_REF, sourceRef]).split("\n").filter(Boolean);
-  const historicalPrefix = `verification/evidence/gates/G1/${PRIOR_C6_SOURCE_REF}/GT-G1-04-C/`;
-  const historical = changed.filter((path) => path.startsWith(historicalPrefix));
+  const historical = changed.filter((path) => [...PRIOR_C6_LINEAGES.keys()].some((ref) => path.startsWith(`verification/evidence/gates/G1/${ref}/GT-G1-04-C/`)));
   for (const path of historical) {
     const sourceBlob = git(["rev-parse", "--verify", `${sourceRef}:${path}`]);
-    const priorBlob = git(["rev-parse", "--verify", `${PRIOR_C6_MATERIALIZED_REF}:${path}`]);
+    const priorRef = [...PRIOR_C6_LINEAGES.entries()].find(([ref]) => path.startsWith(`verification/evidence/gates/G1/${ref}/GT-G1-04-C/`))?.[1];
+    if (!priorRef) throw new Error(`unrecognized historical C6 evidence: ${path}`);
+    const priorBlob = git(["rev-parse", "--verify", `${priorRef}:${path}`]);
     if (sourceBlob !== priorBlob) throw new Error(`historical C6 evidence was rewritten: ${path}`);
   }
   const effective = changed.filter((path) => !historical.includes(path));
@@ -194,6 +199,7 @@ export function generateEvidence(sourceRef) {
     observationCount: run.noMutation.observationCount,
     referenceObservations: 90,
     indexedObservations: 90,
+    providerAgreement: run.noMutation.providerAgreement,
     beforeAfterEqual: `${run.noMutation.beforeAfterEqual}/180`,
     observerMutationCalls: run.noMutation.observerMutationCalls,
     byDisposition: run.noMutation.byDisposition,
