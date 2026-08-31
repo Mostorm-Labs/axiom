@@ -326,6 +326,27 @@ class G104CFixtureCompilerTest(unittest.TestCase):
         ):
             self.assertNotIn(token, source, token)
 
+    def test_no_realization_rule_uses_generic_fallback(self) -> None:
+        source = inspect.getsource(_assert_case_realization)
+        self.assertNotIn("assert isinstance(operation, dict) and operation", source)
+        self.assertIn("No explicit realization predicate", source)
+
+    def test_success_fixture_audit_entries_have_distinguishing_descriptions(self) -> None:
+        audit = {entry["caseId"]: entry for entry in build_case_intent_audit(CASES, GENERATED)}
+        expected = {
+            "C1-INSERT-VALID",
+            "C1-PLACEMENT-VALID",
+            "C1-PATCH-VALID",
+            "C1-SIZE-VALID",
+            "C1-IMAGE-VALID",
+            "C1-SPLIT-PLAN",
+            "C1-ERASE-ADD-VALID",
+        }
+        for case_id in expected:
+            assertions = audit[case_id]["assertions"]
+            self.assertGreaterEqual(len(assertions), 2, case_id)
+            self.assertTrue(all("stimulus predicate for" not in item for item in assertions), case_id)
+
 
 def _stable_id(case_id: str, role: str) -> str:
     return hashlib.sha256(f"axiom-g1-04-c:{case_id}:{role}".encode("utf-8")).hexdigest()[:32]
@@ -338,9 +359,96 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     operation = value["operation"]["payload"]["value"]
     initial = value["initialState"]["objects"]
     initial_by_id = {item["id"]: item for item in initial}
-    family = case["operationFamily"]
     target_id = _stable_id(case_id, "target")
-    if case_id == "C1-TRANSFORM-FINITE":
+    if case_id == "C1-INSERT-VALID":
+        assert len(operation["objects"]) == 1
+        inserted = operation["objects"][0]
+        assert inserted["id"] not in initial_by_id
+        assert inserted["kind"] == 1 and inserted["kind_version"] == 1
+        assert inserted["placement"]["parent_id"] is None
+        assert inserted["content"]["variant"] == 0
+        shape = inserted["content"]["value"]
+        assert shape["shape_kind"] == 1 and shape["width"] > 0 and shape["height"] > 0
+        assert all(isinstance(x, (int, float)) and math.isfinite(x) for x in inserted["transform"])
+        return [
+            "inserted object id is absent from initial state",
+            "inserted object has the published shape kind and positive dimensions",
+            "inserted object placement is root-level with a finite transform",
+        ]
+    elif case_id == "C1-PLACEMENT-VALID":
+        assert len(operation["items"]) == 1
+        item = operation["items"][0]
+        assert item["object_id"] in initial_by_id
+        assert item["placement"]["parent_id"] is None
+        assert item["placement"]["order_key"] == initial_by_id[item["object_id"]]["placement"]["order_key"]
+        return [
+            "placement target resolves to an existing object",
+            "valid placement keeps a root-level parent reference",
+            "placement order key matches the deterministic fixture state",
+        ]
+    elif case_id == "C1-PATCH-VALID":
+        assert len(operation["patches"]) == 1
+        patch = operation["patches"][0]
+        assert patch["object_id"] in initial_by_id
+        assert patch["action"] == "set" and patch["field_id"] == 1
+        assert patch["value"]["variant"] == 1 and isinstance(patch["value"]["value"], str)
+        return [
+            "patch target resolves to an existing object",
+            "patch selects the published field id with a set action",
+            "patch value uses the declared string value branch",
+        ]
+    elif case_id == "C1-SIZE-VALID":
+        assert len(operation["items"]) == 1
+        item = operation["items"][0]
+        assert item["object_id"] in initial_by_id
+        assert item["width"] > 0 and item["height"] > 0
+        assert math.isfinite(item["width"]) and math.isfinite(item["height"])
+        return [
+            "size target resolves to an existing object",
+            "width and height are finite positive dimensions",
+        ]
+    elif case_id == "C1-IMAGE-VALID":
+        assert operation["object_id"] in initial_by_id
+        assert initial_by_id[operation["object_id"]]["kind"] == 2
+        content = operation["content"]
+        assert content["content_mode"] == 1
+        assert content["resource_id"] and content["width"] > 0 and content["height"] > 0
+        assert content["intrinsic_width"] > 0 and content["intrinsic_height"] > 0
+        return [
+            "image target resolves to an existing image object",
+            "image content carries a resource id and published content mode",
+            "local and intrinsic image dimensions are positive",
+        ]
+    elif case_id == "C1-SPLIT-PLAN":
+        assert len(operation["splits"]) == 1
+        split = operation["splits"][0]
+        assert split["source_stroke_id"] in initial_by_id
+        replacements = split["replacements"]
+        assert len(replacements) == 2
+        replacement_ids = [item["id"] for item in replacements]
+        assert len(set(replacement_ids)) == 2 and not (set(replacement_ids) & set(initial_by_id))
+        assert all(item["kind"] == 5 and item["content"]["variant"] == 4 for item in replacements)
+        assert all(len(item["content"]["value"]["stroke"]["data"]) >= 2 for item in replacements)
+        return [
+            "split source references an existing stroke object",
+            "split produces two distinct replacement ids absent from initial state",
+            "each replacement carries a valid stroke payload with multiple points",
+        ]
+    elif case_id == "C1-ERASE-ADD-VALID":
+        assert len(operation["items"]) == 1
+        item = operation["items"][0]
+        assert item["object_id"] in initial_by_id
+        assert len(item["masks"]) == 1
+        mask = item["masks"][0]
+        assert mask["id"] and mask["id"] not in {m["id"] for m in initial_by_id[item["object_id"]]["erase_masks"]}
+        assert len(mask["geometry"]["value"]["segments"]) == 1
+        return [
+            "erase-mask target resolves to an existing object",
+            "valid add operation introduces one previously absent mask id",
+            "mask geometry contains one structural segment",
+        ]
+    elif case_id == "C1-TRANSFORM-FINITE":
+        assert all(isinstance(x, (int, float)) and math.isfinite(x) for x in operation["items"][0]["transform"])
         assert all(isinstance(x, (int, float)) and math.isfinite(x) for x in operation["items"][0]["transform"])
     elif case_id == "C1-TRANSFORM-NEGATIVE-ZERO":
         tx = operation["items"][0]["transform"][4]
@@ -510,7 +618,7 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
         if case_id == "C1-CONNECTOR-TARGET-CAPABILITY":
             assert initial_by_id[target]["kind"] == 1
     else:
-        assert isinstance(operation, dict) and operation
+        raise AssertionError(f"No explicit realization predicate for {case_id}")
     return [f"stimulus predicate for {case_id}"]
 
 
