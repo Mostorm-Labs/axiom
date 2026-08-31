@@ -1,0 +1,1606 @@
+{
+  "format": "axiom-g1-04-c-authority-map-v1",
+  "source_ref": "b628928cf08c98c6a673cc8e361b956f045d6233",
+  "package_ref": "a9561da5bc781f148d12c85f90c34f860734a042",
+  "task_anchor": {
+    "revision": "5f0f061ec7db1d0490941cf3f4e8dbd9eb26b539",
+    "relation": "ancestor"
+  },
+  "terminal_phase_authority": "notion:3cd4c57a-590c-8165-973f-ee31d93f1116",
+  "case_count": 90,
+  "expected_count": 90,
+  "blocking_count": 90,
+  "production_semantic_files_changed": false,
+  "c0_contracts_changed": false,
+  "c2_c8_changed": false,
+  "expected_truth_audit": "90/90",
+  "expected_truth_mismatches_after_fix": 0,
+  "rst_semantic_outcomes": "12/12",
+  "a_lane_b_lane_terminal_phase_audit": "complete",
+  "normalise_guessed_cases": 0,
+  "requirement_coverage": [
+    {
+      "requirement": "P20:C1:C1-INSERT-VALID",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-valid",
+      "case_ids": [
+        "C1-INSERT-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-DELETE-CASCADE",
+      "operation_family": "DeleteObjects",
+      "intent_family": "delete-cascade",
+      "case_ids": [
+        "C1-DELETE-CASCADE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-ELIGIBLE",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-eligible",
+      "case_ids": [
+        "C1-RESTORE-ELIGIBLE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B01"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-VALID",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-valid",
+      "case_ids": [
+        "C1-PLACEMENT-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-TRANSFORM-FINITE",
+      "operation_family": "SetTransforms",
+      "intent_family": "transform-finite",
+      "case_ids": [
+        "C1-TRANSFORM-FINITE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-VALID",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-valid",
+      "case_ids": [
+        "C1-PATCH-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SIZE-VALID",
+      "operation_family": "SetObjectSize",
+      "intent_family": "size-valid",
+      "case_ids": [
+        "C1-SIZE-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-BOUNDARY",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-boundary",
+      "case_ids": [
+        "C1-GEOMETRY-BOUNDARY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-VALID",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-valid",
+      "case_ids": [
+        "C1-IMAGE-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-STROKE-VALID",
+      "operation_family": "AddStroke",
+      "intent_family": "stroke-valid",
+      "case_ids": [
+        "C1-STROKE-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SPLIT-PLAN",
+      "operation_family": "SplitStrokes",
+      "intent_family": "split-plan",
+      "case_ids": [
+        "C1-SPLIT-PLAN"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-ADD-VALID",
+      "operation_family": "AddEraseMasks",
+      "intent_family": "erase-add-valid",
+      "case_ids": [
+        "C1-ERASE-ADD-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-REMOVE-VALID",
+      "operation_family": "RemoveEraseMasks",
+      "intent_family": "erase-remove-valid",
+      "case_ids": [
+        "C1-ERASE-REMOVE-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RICHTEXT-VALID",
+      "operation_family": "EditRichText",
+      "intent_family": "richtext-valid",
+      "case_ids": [
+        "C1-RICHTEXT-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-VALID",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-valid",
+      "case_ids": [
+        "C1-CONNECTOR-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IDEMPOTENT-EQUIVALENT",
+      "operation_family": "RestoreObjects",
+      "intent_family": "idempotent-equivalent",
+      "case_ids": [
+        "C1-IDEMPOTENT-EQUIVALENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B08"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ID-COLLISION",
+      "operation_family": "InsertObjects",
+      "intent_family": "id-collision",
+      "case_ids": [
+        "C1-ID-COLLISION"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-LIMIT",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-limit",
+      "case_ids": [
+        "C1-GEOMETRY-LIMIT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-HIERARCHY-STICKY",
+      "operation_family": "SetPlacements",
+      "intent_family": "hierarchy-sticky",
+      "case_ids": [
+        "C1-HIERARCHY-STICKY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-INSERT-STAGED-PARENT",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-staged-parent",
+      "case_ids": [
+        "C1-INSERT-STAGED-PARENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-INSERT-STAGED-CONNECTOR",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-staged-connector",
+      "case_ids": [
+        "C1-INSERT-STAGED-CONNECTOR"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-INSERT-HIERARCHY-CYCLE",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-hierarchy-cycle",
+      "case_ids": [
+        "C1-INSERT-HIERARCHY-CYCLE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-INSERT-STICKY-CARDINALITY",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-sticky-cardinality",
+      "case_ids": [
+        "C1-INSERT-STICKY-CARDINALITY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-DELETE-MISSING-TARGET",
+      "operation_family": "DeleteObjects",
+      "intent_family": "delete-missing-target",
+      "case_ids": [
+        "C1-DELETE-MISSING-TARGET"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-DELETE-DUPLICATE-TARGET",
+      "operation_family": "DeleteObjects",
+      "intent_family": "delete-duplicate-target",
+      "case_ids": [
+        "C1-DELETE-DUPLICATE-TARGET"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-EXISTING-ID",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-existing-id",
+      "case_ids": [
+        "C1-RESTORE-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-STAGED-PARENT-CHILD",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-staged-parent-child",
+      "case_ids": [
+        "C1-RESTORE-STAGED-PARENT-CHILD"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B04"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-STAGED-CONNECTOR",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-staged-connector",
+      "case_ids": [
+        "C1-RESTORE-STAGED-CONNECTOR"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B06"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-ABSENT-REF",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-absent-ref",
+      "case_ids": [
+        "C1-RESTORE-ABSENT-REF"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B05"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-opid-before-existence",
+      "case_ids": [
+        "C1-RESTORE-OPID-BEFORE-EXISTENCE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#operation-id-before-existence"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-local-replay-remote",
+      "case_ids": [
+        "C1-RESTORE-LOCAL-REPLAY-REMOTE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-NO-TOMBSTONE",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-no-tombstone",
+      "case_ids": [
+        "C1-RESTORE-NO-TOMBSTONE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B12"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-CYCLE",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-cycle",
+      "case_ids": [
+        "C1-PLACEMENT-CYCLE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-INVALID-PARENT",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-invalid-parent",
+      "case_ids": [
+        "C1-PLACEMENT-INVALID-PARENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-ORDERKEY",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-orderkey",
+      "case_ids": [
+        "C1-PLACEMENT-ORDERKEY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-TRANSFORM-NEGATIVE-ZERO",
+      "operation_family": "SetTransforms",
+      "intent_family": "transform-negative-zero",
+      "case_ids": [
+        "C1-TRANSFORM-NEGATIVE-ZERO"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-TRANSFORM-NAN-INF",
+      "operation_family": "SetTransforms",
+      "intent_family": "transform-nan-inf",
+      "case_ids": [
+        "C1-TRANSFORM-NAN-INF"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-FIELD-ID",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-field-id",
+      "case_ids": [
+        "C1-PATCH-FIELD-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-BRANCH-TYPE",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-branch-type",
+      "case_ids": [
+        "C1-PATCH-BRANCH-TYPE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-APPLICABILITY",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-applicability",
+      "case_ids": [
+        "C1-PATCH-APPLICABILITY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-DUPLICATE-FIELD",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-duplicate-field",
+      "case_ids": [
+        "C1-PATCH-DUPLICATE-FIELD"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SIZE-WRONG-KIND",
+      "operation_family": "SetObjectSize",
+      "intent_family": "size-wrong-kind",
+      "case_ids": [
+        "C1-SIZE-WRONG-KIND"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SIZE-NONFINITE",
+      "operation_family": "SetObjectSize",
+      "intent_family": "size-nonfinite",
+      "case_ids": [
+        "C1-SIZE-NONFINITE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SIZE-HARD-LIMIT",
+      "operation_family": "SetObjectSize",
+      "intent_family": "size-hard-limit",
+      "case_ids": [
+        "C1-SIZE-HARD-LIMIT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-WRONG-KIND",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-wrong-kind",
+      "case_ids": [
+        "C1-GEOMETRY-WRONG-KIND"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-STRUCTURAL",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-structural",
+      "case_ids": [
+        "C1-GEOMETRY-STRUCTURAL"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-N-1",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-n-1",
+      "case_ids": [
+        "C1-GEOMETRY-N-1"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-N",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-n",
+      "case_ids": [
+        "C1-GEOMETRY-N"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-GEOMETRY-OVERFLOW",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-overflow",
+      "case_ids": [
+        "C1-GEOMETRY-OVERFLOW"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-WRONG-KIND",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-wrong-kind",
+      "case_ids": [
+        "C1-IMAGE-WRONG-KIND"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-CONTENT-PRESENCE",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-content-presence",
+      "case_ids": [
+        "C1-IMAGE-CONTENT-PRESENCE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-SOURCE-RECT",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-source-rect",
+      "case_ids": [
+        "C1-IMAGE-SOURCE-RECT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-STROKE-WRONG-CONTENT",
+      "operation_family": "AddStroke",
+      "intent_family": "stroke-wrong-content",
+      "case_ids": [
+        "C1-STROKE-WRONG-CONTENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SPLIT-SOURCE-MISSING",
+      "operation_family": "SplitStrokes",
+      "intent_family": "split-source-missing",
+      "case_ids": [
+        "C1-SPLIT-SOURCE-MISSING"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SPLIT-REPLACEMENT-COLLISION",
+      "operation_family": "SplitStrokes",
+      "intent_family": "split-replacement-collision",
+      "case_ids": [
+        "C1-SPLIT-REPLACEMENT-COLLISION"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-ADD-UNIQUENESS",
+      "operation_family": "AddEraseMasks",
+      "intent_family": "erase-add-uniqueness",
+      "case_ids": [
+        "C1-ERASE-ADD-UNIQUENESS"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-REMOVE-MISSING",
+      "operation_family": "RemoveEraseMasks",
+      "intent_family": "erase-remove-missing",
+      "case_ids": [
+        "C1-ERASE-REMOVE-MISSING"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RICHTEXT-UTF8-STYLE",
+      "operation_family": "EditRichText",
+      "intent_family": "richtext-utf8-style",
+      "case_ids": [
+        "C1-RICHTEXT-UTF8-STYLE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RICHTEXT-INVALID-STEP",
+      "operation_family": "EditRichText",
+      "intent_family": "richtext-invalid-step",
+      "case_ids": [
+        "C1-RICHTEXT-INVALID-STEP"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-attached-endpoint",
+      "case_ids": [
+        "C1-CONNECTOR-ATTACHED-ENDPOINT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-INVALID-END",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-invalid-end",
+      "case_ids": [
+        "C1-CONNECTOR-INVALID-END"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-INSERT-EXISTING-ID",
+      "operation_family": "InsertObjects",
+      "intent_family": "insert-existing-id",
+      "case_ids": [
+        "C1-INSERT-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-DELETE-VALID",
+      "operation_family": "DeleteObjects",
+      "intent_family": "delete-valid",
+      "case_ids": [
+        "C1-DELETE-VALID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-DELETE-SUBTREE",
+      "operation_family": "DeleteObjects",
+      "intent_family": "delete-subtree",
+      "case_ids": [
+        "C1-DELETE-SUBTREE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-existing-id-different",
+      "case_ids": [
+        "C1-RESTORE-EXISTING-ID-DIFFERENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B03"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-connector-target-absent",
+      "case_ids": [
+        "C1-RESTORE-CONNECTOR-TARGET-ABSENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-same-payload-new-opid",
+      "case_ids": [
+        "C1-RESTORE-SAME-PAYLOAD-NEW-OPID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RESTORE-BATCH-EXISTING-ID",
+      "operation_family": "RestoreObjects",
+      "intent_family": "restore-batch-existing-id",
+      "case_ids": [
+        "C1-RESTORE-BATCH-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-GROUP-ANY",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-group-any",
+      "case_ids": [
+        "C1-PLACEMENT-GROUP-ANY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-STICKY-RICHTEXT",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-sticky-richtext",
+      "case_ids": [
+        "C1-PLACEMENT-STICKY-RICHTEXT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PLACEMENT-NONPARENT",
+      "operation_family": "SetPlacements",
+      "intent_family": "placement-nonparent",
+      "case_ids": [
+        "C1-PLACEMENT-NONPARENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-PATCH-PRESENCE-DEFAULT",
+      "operation_family": "PatchProperties",
+      "intent_family": "patch-presence-default",
+      "case_ids": [
+        "C1-PATCH-PRESENCE-DEFAULT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SIZE-NONPOSITIVE",
+      "operation_family": "SetObjectSize",
+      "intent_family": "size-nonpositive",
+      "case_ids": [
+        "C1-SIZE-NONPOSITIVE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-INTRINSIC",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-intrinsic",
+      "case_ids": [
+        "C1-IMAGE-INTRINSIC"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-CONTENTMODE",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-contentmode",
+      "case_ids": [
+        "C1-IMAGE-CONTENTMODE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-LOCAL-SIZE",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-local-size",
+      "case_ids": [
+        "C1-IMAGE-LOCAL-SIZE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "operation_family": "SetImageContent",
+      "intent_family": "image-runtime-resource-nonsemantic",
+      "case_ids": [
+        "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-STROKE-INVALID-RECORD",
+      "operation_family": "AddStroke",
+      "intent_family": "stroke-invalid-record",
+      "case_ids": [
+        "C1-STROKE-INVALID-RECORD"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-STROKE-NEW-ID",
+      "operation_family": "AddStroke",
+      "intent_family": "stroke-new-id",
+      "case_ids": [
+        "C1-STROKE-NEW-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-STROKE-EXISTING-ID",
+      "operation_family": "AddStroke",
+      "intent_family": "stroke-existing-id",
+      "case_ids": [
+        "C1-STROKE-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "operation_family": "SplitStrokes",
+      "intent_family": "split-replacement-structural",
+      "case_ids": [
+        "C1-SPLIT-REPLACEMENT-STRUCTURAL"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-ADD-GEOMETRY",
+      "operation_family": "AddEraseMasks",
+      "intent_family": "erase-add-geometry",
+      "case_ids": [
+        "C1-ERASE-ADD-GEOMETRY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-ADD-CAPABILITY",
+      "operation_family": "AddEraseMasks",
+      "intent_family": "erase-add-capability",
+      "case_ids": [
+        "C1-ERASE-ADD-CAPABILITY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-ADD-EXISTING-MASK",
+      "operation_family": "AddEraseMasks",
+      "intent_family": "erase-add-existing-mask",
+      "case_ids": [
+        "C1-ERASE-ADD-EXISTING-MASK"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-REMOVE-DUPLICATE",
+      "operation_family": "RemoveEraseMasks",
+      "intent_family": "erase-remove-duplicate",
+      "case_ids": [
+        "C1-ERASE-REMOVE-DUPLICATE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-ERASE-REMOVE-WHOLE-REJECT",
+      "operation_family": "RemoveEraseMasks",
+      "intent_family": "erase-remove-whole-reject",
+      "case_ids": [
+        "C1-ERASE-REMOVE-WHOLE-REJECT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-RICHTEXT-STABLE-REFS",
+      "operation_family": "EditRichText",
+      "intent_family": "richtext-stable-refs",
+      "case_ids": [
+        "C1-RICHTEXT-STABLE-REFS"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-TARGET-CAPABILITY",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-target-capability",
+      "case_ids": [
+        "C1-CONNECTOR-TARGET-CAPABILITY"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-ANCHOR",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-anchor",
+      "case_ids": [
+        "C1-CONNECTOR-ANCHOR"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:C1-CONNECTOR-ROUTING",
+      "operation_family": "SetConnectorContent",
+      "intent_family": "connector-routing",
+      "case_ids": [
+        "C1-CONNECTOR-ROUTING"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B01",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B01",
+      "case_ids": [
+        "C1-RESTORE-ELIGIBLE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B01"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B02",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B02",
+      "case_ids": [
+        "C1-RESTORE-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B03",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B03",
+      "case_ids": [
+        "C1-RESTORE-EXISTING-ID-DIFFERENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B03"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B04",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B04",
+      "case_ids": [
+        "C1-RESTORE-STAGED-PARENT-CHILD"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B04"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B05",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B05",
+      "case_ids": [
+        "C1-RESTORE-ABSENT-REF"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B05"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B06",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B06",
+      "case_ids": [
+        "C1-RESTORE-STAGED-CONNECTOR"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B06"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B07",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B07",
+      "case_ids": [
+        "C1-RESTORE-CONNECTOR-TARGET-ABSENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B08",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B08",
+      "case_ids": [
+        "C1-IDEMPOTENT-EQUIVALENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B08"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B09",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B09",
+      "case_ids": [
+        "C1-RESTORE-SAME-PAYLOAD-NEW-OPID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B10",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B10",
+      "case_ids": [
+        "C1-RESTORE-BATCH-EXISTING-ID"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B11",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B11",
+      "case_ids": [
+        "C1-RESTORE-LOCAL-REPLAY-REMOTE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:RST-B12",
+      "operation_family": "RestoreObjects",
+      "intent_family": "RST-B12",
+      "case_ids": [
+        "C1-RESTORE-NO-TOMBSTONE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B12"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:same-operation-equivalent-payload",
+      "operation_family": "RestoreObjects",
+      "intent_family": "same-operation-equivalent-payload",
+      "case_ids": [
+        "C1-IDEMPOTENT-EQUIVALENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B08"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:same-operation-different-payload",
+      "operation_family": "InsertObjects",
+      "intent_family": "same-operation-different-payload",
+      "case_ids": [
+        "C1-ID-COLLISION"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V06",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:connector-delete-closed",
+      "operation_family": "DeleteObjects",
+      "intent_family": "connector-delete-closed",
+      "case_ids": [
+        "C1-DELETE-CASCADE"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:geometry-boundaries-overflow",
+      "operation_family": "SetVectorPathGeometry",
+      "intent_family": "geometry-boundaries-overflow",
+      "case_ids": [
+        "C1-GEOMETRY-BOUNDARY",
+        "C1-GEOMETRY-LIMIT",
+        "C1-GEOMETRY-N-1",
+        "C1-GEOMETRY-N",
+        "C1-GEOMETRY-OVERFLOW"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+        "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:hierarchy-capability-cardinality",
+      "operation_family": "SetPlacements",
+      "intent_family": "hierarchy-capability-cardinality",
+      "case_ids": [
+        "C1-HIERARCHY-STICKY",
+        "C1-PLACEMENT-GROUP-ANY",
+        "C1-PLACEMENT-STICKY-RICHTEXT",
+        "C1-PLACEMENT-NONPARENT"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+        "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+      ],
+      "blocking": true
+    },
+    {
+      "requirement": "P20:C1:mutation-free-expected",
+      "operation_family": "*",
+      "intent_family": "mutation-free-expected",
+      "case_ids": [
+        "C1-INSERT-VALID",
+        "C1-DELETE-CASCADE",
+        "C1-RESTORE-ELIGIBLE",
+        "C1-PLACEMENT-VALID",
+        "C1-TRANSFORM-FINITE",
+        "C1-PATCH-VALID",
+        "C1-SIZE-VALID",
+        "C1-GEOMETRY-BOUNDARY",
+        "C1-IMAGE-VALID",
+        "C1-STROKE-VALID",
+        "C1-SPLIT-PLAN",
+        "C1-ERASE-ADD-VALID",
+        "C1-ERASE-REMOVE-VALID",
+        "C1-RICHTEXT-VALID",
+        "C1-CONNECTOR-VALID",
+        "C1-IDEMPOTENT-EQUIVALENT",
+        "C1-ID-COLLISION",
+        "C1-GEOMETRY-LIMIT",
+        "C1-HIERARCHY-STICKY",
+        "C1-INSERT-STAGED-PARENT",
+        "C1-INSERT-STAGED-CONNECTOR",
+        "C1-INSERT-HIERARCHY-CYCLE",
+        "C1-INSERT-STICKY-CARDINALITY",
+        "C1-DELETE-MISSING-TARGET",
+        "C1-DELETE-DUPLICATE-TARGET",
+        "C1-RESTORE-EXISTING-ID",
+        "C1-RESTORE-STAGED-PARENT-CHILD",
+        "C1-RESTORE-STAGED-CONNECTOR",
+        "C1-RESTORE-ABSENT-REF",
+        "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+        "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+        "C1-RESTORE-NO-TOMBSTONE",
+        "C1-PLACEMENT-CYCLE",
+        "C1-PLACEMENT-INVALID-PARENT",
+        "C1-PLACEMENT-ORDERKEY",
+        "C1-TRANSFORM-NEGATIVE-ZERO",
+        "C1-TRANSFORM-NAN-INF",
+        "C1-PATCH-FIELD-ID",
+        "C1-PATCH-BRANCH-TYPE",
+        "C1-PATCH-APPLICABILITY",
+        "C1-PATCH-DUPLICATE-FIELD",
+        "C1-SIZE-WRONG-KIND",
+        "C1-SIZE-NONFINITE",
+        "C1-SIZE-HARD-LIMIT",
+        "C1-GEOMETRY-WRONG-KIND",
+        "C1-GEOMETRY-STRUCTURAL",
+        "C1-GEOMETRY-N-1",
+        "C1-GEOMETRY-N",
+        "C1-GEOMETRY-OVERFLOW",
+        "C1-IMAGE-WRONG-KIND",
+        "C1-IMAGE-CONTENT-PRESENCE",
+        "C1-IMAGE-SOURCE-RECT",
+        "C1-STROKE-WRONG-CONTENT",
+        "C1-SPLIT-SOURCE-MISSING",
+        "C1-SPLIT-REPLACEMENT-COLLISION",
+        "C1-ERASE-ADD-UNIQUENESS",
+        "C1-ERASE-REMOVE-MISSING",
+        "C1-RICHTEXT-UTF8-STYLE",
+        "C1-RICHTEXT-INVALID-STEP",
+        "C1-CONNECTOR-ATTACHED-ENDPOINT",
+        "C1-CONNECTOR-INVALID-END",
+        "C1-INSERT-EXISTING-ID",
+        "C1-DELETE-VALID",
+        "C1-DELETE-SUBTREE",
+        "C1-RESTORE-EXISTING-ID-DIFFERENT",
+        "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+        "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+        "C1-RESTORE-BATCH-EXISTING-ID",
+        "C1-PLACEMENT-GROUP-ANY",
+        "C1-PLACEMENT-STICKY-RICHTEXT",
+        "C1-PLACEMENT-NONPARENT",
+        "C1-PATCH-PRESENCE-DEFAULT",
+        "C1-SIZE-NONPOSITIVE",
+        "C1-IMAGE-INTRINSIC",
+        "C1-IMAGE-CONTENTMODE",
+        "C1-IMAGE-LOCAL-SIZE",
+        "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+        "C1-STROKE-INVALID-RECORD",
+        "C1-STROKE-NEW-ID",
+        "C1-STROKE-EXISTING-ID",
+        "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+        "C1-ERASE-ADD-GEOMETRY",
+        "C1-ERASE-ADD-CAPABILITY",
+        "C1-ERASE-ADD-EXISTING-MASK",
+        "C1-ERASE-REMOVE-DUPLICATE",
+        "C1-ERASE-REMOVE-WHOLE-REJECT",
+        "C1-RICHTEXT-STABLE-REFS",
+        "C1-CONNECTOR-TARGET-CAPABILITY",
+        "C1-CONNECTOR-ANCHOR",
+        "C1-CONNECTOR-ROUTING"
+      ],
+      "authority_rule_refs": [
+        "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+        "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+      ],
+      "blocking": true
+    }
+  ],
+  "semantic_ref_resolution": [
+    {
+      "ref": "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B01",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B02",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B03",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B04",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B05",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B06",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B08",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B12",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#operation-id-before-existence",
+      "resolution": "Current G1-04 semantic authority closure"
+    },
+    {
+      "ref": "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+      "resolution": "Current G1-04 semantic authority closure"
+    }
+  ],
+  "terminal_phase_ref_resolution": {
+    "ref": "notion:3cd4c57a-590c-8165-973f-ee31d93f1116",
+    "resolution": "Current Authority for CExpectedOutcome.terminalPhase classification"
+  },
+  "verification": {
+    "focused_c0_c1": "PASS",
+    "npm_run_validate": "PASS",
+    "git_diff_check": "PASS"
+  }
+}

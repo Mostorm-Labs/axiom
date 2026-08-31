@@ -1,0 +1,730 @@
+{
+  "format": "axiom-g1-04-c-corpus-manifest-v1",
+  "source_ref": "b628928cf08c98c6a673cc8e361b956f045d6233",
+  "suite_id": "GT-G1-04-C-CORE",
+  "records": [
+    {
+      "case_id": "C1-INSERT-VALID",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-DELETE-CASCADE",
+      "operation_family": "DeleteObjects",
+      "inputRef": "generated/inputs/C1-DELETE-CASCADE.json",
+      "expectedRef": "authoring/expected.json#C1-DELETE-CASCADE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-ELIGIBLE",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-ELIGIBLE.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-ELIGIBLE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-VALID",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-TRANSFORM-FINITE",
+      "operation_family": "SetTransforms",
+      "inputRef": "generated/inputs/C1-TRANSFORM-FINITE.json",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-FINITE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-VALID",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SIZE-VALID",
+      "operation_family": "SetObjectSize",
+      "inputRef": "generated/inputs/C1-SIZE-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-SIZE-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-BOUNDARY",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-BOUNDARY.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-BOUNDARY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-VALID",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-STROKE-VALID",
+      "operation_family": "AddStroke",
+      "inputRef": "generated/inputs/C1-STROKE-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-STROKE-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SPLIT-PLAN",
+      "operation_family": "SplitStrokes",
+      "inputRef": "generated/inputs/C1-SPLIT-PLAN.json",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-PLAN",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-ADD-VALID",
+      "operation_family": "AddEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-ADD-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-REMOVE-VALID",
+      "operation_family": "RemoveEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-REMOVE-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RICHTEXT-VALID",
+      "operation_family": "EditRichText",
+      "inputRef": "generated/inputs/C1-RICHTEXT-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-VALID",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IDEMPOTENT-EQUIVALENT",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-IDEMPOTENT-EQUIVALENT.json",
+      "expectedRef": "authoring/expected.json#C1-IDEMPOTENT-EQUIVALENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ID-COLLISION",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-ID-COLLISION.json",
+      "expectedRef": "authoring/expected.json#C1-ID-COLLISION",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-LIMIT",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-LIMIT.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-LIMIT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-HIERARCHY-STICKY",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-HIERARCHY-STICKY.json",
+      "expectedRef": "authoring/expected.json#C1-HIERARCHY-STICKY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-INSERT-STAGED-PARENT",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-STAGED-PARENT.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STAGED-PARENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-INSERT-STAGED-CONNECTOR",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-STAGED-CONNECTOR.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STAGED-CONNECTOR",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-INSERT-HIERARCHY-CYCLE",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-HIERARCHY-CYCLE.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-HIERARCHY-CYCLE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-INSERT-STICKY-CARDINALITY",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-STICKY-CARDINALITY.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STICKY-CARDINALITY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-DELETE-MISSING-TARGET",
+      "operation_family": "DeleteObjects",
+      "inputRef": "generated/inputs/C1-DELETE-MISSING-TARGET.json",
+      "expectedRef": "authoring/expected.json#C1-DELETE-MISSING-TARGET",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-DELETE-DUPLICATE-TARGET",
+      "operation_family": "DeleteObjects",
+      "inputRef": "generated/inputs/C1-DELETE-DUPLICATE-TARGET.json",
+      "expectedRef": "authoring/expected.json#C1-DELETE-DUPLICATE-TARGET",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-EXISTING-ID",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-EXISTING-ID.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-EXISTING-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-STAGED-PARENT-CHILD.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-STAGED-PARENT-CHILD",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-STAGED-CONNECTOR",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-STAGED-CONNECTOR.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-STAGED-CONNECTOR",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-ABSENT-REF",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-ABSENT-REF.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-ABSENT-REF",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-OPID-BEFORE-EXISTENCE.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-LOCAL-REPLAY-REMOTE.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-NO-TOMBSTONE",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-NO-TOMBSTONE.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-NO-TOMBSTONE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-CYCLE",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-CYCLE.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-CYCLE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-INVALID-PARENT",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-INVALID-PARENT.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-INVALID-PARENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-ORDERKEY",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-ORDERKEY.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-ORDERKEY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "operation_family": "SetTransforms",
+      "inputRef": "generated/inputs/C1-TRANSFORM-NEGATIVE-ZERO.json",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-NEGATIVE-ZERO",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-TRANSFORM-NAN-INF",
+      "operation_family": "SetTransforms",
+      "inputRef": "generated/inputs/C1-TRANSFORM-NAN-INF.json",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-NAN-INF",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-FIELD-ID",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-FIELD-ID.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-FIELD-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-BRANCH-TYPE",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-BRANCH-TYPE.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-BRANCH-TYPE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-APPLICABILITY",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-APPLICABILITY.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-APPLICABILITY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-DUPLICATE-FIELD",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-DUPLICATE-FIELD.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-DUPLICATE-FIELD",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SIZE-WRONG-KIND",
+      "operation_family": "SetObjectSize",
+      "inputRef": "generated/inputs/C1-SIZE-WRONG-KIND.json",
+      "expectedRef": "authoring/expected.json#C1-SIZE-WRONG-KIND",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SIZE-NONFINITE",
+      "operation_family": "SetObjectSize",
+      "inputRef": "generated/inputs/C1-SIZE-NONFINITE.json",
+      "expectedRef": "authoring/expected.json#C1-SIZE-NONFINITE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SIZE-HARD-LIMIT",
+      "operation_family": "SetObjectSize",
+      "inputRef": "generated/inputs/C1-SIZE-HARD-LIMIT.json",
+      "expectedRef": "authoring/expected.json#C1-SIZE-HARD-LIMIT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-WRONG-KIND",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-WRONG-KIND.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-WRONG-KIND",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-STRUCTURAL",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-STRUCTURAL.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-STRUCTURAL",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-N-1",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-N-1.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-N-1",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-N",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-N.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-N",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-GEOMETRY-OVERFLOW",
+      "operation_family": "SetVectorPathGeometry",
+      "inputRef": "generated/inputs/C1-GEOMETRY-OVERFLOW.json",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-OVERFLOW",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-WRONG-KIND",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-WRONG-KIND.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-WRONG-KIND",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-CONTENT-PRESENCE",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-CONTENT-PRESENCE.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-CONTENT-PRESENCE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-SOURCE-RECT",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-SOURCE-RECT.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-SOURCE-RECT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-STROKE-WRONG-CONTENT",
+      "operation_family": "AddStroke",
+      "inputRef": "generated/inputs/C1-STROKE-WRONG-CONTENT.json",
+      "expectedRef": "authoring/expected.json#C1-STROKE-WRONG-CONTENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SPLIT-SOURCE-MISSING",
+      "operation_family": "SplitStrokes",
+      "inputRef": "generated/inputs/C1-SPLIT-SOURCE-MISSING.json",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-SOURCE-MISSING",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "operation_family": "SplitStrokes",
+      "inputRef": "generated/inputs/C1-SPLIT-REPLACEMENT-COLLISION.json",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-REPLACEMENT-COLLISION",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-ADD-UNIQUENESS",
+      "operation_family": "AddEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-ADD-UNIQUENESS.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-UNIQUENESS",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-REMOVE-MISSING",
+      "operation_family": "RemoveEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-REMOVE-MISSING.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-MISSING",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RICHTEXT-UTF8-STYLE",
+      "operation_family": "EditRichText",
+      "inputRef": "generated/inputs/C1-RICHTEXT-UTF8-STYLE.json",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-UTF8-STYLE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RICHTEXT-INVALID-STEP",
+      "operation_family": "EditRichText",
+      "inputRef": "generated/inputs/C1-RICHTEXT-INVALID-STEP.json",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-INVALID-STEP",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-ATTACHED-ENDPOINT.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-INVALID-END",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-INVALID-END.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-INVALID-END",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-INSERT-EXISTING-ID",
+      "operation_family": "InsertObjects",
+      "inputRef": "generated/inputs/C1-INSERT-EXISTING-ID.json",
+      "expectedRef": "authoring/expected.json#C1-INSERT-EXISTING-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-DELETE-VALID",
+      "operation_family": "DeleteObjects",
+      "inputRef": "generated/inputs/C1-DELETE-VALID.json",
+      "expectedRef": "authoring/expected.json#C1-DELETE-VALID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-DELETE-SUBTREE",
+      "operation_family": "DeleteObjects",
+      "inputRef": "generated/inputs/C1-DELETE-SUBTREE.json",
+      "expectedRef": "authoring/expected.json#C1-DELETE-SUBTREE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-EXISTING-ID-DIFFERENT.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-CONNECTOR-TARGET-ABSENT.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RESTORE-BATCH-EXISTING-ID",
+      "operation_family": "RestoreObjects",
+      "inputRef": "generated/inputs/C1-RESTORE-BATCH-EXISTING-ID.json",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-BATCH-EXISTING-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-GROUP-ANY",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-GROUP-ANY.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-GROUP-ANY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-STICKY-RICHTEXT.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-STICKY-RICHTEXT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PLACEMENT-NONPARENT",
+      "operation_family": "SetPlacements",
+      "inputRef": "generated/inputs/C1-PLACEMENT-NONPARENT.json",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-NONPARENT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-PATCH-PRESENCE-DEFAULT",
+      "operation_family": "PatchProperties",
+      "inputRef": "generated/inputs/C1-PATCH-PRESENCE-DEFAULT.json",
+      "expectedRef": "authoring/expected.json#C1-PATCH-PRESENCE-DEFAULT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SIZE-NONPOSITIVE",
+      "operation_family": "SetObjectSize",
+      "inputRef": "generated/inputs/C1-SIZE-NONPOSITIVE.json",
+      "expectedRef": "authoring/expected.json#C1-SIZE-NONPOSITIVE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-INTRINSIC",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-INTRINSIC.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-INTRINSIC",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-CONTENTMODE",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-CONTENTMODE.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-CONTENTMODE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-LOCAL-SIZE",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-LOCAL-SIZE.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-LOCAL-SIZE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "operation_family": "SetImageContent",
+      "inputRef": "generated/inputs/C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC.json",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-STROKE-INVALID-RECORD",
+      "operation_family": "AddStroke",
+      "inputRef": "generated/inputs/C1-STROKE-INVALID-RECORD.json",
+      "expectedRef": "authoring/expected.json#C1-STROKE-INVALID-RECORD",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-STROKE-NEW-ID",
+      "operation_family": "AddStroke",
+      "inputRef": "generated/inputs/C1-STROKE-NEW-ID.json",
+      "expectedRef": "authoring/expected.json#C1-STROKE-NEW-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-STROKE-EXISTING-ID",
+      "operation_family": "AddStroke",
+      "inputRef": "generated/inputs/C1-STROKE-EXISTING-ID.json",
+      "expectedRef": "authoring/expected.json#C1-STROKE-EXISTING-ID",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "operation_family": "SplitStrokes",
+      "inputRef": "generated/inputs/C1-SPLIT-REPLACEMENT-STRUCTURAL.json",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-ADD-GEOMETRY",
+      "operation_family": "AddEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-ADD-GEOMETRY.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-GEOMETRY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-ADD-CAPABILITY",
+      "operation_family": "AddEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-ADD-CAPABILITY.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-CAPABILITY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-ADD-EXISTING-MASK",
+      "operation_family": "AddEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-ADD-EXISTING-MASK.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-EXISTING-MASK",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-REMOVE-DUPLICATE",
+      "operation_family": "RemoveEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-REMOVE-DUPLICATE.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-DUPLICATE",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "operation_family": "RemoveEraseMasks",
+      "inputRef": "generated/inputs/C1-ERASE-REMOVE-WHOLE-REJECT.json",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-WHOLE-REJECT",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-RICHTEXT-STABLE-REFS",
+      "operation_family": "EditRichText",
+      "inputRef": "generated/inputs/C1-RICHTEXT-STABLE-REFS.json",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-STABLE-REFS",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-TARGET-CAPABILITY.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-TARGET-CAPABILITY",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-ANCHOR",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-ANCHOR.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ANCHOR",
+      "blocking": true
+    },
+    {
+      "case_id": "C1-CONNECTOR-ROUTING",
+      "operation_family": "SetConnectorContent",
+      "inputRef": "generated/inputs/C1-CONNECTOR-ROUTING.json",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ROUTING",
+      "blocking": true
+    }
+  ],
+  "suite_case_ids": [
+    "C1-CONNECTOR-ANCHOR",
+    "C1-CONNECTOR-ATTACHED-ENDPOINT",
+    "C1-CONNECTOR-INVALID-END",
+    "C1-CONNECTOR-ROUTING",
+    "C1-CONNECTOR-TARGET-CAPABILITY",
+    "C1-CONNECTOR-VALID",
+    "C1-DELETE-CASCADE",
+    "C1-DELETE-DUPLICATE-TARGET",
+    "C1-DELETE-MISSING-TARGET",
+    "C1-DELETE-SUBTREE",
+    "C1-DELETE-VALID",
+    "C1-ERASE-ADD-CAPABILITY",
+    "C1-ERASE-ADD-EXISTING-MASK",
+    "C1-ERASE-ADD-GEOMETRY",
+    "C1-ERASE-ADD-UNIQUENESS",
+    "C1-ERASE-ADD-VALID",
+    "C1-ERASE-REMOVE-DUPLICATE",
+    "C1-ERASE-REMOVE-MISSING",
+    "C1-ERASE-REMOVE-VALID",
+    "C1-ERASE-REMOVE-WHOLE-REJECT",
+    "C1-GEOMETRY-BOUNDARY",
+    "C1-GEOMETRY-LIMIT",
+    "C1-GEOMETRY-N",
+    "C1-GEOMETRY-N-1",
+    "C1-GEOMETRY-OVERFLOW",
+    "C1-GEOMETRY-STRUCTURAL",
+    "C1-GEOMETRY-WRONG-KIND",
+    "C1-HIERARCHY-STICKY",
+    "C1-ID-COLLISION",
+    "C1-IDEMPOTENT-EQUIVALENT",
+    "C1-IMAGE-CONTENT-PRESENCE",
+    "C1-IMAGE-CONTENTMODE",
+    "C1-IMAGE-INTRINSIC",
+    "C1-IMAGE-LOCAL-SIZE",
+    "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+    "C1-IMAGE-SOURCE-RECT",
+    "C1-IMAGE-VALID",
+    "C1-IMAGE-WRONG-KIND",
+    "C1-INSERT-EXISTING-ID",
+    "C1-INSERT-HIERARCHY-CYCLE",
+    "C1-INSERT-STAGED-CONNECTOR",
+    "C1-INSERT-STAGED-PARENT",
+    "C1-INSERT-STICKY-CARDINALITY",
+    "C1-INSERT-VALID",
+    "C1-PATCH-APPLICABILITY",
+    "C1-PATCH-BRANCH-TYPE",
+    "C1-PATCH-DUPLICATE-FIELD",
+    "C1-PATCH-FIELD-ID",
+    "C1-PATCH-PRESENCE-DEFAULT",
+    "C1-PATCH-VALID",
+    "C1-PLACEMENT-CYCLE",
+    "C1-PLACEMENT-GROUP-ANY",
+    "C1-PLACEMENT-INVALID-PARENT",
+    "C1-PLACEMENT-NONPARENT",
+    "C1-PLACEMENT-ORDERKEY",
+    "C1-PLACEMENT-STICKY-RICHTEXT",
+    "C1-PLACEMENT-VALID",
+    "C1-RESTORE-ABSENT-REF",
+    "C1-RESTORE-BATCH-EXISTING-ID",
+    "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+    "C1-RESTORE-ELIGIBLE",
+    "C1-RESTORE-EXISTING-ID",
+    "C1-RESTORE-EXISTING-ID-DIFFERENT",
+    "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+    "C1-RESTORE-NO-TOMBSTONE",
+    "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+    "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+    "C1-RESTORE-STAGED-CONNECTOR",
+    "C1-RESTORE-STAGED-PARENT-CHILD",
+    "C1-RICHTEXT-INVALID-STEP",
+    "C1-RICHTEXT-STABLE-REFS",
+    "C1-RICHTEXT-UTF8-STYLE",
+    "C1-RICHTEXT-VALID",
+    "C1-SIZE-HARD-LIMIT",
+    "C1-SIZE-NONFINITE",
+    "C1-SIZE-NONPOSITIVE",
+    "C1-SIZE-VALID",
+    "C1-SIZE-WRONG-KIND",
+    "C1-SPLIT-PLAN",
+    "C1-SPLIT-REPLACEMENT-COLLISION",
+    "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+    "C1-SPLIT-SOURCE-MISSING",
+    "C1-STROKE-EXISTING-ID",
+    "C1-STROKE-INVALID-RECORD",
+    "C1-STROKE-NEW-ID",
+    "C1-STROKE-VALID",
+    "C1-STROKE-WRONG-CONTENT",
+    "C1-TRANSFORM-FINITE",
+    "C1-TRANSFORM-NAN-INF",
+    "C1-TRANSFORM-NEGATIVE-ZERO"
+  ],
+  "membership_only": true
+}
