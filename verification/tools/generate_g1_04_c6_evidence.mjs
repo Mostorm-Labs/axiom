@@ -10,6 +10,8 @@ const C3_SOURCE_REF = "906327beb9a268c339accd6d3ca6a7038e54ad68";
 const C3_MATERIALIZED_REF = "2a601ab35a2294cb38d713ab001bbac7deaa9cf7";
 const P36_R2_SOURCE_REF = "1763d57e7554ec690634326b998971f0decaae28";
 const P36_FINAL_MATERIALIZED_REF = "c8fe64b4b2927fb369b6735c6b6a1b45edd5d80d";
+const PRIOR_C6_SOURCE_REF = "60e661807a8d450764b316da812a84a097500355";
+const PRIOR_C6_MATERIALIZED_REF = "d5e29a1363417e3eda775727c0f016e40a16128f";
 
 const verificationRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(verificationRoot, "..");
@@ -89,7 +91,15 @@ function assertSafeOutputPath(outputDir) {
 
 function assertSourceScope(sourceRef) {
   const changed = git(["diff", "--name-only", PACKAGE_REF, sourceRef]).split("\n").filter(Boolean);
-  if (changed.length !== C6_SOURCE_PATHS.size || changed.some((path) => !C6_SOURCE_PATHS.has(path))) {
+  const historicalPrefix = `verification/evidence/gates/G1/${PRIOR_C6_SOURCE_REF}/GT-G1-04-C/`;
+  const historical = changed.filter((path) => path.startsWith(historicalPrefix));
+  for (const path of historical) {
+    const sourceBlob = git(["rev-parse", "--verify", `${sourceRef}:${path}`]);
+    const priorBlob = git(["rev-parse", "--verify", `${PRIOR_C6_MATERIALIZED_REF}:${path}`]);
+    if (sourceBlob !== priorBlob) throw new Error(`historical C6 evidence was rewritten: ${path}`);
+  }
+  const effective = changed.filter((path) => !historical.includes(path));
+  if (effective.length !== C6_SOURCE_PATHS.size || effective.some((path) => !C6_SOURCE_PATHS.has(path))) {
     throw new Error(`C6 source scope mismatch: ${changed.join(", ")}`);
   }
 }
