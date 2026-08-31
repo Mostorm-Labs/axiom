@@ -57,4 +57,17 @@ TEST(G1CObserverCoverage, AcceptedNegativeZeroPreservesItsDecoderBoundaryBits) {
               negativeZero->f64Bits.end());
 }
 
+TEST(G1CObserverCoverage, GeometryLimitObservationUsesStableAuthorityCategory) {
+    const auto report = runAcceptedCorpus(
+        std::string(G1_C_SOURCE_DIR) + "/verification/corpus/semantic/v1/g1-04-c/generated/manifest.json");
+    ASSERT_TRUE(report.ok) << report.error;
+    const auto limit = std::find_if(report.observationFacts.begin(), report.observationFacts.end(), [](const auto& fact) {
+        return fact.caseId == "C1-GEOMETRY-LIMIT" && fact.provider == "reference";
+    });
+    ASSERT_NE(limit, report.observationFacts.end());
+    EXPECT_EQ(limit->disposition, "REJECTED");
+    EXPECT_EQ(limit->terminalPhase, "STATELESS_VALIDATE");
+    EXPECT_EQ(limit->issue, "GEOMETRY_LIMIT_EXCEEDED");
+}
+
 } // namespace canvas::verification::g1_04_c

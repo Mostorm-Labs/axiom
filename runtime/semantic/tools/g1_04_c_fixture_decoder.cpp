@@ -92,6 +92,48 @@ bool parseGeometryValue(const json& value, VectorPathGeometry& out, std::vector<
     const auto& inner = value.value("value", json::object());
     if (variant != 0) { out = VectorPathGeometry{}; return true; }
     if (!inner.is_object()) { error = failMessage(path, "invalid geometry value"); return false; }
+    if (inner.contains("geometryRecipe")) {
+        const auto& recipe = inner["geometryRecipe"];
+        if (!recipe.is_object() || recipe.value("carrier", "") != "VectorPath") {
+            error = failMessage(path + ".geometryRecipe", "unsupported compact geometry carrier");
+            return false;
+        }
+        auto count = [&](const char* key, std::size_t& result) {
+            const auto& raw = recipe.value(key, json(0));
+            if (!raw.is_number_unsigned() && !raw.is_number_integer()) {
+                error = failMessage(path + ".geometryRecipe." + key, "expected non-negative integer");
+                return false;
+            }
+            const auto signedValue = raw.get<std::int64_t>();
+            if (signedValue < 0) {
+                error = failMessage(path + ".geometryRecipe." + key, "expected non-negative integer");
+                return false;
+            }
+            result = static_cast<std::size_t>(signedValue);
+            return true;
+        };
+        std::size_t moveCount = 0U;
+        std::size_t lineCount = 0U;
+        std::size_t quadCount = 0U;
+        std::size_t cubicCount = 0U;
+        if (!count("move", moveCount) || !count("line", lineCount) ||
+            !count("quad", quadCount) || !count("cubic", cubicCount)) return false;
+        if (moveCount == 0U || (lineCount == 0U && quadCount == 0U && cubicCount == 0U)) {
+            error = failMessage(path + ".geometryRecipe", "vector path recipe must contain a move and a drawing command");
+            return false;
+        }
+        const auto commandCount = moveCount + lineCount + quadCount + cubicCount;
+        if (commandCount < moveCount || commandCount > out.commands.max_size()) {
+            error = failMessage(path + ".geometryRecipe", "command count overflow");
+            return false;
+        }
+        out.commands.reserve(commandCount);
+        for (std::size_t i = 0; i < moveCount; ++i) out.commands.push_back(MoveTo{Vec2{0.0, 0.0}});
+        for (std::size_t i = 0; i < lineCount; ++i) out.commands.push_back(LineTo{Vec2{1.0, 1.0}});
+        for (std::size_t i = 0; i < quadCount; ++i) out.commands.push_back(QuadTo{Vec2{0.25, 0.25}, Vec2{1.0, 1.0}});
+        for (std::size_t i = 0; i < cubicCount; ++i) out.commands.push_back(CubicTo{Vec2{0.25, 0.25}, Vec2{0.75, 0.75}, Vec2{1.0, 1.0}});
+        return true;
+    }
     for (std::size_t i = 0; i < inner.value("segments", json::array()).size(); ++i) {
         const auto& segment = inner["segments"][i];
         EraseCubicSegment cubic;

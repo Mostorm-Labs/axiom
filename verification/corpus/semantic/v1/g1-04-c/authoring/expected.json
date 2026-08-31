@@ -28,7 +28,19 @@
     ],
     "mutationExpected": false,
     "disposition": "PLAN_READY",
-    "terminalPhase": "PREPARE"
+    "terminalPhase": "PREPARE",
+    "logicalPlanProjection": {
+      "creates": {"objects": []},
+      "replacements": {"objects": []},
+      "deletes": [
+        "14ad662e612a53fa46af20b1aa5fd0f5",
+        "bed0e2f48ca23c0992a9a9ae8f8bf109"
+      ],
+      "deleteClosure": [
+        "14ad662e612a53fa46af20b1aa5fd0f5",
+        "bed0e2f48ca23c0992a9a9ae8f8bf109"
+      ]
+    }
   },
   {
     "format": "axiom-g1-04-c-expected-v1",

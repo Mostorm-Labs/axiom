@@ -45,7 +45,7 @@
         "erase_masks": [],
         "id": "6e1230a882a04d1254294edf716264ed",
         "kind": 3,
-        "kind_version": 3,
+        "kind_version": 1,
         "placement": {
           "order_key": [
             185,
@@ -73,56 +73,14 @@
       "value": {
         "geometry": {
           "value": {
-            "segments": [
-              {
-                "control1": [
-                  0.25,
-                  0.25
-                ],
-                "control2": [
-                  0.75,
-                  0.75
-                ],
-                "p0": {
-                  "position": [
-                    0.0,
-                    0.0
-                  ],
-                  "radius": 1.0
-                },
-                "p1": {
-                  "position": [
-                    1.0,
-                    1.0
-                  ],
-                  "radius": 1.0
-                }
-              },
-              {
-                "control1": [
-                  1.25,
-                  0.25
-                ],
-                "control2": [
-                  1.75,
-                  0.75
-                ],
-                "p0": {
-                  "position": [
-                    1.0,
-                    0.0
-                  ],
-                  "radius": 1.0
-                },
-                "p1": {
-                  "position": [
-                    2.0,
-                    1.0
-                  ],
-                  "radius": 1.0
-                }
-              }
-            ]
+            "geometryRecipe": {
+              "carrier": "VectorPath",
+              "cubic": 1,
+              "expectedUnits": 1999999,
+              "line": 1999993,
+              "move": 1,
+              "quad": 1
+            }
           },
           "variant": 0
         },

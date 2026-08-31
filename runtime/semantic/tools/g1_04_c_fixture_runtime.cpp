@@ -21,6 +21,14 @@ namespace {
 using json = nlohmann::json;
 using namespace canvas::semantic;
 
+const char* validationIssueName(const ValidationIssue issue) {
+    switch (issue) {
+        case ValidationIssue::kGeometryLimitExceeded: return "GEOMETRY_LIMIT_EXCEEDED";
+        case ValidationIssue::kIntegerOverflow: return "INTEGER_OVERFLOW";
+        default: return "PAYLOAD_ERROR";
+    }
+}
+
 class FixtureAppliedOperations final : public AppliedOperationView {
   public:
     explicit FixtureAppliedOperations(const std::vector<Operation>& operations) : operations_(operations) {}
@@ -65,7 +73,7 @@ CorpusReport::ObservationFact observeOne(Store& store, const DecodedFixture& fix
         } else {
             const auto payload = validatePayloadStructure(candidate);
             if (!payload.ok()) {
-                fact.disposition = "REJECTED"; fact.terminalPhase = "STATELESS_VALIDATE"; fact.issue = "PAYLOAD_ERROR";
+                fact.disposition = "REJECTED"; fact.terminalPhase = "STATELESS_VALIDATE"; fact.issue = validationIssueName(payload.issue);
             } else {
                 const auto prepared = prepareApplyPlan(candidate, context);
                 if (prepared.disposition == PrepareDisposition::kPrepared) {

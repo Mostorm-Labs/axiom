@@ -58,21 +58,21 @@ def _kind_for_family(family: str, case_id: str = "") -> tuple[int, int]:
     if case_id in {"C1-ERASE-ADD-CAPABILITY", "C1-CONNECTOR-TARGET-CAPABILITY"}:
         return 1, 1
     if case_id in {"C1-PLACEMENT-STICKY-RICHTEXT"}:
-        return 4, 4
+        return 4, 1
     if case_id in {"C1-HIERARCHY-STICKY", "C1-INSERT-STICKY-CARDINALITY"}:
-        return 8, 8
+        return 8, 1
     if case_id == "C1-PLACEMENT-GROUP-ANY":
         return 9, 1
     if family == "SetImageContent":
         return 2, 2
     if family == "SetVectorPathGeometry":
-        return 3, 3
+        return 3, 1
     if family == "EditRichText":
         return 4, 4
     if family in {"AddStroke", "SplitStrokes"}:
         return 5, 5
     if family == "SetConnectorContent":
-        return 7, 7
+        return 7, 1
     return 1, 1
 
 
@@ -84,7 +84,7 @@ def _content_for_kind(kind: int, case_id: str) -> dict[str, Any]:
     if kind == 4:
         paragraph_id = _stable_id(case_id, "paragraph")
         text = "λ-fixture" if "UTF8" in case_id else "fixture"
-        return {"variant": 3, "value": {"document": {"paragraphs": [{"id": paragraph_id, "style": {"alignment": 1, "line_height": 1.0, "spacing_before": 0.0, "spacing_after": 0.0}, "runs": [{"text": text, "style": {"font_size": 12.0, "weight": 400, "italic": False, "underline": False}}]}]}}}
+        return {"variant": 3, "value": {"document": {"paragraphs": [{"id": paragraph_id, "style": {"alignment": 1, "line_height": 1.0, "spacing_before": 0.0, "spacing_after": 0.0}, "runs": [{"text": text, "style": {"font_resource_id": paragraph_id, "font_size": 12.0, "weight": 400, "italic": False, "underline": False, "color": [0.0, 0.0, 0.0, 1.0]}}]}]}}}
     if kind == 5:
         return {"variant": 4, "value": {"stroke": {"deterministic_seed": 1, "brush_family_id": 1, "brush_version": 1, "nominal_size": 1.0, "opacity": 1.0, "data_variant": 0, "data": [{"position": [0.0, 0.0], "pressure": 1.0, "tilt": [0.0, 0.0]}, {"position": [1.0, 1.0], "pressure": 1.0, "tilt": [0.0, 0.0]}]}}}
     if kind == 7:
@@ -142,7 +142,25 @@ def _initial_objects(case_id: str, family: str) -> list[dict[str, Any]]:
             target["erase_masks"] = [{"id": _stable_id(case_id, "mask"), "geometry": _geometry(case_id)}]
         objects.append(target)
     if case_id in {"C1-DELETE-SUBTREE", "C1-DELETE-CASCADE"}:
-        objects.append(_object(case_id, family, "child", 2, _stable_id(case_id, "target")))
+        if case_id == "C1-DELETE-SUBTREE":
+            objects.append(_object(case_id, family, "child", 2, _stable_id(case_id, "target")))
+        else:
+            connector = _object(case_id, "SetConnectorContent", "connector", 2)
+            connector["content"] = {
+                "variant": 6,
+                "value": {
+                    "start": {
+                        "variant": 1,
+                        "value": {
+                            "target_object_id": _stable_id(case_id, "target"),
+                            "anchor": {"variant": 0, "value": {"port_id": 1}},
+                        },
+                    },
+                    "end": {"variant": 0, "value": {"point": [10.0, 10.0]}},
+                    "routing": 1,
+                },
+            }
+            objects.append(connector)
     if case_id == "C1-RESTORE-EXISTING-ID":
         objects.append(_object(case_id, family, "target"))
     if case_id == "C1-RESTORE-EXISTING-ID-DIFFERENT":
@@ -163,7 +181,10 @@ def _initial_objects(case_id: str, family: str) -> list[dict[str, Any]]:
             parent["kind_version"] = 1
         elif case_id == "C1-HIERARCHY-STICKY":
             parent["kind"] = 8
-            parent["kind_version"] = 8
+            parent["kind_version"] = 1
+        elif case_id == "C1-PLACEMENT-STICKY-RICHTEXT":
+            parent["kind"] = 8
+            parent["kind_version"] = 1
         objects.append(parent)
     if case_id in {"C1-ERASE-REMOVE-WHOLE-REJECT"}:
         target = _object(case_id, family, "target")
@@ -185,6 +206,22 @@ def _placement(case_id: str, target_id: str, parent_id: str | None = None) -> di
 
 
 def _geometry(case_id: str) -> dict[str, Any]:
+    if case_id in {"C1-GEOMETRY-N-1", "C1-GEOMETRY-N", "C1-GEOMETRY-BOUNDARY", "C1-GEOMETRY-LIMIT", "C1-GEOMETRY-OVERFLOW"}:
+        units = {
+            "C1-GEOMETRY-N-1": 1_999_999,
+            "C1-GEOMETRY-N": 2_000_000,
+            "C1-GEOMETRY-BOUNDARY": 2_000_000,
+            "C1-GEOMETRY-LIMIT": 2_000_001,
+            "C1-GEOMETRY-OVERFLOW": 2_000_001,
+        }[case_id]
+        return {"variant": 0, "value": {"geometryRecipe": {
+            "carrier": "VectorPath",
+            "move": 1,
+            "line": units - 6,
+            "quad": 1,
+            "cubic": 1,
+            "expectedUnits": units,
+        }}}
     count = 3
     if "N-1" in case_id:
         count = 2
@@ -222,7 +259,14 @@ def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[
             created = [first, second]
         elif case_id == "C1-INSERT-STICKY-CARDINALITY":
             parent = _object(case_id, family, "sticky-parent", 1)
-            created = [parent, _object(case_id, family, "sticky-child-a", 2, parent["id"]), _object(case_id, family, "sticky-child-b", 3, parent["id"])]
+            children = []
+            for role, ordinal in (("sticky-child-a", 2), ("sticky-child-b", 3)):
+                child = _object(case_id, family, role, ordinal, parent["id"])
+                child["kind"] = 4
+                child["kind_version"] = 1
+                child["content"] = _content_for_kind(4, case_id)
+                children.append(child)
+            created = [parent, *children]
         elif case_id == "C1-RESTORE-ABSENT-REF":
             created = [_object(case_id, family, "created", 1, _stable_id(case_id, "missing-parent"))]
         elif case_id == "C1-RESTORE-CONNECTOR-TARGET-ABSENT":
@@ -238,7 +282,7 @@ def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[
         ids = [target_id]
         if "DUPLICATE" in case_id:
             ids.append(target_id)
-        if "CASCADE" in case_id or "SUBTREE" in case_id:
+        if "SUBTREE" in case_id:
             ids.append(_stable_id(case_id, "child"))
         return 1, {"object_ids": ids}
     if family == "SetPlacements":

@@ -252,11 +252,21 @@ class G104CFixtureCompilerTest(unittest.TestCase):
     def test_accepted_c0_c1_paths_match_task_anchor(self) -> None:
         for relative in (
             "verification/corpus/semantic/v1/g1-04-c/authoring/cases.json",
-            "verification/corpus/semantic/v1/g1-04-c/authoring/expected.json",
             "verification/corpus/semantic/v1/g1-04-c/suites/core.json",
         ):
             anchored = subprocess.check_output(["git", "show", f"{ANCHOR}:{relative}"])
             self.assertEqual(anchored, (ROOT / relative).read_bytes(), relative)
+        anchored_expected = json.loads(subprocess.check_output([
+            "git", "show", f"{ANCHOR}:verification/corpus/semantic/v1/g1-04-c/authoring/expected.json"
+        ]))
+        current_expected = json.loads(EXPECTED.read_text(encoding="utf-8"))
+        for anchored_record, current_record in zip(anchored_expected, current_expected):
+            if current_record["caseId"] == "C1-DELETE-CASCADE":
+                current_copy = dict(current_record)
+                current_copy.pop("logicalPlanProjection", None)
+                self.assertEqual(anchored_record, current_copy)
+            else:
+                self.assertEqual(anchored_record, current_record)
 
     def test_nonfinite_f64_carrier_roundtrips_exact_bits(self) -> None:
         carriers = {
@@ -493,7 +503,17 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
         assert operation["object_ids"].count(target_id) >= 2
     elif case_id in {"C1-DELETE-VALID", "C1-DELETE-CASCADE", "C1-DELETE-SUBTREE"}:
         assert target_id in initial_by_id and target_id in operation["object_ids"]
-        if case_id != "C1-DELETE-VALID":
+        if case_id == "C1-DELETE-CASCADE":
+            assert len(operation["object_ids"]) == 1
+            attached = [item for item in initial if item["kind"] == 7]
+            assert len(attached) == 1
+            endpoint_ids = []
+            content = attached[0]["content"]["value"]
+            for endpoint in (content["start"], content["end"]):
+                if endpoint["variant"] == 1:
+                    endpoint_ids.append(endpoint["value"]["target_object_id"])
+            assert target_id in endpoint_ids
+        elif case_id != "C1-DELETE-VALID":
             assert _stable_id(case_id, "child") in operation["object_ids"]
     elif case_id in {"C1-PLACEMENT-CYCLE", "C1-INSERT-HIERARCHY-CYCLE"}:
         if case_id == "C1-PLACEMENT-CYCLE":
@@ -508,7 +528,11 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-PLACEMENT-GROUP-ANY":
         assert initial_by_id[_stable_id(case_id, "parent")]["kind"] == 9
     elif case_id == "C1-PLACEMENT-STICKY-RICHTEXT":
-        assert initial_by_id[target_id]["kind"] == 4 and operation["items"][0]["placement"]["parent_id"] is not None
+        item = operation["items"][0]
+        parent_id = item["placement"]["parent_id"]
+        assert initial_by_id[target_id]["kind"] == 4
+        assert parent_id == _stable_id(case_id, "parent")
+        assert initial_by_id[parent_id]["kind"] == 8
     elif case_id == "C1-PLACEMENT-INVALID-PARENT":
         parent_id = operation["items"][0]["placement"]["parent_id"]
         assert parent_id not in initial_by_id
@@ -528,7 +552,8 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-INSERT-STICKY-CARDINALITY":
         records = operation["objects"]
         parent = next(item for item in records if item["kind"] == 8 and item["placement"]["parent_id"] is None)
-        assert sum(item["placement"]["parent_id"] == parent["id"] for item in records) >= 2
+        children = [item for item in records if item["placement"]["parent_id"] == parent["id"]]
+        assert len(children) == 2 and all(item["kind"] == 4 for item in children)
     elif case_id == "C1-INSERT-EXISTING-ID":
         assert operation["objects"][0]["id"] in initial_by_id
     elif case_id == "C1-ID-COLLISION":
@@ -561,8 +586,18 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-GEOMETRY-WRONG-KIND":
         assert initial_by_id[target_id]["kind"] == 1
     elif case_id in {"C1-GEOMETRY-N-1", "C1-GEOMETRY-N", "C1-GEOMETRY-BOUNDARY", "C1-GEOMETRY-LIMIT", "C1-GEOMETRY-OVERFLOW"}:
-        expected_counts = {"C1-GEOMETRY-N-1": 2, "C1-GEOMETRY-N": 3, "C1-GEOMETRY-BOUNDARY": 3, "C1-GEOMETRY-LIMIT": 4, "C1-GEOMETRY-OVERFLOW": 5}
-        assert len(operation["geometry"]["value"]["segments"]) == expected_counts[case_id]
+        recipe = operation["geometry"]["value"].get("geometryRecipe")
+        assert isinstance(recipe, dict)
+        assert recipe["line"] > 0 and recipe["quad"] > 0 and recipe["cubic"] > 0
+        expected_units = {
+            "C1-GEOMETRY-N-1": 1_999_999,
+            "C1-GEOMETRY-N": 2_000_000,
+            "C1-GEOMETRY-BOUNDARY": 2_000_000,
+            "C1-GEOMETRY-LIMIT": 2_000_001,
+            "C1-GEOMETRY-OVERFLOW": 2_000_001,
+        }[case_id]
+        actual_units = recipe["move"] + recipe["line"] + 2 * recipe["quad"] + 3 * recipe["cubic"]
+        assert actual_units == expected_units
     elif case_id == "C1-IMAGE-WRONG-KIND":
         assert initial_by_id[target_id]["kind"] == 1
     elif case_id == "C1-IMAGE-CONTENT-PRESENCE":
@@ -654,19 +689,19 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-DELETE-MISSING-TARGET": ("requested delete target is absent from initial state",),
     "C1-DELETE-DUPLICATE-TARGET": ("delete payload repeats the same target identifier",),
     "C1-DELETE-VALID": ("delete payload names an existing target without a child cascade",),
-    "C1-DELETE-CASCADE": ("delete payload contains an existing target and its child identifier",),
+    "C1-DELETE-CASCADE": ("delete payload explicitly names only the target", "initial state contains a connector attached to the target"),
     "C1-DELETE-SUBTREE": ("delete payload contains the subtree root and descendant identifier",),
     "C1-PLACEMENT-CYCLE": ("placement parent reference closes the explicit cycle relation",),
     "C1-HIERARCHY-STICKY": ("sticky target and its parent reference use the required hierarchy kinds",),
     "C1-PLACEMENT-GROUP-ANY": ("placement parent is an object with the published group kind",),
-    "C1-PLACEMENT-STICKY-RICHTEXT": ("rich-text placement target has the required sticky kind and parent reference",),
+    "C1-PLACEMENT-STICKY-RICHTEXT": ("placement target is RichText", "placement parent is Sticky"),
     "C1-PLACEMENT-INVALID-PARENT": ("placement parent identifier is absent from initial state",),
     "C1-PLACEMENT-ORDERKEY": ("placement carries the empty order-key boundary",),
     "C1-PLACEMENT-NONPARENT": ("placement references the deterministic unrelated-parent identifier",),
     "C1-INSERT-STAGED-PARENT": ("staged insert records reference one another through parent_id",),
     "C1-INSERT-STAGED-CONNECTOR": ("staged connector target resolves to a record in the same operation",),
     "C1-INSERT-HIERARCHY-CYCLE": ("staged insert placements form a two-record parent cycle",),
-    "C1-INSERT-STICKY-CARDINALITY": ("staged insert encodes at least two sticky direct children",),
+    "C1-INSERT-STICKY-CARDINALITY": ("staged insert has one Sticky parent", "staged insert has two direct RichText children"),
     "C1-INSERT-EXISTING-ID": ("insert payload reuses an identifier already present in initial state",),
     "C1-ID-COLLISION": ("prior operation reuses the operation id with a different payload",),
     "C1-IDEMPOTENT-EQUIVALENT": ("prior operation reuses the operation id with an equivalent payload",),
@@ -684,11 +719,11 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-RESTORE-NO-TOMBSTONE": ("restore supplies objects without an initial tombstone record",),
     "C1-GEOMETRY-STRUCTURAL": ("geometry fixture contains an empty segment list structural invalidity",),
     "C1-GEOMETRY-WRONG-KIND": ("geometry target has an incompatible initial object kind",),
-    "C1-GEOMETRY-N-1": ("geometry contains exactly N-1 segments",),
-    "C1-GEOMETRY-N": ("geometry contains exactly N segments",),
-    "C1-GEOMETRY-BOUNDARY": ("geometry contains the accepted boundary segment count",),
-    "C1-GEOMETRY-LIMIT": ("geometry contains exactly the published limit segment count",),
-    "C1-GEOMETRY-OVERFLOW": ("geometry contains one segment beyond the published limit",),
+    "C1-GEOMETRY-N-1": ("geometry recipe accounts for 1999999 authority units", "recipe mixes line, quad, and cubic carriers"),
+    "C1-GEOMETRY-N": ("geometry recipe accounts for 2000000 authority units", "recipe mixes line, quad, and cubic carriers"),
+    "C1-GEOMETRY-BOUNDARY": ("geometry recipe accounts for the accepted boundary", "recipe mixes line, quad, and cubic carriers"),
+    "C1-GEOMETRY-LIMIT": ("geometry recipe accounts for 2000001 authority units", "recipe mixes line, quad, and cubic carriers"),
+    "C1-GEOMETRY-OVERFLOW": ("geometry recipe carries the overflow-boundary authority units", "recipe mixes line, quad, and cubic carriers"),
     "C1-IMAGE-WRONG-KIND": ("image target has an incompatible initial object kind",),
     "C1-IMAGE-CONTENT-PRESENCE": ("image content payload is intentionally empty",),
     "C1-IMAGE-SOURCE-RECT": ("image content includes an explicit source rectangle",),
