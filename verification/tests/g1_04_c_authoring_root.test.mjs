@@ -37,6 +37,12 @@ test("C1 authoring root is complete and authority-bound", async () => {
   assert.equal(new Set(ids).size, ids.length); assert.equal(new Set(expectedIds).size, expectedIds.length);
   assert.deepEqual([...expectedIds].sort(), [...ids].sort());
   for (const record of cases) assert.equal(expected.filter((e) => e.caseId === record.id).length, 1);
+  const operationIdCollision = expected.find((record) => record.caseId === "C1-ID-COLLISION");
+  assert.deepEqual(
+    {disposition: operationIdCollision?.disposition, terminalPhase: operationIdCollision?.terminalPhase},
+    {disposition: "REJECTED", terminalPhase: "IDEMPOTENCY"},
+    "different-payload OperationId collision must reject during idempotency before stateful validation",
+  );
   for (const op of OPERATIONS) assert(cases.some((r) => r.operationFamily === op && r.blocking === true && expected.find((e) => e.caseId === r.id && e.disposition === "PLAN_READY" && e.terminalPhase === "PREPARE")), `missing positive ${op}`);
   for (const key of ["connector-target-delete", "geometry-point-like-elements-per-operation-aggregate"]) for (const record of expected) assert.doesNotThrow(() => assertExpectedPolicyStatus(key, record));
   assert.equal(suite.format, "axiom-g1-04-c-core-suite-v1"); assert.equal(suite.formatVersion, 1); assert.equal(suite.suiteId, "GT-G1-04-C-CORE");

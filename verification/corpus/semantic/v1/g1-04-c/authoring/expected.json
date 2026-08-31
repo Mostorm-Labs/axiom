@@ -218,7 +218,7 @@
     ],
     "mutationExpected": false,
     "disposition": "REJECTED",
-    "terminalPhase": "STATEFUL_VALIDATE"
+    "terminalPhase": "IDEMPOTENCY"
   },
   {
     "format": "axiom-g1-04-c-expected-v1",
@@ -396,7 +396,7 @@
     "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
-      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B11"
     ],
     "mutationExpected": false,
     "disposition": "REJECTED",
@@ -409,7 +409,7 @@
     "caseId": "C1-RESTORE-NO-TOMBSTONE",
     "authorityRuleRefs": [
       "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
-      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B12"
     ],
     "mutationExpected": false,
     "disposition": "REJECTED",
@@ -791,5 +791,382 @@
     "mutationExpected": false,
     "disposition": "REJECTED",
     "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-INSERT-EXISTING-ID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-DELETE-VALID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-DELETE-SUBTREE",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B03"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B07"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B09"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+      "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#RST-B10"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-PLACEMENT-GROUP-ANY",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-PLACEMENT-NONPARENT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+      "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-SIZE-NONPOSITIVE",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-IMAGE-INTRINSIC",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-IMAGE-CONTENTMODE",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-IMAGE-LOCAL-SIZE",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-STROKE-INVALID-RECORD",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-STROKE-NEW-ID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-STROKE-EXISTING-ID",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-ERASE-ADD-GEOMETRY",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-ERASE-ADD-CAPABILITY",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-RICHTEXT-STABLE-REFS",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    ],
+    "mutationExpected": false,
+    "disposition": "PLAN_READY",
+    "terminalPhase": "PREPARE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATEFUL_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-CONNECTOR-ANCHOR",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
+  },
+  {
+    "format": "axiom-g1-04-c-expected-v1",
+    "formatVersion": 1,
+    "provenance": "AUTHORITY_MANUAL",
+    "caseId": "C1-CONNECTOR-ROUTING",
+    "authorityRuleRefs": [
+      "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+      "notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3"
+    ],
+    "mutationExpected": false,
+    "disposition": "REJECTED",
+    "terminalPhase": "STATELESS_VALIDATE"
   }
 ]
