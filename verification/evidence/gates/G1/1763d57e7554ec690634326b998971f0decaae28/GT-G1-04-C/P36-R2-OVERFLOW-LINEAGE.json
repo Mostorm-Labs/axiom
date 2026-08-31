@@ -1,0 +1,105 @@
+{
+  "format": "axiom-gt-g1-04-c-p36-r2-overflow-lineage-v1",
+  "formatVersion": 1,
+  "p36RootTaskAnchor": "c7326f31caba88bd76d7e0b2845cae325e6e508a",
+  "previousSourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+  "previousMaterializedRef": "2a601ab35a2294cb38d713ab001bbac7deaa9cf7",
+  "sourceRef": "1763d57e7554ec690634326b998971f0decaae28",
+  "sourceScope": {
+    "baseRef": "2a601ab35a2294cb38d713ab001bbac7deaa9cf7",
+    "changedFiles": [
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/g1_04_c_geometry_overflow_source_test.cpp"
+    ],
+    "productionSourceDelta": 0,
+    "productionHeaderDelta": 0
+  },
+  "productionSourceBinding": {
+    "path": "runtime/semantic/src/validator.cpp",
+    "blobSha": "4b79d3eef0b401519431f09f63e26abe3d4f5180",
+    "taskAnchorBlobSha": "4b79d3eef0b401519431f09f63e26abe3d4f5180",
+    "previousSourceBlobSha": "4b79d3eef0b401519431f09f63e26abe3d4f5180",
+    "previousMaterializedBlobSha": "4b79d3eef0b401519431f09f63e26abe3d4f5180",
+    "currentBlobSha": "4b79d3eef0b401519431f09f63e26abe3d4f5180",
+    "allEqual": true
+  },
+  "arithmeticOverflow": {
+    "checkedAddition": {
+      "expected": "INTEGER_OVERFLOW",
+      "observed": "INTEGER_OVERFLOW",
+      "operands": {
+        "totalUnits": "SIZE_MAX",
+        "nextUnits": 1
+      },
+      "proofSurface": "exact production helper addGeometryUnits in runtime/semantic/src/validator.cpp"
+    },
+    "checkedMultiplication": {
+      "expected": "INTEGER_OVERFLOW",
+      "observed": "INTEGER_OVERFLOW",
+      "cases": [
+        {
+          "weight": "geometry_accounting_v1::kDabInstance",
+          "weightValue": 3,
+          "count": "SIZE_MAX / 3 + 1"
+        },
+        {
+          "weight": "geometry_accounting_v1::kEraseCubicSegment",
+          "weightValue": 6,
+          "count": "SIZE_MAX / 6 + 1"
+        }
+      ],
+      "proofSurface": "exact production helper multiplyGeometryUnits in runtime/semantic/src/validator.cpp"
+    },
+    "copiedArithmeticImplementation": false
+  },
+  "corpusOverflowCase": {
+    "caseId": "C1-GEOMETRY-OVERFLOW",
+    "observed": "GEOMETRY_LIMIT_EXCEEDED",
+    "usedAsArithmeticOverflowOracle": false,
+    "meaning": "historical N+1 corpus case, not the machine-integer overflow proof seam"
+  },
+  "C3Lineage": {
+    "sourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+    "materializedRef": "2a601ab35a2294cb38d713ab001bbac7deaa9cf7",
+    "observationsChanged": false,
+    "metadataOnlyLineageCorrection": true
+  },
+  "C5": {
+    "pass": 61,
+    "fail": 29,
+    "rerun": false,
+    "factsChanged": false
+  },
+  "productionSemanticDelta": 0,
+  "historicalScopeGuard": {
+    "historicalGuardModified": false,
+    "status": "NOT_APPLICABLE_TO_P36_REPAIR",
+    "result": "FAIL",
+    "reason": "historical C5 guard rejects the prior upstream verification delta; no P36 source scope was accepted by that guard"
+  },
+  "tests": {
+    "focusedOverflow": {
+      "target": "canvas_semantic_g1_04_c_geometry_overflow_source_test",
+      "cases": 3,
+      "passed": 3
+    },
+    "fullSemanticCTest": {
+      "passed": 337,
+      "failed": 0,
+      "skipped": 12,
+      "total": 349
+    },
+    "pythonFocused": {
+      "passed": 27,
+      "failed": 0
+    },
+    "npmValidate": {
+      "status": "FAIL",
+      "passingSemanticWorkspaceTests": 49,
+      "failingSemanticWorkspaceTests": 1,
+      "failure": "historical C5 source scope guard mismatch"
+    },
+    "gitDiffCheck": "PASS",
+    "p36SpecificScopeCheck": "PASS"
+  }
+}
