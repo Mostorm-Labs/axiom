@@ -1,0 +1,94 @@
+name: GT-G1-04-C Exact Source
+
+on:
+  push:
+    branches:
+      - codex/gt-g1-04-c8-exact-source-ci
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    name: g1-04-c / exact-source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SOURCE_REF: ${{ github.sha }}
+      RUN_HEAD_SHA: ${{ github.event.head_commit.id }}
+      PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
+      ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
+      UTF8_RANGE_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/utf8_range
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+      - name: Fail closed unless this is the exact authoritative push checkout
+        run: |
+          test "$GITHUB_EVENT_NAME" = push
+          test "$GITHUB_REF" = refs/heads/codex/gt-g1-04-c8-exact-source-ci
+          test -n "$RUN_HEAD_SHA"
+          test "$RUN_HEAD_SHA" = "$GITHUB_SHA"
+          test "$GITHUB_SHA" = "$SOURCE_REF"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+      - name: Install and verify the verification workspace
+        run: |
+          cd verification
+          npm ci
+          npm run build
+          npm run validate
+      - name: Compile C fixtures twice without writing accepted corpus
+        run: |
+          python3 verification/fixture-author/compile_g1_04_c.py --root . --output "$RUNNER_TEMP/g1-04-c8-fixtures-a"
+          python3 verification/fixture-author/compile_g1_04_c.py --root . --output "$RUNNER_TEMP/g1-04-c8-fixtures-b"
+          diff -ru "$RUNNER_TEMP/g1-04-c8-fixtures-a" "$RUNNER_TEMP/g1-04-c8-fixtures-b"
+          diff -ru verification/corpus/semantic/v1/g1-04-c/generated "$RUNNER_TEMP/g1-04-c8-fixtures-a"
+      - name: Build the exact production semantic runtime and run all CTest
+        run: |
+          python3 tools/semantic_fetch.py --target linux-x86_64
+          python3 tools/bootstrap_deps.py --core
+          cmake -S . -B out/g1-04-c8 -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR="$PROTOBUF_DIR" -Dabsl_DIR="$ABSL_DIR" -Dutf8_range_DIR="$UTF8_RANGE_DIR"
+          cmake --build out/g1-04-c8 --parallel
+          ctest --test-dir out/g1-04-c8 --output-on-failure
+      - name: Export fresh native C provider observations
+        run: |
+          observer="$(find out/g1-04-c8 -type f -name canvas_semantic_g1_04_c_observation_export -perm -111 -print -quit)"
+          test -n "$observer"
+          "$observer" verification/corpus/semantic/v1/g1-04-c/generated/manifest.json > "$RUNNER_TEMP/g1-04-c8-observation.json"
+      - name: Generate exact-source evidence and test its fail-closed contract
+        run: |
+          node verification/tools/generate_g1_04_c8_evidence.mjs \
+            --package-ref 5ef414e3dc5b8f4cc42327543b3b1b978ff9a0cc \
+            --task-anchor 34c8db4f247849c5850e16226b0e556f57497053 \
+            --source-ref "$SOURCE_REF" \
+            --observation "$RUNNER_TEMP/g1-04-c8-observation.json" \
+            --output-dir "$RUNNER_TEMP/g1-04-c8-evidence" \
+            --ci-run-id "$GITHUB_RUN_ID" \
+            --ci-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --ci-event "$GITHUB_EVENT_NAME" \
+            --ci-ref "$GITHUB_REF" \
+            --ci-head-sha "$GITHUB_SHA" \
+            --checkout-sha "$(git rev-parse HEAD)" \
+            --workflow-ref "$GITHUB_WORKFLOW_REF"
+          node --test verification/packages/semantic-conformance-cli/test/c8-exact-source-evidence.test.mjs
+          test "$(find "$RUNNER_TEMP/g1-04-c8-evidence" -maxdepth 1 -type f -name '*.json' | wc -l | tr -d ' ')" = 8
+      - name: Upload exact-source durable evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g1-04-c8-${{ github.sha }}
+          path: ${{ runner.temp }}/g1-04-c8-evidence
+          if-no-files-found: error
+          retention-days: 14
