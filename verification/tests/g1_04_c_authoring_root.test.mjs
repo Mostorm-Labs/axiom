@@ -114,8 +114,9 @@ test("C1 authoring root is complete and authority-bound", async () => {
   }
   assert.equal(expected.find((record) => record.caseId === "C1-GEOMETRY-LIMIT")?.semanticErrorCategory, "GEOMETRY_LIMIT_EXCEEDED");
   assert.equal(expected.find((record) => record.caseId === "C1-GEOMETRY-LIMIT")?.terminalPhase, "STATELESS_VALIDATE");
-  assert.equal(expected.find((record) => record.caseId === "C1-GEOMETRY-OVERFLOW")?.semanticErrorCategory, "INTEGER_OVERFLOW");
+  assert.equal(expected.find((record) => record.caseId === "C1-GEOMETRY-OVERFLOW")?.semanticErrorCategory, "GEOMETRY_LIMIT_EXCEEDED");
   assert.equal(expected.find((record) => record.caseId === "C1-GEOMETRY-OVERFLOW")?.terminalPhase, "STATELESS_VALIDATE");
+  assert.equal(expected.find((record) => record.caseId === "C1-ERASE-REMOVE-WHOLE-REJECT")?.terminalPhase, "STATEFUL_VALIDATE");
   for (const op of OPERATIONS) assert(cases.some((r) => r.operationFamily === op && r.blocking === true && expected.find((e) => e.caseId === r.id && e.disposition === "PLAN_READY" && e.terminalPhase === "PREPARE")), `missing positive ${op}`);
   for (const key of ["connector-target-delete", "geometry-point-like-elements-per-operation-aggregate"]) for (const record of expected) assert.doesNotThrow(() => assertExpectedPolicyStatus(key, record));
   assert.equal(suite.format, "axiom-g1-04-c-core-suite-v1"); assert.equal(suite.formatVersion, 1); assert.equal(suite.suiteId, "GT-G1-04-C-CORE");

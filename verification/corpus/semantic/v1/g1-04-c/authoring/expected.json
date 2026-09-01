@@ -551,7 +551,7 @@
     ],
     "mutationExpected": false,
     "disposition": "REJECTED",
-    "terminalPhase": "STATEFUL_VALIDATE"
+    "terminalPhase": "STATELESS_VALIDATE"
   },
   {
     "format": "axiom-g1-04-c-expected-v1",
@@ -762,7 +762,7 @@
     "mutationExpected": false,
     "disposition": "REJECTED",
     "terminalPhase": "STATELESS_VALIDATE",
-    "semanticErrorCategory": "INTEGER_OVERFLOW"
+    "semanticErrorCategory": "GEOMETRY_LIMIT_EXCEEDED"
   },
   {
     "format": "axiom-g1-04-c-expected-v1",
@@ -1326,7 +1326,7 @@
     ],
     "mutationExpected": false,
     "disposition": "REJECTED",
-    "terminalPhase": "STATELESS_VALIDATE"
+    "terminalPhase": "STATEFUL_VALIDATE"
   },
   {
     "format": "axiom-g1-04-c-expected-v1",

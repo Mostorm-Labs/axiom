@@ -58,4 +58,20 @@ TEST(G1CFixtureDecoder, ExpandsAuthorityGeometryRecipeAtDecoderBoundary) {
     EXPECT_TRUE(std::holds_alternative<CubicTo>(payload->geometry.commands.back()));
 }
 
+TEST(G1CFixtureDecoder, DecodesAcceptedV1StrokeBrushColor) {
+    const auto path = std::filesystem::path(G1_C_SOURCE_DIR) /
+        "verification/corpus/semantic/v1/g1-04-c/generated/inputs/C1-STROKE-VALID.json";
+    const auto result = decodeFixtureFile(path.string());
+    ASSERT_TRUE(result.ok) << result.error;
+    ASSERT_TRUE(result.fixture.has_value());
+    const auto* payload = std::get_if<AddStrokeOp>(&result.fixture->operation.payload);
+    ASSERT_NE(payload, nullptr);
+    const auto* content = std::get_if<VectorStrokeContent>(&payload->object.content);
+    ASSERT_NE(content, nullptr);
+    EXPECT_EQ(content->stroke.brush.color.r, 0.0F);
+    EXPECT_EQ(content->stroke.brush.color.g, 0.0F);
+    EXPECT_EQ(content->stroke.brush.color.b, 0.0F);
+    EXPECT_EQ(content->stroke.brush.color.a, 1.0F);
+}
+
 } // namespace canvas::verification::g1_04_c

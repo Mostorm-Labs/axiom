@@ -441,6 +441,17 @@ target_compile_definitions(canvas_semantic_g1_04_c_observer_coverage_test PRIVAT
 target_link_libraries(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 gtest_discover_tests(canvas_semantic_g1_04_c_observer_coverage_test)
 
+add_executable(canvas_semantic_g1_04_c_observation_export
+  ../tools/g1_04_c_observation_export.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_link_libraries(canvas_semantic_g1_04_c_observation_export PRIVATE canvas_runtime_semantic)
+
 add_test(
     NAME canvas_semantic_runtime_boundaries
     COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tools/check_runtime_boundaries.py

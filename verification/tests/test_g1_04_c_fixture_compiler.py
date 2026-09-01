@@ -265,6 +265,27 @@ class G104CFixtureCompilerTest(unittest.TestCase):
                 current_copy = dict(current_record)
                 current_copy.pop("logicalPlanProjection", None)
                 self.assertEqual(anchored_record, current_copy)
+            elif current_record["caseId"] == "C1-PLACEMENT-ORDERKEY":
+                current_copy = dict(current_record)
+                anchored_copy = dict(anchored_record)
+                current_copy.pop("terminalPhase")
+                anchored_copy.pop("terminalPhase")
+                self.assertEqual(anchored_copy, current_copy)
+                self.assertEqual("STATELESS_VALIDATE", current_record["terminalPhase"])
+            elif current_record["caseId"] == "C1-GEOMETRY-OVERFLOW":
+                current_copy = dict(current_record)
+                anchored_copy = dict(anchored_record)
+                current_copy.pop("semanticErrorCategory")
+                anchored_copy.pop("semanticErrorCategory")
+                self.assertEqual(anchored_copy, current_copy)
+                self.assertEqual("GEOMETRY_LIMIT_EXCEEDED", current_record["semanticErrorCategory"])
+            elif current_record["caseId"] == "C1-ERASE-REMOVE-WHOLE-REJECT":
+                current_copy = dict(current_record)
+                anchored_copy = dict(anchored_record)
+                current_copy.pop("terminalPhase")
+                anchored_copy.pop("terminalPhase")
+                self.assertEqual(anchored_copy, current_copy)
+                self.assertEqual("STATEFUL_VALIDATE", current_record["terminalPhase"])
             else:
                 self.assertEqual(anchored_record, current_record)
 
@@ -308,6 +329,88 @@ class G104CFixtureCompilerTest(unittest.TestCase):
         item = value["operation"]["payload"]["value"]["items"][0]
         self.assertEqual("f64:7ff0000000000000", item["width"])
         self.assertEqual(24.0, item["height"])
+
+    def test_p36_image_stroke_and_richtext_carriers_use_v1_identities(self) -> None:
+        for case_id in (
+            "C1-IMAGE-VALID",
+            "C1-IMAGE-INTRINSIC",
+            "C1-IMAGE-CONTENTMODE",
+            "C1-IMAGE-LOCAL-SIZE",
+            "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+            "C1-IMAGE-SOURCE-RECT",
+        ):
+            value = json.loads((GENERATED / "inputs" / f"{case_id}.json").read_text(encoding="utf-8"))
+            target = value["initialState"]["objects"][0]
+            self.assertEqual((2, 1), (target["kind"], target["kind_version"]), case_id)
+
+        for case_id in ("C1-STROKE-VALID", "C1-STROKE-NEW-ID", "C1-STROKE-EXISTING-ID"):
+            value = json.loads((GENERATED / "inputs" / f"{case_id}.json").read_text(encoding="utf-8"))
+            stroke = value["operation"]["payload"]["value"]["object"]
+            self.assertEqual((5, 1), (stroke["kind"], stroke["kind_version"]), case_id)
+            self.assertEqual([0.0, 0.0, 0.0, 1.0], stroke["content"]["value"]["stroke"]["color"], case_id)
+
+        for case_id in ("C1-RICHTEXT-VALID", "C1-RICHTEXT-STABLE-REFS", "C1-RICHTEXT-UTF8-STYLE", "C1-RICHTEXT-INVALID-STEP"):
+            value = json.loads((GENERATED / "inputs" / f"{case_id}.json").read_text(encoding="utf-8"))
+            target = value["initialState"]["objects"][0]
+            self.assertEqual((4, 1), (target["kind"], target["kind_version"]), case_id)
+            base_style = target["content"]["value"]["document"]["paragraphs"][0]["runs"][0]["style"]
+            self.assertIn("font_resource_id", base_style, case_id)
+            self.assertIn("color", base_style, case_id)
+            step_style = value["operation"]["payload"]["value"]["delta"]["steps"][0]["style"]
+            self.assertIn("font_resource_id", step_style, case_id)
+            self.assertIn("color", step_style, case_id)
+
+    def test_p36_staged_and_stateful_fixtures_reach_their_intended_boundary(self) -> None:
+        for case_id in ("C1-INSERT-STAGED-PARENT", "C1-RESTORE-STAGED-PARENT-CHILD"):
+            value = json.loads((GENERATED / "inputs" / f"{case_id}.json").read_text(encoding="utf-8"))
+            records = value["operation"]["payload"]["value"]["objects"]
+            parent = next(record for record in records if record["placement"]["parent_id"] is None)
+            self.assertEqual((9, 1), (parent["kind"], parent["kind_version"]), case_id)
+
+        for case_id in ("C1-ERASE-ADD-VALID", "C1-ERASE-REMOVE-VALID", "C1-ERASE-REMOVE-WHOLE-REJECT"):
+            value = json.loads((GENERATED / "inputs" / f"{case_id}.json").read_text(encoding="utf-8"))
+            target = value["initialState"]["objects"][0]
+            self.assertEqual((5, 1), (target["kind"], target["kind_version"]), case_id)
+
+        connector = json.loads((GENERATED / "inputs/C1-CONNECTOR-VALID.json").read_text(encoding="utf-8"))
+        endpoint_id = connector["operation"]["payload"]["value"]["content"]["start"]["value"]["target_object_id"]
+        self.assertIn(endpoint_id, {record["id"] for record in connector["initialState"]["objects"]})
+
+        geometry = json.loads((GENERATED / "inputs/C1-GEOMETRY-WRONG-KIND.json").read_text(encoding="utf-8"))
+        geometry_value = geometry["operation"]["payload"]["value"]["geometry"]
+        self.assertEqual(0, geometry_value["variant"])
+        self.assertTrue(geometry_value["value"]["segments"])
+
+        split_collision = json.loads((GENERATED / "inputs/C1-SPLIT-REPLACEMENT-COLLISION.json").read_text(encoding="utf-8"))
+        self.assertEqual([], split_collision["initialState"]["priorOperations"])
+        replacements = split_collision["operation"]["payload"]["value"]["splits"][0]["replacements"]
+        initial_ids = {record["id"] for record in split_collision["initialState"]["objects"]}
+        self.assertTrue(any(record["id"] in initial_ids for record in replacements))
+
+    def test_p36_presence_restore_and_limit_fixtures_do_not_use_masking_surrogates(self) -> None:
+        patch = json.loads((GENERATED / "inputs/C1-PATCH-PRESENCE-DEFAULT.json").read_text(encoding="utf-8"))
+        patch = patch["operation"]["payload"]["value"]["patches"][0]
+        self.assertEqual("clear", patch["action"])
+        self.assertNotIn("value", patch)
+
+        replay = json.loads((GENERATED / "inputs/C1-RESTORE-LOCAL-REPLAY-REMOTE.json").read_text(encoding="utf-8"))
+        self.assertEqual([], replay["initialState"]["priorOperations"])
+
+        same_payload = json.loads((GENERATED / "inputs/C1-RESTORE-SAME-PAYLOAD-NEW-OPID.json").read_text(encoding="utf-8"))
+        created_id = same_payload["operation"]["payload"]["value"]["objects"][0]["id"]
+        self.assertEqual([], same_payload["initialState"]["priorOperations"])
+        self.assertIn(created_id, {record["id"] for record in same_payload["initialState"]["objects"]})
+
+        hard_limit = json.loads((GENERATED / "inputs/C1-SIZE-HARD-LIMIT.json").read_text(encoding="utf-8"))
+        items = hard_limit["operation"]["payload"]["value"]["items"]
+        self.assertEqual(65_536, len(items))
+        self.assertNotEqual(100000.0, items[0]["width"])
+
+    def test_p36_expected_golden_reconciles_authority_terminal_and_geometry_category(self) -> None:
+        expected = {record["caseId"]: record for record in json.loads(EXPECTED.read_text(encoding="utf-8"))}
+        self.assertEqual("STATELESS_VALIDATE", expected["C1-PLACEMENT-ORDERKEY"]["terminalPhase"])
+        self.assertEqual("GEOMETRY_LIMIT_EXCEEDED", expected["C1-GEOMETRY-OVERFLOW"]["semanticErrorCategory"])
+        self.assertEqual("STATEFUL_VALIDATE", expected["C1-ERASE-REMOVE-WHOLE-REJECT"]["terminalPhase"])
 
     def test_every_accepted_case_has_explicit_realization_rule(self) -> None:
         cases = json.loads(CASES.read_text(encoding="utf-8"))
@@ -494,7 +597,8 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-SIZE-NONPOSITIVE":
         assert operation["items"][0]["width"] <= 0
     elif case_id == "C1-SIZE-HARD-LIMIT":
-        assert operation["items"][0]["width"] == 100000.0
+        assert len(operation["items"]) == 65_536
+        assert all(item["width"] == 32.0 and item["height"] == 24.0 for item in operation["items"])
     elif case_id == "C1-SIZE-WRONG-KIND":
         assert initial_by_id[target_id]["kind"] == 4
     elif case_id == "C1-DELETE-MISSING-TARGET":
@@ -563,8 +667,9 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
         prior = value["initialState"]["priorOperations"][0]
         assert prior["operation_id"] == value["operation"]["id"] and prior["payload"] == value["operation"]["payload"]
     elif case_id == "C1-RESTORE-SAME-PAYLOAD-NEW-OPID":
-        prior = value["initialState"]["priorOperations"][0]
-        assert prior["operation_id"] != value["operation"]["id"] and prior["payload"] == value["operation"]["payload"]
+        assert not value["initialState"]["priorOperations"]
+        assert target_id in initial_by_id
+        assert operation["objects"][0]["id"] == target_id
     elif case_id == "C1-RESTORE-OPID-BEFORE-EXISTENCE":
         assert len(value["initialState"]["priorOperations"]) == 1 and not initial
     elif case_id == "C1-RESTORE-LOCAL-REPLAY-REMOTE":
@@ -623,7 +728,7 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-SPLIT-SOURCE-MISSING":
         assert target_id not in initial_by_id
     elif case_id == "C1-SPLIT-REPLACEMENT-COLLISION":
-        assert operation["splits"][0]["replacements"][0]["id"] in initial_by_id
+        assert any(item["id"] in initial_by_id for item in operation["splits"][0]["replacements"])
     elif case_id == "C1-SPLIT-REPLACEMENT-STRUCTURAL":
         assert operation["splits"][0]["replacements"][0]["content"]["value"] == {}
     elif case_id == "C1-ERASE-ADD-UNIQUENESS":
@@ -642,13 +747,17 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
         elif case_id == "C1-ERASE-REMOVE-DUPLICATE":
             assert len(ids) >= 2 and len(set(ids)) < len(ids)
         elif case_id == "C1-ERASE-REMOVE-WHOLE-REJECT":
-            assert set(ids) == {item["id"] for item in initial_by_id[target_id]["erase_masks"]}
+            existing_ids = {item["id"] for item in initial_by_id[target_id]["erase_masks"]}
+            assert existing_ids.issubset(ids)
+            assert _stable_id(case_id, "mask-missing") in ids
         else:
             assert ids[0] in {item["id"] for item in initial_by_id[target_id]["erase_masks"]}
     elif case_id == "C1-RICHTEXT-UTF8-STYLE":
         assert "λ" in operation["delta"]["steps"][0]["text"]
     elif case_id == "C1-RICHTEXT-INVALID-STEP":
-        assert operation["delta"]["steps"][0]["kind"] == "UnknownStep"
+        step = operation["delta"]["steps"][0]
+        assert step["kind"] == "InsertText"
+        assert step["paragraph_id"] != _stable_id(case_id, "paragraph")
     elif case_id in {"C1-RICHTEXT-VALID", "C1-RICHTEXT-STABLE-REFS"}:
         assert operation["delta"]["steps"][0]["paragraph_id"] == _stable_id(case_id, "paragraph")
     elif case_id == "C1-CONNECTOR-INVALID-END":
@@ -681,10 +790,10 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-PATCH-FIELD-ID": ("patch selects the deliberately unpublished field identifier",),
     "C1-PATCH-BRANCH-TYPE": ("patch value uses the mechanically incompatible value branch",),
     "C1-PATCH-APPLICABILITY": ("patch target kind is the accepted non-applicable combination",),
-    "C1-PATCH-PRESENCE-DEFAULT": ("patch entry omits the optional value field",),
+    "C1-PATCH-PRESENCE-DEFAULT": ("patch entry uses the valid clear action without an optional value field",),
     "C1-SIZE-NONFINITE": ("width carries the frozen positive-infinity token while height stays finite",),
     "C1-SIZE-NONPOSITIVE": ("size fixture includes a non-positive width dimension",),
-    "C1-SIZE-HARD-LIMIT": ("width uses the published hard-limit boundary value",),
+    "C1-SIZE-HARD-LIMIT": ("size item count is the published N+1 keyed-batch boundary",),
     "C1-SIZE-WRONG-KIND": ("size target has an incompatible initial object kind",),
     "C1-DELETE-MISSING-TARGET": ("requested delete target is absent from initial state",),
     "C1-DELETE-DUPLICATE-TARGET": ("delete payload repeats the same target identifier",),
@@ -705,7 +814,7 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-INSERT-EXISTING-ID": ("insert payload reuses an identifier already present in initial state",),
     "C1-ID-COLLISION": ("prior operation reuses the operation id with a different payload",),
     "C1-IDEMPOTENT-EQUIVALENT": ("prior operation reuses the operation id with an equivalent payload",),
-    "C1-RESTORE-SAME-PAYLOAD-NEW-OPID": ("prior restore payload matches while operation identifiers differ",),
+    "C1-RESTORE-SAME-PAYLOAD-NEW-OPID": ("apply-base already contains the restored object under a distinct operation id",),
     "C1-RESTORE-OPID-BEFORE-EXISTENCE": ("prior operation history exists while the object state is empty",),
     "C1-RESTORE-LOCAL-REPLAY-REMOTE": ("execution variants are ordered local, replay, then remote",),
     "C1-RESTORE-ELIGIBLE": ("restore payload supplies objects absent from the initial state",),
@@ -749,11 +858,11 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-ERASE-REMOVE-VALID": ("erase-mask removal selects an existing mask identifier",),
     "C1-ERASE-REMOVE-MISSING": ("erase-mask removal targets an object with no existing masks",),
     "C1-ERASE-REMOVE-DUPLICATE": ("erase-mask removal repeats the same mask identifier",),
-    "C1-ERASE-REMOVE-WHOLE-REJECT": ("erase-mask removal selects every existing mask identifier",),
+    "C1-ERASE-REMOVE-WHOLE-REJECT": ("one erase-mask removal batch contains all existing ids plus one missing id",),
     "C1-RICHTEXT-VALID": ("rich-text delta references the deterministic paragraph identifier",),
     "C1-RICHTEXT-STABLE-REFS": ("rich-text delta uses stable deterministic paragraph references",),
     "C1-RICHTEXT-UTF8-STYLE": ("rich-text delta includes the UTF-8 lambda style text",),
-    "C1-RICHTEXT-INVALID-STEP": ("rich-text delta uses the intentionally unknown step kind",),
+    "C1-RICHTEXT-INVALID-STEP": ("rich-text delta uses a structurally valid step with an absent paragraph reference",),
     "C1-CONNECTOR-VALID": ("connector uses valid endpoint and routing discriminators",),
     "C1-CONNECTOR-ATTACHED-ENDPOINT": ("connector endpoint target resolves to an existing object",),
     "C1-CONNECTOR-TARGET-CAPABILITY": ("connector target resolves to an object with incompatible capability kind",),

@@ -8,6 +8,7 @@ import { spawnSync } from "node:child_process";
 
 const repoRoot = fileURLToPath(new URL("../../../../", import.meta.url));
 const generator = fileURLToPath(new URL("../../../tools/generate_g1_04_c5_evidence.mjs", import.meta.url));
+const C5_SOURCE_REF = "1342dc52aaeb7e1bf09a38e08d44ef72523a9d79";
 
 function run(args) {
   return spawnSync(process.execPath, [generator, ...args], { cwd: repoRoot, encoding: "utf8" });
@@ -16,7 +17,7 @@ function run(args) {
 function generatedEvidence() {
   const dir = mkdtempSync(join(tmpdir(), "c5-evidence-"));
   const output = join(dir, "core.json");
-  const sourceRef = spawnSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).stdout.trim();
+  const sourceRef = C5_SOURCE_REF;
   const result = run(["--source-ref", sourceRef, "--output", output]);
   assert.equal(result.status, 0, result.stderr);
   return { output, evidence: JSON.parse(readFileSync(output, "utf8")), sourceRef };
