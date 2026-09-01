@@ -1,0 +1,6372 @@
+{
+  "acceptedCases": 90,
+  "decodedInputAudit": {
+    "negativeZero": {
+      "byProvider": {
+        "indexed": [
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "4040000000000000",
+          "4038000000000000",
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "3ff0000000000000",
+          "8000000000000000",
+          "0000000000000000"
+        ],
+        "reference": [
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "4040000000000000",
+          "4038000000000000",
+          "3ff0000000000000",
+          "0000000000000000",
+          "0000000000000000",
+          "3ff0000000000000",
+          "8000000000000000",
+          "0000000000000000"
+        ]
+      },
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "requiredBits": "8000000000000000"
+    }
+  },
+  "expectedTruthReads": 0,
+  "factsOnly": true,
+  "format": "axiom-gt-g1-04-c-plan-projection-v2",
+  "formatVersion": 2,
+  "noMutationObservations": 180,
+  "observationCount": 180,
+  "observationRecords": [
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202"
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202"
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "c22e695db0b7444c02c05136a9273315",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "6901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202"
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202"
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "c22e695db0b7444c02c05136a9273315",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "6901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602"
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602"
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602"
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602"
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01"
+          },
+          {
+            "id": "4e8e23c0a4d41974b50d1ae7c6362861",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6202"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01"
+          },
+          {
+            "id": "4e8e23c0a4d41974b50d1ae7c6362861",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6202"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "43e837de249ce4c6de1eb573911c9aa8",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "6e01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01"
+          },
+          {
+            "id": "4e8e23c0a4d41974b50d1ae7c6362861",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6202"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01"
+          },
+          {
+            "id": "4e8e23c0a4d41974b50d1ae7c6362861",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6202"
+          }
+        ]
+      },
+      "caseId": "C1-CONNECTOR-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "43e837de249ce4c6de1eb573911c9aa8",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "6e01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502"
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502"
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-CASCADE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "14ad662e612a53fa46af20b1aa5fd0f5",
+          "bed0e2f48ca23c0992a9a9ae8f8bf109"
+        ],
+        "deletes": [
+          "14ad662e612a53fa46af20b1aa5fd0f5",
+          "bed0e2f48ca23c0992a9a9ae8f8bf109"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502"
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502"
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-CASCADE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "14ad662e612a53fa46af20b1aa5fd0f5",
+          "bed0e2f48ca23c0992a9a9ae8f8bf109"
+        ],
+        "deletes": [
+          "14ad662e612a53fa46af20b1aa5fd0f5",
+          "bed0e2f48ca23c0992a9a9ae8f8bf109"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "1",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "1",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-SUBTREE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "43cfd6c2cf9ca00cac5f691a562b8369",
+          "f38b01d3a95044a9ebe0aeb0b9fc836f"
+        ],
+        "deletes": [
+          "43cfd6c2cf9ca00cac5f691a562b8369",
+          "f38b01d3a95044a9ebe0aeb0b9fc836f"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-SUBTREE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "43cfd6c2cf9ca00cac5f691a562b8369",
+          "f38b01d3a95044a9ebe0aeb0b9fc836f"
+        ],
+        "deletes": [
+          "43cfd6c2cf9ca00cac5f691a562b8369",
+          "f38b01d3a95044a9ebe0aeb0b9fc836f"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "8426ce74042e7d207d42b65558a96cec"
+        ],
+        "deletes": [
+          "8426ce74042e7d207d42b65558a96cec"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801"
+          }
+        ]
+      },
+      "caseId": "C1-DELETE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deleteClosure": [
+          "8426ce74042e7d207d42b65558a96cec"
+        ],
+        "deletes": [
+          "8426ce74042e7d207d42b65558a96cec"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6001"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6001"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "1101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "1101"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "1101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "1101"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "9301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "9301"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "9301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "9301"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "3a98b65cee5253944fb43cb239e2a644",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "6b01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-ADD-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "3a98b65cee5253944fb43cb239e2a644",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "6b01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "f101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "f101"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "f101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "f101"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0201"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0201"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "2a01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "2a01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01"
+          }
+        ]
+      },
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "8",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "06b176ea38b64f41b467f94575eed8ac",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "d901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "06b176ea38b64f41b467f94575eed8ac",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "d901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "GEOMETRY_LIMIT_EXCEEDED",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "GEOMETRY_LIMIT_EXCEEDED",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-N",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "b0b1bfab58106423c739f8b7405f29e3",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "7501"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-N",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "b0b1bfab58106423c739f8b7405f29e3",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "7501"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-N-1",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6e1230a882a04d1254294edf716264ed",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "b901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-N-1",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6e1230a882a04d1254294edf716264ed",
+              "kind": 3,
+              "kindVersion": 1,
+              "orderKeyHex": "b901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "GEOMETRY_LIMIT_EXCEEDED",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "GEOMETRY_LIMIT_EXCEEDED",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01"
+          }
+        ]
+      },
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302"
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302"
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01"
+          }
+        ]
+      },
+      "caseId": "C1-HIERARCHY-STICKY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302"
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302"
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01"
+          }
+        ]
+      },
+      "caseId": "C1-HIERARCHY-STICKY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-ID-COLLISION",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "10",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-ID-COLLISION",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "10",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "ALREADY_APPLIED",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "ALREADY_APPLIED",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0801"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "1711184e7899723f6e400d25d9017589",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "0801"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "0801"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "1711184e7899723f6e400d25d9017589",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "0801"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e001"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6052dd45f5d0a27ef07faa57a275d454",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "e001"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e001"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6052dd45f5d0a27ef07faa57a275d454",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "e001"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e201"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "09298116f69be9e2e901cace875b0048",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "e201"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "e201"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "09298116f69be9e2e901cace875b0048",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "e201"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "dc01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "dc01"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6b6b2f871f566ef955384227fadf0269",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "dc01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "dc01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "dc01"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "6b6b2f871f566ef955384227fadf0269",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "dc01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "3001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "3001"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "3001"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "3001"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "c501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "c501"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "2327a9670c2abbb9200c3c02c11a4835",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "c501"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "c501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 1,
+            "orderKeyHex": "c501"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "2327a9670c2abbb9200c3c02c11a4835",
+              "kind": 2,
+              "kindVersion": 1,
+              "orderKeyHex": "c501"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401"
+          }
+        ]
+      },
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401"
+          }
+        ]
+      },
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401"
+          }
+        ]
+      },
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "6",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "6",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "02f76840b37beee24d7e13f7d1debef9",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "0702"
+            },
+            {
+              "id": "606de97058a90cc1d39c84c58fca0925",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4701"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "02f76840b37beee24d7e13f7d1debef9",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "0702"
+            },
+            {
+              "id": "606de97058a90cc1d39c84c58fca0925",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4701"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "10b8eec0d52b25f6c19a0e91f4e52658",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "7b01"
+            },
+            {
+              "id": "1891f38a2b2e14b4a0890aef94e66681",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "aa02",
+              "parentId": "10b8eec0d52b25f6c19a0e91f4e52658"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "10b8eec0d52b25f6c19a0e91f4e52658",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "7b01"
+            },
+            {
+              "id": "1891f38a2b2e14b4a0890aef94e66681",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "aa02",
+              "parentId": "10b8eec0d52b25f6c19a0e91f4e52658"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "6d5353bd1eb33e0d51c18c27ee755706",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4001"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-INSERT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "6d5353bd1eb33e0d51c18c27ee755706",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4001"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "d701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "d701"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "d701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "d701"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-FIELD-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-FIELD-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "d301"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "d301"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "0a222cd010297ce23d11a7ebc4e3462d",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "e801"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801"
+          }
+        ]
+      },
+      "caseId": "C1-PATCH-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "0a222cd010297ce23d11a7ebc4e3462d",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "e801"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "6",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "6",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802"
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802"
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "79e5616a8b5a59f1c433ae2edb26616b",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "f801",
+              "parentId": "5a03fcb61d071948c334e24ed13ddb40"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802"
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802"
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "79e5616a8b5a59f1c433ae2edb26616b",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "f801",
+              "parentId": "5a03fcb61d071948c334e24ed13ddb40"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101"
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101"
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101"
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101"
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501"
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501"
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501"
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501"
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702"
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702"
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "4fd1e791957b2865e99e28aa46cd77f0",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "ec01",
+              "parentId": "3093a7ce0643878d7dc592f891bf8b0a"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702"
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702"
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "4fd1e791957b2865e99e28aa46cd77f0",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "ec01",
+              "parentId": "3093a7ce0643878d7dc592f891bf8b0a"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "8b53f77bb899b4dade48d3b920457584",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "0401"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401"
+          }
+        ]
+      },
+      "caseId": "C1-PLACEMENT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "8b53f77bb899b4dade48d3b920457584",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "0401"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "5",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "34397c5e85c3e3faa22713fc30fb1138",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4901"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "34397c5e85c3e3faa22713fc30fb1138",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "4901"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "21bd79b4236537f83f0899b8d48715a0",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "7a01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "21bd79b4236537f83f0899b8d48715a0",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "7a01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "27dc6783005ad22180d4430f4fc233a9",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "da01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "27dc6783005ad22180d4430f4fc233a9",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "da01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "ALREADY_APPLIED",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "ALREADY_APPLIED",
+      "observedTerminalPhase": "IDEMPOTENCY",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7098d29d3c24ef01b00f2c91729947a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7098d29d3c24ef01b00f2c91729947a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e301"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7098d29d3c24ef01b00f2c91729947a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e301"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7098d29d3c24ef01b00f2c91729947a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e301"
+          }
+        ]
+      },
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "79e7ca044bc7cb4cb7f25dbd40df3373",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "7802"
+            },
+            {
+              "id": "d7fdd5b135669d03c826e04e52a8007b",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "e701"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "79e7ca044bc7cb4cb7f25dbd40df3373",
+              "kind": 7,
+              "kindVersion": 1,
+              "orderKeyHex": "7802"
+            },
+            {
+              "id": "d7fdd5b135669d03c826e04e52a8007b",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "e701"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "2ec65c533c1faff08fcad66c2428a34f",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "dc02",
+              "parentId": "85f71d0ba945867d413ebccc00f0498f"
+            },
+            {
+              "id": "85f71d0ba945867d413ebccc00f0498f",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "8201"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "2ec65c533c1faff08fcad66c2428a34f",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "dc02",
+              "parentId": "85f71d0ba945867d413ebccc00f0498f"
+            },
+            {
+              "id": "85f71d0ba945867d413ebccc00f0498f",
+              "kind": 9,
+              "kindVersion": 1,
+              "orderKeyHex": "8201"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "c801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "c801"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "9",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "c801"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "c801"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "9",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "7b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "7b01"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "7b01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "7b01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "7b01"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "7b01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "df01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "df01"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "9",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "df01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "df01"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "9",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "de2c3f49e875c94da3759638ff189d1b",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "d901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "d901"
+          }
+        ]
+      },
+      "caseId": "C1-RICHTEXT-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "de2c3f49e875c94da3759638ff189d1b",
+              "kind": 4,
+              "kindVersion": 1,
+              "orderKeyHex": "d901"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-NONFINITE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-NONFINITE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "a3535ca74d8bf9822fdc8506e509d53c",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "8c01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "a3535ca74d8bf9822fdc8506e509d53c",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "8c01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "8701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "8701"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "8701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "8701"
+          }
+        ]
+      },
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "4",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "a501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "a501"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-PLAN",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "31ced3ec4cd256f2ebbffd43ad922859",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "2902"
+            },
+            {
+              "id": "cb319433dc94a09b03ff27057f1e6513",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "a501"
+            }
+          ]
+        },
+        "deletes": [
+          "42de8b5e79273c23f20fb40ba5cc8bee"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "a501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "a501"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-PLAN",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "31ced3ec4cd256f2ebbffd43ad922859",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "2902"
+            },
+            {
+              "id": "cb319433dc94a09b03ff27057f1e6513",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "a501"
+            }
+          ]
+        },
+        "deletes": [
+          "42de8b5e79273c23f20fb40ba5cc8bee"
+        ],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "bd01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "bd01"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "bd01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "bd01"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "c201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "c201"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "c201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "c201"
+          }
+        ]
+      },
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "1",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeProjection": {
+        "objects": []
+      },
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "1",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0501"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0501"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0501"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "2",
+      "observedTerminalPhase": "STATEFUL_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6901"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0c01"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-NEW-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "7ff61b10469d89029965c790302f1032",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "0c01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0c01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "0c01"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-NEW-ID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "7ff61b10469d89029965c790302f1032",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "0c01"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6601"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "fe1b94d9c9eef2be47df352082cf908f",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "6601"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6601"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "6601"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-VALID",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": [
+            {
+              "id": "fe1b94d9c9eef2be47df352082cf908f",
+              "kind": 5,
+              "kindVersion": 1,
+              "orderKeyHex": "6601"
+            }
+          ]
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": []
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "3701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "3701"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "3701"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 1,
+            "orderKeyHex": "3701"
+          }
+        ]
+      },
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "PAYLOAD_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-FINITE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "cf01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-FINITE",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "cf01"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "REJECTED",
+      "observedErrorCategory": "NORMALIZE_ERROR",
+      "observedTerminalPhase": "STATELESS_VALIDATE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "c3b7df53467ad5d2a766d55231a624e1",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "1401"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "reference"
+    },
+    {
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401"
+          }
+        ]
+      },
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401"
+          }
+        ]
+      },
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "format": "axiom-g1-04-c-observation-v1",
+      "formatVersion": 1,
+      "observedDisposition": "PLAN_READY",
+      "observedPlanProjection": {
+        "creates": {
+          "objects": []
+        },
+        "deletes": [],
+        "replacements": {
+          "objects": [
+            {
+              "id": "c3b7df53467ad5d2a766d55231a624e1",
+              "kind": 1,
+              "kindVersion": 1,
+              "orderKeyHex": "1401"
+            }
+          ]
+        }
+      },
+      "observedTerminalPhase": "PREPARE",
+      "provenance": "IMPLEMENTATION_OBSERVATION",
+      "provider": "indexed"
+    }
+  ],
+  "providers": [
+    "reference",
+    "indexed"
+  ],
+  "semanticCodecCalls": 0,
+  "unexpectedHarnessErrors": 0,
+  "sourceRef": "492d2f914f078a6e4ac8b567e07f7ec813c10107",
+  "executionStartRef": "7f4daa4f162fd249cc1c1cffcb65d3c3df703e9a",
+  "observationInputSha256": "921d02f472d550c820d74e0f176a226db1e33d4633f73a928435571144c91629"
+}
