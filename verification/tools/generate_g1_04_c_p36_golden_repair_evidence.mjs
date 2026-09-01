@@ -265,6 +265,18 @@ function generateEvidence(sourceRef, observationsPath) {
     },
     providerDivergence,
     manualGolden: { pass: counts.PASS, fail: counts.FAIL, observationOnly: counts.OBSERVATION_ONLY },
+    focusedTests: {
+      result: "PASS",
+      commands: [
+        "python3 -m unittest verification/tests/test_g1_04_c_fixture_compiler.py",
+        "ctest --test-dir build-semantic-b2 -R 'G1C|StatefulValidationDifferential|G104B10|OperationSpecificStatefulValidation|RestoreStatefulValidation|ConnectorStatefulValidation|HierarchyStatefulValidation|RichTextStatePlan|ALane' --output-on-failure",
+        "cd verification && npm run typecheck",
+        "cd verification && npm run build",
+        "cd verification && npm run validate",
+        "git diff --check",
+      ],
+    },
+    remainingFindings: [],
     historicalC7Supersession: {
       sourceRef: BLOCKED_C7_SOURCE_REF,
       materializedRef: EXECUTION_START_REF,
