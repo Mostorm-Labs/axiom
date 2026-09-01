@@ -387,6 +387,31 @@ class G104CFixtureCompilerTest(unittest.TestCase):
         initial_ids = {record["id"] for record in split_collision["initialState"]["objects"]}
         self.assertTrue(any(record["id"] in initial_ids for record in replacements))
 
+    def test_p36_applicability_and_size_wrong_kind_use_canonical_v1_stimuli(self) -> None:
+        patch = json.loads((GENERATED / "inputs/C1-PATCH-APPLICABILITY.json").read_text(encoding="utf-8"))
+        patch_target = patch["initialState"]["objects"][0]
+        patches = patch["operation"]["payload"]["value"]["patches"]
+        self.assertEqual((5, 1), (patch_target["kind"], patch_target["kind_version"]))
+        self.assertEqual(4, patch_target["content"]["variant"])
+        self.assertGreaterEqual(len(patch_target["content"]["value"]["stroke"]["data"]), 2)
+        self.assertEqual("PatchProperties", patch["operationFamily"])
+        self.assertEqual(1, len(patches))
+        self.assertEqual(patch_target["id"], patches[0]["object_id"])
+        self.assertEqual(3, patches[0]["field_id"])
+        self.assertNotIn(patches[0]["field_id"], {1, 2, 999999})
+        self.assertEqual("set", patches[0]["action"])
+        self.assertEqual(1, patches[0]["value"]["variant"])
+        self.assertIsInstance(patches[0]["value"]["value"], float)
+        self.assertGreaterEqual(patches[0]["value"]["value"], 0.0)
+        self.assertLessEqual(patches[0]["value"]["value"], 1.0)
+
+        size = json.loads((GENERATED / "inputs/C1-SIZE-WRONG-KIND.json").read_text(encoding="utf-8"))
+        size_target = size["initialState"]["objects"][0]
+        self.assertEqual((4, 1), (size_target["kind"], size_target["kind_version"]))
+        self.assertEqual(3, size_target["content"]["variant"])
+        self.assertTrue(size_target["content"]["value"]["document"]["paragraphs"])
+        self.assertEqual("SetObjectSize", size["operationFamily"])
+
     def test_p36_presence_restore_and_limit_fixtures_do_not_use_masking_surrogates(self) -> None:
         patch = json.loads((GENERATED / "inputs/C1-PATCH-PRESENCE-DEFAULT.json").read_text(encoding="utf-8"))
         patch = patch["operation"]["payload"]["value"]["patches"][0]
@@ -589,7 +614,15 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
     elif case_id == "C1-PATCH-BRANCH-TYPE":
         assert operation["patches"][0]["value"]["variant"] == 2
     elif case_id == "C1-PATCH-APPLICABILITY":
-        assert initial_by_id[target_id]["kind"] == 5
+        target = initial_by_id[target_id]
+        patch = operation["patches"][0]
+        assert target["kind"] == 5 and target["kind_version"] == 1
+        assert target["content"]["variant"] == 4
+        assert len(target["content"]["value"]["stroke"]["data"]) >= 2
+        assert patch["object_id"] == target_id
+        assert patch["field_id"] == 3 and patch["action"] == "set"
+        assert patch["value"]["variant"] == 1 and isinstance(patch["value"]["value"], float)
+        assert 0.0 <= patch["value"]["value"] <= 1.0
     elif case_id == "C1-PATCH-PRESENCE-DEFAULT":
         assert "value" not in operation["patches"][0]
     elif case_id == "C1-SIZE-NONFINITE":
@@ -600,7 +633,10 @@ def _assert_case_realization(case_id: str, case: dict[str, object], value: dict[
         assert len(operation["items"]) == 65_536
         assert all(item["width"] == 32.0 and item["height"] == 24.0 for item in operation["items"])
     elif case_id == "C1-SIZE-WRONG-KIND":
-        assert initial_by_id[target_id]["kind"] == 4
+        target = initial_by_id[target_id]
+        assert target["kind"] == 4 and target["kind_version"] == 1
+        assert target["content"]["variant"] == 3
+        assert target["content"]["value"]["document"]["paragraphs"]
     elif case_id == "C1-DELETE-MISSING-TARGET":
         assert target_id not in initial_by_id
     elif case_id == "C1-DELETE-DUPLICATE-TARGET":
@@ -789,12 +825,16 @@ _CASE_ASSERTION_DESCRIPTIONS = {
     "C1-PATCH-DUPLICATE-FIELD": ("two patch entries share the same object and field identifiers",),
     "C1-PATCH-FIELD-ID": ("patch selects the deliberately unpublished field identifier",),
     "C1-PATCH-BRANCH-TYPE": ("patch value uses the mechanically incompatible value branch",),
-    "C1-PATCH-APPLICABILITY": ("patch target kind is the accepted non-applicable combination",),
+    "C1-PATCH-APPLICABILITY": (
+        "patch target is a canonical V1 VectorStroke with structurally valid stroke content",
+        "patch uses the released opacity field with a valid float value",
+        "opacity is the only non-applicable dimension for the VectorStroke target",
+    ),
     "C1-PATCH-PRESENCE-DEFAULT": ("patch entry uses the valid clear action without an optional value field",),
     "C1-SIZE-NONFINITE": ("width carries the frozen positive-infinity token while height stays finite",),
     "C1-SIZE-NONPOSITIVE": ("size fixture includes a non-positive width dimension",),
     "C1-SIZE-HARD-LIMIT": ("size item count is the published N+1 keyed-batch boundary",),
-    "C1-SIZE-WRONG-KIND": ("size target has an incompatible initial object kind",),
+    "C1-SIZE-WRONG-KIND": ("size target is a canonical V1 RichText object with structurally valid document content",),
     "C1-DELETE-MISSING-TARGET": ("requested delete target is absent from initial state",),
     "C1-DELETE-DUPLICATE-TARGET": ("delete payload repeats the same target identifier",),
     "C1-DELETE-VALID": ("delete payload names an existing target without a child cascade",),

@@ -50,11 +50,11 @@ def _order_key(case_id: str, ordinal: int) -> list[int]:
 def _kind_for_family(family: str, case_id: str = "") -> tuple[int, int]:
     if "WRONG-KIND" in case_id:
         if family == "SetObjectSize":
-            return 4, 4
+            return 4, 1
         if family in {"SetVectorPathGeometry", "SetImageContent"}:
             return 1, 1
     if case_id == "C1-PATCH-APPLICABILITY":
-        return 5, 5
+        return 5, 1
     if case_id in {"C1-ERASE-ADD-CAPABILITY", "C1-CONNECTOR-TARGET-CAPABILITY"}:
         return 1, 1
     if case_id in {"C1-PLACEMENT-STICKY-RICHTEXT"}:
@@ -309,10 +309,14 @@ def _payload(case_id: str, family: str, objects: list[dict[str, Any]]) -> tuple[
         return 4, {"items": [{"object_id": target_id, "transform": transform}]}
     if family == "PatchProperties":
         field_id = 999999 if "FIELD-ID" in case_id else 1
+        if case_id == "C1-PATCH-APPLICABILITY":
+            field_id = 3
         action = "clear" if case_id == "C1-PATCH-PRESENCE-DEFAULT" else "set"
         patch: dict[str, Any] = {"object_id": target_id, "field_id": field_id, "action": action}
         if "PRESENCE-DEFAULT" not in case_id:
             patch["value"] = {"variant": 1, "value": "fixture"}
+        if case_id == "C1-PATCH-APPLICABILITY":
+            patch["value"] = {"variant": 1, "value": 0.5}
         if "BRANCH-TYPE" in case_id:
             patch["value"] = {"variant": 2, "value": 123}
         patches = [patch]
