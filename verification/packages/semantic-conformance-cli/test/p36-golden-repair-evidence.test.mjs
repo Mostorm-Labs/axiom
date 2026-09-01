@@ -57,6 +57,8 @@ test("P36 golden materializer reports observed core-corpus results without writi
   assert.equal(summary.providerOutputUsedAsExpected, false);
   assert.deepEqual(summary.manualGolden, { pass: 50, fail: 40, observationOnly: 0 });
   assert.deepEqual(summary.negativeZeroDecoderBoundary, currentShape.decodedInputAudit.negativeZero);
+  assert.equal(summary.focusedTests.result, "PASS");
+  assert.deepEqual(summary.remainingFindings, []);
   const manifest = spawnSync("git", ["show", `${executionStartRef}:verification/corpus/semantic/v1/g1-04-c/generated/manifest.json`], { cwd: repoRoot });
   assert.equal(manifest.status, 0);
   assert.equal(summary.fixtureManifest.sha256, createHash("sha256").update(manifest.stdout).digest("hex"));
