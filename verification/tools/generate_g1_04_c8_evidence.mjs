@@ -168,7 +168,7 @@ function assertFreshObservation(observation) {
   if (!Array.isArray(value.observationRecords) || value.observationRecords.length !== 180) fail("native observation records are incomplete");
   for (const [index, raw] of value.observationRecords.entries()) {
     const record = asRecord(raw, `native observation record ${index}`);
-    if (record.format !== "axiom-gt-g1-04-c-observation-v1" || record.formatVersion !== 1 || record.provenance !== "IMPLEMENTATION_OBSERVATION") fail(`native observation record ${index} trust envelope is invalid`);
+    if (record.format !== "axiom-g1-04-c-observation-v1" || record.formatVersion !== 1 || record.provenance !== "IMPLEMENTATION_OBSERVATION") fail(`native observation record ${index} trust envelope is invalid`);
     if (record.provider !== "reference" && record.provider !== "indexed") fail(`native observation record ${index} provider is invalid`);
     asString(record.caseId, `native observation record ${index}.caseId`);
     if (!isDeepStrictEqual(record.beforeProjection, record.afterProjection)) fail(`native observation record ${index} mutated state`);

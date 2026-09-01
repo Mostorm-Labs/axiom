@@ -1,5 +1,10 @@
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   assertMaterializationPath,
@@ -8,6 +13,10 @@ import {
 
 const PACKAGE_REF = "5ef414e3dc5b8f4cc42327543b3b1b978ff9a0cc";
 const TASK_ANCHOR = "34c8db4f247849c5850e16226b0e556f57497053";
+const REPOSITORY_ROOT = fileURLToPath(new URL("../../../../", import.meta.url));
+const GENERATOR = fileURLToPath(new URL("../../../tools/generate_g1_04_c8_evidence.mjs", import.meta.url));
+const INHERITED_OBSERVATION_REF = "9b73be589ae070bc602b8989f83d89745a54774e";
+const INHERITED_OBSERVATION_PATH = "verification/evidence/gates/G1/492d2f914f078a6e4ac8b567e07f7ec813c10107/GT-G1-04-C/C-PLAN-PROJECTION.json";
 const SOURCE_REF = "a".repeat(40);
 const BRANCH_REF = "refs/heads/codex/gt-g1-04-c8-exact-source-ci";
 const REQUIRED_EVIDENCE_FILES = [
@@ -109,4 +118,34 @@ test("C8 permits only evidence paths directly under the source-bound materializa
   assert.throws(() => assertMaterializationPath(root, "../C-CI-RUN.json"), /escape|path/i);
   assert.throws(() => assertMaterializationPath(root, "nested/C-CI-RUN.json"), /exactly one|path/i);
   assert.throws(() => assertMaterializationPath(root, "C-OTHER.json"), /required|evidence/i);
+});
+
+test("C8 generator consumes the native observation envelope and emits exactly eight artifacts", () => {
+  const sourceRef = execFileSync("git", ["rev-parse", "HEAD"], { cwd: REPOSITORY_ROOT, encoding: "utf8" }).trim();
+  const temp = mkdtempSync(join(tmpdir(), "g1-04-c8-e2e-"));
+  const observation = join(temp, "observation.json");
+  const output = join(temp, "evidence");
+  const inherited = execFileSync("git", ["show", `${INHERITED_OBSERVATION_REF}:${INHERITED_OBSERVATION_PATH}`], { cwd: REPOSITORY_ROOT, encoding: "utf8" });
+  writeFileSync(observation, inherited);
+  const result = spawnSync(process.execPath, [
+    GENERATOR,
+    "--package-ref", PACKAGE_REF,
+    "--task-anchor", TASK_ANCHOR,
+    "--source-ref", sourceRef,
+    "--observation", observation,
+    "--output-dir", output,
+    "--ci-run-id", "123456789",
+    "--ci-run-attempt", "1",
+    "--ci-event", "push",
+    "--ci-ref", BRANCH_REF,
+    "--ci-head-sha", sourceRef,
+    "--checkout-sha", sourceRef,
+    "--workflow-ref", `${BRANCH_REF}/.github/workflows/g1-04-c-exact-source.yml@${sourceRef}`,
+  ], { cwd: REPOSITORY_ROOT, encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(readdirSync(output).sort(), REQUIRED_EVIDENCE_FILES.slice().sort());
+  const core = JSON.parse(readFileSync(join(output, "C-CORE-CORPUS.json"), "utf8"));
+  assert.equal(core.sourceRef, sourceRef);
+  assert.equal(core.selectedCaseCount, 90);
+  assert.deepEqual(core.resultStatusCounts, { PASS: 90, FAIL: 0, OBSERVATION_ONLY: 0 });
 });
