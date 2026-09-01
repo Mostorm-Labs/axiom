@@ -48,6 +48,7 @@ jobs:
         run: |
           cd verification
           npm ci
+          npx playwright install --with-deps chromium
           npm run build
           npm run validate
       - name: Compile C fixtures twice without writing accepted corpus
