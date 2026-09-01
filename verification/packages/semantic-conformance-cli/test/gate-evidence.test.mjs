@@ -8,12 +8,12 @@ import { spawnSync } from "node:child_process";
 
 const repoRoot = fileURLToPath(new URL("../../../../", import.meta.url));
 const generator = fileURLToPath(new URL("../../../tools/generate_g1_04_c7_evidence.mjs", import.meta.url));
-const packageRef = "abe3bcb2b86d8f68b8b36d431c5a4e6e92a7593e";
+const packageRef = "e4facb7ab786b994dd5c9bb4bc3e4d57fe95d18e";
+const p36SourceRef = "492d2f914f078a6e4ac8b567e07f7ec813c10107";
+const p36MaterializedRef = "9b73be589ae070bc602b8989f83d89745a54774e";
 const sourcePaths = [
   "verification/packages/semantic-conformance-cli/src/provider-diff.ts",
-  "verification/packages/semantic-conformance-cli/src/gate.ts",
   "verification/packages/semantic-conformance-cli/test/provider-diff.test.mjs",
-  "verification/packages/semantic-conformance-cli/test/gate.test.mjs",
   "verification/packages/semantic-conformance-cli/test/gate-evidence.test.mjs",
   "verification/tools/generate_g1_04_c7_evidence.mjs",
 ];
@@ -34,7 +34,7 @@ function assertGateSchema(value, ref) {
   assert.equal(value.formatVersion, 1);
   assert.equal(value.provenance, "GATE_EVIDENCE");
   assert.equal(value.gateId, "GT-G1-04-C");
-  assert.equal(value.status, "FAIL");
+  assert.equal(value.status, "PASS");
   assert.equal(value.sourceRef, ref);
   assert.ok(Array.isArray(value.resultRefs) && value.resultRefs.length > 0);
   assert.equal(new Set(value.resultRefs).size, value.resultRefs.length);
@@ -43,7 +43,7 @@ function assertGateSchema(value, ref) {
   assert.equal(new Set(value.authorityRefs).size, value.authorityRefs.length);
 }
 
-test("C7 generator is deterministic, source-bound, and preserves the truthful provider/Gate distinction", () => {
+test("C7-R2 generator is deterministic, source-bound, and requires all seven Gate conditions to pass", () => {
   const ref = sourceRef();
   const firstDir = mkdtempSync(join(tmpdir(), "c7-evidence-a-"));
   const secondDir = mkdtempSync(join(tmpdir(), "c7-evidence-b-"));
@@ -62,12 +62,21 @@ test("C7 generator is deterministic, source-bound, and preserves the truthful pr
   assert.equal(differential.status, "PASS");
   assert.equal(differential.providerAgreement, "90/90");
   assert.equal(differential.divergenceCount, 0);
-  assert.equal(differential.goldenPassCount, 61);
-  assert.equal(differential.goldenFailCount, 29);
-  assert.equal(differential.manualGoldenCorrectness, "FAIL");
+  assert.equal(differential.goldenPassCount, 90);
+  assert.equal(differential.goldenFailCount, 0);
+  assert.equal(differential.observationOnlyCount, 0);
+  assert.deepEqual(differential.goldenMismatchCaseIds, []);
+  assert.equal(differential.manualGoldenCorrectness, "PASS");
+  assert.equal(differential.trustedDependencies.p36SourceRef, p36SourceRef);
+  assert.equal(differential.trustedDependencies.p36MaterializedRef, p36MaterializedRef);
+  assert.equal(differential.authorityManualExpected, true);
+  assert.equal(differential.expectedTruthWrites, 0);
+  assert.equal(differential.providerOutputUsedAsExpected, false);
+  assert.equal(differential.productionSemanticDelta, 0);
   assert.equal(differential.fixtureReproducibility.byteIdentical, true);
   assert.equal(differential.fixtureReproducibility.caseCount, 90);
-  assert.deepEqual(differential.gateSummary.failedConditions, ["manual-golden-correctness"]);
+  assert.equal(differential.gateSummary.status, "PASS");
+  assert.deepEqual(differential.gateSummary.failedConditions, []);
   assertGateSchema(JSON.parse(readFileSync(join(firstDir, "C-GATE.json"), "utf8")), ref);
 });
 
@@ -80,5 +89,5 @@ test("C7 generator rejects invalid CLI usage, invalid lineage, and forbidden out
   assert.notEqual(run(["--source-ref", ref, "--output-dir", join(repoRoot, "verification/corpus/semantic/v1/g1-04-c/authoring/blocked")]).status, 0);
   assert.notEqual(run(["--source-ref", ref, "--output-dir", join(repoRoot, "verification/corpus/semantic/v1/g1-04-c/generated/blocked")]).status, 0);
   assert.notEqual(run(["--source-ref", ref, "--output-dir", join(repoRoot, "runtime/blocked")]).status, 0);
-  assert.notEqual(run(["--source-ref", ref, "--output-dir", join(repoRoot, "verification/evidence/gates/G1/906327beb9a268c339accd6d3ca6a7038e54ad68/GT-G1-04-C")]).status, 0);
+  assert.notEqual(run(["--source-ref", ref, "--output-dir", join(repoRoot, `verification/evidence/gates/G1/${p36SourceRef}/GT-G1-04-C`)]).status, 0);
 });

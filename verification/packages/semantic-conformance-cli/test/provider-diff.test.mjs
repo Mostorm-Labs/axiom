@@ -5,40 +5,8 @@ import { fileURLToPath } from "node:url";
 import { summarizeProviderDiff } from "../dist/provider-diff.js";
 
 const repoRoot = fileURLToPath(new URL("../../../../", import.meta.url));
-const c5Path = `${repoRoot}/verification/evidence/gates/G1/906327beb9a268c339accd6d3ca6a7038e54ad68/GT-G1-04-C/C-CORE-CORPUS.json`;
-const c6Path = `${repoRoot}/verification/evidence/gates/G1/2bd2a2fa6502163d471995147daa683cefd7cf8f/GT-G1-04-C/C-NO-MUTATION.json`;
-
-const expectedGoldenMismatches = [
-  "C1-CONNECTOR-VALID",
-  "C1-ERASE-ADD-VALID",
-  "C1-ERASE-REMOVE-VALID",
-  "C1-ERASE-REMOVE-WHOLE-REJECT",
-  "C1-GEOMETRY-OVERFLOW",
-  "C1-GEOMETRY-WRONG-KIND",
-  "C1-IMAGE-CONTENTMODE",
-  "C1-IMAGE-INTRINSIC",
-  "C1-IMAGE-LOCAL-SIZE",
-  "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
-  "C1-IMAGE-SOURCE-RECT",
-  "C1-IMAGE-VALID",
-  "C1-INSERT-STAGED-PARENT",
-  "C1-PATCH-PRESENCE-DEFAULT",
-  "C1-PLACEMENT-ORDERKEY",
-  "C1-RESTORE-LOCAL-REPLAY-REMOTE",
-  "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
-  "C1-RESTORE-STAGED-PARENT-CHILD",
-  "C1-RICHTEXT-INVALID-STEP",
-  "C1-RICHTEXT-STABLE-REFS",
-  "C1-RICHTEXT-UTF8-STYLE",
-  "C1-RICHTEXT-VALID",
-  "C1-SIZE-HARD-LIMIT",
-  "C1-SPLIT-PLAN",
-  "C1-SPLIT-REPLACEMENT-COLLISION",
-  "C1-SPLIT-SOURCE-MISSING",
-  "C1-STROKE-EXISTING-ID",
-  "C1-STROKE-NEW-ID",
-  "C1-STROKE-VALID",
-];
+const coreCorpusPath = `${repoRoot}/verification/evidence/gates/G1/492d2f914f078a6e4ac8b567e07f7ec813c10107/GT-G1-04-C/C-CORE-CORPUS.json`;
+const noMutationPath = `${repoRoot}/verification/evidence/gates/G1/492d2f914f078a6e4ac8b567e07f7ec813c10107/GT-G1-04-C/C-NO-MUTATION.json`;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -46,12 +14,12 @@ function clone(value) {
 
 function acceptedInput() {
   return {
-    coreCorpusEvidence: JSON.parse(readFileSync(c5Path, "utf8")),
-    c6NoMutationEvidence: JSON.parse(readFileSync(c6Path, "utf8")),
+    coreCorpusEvidence: JSON.parse(readFileSync(coreCorpusPath, "utf8")),
+    noMutationEvidence: JSON.parse(readFileSync(noMutationPath, "utf8")),
   };
 }
 
-test("provider parity remains PASS while the 29 manual-golden mismatches remain FAIL", () => {
+test("accepted P36 basis reports passing manual golden and provider parity", () => {
   const summary = summarizeProviderDiff(acceptedInput());
   assert.equal(summary.status, "PASS");
   assert.equal(summary.caseCount, 90);
@@ -59,22 +27,40 @@ test("provider parity remains PASS while the 29 manual-golden mismatches remain 
   assert.equal(summary.providerAgreement, "90/90");
   assert.equal(summary.divergenceCount, 0);
   assert.deepEqual(summary.divergenceCaseIds, []);
-  assert.equal(summary.goldenPassCount, 61);
-  assert.equal(summary.goldenFailCount, 29);
+  assert.equal(summary.goldenPassCount, 90);
+  assert.equal(summary.goldenFailCount, 0);
   assert.equal(summary.observationOnlyCount, 0);
-  assert.equal(summary.manualGoldenCorrectness, "FAIL");
-  assert.deepEqual(summary.goldenMismatchCaseIds, expectedGoldenMismatches);
+  assert.equal(summary.manualGoldenCorrectness, "PASS");
+  assert.deepEqual(summary.goldenMismatchCaseIds, []);
 });
 
-test("a provider divergence fails only provider parity and cannot repair a golden mismatch", () => {
+test("a provider divergence fails provider parity and records the failing result inventory", () => {
   const input = acceptedInput();
-  const mismatch = input.coreCorpusEvidence.results.find((result) => result.status === "FAIL");
-  mismatch.diagnostics.push("PROVIDER_DIVERGENCE");
+  const mismatch = input.coreCorpusEvidence.results[0];
+  mismatch.status = "FAIL";
+  mismatch.diagnostics = ["PROVIDER_DIVERGENCE"];
+  input.coreCorpusEvidence.resultStatusCounts = { PASS: 89, FAIL: 1, OBSERVATION_ONLY: 0 };
   const summary = summarizeProviderDiff(input);
   assert.equal(summary.status, "FAIL");
   assert.equal(summary.manualGoldenCorrectness, "FAIL");
+  assert.equal(summary.goldenPassCount, 89);
+  assert.equal(summary.goldenFailCount, 1);
   assert.equal(summary.divergenceCount, 1);
   assert.deepEqual(summary.divergenceCaseIds, [mismatch.caseId]);
+});
+
+test("a synthetic golden mismatch is counted independently from provider divergence", () => {
+  const input = acceptedInput();
+  const mismatch = input.coreCorpusEvidence.results[0];
+  mismatch.status = "FAIL";
+  mismatch.diagnostics = ["REFERENCE_GOLDEN_MISMATCH"];
+  input.coreCorpusEvidence.resultStatusCounts = { PASS: 89, FAIL: 1, OBSERVATION_ONLY: 0 };
+  const summary = summarizeProviderDiff(input);
+  assert.equal(summary.status, "PASS");
+  assert.equal(summary.manualGoldenCorrectness, "FAIL");
+  assert.equal(summary.goldenPassCount, 89);
+  assert.equal(summary.goldenFailCount, 1);
+  assert.deepEqual(summary.goldenMismatchCaseIds, [mismatch.caseId]);
 });
 
 test("provider differential fails closed on an altered corpus inventory or missing provider pair", () => {
@@ -106,16 +92,30 @@ test("provider differential rejects OPEN truth, invalid provenance, expected-tru
 });
 
 test("golden mismatch inventory is deterministic and independently sorted", () => {
-  const first = summarizeProviderDiff(acceptedInput());
-  const reordered = acceptedInput();
+  const input = acceptedInput();
+  const ids = input.coreCorpusEvidence.results.slice(0, 3).map((result) => result.caseId);
+  for (const [index, result] of input.coreCorpusEvidence.results.slice(0, 3).entries()) {
+    result.status = "FAIL";
+    result.diagnostics = ["REFERENCE_GOLDEN_MISMATCH"];
+    ids[index] = result.caseId;
+  }
+  input.coreCorpusEvidence.resultStatusCounts = { PASS: 87, FAIL: 3, OBSERVATION_ONLY: 0 };
+  const first = summarizeProviderDiff(input);
+  const reordered = clone(input);
   reordered.coreCorpusEvidence.results.reverse();
   const second = summarizeProviderDiff(reordered);
   assert.deepEqual(second.goldenMismatchCaseIds, first.goldenMismatchCaseIds);
-  assert.deepEqual(second.goldenMismatchCaseIds, expectedGoldenMismatches);
+  assert.deepEqual(second.goldenMismatchCaseIds, [...ids].sort());
 });
 
-test("provider differential requires the accepted C6 no-mutation aggregate", () => {
+test("provider differential rejects invalid no-mutation aggregate", () => {
   const input = acceptedInput();
-  input.c6NoMutationEvidence.providerAgreement = "89/90";
+  input.noMutationEvidence.beforeAfterEqual = "179/180";
+  assert.throws(() => summarizeProviderDiff(input), /no-mutation/i);
+});
+
+test("provider differential requires the accepted P36 no-mutation aggregate", () => {
+  const input = acceptedInput();
+  input.noMutationEvidence.acceptedCases = 89;
   assert.throws(() => summarizeProviderDiff(input));
 });
