@@ -1,0 +1,77 @@
+{
+  "task_id": "GT-G1-05-A2",
+  "package_ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A2-P31-v0.1",
+  "task_anchor": {
+    "revision": "23f04d78dab8cd44a91ba0cb9362baedd2683bb7",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "23f04d78dab8cd44a91ba0cb9362baedd2683bb7",
+  "execution_ref": "codex/gt-g1-05-a2-generation-changeset",
+  "source_ref": "16283b68257bc0734ecf45902146e6ad3fce15ea",
+  "hosted_ci": {
+    "workflow": "G1 Semantic Codec",
+    "run_id": 33601165219,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33601165219",
+    "head_sha": "16283b68257bc0734ecf45902146e6ad3fce15ea",
+    "status": "success",
+    "job": "semantic-codec / hosted-linux"
+  },
+  "focused_tests": {
+    "filter": "OperationEngine(Apply|GenerationChangeSet)",
+    "passed": 13,
+    "failed": 0,
+    "coverage": [
+      "first Applied insert produces Gbefore->Gafter and Created ChangeSet",
+      "AlreadyApplied and Rejected are generation-neutral and ChangeSet-free",
+      "sequential Applied operations chain generation intervals",
+      "SetTransforms maps to Transform",
+      "PatchProperties maps to Properties with sorted distinct FieldIds",
+      "generation overflow fails before mutation",
+      "Reference/Indexed explicit expected sequence and ChangeSet parity",
+      "production operation/change-set paths contain no allObjects scan"
+    ]
+  },
+  "semantic_regression": {
+    "build": "PASS",
+    "ctest_total": 376,
+    "ctest_passed": 376,
+    "ctest_failed": 0,
+    "protobuf_off_skips": 12,
+    "git_diff_check": "PASS"
+  },
+  "contract_assertions": {
+    "applied_advances_exactly_once": true,
+    "applied_returns_exactly_one_changeset": true,
+    "already_applied_generation_neutral": true,
+    "rejected_generation_neutral": true,
+    "operation_id_collision_generation_neutral": true,
+    "generation_overflow_no_mutation": true,
+    "change_set_prepared_before_atomic_mutation": true,
+    "change_set_post_commit_finalization_is_move_only": true,
+    "reference_indexed_explicit_oracle_parity": true,
+    "a0_defensive_failure_seam_available": false,
+    "a0_defensive_failure_behavior": "inherited A0 precondition-before-mutation contract; no new instrumentation added"
+  },
+  "scope": {
+    "source_diff_from_anchor": {
+      "file_count": 12,
+      "files": [
+        "runtime/semantic/CMakeLists.txt",
+        "runtime/semantic/include/canvas/semantic/change_set.hpp",
+        "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+        "runtime/semantic/include/canvas/semantic/semantic_generation.hpp",
+        "runtime/semantic/src/change_set_builder.cpp",
+        "runtime/semantic/src/change_set_builder.hpp",
+        "runtime/semantic/src/operation_engine.cpp",
+        "runtime/semantic/tests/CMakeLists.txt",
+        "runtime/semantic/tests/operation_engine_apply_differential_test.cpp",
+        "runtime/semantic/tests/operation_engine_apply_test.cpp",
+        "runtime/semantic/tests/operation_engine_generation_change_set_differential_test.cpp",
+        "runtime/semantic/tests/operation_engine_generation_change_set_test.cpp"
+      ]
+    },
+    "forbidden_scope_changed": false,
+    "source_to_materialized_delta": "exactly this evidence file"
+  },
+  "status": "READY_FOR_CONTROL_REVIEW"
+}
