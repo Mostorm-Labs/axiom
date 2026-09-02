@@ -119,7 +119,7 @@ TEST(OperationEngineApplyDifferential, ExplicitApplyIdempotencyCollisionAndRejec
     EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(indexed));
 }
 
-TEST(OperationEngineApplyDifferential, ProductionApplySourceDoesNotScanAllObjects) {
+TEST(OperationEngineApplyDifferential, ProductionEngineDoesNotScanAllObjects) {
     std::ifstream source(OPERATION_ENGINE_SOURCE_PATH);
     ASSERT_TRUE(source.is_open());
     const std::string contents{std::istreambuf_iterator<char>(source), std::istreambuf_iterator<char>()};
