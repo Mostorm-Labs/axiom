@@ -1,0 +1,138 @@
+{
+  "format": "axiom-gt-g1-05-a4-apply-source-publication-v1",
+  "taskId": "GT-G1-05-A4",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A4-P31-v0.1",
+  "authorityRefs": [
+    "https://app.notion.com/p/3cf4c57a590c81f2bc91f9363bad28ff",
+    "https://app.notion.com/p/3c44c57a590c815d8d3cc74bfce15196",
+    "https://app.notion.com/p/3c44c57a590c81dc9f65ec33c8109492",
+    "https://app.notion.com/p/3c44c57a590c81c0bc92c21d69ed8a02",
+    "https://app.notion.com/p/3cf4c57a590c81c7ab19d3015e0b25ab",
+    "https://app.notion.com/p/3c84c57a590c8176960bcab59b6f4c03"
+  ],
+  "taskAnchor": {
+    "revision": "baa057529cb43e1223d092c5865aa40fc4787e45",
+    "relation": "ancestor"
+  },
+  "actualStartingRevision": "12ef8dddf259028d458c2956f7e21d6d7857dd2c",
+  "executionRef": "codex/gt-g1-05-a4-publication-projection",
+  "sourceCommit": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+  "testedCommit": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "implementation": {
+    "projectionHeader": "runtime/semantic/include/canvas/semantic/commit_publication_projection.hpp",
+    "headerOnly": true,
+    "allocationFree": true,
+    "mutationFree": true,
+    "constantTime": true,
+    "appliedCommitRecordIsSoleSourceFact": true,
+    "localEligibleSources": [
+      "LocalInteraction",
+      "LocalCommand",
+      "UndoRedo",
+      "LocalAIImport"
+    ],
+    "noEchoSources": ["RestoreReplay", "RemoteSync"],
+    "invalidApplySourceFailsClosedToNoEcho": true,
+    "operationEngineChanged": false,
+    "sceneOrDatabridgeIntegration": false,
+    "a5OrA6Started": false
+  },
+  "projectionOracle": {
+    "allSixAppliedSources": {
+      "expectedApplied": 6,
+      "observedApplied": 6,
+      "expectedCommitRecords": 6,
+      "observedCommitRecords": 6,
+      "mapping": {
+        "LocalInteraction": "Eligible",
+        "LocalCommand": "Eligible",
+        "UndoRedo": "Eligible",
+        "LocalAIImport": "Eligible",
+        "RestoreReplay": "NoEcho",
+        "RemoteSync": "NoEcho"
+      },
+      "explicitCanonicalPostState": "one shape object id=1",
+      "generation": {"before": 10, "after": 11},
+      "commitOrdinal": 1,
+      "changeSet": {"objectCount": 1, "objectId": 1, "flags": "Created", "changedFields": []}
+    },
+    "canonicalSemanticsDifferOnlyBySource": {
+      "sources": ["LocalInteraction", "RestoreReplay", "RemoteSync"],
+      "operationIdEqual": true,
+      "generationEqual": true,
+      "commitStampEqual": true,
+      "changeSetEqual": true,
+      "explicitPostStateEqual": true,
+      "projection": ["Eligible", "NoEcho", "NoEcho"]
+    },
+    "nonAppliedHaveNoPublicationSourceFact": {
+      "AlreadyApplied": {"commitRecord": false, "canonicalMutation": false},
+      "Rejected": {"commitRecord": false, "canonicalMutation": false},
+      "InvalidRuntimeEpoch": {"commitRecord": false, "canonicalMutation": false},
+      "CommitLaneExhausted": {"commitRecord": false, "canonicalMutation": false}
+    }
+  },
+  "focusedTests": {
+    "a4PublicationProjection": {
+      "target": "canvas_semantic_operation_engine_publication_projection_test",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "atomicApply": {"target": "canvas_semantic_atomic_apply_test", "tests": 10, "passed": 10, "failed": 0},
+    "atomicApplyDifferential": {"target": "canvas_semantic_atomic_apply_differential_test", "tests": 3, "passed": 3, "failed": 0},
+    "operationEngineApply": {"target": "canvas_semantic_operation_engine_apply_test", "tests": 4, "passed": 4, "failed": 0},
+    "operationEngineApplyDifferential": {"target": "canvas_semantic_operation_engine_apply_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "generationChangeSet": {"target": "canvas_semantic_operation_engine_generation_change_set_test", "tests": 6, "passed": 6, "failed": 0},
+    "generationChangeSetDifferential": {"target": "canvas_semantic_operation_engine_generation_change_set_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "canonicalCommitClock": {"target": "canvas_semantic_canonical_commit_clock_test", "tests": 4, "passed": 4, "failed": 0},
+    "canonicalCommit": {"target": "canvas_semantic_operation_engine_canonical_commit_test", "tests": 8, "passed": 8, "failed": 0},
+    "canonicalCommitDifferential": {"target": "canvas_semantic_operation_engine_canonical_commit_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "semanticTypes": {"target": "canvas_semantic_types_test", "tests": 19, "passed": 19, "failed": 0}
+  },
+  "fullSemanticCTest": {
+    "command": "ctest --test-dir build-a4-semantic --output-on-failure",
+    "total": 396,
+    "passed": 384,
+    "skipped": 12,
+    "failed": 0,
+    "result": "PASS",
+    "expectedSkippedReason": "protobuf-off tests in repository configuration"
+  },
+  "scope": {
+    "changedFileCountFromAcceptedStartingRevision": 3,
+    "changedFiles": [
+      "runtime/semantic/include/canvas/semantic/commit_publication_projection.hpp",
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/operation_engine_publication_projection_test.cpp"
+    ],
+    "forbiddenScopeDelta": [],
+    "operationEngineChanged": false,
+    "a0AtomicApplyChanged": false,
+    "a1LedgerOrIdempotencyChanged": false,
+    "a2GenerationOrChangeSetImplementationChanged": false,
+    "a3CanonicalCommitImplementationChanged": false,
+    "databridgePersistenceSceneRenderArcSchemaChanged": false,
+    "a5OrA6Started": false,
+    "gitDiffCheck": "PASS"
+  },
+  "hostedCI": {
+    "workflow": "G1 Semantic Codec",
+    "runId": 33662535154,
+    "event": "workflow_dispatch",
+    "headSha": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+    "workflowRef": "Mostorm-Labs/axiom/.github/workflows/g1-semantic-codec.yml@codex/gt-g1-05-a4-publication-projection",
+    "checkoutSha": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+    "status": "PASS",
+    "result": "EXACT_HEAD_CORROBORATED",
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33662535154"
+  },
+  "materialization": {
+    "sourceToMaterializedDelta": "exactly this evidence file",
+    "evidencePath": "verification/evidence/gates/G1/a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7/GT-G1-05/A4-APPLY-SOURCE-PUBLICATION.json",
+    "materializedRefResolvedAfterEvidenceCommit": true,
+    "historyRewritten": false,
+    "forcePush": false
+  }
+}
