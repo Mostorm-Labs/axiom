@@ -70,7 +70,8 @@ TEST(AtomicApply, AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState) {
     const ObjectRecord created = shape(1U, 1U);
     const std::vector<ObjectRecord> initial = {original, deleted, untouched};
     const std::vector<ObjectRecord> expected_final = {created, replacement, untouched};
-    const PreparedApplyPlan plan{.creates = {created}, .replacements = {replacement}, .deletes = {deleted.id}};
+    const PreparedApplyPlan plan{
+        .creates = {created}, .replacements = {replacement}, .deletes = {deleted.id}, .delete_closure = std::nullopt};
 
     ReferenceObjectStore reference;
     IndexedObjectStore indexed;
