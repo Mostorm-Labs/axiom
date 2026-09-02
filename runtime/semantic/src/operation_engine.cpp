@@ -35,7 +35,7 @@ ApplyResult OperationEngine::apply(
     if (!generation.prepareSuccessor(after)) {
         return {ApplyDisposition::kRejected, {}, std::nullopt};
     }
-    const auto prepared_changes = internal::prepareChangeSet(*prepared.plan);
+    auto prepared_changes = internal::prepareChangeSet(*prepared.plan);
     if (!prepared_changes.has_value()) {
         return {ApplyDisposition::kRejected, {}, std::nullopt};
     }
@@ -74,7 +74,7 @@ ApplyResult OperationEngine::apply(
     if (!generation.prepareSuccessor(after)) {
         return {ApplyDisposition::kRejected, {}, std::nullopt};
     }
-    const auto prepared_changes = internal::prepareChangeSet(*prepared.plan);
+    auto prepared_changes = internal::prepareChangeSet(*prepared.plan);
     if (!prepared_changes.has_value()) {
         return {ApplyDisposition::kRejected, {}, std::nullopt};
     }
