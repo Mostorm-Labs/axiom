@@ -1,0 +1,200 @@
+{
+  "format": "axiom-gt-g1-04-b-b6-b-auth-02-p36-reverification-v1",
+  "task": "GT-G1-04-B/B6",
+  "sourceCommit": "871eec8172674c8fba85548434b5e96c7c30fbf8",
+  "testedCommit": "871eec8172674c8fba85548434b5e96c7c30fbf8",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b6-b-auth-02-repair-p31.md@59e686b81808b82b9775d06388b132c2f47ac5ae",
+  "p36Authorization": "notion:3cb4c57a-590c-81af-94a4-e21d4366e620",
+  "historicalB6": {
+    "sourceCommit": "06dfefd2f0f6e1094ec6867755307413649e35c3",
+    "evidenceCommit": "b558862320db8d043c96da8cc11a2071be1bac65",
+    "evidencePath": "verification/evidence/gates/G1/06dfefd2f0f6e1094ec6867755307413649e35c3/GT-G1-04-B/B-RESTORE.json",
+    "p34PassOccurrencePreserved": true,
+    "historicalEvidenceUntouched": true
+  },
+  "authority": {
+    "bAuth02NotionSource": "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+    "approvalToken": "APPROVE_B_AUTH_02_HIERARCHY_CAPABILITY_V1_OPTION_B",
+    "repositoryMirror": "docs/notion/authority/04-semantic-schema/02-operation-model/hierarchy-parent-child-capability-sticky-child-invariant-v1-authority-closure-v0.1.md@c7948f5f92d62c0b0f057212611afd2ef8ef9cbb",
+    "repositoryMirrorSha256": "9737f9774b9b341a612b75c93b190a264c5d155817617bf2d59f9ff572b176fd",
+    "rule": {
+      "root": "any released V1 ObjectKind",
+      "group": "any released V1 ObjectKind, 0..N direct children",
+      "sticky": "RichText only, 0..1 direct RichText child",
+      "other": "cannot be a non-root parent",
+      "emptySticky": "valid"
+    },
+    "noNewRoleOrSchema": true
+  },
+  "p35Classification": {
+    "implementationDefect": "old B6 did not execute B-AUTH-02 capability validation",
+    "testDefect": "old B6 contained stale Shape-as-parent fixtures",
+    "evidenceGap": "old B-RESTORE occurrence did not prove B-AUTH-02",
+    "b5ProductionDefect": false
+  },
+  "redProvenance": {
+    "red1": {
+      "command": "cmake -S . -B build-semantic-b2 -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF",
+      "result": "RED",
+      "exitCode": 1,
+      "failure": "Cannot find source file: src/hierarchy_capability_validation.cpp; No SOURCES given to target canvas_runtime_semantic",
+      "meaning": "new shared validator API/source was absent before implementation"
+    },
+    "red2": {
+      "command": "cmake --build build-semantic-b2 --target canvas_semantic_restore_stateful_validation_test -j2 && ./build-semantic-b2/runtime/semantic/tests/canvas_semantic_restore_stateful_validation_test --gtest_color=no",
+      "result": "RED with temporary empty validator stub",
+      "exitCode": 1,
+      "failedTests": 5,
+      "totalTests": 25,
+      "failure": "RST-HCV-05, RST-HCV-06, RST-HCV-07, RST-HCV-09, RST-HCV-10 returned kNone instead of kInvalidApplicability",
+      "meaning": "B6 capability call existed but capability semantics were not yet implemented"
+    }
+  },
+  "sharedValidator": {
+    "interface": "StatefulResult validateStagedHierarchyCapabilities(const StagedObjectView&, std::span<const ObjectId>)",
+    "algorithm": "validate affected child and parent kind/version; allow Group; allow Sticky only for RichText; count touched Sticky direct children via staged.children; reject other parents and cardinality >1",
+    "allObjectsCalls": 0,
+    "cycleTraversal": false,
+    "groupChildrenScan": false,
+    "mutation": false
+  },
+  "hcvCases": {
+    "HCV-B01": "PASS kNone root Shape",
+    "HCV-B02": "PASS kNone Group->Shape",
+    "HCV-B03": "PASS kNone Group->Group",
+    "HCV-B04": "PASS kNone Group->Sticky",
+    "HCV-B05": "PASS kNone Sticky->RichText",
+    "HCV-B06": "PASS kNone empty Sticky",
+    "HCV-B07": "PASS kInvalidApplicability Sticky->Shape",
+    "HCV-B08": "PASS kInvalidApplicability Shape->RichText",
+    "HCV-B09": "PASS kInvalidApplicability Connector->Shape",
+    "HCV-B10": "PASS kInvalidApplicability second Sticky RichText",
+    "HCV-B11": "PASS ordering independent",
+    "HCV-B12": "PASS existing Group + staged child",
+    "HCV-B13": "PASS existing empty Sticky + staged RichText",
+    "HCV-B14": "PASS existing Sticky + second RichText rejected",
+    "HCV-B15": "PASS Reference/Indexed parity, no mutation, index rebuild",
+    "HCV-B16": "PASS no allObjects; overlay relation and touched-Sticky children lookup"
+  },
+  "rstCases": {
+    "RST-B01": "PASS kNone all absent",
+    "RST-B02": "PASS kObjectAlreadyExists same record",
+    "RST-B03": "PASS kObjectAlreadyExists different record",
+    "RST-B04": "PASS Group parent + Shape child; child sorts before parent",
+    "RST-B05": "PASS kInvalidReference from B3 before capability",
+    "RST-B06": "PASS staged Connector + target",
+    "RST-B07": "PASS kInvalidReference from B4",
+    "RST-B08": "PASS B1 kAlreadyApplied stops before B6; zero ObjectStore lookup",
+    "RST-B09": "PASS B1 kNew then kObjectAlreadyExists",
+    "RST-B10": "PASS atomic batch collision",
+    "RST-B11": "PASS source-label independent",
+    "RST-B12": "PASS legal Group + Shape checkpoint-like state without ledger"
+  },
+  "rstHcvCases": {
+    "RST-HCV-01": "PASS kNone Restore Group + Shape",
+    "RST-HCV-02": "PASS kNone Restore Group + nested Group",
+    "RST-HCV-03": "PASS kNone Restore Sticky + RichText",
+    "RST-HCV-04": "PASS kNone Restore empty Sticky",
+    "RST-HCV-05": "PASS kInvalidApplicability Restore Sticky + Shape",
+    "RST-HCV-06": "PASS kInvalidApplicability Restore Shape + RichText",
+    "RST-HCV-07": "PASS kInvalidApplicability Sticky + two RichText",
+    "RST-HCV-08": "PASS kNone RichText into existing empty Sticky",
+    "RST-HCV-09": "PASS kInvalidApplicability RichText into occupied Sticky",
+    "RST-HCV-10": "PASS rejection leaves output/base unchanged; Indexed rebuild matches"
+  },
+  "executionOrder": {
+    "b1": "outside planner",
+    "stageCandidates": true,
+    "b2": true,
+    "b3": true,
+    "bAuth02": "strictly after B3",
+    "b4": "strictly after B-AUTH-02",
+    "successOnlyOutputAssignment": true,
+    "missingParentPrecedence": "B3 kInvalidReference before capability",
+    "identityCollisionPrecedence": "kObjectAlreadyExists before capability",
+    "missingConnectorTargetPrecedence": "B4 kInvalidReference after capability"
+  },
+  "graphs": {
+    "rstB04": ["Group(2)", "Shape(1) parent=Group(2)"],
+    "rstB12Checkpoint": ["Group(100)", "Shape(101) parent=Group(100)"],
+    "capabilityPositive": ["Group(2)", "Shape(1) parent=Group(2)"],
+    "capabilitySticky": ["Sticky(2)", "RichText(1) parent=Sticky(2)"],
+    "capabilityNegative": ["Sticky(2)", "Shape(1) parent=Sticky(2)"],
+    "capabilityCardinalityNegative": ["Sticky(3)", "RichText(1) parent=Sticky(3)", "RichText(2) parent=Sticky(3)"]
+  },
+  "parityAndMutation": {
+    "focusedHelperParityCoverage": {
+      "HCV-B01-B14": "primarily ReferenceObjectStore focused semantic cases",
+      "HCV-B15": "explicit ReferenceObjectStore/IndexedObjectStore parity, no mutation, Indexed indexMatchesRebuild",
+      "HCV-B16": "performance/lookup instrumentation"
+    },
+    "restoreCapabilityCasesReferenceIndexed": true,
+    "statefulIssueParity": true,
+    "createsProjectionParity": true,
+    "referenceProjectionUnchanged": true,
+    "indexedProjectionUnchanged": true,
+    "indexedIndexMatchesRebuild": true,
+    "outputAtomicOnCapabilityFailure": true
+  },
+  "performance": {
+    "selfContainedRootConnectorTarget": {
+      "candidateIdentityFinds": 2,
+      "findsByCandidate": {"00000000000000000000000000000001": 1, "00000000000000000000000000000002": 1},
+      "plannerAllObjectsCalls": 0,
+      "capabilityAdditionalBaseFinds": 0,
+      "capabilityChildrenCalls": 0
+    },
+    "selfContainedGroupShape": {"plannerAllObjectsCalls": 0, "groupChildrenScans": 0},
+    "selfContainedStickyRichText": {"plannerAllObjectsCalls": 0, "touchedStickyChildrenCalls": 1, "unrelatedFullStoreScan": false}
+  },
+  "verification": {
+    "focusedHelper": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_hierarchy_capability_validation_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_hierarchy_capability_validation_test --gtest_color=no",
+      "result": "PASS 16/16"
+    },
+    "focusedB6": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_restore_stateful_validation_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_restore_stateful_validation_test --gtest_color=no",
+      "result": "PASS 25/25"
+    },
+    "relevantRegression": {
+      "command": "ctest --test-dir build-semantic-b2 -R 'StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|HierarchyValidation|ConnectorStatefulValidation|DeleteClosure|RestoreStatefulValidation|HierarchyCapability|canvas_semantic_runtime_boundaries' --output-on-failure",
+      "result": "PASS 108/108"
+    },
+    "fullSemantic": {
+      "buildCommand": "cmake --build build-semantic-b2 -j2",
+      "command": "ctest --test-dir build-semantic-b2 --output-on-failure",
+      "result": "PASS 216/216; 12 protobuf-off tests skipped; 0 failed"
+    },
+    "runtimeBoundaries": {"command": "python3 tools/check_runtime_boundaries.py --root .", "result": "PASS (52 contract files)"},
+    "docs": {"command": "python3 tools/check_docs.py", "result": "PASS (283 Markdown files)"},
+    "diffCheck": {"command": "git diff --check", "result": "PASS"}
+  },
+  "scopeGuards": {
+    "B3Changed": false,
+    "B4Changed": false,
+    "B5Changed": false,
+    "B7Started": false,
+    "PreparedApplyPlanChanged": false,
+    "OperationEngineChanged": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "ObjectStoreObjectIndexChanged": false,
+    "SchemaProtobufWireChanged": false,
+    "historicalB5EvidenceUntouched": true,
+    "historicalB6EvidenceUntouched": true,
+    "untrackedBuildAndAndroidDataPreserved": true,
+    "untrackedPaths": ["build-b2/", "build-semantic-b2/", "pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+  },
+  "materialization": {
+    "sourceCommitPushed": true,
+    "evidenceCommitPushed": true,
+    "forcePush": false,
+    "historyRewritten": false,
+    "mergePerformed": false,
+    "PRCreated": false
+  },
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW"
+}

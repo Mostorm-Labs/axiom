@@ -21,6 +21,93 @@ endif()
 
 gtest_discover_tests(canvas_semantic_codec_test)
 
+add_executable(canvas_semantic_normalization_test normalization_test.cpp)
+target_link_libraries(canvas_semantic_normalization_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_normalization_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_normalization_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_normalization_test)
+
+add_executable(canvas_semantic_envelope_validation_test envelope_validation_test.cpp)
+target_link_libraries(canvas_semantic_envelope_validation_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_envelope_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_envelope_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_envelope_validation_test)
+
+# Compile the stateless validator directly for this contract test. This target
+# intentionally does not link canvas_runtime_semantic, reference/indexed object
+# stores, or mutation helpers.
+add_executable(canvas_semantic_payload_structure_test
+  payload_structure_test.cpp
+  ../src/validator.cpp)
+target_include_directories(canvas_semantic_payload_structure_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_payload_structure_test
+  PRIVATE canvas_runtime_foundation GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_payload_structure_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_payload_structure_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_payload_structure_test)
+
+add_executable(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  g1_04_c_geometry_overflow_source_test.cpp)
+target_include_directories(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_g1_04_c_geometry_overflow_source_test
+  PRIVATE canvas_runtime_foundation GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_geometry_overflow_source_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_04_c_geometry_overflow_source_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_g1_04_c_geometry_overflow_source_test)
+
+add_executable(canvas_semantic_leaf_structure_validation_test
+  leaf_structure_validation_test.cpp
+  ../src/validator.cpp)
+target_include_directories(canvas_semantic_leaf_structure_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_leaf_structure_validation_test
+  PRIVATE canvas_runtime_foundation GTest::gtest_main)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_leaf_structure_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_leaf_structure_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_leaf_structure_validation_test)
+
+add_executable(canvas_semantic_a_lane_no_mutation_test
+  a_lane_no_mutation_test.cpp)
+target_link_libraries(canvas_semantic_a_lane_no_mutation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_a_lane_no_mutation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_a_lane_no_mutation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_a_lane_no_mutation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_a_lane_no_mutation_test)
+
 add_executable(canvas_semantic_reference_object_store_test reference_object_store_test.cpp)
 target_link_libraries(canvas_semantic_reference_object_store_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)
@@ -63,6 +150,204 @@ endif()
 
 gtest_discover_tests(canvas_semantic_object_store_differential_test)
 
+add_executable(canvas_semantic_stateful_context_test stateful_context_test.cpp)
+target_link_libraries(canvas_semantic_stateful_context_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_stateful_context_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_stateful_context_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_stateful_context_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_stateful_context_test)
+
+add_executable(canvas_semantic_stateful_kind_applicability_test
+  stateful_kind_applicability_test.cpp)
+target_link_libraries(canvas_semantic_stateful_kind_applicability_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_stateful_kind_applicability_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_stateful_kind_applicability_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_stateful_kind_applicability_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_stateful_kind_applicability_test)
+
+add_executable(canvas_semantic_staged_object_view_test staged_object_view_test.cpp)
+target_link_libraries(canvas_semantic_staged_object_view_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_staged_object_view_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_staged_object_view_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_staged_object_view_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_staged_object_view_test)
+
+add_executable(canvas_semantic_connector_stateful_validation_test
+  connector_stateful_validation_test.cpp)
+target_link_libraries(canvas_semantic_connector_stateful_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_connector_stateful_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_connector_stateful_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_connector_stateful_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_connector_stateful_validation_test)
+
+add_executable(canvas_semantic_idempotency_test idempotency_test.cpp)
+target_link_libraries(canvas_semantic_idempotency_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_idempotency_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+
+if(MSVC)
+  target_compile_options(canvas_semantic_idempotency_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_idempotency_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+gtest_discover_tests(canvas_semantic_idempotency_test)
+
+add_executable(canvas_semantic_hierarchy_stateful_validation_test hierarchy_stateful_validation_test.cpp)
+target_link_libraries(canvas_semantic_hierarchy_stateful_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_hierarchy_stateful_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_hierarchy_stateful_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_hierarchy_stateful_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_hierarchy_stateful_validation_test)
+
+add_executable(canvas_semantic_hierarchy_capability_validation_test
+  hierarchy_capability_validation_test.cpp)
+target_link_libraries(canvas_semantic_hierarchy_capability_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_hierarchy_capability_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_hierarchy_capability_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_hierarchy_capability_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_hierarchy_capability_validation_test)
+
+add_executable(canvas_semantic_delete_closure_test delete_closure_test.cpp)
+target_link_libraries(canvas_semantic_delete_closure_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_delete_closure_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_delete_closure_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_delete_closure_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_delete_closure_test)
+
+add_executable(canvas_semantic_restore_stateful_validation_test
+  restore_stateful_validation_test.cpp)
+target_link_libraries(canvas_semantic_restore_stateful_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_restore_stateful_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_restore_stateful_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_restore_stateful_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_restore_stateful_validation_test)
+
+add_executable(canvas_semantic_operation_specific_stateful_validation_test
+  operation_specific_stateful_validation_test.cpp)
+target_link_libraries(canvas_semantic_operation_specific_stateful_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_specific_stateful_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_specific_stateful_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_specific_stateful_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_specific_stateful_validation_test)
+
+add_executable(canvas_semantic_rich_text_state_plan_test
+  rich_text_state_plan_test.cpp)
+target_link_libraries(canvas_semantic_rich_text_state_plan_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_rich_text_state_plan_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_rich_text_state_plan_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_rich_text_state_plan_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_rich_text_state_plan_test)
+
+add_executable(canvas_semantic_apply_plan_test apply_plan_test.cpp)
+target_link_libraries(canvas_semantic_apply_plan_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_apply_plan_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_apply_plan_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_apply_plan_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_apply_plan_test)
+
+add_executable(canvas_semantic_operation_engine_boundary_test operation_engine_boundary_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_boundary_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_boundary_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_boundary_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_boundary_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_boundary_test)
+
+add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
+target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_stateful_validation_differential_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_stateful_validation_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_stateful_validation_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_stateful_validation_differential_test)
+
+add_executable(canvas_semantic_g1_04_b_operation_matrix_test g1_04_b_operation_matrix_test.cpp)
+target_link_libraries(canvas_semantic_g1_04_b_operation_matrix_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_04_b_operation_matrix_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_b_operation_matrix_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_04_b_operation_matrix_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_04_b_operation_matrix_test)
+
+add_executable(canvas_semantic_g1_04_b_no_mutation_test g1_04_b_no_mutation_test.cpp)
+target_link_libraries(canvas_semantic_g1_04_b_no_mutation_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_04_b_no_mutation_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_b_no_mutation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_04_b_no_mutation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_04_b_no_mutation_test)
+
 foreach(header IN ITEMS
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
@@ -76,11 +361,22 @@ foreach(header IN ITEMS
         canvas/semantic/reference_object_store.hpp
         canvas/semantic/operation_id.hpp
         canvas/semantic/operation.hpp
+        canvas/semantic/operation_fingerprint.hpp
+        canvas/semantic/idempotency.hpp
         canvas/semantic/order_key.hpp
         canvas/semantic/semantic_generation.hpp
         canvas/semantic/semantic_geometry.hpp
         canvas/semantic/semantic_id.hpp
         canvas/semantic/semantic_error.hpp
+        canvas/semantic/staged_object_view.hpp
+        canvas/semantic/restore_planner.hpp
+        canvas/semantic/operation_specific_validation.hpp
+        canvas/semantic/apply_plan.hpp
+        canvas/semantic/operation_engine.hpp
+        canvas/semantic/stateful_validation.hpp
+        canvas/semantic/hierarchy_validation.hpp
+        canvas/semantic/operation_state_validator.hpp
+        canvas/semantic/geometry_accounting_v1.hpp
         canvas/semantic/codec.hpp)
   string(REPLACE "/" "_" target_suffix ${header})
   string(REPLACE "." "_" target_suffix ${target_suffix})
@@ -96,6 +392,66 @@ foreach(header IN ITEMS
 endforeach()
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+add_executable(canvas_semantic_g1_04_c_fixture_decoder_test
+  g1_04_c_fixture_decoder_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp)
+target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)
+
+add_executable(canvas_semantic_g1_04_c_projection_test
+  g1_04_c_projection_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_projection_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_projection_test)
+
+add_executable(canvas_semantic_g1_04_c_observer_contract_test
+  g1_04_c_observer_contract_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_observer_contract_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_observer_contract_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_observer_contract_test)
+
+add_executable(canvas_semantic_g1_04_c_observer_coverage_test
+  g1_04_c_observer_coverage_test.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+target_link_libraries(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_g1_04_c_observer_coverage_test)
+
+add_executable(canvas_semantic_g1_04_c_observation_export
+  ../tools/g1_04_c_observation_export.cpp
+  ../tools/g1_04_c_fixture_decoder.cpp
+  ../tools/g1_04_c_fixture_runtime.cpp
+  ../tools/g1_04_c_projection.cpp
+  ../tools/g1_04_c_observer.cpp)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_link_libraries(canvas_semantic_g1_04_c_observation_export PRIVATE canvas_runtime_semantic)
+
 add_test(
     NAME canvas_semantic_runtime_boundaries
     COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tools/check_runtime_boundaries.py

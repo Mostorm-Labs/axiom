@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:g1-04-c-observation:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "provenance", "caseId", "provider", "observedDisposition", "observedTerminalPhase", "beforeProjection", "afterProjection"],
+  "properties": {
+    "format": {"const": "axiom-g1-04-c-observation-v1"},
+    "formatVersion": {"const": 1},
+    "provenance": {"const": "IMPLEMENTATION_OBSERVATION"},
+    "caseId": {"type": "string", "minLength": 1},
+    "provider": {"enum": ["reference", "indexed"]},
+    "observedDisposition": {"enum": ["PLAN_READY", "ALREADY_APPLIED", "REJECTED"]},
+    "observedTerminalPhase": {"enum": ["NORMALIZE", "STATELESS_VALIDATE", "IDEMPOTENCY", "STATEFUL_VALIDATE", "PREPARE"]},
+    "beforeProjection": {"type": "object"},
+    "afterProjection": {"type": "object"},
+    "observedErrorCategory": {"type": "string", "minLength": 1},
+    "observedPlanProjection": {"type": "object"}
+  }
+}

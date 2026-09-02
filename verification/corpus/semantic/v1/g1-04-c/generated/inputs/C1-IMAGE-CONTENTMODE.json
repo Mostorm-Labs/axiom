@@ -1,0 +1,66 @@
+{
+  "caseId": "C1-IMAGE-CONTENTMODE",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "content_mode": 1,
+            "height": 200.0,
+            "intrinsic_height": 200.0,
+            "intrinsic_width": 320.0,
+            "resource_id": "c0fccb730d09952569787ffc7cc353dd",
+            "width": 320.0
+          },
+          "variant": 1
+        },
+        "erase_masks": [],
+        "id": "1711184e7899723f6e400d25d9017589",
+        "kind": 2,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            8,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "6991c3fe93c2ea3a47f2838f9b6629e5",
+    "id": "d322f5f01adbcdf759c74d9084101e64",
+    "payload": {
+      "value": {
+        "content": {
+          "content_mode": 2,
+          "height": 200.0,
+          "intrinsic_height": 200.0,
+          "intrinsic_width": 320.0,
+          "resource_id": "c0fccb730d09952569787ffc7cc353dd",
+          "width": 320.0
+        },
+        "object_id": "1711184e7899723f6e400d25d9017589"
+      },
+      "variant": 8
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetImageContent",
+  "provenance": "DERIVED_GENERATED"
+}

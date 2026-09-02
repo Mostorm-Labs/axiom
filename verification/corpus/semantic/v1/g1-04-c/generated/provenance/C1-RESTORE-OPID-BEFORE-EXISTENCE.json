@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#operation-id-before-existence"
+  ],
+  "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V04",
+    "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83#operation-id-before-existence",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "42d880cf45aca41347386c97c6d4bd4ad1c8499e3bb4534b528b208a495069d5",
+  "expectedRef": "authoring/expected.json#C1-RESTORE-OPID-BEFORE-EXISTENCE",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2421,
+    "path": "inputs/C1-RESTORE-OPID-BEFORE-EXISTENCE.json",
+    "sha256": "f4b4c2873958a9896599a4c109a5c28b165ab218e165d99f24afb0717075f5dd"
+  },
+  "operationFamily": "RestoreObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "17b1aa35c12d463f2577abebb6cdc5e637b0aa0dd0318d201f1d8a452b9a353e",
+  "sourceCaseRef": "authoring/cases.json#C1-RESTORE-OPID-BEFORE-EXISTENCE",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}

@@ -192,6 +192,9 @@ def _mapping(file_name: str, kind: str, name: str, field: int | None) -> tuple[t
             return (("RT-D05",), "WIRE_BREAKING_PRE_RELEASE_REPAIR", "oneof branch tag identity corrected")
         if name == "RichTextDelta" and field in {1, 2}:
             return (("RT-D06",), "WIRE_BREAKING_PRE_RELEASE_REPAIR", "version and ordered-step field tags corrected")
+    if file_name.endswith("object.proto"):
+        if kind == "enum" and name == "ImageContentMode":
+            return (("IMG-05",), "DESCRIPTOR_IDENTITY_CORRECTION", "enum identity values corrected to released order")
     if file_name.endswith("brush_stroke.proto"):
         if name in {"CurvePoint01", "PiecewiseLinearCurve01"}:
             return (("ST-D01",), "MISSING_FIELD_MATERIALIZATION", "curve message materialized")

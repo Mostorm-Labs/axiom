@@ -1,0 +1,81 @@
+{
+  "caseId": "C1-INSERT-STAGED-PARENT",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "4fbbdbfbba8a5a183088120134ce4cb8",
+    "id": "212dc6645578841cc61032c1e6588ca2",
+    "payload": {
+      "value": {
+        "objects": [
+          {
+            "content": {
+              "value": {},
+              "variant": 8
+            },
+            "erase_masks": [],
+            "id": "10b8eec0d52b25f6c19a0e91f4e52658",
+            "kind": 9,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                123,
+                1
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "content": {
+              "value": {
+                "height": 24.0,
+                "shape_kind": 1,
+                "width": 32.0
+              },
+              "variant": 0
+            },
+            "erase_masks": [],
+            "id": "1891f38a2b2e14b4a0890aef94e66681",
+            "kind": 1,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                170,
+                2
+              ],
+              "parent_id": "10b8eec0d52b25f6c19a0e91f4e52658"
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "variant": 0
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "InsertObjects",
+  "provenance": "DERIVED_GENERATED"
+}

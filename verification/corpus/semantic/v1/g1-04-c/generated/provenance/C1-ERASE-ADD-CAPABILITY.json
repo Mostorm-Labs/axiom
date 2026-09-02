@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-ERASE-ADD-CAPABILITY",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "bd286622118a7d2fc15a3dcf08f24368a13f6bc2a42ac541080e88d970dffa77",
+  "expectedRef": "authoring/expected.json#C1-ERASE-ADD-CAPABILITY",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2307,
+    "path": "inputs/C1-ERASE-ADD-CAPABILITY.json",
+    "sha256": "986bf8365b947898adbaea482709681463ac0be64a8326e808488f03fddbc552"
+  },
+  "operationFamily": "AddEraseMasks",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "758868ae46fbe000ec22e8529c0d12bd05a88a0cbaef2689bff55aaf7e3146b4",
+  "sourceCaseRef": "authoring/cases.json#C1-ERASE-ADD-CAPABILITY",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}

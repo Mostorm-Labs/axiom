@@ -1,0 +1,139 @@
+{
+  "format": "axiom-gt-g1-04-c-coordinator-contract-v1",
+  "packageRef": "6f19852e6589af60a37a1ea36b18b321e4a00543",
+  "sourceRef": "14b0a6ed30d62983c7c067902e236b78a28e61c5",
+  "taskAnchor": {
+    "revision": "855c114f36e4d4d4b9db9faaa28b96ae6d5249c6",
+    "relation": "ancestor"
+  },
+  "syntheticScenarioCount": 10,
+  "syntheticScenarioPassCount": 10,
+  "acceptedExpectedCount": 90,
+  "acceptedOpenPolicyCount": 0,
+  "acceptedExpectedAllAuthorityManual": true,
+  "expectedTruthWrites": 0,
+  "productionSemanticDependencies": 0,
+  "providerOutputUsedAsExpected": false,
+  "verification": [
+    {
+      "id": "C4-T01",
+      "expectedStatus": "PASS",
+      "requiredDiagnostics": [],
+      "observedStatus": "PASS",
+      "observedDiagnostics": [],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T02",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T03",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "INDEXED_GOLDEN_MISMATCH",
+        "PROVIDER_DIVERGENCE"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "INDEXED_GOLDEN_MISMATCH",
+        "PROVIDER_DIVERGENCE"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T04",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "REFERENCE_MUTATION"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "REFERENCE_MUTATION"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T05",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "INDEXED_MUTATION"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "INDEXED_MUTATION"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T06",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "EXPECTED_PROVENANCE_INVALID"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "EXPECTED_PROVENANCE_INVALID"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T07",
+      "expectedStatus": "OBSERVATION_ONLY",
+      "requiredDiagnostics": [
+        "OPEN_POLICY_OBSERVATION_ONLY"
+      ],
+      "observedStatus": "OBSERVATION_ONLY",
+      "observedDiagnostics": [
+        "OPEN_POLICY_OBSERVATION_ONLY"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T08",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "OPEN_POLICY_STALE_CLOSED"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "OPEN_POLICY_STALE_CLOSED"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T09",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "OPEN_AUTHORITY_UNRESOLVED"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "OPEN_AUTHORITY_UNRESOLVED"
+      ],
+      "contractPass": true
+    },
+    {
+      "id": "C4-T10",
+      "expectedStatus": "FAIL",
+      "requiredDiagnostics": [
+        "REFERENCE_MUTATION"
+      ],
+      "observedStatus": "FAIL",
+      "observedDiagnostics": [
+        "REFERENCE_MUTATION"
+      ],
+      "contractPass": true
+    }
+  ]
+}

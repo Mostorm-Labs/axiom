@@ -1,0 +1,124 @@
+{
+  "format": "G1 connector-stateful-validation evidence v2",
+  "task": "GT-G1-04-B / B4 P36 repair: connector references, connectability, StablePort applicability, and A/B ownership",
+  "sourceCommit": "1549b5c42b39ae677220b460dd2d63025fb22326",
+  "testedCommit": "1549b5c42b39ae677220b460dd2d63025fb22326",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorizationRecord": "3ca4c57a-590c-8198-8bfa-c91dc212ac2c",
+  "planCommit": "6357f7e19426f8c7300c11595c26dbb0cf13d8ae",
+  "p34p35Review": {
+    "reviewRecord": "3ca4c57a-590c-81d1-b2f2-ec7e0a8aa67c",
+    "evidenceReReviewRecord": "3ca4c57a-590c-81e2-b621-fd1b81bcd4bd",
+    "classification": {
+      "P34-B4-01": "IMPLEMENTATION_DEFECT",
+      "P34-B4-02": "TEST_DEFECT",
+      "P34-B4-03": "EVIDENCE_GAP",
+      "P34-B4-04": "EVIDENCE_GAP",
+      "P34-B4-05": "EVIDENCE_GAP"
+    },
+    "historicalSource": "1db920e0f144209041c21bc312b5abaf72ddc987",
+    "historicalEvidence": "7d1c8fa483c7acb42ede5b20b32044a5d0779678",
+    "historicalRepairEvidence": "028d5fd89ce0b8b5a2ef350a1da099ef8b10f68f"
+  },
+  "authorityRefs": [
+    "notion:3ca4c57a-590c-8198-8bfa-c91dc212ac2c",
+    "notion:3ca4c57a-590c-81d1-b2f2-ec7e0a8aa67c",
+    "notion:3ca4c57a-590c-81e2-b621-fd1b81bcd4bd",
+    "github:docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md@6357f7e19426f8c7300c11595c26dbb0cf13d8ae"
+  ],
+  "repair": {
+    "P34-B4-01": "Removed B4 kConnectorInvalid classification for A-invalid StablePort port IDs; B4 now consumes the A structural-validation precondition.",
+    "P34-B4-02": "Added independent ReferenceObjectStore versus IndexedObjectStore StablePort differential coverage for all four B4 outcomes.",
+    "P34-B4-03": "StablePort parity is claimed only after executable Reference/Indexed StablePort differential coverage for kNone, kInvalidReference, kInvalidKindVersion, and kConnectorInvalid.",
+    "P34-B4-04": "Evidence records actual configure/build/test commands with real build directories and targets.",
+    "P34-B4-05": "Evidence records concrete per-kind endpoint cases with the actual anchor used by each executable test; historical source/evidence occurrences remain preserved."
+  },
+  "red": {
+    "command": "p36_red_dir=/tmp/axiom-b4-p36-red.hy6mWv; cmake -S . -B $p36_red_dir -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build $p36_red_dir --target canvas_semantic_connector_stateful_validation_test -j2 && $p36_red_dir/runtime/semantic/tests/canvas_semantic_connector_stateful_validation_test --gtest_color=no",
+    "exit": 1,
+    "failure": "Provisional A/B ownership regression failed under the historical implementation: StablePort portId 0 and 5 were returned as kConnectorInvalid.",
+    "result": "failed as expected before the ownership repair; the provisional direct-helper assertion was not retained because A-invalid StablePort values are outside the B4 helper precondition"
+  },
+  "green": {
+    "focused": {
+      "command": "p36_green_dir=/tmp/axiom-b4-p36-green.RWqEzp; cmake -S . -B $p36_green_dir -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build $p36_green_dir --target canvas_semantic_connector_stateful_validation_test -j2 && $p36_green_dir/runtime/semantic/tests/canvas_semantic_connector_stateful_validation_test --gtest_color=no",
+      "exit": 0,
+      "passed": 17,
+      "failed": 0
+    },
+    "regression": {
+      "command": "ctest --test-dir /tmp/axiom-b4-p36-green.RWqEzp -R '^(SemanticTypes|SemanticCodec|SemanticCodecNegative|PayloadStructure|LeafStructureValidation|ALane|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|StatefulValidationContext|StatefulKindApplicability|StagedObjectView|Idempotency|HierarchyValidation)' --output-on-failure",
+      "exit": 0,
+      "total": 131,
+      "passed": 119,
+      "failed": 0,
+      "skipped": 12
+    },
+    "fullSemantic": {
+      "command": "ctest --test-dir /tmp/axiom-b4-p36-green.RWqEzp --output-on-failure",
+      "exit": 0,
+      "total": 160,
+      "passed": 148,
+      "failed": 0,
+      "skipped": 12
+    }
+  },
+  "endpointCases": [
+    {"id": "FreeFreeIsValid", "start": "FreePoint", "end": "FreePoint", "statefulIssue": "kNone"},
+    {"id": "ShapeV1StablePortIsValid", "endpointSide": "start", "targetObjectId": "14000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Shape", "targetKindVersion": 1, "portId": 1}, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone"},
+    {"id": "ImageV1StablePortIsValid", "endpointSide": "start", "targetObjectId": "15000000000000000000000000000000", "targetActualKind": "Image", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Image", "targetKindVersion": 1, "portId": 2}, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone"},
+    {"id": "StickyV1StablePortIsValid", "endpointSide": "start", "targetObjectId": "16000000000000000000000000000000", "targetActualKind": "Sticky", "targetActualKindVersion": 1, "connectability": true, "anchorType": "StablePort", "stablePort": {"targetKind": "Sticky", "targetKindVersion": 1, "portId": 3}, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone"},
+    {"id": "MissingStablePortTarget", "endpointSide": "start", "targetObjectId": "e7030000000000000000000000000000", "targetActualKind": null, "targetActualKindVersion": null, "connectability": null, "anchorType": "StablePort", "stablePort": {"targetKind": null, "targetKindVersion": null, "portId": 2}, "expectedStatefulIssue": "kInvalidReference", "actualStatefulIssue": "kInvalidReference", "stagedVisibility": "absent"},
+    {"id": "UnsupportedShapeV2StablePortTarget", "endpointSide": "start", "targetObjectId": "a5000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 2, "connectability": "not_evaluated", "anchorType": "StablePort", "stablePort": {"targetKind": "Shape", "targetKindVersion": 2, "portId": 3}, "expectedStatefulIssue": "kInvalidKindVersion", "actualStatefulIssue": "kInvalidKindVersion"},
+    {"id": "VectorPathV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "6e000000000000000000000000000000", "targetActualKind": "VectorPath", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "RichTextV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "6f000000000000000000000000000000", "targetActualKind": "RichText", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "VectorStrokeV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "70000000000000000000000000000000", "targetActualKind": "VectorStroke", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "DabStrokeV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "71000000000000000000000000000000", "targetActualKind": "DabStroke", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "ConnectorV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "72000000000000000000000000000000", "targetActualKind": "Connector", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "GroupV1AutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "73000000000000000000000000000000", "targetActualKind": "Group", "targetActualKindVersion": 1, "connectability": false, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kConnectorInvalid", "actualStatefulIssue": "kConnectorInvalid"},
+    {"id": "ShapeV1SameBatchAutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "82000000000000000000000000000000", "targetActualKind": "Shape", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone", "stagedVisibility": "staged-created"},
+    {"id": "ImageV1SameBatchAutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "83000000000000000000000000000000", "targetActualKind": "Image", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone", "stagedVisibility": "staged-created"},
+    {"id": "StickyV1SameBatchAutoPerimeterTarget", "endpointSide": "start", "targetObjectId": "84000000000000000000000000000000", "targetActualKind": "Sticky", "targetActualKindVersion": 1, "connectability": true, "anchorType": "AutoPerimeter", "stablePort": null, "expectedStatefulIssue": "kNone", "actualStatefulIssue": "kNone", "stagedVisibility": "staged-created"}
+  ],
+  "diagnosticPrecedence": [
+    {"id": "StartInvalidReferenceWinsOverEndNonConnectable", "startOutcome": "kInvalidReference", "endOutcome": "kConnectorInvalid", "result": "kInvalidReference"},
+    {"id": "StartNonConnectableWinsOverEndInvalidReference", "startOutcome": "kConnectorInvalid", "endOutcome": "kInvalidReference", "result": "kConnectorInvalid"}
+  ],
+  "connectableV1": ["Shape", "Image", "Sticky"],
+  "nonConnectableV1": ["VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Group"],
+  "stablePortV1": {
+    "identity": ["target ObjectKindId", "target kindVersion", "portId"],
+    "registry": {"1": "TOP", "2": "RIGHT", "3": "BOTTOM", "4": "LEFT"},
+    "applicableTargets": ["Shape v1", "Image v1", "Sticky v1"],
+    "aOwnedRejections": ["portId == 0", "portId >= 5"],
+    "b4Precondition": "StablePortAnchor supplied to B4 has already passed A structural validation"
+  },
+  "stablePortDifferentialCases": [
+    {"id": "StablePortConnectableV1", "test": "ReferenceAndIndexedStoresHaveStablePortDecisionParity", "targetObjectId": "a3000000000000000000000000000000", "kind": "Shape", "kindVersion": 1, "portId": 1, "expected": "kNone", "reference": "kNone", "indexed": "kNone"},
+    {"id": "StablePortMissingTarget", "test": "ReferenceAndIndexedStoresHaveStablePortDecisionParity", "targetObjectId": "e7030000000000000000000000000000", "kind": null, "kindVersion": null, "portId": 2, "expected": "kInvalidReference", "reference": "kInvalidReference", "indexed": "kInvalidReference"},
+    {"id": "StablePortUnsupportedVersion", "test": "ReferenceAndIndexedStoresHaveStablePortDecisionParity", "targetObjectId": "a5000000000000000000000000000000", "kind": "Shape", "kindVersion": 2, "portId": 3, "expected": "kInvalidKindVersion", "reference": "kInvalidKindVersion", "indexed": "kInvalidKindVersion"},
+    {"id": "StablePortNonConnectableV1", "test": "ReferenceAndIndexedStoresHaveStablePortDecisionParity", "targetObjectId": "a6000000000000000000000000000000", "kind": "VectorPath", "kindVersion": 1, "portId": 4, "expected": "kConnectorInvalid", "reference": "kConnectorInvalid", "indexed": "kConnectorInvalid"}
+  ],
+  "referenceIndexedParity": {"result": "PASS", "issues": ["kNone", "kInvalidReference", "kInvalidKindVersion", "kConnectorInvalid"], "actualKindVersionAndStablePortParity": true},
+  "noMutation": {"result": "PASS", "baseObjectStoreProjectionUnchanged": true, "stagedProjectionUnchanged": true, "indexedIndexMatchesRebuild": true},
+  "lookup": {"source_inspection": {"result": "PASS", "detail": "one staged.find(targetObjectId) expression on each AttachedEndpoint validation path; validateStablePortForTarget uses only ObjectRecord and StablePortAnchor"}, "runtime_lookup_measurement": {"result": "PASS", "measurement": "CountingObjectStore base-find calls = 2 for two existing attached endpoints; 0 for FreePoint/FreePoint; allObjects=0; children=0; contains=0", "scope": "underlying ObjectStore find calls, not a claimed StagedObjectView invocation counter"}},
+  "a_b_structural_ownership": {"b4Precondition": "A-normalized + A-stateless-structurally-valid ConnectorContent", "aOwned": ["zero targetObjectId", "malformed endpoint/anchor variant", "invalid AutoPerimeter hint", "non-finite or out-of-domain hint", "hint == center", "StablePort portId == 0", "StablePort portId >= 5", "invalid ConnectorRouting discriminant"], "b4DoesNotRedefineAFailures": true},
+  "forbiddenDependencies": {"allObjects": false, "projection": false, "children": false, "rendererGeometry": false, "routeComputation": false, "skia": false, "scene": false, "spatialIndex": false, "objectStoreMutator": false},
+  "verification": {
+    "focusedB4": "PASS: 17/17",
+    "regression": "PASS: 119 passed, 0 failed, 12 skipped out of 131",
+    "fullSemantic": "PASS: 148 passed, 0 failed, 12 skipped out of 160",
+    "runtimeBoundaries": "PASS: Runtime module boundary check passed (49 contract files)",
+    "docs": "PASS: validated 273 Markdown files",
+    "diffCheck": "PASS",
+    "commands": [
+      "cmake --build /tmp/axiom-b4-p36-green.RWqEzp -j2",
+      "ctest --test-dir /tmp/axiom-b4-p36-green.RWqEzp --output-on-failure",
+      "ctest --test-dir /tmp/axiom-b4-p36-green.RWqEzp -R '^(SemanticTypes|SemanticCodec|SemanticCodecNegative|PayloadStructure|LeafStructureValidation|ALane|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|StatefulValidationContext|StatefulKindApplicability|StagedObjectView|Idempotency|HierarchyValidation)' --output-on-failure",
+      "python3 tools/check_runtime_boundaries.py --root .",
+      "python3 tools/check_docs.py",
+      "git diff --check"
+    ]
+  },
+  "scopeGuard": {"B5toB10": "NOT_AUTHORIZED", "GT-G1-04-C": "DEFERRED", "GT-G1-05": "NOT_AUTHORIZED", "PreparedApplyPlan": false, "OperationEngine": false, "B5FilesChanged": false}
+}

@@ -44,7 +44,7 @@ class G102RDescriptorRefreezeTest(unittest.TestCase):
         self.assertNotEqual(result["beforeDescriptorSha256"], result["afterDescriptorSha256"])
         self.assertEqual([], result["unmappedChanges"])
         self.assertEqual(
-            {"RT-D01", "RT-D02", "RT-D03", "RT-D04", "RT-D05", "RT-D06", "ST-D01", "ST-D02", "ST-D03", "ST-D04", "ST-D05"},
+            {"IMG-05", "RT-D01", "RT-D02", "RT-D03", "RT-D04", "RT-D05", "RT-D06", "ST-D01", "ST-D02", "ST-D03", "ST-D04", "ST-D05"},
             {defect for change in result["changes"] for defect in change["defectIds"]},
         )
 

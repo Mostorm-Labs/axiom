@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:auditoryworks:axiom:verification:g1-04-c-case:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "formatVersion", "provenance", "id", "operationFamily", "authorityRuleRefs", "inputRef", "expectedRef", "blocking"],
+  "properties": {
+    "format": {"const": "axiom-g1-04-c-case-v1"},
+    "formatVersion": {"const": 1},
+    "provenance": {"const": "AUTHORITY_MANUAL"},
+    "id": {"type": "string", "minLength": 1},
+    "operationFamily": {"type": "string", "minLength": 1},
+    "authorityRuleRefs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "inputRef": {"type": "string", "minLength": 1},
+    "expectedRef": {"type": "string", "minLength": 1},
+    "blocking": {"type": "boolean"}
+  }
+}

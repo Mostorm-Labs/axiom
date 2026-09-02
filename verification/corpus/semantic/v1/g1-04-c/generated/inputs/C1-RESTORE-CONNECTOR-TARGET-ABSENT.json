@@ -1,0 +1,74 @@
+{
+  "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "d170cbe7abf9919489796375f0087aef",
+    "id": "dbe195a8f3b5dc9b43f590629201152b",
+    "payload": {
+      "value": {
+        "objects": [
+          {
+            "content": {
+              "value": {
+                "end": {
+                  "value": {
+                    "point": [
+                      10.0,
+                      10.0
+                    ]
+                  },
+                  "variant": 0
+                },
+                "routing": 1,
+                "start": {
+                  "value": {
+                    "anchor": {
+                      "value": {
+                        "port_id": 1
+                      },
+                      "variant": 0
+                    },
+                    "target_object_id": "3e0204f9e21157273103d631e9918581"
+                  },
+                  "variant": 1
+                }
+              },
+              "variant": 6
+            },
+            "erase_masks": [],
+            "id": "e772d2d13f23a2bf9ca851445a2f9822",
+            "kind": 7,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                235,
+                1
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "variant": 2
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "RestoreObjects",
+  "provenance": "DERIVED_GENERATED"
+}

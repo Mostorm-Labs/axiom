@@ -6,6 +6,8 @@
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/semantic/property_value.hpp"
 #include "canvas/semantic/operation.hpp"
+#include "canvas/semantic/document_id.hpp"
+#include "canvas/semantic/operation_payload.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 
 #include <gtest/gtest.h>
@@ -39,9 +41,13 @@ TEST(SemanticTypes, ObjectIdIsOpaqueSixteenBytesAndZeroIsInvalid) {
 
 TEST(SemanticTypes, OrderKeyAcceptsOnlyAuthorityBounds) {
     EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>{}).isValid());
-    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(1, 0)).isValid());
-    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(32, 0)).isValid());
+    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>{1U}).isValid());
+    auto thirty_one = std::vector<std::uint8_t>(31, 0U);
+    thirty_one.back() = 1U;
+    EXPECT_TRUE(OrderKey(std::move(thirty_one)).isValid());
+    EXPECT_TRUE(OrderKey(std::vector<std::uint8_t>(32, 0x01U)).isValid());
     EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>(33, 0)).isValid());
+    EXPECT_FALSE(OrderKey(std::vector<std::uint8_t>{1U, 0U}).isValid());
 }
 
 TEST(SemanticTypes, OrderKeyUsesUnsignedLexicographicBytes) {
@@ -97,6 +103,28 @@ TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {
     EXPECT_FALSE(OperationId(ObjectId::fromUint64(42U)).isZero());
 }
 
+TEST(SemanticTypes, OperationCarriesClosedTypedPayloadAndStrongDocumentId) {
+    static_assert(!std::is_convertible_v<DocumentId, ObjectId>);
+    static_assert(!std::is_convertible_v<ObjectId, DocumentId>);
+    static_assert(std::variant_size_v<OperationPayload> == 15);
+
+    Operation operation{};
+    operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(7U)}};
+    EXPECT_EQ(operation.kind(), OperationKind::kDeleteObjects);
+}
+
+TEST(SemanticTypes, ImageContentModeUsesReleasedWireIdentities) {
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kFit), 1U);
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kFill), 2U);
+    EXPECT_EQ(static_cast<unsigned>(ImageContentMode::kStretch), 3U);
+}
+
+TEST(SemanticTypes, AutoPerimeterHintPresenceIsSemantic) {
+    const AutoPerimeterAnchor absent{};
+    const AutoPerimeterAnchor present{Vec2{0.0, 0.0}};
+    EXPECT_NE(absent, present);
+}
+
 TEST(SemanticTypes, ChangeSetMergesObjectChangesInDeterministicOrder) {
     const ObjectId first = ObjectId::fromUint64(1U);
     const ObjectId second = ObjectId::fromUint64(2U);
@@ -135,7 +163,6 @@ TEST(SemanticTypes, ChangeSetExpressesCreatedAndDeletedObjects) {
 }
 
 TEST(SemanticTypes, PublicTypesDoNotRequireSceneOrRenderer) {
-    static_assert(std::is_trivially_copyable_v<Operation>);
     ObjectRecord record{};
     record.id = ObjectId::fromUint64(1U);
     record.kind = ObjectKind::kShape;

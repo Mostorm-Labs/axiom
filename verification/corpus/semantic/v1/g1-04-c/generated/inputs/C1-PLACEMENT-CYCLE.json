@@ -1,0 +1,66 @@
+{
+  "caseId": "C1-PLACEMENT-CYCLE",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            7,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "f416b3616e87bddddcfdcf9d97f8e451",
+    "id": "d540f09e0c954f0a65098b6d16a8200f",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "object_id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "placement": {
+              "order_key": [
+                7,
+                1
+              ],
+              "parent_id": "38dc3009ba2fc131fe0856cb11b0dca8"
+            }
+          }
+        ]
+      },
+      "variant": 3
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetPlacements",
+  "provenance": "DERIVED_GENERATED"
+}

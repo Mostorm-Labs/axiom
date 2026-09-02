@@ -18,7 +18,7 @@ class OrderKey final {
     explicit OrderKey(std::vector<std::uint8_t> bytes) : bytes_(std::move(bytes)) {}
 
     [[nodiscard]] bool isValid() const noexcept {
-        return bytes_.size() >= kMinSize && bytes_.size() <= kMaxSize;
+        return bytes_.size() >= kMinSize && bytes_.size() <= kMaxSize && bytes_.back() != 0U;
     }
     [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return bytes_; }
 

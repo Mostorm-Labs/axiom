@@ -1,0 +1,125 @@
+{
+  "caseId": "C1-CONNECTOR-VALID",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "end": {
+              "value": {
+                "point": [
+                  10.0,
+                  10.0
+                ]
+              },
+              "variant": 0
+            },
+            "routing": 1,
+            "start": {
+              "value": {
+                "point": [
+                  0.0,
+                  0.0
+                ]
+              },
+              "variant": 0
+            }
+          },
+          "variant": 6
+        },
+        "erase_masks": [],
+        "id": "43e837de249ce4c6de1eb573911c9aa8",
+        "kind": 7,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            110,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "4e8e23c0a4d41974b50d1ae7c6362861",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            98,
+            2
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "cc85a7f46b2c9274f463cc681afa1369",
+    "id": "a3ae7804462dcdbe0f28af0883818fb1",
+    "payload": {
+      "value": {
+        "content": {
+          "end": {
+            "value": {
+              "point": [
+                10.0,
+                10.0
+              ]
+            },
+            "variant": 0
+          },
+          "routing": 1,
+          "start": {
+            "value": {
+              "anchor": {
+                "value": {
+                  "port_id": 1
+                },
+                "variant": 0
+              },
+              "target_object_id": "4e8e23c0a4d41974b50d1ae7c6362861"
+            },
+            "variant": 1
+          }
+        },
+        "object_id": "43e837de249ce4c6de1eb573911c9aa8"
+      },
+      "variant": 14
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetConnectorContent",
+  "provenance": "DERIVED_GENERATED"
+}

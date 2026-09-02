@@ -1,0 +1,131 @@
+{
+  "format": "axiom-g1-04-c-authority-map-v1",
+  "formatVersion": 1,
+  "gate": "GT-G1-04-C",
+  "slice": "C0 Authority Schema + Trust Boundary",
+  "stage": "P32",
+  "status": "PASS",
+  "source_ref": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20",
+  "package_ref": "cefa97ff175de2dc7082039b653ea54300d456c9",
+  "execution_start_ref": "cefa97ff175de2dc7082039b653ea54300d456c9",
+  "task_anchor": {
+    "revision": "ee2466099fb9e074eac5f558bf3e660c8792cae3",
+    "relation": "ancestor",
+    "branch_hint": "codex/gt-g1-04-operation-apply"
+  },
+  "authority_refs": {
+    "current_c_verification_authority": "notion:3cc4c57a-590c-81ae-ab73-d75501c47169",
+    "p23_promotion": "notion:3cc4c57a-590c-817b-bcc6-e545279a4722",
+    "p30_implementation_plan": "notion:3cc4c57a-590c-81c4-9e7b-d404c3fdba4b",
+    "p31_corroboration": "notion:3cc4c57a-590c-81c3-8fe4-c1055d929043",
+    "p32_surface_handoff": "notion:3cc4c57a-590c-818c-a347-fe907d019a06"
+  },
+  "provenance_roles": [
+    "AUTHORITY_MANUAL",
+    "DERIVED_GENERATED",
+    "IMPLEMENTATION_OBSERVATION",
+    "CONFORMANCE_RESULT",
+    "GATE_EVIDENCE"
+  ],
+  "authorized_source_files": [
+    "verification/corpus/semantic/v1/g1-04-c/README.md",
+    "verification/schemas/semantic/g1-04-c-case.schema.json",
+    "verification/schemas/semantic/g1-04-c-expected.schema.json",
+    "verification/schemas/semantic/g1-04-c-observation.schema.json",
+    "verification/schemas/semantic/g1-04-c-result.schema.json",
+    "verification/schemas/semantic/g1-04-c-gate.schema.json",
+    "verification/tools/g1_04_c_contract.mjs",
+    "verification/tests/g1_04_c_schema.test.mjs",
+    "verification/tests/g1_04_c_authority_map.test.mjs",
+    "verification/tests/g1_04_c_open_reconciliation.test.mjs"
+  ],
+  "tdd_commits": [
+    {
+      "phase": "RED_1",
+      "revision": "283468441296e82c3fe3a763b70063faa11cdcc9"
+    },
+    {
+      "phase": "GREEN_1",
+      "revision": "da12f609363777cb99459c032e631ec91ac1c681"
+    },
+    {
+      "phase": "RED_2",
+      "revision": "23ae427fb386e169ce5827c8cb51ac407aa1d3cc"
+    },
+    {
+      "phase": "GREEN_2_SOURCE",
+      "revision": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20"
+    }
+  ],
+  "verification": {
+    "focused_c0": {
+      "command": "cd verification && node --test tests/g1_04_c_schema.test.mjs tests/g1_04_c_authority_map.test.mjs tests/g1_04_c_open_reconciliation.test.mjs",
+      "status": "PASS",
+      "passed": 11,
+      "failed": 0,
+      "note": "Executed in an isolated reconstructed C0 harness using the repository validateValue implementation; this proves the focused C0 contracts only and is not substituted for the full workspace regression command."
+    },
+    "git_diff_check": {
+      "command": "git diff --cached --check",
+      "status": "PASS",
+      "scope": "authorized C0 source diff"
+    },
+    "exact_source_ci": [
+      {
+        "workflow": "G0 Platform Protocol Seed",
+        "run_id": 33321551186,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "workflow": "G1 Semantic Codec",
+        "run_id": 33321551136,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "workflow": "G0 PR CI DAG",
+        "run_id": 33321551143,
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "workspace_regression": {
+      "command": "cd verification && npm run validate",
+      "status": "PASS",
+      "required_for_p32_pass": true,
+      "blocker": null,
+      "exit_code": 0,
+      "source_ref": "cfa5eb9d7908108b9a5c72e086e7f8fa07a47d20",
+      "node_version": "v22.14.0",
+      "npm_version": "10.9.2",
+      "dependency_install": "npm ci --ignore-scripts",
+      "tests": {
+        "workspace_validate": "111 passed, 0 failed",
+        "schema_validation": "23 schemas and 23 fixtures valid",
+        "platform_scenario_validation": "28/28 valid",
+        "workspace_packages": "platform-conformance-cli 24/24; android 2/2; apple 3/3; protocol 18/18; runner 40/40; scripted-adapter 6/6; transport 3/3; web 6/6 plus browser 1/1"
+      },
+      "stdout_summary": "literal npm run validate completed successfully after lockfile install and workspace build"
+    }
+  },
+  "scope_proof": {
+    "source_commits_from_package": 4,
+    "source_changed_file_count": 10,
+    "changed_files_match_authorized_source_files": true,
+    "production_semantic_files_changed": false,
+    "shared_validator_changed": false,
+    "verification_package_json_changed": false,
+    "c1_c8_files_changed": false,
+    "gt_g1_05_files_changed": false
+  },
+  "evidence_gap": {
+    "type": "NONE",
+    "missing": null,
+    "why_not_relaxed": "Complete authenticated checkout regression executed at accepted source_ref."
+  },
+  "resume": {
+    "completed_through": "C0 implementation, RED/GREEN focused verification, exact source materialization, scope proof, exact-source hosted CI, and complete workspace regression",
+    "next_action": "Return exact evidence materialization to CONTROL_REVIEW; do not start C1."
+  }
+}

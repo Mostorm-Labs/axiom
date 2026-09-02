@@ -21,10 +21,23 @@ struct CodecResult final {
     [[nodiscard]] bool ok() const noexcept { return error == SemanticError::kNone; }
 };
 
+struct OperationFieldPresence final {
+    bool schema_version = false;
+    bool payload_version = false;
+};
+
 struct DecodedOperation final {
     Operation operation{};
+    OperationFieldPresence presence{};
     std::vector<CanonicalField> fields;
     SemanticError error = SemanticError::kNone;
+    DecodedOperation() = default;
+    DecodedOperation(Operation operation_value, std::vector<CanonicalField> fields_value,
+                     SemanticError error_value)
+        : operation(std::move(operation_value)), fields(std::move(fields_value)), error(error_value) {}
+    DecodedOperation(Operation operation_value, OperationFieldPresence presence_value,
+                     std::vector<CanonicalField> fields_value, SemanticError error_value)
+        : operation(std::move(operation_value)), presence(presence_value), fields(std::move(fields_value)), error(error_value) {}
     [[nodiscard]] bool ok() const noexcept { return error == SemanticError::kNone; }
 };
 
@@ -77,10 +90,17 @@ struct GoldenCodecObservation final {
 
 class SemanticCodec final {
   public:
+    static SemanticError preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept;
     static CodecResult encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields);
     // Experimental G1-02 probe. Protobuf types remain private to codec.cpp;
     // this returns the canonical runtime bytes without exposing that ABI.
     static CodecResult encodeProtobufOperation(OperationKind kind);
+    // Protobuf envelope preflight seam. Generated DTOs remain private to
+    // codec.cpp; this maps identity/version/payload-branch facts needed by
+    // A0/A2. Because nested payload DTO mapping is intentionally incomplete,
+    // a structurally parsed result is returned with kInvalidSemanticValue;
+    // callers must never treat this seam's result as a complete Operation.
+    static DecodedOperation decodeProtobufOperation(const std::vector<std::uint8_t>& bytes);
     static DecodedOperation decodeOperation(const std::vector<std::uint8_t>& bytes);
     static CodecResult encodeCanonicalF64(double value);
     static std::vector<StableSeedCase> stableSeedV01();

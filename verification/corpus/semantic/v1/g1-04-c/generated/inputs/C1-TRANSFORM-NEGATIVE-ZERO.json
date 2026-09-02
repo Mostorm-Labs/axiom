@@ -1,0 +1,67 @@
+{
+  "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "c3b7df53467ad5d2a766d55231a624e1",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            20,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "9af5eba74ef1fc4d1db80a48b08fd712",
+    "id": "14c3a38cd464bd77f4c959844f0c3693",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "object_id": "c3b7df53467ad5d2a766d55231a624e1",
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              -0.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "variant": 4
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetTransforms",
+  "provenance": "DERIVED_GENERATED"
+}

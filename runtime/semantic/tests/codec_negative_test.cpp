@@ -42,4 +42,22 @@ TEST(SemanticCodecNegative, RejectsNonFiniteAndOversizedValues) {
               SemanticError::kLimitExceeded);
 }
 
+TEST(SemanticCodecNegative, EnforcesOperationWireSizeBoundaryBeforeDecode) {
+    constexpr std::size_t kOperationLimit = 32U * 1024U * 1024U;
+    std::vector<std::uint8_t> exact(kOperationLimit, 0U);
+    EXPECT_EQ(SemanticCodec::preflightOperationBytes(exact), SemanticError::kNone);
+    exact.push_back(0U);
+    EXPECT_EQ(SemanticCodec::preflightOperationBytes(exact), SemanticError::kLimitExceeded);
+}
+
+TEST(SemanticCodecNegative, EnforcesCustomOperationWireSizeLimit) {
+    std::vector<CanonicalField> fields;
+    fields.reserve(33U);
+    for (std::uint32_t id = 1U; id <= 33U; ++id) {
+        fields.push_back(CanonicalField{id, std::vector<std::uint8_t>(1024U * 1024U, 0U)});
+    }
+    EXPECT_EQ(SemanticCodec::encodeOperation(OperationKind::kPatchProperties, fields).error,
+              SemanticError::kLimitExceeded);
+}
+
 } // namespace canvas::semantic

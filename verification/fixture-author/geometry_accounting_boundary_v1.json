@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "authority": "Geometry Aggregate Accounting Contract V1 v0.1",
+  "limit": 2000000,
+  "cases": [
+    {"id": "GAA-BELOW-1999999", "construction": {"dabs": 666661, "eraseSegments": 1, "path": {"move": 1, "line": 4, "quad": 1, "cubic": 1, "close": 1}}, "expectedUnits": 1999999, "expected": "ACCEPTED"},
+    {"id": "GAA-EXACT-2000000", "construction": {"dabs": 666661, "eraseSegments": 1, "path": {"move": 1, "line": 5, "quad": 1, "cubic": 1, "close": 1}}, "expectedUnits": 2000000, "expected": "ACCEPTED"},
+    {"id": "GAA-ABOVE-2000001", "construction": {"dabs": 666661, "eraseSegments": 1, "path": {"move": 1, "line": 6, "quad": 1, "cubic": 1, "close": 1}}, "expectedUnits": 2000001, "expected": "REJECTED", "error": "GEOMETRY_LIMIT_EXCEEDED"}
+  ]
+}

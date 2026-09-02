@@ -1,0 +1,63 @@
+{
+  "format": "axiom-g1-04-a-reentry-reconciliation-evidence-v1",
+  "gate": "GT-G1-04-A",
+  "status": "PASS_REENTRY_READY_A0_A3_IMPLEMENTATION_NOT_STARTED",
+  "approval_token": "APPROVE_G1_04_SEMANTIC_FREEZE_V1",
+  "source_commit": "5ca4b6a227df7a037f4ff4f9338dc2e2f002b620",
+  "source_tree": "b5c1d849f670fa6caec4c725c8835954aaa942a6",
+  "main_authority_baseline": "17ff844f3b72e1976dee248550aa80f59ad38990",
+  "semantic_authority_commit": "8adcf8599775dcdf8852699f5f8725a7add1864e",
+  "authority_publication_evidence_commit": "2b9506077e5f76ef7a71e037f51bc7222754ffa6",
+  "machine_projection_source_commit": "b62fb8bab950a88641721da9db2b96faea385b24",
+  "machine_projection_review_evidence_commit": "17ff844f3b72e1976dee248550aa80f59ad38990",
+  "implementation_branch_merge_commit": "f5578a729da43d3f4a5c6107fef6009e9e7215fe",
+  "current_documents": [
+    "docs/planning/GT_G1_04_AUTHORITY_RECONCILIATION.md",
+    "docs/planning/GT_G1_04_A_CONTRACT_MATRIX.md"
+  ],
+  "historical_lineage": [
+    "docs/planning/history/g1-04/GT_G1_04_AUTHORITY_RECONCILIATION_BLOCKED_AUTHORITY_20260827.md",
+    "docs/planning/history/g1-04/GT_G1_04_A_CONTRACT_MATRIX_BLOCKED_AUTHORITY_20260827.md"
+  ],
+  "execution_plan": "docs/superpowers/plans/2026-08-27-g1-04-a0-a3-reentry-implementation.md",
+  "reentry": {
+    "A0_typed_operation_domain": "READY",
+    "A1_common_normalization": "READY",
+    "A2_envelope_validation": "READY_WITH_WIRE_PREFLIGHT_REQUIREMENT",
+    "A3_payload_structural_validation": "READY",
+    "implementation": "NOT_STARTED",
+    "validation": "NOT_STARTED"
+  },
+  "wire_presence_stop_condition": "WIRE_SCHEMA_CHANGE_REQUIRED",
+  "validation": {
+    "branch_ancestry": {
+      "result": "PASS",
+      "base": "17ff844f3b72e1976dee248550aa80f59ad38990",
+      "head": "5ca4b6a227df7a037f4ff4f9338dc2e2f002b620",
+      "behind_by": 0,
+      "merge_base_equals_base": true
+    },
+    "source_scope": {
+      "result": "PASS",
+      "changed_snapshot_files": 5,
+      "runtime_change": "NONE",
+      "schema_or_proto_change": "NONE",
+      "verification_corpus_change": "NONE"
+    },
+    "machine_projection_review": "PASS_BY_COMMIT_BOUND_EVIDENCE_AT_17ff844f3b72e1976dee248550aa80f59ad38990",
+    "plan_placeholder_scan": "PASS_NO_TODO_OR_TBD",
+    "plan_interface_self_review": "PASS_TYPES_AND_STAGE_OWNERSHIP_EXPLICIT",
+    "repository_docs_checker": "NOT_RERUN_IN_CONNECTOR_ONLY_REENTRY_SESSION",
+    "reviewer_subagent": "UNAVAILABLE_IN_CURRENT_HARNESS_FULL_DIFF_ANCESTRY_AND_PROVENANCE_REVIEW_USED"
+  },
+  "machine_projection_sha256": {
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml": "8cd6baf73f0d9decf1ab0363d019219df5b356f0b9989b4891d51f86fba31082",
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml": "9f44e3eb350d8348e9980194a529d010b87b64e1e4172ca243f799f02fb315fe",
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml": "9ec8df1adcd3446ec7addb4d06c4d672893e60909ef1658bec3b9527fc173481"
+  },
+  "excluded_lanes": [
+    "GT-G1-04-B",
+    "GT-G1-04-C",
+    "GT-G1-05"
+  ]
+}

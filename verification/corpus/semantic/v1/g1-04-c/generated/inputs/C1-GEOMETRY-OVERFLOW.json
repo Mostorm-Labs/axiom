@@ -1,0 +1,96 @@
+{
+  "caseId": "C1-GEOMETRY-OVERFLOW",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "geometry": {
+              "value": {
+                "segments": [
+                  {
+                    "control1": [
+                      0.25,
+                      0.25
+                    ],
+                    "control2": [
+                      0.75,
+                      0.75
+                    ],
+                    "p0": {
+                      "position": [
+                        0.0,
+                        0.0
+                      ],
+                      "radius": 1.0
+                    },
+                    "p1": {
+                      "position": [
+                        1.0,
+                        1.0
+                      ],
+                      "radius": 1.0
+                    }
+                  }
+                ]
+              },
+              "variant": 0
+            }
+          },
+          "variant": 2
+        },
+        "erase_masks": [],
+        "id": "35da8e23f2a7737ae0309607980397a5",
+        "kind": 3,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            209,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "d943e19f3defd4b872cbb66ab0e731c4",
+    "id": "579560aed3fdd9bda1db5077b217326b",
+    "payload": {
+      "value": {
+        "geometry": {
+          "value": {
+            "geometryRecipe": {
+              "carrier": "VectorPath",
+              "cubic": 1,
+              "expectedUnits": 2000001,
+              "line": 1999995,
+              "move": 1,
+              "quad": 1
+            }
+          },
+          "variant": 0
+        },
+        "object_id": "35da8e23f2a7737ae0309607980397a5"
+      },
+      "variant": 7
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetVectorPathGeometry",
+  "provenance": "DERIVED_GENERATED"
+}

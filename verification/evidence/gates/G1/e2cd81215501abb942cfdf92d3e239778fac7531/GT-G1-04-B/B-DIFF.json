@@ -1,0 +1,149 @@
+{
+  "format": "axiom-gt-g1-04-b-b9-reference-indexed-differential-v1",
+  "task": "GT-G1-04-B/B9",
+  "package_ref": "3a276468e39b3f2171d4425f1b60a8469cc35819",
+  "sourceCommit": "e2cd81215501abb942cfdf92d3e239778fac7531",
+  "testedCommit": "e2cd81215501abb942cfdf92d3e239778fac7531",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "task_anchor": "bc80d0a3c1376b0334f79d8e2f5e7588cefff645",
+  "oracle": "ReferenceObjectStore",
+  "sut": "IndexedObjectStore",
+  "inputBoundary": "normalized + structurally valid typed Operations only",
+  "inputBoundaryValidation": {
+    "status": "PASS",
+    "test": "StatefulValidationDifferential.FixtureBankContainsOnlyNormalizedStructurallyValidTypedOperations",
+    "checks": [
+      "normalizeOperation(input) succeeds",
+      "normalized operation equals input",
+      "validateEnvelope(input, presence=true/true) passes",
+      "validatePayloadStructure(input) passes"
+    ]
+  },
+  "appliedOperationFixtures": "independently instantiated equivalent views",
+  "handAuthoredFixtureCount": 20,
+  "tracePresence": [
+    "InsertObjects",
+    "DeleteObjects",
+    "RestoreObjects",
+    "SetPlacements",
+    "SetTransforms",
+    "PatchProperties",
+    "SetObjectSize",
+    "SetVectorPathGeometry",
+    "SetImageContent",
+    "AddStroke",
+    "SplitStrokes",
+    "AddEraseMasks",
+    "RemoveEraseMasks",
+    "EditRichText",
+    "SetConnectorContent"
+  ],
+  "randomSeed": "0xB9D1FF01",
+  "randomTraceBound": 256,
+  "randomTraceExecution": "PASS",
+  "randomObservationCount": 256,
+  "determinismRepeat": "PASS",
+  "deliberateDivergenceDetection": {
+    "status": "PASS",
+    "expectedClass": "PLAN_CREATES_MISMATCH",
+    "firstOperationIndex": 0,
+    "operationId": 100,
+    "operation": "InsertObjects",
+    "fixture": "insert-absent"
+  },
+  "comparison": {
+    "dispositionAndIssue": true,
+    "fullOperationProjection": true,
+    "typedPlanProjection": true,
+    "deleteClosurePartitions": true,
+    "splitStrokesDeletesCreatesNullClosure": true,
+    "storeBeforeAfterNoMutation": true,
+    "hierarchyChildrenParity": true,
+    "indexInvariantBeforeAfter": true,
+    "firstMismatch": null
+  },
+  "projectionProof": {
+    "referenceCanonicalBeforeAfter": "EQUAL_FOR_EVERY_OBSERVATION",
+    "indexedCanonicalBeforeAfter": "EQUAL_FOR_EVERY_OBSERVATION",
+    "referenceIndexedCanonicalParity": "EQUAL_FOR_EVERY_OBSERVATION",
+    "relevantHierarchyChildrenParity": "EQUAL_BEFORE_AND_AFTER_FOR_EVERY_OBSERVATION",
+    "indexedIndexMatchesRebuildBeforeAfter": "TRUE_FOR_EVERY_OBSERVATION"
+  },
+  "lookupWindow": {
+    "measurementWindow": "Indexed-side OperationEngine::prepare only; canonical projections, hierarchy children projections, and index invariant checks are outside the counter window",
+    "counterCoverage": [
+      "size",
+      "contains",
+      "find",
+      "allObjects",
+      "children"
+    ],
+    "singleTargetFixtureCountMinimum": 8,
+    "indexedSingleTargetAllObjectsCalls": 0
+  },
+  "verification": {
+    "focusedB9": {
+      "status": "PASS",
+      "passed": 6,
+      "total": 6,
+      "tests": [
+        "StatefulValidationDifferential.FixtureBankContainsOnlyNormalizedStructurallyValidTypedOperations",
+        "StatefulValidationDifferential.HandAuthoredTraceCoversAllFifteenAndStateFamilies",
+        "StatefulValidationDifferential.FixedSeedRandomizedTraceRuns256ValidPrepareObservations",
+        "StatefulValidationDifferential.FixedSeedTraceIsDeterministicAcrossRepeatedRuns",
+        "StatefulValidationDifferential.ComparatorDetectsDeliberateTestOnlyDivergence",
+        "StatefulValidationDifferential.IndexedSingleTargetPrepareWindowNeverEnumeratesAllObjects"
+      ]
+    },
+    "fullSemanticCTest": {
+      "status": "PASS",
+      "passed": 324,
+      "total": 324,
+      "failed": 0,
+      "elapsedSeconds": 2.12
+    },
+    "semanticVerificationPython": {
+      "status": "PASS",
+      "passed": 37,
+      "failed": 0
+    },
+    "hostedExactHead": {
+      "sourceCommit": "e2cd81215501abb942cfdf92d3e239778fac7531",
+      "g1SemanticCodec": {
+        "runId": 33294114907,
+        "jobId": 99210733675,
+        "status": "SUCCESS"
+      },
+      "g0PlatformProtocolSeed": {
+        "runId": 33294114919,
+        "status": "SUCCESS"
+      },
+      "g0PrCiDag": {
+        "runId": 33294114930,
+        "status": "SUCCESS"
+      }
+    },
+    "g1Artifact": {
+      "artifactId": 9726876864,
+      "sha256": "e7b3b2a3ef81ef49ebfd1d4502a81472089a76d433fb86644e739077350a5a8f",
+      "sourceCommit": "e2cd81215501abb942cfdf92d3e239778fac7531"
+    }
+  },
+  "scopeGuards": {
+    "productionSemanticChanged": false,
+    "objectStoreApiChanged": false,
+    "productionInstrumentationAdded": false,
+    "B0B8Reopened": false,
+    "B10Started": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "verificationOnlyPrMerged": false
+  },
+  "materialization": {
+    "sourceTestCommitPushed": true,
+    "evidenceBoundary": "this evidence-only materialization commit",
+    "historyRewritten": false,
+    "forcePush": false
+  },
+  "status": "READY_FOR_CONTROL_REVIEW"
+}

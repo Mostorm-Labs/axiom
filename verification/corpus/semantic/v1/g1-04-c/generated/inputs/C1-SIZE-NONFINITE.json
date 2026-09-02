@@ -1,0 +1,61 @@
+{
+  "caseId": "C1-SIZE-NONFINITE",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            118,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "6df8add842ccab31b68ea7a4abcd3baa",
+    "id": "34b48389eb7fac3420c85647908795c6",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "height": 24.0,
+            "object_id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "width": "f64:7ff0000000000000"
+          }
+        ]
+      },
+      "variant": 6
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetObjectSize",
+  "provenance": "DERIVED_GENERATED"
+}

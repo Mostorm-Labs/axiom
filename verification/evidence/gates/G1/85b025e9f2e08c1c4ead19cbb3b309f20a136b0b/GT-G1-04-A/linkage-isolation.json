@@ -1,0 +1,10 @@
+{
+  "format": "axiom-gt-g1-04-a-linkage-isolation-evidence-v1",
+  "sourceCommit": "85b025e9f2e08c1c4ead19cbb3b309f20a136b0b",
+  "target": "canvas_semantic_payload_structure_test",
+  "status": "PASS",
+  "command": "nm -u out/g1-04-a-source-85b025e-final-noproto/runtime/semantic/tests/canvas_semantic_payload_structure_test",
+  "forbiddenSymbols": ["reference_object_store", "indexed_object_store", "object_store_mutator"],
+  "observedForbiddenSymbols": [],
+  "interpretation": "A3 leaf/payload structural validation is stateless and does not link ObjectStore implementation or mutation helpers."
+}

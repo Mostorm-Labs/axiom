@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"
+  ],
+  "caseId": "C1-GEOMETRY-BOUNDARY",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "f5d14d9e0d5b5cca180dc4aa7277c981721eb0c6eccc14a7c39b57dc36997f16",
+  "expectedRef": "authoring/expected.json#C1-GEOMETRY-BOUNDARY",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 2240,
+    "path": "inputs/C1-GEOMETRY-BOUNDARY.json",
+    "sha256": "7892604ac1ac090c41c47a4f2f0e5f3a97d7a7c9b5a4500bf6a7fcc5af490f9f"
+  },
+  "operationFamily": "SetVectorPathGeometry",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "1bc968737b3da98a86ee2c31797072d9d128963f79f1436670bf0948105e5425",
+  "sourceCaseRef": "authoring/cases.json#C1-GEOMETRY-BOUNDARY",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}

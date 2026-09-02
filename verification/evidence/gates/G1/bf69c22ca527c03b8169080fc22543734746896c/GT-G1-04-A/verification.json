@@ -1,0 +1,17 @@
+{
+  "format": "axiom-gt-g1-04-a-verification-evidence-v1",
+  "sourceCommit": "bf69c22ca527c03b8169080fc22543734746896c",
+  "commands": [
+    {"command": "cmake --build out/g1-04-a-current -j2", "status": "PASS"},
+    {"command": "ctest --test-dir out/g1-04-a-current --output-on-failure", "status": "PASS", "total": 82, "passed": 80, "skipped": 2, "failed": 0},
+    {"command": "cmake --build out/g1-04-a-proto-corrected-20260827 -j2", "status": "PASS"},
+    {"command": "ctest --test-dir out/g1-04-a-proto-corrected-20260827 --output-on-failure", "status": "PASS", "total": 82, "passed": 82, "skipped": 0, "failed": 0},
+    {"command": "python3 -m unittest verification.tests.test_g1_02r_machine_projection verification.tests.test_g1_02r_descriptor_refreeze verification.tests.test_semantic_contract verification.tests.test_semantic_public_boundary verification.tests.test_g1_04_authority_publication -v", "status": "PASS", "total": 17, "passed": 17, "failed": 0},
+    {"command": "python3 tools/check_g1_04_a_projection_contract.py", "status": "PASS"},
+    {"command": "python3 tools/check_runtime_boundaries.py --root .", "status": "PASS"},
+    {"command": "python3 tools/check_docs.py", "status": "PASS"},
+    {"command": "python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protoc-36.0/bin/protoc", "status": "PASS"},
+    {"command": "git diff --check", "status": "PASS"}
+  ],
+  "descriptorSha256": "13fdd9834bc049894646ae0a4e103bfb43260725ad8b784a14cfdfd93083afc9"
+}

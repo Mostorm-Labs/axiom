@@ -1,0 +1,107 @@
+{
+  "caseId": "C1-RICHTEXT-STABLE-REFS",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "document": {
+              "paragraphs": [
+                {
+                  "id": "fd9ab441b7b6bdfed1e195ca76dfcb1a",
+                  "runs": [
+                    {
+                      "style": {
+                        "color": [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "font_resource_id": "fd9ab441b7b6bdfed1e195ca76dfcb1a",
+                        "font_size": 12.0,
+                        "italic": false,
+                        "underline": false,
+                        "weight": 400
+                      },
+                      "text": "fixture"
+                    }
+                  ],
+                  "style": {
+                    "alignment": 1,
+                    "line_height": 1.0,
+                    "spacing_after": 0.0,
+                    "spacing_before": 0.0
+                  }
+                }
+              ]
+            }
+          },
+          "variant": 3
+        },
+        "erase_masks": [],
+        "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+        "kind": 4,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            123,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "b356f2f293287ea0950cdc52a878017e",
+    "id": "8ccdca18ea963cf56fed00e3c232c45b",
+    "payload": {
+      "value": {
+        "delta": {
+          "delta_version": 1,
+          "steps": [
+            {
+              "kind": "InsertText",
+              "paragraph_id": "fd9ab441b7b6bdfed1e195ca76dfcb1a",
+              "scalar_offset": 0,
+              "style": {
+                "color": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "font_resource_id": "fd9ab441b7b6bdfed1e195ca76dfcb1a",
+                "font_size": 12.0,
+                "italic": false,
+                "underline": false,
+                "weight": 400
+              },
+              "text": "fixture"
+            }
+          ]
+        },
+        "object_id": "4c5f11745d7deb445a5562c4fbbf2edd"
+      },
+      "variant": 13
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "EditRichText",
+  "provenance": "DERIVED_GENERATED"
+}

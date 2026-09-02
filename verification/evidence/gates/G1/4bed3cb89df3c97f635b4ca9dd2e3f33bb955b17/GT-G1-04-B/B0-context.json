@@ -1,0 +1,53 @@
+{
+  "format": "axiom-gt-g1-04-b-b0-context-evidence-v1",
+  "taskId": "GT-G1-04-B/B0",
+  "sourceCommit": "4bed3cb89df3c97f635b4ca9dd2e3f33bb955b17",
+  "testedCommit": "4bed3cb89df3c97f635b4ca9dd2e3f33bb955b17",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authorityBaseline": {
+    "p32AuthorizationRecord": "3ca4c57a-590c-8187-ad93-e61f772b5525",
+    "p30P31PlanBaseline": "b3e1c2f25cd14b08851b0cf8ed65c9a05258efc8",
+    "restoreAuthority": "docs/notion/authority/04-semantic-schema/02-operation-model/restoreobjects-identity-state-tombstone-eligibility-v1-authority-closure-v0.1.md"
+  },
+  "commands": {
+    "red": "cmake --build out/g1-debug --target canvas_semantic_stateful_context_test canvas_semantic_staged_object_view_test -j2",
+    "green": "cmake -S . -B out/g1-debug -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON && cmake --build out/g1-debug --target canvas_semantic_stateful_context_test canvas_semantic_staged_object_view_test -j2 && ctest --test-dir out/g1-debug -R 'StatefulValidationContext|StagedObjectView' --output-on-failure",
+    "regression": "cmake --build out/g1-debug --target canvas_semantic_reference_object_store_test canvas_semantic_indexed_object_store_test canvas_semantic_object_store_differential_test canvas_semantic_a_lane_no_mutation_test -j2 && ctest --test-dir out/g1-debug -R 'ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|ALaneNoMutation|NoMutation' --output-on-failure",
+    "boundaries": "python3 tools/check_runtime_boundaries.py --root .",
+    "docs": "python3 tools/check_docs.py",
+    "diffCheck": "git diff --check"
+  },
+  "redEvidence": {
+    "status": "PASS_EXPECTED_RED",
+    "reason": "focused B0 targets failed to compile because operation_fingerprint.hpp and staged_object_view.hpp interfaces were absent",
+    "exitCode": 1
+  },
+  "greenEvidence": {
+    "focusedTests": {"status": "PASS", "testCount": 10},
+    "regression": {"status": "PASS", "testCount": 7},
+    "runtimeBoundaries": "PASS",
+    "docs": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "typedEquality": {
+    "authority": "normalized typed semantic projection + typed exact equality",
+    "positive": ["OperationId excluded", "equal document/version/payload"],
+    "negative": ["nested VectorPath geometry field", "payload version"],
+    "fingerprint": {"implemented": false, "role": "optional-acceleration-only; not required by B0"}
+  },
+  "stagedView": {
+    "create": "overlay-visible; base unchanged",
+    "replace": "replacement-visible; base unchanged",
+    "delete": "overlay-absent; base unchanged",
+    "deterministicProjection": "PASS",
+    "deterministicChildren": "PASS; Placement.OrderKey then ObjectId"
+  },
+  "referenceIndexedParity": "PASS",
+  "noMutation": {
+    "reference": "before projection equals after projection",
+    "indexed": "before projection equals after projection",
+    "objectIndex": "rebuild comparison PASS"
+  },
+  "blockingReasons": [],
+  "excludedUntrackedData": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+}

@@ -1,0 +1,104 @@
+{
+  "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "8ebefb8affd0c13aad6c0ab7d9f032cb",
+    "id": "b9d9e95f1b1499918b6f06a268dc6392",
+    "payload": {
+      "value": {
+        "objects": [
+          {
+            "content": {
+              "value": {
+                "end": {
+                  "value": {
+                    "point": [
+                      10.0,
+                      10.0
+                    ]
+                  },
+                  "variant": 0
+                },
+                "routing": 1,
+                "start": {
+                  "value": {
+                    "anchor": {
+                      "value": {
+                        "port_id": 1
+                      },
+                      "variant": 0
+                    },
+                    "target_object_id": "d7fdd5b135669d03c826e04e52a8007b"
+                  },
+                  "variant": 1
+                }
+              },
+              "variant": 6
+            },
+            "erase_masks": [],
+            "id": "79e7ca044bc7cb4cb7f25dbd40df3373",
+            "kind": 7,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                120,
+                2
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "content": {
+              "value": {
+                "height": 24.0,
+                "shape_kind": 1,
+                "width": 32.0
+              },
+              "variant": 0
+            },
+            "erase_masks": [],
+            "id": "d7fdd5b135669d03c826e04e52a8007b",
+            "kind": 1,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                231,
+                1
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "variant": 2
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "RestoreObjects",
+  "provenance": "DERIVED_GENERATED"
+}

@@ -1,0 +1,96 @@
+{
+  "caseId": "C1-PLACEMENT-NONPARENT",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "141267096cdac7f68d12044008222b7b",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            85,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            225,
+            2
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "571721848c1a77c9fb78c5d79c9b1517",
+    "id": "b6cf1de21435feff4de8018e1530b2f0",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "object_id": "141267096cdac7f68d12044008222b7b",
+            "placement": {
+              "order_key": [
+                85,
+                1
+              ],
+              "parent_id": "5b7b98cc5bfd6a1c291e71f776721d43"
+            }
+          }
+        ]
+      },
+      "variant": 3
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetPlacements",
+  "provenance": "DERIVED_GENERATED"
+}

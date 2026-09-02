@@ -1,0 +1,1183 @@
+{
+  "format": "axiom-gt-g1-04-b-b7-structural-case-evidence-v2",
+  "task": "GT-G1-04-B/B7",
+  "sourceCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
+  "testedCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
+  "productionImplementationBase": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-structural-case-evidence-repair-p36.md@45f2bd53f01e5df18e82e83c3992d21cdb700dcd",
+  "p31Ref": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-operation-specific-state-p31.md@84a95fbb46ef301833a4ce34a9503451f5d95579",
+  "firstOracleRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-behavioral-oracle-repair-p36.md@32950127b50da42a31a7d0ca7570321b1f86b2f4",
+  "oracleStrengtheningRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-oracle-strengthening-p36.md@5fa191e0ea9e15044d156e96d7158606028fde02",
+  "executionCompletenessRepairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-execution-completeness-repair-p36.md@da28f20d22d77e5d29dfa193a3e2c5ae4e68eb53",
+  "p34Blocker": "notion:3cb4c57a-590c-8150-a259-d510166f77b5",
+  "p35P36Authorization": "notion:3cb4c57a-590c-8116-b7db-deabc05a8f4e",
+  "implementedHere": [
+    "InsertObjects",
+    "SetPlacements",
+    "SetTransforms",
+    "PatchProperties",
+    "SetObjectSize",
+    "SetVectorPathGeometry",
+    "SetImageContent",
+    "AddStroke",
+    "SplitStrokes",
+    "AddEraseMasks",
+    "RemoveEraseMasks",
+    "EditRichText",
+    "SetConnectorContent"
+  ],
+  "semanticCases": [
+    {
+      "caseId": "INS-B01",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly Group id1 and Shape id2 with Shape parent=id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B02",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no creation committed because candidate id1 already exists; non-empty create sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B03",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly Connector id1 attached to target id2 and Shape id2",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B04",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no creation committed because Connector id1 references missing attached target id2; non-empty create sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B05",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no creation committed because Shape id2 is a child of Sticky id1, which is invalid applicability; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B06",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no creation committed because Sticky id1 would contain two RichText children (ids 2 and 3); sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "INS-B07",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly empty Sticky id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "INS-B08",
+      "googleTest": "OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput",
+      "structuralStatus": "INTENTIONAL_DEFENSE_INVALID",
+      "expectedIssue": "kInvalidKindVersion",
+      "expectedProjection": "intentional A-invalid kind_version=9 record in payload; defensive invalid-kind/version rejection with no successful projection claimed",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true,
+      "structuralException": "kind_version=9 intentionally exercises A defensive invalid-kind/version seam"
+    },
+    {
+      "caseId": "PLC-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id2 with placement parent=id1 (Group id1)",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id2 is absent; non-empty replacement sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no replacement committed because requested parent id9 is absent; non-empty replacement sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B04",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kHierarchyCycle",
+      "expectedProjection": "no replacements committed because ids 1 and 2 form a simultaneous placement cycle; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B05",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces RichText id2 with placement parent=Sticky id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B06",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Sticky id1 already contains RichText id2 and would receive second RichText id3; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B07",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id2 cannot be placed under Sticky id1; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PLC-B08",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces RichText id2 with placement parent=Group id3, leaving Sticky id1 empty",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PLC-B09",
+      "googleTest": "OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "two exact replacements: RichText id2 -> Sticky id1 and RichText id3 -> Group id4",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "TRN-B01",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with transform [2,0,0,2,4,5]; all other ObjectRecord fields preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "TRN-B02",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id1 is absent; non-empty replacement sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "TRN-B03",
+      "googleTest": "OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacements committed because batch target id2 is absent; id1 replacement is rolled back atomically and sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SIZE-B01",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with width=3 and height=4; kind, placement, transform and other content preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B02",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Image id1 with width=3 and height=4; resource, intrinsic metadata, crop, mode and transform preserved",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B03",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Sticky id1 with width=3 and height=4",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SIZE-B04",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B04_GroupRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Group id1 is not size-applicable; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SIZE-B05",
+      "googleTest": "OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id1 is absent; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PATH-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces VectorPath id1 with exact MoveTo(0,0), LineTo(1,1), non-zero fill geometry",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PATH-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id1 is not a VectorPath; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PATH-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because VectorPath target id1 is absent; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "IMG-B01",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Image id1 with exact image() content and dimensions 3x4 while preserving the remaining image fields",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "IMG-B02",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id1 is not an Image; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "IMG-B03",
+      "googleTest": "OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because Image target id1 is absent; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B01",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly VectorStroke id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B02",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly DabStroke id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B03",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no creation committed because stroke id1 already exists; non-empty create sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B04",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no creation committed because Shape id1 is not a stroke; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "STR-B05",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "creates exactly VectorStroke id2 with parent=Group id1",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "STR-B06",
+      "googleTest": "OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no creation committed because VectorStroke id2 cannot be placed under Sticky id1; sentinel remains unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B01",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "deletes source stroke id1 and creates exactly VectorStroke replacements ids 2 and 3",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "SPL-B02",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no split projection because source id1 is absent; source-delete and replacement-create sentinels remain unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B03",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no split projection because source id1 is a Shape, not a stroke; sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B04",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no split projection because replacement id2 collides with existing unrelated Shape id2; sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B05",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectAlreadyExists",
+      "expectedProjection": "no split projection because replacement id1 collides with the source id1; sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B06",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no split projection because replacement id2 is a Shape, not a stroke; sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B07",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no split projection because replacement VectorStroke id2 uses invalid Sticky parent id9; sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "SPL-B08",
+      "googleTest": "OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no split projection because the second replacement is invalid Shape id4; the first fragment is rolled back atomically and sentinels unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B01",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces VectorStroke id1 with erase-mask collection containing mask id2",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-ADD-B02",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces DabStroke id1 with erase-mask collection containing mask id2",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-ADD-B03",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id1 is not mask-applicable; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B04",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id1 is absent; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B05",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kMaskStateInvalid",
+      "expectedProjection": "no replacement committed because mask id2 already exists on VectorStroke id1; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-ADD-B06",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacements committed because second target id9 is absent; first mask addition is rolled back atomically and sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B01",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces VectorStroke id1 with erase-mask collection empty after removing mask ids 2 and 3",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "MASK-REM-B02",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kMaskStateInvalid",
+      "expectedProjection": "no replacement committed because requested mask id9 is missing; existing mask id2 and sentinel remain unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B03",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id1 is not mask-applicable; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B04",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id1 is absent; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "MASK-REM-B05",
+      "googleTest": "OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacements committed because second target id9 is absent; first removal is rolled back atomically and sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B01",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with explicit property FieldId 1 set to false",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B02",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Group id1 rejects field 0x100 by kind applicability; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B03",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with explicit FieldId 1 entry removed",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B04",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with registry-default FieldId 1 canonicalized to absence",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B05",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Shape id1 with exactly two sorted explicit entries: FieldId 1=false and FieldId 2=true",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "PROP-B06",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because target id1 is absent; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "PROP-B07",
+      "googleTest": "OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacements committed because second target id2 is absent; first property patch is rolled back atomically and sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B01",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces RichText id1 with paragraph text A😀X using runs A (default style) and 😀X (half-gray style)",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "EDIT-B02",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kObjectMissing",
+      "expectedProjection": "no replacement committed because RichText target id1 is absent; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B03",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because Shape id1 is not RichText; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "EDIT-B04",
+      "googleTest": "OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kTextStateInvalid",
+      "expectedProjection": "no replacement committed because staged DeleteText references missing paragraph id99; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B01",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Connector id1 with its attached endpoint to connectable Shape id2 and straight routing",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "CON-B02",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidApplicability",
+      "expectedProjection": "no replacement committed because target id1 is a Shape, not a Connector; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B03",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kInvalidReference",
+      "expectedProjection": "no replacement committed because Connector id1 attached target id9 is absent; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B04",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kConnectorInvalid",
+      "expectedProjection": "no replacement committed because Connector id1 endpoint target Group id2 is non-connectable; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B05",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "replaces Connector id1 with StablePort anchor 1 attached to Shape id2",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": null
+    },
+    {
+      "caseId": "CON-B06",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kConnectorInvalid",
+      "expectedProjection": "no replacement committed because StablePort target Group id2 is non-connectable; sentinel unchanged",
+      "freshResult": "PASS",
+      "referenceIndexedParity": true,
+      "baseNoMutation": true,
+      "indexedRebuild": true,
+      "nonEmptyFailureSentinel": true
+    },
+    {
+      "caseId": "CON-B07",
+      "googleTest": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
+      "structuralStatus": "PASS",
+      "expectedIssue": "kNone",
+      "expectedProjection": "performance-only connector lookup comparison; FreePoint connector id20 succeeds without endpoint lookup, AttachedEndpoint connector id21 succeeds with greater find count; no state projection claimed",
+      "freshResult": "PASS",
+      "referenceIndexedParity": null,
+      "baseNoMutation": null,
+      "indexedRebuild": null,
+      "nonEmptyFailureSentinel": null,
+      "evidenceApplicability": {
+        "referenceIndexedParity": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "baseNoMutation": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "indexedRebuild": "N/A_NOT_ASSERTED_BY_THIS_SUPPORT_CASE",
+        "nonEmptyFailureSentinel": "N/A_SUCCESS_SUPPORT_CASE"
+      }
+    }
+  ],
+  "richTextHelperCases": [
+    {
+      "caseId": "TXT-S01",
+      "googleTest": "RichTextStatePlan.TXT_S01_UnicodeScalarInsertInAEmojiB",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "paragraph id1 text changes from A😀B to A😀XB in one run retaining the original text style",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S02",
+      "googleTest": "RichTextStatePlan.TXT_S02_DeleteAcrossRunBoundaryNormalizes",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "paragraph id1 becomes a single run B retaining the second run style after deleting A😀 across the run boundary",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S03",
+      "googleTest": "RichTextStatePlan.TXT_S03_SplitAtZero",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "split at offset 0 yields paragraph id1 empty and paragraph id2 containing A😀B with original style",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S04",
+      "googleTest": "RichTextStatePlan.TXT_S04_SplitAtEnd",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "split at end yields paragraph id1 containing A😀B and empty paragraph id2; styles and identities preserved",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S05",
+      "googleTest": "RichTextStatePlan.TXT_S05_SplitParagraphIdCollisionRejects",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "split is rejected because new paragraph id2 collides with existing paragraph id2; the caller-provided pre-seeded output sentinel (base doc() value) remains unchanged",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S06",
+      "googleTest": "RichTextStatePlan.TXT_S06_MergeAdjacentKeepsFirstIdAndStyle",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "adjacent paragraphs id1 and id2 merge into paragraph id1 text A😀BZ, retaining id1 style",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S07",
+      "googleTest": "RichTextStatePlan.TXT_S07_MergeNonAdjacentRejects",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "non-adjacent merge of paragraph id1 with id3 is rejected; the caller-provided pre-seeded output sentinel (base doc() value) remains unchanged",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S08",
+      "googleTest": "RichTextStatePlan.TXT_S08_SetInlineStyleSplitsAndMergesDeterministically",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "inline style over the emoji scalar splits runs into A(default), 😀(color .2), B(default); applying the original style merges them back to A😀B",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S09",
+      "googleTest": "RichTextStatePlan.TXT_S09_SetParagraphStyleReplacesCompleteStyle",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "paragraph id1 receives the complete replacement style: centered alignment and spacing_after=2",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S10",
+      "googleTest": "RichTextStatePlan.TXT_S10_SecondStepResolvesFirstStepStagedState",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "split at offset 1 creates id1 text A and id2 text 😀B; the second staged step changes paragraph id2 alignment to right",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S11",
+      "googleTest": "RichTextStatePlan.TXT_S11_SecondStepInvalidLeavesWholeOutputUnchanged",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "first insert is staged but the second delete references missing paragraph id9, so the whole RichText value remains unchanged",
+      "freshResult": "PASS"
+    },
+    {
+      "caseId": "TXT-S12",
+      "googleTest": "RichTextStatePlan.TXT_S12_EmptyParagraphCanonicalRunsRemainEmpty",
+      "structuralStatus": "N/A_INTERNAL_HELPER",
+      "expectedValue": "empty paragraph remains canonical with empty runs after insert-then-delete resolves against staged state",
+      "freshResult": "PASS"
+    }
+  ],
+  "supportEvidence": [
+    {
+      "test": "OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan",
+      "freshResult": "PASS"
+    },
+    {
+      "test": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
+      "freshResult": "PASS",
+      "freePointAllObjectsCalls": 0,
+      "attachedAllObjectsCalls": 0,
+      "attachedFindCallsGreaterThanFreePoint": true
+    }
+  ],
+  "delegatedCurrentValid": {
+    "DeleteObjects": {
+      "sourceCommit": "36669523ab3a5cc3e0c479cf6f0a5ae6119d240c",
+      "evidenceCommit": "af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e"
+    },
+    "RestoreObjects": {
+      "sourceCommit": "871eec8172674c8fba85548434b5e96c7c30fbf8",
+      "evidenceCommit": "68dd235205253f7080d0a8d28daa957dfe2f0dbd"
+    }
+  },
+  "performance": [
+    {
+      "family": "InsertObjects",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetPlacements",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetTransforms",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "PatchProperties",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetObjectSize",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetVectorPathGeometry",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetImageContent",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "AddStroke",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SplitStrokes",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "AddEraseMasks",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "RemoveEraseMasks",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "EditRichText",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    },
+    {
+      "family": "SetConnectorContent",
+      "allObjectsCalls": 0,
+      "freshResult": "PASS"
+    }
+  ],
+  "verification": {
+    "focusedRichText": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_rich_text_state_plan_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_rich_text_state_plan_test --gtest_color=no",
+      "result": "PASS 12/12"
+    },
+    "focusedB7": {
+      "build": "cmake --build build-semantic-b2 --target canvas_semantic_operation_specific_stateful_validation_test -j2",
+      "command": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_operation_specific_stateful_validation_test --gtest_color=no",
+      "result": "PASS 78/78"
+    },
+    "relevantRegression": {
+      "command": "ctest --test-dir build-semantic-b2 -R 'StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|HierarchyValidation|HierarchyCapability|ConnectorStatefulValidation|DeleteClosure|RestoreStatefulValidation|OperationSpecific|RichTextState' --output-on-failure",
+      "result": "PASS 197/197"
+    },
+    "fullSemantic": {
+      "build": "cmake --build build-semantic-b2 -j2",
+      "command": "ctest --test-dir build-semantic-b2 --output-on-failure",
+      "result": "PASS 306/306; 12 protobuf-off tests skipped"
+    },
+    "runtimeBoundaries": {
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "result": "PASS (53 contract files)"
+    },
+    "docs": {
+      "command": "python3 tools/check_docs.py",
+      "result": "FAIL: frozen P36 plan lambda example falsely parsed as local link (known pre-existing tooling false positive; plan immutable)"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  },
+  "scopeGuards": {
+    "productionSourceChanged": false,
+    "testsChangedOnlyAuthorized": true,
+    "richTextHelperFileChanged": false,
+    "B2Changed": false,
+    "B3Changed": false,
+    "BAuth02Changed": false,
+    "B4Changed": false,
+    "B5Changed": false,
+    "B6Changed": false,
+    "B8Started": false,
+    "PreparedApplyPlanChanged": false,
+    "OperationEngineChanged": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "schemaProtobufWireChanged": false,
+    "untrackedBuildAndAndroidDataPreserved": true
+  },
+  "materialization": {
+    "sourceTestSnapshotPushed": true,
+    "initialEvidenceCommit": "e6fe4155f8d9605acd4119ea3ac91358ff135e6d",
+    "initialEvidenceCommitPushed": true,
+    "historyRewritten": false,
+    "forcePush": false
+  },
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW",
+  "evidenceRepair": {
+    "repairType": "machine evidence truthfulness / applicability repair",
+    "semanticExecutionReusedFromTestedCommit": "fc1bf0966da0febc54f74055eeaece73852a4297",
+    "substantiveEvidenceRepairCommit": "597daf8add22daa26bb71cf55da787a2658201cd",
+    "substantiveEvidenceRepairCommitPushed": true,
+    "newSemanticExecutionPerformed": false,
+    "historyRewritten": false,
+    "forcePush": false
+  }
+}

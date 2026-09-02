@@ -1,0 +1,89 @@
+{
+  "caseId": "C1-GEOMETRY-STRUCTURAL",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "geometry": {
+              "value": {
+                "segments": [
+                  {
+                    "control1": [
+                      0.25,
+                      0.25
+                    ],
+                    "control2": [
+                      0.75,
+                      0.75
+                    ],
+                    "p0": {
+                      "position": [
+                        0.0,
+                        0.0
+                      ],
+                      "radius": 1.0
+                    },
+                    "p1": {
+                      "position": [
+                        1.0,
+                        1.0
+                      ],
+                      "radius": 1.0
+                    }
+                  }
+                ]
+              },
+              "variant": 0
+            }
+          },
+          "variant": 2
+        },
+        "erase_masks": [],
+        "id": "17a94ac1b4c474897b289b81efd85530",
+        "kind": 3,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            125,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "382f90955d043e66c22e57c4efb943d8",
+    "id": "e9b772321d9840a83d229dd9a7542dd2",
+    "payload": {
+      "value": {
+        "geometry": {
+          "value": {
+            "segments": []
+          },
+          "variant": 0
+        },
+        "object_id": "17a94ac1b4c474897b289b81efd85530"
+      },
+      "variant": 7
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetVectorPathGeometry",
+  "provenance": "DERIVED_GENERATED"
+}

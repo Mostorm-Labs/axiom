@@ -1,0 +1,14 @@
+{
+  "format": "axiom-gt-g1-04-a-test-results-v2",
+  "sourceCommit": "b806ee37408b199bd0fca72bd935dfb397889816",
+  "commands": [
+    {"command": "cmake -S . -B out/g1-04-a-source-b806ee3-noproto -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF", "exitCode": 0},
+    {"command": "cmake --build out/g1-04-a-source-b806ee3-noproto --parallel 4", "exitCode": 0},
+    {"command": "ctest --test-dir out/g1-04-a-source-b806ee3-noproto --output-on-failure", "exitCode": 0, "total": 69, "passed": 68, "skipped": 1, "failed": 0},
+    {"command": "cmake -S . -B out/g1-04-a-source-b806ee3-proto-local -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR=/Users/qing/Desktop/sources/git/Mostorm-Labs/canvas/.deps/protobuf/lib/cmake/protobuf -Dabsl_DIR=/Users/qing/Desktop/sources/git/Mostorm-Labs/canvas/.deps/protobuf/lib/cmake/absl -Dutf8_range_DIR=/Users/qing/Desktop/sources/git/Mostorm-Labs/canvas/.deps/protobuf/lib/cmake/utf8_range -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF", "exitCode": 0},
+    {"command": "cmake --build out/g1-04-a-source-b806ee3-proto-local --parallel 4", "exitCode": 0},
+    {"command": "ctest --test-dir out/g1-04-a-source-b806ee3-proto-local --output-on-failure", "exitCode": 0, "total": 69, "passed": 69, "skipped": 0, "failed": 0},
+    {"command": "python3 -m unittest verification.tests.test_semantic_contract verification.tests.test_semantic_public_boundary verification.tests.test_g1_04_authority_publication -v", "exitCode": 0, "tests": 11},
+    {"command": "python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc-36.0.0", "exitCode": 0, "descriptorSha256": "18d682928b42d204ff05103d93e1fb88c9be70de9256acb595f5e3bb846f78e3", "seedCases": 60, "g1_02rCases": 23}
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "format": "axiom-gt-g1-04-b10-summary-v3",
+  "task": "GT-G1-04-B/B10",
+  "package_ref": "ff96bcb49726bdafd29ce77866c55fc21a5bdb59",
+  "source_ref": "6b3a28fad54e81ffbe90aa8fe043b5aad4b5ca7d",
+  "materialized_ref": "pending",
+  "commands": {
+    "build": "cmake --build build-semantic-b2 --target canvas_semantic_g1_04_b_operation_matrix_test -j4",
+    "focused_matrix": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_g1_04_b_operation_matrix_test --gtest_color=no",
+    "focused_no_mutation": "ctest --test-dir build-semantic-b2 --output-on-failure -R G104B10NoMutation",
+    "full_semantic_ctest": "ctest --test-dir build-semantic-b2/runtime/semantic --output-on-failure",
+    "accepted_b8_regression": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_apply_plan_test --gtest_color=no",
+    "accepted_b9_differential": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_stateful_validation_differential_test --gtest_color=no",
+    "python_checks": "python3 -m pytest -q verification/tests/test_semantic_contract.py verification/tests/test_semantic_public_boundary.py verification/tests/test_g1_semantic_differential.py"
+  },
+  "results": {
+    "focused_matrix": "PASS 5/5",
+    "focused_no_mutation": "PASS 3/3",
+    "accepted_b8_regression": "PASS 11/11",
+    "accepted_b9_differential": "PASS 6/6",
+    "full_semantic_ctest": "PASS 332/332 (12 protobuf-off skipped)",
+    "python_checks": "PASS 12/12"
+  },
+  "runtime_observations": {
+    "path": "runtime-observations.jsonl",
+    "count": 68,
+    "complete_projection": true,
+    "independently_parsed": true
+  },
+  "hosted_exact_source_ci": {
+    "workflow": "G1 Semantic Codec",
+    "run_id": 33315702619,
+    "job_id": 99268638421,
+    "head_sha": "6b3a28fad54e81ffbe90aa8fe043b5aad4b5ca7d",
+    "status": "success"
+  },
+  "evidence_files": [
+    "B-CONN.json",
+    "B-DELETE.json",
+    "B-DIFF.json",
+    "B-HIER.json",
+    "B-IDEM.json",
+    "B-NOMUT.json",
+    "B-OP15.json",
+    "B-PLAN.json",
+    "B-RESTORE.json",
+    "B-STATE.json",
+    "no-mutation-results.json",
+    "operation-matrix.json",
+    "runtime-observations.jsonl",
+    "summary.json"
+  ],
+  "scope_guards": {
+    "production_changed": false,
+    "tests_outside_b10_changed": false,
+    "B0_B9_reopened": false,
+    "B11_started": false,
+    "GT_G1_04_C_started": false,
+    "GT_G1_05_changed": false,
+    "production_source_changed": false,
+    "authority_schema_api_changed": false,
+    "b0_b9_reopened": false,
+    "b11_started": false,
+    "gt_g1_04_c_started": false,
+    "gt_g1_05_changed": false
+  },
+  "prepared_apply_plan_boundary": "stops before mutation; immutable data only",
+  "status": "PASS"
+}

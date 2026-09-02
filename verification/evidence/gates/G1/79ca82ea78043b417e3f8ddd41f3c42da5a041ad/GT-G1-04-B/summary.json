@@ -1,0 +1,146 @@
+{
+  "evidence_files_sha256": {
+    "B-CONN.json": "a7c4431a93420e8f9657854fc9e4f7b7fc5203ed42053c1f7af9dda7c54eb858",
+    "B-DELETE.json": "1824c05206a4e0946d8fe162c3b5bbee5a8be751f42800fa6b1af4f274081bb8",
+    "B-DIFF.json": "f4c8ecd59a97999069ddec839f05e8db43e3a819292a9aaff1ec1a3f48f05323",
+    "B-HIER.json": "b0a375e7a65599d926a19306751f1ca5c42804e05043c56f73482322e5fc0539",
+    "B-IDEM.json": "4e87ad8b6a985b1b09538601bc0ec27b3c603e0bf9b89e7ce8512b46e8a62591",
+    "B-NOMUT.json": "14798d3751bdca7adaf3c29520eb92f65689537e8f04295cec0860990c30b1ac",
+    "B-OP15.json": "a6d7f19dec11bd9b52c8ae0206ceea961ae42ad518f3161683fff25c8bf5f84a",
+    "B-PLAN.json": "8caeb1fb42faf8982613f1c18dcc5db085facd131951db0b94e426a56070cf85",
+    "B-RESTORE.json": "7863637982353cd5ad71e92e34a4e64ffaaed3df8db1510c6719de3929af6dc0",
+    "B-STATE.json": "75e16dcc7aa525eb318e42850589692bd3d03c7bfbe053c4a99fbe794de63a63",
+    "no-mutation-results.json": "ac87c98338ca14ec20970448c81053ef31d7b5a546d5b4867f24bfbc21782b19",
+    "operation-matrix.json": "7ddd13f9fd833d945ac76cba88bd0d7a7fae52addd82e62b629cbeafe7a5c333"
+  },
+  "exact_source_verification": {
+    "b10_tests": {
+      "ctest_numbers": "324-331",
+      "failed": 0,
+      "passed": 8,
+      "status": "PASS"
+    },
+    "b8_apply_plan_tests": {
+      "ctest_numbers": "306-316",
+      "failed": 0,
+      "passed": 11,
+      "status": "PASS"
+    },
+    "b9_differential_tests": {
+      "ctest_numbers": "318-323",
+      "failed": 0,
+      "fixed_seed": "0xB9D1FF01",
+      "hand_fixtures": 20,
+      "indexed_single_target_allObjects_calls": 0,
+      "passed": 6,
+      "randomized_observations": 256,
+      "status": "PASS"
+    },
+    "g0_platform_protocol_seed": {
+      "run_id": 33296095589,
+      "status": "PASS"
+    },
+    "g0_pr_ci_dag": {
+      "run_id": 33296095567,
+      "status": "PASS"
+    },
+    "g1_semantic_codec": {
+      "build_command": "cmake --build out/g1-hosted --parallel",
+      "job_id": 99215893300,
+      "note": "PR workflow checkout is a merge commit; source-bound evidence and SOURCE_SHA are explicitly bound to 79ca82ea...",
+      "python_semantic_verification": {
+        "command": "python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_02r_evidence verification.tests.test_g1_03_evidence verification.tests.test_g1_02r_leaf_fixture_author verification.tests.test_g1_02r_semantic_differential verification.tests.test_semantic_public_boundary -v",
+        "failed": 0,
+        "passed": 37,
+        "total": 37
+      },
+      "run_id": 33296095563,
+      "semantic_ctest": {
+        "command": "ctest --test-dir out/g1-hosted --output-on-failure",
+        "failed": 0,
+        "passed": 332,
+        "total": 332
+      },
+      "source_sha_env": "79ca82ea78043b417e3f8ddd41f3c42da5a041ad",
+      "status": "PASS",
+      "whitespace_check": {
+        "command": "git diff --check",
+        "status": "PASS"
+      }
+    }
+  },
+  "format": "axiom-gt-g1-04-b-b10-summary-v1",
+  "gate_pass_claimed": false,
+  "materialization_contract": {
+    "commit_role": "evidence-only",
+    "expected_file_count": 13,
+    "note": "materialized_ref is the Git commit that contains this directory and is intentionally not self-embedded.",
+    "parent_source_ref": "79ca82ea78043b417e3f8ddd41f3c42da5a041ad"
+  },
+  "matrix": {
+    "core_logical_cases": 30,
+    "core_store_observations": 60,
+    "families": 15,
+    "required_rejection_bindings": 9,
+    "restore_rst_bindings": 12,
+    "special_cases": 4,
+    "special_store_observations": 8,
+    "status": "PASS",
+    "total_store_observations": 68
+  },
+  "next_stage": "READY_FOR_P34_REVIEW_AFTER_DURABLE_MATERIALIZATION",
+  "no_mutation": {
+    "applied_operation_view_unchanged": true,
+    "canonical_store_unchanged": true,
+    "dispositions": 3,
+    "indexed_rebuild_invariant": true,
+    "prepared_plan_data_only": true,
+    "status": "PASS",
+    "store_observations": 6
+  },
+  "package_ref": "ff96bcb49726bdafd29ce77866c55fc21a5bdb59",
+  "provider_families": [
+    "B-IDEM",
+    "B-STATE",
+    "B-HIER",
+    "B-CONN",
+    "B-DELETE",
+    "B-RESTORE",
+    "B-OP15",
+    "B-PLAN",
+    "B-NOMUT",
+    "B-DIFF"
+  ],
+  "scope": {
+    "authority_changes": false,
+    "gt_g1_04_c_authorized": false,
+    "gt_g1_05_authorized": false,
+    "object_store_api_changes": false,
+    "production_instrumentation": false,
+    "production_semantic_changes": false,
+    "source_test_changes_frozen": true
+  },
+  "source_ref": "79ca82ea78043b417e3f8ddd41f3c42da5a041ad",
+  "source_scope_compare": {
+    "base": "ff96bcb49726bdafd29ce77866c55fc21a5bdb59",
+    "files": [
+      {
+        "change": "CREATE",
+        "path": "runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp"
+      },
+      {
+        "change": "CREATE",
+        "path": "runtime/semantic/tests/g1_04_b_no_mutation_test.cpp"
+      },
+      {
+        "change": "MODIFY",
+        "path": "runtime/semantic/tests/CMakeLists.txt"
+      }
+    ],
+    "head": "79ca82ea78043b417e3f8ddd41f3c42da5a041ad",
+    "status": "PASS"
+  },
+  "stage": "P32",
+  "status": "PASS",
+  "task": "GT-G1-04-B/B10"
+}

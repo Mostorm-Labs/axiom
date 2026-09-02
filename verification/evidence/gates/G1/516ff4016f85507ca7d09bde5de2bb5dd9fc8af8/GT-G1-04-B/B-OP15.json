@@ -1,0 +1,51 @@
+{
+  "format": "axiom-gt-g1-04-b-b7-behavioral-oracle-p36-v1",
+  "task": "GT-G1-04-B/B7",
+  "sourceCommit": "516ff4016f85507ca7d09bde5de2bb5dd9fc8af8",
+  "testedCommit": "516ff4016f85507ca7d09bde5de2bb5dd9fc8af8",
+  "productionImplementationBase": "f98087b29830ea50bc9984be9ef9dfb9aa88e13b",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-operation-specific-state-p31.md@84a95fbb46ef301833a4ce34a9503451f5d95579",
+  "repairRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b7-behavioral-oracle-repair-p36.md@32950127b50da42a31a7d0ca7570321b1f86b2f4",
+  "p34BlockedReview": "notion:3cb4c57a-590c-8172-89a5-d35143ced4e4",
+  "p35P36Authorization": "notion:3cb4c57a-590c-8154-8fbf-cd3d6a8227a8",
+  "implementedHere": ["InsertObjects", "SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"],
+  "delegatedCurrentValid": {
+    "DeleteObjects": {"source": "36669523ab3a5cc3e0c479cf6f0a5ae6119d240c", "evidence": "af50bb0bf43d4a547fdee3a3b5ecb971dc841c9e"},
+    "RestoreObjects": {"source": "871eec8172674c8fba85548434b5e96c7c30fbf8", "evidence": "68dd235205253f7080d0a8d28daa957dfe2f0dbd"}
+  },
+  "executableCases": {
+    "operationSpecificTarget": "canvas_semantic_operation_specific_stateful_validation_test: PASS 76/76",
+    "richTextTarget": "canvas_semantic_rich_text_state_plan_test: PASS 12/12",
+    "insert": "INS_B01..INS_B08",
+    "placements": "PLC_B01..PLC_B09",
+    "transforms": "TRN_B01..TRN_B03",
+    "properties": "PROP_B01..PROP_B07",
+    "size": "SIZE_B01..SIZE_B05",
+    "vectorPath": "PATH_B01..PATH_B03",
+    "image": "IMG_B01..IMG_B03",
+    "strokes": "STR_B01..STR_B06; SPL_B01..SPL_B08",
+    "masks": "MASK_ADD_B01..B06; MASK_REM_B01..B05",
+    "richText": "TXT_S01..TXT_S12; EDIT_B01..B04",
+    "connector": "CON_B01..B07"
+  },
+  "oracleObservations": {
+    "referenceIndexedDifferential": "All executable state-owning cases seed both stores and compare exact StatefulIssue, output fragment projection, immutable base projection, and Indexed rebuild consistency.",
+    "failureAtomicity": "Every rejection pre-fills a non-empty sentinel and asserts its exact fragment remains unchanged.",
+    "richText": "TXT_S01 uses A😀B scalar position 2; all TXT_S01..TXT_S12 are executable and green.",
+    "performance": "CountingStore directly observed production SetTransforms and SetObjectSize with allObjectsCalls == 0; production implementation contains no allObjects invocation. Other B7 fixtures run through no-mutation differential harnesses.",
+    "productionSourceChangedDuringP36": false
+  },
+  "verification": {
+    "focusedRichText": "PASS 12/12",
+    "focusedOperationSpecific": "PASS 76/76",
+    "relevantRegression": "PASS 195/195",
+    "fullSemantic": "PASS 304/304; 12 protobuf-off tests skipped",
+    "runtimeBoundaries": "PASS (53 contract files)",
+    "docs": "PASS (286 Markdown files)",
+    "diffCheck": "PASS"
+  },
+  "scopeGuards": {"productionB7Changed": false, "B2Changed": false, "B3Changed": false, "BAuth02Changed": false, "B4Changed": false, "B5Changed": false, "B6Changed": false, "B8Started": false, "PreparedApplyPlanChanged": false, "OperationEngineChanged": false, "GTG104CStarted": false, "GTG105Changed": false, "untrackedDataPreserved": true},
+  "materialization": {"sourceTestSnapshotPushed": true, "evidenceCommitPushed": false, "historyRewritten": false, "forcePush": false},
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW"
+}

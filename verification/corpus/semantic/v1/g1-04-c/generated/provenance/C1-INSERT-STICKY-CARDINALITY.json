@@ -1,0 +1,47 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+  ],
+  "caseId": "C1-INSERT-STICKY-CARDINALITY",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "4e727ad4c7a99f3683b1652c941943d7185fd517487f92aeabeb95d54720cf35",
+  "expectedRef": "authoring/expected.json#C1-INSERT-STICKY-CARDINALITY",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 4795,
+    "path": "inputs/C1-INSERT-STICKY-CARDINALITY.json",
+    "sha256": "8ad65d86af39601fd0edc12d8e253f5856764e9478e9b582f18b57002767f57c"
+  },
+  "operationFamily": "InsertObjects",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "ddeebc43e2b9c1e7897048c1ce822320ff981fb574e78f2ffb51f9555557f9df",
+  "sourceCaseRef": "authoring/cases.json#C1-INSERT-STICKY-CARDINALITY",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}

@@ -183,6 +183,21 @@ def _field_contract(message: Message, name: str, number: int, field_type: int, t
 
 
 class G1_02RMachineProjectionTest(unittest.TestCase):
+    def test_image_content_mode_machine_projection_matches_release_identity(self) -> None:
+        messages = fresh_messages()
+        image_mode = messages.get("ImageContentMode")
+        self.assertIsNotNone(image_mode, "IMG-05: ImageContentMode enum is missing")
+        assert image_mode is not None
+        self.assertEqual(
+            image_mode.enums.get("ImageContentMode"),
+            Enum(
+                "ImageContentMode",
+                (("IMAGE_CONTENT_MODE_INVALID", 0), ("IMAGE_CONTENT_MODE_FIT", 1),
+                 ("IMAGE_CONTENT_MODE_FILL", 2), ("IMAGE_CONTENT_MODE_STRETCH", 3)),
+            ),
+            "IMG-05: ImageContentMode enum identity/values are not frozen",
+        )
+
     def test_richtext_machine_projection_matches_current_reconciliation_authority(self) -> None:
         messages = fresh_messages()
         errors: list[str] = []

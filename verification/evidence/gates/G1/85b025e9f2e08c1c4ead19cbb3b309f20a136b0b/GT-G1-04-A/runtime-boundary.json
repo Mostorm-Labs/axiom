@@ -1,0 +1,9 @@
+{
+  "format": "axiom-gt-g1-04-a-runtime-boundary-evidence-v1",
+  "sourceCommit": "85b025e9f2e08c1c4ead19cbb3b309f20a136b0b",
+  "command": "python3 tools/check_runtime_boundaries.py --root .",
+  "status": "PASS",
+  "contractFilesChecked": 41,
+  "forbiddenDependencies": [],
+  "notes": ["No Scene/Skia/Arc/platform dependency in semantic contract boundary", "No public C ABI leakage"]
+}

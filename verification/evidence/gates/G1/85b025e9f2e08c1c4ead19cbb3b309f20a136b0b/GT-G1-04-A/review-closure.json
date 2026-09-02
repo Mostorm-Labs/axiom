@@ -1,0 +1,23 @@
+{
+  "format": "axiom-gt-g1-04-a-review-closure-evidence-v1",
+  "sourceCommit": "85b025e9f2e08c1c4ead19cbb3b309f20a136b0b",
+  "status": "PASS",
+  "closedFindings": [
+    {"id": "A3-R01", "closure": "leaf A3 tests link validator.cpp and foundation only; ObjectStore linkage removed"},
+    {"id": "A3-R02", "closure": "Protobuf partial decode is fail-closed and rejects unknown/duplicate/wrong wire type input"},
+    {"id": "A3-R03", "closure": "Wire field number 29-bit upper bound is checked before narrowing"},
+    {"id": "A3-R04", "closure": "Brush pressure curve constraints and V1 tilt-disabled policy are enforced"},
+    {"id": "DOC-R01", "closure": "Historical G1-04 contract link points to archived counterpart without changing authority status"}
+  ],
+  "scopeGuard": {
+    "statefulObjectStoreValidation": false,
+    "idempotency": false,
+    "resultingStateValidation": false,
+    "applyPlan": false,
+    "gtG105": false,
+    "protoSchemaChange": false,
+    "machineAuthorityChange": false
+  },
+  "deferred": ["GT-G1-04-B", "GT-G1-04-C", "GT-G1-05"],
+  "untrackedPreserved": ["pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+}

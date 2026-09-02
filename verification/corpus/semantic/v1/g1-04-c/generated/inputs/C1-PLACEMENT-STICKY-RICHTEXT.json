@@ -1,0 +1,152 @@
+{
+  "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "document": {
+              "paragraphs": [
+                {
+                  "id": "039fab6e33fee63180d3decb3efbb290",
+                  "runs": [
+                    {
+                      "style": {
+                        "color": [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "font_resource_id": "039fab6e33fee63180d3decb3efbb290",
+                        "font_size": 12.0,
+                        "italic": false,
+                        "underline": false,
+                        "weight": 400
+                      },
+                      "text": "fixture"
+                    }
+                  ],
+                  "style": {
+                    "alignment": 1,
+                    "line_height": 1.0,
+                    "spacing_after": 0.0,
+                    "spacing_before": 0.0
+                  }
+                }
+              ]
+            }
+          },
+          "variant": 3
+        },
+        "erase_masks": [],
+        "id": "3093a7ce0643878d7dc592f891bf8b0a",
+        "kind": 8,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            119,
+            2
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "content": {
+          "value": {
+            "document": {
+              "paragraphs": [
+                {
+                  "id": "039fab6e33fee63180d3decb3efbb290",
+                  "runs": [
+                    {
+                      "style": {
+                        "color": [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "font_resource_id": "039fab6e33fee63180d3decb3efbb290",
+                        "font_size": 12.0,
+                        "italic": false,
+                        "underline": false,
+                        "weight": 400
+                      },
+                      "text": "fixture"
+                    }
+                  ],
+                  "style": {
+                    "alignment": 1,
+                    "line_height": 1.0,
+                    "spacing_after": 0.0,
+                    "spacing_before": 0.0
+                  }
+                }
+              ]
+            }
+          },
+          "variant": 3
+        },
+        "erase_masks": [],
+        "id": "4fd1e791957b2865e99e28aa46cd77f0",
+        "kind": 4,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            236,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "7b4d14a782feacaa39d390d2e09ac1a3",
+    "id": "d182f97395d16977f71e95ba8b9a4d75",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "object_id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "placement": {
+              "order_key": [
+                236,
+                1
+              ],
+              "parent_id": "3093a7ce0643878d7dc592f891bf8b0a"
+            }
+          }
+        ]
+      },
+      "variant": 3
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetPlacements",
+  "provenance": "DERIVED_GENERATED"
+}

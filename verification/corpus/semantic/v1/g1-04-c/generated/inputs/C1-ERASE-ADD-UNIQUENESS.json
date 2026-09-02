@@ -1,0 +1,164 @@
+{
+  "caseId": "C1-ERASE-ADD-UNIQUENESS",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "stroke": {
+              "brush_family_id": 1,
+              "brush_version": 1,
+              "color": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "data": [
+                {
+                  "position": [
+                    0.0,
+                    0.0
+                  ],
+                  "pressure": 1.0,
+                  "tilt": [
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "position": [
+                    1.0,
+                    1.0
+                  ],
+                  "pressure": 1.0,
+                  "tilt": [
+                    0.0,
+                    0.0
+                  ]
+                }
+              ],
+              "data_variant": 0,
+              "deterministic_seed": 1,
+              "nominal_size": 1.0,
+              "opacity": 1.0
+            }
+          },
+          "variant": 4
+        },
+        "erase_masks": [],
+        "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+        "kind": 5,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            147,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "f53b651bcb9b754db97968087b3a7c21",
+    "id": "67e6202e7968bd5ffc57341213505004",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "masks": [
+              {
+                "geometry": {
+                  "value": {
+                    "segments": [
+                      {
+                        "control1": [
+                          0.25,
+                          0.25
+                        ],
+                        "control2": [
+                          0.75,
+                          0.75
+                        ],
+                        "p0": {
+                          "position": [
+                            0.0,
+                            0.0
+                          ],
+                          "radius": 1.0
+                        },
+                        "p1": {
+                          "position": [
+                            1.0,
+                            1.0
+                          ],
+                          "radius": 1.0
+                        }
+                      }
+                    ]
+                  },
+                  "variant": 0
+                },
+                "id": "eefafa00cc8b6d0211667c3d711fe274"
+              },
+              {
+                "geometry": {
+                  "value": {
+                    "segments": [
+                      {
+                        "control1": [
+                          0.25,
+                          0.25
+                        ],
+                        "control2": [
+                          0.75,
+                          0.75
+                        ],
+                        "p0": {
+                          "position": [
+                            0.0,
+                            0.0
+                          ],
+                          "radius": 1.0
+                        },
+                        "p1": {
+                          "position": [
+                            1.0,
+                            1.0
+                          ],
+                          "radius": 1.0
+                        }
+                      }
+                    ]
+                  },
+                  "variant": 0
+                },
+                "id": "eefafa00cc8b6d0211667c3d711fe274"
+              }
+            ],
+            "object_id": "38d431b5398e9ef9357f0b4b00ddbfbb"
+          }
+        ]
+      },
+      "variant": 11
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "AddEraseMasks",
+  "provenance": "DERIVED_GENERATED"
+}

@@ -1,0 +1,66 @@
+{
+  "format": "axiom-gt-g1-04-a-verification-evidence-v2",
+  "sourceCommit": "76757f01942b24d000c569a441d65a9dd598664f",
+  "testedCommit": "76757f01942b24d000c569a441d65a9dd598664f",
+  "commands": {
+    "protobufOff": {
+      "configure": {"exitCode": 0, "buildDirectory": "out/g1-04-a-source-76757f-off"},
+      "build": {"exitCode": 0},
+      "ctest": {"exitCode": 0, "total": 94, "passed": 83, "skipped": 11, "failed": 0}
+    },
+    "protobufOn": {
+      "configure": {"exitCode": 0, "buildDirectory": "out/g1-04-a-source-76757f-on", "protobufPrefix": ".deps/protobuf"},
+      "build": {"exitCode": 0},
+      "ctest": {"exitCode": 0, "total": 94, "passed": 94, "skipped": 0, "failed": 0}
+    },
+    "pythonRegression": {
+      "command": "CANVAS_SEMANTIC_GOLDEN_PROBE=out/g1-04-a-source-76757f-on/runtime/semantic/tools/canvas_semantic_golden_probe python3 -m unittest discover -s verification/tests -p test_*.py -v",
+      "exitCode": 0,
+      "total": 77,
+      "failed": 0
+    },
+    "authorityPublication": {"command": "python3 verification/tools/validate_g1_04_authority_publication.py", "exitCode": 0},
+    "geometryProjection": {"command": "python3 verification/tools/validate_geometry_accounting_projection.py", "exitCode": 0},
+    "geometryBoundaryOracle": {
+      "commands": [
+        {"command": "python3 verification/fixture-author/compile_geometry_accounting_boundary.py", "exitCode": 0},
+        {"command": "python3 verification/fixture-author/compile_geometry_accounting_boundary.py --verify-independence", "exitCode": 0}
+      ],
+      "boundaryUnits": [1999999, 2000000, 2000001],
+      "rejectionCategory": "GEOMETRY_LIMIT_EXCEEDED",
+      "independentFromProductionRuntime": true
+    },
+    "authorityCoverage": {
+      "command": "python3 tools/check_g1_04_a_authority_coverage.py",
+      "exitCode": 0,
+      "checkerJson": {
+        "normativeRuleRows": 39,
+        "ownerMemberships": {"A0": 3, "A1": 12, "A2": 9, "A3": 30},
+        "coveredARows": 36,
+        "deferredBRows": 2,
+        "deferredCRows": 1,
+        "missingRows": [],
+        "wrongOracleRows": [],
+        "unownedRows": [],
+        "blockedCarrierRows": []
+      }
+    },
+    "semanticContract": {
+      "command": "python3 verification/tools/validate_semantic_contract.py --protoc .deps/protobuf/bin/protoc",
+      "exitCode": 0,
+      "descriptorSha256": "13fdd9834bc049894646ae0a4e103bfb43260725ad8b784a14cfdfd93083afc9",
+      "seedCases": 60,
+      "g102rCases": 23
+    },
+    "productionDifferentials": {
+      "bg": {"command": "python3 verification/tools/run_g1_semantic_differential.py --probe out/g1-04-a-source-76757f-on/runtime/semantic/tools/canvas_semantic_golden_probe", "exitCode": 0, "cases": 18, "firstDivergence": null},
+      "g102r": {"command": "python3 verification/tools/run_g1_02r_semantic_differential.py --probe out/g1-04-a-source-76757f-on/runtime/semantic/tools/canvas_semantic_golden_probe", "exitCode": 0, "cases": 23, "firstDivergence": null}
+    },
+    "projectionContract": {"command": "python3 tools/check_g1_04_a_projection_contract.py", "exitCode": 0},
+    "runtimeBoundary": {"command": "python3 tools/check_runtime_boundaries.py --root .", "exitCode": 0, "contractFilesChecked": 41},
+    "runtimeAbi": {"command": "python3 tools/check_runtime_abi_manifest.py --root .", "exitCode": 0, "functions": 54, "structs": 49, "enumConstants": 163},
+    "linkageIsolation": {"command": "nm -u out/g1-04-a-source-76757f-on/runtime/semantic/tests/canvas_semantic_payload_structure_test", "exitCode": 0, "forbiddenSymbols": ["reference_object_store", "indexed_object_store", "object_store_mutator"], "observedForbiddenSymbols": []},
+    "docs": {"command": "python3 tools/check_docs.py", "exitCode": 0, "markdownFiles": 262},
+    "diffCheck": {"command": "git diff --check", "exitCode": 0}
+  }
+}

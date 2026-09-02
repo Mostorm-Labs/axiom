@@ -1,0 +1,104 @@
+{
+  "caseId": "C1-INSERT-STAGED-CONNECTOR",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "1fc47bfe7ae26853bf696318c205dc0c",
+    "id": "27849448338c1a21371964ba4626fd75",
+    "payload": {
+      "value": {
+        "objects": [
+          {
+            "content": {
+              "value": {
+                "end": {
+                  "value": {
+                    "point": [
+                      10.0,
+                      10.0
+                    ]
+                  },
+                  "variant": 0
+                },
+                "routing": 1,
+                "start": {
+                  "value": {
+                    "anchor": {
+                      "value": {
+                        "port_id": 1
+                      },
+                      "variant": 0
+                    },
+                    "target_object_id": "606de97058a90cc1d39c84c58fca0925"
+                  },
+                  "variant": 1
+                }
+              },
+              "variant": 6
+            },
+            "erase_masks": [],
+            "id": "02f76840b37beee24d7e13f7d1debef9",
+            "kind": 7,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                7,
+                2
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "content": {
+              "value": {
+                "height": 24.0,
+                "shape_kind": 1,
+                "width": 32.0
+              },
+              "variant": 0
+            },
+            "erase_masks": [],
+            "id": "606de97058a90cc1d39c84c58fca0925",
+            "kind": 1,
+            "kind_version": 1,
+            "placement": {
+              "order_key": [
+                71,
+                1
+              ],
+              "parent_id": null
+            },
+            "properties": [],
+            "transform": [
+              1.0,
+              0.0,
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "variant": 0
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "InsertObjects",
+  "provenance": "DERIVED_GENERATED"
+}

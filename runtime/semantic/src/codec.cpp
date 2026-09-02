@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <iomanip>
 #include <limits>
+#include <span>
 #include <sstream>
 #include <type_traits>
 #include <utility>
@@ -32,6 +33,11 @@ constexpr std::uint8_t kMagic1 = 0x58U;
 constexpr std::uint8_t kVersion = 1U;
 constexpr std::size_t kHeaderBytes = 8U;
 constexpr std::size_t kMaxFieldBytes = 1024U * 1024U;
+constexpr std::size_t kMaxOperationBytes = 32U * 1024U * 1024U;
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+constexpr std::size_t kMaxRichTextInsertBytes = 8U * 1024U * 1024U;
+constexpr std::size_t kMaxObjectRecordBytes = 16U * 1024U * 1024U;
+#endif
 
 void appendU16(std::vector<std::uint8_t>& out, std::uint16_t value) {
     out.push_back(static_cast<std::uint8_t>(value));
@@ -72,7 +78,11 @@ bool scanWire(const std::vector<std::uint8_t>& bytes, std::vector<WireField>& fi
     while (offset < bytes.size()) {
         std::uint64_t key = 0U;
         if (!readVarint(bytes, offset, key) || key == 0U) return false;
-        const auto number = static_cast<std::uint32_t>(key >> 3U);
+        const auto wide_number = key >> 3U;
+        // Protobuf field numbers are limited to 29 bits.  Validate before
+        // narrowing so an oversized key cannot alias a known field.
+        if (wide_number == 0U || wide_number > 0x1fffffffU) return false;
+        const auto number = static_cast<std::uint32_t>(wide_number);
         const auto type = static_cast<std::uint8_t>(key & 0x07U);
         if (number == 0U) return false;
         switch (type) {
@@ -110,6 +120,378 @@ bool scanWire(const std::vector<std::uint8_t>& bytes, std::vector<WireField>& fi
         }
     }
     return true;
+}
+
+struct RawWireField final {
+    std::uint32_t number = 0;
+    std::uint8_t type = 0;
+    std::span<const std::uint8_t> value;
+};
+
+bool readRawVarint(std::span<const std::uint8_t> bytes, std::size_t& offset, std::uint64_t& value) {
+    value = 0U;
+    for (unsigned shift = 0U; shift < 64U; shift += 7U) {
+        if (offset >= bytes.size()) return false;
+        const auto byte = bytes[offset++];
+        value |= static_cast<std::uint64_t>(byte & 0x7fU) << shift;
+        if ((byte & 0x80U) == 0U) return true;
+    }
+    return false;
+}
+
+template <typename Visitor>
+bool scanRawWire(std::span<const std::uint8_t> bytes, Visitor&& visitor) {
+    std::size_t offset = 0U;
+    while (offset < bytes.size()) {
+        std::uint64_t key = 0U;
+        if (!readRawVarint(bytes, offset, key) || key == 0U) return false;
+        const auto wide_number = key >> 3U;
+        if (wide_number == 0U || wide_number > 0x1fffffffU) return false;
+        const auto number = static_cast<std::uint32_t>(wide_number);
+        const auto type = static_cast<std::uint8_t>(key & 0x07U);
+        const auto begin = offset;
+        switch (type) {
+            case 0U: {
+                std::uint64_t ignored = 0U;
+                if (!readRawVarint(bytes, offset, ignored)) return false;
+                break;
+            }
+            case 1U:
+                if (bytes.size() - offset < 8U) return false;
+                offset += 8U;
+                break;
+            case 2U: {
+                std::uint64_t length = 0U;
+                if (!readRawVarint(bytes, offset, length) || length > bytes.size() - offset) return false;
+                const auto payload_begin = offset;
+                offset += static_cast<std::size_t>(length);
+                visitor(RawWireField{number, type, bytes.subspan(payload_begin, static_cast<std::size_t>(length))});
+                continue;
+            }
+            case 5U:
+                if (bytes.size() - offset < 4U) return false;
+                offset += 4U;
+                break;
+            default:
+                return false;
+        }
+        visitor(RawWireField{number, type, bytes.subspan(begin, offset - begin)});
+    }
+    return true;
+}
+
+void markLimit(std::string& category, const char* value) {
+    if (category.empty()) category = value;
+}
+
+bool richTextStepHasOversizedInsert(std::span<const std::uint8_t> bytes) {
+    std::uint32_t branch = 0U;
+    bool oversized = false;
+    const bool valid = scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number >= 1U && field.number <= 6U) {
+            if (branch != 0U) branch = 7U;
+            else branch = field.number;
+        }
+        if (field.number == 3U && field.type == 2U && field.value.size() > kMaxFieldBytes) oversized = true;
+    });
+    return valid && branch == 1U && oversized;
+}
+
+bool richTextDocumentHasOversizedString(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    return scanRawWire(bytes, [&](const RawWireField& paragraph) {
+        if (paragraph.number != 1U || paragraph.type != 2U) return;
+        if (!scanRawWire(paragraph.value, [&](const RawWireField& run) {
+                if (run.number != 3U || run.type != 2U) return;
+                if (!scanRawWire(run.value, [&](const RawWireField& text) {
+                        if (text.number == 1U && text.type == 2U && text.value.size() > kMaxFieldBytes) oversized = true;
+                    })) oversized = true;
+            })) oversized = true;
+    }) && oversized;
+}
+
+bool richTextDeltaHasLimitViolation(std::span<const std::uint8_t> bytes) {
+    std::size_t inserted_bytes = 0U;
+    bool violation = false;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 2U || field.type != 2U) return;
+        std::uint32_t branch = 0U;
+        if (!scanRawWire(field.value, [&](const RawWireField& step) {
+                if (step.number >= 1U && step.number <= 6U) {
+                    if (branch != 0U) branch = 7U;
+                    else branch = step.number;
+                }
+                if (step.number != 1U || step.type != 2U) return;
+                if (!scanRawWire(step.value, [&](const RawWireField& insert_field) {
+                        if (insert_field.number != 3U || insert_field.type != 2U) return;
+                        if (insert_field.value.size() > kMaxFieldBytes ||
+                            inserted_bytes > kMaxRichTextInsertBytes - insert_field.value.size()) {
+                            violation = true;
+                            return;
+                        }
+                        inserted_bytes += insert_field.value.size();
+                    })) {
+                    violation = true;
+                }
+            })) {
+            violation = true;
+        }
+    }) && violation;
+}
+
+bool rawKnownLimitViolation(const std::string& root_type, std::span<const std::uint8_t> bytes) {
+    if (root_type == "OrderKey") {
+        bool violation = false;
+        if (!scanRawWire(bytes, [&](const RawWireField& field) {
+                if (field.number == 1U && field.type == 2U && field.value.size() > 32U) violation = true;
+        })) return false;
+        return violation;
+    }
+    if (root_type == "RichTextStep") return richTextStepHasOversizedInsert(bytes);
+    if (root_type == "RichTextDelta") return richTextDeltaHasLimitViolation(bytes);
+    if (root_type == "RichTextDocument") return richTextDocumentHasOversizedString(bytes);
+    return false;
+}
+
+bool inspectOrderKey(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 1U && field.type == 2U && field.value.size() > 32U) {
+            markLimit(category, "ORDER_KEY_LIMIT_EXCEEDED");
+        }
+    });
+}
+
+bool inspectRichTextDocument(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& paragraph) {
+        if (paragraph.number != 1U || paragraph.type != 2U) return;
+        if (!scanRawWire(paragraph.value, [&](const RawWireField& run) {
+                if (run.number != 3U || run.type != 2U) return;
+                if (!scanRawWire(run.value, [&](const RawWireField& text) {
+                        if (text.number == 1U && text.type == 2U && text.value.size() > kMaxFieldBytes) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                        }
+                    })) markLimit(category, "MALFORMED_WIRE");
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectRichTextDelta(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t inserted_bytes = 0U;
+    bool malformed = false;
+    const bool valid = scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 2U || field.type != 2U) return;
+        std::uint32_t branch = 0U;
+        if (!scanRawWire(field.value, [&](const RawWireField& step) {
+                if (step.number >= 1U && step.number <= 6U) {
+                    if (branch != 0U) branch = 7U;
+                    else branch = step.number;
+                }
+                if (step.number != 1U || step.type != 2U || branch != 1U) return;
+                if (!scanRawWire(step.value, [&](const RawWireField& insert_field) {
+                        if (insert_field.number != 3U || insert_field.type != 2U) return;
+                        if (insert_field.value.size() > kMaxFieldBytes) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                            return;
+                        }
+                        if (inserted_bytes > kMaxRichTextInsertBytes - insert_field.value.size()) {
+                            markLimit(category, "STRING_LIMIT_EXCEEDED");
+                        } else {
+                            inserted_bytes += insert_field.value.size();
+                        }
+                    })) {
+                    malformed = true;
+                }
+            })) {
+            malformed = true;
+        }
+    });
+    if (inserted_bytes > kMaxRichTextInsertBytes) markLimit(category, "STRING_LIMIT_EXCEEDED");
+    if (malformed) markLimit(category, "MALFORMED_WIRE");
+    return valid && !malformed;
+}
+
+bool inspectObjectContent(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != 4U || field.type != 2U) return;
+        if (!scanRawWire(field.value, [&](const RawWireField& document) {
+                if (document.number == 1U && document.type == 2U && !inspectRichTextDocument(document.value, category)) {
+                    markLimit(category, "MALFORMED_WIRE");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectPlacement(std::span<const std::uint8_t> bytes, std::string& category) {
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 2U && field.type == 2U && !inspectOrderKey(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        }
+    });
+}
+
+bool inspectObjectRecord(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t erase_masks = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number == 4U && field.type == 2U && !inspectPlacement(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        } else if (field.number == 7U && field.type == 2U && !inspectObjectContent(field.value, category)) {
+            markLimit(category, "MALFORMED_WIRE");
+        } else if (field.number == 8U && field.type == 2U) {
+            // ObjectRecord.erase_masks is a bounded repeated collection.
+            // The caller performs the occurrence count; this branch only
+            // validates the nested record's wire span.
+            if (++erase_masks > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+            if (!scanRawWire(field.value, [](const RawWireField&) {})) markLimit(category, "MALFORMED_WIRE");
+        }
+    });
+}
+
+bool inspectObjectCollection(std::span<const std::uint8_t> bytes, std::uint32_t field_number,
+                             std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& field) {
+        if (field.number != field_number || field.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        if (field.value.size() > kMaxObjectRecordBytes) markLimit(category, "OBJECT_SIZE_LIMIT_EXCEEDED");
+        if (!inspectObjectRecord(field.value, category)) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectSplitStrokes(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& split) {
+        if (split.number != 1U || split.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        if (!scanRawWire(split.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U && !inspectObjectCollection(field.value, 2U, category)) {
+                    markLimit(category, "MALFORMED_WIRE");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectAddEraseMasks(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& item) {
+        if (item.number != 1U || item.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        std::size_t masks = 0U;
+        if (!scanRawWire(item.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U && ++masks > 65535U) {
+                    markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool inspectRemoveEraseMasks(std::span<const std::uint8_t> bytes, std::string& category) {
+    std::size_t count = 0U;
+    return scanRawWire(bytes, [&](const RawWireField& item) {
+        if (item.number != 1U || item.type != 2U) return;
+        ++count;
+        if (count > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+        std::size_t mask_ids = 0U;
+        if (!scanRawWire(item.value, [&](const RawWireField& field) {
+                if (field.number == 2U && field.type == 2U) {
+                    ++mask_ids;
+                    if (mask_ids > 65535U) markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                }
+            })) markLimit(category, "MALFORMED_WIRE");
+    });
+}
+
+bool rawOperationLimitViolation(std::span<const std::uint8_t> bytes, std::string& category) {
+    bool malformed = false;
+    if (!scanRawWire(bytes, [&](const RawWireField& operation_field) {
+            if (operation_field.number != 5U || operation_field.type != 2U) return;
+            if (!scanRawWire(operation_field.value, [&](const RawWireField& payload) {
+                    if (payload.type != 2U) return;
+                    bool valid = true;
+                    switch (payload.number) {
+                        case 1U: case 3U:
+                            valid = inspectObjectCollection(payload.value, 1U, category);
+                            break;
+                        case 2U: case 4U: case 5U: case 6U: case 7U: case 9U: case 15U: {
+                            std::size_t count = 0U;
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 1U && field.type == 2U && ++count > 65535U) {
+                                    markLimit(category, "COLLECTION_LIMIT_EXCEEDED");
+                                }
+                            });
+                            break;
+                        }
+                        case 11U:
+                            valid = inspectSplitStrokes(payload.value, category);
+                            break;
+                        case 12U:
+                            valid = inspectAddEraseMasks(payload.value, category);
+                            break;
+                        case 13U:
+                            valid = inspectRemoveEraseMasks(payload.value, category);
+                            break;
+                        case 14U:
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 2U && field.type == 2U && !inspectRichTextDelta(field.value, category)) {
+                                    markLimit(category, "MALFORMED_WIRE");
+                                }
+                            });
+                            break;
+                        case 10U:
+                            valid = scanRawWire(payload.value, [&](const RawWireField& field) {
+                                if (field.number == 1U && field.type == 2U) {
+                                    if (field.value.size() > kMaxObjectRecordBytes) markLimit(category, "OBJECT_SIZE_LIMIT_EXCEEDED");
+                                    if (!inspectObjectRecord(field.value, category)) markLimit(category, "MALFORMED_WIRE");
+                                }
+                            });
+                            break;
+                        default:
+                            // Non-geometry payloads may still have a bounded
+                            // keyed collection in field 1, but no nested
+                            // object-specific traversal is needed here.
+                            valid = scanRawWire(payload.value, [&](const RawWireField&) {});
+                            break;
+                    }
+                    if (!valid) malformed = true;
+                })) malformed = true;
+        })) malformed = true;
+    if (malformed) {
+        category = "MALFORMED_WIRE";
+        return true;
+    }
+    return !category.empty();
+}
+
+bool hasOversizedObjectRecord(std::span<const std::uint8_t> container, std::uint32_t object_field_number) {
+    bool oversized = false;
+    return scanRawWire(container, [&](const RawWireField& field) {
+        oversized = oversized || (field.number == object_field_number && field.type == 2U &&
+                                  field.value.size() > kMaxObjectRecordBytes);
+    }) && oversized;
+}
+
+bool exceedsObjectRecordLimit(std::span<const std::uint8_t> bytes) {
+    bool oversized = false;
+    const bool operation_ok = scanRawWire(bytes, [&](const RawWireField& operation_field) {
+        if (operation_field.number != 5U || operation_field.type != 2U) return;
+        const bool payload_ok = scanRawWire(operation_field.value, [&](const RawWireField& payload_field) {
+            if ((payload_field.number == 1U || payload_field.number == 3U || payload_field.number == 10U) &&
+                payload_field.type == 2U) {
+                oversized = oversized || hasOversizedObjectRecord(payload_field.value, 1U);
+            } else if (payload_field.number == 11U && payload_field.type == 2U) {
+                const bool splits_ok = scanRawWire(payload_field.value, [&](const RawWireField& split_field) {
+                    if (split_field.number == 1U && split_field.type == 2U) {
+                        oversized = oversized || hasOversizedObjectRecord(split_field.value, 2U);
+                    }
+                });
+                if (!splits_ok) oversized = false;
+            }
+        });
+        if (!payload_ok) oversized = false;
+    });
+    return operation_ok && oversized;
 }
 
 bool allowsField(const std::string& root_type, std::uint32_t field) {
@@ -180,6 +562,7 @@ bool validRichTextStepPayload(std::uint32_t branch, const std::vector<std::uint8
 }
 
 std::string preflightCategory(const std::string& root_type, const std::vector<std::uint8_t>& bytes, bool strict_canonical) {
+    if (rawKnownLimitViolation(root_type, bytes)) return "LIMIT_EXCEEDED";
     std::vector<WireField> fields;
     if (!scanWire(bytes, fields)) return "MALFORMED_WIRE";
     std::vector<std::uint32_t> seen;
@@ -620,8 +1003,13 @@ bool serializeCanonical(const Message& source, std::vector<std::uint8_t>& destin
 
 namespace canvas::semantic {
 
+SemanticError SemanticCodec::preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept {
+    return bytes.size() <= kMaxOperationBytes ? SemanticError::kNone : SemanticError::kLimitExceeded;
+}
+
 CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields) {
     if (!isKnownOperationKind(kind) || fields.size() > 65535U) return {SemanticError::kUnknownOperation, {}};
+    std::size_t total_bytes = kHeaderBytes + 2U;
     std::uint32_t previous = 0;
     bool first = true;
     std::vector<std::uint8_t> out{kMagic0, kMagic1, kVersion, static_cast<std::uint8_t>(kind), 0U, 0U, 0U, 0U};
@@ -631,6 +1019,8 @@ CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector
             return {field.id == previous ? SemanticError::kDuplicateCanonicalKey : SemanticError::kNonCanonicalOrder, {}};
         }
         if (field.bytes.size() > kMaxFieldBytes) return {SemanticError::kLimitExceeded, {}};
+        if (total_bytes > kMaxOperationBytes - 8U - field.bytes.size()) return {SemanticError::kLimitExceeded, {}};
+        total_bytes += 8U + field.bytes.size();
         appendU32(out, field.id);
         appendU32(out, static_cast<std::uint32_t>(field.bytes.size()));
         out.insert(out.end(), field.bytes.begin(), field.bytes.end());
@@ -679,7 +1069,107 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
 #endif
 }
 
+DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::uint8_t>& bytes) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)bytes;
+    return DecodedOperation({}, {}, {}, SemanticError::kRuntimeUnavailable);
+#else
+    if (preflightOperationBytes(bytes) != SemanticError::kNone) {
+        return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
+    std::string raw_limit_category;
+    if (rawOperationLimitViolation(bytes, raw_limit_category)) {
+        return DecodedOperation({}, {}, {}, raw_limit_category == "MALFORMED_WIRE"
+            ? SemanticError::kMalformedWire : SemanticError::kLimitExceeded);
+    }
+    if (exceedsObjectRecordLimit(bytes)) {
+        return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
+    std::vector<WireField> fields;
+    if (!scanWire(bytes, fields)) {
+        return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+    }
+    OperationFieldPresence presence{};
+    std::array<unsigned, 6> occurrences{};
+    for (const auto& field : fields) {
+        if (field.number == 0U || field.number > 5U) {
+            return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+        }
+        ++occurrences[field.number];
+        const bool expected_type =
+            ((field.number == 1U || field.number == 2U || field.number == 5U) && field.type == 2U) ||
+            ((field.number == 3U || field.number == 4U) && field.type == 0U);
+        if (!expected_type || occurrences[field.number] > 1U) {
+            return DecodedOperation({}, {}, {}, SemanticError::kMalformedWire);
+        }
+        if (field.number == 3U) presence.schema_version = true;
+        if (field.number == 4U) presence.payload_version = true;
+    }
+
+    auditoryworks::axiom::v1::Operation decoded;
+    if (!decoded.ParseFromArray(bytes.data(), static_cast<int>(bytes.size())) ||
+        !decoded.has_operation_id() || !decoded.has_document_id() || !decoded.has_payload() ||
+        decoded.payload().payload_case() == auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET) {
+        return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+
+    canvas::semantic::ObjectId operation_id;
+    canvas::semantic::ObjectId document_id;
+    if (!mapId(decoded.operation_id(), operation_id) || !mapId(decoded.document_id(), document_id)) {
+        return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+
+    Operation operation;
+    operation.id = OperationId{operation_id};
+    operation.document_id = DocumentId{document_id};
+    operation.schema_version = decoded.schema_version();
+    operation.payload_version = decoded.payload_version();
+    switch (decoded.payload().payload_case()) {
+        case auditoryworks::axiom::v1::OperationPayload::kInsertObjects:
+            operation.payload = InsertObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kDeleteObjects:
+            operation.payload = DeleteObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kRestoreObjects:
+            operation.payload = RestoreObjectsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetPlacements:
+            operation.payload = SetPlacementsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetTransforms:
+            operation.payload = SetTransformsOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kPatchProperties:
+            operation.payload = PatchPropertiesOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetObjectSize:
+            operation.payload = SetObjectSizeOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetVectorPathGeometry:
+            operation.payload = SetVectorPathGeometryOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetImageContent:
+            operation.payload = SetImageContentOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kAddStroke:
+            operation.payload = AddStrokeOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSplitStrokes:
+            operation.payload = SplitStrokesOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kAddEraseMasks:
+            operation.payload = AddEraseMasksOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kRemoveEraseMasks:
+            operation.payload = RemoveEraseMasksOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kEditRichText:
+            operation.payload = EditRichTextOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetConnectorContent:
+            operation.payload = SetConnectorContentOp{}; break;
+        case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
+            return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
+    }
+    // This seam intentionally does not map nested payload DTO fields yet.
+    // Fail closed instead of returning ok() with a payload whose collections
+    // are silently empty; callers may still inspect identity/version
+    // presence for A0/A2 diagnostics.
+    return DecodedOperation(std::move(operation), presence, {}, SemanticError::kInvalidSemanticValue);
+#endif
+}
+
 DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>& bytes) {
+    if (preflightOperationBytes(bytes) != SemanticError::kNone) {
+        return {{}, {}, SemanticError::kLimitExceeded};
+    }
     if (bytes.size() < kHeaderBytes + 2U) return {{}, {}, SemanticError::kTruncatedWire};
     if (bytes[0] != kMagic0 || bytes[1] != kMagic1) return {{}, {}, SemanticError::kMalformedWire};
     if (bytes[2] != kVersion) return {{}, {}, SemanticError::kUnsupportedVersion};
@@ -705,7 +1195,25 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         first = false;
     }
     if (offset != bytes.size()) return {{}, {}, SemanticError::kMalformedWire};
-    return {Operation{OperationId{}, kind}, std::move(fields), SemanticError::kNone};
+    Operation operation;
+    switch (kind) {
+        case OperationKind::kInsertObjects: operation.payload = InsertObjectsOp{}; break;
+        case OperationKind::kDeleteObjects: operation.payload = DeleteObjectsOp{}; break;
+        case OperationKind::kRestoreObjects: operation.payload = RestoreObjectsOp{}; break;
+        case OperationKind::kSetPlacements: operation.payload = SetPlacementsOp{}; break;
+        case OperationKind::kSetTransforms: operation.payload = SetTransformsOp{}; break;
+        case OperationKind::kPatchProperties: operation.payload = PatchPropertiesOp{}; break;
+        case OperationKind::kSetObjectSize: operation.payload = SetObjectSizeOp{}; break;
+        case OperationKind::kSetVectorPathGeometry: operation.payload = SetVectorPathGeometryOp{}; break;
+        case OperationKind::kSetImageContent: operation.payload = SetImageContentOp{}; break;
+        case OperationKind::kAddStroke: operation.payload = AddStrokeOp{}; break;
+        case OperationKind::kSplitStrokes: operation.payload = SplitStrokesOp{}; break;
+        case OperationKind::kAddEraseMasks: operation.payload = AddEraseMasksOp{}; break;
+        case OperationKind::kRemoveEraseMasks: operation.payload = RemoveEraseMasksOp{}; break;
+        case OperationKind::kEditRichText: operation.payload = EditRichTextOp{}; break;
+        case OperationKind::kSetConnectorContent: operation.payload = SetConnectorContentOp{}; break;
+    }
+    return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }
 
 CodecResult SemanticCodec::encodeCanonicalF64(double value) {

@@ -1,0 +1,45 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e"
+  ],
+  "caseId": "C1-IMAGE-WRONG-KIND",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V03",
+    "notion:3c94c57a-590c-81cf-97eb-f6c89fce563e",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c0059e4506a72e78ea1ef263e291139af29fcd04a26b243b7f9a2b43a11c65ec",
+  "expectedRef": "authoring/expected.json#C1-IMAGE-WRONG-KIND",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1411,
+    "path": "inputs/C1-IMAGE-WRONG-KIND.json",
+    "sha256": "e8f71d0e02db55595be3e33314d06ad098f660220c42c5c222e65722a8c6c777"
+  },
+  "operationFamily": "SetImageContent",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "f3daf7e4db07fc82c8ca9ef29164033216fb53af8b5d66a5c8243aa7143b9a49",
+  "sourceCaseRef": "authoring/cases.json#C1-IMAGE-WRONG-KIND",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}

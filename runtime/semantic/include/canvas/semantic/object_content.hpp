@@ -21,9 +21,10 @@ struct ShapeContent final {
 };
 
 enum class ImageContentMode : std::uint8_t {
-    kStretch = 1,
-    kFit = 2,
-    kFill = 3,
+    kInvalid = 0,
+    kFit = 1,
+    kFill = 2,
+    kStretch = 3,
 };
 
 struct ImageContent final {
@@ -276,7 +277,7 @@ struct RichTextDelta final {
 };
 
 struct AutoPerimeterAnchor final {
-    Vec2 hint{};
+    std::optional<Vec2> hint;
 
     bool operator==(const AutoPerimeterAnchor&) const = default;
 };

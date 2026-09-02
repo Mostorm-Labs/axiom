@@ -15,6 +15,8 @@ enum class SemanticError : std::uint8_t {
     kLimitExceeded,
     kMalformedWire,
     kRuntimeUnavailable,
+    // Local semantic implementation diagnostic; not a protocol outcome.
+    kInvalidSemanticValue,
 };
 
 } // namespace canvas::semantic

@@ -1,0 +1,224 @@
+{
+  "format": "axiom-gt-g1-04-b-b6-restore-planner-evidence-v1",
+  "task": "GT-G1-04-B/B6",
+  "sourceCommit": "06dfefd2f0f6e1094ec6867755307413649e35c3",
+  "testedCommit": "06dfefd2f0f6e1094ec6867755307413649e35c3",
+  "implementationCommit": "06dfefd2f0f6e1094ec6867755307413649e35c3",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "basePlanRef": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md",
+  "packageRef": "docs/superpowers/plans/2026-08-29-gt-g1-04-b6-restore-planner-p31.md@8b632ab0c468785f25b1278d6d61bc1c3712b300",
+  "authorization": "notion:3cb4c57a-590c-81c9-bdb9-ec2a36644754",
+  "authority": {
+    "restoreEligibilityNotion": "notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83",
+    "restoreEligibilityMirror": {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/restoreobjects-identity-state-tombstone-eligibility-v1-authority-closure-v0.1.md",
+      "sha256": "d65c3e07b439d7b21268d38ee23a434eddbb94af00ad0aa34f4fc6c2ba628a26"
+    },
+    "payloadValidationMirror": {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-payload-validation-v0.1.md",
+      "sha256": "700d273043a813204aa115e6310d1338a5ec139da160485d6124029647017d74"
+    },
+    "connectorAnchorMirror": {
+      "path": "docs/notion/authority/04-semantic-schema/01-object-schema/connector-anchor-contract-v1-release-v0.1.md",
+      "sha256": "071ce14d67d967f2f564b45b73a123efd65d6c71ca3225869c91bdf985888a01"
+    },
+    "restoreCatchupMirror": {
+      "path": "docs/notion/authority/07-runtime-data-flow/07-08-open-restore-catchup-v0.1.md",
+      "sha256": "6a98660bd83aacc874995dab7e5243c85e0176c6f890ecd7755271de253cbfbf"
+    }
+  },
+  "redEvidence": {
+    "observedBeforeProductionImplementation": true,
+    "command": "cmake -S . -B /tmp/axiom-b6-red -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DCANVAS_BUILD_POC01=OFF -DCANVAS_POC01_BUILD_TESTS=OFF && cmake --build /tmp/axiom-b6-red --target canvas_semantic_restore_stateful_validation_test -j2",
+    "result": "failed as expected (restore planner source/target did not yet exist)",
+    "failure": "missing runtime/semantic/src/restore_planner.cpp and restore_planner.hpp before implementation"
+  },
+  "apiBoundary": {
+    "signature": "StatefulResult validateRestoreObjects(const RestoreObjectsOp&, const ObjectStore&, RestorePlanInputs*)",
+    "b1Ownership": "B1 classifyOperation owns kNew/kAlreadyApplied/kCollision; B6 accepts only the kNew state-planning path",
+    "algorithm": "fresh StagedObjectView; one stageCreate per candidate; complete B2 then B3 then B4 validation; commit creates only after whole-operation success",
+    "mutation": false,
+    "applySourceParameter": false,
+    "tombstoneHistoryOrSyncInputs": false
+  },
+  "cases": {
+    "RST-B01": {
+      "test": "RestoreStatefulValidation.RST_B01_AllAbsentValidRestore",
+      "base": "empty; candidate IDs absent",
+      "candidateObjectIds": ["00000000000000000000000000000001", "00000000000000000000000000000002"],
+      "expectedIssue": "kNone",
+      "actualIssue": "kNone",
+      "createsProjection": "exact normalized restore.objects ordering and complete ObjectRecord values",
+      "result": "PASS"
+    },
+    "RST-B02": {
+      "test": "RestoreStatefulValidation.RST_B02_ExistingSameRecordCollides",
+      "base": "equivalent record for ObjectId 1",
+      "candidateObjectIds": ["00000000000000000000000000000001"],
+      "expectedIssue": "kObjectAlreadyExists",
+      "actualIssue": "kObjectAlreadyExists",
+      "outputUnchanged": true,
+      "baseUnchanged": true,
+      "result": "PASS"
+    },
+    "RST-B03": {
+      "test": "RestoreStatefulValidation.RST_B03_ExistingDifferentRecordCollides",
+      "base": "different valid record with ObjectId 1",
+      "candidateObjectIds": ["00000000000000000000000000000001"],
+      "expectedIssue": "kObjectAlreadyExists",
+      "actualIssue": "kObjectAlreadyExists",
+      "outputUnchanged": true,
+      "baseUnchanged": true,
+      "result": "PASS"
+    },
+    "RST-B04": {
+      "test": "RestoreStatefulValidation.RST_B04_ParentAndChildSamePayload",
+      "hierarchyEdges": [["00000000000000000000000000000001", "00000000000000000000000000000002"]],
+      "candidateObjectIds": ["00000000000000000000000000000001", "00000000000000000000000000000002"],
+      "expectedIssue": "kNone",
+      "actualIssue": "kNone",
+      "result": "PASS; complete staging makes parent visible regardless of payload order"
+    },
+    "RST-B05": {
+      "test": "RestoreStatefulValidation.RST_B05_MissingParentInvalidReference",
+      "hierarchyEdges": [["00000000000000000000000000000002", "00000000000000000000000000000001"]],
+      "candidateObjectIds": ["00000000000000000000000000000002"],
+      "expectedIssue": "kInvalidReference",
+      "actualIssue": "kInvalidReference",
+      "outputUnchanged": true,
+      "result": "PASS"
+    },
+    "RST-B06": {
+      "test": "RestoreStatefulValidation.RST_B06_TargetAndConnectorSamePayload",
+      "connector": {"id": "00000000000000000000000000000001", "attachedTarget": "00000000000000000000000000000002", "anchor": "AutoPerimeterAnchor", "routing": "kStraight"},
+      "target": {"id": "00000000000000000000000000000002", "kind": "Shape", "kindVersion": 1},
+      "expectedIssue": "kNone",
+      "actualIssue": "kNone",
+      "result": "PASS; B4 resolves the target from the staged overlay"
+    },
+    "RST-B07": {
+      "test": "RestoreStatefulValidation.RST_B07_ConnectorMissingTargetInvalidReference",
+      "connector": {"id": "00000000000000000000000000000002", "attachedTarget": "00000000000000000000000000000001", "anchor": "AutoPerimeterAnchor"},
+      "expectedIssue": "kInvalidReference",
+      "actualIssue": "kInvalidReference",
+      "outputUnchanged": true,
+      "result": "PASS"
+    },
+    "RST-B08": {
+      "test": "RestoreStatefulValidation.RST_B08_EquivalentReplayStopsAtB1",
+      "b1Disposition": "kAlreadyApplied",
+      "b6Invoked": false,
+      "appliedOperationLookups": 1,
+      "objectStoreLookups": 0,
+      "expectedIssue": "not applicable; B1 short-circuits before B6",
+      "result": "PASS"
+    },
+    "RST-B09": {
+      "test": "RestoreStatefulValidation.RST_B09_NewOperationIdExistingCandidateCollides",
+      "b1Disposition": "kNew",
+      "candidateObjectIds": ["00000000000000000000000000000001"],
+      "base": "candidate record already present from prior restore",
+      "expectedIssue": "kObjectAlreadyExists",
+      "actualIssue": "kObjectAlreadyExists",
+      "result": "PASS"
+    },
+    "RST-B10": {
+      "test": "RestoreStatefulValidation.RST_B10_BatchCollisionIsAtomic",
+      "candidateObjectIds": ["00000000000000000000000000000001", "00000000000000000000000000000002", "00000000000000000000000000000003"],
+      "base": "ObjectId 2 already exists",
+      "expectedIssue": "kObjectAlreadyExists",
+      "actualIssue": "kObjectAlreadyExists",
+      "outputUnchanged": true,
+      "baseUnchanged": true,
+      "result": "PASS; no partial plan"
+    },
+    "RST-B11": {
+      "test": "RestoreStatefulValidation.RST_B11_SourceLabelsDoNotChangeResult",
+      "testOnlyLabels": ["LocalUndo", "Replay", "Remote"],
+      "productionSourceParameter": false,
+      "expected": "identical StatefulResult and RestorePlanInputs for identical canonical operation/base",
+      "actual": "identical kNone and creates projection",
+      "result": "PASS"
+    },
+    "RST-B12": {
+      "test": "RestoreStatefulValidation.RST_B12_CheckpointLikeStateWithoutLedger",
+      "base": "unrelated valid checkpoint-like records; no deleted-ID/tombstone ledger",
+      "candidateObjectIds": ["00000000000000000000000000000001"],
+      "expectedIssue": "kNone",
+      "actualIssue": "kNone",
+      "historyOrTombstoneInput": false,
+      "result": "PASS"
+    }
+  },
+  "parityAndMutation": {
+    "stores": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "stateOwningCases": "RST-B01..RST-B07 and RST-B09..RST-B12 executed against both stores",
+    "issueParity": true,
+    "createsProjectionParity": true,
+    "baseProjectionBeforeAfterUnchanged": true,
+    "indexedIndexMatchesRebuild": true
+  },
+  "performance": {
+    "test": "RestoreStatefulValidation.RST_Performance_OneLookupPerCandidateAndNoScan",
+    "candidateIdentityIds": ["00000000000000000000000000000001", "00000000000000000000000000000002"],
+    "baseFindCalls": 2,
+    "findCallsByObjectId": {
+      "00000000000000000000000000000001": 1,
+      "00000000000000000000000000000002": 1
+    },
+    "candidateIdentityLookupStrategy": "stageCreate() performs the single lookup; no preceding requireAbsent() pass",
+    "requiredReferenceLookupsForSelfContainedParentTarget": 0,
+    "plannerAllObjectsCalls": 0,
+    "fullStoreScan": false
+  },
+  "verification": {
+    "focusedB6": {
+      "command": "ctest --test-dir build-semantic-b2 -R '^RestoreStatefulValidation\\.' --output-on-failure",
+      "result": "PASS 15/15"
+    },
+    "relevantB0B5Regressions": {
+      "command": "ctest --test-dir build-semantic-b2 -E 'RestoreStatefulValidation|canvas_semantic_runtime_boundaries' --output-on-failure",
+      "result": "PASS 160/160; 12 protobuf-off tests skipped"
+    },
+    "fullSemantic": {
+      "buildCommand": "cmake --build build-semantic-b2 -j2",
+      "command": "ctest --test-dir build-semantic-b2 --output-on-failure",
+      "result": "PASS 176/176; 12 protobuf-off tests skipped; 0 failed; 188 total"
+    },
+    "runtimeBoundaries": {
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "result": "PASS (51 contract files)"
+    },
+    "docs": {
+      "command": "python3 tools/check_docs.py",
+      "result": "PASS (280 Markdown files)"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  },
+  "scopeGuards": {
+    "authorizedPathsOnly": true,
+    "B1Changed": false,
+    "B2Changed": false,
+    "B3Changed": false,
+    "B4Changed": false,
+    "B5Changed": false,
+    "B7PlusChanged": false,
+    "PreparedApplyPlanChanged": false,
+    "OperationEngineChanged": false,
+    "ObjectStoreABIChanged": false,
+    "ObjectIndexChanged": false,
+    "SchemaOrProtobufChanged": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "objectStoreMutation": false,
+    "historyRewritten": false,
+    "forcePush": false,
+    "mergePerformed": false,
+    "PRCreated": false,
+    "untrackedBuildAndAndroidVisualDataPreserved": true,
+    "untrackedPaths": ["build-b2/", "build-semantic-b2/", "pocs/shared_engine/reports/poc01/android-visual-smoke/"]
+  }
+}

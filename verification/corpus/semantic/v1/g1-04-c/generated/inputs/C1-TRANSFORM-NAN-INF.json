@@ -1,0 +1,67 @@
+{
+  "caseId": "C1-TRANSFORM-NAN-INF",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "height": 24.0,
+            "shape_kind": 1,
+            "width": 32.0
+          },
+          "variant": 0
+        },
+        "erase_masks": [],
+        "id": "84b19152a62e77dfbe3708b59311f809",
+        "kind": 1,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            50,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "d52c305f9e9a00bac40bf117fec07d11",
+    "id": "182ae2a9598c07a959f7691d35ff1426",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "object_id": "84b19152a62e77dfbe3708b59311f809",
+            "transform": [
+              "f64:7ff8000000000000",
+              0.0,
+              0.0,
+              1.0,
+              "f64:7ff0000000000000",
+              "f64:fff0000000000000"
+            ]
+          }
+        ]
+      },
+      "variant": 4
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetTransforms",
+  "provenance": "DERIVED_GENERATED"
+}

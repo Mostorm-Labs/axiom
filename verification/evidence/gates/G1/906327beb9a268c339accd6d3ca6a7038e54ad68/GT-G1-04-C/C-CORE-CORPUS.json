@@ -1,0 +1,1233 @@
+{
+  "format": "axiom-gt-g1-04-c-core-corpus-v1",
+  "formatVersion": 1,
+  "packageRef": "12832ab5df9d8638ad1712b182d402d2a0e4d311",
+  "sourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+  "taskAnchor": {
+    "revision": "c7326f31caba88bd76d7e0b2845cae325e6e508a",
+    "relation": "ancestor"
+  },
+  "acceptedBasis": {
+    "c3SourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+    "c3MaterializedRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+    "c4SourceRef": "06b50a781a7b36d6c19f920711ccd416e455aa0b",
+    "c4MaterializedRef": "34584c185d8db84034faeb9c3607b92e495ca8f2"
+  },
+  "suiteId": "GT-G1-04-C-CORE",
+  "selectedCaseCount": 90,
+  "selectedExpectedCount": 90,
+  "selectedObservationCount": 180,
+  "operationFamilyCount": 15,
+  "missingMandatoryFamilies": [],
+  "wrongFamilyCaseIds": [],
+  "unselectedCaseIds": [],
+  "duplicateSuiteCaseIds": [],
+  "acceptedOpenPolicyCount": 0,
+  "acceptedExpectedAllAuthorityManual": true,
+  "expectedTruthWrites": 0,
+  "providerOutputUsedAsExpected": false,
+  "productionSemanticDeltaFromC3": 0,
+  "resultStatusCounts": {
+    "PASS": 61,
+    "FAIL": 29,
+    "OBSERVATION_ONLY": 0
+  },
+  "results": [
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ANCHOR",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ANCHOR/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ANCHOR/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ATTACHED-ENDPOINT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ATTACHED-ENDPOINT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-INVALID-END",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-INVALID-END/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-INVALID-END/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-ROUTING",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ROUTING/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-ROUTING/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-TARGET-CAPABILITY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-TARGET-CAPABILITY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-TARGET-CAPABILITY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-CONNECTOR-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-CONNECTOR-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-CONNECTOR-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-DELETE-CASCADE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-DELETE-CASCADE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-CASCADE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-CASCADE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-DELETE-DUPLICATE-TARGET",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-DUPLICATE-TARGET/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-DUPLICATE-TARGET/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-DELETE-MISSING-TARGET",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-MISSING-TARGET/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-MISSING-TARGET/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-DELETE-SUBTREE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-DELETE-SUBTREE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-SUBTREE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-SUBTREE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-DELETE-VALID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-DELETE-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-DELETE-VALID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-CAPABILITY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-CAPABILITY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-CAPABILITY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-EXISTING-MASK",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-EXISTING-MASK/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-EXISTING-MASK/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-GEOMETRY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-GEOMETRY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-GEOMETRY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-UNIQUENESS",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-UNIQUENESS/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-UNIQUENESS/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-ADD-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-ERASE-ADD-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-ADD-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-DUPLICATE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-DUPLICATE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-DUPLICATE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-MISSING",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-MISSING/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-MISSING/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-ERASE-REMOVE-WHOLE-REJECT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-WHOLE-REJECT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ERASE-REMOVE-WHOLE-REJECT/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-BOUNDARY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-BOUNDARY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-BOUNDARY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-LIMIT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-LIMIT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-LIMIT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-N",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-N",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-N/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-N/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-N-1",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-N-1",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-N-1/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-N-1/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-OVERFLOW",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-OVERFLOW/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-OVERFLOW/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-STRUCTURAL",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-STRUCTURAL/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-STRUCTURAL/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-GEOMETRY-WRONG-KIND",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-WRONG-KIND/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-GEOMETRY-WRONG-KIND/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-HIERARCHY-STICKY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-HIERARCHY-STICKY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-HIERARCHY-STICKY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-HIERARCHY-STICKY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-ID-COLLISION",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-ID-COLLISION",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ID-COLLISION/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-ID-COLLISION/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-IDEMPOTENT-EQUIVALENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IDEMPOTENT-EQUIVALENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IDEMPOTENT-EQUIVALENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-CONTENT-PRESENCE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-CONTENT-PRESENCE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-CONTENT-PRESENCE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-CONTENTMODE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-CONTENTMODE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-CONTENTMODE/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-INTRINSIC",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-INTRINSIC/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-INTRINSIC/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-LOCAL-SIZE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-LOCAL-SIZE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-LOCAL-SIZE/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-SOURCE-RECT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-SOURCE-RECT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-SOURCE-RECT/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-IMAGE-WRONG-KIND",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-WRONG-KIND/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-IMAGE-WRONG-KIND/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-INSERT-EXISTING-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-EXISTING-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-EXISTING-ID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-INSERT-HIERARCHY-CYCLE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-HIERARCHY-CYCLE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-HIERARCHY-CYCLE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STAGED-CONNECTOR",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STAGED-CONNECTOR/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STAGED-CONNECTOR/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STAGED-PARENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STAGED-PARENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STAGED-PARENT/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-INSERT-STICKY-CARDINALITY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STICKY-CARDINALITY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-STICKY-CARDINALITY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-INSERT-VALID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-INSERT-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-INSERT-VALID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PATCH-APPLICABILITY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-APPLICABILITY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-APPLICABILITY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PATCH-BRANCH-TYPE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-BRANCH-TYPE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-BRANCH-TYPE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PATCH-DUPLICATE-FIELD",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-DUPLICATE-FIELD/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-DUPLICATE-FIELD/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-FIELD-ID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PATCH-FIELD-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-FIELD-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-FIELD-ID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-PATCH-PRESENCE-DEFAULT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-PRESENCE-DEFAULT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-PRESENCE-DEFAULT/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PATCH-VALID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PATCH-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PATCH-VALID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-CYCLE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-CYCLE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-CYCLE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-GROUP-ANY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-GROUP-ANY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-GROUP-ANY/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-INVALID-PARENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-INVALID-PARENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-INVALID-PARENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-NONPARENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-NONPARENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-NONPARENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-ORDERKEY",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-ORDERKEY/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-ORDERKEY/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-STICKY-RICHTEXT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-STICKY-RICHTEXT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-STICKY-RICHTEXT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-PLACEMENT-VALID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-PLACEMENT-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-PLACEMENT-VALID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-ABSENT-REF",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-ABSENT-REF/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-ABSENT-REF/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-BATCH-EXISTING-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-BATCH-EXISTING-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-BATCH-EXISTING-ID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-CONNECTOR-TARGET-ABSENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-CONNECTOR-TARGET-ABSENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-ELIGIBLE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-ELIGIBLE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-ELIGIBLE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-EXISTING-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-EXISTING-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-EXISTING-ID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-EXISTING-ID-DIFFERENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-EXISTING-ID-DIFFERENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-LOCAL-REPLAY-REMOTE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-LOCAL-REPLAY-REMOTE/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-NO-TOMBSTONE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-NO-TOMBSTONE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-NO-TOMBSTONE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-OPID-BEFORE-EXISTENCE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-OPID-BEFORE-EXISTENCE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-SAME-PAYLOAD-NEW-OPID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-SAME-PAYLOAD-NEW-OPID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-STAGED-CONNECTOR",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-STAGED-CONNECTOR/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-STAGED-CONNECTOR/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RESTORE-STAGED-PARENT-CHILD",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-STAGED-PARENT-CHILD/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RESTORE-STAGED-PARENT-CHILD/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-INVALID-STEP",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-INVALID-STEP/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-INVALID-STEP/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-STABLE-REFS",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-STABLE-REFS/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-STABLE-REFS/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-UTF8-STYLE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-UTF8-STYLE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-UTF8-STYLE/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-RICHTEXT-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-RICHTEXT-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-RICHTEXT-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-SIZE-HARD-LIMIT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-HARD-LIMIT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-HARD-LIMIT/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SIZE-NONFINITE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-SIZE-NONFINITE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-NONFINITE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-NONFINITE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-SIZE-NONPOSITIVE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-NONPOSITIVE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-NONPOSITIVE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SIZE-VALID",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-SIZE-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-VALID/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-SIZE-WRONG-KIND",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-WRONG-KIND/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SIZE-WRONG-KIND/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SPLIT-PLAN",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-PLAN",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-PLAN/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-PLAN/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-REPLACEMENT-COLLISION",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-REPLACEMENT-COLLISION/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-REPLACEMENT-COLLISION/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-REPLACEMENT-STRUCTURAL/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-REPLACEMENT-STRUCTURAL/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-SPLIT-SOURCE-MISSING",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-SOURCE-MISSING/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-SPLIT-SOURCE-MISSING/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-STROKE-EXISTING-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-EXISTING-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-EXISTING-ID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-STROKE-INVALID-RECORD",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-INVALID-RECORD/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-INVALID-RECORD/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-STROKE-NEW-ID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-STROKE-NEW-ID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-NEW-ID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-NEW-ID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-STROKE-VALID",
+      "status": "FAIL",
+      "expectedRef": "authoring/expected.json#C1-STROKE-VALID",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-VALID/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-VALID/indexed"
+      ],
+      "diagnostics": [
+        "REFERENCE_GOLDEN_MISMATCH",
+        "INDEXED_GOLDEN_MISMATCH"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-STROKE-WRONG-CONTENT",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-WRONG-CONTENT/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-STROKE-WRONG-CONTENT/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-TRANSFORM-FINITE",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-FINITE",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-FINITE/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-FINITE/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-NAN-INF",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-NAN-INF/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-NAN-INF/indexed"
+      ]
+    },
+    {
+      "format": "axiom-g1-04-c-result-v1",
+      "formatVersion": 1,
+      "provenance": "CONFORMANCE_RESULT",
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "status": "PASS",
+      "expectedRef": "authoring/expected.json#C1-TRANSFORM-NEGATIVE-ZERO",
+      "observationRefs": [
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-NEGATIVE-ZERO/reference",
+        "g1-04-c://c3/906327beb9a268c339accd6d3ca6a7038e54ad68/C1-TRANSFORM-NEGATIVE-ZERO/indexed"
+      ]
+    }
+  ]
+}

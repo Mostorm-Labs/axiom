@@ -1,0 +1,89 @@
+{
+  "caseId": "C1-SIZE-WRONG-KIND",
+  "executionVariants": [],
+  "format": "axiom-g1-04-c-input-v1",
+  "formatVersion": 1,
+  "initialState": {
+    "objects": [
+      {
+        "content": {
+          "value": {
+            "document": {
+              "paragraphs": [
+                {
+                  "id": "a1715231d9382885c3276a79bc94cda5",
+                  "runs": [
+                    {
+                      "style": {
+                        "color": [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ],
+                        "font_resource_id": "a1715231d9382885c3276a79bc94cda5",
+                        "font_size": 12.0,
+                        "italic": false,
+                        "underline": false,
+                        "weight": 400
+                      },
+                      "text": "fixture"
+                    }
+                  ],
+                  "style": {
+                    "alignment": 1,
+                    "line_height": 1.0,
+                    "spacing_after": 0.0,
+                    "spacing_before": 0.0
+                  }
+                }
+              ]
+            }
+          },
+          "variant": 3
+        },
+        "erase_masks": [],
+        "id": "f97253564c670ed6ee25bfc71b45c1c5",
+        "kind": 4,
+        "kind_version": 1,
+        "placement": {
+          "order_key": [
+            135,
+            1
+          ],
+          "parent_id": null
+        },
+        "properties": [],
+        "transform": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "priorOperations": []
+  },
+  "operation": {
+    "document_id": "a06080717c2ed8b341013490118e1a99",
+    "id": "d9fa3241fd3d329544b44f63241a417e",
+    "payload": {
+      "value": {
+        "items": [
+          {
+            "height": 24.0,
+            "object_id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "width": 32.0
+          }
+        ]
+      },
+      "variant": 6
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  },
+  "operationFamily": "SetObjectSize",
+  "provenance": "DERIVED_GENERATED"
+}

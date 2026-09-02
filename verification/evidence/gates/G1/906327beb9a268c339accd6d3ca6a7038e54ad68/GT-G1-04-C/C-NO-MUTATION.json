@@ -1,0 +1,4736 @@
+{
+  "format": "axiom-gt-g1-04-c-no-mutation-v2",
+  "formatVersion": 2,
+  "sourceRef": "906327beb9a268c339accd6d3ca6a7038e54ad68",
+  "taskAnchor": {
+    "revision": "c7326f31caba88bd76d7e0b2845cae325e6e508a",
+    "relation": "ancestor"
+  },
+  "packageRef": "12832ab5df9d8638ad1712b182d402d2a0e4d311",
+  "acceptedCaseCount": 90,
+  "providerCount": 2,
+  "observationCount": 180,
+  "unchangedObservationCount": 180,
+  "allBeforeAfterEqual": true,
+  "observerMutationCalls": 0,
+  "fixtureSetupMutation": "bootstrap-only-before-beforeProjection",
+  "canonicalStoreProjection": "allObjects sorted by ObjectId; each object record carries id, kind, kindVersion, optional parentId, and orderKeyHex",
+  "records": [
+    {
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "provider": "reference",
+      "observationRecordIndex": 0,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-ANCHOR",
+      "provider": "indexed",
+      "observationRecordIndex": 1,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "27db3f32210d21361233421baa84857c",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "5b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "provider": "reference",
+      "observationRecordIndex": 2,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202",
+            "parentId": null
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202",
+            "parentId": null
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-ATTACHED-ENDPOINT",
+      "provider": "indexed",
+      "observationRecordIndex": 3,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202",
+            "parentId": null
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7c2190d91e742ddd539f1918ecdaaeab",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0202",
+            "parentId": null
+          },
+          {
+            "id": "c22e695db0b7444c02c05136a9273315",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "provider": "reference",
+      "observationRecordIndex": 4,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-INVALID-END",
+      "provider": "indexed",
+      "observationRecordIndex": 5,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "61e358895e0dca746d1d81dfca777b48",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "1801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "provider": "reference",
+      "observationRecordIndex": 6,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-ROUTING",
+      "provider": "indexed",
+      "observationRecordIndex": 7,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bfc48d8e74c79c368ef9efadadefc7f9",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "fd01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "provider": "reference",
+      "observationRecordIndex": 8,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602",
+            "parentId": null
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602",
+            "parentId": null
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-TARGET-CAPABILITY",
+      "provider": "indexed",
+      "observationRecordIndex": 9,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602",
+            "parentId": null
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09f4a4423730cdf4a0ff45be73669bdb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6602",
+            "parentId": null
+          },
+          {
+            "id": "c08501b13e31f0107ba610e4395b51d8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 10,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-CONNECTOR-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 11,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43e837de249ce4c6de1eb573911c9aa8",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "6e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-CASCADE",
+      "provider": "reference",
+      "observationRecordIndex": 12,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502",
+            "parentId": null
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502",
+            "parentId": null
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-CASCADE",
+      "provider": "indexed",
+      "observationRecordIndex": 13,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502",
+            "parentId": null
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "14ad662e612a53fa46af20b1aa5fd0f5",
+            "kind": 7,
+            "kindVersion": 1,
+            "orderKeyHex": "e502",
+            "parentId": null
+          },
+          {
+            "id": "bed0e2f48ca23c0992a9a9ae8f8bf109",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "provider": "reference",
+      "observationRecordIndex": 14,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-DUPLICATE-TARGET",
+      "provider": "indexed",
+      "observationRecordIndex": 15,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a7849b01a46bf15d846160b9e7eeb12a",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "provider": "reference",
+      "observationRecordIndex": 16,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-MISSING-TARGET",
+      "provider": "indexed",
+      "observationRecordIndex": 17,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-SUBTREE",
+      "provider": "reference",
+      "observationRecordIndex": 18,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-SUBTREE",
+      "provider": "indexed",
+      "observationRecordIndex": 19,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "43cfd6c2cf9ca00cac5f691a562b8369",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6402",
+            "parentId": "f38b01d3a95044a9ebe0aeb0b9fc836f"
+          },
+          {
+            "id": "f38b01d3a95044a9ebe0aeb0b9fc836f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 20,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-DELETE-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 21,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8426ce74042e7d207d42b65558a96cec",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "provider": "reference",
+      "observationRecordIndex": 22,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-CAPABILITY",
+      "provider": "indexed",
+      "observationRecordIndex": 23,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f0406598adf0cc6814fde095a1036849",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "provider": "reference",
+      "observationRecordIndex": 24,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-EXISTING-MASK",
+      "provider": "indexed",
+      "observationRecordIndex": 25,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "7e2e16481af00dda44cd1ce304c2f2e9",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "provider": "reference",
+      "observationRecordIndex": 26,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-GEOMETRY",
+      "provider": "indexed",
+      "observationRecordIndex": 27,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0e5907c36970c4ada8bddecc4db8207d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "provider": "reference",
+      "observationRecordIndex": 28,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9301",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9301",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-UNIQUENESS",
+      "provider": "indexed",
+      "observationRecordIndex": 29,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9301",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38d431b5398e9ef9357f0b4b00ddbfbb",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9301",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 30,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-ADD-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 31,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3a98b65cee5253944fb43cb239e2a644",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "6b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "provider": "reference",
+      "observationRecordIndex": 32,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-DUPLICATE",
+      "provider": "indexed",
+      "observationRecordIndex": 33,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ee070608fac0cc1c97b5a8c04639a83e",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "provider": "reference",
+      "observationRecordIndex": 34,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-MISSING",
+      "provider": "indexed",
+      "observationRecordIndex": 35,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c5675d46be8d9929ab642f3ab00d7922",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 36,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 37,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3e138dc9e7f1e8da440831ca93ea3cbc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "2a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "provider": "reference",
+      "observationRecordIndex": 38,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ERASE-REMOVE-WHOLE-REJECT",
+      "provider": "indexed",
+      "observationRecordIndex": 39,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c34fa39547d0b46e352569023e16be37",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "provider": "reference",
+      "observationRecordIndex": 40,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-BOUNDARY",
+      "provider": "indexed",
+      "observationRecordIndex": 41,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06b176ea38b64f41b467f94575eed8ac",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "provider": "reference",
+      "observationRecordIndex": 42,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-LIMIT",
+      "provider": "indexed",
+      "observationRecordIndex": 43,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4a64ac012c9fa0ed62fe1bd78b6c33bf",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "2401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-N",
+      "provider": "reference",
+      "observationRecordIndex": 44,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-N",
+      "provider": "indexed",
+      "observationRecordIndex": 45,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b0b1bfab58106423c739f8b7405f29e3",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-N-1",
+      "provider": "reference",
+      "observationRecordIndex": 46,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-N-1",
+      "provider": "indexed",
+      "observationRecordIndex": 47,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6e1230a882a04d1254294edf716264ed",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "b901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "provider": "reference",
+      "observationRecordIndex": 48,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-OVERFLOW",
+      "provider": "indexed",
+      "observationRecordIndex": 49,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "35da8e23f2a7737ae0309607980397a5",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "d101",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "provider": "reference",
+      "observationRecordIndex": 50,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-STRUCTURAL",
+      "provider": "indexed",
+      "observationRecordIndex": 51,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "17a94ac1b4c474897b289b81efd85530",
+            "kind": 3,
+            "kindVersion": 1,
+            "orderKeyHex": "7d01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "provider": "reference",
+      "observationRecordIndex": 52,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-GEOMETRY-WRONG-KIND",
+      "provider": "indexed",
+      "observationRecordIndex": 53,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "223a2d6f7c36a45a425eed27ea9d517f",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "da01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-HIERARCHY-STICKY",
+      "provider": "reference",
+      "observationRecordIndex": 54,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302",
+            "parentId": null
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302",
+            "parentId": null
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-HIERARCHY-STICKY",
+      "provider": "indexed",
+      "observationRecordIndex": 55,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302",
+            "parentId": null
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "56b275f608f4d2e1be5d31355bc1b7be",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "f302",
+            "parentId": null
+          },
+          {
+            "id": "de32c63f8f6865964654bc11cb18630f",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "1d01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ID-COLLISION",
+      "provider": "reference",
+      "observationRecordIndex": 56,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-ID-COLLISION",
+      "provider": "indexed",
+      "observationRecordIndex": 57,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "provider": "reference",
+      "observationRecordIndex": 58,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IDEMPOTENT-EQUIVALENT",
+      "provider": "indexed",
+      "observationRecordIndex": 59,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "provider": "reference",
+      "observationRecordIndex": 60,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-CONTENT-PRESENCE",
+      "provider": "indexed",
+      "observationRecordIndex": 61,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6ee26a01d504475d963a0b3695fa58a5",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "provider": "reference",
+      "observationRecordIndex": 62,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-CONTENTMODE",
+      "provider": "indexed",
+      "observationRecordIndex": 63,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "1711184e7899723f6e400d25d9017589",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "0801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "provider": "reference",
+      "observationRecordIndex": 64,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-INTRINSIC",
+      "provider": "indexed",
+      "observationRecordIndex": 65,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6052dd45f5d0a27ef07faa57a275d454",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "provider": "reference",
+      "observationRecordIndex": 66,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-LOCAL-SIZE",
+      "provider": "indexed",
+      "observationRecordIndex": 67,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "09298116f69be9e2e901cace875b0048",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "e201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "provider": "reference",
+      "observationRecordIndex": 68,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "dc01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "dc01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-RUNTIME-RESOURCE-NONSEMANTIC",
+      "provider": "indexed",
+      "observationRecordIndex": 69,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "dc01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6b6b2f871f566ef955384227fadf0269",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "dc01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "provider": "reference",
+      "observationRecordIndex": 70,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "3001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "3001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-SOURCE-RECT",
+      "provider": "indexed",
+      "observationRecordIndex": 71,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "3001",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cbb1435358a905fb5cd11e77d6cd0c6b",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "3001",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 72,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "c501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "c501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 73,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "c501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "2327a9670c2abbb9200c3c02c11a4835",
+            "kind": 2,
+            "kindVersion": 2,
+            "orderKeyHex": "c501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "provider": "reference",
+      "observationRecordIndex": 74,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-IMAGE-WRONG-KIND",
+      "provider": "indexed",
+      "observationRecordIndex": 75,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "cd57607514ab2c06ce335f0a422c2645",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "provider": "reference",
+      "observationRecordIndex": 76,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-EXISTING-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 77,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3c9dfb5653cf68f85381a4c6c4e9e13",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "f401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "provider": "reference",
+      "observationRecordIndex": 78,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-HIERARCHY-CYCLE",
+      "provider": "indexed",
+      "observationRecordIndex": 79,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "provider": "reference",
+      "observationRecordIndex": 80,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STAGED-CONNECTOR",
+      "provider": "indexed",
+      "observationRecordIndex": 81,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "provider": "reference",
+      "observationRecordIndex": 82,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STAGED-PARENT",
+      "provider": "indexed",
+      "observationRecordIndex": 83,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "provider": "reference",
+      "observationRecordIndex": 84,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-STICKY-CARDINALITY",
+      "provider": "indexed",
+      "observationRecordIndex": 85,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 86,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-INSERT-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 87,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "provider": "reference",
+      "observationRecordIndex": 88,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "d701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "d701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-APPLICABILITY",
+      "provider": "indexed",
+      "observationRecordIndex": 89,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "d701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "bdf3cb2de074055244f970019a6f470a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "d701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "provider": "reference",
+      "observationRecordIndex": 90,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-BRANCH-TYPE",
+      "provider": "indexed",
+      "observationRecordIndex": 91,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dd5aa95ba10c04113ce0b14a4e934f80",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "a601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "provider": "reference",
+      "observationRecordIndex": 92,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-DUPLICATE-FIELD",
+      "provider": "indexed",
+      "observationRecordIndex": 93,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "6c59294a24577b51c8c62df57b6fb346",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-FIELD-ID",
+      "provider": "reference",
+      "observationRecordIndex": 94,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-FIELD-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 95,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "036296bac7fdb9d722f5e534bac4d6bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "provider": "reference",
+      "observationRecordIndex": 96,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-PRESENCE-DEFAULT",
+      "provider": "indexed",
+      "observationRecordIndex": 97,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b55fd6cd6a187310ccc3fdc8248e06f2",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "d301",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 98,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PATCH-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 99,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "0a222cd010297ce23d11a7ebc4e3462d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "provider": "reference",
+      "observationRecordIndex": 100,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-CYCLE",
+      "provider": "indexed",
+      "observationRecordIndex": 101,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "38dc3009ba2fc131fe0856cb11b0dca8",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "provider": "reference",
+      "observationRecordIndex": 102,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802",
+            "parentId": null
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802",
+            "parentId": null
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-GROUP-ANY",
+      "provider": "indexed",
+      "observationRecordIndex": 103,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802",
+            "parentId": null
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5a03fcb61d071948c334e24ed13ddb40",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "0802",
+            "parentId": null
+          },
+          {
+            "id": "79e5616a8b5a59f1c433ae2edb26616b",
+            "kind": 9,
+            "kindVersion": 1,
+            "orderKeyHex": "f801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "provider": "reference",
+      "observationRecordIndex": 104,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101",
+            "parentId": null
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101",
+            "parentId": null
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-INVALID-PARENT",
+      "provider": "indexed",
+      "observationRecordIndex": 105,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101",
+            "parentId": null
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "9b848145270e54fc846d428f44b6241d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "9101",
+            "parentId": null
+          },
+          {
+            "id": "e19f5f3f4c9eec1695348734f04989bf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7d02",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "provider": "reference",
+      "observationRecordIndex": 106,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501",
+            "parentId": null
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501",
+            "parentId": null
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-NONPARENT",
+      "provider": "indexed",
+      "observationRecordIndex": 107,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501",
+            "parentId": null
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "141267096cdac7f68d12044008222b7b",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "5501",
+            "parentId": null
+          },
+          {
+            "id": "5b7b98cc5bfd6a1c291e71f776721d43",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "e102",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "provider": "reference",
+      "observationRecordIndex": 108,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-ORDERKEY",
+      "provider": "indexed",
+      "observationRecordIndex": 109,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a6c8f5334b9e4495f90cc1cbffc6ea35",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "provider": "reference",
+      "observationRecordIndex": 110,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702",
+            "parentId": null
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702",
+            "parentId": null
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-STICKY-RICHTEXT",
+      "provider": "indexed",
+      "observationRecordIndex": 111,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702",
+            "parentId": null
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "3093a7ce0643878d7dc592f891bf8b0a",
+            "kind": 8,
+            "kindVersion": 1,
+            "orderKeyHex": "7702",
+            "parentId": null
+          },
+          {
+            "id": "4fd1e791957b2865e99e28aa46cd77f0",
+            "kind": 4,
+            "kindVersion": 1,
+            "orderKeyHex": "ec01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 112,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-PLACEMENT-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 113,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8b53f77bb899b4dade48d3b920457584",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "provider": "reference",
+      "observationRecordIndex": 114,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-ABSENT-REF",
+      "provider": "indexed",
+      "observationRecordIndex": 115,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "provider": "reference",
+      "observationRecordIndex": 116,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-BATCH-EXISTING-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 117,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "ad6349183cfb3156dd090531154dfa53",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "4c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "provider": "reference",
+      "observationRecordIndex": 118,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-CONNECTOR-TARGET-ABSENT",
+      "provider": "indexed",
+      "observationRecordIndex": 119,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "provider": "reference",
+      "observationRecordIndex": 120,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-ELIGIBLE",
+      "provider": "indexed",
+      "observationRecordIndex": 121,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "provider": "reference",
+      "observationRecordIndex": 122,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-EXISTING-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 123,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "480cc6dee4847ca62755d22f303ced73",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0a01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "provider": "reference",
+      "observationRecordIndex": 124,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-EXISTING-ID-DIFFERENT",
+      "provider": "indexed",
+      "observationRecordIndex": 125,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "290704011e6f7671d19fd93ec375987d",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "b501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "provider": "reference",
+      "observationRecordIndex": 126,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-LOCAL-REPLAY-REMOTE",
+      "provider": "indexed",
+      "observationRecordIndex": 127,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "provider": "reference",
+      "observationRecordIndex": 128,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-NO-TOMBSTONE",
+      "provider": "indexed",
+      "observationRecordIndex": 129,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "provider": "reference",
+      "observationRecordIndex": 130,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-OPID-BEFORE-EXISTENCE",
+      "provider": "indexed",
+      "observationRecordIndex": 131,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "provider": "reference",
+      "observationRecordIndex": 132,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-SAME-PAYLOAD-NEW-OPID",
+      "provider": "indexed",
+      "observationRecordIndex": 133,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "provider": "reference",
+      "observationRecordIndex": 134,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-STAGED-CONNECTOR",
+      "provider": "indexed",
+      "observationRecordIndex": 135,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "provider": "reference",
+      "observationRecordIndex": 136,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RESTORE-STAGED-PARENT-CHILD",
+      "provider": "indexed",
+      "observationRecordIndex": 137,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "provider": "reference",
+      "observationRecordIndex": 138,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "c801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "c801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-INVALID-STEP",
+      "provider": "indexed",
+      "observationRecordIndex": 139,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "c801",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a1012aecd9bde5c7dc177e771c53c895",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "c801",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "provider": "reference",
+      "observationRecordIndex": 140,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "7b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "7b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-STABLE-REFS",
+      "provider": "indexed",
+      "observationRecordIndex": 141,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "7b01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "4c5f11745d7deb445a5562c4fbbf2edd",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "7b01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "provider": "reference",
+      "observationRecordIndex": 142,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "df01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "df01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-UTF8-STYLE",
+      "provider": "indexed",
+      "observationRecordIndex": 143,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "df01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "834e0ca59240f59585e04f825701bdf5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "df01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 144,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-RICHTEXT-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 145,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "de2c3f49e875c94da3759638ff189d1b",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "d901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "provider": "reference",
+      "observationRecordIndex": 146,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-HARD-LIMIT",
+      "provider": "indexed",
+      "observationRecordIndex": 147,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a28f13bfb5ea9ea589a577455b1a05c6",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "0e01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-NONFINITE",
+      "provider": "reference",
+      "observationRecordIndex": 148,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-NONFINITE",
+      "provider": "indexed",
+      "observationRecordIndex": 149,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "dfe82e20ecf7a0755faa57c27a00fe78",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "7601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "provider": "reference",
+      "observationRecordIndex": 150,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-NONPOSITIVE",
+      "provider": "indexed",
+      "observationRecordIndex": 151,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c0d60a6a7167a852244ba773f95a3bc",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 152,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 153,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "a3535ca74d8bf9822fdc8506e509d53c",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "8c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "provider": "reference",
+      "observationRecordIndex": 154,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "8701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "8701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SIZE-WRONG-KIND",
+      "provider": "indexed",
+      "observationRecordIndex": 155,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "8701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "f97253564c670ed6ee25bfc71b45c1c5",
+            "kind": 4,
+            "kindVersion": 4,
+            "orderKeyHex": "8701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-PLAN",
+      "provider": "reference",
+      "observationRecordIndex": 156,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "a501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "a501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-PLAN",
+      "provider": "indexed",
+      "observationRecordIndex": 157,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "a501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "42de8b5e79273c23f20fb40ba5cc8bee",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "a501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "provider": "reference",
+      "observationRecordIndex": 158,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "bd01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "bd01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-REPLACEMENT-COLLISION",
+      "provider": "indexed",
+      "observationRecordIndex": 159,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "bd01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c0e49eae0fa6dc8289cd103e72f680a4",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "bd01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "provider": "reference",
+      "observationRecordIndex": 160,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "c201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "c201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-REPLACEMENT-STRUCTURAL",
+      "provider": "indexed",
+      "observationRecordIndex": 161,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "c201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "5c543abb54c7a8eb005c358e4b5d97d5",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "c201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "provider": "reference",
+      "observationRecordIndex": 162,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-SPLIT-SOURCE-MISSING",
+      "provider": "indexed",
+      "observationRecordIndex": 163,
+      "beforeProjection": {
+        "objects": []
+      },
+      "afterProjection": {
+        "objects": []
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "provider": "reference",
+      "observationRecordIndex": 164,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-EXISTING-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 165,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0501",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "8bc0a0b05362b1c306318697a61ba80a",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0501",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "provider": "reference",
+      "observationRecordIndex": 166,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-INVALID-RECORD",
+      "provider": "indexed",
+      "observationRecordIndex": 167,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "06aacacfb49fbed2f7dfd2d12073201f",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6901",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-NEW-ID",
+      "provider": "reference",
+      "observationRecordIndex": 168,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-NEW-ID",
+      "provider": "indexed",
+      "observationRecordIndex": 169,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0c01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "b3ab3bf3a40d3c01806daa3672c6e657",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "0c01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-VALID",
+      "provider": "reference",
+      "observationRecordIndex": 170,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-VALID",
+      "provider": "indexed",
+      "observationRecordIndex": 171,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6601",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "73603b472450c1f0909c1673f615012c",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "6601",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "provider": "reference",
+      "observationRecordIndex": 172,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "3701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "3701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-STROKE-WRONG-CONTENT",
+      "provider": "indexed",
+      "observationRecordIndex": 173,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "3701",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "d02afb8eb1be66a97477bd329a67b39e",
+            "kind": 5,
+            "kindVersion": 5,
+            "orderKeyHex": "3701",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-FINITE",
+      "provider": "reference",
+      "observationRecordIndex": 174,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-FINITE",
+      "provider": "indexed",
+      "observationRecordIndex": 175,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "98c6ce1d63fc252cb4c637d8db98d9cf",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "cf01",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "provider": "reference",
+      "observationRecordIndex": 176,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-NAN-INF",
+      "provider": "indexed",
+      "observationRecordIndex": 177,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "84b19152a62e77dfbe3708b59311f809",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "3201",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "provider": "reference",
+      "observationRecordIndex": 178,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    },
+    {
+      "caseId": "C1-TRANSFORM-NEGATIVE-ZERO",
+      "provider": "indexed",
+      "observationRecordIndex": 179,
+      "beforeProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401",
+            "parentId": null
+          }
+        ]
+      },
+      "afterProjection": {
+        "objects": [
+          {
+            "id": "c3b7df53467ad5d2a766d55231a624e1",
+            "kind": 1,
+            "kindVersion": 1,
+            "orderKeyHex": "1401",
+            "parentId": null
+          }
+        ]
+      },
+      "beforeAfterEqual": true
+    }
+  ]
+}

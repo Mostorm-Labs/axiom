@@ -1,0 +1,32 @@
+{
+  "format": "axiom-g1-04-c-authority-map-v1",
+  "source_ref": "8a5d03635908fb0a14544396c488ddb20a911c64",
+  "package_ref": "a9561da5bc781f148d12c85f90c34f860734a042",
+  "task_anchor": {"revision":"5f0f061ec7db1d0490941cf3f4e8dbd9eb26b539","relation":"ancestor"},
+  "authority_pages": ["notion:3cc4c57a-590c-81ae-ab73-d75501c47169","notion:3c94c57a-590c-8153-955e-dfbb4b6b7da3","notion:3c94c57a-590c-81cf-97eb-f6c89fce563e","notion:3ca4c57a-590c-8150-b3bd-cb1d51eb0b83","notion:3cb4c57a-590c-815a-b8fa-cd785a837da7","notion:3c94c57a-590c-81e1-aea7-eae7ea8a8c88"],
+  "case_count": 19,
+  "expected_count": 19,
+  "blocking_count": 19,
+  "production_semantic_files_changed": false,
+  "requirement_coverage": [
+    {"requirement":"P20:C1:InsertObjects","operation_family":"InsertObjects","intent_family":"valid-staged-insert","case_ids":["C1-INSERT-VALID"],"blocking":true},
+    {"requirement":"P20:C1:DeleteObjects","operation_family":"DeleteObjects","intent_family":"subtree-closure","case_ids":["C1-DELETE-CASCADE"],"blocking":true},
+    {"requirement":"P20:C1:RestoreObjects","operation_family":"RestoreObjects","intent_family":"current-state-eligibility","case_ids":["C1-RESTORE-ELIGIBLE"],"blocking":true},
+    {"requirement":"P20:C1:SetPlacements","operation_family":"SetPlacements","intent_family":"valid-move","case_ids":["C1-PLACEMENT-VALID"],"blocking":true},
+    {"requirement":"P20:C1:SetTransforms","operation_family":"SetTransforms","intent_family":"finite-canonical-transform","case_ids":["C1-TRANSFORM-FINITE"],"blocking":true},
+    {"requirement":"P20:C1:PatchProperties","operation_family":"PatchProperties","intent_family":"valid-set-clear","case_ids":["C1-PATCH-VALID"],"blocking":true},
+    {"requirement":"P20:C1:SetObjectSize","operation_family":"SetObjectSize","intent_family":"valid-size","case_ids":["C1-SIZE-VALID"],"blocking":true},
+    {"requirement":"P20:C1:SetVectorPathGeometry","operation_family":"SetVectorPathGeometry","intent_family":"aggregate-boundary","case_ids":["C1-GEOMETRY-BOUNDARY","C1-GEOMETRY-LIMIT"],"blocking":true},
+    {"requirement":"P20:C1:SetImageContent","operation_family":"SetImageContent","intent_family":"valid-image-content","case_ids":["C1-IMAGE-VALID"],"blocking":true},
+    {"requirement":"P20:C1:AddStroke","operation_family":"AddStroke","intent_family":"valid-stroke","case_ids":["C1-STROKE-VALID"],"blocking":true},
+    {"requirement":"P20:C1:SplitStrokes","operation_family":"SplitStrokes","intent_family":"atomic-split-plan","case_ids":["C1-SPLIT-PLAN"],"blocking":true},
+    {"requirement":"P20:C1:AddEraseMasks","operation_family":"AddEraseMasks","intent_family":"valid-mask","case_ids":["C1-ERASE-ADD-VALID"],"blocking":true},
+    {"requirement":"P20:C1:RemoveEraseMasks","operation_family":"RemoveEraseMasks","intent_family":"valid-removal","case_ids":["C1-ERASE-REMOVE-VALID"],"blocking":true},
+    {"requirement":"P20:C1:EditRichText","operation_family":"EditRichText","intent_family":"ordered-steps","case_ids":["C1-RICHTEXT-VALID"],"blocking":true},
+    {"requirement":"P20:C1:SetConnectorContent","operation_family":"SetConnectorContent","intent_family":"valid-endpoints","case_ids":["C1-CONNECTOR-VALID"],"blocking":true},
+    {"requirement":"P20:C1:idempotency-equivalent","operation_family":"RestoreObjects","intent_family":"same-operation-equivalent-payload","case_ids":["C1-IDEMPOTENT-EQUIVALENT"],"blocking":true},
+    {"requirement":"P20:C1:id-collision","operation_family":"InsertObjects","intent_family":"same-operation-different-payload","case_ids":["C1-ID-COLLISION"],"blocking":true},
+    {"requirement":"P20:C1:hierarchy-cardinality","operation_family":"SetPlacements","intent_family":"sticky-cardinality","case_ids":["C1-HIERARCHY-STICKY"],"blocking":true}
+  ],
+  "verification": {"focused_c0_c1":"PASS","npm_run_validate":"PASS","git_diff_check":"PASS"}
+}

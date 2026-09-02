@@ -1,0 +1,119 @@
+{
+  "format": "axiom-gt-g1-04-b-b8-prepared-apply-plan-v2",
+  "task": "GT-G1-04-B/B8",
+  "stage": "P36_FIX_REVERIFICATION",
+  "sourceCommit": "3ccc8fa33d526e8db6e643c1925dab7dd247af1c",
+  "testedCommit": "3ccc8fa33d526e8db6e643c1925dab7dd247af1c",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "packageRef": "docs/superpowers/plans/2026-08-30-gt-g1-04-b8-prepared-apply-plan-p31.md@534ce78a4edd0d275890ce68eb726e3d925fc06b",
+  "priorMaterializedRef": "7f1172d22b01248081c9b35648ca46369ee41ee0",
+  "repairLineage": {
+    "b8TestRepair": "c65d08b6c6c5427253d188417901068254301d2d",
+    "targetedB7BuildRepair": "29234f26267ff7d218d161cf925c0cc9f594f7f6",
+    "normalizationFixtureRepair": "3ccc8fa33d526e8db6e643c1925dab7dd247af1c",
+    "historyRewritten": false,
+    "forcePush": false
+  },
+  "p35Findings": [
+    {
+      "class": "TEST_DEFECT",
+      "owner": "GT-G1-04-B/B8 P32 test-and-evidence package",
+      "repair": "expanded apply_plan_test.cpp to directly prove the frozen P31 obligations"
+    },
+    {
+      "class": "IMPLEMENTATION_DEFECT",
+      "owner": "B7 operation-specific state validation production source",
+      "repair": "semantic-no-op control-flow formatting for GCC -Werror=misleading-indentation"
+    },
+    {
+      "class": "TEST_DEFECT",
+      "owner": "existing semantic normalization test fixture",
+      "repair": "replaced partial aggregate initialization with an explicitly default-initialized ObjectRecord helper"
+    }
+  ],
+  "preparedApplyPlanContract": {
+    "dispatch": "all 15 OperationPayload alternatives",
+    "shortCircuit": {
+      "alreadyApplied": "kAlreadyApplied; error kNone; no plan; zero ObjectStore reads",
+      "collision": "kRejected; exact kOperationIdCollision; no plan; zero ObjectStore reads"
+    },
+    "projection": {
+      "creates": ["InsertObjects", "RestoreObjects", "AddStroke", "SplitStrokes replacement_creates"],
+      "replacements": ["SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"],
+      "deletes": ["DeleteObjects final_delete_set", "SplitStrokes source_delete_ids"],
+      "deleteClosure": "DeleteObjects only; SplitStrokes must remain nullopt"
+    },
+    "invariants": {
+      "prepared": "error.issue == kNone and plan present",
+      "alreadyApplied": "error.issue == kNone and no plan",
+      "rejected": "error.issue != kNone and no plan"
+    }
+  },
+  "proofMap": {
+    "alreadyAppliedZeroObjectStoreLookup": "ApplyPlan.AlreadyAppliedShortCircuitsBeforeObjectStoreLookup",
+    "collisionZeroObjectStoreLookupAndExactIssue": "ApplyPlan.CollisionShortCircuitsBeforeObjectStoreLookupWithExactIssue",
+    "exactLowerRejectionAndNoPartialPlan": "ApplyPlan.LowerLevelRejectionPreservesIssueAndLeaksNoPartialPlan",
+    "insertCreatesProjectionAndPreparedInvariant": "ApplyPlan.NewInsertProjectsCreatesAndPreparedInvariant",
+    "deleteObjectsExactB5Closure": "ApplyPlan.DeleteObjectsProjectsAcceptedB5ClosureExactly",
+    "restoreObjectsCreatesProjection": "ApplyPlan.RestoreObjectsProjectsCreates",
+    "splitStrokesGenericDeletesCreatesNoClosure": "ApplyPlan.SplitStrokesUsesGenericDeletesAndCreatesWithoutDeleteClosure",
+    "representativeB7CreateProjection": "ApplyPlan.RepresentativeB7CreateProjectionUsesAddStroke",
+    "representativeB7ReplacementProjection": "ApplyPlan.RepresentativeB7ReplacementProjectionUsesSetTransforms",
+    "all15DispatchSmoke": "ApplyPlan.AllFifteenOperationKindsDispatchSmoke",
+    "deterministicRepeatedPlanning": "ApplyPlan.RepeatedPlanningAgainstUnchangedStateIsDeterministic",
+    "operationEngineBoundary": "OperationEngineBoundary.DelegatesToPlanner"
+  },
+  "nonIngress": {
+    "objectStoreMutationInB8Planner": false,
+    "objectStoreMutatorInB8Production": false,
+    "atomicApply": false,
+    "semanticGeneration": false,
+    "changeSetDependencyIntroducedByB8": false,
+    "history": false,
+    "dataBridge": false,
+    "outbox": false,
+    "rendererOrScene": false,
+    "B9": false,
+    "B10": false,
+    "GTG104C": false,
+    "GTG105": false
+  },
+  "verification": {
+    "g1SemanticCodec": {
+      "runId": 33291086263,
+      "status": "PASS",
+      "sourceSha": "3ccc8fa33d526e8db6e643c1925dab7dd247af1c",
+      "coverage": ["protobuf-enabled hosted build", "full semantic CTest", "authority golden regeneration", "GT-G1-02R fixture regeneration", "semantic contract checks", "production differential checks", "evidence generation", "whitespace"]
+    },
+    "g0PlatformProtocolSeed": {
+      "runId": 33291086179,
+      "status": "PASS"
+    },
+    "g0PrCiDag": {
+      "runId": 33291086317,
+      "status": "PASS",
+      "coverage": ["schema validation", "host-debug semantic conformance CTest", "56-vector protocol seed", "web platform contract", "android platform contract", "windows native platform contract", "apple platform contract", "aggregated PR gate"]
+    }
+  },
+  "scope": {
+    "b8RepairFile": "runtime/semantic/tests/apply_plan_test.cpp",
+    "targetedRegressionRepairFiles": [
+      "runtime/semantic/src/operation_specific_validation.cpp",
+      "runtime/semantic/tests/normalization_test.cpp"
+    ],
+    "targetedRepairsAuthorizedByP35": true,
+    "behavioralAuthorityChanged": false,
+    "B9Started": false,
+    "B10Started": false,
+    "GTG104CStarted": false,
+    "GTG105Started": false
+  },
+  "materialization": {
+    "sourceCommitPushed": true,
+    "evidenceCommitPushed": true,
+    "evidenceOnlyCommitExpected": true,
+    "historyRewritten": false,
+    "forcePush": false
+  },
+  "status": "READY_FOR_SAME_P34_RESUME"
+}

@@ -1,0 +1,178 @@
+{
+  "format": "axiom-gt-g1-04-b-b5-delete-closure-evidence-v1",
+  "task": "GT-G1-04-B/B5",
+  "sourceCommit": "50772b4b1d085a669e09fd2d4011e9f71a8c144e",
+  "testedCommit": "50772b4b1d085a669e09fd2d4011e9f71a8c144e",
+  "implementationCommit": "098f715a563ebab8b4d7499a62049fe7bb2f99e8",
+  "coverageCommits": [
+    "5b72c9bbfae8adde403128e84586f8796fe06686",
+    "f01761b6cfc9374df4495d05a57bcc5cda9585af",
+    "a6e480e03124bbe3bf776e3d326ad0b600a8de46",
+    "8b564e2c88d50715b70c52a71b01fad016e535c2",
+    "50772b4b1d085a669e09fd2d4011e9f71a8c144e"
+  ],
+  "repairCommit": "50772b4b1d085a669e09fd2d4011e9f71a8c144e",
+  "branch": "codex/gt-g1-04-operation-apply",
+  "authority": {
+    "b5P31Authorization": "notion:3ca4c57a-590c-81cc-b6f4-f48d56c9ea3e",
+    "baseImplementationPlan": "docs/superpowers/plans/2026-08-28-gt-g1-04-b-stateful-validation.md@6357f7e19426f8c7300c11595c26dbb0cf13d8ae",
+    "b5P31Addendum": "docs/superpowers/plans/2026-08-29-gt-g1-04-b5-delete-closure-p31.md@c9801ffa2ebba09b6cced88a6b2c840e5460e3ad",
+    "p34ReviewRecord": "notion:3cb4c57a-590c-81e8-98de-d904f067350d"
+  },
+  "p34Classification": {
+    "B5-01": "TEST_DEFECT + EVIDENCE_GAP: frozen contract required runtime fixed-point and reverse-relation observability, while prior evidence used source inspection",
+    "B5-02": "TEST_DEFECT + EVIDENCE_GAP: Reference/Indexed differential asserted only final_delete_set",
+    "B5-03": "EVIDENCE_GAP: durable history did not independently prove historical RED-first chronology",
+    "B5-04": "TEST_DEFECT + EVIDENCE_GAP: MissingAtomic asserted only final_delete_set preservation"
+  },
+  "cases": {
+    "directDescendantMultiple": {
+      "test": "DeleteClosure.IndependentOracleDirectDescendantMultiple",
+      "requestedIds": ["00000000000000000000000000000001"],
+      "expected": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "0000000000000000000000000000000b"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "0000000000000000000000000000000b"]
+      },
+      "actual": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "0000000000000000000000000000000b"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "0000000000000000000000000000000b"]
+      },
+      "oracleAssertion": "executable test equality against independent test-only oracle"
+    },
+    "referenceIndexedParity": {
+      "test": "DeleteClosure.DeterministicRepeatedParity",
+      "fixture": "requested root, hierarchy descendant, Connector cascade, and multi-wave closure",
+      "reference": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "00000000000000000000000000000014"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "00000000000000000000000000000014"]
+      },
+      "indexed": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "00000000000000000000000000000014"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "00000000000000000000000000000014"]
+      },
+      "parity": "all four ordered vectors byte/identity equivalent"
+    },
+    "multiWave": {
+      "test": "DeleteClosure.MultiWave",
+      "requestedIds": ["00000000000000000000000000000001"],
+      "fixture": "Shape A; Connector C1 -> A; Shape B is a hierarchy child of C1; Connector C2 -> B",
+      "actual": {
+        "requested_delete_ids": ["00000000000000000000000000000001"],
+        "resolved_hierarchy_closure": ["00000000000000000000000000000002"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000000a", "00000000000000000000000000000014"],
+        "final_delete_set": ["00000000000000000000000000000001", "00000000000000000000000000000002", "0000000000000000000000000000000a", "00000000000000000000000000000014"]
+      },
+      "waveDiscovery": [
+        {"wave": 0, "hierarchyAdditions": [], "connectorAdditions": ["0000000000000000000000000000000a"]},
+        {"wave": 1, "hierarchyAdditions": ["00000000000000000000000000000002"], "connectorAdditions": ["00000000000000000000000000000014"]},
+        {"wave": 2, "hierarchyAdditions": [], "connectorAdditions": []}
+      ]
+    },
+    "missingAtomic": {
+      "test": "DeleteClosure.MissingAtomic",
+      "issue": "kObjectMissing",
+      "preCall": {
+        "requested_delete_ids": ["0000000000000000000000000000005a"],
+        "resolved_hierarchy_closure": ["0000000000000000000000000000005b"],
+        "resolved_connector_cascade_closure": ["0000000000000000000000000000005c"],
+        "final_delete_set": ["0000000000000000000000000000005d"]
+      },
+      "outputUnchanged": {
+        "requested_delete_ids": true,
+        "resolved_hierarchy_closure": true,
+        "resolved_connector_cascade_closure": true,
+        "final_delete_set": true
+      }
+    },
+    "stagedOverlay": {
+      "test": "DeleteClosure.StagedCreateReplaceDelete",
+      "createObserved": true,
+      "replacementObserved": true,
+      "deleteObserved": true,
+      "canonicalMutation": false
+    },
+    "noMutation": {
+      "tests": ["DeleteClosure.NoMutationAndSingleProjectionScan", "DeleteClosure.MultiWaveProjectionScanStillOnce", "DeleteClosure.IndexedIndexRemainsConsistentAfterClosure"],
+      "referenceProjectionUnchanged": true,
+      "indexedProjectionUnchanged": true,
+      "stagedProjectionUnchanged": true,
+      "indexedIndexRebuildMatch": true
+    }
+  },
+  "runtimeInstrumentation": {
+    "approach": "B5-local internal trace seam delegates to the real production closure implementation; public resolver delegates with trace disabled",
+    "publicSemanticAbiChanged": false,
+    "serialized": false,
+    "canonicalState": false,
+    "maintainedReverseIndex": false,
+    "test": "DeleteClosure.RuntimeTraceCapturesFixedPointMetrics",
+    "allObjectsCalls": 1,
+    "childrenCalls": 4,
+    "findCalls": 1,
+    "fixedPointWaves": 3,
+    "reverseRelationLookups": 5,
+    "perWaveHierarchyAdditions": [[], ["00000000000000000000000000000002"], []],
+    "perWaveConnectorAdditions": [["0000000000000000000000000000000a"], ["00000000000000000000000000000014"], []],
+    "projectionScanInvariant": "allObjects full projection scan == 1 across multi-wave closure"
+  },
+  "redProvenance": {
+    "type": "RETROSPECTIVE_RED_REVERIFICATION",
+    "historicalRedArtifactFound": false,
+    "baseline": "c9801ffa2ebba09b6cced88a6b2c840e5460e3ad",
+    "command": "git worktree add --detach <disposable> c9801ffa2ebba09b6cced88a6b2c840e5460e3ad; cmake -S <disposable> -B <disposable>/build-retro -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON -DCANVAS_POC01_BUILD_TESTS=OFF; cmake --build <disposable>/build-retro --target canvas_semantic_delete_closure_test -j2",
+    "expectedFailure": "baseline predates the B5 target/interface",
+    "result": "No rule to make target canvas_semantic_delete_closure_test",
+    "exitCode": 2,
+    "chronologyClaim": "retrospective test-sensitivity evidence only; historical RED-first chronology not claimed"
+  },
+  "verification": {
+    "configureCommand": "existing build-semantic-b2 configured with CANVAS_BUILD_SEMANTIC=ON and BUILD_TESTING=ON",
+    "focusedBuildCommand": "cmake --build build-semantic-b2 --target canvas_semantic_delete_closure_test -j2",
+    "focusedCommand": "./build-semantic-b2/runtime/semantic/tests/canvas_semantic_delete_closure_test --gtest_color=no",
+    "focusedResult": "PASS 13/13",
+    "regressionCommand": "ctest --test-dir build-semantic-b2 -R 'StatefulValidationContext|StagedObjectView|ReferenceObjectStore|IndexedObjectStore|ObjectStoreDifferential|HierarchyValidation|ConnectorStatefulValidation|canvas_semantic_runtime_boundaries' --output-on-failure",
+    "regressionResult": "PASS 52/52",
+    "fullBuildCommand": "cmake --build build-semantic-b2 -j2",
+    "fullSemanticCommand": "ctest --test-dir build-semantic-b2 --output-on-failure",
+    "fullSemanticResult": "PASS 173/173; 12 protobuf tests skipped by configuration (tests 24-35)",
+    "runtimeBoundariesCommand": "python3 tools/check_runtime_boundaries.py --root .",
+    "runtimeBoundariesResult": "PASS (50 contract files)",
+    "docsCommand": "python3 tools/check_docs.py",
+    "docsResult": "PASS (279 Markdown files)",
+    "diffCheckCommand": "git diff --check",
+    "diffCheckResult": "PASS"
+  },
+  "scopeGuards": {
+    "authorizedPathsOnly": true,
+    "filesModified": ["runtime/semantic/src/delete_closure.cpp", "runtime/semantic/src/delete_closure_internal.hpp", "runtime/semantic/tests/delete_closure_test.cpp"],
+    "B6PlusFilesChanged": false,
+    "PreparedApplyPlanChanged": false,
+    "OperationEngineChanged": false,
+    "GTG104CStarted": false,
+    "GTG105Changed": false,
+    "ObjectStoreABIChanged": false,
+    "ObjectIndexChanged": false,
+    "B3Changed": false,
+    "B4Changed": false,
+    "SchemaOrProtobufChanged": false,
+    "mergePerformed": false,
+    "PRCreated": false,
+    "historyRewritten": false,
+    "forcePush": false,
+    "untrackedBuildAndVisualDataPreserved": true
+  },
+  "historicalEvidence": {
+    "oldSourceCommit": "8b564e2c88d50715b70c52a71b01fad016e535c2",
+    "oldEvidencePath": "verification/evidence/gates/G1/8b564e2c88d50715b70c52a71b01fad016e535c2/GT-G1-04-B/B-DELETE.json",
+    "preserved": true
+  },
+  "status": "READY_FOR_INDEPENDENT_P34_REREVIEW"
+}

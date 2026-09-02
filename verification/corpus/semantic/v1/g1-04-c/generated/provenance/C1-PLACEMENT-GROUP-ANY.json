@@ -1,0 +1,47 @@
+{
+  "caseAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7"
+  ],
+  "caseId": "C1-PLACEMENT-GROUP-ANY",
+  "compiler": {
+    "identity": "g1-04-c-independent-fixture-compiler-v1",
+    "sourcePath": "verification/fixture-author/compile_g1_04_c.py",
+    "sourceSha256": "75b4d6040342c77f98bf425092b73caaad97d06047a611dde155f3a681f67f26"
+  },
+  "expectedAuthorityRuleRefs": [
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V01",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V02",
+    "notion:3cc4c57a-590c-81ae-ab73-d75501c47169#C-V05",
+    "notion:3cb4c57a-590c-815a-b8fa-cd785a837da7",
+    "notion:3cd4c57a-590c-8165-973f-ee31d93f1116"
+  ],
+  "expectedRecordSha256": "c85fdad2306b27487c1e3fce03eaffbce2821e9025d9d628a615f53bf7715d1e",
+  "expectedRef": "authoring/expected.json#C1-PLACEMENT-GROUP-ANY",
+  "format": "axiom-g1-04-c-provenance-v1",
+  "formatVersion": 1,
+  "generatedInput": {
+    "bytes": 1813,
+    "path": "inputs/C1-PLACEMENT-GROUP-ANY.json",
+    "sha256": "8f024be9cc719e1d943cd9d4bed942bb7bdf2e6a4114e9e6b59f412242deedd2"
+  },
+  "operationFamily": "SetPlacements",
+  "provenance": "DERIVED_GENERATED",
+  "sourceCaseRecordSha256": "145328af8911423d436e34636d1c66dbea2d6f1e6c057458b2490f17c8919f67",
+  "sourceCaseRef": "authoring/cases.json#C1-PLACEMENT-GROUP-ANY",
+  "sourceFiles": {
+    "cases": {
+      "path": "cases.json",
+      "sha256": "b48e6080159eaee94752e639bb397bba8de487fda7f675c1ab29d37c8e3e334d"
+    },
+    "coreSuite": {
+      "path": "core.json",
+      "sha256": "11d9560581ce2f2526b207f4dd4723da8986d870c5e546dcf4b53c153101cef8"
+    },
+    "expected": {
+      "path": "expected.json",
+      "sha256": "8f3158c9cea44acc4a2300f1d47ab1447fca44d87ba11f55c000b6b868f35e4b"
+    }
+  }
+}
