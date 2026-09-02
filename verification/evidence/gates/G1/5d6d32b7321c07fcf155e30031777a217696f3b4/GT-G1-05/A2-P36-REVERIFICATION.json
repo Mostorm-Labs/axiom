@@ -1,0 +1,77 @@
+{
+  "task_id": "GT-G1-05-A2",
+  "stage": "P36",
+  "finding": {
+    "id": "A2-P34-B1",
+    "classification": "TEST_DEFECT",
+    "result": "FIXED",
+    "p35_package_ref": "notion://3cf4c57a-590c-81d4-921b-efb832c442dd/GT-G1-05-A2-P35-v0.1"
+  },
+  "original_package_ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A2-P31-v0.1",
+  "task_anchor": {
+    "revision": "23f04d78dab8cd44a91ba0cb9362baedd2683bb7",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "27600e8e8703107a5c1bc3320a5595b9651d9931",
+  "execution_ref": "codex/gt-g1-05-a2-generation-changeset",
+  "prior_a2_result": {
+    "source_ref": "16283b68257bc0734ecf45902146e6ad3fce15ea",
+    "materialized_ref": "27600e8e8703107a5c1bc3320a5595b9651d9931"
+  },
+  "repaired_source_ref": "5d6d32b7321c07fcf155e30031777a217696f3b4",
+  "hosted_ci": {
+    "workflow": "G1 Semantic Codec",
+    "run_id": 33622696954,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33622696954",
+    "head_sha": "5d6d32b7321c07fcf155e30031777a217696f3b4",
+    "status": "success",
+    "job": "semantic-codec / hosted-linux"
+  },
+  "resolved_delete_changeset_oracle": {
+    "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "operation": "DeleteObjectsOp{{1}}",
+    "initial_objects": [1, 2, 3, 10, 20, 99],
+    "fixture": {
+      "hierarchy": ["group 1", "group 2 parent=1", "shape 3 parent=2"],
+      "connector_targets": ["connector 10 -> 2", "connector 20 -> 3"],
+      "unrelated_sentinel": 99
+    },
+    "expected_final_delete_set": [1, 2, 3, 10, 20],
+    "result": {
+      "disposition": "Applied",
+      "generation": {"before": 10, "after": 11, "advance_count": 1},
+      "canonical_post_state_absent": [1, 2, 3, 10, 20],
+      "sentinel_unchanged": true,
+      "change_set": {
+        "object_ids": [1, 2, 3, 10, 20],
+        "entry_count": 5,
+        "every_flag": "Deleted",
+        "every_changed_fields_empty": true
+      },
+      "applied_operation_ledger_contains_operation": true,
+      "indexed_rebuild_equivalent": true,
+      "status": "PASS"
+    }
+  },
+  "reverification": {
+    "focused_generation_changeset": {"passed": 6, "failed": 0, "status": "PASS"},
+    "reference_indexed_differential": {"passed": 2, "failed": 0, "status": "PASS"},
+    "delete_closure_regression": {"passed": 15, "failed": 0, "status": "PASS"},
+    "semantic_ctest": {
+      "total": 377,
+      "passed": 377,
+      "failed": 0,
+      "protobuf_off_expected_skips": 12,
+      "status": "PASS"
+    },
+    "git_diff_check": "PASS"
+  },
+  "scope_guards": {
+    "production_source_or_header_changed_from_16283b68257bc0734ecf45902146e6ad3fce15ea": false,
+    "repair_source_delta_from_27600e8e8703107a5c1bc3320a5595b9651d9931": [
+      "runtime/semantic/tests/operation_engine_generation_change_set_test.cpp"
+    ],
+    "source_to_materialized_delta": "exactly this evidence file"
+  },
+  "status": "READY_FOR_P34_REREVIEW"
+}
