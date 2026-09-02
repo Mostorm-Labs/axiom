@@ -65,10 +65,11 @@ void expectBothProvidersRejectWithoutMutation(PlanFactory&& make_plan) {
 TEST(AtomicApply, AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState) {
     const ObjectRecord original = shape(2U, 2U);
     const ObjectRecord deleted = shape(3U, 3U);
+    const ObjectRecord untouched = shape(4U, 4U);
     const ObjectRecord replacement = shape(2U, 8U);
     const ObjectRecord created = shape(1U, 1U);
-    const std::vector<ObjectRecord> initial = {original, deleted};
-    const std::vector<ObjectRecord> expected_final = {created, replacement};
+    const std::vector<ObjectRecord> initial = {original, deleted, untouched};
+    const std::vector<ObjectRecord> expected_final = {created, replacement, untouched};
     const PreparedApplyPlan plan{.creates = {created}, .replacements = {replacement}, .deletes = {deleted.id}};
 
     ReferenceObjectStore reference;

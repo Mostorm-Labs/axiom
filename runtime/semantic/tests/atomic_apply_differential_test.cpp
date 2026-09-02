@@ -39,8 +39,9 @@ void seed(Store& store, const std::vector<ObjectRecord>& records) {
 } // namespace
 
 TEST(AtomicApplyDifferential, ValidPlanMatchesExplicitExpectedProjectionForBothProviders) {
-    const std::vector<ObjectRecord> initial = {shape(2U, 2U), shape(3U, 3U)};
-    const std::vector<ObjectRecord> expected = {shape(1U, 1U), shape(2U, 7U)};
+    const ObjectRecord untouched = shape(4U, 4U);
+    const std::vector<ObjectRecord> initial = {shape(2U, 2U), shape(3U, 3U), untouched};
+    const std::vector<ObjectRecord> expected = {shape(1U, 1U), shape(2U, 7U), untouched};
     const PreparedApplyPlan plan{
         .creates = {shape(1U, 1U)}, .replacements = {shape(2U, 7U)}, .deletes = {id(3U)}};
     ReferenceObjectStore reference;
