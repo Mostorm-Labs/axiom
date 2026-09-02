@@ -1,4 +1,5 @@
 add_library(canvas_runtime_semantic STATIC
+    src/applied_operation_ledger.cpp
     src/change_set.cpp
     src/indexed_object_store.cpp
     src/idempotency.cpp

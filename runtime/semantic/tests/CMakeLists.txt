@@ -340,6 +340,39 @@ else()
 endif()
 gtest_discover_tests(canvas_semantic_operation_engine_boundary_test)
 
+add_executable(canvas_semantic_operation_engine_apply_test operation_engine_apply_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_apply_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_apply_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_apply_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_apply_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_apply_test)
+
+add_executable(
+  canvas_semantic_operation_engine_apply_differential_test
+  operation_engine_apply_differential_test.cpp)
+target_link_libraries(
+  canvas_semantic_operation_engine_apply_differential_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(
+  canvas_semantic_operation_engine_apply_differential_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+target_compile_definitions(
+  canvas_semantic_operation_engine_apply_differential_test
+  PRIVATE OPERATION_ENGINE_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../src/operation_engine.cpp")
+if(MSVC)
+  target_compile_options(
+    canvas_semantic_operation_engine_apply_differential_test
+    PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(
+    canvas_semantic_operation_engine_apply_differential_test
+    PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_apply_differential_test)
+
 add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
 target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 target_include_directories(canvas_semantic_stateful_validation_differential_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
@@ -371,6 +404,7 @@ endif()
 gtest_discover_tests(canvas_semantic_g1_04_b_no_mutation_test)
 
 foreach(header IN ITEMS
+        canvas/semantic/applied_operation_ledger.hpp
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
         canvas/semantic/change_set.hpp
