@@ -51,11 +51,12 @@ template <typename Store>
 void expectFirstInsertAppliesAndRecordsCanonicalOperation() {
     Store objects;
     AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
     OperationEngine engine;
     const ObjectRecord created = shape(1U, 7U);
     const Operation incoming = operation(InsertObjectsOp{{created}}, 101U);
 
-    const ApplyResult result = engine.apply(incoming, objects, ledger);
+    const ApplyResult result = engine.apply(incoming, objects, ledger, generation);
 
     EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
     EXPECT_EQ(result.error.issue, StatefulIssue::kNone);
@@ -77,13 +78,14 @@ void expectNoCommitDispositionLeavesStateAndLedgerUnchanged(
     StatefulIssue expected_issue) {
     Store objects;
     AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
     OperationEngine engine;
-    ASSERT_EQ(engine.apply(first, objects, ledger).disposition, ApplyDisposition::kApplied);
+    ASSERT_EQ(engine.apply(first, objects, ledger, generation).disposition, ApplyDisposition::kApplied);
     const auto before_objects = objects.allObjects();
     const auto before_entry = ledger.find(first.id);
     ASSERT_TRUE(before_entry.has_value());
 
-    const ApplyResult result = engine.apply(follow_up, objects, ledger);
+    const ApplyResult result = engine.apply(follow_up, objects, ledger, generation);
 
     EXPECT_EQ(result.disposition, expected_disposition);
     EXPECT_EQ(result.error.issue, expected_issue);
@@ -130,12 +132,14 @@ TEST(OperationEngineApply, FirstSeenStateInvalidOperationRejectsWithoutLedgerEnt
     IndexedObjectStore indexed;
     AppliedOperationLedger reference_ledger;
     AppliedOperationLedger indexed_ledger;
+    SemanticGenerationState reference_generation;
+    SemanticGenerationState indexed_generation;
     OperationEngine engine;
     const auto reference_before = reference.allObjects();
     const auto indexed_before = indexed.allObjects();
 
-    const ApplyResult reference_result = engine.apply(rejected, reference, reference_ledger);
-    const ApplyResult indexed_result = engine.apply(rejected, indexed, indexed_ledger);
+    const ApplyResult reference_result = engine.apply(rejected, reference, reference_ledger, reference_generation);
+    const ApplyResult indexed_result = engine.apply(rejected, indexed, indexed_ledger, indexed_generation);
 
     EXPECT_EQ(reference_result.disposition, ApplyDisposition::kRejected);
     EXPECT_EQ(indexed_result.disposition, ApplyDisposition::kRejected);

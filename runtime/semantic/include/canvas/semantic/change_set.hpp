@@ -9,6 +9,15 @@
 
 namespace canvas::semantic {
 
+class ChangeSet;
+namespace internal {
+struct PreparedChangeSet;
+[[nodiscard]] ChangeSet finalizeChangeSet(
+    PreparedChangeSet prepared,
+    SemanticGeneration before,
+    SemanticGeneration after);
+} // namespace internal
+
 using FieldId = std::uint32_t;
 
 enum class SemanticChangeFlags : std::uint8_t {
@@ -54,6 +63,11 @@ class ChangeSet final {
     }
 
   private:
+    friend ChangeSet internal::finalizeChangeSet(
+        internal::PreparedChangeSet,
+        SemanticGeneration,
+        SemanticGeneration);
+
     ChangeSet(
         SemanticGeneration before_generation,
         SemanticGeneration after_generation,

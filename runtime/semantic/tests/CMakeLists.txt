@@ -373,6 +373,35 @@ else()
 endif()
 gtest_discover_tests(canvas_semantic_operation_engine_apply_differential_test)
 
+add_executable(canvas_semantic_operation_engine_generation_change_set_test
+  operation_engine_generation_change_set_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_generation_change_set_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_generation_change_set_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_generation_change_set_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_generation_change_set_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_generation_change_set_test)
+
+add_executable(canvas_semantic_operation_engine_generation_change_set_differential_test
+  operation_engine_generation_change_set_differential_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_generation_change_set_differential_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_generation_change_set_differential_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+target_compile_definitions(canvas_semantic_operation_engine_generation_change_set_differential_test
+  PRIVATE OPERATION_ENGINE_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../src/operation_engine.cpp"
+          CHANGE_SET_BUILDER_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../src/change_set_builder.cpp")
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_generation_change_set_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_generation_change_set_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_generation_change_set_differential_test)
+
 add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
 target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 target_include_directories(canvas_semantic_stateful_validation_differential_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
