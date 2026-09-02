@@ -30,6 +30,40 @@ ObjectRecord shape(std::uint64_t value, std::uint8_t tag) {
     return record;
 }
 
+ObjectRecord group(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
+    ObjectRecord record{};
+    record.id = id(value);
+    record.kind = ObjectKind::kGroup;
+    record.kind_version = 1U;
+    record.placement = Placement{parent, OrderKey({static_cast<std::uint8_t>(value)})};
+    record.content = GroupContent{};
+    return record;
+}
+
+ObjectRecord nestedShape(std::uint64_t value, ObjectId parent) {
+    ObjectRecord record = shape(value, static_cast<std::uint8_t>(value));
+    record.placement.parent_id = parent;
+    return record;
+}
+
+ObjectRecord attachedConnector(
+    std::uint64_t value,
+    ObjectId start,
+    std::optional<ObjectId> end = std::nullopt) {
+    ObjectRecord record{};
+    record.id = id(value);
+    record.kind = ObjectKind::kConnector;
+    record.kind_version = 1U;
+    record.placement = Placement{std::nullopt, OrderKey({static_cast<std::uint8_t>(value)})};
+    ConnectorContent content{};
+    content.start.value = AttachedEndpoint{start, AutoPerimeterAnchor{}};
+    if (end.has_value()) {
+        content.end.value = AttachedEndpoint{*end, AutoPerimeterAnchor{}};
+    }
+    record.content = content;
+    return record;
+}
+
 Operation operation(OperationPayload payload, std::uint64_t operation_id) {
     Operation result{};
     result.id = OperationId{id(operation_id)};
@@ -80,11 +114,69 @@ void expectFirstInsertAdvancesGenerationAndBuildsChangeSet() {
     }
 }
 
+template <typename Store>
+void expectResolvedDeleteClosureProducesCompleteChangeSet() {
+    Store objects;
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation(SemanticGeneration(10U));
+    OperationEngine engine;
+
+    const ObjectRecord root = group(1U);
+    const ObjectRecord parent = group(2U, root.id);
+    const ObjectRecord child = nestedShape(3U, parent.id);
+    const ObjectRecord connector_to_parent = attachedConnector(10U, parent.id);
+    const ObjectRecord connector_to_child = attachedConnector(20U, child.id);
+    const ObjectRecord sentinel = shape(99U, 99U);
+    for (const ObjectRecord& record :
+         {root, parent, child, connector_to_parent, connector_to_child, sentinel}) {
+        ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(objects, record));
+    }
+    const std::vector<ObjectRecord> before = objects.allObjects();
+    const Operation deletion = operation(DeleteObjectsOp{{root.id}}, 310U);
+    const ApplyResult result = engine.apply(deletion, objects, ledger, generation);
+
+    ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
+    ASSERT_TRUE(result.change_set.has_value());
+    EXPECT_EQ(result.change_set->beforeGeneration(), SemanticGeneration(10U));
+    EXPECT_EQ(result.change_set->afterGeneration(), SemanticGeneration(11U));
+    EXPECT_EQ(generation.current(), SemanticGeneration(11U));
+    ASSERT_EQ(result.change_set->objects().size(), 5U);
+    const std::vector<ObjectId> expected_ids{root.id, parent.id, child.id,
+                                             connector_to_parent.id, connector_to_child.id};
+    for (std::size_t index = 0; index < expected_ids.size(); ++index) {
+        const ObjectSemanticChange& change = result.change_set->objects()[index];
+        EXPECT_EQ(change.object_id, expected_ids[index]);
+        EXPECT_EQ(change.flags, SemanticChangeFlags::kDeleted);
+        EXPECT_TRUE(change.changed_fields.empty());
+        EXPECT_FALSE(objects.contains(change.object_id));
+    }
+    ASSERT_TRUE(objects.contains(sentinel.id));
+    ASSERT_NE(objects.find(sentinel.id), nullptr);
+    EXPECT_EQ(*objects.find(sentinel.id), sentinel);
+    const auto ledger_entry = ledger.find(deletion.id);
+    ASSERT_TRUE(ledger_entry.has_value());
+    const auto& ledger_operation = ledger_entry->canonical_operation;
+    EXPECT_EQ(ledger_operation.id, deletion.id);
+    EXPECT_EQ(ledger_operation.payload.index(), deletion.payload.index());
+    EXPECT_EQ(ledger_operation.payload, deletion.payload);
+    if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
+        EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(objects));
+    }
+    const std::vector<ObjectRecord> expected_remaining{sentinel};
+    EXPECT_EQ(objects.allObjects(), expected_remaining);
+    EXPECT_EQ(before.size(), 6U);
+}
+
 } // namespace
 
 TEST(OperationEngineGenerationChangeSet, FirstInsertAdvancesAndCreatesForReferenceAndIndexed) {
     expectFirstInsertAdvancesGenerationAndBuildsChangeSet<ReferenceObjectStore>();
     expectFirstInsertAdvancesGenerationAndBuildsChangeSet<IndexedObjectStore>();
+}
+
+TEST(OperationEngineGenerationChangeSet, ResolvedDeleteClosureProducesCompleteChangeSetForBothProviders) {
+    expectResolvedDeleteClosureProducesCompleteChangeSet<ReferenceObjectStore>();
+    expectResolvedDeleteClosureProducesCompleteChangeSet<IndexedObjectStore>();
 }
 
 TEST(OperationEngineGenerationChangeSet, AlreadyAppliedAndRejectedAreGenerationNeutralAndChangeSetFree) {
