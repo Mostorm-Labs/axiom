@@ -1,0 +1,91 @@
+{
+  "format": "axiom-gt-g1-05-a3-canonical-commit-v1",
+  "taskId": "GT-G1-05-A3",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A3-P31-v0.1",
+  "authorityRepairRef": "notion://3cf4c57a-590c-81c7-ab19-d3015e0b25ab",
+  "taskAnchor": {
+    "revision": "5d6d32b7321c07fcf155e30031777a217696f3b4",
+    "relation": "ancestor"
+  },
+  "actualStartingRevision": "4f7a2d1d1de25758768933d614075377c5ab7768",
+  "executionRef": "codex/gt-g1-05-a3-canonical-commit",
+  "sourceCommit": "baa057529cb43e1223d092c5865aa40fc4787e45",
+  "testedCommit": "baa057529cb43e1223d092c5865aa40fc4787e45",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "implementation": {
+    "canonicalCommitClock": true,
+    "strongCommitOrdinal": true,
+    "runtimeEpochZeroFailsClosed": true,
+    "commitOrdinalExhaustionFailsClosed": true,
+    "noOrdinalWrapOrImplicitEpochRollover": true,
+    "explicitApplySource": true,
+    "completeRecordForApplied": true,
+    "recordAssemblyUsesPreparedMovableFacts": true,
+    "a4PublicationPolicyImplemented": false,
+    "a5OrA6Started": false
+  },
+  "focusedTests": {
+    "canonicalCommitClock": {"target": "canvas_semantic_canonical_commit_clock_test", "tests": 4, "passed": 4, "failed": 0},
+    "canonicalCommitRecord": {"target": "canvas_semantic_operation_engine_canonical_commit_test", "tests": 8, "passed": 8, "failed": 0},
+    "referenceIndexedDifferential": {"target": "canvas_semantic_operation_engine_canonical_commit_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "a1ApplyRegression": {"target": "canvas_semantic_operation_engine_apply_test", "tests": 4, "passed": 4, "failed": 0},
+    "a1ApplyDifferentialRegression": {"target": "canvas_semantic_operation_engine_apply_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "a2GenerationChangeSetRegression": {"target": "canvas_semantic_operation_engine_generation_change_set_test", "tests": 6, "passed": 6, "failed": 0},
+    "a2GenerationChangeSetDifferentialRegression": {"target": "canvas_semantic_operation_engine_generation_change_set_differential_test", "tests": 2, "passed": 2, "failed": 0},
+    "semanticTypes": {"target": "canvas_semantic_types_test", "tests": 19, "passed": 19, "failed": 0}
+  },
+  "fullSemanticCTest": {
+    "command": "ctest --test-dir /tmp/axiom-a3-build --output-on-failure",
+    "total": 392,
+    "passed": 380,
+    "skipped": 12,
+    "failed": 0,
+    "result": "PASS"
+  },
+  "scope": {
+    "changedFileCountFromAcceptedStartingRevision": 15,
+    "changedFiles": [
+      "runtime/semantic/include/canvas/semantic/apply_source.hpp",
+      "runtime/semantic/include/canvas/semantic/canonical_commit_clock.hpp",
+      "runtime/semantic/include/canvas/semantic/canonical_commit_record.hpp",
+      "runtime/semantic/include/canvas/semantic/canonical_commit_stamp.hpp",
+      "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+      "runtime/semantic/src/operation_engine.cpp",
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/canonical_commit_clock_test.cpp",
+      "runtime/semantic/tests/operation_engine_apply_differential_test.cpp",
+      "runtime/semantic/tests/operation_engine_apply_test.cpp",
+      "runtime/semantic/tests/operation_engine_canonical_commit_differential_test.cpp",
+      "runtime/semantic/tests/operation_engine_canonical_commit_test.cpp",
+      "runtime/semantic/tests/operation_engine_generation_change_set_differential_test.cpp",
+      "runtime/semantic/tests/operation_engine_generation_change_set_test.cpp",
+      "runtime/semantic/tests/semantic_types_test.cpp"
+    ],
+    "forbiddenScopeDelta": [],
+    "a0AtomicApplyChanged": false,
+    "a1LedgerOrIdempotencyChanged": false,
+    "a2GenerationOrChangeSetImplementationChanged": false,
+    "databridgePersistenceSceneRenderArcSchemaChanged": false,
+    "productionAllObjectsScanAdded": false,
+    "globalOrStaticCommitCounterAdded": false,
+    "gitDiffCheck": "PASS"
+  },
+  "hostedCI": {
+    "workflow": "G1 Semantic Codec",
+    "runId": 33657677147,
+    "event": "workflow_dispatch",
+    "headSha": "baa057529cb43e1223d092c5865aa40fc4787e45",
+    "workflowRef": "Mostorm-Labs/axiom/.github/workflows/g1-semantic-codec.yml@codex/gt-g1-05-a3-canonical-commit",
+    "checkoutSha": "baa057529cb43e1223d092c5865aa40fc4787e45",
+    "status": "PASS",
+    "result": "EXACT_HEAD_CORROBORATED",
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33657677147"
+  },
+  "materialization": {
+    "sourceToMaterializedDelta": "exactly this evidence file",
+    "evidencePath": "verification/evidence/gates/G1/baa057529cb43e1223d092c5865aa40fc4787e45/GT-G1-05/A3-COMMIT-STAMP.json",
+    "materializedRefResolvedAfterEvidenceCommit": true,
+    "historyRewritten": false,
+    "forcePush": false
+  }
+}
