@@ -20,6 +20,7 @@ add_library(canvas_runtime_semantic STATIC
     src/rich_text_state_plan.cpp
     src/codec.cpp
     src/apply_plan.cpp
+    src/atomic_apply.cpp
     src/operation_engine.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)
 target_link_libraries(canvas_runtime_semantic PUBLIC canvas_runtime_foundation)
