@@ -82,11 +82,12 @@ void expectSingleChange(
     SemanticChangeFlags flags,
     std::vector<FieldId> fields = {}) {
     ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
-    ASSERT_TRUE(result.change_set.has_value());
-    EXPECT_EQ(result.change_set->beforeGeneration(), before);
-    EXPECT_EQ(result.change_set->afterGeneration(), after);
-    ASSERT_EQ(result.change_set->objects().size(), 1U);
-    const auto& change = result.change_set->objects().front();
+    ASSERT_TRUE(result.commit_record.has_value());
+    const ChangeSet& change_set = result.commit_record->change_set;
+    EXPECT_EQ(change_set.beforeGeneration(), before);
+    EXPECT_EQ(change_set.afterGeneration(), after);
+    ASSERT_EQ(change_set.objects().size(), 1U);
+    const auto& change = change_set.objects().front();
     EXPECT_EQ(change.object_id, object_id);
     EXPECT_EQ(change.flags, flags);
     EXPECT_EQ(change.changed_fields, fields);
@@ -97,10 +98,16 @@ void expectFirstInsertAdvancesGenerationAndBuildsChangeSet() {
     Store objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation(SemanticGeneration(7U));
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
     const ObjectRecord created = shape(1U, 7U);
     const ApplyResult result = engine.apply(
-        operation(InsertObjectsOp{{created}}, 301U), objects, ledger, generation);
+        operation(InsertObjectsOp{{created}}, 301U),
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
 
     expectSingleChange(
         result,
@@ -119,6 +126,7 @@ void expectResolvedDeleteClosureProducesCompleteChangeSet() {
     Store objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation(SemanticGeneration(10U));
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
 
     const ObjectRecord root = group(1U);
@@ -133,18 +141,25 @@ void expectResolvedDeleteClosureProducesCompleteChangeSet() {
     }
     const std::vector<ObjectRecord> before = objects.allObjects();
     const Operation deletion = operation(DeleteObjectsOp{{root.id}}, 310U);
-    const ApplyResult result = engine.apply(deletion, objects, ledger, generation);
+    const ApplyResult result = engine.apply(
+        deletion,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
 
     ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
-    ASSERT_TRUE(result.change_set.has_value());
-    EXPECT_EQ(result.change_set->beforeGeneration(), SemanticGeneration(10U));
-    EXPECT_EQ(result.change_set->afterGeneration(), SemanticGeneration(11U));
+    ASSERT_TRUE(result.commit_record.has_value());
+    const ChangeSet& change_set = result.commit_record->change_set;
+    EXPECT_EQ(change_set.beforeGeneration(), SemanticGeneration(10U));
+    EXPECT_EQ(change_set.afterGeneration(), SemanticGeneration(11U));
     EXPECT_EQ(generation.current(), SemanticGeneration(11U));
-    ASSERT_EQ(result.change_set->objects().size(), 5U);
+    ASSERT_EQ(change_set.objects().size(), 5U);
     const std::vector<ObjectId> expected_ids{root.id, parent.id, child.id,
                                              connector_to_parent.id, connector_to_child.id};
     for (std::size_t index = 0; index < expected_ids.size(); ++index) {
-        const ObjectSemanticChange& change = result.change_set->objects()[index];
+        const ObjectSemanticChange& change = change_set.objects()[index];
         EXPECT_EQ(change.object_id, expected_ids[index]);
         EXPECT_EQ(change.flags, SemanticChangeFlags::kDeleted);
         EXPECT_TRUE(change.changed_fields.empty());
@@ -183,28 +198,56 @@ TEST(OperationEngineGenerationChangeSet, AlreadyAppliedAndRejectedAreGenerationN
     ReferenceObjectStore objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation(SemanticGeneration(4U));
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
     const Operation first = operation(InsertObjectsOp{{shape(2U, 8U)}}, 302U);
-    ASSERT_EQ(engine.apply(first, objects, ledger, generation).disposition, ApplyDisposition::kApplied);
+    ASSERT_EQ(
+        engine.apply(
+                  first,
+                  ApplySource::kLocalInteraction,
+                  objects,
+                  ledger,
+                  generation,
+                  canonical_commit_clock)
+            .disposition,
+        ApplyDisposition::kApplied);
 
-    const ApplyResult already = engine.apply(first, objects, ledger, generation);
+    const ApplyResult already = engine.apply(
+        first,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     EXPECT_EQ(already.disposition, ApplyDisposition::kAlreadyApplied);
-    EXPECT_FALSE(already.change_set.has_value());
+    EXPECT_FALSE(already.commit_record.has_value());
     EXPECT_EQ(generation.current(), SemanticGeneration(5U));
 
     const Operation collision = operation(DeleteObjectsOp{{id(2U)}}, 302U);
-    const ApplyResult rejected = engine.apply(collision, objects, ledger, generation);
+    const ApplyResult rejected = engine.apply(
+        collision,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     EXPECT_EQ(rejected.disposition, ApplyDisposition::kRejected);
     EXPECT_EQ(rejected.error.issue, StatefulIssue::kOperationIdCollision);
-    EXPECT_FALSE(rejected.change_set.has_value());
+    EXPECT_FALSE(rejected.commit_record.has_value());
     EXPECT_EQ(generation.current(), SemanticGeneration(5U));
 
     const Operation missing = operation(
         SetTransformsOp{{TransformItem{id(99U), Transform2D{2.0, 0.0, 0.0, 2.0, 1.0, 1.0}}}},
         303U);
-    const ApplyResult state_rejected = engine.apply(missing, objects, ledger, generation);
+    const ApplyResult state_rejected = engine.apply(
+        missing,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     EXPECT_EQ(state_rejected.disposition, ApplyDisposition::kRejected);
-    EXPECT_FALSE(state_rejected.change_set.has_value());
+    EXPECT_FALSE(state_rejected.commit_record.has_value());
     EXPECT_EQ(generation.current(), SemanticGeneration(5U));
 }
 
@@ -212,10 +255,17 @@ TEST(OperationEngineGenerationChangeSet, SequentialAppliedOperationsChainGenerat
     ReferenceObjectStore objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
     const ObjectRecord created = shape(3U, 9U);
     const Operation insert = operation(InsertObjectsOp{{created}}, 304U);
-    const ApplyResult insert_result = engine.apply(insert, objects, ledger, generation);
+    const ApplyResult insert_result = engine.apply(
+        insert,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     expectSingleChange(
         insert_result,
         SemanticGeneration(0U),
@@ -227,9 +277,11 @@ TEST(OperationEngineGenerationChangeSet, SequentialAppliedOperationsChainGenerat
     transformed.transform.tx = 99.0;
     const ApplyResult transform_result = engine.apply(
         operation(SetTransformsOp{{TransformItem{created.id, transformed.transform}}}, 305U),
+        ApplySource::kLocalInteraction,
         objects,
         ledger,
-        generation);
+        generation,
+        canonical_commit_clock);
     expectSingleChange(
         transform_result,
         SemanticGeneration(1U),
@@ -239,7 +291,12 @@ TEST(OperationEngineGenerationChangeSet, SequentialAppliedOperationsChainGenerat
     EXPECT_EQ(generation.current(), SemanticGeneration(2U));
 
     const ApplyResult delete_result = engine.apply(
-        operation(DeleteObjectsOp{{created.id}}, 306U), objects, ledger, generation);
+        operation(DeleteObjectsOp{{created.id}}, 306U),
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     expectSingleChange(
         delete_result,
         SemanticGeneration(2U),
@@ -252,17 +309,31 @@ TEST(OperationEngineGenerationChangeSet, PatchPropertiesCarriesSortedDistinctFie
     ReferenceObjectStore objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
     const ObjectRecord created = shape(4U, 10U);
     ASSERT_EQ(
-        engine.apply(operation(InsertObjectsOp{{created}}, 307U), objects, ledger, generation).disposition,
+        engine.apply(
+                  operation(InsertObjectsOp{{created}}, 307U),
+                  ApplySource::kLocalInteraction,
+                  objects,
+                  ledger,
+                  generation,
+                  canonical_commit_clock)
+            .disposition,
         ApplyDisposition::kApplied);
 
     const PatchPropertiesOp patch{
         {{created.id, 2U, PropertyPatchAction::kSet, PropertyValue{true}},
          {created.id, 1U, PropertyPatchAction::kSet, PropertyValue{false}},
          {created.id, 2U, PropertyPatchAction::kSet, PropertyValue{true}}}};
-    const ApplyResult result = engine.apply(operation(patch, 308U), objects, ledger, generation);
+    const ApplyResult result = engine.apply(
+        operation(patch, 308U),
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
     expectSingleChange(
         result,
         SemanticGeneration(1U),
@@ -277,13 +348,19 @@ TEST(OperationEngineGenerationChangeSet, GenerationOverflowFailsBeforeMutation) 
     AppliedOperationLedger ledger;
     SemanticGenerationState generation{
         SemanticGeneration{std::numeric_limits<std::uint64_t>::max()}};
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(3U));
     OperationEngine engine;
     const ObjectRecord created = shape(5U, 11U);
     const ApplyResult result = engine.apply(
-        operation(InsertObjectsOp{{created}}, 309U), objects, ledger, generation);
+        operation(InsertObjectsOp{{created}}, 309U),
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
 
     EXPECT_EQ(result.disposition, ApplyDisposition::kRejected);
-    EXPECT_FALSE(result.change_set.has_value());
+    EXPECT_FALSE(result.commit_record.has_value());
     EXPECT_EQ(generation.current(), SemanticGeneration(std::numeric_limits<std::uint64_t>::max()));
     EXPECT_TRUE(objects.allObjects().empty());
     EXPECT_FALSE(ledger.find(OperationId{id(309U)}).has_value());

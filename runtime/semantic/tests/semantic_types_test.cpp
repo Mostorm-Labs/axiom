@@ -1,4 +1,5 @@
 #include "canvas/semantic/canonical_numeric.hpp"
+#include "canvas/semantic/canonical_commit_clock.hpp"
 #include "canvas/semantic/canonical_commit_stamp.hpp"
 #include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/erase_mask.hpp"
@@ -86,6 +87,10 @@ TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
     static_assert(!std::is_convertible_v<SemanticGeneration, OperationId>);
     static_assert(!std::is_convertible_v<SemanticGeneration, std::uint64_t>);
     static_assert(!std::is_convertible_v<SemanticGeneration, CanonicalCommitStamp>);
+    static_assert(!std::is_convertible_v<CommitOrdinal, std::uint64_t>);
+    static_assert(!std::is_convertible_v<std::uint64_t, CommitOrdinal>);
+    static_assert(!std::is_convertible_v<CommitOrdinal, SemanticGeneration>);
+    static_assert(!std::is_convertible_v<SemanticGeneration, CommitOrdinal>);
     static_assert(!std::is_convertible_v<SemanticGeneration, ServerRevisionBoundaryType>);
     static_assert(!std::is_convertible_v<SemanticGeneration, ServerCursorBoundaryType>);
 
@@ -93,6 +98,12 @@ TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
     const SemanticGeneration successor(1U);
     EXPECT_LT(baseline, successor);
     EXPECT_EQ(successor.value(), 1U);
+}
+
+TEST(SemanticTypes, CanonicalCommitOrdinalStartsWithReservedZero) {
+    const CanonicalCommitClock clock(RuntimeEpoch(9U));
+    EXPECT_EQ(clock.runtimeEpoch(), RuntimeEpoch(9U));
+    EXPECT_EQ(clock.lastCommittedOrdinal(), CommitOrdinal{});
 }
 
 TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {

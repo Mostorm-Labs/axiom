@@ -53,6 +53,7 @@ template <typename Store>
 SequenceOutcome runSequence(Store& objects, AppliedOperationLedger& ledger) {
     OperationEngine engine;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(2U));
     const ObjectRecord created = shape(1U, 7U);
     const Operation applied = operation(InsertObjectsOp{{created}}, 201U);
     const Operation collision = operation(DeleteObjectsOp{{created.id}}, 201U);
@@ -62,7 +63,13 @@ SequenceOutcome runSequence(Store& objects, AppliedOperationLedger& ledger) {
 
     SequenceOutcome outcome;
     for (const Operation& current : std::vector<Operation>{applied, applied, collision, rejected}) {
-        const ApplyResult result = engine.apply(current, objects, ledger, generation);
+        const ApplyResult result = engine.apply(
+            current,
+            ApplySource::kLocalInteraction,
+            objects,
+            ledger,
+            generation,
+            canonical_commit_clock);
         outcome.dispositions.push_back(result.disposition);
         outcome.issues.push_back(result.error.issue);
     }

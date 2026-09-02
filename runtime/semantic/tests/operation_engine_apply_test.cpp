@@ -52,11 +52,18 @@ void expectFirstInsertAppliesAndRecordsCanonicalOperation() {
     Store objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(1U));
     OperationEngine engine;
     const ObjectRecord created = shape(1U, 7U);
     const Operation incoming = operation(InsertObjectsOp{{created}}, 101U);
 
-    const ApplyResult result = engine.apply(incoming, objects, ledger, generation);
+    const ApplyResult result = engine.apply(
+        incoming,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
 
     EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
     EXPECT_EQ(result.error.issue, StatefulIssue::kNone);
@@ -79,13 +86,29 @@ void expectNoCommitDispositionLeavesStateAndLedgerUnchanged(
     Store objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(1U));
     OperationEngine engine;
-    ASSERT_EQ(engine.apply(first, objects, ledger, generation).disposition, ApplyDisposition::kApplied);
+    ASSERT_EQ(
+        engine.apply(
+                  first,
+                  ApplySource::kLocalInteraction,
+                  objects,
+                  ledger,
+                  generation,
+                  canonical_commit_clock)
+            .disposition,
+        ApplyDisposition::kApplied);
     const auto before_objects = objects.allObjects();
     const auto before_entry = ledger.find(first.id);
     ASSERT_TRUE(before_entry.has_value());
 
-    const ApplyResult result = engine.apply(follow_up, objects, ledger, generation);
+    const ApplyResult result = engine.apply(
+        follow_up,
+        ApplySource::kLocalInteraction,
+        objects,
+        ledger,
+        generation,
+        canonical_commit_clock);
 
     EXPECT_EQ(result.disposition, expected_disposition);
     EXPECT_EQ(result.error.issue, expected_issue);
@@ -134,12 +157,26 @@ TEST(OperationEngineApply, FirstSeenStateInvalidOperationRejectsWithoutLedgerEnt
     AppliedOperationLedger indexed_ledger;
     SemanticGenerationState reference_generation;
     SemanticGenerationState indexed_generation;
+    CanonicalCommitClock reference_canonical_commit_clock(RuntimeEpoch(1U));
+    CanonicalCommitClock indexed_canonical_commit_clock(RuntimeEpoch(1U));
     OperationEngine engine;
     const auto reference_before = reference.allObjects();
     const auto indexed_before = indexed.allObjects();
 
-    const ApplyResult reference_result = engine.apply(rejected, reference, reference_ledger, reference_generation);
-    const ApplyResult indexed_result = engine.apply(rejected, indexed, indexed_ledger, indexed_generation);
+    const ApplyResult reference_result = engine.apply(
+        rejected,
+        ApplySource::kLocalInteraction,
+        reference,
+        reference_ledger,
+        reference_generation,
+        reference_canonical_commit_clock);
+    const ApplyResult indexed_result = engine.apply(
+        rejected,
+        ApplySource::kLocalInteraction,
+        indexed,
+        indexed_ledger,
+        indexed_generation,
+        indexed_canonical_commit_clock);
 
     EXPECT_EQ(reference_result.disposition, ApplyDisposition::kRejected);
     EXPECT_EQ(indexed_result.disposition, ApplyDisposition::kRejected);

@@ -402,6 +402,44 @@ else()
 endif()
 gtest_discover_tests(canvas_semantic_operation_engine_generation_change_set_differential_test)
 
+add_executable(canvas_semantic_canonical_commit_clock_test canonical_commit_clock_test.cpp)
+target_link_libraries(canvas_semantic_canonical_commit_clock_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_canonical_commit_clock_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_canonical_commit_clock_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_canonical_commit_clock_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_canonical_commit_clock_test)
+
+add_executable(canvas_semantic_operation_engine_canonical_commit_test
+  operation_engine_canonical_commit_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_canonical_commit_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_canonical_commit_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_canonical_commit_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_canonical_commit_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_canonical_commit_test)
+
+add_executable(canvas_semantic_operation_engine_canonical_commit_differential_test
+  operation_engine_canonical_commit_differential_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_canonical_commit_differential_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_canonical_commit_differential_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+target_compile_definitions(canvas_semantic_operation_engine_canonical_commit_differential_test
+  PRIVATE OPERATION_ENGINE_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../src/operation_engine.cpp")
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_canonical_commit_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_canonical_commit_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_operation_engine_canonical_commit_differential_test)
+
 add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
 target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 target_include_directories(canvas_semantic_stateful_validation_differential_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
@@ -434,8 +472,11 @@ gtest_discover_tests(canvas_semantic_g1_04_b_no_mutation_test)
 
 foreach(header IN ITEMS
         canvas/semantic/applied_operation_ledger.hpp
+        canvas/semantic/apply_source.hpp
         canvas/semantic/canonical_numeric.hpp
         canvas/semantic/canonical_commit_stamp.hpp
+        canvas/semantic/canonical_commit_clock.hpp
+        canvas/semantic/canonical_commit_record.hpp
         canvas/semantic/change_set.hpp
         canvas/semantic/erase_mask.hpp
         canvas/semantic/object_content.hpp

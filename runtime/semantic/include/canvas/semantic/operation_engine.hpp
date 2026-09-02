@@ -1,6 +1,9 @@
 #pragma once
 
 #include "canvas/semantic/apply_plan.hpp"
+#include "canvas/semantic/apply_source.hpp"
+#include "canvas/semantic/canonical_commit_clock.hpp"
+#include "canvas/semantic/canonical_commit_record.hpp"
 #include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 
@@ -17,12 +20,20 @@ enum class ApplyDisposition : std::uint8_t {
     kApplied = 0,
     kAlreadyApplied,
     kRejected,
+    kCommitBlocked,
+};
+
+enum class CommitBlockReason : std::uint8_t {
+    kNone = 0,
+    kInvalidRuntimeEpoch,
+    kCommitLaneExhausted,
 };
 
 struct ApplyResult final {
     ApplyDisposition disposition = ApplyDisposition::kRejected;
     StatefulResult error{};
-    std::optional<ChangeSet> change_set;
+    CommitBlockReason commit_block_reason = CommitBlockReason::kNone;
+    std::optional<CanonicalCommitRecord> commit_record;
 };
 
 class OperationEngine final {
@@ -33,15 +44,19 @@ class OperationEngine final {
 
     [[nodiscard]] ApplyResult apply(
         const Operation& operation,
+        ApplySource source,
         ReferenceObjectStore& objects,
         AppliedOperationLedger& applied_operations,
-        SemanticGenerationState& generation) const;
+        SemanticGenerationState& generation,
+        CanonicalCommitClock& canonical_commit_clock) const;
 
     [[nodiscard]] ApplyResult apply(
         const Operation& operation,
+        ApplySource source,
         IndexedObjectStore& objects,
         AppliedOperationLedger& applied_operations,
-        SemanticGenerationState& generation) const;
+        SemanticGenerationState& generation,
+        CanonicalCommitClock& canonical_commit_clock) const;
 };
 
 } // namespace canvas::semantic

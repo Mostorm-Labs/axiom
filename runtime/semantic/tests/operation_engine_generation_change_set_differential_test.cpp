@@ -52,6 +52,7 @@ template <typename Store>
 SequenceOutcome runSequence(Store& objects, AppliedOperationLedger& ledger) {
     OperationEngine engine;
     SemanticGenerationState generation;
+    CanonicalCommitClock canonical_commit_clock(RuntimeEpoch(4U));
     const ObjectRecord created = shape(6U, 12U);
     const Operation applied = operation(InsertObjectsOp{{created}}, 401U);
     const Operation transformed = operation(
@@ -65,11 +66,21 @@ SequenceOutcome runSequence(Store& objects, AppliedOperationLedger& ledger) {
 
     SequenceOutcome outcome;
     for (const Operation& current : {applied, transformed, already, collision, rejected}) {
-        const ApplyResult result = engine.apply(current, objects, ledger, generation);
+        const ApplyResult result = engine.apply(
+            current,
+            ApplySource::kLocalInteraction,
+            objects,
+            ledger,
+            generation,
+            canonical_commit_clock);
         outcome.dispositions.push_back(result.disposition);
         outcome.issues.push_back(result.error.issue);
         outcome.generations.push_back(generation.current());
-        outcome.change_sets.push_back(result.change_set);
+        if (result.commit_record.has_value()) {
+            outcome.change_sets.push_back(result.commit_record->change_set);
+        } else {
+            outcome.change_sets.push_back(std::nullopt);
+        }
     }
     outcome.final_objects = objects.allObjects();
     return outcome;
