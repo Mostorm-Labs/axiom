@@ -1,0 +1,91 @@
+{
+  "format": "axiom-gt-g1-05-a5-provider-diff-v1",
+  "taskId": "GT-G1-05-A5",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A5-P31-v0.1",
+  "taskAnchor": {
+    "revision": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+    "relation": "ancestor"
+  },
+  "acceptedStartingRevision": "d71c80dd1eb9dd8a3078f2be2e442d38bb6cff64",
+  "actualStartingRevision": "d71c80dd1eb9dd8a3078f2be2e442d38bb6cff64",
+  "executionRef": "codex/gt-g1-05-a5-15-operation-differential",
+  "sourceCommit": "cfc208a58f5231eac74cd5111a372ffb0444e915",
+  "testedCommit": "cfc208a58f5231eac74cd5111a372ffb0444e915",
+  "operationFamilies": [
+    "InsertObjects", "DeleteObjects", "RestoreObjects", "SetPlacements",
+    "SetTransforms", "PatchProperties", "SetObjectSize",
+    "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes",
+    "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"
+  ],
+  "providerOutputUsedAsExpected": false,
+  "productionSemanticFilesChanged": false,
+  "expectedTruthWrites": 0,
+  "validApply": {
+    "families": 15,
+    "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "rows": 30,
+    "result": "PASS",
+    "oracles": [
+      "literal final ObjectStore projection",
+      "exact operation/source/before-generation/after-generation fields",
+      "fixed RuntimeEpoch and first CommitOrdinal",
+      "exact deterministic ChangeSet object IDs, flags, and changed FieldIds",
+      "AppliedOperationLedger canonical operation membership",
+      "Indexed rebuild equivalence"
+    ]
+  },
+  "atomicRejection": {
+    "families": 15,
+    "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "rows": 30,
+    "result": "PASS",
+    "sideEffects": ["no commit record", "unchanged projection", "unchanged ledger", "unchanged generation", "unchanged ordinal", "Indexed rebuild equivalence"]
+  },
+  "specialOracles": {
+    "idempotency": "PASS: both providers, no second commit/state/generation/ordinal/publication effect",
+    "operationIdCollision": "PASS: both providers, rejected with no state/generation/ordinal/ledger overwrite",
+    "deleteSubtreeConnectorCascade": "PASS: both providers, exact deleted IDs [1,2,3,10,20], sentinel preserved",
+    "splitStrokes": "PASS: both providers, source deleted and replacement IDs created in one ChangeSet",
+    "patchProperties": "PASS: both providers, literal sorted PropertyBag and FieldIds [1,2]",
+    "applySourceParity": "PASS: LocalInteraction/RestoreReplay/RemoteSync canonical parity; Eligible/NoEcho/NoEcho"
+  },
+  "focusedTests": {
+    "target": "canvas_semantic_operation_engine_15_operation_conformance_test",
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "result": "PASS"
+  },
+  "semanticRegression": {
+    "build": "PASS",
+    "fullCTest": {
+      "total": 407,
+      "passed": 395,
+      "failed": 0,
+      "protobufOffSkipped": 12,
+      "result": "PASS"
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "scope": {
+    "sourceDeltaFromAcceptedStartingRevision": [
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/operation_engine_15_operation_conformance_test.cpp"
+    ],
+    "forbiddenScopeDelta": [],
+    "productionSemanticFilesChanged": false,
+    "a6Started": false,
+    "gtG106Started": false,
+    "sourceToMaterializedDelta": "exactly this evidence file"
+  },
+  "hostedCI": {
+    "workflow": "G1 Semantic Codec",
+    "runId": 33713213264,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33713213264",
+    "headSha": "cfc208a58f5231eac74cd5111a372ffb0444e915",
+    "checkoutSha": "cfc208a58f5231eac74cd5111a372ffb0444e915",
+    "status": "PASS",
+    "exactSource": true
+  },
+  "status": "READY_FOR_CONTROL_REVIEW"
+}
