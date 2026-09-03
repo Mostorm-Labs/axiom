@@ -561,7 +561,8 @@ target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ../tool
 target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ../src)
 target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_06_projection_test PRIVATE
-  G1_06_PROJECTION_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../tools/g1_06_projection.cpp")
+  G1_06_PROJECTION_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../tools/g1_06_projection.cpp"
+  G1_06_PROJECTION_HEADER_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../tools/g1_06_projection.hpp")
 target_link_libraries(canvas_semantic_g1_06_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 if(MSVC)
   target_compile_options(canvas_semantic_g1_06_projection_test PRIVATE /W4 /permissive- /WX /EHsc)

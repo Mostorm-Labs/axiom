@@ -5,6 +5,7 @@
 #include <bit>
 #include <cstdint>
 #include <iomanip>
+#include <locale>
 #include <span>
 #include <sstream>
 #include <string>
@@ -28,6 +29,7 @@ Overloaded(Visitors...) -> Overloaded<Visitors...>;
 template <typename Integer>
 std::string fixedHex(Integer value, std::size_t width) {
     std::ostringstream out;
+    out.imbue(std::locale::classic());
     out << std::hex << std::nouppercase << std::setfill('0') << std::setw(static_cast<int>(width))
         << value;
     return out.str();
@@ -35,6 +37,7 @@ std::string fixedHex(Integer value, std::size_t width) {
 
 std::string byteHex(std::span<const std::uint8_t> bytes, const char* prefix) {
     std::ostringstream out;
+    out.imbue(std::locale::classic());
     out << prefix << std::hex << std::nouppercase << std::setfill('0');
     for (const std::uint8_t byte : bytes) {
         out << std::setw(2) << static_cast<unsigned>(byte);
