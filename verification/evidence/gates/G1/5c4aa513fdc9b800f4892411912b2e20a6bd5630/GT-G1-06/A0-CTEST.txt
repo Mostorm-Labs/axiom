@@ -1,6 +1,19 @@
-GT-G1-06 / A0 P32 verification transcript
+GT-G1-06 / A0 P32 verification transcript and P36 independent reverification
 source_ref: 5c4aa513fdc9b800f4892411912b2e20a6bd5630
 execution_ref: codex/gt-g1-06-snapshot-replay
+P36 finding: A0-P34-B1
+P36 classification: EVIDENCE_GAP (P32 execution evidence)
+prior_materialized_ref: 677dc14d307cb6c623099a30669eed7d88c0b6f6
+
+P36 fresh independent checkout
+checkout: /tmp/axiom-g1-06-reverify.nuwKal/repo
+checkout HEAD before configure: 5c4aa513fdc9b800f4892411912b2e20a6bd5630
+pre-existing tracked modifications: none (git status --porcelain=v1 was empty)
+independent dependency bootstrap:
+  - python3 tools/bootstrap_deps.py --core: PASS
+  - python3 tools/bootstrap_deps.py --semantic-codec: PASS
+  - protobuf/abseil/utf8_range paths resolved from this checkout's .deps
+  - original execution worktree .deps/out were not used
 
 protobuf-disabled semantic configuration
 command: cmake --build build --target canvas_semantic_g1_06_projection_test canvas_semantic_g1_06_projection_differential_test -j2
@@ -20,10 +33,20 @@ tests:
   - semantic mutation sensitivity
 output_sha256: 07cb08a56959dbdbc7b2088852e802d8fee55a0404abdb9e39bf7f52654394f7
 
+P36 protobuf-disabled focused CTest (fresh build directory)
+command: ctest --test-dir out/semantic-off -R 'g1_06_projection' --output-on-failure
+result: PASS (8/8; 0 failures)
+output_sha256: bf16d76fc56e1fd95e22e7a8fe1a140a141ab360e5b962ed5813ca1975f7591c
+
 complete semantic CTest
 command: ctest --test-dir build --output-on-failure
 result: PASS (415/415; 0 failures; 12 protobuf-preflight tests skipped by protobuf-disabled configuration)
 output_sha256: 79a3195dfcf4dcb264fdedb296219abd89b73752d37e7c00146c5c421153ad02
+
+P36 complete semantic CTest (fresh build directory)
+command: ctest --test-dir out/semantic-off --output-on-failure
+result: PASS (415/415; 0 failures; 12 protobuf-preflight tests skipped by protobuf-disabled configuration)
+output_sha256: 7557f8d0eb2e27948c049f7752f02b5cf47a732f80ada2da38b1eb9a8094de15
 
 host-native protobuf-enabled semantic configuration
 command: cmake -S . -B build-proto-arm64 -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR=/tmp/axiom-g1-06-protobuf-config
@@ -31,6 +54,18 @@ command: cmake --build build-proto-arm64 --target canvas_semantic_g1_06_projecti
 command: ctest --test-dir build-proto-arm64 --output-on-failure -R g1_06_projection
 result: PASS (8/8; 0 failures)
 toolchain: host-native arm64 protobuf 36.0; temporary configuration outside repository
+
+P36 protobuf-enabled focused CTest (fresh build directory and isolated dependencies)
+configure: cmake -S . -B out/semantic-on -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR="$PWD/.deps/protobuf/lib/cmake/protobuf" -Dabsl_DIR="$PWD/.deps/protobuf/lib/cmake/absl" -Dutf8_range_DIR="$PWD/.deps/protobuf/lib/cmake/utf8_range"
+build: cmake --build out/semantic-on --target canvas_semantic_g1_06_projection_test canvas_semantic_g1_06_projection_differential_test
+command: ctest --test-dir out/semantic-on -R 'g1_06_projection' --output-on-failure
+result: PASS (8/8; 0 failures)
+output_sha256: 532975467ea7f89cf61e2440e9edd868621a71b335649a8d4a298e13bd9f973f
+
+P36 source guard
+command: git diff --quiet 5c4aa513fdc9b800f4892411912b2e20a6bd5630
+result: PASS (fresh checkout tracked source unchanged after verification)
+untracked paths: only fresh checkout .deps and out build directories
 
 format check
 command: git diff --check

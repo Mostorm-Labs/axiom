@@ -14,6 +14,25 @@
     "reconciliation": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
     "sourceRef": "5c4aa513fdc9b800f4892411912b2e20a6bd5630"
   },
+  "p36Reverification": {
+    "findingId": "A0-P34-B1",
+    "classification": "EVIDENCE_GAP",
+    "priorMaterializedRef": "677dc14d307cb6c623099a30669eed7d88c0b6f6",
+    "freshIndependentCheckout": {
+      "headBeforeConfigure": "5c4aa513fdc9b800f4892411912b2e20a6bd5630",
+      "preExistingTrackedModifications": false,
+      "freshBuildDirectories": ["out/semantic-off", "out/semantic-on"],
+      "independentDependencyBootstrap": "PASS",
+      "dependsOnOriginalWorktreeUntrackedFiles": false,
+      "trackedSourceUnchangedAfterVerification": true
+    },
+    "results": {
+      "protobufDisabledFocusedCTest": "PASS 8/8",
+      "completeSemanticCTest": "PASS 415/415; 12 protobuf-preflight tests skipped in protobuf-disabled configuration",
+      "protobufEnabledFocusedCTest": "PASS 8/8",
+      "returnStatus": "READY_FOR_P34_REREVIEW"
+    }
+  },
   "projectionContract": {
     "format": "axiom-verification-projection-v1",
     "formatVersion": 1,

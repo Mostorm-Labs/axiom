@@ -8,6 +8,43 @@
     "relation": "ancestor"
   },
   "sourceRef": "5c4aa513fdc9b800f4892411912b2e20a6bd5630",
+  "p36Reverification": {
+    "findingId": "A0-P34-B1",
+    "classification": "EVIDENCE_GAP",
+    "priorMaterializedRef": "677dc14d307cb6c623099a30669eed7d88c0b6f6",
+    "freshIndependentCheckout": {
+      "headBeforeConfigure": "5c4aa513fdc9b800f4892411912b2e20a6bd5630",
+      "preExistingTrackedModifications": false,
+      "freshConfigureBuildDirectories": [
+        "out/semantic-off",
+        "out/semantic-on"
+      ],
+      "independentDependencyBootstrap": [
+        "tools/bootstrap_deps.py --core",
+        "tools/bootstrap_deps.py --semantic-codec"
+      ],
+      "dependsOnOriginalWorktreeUntrackedFiles": false,
+      "trackedSourceUnchangedAfterVerification": true
+    },
+    "requiredResults": {
+      "protobufDisabledFocusedCTest": {
+        "result": "PASS",
+        "tests": "8/8",
+        "outputSha256": "bf16d76fc56e1fd95e22e7a8fe1a140a141ab360e5b962ed5813ca1975f7591c"
+      },
+      "fullSemanticCTest": {
+        "result": "PASS",
+        "tests": "415/415",
+        "protobufPreflightSkipped": 12,
+        "outputSha256": "7557f8d0eb2e27948c049f7752f02b5cf47a732f80ada2da38b1eb9a8094de15"
+      },
+      "protobufEnabledFocusedCTest": {
+        "result": "PASS",
+        "tests": "8/8",
+        "outputSha256": "532975467ea7f89cf61e2440e9edd868621a71b335649a8d4a298e13bd9f973f"
+      }
+    }
+  },
   "sourceCommitsFromAnchor": 2,
   "sourceDiffFromAnchor": {
     "fileCount": 5,
@@ -49,7 +86,17 @@
       "A0-CTEST.txt",
       "A0-DIFF.json"
     ],
-    "sourceToMaterializedDelta": "evidence-only; verified after materialized commit"
+    "sourceToMaterializedDelta": {
+      "classification": "evidence-only",
+      "changedFileCount": 3,
+      "allowedFilesOnly": true,
+      "actualFiles": [
+        "verification/evidence/gates/G1/5c4aa513fdc9b800f4892411912b2e20a6bd5630/GT-G1-06/A0-CTEST.txt",
+        "verification/evidence/gates/G1/5c4aa513fdc9b800f4892411912b2e20a6bd5630/GT-G1-06/A0-DIFF.json",
+        "verification/evidence/gates/G1/5c4aa513fdc9b800f4892411912b2e20a6bd5630/GT-G1-06/A0-PROJECTION.json"
+      ],
+      "verification": "git diff --name-only source_ref..materialized_ref after materialized commit"
+    }
   },
   "gitDiffCheck": "PASS"
 }
