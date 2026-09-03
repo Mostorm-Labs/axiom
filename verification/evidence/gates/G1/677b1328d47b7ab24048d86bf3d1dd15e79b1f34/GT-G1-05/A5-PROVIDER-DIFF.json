@@ -1,0 +1,612 @@
+{
+  "format": "axiom-gt-g1-05-a5-provider-diff-v2",
+  "taskId": "GT-G1-05-A5",
+  "stage": "P36",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A5-P31-v0.1",
+  "p36AuthorizationRef": "notion://3d04c57a-590c-81a1-ad06-c18dd066ed8f/GT-G1-05-A5-P36-v0.1",
+  "taskAnchor": {
+    "revision": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+    "relation": "ancestor"
+  },
+  "acceptedStartingRevision": "d71c80dd1eb9dd8a3078f2be2e442d38bb6cff64",
+  "actualRepairStartingRevision": "e085cdfbee3923506bee7d9367216b115280a136",
+  "priorSourceRef": "cfc208a58f5231eac74cd5111a372ffb0444e915",
+  "priorMaterializedRef": "e085cdfbee3923506bee7d9367216b115280a136",
+  "executionRef": "codex/gt-g1-05-a5-15-operation-differential",
+  "sourceCommit": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+  "testedCommit": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+  "findings": [
+    {
+      "id": "A5-P34-B1",
+      "class": "TEST_ORACLE_GAP",
+      "result": "FIXED",
+      "proof": "All 15 negative fixtures now use structurally valid family payloads and structurally valid initial records before asserting the exact authority-derived stateful rejection."
+    },
+    {
+      "id": "A5-P34-B2",
+      "class": "EVIDENCE_GAP",
+      "result": "FIXED",
+      "proof": "This source-bound artifact records every valid and negative row, both provider observations, authority refs, special oracles, regressions, scope, and exact-source hosted CI."
+    }
+  ],
+  "currentAuthorityRefs": [
+    {
+      "scope": "P30 GT-G1-05 authority package",
+      "ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff"
+    },
+    {
+      "scope": "V1 structural operation contract",
+      "ref": "notion://3c94c57a-590c-81cf-97eb-f6c89fce563e"
+    },
+    {
+      "scope": "15-family payload, atomicity, and idempotency contract",
+      "ref": "notion://3c44c57a-590c-81b7-8f2c-e18ff60bb6c0"
+    },
+    {
+      "scope": "apply flow, source, and no-echo contract",
+      "ref": "notion://3c44c57a-590c-81dc-9f65-ec33c8109492"
+    },
+    {
+      "scope": "canonical commit, SemanticGeneration, and ChangeSet contract",
+      "ref": "notion://3c44c57a-590c-815d-8d3c-c74bfce15196"
+    },
+    {
+      "scope": "accepted A4 publication projection",
+      "ref": "notion://3d04c57a-590c-8110-a25e-c8a3624e5e47"
+    },
+    {
+      "scope": "broader verification input",
+      "ref": "notion://3c44c57a-590c-81d9-a2ea-f77cc4fb67c2"
+    }
+  ],
+  "operationFamilies": [
+    "InsertObjects",
+    "DeleteObjects",
+    "RestoreObjects",
+    "SetPlacements",
+    "SetTransforms",
+    "PatchProperties",
+    "SetObjectSize",
+    "SetVectorPathGeometry",
+    "SetImageContent",
+    "AddStroke",
+    "SplitStrokes",
+    "AddEraseMasks",
+    "RemoveEraseMasks",
+    "EditRichText",
+    "SetConnectorContent"
+  ],
+  "oracleIndependence": {
+    "expectedTruthSource": "Current Authority literals encoded in the test oracle",
+    "providerAgreementUsedAsCorrectnessProof": false,
+    "providerOutputUsedAsExpected": false,
+    "expectedTruthWrites": 0,
+    "productionSemanticDependenciesAdded": 0
+  },
+  "validRowCommonExpectation": {
+    "disposition": "APPLIED",
+    "source": "LOCAL_INTERACTION",
+    "beforeGeneration": 0,
+    "afterGeneration": 1,
+    "commitStamp": {
+      "runtimeEpoch": 9,
+      "commitOrdinal": 1
+    },
+    "ledgerContainsCanonicalOperation": true
+  },
+  "validRows": [
+    {
+      "row": 1,
+      "family": "InsertObjects",
+      "operationId": 5001,
+      "fixture": "insert Shape 100",
+      "expectedPostState": "[Shape 100]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["CREATED"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 2,
+      "family": "DeleteObjects",
+      "operationId": 5002,
+      "fixture": "delete existing Shape 100",
+      "expectedPostState": "[]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["DELETED"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 3,
+      "family": "RestoreObjects",
+      "operationId": 5003,
+      "fixture": "restore Shape 100 into empty state",
+      "expectedPostState": "[Shape 100]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["CREATED"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 4,
+      "family": "SetPlacements",
+      "operationId": 5004,
+      "fixture": "set Shape 100 order key to [9]",
+      "expectedPostState": "[Shape 100 with parent=null and order=[9]]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["PLACEMENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 5,
+      "family": "SetTransforms",
+      "operationId": 5005,
+      "fixture": "set Shape 100 transform translation to (8,9)",
+      "expectedPostState": "[Shape 100 with transform [1,0,0,1,8,9]]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["TRANSFORM"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 6,
+      "family": "PatchProperties",
+      "operationId": 5006,
+      "fixture": "set Shape 100 fields 2=true and 1=false in reverse input order",
+      "expectedPostState": "[Shape 100 with sorted properties {1:false,2:true}]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["PROPERTIES"], "changedFields": [1, 2]}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 7,
+      "family": "SetObjectSize",
+      "operationId": 5007,
+      "fixture": "resize Shape 100 to 20x30",
+      "expectedPostState": "[Shape 100 with shape kind=1 width=20 height=30]",
+      "expectedChangeSet": [{"objectId": 100, "flags": ["CONTENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 8,
+      "family": "SetVectorPathGeometry",
+      "operationId": 5008,
+      "fixture": "set VectorPath 101 to EvenOdd Move(2,3) Line(4,5)",
+      "expectedPostState": "[VectorPath 101 with EvenOdd geometry Move(2,3),Line(4,5)]",
+      "expectedChangeSet": [{"objectId": 101, "flags": ["CONTENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 9,
+      "family": "SetImageContent",
+      "operationId": 5009,
+      "fixture": "set Image 102 resource=801 intrinsic=44x55 mode=Fill size=66x77",
+      "expectedPostState": "[Image 102 with resource=801 intrinsic=44x55 mode=Fill width=66 height=77]",
+      "expectedChangeSet": [{"objectId": 102, "flags": ["CONTENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 10,
+      "family": "AddStroke",
+      "operationId": 5010,
+      "fixture": "add structurally valid VectorStroke 103",
+      "expectedPostState": "[VectorStroke 103]",
+      "expectedChangeSet": [{"objectId": 103, "flags": ["CREATED"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 11,
+      "family": "SplitStrokes",
+      "operationId": 5011,
+      "fixture": "split VectorStroke 103 into VectorStroke 106",
+      "expectedPostState": "[VectorStroke 106]",
+      "expectedChangeSet": [
+        {"objectId": 103, "flags": ["DELETED"], "changedFields": []},
+        {"objectId": 106, "flags": ["CREATED"], "changedFields": []}
+      ],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 12,
+      "family": "AddEraseMasks",
+      "operationId": 5012,
+      "fixture": "add mask 701 to VectorStroke 103",
+      "expectedPostState": "[VectorStroke 103 with erase mask 701]",
+      "expectedChangeSet": [{"objectId": 103, "flags": ["ERASE_MASKS"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 13,
+      "family": "RemoveEraseMasks",
+      "operationId": 5013,
+      "fixture": "remove existing mask 701 from VectorStroke 103",
+      "expectedPostState": "[VectorStroke 103 with no erase masks]",
+      "expectedChangeSet": [{"objectId": 103, "flags": ["ERASE_MASKS"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 14,
+      "family": "EditRichText",
+      "operationId": 5014,
+      "fixture": "apply an empty canonical delta to RichText 104 containing paragraph 1040 and text A",
+      "expectedPostState": "[RichText 104 containing paragraph 1040 and text A]",
+      "expectedChangeSet": [{"objectId": 104, "flags": ["CONTENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 15,
+      "family": "SetConnectorContent",
+      "operationId": 5015,
+      "fixture": "set Connector 105 to free endpoints (5,6),(7,8) and Orthogonal routing",
+      "expectedPostState": "[Connector 105 with free endpoints (5,6),(7,8) and Orthogonal routing]",
+      "expectedChangeSet": [{"objectId": 105, "flags": ["CONTENT"], "changedFields": []}],
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true},
+        "IndexedObjectStore": {"disposition": "APPLIED", "postStateMatched": true, "generationMatched": true, "commitStampMatched": true, "changeSetMatched": true, "ledgerMatched": true, "indexRebuildEquivalent": true}
+      }
+    }
+  ],
+  "negativeRowCommonExpectation": {
+    "disposition": "REJECTED",
+    "payloadStructuralValidation": "PASS",
+    "initialRecordStructuralValidation": "PASS",
+    "commitRecordPresent": false,
+    "postStateUnchanged": true,
+    "attemptedOperationLedgerEntryPresent": false,
+    "priorLedgerEntryPreserved": true,
+    "generationUnchanged": true,
+    "commitOrdinalUnchanged": true
+  },
+  "negativeRows": [
+    {
+      "row": 1,
+      "family": "InsertObjects",
+      "operationId": 3001,
+      "fixture": "insert valid Shape 77 when Shape 77 already exists",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "OBJECT_ALREADY_EXISTS",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 2,
+      "family": "DeleteObjects",
+      "operationId": 3002,
+      "fixture": "delete missing Object 999",
+      "initialObjectIds": [],
+      "expectedStatefulIssue": "OBJECT_MISSING",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 3,
+      "family": "RestoreObjects",
+      "operationId": 3003,
+      "fixture": "restore valid Shape 77 when Shape 77 already exists",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "OBJECT_ALREADY_EXISTS",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 4,
+      "family": "SetPlacements",
+      "operationId": 3004,
+      "fixture": "set a valid placement on missing Object 999",
+      "initialObjectIds": [],
+      "expectedStatefulIssue": "OBJECT_MISSING",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 5,
+      "family": "SetTransforms",
+      "operationId": 3005,
+      "fixture": "set a valid transform on missing Object 999",
+      "initialObjectIds": [],
+      "expectedStatefulIssue": "OBJECT_MISSING",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 6,
+      "family": "PatchProperties",
+      "operationId": 3006,
+      "fixture": "set property field 1=false on missing Object 999",
+      "initialObjectIds": [],
+      "expectedStatefulIssue": "OBJECT_MISSING",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 7,
+      "family": "SetObjectSize",
+      "operationId": 3007,
+      "fixture": "set size 1x1 on valid Group 77",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "INVALID_APPLICABILITY",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 8,
+      "family": "SetVectorPathGeometry",
+      "operationId": 3008,
+      "fixture": "set valid VectorPath geometry on valid Shape 77",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "INVALID_APPLICABILITY",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 9,
+      "family": "SetImageContent",
+      "operationId": 3009,
+      "fixture": "set valid Image content resource=801 intrinsic=20x30 mode=Fit size=20x30 on valid Shape 77",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "INVALID_APPLICABILITY",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "INVALID_APPLICABILITY", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 10,
+      "family": "AddStroke",
+      "operationId": 3010,
+      "fixture": "add structurally valid VectorStroke 77 whose ID collides with existing Shape 77",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "OBJECT_ALREADY_EXISTS",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_ALREADY_EXISTS", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 11,
+      "family": "SplitStrokes",
+      "operationId": 3011,
+      "fixture": "split missing VectorStroke 999 using structurally valid replacement VectorStroke 78",
+      "initialObjectIds": [],
+      "expectedStatefulIssue": "OBJECT_MISSING",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "OBJECT_MISSING", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 12,
+      "family": "AddEraseMasks",
+      "operationId": 3012,
+      "fixture": "add structurally valid existing mask 500 to mask-capable VectorStroke 77 that already contains mask 500",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "MASK_STATE_INVALID",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "MASK_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "MASK_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 13,
+      "family": "RemoveEraseMasks",
+      "operationId": 3013,
+      "fixture": "remove missing mask 999 from mask-capable VectorStroke 77 containing valid mask 500",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "MASK_STATE_INVALID",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "MASK_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "MASK_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 14,
+      "family": "EditRichText",
+      "operationId": 3014,
+      "fixture": "apply a structurally valid staged RichText delta to RichText 77: insert X into paragraph 770, then delete from missing paragraph 999",
+      "initialObjectIds": [77],
+      "expectedStatefulIssue": "TEXT_STATE_INVALID",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "TEXT_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "TEXT_STATE_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    },
+    {
+      "row": 15,
+      "family": "SetConnectorContent",
+      "operationId": 3015,
+      "fixture": "set Connector 77 to structurally valid attached endpoint targeting non-connectable Group 88",
+      "initialObjectIds": [77, 88],
+      "expectedStatefulIssue": "CONNECTOR_INVALID",
+      "observed": {
+        "ReferenceObjectStore": {"disposition": "REJECTED", "statefulIssue": "CONNECTOR_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS"},
+        "IndexedObjectStore": {"disposition": "REJECTED", "statefulIssue": "CONNECTOR_INVALID", "payloadStructuralValidation": "PASS", "initialRecordStructuralValidation": "PASS", "sideEffectChecks": "PASS", "indexRebuildEquivalent": true}
+      }
+    }
+  ],
+  "negativeSideEffectProof": {
+    "rows": 30,
+    "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "priorLedgerFixture": "Applied InsertObjects operation 8000 for Shape 8000",
+    "assertedForEveryRow": [
+      "commit record absent",
+      "canonical post-state byte-equivalent at the typed projection level",
+      "attempted OperationId absent from AppliedOperationLedger",
+      "prior ledger canonical operation ID preserved",
+      "prior ledger canonical payload preserved",
+      "prior ledger fingerprint preserved",
+      "SemanticGeneration unchanged",
+      "CommitOrdinal unchanged",
+      "IndexedObjectStore index remains rebuild-equivalent"
+    ],
+    "result": "PASS"
+  },
+  "specialOracles": {
+    "idempotency": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "equivalentRepeatDisposition": "ALREADY_APPLIED",
+      "secondCommitRecordPresent": false,
+      "stateGenerationOrdinalAndLedgerUnchanged": true,
+      "result": "PASS"
+    },
+    "operationIdCollision": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "disposition": "REJECTED",
+      "issue": "OPERATION_ID_COLLISION",
+      "stateGenerationOrdinalAndExistingLedgerEntryUnchanged": true,
+      "result": "PASS"
+    },
+    "deleteSubtreeConnectorCascade": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "root": 1,
+      "expectedDeletedObjectIds": [1, 2, 3, 10, 20],
+      "observedDeletedObjectIds": [1, 2, 3, 10, 20],
+      "unrelatedSentinelId": 99,
+      "sentinelPreserved": true,
+      "result": "PASS"
+    },
+    "splitStrokes": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "sourceId": 200,
+      "replacementIds": [201, 202],
+      "expectedChangeSet": [
+        {"objectId": 200, "flags": ["DELETED"], "changedFields": []},
+        {"objectId": 201, "flags": ["CREATED"], "changedFields": []},
+        {"objectId": 202, "flags": ["CREATED"], "changedFields": []}
+      ],
+      "result": "PASS"
+    },
+    "patchProperties": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "literalSortedProperties": "{1:false,2:true}",
+      "changedFieldIds": [1, 2],
+      "result": "PASS"
+    },
+    "applySourceParity": {
+      "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+      "canonicalResultsEqual": true,
+      "publicationDisposition": {
+        "LOCAL_INTERACTION": "ELIGIBLE",
+        "RESTORE_REPLAY": "NO_ECHO",
+        "REMOTE_SYNC": "NO_ECHO"
+      },
+      "result": "PASS"
+    }
+  },
+  "focusedTests": {
+    "target": "canvas_semantic_operation_engine_15_operation_conformance_test",
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "result": "PASS"
+  },
+  "mandatoryRegressions": [
+    {"target": "canvas_semantic_g1_04_b_operation_matrix_test", "tests": 5, "passed": 5, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_atomic_apply_test", "tests": 10, "passed": 10, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_atomic_apply_differential_test", "tests": 3, "passed": 3, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_apply_test", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_apply_differential_test", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_generation_change_set_test", "tests": 6, "passed": 6, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_generation_change_set_differential_test", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_canonical_commit_clock_test", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_canonical_commit_test", "tests": 8, "passed": 8, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_canonical_commit_differential_test", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_operation_engine_publication_projection_test", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+    {"target": "canvas_semantic_semantic_types_test", "tests": 19, "passed": 19, "failed": 0, "result": "PASS"}
+  ],
+  "semanticRegression": {
+    "build": "PASS",
+    "fullCTest": {
+      "total": 407,
+      "passed": 395,
+      "failed": 0,
+      "protobufOffSkipped": 12,
+      "result": "PASS"
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "scope": {
+    "repairSourceDeltaFromPriorMaterializedRef": [
+      "runtime/semantic/tests/operation_engine_15_operation_conformance_test.cpp"
+    ],
+    "originalA5SourceDeltaFromAcceptedStartingRevisionToPriorSource": [
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/operation_engine_15_operation_conformance_test.cpp"
+    ],
+    "inheritedPriorMaterialization": [
+      "verification/evidence/gates/G1/cfc208a58f5231eac74cd5111a372ffb0444e915/GT-G1-05/A5-PROVIDER-DIFF.json"
+    ],
+    "forbiddenScopeDelta": [],
+    "productionSemanticFilesChanged": false,
+    "productionHeaderFilesChanged": false,
+    "c1ThroughC4Changed": false,
+    "a0ThroughA4Changed": false,
+    "schemasOrProtoChanged": false,
+    "a6Started": false,
+    "gtG106Started": false,
+    "evidencePath": "verification/evidence/gates/G1/677b1328d47b7ab24048d86bf3d1dd15e79b1f34/GT-G1-05/A5-PROVIDER-DIFF.json",
+    "sourceToMaterializedExpectedDelta": "exactly this evidence file"
+  },
+  "hostedCI": {
+    "workflow": "G1 Semantic Codec",
+    "runId": 33726621435,
+    "jobId": 100556938614,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33726621435",
+    "headBranch": "codex/gt-g1-05-a5-15-operation-differential",
+    "headSha": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+    "checkoutSha": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+    "job": "semantic-codec / hosted-linux",
+    "jobConclusion": "success",
+    "status": "PASS",
+    "exactSource": true
+  },
+  "status": "READY_FOR_P34_REREVIEW"
+}
