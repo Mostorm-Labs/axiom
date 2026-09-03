@@ -554,6 +554,36 @@ target_compile_definitions(canvas_semantic_g1_04_c_projection_test PRIVATE G1_C_
 target_link_libraries(canvas_semantic_g1_04_c_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 gtest_discover_tests(canvas_semantic_g1_04_c_projection_test)
 
+add_executable(canvas_semantic_g1_06_projection_test
+  g1_06_projection_test.cpp
+  ../tools/g1_06_projection.cpp)
+target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_06_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_06_projection_test PRIVATE
+  G1_06_PROJECTION_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../tools/g1_06_projection.cpp")
+target_link_libraries(canvas_semantic_g1_06_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_06_projection_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_06_projection_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_06_projection_test TEST_PREFIX "g1_06_projection.")
+
+add_executable(canvas_semantic_g1_06_projection_differential_test
+  g1_06_projection_differential_test.cpp
+  ../tools/g1_06_projection.cpp)
+target_include_directories(canvas_semantic_g1_06_projection_differential_test PRIVATE ../tools)
+target_include_directories(canvas_semantic_g1_06_projection_differential_test PRIVATE ../src)
+target_include_directories(canvas_semantic_g1_06_projection_differential_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_link_libraries(canvas_semantic_g1_06_projection_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_06_projection_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_06_projection_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_06_projection_differential_test TEST_PREFIX "g1_06_projection.")
+
 add_executable(canvas_semantic_g1_04_c_observer_contract_test
   g1_04_c_observer_contract_test.cpp
   ../tools/g1_04_c_fixture_decoder.cpp
