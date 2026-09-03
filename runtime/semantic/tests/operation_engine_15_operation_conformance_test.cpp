@@ -1,4 +1,5 @@
 #include "canvas/semantic/applied_operation_ledger.hpp"
+#include "canvas/semantic/commit_publication_projection.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
@@ -69,6 +70,32 @@ TEST(OperationEngine15OperationConformance, DeleteSubtreeCascadesAttachedConnect
     ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,root)); ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,child)); ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,sentinel));
     auto r=e.apply(op(DeleteObjectsOp{{root.id}},4001),ApplySource::kLocalInteraction,s,l,g,c); ASSERT_EQ(r.disposition,ApplyDisposition::kApplied); EXPECT_FALSE(s.contains(root.id)); EXPECT_FALSE(s.contains(child.id)); EXPECT_TRUE(s.contains(sentinel.id)); ASSERT_TRUE(r.commit_record.has_value()); ASSERT_EQ(r.commit_record->change_set.objects().size(),2U); EXPECT_EQ(r.commit_record->change_set.objects()[0].flags,SemanticChangeFlags::kDeleted);
 }
+
+template<class Store> void splitOracle(){ Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e; auto src=stroke(200); auto a=stroke(201); auto b=stroke(202); ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,src)); auto r=e.apply(op(SplitStrokesOp{{StrokeSplit{src.id,{a,b}}}},4100),ApplySource::kLocalInteraction,s,l,g,c); ASSERT_EQ(r.disposition,ApplyDisposition::kApplied); EXPECT_FALSE(s.contains(src.id)); EXPECT_TRUE(s.contains(a.id)); EXPECT_TRUE(s.contains(b.id)); ASSERT_TRUE(r.commit_record.has_value()); ASSERT_EQ(r.commit_record->change_set.objects().size(),3U); EXPECT_EQ(r.commit_record->change_set.objects()[0].object_id,src.id); EXPECT_EQ(r.commit_record->change_set.objects()[0].flags,SemanticChangeFlags::kDeleted); EXPECT_EQ(r.commit_record->change_set.objects()[1].flags,SemanticChangeFlags::kCreated); EXPECT_EQ(r.commit_record->change_set.objects()[2].flags,SemanticChangeFlags::kCreated); }
+TEST(OperationEngine15OperationConformance, SplitStrokesDeletesSourceAndCreatesDeterministicReplacements){splitOracle<ReferenceObjectStore>();splitOracle<IndexedObjectStore>();}
+
+template<class Store> void idempotencyAndCollisionOracle(){
+    Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e;
+    const Operation first=op(InsertObjectsOp{{shape(300,3)}},4200);
+    ASSERT_EQ(e.apply(first,ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);
+    const auto before_objects=s.allObjects(); const auto before_entry=l.find(first.id); const auto before_generation=g.current(); const auto before_ordinal=c.lastCommittedOrdinal();
+    const auto already=e.apply(first,ApplySource::kLocalInteraction,s,l,g,c);
+    EXPECT_EQ(already.disposition,ApplyDisposition::kAlreadyApplied); EXPECT_FALSE(already.commit_record.has_value()); EXPECT_EQ(s.allObjects(),before_objects); ASSERT_TRUE(before_entry.has_value()); ASSERT_TRUE(l.find(first.id).has_value()); EXPECT_EQ(l.find(first.id)->canonical_operation.id,before_entry->canonical_operation.id); EXPECT_EQ(l.find(first.id)->canonical_operation.payload,before_entry->canonical_operation.payload); EXPECT_EQ(g.current(),before_generation); EXPECT_EQ(c.lastCommittedOrdinal(),before_ordinal);
+    const auto collision=e.apply(op(DeleteObjectsOp{{id(300)}},4200),ApplySource::kLocalInteraction,s,l,g,c);
+    EXPECT_EQ(collision.disposition,ApplyDisposition::kRejected); EXPECT_EQ(collision.error.issue,StatefulIssue::kOperationIdCollision); EXPECT_FALSE(collision.commit_record.has_value()); EXPECT_EQ(s.allObjects(),before_objects); ASSERT_TRUE(l.find(first.id).has_value()); EXPECT_EQ(l.find(first.id)->canonical_operation.id,before_entry->canonical_operation.id); EXPECT_EQ(l.find(first.id)->canonical_operation.payload,before_entry->canonical_operation.payload); EXPECT_EQ(g.current(),before_generation); EXPECT_EQ(c.lastCommittedOrdinal(),before_ordinal); if constexpr(std::is_same_v<Store,IndexedObjectStore>) EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s));
+}
+TEST(OperationEngine15OperationConformance, IdempotencyAndCollisionAreAtomicOnBothProviders){idempotencyAndCollisionOracle<ReferenceObjectStore>();idempotencyAndCollisionOracle<IndexedObjectStore>();}
+
+template<class Store> void sourceParity(){
+    const Operation incoming=op(InsertObjectsOp{{shape(400,4)}},4300);
+    std::vector<ApplySource> sources{ApplySource::kLocalInteraction,ApplySource::kRestoreReplay,ApplySource::kRemoteSync};
+    std::vector<std::vector<ObjectRecord>> states; std::vector<CanonicalCommitRecord> records;
+    for (auto source:sources){ Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(77)); OperationEngine e; auto result=e.apply(incoming,source,s,l,g,c); ASSERT_EQ(result.disposition,ApplyDisposition::kApplied); ASSERT_TRUE(result.commit_record.has_value()); states.push_back(s.allObjects()); records.push_back(*result.commit_record); }
+    EXPECT_EQ(states[0],states[1]); EXPECT_EQ(states[1],states[2]);
+    for (std::size_t i=0;i<records.size();++i){ EXPECT_EQ(records[i].operation_id,incoming.id); EXPECT_EQ(records[i].before_generation,SemanticGeneration(0)); EXPECT_EQ(records[i].after_generation,SemanticGeneration(1)); EXPECT_EQ(records[i].commit_stamp,(CanonicalCommitStamp{RuntimeEpoch(77),CommitOrdinal(1)})); EXPECT_EQ(records[i].change_set.beforeGeneration(),records[0].change_set.beforeGeneration()); EXPECT_EQ(records[i].change_set.afterGeneration(),records[0].change_set.afterGeneration()); ASSERT_EQ(records[i].change_set.objects().size(),1U); EXPECT_EQ(records[i].change_set.objects()[0].object_id,id(400)); EXPECT_EQ(records[i].change_set.objects()[0].flags,SemanticChangeFlags::kCreated); EXPECT_TRUE(records[i].change_set.objects()[0].changed_fields.empty()); }
+    EXPECT_EQ(records[0].source,ApplySource::kLocalInteraction); EXPECT_EQ(records[1].source,ApplySource::kRestoreReplay); EXPECT_EQ(records[2].source,ApplySource::kRemoteSync); EXPECT_EQ(localBridgePublicationDisposition(records[0]),LocalBridgePublicationDisposition::kEligible); EXPECT_EQ(localBridgePublicationDisposition(records[1]),LocalBridgePublicationDisposition::kNoEcho); EXPECT_EQ(localBridgePublicationDisposition(records[2]),LocalBridgePublicationDisposition::kNoEcho);
+}
+TEST(OperationEngine15OperationConformance, ApplySourcesShareCanonicalResultsAndDifferOnlyInPublication){sourceParity<ReferenceObjectStore>();sourceParity<IndexedObjectStore>();}
 
 TEST(OperationEngine15OperationConformance, PatchPropertiesProducesLiteralSortedFieldChange) {
     IndexedObjectStore s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e; ObjectRecord r=shape(5,5); ASSERT_EQ(e.apply(op(InsertObjectsOp{{r}},4002),ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);
