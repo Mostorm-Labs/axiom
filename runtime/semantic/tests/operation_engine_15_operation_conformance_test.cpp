@@ -12,6 +12,11 @@
 namespace canvas::semantic { namespace {
 ObjectId id(std::uint64_t v){return ObjectId::fromUint64(v);} 
 ObjectRecord shape(std::uint64_t v,std::uint8_t t){ObjectRecord r{};r.id=id(v);r.kind=ObjectKind::kShape;r.kind_version=1U;r.placement=Placement{std::nullopt,OrderKey({t})};r.transform=Transform2D{1,0,0,1,static_cast<double>(t),0};r.content=ShapeContent{t,static_cast<double>(t),static_cast<double>(t+1U)};return r;}
+ObjectRecord vectorPath(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorPath;r.content=VectorPathContent{VectorPathGeometry{FillRule::kNonZero,{MoveTo{{0,0}},LineTo{{1,1}}}}};return r;}
+ObjectRecord image(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kImage;r.content=ImageContent{ResourceId{id(800)},10,10,std::nullopt,ImageContentMode::kFit,0,0};return r;}
+ObjectRecord stroke(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorStroke;StrokeRecord s{};s.brush.brush_family_id=1;s.brush.brush_version=1;s.brush.nominal_size=1;s.brush.opacity=1;s.data=VectorStrokeData{{StrokeSample{{0,0},1,{0,0}}}};r.content=VectorStrokeContent{s};return r;}
+ObjectRecord rich(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kRichText;Paragraph p{};p.id=id(v*10);p.runs={{"A",TextStyle{}}};r.content=RichTextContent{{{p}}};return r;}
+ObjectRecord connector(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kConnector;ConnectorContent c{};c.start.value=FreePointEndpoint{{0,0}};c.end.value=FreePointEndpoint{{1,1}};c.routing=ConnectorRouting::kStraight;r.content=c;return r;}
 Operation op(OperationPayload p,std::uint64_t v){Operation o{};o.id=OperationId{id(v)};o.document_id=DocumentId{id(9000)};o.schema_version=1U;o.payload_version=1U;o.payload=std::move(p);return o;}
 constexpr std::array<std::string_view,15> kExpectedKinds{"kInsertObjects","kDeleteObjects","kRestoreObjects","kSetPlacements","kSetTransforms","kPatchProperties","kSetObjectSize","kSetVectorPathGeometry","kSetImageContent","kAddStroke","kSplitStrokes","kAddEraseMasks","kRemoveEraseMasks","kEditRichText","kSetConnectorContent"};
 template<class Store> void applyInsert(){Store s;AppliedOperationLedger l;SemanticGenerationState g;CanonicalCommitClock c(RuntimeEpoch(42U));OperationEngine e;auto in=op(InsertObjectsOp{{shape(1,7)}},1001);auto r=e.apply(in,ApplySource::kLocalInteraction,s,l,g,c);ASSERT_EQ(r.disposition,ApplyDisposition::kApplied);ASSERT_EQ(g.current(),SemanticGeneration(1));ASSERT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(1));ASSERT_EQ(s.allObjects(),std::vector<ObjectRecord>({shape(1,7)}));ASSERT_TRUE(r.commit_record.has_value());EXPECT_EQ(r.commit_record->operation_id,in.id);EXPECT_EQ(r.commit_record->commit_stamp,(CanonicalCommitStamp{RuntimeEpoch(42),CommitOrdinal(1)}));ASSERT_TRUE(l.find(in.id).has_value());auto again=e.apply(in,ApplySource::kLocalInteraction,s,l,g,c);EXPECT_EQ(again.disposition,ApplyDisposition::kAlreadyApplied);EXPECT_FALSE(again.commit_record.has_value());if constexpr(std::is_same_v<Store,IndexedObjectStore>)EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s));}
@@ -69,4 +74,33 @@ TEST(OperationEngine15OperationConformance, PatchPropertiesProducesLiteralSorted
     IndexedObjectStore s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e; ObjectRecord r=shape(5,5); ASSERT_EQ(e.apply(op(InsertObjectsOp{{r}},4002),ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);
     auto result=e.apply(op(PatchPropertiesOp{{{r.id,2U,PropertyPatchAction::kSet,PropertyValue{true}},{r.id,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},4003),ApplySource::kLocalInteraction,s,l,g,c); ASSERT_EQ(result.disposition,ApplyDisposition::kApplied); auto expected=*s.find(r.id); const std::vector<PropertyEntry> expected_entries{{1U,PropertyValue{false}},{2U,PropertyValue{true}}}; EXPECT_EQ(expected.properties.entries,expected_entries); ASSERT_TRUE(result.commit_record.has_value()); ASSERT_EQ(result.commit_record->change_set.objects().size(),1U); EXPECT_EQ(result.commit_record->change_set.objects()[0].changed_fields,(std::vector<FieldId>{1U,2U})); EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s));
 }
+
+template<class Store> void applyAllFamiliesPositive() {
+  const ObjectRecord sh=shape(100,1), vp=vectorPath(101), im=image(102), st=stroke(103), rt=rich(104), co=connector(105);
+  struct Row { Operation op; ObjectId target; SemanticChangeFlags flag; };
+  const std::vector<Row> rows{
+    {op(InsertObjectsOp{{sh}},5001),sh.id,SemanticChangeFlags::kCreated},
+    {op(DeleteObjectsOp{{sh.id}},5002),sh.id,SemanticChangeFlags::kDeleted},
+    {op(RestoreObjectsOp{{sh}},5003),sh.id,SemanticChangeFlags::kCreated},
+    {op(SetPlacementsOp{{PlacementItem{sh.id,sh.placement}}},5004),sh.id,SemanticChangeFlags::kPlacement},
+    {op(SetTransformsOp{{TransformItem{sh.id,sh.transform}}},5005),sh.id,SemanticChangeFlags::kTransform},
+    {op(PatchPropertiesOp{{PropertyPatch{sh.id,1,PropertyPatchAction::kSet,PropertyValue{true}}}},5006),sh.id,SemanticChangeFlags::kProperties},
+    {op(SetObjectSizeOp{{ObjectSizeItem{sh.id,20,30}}},5007),sh.id,SemanticChangeFlags::kContent},
+    {op(SetVectorPathGeometryOp{vp.id,std::get<VectorPathContent>(vp.content).geometry},5008),vp.id,SemanticChangeFlags::kContent},
+    {op(SetImageContentOp{im.id,std::get<ImageContent>(im.content)},5009),im.id,SemanticChangeFlags::kContent},
+    {op(AddStrokeOp{st},5010),st.id,SemanticChangeFlags::kCreated},
+    {op(SplitStrokesOp{{StrokeSplit{st.id,{stroke(106)}}}},5011),st.id,SemanticChangeFlags::kDeleted},
+    {op(AddEraseMasksOp{{EraseMaskAddItem{st.id,{}}}},5012),st.id,SemanticChangeFlags::kEraseMasks},
+    {op(RemoveEraseMasksOp{{EraseMaskRemoveItem{st.id,{}}}},5013),st.id,SemanticChangeFlags::kEraseMasks},
+    {op(EditRichTextOp{rt.id,RichTextDelta{}},5014),rt.id,SemanticChangeFlags::kContent},
+    {op(SetConnectorContentOp{co.id,std::get<ConnectorContent>(co.content)},5015),co.id,SemanticChangeFlags::kContent}};
+  ASSERT_EQ(rows.size(),kExpectedKinds.size());
+  for (std::size_t i=0;i<rows.size();++i) {
+    Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(9)); OperationEngine e;
+    for (const auto& r : {sh,vp,im,st,rt,co}) if (r.id==rows[i].target || i==0) { if (i>0 && i!=2 && i!=9) ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,r)); }
+    auto result=e.apply(rows[i].op,ApplySource::kLocalInteraction,s,l,g,c);
+    ASSERT_EQ(result.disposition,ApplyDisposition::kApplied)<<kExpectedKinds[i]; ASSERT_TRUE(result.commit_record.has_value()); EXPECT_EQ(result.commit_record->operation_id,rows[i].op.id); EXPECT_EQ(result.commit_record->source,ApplySource::kLocalInteraction); EXPECT_EQ(result.commit_record->before_generation,SemanticGeneration(0)); EXPECT_EQ(result.commit_record->after_generation,SemanticGeneration(1)); EXPECT_EQ(result.commit_record->commit_stamp,(CanonicalCommitStamp{RuntimeEpoch(9),CommitOrdinal(1)})); ASSERT_EQ(result.commit_record->change_set.objects().size(),i==10?2U:1U); EXPECT_EQ(result.commit_record->change_set.objects().front().flags,rows[i].flag); ASSERT_TRUE(l.find(rows[i].op.id).has_value()); if constexpr(std::is_same_v<Store,IndexedObjectStore>) EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s));
+  }
+}
+TEST(OperationEngine15OperationConformance, AllFifteenFamiliesApplyOnBothProviders){applyAllFamiliesPositive<ReferenceObjectStore>();applyAllFamiliesPositive<IndexedObjectStore>();}
 }
