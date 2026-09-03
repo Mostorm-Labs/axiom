@@ -46,18 +46,15 @@ TEST(OperationEngine15OperationConformance, LiteralAuthorityTableDrivesAllFiftee
 }
 
 template<class Store> void rejectAllFamilies() {
-    Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42U)); OperationEngine e;
-    const ObjectId missing=id(999U); const ObjectRecord r=shape(77U,4U);
-    const std::vector<Operation> bad{
-      op(InsertObjectsOp{{r,r}},3001U), op(DeleteObjectsOp{{missing}},3002U), op(RestoreObjectsOp{{r}},3003U),
-      op(SetPlacementsOp{{PlacementItem{missing,r.placement}}},3004U), op(SetTransformsOp{{TransformItem{missing,r.transform}}},3005U),
-      op(PatchPropertiesOp{{PropertyPatch{missing,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},3006U), op(SetObjectSizeOp{{ObjectSizeItem{missing,1,1}}},3007U),
-      op(SetVectorPathGeometryOp{missing,VectorPathGeometry{}},3008U), op(SetImageContentOp{missing,ImageContent{}},3009U), op(AddStrokeOp{r},3010U),
-      op(SplitStrokesOp{{StrokeSplit{missing,{r}}}},3011U), op(AddEraseMasksOp{{EraseMaskAddItem{missing,{}}}},3012U), op(RemoveEraseMasksOp{{EraseMaskRemoveItem{missing,{}}}},3013U),
-      op(EditRichTextOp{missing,RichTextDelta{}},3014U), op(SetConnectorContentOp{missing,ConnectorContent{}},3015U)};
-    for (auto x : bad) { x.schema_version = 0U; const auto before=s.allObjects(); const auto rr=e.apply(x,ApplySource::kLocalInteraction,s,l,g,c); EXPECT_EQ(rr.disposition,ApplyDisposition::kRejected); EXPECT_EQ(s.allObjects(),before); EXPECT_FALSE(l.find(x.id).has_value()); EXPECT_EQ(g.current(),SemanticGeneration(0)); EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(0)); if constexpr(std::is_same_v<Store,IndexedObjectStore>) EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
+    const ObjectId missing=id(999U); const ObjectRecord existing=shape(77U,4U);
+    const std::vector<std::pair<Operation, StatefulIssue>> bad{
+      {op(InsertObjectsOp{{existing}},3001U),StatefulIssue::kObjectAlreadyExists}, {op(DeleteObjectsOp{{missing}},3002U),StatefulIssue::kObjectMissing}, {op(RestoreObjectsOp{{existing}},3003U),StatefulIssue::kObjectAlreadyExists},
+      {op(SetPlacementsOp{{PlacementItem{missing,existing.placement}}},3004U),StatefulIssue::kObjectMissing}, {op(SetTransformsOp{{TransformItem{missing,existing.transform}}},3005U),StatefulIssue::kObjectMissing},
+      {op(PatchPropertiesOp{{PropertyPatch{missing,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},3006U),StatefulIssue::kObjectMissing}, {op(SetObjectSizeOp{{ObjectSizeItem{missing,1,1}}},3007U),StatefulIssue::kObjectMissing},
+      {op(SetVectorPathGeometryOp{missing,VectorPathGeometry{}},3008U),StatefulIssue::kObjectMissing}, {op(SetImageContentOp{missing,ImageContent{}},3009U),StatefulIssue::kObjectMissing}, {op(AddStrokeOp{existing},3010U),StatefulIssue::kObjectAlreadyExists},
+      {op(SplitStrokesOp{{StrokeSplit{missing,{existing}}}},3011U),StatefulIssue::kObjectMissing}, {op(AddEraseMasksOp{{EraseMaskAddItem{missing,{}}}},3012U),StatefulIssue::kObjectMissing}, {op(RemoveEraseMasksOp{{EraseMaskRemoveItem{missing,{}}}},3013U),StatefulIssue::kObjectMissing},
+      {op(EditRichTextOp{missing,RichTextDelta{}},3014U),StatefulIssue::kObjectMissing}, {op(SetConnectorContentOp{missing,ConnectorContent{}},3015U),StatefulIssue::kObjectMissing}};
+    for (const auto& [x, issue] : bad) { Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42U)); OperationEngine e; ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,existing)); const auto before=s.allObjects(); const auto rr=e.apply(x,ApplySource::kLocalInteraction,s,l,g,c); EXPECT_EQ(rr.disposition,ApplyDisposition::kRejected); EXPECT_EQ(rr.error.issue,issue); EXPECT_EQ(s.allObjects(),before); EXPECT_FALSE(l.find(x.id).has_value()); EXPECT_EQ(g.current(),SemanticGeneration(0)); EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(0)); if constexpr(std::is_same_v<Store,IndexedObjectStore>) EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
 }
-TEST(OperationEngine15OperationConformance, EveryFamilyHasAtomicNegativeFixtureOnBothProviders){
-    GTEST_SKIP() << "BLOCKED_SCOPE: authority-valid negative fixtures for all 15 families are not currently representable without production semantics changes; initial InsertObjects duplicate row is accepted and mutates state.";
-    rejectAllFamilies<ReferenceObjectStore>();rejectAllFamilies<IndexedObjectStore>();}
+TEST(OperationEngine15OperationConformance, EveryFamilyHasAtomicNegativeFixtureOnBothProviders){rejectAllFamilies<ReferenceObjectStore>();rejectAllFamilies<IndexedObjectStore>();}
 }
