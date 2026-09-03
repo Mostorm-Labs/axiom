@@ -57,4 +57,16 @@ template<class Store> void rejectAllFamilies() {
     for (const auto& [x, issue] : bad) { Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42U)); OperationEngine e; ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,existing)); const auto before=s.allObjects(); const auto rr=e.apply(x,ApplySource::kLocalInteraction,s,l,g,c); EXPECT_EQ(rr.disposition,ApplyDisposition::kRejected); EXPECT_EQ(rr.error.issue,issue); EXPECT_EQ(s.allObjects(),before); EXPECT_FALSE(l.find(x.id).has_value()); EXPECT_EQ(g.current(),SemanticGeneration(0)); EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(0)); if constexpr(std::is_same_v<Store,IndexedObjectStore>) EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
 }
 TEST(OperationEngine15OperationConformance, EveryFamilyHasAtomicNegativeFixtureOnBothProviders){rejectAllFamilies<ReferenceObjectStore>();rejectAllFamilies<IndexedObjectStore>();}
+
+TEST(OperationEngine15OperationConformance, DeleteSubtreeCascadesAttachedConnectorsAndPreservesSentinel) {
+    ReferenceObjectStore s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e;
+    ObjectRecord root=shape(1,1), child=shape(2,2); child.placement.parent_id=root.id; ObjectRecord sentinel=shape(99,9);
+    ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,root)); ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,child)); ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,sentinel));
+    auto r=e.apply(op(DeleteObjectsOp{{root.id}},4001),ApplySource::kLocalInteraction,s,l,g,c); ASSERT_EQ(r.disposition,ApplyDisposition::kApplied); EXPECT_FALSE(s.contains(root.id)); EXPECT_FALSE(s.contains(child.id)); EXPECT_TRUE(s.contains(sentinel.id)); ASSERT_TRUE(r.commit_record.has_value()); ASSERT_EQ(r.commit_record->change_set.objects().size(),2U); EXPECT_EQ(r.commit_record->change_set.objects()[0].flags,SemanticChangeFlags::kDeleted);
+}
+
+TEST(OperationEngine15OperationConformance, PatchPropertiesProducesLiteralSortedFieldChange) {
+    IndexedObjectStore s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42)); OperationEngine e; ObjectRecord r=shape(5,5); ASSERT_EQ(e.apply(op(InsertObjectsOp{{r}},4002),ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);
+    auto result=e.apply(op(PatchPropertiesOp{{{r.id,2U,PropertyPatchAction::kSet,PropertyValue{true}},{r.id,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},4003),ApplySource::kLocalInteraction,s,l,g,c); ASSERT_EQ(result.disposition,ApplyDisposition::kApplied); auto expected=*s.find(r.id); const std::vector<PropertyEntry> expected_entries{{1U,PropertyValue{false}},{2U,PropertyValue{true}}}; EXPECT_EQ(expected.properties.entries,expected_entries); ASSERT_TRUE(result.commit_record.has_value()); ASSERT_EQ(result.commit_record->change_set.objects().size(),1U); EXPECT_EQ(result.commit_record->change_set.objects()[0].changed_fields,(std::vector<FieldId>{1U,2U})); EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s));
+}
 }
