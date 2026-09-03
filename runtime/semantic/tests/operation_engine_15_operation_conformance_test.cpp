@@ -3,23 +3,27 @@
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "canvas/semantic/validator.hpp"
 #include "object_store_mutator.hpp"
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
 #include <string_view>
 #include <type_traits>
+#include <tuple>
 #include <vector>
 namespace canvas::semantic { namespace {
 ObjectId id(std::uint64_t v){return ObjectId::fromUint64(v);}
 ObjectRecord shape(std::uint64_t v,std::uint8_t t){ObjectRecord r{};r.id=id(v);r.kind=ObjectKind::kShape;r.kind_version=1U;r.placement=Placement{std::nullopt,OrderKey({t})};r.transform=Transform2D{1,0,0,1,static_cast<double>(t),0};r.content=ShapeContent{t,static_cast<double>(t),static_cast<double>(t+1U)};return r;}
 ObjectRecord vectorPath(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorPath;r.content=VectorPathContent{VectorPathGeometry{FillRule::kNonZero,{MoveTo{{0,0}},LineTo{{1,1}}}}};return r;}
-ObjectRecord image(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kImage;r.content=ImageContent{ResourceId{id(800)},10,10,std::nullopt,ImageContentMode::kFit,0,0};return r;}
+ObjectRecord image(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kImage;r.content=ImageContent{ResourceId{id(800)},10,10,std::nullopt,ImageContentMode::kFit,10,10};return r;}
 ObjectRecord stroke(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorStroke;StrokeRecord s{};s.brush.brush_family_id=1;s.brush.brush_version=1;s.brush.nominal_size=1;s.brush.opacity=1;s.data=VectorStrokeData{{StrokeSample{{0,0},1,{0,0}}}};r.content=VectorStrokeContent{s};return r;}
-ObjectRecord rich(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kRichText;Paragraph p{};p.id=id(v*10);p.runs={{"A",TextStyle{}}};r.content=RichTextContent{{{p}}};return r;}
+TextStyle validTextStyle(){TextStyle style{};style.font_resource_id=ResourceId{id(700)};style.font_size=12;style.weight=400;style.color=ColorValue{0,0,0,1};return style;}
+ObjectRecord rich(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kRichText;Paragraph p{};p.id=id(v*10);p.style=ParagraphStyle{ParagraphAlignment::kLeft,1,0,0};p.runs={{"A",validTextStyle()}};r.content=RichTextContent{{{p}}};return r;}
 ObjectRecord connector(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kConnector;ConnectorContent c{};c.start.value=FreePointEndpoint{{0,0}};c.end.value=FreePointEndpoint{{1,1}};c.routing=ConnectorRouting::kStraight;r.content=c;return r;}
 ObjectRecord group(std::uint64_t v,std::optional<ObjectId> parent=std::nullopt){ObjectRecord r{};r.id=id(v);r.kind=ObjectKind::kGroup;r.kind_version=1U;r.placement=Placement{parent,OrderKey({static_cast<std::uint8_t>(v)})};r.content=GroupContent{};return r;}
 ObjectRecord attachedConnector(std::uint64_t v,ObjectId target){auto r=connector(v);ConnectorContent c{};c.start.value=AttachedEndpoint{target,AutoPerimeterAnchor{}};c.end.value=FreePointEndpoint{{9,9}};c.routing=ConnectorRouting::kStraight;r.content=c;return r;}
+EraseMaskRecord eraseMask(std::uint64_t v){const EraseCubicSegment segment{EraseKnot{{0,0},1},EraseKnot{{1,1},1},{0.5,0.5},{0.5,0.5}};return EraseMaskRecord{id(v),SweptCircleMask{{segment}}};}
 Operation op(OperationPayload p,std::uint64_t v){Operation o{};o.id=OperationId{id(v)};o.document_id=DocumentId{id(9000)};o.schema_version=1U;o.payload_version=1U;o.payload=std::move(p);return o;}
 constexpr std::array<std::string_view,15> kExpectedKinds{"kInsertObjects","kDeleteObjects","kRestoreObjects","kSetPlacements","kSetTransforms","kPatchProperties","kSetObjectSize","kSetVectorPathGeometry","kSetImageContent","kAddStroke","kSplitStrokes","kAddEraseMasks","kRemoveEraseMasks","kEditRichText","kSetConnectorContent"};
 struct ExpectedChange final{ObjectId id{};SemanticChangeFlags flags=SemanticChangeFlags::kNone;std::vector<FieldId> fields;};
@@ -56,15 +60,49 @@ TEST(OperationEngine15OperationConformance, LiteralAuthorityTableDrivesAllFiftee
 }
 
 template<class Store> void rejectAllFamilies() {
-    const ObjectId missing=id(999U); const ObjectRecord existing=shape(77U,4U);
-    const std::vector<std::pair<Operation, StatefulIssue>> bad{
-      {op(InsertObjectsOp{{existing}},3001U),StatefulIssue::kObjectAlreadyExists}, {op(DeleteObjectsOp{{missing}},3002U),StatefulIssue::kObjectMissing}, {op(RestoreObjectsOp{{existing}},3003U),StatefulIssue::kObjectAlreadyExists},
-      {op(SetPlacementsOp{{PlacementItem{missing,existing.placement}}},3004U),StatefulIssue::kObjectMissing}, {op(SetTransformsOp{{TransformItem{missing,existing.transform}}},3005U),StatefulIssue::kObjectMissing},
-      {op(PatchPropertiesOp{{PropertyPatch{missing,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},3006U),StatefulIssue::kObjectMissing}, {op(SetObjectSizeOp{{ObjectSizeItem{missing,1,1}}},3007U),StatefulIssue::kObjectMissing},
-      {op(SetVectorPathGeometryOp{missing,VectorPathGeometry{}},3008U),StatefulIssue::kObjectMissing}, {op(SetImageContentOp{missing,ImageContent{}},3009U),StatefulIssue::kObjectMissing}, {op(AddStrokeOp{existing},3010U),StatefulIssue::kObjectAlreadyExists},
-      {op(SplitStrokesOp{{StrokeSplit{missing,{existing}}}},3011U),StatefulIssue::kObjectMissing}, {op(AddEraseMasksOp{{EraseMaskAddItem{missing,{}}}},3012U),StatefulIssue::kObjectMissing}, {op(RemoveEraseMasksOp{{EraseMaskRemoveItem{missing,{}}}},3013U),StatefulIssue::kObjectMissing},
-      {op(EditRichTextOp{missing,RichTextDelta{}},3014U),StatefulIssue::kObjectMissing}, {op(SetConnectorContentOp{missing,ConnectorContent{}},3015U),StatefulIssue::kObjectMissing}};
-    for (const auto& [x, issue] : bad) { Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42U)); OperationEngine e; ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,existing)); const auto before=s.allObjects(); const auto rr=e.apply(x,ApplySource::kLocalInteraction,s,l,g,c); EXPECT_EQ(rr.disposition,ApplyDisposition::kRejected); EXPECT_EQ(rr.error.issue,issue); EXPECT_EQ(s.allObjects(),before); EXPECT_FALSE(l.find(x.id).has_value()); EXPECT_EQ(g.current(),SemanticGeneration(0)); EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(0)); if constexpr(std::is_same_v<Store,IndexedObjectStore>){ EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); } }
+    const ObjectId missing=id(999U); const ObjectRecord existing=shape(77U,1U);
+    auto masked=stroke(77U); const auto duplicate_mask=eraseMask(500U); masked.erase_masks={duplicate_mask};
+    const RichTextDelta invalid_delta{1U,{InsertTextStep{id(770U),0U,"X",validTextStyle()},DeleteTextStep{missing,0U,1U}}};
+    const auto invalid_connector_content=std::get<ConnectorContent>(attachedConnector(78U,id(88U)).content);
+    const std::vector<std::tuple<Operation, StatefulIssue, std::vector<ObjectRecord>>> bad{
+      {op(InsertObjectsOp{{existing}},3001U),StatefulIssue::kObjectAlreadyExists,{existing}},
+       {op(DeleteObjectsOp{{missing}},3002U),StatefulIssue::kObjectMissing,{}},
+       {op(RestoreObjectsOp{{existing}},3003U),StatefulIssue::kObjectAlreadyExists,{existing}},
+       {op(SetPlacementsOp{{PlacementItem{missing,existing.placement}}},3004U),StatefulIssue::kObjectMissing,{}},
+       {op(SetTransformsOp{{TransformItem{missing,existing.transform}}},3005U),StatefulIssue::kObjectMissing,{}},
+       {op(PatchPropertiesOp{{PropertyPatch{missing,1U,PropertyPatchAction::kSet,PropertyValue{false}}}},3006U),StatefulIssue::kObjectMissing,{}},
+       {op(SetObjectSizeOp{{ObjectSizeItem{id(77U),1,1}}},3007U),StatefulIssue::kInvalidApplicability,{group(77U)}},
+       {op(SetVectorPathGeometryOp{id(77U),std::get<VectorPathContent>(vectorPath(78U).content).geometry},3008U),StatefulIssue::kInvalidApplicability,{existing}},
+       {op(SetImageContentOp{id(77U),ImageContent{ResourceId{id(801U)},20,30,std::nullopt,ImageContentMode::kFit,20,30}},3009U),StatefulIssue::kInvalidApplicability,{existing}},
+       {op(AddStrokeOp{stroke(77U)},3010U),StatefulIssue::kObjectAlreadyExists,{existing}},
+       {op(SplitStrokesOp{{StrokeSplit{missing,{stroke(78U)}}}},3011U),StatefulIssue::kObjectMissing,{}},
+       {op(AddEraseMasksOp{{EraseMaskAddItem{id(77U),{duplicate_mask}}}},3012U),StatefulIssue::kMaskStateInvalid,{masked}},
+       {op(RemoveEraseMasksOp{{EraseMaskRemoveItem{id(77U),{missing}}}},3013U),StatefulIssue::kMaskStateInvalid,{masked}},
+       {op(EditRichTextOp{id(77U),invalid_delta},3014U),StatefulIssue::kTextStateInvalid,{rich(77U)}},
+       {op(SetConnectorContentOp{id(77U),invalid_connector_content},3015U),StatefulIssue::kConnectorInvalid,{group(88U),connector(77U)}}};
+    ASSERT_EQ(bad.size(),kExpectedKinds.size());
+    for (std::size_t fixture_index = 0; fixture_index < bad.size(); ++fixture_index) {
+        const auto& fixture = bad[fixture_index];
+        const auto& x=std::get<0>(fixture); const auto issue=std::get<1>(fixture); const auto& initial=std::get<2>(fixture);
+        const auto structural = validatePayloadStructure(x);
+        ASSERT_TRUE(structural.ok()) << "negative fixture payload must be structurally valid for " << kExpectedKinds[fixture_index]
+                                     << " issue=" << static_cast<int>(structural.issue);
+        Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(42U)); OperationEngine e;
+        for (const auto& record : initial) {
+            const auto initial_structural = validatePayloadStructure(op(InsertObjectsOp{{record}},9001U));
+            ASSERT_TRUE(initial_structural.ok()) << "negative fixture initial record must be structurally valid for " << kExpectedKinds[fixture_index]
+                                                 << " issue=" << static_cast<int>(initial_structural.issue);
+            ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,record));
+        }
+        const auto prior_operation=op(InsertObjectsOp{{shape(8000U,1U)}},8000U);
+        ASSERT_EQ(e.apply(prior_operation,ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);
+        const auto prior_entry=l.find(prior_operation.id); ASSERT_TRUE(prior_entry.has_value());
+        const auto before=s.allObjects(); const auto before_generation=g.current(); const auto before_ordinal=c.lastCommittedOrdinal();
+        const auto rr=e.apply(x,ApplySource::kLocalInteraction,s,l,g,c);
+        EXPECT_EQ(rr.disposition,ApplyDisposition::kRejected) << kExpectedKinds[fixture_index]; EXPECT_EQ(rr.error.issue,issue) << kExpectedKinds[fixture_index]; EXPECT_FALSE(rr.commit_record.has_value()) << kExpectedKinds[fixture_index]; EXPECT_EQ(s.allObjects(),before) << kExpectedKinds[fixture_index]; EXPECT_FALSE(l.find(x.id).has_value()) << kExpectedKinds[fixture_index];
+        const auto preserved_entry=l.find(prior_operation.id); ASSERT_TRUE(preserved_entry.has_value()); EXPECT_EQ(preserved_entry->canonical_operation.id,prior_entry->canonical_operation.id); EXPECT_EQ(preserved_entry->canonical_operation.payload,prior_entry->canonical_operation.payload); EXPECT_EQ(preserved_entry->fingerprint,prior_entry->fingerprint);
+        EXPECT_EQ(g.current(),before_generation); EXPECT_EQ(c.lastCommittedOrdinal(),before_ordinal); if constexpr(std::is_same_v<Store,IndexedObjectStore>){ EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
+    }
 }
 TEST(OperationEngine15OperationConformance, EveryFamilyHasAtomicNegativeFixtureOnBothProviders){rejectAllFamilies<ReferenceObjectStore>();rejectAllFamilies<IndexedObjectStore>();}
 
