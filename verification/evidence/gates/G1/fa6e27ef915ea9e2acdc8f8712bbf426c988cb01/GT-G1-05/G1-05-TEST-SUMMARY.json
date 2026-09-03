@@ -1,0 +1,123 @@
+{
+  "format": "axiom-gt-g1-05-a6-test-summary-v1",
+  "taskId": "GT-G1-05-A6",
+  "stage": "P32",
+  "purpose": "Exact-Source CI + Durable GT-G1-05 Evidence",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A6-P31-v0.1",
+  "packagePageRef": "notion://3d04c57a-590c-81fb-86be-ee6858b90a6c",
+  "authorizationRef": "notion://3d04c57a-590c-81fb-86be-ee6858b90a6c/GT-G1-05-A6-P32-AUTH-v0.1",
+  "authorizationPageRef": "notion://3d04c57a-590c-81f9-82b0-f5f4c658174a",
+  "currentAuthorityRefs": [
+    "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff",
+    "notion://3c44c57a-590c-81d9-a2ea-f77cc4fb67c2",
+    "notion://3c84c57a-590c-8176-960b-cab59b6f4c03",
+    "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A5-P31-v0.1",
+    "notion://3d04c57a-590c-816e-9b19-eae91218f6f1"
+  ],
+  "taskAnchor": {
+    "revision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "relation": "ancestor",
+    "verified": true
+  },
+  "acceptedStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+  "actualStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+  "executionRef": "codex/gt-g1-05-a6-exact-source-evidence",
+  "sourceRef": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+  "localTestedRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+  "sourceRefRebound": false,
+  "localBuild": {
+    "configure": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_POC02=OFF -DCANVAS_BUILD_POC03=OFF -DCANVAS_BUILD_POC05=OFF",
+    "build": "cmake --build build -j 8",
+    "result": "PASS"
+  },
+  "focusedRegressions": {
+    "targets": 13,
+    "tests": 80,
+    "passed": 80,
+    "failed": 0,
+    "result": "PASS",
+    "results": [
+      {"target": "canvas_semantic_operation_engine_15_operation_conformance_test", "slice": "A5", "tests": 11, "passed": 11, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_g1_04_b_operation_matrix_test", "slice": "A5 upstream matrix regression", "tests": 5, "passed": 5, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_atomic_apply_test", "slice": "A0", "tests": 10, "passed": 10, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_atomic_apply_differential_test", "slice": "A0", "tests": 3, "passed": 3, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_apply_test", "slice": "A1", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_apply_differential_test", "slice": "A1", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_generation_change_set_test", "slice": "A2", "tests": 6, "passed": 6, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_generation_change_set_differential_test", "slice": "A2", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_canonical_commit_clock_test", "slice": "A3", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_canonical_commit_test", "slice": "A3", "tests": 8, "passed": 8, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_canonical_commit_differential_test", "slice": "A3", "tests": 2, "passed": 2, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_operation_engine_publication_projection_test", "slice": "A4", "tests": 4, "passed": 4, "failed": 0, "result": "PASS"},
+      {"target": "canvas_semantic_types_test", "slice": "A0-A5 shared type regression", "tests": 19, "passed": 19, "failed": 0, "result": "PASS"}
+    ]
+  },
+  "fullSemanticCTest": {
+    "command": "ctest --test-dir build/runtime/semantic --output-on-failure",
+    "inventory": 407,
+    "passed": 395,
+    "expectedProtobufOffSkips": 12,
+    "unexpectedSkipped": 0,
+    "failed": 0,
+    "result": "PASS",
+    "expectedSkippedTests": [
+      "SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord",
+      "SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields",
+      "SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow",
+      "SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit",
+      "SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow",
+      "SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow",
+      "SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow",
+      "SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow",
+      "SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit",
+      "SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse",
+      "SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse",
+      "SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit"
+    ]
+  },
+  "gitDiffCheck": {
+    "command": "git diff --check",
+    "result": "PASS"
+  },
+  "preMaterializationScope": {
+    "headEqualsSourceRef": true,
+    "trackedWorkingTreeClean": true,
+    "productionSemanticDelta": false,
+    "semanticTestSourceDelta": false,
+    "workflowToolingDelta": false,
+    "authorityOrHistoricalEvidenceRewritten": false
+  },
+  "hostedCI": {
+    "workflow": "G1 Semantic Codec",
+    "event": "workflow_dispatch",
+    "runId": 33741996133,
+    "jobId": 100605811609,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33741996133",
+    "jobUrl": "https://github.com/Mostorm-Labs/axiom/actions/runs/33741996133/job/100605811609",
+    "headBranch": "codex/gt-g1-05-a6-exact-source-evidence",
+    "headSha": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "checkoutSha": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "job": "semantic-codec / hosted-linux",
+    "conclusion": "success",
+    "result": "PASS",
+    "exactSource": true,
+    "newA6Run": true,
+    "priorA5RunUsedAsSubstitute": false,
+    "artifact": {
+      "id": 9888195548,
+      "name": "g1-semantic-codec-fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+      "sizeBytes": 865702,
+      "digest": "sha256:ccfec0a68fb75e6880c2f43fd7bf48ce43b00090ed2bda03ac1bbf79dd5f78e4",
+      "expired": false
+    }
+  },
+  "historicalEvidenceNormalization": {
+    "findingId": "A5-P34-RR-F1",
+    "class": "EVIDENCE_LABEL_TYPO",
+    "status": "NON_BLOCKING_HISTORICAL",
+    "historicalA5Label": "canvas_semantic_semantic_types_test",
+    "a6CorrectLabel": "canvas_semantic_types_test",
+    "historicalA5EvidenceChanged": false
+  },
+  "status": "PASS"
+}

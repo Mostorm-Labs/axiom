@@ -1,0 +1,63 @@
+{
+  "format": "axiom-gt-g1-05-a6-diff-v1",
+  "taskId": "GT-G1-05-A6",
+  "stage": "P32",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A6-P31-v0.1",
+  "authorizationRef": "notion://3d04c57a-590c-81fb-86be-ee6858b90a6c/GT-G1-05-A6-P32-AUTH-v0.1",
+  "lineage": {
+    "taskAnchor": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "taskAnchorRelation": "ancestor",
+    "acceptedStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "actualStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "sourceRef": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "sourceRefRebound": false,
+    "executionRef": "codex/gt-g1-05-a6-exact-source-evidence",
+    "materializedRefBinding": "the single evidence-only commit containing this manifest; exact immutable SHA is returned by the P32 surface return and independently resolvable as executionRef HEAD",
+    "materializedRefResolvedAfterEvidenceCommit": true,
+    "sourceIsAncestorOfMaterialized": true,
+    "linearHistoryRequired": true
+  },
+  "a5AcceptedLineage": {
+    "sourceRef": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+    "materializedRef": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "sourceIsParentOfMaterialized": true,
+    "deltaClass": "accepted_evidence_only",
+    "changedPaths": [
+      "verification/evidence/gates/G1/677b1328d47b7ab24048d86bf3d1dd15e79b1f34/GT-G1-05/A5-PROVIDER-DIFF.json"
+    ],
+    "historicalEvidenceRewrittenByA6": false
+  },
+  "deltaContract": {
+    "changedPathsExactly": [
+      "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-TEST-SUMMARY.json",
+      "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-DIFF.json",
+      "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-GATE.json"
+    ],
+    "commitCount": 1,
+    "evidenceOnly": true,
+    "productionSemanticDelta": false,
+    "semanticTestSourceDelta": false,
+    "workflowToolingDelta": false,
+    "authorityDelta": false,
+    "acceptedHistoricalEvidenceDelta": false,
+    "gtG106Delta": false,
+    "unrelatedDelta": false
+  },
+  "mechanicalProof": {
+    "preMaterializationHead": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "preMaterializationTrackedWorkingTreeClean": true,
+    "sourceToMaterializedDiffCommand": "git diff --name-status fa6e27ef915ea9e2acdc8f8712bbf426c988cb01..<materialized_ref>",
+    "sourceToMaterializedDiffValidatedAfterCommit": true,
+    "gitDiffCheck": "PASS",
+    "acceptedA0ThroughA5RefsResolve": true,
+    "remoteHeadMustEqualMaterializedRef": true
+  },
+  "historicalEvidenceNormalization": {
+    "findingId": "A5-P34-RR-F1",
+    "historicalLabel": "canvas_semantic_semantic_types_test",
+    "a6CorrectLabel": "canvas_semantic_types_test",
+    "rewriteA5Evidence": false,
+    "normalizationScope": "A6-owned aggregation only"
+  },
+  "status": "PASS"
+}

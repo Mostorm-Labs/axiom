@@ -1,0 +1,121 @@
+{
+  "format": "axiom-gt-g1-05-a6-gate-input-v1",
+  "taskId": "GT-G1-05-A6",
+  "stage": "P32",
+  "artifactRole": "Gate evidence manifest and independent P34 input; not a P34 verdict",
+  "packageRef": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A6-P31-v0.1",
+  "authorizationRef": "notion://3d04c57a-590c-81fb-86be-ee6858b90a6c/GT-G1-05-A6-P32-AUTH-v0.1",
+  "currentAuthorityRefs": [
+    {"scope": "GT-G1-05 P30", "ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff"},
+    {"scope": "verification design input", "ref": "notion://3c44c57a-590c-81d9-a2ea-f77cc4fb67c2"},
+    {"scope": "G1 Semantic Kernel implementation plan", "ref": "notion://3c84c57a-590c-8176-960b-cab59b6f4c03"},
+    {"scope": "A5 predecessor package", "ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-05-A5-P31-v0.1"},
+    {"scope": "A5 accepted P34 re-review", "ref": "notion://3d04c57a-590c-816e-9b19-eae91218f6f1"}
+  ],
+  "acceptedSliceProvenance": [
+    {
+      "slice": "A0",
+      "status": "ACCEPTED_CLOSED",
+      "gateRef": "https://app.notion.com/p/3cf4c57a590c8160a299d0bd96fa1a13",
+      "acceptedSourceRef": "43cdaad0a1222d2f94d27d82ead6b3aabb15cc92",
+      "acceptedMaterializedRef": "43cdaad0a1222d2f94d27d82ead6b3aabb15cc92",
+      "provenanceMode": "reference_only"
+    },
+    {
+      "slice": "A1",
+      "status": "ACCEPTED_CLOSED",
+      "gateRef": "https://app.notion.com/p/3cf4c57a590c8114a4c8e3328ff5f71e",
+      "acceptedSourceRef": "23f04d78dab8cd44a91ba0cb9362baedd2683bb7",
+      "acceptedMaterializedRef": "23f04d78dab8cd44a91ba0cb9362baedd2683bb7",
+      "provenanceMode": "reference_only"
+    },
+    {
+      "slice": "A2",
+      "status": "ACCEPTED_CLOSED",
+      "gateRef": "https://app.notion.com/p/3cf4c57a590c8197bc6ada7772310028",
+      "acceptedSourceRef": "5d6d32b7321c07fcf155e30031777a217696f3b4",
+      "acceptedMaterializedRef": "4f7a2d1d1de25758768933d614075377c5ab7768",
+      "durableEvidenceRefs": [
+        "verification/evidence/gates/G1/16283b68257bc0734ecf45902146e6ad3fce15ea/GT-G1-05/A2-GENERATION-CHANGESET.json",
+        "verification/evidence/gates/G1/5d6d32b7321c07fcf155e30031777a217696f3b4/GT-G1-05/A2-P36-REVERIFICATION.json"
+      ],
+      "provenanceMode": "reference_only"
+    },
+    {
+      "slice": "A3",
+      "status": "ACCEPTED_CLOSED",
+      "gateRef": "https://app.notion.com/p/3cf4c57a590c8123ac48d8c3d283b7ca",
+      "acceptedSourceRef": "baa057529cb43e1223d092c5865aa40fc4787e45",
+      "acceptedMaterializedRef": "12ef8dddf259028d458c2956f7e21d6d7857dd2c",
+      "durableEvidenceRefs": ["verification/evidence/gates/G1/baa057529cb43e1223d092c5865aa40fc4787e45/GT-G1-05/A3-COMMIT-STAMP.json"],
+      "provenanceMode": "reference_only"
+    },
+    {
+      "slice": "A4",
+      "status": "ACCEPTED_CLOSED",
+      "gateRef": "https://app.notion.com/p/3d04c57a590c8110a25ec8a3624e5e47",
+      "acceptedSourceRef": "a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7",
+      "acceptedMaterializedRef": "d71c80dd1eb9dd8a3078f2be2e442d38bb6cff64",
+      "durableEvidenceRefs": ["verification/evidence/gates/G1/a458b2b5a4764838ecc3d0b1d5ebbde2f27412d7/GT-G1-05/A4-APPLY-SOURCE-PUBLICATION.json"],
+      "provenanceMode": "reference_only"
+    },
+    {
+      "slice": "A5",
+      "status": "ACCEPTED_CLOSED",
+      "gateVerdict": "PASS_WITH_FINDING",
+      "gateRef": "https://app.notion.com/p/3d04c57a590c816e9b19eae91218f6f1",
+      "acceptedSourceRef": "677b1328d47b7ab24048d86bf3d1dd15e79b1f34",
+      "acceptedMaterializedRef": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+      "durableEvidenceRefs": ["verification/evidence/gates/G1/677b1328d47b7ab24048d86bf3d1dd15e79b1f34/GT-G1-05/A5-PROVIDER-DIFF.json"],
+      "provenanceMode": "reference_only"
+    }
+  ],
+  "a6ExactSource": {
+    "taskAnchor": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "acceptedStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "actualStartingRevision": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "sourceRef": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "sourceRefRebound": false,
+    "executionRef": "codex/gt-g1-05-a6-exact-source-evidence"
+  },
+  "a6EvidenceRefs": [
+    "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-TEST-SUMMARY.json",
+    "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-DIFF.json",
+    "verification/evidence/gates/G1/fa6e27ef915ea9e2acdc8f8712bbf426c988cb01/GT-G1-05/G1-05-GATE.json"
+  ],
+  "verificationSummary": {
+    "focusedRegressions": "PASS: 80/80 across 13 targets",
+    "fullSemanticCTest": "PASS: 407 inventory, 395 passed, 12 expected protobuf-off skips, 0 failed",
+    "gitDiffCheck": "PASS",
+    "hostedExactSourceCI": "PASS",
+    "hostedRunId": 33741996133,
+    "hostedJobId": 100605811609,
+    "hostedHeadSha": "fa6e27ef915ea9e2acdc8f8712bbf426c988cb01",
+    "hostedArtifactDigest": "sha256:ccfec0a68fb75e6880c2f43fd7bf48ce43b00090ed2bda03ac1bbf79dd5f78e4"
+  },
+  "scopeProof": {
+    "materializationDelta": "exactly the three A6-owned G1-05 evidence files",
+    "productionSemanticDelta": false,
+    "semanticTestSourceDelta": false,
+    "workflowToolingDelta": false,
+    "authorityDelta": false,
+    "acceptedHistoricalEvidenceDelta": false,
+    "gtG106Delta": false
+  },
+  "historicalFindings": [
+    {
+      "id": "A5-P34-RR-F1",
+      "class": "EVIDENCE_LABEL_TYPO",
+      "status": "NON_BLOCKING_HISTORICAL",
+      "historicalLabel": "canvas_semantic_semantic_types_test",
+      "a6NormalizedLabel": "canvas_semantic_types_test",
+      "historicalA5EvidenceChanged": false
+    }
+  ],
+  "unresolvedBlockingFindings": [],
+  "candidateGateState": "READY_FOR_P34",
+  "independentP34VerdictClaimed": false,
+  "gtG105ClosureEligible": false,
+  "gtG106Started": false,
+  "status": "READY_FOR_P34"
+}
