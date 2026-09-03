@@ -1,0 +1,55 @@
+{
+  "format": "axiom-gt-g1-06-a0-diff-evidence-v1",
+  "formatVersion": 1,
+  "taskId": "GT-G1-06-A0",
+  "packageRef": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A0-P31-v0.1",
+  "taskAnchor": {
+    "revision": "b5b7b9f1fd92be59eecb6815f1e066aff87ffe40",
+    "relation": "ancestor"
+  },
+  "sourceRef": "5c4aa513fdc9b800f4892411912b2e20a6bd5630",
+  "sourceCommitsFromAnchor": 2,
+  "sourceDiffFromAnchor": {
+    "fileCount": 5,
+    "allowedFiles": [
+      "runtime/semantic/tools/g1_06_projection.hpp",
+      "runtime/semantic/tools/g1_06_projection.cpp",
+      "runtime/semantic/tests/g1_06_projection_test.cpp",
+      "runtime/semantic/tests/g1_06_projection_differential_test.cpp",
+      "runtime/semantic/tests/CMakeLists.txt"
+    ],
+    "actualFiles": [
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/semantic/tests/g1_06_projection_differential_test.cpp",
+      "runtime/semantic/tests/g1_06_projection_test.cpp",
+      "runtime/semantic/tools/g1_06_projection.cpp",
+      "runtime/semantic/tools/g1_06_projection.hpp"
+    ],
+    "allowlistExact": true
+  },
+  "sourceFileSha256": {
+    "runtime/semantic/tools/g1_06_projection.hpp": "2cca0832130c5f0e7dace298e4433e3ac50a725923f0e16333567ed1f08a4957",
+    "runtime/semantic/tools/g1_06_projection.cpp": "7e1e83fc346042f5313fe944c0d9198f982b403d701be47c23bc906f4b513fa9",
+    "runtime/semantic/tests/g1_06_projection_test.cpp": "0d7ae05c094b9579f0f6be3a1bba0800ee90757d953cf547abb9caca6313abe8",
+    "runtime/semantic/tests/g1_06_projection_differential_test.cpp": "51978cf198d86856687afed3d7c5eed86c6bd3003b85545efbdc5b157666423c",
+    "runtime/semantic/tests/CMakeLists.txt": "e5a4d56c7d0e0ca09da385fab1ae20bf72f7274162030b96cacae5f21bdaf3aa"
+  },
+  "forbiddenScope": {
+    "productionSemanticHeadersChanged": false,
+    "productionSemanticSourcesChanged": false,
+    "schemaOrProtoChanged": false,
+    "historicalG104CProjectionOrEvidenceChanged": false,
+    "snapshotBootstrapReplayDigestChanged": false,
+    "A1OrLaterStarted": false,
+    "GTG107Started": false
+  },
+  "materialization": {
+    "expectedEvidenceFiles": [
+      "A0-PROJECTION.json",
+      "A0-CTEST.txt",
+      "A0-DIFF.json"
+    ],
+    "sourceToMaterializedDelta": "evidence-only; verified after materialized commit"
+  },
+  "gitDiffCheck": "PASS"
+}

@@ -1,0 +1,37 @@
+GT-G1-06 / A0 P32 verification transcript
+source_ref: 5c4aa513fdc9b800f4892411912b2e20a6bd5630
+execution_ref: codex/gt-g1-06-snapshot-replay
+
+protobuf-disabled semantic configuration
+command: cmake --build build --target canvas_semantic_g1_06_projection_test canvas_semantic_g1_06_projection_differential_test -j2
+result: PASS
+
+focused CTest
+command: ctest --test-dir build -R 'g1_06_projection' --output-on-failure
+result: PASS (8/8; 0 failures)
+tests:
+  - envelope/scalar/presence/canonical text
+  - allObjects single-read/provider-order preservation
+  - locale-independent scalar tags
+  - absent optional omission
+  - exhaustive V1 content/property/nested branch coverage
+  - codec/protobuf/snapshot/engine dependency guard
+  - Reference/Indexed and physical-insertion parity
+  - semantic mutation sensitivity
+output_sha256: 07cb08a56959dbdbc7b2088852e802d8fee55a0404abdb9e39bf7f52654394f7
+
+complete semantic CTest
+command: ctest --test-dir build --output-on-failure
+result: PASS (415/415; 0 failures; 12 protobuf-preflight tests skipped by protobuf-disabled configuration)
+output_sha256: 79a3195dfcf4dcb264fdedb296219abd89b73752d37e7c00146c5c421153ad02
+
+host-native protobuf-enabled semantic configuration
+command: cmake -S . -B build-proto-arm64 -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR=/tmp/axiom-g1-06-protobuf-config
+command: cmake --build build-proto-arm64 --target canvas_semantic_g1_06_projection_test canvas_semantic_g1_06_projection_differential_test -j2
+command: ctest --test-dir build-proto-arm64 --output-on-failure -R g1_06_projection
+result: PASS (8/8; 0 failures)
+toolchain: host-native arm64 protobuf 36.0; temporary configuration outside repository
+
+format check
+command: git diff --check
+result: PASS

@@ -1,0 +1,75 @@
+{
+  "format": "axiom-gt-g1-06-a0-projection-evidence-v1",
+  "formatVersion": 1,
+  "stage": "P32",
+  "taskId": "GT-G1-06-A0",
+  "packageRef": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A0-P31-v0.1",
+  "taskAnchor": {
+    "revision": "b5b7b9f1fd92be59eecb6815f1e066aff87ffe40",
+    "relation": "ancestor"
+  },
+  "execution": {
+    "ref": "codex/gt-g1-06-snapshot-replay",
+    "startingRevision": "ba1a5d28184be86def46ac8c18286b6174a34eed",
+    "reconciliation": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+    "sourceRef": "5c4aa513fdc9b800f4892411912b2e20a6bd5630"
+  },
+  "projectionContract": {
+    "format": "axiom-verification-projection-v1",
+    "formatVersion": 1,
+    "semanticSchemaVersion": 1,
+    "rootType": "auditoryworks.axiom.v1.DocumentSnapshot",
+    "form": "CANONICAL",
+    "textEncoding": "UTF-8, two-space indentation, LF final newline",
+    "scalarTags": {
+      "u64": "u64:<16 lowercase hex>",
+      "f32": "f32:<8 lowercase IEEE-754 hex>",
+      "f64": "f64:<16 lowercase IEEE-754 hex>",
+      "id128": "id128:<32 lowercase hex>",
+      "bytes": "hex:<lowercase even-count hex>"
+    }
+  },
+  "coverage": {
+    "allObjectsReadExactlyOnce": "PASS",
+    "providerOrderPreservedWithoutProjectionResort": "PASS",
+    "fullV1ObjectContentBranches": "9/9 PASS",
+    "fullV1PropertyValueBranches": "7/7 PASS",
+    "fillStyleBranches": "2/2 PASS",
+    "strokeStyleBranches": "2/2 PASS",
+    "strokeJoinBranches": "3/3 PASS",
+    "strokeDashBranches": "2/2 PASS",
+    "pathCommandBranches": "5/5 PASS",
+    "strokeDataBranches": "2/2 PASS",
+    "connectorEndpointBranches": "2/2 PASS",
+    "connectorAnchorBranches": "2/2 PASS",
+    "eraseMaskGeometryBranches": "2/2 PASS",
+    "optionalAbsenceOmitsKeysAndNeverWritesNull": "PASS",
+    "presentDefaultOptionalRetained": "PASS",
+    "processGlobalLocaleDoesNotChangeBitTags": "PASS"
+  },
+  "oracleChecks": {
+    "referenceIndexedParity": "PASS",
+    "physicalInsertionOrderParity": "PASS",
+    "objectArrayAscendingByProviderContract": "PASS",
+    "explicitAuthoredTruthNotProviderDerived": "PASS",
+    "mutationSensitivity": {
+      "transformF64": "PASS",
+      "propertyF32AndColor": "PASS",
+      "placementParentAndOrderKey": "PASS",
+      "objectContent": "PASS",
+      "eraseMask": "PASS",
+      "richTextStringAndStyle": "PASS",
+      "connectorEndpoint": "PASS"
+    }
+  },
+  "independence": {
+    "verificationOnlyNamespace": "canvas::verification::g1_06",
+    "semanticCodecDependency": false,
+    "protobufGeneratedTypeDependency": false,
+    "snapshotSerializerDeserializerDependency": false,
+    "operationEngineDependency": false,
+    "storeMutation": false,
+    "sourceGuard": "PASS"
+  },
+  "result": "PASS"
+}
