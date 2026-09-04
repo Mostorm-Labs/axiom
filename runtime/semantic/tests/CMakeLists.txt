@@ -21,6 +21,21 @@ endif()
 
 gtest_discover_tests(canvas_semantic_codec_test)
 
+add_executable(canvas_semantic_g1_06_snapshot_test
+  g1_06_snapshot_test.cpp
+  ../tools/g1_06_projection.cpp)
+target_link_libraries(canvas_semantic_g1_06_snapshot_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_06_snapshot_test PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src
+  ${CMAKE_CURRENT_SOURCE_DIR}/../tools
+  ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_06_snapshot_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_06_snapshot_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_06_snapshot_test)
+
 add_executable(canvas_semantic_normalization_test normalization_test.cpp)
 target_link_libraries(canvas_semantic_normalization_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 
@@ -507,6 +522,7 @@ foreach(header IN ITEMS
         canvas/semantic/semantic_geometry.hpp
         canvas/semantic/semantic_id.hpp
         canvas/semantic/semantic_error.hpp
+        canvas/semantic/snapshot.hpp
         canvas/semantic/staged_object_view.hpp
         canvas/semantic/restore_planner.hpp
         canvas/semantic/operation_specific_validation.hpp

@@ -20,6 +20,8 @@ add_library(canvas_runtime_semantic STATIC
     src/operation_specific_validation.cpp
     src/rich_text_state_plan.cpp
     src/codec.cpp
+    src/snapshot.cpp
+    src/protobuf_object_mapping.cpp
     src/apply_plan.cpp
     src/atomic_apply.cpp
     src/change_set_builder.cpp
