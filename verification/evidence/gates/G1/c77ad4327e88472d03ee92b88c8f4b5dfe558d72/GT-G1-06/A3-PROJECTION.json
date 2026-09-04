@@ -1,0 +1,34 @@
+{
+  "format": "axiom-gt-g1-06-a3-projection-v1",
+  "task_id": "GT-G1-06-A3",
+  "package_ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-06-A3-P31-v0.1",
+  "source_ref": "c77ad4327e88472d03ee92b88c8f4b5dfe558d72",
+  "oracle": "A0_CANONICAL_SEMANTIC_PROJECTION",
+  "result": "PASS",
+  "projection_checks": {
+    "replay_coordinator_vs_direct_operation_engine_reference_loop": "PASS",
+    "reference_vs_indexed_replay": "PASS",
+    "canonical_json_equality": true,
+    "generation_delta_equality": true,
+    "commit_ordinal_delta_equality": true
+  },
+  "long_stream_checkpoints": [
+    {"prefix_length": 4, "replay_vs_reference": "PASS"},
+    {"prefix_length": 12, "replay_vs_reference": "PASS"},
+    {"prefix_length": 16, "replay_vs_reference": "PASS"}
+  ],
+  "first_divergence": {
+    "injected_operation_index": 3,
+    "exact_operation_id_reported": true,
+    "disposition": "kRejected",
+    "successful_prefix_applied": 3,
+    "later_operations_not_attempted": true,
+    "result": "PASS"
+  },
+  "semantic_projection_dependency": {
+    "new_projection_oracle": false,
+    "accepted_a0_projection_reused": true,
+    "provider_output_used_as_expected_truth": false,
+    "expected_truth_writes": 0
+  }
+}

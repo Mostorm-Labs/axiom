@@ -1,0 +1,66 @@
+{
+  "format": "axiom-gt-g1-06-a3-diff-v1",
+  "task_id": "GT-G1-06-A3",
+  "package_ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-06-A3-P31-v0.1",
+  "task_anchor": {
+    "revision": "24899ee9e9e11267145192aac32a9619f2d400b7",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "3ace6d5dc213dda595f7e8dd42dbcffa419cdcef",
+  "source_parent": "3ace6d5dc213dda595f7e8dd42dbcffa419cdcef",
+  "source_ref": "c77ad4327e88472d03ee92b88c8f4b5dfe558d72",
+  "source_ref_remote_resolvable": true,
+  "inherited_descendant_delta_from_package_anchor": [
+    ".gitignore",
+    "README.md",
+    "tools/bootstrap_deps.py",
+    "tools/link_shared_deps.py"
+  ],
+  "a3_source_changed_files_from_actual_start": [
+    "runtime/semantic/CMakeLists.txt",
+    "runtime/semantic/include/canvas/semantic/replay.hpp",
+    "runtime/semantic/src/replay.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/g1_06_replay_differential_test.cpp",
+    "runtime/semantic/tests/g1_06_replay_test.cpp"
+  ],
+  "source_scope": "EXACT_A3_V0_1_AUTHORIZED_FILES",
+  "forbidden_scope_checks": {
+    "operation_engine_or_apply_source_changes": false,
+    "generation_or_commit_clock_changes": false,
+    "snapshot_bootstrap_or_a0_projection_changes": false,
+    "schema_or_proto_changes": false,
+    "publication_outbox_transport_changes": false,
+    "A4_through_A6_changes": false,
+    "GT_G1_07_changes": false,
+    "historical_A0_A1_A2_evidence_changes": false
+  },
+  "independent_reproduction": {
+    "checkout": "/tmp/axiom-g1-06-a3-independent.wLES2T/repo",
+    "head_before_configure": "c77ad4327e88472d03ee92b88c8f4b5dfe558d72",
+    "clean_tracked_status_before_configure": true,
+    "fresh_dependency_bootstrap": true,
+    "original_worktree_artifacts_reused": false,
+    "protobuf_prefix": "/opt/homebrew/opt/protobuf",
+    "protobuf_version": "libprotoc 36.0",
+    "fresh_protobuf_disabled_build": true,
+    "fresh_protobuf_enabled_build": true,
+    "clean_tracked_status_after_verification": true
+  },
+  "verification_builds": {
+    "protobuf_off_build": "/tmp/axiom-g1-06-a3-independent-off.k3vOxu",
+    "protobuf_on_build": "/tmp/axiom-g1-06-a3-independent-on.hJgYZZ"
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_root": "verification/evidence/gates/G1/c77ad4327e88472d03ee92b88c8f4b5dfe558d72/GT-G1-06/",
+    "allowed_files": [
+      "A3-REPLAY.json",
+      "A3-PROJECTION.json",
+      "A3-CTEST.txt",
+      "A3-DIFF.json"
+    ]
+  },
+  "git_diff_check": "PASS",
+  "production_source_changes_outside_a3_scope": false
+}

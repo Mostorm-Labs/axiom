@@ -1,0 +1,77 @@
+{
+  "format": "axiom-gt-g1-06-a3-replay-v1",
+  "task_id": "GT-G1-06-A3",
+  "stage": "P32_IMPLEMENTATION",
+  "package_ref": "notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-06-A3-P31-v0.1",
+  "package_materialization_ref": "24899ee9e9e11267145192aac32a9619f2d400b7",
+  "task_anchor": {
+    "revision": "24899ee9e9e11267145192aac32a9619f2d400b7",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "3ace6d5dc213dda595f7e8dd42dbcffa419cdcef",
+  "reconciliation": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "source_ref": "c77ad4327e88472d03ee92b88c8f4b5dfe558d72",
+  "result": "PASS",
+  "provider_matrix": [
+    {"provider": "ReferenceObjectStore", "focused_replay": "11/11 PASS", "full_semantic": "450/450 PASS"},
+    {"provider": "IndexedObjectStore", "focused_replay": "11/11 PASS", "full_semantic": "450/450 PASS", "index_matches_rebuild": true}
+  ],
+  "lifecycle_gate_matrix": [
+    {"initial": "Loading", "empty_continuation": "Ready", "result": "PASS"},
+    {"initial": "Constructed", "state_after": "Constructed", "applied": 0, "result": "PASS"},
+    {"initial": "Ready", "state_after": "Ready", "applied": 0, "result": "PASS"},
+    {"initial": "Suspended", "state_after": "Suspended", "applied": 0, "result": "PASS"},
+    {"initial": "Closing", "state_after": "Closing", "applied": 0, "result": "PASS"},
+    {"initial": "Closed", "state_after": "Closed", "applied": 0, "result": "PASS"},
+    {"initial": "Failed", "state_after": "Failed", "applied": 0, "result": "PASS"}
+  ],
+  "ordered_execution": {
+    "operation_engine_apply_source": "kRestoreReplay",
+    "input_order_preserved": true,
+    "empty_continuation_to_ready": true,
+    "full_success_transitions_ready_after_last_item": true,
+    "successful_prefix_preserved_on_failure": true
+  },
+  "accounting": {
+    "mixed_applied_already_applied": {"applied": 1, "already_applied": 1, "generation_delta": 1, "commit_ordinal_delta": 1},
+    "already_applied_no_duplicate_advance": true,
+    "rejected_item_generation_and_clock_neutral": true,
+    "invalid_runtime_epoch": {"disposition": "kCommitBlocked", "first_failure_index": 0, "result": "PASS"},
+    "exhausted_commit_lane": {"disposition": "kCommitBlocked", "first_failure_index": 0, "result": "PASS"}
+  },
+  "failure_routing": {
+    "rejected_after_prefix": {"first_failure_index": 1, "state_after": "Failed", "later_operation_attempted": false},
+    "failure_identity": "exact zero-based index + OperationId + disposition",
+    "result": "PASS"
+  },
+  "delete_closure": {
+    "operation": "DeleteObjectsOp{{20}}",
+    "deleted_ids": [20, 21, 22, 30, 31],
+    "unrelated_sentinel_preserved": true,
+    "result": "PASS"
+  },
+  "operation_family_coverage": {
+    "families": [
+      "InsertObjects", "DeleteObjects", "RestoreObjects", "SetPlacements", "SetTransforms",
+      "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent",
+      "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText",
+      "SetConnectorContent"
+    ],
+    "count": 15,
+    "each_replayed_on_reference_and_indexed": true,
+    "restore_objects_without_tombstone_dependency": true
+  },
+  "no_echo": {
+    "restore_replay_source_used": true,
+    "existing_publication_projection": "kNoEcho",
+    "new_publication_or_outbox_lane": false,
+    "replay_source_static_check": "PASS"
+  },
+  "test_results": {
+    "a3_focused_reference_and_indexed": "11/11 PASS",
+    "a0_a1_a2_g106_focused": "43/43 PASS",
+    "implicated_operation_engine_object_store_restore": "93/93 PASS",
+    "full_semantic_protobuf_on": "450/450 PASS",
+    "full_semantic_protobuf_off": "450/450 PASS with 23 expected protobuf-only skips"
+  }
+}

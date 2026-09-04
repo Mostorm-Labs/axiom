@@ -1,0 +1,50 @@
+GT-G1-06-A3 P32 implementation and independent reverification
+package_ref: notion://3cf4c57a-590c-81f2-bc91-f9363bad28ff/GT-G1-06-A3-P31-v0.1
+package_materialization_ref: 24899ee9e9e11267145192aac32a9619f2d400b7
+task_anchor: 24899ee9e9e11267145192aac32a9619f2d400b7 (ancestor)
+actual_starting_revision: 3ace6d5dc213dda595f7e8dd42dbcffa419cdcef
+source_ref: c77ad4327e88472d03ee92b88c8f4b5dfe558d72
+
+TDD
+  RED: fresh configure failed because authorized runtime/semantic/src/replay.cpp was absent
+  GREEN: replay production surface and tests compiled and passed
+
+Independent checkout
+  path: /tmp/axiom-g1-06-a3-independent.wLES2T/repo
+  HEAD before configure: c77ad4327e88472d03ee92b88c8f4b5dfe558d72
+  tracked status before configure: CLEAN
+  dependency bootstrap: python3 tools/bootstrap_deps.py --core (PASS, proxy used)
+  original worktree dependency/build reuse: NONE
+
+Protobuf toolchain
+  brew --prefix protobuf: /opt/homebrew/opt/protobuf
+  protoc --version: libprotoc 36.0
+
+Independent protobuf-off
+  cmake --build /tmp/axiom-g1-06-a3-independent-off.k3vOxu -j2: PASS
+  ctest -R '^g1_06_replay\\.': 11/11 PASS
+  ctest -R 'G106': 43/43 PASS
+  ctest -R 'OperationEngine|ObjectStore|Restore|g1_06_replay': 93/93 PASS
+  full semantic CTest: 450/450 PASS, 0 failed, 23 expected protobuf-only skips
+  replay-focused.log sha256: f7b64a1eff43fd614d0516142a55c629917eec68764bcb372144269baddf80e2
+  g106-focused.log sha256: d1e546ce9eb7c73fc5a85c5a130332ed6cc21e4aedf1ecda67f112ebc7d41229
+  implicated.log sha256: b5917a055b80d252c01023dee3384c1e2ac0c143b77bc2e73ff743ce16493d72
+  full ctest log sha256: ec705b0ae6186ebd320aa48f8fbe244c9b1d24afca54df15d0f7820370385ac3
+
+Independent protobuf-on
+  cmake --build /tmp/axiom-g1-06-a3-independent-on.hJgYZZ -j2: PASS
+  ctest -R '^g1_06_replay\\.': 11/11 PASS
+  ctest -R 'G106': 43/43 PASS
+  ctest -R 'OperationEngine|ObjectStore|Restore|g1_06_replay': 93/93 PASS
+  full semantic CTest: 450/450 PASS, 0 failed, 0 skipped
+  replay-focused.log sha256: d9d2d25edb17b891e06456fe50c16811d2476bcae61871cb01246e55df41b505
+  g106-focused.log sha256: c60f6033e5f6e64143bfa635b2fb84b2f5697ddaa5288f715030b97b722d562f
+  implicated.log sha256: 6d125701061c8233b331ed73bbf94011caeca262440a1739dc92d675327c4778
+  full ctest log sha256: a269d5b22d6cb77cc6cd10b70eee631e0eb5d16a51f94947e08699abb6712c24
+
+Source integrity after independent reverification
+  git diff --check: PASS
+  independent tracked status after verification: CLEAN
+  source worktree tracked status: CLEAN (untracked verification/build artifacts preserved)
+  local source HEAD: c77ad4327e88472d03ee92b88c8f4b5dfe558d72
+  remote source HEAD before evidence materialization: c77ad4327e88472d03ee92b88c8f4b5dfe558d72
