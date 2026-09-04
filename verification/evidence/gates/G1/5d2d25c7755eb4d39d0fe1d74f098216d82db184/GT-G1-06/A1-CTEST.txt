@@ -1,0 +1,28 @@
+GT-G1-06-A1 P32 verification
+package_ref: notion://3cf4c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.2
+task_anchor: d62aa2d0d164327d8c6126a6a6ccd18de0d1748d
+actual_starting_revision: d62aa2d0d164327d8c6126a6a6ccd18de0d1748d
+source_ref: 5d2d25c7755eb4d39d0fe1d74f098216d82db184
+
+Source focused protobuf-on Snapshot tests: 3/3 PASS
+Source full protobuf-on semantic CTest: 418/418 PASS
+Source focused protobuf-off Snapshot tests: 2 PASS, 1 expected protobuf-only SKIP
+Source full protobuf-off semantic CTest: 418/418 PASS; 13 expected protobuf-only skips
+  (12 protobuf-only codec checks + 1 protobuf-on Snapshot content test)
+Fresh independent checkout focused protobuf-on Snapshot tests: 3/3 PASS
+Fresh independent checkout focused protobuf-off Snapshot tests: 2 PASS, 1 expected SKIP
+Fresh independent checkout full protobuf-on semantic CTest: 418/418 PASS
+Fresh independent checkout full protobuf-off semantic CTest: 418/418 PASS; 13 expected skips
+Verification workspace typecheck: PASS
+Verification workspace build/typecheck scaffold: PASS
+git diff --check: PASS
+Tracked source unchanged after independent reverification: PASS
+
+Command/output hashes:
+source full on: e1c2c6c72f16941e15e8299f155627f579b5fc59a7c328ca10f1e466d68a8735
+source full off: 5c7c32d12dd81004c0212bf0f75e0aeb5ba95a242d162f63e829d5f1c85f270e
+fresh full on: 4d1895db513388e89108b72a06e5f4bdd946ddc6a7ec91b4709cc76c58ee976d
+fresh full off: 90f7636ab04ddae8d2e2aabcefb1d307c61db4b32769243acaaba262b930ac53
+
+Workspace validate note:
+npm run validate completed with 87/88 tests passing. One existing C8 exact-source baseline test failed because the repository contains unrelated historical C8 source/evidence scope; no A1 source or verification files were modified to bypass it.

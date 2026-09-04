@@ -1,0 +1,34 @@
+{
+  "task_id": "GT-G1-06-A1",
+  "task_anchor": "d62aa2d0d164327d8c6126a6a6ccd18de0d1748d",
+  "actual_starting_revision": "d62aa2d0d164327d8c6126a6a6ccd18de0d1748d",
+  "source_ref": "5d2d25c7755eb4d39d0fe1d74f098216d82db184",
+  "materialized_relation": "EVIDENCE_ONLY_DESCENDANT",
+  "source_allowlist": [
+    "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+    "runtime/semantic/src/snapshot.cpp",
+    "runtime/semantic/src/protobuf_object_mapping.hpp",
+    "runtime/semantic/src/protobuf_object_mapping.cpp",
+    "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+    "runtime/semantic/src/codec.cpp",
+    "runtime/semantic/CMakeLists.txt",
+    "runtime/semantic/tests/CMakeLists.txt"
+  ],
+  "source_changed_files": [
+    "runtime/semantic/CMakeLists.txt",
+    "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+    "runtime/semantic/src/protobuf_object_mapping.cpp",
+    "runtime/semantic/src/protobuf_object_mapping.hpp",
+    "runtime/semantic/src/snapshot.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/g1_06_snapshot_test.cpp"
+  ],
+  "forbidden_scope_checks": {
+    "schema_or_proto_changes": false,
+    "A0_projection_source_changes": false,
+    "A2_plus_changes": false,
+    "historical_G1_04_G1_05_evidence_changes": false,
+    "production_semantic_outside_allowlist": false
+  },
+  "source_to_materialized_delta": "EVIDENCE_ONLY"
+}

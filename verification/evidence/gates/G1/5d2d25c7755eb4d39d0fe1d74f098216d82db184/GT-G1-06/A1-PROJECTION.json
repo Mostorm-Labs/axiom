@@ -1,0 +1,18 @@
+{
+  "task_id": "GT-G1-06-A1",
+  "source_ref": "5d2d25c7755eb4d39d0fe1d74f098216d82db184",
+  "oracle": "A0 canonical semantic projection",
+  "result": "PASS",
+  "checks": {
+    "P_before_equals_P_decode_encode": true,
+    "canonical_json_equality": true,
+    "physical_order_permutation_is_byte_identical": true,
+    "candidate_only_decode": true,
+    "object_store_mutation": false,
+    "generation_mutation": false,
+    "runtime_state_transition": false,
+    "ledger_commit_clock_changes": false,
+    "publication_side_effect": false
+  },
+  "fixture_summary": "10 objects spanning all nine V1 ObjectContent branches, nested property/style/path/stroke/connector/erase-mask structures"
+}

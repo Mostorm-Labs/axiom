@@ -1,0 +1,38 @@
+{
+  "task_id": "GT-G1-06-A1",
+  "package_ref": "notion://3cf4c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.2",
+  "task_anchor": "d62aa2d0d164327d8c6126a6a6ccd18de0d1748d",
+  "actual_starting_revision": "d62aa2d0d164327d8c6126a6a6ccd18de0d1748d",
+  "source_ref": "5d2d25c7755eb4d39d0fe1d74f098216d82db184",
+  "materialized_relation": "EVIDENCE_ONLY_DESCENDANT",
+  "snapshot_contract": {
+    "schema": "DocumentSnapshot_V1",
+    "schema_version": 1,
+    "nonzero_document_id": "PASS",
+    "ascending_object_id_order": "PASS",
+    "duplicate_object_id_rejection": "PASS",
+    "malformed_truncated_wire_rejection": "PASS",
+    "protobuf_disabled_runtime_unavailable": "PASS"
+  },
+  "canonical_projection_oracle": {
+    "oracle": "axiom-verification-projection-v1 canonical JSON",
+    "before_equals_decode_encode": "PASS",
+    "physical_object_order_permutation_byte_identity": "PASS"
+  },
+  "mapper_bidirectional_coverage": {
+    "Shape": "encode+decode",
+    "Image": "encode+decode",
+    "VectorPath": "encode+decode",
+    "RichText": "encode+decode",
+    "VectorStroke": "encode+decode",
+    "DabStroke": "encode+decode",
+    "Connector": "encode+decode",
+    "Sticky": "encode+decode",
+    "Group": "encode+decode",
+    "properties": "all PropertyValue oneof branches",
+    "erase_masks": "SweptCircle + FilledPath",
+    "nested": "paths, text styles, brush curves, endpoints and anchors"
+  },
+  "production_semantic_mutation": false,
+  "expected_truth_dependency": false
+}
