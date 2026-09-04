@@ -1,0 +1,64 @@
+{
+  "format": "axiom-gt-g1-06-a2-bootstrap-v1",
+  "task_id": "GT-G1-06-A2",
+  "stage": "P32_IMPLEMENTATION",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "task_anchor": {
+    "revision": "e7e1d4854c446b0839fd598554440afad1eb2448",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "e7e1d4854c446b0839fd598554440afad1eb2448",
+  "source_ref": "d9a5f12def2977fe62ea2a148270e68143af9d14",
+  "reconciliation": "EXACT_ANCHOR",
+  "result": "PASS",
+  "contract": {
+    "loading_only_gate": "PASS",
+    "full_candidate_validation_before_mutation": "PASS",
+    "success_state_remains_loading": "PASS",
+    "failure_state_becomes_failed_only_for_loading_restore_failures": "PASS",
+    "generation_preserved": "PASS",
+    "indexed_rebuild_equivalence": "PASS",
+    "reference_indexed_projection_parity": "PASS"
+  },
+  "lifecycle_gate_matrix": [
+    {"initial": "Constructed", "restored": false, "state_after": "Constructed", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"},
+    {"initial": "Ready", "restored": false, "state_after": "Ready", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"},
+    {"initial": "Suspended", "restored": false, "state_after": "Suspended", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"},
+    {"initial": "Closing", "restored": false, "state_after": "Closing", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"},
+    {"initial": "Closed", "restored": false, "state_after": "Closed", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"},
+    {"initial": "Failed", "restored": false, "state_after": "Failed", "store_unchanged": true, "generation_unchanged": true, "result": "PASS"}
+  ],
+  "provider_matrix": [
+    {"provider": "ReferenceObjectStore", "valid_empty": "PASS", "valid_mixed": "PASS", "valid_graph": "PASS", "negative_atomicity": "PASS"},
+    {"provider": "IndexedObjectStore", "valid_empty": "PASS", "valid_mixed": "PASS", "valid_graph": "PASS", "negative_atomicity": "PASS", "index_matches_rebuild": true}
+  ],
+  "positive_graph_matrix": [
+    {"fixture": "empty_snapshot", "providers": ["ReferenceObjectStore"], "state_after": "Loading", "generation_before": 17, "generation_after": 17, "result": "PASS"},
+    {"fixture": "out_of_order_two_shape_snapshot", "providers": ["ReferenceObjectStore", "IndexedObjectStore"], "state_after": "Loading", "generation_before": 9, "generation_after": 9, "result": "PASS"},
+    {"fixture": "three_shape_candidate_projection", "providers": ["ReferenceObjectStore", "IndexedObjectStore"], "candidate_projection_equals_store_projection": true, "provider_projection_equal": true, "result": "PASS"},
+    {"fixture": "group_shape_connector_stable_port_graph", "providers": ["ReferenceObjectStore", "IndexedObjectStore"], "hierarchy_valid": true, "connector_reference_valid": true, "result": "PASS"}
+  ],
+  "negative_atomicity_matrix": [
+    {"fixture": "non_empty_target", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "invalid_object_record", "providers": ["ReferenceObjectStore", "IndexedObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_before": 12, "generation_after": 12, "result": "PASS"},
+    {"fixture": "duplicate_object_id", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "missing_parent", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "hierarchy_cycle", "providers": ["IndexedObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "invalid_parent_capability", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "connector_target_missing", "providers": ["IndexedObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "connector_target_non_connectable", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "invalid_stable_port", "providers": ["IndexedObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "zero_document_id", "providers": ["ReferenceObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"},
+    {"fixture": "unsupported_schema_version", "providers": ["IndexedObjectStore"], "state_after": "Failed", "store_before_after_equal": true, "generation_unchanged": true, "result": "PASS"}
+  ],
+  "side_effect_absence": {
+    "operation_created_or_applied": false,
+    "applied_operation_ledger_written": false,
+    "canonical_commit_stamp_or_clock_written": false,
+    "change_set_created": false,
+    "publication_eligibility_emitted": false,
+    "outbox_or_sync_state_written": false,
+    "generation_advanced": false,
+    "ready_transition": false
+  }
+}

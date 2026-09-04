@@ -1,0 +1,86 @@
+GT-G1-06-A2 P32 clean-checkout verification
+package_ref: notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1
+task_anchor: e7e1d4854c446b0839fd598554440afad1eb2448 (ancestor)
+actual_starting_revision: e7e1d4854c446b0839fd598554440afad1eb2448
+source_ref: d9a5f12def2977fe62ea2a148270e68143af9d14
+
+Independent checkout
+  path: /tmp/axiom-g1-06-a2-clean.bHappD
+  HEAD before configure: d9a5f12def2977fe62ea2a148270e68143af9d14
+  tracked status before configure: CLEAN
+  dependency bootstrap: python3 tools/bootstrap_deps.py --core (PASS)
+  original worktree dependency/build reuse: NONE
+
+Protobuf toolchain
+  brew --prefix protobuf: /opt/homebrew/opt/protobuf
+  protoc --version: libprotoc 36.0
+
+Common semantic-only CMake switches
+  -DBUILD_TESTING=ON
+  -DCANVAS_BUILD_SEMANTIC=ON
+  -DCANVAS_BUILD_POC01=OFF
+  -DCANVAS_BUILD_POC02=OFF
+  -DCANVAS_BUILD_POC03=OFF
+  -DCANVAS_BUILD_POC05=OFF
+  -DCANVAS_BUILD_RF01=OFF
+  -DCANVAS_BUILD_ARC=OFF
+  -DCANVAS_BUILD_POC06=OFF
+
+Protobuf-enabled configure/build
+  brew_prefix="$(brew --prefix protobuf)"
+  cmake -S . -B <fresh-protobuf-on-build> \
+    -DProtobuf_DIR="$brew_prefix/lib/cmake/protobuf" \
+    -DCMAKE_PREFIX_PATH="$brew_prefix" \
+    -DBUILD_TESTING=ON \
+    -DCANVAS_BUILD_SEMANTIC=ON \
+    -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+    <common-semantic-only-switches>
+  cmake --build <fresh-protobuf-on-build> -j 4
+  result: PASS
+
+Protobuf-enabled focused A0/A1/A2 regression
+  ctest --test-dir <fresh-protobuf-on-build> -R 'G106' --output-on-failure
+  result: 31/31 PASS, 0 failed, 0 skipped
+  log_sha256: f6965dfa9ec1985efbd7e6aa5050d97d06ba8dbc9c39194e418523c625fe80b1
+
+Protobuf-enabled full semantic CTest
+  ctest --test-dir <fresh-protobuf-on-build> --output-on-failure
+  result: 438/438 PASS, 0 failed, 0 skipped
+  log_sha256: 871f2141b96e2d898e1a9ac526865a8431773ba6b13e63a2cc0056b4c2d6ad1b
+
+Protobuf-disabled configure/build
+  cmake -S . -B <fresh-protobuf-off-build> \
+    -DBUILD_TESTING=ON \
+    -DCANVAS_BUILD_SEMANTIC=ON \
+    -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF \
+    <common-semantic-only-switches>
+  cmake --build <fresh-protobuf-off-build> -j 4
+  result: PASS
+
+Protobuf-disabled focused A0/A1/A2 regression
+  ctest --test-dir <fresh-protobuf-off-build> -R 'G106' --output-on-failure
+  result: 20 PASS, 0 failed, 11 expected protobuf-only skips
+  A2 bootstrap: 10/10 PASS
+  A0 projection: 8/8 PASS
+  A1 protobuf-off contract/non-wire validation: 2/2 PASS
+  log_sha256: e4f699fc2148bd3305d4172e037592962dfd632b537557cb67457589816c67b1
+
+Protobuf-disabled full semantic CTest
+  ctest --test-dir <fresh-protobuf-off-build> --output-on-failure
+  result: 415 PASS, 0 failed, 23 expected protobuf-only skips, 438 discovered
+  log_sha256: a2e9a2a5b18f71d7af86e86e327749678f5bb443fff36f9024882e2c01a7ed5e
+
+Source integrity after verification
+  git diff --check: PASS
+  tracked status: CLEAN
+  source HEAD: d9a5f12def2977fe62ea2a148270e68143af9d14
+  remote execution ref HEAD before evidence materialization:
+    d9a5f12def2977fe62ea2a148270e68143af9d14
+
+Additional non-gate workspace check
+  npm ci: PASS
+  npm run build: PASS
+  npm run validate: 111 root checks PASS; semantic-conformance workspace
+    87/88 PASS with one historical C8 exact-source fixture failure caused by
+    applying the frozen C8 source-scope assertion to the current descendant.
+  A2 source/test changes were not made to bypass this unrelated historical check.

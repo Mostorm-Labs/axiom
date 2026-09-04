@@ -1,0 +1,60 @@
+{
+  "format": "axiom-gt-g1-06-a2-diff-v1",
+  "task_id": "GT-G1-06-A2",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "task_anchor": {
+    "revision": "e7e1d4854c446b0839fd598554440afad1eb2448",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "e7e1d4854c446b0839fd598554440afad1eb2448",
+  "source_ref": "d9a5f12def2977fe62ea2a148270e68143af9d14",
+  "source_ref_remote_resolvable": true,
+  "source_changed_files": {
+    "created": [
+      "runtime/semantic/include/canvas/semantic/document_runtime_state.hpp",
+      "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp",
+      "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp"
+    ],
+    "modified": [
+      "runtime/semantic/CMakeLists.txt",
+      "runtime/semantic/tests/CMakeLists.txt"
+    ]
+  },
+  "source_scope": "EXACT_V0_1_AUTHORIZED_FILES",
+  "forbidden_scope_checks": {
+    "A1_snapshot_codec_or_mapper_changes": false,
+    "normalizer_or_validator_changes": false,
+    "operation_engine_or_apply_changes": false,
+    "object_store_implementation_changes": false,
+    "schema_or_proto_changes": false,
+    "A0_projection_changes": false,
+    "replay_or_ready_finalization_changes": false,
+    "digest_changes": false,
+    "A3_through_A6_changes": false,
+    "GT_G1_07_changes": false,
+    "historical_A0_A1_evidence_changes": false
+  },
+  "independent_reproduction": {
+    "checkout": "/tmp/axiom-g1-06-a2-clean.bHappD",
+    "head_before_configure": "d9a5f12def2977fe62ea2a148270e68143af9d14",
+    "clean_tracked_status_before_configure": true,
+    "fresh_dependency_bootstrap": true,
+    "original_worktree_artifacts_reused": false,
+    "protobuf_prefix": "/opt/homebrew/opt/protobuf",
+    "protobuf_version": "libprotoc 36.0",
+    "fresh_protobuf_enabled_build": true,
+    "fresh_protobuf_disabled_build": true,
+    "clean_tracked_status_after_verification": true
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_files": [
+      "verification/evidence/gates/G1/d9a5f12def2977fe62ea2a148270e68143af9d14/GT-G1-06/A2-BOOTSTRAP.json",
+      "verification/evidence/gates/G1/d9a5f12def2977fe62ea2a148270e68143af9d14/GT-G1-06/A2-CTEST.txt",
+      "verification/evidence/gates/G1/d9a5f12def2977fe62ea2a148270e68143af9d14/GT-G1-06/A2-DIFF.json",
+      "verification/evidence/gates/G1/d9a5f12def2977fe62ea2a148270e68143af9d14/GT-G1-06/A2-PROJECTION.json"
+    ]
+  },
+  "git_diff_check": "PASS"
+}

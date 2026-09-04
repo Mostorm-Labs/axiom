@@ -1,0 +1,33 @@
+{
+  "format": "axiom-gt-g1-06-a2-projection-v1",
+  "task_id": "GT-G1-06-A2",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "source_ref": "d9a5f12def2977fe62ea2a148270e68143af9d14",
+  "oracle": "A0_CANONICAL_SEMANTIC_PROJECTION",
+  "result": "PASS",
+  "successful_fixtures": [
+    {"fixture": "three_shape_candidate_projection", "candidate_projection_equals_reference_post_bootstrap": true, "candidate_projection_equals_indexed_post_bootstrap": true, "reference_equals_indexed": true, "canonical_json_equal": true},
+    {"fixture": "group_shape_connector_stable_port_graph", "reference_equals_indexed": true, "canonical_order": "ascending_object_id"}
+  ],
+  "fail_closed_projection_matrix": [
+    {"fixture": "all_non_loading_states", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "non_empty_target", "before_after_object_records": "EXACT_EQUAL", "projection_implication": "EQUAL", "result": "PASS"},
+    {"fixture": "invalid_object_record", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "duplicate_object_id", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "missing_parent", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "hierarchy_cycle", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "invalid_parent_capability", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "connector_target_missing", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "connector_target_non_connectable", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "invalid_stable_port", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "zero_document_id", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"},
+    {"fixture": "unsupported_schema_version", "before_after_projection": "EQUAL_EMPTY", "result": "PASS"}
+  ],
+  "generation_observations": {
+    "successful_nonzero_baselines": [{"before": 9, "after": 9}, {"before": 17, "after": 17}],
+    "failed_nonzero_baseline": {"before": 12, "after": 12},
+    "all_unchanged": true
+  },
+  "focused_projection_regression": "8/8 PASS",
+  "reference_indexed_projection_parity": "PASS"
+}
