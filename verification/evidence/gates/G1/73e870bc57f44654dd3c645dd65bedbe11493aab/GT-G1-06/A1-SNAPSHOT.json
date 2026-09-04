@@ -1,0 +1,47 @@
+{
+  "format": "axiom-gt-g1-06-a1-snapshot-v0.4",
+  "task_id": "GT-G1-06-A1",
+  "stage": "P33_RESUME_INTERRUPTED_WORK",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.4",
+  "task_anchor": "d52b1b08e1176445971402edc3d1248f1e40176a",
+  "actual_starting_revision": "d52b1b08e1176445971402edc3d1248f1e40176a",
+  "source_ref": "73e870bc57f44654dd3c645dd65bedbe11493aab",
+  "reconciliation": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "snapshot_contract": {
+    "schema": "DocumentSnapshot_V1",
+    "schema_version": 1,
+    "nonzero_document_id": "PASS",
+    "ascending_object_id_order": "PASS",
+    "duplicate_object_id_rejection": "PASS",
+    "raw_wire_unknown_duplicate_oneof_rejection": "PASS",
+    "semantic_required_presence_rejection": "PASS",
+    "protobuf_disabled_runtime_unavailable": "PASS"
+  },
+  "implementation_seams": {
+    "shared_objectrecord_normalization": "PASS",
+    "shared_objectrecord_validation": "PASS",
+    "snapshot_raw_wire_preflight": "PASS",
+    "snapshot_canonical_writer": "PASS",
+    "direct_deterministic_protobuf_serializer_as_protocol_authority": false
+  },
+  "propertyvalue_v0_4_matrix": [
+    {"schema_variant": "bool", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "float_opacity", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "BlendModeValue", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "FillStyleValue/SolidFill(ColorValue)", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "StrokeStyleValue/SolidStroke(ColorValue)", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "ConnectorDecorationValue", "registry_reachable_in_V1": true, "positive_snapshot_fixture": true, "mapper_only_fixture": false, "negative_semantic_fixture": false, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": true},
+    {"schema_variant": "ColorValue direct PropertyBag", "registry_reachable_in_V1": false, "positive_snapshot_fixture": false, "mapper_only_fixture": true, "negative_semantic_fixture": true, "encode_covered": true, "decode_covered": true, "expected_semantic_acceptance": false}
+  ],
+  "content_and_canonicality": {
+    "all_nine_v1_object_content_branches": "PASS",
+    "physical_order_permutation_byte_identity": "PASS",
+    "property_bag_canonicalization": "PASS",
+    "erase_mask_canonicalization": "PASS",
+    "f32_negative_zero_canonicalization": "PASS",
+    "f64_negative_zero_canonicalization": "PASS",
+    "direct_color_mapper_round_trip_then_semantic_rejection": "PASS"
+  },
+  "expected_truth_dependency": false,
+  "production_semantic_mutation_during_decode": false
+}

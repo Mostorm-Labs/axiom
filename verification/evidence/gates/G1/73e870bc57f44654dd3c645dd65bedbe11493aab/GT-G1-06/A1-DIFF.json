@@ -1,0 +1,40 @@
+{
+  "task_id": "GT-G1-06-A1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.4",
+  "task_anchor": "d52b1b08e1176445971402edc3d1248f1e40176a",
+  "source_ref": "73e870bc57f44654dd3c645dd65bedbe11493aab",
+  "source_changed_files": {
+    "created": [
+      "runtime/semantic/src/object_record_semantics_internal.hpp",
+      "runtime/semantic/src/protobuf_codec_internal.hpp"
+    ],
+    "modified": [
+      "runtime/semantic/src/normalizer.cpp",
+      "runtime/semantic/src/validator.cpp",
+      "runtime/semantic/src/codec.cpp",
+      "runtime/semantic/src/snapshot.cpp",
+      "runtime/semantic/src/protobuf_object_mapping.hpp",
+      "runtime/semantic/src/protobuf_object_mapping.cpp",
+      "runtime/semantic/tests/g1_06_snapshot_test.cpp"
+    ]
+  },
+  "source_scope": "EXACT_V0_4_AUTHORIZED_FILES",
+  "forbidden_scope_checks": {
+    "schema_or_proto_changes": false,
+    "public_header_changes": false,
+    "cmake_changes": false,
+    "A0_projection_changes": false,
+    "A2_through_A6_changes": false,
+    "GT_G1_07_changes": false,
+    "historical_evidence_changes": false
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_files": [
+      "verification/evidence/gates/G1/73e870bc57f44654dd3c645dd65bedbe11493aab/GT-G1-06/A1-SNAPSHOT.json",
+      "verification/evidence/gates/G1/73e870bc57f44654dd3c645dd65bedbe11493aab/GT-G1-06/A1-CTEST.txt",
+      "verification/evidence/gates/G1/73e870bc57f44654dd3c645dd65bedbe11493aab/GT-G1-06/A1-DIFF.json",
+      "verification/evidence/gates/G1/73e870bc57f44654dd3c645dd65bedbe11493aab/GT-G1-06/A1-PROJECTION.json"
+    ]
+  }
+}

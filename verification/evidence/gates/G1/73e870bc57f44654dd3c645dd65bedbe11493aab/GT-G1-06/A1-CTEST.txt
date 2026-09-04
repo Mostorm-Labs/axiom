@@ -1,0 +1,33 @@
+GT-G1-06-A1 P33 verification and independent reproduction
+package_ref: notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.4
+task_anchor: d52b1b08e1176445971402edc3d1248f1e40176a
+actual_starting_revision: d52b1b08e1176445971402edc3d1248f1e40176a
+source_ref: 73e870bc57f44654dd3c645dd65bedbe11493aab
+
+P33 reconciliation: ANCHOR_DESCENDANT_WITHOUT_CURSOR
+Preserved local implementation work was committed only after source verification.
+
+Source verification (protobuf-on build-a1-proto-r2):
+  cmake --build build-a1-proto-r2 -j4: PASS
+  focused G106Snapshot: 13/13 PASS
+  focused G106Projection: 8/8 PASS
+  codec/golden regression: 31/31 PASS
+  normalizer/validator regression: 37/37 PASS
+  full semantic CTest: 428/428 PASS
+
+Source protobuf-off contract (/tmp/axiom-g1-06-snapshot-proto-off):
+  build: PASS
+  focused G106Snapshot: 2 PASS; 11 expected protobuf-only SKIP; 0 failure
+
+Fresh independent reproduction:
+  checkout: detached exact source_ref 73e870bc57f44654dd3c645dd65bedbe11493aab
+  tracked status before configure: clean
+  dependency bootstrap: tools/bootstrap_deps.py --core --semantic-codec: PASS
+  original worktree .deps/build reuse: false
+  protobuf-on fresh configure/build: PASS
+  protobuf-on focused G106Snapshot: 13/13 PASS
+  protobuf-on full semantic CTest: 428/428 PASS
+  protobuf-off fresh configure/build: PASS
+  protobuf-off focused G106Snapshot: 2 PASS; 11 expected protobuf-only SKIP; 0 failure
+  tracked source unchanged after reproduction: PASS
+  git diff --check: PASS

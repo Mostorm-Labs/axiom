@@ -1,0 +1,30 @@
+{
+  "task_id": "GT-G1-06-A1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A1-P31-v0.4",
+  "source_ref": "73e870bc57f44654dd3c645dd65bedbe11493aab",
+  "oracle": "A0 canonical semantic projection",
+  "result": "PASS",
+  "checks": {
+    "P_before_equals_P_decode_encode": true,
+    "canonical_json_equality": true,
+    "physical_order_permutation_is_byte_identical": true,
+    "candidate_only_decode": true,
+    "object_store_mutation": false,
+    "generation_mutation": false,
+    "runtime_state_transition": false,
+    "ledger_or_commit_clock_mutation": false,
+    "publication_side_effect": false
+  },
+  "fixture": {
+    "object_count": 10,
+    "object_content_branches": [
+      "Shape", "Image", "VectorPath", "RichText", "VectorStroke",
+      "DabStroke", "Connector", "Sticky", "Group"
+    ],
+    "nested_coverage": [
+      "SolidFill ColorValue", "SolidStroke ColorValue", "property bag",
+      "path", "rich text", "pressure curves", "connector anchors", "erase masks"
+    ]
+  },
+  "focused_projection_regression": "8/8 PASS"
+}
