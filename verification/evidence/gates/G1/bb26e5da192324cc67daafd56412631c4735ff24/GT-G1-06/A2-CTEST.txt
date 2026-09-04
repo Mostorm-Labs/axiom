@@ -1,0 +1,60 @@
+GT-G1-06-A2 P36 test-only repair reverification
+package_ref: notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1
+finding_id: A2-P34-B1
+classification: TEST_ORACLE_GAP
+repair_base: 0a10a813b1567686a3b1507269fb935235ac3b6b
+actual_starting_revision: 0a10a813b1567686a3b1507269fb935235ac3b6b
+source_ref: bb26e5da192324cc67daafd56412631c4735ff24
+
+Independent checkout
+  path: /tmp/axiom-g1-06-a2-verify-O6mHEU
+  HEAD before configure: bb26e5da192324cc67daafd56412631c4735ff24
+  tracked status before configure: CLEAN
+  dependency bootstrap: python3 tools/bootstrap_deps.py --core --semantic-codec (PASS)
+  npm dependency bootstrap: npm ci --ignore-scripts (PASS)
+  original worktree dependency/build reuse: NONE
+
+Protobuf toolchain
+  brew --prefix protobuf: /opt/homebrew/opt/protobuf
+  protoc --version: libprotoc 36.0
+
+Fresh protobuf-enabled build
+  cmake -S . -B build-proto-on -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+    -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON \
+    -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+    -DProtobuf_DIR=$PWD/.deps/protobuf/lib/cmake/protobuf \
+    -Dabsl_DIR=$PWD/.deps/protobuf/lib/cmake/absl \
+    -Dutf8_range_DIR=$PWD/.deps/protobuf/lib/cmake/utf8_range
+  cmake --build build-proto-on -j4: PASS
+  ctest --test-dir build-proto-on -R '^g1_06_snapshot_bootstrap\\.' --output-on-failure: 11/11 PASS
+  ctest --test-dir build-proto-on -R 'G106' --output-on-failure: 32/32 PASS
+  implicated hierarchy/capability/Connector/ObjectStore/G106: 100/100 PASS
+  full semantic CTest: 439/439 PASS, 0 failed, 0 skipped
+
+Fresh protobuf-disabled build
+  cmake -S . -B build-proto-off -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+    -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DBUILD_TESTING=ON \
+    -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+  cmake --build build-proto-off -j4: PASS
+  ctest --test-dir build-proto-off -R '^g1_06_snapshot_bootstrap\\.' --output-on-failure: 11/11 PASS
+  ctest --test-dir build-proto-off -R 'G106' --output-on-failure: 21 PASS, 11 expected protobuf-only skips
+  implicated hierarchy/capability/Connector/ObjectStore/G106: 89 PASS, 11 expected protobuf-only skips
+  full semantic CTest: 416 PASS, 23 expected protobuf-only skips, 0 failed
+
+Verification workspace
+  npm run build: PASS
+  npm run validate: 87/88 PASS; one existing C8 exact-source lineage mismatch
+    (non-gate historical finding; not modified or suppressed by A2)
+
+Source integrity after verification
+  git diff --check: PASS
+  tracked status after verification: CLEAN
+  production source/header changes: NONE
+  source-to-materialized relation: EVIDENCE_ONLY_DESCENDANT
+  source-to-materialized changed paths: four files under this GT-G1-06 evidence root only
+
+Result
+  provider parity negative matrix: PASS (22/22 provider pairs)
+  expected truth writes: 0
+  production semantic dependencies: 0
+  finding A2-P34-B1: FIXED

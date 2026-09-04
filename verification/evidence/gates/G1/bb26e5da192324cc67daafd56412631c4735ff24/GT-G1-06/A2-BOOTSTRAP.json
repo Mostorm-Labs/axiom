@@ -1,0 +1,55 @@
+{
+  "format": "axiom-gt-g1-06-a2-bootstrap-v2",
+  "task_id": "GT-G1-06-A2",
+  "finding_id": "A2-P34-B1",
+  "classification": "TEST_ORACLE_GAP",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "original_task_anchor": {
+    "revision": "e7e1d4854c446b0839fd598554440afad1eb2448",
+    "relation": "ancestor"
+  },
+  "repair_base": "0a10a813b1567686a3b1507269fb935235ac3b6b",
+  "actual_starting_revision": "0a10a813b1567686a3b1507269fb935235ac3b6b",
+  "source_ref": "bb26e5da192324cc67daafd56412631c4735ff24",
+  "prior_blocked_materialized_ref": "0a10a813b1567686a3b1507269fb935235ac3b6b",
+  "repair_scope": {
+    "changed_files": [
+      "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp"
+    ],
+    "production_source_changed": false,
+    "cmake_changed": false,
+    "schema_or_proto_changed": false,
+    "historical_c8_lineage_changed": false
+  },
+  "fixtures": [
+    "non_empty_target",
+    "invalid_object_record",
+    "duplicate_object_id",
+    "missing_parent",
+    "hierarchy_cycle",
+    "invalid_parent_capability",
+    "connector_target_missing",
+    "connector_target_non_connectable",
+    "invalid_stable_port",
+    "zero_document_id",
+    "unsupported_schema_version"
+  ],
+  "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+  "provider_pairs": 22,
+  "oracle": {
+    "restored": false,
+    "state_after": "Failed",
+    "store_unchanged": true,
+    "projection_unchanged": true,
+    "generation_unchanged": true,
+    "partial_population": false
+  },
+  "focused_bootstrap": {
+    "protobuf_on": "11/11 PASS",
+    "protobuf_off": "11/11 PASS",
+    "result": "PASS"
+  },
+  "finding_result": "FIXED",
+  "expected_truth_writes": 0,
+  "status": "PASS"
+}

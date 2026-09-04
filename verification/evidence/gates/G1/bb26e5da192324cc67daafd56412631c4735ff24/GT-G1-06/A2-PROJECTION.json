@@ -1,0 +1,27 @@
+{
+  "format": "axiom-gt-g1-06-a2-projection-v2",
+  "task_id": "GT-G1-06-A2",
+  "finding_id": "A2-P34-B1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "source_ref": "bb26e5da192324cc67daafd56412631c4735ff24",
+  "oracle": "A0_CANONICAL_SEMANTIC_PROJECTION",
+  "provider_parity": {
+    "providers": ["ReferenceObjectStore", "IndexedObjectStore"],
+    "negative_fixture_pairs": 22,
+    "all_pairs": "PASS",
+    "state_after": "Failed",
+    "store_or_projection_unchanged": true,
+    "generation_unchanged": true,
+    "partial_population": false
+  },
+  "projection_regression": {
+    "protobuf_on_g106_projection": "8/8 PASS",
+    "protobuf_off_g106_projection": "8/8 PASS",
+    "reference_indexed_parity": "PASS",
+    "a0_a1_projection_implementation_changed": false
+  },
+  "production_semantic_dependencies": 0,
+  "expected_truth_writes": 0,
+  "provider_output_used_as_expected": false,
+  "status": "PASS"
+}

@@ -1,0 +1,60 @@
+{
+  "format": "axiom-gt-g1-06-a2-diff-v2",
+  "task_id": "GT-G1-06-A2",
+  "finding_id": "A2-P34-B1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A2-P31-v0.1",
+  "source_ref": "bb26e5da192324cc67daafd56412631c4735ff24",
+  "source_ref_remote_resolvable": true,
+  "source_parent": "0a10a813b1567686a3b1507269fb935235ac3b6b",
+  "source_scope": "EXACT_TEST_ONLY_REPAIR",
+  "source_changed_files": {
+    "created": [],
+    "modified": [
+      "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp"
+    ],
+    "deleted": []
+  },
+  "production_guard": {
+    "production_source_changed": false,
+    "cmake_changed": false,
+    "schema_or_proto_changed": false,
+    "a0_a1_source_changed": false,
+    "replay_or_digest_changed": false,
+    "historical_c8_lineage_changed": false,
+    "gt_g1_07_changed": false
+  },
+  "changed_test_sha256": "a7b5ee88c4bef8d392911197648dc95380b8a7d5debe4e17e7d86e63801f142f",
+  "repair_base_test_sha256": "d011e8ad5ceafb042100ccab36f1ef434e9419cee841fbe56582b24bea13751e",
+  "independent_reproduction": {
+    "checkout": "/tmp/axiom-g1-06-a2-verify-O6mHEU",
+    "head_before_configure": "bb26e5da192324cc67daafd56412631c4735ff24",
+    "clean_tracked_status_before_configure": true,
+    "fresh_dependency_bootstrap": true,
+    "original_worktree_artifacts_reused": false,
+    "protobuf_prefix": "/opt/homebrew/opt/protobuf",
+    "protobuf_version": "libprotoc 36.0",
+    "fresh_protobuf_enabled_build": true,
+    "fresh_protobuf_disabled_build": true,
+    "clean_tracked_status_after_verification": true
+  },
+  "verification": {
+    "focused_g106_on": "32/32 PASS",
+    "focused_g106_off": "21 PASS, 11 expected protobuf-only skips",
+    "implicated_on": "100/100 PASS",
+    "implicated_off": "89 PASS, 11 expected protobuf-only skips",
+    "full_semantic_on": "439/439 PASS",
+    "full_semantic_off": "416 PASS, 23 expected protobuf-only skips",
+    "git_diff_check": "PASS"
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_files": [
+      "verification/evidence/gates/G1/bb26e5da192324cc67daafd56412631c4735ff24/GT-G1-06/A2-BOOTSTRAP.json",
+      "verification/evidence/gates/G1/bb26e5da192324cc67daafd56412631c4735ff24/GT-G1-06/A2-CTEST.txt",
+      "verification/evidence/gates/G1/bb26e5da192324cc67daafd56412631c4735ff24/GT-G1-06/A2-DIFF.json",
+      "verification/evidence/gates/G1/bb26e5da192324cc67daafd56412631c4735ff24/GT-G1-06/A2-PROJECTION.json"
+    ],
+    "evidence_only": true
+  },
+  "status": "PASS"
+}
