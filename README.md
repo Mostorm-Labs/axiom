@@ -83,6 +83,41 @@ The immutable POC profiles remain reproducible. R1 productization adds the
 and `asan` variants; it is produced and published separately, so ordinary
 Canvas CI downloads SDK assets and never runs Skia GN/Ninja.
 
+## Shared local dependency cache
+
+The repository keeps its dependency interface at `<worktree>/.deps`, but the
+actual dependency checkouts and compiled toolchains can be shared by multiple
+worktrees. This avoids downloading and rebuilding the locked GoogleTest,
+nlohmann/json, xxHash, Protobuf/Abseil, Node, Emscripten, or Skia assets for
+every checkout. The cache is local-only and is never committed.
+
+On macOS, create the shared cache under the requested `deps` directory and
+connect the current worktree:
+
+```bash
+shared_deps=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64
+python3 tools/link_shared_deps.py --shared-root "$shared_deps"
+python3 tools/bootstrap_deps.py --core --semantic-codec --homebrew-protoc
+python3 tools/link_shared_deps.py --shared-root "$shared_deps" --check
+```
+
+For another worktree, run the same `link_shared_deps.py` command from that
+worktree, using the same cache path. The script fails closed if `.deps` is a
+real directory or points at a different cache; move an existing disposable
+`.deps` directory aside explicitly before connecting it. The equivalent
+configuration can be supplied through `AXIOM_SHARED_DEPS`.
+
+The cache is keyed by the lock files (`deps.lock.json` and
+`semantic-toolchain.lock.json`); rerunning `bootstrap_deps.py` is idempotent
+and verifies pinned revisions/digests. On macOS, keep `--homebrew-protoc` in
+the command when regenerating the semantic toolchain so the active compiler
+remains the installed Homebrew Protobuf 36 binary; the option rejects any
+other version. Compiled dependencies are
+platform/architecture-specific, so use separate cache roots such as
+`darwin-arm64` and `linux-x86_64` when sharing across machines. Keep build
+directories outside the shared cache and separate per worktree/configuration;
+only dependency sources and installed runtimes belong in the shared cache.
+
 ## Current sequence
 
 `AR-0` reconciles the Notion v0.3 direction with repository evidence. G0～G3
