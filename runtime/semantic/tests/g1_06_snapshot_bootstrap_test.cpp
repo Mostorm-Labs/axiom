@@ -87,6 +87,42 @@ void expectLoadingFailure(const SemanticSnapshot& snapshot, StatefulIssue issue)
     EXPECT_EQ(generation.current(), before);
 }
 
+template <typename Store, typename Seed>
+void expectLoadingFailureAtomically(const SemanticSnapshot& snapshot, Seed seed) {
+    Store objects;
+    seed(objects);
+    const auto before_objects = objects.allObjects();
+    DocumentRuntimeState state = DocumentRuntimeState::kLoading;
+    SemanticGenerationState generation(SemanticGeneration(12U));
+    const auto before_generation = generation.current();
+
+    const auto result = SnapshotBootstrapper::restore(snapshot, state, objects, generation);
+
+    EXPECT_FALSE(result.restored);
+    EXPECT_FALSE(result.semantic_error.ok());
+    EXPECT_EQ(state, DocumentRuntimeState::kFailed);
+    EXPECT_EQ(objects.allObjects(), before_objects);
+    EXPECT_EQ(generation.current(), before_generation);
+}
+
+template <typename Seed>
+void expectLoadingFailureOnBothProviders(const SemanticSnapshot& snapshot, Seed seed) {
+    expectLoadingFailureAtomically<ReferenceObjectStore>(snapshot, seed);
+    expectLoadingFailureAtomically<IndexedObjectStore>(snapshot, seed);
+}
+
+struct EmptyTargetSeed {
+    template <typename Store>
+    void operator()(Store&) const {}
+};
+
+struct NonEmptyTargetSeed {
+    template <typename Store>
+    void operator()(Store& objects) const {
+        ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(objects, shape(99U)));
+    }
+};
+
 TEST(G106SnapshotBootstrap, EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration) {
     ReferenceObjectStore objects;
     DocumentRuntimeState state = DocumentRuntimeState::kLoading;
@@ -228,6 +264,58 @@ TEST(G106SnapshotBootstrap, RejectsZeroDocumentAndUnsupportedSchema) {
     SemanticSnapshot version = emptySnapshot();
     version.schema_version = 2U;
     expectLoadingFailure<IndexedObjectStore>(version, StatefulIssue::kInvalidApplicability);
+}
+
+TEST(G106SnapshotBootstrap, NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders) {
+    const EmptyTargetSeed empty_target;
+    const NonEmptyTargetSeed non_empty_target;
+
+    expectLoadingFailureOnBothProviders(emptySnapshot(), non_empty_target);
+
+    SemanticSnapshot invalid_record = emptySnapshot();
+    auto invalid = shape(1U);
+    invalid.kind_version = 2U;
+    invalid_record.objects = {invalid};
+    expectLoadingFailureOnBothProviders(invalid_record, empty_target);
+
+    SemanticSnapshot duplicate = emptySnapshot();
+    duplicate.objects = {shape(1U), shape(1U)};
+    expectLoadingFailureOnBothProviders(duplicate, empty_target);
+
+    SemanticSnapshot missing_parent = emptySnapshot();
+    missing_parent.objects = {shape(2U, id(77U))};
+    expectLoadingFailureOnBothProviders(missing_parent, empty_target);
+
+    SemanticSnapshot cycle = emptySnapshot();
+    cycle.objects = {shape(1U, id(2U)), shape(2U, id(1U))};
+    expectLoadingFailureOnBothProviders(cycle, empty_target);
+
+    SemanticSnapshot invalid_parent_capability = emptySnapshot();
+    invalid_parent_capability.objects = {shape(2U, id(1U)), connector(1U, id(2U))};
+    expectLoadingFailureOnBothProviders(invalid_parent_capability, empty_target);
+
+    SemanticSnapshot connector_target_missing = emptySnapshot();
+    connector_target_missing.objects = {connector(1U, id(77U))};
+    expectLoadingFailureOnBothProviders(connector_target_missing, empty_target);
+
+    SemanticSnapshot connector_target_non_connectable = emptySnapshot();
+    connector_target_non_connectable.objects = {group(2U), connector(1U, id(2U))};
+    expectLoadingFailureOnBothProviders(connector_target_non_connectable, empty_target);
+
+    SemanticSnapshot invalid_stable_port = emptySnapshot();
+    invalid_stable_port.objects = {shape(2U), connector(1U, id(2U))};
+    auto& connector_content = std::get<ConnectorContent>(invalid_stable_port.objects.back().content);
+    connector_content.start = ConnectorEndpoint{
+        AttachedEndpoint{id(2U), StablePortAnchor{0U}}};
+    expectLoadingFailureOnBothProviders(invalid_stable_port, empty_target);
+
+    SemanticSnapshot zero_document_id = emptySnapshot();
+    zero_document_id.document_id = DocumentId{};
+    expectLoadingFailureOnBothProviders(zero_document_id, empty_target);
+
+    SemanticSnapshot unsupported_schema = emptySnapshot();
+    unsupported_schema.schema_version = 2U;
+    expectLoadingFailureOnBothProviders(unsupported_schema, empty_target);
 }
 
 } // namespace
