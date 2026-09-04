@@ -543,6 +543,7 @@ foreach(header IN ITEMS
         canvas/semantic/operation_specific_validation.hpp
         canvas/semantic/apply_plan.hpp
         canvas/semantic/operation_engine.hpp
+        canvas/semantic/replay.hpp
         canvas/semantic/stateful_validation.hpp
         canvas/semantic/hierarchy_validation.hpp
         canvas/semantic/operation_state_validator.hpp
@@ -615,6 +616,37 @@ else()
   target_compile_options(canvas_semantic_g1_06_projection_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_g1_06_projection_differential_test TEST_PREFIX "g1_06_projection.")
+
+add_executable(canvas_semantic_g1_06_replay_test
+  g1_06_replay_test.cpp)
+target_link_libraries(canvas_semantic_g1_06_replay_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_06_replay_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_06_replay_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_06_replay_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_06_replay_test TEST_PREFIX "g1_06_replay.")
+
+add_executable(canvas_semantic_g1_06_replay_differential_test
+  g1_06_replay_differential_test.cpp
+  ../tools/g1_06_projection.cpp)
+target_link_libraries(canvas_semantic_g1_06_replay_differential_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_06_replay_differential_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src
+          ${CMAKE_CURRENT_SOURCE_DIR}/../tools
+          ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_06_replay_differential_test
+  PRIVATE G1_06_REPLAY_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../src/replay.cpp")
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_06_replay_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_06_replay_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_06_replay_differential_test TEST_PREFIX "g1_06_replay.")
 
 add_executable(canvas_semantic_g1_04_c_observer_contract_test
   g1_04_c_observer_contract_test.cpp

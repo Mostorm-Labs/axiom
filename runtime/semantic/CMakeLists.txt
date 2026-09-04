@@ -23,6 +23,7 @@ add_library(canvas_runtime_semantic STATIC
     src/snapshot.cpp
     src/snapshot_bootstrap.cpp
     src/protobuf_object_mapping.cpp
+    src/replay.cpp
     src/apply_plan.cpp
     src/atomic_apply.cpp
     src/change_set_builder.cpp
