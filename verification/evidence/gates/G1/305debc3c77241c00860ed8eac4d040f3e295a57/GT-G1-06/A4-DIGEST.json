@@ -1,0 +1,127 @@
+{
+  "format": "axiom-gt-g1-06-a4-digest-v1",
+  "task_id": "GT-G1-06-A4",
+  "stage": "P32",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "package_materialization_ref": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+  "task_anchor": {
+    "revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+  "source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+  "source_parent": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+  "digest_contract": {
+    "namespace": "canvas::verification::g1_06",
+    "api": "digestCanonicalProjectionBytes(std::string_view)",
+    "role": "private verification-only diagnostic over exact A0 canonical projection JSON bytes",
+    "input": "exact byte sequence returned by writeCanonicalProjectionJson(projectDocument(...))",
+    "algorithm": "FNV-1a-64",
+    "offset_basis_decimal": 14695981039346656037,
+    "offset_basis_hex": "0xcbf29ce484222325",
+    "prime_decimal": 1099511628211,
+    "prime_hex": "0x100000001b3",
+    "byte_loop": [
+      "xor current byte",
+      "multiply by prime using uint64 modulo arithmetic"
+    ],
+    "forbidden_operations_verified": [
+      "ObjectStore traversal",
+      "JSON parse or reformat",
+      "newline normalization",
+      "locale conversion",
+      "UTF transcoding",
+      "snapshot serialization",
+      "public digest ABI",
+      "hard-coded expected final digest literals"
+    ]
+  },
+  "canonical_projection_byte_input": {
+    "producer": "A0 writeCanonicalProjectionJson(projectDocument(document_id, schema_version, store))",
+    "serialization": "nlohmann::ordered_json dump(2) plus one trailing newline; digest receives bytes unchanged",
+    "empty_document_example_lines": [
+      "{",
+      "  \"format\": \"axiom-verification-projection-v1\",",
+      "  \"formatVersion\": 1,",
+      "  \"semanticSchemaVersion\": 1,",
+      "  \"rootType\": \"auditoryworks.axiom.v1.DocumentSnapshot\",",
+      "  \"form\": \"CANONICAL\",",
+      "  \"value\": {",
+      "    \"document_id\": \"id128:42000000000000000000000000000024\",",
+      "    \"schema_version\": 1,",
+      "    \"objects\": []",
+      "  }",
+      "}",
+      ""
+    ],
+    "empty_document_utf8_byte_length": 305,
+    "empty_document_sha256": "847329dd7da7df466509e3bca065fa5ef0db04c89b32f6e7b589c8a99c4b92ef"
+  },
+  "same_state_routes": [
+    "ReferenceObjectStore",
+    "IndexedObjectStore",
+    "physical insertion permutation",
+    "A2 SnapshotBootstrapper domain-Snapshot restore",
+    "A3 ReplayCoordinator recovery"
+  ],
+  "same_state_oracle_order": [
+    "canonical projection JSON exact equality",
+    "digest equality"
+  ],
+  "same_state_results": {
+    "reference_vs_indexed": "PASS",
+    "physical_insertion_permutation": "PASS",
+    "snapshot_restored": "PASS",
+    "replay_recovered": "PASS",
+    "projection_backstop_on_every_route": true,
+    "digest_parity_after_projection_equality": true
+  },
+  "mutation_sensitivity": {
+    "placement_or_hierarchy": {
+      "projection_differs_first": true,
+      "digest_differs_second": true,
+      "result": "PASS"
+    },
+    "transform_or_property_bag": {
+      "projection_differs_first": true,
+      "digest_differs_second": true,
+      "result": "PASS"
+    },
+    "content_level": {
+      "projection_differs_first": true,
+      "digest_differs_second": true,
+      "result": "PASS"
+    }
+  },
+  "mandatory_invariants": {
+    "digest_only_pass_assertions": 0,
+    "public_semantic_digest_surface": false,
+    "protobuf_dependency_in_digest": false,
+    "golden_digest_correctness_literal": false,
+    "expected_truth_writes": 0,
+    "provider_output_used_as_expected": false,
+    "production_semantic_dependencies": 0
+  },
+  "verification": {
+    "focused_digest_protobuf_on": "11/11 PASS",
+    "focused_digest_protobuf_off": "11/11 PASS",
+    "g106_focused_protobuf_on": "41/41 PASS",
+    "g106_focused_protobuf_off": "41/41 PASS",
+    "full_semantic_protobuf_on": "461/461 PASS",
+    "full_semantic_protobuf_off": "438 PASS, 23 expected protobuf-only skips, 0 failed (461 total)",
+    "independent_fnv_reference": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "hosted_ci_attempt": {
+    "required_by_a4_package": false,
+    "workflow": "G1 Semantic Codec",
+    "run_id": 33904570476,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/33904570476",
+    "source_sha": "305debc3c77241c00860ed8eac4d040f3e295a57",
+    "status": "FAILED_BEFORE_A4_VERIFICATION",
+    "failure_step": "tools/semantic_fetch.py --target linux-x86_64",
+    "failure_reason": "semantic SDK identity does not match deps.lock.json",
+    "interpretation": "existing hosted toolchain/lock environment failure; no A4 source/test failure and no repository workaround applied"
+  },
+  "status": "PASS"
+}

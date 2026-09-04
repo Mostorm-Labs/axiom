@@ -1,0 +1,73 @@
+{
+  "format": "axiom-gt-g1-06-a4-diff-v1",
+  "task_id": "GT-G1-06-A4",
+  "stage": "P32",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "task_anchor": {
+    "revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+  "source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+  "source_parent": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+  "source_ref_remote_resolvable": true,
+  "source_scope": {
+    "created": [
+      "runtime/semantic/tools/g1_06_digest.hpp",
+      "runtime/semantic/tools/g1_06_digest.cpp",
+      "runtime/semantic/tests/g1_06_digest_test.cpp"
+    ],
+    "modified": [
+      "runtime/semantic/tests/CMakeLists.txt"
+    ],
+    "deleted": [],
+    "exact_authorized_scope": true,
+    "forbidden_files_changed": []
+  },
+  "source_file_sha256": {
+    "runtime/semantic/tools/g1_06_digest.hpp": "50006c7ae8a231072dbd9e9ba97ea6413d5b8ddacee58ba4f8d7f4f2e4d9c19a",
+    "runtime/semantic/tools/g1_06_digest.cpp": "e0740b1cf56fb068ed2593201d5a7475af956ca496c1ff623e654500f2d0b6bf",
+    "runtime/semantic/tests/g1_06_digest_test.cpp": "0a332a9402e1decbc8998ed7e10379b7ee41146a201970973313c6cf383ab7d3",
+    "runtime/semantic/tests/CMakeLists.txt": "8c9afb985d2d9799d9c707bed6b884440f22541592ae168ae6d79cb164069c71"
+  },
+  "production_guard": {
+    "runtime_semantic_production_source_changed": false,
+    "runtime_semantic_public_header_changed": false,
+    "cmake_outside_authorized_test_list_changed": false,
+    "schema_or_proto_changed": false,
+    "a0_a3_accepted_source_or_tests_changed": false,
+    "a5_a6_changed": false,
+    "gt_g1_07_changed": false
+  },
+  "independent_reproduction": {
+    "checkout_path": "/tmp/axiom-g1-06-a4-independent.o239OB/repo",
+    "head_before_configure": "305debc3c77241c00860ed8eac4d040f3e295a57",
+    "clean_tracked_status_before_configure": true,
+    "fresh_dependency_bootstrap": true,
+    "fresh_protobuf_enabled_build": true,
+    "fresh_protobuf_disabled_build": true,
+    "original_worktree_artifacts_reused": false,
+    "clean_tracked_status_after_verification": true,
+    "protobuf_prefix": "/opt/homebrew/opt/protobuf",
+    "protobuf_version": "libprotoc 36.0"
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_files": [
+      "verification/evidence/gates/G1/305debc3c77241c00860ed8eac4d040f3e295a57/GT-G1-06/A4-DIGEST.json",
+      "verification/evidence/gates/G1/305debc3c77241c00860ed8eac4d040f3e295a57/GT-G1-06/A4-PROJECTION.json",
+      "verification/evidence/gates/G1/305debc3c77241c00860ed8eac4d040f3e295a57/GT-G1-06/A4-CTEST.txt",
+      "verification/evidence/gates/G1/305debc3c77241c00860ed8eac4d040f3e295a57/GT-G1-06/A4-DIFF.json"
+    ],
+    "evidence_only": true
+  },
+  "verification": {
+    "git_diff_check": "PASS",
+    "source_ref_unchanged_after_verification": true,
+    "tracked_source_status_after_verification": "CLEAN",
+    "expected_truth_writes": 0,
+    "provider_output_used_as_expected": false,
+    "production_semantic_dependencies": 0
+  },
+  "status": "PASS"
+}

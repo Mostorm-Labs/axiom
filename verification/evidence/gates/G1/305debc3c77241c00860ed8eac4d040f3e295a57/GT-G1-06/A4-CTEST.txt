@@ -1,0 +1,62 @@
+GT-G1-06-A4 P32 verification evidence
+package_ref: notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1
+task_anchor: 93cb69b56b2cbbed6ac0973943d80347bd93e346 (ancestor)
+actual_starting_revision: 93cb69b56b2cbbed6ac0973943d80347bd93e346
+source_ref: 305debc3c77241c00860ed8eac4d040f3e295a57
+
+Independent checkout
+  path: /tmp/axiom-g1-06-a4-independent.o239OB/repo
+  checkout: exact source_ref
+  tracked status before configure: CLEAN
+  dependency bootstrap: python3 tools/bootstrap_deps.py --core (PASS)
+  original worktree build/untracked artifact reuse: NONE
+  tracked status after verification: CLEAN
+
+Toolchain
+  protobuf prefix: /opt/homebrew/opt/protobuf
+  protoc: libprotoc 36.0
+
+Fresh protobuf-enabled build
+  build directory: /tmp/axiom-g1-06-a4-on.udr5cr
+  configure: PASS (CANVAS_BUILD_SEMANTIC=ON, CANVAS_SEMANTIC_ENABLE_PROTOBUF=ON)
+  build: PASS
+  ctest -R '^g1_06_digest\\.': 11/11 PASS
+  ctest -R '^g1_06_': 41/41 PASS
+  full semantic CTest: 461/461 PASS, 0 failed
+
+Fresh protobuf-disabled build
+  build directory: /tmp/axiom-g1-06-a4-off.ZkY7Fh
+  configure: PASS (CANVAS_BUILD_SEMANTIC=ON, CANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF)
+  build: PASS
+  ctest -R '^g1_06_digest\\.': 11/11 PASS
+  ctest -R '^g1_06_': 41/41 PASS
+  full semantic CTest: 438 PASS, 23 expected protobuf-only skips, 0 failed (461 total)
+  expected skipped tests are protobuf-only; no unexpected skip or failure
+
+Coverage represented by the focused A4 suite
+  exact-byte FNV-1a independent reference: PASS
+  repeated identical input deterministic: PASS
+  empty-document canonical projection: PASS
+  Reference/Indexed projection then digest parity: PASS
+  insertion permutation projection then digest parity: PASS
+  SnapshotBootstrapper projection then digest parity: PASS
+  ReplayCoordinator projection then digest parity: PASS
+  placement/hierarchy mutation projection backstop then digest: PASS
+  transform mutation projection backstop then digest: PASS
+  content mutation projection backstop then digest: PASS
+  verification-only source/header boundary: PASS
+
+Hosted workflow attempt (not an A4 package gate)
+  workflow: G1 Semantic Codec
+  run: 33904570476
+  source SHA: 305debc3c77241c00860ed8eac4d040f3e295a57
+  result: FAILED before A4 verification at semantic_fetch.py SDK identity check
+  reason: semantic SDK identity does not match deps.lock.json
+  no repository source/test workaround applied
+
+Result
+  all required local A4 verification: PASS
+  expected truth writes: 0
+  provider output used as expected: false
+  production semantic dependencies: 0
+  git diff --check: PASS

@@ -1,0 +1,43 @@
+{
+  "format": "axiom-gt-g1-06-a4-projection-v1",
+  "task_id": "GT-G1-06-A4",
+  "stage": "P32",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+  "oracle": "A0_CANONICAL_SEMANTIC_PROJECTION",
+  "canonical_projection_contract": {
+    "exact_input": "writeCanonicalProjectionJson(projectDocument(...)) byte sequence",
+    "canonical_json_equality_required_before_digest": true,
+    "object_order": "provider-independent canonical ObjectStore order",
+    "byte_preservation": "digest consumes the projection string without parsing, reformatting, newline or locale conversion"
+  },
+  "same_state_projection_backstop": {
+    "ReferenceObjectStore_vs_IndexedObjectStore": "PASS",
+    "physical_insertion_permutation": "PASS",
+    "A2_SnapshotBootstrapper_restore": "PASS",
+    "A3_ReplayCoordinator_recovery": "PASS",
+    "all_same_state_comparisons_have_exact_projection_equality": true
+  },
+  "mutation_projection_backstop": {
+    "placement_or_hierarchy": "baseline projection != mutated projection",
+    "transform_or_property_bag": "baseline projection != mutated projection",
+    "content_level": "baseline projection != mutated projection",
+    "digest_checked_only_after_projection_difference": true
+  },
+  "focused_corpus": {
+    "repeated_identical_input": "PASS",
+    "empty_document": "PASS",
+    "provider_parity": "PASS",
+    "insertion_permutation": "PASS",
+    "snapshot_restore": "PASS",
+    "replay_recovery": "PASS",
+    "three_mutation_families": "PASS",
+    "verification_only_source_boundary": "PASS",
+    "independent_fnv_conformance": "PASS"
+  },
+  "projection_json_example": {
+    "empty_document_utf8_byte_length": 305,
+    "empty_document_sha256": "847329dd7da7df466509e3bca065fa5ef0db04c89b32f6e7b589c8a99c4b92ef"
+  },
+  "status": "PASS"
+}
