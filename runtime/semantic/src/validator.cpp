@@ -1,6 +1,8 @@
 #include "canvas/semantic/validator.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
+#include "object_record_semantics_internal.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -625,6 +627,10 @@ ValidationResult invalidPropertyPatch() noexcept {
 
 } // namespace
 
+bool internal::validateObjectRecord(const ObjectRecord& object) noexcept {
+    return validObjectRecordStructure(object);
+}
+
 ValidationResult validateEnvelope(
     const Operation& operation,
     const OperationFieldPresence& presence) noexcept {
@@ -650,7 +656,7 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                     return invalidCollection();
                 }
                 for (const auto& object : payload.objects) {
-                    if (!validObjectRecordStructure(object)) return invalidObjectKind();
+                    if (!internal::validateObjectRecord(object)) return invalidObjectKind();
                 }
             } else if constexpr (std::is_same_v<Payload, DeleteObjectsOp>) {
                 if (!validCanonicalSet(payload.object_ids, [](const ObjectId& value) { return value; })) {
@@ -713,7 +719,7 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
             } else if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
-                if (!validObjectRecordStructure(payload.object)) return invalidObjectKind();
+                if (!internal::validateObjectRecord(payload.object)) return invalidObjectKind();
             } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {
                 if (!validCanonicalSet(payload.splits, [](const StrokeSplit& split) { return split.source_stroke_id; })) {
                     return invalidCollection();
@@ -724,7 +730,7 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                         return invalidCollection();
                     }
                     for (const auto& replacement : split.replacements) {
-                        if (!validObjectRecordStructure(replacement)) return invalidObjectKind();
+                        if (!internal::validateObjectRecord(replacement)) return invalidObjectKind();
                         replacement_ids.push_back(replacement.id);
                     }
                 }

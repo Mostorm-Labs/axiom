@@ -1,6 +1,8 @@
 #include "canvas/semantic/codec.hpp"
 #include "canvas/semantic/object_content.hpp"
 
+#include "protobuf_codec_internal.hpp"
+
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -25,6 +27,8 @@
 #include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/message.h>
 #endif
 
 namespace {
@@ -649,6 +653,18 @@ void appendMessage(std::vector<std::uint8_t>& output, std::uint32_t field, const
     output.insert(output.end(), value.begin(), value.end());
 }
 
+void appendFixed64Raw(std::vector<std::uint8_t>& output, std::uint64_t value) {
+    for (unsigned shift = 0; shift < 64U; shift += 8U) {
+        output.push_back(static_cast<std::uint8_t>(value >> shift));
+    }
+}
+
+void appendFixed32Raw(std::vector<std::uint8_t>& output, std::uint32_t value) {
+    for (unsigned shift = 0; shift < 32U; shift += 8U) {
+        output.push_back(static_cast<std::uint8_t>(value >> shift));
+    }
+}
+
 std::string bytesHex(const std::array<std::uint8_t, 16>& bytes) {
     constexpr char digits[] = "0123456789abcdef";
     std::string result;
@@ -998,6 +1014,207 @@ bool serializeCanonical(const Message& source, std::vector<std::uint8_t>& destin
     destination.assign(bytes.begin(), bytes.end());
     return true;
 }
+
+enum class SnapshotPreflightFailure : std::uint8_t {
+    kNone,
+    kMalformed,
+    kLimit,
+};
+
+constexpr std::size_t kMaxSnapshotRepeatedItems = 65535U;
+
+std::uint8_t canonicalWireType(const google::protobuf::FieldDescriptor& field) {
+    using Field = google::protobuf::FieldDescriptor;
+    if (field.is_repeated() && field.is_packable() && field.is_packed()) return 2U;
+    switch (field.type()) {
+        case Field::TYPE_DOUBLE:
+        case Field::TYPE_FIXED64:
+        case Field::TYPE_SFIXED64:
+            return 1U;
+        case Field::TYPE_FLOAT:
+        case Field::TYPE_FIXED32:
+        case Field::TYPE_SFIXED32:
+            return 5U;
+        case Field::TYPE_STRING:
+        case Field::TYPE_BYTES:
+        case Field::TYPE_MESSAGE:
+        case Field::TYPE_GROUP:
+            return 2U;
+        default:
+            return 0U;
+    }
+}
+
+bool validatePackedValues(std::span<const std::uint8_t> bytes,
+                          const google::protobuf::FieldDescriptor& field) {
+    std::size_t offset = 0U;
+    const auto type = canonicalWireType(field);
+    if (type == 1U) return (bytes.size() % 8U) == 0U;
+    if (type == 5U) return (bytes.size() % 4U) == 0U;
+    while (offset < bytes.size()) {
+        std::uint64_t ignored = 0U;
+        if (!readRawVarint(bytes, offset, ignored)) return false;
+    }
+    return true;
+}
+
+bool preflightSnapshotMessage(std::span<const std::uint8_t> bytes,
+                              const google::protobuf::Descriptor& descriptor,
+                              SnapshotPreflightFailure& failure,
+                              bool root) {
+    std::vector<unsigned> occurrences(static_cast<std::size_t>(descriptor.field_count()), 0U);
+    std::vector<unsigned> oneof_occurrences(static_cast<std::size_t>(descriptor.oneof_decl_count()), 0U);
+    bool valid = scanRawWire(bytes, [&](const RawWireField& raw) {
+        if (failure != SnapshotPreflightFailure::kNone) return;
+        const auto* field = descriptor.FindFieldByNumber(static_cast<int>(raw.number));
+        if (field == nullptr || raw.type != canonicalWireType(*field)) {
+            failure = SnapshotPreflightFailure::kMalformed;
+            return;
+        }
+        const auto index = static_cast<std::size_t>(field->index());
+        ++occurrences[index];
+        if ((!field->is_repeated() && occurrences[index] > 1U) ||
+            (field->is_repeated() && occurrences[index] > kMaxSnapshotRepeatedItems)) {
+            failure = occurrences[index] > kMaxSnapshotRepeatedItems
+                ? SnapshotPreflightFailure::kLimit : SnapshotPreflightFailure::kMalformed;
+            return;
+        }
+        if (const auto* oneof = field->containing_oneof(); oneof != nullptr) {
+            const auto oneof_index = static_cast<std::size_t>(oneof->index());
+            if (++oneof_occurrences[oneof_index] > 1U) {
+                failure = SnapshotPreflightFailure::kMalformed;
+                return;
+            }
+        }
+        if (field->is_repeated() && field->is_packable() && field->is_packed()) {
+            if (!validatePackedValues(raw.value, *field)) failure = SnapshotPreflightFailure::kMalformed;
+            return;
+        }
+        if (field->cpp_type() == google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE) {
+            if (field->message_type()->full_name() == "auditoryworks.axiom.v1.ObjectRecord" &&
+                raw.value.size() > kMaxObjectRecordBytes) {
+                failure = SnapshotPreflightFailure::kLimit;
+                return;
+            }
+            if (!preflightSnapshotMessage(raw.value, *field->message_type(), failure, false)) return;
+        }
+    });
+    if (!valid && failure == SnapshotPreflightFailure::kNone) {
+        failure = SnapshotPreflightFailure::kMalformed;
+    }
+    if (failure != SnapshotPreflightFailure::kNone) return false;
+    if (root && (occurrences.size() < 2U || occurrences[0] != 1U || occurrences[1] != 1U)) {
+        failure = SnapshotPreflightFailure::kMalformed;
+        return false;
+    }
+    return true;
+}
+
+bool appendCanonicalScalar(const google::protobuf::Message& source,
+                           const google::protobuf::FieldDescriptor& field,
+                           int index,
+                           bool repeated,
+                           std::vector<std::uint8_t>& output,
+                           bool tagged) {
+    using Field = google::protobuf::FieldDescriptor;
+    const auto* reflection = source.GetReflection();
+    const auto append_tag = [&](std::uint8_t type) {
+        if (tagged) appendVarint(output, static_cast<std::uint64_t>((field.number() << 3U) | type));
+    };
+    const auto uint32_value = [&]() { return repeated ? reflection->GetRepeatedUInt32(source, &field, index) : reflection->GetUInt32(source, &field); };
+    const auto uint64_value = [&]() { return repeated ? reflection->GetRepeatedUInt64(source, &field, index) : reflection->GetUInt64(source, &field); };
+    const auto int32_value = [&]() { return repeated ? reflection->GetRepeatedInt32(source, &field, index) : reflection->GetInt32(source, &field); };
+    const auto int64_value = [&]() { return repeated ? reflection->GetRepeatedInt64(source, &field, index) : reflection->GetInt64(source, &field); };
+    switch (field.type()) {
+        case Field::TYPE_DOUBLE: {
+            double value = repeated ? reflection->GetRepeatedDouble(source, &field, index) : reflection->GetDouble(source, &field);
+            if (value == 0.0) value = 0.0;
+            append_tag(1U);
+            appendFixed64Raw(output, std::bit_cast<std::uint64_t>(value));
+            return true;
+        }
+        case Field::TYPE_FLOAT: {
+            float value = repeated ? reflection->GetRepeatedFloat(source, &field, index) : reflection->GetFloat(source, &field);
+            if (value == 0.0F) value = 0.0F;
+            append_tag(5U);
+            appendFixed32Raw(output, std::bit_cast<std::uint32_t>(value));
+            return true;
+        }
+        case Field::TYPE_FIXED64:
+        case Field::TYPE_SFIXED64:
+            append_tag(1U);
+            appendFixed64Raw(output, field.type() == Field::TYPE_FIXED64
+                ? uint64_value() : static_cast<std::uint64_t>(int64_value()));
+            return true;
+        case Field::TYPE_FIXED32:
+        case Field::TYPE_SFIXED32:
+            append_tag(5U);
+            appendFixed32Raw(output, field.type() == Field::TYPE_FIXED32
+                ? uint32_value() : static_cast<std::uint32_t>(int32_value()));
+            return true;
+        case Field::TYPE_BOOL:
+            append_tag(0U);
+            appendVarint(output, repeated ? reflection->GetRepeatedBool(source, &field, index) : reflection->GetBool(source, &field));
+            return true;
+        case Field::TYPE_ENUM:
+            append_tag(0U);
+            appendVarint(output, static_cast<std::uint64_t>(repeated ? reflection->GetRepeatedEnumValue(source, &field, index) : reflection->GetEnumValue(source, &field)));
+            return true;
+        case Field::TYPE_INT32:
+        case Field::TYPE_SINT32:
+        case Field::TYPE_UINT32:
+            append_tag(0U);
+            appendVarint(output, field.type() == Field::TYPE_UINT32 ? uint32_value() : static_cast<std::uint64_t>(int32_value()));
+            return true;
+        case Field::TYPE_INT64:
+        case Field::TYPE_SINT64:
+        case Field::TYPE_UINT64:
+            append_tag(0U);
+            appendVarint(output, field.type() == Field::TYPE_UINT64 ? uint64_value() : static_cast<std::uint64_t>(int64_value()));
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool canonicalEncodeMessage(const google::protobuf::Message& source, std::vector<std::uint8_t>& output) {
+    const auto* descriptor = source.GetDescriptor();
+    const auto* reflection = source.GetReflection();
+    if (descriptor == nullptr || reflection == nullptr || reflection->GetUnknownFields(source).field_count() != 0) return false;
+    std::vector<const google::protobuf::FieldDescriptor*> fields;
+    fields.reserve(static_cast<std::size_t>(descriptor->field_count()));
+    for (int index = 0; index < descriptor->field_count(); ++index) fields.push_back(descriptor->field(index));
+    std::sort(fields.begin(), fields.end(), [](const auto* lhs, const auto* rhs) { return lhs->number() < rhs->number(); });
+    for (const auto* field : fields) {
+        const int count = field->is_repeated() ? reflection->FieldSize(source, field)
+                                               : (reflection->HasField(source, field) ? 1 : 0);
+        if (count == 0) continue;
+        if (field->is_repeated() && field->is_packable() && field->is_packed()) {
+            std::vector<std::uint8_t> packed;
+            for (int index = 0; index < count; ++index) {
+                if (!appendCanonicalScalar(source, *field, index, true, packed, false)) return false;
+            }
+            appendMessage(output, static_cast<std::uint32_t>(field->number()), packed);
+            continue;
+        }
+        for (int index = 0; index < count; ++index) {
+            if (field->cpp_type() == google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE) {
+                const auto& nested = field->is_repeated() ? reflection->GetRepeatedMessage(source, field, index)
+                                                           : reflection->GetMessage(source, field);
+                std::vector<std::uint8_t> encoded;
+                if (!canonicalEncodeMessage(nested, encoded)) return false;
+                appendMessage(output, static_cast<std::uint32_t>(field->number()), encoded);
+            } else if (field->cpp_type() == google::protobuf::FieldDescriptor::CPPTYPE_STRING) {
+                const auto& value = field->is_repeated() ? reflection->GetRepeatedStringReference(source, field, index, nullptr)
+                                                          : reflection->GetStringReference(source, field, nullptr);
+                appendBytes(output, static_cast<std::uint32_t>(field->number()), value);
+            } else if (!appendCanonicalScalar(source, *field, index, field->is_repeated(), output, true)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 #endif
 }
 
@@ -1006,6 +1223,25 @@ namespace canvas::semantic {
 SemanticError SemanticCodec::preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept {
     return bytes.size() <= kMaxOperationBytes ? SemanticError::kNone : SemanticError::kLimitExceeded;
 }
+
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+SemanticError internal::preflightDocumentSnapshotV1(std::span<const std::uint8_t> bytes) noexcept {
+    if (bytes.size() > kMaxOperationBytes) return SemanticError::kLimitExceeded;
+    SnapshotPreflightFailure failure = SnapshotPreflightFailure::kNone;
+    if (!preflightSnapshotMessage(bytes, *auditoryworks::axiom::v1::DocumentSnapshot::descriptor(), failure, true)) {
+        return failure == SnapshotPreflightFailure::kLimit ? SemanticError::kLimitExceeded
+                                                           : SemanticError::kMalformedWire;
+    }
+    return SemanticError::kNone;
+}
+
+CodecResult internal::canonicalEncodeDocumentSnapshot(
+    const auditoryworks::axiom::v1::DocumentSnapshot& snapshot) {
+    std::vector<std::uint8_t> bytes;
+    if (!canonicalEncodeMessage(snapshot, bytes)) return {SemanticError::kMalformedWire, {}};
+    return {SemanticError::kNone, std::move(bytes)};
+}
+#endif
 
 CodecResult SemanticCodec::encodeOperation(OperationKind kind, const std::vector<CanonicalField>& fields) {
     if (!isKnownOperationKind(kind) || fields.size() > 65535U) return {SemanticError::kUnknownOperation, {}};

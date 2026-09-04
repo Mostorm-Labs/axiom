@@ -1,5 +1,7 @@
 #include "canvas/semantic/normalizer.hpp"
 
+#include "object_record_semantics_internal.hpp"
+
 #include "canvas/semantic/canonical_numeric.hpp"
 
 #include <algorithm>
@@ -368,7 +370,7 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             if constexpr (std::is_same_v<Item, InsertObjectsOp> || std::is_same_v<Item, RestoreObjectsOp>) {
                 if (!allIdsValid(value.objects, [](const auto& object) { return object.id; })) return false;
                 if (!sortUnique(value.objects, [](const auto& left, const auto& right) { return objectIdLess(left.id, right.id); })) return false;
-                for (auto& object : value.objects) if (!normalizeObject(object)) return false;
+                for (auto& object : value.objects) if (!internal::normalizeObjectRecord(object)) return false;
                 return true;
             } else if constexpr (std::is_same_v<Item, DeleteObjectsOp>) {
                 if (!allIdsValid(value.object_ids, [](const auto& object_id) { return object_id; })) return false;
@@ -416,7 +418,7 @@ bool normalizeOperationPayload(OperationPayload& payload) {
                     !normalizeDouble(value.content.width) || !normalizeDouble(value.content.height)) return false;
                 return normalizeSourceRect(value.content.source_rect);
             } else if constexpr (std::is_same_v<Item, AddStrokeOp>) {
-                return normalizeObject(value.object);
+                return internal::normalizeObjectRecord(value.object);
             } else if constexpr (std::is_same_v<Item, SplitStrokesOp>) {
                 if (!allIdsValid(value.splits, [](const auto& split) { return split.source_stroke_id; })) return false;
                 if (!sortUnique(value.splits, [](const auto& left, const auto& right) { return objectIdLess(left.source_stroke_id, right.source_stroke_id); })) return false;
@@ -424,7 +426,7 @@ bool normalizeOperationPayload(OperationPayload& payload) {
                 for (auto& split : value.splits) {
                     if (!sortUnique(split.replacements, [](const auto& left, const auto& right) { return objectIdLess(left.id, right.id); })) return false;
                     for (auto& replacement : split.replacements) {
-                        if (!normalizeObject(replacement)) return false;
+                        if (!internal::normalizeObjectRecord(replacement)) return false;
                         replacement_ids.push_back(replacement.id);
                     }
                 }
@@ -455,6 +457,10 @@ bool normalizeOperationPayload(OperationPayload& payload) {
 }
 
 } // namespace
+
+bool internal::normalizeObjectRecord(ObjectRecord& object) {
+    return normalizeObject(object);
+}
 
 NormalizeResult normalizeOperation(const Operation& input) {
     NormalizeResult result;
