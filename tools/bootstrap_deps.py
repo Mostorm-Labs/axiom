@@ -325,6 +325,53 @@ def bootstrap_semantic(lock: dict) -> Path:
     finally:
         if staging_root.exists():
             shutil.rmtree(staging_root, ignore_errors=True)
+
+
+def bootstrap_homebrew_protoc(lock: dict) -> None:
+    """Copy the locked-version Homebrew protoc into the shared cache.
+
+    The semantic runtime remains the lock-built static toolchain. Homebrew is
+    used only for the protoc executable when explicitly requested, and the
+    wrapper supplies Homebrew's dynamic library search paths when CMake invokes
+    it through ``.deps/protobuf/bin/protoc``.
+    """
+    if platform.system() != "Darwin":
+        raise RuntimeError("--homebrew-protoc is supported only on macOS")
+    protobuf = lock["dependencies"]["protobuf"]
+    expected_version = protobuf["version"]
+    brew_prefix = Path(output("brew", "--prefix", "protobuf"))
+    brew_abseil_prefix = Path(output("brew", "--prefix", "abseil"))
+    brew_protoc = brew_prefix / "bin" / "protoc"
+    if not brew_protoc.exists():
+        raise RuntimeError(f"Homebrew protoc was not found: {brew_protoc}")
+    actual_version = output(str(brew_protoc), "--version")
+    if actual_version != f"libprotoc {expected_version}":
+        raise RuntimeError(
+            f"Homebrew protoc version mismatch: expected {expected_version}, got {actual_version}"
+        )
+    destination_bin = DEPS / "protobuf" / "bin"
+    if not destination_bin.is_dir():
+        raise RuntimeError("--homebrew-protoc requires an existing .deps/protobuf toolchain")
+
+    versioned_name = f"protoc-{expected_version}.0"
+    brew_copy_name = f"protoc-brew-{expected_version}.0"
+    brew_copy = destination_bin / brew_copy_name
+    temporary_copy = destination_bin / f".{brew_copy_name}.partial"
+    if temporary_copy.exists():
+        temporary_copy.unlink()
+    shutil.copy2(brew_protoc.resolve(), temporary_copy)
+    temporary_copy.replace(brew_copy)
+    wrapper = destination_bin / versioned_name
+    wrapper.write_text(
+        "#!/bin/sh\n"
+        "set -eu\n"
+        f"export DYLD_LIBRARY_PATH=\"{brew_prefix / 'lib'}:{brew_abseil_prefix / 'lib'}${{DYLD_LIBRARY_PATH:+:${{DYLD_LIBRARY_PATH}}}}\"\n"
+        f"exec \"$(dirname \"$0\")/{brew_copy_name}\" \"$@\"\n",
+        encoding="utf-8",
+    )
+    wrapper.chmod(0o755)
+
+
 def download(url: str, path: Path, sha256: str | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and sha256:
@@ -501,6 +548,10 @@ def main() -> int:
         help="Build and install the pinned Abseil/Protobuf semantic codec toolchain",
     )
     parser.add_argument(
+        "--homebrew-protoc", action="store_true",
+        help="Copy the locked-version Homebrew protoc into the semantic toolchain (macOS)",
+    )
+    parser.add_argument(
         "--github-api-archives",
         action="store_true",
         help="Use gh API source archives for core deps when HTTPS Git is blocked",
@@ -511,7 +562,7 @@ def main() -> int:
         help="Use immutable raw GitHub files for header/source-only core deps",
     )
     args = parser.parse_args()
-    if not any((args.core, args.skia, args.skia_archive, args.font_only, args.sync_skia, args.web, args.node, args.windows_llvm, args.semantic_codec)):
+    if not any((args.core, args.skia, args.skia_archive, args.font_only, args.sync_skia, args.web, args.node, args.windows_llvm, args.semantic_codec, args.homebrew_protoc)):
         args.core = True
     DEPS.mkdir(parents=True, exist_ok=True)
     lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
@@ -531,6 +582,8 @@ def main() -> int:
         bootstrap_windows_llvm(lock)
     if args.semantic_codec:
         bootstrap_semantic(lock)
+    if args.homebrew_protoc:
+        bootstrap_homebrew_protoc(lock)
     return 0
 
 
