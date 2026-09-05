@@ -407,7 +407,9 @@ void expectSameStateOutcome(const Outcome& expected, const Outcome& actual) {
     EXPECT_EQ(actual.digest, expected.digest);
     EXPECT_EQ(actual.generation, expected.generation);
     EXPECT_EQ(actual.ordinal, expected.ordinal);
-    if constexpr (std::is_same_v<Store, IndexedObjectStore>) EXPECT_TRUE(actual.index_matches);
+    if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
+        EXPECT_TRUE(actual.index_matches);
+    }
 }
 
 template <typename Store>

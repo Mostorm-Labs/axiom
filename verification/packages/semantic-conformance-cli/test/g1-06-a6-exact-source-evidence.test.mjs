@@ -11,9 +11,13 @@ import {
   INHERITED_V01_PACKAGE_REF,
   INHERITED_V01_SOURCE_PATHS,
   INHERITED_V01_SOURCE_REF,
+  INHERITED_V02_PACKAGE_REF,
+  INHERITED_V02_SOURCE_PATHS,
+  INHERITED_V02_SOURCE_REF,
   ORIGINAL_A6_ANCHOR,
   PACKAGE_REF,
   PRODUCTION_REPAIR_PATH,
+  INTEGRATION_TEST_PATH,
   REQUIRED_EVIDENCE_FILES,
   TASK_ANCHOR,
   WORKFLOW_NAME,
@@ -27,8 +31,11 @@ import {
   validateOracleContract,
   validateInheritedV01SourceDelta,
   validateInheritedV01Identity,
+  validateInheritedV02SourceDelta,
+  validateInheritedV02Identity,
   validateActualStartingRevision,
   validateProductionRepairPatch,
+  validateTestWarningRepairPatch,
   validateSemanticAccounting,
   validateSourceDelta,
   validateSourceRef,
@@ -76,7 +83,15 @@ function facts(overrides = {}) {
       sourceDelta: INHERITED_V01_SOURCE_PATHS,
       status: "INHERITED_VALID",
     },
+    inheritedV02: {
+      packageRef: INHERITED_V02_PACKAGE_REF,
+      sourceRef: INHERITED_V02_SOURCE_REF,
+      sourceDelta: INHERITED_V02_SOURCE_PATHS,
+      productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
+      status: "INHERITED_VALID",
+    },
     productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
+    testWarningRepair: "TEST_SEMANTIC_NO_OP_WARNING_REPAIR",
     ci: ci(),
     a5AcceptedPredecessor: {
       status: "ACCEPTED_FOR_DOWNSTREAM",
@@ -189,8 +204,39 @@ test("accepts the four-file v0.2 retry source delta", () => {
     ["M", ".github/workflows/g1-06-exact-source.yml"],
     ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
     ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+    ["M", INTEGRATION_TEST_PATH],
+  ]));
+});
+
+test("accepts and rejects the inherited v0.2 four-file segment", () => {
+  assert.doesNotThrow(() => validateInheritedV02SourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
     ["M", PRODUCTION_REPAIR_PATH],
   ]));
+  assert.throws(() => validateInheritedV02Identity({
+    packageRef: PACKAGE_REF,
+    sourceRef: INHERITED_V02_SOURCE_REF,
+    sourceDelta: INHERITED_V02_SOURCE_PATHS,
+    productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
+    status: "INHERITED_VALID",
+  }), /inherited|identity/i);
+});
+
+const testWarningPatch = `diff --git a/runtime/semantic/tests/g1_06_integration_test.cpp b/runtime/semantic/tests/g1_06_integration_test.cpp
+@@ -410 +410,3 @@ void expectSameStateOutcome(const Outcome& expected, const Outcome& actual) {
+-    if constexpr (std::is_same_v<Store, IndexedObjectStore>) EXPECT_TRUE(actual.index_matches);
++    if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
++        EXPECT_TRUE(actual.index_matches);
++    }`;
+
+test("accepts the exact single-hunk test warning repair", () => {
+  assert.doesNotThrow(() => validateTestWarningRepairPatch(testWarningPatch));
+});
+
+test("rejects a second test warning repair hunk", () => {
+  assert.throws(() => validateTestWarningRepairPatch(`${testWarningPatch}\n@@ -1 +1 @@\n-old\n+new`), /exactly one hunk|unexpected/i);
 });
 
 test("rejects extra_source_path", () => {

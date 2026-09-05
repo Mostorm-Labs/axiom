@@ -4,11 +4,13 @@ import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const TASK_ID = "GT-G1-06-A6";
-export const PACKAGE_REF = "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2";
-export const PACKAGE_PAGE = "3d24c57a-590c-81b4-a317-f24565aff1f4";
+export const PACKAGE_REF = "notion://3d24c57a-590c-81ab-a5a5-e4e59c755a5e/GT-G1-06-A6-P31-v0.3";
+export const PACKAGE_PAGE = "3d24c57a-590c-81d2-ab43-e0a697a03793";
 export const ORIGINAL_A6_ANCHOR = "3f01f599efee21d9adbd8c4cacdcf953995979f9";
 export const INHERITED_V01_SOURCE_REF = "ee9a383039e619926c38cd91dc48475e25d38b0d";
-export const PACKAGE_MATERIALIZATION_REF = INHERITED_V01_SOURCE_REF;
+export const INHERITED_V02_SOURCE_REF = "d58e2a56b65d129ddf963435a75971d72cc43b65";
+export const INHERITED_V02_PACKAGE_REF = "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2";
+export const PACKAGE_MATERIALIZATION_REF = INHERITED_V02_SOURCE_REF;
 export const TASK_ANCHOR = PACKAGE_MATERIALIZATION_REF;
 export const INHERITED_V01_PACKAGE_REF = "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1";
 export const BRANCH_REF = "refs/heads/codex/gt-g1-06-snapshot-replay";
@@ -19,15 +21,18 @@ export const A5_SOURCE_REF = "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc";
 export const A5_MATERIALIZED_REF = PACKAGE_MATERIALIZATION_REF;
 export const A5_PACKAGE_REF = "notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3";
 
+export const PRODUCTION_REPAIR_PATH = "runtime/semantic/src/protobuf_object_mapping.cpp";
+export const INTEGRATION_TEST_PATH = "runtime/semantic/tests/g1_06_integration_test.cpp";
+
 export const AUTHORIZED_SOURCE_PATHS = [
   WORKFLOW_PATH,
   "verification/tools/generate_g1_06_a6_evidence.mjs",
   "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs",
-  "runtime/semantic/src/protobuf_object_mapping.cpp",
+  INTEGRATION_TEST_PATH,
 ];
 
 export const INHERITED_V01_SOURCE_PATHS = AUTHORIZED_SOURCE_PATHS.slice(0, 3);
-export const PRODUCTION_REPAIR_PATH = "runtime/semantic/src/protobuf_object_mapping.cpp";
+export const INHERITED_V02_SOURCE_PATHS = [...INHERITED_V01_SOURCE_PATHS, PRODUCTION_REPAIR_PATH];
 
 export const REQUIRED_EVIDENCE_FILES = [
   "G1-06-PLAN.json",
@@ -140,10 +145,33 @@ export function validateInheritedV01SourceDelta(entries) {
   return normalized;
 }
 
+export function validateInheritedV02SourceDelta(entries) {
+  if (!Array.isArray(entries)) fail("inherited v0.2 source delta must be an array");
+  const normalized = entries.map((entry) => {
+    if (!Array.isArray(entry) || entry.length !== 2) fail("inherited v0.2 source delta entry is malformed");
+    return { status: entry[0], path: entry[1] };
+  });
+  if (normalized.length !== INHERITED_V02_SOURCE_PATHS.length) fail("inherited v0.2 source delta count is not exactly four");
+  const paths = normalized.map((entry) => entry.path);
+  if (new Set(paths).size !== INHERITED_V02_SOURCE_PATHS.length) fail("inherited v0.2 source delta contains duplicate paths");
+  for (const entry of normalized) {
+    if (entry.status !== "M" || !INHERITED_V02_SOURCE_PATHS.includes(entry.path)) fail(`invalid inherited v0.2 source delta: ${entry.status} ${entry.path}`);
+  }
+  return normalized;
+}
+
 export function validateInheritedV01Identity(value) {
   const inherited = asRecord(value, "inherited A6 v0.1 segment");
   if (inherited.packageRef !== INHERITED_V01_PACKAGE_REF || inherited.originalAnchor !== ORIGINAL_A6_ANCHOR || inherited.sourceRef !== INHERITED_V01_SOURCE_REF || inherited.status !== "INHERITED_VALID") fail("inherited A6 v0.1 segment identity is invalid");
   if (JSON.stringify(inherited.sourceDelta) !== JSON.stringify(INHERITED_V01_SOURCE_PATHS)) fail("inherited A6 v0.1 source delta is invalid");
+  return inherited;
+}
+
+export function validateInheritedV02Identity(value) {
+  const inherited = asRecord(value, "inherited A6 v0.2 segment");
+  if (inherited.packageRef !== INHERITED_V02_PACKAGE_REF || inherited.sourceRef !== INHERITED_V02_SOURCE_REF || inherited.status !== "INHERITED_VALID") fail("inherited A6 v0.2 segment identity is invalid");
+  if (JSON.stringify(inherited.sourceDelta) !== JSON.stringify(INHERITED_V02_SOURCE_PATHS)) fail("inherited A6 v0.2 source delta is invalid");
+  if (inherited.productionRepair !== "SEMANTIC_NO_OP_WARNING_REPAIR") fail("inherited A6 v0.2 production repair identity is invalid");
   return inherited;
 }
 
@@ -163,6 +191,19 @@ export function validateProductionRepairPatch(patch) {
   if (normalized.includes("if(source.placement.parent_id) { destination.mutable_placement()->mutable_order_key")) fail("order key write became conditional");
   if (!normalized.includes("setId(*source.placement.parent_id,destination.mutable_placement()->mutable_parent_id())")) fail("parent identifier mapping changed");
   if (!normalized.includes("destination.mutable_placement()->mutable_order_key()->set_value")) fail("order key field mapping changed");
+  return true;
+}
+
+export function validateTestWarningRepairPatch(patch) {
+  if (typeof patch !== "string" || patch.length === 0) fail("test warning repair patch is missing");
+  const hunks = patch.split(/^(?=@@)/m).filter((part) => part.startsWith("@@"));
+  if (hunks.length !== 1) fail("test warning repair must contain exactly one hunk");
+  const changedLines = patch.split(/\r?\n/).filter((line) => (line.startsWith("+") && !line.startsWith("+++")) || (line.startsWith("-") && !line.startsWith("---")));
+  if (changedLines.length !== 4 || changedLines.filter((line) => line.startsWith("-")).length !== 1 || changedLines.filter((line) => line.startsWith("+")).length !== 3) fail("test warning repair patch has unexpected changed statements");
+  const normalized = patch.replace(/\s+/g, " ").trim();
+  const removed = "- if constexpr (std::is_same_v<Store, IndexedObjectStore>) EXPECT_TRUE(actual.index_matches);";
+  const added = "+ if constexpr (std::is_same_v<Store, IndexedObjectStore>) { + EXPECT_TRUE(actual.index_matches); + }";
+  if (!normalized.includes(removed) || !normalized.includes(added)) fail("test warning repair changes more than the authorized dangling-else statement");
   return true;
 }
 
@@ -306,15 +347,32 @@ function validateInheritedV01Segment() {
   };
 }
 
+function validateInheritedV02Segment() {
+  requireCommit(INHERITED_V02_SOURCE_REF, "inherited v0.2 source ref");
+  requireAncestor(INHERITED_V01_SOURCE_REF, INHERITED_V02_SOURCE_REF, "inherited v0.1 source ref");
+  validateInheritedV02SourceDelta(git(["diff", "--name-status", INHERITED_V01_SOURCE_REF, INHERITED_V02_SOURCE_REF])
+    .split("\n").filter(Boolean).map((line) => line.split("\t")));
+  validateProductionRepairPatch(gitDiff(INHERITED_V01_SOURCE_REF, INHERITED_V02_SOURCE_REF, PRODUCTION_REPAIR_PATH));
+  return {
+    packageRef: INHERITED_V02_PACKAGE_REF,
+    sourceRef: INHERITED_V02_SOURCE_REF,
+    sourceDelta: INHERITED_V02_SOURCE_PATHS.slice(),
+    productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
+    status: "INHERITED_VALID",
+  };
+}
+
 function assertSourceLineage(sourceRef, actualStartingRevision) {
   const parent = git(["rev-parse", `${sourceRef}^`]);
   validateAncestry({ packageMaterializationRef: PACKAGE_MATERIALIZATION_REF, taskAnchor: TASK_ANCHOR, sourceRef, sourceCommitParent: parent });
   validateActualStartingRevision(actualStartingRevision);
-  const inherited = validateInheritedV01Segment();
+  const inheritedV01 = validateInheritedV01Segment();
+  const inheritedV02 = validateInheritedV02Segment();
   validateSourceDelta(gitSourceDelta(sourceRef));
-  validateProductionRepairPatch(gitDiff(actualStartingRevision, sourceRef, PRODUCTION_REPAIR_PATH));
+  if (gitDiff(actualStartingRevision, sourceRef, PRODUCTION_REPAIR_PATH) !== "") fail("inherited production repair was modified in v0.3");
+  validateTestWarningRepairPatch(gitDiff(actualStartingRevision, sourceRef, INTEGRATION_TEST_PATH));
   validateRepositoryIdentity(git(["remote", "get-url", "origin"]));
-  return { parent, inherited };
+  return { parent, inheritedV01, inheritedV02 };
 }
 
 function readFacts(path) {
@@ -337,7 +395,9 @@ export function validateFacts(facts, expected) {
   if (value.actualStartingRevision !== expected.actualStartingRevision) fail("facts actual starting revision is foreign");
   if (value.repository !== REPOSITORY || value.sourceCommitParent !== expected.sourceCommitParent) fail("facts repository or source parent is invalid");
   validateInheritedV01Identity(value.inheritedV01);
+  validateInheritedV02Identity(value.inheritedV02);
   if (value.productionRepair !== "SEMANTIC_NO_OP_WARNING_REPAIR") fail("production repair classification is invalid");
+  if (value.testWarningRepair !== "TEST_SEMANTIC_NO_OP_WARNING_REPAIR") fail("test warning repair classification is invalid");
   validateCiIdentity(value.ci, expected.sourceRef);
   validateA5Provenance(value.a5AcceptedPredecessor);
   validateFocusedResults(value.focused);
@@ -350,7 +410,7 @@ export function validateFacts(facts, expected) {
   return { ...value, semantic };
 }
 
-function commonEnvelope({ facts, sourceRef, sourceCommitParent, inherited, a5 }) {
+function commonEnvelope({ facts, sourceRef, sourceCommitParent, inheritedV01, inheritedV02, a5 }) {
   return {
     taskId: TASK_ID,
     stage: "P32",
@@ -359,7 +419,10 @@ function commonEnvelope({ facts, sourceRef, sourceCommitParent, inherited, a5 })
     packageMaterializationRef: PACKAGE_MATERIALIZATION_REF,
     taskAnchor: { revision: TASK_ANCHOR, relation: "ancestor" },
     originalA6Anchor: ORIGINAL_A6_ANCHOR,
-    inheritedV01: inherited,
+    inheritedV01,
+    inheritedV02,
+    productionRepair: facts.productionRepair,
+    testWarningRepair: facts.testWarningRepair,
     actualStartingRevision: facts.actualStartingRevision,
     sourceRef,
     sourceCommitParent,
@@ -452,14 +515,14 @@ export function generateEvidence({ packageRef, taskAnchor, actualStartingRevisio
   const output = assertSafeOutputDirectory(outputDir);
   if (existsSync(output) && readdirSync(output).length !== 0) fail("evidence output directory must be empty");
   mkdirSync(output, { recursive: true });
-  const { parent: sourceCommitParent, inherited: inheritedSegment } = assertSourceLineage(sourceRef, actualStartingRevision);
+  const { parent: sourceCommitParent, inheritedV01, inheritedV02 } = assertSourceLineage(sourceRef, actualStartingRevision);
   const a5 = loadAcceptedA5();
   const rawFacts = readFacts(factsPath);
   const facts = validateFacts(rawFacts, { packageRef, taskAnchor, actualStartingRevision, sourceRef, sourceCommitParent });
   const ciRecord = validateCiIdentity(ci, sourceRef);
   if (!ciIdentityEqual(ciRecord, facts.ci)) fail("CLI CI identity differs from facts CI identity");
   const inheritedEvidence = { replay: gitJson(PACKAGE_MATERIALIZATION_REF, `${a5.evidenceRoot}/G1-06-REPLAY.json`) };
-  const common = commonEnvelope({ facts, sourceRef, sourceCommitParent, inherited: inheritedSegment, a5 });
+  const common = commonEnvelope({ facts, sourceRef, sourceCommitParent, inheritedV01, inheritedV02, a5 });
   const documents = {};
   for (const name of REQUIRED_EVIDENCE_FILES) {
     if (name === "G1-06-CTEST.txt") documents[name] = renderCtest(common, facts, a5);

@@ -9,6 +9,7 @@ on:
       - "verification/tools/generate_g1_06_a6_evidence.mjs"
       - "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"
       - "runtime/semantic/src/protobuf_object_mapping.cpp"
+      - "runtime/semantic/tests/g1_06_integration_test.cpp"
 
 permissions:
   contents: read
@@ -21,9 +22,9 @@ jobs:
     env:
       SOURCE_REF: ${{ github.sha }}
       RUN_HEAD_SHA: ${{ github.event.head_commit.id }}
-      PACKAGE_REF: notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2
-      TASK_ANCHOR: ee9a383039e619926c38cd91dc48475e25d38b0d
-      STARTING_REVISION: ee9a383039e619926c38cd91dc48475e25d38b0d
+      PACKAGE_REF: notion://3d24c57a-590c-81ab-a5a5-e4e59c755a5e/GT-G1-06-A6-P31-v0.3
+      TASK_ANCHOR: d58e2a56b65d129ddf963435a75971d72cc43b65
+      STARTING_REVISION: d58e2a56b65d129ddf963435a75971d72cc43b65
       ORIGINAL_A6_ANCHOR: 3f01f599efee21d9adbd8c4cacdcf953995979f9
       PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
       ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
@@ -151,9 +152,10 @@ jobs:
           workspace = Path(sys.argv[2])
           source = "${{ github.sha }}"
           source_parent = __import__("subprocess").check_output(["git", "rev-parse", f"{source}^"], text=True).strip()
-          anchor = "ee9a383039e619926c38cd91dc48475e25d38b0d"
+          anchor = "d58e2a56b65d129ddf963435a75971d72cc43b65"
+          inherited_v02_source = "d58e2a56b65d129ddf963435a75971d72cc43b65"
           original_anchor = "3f01f599efee21d9adbd8c4cacdcf953995979f9"
-          package = "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2"
+          package = "notion://3d24c57a-590c-81ab-a5a5-e4e59c755a5e/GT-G1-06-A6-P31-v0.3"
           required = [
               "G1-06-PLAN.json", "G1-06-SNAPSHOT.json", "G1-06-REPLAY.json",
               "G1-06-PROJECTION.json", "G1-06-DIGEST.json", "G1-06-CTEST.txt", "G1-06-DIFF.json",
@@ -206,7 +208,7 @@ jobs:
               "inheritedV01": {
                   "packageRef": "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1",
                   "originalAnchor": original_anchor,
-                  "sourceRef": anchor,
+                  "sourceRef": "ee9a383039e619926c38cd91dc48475e25d38b0d",
                   "sourceDelta": [
                       ".github/workflows/g1-06-exact-source.yml",
                       "verification/tools/generate_g1_06_a6_evidence.mjs",
@@ -215,6 +217,19 @@ jobs:
                   "status": "INHERITED_VALID",
               },
               "productionRepair": "SEMANTIC_NO_OP_WARNING_REPAIR",
+              "testWarningRepair": "TEST_SEMANTIC_NO_OP_WARNING_REPAIR",
+              "inheritedV02": {
+                  "packageRef": "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2",
+                  "sourceRef": inherited_v02_source,
+                  "sourceDelta": [
+                      ".github/workflows/g1-06-exact-source.yml",
+                      "verification/tools/generate_g1_06_a6_evidence.mjs",
+                      "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs",
+                      "runtime/semantic/src/protobuf_object_mapping.cpp",
+                  ],
+                  "productionRepair": "SEMANTIC_NO_OP_WARNING_REPAIR",
+                  "status": "INHERITED_VALID",
+              },
               "repository": "Mostorm-Labs/axiom",
               "ci": {
                   "runId": "${{ github.run_id }}",
