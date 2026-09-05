@@ -1,0 +1,86 @@
+{
+  "format": "axiom-gt-g1-06-a5-p32-evidence-v1",
+  "task_id": "GT-G1-06-A5",
+  "stage": "P32",
+  "lifecycle_stage": "P32_IMPLEMENTATION",
+  "occurrence": "P32_AUTHORIZATION_01",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "package_materialization_ref": "084a8e99433919afc578b0405ff654155f54ab4c",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_ref": "codex/gt-g1-06-snapshot-replay",
+  "task_anchor": {
+    "revision": "084a8e99433919afc578b0405ff654155f54ab4c",
+    "relation": "ancestor",
+    "verified": true
+  },
+  "actual_starting_revision": "084a8e99433919afc578b0405ff654155f54ab4c",
+  "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+  "source_commit_parent": "9deda4d08c98c6780fe8ec95943a25d589e9b935",
+  "authorized_source_delta": [
+    "runtime/semantic/tests/g1_06_integration_test.cpp"
+  ],
+  "forbidden_scope_delta": [],
+  "required_oracle": {
+    "primary": "canonical_semantic_projection",
+    "success_relation": "reference sequential apply == indexed sequential apply == reference snapshot+full-replay == indexed snapshot+full-replay",
+    "digest_role": "secondary diagnostic parity only",
+    "provider_output_used_as_expected": false,
+    "expected_truth_writes": 0,
+    "transport_continuation_completeness": "continuation_is_authoritative_materialized_sequence"
+  },
+  "continuation": {
+    "family_count": 15,
+    "operation_count": 15,
+    "ordered_operation_ids": [6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109, 6110, 6111, 6112, 6113, 6114, 6115],
+    "one_replay_coordinator_invocation_per_snapshot_route": true,
+    "checkpoint_count": 3,
+    "checkpoints": [5, 10, 15]
+  },
+  "verification": {
+    "dependency_bootstrap": {
+      "command": "python3 tools/bootstrap_deps.py --core",
+      "result": "PASS",
+      "fresh_independent_checkout": true,
+      "original_worktree_artifact_reuse": false
+    },
+    "protobuf_on": {
+      "protoc": "libprotoc 36.0",
+      "prefix": "/opt/homebrew/opt/protobuf",
+      "configure": "PASS",
+      "build": "PASS",
+      "focused_integration": "7/7 PASS",
+      "operation_conformance": "11/11 PASS",
+      "g1_06_bundle": "62/62 PASS",
+      "g1_05_regression_bundle": "80/80 PASS",
+      "full_semantic_ctest": "469/469 PASS, 0 FAIL"
+    },
+    "protobuf_off": {
+      "configure": "PASS",
+      "build": "PASS",
+      "focused_integration": "7/7 PASS",
+      "operation_conformance": "11/11 PASS",
+      "g1_06_bundle": "62 total = 51 PASS + 11 expected SKIP + 0 FAIL",
+      "g1_05_regression_bundle": "80/80 PASS",
+      "full_semantic_ctest": "469 total = 446 PASS + 23 expected SKIP + 0 FAIL",
+      "unexpected_failures": 0,
+      "exact_skipped_ids": ["25-36", "53-63"]
+    },
+    "git_diff_check": "PASS",
+    "tracked_source_clean_after_verification": true,
+    "production_source_changed": false
+  },
+  "materialization": {
+    "required_files": [
+      "G1-06-PLAN.json",
+      "G1-06-SNAPSHOT.json",
+      "G1-06-REPLAY.json",
+      "G1-06-PROJECTION.json",
+      "G1-06-DIGEST.json",
+      "G1-06-CTEST.txt",
+      "G1-06-DIFF.json"
+    ],
+    "new_materialized_ref": "P32_RETURN_METADATA",
+    "reviewer_accessible": true,
+    "source_to_materialized_delta": "EVIDENCE_ONLY"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "format": "axiom-gt-g1-06-a5-snapshot-evidence-v1",
+  "task_id": "GT-G1-06-A5",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+  "snapshot_route": "A2 domain SemanticSnapshot -> SnapshotBootstrapper restore",
+  "codec_route": {
+    "protobuf_on": "SnapshotCodec encode/decode at checkpoint 0 and checkpoints 5, 10, 15",
+    "protobuf_off": "domain snapshot route; protobuf byte API remains outside this integration oracle"
+  },
+  "corpus": [
+    "empty snapshot",
+    "mixed ObjectKind records",
+    "hierarchy and connector graph",
+    "RichText",
+    "VectorStroke with EraseMask",
+    "DabStroke",
+    "canonical object projection",
+    "physical insertion permutation at checkpoint 10",
+    "RestoreObjects continuation without tombstone ledger"
+  ],
+  "checkpoint_identities": [
+    {"prefix_count": 5, "last_operation_id": 6105, "snapshot_permuted": false, "codec_round_trip": true},
+    {"prefix_count": 10, "last_operation_id": 6110, "snapshot_permuted": true, "codec_round_trip": true},
+    {"prefix_count": 15, "last_operation_id": 6115, "snapshot_permuted": false, "codec_round_trip": true}
+  ],
+  "invariants": {
+    "snapshot_decode_mutates_object_store": false,
+    "snapshot_decode_mutates_generation": false,
+    "reference_indexed_restore_parity": true,
+    "all_checkpoint_routes_pass": true
+  }
+}

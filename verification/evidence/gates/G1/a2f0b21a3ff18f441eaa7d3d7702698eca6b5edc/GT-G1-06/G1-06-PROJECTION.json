@@ -1,0 +1,25 @@
+{
+  "format": "axiom-gt-g1-06-a5-projection-evidence-v1",
+  "task_id": "GT-G1-06-A5",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+  "primary_oracle": "canonical_semantic_projection",
+  "canonical_json_equality": true,
+  "projection_divergence_count": 0,
+  "same_state_route_equalities": [
+    "Reference sequential apply == Indexed sequential apply",
+    "Reference sequential apply == Reference snapshot+full-15-family-replay",
+    "Reference sequential apply == Indexed snapshot+full-15-family-replay",
+    "Reference snapshot+replay == Indexed snapshot+replay",
+    "checkpoint prefix 5 == direct final projection",
+    "checkpoint prefix 10 (permuted physical snapshot) == direct final projection",
+    "checkpoint prefix 15 == direct final projection"
+  ],
+  "checkpoint_projection_references": [
+    {"prefix_count": 5, "reference": "direct final canonical projection", "result": "EQUAL"},
+    {"prefix_count": 10, "reference": "direct final canonical projection", "result": "EQUAL"},
+    {"prefix_count": 15, "reference": "direct final canonical projection", "result": "EQUAL"}
+  ],
+  "mutation_oracle_backstop": "not applicable to A5 continuation fixture; inherited G1-06 A4 mutation suite remains unchanged and passed",
+  "digest_used_as_override": false
+}

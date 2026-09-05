@@ -1,0 +1,45 @@
+{
+  "format": "axiom-gt-g1-06-a5-evidence-diff-v1",
+  "task_id": "GT-G1-06-A5",
+  "stage": "P32",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "task_anchor": {
+    "revision": "084a8e99433919afc578b0405ff654155f54ab4c",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "084a8e99433919afc578b0405ff654155f54ab4c",
+  "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+  "source_commit_parent": "9deda4d08c98c6780fe8ec95943a25d589e9b935",
+  "source_scope_delta": [
+    "runtime/semantic/tests/g1_06_integration_test.cpp"
+  ],
+  "production_source_changed": false,
+  "cmake_changed": false,
+  "schema_or_proto_changed": false,
+  "historical_A0_A4_evidence_changed": false,
+  "forbidden_modified_paths": [],
+  "verification": {
+    "fresh_independent_checkout": true,
+    "head_before_configure_equals_source_ref": true,
+    "tracked_status_before_configure": "CLEAN",
+    "tracked_status_after_verification": "CLEAN",
+    "git_diff_check": "PASS",
+    "protobuf_on_full_semantic": "469/469 PASS",
+    "protobuf_off_full_semantic": "446 PASS + 23 expected SKIP + 0 FAIL",
+    "source_ref_reviewer_resolvable": true
+  },
+  "evidence_paths": [
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-PLAN.json",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-SNAPSHOT.json",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-REPLAY.json",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-PROJECTION.json",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-DIGEST.json",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-CTEST.txt",
+    "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-DIFF.json"
+  ],
+  "repair_modified_paths_exact": true,
+  "source_to_materialized_delta": "EVIDENCE_ONLY",
+  "new_materialized_ref": "P32_RETURN_METADATA",
+  "reviewer_accessible_materialization": true,
+  "historical_evidence_untouched": true
+}

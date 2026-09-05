@@ -1,0 +1,57 @@
+GT-G1-06-A5 P32 independent verification transcript
+package_ref=notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3
+source_ref=a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc
+actual_starting_revision=084a8e99433919afc578b0405ff654155f54ab4c
+checkout=/tmp/axiom-g1-06-a5-p32-independent.UQdRFk/repo
+dependency_bootstrap=python3 tools/bootstrap_deps.py --core (PASS)
+original_worktree_artifact_reuse=NONE
+
+protobuf configuration
+  on: cmake -S . -B build-proto-on-r1 -DProtobuf_DIR=/opt/homebrew/opt/protobuf/lib/cmake/protobuf -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/protobuf -DBUILD_TESTING=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON
+  on compiler: libprotoc 36.0
+  off: cmake -S . -B build-proto-off-r1 -DBUILD_TESTING=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+  configure=PASS
+  build=PASS
+
+focused targets
+  canvas_semantic_g1_06_integration_test: protobuf-on 7/7 PASS; protobuf-off 7/7 PASS
+  canvas_semantic_operation_engine_15_operation_conformance_test: protobuf-on 11/11 PASS; protobuf-off 11/11 PASS
+  G1-06 snapshot/bootstrap/replay/projection/digest bundle: protobuf-on 62/62 PASS; protobuf-off 62 total = 51 PASS + 11 expected SKIP + 0 FAIL
+  GT-G1-05 regression bundle (80 tests): protobuf-on 80/80 PASS; protobuf-off 80/80 PASS
+
+full semantic CTest
+  command: ctest --test-dir build-proto-on-r1 --output-on-failure
+  protobuf-on: 469 discovered, 469 executed PASS, 0 SKIP, 0 FAIL
+  command: ctest --test-dir build-proto-off-r1 --output-on-failure
+  protobuf-off: 469 discovered, 446 executed PASS, 23 SKIP, 0 FAIL
+
+exact protobuf-off skipped tests (expected; all protobuf-only)
+  25 - SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord
+  26 - SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields
+  27 - SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow
+  28 - SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit
+  29 - SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow
+  30 - SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow
+  31 - SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow
+  32 - SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow
+  33 - SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit
+  34 - SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse
+  35 - SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse
+  36 - SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit
+  53 - G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse
+  54 - G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping
+  55 - G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence
+  56 - G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator
+  57 - G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically
+  58 - G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode
+  59 - G106Snapshot.CanonicalizesPropertyBagEntryPermutation
+  60 - G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke
+  61 - G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue
+  62 - G106Snapshot.CanonicalizesF64NegativeZeroInTransform
+  63 - G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder
+
+guards
+  git diff --check=PASS
+  tracked_source_status_after_verification=CLEAN
+  production_source_changed=false
+  source_delta_before_evidence=runtime/semantic/tests/g1_06_integration_test.cpp only

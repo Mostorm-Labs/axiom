@@ -1,0 +1,64 @@
+{
+  "format": "axiom-gt-g1-06-a5-replay-evidence-v1",
+  "task_id": "GT-G1-06-A5",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+  "authoritative_continuation": {
+    "operation_count": 15,
+    "ordered_operation_ids": [6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109, 6110, 6111, 6112, 6113, 6114, 6115],
+    "family_coverage": {
+      "1": {"operation_id": 6101, "family": "InsertObjects"},
+      "2": {"operation_id": 6102, "family": "DeleteObjects"},
+      "3": {"operation_id": 6103, "family": "RestoreObjects"},
+      "4": {"operation_id": 6104, "family": "SetPlacements"},
+      "5": {"operation_id": 6105, "family": "SetTransforms"},
+      "6": {"operation_id": 6106, "family": "PatchProperties"},
+      "7": {"operation_id": 6107, "family": "SetObjectSize"},
+      "8": {"operation_id": 6108, "family": "SetVectorPathGeometry"},
+      "9": {"operation_id": 6109, "family": "SetImageContent"},
+      "10": {"operation_id": 6110, "family": "AddStroke"},
+      "11": {"operation_id": 6111, "family": "SplitStrokes"},
+      "12": {"operation_id": 6112, "family": "AddEraseMasks"},
+      "13": {"operation_id": 6113, "family": "RemoveEraseMasks"},
+      "14": {"operation_id": 6114, "family": "EditRichText"},
+      "15": {"operation_id": 6115, "family": "SetConnectorContent"}
+    },
+    "full_replay_is_one_invocation": {
+      "reference_snapshot_replay": true,
+      "indexed_snapshot_replay": true,
+      "suffix_prefix_count": 0,
+      "replay_coordinator_receives_all_15_operations": true
+    }
+  },
+  "checkpoint_identities": [
+    {"prefix_count": 5, "suffix_count": 10, "last_prefix_operation_id": 6105},
+    {"prefix_count": 10, "suffix_count": 5, "last_prefix_operation_id": 6110, "physical_snapshot_permutation": true},
+    {"prefix_count": 15, "suffix_count": 0, "last_prefix_operation_id": 6115}
+  ],
+  "route_provider_matrix": {
+    "reference_sequential": "PASS",
+    "indexed_sequential": "PASS",
+    "reference_snapshot_plus_full_replay": "PASS",
+    "indexed_snapshot_plus_full_replay": "PASS",
+    "projection_divergence_count": 0,
+    "digest_divergence_count": 0,
+    "indexed_index_matches_rebuild": true
+  },
+  "accounting": {
+    "full_continuation_applied": 15,
+    "full_continuation_already_applied": 0,
+    "full_continuation_rejected": 0,
+    "final_generation": 15,
+    "final_commit_ordinal": 15,
+    "checkpoint_suffix_applied": {"5": 10, "10": 5, "15": 0}
+  },
+  "negative_replay": {
+    "first_failure_index": 1,
+    "first_failure_operation_id": 6702,
+    "first_failure_disposition": "kRejected",
+    "applied_prefix_count": 1,
+    "later_item_executed": false,
+    "state_after": "Failed",
+    "omitted_valid_external_suffix_claim": false
+  }
+}
