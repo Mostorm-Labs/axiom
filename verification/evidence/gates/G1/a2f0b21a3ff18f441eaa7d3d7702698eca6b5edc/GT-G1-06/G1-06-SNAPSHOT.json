@@ -1,7 +1,7 @@
 {
   "format": "axiom-gt-g1-06-a5-snapshot-evidence-v1",
   "task_id": "GT-G1-06-A5",
-  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "package_ref": "notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3",
   "source_ref": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
   "snapshot_route": "A2 domain SemanticSnapshot -> SnapshotBootstrapper restore",
   "codec_route": {
@@ -29,5 +29,26 @@
     "snapshot_decode_mutates_generation": false,
     "reference_indexed_restore_parity": true,
     "all_checkpoint_routes_pass": true
+  },
+  "accepted_snapshot_regression_evidence": {
+    "malformed_snapshot_bytes_fail_closed": {
+      "evidence_path": "verification/evidence/gates/G1/5d2d25c7755eb4d39d0fe1d74f098216d82db184/GT-G1-06/A1-SNAPSHOT.json",
+      "result": "PASS",
+      "assertion": "malformed_truncated_wire_rejection"
+    },
+    "truncated_snapshot_bytes_fail_closed": {
+      "evidence_path": "verification/evidence/gates/G1/5d2d25c7755eb4d39d0fe1d74f098216d82db184/GT-G1-06/A1-SNAPSHOT.json",
+      "result": "PASS",
+      "assertion": "malformed_truncated_wire_rejection"
+    },
+    "failure_before_partial_ready_or_semantic_publication": {
+      "evidence_path": "verification/evidence/gates/G1/bb26e5da192324cc67daafd56412631c4735ff24/GT-G1-06/A2-BOOTSTRAP.json",
+      "result": "PASS",
+      "partial_population": false,
+      "state_after_failure": "Failed",
+      "ready_transition": false,
+      "publication_eligibility_emitted": false,
+      "generation_advanced": false
+    }
   }
 }

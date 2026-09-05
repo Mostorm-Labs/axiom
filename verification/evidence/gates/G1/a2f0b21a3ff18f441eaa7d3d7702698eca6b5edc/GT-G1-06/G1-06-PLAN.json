@@ -3,8 +3,8 @@
   "task_id": "GT-G1-06-A5",
   "stage": "P32",
   "lifecycle_stage": "P32_IMPLEMENTATION",
-  "occurrence": "P32_AUTHORIZATION_01",
-  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.3",
+  "occurrence": "P32_EVIDENCE_REPAIR_05",
+  "package_ref": "notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3",
   "package_materialization_ref": "084a8e99433919afc578b0405ff654155f54ab4c",
   "repository": "Mostorm-Labs/axiom",
   "execution_ref": "codex/gt-g1-06-snapshot-replay",
@@ -26,7 +26,10 @@
     "digest_role": "secondary diagnostic parity only",
     "provider_output_used_as_expected": false,
     "expected_truth_writes": 0,
-    "transport_continuation_completeness": "continuation_is_authoritative_materialized_sequence"
+    "transport_continuation_completeness": {
+      "scope": "OUT_OF_GT_G1_06_SEMANTIC_PROOF",
+      "semantic_replay_precondition": "continuation_is_authoritative_materialized_sequence"
+    }
   },
   "continuation": {
     "family_count": 15,
@@ -65,6 +68,24 @@
       "full_semantic_ctest": "469 total = 446 PASS + 23 expected SKIP + 0 FAIL",
       "unexpected_failures": 0,
       "exact_skipped_ids": ["25-36", "53-63"]
+    },
+    "accepted_A4_provenance": {
+      "repair_source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+      "materialized_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
+      "protobuf_off": {
+        "total": 462,
+        "passed": 439,
+        "expected_skipped": 23,
+        "failed": 0,
+        "skip_set_relation": "EXACT_MATCH"
+      },
+      "current_P32_protobuf_off": {
+        "total": 469,
+        "passed": 446,
+        "expected_skipped": 23,
+        "failed": 0,
+        "skip_set_relation": "EXACT_MATCH"
+      }
     },
     "git_diff_check": "PASS",
     "tracked_source_clean_after_verification": true,
