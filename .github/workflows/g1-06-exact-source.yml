@@ -8,6 +8,7 @@ on:
       - ".github/workflows/g1-06-exact-source.yml"
       - "verification/tools/generate_g1_06_a6_evidence.mjs"
       - "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"
+      - "runtime/semantic/src/protobuf_object_mapping.cpp"
 
 permissions:
   contents: read
@@ -20,9 +21,10 @@ jobs:
     env:
       SOURCE_REF: ${{ github.sha }}
       RUN_HEAD_SHA: ${{ github.event.head_commit.id }}
-      PACKAGE_REF: notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1
-      TASK_ANCHOR: 3f01f599efee21d9adbd8c4cacdcf953995979f9
-      STARTING_REVISION: 3f01f599efee21d9adbd8c4cacdcf953995979f9
+      PACKAGE_REF: notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2
+      TASK_ANCHOR: ee9a383039e619926c38cd91dc48475e25d38b0d
+      STARTING_REVISION: ee9a383039e619926c38cd91dc48475e25d38b0d
+      ORIGINAL_A6_ANCHOR: 3f01f599efee21d9adbd8c4cacdcf953995979f9
       PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
       ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
       UTF8_RANGE_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/utf8_range
@@ -73,6 +75,7 @@ jobs:
               ;;
           esac
           git merge-base --is-ancestor "$TASK_ANCHOR" "$SOURCE_REF"
+          git merge-base --is-ancestor "$ORIGINAL_A6_ANCHOR" "$TASK_ANCHOR"
 
       - name: Install and build the verification workspace
         run: |
@@ -148,8 +151,9 @@ jobs:
           workspace = Path(sys.argv[2])
           source = "${{ github.sha }}"
           source_parent = __import__("subprocess").check_output(["git", "rev-parse", f"{source}^"], text=True).strip()
-          anchor = "3f01f599efee21d9adbd8c4cacdcf953995979f9"
-          package = "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1"
+          anchor = "ee9a383039e619926c38cd91dc48475e25d38b0d"
+          original_anchor = "3f01f599efee21d9adbd8c4cacdcf953995979f9"
+          package = "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2"
           required = [
               "G1-06-PLAN.json", "G1-06-SNAPSHOT.json", "G1-06-REPLAY.json",
               "G1-06-PROJECTION.json", "G1-06-DIGEST.json", "G1-06-CTEST.txt", "G1-06-DIFF.json",
@@ -199,6 +203,18 @@ jobs:
               "actualStartingRevision": anchor,
               "sourceRef": source,
               "sourceCommitParent": source_parent,
+              "inheritedV01": {
+                  "packageRef": "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1",
+                  "originalAnchor": original_anchor,
+                  "sourceRef": anchor,
+                  "sourceDelta": [
+                      ".github/workflows/g1-06-exact-source.yml",
+                      "verification/tools/generate_g1_06_a6_evidence.mjs",
+                      "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs",
+                  ],
+                  "status": "INHERITED_VALID",
+              },
+              "productionRepair": "SEMANTIC_NO_OP_WARNING_REPAIR",
               "repository": "Mostorm-Labs/axiom",
               "ci": {
                   "runId": "${{ github.run_id }}",

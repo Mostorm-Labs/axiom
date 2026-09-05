@@ -8,7 +8,12 @@ import {
   A5_SOURCE_REF,
   BRANCH_REF,
   EXPECTED_PROTOBUF_OFF_SKIP_IDS,
+  INHERITED_V01_PACKAGE_REF,
+  INHERITED_V01_SOURCE_PATHS,
+  INHERITED_V01_SOURCE_REF,
+  ORIGINAL_A6_ANCHOR,
   PACKAGE_REF,
+  PRODUCTION_REPAIR_PATH,
   REQUIRED_EVIDENCE_FILES,
   TASK_ANCHOR,
   WORKFLOW_NAME,
@@ -20,6 +25,10 @@ import {
   validateEvidenceInventory,
   validateFacts,
   validateOracleContract,
+  validateInheritedV01SourceDelta,
+  validateInheritedV01Identity,
+  validateActualStartingRevision,
+  validateProductionRepairPatch,
   validateSemanticAccounting,
   validateSourceDelta,
   validateSourceRef,
@@ -60,6 +69,14 @@ function facts(overrides = {}) {
     sourceRef: SOURCE_REF,
     sourceCommitParent: SOURCE_PARENT,
     repository: "Mostorm-Labs/axiom",
+    inheritedV01: {
+      packageRef: INHERITED_V01_PACKAGE_REF,
+      originalAnchor: ORIGINAL_A6_ANCHOR,
+      sourceRef: INHERITED_V01_SOURCE_REF,
+      sourceDelta: INHERITED_V01_SOURCE_PATHS,
+      status: "INHERITED_VALID",
+    },
+    productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
     ci: ci(),
     a5AcceptedPredecessor: {
       status: "ACCEPTED_FOR_DOWNSTREAM",
@@ -114,6 +131,23 @@ test("rejects malformed_or_foreign_source_ref", () => {
   }), /immutable identity|foreign/i);
 });
 
+test("rejects old v0.1 package or retry-anchor substitution", () => {
+  assert.throws(() => validateFacts(facts({ packageRef: INHERITED_V01_PACKAGE_REF }), {
+    packageRef: PACKAGE_REF,
+    taskAnchor: TASK_ANCHOR,
+    actualStartingRevision: TASK_ANCHOR,
+    sourceRef: SOURCE_REF,
+    sourceCommitParent: SOURCE_PARENT,
+  }), /immutable identity|foreign/i);
+  assert.throws(() => validateFacts(facts({ taskAnchor: ORIGINAL_A6_ANCHOR }), {
+    packageRef: PACKAGE_REF,
+    taskAnchor: TASK_ANCHOR,
+    actualStartingRevision: TASK_ANCHOR,
+    sourceRef: SOURCE_REF,
+    sourceCommitParent: SOURCE_PARENT,
+  }), /immutable identity|foreign/i);
+});
+
 test("rejects task_anchor_ancestry_failure", () => {
   assert.throws(() => validateAncestry({
     packageMaterializationRef: TASK_ANCHOR,
@@ -121,6 +155,42 @@ test("rejects task_anchor_ancestry_failure", () => {
     sourceRef: TASK_ANCHOR,
     sourceCommitParent: "1".repeat(40),
   }), /SHA|resolvable/i);
+});
+
+test("accepts an inherited v0.1 three-file source segment", () => {
+  assert.doesNotThrow(() => validateInheritedV01SourceDelta([
+    ["A", ".github/workflows/g1-06-exact-source.yml"],
+    ["A", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["A", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+  ]));
+});
+
+test("rejects inherited segment identity or ancestry delta", () => {
+  assert.throws(() => validateInheritedV01SourceDelta([
+    ["A", ".github/workflows/g1-06-exact-source.yml"],
+    ["A", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+  ]), /inherited|delta/i);
+});
+
+test("rejects inherited segment identity substitution and nonempty retry-start delta", () => {
+  assert.throws(() => validateInheritedV01Identity({
+    packageRef: PACKAGE_REF,
+    originalAnchor: ORIGINAL_A6_ANCHOR,
+    sourceRef: INHERITED_V01_SOURCE_REF,
+    sourceDelta: INHERITED_V01_SOURCE_PATHS,
+    status: "INHERITED_VALID",
+  }), /inherited|identity/i);
+  assert.throws(() => validateActualStartingRevision(ORIGINAL_A6_ANCHOR), /starting|retry anchor/i);
+});
+
+test("accepts the four-file v0.2 retry source delta", () => {
+  assert.doesNotThrow(() => validateSourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+    ["M", PRODUCTION_REPAIR_PATH],
+  ]));
 });
 
 test("rejects extra_source_path", () => {
@@ -134,9 +204,46 @@ test("rejects extra_source_path", () => {
 
 test("rejects missing_source_path", () => {
   assert.throws(() => validateSourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+  ]), /count|four/i);
+});
+
+test("rejects fifth retry path and wrong change status", () => {
+  assert.throws(() => validateSourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+    ["M", PRODUCTION_REPAIR_PATH],
+    ["M", "runtime/semantic/src/forbidden.cpp"],
+  ]), /count|unauthorized/i);
+  assert.throws(() => validateSourceDelta([
     ["A", ".github/workflows/g1-06-exact-source.yml"],
-    ["A", "verification/tools/generate_g1_06_a6_evidence.mjs"],
-  ]), /count|three/i);
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+    ["M", PRODUCTION_REPAIR_PATH],
+  ]), /unauthorized|status/i);
+});
+
+const productionPatch = `@@ -87 +87,4 @@
+-    if(source.placement.parent_id)setId(*source.placement.parent_id,destination.mutable_placement()->mutable_parent_id());destination.mutable_placement()->mutable_order_key()->set_value(std::string(reinterpret_cast<const char*>(source.placement.order_key.bytes().data()),source.placement.order_key.bytes().size()));
++    if(source.placement.parent_id) {
++        setId(*source.placement.parent_id,destination.mutable_placement()->mutable_parent_id());
++    }
++    destination.mutable_placement()->mutable_order_key()->set_value(std::string(reinterpret_cast<const char*>(source.placement.order_key.bytes().data()),source.placement.order_key.bytes().size()));`;
+
+test("accepts the semantic no-op warning repair boundary", () => {
+  assert.doesNotThrow(() => validateProductionRepairPatch(productionPatch));
+});
+
+test("rejects production patch outside the authorized statement boundary", () => {
+  assert.throws(() => validateProductionRepairPatch(`${productionPatch}\n+    destination.set_kind_version(99);`), /statement|unexpected|authorized/i);
+});
+
+test("rejects conditional order-key write or mapping mutation", () => {
+  assert.throws(() => validateProductionRepairPatch(productionPatch.replace("destination.mutable_placement()->mutable_order_key()->set_value", "if(source.placement.parent_id)destination.mutable_placement()->mutable_order_key()->set_value")), /conditional|order key|statement/i);
+  assert.throws(() => validateProductionRepairPatch(productionPatch.replace("mutable_parent_id", "mutable_wrong_id")), /identifier|mapping|statement/i);
 });
 
 test("rejects CI_head_checkout_source_mismatch", () => {
@@ -184,7 +291,7 @@ test("rejects historical_A5_evidence_mutation", () => {
     ["A", ".github/workflows/g1-06-exact-source.yml"],
     ["A", "verification/tools/generate_g1_06_a6_evidence.mjs"],
     ["M", "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-PLAN.json"],
-  ]), /unauthorized|exactly three/i);
+  ]), /unauthorized|exactly four/i);
 });
 
 test("rejects unsupported_A5_provenance_substitution", () => {
