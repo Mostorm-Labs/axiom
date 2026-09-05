@@ -27,7 +27,8 @@
       "reference_snapshot_replay": true,
       "indexed_snapshot_replay": true,
       "suffix_prefix_count": 0,
-      "replay_coordinator_receives_all_15_operations": true
+      "replay_coordinator_receives_all_15_operations": true,
+      "final_lifecycle_state": "Ready"
     }
   },
   "checkpoint_identities": [
@@ -50,6 +51,7 @@
     "full_continuation_rejected": 0,
     "final_generation": 15,
     "final_commit_ordinal": 15,
+    "final_lifecycle_state": "Ready",
     "checkpoint_suffix_applied": {"5": 10, "10": 5, "15": 0}
   },
   "negative_replay": {
