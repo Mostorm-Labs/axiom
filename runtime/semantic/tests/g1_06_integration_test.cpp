@@ -113,6 +113,23 @@ ObjectRecord vectorStroke(std::uint64_t value, ObjectId parent) {
     return record;
 }
 
+ObjectRecord vectorPath(std::uint64_t value, ObjectId parent) {
+    ObjectRecord record = shape(value, parent, 6U);
+    record.kind = ObjectKind::kVectorPath;
+    record.content = VectorPathContent{VectorPathGeometry{
+        FillRule::kNonZero,
+        {MoveTo{Vec2{0.0, 0.0}}, LineTo{Vec2{1.0, 1.0}}}}};
+    return record;
+}
+
+ObjectRecord image(std::uint64_t value, ObjectId parent) {
+    ObjectRecord record = shape(value, parent, 7U);
+    record.kind = ObjectKind::kImage;
+    record.content = ImageContent{
+        ResourceId{id(800U)}, 10.0, 10.0, std::nullopt, ImageContentMode::kFit, 10.0, 10.0};
+    return record;
+}
+
 ObjectRecord dabStroke(std::uint64_t value, ObjectId parent) {
     ObjectRecord record = shape(value, parent, 5U);
     record.kind = ObjectKind::kDabStroke;
@@ -183,6 +200,64 @@ std::vector<Operation> integratedOperations() {
         operation(SetTransformsOp{{TransformItem{
             id(5U), Transform2D{1.0, 0.0, 0.0, 1.0, 55.0, 56.0}}}}, 6009U),
     };
+}
+
+std::vector<Operation> allFamilyContinuation() {
+    const ObjectId root_id = id(100U);
+    const ObjectRecord root = group(100U);
+    const ObjectRecord shape_record = shape(101U, root_id, 1U);
+    const ObjectRecord vector_path_record = vectorPath(102U, root_id);
+    const ObjectRecord image_record = image(103U, root_id);
+    const ObjectRecord vector_stroke_record = vectorStroke(104U, root_id);
+    const ObjectRecord rich_text_record = richText(105U, root_id);
+    const ObjectRecord connector_record = connector(106U, shape_record.id);
+    const ObjectRecord deleted_record = shape(107U, root_id, 8U);
+    const ObjectRecord added_stroke = vectorStroke(108U, root_id);
+    const ObjectRecord split_stroke_a = vectorStroke(109U, root_id);
+    const ObjectRecord split_stroke_b = vectorStroke(110U, root_id);
+    const EraseMaskRecord added_mask = eraseMask(411U);
+
+    ObjectRecord placed = shape_record;
+    placed.placement = Placement{root_id, OrderKey({20U})};
+    ObjectRecord transformed = placed;
+    transformed.transform = Transform2D{1.0, 0.0, 0.0, 1.0, 101.0, 102.0};
+    const VectorPathGeometry changed_geometry{
+        FillRule::kEvenOdd, {MoveTo{Vec2{2.0, 3.0}}, LineTo{Vec2{4.0, 5.0}}}};
+    const ImageContent changed_image{
+        ResourceId{id(801U)}, 44.0, 55.0, std::nullopt, ImageContentMode::kFill, 66.0, 77.0};
+    const ConnectorContent changed_connector{
+        ConnectorEndpoint{AttachedEndpoint{shape_record.id, StablePortAnchor{3U}}},
+        ConnectorEndpoint{FreePointEndpoint{Vec2{11.0, 12.0}}}, ConnectorRouting::kOrthogonal};
+
+    return {
+        operation(InsertObjectsOp{{root,
+                                   shape_record,
+                                   vector_path_record,
+                                   image_record,
+                                   vector_stroke_record,
+                                   rich_text_record,
+                                   connector_record,
+                                   deleted_record}},
+                  6101U),
+        operation(DeleteObjectsOp{{deleted_record.id}}, 6102U),
+        operation(RestoreObjectsOp{{deleted_record}}, 6103U),
+        operation(SetPlacementsOp{{PlacementItem{shape_record.id, placed.placement}}}, 6104U),
+        operation(SetTransformsOp{{TransformItem{shape_record.id, transformed.transform}}}, 6105U),
+        operation(PatchPropertiesOp{{PropertyPatch{
+            shape_record.id, 2U, PropertyPatchAction::kSet, PropertyValue{true}}}},
+                  6106U),
+        operation(SetObjectSizeOp{{ObjectSizeItem{shape_record.id, 44.0, 55.0}}}, 6107U),
+        operation(SetVectorPathGeometryOp{vector_path_record.id, changed_geometry}, 6108U),
+        operation(SetImageContentOp{image_record.id, changed_image}, 6109U),
+        operation(AddStrokeOp{added_stroke}, 6110U),
+        operation(SplitStrokesOp{{StrokeSplit{added_stroke.id, {split_stroke_a, split_stroke_b}}}},
+                  6111U),
+        operation(AddEraseMasksOp{{EraseMaskAddItem{vector_stroke_record.id, {added_mask}}}},
+                  6112U),
+        operation(RemoveEraseMasksOp{{EraseMaskRemoveItem{vector_stroke_record.id, {added_mask.id}}}},
+                  6113U),
+        operation(EditRichTextOp{rich_text_record.id, RichTextDelta{}}, 6114U),
+        operation(SetConnectorContentOp{connector_record.id, changed_connector}, 6115U)};
 }
 
 struct Outcome final {
@@ -407,6 +482,46 @@ TEST(G106Integration, IntegratedRouteProviderCorpusHasProjectionFirstFourWayEqua
         expectSameStateOutcome<ReferenceObjectStore>(direct_reference, replay_reference);
         expectSameStateOutcome<IndexedObjectStore>(direct_reference, replay_indexed);
     }
+}
+
+TEST(G106Integration, FullFifteenFamilyContinuationReplaysInOneInvocationWithFourWayProjectionEquality) {
+    const std::vector<Operation> operations = allFamilyContinuation();
+    ASSERT_EQ(operations.size(), 15U);
+    for (std::size_t index = 0U; index < operations.size(); ++index) {
+        EXPECT_EQ(operations[index].payload.index(), index);
+    }
+
+    const Outcome direct_reference = runSequential<ReferenceObjectStore>(operations);
+    const Outcome direct_indexed = runSequential<IndexedObjectStore>(operations);
+    const Outcome replay_reference = runSnapshotReplay<ReferenceObjectStore>(
+        operations, 0U, false, true);
+    const Outcome replay_indexed = runSnapshotReplay<IndexedObjectStore>(
+        operations, 0U, false, true);
+
+    ASSERT_TRUE(direct_reference.valid);
+    ASSERT_TRUE(direct_indexed.valid);
+    ASSERT_TRUE(replay_reference.valid);
+    ASSERT_TRUE(replay_indexed.valid);
+    EXPECT_EQ(direct_reference.applied, 15U);
+    EXPECT_EQ(direct_indexed.applied, 15U);
+    EXPECT_EQ(replay_reference.applied, 15U);
+    EXPECT_EQ(replay_indexed.applied, 15U);
+    EXPECT_EQ(direct_reference.projection, direct_indexed.projection);
+    EXPECT_EQ(direct_reference.projection, replay_reference.projection);
+    EXPECT_EQ(direct_reference.projection, replay_indexed.projection);
+    EXPECT_EQ(direct_reference.digest, direct_indexed.digest);
+    EXPECT_EQ(direct_reference.digest, replay_reference.digest);
+    EXPECT_EQ(direct_reference.digest, replay_indexed.digest);
+    EXPECT_EQ(direct_reference.generation, SemanticGeneration(15U));
+    EXPECT_EQ(direct_reference.ordinal, CommitOrdinal(15U));
+    EXPECT_EQ(direct_indexed.generation, direct_reference.generation);
+    EXPECT_EQ(replay_reference.generation, direct_reference.generation);
+    EXPECT_EQ(replay_indexed.generation, direct_reference.generation);
+    EXPECT_EQ(direct_indexed.ordinal, direct_reference.ordinal);
+    EXPECT_EQ(replay_reference.ordinal, direct_reference.ordinal);
+    EXPECT_EQ(replay_indexed.ordinal, direct_reference.ordinal);
+    EXPECT_TRUE(direct_indexed.index_matches);
+    EXPECT_TRUE(replay_indexed.index_matches);
 }
 
 TEST(G106Integration, EmptySnapshotAndEmptyAuthoritativeContinuationRemainReady) {
