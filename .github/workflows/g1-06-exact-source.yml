@@ -87,8 +87,12 @@ jobs:
       - name: Bootstrap dependencies and build fresh protobuf-enabled semantic tree
         run: |
           set -euo pipefail
-          python3 tools/semantic_fetch.py --target linux-x86_64
-          python3 tools/bootstrap_deps.py --core
+          # Build the locked semantic toolchain from the exact source checkout.
+          # The prebuilt SDK identity is tied to an older producer recipe and
+          # therefore cannot satisfy the current lock after an authorized
+          # descendant; source bootstrap preserves the lock contract without
+          # accepting an unverifiable archive.
+          python3 tools/bootstrap_deps.py --core --semantic-codec
           cmake -S . -B out/g1-06-a6-protobuf-on -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCANVAS_BUILD_POC01=OFF \
