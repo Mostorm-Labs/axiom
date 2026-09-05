@@ -129,7 +129,7 @@ jobs:
             test -s "$build/$junit"
             cp "$build/$junit" "$output"
           }
-          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-a6-on-integration.xml" '^g1_06_integration\.'
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-integration.xml" '^g1_06_integration\.'
           run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-operation-conformance.xml" '^OperationEngine15OperationConformance\.'
           run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-g1-06.xml" '^(G106Snapshot\.|g1_06_snapshot_bootstrap\.|g1_06_projection\.|g1_06_replay\.|g1_06_digest\.)'
           run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-g1-05.xml" '^(ApplyPlan\.|AtomicApply|OperationEngine)'
