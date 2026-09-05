@@ -124,7 +124,10 @@ jobs:
             local build="$1"
             local output="$2"
             local expression="$3"
-            ctest --test-dir "$build" --output-on-failure --output-junit "$output" -R "$expression"
+            local junit="$(basename "$output")"
+            ctest --test-dir "$build" --output-on-failure --output-junit "$junit" -R "$expression"
+            test -s "$build/$junit"
+            cp "$build/$junit" "$output"
           }
           run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-a6-on-integration.xml" '^g1_06_integration\.'
           run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-operation-conformance.xml" '^OperationEngine15OperationConformance\.'
