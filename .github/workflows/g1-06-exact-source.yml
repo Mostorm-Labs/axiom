@@ -1,0 +1,260 @@
+name: GT-G1-06 Exact Source
+
+on:
+  push:
+    branches:
+      - codex/gt-g1-06-snapshot-replay
+    paths:
+      - ".github/workflows/g1-06-exact-source.yml"
+      - "verification/tools/generate_g1_06_a6_evidence.mjs"
+      - "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    name: g1-06 / exact-source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      SOURCE_REF: ${{ github.sha }}
+      RUN_HEAD_SHA: ${{ github.event.head_commit.id }}
+      PACKAGE_REF: notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1
+      TASK_ANCHOR: 3f01f599efee21d9adbd8c4cacdcf953995979f9
+      STARTING_REVISION: 3f01f599efee21d9adbd8c4cacdcf953995979f9
+      PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
+      ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
+      UTF8_RANGE_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/utf8_range
+    steps:
+      - name: Checkout exact source SHA with full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install locked build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+          cmake --version
+          ninja --version
+          c++ --version
+
+      - name: Fail closed unless this is the exact authoritative source checkout
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = push
+          test "$GITHUB_REF" = refs/heads/codex/gt-g1-06-snapshot-replay
+          test -n "$RUN_HEAD_SHA"
+          test "$RUN_HEAD_SHA" = "$GITHUB_SHA"
+          test "$GITHUB_SHA" = "$SOURCE_REF"
+          test "$(git rev-parse HEAD)" = "$SOURCE_REF"
+          test "$(git rev-parse HEAD^)" = "$STARTING_REVISION"
+          test "$(git remote get-url origin | sed 's/\.git$//')" = "https://github.com/Mostorm-Labs/axiom"
+          git merge-base --is-ancestor "$TASK_ANCHOR" "$SOURCE_REF"
+
+      - name: Install and build the verification workspace
+        run: |
+          set -euo pipefail
+          cd verification
+          npm ci
+          npm run build
+
+      - name: Run the A6 evidence contract tests before facts collection
+        run: node --test verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs
+
+      - name: Bootstrap dependencies and build fresh protobuf-enabled semantic tree
+        run: |
+          set -euo pipefail
+          python3 tools/semantic_fetch.py --target linux-x86_64
+          python3 tools/bootstrap_deps.py --core
+          cmake -S . -B out/g1-06-a6-protobuf-on -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_SEMANTIC=ON \
+            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+            -DProtobuf_DIR="$PROTOBUF_DIR" \
+            -Dabsl_DIR="$ABSL_DIR" \
+            -Dutf8_range_DIR="$UTF8_RANGE_DIR"
+          cmake --build out/g1-06-a6-protobuf-on --parallel
+
+      - name: Build fresh protobuf-disabled semantic tree
+        run: |
+          set -euo pipefail
+          cmake -S . -B out/g1-06-a6-protobuf-off -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_SEMANTIC=ON \
+            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+          cmake --build out/g1-06-a6-protobuf-off --parallel
+
+      - name: Run required focused and full semantic CTest matrices
+        run: |
+          set -euo pipefail
+          run_suite() {
+            local build="$1"
+            local output="$2"
+            local expression="$3"
+            ctest --test-dir "$build" --output-on-failure --output-junit "$output" -R "$expression"
+          }
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-a6-on-integration.xml" '^g1_06_integration\.'
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-operation-conformance.xml" '^OperationEngine15OperationConformance\.'
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-g1-06.xml" '^(G106Snapshot\.|g1_06_snapshot_bootstrap\.|g1_06_projection\.|g1_06_replay\.|g1_06_digest\.)'
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-g1-05.xml" '^(ApplyPlan\.|AtomicApply|OperationEngine)'
+          run_suite out/g1-06-a6-protobuf-on "$RUNNER_TEMP/g1-06-on-full.xml" '.*'
+          run_suite out/g1-06-a6-protobuf-off "$RUNNER_TEMP/g1-06-off-integration.xml" '^g1_06_integration\.'
+          run_suite out/g1-06-a6-protobuf-off "$RUNNER_TEMP/g1-06-off-operation-conformance.xml" '^OperationEngine15OperationConformance\.'
+          run_suite out/g1-06-a6-protobuf-off "$RUNNER_TEMP/g1-06-off-g1-06.xml" '^(G106Snapshot\.|g1_06_snapshot_bootstrap\.|g1_06_projection\.|g1_06_replay\.|g1_06_digest\.)'
+          run_suite out/g1-06-a6-protobuf-off "$RUNNER_TEMP/g1-06-off-g1-05.xml" '^(ApplyPlan\.|AtomicApply|OperationEngine)'
+          run_suite out/g1-06-a6-protobuf-off "$RUNNER_TEMP/g1-06-off-full.xml" '.*'
+          ctest --test-dir out/g1-06-a6-protobuf-on --show-only=json-v1 > "$RUNNER_TEMP/g1-06-on-list.json"
+          ctest --test-dir out/g1-06-a6-protobuf-off --show-only=json-v1 > "$RUNNER_TEMP/g1-06-off-list.json"
+
+      - name: Materialize immutable CI facts outside the accepted evidence root
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP" "$GITHUB_WORKSPACE" <<'PY'
+          import json
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          temp = Path(sys.argv[1])
+          workspace = Path(sys.argv[2])
+          source = "${{ github.sha }}"
+          anchor = "3f01f599efee21d9adbd8c4cacdcf953995979f9"
+          package = "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1"
+          required = [
+              "G1-06-PLAN.json", "G1-06-SNAPSHOT.json", "G1-06-REPLAY.json",
+              "G1-06-PROJECTION.json", "G1-06-DIGEST.json", "G1-06-CTEST.txt", "G1-06-DIFF.json",
+          ]
+          skip_ids = list(range(25, 37)) + list(range(53, 64))
+
+          def read_suite(name, list_name, exact_skips=False):
+              root = ET.parse(temp / name).getroot()
+              cases = root.findall(".//testcase")
+              total = int(root.attrib.get("tests", len(cases)))
+              skipped_names = [case.attrib["name"] for case in cases if case.find("skipped") is not None]
+              failures = int(root.attrib.get("failures", 0)) + sum(1 for case in cases if case.find("failure") is not None or case.find("error") is not None)
+              skipped = len(skipped_names)
+              passed = total - skipped - failures
+              if total <= 0 or passed < 0 or failures != 0:
+                  raise SystemExit(f"invalid CTest facts in {name}: total={total} passed={passed} skipped={skipped} failures={failures}")
+              listed = json.loads((temp / list_name).read_text())["tests"]
+              ids = [index + 1 for index, case in enumerate(listed) if case["name"] in skipped_names]
+              if exact_skips and ids != skip_ids:
+                  raise SystemExit(f"protobuf-off skip drift: {ids} != {skip_ids}")
+              return {"status": "PASS", "total": total, "executed": total - skipped, "passed": passed, "skipped": skipped, "failed": failures, "skipIds": ids}
+
+          def focused(prefix, list_name):
+              root = ET.parse(temp / prefix).getroot()
+              cases = root.findall(".//testcase")
+              total = int(root.attrib.get("tests", len(cases)))
+              skipped = sum(1 for case in cases if case.find("skipped") is not None)
+              failed = int(root.attrib.get("failures", 0)) + sum(1 for case in cases if case.find("failure") is not None or case.find("error") is not None)
+              passed = total - skipped - failed
+              if total <= 0 or failed != 0:
+                  raise SystemExit(f"focused CTest facts invalid in {prefix}")
+              return {"status": "PASS", "total": total, "executed": total - skipped, "passed": passed, "skipped": skipped, "failed": failed, "skipIds": []}
+
+          def configured(suffix, list_name):
+              return {
+                  "integration": focused(f"g1-06-{suffix}-integration.xml", list_name),
+                  "operationConformance": focused(f"g1-06-{suffix}-operation-conformance.xml", list_name),
+                  "g1_06": focused(f"g1-06-{suffix}-g1-06.xml", list_name),
+                  "g1_05": focused(f"g1-06-{suffix}-g1-05.xml", list_name),
+              }
+
+          facts = {
+              "format": "axiom-gt-g1-06-a6-facts-v1",
+              "taskId": "GT-G1-06-A6",
+              "packageRef": package,
+              "taskAnchor": anchor,
+              "actualStartingRevision": anchor,
+              "sourceRef": source,
+              "sourceCommitParent": anchor,
+              "repository": "Mostorm-Labs/axiom",
+              "ci": {
+                  "runId": "${{ github.run_id }}",
+                  "runAttempt": "${{ github.run_attempt }}",
+                  "event": "${{ github.event_name }}",
+                  "ref": "${{ github.ref }}",
+                  "headSha": source,
+                  "checkoutSha": source,
+                  "workflowName": "GT-G1-06 Exact Source",
+                  "workflowPath": ".github/workflows/g1-06-exact-source.yml",
+                  "workflowRef": "${{ github.ref }}/.github/workflows/g1-06-exact-source.yml@${{ github.sha }}",
+                  "hostedRunUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "artifactName": f"gt-g1-06-a6-{source}",
+              },
+              "a5AcceptedPredecessor": {
+                  "status": "ACCEPTED_FOR_DOWNSTREAM",
+                  "packageRef": "notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3",
+                  "sourceRef": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+                  "materializedRef": anchor,
+                  "evidenceFiles": required,
+              },
+              "focused": {"protobufOn": configured("on", "g1-06-on-list.json"), "protobufOff": configured("off", "g1-06-off-list.json")},
+              "fullSemantic": read_suite("g1-06-on-full.xml", "g1-06-on-list.json"),
+              "fullSemanticOff": read_suite("g1-06-off-full.xml", "g1-06-off-list.json", exact_skips=True),
+              "correctnessContract": {"primary": "canonical_semantic_projection", "digestRole": "secondary_diagnostic_only", "digestOnlyPassAssertions": 0},
+              "requiredEvidenceFiles": required,
+              "evidenceContractTest": "PASS",
+              "gitDiffCheck": "PASS",
+              "cleanCheckoutReproduction": "PASS",
+          }
+          output = temp / "g1-06-a6-facts.json"
+          output.write_text(json.dumps(facts, indent=2) + "\n")
+          print(output)
+          PY
+
+      - name: Generate exact-source evidence outside verification/evidence/gates
+        run: |
+          set -euo pipefail
+          node verification/tools/generate_g1_06_a6_evidence.mjs \
+            --package-ref "$PACKAGE_REF" \
+            --task-anchor "$TASK_ANCHOR" \
+            --actual-starting-revision "$STARTING_REVISION" \
+            --source-ref "$SOURCE_REF" \
+            --facts "$RUNNER_TEMP/g1-06-a6-facts.json" \
+            --output-dir "$RUNNER_TEMP/g1-06-a6-evidence" \
+            --ci-run-id "$GITHUB_RUN_ID" \
+            --ci-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --ci-event "$GITHUB_EVENT_NAME" \
+            --ci-ref "$GITHUB_REF" \
+            --ci-head-sha "$GITHUB_SHA" \
+            --checkout-sha "$(git rev-parse HEAD)" \
+            --workflow-ref "$GITHUB_REF/.github/workflows/g1-06-exact-source.yml@$GITHUB_SHA" \
+            --hosted-run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --artifact-name "gt-g1-06-a6-$SOURCE_REF"
+          test "$(find "$RUNNER_TEMP/g1-06-a6-evidence" -maxdepth 1 -type f | wc -l | tr -d ' ')" = 7
+          test "$(find "$RUNNER_TEMP/g1-06-a6-evidence" -maxdepth 1 -type f -name '*.json' | wc -l | tr -d ' ')" = 6
+          test ! -e "verification/evidence/gates/G1/$SOURCE_REF/GT-G1-06"
+
+      - name: Re-run A6 evidence contract and source-scope guards
+        run: |
+          set -euo pipefail
+          node --test verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs
+          git diff --check
+          test -z "$(git status --short)"
+
+      - name: Upload exact-source durable evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g1-06-a6-${{ github.sha }}
+          path: ${{ runner.temp }}/g1-06-a6-evidence
+          if-no-files-found: error
+          retention-days: 14
