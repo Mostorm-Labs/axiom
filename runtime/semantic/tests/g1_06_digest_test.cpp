@@ -59,9 +59,48 @@ ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nu
     return record;
 }
 
+ObjectRecord richText(std::uint64_t value, ObjectId parent) {
+    ObjectRecord record = shape(value, parent);
+    record.kind = ObjectKind::kRichText;
+    TextStyle style{};
+    style.font_resource_id = ResourceId{id(700U)};
+    style.font_size = 14.0;
+    style.weight = 700U;
+    style.italic = true;
+    style.underline = true;
+    style.color = ColorValue{0.2F, 0.4F, 0.8F, 1.0F};
+    Paragraph paragraph{};
+    paragraph.id = id(value * 10U);
+    paragraph.style = ParagraphStyle{ParagraphAlignment::kCenter, 1.2, 0.1, 0.2};
+    paragraph.runs = {TextRun{"representative rich text", style}};
+    record.content = RichTextContent{RichTextDocument{{paragraph}}};
+    return record;
+}
+
+ObjectRecord vectorStroke(std::uint64_t value, ObjectId parent) {
+    ObjectRecord record = shape(value, parent);
+    record.kind = ObjectKind::kVectorStroke;
+    StrokeRecord stroke{};
+    stroke.brush.brush_family_id = 1U;
+    stroke.brush.brush_version = 1U;
+    stroke.brush.color = ColorValue{0.9F, 0.1F, 0.3F, 1.0F};
+    stroke.brush.nominal_size = 6.0;
+    stroke.brush.opacity = 0.8F;
+    stroke.brush.pressure = PressureMapping{
+        true,
+        PiecewiseLinearCurve01{{CurvePoint01{0.0F, 0.25F}, CurvePoint01{1.0F, 1.0F}}},
+        PiecewiseLinearCurve01{{CurvePoint01{0.0F, 0.5F}, CurvePoint01{1.0F, 0.75F}}}};
+    stroke.deterministic_seed = 0x1234U;
+    stroke.data = VectorStrokeData{{
+        StrokeSample{Vec2{0.0, 0.0}, 0.5F, Vec2{0.0, 0.0}},
+        StrokeSample{Vec2{1.0, 2.0}, 0.9F, Vec2{0.0, 0.0}}}};
+    record.content = VectorStrokeContent{stroke};
+    return record;
+}
+
 std::vector<ObjectRecord> fixtureObjects() {
     const ObjectRecord root = group(1U);
-    return {shape(3U, root.id), root, shape(2U)};
+    return {shape(3U, root.id), root, shape(2U), richText(4U, root.id), vectorStroke(5U, root.id)};
 }
 
 template <typename Store>
@@ -109,6 +148,45 @@ void applyOperation(Store& store, OperationPayload payload, std::uint64_t operat
 TEST(G106Digest, Fnv1aUsesExactBytesAndIndependentReference) {
     constexpr std::string_view input{"axiom\0digest", 12U};
     EXPECT_EQ(digestCanonicalProjectionBytes(input), independentFnv1a64(input));
+}
+
+TEST(G106Digest, SharedFixtureIncludesRepresentativeContentFamilies) {
+    const auto records = fixtureObjects();
+    const auto findRecord = [&records](std::uint64_t value) {
+        return std::find_if(records.begin(), records.end(), [value](const ObjectRecord& record) {
+            return record.id == id(value);
+        });
+    };
+
+    const auto rich_text = findRecord(4U);
+    ASSERT_NE(rich_text, records.end());
+    EXPECT_EQ(rich_text->kind, ObjectKind::kRichText);
+    ASSERT_TRUE(rich_text->placement.parent_id.has_value());
+    EXPECT_EQ(*rich_text->placement.parent_id, id(1U));
+    const auto* rich_content = std::get_if<RichTextContent>(&rich_text->content);
+    ASSERT_NE(rich_content, nullptr);
+    ASSERT_EQ(rich_content->document.paragraphs.size(), 1U);
+    ASSERT_EQ(rich_content->document.paragraphs.front().runs.size(), 1U);
+    const auto& rich_run = rich_content->document.paragraphs.front().runs.front();
+    EXPECT_FALSE(rich_run.text.empty());
+    EXPECT_TRUE(rich_run.style.font_resource_id.has_value());
+    EXPECT_GT(rich_run.style.font_size, 0.0);
+    EXPECT_GT(rich_run.style.weight, 0U);
+    EXPECT_TRUE(rich_run.style.italic);
+
+    const auto vector_stroke = findRecord(5U);
+    ASSERT_NE(vector_stroke, records.end());
+    EXPECT_EQ(vector_stroke->kind, ObjectKind::kVectorStroke);
+    ASSERT_TRUE(vector_stroke->placement.parent_id.has_value());
+    EXPECT_EQ(*vector_stroke->placement.parent_id, id(1U));
+    const auto* vector_content = std::get_if<VectorStrokeContent>(&vector_stroke->content);
+    ASSERT_NE(vector_content, nullptr);
+    EXPECT_GT(vector_content->stroke.brush.nominal_size, 0.0);
+    EXPECT_GE(vector_content->stroke.brush.opacity, 0.0F);
+    EXPECT_LE(vector_content->stroke.brush.opacity, 1.0F);
+    const auto* vector_data = std::get_if<VectorStrokeData>(&vector_content->stroke.data);
+    ASSERT_NE(vector_data, nullptr);
+    ASSERT_FALSE(vector_data->samples.empty());
 }
 
 TEST(G106Digest, RepeatedIdenticalInputIsDeterministic) {
