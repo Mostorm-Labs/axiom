@@ -1,0 +1,32 @@
+GT-G1-06-A6 P32 exact-source CI verification transcript
+package_ref=notion://3d24c57a-590c-81ab-a5a5-e4e59c755a5e/GT-G1-06-A6-P31-v0.3
+task_anchor=d58e2a56b65d129ddf963435a75971d72cc43b65
+actual_starting_revision=d58e2a56b65d129ddf963435a75971d72cc43b65
+source_ref=1b370bd242ce19838889b28beb7b75979244cbab
+source_commit_parent=199c47154d66e626b73d4dbae2e91a04aaa1dbd6
+ci_event=push
+ci_ref=refs/heads/codex/gt-g1-06-snapshot-replay
+ci_head_sha=1b370bd242ce19838889b28beb7b75979244cbab
+checkout_sha=1b370bd242ce19838889b28beb7b75979244cbab
+hosted_run=https://github.com/Mostorm-Labs/axiom/actions/runs/33997447504
+artifact=gt-g1-06-a6-1b370bd242ce19838889b28beb7b75979244cbab
+
+accepted_A5_source_ref=a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc
+accepted_A5_materialized_ref=d58e2a56b65d129ddf963435a75971d72cc43b65
+accepted_A5_package_ref=notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3
+
+protobufOn_integration=7 total, 7 PASS, 0 SKIP, 0 FAIL
+protobufOn_operationConformance=11 total, 11 PASS, 0 SKIP, 0 FAIL
+protobufOn_g1_06=55 total, 55 PASS, 0 SKIP, 0 FAIL
+protobufOn_g1_05=64 total, 64 PASS, 0 SKIP, 0 FAIL
+protobufOff_integration=7 total, 7 PASS, 0 SKIP, 0 FAIL
+protobufOff_operationConformance=11 total, 11 PASS, 0 SKIP, 0 FAIL
+protobufOff_g1_06=55 total, 44 PASS, 11 SKIP, 0 FAIL
+protobufOff_g1_05=64 total, 64 PASS, 0 SKIP, 0 FAIL
+protobuf_on_full_semantic=469 total, 469 PASS, 0 expected SKIP, 0 FAIL
+protobuf_off_full_semantic=469 total, 446 PASS, 23 expected SKIP, 0 FAIL
+protobuf_off_exact_skip_ids=25,26,27,28,29,30,31,32,33,34,35,36,53,54,55,56,57,58,59,60,61,62,63
+evidence_contract_test=PASS
+git_diff_check=PASS
+clean_checkout_reproduction=PASS
+status=PASS
