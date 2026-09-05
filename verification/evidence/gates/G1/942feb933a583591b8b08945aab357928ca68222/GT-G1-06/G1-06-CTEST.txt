@@ -1,9 +1,20 @@
-GT-G1-06-A5 P32 evidence-repair protobuf-off transcript
+GT-G1-06-A5 P32 evidence-binding-repair protobuf-off transcript
 package_ref=notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2
-repair_authority_page=3d24c57a590c8163add3dda65cdfd189
-blocker=A5-P32-B1 / EVIDENCE_GAP / PROTOBUF_OFF_SKIP_ACCOUNTING_MISMATCH
+prior_repair_authority_page=3d24c57a590c8163add3dda65cdfd189
+binding_repair_authority_page=3d24c57a590c81e1bc74d28f6b51cdb4
+blocker=A5-P32-B2 / EVIDENCE_GAP / BASELINE_PROVENANCE_AND_LINEAGE_METADATA_MISMATCH
+prior_blocker=A5-P32-B1 / CLOSED
 source_ref=942feb933a583591b8b08945aab357928ca68222
 prior_materialized_ref=5ff36936c443970e98ef8f0487aa88e3ecf053b6
+repair_base_ref=119f42ac31fabcf763b1eb70dd37165dacad2d53
+
+Stable evidence lineage before this repair
+  source_ref=942feb933a583591b8b08945aab357928ca68222
+  -> prior_materialized_ref=5ff36936c443970e98ef8f0487aa88e3ecf053b6
+  -> evidence_descendant=c6e4f76a0b42fc3a5ded0cddd314d7123393ac74
+  -> repair_base_ref=119f42ac31fabcf763b1eb70dd37165dacad2d53
+
+The final reviewer-accessible repair materialized_ref is supplied by P32 return metadata and independently resolved by CONTROL_REVIEW. It is intentionally not embedded as a self-referential SHA in this file.
 
 Fresh independent checkout
   checkout_root=/tmp/axiom-g1-06-a5-reverify.uGp1pb/repo
@@ -54,9 +65,10 @@ Exact skipped tests (all protobuf-only; CTest reported Skipped)
   63 - G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder
 
 Comparison with accepted A4 protobuf-off skip set
-  accepted_A4_source_ref=305debc3c77241c00860ed8eac4d040f3e295a57
-  accepted_A4_total=461
-  accepted_A4_executed_pass=438
+  accepted_A4_repair_source_ref=baf250f663a4eecf103701192d2ba415c6cc71db
+  accepted_A4_materialized_ref=f67c46a8181840ef50ac278cff5933c5c8833872
+  accepted_A4_total=462
+  accepted_A4_executed_pass=439
   accepted_A4_skipped=23
   accepted_A4_unexpected_failures=0
   skip_set_relation=EXACT_MATCH

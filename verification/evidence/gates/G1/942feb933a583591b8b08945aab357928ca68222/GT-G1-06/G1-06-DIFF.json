@@ -1,23 +1,51 @@
 {
   "format": "axiom-gt-g1-06-a5-evidence-repair-diff-v1",
   "task_id": "GT-G1-06-A5",
-  "stage": "P32_EVIDENCE_REPAIR",
-  "occurrence": "P32_EVIDENCE_REPAIR_01",
+  "stage": "P32_EVIDENCE_BINDING_REPAIR",
+  "occurrence": "P32_EVIDENCE_BINDING_REPAIR_01",
   "blocker": {
-    "id": "A5-P32-B1",
+    "id": "A5-P32-B2",
     "class": "EVIDENCE_GAP",
-    "subtype": "PROTOBUF_OFF_SKIP_ACCOUNTING_MISMATCH",
+    "subtype": "BASELINE_PROVENANCE_AND_LINEAGE_METADATA_MISMATCH",
     "status": "FIXED"
+  },
+  "prior_blocker": {
+    "id": "A5-P32-B1",
+    "status": "CLOSED"
   },
   "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2",
   "task_anchor": "f67c46a8181840ef50ac278cff5933c5c8833872",
   "actual_starting_revision": "f67c46a8181840ef50ac278cff5933c5c8833872",
   "source_ref": "942feb933a583591b8b08945aab357928ca68222",
   "prior_materialized_ref": "5ff36936c443970e98ef8f0487aa88e3ecf053b6",
-  "new_materialized_ref": "returned after this evidence-only commit (exact SHA in P32 return)",
-  "repair_commit_parent": "5ff36936c443970e98ef8f0487aa88e3ecf053b6",
+  "repair_base_ref": "119f42ac31fabcf763b1eb70dd37165dacad2d53",
+  "new_materialized_ref": "P32_RETURN_METADATA (reviewer-accessible returned ref; independently resolved by CONTROL_REVIEW)",
+  "repair_commit_parent": "119f42ac31fabcf763b1eb70dd37165dacad2d53",
   "source_commit_parent": "f67c46a8181840ef50ac278cff5933c5c8833872",
   "source_ref_unchanged": true,
+  "stable_existing_lineage": [
+    "942feb933a583591b8b08945aab357928ca68222",
+    "5ff36936c443970e98ef8f0487aa88e3ecf053b6",
+    "c6e4f76a0b42fc3a5ded0cddd314d7123393ac74",
+    "119f42ac31fabcf763b1eb70dd37165dacad2d53"
+  ],
+  "final_materialized_ref_binding": {
+    "location": "P32_RETURN_METADATA",
+    "reviewer_resolution": "REQUIRED",
+    "embedded_commit_sha_in_file": false,
+    "statement": "The final reviewer-accessible repair materialized_ref is supplied by P32 return metadata and independently resolved by CONTROL_REVIEW; this self-containing evidence file does not embed its own final commit SHA."
+  },
+  "accepted_A4_provenance": {
+    "repair_source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+    "materialized_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
+    "protobuf_off": {
+      "total": 462,
+      "passed": 439,
+      "skipped": 23,
+      "unexpected_failures": 0
+    },
+    "exact_skip_set": ["25-36", "53-63"]
+  },
   "source_scope_delta": [
     "runtime/semantic/tests/g1_06_integration_test.cpp",
     "runtime/semantic/tests/CMakeLists.txt"
@@ -60,6 +88,8 @@
     "git_diff_check": "PASS",
     "source_ref_unchanged_after_verification": true,
     "production_source_changed": false,
-    "source_to_materialized_delta": "EVIDENCE_ONLY"
+    "source_to_materialized_delta": "EVIDENCE_ONLY",
+    "accepted_A4_provenance_repaired": true,
+    "exact_skip_set_preserved": true
   }
 }

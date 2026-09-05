@@ -1,13 +1,19 @@
 {
   "task_id": "GT-G1-06-A5",
   "stage": "P32",
-  "occurrence": "P32_EVIDENCE_REPAIR_01",
-  "repair_authority_page": "3d24c57a590c8163add3dda65cdfd189",
+  "lifecycle_stage": "P32_EVIDENCE_BINDING_REPAIR",
+  "occurrence": "P32_EVIDENCE_BINDING_REPAIR_01",
+  "repair_authority_page": "3d24c57a590c81e1bc74d28f6b51cdb4",
+  "prior_reconciliation_page": "3d24c57a590c81758a5ac7959459185b",
   "blocker": {
-    "id": "A5-P32-B1",
+    "id": "A5-P32-B2",
     "class": "EVIDENCE_GAP",
-    "subtype": "PROTOBUF_OFF_SKIP_ACCOUNTING_MISMATCH",
+    "subtype": "BASELINE_PROVENANCE_AND_LINEAGE_METADATA_MISMATCH",
     "status": "FIXED"
+  },
+  "prior_blocker": {
+    "id": "A5-P32-B1",
+    "status": "CLOSED"
   },
   "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2",
   "package_materialization_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
@@ -19,6 +25,13 @@
   },
   "actual_starting_revision": "f67c46a8181840ef50ac278cff5933c5c8833872",
   "source_ref": "942feb933a583591b8b08945aab357928ca68222",
+  "repair_base_ref": "119f42ac31fabcf763b1eb70dd37165dacad2d53",
+  "stable_existing_lineage": [
+    "942feb933a583591b8b08945aab357928ca68222",
+    "5ff36936c443970e98ef8f0487aa88e3ecf053b6",
+    "c6e4f76a0b42fc3a5ded0cddd314d7123393ac74",
+    "119f42ac31fabcf763b1eb70dd37165dacad2d53"
+  ],
   "authorized_source_scope": [
     "runtime/semantic/tests/g1_06_integration_test.cpp",
     "runtime/semantic/tests/CMakeLists.txt"
@@ -73,9 +86,10 @@
         {"id": 63, "name": "G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder"}
       ],
       "accepted_A4_baseline": {
-        "source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
-        "total_discovered_tests": 461,
-        "executed_passed": 438,
+        "repair_source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+        "materialized_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
+        "total_discovered_tests": 462,
+        "executed_passed": 439,
         "skipped_tests": 23,
         "unexpected_failures": 0,
         "skip_set_relation": "EXACT_MATCH"
@@ -99,7 +113,14 @@
     "tracked_source_clean_after_verification": true,
     "git_diff_check": "PASS",
     "source_ref_unchanged": true,
-    "production_source_changed": false
+    "production_source_changed": false,
+    "accepted_A4_provenance_repaired": true,
+    "final_materialized_ref_binding": {
+      "location": "P32_RETURN_METADATA",
+      "reviewer_resolution": "REQUIRED",
+      "embedded_commit_sha_in_file": false,
+      "statement": "The final reviewer-accessible repair materialized_ref is returned by P32 and independently resolved by CONTROL_REVIEW; it is not self-embedded in this file."
+    }
   },
   "guards": {
     "expectedTruthWrites": 0,
