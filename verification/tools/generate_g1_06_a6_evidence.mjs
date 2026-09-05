@@ -255,6 +255,11 @@ function readFacts(path) {
   }
 }
 
+function ciIdentityEqual(left, right) {
+  return ["runId", "runAttempt", "event", "ref", "headSha", "checkoutSha", "workflowName", "workflowPath", "workflowRef", "hostedRunUrl", "artifactName"]
+    .every((key) => left[key] === right[key]);
+}
+
 export function validateFacts(facts, expected) {
   const value = asRecord(facts, "A6 facts");
   if (value.format !== "axiom-gt-g1-06-a6-facts-v1" || value.taskId !== TASK_ID) fail("facts envelope is invalid");
@@ -378,7 +383,7 @@ export function generateEvidence({ packageRef, taskAnchor, actualStartingRevisio
   const rawFacts = readFacts(factsPath);
   const facts = validateFacts(rawFacts, { packageRef, taskAnchor, actualStartingRevision, sourceRef, sourceCommitParent });
   const ciRecord = validateCiIdentity(ci, sourceRef);
-  if (JSON.stringify(ciRecord) !== JSON.stringify(facts.ci)) fail("CLI CI identity differs from facts CI identity");
+  if (!ciIdentityEqual(ciRecord, facts.ci)) fail("CLI CI identity differs from facts CI identity");
   const inherited = { replay: gitJson(PACKAGE_MATERIALIZATION_REF, `${a5.evidenceRoot}/G1-06-REPLAY.json`) };
   const common = commonEnvelope({ facts, sourceRef, sourceCommitParent, a5 });
   const documents = {};
@@ -422,7 +427,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       hostedRunUrl: args.hostedRunUrl,
       artifactName: args.artifactName,
     };
-    const result = generateEvidence({ ...args, ci });
+    const result = generateEvidence({ ...args, factsPath: args.facts, ci });
     process.stdout.write(`${JSON.stringify(result)}\n`);
   } catch (error) {
     process.stderr.write(`A6 evidence generation failed closed: ${error.message}\n`);
