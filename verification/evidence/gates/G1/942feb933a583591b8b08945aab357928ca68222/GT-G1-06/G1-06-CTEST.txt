@@ -1,24 +1,71 @@
-GT-G1-06-A5 P32 verification transcript
+GT-G1-06-A5 P32 evidence-repair protobuf-off transcript
 package_ref=notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2
+repair_authority_page=3d24c57a590c8163add3dda65cdfd189
+blocker=A5-P32-B1 / EVIDENCE_GAP / PROTOBUF_OFF_SKIP_ACCOUNTING_MISMATCH
 source_ref=942feb933a583591b8b08945aab357928ca68222
-independent_checkout=/tmp/axiom-g1-06-a5-verify-off
+prior_materialized_ref=5ff36936c443970e98ef8f0487aa88e3ecf053b6
 
-protobuf-off configure/build:
-cmake -S . -B /tmp/axiom-g1-06-a5-build-off -DBUILD_TESTING=ON -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
-cmake --build /tmp/axiom-g1-06-a5-build-off -j2
-focused canvas_semantic_g1_06_integration_test: 6/6 passed
-full semantic ctest: 468/468 passed, 0 failed, 25 accepted protobuf-off skips
+Fresh independent checkout
+  checkout_root=/tmp/axiom-g1-06-a5-reverify.uGp1pb/repo
+  checkout=exact source_ref
+  head_before_configure=942feb933a583591b8b08945aab357928ca68222
+  tracked_status_before_configure=CLEAN
+  dependency_bootstrap=python3 tools/bootstrap_deps.py --core (PASS)
+  original_worktree_artifact_reuse=NONE
 
-protobuf-on configure/build:
-brew_prefix=/opt/homebrew/opt/protobuf
-protoc=libprotoc 36.0
-cmake -S . -B /tmp/axiom-g1-06-a5-build-on -DBUILD_TESTING=ON -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR=/opt/homebrew/opt/protobuf/lib/cmake/protobuf -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/protobuf
-cmake --build /tmp/axiom-g1-06-a5-build-on -j2
-focused canvas_semantic_g1_06_integration_test: 6/6 passed
-full semantic ctest: 468/468 passed, 0 failed
+Fresh protobuf-disabled configure/build
+  build_directory=/tmp/axiom-g1-06-a5-reverify.uGp1pb/build-off
+  configure=PASS
+  options=BUILD_TESTING=ON, CANVAS_BUILD_SEMANTIC=ON, CANVAS_BUILD_POC01=OFF, CANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+  build=PASS
+  command=ctest --test-dir /tmp/axiom-g1-06-a5-reverify.uGp1pb/build-off --output-on-failure
 
-source verification:
-git diff --check: PASS
-git status --short --untracked-files=no: CLEAN
-production semantic source/header changes: 0
-source scope delta: runtime/semantic/tests/g1_06_integration_test.cpp (CREATE), runtime/semantic/tests/CMakeLists.txt (MODIFY)
+Exact CTest observations
+  total_discovered_tests=468
+  executed_tests=445
+  passed_tests=445
+  skipped_tests=23
+  unexpected_failures=0
+  summary=100% tests passed, 0 tests failed out of 468
+
+Exact skipped tests (all protobuf-only; CTest reported Skipped)
+  25 - SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord
+  26 - SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields
+  27 - SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow
+  28 - SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit
+  29 - SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow
+  30 - SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow
+  31 - SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow
+  32 - SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow
+  33 - SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit
+  34 - SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse
+  35 - SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse
+  36 - SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit
+  53 - G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse
+  54 - G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping
+  55 - G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence
+  56 - G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator
+  57 - G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically
+  58 - G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode
+  59 - G106Snapshot.CanonicalizesPropertyBagEntryPermutation
+  60 - G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke
+  61 - G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue
+  62 - G106Snapshot.CanonicalizesF64NegativeZeroInTransform
+  63 - G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder
+
+Comparison with accepted A4 protobuf-off skip set
+  accepted_A4_source_ref=305debc3c77241c00860ed8eac4d040f3e295a57
+  accepted_A4_total=461
+  accepted_A4_executed_pass=438
+  accepted_A4_skipped=23
+  accepted_A4_unexpected_failures=0
+  skip_set_relation=EXACT_MATCH
+  skip_set_added=[]
+  skip_set_removed=[]
+  source_supported_reason=A5 source delta f67c46a8181840ef50ac278cff5933c5c8833872..942feb933a583591b8b08945aab357928ca68222 only appends the six-test g1_06_integration target after the existing registrations; no pre-existing protobuf-only test registration or skip condition changed.
+
+Post-verification repository guard
+  tracked_status_after_verification=CLEAN
+  source_ref_unchanged=true
+  production_source_changed=false
+  git_diff_check=PASS

@@ -1,7 +1,14 @@
 {
   "task_id": "GT-G1-06-A5",
   "stage": "P32",
-  "occurrence": "P32_AUTHORIZATION_01",
+  "occurrence": "P32_EVIDENCE_REPAIR_01",
+  "repair_authority_page": "3d24c57a590c8163add3dda65cdfd189",
+  "blocker": {
+    "id": "A5-P32-B1",
+    "class": "EVIDENCE_GAP",
+    "subtype": "PROTOBUF_OFF_SKIP_ACCOUNTING_MISMATCH",
+    "status": "FIXED"
+  },
   "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2",
   "package_materialization_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
   "repository": "Mostorm-Labs/axiom",
@@ -31,13 +38,68 @@
       "full_semantic_ctest": "468/468 passed"
     },
     "protobuf_off": {
-      "focused_integration": "6/6 passed",
-      "full_semantic_ctest": "468/468 passed",
-      "accepted_skips": 25
+      "configure": "PASS",
+      "build": "PASS",
+      "focused_integration": "6/6 passed (source result retained from accepted A5 verification)",
+      "total_discovered_tests": 468,
+      "executed_tests": 445,
+      "passed_tests": 445,
+      "skipped_tests": 23,
+      "unexpected_failures": 0,
+      "full_semantic_ctest": "468 total = 445 executed PASS + 23 expected protobuf-only skips + 0 failed",
+      "exact_skipped_tests": [
+        {"id": 25, "name": "SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord"},
+        {"id": 26, "name": "SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields"},
+        {"id": 27, "name": "SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow"},
+        {"id": 28, "name": "SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit"},
+        {"id": 29, "name": "SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow"},
+        {"id": 30, "name": "SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow"},
+        {"id": 31, "name": "SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow"},
+        {"id": 32, "name": "SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow"},
+        {"id": 33, "name": "SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit"},
+        {"id": 34, "name": "SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse"},
+        {"id": 35, "name": "SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse"},
+        {"id": 36, "name": "SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit"},
+        {"id": 53, "name": "G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse"},
+        {"id": 54, "name": "G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping"},
+        {"id": 55, "name": "G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence"},
+        {"id": 56, "name": "G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator"},
+        {"id": 57, "name": "G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically"},
+        {"id": 58, "name": "G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode"},
+        {"id": 59, "name": "G106Snapshot.CanonicalizesPropertyBagEntryPermutation"},
+        {"id": 60, "name": "G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke"},
+        {"id": 61, "name": "G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue"},
+        {"id": 62, "name": "G106Snapshot.CanonicalizesF64NegativeZeroInTransform"},
+        {"id": 63, "name": "G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder"}
+      ],
+      "accepted_A4_baseline": {
+        "source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+        "total_discovered_tests": 461,
+        "executed_passed": 438,
+        "skipped_tests": 23,
+        "unexpected_failures": 0,
+        "skip_set_relation": "EXACT_MATCH"
+      },
+      "skip_set_delta": {
+        "added": [],
+        "removed": []
+      },
+      "source_supported_reason": "A5 source delta f67c46a8181840ef50ac278cff5933c5c8833872..942feb933a583591b8b08945aab357928ca68222 only appends the six-test g1_06_integration target after existing registrations; no pre-existing protobuf-only registration or skip condition changed."
+    },
+    "repair_reproduction": {
+      "checkout": "/tmp/axiom-g1-06-a5-reverify.uGp1pb/repo",
+      "build_directory": "/tmp/axiom-g1-06-a5-reverify.uGp1pb/build-off",
+      "head_before_configure": "942feb933a583591b8b08945aab357928ca68222",
+      "tracked_status_before_configure": "CLEAN",
+      "tracked_status_after_verification": "CLEAN",
+      "dependency_bootstrap": "python3 tools/bootstrap_deps.py --core (PASS)",
+      "original_worktree_artifact_reuse": false
     },
     "clean_independent_checkout": true,
     "tracked_source_clean_after_verification": true,
-    "git_diff_check": "PASS"
+    "git_diff_check": "PASS",
+    "source_ref_unchanged": true,
+    "production_source_changed": false
   },
   "guards": {
     "expectedTruthWrites": 0,
