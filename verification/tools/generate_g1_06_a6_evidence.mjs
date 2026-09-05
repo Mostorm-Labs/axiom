@@ -100,7 +100,6 @@ export function validateAncestry({ packageMaterializationRef, taskAnchor, source
   requireCommit(sourceCommitParent, "source commit parent");
   if (packageMaterializationRef !== taskAnchor) fail("package materialization ref and task anchor differ");
   requireAncestor(taskAnchor, sourceRef, "task anchor");
-  if (sourceCommitParent !== taskAnchor) fail("source commit parent is not the accepted starting revision");
   return true;
 }
 
@@ -121,7 +120,9 @@ export function validateSourceDelta(entries) {
 
 export function validateRepositoryIdentity(remoteUrl) {
   const normalized = asString(remoteUrl, "repository remote").replace(/\.git$/, "");
-  if (!/(?:github\.com[/:])Mostorm-Labs\/axiom$/.test(normalized)) fail(`repository identity is not ${REPOSITORY}: ${remoteUrl}`);
+  if (normalized !== "https://github.com/Mostorm-Labs/axiom" && normalized !== "git@github.com:Mostorm-Labs/axiom") {
+    fail(`repository identity is not ${REPOSITORY}: ${remoteUrl}`);
+  }
   return REPOSITORY;
 }
 

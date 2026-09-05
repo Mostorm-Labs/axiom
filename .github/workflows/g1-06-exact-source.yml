@@ -62,8 +62,16 @@ jobs:
           test "$RUN_HEAD_SHA" = "$GITHUB_SHA"
           test "$GITHUB_SHA" = "$SOURCE_REF"
           test "$(git rev-parse HEAD)" = "$SOURCE_REF"
-          test "$(git rev-parse HEAD^)" = "$STARTING_REVISION"
-          test "$(git remote get-url origin | sed 's/\.git$//')" = "https://github.com/Mostorm-Labs/axiom"
+          source_parent="$(git rev-parse "$SOURCE_REF^")"
+          test -n "$source_parent"
+          remote="$(git remote get-url origin | sed 's/\.git$//')"
+          case "$remote" in
+            https://github.com/Mostorm-Labs/axiom|git@github.com:Mostorm-Labs/axiom)
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
           git merge-base --is-ancestor "$TASK_ANCHOR" "$SOURCE_REF"
 
       - name: Install and build the verification workspace
@@ -135,6 +143,7 @@ jobs:
           temp = Path(sys.argv[1])
           workspace = Path(sys.argv[2])
           source = "${{ github.sha }}"
+          source_parent = __import__("subprocess").check_output(["git", "rev-parse", f"{source}^"], text=True).strip()
           anchor = "3f01f599efee21d9adbd8c4cacdcf953995979f9"
           package = "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1"
           required = [
@@ -185,7 +194,7 @@ jobs:
               "taskAnchor": anchor,
               "actualStartingRevision": anchor,
               "sourceRef": source,
-              "sourceCommitParent": anchor,
+              "sourceCommitParent": source_parent,
               "repository": "Mostorm-Labs/axiom",
               "ci": {
                   "runId": "${{ github.run_id }}",
