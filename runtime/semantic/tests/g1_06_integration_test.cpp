@@ -522,6 +522,18 @@ TEST(G106Integration, FullFifteenFamilyContinuationReplaysInOneInvocationWithFou
     EXPECT_EQ(replay_indexed.ordinal, direct_reference.ordinal);
     EXPECT_TRUE(direct_indexed.index_matches);
     EXPECT_TRUE(replay_indexed.index_matches);
+
+    for (const std::size_t checkpoint : {std::size_t{5U}, std::size_t{10U},
+                                         std::size_t{15U}}) {
+        const Outcome checkpoint_reference = runSnapshotReplay<ReferenceObjectStore>(
+            operations, checkpoint, checkpoint == 10U, true);
+        const Outcome checkpoint_indexed = runSnapshotReplay<IndexedObjectStore>(
+            operations, checkpoint, checkpoint == 10U, true);
+        expectSameStateOutcome<ReferenceObjectStore>(direct_reference, checkpoint_reference);
+        expectSameStateOutcome<IndexedObjectStore>(direct_reference, checkpoint_indexed);
+        EXPECT_EQ(checkpoint_reference.applied, operations.size() - checkpoint);
+        EXPECT_EQ(checkpoint_indexed.applied, operations.size() - checkpoint);
+    }
 }
 
 TEST(G106Integration, EmptySnapshotAndEmptyAuthoritativeContinuationRemainReady) {
