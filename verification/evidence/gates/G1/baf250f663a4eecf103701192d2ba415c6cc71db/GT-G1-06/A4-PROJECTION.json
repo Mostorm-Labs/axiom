@@ -1,0 +1,64 @@
+{
+  "format": "axiom-gt-g1-06-a4-projection-v2",
+  "task_id": "GT-G1-06-A4",
+  "lifecycle_stage": "P36_FIX_AND_REVERIFICATION",
+  "finding_id": "A4-P34-B1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+  "oracle": "A0_CANONICAL_SEMANTIC_PROJECTION",
+  "representative_content_families": {
+    "hierarchy_placement": "present",
+    "rich_text": "present under group 1 with one valid paragraph and one styled text run",
+    "vector_stroke": "present under group 1 with valid brush and two stroke samples",
+    "nontrivial_content_families": 2
+  },
+  "canonical_projection_contract": {
+    "exact_input": "writeCanonicalProjectionJson(projectDocument(...)) byte sequence",
+    "projection_equality_required_before_digest": true,
+    "digest_consumes_bytes_unchanged": true,
+    "canonical_json_equality": true
+  },
+  "same_state_routes": {
+    "ReferenceObjectStore": {
+      "projection_exact_equal": true,
+      "digest_equal": true,
+      "result": "PASS"
+    },
+    "IndexedObjectStore": {
+      "projection_exact_equal": true,
+      "digest_equal": true,
+      "result": "PASS"
+    },
+    "physical_insertion_permutation": {
+      "projection_exact_equal": true,
+      "digest_equal": true,
+      "result": "PASS"
+    },
+    "A2_SnapshotBootstrapper_restore": {
+      "projection_exact_equal": true,
+      "digest_equal": true,
+      "result": "PASS"
+    },
+    "A3_ReplayCoordinator_recovery": {
+      "projection_exact_equal": true,
+      "digest_equal": true,
+      "result": "PASS"
+    }
+  },
+  "mutation_projection_backstop": {
+    "placement_or_hierarchy": "baseline projection != mutated projection; digest differs afterward",
+    "transform_or_property_bag": "baseline projection != mutated projection; digest differs afterward",
+    "content_level": "baseline projection != mutated projection; digest differs afterward",
+    "projection_difference_checked_before_digest": true
+  },
+  "preserved_existing_proof": {
+    "independent_fnv_reference": "PASS",
+    "repeated_identical_input_determinism": "PASS",
+    "empty_projection_determinism": "PASS",
+    "verification_only_source_boundary": "PASS",
+    "digest_only_pass_assertions": 0,
+    "no_public_digest_abi": true,
+    "no_golden_final_digest_literal": true
+  },
+  "status": "PASS"
+}

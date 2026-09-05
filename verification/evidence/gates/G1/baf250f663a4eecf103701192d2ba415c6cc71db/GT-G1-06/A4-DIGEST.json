@@ -1,0 +1,151 @@
+{
+  "format": "axiom-gt-g1-06-a4-digest-v2",
+  "task_id": "GT-G1-06-A4",
+  "lifecycle_stage": "P36_FIX_AND_REVERIFICATION",
+  "finding_id": "A4-P34-B1",
+  "classification": "TEST_ORACLE_GAP",
+  "subtype": "REPRESENTATIVE_ROUTE_CORPUS_CONTENT_FAMILY_COVERAGE_INCOMPLETE",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "authorization_page_id": "3d24c57a-590c-8149-b1ec-ee65d46b793f",
+  "original_task_anchor": {
+    "revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+    "relation": "ancestor"
+  },
+  "prior_source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+  "prior_materialized_ref": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "repair_base": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "actual_starting_revision": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+  "source_parent": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "repair_result": "FIXED",
+  "repair_scope": {
+    "allowed_modify": [
+      "runtime/semantic/tests/g1_06_digest_test.cpp"
+    ],
+    "changed_files": [
+      "runtime/semantic/tests/g1_06_digest_test.cpp"
+    ],
+    "production_source_changed": false,
+    "digest_tool_changed": false,
+    "cmake_changed": false,
+    "schema_or_proto_changed": false,
+    "a0_a3_accepted_source_or_tests_changed": false,
+    "a5_a6_changed": false,
+    "gt_g1_07_changed": false
+  },
+  "representative_corpus": {
+    "hierarchy_placement_present": true,
+    "root_group_id": 1,
+    "rich_text": {
+      "present": true,
+      "object_id": 4,
+      "kind": "ObjectKind::kRichText",
+      "kind_version": 1,
+      "parent_id": 1,
+      "paragraph_count": 1,
+      "text_run_count": 1,
+      "non_default_paragraph_style": true,
+      "non_default_text_style": true,
+      "valid_font_resource": true,
+      "result": "PASS"
+    },
+    "vector_stroke": {
+      "present": true,
+      "object_id": 5,
+      "kind": "ObjectKind::kVectorStroke",
+      "kind_version": 1,
+      "parent_id": 1,
+      "valid_brush_descriptor": true,
+      "nominal_size_positive": true,
+      "opacity_valid": true,
+      "stroke_sample_count": 2,
+      "result": "PASS"
+    },
+    "nontrivial_content_families": 2,
+    "fixture_validation": "PASS"
+  },
+  "digest_contract": {
+    "namespace": "canvas::verification::g1_06",
+    "api": "digestCanonicalProjectionBytes(std::string_view)",
+    "role": "private verification-only diagnostic over exact A0 canonical projection JSON bytes",
+    "algorithm": "FNV-1a-64",
+    "offset_basis_hex": "0xcbf29ce484222325",
+    "prime_hex": "0x100000001b3",
+    "input": "exact A0 writeCanonicalProjectionJson(projectDocument(...)) byte sequence",
+    "byte_preservation": true,
+    "no_object_store_traversal": true,
+    "no_json_parse_or_reformat": true,
+    "no_newline_normalization": true,
+    "no_locale_conversion": true,
+    "no_utf_transcoding": true,
+    "no_snapshot_serialization": true,
+    "no_public_digest_abi": true,
+    "no_hard_coded_expected_final_digest_literals": true
+  },
+  "same_state_routes": {
+    "oracle_order": [
+      "canonical_projection_exact_equality",
+      "digest_equality"
+    ],
+    "routes": {
+      "ReferenceObjectStore": "PASS",
+      "IndexedObjectStore": "PASS",
+      "physical_insertion_permutation": "PASS",
+      "A2_SnapshotBootstrapper_restore": "PASS",
+      "A3_ReplayCoordinator_recovery": "PASS"
+    },
+    "all_five_routes_projection_equal_before_digest": true,
+    "all_five_routes_digest_equal_after_projection_equality": true
+  },
+  "mutation_sensitivity": {
+    "placement_or_hierarchy": {
+      "baseline_projection_differs": true,
+      "digest_differs_after_projection_difference": true,
+      "result": "PASS"
+    },
+    "transform_or_property_bag": {
+      "baseline_projection_differs": true,
+      "digest_differs_after_projection_difference": true,
+      "result": "PASS"
+    },
+    "content_level": {
+      "baseline_projection_differs": true,
+      "digest_differs_after_projection_difference": true,
+      "result": "PASS"
+    }
+  },
+  "mandatory_invariants": {
+    "digest_only_pass_assertions": 0,
+    "public_semantic_digest_surface": false,
+    "protobuf_dependency_in_digest": false,
+    "golden_digest_correctness_literal": false,
+    "expected_truth_writes": 0,
+    "provider_output_used_as_expected": false,
+    "production_semantic_dependencies": 0
+  },
+  "verification": {
+    "a4_focused_protobuf_on": "12/12 PASS",
+    "a4_focused_protobuf_off": "12/12 PASS",
+    "g1_06_focused_protobuf_on": "42/42 PASS",
+    "g1_06_focused_protobuf_off": "42/42 PASS",
+    "relevant_a0_a3_provider_regressions_protobuf_on": "146/146 PASS",
+    "relevant_a0_a3_provider_regressions_protobuf_off": "146/146 PASS, 23 expected protobuf-only skips",
+    "full_semantic_protobuf_on": "462/462 PASS",
+    "full_semantic_protobuf_off": "439 PASS, 23 expected protobuf-only skips, 0 failed (462 total)",
+    "protobuf_prefix": "/opt/homebrew/opt/protobuf",
+    "protoc_version": "libprotoc 36.0",
+    "independent_fnv_reference": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "historical_hosted_workflow": {
+    "workflow": "G1 Semantic Codec",
+    "run_id": 33904570476,
+    "source_sha": "305debc3c77241c00860ed8eac4d040f3e295a57",
+    "gate_required_for_this_reverification": false,
+    "rerun_required": false,
+    "status": "FAILED_BEFORE_A4_VERIFICATION",
+    "failure": "semantic SDK identity does not match deps.lock.json",
+    "workaround_applied": false
+  },
+  "status": "PASS"
+}

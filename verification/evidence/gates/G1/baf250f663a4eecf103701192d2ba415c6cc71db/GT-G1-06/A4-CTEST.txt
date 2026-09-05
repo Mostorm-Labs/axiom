@@ -1,0 +1,68 @@
+GT-G1-06-A4 P36 test-oracle repair and reverification evidence
+package_ref: notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1
+finding_id: A4-P34-B1
+classification: TEST_ORACLE_GAP
+repair_base: da7e1fa69c596b457ee6de65750b3b03967c29ab
+actual_starting_revision: da7e1fa69c596b457ee6de65750b3b03967c29ab
+source_ref: baf250f663a4eecf103701192d2ba415c6cc71db
+
+Repair source and independent checkout
+  repair source parent: da7e1fa69c596b457ee6de65750b3b03967c29ab
+  independent checkout: /tmp/axiom-g1-06-a4-reverify.OvmjdH/repo
+  checkout revision: baf250f663a4eecf103701192d2ba415c6cc71db
+  tracked status before configure: CLEAN
+  dependency lock bootstrap: python3 tools/bootstrap_deps.py --core (PASS)
+  original worktree dependency/build artifact reuse: NONE
+  tracked status after verification: CLEAN
+
+Toolchain
+  protobuf prefix: /opt/homebrew/opt/protobuf
+  protoc: libprotoc 36.0
+
+Fresh protobuf-enabled build
+  build directory: /tmp/axiom-g1-06-a4-reverify.OvmjdH/repo/build-a4-on
+  configure: PASS (CANVAS_BUILD_POC01=OFF, CANVAS_BUILD_SEMANTIC=ON,
+    CANVAS_SEMANTIC_ENABLE_PROTOBUF=ON, Homebrew Protobuf CMake prefix)
+  build: PASS
+  A4 digest focused: 12/12 PASS
+  full g1_06 focused: 42/42 PASS
+  relevant A0-A3/provider regressions: 146/146 PASS
+  full semantic CTest: 462/462 PASS, 0 failed
+
+Fresh protobuf-disabled build
+  build directory: /tmp/axiom-g1-06-a4-reverify.OvmjdH/repo/build-a4-off
+  configure: PASS (CANVAS_BUILD_POC01=OFF, CANVAS_BUILD_SEMANTIC=ON,
+    CANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF)
+  build: PASS
+  A4 digest focused: 12/12 PASS
+  full g1_06 focused: 42/42 PASS
+  relevant A0-A3/provider regressions: 146/146 PASS, 23 expected protobuf-only skips
+  full semantic CTest: 439 PASS, 23 expected protobuf-only skips, 0 failed (462 total)
+  exact protobuf-only skipped set: tests 25-36 and 53-63
+  no unexpected skip or failure
+
+Representative fixture oracle
+  hierarchy/placement: PASS
+  valid RichText with one Paragraph and one styled TextRun: PASS
+  valid VectorStroke with BrushDescriptor and two StrokeSamples: PASS
+  nontrivial content families: 2
+  Reference/Indexed/projection-first route parity: PASS
+  SnapshotBootstrapper route parity: PASS
+  ReplayCoordinator route parity: PASS
+  three mutation families projection backstop: PASS
+
+Hosted workflow history
+  G1 Semantic Codec run 33904570476 on prior source 305debc3c77241c00860ed8eac4d040f3e295a57
+  gate required for this P36 test-only reverification: false
+  rerun: not required
+  prior failure was before A4 verification at semantic SDK identity check
+  no workflow, lockfile, semantic_fetch, production, or test workaround applied
+
+Result
+  finding A4-P34-B1: FIXED
+  production source changed: false
+  digest tool changed: false
+  expected truth writes: 0
+  provider output used as expected: false
+  production semantic dependencies: 0
+  git diff --check: PASS

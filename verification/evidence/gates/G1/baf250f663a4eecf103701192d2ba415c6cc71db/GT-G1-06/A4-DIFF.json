@@ -1,0 +1,88 @@
+{
+  "format": "axiom-gt-g1-06-a4-diff-v2",
+  "task_id": "GT-G1-06-A4",
+  "lifecycle_stage": "P36_FIX_AND_REVERIFICATION",
+  "finding_id": "A4-P34-B1",
+  "package_ref": "notion://3d04c57a-590c-81dc-a812-fecdb83cb3a9/GT-G1-06-A4-P31-v0.1",
+  "original_task_anchor": {
+    "revision": "93cb69b56b2cbbed6ac0973943d80347bd93e346",
+    "relation": "ancestor"
+  },
+  "prior_source_ref": "305debc3c77241c00860ed8eac4d040f3e295a57",
+  "prior_materialized_ref": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "repair_base": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "actual_starting_revision": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "source_ref": "baf250f663a4eecf103701192d2ba415c6cc71db",
+  "source_parent": "da7e1fa69c596b457ee6de65750b3b03967c29ab",
+  "source_ref_remote_resolvable": true,
+  "repair_base_to_source": {
+    "relation": "DIRECT_DESCENDANT",
+    "commit_count": 1,
+    "changed_paths": [
+      "runtime/semantic/tests/g1_06_digest_test.cpp"
+    ],
+    "exactly_one_authorized_test_file": true,
+    "production_or_digest_tool_delta": "NONE",
+    "cmake_delta": "NONE",
+    "schema_or_proto_delta": "NONE",
+    "historical_evidence_delta": "NONE"
+  },
+  "source_file_integrity": {
+    "runtime/semantic/tools/g1_06_digest.hpp": {
+      "sha256": "50006c7ae8a231072dbd9e9ba97ea6413d5b8ddacee58ba4f8d7f4f2e4d9c19a",
+      "changed_since_prior_source": false
+    },
+    "runtime/semantic/tools/g1_06_digest.cpp": {
+      "sha256": "e0740b1cf56fb068ed2593201d5a7475af956ca496c1ff623e654500f2d0b6bf",
+      "changed_since_prior_source": false
+    },
+    "runtime/semantic/tests/CMakeLists.txt": {
+      "sha256": "8c9afb985d2d9799d9c707bed6b884440f22541592ae168ae6d79cb164069c71",
+      "changed_since_prior_source": false
+    },
+    "runtime/semantic/tests/g1_06_digest_test.cpp": {
+      "sha256": "b5d8fb271569a3ef33e29f0e525b34c649b2683e1bed6577ec1afb71670b9af9",
+      "changed_since_repair_base": true
+    }
+  },
+  "production_guard": {
+    "runtime_semantic_production_source_changed": false,
+    "runtime_semantic_public_header_changed": false,
+    "digest_tool_changed": false,
+    "cmake_changed": false,
+    "schema_or_proto_changed": false,
+    "a0_a3_accepted_source_or_tests_changed": false,
+    "a5_a6_changed": false,
+    "gt_g1_07_changed": false
+  },
+  "independent_reproduction": {
+    "checkout_path": "/tmp/axiom-g1-06-a4-reverify.OvmjdH/repo",
+    "head_before_configure": "baf250f663a4eecf103701192d2ba415c6cc71db",
+    "clean_tracked_status_before_configure": true,
+    "fresh_dependency_bootstrap": true,
+    "fresh_protobuf_enabled_build": true,
+    "fresh_protobuf_disabled_build": true,
+    "original_worktree_artifacts_reused": false,
+    "clean_tracked_status_after_verification": true,
+    "source_immutable_after_reverification": true
+  },
+  "source_to_materialized_delta": {
+    "required_relation": "EVIDENCE_ONLY_DESCENDANT",
+    "allowed_files": [
+      "verification/evidence/gates/G1/baf250f663a4eecf103701192d2ba415c6cc71db/GT-G1-06/A4-DIGEST.json",
+      "verification/evidence/gates/G1/baf250f663a4eecf103701192d2ba415c6cc71db/GT-G1-06/A4-PROJECTION.json",
+      "verification/evidence/gates/G1/baf250f663a4eecf103701192d2ba415c6cc71db/GT-G1-06/A4-CTEST.txt",
+      "verification/evidence/gates/G1/baf250f663a4eecf103701192d2ba415c6cc71db/GT-G1-06/A4-DIFF.json"
+    ],
+    "evidence_only": true,
+    "historical_evidence_under_prior_source_untouched": true
+  },
+  "verification": {
+    "git_diff_check": "PASS",
+    "tracked_source_status_after_verification": "CLEAN",
+    "expected_truth_writes": 0,
+    "provider_output_used_as_expected": false,
+    "production_semantic_dependencies": 0
+  },
+  "status": "PASS"
+}
