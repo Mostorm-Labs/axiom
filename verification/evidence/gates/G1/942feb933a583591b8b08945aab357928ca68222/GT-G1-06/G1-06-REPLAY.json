@@ -1,0 +1,33 @@
+{
+  "task_id": "GT-G1-06-A5",
+  "source_ref": "942feb933a583591b8b08945aab357928ca68222",
+  "authoritative_continuation": {
+    "operation_count": 9,
+    "object_count": 7,
+    "checkpoints": [1, 3, 6],
+    "sequence": [6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009]
+  },
+  "route_provider_matrix": {
+    "reference_sequential_apply": "PASS",
+    "indexed_sequential_apply": "PASS",
+    "reference_snapshot_replay": "PASS",
+    "indexed_snapshot_replay": "PASS",
+    "projection_divergence_count": 0,
+    "digest_divergence_count": 0,
+    "indexed_index_matches_rebuild": true
+  },
+  "lifecycle_accounting": {
+    "applied_sequence": "9 applied, generation and commit ordinal advance once per operation",
+    "already_applied_case": "1 AlreadyApplied, no generation or commit ordinal advance",
+    "rejected_case": {
+      "state": "Failed",
+      "first_failure_index": 1,
+      "applied_prefix": 1,
+      "later_item_executed": false,
+      "generation_advance_for_rejected_item": false
+    },
+    "empty_continuation": "Loading to Ready without mutation"
+  },
+  "restore_objects_without_tombstone_ledger": "PASS",
+  "no_echo_or_publication_side_effect": "inherited replay contract regression PASS"
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "GT-G1-06-A5",
+  "source_ref": "942feb933a583591b8b08945aab357928ca68222",
+  "primary_oracle": "canonical_semantic_projection",
+  "comparisons": [
+    "ReferenceObjectStore sequential apply projection == IndexedObjectStore sequential apply projection",
+    "ReferenceObjectStore sequential apply projection == ReferenceObjectStore snapshot+replay projection at checkpoints 1, 3, 6",
+    "ReferenceObjectStore sequential apply projection == IndexedObjectStore snapshot+replay projection at checkpoints 1, 3, 6",
+    "physical insertion permutation projection == canonical projection"
+  ],
+  "projection_divergence_count": 0,
+  "canonical_json_equality": true,
+  "digest_used_as_override": false,
+  "mutation_oracle_backstop": "accepted A4 digest/projection mutation corpus remains unchanged and passes in full semantic CTest",
+  "provider_parity": "PASS"
+}

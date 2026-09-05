@@ -1,0 +1,36 @@
+{
+  "task_id": "GT-G1-06-A5",
+  "source_ref": "942feb933a583591b8b08945aab357928ca68222",
+  "snapshot_schema": "DocumentSnapshot_V1",
+  "snapshot_routes": [
+    {
+      "configuration": "protobuf-on",
+      "route": "SnapshotCodec encode/decode at checkpoint 1 followed by SnapshotBootstrapper restore",
+      "result": "PASS"
+    },
+    {
+      "configuration": "protobuf-off",
+      "route": "domain SemanticSnapshot followed by SnapshotBootstrapper restore; byte API retains accepted runtime-unavailable contract",
+      "result": "PASS"
+    }
+  ],
+  "corpus": [
+    "empty snapshot",
+    "one-object minimum",
+    "mixed ObjectKind records",
+    "hierarchy and connector graph",
+    "RichText",
+    "VectorStroke with EraseMask",
+    "DabStroke",
+    "canonical object ordering",
+    "physical insertion permutation",
+    "RestoreObjects continuation without tombstone ledger"
+  ],
+  "bootstrap_invariants": {
+    "starts_loading": true,
+    "object_store_mutation_during_decode": false,
+    "generation_advanced_by_restore": false,
+    "reference_indexed_parity": true,
+    "malformed_truncated_regressions": "covered by accepted G106 snapshot codec tests"
+  }
+}

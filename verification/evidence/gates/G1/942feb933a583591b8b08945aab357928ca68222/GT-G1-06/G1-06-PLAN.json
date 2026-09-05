@@ -1,0 +1,48 @@
+{
+  "task_id": "GT-G1-06-A5",
+  "stage": "P32",
+  "occurrence": "P32_AUTHORIZATION_01",
+  "package_ref": "notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2",
+  "package_materialization_ref": "f67c46a8181840ef50ac278cff5933c5c8833872",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_ref": "codex/gt-g1-06-snapshot-replay",
+  "task_anchor": {
+    "revision": "f67c46a8181840ef50ac278cff5933c5c8833872",
+    "relation": "ancestor"
+  },
+  "actual_starting_revision": "f67c46a8181840ef50ac278cff5933c5c8833872",
+  "source_ref": "942feb933a583591b8b08945aab357928ca68222",
+  "authorized_source_scope": [
+    "runtime/semantic/tests/g1_06_integration_test.cpp",
+    "runtime/semantic/tests/CMakeLists.txt"
+  ],
+  "oracle": {
+    "primary": "canonical_semantic_projection",
+    "success_relation": "reference sequential apply == indexed sequential apply == reference snapshot+replay == indexed snapshot+replay",
+    "digest_role": "private diagnostic backstop only",
+    "transport_continuation_completeness": "continuation_is_authoritative_materialized_sequence"
+  },
+  "verification": {
+    "protobuf_on": {
+      "compiler": "Homebrew protobuf",
+      "prefix": "/opt/homebrew/opt/protobuf",
+      "protoc": "libprotoc 36.0",
+      "focused_integration": "6/6 passed",
+      "full_semantic_ctest": "468/468 passed"
+    },
+    "protobuf_off": {
+      "focused_integration": "6/6 passed",
+      "full_semantic_ctest": "468/468 passed",
+      "accepted_skips": 25
+    },
+    "clean_independent_checkout": true,
+    "tracked_source_clean_after_verification": true,
+    "git_diff_check": "PASS"
+  },
+  "guards": {
+    "expectedTruthWrites": 0,
+    "providerOutputUsedAsExpected": false,
+    "productionSemanticDependencies": 0,
+    "production_source_changed": false
+  }
+}

@@ -1,0 +1,24 @@
+GT-G1-06-A5 P32 verification transcript
+package_ref=notion://3d24c57a-590c-8116-8d39-fae074ec4ca3/GT-G1-06-A5-P31-v0.2
+source_ref=942feb933a583591b8b08945aab357928ca68222
+independent_checkout=/tmp/axiom-g1-06-a5-verify-off
+
+protobuf-off configure/build:
+cmake -S . -B /tmp/axiom-g1-06-a5-build-off -DBUILD_TESTING=ON -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+cmake --build /tmp/axiom-g1-06-a5-build-off -j2
+focused canvas_semantic_g1_06_integration_test: 6/6 passed
+full semantic ctest: 468/468 passed, 0 failed, 25 accepted protobuf-off skips
+
+protobuf-on configure/build:
+brew_prefix=/opt/homebrew/opt/protobuf
+protoc=libprotoc 36.0
+cmake -S . -B /tmp/axiom-g1-06-a5-build-on -DBUILD_TESTING=ON -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR=/opt/homebrew/opt/protobuf/lib/cmake/protobuf -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/protobuf
+cmake --build /tmp/axiom-g1-06-a5-build-on -j2
+focused canvas_semantic_g1_06_integration_test: 6/6 passed
+full semantic ctest: 468/468 passed, 0 failed
+
+source verification:
+git diff --check: PASS
+git status --short --untracked-files=no: CLEAN
+production semantic source/header changes: 0
+source scope delta: runtime/semantic/tests/g1_06_integration_test.cpp (CREATE), runtime/semantic/tests/CMakeLists.txt (MODIFY)
