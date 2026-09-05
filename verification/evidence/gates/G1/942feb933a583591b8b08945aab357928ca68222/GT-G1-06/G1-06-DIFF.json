@@ -26,10 +26,20 @@
   "source_test_cmake_dependency_workflow_changed": false,
   "source_to_materialized_delta": "EVIDENCE_ONLY",
   "evidence_paths": [
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-PLAN.json",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-SNAPSHOT.json",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-REPLAY.json",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-PROJECTION.json",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-DIGEST.json",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-CTEST.txt",
+    "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-DIFF.json"
+  ],
+  "repair_modified_paths": [
     "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-CTEST.txt",
     "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-PLAN.json",
     "verification/evidence/gates/G1/942feb933a583591b8b08945aab357928ca68222/GT-G1-06/G1-06-DIFF.json"
   ],
+  "repair_modified_paths_exact": true,
   "authorized_modified_paths_exact": true,
   "forbidden_modified_paths": [],
   "historical_evidence_untouched": true,
