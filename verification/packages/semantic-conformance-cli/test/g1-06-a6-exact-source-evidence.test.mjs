@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
@@ -14,6 +15,9 @@ import {
   INHERITED_V02_PACKAGE_REF,
   INHERITED_V02_SOURCE_PATHS,
   INHERITED_V02_SOURCE_REF,
+  INHERITED_V03_PACKAGE_REF,
+  INHERITED_V03_SOURCE_PATHS,
+  INHERITED_V03_SOURCE_REF,
   ORIGINAL_A6_ANCHOR,
   PACKAGE_REF,
   PRODUCTION_REPAIR_PATH,
@@ -33,6 +37,9 @@ import {
   validateInheritedV01Identity,
   validateInheritedV02SourceDelta,
   validateInheritedV02Identity,
+  validateInheritedV03SourceDelta,
+  validateInheritedV03Identity,
+  validateBlockedV03EvidenceRoot,
   validateActualStartingRevision,
   validateProductionRepairPatch,
   validateTestWarningRepairPatch,
@@ -90,6 +97,20 @@ function facts(overrides = {}) {
       productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
       status: "INHERITED_VALID",
     },
+    inheritedV03: {
+      packageRef: INHERITED_V03_PACKAGE_REF,
+      sourceRef: INHERITED_V03_SOURCE_REF,
+      sourceDelta: INHERITED_V03_SOURCE_PATHS,
+      status: "INHERITED_VALID",
+    },
+    blockedV03Evidence: {
+      sourceRef: INHERITED_V03_SOURCE_REF,
+      materializedRef: TASK_ANCHOR,
+      evidenceRoot: `verification/evidence/gates/G1/${INHERITED_V03_SOURCE_REF}/GT-G1-06`,
+      evidenceFiles: REQUIRED_EVIDENCE_FILES,
+      classification: "BLOCKED_PREDECESSOR_EVIDENCE_ONLY",
+      unchanged: true,
+    },
     productionRepair: "SEMANTIC_NO_OP_WARNING_REPAIR",
     testWarningRepair: "TEST_SEMANTIC_NO_OP_WARNING_REPAIR",
     ci: ci(),
@@ -133,6 +154,17 @@ test("accepts a complete exact-source A6 facts envelope", () => {
     sourceRef: SOURCE_REF,
     sourceCommitParent: SOURCE_PARENT,
   }));
+});
+
+test("binds v0.4 package materialization independently from accepted A5", () => {
+  assert.equal(PACKAGE_REF, "notion://3d24c57a-590c-81b3-8c3e-c9698b669547/GT-G1-06-A6-P31-v0.4");
+  assert.equal(TASK_ANCHOR, "7f904aaee40d0301a6bd3528b9c8836845a05d57");
+  assert.equal(A5_MATERIALIZED_REF, "3f01f599efee21d9adbd8c4cacdcf953995979f9");
+  assert.notEqual(A5_MATERIALIZED_REF, TASK_ANCHOR);
+});
+
+test("accepts the frozen blocked v0.3 evidence root without mutation", () => {
+  assert.doesNotThrow(() => validateBlockedV03EvidenceRoot(TASK_ANCHOR));
 });
 
 test("rejects malformed_or_foreign_source_ref", () => {
@@ -199,13 +231,36 @@ test("rejects inherited segment identity substitution and nonempty retry-start d
   assert.throws(() => validateActualStartingRevision(ORIGINAL_A6_ANCHOR), /starting|retry anchor/i);
 });
 
-test("accepts the four-file v0.2 retry source delta", () => {
+test("accepts the exact three-file v0.4 control source delta", () => {
   assert.doesNotThrow(() => validateSourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+    ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
+  ]));
+});
+
+test("accepts the inherited v0.3 four-file source delta", () => {
+  assert.doesNotThrow(() => validateInheritedV03SourceDelta([
     ["M", ".github/workflows/g1-06-exact-source.yml"],
     ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
     ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
     ["M", INTEGRATION_TEST_PATH],
   ]));
+});
+
+test("accepts and rejects the inherited v0.3 identity", () => {
+  assert.doesNotThrow(() => validateInheritedV03Identity({
+    packageRef: INHERITED_V03_PACKAGE_REF,
+    sourceRef: INHERITED_V03_SOURCE_REF,
+    sourceDelta: INHERITED_V03_SOURCE_PATHS,
+    status: "INHERITED_VALID",
+  }));
+  assert.throws(() => validateInheritedV03Identity({
+    packageRef: INHERITED_V02_PACKAGE_REF,
+    sourceRef: INHERITED_V03_SOURCE_REF,
+    sourceDelta: INHERITED_V03_SOURCE_PATHS,
+    status: "INHERITED_VALID",
+  }), /inherited|identity/i);
 });
 
 test("accepts and rejects the inherited v0.2 four-file segment", () => {
@@ -248,12 +303,20 @@ test("rejects extra_source_path", () => {
   ]), /count|unauthorized/i);
 });
 
-test("rejects missing_source_path", () => {
+test("rejects an extra v0.4 source path", () => {
   assert.throws(() => validateSourceDelta([
     ["M", ".github/workflows/g1-06-exact-source.yml"],
     ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
     ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
-  ]), /count|four/i);
+    ["M", PRODUCTION_REPAIR_PATH],
+  ]), /count|three|unauthorized/i);
+});
+
+test("rejects a missing v0.4 source path", () => {
+  assert.throws(() => validateSourceDelta([
+    ["M", ".github/workflows/g1-06-exact-source.yml"],
+    ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
+  ]), /count|three/i);
 });
 
 test("rejects fifth retry path and wrong change status", () => {
@@ -268,8 +331,8 @@ test("rejects fifth retry path and wrong change status", () => {
     ["A", ".github/workflows/g1-06-exact-source.yml"],
     ["M", "verification/tools/generate_g1_06_a6_evidence.mjs"],
     ["M", "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"],
-    ["M", PRODUCTION_REPAIR_PATH],
-  ]), /unauthorized|status/i);
+    ["A", "runtime/semantic/src/forbidden.cpp"],
+  ]), /count|unauthorized|status/i);
 });
 
 const productionPatch = `@@ -87 +87,4 @@
@@ -329,7 +392,8 @@ test("rejects digest_only_correctness_claim", () => {
 });
 
 test("rejects forbidden_gate_evidence_output_path", () => {
-  assert.throws(() => assertSafeOutputDirectory(join(process.cwd(), "verification/evidence/gates/G1/foreign")), /evidence\/gates|directly/i);
+  const forbiddenOutput = fileURLToPath(new URL("../../../evidence/gates/G1/foreign", import.meta.url));
+  assert.throws(() => assertSafeOutputDirectory(forbiddenOutput), /evidence\/gates|directly/i);
 });
 
 test("rejects historical_A5_evidence_mutation", () => {
@@ -348,4 +412,20 @@ test("rejects unsupported_A5_provenance_substitution", () => {
     materializedRef: A5_MATERIALIZED_REF,
     evidenceFiles: REQUIRED_EVIDENCE_FILES,
   }), /provenance|substitution/i);
+});
+
+test("rejects A5 materialized ref substitutions", () => {
+  for (const materializedRef of [
+    "d58e2a56b65d129ddf963435a75971d72cc43b65",
+    "1b370bd242ce19838889b28beb7b75979244cbab",
+    "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+  ]) {
+    assert.throws(() => validateA5Provenance({
+      status: "ACCEPTED_FOR_DOWNSTREAM",
+      packageRef: A5_PACKAGE_REF,
+      sourceRef: A5_SOURCE_REF,
+      materializedRef,
+      evidenceFiles: REQUIRED_EVIDENCE_FILES,
+    }), /provenance|substitution/i);
+  }
 });
