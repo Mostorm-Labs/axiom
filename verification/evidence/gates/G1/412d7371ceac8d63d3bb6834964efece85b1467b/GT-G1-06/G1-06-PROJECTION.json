@@ -1,0 +1,186 @@
+{
+  "format": "axiom-gt-g1-06-a6-projection-v1",
+  "taskId": "GT-G1-06-A6",
+  "stage": "P32",
+  "packageRef": "notion://3d24c57a-590c-81b3-8c3e-c9698b669547/GT-G1-06-A6-P31-v0.4",
+  "packagePage": "3d24c57a-590c-8103-9a3f-f4ca58f2d129",
+  "packageMaterializationRef": "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+  "taskAnchor": {
+    "revision": "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+    "relation": "ancestor"
+  },
+  "originalA6Anchor": "3f01f599efee21d9adbd8c4cacdcf953995979f9",
+  "inheritedV01": {
+    "packageRef": "notion://3d24c57a-590c-813c-85b3-f330715b4120/GT-G1-06-A6-P31-v0.1",
+    "originalAnchor": "3f01f599efee21d9adbd8c4cacdcf953995979f9",
+    "sourceRef": "ee9a383039e619926c38cd91dc48475e25d38b0d",
+    "sourceDelta": [
+      ".github/workflows/g1-06-exact-source.yml",
+      "verification/tools/generate_g1_06_a6_evidence.mjs",
+      "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"
+    ],
+    "status": "INHERITED_VALID"
+  },
+  "inheritedV02": {
+    "packageRef": "notion://3d24c57a-590c-81df-ba72-c1b66fac724a/GT-G1-06-A6-P31-v0.2",
+    "sourceRef": "d58e2a56b65d129ddf963435a75971d72cc43b65",
+    "sourceDelta": [
+      ".github/workflows/g1-06-exact-source.yml",
+      "verification/tools/generate_g1_06_a6_evidence.mjs",
+      "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs",
+      "runtime/semantic/src/protobuf_object_mapping.cpp"
+    ],
+    "productionRepair": "SEMANTIC_NO_OP_WARNING_REPAIR",
+    "status": "INHERITED_VALID"
+  },
+  "inheritedV03": {
+    "packageRef": "notion://3d24c57a-590c-81ab-a5a5-e4e59c755a5e/GT-G1-06-A6-P31-v0.3",
+    "sourceRef": "1b370bd242ce19838889b28beb7b75979244cbab",
+    "sourceDelta": [
+      ".github/workflows/g1-06-exact-source.yml",
+      "verification/tools/generate_g1_06_a6_evidence.mjs",
+      "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs",
+      "runtime/semantic/tests/g1_06_integration_test.cpp"
+    ],
+    "status": "INHERITED_VALID"
+  },
+  "blockedV03Evidence": {
+    "sourceRef": "1b370bd242ce19838889b28beb7b75979244cbab",
+    "materializedRef": "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+    "evidenceRoot": "verification/evidence/gates/G1/1b370bd242ce19838889b28beb7b75979244cbab/GT-G1-06",
+    "evidenceFiles": [
+      "G1-06-PLAN.json",
+      "G1-06-SNAPSHOT.json",
+      "G1-06-REPLAY.json",
+      "G1-06-PROJECTION.json",
+      "G1-06-DIGEST.json",
+      "G1-06-CTEST.txt",
+      "G1-06-DIFF.json"
+    ],
+    "classification": "BLOCKED_PREDECESSOR_EVIDENCE_ONLY",
+    "unchanged": true
+  },
+  "productionRepair": "SEMANTIC_NO_OP_WARNING_REPAIR",
+  "testWarningRepair": "TEST_SEMANTIC_NO_OP_WARNING_REPAIR",
+  "actualStartingRevision": "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+  "sourceRef": "412d7371ceac8d63d3bb6834964efece85b1467b",
+  "sourceCommitParent": "7f904aaee40d0301a6bd3528b9c8836845a05d57",
+  "executionRef": "codex/gt-g1-06-snapshot-replay",
+  "repository": "Mostorm-Labs/axiom",
+  "sourceDelta": [
+    ".github/workflows/g1-06-exact-source.yml",
+    "verification/tools/generate_g1_06_a6_evidence.mjs",
+    "verification/packages/semantic-conformance-cli/test/g1-06-a6-exact-source-evidence.test.mjs"
+  ],
+  "a5AcceptedPredecessor": {
+    "status": "ACCEPTED_FOR_DOWNSTREAM",
+    "packageRef": "notion://3d24c57a-590c-81b3-a01f-fd3c70dbb97c/GT-G1-06-A5-P31-v0.3",
+    "sourceRef": "a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc",
+    "materializedRef": "3f01f599efee21d9adbd8c4cacdcf953995979f9",
+    "evidenceRoot": "verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06",
+    "evidenceFiles": [
+      "G1-06-PLAN.json",
+      "G1-06-SNAPSHOT.json",
+      "G1-06-REPLAY.json",
+      "G1-06-PROJECTION.json",
+      "G1-06-DIGEST.json",
+      "G1-06-CTEST.txt",
+      "G1-06-DIFF.json"
+    ]
+  },
+  "ci": {
+    "runId": "34001120820",
+    "runAttempt": "1",
+    "event": "push",
+    "ref": "refs/heads/codex/gt-g1-06-snapshot-replay",
+    "headSha": "412d7371ceac8d63d3bb6834964efece85b1467b",
+    "checkoutSha": "412d7371ceac8d63d3bb6834964efece85b1467b",
+    "workflowName": "GT-G1-06 Exact Source",
+    "workflowPath": ".github/workflows/g1-06-exact-source.yml",
+    "workflowRef": "refs/heads/codex/gt-g1-06-snapshot-replay/.github/workflows/g1-06-exact-source.yml@412d7371ceac8d63d3bb6834964efece85b1467b",
+    "hostedRunUrl": "https://github.com/Mostorm-Labs/axiom/actions/runs/34001120820",
+    "artifactName": "gt-g1-06-a6-412d7371ceac8d63d3bb6834964efece85b1467b"
+  },
+  "primaryOracle": "canonical_semantic_projection",
+  "inheritedA5ProjectionEvidence": "3f01f599efee21d9adbd8c4cacdcf953995979f9:verification/evidence/gates/G1/a2f0b21a3ff18f441eaa7d3d7702698eca6b5edc/GT-G1-06/G1-06-PROJECTION.json",
+  "projectionBackstop": "PASS",
+  "exactSourceVerification": {
+    "protobufOn": {
+      "integration": {
+        "status": "PASS",
+        "total": 7,
+        "executed": 7,
+        "passed": 7,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      },
+      "operationConformance": {
+        "status": "PASS",
+        "total": 11,
+        "executed": 11,
+        "passed": 11,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      },
+      "g1_06": {
+        "status": "PASS",
+        "total": 55,
+        "executed": 55,
+        "passed": 55,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      },
+      "g1_05": {
+        "status": "PASS",
+        "total": 64,
+        "executed": 64,
+        "passed": 64,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      }
+    },
+    "protobufOff": {
+      "integration": {
+        "status": "PASS",
+        "total": 7,
+        "executed": 7,
+        "passed": 7,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      },
+      "operationConformance": {
+        "status": "PASS",
+        "total": 11,
+        "executed": 11,
+        "passed": 11,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      },
+      "g1_06": {
+        "status": "PASS",
+        "total": 55,
+        "executed": 44,
+        "passed": 44,
+        "skipped": 11,
+        "failed": 0,
+        "skipIds": []
+      },
+      "g1_05": {
+        "status": "PASS",
+        "total": 64,
+        "executed": 64,
+        "passed": 64,
+        "skipped": 0,
+        "failed": 0,
+        "skipIds": []
+      }
+    }
+  },
+  "status": "PASS"
+}
