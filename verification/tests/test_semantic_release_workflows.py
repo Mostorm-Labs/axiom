@@ -7,15 +7,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class SemanticReleaseWorkflowTest(unittest.TestCase):
     def test_aggregation_waits_for_all_cells_and_only_dry_runs_publication(self):
-        workflow = (ROOT / '.github/workflows/semantic-sdk-producer-contract.yml').read_text()
+        workflow = (ROOT / '.github/workflows/semantic-sdk-producer.yml').read_text()
         self.assertIn('  release-set:\n', workflow)
         job = workflow.split('  release-set:\n', 1)[1]
-        self.assertIn('needs: [host-tools, runtimes]', job)
+        self.assertIn('needs: [prepare, host-tools, runtimes]', job)
         self.assertIn('tools/semantic/aggregate.py', job)
         self.assertIn('tools/update_semantic_lock.py', job)
         self.assertIn('tools/semantic/publish_release.py', job)
         self.assertIn('--dry-run', job)
-        self.assertIn('semantic-v2-release-set-candidate', job)
+        self.assertIn('${{ inputs.artifact_prefix }}-release-set', job)
         self.assertNotIn('contents: write', workflow)
         self.assertNotIn('--clobber', workflow)
         self.assertNotIn('gh release create', workflow)

@@ -62,6 +62,17 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("git-sync-deps", workflow)
         self.assertNotIn("gh release create", workflow)
 
+    def test_semantic_producer_keeps_business_changes_out_and_checks_new_orchestration(self):
+        workflow = (WORKFLOWS / "semantic-sdk-producer-contract.yml").read_text()
+        triggers = workflow.split("permissions:", 1)[0]
+        self.assertNotIn('"runtime/semantic/**"', triggers)
+        for path in ('"tools/semantic/**"', '"tools/sdk/**"',
+                     '".github/workflows/semantic-sdk-producer.yml"',
+                     '"verification/tests/test_semantic_sdk_workflows.py"'):
+            self.assertIn(path, triggers)
+        self.assertIn("needs.classify.outputs.should_build == 'true'", workflow)
+        self.assertIn("uses: ./.github/workflows/semantic-sdk-producer.yml", workflow)
+
     def test_g103_evidence_does_not_promote_poc03_to_gate_authority(self):
         generator = (ROOT / "verification/tools/generate_g1_03_evidence.py").read_text(
             encoding="utf-8"

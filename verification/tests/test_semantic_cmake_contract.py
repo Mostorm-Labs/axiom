@@ -37,12 +37,13 @@ class SemanticCmakeStaticTest(unittest.TestCase):
 
     def test_cmake_qualification_runs_before_producer_and_on_real_v2_package(self):
         source = (ROOT / '.github/workflows/semantic-sdk-producer-contract.yml').read_text()
-        discovery = source.split('  runtime-discovery:', 1)[1].split('  runtimes:', 1)[0]
+        discovery = source.split('  runtime-discovery:', 1)[1].split('  producer:', 1)[0]
         self.assertIn('verification.tests.test_semantic_cmake_contract', discovery)
+        source = (ROOT / '.github/workflows/semantic-sdk-producer.yml').read_text()
         self.assertIn('  axiom-cmake-consumer:', source)
         job = source.split('  axiom-cmake-consumer:', 1)[1]
         self.assertIn('needs: release-set', job)
-        self.assertIn('semantic-v2-release-set-candidate', job)
+        self.assertIn('${{ inputs.artifact_prefix }}-release-set', job)
         self.assertIn('setup_environment', job)
         self.assertIn('consumer_cmake_arguments', job)
         self.assertIn('--output-junit', job)

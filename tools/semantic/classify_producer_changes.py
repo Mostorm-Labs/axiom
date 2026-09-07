@@ -31,7 +31,7 @@ RUNTIME_RECIPE_PATHS = frozenset({
 SHARED_RECIPE_PATHS = frozenset({
     'tools/semantic/contract.py', 'tools/semantic/package_common.py',
     'tools/semantic/sources.py', 'tools/sdk/archive.py',
-    '.github/workflows/semantic-sdk-producer.yml',
+    '.github/workflows/semantic-sdk-producer.yml', 'tools/semantic/producer_cell.py',
 })
 # Keep the live v1 recipe conservative until its workflow is explicitly retired.
 LEGACY_RECIPE_PATHS = frozenset({
