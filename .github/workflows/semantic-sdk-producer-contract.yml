@@ -1,0 +1,68 @@
+name: Semantic SDK Producer Contract
+
+on:
+  pull_request:
+    paths:
+      - "deps.lock.json"
+      - "tools/sdk/archive.py"
+      - "tools/semantic/contract.py"
+      - "tools/semantic/profile-v2.json"
+      - "tools/semantic/package_host.py"
+      - "tools/semantic/package_common.py"
+      - "tools/semantic/sources.py"
+      - "tools/semantic/tests/test_package_host_v2.py"
+      - "verification/tests/test_semantic_sdk_workflows.py"
+      - ".github/workflows/semantic-sdk-producer-contract.yml"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  host-tools:
+    name: host-tool / ${{ matrix.host }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {host: linux-x86_64, os: ubuntu-24.04}
+          - {host: windows-x64, os: windows-2025}
+          - {host: macos-universal, os: macos-15}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Test host package and workflow contracts
+        run: python -m unittest tools.semantic.tests.test_package_host_v2 verification.tests.test_semantic_sdk_workflows -v
+      - name: Package and execute the locked official host tool
+        run: >-
+          python tools/semantic/package_host.py --host-key ${{ matrix.host }}
+          --output out/semantic-sdk/package-a --probe
+      - name: Independently repackage the same verified upstream bytes
+        run: >-
+          python tools/semantic/package_host.py --host-key ${{ matrix.host }}
+          --output out/semantic-sdk/package-b
+      - name: Compare package bytes and metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tools.sdk.archive import file_sha256
+          first = Path("out/semantic-sdk/package-a")
+          second = Path("out/semantic-sdk/package-b")
+          a = json.loads((first / "record.json").read_bytes())
+          b = json.loads((second / "record.json").read_bytes())
+          assert a == b, "host record is not deterministic"
+          assert file_sha256(first / a["asset"]) == file_sha256(second / b["asset"]), "host archive is not deterministic"
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-v2-host-${{ matrix.host }}
+          path: out/semantic-sdk/package-a
+          if-no-files-found: error
+          retention-days: 14

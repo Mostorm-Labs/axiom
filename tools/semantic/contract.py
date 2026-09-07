@@ -72,15 +72,22 @@ def _pairs(pairs: list[tuple[str, Any]]) -> dict:
     return result
 
 
-def read_json(path: Path) -> dict:
+def parse_json_bytes(data: bytes) -> dict:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_pairs,
+        value = json.loads(data, object_pairs_hook=_pairs,
                            parse_constant=lambda token: _fail(f"nonfinite JSON value: {token}"))
-    except (OSError, ValueError) as error:
-        raise SdkError(f"semantic: cannot read JSON {path}: {error}") from error
+    except (ValueError, UnicodeError) as error:
+        raise SdkError(f"semantic: invalid JSON: {error}") from error
     if not isinstance(value, dict):
         _fail("JSON root must be an object")
     return value
+
+
+def read_json(path: Path) -> dict:
+    try:
+        return parse_json_bytes(path.read_bytes())
+    except OSError as error:
+        raise SdkError(f"semantic: cannot read JSON {path}: {error}") from error
 
 
 def _identity(payload: dict) -> tuple[dict, str]:
