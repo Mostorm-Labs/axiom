@@ -587,6 +587,9 @@ target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../sr
 target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_projection_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_projection_test PRIVATE /EHsc)
+endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_projection_test)
 
 add_executable(canvas_semantic_g1_06_projection_test
@@ -680,6 +683,9 @@ target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVAT
 target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_observer_contract_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_observer_contract_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_observer_contract_test PRIVATE /EHsc)
+endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_observer_contract_test)
 
 add_executable(canvas_semantic_g1_04_c_observer_coverage_test
@@ -693,6 +699,9 @@ target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVAT
 target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE /EHsc)
+endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_observer_coverage_test)
 
 add_executable(canvas_semantic_g1_04_c_observation_export
@@ -705,6 +714,9 @@ target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ..
 target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../src)
 target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_link_libraries(canvas_semantic_g1_04_c_observation_export PRIVATE canvas_runtime_semantic)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_04_c_observation_export PRIVATE /EHsc)
+endif()
 
 add_test(
     NAME canvas_semantic_runtime_boundaries
