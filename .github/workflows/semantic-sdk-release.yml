@@ -46,6 +46,8 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      attestations: write
+      id-token: write
     outputs:
       candidate_ref: ${{ steps.stage.outputs.candidate_ref }}
       needs_lock_pr: ${{ steps.stage.outputs.needs_lock_pr }}
@@ -99,6 +101,12 @@ jobs:
             --tag "$tag" \
             --output out/semantic-candidate-lock/semantic-sdk.lock.json
           cmp out/semantic-candidate-lock/semantic-sdk.lock.json out/producer-candidate-lock/semantic-sdk.lock.json
+      - name: Attest SDK archives and release index provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            out/semantic-release/*.zip
+            out/semantic-release/semantic-sdk-index.json
       - name: Publish or verify the immutable Release Set
         id: publish
         shell: bash
