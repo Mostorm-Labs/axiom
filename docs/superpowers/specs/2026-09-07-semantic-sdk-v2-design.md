@@ -2,29 +2,28 @@
 
 Date: 2026-09-07
 Status: Proposed / design-approved in chat, implementation not yet started
-Scope: Semantic Protobuf/Abseil host tooling, target runtimes, immutable release-set publication, lock/index authority, shared local SDK materialization, build-environment resolution, CI qualification, and developer consumption
+Scope: Semantic Protobuf/Abseil host tooling, target runtimes, immutable release-set publication, lock/index authority, generic shared SDK materialization, build-environment resolution, CI qualification, developer consumption, and future SDK-family extensibility.
 
 ## 1. Purpose
 
-Axiom already has a working Linux-hosted semantic dependency producer/consumer path, but it is still shaped as a single Linux toolchain archive. That model is good enough for hosted Linux semantic CI, but it is not a complete dependency product for Windows/macOS development or for Android/iOS/Web cross-compilation.
+Axiom already has a working Linux-hosted semantic dependency producer/consumer path, but it is still shaped as a single Linux toolchain archive. That model is sufficient for hosted Linux semantic CI, but it is not a complete dependency product for Windows/macOS development or Android/iOS/Web cross-compilation.
 
-This design upgrades the semantic dependency supply chain into a formal cross-platform SDK product with five properties:
+This design upgrades the semantic dependency supply chain into a formal cross-platform SDK product with six properties:
 
 1. Semantic dependencies are published as permanent immutable GitHub Release assets, not only short-lived GitHub Actions artifacts.
 2. Host code-generation tools are separated from target runtime libraries so native and cross builds use the same model.
 3. A complete release set covers Linux, Windows, macOS, iOS, Android, and Web targets.
 4. Developer machines and CI materialize immutable SDK assets into a persistent shared Axiom SDK Store instead of relying on repo-local `.deps/protobuf` or manual symlinks.
 5. A single repository lock selects one immutable release-set index; the index selects platform-specific content-addressed assets.
+6. The Store/resolver layer is generic Axiom infrastructure. Semantic is the first provider using it, not the owner of the infrastructure, so future SDK families can be added without changing existing Semantic or Skia authority.
 
 The immediate operational goal is to have this model published and consumable before GT-G1-08 begins. GT-G1-07 historical evidence remains untouched.
 
 ## 2. Current repository constraints
 
-The current implementation has four structural limitations that v2 must remove.
-
 ### 2.1 Single-host identity
 
-`tools/semantic_sdk.py` currently defines the semantic SDK identity around a fixed `linux/x86_64` target and packages a runnable `protoc` together with the installed Protobuf/Abseil runtime.
+`tools/semantic_sdk.py` currently defines semantic SDK identity around a fixed `linux/x86_64` target and packages a runnable `protoc` together with the installed Protobuf/Abseil runtime.
 
 ### 2.2 Single-asset lock
 
@@ -38,14 +37,22 @@ The current implementation has four structural limitations that v2 must remove.
 
 `runtime/semantic/CMakeLists.txt` currently requires the same Protobuf package to provide both `protobuf::libprotobuf` and `protobuf::protoc`, then executes `$<TARGET_FILE:protobuf::protoc>` for code generation.
 
-That is valid for a native build where host and target match. It is not a sound cross-compilation model. `protoc` must run on the build host, while `libprotobuf` and Abseil must match the final target ABI.
+That is valid only for a native build where host and target match. `protoc` must run on the build host, while `libprotobuf` and Abseil must match the final target ABI.
+
+### 2.5 Dependency infrastructure is still family-specific
+
+Current fetching/materialization logic is organized around individual dependency families. If that pattern were extended directly, adding PDF, media, toolchain, or another SDK family would require more family-specific branches in the resolver and repeated implementations of Store/fetch/verify/offline/mirror behavior.
+
+Semantic SDK v2 must avoid becoming a new special case of the same problem.
 
 ## 3. Architectural decision
 
 Semantic SDK v2 separates host tools from target runtimes while publishing them as one atomic immutable release set.
 
+At the same time, the local Store, immutable materialization, transport selection, verification, and generic host/target resolution mechanics are owned by **Axiom SDK Infrastructure**, outside the Semantic provider.
+
 ```text
-                       deps.lock.json
+                    dependency / producer authority
                               |
                               v
                     Semantic SDK Producer
@@ -69,10 +76,15 @@ Semantic SDK v2 separates host tools from target runtimes while publishing them 
                    semantic-sdk.lock.json
                               |
                               v
-                 Build Environment Resolver
+                 Axiom SDK Infrastructure
+              +---------------+----------------+
+              |               |                |
+          Resolver Core   Verify/Transport   Shared Store
+              |                                |
+              +---------------+----------------+
                               |
                               v
-                    Shared Axiom SDK Store
+                    Semantic Provider
                               |
                  +------------+------------+
                  |                         |
@@ -85,7 +97,7 @@ Semantic SDK v2 separates host tools from target runtimes while publishing them 
                             CMake
 ```
 
-The release set is the authoritative published unit. Individual host/runtime assets are independently content-addressed so unchanged assets can be reused across release sets without rebuilding or redownloading.
+The Semantic release set is the authoritative published unit for Semantic. The generic Store is not authority. Individual host/runtime assets remain content-addressed so unchanged assets can be reused across release sets without rebuilding or redownloading.
 
 ## 4. Platform matrix
 
@@ -99,13 +111,11 @@ Semantic v2 publishes three host `protoc` assets:
 | `windows-x64` | Windows x64 developer/CI hosts |
 | `macos-universal` | macOS Apple Silicon and Intel hosts |
 
-These assets contain the runnable code generator and its manifest/identity metadata. They do not define the target runtime ABI.
+These assets contain the runnable code generator and manifest/identity metadata. They do not define the target runtime ABI.
 
-Protobuf 36.0 already publishes official binaries for these hosts. Axiom should lock the exact upstream asset identities and repackage them deterministically as Axiom host-tool assets rather than compiling `protoc` from source for normal consumers.
+Protobuf 36.0 already publishes official binaries for these hosts. Axiom should lock exact upstream asset identities and repackage them deterministically as Axiom host-tool assets rather than compiling `protoc` from source for normal consumers.
 
 ### 4.2 Target runtime assets
-
-Semantic v2 publishes these target runtime assets:
 
 | Runtime key | ABI / toolchain intent |
 | --- | --- |
@@ -119,13 +129,11 @@ Semantic v2 publishes these target runtime assets:
 | `android-x86_64` | Android x86_64 runtime |
 | `web-wasm32` | Emscripten wasm32 runtime |
 
-Runtime assets contain the target-side consumer contract: headers, static libraries, required CMake package metadata, license/provenance metadata, and manifest identity. They do not need to contain a target-native `protoc` executable.
+Runtime assets contain headers, static libraries, required CMake package metadata, license/provenance metadata, and manifest identity. They do not need a target-native `protoc` executable.
 
 ### 4.3 Cross-compilation pairing
 
 The resolver chooses host and target independently.
-
-Examples:
 
 ```text
 macOS arm64 host -> iOS arm64 target
@@ -141,19 +149,17 @@ Windows x64 host -> Windows x64 target
   runtime:   windows-x64-msvc-static
 ```
 
-This host/target split is a hard compatibility rule of Semantic SDK v2.
+This split is a hard compatibility rule.
 
 ## 5. Identity model
 
-Semantic v2 uses three distinct identities.
-
-Every identity is computed from a canonical identity payload that does not contain the ID being computed. The computed ID is then stored beside that payload and verified by recomputation. IDs must never be defined as hashes of serialized objects containing themselves.
+Every identity is computed from a canonical identity payload that does not contain the ID being computed. The computed ID is stored beside that payload and verified by recomputation.
 
 ### 5.1 `hostToolId`
 
-`hostToolId` answers: which exact host-runnable `protoc` package is this?
+Answers: which exact host-runnable `protoc` package is this?
 
-Its canonical identity payload must be derived from authority inputs that materially define the host tool, including at least:
+Its canonical identity payload includes at least:
 
 - Protobuf version;
 - upstream host asset identity and SHA-256;
@@ -165,32 +171,44 @@ Unrelated repository source changes must not change `hostToolId`.
 
 ### 5.2 `runtimeId`
 
-`runtimeId` answers: which exact target Protobuf/Abseil runtime ABI is this?
+Answers: which exact target Protobuf/Abseil runtime ABI is this?
 
-Its canonical identity payload must include at least:
+Its canonical identity payload includes at least:
 
 - Protobuf source version and SHA-256;
 - Abseil source version and SHA-256;
 - target platform/architecture;
 - target toolchain identity;
-- ABI contract such as static/shared library mode, CRT contract, deployment target/API level, C++ standard, and sanitizer/runtime policy where relevant;
-- semantic runtime build/package contract version.
+- ABI contract, including static/shared mode, CRT contract, deployment target/API level, C++ standard, and sanitizer/runtime policy where relevant;
+- Semantic runtime build/package contract version.
 
 Unrelated Axiom runtime/business source changes must not change `runtimeId`.
 
 ### 5.3 `releaseSetId`
 
-`releaseSetId` answers: which complete Semantic SDK platform set is currently being published and accepted as one release?
+Answers: which complete Semantic SDK platform set is currently being published and accepted as one release?
 
-It is the SHA-256 of a canonical release-set identity payload containing the dependency authority plus the sorted selected host-tool/runtime identity-and-digest records. The identity payload explicitly excludes `releaseSetId` itself, the release tag, URLs, timestamps, attestations, and other publication metadata. The computed `releaseSetId` is then written into the final index and can be recomputed by consumers from its identity-bearing payload.
+It is the SHA-256 of a canonical release-set identity payload containing dependency authority plus the sorted selected host-tool/runtime identity-and-digest records. The payload excludes `releaseSetId` itself, release tag, URLs, timestamps, attestations, and other publication metadata.
 
-If any selected asset identity/digest changes, the `releaseSetId` changes. A new release set may reuse unchanged `hostToolId` or `runtimeId` values from an earlier release.
+If any selected asset identity/digest changes, `releaseSetId` changes. A new release set may reuse unchanged `hostToolId` or `runtimeId` values from an earlier release.
+
+### 5.4 Family identity isolation
+
+Semantic identities are owned only by the Semantic family. Adding another SDK family must not alter:
+
+- `hostToolId` inputs;
+- `runtimeId` inputs;
+- `releaseSetId` inputs;
+- existing Semantic release tags or assets;
+- existing Semantic lock/index formats or accepted release-set identity.
+
+Generic Store metadata must never become an implicit input to a family content identity unless that metadata materially changes the package bytes or consumer contract.
 
 ## 6. Release index and repository lock
 
 ### 6.1 Repository lock
 
-The repository will migrate from the single-platform `semantic-toolchain.lock.json` model to a v2 release-set lock, for example:
+The repository migrates to a v2 release-set lock, for example:
 
 ```json
 {
@@ -203,84 +221,48 @@ The repository will migrate from the single-platform `semantic-toolchain.lock.js
 }
 ```
 
-The lock intentionally does not duplicate all platform asset records. It pins one immutable release index by release tag, release-set identity, and exact serialized index digest.
+The lock pins one immutable release index by release tag, release-set identity, and exact serialized index digest.
 
 ### 6.2 Release index
 
-`semantic-sdk-index.json` is the canonical complete release description. It contains:
+`semantic-sdk-index.json` contains:
 
 - format/schema version;
 - `releaseSetId`;
-- the canonical release-set identity payload or fields sufficient to reconstruct it exactly;
+- fields sufficient to reconstruct the canonical release-set identity payload;
 - dependency authority versions/digests;
 - `hostTools` map keyed by supported host;
 - `runtimes` map keyed by supported target runtime;
-- each asset file name, SHA-256, content identity, and compatibility metadata;
-- optional provenance/attestation references where useful.
+- asset file name, SHA-256, content identity, compatibility metadata;
+- optional provenance/attestation references.
 
-Conceptually:
-
-```json
-{
-  "format": "axiom-semantic-sdk-index-v2",
-  "releaseSetId": "...",
-  "dependencies": {
-    "protobuf": "36.0",
-    "abseil": "20250512.1"
-  },
-  "hostTools": {
-    "windows-x64": {
-      "hostToolId": "...",
-      "asset": "axiom-semantic-protoc-windows-x64-....zip",
-      "sha256": "..."
-    }
-  },
-  "runtimes": {
-    "windows-x64-msvc-static": {
-      "runtimeId": "...",
-      "asset": "axiom-semantic-runtime-windows-x64-msvc-static-....zip",
-      "sha256": "...",
-      "abi": {
-        "compiler": "msvc-compatible",
-        "crt": "static",
-        "cxxStandard": 20
-      }
-    }
-  }
-}
-```
-
-The canonical release-set identity payload determines `releaseSetId`; the exact final serialized index bytes are independently pinned by `indexSha256`. This avoids self-referential identity while still making both semantic identity and exact file bytes verifiable.
+The canonical release-set payload determines `releaseSetId`; exact final serialized index bytes are independently pinned by `indexSha256`.
 
 ## 7. Immutable GitHub Release contract
 
-A formal Semantic SDK release is tagged as:
+A formal Semantic SDK release is tagged:
 
 ```text
 semantic-sdk-v2-<releaseSetId[:16]>
 ```
 
-The release contains the complete supported matrix:
+It contains the complete supported matrix:
 
 - `semantic-sdk-index.json`;
 - `SHA256SUMS`;
 - three host-tool archives;
 - nine target-runtime archives;
-- GitHub provenance attestations for the index and SDK archives.
+- provenance attestations for the index and SDK archives.
 
-Release assets are permanent dependency artifacts. GitHub Actions artifacts remain temporary intra-workflow transport only.
+Release assets are permanent dependency artifacts. Actions artifacts are temporary intra-workflow transport only.
 
 ### 7.1 Immutability
 
-Published tags/assets must never be overwritten, deleted and recreated under the same identity, or silently replaced.
-
-If a publication workflow encounters an existing tag, it may succeed only after proving the existing release/index/assets are byte-identical to the requested publication.
+Published tags/assets must never be overwritten, deleted and recreated under the same identity, or silently replaced. Existing-tag publication succeeds only after proving byte identity.
 
 ### 7.2 Complete release set
 
-Every formal Semantic SDK v2 release contains a complete matrix even if only one target changed. Unchanged assets may be reused from a prior trusted release without rebuilding. For a new complete Release, reuse means staging the exact previously verified bytes and attaching those byte-identical archives to the new Release; it does not mean rebuilding identity-equivalent binaries or leaving the new Release dependent on mutable external state.
-
-Therefore:
+Every formal Semantic SDK v2 release contains a complete matrix even if only one target changed. Unchanged assets may be reused from a prior trusted release by staging the exact verified bytes and attaching those byte-identical archives to the new release.
 
 ```text
 release is complete
@@ -291,25 +273,21 @@ build is incremental
 
 ### 8.1 PR qualification
 
-Producer-authority changes on a pull request run classification and qualification but do not publish a GitHub Release.
-
-The classifier determines which host/runtime identities are affected. Only those cells rebuild. Unchanged cells can be represented by known trusted asset identities for qualification/aggregation logic.
+Producer-authority changes on a pull request run classification and qualification but do not publish a GitHub Release. Only affected host/runtime identities rebuild.
 
 ### 8.2 Main release workflow
 
-After producer-authority changes merge to `main`, a formal Semantic SDK release workflow:
+After producer-authority changes merge to `main`, the release workflow:
 
 1. validates it is running from `main`;
 2. computes planned host/runtime identities;
 3. reuses trusted byte-identical immutable assets whose identity is unchanged;
 4. builds/packages/verifies changed cells;
-5. aggregates the complete `semantic-sdk-index.json` and `SHA256SUMS`;
+5. aggregates the complete index and checksums;
 6. verifies determinism and complete matrix coverage;
 7. publishes the immutable GitHub Release;
-8. generates a repository lock update;
-9. opens a lock-only consumer PR rather than silently advancing consumer authority on `main`.
-
-This preserves a two-phase authority boundary:
+8. generates the repository lock update;
+9. opens a lock-only consumer PR instead of silently advancing consumer authority.
 
 ```text
 Producer authority -> immutable published Release
@@ -318,9 +296,7 @@ Consumer authority -> repository lock explicitly accepts one Release Set
 
 ### 8.3 Trigger ownership
 
-Producer rebuilds are driven by dependency/toolchain/package authority, not ordinary Axiom semantic business logic.
-
-Expected invalidation rules include:
+Expected invalidation rules:
 
 - Protobuf version/source change -> all host tools and all runtimes;
 - Abseil version/source change -> all runtimes, host tools unchanged;
@@ -332,114 +308,180 @@ Expected invalidation rules include:
 - runtime packaging/build contract change -> affected runtimes;
 - ordinary Axiom semantic/runtime source changes -> zero producer builds.
 
-Static CI contract tests should enforce these boundaries.
+Static CI contract tests enforce these boundaries.
 
 ## 9. Platform build and qualification expectations
 
 ### 9.1 Host tools
 
-Each host-tool package must at minimum prove:
-
-- exact upstream asset digest/version;
-- deterministic Axiom packaging;
-- manifest/file hash integrity;
-- executable mode/format validity;
-- `protoc --version` matches the locked dependency version.
+Each host-tool package proves exact upstream digest/version, deterministic packaging, manifest/file integrity, executable validity, and matching `protoc --version`.
 
 ### 9.2 Linux runtime
 
-Build and source-free consumer qualification run on pinned Ubuntu/toolchain identity. Qualification includes configure, compile, link, and runtime smoke where applicable.
+Pinned Ubuntu/toolchain; source-free configure, compile, link, and runtime smoke where applicable.
 
 ### 9.3 Windows runtime
 
-The Windows runtime uses an MSVC-compatible ABI and static CRT contract aligned with Axiom's existing Windows Skia linkage direction. The contract must record compiler/toolchain identity, `/MT`-equivalent CRT semantics, C++20, and relevant iterator/debug ABI constraints.
-
-Qualification includes source-free configure, compile, link, and native runtime smoke.
+MSVC-compatible ABI, static CRT, C++20, aligned with the existing Windows Skia linkage direction. Qualification includes source-free configure, compile, link, and native smoke.
 
 ### 9.4 macOS runtimes
 
-macOS arm64 and x64 are separate target runtime identities. Qualification proves correct architecture, package configuration, static linking, and native smoke for the matching runner/toolchain.
+Separate arm64/x64 identities; source-free package/configuration/static-link qualification and native smoke on matching runners where available.
 
 ### 9.5 iOS runtimes
 
-`ios-arm64` and `ios-simulator-arm64` are distinct runtime identities. Qualification includes source-free configure/compile/link. Simulator runtime smoke is required where practical; device runtime execution is not required for the SDK producer itself.
+`ios-arm64` and `ios-simulator-arm64` remain distinct. Qualification includes source-free configure/compile/link; simulator smoke where practical.
 
 ### 9.6 Android runtimes
 
-Android arm64-v8a and x86_64 are built against the pinned Android NDK/API contract. Qualification includes source-free configure/compile/link. x86_64 emulator smoke may be used for release qualification where reliable, but artifact validity must not depend on an unavailable emulator.
+arm64-v8a and x86_64 built against pinned NDK/API. Qualification includes source-free configure/compile/link; emulator smoke may supplement but is not required for artifact validity.
 
 ### 9.7 Web runtime
 
-Web uses the pinned Emscripten toolchain and wasm32 ABI. Qualification includes source-free configure/compile/link plus an executable smoke under Node or browser automation where appropriate.
+Pinned Emscripten wasm32 ABI; source-free configure/compile/link plus executable smoke under Node or browser automation where appropriate.
 
-## 10. Shared Axiom SDK Store
+## 10. Generic Axiom SDK Infrastructure
 
-Semantic v2 removes the repo-local `.deps/protobuf` directory from the formal semantic dependency contract.
+The Axiom SDK Store and resolver are **generic infrastructure**, not Semantic-owned implementation details.
 
-### 10.1 Purpose
+### 10.1 Ownership
 
-The Axiom SDK Store is a persistent local materialization of immutable release assets. It is not authority and it is not a correctness-bypassing cache.
+The generic layer owns only mechanisms common to SDK families:
 
-Authority remains:
+- Store root discovery and override;
+- immutable archive cache/materialization;
+- SHA-256 and manifest verification primitives;
+- atomic install;
+- source priority (Store/mirror/Release);
+- offline behavior;
+- host/target capability discovery;
+- generic status/diagnostic reporting;
+- family namespace isolation;
+- optional garbage collection of unreferenced materializations.
+
+It does not know that Protobuf, Skia, PDFium, FFmpeg, or any other dependency has a particular semantic meaning.
+
+### 10.2 SDK family providers
+
+Each family owns its own authority and build adapter, for example:
 
 ```text
-repository lock
--> immutable release index
+Semantic Provider
+  owns semantic-sdk.lock.json
+  owns semantic-sdk-index.json interpretation
+  exports AXIOM_PROTOC
+  exports AXIOM_SEMANTIC_RUNTIME_ROOT
+
+Skia Provider (future Store migration)
+  keeps existing Skia locks/releases/identity semantics
+  exports AXIOM_SKIA_SDK_ROOT
+
+Future PDF Provider
+  owns its own lock/index/release family
+  exports AXIOM_PDF_SDK_ROOT
+```
+
+Providers may use the generic resolver and Store but may not mutate another provider's lock, identity, or materialized package contract.
+
+### 10.3 Additive-extension rule
+
+**Adding a new SDK family MUST be additive.** It must not require changing existing SDK identities, immutable release assets, lock formats, Store materializations, or stable consumer contracts.
+
+A new family may add:
+
+- its own provider;
+- its own lock and index schemas;
+- its own producer/qualification workflow;
+- its own build adapter and exported roots;
+- its own namespaced Store materializations.
+
+It must reuse generic Store/fetch/verify/materialization infrastructure instead of adding another parallel dependency manager.
+
+### 10.4 Store namespace and content layout
+
+Conceptually:
+
+```text
+<Axiom SDK Store>/
+  archives/
+    sha256/<digest>/...
+
+  packages/
+    semantic/
+      host-tools/<hostToolId>/...
+      runtimes/<runtimeId>/...
+    skia/
+      runtimes/<skiaRuntimeId>/...
+    toolchains/
+      <family>/<toolchainId>/...
+    pdf/
+      ...
+    media/
+      ...
+
+  release-sets/
+    semantic/<releaseSetId>/...
+    skia/<releaseIdentity>/...
+    ...
+```
+
+Exact spelling may evolve, but family namespace separation and immutable identity-based materialization are mandatory.
+
+### 10.5 Family admission criteria
+
+Not every dependency becomes an SDK family. A dependency is a strong candidate when it is heavyweight, cross-platform ABI-sensitive, slow/expensive to build, reusable across worktrees/projects, and benefits from source-free immutable consumption.
+
+Small, fast, source-friendly dependencies should remain under ordinary source/package-manager ownership.
+
+Transitive implementation dependencies should remain encapsulated by their owning SDK where possible. For example, libraries consumed only as part of the Skia build must not automatically become separate Axiom SDK families.
+
+## 11. Shared Axiom SDK Store
+
+Semantic v2 removes repo-local `.deps/protobuf` from the formal semantic dependency contract.
+
+### 11.1 Purpose
+
+The Store is a persistent local materialization of immutable release assets. It is not authority and never bypasses correctness verification.
+
+Semantic authority remains:
+
+```text
+semantic repository lock
+-> immutable semantic release index
 -> asset SHA / hostToolId / runtimeId
 ```
 
-The Store is merely a verified local copy of those authority artifacts.
-
-### 10.2 Default locations
-
-Default user-scoped locations should be platform-native:
+### 11.2 Default locations
 
 - Windows: `%LOCALAPPDATA%\Axiom\sdk`
 - macOS: `~/Library/Application Support/Axiom/sdk`
 - Linux: `$XDG_DATA_HOME/axiom/sdk`, falling back to `~/.local/share/axiom/sdk`
 
-Developers may override the root with:
+Override:
 
 ```text
 AXIOM_SDK_STORE=<path>
 ```
 
-This supports an existing shared dependency directory, a fast local disk, or a mounted shared volume without per-worktree symlinks.
+### 11.3 Materialization behavior
 
-### 10.3 Content-addressed layout
+For requested Semantic host/target pairing the generic resolver plus Semantic provider:
 
-The semantic portion of the store is keyed by immutable identities, conceptually:
-
-```text
-<Axiom SDK Store>/
-  semantic/
-    archives/
-    release-sets/<releaseSetId>/semantic-sdk-index.json
-    host-tools/<hostToolId>/...
-    runtimes/<runtimeId>/...
-```
-
-The exact directory spelling may evolve, but identity-based separation is mandatory.
-
-### 10.4 Materialization behavior
-
-For a requested host/target pair the resolver:
-
-1. reads the repository lock;
-2. fetches/verifies the locked release index if not already materialized;
-3. selects the required host tool and target runtime;
-4. checks the SDK Store for the exact `hostToolId` and `runtimeId`;
-5. validates local manifests/identity before use;
+1. reads the Semantic repository lock;
+2. fetches/verifies the locked release index if needed;
+3. selects host tool and target runtime;
+4. checks the Store for exact identities;
+5. validates local manifests/identity;
 6. downloads only missing assets;
-7. verifies SHA-256, manifest identity, file set, modes, and consumer contract;
-8. atomically installs them into the Store;
+7. verifies SHA-256, manifest, file set, modes, and consumer contract;
+8. atomically installs them;
 9. exports stable build-environment paths.
 
-A second worktree using the same identities performs no clone, source build, or network download.
+A second worktree with the same identities performs no clone, source build, or network download.
 
-## 11. Source resolution, offline mode, and mirrors
+## 12. Source resolution, offline mode, and mirrors
 
-The resolver uses this source priority:
+Source priority:
 
 ```text
 1. verified Axiom SDK Store materialization
@@ -447,44 +489,32 @@ The resolver uses this source priority:
 3. locked GitHub Release
 ```
 
-A mirror is transport only. It never replaces lock/index/asset identity verification.
+Mirror is transport only and never replaces lock/index/asset verification.
 
-Supported configuration should include:
+Supported configuration:
 
 ```text
 AXIOM_SDK_STORE
 AXIOM_SDK_MIRROR
 ```
 
-and an explicit `--offline` mode.
+`--offline` accepts only already-valid local Store materializations. Missing assets fail closed and never trigger source bootstrap fallback.
 
-`--offline` accepts only already-valid local Store materializations. Missing assets fail closed. It must never trigger a source bootstrap fallback.
-
-## 12. Build Environment Resolver contract
+## 13. Build Environment Resolver contract
 
 `tools/setup_build_environment.py` evolves from Linux semantic setup into the shared Axiom Build Environment Resolver.
 
-### 12.1 Native usage
+The command surface may expose family selectors such as `--semantic` and later `--skia`, but the resolver core must dispatch through provider contracts rather than hard-code family-specific fetch/materialization logic throughout the core.
 
-For native development:
+### 13.1 Native usage
 
 ```text
 python tools/setup_build_environment.py --semantic
 ```
 
-The resolver auto-detects the host and native target.
+Auto-detect host and native target.
 
-Examples:
-
-```text
-Windows host -> windows-x64-msvc-static runtime
-macOS arm64 host -> macos-arm64 runtime
-Linux x64 host -> linux-x86_64 runtime
-```
-
-### 12.2 Cross-target usage
-
-For cross builds the user specifies the final program target:
+### 13.2 Cross-target usage
 
 ```text
 python tools/setup_build_environment.py --semantic --target ios-arm64
@@ -492,11 +522,9 @@ python tools/setup_build_environment.py --semantic --target android-arm64-v8a
 python tools/setup_build_environment.py --semantic --target web-wasm32
 ```
 
-`--target` always means final target runtime. Host detection remains independent.
+`--target` always means final target runtime; host detection is independent.
 
-### 12.3 Stable exported variables
-
-The stable semantic build-environment contract is:
+### 13.3 Stable Semantic exports
 
 ```text
 AXIOM_SEMANTIC_HOST_ROOT
@@ -504,51 +532,17 @@ AXIOM_PROTOC
 AXIOM_SEMANTIC_RUNTIME_ROOT
 ```
 
-The resolver may derive CMake adapter variables such as:
+CMake adapter variables such as `CMAKE_PREFIX_PATH` may be derived, but are not Semantic identity or long-term Axiom API.
 
-```text
-CMAKE_PREFIX_PATH=<AXIOM_SEMANTIC_RUNTIME_ROOT>
-```
+### 13.4 Diagnostics
 
-but `CMAKE_PREFIX_PATH` is not the semantic dependency identity and should not become the long-term Axiom API.
+`--status` should report detected host, target, family release identity, selected asset identities, ABI/path/source, network use, and Store/mirror/Release origin. Output must remain capable of reporting multiple SDK families without changing the already-stable fields of existing providers.
 
-Compatibility variables may remain temporarily where migration requires them, but new workflows should consume the stable semantic roots.
+## 14. CMake host/target separation
 
-### 12.4 Diagnostics
+CMake must stop treating `protobuf::protoc` as part of the target runtime package.
 
-The resolver should expose a human-readable status mode, for example:
-
-```text
-python tools/setup_build_environment.py --status
-```
-
-The output should report:
-
-- detected host;
-- requested/resolved target;
-- release tag and `releaseSetId`;
-- selected `hostToolId` and path/source;
-- selected `runtimeId` and ABI/path/source;
-- whether network was used;
-- whether each artifact came from Store, mirror, or GitHub Release.
-
-Machine-readable facts remain available for CI/evidence.
-
-## 13. CMake host/target separation
-
-The Semantic CMake consumer contract must stop treating `protobuf::protoc` as part of the target runtime package.
-
-### 13.1 Target runtime requirement
-
-CMake continues to locate the target Protobuf package through the selected runtime root and requires `protobuf::libprotobuf`.
-
-### 13.2 Host tool requirement
-
-Code generation uses the separately resolved host executable:
-
-```text
-AXIOM_PROTOC
-```
+Target Protobuf is located through the selected runtime root and must provide `protobuf::libprotobuf`. Code generation uses separately resolved `AXIOM_PROTOC`.
 
 Conceptually:
 
@@ -562,113 +556,90 @@ if(NOT DEFINED AXIOM_PROTOC)
 endif()
 ```
 
-The generated-source custom command executes `${AXIOM_PROTOC}`, not `$<TARGET_FILE:protobuf::protoc>`.
+Generated-source commands execute `${AXIOM_PROTOC}`, not `$<TARGET_FILE:protobuf::protoc>`.
 
-This split is required for all cross-compilation targets.
-
-## 14. Relationship to `.deps`
-
-This design does not delete or redesign every existing dependency path before GT-G1-08.
-
-The intended boundary is:
+## 15. Relationship to `.deps`
 
 ```text
 .deps            = repo-local lightweight/source dependencies still owned by current bootstrap paths
-Axiom SDK Store  = heavyweight immutable binary SDK products
+Axiom SDK Store  = heavyweight immutable binary SDK/toolchain products
 ```
 
-Semantic exits `.deps/protobuf` as a formal dependency path in v2.
+Semantic exits `.deps/protobuf` in v2. `googletest`, `nlohmann-json`, `xxhash`, and similar lightweight dependencies may remain under `.deps` until separately justified.
 
-`googletest`, `nlohmann-json`, `xxhash`, and other current lightweight dependencies may remain under `.deps` until separately migrated.
-
-## 15. Relationship to Skia
+## 16. Relationship to Skia and future SDK families
 
 Skia is not migrated in this Semantic SDK v2 implementation.
 
-However, the Axiom SDK Store is deliberately designed as the common future materialization layer for immutable SDK products. Skia already has a mature target-matrix, immutable-release consumer model, so a later change may materialize Skia SDK assets into the same store without redesigning the Skia producer.
+Skia already has mature immutable release/target-matrix authority. A later consumer-only migration may materialize those existing Skia assets through the generic Store while preserving existing locks, release identities, producer behavior, and verification semantics.
 
-Long-term the store may contain:
+Likely future Store candidates include heavyweight toolchain packages and, if product scope requires them, PDF or media runtimes. Their admission is a separate design/authority decision; this spec does not pre-authorize a specific PDF/media dependency.
 
-```text
-Axiom SDK Store
-  semantic/
-  skia/
-  toolchains/
-```
+The following categories should generally stay outside standalone SDK families unless future evidence changes the boundary:
 
-This future convergence must preserve existing Skia locks, release identities, and consumer verification semantics.
+- lightweight source dependencies;
+- npm/package-manager dependencies;
+- OS/system SDKs such as DirectX/Metal/Xcode/Windows SDK (resolver may verify capability/version, not republish them);
+- implementation-only transitive libraries already encapsulated inside Skia or another owning SDK.
 
-## 16. Migration and compatibility
+## 17. Migration and compatibility
 
-### 16.1 GT-G1-07
+### 17.1 GT-G1-07
 
-GT-G1-07 historical evidence remains unchanged. Its existing semantic dependency evidence is not reopened or rematerialized solely for this migration.
+GT-G1-07 historical evidence remains unchanged. Existing Semantic Toolchain v1 Release remains immutable and available for evidence reproduction.
 
-The existing historical Semantic Toolchain v1 Release remains immutable and available for evidence reproduction.
-
-### 16.2 GT-G1-08+
+### 17.2 GT-G1-08+
 
 Before GT-G1-08 begins, `main` should have:
 
-1. Semantic SDK v2 producer/index/store/resolver implementation;
-2. the first complete v2 release published;
-3. a v2 repository lock selecting that release set;
-4. Linux/Windows/macOS native consumer qualification;
-5. source-free cross-target qualification for iOS/Android/Web;
-6. ordinary semantic CI using v2 instead of source-building Protobuf/Abseil.
+1. generic SDK Infrastructure sufficient for Semantic provider use;
+2. Semantic SDK v2 producer/index/store/resolver integration;
+3. the first complete v2 release published;
+4. a v2 repository lock selecting that release set;
+5. Linux/Windows/macOS native consumer qualification;
+6. source-free iOS/Android/Web target qualification;
+7. ordinary semantic CI using v2 instead of source-building Protobuf/Abseil.
 
-GT-G1-08 and later semantic tasks inherit the new build-environment authority.
+### 17.3 Historical assets
 
-### 16.3 Historical v1 assets
+Existing Semantic v1 and Skia release assets are never overwritten or deleted. v2 is a new Semantic publication family.
 
-Existing v1 release assets are never overwritten or deleted. v2 is a new publication family with new lock/index formats and identities.
+## 18. Failure handling
 
-## 17. Failure handling
-
-Semantic v2 is fail-closed.
-
-Consumer resolution fails when any of the following occurs:
-
-- unsupported or malformed repository lock;
-- locked release/index cannot be resolved;
-- index digest or `releaseSetId` mismatch;
-- host or target is unsupported;
-- selected asset digest/identity mismatch;
-- local Store manifest/file hashes are invalid;
-- runtime ABI metadata is incompatible with the requested target;
-- required CMake consumer files are missing;
-- host `protoc` is missing, non-runnable, or version-incompatible;
-- offline mode lacks a valid local materialization;
-- a consumer attempts an unauthorized source fallback.
+Semantic v2 is fail-closed. Resolution fails on malformed/unsupported locks, unresolved locked release/index, digest or identity mismatch, unsupported host/target, invalid Store materialization, ABI mismatch, missing consumer files, unusable/incompatible host `protoc`, missing offline materialization, or unauthorized source fallback.
 
 A missing Release asset never causes automatic Protobuf/Abseil source compilation in ordinary consumer mode.
 
-## 18. Testing and acceptance requirements
+Generic resolver/provider errors must identify the failing family so one broken future family cannot masquerade as a Semantic or Skia integrity failure.
+
+## 19. Testing and acceptance requirements
 
 Implementation is accepted only when all of the following are proven:
 
-1. A complete Semantic SDK v2 release exists with the three host tools, nine target runtimes, index, checksums, and provenance metadata.
+1. A complete Semantic SDK v2 release exists with three host tools, nine target runtimes, index, checksums, and provenance metadata.
 2. Release publication is immutable and idempotent for byte-identical existing releases.
-3. The repository v2 lock pins exactly one release index by tag, `releaseSetId`, and SHA-256.
-4. Host/runtime assets are independently content-addressed and unchanged identities can be reused across release sets.
+3. The repository v2 lock pins exactly one Semantic release index by tag, `releaseSetId`, and SHA-256.
+4. Host/runtime assets are independently content-addressed and unchanged identities can be reused.
 5. Windows, macOS, and Linux native semantic builds consume v2 assets source-free.
-6. iOS, Android, and Web semantic target builds consume a host `protoc` plus the correct target runtime source-free.
-7. Semantic CMake no longer requires target `protobuf::protoc` and uses the separately resolved `AXIOM_PROTOC`.
-8. The resolver uses the shared SDK Store without repo-local symlinks.
-9. A second worktree with an already-populated Store performs no semantic source clone/build/download.
-10. Missing assets download only the required immutable host/runtime packages, not the entire matrix.
-11. `--offline` succeeds with a valid Store and fails closed when required materialization is absent.
-12. Mirror transport is still checked against lock/index/asset authority.
-13. CI and local developer flows use the same resolver, lock, index, and verification logic.
-14. Producer invalidation tests prove ordinary semantic source changes do not rebuild dependency SDKs.
+6. iOS, Android, and Web builds consume a host `protoc` plus the correct target runtime source-free.
+7. Semantic CMake uses separately resolved `AXIOM_PROTOC`.
+8. The resolver uses the shared SDK Store without repo-local Semantic symlinks.
+9. A second worktree with a populated Store performs no Semantic source clone/build/download.
+10. Missing assets download only required immutable host/runtime packages.
+11. `--offline` succeeds with valid Store state and fails closed otherwise.
+12. Mirror transport remains checked against authority.
+13. CI and local development share resolver/lock/index/verification logic.
+14. Producer invalidation tests prove ordinary Axiom source changes do not rebuild dependency SDKs.
 15. GT-G1-07 historical evidence/assets are unchanged.
-16. Existing Skia locks/releases are unchanged by this work.
+16. Existing Skia locks/releases are unchanged.
+17. Generic Store/resolver tests prove SDK family namespaces cannot overwrite or reinterpret one another.
+18. Adding a synthetic second provider in tests is additive: it does not change Semantic identities, Semantic lock parsing, Semantic Store paths, or Semantic consumer exports.
+19. Generic resolver core has no dependency-specific branch that is required merely to recognize future package content; family-specific semantics are isolated behind provider contracts.
+20. Existing family materializations remain valid after another family is added.
 
-## 19. Expected developer workflow
+## 20. Expected developer workflow
 
-After v2 lands, a new worktree should need only the build-environment resolver.
-
-Native example:
+Native:
 
 ```text
 git clone ...
@@ -678,30 +649,50 @@ cmake ...
 cmake --build ...
 ```
 
-Cross-target example:
+Cross-target:
 
 ```text
 python tools/setup_build_environment.py --semantic --target android-arm64-v8a
 ```
 
-If the selected identities are already in the shared Store, setup is a local verification/resolution step. If they are missing, only the required immutable Release assets are downloaded and installed.
+Future additive usage may look like:
 
-Developers no longer need to create `.deps/protobuf` symlinks, know the shared dependency folder layout, or rebuild Protobuf/Abseil merely because they changed worktrees or moved to Windows/macOS.
+```text
+python tools/setup_build_environment.py --semantic --skia --target windows-x64
+```
 
-## 20. Non-goals
+That future syntax does not imply Skia migration is part of this implementation.
+
+If selected identities are already in the shared Store, setup is local verification/resolution. Developers no longer need `.deps/protobuf` symlinks, manual shared-folder layout knowledge, or repeat Protobuf/Abseil builds when changing worktrees/platforms.
+
+## 21. Non-goals
 
 This work does not:
 
 - modify Axiom semantic operation/runtime behavior;
 - redesign schema semantics;
 - rework GT-G1-07 evidence;
-- delete historical Semantic v1 assets;
-- overwrite any existing Release asset;
-- migrate every lightweight `.deps` dependency;
+- delete or overwrite historical Semantic assets;
 - migrate Skia into the shared Store in the same change;
-- introduce vcpkg, Conan, or another package manager as dependency authority;
+- alter existing Skia locks, release identities, or producer behavior;
+- migrate every lightweight `.deps` dependency;
+- create a general-purpose replacement for vcpkg/Conan;
+- require every dependency to become an Axiom SDK family;
+- publish OS/vendor SDKs that should remain system-installed;
+- choose a PDF/media/diagnostics dependency in advance;
 - allow cache/mirror/store contents to bypass lock/index/manifest verification.
 
-## 21. Acceptance boundary before GT-G1-08
+## 22. Acceptance boundary before GT-G1-08
 
-This design is considered operationally complete before GT-G1-08 only when Axiom has a published, immutable, complete Semantic SDK v2 Release Set; `main` is locked to it through the v2 index/lock authority; Linux, Windows, and macOS native consumers plus iOS/Android/Web cross-target consumers are proven source-free; and local development uses the persistent shared Axiom SDK Store rather than `.deps/protobuf` symlinks or repeated third-party source builds.
+This design is operationally complete before GT-G1-08 only when Axiom has:
+
+- a generic SDK Store/resolver layer whose ownership is outside the Semantic provider;
+- a published, immutable, complete Semantic SDK v2 Release Set;
+- `main` locked to it through v2 index/lock authority;
+- Linux, Windows, and macOS native consumers plus iOS/Android/Web cross-target consumers proven source-free;
+- local development using the persistent shared Axiom SDK Store rather than `.deps/protobuf` symlinks or repeated third-party source builds;
+- contract tests proving a future SDK family can be added additively without changing existing Semantic identities/contracts or existing Skia authority.
+
+The long-term architectural rule established by this work is:
+
+> **SDK families own their dependency authority; Axiom SDK Infrastructure owns only generic resolution/materialization mechanisms. New SDK families are additive and must not rewrite the authority of existing families.**
