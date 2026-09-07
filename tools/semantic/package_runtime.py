@@ -57,7 +57,8 @@ def package_runtime(lock: dict, profile: dict, key: str, root: Path, toolchain: 
                     output: Path) -> dict:
     identity, _ = make_runtime_identity(lock, profile, key, toolchain)
     _check_contract(root, key)
-    prefixes = {str(root.resolve()), root.resolve().as_posix()}
+    prefixes = {spelling for path in (root, root.absolute(), root.resolve())
+                for spelling in (str(path), path.as_posix())}
     prefixes |= {str(value) for name, value in toolchain.items() if name in {"buildPath", "sourcePath", "installPath"}}
     for path in (root / "lib/cmake").rglob("*.cmake"):
         text = path.read_text(encoding="utf-8")

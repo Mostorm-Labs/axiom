@@ -1,5 +1,6 @@
 """Target runtimes contain relocatable static consumers, never host protoc."""
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -72,6 +73,15 @@ class RuntimePackageTest(unittest.TestCase):
         (root / "lib/cmake/protobuf/protobuf-config.cmake").write_text(f'set(path "{root.as_posix()}/lib")\n')
         with self.assertRaisesRegex(SdkError, "relocat"):
             package_runtime(self.lock, self.profile, "linux-x86_64", root, fixture_toolchain(), self.base / "out")
+
+    @unittest.skipIf(os.name == "nt", "Windows exercises short-path aliases in the normal prefix test")
+    def test_unresolved_install_alias_is_not_allowed_in_cmake(self):
+        actual = runtime_fixture(self.base / "actual")
+        alias = self.base / "alias"
+        alias.symlink_to(actual, target_is_directory=True)
+        (actual / "lib/cmake/protobuf/protobuf-config.cmake").write_text(f'set(path "{alias.as_posix()}/lib")\n')
+        with self.assertRaisesRegex(SdkError, "relocat"):
+            package_runtime(self.lock, self.profile, "linux-x86_64", alias, fixture_toolchain(), self.base / "out")
 
     def test_pkgconfig_and_build_junk_are_not_the_cmake_sdk_contract(self):
         root = runtime_fixture(self.base / "install")
