@@ -1126,9 +1126,22 @@ void recordRuntimeObservation(
     const std::optional<std::vector<ObjectRecord>>& children_after,
     bool index_before,
     bool index_after) {
+    std::ofstream out;
+#if defined(_WIN32)
+    char* path = nullptr;
+    std::size_t path_size = 0U;
+    const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");
+    if (getenv_result != 0 || path == nullptr) {
+        std::free(path);
+        return;
+    }
+    out.open(path, std::ios::app);
+    std::free(path);
+#else
     const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
     if (path == nullptr) return;
-    std::ofstream out(path, std::ios::app);
+    out.open(path, std::ios::app);
+#endif
     out << std::setprecision(17);
     out << "{\"case_id\":\"" << test_case.case_id << "\",\"operation_name\":\""
         << test_case.operation_name << "\",\"polarity\":\""
