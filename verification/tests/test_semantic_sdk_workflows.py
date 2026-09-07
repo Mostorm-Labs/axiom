@@ -24,6 +24,8 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
         for key in ("linux-x86_64", "windows-x64-msvc-static", "macos-arm64", "macos-x64",
                     "ios-arm64", "ios-simulator-arm64", "android-arm64-v8a", "android-x86_64", "web-wasm32"):
             self.assertIn("target: " + key, workflow)
+        self.assertIn("cmake==3.30.5 ninja==1.11.1.4", workflow)
+        self.assertNotIn("ninja==1.12.1", workflow)
         self.assertIn("needs: host-tools", workflow)
         self.assertIn("tools/semantic/qualify_runtime.py", workflow)
         self.assertIn("semantic-v2-host-${{ matrix.host }}", workflow)

@@ -98,7 +98,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Install CMake and Ninja
-        run: python -m pip install cmake==3.30.5 ninja==1.12.1
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
       - name: Test runtime build, package and smoke contracts
         run: >-
           python -m unittest tools.semantic.tests.test_runtime_build_plan
