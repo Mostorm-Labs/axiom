@@ -68,8 +68,9 @@ class SdkStore:
         descriptor = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
         acquired = False
         try:
-            if os.fstat(descriptor).st_size == 0:
-                os.write(descriptor, b"0")
+            # Lock byte zero even when the file is empty: Windows permits
+            # locking beyond EOF. An initialization write before locking
+            # races with another holder and bypasses the retry loop.
             deadline = time.monotonic() + timeout
             while True:
                 try:
