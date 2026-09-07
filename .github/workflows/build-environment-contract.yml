@@ -4,6 +4,15 @@ on:
   pull_request:
     paths:
       - "tools/sdk/**"
+      - "semantic-sdk.lock.json"
+      - "tools/semantic/provider.py"
+      - "tools/semantic/package_host.py"
+      - "tools/semantic/package_runtime.py"
+      - "tools/semantic/package_common.py"
+      - "tools/semantic/tests/provider_fixtures.py"
+      - "tools/semantic/tests/test_provider_v2.py"
+      - "verification/tests/test_build_environment_v2.py"
+      - "verification/tests/test_semantic_provider_workflows.py"
       - "tools/semantic/contract.py"
       - "tools/semantic/profile-v2.json"
       - "tools/semantic/tests/test_contract_v2.py"
@@ -26,6 +35,15 @@ on:
     branches: [main]
     paths:
       - "tools/sdk/**"
+      - "semantic-sdk.lock.json"
+      - "tools/semantic/provider.py"
+      - "tools/semantic/package_host.py"
+      - "tools/semantic/package_runtime.py"
+      - "tools/semantic/package_common.py"
+      - "tools/semantic/tests/provider_fixtures.py"
+      - "tools/semantic/tests/test_provider_v2.py"
+      - "verification/tests/test_build_environment_v2.py"
+      - "verification/tests/test_semantic_provider_workflows.py"
       - "tools/semantic/contract.py"
       - "tools/semantic/profile-v2.json"
       - "tools/semantic/tests/test_contract_v2.py"
@@ -125,6 +143,11 @@ jobs:
         run: python -m unittest discover -s tools/sdk/tests -v
       - name: Test Semantic SDK v2 authority and Skia isolation
         run: python -m unittest tools.semantic.tests.test_contract_v2 tools.skia.tests.test_change_classifier -v
+      - name: Test Semantic Store provider and developer entry points
+        run: >-
+          python -m unittest tools.semantic.tests.test_provider_v2
+          verification.tests.test_build_environment_v2 verification.tests.test_build_environment
+          verification.tests.test_semantic_lock verification.tests.test_semantic_provider_workflows -v
       - name: Test host workflow boundary
         run: python -m unittest verification.tests.test_sdk_infrastructure_workflow -v
       - name: Check whitespace
