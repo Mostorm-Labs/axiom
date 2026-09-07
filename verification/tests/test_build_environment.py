@@ -1,5 +1,8 @@
+import contextlib
+import io
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -73,6 +76,22 @@ class BuildEnvironmentTest(unittest.TestCase):
             self.assertIn([sys.executable, "tools/bootstrap_deps.py", "--core"], commands)
             self.assertFalse(any("--semantic-codec" in command for command in commands))
             self.assertTrue(any("tools/semantic_fetch.py" in command for command in commands))
+
+    @mock.patch("tools.setup_build_environment.subprocess.run")
+    def test_setup_environment_surfaces_semantic_fetch_diagnostics(self, run):
+        run.side_effect = subprocess.CalledProcessError(
+            1,
+            [sys.executable, "tools/semantic_fetch.py"],
+            output="fetch stdout\n",
+            stderr="semantic identity mismatch\n",
+        )
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            with self.assertRaises(subprocess.CalledProcessError):
+                build_env.setup_environment(core=False, semantic=True, target="linux-x86_64")
+        self.assertIn("fetch stdout", stdout.getvalue())
+        self.assertIn("semantic identity mismatch", stderr.getvalue())
 
 
 if __name__ == "__main__":
