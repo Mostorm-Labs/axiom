@@ -73,6 +73,44 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertIn("needs.classify.outputs.should_build == 'true'", workflow)
         self.assertIn("uses: ./.github/workflows/semantic-sdk-producer.yml", workflow)
 
+    def test_semantic_v2_consumer_validation_has_transition_gate_and_exact_matrix(self):
+        workflow = (WORKFLOWS / "semantic-sdk-consumer-validation.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_call:", workflow)
+        self.assertIn("checkout_ref:", workflow)
+        self.assertIn("ref: ${{ inputs.checkout_ref ||", workflow)
+        self.assertIn("SEMANTIC_V2_NOT_LOCKED", workflow)
+        self.assertIn("semantic-sdk.lock.json", workflow)
+        for key in (
+            "linux-x86_64", "windows-x64-msvc-static", "macos-arm64", "macos-x64",
+            "ios-arm64", "ios-simulator-arm64", "android-arm64-v8a",
+            "android-x86_64", "web-wasm32",
+        ):
+            self.assertIn(key, workflow)
+        self.assertIn("tools/setup_build_environment.py --semantic", workflow)
+        self.assertIn('AXIOM_SEMANTIC_RUNTIME_ROOT', workflow)
+        self.assertIn('AXIOM_PROTOC', workflow)
+        self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
+        for forbidden in ("sdk_bytes", "sdk_url", "sdk_identity", "release_url"):
+            self.assertNotIn(forbidden, workflow.lower())
+
+    def test_build_environment_delegates_v2_matrix_without_rewriting_skia_consumer(self):
+        workflow = (WORKFLOWS / "build-environment-contract.yml").read_text(encoding="utf-8")
+        self.assertIn("uses: ./.github/workflows/semantic-sdk-consumer-validation.yml", workflow)
+        self.assertIn("semantic-sdk.lock.json", workflow)
+        skia = workflow.split("  skia-historical-consumer:", 1)[1].split("\n  sdk-infrastructure:", 1)[0]
+        self.assertIn("tools/skia/fetch.py", skia)
+        self.assertIn("android-x86_64-gles3", skia)
+        self.assertNotIn("semantic-sdk-consumer-validation", skia)
+
+    def test_g1_v2_evidence_uses_store_manifests_and_retains_v1_transition_marker(self):
+        workflow = (WORKFLOWS / "g1-semantic-codec.yml").read_text(encoding="utf-8")
+        self.assertIn("semantic-host-manifest.json", workflow)
+        self.assertIn("semantic-runtime-manifest.json", workflow)
+        self.assertIn("semantic-sdk.lock.json", workflow)
+        self.assertIn(".deps/protobuf/.canvas-semantic-toolchain.json", workflow)
+        self.assertIn("AXIOM_SEMANTIC_HOST_ROOT", workflow)
+        self.assertIn("AXIOM_SEMANTIC_RUNTIME_ROOT", workflow)
+
     def test_g103_evidence_does_not_promote_poc03_to_gate_authority(self):
         generator = (ROOT / "verification/tools/generate_g1_03_evidence.py").read_text(
             encoding="utf-8"
