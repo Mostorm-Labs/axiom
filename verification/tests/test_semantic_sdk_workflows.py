@@ -26,12 +26,22 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
             self.assertIn("target: " + key, workflow)
         self.assertIn("cmake==3.30.5 ninja==1.11.1.4", workflow)
         self.assertNotIn("ninja==1.12.1", workflow)
-        self.assertIn("needs: host-tools", workflow)
+        self.assertIn("needs: [host-tools, runtime-discovery]", workflow)
         self.assertIn("tools/semantic/qualify_runtime.py", workflow)
         self.assertIn("semantic-v2-host-${{ matrix.host }}", workflow)
         self.assertIn("semantic-v2-runtime-${{ matrix.target }}", workflow)
         self.assertNotIn("contents: write", workflow)
         self.assertNotIn("gh release", workflow)
+
+    def test_package_discovery_preflight_does_not_build_dependencies(self):
+        workflow = (ROOT / ".github/workflows/semantic-sdk-producer-contract.yml").read_text(encoding="utf-8")
+        preflight = workflow.split("  runtime-discovery:\n", 1)[1].split("  runtimes:\n", 1)[0]
+        self.assertIn("os: [ubuntu-24.04, windows-2025, macos-15]", preflight)
+        self.assertIn("cmake==3.30.5", preflight)
+        self.assertIn("tools.semantic.tests.test_runtime_cmake_discovery", preflight)
+        self.assertNotIn("bootstrap_deps.py", preflight)
+        self.assertNotIn("qualify_runtime.py", preflight)
+        self.assertNotIn("build_runtime.py", preflight)
 
 
 if __name__ == "__main__":

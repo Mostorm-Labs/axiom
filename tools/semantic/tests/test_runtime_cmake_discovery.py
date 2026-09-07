@@ -71,6 +71,20 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             capture_output=True, text=True, env=environment, check=False,
         )
 
+    def test_prefix_and_search_root_use_the_same_real_path(self):
+        with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
+            directory = Path(temporary).resolve()
+            runtime = directory / "runtime with spaces"
+            runtime.mkdir()
+            protoc = runtime / "protoc.exe"
+            protoc.touch()
+            alias = self.alias(runtime)
+            arguments = self.arguments(alias, alias / protoc.name)
+            expected = runtime.resolve().as_posix()
+            self.assertIn(f"-DCMAKE_PREFIX_PATH={expected}", arguments)
+            self.assertIn(f"-DCMAKE_FIND_ROOT_PATH={expected}", arguments)
+            self.assertIn(f"-DAXIOM_PROTOC={protoc.resolve().as_posix()}", arguments)
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
