@@ -61,6 +61,8 @@ def _validate_ref(family: str, identity: str, repository: str, tag: str,
             raise SdkError(f"invalid repository: {repository!r}")
     if not isinstance(tag, str) or not tag or any(ord(c) < 33 for c in tag):
         raise SdkError(f"invalid release tag: {tag!r}")
+    for component in tag.split("/"):
+        validate_component(component)
 
 
 @dataclass(frozen=True)

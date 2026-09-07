@@ -41,7 +41,7 @@ class HostAndPathTest(unittest.TestCase):
                      ("Linux", {"XDG_DATA_HOME": str(home / "Data")}, home / "Data/axiom/sdk")]
             for system, env, expected in cases:
                 self.assertEqual(default_store_root(system, env, home), expected)
-            self.assertEqual(default_store_root("Windows", {"AXIOM_SDK_STORE": str(home / "shared")}, home), home / "shared")
+            self.assertEqual(default_store_root("Windows", {"AXIOM_SDK_STORE": str(home / "shared")}, home), (home / "shared").resolve())
 
     def test_missing_windows_localappdata_fails(self):
         with self.assertRaises(SdkError):
@@ -50,7 +50,8 @@ class HostAndPathTest(unittest.TestCase):
     def test_refs_reject_namespace_or_asset_escape(self):
         for changes in ({"family": "../skia"}, {"kind": "/tmp"}, {"asset": "../asset.zip"},
                         {"asset": "C:asset.zip"}, {"asset": "NUL.zip"}, {"sha256": "BAD"},
-                        {"identity": "../escape"}, {"repository": "org/repo/extra"}):
+                        {"identity": "../escape"}, {"repository": "org/repo/extra"},
+                        {"release_tag": "../escape"}, {"release_tag": "/absolute"}):
             with self.subTest(changes=changes), self.assertRaises(SdkError):
                 artifact(**changes)
 

@@ -3,6 +3,8 @@ name: Build Environment Contract
 on:
   pull_request:
     paths:
+      - "tools/sdk/**"
+      - "verification/tests/test_sdk_infrastructure_workflow.py"
       - "deps.lock.json"
       - "semantic-toolchain.lock.json"
       - "r1-full-skia-sdk.lock.json"
@@ -20,6 +22,8 @@ on:
   push:
     branches: [main]
     paths:
+      - "tools/sdk/**"
+      - "verification/tests/test_sdk_infrastructure_workflow.py"
       - "deps.lock.json"
       - "semantic-toolchain.lock.json"
       - "r1-full-skia-sdk.lock.json"
@@ -98,3 +102,22 @@ jobs:
             --variant release \
             --summary-file "$GITHUB_STEP_SUMMARY"
           test ! -d .deps/skia
+
+  sdk-infrastructure:
+    name: sdk-infrastructure / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Test generic SDK infrastructure without dependency builds
+        run: python -m unittest discover -s tools/sdk/tests -v
+      - name: Test host workflow boundary
+        run: python -m unittest verification.tests.test_sdk_infrastructure_workflow -v
+      - name: Check whitespace
+        run: git diff --check
