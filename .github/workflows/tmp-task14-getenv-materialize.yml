@@ -1,0 +1,64 @@
+name: Temporary Task14 getenv materialization
+
+on:
+  push:
+    branches:
+      - fix/semantic-test-getenv-portability
+    paths:
+      - .github/workflows/tmp-task14-getenv-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.head_commit.message == 'chore: materialize getenv fix'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply exact C++ portability patch
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+
+          path = Path('runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp')
+          source = path.read_text(encoding='utf-8')
+          old = '''    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
+              if (path == nullptr) return;
+              std::ofstream out(path, std::ios::app);
+          '''
+          # Keep indentation exact to repository source, not the Python heredoc indentation.
+          old = old.replace('              ', '    ')
+          new = '''    std::ofstream out;
+          #if defined(_WIN32)
+              char* path = nullptr;
+              std::size_t path_size = 0U;
+              const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");
+              if (getenv_result != 0 || path == nullptr) {
+                  std::free(path);
+                  return;
+              }
+              out.open(path, std::ios::app);
+              std::free(path);
+          #else
+              const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
+              if (path == nullptr) return;
+              out.open(path, std::ios::app);
+          #endif
+          '''
+          new = new.replace('          #', '#').replace('              ', '    ').replace('          ', '')
+          if source.count(old) != 1:
+              raise SystemExit(f'expected exactly one getenv block, found {source.count(old)}')
+          path.write_text(source.replace(old, new), encoding='utf-8')
+          PYTHON
+          git diff --check
+          test "$(git diff --name-only)" = "runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp"
+      - name: Commit exact GREEN
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp
+          git commit -m "fix: use Windows-safe getenv in operation matrix test"
+          git push origin HEAD:fix/semantic-test-getenv-portability
