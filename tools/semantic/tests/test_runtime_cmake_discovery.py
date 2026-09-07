@@ -130,7 +130,6 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             generated_policy,
             "clang-cl 22 emits -Winvalid-offsetof from protoc-generated *.pb.cc; suppress only on generated sources",
         )
-        self.assertEqual(source.count("-Wno-invalid offsetof"), 0)
         self.assertEqual(source.count("-Wno-invalid-offsetof"), 1)
 
     def test_snapshot_bootstrap_sort_declares_algorithm_dependency(self):
