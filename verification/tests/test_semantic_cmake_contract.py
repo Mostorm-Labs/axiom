@@ -135,10 +135,10 @@ with (out / "calls.txt").open("a") as calls:
             output.write('add_executable(protobuf::protoc IMPORTED)\n'
                          'set_target_properties(protobuf::protoc PROPERTIES '
                          'IMPORTED_LOCATION "/never-run-target-protoc")\n')
-        # Generic disables CMake's Windows/MSVC platform flags. Select Windows
-        # explicitly on Windows instead: CMake still sets CROSSCOMPILING=TRUE,
-        # but its compiler sanity check uses the correct native ABI flags.
-        system = 'Windows' if os.name == 'nt' else 'Generic'
+        # Generic omits MSVC command rules and Apple's SDK linker flags.
+        # Select the native platform explicitly on those hosts instead: CMake
+        # still sets CROSSCOMPILING=TRUE, asserted below, without a fake compiler.
+        system = {'win32': 'Windows', 'darwin': 'Darwin'}.get(sys.platform, 'Generic')
         self.expect_success(extra=(f'-DCMAKE_SYSTEM_NAME={system}',
                                    '-DCMAKE_CROSSCOMPILING_EMULATOR=/never-run-emulator'))
         self.assertEqual((self.build / 'cross.txt').read_text(), 'TRUE')
