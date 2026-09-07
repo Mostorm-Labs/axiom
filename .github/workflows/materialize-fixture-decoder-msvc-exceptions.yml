@@ -25,13 +25,17 @@ jobs:
 
           path = Path("runtime/semantic/tests/CMakeLists.txt")
           source = path.read_text(encoding="utf-8")
-          old = '''target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)'''
-          new = '''target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE /EHsc)
-endif()
-gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)'''
+          old = (
+              "target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)\n"
+              "gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)"
+          )
+          new = (
+              "target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)\n"
+              "if(MSVC)\n"
+              "  target_compile_options(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE /EHsc)\n"
+              "endif()\n"
+              "gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)"
+          )
           if source.count(old) != 1:
               raise SystemExit(f"expected exactly one fixture decoder target block, found {source.count(old)}")
           path.write_text(source.replace(old, new), encoding="utf-8")
