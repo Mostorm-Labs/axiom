@@ -76,6 +76,7 @@ class SemanticCmakeExecutionTest(unittest.TestCase):
 project(SemanticHostContract LANGUAGES CXX)
 add_library(canvas_runtime_foundation INTERFACE)
 add_subdirectory(semantic)
+file(WRITE "${CMAKE_BINARY_DIR}/cross.txt" "${CMAKE_CROSSCOMPILING}")
 file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/links.txt"
      CONTENT "$<TARGET_PROPERTY:canvas_runtime_semantic,LINK_LIBRARIES>")
 ''')
@@ -134,8 +135,13 @@ with (out / "calls.txt").open("a") as calls:
             output.write('add_executable(protobuf::protoc IMPORTED)\n'
                          'set_target_properties(protobuf::protoc PROPERTIES '
                          'IMPORTED_LOCATION "/never-run-target-protoc")\n')
-        self.expect_success(extra=('-DCMAKE_SYSTEM_NAME=Generic',
+        # Generic disables CMake's Windows/MSVC platform flags. Select Windows
+        # explicitly on Windows instead: CMake still sets CROSSCOMPILING=TRUE,
+        # but its compiler sanity check uses the correct native ABI flags.
+        system = 'Windows' if os.name == 'nt' else 'Generic'
+        self.expect_success(extra=(f'-DCMAKE_SYSTEM_NAME={system}',
                                    '-DCMAKE_CROSSCOMPILING_EMULATOR=/never-run-emulator'))
+        self.assertEqual((self.build / 'cross.txt').read_text(), 'TRUE')
         self.assertEqual(self.generate(), ['host'])
 
     def test_host_is_mandatory_even_when_runtime_exports_protoc(self):
