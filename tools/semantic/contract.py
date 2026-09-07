@@ -95,11 +95,18 @@ def _identity(payload: dict) -> tuple[dict, str]:
 
 
 def validate_profile(value: Any) -> dict:
-    profile = _object(value, {"format", "hostContractVersion", "runtimeContractVersion", "hostTools", "runtimes"}, "profile")
+    profile = _object(value, {"format", "hostContractVersion", "runtimeContractVersion", "hostTools", "runtimes"}, "profile",
+                      frozenset({"runtimeContractVersions"}))
     if profile["format"] != PROFILE_FORMAT:
         _fail("unsupported profile format")
     _positive_int(profile["hostContractVersion"], "hostContractVersion")
     _positive_int(profile["runtimeContractVersion"], "runtimeContractVersion")
+    versions = profile.get("runtimeContractVersions", {})
+    if not isinstance(versions, dict) or versions.keys() - set(RUNTIME_KEYS):
+        _fail("invalid per-target runtime contract versions")
+    for key, version in versions.items():
+        if _positive_int(version, f"runtimeContractVersions.{key}") < profile["runtimeContractVersion"]:
+            _fail("per-target runtime contract version cannot precede the base contract")
     _object(profile["hostTools"], set(HOST_KEYS), "host matrix")
     _object(profile["runtimes"], set(RUNTIME_KEYS), "runtime matrix")
     for key, host in profile["hostTools"].items():
@@ -198,7 +205,7 @@ def make_runtime_identity(lock: dict, profile: dict, key: str, toolchain: dict) 
     return _identity({"format": "axiom-semantic-runtime-identity-v2", "key": key,
                       "protobuf": dependencies["protobuf"], "abseil": dependencies["abseil"],
                       "target": target, "toolchain": {k: v for k, v in toolchain.items() if k in _TOOLCHAIN_FIELDS},
-                      "contractVersion": profile["runtimeContractVersion"]})
+                      "contractVersion": profile.get("runtimeContractVersions", {}).get(key, profile["runtimeContractVersion"])})
 
 
 def make_release_set_identity(dependencies: dict, hosts: dict, runtimes: dict) -> tuple[dict, str]:

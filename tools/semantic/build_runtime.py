@@ -43,17 +43,28 @@ def runtime_build_commands(protobuf_source: Path, abseil_source: Path, build_roo
     )
 
 
-def _prefix_maps(args: list[str], source: Path, build: Path, windows: bool) -> list[str]:
+def _prefix_maps(args: list[str], source: Path, build: Path, windows: bool,
+                 *, install_root: Path | None = None) -> list[str]:
     # Normalize __FILE__/debug paths without making a checkout path an SDK ID.
     option = "/clang:" if windows else ""
     maps = [f'{option}-ffile-prefix-map="{source.as_posix()}"=/axiom-sdk/src',
             f'{option}-fdebug-prefix-map="{build.as_posix()}"=/axiom-sdk/build']
+    if windows and install_root is not None:
+        maps.append(f'{option}-ffile-prefix-map="{install_root.as_posix()}"=/axiom-sdk/install')
     result = list(args)
     for field in ("CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"):
         prefix = f"-D{field}="
         old = next((item for item in result if item.startswith(prefix)), prefix)
         result = [item for item in result if not item.startswith(prefix)]
         result.append(old + " " + " ".join(maps))
+    if windows:
+        launcher = ";".join((sys.executable, str(Path(__file__).with_name("windows_compile.py"))))
+        for language in ("C", "CXX"):
+            prefix = f"-DCMAKE_{language}_FLAGS="
+            for index, flag in enumerate(result):
+                if flag.startswith(prefix) and "/Brepro" not in flag.split():
+                    result[index] += " /Brepro"
+            result.append(f"-DCMAKE_{language}_COMPILER_LAUNCHER={launcher}")
     return result
 
 
@@ -72,6 +83,7 @@ def main() -> int:
     parser.add_argument("--cxx")
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--identify-only", action="store_true")
+    parser.add_argument("--facts-output", type=Path)
     args = parser.parse_args()
     lock, profile = read_json(args.deps_lock), load_profile(args.profile)
     selection = identify_toolchain(profile, args.target, ndk=args.ndk, emscripten=args.emscripten, cc=args.cc, cxx=args.cxx)
@@ -88,7 +100,8 @@ def main() -> int:
     # Keep work/logs on failure for diagnosis. No caller-owned directory is deleted.
     protobuf_source = safe_extract_source_tar(source_archive("protobuf", lock, args.cache), work / "sources/protobuf")
     abseil_source = safe_extract_source_tar(source_archive("abseil", lock, args.cache), work / "sources/abseil")
-    target_args = _prefix_maps(list(selection.cmake_args), work / "sources", work / "build", args.target.startswith("windows"))
+    target_args = _prefix_maps(list(selection.cmake_args), work / "sources", work / "build",
+                               args.target.startswith("windows"), install_root=install_root)
     environment = {**os.environ, "SOURCE_DATE_EPOCH": "0", "ZERO_AR_DATE": "1"}
     for command in runtime_build_commands(protobuf_source, abseil_source, work / "build", install_root, target_args, jobs=args.jobs):
         print("+", " ".join(command), flush=True)
@@ -99,7 +112,13 @@ def main() -> int:
                          (protobuf_source / "third_party/utf8_range/LICENSE", "utf8_range.txt"),
                          (abseil_source / "LICENSE", "Abseil.txt")):
         (licenses / name).write_bytes(source.read_bytes())
-    print(canonical_bytes({"target": args.target, "installRoot": str(install_root), "workRoot": str(work)}).decode())
+    facts = {"target": args.target, "installRoot": str(install_root), "workRoot": str(work),
+             "sourceRoot": str(work / "sources"), "buildRoot": str(work / "build"),
+             "cleanInstall": True}
+    if args.facts_output is not None:
+        args.facts_output.parent.mkdir(parents=True, exist_ok=True)
+        args.facts_output.write_bytes(canonical_bytes(facts) + b"\n")
+    print(canonical_bytes(facts).decode())
     return 0
 
 

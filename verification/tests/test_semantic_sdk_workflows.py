@@ -43,6 +43,15 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
         self.assertNotIn("qualify_runtime.py", preflight)
         self.assertNotIn("build_runtime.py", preflight)
 
+    def test_windows_runs_clean_build_comparison_before_artifact_upload(self):
+        workflow = (ROOT / ".github/workflows/semantic-sdk-producer-contract.yml").read_text(encoding="utf-8")
+        runtime = workflow.split("  runtimes:\n", 1)[1].split("  release-set:\n", 1)[0]
+        self.assertIn("--verify-clean-rebuild", runtime)
+        self.assertIn("tools.semantic.tests.test_runtime_reproducibility", runtime)
+        self.assertIn("out/semantic-sdk/runtime/reproducibility.json", runtime)
+        self.assertLess(runtime.index("--verify-clean-rebuild"), runtime.index("actions/upload-artifact"))
+        self.assertIn("if: matrix.family == 'windows'", runtime.split("--verify-clean-rebuild")[0])
+
 
 if __name__ == "__main__":
     unittest.main()

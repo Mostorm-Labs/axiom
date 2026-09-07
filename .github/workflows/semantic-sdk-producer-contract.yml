@@ -15,6 +15,7 @@ on:
       - "tools/semantic/package_common.py"
       - "tools/semantic/sources.py"
       - "tools/semantic/build_runtime.py"
+      - "tools/semantic/windows_compile.py"
       - "tools/semantic/package_runtime.py"
       - "tools/semantic/toolchain.py"
       - "tools/semantic/qualify_runtime.py"
@@ -140,6 +141,9 @@ jobs:
           $process = Start-Process $installer -ArgumentList /S,"/D=$installDir" -Wait -PassThru
           if ($process.ExitCode -ne 0) { throw "LLVM installation failed" }
           (Join-Path $installDir bin) | Out-File $env:GITHUB_PATH -Append
+      - name: Verify Windows reproducibility regressions with pinned LLVM
+        if: matrix.family == 'windows'
+        run: python -m unittest tools.semantic.tests.test_runtime_reproducibility -v
       - name: Install pinned Android NDK
         if: matrix.family == 'android'
         shell: bash
@@ -157,8 +161,11 @@ jobs:
           name: semantic-v2-host-${{ matrix.host }}
           path: out/semantic-sdk/host
       - name: Build, package twice and verify relocated runtime consumer
-        if: matrix.family != 'web'
+        if: matrix.family != 'web' && matrix.family != 'windows'
         run: python tools/semantic/qualify_runtime.py --target ${{ matrix.target }}
+      - name: Verify two independent Windows clean builds and native consumers
+        if: matrix.family == 'windows'
+        run: python tools/semantic/qualify_runtime.py --target ${{ matrix.target }} --verify-clean-rebuild
       - name: Build, package twice and execute Web runtime consumer
         if: matrix.family == 'web'
         shell: bash
@@ -172,6 +179,7 @@ jobs:
             out/semantic-sdk/runtime/package-a
             out/semantic-sdk/runtime/smoke.json
             out/semantic-sdk/runtime/toolchain.json
+            out/semantic-sdk/runtime/reproducibility.json
           if-no-files-found: error
           retention-days: 14
 
