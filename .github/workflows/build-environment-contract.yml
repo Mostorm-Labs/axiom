@@ -1,0 +1,100 @@
+name: Build Environment Contract
+
+on:
+  pull_request:
+    paths:
+      - "deps.lock.json"
+      - "semantic-toolchain.lock.json"
+      - "r1-full-skia-sdk.lock.json"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic_fetch.py"
+      - "tools/semantic_sdk.py"
+      - "tools/skia/fetch.py"
+      - "tools/skia/consumer.py"
+      - "verification/tests/test_build_environment.py"
+      - "verification/tests/test_semantic_lock.py"
+      - "verification/tests/test_semantic_sdk.py"
+      - "verification/tests/test_ci_trigger_boundaries.py"
+      - ".github/workflows/build-environment-contract.yml"
+      - ".github/workflows/g1-semantic-codec.yml"
+  push:
+    branches: [main]
+    paths:
+      - "deps.lock.json"
+      - "semantic-toolchain.lock.json"
+      - "r1-full-skia-sdk.lock.json"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic_fetch.py"
+      - "tools/semantic_sdk.py"
+      - "tools/skia/fetch.py"
+      - "tools/skia/consumer.py"
+      - "verification/tests/test_build_environment.py"
+      - "verification/tests/test_semantic_lock.py"
+      - "verification/tests/test_semantic_sdk.py"
+      - "verification/tests/test_ci_trigger_boundaries.py"
+      - ".github/workflows/build-environment-contract.yml"
+      - ".github/workflows/g1-semantic-codec.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-consumer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Run build-environment contracts
+        run: >-
+          python3 -m unittest
+          verification.tests.test_build_environment
+          verification.tests.test_semantic_sdk
+          verification.tests.test_semantic_lock -v
+      - name: Consume locked semantic environment
+        run: |
+          python3 tools/setup_build_environment.py --core --semantic --target linux-x86_64 --github-env "$GITHUB_ENV" --facts-output "$RUNNER_TEMP/build-environment.json"
+      - name: Configure, build, and test Axiom semantic consumer
+        run: |
+          cmake -S . -B out/build-environment-contract -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_SEMANTIC=ON \
+            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
+          cmake --build out/build-environment-contract --parallel
+          ctest --test-dir out/build-environment-contract --output-on-failure
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-environment-${{ github.sha }}
+          path: ${{ runner.temp }}/build-environment.json
+          if-no-files-found: error
+          retention-days: 14
+
+  skia-historical-consumer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Validate locked historical R1 Full consumer
+        run: |
+          python3 -m unittest tools.skia.tests.test_consumer -v
+          python3 - <<'PY'
+          import json
+          import sys
+          sys.path.insert(0, "tools/skia")
+          from consumer import validate_lock
+          validate_lock(json.load(open("r1-full-skia-sdk.lock.json", encoding="utf-8")))
+          print("R1 Full lock is valid")
+          PY
+          python3 tools/skia/fetch.py \
+            --profile tools/skia/profiles/r1-full-v1.json \
+            --lock r1-full-skia-sdk.lock.json \
+            --target android-x86_64-gles3 \
+            --variant release \
+            --summary-file "$GITHUB_STEP_SUMMARY"
+          test ! -d .deps/skia

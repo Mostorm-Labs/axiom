@@ -28,6 +28,33 @@ class SemanticSdkTest(unittest.TestCase):
             "cxxStandard": 20,
         }
 
+    def _complete_root(self, directory):
+        root = Path(directory) / "toolchain"
+        (root / "bin").mkdir(parents=True)
+        (root / "lib").mkdir()
+        (root / "include").mkdir()
+        (root / "bin" / "protoc").write_bytes(b"protoc")
+        (root / "bin" / "protoc").chmod(0o755)
+        (root / "lib" / "libprotobuf.a").write_bytes(b"protobuf")
+        (root / "lib" / "cmake" / "protobuf").mkdir(parents=True)
+        (root / "lib" / "cmake" / "absl").mkdir(parents=True)
+        (root / "lib" / "cmake" / "utf8_range").mkdir(parents=True)
+        (root / "lib" / "cmake" / "protobuf" / "protobuf-config.cmake").write_text("# protobuf\n")
+        (root / "lib" / "cmake" / "absl" / "abslConfig.cmake").write_text("# absl\n")
+        (root / "lib" / "cmake" / "utf8_range" / "utf8_range-config.cmake").write_text("# utf8\n")
+        lock = self._lock()
+        (root / ".canvas-semantic-toolchain.json").write_text(json.dumps({
+            "format": "canvas-semantic-toolchain-v1",
+            "protobuf_version": lock["dependencies"]["protobuf"]["version"],
+            "protobuf_edition": lock["dependencies"]["protobuf"]["edition"],
+            "protobuf_source_sha256": lock["dependencies"]["protobuf"]["source_sha256"],
+            "protobuf_asset_key": "linux-x86_64",
+            "protobuf_asset_sha256": lock["dependencies"]["protobuf"]["protoc_assets"]["linux-x86_64"]["sha256"],
+            "abseil_version": lock["dependencies"]["abseil"]["version"],
+            "abseil_source_sha256": lock["dependencies"]["abseil"]["source_sha256"],
+        }) + "\n")
+        return root
+
     def test_identity_excludes_install_path_and_is_canonical(self):
         identity_a, sdk_a = module.make_identity(self._lock(), self._toolchain())
         identity_b, sdk_b = module.make_identity(self._lock(), {**self._toolchain(), "installPath": "/tmp/other"})
@@ -37,30 +64,7 @@ class SemanticSdkTest(unittest.TestCase):
 
     def test_archive_is_deterministic_and_manifest_is_verified(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory) / "toolchain"
-            (root / "bin").mkdir(parents=True)
-            (root / "lib").mkdir()
-            (root / "include").mkdir()
-            (root / "bin" / "protoc").write_bytes(b"protoc")
-            (root / "bin" / "protoc").chmod(0o755)
-            (root / "lib" / "libprotobuf.a").write_bytes(b"protobuf")
-            (root / "lib" / "cmake" / "protobuf").mkdir(parents=True)
-            (root / "lib" / "cmake" / "absl").mkdir(parents=True)
-            (root / "lib" / "cmake" / "utf8_range").mkdir(parents=True)
-            (root / "lib" / "cmake" / "protobuf" / "protobuf-config.cmake").write_text("# protobuf\n")
-            (root / "lib" / "cmake" / "absl" / "abslConfig.cmake").write_text("# absl\n")
-            (root / "lib" / "cmake" / "utf8_range" / "utf8_range-config.cmake").write_text("# utf8\n")
-            lock = self._lock()
-            (root / ".canvas-semantic-toolchain.json").write_text(json.dumps({
-                "format": "canvas-semantic-toolchain-v1",
-                "protobuf_version": lock["dependencies"]["protobuf"]["version"],
-                "protobuf_edition": lock["dependencies"]["protobuf"]["edition"],
-                "protobuf_source_sha256": lock["dependencies"]["protobuf"]["source_sha256"],
-                "protobuf_asset_key": "linux-x86_64",
-                "protobuf_asset_sha256": lock["dependencies"]["protobuf"]["protoc_assets"]["linux-x86_64"]["sha256"],
-                "abseil_version": lock["dependencies"]["abseil"]["version"],
-                "abseil_source_sha256": lock["dependencies"]["abseil"]["source_sha256"],
-            }) + "\n")
+            root = self._complete_root(directory)
             (root / "include" / "semantic.h").write_text("#pragma once\n", encoding="utf-8")
             archive_a = Path(directory) / "a.zip"
             archive_b = Path(directory) / "b.zip"
@@ -74,6 +78,46 @@ class SemanticSdkTest(unittest.TestCase):
             self.assertEqual(verified["sdkId"], sdk_id)
             self.assertEqual((destination / "bin" / "protoc").read_bytes(), b"protoc")
             self.assertTrue(stat.S_IMODE((destination / "bin" / "protoc").stat().st_mode) & stat.S_IXUSR)
+
+    def test_locked_archive_can_ignore_current_producer_recipe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._complete_root(directory)
+            identity, _ = module.make_identity(self._lock(), self._toolchain())
+            identity["recipe"] = {**identity["recipe"], "sha256": "f" * 64}
+            historical_sdk_id = module.sha256_bytes(module.canonical_bytes(identity))
+            archive = Path(directory) / "historical.zip"
+            module.create_archive(root, module.make_manifest(root, identity, historical_sdk_id), archive)
+
+            with self.assertRaisesRegex(module.SdkError, "producer recipe"):
+                module.verify_archive(
+                    archive, Path(directory) / "strict", self._lock(), historical_sdk_id
+                )
+
+            verified = module.verify_archive(
+                archive,
+                Path(directory) / "consumer",
+                self._lock(),
+                historical_sdk_id,
+                enforce_current_recipe=False,
+            )
+            self.assertEqual(verified["sdkId"], historical_sdk_id)
+
+    def test_historical_consumer_still_rejects_dependency_identity_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._complete_root(directory)
+            identity, _ = module.make_identity(self._lock(), self._toolchain())
+            identity["protobuf"] = {**identity["protobuf"], "version": "999.0"}
+            historical_sdk_id = module.sha256_bytes(module.canonical_bytes(identity))
+            archive = Path(directory) / "dependency-drift.zip"
+            module.create_archive(root, module.make_manifest(root, identity, historical_sdk_id), archive)
+            with self.assertRaisesRegex(module.SdkError, "dependency identity"):
+                module.verify_archive(
+                    archive,
+                    Path(directory) / "consumer",
+                    self._lock(),
+                    historical_sdk_id,
+                    enforce_current_recipe=False,
+                )
 
     def test_archive_rejects_path_traversal(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -107,27 +151,9 @@ class SemanticSdkTest(unittest.TestCase):
 
     def test_archive_rejects_non_executable_protoc(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory) / "toolchain"
-            (root / "bin").mkdir(parents=True)
-            (root / "lib" / "cmake" / "protobuf").mkdir(parents=True)
-            (root / "lib" / "cmake" / "absl").mkdir(parents=True)
-            (root / "lib" / "cmake" / "utf8_range").mkdir(parents=True)
-            (root / "bin" / "protoc").write_bytes(b"protoc")
-            (root / "lib" / "libprotobuf.a").write_bytes(b"protobuf")
-            (root / "lib" / "cmake" / "protobuf" / "protobuf-config.cmake").write_text("# protobuf\n")
-            (root / "lib" / "cmake" / "absl" / "abslConfig.cmake").write_text("# absl\n")
-            (root / "lib" / "cmake" / "utf8_range" / "utf8_range-config.cmake").write_text("# utf8\n")
+            root = self._complete_root(directory)
+            (root / "bin" / "protoc").chmod(0o644)
             lock = self._lock()
-            (root / ".canvas-semantic-toolchain.json").write_text(json.dumps({
-                "format": "canvas-semantic-toolchain-v1",
-                "protobuf_version": lock["dependencies"]["protobuf"]["version"],
-                "protobuf_edition": lock["dependencies"]["protobuf"]["edition"],
-                "protobuf_source_sha256": lock["dependencies"]["protobuf"]["source_sha256"],
-                "protobuf_asset_key": "linux-x86_64",
-                "protobuf_asset_sha256": lock["dependencies"]["protobuf"]["protoc_assets"]["linux-x86_64"]["sha256"],
-                "abseil_version": lock["dependencies"]["abseil"]["version"],
-                "abseil_source_sha256": lock["dependencies"]["abseil"]["source_sha256"],
-            }) + "\n")
             identity, sdk_id = module.make_identity(lock, self._toolchain())
             archive = Path(directory) / "toolchain.zip"
             module.create_archive(root, module.make_manifest(root, identity, sdk_id), archive)

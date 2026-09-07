@@ -38,8 +38,29 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         trigger = trigger_block("g1-semantic-codec.yml")
         self.assertIn('"runtime/semantic/**"', trigger)
         self.assertIn('"schema/axiom/v1/**"', trigger)
+        self.assertIn('"tools/setup_build_environment.py"', trigger)
         self.assertNotIn("poc03", trigger.lower())
         self.assertNotIn("needs:", trigger)
+        workflow = (WORKFLOWS / "g1-semantic-codec.yml").read_text(encoding="utf-8")
+        self.assertIn("tools/setup_build_environment.py --core --semantic", workflow)
+        self.assertIn('-DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"', workflow)
+        self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
+        self.assertNotIn("-DProtobuf_DIR=", workflow)
+        self.assertNotIn("-Dabsl_DIR=", workflow)
+        self.assertNotIn("-Dutf8_range_DIR=", workflow)
+
+    def test_build_environment_contract_is_consumer_only(self):
+        workflow = (WORKFLOWS / "build-environment-contract.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("tools/setup_build_environment.py --core --semantic", workflow)
+        self.assertIn("tools/skia/fetch.py", workflow)
+        self.assertIn("r1-full-skia-sdk.lock.json", workflow)
+        self.assertIn("android-x86_64-gles3", workflow)
+        self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
+        self.assertNotIn("tools/skia/build.py", workflow)
+        self.assertNotIn("git-sync-deps", workflow)
+        self.assertNotIn("gh release create", workflow)
 
     def test_g103_evidence_does_not_promote_poc03_to_gate_authority(self):
         generator = (ROOT / "verification/tools/generate_g1_03_evidence.py").read_text(
