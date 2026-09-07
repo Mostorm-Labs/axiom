@@ -82,7 +82,15 @@ jobs:
         with: { python-version: "3.12" }
       - name: Validate locked historical R1 Full consumer
         run: |
-          python3 -m unittest tools.skia.tests.test_consumer tools.skia.tests.test_sdk_tools -v
+          python3 -m unittest tools.skia.tests.test_consumer -v
+          python3 - <<'PY'
+          import json
+          import sys
+          sys.path.insert(0, "tools/skia")
+          from consumer import validate_lock
+          validate_lock(json.load(open("r1-full-skia-sdk.lock.json", encoding="utf-8")))
+          print("R1 Full lock is valid")
+          PY
           python3 tools/skia/fetch.py \
             --profile tools/skia/profiles/r1-full-v1.json \
             --lock r1-full-skia-sdk.lock.json \
