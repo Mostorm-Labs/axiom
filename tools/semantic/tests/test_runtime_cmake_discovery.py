@@ -202,7 +202,7 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             (runtime / "lib/cmake/absl/abslConfig.cmake").unlink()
             result = self.configure(directory, runtime, decoy=decoy)
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn('provided by "Protobuf"', result.stdout + result.stderr)
+            self.assertIn('provided by "absl"', result.stdout + result.stderr)
 
 
 if __name__ == "__main__":
