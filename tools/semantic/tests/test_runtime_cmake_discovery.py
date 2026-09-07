@@ -175,7 +175,6 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
             directory = Path(temporary).resolve()
             actual = directory / "runtime with spaces"
-            actual.mkdir()
             self.packages(actual)
             aliased = self.alias(actual)
             result = self.configure(directory, aliased)
