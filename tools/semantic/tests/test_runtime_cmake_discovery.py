@@ -85,6 +85,15 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             self.assertIn(f"-DCMAKE_FIND_ROOT_PATH={expected}", arguments)
             self.assertIn(f"-DAXIOM_PROTOC={protoc.resolve().as_posix()}", arguments)
 
+    def test_locked_candidate_workflow_uses_shared_cmake_argument_contract(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / ".github/workflows/semantic-sdk-consumer-validation.yml").read_text(encoding="utf-8")
+        self.assertGreaterEqual(source.count("consumer_cmake_arguments"), 2)
+        self.assertGreaterEqual(source.count("target_cmake_arguments"), 2)
+        self.assertGreaterEqual(source.count("subprocess.run"), 4)
+        self.assertNotIn('cmake -S . -B "out/consumer-$TARGET_KEY"', source)
+        self.assertIn('build_type = "Debug" if family == "linux" else "Release"', source)
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
