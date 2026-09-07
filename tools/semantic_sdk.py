@@ -162,7 +162,40 @@ def _safe_member(name: str) -> Path:
     return relative
 
 
-def _validate_manifest(manifest: Any, lock: dict[str, Any], expected_sdk_id: str) -> dict[str, Any]:
+def _validate_dependency_identity(identity: dict[str, Any], lock: dict[str, Any]) -> None:
+    dependencies = lock["dependencies"]
+    expected = {
+        "format": IDENTITY_FORMAT,
+        "target": {"os": "linux", "arch": "x86_64"},
+        "protobuf": {
+            "version": dependencies["protobuf"]["version"],
+            "edition": dependencies["protobuf"]["edition"],
+            "sourceSha256": dependencies["protobuf"]["source_sha256"],
+            "protocAssetSha256": dependencies["protobuf"]["protoc_assets"]["linux-x86_64"]["sha256"],
+        },
+        "abseil": {
+            "version": dependencies["abseil"]["version"],
+            "sourceSha256": dependencies["abseil"]["source_sha256"],
+        },
+    }
+    for key, value in expected.items():
+        if identity.get(key) != value:
+            raise SdkError(f"semantic SDK dependency identity mismatch for {key}")
+    if set(identity) != {"format", "target", "protobuf", "abseil", "toolchain", "recipe"}:
+        raise SdkError("semantic SDK dependency identity has unexpected fields")
+    if not isinstance(identity.get("toolchain"), dict) or not identity["toolchain"]:
+        raise SdkError("semantic SDK toolchain identity is missing")
+    if not isinstance(identity.get("recipe"), dict) or not identity["recipe"]:
+        raise SdkError("semantic SDK producer recipe identity is missing")
+
+
+def _validate_manifest(
+    manifest: Any,
+    lock: dict[str, Any],
+    expected_sdk_id: str,
+    *,
+    enforce_current_recipe: bool = True,
+) -> dict[str, Any]:
     if not isinstance(manifest, dict) or manifest.get("format") != FORMAT or manifest.get("schemaVersion") != 1:
         raise SdkError("unsupported semantic SDK manifest")
     identity = manifest.get("identity")
@@ -170,12 +203,13 @@ def _validate_manifest(manifest: Any, lock: dict[str, Any], expected_sdk_id: str
         raise SdkError("semantic SDK identity is missing")
     if manifest.get("sdkId") != expected_sdk_id:
         raise SdkError("semantic SDK ID does not match the locked SDK")
-    toolchain = identity.get("toolchain")
-    if not isinstance(toolchain, dict):
-        raise SdkError("semantic SDK toolchain identity is missing")
-    _, actual_sdk_id = make_identity(lock, toolchain)
-    if actual_sdk_id != expected_sdk_id:
-        raise SdkError("semantic SDK identity does not match deps.lock.json")
+    if sha256_bytes(canonical_bytes(identity)) != expected_sdk_id:
+        raise SdkError("semantic SDK ID does not match its canonical identity")
+    _validate_dependency_identity(identity, lock)
+    if enforce_current_recipe:
+        current_identity, _ = make_identity(lock, identity["toolchain"])
+        if identity["recipe"] != current_identity["recipe"]:
+            raise SdkError("semantic SDK producer recipe does not match current producer recipe")
     files = manifest.get("files")
     if not isinstance(files, list) or not files:
         raise SdkError("semantic SDK manifest has no files")
@@ -199,7 +233,14 @@ def _validate_manifest(manifest: Any, lock: dict[str, Any], expected_sdk_id: str
     return manifest
 
 
-def verify_archive(archive_path: Path, destination: Path, lock: dict[str, Any], expected_sdk_id: str) -> dict[str, Any]:
+def verify_archive(
+    archive_path: Path,
+    destination: Path,
+    lock: dict[str, Any],
+    expected_sdk_id: str,
+    *,
+    enforce_current_recipe: bool = True,
+) -> dict[str, Any]:
     if not archive_path.is_file():
         raise SdkError(f"semantic SDK archive is missing: {archive_path}")
     with zipfile.ZipFile(archive_path) as archive:
@@ -214,11 +255,17 @@ def verify_archive(archive_path: Path, destination: Path, lock: dict[str, Any], 
             manifest = json.loads(archive.read("manifest.json"))
         except (KeyError, json.JSONDecodeError) as error:
             raise SdkError("semantic SDK archive has no valid manifest") from error
-        manifest = _validate_manifest(manifest, lock, expected_sdk_id)
+        manifest = _validate_manifest(
+            manifest,
+            lock,
+            expected_sdk_id,
+            enforce_current_recipe=enforce_current_recipe,
+        )
         expected_names = {"manifest.json", *(f"toolchain/{item['path']}" for item in manifest["files"])}
         actual_names = {member.filename for member in members}
         if actual_names != expected_names:
             raise SdkError("semantic SDK archive does not match manifest file set")
+        destination.parent.mkdir(parents=True, exist_ok=True)
         temporary = Path(tempfile.mkdtemp(prefix="axiom-semantic-sdk-", dir=destination.parent))
         try:
             for item in manifest["files"]:
@@ -243,7 +290,6 @@ def verify_archive(archive_path: Path, destination: Path, lock: dict[str, Any], 
                marker.get("abseil_version") != dependencies["abseil"]["version"] or \
                marker.get("abseil_source_sha256") != dependencies["abseil"]["source_sha256"]:
                 raise SdkError("semantic SDK marker does not match deps.lock.json")
-            destination.parent.mkdir(parents=True, exist_ok=True)
             backup = destination.with_name(destination.name + ".previous")
             if backup.exists():
                 shutil.rmtree(backup)
@@ -275,7 +321,7 @@ def main() -> int:
         toolchain = json.loads(args.toolchain_json.read_text(encoding="utf-8"))
         identity, sdk_id = make_identity(lock, toolchain)
         manifest = make_manifest(args.root, identity, sdk_id)
-        create_archive(args.root, manifest, args.output)
+        create_archive(root=args.root, manifest=manifest, output=args.output)
         print(json.dumps({"sdkId": sdk_id, "archive": str(args.output)}, sort_keys=True))
     else:
         manifest = verify_archive(args.archive, args.destination, lock, args.sdk_id)
