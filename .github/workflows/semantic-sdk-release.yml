@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: semantic-sdk-release
@@ -45,6 +44,8 @@ jobs:
     needs: [guard, producer]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    permissions:
+      contents: write
     outputs:
       candidate_ref: ${{ steps.stage.outputs.candidate_ref }}
       needs_lock_pr: ${{ steps.stage.outputs.needs_lock_pr }}
@@ -67,12 +68,41 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.producer.outputs.candidate_lock_artifact }}
-          path: out/semantic-candidate-lock
+          path: out/producer-candidate-lock
+      - name: Verify complete Release Set before publication
+        shell: bash
+        run: |
+          mkdir -p out/promotion out/semantic-candidate-lock
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tools.semantic.aggregate import verify_release_directory
+
+          directory = Path("out/semantic-release")
+          facts = verify_release_directory(directory)
+          zip_assets = sorted(path.name for path in directory.glob("*.zip"))
+          if len(zip_assets) != 12:
+              raise SystemExit(f"expected 12 SDK ZIP assets, found {len(zip_assets)}")
+          required = {"semantic-sdk-index.json", "SHA256SUMS"}
+          missing = sorted(name for name in required if not (directory / name).is_file())
+          if missing:
+              raise SystemExit(f"missing release authority files: {missing}")
+          Path("out/promotion/prepublish.json").write_text(
+              json.dumps({"releaseSetId": facts["releaseSetId"], "zipAssets": zip_assets,
+                          "indexSha256": facts["indexSha256"]}, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          tag=$(python -c 'import json; print(json.load(open("out/semantic-release/release.json"))["tag"])')
+          python tools/update_semantic_lock.py \
+            --index out/semantic-release/semantic-sdk-index.json \
+            --tag "$tag" \
+            --output out/semantic-candidate-lock/semantic-sdk.lock.json
+          cmp out/semantic-candidate-lock/semantic-sdk.lock.json out/producer-candidate-lock/semantic-sdk.lock.json
       - name: Publish or verify the immutable Release Set
         id: publish
         shell: bash
         run: |
-          mkdir -p out/promotion
           python tools/semantic/publish_release.py \
             --directory out/semantic-release \
             --target-commit "$SOURCE_SHA" | tee out/promotion/release.json
@@ -98,7 +128,8 @@ jobs:
           PY
 
           release_set_id=$(python -c 'import json; print(json.load(open("out/promotion/release.json"))["releaseSetId"])')
-          branch="semantic-sdk-lock-${release_set_id:0:16}"
+          prefix=${release_set_id:0:16}
+          branch="automation/semantic-sdk-lock-$prefix"
           echo "release_set_id=$release_set_id" >> "$GITHUB_OUTPUT"
 
           if [[ -f semantic-sdk.lock.json ]] && cmp -s semantic-sdk.lock.json out/semantic-candidate-lock/semantic-sdk.lock.json; then
@@ -122,7 +153,7 @@ jobs:
             [[ "$changed" == "semantic-sdk.lock.json" ]]
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: accept Semantic SDK ${release_set_id:0:16}"
+            git commit -m "chore: advance Semantic SDK lock"
             git push origin "HEAD:refs/heads/$branch"
           fi
 
@@ -146,6 +177,9 @@ jobs:
     needs: [guard, promote, candidate-consumer]
     if: needs.promote.outputs.needs_lock_pr == 'true'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE_SHA: ${{ needs.guard.outputs.source_sha }}
@@ -157,22 +191,26 @@ jobs:
         with:
           ref: ${{ needs.guard.outputs.source_sha }}
           fetch-depth: 0
+          persist-credentials: false
       - name: Re-check that the candidate branch is lock-only
         shell: bash
         run: |
           git fetch --no-tags origin "refs/heads/$CANDIDATE_REF"
           changed=$(git diff --name-only "$SOURCE_SHA...FETCH_HEAD")
           [[ "$changed" == "semantic-sdk.lock.json" ]]
+          git show FETCH_HEAD:semantic-sdk.lock.json > out/candidate-lock.json
       - name: Open the lock-only consumer-authority PR
         shell: bash
         run: |
           existing=$(gh pr list --base main --head "$CANDIDATE_REF" --state open --json number --jq '.[0].number // empty')
           if [[ -n "$existing" ]]; then
-            echo "Lock PR #$existing already exists"
+            echo "Lock PR #$existing already exists for $CANDIDATE_REF"
             exit 0
           fi
+          workflow_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          prefix=${RELEASE_SET_ID:0:16}
           gh pr create \
             --base main \
             --head "$CANDIDATE_REF" \
-            --title "chore: accept Semantic SDK ${RELEASE_SET_ID:0:16}" \
-            --body "Accept immutable Semantic SDK Release Set \`$RELEASE_SET_ID\` (\`$RELEASE_TAG\`). The candidate branch was explicitly qualified by the reusable source-free consumer matrix before this PR was opened. This PR changes only \`semantic-sdk.lock.json\`."
+            --title "chore: advance Semantic SDK to $prefix" \
+            --body "Accept immutable Semantic SDK Release Set \`$RELEASE_SET_ID\` (\`$RELEASE_TAG\`). Candidate authority was explicitly qualified before PR creation by the source-free consumer matrix in $workflow_url. This PR changes only \`semantic-sdk.lock.json\`; historical \`semantic-toolchain.lock.json\` remains untouched."
