@@ -1,0 +1,109 @@
+"""Real CMake discovery through the relocated SDK prefix, without an SDK build."""
+from __future__ import annotations
+
+import ctypes
+import importlib.util
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import unittest
+
+
+class RuntimeCMakeDiscoveryTest(unittest.TestCase):
+    def arguments(self, runtime: Path, protoc: Path) -> list[str]:
+        spec = importlib.util.find_spec("tools.semantic.cmake_consumer")
+        self.assertIsNotNone(spec, "the runtime smoke must expose its shared CMake search arguments")
+        from tools.semantic.cmake_consumer import consumer_cmake_arguments
+        return consumer_cmake_arguments(runtime, protoc)
+
+    def packages(self, runtime: Path) -> None:
+        configs = {
+            "protobuf/protobuf-config.cmake": (
+                'find_package(absl CONFIG REQUIRED)\n'
+                'find_package(utf8_range CONFIG REQUIRED)\n'
+                'set(AXIOM_TEST_PROTOBUF_FOUND TRUE)\n'
+            ),
+            "absl/abslConfig.cmake": "set(AXIOM_TEST_ABSL_FOUND TRUE)\n",
+            "utf8_range/utf8_range-config.cmake": "set(AXIOM_TEST_UTF8_FOUND TRUE)\n",
+        }
+        for name, text in configs.items():
+            path = runtime / "lib/cmake" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+
+    def alias(self, root: Path) -> Path:
+        if os.name == "nt":
+            from ctypes import wintypes
+            get_short = ctypes.WinDLL("kernel32", use_last_error=True).GetShortPathNameW
+            get_short.argtypes = [wintypes.LPCWSTR, wintypes.LPWSTR, wintypes.DWORD]
+            get_short.restype = wintypes.DWORD
+            length = get_short(str(root), None, 0)
+            if not length:
+                raise ctypes.WinError(ctypes.get_last_error())
+            buffer = ctypes.create_unicode_buffer(length)
+            if not get_short(str(root), buffer, length):
+                raise ctypes.WinError(ctypes.get_last_error())
+            result = Path(buffer.value)
+            self.assertNotEqual(str(result), str(root), "Windows regression requires an actual short-path alias")
+            return result
+        alias = root.parent / "alias"
+        alias.symlink_to(root, target_is_directory=True)
+        return alias
+
+    def configure(self, directory: Path, runtime: Path, *, decoy: Path | None = None) -> subprocess.CompletedProcess:
+        script = directory / "discover.cmake"
+        script.write_text(
+            'cmake_minimum_required(VERSION 3.30)\n'
+            'find_package(Protobuf CONFIG REQUIRED)\n'
+            'if(NOT AXIOM_TEST_PROTOBUF_FOUND OR NOT AXIOM_TEST_ABSL_FOUND OR NOT AXIOM_TEST_UTF8_FOUND)\n'
+            '  message(FATAL_ERROR "The SDK dependency closure was not found")\n'
+            'endif()\n', encoding="utf-8")
+        protoc = directory / "host/bin/protoc"
+        protoc.parent.mkdir(parents=True, exist_ok=True)
+        protoc.touch()
+        environment = os.environ.copy()
+        if decoy is not None:
+            environment["CMAKE_PREFIX_PATH"] = str(decoy)
+        return subprocess.run(
+            ["cmake", *self.arguments(runtime, protoc), "--debug-find", "-P", str(script)],
+            capture_output=True, text=True, env=environment, check=False,
+        )
+
+    @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
+    def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
+        with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
+            directory = Path(temporary).resolve()
+            actual = directory / "runtime with spaces"
+            self.packages(actual)
+            aliased = self.alias(actual)
+            result = self.configure(directory, aliased)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
+    def test_missing_runtime_does_not_fall_back_to_host_packages(self):
+        with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
+            directory = Path(temporary).resolve()
+            runtime, decoy = directory / "runtime", directory / "host-install"
+            runtime.mkdir()
+            self.packages(decoy)
+            result = self.configure(directory, runtime, decoy=decoy)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('provided by "Protobuf"', result.stdout + result.stderr)
+
+    @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
+    def test_missing_transitive_package_does_not_fall_back_to_host(self):
+        with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
+            directory = Path(temporary).resolve()
+            runtime, decoy = directory / "runtime", directory / "host-install"
+            self.packages(runtime)
+            self.packages(decoy)
+            (runtime / "lib/cmake/absl/abslConfig.cmake").unlink()
+            result = self.configure(directory, runtime, decoy=decoy)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('provided by "absl"', result.stdout + result.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()

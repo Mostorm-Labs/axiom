@@ -13,6 +13,7 @@ if __package__ in {None, ""}:
 
 from tools.sdk.archive import canonical_bytes
 from tools.sdk.model import HostPlatform, SdkError, detect_host_platform, validate_component
+from tools.semantic.cmake_consumer import consumer_cmake_arguments
 from tools.semantic.contract import DEFAULT_PROFILE, ROOT, RUNTIME_KEYS, load_profile, read_json
 from tools.semantic.package_host import install_host, probe_host
 from tools.semantic.package_runtime import install_runtime
@@ -46,9 +47,7 @@ def smoke_consumer(target: str, runtime_directory: Path, host_directory: Path, *
         protoc = host_root / host["identity"]["executable"]
         command = ["cmake", "-S", str(ROOT / "tools/semantic/smoke"), "-B", str(build), "-G", "Ninja",
                    "-DCMAKE_BUILD_TYPE=Release", *toolchain.cmake_args,
-                   f"-DCMAKE_PREFIX_PATH={runtime_root.as_posix()}", f"-DAXIOM_PROTOC={protoc.as_posix()}",
-                   f"-DCMAKE_FIND_ROOT_PATH={runtime_root.as_posix()}", "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
-                   "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF", "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"]
+                   *consumer_cmake_arguments(runtime_root, protoc)]
         subprocess.run(command, check=True)
         subprocess.run(["cmake", "--build", str(build), "--parallel", "2"], check=True)
         execution = "not-run-cross-target"
