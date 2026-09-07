@@ -4,6 +4,7 @@
 #include "canvas/semantic/validator.hpp"
 #include "object_store_mutator.hpp"
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <cstdint>
 #include <map>
 #include <optional>
