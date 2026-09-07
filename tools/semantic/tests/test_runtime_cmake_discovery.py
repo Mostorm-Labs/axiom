@@ -94,6 +94,13 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
         self.assertNotIn('cmake -S . -B "out/consumer-$TARGET_KEY"', source)
         self.assertIn('build_type = "Debug" if family == "linux" else "Release"', source)
 
+    def test_locked_candidate_web_lane_links_and_runs_node_smoke(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / ".github/workflows/semantic-sdk-consumer-validation.yml").read_text(encoding="utf-8")
+        self.assertIn("canvas_semantic_golden_probe", source)
+        self.assertIn('subprocess.run(["node"', source)
+        self.assertIn("returncode == 64", source)
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
