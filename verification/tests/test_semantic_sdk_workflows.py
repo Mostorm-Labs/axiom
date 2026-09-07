@@ -19,6 +19,18 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
         self.assertNotIn("gh release", workflow)
         self.assertNotIn("--semantic-codec", workflow)
 
+    def test_runtime_matrix_uses_producer_only_build_and_relocated_smoke(self):
+        workflow = (ROOT / ".github/workflows/semantic-sdk-producer-contract.yml").read_text(encoding="utf-8")
+        for key in ("linux-x86_64", "windows-x64-msvc-static", "macos-arm64", "macos-x64",
+                    "ios-arm64", "ios-simulator-arm64", "android-arm64-v8a", "android-x86_64", "web-wasm32"):
+            self.assertIn("target: " + key, workflow)
+        self.assertIn("needs: host-tools", workflow)
+        self.assertIn("tools/semantic/qualify_runtime.py", workflow)
+        self.assertIn("semantic-v2-host-${{ matrix.host }}", workflow)
+        self.assertIn("semantic-v2-runtime-${{ matrix.target }}", workflow)
+        self.assertNotIn("contents: write", workflow)
+        self.assertNotIn("gh release", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
