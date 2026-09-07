@@ -57,6 +57,7 @@ class BuildEnvironmentTest(unittest.TestCase):
             self.assertEqual(text.count("CMAKE_PREFIX_PATH="), 1)
             self.assertIn(f"AXIOM_SEMANTIC_RUNTIME_ROOT={root.resolve()}\n", text)
             self.assertIn(f"AXIOM_SEMANTIC_HOST_ROOT={root.resolve()}\n", text)
+            self.assertIn(f"AXIOM_PROTOC={(root / 'bin/protoc').resolve()}\n", text)
 
     @mock.patch("tools.setup_build_environment.subprocess.run")
     def test_setup_environment_never_requests_semantic_source_bootstrap(self, run):
