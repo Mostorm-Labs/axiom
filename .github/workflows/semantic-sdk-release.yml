@@ -1,0 +1,178 @@
+name: Semantic SDK Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: semantic-sdk-release
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    outputs:
+      source_sha: ${{ steps.main.outputs.source_sha }}
+    steps:
+      - name: Require an exact main workflow_dispatch
+        id: main
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "Semantic SDK promotion may run only from refs/heads/main" >&2
+            exit 1
+          fi
+          if [[ ! "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Semantic SDK promotion requires an exact commit SHA" >&2
+            exit 1
+          fi
+          echo "source_sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+
+  producer:
+    needs: guard
+    uses: ./.github/workflows/semantic-sdk-producer.yml
+    with:
+      host_tools: '["linux-x86_64","windows-x64","macos-universal"]'
+      runtimes: '["linux-x86_64","windows-x64-msvc-static","macos-arm64","macos-x64","ios-arm64","ios-simulator-arm64","android-arm64-v8a","android-x86_64","web-wasm32"]'
+      aggregate: true
+      accepted_ref: ${{ needs.guard.outputs.source_sha }}
+      artifact_prefix: semantic-sdk-release
+
+  promote:
+    needs: [guard, producer]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      candidate_ref: ${{ steps.stage.outputs.candidate_ref }}
+      needs_lock_pr: ${{ steps.stage.outputs.needs_lock_pr }}
+      release_set_id: ${{ steps.stage.outputs.release_set_id }}
+      release_tag: ${{ steps.publish.outputs.release_tag }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_SHA: ${{ needs.guard.outputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.guard.outputs.source_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.producer.outputs.release_set_artifact }}
+          path: out/semantic-release
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.producer.outputs.candidate_lock_artifact }}
+          path: out/semantic-candidate-lock
+      - name: Publish or verify the immutable Release Set
+        id: publish
+        shell: bash
+        run: |
+          mkdir -p out/promotion
+          python tools/semantic/publish_release.py \
+            --directory out/semantic-release \
+            --target-commit "$SOURCE_SHA" | tee out/promotion/release.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          facts = json.load(open("out/promotion/release.json", encoding="utf-8"))
+          print(f"release_tag={facts['tag']}")
+          print(f"release_set_id={facts['releaseSetId']}")
+          PY
+      - name: Stage the lock-only candidate branch
+        id: stage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tools.semantic.contract import read_json, validate_v2_lock
+          lock = read_json(Path("out/semantic-candidate-lock/semantic-sdk.lock.json"))
+          validate_v2_lock(lock)
+          release = json.load(open("out/promotion/release.json", encoding="utf-8"))
+          if lock["releaseSetId"] != release["releaseSetId"]:
+              raise SystemExit("candidate lock releaseSetId does not match published Release Set")
+          PY
+
+          release_set_id=$(python -c 'import json; print(json.load(open("out/promotion/release.json"))["releaseSetId"])')
+          branch="semantic-sdk-lock-${release_set_id:0:16}"
+          echo "release_set_id=$release_set_id" >> "$GITHUB_OUTPUT"
+
+          if [[ -f semantic-sdk.lock.json ]] && cmp -s semantic-sdk.lock.json out/semantic-candidate-lock/semantic-sdk.lock.json; then
+            echo "candidate_ref=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+            echo "needs_lock_pr=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch --no-tags origin "refs/heads/$branch"
+            git show FETCH_HEAD:semantic-sdk.lock.json > out/existing-candidate-lock.json
+            cmp out/existing-candidate-lock.json out/semantic-candidate-lock/semantic-sdk.lock.json
+            changed=$(git diff --name-only "$SOURCE_SHA...FETCH_HEAD")
+            [[ "$changed" == "semantic-sdk.lock.json" ]]
+          else
+            git switch --detach "$SOURCE_SHA"
+            git switch -c "$branch"
+            cp out/semantic-candidate-lock/semantic-sdk.lock.json semantic-sdk.lock.json
+            git add semantic-sdk.lock.json
+            changed=$(git diff --cached --name-only)
+            [[ "$changed" == "semantic-sdk.lock.json" ]]
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: accept Semantic SDK ${release_set_id:0:16}"
+            git push origin "HEAD:refs/heads/$branch"
+          fi
+
+          echo "candidate_ref=$branch" >> "$GITHUB_OUTPUT"
+          echo "needs_lock_pr=true" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-sdk-promotion-${{ github.run_id }}
+          path: out/promotion
+          retention-days: 30
+          if-no-files-found: error
+
+  candidate-consumer:
+    needs: promote
+    uses: ./.github/workflows/semantic-sdk-consumer-validation.yml
+    with:
+      checkout_ref: ${{ needs.promote.outputs.candidate_ref }}
+      require_v2_lock: true
+
+  open-lock-pr:
+    needs: [guard, promote, candidate-consumer]
+    if: needs.promote.outputs.needs_lock_pr == 'true'
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_SHA: ${{ needs.guard.outputs.source_sha }}
+      CANDIDATE_REF: ${{ needs.promote.outputs.candidate_ref }}
+      RELEASE_SET_ID: ${{ needs.promote.outputs.release_set_id }}
+      RELEASE_TAG: ${{ needs.promote.outputs.release_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.guard.outputs.source_sha }}
+          fetch-depth: 0
+      - name: Re-check that the candidate branch is lock-only
+        shell: bash
+        run: |
+          git fetch --no-tags origin "refs/heads/$CANDIDATE_REF"
+          changed=$(git diff --name-only "$SOURCE_SHA...FETCH_HEAD")
+          [[ "$changed" == "semantic-sdk.lock.json" ]]
+      - name: Open the lock-only consumer-authority PR
+        shell: bash
+        run: |
+          existing=$(gh pr list --base main --head "$CANDIDATE_REF" --state open --json number --jq '.[0].number // empty')
+          if [[ -n "$existing" ]]; then
+            echo "Lock PR #$existing already exists"
+            exit 0
+          fi
+          gh pr create \
+            --base main \
+            --head "$CANDIDATE_REF" \
+            --title "chore: accept Semantic SDK ${RELEASE_SET_ID:0:16}" \
+            --body "Accept immutable Semantic SDK Release Set \`$RELEASE_SET_ID\` (\`$RELEASE_TAG\`). The candidate branch was explicitly qualified by the reusable source-free consumer matrix before this PR was opened. This PR changes only \`semantic-sdk.lock.json\`."
