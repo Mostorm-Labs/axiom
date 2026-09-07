@@ -151,6 +151,25 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             "std::sort users must directly include <algorithm>: " + ", ".join(offenders),
         )
 
+    def test_semantic_test_getenv_users_declare_windows_safe_path(self):
+        root = Path(__file__).resolve().parents[3]
+        tests = root / "runtime/semantic/tests"
+        offenders = []
+        getenv_users = []
+        for path in sorted(tests.glob("*.cpp")):
+            source = path.read_text(encoding="utf-8")
+            if "std::getenv(" not in source:
+                continue
+            getenv_users.append(path.name)
+            if "_dupenv_s(" not in source:
+                offenders.append(path.name)
+        self.assertTrue(getenv_users, "the portability contract must exercise at least one std::getenv user")
+        self.assertEqual(
+            offenders,
+            [],
+            "std::getenv users must declare a Windows-safe _dupenv_s path: " + ", ".join(offenders),
+        )
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
