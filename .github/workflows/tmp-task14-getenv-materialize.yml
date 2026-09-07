@@ -27,27 +27,29 @@ jobs:
           from pathlib import Path
           path = Path('runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp')
           text = path.read_text(encoding='utf-8')
-          old = '''    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
-    if (path == nullptr) return;
-    std::ofstream out(path, std::ios::app);
-'''
-          new = '''    std::ofstream out;
-#if defined(_WIN32)
-    char* path = nullptr;
-    std::size_t path_size = 0U;
-    const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");
-    if (getenv_result != 0 || path == nullptr) {
-        std::free(path);
-        return;
-    }
-    out.open(path, std::ios::app);
-    std::free(path);
-#else
-    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
-    if (path == nullptr) return;
-    out.open(path, std::ios::app);
-#endif
-'''
+          old = (
+              '    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");\n'
+              '    if (path == nullptr) return;\n'
+              '    std::ofstream out(path, std::ios::app);\n'
+          )
+          new = (
+              '    std::ofstream out;\n'
+              '#if defined(_WIN32)\n'
+              '    char* path = nullptr;\n'
+              '    std::size_t path_size = 0U;\n'
+              '    const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");\n'
+              '    if (getenv_result != 0 || path == nullptr) {\n'
+              '        std::free(path);\n'
+              '        return;\n'
+              '    }\n'
+              '    out.open(path, std::ios::app);\n'
+              '    std::free(path);\n'
+              '#else\n'
+              '    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");\n'
+              '    if (path == nullptr) return;\n'
+              '    out.open(path, std::ios::app);\n'
+              '#endif\n'
+          )
           assert text.count(old) == 1, text.count(old)
           path.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
