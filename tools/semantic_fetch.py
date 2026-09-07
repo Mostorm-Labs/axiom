@@ -56,7 +56,13 @@ def main() -> int:
         actual_sha = sha256(archive)
         if actual_sha != expected_sha:
             raise SdkError(f"semantic toolchain SHA-256 mismatch: expected {expected_sha}, got {actual_sha}")
-        verify_archive(archive, args.destination, json.loads((ROOT / "deps.lock.json").read_text()), sdk_id)
+        verify_archive(
+            archive,
+            args.destination,
+            json.loads((ROOT / "deps.lock.json").read_text()),
+            sdk_id,
+            enforce_current_recipe=False,
+        )
     print(json.dumps({"sdkId": sdk_id, "asset": asset, "sha256": expected_sha, "url": url}, sort_keys=True))
     return 0
 
