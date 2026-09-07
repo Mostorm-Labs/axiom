@@ -6,6 +6,10 @@ on:
       - "deps.lock.json"
       - "tools/sdk/archive.py"
       - "tools/semantic/contract.py"
+      - "tools/semantic/aggregate.py"
+      - "tools/semantic/reuse_release.py"
+      - "tools/semantic/publish_release.py"
+      - "tools/update_semantic_lock.py"
       - "tools/semantic/profile-v2.json"
       - "tools/semantic/package_host.py"
       - "tools/semantic/package_common.py"
@@ -170,3 +174,45 @@ jobs:
             out/semantic-sdk/runtime/toolchain.json
           if-no-files-found: error
           retention-days: 14
+
+  release-set:
+    needs: [host-tools, runtimes]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: semantic-v2-*
+          path: out/semantic-release-inputs
+          merge-multiple: false
+      - name: Aggregate and verify the complete 3-host and 9-runtime set
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/semantic/aggregate.py --assets out/semantic-release-inputs
+          --output out/semantic-release-candidate
+      - name: Generate candidate lock without changing repository authority
+        shell: bash
+        run: |
+          tag=$(python -c 'import json; print(json.load(open("out/semantic-release-candidate/release.json"))["tag"])')
+          python tools/update_semantic_lock.py --index out/semantic-release-candidate/semantic-sdk-index.json --tag "$tag" --output out/semantic-candidate-lock/semantic-sdk.lock.json
+      - name: Validate publication input without creating a Release
+        run: >-
+          python tools/semantic/publish_release.py --directory out/semantic-release-candidate
+          --target-commit ${{ github.sha }} --dry-run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-v2-release-set-candidate
+          path: out/semantic-release-candidate
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-v2-candidate-lock
+          path: out/semantic-candidate-lock
+          retention-days: 14
+          if-no-files-found: error

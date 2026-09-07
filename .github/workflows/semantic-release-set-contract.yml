@@ -7,6 +7,7 @@ on:
       - "tools/semantic/**"
       - "tools/update_semantic_lock.py"
       - "verification/tests/test_semantic_lock.py"
+      - "verification/tests/test_semantic_release_workflows.py"
       - ".github/workflows/semantic-release-set-contract.yml"
 
 permissions:
@@ -45,4 +46,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Release set authority contracts (no dependency builds or publication)
-        run: python -m unittest tools.semantic.tests.test_aggregate_v2 verification.tests.test_semantic_lock -v
+        run: >-
+          python -m unittest tools.semantic.tests.test_aggregate_v2
+          tools.semantic.tests.test_reuse_release_v2 tools.semantic.tests.test_publish_release_v2
+          verification.tests.test_semantic_lock verification.tests.test_semantic_release_workflows -v

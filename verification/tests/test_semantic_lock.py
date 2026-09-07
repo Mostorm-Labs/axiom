@@ -59,5 +59,48 @@ class SemanticLockTest(unittest.TestCase):
             self.assertIn("invalid asset or digest", result.stderr + result.stdout)
 
 
+class SemanticV2LockTest(unittest.TestCase):
+    def setUp(self):
+        from tools.sdk.archive import canonical_bytes
+        from tools.semantic.contract import load_profile, read_json
+        from tools.semantic.tests.test_contract_v2 import fixture_index
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.base = Path(temporary.name)
+        self.index = fixture_index(read_json(ROOT / "deps.lock.json"), load_profile())
+        self.path = self.base / "index.json"
+        self.path.write_bytes(canonical_bytes(self.index) + b"\n")
+        self.tag = "semantic-sdk-v2-" + self.index["releaseSetId"][:16]
+
+    def test_v2_generator_pins_exact_index_bytes_and_does_not_touch_v1(self):
+        import hashlib
+        from tools.semantic.contract import validate_v2_lock
+        old = (ROOT / "semantic-toolchain.lock.json").read_bytes()
+        output = self.base / "v2.lock.json"
+        result = subprocess.run([sys.executable, str(SCRIPT), "--index", str(self.path),
+                                 "--tag", self.tag, "--output", str(output)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        value = validate_v2_lock(json.loads(output.read_bytes()))
+        self.assertEqual(value["indexSha256"], hashlib.sha256(self.path.read_bytes()).hexdigest())
+        self.assertEqual(value["releaseSetId"], self.index["releaseSetId"])
+        self.assertEqual((ROOT / "semantic-toolchain.lock.json").read_bytes(), old)
+
+    def test_invalid_index_tag_or_mixed_v1_arguments_preserve_existing_output(self):
+        output = self.base / "lock.json"
+        output.write_bytes(b"preserve")
+        commands = [("--index", str(self.path), "--tag", "wrong"),
+                    ("--index", str(self.path), "--tag", self.tag, "--asset", ASSET)]
+        for options in commands:
+            result = subprocess.run([sys.executable, str(SCRIPT), *options, "--output", str(output)],
+                                    capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(output.read_bytes(), b"preserve")
+        self.path.write_bytes(b"{}")
+        result = subprocess.run([sys.executable, str(SCRIPT), "--index", str(self.path),
+                                 "--tag", self.tag, "--output", str(output)], capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(output.read_bytes(), b"preserve")
+
+
 if __name__ == "__main__":
     unittest.main()

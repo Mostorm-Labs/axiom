@@ -81,5 +81,46 @@ class AggregateTest(unittest.TestCase):
         self.assertEqual(path.read_bytes(), b"existing bad data")
 
 
+    def test_real_archive_collision_is_rejected_against_accepted_index(self):
+        from tools.sdk.archive import canonical_bytes
+        from tools.semantic.package_common import create_package
+        aggregate(self.assets, self.output)
+        prior = read_json(self.output / "semantic-sdk-index.json")
+        for kind, key in (("hostTools", "linux-x86_64"), ("runtimes", "linux-x86_64")):
+            with self.subTest(kind=kind):
+                record = self.records[kind, key]
+                payload = self.base / "payload" / kind / key
+                path = payload / "licenses/Protobuf.txt"
+                path.write_bytes(b"changed payload under unchanged identity")
+                source = self.assets / kind / key
+                (source / record["asset"]).unlink()
+                replacement = create_package(payload, record["identity"], host=kind == "hostTools", output=source)
+                (source / "record.json").write_bytes(canonical_bytes(replacement))
+                with self.assertRaisesRegex(SdkError, "identity.collision.*contract"):
+                    aggregate(self.assets, self.base / "collision", previous_index=prior)
+                # Restore so each subtest independently exercises its own family.
+                shutil.copyfile(self.output / record["asset"], source / record["asset"])
+                (source / "record.json").write_bytes(canonical_bytes(record))
+        self.assertFalse((self.base / "collision").exists())
+
+    def test_identical_existing_output_is_idempotent(self):
+        first = aggregate(self.assets, self.output)
+        self.assertEqual(aggregate(self.assets, self.output), first)
+
+    def test_corrupt_manifest_payload_is_rejected_even_after_updating_zip_checksum(self):
+        import zipfile
+        from tools.sdk.archive import canonical_bytes
+        record = self.records["runtimes", "linux-x86_64"]
+        source = self.assets / "runtimes/linux-x86_64"
+        archive = source / record["asset"]
+        with zipfile.ZipFile(archive, "a") as zipped:
+            zipped.writestr("package/unlisted-file", b"bad")
+        altered = {**record, "sha256": file_sha256(archive), "size": archive.stat().st_size}
+        (source / "record.json").write_bytes(canonical_bytes(altered))
+        with self.assertRaises(SdkError):
+            aggregate(self.assets, self.output)
+        self.assertFalse(self.output.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
