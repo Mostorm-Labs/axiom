@@ -34,8 +34,14 @@ target_compile_features(canvas_runtime_semantic PUBLIC cxx_std_20)
 
 if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
   find_package(Protobuf CONFIG REQUIRED)
-  if(NOT TARGET protobuf::libprotobuf OR NOT TARGET protobuf::protoc)
-    message(FATAL_ERROR "Protobuf CONFIG package must provide protobuf::libprotobuf and protobuf::protoc")
+  if(NOT TARGET protobuf::libprotobuf)
+    message(FATAL_ERROR "Semantic runtime requires protobuf::libprotobuf")
+  endif()
+  # The executable runs on the build host; the package supplies target libraries.
+  # Never infer a generator from the target package, including in native builds.
+  set(AXIOM_PROTOC "" CACHE FILEPATH "Host protoc executable for Axiom semantic code generation")
+  if(NOT AXIOM_PROTOC OR NOT EXISTS "${AXIOM_PROTOC}" OR IS_DIRECTORY "${AXIOM_PROTOC}")
+    message(FATAL_ERROR "Semantic code generation requires a valid AXIOM_PROTOC host executable")
   endif()
   set(AXIOM_PROTO_ROOT ${PROJECT_SOURCE_DIR}/schema/axiom/v1/proto)
   set(AXIOM_PROTO_GENERATED_ROOT ${CMAKE_CURRENT_BINARY_DIR}/generated)
@@ -62,11 +68,11 @@ if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
   add_custom_command(
     OUTPUT ${AXIOM_PROTO_GENERATED_CC} ${AXIOM_PROTO_GENERATED_H}
     COMMAND ${CMAKE_COMMAND} -E make_directory "${AXIOM_PROTO_GENERATED_ROOT}"
-    COMMAND $<TARGET_FILE:protobuf::protoc>
+    COMMAND "${AXIOM_PROTOC}"
             --proto_path=${AXIOM_PROTO_ROOT}
             --cpp_out=${AXIOM_PROTO_GENERATED_ROOT}
             ${AXIOM_PROTO_RELATIVE_FILES}
-    DEPENDS protobuf::protoc ${AXIOM_PROTO_FILES}
+    DEPENDS "${AXIOM_PROTOC}" ${AXIOM_PROTO_FILES}
     WORKING_DIRECTORY "${AXIOM_PROTO_ROOT}"
     VERBATIM)
   target_sources(canvas_runtime_semantic PRIVATE ${AXIOM_PROTO_GENERATED_CC})

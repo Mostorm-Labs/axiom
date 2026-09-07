@@ -57,6 +57,8 @@ def validate_semantic_install(root: Path) -> dict[str, str]:
     return {
         "AXIOM_DEPS_DIR": str(DEPS_ROOT.resolve()),
         "AXIOM_SEMANTIC_SDK_ROOT": str(root),
+        "AXIOM_SEMANTIC_RUNTIME_ROOT": str(root),
+        "AXIOM_SEMANTIC_HOST_ROOT": str(root),
         "CMAKE_PREFIX_PATH": str(root),
         **{name: str(path.resolve()) for name, path in required.items()},
     }

@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -p out/release-contract-source
           git rev-parse HEAD > out/release-contract-source/revision.txt
-          git archive --format=zip --output=out/release-contract-source/source.zip HEAD tools verification .github/workflows deps.lock.json semantic-toolchain.lock.json r1-full-skia-sdk.lock.json docs/superpowers
+          git archive --format=zip --output=out/release-contract-source/source.zip HEAD tools verification .github/workflows deps.lock.json semantic-toolchain.lock.json r1-full-skia-sdk.lock.json docs/superpowers CMakeLists.txt runtime/foundation runtime/semantic schema/axiom/v1
       - uses: actions/upload-artifact@v4
         with:
           name: semantic-release-contract-source

@@ -43,7 +43,7 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("needs:", trigger)
         workflow = (WORKFLOWS / "g1-semantic-codec.yml").read_text(encoding="utf-8")
         self.assertIn("tools/setup_build_environment.py --core --semantic", workflow)
-        self.assertIn('-DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"', workflow)
+        self.assertIn('-DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT"', workflow)
         self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
         self.assertNotIn("-DProtobuf_DIR=", workflow)
         self.assertNotIn("-Dabsl_DIR=", workflow)

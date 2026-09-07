@@ -1,5 +1,6 @@
 """Provider qualification consumes a complete candidate, never builds SDKs."""
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -9,7 +10,8 @@ class ProviderWorkflowTest(unittest.TestCase):
     def test_real_provider_consumption_follows_release_set_on_three_hosts(self):
         workflow = (ROOT / '.github/workflows/semantic-sdk-producer-contract.yml').read_text()
         self.assertIn('  provider-consumer:\n', workflow)
-        job = workflow.split('  provider-consumer:\n', 1)[1]
+        job = re.split(r'^  [a-zA-Z0-9_-]+:', workflow.split('  provider-consumer:\n', 1)[1],
+                       maxsplit=1, flags=re.MULTILINE)[0]
         self.assertIn('needs: release-set', job)
         for item in ('ubuntu-24.04', 'windows-2025', 'macos-15', 'semantic-v2-release-set-candidate',
                      'verification/tools/qualify_semantic_provider.py'):

@@ -3,6 +3,8 @@ name: Build Environment Contract
 on:
   pull_request:
     paths:
+      - "runtime/semantic/CMakeLists.txt"
+      - "verification/tests/test_semantic_cmake_contract.py"
       - "tools/sdk/**"
       - "semantic-sdk.lock.json"
       - "tools/semantic/provider.py"
@@ -34,6 +36,8 @@ on:
   push:
     branches: [main]
     paths:
+      - "runtime/semantic/CMakeLists.txt"
+      - "verification/tests/test_semantic_cmake_contract.py"
       - "tools/sdk/**"
       - "semantic-sdk.lock.json"
       - "tools/semantic/provider.py"
@@ -92,7 +96,7 @@ jobs:
             -DCANVAS_BUILD_POC01=OFF \
             -DCANVAS_BUILD_SEMANTIC=ON \
             -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
-            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
+            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DAXIOM_PROTOC="$AXIOM_PROTOC"
           cmake --build out/build-environment-contract --parallel
           ctest --test-dir out/build-environment-contract --output-on-failure
       - uses: actions/upload-artifact@v4

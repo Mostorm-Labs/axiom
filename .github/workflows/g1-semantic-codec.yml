@@ -127,7 +127,7 @@ jobs:
           cmp evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt evidence-ci/g1-semantic-codec/generated-code-sha256-b.txt
       - name: Build semantic runtime and generated C++ code
         run: |
-          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
+          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DAXIOM_PROTOC="$AXIOM_PROTOC"
           cmake --build out/g1-hosted --parallel
           ctest --test-dir out/g1-hosted --output-on-failure
           find out/g1-hosted/runtime/semantic/generated -type f -print 2>/dev/null | sort > evidence-ci/g1-semantic-codec/generated-files.txt || true

@@ -31,6 +31,8 @@ class BuildEnvironmentTest(unittest.TestCase):
             environment = build_env.validate_semantic_install(root)
             self.assertEqual(environment["AXIOM_SEMANTIC_SDK_ROOT"], str(root.resolve()))
             self.assertEqual(environment["CMAKE_PREFIX_PATH"], str(root.resolve()))
+            self.assertEqual(environment["AXIOM_SEMANTIC_RUNTIME_ROOT"], str(root.resolve()))
+            self.assertEqual(environment["AXIOM_SEMANTIC_HOST_ROOT"], str(root.resolve()))
             self.assertEqual(environment["PROTOBUF_DIR"], str((root / "lib/cmake/protobuf").resolve()))
             self.assertEqual(environment["ABSL_DIR"], str((root / "lib/cmake/absl").resolve()))
             self.assertEqual(environment["UTF8_RANGE_DIR"], str((root / "lib/cmake/utf8_range").resolve()))
@@ -53,6 +55,8 @@ class BuildEnvironmentTest(unittest.TestCase):
             self.assertIn(f"AXIOM_SEMANTIC_SDK_ROOT={root.resolve()}\n", text)
             self.assertIn(f"CMAKE_PREFIX_PATH={root.resolve()}\n", text)
             self.assertEqual(text.count("CMAKE_PREFIX_PATH="), 1)
+            self.assertIn(f"AXIOM_SEMANTIC_RUNTIME_ROOT={root.resolve()}\n", text)
+            self.assertIn(f"AXIOM_SEMANTIC_HOST_ROOT={root.resolve()}\n", text)
 
     @mock.patch("tools.setup_build_environment.subprocess.run")
     def test_setup_environment_never_requests_semantic_source_bootstrap(self, run):
