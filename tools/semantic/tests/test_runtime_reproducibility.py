@@ -2,6 +2,8 @@
 import copy
 import hashlib
 import json
+import os
+import re
 from pathlib import Path
 import shlex
 import shutil
@@ -101,6 +103,18 @@ class WindowsCoffReproducibilityTest(unittest.TestCase):
             a = self.compile_object(base / 'first', 'CXX', header=True)
             b = self.compile_object(base / 'another/deep path', 'CXX', header=True)
             self.assertEqual(hashlib.sha256(a).hexdigest(), hashlib.sha256(b).hexdigest())
+
+    @unittest.skipIf(os.name == 'nt', 'the Windows tempfile root already exercises its short-path alias')
+    def test_installed_header_prefix_is_canonical_through_directory_alias(self):
+        with tempfile.TemporaryDirectory() as directory:
+            actual = Path(directory) / 'real root'
+            actual.mkdir()
+            alias = Path(directory) / 'alias'
+            alias.symlink_to(actual, target_is_directory=True)
+            a = self.compile_object(alias / 'first', 'CXX', header=True)
+            b = self.compile_object(alias / 'different/deeper root', 'CXX', header=True)
+            self.assertEqual(hashlib.sha256(a).hexdigest(), hashlib.sha256(b).hexdigest(),
+                             repr([re.findall(rb'[ -~]{8,}', value) for value in (a, b)]))
 
     def test_c_coff_has_no_wall_clock_timestamp(self):
         with tempfile.TemporaryDirectory() as directory:

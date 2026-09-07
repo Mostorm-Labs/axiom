@@ -46,6 +46,13 @@ def runtime_build_commands(protobuf_source: Path, abseil_source: Path, build_roo
 def _prefix_maps(args: list[str], source: Path, build: Path, windows: bool,
                  *, install_root: Path | None = None) -> list[str]:
     # Normalize __FILE__/debug paths without making a checkout path an SDK ID.
+    # Prefix replacement compares spelling, not filesystem identity. In
+    # particular Windows temporary roots can use an 8.3 alias while /I and
+    # CMake use the resolved long path. Match that same real spelling first.
+    if windows:
+        source, build = source.resolve(), build.resolve()
+        if install_root is not None:
+            install_root = install_root.resolve()
     option = "/clang:" if windows else ""
     maps = [f'{option}-ffile-prefix-map="{source.as_posix()}"=/axiom-sdk/src',
             f'{option}-fdebug-prefix-map="{build.as_posix()}"=/axiom-sdk/build']
