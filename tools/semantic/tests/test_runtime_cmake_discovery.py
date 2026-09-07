@@ -170,6 +170,22 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             "std::getenv users must declare a Windows-safe _dupenv_s path: " + ", ".join(offenders),
         )
 
+    def test_g1_04_c_fixture_decoder_target_enables_msvc_exceptions(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / "runtime/semantic/tests/CMakeLists.txt").read_text(encoding="utf-8")
+        target_begin = source.index("add_executable(canvas_semantic_g1_04_c_fixture_decoder_test")
+        target_end = source.index(
+            "gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)",
+            target_begin,
+        )
+        target_block = source[target_begin:target_end]
+        self.assertIn("if(MSVC)", target_block)
+        self.assertIn(
+            "/EHsc",
+            target_block,
+            "the fixture decoder uses try/catch and must enable C++ exceptions for MSVC/clang-cl",
+        )
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:
