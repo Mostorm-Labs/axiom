@@ -130,7 +130,19 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             generated_policy,
             "clang-cl 22 emits -Winvalid-offsetof from protoc-generated *.pb.cc; suppress only on generated sources",
         )
+        self.assertEqual(source.count("-Wno-invalid offsetof"), 0)
         self.assertEqual(source.count("-Wno-invalid-offsetof"), 1)
+
+    def test_snapshot_bootstrap_sort_declares_algorithm_dependency(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp").read_text(encoding="utf-8")
+        include_block = source.split("namespace canvas::semantic", 1)[0]
+        self.assertIn("std::sort(", source)
+        self.assertIn(
+            "#include <algorithm>",
+            include_block,
+            "std::sort must not depend on incidental transitive standard-library includes",
+        )
 
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
