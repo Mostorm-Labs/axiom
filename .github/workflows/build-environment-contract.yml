@@ -33,6 +33,7 @@ on:
       - "verification/tests/test_ci_trigger_boundaries.py"
       - ".github/workflows/build-environment-contract.yml"
       - ".github/workflows/g1-semantic-codec.yml"
+      - ".github/workflows/semantic-sdk-consumer-validation.yml"
   push:
     branches: [main]
     paths:
@@ -66,6 +67,7 @@ on:
       - "verification/tests/test_ci_trigger_boundaries.py"
       - ".github/workflows/build-environment-contract.yml"
       - ".github/workflows/g1-semantic-codec.yml"
+      - ".github/workflows/semantic-sdk-consumer-validation.yml"
   workflow_dispatch:
 
 permissions:
@@ -156,3 +158,31 @@ jobs:
         run: python -m unittest verification.tests.test_sdk_infrastructure_workflow -v
       - name: Check whitespace
         run: git diff --check
+
+  semantic-v2-detect:
+    runs-on: ubuntu-24.04
+    outputs:
+      locked: ${{ steps.lock.outputs.locked }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - id: lock
+        shell: bash
+        run: |
+          if [[ -f semantic-sdk.lock.json ]]; then
+            echo "locked=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SEMANTIC_V2_NOT_LOCKED"
+            echo "locked=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  semantic-v2-validation:
+    needs: semantic-v2-detect
+    if: needs.semantic-v2-detect.outputs.locked == 'true'
+    uses: ./.github/workflows/semantic-sdk-consumer-validation.yml
+    with:
+      checkout_ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    permissions:
+      contents: read
