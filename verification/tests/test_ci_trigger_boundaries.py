@@ -49,6 +49,19 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("-Dabsl_DIR=", workflow)
         self.assertNotIn("-Dutf8_range_DIR=", workflow)
 
+    def test_build_environment_contract_is_consumer_only(self):
+        workflow = (WORKFLOWS / "build-environment-contract.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("tools/setup_build_environment.py --core --semantic", workflow)
+        self.assertIn("tools/skia/fetch.py", workflow)
+        self.assertIn("r1-full-skia-sdk.lock.json", workflow)
+        self.assertIn("android-x86_64-gles3", workflow)
+        self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
+        self.assertNotIn("tools/skia/build.py", workflow)
+        self.assertNotIn("git-sync-deps", workflow)
+        self.assertNotIn("gh release create", workflow)
+
     def test_g103_evidence_does_not_promote_poc03_to_gate_authority(self):
         generator = (ROOT / "verification/tools/generate_g1_03_evidence.py").read_text(
             encoding="utf-8"
