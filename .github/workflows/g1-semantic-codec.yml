@@ -7,8 +7,10 @@ on:
       - "tools/bootstrap_deps.py"
       - "tools/semantic_sdk.py"
       - "tools/semantic_fetch.py"
+      - "tools/setup_build_environment.py"
       - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
+      - "verification/tests/test_build_environment.py"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
       - "schema/axiom/v1/**"
@@ -38,8 +40,10 @@ on:
       - "tools/bootstrap_deps.py"
       - "tools/semantic_sdk.py"
       - "tools/semantic_fetch.py"
+      - "tools/setup_build_environment.py"
       - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
+      - "verification/tests/test_build_environment.py"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
       - "schema/axiom/v1/**"
@@ -73,9 +77,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
-      PROTOBUF_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/protobuf
-      ABSL_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/absl
-      UTF8_RANGE_DIR: ${{ github.workspace }}/.deps/protobuf/lib/cmake/utf8_range
       SOURCE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
@@ -92,22 +93,24 @@ jobs:
           cmake --version
           ninja --version
           g++ --version
-      - name: Fetch locked semantic toolchain Release asset
-        run: python3 tools/semantic_fetch.py --target linux-x86_64
+      - name: Set up locked Axiom build environment
+        run: |
+          mkdir -p evidence-ci/g1-semantic-codec
+          python3 tools/setup_build_environment.py --core --semantic --target linux-x86_64 --github-env "$GITHUB_ENV" --facts-output evidence-ci/g1-semantic-codec/build-environment.json
       - name: Record toolchain manifest
         run: |
           mkdir -p evidence-ci/g1-semantic-codec
           cp .deps/protobuf/.canvas-semantic-toolchain.json evidence-ci/g1-semantic-codec/toolchain.json
           cmake --version > evidence-ci/g1-semantic-codec/cmake.txt
           c++ --version > evidence-ci/g1-semantic-codec/compiler.txt
-          .deps/protobuf/bin/protoc --version > evidence-ci/g1-semantic-codec/protoc.txt
+          "$AXIOM_PROTOC" --version > evidence-ci/g1-semantic-codec/protoc.txt
       - name: Generate descriptor twice and compare
         run: |
           mkdir -p evidence-ci/g1-semantic-codec/generated
           SOURCES=()
           while IFS= read -r source; do SOURCES+=("$source"); done < <(find schema/axiom/v1/proto -name '*.proto' -print | sed 's#^schema/axiom/v1/proto/##' | sort)
-          .deps/protobuf/bin/protoc --proto_path=schema/axiom/v1/proto --include_imports --descriptor_set_out=evidence-ci/g1-semantic-codec/generated/descriptor-a.pb "${SOURCES[@]}"
-          .deps/protobuf/bin/protoc --proto_path=schema/axiom/v1/proto --include_imports --descriptor_set_out=evidence-ci/g1-semantic-codec/generated/descriptor-b.pb "${SOURCES[@]}"
+          "$AXIOM_PROTOC" --proto_path=schema/axiom/v1/proto --include_imports --descriptor_set_out=evidence-ci/g1-semantic-codec/generated/descriptor-a.pb "${SOURCES[@]}"
+          "$AXIOM_PROTOC" --proto_path=schema/axiom/v1/proto --include_imports --descriptor_set_out=evidence-ci/g1-semantic-codec/generated/descriptor-b.pb "${SOURCES[@]}"
           sha256sum evidence-ci/g1-semantic-codec/generated/descriptor-*.pb | tee evidence-ci/g1-semantic-codec/descriptor-sha256.txt
           cmp evidence-ci/g1-semantic-codec/generated/descriptor-a.pb evidence-ci/g1-semantic-codec/generated/descriptor-b.pb
           cmp evidence-ci/g1-semantic-codec/generated/descriptor-a.pb schema/axiom/v1/descriptor/descriptor.lock.pb
@@ -116,16 +119,15 @@ jobs:
           SOURCES=()
           while IFS= read -r source; do SOURCES+=("$source"); done < <(find schema/axiom/v1/proto -name '*.proto' -print | sed 's#^schema/axiom/v1/proto/##' | sort)
           mkdir -p evidence-ci/g1-semantic-codec/generated/cpp-a evidence-ci/g1-semantic-codec/generated/cpp-b
-          .deps/protobuf/bin/protoc --proto_path=schema/axiom/v1/proto --cpp_out=evidence-ci/g1-semantic-codec/generated/cpp-a "${SOURCES[@]}"
-          .deps/protobuf/bin/protoc --proto_path=schema/axiom/v1/proto --cpp_out=evidence-ci/g1-semantic-codec/generated/cpp-b "${SOURCES[@]}"
+          "$AXIOM_PROTOC" --proto_path=schema/axiom/v1/proto --cpp_out=evidence-ci/g1-semantic-codec/generated/cpp-a "${SOURCES[@]}"
+          "$AXIOM_PROTOC" --proto_path=schema/axiom/v1/proto --cpp_out=evidence-ci/g1-semantic-codec/generated/cpp-b "${SOURCES[@]}"
           diff -ru evidence-ci/g1-semantic-codec/generated/cpp-a evidence-ci/g1-semantic-codec/generated/cpp-b
           (cd evidence-ci/g1-semantic-codec/generated/cpp-a && find . -type f -print0 | sort -z | xargs -0 sha256sum) > evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt
           (cd evidence-ci/g1-semantic-codec/generated/cpp-b && find . -type f -print0 | sort -z | xargs -0 sha256sum) > evidence-ci/g1-semantic-codec/generated-code-sha256-b.txt
           cmp evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt evidence-ci/g1-semantic-codec/generated-code-sha256-b.txt
       - name: Build semantic runtime and generated C++ code
         run: |
-          python3 tools/bootstrap_deps.py --core
-          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DProtobuf_DIR="$PROTOBUF_DIR" -Dabsl_DIR="$ABSL_DIR" -Dutf8_range_DIR="$UTF8_RANGE_DIR"
+          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
           cmake --build out/g1-hosted --parallel
           ctest --test-dir out/g1-hosted --output-on-failure
           find out/g1-hosted/runtime/semantic/generated -type f -print 2>/dev/null | sort > evidence-ci/g1-semantic-codec/generated-files.txt || true
@@ -173,7 +175,7 @@ jobs:
             --output evidence-ci/g1-semantic-codec/descriptor-refreeze-diff.json
       - name: Run semantic contract and production differential checks
         run: |
-          python3 verification/tools/validate_semantic_contract.py --root . --protoc .deps/protobuf/bin/protoc
+          python3 verification/tools/validate_semantic_contract.py --root . --protoc "$AXIOM_PROTOC"
           CANVAS_SEMANTIC_GOLDEN_PROBE=out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe \
             python3 -m unittest verification.tests.test_semantic_bootstrap verification.tests.test_semantic_contract verification.tests.test_g1_semantic_differential verification.tests.test_codec_fixture_author verification.tests.test_g1_01r_evidence verification.tests.test_g1_02_evidence verification.tests.test_g1_02r_evidence verification.tests.test_g1_03_evidence verification.tests.test_g1_02r_leaf_fixture_author verification.tests.test_g1_02r_semantic_differential verification.tests.test_semantic_public_boundary -v
           python3 verification/tools/run_g1_semantic_differential.py --root . --probe out/g1-hosted/runtime/semantic/tools/canvas_semantic_golden_probe --output evidence-ci/g1-semantic-codec/differential.json
