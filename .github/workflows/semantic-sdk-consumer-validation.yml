@@ -142,24 +142,36 @@ jobs:
       - name: Configure, build and test native Axiom Semantic
         shell: bash
         run: |
-          extra=()
-          if [[ "$TARGET_FAMILY" == windows ]]; then
-            extra+=("-DCMAKE_C_COMPILER=clang-cl" "-DCMAKE_CXX_COMPILER=clang-cl")
-            extra+=("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" "-DABSL_MSVC_STATIC_RUNTIME=ON")
-            extra+=("-DCMAKE_CXX_FLAGS=/D_ITERATOR_DEBUG_LEVEL=0 /D_HAS_ITERATOR_DEBUGGING=0 /Brepro")
-          elif [[ "$TARGET_FAMILY" == macos ]]; then
-            extra+=("-DCMAKE_OSX_ARCHITECTURES=$TARGET_ARCH")
-          fi
-          cmake -S . -B "out/consumer-$TARGET_KEY" -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCANVAS_BUILD_POC01=OFF \
-            -DCANVAS_BUILD_SEMANTIC=ON \
-            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
-            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" \
-            -DAXIOM_PROTOC="$AXIOM_PROTOC" \
-            "${extra[@]}"
-          cmake --build "out/consumer-$TARGET_KEY" --parallel
-          ctest --test-dir "out/consumer-$TARGET_KEY" --output-on-failure
+          python - <<'PY'
+          import os
+          import subprocess
+          from pathlib import Path
+          from tools.semantic.cmake_consumer import consumer_cmake_arguments
+          from tools.semantic.contract import load_profile
+          from tools.semantic.toolchain import target_cmake_arguments
+
+          target = os.environ["TARGET_KEY"]
+          family = os.environ["TARGET_FAMILY"]
+          runtime = Path(os.environ["AXIOM_SEMANTIC_RUNTIME_ROOT"])
+          protoc = Path(os.environ["AXIOM_PROTOC"])
+          build = f"out/consumer-{target}"
+          build_type = "Debug" if family == "linux" else "Release"
+          toolchain = {}
+          if family == "windows":
+              toolchain.update(cc="clang-cl", cxx="clang-cl")
+          command = [
+              "cmake", "-S", ".", "-B", build, "-G", "Ninja",
+              f"-DCMAKE_BUILD_TYPE={build_type}",
+              "-DCANVAS_BUILD_POC01=OFF",
+              "-DCANVAS_BUILD_SEMANTIC=ON",
+              "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+              *target_cmake_arguments(load_profile(), target, **toolchain),
+              *consumer_cmake_arguments(runtime, protoc),
+          ]
+          subprocess.run(command, check=True)
+          subprocess.run(["cmake", "--build", build, "--parallel", "2"], check=True)
+          subprocess.run(["ctest", "--test-dir", build, "--output-on-failure"], check=True)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: semantic-sdk-consumer-${{ matrix.key }}
@@ -233,38 +245,46 @@ jobs:
       - name: Configure and link Axiom Semantic for cross target
         shell: bash
         run: |
-          extra=()
-          case "$TARGET_FAMILY" in
-            ios)
-              extra+=("-DCMAKE_SYSTEM_NAME=iOS" "-DCMAKE_OSX_ARCHITECTURES=arm64")
-              extra+=("-DCMAKE_OSX_SYSROOT=iphoneos" "-DCMAKE_OSX_DEPLOYMENT_TARGET=17.0")
-              extra+=("-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO")
-              ;;
-            ios-simulator)
-              extra+=("-DCMAKE_SYSTEM_NAME=iOS" "-DCMAKE_OSX_ARCHITECTURES=arm64")
-              extra+=("-DCMAKE_OSX_SYSROOT=iphonesimulator" "-DCMAKE_OSX_DEPLOYMENT_TARGET=17.0")
-              extra+=("-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO")
-              ;;
-            android)
-              extra+=("-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake")
-              extra+=("-DANDROID_ABI=$TARGET_ABI" "-DANDROID_PLATFORM=android-26" "-DANDROID_STL=c++_static")
-              ;;
-            web)
-              source .deps/emsdk/emsdk_env.sh
-              extra+=("-DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake")
-              extra+=("-DCMAKE_CXX_FLAGS=-fexceptions" "-DCMAKE_EXE_LINKER_FLAGS=-fexceptions")
-              ;;
-          esac
-          cmake -S . -B "out/consumer-$TARGET_KEY" -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_TESTING=OFF \
-            -DCANVAS_BUILD_POC01=OFF \
-            -DCANVAS_BUILD_SEMANTIC=ON \
-            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
-            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" \
-            -DAXIOM_PROTOC="$AXIOM_PROTOC" \
-            "${extra[@]}"
-          cmake --build "out/consumer-$TARGET_KEY" --target canvas_runtime_semantic --parallel
+          if [[ "$TARGET_FAMILY" == web ]]; then
+            source .deps/emsdk/emsdk_env.sh
+          fi
+          python - <<'PY'
+          import os
+          import subprocess
+          from pathlib import Path
+          from tools.semantic.cmake_consumer import consumer_cmake_arguments
+          from tools.semantic.contract import load_profile
+          from tools.semantic.toolchain import target_cmake_arguments
+
+          target = os.environ["TARGET_KEY"]
+          family = os.environ["TARGET_FAMILY"]
+          runtime = Path(os.environ["AXIOM_SEMANTIC_RUNTIME_ROOT"])
+          protoc = Path(os.environ["AXIOM_PROTOC"])
+          build = f"out/consumer-{target}"
+          toolchain = {}
+          if family == "android":
+              toolchain["ndk"] = Path(os.environ["ANDROID_NDK_ROOT"])
+          elif family == "web":
+              toolchain["emscripten"] = Path(os.environ["EMSDK"]) / "upstream/emscripten"
+          command = [
+              "cmake", "-S", ".", "-B", build, "-G", "Ninja",
+              "-DCMAKE_BUILD_TYPE=Release",
+              "-DBUILD_TESTING=OFF",
+              "-DCANVAS_BUILD_POC01=OFF",
+              "-DCANVAS_BUILD_SEMANTIC=ON",
+              "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+              *target_cmake_arguments(load_profile(), target, **toolchain),
+              *consumer_cmake_arguments(runtime, protoc),
+          ]
+          subprocess.run(command, check=True)
+          build_target = "canvas_semantic_golden_probe" if family == "web" else "canvas_runtime_semantic"
+          subprocess.run(["cmake", "--build", build, "--target", build_target, "--parallel", "2"], check=True)
+          if family == "web":
+              scripts = list(Path(build).rglob("canvas_semantic_golden_probe.js"))
+              assert len(scripts) == 1, scripts
+              result = subprocess.run(["node", str(scripts[0])], check=False)
+              assert result.returncode == 64, result.returncode
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: semantic-sdk-consumer-${{ matrix.key }}
