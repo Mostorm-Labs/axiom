@@ -7,6 +7,10 @@ on:
         required: false
         type: string
         default: ""
+      require_v2_lock:
+        required: false
+        type: boolean
+        default: false
   pull_request:
     paths:
       - "semantic-sdk.lock.json"
@@ -24,6 +28,11 @@ on:
         required: false
         type: string
         default: ""
+      require_v2_lock:
+        description: Fail instead of using the pre-lock transition path
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -47,8 +56,14 @@ jobs:
       - name: Detect accepted Semantic SDK v2 authority
         id: lock
         shell: bash
+        env:
+          REQUIRE_V2_LOCK: ${{ inputs.require_v2_lock || false }}
         run: |
           if [[ ! -f semantic-sdk.lock.json ]]; then
+            if [[ "$REQUIRE_V2_LOCK" == "true" ]]; then
+              echo "SEMANTIC_V2_LOCK_REQUIRED" >&2
+              exit 1
+            fi
             echo "SEMANTIC_V2_NOT_LOCKED"
             echo "v2_locked=false" >> "$GITHUB_OUTPUT"
             exit 0
