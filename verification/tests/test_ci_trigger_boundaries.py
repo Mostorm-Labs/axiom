@@ -87,6 +87,7 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         ):
             self.assertIn(key, workflow)
         self.assertIn("tools/setup_build_environment.py --semantic", workflow)
+        self.assertNotIn("AXIOM_SDK_STORE: ${{ runner.temp }}", workflow)
         self.assertIn('AXIOM_SEMANTIC_RUNTIME_ROOT', workflow)
         self.assertIn('AXIOM_PROTOC', workflow)
         self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
