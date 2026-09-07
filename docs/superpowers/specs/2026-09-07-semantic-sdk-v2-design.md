@@ -147,11 +147,13 @@ This host/target split is a hard compatibility rule of Semantic SDK v2.
 
 Semantic v2 uses three distinct identities.
 
+Every identity is computed from a canonical identity payload that does not contain the ID being computed. The computed ID is then stored beside that payload and verified by recomputation. IDs must never be defined as hashes of serialized objects containing themselves.
+
 ### 5.1 `hostToolId`
 
 `hostToolId` answers: which exact host-runnable `protoc` package is this?
 
-Its identity must be derived from authority inputs that materially define the host tool, including at least:
+Its canonical identity payload must be derived from authority inputs that materially define the host tool, including at least:
 
 - Protobuf version;
 - upstream host asset identity and SHA-256;
@@ -165,7 +167,7 @@ Unrelated repository source changes must not change `hostToolId`.
 
 `runtimeId` answers: which exact target Protobuf/Abseil runtime ABI is this?
 
-Its identity must include at least:
+Its canonical identity payload must include at least:
 
 - Protobuf source version and SHA-256;
 - Abseil source version and SHA-256;
@@ -180,9 +182,9 @@ Unrelated Axiom runtime/business source changes must not change `runtimeId`.
 
 `releaseSetId` answers: which complete Semantic SDK platform set is currently being published and accepted as one release?
 
-It is derived from the canonical release index, which includes the selected host-tool and runtime asset identities and digests. If any selected asset changes, the `releaseSetId` changes.
+It is the SHA-256 of a canonical release-set identity payload containing the dependency authority plus the sorted selected host-tool/runtime identity-and-digest records. The identity payload explicitly excludes `releaseSetId` itself, the release tag, URLs, timestamps, attestations, and other publication metadata. The computed `releaseSetId` is then written into the final index and can be recomputed by consumers from its identity-bearing payload.
 
-A new release set may reuse unchanged `hostToolId` or `runtimeId` values from an earlier release.
+If any selected asset identity/digest changes, the `releaseSetId` changes. A new release set may reuse unchanged `hostToolId` or `runtimeId` values from an earlier release.
 
 ## 6. Release index and repository lock
 
@@ -201,7 +203,7 @@ The repository will migrate from the single-platform `semantic-toolchain.lock.js
 }
 ```
 
-The lock intentionally does not duplicate all platform asset records. It pins one immutable release index by release tag, release-set identity, and index digest.
+The lock intentionally does not duplicate all platform asset records. It pins one immutable release index by release tag, release-set identity, and exact serialized index digest.
 
 ### 6.2 Release index
 
@@ -209,6 +211,7 @@ The lock intentionally does not duplicate all platform asset records. It pins on
 
 - format/schema version;
 - `releaseSetId`;
+- the canonical release-set identity payload or fields sufficient to reconstruct it exactly;
 - dependency authority versions/digests;
 - `hostTools` map keyed by supported host;
 - `runtimes` map keyed by supported target runtime;
@@ -247,7 +250,7 @@ Conceptually:
 }
 ```
 
-The canonical index bytes determine `releaseSetId`; the index must be deterministic and self-consistent.
+The canonical release-set identity payload determines `releaseSetId`; the exact final serialized index bytes are independently pinned by `indexSha256`. This avoids self-referential identity while still making both semantic identity and exact file bytes verifiable.
 
 ## 7. Immutable GitHub Release contract
 
@@ -275,7 +278,7 @@ If a publication workflow encounters an existing tag, it may succeed only after 
 
 ### 7.2 Complete release set
 
-Every formal Semantic SDK v2 release contains a complete matrix even if only one target changed. Unchanged assets may be reused from a prior trusted release without rebuilding.
+Every formal Semantic SDK v2 release contains a complete matrix even if only one target changed. Unchanged assets may be reused from a prior trusted release without rebuilding. For a new complete Release, reuse means staging the exact previously verified bytes and attaching those byte-identical archives to the new Release; it does not mean rebuilding identity-equivalent binaries or leaving the new Release dependent on mutable external state.
 
 Therefore:
 
