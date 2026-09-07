@@ -112,6 +112,48 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
         for forbidden in ('bootstrap_deps.py', 'build_runtime.py --target', 'qualify_runtime.py --target'):
             self.assertNotIn(forbidden, preflight)
 
+    def test_release_promotion_is_main_only_complete_and_immutable(self):
+        source = (WORKFLOWS / 'semantic-sdk-release.yml').read_text(encoding='utf-8')
+        self.assertIn('workflow_dispatch:', source)
+        self.assertIn('refs/heads/main', job(source, 'guard'))
+        producer = job(source, 'producer')
+        self.assertIn('uses: ./.github/workflows/semantic-sdk-producer.yml', producer)
+        self.assertIn('aggregate: true', producer)
+        for key in ('linux-x86_64', 'windows-x64', 'macos-universal',
+                    'windows-x64-msvc-static', 'macos-arm64', 'macos-x64',
+                    'ios-arm64', 'ios-simulator-arm64', 'android-arm64-v8a',
+                    'android-x86_64', 'web-wasm32'):
+            self.assertIn(key, producer)
+        promote = job(source, 'promote')
+        self.assertIn('tools/semantic/publish_release.py', promote)
+        self.assertNotIn('--dry-run', promote)
+        self.assertIn('semantic-sdk-lock-', promote)
+        self.assertIn('releaseSetId', promote)
+        self.assertIn('git diff --name-only', promote)
+        self.assertNotIn('--force', promote)
+        self.assertNotIn('--clobber', promote)
+
+    def test_release_qualifies_exact_candidate_before_opening_lock_only_pr(self):
+        source = (WORKFLOWS / 'semantic-sdk-release.yml').read_text(encoding='utf-8')
+        validation = job(source, 'candidate-consumer')
+        self.assertIn('uses: ./.github/workflows/semantic-sdk-consumer-validation.yml', validation)
+        self.assertIn('checkout_ref: ${{ needs.promote.outputs.candidate_ref }}', validation)
+        self.assertIn('require_v2_lock: true', validation)
+        open_pr = job(source, 'open-lock-pr')
+        self.assertIn('needs: [guard, promote, candidate-consumer]', open_pr)
+        self.assertIn('git diff --name-only', open_pr)
+        self.assertIn('semantic-sdk.lock.json', open_pr)
+        self.assertIn('gh pr create', open_pr)
+        self.assertNotIn('workflow_run', source)
+        self.assertNotIn('pull_request_target', source)
+
+    def test_candidate_consumer_can_fail_closed_when_release_lock_is_missing(self):
+        source = (WORKFLOWS / 'semantic-sdk-consumer-validation.yml').read_text(encoding='utf-8')
+        self.assertIn('require_v2_lock:', source)
+        self.assertIn('type: boolean', source)
+        self.assertIn('SEMANTIC_V2_LOCK_REQUIRED', job(source, 'preflight'))
+        self.assertIn('inputs.require_v2_lock', job(source, 'preflight'))
+
     def test_pr_and_reusable_producer_cannot_publish_or_accept_authority(self):
         for filename in ('semantic-sdk-producer-contract.yml', 'semantic-sdk-producer.yml'):
             source = (WORKFLOWS / filename).read_text()
@@ -120,7 +162,6 @@ class SemanticSdkWorkflowTest(unittest.TestCase):
                 self.assertNotIn(forbidden, source)
             for line in source.splitlines():
                 if 'publish_release.py' in line:
-                    # The continued argument line contains the mandatory dry-run.
                     command = source[source.index(line):].split('- uses:', 1)[0]
                     self.assertIn('--dry-run', command)
 
