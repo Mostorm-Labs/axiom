@@ -1,0 +1,279 @@
+name: Semantic SDK Consumer Validation
+
+on:
+  workflow_call:
+    inputs:
+      checkout_ref:
+        required: false
+        type: string
+        default: ""
+  pull_request:
+    paths:
+      - "semantic-sdk.lock.json"
+      - "tools/sdk/**"
+      - "tools/semantic/provider.py"
+      - "tools/setup_build_environment.py"
+      - "runtime/semantic/**"
+      - "verification/tests/test_build_environment*.py"
+      - "verification/tests/test_semantic_cmake_contract.py"
+      - ".github/workflows/semantic-sdk-consumer-validation.yml"
+  workflow_dispatch:
+    inputs:
+      checkout_ref:
+        description: Exact repository ref to validate
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      v2_locked: ${{ steps.lock.outputs.v2_locked }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Detect accepted Semantic SDK v2 authority
+        id: lock
+        shell: bash
+        run: |
+          if [[ ! -f semantic-sdk.lock.json ]]; then
+            echo "SEMANTIC_V2_NOT_LOCKED"
+            echo "v2_locked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          from tools.semantic.contract import read_json, validate_v2_lock
+          validate_v2_lock(read_json(Path("semantic-sdk.lock.json")))
+          print("SEMANTIC_V2_LOCKED")
+          PY
+          echo "v2_locked=true" >> "$GITHUB_OUTPUT"
+
+  native:
+    needs: preflight
+    if: needs.preflight.outputs.v2_locked == 'true'
+    name: native / ${{ matrix.key }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {key: linux-x86_64, os: ubuntu-24.04, arch: x86_64, family: linux}
+          - {key: windows-x64-msvc-static, os: windows-2025, arch: x64, family: windows}
+          - {key: macos-arm64, os: macos-15, arch: arm64, family: macos}
+          - {key: macos-x64, os: macos-15-intel, arch: x86_64, family: macos}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    env:
+      AXIOM_SDK_STORE: ${{ runner.temp }}/axiom-sdk-store
+      TARGET_KEY: ${{ matrix.key }}
+      TARGET_FAMILY: ${{ matrix.family }}
+      TARGET_ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install build tools and lightweight core dependencies
+        shell: bash
+        run: |
+          python -m pip install cmake==3.30.5 ninja==1.11.1.4
+          python tools/setup_build_environment.py --core
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: matrix.family == 'windows'
+        with: {arch: x64}
+      - name: Install pinned Windows LLVM
+        if: matrix.family == 'windows'
+        shell: pwsh
+        run: |
+          python tools/bootstrap_deps.py --windows-llvm
+          if ($LASTEXITCODE -ne 0) { throw "LLVM download failed" }
+          $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
+          $installDir = Join-Path $PWD .deps/llvm
+          $process = Start-Process $installer -ArgumentList /S,"/D=$installDir" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "LLVM installation failed" }
+          (Join-Path $installDir bin) | Out-File $env:GITHUB_PATH -Append
+      - name: Resolve locked SDK then prove Store-only second resolution
+        shell: bash
+        run: |
+          mkdir -p out/consumer-facts
+          python tools/setup_build_environment.py --semantic --target "$TARGET_KEY" \
+            --github-env "$GITHUB_ENV" --facts-output out/consumer-facts/first.json
+          python tools/setup_build_environment.py --semantic --target "$TARGET_KEY" --offline \
+            --facts-output out/consumer-facts/second.json
+          python - <<'PY'
+          import json
+          facts = json.load(open("out/consumer-facts/second.json", encoding="utf-8"))
+          resolution = facts["semantic"]["resolution"]
+          assert resolution["networkUsed"] is False, resolution
+          assert resolution["index"]["source"] == "store", resolution
+          assert all(item["source"] == "store" and item["networkUsed"] is False
+                     for item in resolution["artifacts"]), resolution
+          PY
+          test ! -e .deps/protobuf
+      - name: Configure, build and test native Axiom Semantic
+        shell: bash
+        run: |
+          extra=()
+          if [[ "$TARGET_FAMILY" == windows ]]; then
+            extra+=("-DCMAKE_C_COMPILER=clang-cl" "-DCMAKE_CXX_COMPILER=clang-cl")
+            extra+=("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" "-DABSL_MSVC_STATIC_RUNTIME=ON")
+            extra+=("-DCMAKE_CXX_FLAGS=/D_ITERATOR_DEBUG_LEVEL=0 /D_HAS_ITERATOR_DEBUGGING=0 /Brepro")
+          elif [[ "$TARGET_FAMILY" == macos ]]; then
+            extra+=("-DCMAKE_OSX_ARCHITECTURES=$TARGET_ARCH")
+          fi
+          cmake -S . -B "out/consumer-$TARGET_KEY" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_SEMANTIC=ON \
+            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" \
+            -DAXIOM_PROTOC="$AXIOM_PROTOC" \
+            "${extra[@]}"
+          cmake --build "out/consumer-$TARGET_KEY" --parallel
+          ctest --test-dir "out/consumer-$TARGET_KEY" --output-on-failure
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-sdk-consumer-${{ matrix.key }}
+          path: out/consumer-facts
+          retention-days: 14
+          if-no-files-found: error
+
+  cross:
+    needs: preflight
+    if: needs.preflight.outputs.v2_locked == 'true'
+    name: cross / ${{ matrix.key }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {key: ios-arm64, os: macos-15, family: ios}
+          - {key: ios-simulator-arm64, os: macos-15, family: ios-simulator}
+          - {key: android-arm64-v8a, os: ubuntu-24.04, family: android, abi: arm64-v8a}
+          - {key: android-x86_64, os: ubuntu-24.04, family: android, abi: x86_64}
+          - {key: web-wasm32, os: ubuntu-24.04, family: web}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    env:
+      AXIOM_SDK_STORE: ${{ runner.temp }}/axiom-sdk-store
+      TARGET_KEY: ${{ matrix.key }}
+      TARGET_FAMILY: ${{ matrix.family }}
+      TARGET_ABI: ${{ matrix.abi }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install CMake, Ninja and lightweight core dependencies
+        shell: bash
+        run: |
+          python -m pip install cmake==3.30.5 ninja==1.11.1.4
+          python tools/setup_build_environment.py --core
+      - name: Install pinned Android NDK
+        if: matrix.family == 'android'
+        shell: bash
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" || [[ "${PIPESTATUS[1]}" -eq 0 ]]
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v4
+        if: matrix.family == 'web'
+        with: {node-version: "24.18.0"}
+      - name: Install pinned Emscripten
+        if: matrix.family == 'web'
+        shell: bash
+        run: python tools/bootstrap_deps.py --web
+      - name: Resolve locked SDK then prove Store-only second resolution
+        shell: bash
+        run: |
+          mkdir -p out/consumer-facts
+          python tools/setup_build_environment.py --semantic --target "$TARGET_KEY" \
+            --github-env "$GITHUB_ENV" --facts-output out/consumer-facts/first.json
+          python tools/setup_build_environment.py --semantic --target "$TARGET_KEY" --offline \
+            --facts-output out/consumer-facts/second.json
+          python - <<'PY'
+          import json
+          facts = json.load(open("out/consumer-facts/second.json", encoding="utf-8"))
+          resolution = facts["semantic"]["resolution"]
+          assert resolution["networkUsed"] is False, resolution
+          assert resolution["index"]["source"] == "store", resolution
+          assert all(item["source"] == "store" and item["networkUsed"] is False
+                     for item in resolution["artifacts"]), resolution
+          PY
+          test ! -e .deps/protobuf
+      - name: Configure and link Axiom Semantic for cross target
+        shell: bash
+        run: |
+          extra=()
+          case "$TARGET_FAMILY" in
+            ios)
+              extra+=("-DCMAKE_SYSTEM_NAME=iOS" "-DCMAKE_OSX_ARCHITECTURES=arm64")
+              extra+=("-DCMAKE_OSX_SYSROOT=iphoneos" "-DCMAKE_OSX_DEPLOYMENT_TARGET=17.0")
+              extra+=("-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO")
+              ;;
+            ios-simulator)
+              extra+=("-DCMAKE_SYSTEM_NAME=iOS" "-DCMAKE_OSX_ARCHITECTURES=arm64")
+              extra+=("-DCMAKE_OSX_SYSROOT=iphonesimulator" "-DCMAKE_OSX_DEPLOYMENT_TARGET=17.0")
+              extra+=("-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO")
+              ;;
+            android)
+              extra+=("-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake")
+              extra+=("-DANDROID_ABI=$TARGET_ABI" "-DANDROID_PLATFORM=android-26" "-DANDROID_STL=c++_static")
+              ;;
+            web)
+              source .deps/emsdk/emsdk_env.sh
+              extra+=("-DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake")
+              extra+=("-DCMAKE_CXX_FLAGS=-fexceptions" "-DCMAKE_EXE_LINKER_FLAGS=-fexceptions")
+              ;;
+          esac
+          cmake -S . -B "out/consumer-$TARGET_KEY" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=OFF \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_SEMANTIC=ON \
+            -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" \
+            -DAXIOM_PROTOC="$AXIOM_PROTOC" \
+            "${extra[@]}"
+          cmake --build "out/consumer-$TARGET_KEY" --target canvas_runtime_semantic --parallel
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-sdk-consumer-${{ matrix.key }}
+          path: out/consumer-facts
+          retention-days: 14
+          if-no-files-found: error
+
+  result:
+    if: always()
+    needs: [preflight, native, cross]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Enforce transition or complete consumer matrix success
+        shell: bash
+        env:
+          LOCKED: ${{ needs.preflight.outputs.v2_locked }}
+          PREFLIGHT: ${{ needs.preflight.result }}
+          NATIVE: ${{ needs.native.result }}
+          CROSS: ${{ needs.cross.result }}
+        run: |
+          [[ "$PREFLIGHT" == success ]]
+          if [[ "$LOCKED" != true ]]; then
+            echo "SEMANTIC_V2_NOT_LOCKED"
+            [[ "$NATIVE" == skipped && "$CROSS" == skipped ]]
+            exit 0
+          fi
+          [[ "$NATIVE" == success && "$CROSS" == success ]]
