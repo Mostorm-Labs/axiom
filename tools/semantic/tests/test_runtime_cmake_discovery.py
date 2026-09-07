@@ -119,6 +119,19 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             "Windows and Android Clang reject the unbraced loop/switch followed by return with -Wmisleading-indentation",
         )
 
+    def test_clangcl_generated_protobuf_offsetof_warning_is_suppressed_only_on_generated_sources(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / "runtime/semantic/CMakeLists.txt").read_text(encoding="utf-8")
+        generated_begin = source.index('if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")')
+        generated_end = source.index("  add_custom_command(", generated_begin)
+        generated_policy = source[generated_begin:generated_end]
+        self.assertIn(
+            "-Wno-invalid-offsetof",
+            generated_policy,
+            "clang-cl 22 emits -Winvalid-offsetof from protoc-generated *.pb.cc; suppress only on generated sources",
+        )
+        self.assertEqual(source.count("-Wno-invalid-offsetof"), 1)
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:

@@ -59,8 +59,14 @@ if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
     list(APPEND AXIOM_PROTO_GENERATED_H "${AXIOM_PROTO_GENERATED_ROOT}/${generated_h}")
   endforeach()
   if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")
+    set(AXIOM_PROTO_GENERATED_COMPILE_OPTIONS
+      -Wno-nullability-extension
+      -Wno-deprecated-declarations)
+    if(MSVC)
+      list(APPEND AXIOM_PROTO_GENERATED_COMPILE_OPTIONS -Wno-invalid-offsetof)
+    endif()
     set_source_files_properties(${AXIOM_PROTO_GENERATED_CC}
-      PROPERTIES COMPILE_OPTIONS "-Wno-nullability-extension;-Wno-deprecated-declarations")
+      PROPERTIES COMPILE_OPTIONS "${AXIOM_PROTO_GENERATED_COMPILE_OPTIONS}")
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set_source_files_properties(${AXIOM_PROTO_GENERATED_CC}
       PROPERTIES COMPILE_OPTIONS "-Wno-deprecated-declarations")
