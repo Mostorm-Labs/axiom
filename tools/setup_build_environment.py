@@ -50,18 +50,8 @@ def validate_semantic_install(root: Path) -> dict[str, str]:
     }
 
 
-def setup_environment(*, core: bool, semantic: bool, target: str) -> dict[str, Any]:
-    if target != "linux-x86_64":
-        raise RuntimeError(f"unsupported build-environment target: {target}")
-    if core:
-        subprocess.run(
-            [sys.executable, "tools/bootstrap_deps.py", "--core"],
-            cwd=ROOT,
-            check=True,
-        )
-    semantic_fetch: dict[str, Any] | None = None
-    environment = {"AXIOM_DEPS_DIR": str(DEPS_ROOT.resolve())}
-    if semantic:
+def _fetch_semantic(target: str) -> dict[str, Any]:
+    try:
         result = subprocess.run(
             [
                 sys.executable,
@@ -76,12 +66,33 @@ def setup_environment(*, core: bool, semantic: bool, target: str) -> dict[str, A
             capture_output=True,
             text=True,
         )
-        if result.stdout:
-            print(result.stdout, end="")
-        lines = result.stdout.splitlines()
-        if not lines:
-            raise RuntimeError("semantic fetch produced no machine-readable result")
-        semantic_fetch = json.loads(lines[-1])
+    except subprocess.CalledProcessError as error:
+        if error.stdout:
+            print(error.stdout, end="")
+        if error.stderr:
+            print(error.stderr, end="", file=sys.stderr)
+        raise
+    if result.stdout:
+        print(result.stdout, end="")
+    lines = result.stdout.splitlines()
+    if not lines:
+        raise RuntimeError("semantic fetch produced no machine-readable result")
+    return json.loads(lines[-1])
+
+
+def setup_environment(*, core: bool, semantic: bool, target: str) -> dict[str, Any]:
+    if target != "linux-x86_64":
+        raise RuntimeError(f"unsupported build-environment target: {target}")
+    if core:
+        subprocess.run(
+            [sys.executable, "tools/bootstrap_deps.py", "--core"],
+            cwd=ROOT,
+            check=True,
+        )
+    semantic_fetch: dict[str, Any] | None = None
+    environment = {"AXIOM_DEPS_DIR": str(DEPS_ROOT.resolve())}
+    if semantic:
+        semantic_fetch = _fetch_semantic(target)
         environment.update(validate_semantic_install(SEMANTIC_ROOT))
     lock = json.loads(SEMANTIC_LOCK.read_text(encoding="utf-8")) if semantic else None
     return {
