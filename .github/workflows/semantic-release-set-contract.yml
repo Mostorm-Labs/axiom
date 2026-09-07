@@ -1,0 +1,52 @@
+name: Semantic Release Set Contract
+
+on:
+  pull_request:
+    paths:
+      - "tools/sdk/**"
+      - "tools/semantic/**"
+      - "tools/update_semantic_lock.py"
+      - "verification/tests/test_semantic_lock.py"
+      - "verification/tests/test_semantic_release_workflows.py"
+      - ".github/workflows/semantic-release-set-contract.yml"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  source-snapshot:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Record exact sources for reproducing release checks
+        run: |
+          mkdir -p out/release-contract-source
+          git rev-parse HEAD > out/release-contract-source/revision.txt
+          git archive --format=zip --output=out/release-contract-source/source.zip HEAD tools verification .github/workflows deps.lock.json semantic-toolchain.lock.json r1-full-skia-sdk.lock.json docs/superpowers CMakeLists.txt runtime/foundation runtime/semantic schema/axiom/v1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-release-contract-source
+          path: out/release-contract-source
+          retention-days: 7
+          if-no-files-found: error
+  contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Release set authority contracts (no dependency builds or publication)
+        run: >-
+          python -m unittest tools.semantic.tests.test_aggregate_v2
+          tools.semantic.tests.test_reuse_release_v2 tools.semantic.tests.test_publish_release_v2
+          verification.tests.test_semantic_lock verification.tests.test_semantic_release_workflows -v

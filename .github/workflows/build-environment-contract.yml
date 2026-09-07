@@ -3,6 +3,22 @@ name: Build Environment Contract
 on:
   pull_request:
     paths:
+      - "runtime/semantic/CMakeLists.txt"
+      - "verification/tests/test_semantic_cmake_contract.py"
+      - "tools/sdk/**"
+      - "semantic-sdk.lock.json"
+      - "tools/semantic/provider.py"
+      - "tools/semantic/package_host.py"
+      - "tools/semantic/package_runtime.py"
+      - "tools/semantic/package_common.py"
+      - "tools/semantic/tests/provider_fixtures.py"
+      - "tools/semantic/tests/test_provider_v2.py"
+      - "verification/tests/test_build_environment_v2.py"
+      - "verification/tests/test_semantic_provider_workflows.py"
+      - "tools/semantic/contract.py"
+      - "tools/semantic/profile-v2.json"
+      - "tools/semantic/tests/test_contract_v2.py"
+      - "verification/tests/test_sdk_infrastructure_workflow.py"
       - "deps.lock.json"
       - "semantic-toolchain.lock.json"
       - "r1-full-skia-sdk.lock.json"
@@ -17,9 +33,26 @@ on:
       - "verification/tests/test_ci_trigger_boundaries.py"
       - ".github/workflows/build-environment-contract.yml"
       - ".github/workflows/g1-semantic-codec.yml"
+      - ".github/workflows/semantic-sdk-consumer-validation.yml"
   push:
     branches: [main]
     paths:
+      - "runtime/semantic/CMakeLists.txt"
+      - "verification/tests/test_semantic_cmake_contract.py"
+      - "tools/sdk/**"
+      - "semantic-sdk.lock.json"
+      - "tools/semantic/provider.py"
+      - "tools/semantic/package_host.py"
+      - "tools/semantic/package_runtime.py"
+      - "tools/semantic/package_common.py"
+      - "tools/semantic/tests/provider_fixtures.py"
+      - "tools/semantic/tests/test_provider_v2.py"
+      - "verification/tests/test_build_environment_v2.py"
+      - "verification/tests/test_semantic_provider_workflows.py"
+      - "tools/semantic/contract.py"
+      - "tools/semantic/profile-v2.json"
+      - "tools/semantic/tests/test_contract_v2.py"
+      - "verification/tests/test_sdk_infrastructure_workflow.py"
       - "deps.lock.json"
       - "semantic-toolchain.lock.json"
       - "r1-full-skia-sdk.lock.json"
@@ -34,6 +67,7 @@ on:
       - "verification/tests/test_ci_trigger_boundaries.py"
       - ".github/workflows/build-environment-contract.yml"
       - ".github/workflows/g1-semantic-codec.yml"
+      - ".github/workflows/semantic-sdk-consumer-validation.yml"
   workflow_dispatch:
 
 permissions:
@@ -64,7 +98,7 @@ jobs:
             -DCANVAS_BUILD_POC01=OFF \
             -DCANVAS_BUILD_SEMANTIC=ON \
             -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
-            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
+            -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DAXIOM_PROTOC="$AXIOM_PROTOC"
           cmake --build out/build-environment-contract --parallel
           ctest --test-dir out/build-environment-contract --output-on-failure
       - uses: actions/upload-artifact@v4
@@ -98,3 +132,57 @@ jobs:
             --variant release \
             --summary-file "$GITHUB_STEP_SUMMARY"
           test ! -d .deps/skia
+
+  sdk-infrastructure:
+    name: sdk-infrastructure / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Test generic SDK infrastructure without dependency builds
+        run: python -m unittest discover -s tools/sdk/tests -v
+      - name: Test Semantic SDK v2 authority and Skia isolation
+        run: python -m unittest tools.semantic.tests.test_contract_v2 tools.skia.tests.test_change_classifier -v
+      - name: Test Semantic Store provider and developer entry points
+        run: >-
+          python -m unittest tools.semantic.tests.test_provider_v2
+          verification.tests.test_build_environment_v2 verification.tests.test_build_environment
+          verification.tests.test_semantic_lock verification.tests.test_semantic_provider_workflows -v
+      - name: Test host workflow boundary
+        run: python -m unittest verification.tests.test_sdk_infrastructure_workflow -v
+      - name: Check whitespace
+        run: git diff --check
+
+  semantic-v2-detect:
+    runs-on: ubuntu-24.04
+    outputs:
+      locked: ${{ steps.lock.outputs.locked }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - id: lock
+        shell: bash
+        run: |
+          if [[ -f semantic-sdk.lock.json ]]; then
+            echo "locked=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SEMANTIC_V2_NOT_LOCKED"
+            echo "locked=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  semantic-v2-validation:
+    needs: semantic-v2-detect
+    if: needs.semantic-v2-detect.outputs.locked == 'true'
+    uses: ./.github/workflows/semantic-sdk-consumer-validation.yml
+    with:
+      checkout_ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    permissions:
+      contents: read

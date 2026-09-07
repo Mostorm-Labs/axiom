@@ -1,0 +1,160 @@
+name: Semantic SDK Producer Contract
+
+on:
+  pull_request:
+    paths:
+      - "deps.lock.json"
+      - "tools/semantic/**"
+      - "tools/sdk/**"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic_fetch.py"
+      - "tools/update_semantic_lock.py"
+      - "semantic-sdk.lock.json"
+      - "runtime/semantic/CMakeLists.txt"
+      - "verification/tools/qualify_semantic_provider.py"
+      - "verification/tests/test_semantic_*.py"
+      - "verification/tests/test_ci_trigger_boundaries.py"
+      - "verification/tests/test_semantic_sdk_workflows.py"
+      - ".github/workflows/semantic-sdk-producer-contract.yml"
+      - ".github/workflows/semantic-sdk-producer.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: semantic-sdk-contract-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  classify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      host_tools: ${{ steps.select.outputs.host_tools }}
+      runtimes: ${{ steps.select.outputs.runtimes }}
+      mode: ${{ steps.select.outputs.mode }}
+      should_build: ${{ steps.select.outputs.should_build }}
+      verify_partial: ${{ steps.select.outputs.verify_partial }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Verify classification and orchestration contracts
+        run: >-
+          python -m unittest tools.semantic.tests.test_producer_change_classifier
+          tools.semantic.tests.test_producer_orchestration
+          verification.tests.test_semantic_sdk_workflows
+          verification.tests.test_ci_trigger_boundaries -v
+      - name: Classify exact PR base and head
+        id: select
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python tools/semantic/classify_producer_changes.py --base-ref "$BASE_REF" --head-ref "$HEAD_REF" > selection.json
+          python - <<'PYTHON'
+          import os, subprocess
+          from pathlib import Path
+          from tools.semantic.contract import read_json
+          from tools.semantic.producer_plan import write_outputs
+          selection = read_json(Path("selection.json"))
+          changed = subprocess.check_output(["git", "diff", "--no-renames", "--name-only", "-z",
+                                             os.environ["BASE_REF"], os.environ["HEAD_REF"], "--"], text=True).split("\0")
+          selection["verify_partial"] = bool(set(changed) & {
+              ".github/workflows/semantic-sdk-producer.yml", "tools/semantic/producer_cell.py",
+              "tools/semantic/producer_plan.py", ".github/workflows/semantic-sdk-producer-contract.yml"})
+          write_outputs(Path(os.environ["GITHUB_OUTPUT"]), selection)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as stream:
+              stream.write("## Semantic producer selection\n```json\n" + Path("selection.json").read_text() + "```\n")
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: semantic-sdk-selection
+          path: selection.json
+          retention-days: 14
+          if-no-files-found: error
+
+  runtime-discovery:
+    name: runtime-discovery / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install the producer CMake version
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+        with: {arch: x64}
+      - name: Verify discovery, CMake and orchestration without dependency builds
+        run: >-
+          python -m unittest tools.semantic.tests.test_runtime_cmake_discovery
+          tools.semantic.tests.test_producer_orchestration
+          tools.semantic.tests.test_producer_change_classifier
+          verification.tests.test_semantic_cmake_contract
+          verification.tests.test_semantic_sdk_workflows -v
+
+  producer:
+    needs: [classify, runtime-discovery]
+    if: needs.classify.outputs.should_build == 'true'
+    uses: ./.github/workflows/semantic-sdk-producer.yml
+    with:
+      host_tools: ${{ needs.classify.outputs.host_tools }}
+      runtimes: ${{ needs.classify.outputs.runtimes }}
+      aggregate: ${{ needs.classify.outputs.mode == 'full' }}
+      accepted_ref: ${{ github.event.pull_request.base.sha }}
+
+  empty-selection:
+    needs: classify
+    uses: ./.github/workflows/semantic-sdk-producer.yml
+    with:
+      host_tools: '[]'
+      runtimes: '[]'
+      aggregate: false
+      accepted_ref: ${{ github.event.pull_request.base.sha }}
+      artifact_prefix: semantic-sdk-empty-proof
+
+  partial-runtime-proof:
+    needs: [classify, runtime-discovery]
+    if: needs.classify.outputs.verify_partial == 'true'
+    uses: ./.github/workflows/semantic-sdk-producer.yml
+    with:
+      host_tools: '[]'
+      runtimes: '["linux-x86_64"]'
+      aggregate: false
+      accepted_ref: ${{ github.event.pull_request.base.sha }}
+      artifact_prefix: semantic-sdk-partial-proof
+
+  result:
+    needs: [classify, runtime-discovery, producer, empty-selection, partial-runtime-proof]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Reject failed classification or unexpectedly skipped producer
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          SHOULD_BUILD: ${{ needs.classify.outputs.should_build }}
+          VERIFY_PARTIAL: ${{ needs.classify.outputs.verify_partial }}
+        run: |
+          python3 - <<'PYTHON'
+          import json, os
+          needs = json.loads(os.environ["NEEDS"])
+          for name in ("classify", "runtime-discovery", "empty-selection"):
+              assert needs[name]["result"] == "success", (name, needs[name]["result"])
+          expected = "success" if os.environ["SHOULD_BUILD"] == "true" else "skipped"
+          assert needs["producer"]["result"] == expected, (needs["producer"]["result"], expected)
+          partial = "success" if os.environ["VERIFY_PARTIAL"] == "true" else "skipped"
+          assert needs["partial-runtime-proof"]["result"] == partial, needs["partial-runtime-proof"]
+          print("PASS: producer selection and reusable workflow results agree")
+          PYTHON

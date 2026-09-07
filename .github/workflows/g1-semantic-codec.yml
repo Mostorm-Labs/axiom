@@ -10,6 +10,7 @@ on:
       - "tools/setup_build_environment.py"
       - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
+      - "semantic-sdk.lock.json"
       - "verification/tests/test_build_environment.py"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
@@ -43,6 +44,7 @@ on:
       - "tools/setup_build_environment.py"
       - "tools/update_semantic_lock.py"
       - "semantic-toolchain.lock.json"
+      - "semantic-sdk.lock.json"
       - "verification/tests/test_build_environment.py"
       - "verification/tests/test_semantic_sdk.py"
       - "verification/tests/test_semantic_lock.py"
@@ -100,7 +102,12 @@ jobs:
       - name: Record toolchain manifest
         run: |
           mkdir -p evidence-ci/g1-semantic-codec
-          cp .deps/protobuf/.canvas-semantic-toolchain.json evidence-ci/g1-semantic-codec/toolchain.json
+          if [[ -f semantic-sdk.lock.json ]]; then
+            cp "$AXIOM_SEMANTIC_HOST_ROOT/manifest.json" evidence-ci/g1-semantic-codec/semantic-host-manifest.json
+            cp "$AXIOM_SEMANTIC_RUNTIME_ROOT/manifest.json" evidence-ci/g1-semantic-codec/semantic-runtime-manifest.json
+          else
+            cp .deps/protobuf/.canvas-semantic-toolchain.json evidence-ci/g1-semantic-codec/toolchain.json
+          fi
           cmake --version > evidence-ci/g1-semantic-codec/cmake.txt
           c++ --version > evidence-ci/g1-semantic-codec/compiler.txt
           "$AXIOM_PROTOC" --version > evidence-ci/g1-semantic-codec/protoc.txt
@@ -127,7 +134,7 @@ jobs:
           cmp evidence-ci/g1-semantic-codec/generated-code-sha256-a.txt evidence-ci/g1-semantic-codec/generated-code-sha256-b.txt
       - name: Build semantic runtime and generated C++ code
         run: |
-          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_SDK_ROOT"
+          cmake -S . -B out/g1-hosted -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCMAKE_PREFIX_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DAXIOM_PROTOC="$AXIOM_PROTOC"
           cmake --build out/g1-hosted --parallel
           ctest --test-dir out/g1-hosted --output-on-failure
           find out/g1-hosted/runtime/semantic/generated -type f -print 2>/dev/null | sort > evidence-ci/g1-semantic-codec/generated-files.txt || true

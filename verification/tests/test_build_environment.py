@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from unittest import mock
 
+from tools.sdk.model import HostPlatform
 import tools.setup_build_environment as build_env
 
 
@@ -30,6 +31,8 @@ class BuildEnvironmentTest(unittest.TestCase):
             environment = build_env.validate_semantic_install(root)
             self.assertEqual(environment["AXIOM_SEMANTIC_SDK_ROOT"], str(root.resolve()))
             self.assertEqual(environment["CMAKE_PREFIX_PATH"], str(root.resolve()))
+            self.assertEqual(environment["AXIOM_SEMANTIC_RUNTIME_ROOT"], str(root.resolve()))
+            self.assertEqual(environment["AXIOM_SEMANTIC_HOST_ROOT"], str(root.resolve()))
             self.assertEqual(environment["PROTOBUF_DIR"], str((root / "lib/cmake/protobuf").resolve()))
             self.assertEqual(environment["ABSL_DIR"], str((root / "lib/cmake/absl").resolve()))
             self.assertEqual(environment["UTF8_RANGE_DIR"], str((root / "lib/cmake/utf8_range").resolve()))
@@ -52,6 +55,9 @@ class BuildEnvironmentTest(unittest.TestCase):
             self.assertIn(f"AXIOM_SEMANTIC_SDK_ROOT={root.resolve()}\n", text)
             self.assertIn(f"CMAKE_PREFIX_PATH={root.resolve()}\n", text)
             self.assertEqual(text.count("CMAKE_PREFIX_PATH="), 1)
+            self.assertIn(f"AXIOM_SEMANTIC_RUNTIME_ROOT={root.resolve()}\n", text)
+            self.assertIn(f"AXIOM_SEMANTIC_HOST_ROOT={root.resolve()}\n", text)
+            self.assertIn(f"AXIOM_PROTOC={(root / 'bin/protoc').resolve()}\n", text)
 
     @mock.patch("tools.setup_build_environment.subprocess.run")
     def test_setup_environment_never_requests_semantic_source_bootstrap(self, run):
@@ -69,7 +75,9 @@ class BuildEnvironmentTest(unittest.TestCase):
                 }) + "\n"),
             ]
             try:
-                build_env.setup_environment(core=True, semantic=True, target="linux-x86_64")
+                build_env.setup_environment(core=True, semantic=True, target="linux-x86_64",
+                                            host=HostPlatform("linux", "x86_64", "linux-x86_64"),
+                                            lock_path=build_env.SEMANTIC_LOCK)
             finally:
                 build_env.SEMANTIC_ROOT = original
             commands = [call.args[0] for call in run.call_args_list]
@@ -89,7 +97,9 @@ class BuildEnvironmentTest(unittest.TestCase):
         stderr = io.StringIO()
         with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
             with self.assertRaises(subprocess.CalledProcessError):
-                build_env.setup_environment(core=False, semantic=True, target="linux-x86_64")
+                build_env.setup_environment(core=False, semantic=True, target="linux-x86_64",
+                                            host=HostPlatform("linux", "x86_64", "linux-x86_64"),
+                                            lock_path=build_env.SEMANTIC_LOCK)
         self.assertIn("fetch stdout", stdout.getvalue())
         self.assertIn("semantic identity mismatch", stderr.getvalue())
 

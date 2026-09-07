@@ -1,0 +1,454 @@
+name: Semantic SDK Producer
+
+on:
+  workflow_call:
+    inputs:
+      host_tools: {required: true, type: string}
+      runtimes: {required: true, type: string}
+      aggregate: {required: false, type: boolean, default: false}
+      accepted_ref: {required: true, type: string}
+      artifact_prefix: {required: false, type: string, default: semantic-sdk}
+    outputs:
+      release_set_artifact:
+        value: ${{ jobs.release-set.outputs.release_set_artifact }}
+      candidate_lock_artifact:
+        value: ${{ jobs.release-set.outputs.candidate_lock_artifact }}
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUTF8: "1"
+  AXIOM_SDK_STORE: out/sdk-store
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      host_matrix: ${{ steps.plan.outputs.host_matrix }}
+      runtime_matrix: ${{ steps.plan.outputs.runtime_matrix }}
+      has_hosts: ${{ steps.plan.outputs.has_hosts }}
+      has_runtimes: ${{ steps.plan.outputs.has_runtimes }}
+      aggregate: ${{ steps.plan.outputs.aggregate }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Validate exact selections and snapshot accepted base authority
+        id: plan
+        env:
+          HOST_TOOLS: ${{ inputs.host_tools }}
+          RUNTIMES: ${{ inputs.runtimes }}
+          AGGREGATE: ${{ inputs.aggregate }}
+          ACCEPTED_REF: ${{ inputs.accepted_ref }}
+        run: |
+          python tools/semantic/producer_plan.py --host-tools "$HOST_TOOLS" --runtimes "$RUNTIMES" \
+            --aggregate "$AGGREGATE" --accepted-ref "$ACCEPTED_REF" \
+            --output out/producer-plan --github-output "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: steps.plan.outputs.has_hosts == 'true' || steps.plan.outputs.has_runtimes == 'true'
+        with:
+          name: ${{ inputs.artifact_prefix }}-producer-authority
+          path: out/producer-plan/authority
+          retention-days: 14
+          if-no-files-found: error
+
+  host-tools:
+    needs: prepare
+    if: needs.prepare.outputs.has_hosts == 'true'
+    name: host-tool / ${{ matrix.key }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.host_matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      CELL_KEY: ${{ matrix.key }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-producer-authority
+          path: out/producer-authority
+      - name: Identify host package before transport or packaging
+        id: identity
+        shell: bash
+        run: >-
+          python tools/semantic/producer_cell.py identity --kind hostTools --key "$CELL_KEY"
+          --plan out/semantic-sdk/host/identity.json --github-output "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: out/sdk-store
+          key: semantic-producer-v2-${{ runner.os }}-${{ steps.identity.outputs.identifier }}-${{ hashFiles('out/producer-authority/semantic-sdk.lock.json') }}
+          restore-keys: semantic-producer-v2-${{ runner.os }}-${{ steps.identity.outputs.identifier }}-
+      - name: Verify and reuse the currently accepted immutable host package
+        id: reuse
+        shell: bash
+        run: >-
+          python tools/semantic/producer_cell.py reuse --plan out/semantic-sdk/host/identity.json
+          --authority-directory out/producer-authority --store "$AXIOM_SDK_STORE"
+          --directory out/semantic-sdk/host/package-a --facts-output out/semantic-sdk/host/reuse.json
+          --github-output "$GITHUB_OUTPUT"
+      - name: Package exact upstream bytes twice only on clean reuse miss
+        if: steps.reuse.outputs.reused != 'true'
+        shell: bash
+        run: |
+          python tools/semantic/package_host.py --host-key "$CELL_KEY" --output out/semantic-sdk/host/package-a
+          python tools/semantic/package_host.py --host-key "$CELL_KEY" --output out/semantic-sdk/host/package-b
+          python tools/semantic/producer_cell.py compare --plan out/semantic-sdk/host/identity.json \
+            --directory out/semantic-sdk/host/package-a --second out/semantic-sdk/host/package-b \
+            --facts-output out/semantic-sdk/host/comparison.json
+      - name: Verify expected identity and probe native protoc including universal slices
+        run: >-
+          python tools/semantic/producer_cell.py verify --plan out/semantic-sdk/host/identity.json
+          --directory out/semantic-sdk/host/package-a --probe
+          --facts-output out/semantic-sdk/host/probe.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-host-${{ matrix.key }}
+          path: |
+            out/semantic-sdk/host/package-a
+            out/semantic-sdk/host/identity.json
+            out/semantic-sdk/host/reuse.json
+            out/semantic-sdk/host/comparison.json
+            out/semantic-sdk/host/probe.json
+          retention-days: 14
+          if-no-files-found: error
+
+  runtimes:
+    needs: [prepare, host-tools]
+    if: >-
+      ${{ !cancelled() && needs.prepare.result == 'success' &&
+          needs.prepare.outputs.has_runtimes == 'true' &&
+          (needs.host-tools.result == 'success' || needs.host-tools.result == 'skipped') }}
+    name: runtime / ${{ matrix.key }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.runtime_matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      CELL_KEY: ${{ matrix.key }}
+      CELL_FAMILY: ${{ matrix.family }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install CMake and Ninja
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
+      - name: Test runtime package and source-free smoke contracts
+        run: >-
+          python -m unittest tools.semantic.tests.test_runtime_build_plan
+          tools.semantic.tests.test_package_runtime_v2
+          tools.semantic.tests.test_runtime_smoke_contract -v
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: matrix.family == 'windows'
+        with: {arch: x64}
+      - name: Install pinned Windows LLVM
+        if: matrix.family == 'windows'
+        shell: pwsh
+        run: |
+          python tools/bootstrap_deps.py --windows-llvm
+          if ($LASTEXITCODE -ne 0) { throw "LLVM download failed" }
+          $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
+          $installDir = Join-Path $PWD .deps/llvm
+          $process = Start-Process $installer -ArgumentList /S,"/D=$installDir" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "LLVM installation failed" }
+          (Join-Path $installDir bin) | Out-File $env:GITHUB_PATH -Append
+      - name: Verify Windows reproducibility regressions with pinned LLVM
+        if: matrix.family == 'windows'
+        run: python -m unittest tools.semantic.tests.test_runtime_reproducibility -v
+      - name: Install pinned Android NDK
+        if: matrix.family == 'android'
+        shell: bash
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" || [[ "${PIPESTATUS[1]}" -eq 0 ]]
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v4
+        if: matrix.family == 'web'
+        with: {node-version: "24.18.0"}
+      - name: Install pinned Emscripten
+        if: matrix.family == 'web'
+        run: python tools/bootstrap_deps.py --web
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-producer-authority
+          path: out/producer-authority
+      - name: Identify target ABI and actual toolchain before source acquisition
+        id: identity
+        shell: bash
+        run: |
+          if [[ "$CELL_FAMILY" == web ]]; then source .deps/emsdk/emsdk_env.sh; fi
+          python tools/semantic/producer_cell.py identity --kind runtimes --key "$CELL_KEY" \
+            --plan out/semantic-sdk/runtime/identity.json --github-output "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: out/sdk-store
+          key: semantic-producer-v2-${{ runner.os }}-${{ steps.identity.outputs.identifier }}-${{ hashFiles('out/producer-authority/semantic-sdk.lock.json') }}
+          restore-keys: semantic-producer-v2-${{ runner.os }}-${{ steps.identity.outputs.identifier }}-
+      - name: Verify and reuse the currently accepted immutable target runtime
+        id: reuse
+        shell: bash
+        run: |
+          if [[ "$CELL_FAMILY" == web ]]; then source .deps/emsdk/emsdk_env.sh; fi
+          python tools/semantic/producer_cell.py reuse --plan out/semantic-sdk/runtime/identity.json \
+            --authority-directory out/producer-authority --store "$AXIOM_SDK_STORE" \
+            --directory out/semantic-sdk/runtime/package-a --facts-output out/semantic-sdk/runtime/reuse.json \
+            --github-output "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        if: contains(fromJSON(inputs.host_tools), matrix.host)
+        with:
+          name: ${{ inputs.artifact_prefix }}-host-${{ matrix.host }}
+          path: out/semantic-sdk/host-input
+      - name: Acquire matching host binary without adding a host build cell
+        shell: bash
+        run: >-
+          python tools/semantic/producer_cell.py support-host --directory out/semantic-sdk/host-input/package-a
+          --authority-directory out/producer-authority --store "$AXIOM_SDK_STORE"
+          --facts-output out/semantic-sdk/runtime/host-acquisition.json
+      - name: Build only on clean miss and qualify deterministic relocated runtime
+        if: steps.reuse.outputs.reused != 'true'
+        shell: bash
+        run: |
+          if [[ "$CELL_FAMILY" == web ]]; then source .deps/emsdk/emsdk_env.sh; fi
+          extra=()
+          if [[ "$CELL_FAMILY" == windows ]]; then extra+=(--verify-clean-rebuild); fi
+          python tools/semantic/qualify_runtime.py --target "$CELL_KEY" \
+            --host-directory out/semantic-sdk/host-input/package-a "${extra[@]}"
+      - name: Verify runtime against identity computed before reuse or build
+        shell: bash
+        run: |
+          if [[ "$CELL_FAMILY" == web ]]; then source .deps/emsdk/emsdk_env.sh; fi
+          python tools/semantic/producer_cell.py verify --plan out/semantic-sdk/runtime/identity.json \
+            --directory out/semantic-sdk/runtime/package-a
+      - name: Source-free relocated smoke also runs on a verified reuse hit
+        if: steps.reuse.outputs.reused == 'true'
+        shell: bash
+        run: |
+          if [[ "$CELL_FAMILY" == web ]]; then source .deps/emsdk/emsdk_env.sh; fi
+          python tools/semantic/producer_cell.py smoke --plan out/semantic-sdk/runtime/identity.json \
+            --directory out/semantic-sdk/runtime/package-a --host-directory out/semantic-sdk/host-input/package-a \
+            --facts-output out/semantic-sdk/runtime/smoke.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-runtime-${{ matrix.key }}
+          path: |
+            out/semantic-sdk/runtime/package-a
+            out/semantic-sdk/runtime/identity.json
+            out/semantic-sdk/runtime/reuse.json
+            out/semantic-sdk/runtime/host-acquisition.json
+            out/semantic-sdk/runtime/smoke.json
+            out/semantic-sdk/runtime/toolchain.json
+            out/semantic-sdk/runtime/reproducibility.json
+          retention-days: 14
+          if-no-files-found: error
+
+  release-set:
+    needs: [prepare, host-tools, runtimes]
+    if: needs.prepare.outputs.aggregate == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      release_set_artifact: ${{ steps.names.outputs.release_set_artifact }}
+      candidate_lock_artifact: ${{ steps.names.outputs.candidate_lock_artifact }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ${{ inputs.artifact_prefix }}-host-*
+          path: out/semantic-release-inputs
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ${{ inputs.artifact_prefix }}-runtime-*
+          path: out/semantic-release-inputs
+          merge-multiple: false
+      - name: Aggregate and verify exactly the complete 3-host and 9-runtime set
+        run: >-
+          python tools/semantic/aggregate.py --assets out/semantic-release-inputs
+          --output out/semantic-release-candidate
+      - name: Generate candidate lock without changing repository authority
+        shell: bash
+        run: |
+          tag=$(python -c 'import json; print(json.load(open("out/semantic-release-candidate/release.json"))["tag"])')
+          python tools/update_semantic_lock.py --index out/semantic-release-candidate/semantic-sdk-index.json --tag "$tag" --output out/semantic-candidate-lock/semantic-sdk.lock.json
+      - name: Validate publication input without creating a Release
+        run: >-
+          python tools/semantic/publish_release.py --directory out/semantic-release-candidate
+          --target-commit ${{ github.sha }} --dry-run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-release-set
+          path: out/semantic-release-candidate
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-candidate-lock
+          path: out/semantic-candidate-lock
+          retention-days: 14
+          if-no-files-found: error
+      - id: names
+        env:
+          PREFIX: ${{ inputs.artifact_prefix }}
+        run: |
+          echo "release_set_artifact=$PREFIX-release-set" >> "$GITHUB_OUTPUT"
+          echo "candidate_lock_artifact=$PREFIX-candidate-lock" >> "$GITHUB_OUTPUT"
+
+  provider-consumer:
+    needs: release-set
+    name: provider-consumer / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-release-set
+          path: out/provider-candidate
+      - name: Qualify real Store resolution, second-worktree offline use and native protoc
+        run: >-
+          python verification/tools/qualify_semantic_provider.py
+          --release-directory out/provider-candidate
+          --facts-output out/provider-qualification.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-provider-${{ matrix.os }}
+          path: out/provider-qualification.json
+          retention-days: 14
+          if-no-files-found: error
+
+  axiom-cmake-consumer:
+    needs: release-set
+    name: axiom-cmake-consumer / linux-v2
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install build tools and lightweight core sources only
+        run: |
+          python -m pip install cmake==3.30.5 ninja==1.11.1.4
+          python tools/bootstrap_deps.py --core
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_prefix }}-release-set
+          path: out/cmake-candidate
+      - name: Resolve candidate into shared Store and verify offline reuse
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import os
+          import shutil
+          from pathlib import Path
+          from unittest import mock
+          from tools.semantic.aggregate import verify_release_directory
+          from tools.update_semantic_lock import make_v2_lock
+          from tools.sdk.archive import canonical_bytes
+          from tools.setup_build_environment import setup_environment, write_facts, write_github_env
+          release_dir = Path("out/cmake-candidate").resolve()
+          release = verify_release_directory(release_dir)
+          lock_path = Path("out/cmake-candidate-lock.json").resolve()
+          lock_path.write_bytes(canonical_bytes(make_v2_lock(release_dir / "semantic-sdk-index.json", release["tag"])) + b"\n")
+          mirror = Path("out/cmake-mirror").resolve()
+          shutil.copytree(release_dir, mirror / release["tag"])
+          store = Path("out/shared SDK Store").resolve()
+          with mock.patch("tools.sdk.transport._open", side_effect=AssertionError("unexpected network")):
+              cold = setup_environment(core=False, semantic=True, lock_path=lock_path,
+                                       store_root=store, mirror=str(mirror))
+              shutil.rmtree(mirror)
+              shutil.rmtree(store / "archives")
+              warm = setup_environment(core=False, semantic=True, lock_path=lock_path,
+                                       store_root=store, offline=True)
+          assert cold["environment"] == warm["environment"]
+          assert not warm["semantic"]["resolution"]["networkUsed"]
+          assert not Path(".deps/protobuf").exists()
+          write_facts(Path("out/cmake-evidence/build-environment.json"), warm)
+          write_github_env(Path(os.environ["GITHUB_ENV"]), warm["environment"])
+          PYTHON
+      - name: Configure Axiom with separate host tool and target SDK
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import os
+          import subprocess
+          from pathlib import Path
+          from tools.semantic.cmake_consumer import consumer_cmake_arguments
+          runtime = Path(os.environ["AXIOM_SEMANTIC_RUNTIME_ROOT"])
+          protoc = Path(os.environ["AXIOM_PROTOC"])
+          subprocess.run(["cmake", "-S", ".", "-B", "out/axiom-v2-on", "-G", "Ninja",
+                          "-DCMAKE_BUILD_TYPE=Debug", "-DCANVAS_BUILD_POC01=OFF",
+                          "-DCANVAS_BUILD_SEMANTIC=ON", "-DBUILD_TESTING=ON",
+                          "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+                          *consumer_cmake_arguments(runtime, protoc)], check=True)
+          cache = Path("out/axiom-v2-on/CMakeCache.txt").read_text()
+          assert f"AXIOM_PROTOC:FILEPATH={protoc.as_posix()}" in cache
+          for package in ("Protobuf", "absl", "utf8_range"):
+              record = next(line for line in cache.splitlines() if line.startswith(package + "_DIR:"))
+              assert Path(record.split("=", 1)[1]).resolve().is_relative_to(runtime.resolve()), record
+          PYTHON
+      - name: Build and test full Axiom Semantic against v2 SDK
+        run: |
+          cmake --build out/axiom-v2-on --parallel 2
+          ctest --test-dir out/axiom-v2-on --output-on-failure --output-junit "$PWD/out/cmake-evidence/protobuf-on.xml" --no-tests=error
+      - name: Keep Protobuf-off builds independent of SDKs
+        run: |
+          cmake -S . -B out/axiom-v2-off -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DBUILD_TESTING=ON
+          cmake --build out/axiom-v2-off --parallel 2
+          ctest --test-dir out/axiom-v2-off --output-on-failure --output-junit "$PWD/out/cmake-evidence/protobuf-off.xml" --no-tests=error
+          test ! -d .deps/protobuf
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.artifact_prefix }}-axiom-cmake-linux
+          path: out/cmake-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+  result:
+    needs: [prepare, host-tools, runtimes, release-set, provider-consumer, axiom-cmake-consumer]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Enforce requested-job success and deliberate skips
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          PREPARE_RESULT: ${{ needs.prepare.result }}
+          HAS_HOSTS: ${{ needs.prepare.outputs.has_hosts }}
+          HAS_RUNTIMES: ${{ needs.prepare.outputs.has_runtimes }}
+          AGGREGATE: ${{ needs.prepare.outputs.aggregate }}
+        run: |
+          python3 - <<'PYTHON'
+          import json, os
+          needs = json.loads(os.environ["NEEDS"])
+          assert os.environ["PREPARE_RESULT"] == "success", "producer planning failed"
+          requested = {"host-tools": os.environ["HAS_HOSTS"] == "true",
+                       "runtimes": os.environ["HAS_RUNTIMES"] == "true"}
+          for name in ("release-set", "provider-consumer", "axiom-cmake-consumer"):
+              requested[name] = os.environ["AGGREGATE"] == "true"
+          for name, enabled in requested.items():
+              expected = "success" if enabled else "skipped"
+              assert needs[name]["result"] == expected, (name, needs[name]["result"], expected)
+          print("PASS: requested producer jobs succeeded; unrequested jobs were skipped")
+          PYTHON

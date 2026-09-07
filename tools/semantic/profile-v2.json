@@ -1,0 +1,196 @@
+{
+  "format": "axiom-semantic-sdk-profile-v2",
+  "hostContractVersion": 1,
+  "runtimeContractVersion": 1,
+  "runtimeContractVersions": {"windows-x64-msvc-static": 2},
+  "hostTools": {
+    "linux-x86_64": {
+      "upstreamKey": "linux-x86_64",
+      "runner": "ubuntu-24.04",
+      "executable": "bin/protoc"
+    },
+    "windows-x64": {
+      "upstreamKey": "windows-x64",
+      "runner": "windows-2025",
+      "executable": "bin/protoc.exe"
+    },
+    "macos-universal": {
+      "upstreamKey": "darwin-universal",
+      "runner": "macos-15",
+      "executable": "bin/protoc"
+    }
+  },
+  "runtimes": {
+    "linux-x86_64": {
+      "platform": "linux",
+      "arch": "x86_64",
+      "runner": "ubuntu-24.04",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libstdc++"
+      },
+      "toolchain": {
+        "compilerFamily": "gcc"
+      }
+    },
+    "windows-x64-msvc-static": {
+      "platform": "windows",
+      "arch": "x64",
+      "runner": "windows-2025",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "msvc",
+        "crt": "static-release",
+        "iteratorDebugLevel": 0
+      },
+      "toolchain": {
+        "compilerFamily": "clang-cl",
+        "llvm": "22.1.8"
+      }
+    },
+    "macos-arm64": {
+      "platform": "macos",
+      "arch": "arm64",
+      "runner": "macos-15",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "sdk": "macosx"
+      }
+    },
+    "macos-x64": {
+      "platform": "macos",
+      "arch": "x86_64",
+      "runner": "macos-15",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "sdk": "macosx"
+      }
+    },
+    "ios-arm64": {
+      "platform": "ios",
+      "arch": "arm64",
+      "runner": "macos-15",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "sdk": "iphoneos",
+        "deploymentTarget": "17.0"
+      }
+    },
+    "ios-simulator-arm64": {
+      "platform": "ios-simulator",
+      "arch": "arm64",
+      "runner": "macos-15",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "sdk": "iphonesimulator",
+        "deploymentTarget": "17.0"
+      }
+    },
+    "android-arm64-v8a": {
+      "platform": "android",
+      "arch": "arm64-v8a",
+      "runner": "ubuntu-24.04",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "ndk": "27.2.12479018",
+        "apiLevel": 26
+      }
+    },
+    "android-x86_64": {
+      "platform": "android",
+      "arch": "x86_64",
+      "runner": "ubuntu-24.04",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++"
+      },
+      "toolchain": {
+        "ndk": "27.2.12479018",
+        "apiLevel": 26
+      }
+    },
+    "web-wasm32": {
+      "platform": "web",
+      "arch": "wasm32",
+      "runner": "ubuntu-24.04",
+      "abi": {
+        "cxxStandard": 20,
+        "linkage": "static",
+        "pic": true,
+        "buildType": "Release",
+        "sanitizer": "none",
+        "exceptions": true,
+        "rtti": true,
+        "cxxRuntime": "libc++",
+        "pthread": false
+      },
+      "toolchain": {
+        "emscripten": "6.0.6",
+        "llvm": "22.1.8"
+      }
+    }
+  }
+}
