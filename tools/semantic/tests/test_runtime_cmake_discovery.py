@@ -132,15 +132,23 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
         )
         self.assertEqual(source.count("-Wno-invalid-offsetof"), 1)
 
-    def test_snapshot_bootstrap_sort_declares_algorithm_dependency(self):
+    def test_semantic_test_sort_users_declare_algorithm_dependency(self):
         root = Path(__file__).resolve().parents[3]
-        source = (root / "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp").read_text(encoding="utf-8")
-        include_block = source.split("namespace canvas::semantic", 1)[0]
-        self.assertIn("std::sort(", source)
-        self.assertIn(
-            "#include <algorithm>",
-            include_block,
-            "std::sort must not depend on incidental transitive standard-library includes",
+        tests = root / "runtime/semantic/tests"
+        offenders = []
+        sort_users = []
+        for path in sorted(tests.glob("*.cpp")):
+            source = path.read_text(encoding="utf-8")
+            if "std::sort(" not in source:
+                continue
+            sort_users.append(path.name)
+            if "#include <algorithm>" not in source:
+                offenders.append(path.name)
+        self.assertTrue(sort_users, "the portability contract must exercise at least one std::sort user")
+        self.assertEqual(
+            offenders,
+            [],
+            "std::sort users must directly include <algorithm>: " + ", ".join(offenders),
         )
 
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
