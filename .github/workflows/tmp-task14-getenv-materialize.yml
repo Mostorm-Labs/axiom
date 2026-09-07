@@ -1,64 +1,72 @@
-name: Temporary Task14 getenv materialization
+name: Task14 verified getenv green materialization
 
 on:
   push:
     branches:
       - fix/semantic-test-getenv-portability
-    paths:
-      - .github/workflows/tmp-task14-getenv-materialize.yml
 
 permissions:
   contents: write
 
 jobs:
   materialize:
-    if: github.event.head_commit.message == 'chore: materialize getenv fix'
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Apply exact C++ portability patch
+        with:
+          ref: fix/semantic-test-getenv-portability
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Replace the one Windows-deprecated getenv call
         shell: bash
         run: |
-          python3 - <<'PYTHON'
+          python - <<'PY'
           from pathlib import Path
-
           path = Path('runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp')
-          source = path.read_text(encoding='utf-8')
+          text = path.read_text(encoding='utf-8')
           old = '''    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
-              if (path == nullptr) return;
-              std::ofstream out(path, std::ios::app);
-          '''
-          # Keep indentation exact to repository source, not the Python heredoc indentation.
-          old = old.replace('              ', '    ')
+    if (path == nullptr) return;
+    std::ofstream out(path, std::ios::app);
+'''
           new = '''    std::ofstream out;
-          #if defined(_WIN32)
-              char* path = nullptr;
-              std::size_t path_size = 0U;
-              const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");
-              if (getenv_result != 0 || path == nullptr) {
-                  std::free(path);
-                  return;
-              }
-              out.open(path, std::ios::app);
-              std::free(path);
-          #else
-              const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
-              if (path == nullptr) return;
-              out.open(path, std::ios::app);
-          #endif
-          '''
-          new = new.replace('          #', '#').replace('              ', '    ').replace('          ', '')
-          if source.count(old) != 1:
-              raise SystemExit(f'expected exactly one getenv block, found {source.count(old)}')
-          path.write_text(source.replace(old, new), encoding='utf-8')
-          PYTHON
+#if defined(_WIN32)
+    char* path = nullptr;
+    std::size_t path_size = 0U;
+    const int getenv_result = _dupenv_s(&path, &path_size, "AXIOM_B10_OBSERVATIONS");
+    if (getenv_result != 0 || path == nullptr) {
+        std::free(path);
+        return;
+    }
+    out.open(path, std::ios::app);
+    std::free(path);
+#else
+    const char* path = std::getenv("AXIOM_B10_OBSERVATIONS");
+    if (path == nullptr) return;
+    out.open(path, std::ios::app);
+#endif
+'''
+          assert text.count(old) == 1, text.count(old)
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           git diff --check
           test "$(git diff --name-only)" = "runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp"
-      - name: Commit exact GREEN
+      - name: Prove the directory-level GREEN contract
         shell: bash
         run: |
+          python -m unittest \
+            tools.semantic.tests.test_runtime_cmake_discovery.RuntimeCMakeDiscoveryTest.test_semantic_test_getenv_users_declare_windows_safe_path \
+            -v
+      - name: Remove materializer and commit exact verified bytes
+        shell: bash
+        run: |
+          rm .github/workflows/tmp-task14-getenv-materialize.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp
+          git add -A
+          git diff --cached --check
+          test "$(git diff --cached --name-only | sort)" = $'.github/workflows/tmp-task14-getenv-materialize.yml\nruntime/semantic/tests/g1_04_b_operation_matrix_test.cpp'
           git commit -m "fix: use Windows-safe getenv in operation matrix test"
           git push origin HEAD:fix/semantic-test-getenv-portability
