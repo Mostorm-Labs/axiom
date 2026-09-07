@@ -101,6 +101,24 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
         self.assertIn('subprocess.run(["node"', source)
         self.assertIn("returncode == 64", source)
 
+    def test_cross_compilers_do_not_see_definition_only_replace_batch_template(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / "runtime/semantic/src/operation_specific_validation.cpp").read_text(encoding="utf-8")
+        self.assertNotEqual(
+            source.count("replaceBatch("),
+            1,
+            "a definition-only anonymous template is rejected by Emscripten Clang with -Wunused-template",
+        )
+
+    def test_geometry_decoder_braces_loop_before_success_return(self):
+        root = Path(__file__).resolve().parents[3]
+        source = (root / "runtime/semantic/src/protobuf_object_mapping.cpp").read_text(encoding="utf-8")
+        self.assertNotIn(
+            "for(const auto& command:source.commands()) switch(command.command_case()) {",
+            source,
+            "Windows and Android Clang reject the unbraced loop/switch followed by return with -Wmisleading-indentation",
+        )
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
         with tempfile.TemporaryDirectory(prefix="axiom-discovery-") as temporary:

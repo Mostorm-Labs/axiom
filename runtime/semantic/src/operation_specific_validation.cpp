@@ -26,14 +26,6 @@ StatefulResult hierarchyAndCaps(const StagedObjectView& staged, const std::vecto
     return validateStagedHierarchyCapabilities(staged, std::span<const ObjectId>(ids.data(), ids.size()));
 }
 
-template <typename Op, typename Out, typename Build>
-StatefulResult replaceBatch(const Op& op, const ObjectStore& base, Out* out, Build&& build) {
-    Out result;
-    auto status = build(op, base, result);
-    if (!status.ok()) return status;
-    *out = std::move(result); return {};
-}
-
 } // namespace
 
 StatefulResult validateInsertObjectsState(const InsertObjectsOp& op, const ObjectStore& base, CreateObjectsStatePlanInputs* out) {

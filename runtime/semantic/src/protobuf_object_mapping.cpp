@@ -44,14 +44,17 @@ void setGeometry(const VectorPathGeometry& source, p::VectorPathGeometry* destin
 bool getGeometry(const p::VectorPathGeometry& source, VectorPathGeometry& destination) {
     if(!source.has_fill_rule())return false;
     destination.fill_rule=static_cast<FillRule>(source.fill_rule()); destination.commands.clear();
-    for(const auto& command:source.commands()) switch(command.command_case()) {
-      case p::PathCommand::kMoveTo:{if(!command.move_to().has_point())return false;Vec2 v;if(!getVec(command.move_to().point(),v))return false;destination.commands.emplace_back(MoveTo{v});break;}
-      case p::PathCommand::kLineTo:{if(!command.line_to().has_end())return false;Vec2 v;if(!getVec(command.line_to().end(),v))return false;destination.commands.emplace_back(LineTo{v});break;}
-      case p::PathCommand::kQuadTo:{if(!command.quad_to().has_control()||!command.quad_to().has_end())return false;Vec2 c,e;if(!getVec(command.quad_to().control(),c)||!getVec(command.quad_to().end(),e))return false;destination.commands.emplace_back(QuadTo{c,e});break;}
-      case p::PathCommand::kCubicTo:{if(!command.cubic_to().has_control1()||!command.cubic_to().has_control2()||!command.cubic_to().has_end())return false;Vec2 c1,c2,e;if(!getVec(command.cubic_to().control1(),c1)||!getVec(command.cubic_to().control2(),c2)||!getVec(command.cubic_to().end(),e))return false;destination.commands.emplace_back(CubicTo{c1,c2,e});break;}
-      case p::PathCommand::kClosePath:destination.commands.emplace_back(ClosePath{});break;
-      default:return false;
-    } return true;
+    for (const auto& command : source.commands()) {
+        switch (command.command_case()) {
+          case p::PathCommand::kMoveTo:{if(!command.move_to().has_point())return false;Vec2 v;if(!getVec(command.move_to().point(),v))return false;destination.commands.emplace_back(MoveTo{v});break;}
+          case p::PathCommand::kLineTo:{if(!command.line_to().has_end())return false;Vec2 v;if(!getVec(command.line_to().end(),v))return false;destination.commands.emplace_back(LineTo{v});break;}
+          case p::PathCommand::kQuadTo:{if(!command.quad_to().has_control()||!command.quad_to().has_end())return false;Vec2 c,e;if(!getVec(command.quad_to().control(),c)||!getVec(command.quad_to().end(),e))return false;destination.commands.emplace_back(QuadTo{c,e});break;}
+          case p::PathCommand::kCubicTo:{if(!command.cubic_to().has_control1()||!command.cubic_to().has_control2()||!command.cubic_to().has_end())return false;Vec2 c1,c2,e;if(!getVec(command.cubic_to().control1(),c1)||!getVec(command.cubic_to().control2(),c2)||!getVec(command.cubic_to().end(),e))return false;destination.commands.emplace_back(CubicTo{c1,c2,e});break;}
+          case p::PathCommand::kClosePath:destination.commands.emplace_back(ClosePath{});break;
+          default:return false;
+        }
+    }
+    return true;
 }
 
 void setTextStyle(const TextStyle& source,p::TextStyle* destination){if(source.font_resource_id)setId(source.font_resource_id->value,destination->mutable_font_resource_id());destination->set_font_size(source.font_size);destination->set_weight(source.weight);destination->set_italic(source.italic);destination->set_underline(source.underline);setColor(source.color,destination->mutable_color());}
