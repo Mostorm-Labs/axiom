@@ -76,7 +76,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 35
     env:
-      AXIOM_SDK_STORE: ${{ runner.temp }}/axiom-sdk-store
+      AXIOM_SDK_STORE: out/semantic-consumer-sdk-store
       TARGET_KEY: ${{ matrix.key }}
       TARGET_FAMILY: ${{ matrix.family }}
       TARGET_ARCH: ${{ matrix.arch }}
@@ -168,7 +168,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 35
     env:
-      AXIOM_SDK_STORE: ${{ runner.temp }}/axiom-sdk-store
+      AXIOM_SDK_STORE: out/semantic-consumer-sdk-store
       TARGET_KEY: ${{ matrix.key }}
       TARGET_FAMILY: ${{ matrix.family }}
       TARGET_ABI: ${{ matrix.abi }}
