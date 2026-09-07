@@ -40,6 +40,13 @@ def _api(path: str, *, optional: bool = False) -> dict | None:
     return result
 
 
+def _tagged_commit(repository: str, tag: str, *, optional: bool = False) -> dict | None:
+    tag_ref = _api(f"repos/{repository}/git/ref/tags/{tag}", optional=optional)
+    if tag_ref is None:
+        return None
+    return _api(f"repos/{repository}/commits/{tag}")
+
+
 def _release_metadata(repository: str, tag: str) -> dict | None:
     metadata = _api(f"repos/{repository}/releases/tags/{tag}", optional=True)
     if metadata is not None:
@@ -71,7 +78,7 @@ def _verify_remote(directory: Path, release: dict, repository: str, commit: str,
         raise IntegrityError("semantic: invalid remote asset metadata")
     if sorted(a["name"] for a in entries) != release["assets"]:
         raise IntegrityError("semantic: existing release asset set differs; assets are immutable")
-    actual = _api(f"repos/{repository}/commits/{release['tag']}", optional=metadata["draft"])
+    actual = _tagged_commit(repository, release["tag"], optional=metadata["draft"])
     if actual is not None and actual.get("sha") != commit:
         raise IntegrityError("semantic: release Git tag does not resolve to the exact producer commit")
     with tempfile.TemporaryDirectory(prefix="semantic-release-verify-") as temporary:
@@ -100,7 +107,7 @@ def publish_release(directory: Path, repository: str, target_commit: str, *, dry
     existed = metadata is not None
     if not existed:
         # A pre-existing tag is not made safe merely by passing --target.
-        tagged = _api(f"repos/{repository}/commits/{release['tag']}", optional=True)
+        tagged = _tagged_commit(repository, release["tag"], optional=True)
         if tagged is not None and tagged.get("sha") != target_commit:
             raise IntegrityError("semantic: existing Git tag targets a different commit")
         notes = (f"Immutable Semantic dependency Release Set {release['releaseSetId']}. "

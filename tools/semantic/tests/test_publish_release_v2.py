@@ -50,9 +50,15 @@ class PublishReleaseTest(unittest.TestCase):
                 self.assertIn("--paginate", command)
                 self.assertIn("--slurp", command)
                 value = [[], [self.metadata] if self.exists else []]
-            else:
+            elif "/git/ref/tags/" in command[2]:
                 if not self.tag_exists:
                     return subprocess.CompletedProcess(command, 1, "", "gh: Not Found (HTTP 404)")
+                value = {"ref": f"refs/tags/{self.release['tag']}", "object": {"sha": self.tag_commit}}
+            else:
+                if not self.tag_exists:
+                    return subprocess.CompletedProcess(
+                        command, 1, "",
+                        f"gh: No commit found for SHA: {self.release['tag']} (HTTP 422)")
                 value = {"sha": self.tag_commit}
             return subprocess.CompletedProcess(command, 0, json.dumps(value), "")
         if command[:3] == ["gh", "release", "download"]:
@@ -130,7 +136,6 @@ class PublishReleaseTest(unittest.TestCase):
         self.assertEqual(result["status"], "dry-run")
         self.assertEqual(result["assets"], self.release["assets"])
 
-
     def test_complete_draft_can_resume_but_partial_draft_is_never_repaired_in_place(self):
         self.metadata["draft"] = True
         self.assertEqual(self.invoke()["status"], "published")
@@ -155,7 +160,6 @@ class PublishReleaseTest(unittest.TestCase):
             self.invoke()
         self.assertTrue(self.metadata["draft"])
         self.assertFalse(any(c[:3] == ["gh", "release", "edit"] for c in self.commands))
-
 
     def test_pending_draft_tag_need_not_exist_until_publication(self):
         self.exists = False
