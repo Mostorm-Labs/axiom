@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ctypes
 import importlib.util
+import json
 import os
 from pathlib import Path
 import shutil
@@ -185,6 +186,41 @@ class RuntimeCMakeDiscoveryTest(unittest.TestCase):
             target_block,
             "the fixture decoder uses try/catch and must enable C++ exceptions for MSVC/clang-cl",
         )
+
+    @unittest.skipUnless(os.name == "nt" and all(shutil.which(tool) for tool in
+                         ("clang-cl", "cmake", "ninja")), "Windows clang-cl, CMake and Ninja required")
+    def test_all_fixture_decoder_consumers_compile_with_windows_exception_contract(self):
+        """Every target compiling the decoder must support its real try/catch body."""
+        from tools.semantic.contract import load_profile
+        from tools.semantic.toolchain import target_cmake_arguments
+
+        root = Path(__file__).resolve().parents[3]
+        if not (root / ".deps/googletest/CMakeLists.txt").is_file():
+            self.skipTest("run setup_build_environment.py --core first")
+        # Keep Windows object paths short; this probe needs only core headers,
+        # and neither acquires nor rebuilds a Semantic SDK.
+        (root / "out").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="eh-", dir=root / "out") as temporary:
+            build = Path(temporary)
+            configured = subprocess.run([
+                "cmake", "-S", str(root), "-B", str(build), "-G", "Ninja",
+                "-DCMAKE_BUILD_TYPE=Release", "-DCANVAS_BUILD_POC01=OFF",
+                "-DCANVAS_BUILD_SEMANTIC=ON", "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF",
+                *target_cmake_arguments(load_profile(), "windows-x64-msvc-static",
+                                       cc="clang-cl", cxx="clang-cl"),
+            ], capture_output=True, text=True, encoding="utf-8", errors="replace")
+            self.assertEqual(configured.returncode, 0, configured.stdout + configured.stderr)
+            commands = json.loads((build / "compile_commands.json").read_text(encoding="utf-8"))
+            decoder = (root / "runtime/semantic/tools/g1_04_c_fixture_decoder.cpp").resolve()
+            consumers = [entry for entry in commands if Path(entry["file"]).resolve() == decoder]
+            self.assertTrue(consumers, "the probe must compile the real fixture decoder")
+            for entry in consumers:
+                with self.subTest(consumer=entry["output"]):
+                    compiled = subprocess.run([
+                        "cmake", "--build", str(build), "--target",
+                        entry["output"].replace("\\", "/"), "--parallel", "2",
+                    ], capture_output=True, text=True, encoding="utf-8", errors="replace")
+                    self.assertEqual(compiled.returncode, 0, compiled.stdout + compiled.stderr)
 
     @unittest.skipUnless(shutil.which("cmake"), "CMake is required for the real package discovery probe")
     def test_relocated_sdk_is_discovered_through_filesystem_alias(self):
