@@ -752,3 +752,7 @@ else()
   target_compile_options(canvas_semantic_g1_06_integration_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_g1_06_integration_test TEST_PREFIX "g1_06_integration.")
+
+add_executable(canvas_semantic_codec_operation_ingress_test codec_operation_ingress_test.cpp)
+target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+gtest_discover_tests(canvas_semantic_codec_operation_ingress_test)
