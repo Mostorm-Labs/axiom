@@ -2,6 +2,7 @@
 #include "canvas/semantic/object_content.hpp"
 
 #include "protobuf_codec_internal.hpp"
+#include "protobuf_object_mapping.hpp"
 
 #include <algorithm>
 #include <array>
@@ -722,6 +723,82 @@ bool mapVec(const auditoryworks::axiom::v1::Vec2& source, canvas::semantic::Vec2
     return true;
 }
 
+bool mapTransform(const auditoryworks::axiom::v1::Transform2D& source, canvas::semantic::Transform2D& destination) {
+    if (!source.has_a() || !source.has_b() || !source.has_c() || !source.has_d() || !source.has_tx() || !source.has_ty()) return false;
+    destination = {source.a(), source.b(), source.c(), source.d(), source.tx(), source.ty()};
+    return true;
+}
+
+bool mapPlacement(const auditoryworks::axiom::v1::Placement& source, canvas::semantic::Placement& destination) {
+    destination.parent_id.reset();
+    if (source.has_parent_id()) { canvas::semantic::ObjectId id; if (!mapId(source.parent_id(), id)) return false; destination.parent_id = id; }
+    if (!source.has_order_key() || !source.order_key().has_value()) return false;
+    destination.order_key = canvas::semantic::OrderKey({source.order_key().value().begin(), source.order_key().value().end()});
+    return destination.order_key.isValid();
+}
+
+bool mapImageContent(const auditoryworks::axiom::v1::ImageContent& source, canvas::semantic::ImageContent& destination) {
+    canvas::semantic::ObjectId resource;
+    if (!mapId(source.resource_id(), resource) || !source.has_intrinsic_width() || !source.has_intrinsic_height() ||
+        !source.has_content_mode() || !source.has_width() || !source.has_height()) return false;
+    std::optional<canvas::semantic::NormalizedRect> rect;
+    if (source.has_source_rect()) {
+        const auto& r = source.source_rect();
+        if (!r.has_x() || !r.has_y() || !r.has_width() || !r.has_height()) return false;
+        rect = canvas::semantic::NormalizedRect{r.x(), r.y(), r.width(), r.height()};
+    }
+    destination = {canvas::semantic::ResourceId{resource}, source.intrinsic_width(), source.intrinsic_height(), rect,
+                   static_cast<canvas::semantic::ImageContentMode>(source.content_mode()), source.width(), source.height()};
+    return true;
+}
+
+bool mapPropertyValue(const auditoryworks::axiom::v1::PropertyValue& source, canvas::semantic::PropertyValue& destination) {
+    using P=auditoryworks::axiom::v1::PropertyValue;
+    switch(source.value_case()) {
+      case P::kBoolValue: destination=source.bool_value(); return true;
+      case P::kF32Value: destination=source.f32_value(); return true;
+      default: return false;
+    }
+}
+
+bool mapGeometry(const auditoryworks::axiom::v1::VectorPathGeometry&, canvas::semantic::VectorPathGeometry&);
+
+bool mapEraseMask(const auditoryworks::axiom::v1::EraseMaskRecord& source, canvas::semantic::EraseMaskRecord& destination) {
+    if (!source.has_mask_id() || !mapId(source.mask_id(), destination.id) || !source.has_geometry()) return false;
+    const auto& g=source.geometry();
+    if (g.has_filled_path() && g.filled_path().has_path()) { canvas::semantic::VectorPathGeometry path; if(!mapGeometry(g.filled_path().path(),path)) return false; destination.geometry=canvas::semantic::FilledPathMask{std::move(path)}; return true; }
+    if (!g.has_swept_circle()) return false;
+    canvas::semantic::SweptCircleMask mask;
+    for (const auto& s:g.swept_circle().segments()) { if(!s.has_p0()||!s.has_p1()||!s.has_control1()||!s.has_control2()||!s.p0().has_position()||!s.p1().has_position()||!s.p0().has_radius()||!s.p1().has_radius()) return false; canvas::semantic::EraseCubicSegment out; if(!mapVec(s.p0().position(),out.p0.position)||!mapVec(s.p1().position(),out.p1.position)||!mapVec(s.control1(),out.control1)||!mapVec(s.control2(),out.control2)) return false; out.p0.radius=s.p0().radius(); out.p1.radius=s.p1().radius(); mask.segments.push_back(out); }
+    destination.geometry=std::move(mask); return true;
+}
+
+bool mapConnector(const auditoryworks::axiom::v1::ConnectorContent& source, canvas::semantic::ConnectorContent& destination) {
+    auto endpoint = [](const auditoryworks::axiom::v1::ConnectorEndpoint& s, canvas::semantic::ConnectorEndpoint& d) {
+        if (s.has_free_point() && s.free_point().has_point()) { canvas::semantic::Vec2 p; if (!mapVec(s.free_point().point(), p)) return false; d.value = canvas::semantic::FreePointEndpoint{p}; return true; }
+        if (!s.has_attached() || !s.attached().has_target_object_id() || !s.attached().has_anchor()) return false;
+        canvas::semantic::ObjectId id; if (!mapId(s.attached().target_object_id(), id)) return false;
+        const auto& a=s.attached().anchor();
+        if (a.has_auto_perimeter()) { std::optional<canvas::semantic::Vec2> hint; if (a.auto_perimeter().has_hint()) { canvas::semantic::Vec2 p; if(!mapVec(a.auto_perimeter().hint(),p)) return false; hint=p; } d.value=canvas::semantic::AttachedEndpoint{id,canvas::semantic::AutoPerimeterAnchor{hint}}; return true; }
+        if (a.has_stable_port() && a.stable_port().has_port_id()) { d.value=canvas::semantic::AttachedEndpoint{id,canvas::semantic::StablePortAnchor{a.stable_port().port_id()}}; return true; }
+        return false;
+    };
+    if (!source.has_start() || !source.has_end() || !source.has_routing() || !endpoint(source.start(),destination.start) || !endpoint(source.end(),destination.end)) return false;
+    destination.routing=static_cast<canvas::semantic::ConnectorRouting>(source.routing()); return true;
+}
+
+bool mapGeometry(const auditoryworks::axiom::v1::VectorPathGeometry& source, canvas::semantic::VectorPathGeometry& destination) {
+    if (!source.has_fill_rule()) return false; destination.fill_rule=static_cast<canvas::semantic::FillRule>(source.fill_rule()); destination.commands.clear();
+    for (const auto& c: source.commands()) { switch(c.command_case()) {
+      case auditoryworks::axiom::v1::PathCommand::kMoveTo: { canvas::semantic::Vec2 p; if(!c.move_to().has_point()||!mapVec(c.move_to().point(),p)) return false; destination.commands.emplace_back(canvas::semantic::MoveTo{p}); break; }
+      case auditoryworks::axiom::v1::PathCommand::kLineTo: { canvas::semantic::Vec2 p; if(!c.line_to().has_end()||!mapVec(c.line_to().end(),p)) return false; destination.commands.emplace_back(canvas::semantic::LineTo{p}); break; }
+      case auditoryworks::axiom::v1::PathCommand::kQuadTo: { canvas::semantic::Vec2 p,q; if(!c.quad_to().has_control()||!c.quad_to().has_end()||!mapVec(c.quad_to().control(),p)||!mapVec(c.quad_to().end(),q)) return false; destination.commands.emplace_back(canvas::semantic::QuadTo{p,q}); break; }
+      case auditoryworks::axiom::v1::PathCommand::kCubicTo: { canvas::semantic::Vec2 a,b,c3; if(!c.cubic_to().has_control1()||!c.cubic_to().has_control2()||!c.cubic_to().has_end()||!mapVec(c.cubic_to().control1(),a)||!mapVec(c.cubic_to().control2(),b)||!mapVec(c.cubic_to().end(),c3)) return false; destination.commands.emplace_back(canvas::semantic::CubicTo{a,b,c3}); break; }
+      case auditoryworks::axiom::v1::PathCommand::kClosePath: destination.commands.emplace_back(canvas::semantic::ClosePath{}); break;
+      default: return false;
+    }} return true;
+}
+
 bool mapTextStyle(const auditoryworks::axiom::v1::TextStyle& source, canvas::semantic::TextStyle& destination) {
     if (source.has_font_resource_id()) {
         canvas::semantic::ObjectId id;
@@ -1360,45 +1437,45 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
     operation.document_id = DocumentId{document_id};
     operation.schema_version = decoded.schema_version();
     operation.payload_version = decoded.payload_version();
+    bool payload_ok = true;
     switch (decoded.payload().payload_case()) {
         case auditoryworks::axiom::v1::OperationPayload::kInsertObjects:
-            operation.payload = InsertObjectsOp{}; break;
+        { InsertObjectsOp value; if(decoded.payload().insert_objects().ByteSizeLong()==0) payload_ok=false; for (const auto& item : decoded.payload().insert_objects().objects()) { ObjectRecord mapped; if (!canvas::semantic::internal::fromProtobufObjectRecord(item, mapped)) { payload_ok=false; break; } value.objects.push_back(std::move(mapped)); } operation.payload = std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kDeleteObjects:
-            operation.payload = DeleteObjectsOp{}; break;
+        { DeleteObjectsOp value; for (const auto& item : decoded.payload().delete_objects().object_ids()) { ObjectId id; if (!mapId(item,id)) { payload_ok=false; break; } value.object_ids.push_back(id); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kRestoreObjects:
-            operation.payload = RestoreObjectsOp{}; break;
+        { RestoreObjectsOp value; for (const auto& item : decoded.payload().restore_objects().objects()) { ObjectRecord mapped; if (!canvas::semantic::internal::fromProtobufObjectRecord(item,mapped)) { payload_ok=false; break; } value.objects.push_back(std::move(mapped)); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetPlacements:
-            operation.payload = SetPlacementsOp{}; break;
+        { SetPlacementsOp value; for (const auto& item : decoded.payload().set_placements().items()) { PlacementItem mapped; if (!mapId(item.object_id(),mapped.object_id)||!mapPlacement(item.placement(),mapped.placement)) { payload_ok=false; break; } value.items.push_back(std::move(mapped)); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetTransforms:
-            operation.payload = SetTransformsOp{}; break;
+        { SetTransformsOp value; for (const auto& item : decoded.payload().set_transforms().items()) { TransformItem mapped; if (!mapId(item.object_id(),mapped.object_id)||!mapTransform(item.transform(),mapped.transform)) { payload_ok=false; break; } value.items.push_back(std::move(mapped)); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kPatchProperties:
-            operation.payload = PatchPropertiesOp{}; break;
+        { PatchPropertiesOp value; for(const auto& item:decoded.payload().patch_properties().patches()){ PropertyPatch p; if(!mapId(item.object_id(),p.object_id)||!item.has_field_id()||!item.has_action()){payload_ok=false;break;} p.field_id=item.field_id(); p.action=static_cast<PropertyPatchAction>(item.action()); if(item.has_value()){PropertyValue v;if(!mapPropertyValue(item.value(),v)){payload_ok=false;break;}p.value=std::move(v);} value.patches.push_back(std::move(p)); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetObjectSize:
-            operation.payload = SetObjectSizeOp{}; break;
+        { SetObjectSizeOp value; for (const auto& item : decoded.payload().set_object_size().items()) { ObjectSizeItem mapped; if (!mapId(item.object_id(),mapped.object_id)||!item.has_width()||!item.has_height()) { payload_ok=false; break; } mapped.width=item.width(); mapped.height=item.height(); value.items.push_back(mapped); } operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetVectorPathGeometry:
-            operation.payload = SetVectorPathGeometryOp{}; break;
+        { SetVectorPathGeometryOp value; if(!mapId(decoded.payload().set_vector_path_geometry().object_id(),value.object_id)||!decoded.payload().set_vector_path_geometry().has_geometry()) payload_ok=false; else if(!mapGeometry(decoded.payload().set_vector_path_geometry().geometry(),value.geometry)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetImageContent:
-            operation.payload = SetImageContentOp{}; break;
+        { SetImageContentOp value; const auto& item=decoded.payload().set_image_content(); if(!mapId(item.object_id(),value.object_id)||!mapImageContent(item.content(),value.content)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kAddStroke:
-            operation.payload = AddStrokeOp{}; break;
+        { AddStrokeOp value; if(!canvas::semantic::internal::fromProtobufObjectRecord(decoded.payload().add_stroke().object(),value.object)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSplitStrokes:
-            operation.payload = SplitStrokesOp{}; break;
+        { SplitStrokesOp value; for(const auto& item:decoded.payload().split_strokes().splits()){ StrokeSplit split; if(!mapId(item.source_stroke_id(),split.source_stroke_id)) {payload_ok=false;break;} for(const auto& obj:item.replacements()){ObjectRecord mapped;if(!canvas::semantic::internal::fromProtobufObjectRecord(obj,mapped)){payload_ok=false;break;} split.replacements.push_back(std::move(mapped));} if(!payload_ok) break; value.splits.push_back(std::move(split));} operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kAddEraseMasks:
-            operation.payload = AddEraseMasksOp{}; break;
+        { AddEraseMasksOp value; for(const auto& item:decoded.payload().add_erase_masks().items()){EraseMaskAddItem mapped;if(!mapId(item.object_id(),mapped.object_id)){payload_ok=false;break;} for(const auto& mask:item.masks()){EraseMaskRecord record;if(!mapEraseMask(mask,record)){payload_ok=false;break;} mapped.masks.push_back(std::move(record));} if(!payload_ok)break; value.items.push_back(std::move(mapped));} operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kRemoveEraseMasks:
-            operation.payload = RemoveEraseMasksOp{}; break;
+        { RemoveEraseMasksOp value; for(const auto& item:decoded.payload().remove_erase_masks().items()){EraseMaskRemoveItem mapped;if(!mapId(item.object_id(),mapped.object_id)){payload_ok=false;break;} for(const auto& mask:item.mask_ids()){ObjectId id;if(!mapId(mask,id)){payload_ok=false;break;} mapped.mask_ids.push_back(id);} if(!payload_ok)break; value.items.push_back(std::move(mapped));} operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kEditRichText:
-            operation.payload = EditRichTextOp{}; break;
+        { EditRichTextOp value; if(!mapId(decoded.payload().edit_rich_text().object_id(),value.object_id)||!mapRichTextDelta(decoded.payload().edit_rich_text().delta(),value.delta)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetConnectorContent:
-            operation.payload = SetConnectorContentOp{}; break;
+        { SetConnectorContentOp value; if(!mapId(decoded.payload().set_connector_content().object_id(),value.object_id)||!mapConnector(decoded.payload().set_connector_content().content(),value.content)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
             return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
     }
-    // This seam intentionally does not map nested payload DTO fields yet.
-    // Fail closed instead of returning ok() with a payload whose collections
-    // are silently empty; callers may still inspect identity/version
-    // presence for A0/A2 diagnostics.
-    return DecodedOperation(std::move(operation), presence, {}, SemanticError::kInvalidSemanticValue);
+    // Preserve envelope diagnostics even when payload reconstruction fails.
+    // The error remains non-success, so this is not an applicable operation.
+    if (!payload_ok) return DecodedOperation(std::move(operation), presence, {}, SemanticError::kInvalidSemanticValue);
+    return DecodedOperation(std::move(operation), presence, {}, SemanticError::kNone);
 #endif
 }
 
