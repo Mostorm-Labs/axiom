@@ -754,9 +754,26 @@ bool mapImageContent(const auditoryworks::axiom::v1::ImageContent& source, canva
 
 bool mapPropertyValue(const auditoryworks::axiom::v1::PropertyValue& source, canvas::semantic::PropertyValue& destination) {
     using P=auditoryworks::axiom::v1::PropertyValue;
+    auto color = [](const auditoryworks::axiom::v1::ColorValue& s, canvas::semantic::ColorValue& d) { if(!s.has_r()||!s.has_g()||!s.has_b()||!s.has_a()) return false; d={s.r(),s.g(),s.b(),s.a()}; return true; };
     switch(source.value_case()) {
       case P::kBoolValue: destination=source.bool_value(); return true;
       case P::kF32Value: destination=source.f32_value(); return true;
+      case P::kColorValue: { canvas::semantic::ColorValue d; if(!color(source.color_value(),d)) return false; destination=d; return true; }
+      case P::kFillStyle: {
+        if(source.fill_style().has_none()) { destination=canvas::semantic::FillStyleValue{canvas::semantic::NoFill{}}; return true; }
+        if(source.fill_style().has_solid() && source.fill_style().solid().has_color()) { canvas::semantic::ColorValue d; if(!color(source.fill_style().solid().color(),d)) return false; destination=canvas::semantic::FillStyleValue{canvas::semantic::SolidFill{d}}; return true; }
+        return false;
+      }
+      case P::kStrokeStyle: {
+        if(source.stroke_style().has_none()) { destination=canvas::semantic::StrokeStyleValue{canvas::semantic::NoStroke{}}; return true; }
+        if(!source.stroke_style().has_solid()) return false;
+        const auto& s=source.stroke_style().solid(); canvas::semantic::ColorValue c; if(!s.has_color()||!color(s.color(),c)||!s.has_width()||!s.has_cap()||!s.has_join()||!s.has_dash()) return false;
+        canvas::semantic::StrokeJoin join; const auto& j=s.join(); if(j.has_miter()){if(!j.miter().has_limit())return false;join=canvas::semantic::MiterJoin{j.miter().limit()};}else if(j.has_round())join=canvas::semantic::RoundJoin{};else if(j.has_bevel())join=canvas::semantic::BevelJoin{};else return false;
+        canvas::semantic::StrokeDash dash; const auto& d=s.dash(); if(d.has_solid())dash=canvas::semantic::SolidDash{};else if(d.has_pattern()){if(!d.pattern().has_offset())return false;dash=canvas::semantic::DashPattern{{d.pattern().segments().begin(),d.pattern().segments().end()},d.pattern().offset()};}else return false;
+        destination=canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{c,s.width(),static_cast<canvas::semantic::StrokeCap>(s.cap()),join,dash}}; return true;
+      }
+      case P::kBlendMode: destination=static_cast<canvas::semantic::BlendModeValue>(source.blend_mode()); return true;
+      case P::kConnectorDecoration: destination=static_cast<canvas::semantic::ConnectorDecorationValue>(source.connector_decoration()); return true;
       default: return false;
     }
 }
