@@ -539,14 +539,28 @@ TEST(G106Integration, FullFifteenFamilyContinuationReplaysInOneInvocationWithFou
 }
 
 TEST(G106Integration, EmptySnapshotAndEmptyAuthoritativeContinuationRemainReady) {
-    const Outcome outcome = runSnapshotReplay<ReferenceObjectStore>({}, 0U, false, false);
-    ASSERT_TRUE(outcome.valid);
-    EXPECT_TRUE(outcome.ready);
-    EXPECT_EQ(outcome.projection,
-              writeCanonicalProjectionJson(projectDocument(projectionDocumentId(), 1U,
-                                                            ReferenceObjectStore{})));
-    EXPECT_EQ(outcome.generation, SemanticGeneration(0U));
-    EXPECT_EQ(outcome.ordinal, CommitOrdinal(0U));
+    SemanticSnapshot snapshot;
+    snapshot.document_id = documentId();
+    snapshot.schema_version = 1U;
+    ReferenceObjectStore objects;
+    DocumentRuntimeState state = DocumentRuntimeState::kLoading;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(42U));
+    const SnapshotBootstrapResult bootstrap =
+        SnapshotBootstrapper::restore(snapshot, state, objects, generation);
+    ASSERT_TRUE(bootstrap.restored);
+    const std::span<const Operation> continuation;
+    AppliedOperationLedger ledger;
+    const ReplayResult replay = ReplayCoordinator::replayAndFinalize(
+        continuation, state, objects, ledger, generation, clock);
+    ASSERT_TRUE(replay.ready);
+    EXPECT_FALSE(replay.failure.has_value());
+    EXPECT_EQ(writeCanonicalProjectionJson(
+                  projectDocument(projectionDocumentId(), 1U, objects)),
+              writeCanonicalProjectionJson(
+                  projectDocument(projectionDocumentId(), 1U, ReferenceObjectStore{})));
+    EXPECT_EQ(generation.current(), SemanticGeneration(0U));
+    EXPECT_EQ(clock.lastCommittedOrdinal(), CommitOrdinal(0U));
 }
 
 TEST(G106Integration, OneObjectMinimumAndPhysicalInsertionPermutationHaveCanonicalParity) {
