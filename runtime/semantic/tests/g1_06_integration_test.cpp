@@ -36,10 +36,9 @@ ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
 DocumentId documentId() { return DocumentId{id(0xd06U)}; }
 
 ProjectionDocumentId projectionDocumentId() {
-    ProjectionDocumentId result;
-    std::copy(documentId().value().bytes.begin(), documentId().value().bytes.end(),
-              result.bytes.begin());
-    return result;
+    // Copy the array as a value: separate documentId() temporaries cannot
+    // supply the begin/end iterators of one valid range.
+    return ProjectionDocumentId{documentId().value().bytes};
 }
 
 ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt,
@@ -555,10 +554,11 @@ TEST(G106Integration, EmptySnapshotAndEmptyAuthoritativeContinuationRemainReady)
         continuation, state, objects, ledger, generation, clock);
     ASSERT_TRUE(replay.ready);
     EXPECT_FALSE(replay.failure.has_value());
+    const ProjectionDocumentId expected_document_id{{0x06U, 0x0dU}};
     EXPECT_EQ(writeCanonicalProjectionJson(
                   projectDocument(projectionDocumentId(), 1U, objects)),
               writeCanonicalProjectionJson(
-                  projectDocument(projectionDocumentId(), 1U, ReferenceObjectStore{})));
+                  projectDocument(expected_document_id, 1U, ReferenceObjectStore{})));
     EXPECT_EQ(generation.current(), SemanticGeneration(0U));
     EXPECT_EQ(clock.lastCommittedOrdinal(), CommitOrdinal(0U));
 }
