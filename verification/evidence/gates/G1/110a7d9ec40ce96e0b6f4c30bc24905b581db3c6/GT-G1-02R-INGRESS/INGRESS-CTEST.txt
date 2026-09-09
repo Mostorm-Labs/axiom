@@ -1,0 +1,3 @@
+protobuf ON: cmake --build out/g1-hosted --parallel && ctest --test-dir out/g1-hosted --output-on-failure: PASS
+protobuf OFF: ctest --test-dir out/g1-off --output-on-failure: PASS (23 EXPECTED SKIP)
+git diff --check: PASS
