@@ -149,6 +149,8 @@ jobs:
           grep -Fx 'correctness=PASS locality=PASS scales=3 delete_reverse_scan=NOT_MEASURED' "$RUNNER_TEMP/g1-08-verifier.txt"
 
       - name: Materialize provider-bound facts
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           provider_job_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate --jq '.jobs[] | select(.name | endswith("exact-source")) | .databaseId' | head -n 1)"
