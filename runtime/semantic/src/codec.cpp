@@ -805,7 +805,9 @@ bool mapConnector(const auditoryworks::axiom::v1::ConnectorContent& source, canv
 }
 
 bool mapGeometry(const auditoryworks::axiom::v1::VectorPathGeometry& source, canvas::semantic::VectorPathGeometry& destination) {
-    if (!source.has_fill_rule()) return false; destination.fill_rule=static_cast<canvas::semantic::FillRule>(source.fill_rule()); destination.commands.clear();
+    if (!source.has_fill_rule()) return false;
+    destination.fill_rule = static_cast<canvas::semantic::FillRule>(source.fill_rule());
+    destination.commands.clear();
     for (const auto& c: source.commands()) { switch(c.command_case()) {
       case auditoryworks::axiom::v1::PathCommand::kMoveTo: { canvas::semantic::Vec2 p; if(!c.move_to().has_point()||!mapVec(c.move_to().point(),p)) return false; destination.commands.emplace_back(canvas::semantic::MoveTo{p}); break; }
       case auditoryworks::axiom::v1::PathCommand::kLineTo: { canvas::semantic::Vec2 p; if(!c.line_to().has_end()||!mapVec(c.line_to().end(),p)) return false; destination.commands.emplace_back(canvas::semantic::LineTo{p}); break; }
