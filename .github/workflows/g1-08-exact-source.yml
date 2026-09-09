@@ -151,6 +151,9 @@ jobs:
       - name: Materialize provider-bound facts
         run: |
           set -euo pipefail
+          provider_job_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate --jq '.jobs[] | select(.name | endswith("exact-source")) | .databaseId' | head -n 1)"
+          [[ "$provider_job_id" =~ ^[0-9]+$ ]]
+          export G1_08_PROVIDER_JOB_ID="$provider_job_id"
           python3 - "$RUNNER_TEMP" "$GITHUB_SHA" <<'PY'
           import json, os, subprocess, sys, xml.etree.ElementTree as ET
           from pathlib import Path
@@ -169,7 +172,7 @@ jobs:
             "taskAnchor":os.environ["TASK_ANCHOR"], "actualStartingRevision":os.environ["SOURCE_BASE"], "sourceRef":source,
             "sourceCommitParent":parent, "executionRef":os.environ["EXECUTION_REF"],
             "sourceDelta":{"paths":Path(temp, "g1-08-expected-source-paths.txt").read_text().splitlines()},
-            "provider":{"runId":os.environ["GITHUB_RUN_ID"], "attempt":os.environ["GITHUB_RUN_ATTEMPT"], "jobId":os.environ["GITHUB_JOB"], "artifactIdentity":f"gt-g1-08-{source}", "sourceSha":source, "workflow":".github/workflows/g1-08-exact-source.yml"},
+            "provider":{"runId":os.environ["GITHUB_RUN_ID"], "attempt":os.environ["GITHUB_RUN_ATTEMPT"], "jobId":os.environ["G1_08_PROVIDER_JOB_ID"], "artifactIdentity":f"gt-g1-08-{source}", "sourceSha":source, "workflow":".github/workflows/g1-08-exact-source.yml"},
             "materialization":{"relation":"EVIDENCE_ONLY_DESCENDANT_PENDING", "sourceRef":source, "sourceChanges":False, "ref":"pending"},
             "lock":{"path":"semantic-sdk.lock.json", "blobSha":subprocess.check_output(["git", "rev-parse", f"{source}:semantic-sdk.lock.json"], text=True).strip(), "releaseSetId":"14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"},
             "machine":{"negativePreflight":"PASS", "protobufOff":"PASS", "legacyDecoder":"PASS", "cleanCheckout":"PASS"},
