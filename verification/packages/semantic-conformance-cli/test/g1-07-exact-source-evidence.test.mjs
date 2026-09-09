@@ -39,7 +39,7 @@ const facts = (overrides = {}) => ({
   observations: { step: "PASS", seek: "PASS", observation: "PASS", determinism: "PASS", negative: "PASS" },
   regressionTests: {
     protobufOn: { total: 485, passed: 485, skipped: 0, failed: 0, skipIds: [] },
-    protobufOff: { total: 485, passed: 462, skipped: 23, failed: 0, skipIds: [...Array.from({ length: 12 }, (_, i) => i + 25), ...Array.from({ length: 11 }, (_, i) => i + 53)] },
+    protobufOff: { total: 485, passed: 462, skipped: 23, failed: 0, skipIds: [...Array.from({ length: 12 }, (_, i) => i + 25), ...Array.from({ length: 11 }, (_, i) => i + 54)] },
     focused: { protobufOn: { total: 16, passed: 16, skipped: 0, failed: 0 }, protobufOff: { total: 16, passed: 16, skipped: 0, failed: 0 } },
     components: {
       g1_06: { protobufOn: { total: 62, passed: 62, skipped: 0, failed: 0 }, protobufOff: { total: 62, passed: 39, skipped: 23, failed: 0 } },

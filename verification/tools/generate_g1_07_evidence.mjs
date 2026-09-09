@@ -125,7 +125,7 @@ export function validateFacts(facts, expected = {}) {
     return item;
   };
   verifySuite(regression.protobufOn, "protobuf-on regression", []);
-  verifySuite(regression.protobufOff, "protobuf-off regression", [...Array.from({ length: 12 }, (_, i) => i + 25), ...Array.from({ length: 11 }, (_, i) => i + 53)]);
+  verifySuite(regression.protobufOff, "protobuf-off regression", [...Array.from({ length: 12 }, (_, i) => i + 25), ...Array.from({ length: 11 }, (_, i) => i + 54)]);
   const focused = asRecord(regression.focused, "focused regression");
   for (const config of ["protobufOn", "protobufOff"]) {
     const item = asRecord(focused[config], `focused ${config}`);

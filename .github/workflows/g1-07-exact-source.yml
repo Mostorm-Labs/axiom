@@ -246,7 +246,7 @@ jobs:
           from pathlib import Path
           temp = Path(sys.argv[1]); source = "${{ github.sha }}"
           cli_process = json.loads((temp / "g1-07-cli-process.json").read_text())
-          skip = list(range(25,37)) + list(range(53,64))
+          skip = list(range(25,37)) + list(range(54,65))
           def suite(name, list_name, off=False):
               root = ET.parse(temp/name).getroot(); cases = root.findall('.//testcase')
               total = int(root.attrib.get('tests', len(cases))); failed = int(root.attrib.get('failures', 0)) + sum(1 for c in cases if c.find('failure') is not None or c.find('error') is not None)
