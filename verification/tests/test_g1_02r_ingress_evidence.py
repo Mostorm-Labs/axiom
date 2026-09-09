@@ -15,7 +15,7 @@ class IngressEvidenceTest(unittest.TestCase):
 
     def test_rejects_frozen_contract_mismatches(self):
         good = dict(source_ref="a"*40, package_ref="notion://3d44c57a-590c-81f6-a0d7-d8ae909a968c/GT-G1-02R-INGRESS-P31-v0.1")
-        cases = [{"task_id":"OTHER"}, {"task_anchor":"b"*40}, {"changed_paths":[]}, {"family_rows":["DeleteObjects"]}, {"provider":{"run_id":None,"attempt":1,"job_id":"j","artifact_identity":"a","exact_tested_source_sha":"a"*40}}]
+        cases = [{"task_id":"OTHER"}, {"task_anchor":"b"*40}, {"changed_paths":[]}, {"family_rows":["DeleteObjects"]}, {"provider":{"run_id":None,"attempt":1,"job_id":"j","artifact_identity":"a","exact_tested_source_sha":"a"*40}}, {"evidence_inventory":[]}, {"materialized_ref":"a"*40}]
         for extra in cases:
             with self.subTest(extra=extra), tempfile.TemporaryDirectory() as d:
                 with self.assertRaises(ValueError): generate(Path(d), **good, **extra)
