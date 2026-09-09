@@ -5,6 +5,11 @@
 #include <nlohmann/json.hpp>
 
 #include <array>
+#include <string>
+
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+#include "auditoryworks/axiom/v1/operation.pb.h"
+#endif
 
 namespace canvas::verification::g1_07 {
 namespace {
@@ -271,6 +276,86 @@ TEST(G107ReplayInspector, TraceParserFailsClosedForStructuralAndMalformedInputs)
         EXPECT_NE(result.failure, FailureClass::kNone);
     }
 }
+
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+TEST(G107ReplayInspector, NonEmptyProtobufTraceUsesDecodeNormalizeAndCanonicalReplayRoute) {
+    namespace p = auditoryworks::axiom::v1;
+    p::Operation wire;
+    auto set_id = [](p::Id128* value, std::uint8_t byte) {
+        value->set_value(std::string(16, static_cast<char>(byte)));
+    };
+    set_id(wire.mutable_operation_id(), 1U);
+    set_id(wire.mutable_document_id(), 2U);
+    wire.set_schema_version(1U);
+    wire.set_payload_version(1U);
+    auto* object = wire.mutable_payload()->mutable_insert_objects()->add_objects();
+    set_id(object->mutable_id(), 9U);
+    object->set_kind_id(1U);
+    object->set_kind_version(1U);
+    object->mutable_placement()->mutable_order_key()->set_value("A");
+    object->mutable_transform()->set_a(1.0);
+    object->mutable_transform()->set_b(0.0);
+    object->mutable_transform()->set_c(0.0);
+    object->mutable_transform()->set_d(1.0);
+    object->mutable_transform()->set_tx(0.0);
+    object->mutable_transform()->set_ty(0.0);
+    object->mutable_properties();
+    object->mutable_content()->mutable_shape()->set_shape_kind(2U);
+    object->mutable_content()->mutable_shape()->set_width(11.0);
+    object->mutable_content()->mutable_shape()->set_height(12.0);
+    std::string bytes;
+    ASSERT_TRUE(wire.SerializeToString(&bytes));
+    const auto direct = SemanticCodec::decodeProtobufOperation({bytes.begin(), bytes.end()});
+    ASSERT_TRUE(direct.ok());
+    static constexpr char hex[] = "0123456789abcdef";
+    std::string bytes_hex;
+    for (const unsigned char byte : bytes) {
+        bytes_hex.push_back(hex[byte >> 4U]);
+        bytes_hex.push_back(hex[byte & 0x0fU]);
+    }
+    const auto trace_result = decodeTraceJson(
+        std::string(R"({"format":"axiom-semantic-replay-trace-v1","formatVersion":1,)" ) +
+        R"("documentIdHex":"02020202020202020202020202020202","schemaVersion":1,)" +
+        R"("baseline":{"kind":"empty","semanticGeneration":0,"runtimeEpoch":42,"commitOrdinal":0},)" +
+        R"("operations":[{"bytesHex":")" + bytes_hex + R"("}]})");
+    ASSERT_TRUE(trace_result.ok()) << trace_result.detail;
+    ASSERT_EQ(trace_result.trace->operations.size(), 1U);
+    const auto& decoded = trace_result.trace->operations.front();
+    ASSERT_EQ(decoded.id.value().bytes[0], 1U);
+    ASSERT_EQ(decoded.document_id.value().bytes[0], 2U);
+    ASSERT_EQ(decoded.schema_version, 1U);
+    ASSERT_EQ(decoded.payload_version, 1U);
+    const auto& decoded_object = std::get<InsertObjectsOp>(decoded.payload).objects.front();
+    EXPECT_EQ(decoded_object.id.bytes[0], 9U);
+    EXPECT_EQ(decoded_object.placement.order_key.bytes()[0], 'A');
+    EXPECT_DOUBLE_EQ(decoded_object.transform.a, 1.0);
+    ASSERT_TRUE(std::holds_alternative<ShapeContent>(decoded_object.content));
+    EXPECT_DOUBLE_EQ(std::get<ShapeContent>(decoded_object.content).width, 11.0);
+
+    const ReplayInspector inspector(*trace_result.trace, Provider::kReference);
+    const auto replay = inspector.run();
+    ASSERT_TRUE(replay.success) << failureClassName(replay.failure);
+    EXPECT_EQ(replay.resulting_position, 1U);
+    EXPECT_EQ(replay.semantic_generation, SemanticGeneration(1U));
+}
+#endif
+
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+TEST(G107ReplayInspector, NonEmptyProtobufTraceFailsClosedWhenRuntimeUnavailable) {
+    // A valid, non-empty Operation envelope (insert payload with an empty
+    // batch) is intentionally supplied to the protobuf-disabled build.
+    constexpr std::string_view bytes_hex =
+        "0a120a100101010101010101010101010101010112120a1002020202020202020202020202020202"
+        "180120012a020a00";
+    const auto result = decodeTraceJson(
+        std::string(R"({"format":"axiom-semantic-replay-trace-v1","formatVersion":1,)" ) +
+        R"("documentIdHex":"02020202020202020202020202020202","schemaVersion":1,)" +
+        R"("baseline":{"kind":"empty","semanticGeneration":0,"runtimeEpoch":42,"commitOrdinal":0},)" +
+        R"("operations":[{"bytesHex":")" + std::string(bytes_hex) + R"("}]})");
+    EXPECT_FALSE(result.ok());
+    EXPECT_EQ(result.failure, FailureClass::kTraceInvalid);
+}
+#endif
 
 } // namespace
 } // namespace canvas::verification::g1_07

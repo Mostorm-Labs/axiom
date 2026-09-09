@@ -74,10 +74,17 @@ add_executable(canvas_semantic_g1_07_replay_inspector_test
   ../tools/g1_06_digest.cpp)
 target_link_libraries(canvas_semantic_g1_07_replay_inspector_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_link_libraries(canvas_semantic_g1_07_replay_inspector_test PRIVATE protobuf::libprotobuf)
+endif()
 target_include_directories(canvas_semantic_g1_07_replay_inspector_test PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/../src
   ${CMAKE_CURRENT_SOURCE_DIR}/../tools
   ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_include_directories(canvas_semantic_g1_07_replay_inspector_test PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated)
+endif()
 if(MSVC)
   target_compile_options(canvas_semantic_g1_07_replay_inspector_test PRIVATE /W4 /permissive- /WX /EHsc)
 else()
