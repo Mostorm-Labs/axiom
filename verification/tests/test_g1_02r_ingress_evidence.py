@@ -5,8 +5,12 @@ from verification.tools.generate_g1_02r_ingress_evidence import FILES, generate
 class IngressEvidenceTest(unittest.TestCase):
     def test_generates_exact_six_bound_files(self):
         with tempfile.TemporaryDirectory() as d:
-            out=generate(Path(d), "abc123", "notion://GT-G1-02R-INGRESS")
+            out=generate(Path(d), "a"*40, "notion://3d44c57a-590c-81f6-a0d7-d8ae909a968c/GT-G1-02R-INGRESS-P31-v0.1")
             self.assertEqual(sorted(p.name for p in out.iterdir()), sorted(FILES))
-            self.assertEqual(json.loads((out/"INGRESS-PLAN.json").read_text())["source_ref"], "abc123")
+            self.assertEqual(json.loads((out/"INGRESS-PLAN.json").read_text())["source_ref"], "a"*40)
+
+    def test_rejects_wrong_package(self):
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(ValueError): generate(Path(d), "a"*40, "wrong")
 
 if __name__ == "__main__": unittest.main()
