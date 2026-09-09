@@ -1,0 +1,10 @@
+{
+  "negative_preflight": "PASS",
+  "protobuf_off": "kRuntimeUnavailable observed",
+  "legacy_decoder": "PASS",
+  "clean_checkout": "PASS",
+  "protobuf_on_command": "cmake --build out/g1-hosted --parallel && ctest --test-dir out/g1-hosted --output-on-failure",
+  "protobuf_on_result": "PASS",
+  "protobuf_off_command": "ctest --test-dir out/g1-off --output-on-failure",
+  "protobuf_off_result": "PASS (23 EXPECTED SKIP)"
+}
