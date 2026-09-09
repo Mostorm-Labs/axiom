@@ -1,6 +1,6 @@
 # GT-G1-07 P31 Task Package v0.2
 
-Status: BINDING REFRESHED / READY / P32 NOT AUTHORIZED
+Status: FINAL TB BINDING REFRESHED / READY / P32 NOT AUTHORIZED
 
 - package_id: `GT-G1-07-P31-v0.2`
 - package_ref: `notion://3d64c57a-590c-810e-93d9-ff721caceb8a/GT-G1-07-P31-v0.2`
@@ -15,17 +15,17 @@ Status: BINDING REFRESHED / READY / P32 NOT AUTHORIZED
 
 ## Exact Verification bindings
 
-These bindings are normative for `PackageBindingPreflight` and `EvidenceContractPreflight` and were formalized by `GT-G1-07 P20 Targeted Verification Reconciliation v0.1`.
+These bindings are normative for `PackageBindingPreflight` and `EvidenceContractPreflight` and were formalized by `GT-G1-07 P20 Targeted Verification Reconciliation v0.1` plus `GT-G1-07 P20 TrustedBasis Correction v0.2`.
 
 - verification_spec_id: `GT-G1-07-VS-v0.1`
 - obligation_set_id: `GT-G1-07-OBL-v0.1`
-- trusted_basis_id: `GT-G1-07-TB-v0.1`
+- trusted_basis_id: `GT-G1-07-TB-v0.2`
 - scope_contract_id: `GT-G1-07-SCOPE-v0.1`
 - acceptance_oracle_id: `GT-G1-07-ORACLE-v0.1`
 - evidence_compilation_contract_id: `GT-G1-07-ECC-v0.1`
-- verification authority ref: `notion://3d64c57a-590c-81e2-8e9d-dbdf085e7618/GT-G1-07-P20-v0.1`
+- verification authority ref: `notion://3d64c57a-590c-8190-8217-d365dab90b55/GT-G1-07-TB-v0.2`
 
-This binding refresh does not alter `T07-R01` through `T07-R12`, source scope, the exact 12-file evidence inventory, the `EXECUTION_CLOSURE_CONTRACT`, or the same `PRIMARY_GATE_01` occurrence.
+This final TB binding refresh does not alter `T07-R01` through `T07-R12`, source scope, the exact 12-file evidence inventory, the `EXECUTION_CLOSURE_CONTRACT`, or the same `PRIMARY_GATE_01` occurrence.
 
 ## Rebind facts
 
