@@ -70,7 +70,6 @@ jobs:
           git diff --name-only "$SOURCE_BASE" "$GITHUB_SHA" | sort > "$RUNNER_TEMP/g1-08-actual-source-paths.txt"
           cat > "$RUNNER_TEMP/g1-08-expected-source-paths.txt" <<'EOF'
           .github/workflows/g1-08-exact-source.yml
-          runtime/semantic/include/canvas/semantic/staged_object_view.hpp
           runtime/semantic/src/delete_closure.cpp
           runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp
           runtime/semantic/src/indexed_object_store.cpp

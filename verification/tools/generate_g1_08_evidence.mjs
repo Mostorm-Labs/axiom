@@ -8,7 +8,6 @@ export const TASK_ANCHOR = "7a9828a78cfdd1e0c2926b80428cf90084d85530";
 export const EXECUTION_REF = "codex/gt-g1-08-reference-differential-locality";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
-  "runtime/semantic/include/canvas/semantic/staged_object_view.hpp",
   "runtime/semantic/src/delete_closure.cpp",
   "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp",
   "runtime/semantic/src/indexed_object_store.cpp",
