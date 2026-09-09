@@ -1,0 +1,44 @@
+name: GT-G1-08 Exact Source
+
+on:
+  push:
+    branches: [codex/gt-g1-08-reference-differential-locality]
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      EXECUTION_REF: codex/gt-g1-08-reference-differential-locality
+      TASK_ANCHOR: a2c3bfa05930b53739886d4d151be31dbcd6be15
+      SOURCE_BASE: a2c3bfa05930b53739886d4d151be31dbcd6be15
+      PACKAGE_REF: notion://3d64c57a-590c-8196-813d-ffd71b4f52f7/GT-G1-08-P31-v0.2
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: ${{ github.sha }}, fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: "24.18.0"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Resolve locked Semantic SDK v2
+        run: python3 tools/setup_build_environment.py --core --semantic --facts-output "$RUNNER_TEMP/g1-08-build-environment.json" --status
+      - name: Verify exact source identity and scope
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$GITHUB_REF" = "refs/heads/$EXECUTION_REF"
+          test "$(git remote get-url origin | sed 's/\.git$//')" = "https://github.com/Mostorm-Labs/axiom"
+          git merge-base --is-ancestor "$TASK_ANCHOR" "$GITHUB_SHA"
+          git merge-base --is-ancestor "$SOURCE_BASE" "$GITHUB_SHA"
+      - name: Configure build and run GT-G1-08 tests
+        run: |
+          set -euo pipefail
+          cmake -S . -B out/g1-08 -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF -DBUILD_TESTING=ON
+          cmake --build out/g1-08 --parallel
+          ctest --test-dir out/g1-08 --output-on-failure
+      - name: Verify whitespace and status
+        run: |
+          git diff --check
