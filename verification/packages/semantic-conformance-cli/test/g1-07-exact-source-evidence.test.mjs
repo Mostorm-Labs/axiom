@@ -95,7 +95,7 @@ test("rejects incomplete verification accounting, CI provenance, or acceptance t
 });
 test("declares the exact twelve evidence inventory names", () => {
   assert.equal(REQUIRED_EVIDENCE_FILES.length, 12);
-  assert.equal(EXECUTION_REF, "codex/gt-g1-07-rebind-v2");
+  assert.equal(EXECUTION_REF, "codex/gt-g1-07-p36-wire-trace-repair");
   assert.equal(new Set(REQUIRED_EVIDENCE_FILES).size, 12);
 });
 test("rejects output escape", () => assert.throws(() => assertSafeOutputDirectory("../../outside"), /escapes|relative|staging/i));
