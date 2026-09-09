@@ -4,6 +4,7 @@
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
+#include "canvas/semantic/normalizer.hpp"
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <vector>
@@ -44,9 +45,11 @@ TEST(CodecOperationIngress, DecodedOperationIsConsumableByOperationEngine) {
     p::Operation wire_operation; wire(&wire_operation, 1); std::string bytes; ASSERT_TRUE(wire_operation.SerializeToString(&bytes));
     const auto decoded = SemanticCodec::decodeProtobufOperation({bytes.begin(), bytes.end()});
     ASSERT_EQ(decoded.error, SemanticError::kNone);
+    const auto normalized = normalizeOperation(decoded.operation);
+    ASSERT_TRUE(normalized.ok());
     ReferenceObjectStore objects; AppliedOperationLedger ledger; SemanticGenerationState generation;
     CanonicalCommitClock clock(RuntimeEpoch(1)); OperationEngine engine;
-    const auto result = engine.apply(decoded.operation, ApplySource::kRestoreReplay, objects, ledger, generation, clock);
+    const auto result = engine.apply(normalized.value, ApplySource::kRestoreReplay, objects, ledger, generation, clock);
     EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
     EXPECT_EQ(objects.size(), 1U); EXPECT_EQ(generation.current(), SemanticGeneration(1));
 }
