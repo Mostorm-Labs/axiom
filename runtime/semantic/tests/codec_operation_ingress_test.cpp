@@ -64,6 +64,31 @@ TEST(CodecOperationIngress, PreservesConfiguredNestedValues) {
     const auto& point = std::get<MoveTo>(g.commands.front()).point;
     EXPECT_DOUBLE_EQ(point.x, 1.0); EXPECT_DOUBLE_EQ(point.y, 2.0);
 }
+
+TEST(CodecOperationIngress, PreservesNestedValuesAcrossAllConfiguredFamilies) {
+    for (std::uint8_t v = 1; v <= 15; ++v) {
+        p::Operation w; wire(&w, v); std::string b; ASSERT_TRUE(w.SerializeToString(&b));
+        const auto d = SemanticCodec::decodeProtobufOperation({b.begin(), b.end()});
+        ASSERT_EQ(d.error, SemanticError::kNone) << v;
+        switch (v) {
+            case 1: { const auto& x = std::get<InsertObjectsOp>(d.operation.payload).objects.front(); EXPECT_EQ(x.kind, ObjectKind::kShape); EXPECT_EQ(x.placement.order_key.bytes()[0], 'A'); EXPECT_DOUBLE_EQ(x.transform.ty, 4); EXPECT_TRUE(std::holds_alternative<ShapeContent>(x.content)); break; }
+            case 2: EXPECT_EQ(std::get<DeleteObjectsOp>(d.operation.payload).object_ids.front().bytes[0], 3); break;
+            case 3: EXPECT_TRUE(std::holds_alternative<ShapeContent>(std::get<RestoreObjectsOp>(d.operation.payload).objects.front().content)); break;
+            case 4: EXPECT_EQ(std::get<SetPlacementsOp>(d.operation.payload).items.front().placement.order_key.bytes()[0], 'A'); break;
+            case 5: { const auto& x=std::get<SetTransformsOp>(d.operation.payload).items.front().transform; EXPECT_DOUBLE_EQ(x.a,1); EXPECT_DOUBLE_EQ(x.d,1); EXPECT_DOUBLE_EQ(x.tx,3); EXPECT_DOUBLE_EQ(x.ty,4); break; }
+            case 6: { const auto& x=std::get<PatchPropertiesOp>(d.operation.payload).patches.front(); EXPECT_EQ(x.action, PropertyPatchAction::kSet); ASSERT_TRUE(std::holds_alternative<PropertyValue>(x.value)); ASSERT_TRUE(std::holds_alternative<bool>(std::get<PropertyValue>(x.value))); EXPECT_TRUE(std::get<bool>(std::get<PropertyValue>(x.value))); break; }
+            case 7: { const auto& x=std::get<SetObjectSizeOp>(d.operation.payload).items.front(); EXPECT_DOUBLE_EQ(x.width,21); EXPECT_DOUBLE_EQ(x.height,22); break; }
+            case 8: break;
+            case 9: { const auto& x=std::get<SetImageContentOp>(d.operation.payload).content; EXPECT_EQ(x.resource_id.value.bytes[0],11); EXPECT_DOUBLE_EQ(x.intrinsic_width,31); EXPECT_EQ(x.content_mode,ImageContentMode::kFit); EXPECT_DOUBLE_EQ(x.height,34); break; }
+            case 10: { const auto& x=std::get<AddStrokeOp>(d.operation.payload).object; EXPECT_EQ(x.kind,ObjectKind::kVectorStroke); EXPECT_EQ(x.kind_version,1U); break; }
+            case 11: { const auto& x=std::get<SplitStrokesOp>(d.operation.payload).splits.front(); EXPECT_EQ(x.source_stroke_id.bytes[0],13); EXPECT_EQ(x.replacements.front().id.bytes[0],14); EXPECT_TRUE(std::holds_alternative<ShapeContent>(x.replacements.front().content)); break; }
+            case 12: { const auto& x=std::get<AddEraseMasksOp>(d.operation.payload).items.front().masks.front(); EXPECT_EQ(x.id.bytes[0],16); EXPECT_TRUE(std::holds_alternative<FilledPathMask>(x.geometry)); break; }
+            case 13: { const auto& x=std::get<RemoveEraseMasksOp>(d.operation.payload).items.front(); EXPECT_EQ(x.object_id.bytes[0],17); EXPECT_EQ(x.mask_ids.front().bytes[0],18); break; }
+            case 14: { const auto& x=std::get<EditRichTextOp>(d.operation.payload).delta; ASSERT_EQ(x.steps.size(),1U); const auto& s=std::get<InsertTextStep>(x.steps.front()); EXPECT_EQ(s.paragraph_id.bytes[0],20); EXPECT_EQ(s.text,"hi"); EXPECT_DOUBLE_EQ(s.style.font_size,12); break; }
+            case 15: { const auto& x=std::get<SetConnectorContentOp>(d.operation.payload).content; EXPECT_EQ(x.routing,ConnectorRouting::kStraight); EXPECT_TRUE(std::holds_alternative<FreePointEndpoint>(x.start.value)); EXPECT_TRUE(std::holds_alternative<FreePointEndpoint>(x.end.value)); break; }
+        }
+    }
+}
 }
 
 #else
