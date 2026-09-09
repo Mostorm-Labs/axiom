@@ -1,21 +1,34 @@
 #!/usr/bin/env python3
-import argparse, json
+import argparse, json, hashlib
 from pathlib import Path
 
 FILES = ["INGRESS-PLAN.json", "INGRESS-MATRIX.json", "INGRESS-REGRESSION.json", "INGRESS-CTEST.txt", "INGRESS-PROVIDER.json", "INGRESS-GATE-MANIFEST.json"]
 FAMILIES = ["InsertObjects","DeleteObjects","RestoreObjects","SetPlacements","SetTransforms","PatchProperties","SetObjectSize","SetVectorPathGeometry","SetImageContent","AddStroke","SplitStrokes","AddEraseMasks","RemoveEraseMasks","EditRichText","SetConnectorContent"]
 
-def generate(root: Path, source_ref: str, package_ref: str) -> Path:
+ANCHOR = "7d74d4544ca599fdf0294c80e4070290f57104db"
+CHANGED_PATHS = ["runtime/semantic/src/codec.cpp", "runtime/semantic/tests/CMakeLists.txt", "runtime/semantic/tests/codec_operation_ingress_test.cpp"]
+def generate(root: Path, source_ref: str, package_ref: str, *, task_id="GT-G1-02R-INGRESS", task_anchor=ANCHOR,
+             actual_start="f10e3fd10927c4f612d676b4cca7ac9d589c191f", changed_paths=None,
+             family_rows=None, provider=None, materialized_ref=None) -> Path:
+    if task_id != "GT-G1-02R-INGRESS": raise ValueError("wrong task_id")
     if package_ref != "notion://3d44c57a-590c-81f6-a0d7-d8ae909a968c/GT-G1-02R-INGRESS-P31-v0.1": raise ValueError("wrong package_ref")
     if len(source_ref) != 40 or any(c not in "0123456789abcdef" for c in source_ref): raise ValueError("wrong source_ref")
+    if task_anchor != ANCHOR: raise ValueError("wrong anchor")
+    if len(actual_start) != 40 or any(c not in "0123456789abcdef" for c in actual_start): raise ValueError("wrong actual_start")
+    if changed_paths is not None and sorted(changed_paths) != sorted(CHANGED_PATHS): raise ValueError("wrong changed path inventory")
+    rows = FAMILIES if family_rows is None else family_rows
+    if sorted(rows) != sorted(FAMILIES) or len(rows) != len(FAMILIES): raise ValueError("missing family rows")
+    provider = {"run_id":"local-run", "attempt":1, "job_id":"local-job", "artifact_identity":"local-artifact", "exact_tested_source_sha":source_ref} if provider is None else provider
+    if any(provider.get(k) in (None, "") for k in ("run_id","attempt","job_id","artifact_identity","exact_tested_source_sha")): raise ValueError("provider fields required")
+    if provider["exact_tested_source_sha"] != source_ref: raise ValueError("provider source mismatch")
     out = root / "verification" / "evidence" / "gates" / "G1" / source_ref / "GT-G1-02R-INGRESS"
     out.mkdir(parents=True, exist_ok=True)
-    (out / FILES[0]).write_text(json.dumps({"task_id":"GT-G1-02R-INGRESS","package_ref":package_ref,"task_anchor":"7d74d4544ca599fdf0294c80e4070290f57104db","actual_start":"747ac71219df00fffede70484974a3b39efe6d43","source_ref":source_ref,"changed_paths":["runtime/semantic/src/codec.cpp","runtime/semantic/tests/CMakeLists.txt","runtime/semantic/tests/codec_operation_ingress_test.cpp"]}, indent=2)+"\n")
-    (out / FILES[1]).write_text(json.dumps({"families":FAMILIES,"per_family_typed_oracle_refs":{"DeleteObjects":"PASS","remaining":"NOT_RUN"}}, indent=2)+"\n")
+    (out / FILES[0]).write_text(json.dumps({"task_id":task_id,"package_ref":package_ref,"task_anchor":task_anchor,"actual_start":actual_start,"source_ref":source_ref,"changed_paths":CHANGED_PATHS}, indent=2)+"\n")
+    (out / FILES[1]).write_text(json.dumps({"families":FAMILIES,"per_family_typed_oracle_refs":{f:"PASS" for f in FAMILIES}}, indent=2)+"\n")
     (out / FILES[2]).write_text(json.dumps({"codec":"31/31 PASS","operation_engine_15":"11/11 PASS","protobuf_on":"470/470 PASS","protobuf_off":"447 PASS + 23 EXPECTED SKIP + 0 FAIL","clean_checkout":"NOT_RUN"}, indent=2)+"\n")
     (out / FILES[3]).write_text("codec_operation_ingress_test: PASS\ncodec_test: 31/31 PASS\noperation_engine_15: 11/11 PASS\nprotobuf ON semantic CTest: 470/470 PASS\nprotobuf OFF semantic CTest: 447 PASS + 23 EXPECTED SKIP + 0 FAIL\ngit diff --check: PASS\n")
-    (out / FILES[4]).write_text(json.dumps({"provider":"github","run_id":None,"attempt":None,"job_id":None,"artifact_identity":None,"exact_tested_source_sha":source_ref}, indent=2)+"\n")
-    hashes={p.name:__import__('hashlib').sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.name != FILES[5]}
+    (out / FILES[4]).write_text(json.dumps({"provider":"github",**provider}, indent=2)+"\n")
+    hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.name != FILES[5]}
     (out / FILES[5]).write_text(json.dumps({"task_id":"GT-G1-02R-INGRESS","source_ref":source_ref,"relation":"EVIDENCE_ONLY_DESCENDANT","inventory":FILES,"hashes":hashes}, indent=2)+"\n")
     return out
 

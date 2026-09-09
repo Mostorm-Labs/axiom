@@ -755,4 +755,9 @@ gtest_discover_tests(canvas_semantic_g1_06_integration_test TEST_PREFIX "g1_06_i
 
 add_executable(canvas_semantic_codec_operation_ingress_test codec_operation_ingress_test.cpp)
 target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_include_directories(canvas_semantic_codec_operation_ingress_test PRIVATE
+    ${CMAKE_BINARY_DIR}/runtime/semantic/generated)
+  target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE protobuf::libprotobuf)
+endif()
 gtest_discover_tests(canvas_semantic_codec_operation_ingress_test)
