@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   exact-source:
@@ -153,7 +154,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          provider_job_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate --jq '.jobs[] | select(.name | endswith("exact-source")) | .databaseId' | head -n 1)"
+          provider_job_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate --jq '.jobs[] | select(.name == "g1-08 / exact-source") | .databaseId' | head -n 1)"
           [[ "$provider_job_id" =~ ^[0-9]+$ ]]
           export G1_08_PROVIDER_JOB_ID="$provider_job_id"
           python3 - "$RUNNER_TEMP" "$GITHUB_SHA" <<'PY'
