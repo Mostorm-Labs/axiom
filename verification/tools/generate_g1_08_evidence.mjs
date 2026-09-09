@@ -2,23 +2,22 @@ import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 
 export const TASK_ID = "GT-G1-08";
-export const PACKAGE_REF = "notion://3d64c57a-590c-8196-813d-ffd71b4f52f7/GT-G1-08-P31-v0.2";
-export const PACKAGE_MATERIALIZATION_REF = "da844b3bd495608ebc5b12c14512fa0399dae580";
-export const TASK_ANCHOR = "a2c3bfa05930b53739886d4d151be31dbcd6be15";
+export const PACKAGE_REF = "notion://3d64c57a-590c-81c9-91c6-ffbe140514d8/GT-G1-08-P36-v0.1";
+export const PACKAGE_MATERIALIZATION_REF = "d9ac63756b54a40286628afac39e394615bc602a";
+export const TASK_ANCHOR = "7a9828a78cfdd1e0c2926b80428cf90084d85530";
 export const EXECUTION_REF = "codex/gt-g1-08-reference-differential-locality";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
+  "runtime/semantic/include/canvas/semantic/staged_object_view.hpp",
+  "runtime/semantic/src/delete_closure.cpp",
   "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp",
   "runtime/semantic/src/indexed_object_store.cpp",
-  "runtime/semantic/tests/CMakeLists.txt",
+  "runtime/semantic/src/object_index.cpp",
+  "runtime/semantic/src/object_index.hpp",
+  "runtime/semantic/src/object_store_mutator.hpp",
+  "runtime/semantic/src/staged_object_view.cpp",
   "runtime/semantic/tests/g1_08_locality_test.cpp",
-  "runtime/semantic/tests/g1_08_reference_differential_test.cpp",
-  "runtime/semantic/tools/CMakeLists.txt",
-  "runtime/semantic/tools/g1_08_locality_workload.cpp",
-  "runtime/semantic/tools/g1_08_locality_workload.hpp",
   "runtime/semantic/tools/g1_08_verifier.cpp",
-  "runtime/semantic/tools/g1_08_verifier.hpp",
-  "runtime/semantic/tools/g1_08_verifier_main.cpp",
   "verification/packages/semantic-conformance-cli/test/g1-08-exact-source-evidence.test.mjs",
   "verification/tools/generate_g1_08_evidence.mjs",
 ];
@@ -49,6 +48,7 @@ export function validateFacts(facts, expected = {}) {
   const machine = record(value.machine, "machine facts");
   for (const key of ["negativePreflight", "protobufOff", "legacyDecoder", "cleanCheckout"]) if (machine[key] !== "PASS") fail(`machine fact ${key} missing`);
   for (const key of ["correctness", "locality"]) if (record(value[key], `${key} facts`).status !== "PASS") fail(`${key} facts did not pass`);
+  if (value.locality.deleteReverseScan === "OBSERVED") fail("locality facts report an observed full-store reverse scan");
   for (const key of ["ctestOn", "ctestOff"]) { const item = record(value[key], key); nonEmpty(item.command, `${key}.command`); suite(item.result, `${key}.result`); nonEmpty(item.xml, `${key}.xml`); }
   if (!Array.isArray(value.familyOracles) || value.familyOracles.length !== 15 || value.familyOracles.some(item => !item || typeof item.ref !== "string" || item.status !== "PASS")) fail("family oracle inventory incomplete");
   return value;

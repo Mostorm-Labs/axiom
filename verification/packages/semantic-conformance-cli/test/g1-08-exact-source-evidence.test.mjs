@@ -5,8 +5,8 @@ import {
   TASK_ANCHOR, validateFacts,
 } from "../../../tools/generate_g1_08_evidence.mjs";
 
-const source = "a".repeat(40);
-const parent = "b".repeat(40);
+const source = "b".repeat(40);
+const parent = "c".repeat(40);
 const materialized = "c".repeat(40);
 const xml = "<?xml version=\"1.0\"?><testsuites tests=\"1\" failures=\"0\"><testsuite tests=\"1\" failures=\"0\"><testcase name=\"ok\"/></testsuite></testsuites>\n";
 const suite = {status:"PASS",total:1,passed:1,skipped:0,failed:0,skipIds:[]};
@@ -19,7 +19,7 @@ const facts = (overrides = {}) => ({
   materialization:{relation:"EVIDENCE_ONLY_DESCENDANT",sourceRef:source,sourceChanges:false,ref:materialized},
   lock:{path:"semantic-sdk.lock.json",blobSha:"d".repeat(40),releaseSetId:"14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"},
   machine:{negativePreflight:"PASS",protobufOff:"PASS",legacyDecoder:"PASS",cleanCheckout:"PASS"},
-  correctness:{status:"PASS",verifier:"PASS"}, locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"OBSERVED"},
+  correctness:{status:"PASS",verifier:"PASS"}, locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"NONE"},
   ctestOn:{command:"ctest --test-dir out/g1-08-protobuf-on --output-on-failure",result:suite,xml},
   ctestOff:{command:"ctest --test-dir out/g1-08-protobuf-off --output-on-failure",result:suite,xml},
   familyOracles:Array.from({length:15},(_,i)=>({family:String(i),ref:`oracle-${i+1}`,status:"PASS"})), ...overrides,
@@ -46,5 +46,8 @@ test("rejects a materialized ref that is not a full SHA",()=>{
 test("rejects wrong path inventory and lock binding",()=>{
   assert.throws(()=>validateFacts(facts({sourceDelta:{paths:["runtime/semantic/src/replay.cpp"]}}),{sourceRef:source}));
   assert.throws(()=>validateFacts(facts({lock:{...facts().lock,releaseSetId:"wrong"}}),{sourceRef:source}));
+});
+test("rejects locality PASS when delete reverse scan is observed",()=>{
+  assert.throws(()=>validateFacts(facts({locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"OBSERVED"}}),{sourceRef:source}));
 });
 test("declares exact blocking inventory",()=>{assert.equal(REQUIRED.length,5);assert.equal(new Set(REQUIRED).size,5);});

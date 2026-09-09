@@ -131,6 +131,11 @@ bool ObjectStoreMutator::indexMatchesRebuild(const IndexedObjectStore& store) {
     return store.indexMatchesRebuildInternal();
 }
 
+std::vector<ObjectId> ObjectStoreMutator::connectorsReferencing(
+    const IndexedObjectStore& store, const ObjectId& target) {
+    return store.object_index_->connectorsReferencing(target);
+}
+
 } // namespace canvas::semantic::internal
 
 namespace canvas::semantic::internal {
@@ -138,5 +143,10 @@ namespace canvas::semantic::internal {
 void resetIndexedAccessProbe() { probe = {}; }
 void enableIndexedAccessProbe(bool enabled) { probe_enabled = enabled; }
 IndexedAccessProbeSnapshot snapshotIndexedAccessProbe() { return probe; }
+
+std::vector<ObjectId> indexedConnectorsReferencing(
+    const IndexedObjectStore& store, const ObjectId& target) {
+    return ObjectStoreMutator::connectorsReferencing(store, target);
+}
 
 } // namespace canvas::semantic::internal

@@ -1,5 +1,9 @@
 #include "canvas/semantic/staged_object_view.hpp"
 
+#include "canvas/semantic/indexed_object_store.hpp"
+#include "canvas/semantic/object_content.hpp"
+#include "g1_08_indexed_access_probe_internal.hpp"
+
 #include <algorithm>
 
 namespace canvas::semantic {
@@ -79,6 +83,73 @@ std::vector<ObjectRecord> StagedObjectView::children(
     std::sort(result.begin(), result.end(), childBefore);
     return result;
 }
+
+namespace internal {
+namespace {
+bool referencesTarget(const ObjectRecord& record, const ObjectId& target) {
+    if (record.kind != ObjectKind::kConnector || record.kind_version != 1U) return false;
+    const auto* content = std::get_if<ConnectorContent>(&record.content);
+    if (content == nullptr) return false;
+    for (const ConnectorEndpoint* endpoint : {&content->start, &content->end}) {
+        if (const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value);
+            attached != nullptr && attached->target_object_id == target) return true;
+    }
+    return false;
+}
+} // namespace
+
+bool usesIndexedConnectorLookup(const StagedObjectView& staged) {
+    return dynamic_cast<const IndexedObjectStore*>(&staged.base_) != nullptr;
+}
+
+std::map<ObjectId, std::vector<ObjectId>> referenceConnectorReverseRelation(
+    const StagedObjectView& staged) {
+    std::map<ObjectId, std::vector<ObjectId>> relation;
+    for (const ObjectRecord& record : staged.allObjects()) {
+        if (record.kind != ObjectKind::kConnector || record.kind_version != 1U) continue;
+        const auto* content = std::get_if<ConnectorContent>(&record.content);
+        if (content == nullptr) continue;
+        std::set<ObjectId> targets;
+        for (const ConnectorEndpoint* endpoint : {&content->start, &content->end}) {
+            if (const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value)) {
+                targets.insert(attached->target_object_id);
+            }
+        }
+        for (const ObjectId& target : targets) relation[target].push_back(record.id);
+    }
+    return relation;
+}
+
+std::vector<ObjectId> connectorsReferencing(const StagedObjectView& staged,
+                                            const ObjectId& target) {
+    std::vector<ObjectId> result;
+    if (const auto* indexed = dynamic_cast<const IndexedObjectStore*>(&staged.base_)) {
+        result = indexedConnectorsReferencing(*indexed, target);
+    } else {
+        for (const ObjectRecord& record : staged.base_.allObjects())
+            if (referencesTarget(record, target)) result.push_back(record.id);
+    }
+    auto references = [&](const ObjectRecord& record) {
+        if (record.kind != ObjectKind::kConnector || record.kind_version != 1U) return false;
+        const auto* content = std::get_if<ConnectorContent>(&record.content);
+        if (content == nullptr) return false;
+        for (const ConnectorEndpoint* endpoint : {&content->start, &content->end}) {
+            if (const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value);
+                attached != nullptr && attached->target_object_id == target) return true;
+        }
+        return false;
+    };
+    std::set<ObjectId> ids(result.begin(), result.end());
+    for (const ObjectId& id : staged.deletes_) ids.erase(id);
+    for (const auto& [id, replacement] : staged.replacements_) {
+        ids.erase(id);
+        if (references(replacement)) ids.insert(id);
+    }
+    for (const auto& [id, created] : staged.creates_) if (references(created)) ids.insert(id);
+    result.assign(ids.begin(), ids.end());
+    return result;
+}
+} // namespace internal
 
 bool StagedObjectView::stageCreate(ObjectRecord record) {
     if (deletes_.contains(record.id) || contains(record.id) || creates_.contains(record.id) ||

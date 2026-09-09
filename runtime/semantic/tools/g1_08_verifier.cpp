@@ -33,11 +33,18 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
     }
     VerificationSummary result;
     result.correctness_pass = reference.allObjects() == indexed.allObjects();
+    const auto scale_one = runIndexedLocalityWorkload(1000U);
+    const auto scale_two = runIndexedLocalityWorkload(10000U);
+    const auto scale_three = runIndexedLocalityWorkload(100000U);
     result.scales_checked = 3U;
-    result.locality = runIndexedLocalityWorkload(1000U);
-    result.locality_pass = result.locality.access.find_calls == 1U &&
-                          result.locality.access.all_objects_calls == 0U &&
-                          result.locality.access.all_objects_records_materialized == 0U;
+    result.locality = scale_three;
+    const auto locality_ok = [](const LocalityWorkloadResult& workload) {
+        return workload.access.find_calls == 1U &&
+               workload.access.all_objects_calls == 0U &&
+               workload.access.all_objects_records_materialized == 0U;
+    };
+    result.locality_pass = locality_ok(scale_one) && locality_ok(scale_two) &&
+                          locality_ok(scale_three);
     canvas::semantic::AppliedOperationLedger ledger;
     canvas::semantic::SemanticGenerationState generation;
     canvas::semantic::CanonicalCommitClock clock(canvas::semantic::RuntimeEpoch(42U));
@@ -60,6 +67,7 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
     canvas::semantic::internal::enableIndexedAccessProbe(false);
     result.delete_reverse_scan_observed = delete_probe.all_objects_calls > 0U &&
                                            delete_probe.all_objects_records_materialized == 1000U;
+    result.locality_pass = result.locality_pass && !result.delete_reverse_scan_observed;
     return result;
 }
 

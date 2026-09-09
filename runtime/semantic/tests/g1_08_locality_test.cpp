@@ -4,6 +4,8 @@
 #include "canvas/semantic/applied_operation_ledger.hpp"
 #include "canvas/semantic/canonical_commit_clock.hpp"
 #include "canvas/semantic/operation_engine.hpp"
+#include "canvas/semantic/object_content.hpp"
+#include "../tools/g1_08_locality_workload.hpp"
 
 #include <gtest/gtest.h>
 
@@ -20,6 +22,20 @@ ObjectRecord record(std::uint64_t value) {
     result.placement = Placement{std::nullopt, OrderKey({1U})};
     result.transform = Transform2D{1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
     result.content = ShapeContent{1U, 10.0, 20.0};
+    return result;
+}
+
+ObjectRecord connector(std::uint64_t value, ObjectId target) {
+    ObjectRecord result{};
+    result.id = ObjectId::fromUint64(value);
+    result.kind = ObjectKind::kConnector;
+    result.kind_version = 1U;
+    result.placement = Placement{std::nullopt, OrderKey({1U})};
+    ConnectorContent content{};
+    content.start.value = AttachedEndpoint{target, AutoPerimeterAnchor{}};
+    content.end.value = FreePointEndpoint{Vec2{1.0, 1.0}};
+    content.routing = ConnectorRouting::kStraight;
+    result.content = content;
     return result;
 }
 
@@ -58,7 +74,7 @@ TEST(G108Locality, IndexedLocalReadDoesNotMaterializeWholeStore) {
     EXPECT_EQ(measured.all_objects_records_materialized, 0U);
 }
 
-TEST(G108Locality, ControlledProbeRecordsExpectedDeleteReverseScanRisk) {
+TEST(G108Locality, DeleteClosureUsesIndexedReverseLookupWithoutFullStoreScan) {
     IndexedObjectStore store;
     for (std::uint64_t value = 1U; value <= 1000U; ++value) {
         ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, record(value)));
@@ -79,8 +95,74 @@ TEST(G108Locality, ControlledProbeRecordsExpectedDeleteReverseScanRisk) {
     const auto measured = internal::snapshotIndexedAccessProbe();
     internal::enableIndexedAccessProbe(false);
     ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
-    EXPECT_GT(measured.all_objects_calls, 0U);
-    EXPECT_EQ(measured.all_objects_records_materialized, 1000U);
+    EXPECT_EQ(measured.all_objects_calls, 0U);
+    EXPECT_EQ(measured.all_objects_records_materialized, 0U);
+}
+
+TEST(G108Locality, IndexedReverseLookupScalesWithoutMaterializingUnrelatedRecords) {
+    IndexedObjectStore store;
+    for (std::uint64_t value = 1U; value <= 1000U; ++value) {
+        ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, record(value)));
+    }
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(43U));
+    Operation operation{};
+    operation.id = OperationId{ObjectId::fromUint64(9001U)};
+    operation.document_id = DocumentId{ObjectId::fromUint64(99U)};
+    operation.schema_version = 1U;
+    operation.payload_version = 1U;
+    operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(1U)}};
+    internal::resetIndexedAccessProbe();
+    internal::enableIndexedAccessProbe(true);
+    const auto result = OperationEngine{}.apply(operation, ApplySource::kLocalInteraction,
+                                                store, ledger, generation, clock);
+    const auto measured = internal::snapshotIndexedAccessProbe();
+    internal::enableIndexedAccessProbe(false);
+    ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
+    EXPECT_EQ(measured.all_objects_calls, 0U);
+    EXPECT_EQ(measured.all_objects_records_materialized, 0U);
+}
+
+TEST(G108Locality, T08L03AllRequiredScalesRemainScanFree) {
+    for (const std::size_t total : {1000U, 10000U, 100000U}) {
+        const auto measured = verification::g1_08::runIndexedLocalityWorkload(total);
+        EXPECT_EQ(measured.total_objects, total);
+        EXPECT_EQ(measured.access.find_calls, 1U);
+        EXPECT_EQ(measured.access.all_objects_calls, 0U);
+        EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
+    }
+}
+
+TEST(G108Locality, T08L04ControlledCascadesUseOnlyAffectedClosure) {
+    for (const std::uint64_t connector_count : {8U, 64U, 512U}) {
+        IndexedObjectStore store;
+        constexpr std::uint64_t target_id = 1U;
+        ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(store, record(target_id)));
+        for (std::uint64_t i = 0U; i < connector_count; ++i) {
+            ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(
+                store, connector(1000U + i, ObjectId::fromUint64(target_id))));
+        }
+        AppliedOperationLedger ledger;
+        SemanticGenerationState generation;
+        CanonicalCommitClock clock(RuntimeEpoch(44U));
+        Operation operation{};
+        operation.id = OperationId{ObjectId::fromUint64(90000U + connector_count)};
+        operation.document_id = DocumentId{ObjectId::fromUint64(99U)};
+        operation.schema_version = 1U;
+        operation.payload_version = 1U;
+        operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(target_id)}};
+        internal::resetIndexedAccessProbe();
+        internal::enableIndexedAccessProbe(true);
+        const auto result = OperationEngine{}.apply(operation, ApplySource::kLocalInteraction,
+                                                    store, ledger, generation, clock);
+        const auto measured = internal::snapshotIndexedAccessProbe();
+        internal::enableIndexedAccessProbe(false);
+        ASSERT_EQ(result.disposition, ApplyDisposition::kApplied);
+        EXPECT_EQ(measured.all_objects_calls, 0U);
+        EXPECT_EQ(measured.all_objects_records_materialized, 0U);
+        EXPECT_EQ(store.size(), 0U);
+    }
 }
 
 } // namespace canvas::semantic

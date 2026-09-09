@@ -1,6 +1,10 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
+#include "canvas/semantic/object_record.hpp"
+
+namespace canvas::semantic { class IndexedObjectStore; }
 
 namespace canvas::semantic::internal {
 
@@ -20,5 +24,7 @@ struct IndexedAccessProbeSnapshot final {
 void resetIndexedAccessProbe();
 void enableIndexedAccessProbe(bool enabled);
 [[nodiscard]] IndexedAccessProbeSnapshot snapshotIndexedAccessProbe();
+[[nodiscard]] std::vector<ObjectId> indexedConnectorsReferencing(
+    const IndexedObjectStore& store, const ObjectId& target);
 
 } // namespace canvas::semantic::internal
