@@ -18,11 +18,15 @@ jobs:
       PACKAGE_REF: notion://3d64c57a-590c-8196-813d-ffd71b4f52f7/GT-G1-08-P31-v0.2
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ github.sha }}, fetch-depth: 0}
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: {node-version: "24.18.0"}
+        with:
+          node-version: "24.18.0"
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
+        with:
+          python-version: "3.12"
       - name: Resolve locked Semantic SDK v2
         run: python3 tools/setup_build_environment.py --core --semantic --facts-output "$RUNNER_TEMP/g1-08-build-environment.json" --status
       - name: Verify exact source identity and scope
