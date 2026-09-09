@@ -1,4 +1,9 @@
 #include "canvas/semantic/codec.hpp"
+#include "canvas/semantic/applied_operation_ledger.hpp"
+#include "canvas/semantic/canonical_commit_clock.hpp"
+#include "canvas/semantic/operation_engine.hpp"
+#include "canvas/semantic/reference_object_store.hpp"
+#include "canvas/semantic/semantic_generation.hpp"
 #include <gtest/gtest.h>
 #include <cstdint>
 #include <vector>
@@ -34,6 +39,17 @@ case 14: {auto*x=o->mutable_payload()->mutable_edit_rich_text();id(x->mutable_ob
 case 15: {auto*x=o->mutable_payload()->mutable_set_connector_content();id(x->mutable_object_id(),21);vec(x->mutable_content()->mutable_start()->mutable_free_point()->mutable_point(),1,1);vec(x->mutable_content()->mutable_end()->mutable_free_point()->mutable_point(),2,2);x->mutable_content()->set_routing(p::CONNECTOR_ROUTING_STRAIGHT);break;}
 default: break; }}
 TEST(CodecOperationIngress, DecodesIndependentNonEmptyWireRepresentativesForAllFamilies) { constexpr std::array<const char*,15> n{"InsertObjects","DeleteObjects","RestoreObjects","SetPlacements","SetTransforms","PatchProperties","SetObjectSize","SetVectorPathGeometry","SetImageContent","AddStroke","SplitStrokes","AddEraseMasks","RemoveEraseMasks","EditRichText","SetConnectorContent"}; for(std::uint8_t v=1;v<=15;++v){p::Operation w;wire(&w,v);std::string b;ASSERT_TRUE(w.SerializeToString(&b))<<n[v-1];auto d=SemanticCodec::decodeProtobufOperation({b.begin(),b.end()});ASSERT_EQ(d.error,SemanticError::kNone)<<n[v-1];EXPECT_EQ(d.operation.id.value().bytes[0],1);EXPECT_EQ(d.operation.document_id.value().bytes[0],2);EXPECT_EQ(d.operation.schema_version,3U);EXPECT_EQ(d.operation.payload_version,4U);EXPECT_TRUE(d.presence.schema_version);EXPECT_TRUE(d.presence.payload_version);EXPECT_EQ(static_cast<unsigned>(d.operation.kind()),v);switch(v){case 1:EXPECT_EQ(std::get<InsertObjectsOp>(d.operation.payload).objects.front().id.bytes[0],9);break;case 2:EXPECT_EQ(std::get<DeleteObjectsOp>(d.operation.payload).object_ids.front().bytes[0],3);break;case 3:EXPECT_EQ(std::get<RestoreObjectsOp>(d.operation.payload).objects.front().id.bytes[0],4);break;case 4:EXPECT_EQ(std::get<SetPlacementsOp>(d.operation.payload).items.front().object_id.bytes[0],5);break;case 5:EXPECT_DOUBLE_EQ(std::get<SetTransformsOp>(d.operation.payload).items.front().transform.tx,3);break;case 6:EXPECT_EQ(std::get<PatchPropertiesOp>(d.operation.payload).patches.front().field_id,8U);break;case 7:EXPECT_DOUBLE_EQ(std::get<SetObjectSizeOp>(d.operation.payload).items.front().width,21);break;case 8:EXPECT_EQ(std::get<SetVectorPathGeometryOp>(d.operation.payload).geometry.commands.size(),1U);break;case 9:EXPECT_DOUBLE_EQ(std::get<SetImageContentOp>(d.operation.payload).content.width,33);break;case 10:EXPECT_EQ(std::get<AddStrokeOp>(d.operation.payload).object.id.bytes[0],12);break;case 11:EXPECT_EQ(std::get<SplitStrokesOp>(d.operation.payload).splits.front().replacements.front().id.bytes[0],14);break;case 12:EXPECT_EQ(std::get<AddEraseMasksOp>(d.operation.payload).items.front().masks.front().id.bytes[0],16);break;case 13:EXPECT_EQ(std::get<RemoveEraseMasksOp>(d.operation.payload).items.front().mask_ids.front().bytes[0],18);break;case 14:EXPECT_EQ(std::get<EditRichTextOp>(d.operation.payload).delta.steps.size(),1U);break;case 15:EXPECT_EQ(std::get<SetConnectorContentOp>(d.operation.payload).content.routing,ConnectorRouting::kStraight);break;}}}
+
+TEST(CodecOperationIngress, DecodedOperationIsConsumableByOperationEngine) {
+    p::Operation wire_operation; wire(&wire_operation, 1); std::string bytes; ASSERT_TRUE(wire_operation.SerializeToString(&bytes));
+    const auto decoded = SemanticCodec::decodeProtobufOperation({bytes.begin(), bytes.end()});
+    ASSERT_EQ(decoded.error, SemanticError::kNone);
+    ReferenceObjectStore objects; AppliedOperationLedger ledger; SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(1)); OperationEngine engine;
+    const auto result = engine.apply(decoded.operation, ApplySource::kRestoreReplay, objects, ledger, generation, clock);
+    EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
+    EXPECT_EQ(objects.size(), 1U); EXPECT_EQ(generation.current(), SemanticGeneration(1));
+}
 }
 
 #else
