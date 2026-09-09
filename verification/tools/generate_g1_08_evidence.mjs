@@ -42,7 +42,8 @@ export function validateFacts(facts, expected = {}) {
   for (const key of ["runId", "attempt", "jobId", "artifactIdentity", "workflow"]) nonEmpty(provider[key], `provider.${key}`);
   if (provider.sourceSha !== value.sourceRef || provider.workflow !== ".github/workflows/g1-08-exact-source.yml") fail("provider source binding mismatch");
   const materialization = record(value.materialization, "materialization facts");
-  if (materialization.relation !== "EVIDENCE_ONLY_DESCENDANT" || materialization.sourceRef !== value.sourceRef || materialization.sourceChanges !== false || !sha(materialization.ref) || materialization.ref === value.sourceRef) fail("materialization provenance mismatch");
+  if (!["EVIDENCE_ONLY_DESCENDANT", "EVIDENCE_ONLY_DESCENDANT_PENDING"].includes(materialization.relation) || materialization.sourceRef !== value.sourceRef || materialization.sourceChanges !== false) fail("materialization provenance mismatch");
+  if (materialization.relation === "EVIDENCE_ONLY_DESCENDANT" && (!sha(materialization.ref) || materialization.ref === value.sourceRef)) fail("materialization provenance mismatch");
   const lock = record(value.lock, "lock facts");
   if (lock.path !== "semantic-sdk.lock.json" || !sha(lock.blobSha) || lock.releaseSetId !== RELEASE_SET_ID) fail("locked SDK binding mismatch");
   const machine = record(value.machine, "machine facts");
@@ -62,7 +63,9 @@ export function generateEvidence({ sourceRef, facts, out, repositoryRoot = proce
   const root = { format: "axiom-gt-g1-08-evidence-v1", taskId: TASK_ID, packageRef: PACKAGE_REF, packageMaterializationRef: PACKAGE_MATERIALIZATION_REF, repository: "Mostorm-Labs/axiom", taskAnchor: TASK_ANCHOR, executionRef: EXECUTION_REF, sourceRef, provider: value.provider };
   writeFileSync(resolve(target, "G1-08-CORRECTNESS.json"), JSON.stringify({ ...root, correctness: value.correctness, familyOracles: value.familyOracles }, null, 2) + "\n");
   writeFileSync(resolve(target, "G1-08-LOCALITY.json"), JSON.stringify({ ...root, locality: value.locality, machine: value.machine }, null, 2) + "\n");
-  writeFileSync(resolve(target, "G1-08-RUN-MANIFEST.json"), JSON.stringify({ ...root, sourceDelta: value.sourceDelta, lock: value.lock, materialization: value.materialization, evidenceInventory: REQUIRED, p34Claimed: false }, null, 2) + "\n");
+  const materialization = { ...value.materialization };
+  if (materialization.relation === "EVIDENCE_ONLY_DESCENDANT_PENDING") delete materialization.ref;
+  writeFileSync(resolve(target, "G1-08-RUN-MANIFEST.json"), JSON.stringify({ ...root, sourceDelta: value.sourceDelta, lock: value.lock, materialization, evidenceInventory: REQUIRED, p34Claimed: false }, null, 2) + "\n");
   writeFileSync(resolve(target, "G1-08-CTEST-ON.xml"), value.ctestOn.xml);
   writeFileSync(resolve(target, "G1-08-CTEST-OFF.xml"), value.ctestOff.xml);
   validateEvidenceInventory(target); return target;
