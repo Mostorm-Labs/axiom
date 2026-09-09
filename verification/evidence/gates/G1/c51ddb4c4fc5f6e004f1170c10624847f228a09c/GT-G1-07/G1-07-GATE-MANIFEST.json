@@ -1,0 +1,38 @@
+{
+  "taskId": "GT-G1-07",
+  "packageRef": "notion://3d64c57a-590c-810e-93d9-ff721caceb8a/GT-G1-07-P31-v0.2",
+  "repository": "Mostorm-Labs/axiom",
+  "taskAnchor": "8d3570c7c5df6f718b444b102b8b01042c2af3dd",
+  "sourceRef": "c51ddb4c4fc5f6e004f1170c10624847f228a09c",
+  "actualStartingRevision": "5da008c252162f9fe9677a1841bd9b63bbc20389",
+  "executionRef": "codex/gt-g1-07-p36-wire-trace-repair",
+  "ci": {
+    "workflowName": "GT-G1-07 Exact Source",
+    "workflowPath": ".github/workflows/g1-07-exact-source.yml",
+    "sourceRef": "c51ddb4c4fc5f6e004f1170c10624847f228a09c",
+    "checkoutSha": "c51ddb4c4fc5f6e004f1170c10624847f228a09c",
+    "event": "push",
+    "ref": "refs/heads/codex/gt-g1-07-p36-wire-trace-repair",
+    "runId": "34316167945",
+    "runAttempt": "1",
+    "hostedRunUrl": "https://github.com/Mostorm-Labs/axiom/actions/runs/34316167945",
+    "artifactName": "gt-g1-07-c51ddb4c4fc5f6e004f1170c10624847f228a09c"
+  },
+  "requiredEvidenceFiles": [
+    "G1-07-PLAN.json",
+    "G1-07-TRACE.json",
+    "G1-07-STEP.json",
+    "G1-07-SEEK.json",
+    "G1-07-OBSERVATION.json",
+    "G1-07-PROJECTION.json",
+    "G1-07-DETERMINISM.json",
+    "G1-07-NEGATIVE.json",
+    "G1-07-CLI.txt",
+    "G1-07-CTEST.txt",
+    "G1-07-DIFF.json",
+    "G1-07-GATE-MANIFEST.json"
+  ],
+  "evidenceStatus": "FACTS_BOUND",
+  "sourceToMaterialized": "EVIDENCE_ONLY_DESCENDANT",
+  "p34Claimed": false
+}
