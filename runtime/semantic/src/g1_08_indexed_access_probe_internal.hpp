@@ -6,7 +6,17 @@
 
 namespace canvas::semantic { class IndexedObjectStore; }
 
+namespace canvas::semantic { class StagedObjectView; class ObjectStore; }
+
 namespace canvas::semantic::internal {
+
+void noteStagedBase(const canvas::semantic::StagedObjectView& staged, const canvas::semantic::ObjectStore& store);
+void noteStagedCreate(const canvas::semantic::StagedObjectView& staged, const ObjectRecord& record);
+void noteStagedReplace(const canvas::semantic::StagedObjectView& staged, const ObjectRecord& record);
+void noteStagedDelete(const canvas::semantic::StagedObjectView& staged, const ObjectId& id);
+[[nodiscard]] bool stagedUsesIndexed(const canvas::semantic::StagedObjectView& staged);
+[[nodiscard]] std::vector<ObjectId> stagedConnectorsReferencing(
+    const canvas::semantic::StagedObjectView& staged, const ObjectId& target);
 
 struct IndexedAccessProbeSnapshot final {
     std::size_t all_objects_calls = 0;

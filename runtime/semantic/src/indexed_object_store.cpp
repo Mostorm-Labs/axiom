@@ -2,6 +2,8 @@
 
 #include "object_index.hpp"
 #include "object_store_mutator.hpp"
+#include "canvas/semantic/staged_object_view.hpp"
+#include "canvas/semantic/object_content.hpp"
 #include "g1_08_indexed_access_probe_internal.hpp"
 
 #include <map>
@@ -114,6 +116,66 @@ bool IndexedObjectStore::indexMatchesRebuildInternal() const {
 } // namespace canvas::semantic
 
 namespace canvas::semantic::internal {
+
+namespace {
+struct StagedLookupState {
+    const IndexedObjectStore* base = nullptr;
+    std::map<ObjectId, ObjectRecord> overlays;
+    std::set<ObjectId> deletes;
+};
+thread_local std::map<const StagedObjectView*, StagedLookupState> staged_states;
+}
+
+void noteStagedBase(const StagedObjectView& staged, const ObjectStore& store) {
+    auto& state = staged_states[&staged];
+    state.base = dynamic_cast<const IndexedObjectStore*>(&store);
+}
+
+void noteStagedCreate(const StagedObjectView& staged, const ObjectRecord& record) {
+    staged_states[&staged].overlays[record.id] = record;
+}
+
+void noteStagedReplace(const StagedObjectView& staged, const ObjectRecord& record) {
+    staged_states[&staged].overlays[record.id] = record;
+    staged_states[&staged].deletes.erase(record.id);
+}
+
+void noteStagedDelete(const StagedObjectView& staged, const ObjectId& id) {
+    staged_states[&staged].overlays.erase(id);
+    staged_states[&staged].deletes.insert(id);
+}
+
+namespace {
+bool references(const ObjectRecord& record, const ObjectId& target) {
+    if (record.kind != ObjectKind::kConnector || record.kind_version != 1U) return false;
+    const auto* content = std::get_if<ConnectorContent>(&record.content);
+    if (content == nullptr) return false;
+    for (const ConnectorEndpoint* endpoint : {&content->start, &content->end}) {
+        if (const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value);
+            attached != nullptr && attached->target_object_id == target) return true;
+    }
+    return false;
+}
+}
+
+bool stagedUsesIndexed(const StagedObjectView& staged) {
+    const auto it = staged_states.find(&staged);
+    return it != staged_states.end() && it->second.base != nullptr;
+}
+
+std::vector<ObjectId> stagedConnectorsReferencing(const StagedObjectView& staged,
+                                                  const ObjectId& target) {
+    const auto state_it = staged_states.find(&staged);
+    if (state_it == staged_states.end() || state_it->second.base == nullptr) return {};
+    const auto base_ids = ObjectStoreMutator::connectorsReferencing(*state_it->second.base, target);
+    std::set<ObjectId> ids(base_ids.begin(), base_ids.end());
+    for (const auto& [id, record] : state_it->second.overlays) {
+        ids.erase(id);
+        if (references(record, target)) ids.insert(id);
+    }
+    for (const auto& id : state_it->second.deletes) ids.erase(id);
+    return {ids.begin(), ids.end()};
+}
 
 bool ObjectStoreMutator::insertFresh(IndexedObjectStore& store, ObjectRecord record) {
     return store.insertFreshInternal(std::move(record));

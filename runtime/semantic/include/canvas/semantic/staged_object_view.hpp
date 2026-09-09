@@ -9,15 +9,6 @@
 
 namespace canvas::semantic {
 
-class StagedObjectView;
-namespace internal {
-[[nodiscard]] std::vector<ObjectId> connectorsReferencing(
-    const StagedObjectView& staged, const ObjectId& target);
-[[nodiscard]] std::map<ObjectId, std::vector<ObjectId>> referenceConnectorReverseRelation(
-    const StagedObjectView& staged);
-[[nodiscard]] bool usesIndexedConnectorLookup(const StagedObjectView& staged);
-}
-
 class StagedObjectView final {
   public:
     explicit StagedObjectView(const ObjectStore& base) : base_(base) {}
@@ -34,11 +25,6 @@ class StagedObjectView final {
     [[nodiscard]] bool stageDelete(const ObjectId& id);
 
   private:
-    friend std::vector<ObjectId> internal::connectorsReferencing(
-        const StagedObjectView&, const ObjectId&);
-    friend std::map<ObjectId, std::vector<ObjectId>>
-    internal::referenceConnectorReverseRelation(const StagedObjectView&);
-    friend bool internal::usesIndexedConnectorLookup(const StagedObjectView&);
     static bool childBefore(const ObjectRecord& left, const ObjectRecord& right);
 
     const ObjectStore& base_;
