@@ -21,6 +21,21 @@ endif()
 
 gtest_discover_tests(canvas_semantic_codec_test)
 
+add_executable(canvas_semantic_codec_operation_ingress_test codec_operation_ingress_test.cpp)
+target_link_libraries(canvas_semantic_codec_operation_ingress_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE protobuf::libprotobuf)
+  target_include_directories(canvas_semantic_codec_operation_ingress_test PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated)
+endif()
+if(MSVC)
+  target_compile_options(canvas_semantic_codec_operation_ingress_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_codec_operation_ingress_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_codec_operation_ingress_test TEST_PREFIX "codec_operation_ingress.")
+
 add_executable(canvas_semantic_g1_06_snapshot_test
   g1_06_snapshot_test.cpp
   ../tools/g1_06_projection.cpp)
@@ -50,6 +65,75 @@ else()
   target_compile_options(canvas_semantic_g1_06_snapshot_bootstrap_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_g1_06_snapshot_bootstrap_test TEST_PREFIX "g1_06_snapshot_bootstrap.")
+
+add_executable(canvas_semantic_g1_07_replay_inspector_test
+  g1_07_replay_inspector_test.cpp
+  ../tools/g1_07_replay_inspector.cpp
+  ../tools/g1_07_replay_corpus.cpp
+  ../tools/g1_06_projection.cpp
+  ../tools/g1_06_digest.cpp)
+target_link_libraries(canvas_semantic_g1_07_replay_inspector_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_link_libraries(canvas_semantic_g1_07_replay_inspector_test PRIVATE protobuf::libprotobuf)
+endif()
+target_include_directories(canvas_semantic_g1_07_replay_inspector_test PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src
+  ${CMAKE_CURRENT_SOURCE_DIR}/../tools
+  ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  target_include_directories(canvas_semantic_g1_07_replay_inspector_test PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated)
+endif()
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_07_replay_inspector_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_07_replay_inspector_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_07_replay_inspector_test TEST_PREFIX "g1_07_replay_inspector.")
+
+if(NOT TARGET canvas_semantic_g1_07_replay_inspector)
+  add_executable(canvas_semantic_g1_07_replay_inspector
+    ../tools/g1_07_replay_inspector_main.cpp
+    ../tools/g1_07_replay_inspector.cpp
+    ../tools/g1_07_replay_corpus.cpp
+    ../tools/g1_06_projection.cpp
+    ../tools/g1_06_digest.cpp)
+  target_link_libraries(canvas_semantic_g1_07_replay_inspector
+    PRIVATE canvas_runtime_semantic)
+  target_include_directories(canvas_semantic_g1_07_replay_inspector PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../tools
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+    ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+  if(MSVC)
+    target_compile_options(canvas_semantic_g1_07_replay_inspector PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(canvas_semantic_g1_07_replay_inspector PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+endif()
+
+add_executable(canvas_semantic_g1_07_replay_inspector_cli_test
+  g1_07_replay_inspector_cli_test.cpp
+  ../tools/g1_07_replay_inspector.cpp
+  ../tools/g1_07_replay_corpus.cpp
+  ../tools/g1_06_projection.cpp
+  ../tools/g1_06_digest.cpp)
+target_link_libraries(canvas_semantic_g1_07_replay_inspector_cli_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_include_directories(canvas_semantic_g1_07_replay_inspector_cli_test PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src
+  ${CMAKE_CURRENT_SOURCE_DIR}/../tools
+  ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+target_compile_definitions(canvas_semantic_g1_07_replay_inspector_cli_test PRIVATE
+  G1_07_REPLAY_INSPECTOR_BINARY_PATH="$<TARGET_FILE:canvas_semantic_g1_07_replay_inspector>")
+add_dependencies(canvas_semantic_g1_07_replay_inspector_cli_test
+  canvas_semantic_g1_07_replay_inspector)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_07_replay_inspector_cli_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_07_replay_inspector_cli_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_g1_07_replay_inspector_cli_test TEST_PREFIX "g1_07_replay_inspector_cli.")
 
 add_executable(canvas_semantic_normalization_test normalization_test.cpp)
 target_link_libraries(canvas_semantic_normalization_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
@@ -571,9 +655,6 @@ target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE 
 target_include_directories(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_fixture_decoder_test PRIVATE /EHsc)
-endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_fixture_decoder_test)
 
 add_executable(canvas_semantic_g1_04_c_projection_test
@@ -587,9 +668,6 @@ target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ../sr
 target_include_directories(canvas_semantic_g1_04_c_projection_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_projection_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_projection_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_projection_test PRIVATE /EHsc)
-endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_projection_test)
 
 add_executable(canvas_semantic_g1_06_projection_test
@@ -683,9 +761,6 @@ target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVAT
 target_include_directories(canvas_semantic_g1_04_c_observer_contract_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_observer_contract_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_observer_contract_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_observer_contract_test PRIVATE /EHsc)
-endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_observer_contract_test)
 
 add_executable(canvas_semantic_g1_04_c_observer_coverage_test
@@ -699,9 +774,6 @@ target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVAT
 target_include_directories(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_compile_definitions(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE G1_C_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 target_link_libraries(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_observer_coverage_test PRIVATE /EHsc)
-endif()
 gtest_discover_tests(canvas_semantic_g1_04_c_observer_coverage_test)
 
 add_executable(canvas_semantic_g1_04_c_observation_export
@@ -714,9 +786,6 @@ target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ..
 target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ../src)
 target_include_directories(canvas_semantic_g1_04_c_observation_export PRIVATE ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_link_libraries(canvas_semantic_g1_04_c_observation_export PRIVATE canvas_runtime_semantic)
-if(MSVC)
-  target_compile_options(canvas_semantic_g1_04_c_observation_export PRIVATE /EHsc)
-endif()
 
 add_test(
     NAME canvas_semantic_runtime_boundaries
@@ -752,12 +821,3 @@ else()
   target_compile_options(canvas_semantic_g1_06_integration_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_g1_06_integration_test TEST_PREFIX "g1_06_integration.")
-
-add_executable(canvas_semantic_codec_operation_ingress_test codec_operation_ingress_test.cpp)
-target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
-if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
-  target_include_directories(canvas_semantic_codec_operation_ingress_test PRIVATE
-    ${CMAKE_BINARY_DIR}/runtime/semantic/generated)
-  target_link_libraries(canvas_semantic_codec_operation_ingress_test PRIVATE protobuf::libprotobuf)
-endif()
-gtest_discover_tests(canvas_semantic_codec_operation_ingress_test)
