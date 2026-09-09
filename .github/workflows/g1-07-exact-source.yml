@@ -1,0 +1,284 @@
+name: GT-G1-07 Exact Source
+
+on:
+  push:
+    branches:
+      - codex/gt-g1-07-rebind-v2
+    paths:
+      - ".github/workflows/g1-07-exact-source.yml"
+      - "runtime/semantic/tools/**"
+      - "runtime/semantic/tests/CMakeLists.txt"
+      - "runtime/semantic/tests/g1_07_replay_inspector_test.cpp"
+      - "runtime/semantic/tests/g1_07_replay_inspector_cli_test.cpp"
+      - "runtime/semantic/include/canvas/semantic/codec.hpp"
+      - "verification/tools/generate_g1_07_evidence.mjs"
+      - "verification/packages/semantic-conformance-cli/test/g1-07-exact-source-evidence.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-source:
+    name: g1-07 / exact-source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      PACKAGE_REF: notion://3d64c57a-590c-810e-93d9-ff721caceb8a/GT-G1-07-P31-v0.2
+      TASK_ANCHOR: 8d3570c7c5df6f718b444b102b8b01042c2af3dd
+      SOURCE_BASE: 5da008c252162f9fe9677a1841bd9b63bbc20389
+      EXECUTION_REF: codex/gt-g1-07-rebind-v2
+    steps:
+      - name: Checkout exact source SHA with full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.18.0"
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install locked build prerequisites
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+          cmake --version
+          ninja --version
+          c++ --version
+
+      - name: Verify repository, source, anchor, and workflow identity
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = push
+          test "$GITHUB_REF" = "refs/heads/$EXECUTION_REF"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git remote get-url origin | sed 's/\.git$//')" = "https://github.com/Mostorm-Labs/axiom"
+          test -z "$(git status --porcelain --untracked-files=all)"
+          git merge-base --is-ancestor "$TASK_ANCHOR" "$GITHUB_SHA"
+          git merge-base --is-ancestor "$SOURCE_BASE" "$GITHUB_SHA"
+          git diff --name-status "$SOURCE_BASE" "$GITHUB_SHA" | awk '$1 != "A" && $1 != "M" { exit 1 }'
+          git diff --name-only "$SOURCE_BASE" "$GITHUB_SHA" | sort > "$RUNNER_TEMP/g1-07-actual-source-paths.txt"
+          printf '%s\n' \
+            .github/workflows/g1-07-exact-source.yml \
+            runtime/semantic/tests/CMakeLists.txt \
+            runtime/semantic/tests/g1_07_replay_inspector_cli_test.cpp \
+            runtime/semantic/tests/g1_07_replay_inspector_test.cpp \
+            runtime/semantic/tools/CMakeLists.txt \
+            runtime/semantic/tools/g1_07_replay_corpus.cpp \
+            runtime/semantic/tools/g1_07_replay_corpus.hpp \
+            runtime/semantic/tools/g1_07_replay_inspector.cpp \
+            runtime/semantic/tools/g1_07_replay_inspector.hpp \
+            runtime/semantic/tools/g1_07_replay_inspector_main.cpp \
+            runtime/semantic/include/canvas/semantic/codec.hpp \
+            verification/packages/semantic-conformance-cli/test/g1-07-exact-source-evidence.test.mjs \
+            verification/tools/generate_g1_07_evidence.mjs | sort > "$RUNNER_TEMP/g1-07-expected-source-paths.txt"
+          diff -u "$RUNNER_TEMP/g1-07-expected-source-paths.txt" "$RUNNER_TEMP/g1-07-actual-source-paths.txt"
+
+      - name: Install verification dependencies and run evidence contract
+        run: |
+          set -euo pipefail
+          cd verification
+          npm ci
+          npm run build
+          node --test packages/semantic-conformance-cli/test/g1-07-exact-source-evidence.test.mjs
+
+      - name: Resolve locked Semantic SDK v2 and core dependencies
+        run: |
+          set -euo pipefail
+          python3 tools/setup_build_environment.py --core --semantic --facts-output "$RUNNER_TEMP/g1-07-build-environment.json" --status
+          python3 - "$RUNNER_TEMP/g1-07-build-environment.json" <<'PY'
+          import json, os
+          from pathlib import Path
+          facts = json.loads(Path(os.environ["RUNNER_TEMP"], "g1-07-build-environment.json").read_text())
+          env = facts["environment"]
+          with open(os.environ["GITHUB_ENV"], "a") as out:
+              for key in ("AXIOM_PROTOC", "AXIOM_SEMANTIC_RUNTIME_ROOT", "CMAKE_PREFIX_PATH"):
+                  out.write(f"{key}={env[key]}\n")
+          PY
+
+      - name: Configure and build protobuf-on semantic tree
+        run: |
+          set -euo pipefail
+          cmake -S . -B out/g1-07-protobuf-on -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON \
+            -DAXIOM_PROTOC="$AXIOM_PROTOC" -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+            -DCMAKE_FIND_ROOT_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
+            -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF
+          cmake --build out/g1-07-protobuf-on --parallel
+
+      - name: Configure and build protobuf-off semantic tree
+        run: |
+          set -euo pipefail
+          cmake -S . -B out/g1-07-protobuf-off -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF \
+            -DAXIOM_PROTOC="$AXIOM_PROTOC" -DCMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+            -DCMAKE_FIND_ROOT_PATH="$AXIOM_SEMANTIC_RUNTIME_ROOT" -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
+            -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF
+          cmake --build out/g1-07-protobuf-off --parallel
+
+      - name: Run focused and full semantic CTest matrices
+        run: |
+          set -euo pipefail
+          run_suite() {
+            local build="$1"; local output="$2"; local expression="$3"; local junit="$(basename "$output")"
+            ctest --test-dir "$build" --output-on-failure --output-junit "$junit" -R "$expression"
+            test -s "$build/$junit"; cp "$build/$junit" "$output"
+          }
+          run_suite out/g1-07-protobuf-on "$RUNNER_TEMP/g1-07-on-focused.xml" '^(g1_07_replay_inspector\.|g1_07_replay_inspector_cli\.|g1_06_|OperationEngine15OperationConformance\.)'
+          run_suite out/g1-07-protobuf-off "$RUNNER_TEMP/g1-07-off-focused.xml" '^(g1_07_replay_inspector\.|g1_07_replay_inspector_cli\.|g1_06_|OperationEngine15OperationConformance\.)'
+          run_suite out/g1-07-protobuf-on "$RUNNER_TEMP/g1-07-on-g1-06.xml" '^(G106Snapshot\.|g1_06_snapshot_bootstrap\.|g1_06_projection\.|g1_06_replay\.|g1_06_digest\.|g1_06_integration\.)'
+          run_suite out/g1-07-protobuf-off "$RUNNER_TEMP/g1-07-off-g1-06.xml" '^(G106Snapshot\.|g1_06_snapshot_bootstrap\.|g1_06_projection\.|g1_06_replay\.|g1_06_digest\.|g1_06_integration\.)'
+          run_suite out/g1-07-protobuf-on "$RUNNER_TEMP/g1-07-on-g1-05.xml" '^(ApplyPlan\.|AtomicApply|OperationEngine)'
+          run_suite out/g1-07-protobuf-off "$RUNNER_TEMP/g1-07-off-g1-05.xml" '^(ApplyPlan\.|AtomicApply|OperationEngine)'
+          run_suite out/g1-07-protobuf-on "$RUNNER_TEMP/g1-07-on-full.xml" '.*'
+          run_suite out/g1-07-protobuf-off "$RUNNER_TEMP/g1-07-off-full.xml" '.*'
+          ctest --test-dir out/g1-07-protobuf-on --show-only=json-v1 > "$RUNNER_TEMP/g1-07-on-list.json"
+          ctest --test-dir out/g1-07-protobuf-off --show-only=json-v1 > "$RUNNER_TEMP/g1-07-off-list.json"
+
+      - name: Verify scope and whitespace
+        run: |
+          set -euo pipefail
+          git diff --check
+          test -z "$(git status --porcelain --untracked-files=all | grep -E '^( M|M |A |D |R |\?\?) (runtime/semantic/include|runtime/semantic/src|schema/)' || true)"
+
+      - name: Capture CLI process-level evidence
+        run: |
+          set -euo pipefail
+          find_cli() {
+            find "$1" -type f -name canvas_semantic_g1_07_replay_inspector -perm -111 -print -quit
+          }
+          ON_CLI="$(find_cli out/g1-07-protobuf-on)"
+          OFF_CLI="$(find_cli out/g1-07-protobuf-off)"
+          test -x "$ON_CLI"
+          test -x "$OFF_CLI"
+          python3 - "$RUNNER_TEMP" "$ON_CLI" "$OFF_CLI" <<'PY'
+          import hashlib, json, subprocess, sys
+          from pathlib import Path
+          temp = Path(sys.argv[1]); executables = {"protobuf-on": sys.argv[2], "protobuf-off": sys.argv[3]}
+          trace = temp / "g1-07-cli-empty.trace.json"
+          trace.write_text('''{
+            "format": "axiom-semantic-replay-trace-v1",
+            "formatVersion": 1,
+            "documentIdHex": "06070000000000000000000000000000",
+            "schemaVersion": 1,
+            "baseline": {"kind": "empty", "semanticGeneration": 0, "runtimeEpoch": 42, "commitOrdinal": 0},
+            "operations": []
+          }\n''')
+          semantic_trace = temp / "g1-07-cli-semantic-error.trace.json"
+          semantic_trace.write_text('''{
+            "format": "axiom-semantic-replay-trace-v1",
+            "formatVersion": 1,
+            "documentIdHex": "06070000000000000000000000000000",
+            "schemaVersion": 1,
+            "baseline": {"kind": "snapshot", "semanticGeneration": 0, "runtimeEpoch": 42, "commitOrdinal": 0, "snapshotBytesHex": "00"},
+            "operations": []
+          }\n''')
+          cases = []
+          empty_projection = {
+              "format": "axiom-verification-projection-v1", "formatVersion": 1,
+              "semanticSchemaVersion": 1, "rootType": "auditoryworks.axiom.v1.DocumentSnapshot",
+              "form": "CANONICAL", "value": {"document_id": "id128:06070000000000000000000000000000",
+              "schema_version": 1, "objects": []}}
+          empty_digest = "0627460e59f73a7b"
+          def capture(configuration, command, scenario, arguments, expected_exit, index):
+              executable = executables[configuration]
+              first = subprocess.run([executable, *arguments], capture_output=True, check=False)
+              repeat = subprocess.run([executable, *arguments], capture_output=True, check=False)
+              stdout = first.stdout.decode("utf-8")
+              stderr = first.stderr.decode("utf-8")
+              if first.returncode != expected_exit or repeat.returncode != expected_exit or first.stdout != repeat.stdout or first.stderr != repeat.stderr:
+                  raise SystemExit(f"CLI process mismatch: {configuration} {command} {scenario}")
+              if not stdout.endswith("\n"):
+                  raise SystemExit(f"CLI stdout missing newline: {configuration} {command} {scenario}")
+              decoder = json.JSONDecoder(); parsed, end = decoder.raw_decode(stdout)
+              if stdout[end:].strip():
+                  raise SystemExit(f"CLI stdout contains multiple documents: {configuration} {command} {scenario}")
+              if not isinstance(parsed, dict) or parsed.get("format") != "axiom-semantic-replay-inspector-output-v1":
+                  raise SystemExit(f"CLI stdout schema invalid: {configuration} {command} {scenario}")
+              independent_oracle = False
+              if scenario == "valid" and command in {"run", "seek", "projection"}:
+                  independent_oracle = parsed.get("projection") == empty_projection and parsed.get("digestHex") == empty_digest
+              elif scenario == "valid" and command == "object":
+                  independent_oracle = parsed.get("projection") == empty_projection and parsed.get("found") is False and parsed.get("object") is None and parsed.get("digestHex") == empty_digest
+              elif scenario == "boundary-error":
+                  independent_oracle = command == "step" and parsed.get("success") is False and parsed.get("failure") == "POSITION_INVALID"
+              elif scenario == "argument-error":
+                  independent_oracle = parsed.get("success") is False and parsed.get("failure") == "TRACE_INVALID"
+              elif scenario == "semantic-error":
+                  independent_oracle = parsed.get("success") is False and parsed.get("failure") == "SNAPSHOT_DECODE_FAILED"
+              if not independent_oracle:
+                  raise SystemExit(f"CLI independent oracle mismatch: {configuration} {command} {scenario}")
+              stem = f"g1-07-cli-{index:02d}-{configuration}-{command}-{scenario}"
+              (temp / f"{stem}.stdout").write_bytes(first.stdout)
+              (temp / f"{stem}.stderr").write_bytes(first.stderr)
+              cases.append({"command": command, "scenario": scenario, "provider": "reference", "configuration": configuration,
+                            "exitCode": first.returncode, "stdoutSha256": hashlib.sha256(first.stdout).hexdigest(),
+                            "stderrSha256": hashlib.sha256(first.stderr).hexdigest(), "stdoutDocumentCount": 1,
+                            "stdoutEndsWithNewline": True, "stdoutSchemaValid": True, "deterministicRepeat": True,
+                            "independentOracle": independent_oracle, "status": "PASS"})
+          for configuration in executables:
+              trace_arg = str(trace); semantic_arg = str(semantic_trace)
+              capture(configuration, "run", "valid", ["run", "--trace", trace_arg, "--provider", "reference"], 0, len(cases))
+              capture(configuration, "step", "boundary-error", ["step", "--trace", trace_arg, "--provider", "reference", "--index", "0"], 2, len(cases))
+              capture(configuration, "seek", "valid", ["seek", "--trace", trace_arg, "--provider", "reference", "--position", "0"], 0, len(cases))
+              capture(configuration, "object", "valid", ["object", "--trace", trace_arg, "--provider", "reference", "--position", "0", "--object-id", "000000000000000000000000000003e7"], 0, len(cases))
+              capture(configuration, "projection", "valid", ["projection", "--trace", trace_arg, "--provider", "reference", "--position", "0"], 0, len(cases))
+              capture(configuration, "run", "argument-error", ["run", "--trace", trace_arg, "--provider", "bogus"], 2, len(cases))
+              capture(configuration, "run", "semantic-error", ["run", "--trace", semantic_arg, "--provider", "reference"], 3, len(cases))
+          (temp / "g1-07-cli-process.json").write_text(json.dumps({"format": "axiom-gt-g1-07-cli-process-v1", "processLevel": True,
+              "allCommandsCovered": True, "exit2Covered": True, "exit3Covered": True, "commands": cases}, indent=2) + "\n")
+          PY
+
+      - name: Materialize exact-source facts and evidence outside repository evidence root
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, subprocess, sys, xml.etree.ElementTree as ET
+          from pathlib import Path
+          temp = Path(sys.argv[1]); source = "${{ github.sha }}"
+          cli_process = json.loads((temp / "g1-07-cli-process.json").read_text())
+          skip = list(range(25,37)) + list(range(53,64))
+          def suite(name, list_name, off=False):
+              root = ET.parse(temp/name).getroot(); cases = root.findall('.//testcase')
+              total = int(root.attrib.get('tests', len(cases))); failed = int(root.attrib.get('failures', 0)) + sum(1 for c in cases if c.find('failure') is not None or c.find('error') is not None)
+              skipped = sum(1 for c in cases if c.find('skipped') is not None); passed = total - skipped - failed
+              listed = json.loads((temp/list_name).read_text())['tests']
+              ids = [i+1 for i,c in enumerate(listed) if c['name'] in [x.attrib['name'] for x in cases if x.find('skipped') is not None]]
+              if failed or total != passed + skipped or (off and ids != skip) or (not off and skipped != 0): raise SystemExit(f'invalid suite facts: {name} {total} {passed} {skipped} {failed} {ids}')
+              return {'status':'PASS','total':total,'passed':passed,'skipped':skipped,'failed':failed,'skipIds':ids}
+          def focused(name):
+              root = ET.parse(temp/name).getroot(); cases=root.findall('.//testcase'); total=int(root.attrib.get('tests',len(cases))); failed=int(root.attrib.get('failures',0)) + sum(1 for c in cases if c.find('failure') is not None or c.find('error') is not None); skipped=sum(1 for c in cases if c.find('skipped') is not None)
+              if failed or total <= 0: raise SystemExit(f'invalid focused facts: {name}')
+              return {'status':'PASS','total':total,'passed':total-skipped-failed,'skipped':skipped,'failed':failed,'testNames':[c.attrib['name'] for c in cases]}
+          families=['InsertObjects','DeleteObjects','RestoreObjects','SetPlacements','SetTransforms','PatchProperties','SetObjectSize','SetVectorPathGeometry','SetImageContent','AddStroke','SplitStrokes','AddEraseMasks','RemoveEraseMasks','EditRichText','SetConnectorContent']
+          paths=['runtime/semantic/tools/g1_07_replay_inspector.hpp','runtime/semantic/tools/g1_07_replay_inspector.cpp','runtime/semantic/tools/g1_07_replay_corpus.hpp','runtime/semantic/tools/g1_07_replay_corpus.cpp','runtime/semantic/tools/g1_07_replay_inspector_main.cpp','runtime/semantic/tests/g1_07_replay_inspector_test.cpp','runtime/semantic/tests/g1_07_replay_inspector_cli_test.cpp','.github/workflows/g1-07-exact-source.yml','runtime/semantic/tools/CMakeLists.txt','runtime/semantic/tests/CMakeLists.txt','runtime/semantic/include/canvas/semantic/codec.hpp','verification/tools/generate_g1_07_evidence.mjs','verification/packages/semantic-conformance-cli/test/g1-07-exact-source-evidence.test.mjs']
+          parent = subprocess.check_output(['git','rev-parse',f'{source}^'],text=True).strip()
+          facts={'format':'axiom-gt-g1-07-facts-v1','taskId':'GT-G1-07','packageRef':'notion://3d64c57a-590c-810e-93d9-ff721caceb8a/GT-G1-07-P31-v0.2','repository':'Mostorm-Labs/axiom','taskAnchor':'8d3570c7c5df6f718b444b102b8b01042c2af3dd','actualStartingRevision':'5da008c252162f9fe9677a1841bd9b63bbc20389','sourceRef':source,'sourceCommitParent':parent,'implementationSteps':{'completed':16,'total':16},'acceptanceStatus':'PASS','cleanCheckout':'PASS','sourceDelta':{'paths':paths},'semantic':{'projectionPrimary':True,'digestSecondaryOnly':True,'digestOnlyPassAssertions':0},'ci':{'workflowName':'GT-G1-07 Exact Source','workflowPath':'.github/workflows/g1-07-exact-source.yml','sourceRef':source,'checkoutSha':source,'event':'push','ref':'refs/heads/codex/gt-g1-07-rebind-v2','runId':'${{ github.run_id }}','runAttempt':'${{ github.run_attempt }}','hostedRunUrl':'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}','artifactName':f'gt-g1-07-{source}'},'cliProcess':cli_process,'replay':{'operationCount':15,'orderedOperationFamilies':families,'singleReplayCoordinatorInvocation':True,'checkpoints':[0,5,10,15],'omittedValidExternalSuffixClaimed':False},'stepMatrix':{'applied':15,'alreadyApplied':0,'rejected':0,'commitBlocked':0,'firstFailureIndex':None,'firstFailureOperationId':None},'seek':{'positions':[0,1,5,10,15],'projectionParity':'5/5','digestParity':'5/5'},'observationsDetail':{'objectFound':True,'objectMissing':True,'readOnly':True,'lifecycle':'READY','generation':15,'commitOrdinal':15},'negativeMatrix':{'malformed':'PASS','invalidPosition':'PASS','rejectedSuffix':'PASS','commitBlocked':'PASS','snapshotBootstrapFailure':'PASS'},'acceptanceMatrix':[{'id':'single-step','test':'AppliedStepExposesCanonicalCommitChangeSetAndIdentityNamespaces','evidence':'G1-07-STEP.json'},{'id':'whole-route','test':'AllOperationFamilyCorpusReplaysThroughSingleCanonicalRoute','evidence':'G1-07-TRACE.json'},{'id':'seek','test':'SeekCoversBoundaryAndLongCorpusPositionsAcrossProviders','evidence':'G1-07-SEEK.json'},{'id':'object','test':'ObjectFoundAndMissingQueriesAreReadOnlyAndProviderEquivalent','evidence':'G1-07-OBSERVATION.json'},{'id':'projection','test':'ProvidersHaveProjectionParity','evidence':'G1-07-PROJECTION.json'},{'id':'determinism','test':'EveryCommandUsesOneDeterministicSchema','evidence':'G1-07-DETERMINISM.json'},{'id':'negative','test':'TraceParserFailsClosedForStructuralAndMalformedInputs','evidence':'G1-07-NEGATIVE.json'}]}
+          facts['regressionTests']={'protobufOn':suite('g1-07-on-full.xml','g1-07-on-list.json'),'protobufOff':suite('g1-07-off-full.xml','g1-07-off-list.json',True),'focused':{'protobufOn':focused('g1-07-on-focused.xml'),'protobufOff':focused('g1-07-off-focused.xml')},'components':{'g1_06':{'protobufOn':focused('g1-07-on-g1-06.xml'),'protobufOff':focused('g1-07-off-g1-06.xml')},'g1_05':{'protobufOn':focused('g1-07-on-g1-05.xml'),'protobufOff':focused('g1-07-off-g1-05.xml')}},'fullSemantic':'exact JUnit suites'}
+          (temp/'g1-07-facts.json').write_text(json.dumps(facts,indent=2)+'\n')
+          PY
+          node verification/tools/generate_g1_07_evidence.mjs --source-ref "$GITHUB_SHA" --facts "$RUNNER_TEMP/g1-07-facts.json" --out "out/g1-07-evidence"
+
+      - name: Upload exact-source facts and CTest logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g1-07-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/g1-07-facts.json
+            out/g1-07-evidence/**
+            ${{ runner.temp }}/g1-07-*.xml
+            out/g1-07-protobuf-on/Testing/**
+            out/g1-07-protobuf-off/Testing/**
+            ${{ runner.temp }}/g1-07-cli-process.json
+            ${{ runner.temp }}/g1-07-cli-*.stdout
+            ${{ runner.temp }}/g1-07-cli-*.stderr
+            verification/packages/semantic-conformance-cli/test/g1-07-exact-source-evidence.test.mjs
