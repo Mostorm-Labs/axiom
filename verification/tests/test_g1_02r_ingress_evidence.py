@@ -5,7 +5,7 @@ from verification.tools.generate_g1_02r_ingress_evidence import FILES, generate
 class IngressEvidenceTest(unittest.TestCase):
     def test_generates_exact_six_bound_files(self):
         with tempfile.TemporaryDirectory() as d:
-            out=generate(Path(d), "a"*40, "notion://3d44c57a-590c-81f6-a0d7-d8ae909a968c/GT-G1-02R-INGRESS-P31-v0.1")
+            out=generate(Path(d), "a"*40, "notion://3d44c57a-590c-81f6-a0d7-d8ae909a968c/GT-G1-02R-INGRESS-P31-v0.1", provider={"run_id":"r","attempt":1,"job_id":"j","artifact_identity":"a","exact_tested_source_sha":"a"*40})
             self.assertEqual(sorted(p.name for p in out.iterdir()), sorted(FILES))
             self.assertEqual(json.loads((out/"INGRESS-PLAN.json").read_text())["source_ref"], "a"*40)
 

@@ -19,7 +19,7 @@ def generate(root: Path, source_ref: str, package_ref: str, *, task_id="GT-G1-02
     if source_ref in {"305debc3c77241c00860ed8eac4d040f3e295a57", "1b370bd242ce19838889b28beb7b75979244cbab"}: raise ValueError("historical namespace reuse")
     rows = FAMILIES if family_rows is None else family_rows
     if sorted(rows) != sorted(FAMILIES) or len(rows) != len(FAMILIES): raise ValueError("missing family rows")
-    provider = {"run_id":"local-run", "attempt":1, "job_id":"local-job", "artifact_identity":"local-artifact", "exact_tested_source_sha":source_ref} if provider is None else provider
+    if provider is None: raise ValueError("provider fields required")
     if any(provider.get(k) in (None, "") for k in ("run_id","attempt","job_id","artifact_identity","exact_tested_source_sha")): raise ValueError("provider fields required")
     if provider["exact_tested_source_sha"] != source_ref: raise ValueError("provider source mismatch")
     if materialized_ref is not None and (len(materialized_ref) != 40 or materialized_ref == source_ref): raise ValueError("source/materialized provenance mismatch")
