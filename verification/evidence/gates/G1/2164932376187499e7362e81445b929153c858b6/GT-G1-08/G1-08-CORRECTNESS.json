@@ -1,0 +1,99 @@
+{
+  "format": "axiom-gt-g1-08-evidence-v1",
+  "taskId": "GT-G1-08",
+  "packageRef": "notion://3d64c57a-590c-81c9-91c6-ffbe140514d8/GT-G1-08-P36-v0.1",
+  "packageMaterializationRef": "d9ac63756b54a40286628afac39e394615bc602a",
+  "repository": "Mostorm-Labs/axiom",
+  "taskAnchor": "7a9828a78cfdd1e0c2926b80428cf90084d85530",
+  "executionRef": "codex/gt-g1-08-reference-differential-locality",
+  "sourceRef": "2164932376187499e7362e81445b929153c858b6",
+  "provider": {
+    "runId": "34380427797",
+    "attempt": "1",
+    "jobId": "102563641950",
+    "artifactIdentity": "gt-g1-08-2164932376187499e7362e81445b929153c858b6",
+    "sourceSha": "2164932376187499e7362e81445b929153c858b6",
+    "workflow": ".github/workflows/g1-08-exact-source.yml"
+  },
+  "correctness": {
+    "status": "PASS",
+    "verifier": "PASS"
+  },
+  "familyOracles": [
+    {
+      "family": "InsertObjects",
+      "ref": "g1-08-independent-InsertObjects",
+      "status": "PASS"
+    },
+    {
+      "family": "DeleteObjects",
+      "ref": "g1-08-independent-DeleteObjects",
+      "status": "PASS"
+    },
+    {
+      "family": "RestoreObjects",
+      "ref": "g1-08-independent-RestoreObjects",
+      "status": "PASS"
+    },
+    {
+      "family": "SetPlacements",
+      "ref": "g1-08-independent-SetPlacements",
+      "status": "PASS"
+    },
+    {
+      "family": "SetTransforms",
+      "ref": "g1-08-independent-SetTransforms",
+      "status": "PASS"
+    },
+    {
+      "family": "PatchProperties",
+      "ref": "g1-08-independent-PatchProperties",
+      "status": "PASS"
+    },
+    {
+      "family": "SetObjectSize",
+      "ref": "g1-08-independent-SetObjectSize",
+      "status": "PASS"
+    },
+    {
+      "family": "SetVectorPathGeometry",
+      "ref": "g1-08-independent-SetVectorPathGeometry",
+      "status": "PASS"
+    },
+    {
+      "family": "SetImageContent",
+      "ref": "g1-08-independent-SetImageContent",
+      "status": "PASS"
+    },
+    {
+      "family": "AddStroke",
+      "ref": "g1-08-independent-AddStroke",
+      "status": "PASS"
+    },
+    {
+      "family": "SplitStrokes",
+      "ref": "g1-08-independent-SplitStrokes",
+      "status": "PASS"
+    },
+    {
+      "family": "AddEraseMasks",
+      "ref": "g1-08-independent-AddEraseMasks",
+      "status": "PASS"
+    },
+    {
+      "family": "RemoveEraseMasks",
+      "ref": "g1-08-independent-RemoveEraseMasks",
+      "status": "PASS"
+    },
+    {
+      "family": "EditRichText",
+      "ref": "g1-08-independent-EditRichText",
+      "status": "PASS"
+    },
+    {
+      "family": "SetConnectorContent",
+      "ref": "g1-08-independent-SetConnectorContent",
+      "status": "PASS"
+    }
+  ]
+}
