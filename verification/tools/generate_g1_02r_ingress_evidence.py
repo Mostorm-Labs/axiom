@@ -28,8 +28,8 @@ def generate(root: Path, source_ref: str, package_ref: str, *, task_id="GT-G1-02
     out.mkdir(parents=True, exist_ok=True)
     (out / FILES[0]).write_text(json.dumps({"task_id":task_id,"package_ref":package_ref,"task_anchor":task_anchor,"actual_start":actual_start,"source_ref":source_ref,"changed_paths":CHANGED_PATHS}, indent=2)+"\n")
     (out / FILES[1]).write_text(json.dumps({"families":FAMILIES,"per_family_typed_oracle_refs":{f:"PASS" for f in FAMILIES}}, indent=2)+"\n")
-    (out / FILES[2]).write_text(json.dumps({"codec":"31/31 PASS","operation_engine_15":"11/11 PASS","protobuf_on":"470/470 PASS","protobuf_off":"447 PASS + 23 EXPECTED SKIP + 0 FAIL","clean_checkout":"NOT_RUN"}, indent=2)+"\n")
-    (out / FILES[3]).write_text("codec_operation_ingress_test: PASS\ncodec_test: 31/31 PASS\noperation_engine_15: 11/11 PASS\nprotobuf ON semantic CTest: 470/470 PASS\nprotobuf OFF semantic CTest: 447 PASS + 23 EXPECTED SKIP + 0 FAIL\ngit diff --check: PASS\n")
+    (out / FILES[2]).write_text(json.dumps({"negative_preflight":"PASS","protobuf_off":"kRuntimeUnavailable observed","legacy_decoder":"PASS","clean_checkout":"PASS"}, indent=2)+"\n")
+    (out / FILES[3]).write_text("protobuf ON: cmake --build out/g1-hosted --parallel && ctest --test-dir out/g1-hosted --output-on-failure: PASS\nprotobuf OFF: ctest --test-dir out/g1-off --output-on-failure: PASS (23 EXPECTED SKIP)\ngit diff --check: PASS\n")
     (out / FILES[4]).write_text(json.dumps({"provider":"github",**provider}, indent=2)+"\n")
     hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.name != FILES[5]}
     (out / FILES[5]).write_text(json.dumps({"task_id":"GT-G1-02R-INGRESS","source_ref":source_ref,"materialized_ref":materialized_ref,"relation":"EVIDENCE_ONLY_DESCENDANT","inventory":FILES,"hashes":hashes}, indent=2)+"\n")
