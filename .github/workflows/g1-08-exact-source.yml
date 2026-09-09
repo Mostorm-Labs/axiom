@@ -66,7 +66,7 @@ jobs:
           git merge-base --is-ancestor "$TASK_ANCHOR" "$GITHUB_SHA"
           git merge-base --is-ancestor "$SOURCE_BASE" "$GITHUB_SHA"
           git cat-file -e "$PACKAGE_MATERIALIZATION_REF^{commit}"
-          test "$(git show -s --format=%s "$PACKAGE_MATERIALIZATION_REF")" = "Materialize GT-G1-08 P36 repair package"
+          test "$(git show -s --format=%s "$PACKAGE_MATERIALIZATION_REF")" = "Materialize GT-G1-08 P36 v0.2 verification repair package"
           git diff --name-status "$SOURCE_BASE" "$GITHUB_SHA" | awk '$1 != "A" && $1 != "M" { exit 1 }'
           git diff --name-only "$SOURCE_BASE" "$GITHUB_SHA" | sort > "$RUNNER_TEMP/g1-08-actual-source-paths.txt"
           cat > "$RUNNER_TEMP/g1-08-expected-source-paths.txt" <<'EOF'
