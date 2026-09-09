@@ -6,7 +6,7 @@ FILES = ["INGRESS-PLAN.json", "INGRESS-MATRIX.json", "INGRESS-REGRESSION.json", 
 FAMILIES = ["InsertObjects","DeleteObjects","RestoreObjects","SetPlacements","SetTransforms","PatchProperties","SetObjectSize","SetVectorPathGeometry","SetImageContent","AddStroke","SplitStrokes","AddEraseMasks","RemoveEraseMasks","EditRichText","SetConnectorContent"]
 
 ANCHOR = "7d74d4544ca599fdf0294c80e4070290f57104db"
-CHANGED_PATHS = ["runtime/semantic/src/codec.cpp", "runtime/semantic/tests/CMakeLists.txt", "runtime/semantic/tests/codec_operation_ingress_test.cpp"]
+CHANGED_PATHS = ["runtime/semantic/src/codec.cpp", "runtime/semantic/tests/CMakeLists.txt", "runtime/semantic/tests/codec_operation_ingress_test.cpp", "verification/tools/generate_g1_02r_ingress_evidence.py", "verification/tests/test_g1_02r_ingress_evidence.py"]
 def generate(root: Path, source_ref: str, package_ref: str, *, task_id="GT-G1-02R-INGRESS", task_anchor=ANCHOR,
              actual_start="f10e3fd10927c4f612d676b4cca7ac9d589c191f", changed_paths=None,
              family_rows=None, provider=None, materialized_ref=None) -> Path:
