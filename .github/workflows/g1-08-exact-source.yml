@@ -3,7 +3,7 @@ name: GT-G1-08 Exact Source
 on:
   push:
     branches:
-      - codex/gt-g1-08-p36-r2-locality-workloads
+      - codex/gt-g1-08-p36-r3-cardinality
     paths:
       - ".github/workflows/g1-08-exact-source.yml"
       - "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp"
@@ -23,9 +23,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
-      EXECUTION_REF: codex/gt-g1-08-p36-r2-locality-workloads
+      EXECUTION_REF: codex/gt-g1-08-p36-r3-cardinality
       TASK_ANCHOR: 646c0a18446fd7af3a2390222cf5b40e4387de9e
-      SOURCE_BASE: 646c0a18446fd7af3a2390222cf5b40e4387de9e
+      SOURCE_BASE: 3a4d272dd6090d468741b0e5fc34dda752bfd285
       PACKAGE_REF: notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2
       PACKAGE_MATERIALIZATION_REF: f092d70bba2fa82eef79ba0c764b6c83cacf1b7a
 

@@ -5,7 +5,7 @@ export const TASK_ID = "GT-G1-08";
 export const PACKAGE_REF = "notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2";
 export const PACKAGE_MATERIALIZATION_REF = "f092d70bba2fa82eef79ba0c764b6c83cacf1b7a";
 export const TASK_ANCHOR = "646c0a18446fd7af3a2390222cf5b40e4387de9e";
-export const EXECUTION_REF = "codex/gt-g1-08-p36-r2-locality-workloads";
+export const EXECUTION_REF = "codex/gt-g1-08-p36-r3-cardinality";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
   "runtime/semantic/tests/g1_08_locality_test.cpp",
