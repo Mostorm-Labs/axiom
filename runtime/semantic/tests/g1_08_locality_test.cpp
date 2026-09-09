@@ -174,7 +174,7 @@ TEST(G108Locality, FrozenControlledCascadeScalesWithAffectedClosure) {
         EXPECT_STREQ(measured.workload, "W08-CONTROLLED-CASCADE");
         EXPECT_TRUE(measured.applied);
         EXPECT_EQ(measured.total_objects, 100000U);
-        EXPECT_EQ(measured.affected_objects, connectors + 1U);
+        EXPECT_EQ(measured.affected_objects, connectors);
         EXPECT_EQ(measured.access.all_objects_calls, 0U);
         EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
     }

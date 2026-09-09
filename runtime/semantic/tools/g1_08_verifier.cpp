@@ -7,6 +7,8 @@
 #include "canvas/semantic/applied_operation_ledger.hpp"
 #include "canvas/semantic/canonical_commit_clock.hpp"
 #include "canvas/semantic/operation_engine.hpp"
+#include <algorithm>
+#include <array>
 
 namespace canvas::verification::g1_08 {
 namespace {
@@ -33,14 +35,17 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
     }
     VerificationSummary result;
     result.correctness_pass = reference.allObjects() == indexed.allObjects();
-    const auto scale_one = runIndexedLocalityWorkload(1000U);
-    const auto scale_two = runIndexedLocalityWorkload(10000U);
-    const auto scale_three = runIndexedLocalityWorkload(100000U);
-    result.hierarchy = runHierarchyWorkload(100000U);
-    result.connector_delete = runConnectorDeleteWorkload(100000U);
-    result.controlled_cascade = runControlledCascadeWorkload(512U);
+    const std::array<std::size_t, 3> scales{1000U, 10000U, 100000U};
+    for (std::size_t i = 0U; i < scales.size(); ++i) {
+        result.local_mutation[i] = runIndexedLocalityWorkload(scales[i]);
+        result.hierarchy[i] = runHierarchyWorkload(scales[i]);
+        result.connector_delete[i] = runConnectorDeleteWorkload(scales[i]);
+    }
+    result.controlled_cascade = {runControlledCascadeWorkload(8U),
+                                 runControlledCascadeWorkload(64U),
+                                 runControlledCascadeWorkload(512U)};
     result.scales_checked = 3U;
-    result.locality = scale_three;
+    result.locality = result.local_mutation.back();
     const auto locality_ok = [](const LocalityWorkloadResult& workload) {
         return workload.applied &&
                workload.access.all_objects_calls == 0U &&
@@ -52,9 +57,10 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
                workload.access.all_objects_records_materialized == 0U &&
                workload.access.index_rebuild_check_calls == 0U;
     };
-    result.locality_pass = locality_ok(scale_one) && locality_ok(scale_two) &&
-                          locality_ok(scale_three) && apply_ok(result.hierarchy) &&
-                          apply_ok(result.connector_delete) && apply_ok(result.controlled_cascade);
+    result.locality_pass = std::all_of(result.local_mutation.begin(), result.local_mutation.end(), locality_ok) &&
+                          std::all_of(result.hierarchy.begin(), result.hierarchy.end(), apply_ok) &&
+                          std::all_of(result.connector_delete.begin(), result.connector_delete.end(), apply_ok) &&
+                          std::all_of(result.controlled_cascade.begin(), result.controlled_cascade.end(), apply_ok);
     canvas::semantic::AppliedOperationLedger ledger;
     canvas::semantic::SemanticGenerationState generation;
     canvas::semantic::CanonicalCommitClock clock(canvas::semantic::RuntimeEpoch(42U));

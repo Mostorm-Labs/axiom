@@ -3,6 +3,7 @@
 #include "g1_08_indexed_access_probe_internal.hpp"
 
 #include <cstddef>
+#include <array>
 
 
 namespace canvas::verification::g1_08 {
@@ -18,6 +19,6 @@ struct LocalityWorkloadResult final {
 [[nodiscard]] LocalityWorkloadResult runIndexedLocalityWorkload(std::size_t total_objects);
 [[nodiscard]] LocalityWorkloadResult runHierarchyWorkload(std::size_t total_objects);
 [[nodiscard]] LocalityWorkloadResult runConnectorDeleteWorkload(std::size_t total_objects);
-[[nodiscard]] LocalityWorkloadResult runControlledCascadeWorkload(std::size_t connector_count);
+[[nodiscard]] LocalityWorkloadResult runControlledCascadeWorkload(std::size_t affected_closure_size);
 
 } // namespace canvas::verification::g1_08
