@@ -2,22 +2,18 @@ import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 
 export const TASK_ID = "GT-G1-08";
-export const PACKAGE_REF = "notion://3d64c57a-590c-81c9-91c6-ffbe140514d8/GT-G1-08-P36-v0.1";
-export const PACKAGE_MATERIALIZATION_REF = "d9ac63756b54a40286628afac39e394615bc602a";
-export const TASK_ANCHOR = "7a9828a78cfdd1e0c2926b80428cf90084d85530";
-export const EXECUTION_REF = "codex/gt-g1-08-reference-differential-locality";
+export const PACKAGE_REF = "notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2";
+export const PACKAGE_MATERIALIZATION_REF = "f092d70bba2fa82eef79ba0c764b6c83cacf1b7a";
+export const TASK_ANCHOR = "646c0a18446fd7af3a2390222cf5b40e4387de9e";
+export const EXECUTION_REF = "codex/gt-g1-08-p36-r2-locality-workloads";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
-  "runtime/semantic/src/delete_closure.cpp",
-  "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp",
-  "runtime/semantic/src/indexed_object_store.cpp",
-  "runtime/semantic/src/object_index.cpp",
-  "runtime/semantic/src/object_index.hpp",
-  "runtime/semantic/src/object_store_mutator.hpp",
-  "runtime/semantic/src/staged_object_view.cpp",
   "runtime/semantic/tests/g1_08_locality_test.cpp",
+  "runtime/semantic/tools/g1_08_locality_workload.cpp",
+  "runtime/semantic/tools/g1_08_locality_workload.hpp",
   "runtime/semantic/tools/g1_08_verifier.cpp",
-  "verification/packages/semantic-conformance-cli/test/g1-08-exact-source-evidence.test.mjs",
+  "runtime/semantic/tools/g1_08_verifier.hpp",
+  "runtime/semantic/tools/g1_08_verifier_main.cpp",
   "verification/tools/generate_g1_08_evidence.mjs",
 ];
 export const REQUIRED = ["G1-08-CORRECTNESS.json", "G1-08-LOCALITY.json", "G1-08-CTEST-ON.xml", "G1-08-CTEST-OFF.xml", "G1-08-RUN-MANIFEST.json"];

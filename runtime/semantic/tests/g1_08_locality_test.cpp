@@ -128,7 +128,53 @@ TEST(G108Locality, T08L03AllRequiredScalesRemainScanFree) {
     for (const std::size_t total : {1000U, 10000U, 100000U}) {
         const auto measured = verification::g1_08::runIndexedLocalityWorkload(total);
         EXPECT_EQ(measured.total_objects, total);
-        EXPECT_EQ(measured.access.find_calls, 1U);
+        EXPECT_EQ(measured.access.find_calls, 8U);
+        EXPECT_EQ(measured.access.all_objects_calls, 0U);
+        EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
+    }
+}
+
+TEST(G108Locality, FrozenLocalMutationUsesOperationEngineAtAllScales) {
+    for (const std::size_t total : {1000U, 10000U, 100000U}) {
+        const auto measured = verification::g1_08::runIndexedLocalityWorkload(total);
+        EXPECT_STREQ(measured.workload, "W08-LOCAL-MUTATION");
+        EXPECT_TRUE(measured.applied);
+        EXPECT_EQ(measured.affected_objects, 8U);
+        EXPECT_EQ(measured.access.all_objects_calls, 0U);
+        EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
+        EXPECT_EQ(measured.access.index_rebuild_check_calls, 0U);
+    }
+}
+
+TEST(G108Locality, FrozenHierarchyUsesBoundedHotTopologyAtAllScales) {
+    for (const std::size_t total : {1000U, 10000U, 100000U}) {
+        const auto measured = verification::g1_08::runHierarchyWorkload(total);
+        EXPECT_STREQ(measured.workload, "W08-HIERARCHY");
+        EXPECT_TRUE(measured.applied);
+        EXPECT_EQ(measured.affected_objects, 8U);
+        EXPECT_EQ(measured.access.all_objects_calls, 0U);
+        EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
+    }
+}
+
+TEST(G108Locality, FrozenConnectorDeleteUsesBoundedReverseRelationAtAllScales) {
+    for (const std::size_t total : {1000U, 10000U, 100000U}) {
+        const auto measured = verification::g1_08::runConnectorDeleteWorkload(total);
+        EXPECT_STREQ(measured.workload, "W08-CONNECTOR-DELETE");
+        EXPECT_TRUE(measured.applied);
+        EXPECT_EQ(measured.affected_objects, 8U);
+        EXPECT_EQ(measured.access.all_objects_calls, 0U);
+        EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
+    }
+}
+
+TEST(G108Locality, FrozenControlledCascadeScalesWithAffectedClosure) {
+    for (const std::size_t connectors : {8U, 64U, 512U}) {
+        const auto measured = verification::g1_08::runControlledCascadeWorkload(connectors);
+        EXPECT_STREQ(measured.workload, "W08-CONTROLLED-CASCADE");
+        EXPECT_TRUE(measured.applied);
+        EXPECT_EQ(measured.total_objects, 100000U);
+        EXPECT_EQ(measured.affected_objects, connectors + 1U);
         EXPECT_EQ(measured.access.all_objects_calls, 0U);
         EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
     }

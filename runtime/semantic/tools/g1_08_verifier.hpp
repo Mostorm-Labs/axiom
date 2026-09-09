@@ -11,6 +11,9 @@ struct VerificationSummary final {
     bool locality_pass = false;
     std::size_t scales_checked = 0;
     LocalityWorkloadResult locality{};
+    LocalityWorkloadResult hierarchy{};
+    LocalityWorkloadResult connector_delete{};
+    LocalityWorkloadResult controlled_cascade{};
     bool delete_reverse_scan_observed = false;
 };
 

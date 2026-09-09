@@ -36,15 +36,25 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
     const auto scale_one = runIndexedLocalityWorkload(1000U);
     const auto scale_two = runIndexedLocalityWorkload(10000U);
     const auto scale_three = runIndexedLocalityWorkload(100000U);
+    result.hierarchy = runHierarchyWorkload(100000U);
+    result.connector_delete = runConnectorDeleteWorkload(100000U);
+    result.controlled_cascade = runControlledCascadeWorkload(512U);
     result.scales_checked = 3U;
     result.locality = scale_three;
     const auto locality_ok = [](const LocalityWorkloadResult& workload) {
-        return workload.access.find_calls == 1U &&
+        return workload.applied &&
                workload.access.all_objects_calls == 0U &&
-               workload.access.all_objects_records_materialized == 0U;
+               workload.access.all_objects_records_materialized == 0U &&
+               workload.access.index_rebuild_check_calls == 0U;
+    };
+    const auto apply_ok = [](const LocalityWorkloadResult& workload) {
+        return workload.applied && workload.access.all_objects_calls == 0U &&
+               workload.access.all_objects_records_materialized == 0U &&
+               workload.access.index_rebuild_check_calls == 0U;
     };
     result.locality_pass = locality_ok(scale_one) && locality_ok(scale_two) &&
-                          locality_ok(scale_three);
+                          locality_ok(scale_three) && apply_ok(result.hierarchy) &&
+                          apply_ok(result.connector_delete) && apply_ok(result.controlled_cascade);
     canvas::semantic::AppliedOperationLedger ledger;
     canvas::semantic::SemanticGenerationState generation;
     canvas::semantic::CanonicalCommitClock clock(canvas::semantic::RuntimeEpoch(42U));

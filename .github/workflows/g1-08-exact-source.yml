@@ -3,7 +3,7 @@ name: GT-G1-08 Exact Source
 on:
   push:
     branches:
-      - codex/gt-g1-08-reference-differential-locality
+      - codex/gt-g1-08-p36-r2-locality-workloads
     paths:
       - ".github/workflows/g1-08-exact-source.yml"
       - "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp"
@@ -23,11 +23,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
-      EXECUTION_REF: codex/gt-g1-08-reference-differential-locality
-      TASK_ANCHOR: 7a9828a78cfdd1e0c2926b80428cf90084d85530
-      SOURCE_BASE: 7a9828a78cfdd1e0c2926b80428cf90084d85530
-      PACKAGE_REF: notion://3d64c57a-590c-81c9-91c6-ffbe140514d8/GT-G1-08-P36-v0.1
-      PACKAGE_MATERIALIZATION_REF: d9ac63756b54a40286628afac39e394615bc602a
+      EXECUTION_REF: codex/gt-g1-08-p36-r2-locality-workloads
+      TASK_ANCHOR: 646c0a18446fd7af3a2390222cf5b40e4387de9e
+      SOURCE_BASE: 646c0a18446fd7af3a2390222cf5b40e4387de9e
+      PACKAGE_REF: notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2
+      PACKAGE_MATERIALIZATION_REF: f092d70bba2fa82eef79ba0c764b6c83cacf1b7a
 
     steps:
       - name: Checkout exact source SHA with full history
@@ -57,7 +57,7 @@ jobs:
       - name: Verify repository, source, anchor, package, and scope identity
         run: |
           set -euo pipefail
-          git fetch --no-tags origin refs/heads/aegis/gt-g1-08-p36-repair-v0.1
+          git fetch --no-tags origin refs/heads/aegis/gt-g1-08-p36-r2-verification-v0.2
           test "$GITHUB_EVENT_NAME" = push
           test "$GITHUB_REF" = "refs/heads/$EXECUTION_REF"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
@@ -71,16 +71,12 @@ jobs:
           git diff --name-only "$SOURCE_BASE" "$GITHUB_SHA" | sort > "$RUNNER_TEMP/g1-08-actual-source-paths.txt"
           cat > "$RUNNER_TEMP/g1-08-expected-source-paths.txt" <<'EOF'
           .github/workflows/g1-08-exact-source.yml
-          runtime/semantic/src/delete_closure.cpp
-          runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp
-          runtime/semantic/src/indexed_object_store.cpp
-          runtime/semantic/src/object_index.cpp
-          runtime/semantic/src/object_index.hpp
-          runtime/semantic/src/object_store_mutator.hpp
-          runtime/semantic/src/staged_object_view.cpp
           runtime/semantic/tests/g1_08_locality_test.cpp
+          runtime/semantic/tools/g1_08_locality_workload.cpp
+          runtime/semantic/tools/g1_08_locality_workload.hpp
           runtime/semantic/tools/g1_08_verifier.cpp
-          verification/packages/semantic-conformance-cli/test/g1-08-exact-source-evidence.test.mjs
+          runtime/semantic/tools/g1_08_verifier.hpp
+          runtime/semantic/tools/g1_08_verifier_main.cpp
           verification/tools/generate_g1_08_evidence.mjs
           EOF
           sed -i 's/^          //' "$RUNNER_TEMP/g1-08-expected-source-paths.txt"
@@ -147,7 +143,7 @@ jobs:
         run: |
           set -euo pipefail
           out/g1-08-protobuf-on/runtime/semantic/tools/canvas_semantic_g1_08_verifier | tee "$RUNNER_TEMP/g1-08-verifier.txt"
-          grep -Fx 'correctness=PASS locality=PASS scales=3 delete_reverse_scan=NOT_MEASURED' "$RUNNER_TEMP/g1-08-verifier.txt"
+          grep -Fx 'correctness=PASS locality=PASS scales=3 hierarchy=PASS connector_delete=PASS cascade=PASS delete_reverse_scan=NOT_MEASURED' "$RUNNER_TEMP/g1-08-verifier.txt"
 
       - name: Materialize provider-bound facts
         run: |
@@ -164,6 +160,10 @@ jobs:
               total = int(root.attrib.get('tests', len(cases)))
               return {"status":"PASS", "total":total, "passed":total-skipped-failed, "skipped":skipped, "failed":failed, "skipIds":[]}
           families = ["InsertObjects", "DeleteObjects", "RestoreObjects", "SetPlacements", "SetTransforms", "PatchProperties", "SetObjectSize", "SetVectorPathGeometry", "SetImageContent", "AddStroke", "SplitStrokes", "AddEraseMasks", "RemoveEraseMasks", "EditRichText", "SetConnectorContent"]
+          verifier = Path(temp, "g1-08-verifier.txt").read_text()
+          on_suite = suite(temp/"g1-08-on-full.xml")
+          off_suite = suite(temp/"g1-08-off-full.xml")
+          verifier_pass = "correctness=PASS locality=PASS" in verifier
           facts = {
             "format":"axiom-gt-g1-08-facts-v1", "taskId":"GT-G1-08", "packageRef":os.environ["PACKAGE_REF"],
             "packageMaterializationRef":os.environ["PACKAGE_MATERIALIZATION_REF"], "repository":"Mostorm-Labs/axiom",
@@ -173,10 +173,10 @@ jobs:
             "provider":{"runId":os.environ["GITHUB_RUN_ID"], "attempt":os.environ["GITHUB_RUN_ATTEMPT"], "jobId":os.environ["GITHUB_JOB"], "artifactIdentity":f"gt-g1-08-{source}", "sourceSha":source, "workflow":".github/workflows/g1-08-exact-source.yml"},
             "materialization":{"relation":"EVIDENCE_ONLY_DESCENDANT_PENDING", "sourceRef":source, "sourceChanges":False, "ref":"pending"},
             "lock":{"path":"semantic-sdk.lock.json", "blobSha":subprocess.check_output(["git", "rev-parse", f"{source}:semantic-sdk.lock.json"], text=True).strip(), "releaseSetId":"14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"},
-            "machine":{"negativePreflight":"PASS", "protobufOff":"PASS", "legacyDecoder":"PASS", "cleanCheckout":"PASS"},
-            "correctness":{"status":"PASS", "verifier":"PASS"}, "locality":{"status":"PASS", "verifier":"PASS", "deleteReverseScan":"NONE"},
-            "ctestOn":{"command":"ctest --test-dir out/g1-08-protobuf-on --output-on-failure -R '.*'", "result":suite(temp/"g1-08-on-full.xml"), "xml":Path(temp,"g1-08-on-full.xml").read_text()},
-            "ctestOff":{"command":"ctest --test-dir out/g1-08-protobuf-off --output-on-failure -R '.*'", "result":suite(temp/"g1-08-off-full.xml"), "xml":Path(temp,"g1-08-off-full.xml").read_text()},
+            "machine":{"negativePreflight":"PASS" if verifier_pass else "FAIL", "protobufOff":"PASS" if off_suite["failed"] == 0 else "FAIL", "legacyDecoder":"PASS" if verifier_pass else "FAIL", "cleanCheckout":"PASS" if not subprocess.check_output(["git", "status", "--porcelain"], text=True).strip() else "FAIL"},
+            "correctness":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL"}, "locality":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL", "deleteReverseScan":"NONE"},
+            "ctestOn":{"command":"ctest --test-dir out/g1-08-protobuf-on --output-on-failure -R '.*'", "result":on_suite, "xml":Path(temp,"g1-08-on-full.xml").read_text()},
+            "ctestOff":{"command":"ctest --test-dir out/g1-08-protobuf-off --output-on-failure -R '.*'", "result":off_suite, "xml":Path(temp,"g1-08-off-full.xml").read_text()},
             "familyOracles":[{"family":family,"ref":f"g1-08-independent-{family}","status":"PASS"} for family in families],
           }
           Path(temp, "g1-08-facts.json").write_text(json.dumps(facts, indent=2) + "\n")
