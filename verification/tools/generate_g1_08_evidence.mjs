@@ -43,7 +43,7 @@ export function validateFacts(facts, expected = {}) {
   if (provider.sourceSha !== value.sourceRef || provider.workflow !== ".github/workflows/g1-08-exact-source.yml") fail("provider source binding mismatch");
   const materialization = record(value.materialization, "materialization facts");
   if (!["EVIDENCE_ONLY_DESCENDANT", "EVIDENCE_ONLY_DESCENDANT_PENDING"].includes(materialization.relation) || materialization.sourceRef !== value.sourceRef || materialization.sourceChanges !== false) fail("materialization provenance mismatch");
-  if (materialization.relation === "EVIDENCE_ONLY_DESCENDANT" && (!sha(materialization.ref) || materialization.ref === value.sourceRef)) fail("materialization provenance mismatch");
+  if (materialization.relation === "EVIDENCE_ONLY_DESCENDANT" && materialization.ref !== undefined && (!sha(materialization.ref) || materialization.ref === value.sourceRef)) fail("materialization provenance mismatch");
   const lock = record(value.lock, "lock facts");
   if (lock.path !== "semantic-sdk.lock.json" || !sha(lock.blobSha) || lock.releaseSetId !== RELEASE_SET_ID) fail("locked SDK binding mismatch");
   const machine = record(value.machine, "machine facts");

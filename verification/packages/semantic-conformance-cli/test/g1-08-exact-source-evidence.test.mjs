@@ -39,6 +39,10 @@ test("rejects wrong materialization provenance and namespace reuse",()=>{
   assert.throws(()=>validateFacts(facts({materialization:{...facts().materialization,sourceChanges:true}}),{sourceRef:source}));
   assert.throws(()=>validateFacts(facts({materialization:{...facts().materialization,ref:source}}),{sourceRef:source}));
 });
+
+test("rejects a materialized ref that is not a full SHA",()=>{
+  assert.throws(()=>validateFacts(facts({materialization:{...facts().materialization,ref:"pending"}}),{sourceRef:source}));
+});
 test("rejects wrong path inventory and lock binding",()=>{
   assert.throws(()=>validateFacts(facts({sourceDelta:{paths:["runtime/semantic/src/replay.cpp"]}}),{sourceRef:source}));
   assert.throws(()=>validateFacts(facts({lock:{...facts().lock,releaseSetId:"wrong"}}),{sourceRef:source}));
