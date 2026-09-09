@@ -24,6 +24,7 @@ def generate(root: Path, source_ref: str, package_ref: str, *, task_id="GT-G1-02
     if provider["exact_tested_source_sha"] != source_ref: raise ValueError("provider source mismatch")
     if materialized_ref is not None and (len(materialized_ref) != 40 or materialized_ref == source_ref): raise ValueError("source/materialized provenance mismatch")
     if evidence_inventory is not None and sorted(evidence_inventory) != sorted(FILES): raise ValueError("wrong evidence inventory")
+    if family_rows is None or provider is None: raise ValueError("bound test inputs required")
     out = root / "verification" / "evidence" / "gates" / "G1" / source_ref / "GT-G1-02R-INGRESS"
     out.mkdir(parents=True, exist_ok=True)
     (out / FILES[0]).write_text(json.dumps({"task_id":task_id,"package_ref":package_ref,"task_anchor":task_anchor,"actual_start":actual_start,"source_ref":source_ref,"changed_paths":CHANGED_PATHS}, indent=2)+"\n")

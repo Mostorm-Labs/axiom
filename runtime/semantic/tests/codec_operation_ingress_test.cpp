@@ -53,6 +53,17 @@ TEST(CodecOperationIngress, DecodedOperationIsConsumableByOperationEngine) {
     EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
     EXPECT_EQ(objects.size(), 1U); EXPECT_EQ(generation.current(), SemanticGeneration(1));
 }
+
+TEST(CodecOperationIngress, PreservesConfiguredNestedValues) {
+    p::Operation w; wire(&w, 8); std::string b; ASSERT_TRUE(w.SerializeToString(&b));
+    const auto d = SemanticCodec::decodeProtobufOperation({b.begin(), b.end()});
+    ASSERT_EQ(d.error, SemanticError::kNone);
+    const auto& g = std::get<SetVectorPathGeometryOp>(d.operation.payload).geometry;
+    EXPECT_EQ(g.fill_rule, FillRule::kNonZero);
+    ASSERT_EQ(g.commands.size(), 1U);
+    const auto& point = std::get<MoveTo>(g.commands.front()).point;
+    EXPECT_DOUBLE_EQ(point.x, 1.0); EXPECT_DOUBLE_EQ(point.y, 2.0);
+}
 }
 
 #else
