@@ -16,6 +16,9 @@ struct VerificationSummary final {
     std::array<LocalityWorkloadResult, 3> hierarchy{};
     std::array<LocalityWorkloadResult, 3> connector_delete{};
     std::array<LocalityWorkloadResult, 3> controlled_cascade{};
+    bool local_mutation_access_shape_pass = false;
+    bool hierarchy_access_shape_pass = false;
+    bool cascade_access_shape_pass = false;
     bool delete_reverse_scan_observed = false;
 };
 

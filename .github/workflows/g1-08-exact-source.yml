@@ -3,7 +3,7 @@ name: GT-G1-08 Exact Source
 on:
   push:
     branches:
-      - codex/gt-g1-08-p36-r3-cardinality
+      - codex/gt-g1-08-p36-r4-access-shape
     paths:
       - ".github/workflows/g1-08-exact-source.yml"
       - "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp"
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
-      EXECUTION_REF: codex/gt-g1-08-p36-r3-cardinality
+      EXECUTION_REF: codex/gt-g1-08-p36-r4-access-shape
       TASK_ANCHOR: 646c0a18446fd7af3a2390222cf5b40e4387de9e
       SOURCE_BASE: 3a4d272dd6090d468741b0e5fc34dda752bfd285
       PACKAGE_REF: notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2
@@ -144,7 +144,7 @@ jobs:
         run: |
           set -euo pipefail
           out/g1-08-protobuf-on/runtime/semantic/tools/canvas_semantic_g1_08_verifier | tee "$RUNNER_TEMP/g1-08-verifier.txt"
-          grep -Fx 'correctness=PASS locality=PASS scales=3 hierarchy=PASS connector_delete=PASS cascade=PASS delete_reverse_scan=NOT_MEASURED' "$RUNNER_TEMP/g1-08-verifier.txt"
+          grep -Fx 'correctness=PASS locality=PASS scales=3 hierarchy=PASS connector_delete=PASS cascade=PASS access_shape_l01=PASS access_shape_l02=PASS access_shape_l04=PASS delete_reverse_scan=NOT_MEASURED' "$RUNNER_TEMP/g1-08-verifier.txt"
 
       - name: Materialize provider-bound facts
         run: |
@@ -164,7 +164,7 @@ jobs:
           verifier = Path(temp, "g1-08-verifier.txt").read_text()
           on_suite = suite(temp/"g1-08-on-full.xml")
           off_suite = suite(temp/"g1-08-off-full.xml")
-          verifier_pass = "correctness=PASS locality=PASS" in verifier
+          verifier_pass = "correctness=PASS locality=PASS" in verifier and "access_shape_l01=PASS access_shape_l02=PASS access_shape_l04=PASS" in verifier
           facts = {
             "format":"axiom-gt-g1-08-facts-v1", "taskId":"GT-G1-08", "packageRef":os.environ["PACKAGE_REF"],
             "packageMaterializationRef":os.environ["PACKAGE_MATERIALIZATION_REF"], "repository":"Mostorm-Labs/axiom",
@@ -175,7 +175,7 @@ jobs:
             "materialization":{"relation":"EVIDENCE_ONLY_DESCENDANT_PENDING", "sourceRef":source, "sourceChanges":False, "ref":"pending"},
             "lock":{"path":"semantic-sdk.lock.json", "blobSha":subprocess.check_output(["git", "rev-parse", f"{source}:semantic-sdk.lock.json"], text=True).strip(), "releaseSetId":"14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"},
             "machine":{"negativePreflight":"PASS" if verifier_pass else "FAIL", "protobufOff":"PASS" if off_suite["failed"] == 0 else "FAIL", "legacyDecoder":"PASS" if verifier_pass else "FAIL", "cleanCheckout":"PASS" if not subprocess.check_output(["git", "status", "--porcelain"], text=True).strip() else "FAIL"},
-            "correctness":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL"}, "locality":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL", "deleteReverseScan":"NONE"},
+            "correctness":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL"}, "locality":{"status":"PASS" if verifier_pass else "FAIL", "verifier":"PASS" if verifier_pass else "FAIL", "deleteReverseScan":"NONE", "accessShapeOracles":{"L01_scale_invariant":"PASS" if "access_shape_l01=PASS" in verifier else "FAIL", "L02_fixed_hot_topology_only":"PASS" if "access_shape_l02=PASS" in verifier else "FAIL", "L04_true_closure_only":"PASS" if "access_shape_l04=PASS" in verifier else "FAIL"}},
             "ctestOn":{"command":"ctest --test-dir out/g1-08-protobuf-on --output-on-failure -R '.*'", "result":on_suite, "xml":Path(temp,"g1-08-on-full.xml").read_text()},
             "ctestOff":{"command":"ctest --test-dir out/g1-08-protobuf-off --output-on-failure -R '.*'", "result":off_suite, "xml":Path(temp,"g1-08-off-full.xml").read_text()},
             "familyOracles":[{"family":family,"ref":f"g1-08-independent-{family}","status":"PASS"} for family in families],

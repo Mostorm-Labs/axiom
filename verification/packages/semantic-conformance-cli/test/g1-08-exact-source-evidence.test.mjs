@@ -19,7 +19,7 @@ const facts = (overrides = {}) => ({
   materialization:{relation:"EVIDENCE_ONLY_DESCENDANT",sourceRef:source,sourceChanges:false,ref:materialized},
   lock:{path:"semantic-sdk.lock.json",blobSha:"d".repeat(40),releaseSetId:"14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"},
   machine:{negativePreflight:"PASS",protobufOff:"PASS",legacyDecoder:"PASS",cleanCheckout:"PASS"},
-  correctness:{status:"PASS",verifier:"PASS"}, locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"NONE"},
+  correctness:{status:"PASS",verifier:"PASS"}, locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"NONE",accessShapeOracles:{L01_scale_invariant:"PASS",L02_fixed_hot_topology_only:"PASS",L04_true_closure_only:"PASS"}},
   ctestOn:{command:"ctest --test-dir out/g1-08-protobuf-on --output-on-failure",result:suite,xml},
   ctestOff:{command:"ctest --test-dir out/g1-08-protobuf-off --output-on-failure",result:suite,xml},
   familyOracles:Array.from({length:15},(_,i)=>({family:String(i),ref:`oracle-${i+1}`,status:"PASS"})), ...overrides,
@@ -50,5 +50,8 @@ test("rejects wrong path inventory and lock binding",()=>{
 });
 test("rejects locality PASS when delete reverse scan is observed",()=>{
   assert.throws(()=>validateFacts(facts({locality:{status:"PASS",verifier:"PASS",deleteReverseScan:"OBSERVED"}}),{sourceRef:source}));
+});
+test("rejects locality PASS when an access-shape oracle is missing",()=>{
+  assert.throws(() => validateFacts(facts({locality: {...facts().locality, accessShapeOracles: {L01_scale_invariant: "PASS", L02_fixed_hot_topology_only: "PASS", L04_true_closure_only: "FAIL"}}}), {sourceRef: source}));
 });
 test("declares exact blocking inventory",()=>{assert.equal(REQUIRED.length,5);assert.equal(new Set(REQUIRED).size,5);});

@@ -6,7 +6,7 @@ export const PACKAGE_REF = "notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-
 export const PACKAGE_MATERIALIZATION_REF = "f092d70bba2fa82eef79ba0c764b6c83cacf1b7a";
 export const TASK_ANCHOR = "646c0a18446fd7af3a2390222cf5b40e4387de9e";
 export const RESUME_SOURCE = "3a4d272dd6090d468741b0e5fc34dda752bfd285";
-export const EXECUTION_REF = "codex/gt-g1-08-p36-r3-cardinality";
+export const EXECUTION_REF = "codex/gt-g1-08-p36-r4-access-shape";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
   "runtime/semantic/tests/g1_08_locality_test.cpp",
@@ -46,6 +46,8 @@ export function validateFacts(facts, expected = {}) {
   for (const key of ["negativePreflight", "protobufOff", "legacyDecoder", "cleanCheckout"]) if (machine[key] !== "PASS") fail(`machine fact ${key} missing`);
   for (const key of ["correctness", "locality"]) if (record(value[key], `${key} facts`).status !== "PASS") fail(`${key} facts did not pass`);
   if (value.locality.deleteReverseScan === "OBSERVED") fail("locality facts report an observed full-store reverse scan");
+  const accessShape = record(value.locality.accessShapeOracles, "access shape oracles");
+  for (const key of ["L01_scale_invariant", "L02_fixed_hot_topology_only", "L04_true_closure_only"]) if (accessShape[key] !== "PASS") fail(`access shape oracle ${key} missing`);
   for (const key of ["ctestOn", "ctestOff"]) { const item = record(value[key], key); nonEmpty(item.command, `${key}.command`); suite(item.result, `${key}.result`); nonEmpty(item.xml, `${key}.xml`); }
   if (!Array.isArray(value.familyOracles) || value.familyOracles.length !== 15 || value.familyOracles.some(item => !item || typeof item.ref !== "string" || item.status !== "PASS")) fail("family oracle inventory incomplete");
   return value;
@@ -59,7 +61,7 @@ export function generateEvidence({ sourceRef, facts, out, repositoryRoot = proce
   const value = validateFacts(facts, { sourceRef }); const target = assertSafeOutputDirectory(out, repositoryRoot); mkdirSync(target, { recursive: true });
   const root = { format: "axiom-gt-g1-08-evidence-v1", taskId: TASK_ID, packageRef: PACKAGE_REF, packageMaterializationRef: PACKAGE_MATERIALIZATION_REF, repository: "Mostorm-Labs/axiom", taskAnchor: TASK_ANCHOR, executionRef: EXECUTION_REF, sourceRef, provider: value.provider };
   writeFileSync(resolve(target, "G1-08-CORRECTNESS.json"), JSON.stringify({ ...root, correctness: value.correctness, familyOracles: value.familyOracles }, null, 2) + "\n");
-  writeFileSync(resolve(target, "G1-08-LOCALITY.json"), JSON.stringify({ ...root, locality: value.locality, machine: value.machine }, null, 2) + "\n");
+  writeFileSync(resolve(target, "G1-08-LOCALITY.json"), JSON.stringify({ ...root, locality: value.locality, accessShapeOracles: { L01_scale_invariant: value.locality.accessShapeOracles?.L01_scale_invariant ?? "PASS", L02_fixed_hot_topology_only: value.locality.accessShapeOracles?.L02_fixed_hot_topology_only ?? "PASS", L04_true_closure_only: value.locality.accessShapeOracles?.L04_true_closure_only ?? "PASS" }, machine: value.machine }, null, 2) + "\n");
   const materialization = { ...value.materialization };
   if (materialization.relation === "EVIDENCE_ONLY_DESCENDANT_PENDING") delete materialization.ref;
   writeFileSync(resolve(target, "G1-08-RUN-MANIFEST.json"), JSON.stringify({ ...root, sourceDelta: value.sourceDelta, lock: value.lock, materialization, evidenceInventory: REQUIRED, p34Claimed: false }, null, 2) + "\n");

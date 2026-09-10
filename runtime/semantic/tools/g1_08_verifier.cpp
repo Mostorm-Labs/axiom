@@ -46,6 +46,25 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
                                  runControlledCascadeWorkload(512U)};
     result.scales_checked = 3U;
     result.locality = result.local_mutation.back();
+    const auto sameShape = [](const auto& left, const auto& right) {
+        return left.access.find_calls == right.access.find_calls &&
+               left.access.contains_calls == right.access.contains_calls &&
+               left.access.children_calls == right.access.children_calls &&
+               left.access.children_records_materialized == right.access.children_records_materialized &&
+               left.access.insert_fresh_calls == right.access.insert_fresh_calls &&
+               left.access.replace_existing_calls == right.access.replace_existing_calls &&
+               left.access.erase_existing_calls == right.access.erase_existing_calls &&
+               left.access.index_rebuild_check_calls == right.access.index_rebuild_check_calls;
+    };
+    result.local_mutation_access_shape_pass = sameShape(result.local_mutation.front(), result.local_mutation.back());
+    result.hierarchy_access_shape_pass = sameShape(result.hierarchy.front(), result.hierarchy.back());
+    result.cascade_access_shape_pass =
+        result.controlled_cascade[0].access.erase_existing_calls < result.controlled_cascade[1].access.erase_existing_calls &&
+        result.controlled_cascade[1].access.erase_existing_calls < result.controlled_cascade[2].access.erase_existing_calls &&
+        result.controlled_cascade[0].access.all_objects_calls == result.controlled_cascade[1].access.all_objects_calls &&
+        result.controlled_cascade[1].access.all_objects_calls == result.controlled_cascade[2].access.all_objects_calls &&
+        result.controlled_cascade[0].access.all_objects_records_materialized == result.controlled_cascade[1].access.all_objects_records_materialized &&
+        result.controlled_cascade[1].access.all_objects_records_materialized == result.controlled_cascade[2].access.all_objects_records_materialized;
     const auto locality_ok = [](const LocalityWorkloadResult& workload) {
         return workload.applied &&
                workload.access.all_objects_calls == 0U &&
@@ -57,7 +76,10 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
                workload.access.all_objects_records_materialized == 0U &&
                workload.access.index_rebuild_check_calls == 0U;
     };
-    result.locality_pass = std::all_of(result.local_mutation.begin(), result.local_mutation.end(), locality_ok) &&
+    result.locality_pass = result.local_mutation_access_shape_pass &&
+                          result.hierarchy_access_shape_pass &&
+                          result.cascade_access_shape_pass &&
+                          std::all_of(result.local_mutation.begin(), result.local_mutation.end(), locality_ok) &&
                           std::all_of(result.hierarchy.begin(), result.hierarchy.end(), apply_ok) &&
                           std::all_of(result.connector_delete.begin(), result.connector_delete.end(), apply_ok) &&
                           std::all_of(result.controlled_cascade.begin(), result.controlled_cascade.end(), apply_ok);

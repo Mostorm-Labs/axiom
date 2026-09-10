@@ -146,6 +146,17 @@ TEST(G108Locality, FrozenLocalMutationUsesOperationEngineAtAllScales) {
     }
 }
 
+TEST(G108Locality, AccessShapeForLocalMutationIsScaleInvariant) {
+    const auto small = verification::g1_08::runIndexedLocalityWorkload(1000U).access;
+    const auto large = verification::g1_08::runIndexedLocalityWorkload(100000U).access;
+    EXPECT_EQ(small.find_calls, large.find_calls);
+    EXPECT_EQ(small.contains_calls, large.contains_calls);
+    EXPECT_EQ(small.children_calls, large.children_calls);
+    EXPECT_EQ(small.insert_fresh_calls, large.insert_fresh_calls);
+    EXPECT_EQ(small.replace_existing_calls, large.replace_existing_calls);
+    EXPECT_EQ(small.erase_existing_calls, large.erase_existing_calls);
+}
+
 TEST(G108Locality, FrozenHierarchyUsesBoundedHotTopologyAtAllScales) {
     for (const std::size_t total : {1000U, 10000U, 100000U}) {
         const auto measured = verification::g1_08::runHierarchyWorkload(total);
@@ -155,6 +166,17 @@ TEST(G108Locality, FrozenHierarchyUsesBoundedHotTopologyAtAllScales) {
         EXPECT_EQ(measured.access.all_objects_calls, 0U);
         EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
     }
+}
+
+TEST(G108Locality, AccessShapeForHierarchyIsIndependentOfColdPopulation) {
+    const auto small = verification::g1_08::runHierarchyWorkload(1000U).access;
+    const auto large = verification::g1_08::runHierarchyWorkload(100000U).access;
+    EXPECT_EQ(small.find_calls, large.find_calls);
+    EXPECT_EQ(small.contains_calls, large.contains_calls);
+    EXPECT_EQ(small.children_calls, large.children_calls);
+    EXPECT_EQ(small.insert_fresh_calls, large.insert_fresh_calls);
+    EXPECT_EQ(small.replace_existing_calls, large.replace_existing_calls);
+    EXPECT_EQ(small.erase_existing_calls, large.erase_existing_calls);
 }
 
 TEST(G108Locality, FrozenConnectorDeleteUsesBoundedReverseRelationAtAllScales) {
@@ -178,6 +200,18 @@ TEST(G108Locality, FrozenControlledCascadeScalesWithAffectedClosure) {
         EXPECT_EQ(measured.access.all_objects_calls, 0U);
         EXPECT_EQ(measured.access.all_objects_records_materialized, 0U);
     }
+}
+
+TEST(G108Locality, AccessShapeForCascadeTracksTrueClosure) {
+    const auto closure8 = verification::g1_08::runControlledCascadeWorkload(8U).access;
+    const auto closure64 = verification::g1_08::runControlledCascadeWorkload(64U).access;
+    const auto closure512 = verification::g1_08::runControlledCascadeWorkload(512U).access;
+    EXPECT_LT(closure8.erase_existing_calls, closure64.erase_existing_calls);
+    EXPECT_LT(closure64.erase_existing_calls, closure512.erase_existing_calls);
+    EXPECT_EQ(closure8.all_objects_calls, closure64.all_objects_calls);
+    EXPECT_EQ(closure64.all_objects_calls, closure512.all_objects_calls);
+    EXPECT_EQ(closure8.all_objects_records_materialized, closure64.all_objects_records_materialized);
+    EXPECT_EQ(closure64.all_objects_records_materialized, closure512.all_objects_records_materialized);
 }
 
 TEST(G108Locality, T08L04ControlledCascadesUseOnlyAffectedClosure) {
