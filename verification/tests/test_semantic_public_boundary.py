@@ -19,6 +19,15 @@ class SemanticPublicBoundaryTest(unittest.TestCase):
         for header in PUBLIC_HEADERS.glob("*.hpp"):
             self.assertNotIn("SemanticRevision", header.read_text(encoding="utf-8"))
 
+    def test_semantic_read_view_is_a_supported_public_contract(self):
+        header = PUBLIC_HEADERS / "semantic_read_view.hpp"
+        self.assertTrue(header.is_file(), "SemanticReadView public header is required")
+        text = header.read_text(encoding="utf-8")
+        self.assertIn("SemanticReadView", text)
+        self.assertIn("SemanticGeneration", text)
+        self.assertNotIn("ObjectStoreMutator", text)
+        self.assertNotIn("OperationEngine", text)
+
     def test_public_semantic_headers_do_not_leak_derived_or_platform_layers(self):
         forbidden = ("RuntimeScene", "Skia", "Arc", "jni.h", "UIKit", "windows.h", "emscripten/")
         for header in PUBLIC_HEADERS.glob("*.hpp"):

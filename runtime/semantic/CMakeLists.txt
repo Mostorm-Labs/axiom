@@ -102,5 +102,20 @@ if(CANVAS_BUILD_SEMANTIC AND BUILD_TESTING)
   set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
   add_subdirectory(${PROJECT_SOURCE_DIR}/.deps/googletest
                    ${CMAKE_BINARY_DIR}/_deps/googletest EXCLUDE_FROM_ALL)
+
+  add_executable(canvas_semantic_read_view_contract_test
+    tests/semantic_read_view_contract_test.cpp)
+  target_link_libraries(canvas_semantic_read_view_contract_test
+    PRIVATE canvas_runtime_semantic GTest::gtest_main)
+  if(MSVC)
+    target_compile_options(canvas_semantic_read_view_contract_test
+      PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(canvas_semantic_read_view_contract_test
+      PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME canvas_semantic_read_view_contract_test
+           COMMAND canvas_semantic_read_view_contract_test)
+
   add_subdirectory(tests)
 endif()

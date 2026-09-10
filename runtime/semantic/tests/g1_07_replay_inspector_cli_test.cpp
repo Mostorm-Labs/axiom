@@ -30,6 +30,9 @@ struct ProcessResult final {
 };
 
 std::string quoteForShell(const std::string& value) {
+#if defined(_WIN32)
+    return "\"" + value + "\"";
+#else
     std::string quoted{"'"};
     for (const char character : value) {
         if (character == '\'') quoted += "'\\''";
@@ -37,6 +40,7 @@ std::string quoteForShell(const std::string& value) {
     }
     quoted += '\'';
     return quoted;
+#endif
 }
 
 std::string readFile(const std::filesystem::path& path) {
@@ -88,6 +92,9 @@ class CliFixture final {
         for (const auto& argument : arguments) command += " " + quoteForShell(argument);
         command += " >" + quoteForShell(stdout_path.string()) +
                    " 2>" + quoteForShell(stderr_path.string());
+#if defined(_WIN32)
+        command = "\"" + command + "\"";
+#endif
         const int status = std::system(command.c_str());
         ProcessResult result;
         result.exit_code = normalizedExitCode(status);
