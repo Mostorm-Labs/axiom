@@ -78,6 +78,7 @@ jobs:
           runtime/semantic/tools/g1_08_verifier.hpp
           runtime/semantic/tools/g1_08_verifier_main.cpp
           verification/tools/generate_g1_08_evidence.mjs
+          verification/packages/semantic-conformance-cli/test/g1-08-exact-source-evidence.test.mjs
           EOF
           sed -i 's/^          //' "$RUNNER_TEMP/g1-08-expected-source-paths.txt"
           sort -o "$RUNNER_TEMP/g1-08-expected-source-paths.txt" "$RUNNER_TEMP/g1-08-expected-source-paths.txt"

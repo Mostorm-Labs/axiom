@@ -16,6 +16,7 @@ export const SOURCE_PATHS = [
   "runtime/semantic/tools/g1_08_verifier.hpp",
   "runtime/semantic/tools/g1_08_verifier_main.cpp",
   "verification/tools/generate_g1_08_evidence.mjs",
+  "verification/packages/semantic-conformance-cli/test/g1-08-exact-source-evidence.test.mjs",
 ];
 export const REQUIRED = ["G1-08-CORRECTNESS.json", "G1-08-LOCALITY.json", "G1-08-CTEST-ON.xml", "G1-08-CTEST-OFF.xml", "G1-08-RUN-MANIFEST.json"];
 const RELEASE_SET_ID = "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea";
