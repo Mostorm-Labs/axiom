@@ -1,5 +1,9 @@
 #include "canvas/semantic/staged_object_view.hpp"
 
+#include "canvas/semantic/indexed_object_store.hpp"
+#include "canvas/semantic/object_content.hpp"
+#include "g1_08_indexed_access_probe_internal.hpp"
+
 #include <algorithm>
 
 namespace canvas::semantic {
@@ -9,6 +13,7 @@ bool StagedObjectView::contains(const ObjectId& id) const noexcept {
 }
 
 const ObjectRecord* StagedObjectView::find(const ObjectId& id) const noexcept {
+    internal::noteStagedBase(*this, base_);
     if (deletes_.contains(id)) return nullptr;
     if (const auto it = replacements_.find(id); it != replacements_.end()) return &it->second;
     if (const auto it = creates_.find(id); it != creates_.end()) return &it->second;
@@ -53,6 +58,7 @@ bool StagedObjectView::childBefore(const ObjectRecord& left, const ObjectRecord&
 
 std::vector<ObjectRecord> StagedObjectView::children(
     const std::optional<ObjectId>& parent_id) const {
+    internal::noteStagedBase(*this, base_);
     std::vector<ObjectRecord> result = base_.children(parent_id);
     result.erase(std::remove_if(result.begin(), result.end(), [&](const ObjectRecord& record) {
                      return deletes_.contains(record.id) ||
@@ -85,6 +91,7 @@ bool StagedObjectView::stageCreate(ObjectRecord record) {
         replacements_.contains(record.id)) {
         return false;
     }
+    internal::noteStagedCreate(*this, record);
     creates_.emplace(record.id, std::move(record));
     return true;
 }
@@ -92,9 +99,11 @@ bool StagedObjectView::stageCreate(ObjectRecord record) {
 bool StagedObjectView::stageReplace(ObjectRecord record) {
     if (deletes_.contains(record.id) || !contains(record.id)) return false;
     if (creates_.contains(record.id)) {
+        internal::noteStagedReplace(*this, record);
         creates_[record.id] = std::move(record);
         return true;
     }
+    internal::noteStagedReplace(*this, record);
     replacements_[record.id] = std::move(record);
     return true;
 }
@@ -103,6 +112,7 @@ bool StagedObjectView::stageDelete(const ObjectId& id) {
     if (!contains(id)) return false;
     creates_.erase(id);
     replacements_.erase(id);
+    internal::noteStagedDelete(*this, id);
     deletes_.insert(id);
     return true;
 }

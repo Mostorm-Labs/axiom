@@ -23,3 +23,17 @@ if(MSVC)
 else()
   target_compile_options(canvas_semantic_g1_07_replay_inspector PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
+
+add_executable(canvas_semantic_g1_08_verifier
+  g1_08_verifier_main.cpp
+  g1_08_verifier.cpp
+  g1_08_locality_workload.cpp)
+target_link_libraries(canvas_semantic_g1_08_verifier PRIVATE canvas_runtime_semantic)
+target_include_directories(canvas_semantic_g1_08_verifier PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+if(MSVC)
+  target_compile_options(canvas_semantic_g1_08_verifier PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_g1_08_verifier PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()

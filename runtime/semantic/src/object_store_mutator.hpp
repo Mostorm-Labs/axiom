@@ -20,6 +20,8 @@ class ObjectStoreMutator final {
     [[nodiscard]] static bool replaceExisting(IndexedObjectStore& store, ObjectRecord record);
     [[nodiscard]] static bool eraseExisting(IndexedObjectStore& store, const ObjectId& id);
     [[nodiscard]] static bool indexMatchesRebuild(const IndexedObjectStore& store);
+    [[nodiscard]] static std::vector<ObjectId> connectorsReferencing(
+        const IndexedObjectStore& store, const ObjectId& target);
 };
 
 } // namespace canvas::semantic::internal

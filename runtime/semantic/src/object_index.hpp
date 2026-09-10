@@ -19,6 +19,7 @@ class ObjectIndex final {
 
     [[nodiscard]] std::vector<ObjectId> children(
         const std::optional<ObjectId>& parent_id) const;
+    [[nodiscard]] std::vector<ObjectId> connectorsReferencing(const ObjectId& target) const;
     [[nodiscard]] bool equals(const ObjectIndex& other) const noexcept;
 
   private:
@@ -33,6 +34,7 @@ class ObjectIndex final {
     using ChildSet = std::set<ChildEntry>;
 
     std::map<ParentScope, ChildSet> children_by_parent_;
+    std::map<ObjectId, std::set<ObjectId>> connectors_by_target_;
 };
 
 } // namespace canvas::semantic::internal
