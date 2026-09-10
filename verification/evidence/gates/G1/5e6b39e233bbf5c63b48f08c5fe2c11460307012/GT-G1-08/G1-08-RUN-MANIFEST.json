@@ -1,0 +1,45 @@
+{
+  "format": "axiom-gt-g1-08-evidence-v1",
+  "taskId": "GT-G1-08",
+  "packageRef": "notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2",
+  "packageMaterializationRef": "f092d70bba2fa82eef79ba0c764b6c83cacf1b7a",
+  "repository": "Mostorm-Labs/axiom",
+  "taskAnchor": "646c0a18446fd7af3a2390222cf5b40e4387de9e",
+  "executionRef": "codex/gt-g1-08-p36-r5-access-shape",
+  "sourceRef": "5e6b39e233bbf5c63b48f08c5fe2c11460307012",
+  "provider": {
+    "runId": "34431449879",
+    "attempt": "1",
+    "jobId": "102727629118",
+    "artifactIdentity": "gt-g1-08-5e6b39e233bbf5c63b48f08c5fe2c11460307012",
+    "sourceSha": "5e6b39e233bbf5c63b48f08c5fe2c11460307012",
+    "workflow": ".github/workflows/g1-08-exact-source.yml"
+  },
+  "sourceDelta": {
+    "paths": [
+      ".github/workflows/g1-08-exact-source.yml",
+      "runtime/semantic/tests/g1_08_locality_test.cpp",
+      "runtime/semantic/tools/g1_08_verifier.cpp",
+      "runtime/semantic/tools/g1_08_verifier.hpp",
+      "verification/tools/generate_g1_08_evidence.mjs"
+    ]
+  },
+  "lock": {
+    "path": "semantic-sdk.lock.json",
+    "blobSha": "1aa9a0eddc8c7a917287276b466da23c4f9ef589",
+    "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea"
+  },
+  "materialization": {
+    "relation": "EVIDENCE_ONLY_DESCENDANT_PENDING",
+    "sourceRef": "5e6b39e233bbf5c63b48f08c5fe2c11460307012",
+    "sourceChanges": false
+  },
+  "evidenceInventory": [
+    "G1-08-CORRECTNESS.json",
+    "G1-08-LOCALITY.json",
+    "G1-08-CTEST-ON.xml",
+    "G1-08-CTEST-OFF.xml",
+    "G1-08-RUN-MANIFEST.json"
+  ],
+  "p34Claimed": false
+}
