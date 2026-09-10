@@ -30,6 +30,9 @@ struct ProcessResult final {
 };
 
 std::string quoteForShell(const std::string& value) {
+#if defined(_WIN32)
+    return "\"" + value + "\"";
+#else
     std::string quoted{"'"};
     for (const char character : value) {
         if (character == '\'') quoted += "'\\''";
@@ -37,6 +40,7 @@ std::string quoteForShell(const std::string& value) {
     }
     quoted += '\'';
     return quoted;
+#endif
 }
 
 std::string readFile(const std::filesystem::path& path) {
