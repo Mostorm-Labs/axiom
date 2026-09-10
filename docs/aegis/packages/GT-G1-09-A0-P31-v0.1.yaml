@@ -1,0 +1,91 @@
+package_id: GT-G1-09-A0
+package_version: v0.1
+stage: P31_TASK_PACKAGING
+purpose: SemanticReadView Public Boundary Closure
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  task_anchor:
+    revision: 196f71ff600b633d6f017a928bc0e8205004223c
+    relation: ancestor
+
+current_authority:
+  - G1 Semantic Kernel Implementation Plan v0.2
+  - GT-G1-09 P20 Final Gate Verification Design Reconciliation v0.1
+  - GT-G1-09 P30 Targeted Implementation Reconciliation v0.1
+
+implementation:
+  required_changes:
+    - Add public semantic read facade SemanticReadView.
+    - Keep facade non-owning and delegated to existing ObjectStore read contract.
+    - Bind view observation to SemanticGeneration.
+  forbidden_changes:
+    - OperationEngine semantics
+    - ObjectStore algorithms
+    - IndexedObjectStore/ObjectIndex/delete locality paths
+    - Snapshot/Replay/Projection/Digest implementations
+    - Schema/protobuf/wire/golden changes
+    - SemanticGeneration or ChangeSet semantic changes
+    - semantic-sdk.lock.json or SDK release changes
+    - G2 implementation
+
+tests:
+  required:
+    - id: O-A
+      oracle: Public consumer compile/type resolution
+      expected_result: SemanticReadView usable without private headers
+      blocking_reason: G2 minimum semantic surface
+    - id: O-B
+      oracle: Generation binding
+      expected_result: View preserves strong SemanticGeneration identity
+      blocking_reason: namespace correctness
+    - id: O-C
+      oracle: Read delegation
+      expected_result: ObjectStore read operations delegate correctly
+      blocking_reason: semantic read correctness
+    - id: O-D
+      oracle: No mutation surface
+      expected_result: No canonical write escape through view
+      blocking_reason: canonical ownership
+    - id: O-E
+      oracle: Public boundary hygiene
+      expected_result: No derived/platform leakage
+      blocking_reason: public contract
+    - id: O-F
+      oracle: Existing G1 Semantic Codec workflow on exact result SHA
+      expected_result: PASS
+      blocking_reason: hosted regression
+
+hosted_verification:
+  required:
+    - workflow: G1 Semantic Codec
+      reason: Existing semantic build/test/evidence contract
+
+evidence:
+  blocking:
+    - exact result revision
+    - reviewer-resolvable materialized ref
+    - hosted workflow identity bound to result SHA
+    - public boundary regression evidence
+  corroborative:
+    - local compile/test output
+
+terminal_success:
+  all_of:
+    - SemanticReadView public boundary exists
+    - required tests pass
+    - exact source hosted verification passes
+    - reviewer-accessible materialization exists
+
+terminal_blockers:
+  explicit_classes:
+    - AUTHORITY_CONFLICT
+    - MISSING_REQUIRED_INPUT
+    - ENVIRONMENT_BLOCKER
+    - FROZEN_VERIFICATION_FAILURE
+    - NEW_HIGH_IMPACT_FAILURE_MODE
+
+return_policy:
+  continue_until_terminal_state: true
+
+preferred_executor: codex
