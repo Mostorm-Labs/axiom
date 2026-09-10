@@ -46,25 +46,16 @@ VerificationSummary verifyReferenceIndexedAndLocality() {
                                  runControlledCascadeWorkload(512U)};
     result.scales_checked = 3U;
     result.locality = result.local_mutation.back();
-    const auto sameShape = [](const auto& left, const auto& right) {
-        return left.access.find_calls == right.access.find_calls &&
-               left.access.contains_calls == right.access.contains_calls &&
-               left.access.children_calls == right.access.children_calls &&
-               left.access.children_records_materialized == right.access.children_records_materialized &&
-               left.access.insert_fresh_calls == right.access.insert_fresh_calls &&
-               left.access.replace_existing_calls == right.access.replace_existing_calls &&
-               left.access.erase_existing_calls == right.access.erase_existing_calls &&
-               left.access.index_rebuild_check_calls == right.access.index_rebuild_check_calls;
-    };
-    result.local_mutation_access_shape_pass = sameShape(result.local_mutation.front(), result.local_mutation.back());
-    result.hierarchy_access_shape_pass = sameShape(result.hierarchy.front(), result.hierarchy.back());
+    result.local_mutation_access_shape_pass = sameIndexedAccessShape(result.local_mutation[0].access, result.local_mutation[1].access) &&
+                                             sameIndexedAccessShape(result.local_mutation[1].access, result.local_mutation[2].access);
+    result.hierarchy_access_shape_pass = sameIndexedAccessShape(result.hierarchy[0].access, result.hierarchy[1].access) &&
+                                         sameIndexedAccessShape(result.hierarchy[1].access, result.hierarchy[2].access);
     result.cascade_access_shape_pass =
+        controlledCascadeAccessShapeMatchesClosure(result.controlled_cascade[0]) &&
+        controlledCascadeAccessShapeMatchesClosure(result.controlled_cascade[1]) &&
+        controlledCascadeAccessShapeMatchesClosure(result.controlled_cascade[2]) &&
         result.controlled_cascade[0].access.erase_existing_calls < result.controlled_cascade[1].access.erase_existing_calls &&
-        result.controlled_cascade[1].access.erase_existing_calls < result.controlled_cascade[2].access.erase_existing_calls &&
-        result.controlled_cascade[0].access.all_objects_calls == result.controlled_cascade[1].access.all_objects_calls &&
-        result.controlled_cascade[1].access.all_objects_calls == result.controlled_cascade[2].access.all_objects_calls &&
-        result.controlled_cascade[0].access.all_objects_records_materialized == result.controlled_cascade[1].access.all_objects_records_materialized &&
-        result.controlled_cascade[1].access.all_objects_records_materialized == result.controlled_cascade[2].access.all_objects_records_materialized;
+        result.controlled_cascade[1].access.erase_existing_calls < result.controlled_cascade[2].access.erase_existing_calls;
     const auto locality_ok = [](const LocalityWorkloadResult& workload) {
         return workload.applied &&
                workload.access.all_objects_calls == 0U &&

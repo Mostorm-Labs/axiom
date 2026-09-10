@@ -6,6 +6,7 @@
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/object_content.hpp"
 #include "../tools/g1_08_locality_workload.hpp"
+#include "../tools/g1_08_verifier.hpp"
 
 #include <gtest/gtest.h>
 
@@ -157,6 +158,36 @@ TEST(G108Locality, AccessShapeForLocalMutationIsScaleInvariant) {
     EXPECT_EQ(small.erase_existing_calls, large.erase_existing_calls);
 }
 
+TEST(G108Locality, AccessShapeEqualityCoversEveryFrozenProbeObservation) {
+    internal::IndexedAccessProbeSnapshot expected{};
+    expected.all_objects_calls = 1U;
+    expected.all_objects_records_materialized = 2U;
+    expected.find_calls = 3U;
+    expected.contains_calls = 4U;
+    expected.children_calls = 5U;
+    expected.children_records_materialized = 6U;
+    expected.insert_fresh_calls = 7U;
+    expected.replace_existing_calls = 8U;
+    expected.erase_existing_calls = 9U;
+    expected.index_rebuild_check_calls = 10U;
+    EXPECT_TRUE(verification::g1_08::sameIndexedAccessShape(expected, expected));
+    for (const auto member : {
+             &internal::IndexedAccessProbeSnapshot::all_objects_calls,
+             &internal::IndexedAccessProbeSnapshot::all_objects_records_materialized,
+             &internal::IndexedAccessProbeSnapshot::find_calls,
+             &internal::IndexedAccessProbeSnapshot::contains_calls,
+             &internal::IndexedAccessProbeSnapshot::children_calls,
+             &internal::IndexedAccessProbeSnapshot::children_records_materialized,
+             &internal::IndexedAccessProbeSnapshot::insert_fresh_calls,
+             &internal::IndexedAccessProbeSnapshot::replace_existing_calls,
+             &internal::IndexedAccessProbeSnapshot::erase_existing_calls,
+             &internal::IndexedAccessProbeSnapshot::index_rebuild_check_calls}) {
+        auto changed = expected;
+        ++(changed.*member);
+        EXPECT_FALSE(verification::g1_08::sameIndexedAccessShape(expected, changed));
+    }
+}
+
 TEST(G108Locality, FrozenHierarchyUsesBoundedHotTopologyAtAllScales) {
     for (const std::size_t total : {1000U, 10000U, 100000U}) {
         const auto measured = verification::g1_08::runHierarchyWorkload(total);
@@ -212,6 +243,26 @@ TEST(G108Locality, AccessShapeForCascadeTracksTrueClosure) {
     EXPECT_EQ(closure64.all_objects_calls, closure512.all_objects_calls);
     EXPECT_EQ(closure8.all_objects_records_materialized, closure64.all_objects_records_materialized);
     EXPECT_EQ(closure64.all_objects_records_materialized, closure512.all_objects_records_materialized);
+}
+
+TEST(G108Locality, CascadeStructuralOracleRejectsHiddenColdPopulationWorkInEveryCounter) {
+    auto workload = verification::g1_08::runControlledCascadeWorkload(8U);
+    ASSERT_TRUE(verification::g1_08::controlledCascadeAccessShapeMatchesClosure(workload));
+    for (const auto member : {
+             &internal::IndexedAccessProbeSnapshot::all_objects_calls,
+             &internal::IndexedAccessProbeSnapshot::all_objects_records_materialized,
+             &internal::IndexedAccessProbeSnapshot::find_calls,
+             &internal::IndexedAccessProbeSnapshot::contains_calls,
+             &internal::IndexedAccessProbeSnapshot::children_calls,
+             &internal::IndexedAccessProbeSnapshot::children_records_materialized,
+             &internal::IndexedAccessProbeSnapshot::insert_fresh_calls,
+             &internal::IndexedAccessProbeSnapshot::replace_existing_calls,
+             &internal::IndexedAccessProbeSnapshot::erase_existing_calls,
+             &internal::IndexedAccessProbeSnapshot::index_rebuild_check_calls}) {
+        auto hidden_work = workload;
+        ++(hidden_work.access.*member);
+        EXPECT_FALSE(verification::g1_08::controlledCascadeAccessShapeMatchesClosure(hidden_work));
+    }
 }
 
 TEST(G108Locality, T08L04ControlledCascadesUseOnlyAffectedClosure) {
