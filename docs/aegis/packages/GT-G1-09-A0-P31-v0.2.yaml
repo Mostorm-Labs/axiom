@@ -1,0 +1,150 @@
+package_id: GT-G1-09-A0
+package_version: v0.2
+stage: P31_TASK_PACKAGING
+purpose: SemanticReadView Public Boundary Closure
+supersedes:
+  package_ref: notion://3d74c57a-590c-815d-b488-fd378b909a94/GT-G1-09-A0-P31-v0.1
+  reason: exact binding and package-specific terminal blocker repair only
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  task_anchor:
+    revision: 196f71ff600b633d6f017a928bc0e8205004223c
+    relation: ancestor
+  resume_cursor: null
+
+verification_binding:
+  verification_spec_ref: notion://3d74c57a-590c-8167-a667-e82aa93054ee/GT-G1-09-P20-v0.1
+  blocking_finding: G109-P20-B1
+  obligation_set:
+    - FG-B_PUBLIC_SEMANTIC_BOUNDARY
+    - FG-H_EXACT_SOURCE_ENVIRONMENT_PROVENANCE_FOR_REPAIR
+  evidence_profile: STANDARD
+
+trusted_basis:
+  current_g1_authority_ref: notion://3c84c57a-590c-8176-960b-cab59b6f4c03/G1-Semantic-Kernel-Implementation-Plan-v0.2
+  implementation_binding_ref: notion://3d74c57a-590c-81a0-a90b-d4804091c0c7/GT-G1-09-P30-v0.1
+  semantic_core_ref: notion://3c44c57a-590c-81c0-bc92-c21d69ed8a02/Axiom-Semantic-Core-v0.1
+  scene_core_ref: notion://3c44c57a-590c-81c5-883b-f091ccf2278f/Axiom-Scene-Core-v0.1
+  generation_changeset_ref: notion://3c44c57a-590c-815d-8d3c-c74bfce15196/07-11-SemanticGeneration-ChangeSet-v0.1
+
+scope_contract:
+  required_production_change:
+    - runtime/semantic/include/canvas/semantic/semantic_read_view.hpp
+  required_test_control_changes:
+    - runtime/semantic/tests/semantic_read_view_contract_test.cpp
+    - runtime/semantic/tests/CMakeLists.txt
+    - verification/tests/test_semantic_public_boundary.py
+  permitted_incidental_change:
+    - a runtime/semantic/src/semantic_read_view.cpp only if required by ordinary compilation; semantics must remain pure delegation
+  forbidden_changes:
+    - runtime/semantic/src/operation_engine.cpp or OperationEngine semantics
+    - reference_object_store / indexed_object_store / object_index / delete_closure / staged_object_view production algorithms
+    - snapshot / replay / projection / digest implementations
+    - schema / proto / descriptor / golden canonical bytes
+    - ChangeSet or SemanticGeneration semantics
+    - semantic-sdk.lock.json / semantic-toolchain lock / SDK release identity
+    - architecture, product, or semantic Authority documents
+    - Scene Core implementation, G2 implementation, public C ABI
+
+acceptance_oracle_contract:
+  id: GT-G1-09-A0-ORACLE-v1
+  obligations:
+    - id: O-A
+      oracle: public consumer compile/type resolution
+      expected_result: canvas::semantic::SemanticReadView resolves using public semantic headers only
+    - id: O-B
+      oracle: generation binding
+      expected_result: constructed view reports the same strong SemanticGeneration value and exposes no commit/server identity alias
+    - id: O-C
+      oracle: read delegation
+      expected_result: size/contains/find/allObjects/children delegate exactly to const ObjectStore behavior
+    - id: O-D
+      oracle: no mutation surface
+      expected_result: public API exposes no mutable ObjectStore/ObjectRecord or canonical write operation
+    - id: O-E
+      oracle: semantic public boundary hygiene
+      expected_result: RuntimeScene/Skia/Arc/platform leakage remains rejected and new header is part of supported public surface
+    - id: O-F
+      oracle: exact-source hosted G1 Semantic Codec
+      expected_result: workflow conclusion success for exact result SHA under locked Semantic SDK v2
+
+EXECUTION_CLOSURE_CONTRACT:
+  implementation:
+    required_changes:
+      - add thin final SemanticReadView facade over const ObjectStore
+      - capture SemanticGeneration by value
+      - keep facade non-owning, synchronous/ephemeral, and read-only
+      - delegate size/contains/find/allObjects/children without new storage/index/cache algorithms
+    forbidden_changes:
+      - any change listed in scope_contract.forbidden_changes
+
+  tests:
+    required:
+      - id: O-A_TO_O-D_CPP_CONTRACT
+        command_or_oracle: build and run canvas_semantic_read_view_contract_test from public include/link surface
+        expected_result: all SemanticReadView contract tests pass
+        blocking_reason: closes G109-P20-B1 public consumer boundary
+      - id: O-E_PUBLIC_BOUNDARY
+        command_or_oracle: python3 -m unittest verification.tests.test_semantic_public_boundary -v
+        expected_result: PASS
+        blocking_reason: prevents public-layer leakage and verifies supported surface
+      - id: SEMANTIC_REGRESSION
+        command_or_oracle: run complete semantic CTest for the exact candidate in the selected build
+        expected_result: 0 failures
+        blocking_reason: detects repair regression in current semantic runtime
+
+  hosted_verification:
+    required:
+      - workflow: .github/workflows/g1-semantic-codec.yml
+        display_name: G1 Semantic Codec
+        source_binding: exact result SHA
+        expected_result: conclusion success
+    optional: []
+
+  evidence:
+    blocking:
+      - exact result_revision
+      - reviewer-resolvable remote branch or PR whose head is result_revision
+      - PR changed-file/diff surface proving repair radius
+      - exact G1 Semantic Codec run_id and job_id bound to result_revision
+      - hosted artifact/ref when emitted by the workflow
+      - passing public-boundary regression on the exact result lineage
+    corroborative:
+      - local targeted RED/GREEN output
+      - local complete semantic CTest output
+      - local build-environment facts
+
+  predecessor_evidence_reuse:
+    GT_G1_04_05_mutation_commit: REUSE_WITH_LINEAGE
+    GT_G1_06_snapshot_replay: REUSE_WITH_LINEAGE
+    GT_G1_07_replay_inspector: REUSE_WITH_LINEAGE
+    GT_G1_08_reference_indexed_locality: REUSE_DIRECTLY_BY_TREE_LINEAGE
+    codec_generated_ingress: REUSE_PLUS_FINAL_G1_SEMANTIC_CODEC
+    final_public_boundary: MUST_REVERIFY_ON_RESULT_SHA
+
+  terminal_success:
+    all_of:
+      - SemanticReadView public surface exists and satisfies O-A through O-E
+      - exact candidate semantic regression passes
+      - exact-source G1 Semantic Codec hosted verification passes
+      - exact result is reviewer-resolvable via remote branch or PR
+      - repair diff stays within frozen scope and predecessor evidence reuse remains valid
+
+  terminal_blockers:
+    explicit_classes:
+      - AUTHORITY_CONFLICT
+      - MISSING_REQUIRED_INPUT
+      - ENVIRONMENT_BLOCKER
+      - SCOPE_EXPANSION_REQUIRES_REPLAN
+      - PUBLIC_BOUNDARY_ORACLE_FAILURE
+      - READ_ONLY_CONTRACT_FAILURE
+      - FROZEN_VERIFICATION_FAILURE
+      - EVIDENCE_MATERIALIZATION_BLOCKER
+      - NEW_HIGH_IMPACT_FAILURE_MODE
+
+  return_policy:
+    continue_until_terminal_state: true
+
+preferred_executor: codex
