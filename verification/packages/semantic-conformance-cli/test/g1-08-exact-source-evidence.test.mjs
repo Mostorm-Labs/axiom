@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   EXECUTION_REF, PACKAGE_MATERIALIZATION_REF, PACKAGE_REF, REQUIRED, SOURCE_PATHS,
-  TASK_ANCHOR, validateFacts,
+  TASK_ANCHOR, RESUME_SOURCE, validateFacts,
 } from "../../../tools/generate_g1_08_evidence.mjs";
 
 const source = "b".repeat(40);
@@ -25,6 +25,7 @@ const facts = (overrides = {}) => ({
   familyOracles:Array.from({length:15},(_,i)=>({family:String(i),ref:`oracle-${i+1}`,status:"PASS"})), ...overrides,
 });
 test("accepts complete provider-bound facts",()=>assert.doesNotThrow(()=>validateFacts(facts(),{sourceRef:source})));
+test("accepts an authorized resume source as the actual starting revision",()=>assert.doesNotThrow(()=>validateFacts(facts({actualStartingRevision:RESUME_SOURCE}),{sourceRef:source})));
 test("rejects wrong task, anchor, source, and provider identity",()=>{
   assert.throws(()=>validateFacts(facts({taskId:"GT-G1-09"}),{sourceRef:source}));
   assert.throws(()=>validateFacts(facts({taskAnchor:"e".repeat(40)}),{sourceRef:source}));

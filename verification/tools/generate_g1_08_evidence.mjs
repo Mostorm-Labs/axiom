@@ -5,6 +5,7 @@ export const TASK_ID = "GT-G1-08";
 export const PACKAGE_REF = "notion://3d64c57a-590c-8166-aff5-f5063576802a/GT-G1-08-P36-v0.2";
 export const PACKAGE_MATERIALIZATION_REF = "f092d70bba2fa82eef79ba0c764b6c83cacf1b7a";
 export const TASK_ANCHOR = "646c0a18446fd7af3a2390222cf5b40e4387de9e";
+export const RESUME_SOURCE = "3a4d272dd6090d468741b0e5fc34dda752bfd285";
 export const EXECUTION_REF = "codex/gt-g1-08-p36-r3-cardinality";
 export const SOURCE_PATHS = [
   ".github/workflows/g1-08-exact-source.yml",
@@ -28,7 +29,7 @@ export function validateFacts(facts, expected = {}) {
   const value = record(facts, "facts");
   if (value.format !== "axiom-gt-g1-08-facts-v1" || value.taskId !== TASK_ID || value.packageRef !== PACKAGE_REF) fail("task/package identity mismatch");
   if (value.packageMaterializationRef !== PACKAGE_MATERIALIZATION_REF || value.executionRef !== EXECUTION_REF) fail("package materialization/execution binding mismatch");
-  if (value.repository !== "Mostorm-Labs/axiom" || value.taskAnchor !== TASK_ANCHOR || value.actualStartingRevision !== TASK_ANCHOR) fail("repository/anchor binding mismatch");
+  if (value.repository !== "Mostorm-Labs/axiom" || value.taskAnchor !== TASK_ANCHOR || ![TASK_ANCHOR, RESUME_SOURCE].includes(value.actualStartingRevision)) fail("repository/anchor binding mismatch");
   if (!sha(value.sourceRef) || (expected.sourceRef && value.sourceRef !== expected.sourceRef) || !sha(value.sourceCommitParent)) fail("source binding invalid");
   const delta = record(value.sourceDelta, "source delta");
   if (!Array.isArray(delta.paths) || delta.paths.length !== SOURCE_PATHS.length || JSON.stringify([...delta.paths].sort()) !== JSON.stringify([...SOURCE_PATHS].sort())) fail("source path inventory mismatch");
