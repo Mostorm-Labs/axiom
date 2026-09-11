@@ -1,0 +1,32 @@
+{
+  "task_id": "GT-G2-00-A0",
+  "source_ref": "a4425744799303eaeaa22a1d005b6005696879b",
+  "source_parent": "a908c9bc4acb95566f275747884ae26b7a4c9894",
+  "package_ref": "notion://3d84c57a590c81ab8598c940454813cc/GT-G2-00-A0-P31-v0.3",
+  "package_materialization_ref": "34fe540470df8d8b79e9e5623fc5dd826221968f",
+  "evidence_inventory": ["G2-BOUNDARY.json", "G2-CTEST.txt", "G2-GATE-MANIFEST.json"],
+  "evidence_only": true,
+  "official_gate_pass_claimed": false,
+  "verification_bindings": {
+    "verification_spec_id": "GT-G2-00-VS-v0.1",
+    "obligation_set_id": "GT-G2-00-OBL-v0.1",
+    "trusted_basis_id": "GT-G2-00-TB-v0.1",
+    "scope_contract_id": "GT-G2-00-SCOPE-v0.1",
+    "acceptance_oracle_id": "GT-G2-00-ORACLE-v0.1",
+    "evidence_compilation_contract_id": "GT-G2-00-ECC-v0.1",
+    "obligation_rows": ["T02-R01"]
+  },
+  "resolver_facts": {
+    "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970",
+    "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+    "host": "macos-arm64",
+    "target": "macos-arm64",
+    "networkUsed": false,
+    "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+    "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+    "facts_sha256": "2dcf7b4d5531c3914de74cf1efd17f0aecfcb970db1a464e75d0368dfed3e49b"
+  },
+  "ancestry": {"anchor_is_ancestor": true, "evidence_parent_is_source": true, "source_changes_in_evidence_commit": false},
+  "prohibitions_respected": ["no_g2_pass_claim", "no_p34_pass_claim", "no_g2_a1_execution"]
+}

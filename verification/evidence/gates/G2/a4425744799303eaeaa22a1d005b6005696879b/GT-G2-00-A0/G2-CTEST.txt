@@ -1,0 +1,45 @@
+source_ref: a4425744799303eaeaa22a1d005b6005696879b
+
+protobuf_off_full:
+  command: ctest --test-dir build-g2-a0-verify --output-on-failure
+  config: CANVAS_SEMANTIC_ENABLE_PROTOBUF=OFF
+  exit_code: 0
+  tests_total: 515
+  tests_failed: 0
+  expected_skips: 23
+
+protobuf_on_full:
+  command: ctest --test-dir build-g2-a0-proto-on --output-on-failure
+  config: CANVAS_SEMANTIC_ENABLE_PROTOBUF=ON
+  exit_code: 0
+  tests_total: 518
+  tests_failed: 0
+  expected_skips: 0
+
+focused:
+  command: ctest --test-dir build-g2-a0-verify --output-on-failure -R 'canvas_rf01_scene_binding|canvas_g2_a0_semantic_generation_binding|canvas_rf01_module_boundaries|canvas_rf01_scene_atomicity|canvas_rf01_full_rebuild'
+  exit_code: 0
+  tests_total: 5
+  tests_failed: 0
+
+protobuf_on_focused:
+  command: ctest --test-dir build-g2-a0-proto-on --output-on-failure -R 'canvas_g2_a0_semantic_generation_binding|canvas_rf01_scene_binding|canvas_rf01_module_boundaries|canvas_rf01_scene_atomicity|canvas_rf01_full_rebuild'
+  exit_code: 0
+  tests_total: 5
+  tests_failed: 0
+
+fresh_clean_checkout:
+  source_ref: a4425744799303eaeaa22a1d005b6005696879b
+  command: ctest --test-dir build-clean --output-on-failure -R 'canvas_g2_a0_semantic_generation_binding|canvas_rf01_'
+  exit_code: 0
+  tests_total: 7
+  tests_failed: 0
+
+sdk_facts_command:
+  command: python tools/setup_build_environment.py --core --semantic --facts-output out/g2-a0-build-environment.json --status
+  exit_code: 0
+  network_used: false
+
+git_diff_check:
+  command: git diff --check a908c9bc4acb95566f275747884ae26b7a4c9894 a4425744799303eaeaa22a1d005b6005696879b
+  exit_code: 0
