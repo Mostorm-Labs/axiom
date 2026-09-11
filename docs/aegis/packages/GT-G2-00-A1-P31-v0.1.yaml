@@ -1,0 +1,160 @@
+type: aegis_task_package_materialization
+package_id: GT-G2-00-A1-P31-v0.1
+package_ref: notion://3d84c57a590c81f291ebf412dc4dd2b8/GT-G2-00-A1-P31-v0.1
+task_id: GT-G2-00-A1
+stage: P31_TASK_PACKAGING
+stage_owner: aegis-implementation
+verdict: READY_FOR_CONTROL_REVIEW
+package_scope: G2-A1_ONLY
+supersedes: null
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+  actual_starting_revision: a4425744799303eaeaa22a1d005b6005696879b9
+  task_anchor:
+    revision: a4425744799303eaeaa22a1d005b6005696879b9
+    relation: ancestor
+  worktree_preflight: clean
+resume_cursor: null
+p32_authorized: false
+p34_authorized: false
+g2_gate_evaluated: false
+g2_a2_authorized: false
+repository_mutation_authorized: false
+
+predecessor:
+  task_id: GT-G2-00-A0
+  integrated_source_ref: a4425744799303eaeaa22a1d005b6005696879b9
+  integration_closure_status: COMPLETE
+  evidence_only_ref: 8fb492ef306d842f4f3a2d4eaf7a3553c270e927
+  evidence_is_not_source_base: true
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.1
+  obligation_set_id: GT-G2-00-OBL-v0.1
+  trusted_basis_id: GT-G2-00-TB-v0.1
+  scope_contract_id: GT-G2-00-SCOPE-v0.1
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.1
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+
+frozen_obligations:
+  - T02-R02
+
+objective:
+  - establish_renderer_neutral_runtime_scene_projection
+  - remove_render_core_ownership_leakage_from_shared_scene_projection
+  - preserve_generation_bound_input_from_A0
+  - cover_exactly_nine_v1_object_kinds
+  - reject_or_absent_Page_object_kind
+
+authorized_source_paths:
+  MODIFY:
+    - runtime/scene/include/canvas/scene/scene.hpp
+    - runtime/scene/include/canvas/scene/scene_types.hpp
+    - runtime/scene/include/canvas/scene/scene_view.hpp
+    - runtime/scene/include/canvas/scene/scene_query.hpp
+    - runtime/scene/include/canvas/scene/scene_record_store.hpp
+    - runtime/scene/src/scene.cpp
+    - runtime/scene/src/scene_view.cpp
+    - runtime/scene/src/scene_record_store.cpp
+    - runtime/scene/CMakeLists.txt
+    - runtime/scene/tests/CMakeLists.txt
+  CREATE:
+    - runtime/scene/tests/renderer_neutral_projection_test.cpp
+    - runtime/scene/tests/scene_v1_kind_projection_test.cpp
+  READ_ONLY_REFERENCE:
+    - runtime/scene/include/canvas/scene/scene_binding.hpp
+    - runtime/scene/include/canvas/scene/scene_commit_input.hpp
+    - runtime/scene/include/canvas/scene/scene_compiler.hpp
+
+forbidden_changes:
+  - runtime/semantic/**
+  - schema/**
+  - persistence/**
+  - render/**
+  - skia/**
+  - gpu/**
+  - platform/**
+  - semantic-sdk.lock.json
+  - public_semantic_contracts
+  - semantic_generation_or_changeset_contract
+  - new_object_kinds
+  - Page_object_kind_introduction
+  - production_draw_or_frame_ownership
+  - new_latency_product_slo
+
+independent_oracle:
+  authored_truth: independent_test_truth
+  production_projection_as_sole_oracle: forbidden
+  required_kind_rows:
+    - Shape
+    - Image
+    - VectorPath
+    - RichText
+    - VectorStroke
+    - DabStroke
+    - Connector
+    - Sticky
+    - Group
+  page_behavior: explicit_absence_or_rejection
+  required_boundary_checks:
+    - no_IRenderScene_dependency_in_shared_projection
+    - no_Skia_dependency_in_shared_projection
+    - no_GPU_dependency_in_shared_projection
+    - no_RenderTarget_dependency_in_shared_projection
+    - no_Viewport_dependency_in_shared_projection
+    - no_mutable_render_record_ownership
+
+required_verification:
+  - focused_renderer_neutral_projection_oracle
+  - focused_all_nine_v1_kind_oracle
+  - explicit_Page_absence_or_rejection
+  - public_header_dependency_boundary_check
+  - existing_RF01_atomicity_regression
+  - existing_RF01_full_rebuild_regression
+  - protobuf_ON_declared_behavior
+  - protobuf_OFF_declared_behavior
+  - git_diff_check
+  - fresh_exact_source_clean_checkout
+
+evidence_inventory:
+  - G2-A1-BOUNDARY.json
+  - G2-A1-PROJECTION.json
+  - G2-A1-CTEST.txt
+  - G2-A1-GATE-MANIFEST.json
+
+evidence_contract:
+  source_changed_paths_must_equal_authorized: true
+  evidence_only_materialization: true
+  source_changes_in_materialized_commit: forbidden
+  exact_source_sha_required: true
+  provider_tested_source_sha_must_match: true
+  no_fake_machine_facts: true
+  no_evidence_commit_as_source_base: true
+
+terminal_success:
+  - T02-R02_pass
+  - exact_nine_kind_projection_pass
+  - renderer_neutral_boundary_pass
+  - Page_absent_or_rejected
+  - focused_and_RF01_regressions_pass
+  - fresh_exact_source_checkout_pass
+  - exact_evidence_inventory_materialized
+  - exactly_one_evidence_only_direct_descendant
+
+terminal_blockers:
+  - AUTHORITY_CONFLICT
+  - MISSING_REQUIRED_INPUT
+  - ENVIRONMENT_BLOCKER
+  - FROZEN_VERIFICATION_FAILURE
+  - NEW_HIGH_IMPACT_FAILURE_MODE
+  - PACKAGE_SCOPE_DIVERGENCE
+
+return_policy:
+  continue_until_terminal_state: true
+  return_surface: CONTROL_REVIEW
+  next_stage: P32_G2_A1_CODE_EXECUTION_ONLY_AFTER_EXPLICIT_HANDOFF
+  official_g2_pass_claimed: false
+  official_p34_pass_claimed: false
+  g2_a2_started: false
