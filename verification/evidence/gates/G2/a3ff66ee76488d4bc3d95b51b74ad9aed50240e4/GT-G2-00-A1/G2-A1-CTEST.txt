@@ -1,0 +1,43 @@
+GT-G2-00-A1 verification evidence
+source_ref=a3ff66ee76488d4bc3d95b51b74ad9aed50240e4
+task_anchor=a4425744799303eaeaa22a1d005b6005696879b9
+
+[protobuf OFF]
+command: ctest --test-dir /tmp/axiom-g2-a1-build.fgPkHg --output-on-failure
+exit_code: 0
+summary: 516 tests, 516 passed, 0 failed, 23 expected protobuf-unavailable skips
+focused: canvas_g2_a1_runtime_record_projection PASS
+regressions: RF01 atomicity, full rebuild, SceneBinding, damage/view PASS
+
+[protobuf ON]
+command: ctest --test-dir /tmp/axiom-g2-a1-build-on-debug.phgJ8V --output-on-failure
+exit_code: 0
+summary: 519 tests, 519 passed, 0 failed, 0 unexpected skips
+focused: canvas_g2_a1_runtime_record_projection PASS
+regressions: RF01 atomicity, full rebuild, SceneBinding, damage/view PASS
+
+[boundary and source checks]
+command: python3 tools/check_runtime_boundaries.py --root .
+exit_code: 0
+result: Runtime module boundary check passed (66 contract files)
+command: git diff --check a4425744799303eaeaa22a1d005b6005696879b9 a3ff66ee76488d4bc3d95b51b74ad9aed50240e4
+exit_code: 0
+
+[clean checkout]
+checkout_source_sha: a3ff66ee76488d4bc3d95b51b74ad9aed50240e4
+command: cmake --build /tmp/axiom-g2-a1-clean-build --target canvas_g2_a1_runtime_record_projection canvas_g2_a0_semantic_generation_binding
+exit_code: 0
+focused_result: 2 tests, 2 passed, 0 failed
+
+[resolver]
+resolver_command: python3.12 tools/setup_build_environment.py --semantic --offline --facts-output out/g2-a1-build-environment.json --status
+resolver_exit_code: 0
+release_tag: semantic-sdk-v2-14e3d492c9b7f970
+release_set_id: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+network_used: false
+facts_sha256: 161de77f23e2dc743fbdb5694e40284f2cb87945622c11fd320f52e229995297
+AXIOM_PROTOC: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc
+AXIOM_SEMANTIC_RUNTIME_ROOT: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+CMAKE_PREFIX_PATH: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+
+official_gate_pass_claimed=false

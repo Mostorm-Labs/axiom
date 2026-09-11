@@ -1,0 +1,27 @@
+{
+  "format": "axiom-g2-a1-gate-manifest-v1",
+  "task_id": "GT-G2-00-A1",
+  "package_ref": "notion://3d84c57a590c810c873dd597fac8189b/GT-G2-00-A1-P31-v0.2",
+  "package_materialization_ref": "a2cc45d8386fd376827ef5c8aac50f1228577df3",
+  "task_anchor": "a4425744799303eaeaa22a1d005b6005696879b9",
+  "source_ref": "a3ff66ee76488d4bc3d95b51b74ad9aed50240e4",
+  "source_parent": "a4425744799303eaeaa22a1d005b6005696879b9",
+  "evidence_inventory": ["G2-A1-BOUNDARY.json", "G2-A1-PROJECTION.json", "G2-A1-CTEST.txt", "G2-A1-GATE-MANIFEST.json"],
+  "evidence_only": true,
+  "source_changes_in_evidence_commit": false,
+  "fresh_clean_checkout": {"source_sha": "a3ff66ee76488d4bc3d95b51b74ad9aed50240e4", "pass": true},
+  "provider": {"required_by_package": false, "status": "NOT_APPLICABLE", "tested_source_sha": null},
+  "verification_bindings": {
+    "verification_spec_id": "GT-G2-00-VS-v0.1",
+    "obligation_set_id": "GT-G2-00-OBL-v0.1",
+    "trusted_basis_id": "GT-G2-00-TB-v0.1",
+    "scope_contract_id": "GT-G2-00-SCOPE-v0.1",
+    "acceptance_oracle_id": "GT-G2-00-ORACLE-v0.1",
+    "evidence_compilation_contract_id": "GT-G2-00-ECC-v0.1",
+    "obligation_rows": ["T02-R02"]
+  },
+  "terminal_status": "READY_FOR_CONTROL_REVIEW",
+  "official_g2_pass_claimed": false,
+  "official_p34_pass_claimed": false,
+  "g2_a2_started": false
+}

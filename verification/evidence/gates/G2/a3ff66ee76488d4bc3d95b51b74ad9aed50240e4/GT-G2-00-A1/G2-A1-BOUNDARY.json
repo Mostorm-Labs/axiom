@@ -1,0 +1,35 @@
+{
+  "format": "axiom-g2-a1-boundary-evidence-v1",
+  "task_id": "GT-G2-00-A1",
+  "package_ref": "notion://3d84c57a590c810c873dd597fac8189b/GT-G2-00-A1-P31-v0.2",
+  "package_materialization_ref": "a2cc45d8386fd376827ef5c8aac50f1228577df3",
+  "task_anchor": "a4425744799303eaeaa22a1d005b6005696879b9",
+  "source_ref": "a3ff66ee76488d4bc3d95b51b74ad9aed50240e4",
+  "source_parent": "a4425744799303eaeaa22a1d005b6005696879b9",
+  "changed_paths_command": "git diff --name-status a4425744799303eaeaa22a1d005b6005696879b9 a3ff66ee76488d4bc3d95b51b74ad9aed50240e4",
+  "changed_paths": [
+    ["M", "runtime/scene/include/canvas/scene/render_scene.hpp"],
+    ["M", "runtime/scene/include/canvas/scene/scene_types.hpp"],
+    ["M", "runtime/scene/src/scene.cpp"],
+    ["M", "runtime/scene/tests/CMakeLists.txt"],
+    ["A", "runtime/scene/tests/runtime_record_projection_test.cpp"]
+  ],
+  "authorized_path_count": 5,
+  "scope_verdict": "PASS",
+  "git_diff_check": {
+    "command": "git diff --check a4425744799303eaeaa22a1d005b6005696879b9 a3ff66ee76488d4bc3d95b51b74ad9aed50240e4",
+    "exit_code": 0
+  },
+  "public_boundary": {
+    "renderer_neutral_projection": true,
+    "irender_scene_dependency": false,
+    "skia_dependency": false,
+    "gpu_dependency": false,
+    "render_target_dependency": false,
+    "viewport_dependency": false,
+    "mutable_render_record_ownership": false
+  },
+  "page_behavior": "REJECTED_AS_UNKNOWN_KIND",
+  "evidence_only": true,
+  "official_gate_pass_claimed": false
+}

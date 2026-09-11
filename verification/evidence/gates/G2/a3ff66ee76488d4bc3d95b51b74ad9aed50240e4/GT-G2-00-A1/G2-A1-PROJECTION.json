@@ -1,0 +1,30 @@
+{
+  "format": "axiom-g2-a1-projection-evidence-v1",
+  "task_id": "GT-G2-00-A1",
+  "source_ref": "a3ff66ee76488d4bc3d95b51b74ad9aed50240e4",
+  "obligation": "T02-R02",
+  "focused_test": "canvas_g2_a1_runtime_record_projection",
+  "result": {"passed": 1, "failed": 0, "exit_code": 0},
+  "generation_binding": {
+    "initial": 7,
+    "applied": 8,
+    "stale_apply_rejected": true,
+    "failed_replace_preserves_published_projection": true
+  },
+  "independent_typed_oracle": {
+    "Shape": ["shape_kind", "width", "height"],
+    "Image": ["resource_id", "intrinsic_width", "intrinsic_height", "content_mode", "width", "height"],
+    "VectorPath": ["fill_rule", "MoveTo", "LineTo", "ClosePath"],
+    "RichText": ["paragraph_id", "text", "paragraph_style", "text_style"],
+    "VectorStroke": ["brush_family_id", "deterministic_seed", "stroke_sample"],
+    "DabStroke": ["brush_family_id", "deterministic_seed", "dab_center"],
+    "Connector": ["free_point_start", "attached_end", "routing"],
+    "Sticky": ["width", "height"],
+    "Group": ["typed_group_content"]
+  },
+  "all_nine_v1_kinds": "PASS",
+  "typed_nested_values": "PASS",
+  "page_absence_or_rejection": "PASS",
+  "production_projection_as_sole_oracle": false,
+  "official_gate_pass_claimed": false
+}
