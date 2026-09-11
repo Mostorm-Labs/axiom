@@ -12,9 +12,9 @@ materialization and does not authorize repository mutation or P32 execution.
 
 ```yaml
 package_id: GT-G2-00-A0-P31-v0.3
-package_ref: CONTROL_PLANE_ASSIGNMENT_REQUIRED:GT-G2-00-A0-P31-v0.3
+package_ref: notion://3d84c57a590c81ab8598c940454813cc/GT-G2-00-A0-P31-v0.3
 supersedes: notion://3d74c57a590c81269433e00b57ed6e0d/GT-G2-00-A0-P31-v0.2
-package_materialization_ref: this documentation-only Git commit (resolved by the control plane after commit)
+package_materialization_ref: git:e2bcc0b8f46549a3101788552da4b1fcf3f00932
 task_id: GT-G2-00-A0
 stage: P31_TASK_PACKAGING
 verdict: READY_FOR_CONTROL_REVIEW
