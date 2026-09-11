@@ -1,0 +1,86 @@
+type: aegis_task_package_materialization
+package_id: GT-G2-00-A0-P31-v0.3
+package_ref: notion://3d84c57a590c81ab8598c940454813cc/GT-G2-00-A0-P31-v0.3
+supersedes: notion://3d74c57a590c81269433e00b57ed6e0d/GT-G2-00-A0-P31-v0.2
+task_id: GT-G2-00-A0
+stage: P31_TASK_PACKAGING
+stage_owner: aegis-implementation
+verdict: READY_FOR_CONTROL_REVIEW
+package_scope: G2-A0_ONLY
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+  actual_starting_revision: a908c9bc4acb95566f275747884ae26b7a4c9894
+  task_anchor:
+    revision: a908c9bc4acb95566f275747884ae26b7a4c9894
+    relation: ancestor
+  worktree_preflight: clean
+resume_cursor: null
+p32_authorized: false
+p34_authorized: false
+g2_gate_evaluated: false
+g3_authorized: false
+repository_mutation_authorized: false
+authorized_source_paths:
+  CREATE:
+    - runtime/scene/include/canvas/scene/scene_commit_input.hpp
+    - runtime/scene/tests/semantic_generation_binding_test.cpp
+  MODIFY:
+    - runtime/scene/include/canvas/scene/scene.hpp
+    - runtime/scene/include/canvas/scene/scene_compiler.hpp
+    - runtime/scene/include/canvas/scene/scene_binding.hpp
+    - runtime/scene/src/scene.cpp
+    - runtime/scene/src/scene_binding.cpp
+    - runtime/scene/CMakeLists.txt
+    - runtime/scene/tests/CMakeLists.txt
+evidence_inventory:
+  - G2-BOUNDARY.json
+  - G2-CTEST.txt
+  - G2-GATE-MANIFEST.json
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.1
+  obligation_set_id: GT-G2-00-OBL-v0.1
+  trusted_basis_id: GT-G2-00-TB-v0.1
+  scope_contract_id: GT-G2-00-SCOPE-v0.1
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.1
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+obligation_rows:
+  - T02-R01
+execution_ref: codex/gt-g2-00-a0-generation-input
+dependency_resolution:
+  command: python tools/setup_build_environment.py --core --semantic --facts-output out/g2-a0-build-environment.json --status
+  required_facts:
+    - AXIOM_PROTOC
+    - AXIOM_SEMANTIC_RUNTIME_ROOT
+    - CMAKE_PREFIX_PATH
+  locked_release_tag: semantic-sdk-v2-14e3d492c9b7f970
+  locked_release_set_id: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+  network_allowed: false
+  forbidden:
+    - .deps/protobuf
+    - hard-coded Protobuf_DIR
+    - hard-coded absl_DIR
+    - hard-coded utf8_range_DIR
+    - ad-hoc dependency acquisition
+    - semantic-sdk.lock.json modification
+evidence_contract:
+  changed_paths_must_equal_authorized: true
+  changed_paths_source: git diff --name-only a908c9bc4acb95566f275747884ae26b7a4c9894 <exact_result_revision>
+  diff_check_command: git diff --check
+  diff_check_exit_code: 0
+  official_gate_pass_claimed: false
+terminal_blockers:
+  - AUTHORITY_CONFLICT
+  - MISSING_REQUIRED_INPUT
+  - ENVIRONMENT_BLOCKER
+  - FROZEN_VERIFICATION_FAILURE
+  - NEW_HIGH_IMPACT_FAILURE_MODE
+  - PACKAGE_SCOPE_DIVERGENCE
+return_policy:
+  continue_until_terminal_state: true
+  next_stage: P32_G2_A0_CODE_EXECUTION_ONLY_AFTER_EXPLICIT_HANDOFF
+prohibitions:
+  - no_g2_pass_claim
+  - no_p34_pass_claim
+  - no_g2_a1_execution
