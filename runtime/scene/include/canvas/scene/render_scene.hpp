@@ -10,6 +10,11 @@
 
 namespace canvas {
 
+// Legacy RF-01 render-participant seam. RuntimeScene's G2 production
+// projection is declared in scene.hpp/scene_types.hpp and does not depend on
+// this interface. DirectRenderScene and ShadowRenderScene remain transition
+// and reference-test assets until the G3 render migration.
+
 class IPreparedRenderSceneUpdate {
   public:
     virtual ~IPreparedRenderSceneUpdate() = default;
