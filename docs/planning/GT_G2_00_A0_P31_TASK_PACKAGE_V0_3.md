@@ -1,8 +1,9 @@
-# GT-G2-00-A0 P31 Task Package v0.2
+# GT-G2-00-A0 P31 Task Package v0.3
 
 Status: READY / P32 NOT AUTHORIZED
 
-This revision supersedes the non-executable v0.1 package. It reconciles the
+This revision supersedes v0.2 after CONTROL_REVIEW identified a source-scope
+reconciliation defect. It reconciles the
 source allowlist with the repository's actual Scene public boundary while
 preserving the frozen P20/P30 contract. It is a documentation-only P31
 materialization and does not authorize repository mutation or P32 execution.
@@ -10,13 +11,13 @@ materialization and does not authorize repository mutation or P32 execution.
 ## Package identity
 
 ```yaml
-package_id: GT-G2-00-A0-P31-v0.2
-package_ref: notion://3d74c57a590c81269433e00b57ed6e0d/GT-G2-00-A0-P31-v0.2
-supersedes: notion://3d74c57a590c81198813e8eb396a7e08/GT-G2-00-A0-P31-v0.1
+package_id: GT-G2-00-A0-P31-v0.3
+package_ref: CONTROL_PLANE_ASSIGNMENT_REQUIRED:GT-G2-00-A0-P31-v0.3
+supersedes: notion://3d74c57a590c81269433e00b57ed6e0d/GT-G2-00-A0-P31-v0.2
 package_materialization_ref: this documentation-only Git commit (resolved by the control plane after commit)
 task_id: GT-G2-00-A0
 stage: P31_TASK_PACKAGING
-verdict: READY
+verdict: READY_FOR_CONTROL_REVIEW
 package_scope: G2-A0_ONLY
 repository:
   provider: github
@@ -47,9 +48,9 @@ CREATE:
   - runtime/scene/tests/semantic_generation_binding_test.cpp
 MODIFY:
   - runtime/scene/include/canvas/scene/scene.hpp
-  - runtime/scene/include/canvas/scene/scene_types.hpp
   - runtime/scene/include/canvas/scene/scene_compiler.hpp
   - runtime/scene/include/canvas/scene/scene_binding.hpp
+  - runtime/scene/src/scene.cpp
   - runtime/scene/src/scene_binding.cpp
   - runtime/scene/CMakeLists.txt
   - runtime/scene/tests/CMakeLists.txt
@@ -113,14 +114,19 @@ cmake:
 ```
 
 The P32 evidence must record the actual resolver paths and release identities;
-these are machine facts, not prose defaults.
+these are machine facts, not prose defaults. It must also record the exact
+`git diff --check` command and exit code 0. The changed-path inventory must be
+computed from the source anchor to the exact result revision and must equal
+this allowlist; a self-reported scope verdict is insufficient.
 
 ## Verification and return boundary
 
 Blocking checks are the focused generation/input oracle, public-boundary test,
 existing RF-01 atomicity/full-rebuild regression, SDK facts command, and
-`git diff --check`. Required evidence inputs are `G2-BOUNDARY.json`,
-`G2-CTEST.txt`, and `G2-GATE-MANIFEST.json`. The future executor must return
+`git diff --check`. Required evidence inputs remain exactly
+`G2-BOUNDARY.json`, `G2-CTEST.txt`, and `G2-GATE-MANIFEST.json`;
+`G2-CTEST.txt` must include the exact `git diff --check` command and exit-0
+result. The future executor must return
 the exact source revision, changed-path inventory, resolver facts, process
 results, and evidence refs. It must not claim G2 or P34 PASS.
 
