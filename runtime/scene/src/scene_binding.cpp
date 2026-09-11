@@ -16,6 +16,7 @@ foundation::Result<SceneSyncReceipt> SceneBinding::rebuild(const ICompiledSceneS
     SceneApplyReceipt apply = std::move(applyResult.value());
     return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
         .revision = apply.afterRevision,
+        .semanticGeneration = {},
         .disposition = SceneSyncDisposition::kRebuiltFull,
         .apply = std::move(apply),
         .incrementalFailure = std::nullopt,
@@ -42,8 +43,59 @@ foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(const ICompiledSc
     SceneApplyReceipt apply = std::move(applyResult.value());
     return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
         .revision = apply.afterRevision,
+        .semanticGeneration = {},
         .disposition = SceneSyncDisposition::kAppliedIncremental,
         .apply = std::move(apply),
+        .incrementalFailure = std::nullopt,
+    });
+}
+
+foundation::Result<SceneSyncReceipt> SceneBinding::rebuild(
+    const ISemanticSceneCompiler& compiler, const SceneCommitInput& input) {
+    if (input.changes != nullptr) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            foundation::Error{foundation::ErrorCode::kInvalidRevision,
+                              "Full semantic rebuild must not carry a ChangeSet"});
+    }
+    auto snapshot = compiler.compileFull(input.post_state);
+    if (!snapshot) {
+        return foundation::Result<SceneSyncReceipt>::failure(snapshot.error());
+    }
+    auto applied = _scene.replace(input, std::move(snapshot.value()));
+    if (!applied) {
+        return foundation::Result<SceneSyncReceipt>::failure(applied.error());
+    }
+    SceneApplyReceipt receipt = std::move(applied.value());
+    return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
+        .revision = receipt.afterRevision,
+        .semanticGeneration = input.after_generation,
+        .disposition = SceneSyncDisposition::kRebuiltFull,
+        .apply = std::move(receipt),
+        .incrementalFailure = std::nullopt,
+    });
+}
+
+foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
+    const ISemanticSceneCompiler& compiler, const SceneCommitInput& input) {
+    if (input.changes == nullptr) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            foundation::Error{foundation::ErrorCode::kInvalidRevision,
+                              "Incremental semantic synchronization requires a ChangeSet"});
+    }
+    auto delta = compiler.compileDelta(input.post_state, *input.changes);
+    if (!delta) {
+        return foundation::Result<SceneSyncReceipt>::failure(delta.error());
+    }
+    auto applied = _scene.apply(input, std::move(delta.value()));
+    if (!applied) {
+        return foundation::Result<SceneSyncReceipt>::failure(applied.error());
+    }
+    SceneApplyReceipt receipt = std::move(applied.value());
+    return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
+        .revision = receipt.afterRevision,
+        .semanticGeneration = input.after_generation,
+        .disposition = SceneSyncDisposition::kAppliedIncremental,
+        .apply = std::move(receipt),
         .incrementalFailure = std::nullopt,
     });
 }
@@ -62,6 +114,7 @@ SceneBinding::rebuildAfterIncrementalFailure(const ICompiledSceneSource& source,
     SceneApplyReceipt apply = std::move(applyResult.value());
     return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
         .revision = apply.afterRevision,
+        .semanticGeneration = {},
         .disposition = SceneSyncDisposition::kRebuiltFull,
         .apply = std::move(apply),
         .incrementalFailure = std::move(incrementalFailure),

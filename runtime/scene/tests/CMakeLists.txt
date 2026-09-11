@@ -34,6 +34,22 @@ endif()
 
 add_test(NAME canvas_rf01_scene_binding COMMAND canvas_rf01_scene_binding_test)
 
+add_executable(canvas_g2_a0_semantic_generation_binding
+    semantic_generation_binding_test.cpp)
+target_link_libraries(canvas_g2_a0_semantic_generation_binding
+    PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+
+if(MSVC)
+    target_compile_options(
+        canvas_g2_a0_semantic_generation_binding PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(
+        canvas_g2_a0_semantic_generation_binding PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+add_test(NAME canvas_g2_a0_semantic_generation_binding
+         COMMAND canvas_g2_a0_semantic_generation_binding)
+
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
 

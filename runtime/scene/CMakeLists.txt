@@ -7,8 +7,10 @@ add_library(canvas_runtime_scene STATIC
     src/scene_view.cpp
     src/shadow_render_scene.cpp
     src/uniform_grid_spatial_index.cpp)
-target_include_directories(canvas_runtime_scene PUBLIC include)
-target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation)
+target_include_directories(canvas_runtime_scene PUBLIC include
+                           ${PROJECT_SOURCE_DIR}/runtime/semantic/include)
+target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation
+                      canvas_runtime_semantic)
 target_compile_features(canvas_runtime_scene PUBLIC cxx_std_20)
 
 if(MSVC)

@@ -188,6 +188,26 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
     }
 }
 
+foundation::Result<SceneApplyReceipt> Scene::replace(const SceneCommitInput& input,
+                                                    CompiledSceneSnapshot snapshot) {
+    const bool initialGenerationBaseline =
+        _revision.isZero() && _semanticGeneration == semantic::SemanticGeneration(0) &&
+        input.before_generation == semantic::SemanticGeneration(0) &&
+        input.after_generation == semantic::SemanticGeneration(0);
+    if (input.post_state.generation() != input.after_generation ||
+        input.before_generation != input.after_generation ||
+        (!initialGenerationBaseline && input.after_generation <= _semanticGeneration)) {
+        return foundation::Result<SceneApplyReceipt>::failure(makeError(
+            foundation::ErrorCode::kInvalidRevision,
+            "SceneCommitInput generation does not match full replacement"));
+    }
+    auto result = replace(std::move(snapshot));
+    if (result) {
+        _semanticGeneration = input.after_generation;
+    }
+    return result;
+}
+
 foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
     if (delta.beforeRevision != _revision || delta.afterRevision <= delta.beforeRevision) {
         return foundation::Result<SceneApplyReceipt>::failure(makeError(
@@ -256,6 +276,24 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
         return foundation::Result<SceneApplyReceipt>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory, "Unable to prepare Scene delta"));
     }
+}
+
+foundation::Result<SceneApplyReceipt> Scene::apply(const SceneCommitInput& input,
+                                                  CompiledSceneDelta delta) {
+    if (input.changes == nullptr || input.post_state.generation() != input.after_generation ||
+        input.changes->beforeGeneration() != input.before_generation ||
+        input.changes->afterGeneration() != input.after_generation ||
+        input.before_generation != _semanticGeneration ||
+        input.after_generation <= input.before_generation) {
+        return foundation::Result<SceneApplyReceipt>::failure(makeError(
+            foundation::ErrorCode::kInvalidRevision,
+            "SceneCommitInput generation transition is invalid"));
+    }
+    auto result = apply(std::move(delta));
+    if (result) {
+        _semanticGeneration = input.after_generation;
+    }
+    return result;
 }
 
 foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) const {

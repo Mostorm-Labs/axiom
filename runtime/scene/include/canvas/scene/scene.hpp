@@ -7,6 +7,7 @@
 #include "canvas/scene/scene_query.hpp"
 #include "canvas/scene/scene_record_store.hpp"
 #include "canvas/scene/scene_types.hpp"
+#include "canvas/scene/scene_commit_input.hpp"
 #include "canvas/scene/spatial_index.hpp"
 
 #include <cstddef>
@@ -66,6 +67,9 @@ class Scene final {
     [[nodiscard]] SceneRevision revision() const {
         return _revision;
     }
+    [[nodiscard]] semantic::SemanticGeneration semanticGeneration() const {
+        return _semanticGeneration;
+    }
     [[nodiscard]] SceneReadView read() const {
         return SceneReadView(_revision, _records.records());
     }
@@ -83,6 +87,11 @@ class Scene final {
                                           SceneRevision throughInclusive) const;
     void compactDamageThrough(SceneRevision revision);
 
+    foundation::Result<SceneApplyReceipt> replace(const SceneCommitInput& input,
+                                                  CompiledSceneSnapshot snapshot);
+    foundation::Result<SceneApplyReceipt> apply(const SceneCommitInput& input,
+                                                CompiledSceneDelta delta);
+
     [[nodiscard]] SceneCommitDiagnostics commitDiagnostics() const {
         return _commitDiagnostics;
     }
@@ -96,6 +105,7 @@ class Scene final {
     std::unique_ptr<ISpatialIndex> _spatialIndex;
     DamageTracker _damageTracker;
     SceneRevision _revision;
+    semantic::SemanticGeneration _semanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
 };
 
