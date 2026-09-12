@@ -8,6 +8,17 @@
 
 namespace canvas::scene {
 namespace {
+void encodeBrush(std::ostringstream& out, const semantic::BrushDescriptor& brush) {
+    out << ":brush:" << brush.brush_family_id << ':' << brush.brush_version << ':'
+        << brush.color.r << ',' << brush.color.g << ',' << brush.color.b << ',' << brush.color.a
+        << ':' << brush.nominal_size << ':' << brush.opacity << ':' << static_cast<unsigned>(brush.blend_mode)
+        << ':' << brush.pressure.enabled << ':';
+    if (brush.pressure.size_curve) { out << "sc"; for (const auto& p : brush.pressure.size_curve->points) out << ',' << p.x << ',' << p.y; }
+    out << ':' << brush.pressure.opacity_curve.has_value() << ':' << brush.tilt.enabled << ':'
+        << brush.tilt.size_influence << ':' << brush.tilt.angle_influence << ':'
+        << brush.smoothing.amount << ':' << brush.spacing.normalized_spacing;
+    if (brush.texture_resource_id) { out << ":tex:"; for (const auto byte : brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }
+}
 std::string geometryText(const semantic::ObjectRecord& r) {
     std::ostringstream out;
     out.precision(17);
@@ -37,12 +48,10 @@ std::string geometryText(const semantic::ObjectRecord& r) {
             out << ":text:" << c.document.paragraphs.size();
             for (const auto& paragraph : c.document.paragraphs) for (const auto& run : paragraph.runs) out << ':' << run.text;
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
-            out << ":vstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.brush_version << ':' << c.stroke.brush.nominal_size;
-            if (c.stroke.brush.texture_resource_id) { out << ":tex:"; for (const auto byte : c.stroke.brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }
+            out << ":vstroke:" << c.stroke.deterministic_seed; encodeBrush(out, c.stroke.brush);
             if (const auto* data = std::get_if<semantic::VectorStrokeData>(&c.stroke.data)) for (const auto& sample : data->samples) out << ':' << sample.position.x << ',' << sample.position.y << ',' << sample.pressure << ',' << sample.tilt.x << ',' << sample.tilt.y;
         } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
-            out << ":dstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.brush_version << ':' << c.stroke.brush.nominal_size;
-            if (c.stroke.brush.texture_resource_id) { out << ":tex:"; for (const auto byte : c.stroke.brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }
+            out << ":dstroke:" << c.stroke.deterministic_seed; encodeBrush(out, c.stroke.brush);
             if (const auto* data = std::get_if<semantic::DabStrokeData>(&c.stroke.data)) for (const auto& dab : data->dabs) out << ':' << dab.center.x << ',' << dab.center.y << ',' << dab.size << ',' << dab.rotation << ',' << dab.opacity;
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             out << ":connector:" << static_cast<unsigned>(c.routing);
