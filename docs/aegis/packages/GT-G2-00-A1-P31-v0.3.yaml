@@ -1,0 +1,123 @@
+type: aegis_task_package_materialization
+package_id: GT-G2-00-A1-P31-v0.3
+package_ref: notion://3d94c57a590c811a8c38e6947997deb8/GT-G2-00-A1-P31-v0.3
+supersedes: notion://3d84c57a590c810c873dd597fac8189b/GT-G2-00-A1-P31-v0.2
+task_id: GT-G2-00-A1
+stage: P31_TARGETED_REPACKAGE
+stage_owner: aegis-implementation
+verdict: READY_FOR_P32_CONTROL_REREVIEW
+package_scope: G2-A1_ONLY
+repair_class: TASK_PACKAGE_DEFECT
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+  task_anchor:
+    revision: a4425744799303eaeaa22a1d005b6005696879b9
+    relation: ancestor
+predecessor:
+  task_id: GT-G2-00-A0
+  integrated_source_ref: a4425744799303eaeaa22a1d005b6005696879b9
+  integration_closure_status: COMPLETE
+existing_execution_candidate:
+  execution_ref: codex/gt-g2-a1-code-execution-v2
+  result_revision: a3ff66ee76488d4bc3d95b51b74ad9aed50240e4
+  materialized_ref: a04bd819fb3704d85edb357907d7fd5b2f41686b
+  preservation_policy: preserve_for_independent_P32_control_rereview
+  new_code_execution_required: false
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.1
+  obligation_set_id: GT-G2-00-OBL-v0.1
+  trusted_basis_id: GT-G2-00-TB-v0.1
+  scope_contract_id: GT-G2-00-SCOPE-v0.1
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.1
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+frozen_obligations:
+  - T02-R02
+objective:
+  - establish_renderer_neutral_runtime_scene_projection
+  - remove_render_core_ownership_leakage_from_shared_scene_projection
+  - preserve_generation_bound_input_from_A0
+  - cover_exactly_nine_v1_object_kinds
+  - reject_or_absent_Page_object_kind
+authorized_source_paths:
+  MODIFY:
+    - runtime/scene/include/canvas/scene/render_scene.hpp
+    - runtime/scene/include/canvas/scene/scene_types.hpp
+    - runtime/scene/src/scene.cpp
+    - runtime/scene/tests/CMakeLists.txt
+  CREATE:
+    - runtime/scene/tests/runtime_record_projection_test.cpp
+  READ_ONLY_REFERENCE:
+    - runtime/scene/include/canvas/scene/scene.hpp
+    - runtime/scene/CMakeLists.txt
+    - runtime/scene/testing/CMakeLists.txt
+    - runtime/scene/include/canvas/scene/scene_binding.hpp
+    - runtime/scene/include/canvas/scene/scene_commit_input.hpp
+    - runtime/scene/include/canvas/scene/scene_compiler.hpp
+    - runtime/scene/include/canvas/scene/scene_query.hpp
+    - runtime/scene/include/canvas/scene/scene_record_store.hpp
+    - runtime/scene/include/canvas/scene/scene_view.hpp
+forbidden_changes:
+  - runtime/semantic/**
+  - schema/**
+  - persistence/**
+  - render/**
+  - skia/**
+  - gpu/**
+  - platform/**
+  - semantic-sdk.lock.json
+  - public_semantic_contracts
+  - semantic_generation_or_changeset_contract
+  - new_object_kinds
+  - Page_object_kind_introduction
+  - production_draw_or_frame_ownership
+required_verification:
+  - focused_renderer_neutral_projection_oracle
+  - focused_all_nine_v1_kind_oracle
+  - explicit_Page_absence_or_rejection
+  - public_header_dependency_boundary_check
+  - existing_RF01_atomicity_regression
+  - existing_RF01_full_rebuild_regression
+  - protobuf_ON_declared_behavior
+  - protobuf_OFF_declared_behavior
+  - fresh_exact_source_clean_checkout
+  - git_diff_check
+evidence_inventory:
+  - G2-A1-BOUNDARY.json
+  - G2-A1-PROJECTION.json
+  - G2-A1-CTEST.txt
+  - G2-A1-GATE-MANIFEST.json
+evidence_contract:
+  source_changed_paths_must_equal_authorized: true
+  authorized_mutation_path_count: 5
+  evidence_only_materialization: true
+  source_changes_in_materialized_commit: forbidden
+  exact_source_sha_required: true
+  provider_tested_source_sha_must_match: true
+  no_fake_machine_facts: true
+  no_evidence_commit_as_source_base: true
+terminal_success:
+  - T02-R02_pass
+  - exact_nine_kind_projection_pass
+  - renderer_neutral_boundary_pass
+  - Page_absent_or_rejected
+  - focused_and_RF01_regressions_pass
+  - fresh_exact_source_checkout_pass
+  - exact_five_path_source_delta
+  - exact_evidence_inventory_materialized
+  - exactly_one_evidence_only_direct_descendant
+terminal_blockers:
+  - AUTHORITY_CONFLICT
+  - MISSING_REQUIRED_INPUT
+  - ENVIRONMENT_BLOCKER
+  - FROZEN_VERIFICATION_FAILURE
+  - NEW_HIGH_IMPACT_FAILURE_MODE
+  - PACKAGE_SCOPE_DIVERGENCE
+return_policy:
+  continue_until_terminal_state: true
+  return_surface: P32_CONTROL_REREVIEW
+  new_code_execution_required: false
+  official_g2_pass_claimed: false
+  official_p34_pass_claimed: false
+  g2_a2_started: false
