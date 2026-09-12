@@ -47,8 +47,9 @@ int main() {
     graph.addRelation(resource_id, image.id);
     graph.addRelation(image.id, connector.id);
     const auto resourceChain = graph.closure({resource_id});
-    assert((resourceChain == std::vector<foundation::ObjectId>{resource_id, image.id, connector.id}));
+    assert((resourceChain == std::vector<foundation::ObjectId>{image.id, connector.id, resource_id}));
     graph.removeRelation(image.id, connector.id);
-    assert(graph.closure({resource_id}) == std::vector<foundation::ObjectId>{resource_id, image.id});
+    const auto resourceImageOnly = graph.closure({resource_id});
+    assert((resourceImageOnly == std::vector<foundation::ObjectId>{image.id, resource_id}));
     return 0;
 }
