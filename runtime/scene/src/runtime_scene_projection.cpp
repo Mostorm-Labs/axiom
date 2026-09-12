@@ -18,23 +18,41 @@ std::string geometryText(const semantic::ObjectRecord& r) {
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             out << ":shape:" << c.shape_kind << ':' << c.width << ':' << c.height;
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
-            out << ":image:" << c.resource_id.value.bytes[0] << ':' << c.width << ':' << c.height;
+            out << ":image:";
+            for (const auto byte : c.resource_id.value.bytes) out << static_cast<unsigned>(byte) << ',';
+            out << ':' << c.intrinsic_width << ':' << c.intrinsic_height << ':' << c.width << ':' << c.height;
         } else if constexpr (std::is_same_v<T, semantic::VectorPathContent>) {
             out << ":path:" << static_cast<unsigned>(c.geometry.fill_rule) << ':' << c.geometry.commands.size();
             for (const auto& command : c.geometry.commands) {
-                std::visit([&](const auto& value) { out << ':' << sizeof(value); }, command);
+                std::visit([&](const auto& value) {
+                    using C = std::decay_t<decltype(value)>;
+                    if constexpr (std::is_same_v<C, semantic::MoveTo>) out << ":M:" << value.point.x << ',' << value.point.y;
+                    else if constexpr (std::is_same_v<C, semantic::LineTo>) out << ":L:" << value.end.x << ',' << value.end.y;
+                    else if constexpr (std::is_same_v<C, semantic::QuadTo>) out << ":Q:" << value.control.x << ',' << value.control.y << ',' << value.end.x << ',' << value.end.y;
+                    else if constexpr (std::is_same_v<C, semantic::CubicTo>) out << ":C:" << value.control1.x << ',' << value.control1.y << ',' << value.control2.x << ',' << value.control2.y << ',' << value.end.x << ',' << value.end.y;
+                    else out << ":Z";
+                }, command);
             }
         } else if constexpr (std::is_same_v<T, semantic::RichTextContent>) {
             out << ":text:" << c.document.paragraphs.size();
             for (const auto& paragraph : c.document.paragraphs) for (const auto& run : paragraph.runs) out << ':' << run.text;
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
-            out << ":vstroke:" << c.stroke.deterministic_seed;
-            if (const auto* data = std::get_if<semantic::VectorStrokeData>(&c.stroke.data)) out << ':' << data->samples.size();
+            out << ":vstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.nominal_size;
+            if (const auto* data = std::get_if<semantic::VectorStrokeData>(&c.stroke.data)) for (const auto& sample : data->samples) out << ':' << sample.position.x << ',' << sample.position.y << ',' << sample.pressure << ',' << sample.tilt.x << ',' << sample.tilt.y;
         } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
-            out << ":dstroke:" << c.stroke.deterministic_seed;
-            if (const auto* data = std::get_if<semantic::DabStrokeData>(&c.stroke.data)) out << ':' << data->dabs.size();
+            out << ":dstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.nominal_size;
+            if (const auto* data = std::get_if<semantic::DabStrokeData>(&c.stroke.data)) for (const auto& dab : data->dabs) out << ':' << dab.center.x << ',' << dab.center.y << ',' << dab.size << ',' << dab.rotation << ',' << dab.opacity;
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             out << ":connector:" << static_cast<unsigned>(c.routing);
+            for (const auto* endpoint : {&c.start, &c.end}) std::visit([&](const auto& value) {
+                using E = std::decay_t<decltype(value)>;
+                if constexpr (std::is_same_v<E, semantic::FreePointEndpoint>) {
+                    out << ":free:" << value.point.x << ',' << value.point.y;
+                } else {
+                    out << ":attached:";
+                    for (const auto byte : value.target_object_id.bytes) out << static_cast<unsigned>(byte) << ',';
+                }
+            }, endpoint->value);
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {
             out << ":sticky:" << c.width << ':' << c.height;
         } else {
