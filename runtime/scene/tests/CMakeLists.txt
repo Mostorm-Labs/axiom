@@ -50,6 +50,20 @@ endif()
 add_test(NAME canvas_g2_a0_semantic_generation_binding
          COMMAND canvas_g2_a0_semantic_generation_binding)
 
+add_executable(canvas_g2_a1_runtime_record_projection
+    runtime_record_projection_test.cpp)
+target_link_libraries(canvas_g2_a1_runtime_record_projection
+    PRIVATE canvas_runtime_scene canvas_runtime_semantic)
+target_include_directories(canvas_g2_a1_runtime_record_projection
+    PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+if(MSVC)
+    target_compile_options(canvas_g2_a1_runtime_record_projection PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_g2_a1_runtime_record_projection PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME canvas_g2_a1_runtime_record_projection
+         COMMAND canvas_g2_a1_runtime_record_projection)
+
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
 

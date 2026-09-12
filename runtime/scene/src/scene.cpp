@@ -15,6 +15,22 @@ foundation::Error makeError(foundation::ErrorCode code, const char* message) {
     return foundation::Error{code, message};
 }
 
+bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
+    switch (kind) {
+    case semantic::ObjectKind::kShape:
+    case semantic::ObjectKind::kImage:
+    case semantic::ObjectKind::kVectorPath:
+    case semantic::ObjectKind::kRichText:
+    case semantic::ObjectKind::kVectorStroke:
+    case semantic::ObjectKind::kDabStroke:
+    case semantic::ObjectKind::kConnector:
+    case semantic::ObjectKind::kSticky:
+    case semantic::ObjectKind::kGroup:
+        return true;
+    }
+    return false;
+}
+
 std::vector<SpatialRecord> makeSpatialRecords(std::span<const SceneRecord> records) {
     std::vector<SpatialRecord> spatialRecords;
     spatialRecords.reserve(records.size());
@@ -91,6 +107,40 @@ bool hasKnownHitKinds(HitTestKindMask kinds) {
 }
 
 } // namespace
+
+foundation::Result<RuntimeSceneProjection> RuntimeScene::replace(
+    const semantic::SemanticReadView& post_state) {
+    try {
+        const std::vector<semantic::ObjectRecord> source = post_state.allObjects();
+        for (const semantic::ObjectRecord& record : source) {
+            if (record.id.isZero() || !isSupportedRuntimeKind(record.kind)) {
+                return foundation::Result<RuntimeSceneProjection>::failure(
+                    makeError(foundation::ErrorCode::kInvalidRecord,
+                              "RuntimeScene contains an unknown or invalid object kind"));
+            }
+        }
+        RuntimeSceneProjection next = projectRuntimeScene(source, post_state.generation());
+        // Materialize the return value before publishing so an allocation
+        // failure cannot leave the RuntimeScene half-updated.
+        RuntimeSceneProjection result = next;
+        _projection = std::move(next);
+        return foundation::Result<RuntimeSceneProjection>::success(std::move(result));
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<RuntimeSceneProjection>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "Unable to prepare renderer-neutral RuntimeScene projection"));
+    }
+}
+
+foundation::Result<RuntimeSceneProjection> RuntimeScene::apply(
+    const semantic::SemanticReadView& post_state) {
+    if (post_state.generation() <= _projection.generation) {
+        return foundation::Result<RuntimeSceneProjection>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "RuntimeScene generation must advance on apply"));
+    }
+    return replace(post_state);
+}
 
 const SceneRecord* SceneReadView::find(ObjectId objectId) const {
     const auto found =
