@@ -91,5 +91,16 @@ int main() {
     const auto degenerate = scene::computeBounds(record);
     assert(degenerate.finite);
     assert(degenerate.geometry == foundation::WorldRect{});
+
+    record.kind = semantic::ObjectKind::kVectorPath;
+    record.transform = semantic::Transform2D{1.0, 0.0, 0.0, 1.0, 10.0, -5.0};
+    record.content = semantic::VectorPathContent{semantic::VectorPathGeometry{
+        .commands = {semantic::MoveTo{{-2.0, 4.0}},
+                     semantic::CubicTo{{8.0, -6.0}, {12.0, 18.0}, {20.0, 3.0}}}}};
+    const auto semanticPath = scene::computeBounds(record);
+    assert(semanticPath.finite);
+    assert((semanticPath.geometry == foundation::WorldRect{-2.0F, -6.0F, 20.0F, 18.0F}));
+    assert(semanticPath.visual == semanticPath.geometry);
+    assert((semanticPath.world == foundation::WorldRect{8.0F, -11.0F, 30.0F, 13.0F}));
     return 0;
 }

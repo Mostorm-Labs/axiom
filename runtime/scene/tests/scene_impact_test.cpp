@@ -2,6 +2,41 @@
 #include "canvas/foundation/object_id.hpp"
 
 #include <cassert>
+#include <array>
+#include <string_view>
+
+namespace {
+using canvas::DirtyState;
+using canvas::ImpactClassification;
+
+bool exact(const ImpactClassification& actual, const ImpactClassification& expected) {
+    return actual.record == expected.record && actual.hierarchy == expected.hierarchy &&
+           actual.local_geometry == expected.local_geometry &&
+           actual.visual_bounds == expected.visual_bounds &&
+           actual.world_bounds == expected.world_bounds && actual.spatial == expected.spatial &&
+           actual.relation == expected.relation && actual.resource == expected.resource &&
+           actual.visibility == expected.visibility &&
+           actual.ordinary_property == expected.ordinary_property;
+}
+
+ImpactClassification reuse() { return {}; }
+ImpactClassification dirty(std::initializer_list<const char*> fields) {
+    ImpactClassification out;
+    for (const auto* field : fields) {
+        if (std::string_view(field) == "record") out.record = DirtyState::kDirty;
+        if (std::string_view(field) == "hierarchy") out.hierarchy = DirtyState::kDirty;
+        if (std::string_view(field) == "local") out.local_geometry = DirtyState::kDirty;
+        if (std::string_view(field) == "visual") out.visual_bounds = DirtyState::kDirty;
+        if (std::string_view(field) == "world") out.world_bounds = DirtyState::kDirty;
+        if (std::string_view(field) == "spatial") out.spatial = DirtyState::kDirty;
+        if (std::string_view(field) == "relation") out.relation = DirtyState::kDirty;
+        if (std::string_view(field) == "resource") out.resource = DirtyState::kDirty;
+        if (std::string_view(field) == "visibility") out.visibility = DirtyState::kDirty;
+        if (std::string_view(field) == "ordinary") out.ordinary_property = DirtyState::kDirty;
+    }
+    return out;
+}
+} // namespace
 
 int main() {
     using namespace canvas;
@@ -88,5 +123,36 @@ int main() {
         semantic::ObjectSemanticChange{.object_id = image.id,
                                        .flags = semantic::SemanticChangeFlags::kProperties});
     assert(emptyProperties.visual_bounds == scene::DirtyState::kDirty);
+
+    const auto id = foundation::ObjectId::fromUint64(20);
+    struct Row {
+        semantic::ObjectSemanticChange change;
+        ImpactClassification expected;
+    };
+    const std::array<Row, 11> rows{
+        Row{{id, semantic::SemanticChangeFlags::kTransform, {}}, dirty({"world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kPlacement, {}}, dirty({"hierarchy", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kContent, {}}, dirty({"local", "visual", "world", "spatial", "relation"})},
+        Row{{id, semantic::SemanticChangeFlags::kProperties, {0x101U}}, dirty({"visual", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kProperties, {1U}}, dirty({"visibility"})},
+        Row{{id, semantic::SemanticChangeFlags::kProperties, {3U}}, dirty({"ordinary"})},
+        Row{{id, semantic::SemanticChangeFlags::kProperties, {0x200U}}, dirty({"visual", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kCreated, {}}, dirty({"record", "hierarchy", "local", "visual", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kDeleted, {}}, dirty({"record", "hierarchy", "local", "visual", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kEraseMasks, {}}, dirty({"visual", "world", "spatial"})},
+        Row{{id, semantic::SemanticChangeFlags::kProperties, {}}, dirty({"visual", "world", "spatial"})},
+    };
+    for (const auto& row : rows) assert(exact(scene::classifyImpact(row.change), row.expected));
+
+    semantic::ObjectRecord vectorRecord;
+    vectorRecord.id = id;
+    vectorRecord.kind = semantic::ObjectKind::kVectorStroke;
+    vectorRecord.content = semantic::VectorStrokeContent{semantic::StrokeRecord{
+        .brush = semantic::BrushDescriptor{.texture_resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(900)}}}};
+    const auto resourceImpact = scene::classifyImpact(
+        semantic::ObjectSemanticChange{id, semantic::SemanticChangeFlags::kContent, {}},
+        &vectorRecord);
+    assert(resourceImpact.resource == DirtyState::kDirty);
+    assert(resourceImpact.relation == DirtyState::kReuse);
     return 0;
 }
