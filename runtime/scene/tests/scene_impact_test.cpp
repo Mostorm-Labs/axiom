@@ -101,8 +101,7 @@ int main() {
         semantic::ObjectSemanticChange{.object_id = image.id,
                                        .flags = semantic::SemanticChangeFlags::kContent},
         &image);
-    assert(imageContent.relation == scene::DirtyState::kReuse);
-    assert(imageContent.resource == scene::DirtyState::kDirty);
+    assert(exact(imageContent, dirty({"local", "visual", "world", "spatial", "resource"})));
 
     semantic::ObjectRecord connectorRecord;
     connectorRecord.id = foundation::ObjectId::fromUint64(7);
@@ -111,7 +110,7 @@ int main() {
         semantic::ObjectSemanticChange{.object_id = connectorRecord.id,
                                        .flags = semantic::SemanticChangeFlags::kContent},
         &connectorRecord);
-    assert(connectorContent.relation == scene::DirtyState::kDirty);
+    assert(exact(connectorContent, dirty({"local", "visual", "world", "spatial", "relation"})));
 
     const auto ordinaryContent = scene::classifyImpact(
         semantic::ObjectSemanticChange{.object_id = image.id,
@@ -152,7 +151,6 @@ int main() {
     const auto resourceImpact = scene::classifyImpact(
         semantic::ObjectSemanticChange{id, semantic::SemanticChangeFlags::kContent, {}},
         &vectorRecord);
-    assert(resourceImpact.resource == DirtyState::kDirty);
-    assert(resourceImpact.relation == DirtyState::kReuse);
+    assert(exact(resourceImpact, dirty({"local", "visual", "world", "spatial", "resource"})));
     return 0;
 }

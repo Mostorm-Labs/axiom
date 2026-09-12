@@ -51,5 +51,22 @@ int main() {
     graph.removeRelation(image.id, connector.id);
     const auto resourceImageOnly = graph.closure({resource_id});
     assert((resourceImageOnly == std::vector<foundation::ObjectId>{image.id, resource_id}));
+
+    // A disjoint cold component must never enter an active closure.
+    const auto coldRoot = foundation::ObjectId::fromUint64(7000);
+    const auto coldLeaf = foundation::ObjectId::fromUint64(7001);
+    graph.addHierarchy(coldRoot, coldLeaf);
+    graph.addRelation(coldLeaf, foundation::ObjectId::fromUint64(7002));
+    assert((graph.closure({resource_id}) ==
+            std::vector<foundation::ObjectId>{image.id, resource_id}));
+
+    // Creation inserts a dependent edge; deletion removes it without a stale closure.
+    const auto createdDependent = foundation::ObjectId::fromUint64(8001);
+    graph.addRelation(image.id, createdDependent);
+    const auto afterCreate = graph.closure({resource_id});
+    assert((afterCreate == std::vector<foundation::ObjectId>{image.id, createdDependent, resource_id}));
+    graph.removeRelation(image.id, createdDependent);
+    assert((graph.closure({resource_id}) ==
+            std::vector<foundation::ObjectId>{image.id, resource_id}));
     return 0;
 }
