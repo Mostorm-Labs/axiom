@@ -3,6 +3,10 @@ add_library(canvas_runtime_scene STATIC
     src/direct_render_scene.cpp
     src/scene.cpp
     src/scene_binding.cpp
+    src/bounds_system.cpp
+    src/reference_geometry.cpp
+    src/scene_impact.cpp
+    src/scene_dependency_graph.cpp
     src/scene_record_store.cpp
     src/scene_view.cpp
     src/shadow_render_scene.cpp
