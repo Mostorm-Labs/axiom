@@ -67,19 +67,28 @@ int main() {
         .width = 40.0,
         .height = 30.0};
     const auto image = scene::computeBounds(record);
-    assert(image.geometry.right == 40.0F && image.geometry.bottom == 30.0F);
+    assert(image.finite);
+    assert((image.geometry == foundation::WorldRect{0.0F, 0.0F, 40.0F, 30.0F}));
+    assert((image.visual == foundation::WorldRect{0.0F, 0.0F, 40.0F, 30.0F}));
+    assert((image.world == foundation::WorldRect{-23.0F, 11.0F, 7.0F, 51.0F}));
 
     record.kind = semantic::ObjectKind::kSticky;
     record.content = semantic::StickyContent{25.0, 15.0};
     const auto sticky = scene::computeBounds(record);
-    assert(sticky.geometry.right == 25.0F && sticky.geometry.bottom == 15.0F);
+    assert(sticky.finite);
+    assert((sticky.geometry == foundation::WorldRect{0.0F, 0.0F, 25.0F, 15.0F}));
+    assert((sticky.visual == foundation::WorldRect{0.0F, 0.0F, 25.0F, 15.0F}));
+    assert((sticky.world == foundation::WorldRect{-8.0F, 11.0F, 7.0F, 36.0F}));
 
     record.kind = semantic::ObjectKind::kRichText;
     record.content = semantic::RichTextContent{semantic::RichTextDocument{
         {semantic::Paragraph{.style = semantic::ParagraphStyle{.line_height = 12.0},
                              .runs = {semantic::TextRun{.text = "abcd", .style = semantic::TextStyle{.font_size = 10.0}}}}}}};
     const auto text = scene::computeBounds(record);
-    assert(text.geometry.right == 20.0F && text.geometry.bottom == 12.0F);
+    assert(text.finite);
+    assert((text.geometry == foundation::WorldRect{0.0F, 0.0F, 20.0F, 12.0F}));
+    assert((text.visual == foundation::WorldRect{0.0F, 0.0F, 20.0F, 12.0F}));
+    assert((text.world == foundation::WorldRect{-5.0F, 11.0F, 7.0F, 31.0F}));
 
     record.kind = semantic::ObjectKind::kShape;
     record.content = semantic::ShapeContent{1, std::numeric_limits<double>::quiet_NaN(), 2.0};
@@ -90,7 +99,9 @@ int main() {
     record.content = semantic::ShapeContent{1, 0.0, 0.0};
     const auto degenerate = scene::computeBounds(record);
     assert(degenerate.finite);
-    assert(degenerate.geometry == foundation::WorldRect{});
+    assert((degenerate.geometry == foundation::WorldRect{0.0F, 0.0F, 0.0F, 0.0F}));
+    assert((degenerate.visual == foundation::WorldRect{0.0F, 0.0F, 0.0F, 0.0F}));
+    assert((degenerate.world == foundation::WorldRect{7.0F, 11.0F, 7.0F, 11.0F}));
 
     record.kind = semantic::ObjectKind::kVectorPath;
     record.transform = semantic::Transform2D{1.0, 0.0, 0.0, 1.0, 10.0, -5.0};
