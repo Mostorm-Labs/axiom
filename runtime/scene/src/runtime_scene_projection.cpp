@@ -14,7 +14,9 @@ void encodeBrush(std::ostringstream& out, const semantic::BrushDescriptor& brush
         << ':' << brush.nominal_size << ':' << brush.opacity << ':' << static_cast<unsigned>(brush.blend_mode)
         << ':' << brush.pressure.enabled << ':';
     if (brush.pressure.size_curve) { out << "sc"; for (const auto& p : brush.pressure.size_curve->points) out << ',' << p.x << ',' << p.y; }
-    out << ':' << brush.pressure.opacity_curve.has_value() << ':' << brush.tilt.enabled << ':'
+    out << ':';
+    if (brush.pressure.opacity_curve) { out << "oc"; for (const auto& p : brush.pressure.opacity_curve->points) out << ',' << p.x << ',' << p.y; }
+    out << ':' << brush.tilt.enabled << ':'
         << brush.tilt.size_influence << ':' << brush.tilt.angle_influence << ':'
         << brush.smoothing.amount << ':' << brush.spacing.normalized_spacing;
     if (brush.texture_resource_id) { out << ":tex:"; for (const auto byte : brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }

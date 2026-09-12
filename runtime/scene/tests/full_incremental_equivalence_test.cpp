@@ -75,8 +75,8 @@ int main() {
         {canvas::semantic::ObjectId::fromUint64(2), canvas::semantic::ObjectKind::kImage, 1, std::nullopt, {2}, 2.0, "2:1,0,0,1,2,0:image:90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:0:0:11:12", {0,0,11,12}, {0,0,11,12}, {2,0,13,12}, {canvas::semantic::ObjectId::fromUint64(90)}},
         {canvas::semantic::ObjectId::fromUint64(3), canvas::semantic::ObjectKind::kVectorPath, 1, std::nullopt, {3}, 3.0, "3:1,0,0,1,3,0:path:2:2:M:1,2:L:3,4", {1,2,3,4}, {1,2,3,4}, {4,2,6,4}, {}},
         {canvas::semantic::ObjectId::fromUint64(4), canvas::semantic::ObjectKind::kRichText, 1, std::nullopt, {4}, 4.0, "4:1,0,0,1,4,0:text:1:hello", {0,0,2.5F,1}, {0,0,2.5F,1}, {4,0,6.5F,1}, {}},
-        {canvas::semantic::ObjectId::fromUint64(5), canvas::semantic::ObjectKind::kVectorStroke, 1, std::nullopt, {5}, 5.0, "5:1,0,0,1,5,0:vstroke:7:brush:0:0:0,0,0,0:0:0:1:0::0:0:0:0:0:0:1,2,0,0,0", {1,2,1,2}, {1,2,1,2}, {6,2,6,2}, {}},
-        {canvas::semantic::ObjectId::fromUint64(6), canvas::semantic::ObjectKind::kDabStroke, 1, std::nullopt, {6}, 6.0, "6:1,0,0,1,6,0:dstroke:8:brush:0:0:0,0,0,0:0:0:1:0::0:0:0:0:0:0:2,3,4,0,0", {0,1,4,5}, {0,1,4,5}, {6,1,10,5}, {}},
+        {canvas::semantic::ObjectId::fromUint64(5), canvas::semantic::ObjectKind::kVectorStroke, 1, std::nullopt, {5}, 5.0, "5:1,0,0,1,5,0:vstroke:7:brush:0:0:0,0,0,0:0:0:1:0:::0:0:0:0:0:1,2,0,0,0", {1,2,1,2}, {1,2,1,2}, {6,2,6,2}, {}},
+        {canvas::semantic::ObjectId::fromUint64(6), canvas::semantic::ObjectKind::kDabStroke, 1, std::nullopt, {6}, 6.0, "6:1,0,0,1,6,0:dstroke:8:brush:0:0:0,0,0,0:0:0:1:0:::0:0:0:0:0:2,3,4,0,0", {0,1,4,5}, {0,1,4,5}, {6,1,10,5}, {}},
         {canvas::semantic::ObjectId::fromUint64(7), canvas::semantic::ObjectKind::kConnector, 1, std::nullopt, {7}, 7.0, "7:1,0,0,1,7,0:connector:1:free:1,2:attached:1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:auto:", {1,2,1,2}, {1,2,1,2}, {8,2,8,2}, {canvas::semantic::ObjectId::fromUint64(1)}},
         {canvas::semantic::ObjectId::fromUint64(8), canvas::semantic::ObjectKind::kSticky, 1, std::nullopt, {8}, 8.0, "8:1,0,0,1,8,0:sticky:13:14", {0,0,13,14}, {0,0,13,14}, {8,0,21,14}, {}},
         {canvas::semantic::ObjectId::fromUint64(9), canvas::semantic::ObjectKind::kGroup, 1, canvas::semantic::ObjectId::fromUint64(1), {9}, 9.0, "9:1,0,0,1,9,0:group", {}, {}, {}, {canvas::semantic::ObjectId::fromUint64(1)}}};
@@ -144,11 +144,6 @@ int main() {
     auto& brush = std::get<canvas::semantic::VectorStrokeContent>(stroke_b.content).stroke.brush;
     brush.pressure.enabled = true;
     brush.pressure.size_curve = canvas::semantic::PiecewiseLinearCurve01{{{0.0F, 0.1F}, {1.0F, 0.9F}}};
-    brush.tilt.enabled = true;
-    brush.tilt.size_influence = 0.25F;
-    brush.smoothing.amount = 0.5F;
-    brush.spacing.normalized_spacing = 0.75F;
-    brush.texture_resource_id = canvas::semantic::ResourceId{canvas::semantic::ObjectId::fromUint64(77)};
     canvas::semantic::ReferenceObjectStore stroke_store_a;
     canvas::semantic::ReferenceObjectStore stroke_store_b;
     assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(stroke_store_a, stroke_a));
@@ -156,5 +151,33 @@ int main() {
     const auto stroke_projection_a = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(stroke_store_a, canvas::semantic::SemanticGeneration(1)));
     const auto stroke_projection_b = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(stroke_store_b, canvas::semantic::SemanticGeneration(1)));
     assert(stroke_projection_a.value().records[0].referenceGeometryDigest != stroke_projection_b.value().records[0].referenceGeometryDigest);
+
+    auto singleVariableCheck = [&](auto mutate) {
+        auto variant = stroke_a;
+        mutate(variant);
+        canvas::semantic::ReferenceObjectStore control_store;
+        canvas::semantic::ReferenceObjectStore variant_store;
+        assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(control_store, stroke_a));
+        assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(variant_store, variant));
+        const auto control = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(control_store, canvas::semantic::SemanticGeneration(1)));
+        const auto changed = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(variant_store, canvas::semantic::SemanticGeneration(1)));
+        assert(control.value().records[0].referenceGeometryDigest != changed.value().records[0].referenceGeometryDigest);
+    };
+    singleVariableCheck([](auto& value) { std::get<canvas::semantic::VectorStrokeContent>(value.content).stroke.brush.texture_resource_id = canvas::semantic::ResourceId{canvas::semantic::ObjectId::fromUint64(78)}; });
+    singleVariableCheck([](auto& value) { std::get<canvas::semantic::VectorStrokeContent>(value.content).stroke.brush.pressure.opacity_curve = canvas::semantic::PiecewiseLinearCurve01{{{0.0F,0.2F},{1.0F,0.8F}}}; });
+    singleVariableCheck([](auto& value) { std::get<canvas::semantic::VectorStrokeContent>(value.content).stroke.brush.tilt.angle_influence = 0.5F; });
+    singleVariableCheck([](auto& value) { std::get<canvas::semantic::VectorStrokeContent>(value.content).stroke.brush.smoothing.amount = 0.5F; });
+    singleVariableCheck([](auto& value) { std::get<canvas::semantic::VectorStrokeContent>(value.content).stroke.brush.spacing.normalized_spacing = 0.5F; });
+    auto connector_a = makeRecord(canvas::semantic::ObjectKind::kConnector, 43);
+    auto connector_b = connector_a;
+    auto& attached = std::get<canvas::semantic::AttachedEndpoint>(std::get<canvas::semantic::ConnectorContent>(connector_b.content).end.value);
+    attached.anchor = canvas::semantic::StablePortAnchor{.port_id = 9};
+    canvas::semantic::ReferenceObjectStore connector_store_a;
+    canvas::semantic::ReferenceObjectStore connector_store_b;
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(connector_store_a, connector_a));
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(connector_store_b, connector_b));
+    const auto connector_projection_a = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(connector_store_a, canvas::semantic::SemanticGeneration(1)));
+    const auto connector_projection_b = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(connector_store_b, canvas::semantic::SemanticGeneration(1)));
+    assert(connector_projection_a.value().records[0].referenceGeometryDigest != connector_projection_b.value().records[0].referenceGeometryDigest);
     return 0;
 }
