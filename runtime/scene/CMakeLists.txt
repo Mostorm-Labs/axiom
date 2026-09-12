@@ -11,6 +11,9 @@ add_library(canvas_runtime_scene STATIC
     src/scene_view.cpp
     src/shadow_render_scene.cpp
     src/uniform_grid_spatial_index.cpp)
+target_sources(canvas_runtime_scene PRIVATE
+    src/full_scene_compiler.cpp
+    src/runtime_scene_projection.cpp)
 target_include_directories(canvas_runtime_scene PUBLIC include
                            ${PROJECT_SOURCE_DIR}/runtime/semantic/include)
 target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation
