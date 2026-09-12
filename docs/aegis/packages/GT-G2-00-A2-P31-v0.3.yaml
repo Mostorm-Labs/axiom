@@ -1,0 +1,247 @@
+type: aegis_task_package_materialization
+package_id: GT-G2-00-A2-P31-v0.3
+package_ref: notion://3d94c57a590c81c683b3ef699f5fcb02/GT-G2-00-A2-P31-v0.3
+supersedes: notion://3d94c57a590c81c4b7f4c76886e143d8/GT-G2-00-A2-P31-v0.2
+prior_package_materialization_ref: 6d17e9d8bc8e74cc27a353e2145ba23f642c5da3
+p31_control_rereview_ref: notion://3d94c57a590c81698b21d99f6ab501e8/GT-G2-00-A2-P31-CONTROL_REREVIEW-v0.2
+task_id: GT-G2-00-A2
+stage: P31_AUTHORIZATION_RECONCILIATION
+stage_owner: aegis-implementation
+verdict: READY_FOR_P32
+package_scope: G2-A2_ONLY
+repair_class: TASK_PACKAGE_DEFECT
+repair_scope: authorization_state_only
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+  task_anchor:
+    revision: 87a38a32e5ca37ad309ea4a8c1eb4a65a561b761
+    relation: ancestor
+  planning_ancestry_anchor:
+    revision: a908c9bc4acb95566f275747884ae26b7a4c9894
+    relation: ancestor
+predecessor:
+  task_id: GT-G2-00-A1
+  integration_merge_ref: 87a38a32e5ca37ad309ea4a8c1eb4a65a561b761
+  integration_closure_status: COMPLETE
+authority_refs:
+  authority: notion://3c84c57a590c8194a0eed8d1e6f79774/G2-RuntimeScene-Foundation-Implementation-Plan-v0.2
+  module: notion://3c44c57a590c81c5883bf091ccf2278f/Axiom-Scene-Core-v0.1
+  runtime_flow: notion://3c44c57a590c81e5b859fe6168157f26/07-04-Document-RuntimeScene-v0.1
+  bounds_engineering: notion://3c44c57a590c81dc9a27eb4c5e8f2fc7/Axiom-Render-Optimization-02-Bounds-System-v0.1
+  p20: notion://3d74c57a590c81759f10d3dfff15fd7c/GT-G2-00-P20-v0.1
+  p30: notion://3d74c57a590c811390b3cc5c0216f8ea/GT-G2-00-P30-v0.1
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.1
+  obligation_set_id: GT-G2-00-OBL-v0.1
+  trusted_basis_id: GT-G2-00-TB-v0.1
+  scope_contract_id: GT-G2-00-SCOPE-v0.1
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.1
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+frozen_obligations:
+  - T02-R03
+  - T02-R04
+objective:
+  - renderer_neutral_reference_geometry_baseline
+  - finite_deterministic_canonical_conservative_bounds
+  - directional_scene_impact_classification
+  - minimal_correct_runtime_dependency_closure
+authorized_source_paths:
+  MODIFY:
+    - runtime/scene/CMakeLists.txt
+    - runtime/scene/tests/CMakeLists.txt
+  CREATE:
+    - runtime/scene/include/canvas/scene/bounds_system.hpp
+    - runtime/scene/src/bounds_system.cpp
+    - runtime/scene/include/canvas/scene/reference_geometry.hpp
+    - runtime/scene/src/reference_geometry.cpp
+    - runtime/scene/tests/bounds_system_test.cpp
+    - runtime/scene/tests/reference_geometry_test.cpp
+    - runtime/scene/include/canvas/scene/scene_impact.hpp
+    - runtime/scene/src/scene_impact.cpp
+    - runtime/scene/include/canvas/scene/scene_dependency_graph.hpp
+    - runtime/scene/src/scene_dependency_graph.cpp
+    - runtime/scene/tests/scene_impact_test.cpp
+    - runtime/scene/tests/dependency_closure_test.cpp
+  READ_ONLY_REFERENCE:
+    - runtime/scene/include/canvas/scene/scene_types.hpp
+    - runtime/scene/include/canvas/scene/scene_commit_input.hpp
+    - runtime/scene/include/canvas/scene/scene.hpp
+    - runtime/semantic/include/canvas/semantic/change_set.hpp
+    - runtime/semantic/include/canvas/semantic/object_record.hpp
+    - runtime/foundation/include/canvas/foundation/world_geometry.hpp
+    - schema/axiom/v1/registry/field_registry_v1.yaml
+    - semantic-sdk.lock.json
+observable_contract:
+  T02_R03:
+    invariants:
+      - GeometryBounds_object_local_pure_geometry
+      - VisualBounds_object_local_conservative_pixel_envelope
+      - WorldBounds_conservative_world_AABB
+      - finite
+      - deterministic
+      - canonical
+      - ordered
+      - no_under_bound
+      - transform_only_reuses_local_geometry
+      - Group_zero_visual_object
+      - renderer_neutral_reference_geometry
+  T02_R04:
+    impact_sources:
+      - create
+      - delete
+      - transform
+      - hierarchy_order
+      - geometry_layout
+      - style_effect
+      - resource
+      - visibility
+      - relation
+      - ordinary_property
+    dirty_families:
+      - record
+      - hierarchy
+      - local_geometry
+      - visual_bounds
+      - world_bounds
+      - spatial
+      - relation
+      - resource
+      - visibility
+    directional_invariants:
+      - transform_only_reuses_local_geometry
+      - reparent_updates_descendant_world_dependency_only
+      - geometry_layout_propagates_geometry_to_visual_to_world_to_spatial
+      - opacity_only_does_not_rebuild_local_geometry_or_extent_bounds
+      - property_stroke_style_updates_visual_world_spatial_without_second_geometry_owner
+      - stroke_object_content_may_classify_geometry_layout
+      - connector_target_change_invalidates_relation_and_route_geometry
+      - create_delete_not_global_rebuild
+      - empty_changed_fields_is_conservative_object_property_invalidation_not_full_scene
+      - runtime_dependency_cycles_terminate_safely
+required_verification:
+  - A2-R03-ANALYTIC-BOUNDS
+  - A2-R03-REFERENCE-GEOMETRY
+  - A2-R04-IMPACT-TABLE
+  - A2-R04-DEPENDENCY-CLOSURE
+  - A2-BOUNDARY
+  - A2-REGRESSION
+  - protobuf_ON_full_semantic_ctest
+  - protobuf_OFF_full_semantic_ctest_declared_skips_only
+  - fresh_exact_source_focused_checkout
+  - git_diff_check
+independent_oracles:
+  bounds_fixtures:
+    - fill_only_shape
+    - wide_stroke
+    - effect_or_shadow_expansion
+    - rotated_scaled_object
+    - image_proxy
+    - text_proxy
+    - vector_path
+    - vector_stroke
+    - zero_visual_group
+    - sticky
+    - connector_route_envelope
+    - nonfinite_input_negative
+    - degenerate_geometry_negative
+  closure_topologies:
+    - descendants
+    - connector_endpoint_chains
+    - reparenting
+    - resource_dependents
+    - create_delete
+    - unrelated_cold_roots
+blocking_evidence_mapping:
+  G2-PROJECTION.json:
+    - T02-R03
+    - T02-R04
+  G2-CTEST.txt:
+    - A2_focused_and_build_matrix
+  G2-PLAN.json:
+    - A2_source_commands_and_path_inventory
+  G2-GATE-MANIFEST.json:
+    - A2_identity_ancestry_and_bindings
+  materialize_final_inventory_during_A2: false
+corroborative_staging:
+  namespace: verification/evidence/staging/G2/<RESULT_REVISION>/GT-G2-00-A2/
+  optional_files:
+    - G2-A2-BOUNDS.json
+    - G2-A2-CLOSURE.json
+    - G2-A2-CTEST.txt
+    - G2-A2-RUN-MANIFEST.json
+  classification: corroborative_only
+  blocking_status: false
+  may_satisfy_final_G2_gate_inventory: false
+  may_replace_frozen_final_evidence: false
+forbidden_changes:
+  - runtime/semantic/**
+  - schema/**
+  - persistence/**
+  - render/**
+  - skia/**
+  - gpu/**
+  - platform/**
+  - semantic-sdk.lock.json
+  - semantic_generation_semantics
+  - changeset_semantics_or_storage_truth
+  - FieldId_or_ObjectKind_registry_changes
+  - FullSceneCompiler_implementation
+  - SceneRecordStore_locality_rewrite
+  - production_SpatialIndex_algorithm_rewrite
+  - SceneUpdateCoordinator_or_recovery_publication
+  - public_query_or_hittest_integration
+  - Tile_RenderGroup_RasterCache_Scheduler_work
+  - Product_latency_SLOs
+execution_closure_contract:
+  exact_source_changed_path_count: 14
+  source_changed_paths_must_equal_authorized: true
+  tests_must_all_pass: true
+  final_G2_inventory_materialization_required_during_A2: false
+  corroborative_staging_artifacts_required: false
+  terminal_success:
+    - T02-R03_pass
+    - T02-R04_pass
+    - analytic_bounds_and_reference_geometry_oracles_pass
+    - exact_impact_dirty_family_oracle_pass
+    - exact_dependency_closure_oracle_pass
+    - renderer_neutral_boundary_pass
+    - A0_A1_RF01_regressions_pass
+    - protobuf_ON_OFF_and_clean_checkout_pass
+    - git_diff_check_exit_0
+    - exact_fourteen_path_source_delta
+    - reviewer_accessible_exact_result_revision
+    - evidence_input_refs_for_future_final_compilation_present
+  terminal_blockers:
+    - AUTHORITY_CONFLICT
+    - MISSING_REQUIRED_INPUT
+    - ENVIRONMENT_BLOCKER
+    - FROZEN_VERIFICATION_FAILURE
+    - NEW_HIGH_IMPACT_FAILURE_MODE
+    - PACKAGE_SCOPE_DIVERGENCE
+    - BLOCKED_REPOSITORY_IDENTITY
+  continue_until_terminal_state: true
+  expected_success_status: READY_FOR_CONTROL_REVIEW
+return_contract:
+  required_fields:
+    - actual_starting_revision
+    - result_revision
+    - execution_ref
+    - exact_source_changed_paths
+    - focused_test_results
+    - regression_results
+    - protobuf_ON_result
+    - protobuf_OFF_result
+    - clean_checkout_result
+    - git_diff_check_result
+    - resolver_facts
+    - evidence_input_refs
+    - staging_materialized_ref_if_any
+  official_g2_pass_claimed: false
+  official_p34_pass_claimed: false
+  g2_a3_started: false
+p32_code_execution_authorized: true
+p34_authorized: false
+g2_gate_evaluated: false
+g2_a3_authorized: false
