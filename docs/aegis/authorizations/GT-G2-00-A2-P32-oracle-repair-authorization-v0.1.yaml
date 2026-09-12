@@ -1,0 +1,115 @@
+authorization_id: GT-G2-00-A2-P32-ORACLE-REPAIR-AUTH-v0.1
+task_id: GT-G2-00-A2
+stage: P32_CODE_EXECUTION
+stage_owner: aegis-implementation
+status: AUTHORIZED
+reason: frozen_verification_oracle_repair
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+
+package_ref: notion://3d94c57a-590c-81a2-a978-cf7b301284c3/GT-G2-00-A2-P31-v0.4
+package_materialization_ref: 30186cfa2f611f79a06d70b3a73b9be997939474
+prior_p32_authorization_ref: notion://3d94c57a-590c-81f0-9ba9-de480810df67/GT-G2-00-A2-P32-AUTH-v0.1
+prior_p32_authorization_materialization_ref: d431dadfb584d402ab1e8321a95503088396a814
+control_review_ref: notion://3d94c57a-590c-81c2-bdb3-d9f831b5fa33/GT-G2-00-A2-P32-CONTROL-REVIEW-v0.3
+control_review_verdict: BLOCKED
+blocker_class: FROZEN_VERIFICATION_FAILURE
+repair_owner: P32_IMPLEMENTATION
+
+authorization_semantics:
+  p32_oracle_repair_authorized: true
+  repair_stays_within_existing_package: true
+  package_scope_unchanged: true
+  verification_bindings_unchanged: true
+  p34_authorized: false
+  g2_gate_evaluated: false
+  g2_a3_authorized: false
+
+task_anchor:
+  revision: 87a38a32e5ca37ad309ea4a8c1eb4a65a561b761
+  relation: ancestor
+
+resume_cursor:
+  execution_ref: codex/gt-g2-a2-p32-v0-4-continuation
+  accepted_revision: a85145941941278df3a0624b850529b9a09b2948
+  relation_to_task_anchor: descendant
+  next_action: close_missing_independent_oracle_rows_and_regenerate_truthful_exact_result_staging
+
+repair_execution_ref:
+  branch: codex/gt-g2-a2-p32-v0-4-oracle-repair
+  initial_revision: a85145941941278df3a0624b850529b9a09b2948
+  branch_policy: source_only_repair_from_accepted_cursor
+
+historical_staging:
+  ref: 106cb6d228660b9d00821e44b63a792229b6e491
+  classification: corroborative_history_only
+  may_be_source_baseline: false
+  may_be_current_proof: false
+
+repair_scope:
+  preferred_mode: test_oracle_only
+  source_changes_must_be_subset_of_authorized_fourteen: true
+  cumulative_task_anchor_to_final_must_still_equal_authorized_fourteen: true
+  semantic_or_schema_changes: forbidden
+  shadow_blur_filter_semantics: forbidden
+  invented_FieldId_or_ObjectKind: forbidden
+  global_full_scene_invalidation_substitute: forbidden
+  A3_through_A7_implementation: forbidden
+
+repair_findings:
+  - id: A2-P32-v0.4-B1
+    class: R03_VECTOR_PATH_FIXTURE_GAP
+    requirement: add independent semantic VectorPathContent -> computeBounds fixture with declared GeometryBounds/VisualBounds/WorldBounds truth; standalone ReferenceGeometry coverage is insufficient
+  - id: A2-P32-v0.4-B2
+    class: R04_EXACT_IMPACT_TABLE_GAP
+    requirement: assert exact dirty-family equality for every frozen P31 v0.4 impact row, including placement/hierarchy-order and delete, with no unintended dirty families
+  - id: A2-P32-v0.4-B3
+    class: R04_DEPENDENCY_TOPOLOGY_GAP
+    requirement: independently instantiate and prove connector endpoint chain, resource dependents from real V1 ResourceId ownership, create/delete edge lifecycle, unrelated cold roots, reparent old-edge removal, descendants, and cycle safety
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.2
+  obligation_set_id: GT-G2-00-OBL-v0.2
+  trusted_basis_id: GT-G2-00-TB-v0.2
+  scope_contract_id: GT-G2-00-SCOPE-v0.2
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+
+required_reverification:
+  - complete A2-R03-ANALYTIC-BOUNDS-v0.2 fixture matrix including semantic VectorPathContent projection
+  - complete A2-R03-REFERENCE-GEOMETRY-v0.2 regression matrix
+  - complete table-driven A2-R04-IMPACT-TABLE-v0.2 with exact dirty-family equality for every frozen row
+  - complete A2-R04-DEPENDENCY-CLOSURE-v0.2 topology matrix with independently instantiated real-V1 resource/relation ownership
+  - A2-BOUNDARY
+  - A2-REGRESSION
+  - protobuf_ON_full_semantic_ctest
+  - protobuf_OFF_full_semantic_ctest_declared_skips_only
+  - fresh_exact_source_focused_checkout
+  - git_diff_check
+  - cumulative_exact_fourteen_path_source_delta_check
+
+review_materialization:
+  regenerate_for_new_exact_result_revision: true
+  namespace: verification/evidence/staging/G2/<NEW_RESULT_REVISION>/GT-G2-00-A2/
+  files:
+    - G2-A2-BOUNDS.json
+    - G2-A2-CLOSURE.json
+    - G2-A2-CTEST.txt
+    - G2-A2-RUN-MANIFEST.json
+  classification: corroborative_only
+  inventories_must_match_actually_executed_fixtures_and_topologies: true
+  old_ref_forbidden_as_current_proof: 106cb6d228660b9d00821e44b63a792229b6e491
+
+execution_closure:
+  continue_until_terminal_state: true
+  expected_success_status: READY_FOR_CONTROL_REVIEW
+
+return_surface: CONTROL_REVIEW
+
+claims_forbidden:
+  - official_G2_PASS
+  - P34_PASS
+  - G2_A3_started
