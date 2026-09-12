@@ -3,8 +3,6 @@
 #include "object_store_mutator.hpp"
 
 #include <cassert>
-#include <cstdio>
-#include <cstdlib>
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -17,6 +15,7 @@ struct ExpectedRow final {
     std::optional<canvas::semantic::ObjectId> parent;
     std::vector<std::uint8_t> order;
     double tx;
+    std::string referenceGeometry;
     canvas::foundation::WorldRect geometry;
     canvas::foundation::WorldRect visual;
     canvas::foundation::WorldRect world;
@@ -51,14 +50,14 @@ void assertExpected(const canvas::InspectionRecord& actual, const ExpectedRow& e
     assert(actual.placement.parent_id == expected.parent);
     assert(std::vector<std::uint8_t>(actual.placement.order_key.bytes().begin(), actual.placement.order_key.bytes().end()) == expected.order);
     assert(actual.transform.tx == expected.tx);
-    if (!(actual.geometryBounds == expected.geometry)) {
-        std::fprintf(stderr, "geometry mismatch kind=%u actual=%g,%g,%g,%g expected=%g,%g,%g,%g\\n", static_cast<unsigned>(actual.kind), actual.geometryBounds.left, actual.geometryBounds.top, actual.geometryBounds.right, actual.geometryBounds.bottom, expected.geometry.left, expected.geometry.top, expected.geometry.right, expected.geometry.bottom);
-        std::abort();
-    }
+    assert(actual.geometryBounds == expected.geometry);
     assert(actual.visualBounds == expected.visual);
     assert(actual.worldBounds == expected.world);
     assert(actual.directDependencies == expected.dependencies);
     assert(!actual.referenceGeometryDigest.empty());
+    if (!expected.referenceGeometry.empty()) {
+        assert(actual.referenceGeometryDigest == expected.referenceGeometry);
+    }
 }
 }
 
@@ -72,15 +71,15 @@ int main() {
     expected[8].placement.parent_id = expected[0].id;
     assert(canvas::semantic::internal::ObjectStoreMutator::replaceExisting(store, expected[8]));
     const std::vector<ExpectedRow> expectedRows = {
-        {canvas::semantic::ObjectId::fromUint64(1), canvas::semantic::ObjectKind::kShape, 1, std::nullopt, {1}, 1.0, {0,0,10,20}, {0,0,10,20}, {1,0,11,20}, {}},
-        {canvas::semantic::ObjectId::fromUint64(2), canvas::semantic::ObjectKind::kImage, 1, std::nullopt, {2}, 2.0, {0,0,11,12}, {0,0,11,12}, {2,0,13,12}, {canvas::semantic::ObjectId::fromUint64(90)}},
-        {canvas::semantic::ObjectId::fromUint64(3), canvas::semantic::ObjectKind::kVectorPath, 1, std::nullopt, {3}, 3.0, {1,2,3,4}, {1,2,3,4}, {4,2,6,4}, {}},
-        {canvas::semantic::ObjectId::fromUint64(4), canvas::semantic::ObjectKind::kRichText, 1, std::nullopt, {4}, 4.0, {0,0,2.5F,1}, {0,0,2.5F,1}, {4,0,6.5F,1}, {}},
-        {canvas::semantic::ObjectId::fromUint64(5), canvas::semantic::ObjectKind::kVectorStroke, 1, std::nullopt, {5}, 5.0, {1,2,1,2}, {1,2,1,2}, {6,2,6,2}, {}},
-        {canvas::semantic::ObjectId::fromUint64(6), canvas::semantic::ObjectKind::kDabStroke, 1, std::nullopt, {6}, 6.0, {0,1,4,5}, {0,1,4,5}, {6,1,10,5}, {}},
-        {canvas::semantic::ObjectId::fromUint64(7), canvas::semantic::ObjectKind::kConnector, 1, std::nullopt, {7}, 7.0, {1,2,1,2}, {1,2,1,2}, {8,2,8,2}, {canvas::semantic::ObjectId::fromUint64(1)}},
-        {canvas::semantic::ObjectId::fromUint64(8), canvas::semantic::ObjectKind::kSticky, 1, std::nullopt, {8}, 8.0, {0,0,13,14}, {0,0,13,14}, {8,0,21,14}, {}},
-        {canvas::semantic::ObjectId::fromUint64(9), canvas::semantic::ObjectKind::kGroup, 1, canvas::semantic::ObjectId::fromUint64(1), {9}, 9.0, {}, {}, {}, {canvas::semantic::ObjectId::fromUint64(1)}}};
+        {canvas::semantic::ObjectId::fromUint64(1), canvas::semantic::ObjectKind::kShape, 1, std::nullopt, {1}, 1.0, "1:1,0,0,1,1,0:shape:1:10:20", {0,0,10,20}, {0,0,10,20}, {1,0,11,20}, {}},
+        {canvas::semantic::ObjectId::fromUint64(2), canvas::semantic::ObjectKind::kImage, 1, std::nullopt, {2}, 2.0, "2:1,0,0,1,2,0:image:90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:0:0:11:12", {0,0,11,12}, {0,0,11,12}, {2,0,13,12}, {canvas::semantic::ObjectId::fromUint64(90)}},
+        {canvas::semantic::ObjectId::fromUint64(3), canvas::semantic::ObjectKind::kVectorPath, 1, std::nullopt, {3}, 3.0, "3:1,0,0,1,3,0:path:2:2:M:1,2:L:3,4", {1,2,3,4}, {1,2,3,4}, {4,2,6,4}, {}},
+        {canvas::semantic::ObjectId::fromUint64(4), canvas::semantic::ObjectKind::kRichText, 1, std::nullopt, {4}, 4.0, "4:1,0,0,1,4,0:text:1:hello", {0,0,2.5F,1}, {0,0,2.5F,1}, {4,0,6.5F,1}, {}},
+        {canvas::semantic::ObjectId::fromUint64(5), canvas::semantic::ObjectKind::kVectorStroke, 1, std::nullopt, {5}, 5.0, "5:1,0,0,1,5,0:vstroke:7:brush:0:0:0,0,0,0:0:0:1:0::0:0:0:0:0:0:1,2,0,0,0", {1,2,1,2}, {1,2,1,2}, {6,2,6,2}, {}},
+        {canvas::semantic::ObjectId::fromUint64(6), canvas::semantic::ObjectKind::kDabStroke, 1, std::nullopt, {6}, 6.0, "6:1,0,0,1,6,0:dstroke:8:brush:0:0:0,0,0,0:0:0:1:0::0:0:0:0:0:0:2,3,4,0,0", {0,1,4,5}, {0,1,4,5}, {6,1,10,5}, {}},
+        {canvas::semantic::ObjectId::fromUint64(7), canvas::semantic::ObjectKind::kConnector, 1, std::nullopt, {7}, 7.0, "7:1,0,0,1,7,0:connector:1:free:1,2:attached:1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:auto:", {1,2,1,2}, {1,2,1,2}, {8,2,8,2}, {canvas::semantic::ObjectId::fromUint64(1)}},
+        {canvas::semantic::ObjectId::fromUint64(8), canvas::semantic::ObjectKind::kSticky, 1, std::nullopt, {8}, 8.0, "8:1,0,0,1,8,0:sticky:13:14", {0,0,13,14}, {0,0,13,14}, {8,0,21,14}, {}},
+        {canvas::semantic::ObjectId::fromUint64(9), canvas::semantic::ObjectKind::kGroup, 1, canvas::semantic::ObjectId::fromUint64(1), {9}, 9.0, "9:1,0,0,1,9,0:group", {}, {}, {}, {canvas::semantic::ObjectId::fromUint64(1)}}};
     const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(4));
     const auto first = canvas::FullSceneCompiler::compile(view);
     const auto second = canvas::FullSceneCompiler::compile(view);
@@ -89,7 +88,11 @@ int main() {
     assert(first.value().generation == canvas::semantic::SemanticGeneration(4));
     assert(first.value().records.size() == 9);
     assert(first.value().records[0].worldBounds.right == 11.0F);
-    for (const auto& row : expectedRows) assertExpected(*first.value().find(row.id), row);
+    for (const auto& row : expectedRows) {
+        const auto* actual = first.value().find(row.id);
+        assert(actual != nullptr);
+        assertExpected(*actual, row);
+    }
     for (const auto& object : expected) {
         const auto* row = first.value().find(object.id);
         assert(row != nullptr);
