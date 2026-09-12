@@ -1,0 +1,71 @@
+authorization_id: GT-G2-00-A2-P32-AUTH-v0.1
+task_id: GT-G2-00-A2
+stage: P32_CODE_EXECUTION
+stage_owner: aegis-implementation
+status: AUTHORIZED
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+
+package_ref: notion://3d94c57a-590c-81a2-a978-cf7b301284c3/GT-G2-00-A2-P31-v0.4
+package_materialization_ref: 30186cfa2f611f79a06d70b3a73b9be997939474
+control_review_ref: notion://3d94c57a-590c-81c0-b728-fdf769116ef4/GT-G2-00-A2-P31-CONTROL_REVIEW-v0.4
+control_review_verdict: READY
+
+authorization_semantics:
+  p32_code_execution_authorized: true
+  supersedes_only:
+    - package_field:p32_code_execution_authorized=false
+  superseded_field_classification: provisional_pre_control_review_state
+  does_not_supersede:
+    - package_scope
+    - verification_bindings
+    - task_anchor
+    - resume_cursor
+    - authorized_source_paths
+    - forbidden_changes
+    - required_verification
+    - evidence_contract
+    - execution_closure_contract
+    - terminal_blockers
+  precedence_rule: this_post_control_review_authorization_is_the_current_P32_authorization_state
+
+task_anchor:
+  revision: 87a38a32e5ca37ad309ea4a8c1eb4a65a561b761
+  relation: ancestor
+
+resume_cursor:
+  execution_ref: codex/gt-g2-a2-p32-repair-v1
+  accepted_revision: 028c0a3df34f7c1f988b2a9b6f9868aeb8b9a1b5
+  relation_to_task_anchor: descendant
+  historical_branch_head: 55aa0397467d6654f1b172199ee1ef2640e0c57e
+  historical_branch_head_classification: corroborative_evidence_descendant_not_source_baseline
+  next_action: complete_remaining_T02_R03_v0_2_fixture_matrix_then_finish_R04_exact_impact_and_dependency_closure
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.2
+  obligation_set_id: GT-G2-00-OBL-v0.2
+  trusted_basis_id: GT-G2-00-TB-v0.2
+  scope_contract_id: GT-G2-00-SCOPE-v0.2
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+  frozen_obligations:
+    - T02-R03
+    - T02-R04
+
+execution_requirements:
+  continue_until_terminal_state: true
+  cumulative_delta_task_anchor_to_final_must_equal_authorized_fourteen_paths: true
+  resume_delta_cursor_to_final_must_be_subset_of_authorized_fourteen_paths: true
+  historical_staging_must_not_be_used_as_current_proof: true
+  final_G2_ten_file_inventory_materialization_during_A2: false
+
+return_surface: CONTROL_REVIEW
+expected_success_status: READY_FOR_CONTROL_REVIEW
+
+claims_forbidden:
+  - official_G2_PASS
+  - P34_PASS
+  - G2_A3_started
