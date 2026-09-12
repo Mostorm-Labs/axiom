@@ -37,10 +37,12 @@ std::string geometryText(const semantic::ObjectRecord& r) {
             out << ":text:" << c.document.paragraphs.size();
             for (const auto& paragraph : c.document.paragraphs) for (const auto& run : paragraph.runs) out << ':' << run.text;
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
-            out << ":vstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.nominal_size;
+            out << ":vstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.brush_version << ':' << c.stroke.brush.nominal_size;
+            if (c.stroke.brush.texture_resource_id) { out << ":tex:"; for (const auto byte : c.stroke.brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }
             if (const auto* data = std::get_if<semantic::VectorStrokeData>(&c.stroke.data)) for (const auto& sample : data->samples) out << ':' << sample.position.x << ',' << sample.position.y << ',' << sample.pressure << ',' << sample.tilt.x << ',' << sample.tilt.y;
         } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
-            out << ":dstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.nominal_size;
+            out << ":dstroke:" << c.stroke.deterministic_seed << ':' << c.stroke.brush.brush_family_id << ':' << c.stroke.brush.brush_version << ':' << c.stroke.brush.nominal_size;
+            if (c.stroke.brush.texture_resource_id) { out << ":tex:"; for (const auto byte : c.stroke.brush.texture_resource_id->value.bytes) out << static_cast<unsigned>(byte) << ','; }
             if (const auto* data = std::get_if<semantic::DabStrokeData>(&c.stroke.data)) for (const auto& dab : data->dabs) out << ':' << dab.center.x << ',' << dab.center.y << ',' << dab.size << ',' << dab.rotation << ',' << dab.opacity;
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             out << ":connector:" << static_cast<unsigned>(c.routing);
@@ -51,6 +53,15 @@ std::string geometryText(const semantic::ObjectRecord& r) {
                 } else {
                     out << ":attached:";
                     for (const auto byte : value.target_object_id.bytes) out << static_cast<unsigned>(byte) << ',';
+                    std::visit([&](const auto& anchor) {
+                        using A = std::decay_t<decltype(anchor)>;
+                        if constexpr (std::is_same_v<A, semantic::AutoPerimeterAnchor>) {
+                            out << ":auto:";
+                            if (anchor.hint) out << anchor.hint->x << ',' << anchor.hint->y;
+                        } else {
+                            out << ":port:" << anchor.port_id;
+                        }
+                    }, value.anchor);
                 }
             }, endpoint->value);
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {

@@ -37,6 +37,8 @@ int main() {
         expected.push_back(makeRecord(static_cast<canvas::semantic::ObjectKind>(kind), kind));
         assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(store, expected.back()));
     }
+    expected[8].placement.parent_id = expected[0].id;
+    assert(canvas::semantic::internal::ObjectStoreMutator::replaceExisting(store, expected[8]));
     const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(4));
     const auto first = canvas::FullSceneCompiler::compile(view);
     const auto second = canvas::FullSceneCompiler::compile(view);
@@ -51,8 +53,15 @@ int main() {
         assert(row->kind == object.kind);
         assert(row->referenceGeometryDigest.find(std::to_string(static_cast<unsigned>(object.kind))) != std::string::npos);
     }
-    assert(first.value().find(canvas::semantic::ObjectId::fromUint64(2))->directDependencies.size() == 1);
-    assert(first.value().find(canvas::semantic::ObjectId::fromUint64(7))->directDependencies.size() == 1);
+    const auto* group = first.value().find(expected[8].id);
+    assert(group->placement.parent_id && *group->placement.parent_id == expected[0].id);
+    assert(group->placement.order_key == expected[8].placement.order_key);
+    assert(group->transform.tx == expected[8].transform.tx);
+    assert(group->geometryBounds == canvas::foundation::WorldRect{});
+    assert(group->visualBounds == canvas::foundation::WorldRect{});
+    assert(group->worldBounds == canvas::foundation::WorldRect{});
+    assert(first.value().find(canvas::semantic::ObjectId::fromUint64(2))->directDependencies == std::vector<canvas::semantic::ObjectId>{canvas::semantic::ObjectId::fromUint64(90)});
+    assert(first.value().find(canvas::semantic::ObjectId::fromUint64(7))->directDependencies == std::vector<canvas::semantic::ObjectId>{canvas::semantic::ObjectId::fromUint64(1)});
     auto reversed = expected;
     std::reverse(reversed.begin(), reversed.end());
     canvas::semantic::ReferenceObjectStore reordered;
@@ -60,5 +69,28 @@ int main() {
     const auto permutation = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(reordered, canvas::semantic::SemanticGeneration(4)));
     assert(permutation.hasValue());
     assert(permutation.value() == first.value());
+
+    auto path_a = makeRecord(canvas::semantic::ObjectKind::kVectorPath, 40);
+    auto path_b = path_a;
+    auto& path_geometry = std::get<canvas::semantic::VectorPathContent>(path_b.content).geometry;
+    std::get<canvas::semantic::LineTo>(path_geometry.commands[1]).end.x = 99.0;
+    canvas::semantic::ReferenceObjectStore path_store_a;
+    canvas::semantic::ReferenceObjectStore path_store_b;
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(path_store_a, path_a));
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(path_store_b, path_b));
+    const auto path_projection_a = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(path_store_a, canvas::semantic::SemanticGeneration(1)));
+    const auto path_projection_b = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(path_store_b, canvas::semantic::SemanticGeneration(1)));
+    assert(path_projection_a.value().records[0].referenceGeometryDigest != path_projection_b.value().records[0].referenceGeometryDigest);
+
+    auto image_a = makeRecord(canvas::semantic::ObjectKind::kImage, 41);
+    auto image_b = image_a;
+    std::get<canvas::semantic::ImageContent>(image_b.content).resource_id.value = canvas::semantic::ObjectId::fromUint64(91);
+    canvas::semantic::ReferenceObjectStore image_store_a;
+    canvas::semantic::ReferenceObjectStore image_store_b;
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(image_store_a, image_a));
+    assert(canvas::semantic::internal::ObjectStoreMutator::insertFresh(image_store_b, image_b));
+    const auto image_projection_a = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(image_store_a, canvas::semantic::SemanticGeneration(1)));
+    const auto image_projection_b = canvas::FullSceneCompiler::compile(canvas::semantic::SemanticReadView(image_store_b, canvas::semantic::SemanticGeneration(1)));
+    assert(image_projection_a.value().records[0].referenceGeometryDigest != image_projection_b.value().records[0].referenceGeometryDigest);
     return 0;
 }
