@@ -1,0 +1,286 @@
+package_id: GT-G2-00-A2-P31-v0.4
+package_ref: notion://3d94c57a-590c-81a2-a978-cf7b301284c3/GT-G2-00-A2-P31-v0.4
+task_id: GT-G2-00-A2
+stage: P31_TARGETED_REPACKAGE
+stage_owner: aegis-implementation
+verdict: READY_FOR_CONTROL_REVIEW
+package_scope: G2-A2_REMAINDER_ONLY
+supersedes: notion://3d94c57a-590c-81c6-83b3-ef699f5fcb02/GT-G2-00-A2-P31-v0.3
+reconciliation_ref: notion://3d94c57a-590c-8116-b002-d26decf3d33f/GT-G2-00-A2-P30-P31-RECONCILIATION-v0.1
+p32_code_execution_authorized: false
+p34_authorized: false
+g2_gate_evaluated: false
+g2_a3_authorized: false
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+
+package_materialization_branch: codex/gt-g2-a2-p31-v0-4
+materialization_scope: documentation_only
+source_mutation_in_materialization: false
+
+task_anchor:
+  revision: 87a38a32e5ca37ad309ea4a8c1eb4a65a561b761
+  relation: ancestor
+
+planning_ancestry_anchor:
+  revision: a908c9bc4acb95566f275747884ae26b7a4c9894
+  relation: ancestor
+
+resume_cursor:
+  execution_ref: codex/gt-g2-a2-p32-repair-v1
+  accepted_revision: 028c0a3df34f7c1f988b2a9b6f9868aeb8b9a1b5
+  relation_to_task_anchor: descendant
+  observed_branch_head: 55aa0397467d6654f1b172199ee1ef2640e0c57e
+  observed_branch_head_classification: historical_corroborative_evidence_descendant_not_source_baseline
+  completed_through:
+    - affine_world_bounds_four_corner_transform
+    - vector_stroke_and_dab_conservative_envelopes
+    - cubic_control_point_conservative_bounds
+    - fill_shape_and_current_v1_stroke_baseline
+    - zero_visual_group
+    - basic_connector_route_envelope
+    - descendant_and_relation_chain_traversal
+    - cycle_safe_dependency_traversal
+    - existing_A0_A1_RF01_regressions
+  next_action: complete_remaining_T02_R03_v0_2_fixture_matrix_then_finish_R04_exact_impact_and_dependency_closure
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.2
+  obligation_set_id: GT-G2-00-OBL-v0.2
+  trusted_basis_id: GT-G2-00-TB-v0.2
+  scope_contract_id: GT-G2-00-SCOPE-v0.2
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+  frozen_obligations:
+    - T02-R03
+    - T02-R04
+  shadow_blur_filter_current_v1: NOT_APPLICABLE
+
+authorized_source_paths:
+  - runtime/scene/CMakeLists.txt
+  - runtime/scene/tests/CMakeLists.txt
+  - runtime/scene/include/canvas/scene/bounds_system.hpp
+  - runtime/scene/src/bounds_system.cpp
+  - runtime/scene/include/canvas/scene/reference_geometry.hpp
+  - runtime/scene/src/reference_geometry.cpp
+  - runtime/scene/tests/bounds_system_test.cpp
+  - runtime/scene/tests/reference_geometry_test.cpp
+  - runtime/scene/include/canvas/scene/scene_impact.hpp
+  - runtime/scene/src/scene_impact.cpp
+  - runtime/scene/include/canvas/scene/scene_dependency_graph.hpp
+  - runtime/scene/src/scene_dependency_graph.cpp
+  - runtime/scene/tests/scene_impact_test.cpp
+  - runtime/scene/tests/dependency_closure_test.cpp
+
+scope_rules:
+  cumulative_delta_task_anchor_to_final:
+    changed_paths_must_equal_authorized_fourteen: true
+  resume_delta_cursor_to_final:
+    changed_paths_must_be_subset_of_authorized_fourteen: true
+
+forbidden_changes:
+  - runtime/semantic/**
+  - schema/**
+  - persistence/**
+  - render_core_or_skia_gpu_dependencies
+  - platform/**
+  - semantic-sdk.lock.json
+  - new_semantic_fields_or_object_kinds
+  - shadow_blur_filter_semantics
+  - full_scene_invalidation_as_normal_closure
+  - G2_A3_through_A7_implementation
+
+preserved_work:
+  - full_affine_world_bounds_a_b_c_d_tx_ty
+  - current_v1_stroke_and_brush_extent_baseline
+  - vector_stroke_and_dab_envelopes
+  - cubic_control_point_bounds
+  - zero_visual_group
+  - basic_connector_route_envelope
+  - cycle_safe_dependency_traversal
+
+remaining_R03_v0_2:
+  required_fixtures:
+    - image_proxy
+    - text_proxy
+    - vector_path_semantic_projection
+    - sticky
+    - nonfinite_input_NaN_or_Inf
+    - degenerate_geometry_explicit_oracle
+  regression_fixtures:
+    - fill_only_shape
+    - current_v1_wide_stroke
+    - rotated_scaled_affine_object
+    - vector_stroke
+    - dab_stroke
+    - zero_visual_group
+    - connector_route_envelope
+    - cubic_controls
+  forbidden_fixture:
+    - shadow_blur_filter
+
+remaining_R04_v0_2:
+  required_impact_rows:
+    - transform_only
+    - placement_hierarchy_order
+    - geometry_layout_content
+    - current_v1_style_appearance_strokeStyle
+    - visibility
+    - opacity_only_or_ordinary_property
+    - resource_owned_content_with_semantic_object_or_provider_context
+    - connector_relation_owned_content_with_semantic_object_or_provider_context
+    - create
+    - delete
+    - empty_changed_fields_conservative_object_fallback
+  classification_rules:
+    - resource_and_relation_must_not_depend_on_invented_field_id_ranges
+    - non_connector_content_must_not_be_relation_dirty_merely_due_to_kContent
+    - internal_classifier_signature_may_consume_current_semantic_object_or_provider_context
+  required_dependency_topologies:
+    - descendants
+    - connector_endpoint_dependent_chain
+    - reparenting_old_edge_removal_or_replacement
+    - resource_dependents_from_current_v1_resource_ownership
+    - create_delete_edge_insertion_removal_without_stale_edges
+    - unrelated_cold_roots_untouched
+    - cycle_safe_termination
+
+required_verification:
+  - A2-R03-ANALYTIC-BOUNDS-v0.2
+  - A2-R03-REFERENCE-GEOMETRY-v0.2
+  - A2-R04-IMPACT-TABLE-v0.2
+  - A2-R04-DEPENDENCY-CLOSURE-v0.2
+  - A2-BOUNDARY
+  - A2-REGRESSION
+  - protobuf_ON_full_semantic_ctest
+  - protobuf_OFF_full_semantic_ctest_declared_skips_only
+  - fresh_exact_source_focused_checkout
+  - git_diff_check
+
+blocking_evidence_mapping:
+  G2-PROJECTION.json:
+    - T02-R03
+    - T02-R04
+  G2-CTEST.txt:
+    - A2_focused_and_build_matrix
+  G2-PLAN.json:
+    - A2_source_commands_and_path_inventory
+  G2-GATE-MANIFEST.json:
+    - A2_identity_ancestry_and_bindings
+materialize_final_inventory_during_A2: false
+
+review_materialization:
+  required: true
+  namespace: verification/evidence/staging/G2/<NEW_RESULT_REVISION>/GT-G2-00-A2/
+  files:
+    - G2-A2-BOUNDS.json
+    - G2-A2-CLOSURE.json
+    - G2-A2-CTEST.txt
+    - G2-A2-RUN-MANIFEST.json
+  classification: corroborative_only
+  gate_blocking: false
+  may_replace_final_evidence: false
+  must_bind_exact_new_result_revision: true
+  historical_ref_forbidden_as_current_proof: 55aa0397467d6654f1b172199ee1ef2640e0c57e
+
+EXECUTION_CLOSURE_CONTRACT:
+  implementation:
+    required_changes:
+      - close_all_remaining_R03_v0_2_fixtures
+      - close_exact_R04_impact_rows_without_invented_semantics
+      - close_reparent_resource_create_delete_cold_root_dependency_topologies
+      - preserve_accepted_cursor_work
+    forbidden_changes:
+      - semantic_or_schema_changes
+      - shadow_blur_filter_semantics
+      - Render_Core_or_Skia_dependencies
+      - full_scene_invalidation_as_normal_closure
+      - A3_A7_implementation
+
+  tests:
+    required:
+      - A2-R03-ANALYTIC-BOUNDS-v0.2
+      - A2-R03-REFERENCE-GEOMETRY-v0.2
+      - A2-R04-IMPACT-TABLE-v0.2
+      - A2-R04-DEPENDENCY-CLOSURE-v0.2
+      - A2-BOUNDARY
+      - A2-REGRESSION
+      - protobuf_ON_full_semantic_ctest
+      - protobuf_OFF_full_semantic_ctest_declared_skips_only
+      - fresh_exact_source_focused_checkout
+      - git_diff_check
+
+  hosted_verification:
+    required: []
+    optional: []
+
+  evidence:
+    blocking_gate_families:
+      - G2-PROJECTION.json
+      - G2-CTEST.txt
+      - G2-PLAN.json
+      - G2-GATE-MANIFEST.json
+    corroborative_required_for_review:
+      - G2-A2-BOUNDS.json
+      - G2-A2-CLOSURE.json
+      - G2-A2-CTEST.txt
+      - G2-A2-RUN-MANIFEST.json
+
+  terminal_success:
+    all_of:
+      - T02-R03_v0_2_pass
+      - T02-R04_v0_2_pass
+      - all_required_R03_fixture_rows_observed
+      - all_required_R04_impact_rows_equal_independent_truth
+      - all_required_R04_topologies_equal_independent_truth
+      - renderer_neutral_boundary_pass
+      - A0_A1_RF01_regressions_pass
+      - protobuf_ON_OFF_pass
+      - fresh_exact_source_focused_checkout_pass
+      - git_diff_check_exit_0
+      - cumulative_task_anchor_to_final_delta_exact_fourteen_paths
+      - resume_cursor_to_final_delta_subset_of_authorized_fourteen
+      - reviewer_accessible_exact_result_revision
+      - regenerated_corrob_staging_bound_to_exact_result_revision
+
+  terminal_blockers:
+    explicit_classes:
+      - AUTHORITY_CONFLICT
+      - MISSING_REQUIRED_INPUT
+      - ENVIRONMENT_BLOCKER
+      - FROZEN_VERIFICATION_FAILURE
+      - NEW_HIGH_IMPACT_FAILURE_MODE
+      - PACKAGE_SCOPE_DIVERGENCE
+      - BLOCKED_REPOSITORY_IDENTITY
+      - BLOCKED_EXECUTION_DIVERGENCE
+
+  return_policy:
+    continue_until_terminal_state: true
+    expected_success_status: READY_FOR_CONTROL_REVIEW
+
+required_return_fields:
+  - cursor_classification
+  - actual_starting_revision
+  - result_revision
+  - execution_ref
+  - cumulative_exact_source_changed_paths
+  - resume_delta_changed_paths
+  - focused_test_results
+  - regression_results
+  - protobuf_ON_result
+  - protobuf_OFF_result
+  - clean_checkout_result
+  - git_diff_check_result
+  - resolver_facts
+  - evidence_input_refs
+  - new_staging_materialized_ref
+
+claims_forbidden:
+  - official_G2_PASS
+  - P34_PASS
+  - G2_A3_started
+
+next_stage: P31_CONTROL_REVIEW
