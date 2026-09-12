@@ -15,6 +15,8 @@ struct ReferencePathElement final {
     double y = 0.0;
     double control_x = 0.0;
     double control_y = 0.0;
+    double control2_x = 0.0;
+    double control2_y = 0.0;
 };
 
 struct ReferenceGeometry final {

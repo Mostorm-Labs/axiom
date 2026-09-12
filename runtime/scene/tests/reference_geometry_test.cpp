@@ -18,6 +18,13 @@ int main() {
     assert(pathBounds.left == -4.0F && pathBounds.top == 3.0F);
     assert(pathBounds.right == 2.0F && pathBounds.bottom == 8.0F);
 
+    const ReferenceGeometry cubic = ReferenceGeometry::path({
+        {ReferencePathCommand::kCubicTo, 4.0, 5.0, -10.0, 12.0, 18.0, -9.0},
+    });
+    const auto cubicBounds = geometryBounds(cubic);
+    assert(cubicBounds.left == -10.0F && cubicBounds.top == -9.0F);
+    assert(cubicBounds.right == 18.0F && cubicBounds.bottom == 12.0F);
+
     const auto invalid = ReferenceGeometry::rectangle(-1.0, 2.0);
     assert(!geometryBounds(invalid).isFiniteAndOrdered());
     return 0;

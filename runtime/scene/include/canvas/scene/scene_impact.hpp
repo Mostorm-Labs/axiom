@@ -18,6 +18,7 @@ struct ImpactClassification final {
     DirtyState relation = DirtyState::kReuse;
     DirtyState resource = DirtyState::kReuse;
     DirtyState visibility = DirtyState::kReuse;
+    DirtyState ordinary_property = DirtyState::kReuse;
 };
 
 [[nodiscard]] ImpactClassification classifyImpact(const semantic::ObjectSemanticChange& change) noexcept;

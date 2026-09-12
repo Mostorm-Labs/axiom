@@ -13,5 +13,10 @@ int main() {
                                                           foundation::ObjectId::fromUint64(2),
                                                           foundation::ObjectId::fromUint64(3),
                                                           foundation::ObjectId::fromUint64(9)}));
+
+    graph.addRelation(foundation::ObjectId::fromUint64(3), foundation::ObjectId::fromUint64(1));
+    graph.addHierarchy(foundation::ObjectId::fromUint64(3), foundation::ObjectId::fromUint64(3));
+    const auto cyclic = graph.closure({foundation::ObjectId::fromUint64(1)});
+    assert(cyclic.size() == 4U);
     return 0;
 }

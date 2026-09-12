@@ -21,5 +21,40 @@ int main() {
     assert(opacityImpact.local_geometry == scene::DirtyState::kReuse);
     assert(opacityImpact.visual_bounds == scene::DirtyState::kReuse);
     assert(opacityImpact.world_bounds == scene::DirtyState::kReuse);
+
+    for (const auto field : {1U, 0x200U, 0x201U}) {
+        semantic::ObjectSemanticChange change{
+            .object_id = foundation::ObjectId::fromUint64(3),
+            .flags = semantic::SemanticChangeFlags::kProperties,
+            .changed_fields = {field}};
+        const auto classified = scene::classifyImpact(change);
+        if (field == 1U) {
+            assert(classified.visibility == scene::DirtyState::kDirty);
+            assert(classified.visual_bounds == scene::DirtyState::kReuse);
+        } else {
+            assert(classified.visual_bounds == scene::DirtyState::kDirty);
+            assert(classified.world_bounds == scene::DirtyState::kDirty);
+        }
+    }
+
+    const auto strokeStyle = scene::classifyImpact(semantic::ObjectSemanticChange{
+        .object_id = foundation::ObjectId::fromUint64(4),
+        .flags = semantic::SemanticChangeFlags::kProperties,
+        .changed_fields = {0x101U}});
+    assert(strokeStyle.local_geometry == scene::DirtyState::kReuse);
+    assert(strokeStyle.visual_bounds == scene::DirtyState::kDirty);
+    assert(strokeStyle.spatial == scene::DirtyState::kDirty);
+
+    const auto created = scene::classifyImpact(semantic::ObjectSemanticChange{
+        .object_id = foundation::ObjectId::fromUint64(5),
+        .flags = semantic::SemanticChangeFlags::kCreated});
+    assert(created.record == scene::DirtyState::kDirty);
+    assert(created.local_geometry == scene::DirtyState::kDirty);
+    assert(created.visual_bounds == scene::DirtyState::kDirty);
+
+    const auto relation = scene::classifyImpact(semantic::ObjectSemanticChange{
+        .object_id = foundation::ObjectId::fromUint64(6),
+        .flags = semantic::SemanticChangeFlags::kContent});
+    assert(relation.relation == scene::DirtyState::kDirty);
     return 0;
 }

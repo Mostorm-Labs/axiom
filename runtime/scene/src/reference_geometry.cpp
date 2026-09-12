@@ -37,8 +37,10 @@ foundation::WorldRect geometryBounds(const ReferenceGeometry& geometry) noexcept
     for (const auto& element : geometry.elements) {
         const bool has_control = element.command == ReferencePathCommand::kQuadTo ||
                                  element.command == ReferencePathCommand::kCubicTo;
-        const double xs[] = {element.x, has_control ? element.control_x : element.x};
-        const double ys[] = {element.y, has_control ? element.control_y : element.y};
+        const double xs[] = {element.x, has_control ? element.control_x : element.x,
+                             element.command == ReferencePathCommand::kCubicTo ? element.control2_x : element.x};
+        const double ys[] = {element.y, has_control ? element.control_y : element.y,
+                             element.command == ReferencePathCommand::kCubicTo ? element.control2_y : element.y};
         for (double x : xs) {
             left = std::min(left, x); right = std::max(right, x);
         }
