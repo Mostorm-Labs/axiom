@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 int main() {
     using namespace canvas;
@@ -57,5 +58,38 @@ int main() {
     record.content = semantic::GroupContent{};
     const auto group = scene::computeBounds(record);
     assert(group.visual.left == 0.0F && group.visual.right == 0.0F);
+
+    record.kind = semantic::ObjectKind::kImage;
+    record.content = semantic::ImageContent{
+        .resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(7)},
+        .intrinsic_width = 40.0,
+        .intrinsic_height = 30.0,
+        .width = 40.0,
+        .height = 30.0};
+    const auto image = scene::computeBounds(record);
+    assert(image.geometry.right == 40.0F && image.geometry.bottom == 30.0F);
+
+    record.kind = semantic::ObjectKind::kSticky;
+    record.content = semantic::StickyContent{25.0, 15.0};
+    const auto sticky = scene::computeBounds(record);
+    assert(sticky.geometry.right == 25.0F && sticky.geometry.bottom == 15.0F);
+
+    record.kind = semantic::ObjectKind::kRichText;
+    record.content = semantic::RichTextContent{semantic::RichTextDocument{
+        {semantic::Paragraph{.style = semantic::ParagraphStyle{.line_height = 12.0},
+                             .runs = {semantic::TextRun{.text = "abcd", .style = semantic::TextStyle{.font_size = 10.0}}}}}}};
+    const auto text = scene::computeBounds(record);
+    assert(text.geometry.right == 20.0F && text.geometry.bottom == 12.0F);
+
+    record.kind = semantic::ObjectKind::kShape;
+    record.content = semantic::ShapeContent{1, std::numeric_limits<double>::quiet_NaN(), 2.0};
+    const auto nonfinite = scene::computeBounds(record);
+    assert(!nonfinite.finite);
+    assert(!nonfinite.world.isFiniteAndOrdered());
+
+    record.content = semantic::ShapeContent{1, 0.0, 0.0};
+    const auto degenerate = scene::computeBounds(record);
+    assert(degenerate.finite);
+    assert(degenerate.geometry == foundation::WorldRect{});
     return 0;
 }

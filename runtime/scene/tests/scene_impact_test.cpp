@@ -56,5 +56,37 @@ int main() {
         .object_id = foundation::ObjectId::fromUint64(6),
         .flags = semantic::SemanticChangeFlags::kContent});
     assert(relation.relation == scene::DirtyState::kDirty);
+
+    semantic::ObjectRecord image;
+    image.id = foundation::ObjectId::fromUint64(6);
+    image.kind = semantic::ObjectKind::kImage;
+    image.content = semantic::ImageContent{
+        .resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(99)}};
+    const auto imageContent = scene::classifyImpact(
+        semantic::ObjectSemanticChange{.object_id = image.id,
+                                       .flags = semantic::SemanticChangeFlags::kContent},
+        &image);
+    assert(imageContent.relation == scene::DirtyState::kReuse);
+    assert(imageContent.resource == scene::DirtyState::kDirty);
+
+    semantic::ObjectRecord connectorRecord;
+    connectorRecord.id = foundation::ObjectId::fromUint64(7);
+    connectorRecord.kind = semantic::ObjectKind::kConnector;
+    const auto connectorContent = scene::classifyImpact(
+        semantic::ObjectSemanticChange{.object_id = connectorRecord.id,
+                                       .flags = semantic::SemanticChangeFlags::kContent},
+        &connectorRecord);
+    assert(connectorContent.relation == scene::DirtyState::kDirty);
+
+    const auto ordinaryContent = scene::classifyImpact(
+        semantic::ObjectSemanticChange{.object_id = image.id,
+                                       .flags = semantic::SemanticChangeFlags::kContent},
+        static_cast<const semantic::ObjectRecord*>(nullptr));
+    assert(ordinaryContent.relation == scene::DirtyState::kDirty);
+
+    const auto emptyProperties = scene::classifyImpact(
+        semantic::ObjectSemanticChange{.object_id = image.id,
+                                       .flags = semantic::SemanticChangeFlags::kProperties});
+    assert(emptyProperties.visual_bounds == scene::DirtyState::kDirty);
     return 0;
 }

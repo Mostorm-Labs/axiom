@@ -2,8 +2,6 @@
 
 #include "canvas/semantic/change_set.hpp"
 
-#include <vector>
-
 namespace canvas::scene {
 
 enum class DirtyState : unsigned char { kReuse, kDirty };
@@ -22,6 +20,9 @@ struct ImpactClassification final {
 };
 
 [[nodiscard]] ImpactClassification classifyImpact(const semantic::ObjectSemanticChange& change) noexcept;
+[[nodiscard]] ImpactClassification classifyImpact(
+    const semantic::ObjectSemanticChange& change,
+    const semantic::ObjectRecord* current_record) noexcept;
 
 } // namespace canvas::scene
 

@@ -6,6 +6,18 @@
 namespace canvas::scene {
 void SceneDependencyGraph::addHierarchy(foundation::ObjectId parent, foundation::ObjectId child) { edges_[parent].push_back(child); }
 void SceneDependencyGraph::addRelation(foundation::ObjectId source, foundation::ObjectId dependent) { edges_[source].push_back(dependent); }
+namespace {
+void removeEdge(std::unordered_map<foundation::ObjectId, std::vector<foundation::ObjectId>, foundation::ObjectIdHash>& edges,
+                foundation::ObjectId source, foundation::ObjectId dependent) {
+    const auto it = edges.find(source);
+    if (it == edges.end()) return;
+    auto& targets = it->second;
+    targets.erase(std::remove(targets.begin(), targets.end(), dependent), targets.end());
+    if (targets.empty()) edges.erase(it);
+}
+}
+void SceneDependencyGraph::removeHierarchy(foundation::ObjectId parent, foundation::ObjectId child) { removeEdge(edges_, parent, child); }
+void SceneDependencyGraph::removeRelation(foundation::ObjectId source, foundation::ObjectId dependent) { removeEdge(edges_, source, dependent); }
 std::vector<foundation::ObjectId> SceneDependencyGraph::closure(std::span<const foundation::ObjectId> roots) const {
     std::vector<foundation::ObjectId> result(roots.begin(), roots.end());
     std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> seen(result.begin(), result.end());

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 int main() {
     using namespace canvas::scene;
@@ -27,5 +28,12 @@ int main() {
 
     const auto invalid = ReferenceGeometry::rectangle(-1.0, 2.0);
     assert(!geometryBounds(invalid).isFiniteAndOrdered());
+
+    const auto empty = geometryBounds(ReferenceGeometry::path({}));
+    assert(empty == canvas::foundation::WorldRect{});
+
+    const auto nonfinite = geometryBounds(ReferenceGeometry::rectangle(
+        std::numeric_limits<double>::infinity(), 2.0));
+    assert(!nonfinite.isFiniteAndOrdered());
     return 0;
 }
