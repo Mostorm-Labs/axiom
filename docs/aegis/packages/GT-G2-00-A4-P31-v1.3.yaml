@@ -1,0 +1,294 @@
+package_id: GT-G2-00-A4-P31-v1.3
+supersedes: GT-G2-00-A4-P31-v1.2
+stage: P31_TASK_PACKAGING
+stage_owner: aegis-implementation
+reconciliation_kind: TARGETED_PACKAGE_REALITY_RECONCILIATION
+verdict: READY_FOR_CONTROL_REVIEW
+p34_authorized: false
+a5_started: false
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+
+task_anchor:
+  revision: e122848cb4c9c1ac5ea0ee1f700b2890715eb806
+  relation: ancestor
+
+execution_base:
+  revision: a04d29d6c7160e7406fd500ff1bd3d6b70b1da2c
+
+accepted_existing_result:
+  revision: d6e2811af10ac33bab825a687c9a121f75892f9d
+  execution_branch: codex/gt-g2-a4-p32-v1-2
+  relation_to_execution_base: descendant
+  preserve_valid_work: true
+  source_mutation_required_by_this_reconciliation: false
+  mutable_branch_ref_role: corroborative_only
+  immutable_result_identity:
+    type: git_commit
+    repository: Mostorm-Labs/axiom
+    sha: d6e2811af10ac33bab825a687c9a121f75892f9d
+
+reconciliation_changes:
+  source_scope_additions:
+    - runtime/scene/CMakeLists.txt
+    - runtime/scene/include/canvas/scene/direct_render_scene.hpp
+  source_scope_addition_rationale:
+    runtime/scene/CMakeLists.txt: required to compile the authorized SceneDelta implementation unit
+    runtime/scene/include/canvas/scene/direct_render_scene.hpp: required to declare the authorized DirectRenderScene delta consumer boundary
+  test_path_corrections:
+    remove_nonexistent_package_paths:
+      - runtime/scene/tests/scene_record_store_locality_test.cpp
+      - runtime/scene/tests/scene_consumer_boundary_test.cpp
+    bind_current_test_organization:
+      - runtime/scene/tests/scene_delta_test.cpp
+      - runtime/scene/tests/scene_atomicity_test.cpp
+      - runtime/scene/tests/scene_full_rebuild_test.cpp
+      - runtime/scene/tests/CMakeLists.txt
+  verification_obligations_changed: false
+  p20_reopen_required: false
+  p30_replan_required: false
+  architecture_or_semantic_authority_changed: false
+  a5_scope_added: false
+
+cpp_contract:
+  RecordHandle: std::uint64_t
+  SceneDelta:
+    header: runtime/scene/include/canvas/scene/scene_delta.hpp
+    fields: [generationFrom, generationTo, addedRecords, updatedRecords, removedHandles, orderChanges, boundsChanges]
+    owner: RuntimeScene_execution_layer_only
+  PreparedDelta:
+    header: runtime/scene/include/canvas/scene/scene_delta.hpp
+    fields: [sceneDelta, slotWrites, objectIndexUpdates, orderIndexUpdates]
+    move_only: true
+
+  SceneRecordStore:
+    authoritative_lookup: ObjectId_to_RecordHandle_to_arena
+    ordered_projection_cache_is_not_mutation_authority: true
+    localized_prepare_commit: required
+    materializeSnapshot: foundation::Result<std::vector<SceneRecord>>() const
+    full_enumeration_only_in_explicit_snapshot_or_read_projection: true
+
+  RenderBoundary:
+    interface_header: runtime/scene/include/canvas/scene/render_scene.hpp
+    direct_header: runtime/scene/include/canvas/scene/direct_render_scene.hpp
+    delta_prepare: foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>(const SceneDelta&, SceneRevision, SceneRevision) const
+    delta_commit: void(std::unique_ptr<IPreparedRenderSceneUpdate>) noexcept
+    legacy_prepareApply: retained_adapter_for_existing_RF01_tests
+    delta_adapter_rule: converts_only_changed_records_and_never_calls_prepareReplace
+
+  SpatialBoundary:
+    interface_header: runtime/scene/include/canvas/scene/spatial_index.hpp
+    delta_prepare: foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>(const SceneDelta&, SceneRevision, SceneRevision) const
+    delta_commit: void(std::unique_ptr<IPreparedSpatialUpdate>) noexcept
+    legacy_prepareApply: retained_adapter_for_existing_RF01_tests
+    delta_adapter_rule: converts_only_changed_bounds_and_never_calls_prepareReplace
+    A5_differential: deferred
+
+  ShadowRenderScene:
+    header: runtime/scene/include/canvas/scene/shadow_render_scene.hpp
+    source: runtime/scene/src/shadow_render_scene.cpp
+    delta_prepare: forwards_same_SceneDelta_to_primary_and_shadow
+    delta_failure: first_error_preserved_as_foundation_Result
+    no_full_snapshot: true
+
+  UniformGridSpatialIndex:
+    header: runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+    source: runtime/scene/src/uniform_grid_spatial_index.cpp
+    delta_prepare: bounded_cell_updates_from_SceneDelta
+    stable_spatial_identity: required
+    no_full_rebuild: true
+    A5_spatial_differential: forbidden
+
+  SceneApply:
+    prepare_order: [SceneRecordStore, RenderBoundary.delta_prepare, SpatialBoundary.delta_prepare]
+    commit_order: [SceneRecordStore, RenderBoundary.delta_commit, SpatialBoundary.delta_commit, revision_publish]
+    prepare_failure: no_published_store_consumer_or_revision_changes
+    commit: noexcept
+
+fake_participants:
+  headers_sources:
+    - runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp
+    - runtime/scene/testing/src/fake_render_scene.cpp
+    - runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+    - runtime/scene/testing/src/fake_spatial_index.cpp
+  delta_behavior: local_changed_records_only
+  rejection_error: foundation::ErrorCode::kParticipantRejected
+  full_snapshot: forbidden
+
+tests:
+  current_executable_sources:
+    - runtime/scene/tests/scene_delta_test.cpp
+    - runtime/scene/tests/scene_atomicity_test.cpp
+    - runtime/scene/tests/scene_full_rebuild_test.cpp
+    - runtime/scene/tests/CMakeLists.txt
+  required_cases:
+    - stable_handle_survives_order_change
+    - snapshot_independent_mutation_lookup
+    - locality_matrix_1K_10K_100K
+    - zero_full_clone_sort_reindex_rebuild
+    - atomic_prepare_failure_no_publish
+    - render_and_shadow_receive_delta_only
+    - spatial_delta_updates_without_full_rebuild
+    - fake_rejection_maps_to_kParticipantRejected
+    - explicit_snapshot_matches_FullSceneCompiler
+    - A0_A3_regression
+    - RF01_regression
+    - protobuf_ON_OFF_full_ctest
+    - fresh_exact_source_focused_checkout
+    - git_diff_check
+  organization_rule: required_cases_are_normative; source_file_names_are_not_independent_finish_lines
+
+source_scope:
+  - runtime/scene/CMakeLists.txt
+  - runtime/scene/include/canvas/scene/scene_record_store.hpp
+  - runtime/scene/src/scene_record_store.cpp
+  - runtime/scene/include/canvas/scene/scene_delta.hpp
+  - runtime/scene/src/scene_delta.cpp
+  - runtime/scene/include/canvas/scene/scene.hpp
+  - runtime/scene/src/scene.cpp
+  - runtime/scene/include/canvas/scene/render_scene.hpp
+  - runtime/scene/include/canvas/scene/direct_render_scene.hpp
+  - runtime/scene/src/direct_render_scene.cpp
+  - runtime/scene/include/canvas/scene/shadow_render_scene.hpp
+  - runtime/scene/src/shadow_render_scene.cpp
+  - runtime/scene/include/canvas/scene/spatial_index.hpp
+  - runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+  - runtime/scene/src/uniform_grid_spatial_index.cpp
+  - runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp
+  - runtime/scene/testing/src/fake_render_scene.cpp
+  - runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+  - runtime/scene/testing/src/fake_spatial_index.cpp
+  - runtime/scene/testing/CMakeLists.txt
+  - runtime/scene/tests/scene_delta_test.cpp
+  - runtime/scene/tests/CMakeLists.txt
+
+verification_only_sources:
+  - runtime/scene/tests/scene_atomicity_test.cpp
+  - runtime/scene/tests/scene_full_rebuild_test.cpp
+
+forbidden_scope:
+  - semantic_schema_or_wire_changes
+  - Operation_or_ChangeSet_changes
+  - A2_dependency_changes
+  - A3_FullSceneCompiler_changes
+  - A5_spatial_differential_implementation
+  - A6_coordinator_or_recovery
+  - A7_query_or_hit_test
+  - Render_backend_GPU_or_Skia_changes
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.2
+  obligation_set_id: GT-G2-00-OBL-v0.2
+  trusted_basis_id: GT-G2-00-TB-v0.2
+  scope_contract_id: GT-G2-00-SCOPE-v0.2
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+
+evidence_identity_contract:
+  exact_result_revision:
+    repository: Mostorm-Labs/axiom
+    sha: d6e2811af10ac33bab825a687c9a121f75892f9d
+    reviewer_resolvable: true
+  mutable_branch_ref:
+    value: origin/codex/gt-g2-a4-p32-v1-2
+    role: corroborative_only
+    sufficient_as_sole_identity: false
+  verification_evidence:
+    must_bind_exact_result_revision: d6e2811af10ac33bab825a687c9a121f75892f9d
+    reviewer_accessible_materialization_required_before_P34: true
+    may_reuse_valid_P36_results: true
+    rerun_not_required_by_package_reconciliation_alone: true
+
+EXECUTION_CLOSURE_CONTRACT:
+  implementation:
+    required_changes:
+      - StableSlotStore_and_authoritative_handle_lookup
+      - PreparedDelta_with_slot_object_order_updates
+      - Delta_first_render_and_spatial_consumer_boundaries
+      - localized_DirectRenderScene_maintenance
+      - localized_UniformGridSpatialIndex_maintenance
+      - explicit_snapshot_materialization_outside_mutation_locality_path
+    forbidden_changes:
+      - semantic_schema_or_wire_changes
+      - Operation_or_ChangeSet_changes
+      - A3_FullSceneCompiler_changes
+      - A5_spatial_differential_implementation
+      - A6_or_A7_scope
+      - Render_backend_GPU_or_Skia_changes
+
+  tests:
+    required:
+      - id: A4_LOCALITY_MATRIX
+        command_or_oracle: deterministic_same_hot_topology_1K_10K_100K
+        expected_result: bounded_structural_work_independent_of_total_scene_population
+        blocking_reason: GT-G2-00-VS-v0.2 locality obligation
+      - id: A4_FORBIDDEN_FULL_WORK
+        command_or_oracle: executable_full_clone_sort_reindex_rebuild_counters
+        expected_result: all_forbidden_counters_zero
+        blocking_reason: GT-G2-00-VS-v0.2 locality obligation
+      - id: A4_ATOMICITY
+        command_or_oracle: prepare_failure_publishes_no_store_render_spatial_or_revision_change
+        expected_result: pass
+        blocking_reason: atomic prepare_commit contract
+      - id: A4_SNAPSHOT_DIFFERENTIAL
+        command_or_oracle: explicit_snapshot_matches_independent_FullSceneCompiler_projection
+        expected_result: pass
+        blocking_reason: acceptance oracle
+      - id: A4_REGRESSION
+        command_or_oracle: A0_A3_RF01_and_full_CTest_regression
+        expected_result: pass
+        blocking_reason: frozen compatibility obligation
+      - id: A4_PROTOBUF_MATRIX
+        command_or_oracle: protobuf_OFF_and_ON_full_CTest
+        expected_result: pass_with_only_declared_skips
+        blocking_reason: frozen build_matrix obligation
+      - id: A4_FRESH_EXACT_SOURCE
+        command_or_oracle: fresh_checkout_at_exact_result_revision_plus_focused_verification_and_git_diff_check
+        expected_result: pass
+        blocking_reason: reproducibility obligation
+
+  hosted_verification:
+    required: []
+    optional: []
+
+  evidence:
+    blocking:
+      - exact_result_revision_bound_verification_record
+      - locality_matrix_and_forbidden_work_results
+      - protobuf_ON_OFF_results
+      - fresh_exact_source_result
+    corroborative:
+      - mutable_execution_branch_ref
+
+  terminal_success:
+    all_of:
+      - frozen_required_cases_satisfied
+      - exact_result_revision_is_reviewer_resolvable
+      - reviewer_accessible_verification_evidence_materialized
+      - no_source_changes_outside_v1_3_scope
+
+  terminal_blockers:
+    explicit_classes:
+      - AUTHORITY_CONFLICT
+      - MISSING_REQUIRED_INPUT
+      - ENVIRONMENT_BLOCKER
+      - FROZEN_VERIFICATION_FAILURE
+      - NEW_HIGH_IMPACT_FAILURE_MODE
+      - TASK_PACKAGE_DEFECT
+      - VERIFICATION_DESIGN_DEFECT
+      - BLOCKED_EXECUTION_DIVERGENCE
+      - BLOCKED_EVIDENCE
+
+  return_policy:
+    continue_until_terminal_state: true
+    return_surface: CONTROL_REVIEW
+
+post_reconciliation_execution_policy:
+  code_changes_required: false
+  preserve_result_revision: d6e2811af10ac33bab825a687c9a121f75892f9d
+  further_source_mutation_without_new_defect: forbidden
+  evidence_only_continuation_if_needed: allowed_after_CONTROL_REVIEW
+  p34_entry_requires_CONTROL_REVIEW_acceptance: true
