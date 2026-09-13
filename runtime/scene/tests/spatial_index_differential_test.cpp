@@ -10,9 +10,33 @@
 #include <string_view>
 #include <vector>
 
+#if defined(_WIN32)
+#include <malloc.h>
+#endif
+
 namespace {
 std::atomic<std::uint64_t> gOrdinaryAllocations{0};
+
+void* allocateAligned(std::size_t size, std::size_t alignment) noexcept {
+#if defined(_WIN32)
+    return _aligned_malloc(size == 0U ? 1U : size, alignment);
+#else
+    void* memory = nullptr;
+    if (posix_memalign(&memory, alignment, size == 0U ? 1U : size) != 0) {
+        return nullptr;
+    }
+    return memory;
+#endif
 }
+
+void freeAligned(void* memory) noexcept {
+#if defined(_WIN32)
+    _aligned_free(memory);
+#else
+    std::free(memory);
+#endif
+}
+} // namespace
 
 void* operator new(std::size_t size) {
     gOrdinaryAllocations.fetch_add(1U, std::memory_order_relaxed);
@@ -37,9 +61,7 @@ void operator delete[](void* memory, std::size_t) noexcept { std::free(memory); 
 
 void* operator new(std::size_t size, std::align_val_t alignment) {
     gOrdinaryAllocations.fetch_add(1U, std::memory_order_relaxed);
-    const std::size_t align = static_cast<std::size_t>(alignment);
-    const std::size_t padded = ((size == 0U ? 1U : size) + align - 1U) / align * align;
-    if (void* memory = std::aligned_alloc(align, padded)) {
+    if (void* memory = allocateAligned(size, static_cast<std::size_t>(alignment))) {
         return memory;
     }
     throw std::bad_alloc();
@@ -49,11 +71,11 @@ void* operator new[](std::size_t size, std::align_val_t alignment) {
     return ::operator new(size, alignment);
 }
 
-void operator delete(void* memory, std::align_val_t) noexcept { std::free(memory); }
-void operator delete[](void* memory, std::align_val_t) noexcept { std::free(memory); }
-void operator delete(void* memory, std::size_t, std::align_val_t) noexcept { std::free(memory); }
+void operator delete(void* memory, std::align_val_t) noexcept { freeAligned(memory); }
+void operator delete[](void* memory, std::align_val_t) noexcept { freeAligned(memory); }
+void operator delete(void* memory, std::size_t, std::align_val_t) noexcept { freeAligned(memory); }
 void operator delete[](void* memory, std::size_t, std::align_val_t) noexcept {
-    std::free(memory);
+    freeAligned(memory);
 }
 
 namespace {
