@@ -1,0 +1,439 @@
+package_id: GT-G2-00-A5-P31-v0.2
+package_ref: notion://3da4c57a-590c-81f2-b9c0-db8c6858de5b/GT-G2-00-A5-P31-v0.2
+task_id: GT-G2-00-A5
+capability: Spatial Differential
+stage: P31_TASK_PACKAGING
+stage_owner: aegis-implementation
+verdict: READY_FOR_CONTROL_REVIEW
+package_scope: G2_A5_P36_REPAIR_AND_REVERIFICATION_REFRESH
+supersedes_package_ref: notion://3da4c57a-590c-8189-885f-ee17ac0589ee/GT-G2-00-A5-P31-v0.1
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+
+package_materialization_branch: codex/gt-g2-a5-p31-v0-2
+materialization_scope: documentation_only
+source_mutation_in_materialization: false
+
+task_anchor:
+  revision: a134307595e24cce22e851cd0d98170074668eb2
+  relation: exact
+  meaning: accepted_preserved_P36_result_and_future_repair_base
+
+planning_ancestry_anchor:
+  revision: 9483c162d293c3a049df3daa734ba514e9931c2c
+  relation: ancestor
+
+resume_cursor:
+  type: P36_REPAIR_CURSOR
+  execution_ref: codex/gt-g2-a5-p36-v0-1
+  accepted_revision: a134307595e24cce22e851cd0d98170074668eb2
+  completed_through:
+    - A5-P35-D3_SpatialDelta_runtime_boundary
+    - A5-P35-D4_failed_prepare_diagnostics_staging
+    - prior_focused_A5_differential
+    - prior_A4_scene_delta_regression
+    - prior_RF01_atomicity_full_rebuild_focused
+    - prior_git_diff_check
+  next_action: repair_D1_and_D2_then_execute_exact_P20_v0_3_huge_fixture_and_full_frozen_matrix
+
+p30_replan_required: false
+p32_restart_allowed: false
+p36_code_reverify_authorized: false
+p34_authorized: false
+A6_authorized: false
+G2_PASS: NOT_EVALUATED
+
+authority:
+  p15_ref: notion://3da4c57a-590c-81d2-94b7-d64f54d24184/GT-G2-00-A5-P15-v0.1
+  p16_ref: notion://3da4c57a-590c-81bc-8b56-dbf5be68791c/GT-G2-00-A5-P16-v0.1
+  p20_ref: notion://3da4c57a-590c-81e0-b4c9-dad679a95bac/GT-G2-00-P20-v0.3
+  downstream_reconciliation_ref: notion://3da4c57a-590c-8123-9f18-fc06f6a2f7a1/GT-G2-00-A5-P30-P31-Downstream-Impact-Reconciliation-v0.1
+  prior_p36_control_review_ref: notion://3da4c57a-590c-81c5-ace2-c93b1c4e8965/GT-G2-00-A5-P36-CONTROL-REVIEW-v0.1
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.3
+  obligation_set_id: GT-G2-00-OBL-v0.3
+  trusted_basis_id: GT-G2-00-TB-v0.3
+  scope_contract_id: GT-G2-00-SCOPE-v0.3
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.3
+  fixture_contract_id: GT-G2-00-T02-R06-HUGE-v0.1
+  corpus_id: GT-G2-00-CORPUS-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+  frozen_obligation_slice:
+    T02-R06: full
+    T02-R11: spatial_half_only
+
+finding_state:
+  A5-P35-D1:
+    status: OPEN
+    owner: implementation
+    requirement: genuine_no_fallible_commit
+  A5-P35-D2:
+    status: OPEN
+    owner: implementation
+    requirement: real_SpatialEntryId_membership_identity
+  A5-P35-D3:
+    status: PRESERVE_FIXED
+    regression_required: true
+  A5-P35-D4:
+    status: PRESERVE_FIXED
+    regression_required: true
+  A5-P36-U1:
+    status: CLOSED_BY_P20_v0_3
+  A5-P35-D6:
+    status: OPEN_PENDING_FULL_REVERIFICATION
+
+authorized_source_paths:
+  - runtime/scene/include/canvas/scene/spatial_index.hpp
+  - runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+  - runtime/scene/src/uniform_grid_spatial_index.cpp
+  - runtime/scene/include/canvas/scene/spatial_delta.hpp
+  - runtime/scene/src/spatial_delta.cpp
+  - runtime/scene/include/canvas/scene/linear_spatial_index.hpp
+  - runtime/scene/src/linear_spatial_index.cpp
+  - runtime/scene/src/scene.cpp
+  - runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+  - runtime/scene/testing/src/fake_spatial_index.cpp
+  - runtime/scene/testing/CMakeLists.txt
+  - runtime/scene/tests/spatial_delta_test.cpp
+  - runtime/scene/tests/spatial_index_differential_test.cpp
+  - runtime/scene/tests/spatial_index_locality_test.cpp
+  - runtime/scene/tests/scene_atomicity_test.cpp
+  - runtime/scene/tests/CMakeLists.txt
+  - runtime/scene/CMakeLists.txt
+
+scope_rules:
+  repair_base_to_final_source_diff_must_be_subset_of_authorized_paths: true
+  control_and_evidence_artifacts_excluded_from_source_allowlist_check: true
+  scene_cpp_scope: A5_SpatialDelta_and_ISpatialIndex_wiring_only
+  scene_delta_header_or_source_change_allowed: false
+  participant_commit_ordering_change_allowed: false
+  A6_recovery_or_coordinator_change_allowed: false
+  A7_public_query_hit_semantics_change_allowed: false
+  path_scope_divergence_requires_terminal_return: PACKAGE_SCOPE_DIVERGENCE
+
+preserved_contracts:
+  spatial_delta_boundary:
+    production_scene_path_explicitly_projects_SceneDelta_to_SpatialDelta: true
+    correctness_source: SceneDelta.mutations_before_after_runtime_state
+    unchanged_bounds_membership_mutation: false
+    duplicate_logical_entry_actions_fail_closed: true
+    semantic_Operation_or_ChangeSet_reread: forbidden
+  spatial_entry_identity:
+    membership_identity: SpatialEntryId
+    opaque: true
+    runtime_local: true
+    rebuildable: true
+    wire_or_persistent_identity: false
+    ObjectId_role: owner_source_correlation_only
+    bucket_may_store_record_vector_position: false
+    future_one_to_many_entry_contract_must_remain_possible: true
+  production_differential:
+    removed: oldCoverage_minus_newCoverage
+    retained: oldCoverage_intersection_newCoverage
+    added: newCoverage_minus_oldCoverage
+    retained_memberships_rewritten: false
+    unchanged_bounds_membership_edits: 0
+    same_coverage_bounds_membership_removals: 0
+    same_coverage_bounds_membership_additions: 0
+    exact_bounds_update_on_same_coverage_required: true
+    duplicate_SpatialEntryId_per_bucket_allowed: false
+    unrelated_bucket_rebuild_or_scan_allowed: false
+    normal_delta_full_grid_rebuild_allowed: false
+  prepare_commit:
+    prepare_completes_all_fallible_work: true
+    prepare_completes_all_container_allocation_growth_rehash_capacity_work: true
+    commit_noexcept_required: true
+    commit_ordinary_allocation_growth_rehash_allowed: false
+    commit_coverage_recomputation_allowed: false
+    commit_full_spatial_scan_or_rebuild_allowed: false
+    commit_new_error_surface_allowed: false
+    failed_prepare_published_state_unchanged: true
+    failed_prepare_bound_revision_unchanged: true
+    failed_prepare_committed_locality_diagnostics_unchanged: true
+  linear_oracle:
+    independent_entry_storage: true
+    direct_WorldRect_intersection_scan: true
+    may_share_foundation_rect_primitive: true
+    may_share_UniformGrid_cellsFor: false
+    may_share_production_membership_diff: false
+    production_output_as_expected_truth: false
+
+huge_object_fixture:
+  fixture_id: G2-T02-R06-HUGE-01
+  fixture_contract_id: GT-G2-00-T02-R06-HUGE-v0.1
+  object_id:
+    construction: foundation::ObjectId::fromUint64(0xA500000000000001ULL)
+  revisions:
+    initial: 100
+    insert: 101
+    update: 102
+    remove: 103
+  bounds_B0: [-262144.0, -262144.0, 262144.0, 262144.0]
+  bounds_B1: [-196608.0, -262144.0, 327680.0, 262144.0]
+  queries:
+    Q_CENTER: [-128.0, -128.0, 128.0, 128.0]
+    Q_OLD_ONLY: [-262000.0, -64.0, -261744.0, 64.0]
+    Q_NEW_ONLY: [327424.0, -64.0, 327600.0, 64.0]
+    Q_OUTSIDE: [393216.0, -128.0, 393472.0, 128.0]
+  expected_after_insert:
+    Q_CENTER: [0xA500000000000001]
+    Q_OLD_ONLY: [0xA500000000000001]
+    Q_NEW_ONLY: []
+    Q_OUTSIDE: []
+  expected_after_update:
+    Q_CENTER: [0xA500000000000001]
+    Q_OLD_ONLY: []
+    Q_NEW_ONLY: [0xA500000000000001]
+    Q_OUTSIDE: []
+  expected_after_remove:
+    Q_CENTER: []
+    Q_OLD_ONLY: []
+    Q_NEW_ONLY: []
+    Q_OUTSIDE: []
+  production_prepare_insert_must_succeed: true
+  production_prepare_update_must_succeed: true
+  production_prepare_remove_must_succeed: true
+  exact_Linear_parity_required: true
+  false_negative_forbidden: true
+  silent_omission_forbidden: true
+  partial_indexing_forbidden: true
+
+extreme_representability_probe:
+  fixture_id: G2-T02-R06-EXTREME-01
+  sentinel_object_id:
+    construction: foundation::ObjectId::fromUint64(0xA5000000000000F2ULL)
+  probe_object_id:
+    construction: foundation::ObjectId::fromUint64(0xA5000000000000F1ULL)
+  base_revision: 200
+  target_revision: 201
+  sentinel_bounds: [-64.0, -64.0, 64.0, 64.0]
+  probe_bounds: [549755813888.0, 0.0, 549755879424.0, 65536.0]
+  if_prepare_accepts:
+    exact_Linear_parity_required: true
+  if_prepare_rejects_as_unrepresentable:
+    failure_before_publication_required: true
+    published_revision_must_remain: 200
+    sentinel_state_unchanged: true
+    probe_absent: true
+    committed_locality_diagnostics_unchanged: true
+  silent_drop_or_partial_publish_forbidden: true
+
+locality_contract:
+  required_counters:
+    - fullSpatialRebuildCount
+    - fullSpatialRecordCloneCount
+    - fullCellScanCount
+    - affectedEntryCount
+    - oldCoverageUnitsVisited
+    - newCoverageUnitsVisited
+    - membershipRemovalCount
+    - membershipRetainedCount
+    - membershipAddCount
+    - queryVisitedCellsOrNodes
+    - queryCandidatesReturned
+  hot_path_zero:
+    fullSpatialRebuildCount: 0
+    fullSpatialRecordCloneCount: 0
+    fullCellScanCount: 0
+  cold_scale_populations: [1000, 10000, 100000]
+  invariant: structural_access_depends_on_affected_coverage_or_query_work_not_total_population
+
+poc03_contract:
+  source_tree: pocs/large_scene
+  source_tree_read_only: true
+  production_linkage_allowed: false
+  population: 100000
+  seed: 0x43414e5641533033
+  columns: 1000
+  cell_size: 32.0
+  candidate_count_max: 5000
+  classification: blocking_profile_specific_not_product_SLO
+  one_million_profile_blocking_for_A5: false
+
+required_verification:
+  - A5-SPATIAL-DELTA-PROJECTION
+  - A5-LINEAR-ORACLE-INDEPENDENCE
+  - A5-OVERLAP-BOUNDARY-PARITY
+  - A5-INSERT-REMOVE-UPDATE-PARITY
+  - A5-UNCHANGED-BOUNDS-ZERO-CHURN
+  - A5-SAME-COVERAGE-BOUNDS-UPDATE
+  - A5-CROSS-CELL-DIFFERENTIAL
+  - A5-DUPLICATE-CELL-NO-DUPLICATE-CANDIDATE
+  - A5-STALE-ENTRY-BEFORE-MISMATCH-NO-PUBLISH
+  - A5-HUGE-OBJECT-PARITY:G2-T02-R06-HUGE-01
+  - A5-UNREPRESENTABLE-BOUNDS-FAIL-CLOSED:G2-T02-R06-EXTREME-01
+  - A5-ZERO-FULL-WORK-COUNTERS
+  - A5-COLD-SCALE-INVARIANCE-1K-10K-100K
+  - A5-POC03-REPRESENTATIVE-100K-CANDIDATE
+  - A5-NO-FALLIBLE-COMMIT
+  - A5-A0-A4-REGRESSION
+  - protobuf_ON_full_semantic_ctest
+  - protobuf_OFF_full_semantic_ctest_declared_skips_only
+  - fresh_exact_source_focused_checkout
+  - git_diff_check
+
+build_environment:
+  dependency_entrypoint: tools/setup_build_environment.py
+  sdk_store_required: true
+  python_minimum: '3.10'
+  adhoc_source_protobuf_build_forbidden: true
+  protobuf_ON:
+    CANVAS_BUILD_POC01: OFF
+    CANVAS_BUILD_RF01: ON
+    CANVAS_BUILD_SEMANTIC: ON
+    CANVAS_SEMANTIC_ENABLE_PROTOBUF: ON
+    exact_sdk_runtime_and_protoc_from_resolver_required: true
+  protobuf_OFF:
+    CANVAS_BUILD_POC01: OFF
+    CANVAS_BUILD_RF01: ON
+    CANVAS_BUILD_SEMANTIC: ON
+    CANVAS_SEMANTIC_ENABLE_PROTOBUF: OFF
+    separate_clean_build_directory_required: true
+
+forbidden_changes:
+  - runtime/semantic/**
+  - schema/**
+  - persistence/**
+  - sync/**
+  - platform/**
+  - semantic-sdk.lock.json
+  - ObjectKind_or_FieldId_registry_changes
+  - Operation_or_ChangeSet_semantics_changes
+  - A2_A3_A4_authority_redesign
+  - runtime/scene/include/canvas/scene/scene_delta.hpp
+  - runtime/scene/src/scene_delta.cpp
+  - A6_incremental_coordinator_or_recovery
+  - A7_precise_Query_HitTest_Inspector_or_final_ordering
+  - Render_Core_Skia_GPU_Tile_RenderGroup_RasterCache_Scheduler
+  - pocs/large_scene/**_modification
+  - production_POC03_linkage
+  - permanent_Spatial_backend_ADR
+  - new_SparseHash_RTree_Quadtree_Hybrid_backend_scope
+  - one_million_profile_as_blocking_A5_gate
+  - Product_latency_or_memory_SLO_gate
+  - final_G2_gate_evidence_materialization
+  - G3_work
+
+blocking_evidence_mapping:
+  G2-PROJECTION.json:
+    - T02-R06_spatial_parity_and_correctness
+    - T02-R11_spatial_locality_access_vectors
+  G2-CTEST.txt:
+    - A5_focused_and_regression_execution
+  G2-PLAN.json:
+    - A5_source_commands_path_inventory_fixture_and_scale_matrix
+  G2-GATE-MANIFEST.json:
+    - A5_identity_ancestry_and_verification_bindings
+
+EXECUTION_CLOSURE_CONTRACT:
+  implementation:
+    required_changes:
+      - A5-P35-D1: eliminate_all_commit_time_ordinary_allocation_growth_and_rehash_surfaces
+      - A5-P35-D2: use_real_SpatialEntryId_domain_end_to_end_for_membership_and_registry
+      - preserve_A5-P35-D3_SpatialDelta_runtime_boundary
+      - preserve_A5-P35-D4_failed_prepare_diagnostics_staging
+      - support_G2-T02-R06-HUGE-01_successfully_with_exact_Linear_parity
+      - enforce_G2-T02-R06-EXTREME-01_parity_on_accept_or_atomic_fail_closed_on_reject
+      - complete_remaining_A5_frozen_matrix
+    forbidden_changes:
+      - upstream_authority_or_semantic_redefinition
+      - source_scope_expansion_without_PACKAGE_SCOPE_DIVERGENCE_return
+      - new_permanent_spatial_backend_architecture
+      - A6_A7_Render_G3_scope
+  tests:
+    required:
+      - id: A5-NO-FALLIBLE-COMMIT
+        expected_result: PASS
+        blocking_reason: A5-P35-D1
+      - id: A5-SPATIAL-ENTRY-ID-IDENTITY
+        expected_result: bucket_and_registry_use_real_SpatialEntryId_not_record_vector_index
+        blocking_reason: A5-P35-D2
+      - id: A5-HUGE-OBJECT-PARITY
+        fixture: G2-T02-R06-HUGE-01
+        expected_result: PASS
+        blocking_reason: T02-R06
+      - id: A5-UNREPRESENTABLE-BOUNDS-FAIL-CLOSED
+        fixture: G2-T02-R06-EXTREME-01
+        expected_result: PASS
+        blocking_reason: T02-R06
+      - id: FULL_A5_FROZEN_MATRIX
+        expected_result: PASS
+        blocking_reason: A5-P35-D6
+      - id: protobuf_ON_full_semantic_ctest
+        expected_result: PASS
+      - id: protobuf_OFF_full_semantic_ctest_declared_skips_only
+        expected_result: PASS
+      - id: fresh_exact_source_focused_checkout
+        expected_result: PASS
+      - id: git_diff_check
+        expected_result: PASS
+  hosted_verification:
+    required: []
+    optional:
+      - exact_result_hosted_CI
+      - spatial_locality_artifact
+  evidence:
+    blocking:
+      - exact_result_revision
+      - reviewer_accessible_materialized_ref
+      - exact_P20_v0_3_verification_bindings
+      - exact_fixture_ids_and_results
+      - full_frozen_matrix_results
+      - protobuf_ON_OFF_results
+      - fresh_exact_result_checkout_result
+      - source_allowlist_diff_result
+    corroborative:
+      - staging_spatial_parity_json
+      - staging_locality_json
+      - staging_ctest_log
+      - staging_run_manifest
+  terminal_success:
+    all_of:
+      - D1_FIXED
+      - D2_FIXED
+      - D3_REGRESSION_PASS
+      - D4_REGRESSION_PASS
+      - G2_T02_R06_HUGE_01_PASS
+      - G2_T02_R06_EXTREME_01_PASS
+      - FULL_A5_FROZEN_MATRIX_PASS
+      - A0_A4_REGRESSIONS_PASS
+      - PROTOBUF_ON_PASS
+      - PROTOBUF_OFF_PASS_WITH_ONLY_DECLARED_SKIPS
+      - FRESH_EXACT_RESULT_CHECKOUT_PASS
+      - GIT_DIFF_CHECK_PASS
+      - SOURCE_DIFF_WITHIN_ALLOWLIST
+      - REVIEWER_ACCESSIBLE_RESULT_MATERIALIZED
+  terminal_blockers:
+    explicit_classes:
+      - AUTHORITY_CONFLICT
+      - MISSING_REQUIRED_INPUT
+      - ENVIRONMENT_BLOCKER
+      - FROZEN_VERIFICATION_FAILURE
+      - NEW_HIGH_IMPACT_FAILURE_MODE
+      - PACKAGE_SCOPE_DIVERGENCE
+      - BLOCKED_REPOSITORY_IDENTITY
+      - BLOCKED_EXECUTION_DIVERGENCE
+      - BLOCKED_EVIDENCE
+  return_policy:
+    continue_until_terminal_state: true
+
+successful_return:
+  status: READY_FOR_P34_REREVIEW
+  repair_base: a134307595e24cce22e851cd0d98170074668eb2
+  result_revision: required_new_exact_revision
+  materialized_ref: required_reviewer_accessible_git_ref
+
+claims_forbidden:
+  - P34_PASS
+  - A5_PASS
+  - official_G2_PASS
+  - Repository_Integration_Closure
+  - A6_started_or_authorized
+  - permanent_Spatial_backend_selected
+  - G3_started
+
+next_stage: P31_CONTROL_REVIEW
