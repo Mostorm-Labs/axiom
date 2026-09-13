@@ -56,8 +56,13 @@ int main() {
     auto local = store.prepareApply(input.mutations);
     if (!local) return EXIT_FAILURE;
     store.commit(std::move(local.value()));
+    const auto afterDiag = store.localityDiagnostics();
     if (stableHandle == 0 || store.handleFor(before.objectId) != stableHandle ||
         store.localityDiagnostics().localizedMutationCount != beforeDiag.localizedMutationCount + 1 ||
+        afterDiag.fullRecordCloneCount != beforeDiag.fullRecordCloneCount ||
+        afterDiag.fullSortCount != beforeDiag.fullSortCount ||
+        afterDiag.fullReindexCount != beforeDiag.fullReindexCount ||
+        afterDiag.fullRebuildCount != beforeDiag.fullRebuildCount ||
         store.records().front().orderKey != SceneOrderKey(2)) {
         std::cerr << "Stable slot locality failed\n";
         return EXIT_FAILURE;
@@ -73,6 +78,7 @@ int main() {
         auto initial = local.prepareReplace(seed);
         if (!initial) return std::pair<std::uint64_t, std::size_t>{0, 0};
         local.commit(std::move(initial.value()));
+        const auto baseline = local.localityDiagnostics();
         const SceneRecord inserted = record(1, population + 100);
         CompiledSceneDelta add{SceneRevision(1), SceneRevision(2),
                                {SceneMutation{SceneMutationKind::kInsert, inserted.objectId,
@@ -96,6 +102,14 @@ int main() {
         auto removePrepared = local.prepareApply(remove.mutations);
         if (!removePrepared) return std::pair<std::uint64_t, std::size_t>{0, 0};
         local.commit(std::move(removePrepared.value()));
+        const auto diagnostics = local.localityDiagnostics();
+        if (diagnostics.localizedMutationCount != baseline.localizedMutationCount + 3 ||
+            diagnostics.fullRecordCloneCount != baseline.fullRecordCloneCount ||
+            diagnostics.fullSortCount != baseline.fullSortCount ||
+            diagnostics.fullReindexCount != baseline.fullReindexCount ||
+            diagnostics.fullRebuildCount != baseline.fullRebuildCount) {
+            return std::pair<std::uint64_t, std::size_t>{0, 0};
+        }
         return std::pair<std::uint64_t, std::size_t>{local.handleFor(inserted.objectId),
                                                      local.records().size()};
     };

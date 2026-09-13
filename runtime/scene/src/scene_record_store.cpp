@@ -150,6 +150,10 @@ std::size_t SceneRecordStore::estimatedBytes() const {
 foundation::Result<SceneRecordStore::PreparedUpdate>
 SceneRecordStore::prepareReplace(std::span<const SceneRecord> records) const {
     try {
+        ++_localityDiagnostics.fullRecordCloneCount;
+        ++_localityDiagnostics.fullSortCount;
+        ++_localityDiagnostics.fullReindexCount;
+        ++_localityDiagnostics.fullRebuildCount;
         std::vector<SceneRecord> normalized;
         normalized.reserve(records.size());
         for (const SceneRecord& record : records) {
