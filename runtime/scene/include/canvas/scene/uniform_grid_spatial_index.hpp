@@ -62,6 +62,7 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     SpatialEntryId _nextEntryId = 1;
     std::unordered_map<ObjectId, std::uint32_t, foundation::ObjectIdHash> _index;
     std::unordered_map<std::int64_t, std::vector<SpatialEntryId>> _cells;
+    std::unordered_map<SpatialEntryId, WorldRect> _overflow;
 };
 
 } // namespace canvas

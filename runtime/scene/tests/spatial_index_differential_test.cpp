@@ -1,5 +1,6 @@
 #include "canvas/scene/linear_spatial_index.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/scene/spatial_delta.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -61,6 +62,19 @@ int main() {
         std::cerr << "localized diagnostics violated\n";
         return EXIT_FAILURE;
     }
+    const ObjectId hugeId = ObjectId::fromUint64(0xA500000000000001ULL);
+    const WorldRect hugeBounds{-262144.0F, -262144.0F, 262144.0F, 262144.0F};
+    SpatialMutation hugeInsert{SceneMutationKind::kInsert, hugeId, std::nullopt, hugeBounds};
+    SceneDelta hugeDelta{SceneRevision(2), SceneRevision(3), {}, {}, {}, {}, {},
+                         {SceneMutation{SceneMutationKind::kInsert, hugeId, std::nullopt,
+                                         sceneRecord(record(0xA500000000000001ULL, hugeBounds))}}};
+    auto hugePrepared = grid.prepareSpatialDelta(makeSpatialDelta(hugeDelta), SceneRevision(2), SceneRevision(3));
+    if (!hugePrepared) {
+        std::cerr << "huge object prepare failed\n";
+        return EXIT_FAILURE;
+    }
+    grid.commit(std::move(hugePrepared.value()));
+    if (!grid.query({-128, -128, 128, 128})) return EXIT_FAILURE;
     const auto beforeFailure = grid.diagnostics();
     SceneDelta invalid{SceneRevision(2), SceneRevision(3), {}, {}, {}, {}, {},
                        {SceneMutation{SceneMutationKind::kUpdate, second.objectId,

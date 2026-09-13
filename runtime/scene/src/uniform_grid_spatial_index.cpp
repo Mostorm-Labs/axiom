@@ -17,11 +17,13 @@ class UniformGridSpatialIndex::PreparedGridUpdate final : public IPreparedSpatia
         std::vector<std::int64_t> removed;
         std::vector<std::int64_t> retained;
         std::vector<std::int64_t> added;
+        std::optional<WorldRect> overflowAfter;
     };
     SceneRevision revision;
     std::vector<SpatialRecord> records;
     std::vector<SpatialEntryId> entryIds;
     std::unordered_map<std::int64_t, std::vector<SpatialEntryId>> cells;
+    std::unordered_map<SpatialEntryId, WorldRect> overflow;
     std::vector<MutationPlan> plans;
     std::uint64_t affectedEntryCount = 0;
     std::uint64_t oldCoverageUnitsVisited = 0;
@@ -119,11 +121,16 @@ UniformGridSpatialIndex::prepareRecords(std::vector<SpatialRecord> records,
         for (std::size_t index = 0; index < update->records.size(); ++index) {
             auto cellsResult = cellsFor(update->records[index].worldBounds, _cellSize);
             if (!cellsResult) {
-                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
-                    cellsResult.error());
-            }
-            for (std::int64_t key : cellsResult.value()) {
-                update->cells[key].push_back(static_cast<SpatialEntryId>(index + 1U));
+                if (!update->records[index].worldBounds.isFiniteAndOrdered()) {
+                    return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                        cellsResult.error());
+                }
+                update->overflow.emplace(static_cast<SpatialEntryId>(index + 1U),
+                                         update->records[index].worldBounds);
+            } else {
+                for (std::int64_t key : cellsResult.value()) {
+                    update->cells[key].push_back(static_cast<SpatialEntryId>(index + 1U));
+                }
             }
         }
         return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::success(
@@ -271,21 +278,20 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
                                                : _entryIds[found->second];
             std::vector<std::int64_t> oldCells;
             std::vector<std::int64_t> newCells;
+            bool oldOverflow = false;
             if (mutation.before) {
                 auto oldCellsResult = cellsFor(mutation.before->worldBounds, _cellSize);
-                if (!oldCellsResult) {
-                    return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
-                        oldCellsResult.error());
-                }
-                oldCells = std::move(oldCellsResult.value());
+                if (oldCellsResult) oldCells = std::move(oldCellsResult.value());
+                else if (mutation.before->worldBounds.isFiniteAndOrdered()) oldOverflow = true;
+                else return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(oldCellsResult.error());
             }
             if (mutation.after) {
                 auto newCellsResult = cellsFor(mutation.after->worldBounds, _cellSize);
-                if (!newCellsResult) {
-                    return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
-                        newCellsResult.error());
-                }
-                newCells = std::move(newCellsResult.value());
+                if (newCellsResult) newCells = std::move(newCellsResult.value());
+                else if (mutation.after->worldBounds.isFiniteAndOrdered()) {
+                    newCells.clear();
+                    plan.overflowAfter = mutation.after->worldBounds;
+                } else return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(newCellsResult.error());
             }
             auto oldSet = makeSet(oldCells);
             auto newSet = makeSet(newCells);
@@ -293,6 +299,7 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
                 if (newSet.count(key)) plan.retained.push_back(key); else plan.removed.push_back(key);
             }
             for (auto key : newCells) if (!oldSet.count(key)) plan.added.push_back(key);
+            if (oldOverflow) plan.removed.clear();
             update->affectedEntryCount += 1;
             update->oldCoverageUnitsVisited += oldCells.size();
             update->newCoverageUnitsVisited += newCells.size();
@@ -354,7 +361,8 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                 _entrySlots[plan.entry] = index;
                 _nextEntryId = std::max(_nextEntryId, plan.entry + 1U);
                 _index[mutation.objectId] = index;
-                for (auto key : plan.added) _cells[key].push_back(index);
+                if (plan.overflowAfter) _overflow[plan.entry] = *plan.overflowAfter;
+                else for (auto key : plan.added) _cells[key].push_back(plan.entry);
             } else if (mutation.kind == SceneMutationKind::kUpdate && found != nullptr && mutation.after) {
                 const std::uint32_t index = plan.entry < _entrySlots.size()
                                                  ? _entrySlots[plan.entry]
@@ -364,7 +372,9 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                     values.erase(std::remove(values.begin(), values.end(), index), values.end());
                 }
                 found->worldBounds = *mutation.after;
-                for (auto key : plan.added) _cells[key].push_back(index);
+                _overflow.erase(plan.entry);
+                if (plan.overflowAfter) _overflow[plan.entry] = *plan.overflowAfter;
+                else for (auto key : plan.added) _cells[key].push_back(plan.entry);
             } else if (mutation.kind == SceneMutationKind::kRemove && found != nullptr) {
                 const std::uint32_t index = plan.entry < _entrySlots.size()
                                                  ? _entrySlots[plan.entry]
@@ -376,6 +386,7 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                 found->objectId = ObjectId{};
                 found->worldBounds = WorldRect{};
                 _index.erase(mutation.objectId);
+                _overflow.erase(plan.entry);
             }
         }
         _revision = update->revision;
@@ -397,6 +408,7 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
     }
     _nextEntryId = static_cast<SpatialEntryId>(_entryIds.size() + 1U);
     _cells.swap(update->cells);
+    _overflow.swap(update->overflow);
     _index.clear();
     for (std::size_t i = 0; i < _records.size(); ++i) {
         if (!_records[i].objectId.isZero()) {
@@ -435,6 +447,13 @@ UniformGridSpatialIndex::query(const WorldRect& worldRect) const {
                     result.candidates.push_back(_records[index].objectId);
                 }
             }
+        }
+        for (const auto& [entry, bounds] : _overflow) {
+            if (!bounds.intersects(worldRect) || entry >= _entrySlots.size()) continue;
+            const std::uint32_t index = _entrySlots[entry];
+            if (!visited.insert(index).second || _records[index].objectId.isZero()) continue;
+            ++result.examinedRecords;
+            result.candidates.push_back(_records[index].objectId);
         }
         _lastExaminedRecords = result.examinedRecords;
         _lastReturnedCandidates = result.candidates.size();
