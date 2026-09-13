@@ -121,7 +121,9 @@ UniformGridSpatialIndex::prepareRecords(std::vector<SpatialRecord> records,
         for (std::size_t index = 0; index < update->records.size(); ++index) {
             auto cellsResult = cellsFor(update->records[index].worldBounds, _cellSize);
             if (!cellsResult) {
-                if (!update->records[index].worldBounds.isFiniteAndOrdered()) {
+                const auto& bounds = update->records[index].worldBounds;
+                if (!bounds.isFiniteAndOrdered() || bounds.right - bounds.left > 1048576.0F ||
+                    bounds.bottom - bounds.top > 1048576.0F) {
                     return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
                         cellsResult.error());
                 }
@@ -288,7 +290,9 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
             if (mutation.after) {
                 auto newCellsResult = cellsFor(mutation.after->worldBounds, _cellSize);
                 if (newCellsResult) newCells = std::move(newCellsResult.value());
-                else if (mutation.after->worldBounds.isFiniteAndOrdered()) {
+                else if (mutation.after->worldBounds.isFiniteAndOrdered() &&
+                         mutation.after->worldBounds.right - mutation.after->worldBounds.left <= 1048576.0F &&
+                         mutation.after->worldBounds.bottom - mutation.after->worldBounds.top <= 1048576.0F) {
                     newCells.clear();
                     plan.overflowAfter = mutation.after->worldBounds;
                 } else return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(newCellsResult.error());
