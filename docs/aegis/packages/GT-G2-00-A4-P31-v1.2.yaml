@@ -1,0 +1,146 @@
+package_id: GT-G2-00-A4-P31-v1.2
+supersedes: GT-G2-00-A4-P31-v1.1
+stage: P31_TASK_PACKAGING
+stage_owner: aegis-implementation
+verdict: READY_FOR_P32
+p32_code_execution_authorized: true
+p34_authorized: false
+a5_started: false
+
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+  canonical_branch: main
+task_anchor:
+  revision: e122848cb4c9c1ac5ea0ee1f700b2890715eb806
+  relation: ancestor
+execution_base:
+  revision: a04d29d6c7160e7406fd500ff1bd3d6b70b1da2c
+
+cpp_contract:
+  RecordHandle: std::uint64_t
+  SceneDelta:
+    header: runtime/scene/include/canvas/scene/scene_delta.hpp
+    fields: [generationFrom, generationTo, addedRecords, updatedRecords, removedHandles, orderChanges, boundsChanges]
+    owner: RuntimeScene_execution_layer_only
+  PreparedDelta:
+    header: runtime/scene/include/canvas/scene/scene_delta.hpp
+    fields: [sceneDelta, slotWrites, objectIndexUpdates, orderIndexUpdates]
+    move_only: true
+    wrapper: foundation::Result<std::unique_ptr<PreparedDelta>>
+
+  SceneRecordStore:
+    prepareApply: foundation::Result<PreparedDelta>(std::span<const SceneMutation>) const
+    commit: void(PreparedDelta&&) noexcept
+    materializeSnapshot: foundation::Result<std::vector<SceneRecord>>() const
+    full_enumeration_only_in: materializeSnapshot
+
+  RenderBoundary:
+    interface_header: runtime/scene/include/canvas/scene/render_scene.hpp
+    delta_prepare: foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>(const SceneDelta&, SceneRevision, SceneRevision) const
+    delta_commit: void(std::unique_ptr<IPreparedRenderSceneUpdate>) noexcept
+    legacy_prepareApply: retained_adapter_for_existing_RF01_tests
+    delta_adapter_rule: converts_only_changed_records_and_never_calls_prepareReplace
+
+  SpatialBoundary:
+    interface_header: runtime/scene/include/canvas/scene/spatial_index.hpp
+    delta_prepare: foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>(const SceneDelta&, SceneRevision, SceneRevision) const
+    delta_commit: void(std::unique_ptr<IPreparedSpatialUpdate>) noexcept
+    legacy_prepareApply: retained_adapter_for_existing_RF01_tests
+    delta_adapter_rule: converts_only_changed_bounds_and_never_calls_prepareReplace
+    A5_differential: deferred
+
+  ShadowRenderScene:
+    header: runtime/scene/include/canvas/scene/shadow_render_scene.hpp
+    source: runtime/scene/src/shadow_render_scene.cpp
+    delta_prepare: forwards_same_SceneDelta_to_primary_and_shadow
+    delta_failure: first_error_preserved_as_foundation_Result
+    no_full_snapshot: true
+
+  UniformGridSpatialIndex:
+    header: runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+    source: runtime/scene/src/uniform_grid_spatial_index.cpp
+    delta_prepare: bounded_cell_updates_from_SceneDelta
+    no_full_rebuild: true
+    A5_spatial_differential: forbidden
+
+  SceneApply:
+    prepare_order: [SceneRecordStore, RenderBoundary.delta_prepare, SpatialBoundary.delta_prepare]
+    commit_order: [SceneRecordStore, RenderBoundary.delta_commit, SpatialBoundary.delta_commit, revision_publish]
+    prepare_failure: no_published_store_consumer_or_revision_changes
+    commit: noexcept
+
+fake_participants:
+  headers_sources:
+    - runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp
+    - runtime/scene/testing/src/fake_render_scene.cpp
+    - runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+    - runtime/scene/testing/src/fake_spatial_index.cpp
+  delta_behavior: local_changed_records_only
+  rejection_error: foundation::ErrorCode::kParticipantRejected
+  full_snapshot: forbidden
+
+tests:
+  executable_paths:
+    - runtime/scene/tests/scene_record_store_locality_test.cpp
+    - runtime/scene/tests/scene_delta_test.cpp
+    - runtime/scene/tests/scene_consumer_boundary_test.cpp
+  required_cases:
+    - stable_handle_survives_order_change
+    - locality_matrix_1K_10K_100K
+    - zero_full_clone_sort_reindex_rebuild
+    - atomic_prepare_failure_no_publish
+    - render_and_shadow_receive_delta_only
+    - spatial_delta_updates_without_full_rebuild
+    - fake_rejection_maps_to_kParticipantRejected
+    - explicit_snapshot_matches_FullSceneCompiler
+    - A0_A3_regression
+    - protobuf_ON_OFF_full_ctest
+    - fresh_exact_source_focused_checkout
+    - git_diff_check
+
+source_scope:
+  - runtime/scene/include/canvas/scene/scene_record_store.hpp
+  - runtime/scene/src/scene_record_store.cpp
+  - runtime/scene/include/canvas/scene/scene_delta.hpp
+  - runtime/scene/src/scene_delta.cpp
+  - runtime/scene/include/canvas/scene/scene.hpp
+  - runtime/scene/src/scene.cpp
+  - runtime/scene/include/canvas/scene/render_scene.hpp
+  - runtime/scene/src/direct_render_scene.cpp
+  - runtime/scene/include/canvas/scene/shadow_render_scene.hpp
+  - runtime/scene/src/shadow_render_scene.cpp
+  - runtime/scene/include/canvas/scene/spatial_index.hpp
+  - runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+  - runtime/scene/src/uniform_grid_spatial_index.cpp
+  - runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp
+  - runtime/scene/testing/src/fake_render_scene.cpp
+  - runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+  - runtime/scene/testing/src/fake_spatial_index.cpp
+  - runtime/scene/testing/CMakeLists.txt
+  - runtime/scene/tests/scene_record_store_locality_test.cpp
+  - runtime/scene/tests/scene_delta_test.cpp
+  - runtime/scene/tests/scene_consumer_boundary_test.cpp
+  - runtime/scene/tests/CMakeLists.txt
+
+forbidden_scope:
+  - semantic_schema_or_wire_changes
+  - Operation_or_ChangeSet_changes
+  - A2_dependency_changes
+  - A3_FullSceneCompiler_changes
+  - A5_spatial_differential_implementation
+  - A6_coordinator_or_recovery
+  - A7_query_or_hit_test
+  - Render_backend_GPU_or_Skia_changes
+
+verification_bindings:
+  verification_spec_id: GT-G2-00-VS-v0.2
+  obligation_set_id: GT-G2-00-OBL-v0.2
+  trusted_basis_id: GT-G2-00-TB-v0.2
+  scope_contract_id: GT-G2-00-SCOPE-v0.2
+  acceptance_oracle_id: GT-G2-00-ORACLE-v0.2
+  evidence_compilation_contract_id: GT-G2-00-ECC-v0.1
+
+return_policy:
+  continue_until_terminal_state: true
+  return_surface: CONTROL_REVIEW
