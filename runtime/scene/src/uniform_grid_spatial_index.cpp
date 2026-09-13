@@ -312,51 +312,6 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
             update->membershipAddCount += plan.added.size();
             update->plans.push_back(std::move(plan));
         }
-        // Detached publication attempt: all fallible state construction lives
-        // exclusively in PreparedGridUpdate; commit can publish by noexcept swap.
-        update->records = _records;
-        update->entryIds = _entryIds;
-        update->cells = _cells;
-        update->overflow = _overflow;
-        for (const auto& plan : update->plans) {
-            const auto& mutation = plan.mutation;
-            if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
-                update->records.push_back({mutation.objectId, *mutation.after});
-                update->entryIds.push_back(plan.entry);
-                if (plan.overflowAfter) update->overflow.emplace(plan.entry, *plan.overflowAfter);
-                for (const auto key : plan.added) update->cells[key].push_back(plan.entry);
-            } else if (mutation.kind == SceneMutationKind::kUpdate && mutation.after) {
-                const auto found = std::find_if(update->records.begin(), update->records.end(),
-                    [&](const SpatialRecord& r) { return r.objectId == mutation.objectId; });
-                if (found != update->records.end()) found->worldBounds = *mutation.after;
-                for (const auto key : plan.removed) {
-                    auto it = update->cells.find(key);
-                    if (it != update->cells.end()) {
-                        auto& values = it->second;
-                        values.erase(std::remove(values.begin(), values.end(), plan.entry), values.end());
-                    }
-                }
-                update->overflow.erase(plan.entry);
-                if (plan.overflowAfter) update->overflow.emplace(plan.entry, *plan.overflowAfter);
-                for (const auto key : plan.added) update->cells[key].push_back(plan.entry);
-            } else if (mutation.kind == SceneMutationKind::kRemove) {
-                const auto found = std::find_if(update->records.begin(), update->records.end(),
-                    [&](const SpatialRecord& r) { return r.objectId == mutation.objectId; });
-                if (found != update->records.end()) {
-                    found->objectId = ObjectId{};
-                    found->worldBounds = WorldRect{};
-                }
-                for (const auto key : plan.removed) {
-                    auto it = update->cells.find(key);
-                    if (it != update->cells.end()) {
-                        auto& values = it->second;
-                        values.erase(std::remove(values.begin(), values.end(), plan.entry), values.end());
-                    }
-                }
-                update->overflow.erase(plan.entry);
-            }
-        }
-        update->localized = false;
         update->localizedMutationCount = update->plans.size();
         return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::success(
             std::move(update));
