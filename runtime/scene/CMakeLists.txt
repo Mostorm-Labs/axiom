@@ -8,6 +8,7 @@ add_library(canvas_runtime_scene STATIC
     src/scene_impact.cpp
     src/scene_dependency_graph.cpp
     src/scene_record_store.cpp
+    src/scene_delta.cpp
     src/scene_view.cpp
     src/shadow_render_scene.cpp
     src/uniform_grid_spatial_index.cpp)

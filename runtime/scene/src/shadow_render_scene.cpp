@@ -86,6 +86,14 @@ ShadowRenderScene::prepareApply(std::span<const SceneMutation> mutations,
                        _shadow->prepareApply(mutations, beforeRevision, afterRevision));
 }
 
+foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
+ShadowRenderScene::prepareDelta(const SceneDelta& delta,
+                                SceneRevision beforeRevision,
+                                SceneRevision afterRevision) const {
+    return preparePair(_primary->prepareDelta(delta, beforeRevision, afterRevision),
+                       _shadow->prepareDelta(delta, beforeRevision, afterRevision));
+}
+
 void ShadowRenderScene::commit(std::unique_ptr<IPreparedRenderSceneUpdate> prepared) noexcept {
     auto* update = static_cast<PreparedUpdate*>(prepared.get());
     _primary->commit(std::move(update->primary));

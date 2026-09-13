@@ -94,6 +94,11 @@ target_compile_features(canvas_g2_a3_full_incremental_equivalence PRIVATE cxx_st
 add_test(NAME canvas_g2_a3_full_incremental_equivalence
          COMMAND canvas_g2_a3_full_incremental_equivalence)
 
+add_executable(canvas_g2_a4_scene_delta_test scene_delta_test.cpp)
+target_link_libraries(canvas_g2_a4_scene_delta_test PRIVATE canvas_runtime_scene_fakes)
+target_compile_features(canvas_g2_a4_scene_delta_test PRIVATE cxx_std_20)
+add_test(NAME canvas_g2_a4_scene_delta COMMAND canvas_g2_a4_scene_delta_test)
+
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
 

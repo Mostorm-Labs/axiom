@@ -11,6 +11,8 @@ class DirectRenderScene::PreparedUpdate final : public IPreparedRenderSceneUpdat
     SceneRevision revision;
     std::vector<RenderRecord> records;
     std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> index;
+    std::vector<SceneMutation> mutations;
+    bool localized = false;
 };
 
 namespace {
@@ -143,8 +145,68 @@ DirectRenderScene::prepareApply(std::span<const SceneMutation> mutations,
     }
 }
 
+foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
+DirectRenderScene::prepareDelta(const SceneDelta& delta,
+                                SceneRevision beforeRevision,
+                                SceneRevision afterRevision) const {
+    ++_prepareCount;
+    if (beforeRevision != _revision || afterRevision <= beforeRevision) {
+        return foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "DirectRenderScene delta revision is invalid"));
+    }
+    try {
+        std::vector<RenderRecord> changed;
+        changed.reserve(delta.mutations.size());
+        for (const SceneMutation& mutation : delta.mutations) {
+            if (mutation.kind != SceneMutationKind::kRemove && mutation.after) {
+                changed.push_back(RenderRecord{mutation.after->objectId,
+                                               mutation.after->orderKey,
+                                               mutation.after->worldBounds,
+                                               mutation.after->renderPayload});
+            }
+        }
+        auto update = std::make_unique<PreparedUpdate>();
+        update->revision = afterRevision;
+        update->records = std::move(changed);
+        update->mutations = delta.mutations;
+        update->localized = true;
+        _localizedMutationCount += delta.mutations.size();
+        return foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>::success(
+            std::move(update));
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "DirectRenderScene could not prepare delta"));
+    }
+}
+
 void DirectRenderScene::commit(std::unique_ptr<IPreparedRenderSceneUpdate> prepared) noexcept {
     auto* update = static_cast<PreparedUpdate*>(prepared.get());
+    if (update->localized) {
+        for (const SceneMutation& mutation : update->mutations) {
+            const auto found = _index.find(mutation.objectId);
+            if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
+                RenderRecord record{mutation.after->objectId, mutation.after->orderKey,
+                                    mutation.after->worldBounds, mutation.after->renderPayload};
+                _index[record.objectId] = _records.size();
+                _records.push_back(record);
+            } else if (mutation.kind == SceneMutationKind::kUpdate && found != _index.end() &&
+                       mutation.after) {
+                _records[found->second] = RenderRecord{mutation.after->objectId,
+                                                       mutation.after->orderKey,
+                                                       mutation.after->worldBounds,
+                                                       mutation.after->renderPayload};
+            } else if (mutation.kind == SceneMutationKind::kRemove && found != _index.end()) {
+                _records.erase(_records.begin() + static_cast<std::ptrdiff_t>(found->second));
+                _index.clear();
+                for (std::size_t i = 0; i < _records.size(); ++i) _index[_records[i].objectId] = i;
+            }
+        }
+        _revision = update->revision;
+        ++_commitCount;
+        return;
+    }
     _records.swap(update->records);
     _index.swap(update->index);
     _revision = update->revision;
@@ -202,6 +264,7 @@ RenderSceneDiagnostics DirectRenderScene::diagnostics() const {
         .nodeCount = _records.size(),
         .prepareCount = _prepareCount,
         .commitCount = _commitCount,
+        .localizedMutationCount = _localizedMutationCount,
     };
 }
 

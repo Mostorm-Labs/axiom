@@ -2,6 +2,7 @@
 
 #include "canvas/foundation/result.hpp"
 #include "canvas/scene/scene_types.hpp"
+#include "canvas/scene/scene_delta.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -47,6 +48,11 @@ struct RenderSceneDiagnostics final {
     std::uint64_t nodeCount = 0;
     std::uint64_t prepareCount = 0;
     std::uint64_t commitCount = 0;
+    std::uint64_t fullRecordCloneCount = 0;
+    std::uint64_t fullSortCount = 0;
+    std::uint64_t fullReindexCount = 0;
+    std::uint64_t fullRebuildCount = 0;
+    std::uint64_t localizedMutationCount = 0;
 };
 
 class IRenderScene {
@@ -60,6 +66,13 @@ class IRenderScene {
     prepareApply(std::span<const SceneMutation> mutations,
                  SceneRevision beforeRevision,
                  SceneRevision afterRevision) const = 0;
+
+    virtual foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
+    prepareDelta(const SceneDelta& delta,
+                 SceneRevision beforeRevision,
+                 SceneRevision afterRevision) const {
+        return prepareApply(delta.mutations, beforeRevision, afterRevision);
+    }
 
     virtual void commit(std::unique_ptr<IPreparedRenderSceneUpdate> update) noexcept = 0;
 

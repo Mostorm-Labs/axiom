@@ -102,6 +102,20 @@ const SceneRecord* SceneRecordStore::find(ObjectId objectId) const {
     return findRecord(_records, _index, objectId);
 }
 
+RecordHandle SceneRecordStore::handleFor(ObjectId objectId) const noexcept {
+    const auto found = _handles.find(objectId);
+    return found == _handles.end() ? 0 : found->second;
+}
+
+foundation::Result<std::vector<SceneRecord>> SceneRecordStore::materializeSnapshot() const {
+    try {
+        return foundation::Result<std::vector<SceneRecord>>::success(_records);
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<std::vector<SceneRecord>>::failure(
+            makeError(ErrorCode::kOutOfMemory, "Unable to materialize Scene snapshot"));
+    }
+}
+
 WorldRect SceneRecordStore::contentBounds() const {
     return calculateContentBounds(_records);
 }
@@ -133,20 +147,18 @@ SceneRecordStore::prepareReplace(std::span<const SceneRecord> records) const {
 foundation::Result<SceneRecordStore::PreparedUpdate>
 SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
     try {
-        std::vector<SceneRecord> records = _records;
         std::unordered_set<ObjectId, foundation::ObjectIdHash> mutatedIds;
         mutatedIds.reserve(mutations.size());
+        std::vector<SceneMutation> prepared;
+        prepared.reserve(mutations.size());
         for (const SceneMutation& mutation : mutations) {
             if (mutation.objectId.isZero() || !mutatedIds.insert(mutation.objectId).second) {
                 return foundation::Result<PreparedUpdate>::failure(makeError(
                     ErrorCode::kDuplicateObject, "Delta mutates an ObjectId more than once"));
             }
 
-            auto found = std::find_if(
-                records.begin(), records.end(), [&mutation](const SceneRecord& record) {
-                    return record.objectId == mutation.objectId;
-                });
-            const bool exists = found != records.end();
+            const auto foundIndex = _index.find(mutation.objectId);
+            const bool exists = foundIndex != _index.end();
             const bool hasBefore = mutation.before.has_value();
             const bool hasAfter = mutation.after.has_value();
             if ((hasBefore && mutation.before->objectId != mutation.objectId) ||
@@ -174,7 +186,8 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kDuplicateObject, "Insert ObjectId already exists"));
                 }
-                records.push_back(std::move(*normalizedAfter));
+                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId, std::nullopt,
+                                                 std::move(*normalizedAfter)});
                 break;
             case SceneMutationKind::kUpdate:
                 if (!hasBefore || !normalizedAfter) {
@@ -185,12 +198,13 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kMissingObject, "Update ObjectId does not exist"));
                 }
-                if (*found != *mutation.before) {
+                if (_records[foundIndex->second] != *mutation.before) {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kBeforeImageMismatch,
                                   "Update before image does not match Scene"));
                 }
-                *found = std::move(*normalizedAfter);
+                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId,
+                                                 mutation.before, std::move(*normalizedAfter)});
                 break;
             case SceneMutationKind::kRemove:
                 if (!hasBefore || hasAfter) {
@@ -201,19 +215,21 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kMissingObject, "Remove ObjectId does not exist"));
                 }
-                if (*found != *mutation.before) {
+                if (_records[foundIndex->second] != *mutation.before) {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kBeforeImageMismatch,
                                   "Remove before image does not match Scene"));
                 }
-                records.erase(found);
+                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId,
+                                                 mutation.before, std::nullopt});
                 break;
             default:
                 return foundation::Result<PreparedUpdate>::failure(
                     makeError(ErrorCode::kInvalidRecord, "Mutation kind is unknown"));
             }
         }
-        return buildPreparedUpdate(std::move(records));
+        return foundation::Result<PreparedUpdate>::success(
+            PreparedUpdate(std::move(prepared)));
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedUpdate>::failure(
             makeError(ErrorCode::kOutOfMemory, "Unable to prepare Scene delta"));
@@ -221,8 +237,80 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
 }
 
 void SceneRecordStore::commit(PreparedUpdate update) noexcept {
+    if (!update._mutations.empty()) {
+        for (const SceneMutation& mutation : update._mutations) {
+            const auto found = _index.find(mutation.objectId);
+            switch (mutation.kind) {
+            case SceneMutationKind::kInsert: {
+                const auto position = std::lower_bound(
+                    _records.begin(), _records.end(), *mutation.after,
+                    [](const SceneRecord& left, const SceneRecord& right) {
+                        return recordLess(left, right);
+                    });
+                const std::size_t inserted = static_cast<std::size_t>(position - _records.begin());
+                _records.insert(position, *mutation.after);
+                for (auto& [id, index] : _index) {
+                    static_cast<void>(id);
+                    if (index >= inserted) {
+                        ++index;
+                    }
+                }
+                _index[mutation.objectId] = inserted;
+                if (_handles.find(mutation.objectId) == _handles.end()) {
+                    _handles[mutation.objectId] = _nextHandle++;
+                }
+                break;
+            }
+            case SceneMutationKind::kUpdate: {
+                if (found == _index.end()) break;
+                const std::size_t oldIndex = found->second;
+                const SceneRecord replacement = *mutation.after;
+                if (_records[oldIndex].orderKey == replacement.orderKey) {
+                    _records[oldIndex] = replacement;
+                } else {
+                    _records.erase(_records.begin() + static_cast<std::ptrdiff_t>(oldIndex));
+                    for (auto& [id, index] : _index) {
+                        static_cast<void>(id);
+                        if (index > oldIndex) --index;
+                    }
+                    const auto position = std::lower_bound(
+                        _records.begin(), _records.end(), replacement,
+                        [](const SceneRecord& left, const SceneRecord& right) {
+                            return recordLess(left, right);
+                        });
+                    const std::size_t inserted = static_cast<std::size_t>(position - _records.begin());
+                    _records.insert(position, replacement);
+                    for (auto& [id, index] : _index) {
+                        static_cast<void>(id);
+                        if (index >= inserted) ++index;
+                    }
+                    _index[mutation.objectId] = inserted;
+                }
+                break;
+            }
+            case SceneMutationKind::kRemove: {
+                if (found == _index.end()) break;
+                const std::size_t removed = found->second;
+                _records.erase(_records.begin() + static_cast<std::ptrdiff_t>(removed));
+                _index.erase(found);
+                _handles.erase(mutation.objectId);
+                for (auto& [id, index] : _index) {
+                    static_cast<void>(id);
+                    if (index > removed) --index;
+                }
+                break;
+            }
+            }
+        }
+        _localityDiagnostics.localizedMutationCount += update._mutations.size();
+        return;
+    }
     _records.swap(update._records);
     _index.swap(update._index);
+    _handles.clear();
+    for (const SceneRecord& record : _records) {
+        _handles.emplace(record.objectId, _nextHandle++);
+    }
 }
 
 } // namespace canvas
