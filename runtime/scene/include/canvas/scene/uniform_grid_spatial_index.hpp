@@ -29,6 +29,7 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     [[nodiscard]] SpatialIndexDiagnostics diagnostics() const override;
 
   private:
+    struct PreparedMutation;
     class PreparedGridUpdate;
 
     foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
@@ -41,6 +42,15 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     mutable std::uint64_t _lastCellVisits = 0;
     std::uint64_t _commitCount = 0;
     mutable std::uint64_t _localizedMutationCount = 0;
+    mutable std::uint64_t _fullSpatialRebuildCount = 0;
+    mutable std::uint64_t _fullSpatialRecordCloneCount = 0;
+    mutable std::uint64_t _fullCellScanCount = 0;
+    mutable std::uint64_t _affectedEntryCount = 0;
+    mutable std::uint64_t _oldCoverageUnitsVisited = 0;
+    mutable std::uint64_t _newCoverageUnitsVisited = 0;
+    mutable std::uint64_t _membershipRemovalCount = 0;
+    mutable std::uint64_t _membershipRetainedCount = 0;
+    mutable std::uint64_t _membershipAddCount = 0;
     SceneRevision _revision;
     std::vector<SpatialRecord> _records;
     std::unordered_map<ObjectId, std::uint32_t, foundation::ObjectIdHash> _index;

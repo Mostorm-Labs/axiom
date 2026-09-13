@@ -11,6 +11,8 @@ add_library(canvas_runtime_scene STATIC
     src/scene_delta.cpp
     src/scene_view.cpp
     src/shadow_render_scene.cpp
+    src/spatial_delta.cpp
+    src/linear_spatial_index.cpp
     src/uniform_grid_spatial_index.cpp)
 target_sources(canvas_runtime_scene PRIVATE
     src/full_scene_compiler.cpp

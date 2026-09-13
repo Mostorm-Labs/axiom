@@ -11,10 +11,17 @@
 namespace canvas {
 class UniformGridSpatialIndex::PreparedGridUpdate final : public IPreparedSpatialUpdate {
   public:
+    struct MutationPlan {
+        SpatialMutation mutation;
+        SpatialEntryId entry = 0;
+        std::vector<std::int64_t> removed;
+        std::vector<std::int64_t> retained;
+        std::vector<std::int64_t> added;
+    };
     SceneRevision revision;
     std::vector<SpatialRecord> records;
     std::unordered_map<std::int64_t, std::vector<std::uint32_t>> cells;
-    std::vector<SpatialMutation> mutations;
+    std::vector<MutationPlan> plans;
     bool localized = false;
 };
 
@@ -197,36 +204,92 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
             makeError(foundation::ErrorCode::kInvalidRevision,
                       "UniformGridSpatialIndex delta revision is invalid"));
     }
+    if (delta.generationFrom != beforeRevision || delta.generationTo != afterRevision) {
+        return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "UniformGridSpatialIndex SceneDelta generation is invalid"));
+    }
     try {
         auto update = std::make_unique<PreparedGridUpdate>();
         update->revision = afterRevision;
         update->localized = true;
-        update->mutations.reserve(delta.mutations.size());
+        update->plans.reserve(delta.mutations.size());
+        auto makeSet = [](const std::vector<std::int64_t>& values) {
+            return std::unordered_set<std::int64_t>(values.begin(), values.end());
+        };
+        std::unordered_set<ObjectId, foundation::ObjectIdHash> seen;
+        seen.reserve(delta.mutations.size());
         for (const SceneMutation& mutation : delta.mutations) {
+            if (!seen.insert(mutation.objectId).second) {
+                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                    makeError(foundation::ErrorCode::kDuplicateObject,
+                              "UniformGridSpatialIndex delta identity is duplicated"));
+            }
+            auto found = _index.find(mutation.objectId);
+            if (mutation.kind != SceneMutationKind::kInsert && found == _index.end()) {
+                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                    makeError(foundation::ErrorCode::kMissingObject,
+                              "UniformGridSpatialIndex delta identity is missing"));
+            }
+            if (mutation.kind == SceneMutationKind::kInsert &&
+                (found != _index.end() || mutation.before || !mutation.after)) {
+                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                    makeError(foundation::ErrorCode::kDuplicateObject,
+                              "UniformGridSpatialIndex delta identity is duplicated"));
+            }
+            if (mutation.kind == SceneMutationKind::kUpdate &&
+                (!mutation.before || !mutation.after ||
+                 _records[found->second].worldBounds != mutation.before->worldBounds)) {
+                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                    makeError(foundation::ErrorCode::kBeforeImageMismatch,
+                              "UniformGridSpatialIndex update before image mismatches"));
+            }
+            if (mutation.kind == SceneMutationKind::kRemove &&
+                (!mutation.before || mutation.after ||
+                 _records[found->second].worldBounds != mutation.before->worldBounds)) {
+                return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                    makeError(foundation::ErrorCode::kBeforeImageMismatch,
+                              "UniformGridSpatialIndex remove before image mismatches"));
+            }
+            PreparedGridUpdate::MutationPlan plan;
+            plan.mutation = SpatialMutation{mutation.kind, mutation.objectId,
+                                             mutation.before ? std::optional(mutation.before->worldBounds) : std::nullopt,
+                                             mutation.after ? std::optional(mutation.after->worldBounds) : std::nullopt};
+            plan.entry = found == _index.end() ? static_cast<SpatialEntryId>(_records.size())
+                                               : static_cast<SpatialEntryId>(found->second);
+            std::vector<std::int64_t> oldCells;
+            std::vector<std::int64_t> newCells;
             if (mutation.before) {
-                auto oldCells = cellsFor(mutation.before->worldBounds, _cellSize);
-                if (!oldCells) {
+                auto oldCellsResult = cellsFor(mutation.before->worldBounds, _cellSize);
+                if (!oldCellsResult) {
                     return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
-                        oldCells.error());
+                        oldCellsResult.error());
                 }
+                oldCells = std::move(oldCellsResult.value());
             }
             if (mutation.after) {
-                auto newCells = cellsFor(mutation.after->worldBounds, _cellSize);
-                if (!newCells) {
+                auto newCellsResult = cellsFor(mutation.after->worldBounds, _cellSize);
+                if (!newCellsResult) {
                     return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
-                        newCells.error());
+                        newCellsResult.error());
                 }
+                newCells = std::move(newCellsResult.value());
             }
-            update->mutations.push_back(SpatialMutation{
-                .kind = mutation.kind,
-                .objectId = mutation.objectId,
-                .before = mutation.before ? std::optional(mutation.before->worldBounds)
-                                           : std::nullopt,
-                .after = mutation.after ? std::optional(mutation.after->worldBounds)
-                                         : std::nullopt,
-            });
+            auto oldSet = makeSet(oldCells);
+            auto newSet = makeSet(newCells);
+            for (auto key : oldCells) {
+                if (newSet.count(key)) plan.retained.push_back(key); else plan.removed.push_back(key);
+            }
+            for (auto key : newCells) if (!oldSet.count(key)) plan.added.push_back(key);
+            _affectedEntryCount += 1;
+            _oldCoverageUnitsVisited += oldCells.size();
+            _newCoverageUnitsVisited += newCells.size();
+            _membershipRemovalCount += plan.removed.size();
+            _membershipRetainedCount += plan.retained.size();
+            _membershipAddCount += plan.added.size();
+            update->plans.push_back(std::move(plan));
         }
-        _localizedMutationCount += update->mutations.size();
+        _localizedMutationCount += update->plans.size();
         return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::success(
             std::move(update));
     } catch (const std::bad_alloc&) {
@@ -239,42 +302,35 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
 void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> prepared) noexcept {
     auto* update = static_cast<PreparedGridUpdate*>(prepared.get());
     if (update->localized) {
-        for (const SpatialMutation& mutation : update->mutations) {
+        for (const auto& plan : update->plans) {
+            const SpatialMutation& mutation = plan.mutation;
             const auto indexIt = _index.find(mutation.objectId);
             SpatialRecord* found = indexIt == _index.end() ? nullptr : &_records[indexIt->second];
             if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
                 const std::uint32_t index = static_cast<std::uint32_t>(_records.size());
                 _records.push_back(SpatialRecord{mutation.objectId, *mutation.after});
                 _index[mutation.objectId] = index;
-                auto cellsResult = cellsFor(*mutation.after, _cellSize);
-                if (cellsResult) for (auto key : cellsResult.value()) _cells[key].push_back(index);
+                for (auto key : plan.added) _cells[key].push_back(index);
             } else if (mutation.kind == SceneMutationKind::kUpdate && found != nullptr && mutation.after) {
                 const std::uint32_t index = _index[mutation.objectId];
-                if (mutation.before) {
-                    auto oldCells = cellsFor(*mutation.before, _cellSize);
-                    if (oldCells) for (auto key : oldCells.value()) {
-                        auto& values = _cells[key];
-                        values.erase(std::remove(values.begin(), values.end(), index), values.end());
-                    }
+                for (auto key : plan.removed) {
+                    auto& values = _cells[key];
+                    values.erase(std::remove(values.begin(), values.end(), index), values.end());
                 }
                 found->worldBounds = *mutation.after;
-                auto newCells = cellsFor(*mutation.after, _cellSize);
-                if (newCells) for (auto key : newCells.value()) _cells[key].push_back(index);
+                for (auto key : plan.added) _cells[key].push_back(index);
             } else if (mutation.kind == SceneMutationKind::kRemove && found != nullptr) {
                 const std::uint32_t index = indexIt->second;
-                if (mutation.before) {
-                    auto oldCells = cellsFor(*mutation.before, _cellSize);
-                    if (oldCells) for (auto key : oldCells.value()) {
-                        auto& values = _cells[key];
-                        values.erase(std::remove(values.begin(), values.end(), index), values.end());
-                    }
+                for (auto key : plan.removed) {
+                    auto& values = _cells[key];
+                    values.erase(std::remove(values.begin(), values.end(), index), values.end());
                 }
                 found->objectId = ObjectId{};
                 found->worldBounds = WorldRect{};
                 _index.erase(mutation.objectId);
             }
         }
-        _revision = update->revision;
+    _revision = update->revision;
         ++_commitCount;
         return;
     }
@@ -286,7 +342,7 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
             _index.emplace(_records[i].objectId, static_cast<std::uint32_t>(i));
         }
     }
-    _revision = update->revision;
+        _revision = update->revision;
     ++_commitCount;
 }
 
@@ -342,6 +398,15 @@ SpatialIndexDiagnostics UniformGridSpatialIndex::diagnostics() const {
         .lastCellVisits = _lastCellVisits,
         .estimatedBytes = estimatedBytes,
         .localizedMutationCount = _localizedMutationCount,
+        .fullSpatialRebuildCount = _fullSpatialRebuildCount,
+        .fullSpatialRecordCloneCount = _fullSpatialRecordCloneCount,
+        .fullCellScanCount = _fullCellScanCount,
+        .affectedEntryCount = _affectedEntryCount,
+        .oldCoverageUnitsVisited = _oldCoverageUnitsVisited,
+        .newCoverageUnitsVisited = _newCoverageUnitsVisited,
+        .membershipRemovalCount = _membershipRemovalCount,
+        .membershipRetainedCount = _membershipRetainedCount,
+        .membershipAddCount = _membershipAddCount,
     };
 }
 

@@ -99,6 +99,13 @@ target_link_libraries(canvas_g2_a4_scene_delta_test PRIVATE canvas_runtime_scene
 target_compile_features(canvas_g2_a4_scene_delta_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a4_scene_delta COMMAND canvas_g2_a4_scene_delta_test)
 
+add_executable(canvas_g2_a5_spatial_index_differential_test
+    spatial_index_differential_test.cpp)
+target_link_libraries(canvas_g2_a5_spatial_index_differential_test PRIVATE canvas_runtime_scene)
+target_compile_features(canvas_g2_a5_spatial_index_differential_test PRIVATE cxx_std_20)
+add_test(NAME canvas_g2_a5_spatial_index_differential
+         COMMAND canvas_g2_a5_spatial_index_differential_test)
+
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
 
