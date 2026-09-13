@@ -99,12 +99,30 @@ target_link_libraries(canvas_g2_a4_scene_delta_test PRIVATE canvas_runtime_scene
 target_compile_features(canvas_g2_a4_scene_delta_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a4_scene_delta COMMAND canvas_g2_a4_scene_delta_test)
 
+# G2-A5 P36 uses a standalone executable so the frozen spatial oracle can be
+# compiled and executed even when an unrelated Scene target fails earlier in
+# the full repository build. The exact production spatial sources are compiled
+# into this target; no mock implementation is substituted.
 add_executable(canvas_g2_a5_spatial_index_differential_test
-    spatial_index_differential_test.cpp)
-target_link_libraries(canvas_g2_a5_spatial_index_differential_test PRIVATE canvas_runtime_scene)
+    spatial_index_differential_test.cpp
+    ../src/linear_spatial_index.cpp
+    ../src/uniform_grid_spatial_index.cpp)
+target_include_directories(canvas_g2_a5_spatial_index_differential_test PRIVATE
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/semantic/include
+    ${PROJECT_SOURCE_DIR}/runtime/foundation/include)
 target_compile_features(canvas_g2_a5_spatial_index_differential_test PRIVATE cxx_std_20)
+if(MSVC)
+    target_compile_options(canvas_g2_a5_spatial_index_differential_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_g2_a5_spatial_index_differential_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
 add_test(NAME canvas_g2_a5_spatial_index_differential
          COMMAND canvas_g2_a5_spatial_index_differential_test)
+add_custom_command(TARGET canvas_g2_a5_spatial_index_differential_test POST_BUILD
+    COMMAND $<TARGET_FILE:canvas_g2_a5_spatial_index_differential_test>
+    COMMENT "Run GT-G2-00-A5 P36 spatial differential oracle")
+add_dependencies(canvas_runtime_scene canvas_g2_a5_spatial_index_differential_test)
 
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
