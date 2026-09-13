@@ -43,6 +43,7 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     mutable std::uint64_t _localizedMutationCount = 0;
     SceneRevision _revision;
     std::vector<SpatialRecord> _records;
+    std::unordered_map<ObjectId, std::uint32_t, foundation::ObjectIdHash> _index;
     std::unordered_map<std::int64_t, std::vector<std::uint32_t>> _cells;
 };
 

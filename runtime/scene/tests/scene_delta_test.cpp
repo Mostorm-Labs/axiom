@@ -62,5 +62,56 @@ int main() {
         std::cerr << "Stable slot locality failed\n";
         return EXIT_FAILURE;
     }
+
+    auto runSequence = [](std::size_t population, bool readBetween) {
+        SceneRecordStore local;
+        std::vector<SceneRecord> seed;
+        seed.reserve(population);
+        for (std::size_t i = 0; i < population; ++i) {
+            seed.push_back(record(static_cast<std::uint64_t>(i + 10), i + 10));
+        }
+        auto initial = local.prepareReplace(seed);
+        if (!initial) return std::pair<std::uint64_t, std::size_t>{0, 0};
+        local.commit(std::move(initial.value()));
+        const SceneRecord inserted = record(1, population + 100);
+        CompiledSceneDelta add{SceneRevision(1), SceneRevision(2),
+                               {SceneMutation{SceneMutationKind::kInsert, inserted.objectId,
+                                               std::nullopt, inserted}}, std::nullopt};
+        auto addPrepared = local.prepareApply(add.mutations);
+        if (!addPrepared) return std::pair<std::uint64_t, std::size_t>{0, 0};
+        local.commit(std::move(addPrepared.value()));
+        if (readBetween) static_cast<void>(local.materializeSnapshot());
+        SceneRecord changed = inserted;
+        changed.contentRevision = ContentRevision(2);
+        CompiledSceneDelta update{SceneRevision(2), SceneRevision(3),
+                                  {SceneMutation{SceneMutationKind::kUpdate, inserted.objectId,
+                                                  inserted, changed}}, std::nullopt};
+        auto updatePrepared = local.prepareApply(update.mutations);
+        if (!updatePrepared) return std::pair<std::uint64_t, std::size_t>{0, 0};
+        local.commit(std::move(updatePrepared.value()));
+        if (readBetween) static_cast<void>(local.materializeSnapshot());
+        CompiledSceneDelta remove{SceneRevision(3), SceneRevision(4),
+                                  {SceneMutation{SceneMutationKind::kRemove, inserted.objectId,
+                                                  changed, std::nullopt}}, std::nullopt};
+        auto removePrepared = local.prepareApply(remove.mutations);
+        if (!removePrepared) return std::pair<std::uint64_t, std::size_t>{0, 0};
+        local.commit(std::move(removePrepared.value()));
+        return std::pair<std::uint64_t, std::size_t>{local.handleFor(inserted.objectId),
+                                                     local.records().size()};
+    };
+    const auto noRead = runSequence(1000, false);
+    const auto withRead = runSequence(1000, true);
+    if (noRead != withRead || noRead.first != 0) {
+        std::cerr << "snapshot-independent mutation regression failed\n";
+        return EXIT_FAILURE;
+    }
+    for (std::size_t population : {1000U, 10000U, 100000U}) {
+        const auto result = runSequence(population, false);
+        if (result.first != 0 || result.second != population) {
+            std::cerr << "locality matrix failed at " << population << "\n";
+            return EXIT_FAILURE;
+        }
+        std::cout << "locality population=" << population << " localized_mutations=3\n";
+    }
     return EXIT_SUCCESS;
 }

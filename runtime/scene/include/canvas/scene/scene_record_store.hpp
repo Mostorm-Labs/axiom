@@ -45,12 +45,11 @@ class SceneRecordStore final {
                        std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> index)
             : _records(std::move(records)), _index(std::move(index)) {}
 
-        explicit PreparedUpdate(std::vector<SceneMutation> mutations)
-            : _mutations(std::move(mutations)) {}
+        explicit PreparedUpdate(PreparedDelta delta) : _delta(std::move(delta)) {}
 
         std::vector<SceneRecord> _records;
         std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> _index;
-        std::vector<SceneMutation> _mutations;
+        PreparedDelta _delta;
     };
 
     [[nodiscard]] std::span<const SceneRecord> records() const {

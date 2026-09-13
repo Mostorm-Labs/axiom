@@ -35,6 +35,32 @@ struct SceneDelta final {
     std::vector<SceneMutation> mutations;
 };
 
+struct SlotWrite final {
+    RecordHandle handle;
+    std::optional<SceneRecord> before;
+    std::optional<SceneRecord> after;
+};
+
+struct ObjectIndexUpdate final {
+    ObjectId objectId;
+    RecordHandle handle;
+    bool remove = false;
+};
+
+struct OrderIndexUpdate final {
+    ObjectId objectId;
+    SceneOrderKey key;
+    RecordHandle handle;
+    bool remove = false;
+};
+
+struct PreparedDelta final {
+    SceneDelta sceneDelta;
+    std::vector<SlotWrite> slotWrites;
+    std::vector<ObjectIndexUpdate> objectIndexUpdates;
+    std::vector<OrderIndexUpdate> orderIndexUpdates;
+};
+
 [[nodiscard]] SceneDelta makeSceneDelta(const CompiledSceneDelta& delta);
 
 } // namespace canvas

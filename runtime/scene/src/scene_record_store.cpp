@@ -110,6 +110,7 @@ RecordHandle SceneRecordStore::handleFor(ObjectId objectId) const noexcept {
 
 foundation::Result<std::vector<SceneRecord>> SceneRecordStore::materializeSnapshot() const {
     try {
+        materializeOrderedCache();
         return foundation::Result<std::vector<SceneRecord>>::success(_records);
     } catch (const std::bad_alloc&) {
         return foundation::Result<std::vector<SceneRecord>>::failure(
@@ -170,8 +171,13 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
     try {
         std::unordered_set<ObjectId, foundation::ObjectIdHash> mutatedIds;
         mutatedIds.reserve(mutations.size());
-        std::vector<SceneMutation> prepared;
-        prepared.reserve(mutations.size());
+        PreparedDelta preparedDelta;
+        preparedDelta.sceneDelta.generationFrom = SceneRevision{};
+        preparedDelta.sceneDelta.generationTo = SceneRevision{};
+        preparedDelta.sceneDelta.mutations.reserve(mutations.size());
+        preparedDelta.slotWrites.reserve(mutations.size());
+        preparedDelta.objectIndexUpdates.reserve(mutations.size());
+        preparedDelta.orderIndexUpdates.reserve(mutations.size() * 2);
         for (const SceneMutation& mutation : mutations) {
             if (mutation.objectId.isZero() || !mutatedIds.insert(mutation.objectId).second) {
                 return foundation::Result<PreparedUpdate>::failure(makeError(
@@ -198,7 +204,7 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
             }
 
             switch (mutation.kind) {
-            case SceneMutationKind::kInsert:
+            case SceneMutationKind::kInsert: {
                 if (hasBefore || !normalizedAfter) {
                     return foundation::Result<PreparedUpdate>::failure(makeError(
                         ErrorCode::kInvalidRecord, "Insert requires only an after record"));
@@ -207,10 +213,14 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                     return foundation::Result<PreparedUpdate>::failure(
                         makeError(ErrorCode::kDuplicateObject, "Insert ObjectId already exists"));
                 }
-                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId, std::nullopt,
-                                                 std::move(*normalizedAfter)});
+                const RecordHandle handle = _nextHandle + preparedDelta.slotWrites.size();
+                preparedDelta.slotWrites.push_back(SlotWrite{handle, std::nullopt, *normalizedAfter});
+                preparedDelta.objectIndexUpdates.push_back(ObjectIndexUpdate{mutation.objectId, handle, false});
+                preparedDelta.orderIndexUpdates.push_back(OrderIndexUpdate{mutation.objectId, normalizedAfter->orderKey, handle, false});
+                preparedDelta.sceneDelta.mutations.push_back(mutation);
                 break;
-            case SceneMutationKind::kUpdate:
+            }
+            case SceneMutationKind::kUpdate: {
                 if (!hasBefore || !normalizedAfter) {
                     return foundation::Result<PreparedUpdate>::failure(makeError(
                         ErrorCode::kInvalidRecord, "Update requires before and after records"));
@@ -224,10 +234,15 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                         makeError(ErrorCode::kBeforeImageMismatch,
                                   "Update before image does not match Scene"));
                 }
-                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId,
-                                                 mutation.before, std::move(*normalizedAfter)});
+                const RecordHandle handle = handleIt->second;
+                preparedDelta.slotWrites.push_back(SlotWrite{handle, mutation.before, *normalizedAfter});
+                preparedDelta.objectIndexUpdates.push_back(ObjectIndexUpdate{mutation.objectId, handle, false});
+                preparedDelta.orderIndexUpdates.push_back(OrderIndexUpdate{mutation.objectId, mutation.before->orderKey, handle, true});
+                preparedDelta.orderIndexUpdates.push_back(OrderIndexUpdate{mutation.objectId, normalizedAfter->orderKey, handle, false});
+                preparedDelta.sceneDelta.mutations.push_back(mutation);
                 break;
-            case SceneMutationKind::kRemove:
+            }
+            case SceneMutationKind::kRemove: {
                 if (!hasBefore || hasAfter) {
                     return foundation::Result<PreparedUpdate>::failure(makeError(
                         ErrorCode::kInvalidRecord, "Remove requires only a before record"));
@@ -241,16 +256,20 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
                         makeError(ErrorCode::kBeforeImageMismatch,
                                   "Remove before image does not match Scene"));
                 }
-                prepared.push_back(SceneMutation{mutation.kind, mutation.objectId,
-                                                 mutation.before, std::nullopt});
+                const RecordHandle handle = handleIt->second;
+                preparedDelta.slotWrites.push_back(SlotWrite{handle, mutation.before, std::nullopt});
+                preparedDelta.objectIndexUpdates.push_back(ObjectIndexUpdate{mutation.objectId, handle, true});
+                preparedDelta.orderIndexUpdates.push_back(OrderIndexUpdate{mutation.objectId, mutation.before->orderKey, handle, true});
+                preparedDelta.sceneDelta.mutations.push_back(mutation);
                 break;
+            }
             default:
                 return foundation::Result<PreparedUpdate>::failure(
                     makeError(ErrorCode::kInvalidRecord, "Mutation kind is unknown"));
             }
         }
         return foundation::Result<PreparedUpdate>::success(
-            PreparedUpdate(std::move(prepared)));
+            PreparedUpdate(std::move(preparedDelta)));
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedUpdate>::failure(
             makeError(ErrorCode::kOutOfMemory, "Unable to prepare Scene delta"));
@@ -258,9 +277,8 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
 }
 
 void SceneRecordStore::commit(PreparedUpdate update) noexcept {
-    if (!update._mutations.empty()) {
-        for (const SceneMutation& mutation : update._mutations) {
-            const auto found = _index.find(mutation.objectId);
+    if (!update._delta.sceneDelta.mutations.empty()) {
+        for (const SceneMutation& mutation : update._delta.sceneDelta.mutations) {
             switch (mutation.kind) {
             case SceneMutationKind::kInsert: {
                 if (_handles.find(mutation.objectId) == _handles.end()) {
@@ -273,9 +291,10 @@ void SceneRecordStore::commit(PreparedUpdate update) noexcept {
                 break;
             }
             case SceneMutationKind::kUpdate: {
-                if (found == _index.end()) break;
+                const auto handleIt = _handles.find(mutation.objectId);
+                if (handleIt == _handles.end()) break;
                 const SceneRecord replacement = *mutation.after;
-                const RecordHandle handle = _handles[mutation.objectId];
+                const RecordHandle handle = handleIt->second;
                 const SceneRecord previous = _arena[handle];
                 _orderIndex.erase(std::make_pair(previous.orderKey, mutation.objectId));
                 _arena[handle] = replacement;
@@ -283,22 +302,18 @@ void SceneRecordStore::commit(PreparedUpdate update) noexcept {
                 break;
             }
             case SceneMutationKind::kRemove: {
-                if (found == _index.end()) break;
-                _index.erase(found);
-                const RecordHandle handle = _handles[mutation.objectId];
+                const auto handleIt = _handles.find(mutation.objectId);
+                if (handleIt == _handles.end()) break;
+                const RecordHandle handle = handleIt->second;
                 const SceneRecord previous = _arena[handle];
                 _orderIndex.erase(std::make_pair(previous.orderKey, mutation.objectId));
                 _arena.erase(handle);
                 _handles.erase(mutation.objectId);
-                for (auto& [id, index] : _index) {
-                    static_cast<void>(id);
-                    static_cast<void>(index);
-                }
                 break;
             }
             }
         }
-        _localityDiagnostics.localizedMutationCount += update._mutations.size();
+        _localityDiagnostics.localizedMutationCount += update._delta.sceneDelta.mutations.size();
         _orderedCacheValid = false;
         return;
     }

@@ -240,16 +240,16 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
     auto* update = static_cast<PreparedGridUpdate*>(prepared.get());
     if (update->localized) {
         for (const SpatialMutation& mutation : update->mutations) {
-            auto found = std::find_if(_records.begin(), _records.end(), [&mutation](const SpatialRecord& r) {
-                return r.objectId == mutation.objectId;
-            });
+            const auto indexIt = _index.find(mutation.objectId);
+            SpatialRecord* found = indexIt == _index.end() ? nullptr : &_records[indexIt->second];
             if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
                 const std::uint32_t index = static_cast<std::uint32_t>(_records.size());
                 _records.push_back(SpatialRecord{mutation.objectId, *mutation.after});
+                _index[mutation.objectId] = index;
                 auto cellsResult = cellsFor(*mutation.after, _cellSize);
                 if (cellsResult) for (auto key : cellsResult.value()) _cells[key].push_back(index);
-            } else if (mutation.kind == SceneMutationKind::kUpdate && found != _records.end() && mutation.after) {
-                const std::uint32_t index = static_cast<std::uint32_t>(found - _records.begin());
+            } else if (mutation.kind == SceneMutationKind::kUpdate && found != nullptr && mutation.after) {
+                const std::uint32_t index = _index[mutation.objectId];
                 if (mutation.before) {
                     auto oldCells = cellsFor(*mutation.before, _cellSize);
                     if (oldCells) for (auto key : oldCells.value()) {
@@ -260,8 +260,8 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                 found->worldBounds = *mutation.after;
                 auto newCells = cellsFor(*mutation.after, _cellSize);
                 if (newCells) for (auto key : newCells.value()) _cells[key].push_back(index);
-            } else if (mutation.kind == SceneMutationKind::kRemove && found != _records.end()) {
-                const std::uint32_t index = static_cast<std::uint32_t>(found - _records.begin());
+            } else if (mutation.kind == SceneMutationKind::kRemove && found != nullptr) {
+                const std::uint32_t index = indexIt->second;
                 if (mutation.before) {
                     auto oldCells = cellsFor(*mutation.before, _cellSize);
                     if (oldCells) for (auto key : oldCells.value()) {
@@ -269,11 +269,9 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                         values.erase(std::remove(values.begin(), values.end(), index), values.end());
                     }
                 }
-                _records.erase(found);
-                for (auto& [key, values] : _cells) {
-                    static_cast<void>(key);
-                    for (auto& value : values) if (value > index) --value;
-                }
+                found->objectId = ObjectId{};
+                found->worldBounds = WorldRect{};
+                _index.erase(mutation.objectId);
             }
         }
         _revision = update->revision;
@@ -282,6 +280,12 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
     }
     _records.swap(update->records);
     _cells.swap(update->cells);
+    _index.clear();
+    for (std::size_t i = 0; i < _records.size(); ++i) {
+        if (!_records[i].objectId.isZero()) {
+            _index.emplace(_records[i].objectId, static_cast<std::uint32_t>(i));
+        }
+    }
     _revision = update->revision;
     ++_commitCount;
 }
@@ -306,6 +310,7 @@ UniformGridSpatialIndex::query(const WorldRect& worldRect) const {
                 if (!visited.insert(index).second) {
                     continue;
                 }
+                if (_records[index].objectId.isZero()) continue;
                 ++result.examinedRecords;
                 if (_records[index].worldBounds.intersects(worldRect)) {
                     result.candidates.push_back(_records[index].objectId);
