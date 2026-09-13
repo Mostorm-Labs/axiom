@@ -100,6 +100,13 @@ class ISpatialIndex {
         return prepareApply(mutations, beforeRevision, afterRevision);
     }
 
+    virtual foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+    prepareSpatialDelta(const SpatialDelta& delta,
+                        SceneRevision beforeRevision,
+                        SceneRevision afterRevision) const {
+        return prepareApply(delta.mutations, beforeRevision, afterRevision);
+    }
+
     virtual void commit(std::unique_ptr<IPreparedSpatialUpdate> update) noexcept = 0;
 
     virtual foundation::Result<SpatialQueryResult> query(const WorldRect& worldRect) const = 0;

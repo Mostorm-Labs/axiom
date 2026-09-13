@@ -24,6 +24,10 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     prepareDelta(const SceneDelta& delta,
                  SceneRevision beforeRevision,
                  SceneRevision afterRevision) const override;
+    foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+    prepareSpatialDelta(const SpatialDelta& delta,
+                        SceneRevision beforeRevision,
+                        SceneRevision afterRevision) const override;
     void commit(std::unique_ptr<IPreparedSpatialUpdate> update) noexcept override;
     foundation::Result<SpatialQueryResult> query(const WorldRect& worldRect) const override;
     [[nodiscard]] SpatialIndexDiagnostics diagnostics() const override;
@@ -54,7 +58,7 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     SceneRevision _revision;
     std::vector<SpatialRecord> _records;
     std::unordered_map<ObjectId, std::uint32_t, foundation::ObjectIdHash> _index;
-    std::unordered_map<std::int64_t, std::vector<std::uint32_t>> _cells;
+    std::unordered_map<std::int64_t, std::vector<SpatialEntryId>> _cells;
 };
 
 } // namespace canvas

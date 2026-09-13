@@ -20,8 +20,14 @@ class UniformGridSpatialIndex::PreparedGridUpdate final : public IPreparedSpatia
     };
     SceneRevision revision;
     std::vector<SpatialRecord> records;
-    std::unordered_map<std::int64_t, std::vector<std::uint32_t>> cells;
+    std::unordered_map<std::int64_t, std::vector<SpatialEntryId>> cells;
     std::vector<MutationPlan> plans;
+    std::uint64_t affectedEntryCount = 0;
+    std::uint64_t oldCoverageUnitsVisited = 0;
+    std::uint64_t newCoverageUnitsVisited = 0;
+    std::uint64_t membershipRemovalCount = 0;
+    std::uint64_t membershipRetainedCount = 0;
+    std::uint64_t membershipAddCount = 0;
     bool localized = false;
 };
 
@@ -281,12 +287,12 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
                 if (newSet.count(key)) plan.retained.push_back(key); else plan.removed.push_back(key);
             }
             for (auto key : newCells) if (!oldSet.count(key)) plan.added.push_back(key);
-            _affectedEntryCount += 1;
-            _oldCoverageUnitsVisited += oldCells.size();
-            _newCoverageUnitsVisited += newCells.size();
-            _membershipRemovalCount += plan.removed.size();
-            _membershipRetainedCount += plan.retained.size();
-            _membershipAddCount += plan.added.size();
+            update->affectedEntryCount += 1;
+            update->oldCoverageUnitsVisited += oldCells.size();
+            update->newCoverageUnitsVisited += newCells.size();
+            update->membershipRemovalCount += plan.removed.size();
+            update->membershipRetainedCount += plan.retained.size();
+            update->membershipAddCount += plan.added.size();
             update->plans.push_back(std::move(plan));
         }
         _localizedMutationCount += update->plans.size();
@@ -297,6 +303,34 @@ UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
             makeError(foundation::ErrorCode::kOutOfMemory,
                       "UniformGridSpatialIndex could not prepare delta"));
     }
+}
+
+foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+UniformGridSpatialIndex::prepareSpatialDelta(const SpatialDelta& delta,
+                                             SceneRevision beforeRevision,
+                                             SceneRevision afterRevision) const {
+    if (delta.generationFrom != beforeRevision || delta.generationTo != afterRevision) {
+        return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "UniformGridSpatialIndex spatial delta generation is invalid"));
+    }
+    SceneDelta sceneDelta{
+        .generationFrom = delta.generationFrom,
+        .generationTo = delta.generationTo,
+        .mutations = {},
+    };
+    sceneDelta.mutations.reserve(delta.mutations.size());
+    for (const auto& mutation : delta.mutations) {
+        sceneDelta.mutations.push_back(SceneMutation{
+            .kind = mutation.kind,
+            .objectId = mutation.objectId,
+            .before = mutation.before ? std::optional(SceneRecord{mutation.objectId, {}, SceneObjectKind::kShape,
+                                                                    SceneRecordFlags::kNone, *mutation.before, {}, {}, {}}) : std::nullopt,
+            .after = mutation.after ? std::optional(SceneRecord{mutation.objectId, {}, SceneObjectKind::kShape,
+                                                                  SceneRecordFlags::kNone, *mutation.after, {}, {}, {}}) : std::nullopt,
+        });
+    }
+    return prepareDelta(sceneDelta, beforeRevision, afterRevision);
 }
 
 void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> prepared) noexcept {
@@ -330,7 +364,13 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                 _index.erase(mutation.objectId);
             }
         }
-    _revision = update->revision;
+        _revision = update->revision;
+        _affectedEntryCount += update->affectedEntryCount;
+        _oldCoverageUnitsVisited += update->oldCoverageUnitsVisited;
+        _newCoverageUnitsVisited += update->newCoverageUnitsVisited;
+        _membershipRemovalCount += update->membershipRemovalCount;
+        _membershipRetainedCount += update->membershipRetainedCount;
+        _membershipAddCount += update->membershipAddCount;
         ++_commitCount;
         return;
     }
@@ -362,7 +402,8 @@ UniformGridSpatialIndex::query(const WorldRect& worldRect) const {
             if (found == _cells.end()) {
                 continue;
             }
-            for (std::uint32_t index : found->second) {
+            for (SpatialEntryId entry : found->second) {
+                const std::uint32_t index = static_cast<std::uint32_t>(entry);
                 if (!visited.insert(index).second) {
                     continue;
                 }
