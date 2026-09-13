@@ -198,9 +198,14 @@ void DirectRenderScene::commit(std::unique_ptr<IPreparedRenderSceneUpdate> prepa
                                                        mutation.after->worldBounds,
                                                        mutation.after->renderPayload};
             } else if (mutation.kind == SceneMutationKind::kRemove && found != _index.end()) {
-                _records.erase(_records.begin() + static_cast<std::ptrdiff_t>(found->second));
-                _index.clear();
-                for (std::size_t i = 0; i < _records.size(); ++i) _index[_records[i].objectId] = i;
+                const std::size_t removed = found->second;
+                const std::size_t last = _records.size() - 1;
+                if (removed != last) {
+                    _records[removed] = _records[last];
+                    _index[_records[removed].objectId] = removed;
+                }
+                _records.pop_back();
+                _index.erase(found->first);
             }
         }
         _revision = update->revision;

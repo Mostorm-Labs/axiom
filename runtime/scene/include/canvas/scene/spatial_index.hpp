@@ -45,6 +45,11 @@ struct SpatialIndexDiagnostics final {
     std::uint64_t lastReturnedCandidates = 0;
     std::uint64_t lastCellVisits = 0;
     std::size_t estimatedBytes = 0;
+    std::uint64_t fullRecordCloneCount = 0;
+    std::uint64_t fullSortCount = 0;
+    std::uint64_t fullReindexCount = 0;
+    std::uint64_t fullRebuildCount = 0;
+    std::uint64_t localizedMutationCount = 0;
 };
 
 class ISpatialIndex {

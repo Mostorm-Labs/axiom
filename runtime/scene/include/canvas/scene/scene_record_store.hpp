@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <map>
 #include <span>
 #include <unordered_map>
 #include <utility>
@@ -53,6 +54,7 @@ class SceneRecordStore final {
     };
 
     [[nodiscard]] std::span<const SceneRecord> records() const {
+        materializeOrderedCache();
         return _records;
     }
     [[nodiscard]] const SceneRecord* find(ObjectId objectId) const;
@@ -70,10 +72,14 @@ class SceneRecordStore final {
 
   private:
     static foundation::Result<PreparedUpdate> buildPreparedUpdate(std::vector<SceneRecord> records);
+    void materializeOrderedCache() const;
 
-    std::vector<SceneRecord> _records;
-    std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> _index;
+    mutable std::vector<SceneRecord> _records;
+    mutable std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> _index;
     std::unordered_map<ObjectId, RecordHandle, foundation::ObjectIdHash> _handles;
+    std::unordered_map<RecordHandle, SceneRecord> _arena;
+    std::map<std::pair<SceneOrderKey, ObjectId>, RecordHandle> _orderIndex;
+    mutable bool _orderedCacheValid = false;
     RecordHandle _nextHandle = 1;
     mutable LocalityDiagnostics _localityDiagnostics;
 };
