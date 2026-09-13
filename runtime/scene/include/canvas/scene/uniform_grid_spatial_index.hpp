@@ -3,9 +3,9 @@
 #include "canvas/scene/spatial_index.hpp"
 
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <span>
-#include <unordered_map>
 #include <vector>
 
 namespace canvas {
@@ -38,6 +38,10 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
 
     foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
     prepareRecords(std::vector<SpatialRecord> records, SceneRevision revision) const;
+    foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+    prepareMutations(std::span<const SpatialMutation> mutations,
+                     SceneRevision beforeRevision,
+                     SceneRevision afterRevision) const;
 
     float _cellSize;
     mutable std::uint64_t _prepareCount = 0;
@@ -56,13 +60,11 @@ class UniformGridSpatialIndex final : public ISpatialIndex {
     mutable std::uint64_t _membershipRetainedCount = 0;
     mutable std::uint64_t _membershipAddCount = 0;
     SceneRevision _revision;
-    std::vector<SpatialRecord> _records;
-    std::vector<SpatialEntryId> _entryIds;
-    std::vector<std::uint32_t> _entrySlots;
+    std::map<SpatialEntryId, SpatialRecord> _records;
     SpatialEntryId _nextEntryId = 1;
-    std::unordered_map<ObjectId, std::uint32_t, foundation::ObjectIdHash> _index;
-    std::unordered_map<std::int64_t, std::vector<SpatialEntryId>> _cells;
-    std::unordered_map<SpatialEntryId, WorldRect> _overflow;
+    std::map<ObjectId, SpatialEntryId> _index;
+    std::map<std::int64_t, std::vector<SpatialEntryId>> _cells;
+    std::map<SpatialEntryId, WorldRect> _overflow;
 };
 
 } // namespace canvas
