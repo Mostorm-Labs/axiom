@@ -61,5 +61,15 @@ int main() {
         std::cerr << "localized diagnostics violated\n";
         return EXIT_FAILURE;
     }
+    const auto beforeFailure = grid.diagnostics();
+    SceneDelta invalid{SceneRevision(2), SceneRevision(3), {}, {}, {}, {}, {},
+                       {SceneMutation{SceneMutationKind::kUpdate, second.objectId,
+                                       sceneRecord(first), sceneRecord(moved)}}};
+    if (grid.prepareDelta(invalid, SceneRevision(2), SceneRevision(3)) ||
+        grid.diagnostics().affectedEntryCount != beforeFailure.affectedEntryCount ||
+        grid.diagnostics().membershipAddCount != beforeFailure.membershipAddCount) {
+        std::cerr << "failed prepare contaminated diagnostics\n";
+        return EXIT_FAILURE;
+    }
     return EXIT_SUCCESS;
 }
