@@ -29,6 +29,11 @@ class ShadowRenderScene final : public IRenderScene {
                  SceneRevision beforeRevision,
                  SceneRevision afterRevision) const override;
 
+    foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
+    prepareDelta(const SceneDelta& delta,
+                 SceneRevision beforeRevision,
+                 SceneRevision afterRevision) const override;
+
     void commit(std::unique_ptr<IPreparedRenderSceneUpdate> update) noexcept override;
 
     foundation::Result<PreciseHit>

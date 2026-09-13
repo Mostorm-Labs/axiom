@@ -2,6 +2,7 @@
 
 #include "canvas/foundation/result.hpp"
 #include "canvas/scene/scene_types.hpp"
+#include "canvas/scene/scene_delta.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -44,6 +45,11 @@ struct SpatialIndexDiagnostics final {
     std::uint64_t lastReturnedCandidates = 0;
     std::uint64_t lastCellVisits = 0;
     std::size_t estimatedBytes = 0;
+    std::uint64_t fullRecordCloneCount = 0;
+    std::uint64_t fullSortCount = 0;
+    std::uint64_t fullReindexCount = 0;
+    std::uint64_t fullRebuildCount = 0;
+    std::uint64_t localizedMutationCount = 0;
 };
 
 class ISpatialIndex {
@@ -57,6 +63,25 @@ class ISpatialIndex {
     prepareApply(std::span<const SpatialMutation> mutations,
                  SceneRevision beforeRevision,
                  SceneRevision afterRevision) const = 0;
+
+    virtual foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+    prepareDelta(const SceneDelta& delta,
+                 SceneRevision beforeRevision,
+                 SceneRevision afterRevision) const {
+        std::vector<SpatialMutation> mutations;
+        mutations.reserve(delta.mutations.size());
+        for (const SceneMutation& mutation : delta.mutations) {
+            mutations.push_back(SpatialMutation{
+                .kind = mutation.kind,
+                .objectId = mutation.objectId,
+                .before = mutation.before ? std::optional(mutation.before->worldBounds)
+                                           : std::nullopt,
+                .after = mutation.after ? std::optional(mutation.after->worldBounds)
+                                         : std::nullopt,
+            });
+        }
+        return prepareApply(mutations, beforeRevision, afterRevision);
+    }
 
     virtual void commit(std::unique_ptr<IPreparedSpatialUpdate> update) noexcept = 0;
 

@@ -14,6 +14,8 @@ class UniformGridSpatialIndex::PreparedGridUpdate final : public IPreparedSpatia
     SceneRevision revision;
     std::vector<SpatialRecord> records;
     std::unordered_map<std::int64_t, std::vector<std::uint32_t>> cells;
+    std::vector<SpatialMutation> mutations;
+    bool localized = false;
 };
 
 namespace {
@@ -185,10 +187,105 @@ UniformGridSpatialIndex::prepareApply(std::span<const SpatialMutation> mutations
     }
 }
 
+foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+UniformGridSpatialIndex::prepareDelta(const SceneDelta& delta,
+                                      SceneRevision beforeRevision,
+                                      SceneRevision afterRevision) const {
+    ++_prepareCount;
+    if (beforeRevision != _revision || afterRevision <= beforeRevision) {
+        return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "UniformGridSpatialIndex delta revision is invalid"));
+    }
+    try {
+        auto update = std::make_unique<PreparedGridUpdate>();
+        update->revision = afterRevision;
+        update->localized = true;
+        update->mutations.reserve(delta.mutations.size());
+        for (const SceneMutation& mutation : delta.mutations) {
+            if (mutation.before) {
+                auto oldCells = cellsFor(mutation.before->worldBounds, _cellSize);
+                if (!oldCells) {
+                    return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                        oldCells.error());
+                }
+            }
+            if (mutation.after) {
+                auto newCells = cellsFor(mutation.after->worldBounds, _cellSize);
+                if (!newCells) {
+                    return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+                        newCells.error());
+                }
+            }
+            update->mutations.push_back(SpatialMutation{
+                .kind = mutation.kind,
+                .objectId = mutation.objectId,
+                .before = mutation.before ? std::optional(mutation.before->worldBounds)
+                                           : std::nullopt,
+                .after = mutation.after ? std::optional(mutation.after->worldBounds)
+                                         : std::nullopt,
+            });
+        }
+        _localizedMutationCount += update->mutations.size();
+        return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::success(
+            std::move(update));
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "UniformGridSpatialIndex could not prepare delta"));
+    }
+}
+
 void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> prepared) noexcept {
     auto* update = static_cast<PreparedGridUpdate*>(prepared.get());
+    if (update->localized) {
+        for (const SpatialMutation& mutation : update->mutations) {
+            const auto indexIt = _index.find(mutation.objectId);
+            SpatialRecord* found = indexIt == _index.end() ? nullptr : &_records[indexIt->second];
+            if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
+                const std::uint32_t index = static_cast<std::uint32_t>(_records.size());
+                _records.push_back(SpatialRecord{mutation.objectId, *mutation.after});
+                _index[mutation.objectId] = index;
+                auto cellsResult = cellsFor(*mutation.after, _cellSize);
+                if (cellsResult) for (auto key : cellsResult.value()) _cells[key].push_back(index);
+            } else if (mutation.kind == SceneMutationKind::kUpdate && found != nullptr && mutation.after) {
+                const std::uint32_t index = _index[mutation.objectId];
+                if (mutation.before) {
+                    auto oldCells = cellsFor(*mutation.before, _cellSize);
+                    if (oldCells) for (auto key : oldCells.value()) {
+                        auto& values = _cells[key];
+                        values.erase(std::remove(values.begin(), values.end(), index), values.end());
+                    }
+                }
+                found->worldBounds = *mutation.after;
+                auto newCells = cellsFor(*mutation.after, _cellSize);
+                if (newCells) for (auto key : newCells.value()) _cells[key].push_back(index);
+            } else if (mutation.kind == SceneMutationKind::kRemove && found != nullptr) {
+                const std::uint32_t index = indexIt->second;
+                if (mutation.before) {
+                    auto oldCells = cellsFor(*mutation.before, _cellSize);
+                    if (oldCells) for (auto key : oldCells.value()) {
+                        auto& values = _cells[key];
+                        values.erase(std::remove(values.begin(), values.end(), index), values.end());
+                    }
+                }
+                found->objectId = ObjectId{};
+                found->worldBounds = WorldRect{};
+                _index.erase(mutation.objectId);
+            }
+        }
+        _revision = update->revision;
+        ++_commitCount;
+        return;
+    }
     _records.swap(update->records);
     _cells.swap(update->cells);
+    _index.clear();
+    for (std::size_t i = 0; i < _records.size(); ++i) {
+        if (!_records[i].objectId.isZero()) {
+            _index.emplace(_records[i].objectId, static_cast<std::uint32_t>(i));
+        }
+    }
     _revision = update->revision;
     ++_commitCount;
 }
@@ -213,6 +310,7 @@ UniformGridSpatialIndex::query(const WorldRect& worldRect) const {
                 if (!visited.insert(index).second) {
                     continue;
                 }
+                if (_records[index].objectId.isZero()) continue;
                 ++result.examinedRecords;
                 if (_records[index].worldBounds.intersects(worldRect)) {
                     result.candidates.push_back(_records[index].objectId);
@@ -243,6 +341,7 @@ SpatialIndexDiagnostics UniformGridSpatialIndex::diagnostics() const {
         .lastReturnedCandidates = _lastReturnedCandidates,
         .lastCellVisits = _lastCellVisits,
         .estimatedBytes = estimatedBytes,
+        .localizedMutationCount = _localizedMutationCount,
     };
 }
 

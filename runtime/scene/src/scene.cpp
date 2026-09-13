@@ -1,4 +1,5 @@
 #include "canvas/scene/scene.hpp"
+#include "canvas/scene/scene_delta.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -38,20 +39,6 @@ std::vector<SpatialRecord> makeSpatialRecords(std::span<const SceneRecord> recor
         spatialRecords.push_back(SpatialRecord{record.objectId, record.worldBounds});
     }
     return spatialRecords;
-}
-
-std::vector<SpatialMutation> makeSpatialMutations(std::span<const SceneMutation> mutations) {
-    std::vector<SpatialMutation> spatialMutations;
-    spatialMutations.reserve(mutations.size());
-    for (const SceneMutation& mutation : mutations) {
-        spatialMutations.push_back(SpatialMutation{
-            .kind = mutation.kind,
-            .objectId = mutation.objectId,
-            .before = mutation.before ? std::optional(mutation.before->worldBounds) : std::nullopt,
-            .after = mutation.after ? std::optional(mutation.after->worldBounds) : std::nullopt,
-        });
-    }
-    return spatialMutations;
 }
 
 DamageSet damageForDelta(const CompiledSceneDelta& delta) {
@@ -271,9 +258,9 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
     SceneRecordStore::PreparedUpdate preparedRecords = std::move(recordsResult.value());
 
     try {
-        std::vector<SpatialMutation> spatialMutations = makeSpatialMutations(delta.mutations);
+        const SceneDelta runtimeDelta = makeSceneDelta(delta);
         auto renderResult =
-            _renderScene->prepareApply(delta.mutations, delta.beforeRevision, delta.afterRevision);
+            _renderScene->prepareDelta(runtimeDelta, delta.beforeRevision, delta.afterRevision);
         if (!renderResult) {
             return foundation::Result<SceneApplyReceipt>::failure(renderResult.error());
         }
@@ -283,8 +270,8 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
                           "Render participant returned an empty prepared update"));
         }
 
-        auto spatialResult = _spatialIndex->prepareApply(
-            spatialMutations, delta.beforeRevision, delta.afterRevision);
+        auto spatialResult = _spatialIndex->prepareDelta(
+            runtimeDelta, delta.beforeRevision, delta.afterRevision);
         if (!spatialResult) {
             return foundation::Result<SceneApplyReceipt>::failure(spatialResult.error());
         }

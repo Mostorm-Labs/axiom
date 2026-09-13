@@ -20,6 +20,11 @@ class DirectRenderScene final : public IRenderScene {
                  SceneRevision beforeRevision,
                  SceneRevision afterRevision) const override;
 
+    foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
+    prepareDelta(const SceneDelta& delta,
+                 SceneRevision beforeRevision,
+                 SceneRevision afterRevision) const override;
+
     void commit(std::unique_ptr<IPreparedRenderSceneUpdate> update) noexcept override;
 
     foundation::Result<PreciseHit> preciseHitTest(const PreciseHitRequest& request) const override;
@@ -42,6 +47,7 @@ class DirectRenderScene final : public IRenderScene {
 
     mutable std::uint64_t _prepareCount = 0;
     std::uint64_t _commitCount = 0;
+    mutable std::uint64_t _localizedMutationCount = 0;
     SceneRevision _revision;
     std::vector<RenderRecord> _records;
     std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> _index;

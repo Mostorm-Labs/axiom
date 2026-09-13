@@ -1,0 +1,71 @@
+artifact_id: GT-G2-00-A4-EVIDENCE-v1.4
+artifact_kind: EvidenceArtifact
+task_id: GT-G2-00-A4
+finding_id: A4-P34-F1
+classification: IMPLEMENTATION_DEFECT
+package_id: GT-G2-00-A4-P31-v1.3
+package_materialization_ref: 42e17bcf6c5efe0dba3719849c3607df92fdd850
+repair_baseline: d6e2811af10ac33bab825a687c9a121f75892f9d
+result_repository: Mostorm-Labs/axiom
+result_revision: a8f75cd4fe3fe05a3d0d1601150965f08246e071
+verification:
+  forbidden_work:
+    assertion_basis: executable_scene_delta_test
+    1K:
+      localizedMutationCount: 3
+      fullRecordCloneCount: 0
+      fullSortCount: 0
+      fullReindexCount: 0
+      fullRebuildCount: 0
+    10K:
+      localizedMutationCount: 3
+      fullRecordCloneCount: 0
+      fullSortCount: 0
+      fullReindexCount: 0
+      fullRebuildCount: 0
+    100K:
+      localizedMutationCount: 3
+      fullRecordCloneCount: 0
+      fullSortCount: 0
+      fullReindexCount: 0
+      fullRebuildCount: 0
+    counters_wired_to_real_operations: true
+  locality_matrix:
+    same_hot_topology: insert_update_remove
+    snapshot_independent_lookup: passed
+  atomicity:
+    scene_atomicity: passed
+    full_rebuild_negative_path: passed
+    no_publish_on_participant_failure: passed
+  regression:
+    A0_A3: passed
+    RF01: passed
+    debug_full_ctest: "522/522 passed"
+  protobuf_OFF:
+    full_ctest: "522/522 passed"
+    declared_skips_only: true
+  protobuf_ON:
+    full_ctest: "525/525 passed"
+    semantic_sdk_release_tag: semantic-sdk-v2-14e3d492c9b7f970
+    AXIOM_PROTOC_verified: true
+    AXIOM_SEMANTIC_RUNTIME_ROOT_verified: true
+  fresh_exact_source:
+    checkout_revision: a8f75cd4fe3fe05a3d0d1601150965f08246e071
+    clean_before_test: true
+    focused_locality: passed
+    git_diff_check: passed
+    repository_clean: true
+  git_diff_check: passed
+evidence_input_refs:
+  - "git:a8f75cd4fe3fe05a3d0d1601150965f08246e071"
+  - "git:d6e2811af10ac33bab825a687c9a121f75892f9d"
+  - "git:42e17bcf6c5efe0dba3719849c3607df92fdd850"
+  - "ctest:out/g2-a4-debug"
+  - "ctest:out/g2-a4-protobuf-on"
+  - "fresh-checkout:a8f75cd4fe3fe05a3d0d1601150965f08246e071"
+source_scope_compliant: true
+source_changes_after_result_revision: false
+verdict_for_control_review: READY_FOR_CONTROL_REVIEW
+p34_pass_claimed: false
+g2_pass_claimed: false
+a5_started: false
