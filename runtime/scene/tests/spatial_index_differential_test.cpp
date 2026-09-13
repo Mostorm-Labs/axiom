@@ -35,7 +35,7 @@ int main() {
     const std::vector<SpatialRecord> initial{first, second};
     auto gridSeed = grid.prepareReplace(initial, SceneRevision(1));
     auto linearSeed = linear.prepareReplace(initial, SceneRevision(1));
-    if (!gridSeed || !linearSeed) return EXIT_FAILURE;
+    if (!gridSeed || !linearSeed) { std::cerr << "seed prepare\n"; return EXIT_FAILURE; }
     grid.commit(std::move(gridSeed.value()));
     linear.commit(std::move(linearSeed.value()));
     SpatialRecord moved = first;
@@ -47,13 +47,32 @@ int main() {
                                     movedScene}}};
     auto gridPrepared = grid.prepareDelta(delta, SceneRevision(1), SceneRevision(2));
     auto linearPrepared = linear.prepareDelta(delta, SceneRevision(1), SceneRevision(2));
-    if (!gridPrepared || !linearPrepared) return EXIT_FAILURE;
+    if (!gridPrepared || !linearPrepared) { std::cerr << "move prepare\n"; return EXIT_FAILURE; }
     grid.commit(std::move(gridPrepared.value()));
     linear.commit(std::move(linearPrepared.value()));
     const auto gridQuery = grid.query({0, 0, 4, 4});
     const auto linearQuery = linear.query({0, 0, 4, 4});
     if (!gridQuery || !linearQuery || gridQuery.value().candidates != linearQuery.value().candidates) {
         std::cerr << "uniform grid and linear oracle diverged\n";
+        return EXIT_FAILURE;
+    }
+    const SpatialRecord third = record(3, {20, 20, 22, 22});
+    auto addThird = grid.prepareApply(std::vector<SpatialMutation>{insert(third)}, SceneRevision(2), SceneRevision(3));
+    if (!addThird) { std::cerr << "third insert prepare\n"; return EXIT_FAILURE; }
+    grid.commit(std::move(addThird.value()));
+    auto removeFirst = grid.prepareApply(
+        std::vector<SpatialMutation>{{SceneMutationKind::kRemove, first.objectId, moved.worldBounds, std::nullopt}},
+        SceneRevision(3), SceneRevision(4));
+    if (!removeFirst) { std::cerr << "remove first prepare\n"; return EXIT_FAILURE; }
+    grid.commit(std::move(removeFirst.value()));
+    auto movedThird = third; movedThird.worldBounds = {21, 20, 23, 22};
+    auto updateThird = grid.prepareApply(std::vector<SpatialMutation>{update(third, movedThird)}, SceneRevision(4), SceneRevision(5));
+    if (!updateThird) { std::cerr << "third update prepare\n"; return EXIT_FAILURE; }
+    grid.commit(std::move(updateThird.value()));
+    const auto lifecycleQuery = grid.query({20, 20, 24, 24});
+    if (!lifecycleQuery || lifecycleQuery.value().candidates.size() != 1U ||
+        lifecycleQuery.value().candidates.front() != third.objectId) {
+        std::cerr << "entry lifecycle query mismatch\n";
         return EXIT_FAILURE;
     }
     const auto diagnostics = grid.diagnostics();
@@ -65,21 +84,21 @@ int main() {
     const ObjectId hugeId = ObjectId::fromUint64(0xA500000000000001ULL);
     const WorldRect hugeBounds{-262144.0F, -262144.0F, 262144.0F, 262144.0F};
     SpatialMutation hugeInsert{SceneMutationKind::kInsert, hugeId, std::nullopt, hugeBounds};
-    SceneDelta hugeDelta{SceneRevision(2), SceneRevision(3), {}, {}, {}, {}, {},
+    SceneDelta hugeDelta{SceneRevision(5), SceneRevision(6), {}, {}, {}, {}, {},
                          {SceneMutation{SceneMutationKind::kInsert, hugeId, std::nullopt,
                                          sceneRecord(record(0xA500000000000001ULL, hugeBounds))}}};
-    auto hugePrepared = grid.prepareSpatialDelta(makeSpatialDelta(hugeDelta), SceneRevision(2), SceneRevision(3));
+    auto hugePrepared = grid.prepareSpatialDelta(makeSpatialDelta(hugeDelta), SceneRevision(5), SceneRevision(6));
     if (!hugePrepared) {
         std::cerr << "huge object prepare failed\n";
         return EXIT_FAILURE;
     }
     grid.commit(std::move(hugePrepared.value()));
-    if (!grid.query({-128, -128, 128, 128})) return EXIT_FAILURE;
+    if (!grid.query({-128, -128, 128, 128})) { std::cerr << "huge center query\n"; return EXIT_FAILURE; }
     const auto beforeFailure = grid.diagnostics();
-    SceneDelta invalid{SceneRevision(2), SceneRevision(3), {}, {}, {}, {}, {},
+    SceneDelta invalid{SceneRevision(6), SceneRevision(7), {}, {}, {}, {}, {},
                        {SceneMutation{SceneMutationKind::kUpdate, second.objectId,
                                        sceneRecord(first), sceneRecord(moved)}}};
-    if (grid.prepareDelta(invalid, SceneRevision(2), SceneRevision(3)) ||
+    if (grid.prepareDelta(invalid, SceneRevision(6), SceneRevision(7)) ||
         grid.diagnostics().affectedEntryCount != beforeFailure.affectedEntryCount ||
         grid.diagnostics().membershipAddCount != beforeFailure.membershipAddCount) {
         std::cerr << "failed prepare contaminated diagnostics\n";

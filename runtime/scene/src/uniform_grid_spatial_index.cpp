@@ -361,31 +361,24 @@ void UniformGridSpatialIndex::commit(std::unique_ptr<IPreparedSpatialUpdate> pre
                 const std::uint32_t index = static_cast<std::uint32_t>(_records.size());
                 _records.push_back(SpatialRecord{mutation.objectId, *mutation.after});
                 _entryIds.push_back(plan.entry);
-                if (_entrySlots.size() <= plan.entry) _entrySlots.resize(plan.entry + 1U);
                 _entrySlots[plan.entry] = index;
                 _nextEntryId = std::max(_nextEntryId, plan.entry + 1U);
-                _index[mutation.objectId] = index;
+                _index.emplace(mutation.objectId, index);
                 if (plan.overflowAfter) _overflow[plan.entry] = *plan.overflowAfter;
                 else for (auto key : plan.added) _cells[key].push_back(plan.entry);
             } else if (mutation.kind == SceneMutationKind::kUpdate && found != nullptr && mutation.after) {
-                const std::uint32_t index = plan.entry < _entrySlots.size()
-                                                 ? _entrySlots[plan.entry]
-                                                 : _index[mutation.objectId];
                 for (auto key : plan.removed) {
-                    auto& values = _cells[key];
-                    values.erase(std::remove(values.begin(), values.end(), index), values.end());
+                    auto& values = _cells.find(key)->second;
+                    values.erase(std::remove(values.begin(), values.end(), plan.entry), values.end());
                 }
                 found->worldBounds = *mutation.after;
                 _overflow.erase(plan.entry);
                 if (plan.overflowAfter) _overflow[plan.entry] = *plan.overflowAfter;
                 else for (auto key : plan.added) _cells[key].push_back(plan.entry);
             } else if (mutation.kind == SceneMutationKind::kRemove && found != nullptr) {
-                const std::uint32_t index = plan.entry < _entrySlots.size()
-                                                 ? _entrySlots[plan.entry]
-                                                 : indexIt->second;
                 for (auto key : plan.removed) {
-                    auto& values = _cells[key];
-                    values.erase(std::remove(values.begin(), values.end(), index), values.end());
+                    auto& values = _cells.find(key)->second;
+                    values.erase(std::remove(values.begin(), values.end(), plan.entry), values.end());
                 }
                 found->objectId = ObjectId{};
                 found->worldBounds = WorldRect{};
