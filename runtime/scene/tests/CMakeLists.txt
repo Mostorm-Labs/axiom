@@ -154,6 +154,8 @@ foreach(header IN ITEMS
         canvas/scene/scene_view.hpp
         canvas/scene/shadow_render_scene.hpp
         canvas/scene/spatial_index.hpp
+        canvas/scene/spatial_delta.hpp
+        canvas/scene/linear_spatial_index.hpp
         canvas/scene/uniform_grid_spatial_index.hpp)
     string(REPLACE "/" "_" target_suffix ${header})
     string(REPLACE "." "_" target_suffix ${target_suffix})
