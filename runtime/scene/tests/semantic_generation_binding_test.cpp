@@ -34,7 +34,7 @@ int main() {
 
     struct Compiler final : canvas::ISemanticSceneCompiler {
         canvas::foundation::Result<CompiledSceneSnapshot> compileFull(
-            const SemanticReadView& view) const override {
+            [[maybe_unused]] const SemanticReadView& view) const override {
             assert(view.generation() == SemanticGeneration(0) ||
                    view.generation() == SemanticGeneration(7));
             return canvas::foundation::Result<CompiledSceneSnapshot>::success(
@@ -42,8 +42,8 @@ int main() {
         }
 
         canvas::foundation::Result<CompiledSceneDelta> compileDelta(
-            const SemanticReadView& view,
-            const ChangeSet& change_set) const override {
+            [[maybe_unused]] const SemanticReadView& view,
+            [[maybe_unused]] const ChangeSet& change_set) const override {
             assert(view.generation() == change_set.afterGeneration());
             return canvas::foundation::Result<CompiledSceneDelta>::success(
                 CompiledSceneDelta{.beforeRevision = SceneRevision(1),
