@@ -1,5 +1,6 @@
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/scene_delta.hpp"
+#include "canvas/scene/spatial_delta.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -270,8 +271,9 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
                           "Render participant returned an empty prepared update"));
         }
 
-        auto spatialResult = _spatialIndex->prepareDelta(
-            runtimeDelta, delta.beforeRevision, delta.afterRevision);
+        const SpatialDelta spatialDelta = makeSpatialDelta(runtimeDelta);
+        auto spatialResult = _spatialIndex->prepareSpatialDelta(
+            spatialDelta, delta.beforeRevision, delta.afterRevision);
         if (!spatialResult) {
             return foundation::Result<SceneApplyReceipt>::failure(spatialResult.error());
         }

@@ -26,6 +26,14 @@ struct SpatialMutation final {
     std::optional<WorldRect> after;
 };
 
+using SpatialEntryId = std::uint64_t;
+
+struct SpatialDelta final {
+    SceneRevision generationFrom;
+    SceneRevision generationTo;
+    std::vector<SpatialMutation> mutations;
+};
+
 class IPreparedSpatialUpdate {
   public:
     virtual ~IPreparedSpatialUpdate() = default;
@@ -50,6 +58,15 @@ struct SpatialIndexDiagnostics final {
     std::uint64_t fullReindexCount = 0;
     std::uint64_t fullRebuildCount = 0;
     std::uint64_t localizedMutationCount = 0;
+    std::uint64_t fullSpatialRebuildCount = 0;
+    std::uint64_t fullSpatialRecordCloneCount = 0;
+    std::uint64_t fullCellScanCount = 0;
+    std::uint64_t affectedEntryCount = 0;
+    std::uint64_t oldCoverageUnitsVisited = 0;
+    std::uint64_t newCoverageUnitsVisited = 0;
+    std::uint64_t membershipRemovalCount = 0;
+    std::uint64_t membershipRetainedCount = 0;
+    std::uint64_t membershipAddCount = 0;
 };
 
 class ISpatialIndex {
@@ -81,6 +98,13 @@ class ISpatialIndex {
             });
         }
         return prepareApply(mutations, beforeRevision, afterRevision);
+    }
+
+    virtual foundation::Result<std::unique_ptr<IPreparedSpatialUpdate>>
+    prepareSpatialDelta(const SpatialDelta& delta,
+                        SceneRevision beforeRevision,
+                        SceneRevision afterRevision) const {
+        return prepareApply(delta.mutations, beforeRevision, afterRevision);
     }
 
     virtual void commit(std::unique_ptr<IPreparedSpatialUpdate> update) noexcept = 0;
