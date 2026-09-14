@@ -173,7 +173,7 @@ void writeJson(const Options& options, const std::vector<ScaleResult>& results) 
     out << std::fixed << std::setprecision(3);
     out << "{\n  \"task_id\": \"GT-G2-00-A5\",\n"
         << "  \"stage\": \"P36_FIX_REVERIFICATION\",\n"
-        << "  \"revision\": \"6086648be48e3a0a28e1c58d134e48d5f07b5fea\",\n"
+        << "  \"revision\": \"b77b8593a5de0496fda0ed0754491b7ee0b74115\",\n"
         << "  \"compiler\": \"CXX20\",\n  \"platform\": \"local\",\n"
         << "  \"dataset\": {\"seed\": " << options.seed
         << ", \"object_generation\": \"LCG; ObjectId = index + 1\","
