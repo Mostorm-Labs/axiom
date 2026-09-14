@@ -23,7 +23,8 @@ def main() -> int:
         text = path.read_text(encoding="utf-8")
         if text.count("```") % 2:
             failures.append(f"{path.relative_to(ROOT)}: unbalanced code fence")
-        for match in LINK.finditer(text):
+        prose = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+        for match in LINK.finditer(prose):
             raw = match.group(1).strip()
             if raw.startswith("<") and raw.endswith(">"):
                 raw = raw[1:-1]
