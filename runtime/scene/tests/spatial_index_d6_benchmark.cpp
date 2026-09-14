@@ -176,7 +176,8 @@ void writeJson(const Options& options, const std::vector<ScaleResult>& results) 
         << "  \"revision\": \"6086648be48e3a0a28e1c58d134e48d5f07b5fea\",\n"
         << "  \"compiler\": \"CXX20\",\n  \"platform\": \"local\",\n"
         << "  \"dataset\": {\"seed\": " << options.seed
-        << ", \"bounds_distribution\": \"LCG uniform plane, 4-16px squares\","
+        << ", \"object_generation\": \"LCG; ObjectId = index + 1\","
+        << " \"bounds_distribution\": \"LCG uniform plane, 4-16px squares\","
         << " \"query_distribution\": \"deterministic 180x180 pans\","
         << " \"mutation_distribution\": \"deterministic cross-cell +512px updates\"},\n"
         << "  \"scales\": [\n";
