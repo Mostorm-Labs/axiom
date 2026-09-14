@@ -98,7 +98,16 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record) noexcept {
     if (record.kind == semantic::ObjectKind::kGroup) { result.geometry = {}; result.visual = {}; result.world = {}; return result; }
     result.geometry = shapeRect(record);
     const float stroke = [&] {
-        for (const auto& entry : record.properties.entries) if (entry.field_id == 0x101U) if (const auto* style = std::get_if<semantic::StrokeStyleValue>(&entry.value)) if (const auto* solid = std::get_if<semantic::SolidStroke>(style)) return static_cast<float>(std::max(0.0, solid->width) * 0.5); return 0.0F;
+        for (const auto& entry : record.properties.entries) {
+            if (entry.field_id == 0x101U) {
+                if (const auto* style = std::get_if<semantic::StrokeStyleValue>(&entry.value)) {
+                    if (const auto* solid = std::get_if<semantic::SolidStroke>(style)) {
+                        return static_cast<float>(std::max(0.0, solid->width) * 0.5);
+                    }
+                }
+            }
+        }
+        return 0.0F;
     }();
     result.visual = {result.geometry.left - stroke, result.geometry.top - stroke,
                      result.geometry.right + stroke, result.geometry.bottom + stroke};
@@ -106,12 +115,15 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record) noexcept {
     const double ys[] = {result.visual.top, result.visual.bottom};
     foundation::WorldRect transformed{};
     bool have = false;
-    for (const double x : xs) for (const double y : ys) {
-        const double wx = record.transform.a * x + record.transform.c * y + record.transform.tx;
-        const double wy = record.transform.b * x + record.transform.d * y + record.transform.ty;
-        const foundation::WorldRect point{static_cast<float>(wx), static_cast<float>(wy),
-                                          static_cast<float>(wx), static_cast<float>(wy)};
-        transformed = have ? foundation::unionRects(transformed, point) : point; have = true;
+    for (const double x : xs) {
+        for (const double y : ys) {
+            const double wx = record.transform.a * x + record.transform.c * y + record.transform.tx;
+            const double wy = record.transform.b * x + record.transform.d * y + record.transform.ty;
+            const foundation::WorldRect point{static_cast<float>(wx), static_cast<float>(wy),
+                                              static_cast<float>(wx), static_cast<float>(wy)};
+            transformed = have ? foundation::unionRects(transformed, point) : point;
+            have = true;
+        }
     }
     result.world = transformed;
     result.finite = finiteRect(result.geometry) && finiteRect(result.visual) && finiteRect(result.world);

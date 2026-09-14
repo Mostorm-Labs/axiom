@@ -1,5 +1,6 @@
 add_executable(canvas_rf01_scene_atomicity_test scene_atomicity_test.cpp)
-target_link_libraries(canvas_rf01_scene_atomicity_test PRIVATE canvas_runtime_scene_fakes)
+target_link_libraries(canvas_rf01_scene_atomicity_test
+    PRIVATE canvas_runtime_scene_fakes canvas_runtime_semantic)
 
 if(MSVC)
     target_compile_options(canvas_rf01_scene_atomicity_test PRIVATE /W4 /permissive- /WX /EHsc)

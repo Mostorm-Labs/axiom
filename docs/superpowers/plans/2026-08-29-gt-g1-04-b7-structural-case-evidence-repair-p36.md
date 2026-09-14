@@ -195,9 +195,7 @@ auto payload = SetTransformsOp{{{id(2), transform}}};
 expectReplaceCase(
     initial,
     payload,
-    [&](const auto& store, auto* out) {
-        return validateSetTransformsState(payload, store, out);
-    },
+    callback,
     StatefulIssue::kNone,
     expected,
     rs());
