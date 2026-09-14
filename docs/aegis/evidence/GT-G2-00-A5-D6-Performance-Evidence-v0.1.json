@@ -1,0 +1,56 @@
+{
+  "task_id": "GT-G2-00-A5",
+  "stage": "P36_FIX_REVERIFICATION",
+  "revision": "6086648be48e3a0a28e1c58d134e48d5f07b5fea",
+  "compiler": "CXX20",
+  "platform": "local",
+  "dataset": {"seed": 3601187038, "bounds_distribution": "LCG uniform plane, 4-16px squares", "query_distribution": "deterministic 180x180 pans", "mutation_distribution": "deterministic cross-cell +512px updates"},
+  "scales": [
+    {
+      "records": 1000,
+      "query_latency_us": {"p50": 13.667, "p95": 24.041, "p99": 25.125},
+      "update_latency_us": {"p50": 23.917, "p95": 32.208, "p99": 32.208},
+      "candidate_amplification": 1.000,
+      "visited_cells_mean": 2.896,
+      "memory_bytes": {"index": 72000, "record": 88000, "cell_membership": 9024, "overflow": 0},
+      "allocation_behavior": {"commit_allocation_delta": 0, "full_rebuild_count": 0, "full_clone_count": 0, "full_scan_count": 0}
+    },
+    {
+      "records": 10000,
+      "query_latency_us": {"p50": 120.416, "p95": 261.750, "p99": 357.625},
+      "update_latency_us": {"p50": 134.625, "p95": 250.041, "p99": 250.041},
+      "candidate_amplification": 1.000,
+      "visited_cells_mean": 2.896,
+      "memory_bytes": {"index": 720000, "record": 880000, "cell_membership": 81024, "overflow": 0},
+      "allocation_behavior": {"commit_allocation_delta": 0, "full_rebuild_count": 0, "full_clone_count": 0, "full_scan_count": 0}
+    },
+    {
+      "records": 50000,
+      "query_latency_us": {"p50": 627.167, "p95": 1213.875, "p99": 1259.958},
+      "update_latency_us": {"p50": 492.667, "p95": 915.250, "p99": 915.250},
+      "candidate_amplification": 1.000,
+      "visited_cells_mean": 2.896,
+      "memory_bytes": {"index": 3600000, "record": 4400000, "cell_membership": 401024, "overflow": 0},
+      "allocation_behavior": {"commit_allocation_delta": 0, "full_rebuild_count": 0, "full_clone_count": 0, "full_scan_count": 0}
+    },
+    {
+      "records": 100000,
+      "query_latency_us": {"p50": 1249.292, "p95": 2592.709, "p99": 2654.125},
+      "update_latency_us": {"p50": 760.708, "p95": 1017.708, "p99": 1017.708},
+      "candidate_amplification": 1.000,
+      "visited_cells_mean": 2.906,
+      "memory_bytes": {"index": 7200000, "record": 8800000, "cell_membership": 801024, "overflow": 0},
+      "allocation_behavior": {"commit_allocation_delta": 0, "full_rebuild_count": 0, "full_clone_count": 0, "full_scan_count": 0}
+    },
+    {
+      "records": 1000000,
+      "query_latency_us": {"p50": 18736.416, "p95": 35705.833, "p99": 35914.292},
+      "update_latency_us": {"p50": 8585.792, "p95": 10202.833, "p99": 10202.833},
+      "candidate_amplification": 1.000,
+      "visited_cells_mean": 2.875,
+      "memory_bytes": {"index": 72000000, "record": 88000000, "cell_membership": 8001024, "overflow": 0},
+      "allocation_behavior": {"commit_allocation_delta": 0, "full_rebuild_count": 0, "full_clone_count": 0, "full_scan_count": 0}
+    }
+  ],
+  "result": "PASS"
+}

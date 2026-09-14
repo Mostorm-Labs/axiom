@@ -124,6 +124,24 @@ add_custom_command(TARGET canvas_g2_a5_spatial_index_differential_test POST_BUIL
     COMMENT "Run GT-G2-00-A5 P36 spatial differential oracle")
 add_dependencies(canvas_runtime_scene canvas_g2_a5_spatial_index_differential_test)
 
+add_executable(canvas_g2_a5_d6_spatial_index_benchmark
+    spatial_index_d6_benchmark.cpp
+    ../src/linear_spatial_index.cpp
+    ../src/uniform_grid_spatial_index.cpp)
+target_include_directories(canvas_g2_a5_d6_spatial_index_benchmark PRIVATE
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/semantic/include
+    ${PROJECT_SOURCE_DIR}/runtime/foundation/include)
+target_compile_features(canvas_g2_a5_d6_spatial_index_benchmark PRIVATE cxx_std_20)
+if(MSVC)
+    target_compile_options(canvas_g2_a5_d6_spatial_index_benchmark PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_g2_a5_d6_spatial_index_benchmark PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME canvas_g2_a5_d6_spatial_index_benchmark
+         COMMAND canvas_g2_a5_d6_spatial_index_benchmark
+                 --output ${CMAKE_CURRENT_BINARY_DIR}/GT-G2-00-A5-D6-Performance-Evidence-v0.1.json)
+
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
 
