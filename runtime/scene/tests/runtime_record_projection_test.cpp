@@ -96,8 +96,8 @@ ObjectRecord record(ObjectKind kind, std::uint64_t id) {
                     .brush_version = 3,
                     .nominal_size = 5.5,
                     .opacity = 0.75F,
-                    .texture_resource_id = std::nullopt,
                     .blend_mode = canvas::semantic::BrushBlendMode::kHighlighter,
+                    .texture_resource_id = std::nullopt,
                 },
                 .deterministic_seed = 1234,
                 .data = canvas::semantic::VectorStrokeData{
