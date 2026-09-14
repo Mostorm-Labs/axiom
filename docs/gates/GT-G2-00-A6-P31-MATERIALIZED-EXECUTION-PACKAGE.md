@@ -1,14 +1,15 @@
-# GT-G2-00-A6 P31 Materialized Execution Package v0.3
+# GT-G2-00-A6 P31 Materialized Execution Package v0.4
 
 ## Status
 
 ```yaml
 stage: P31_TARGETED_RECONCILIATION_AND_REPACKAGE
 task_id: GT-G2-00-A6
-package_id: GT-G2-00-A6-P31-v0.3
-reconciliation_subject: EXECUTABLE_BOUNDARY_ONLY
+package_id: GT-G2-00-A6-P31-v0.4
+reconciliation_subject: RUNTIME_PROJECTION_PUBLICATION_CONVERGENCE
 status: MATERIALIZED_FOR_P33_ENTRY_REVIEW
 repository_bound: true
+preserve_valid_result_revision: eff48f3b5114a15acdab952eb0be0d2a93c981e0
 T02_R07_completion_target_changed: false
 T02_R08_completion_target_changed: false
 P20_reentry_required: false
@@ -17,12 +18,12 @@ P32_replay_from_scratch_required: false
 p34_authorized: false
 ```
 
-This v0.3 supersedes P31 v0.2 only for the executable package boundary. It preserves the valid implementation already present at `4a4d00e9bede523fc0989af22b096fc4a592329f` and does not reopen Authority or Verification.
+This v0.4 supersedes P31 v0.3 after the targeted P15/P16/P20 v0.3 reconciliation. It preserves the accepted partial implementation at `eff48f3b5114a15acdab952eb0be0d2a93c981e0`; implementation must continue from that cursor rather than replay from the task anchor.
 
 ## Package Authority
 
 ```yaml
-package_ref: notion://3db4c57a-590c-813b-a3d9-c5b64984b6be/GT-G2-00-A6-P31-v0.3
+package_ref: notion://3db4c57a-590c-81c5-8775-cf70fdb62788/GT-G2-00-A6-P31-v0.4
 repository:
   provider: github
   full_name: Mostorm-Labs/axiom
@@ -31,42 +32,47 @@ execution_branch: codex/gt-g2-a6-incremental-runtime-coordination
 task_anchor:
   revision: 4faf351fc85360d0b843dc380c530c12cbb3a48b
   relation: ancestor
+package_materialization_ref: EXACT_THIS_COMMIT
 resume_cursor:
-  type: P32_ACCEPTED_PARTIAL_RESULT
+  type: P33_ACCEPTED_PARTIAL_RESULT
   execution_ref: codex/gt-g2-a6-incremental-runtime-coordination
-  accepted_revision: 4a4d00e9bede523fc0989af22b096fc4a592329f
+  accepted_revision: eff48f3b5114a15acdab952eb0be0d2a93c981e0
   completed_through:
     - A6_coordinator_surface_materialized
-    - canonical_ChangeSet_consumption
+    - canonical_ChangeSet_consumption_basic
     - generation_validation_basic
-    - explicit_incremental_recovery_disposition_basic
-    - kRequiresFullRebuild_basic_recovery_path
-    - exercised_render_prepare_failure_preserves_old_state
-    - predecessor_regression_matrix_reported_PASS
+    - explicit_incremental_vs_recovery_disposition_basic
+    - prior_SceneBinding_kRequiresFullRebuild_recovery_path_basic
+    - prior_render_prepare_failure_preserves_old_legacy_state
+    - test_only_actual_FullSceneCompiler_adapter_compiles_and_runs
+    - focused_A6_and_predecessor_matrix_reported_PASS
     - git_diff_check_reported_PASS
-  not_yet_accepted_as_closed:
-    - P31_source_scope_conformance
-    - T02_R07_blocking_equivalence_evidence
-    - T02_R08_full_atomic_boundary_matrix
-    - T02_R08_full_recovery_fixture_matrix
-    - independent_FullSceneCompiler_exact_oracle
-  next_action: resume_remaining_A6_proof_work_under_P31_v0_3
+  not_yet_closed:
+    - canonical_A1_RuntimeScene_publication_path
+    - localized_RuntimeScene_prepare_publish_mechanics
+    - independent_FullSceneCompiler_materialization_bridge_for_recovery
+    - canonical_Scene_Core_atomic_publication_set
+    - T02_R07_long_run_nine_kind_exact_equivalence
+    - T02_R08_complete_checkpoint_failure_matrix
+    - T02_R08_corrupt_state_and_failed_recovery_matrix
+  next_action: converge_preserved_A6_implementation_to_P15_P16_P20_v0_3_without_replay
 ```
 
-`Task Anchor != Execution Cursor`. P33 must preserve the accepted cursor and must not replay completed coordinator work.
+`Task Anchor != Execution Cursor`. The cursor is navigation metadata only and does not expand scope or count as Gate evidence.
 
 ## Current Authority Bindings
 
 ```yaml
-P15_current: notion://3db4c57a-590c-814f-8dd4-d40ec9c2a36b/GT-G2-00-A6-P15-v0.2
-P16_current: notion://3db4c57a-590c-81a7-acbd-d4ec00508759/GT-G2-00-A6-P16-v0.2
-A6_P20_current: notion://3db4c57a-590c-8122-99ac-facf2b77aa3c/GT-G2-00-A6-P20-v0.2
+P15_current: notion://3db4c57a-590c-81bb-a5a6-f2bd00847c55/GT-G2-00-A6-P15-v0.3
+P16_current: notion://3db4c57a-590c-81a1-b2c0-fba8cf76ae9b/GT-G2-00-A6-P16-v0.3
+A6_P20_current: notion://3db4c57a-590c-814a-a71c-c97d15f216e0/GT-G2-00-A6-P20-v0.3
 global_G2_P20_current: notion://3da4c57a-590c-81e0-b4c9-dad679a95bac/GT-G2-00-P20-v0.3
 P30_preserved: notion://3d74c57a-590c-8113-90b3-cc5c0216f8ea/GT-G2-00-P30-v0.1
-P32_control_review: notion://3db4c57a-590c-816c-bbd1-e68b2cda257a/GT-G2-00-A6-P32-CONTROL-REVIEW-v0.1
+P23_authority_supersession: notion://3db4c57a-590c-81f4-baa9-f7b53a759701/GT-G2-00-A6-P23-v0.2
+P33_control_review: notion://3db4c57a-590c-81d1-86ec-ec5f87789f3b/GT-G2-00-A6-P33-CONTROL-REVIEW-v0.1
 ```
 
-Verification bindings remain unchanged:
+Verification bindings:
 
 ```yaml
 verification_spec_id: GT-G2-00-VS-v0.3
@@ -81,139 +87,196 @@ A6_obligation_slice:
   - T02-R08
 ```
 
-No Verification wording, oracle, corpus size, blocking classification, or global evidence-file slot is changed.
+No Verification strength, corpus size, blocking classification, or global evidence-file slot is changed.
 
-## Preserved Valid Implementation
+## Repository Reality Bound Into This Package
 
-The accepted result revision `4a4d00e9bede523fc0989af22b096fc4a592329f` is valid partial work and must be preserved unless a new verified defect specifically requires changing it.
+At the accepted cursor `eff48f3…`:
 
-Accepted implementation facts:
+- `IncrementalRuntimeCoordinator` is still bound to legacy `SceneBinding` for `apply/recover`;
+- the production A1 canonical logical scene is `canvas::RuntimeScene` / `canvas::RuntimeSceneProjection` in `scene_types.hpp` and represents all nine V1 semantic kinds;
+- current `RuntimeScene::replace/apply` publishes directly and has no separate prepare/publication staging boundary;
+- A3 `canvas::scene::FullSceneCompiler` returns the independent inspection/reference projection family;
+- the two projection families retain the known `RuntimeSceneProjection` co-include/name conflict;
+- A2 impact/dependency functions, BoundsSystem computations, A4 locality work, and A5 SpatialIndex are trusted consumed capabilities and are not redefined here.
 
-- runtime-local `RuntimeUpdatePlan` and `IncrementalRuntimeCoordinator` exist;
-- canonical `canvas::semantic::ChangeSet` is consumed without a second semantic taxonomy;
-- basic generation preconditions exist;
-- incremental and recovery paths are explicitly distinguished;
-- `kRequiresFullRebuild` explicitly enters the existing rebuild path;
-- the exercised render-prepare failure preserves prior published Scene/render/spatial state;
-- no Semantic Schema, Operation Model, A2 impact/dependency, SpatialIndex implementation, renderer architecture, Tile/GPU/Skia, persistence, or sync scope was changed.
+Therefore the remaining A6 work is not a test-only patch. The canonical production path must converge to the A1 RuntimeScene publication contract before R07/R08 can close.
 
-These facts are implementation progress, not T02-R07/T02-R08 Gate evidence closure.
+## Required Convergence Changes
 
-## Executable-Boundary Repair
+### Canonical RuntimeScene publication
 
-P31 v0.2 omitted two source surfaces already required by the accepted implementation:
+The blocking A6 path MUST publish the A1 renderer-neutral nine-kind RuntimeScene as the canonical scene observable. Existing SceneBinding/legacy Scene code may remain for compatibility/regression purposes but MUST NOT define R07/R08 canonical truth.
 
-1. `runtime/scene/CMakeLists.txt` for linking the authorized coordinator into `canvas_runtime_scene`;
-2. `runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp` for the dedicated R08 atomic-publication test identity.
+### RuntimeScene prepare -> publication staging
 
-P31 v0.3 explicitly covers those paths. This repair is not general permission to expand scope.
+`RuntimeScene` must gain the minimum internal mechanics needed to stage a target generation without publishing it before all required A6 Scene-Core participants have prepared.
 
-## Authorized Source Scope
+Allowed forms include a private/friend prepared projection or equivalent staging object. The resulting implementation MUST:
 
-Existing/accepted paths that P33 may preserve or minimally modify only when required by the remaining frozen closure contract:
+- preserve the A1 nine-kind logical record contract;
+- stage incremental target state from authoritative post-state plus canonical ChangeSet and existing A2-derived affected work;
+- stage full target state from the FullSceneCompiler materialization bridge;
+- publish only after the A6 publication decision;
+- preserve existing A1 replace/apply compatibility, preferably by delegating to the same staging mechanics;
+- NOT turn legacy `SceneObjectKind` / `SceneRecord` into a competing nine-kind semantic truth.
 
-```text
-runtime/scene/CMakeLists.txt
-runtime/scene/include/canvas/scene/scene_binding.hpp
-runtime/scene/src/scene_binding.cpp
-runtime/scene/include/canvas/scene/scene.hpp
-runtime/scene/src/scene.cpp
-runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp
-runtime/scene/src/incremental_runtime_coordinator.cpp
-runtime/scene/tests/CMakeLists.txt
-runtime/scene/tests/incremental_runtime_coordinator_test.cpp
-runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp
-runtime/scene/tests/incremental_runtime_recovery_test.cpp
-runtime/scene/tests/full_incremental_equivalence_test.cpp
-runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp
-runtime/scene/testing/src/fake_render_scene.cpp
-runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
-runtime/scene/testing/src/fake_spatial_index.cpp
-```
+### Production FullSceneCompiler materialization bridge
 
-New files authorized only for **test-only independent FullSceneCompiler oracle adaptation**:
+Recovery MUST materially consume the independent A3 FullSceneCompiler result.
+
+Authorized private production topology:
 
 ```text
-runtime/scene/tests/incremental_runtime_full_oracle_adapter.hpp
-runtime/scene/tests/incremental_runtime_full_oracle_adapter.cpp
-```
-
-Use fewer files when possible. Any required path outside this inventory is `PACKAGE_SCOPE_DIVERGENCE` and must fail closed.
-
-## Explicitly Forbidden Production Mutation
-
-Do not modify:
-
-```text
-runtime/semantic/**
-runtime/scene/include/canvas/scene/scene_commit_input.hpp
-runtime/scene/include/canvas/scene/scene_compiler.hpp
-runtime/scene/include/canvas/scene/runtime_scene_projection.hpp
-runtime/scene/src/runtime_scene_projection.cpp
-runtime/scene/include/canvas/scene/full_scene_compiler.hpp
-runtime/scene/src/full_scene_compiler.cpp
-runtime/scene/include/canvas/scene/scene_types.hpp
-runtime/scene/src/scene_impact.cpp
-runtime/scene/include/canvas/scene/scene_impact.hpp
-runtime/scene/src/scene_dependency_graph.cpp
-runtime/scene/include/canvas/scene/scene_dependency_graph.hpp
-runtime/scene/src/bounds_system.cpp
-runtime/scene/include/canvas/scene/bounds_system.hpp
-runtime/scene/src/scene_record_store.cpp
-runtime/scene/include/canvas/scene/scene_record_store.hpp
-runtime/scene/src/uniform_grid_spatial_index.cpp
-runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
-runtime/scene/src/linear_spatial_index.cpp
-runtime/scene/include/canvas/scene/linear_spatial_index.hpp
-runtime/scene/src/direct_render_scene.cpp
-runtime/scene/include/canvas/scene/direct_render_scene.hpp
-runtime/scene/include/canvas/scene/render_scene.hpp
-```
-
-If a listed path does not exist, the entry creates no authority to create it; it remains a prohibition on adding that production surface for A6.
-
-Also forbidden:
-
-- second ChangeSet/ObjectChange/ChangeKind/FieldMask taxonomy;
-- second A2 impact classifier or dependency-closure engine;
-- semantic truth mutation during recovery;
-- Render Core / Tile / GPU / Skia / persistence / sync / schema / wire changes;
-- new Product SLOs;
-- weakening or replacing the frozen R07/R08 oracle;
-- adding a production debug API only to make tests injectable.
-
-## Test-Only FullSceneCompiler Oracle Adapter
-
-Repository reality contains two incompatible `RuntimeSceneProjection` type families. P31 v0.3 does **not** authorize changing that production type conflict. Instead it freezes a test-only translation-unit boundary:
-
-```text
-A6 coordinator / Scene test translation unit
+IncrementalRuntimeCoordinator
         |
-        | neutral test DTO only
+        | neutral runtime-local materialization DTO
         v
-incremental_runtime_full_oracle_adapter.hpp
+incremental_runtime_full_materialization_bridge.hpp
         ^
         |
-incremental_runtime_full_oracle_adapter.cpp
+incremental_runtime_full_materialization_bridge.cpp
         |
-        | actual independent oracle
+        | actual independent reference computation
         v
 canvas::scene::FullSceneCompiler::compile(SemanticReadView)
 ```
 
 Rules:
 
-1. Adapter `.cpp` is the only new A6 test translation unit that may include `full_scene_compiler.hpp` / the inspection projection family.
-2. Adapter header must not expose either conflicting `RuntimeSceneProjection` type.
-3. Adapter returns a neutral test-only canonical comparison DTO/digest containing only renderer-neutral observable fields needed by the frozen comparison.
-4. The full side must be produced by the actual independent `canvas::scene::FullSceneCompiler::compile(view)`; a test-local substitute compiler does not satisfy R07.
-5. The incremental side must be canonicalized from A6-published derived state / public observation surfaces. It must not backfill incremental-side values from `SemanticReadView` merely to manufacture equality.
-6. Canonicalization is comparison-only and does not create semantic Authority or alter the oracle.
-7. If the frozen comparison cannot be produced through public/allowed surfaces without forbidden production changes, return `PACKAGE_SCOPE_DIVERGENCE`; do not weaken R07.
+1. bridge `.cpp` may include `full_scene_compiler.hpp` and the A3 inspection projection family;
+2. bridge header must not expose either conflicting `RuntimeSceneProjection` type;
+3. bridge output must carry all facts needed to materialize canonical A1 RuntimeScene and required recovery-derived state: semantic record identity/kind/version/placement/transform/properties/content/erase masks plus reference bounds needed by the selected Bounds/Spatial materialization;
+4. bridge must consume the actual FullSceneCompiler result; an unrelated semantic rebuild may not be relabeled as FullSceneCompiler recovery;
+5. A3 FullSceneCompiler and `runtime_scene_projection.*` remain read-only.
 
-## Frozen T02-R07 Target — Unchanged
+### Canonical Scene-Core publication set
 
-`A6_INCREMENTAL_EQUIVALENCE_EVIDENCE` remains blocking.
+One A6 transaction stages/publishes at one `SemanticGeneration`:
+
+- canonical A1 RuntimeScene / conforming backing state;
+- derived bounds state required by the selected transition;
+- production SpatialIndex update;
+- generation-bound Scene-Core invalidation output (runtime-local equivalent allowed if no existing type fits);
+- every additional real Scene-Core participant actually mutated by the final implementation.
+
+`IRenderScene`, Render-Core DamageTracker, GPU/Skia, FrameState, Tile/RenderGroup, raster and presentation are excluded from canonical A6 publication truth.
+
+### A2 / A4 / A5 preservation
+
+- consume existing A2 `classifyImpact` and dependency-closure semantics; do not implement a second classifier/closure model;
+- preserve A4 locality/stable-handle capability; no A4 algorithm rewrite is authorized;
+- use existing A5 production SpatialIndex prepare/commit semantics; no spatial backend algorithm mutation is authorized.
+
+### R08 non-public checkpoint seam
+
+Deterministic coordinator-level checkpoints are frozen at:
+
+```text
+before RuntimeScene prepare
+after RuntimeScene prepare
+before Bounds staging
+after Bounds staging
+before Spatial prepare
+after Spatial prepare
+before invalidation finalization
+after invalidation finalization
+before/after every additional actual Scene-Core participant prepare
+immediately before publication barrier
+```
+
+Exact hook representation is implementation-open but MUST be non-public verification instrumentation. Friend-only test access, private callbacks, an internal header, or equivalent are allowed. A public production debug API is forbidden.
+
+The same non-public test access may deliberately corrupt derived coordinator state for the frozen R08 corrupt-state fixture, but it must not create a general production mutation/debug surface.
+
+## Authorized Mutable Source Scope
+
+### Production existing files
+
+```text
+runtime/scene/CMakeLists.txt
+runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp
+runtime/scene/src/incremental_runtime_coordinator.cpp
+runtime/scene/include/canvas/scene/scene_types.hpp
+runtime/scene/src/scene.cpp
+```
+
+`scene_types.hpp` / `scene.cpp` mutation is restricted to canonical `RuntimeScene` staging/publication mechanics and minimal helpers. Legacy `SceneObjectKind`, `SceneRecord`, RF-01 renderer/query/hit/frame semantics and legacy Scene transaction ownership are not A6 mutation targets.
+
+### New private production files allowed
+
+```text
+runtime/scene/src/incremental_runtime_full_materialization_bridge.hpp
+runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp
+runtime/scene/src/incremental_runtime_checkpoint.hpp
+```
+
+Use fewer files where possible. The checkpoint header is optional if the seam fits inside existing A6 files.
+
+### A6 tests and test-only support
+
+```text
+runtime/scene/tests/CMakeLists.txt
+runtime/scene/tests/incremental_runtime_coordinator_test.cpp
+runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp
+runtime/scene/tests/incremental_runtime_recovery_test.cpp
+runtime/scene/tests/incremental_runtime_full_oracle_adapter.hpp
+runtime/scene/tests/incremental_runtime_full_oracle_adapter.cpp
+runtime/scene/tests/incremental_runtime_test_access.hpp
+runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
+runtime/scene/testing/src/fake_spatial_index.cpp
+```
+
+`incremental_runtime_test_access.hpp` is optional and may exist only for friend/private checkpoint and corruption access. It must not become installed/public production API.
+
+Any required mutable path outside this inventory is `PACKAGE_SCOPE_DIVERGENCE` and must fail closed rather than be silently added during P33.
+
+## Read-Only Dependencies / Forbidden Mutation
+
+The executor may read/call but MUST NOT modify:
+
+```text
+runtime/semantic/**
+runtime/scene/include/canvas/scene/scene_commit_input.hpp
+runtime/scene/include/canvas/scene/scene_compiler.hpp
+runtime/scene/include/canvas/scene/scene_binding.hpp
+runtime/scene/src/scene_binding.cpp
+runtime/scene/include/canvas/scene/scene.hpp
+runtime/scene/include/canvas/scene/runtime_scene_projection.hpp
+runtime/scene/src/runtime_scene_projection.cpp
+runtime/scene/include/canvas/scene/full_scene_compiler.hpp
+runtime/scene/src/full_scene_compiler.cpp
+runtime/scene/include/canvas/scene/bounds_system.hpp
+runtime/scene/src/bounds_system.cpp
+runtime/scene/include/canvas/scene/scene_impact.hpp
+runtime/scene/src/scene_impact.cpp
+runtime/scene/include/canvas/scene/scene_dependency_graph.hpp
+runtime/scene/src/scene_dependency_graph.cpp
+runtime/scene/include/canvas/scene/scene_record_store.hpp
+runtime/scene/src/scene_record_store.cpp
+runtime/scene/include/canvas/scene/spatial_index.hpp
+runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp
+runtime/scene/src/uniform_grid_spatial_index.cpp
+runtime/scene/include/canvas/scene/linear_spatial_index.hpp
+runtime/scene/src/linear_spatial_index.cpp
+runtime/scene/include/canvas/scene/render_scene.hpp
+runtime/scene/include/canvas/scene/direct_render_scene.hpp
+runtime/scene/src/direct_render_scene.cpp
+```
+
+Also forbidden:
+
+- a second semantic ChangeSet, ObjectKind, validator or apply engine;
+- a second A2 impact-classification/dependency-closure semantics;
+- changing A3 FullSceneCompiler/reference projection to fit incremental output;
+- creating a new semantic alias from `SemanticGeneration` to `SceneRevision`;
+- routing canonical A6 proof through legacy six-kind SceneRecord/IRenderScene state;
+- public production debug/corruption API;
+- Render Core, Tile, GPU/Skia, persistence, sync, schema/wire or platform work;
+- new Product latency/memory SLOs;
+- weakening T02-R07/T02-R08 or adding an 11th final G2 evidence file.
+
+## R07 Blocking Closure
 
 Required CTest identity:
 
@@ -223,22 +286,21 @@ canvas_g2_a6_incremental_equivalence:
   expected_result: PASS
 ```
 
-It qualifies as blocking evidence only when all frozen requirements are satisfied:
+Blocking evidence requires:
 
-- actual integrated A6 coordinator path;
-- actual independent FullSceneCompiler oracle from the same authoritative SemanticReadView;
-- exact canonical observable comparison after every true Applied generation;
-- all nine V1 kinds and every inherited impact family;
-- at least 1000 true Applied revisions per fixed seed;
-- at least three documented fixed seeds;
+- actual authority-conforming A6 canonical RuntimeScene publication path;
+- independent A3 FullSceneCompiler from the same authoritative SemanticReadView;
+- independently authored comparison-only canonicalization of both sides;
+- exact equality after every true Applied generation;
+- all nine V1 kinds and every inherited R07 impact family;
+- >=1000 true Applied generations per fixed seed;
+- >=3 documented fixed seeds;
 - deterministic replay;
-- first mismatch reports seed, step, generation, ObjectId when attributable, and component/field.
+- first-divergence diagnostics: seed, step, generation, ObjectId when attributable, kind, component/field, incremental value, reference value.
 
-The existing single-step coordinator test remains valid partial progress but is not R07 closure until upgraded to this contract.
+The current lossy digest/smoke invocation at `eff48f3…` is preserved progress but is not R07 closure.
 
-## Frozen T02-R08 Atomic Target — Unchanged
-
-`A6_ATOMIC_PUBLICATION_EVIDENCE` remains blocking.
+## R08 Atomic-Publication Blocking Closure
 
 Required CTest identity:
 
@@ -248,22 +310,19 @@ canvas_g2_a6_atomic_publication:
   expected_result: PASS
 ```
 
-P33 must enumerate the **actual required prepare boundaries represented by the final A6 path** and deterministically inject failure before/after each applicable boundary. At minimum the matrix must account for the runtime-record/Scene participant, bounds/recomputation boundary when represented, spatial participant, and render-invalidation/render participant before publication.
-
-For every injected pre-publication failure:
+The final test MUST enumerate the actual authority-conforming participant list and inject deterministic failure at every frozen checkpoint. For every pre-publication failure:
 
 ```yaml
 published_generation_after_failure: MUST_EQUAL_previous_published_generation
-published_observable_projection_after_failure: MUST_EQUAL_previous_projection_byte_for_byte
+canonical_RuntimeScene_after_failure: MUST_EQUAL_previous_published_RuntimeScene
+required_derived_state_after_failure: MUST_EQUAL_previous_published_state
 partial_participant_visibility: FORBIDDEN
 failure_disposition: MUST_BE_EXPLICIT
 ```
 
-Existing render-prepare rejection coverage is accepted partial work, not the complete matrix. If a required boundary cannot be deterministically injected using authorized test/fake surfaces, return `PACKAGE_SCOPE_DIVERGENCE`.
+Legacy render/damage rejection coverage may remain corroborative regression evidence; it does not substitute for the canonical checkpoint matrix.
 
-## Frozen T02-R08 Recovery Target — Unchanged
-
-`A6_RECOVERY_EVIDENCE` remains blocking.
+## R08 Recovery Blocking Closure
 
 Required CTest identity:
 
@@ -273,22 +332,29 @@ canvas_g2_a6_recovery:
   expected_result: PASS
 ```
 
-The recovery matrix must cover:
+Required fixtures:
 
 - dropped or unusable ChangeSet;
 - stale derived state;
 - semantic generation gap;
-- deliberately corrupted derived state using test-only injection surfaces;
-- explicit recovery disposition distinct from incremental success;
-- exact recovered observable projection equality to the independent FullSceneCompiler oracle through the neutral adapter;
-- failed recovery leaves the previously published generation/state unchanged.
+- deliberately corrupted derived state through non-public test access;
+- failed recovery path.
 
-A direct `recover()` smoke test remains valid partial progress but is not blocking closure by itself. If deliberate corruption cannot be exercised without a forbidden production debug API, fail closed rather than expand production scope.
+For every successful recovery:
 
-## Required Predecessor Regressions — Unchanged
+- actual A3 FullSceneCompiler is invoked;
+- recovery materializes canonical RuntimeScene plus required derived state through the production bridge;
+- published recovery generation equals the stable authoritative generation;
+- recovered canonical observable exactly equals the independent test oracle;
+- disposition is explicitly FULL_REBUILD / RECOVERY, never incremental success.
+
+Failed recovery leaves the previous published canonical state unchanged.
+
+## Required Predecessor Regressions
 
 ```text
 canvas_g2_a0_semantic_generation_binding
+canvas_g2_a1_runtime_scene_projection
 canvas_g2_a2_scene_impact
 canvas_g2_a2_dependency_closure
 canvas_g2_a3_full_incremental_equivalence
@@ -298,100 +364,104 @@ canvas_rf01_scene_atomicity
 canvas_rf01_scene_binding
 ```
 
-All must remain PASS at the final result revision. `git diff --check` must remain PASS.
+All MUST PASS at the exact final result revision. `git diff --check` MUST PASS.
 
-## Blocking Evidence — Unchanged
+## Evidence Classification
 
 ```yaml
-A6_INCREMENTAL_EQUIVALENCE_EVIDENCE:
-  obligation: T02-R07
-  blocking: true
-A6_ATOMIC_PUBLICATION_EVIDENCE:
-  obligation: T02-R08
-  blocking: true
-A6_RECOVERY_EVIDENCE:
-  obligation: T02-R08
-  blocking: true
-A6_A2_CONSUMPTION_DIAGNOSTICS:
-  blocking: false
+blocking:
+  - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE   # T02-R07
+  - A6_ATOMIC_PUBLICATION_EVIDENCE        # T02-R08
+  - A6_RECOVERY_EVIDENCE                  # T02-R08
+corroborative:
+  - A6_A2_CONSUMPTION_DIAGNOSTICS
+  - legacy_SceneBinding_render_damage_regressions
 ```
 
-No 11th final G2 evidence file is authorized. `GT-G2-00-ECC-v0.1` remains unchanged.
+No new blocking artifact and no new global evidence-file slot is authorized.
 
-## EXECUTION_CLOSURE_CONTRACT v0.3 — Remaining Work Only
+## EXECUTION_CLOSURE_CONTRACT v0.4
 
 ```yaml
 EXECUTION_CLOSURE_CONTRACT:
   implementation:
-    preserve_completed_work_at: 4a4d00e9bede523fc0989af22b096fc4a592329f
-    required_remaining_changes:
-      - reconcile_source_scope_with_the_accepted_build_wiring_and_atomic_test_surface
-      - add_test_only_independent_FullSceneCompiler_oracle_adapter_if_needed
-      - upgrade_A6_R07_test_from_smoke_test_to_frozen_long_run_independent_oracle_contract
-      - complete_R08_failure_injection_matrix_for_every_actual_required_prepare_boundary
-      - complete_R08_recovery_fixture_matrix_and_exact_full_oracle_comparison
-      - preserve_explicit_incremental_vs_recovery_disposition
+    preserve_completed_work_at: eff48f3b5114a15acdab952eb0be0d2a93c981e0
+    required_changes:
+      - preserve_existing_A6_planning_generation_and_disposition_work_unless_a_verified_defect_requires_change
+      - make_canonical_A1_nine_kind_RuntimeScene_the_blocking_A6_published_scene_observable
+      - add_minimal_RuntimeScene_staging_and_publication_mechanics_for_cross_participant_atomicity
+      - consume_existing_A2_impact_dependency_boundary_for_incremental_affected_work
+      - stage_bounds_and_production_spatial_updates_before_publication
+      - produce_generation_bound_Scene_Core_invalidation_output_without_Render_Core_ownership
+      - add_private_production_FullSceneCompiler_materialization_bridge_and_use_it_for_recovery
+      - add_non_public_coordinator_checkpoint_and_corruption_testability_seam
+      - upgrade_R07_test_to_exact_long_run_nine_kind_independent_oracle_contract
+      - complete_R08_atomic_checkpoint_matrix
+      - complete_R08_recovery_matrix_including_corrupt_state_and_failed_recovery
     forbidden_changes:
-      - replay_or_replace_accepted_A6_coordinator_work_without_a_new_observed_defect
-      - modify_forbidden_production_projection_or_FullSceneCompiler_paths
-      - redefine_semantic_ChangeSet_or_change_kinds
-      - duplicate_A2_impact_or_dependency_engine
-      - weaken_R07_or_R08_or_replace_the_independent_full_oracle
-      - silently_skip_uninjectable_required_participant_boundaries
-      - add_production_debug_api_only_for_test_corruption
+      - replay_from_task_anchor_or_discard_accepted_eff48f3_work_without_verified_defect
+      - modify_A2_A3_A4_A5_algorithm_authority_or_semantic_truth
+      - modify_FullSceneCompiler_or_reference_projection_to_match_incremental_output
+      - make_legacy_SceneBinding_or_six_kind_SceneRecord_the_canonical_A6_truth
+      - public_production_debug_or_corruption_API
+      - weaken_R07_or_R08_or_reduce_corpus_strength
+      - silently_skip_required_checkpoint_or_recovery_fixture
       - add_new_global_G2_evidence_file_slot
 
   tests:
     required:
       - id: A6_R07_EQUIVALENCE
-        command_or_oracle: ctest canvas_g2_a6_incremental_equivalence using actual A6 coordinator and independent FullSceneCompiler adapter
+        command_or_oracle: ctest canvas_g2_a6_incremental_equivalence against independent A3 FullSceneCompiler after every Applied generation
         expected_result: PASS
-        blocking_reason: T02-R07 requires end-to-end drift detection after every Applied generation over the frozen corpus
+        blocking_reason: T02-R07 integrated drift/kind-loss has no other end-to-end independent detector
       - id: A6_R08_ATOMIC_PUBLICATION
-        command_or_oracle: ctest canvas_g2_a6_atomic_publication with deterministic failure injection across every final required prepare boundary
+        command_or_oracle: ctest canvas_g2_a6_atomic_publication with every frozen coordinator checkpoint injected
         expected_result: PASS
-        blocking_reason: T02-R08 requires proof that no half-published generation is observable
+        blocking_reason: T02-R08 cross-participant half-publish is only detected at the A6 transaction boundary
       - id: A6_R08_RECOVERY
-        command_or_oracle: ctest canvas_g2_a6_recovery with dropped/stale/gap/corrupt/failed-recovery fixtures and independent full oracle
+        command_or_oracle: ctest canvas_g2_a6_recovery with dropped/stale/gap/corrupt/failed-recovery fixtures and actual production recovery bridge
         expected_result: PASS
-        blocking_reason: T02-R08 recovery orchestration is A6-owned
+        blocking_reason: T02-R08 recovery orchestration/materialization is A6-owned
       - id: A6_PREDECESSOR_REGRESSION_MATRIX
-        command_or_oracle: run the frozen predecessor CTest identities listed above
+        command_or_oracle: run all predecessor CTest identities frozen above
         expected_result: PASS
-        blocking_reason: A6 must not regress consumed A0-A5 contracts
+        blocking_reason: A6 must preserve consumed A0-A5 and RF-01 contracts
       - id: SOURCE_HYGIENE
         command_or_oracle: git diff --check
         expected_result: PASS
-        blocking_reason: final result must remain reviewable and clean
+        blocking_reason: final source must remain reviewer-clean
 
   hosted_verification:
     required: []
     optional:
-      - existing repository CI on the exact final result revision when available
+      - existing repository CI on exact final result revision when available
 
   evidence:
     blocking:
-      - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE -> T02-R07
-      - A6_ATOMIC_PUBLICATION_EVIDENCE -> T02-R08
-      - A6_RECOVERY_EVIDENCE -> T02-R08
+      - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE
+      - A6_ATOMIC_PUBLICATION_EVIDENCE
+      - A6_RECOVERY_EVIDENCE
     corroborative:
       - A6_A2_CONSUMPTION_DIAGNOSTICS
-      - A6_FOCUSED_EXISTING_SCENE_REGRESSIONS
+      - legacy_SceneBinding_render_damage_regressions
 
   durable_result_boundary:
     repository_branch_must_be_pushed: codex/gt-g2-a6-incremental-runtime-coordination
     exact_result_revision_required: true
     reviewer_resolvable_source_required: true
     package_materialization_must_be_resolvable_before_resume: true
+    hosted_CI_not_required_by_this_A6_package: true
     official_Gate_PASS_forbidden_in_execution_return: true
 
   terminal_success:
     all_of:
-      - accepted_partial_work_preserved_or_superseded_only_by_a_new_verified_defect
-      - actual_final_changed_paths_conform_to_P31_v0_3
-      - A6_R07_frozen_blocking_evidence_closed
-      - A6_R08_atomic_frozen_blocking_evidence_closed
-      - A6_R08_recovery_frozen_blocking_evidence_closed
+      - accepted_eff48f3_partial_work_preserved_except_where_directly_reconciled_to_v0_3_Authority
+      - final_changed_paths_conform_to_P31_v0_4_allowlist
+      - canonical_A1_RuntimeScene_is_actual_A6_published_observable
+      - recovery_materially_uses_independent_A3_FullSceneCompiler_result
+      - A6_R07_blocking_evidence_closed
+      - A6_R08_atomic_blocking_evidence_closed
+      - A6_R08_recovery_blocking_evidence_closed
       - predecessor_regression_matrix_PASS
       - git_diff_check_PASS
       - exact_final_result_revision_pushed_and_reviewer_resolvable
@@ -406,43 +476,48 @@ EXECUTION_CLOSURE_CONTRACT:
       - NEW_HIGH_IMPACT_FAILURE_MODE
       - PACKAGE_SCOPE_DIVERGENCE
       - BLOCKED_REPOSITORY_IDENTITY
-      - BLOCKED_EVIDENCE
+      - BLOCKED_EXECUTION_DIVERGENCE
 
   return_policy:
     continue_until_terminal_state: true
 ```
 
-## P33 Resume Policy
+## P33 Entry Preflight
 
-After this package is materialized, the branch will contain a package-only descendant of the accepted cursor. P33 must use ancestry and classify the observed position rather than require historical HEAD equality.
+Before source mutation P33 MUST:
 
-```yaml
-expected_resume_classification: DESCENDANT_CURSOR
-accepted_cursor_revision: 4a4d00e9bede523fc0989af22b096fc4a592329f
-allowed_descendant_before_resume: package_materialization_only
-```
+1. resolve repository identity `github / Mostorm-Labs/axiom`;
+2. resolve this exact same-repository package materialization commit;
+3. verify task anchor `4faf351f…` and accepted cursor `eff48f3…` ancestry;
+4. verify the descendant delta after `eff48f3…` is package-materialization-only;
+5. run PackageBindingPreflight against P15/P16/P20 v0.3 and the exact Verification bindings above;
+6. run EvidenceContractPreflight for the three blocking A6 evidence obligations;
+7. verify there is no unauthorized source delta before mutation.
 
-P33 must first verify that the delta after the accepted cursor is only this v0.3 package materialization. It then resumes at the first incomplete frozen proof item and does not replay completed coordinator work.
+Expected resume classification after package-only materialization: `DESCENDANT_CURSOR`.
+
+A floating `latest`, superseded Authority/P20/P31 ref, unresolved package ref, or non-package source delta before P33 is fail-closed.
 
 ## Return Contract After Resumed Execution
 
-A successful resumed execution return must carry exact identities:
-
 ```yaml
 task_id: GT-G2-00-A6
-status: READY_FOR_CONTROL_REVIEW
-package_ref: notion://3db4c57a-590c-813b-a3d9-c5b64984b6be/GT-G2-00-A6-P31-v0.3
-package_materialization_ref: EXACT_THIS_COMMIT
-resume_cursor_used: 4a4d00e9bede523fc0989af22b096fc4a592329f
+status: READY_FOR_CONTROL_REVIEW | BLOCKED
+package_ref: notion://3db4c57a-590c-81c5-8775-cf70fdb62788/GT-G2-00-A6-P31-v0.4
+package_materialization_ref: EXACT_V0_4_MATERIALIZATION_SHA
+resume_cursor_used: eff48f3b5114a15acdab952eb0be0d2a93c981e0
 actual_resumed_starting_revision: EXACT_SHA
 result_revision: EXACT_SHA
 execution_branch: codex/gt-g2-a6-incremental-runtime-coordination
+repository_mutation_scope_conformed: true | false
 blocking_evidence:
-  - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE
-  - A6_ATOMIC_PUBLICATION_EVIDENCE
-  - A6_RECOVERY_EVIDENCE
-repository_mutation_scope_conformed: true
+  A6_INCREMENTAL_EQUIVALENCE_EVIDENCE: PASS | FAIL | NOT_RUN
+  A6_ATOMIC_PUBLICATION_EVIDENCE: PASS | FAIL | NOT_RUN
+  A6_RECOVERY_EVIDENCE: PASS | FAIL | NOT_RUN
+predecessor_regressions: PASS | FAIL | NOT_RUN
+git_diff_check: PASS | FAIL | NOT_RUN
+terminal_blocker: null | EXPLICIT_CLASS
 next_surface: CONTROL_REVIEW
 ```
 
-P33/P32 execution must not emit official P34 PASS.
+P33/P32 execution MUST NOT emit or imply official P34 PASS.
