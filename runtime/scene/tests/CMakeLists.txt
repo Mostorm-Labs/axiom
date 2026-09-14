@@ -100,7 +100,9 @@ target_link_libraries(canvas_g2_a4_scene_delta_test PRIVATE canvas_runtime_scene
 target_compile_features(canvas_g2_a4_scene_delta_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a4_scene_delta COMMAND canvas_g2_a4_scene_delta_test)
 
-add_executable(canvas_g2_a6_incremental_equivalence incremental_runtime_coordinator_test.cpp)
+add_executable(canvas_g2_a6_incremental_equivalence
+    incremental_runtime_coordinator_test.cpp
+    incremental_runtime_full_oracle_adapter.cpp)
 target_link_libraries(canvas_g2_a6_incremental_equivalence
     PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
 target_compile_features(canvas_g2_a6_incremental_equivalence PRIVATE cxx_std_20)

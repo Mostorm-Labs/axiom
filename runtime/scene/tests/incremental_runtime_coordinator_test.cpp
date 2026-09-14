@@ -2,11 +2,16 @@
 #include "canvas/scene/testing/fake_render_scene.hpp"
 #include "canvas/scene/testing/fake_spatial_index.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "incremental_runtime_full_oracle_adapter.hpp"
 
 #include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <optional>
+
+// The independent FullSceneCompiler projection family is intentionally kept
+// out of this translation unit; its test-only adapter is exercised by the
+// standalone A6 oracle target once the production name collision is resolved.
 
 namespace {
 canvas::SceneRecord record(std::uint64_t id) {
@@ -60,6 +65,11 @@ class Compiler final : public canvas::ISemanticSceneCompiler {
 int main() {
     canvas::semantic::ReferenceObjectStore store;
     const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(1));
+    const auto oracle = canvas::testing::compileFullOracle(view);
+    if (!oracle.valid || oracle.generation != 1 || oracle.objectCount != 0) {
+        std::cerr << "independent oracle adapter failed\n";
+        return EXIT_FAILURE;
+    }
     const auto changes = canvas::semantic::ChangeSet::fromChanges(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), {});
     canvas::RuntimeUpdatePlan defaultPlan;
