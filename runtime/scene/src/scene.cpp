@@ -225,6 +225,7 @@ void Scene::publishStagedSnapshot() noexcept {
     _publishedBounds = _pendingBounds;
     _invalidationGeneration = _pendingInvalidationGeneration;
     _publishedSemanticGeneration = _pendingSemanticGeneration;
+    _semanticGeneration = _pendingSemanticGeneration;
     _publishedInvalidation = std::move(_pendingInvalidation);
     _pendingBoundsStaged = false;
 }
@@ -451,13 +452,16 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
         }
-        auto damageResult = _damageTracker.prepareApply(delta);
-        if (!damageResult) {
-            return foundation::Result<SceneApplyReceipt>::failure(damageResult.error());
-        }
+        const DamageSet stagedDamage = damageForDelta(delta);
+        _pendingInvalidation = SceneInvalidationOutput{
+            delta.afterRevision, stagedDamage.rects, false};
         if (checkpoint != nullptr && checkpoint(checkpointContext, 7U)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
+        }
+        auto damageResult = _damageTracker.prepareApply(delta);
+        if (!damageResult) {
+            return foundation::Result<SceneApplyReceipt>::failure(damageResult.error());
         }
         SceneApplyReceipt receipt{
             .beforeRevision = delta.beforeRevision,
@@ -503,7 +507,8 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
         }
         _pendingInvalidationGeneration = delta.afterRevision;
         _pendingSemanticGeneration = semantic::SemanticGeneration(delta.afterRevision.value());
-        _pendingInvalidation = SceneInvalidationOutput{delta.afterRevision, receipt.damage.rects, false};
+        // The generation-bound invalidation payload was staged inside the
+        // canonical invalidation checkpoint pair above.
         _commitDiagnostics.revisionStage = ++stage;
         // All participant commits have completed.  The coordinator closes the
         // shared publication gate only after this point, so observers cannot
@@ -603,6 +608,11 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
 }
 
 foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) const {
+    if (_publicationGate != nullptr && _publicationGate->transactionActive) {
+        return foundation::Result<HitTestResult>::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected,
+            "HitTest deferred while Scene publication is active"));
+    }
     if (!std::isfinite(request.worldPoint.x) || !std::isfinite(request.worldPoint.y) ||
         !std::isfinite(request.tolerance) || request.tolerance < 0.0F ||
         request.maximumResults == 0U || !hasKnownHitKinds(request.filter.kinds)) {
@@ -687,6 +697,11 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
 }
 
 foundation::Result<SceneDrawList> Scene::buildDrawList(const SceneQueryResult& visible) const {
+    if (_publicationGate != nullptr && _publicationGate->transactionActive) {
+        return foundation::Result<SceneDrawList>::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected,
+            "Draw-list construction deferred while Scene publication is active"));
+    }
     if (visible.revision != _revision) {
         return foundation::Result<SceneDrawList>::failure(
             makeError(foundation::ErrorCode::kInvalidRevision, "Scene query result is stale"));
@@ -696,6 +711,11 @@ foundation::Result<SceneDrawList> Scene::buildDrawList(const SceneQueryResult& v
 
 foundation::Result<SceneFrameInput> Scene::buildFrame(const SceneQuery& request,
                                                        SceneRevision afterExclusive) const {
+    if (_publicationGate != nullptr && _publicationGate->transactionActive) {
+        return foundation::Result<SceneFrameInput>::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected,
+            "Frame construction deferred while Scene publication is active"));
+    }
     if (afterExclusive > _revision) {
         return foundation::Result<SceneFrameInput>::failure(makeError(
             foundation::ErrorCode::kInvalidRevision,

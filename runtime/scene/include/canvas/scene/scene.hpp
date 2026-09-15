@@ -129,8 +129,17 @@ class Scene final {
     void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
     bool stagePublicationSnapshot(std::span<const SceneRecord> records);
     void publishStagedSnapshot() noexcept;
+    void clearPendingPublication() noexcept {
+        _stagedPublishedRecords.clear();
+        _pendingInvalidation = {};
+        _pendingBoundsStaged = false;
+    }
     void stageBounds(WorldRect bounds, SceneRevision revision) noexcept {
-        _pendingBounds = bounds;
+        if (!_pendingBoundsStaged) {
+            _pendingBounds = bounds;
+        } else {
+            _pendingBounds = foundation::unionRects(_pendingBounds, bounds);
+        }
         _pendingInvalidationGeneration = revision;
         _pendingBoundsStaged = true;
     }

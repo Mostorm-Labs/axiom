@@ -52,6 +52,20 @@ void IncrementalRuntimeCoordinator::observePublication(void* context) noexcept {
             observed.revision() != self->publicationGate_.previousRevision) {
             self->publicationObservationCoherent_ = false;
         }
+        const auto hit = self->binding_._scene.hitTest(
+            HitTestRequest{WorldPoint{0.0F, 0.0F}, 0.0F, HitTestFilter{}, 1U});
+        if (hit || hit.error().code != foundation::ErrorCode::kParticipantRejected) {
+            self->publicationObservationCoherent_ = false;
+        }
+        const auto query = self->binding_._scene.query(SceneQuery{WorldRect{-1.0F, -1.0F, 1.0F, 1.0F}});
+        if (!query) {
+            self->publicationObservationCoherent_ = false;
+        } else {
+            const auto draw = self->binding_._scene.buildDrawList(query.value());
+            if (draw || draw.error().code != foundation::ErrorCode::kParticipantRejected) {
+                self->publicationObservationCoherent_ = false;
+            }
+        }
     }
 }
 
@@ -60,6 +74,7 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
     if (self != nullptr && self->pendingPublication_.has_value()) {
         self->runtimeScene_.publish(std::move(*self->pendingPublication_));
         self->pendingPublication_.reset();
+        self->binding_._scene.stageSemanticGeneration(self->pendingGeneration_);
         self->binding_._scene.publishStagedSnapshot();
         self->publicationGate_.transactionActive = false;
         self->publicationGate_.observation = nullptr;
@@ -169,9 +184,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"});
     }
-    binding_._scene.stageInvalidation(SceneInvalidationOutput{
-        SceneRevision(input.after_generation.value()), {}, false});
-    binding_._scene.finalizeInvalidation(SceneRevision(input.after_generation.value()));
+    // The canonical Scene transaction finalizes the actual generation-bound
+    // payload; this checkpoint pair is retained as the coordinator boundary.
     if (checkpointFails(RuntimeCheckpoint::kAfterInvalidationFinalization)) {
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"});
@@ -198,6 +212,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     }
 
     pendingPublication_.reset();
+    binding_._scene.clearPendingPublication();
     publicationGate_.transactionActive = false;
 
     // An unsafe/unsupported incremental continuation is explicitly recovered
