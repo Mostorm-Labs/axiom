@@ -58,6 +58,9 @@ class IncrementalRuntimeCoordinator final {
     [[nodiscard]] const RuntimeScene& runtimeScene() const noexcept {
         return runtimeScene_;
     }
+    [[nodiscard]] bool publicationObservationCoherent() const noexcept {
+        return publicationObservationCoherent_;
+    }
 
   private:
     friend class IncrementalRuntimeTestAccess;
@@ -74,6 +77,7 @@ class IncrementalRuntimeCoordinator final {
     }
     static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
     static void publishPending(void* context) noexcept;
+    static void observePublication(void* context) noexcept;
 
     SceneBinding& binding_;
     RuntimeScene runtimeScene_;
@@ -82,6 +86,8 @@ class IncrementalRuntimeCoordinator final {
     ScenePublicationGate publicationGate_;
     semantic::SemanticGeneration pendingGeneration_{};
     SceneRevision pendingRevision_{};
+    std::uint64_t publicationObservations_ = 0;
+    bool publicationObservationCoherent_ = true;
 };
 
 } // namespace canvas

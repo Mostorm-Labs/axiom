@@ -26,11 +26,14 @@ class IncrementalRuntimeCoordinator;
 // observers continue to see the last published generation until the
 // coordinator closes the epoch.
 struct ScenePublicationGate final {
+    using ObservationFn = void (*)(void*) noexcept;
     semantic::SemanticGeneration previousGeneration{};
     foundation::SceneRevision previousRevision{};
     foundation::SceneRevision revision{};
     semantic::SemanticGeneration generation{};
     bool transactionActive = false;
+    ObservationFn observation = nullptr;
+    void* observationContext = nullptr;
 };
 
 using foundation::ContentRevision;

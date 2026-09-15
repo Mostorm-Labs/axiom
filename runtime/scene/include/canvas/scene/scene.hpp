@@ -73,7 +73,12 @@ class Scene final {
                    ? _publicationGate->previousGeneration : _semanticGeneration;
     }
     [[nodiscard]] SceneReadView read() const {
-        return SceneReadView(_revision, _records.records());
+        if (_publicationGate != nullptr && _publicationGate->transactionActive &&
+            _publishedSnapshotValid) {
+            return SceneReadView(_publicationGate->previousRevision, _publishedRecords);
+        }
+        return SceneReadView(_revision, _publishedSnapshotValid ? std::span<const SceneRecord>(_publishedRecords)
+                                                                  : _records.records());
     }
 
     foundation::Result<SceneApplyReceipt> replace(CompiledSceneSnapshot snapshot);
@@ -88,6 +93,11 @@ class Scene final {
     [[nodiscard]] DamageSet collectDamage(SceneRevision afterExclusive,
                                           SceneRevision throughInclusive) const;
     void compactDamageThrough(SceneRevision revision);
+
+    [[nodiscard]] WorldRect publishedBounds() const noexcept { return _publishedBounds; }
+    [[nodiscard]] SceneRevision invalidationGeneration() const noexcept {
+        return _invalidationGeneration;
+    }
 
     foundation::Result<SceneApplyReceipt> replace(const SceneCommitInput& input,
                                                   CompiledSceneSnapshot snapshot);
@@ -108,6 +118,15 @@ class Scene final {
     friend class IncrementalRuntimeCoordinator;
 
     void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
+    bool stagePublicationSnapshot(std::span<const SceneRecord> records);
+    void publishStagedSnapshot() noexcept;
+    void stageBounds(WorldRect bounds, SceneRevision revision) noexcept {
+        _pendingBounds = bounds;
+        _pendingInvalidationGeneration = revision;
+    }
+    void finalizeInvalidation(SceneRevision revision) noexcept {
+        _pendingInvalidationGeneration = revision;
+    }
 
     foundation::Result<SceneApplyReceipt> applyPreparedDelta(
         CompiledSceneDelta delta,
@@ -124,6 +143,13 @@ class Scene final {
     semantic::SemanticGeneration _semanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
     ScenePublicationGate* _publicationGate = nullptr;
+    std::vector<SceneRecord> _publishedRecords;
+    std::vector<SceneRecord> _stagedPublishedRecords;
+    bool _publishedSnapshotValid = false;
+    WorldRect _publishedBounds{};
+    SceneRevision _invalidationGeneration{};
+    WorldRect _pendingBounds{};
+    SceneRevision _pendingInvalidationGeneration{};
 };
 
 } // namespace canvas

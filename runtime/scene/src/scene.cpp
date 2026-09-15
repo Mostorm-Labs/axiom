@@ -210,6 +210,22 @@ Scene::Scene(std::unique_ptr<IRenderScene> renderScene, std::unique_ptr<ISpatial
     assert(_spatialIndex != nullptr);
 }
 
+bool Scene::stagePublicationSnapshot(std::span<const SceneRecord> records) {
+    try {
+        _stagedPublishedRecords.assign(records.begin(), records.end());
+        return true;
+    } catch (const std::bad_alloc&) {
+        return false;
+    }
+}
+
+void Scene::publishStagedSnapshot() noexcept {
+    _publishedRecords.swap(_stagedPublishedRecords);
+    _publishedSnapshotValid = true;
+    _publishedBounds = _pendingBounds;
+    _invalidationGeneration = _pendingInvalidationGeneration;
+}
+
 foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snapshot) {
     if (snapshot.sourceRevision.isZero() || snapshot.sourceRevision <= _revision) {
         return foundation::Result<SceneApplyReceipt>::failure(makeError(
@@ -271,19 +287,39 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
                 },
         };
 
+        if (!stagePublicationSnapshot(preparedRecords.records())) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
+        }
+
         _commitDiagnostics = SceneCommitDiagnostics{
             .transactionCount = _commitDiagnostics.transactionCount + 1,
         };
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _renderScene->commit(std::move(renderResult.value()));
         _commitDiagnostics.renderSceneStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _spatialIndex->commit(std::move(spatialResult.value()));
         _commitDiagnostics.spatialIndexStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _damageTracker.commit(std::move(damageResult.value()));
         _commitDiagnostics.damageStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _revision = snapshot.sourceRevision;
+        _pendingBounds = newContentBounds;
+        _pendingInvalidationGeneration = snapshot.sourceRevision;
+        publishStagedSnapshot();
         _commitDiagnostics.revisionStage = ++stage;
         return foundation::Result<SceneApplyReceipt>::success(std::move(receipt));
     } catch (const std::bad_alloc&) {
@@ -334,6 +370,36 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
     SceneRecordStore::PreparedUpdate preparedRecords = std::move(recordsResult.value());
 
     try {
+        std::vector<SceneRecord> stagedRecords;
+        auto currentRecords = _records.materializeSnapshot();
+        if (!currentRecords) {
+            return foundation::Result<SceneApplyReceipt>::failure(currentRecords.error());
+        }
+        stagedRecords = std::move(currentRecords.value());
+        for (const auto& mutation : delta.mutations) {
+            auto it = std::find_if(stagedRecords.begin(), stagedRecords.end(),
+                                   [&](const SceneRecord& record) {
+                                       return record.objectId == mutation.objectId;
+                                   });
+            if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
+                stagedRecords.push_back(*mutation.after);
+            } else if (mutation.kind == SceneMutationKind::kUpdate && mutation.after &&
+                       it != stagedRecords.end()) {
+                *it = *mutation.after;
+            } else if (mutation.kind == SceneMutationKind::kRemove && it != stagedRecords.end()) {
+                stagedRecords.erase(it);
+            }
+        }
+        std::sort(stagedRecords.begin(), stagedRecords.end(), [](const SceneRecord& a,
+                                                                 const SceneRecord& b) {
+            return a.orderKey < b.orderKey ||
+                   (a.orderKey == b.orderKey && a.objectId < b.objectId);
+        });
+        if (!stagePublicationSnapshot(stagedRecords)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
+        }
+        const WorldRect newContentBounds = preparedRecords.contentBounds();
         const SceneDelta runtimeDelta = makeSceneDelta(delta);
         if (checkpoint != nullptr && checkpoint(checkpointContext, 2U)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
@@ -407,18 +473,36 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _renderScene->commit(std::move(renderResult.value()));
         _commitDiagnostics.renderSceneStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _spatialIndex->commit(std::move(spatialResult.value()));
         _commitDiagnostics.spatialIndexStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _damageTracker.commit(std::move(damageResult.value()));
         _commitDiagnostics.damageStage = ++stage;
+        if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
+            _publicationGate->observation(_publicationGate->observationContext);
+        }
         _revision = delta.afterRevision;
+        _pendingBounds = newContentBounds;
+        _pendingInvalidationGeneration = delta.afterRevision;
         _commitDiagnostics.revisionStage = ++stage;
         // All participant commits have completed.  The coordinator closes the
         // shared publication gate only after this point, so observers cannot
         // observe a mixed generation while compatibility participants commit.
-        if (publish != nullptr) publish(publishContext);
+        if (publish != nullptr) {
+            publish(publishContext);
+        } else {
+            publishStagedSnapshot();
+        }
         return foundation::Result<SceneApplyReceipt>::success(std::move(receipt));
     } catch (const std::bad_alloc&) {
         return foundation::Result<SceneApplyReceipt>::failure(
@@ -448,6 +532,26 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
     if (!request.worldRect.isFiniteAndOrdered()) {
         return foundation::Result<SceneQueryResult>::failure(
             makeError(foundation::ErrorCode::kInvalidArgument, "Scene query bounds are invalid"));
+    }
+    if (_publicationGate != nullptr && _publicationGate->transactionActive &&
+        _publishedSnapshotValid) {
+        try {
+            SceneQueryResult result{
+                .revision = _publicationGate->previousRevision,
+                .backToFront = {},
+                .diagnostics = {},
+            };
+            for (const auto& record : _publishedRecords) {
+                if (isVisible(record) && record.worldBounds.intersects(request.worldRect)) {
+                    result.backToFront.push_back(record.objectId);
+                }
+            }
+            result.diagnostics.visibleRecords = result.backToFront.size();
+            return foundation::Result<SceneQueryResult>::success(std::move(result));
+        } catch (const std::bad_alloc&) {
+            return foundation::Result<SceneQueryResult>::failure(
+                makeError(foundation::ErrorCode::kOutOfMemory, "Scene query could not allocate"));
+        }
     }
     auto spatialResult = _spatialIndex->query(request.worldRect);
     if (!spatialResult) {

@@ -102,8 +102,18 @@ int main() {
     // prepare, before any participant is published.
     renderRaw->setRejectPrepare(true);
     const auto rejected = coordinator.apply(Compiler{}, input);
-    return !rejected && rejected.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
-                   scene.revision() == beforeRevision &&
-                   coordinator.runtimeScene().generation() == beforeRuntimeGeneration
-               ? EXIT_SUCCESS : EXIT_FAILURE;
+    if (rejected || rejected.error().code != canvas::foundation::ErrorCode::kParticipantRejected ||
+        scene.revision() != beforeRevision ||
+        coordinator.runtimeScene().generation() != beforeRuntimeGeneration) {
+        return EXIT_FAILURE;
+    }
+
+    // A successful transaction invokes observers after each participant commit;
+    // every observation must still resolve to the prior published snapshot
+    // until the single publication callback closes the epoch.
+    renderRaw->setRejectPrepare(false);
+    const auto applied = coordinator.apply(Compiler{}, input);
+    return applied && coordinator.publicationObservationCoherent()
+               ? EXIT_SUCCESS
+               : EXIT_FAILURE;
 }
