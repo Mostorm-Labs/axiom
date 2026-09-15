@@ -70,6 +70,31 @@ int main() {
         scene.revision() != canvas::SceneRevision(3)) {
         return EXIT_FAILURE;
     }
+    auto gapRender = std::make_unique<canvas::testing::FakeRenderScene>();
+    auto* gapRenderRaw = gapRender.get();
+    canvas::Scene gapFailureScene(std::move(gapRender),
+                                  std::make_unique<canvas::testing::FakeSpatialIndex>());
+    canvas::SceneBinding gapFailureBinding(gapFailureScene);
+    canvas::IncrementalRuntimeCoordinator gapFailureCoordinator(gapFailureBinding);
+    const canvas::semantic::SemanticReadView gapSeedView(
+        store, canvas::semantic::SemanticGeneration(1));
+    if (!gapFailureCoordinator.recover(
+            Compiler{}, canvas::SceneCommitInput(canvas::semantic::SemanticGeneration(1), gapSeedView))) {
+        return EXIT_FAILURE;
+    }
+    gapRenderRaw->setRejectPrepare(true);
+    const auto failedGap = gapFailureCoordinator.apply(Compiler{}, gapInput);
+    if (failedGap || gapFailureScene.revision() != canvas::SceneRevision(1) ||
+        gapFailureScene.semanticGeneration() != canvas::semantic::SemanticGeneration(1) ||
+        gapFailureCoordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(1)) {
+        return EXIT_FAILURE;
+    }
+    gapRenderRaw->setRejectPrepare(false);
+    const auto recoveredGap = gapFailureCoordinator.apply(Compiler{}, gapInput);
+    if (!recoveredGap || gapFailureScene.revision() != canvas::SceneRevision(3) ||
+        gapFailureCoordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(3)) {
+        return EXIT_FAILURE;
+    }
     // A dropped ChangeSet enters the same explicit full-recovery policy.
     canvas::Scene droppedScene(std::make_unique<canvas::testing::FakeRenderScene>(),
                                std::make_unique<canvas::testing::FakeSpatialIndex>());

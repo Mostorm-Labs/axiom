@@ -129,30 +129,14 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     }
     if (input.changes->beforeGeneration() != runtimeScene_.generation()) {
         SceneCommitInput recoveryInput(input.after_generation, input.post_state);
-        auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
-        if (!recoveryMaterialized) return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
-        auto recoveryPrepared = runtimeScene_.prepare(
-            projectionFromMaterialized(std::move(recoveryMaterialized.value())));
-        if (!recoveryPrepared) return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
-        auto recovered = binding_.rebuild(compiler, recoveryInput);
-        if (!recovered) return recovered;
-        runtimeScene_.publish(std::move(recoveryPrepared.value()));
-        return recovered;
+        return recover(compiler, recoveryInput);
     }
     const auto updatePlan = plan(input.post_state, *input.changes);
     if (!updatePlan) {
         if (updatePlan.error().code == foundation::ErrorCode::kInvalidRevision &&
             input.post_state.generation() > runtimeScene_.generation()) {
             SceneCommitInput recoveryInput(input.after_generation, input.post_state);
-            auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
-            if (!recoveryMaterialized) return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
-            auto recoveryPrepared = runtimeScene_.prepare(
-                projectionFromMaterialized(std::move(recoveryMaterialized.value())));
-            if (!recoveryPrepared) return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
-            auto recovered = binding_.rebuild(compiler, recoveryInput);
-            if (!recovered) return recovered;
-            runtimeScene_.publish(std::move(recoveryPrepared.value()));
-            return recovered;
+            return recover(compiler, recoveryInput);
         }
         return foundation::Result<SceneSyncReceipt>::failure(updatePlan.error());
     }
@@ -224,20 +208,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     // through the independent full compiler path. The recovery receipt is
     // distinguishable and never reported as incremental success.
     const SceneCommitInput recoveryInput(input.after_generation, input.post_state);
-    auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
-    if (!recoveryMaterialized) {
-        return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
-    }
-    auto recoveryPrepared = runtimeScene_.prepare(
-        projectionFromMaterialized(std::move(recoveryMaterialized.value())));
-    if (!recoveryPrepared) {
-        return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
-    }
-    auto recovered = binding_.rebuild(compiler, recoveryInput);
-    if (!recovered) {
-        return recovered;
-    }
-    runtimeScene_.publish(std::move(recoveryPrepared.value()));
+    auto recovered = recover(compiler, recoveryInput);
+    if (!recovered) return recovered;
     auto receipt = std::move(recovered.value());
     receipt.incrementalFailure = incremental.error();
     return foundation::Result<SceneSyncReceipt>::success(std::move(receipt));
@@ -277,12 +249,12 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
         abortPublication();
         return result;
     }
+    binding_._scene.stageSemanticGeneration(input.after_generation);
+    binding_._scene.publishStagedSnapshot();
     runtimeScene_.publish(std::move(runtimePrepared.value()));
     publicationGate_.transactionActive = false;
     publicationGate_.observation = nullptr;
     publicationGate_.observationContext = nullptr;
-    binding_._scene.stageSemanticGeneration(input.after_generation);
-    binding_._scene.publishStagedSnapshot();
     return result;
 }
 
