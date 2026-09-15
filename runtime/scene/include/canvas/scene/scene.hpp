@@ -81,7 +81,7 @@ class Scene final {
     [[nodiscard]] SceneReadView read() const {
         if (_publicationGate != nullptr && _publicationGate->transactionActive &&
             _publishedSnapshotValid) {
-            return SceneReadView(_publicationGate->previousRevision, _publishedRecords);
+            return SceneReadView(_publicationGate->previousRevision, _stablePublishedRecords);
         }
         return SceneReadView(_revision, _publishedSnapshotValid ? std::span<const SceneRecord>(_publishedRecords)
                                                                   : _records.records());
@@ -100,12 +100,17 @@ class Scene final {
                                           SceneRevision throughInclusive) const;
     void compactDamageThrough(SceneRevision revision);
 
-    [[nodiscard]] WorldRect publishedBounds() const noexcept { return _publishedBounds; }
+    [[nodiscard]] WorldRect publishedBounds() const noexcept {
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stablePublishedBounds : _publishedBounds;
+    }
     [[nodiscard]] SceneRevision invalidationGeneration() const noexcept {
-        return _invalidationGeneration;
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stableInvalidationGeneration : _invalidationGeneration;
     }
     [[nodiscard]] const SceneInvalidationOutput& invalidationOutput() const noexcept {
-        return _publishedInvalidation;
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stablePublishedInvalidation : _publishedInvalidation;
     }
 
     foundation::Result<SceneApplyReceipt> replace(const SceneCommitInput& input,
@@ -170,11 +175,15 @@ class Scene final {
     SceneCommitDiagnostics _commitDiagnostics;
     ScenePublicationGate* _publicationGate = nullptr;
     std::vector<SceneRecord> _publishedRecords;
+    std::vector<SceneRecord> _stablePublishedRecords;
     std::vector<SceneRecord> _stagedPublishedRecords;
     bool _publishedSnapshotValid = false;
     WorldRect _publishedBounds{};
+    WorldRect _stablePublishedBounds{};
     SceneRevision _invalidationGeneration{};
+    SceneRevision _stableInvalidationGeneration{};
     SceneInvalidationOutput _publishedInvalidation{};
+    SceneInvalidationOutput _stablePublishedInvalidation{};
     SceneInvalidationOutput _pendingInvalidation{};
     semantic::SemanticGeneration _pendingSemanticGeneration{};
     bool _pendingBoundsStaged = false;

@@ -78,6 +78,9 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
         self->pendingPublication_.reset();
         self->binding_._scene.stageSemanticGeneration(self->pendingGeneration_);
         self->binding_._scene.publishStagedSnapshot();
+        if (self->publicationGate_.observation != nullptr) {
+            self->publicationGate_.observation(self->publicationGate_.observationContext);
+        }
         self->publicationGate_.transactionActive = false;
         self->publicationGate_.observation = nullptr;
         self->publicationGate_.observationContext = nullptr;
@@ -252,6 +255,9 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     binding_._scene.stageSemanticGeneration(input.after_generation);
     binding_._scene.publishStagedSnapshot();
     runtimeScene_.publish(std::move(runtimePrepared.value()));
+    if (publicationGate_.observation != nullptr) {
+        publicationGate_.observation(publicationGate_.observationContext);
+    }
     publicationGate_.transactionActive = false;
     publicationGate_.observation = nullptr;
     publicationGate_.observationContext = nullptr;

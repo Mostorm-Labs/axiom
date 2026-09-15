@@ -183,6 +183,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
 }
 
 void RuntimeScene::publish(PreparedPublication publication) noexcept {
+    _stableProjection = std::move(_projection);
     _projection = std::move(publication.projection);
 }
 
@@ -220,6 +221,10 @@ bool Scene::stagePublicationSnapshot(std::span<const SceneRecord> records) {
 }
 
 void Scene::publishStagedSnapshot() noexcept {
+    _stablePublishedRecords = std::move(_publishedRecords);
+    _stablePublishedBounds = _publishedBounds;
+    _stableInvalidationGeneration = _invalidationGeneration;
+    _stablePublishedInvalidation = _publishedInvalidation;
     _publishedRecords.swap(_stagedPublishedRecords);
     _publishedSnapshotValid = true;
     _publishedBounds = _pendingBounds;
