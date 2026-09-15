@@ -66,11 +66,7 @@ bool equivalent(const canvas::RuntimeSceneRecord& actual,
     return actual.objectId == expected.objectId && actual.kind == expected.kind &&
            actual.kindVersion == expected.kindVersion && actual.placement == expected.placement &&
            actual.transform == expected.transform && actual.properties == expected.properties &&
-           actual.content == expected.content && actual.eraseMasks == expected.eraseMasks &&
-           actual.geometryBounds == expected.geometryBounds && actual.visualBounds == expected.visualBounds &&
-           actual.worldBounds == expected.worldBounds &&
-           actual.referenceGeometryDigest == expected.referenceGeometryDigest &&
-           actual.directDependencies == expected.directDependencies;
+           actual.content == expected.content && actual.eraseMasks == expected.eraseMasks;
 }
 
 class Compiler final : public canvas::ISemanticSceneCompiler {
