@@ -36,6 +36,12 @@ struct SceneCommitDiagnostics final {
     std::uint8_t revisionStage = 0;
 };
 
+struct SceneInvalidationOutput final {
+    SceneRevision generation{};
+    std::vector<DamageRect> rects;
+    bool fullScene = false;
+};
+
 class SceneReadView final {
   public:
     [[nodiscard]] SceneRevision revision() const {
@@ -98,6 +104,9 @@ class Scene final {
     [[nodiscard]] SceneRevision invalidationGeneration() const noexcept {
         return _invalidationGeneration;
     }
+    [[nodiscard]] const SceneInvalidationOutput& invalidationOutput() const noexcept {
+        return _publishedInvalidation;
+    }
 
     foundation::Result<SceneApplyReceipt> replace(const SceneCommitInput& input,
                                                   CompiledSceneSnapshot snapshot);
@@ -123,9 +132,16 @@ class Scene final {
     void stageBounds(WorldRect bounds, SceneRevision revision) noexcept {
         _pendingBounds = bounds;
         _pendingInvalidationGeneration = revision;
+        _pendingBoundsStaged = true;
     }
     void finalizeInvalidation(SceneRevision revision) noexcept {
         _pendingInvalidationGeneration = revision;
+    }
+    void stageInvalidation(SceneInvalidationOutput output) {
+        _pendingInvalidation = std::move(output);
+    }
+    void stageSemanticGeneration(semantic::SemanticGeneration generation) noexcept {
+        _pendingSemanticGeneration = generation;
     }
 
     foundation::Result<SceneApplyReceipt> applyPreparedDelta(
@@ -141,6 +157,7 @@ class Scene final {
     DamageTracker _damageTracker;
     SceneRevision _revision;
     semantic::SemanticGeneration _semanticGeneration{};
+    semantic::SemanticGeneration _publishedSemanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
     ScenePublicationGate* _publicationGate = nullptr;
     std::vector<SceneRecord> _publishedRecords;
@@ -148,6 +165,10 @@ class Scene final {
     bool _publishedSnapshotValid = false;
     WorldRect _publishedBounds{};
     SceneRevision _invalidationGeneration{};
+    SceneInvalidationOutput _publishedInvalidation{};
+    SceneInvalidationOutput _pendingInvalidation{};
+    semantic::SemanticGeneration _pendingSemanticGeneration{};
+    bool _pendingBoundsStaged = false;
     WorldRect _pendingBounds{};
     SceneRevision _pendingInvalidationGeneration{};
 };

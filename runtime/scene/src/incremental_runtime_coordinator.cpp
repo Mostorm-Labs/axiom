@@ -169,6 +169,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"});
     }
+    binding_._scene.stageInvalidation(SceneInvalidationOutput{
+        SceneRevision(input.after_generation.value()), {}, false});
     binding_._scene.finalizeInvalidation(SceneRevision(input.after_generation.value()));
     if (checkpointFails(RuntimeCheckpoint::kAfterInvalidationFinalization)) {
         return foundation::Result<SceneSyncReceipt>::failure(

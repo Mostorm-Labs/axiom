@@ -224,6 +224,9 @@ void Scene::publishStagedSnapshot() noexcept {
     _publishedSnapshotValid = true;
     _publishedBounds = _pendingBounds;
     _invalidationGeneration = _pendingInvalidationGeneration;
+    _publishedSemanticGeneration = _pendingSemanticGeneration;
+    _publishedInvalidation = std::move(_pendingInvalidation);
+    _pendingBoundsStaged = false;
 }
 
 foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snapshot) {
@@ -318,7 +321,10 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
         }
         _revision = snapshot.sourceRevision;
         _pendingBounds = newContentBounds;
+        _pendingBoundsStaged = true;
         _pendingInvalidationGeneration = snapshot.sourceRevision;
+        _pendingSemanticGeneration = semantic::SemanticGeneration(snapshot.sourceRevision.value());
+        _pendingInvalidation = SceneInvalidationOutput{snapshot.sourceRevision, receipt.damage.rects, true};
         publishStagedSnapshot();
         _commitDiagnostics.revisionStage = ++stage;
         return foundation::Result<SceneApplyReceipt>::success(std::move(receipt));
@@ -492,8 +498,12 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
             _publicationGate->observation(_publicationGate->observationContext);
         }
         _revision = delta.afterRevision;
-        _pendingBounds = newContentBounds;
+        if (!_pendingBoundsStaged) {
+            _pendingBounds = newContentBounds;
+        }
         _pendingInvalidationGeneration = delta.afterRevision;
+        _pendingSemanticGeneration = semantic::SemanticGeneration(delta.afterRevision.value());
+        _pendingInvalidation = SceneInvalidationOutput{delta.afterRevision, receipt.damage.rects, false};
         _commitDiagnostics.revisionStage = ++stage;
         // All participant commits have completed.  The coordinator closes the
         // shared publication gate only after this point, so observers cannot

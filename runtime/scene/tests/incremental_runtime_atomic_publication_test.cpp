@@ -113,7 +113,13 @@ int main() {
     // until the single publication callback closes the epoch.
     renderRaw->setRejectPrepare(false);
     const auto applied = coordinator.apply(Compiler{}, input);
-    return applied && coordinator.publicationObservationCoherent()
+    const auto target = canvas::semantic::SemanticGeneration(2);
+    const auto& invalidation = scene.invalidationOutput();
+    return applied && coordinator.publicationObservationCoherent() &&
+                   scene.semanticGeneration() == target &&
+                   scene.invalidationGeneration() == canvas::SceneRevision(2) &&
+                   invalidation.generation == canvas::SceneRevision(2) &&
+                   !invalidation.rects.empty()
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }
