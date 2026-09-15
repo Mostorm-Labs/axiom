@@ -75,12 +75,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
-    auto fullMaterialized = internal::materializeFullScene(input.post_state);
-    if (!fullMaterialized) {
-        return foundation::Result<SceneSyncReceipt>::failure(fullMaterialized.error());
-    }
-    auto runtimePrepared = runtimeScene_.prepare(
-        projectionFromMaterialized(std::move(fullMaterialized.value())));
+    auto runtimePrepared = runtimeScene_.prepare(input.post_state);
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
