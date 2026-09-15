@@ -83,6 +83,46 @@ class MultiBoundsCompiler final : public canvas::ISemanticSceneCompiler {
                 .hints = std::nullopt});
     }
 };
+
+class ABCompiler final : public canvas::ISemanticSceneCompiler {
+  public:
+    canvas::foundation::Result<canvas::CompiledSceneSnapshot> compileFull(
+        const canvas::semantic::SemanticReadView&) const override {
+        return canvas::foundation::Result<canvas::CompiledSceneSnapshot>::success(
+            canvas::CompiledSceneSnapshot{canvas::SceneRevision(1), {}});
+    }
+    canvas::foundation::Result<canvas::CompiledSceneDelta> compileDelta(
+        const canvas::semantic::SemanticReadView&,
+        const canvas::semantic::ChangeSet& changes) const override {
+        const bool isB = !changes.objects().empty() &&
+                         changes.objects().front().object_id == canvas::semantic::ObjectId::fromUint64(202);
+        const auto id = canvas::ObjectId::fromUint64(isB ? 202 : 201);
+        const auto bounds = isB ? canvas::WorldRect{200.0F, 0.0F, 210.0F, 10.0F}
+                                : canvas::WorldRect{-100.0F, 0.0F, -90.0F, 10.0F};
+        return canvas::foundation::Result<canvas::CompiledSceneDelta>::success(
+            canvas::CompiledSceneDelta{
+                .beforeRevision = canvas::SceneRevision(1),
+                .afterRevision = canvas::SceneRevision(2),
+                .mutations = {canvas::SceneMutation{
+                    .kind = canvas::SceneMutationKind::kInsert,
+                    .objectId = id,
+                    .before = std::nullopt,
+                    .after = boundsRecord(isB ? 202 : 201, bounds),
+                }},
+                .hints = std::nullopt,
+            });
+    }
+};
+
+canvas::semantic::ObjectRecord semanticObject(std::uint64_t id, double tx) {
+    canvas::semantic::ObjectRecord object;
+    object.id = canvas::semantic::ObjectId::fromUint64(id);
+    object.kind = canvas::semantic::ObjectKind::kShape;
+    object.kind_version = 1;
+    object.content = canvas::semantic::ShapeContent{1, 10.0, 10.0};
+    object.transform.tx = tx;
+    return object;
+}
 } // namespace
 
 int main() {
@@ -207,6 +247,61 @@ int main() {
     canvas::IncrementalRuntimeTestAccess::clear(boundsCoordinator);
     if (!boundsCoordinator.apply(MultiBoundsCompiler{}, boundsInput) ||
         boundsScene.publishedBounds() != expectedUnion) {
+        return EXIT_FAILURE;
+    }
+
+    // A failed transition A must not leak any staged bounds, invalidation, or
+    // RuntimeScene projection into a later, distinguishable transition B.
+    canvas::semantic::ReferenceObjectStore storeA;
+    canvas::semantic::ReferenceObjectStore storeB;
+    const auto objectA2 = semanticObject(201, -100.0);
+    const auto objectB2 = semanticObject(202, 200.0);
+    if (!canvas::semantic::internal::ObjectStoreMutator::insertFresh(storeA, objectA2) ||
+        !canvas::semantic::internal::ObjectStoreMutator::insertFresh(storeB, objectB2)) {
+        return EXIT_FAILURE;
+    }
+    const canvas::semantic::SemanticReadView viewA(storeA, canvas::semantic::SemanticGeneration(2));
+    const canvas::semantic::SemanticReadView viewB(storeB, canvas::semantic::SemanticGeneration(2));
+    const auto changesA = canvas::semantic::ChangeSet::fromChanges(
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2),
+        {{objectA2.id, canvas::semantic::SemanticChangeFlags::kContent, {}}});
+    const auto changesB = canvas::semantic::ChangeSet::fromChanges(
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2),
+        {{objectB2.id, canvas::semantic::SemanticChangeFlags::kContent, {}}});
+    canvas::Scene carryScene(std::make_unique<canvas::testing::FakeRenderScene>(),
+                             std::make_unique<canvas::testing::FakeSpatialIndex>());
+    canvas::SceneBinding carryBinding(carryScene);
+    canvas::IncrementalRuntimeCoordinator carryCoordinator(carryBinding);
+    const canvas::semantic::SemanticReadView emptySeed(store, canvas::semantic::SemanticGeneration(1));
+    if (!carryCoordinator.recover(ABCompiler{}, canvas::SceneCommitInput(
+                                      canvas::semantic::SemanticGeneration(1), emptySeed))) {
+        return EXIT_FAILURE;
+    }
+    const auto goldBounds = carryScene.publishedBounds();
+    const auto failedA = canvas::SceneCommitInput(
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), viewA,
+        &changesA);
+    canvas::IncrementalRuntimeTestAccess::failAt(
+        carryCoordinator, canvas::RuntimeCheckpoint::kBeforePublication);
+    if (carryCoordinator.apply(ABCompiler{}, failedA) ||
+        carryScene.publishedBounds() != goldBounds ||
+        carryScene.invalidationOutput().generation != canvas::SceneRevision(1) ||
+        carryCoordinator.runtimeScene().find(objectA2.id) != nullptr) {
+        return EXIT_FAILURE;
+    }
+    canvas::IncrementalRuntimeTestAccess::clear(carryCoordinator);
+    const auto successfulB = canvas::SceneCommitInput(
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), viewB,
+        &changesB);
+    if (!carryCoordinator.apply(ABCompiler{}, successfulB)) return EXIT_FAILURE;
+    const auto expectedB = canvas::WorldRect{200.0F, 0.0F, 210.0F, 10.0F};
+    const auto& invalidationB = carryScene.invalidationOutput();
+    if (carryScene.publishedBounds() != expectedB ||
+        invalidationB.generation != canvas::SceneRevision(2) || invalidationB.fullScene ||
+        invalidationB.rects.size() != 1U || invalidationB.rects.front().worldRect != expectedB ||
+        carryCoordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2) ||
+        carryCoordinator.runtimeScene().find(objectA2.id) != nullptr ||
+        carryCoordinator.runtimeScene().find(objectB2.id) == nullptr) {
         return EXIT_FAILURE;
     }
 
