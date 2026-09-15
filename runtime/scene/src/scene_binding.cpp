@@ -77,14 +77,16 @@ foundation::Result<SceneSyncReceipt> SceneBinding::rebuild(
 
 foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
     const ISemanticSceneCompiler& compiler, const SceneCommitInput& input) {
-    return synchronize(compiler, input, nullptr, nullptr);
+    return synchronize(compiler, input, nullptr, nullptr, nullptr, nullptr);
 }
 
 foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
     const ISemanticSceneCompiler& compiler,
     const SceneCommitInput& input,
     TransactionCheckpointFn checkpoint,
-    void* checkpointContext) {
+    void* checkpointContext,
+    PublicationFn publish,
+    void* publishContext) {
     if (input.changes == nullptr) {
         return foundation::Result<SceneSyncReceipt>::failure(
             foundation::Error{foundation::ErrorCode::kInvalidRevision,
@@ -94,7 +96,8 @@ foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
     if (!delta) {
         return foundation::Result<SceneSyncReceipt>::failure(delta.error());
     }
-    auto applied = _scene.applyPreparedDelta(std::move(delta.value()), checkpoint, checkpointContext);
+    auto applied = _scene.applyPreparedDelta(std::move(delta.value()), checkpoint, checkpointContext,
+                                              publish, publishContext);
     if (!applied) {
         return foundation::Result<SceneSyncReceipt>::failure(applied.error());
     }

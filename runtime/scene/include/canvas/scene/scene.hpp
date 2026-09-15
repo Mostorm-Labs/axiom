@@ -101,12 +101,15 @@ class Scene final {
 
   private:
     using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
+    using PublicationFn = void (*)(void*) noexcept;
     friend class SceneBinding;
 
     foundation::Result<SceneApplyReceipt> applyPreparedDelta(
         CompiledSceneDelta delta,
         TransactionCheckpointFn checkpoint,
-        void* checkpointContext);
+        void* checkpointContext,
+        PublicationFn publish,
+        void* publishContext);
 
     SceneRecordStore _records;
     std::unique_ptr<IRenderScene> _renderScene;

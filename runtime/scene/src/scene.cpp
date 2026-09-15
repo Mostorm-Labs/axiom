@@ -313,13 +313,15 @@ foundation::Result<SceneApplyReceipt> Scene::replace(const SceneCommitInput& inp
 }
 
 foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
-    return applyPreparedDelta(std::move(delta), nullptr, nullptr);
+    return applyPreparedDelta(std::move(delta), nullptr, nullptr, nullptr, nullptr);
 }
 
 foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
     CompiledSceneDelta delta,
     TransactionCheckpointFn checkpoint,
-    void* checkpointContext) {
+    void* checkpointContext,
+    PublicationFn publish,
+    void* publishContext) {
     if (delta.beforeRevision != _revision || delta.afterRevision <= delta.beforeRevision) {
         return foundation::Result<SceneApplyReceipt>::failure(makeError(
             foundation::ErrorCode::kInvalidRevision, "Delta does not advance the current Scene"));
@@ -398,6 +400,11 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
         }
+
+        // All participant prepare work has completed.  The coordinator owns
+        // the single publication decision; subsequent participant commits are
+        // noexcept publication of already-prepared state.
+        if (publish != nullptr) publish(publishContext);
 
         _commitDiagnostics = SceneCommitDiagnostics{
             .transactionCount = _commitDiagnostics.transactionCount + 1,

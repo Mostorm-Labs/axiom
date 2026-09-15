@@ -70,10 +70,12 @@ class IncrementalRuntimeCoordinator final {
         return checkpointFailure_.has_value() && *checkpointFailure_ == checkpoint;
     }
     static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
+    static void publishPending(void* context) noexcept;
 
     SceneBinding& binding_;
     RuntimeScene runtimeScene_;
     std::optional<RuntimeCheckpoint> checkpointFailure_;
+    std::optional<RuntimeScene::PreparedPublication> pendingPublication_;
 };
 
 } // namespace canvas

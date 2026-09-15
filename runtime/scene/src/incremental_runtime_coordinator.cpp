@@ -40,6 +40,14 @@ bool IncrementalRuntimeCoordinator::transactionCheckpoint(
     return self->checkpointFails(static_cast<RuntimeCheckpoint>(checkpoint));
 }
 
+void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
+    auto* self = static_cast<IncrementalRuntimeCoordinator*>(context);
+    if (self != nullptr && self->pendingPublication_.has_value()) {
+        self->runtimeScene_.publish(std::move(*self->pendingPublication_));
+        self->pendingPublication_.reset();
+    }
+}
+
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,
     const semantic::ChangeSet& changes) const {
@@ -140,18 +148,16 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     // The coordinator boundary is the last point at which all participants
     // are still unpublished.  A deterministic failure here must therefore
     // precede SceneBinding's participant prepare/commit transaction.
+    pendingPublication_ = std::move(runtimePrepared.value());
     auto incremental = binding_.synchronize(
-        compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this);
+        compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
+        &IncrementalRuntimeCoordinator::publishPending, this);
     if (incremental || incremental.error().code != foundation::ErrorCode::kRequiresFullRebuild) {
         if (!incremental) return incremental;
-        if (runtimePrepared.value().projection.generation != input.post_state.generation()) {
-            return foundation::Result<SceneSyncReceipt>::failure(
-                {foundation::ErrorCode::kInvalidRevision,
-                 "RuntimeScene prepared generation does not match semantic input"});
-        }
-        runtimeScene_.publish(std::move(runtimePrepared.value()));
         return incremental;
     }
+
+    pendingPublication_.reset();
 
     // An unsafe/unsupported incremental continuation is explicitly recovered
     // through the independent full compiler path. The recovery receipt is
