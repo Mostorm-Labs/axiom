@@ -38,7 +38,10 @@ struct RuntimeUpdatePlan final {
 
 class IncrementalRuntimeCoordinator final {
   public:
-    explicit IncrementalRuntimeCoordinator(SceneBinding& binding) noexcept : binding_(binding) {}
+    explicit IncrementalRuntimeCoordinator(SceneBinding& binding) noexcept : binding_(binding) {
+        runtimeScene_.setPublicationGate(&publicationGate_);
+        binding_.setPublicationGate(&publicationGate_);
+    }
 
     [[nodiscard]] foundation::Result<RuntimeUpdatePlan> plan(
         const semantic::SemanticReadView& postState,
@@ -76,6 +79,9 @@ class IncrementalRuntimeCoordinator final {
     RuntimeScene runtimeScene_;
     std::optional<RuntimeCheckpoint> checkpointFailure_;
     std::optional<RuntimeScene::PreparedPublication> pendingPublication_;
+    ScenePublicationGate publicationGate_;
+    semantic::SemanticGeneration pendingGeneration_{};
+    SceneRevision pendingRevision_{};
 };
 
 } // namespace canvas

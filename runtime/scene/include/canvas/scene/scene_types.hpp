@@ -21,6 +21,18 @@ namespace canvas {
 
 class IncrementalRuntimeCoordinator;
 
+// Shared visibility epoch for the A6 prepare/publication transaction.  Scene
+// and RuntimeScene may finish internal noexcept commits in sequence, but
+// observers continue to see the last published generation until the
+// coordinator closes the epoch.
+struct ScenePublicationGate final {
+    semantic::SemanticGeneration previousGeneration{};
+    foundation::SceneRevision previousRevision{};
+    foundation::SceneRevision revision{};
+    semantic::SemanticGeneration generation{};
+    bool transactionActive = false;
+};
+
 using foundation::ContentRevision;
 using foundation::ObjectId;
 using foundation::SceneRevision;
@@ -80,7 +92,9 @@ class RuntimeScene final {
     RuntimeScene() = default;
 
     [[nodiscard]] semantic::SemanticGeneration generation() const noexcept {
-        return _projection.generation;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousGeneration
+                   : _projection.generation;
     }
     [[nodiscard]] std::span<const RuntimeSceneRecord> records() const noexcept {
         return _projection.records;
@@ -102,6 +116,8 @@ class RuntimeScene final {
 
     friend class IncrementalRuntimeCoordinator;
 
+    void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
+
     foundation::Result<PreparedPublication> prepare(
         const semantic::SemanticReadView& post_state) const;
     foundation::Result<PreparedPublication> prepareIncremental(
@@ -115,6 +131,7 @@ class RuntimeScene final {
     }
 
     RuntimeSceneProjection _projection;
+    ScenePublicationGate* _publicationGate = nullptr;
 };
 
 [[nodiscard]] inline RuntimeSceneProjection projectRuntimeScene(

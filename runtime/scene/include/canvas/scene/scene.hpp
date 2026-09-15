@@ -65,10 +65,12 @@ class Scene final {
     Scene& operator=(const Scene&) = delete;
 
     [[nodiscard]] SceneRevision revision() const {
-        return _revision;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousRevision : _revision;
     }
     [[nodiscard]] semantic::SemanticGeneration semanticGeneration() const {
-        return _semanticGeneration;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousGeneration : _semanticGeneration;
     }
     [[nodiscard]] SceneReadView read() const {
         return SceneReadView(_revision, _records.records());
@@ -103,6 +105,9 @@ class Scene final {
     using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
     using PublicationFn = void (*)(void*) noexcept;
     friend class SceneBinding;
+    friend class IncrementalRuntimeCoordinator;
+
+    void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
 
     foundation::Result<SceneApplyReceipt> applyPreparedDelta(
         CompiledSceneDelta delta,
@@ -118,6 +123,7 @@ class Scene final {
     SceneRevision _revision;
     semantic::SemanticGeneration _semanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
+    ScenePublicationGate* _publicationGate = nullptr;
 };
 
 } // namespace canvas

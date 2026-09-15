@@ -401,11 +401,6 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                 foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
         }
 
-        // All participant prepare work has completed.  The coordinator owns
-        // the single publication decision; subsequent participant commits are
-        // noexcept publication of already-prepared state.
-        if (publish != nullptr) publish(publishContext);
-
         _commitDiagnostics = SceneCommitDiagnostics{
             .transactionCount = _commitDiagnostics.transactionCount + 1,
         };
@@ -420,6 +415,10 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
         _commitDiagnostics.damageStage = ++stage;
         _revision = delta.afterRevision;
         _commitDiagnostics.revisionStage = ++stage;
+        // All participant commits have completed.  The coordinator closes the
+        // shared publication gate only after this point, so observers cannot
+        // observe a mixed generation while compatibility participants commit.
+        if (publish != nullptr) publish(publishContext);
         return foundation::Result<SceneApplyReceipt>::success(std::move(receipt));
     } catch (const std::bad_alloc&) {
         return foundation::Result<SceneApplyReceipt>::failure(

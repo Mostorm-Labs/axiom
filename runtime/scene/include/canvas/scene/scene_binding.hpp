@@ -39,6 +39,8 @@ class SceneBinding final {
     using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
     using PublicationFn = void (*)(void*) noexcept;
 
+    void setPublicationGate(ScenePublicationGate* gate) noexcept { _scene.setPublicationGate(gate); }
+
     foundation::Result<SceneSyncReceipt> synchronize(
         const ISemanticSceneCompiler& compiler,
         const SceneCommitInput& input,

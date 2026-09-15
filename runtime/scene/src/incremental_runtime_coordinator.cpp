@@ -45,6 +45,7 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
     if (self != nullptr && self->pendingPublication_.has_value()) {
         self->runtimeScene_.publish(std::move(*self->pendingPublication_));
         self->pendingPublication_.reset();
+        self->publicationGate_.transactionActive = false;
     }
 }
 
@@ -149,6 +150,13 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     // are still unpublished.  A deterministic failure here must therefore
     // precede SceneBinding's participant prepare/commit transaction.
     pendingPublication_ = std::move(runtimePrepared.value());
+    pendingGeneration_ = input.after_generation;
+    pendingRevision_ = SceneRevision(input.after_generation.value());
+    publicationGate_.previousGeneration = runtimeScene_.generation();
+    publicationGate_.previousRevision = binding_._scene.revision();
+    publicationGate_.generation = pendingGeneration_;
+    publicationGate_.revision = pendingRevision_;
+    publicationGate_.transactionActive = true;
     auto incremental = binding_.synchronize(
         compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
@@ -158,6 +166,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     }
 
     pendingPublication_.reset();
+    publicationGate_.transactionActive = false;
 
     // An unsafe/unsupported incremental continuation is explicitly recovered
     // through the independent full compiler path. The recovery receipt is
