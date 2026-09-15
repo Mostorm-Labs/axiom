@@ -326,7 +326,9 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
         _pendingInvalidationGeneration = snapshot.sourceRevision;
         _pendingSemanticGeneration = semantic::SemanticGeneration(snapshot.sourceRevision.value());
         _pendingInvalidation = SceneInvalidationOutput{snapshot.sourceRevision, receipt.damage.rects, true};
-        publishStagedSnapshot();
+        if (_publicationGate == nullptr || !_publicationGate->transactionActive) {
+            publishStagedSnapshot();
+        }
         _commitDiagnostics.revisionStage = ++stage;
         return foundation::Result<SceneApplyReceipt>::success(std::move(receipt));
     } catch (const std::bad_alloc&) {

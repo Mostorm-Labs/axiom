@@ -44,6 +44,17 @@ int main() {
         coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2)) {
         return EXIT_FAILURE;
     }
+    const auto goldRevision = scene.revision();
+    const auto goldGeneration = coordinator.runtimeScene().generation();
+    canvas::IncrementalRuntimeTestAccess::failAt(
+        coordinator, canvas::RuntimeCheckpoint::kBeforePublication);
+    const auto failedBeforePublish = coordinator.recover(Compiler{}, input);
+    canvas::IncrementalRuntimeTestAccess::clear(coordinator);
+    if (failedBeforePublish || scene.revision() != goldRevision ||
+        scene.semanticGeneration() != canvas::semantic::SemanticGeneration(2) ||
+        coordinator.runtimeScene().generation() != goldGeneration) {
+        return EXIT_FAILURE;
+    }
     // A semantic generation gap enters the frozen full-recovery policy.
     const auto gapChanges = canvas::semantic::ChangeSet::fromChanges(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(3), {});

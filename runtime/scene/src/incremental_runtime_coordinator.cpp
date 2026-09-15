@@ -260,16 +260,29 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
+    publicationGate_.previousGeneration = runtimeScene_.generation();
+    publicationGate_.previousRevision = binding_._scene.revision();
+    publicationGate_.generation = input.after_generation;
+    publicationGate_.revision = SceneRevision(input.after_generation.value());
+    publicationGate_.transactionActive = true;
+    publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
+    publicationGate_.observationContext = this;
     if (checkpointFails(RuntimeCheckpoint::kBeforePublication)) {
+        abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "Recovery publication checkpoint failure"});
     }
     auto result = binding_.rebuild(compiler, input);
-    if (checkpointFails(RuntimeCheckpoint::kAfterPublication)) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kParticipantRejected, "Post-publication checkpoint failure"});
+    if (!result) {
+        abortPublication();
+        return result;
     }
-    if (result) runtimeScene_.publish(std::move(runtimePrepared.value()));
+    runtimeScene_.publish(std::move(runtimePrepared.value()));
+    publicationGate_.transactionActive = false;
+    publicationGate_.observation = nullptr;
+    publicationGate_.observationContext = nullptr;
+    binding_._scene.stageSemanticGeneration(input.after_generation);
+    binding_._scene.publishStagedSnapshot();
     return result;
 }
 
