@@ -143,6 +143,19 @@ int main() {
         coordinator.runtimeScene().generation() != beforeRuntimeGeneration) {
         return EXIT_FAILURE;
     }
+    const auto recoveredQuery = scene.query(canvas::SceneQuery{canvas::WorldRect{-1.0F, -1.0F, 2.0F, 2.0F}});
+    if (!recoveredQuery || recoveredQuery.error().code == canvas::foundation::ErrorCode::kParticipantRejected) {
+        return EXIT_FAILURE;
+    }
+    const auto recoveredHit = scene.hitTest(canvas::HitTestRequest{
+        .worldPoint = canvas::WorldPoint{0.0F, 0.0F},
+        .tolerance = 0.0F,
+        .filter = canvas::HitTestFilter{},
+        .maximumResults = 1U,
+    });
+    if (!recoveredHit || recoveredHit.error().code == canvas::foundation::ErrorCode::kParticipantRejected) {
+        return EXIT_FAILURE;
+    }
 
     canvas::semantic::ObjectRecord objectA;
     objectA.id = canvas::semantic::ObjectId::fromUint64(101);

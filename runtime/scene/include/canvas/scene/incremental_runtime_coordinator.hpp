@@ -78,6 +78,7 @@ class IncrementalRuntimeCoordinator final {
     static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
     static void publishPending(void* context) noexcept;
     static void observePublication(void* context) noexcept;
+    void abortPublication() noexcept;
 
     SceneBinding& binding_;
     RuntimeScene runtimeScene_;

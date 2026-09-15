@@ -84,6 +84,14 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
     }
 }
 
+void IncrementalRuntimeCoordinator::abortPublication() noexcept {
+    pendingPublication_.reset();
+    binding_._scene.clearPendingPublication();
+    publicationGate_.transactionActive = false;
+    publicationGate_.observation = nullptr;
+    publicationGate_.observationContext = nullptr;
+}
+
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,
     const semantic::ChangeSet& changes) const {
@@ -198,14 +206,13 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     auto incremental = binding_.synchronize(
         compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
-    if (incremental || incremental.error().code != foundation::ErrorCode::kRequiresFullRebuild) {
-        if (!incremental) return incremental;
+    if (incremental) {
         return incremental;
     }
-
-    pendingPublication_.reset();
-    binding_._scene.clearPendingPublication();
-    publicationGate_.transactionActive = false;
+    abortPublication();
+    if (incremental.error().code != foundation::ErrorCode::kRequiresFullRebuild) {
+        return incremental;
+    }
 
     // An unsafe/unsupported incremental continuation is explicitly recovered
     // through the independent full compiler path. The recovery receipt is
