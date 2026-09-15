@@ -13,9 +13,12 @@
 #include <cstdint>
 #include <optional>
 #include <span>
+#include <string>
 #include <vector>
 
 namespace canvas {
+
+class IncrementalRuntimeCoordinator;
 
 using foundation::ContentRevision;
 using foundation::ObjectId;
@@ -46,6 +49,11 @@ struct RuntimeSceneRecord final {
     semantic::PropertyBag properties{};
     semantic::ObjectContent content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
+    foundation::WorldRect geometryBounds{};
+    foundation::WorldRect visualBounds{};
+    foundation::WorldRect worldBounds{};
+    std::string referenceGeometryDigest;
+    std::vector<semantic::ObjectId> directDependencies;
 
     bool operator==(const RuntimeSceneRecord&) const = default;
 };
@@ -86,6 +94,22 @@ class RuntimeScene final {
         const semantic::SemanticReadView& post_state);
 
   private:
+    friend class IncrementalRuntimeTestAccess;
+    struct PreparedPublication final {
+        RuntimeSceneProjection projection;
+    };
+
+    friend class IncrementalRuntimeCoordinator;
+
+    foundation::Result<PreparedPublication> prepare(
+        const semantic::SemanticReadView& post_state) const;
+    foundation::Result<PreparedPublication> prepare(
+        RuntimeSceneProjection projection) const;
+    void publish(PreparedPublication publication) noexcept;
+    void corruptForTest() noexcept {
+        _projection.generation = semantic::SemanticGeneration(0);
+    }
+
     RuntimeSceneProjection _projection;
 };
 

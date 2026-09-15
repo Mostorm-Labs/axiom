@@ -98,26 +98,41 @@ bool hasKnownHitKinds(HitTestKindMask kinds) {
 
 foundation::Result<RuntimeSceneProjection> RuntimeScene::replace(
     const semantic::SemanticReadView& post_state) {
+    auto prepared = prepare(post_state);
+    if (!prepared) return foundation::Result<RuntimeSceneProjection>::failure(prepared.error());
+    RuntimeSceneProjection result = prepared.value().projection;
+    publish(std::move(prepared.value()));
+    return foundation::Result<RuntimeSceneProjection>::success(std::move(result));
+}
+
+foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
+    const semantic::SemanticReadView& post_state) const {
     try {
         const std::vector<semantic::ObjectRecord> source = post_state.allObjects();
         for (const semantic::ObjectRecord& record : source) {
             if (record.id.isZero() || !isSupportedRuntimeKind(record.kind)) {
-                return foundation::Result<RuntimeSceneProjection>::failure(
+                return foundation::Result<RuntimeScene::PreparedPublication>::failure(
                     makeError(foundation::ErrorCode::kInvalidRecord,
                               "RuntimeScene contains an unknown or invalid object kind"));
             }
         }
-        RuntimeSceneProjection next = projectRuntimeScene(source, post_state.generation());
-        // Materialize the return value before publishing so an allocation
-        // failure cannot leave the RuntimeScene half-updated.
-        RuntimeSceneProjection result = next;
-        _projection = std::move(next);
-        return foundation::Result<RuntimeSceneProjection>::success(std::move(result));
+        return foundation::Result<PreparedPublication>::success(
+            PreparedPublication{projectRuntimeScene(source, post_state.generation())});
     } catch (const std::bad_alloc&) {
-        return foundation::Result<RuntimeSceneProjection>::failure(
+        return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
                       "Unable to prepare renderer-neutral RuntimeScene projection"));
     }
+}
+
+foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
+    RuntimeSceneProjection projection) const {
+    return foundation::Result<PreparedPublication>::success(
+        PreparedPublication{std::move(projection)});
+}
+
+void RuntimeScene::publish(PreparedPublication publication) noexcept {
+    _projection = std::move(publication.projection);
 }
 
 foundation::Result<RuntimeSceneProjection> RuntimeScene::apply(

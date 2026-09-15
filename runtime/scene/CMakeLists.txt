@@ -4,6 +4,7 @@ add_library(canvas_runtime_scene STATIC
     src/scene.cpp
     src/scene_binding.cpp
     src/incremental_runtime_coordinator.cpp
+    src/incremental_runtime_full_materialization_bridge.cpp
     src/bounds_system.cpp
     src/reference_geometry.cpp
     src/scene_impact.cpp

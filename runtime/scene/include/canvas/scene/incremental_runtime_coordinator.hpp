@@ -15,6 +15,12 @@ enum class RuntimeUpdateDisposition : std::uint8_t {
     kRecovery,
 };
 
+enum class RuntimeCheckpoint : std::uint8_t {
+    kBeforeRuntimePrepare,
+    kAfterRuntimePrepare,
+    kBeforePublication,
+};
+
 struct RuntimeUpdatePlan final {
     semantic::SemanticGeneration beforeGeneration{};
     semantic::SemanticGeneration afterGeneration{};
@@ -39,8 +45,27 @@ class IncrementalRuntimeCoordinator final {
         const ISemanticSceneCompiler& compiler,
         const SceneCommitInput& input);
 
+    [[nodiscard]] const RuntimeScene& runtimeScene() const noexcept {
+        return runtimeScene_;
+    }
+
   private:
+    friend class IncrementalRuntimeTestAccess;
+
+    void setCheckpointFailure(RuntimeCheckpoint checkpoint) noexcept {
+        checkpointFailure_ = checkpoint;
+    }
+    void clearCheckpointFailure() noexcept { checkpointFailure_.reset(); }
+    void corruptRuntimeProjectionForTest() noexcept {
+        runtimeScene_.corruptForTest();
+    }
+    [[nodiscard]] bool checkpointFails(RuntimeCheckpoint checkpoint) const noexcept {
+        return checkpointFailure_.has_value() && *checkpointFailure_ == checkpoint;
+    }
+
     SceneBinding& binding_;
+    RuntimeScene runtimeScene_;
+    std::optional<RuntimeCheckpoint> checkpointFailure_;
 };
 
 } // namespace canvas

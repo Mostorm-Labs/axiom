@@ -109,13 +109,16 @@ target_compile_features(canvas_g2_a6_incremental_equivalence PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a6_incremental_equivalence
          COMMAND canvas_g2_a6_incremental_equivalence)
 
-add_executable(canvas_g2_a6_atomic_publication incremental_runtime_atomic_publication_test.cpp)
+add_executable(canvas_g2_a6_atomic_publication
+    incremental_runtime_atomic_publication_test.cpp)
+target_include_directories(canvas_g2_a6_atomic_publication PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(canvas_g2_a6_atomic_publication
     PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
 target_compile_features(canvas_g2_a6_atomic_publication PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a6_atomic_publication COMMAND canvas_g2_a6_atomic_publication)
 
 add_executable(canvas_g2_a6_recovery incremental_runtime_recovery_test.cpp)
+target_include_directories(canvas_g2_a6_recovery PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(canvas_g2_a6_recovery
     PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
 target_compile_features(canvas_g2_a6_recovery PRIVATE cxx_std_20)
