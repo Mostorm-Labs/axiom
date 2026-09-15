@@ -12,9 +12,9 @@ namespace {
 class Compiler final : public canvas::ISemanticSceneCompiler {
   public:
     canvas::foundation::Result<canvas::CompiledSceneSnapshot> compileFull(
-        const canvas::semantic::SemanticReadView&) const override {
+        const canvas::semantic::SemanticReadView& view) const override {
         return canvas::foundation::Result<canvas::CompiledSceneSnapshot>::success(
-            canvas::CompiledSceneSnapshot{canvas::SceneRevision(2), {}});
+            canvas::CompiledSceneSnapshot{canvas::SceneRevision(view.generation().value()), {}});
     }
     canvas::foundation::Result<canvas::CompiledSceneDelta> compileDelta(
         const canvas::semantic::SemanticReadView&,
@@ -23,6 +23,7 @@ class Compiler final : public canvas::ISemanticSceneCompiler {
             {canvas::foundation::ErrorCode::kRequiresFullRebuild, "recovery test"});
     }
 };
+
 } // namespace
 
 int main() {
@@ -43,16 +44,19 @@ int main() {
         coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2)) {
         return EXIT_FAILURE;
     }
-    // A semantic generation gap must fail closed without replacing the
-    // already-published canonical state.
+    // A semantic generation gap enters the frozen full-recovery policy.
     const auto gapChanges = canvas::semantic::ChangeSet::fromChanges(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(3), {});
+    const canvas::semantic::SemanticReadView gapView(
+        store, canvas::semantic::SemanticGeneration(3));
     const canvas::SceneCommitInput gapInput(
         canvas::semantic::SemanticGeneration(1),
-        canvas::semantic::SemanticGeneration(3), view, &gapChanges);
+        canvas::semantic::SemanticGeneration(3), gapView, &gapChanges);
     const auto gap = coordinator.apply(Compiler{}, gapInput);
-    if (gap || coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2) ||
-        scene.revision() != canvas::SceneRevision(2)) {
+    if (!gap) return EXIT_FAILURE;
+    if (gap.value().disposition != canvas::SceneSyncDisposition::kRebuiltFull ||
+        coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(3) ||
+        scene.revision() != canvas::SceneRevision(3)) {
         return EXIT_FAILURE;
     }
     // A dropped ChangeSet enters the same explicit full-recovery policy.

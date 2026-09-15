@@ -35,6 +35,15 @@ class SceneBinding final {
                                                      const SceneCommitInput& input);
 
   private:
+    friend class IncrementalRuntimeCoordinator;
+    using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
+
+    foundation::Result<SceneSyncReceipt> synchronize(
+        const ISemanticSceneCompiler& compiler,
+        const SceneCommitInput& input,
+        TransactionCheckpointFn checkpoint,
+        void* checkpointContext);
+
     foundation::Result<SceneSyncReceipt>
     rebuildAfterIncrementalFailure(const ICompiledSceneSource& source,
                                    foundation::Error incrementalFailure);

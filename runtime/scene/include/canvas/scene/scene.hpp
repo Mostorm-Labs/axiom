@@ -100,6 +100,14 @@ class Scene final {
     }
 
   private:
+    using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
+    friend class SceneBinding;
+
+    foundation::Result<SceneApplyReceipt> applyPreparedDelta(
+        CompiledSceneDelta delta,
+        TransactionCheckpointFn checkpoint,
+        void* checkpointContext);
+
     SceneRecordStore _records;
     std::unique_ptr<IRenderScene> _renderScene;
     std::unique_ptr<ISpatialIndex> _spatialIndex;

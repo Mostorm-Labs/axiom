@@ -126,7 +126,9 @@ int main() {
             const canvas::SceneCommitInput input(before, after, incrementalView, &changes);
             const auto applied = runtime.apply(Compiler{}, input);
             if (!applied || applied.value().disposition != canvas::SceneSyncDisposition::kAppliedIncremental) {
-                std::cerr << "R07 apply failure seed=" << seed << " step=" << step << "\n";
+                std::cerr << "R07 apply failure seed=" << seed << " step=" << step;
+                if (!applied) std::cerr << " code=" << static_cast<int>(applied.error().code) << " msg=" << applied.error().message;
+                std::cerr << "\n";
                 return EXIT_FAILURE;
             }
             const auto reference = canvas::testing::compileFullOracle(incrementalView);
@@ -143,6 +145,47 @@ int main() {
                     return EXIT_FAILURE;
                 }
             }
+        }
+    }
+
+    // Incremental staging must consume the canonical ChangeSet and preserve
+    // unaffected published records instead of rebuilding from the entire view.
+    {
+        canvas::semantic::ReferenceObjectStore store;
+        const auto first = semanticRecord(canvas::semantic::ObjectKind::kShape, 1, 41);
+        const auto second = semanticRecord(canvas::semantic::ObjectKind::kImage, 2, 41);
+        if (!canvas::semantic::internal::ObjectStoreMutator::insertFresh(store, first) ||
+            !canvas::semantic::internal::ObjectStoreMutator::insertFresh(store, second)) {
+            return EXIT_FAILURE;
+        }
+        const auto seedView = canvas::semantic::SemanticReadView(
+            store, canvas::semantic::SemanticGeneration(1));
+        const auto view = canvas::semantic::SemanticReadView(
+            store, canvas::semantic::SemanticGeneration(2));
+        const auto changes = canvas::semantic::ChangeSet::fromChanges(
+            canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2),
+            {canvas::semantic::ObjectSemanticChange{
+                .object_id = second.id,
+                .flags = canvas::semantic::SemanticChangeFlags::kTransform,
+                .changed_fields = {7U}}});
+        canvas::Scene scene(std::make_unique<canvas::testing::FakeRenderScene>(),
+                            std::make_unique<canvas::testing::FakeSpatialIndex>());
+        canvas::SceneBinding binding(scene);
+        canvas::IncrementalRuntimeCoordinator runtime(binding);
+        const canvas::SceneCommitInput seedInput(
+            canvas::semantic::SemanticGeneration(1), seedView);
+        if (!runtime.recover(Compiler{}, seedInput)) return EXIT_FAILURE;
+        const auto before = runtime.runtimeScene().find(first.id);
+        if (before == nullptr) return EXIT_FAILURE;
+        const auto beforeId = before->objectId;
+        const auto input = canvas::SceneCommitInput(
+            canvas::semantic::SemanticGeneration(1),
+            canvas::semantic::SemanticGeneration(2), view, &changes);
+        const auto applied = runtime.apply(Compiler{}, input);
+        if (!applied || runtime.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2) ||
+            runtime.runtimeScene().find(first.id) == nullptr ||
+            runtime.runtimeScene().find(first.id)->objectId != beforeId) {
+            return EXIT_FAILURE;
         }
     }
     return EXIT_SUCCESS;

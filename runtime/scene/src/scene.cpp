@@ -1,6 +1,7 @@
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/scene_delta.hpp"
 #include "canvas/scene/spatial_delta.hpp"
+#include "canvas/scene/scene_impact.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -129,6 +130,56 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     RuntimeSceneProjection projection) const {
     return foundation::Result<PreparedPublication>::success(
         PreparedPublication{std::move(projection)});
+}
+
+foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncremental(
+    const semantic::SemanticReadView& post_state,
+    const semantic::ChangeSet& changes) const {
+    if (changes.beforeGeneration() != _projection.generation ||
+        changes.afterGeneration() != post_state.generation()) {
+        return foundation::Result<PreparedPublication>::failure(
+            makeError(foundation::ErrorCode::kInvalidRevision,
+                      "RuntimeScene incremental generation does not match published state"));
+    }
+    try {
+        RuntimeSceneProjection next = _projection;
+        next.generation = post_state.generation();
+        for (const auto& change : changes.objects()) {
+            const auto* current = post_state.find(change.object_id);
+            const auto impact = scene::classifyImpact(change, current);
+            (void)impact;
+            const auto existing = std::find_if(
+                next.records.begin(), next.records.end(), [&](const RuntimeSceneRecord& record) {
+                    return record.objectId == change.object_id;
+                });
+            const bool deleted = (static_cast<unsigned char>(change.flags) &
+                                  static_cast<unsigned char>(semantic::SemanticChangeFlags::kDeleted)) != 0;
+            if (deleted || current == nullptr) {
+                if (existing != next.records.end()) next.records.erase(existing);
+                continue;
+            }
+            auto projected = projectRuntimeScene(std::span<const semantic::ObjectRecord>(current, 1),
+                                                 post_state.generation());
+            if (existing == next.records.end()) {
+                next.records.push_back(std::move(projected.records.front()));
+            } else {
+                *existing = std::move(projected.records.front());
+            }
+        }
+        std::sort(next.records.begin(), next.records.end(),
+                  [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
+                      if (left.placement.order_key != right.placement.order_key) {
+                          return left.placement.order_key < right.placement.order_key;
+                      }
+                      return left.objectId < right.objectId;
+                  });
+        return foundation::Result<PreparedPublication>::success(
+            PreparedPublication{std::move(next)});
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<PreparedPublication>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "Unable to prepare incremental RuntimeScene projection"));
+    }
 }
 
 void RuntimeScene::publish(PreparedPublication publication) noexcept {
@@ -262,6 +313,13 @@ foundation::Result<SceneApplyReceipt> Scene::replace(const SceneCommitInput& inp
 }
 
 foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
+    return applyPreparedDelta(std::move(delta), nullptr, nullptr);
+}
+
+foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
+    CompiledSceneDelta delta,
+    TransactionCheckpointFn checkpoint,
+    void* checkpointContext) {
     if (delta.beforeRevision != _revision || delta.afterRevision <= delta.beforeRevision) {
         return foundation::Result<SceneApplyReceipt>::failure(makeError(
             foundation::ErrorCode::kInvalidRevision, "Delta does not advance the current Scene"));
@@ -275,6 +333,19 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
 
     try {
         const SceneDelta runtimeDelta = makeSceneDelta(delta);
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 2U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"));
+        }
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 3U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"));
+        }
+
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 4U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));
+        }
         auto renderResult =
             _renderScene->prepareDelta(runtimeDelta, delta.beforeRevision, delta.afterRevision);
         if (!renderResult) {
@@ -297,10 +368,22 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
                 makeError(foundation::ErrorCode::kParticipantRejected,
                           "Spatial participant returned an empty prepared update"));
         }
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 5U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));
+        }
 
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 6U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
+        }
         auto damageResult = _damageTracker.prepareApply(delta);
         if (!damageResult) {
             return foundation::Result<SceneApplyReceipt>::failure(damageResult.error());
+        }
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 7U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
         }
         SceneApplyReceipt receipt{
             .beforeRevision = delta.beforeRevision,
@@ -310,6 +393,11 @@ foundation::Result<SceneApplyReceipt> Scene::apply(CompiledSceneDelta delta) {
             .spatialRecordsTouched = delta.mutations.size(),
             .damage = damageForDelta(delta),
         };
+
+        if (checkpoint != nullptr && checkpoint(checkpointContext, 8U)) {
+            return foundation::Result<SceneApplyReceipt>::failure(makeError(
+                foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
+        }
 
         _commitDiagnostics = SceneCommitDiagnostics{
             .transactionCount = _commitDiagnostics.transactionCount + 1,

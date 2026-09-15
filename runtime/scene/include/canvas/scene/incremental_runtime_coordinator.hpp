@@ -69,6 +69,7 @@ class IncrementalRuntimeCoordinator final {
     [[nodiscard]] bool checkpointFails(RuntimeCheckpoint checkpoint) const noexcept {
         return checkpointFailure_.has_value() && *checkpointFailure_ == checkpoint;
     }
+    static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
 
     SceneBinding& binding_;
     RuntimeScene runtimeScene_;

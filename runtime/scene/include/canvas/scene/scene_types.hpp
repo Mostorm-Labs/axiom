@@ -6,6 +6,7 @@
 #include "canvas/foundation/stable_order_key.hpp"
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 
@@ -103,6 +104,9 @@ class RuntimeScene final {
 
     foundation::Result<PreparedPublication> prepare(
         const semantic::SemanticReadView& post_state) const;
+    foundation::Result<PreparedPublication> prepareIncremental(
+        const semantic::SemanticReadView& post_state,
+        const semantic::ChangeSet& changes) const;
     foundation::Result<PreparedPublication> prepare(
         RuntimeSceneProjection projection) const;
     void publish(PreparedPublication publication) noexcept;

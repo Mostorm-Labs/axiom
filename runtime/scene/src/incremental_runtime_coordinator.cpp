@@ -1,6 +1,7 @@
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 
 #include "incremental_runtime_full_materialization_bridge.hpp"
+#include "canvas/scene/bounds_system.hpp"
 
 #include <algorithm>
 
@@ -31,6 +32,13 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
     return projection;
 }
 } // namespace
+
+bool IncrementalRuntimeCoordinator::transactionCheckpoint(
+    void* context, std::uint8_t checkpoint) noexcept {
+    auto* self = static_cast<IncrementalRuntimeCoordinator*>(context);
+    if (self == nullptr) return false;
+    return self->checkpointFails(static_cast<RuntimeCheckpoint>(checkpoint));
+}
 
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,
@@ -67,15 +75,40 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         // terminal error. Rebuild from the authoritative post-state.
         return recover(compiler, input);
     }
+    if (input.changes->beforeGeneration() != runtimeScene_.generation()) {
+        SceneCommitInput recoveryInput(input.after_generation, input.post_state);
+        auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
+        if (!recoveryMaterialized) return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
+        auto recoveryPrepared = runtimeScene_.prepare(
+            projectionFromMaterialized(std::move(recoveryMaterialized.value())));
+        if (!recoveryPrepared) return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
+        auto recovered = binding_.rebuild(compiler, recoveryInput);
+        if (!recovered) return recovered;
+        runtimeScene_.publish(std::move(recoveryPrepared.value()));
+        return recovered;
+    }
     const auto updatePlan = plan(input.post_state, *input.changes);
     if (!updatePlan) {
+        if (updatePlan.error().code == foundation::ErrorCode::kInvalidRevision &&
+            input.post_state.generation() > runtimeScene_.generation()) {
+            SceneCommitInput recoveryInput(input.after_generation, input.post_state);
+            auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
+            if (!recoveryMaterialized) return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
+            auto recoveryPrepared = runtimeScene_.prepare(
+                projectionFromMaterialized(std::move(recoveryMaterialized.value())));
+            if (!recoveryPrepared) return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
+            auto recovered = binding_.rebuild(compiler, recoveryInput);
+            if (!recovered) return recovered;
+            runtimeScene_.publish(std::move(recoveryPrepared.value()));
+            return recovered;
+        }
         return foundation::Result<SceneSyncReceipt>::failure(updatePlan.error());
     }
     if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) {
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
-    auto runtimePrepared = runtimeScene_.prepare(input.post_state);
+    auto runtimePrepared = runtimeScene_.prepareIncremental(input.post_state, *input.changes);
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
@@ -83,23 +116,32 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
-    if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare) ||
-        checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare) ||
-        checkpointFails(RuntimeCheckpoint::kBeforeSpatialPrepare) ||
-        checkpointFails(RuntimeCheckpoint::kAfterSpatialPrepare) ||
-        checkpointFails(RuntimeCheckpoint::kBeforeInvalidationFinalization) ||
-        checkpointFails(RuntimeCheckpoint::kAfterInvalidationFinalization)) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kParticipantRejected, "Scene-Core checkpoint failure"});
+    // Bounds staging is a real participant operation: derive bounds for each
+    // semantically affected object before the Scene transaction prepares
+    // record/spatial/invalidation state.  The resulting values are consumed by
+    // the compiled SceneDelta; no published participant is touched here.
+    for (const auto& change : input.changes->objects()) {
+        if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare)) {
+            return foundation::Result<SceneSyncReceipt>::failure(
+                {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
+        }
+        if (const auto* object = input.post_state.find(change.object_id)) {
+            const auto bounds = computeBounds(*object);
+            if (!bounds.finite) {
+                return foundation::Result<SceneSyncReceipt>::failure(
+                    {foundation::ErrorCode::kInvalidRecord, "Bounds participant rejected non-finite state"});
+            }
+        }
+        if (checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare)) {
+            return foundation::Result<SceneSyncReceipt>::failure(
+                {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
+        }
     }
     // The coordinator boundary is the last point at which all participants
     // are still unpublished.  A deterministic failure here must therefore
     // precede SceneBinding's participant prepare/commit transaction.
-    if (checkpointFails(RuntimeCheckpoint::kBeforePublication)) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"});
-    }
-    auto incremental = binding_.synchronize(compiler, input);
+    auto incremental = binding_.synchronize(
+        compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this);
     if (incremental || incremental.error().code != foundation::ErrorCode::kRequiresFullRebuild) {
         if (!incremental) return incremental;
         if (runtimePrepared.value().projection.generation != input.post_state.generation()) {
