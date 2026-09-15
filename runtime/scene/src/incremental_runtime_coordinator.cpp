@@ -54,6 +54,13 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
+    // The coordinator boundary is the last point at which all participants
+    // are still unpublished.  A deterministic failure here must therefore
+    // precede SceneBinding's participant prepare/commit transaction.
+    if (checkpointFails(RuntimeCheckpoint::kBeforePublication)) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"});
+    }
     auto incremental = binding_.synchronize(compiler, input);
     if (incremental || incremental.error().code != foundation::ErrorCode::kRequiresFullRebuild) {
         if (!incremental) return incremental;
@@ -61,10 +68,6 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
             return foundation::Result<SceneSyncReceipt>::failure(
                 {foundation::ErrorCode::kInvalidRevision,
                  "RuntimeScene prepared generation does not match semantic input"});
-        }
-        if (checkpointFails(RuntimeCheckpoint::kBeforePublication)) {
-            return foundation::Result<SceneSyncReceipt>::failure(
-                {foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"});
         }
         runtimeScene_.publish(std::move(runtimePrepared.value()));
         return incremental;

@@ -2,6 +2,7 @@
 #include "canvas/scene/testing/fake_render_scene.hpp"
 #include "canvas/scene/testing/fake_spatial_index.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "incremental_runtime_test_access.hpp"
 
 #include <cstdlib>
 #include <optional>
@@ -68,14 +69,29 @@ int main() {
     const auto beforeRevision = scene.revision();
     const auto beforeDigest = renderRaw->stateDigest();
     const auto beforeSpatialDigest = spatialRaw->stateDigest();
-    renderRaw->setRejectPrepare(true);
+    const auto beforeRuntimeGeneration = coordinator.runtimeScene().generation();
+    canvas::IncrementalRuntimeTestAccess::failAt(
+        coordinator, canvas::RuntimeCheckpoint::kBeforePublication);
+    renderRaw->setRejectPrepare(false);
     const canvas::SceneCommitInput input(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), view,
         &changes);
     const auto result = coordinator.apply(Compiler{}, input);
-    return !result && result.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
+    const bool checkpointAtomic =
+        !result && result.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
                    scene.revision() == beforeRevision && renderRaw->stateDigest() == beforeDigest &&
-                   spatialRaw->stateDigest() == beforeSpatialDigest
-               ? EXIT_SUCCESS
-               : EXIT_FAILURE;
+                   spatialRaw->stateDigest() == beforeSpatialDigest &&
+                   coordinator.runtimeScene().generation() == beforeRuntimeGeneration;
+    canvas::IncrementalRuntimeTestAccess::clear(coordinator);
+    if (!checkpointAtomic) return EXIT_FAILURE;
+
+    // Exercise the legacy participant failure independently from the
+    // coordinator checkpoint seam.  The render rejection must happen during
+    // prepare, before any participant is published.
+    renderRaw->setRejectPrepare(true);
+    const auto rejected = coordinator.apply(Compiler{}, input);
+    return !rejected && rejected.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
+                   scene.revision() == beforeRevision &&
+                   coordinator.runtimeScene().generation() == beforeRuntimeGeneration
+               ? EXIT_SUCCESS : EXIT_FAILURE;
 }
