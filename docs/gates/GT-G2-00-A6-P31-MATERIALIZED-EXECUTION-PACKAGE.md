@@ -1,34 +1,34 @@
-# GT-G2-00-A6 P31 Materialized Execution Package v0.4
+# GT-G2-00-A6 P31 Materialized Execution Package v0.5
 
 ## Status
 
 ```yaml
-stage: P31_TARGETED_RECONCILIATION_AND_REPACKAGE
+stage: P31_TARGETED_REPACKAGE
 task_id: GT-G2-00-A6
-package_id: GT-G2-00-A6-P31-v0.4
-reconciliation_subject: RUNTIME_PROJECTION_PUBLICATION_CONVERGENCE
+package_id: GT-G2-00-A6-P31-v0.5
+reconciliation_subject: A6_R07_CANONICAL_COMPARISON_DOMAIN_BINDING
 status: MATERIALIZED_FOR_P33_ENTRY_REVIEW
 repository_bound: true
-preserve_valid_result_revision: eff48f3b5114a15acdab952eb0be0d2a93c981e0
-T02_R07_completion_target_changed: false
-T02_R08_completion_target_changed: false
+supersedes_package: GT-G2-00-A6-P31-v0.4
+preserve_valid_result_revision: e709ce02e2091757e9c7fbf4632bc3218fda6942
 P20_reentry_required: false
 P30_substantive_replan_required: false
 P32_replay_from_scratch_required: false
 p34_authorized: false
 ```
 
-This v0.4 supersedes P31 v0.3 after the targeted P15/P16/P20 v0.3 reconciliation. It preserves the accepted partial implementation at `eff48f3b5114a15acdab952eb0be0d2a93c981e0`; implementation must continue from that cursor rather than replay from the task anchor.
+This v0.5 supersedes P31 v0.4 only because A6 P20 v0.4 froze the exact R07 canonical comparison domain. Preserve the accepted result at `e709ce02e2091757e9c7fbf4632bc3218fda6942`; do not replay A6. The stale whole-DTO A1-vs-A3 comparison is replaced by an explicit comparison-only canonicalization over the frozen A1 structural domain. Bounds/dependency/spatial/invalidation correctness remains covered through participant-specific evidence.
 
 ## Package Authority
 
 ```yaml
-package_ref: notion://3db4c57a-590c-81c5-8775-cf70fdb62788/GT-G2-00-A6-P31-v0.4
+package_ref: notion://3dc4c57a-590c-81ce-8c78-d4fb1c68d007/GT-G2-00-A6-P31-v0.5
 repository:
   provider: github
   full_name: Mostorm-Labs/axiom
   canonical_branch: main
 execution_branch: codex/gt-g2-a6-incremental-runtime-coordination
+materialization_branch: aegis/gt-g2-a6-p31-v0-5-materialization
 task_anchor:
   revision: 4faf351fc85360d0b843dc380c530c12cbb3a48b
   relation: ancestor
@@ -36,43 +36,42 @@ package_materialization_ref: EXACT_THIS_COMMIT
 resume_cursor:
   type: P33_ACCEPTED_PARTIAL_RESULT
   execution_ref: codex/gt-g2-a6-incremental-runtime-coordination
-  accepted_revision: eff48f3b5114a15acdab952eb0be0d2a93c981e0
+  accepted_revision: e709ce02e2091757e9c7fbf4632bc3218fda6942
   completed_through:
-    - A6_coordinator_surface_materialized
-    - canonical_ChangeSet_consumption_basic
-    - generation_validation_basic
-    - explicit_incremental_vs_recovery_disposition_basic
-    - prior_SceneBinding_kRequiresFullRebuild_recovery_path_basic
-    - prior_render_prepare_failure_preserves_old_legacy_state
-    - test_only_actual_FullSceneCompiler_adapter_compiles_and_runs
-    - focused_A6_and_predecessor_matrix_reported_PASS
-    - git_diff_check_reported_PASS
+    - preserved_v0_4_A6_coordinator_and_generation_work
+    - canonical_A1_RuntimeScene_prepare_publish_surface_present
+    - production_full_materialization_bridge_invokes_actual_A3_FullSceneCompiler
+    - recovery_path_materializes_A3_result_into_RuntimeScene_staging
+    - non_public_checkpoint_and_corruption_test_access_present
+    - normal_incremental_RED_path_no_longer_materializes_RuntimeScene_through_A3
+    - P36_RED_experiment_reproduced_first_R07_divergence_under_stale_whole_DTO_comparison
+    - execution_branch_scope_conformed_through_e709ce02
   not_yet_closed:
-    - canonical_A1_RuntimeScene_publication_path
-    - localized_RuntimeScene_prepare_publish_mechanics
-    - independent_FullSceneCompiler_materialization_bridge_for_recovery
-    - canonical_Scene_Core_atomic_publication_set
-    - T02_R07_long_run_nine_kind_exact_equivalence
-    - T02_R08_complete_checkpoint_failure_matrix
-    - T02_R08_corrupt_state_and_failed_recovery_matrix
-  next_action: converge_preserved_A6_implementation_to_P15_P16_P20_v0_3_without_replay
+    - R07_comparison_adapter_bound_to_exact_P20_v0_4_A1_structural_domain
+    - participant_specific_bounds_correctness_separated_from_A1_structural_equality
+    - A6_actual_Bounds_Spatial_invalidation_participant_staging_and_publication_where_required
+    - T02_R07_long_run_all_kind_all_impact_family_closure
+    - T02_R08_complete_actual_participant_checkpoint_matrix
+    - T02_R08_corrupt_state_and_failed_recovery_matrix_formal_closure
+    - exact_final_result_and_blocking_evidence_materialization_for_control_review
+  next_action: reconcile_R07_comparison_to_P20_v0_4_then_finish_remaining_A6_participant_evidence_without_replay
 ```
 
-`Task Anchor != Execution Cursor`. The cursor is navigation metadata only and does not expand scope or count as Gate evidence.
+`Task Anchor != Execution Cursor`. The package materialization branch is documentation-only and MUST NOT replace the execution cursor.
 
 ## Current Authority Bindings
 
 ```yaml
 P15_current: notion://3db4c57a-590c-81bb-a5a6-f2bd00847c55/GT-G2-00-A6-P15-v0.3
 P16_current: notion://3db4c57a-590c-81a1-b2c0-fba8cf76ae9b/GT-G2-00-A6-P16-v0.3
-A6_P20_current: notion://3db4c57a-590c-814a-a71c-c97d15f216e0/GT-G2-00-A6-P20-v0.3
+A6_P20_current: notion://3dc4c57a-590c-81fb-9fd8-cec20062874c/GT-G2-00-A6-P20-v0.4
 global_G2_P20_current: notion://3da4c57a-590c-81e0-b4c9-dad679a95bac/GT-G2-00-P20-v0.3
 P30_preserved: notion://3d74c57a-590c-8113-90b3-cc5c0216f8ea/GT-G2-00-P30-v0.1
-P23_authority_supersession: notion://3db4c57a-590c-81f4-baa9-f7b53a759701/GT-G2-00-A6-P23-v0.2
-P33_control_review: notion://3db4c57a-590c-81d1-86ec-ec5f87789f3b/GT-G2-00-A6-P33-CONTROL-REVIEW-v0.1
+fresh_routing: notion://3dc4c57a-590c-81a6-ab9d-f2994952590b/GT-G2-00-A6-AEGIS-FRESH-ROUTING-v0.3
+P36_task_package_defect: notion://3dc4c57a-590c-81ce-91da-d4a1f4dc728d/GT-G2-00-A6-P36-v0.2
 ```
 
-Verification bindings:
+Verification bindings remain:
 
 ```yaml
 verification_spec_id: GT-G2-00-VS-v0.3
@@ -87,107 +86,95 @@ A6_obligation_slice:
   - T02-R08
 ```
 
-No Verification strength, corpus size, blocking classification, or global evidence-file slot is changed.
+No global Verification strength, evidence-file count, R08 wording, P15, P16, or P30 topology is changed by this package.
 
-## Repository Reality Bound Into This Package
+## Repository Reality Bound Into v0.5
 
-At the accepted cursor `eff48f3…`:
+At accepted cursor `e709ce02...`:
 
-- `IncrementalRuntimeCoordinator` is still bound to legacy `SceneBinding` for `apply/recover`;
-- the production A1 canonical logical scene is `canvas::RuntimeScene` / `canvas::RuntimeSceneProjection` in `scene_types.hpp` and represents all nine V1 semantic kinds;
-- current `RuntimeScene::replace/apply` publishes directly and has no separate prepare/publication staging boundary;
-- A3 `canvas::scene::FullSceneCompiler` returns the independent inspection/reference projection family;
-- the two projection families retain the known `RuntimeSceneProjection` co-include/name conflict;
-- A2 impact/dependency functions, BoundsSystem computations, A4 locality work, and A5 SpatialIndex are trusted consumed capabilities and are not redefined here.
+- normal `IncrementalRuntimeCoordinator::apply` stages `RuntimeScene` through `RuntimeScene::prepare(post_state)`, not A3 materialization;
+- recovery materially uses the private production bridge that calls A3 `FullSceneCompiler`;
+- `RuntimeSceneRecord` currently contains A1 semantic fields plus extra derived/inspection-like fields;
+- `projectRuntimeScene(...)` fills the A1 semantic fields and leaves the extra derived fields default/empty;
+- the current R07 test compares every field, including bounds, `referenceGeometryDigest`, and `directDependencies`;
+- the independent A3 adapter supplies those richer fields from FullSceneCompiler;
+- public `computeBounds(...)` is available as trusted bounds derivation;
+- A3-private digest and direct-dependency derivations remain inspection/oracle internals.
 
-Therefore the remaining A6 work is not a test-only patch. The canonical production path must converge to the A1 RuntimeScene publication contract before R07/R08 can close.
+The first incomplete step is therefore to correct the R07 comparison contract to P20 v0.4, not to restore A3 as the normal incremental source.
 
-## Required Convergence Changes
+## Exact R07 A1 Structural Comparison Domain
 
-### Canonical RuntimeScene publication
-
-The blocking A6 path MUST publish the A1 renderer-neutral nine-kind RuntimeScene as the canonical scene observable. Existing SceneBinding/legacy Scene code may remain for compatibility/regression purposes but MUST NOT define R07/R08 canonical truth.
-
-### RuntimeScene prepare -> publication staging
-
-`RuntimeScene` must gain the minimum internal mechanics needed to stage a target generation without publishing it before all required A6 Scene-Core participants have prepared.
-
-Allowed forms include a private/friend prepared projection or equivalent staging object. The resulting implementation MUST:
-
-- preserve the A1 nine-kind logical record contract;
-- stage incremental target state from authoritative post-state plus canonical ChangeSet and existing A2-derived affected work;
-- stage full target state from the FullSceneCompiler materialization bridge;
-- publish only after the A6 publication decision;
-- preserve existing A1 replace/apply compatibility, preferably by delegating to the same staging mechanics;
-- NOT turn legacy `SceneObjectKind` / `SceneRecord` into a competing nine-kind semantic truth.
-
-### Production FullSceneCompiler materialization bridge
-
-Recovery MUST materially consume the independent A3 FullSceneCompiler result.
-
-Authorized private production topology:
+After every true Applied generation:
 
 ```text
-IncrementalRuntimeCoordinator
-        |
-        | neutral runtime-local materialization DTO
-        v
-incremental_runtime_full_materialization_bridge.hpp
-        ^
-        |
-incremental_runtime_full_materialization_bridge.cpp
-        |
-        | actual independent reference computation
-        v
-canvas::scene::FullSceneCompiler::compile(SemanticReadView)
+CanonicalizeA1(A6 published RuntimeScene @ G)
+==
+CanonicalizeA1(A3 independent FullSceneCompiler reference @ G)
 ```
 
-Rules:
+The exact structural domain is:
 
-1. bridge `.cpp` may include `full_scene_compiler.hpp` and the A3 inspection projection family;
-2. bridge header must not expose either conflicting `RuntimeSceneProjection` type;
-3. bridge output must carry all facts needed to materialize canonical A1 RuntimeScene and required recovery-derived state: semantic record identity/kind/version/placement/transform/properties/content/erase masks plus reference bounds needed by the selected Bounds/Spatial materialization;
-4. bridge must consume the actual FullSceneCompiler result; an unrelated semantic rebuild may not be relabeled as FullSceneCompiler recovery;
-5. A3 FullSceneCompiler and `runtime_scene_projection.*` remain read-only.
-
-### Canonical Scene-Core publication set
-
-One A6 transaction stages/publishes at one `SemanticGeneration`:
-
-- canonical A1 RuntimeScene / conforming backing state;
-- derived bounds state required by the selected transition;
-- production SpatialIndex update;
-- generation-bound Scene-Core invalidation output (runtime-local equivalent allowed if no existing type fits);
-- every additional real Scene-Core participant actually mutated by the final implementation.
-
-`IRenderScene`, Render-Core DamageTracker, GPU/Skia, FrameState, Tile/RenderGroup, raster and presentation are excluded from canonical A6 publication truth.
-
-### A2 / A4 / A5 preservation
-
-- consume existing A2 `classifyImpact` and dependency-closure semantics; do not implement a second classifier/closure model;
-- preserve A4 locality/stable-handle capability; no A4 algorithm rewrite is authorized;
-- use existing A5 production SpatialIndex prepare/commit semantics; no spatial backend algorithm mutation is authorized.
-
-### R08 non-public checkpoint seam
-
-Deterministic coordinator-level checkpoints are frozen at:
-
-```text
-before RuntimeScene prepare
-after RuntimeScene prepare
-before Bounds staging
-after Bounds staging
-before Spatial prepare
-after Spatial prepare
-before invalidation finalization
-after invalidation finalization
-before/after every additional actual Scene-Core participant prepare
-immediately before publication barrier
+```yaml
+projection:
+  generation: SemanticGeneration
+  records:
+    membership: exact
+    allowed_kinds:
+      - Shape
+      - Image
+      - VectorPath
+      - RichText
+      - VectorStroke
+      - DabStroke
+      - Connector
+      - Sticky
+      - Group
+    page: absent_or_rejected
+per_record:
+  - ObjectId
+  - ObjectKind
+  - KindVersion
+  - Placement
+  - Transform2D
+  - PropertyBag
+  - ObjectContent
+  - EraseMasks
 ```
 
-Exact hook representation is implementation-open but MUST be non-public verification instrumentation. Friend-only test access, private callbacks, an internal header, or equivalent are allowed. A public production debug API is forbidden.
+Comparison may normalize deterministic record/container ordering only. It MUST NOT backfill the incremental side from `SemanticReadView`, read expected values from the incremental side, or add fields merely because they exist in a current/future C++ struct.
 
-The same non-public test access may deliberately corrupt derived coordinator state for the frozen R08 corrupt-state fixture, but it must not create a general production mutation/debug surface.
+The following are explicitly outside A1 structural equality:
+
+```yaml
+A3_inspection_only_for_R07_structural_comparison:
+  - GeometryBounds
+  - VisualBounds
+  - WorldBounds
+  - referenceGeometryDigest
+  - directDependencies
+  - A3_specific_reference_geometry_representation
+```
+
+A direct `RuntimeSceneRecord::operator==` / whole-DTO comparison is insufficient unless both sides are first canonicalized onto the explicit A1 domain above.
+
+## Derived Correctness Binding Retained
+
+Exclusion from A1 structural equality does not remove correctness obligations:
+
+- **Bounds:** actual A6 bounds-derived state is checked against A3 full-scan bounds and/or trusted `computeBounds`. If extra RuntimeScene bounds fields are used as physical backing, they are derived participant state, not A1 structural identity.
+- **Dependency:** A2 remains owner of dependency derivation. A6 consumes the established A2 evaluation boundary; A3 `directDependencies` remains oracle/inspection data and creates no A1 storage requirement. A6 MUST NOT invent a second dependency algorithm.
+- **Spatial:** production SpatialIndex state remains bound to the existing A5 independent differential/oracle contract. No spatial backend algorithm change is authorized.
+- **Reference geometry:** A3 digest/representation remains inspection-only unless an actual A6 geometry-derived participant exists. Do not duplicate A3-private derivation merely for R07 equality.
+- **Invalidation:** generation-bound Scene-Core invalidation output remains an A6 participant when the selected transition mutates it and remains under existing participant/A6 verification obligations.
+
+## Required Implementation Reconciliation
+
+1. Preserve the `e709ce02...` RED independence correction. Normal incremental RuntimeScene staging MUST continue to avoid A3 FullSceneCompiler/full materialization.
+2. Replace stale whole-DTO R07 equality with comparison-only canonicalization over the exact A1 structural domain.
+3. Keep derived participant checks. Do not make R07 green by deleting bounds/spatial/invalidation/A2-consumption verification.
+4. Preserve recovery independence: A3 FullSceneCompiler -> private A6 recovery materialization bridge -> canonical RuntimeScene + required derived participants -> atomic recovery publication.
+5. Finish remaining v0.4 participant closure without replay: canonical A1 publication, actual required Bounds/Spatial/invalidation staging, generation-coherent publication, R08 actual-participant checkpoint matrix, corrupt-state and failed-recovery fixtures, and predecessor regressions.
 
 ## Authorized Mutable Source Scope
 
@@ -201,9 +188,9 @@ runtime/scene/include/canvas/scene/scene_types.hpp
 runtime/scene/src/scene.cpp
 ```
 
-`scene_types.hpp` / `scene.cpp` mutation is restricted to canonical `RuntimeScene` staging/publication mechanics and minimal helpers. Legacy `SceneObjectKind`, `SceneRecord`, RF-01 renderer/query/hit/frame semantics and legacy Scene transaction ownership are not A6 mutation targets.
+`scene_types.hpp` / `scene.cpp` may change only for A6 RuntimeScene staging/publication and derived participant backing needed by this package. Removing extra inspection-like fields from `RuntimeSceneRecord` is not required by P20 v0.4; if retained, they MUST NOT define A1 structural equality.
 
-### New private production files allowed
+### Private production files
 
 ```text
 runtime/scene/src/incremental_runtime_full_materialization_bridge.hpp
@@ -211,7 +198,7 @@ runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp
 runtime/scene/src/incremental_runtime_checkpoint.hpp
 ```
 
-Use fewer files where possible. The checkpoint header is optional if the seam fits inside existing A6 files.
+The full materialization bridge remains recovery-only for A3 materialization. The checkpoint header remains optional.
 
 ### A6 tests and test-only support
 
@@ -227,13 +214,11 @@ runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp
 runtime/scene/testing/src/fake_spatial_index.cpp
 ```
 
-`incremental_runtime_test_access.hpp` is optional and may exist only for friend/private checkpoint and corruption access. It must not become installed/public production API.
-
-Any required mutable path outside this inventory is `PACKAGE_SCOPE_DIVERGENCE` and must fail closed rather than be silently added during P33.
+Any required path outside this inventory is `PACKAGE_SCOPE_DIVERGENCE` and MUST fail closed rather than be silently added during P33.
 
 ## Read-Only Dependencies / Forbidden Mutation
 
-The executor may read/call but MUST NOT modify:
+Read/call but do not modify:
 
 ```text
 runtime/semantic/**
@@ -264,93 +249,95 @@ runtime/scene/include/canvas/scene/direct_render_scene.hpp
 runtime/scene/src/direct_render_scene.cpp
 ```
 
-Also forbidden:
+Forbidden:
 
-- a second semantic ChangeSet, ObjectKind, validator or apply engine;
-- a second A2 impact-classification/dependency-closure semantics;
-- changing A3 FullSceneCompiler/reference projection to fit incremental output;
-- creating a new semantic alias from `SemanticGeneration` to `SceneRevision`;
-- routing canonical A6 proof through legacy six-kind SceneRecord/IRenderScene state;
+- reintroducing A3 FullSceneCompiler/materialization into normal incremental RuntimeScene construction;
+- copying/reimplementing A3-private digest or dependency derivation into A6 merely to match the oracle;
+- modifying A3 reference projection to fit incremental output;
+- treating current struct membership as verification authority;
+- introducing a second semantic ChangeSet/ObjectKind/apply engine or A2 dependency semantics;
+- making legacy six-kind SceneRecord/IRenderScene canonical A6 truth;
 - public production debug/corruption API;
-- Render Core, Tile, GPU/Skia, persistence, sync, schema/wire or platform work;
-- new Product latency/memory SLOs;
-- weakening T02-R07/T02-R08 or adding an 11th final G2 evidence file.
+- Render Core/Tile/GPU/Skia/persistence/sync/schema/platform work;
+- weakening R07/R08 or reducing corpus/checkpoint/recovery strength;
+- adding a new global G2 evidence-file slot.
 
-## R07 Blocking Closure
+## Required Tests / Oracles
 
-Required CTest identity:
+### A6_R07_EQUIVALENCE
 
 ```yaml
-canvas_g2_a6_incremental_equivalence:
-  obligation: T02-R07
-  expected_result: PASS
+id: A6_R07_EQUIVALENCE
+ctest: canvas_g2_a6_incremental_equivalence
+obligation: T02-R07
+expected_result: PASS
 ```
 
-Blocking evidence requires:
+Requirements:
 
-- actual authority-conforming A6 canonical RuntimeScene publication path;
-- independent A3 FullSceneCompiler from the same authoritative SemanticReadView;
-- independently authored comparison-only canonicalization of both sides;
-- exact equality after every true Applied generation;
-- all nine V1 kinds and every inherited R07 impact family;
-- >=1000 true Applied generations per fixed seed;
-- >=3 documented fixed seeds;
+- at least 3 documented fixed seeds;
+- at least 1000 true Applied transitions per seed;
+- all nine V1 kinds;
+- all inherited R07 impact families;
+- comparison after every true Applied generation;
+- structural equality uses only the exact A1 domain above;
+- incremental side is the actual A6-published RuntimeScene;
+- reference side is independent A3 FullSceneCompiler from the same SemanticReadView;
 - deterministic replay;
-- first-divergence diagnostics: seed, step, generation, ObjectId when attributable, kind, component/field, incremental value, reference value.
+- first divergence records seed, step, generation, ObjectId when attributable, kind, domain, component/field, incremental value, reference value, comparison method.
 
-The current lossy digest/smoke invocation at `eff48f3…` is preserved progress but is not R07 closure.
+A direct whole-DTO equality, sequence-end-only comparison, smoke invocation, six-kind comparison, or semantic-post-state backfill is insufficient.
 
-## R08 Atomic-Publication Blocking Closure
+### A6_R07_DERIVED_PARTICIPANTS
 
-Required CTest identity:
-
-```yaml
-canvas_g2_a6_atomic_publication:
-  obligation: T02-R08
-  expected_result: PASS
-```
-
-The final test MUST enumerate the actual authority-conforming participant list and inject deterministic failure at every frozen checkpoint. For every pre-publication failure:
+Required in the same long-run corpus or deterministically linked blocking fixtures:
 
 ```yaml
-published_generation_after_failure: MUST_EQUAL_previous_published_generation
-canonical_RuntimeScene_after_failure: MUST_EQUAL_previous_published_RuntimeScene
-required_derived_state_after_failure: MUST_EQUAL_previous_published_state
-partial_participant_visibility: FORBIDDEN
-failure_disposition: MUST_BE_EXPLICIT
+bounds:
+  actual: actual_A6_published_or_staged_bounds_participant
+  reference: A3_full_scan_bounds_or_trusted_computeBounds
+  classification: blocking_when_applicable_to_selected_participant
+spatial:
+  actual: production_A6_SpatialIndex_state
+  reference: preserved_A5_independent_spatial_oracle_contract
+  classification: blocking
+A2_dependency_consumption:
+  actual: A6_consumes_existing_A2_evaluation_boundary
+  reference: frozen_A2_dependency_closure_contract
+  classification: blocking_by_upstream_binding
+invalidation:
+  actual: generation_bound_Scene_Core_invalidation_output_when_mutated
+  reference: frozen_participant_or_A6_oracle
+  classification: blocking_when_participant_present
 ```
 
-Legacy render/damage rejection coverage may remain corroborative regression evidence; it does not substitute for the canonical checkpoint matrix.
+No `referenceGeometryDigest` or `directDependencies` storage is required in A1 to satisfy this section.
 
-## R08 Recovery Blocking Closure
-
-Required CTest identity:
+### A6_R08_ATOMIC_PUBLICATION
 
 ```yaml
-canvas_g2_a6_recovery:
-  obligation: T02-R08
-  expected_result: PASS
+id: A6_R08_ATOMIC_PUBLICATION
+ctest: canvas_g2_a6_atomic_publication
+obligation: T02-R08
+expected_result: PASS
 ```
 
-Required fixtures:
+Inject deterministic failure at every actual required pre-publication participant boundary and immediately before publication. For every pre-publication failure, previous published RuntimeScene/generation/derived participant state remains exactly visible and partial publication is forbidden.
 
-- dropped or unusable ChangeSet;
-- stale derived state;
-- semantic generation gap;
-- deliberately corrupted derived state through non-public test access;
-- failed recovery path.
+### A6_R08_RECOVERY
 
-For every successful recovery:
+```yaml
+id: A6_R08_RECOVERY
+ctest: canvas_g2_a6_recovery
+obligation: T02-R08
+expected_result: PASS
+```
 
-- actual A3 FullSceneCompiler is invoked;
-- recovery materializes canonical RuntimeScene plus required derived state through the production bridge;
-- published recovery generation equals the stable authoritative generation;
-- recovered canonical observable exactly equals the independent test oracle;
-- disposition is explicitly FULL_REBUILD / RECOVERY, never incremental success.
+Fixtures remain: dropped/unusable ChangeSet, stale derived state, semantic generation gap, deliberately corrupted derived state through non-public test access, and failed recovery. Successful recovery materially invokes A3 FullSceneCompiler through the production bridge and publishes coherent canonical/derived state. Failed recovery preserves previous publication.
 
-Failed recovery leaves the previous published canonical state unchanged.
+### Predecessor regressions
 
-## Required Predecessor Regressions
+All MUST PASS at exact final result revision:
 
 ```text
 canvas_g2_a0_semantic_generation_binding
@@ -364,77 +351,79 @@ canvas_rf01_scene_atomicity
 canvas_rf01_scene_binding
 ```
 
-All MUST PASS at the exact final result revision. `git diff --check` MUST PASS.
+`git diff --check` MUST PASS.
 
 ## Evidence Classification
 
 ```yaml
 blocking:
-  - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE   # T02-R07
-  - A6_ATOMIC_PUBLICATION_EVIDENCE        # T02-R08
-  - A6_RECOVERY_EVIDENCE                  # T02-R08
+  - A6_INCREMENTAL_EQUIVALENCE_EVIDENCE
+  - A6_ATOMIC_PUBLICATION_EVIDENCE
+  - A6_RECOVERY_EVIDENCE
 corroborative:
   - A6_A2_CONSUMPTION_DIAGNOSTICS
   - legacy_SceneBinding_render_damage_regressions
 ```
 
-No new blocking artifact and no new global evidence-file slot is authorized.
+No new blocking artifact family and no new global evidence-file slot are authorized.
 
-## EXECUTION_CLOSURE_CONTRACT v0.4
+## EXECUTION_CLOSURE_CONTRACT v0.5
 
 ```yaml
 EXECUTION_CLOSURE_CONTRACT:
   implementation:
-    preserve_completed_work_at: eff48f3b5114a15acdab952eb0be0d2a93c981e0
+    preserve_completed_work_at: e709ce02e2091757e9c7fbf4632bc3218fda6942
     required_changes:
-      - preserve_existing_A6_planning_generation_and_disposition_work_unless_a_verified_defect_requires_change
-      - make_canonical_A1_nine_kind_RuntimeScene_the_blocking_A6_published_scene_observable
-      - add_minimal_RuntimeScene_staging_and_publication_mechanics_for_cross_participant_atomicity
-      - consume_existing_A2_impact_dependency_boundary_for_incremental_affected_work
-      - stage_bounds_and_production_spatial_updates_before_publication
-      - produce_generation_bound_Scene_Core_invalidation_output_without_Render_Core_ownership
-      - add_private_production_FullSceneCompiler_materialization_bridge_and_use_it_for_recovery
-      - add_non_public_coordinator_checkpoint_and_corruption_testability_seam
-      - upgrade_R07_test_to_exact_long_run_nine_kind_independent_oracle_contract
-      - complete_R08_atomic_checkpoint_matrix
+      - preserve_e709ce_RED_independence_correction_and_all_compatible_prior_A6_work
+      - bind_R07_structural_comparison_to_explicit_P20_v0_4_A1_domain_only
+      - keep_A3_bounds_digest_dependencies_as_inspection_or_participant_oracle_data_not_A1_structural_fields
+      - preserve_or_complete_actual_A6_bounds_spatial_invalidation_participant_staging_and_atomic_publication
+      - retain_existing_A2_dependency_ownership_and_consume_its_evaluation_boundary
+      - keep_A3_full_materialization_bridge_recovery_only
+      - complete_R07_long_run_nine_kind_all_impact_family_evidence
+      - complete_R08_actual_participant_checkpoint_matrix
       - complete_R08_recovery_matrix_including_corrupt_state_and_failed_recovery
     forbidden_changes:
-      - replay_from_task_anchor_or_discard_accepted_eff48f3_work_without_verified_defect
+      - replay_from_main_task_anchor_eff48f3_a69e91_or_bd41068
+      - restore_A3_materialization_as_normal_incremental_RuntimeScene_source
+      - require_referenceGeometryDigest_or_directDependencies_as_A1_structural_equality_fields
+      - duplicate_A3_private_digest_or_dependency_derivation_in_A6
+      - remove_derived_correctness_checks_merely_to_make_R07_green
       - modify_A2_A3_A4_A5_algorithm_authority_or_semantic_truth
-      - modify_FullSceneCompiler_or_reference_projection_to_match_incremental_output
-      - make_legacy_SceneBinding_or_six_kind_SceneRecord_the_canonical_A6_truth
-      - public_production_debug_or_corruption_API
       - weaken_R07_or_R08_or_reduce_corpus_strength
-      - silently_skip_required_checkpoint_or_recovery_fixture
       - add_new_global_G2_evidence_file_slot
 
   tests:
     required:
       - id: A6_R07_EQUIVALENCE
-        command_or_oracle: ctest canvas_g2_a6_incremental_equivalence against independent A3 FullSceneCompiler after every Applied generation
+        command_or_oracle: canvas_g2_a6_incremental_equivalence using explicit P20 v0.4 A1 canonicalization after every true Applied generation
         expected_result: PASS
-        blocking_reason: T02-R07 integrated drift/kind-loss has no other end-to-end independent detector
+        blocking_reason: closes integrated long-run structural drift and kind-loss while preserving independent A3 reference
+      - id: A6_R07_DERIVED_PARTICIPANTS
+        command_or_oracle: participant-specific bounds/spatial/invalidation checks plus frozen A2 dependency-consumption binding
+        expected_result: PASS
+        blocking_reason: prevents structural-domain clarification from deleting derived correctness coverage
       - id: A6_R08_ATOMIC_PUBLICATION
-        command_or_oracle: ctest canvas_g2_a6_atomic_publication with every frozen coordinator checkpoint injected
+        command_or_oracle: canvas_g2_a6_atomic_publication against every actual required participant checkpoint
         expected_result: PASS
-        blocking_reason: T02-R08 cross-participant half-publish is only detected at the A6 transaction boundary
+        blocking_reason: closes cross-participant half-publish failure mode
       - id: A6_R08_RECOVERY
-        command_or_oracle: ctest canvas_g2_a6_recovery with dropped/stale/gap/corrupt/failed-recovery fixtures and actual production recovery bridge
+        command_or_oracle: canvas_g2_a6_recovery with dropped/stale/gap/corrupt/failed-recovery fixtures and actual A3 bridge
         expected_result: PASS
-        blocking_reason: T02-R08 recovery orchestration/materialization is A6-owned
+        blocking_reason: closes A6-owned recovery and materialization failure modes
       - id: A6_PREDECESSOR_REGRESSION_MATRIX
-        command_or_oracle: run all predecessor CTest identities frozen above
+        command_or_oracle: run all frozen predecessor CTest identities
         expected_result: PASS
-        blocking_reason: A6 must preserve consumed A0-A5 and RF-01 contracts
+        blocking_reason: preserves A0-A5 and RF-01 consumed contracts
       - id: SOURCE_HYGIENE
         command_or_oracle: git diff --check
         expected_result: PASS
-        blocking_reason: final source must remain reviewer-clean
+        blocking_reason: reviewer-clean final source
 
   hosted_verification:
     required: []
     optional:
-      - existing repository CI on exact final result revision when available
+      - repository_CI_on_exact_final_result_revision_when_available
 
   evidence:
     blocking:
@@ -450,14 +439,16 @@ EXECUTION_CLOSURE_CONTRACT:
     exact_result_revision_required: true
     reviewer_resolvable_source_required: true
     package_materialization_must_be_resolvable_before_resume: true
-    hosted_CI_not_required_by_this_A6_package: true
     official_Gate_PASS_forbidden_in_execution_return: true
 
   terminal_success:
     all_of:
-      - accepted_eff48f3_partial_work_preserved_except_where_directly_reconciled_to_v0_3_Authority
-      - final_changed_paths_conform_to_P31_v0_4_allowlist
-      - canonical_A1_RuntimeScene_is_actual_A6_published_observable
+      - e709ce_valid_work_preserved_except_verified_reconciliation_changes
+      - final_changed_paths_conform_to_P31_v0_5_allowlist
+      - normal_incremental_A6_does_not_generate_RuntimeScene_via_A3
+      - exact_A1_structural_domain_equal_to_independent_A3_reference_after_every_required_Applied_generation
+      - required_derived_participant_correctness_checks_closed_without_A1_digest_dependency_storage_requirement
+      - canonical_A6_participants_publish_one_generation_atomically
       - recovery_materially_uses_independent_A3_FullSceneCompiler_result
       - A6_R07_blocking_evidence_closed
       - A6_R08_atomic_blocking_evidence_closed
@@ -487,35 +478,32 @@ EXECUTION_CLOSURE_CONTRACT:
 Before source mutation P33 MUST:
 
 1. resolve repository identity `github / Mostorm-Labs/axiom`;
-2. resolve this exact same-repository package materialization commit;
-3. verify task anchor `4faf351f…` and accepted cursor `eff48f3…` ancestry;
-4. verify the descendant delta after `eff48f3…` is package-materialization-only;
-5. run PackageBindingPreflight against P15/P16/P20 v0.3 and the exact Verification bindings above;
-6. run EvidenceContractPreflight for the three blocking A6 evidence obligations;
-7. verify there is no unauthorized source delta before mutation.
-
-Expected resume classification after package-only materialization: `DESCENDANT_CURSOR`.
-
-A floating `latest`, superseded Authority/P20/P31 ref, unresolved package ref, or non-package source delta before P33 is fail-closed.
+2. resolve this exact same-repository v0.5 package materialization commit;
+3. verify task anchor `4faf351f...` is an ancestor of `e709ce02...` and the execution branch still resolves at or as a valid descendant of the accepted cursor;
+4. classify `EXACT_CURSOR` or `DESCENDANT_CURSOR` from the execution branch, not from the package-materialization branch;
+5. run PackageBindingPreflight against P15 v0.3, P16 v0.3, A6 P20 v0.4, and global P20 v0.3;
+6. run EvidenceContractPreflight for the three blocking A6 evidence families;
+7. inspect only the delta after `e709ce02...`; do not replay earlier A6 work;
+8. fail closed on any non-package source divergence outside the v0.5 allowlist.
 
 ## Return Contract After Resumed Execution
+
+Execution return carries exact identities/navigation only. Machine proof facts remain owned by EvidenceArtifact/provider observations.
 
 ```yaml
 task_id: GT-G2-00-A6
 status: READY_FOR_CONTROL_REVIEW | BLOCKED
-package_ref: notion://3db4c57a-590c-81c5-8775-cf70fdb62788/GT-G2-00-A6-P31-v0.4
-package_materialization_ref: EXACT_V0_4_MATERIALIZATION_SHA
-resume_cursor_used: eff48f3b5114a15acdab952eb0be0d2a93c981e0
+package_ref: notion://3dc4c57a-590c-81ce-8c78-d4fb1c68d007/GT-G2-00-A6-P31-v0.5
+package_materialization_ref: EXACT_V0_5_MATERIALIZATION_SHA
+resume_cursor_used: e709ce02e2091757e9c7fbf4632bc3218fda6942
 actual_resumed_starting_revision: EXACT_SHA
 result_revision: EXACT_SHA
 execution_branch: codex/gt-g2-a6-incremental-runtime-coordination
-repository_mutation_scope_conformed: true | false
-blocking_evidence:
-  A6_INCREMENTAL_EQUIVALENCE_EVIDENCE: PASS | FAIL | NOT_RUN
-  A6_ATOMIC_PUBLICATION_EVIDENCE: PASS | FAIL | NOT_RUN
-  A6_RECOVERY_EVIDENCE: PASS | FAIL | NOT_RUN
-predecessor_regressions: PASS | FAIL | NOT_RUN
-git_diff_check: PASS | FAIL | NOT_RUN
+materialized_ref: reviewer_resolvable_exact_result_ref
+evidence_input_refs:
+  - exact_evidence_input_refs
+provider_run_refs:
+  - exact_provider_refs_when_applicable
 terminal_blocker: null | EXPLICIT_CLASS
 next_surface: CONTROL_REVIEW
 ```
