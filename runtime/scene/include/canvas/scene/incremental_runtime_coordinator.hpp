@@ -18,7 +18,14 @@ enum class RuntimeUpdateDisposition : std::uint8_t {
 enum class RuntimeCheckpoint : std::uint8_t {
     kBeforeRuntimePrepare,
     kAfterRuntimePrepare,
+    kBeforeBoundsPrepare,
+    kAfterBoundsPrepare,
+    kBeforeSpatialPrepare,
+    kAfterSpatialPrepare,
+    kBeforeInvalidationFinalization,
+    kAfterInvalidationFinalization,
     kBeforePublication,
+    kAfterPublication,
 };
 
 struct RuntimeUpdatePlan final {

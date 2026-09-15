@@ -6,6 +6,32 @@
 
 namespace canvas {
 
+namespace {
+RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScene materialized) {
+    RuntimeSceneProjection projection;
+    projection.generation = materialized.generation;
+    projection.records.reserve(materialized.records.size());
+    for (auto& record : materialized.records) {
+        projection.records.push_back(RuntimeSceneRecord{
+            .objectId = record.objectId,
+            .kind = record.kind,
+            .kindVersion = record.kindVersion,
+            .placement = std::move(record.placement),
+            .transform = std::move(record.transform),
+            .properties = std::move(record.properties),
+            .content = std::move(record.content),
+            .eraseMasks = std::move(record.eraseMasks),
+            .geometryBounds = record.geometryBounds,
+            .visualBounds = record.visualBounds,
+            .worldBounds = record.worldBounds,
+            .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
+            .directDependencies = std::move(record.directDependencies),
+        });
+    }
+    return projection;
+}
+} // namespace
+
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,
     const semantic::ChangeSet& changes) const {
@@ -37,9 +63,9 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     const ISemanticSceneCompiler& compiler,
     const SceneCommitInput& input) {
     if (input.changes == nullptr) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kInvalidRevision,
-             "Incremental runtime update requires a ChangeSet"});
+        // A dropped ChangeSet is a recovery condition, not an incremental
+        // terminal error. Rebuild from the authoritative post-state.
+        return recover(compiler, input);
     }
     const auto updatePlan = plan(input.post_state, *input.changes);
     if (!updatePlan) {
@@ -49,13 +75,27 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
-    auto runtimePrepared = runtimeScene_.prepare(input.post_state);
+    auto fullMaterialized = internal::materializeFullScene(input.post_state);
+    if (!fullMaterialized) {
+        return foundation::Result<SceneSyncReceipt>::failure(fullMaterialized.error());
+    }
+    auto runtimePrepared = runtimeScene_.prepare(
+        projectionFromMaterialized(std::move(fullMaterialized.value())));
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
     if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) {
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
+    }
+    if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare) ||
+        checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare) ||
+        checkpointFails(RuntimeCheckpoint::kBeforeSpatialPrepare) ||
+        checkpointFails(RuntimeCheckpoint::kAfterSpatialPrepare) ||
+        checkpointFails(RuntimeCheckpoint::kBeforeInvalidationFinalization) ||
+        checkpointFails(RuntimeCheckpoint::kAfterInvalidationFinalization)) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kParticipantRejected, "Scene-Core checkpoint failure"});
     }
     // The coordinator boundary is the last point at which all participants
     // are still unpublished.  A deterministic failure here must therefore
@@ -80,31 +120,12 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     // through the independent full compiler path. The recovery receipt is
     // distinguishable and never reported as incremental success.
     const SceneCommitInput recoveryInput(input.after_generation, input.post_state);
-    auto fullMaterialized = internal::materializeFullScene(input.post_state);
-    if (!fullMaterialized) {
-        return foundation::Result<SceneSyncReceipt>::failure(fullMaterialized.error());
+    auto recoveryMaterialized = internal::materializeFullScene(input.post_state);
+    if (!recoveryMaterialized) {
+        return foundation::Result<SceneSyncReceipt>::failure(recoveryMaterialized.error());
     }
-    RuntimeSceneProjection recoveryProjection;
-    recoveryProjection.generation = fullMaterialized.value().generation;
-    recoveryProjection.records.reserve(fullMaterialized.value().records.size());
-    for (auto& record : fullMaterialized.value().records) {
-        recoveryProjection.records.push_back(RuntimeSceneRecord{
-            .objectId = record.objectId,
-            .kind = record.kind,
-            .kindVersion = record.kindVersion,
-            .placement = std::move(record.placement),
-            .transform = std::move(record.transform),
-            .properties = std::move(record.properties),
-            .content = std::move(record.content),
-            .eraseMasks = std::move(record.eraseMasks),
-            .geometryBounds = record.geometryBounds,
-            .visualBounds = record.visualBounds,
-            .worldBounds = record.worldBounds,
-            .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
-            .directDependencies = std::move(record.directDependencies),
-        });
-    }
-    auto recoveryPrepared = runtimeScene_.prepare(std::move(recoveryProjection));
+    auto recoveryPrepared = runtimeScene_.prepare(
+        projectionFromMaterialized(std::move(recoveryMaterialized.value())));
     if (!recoveryPrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(recoveryPrepared.error());
     }
@@ -130,27 +151,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     if (!materialized) {
         return foundation::Result<SceneSyncReceipt>::failure(materialized.error());
     }
-    RuntimeSceneProjection projection;
-    projection.generation = materialized.value().generation;
-    projection.records.reserve(materialized.value().records.size());
-    for (auto& record : materialized.value().records) {
-        projection.records.push_back(RuntimeSceneRecord{
-            .objectId = record.objectId,
-            .kind = record.kind,
-            .kindVersion = record.kindVersion,
-            .placement = std::move(record.placement),
-            .transform = std::move(record.transform),
-            .properties = std::move(record.properties),
-            .content = std::move(record.content),
-            .eraseMasks = std::move(record.eraseMasks),
-            .geometryBounds = record.geometryBounds,
-            .visualBounds = record.visualBounds,
-            .worldBounds = record.worldBounds,
-            .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
-            .directDependencies = std::move(record.directDependencies),
-        });
-    }
-    auto runtimePrepared = runtimeScene_.prepare(std::move(projection));
+    auto runtimePrepared = runtimeScene_.prepare(
+        projectionFromMaterialized(std::move(materialized.value())));
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
@@ -159,6 +161,10 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kParticipantRejected, "Recovery publication checkpoint failure"});
     }
     auto result = binding_.rebuild(compiler, input);
+    if (checkpointFails(RuntimeCheckpoint::kAfterPublication)) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kParticipantRejected, "Post-publication checkpoint failure"});
+    }
     if (result) runtimeScene_.publish(std::move(runtimePrepared.value()));
     return result;
 }

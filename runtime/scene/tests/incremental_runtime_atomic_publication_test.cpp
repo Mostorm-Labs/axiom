@@ -5,6 +5,7 @@
 #include "incremental_runtime_test_access.hpp"
 
 #include <cstdlib>
+#include <array>
 #include <optional>
 #include <vector>
 
@@ -70,20 +71,31 @@ int main() {
     const auto beforeDigest = renderRaw->stateDigest();
     const auto beforeSpatialDigest = spatialRaw->stateDigest();
     const auto beforeRuntimeGeneration = coordinator.runtimeScene().generation();
-    canvas::IncrementalRuntimeTestAccess::failAt(
-        coordinator, canvas::RuntimeCheckpoint::kBeforePublication);
     renderRaw->setRejectPrepare(false);
     const canvas::SceneCommitInput input(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), view,
         &changes);
-    const auto result = coordinator.apply(Compiler{}, input);
-    const bool checkpointAtomic =
-        !result && result.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
-                   scene.revision() == beforeRevision && renderRaw->stateDigest() == beforeDigest &&
-                   spatialRaw->stateDigest() == beforeSpatialDigest &&
-                   coordinator.runtimeScene().generation() == beforeRuntimeGeneration;
-    canvas::IncrementalRuntimeTestAccess::clear(coordinator);
-    if (!checkpointAtomic) return EXIT_FAILURE;
+    const std::array checkpoints{
+        canvas::RuntimeCheckpoint::kBeforeRuntimePrepare,
+        canvas::RuntimeCheckpoint::kAfterRuntimePrepare,
+        canvas::RuntimeCheckpoint::kBeforeBoundsPrepare,
+        canvas::RuntimeCheckpoint::kAfterBoundsPrepare,
+        canvas::RuntimeCheckpoint::kBeforeSpatialPrepare,
+        canvas::RuntimeCheckpoint::kAfterSpatialPrepare,
+        canvas::RuntimeCheckpoint::kBeforeInvalidationFinalization,
+        canvas::RuntimeCheckpoint::kAfterInvalidationFinalization,
+        canvas::RuntimeCheckpoint::kBeforePublication};
+    for (const auto checkpoint : checkpoints) {
+        canvas::IncrementalRuntimeTestAccess::failAt(coordinator, checkpoint);
+        const auto result = coordinator.apply(Compiler{}, input);
+        const bool checkpointAtomic =
+            !result && result.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
+                       scene.revision() == beforeRevision && renderRaw->stateDigest() == beforeDigest &&
+                       spatialRaw->stateDigest() == beforeSpatialDigest &&
+                       coordinator.runtimeScene().generation() == beforeRuntimeGeneration;
+        canvas::IncrementalRuntimeTestAccess::clear(coordinator);
+        if (!checkpointAtomic) return EXIT_FAILURE;
+    }
 
     // Exercise the legacy participant failure independently from the
     // coordinator checkpoint seam.  The render rejection must happen during

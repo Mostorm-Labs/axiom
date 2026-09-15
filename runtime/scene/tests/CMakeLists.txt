@@ -105,6 +105,8 @@ add_executable(canvas_g2_a6_incremental_equivalence
     incremental_runtime_full_oracle_adapter.cpp)
 target_link_libraries(canvas_g2_a6_incremental_equivalence
     PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+target_include_directories(canvas_g2_a6_incremental_equivalence
+    PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
 target_compile_features(canvas_g2_a6_incremental_equivalence PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a6_incremental_equivalence
          COMMAND canvas_g2_a6_incremental_equivalence)

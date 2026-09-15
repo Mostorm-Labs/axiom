@@ -43,6 +43,29 @@ int main() {
         coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2)) {
         return EXIT_FAILURE;
     }
+    // A semantic generation gap must fail closed without replacing the
+    // already-published canonical state.
+    const auto gapChanges = canvas::semantic::ChangeSet::fromChanges(
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(3), {});
+    const canvas::SceneCommitInput gapInput(
+        canvas::semantic::SemanticGeneration(1),
+        canvas::semantic::SemanticGeneration(3), view, &gapChanges);
+    const auto gap = coordinator.apply(Compiler{}, gapInput);
+    if (gap || coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2) ||
+        scene.revision() != canvas::SceneRevision(2)) {
+        return EXIT_FAILURE;
+    }
+    // A dropped ChangeSet enters the same explicit full-recovery policy.
+    canvas::Scene droppedScene(std::make_unique<canvas::testing::FakeRenderScene>(),
+                               std::make_unique<canvas::testing::FakeSpatialIndex>());
+    canvas::SceneBinding droppedBinding(droppedScene);
+    canvas::IncrementalRuntimeCoordinator droppedCoordinator(droppedBinding);
+    const auto dropped = droppedCoordinator.apply(Compiler{}, input);
+    if (!dropped || dropped.value().disposition != canvas::SceneSyncDisposition::kRebuiltFull ||
+        droppedScene.revision() != canvas::SceneRevision(2) ||
+        droppedCoordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2)) {
+        return EXIT_FAILURE;
+    }
     canvas::IncrementalRuntimeTestAccess::corrupt(coordinator);
     if (coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(0)) {
         return EXIT_FAILURE;
@@ -63,8 +86,10 @@ int main() {
     canvas::SceneBinding failingBinding(failingScene);
     canvas::IncrementalRuntimeCoordinator failingCoordinator(failingBinding);
     const auto rejected = failingCoordinator.recover(Compiler{}, input);
-    return !rejected && rejected.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
+    if (!rejected && rejected.error().code == canvas::foundation::ErrorCode::kParticipantRejected &&
                    failingCoordinator.runtimeScene().generation() == canvas::semantic::SemanticGeneration(0) &&
-                   failingScene.revision() == canvas::SceneRevision(0)
-               ? EXIT_SUCCESS : EXIT_FAILURE;
+                   failingScene.revision() == canvas::SceneRevision(0)) {
+        return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
 }

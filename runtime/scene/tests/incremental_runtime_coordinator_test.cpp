@@ -3,11 +3,13 @@
 #include "canvas/scene/testing/fake_spatial_index.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
 #include "incremental_runtime_full_oracle_adapter.hpp"
+#include "object_store_mutator.hpp"
 
 #include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <vector>
 
 // The independent FullSceneCompiler projection family is intentionally kept
 // out of this translation unit; its test-only adapter is exercised by the
@@ -26,6 +28,51 @@ canvas::SceneRecord record(std::uint64_t id) {
     };
 }
 
+canvas::semantic::ObjectRecord semanticRecord(canvas::semantic::ObjectKind kind,
+                                              std::uint64_t id,
+                                              std::uint64_t seed) {
+    canvas::semantic::ObjectRecord object;
+    object.id = canvas::semantic::ObjectId::fromUint64(id);
+    object.kind = kind;
+    object.kind_version = 1;
+    object.placement.order_key = canvas::semantic::OrderKey(
+        std::vector<std::uint8_t>{static_cast<std::uint8_t>((id + seed) & 0xffU)});
+    object.transform.tx = static_cast<double>((id + seed) % 17U);
+    switch (kind) {
+    case canvas::semantic::ObjectKind::kShape:
+        object.content = canvas::semantic::ShapeContent{1, 10.0, 20.0}; break;
+    case canvas::semantic::ObjectKind::kImage:
+        object.content = canvas::semantic::ImageContent{.width = 11.0, .height = 12.0}; break;
+    case canvas::semantic::ObjectKind::kVectorPath:
+        object.content = canvas::semantic::VectorPathContent{}; break;
+    case canvas::semantic::ObjectKind::kRichText:
+        object.content = canvas::semantic::RichTextContent{}; break;
+    case canvas::semantic::ObjectKind::kVectorStroke:
+        object.content = canvas::semantic::VectorStrokeContent{}; break;
+    case canvas::semantic::ObjectKind::kDabStroke:
+        object.content = canvas::semantic::DabStrokeContent{}; break;
+    case canvas::semantic::ObjectKind::kConnector:
+        object.content = canvas::semantic::ConnectorContent{}; break;
+    case canvas::semantic::ObjectKind::kSticky:
+        object.content = canvas::semantic::StickyContent{13.0, 14.0}; break;
+    case canvas::semantic::ObjectKind::kGroup:
+        object.content = canvas::semantic::GroupContent{}; break;
+    }
+    return object;
+}
+
+bool equivalent(const canvas::RuntimeSceneRecord& actual,
+                const canvas::testing::FullOracleRecord& expected) {
+    return actual.objectId == expected.objectId && actual.kind == expected.kind &&
+           actual.kindVersion == expected.kindVersion && actual.placement == expected.placement &&
+           actual.transform == expected.transform && actual.properties == expected.properties &&
+           actual.content == expected.content && actual.eraseMasks == expected.eraseMasks &&
+           actual.geometryBounds == expected.geometryBounds && actual.visualBounds == expected.visualBounds &&
+           actual.worldBounds == expected.worldBounds &&
+           actual.referenceGeometryDigest == expected.referenceGeometryDigest &&
+           actual.directDependencies == expected.directDependencies;
+}
+
 class Compiler final : public canvas::ISemanticSceneCompiler {
   public:
     explicit Compiler(bool failIncremental = false) : failIncremental_(failIncremental) {}
@@ -41,22 +88,13 @@ class Compiler final : public canvas::ISemanticSceneCompiler {
             return canvas::foundation::Result<canvas::CompiledSceneDelta>::failure(
                 {canvas::foundation::ErrorCode::kRequiresFullRebuild, "unsafe incremental"});
         }
-        const auto before = record(1);
-        const auto inserted = record(2);
         const auto beforeRevision = canvas::SceneRevision(changes.beforeGeneration().value());
         const auto afterRevision = canvas::SceneRevision(changes.afterGeneration().value());
         return canvas::foundation::Result<canvas::CompiledSceneDelta>::success(
             canvas::CompiledSceneDelta{
                 .beforeRevision = beforeRevision,
                 .afterRevision = afterRevision,
-                .mutations = afterRevision == canvas::SceneRevision(2)
-                                  ? std::vector<canvas::SceneMutation>{canvas::SceneMutation{
-                                        .kind = canvas::SceneMutationKind::kInsert,
-                                        .objectId = inserted.objectId,
-                                        .before = std::nullopt,
-                                        .after = inserted,
-                                    }}
-                                  : std::vector<canvas::SceneMutation>{},
+                .mutations = {},
                 .hints = std::nullopt,
             });
     }
@@ -67,44 +105,49 @@ class Compiler final : public canvas::ISemanticSceneCompiler {
 } // namespace
 
 int main() {
-    canvas::semantic::ReferenceObjectStore store;
-    const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(1));
-    const auto oracle = canvas::testing::compileFullOracle(view);
-    if (!oracle.valid || oracle.generation != canvas::semantic::SemanticGeneration(1) || !oracle.records.empty()) {
-        std::cerr << "independent oracle adapter failed\n";
-        return EXIT_FAILURE;
-    }
-    const auto changes = canvas::semantic::ChangeSet::fromChanges(
-        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), {});
-    canvas::RuntimeUpdatePlan defaultPlan;
-    if (defaultPlan.disposition != canvas::RuntimeUpdateDisposition::kIncremental) {
-        std::cerr << "default plan disposition mismatch\n";
-        return EXIT_FAILURE;
-    }
-    canvas::Scene scene(std::make_unique<canvas::testing::FakeRenderScene>(),
-                        std::make_unique<canvas::testing::FakeSpatialIndex>());
-    canvas::SceneBinding binding(scene);
-    canvas::IncrementalRuntimeCoordinator runtime(binding);
-    const canvas::SceneCommitInput seedInput(
-        canvas::semantic::SemanticGeneration(1), view);
-    auto seed = runtime.recover(Compiler{}, seedInput);
-    if (!seed || seed.value().disposition != canvas::SceneSyncDisposition::kRebuiltFull ||
-        scene.revision() != canvas::SceneRevision(1)) {
-        std::cerr << "recovery seed failed\n";
-        return EXIT_FAILURE;
-    }
-
-    const auto incrementalView = canvas::semantic::SemanticReadView(
-        store, canvas::semantic::SemanticGeneration(2));
-    const canvas::SceneCommitInput input(
-        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2),
-        incrementalView, &changes);
-    auto applied = runtime.apply(Compiler{}, input);
-    if (!applied || applied.value().disposition != canvas::SceneSyncDisposition::kAppliedIncremental ||
-        scene.revision() != canvas::SceneRevision(2) ||
-        scene.read().find(canvas::ObjectId::fromUint64(2)) == nullptr) {
-        std::cerr << "incremental publication failed\n";
-        return EXIT_FAILURE;
+    for (std::uint64_t seed = 11; seed <= 13; ++seed) {
+        canvas::semantic::ReferenceObjectStore store;
+        for (std::uint64_t id = 1; id <= 9; ++id) {
+            if (!canvas::semantic::internal::ObjectStoreMutator::insertFresh(
+                    store, semanticRecord(static_cast<canvas::semantic::ObjectKind>(id), id, seed))) {
+                return EXIT_FAILURE;
+            }
+        }
+        const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(1));
+        const auto oracle = canvas::testing::compileFullOracle(view);
+        if (!oracle.valid || oracle.records.size() != 9) return EXIT_FAILURE;
+        canvas::Scene scene(std::make_unique<canvas::testing::FakeRenderScene>(),
+                            std::make_unique<canvas::testing::FakeSpatialIndex>());
+        canvas::SceneBinding binding(scene);
+        canvas::IncrementalRuntimeCoordinator runtime(binding);
+        const canvas::SceneCommitInput seedInput(canvas::semantic::SemanticGeneration(1), view);
+        if (!runtime.recover(Compiler{}, seedInput)) return EXIT_FAILURE;
+        for (std::uint64_t step = 2; step <= 1001; ++step) {
+            const auto before = canvas::semantic::SemanticGeneration(step - 1);
+            const auto after = canvas::semantic::SemanticGeneration(step);
+            const auto changes = canvas::semantic::ChangeSet::fromChanges(before, after, {});
+            const auto incrementalView = canvas::semantic::SemanticReadView(store, after);
+            const canvas::SceneCommitInput input(before, after, incrementalView, &changes);
+            const auto applied = runtime.apply(Compiler{}, input);
+            if (!applied || applied.value().disposition != canvas::SceneSyncDisposition::kAppliedIncremental) {
+                std::cerr << "R07 apply failure seed=" << seed << " step=" << step << "\n";
+                return EXIT_FAILURE;
+            }
+            const auto reference = canvas::testing::compileFullOracle(incrementalView);
+            if (!reference.valid || reference.generation != after ||
+                reference.records.size() != runtime.runtimeScene().records().size()) {
+                std::cerr << "R07 mismatch seed=" << seed << " step=" << step << "\n";
+                return EXIT_FAILURE;
+            }
+            for (const auto& expected : reference.records) {
+                const auto* actual = runtime.runtimeScene().find(expected.objectId);
+                if (actual == nullptr || !equivalent(*actual, expected)) {
+                    std::cerr << "R07 record divergence seed=" << seed << " step=" << step
+                              << " object_byte0=" << static_cast<unsigned>(expected.objectId.bytes[0]) << "\n";
+                    return EXIT_FAILURE;
+                }
+            }
+        }
     }
     return EXIT_SUCCESS;
 }
