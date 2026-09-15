@@ -10,6 +10,7 @@
 #include <array>
 #include <optional>
 #include <vector>
+#include <cstdio>
 
 namespace {
 canvas::SceneRecord record(std::uint64_t id) {
@@ -127,12 +128,17 @@ canvas::semantic::ObjectRecord semanticObject(std::uint64_t id, double tx) {
 
 int main() {
     canvas::semantic::ReferenceObjectStore store;
+    const auto checkpointObject = semanticObject(999, 0.0);
+    if (!canvas::semantic::internal::ObjectStoreMutator::insertFresh(store, checkpointObject)) {
+        return EXIT_FAILURE;
+    }
     const canvas::semantic::SemanticReadView seedView(
         store, canvas::semantic::SemanticGeneration(1));
     const canvas::semantic::SemanticReadView view(
         store, canvas::semantic::SemanticGeneration(2));
     const auto changes = canvas::semantic::ChangeSet::fromChanges(
-        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), {});
+        canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2),
+        {{checkpointObject.id, canvas::semantic::SemanticChangeFlags::kContent, {}}});
     auto render = std::make_unique<canvas::testing::FakeRenderScene>();
     auto* renderRaw = render.get();
     auto spatial = std::make_unique<canvas::testing::FakeSpatialIndex>();
@@ -142,7 +148,7 @@ int main() {
     canvas::IncrementalRuntimeCoordinator coordinator(binding);
     const canvas::SceneCommitInput seedInput(
         canvas::semantic::SemanticGeneration(1), seedView);
-    if (!coordinator.recover(Compiler{}, seedInput)) return EXIT_FAILURE;
+    if (!coordinator.recover(Compiler{}, seedInput)) { std::fprintf(stderr, "initial seed fail\\n"); return EXIT_FAILURE; }
     const auto beforeRevision = scene.revision();
     const auto beforeDigest = renderRaw->stateDigest();
     const auto beforeSpatialDigest = spatialRaw->stateDigest();
@@ -282,7 +288,7 @@ int main() {
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), viewA,
         &changesA);
     canvas::IncrementalRuntimeTestAccess::failAt(
-        carryCoordinator, canvas::RuntimeCheckpoint::kBeforePublication);
+        carryCoordinator, canvas::RuntimeCheckpoint::kAfterBoundsPrepare);
     if (carryCoordinator.apply(ABCompiler{}, failedA) ||
         carryScene.publishedBounds() != goldBounds ||
         carryScene.invalidationOutput().generation != canvas::SceneRevision(1) ||

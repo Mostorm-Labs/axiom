@@ -408,15 +408,6 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
         }
         const WorldRect newContentBounds = preparedRecords.contentBounds();
         const SceneDelta runtimeDelta = makeSceneDelta(delta);
-        if (checkpoint != nullptr && checkpoint(checkpointContext, 2U)) {
-            return foundation::Result<SceneApplyReceipt>::failure(makeError(
-                foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"));
-        }
-        if (checkpoint != nullptr && checkpoint(checkpointContext, 3U)) {
-            return foundation::Result<SceneApplyReceipt>::failure(makeError(
-                foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"));
-        }
-
         if (checkpoint != nullptr && checkpoint(checkpointContext, 4U)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));

@@ -156,15 +156,25 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         }
         return foundation::Result<SceneSyncReceipt>::failure(updatePlan.error());
     }
+    publicationGate_.previousGeneration = runtimeScene_.generation();
+    publicationGate_.previousRevision = binding_._scene.revision();
+    publicationGate_.generation = input.after_generation;
+    publicationGate_.revision = SceneRevision(input.after_generation.value());
+    publicationGate_.transactionActive = true;
+    publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
+    publicationGate_.observationContext = this;
     if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) {
+        abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
     auto runtimePrepared = runtimeScene_.prepareIncremental(input.post_state, *input.changes);
     if (!runtimePrepared) {
+        abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
     if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) {
+        abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }
@@ -174,18 +184,21 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     // the compiled SceneDelta; no published participant is touched here.
     for (const auto& change : input.changes->objects()) {
         if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare)) {
+            abortPublication();
             return foundation::Result<SceneSyncReceipt>::failure(
                 {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
         }
         if (const auto* object = input.post_state.find(change.object_id)) {
             const auto bounds = computeBounds(*object);
             if (!bounds.finite) {
+                abortPublication();
                 return foundation::Result<SceneSyncReceipt>::failure(
                     {foundation::ErrorCode::kInvalidRecord, "Bounds participant rejected non-finite state"});
             }
             binding_._scene.stageBounds(bounds.world, SceneRevision(input.after_generation.value()));
         }
         if (checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare)) {
+            abortPublication();
             return foundation::Result<SceneSyncReceipt>::failure(
                 {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
         }
@@ -196,13 +209,6 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     pendingPublication_ = std::move(runtimePrepared.value());
     pendingGeneration_ = input.after_generation;
     pendingRevision_ = SceneRevision(input.after_generation.value());
-    publicationGate_.previousGeneration = runtimeScene_.generation();
-    publicationGate_.previousRevision = binding_._scene.revision();
-    publicationGate_.generation = pendingGeneration_;
-    publicationGate_.revision = pendingRevision_;
-    publicationGate_.transactionActive = true;
-    publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
-    publicationGate_.observationContext = this;
     auto incremental = binding_.synchronize(
         compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
