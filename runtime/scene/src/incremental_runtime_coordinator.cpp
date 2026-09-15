@@ -45,12 +45,15 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     if (!updatePlan) {
         return foundation::Result<SceneSyncReceipt>::failure(updatePlan.error());
     }
+    if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) {
+        return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
+    }
     auto runtimePrepared = runtimeScene_.prepare(input.post_state);
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
-    if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare) ||
-        checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) {
+    if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) {
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "RuntimeScene checkpoint failure"});
     }

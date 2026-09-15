@@ -36,23 +36,27 @@ class Compiler final : public canvas::ISemanticSceneCompiler {
     }
     canvas::foundation::Result<canvas::CompiledSceneDelta> compileDelta(
         const canvas::semantic::SemanticReadView&,
-        const canvas::semantic::ChangeSet&) const override {
+        const canvas::semantic::ChangeSet& changes) const override {
         if (failIncremental_) {
             return canvas::foundation::Result<canvas::CompiledSceneDelta>::failure(
                 {canvas::foundation::ErrorCode::kRequiresFullRebuild, "unsafe incremental"});
         }
         const auto before = record(1);
         const auto inserted = record(2);
+        const auto beforeRevision = canvas::SceneRevision(changes.beforeGeneration().value());
+        const auto afterRevision = canvas::SceneRevision(changes.afterGeneration().value());
         return canvas::foundation::Result<canvas::CompiledSceneDelta>::success(
             canvas::CompiledSceneDelta{
-                .beforeRevision = canvas::SceneRevision(1),
-                .afterRevision = canvas::SceneRevision(2),
-                .mutations = {canvas::SceneMutation{
-                    .kind = canvas::SceneMutationKind::kInsert,
-                    .objectId = inserted.objectId,
-                    .before = std::nullopt,
-                    .after = inserted,
-                }},
+                .beforeRevision = beforeRevision,
+                .afterRevision = afterRevision,
+                .mutations = afterRevision == canvas::SceneRevision(2)
+                                  ? std::vector<canvas::SceneMutation>{canvas::SceneMutation{
+                                        .kind = canvas::SceneMutationKind::kInsert,
+                                        .objectId = inserted.objectId,
+                                        .before = std::nullopt,
+                                        .after = inserted,
+                                    }}
+                                  : std::vector<canvas::SceneMutation>{},
                 .hints = std::nullopt,
             });
     }
@@ -66,7 +70,7 @@ int main() {
     canvas::semantic::ReferenceObjectStore store;
     const canvas::semantic::SemanticReadView view(store, canvas::semantic::SemanticGeneration(1));
     const auto oracle = canvas::testing::compileFullOracle(view);
-    if (!oracle.valid || oracle.generation != 1 || oracle.objectCount != 0) {
+    if (!oracle.valid || oracle.generation != canvas::semantic::SemanticGeneration(1) || !oracle.records.empty()) {
         std::cerr << "independent oracle adapter failed\n";
         return EXIT_FAILURE;
     }

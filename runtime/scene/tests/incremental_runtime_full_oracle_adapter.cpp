@@ -4,24 +4,23 @@
 
 namespace canvas::testing {
 
-FullOracleDigest compileFullOracle(const semantic::SemanticReadView& view) noexcept {
+FullOracleScene compileFullOracle(const semantic::SemanticReadView& view) noexcept {
     const auto compiled = canvas::scene::FullSceneCompiler::compile(view);
     if (!compiled) {
         return {};
     }
-    std::uint64_t digest = 1469598103934665603ULL;
+    FullOracleScene result;
+    result.generation = compiled.value().generation;
+    result.records.reserve(compiled.value().records.size());
     for (const auto& record : compiled.value().records) {
-        for (const auto byte : record.objectId.bytes) {
-            digest ^= byte;
-            digest *= 1099511628211ULL;
-        }
-        digest ^= static_cast<std::uint64_t>(record.kind);
-        digest *= 1099511628211ULL;
-        digest ^= static_cast<std::uint64_t>(record.worldBounds.left != 0.0F);
-        digest *= 1099511628211ULL;
+        result.records.push_back(FullOracleRecord{
+            record.objectId, record.kind, record.kindVersion, record.placement,
+            record.transform, record.properties, record.content, record.eraseMasks,
+            record.geometryBounds, record.visualBounds, record.worldBounds,
+            record.referenceGeometryDigest, record.directDependencies});
     }
-    return FullOracleDigest{compiled.value().generation.value(),
-                            compiled.value().records.size(), digest, true};
+    result.valid = true;
+    return result;
 }
 
 } // namespace canvas::testing

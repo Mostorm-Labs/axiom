@@ -38,7 +38,8 @@ int main() {
     const auto result = coordinator.recover(Compiler{}, input);
     const auto oracle = canvas::testing::compileFullOracle(view);
     if (!result || result.value().disposition != canvas::SceneSyncDisposition::kRebuiltFull ||
-        scene.revision() != canvas::SceneRevision(2) || !oracle.valid ||
+        scene.revision() != canvas::SceneRevision(2) || !oracle.valid || oracle.generation != canvas::semantic::SemanticGeneration(2) ||
+        !oracle.records.empty() ||
         coordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(2)) {
         return EXIT_FAILURE;
     }
