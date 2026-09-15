@@ -448,11 +448,11 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                 foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));
         }
 
+        const DamageSet stagedDamage = damageForDelta(delta);
         if (checkpoint != nullptr && checkpoint(checkpointContext, 6U)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
         }
-        const DamageSet stagedDamage = damageForDelta(delta);
         _pendingInvalidation = SceneInvalidationOutput{
             delta.afterRevision, stagedDamage.rects, false};
         if (checkpoint != nullptr && checkpoint(checkpointContext, 7U)) {

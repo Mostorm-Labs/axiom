@@ -46,8 +46,10 @@ void IncrementalRuntimeCoordinator::observePublication(void* context) noexcept {
         ++self->publicationObservations_;
         const auto observed = self->binding_._scene.read();
         const auto sceneRevision = self->binding_._scene.revision();
+        const auto sceneGeneration = self->binding_._scene.semanticGeneration();
         const auto runtimeGeneration = self->runtimeScene_.generation();
         if (sceneRevision != self->publicationGate_.previousRevision ||
+            sceneGeneration != self->publicationGate_.previousGeneration ||
             runtimeGeneration != self->publicationGate_.previousGeneration ||
             observed.revision() != self->publicationGate_.previousRevision) {
             self->publicationObservationCoherent_ = false;
@@ -179,16 +181,6 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
             return foundation::Result<SceneSyncReceipt>::failure(
                 {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
         }
-    }
-    if (checkpointFails(RuntimeCheckpoint::kBeforeInvalidationFinalization)) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"});
-    }
-    // The canonical Scene transaction finalizes the actual generation-bound
-    // payload; this checkpoint pair is retained as the coordinator boundary.
-    if (checkpointFails(RuntimeCheckpoint::kAfterInvalidationFinalization)) {
-        return foundation::Result<SceneSyncReceipt>::failure(
-            {foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"});
     }
     // The coordinator boundary is the last point at which all participants
     // are still unpublished.  A deterministic failure here must therefore
