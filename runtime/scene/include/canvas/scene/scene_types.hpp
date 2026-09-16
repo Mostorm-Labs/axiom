@@ -68,8 +68,8 @@ struct RuntimeSceneRecord final {
     foundation::WorldRect geometryBounds{};
     foundation::WorldRect visualBounds{};
     foundation::WorldRect worldBounds{};
-    std::string referenceGeometryDigest;
-    std::vector<semantic::ObjectId> directDependencies;
+    std::string referenceGeometryDigest{};
+    std::vector<semantic::ObjectId> directDependencies{};
 
     bool operator==(const RuntimeSceneRecord&) const = default;
 };
