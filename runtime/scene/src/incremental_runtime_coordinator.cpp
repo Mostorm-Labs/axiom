@@ -95,6 +95,7 @@ void IncrementalRuntimeCoordinator::abortPublication() noexcept {
     publicationGate_.observationContext = nullptr;
 }
 
+
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,
     const semantic::ChangeSet& changes) const {
@@ -150,6 +151,11 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     publicationGate_.transactionActive = true;
     publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext = this;
+    runtimeScene_._stableProjection = runtimeScene_._projection;
+    binding_._scene._stablePublishedRecords = binding_._scene._publishedRecords;
+    binding_._scene._stablePublishedBounds = binding_._scene._publishedBounds;
+    binding_._scene._stableInvalidationGeneration = binding_._scene._invalidationGeneration;
+    binding_._scene._stablePublishedInvalidation = binding_._scene._publishedInvalidation;
     if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) {
         abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(
@@ -242,6 +248,11 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     publicationGate_.transactionActive = true;
     publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext = this;
+    runtimeScene_._stableProjection = runtimeScene_._projection;
+    binding_._scene._stablePublishedRecords = binding_._scene._publishedRecords;
+    binding_._scene._stablePublishedBounds = binding_._scene._publishedBounds;
+    binding_._scene._stableInvalidationGeneration = binding_._scene._invalidationGeneration;
+    binding_._scene._stablePublishedInvalidation = binding_._scene._publishedInvalidation;
     if (checkpointFails(RuntimeCheckpoint::kBeforePublication)) {
         abortPublication();
         return foundation::Result<SceneSyncReceipt>::failure(

@@ -554,7 +554,7 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
                 .backToFront = {},
                 .diagnostics = {},
             };
-            for (const auto& record : _publishedRecords) {
+            for (const auto& record : _stablePublishedRecords) {
                 if (isVisible(record) && record.worldBounds.intersects(request.worldRect)) {
                     result.backToFront.push_back(record.objectId);
                 }
