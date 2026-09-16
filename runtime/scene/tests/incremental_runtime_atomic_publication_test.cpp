@@ -257,7 +257,7 @@ int main() {
         return EXIT_FAILURE;
     }
     const auto recoveredQuery = scene.query(canvas::SceneQuery{canvas::WorldRect{-1.0F, -1.0F, 2.0F, 2.0F}});
-    if (!recoveredQuery || recoveredQuery.error().code == canvas::foundation::ErrorCode::kParticipantRejected) {
+    if (!recoveredQuery) {
         return EXIT_FAILURE;
     }
     const auto recoveredHit = scene.hitTest(canvas::HitTestRequest{
@@ -266,7 +266,7 @@ int main() {
         .filter = canvas::HitTestFilter{},
         .maximumResults = 1U,
     });
-    if (!recoveredHit || recoveredHit.error().code == canvas::foundation::ErrorCode::kParticipantRejected) {
+    if (!recoveredHit) {
         return EXIT_FAILURE;
     }
 
