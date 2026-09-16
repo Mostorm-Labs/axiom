@@ -6,6 +6,7 @@
 #include "canvas/foundation/stable_order_key.hpp"
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 
@@ -13,9 +14,27 @@
 #include <cstdint>
 #include <optional>
 #include <span>
+#include <string>
 #include <vector>
 
 namespace canvas {
+
+class IncrementalRuntimeCoordinator;
+
+// Shared visibility epoch for the A6 prepare/publication transaction.  Scene
+// and RuntimeScene may finish internal noexcept commits in sequence, but
+// observers continue to see the last published generation until the
+// coordinator closes the epoch.
+struct ScenePublicationGate final {
+    using ObservationFn = void (*)(void*) noexcept;
+    semantic::SemanticGeneration previousGeneration{};
+    foundation::SceneRevision previousRevision{};
+    foundation::SceneRevision revision{};
+    semantic::SemanticGeneration generation{};
+    bool transactionActive = false;
+    ObservationFn observation = nullptr;
+    void* observationContext = nullptr;
+};
 
 using foundation::ContentRevision;
 using foundation::ObjectId;
@@ -46,6 +65,11 @@ struct RuntimeSceneRecord final {
     semantic::PropertyBag properties{};
     semantic::ObjectContent content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
+    foundation::WorldRect geometryBounds{};
+    foundation::WorldRect visualBounds{};
+    foundation::WorldRect worldBounds{};
+    std::string referenceGeometryDigest{};
+    std::vector<semantic::ObjectId> directDependencies{};
 
     bool operator==(const RuntimeSceneRecord&) const = default;
 };
@@ -71,13 +95,19 @@ class RuntimeScene final {
     RuntimeScene() = default;
 
     [[nodiscard]] semantic::SemanticGeneration generation() const noexcept {
-        return _projection.generation;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousGeneration
+                   : _projection.generation;
     }
     [[nodiscard]] std::span<const RuntimeSceneRecord> records() const noexcept {
-        return _projection.records;
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? std::span<const RuntimeSceneRecord>(_stableProjection.records)
+                   : std::span<const RuntimeSceneRecord>(_projection.records);
     }
     [[nodiscard]] const RuntimeSceneRecord* find(semantic::ObjectId id) const noexcept {
-        return _projection.find(id);
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stableProjection.find(id)
+                   : _projection.find(id);
     }
 
     foundation::Result<RuntimeSceneProjection> replace(
@@ -86,7 +116,30 @@ class RuntimeScene final {
         const semantic::SemanticReadView& post_state);
 
   private:
+    friend class IncrementalRuntimeTestAccess;
+    struct PreparedPublication final {
+        RuntimeSceneProjection projection;
+    };
+
+    friend class IncrementalRuntimeCoordinator;
+
+    void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
+
+    foundation::Result<PreparedPublication> prepare(
+        const semantic::SemanticReadView& post_state) const;
+    foundation::Result<PreparedPublication> prepareIncremental(
+        const semantic::SemanticReadView& post_state,
+        const semantic::ChangeSet& changes) const;
+    foundation::Result<PreparedPublication> prepare(
+        RuntimeSceneProjection projection) const;
+    void publish(PreparedPublication publication) noexcept;
+    void corruptForTest() noexcept {
+        _projection.generation = semantic::SemanticGeneration(0);
+    }
+
     RuntimeSceneProjection _projection;
+    RuntimeSceneProjection _stableProjection;
+    ScenePublicationGate* _publicationGate = nullptr;
 };
 
 [[nodiscard]] inline RuntimeSceneProjection projectRuntimeScene(

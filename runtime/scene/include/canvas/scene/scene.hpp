@@ -36,6 +36,12 @@ struct SceneCommitDiagnostics final {
     std::uint8_t revisionStage = 0;
 };
 
+struct SceneInvalidationOutput final {
+    SceneRevision generation{};
+    std::vector<DamageRect> rects;
+    bool fullScene = false;
+};
+
 class SceneReadView final {
   public:
     [[nodiscard]] SceneRevision revision() const {
@@ -65,13 +71,19 @@ class Scene final {
     Scene& operator=(const Scene&) = delete;
 
     [[nodiscard]] SceneRevision revision() const {
-        return _revision;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousRevision : _revision;
     }
     [[nodiscard]] semantic::SemanticGeneration semanticGeneration() const {
-        return _semanticGeneration;
+        return _publicationGate != nullptr && _publicationGate->transactionActive
+                   ? _publicationGate->previousGeneration : _semanticGeneration;
     }
     [[nodiscard]] SceneReadView read() const {
-        return SceneReadView(_revision, _records.records());
+        if (_publicationGate != nullptr && _publicationGate->transactionActive) {
+            return SceneReadView(_publicationGate->previousRevision, _stablePublishedRecords);
+        }
+        return SceneReadView(_revision, _publishedSnapshotValid ? std::span<const SceneRecord>(_publishedRecords)
+                                                                  : _records.records());
     }
 
     foundation::Result<SceneApplyReceipt> replace(CompiledSceneSnapshot snapshot);
@@ -87,6 +99,19 @@ class Scene final {
                                           SceneRevision throughInclusive) const;
     void compactDamageThrough(SceneRevision revision);
 
+    [[nodiscard]] WorldRect publishedBounds() const noexcept {
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stablePublishedBounds : _publishedBounds;
+    }
+    [[nodiscard]] SceneRevision invalidationGeneration() const noexcept {
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stableInvalidationGeneration : _invalidationGeneration;
+    }
+    [[nodiscard]] const SceneInvalidationOutput& invalidationOutput() const noexcept {
+        return (_publicationGate != nullptr && _publicationGate->transactionActive)
+                   ? _stablePublishedInvalidation : _publishedInvalidation;
+    }
+
     foundation::Result<SceneApplyReceipt> replace(const SceneCommitInput& input,
                                                   CompiledSceneSnapshot snapshot);
     foundation::Result<SceneApplyReceipt> apply(const SceneCommitInput& input,
@@ -100,13 +125,69 @@ class Scene final {
     }
 
   private:
+    using TransactionCheckpointFn = bool (*)(void*, std::uint8_t) noexcept;
+    using PublicationFn = void (*)(void*) noexcept;
+    friend class SceneBinding;
+    friend class IncrementalRuntimeCoordinator;
+
+    void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
+    bool stagePublicationSnapshot(std::span<const SceneRecord> records);
+    void publishStagedSnapshot() noexcept;
+    void clearPendingPublication() noexcept {
+        _stagedPublishedRecords.clear();
+        _pendingInvalidation = {};
+        _pendingBoundsStaged = false;
+    }
+    void stageBounds(WorldRect bounds, SceneRevision revision) noexcept {
+        if (!_pendingBoundsStaged) {
+            _pendingBounds = bounds;
+        } else {
+            _pendingBounds = foundation::unionRects(_pendingBounds, bounds);
+        }
+        _pendingInvalidationGeneration = revision;
+        _pendingBoundsStaged = true;
+    }
+    void finalizeInvalidation(SceneRevision revision) noexcept {
+        _pendingInvalidationGeneration = revision;
+    }
+    void stageInvalidation(SceneInvalidationOutput output) {
+        _pendingInvalidation = std::move(output);
+    }
+    void stageSemanticGeneration(semantic::SemanticGeneration generation) noexcept {
+        _pendingSemanticGeneration = generation;
+    }
+
+    foundation::Result<SceneApplyReceipt> applyPreparedDelta(
+        CompiledSceneDelta delta,
+        TransactionCheckpointFn checkpoint,
+        void* checkpointContext,
+        PublicationFn publish,
+        void* publishContext);
+
     SceneRecordStore _records;
     std::unique_ptr<IRenderScene> _renderScene;
     std::unique_ptr<ISpatialIndex> _spatialIndex;
     DamageTracker _damageTracker;
     SceneRevision _revision;
     semantic::SemanticGeneration _semanticGeneration{};
+    semantic::SemanticGeneration _publishedSemanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
+    ScenePublicationGate* _publicationGate = nullptr;
+    std::vector<SceneRecord> _publishedRecords;
+    std::vector<SceneRecord> _stablePublishedRecords;
+    std::vector<SceneRecord> _stagedPublishedRecords;
+    bool _publishedSnapshotValid = false;
+    WorldRect _publishedBounds{};
+    WorldRect _stablePublishedBounds{};
+    SceneRevision _invalidationGeneration{};
+    SceneRevision _stableInvalidationGeneration{};
+    SceneInvalidationOutput _publishedInvalidation{};
+    SceneInvalidationOutput _stablePublishedInvalidation{};
+    SceneInvalidationOutput _pendingInvalidation{};
+    semantic::SemanticGeneration _pendingSemanticGeneration{};
+    bool _pendingBoundsStaged = false;
+    WorldRect _pendingBounds{};
+    SceneRevision _pendingInvalidationGeneration{};
 };
 
 } // namespace canvas

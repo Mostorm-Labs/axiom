@@ -100,6 +100,34 @@ target_link_libraries(canvas_g2_a4_scene_delta_test PRIVATE canvas_runtime_scene
 target_compile_features(canvas_g2_a4_scene_delta_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a4_scene_delta COMMAND canvas_g2_a4_scene_delta_test)
 
+add_executable(canvas_g2_a6_incremental_equivalence
+    incremental_runtime_coordinator_test.cpp
+    incremental_runtime_full_oracle_adapter.cpp)
+target_link_libraries(canvas_g2_a6_incremental_equivalence
+    PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+target_include_directories(canvas_g2_a6_incremental_equivalence
+    PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+target_compile_features(canvas_g2_a6_incremental_equivalence PRIVATE cxx_std_20)
+add_test(NAME canvas_g2_a6_incremental_equivalence
+         COMMAND canvas_g2_a6_incremental_equivalence)
+
+add_executable(canvas_g2_a6_atomic_publication
+    incremental_runtime_atomic_publication_test.cpp)
+target_include_directories(canvas_g2_a6_atomic_publication PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(canvas_g2_a6_atomic_publication
+    PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+target_compile_features(canvas_g2_a6_atomic_publication PRIVATE cxx_std_20)
+add_test(NAME canvas_g2_a6_atomic_publication COMMAND canvas_g2_a6_atomic_publication)
+
+add_executable(canvas_g2_a6_recovery
+    incremental_runtime_recovery_test.cpp
+    incremental_runtime_full_oracle_adapter.cpp)
+target_include_directories(canvas_g2_a6_recovery PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(canvas_g2_a6_recovery
+    PRIVATE canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+target_compile_features(canvas_g2_a6_recovery PRIVATE cxx_std_20)
+add_test(NAME canvas_g2_a6_recovery COMMAND canvas_g2_a6_recovery)
+
 # G2-A5 P36 uses a standalone executable so the frozen spatial oracle can be
 # compiled and executed even when an unrelated Scene target fails earlier in
 # the full repository build. The exact production spatial sources are compiled
@@ -141,7 +169,7 @@ else()
 endif()
 add_test(NAME canvas_g2_a5_d6_spatial_index_benchmark
          COMMAND canvas_g2_a5_d6_spatial_index_benchmark
-                 --output ${CMAKE_CURRENT_BINARY_DIR}/GT-G2-00-A5-D6-Performance-Evidence-v0.1.json)
+                 --output=${CMAKE_CURRENT_BINARY_DIR}/GT-G2-00-A5-D6-Performance-Evidence-v0.1.json)
 
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)

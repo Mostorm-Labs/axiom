@@ -77,6 +77,16 @@ foundation::Result<SceneSyncReceipt> SceneBinding::rebuild(
 
 foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
     const ISemanticSceneCompiler& compiler, const SceneCommitInput& input) {
+    return synchronize(compiler, input, nullptr, nullptr, nullptr, nullptr);
+}
+
+foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
+    const ISemanticSceneCompiler& compiler,
+    const SceneCommitInput& input,
+    TransactionCheckpointFn checkpoint,
+    void* checkpointContext,
+    PublicationFn publish,
+    void* publishContext) {
     if (input.changes == nullptr) {
         return foundation::Result<SceneSyncReceipt>::failure(
             foundation::Error{foundation::ErrorCode::kInvalidRevision,
@@ -86,10 +96,12 @@ foundation::Result<SceneSyncReceipt> SceneBinding::synchronize(
     if (!delta) {
         return foundation::Result<SceneSyncReceipt>::failure(delta.error());
     }
-    auto applied = _scene.apply(input, std::move(delta.value()));
+    auto applied = _scene.applyPreparedDelta(std::move(delta.value()), checkpoint, checkpointContext,
+                                              publish, publishContext);
     if (!applied) {
         return foundation::Result<SceneSyncReceipt>::failure(applied.error());
     }
+    _scene._semanticGeneration = input.after_generation;
     SceneApplyReceipt receipt = std::move(applied.value());
     return foundation::Result<SceneSyncReceipt>::success(SceneSyncReceipt{
         .revision = receipt.afterRevision,
