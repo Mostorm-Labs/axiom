@@ -7,12 +7,66 @@
 #include "../../semantic/src/object_store_mutator.hpp"
 
 #include <cstdlib>
+#include <algorithm>
 #include <array>
 #include <optional>
 #include <vector>
 #include <cstdio>
 
 namespace {
+struct GoldObserver final {
+    canvas::IncrementalRuntimeCoordinator* coordinator = nullptr;
+    canvas::Scene* scene = nullptr;
+    canvas::ObjectId runtimeGoldId{};
+    canvas::ObjectId sceneGoldId{};
+    canvas::semantic::SemanticGeneration goldRuntimeGeneration{};
+    canvas::SceneRevision goldSceneRevision{};
+    canvas::semantic::SemanticGeneration goldSemanticGeneration{};
+    canvas::RuntimeSceneRecord goldRuntime{};
+    canvas::SceneRecord goldScene{};
+    canvas::WorldRect goldBounds{};
+    canvas::SceneInvalidationOutput goldInvalidation{};
+    std::vector<canvas::ObjectId> goldQuery;
+    bool called = false;
+    bool passed = false;
+};
+
+void observeGold(void* opaque) noexcept {
+    auto* observer = static_cast<GoldObserver*>(opaque);
+    observer->called = true;
+    const auto runtime = observer->coordinator->runtimeScene();
+    const auto read = observer->scene->read();
+    const auto query = observer->scene->query(canvas::SceneQuery{canvas::WorldRect{-1.0F, -1.0F, 1.0F, 1.0F}});
+    const auto* runtimeGold = runtime.find(observer->runtimeGoldId);
+    const auto* sceneGold = read.find(observer->sceneGoldId);
+    bool queryMatches = false;
+    if (query) {
+        auto ids = query.value().backToFront;
+        std::sort(ids.begin(), ids.end());
+        queryMatches = ids == observer->goldQuery;
+    }
+    const auto& invalidation = observer->scene->invalidationOutput();
+    bool invalidationMatches = invalidation.generation == observer->goldInvalidation.generation &&
+                               invalidation.fullScene == observer->goldInvalidation.fullScene &&
+                               invalidation.rects.size() == observer->goldInvalidation.rects.size();
+    if (invalidationMatches) {
+        for (std::size_t i = 0; i < invalidation.rects.size(); ++i) {
+            invalidationMatches = invalidation.rects[i].worldRect == observer->goldInvalidation.rects[i].worldRect &&
+                                  invalidation.rects[i].reasons == observer->goldInvalidation.rects[i].reasons;
+            if (!invalidationMatches) break;
+        }
+    }
+    observer->passed = runtime.generation() == observer->goldRuntimeGeneration &&
+                       runtime.records().size() == 1U && runtimeGold != nullptr && *runtimeGold == observer->goldRuntime &&
+                       observer->scene->revision() == observer->goldSceneRevision &&
+                       observer->scene->semanticGeneration() == observer->goldSemanticGeneration &&
+                       read.revision() == observer->goldSceneRevision && read.records().size() == 1U &&
+                       sceneGold != nullptr && *sceneGold == observer->goldScene && queryMatches &&
+                       observer->scene->publishedBounds() == observer->goldBounds &&
+                       observer->scene->invalidationGeneration() == observer->goldInvalidation.generation &&
+                       invalidationMatches;
+}
+
 canvas::SceneRecord record(std::uint64_t id) {
     return canvas::SceneRecord{
         .objectId = canvas::ObjectId::fromUint64(id),
@@ -153,6 +207,19 @@ int main() {
     const auto beforeDigest = renderRaw->stateDigest();
     const auto beforeSpatialDigest = spatialRaw->stateDigest();
     const auto beforeRuntimeGeneration = coordinator.runtimeScene().generation();
+    GoldObserver goldObserver{&coordinator, &scene, canvas::ObjectId::fromUint64(999), canvas::ObjectId::fromUint64(1)};
+    goldObserver.goldRuntimeGeneration = coordinator.runtimeScene().generation();
+    goldObserver.goldSceneRevision = scene.revision();
+    goldObserver.goldSemanticGeneration = scene.semanticGeneration();
+    goldObserver.goldRuntime = *coordinator.runtimeScene().find(goldObserver.runtimeGoldId);
+    goldObserver.goldScene = *scene.read().find(goldObserver.sceneGoldId);
+    goldObserver.goldBounds = scene.publishedBounds();
+    goldObserver.goldInvalidation = scene.invalidationOutput();
+    const auto goldQuery = scene.query(canvas::SceneQuery{canvas::WorldRect{-1.0F, -1.0F, 1.0F, 1.0F}});
+    if (!goldQuery) return EXIT_FAILURE;
+    goldObserver.goldQuery = goldQuery.value().backToFront;
+    std::sort(goldObserver.goldQuery.begin(), goldObserver.goldQuery.end());
+    canvas::IncrementalRuntimeTestAccess::observe(coordinator, observeGold, &goldObserver);
     renderRaw->setRejectPrepare(false);
     const canvas::SceneCommitInput input(
         canvas::semantic::SemanticGeneration(1), canvas::semantic::SemanticGeneration(2), view,
@@ -318,7 +385,7 @@ int main() {
     const auto applied = coordinator.apply(Compiler{}, input);
     const auto target = canvas::semantic::SemanticGeneration(2);
     const auto& invalidation = scene.invalidationOutput();
-    return applied && coordinator.publicationObservationCoherent() &&
+    return applied && goldObserver.called && goldObserver.passed && coordinator.publicationObservationCoherent() &&
                    scene.semanticGeneration() == target &&
                    scene.invalidationGeneration() == canvas::SceneRevision(2) &&
                    invalidation.generation == canvas::SceneRevision(2) &&

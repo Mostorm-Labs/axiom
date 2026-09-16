@@ -64,6 +64,11 @@ class IncrementalRuntimeCoordinator final {
 
   private:
     friend class IncrementalRuntimeTestAccess;
+    using TestPublicationObserver = void (*)(void*) noexcept;
+    void setTestPublicationObserver(TestPublicationObserver observer, void* context) noexcept {
+        testPublicationObserver_ = observer;
+        testPublicationObserverContext_ = context;
+    }
 
     void setCheckpointFailure(RuntimeCheckpoint checkpoint) noexcept {
         checkpointFailure_ = checkpoint;
@@ -89,6 +94,8 @@ class IncrementalRuntimeCoordinator final {
     SceneRevision pendingRevision_{};
     std::uint64_t publicationObservations_ = 0;
     bool publicationObservationCoherent_ = true;
+    TestPublicationObserver testPublicationObserver_ = nullptr;
+    void* testPublicationObserverContext_ = nullptr;
 };
 
 } // namespace canvas

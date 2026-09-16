@@ -16,6 +16,11 @@ class IncrementalRuntimeTestAccess final {
     static void corrupt(IncrementalRuntimeCoordinator& coordinator) noexcept {
         coordinator.corruptRuntimeProjectionForTest();
     }
+    static void observe(IncrementalRuntimeCoordinator& coordinator,
+                        IncrementalRuntimeCoordinator::TestPublicationObserver observer,
+                        void* context) noexcept {
+        coordinator.setTestPublicationObserver(observer, context);
+    }
 };
 
 } // namespace canvas

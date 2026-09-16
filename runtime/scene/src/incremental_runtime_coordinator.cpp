@@ -81,6 +81,9 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
         if (self->publicationGate_.observation != nullptr) {
             self->publicationGate_.observation(self->publicationGate_.observationContext);
         }
+        if (self->testPublicationObserver_ != nullptr) {
+            self->testPublicationObserver_(self->testPublicationObserverContext_);
+        }
         self->publicationGate_.transactionActive = false;
         self->publicationGate_.observation = nullptr;
         self->publicationGate_.observationContext = nullptr;
@@ -268,6 +271,9 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     runtimeScene_.publish(std::move(runtimePrepared.value()));
     if (publicationGate_.observation != nullptr) {
         publicationGate_.observation(publicationGate_.observationContext);
+    }
+    if (testPublicationObserver_ != nullptr) {
+        testPublicationObserver_(testPublicationObserverContext_);
     }
     publicationGate_.transactionActive = false;
     publicationGate_.observation = nullptr;
