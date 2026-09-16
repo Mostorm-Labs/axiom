@@ -141,7 +141,7 @@ else()
 endif()
 add_test(NAME canvas_g2_a5_d6_spatial_index_benchmark
          COMMAND canvas_g2_a5_d6_spatial_index_benchmark
-                 --output ${CMAKE_CURRENT_BINARY_DIR}/GT-G2-00-A5-D6-Performance-Evidence-v0.1.json)
+                 --output=${CMAKE_CURRENT_BINARY_DIR}/GT-G2-00-A5-D6-Performance-Evidence-v0.1.json)
 
 add_executable(canvas_rf01_damage_view_test damage_view_test.cpp)
 target_link_libraries(canvas_rf01_damage_view_test PRIVATE canvas_runtime_scene)
