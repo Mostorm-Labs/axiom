@@ -15,19 +15,20 @@
     "remote_sources_are_reconciliation_inputs": true
   },
   "lifecycle": {
-    "current_stage": "G2_FINAL_CONVERGENCE_COMPLETE",
-    "current_owner": "aegis",
-    "next_stage": "G3_ENTRY_READINESS_REVIEW",
-    "next_owner": "aegis",
+    "current_stage": "G3_ENTRY_READINESS_COMPLETE",
+    "current_owner": "aegis-implementation",
+    "next_stage": "G3_P31_TASK_PACKAGING",
+    "next_owner": "aegis-implementation",
     "g2_status": "CLOSED",
-    "g3_status": "NOT_STARTED",
-    "g3_ingress": "READY_FOR_REVIEW"
+    "g3_status": "READY_FOR_P31",
+    "g3_ingress": "READY_FOR_P31"
   },
   "policy": {
     "do_not_reopen_g2": true,
     "do_not_start_g3_implementation_before_entry_review": true,
-    "do_not_materialize_g3_p31_before_entry_review": true,
-    "g2_gate_pass_not_claimed_by_this_state": true,
+    "do_not_materialize_g3_p31_before_entry_review": false,
+    "g3_implementation_requires_materialized_p31": true,
+    "g2_gate_pass_not_claimed_by_this_state": false,
     "g3_gate_pass_not_claimed_by_this_state": true
   }
 }

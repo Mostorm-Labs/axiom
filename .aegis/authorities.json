@@ -36,9 +36,9 @@
       "id": "g3-capability-authority",
       "scope": "capability:G3/basic-canonical-canvas",
       "kind": "capability",
-      "version": "v0.1",
+      "version": "v0.2",
       "status": "Current",
-      "ref": "repo:.aegis/authorities.json#g3-capability-authority",
+      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
       "depends_on": ["g2-canonical-main"],
       "content": {
         "owner": "G3",
@@ -51,7 +51,13 @@
           "camera_view_pan_zoom_clip_dpr",
           "hit_select_vertical_slice",
           "headless_golden_path",
-          "Tier-A_host_surface_lifecycle_contracts"
+          "Tier-A_host_surface_lifecycle_contracts",
+          "per_view_RenderCore",
+          "VisibilityResolver",
+          "Direct_NonTiled_Reference_Source",
+          "PresentationTracker",
+          "headless_windows_web_reference_hosts",
+          "cross_platform_G3_evidence"
         ],
         "depends_on_g2": "g2-canonical-main",
         "forbidden": [
@@ -62,12 +68,18 @@
           "RenderGroup",
           "RasterCache",
           "production_scheduler",
-          "G3_implementation_before_P31"
+          "G3_implementation_before_P31",
+          "SemanticDocument_direct_render",
+          "G4_Arc_or_ink",
+          "G5_tile_cache_raster_cache_optimization"
         ],
         "source_basis": [
-          "docs/planning/AXIOM_GATES_AND_STAGES.md#9-g3-basic-canonical-canvas",
-          "docs/planning/GATE_TASK_TRACKER.md#3-g3",
-          "docs/notion/authority/10-verification/evidence-gated-vertical-build-g0-g9-v0.1.md"
+          "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+          "notion://3da4c57a-590c-8160-a895-e71681e78860",
+          "notion://3da4c57a-590c-81a5-957c-eba685849887",
+          "notion://3da4c57a-590c-81ba-a1a4-da47b2ab35de",
+          "notion://3da4c57a-590c-811a-963c-f294cf8e4009",
+          "notion://3da4c57a-590c-8175-9945-d6cadcc95e74"
         ]
       }
     }
