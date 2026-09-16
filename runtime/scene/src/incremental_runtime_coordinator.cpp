@@ -68,6 +68,9 @@ void IncrementalRuntimeCoordinator::observePublication(void* context) noexcept {
                 self->publicationObservationCoherent_ = false;
             }
         }
+        if (self->testPublicationObserver_ != nullptr) {
+            self->testPublicationObserver_(self->testPublicationObserverContext_);
+        }
     }
 }
 

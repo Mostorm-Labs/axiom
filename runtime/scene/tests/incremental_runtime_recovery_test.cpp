@@ -54,6 +54,50 @@ struct RecoveryObserver final {
     bool passed = false;
 };
 
+struct InitialPublicationObserver final {
+    canvas::IncrementalRuntimeCoordinator* coordinator = nullptr;
+    canvas::Scene* scene = nullptr;
+    canvas::ObjectId gnewId{};
+    canvas::WorldRect goldBounds{};
+    canvas::SceneInvalidationOutput goldInvalidation{};
+    bool called = false;
+    bool passed = false;
+    bool allPassed = true;
+};
+
+void observeInitialGold(void* opaque) noexcept {
+    auto* observer = static_cast<InitialPublicationObserver*>(opaque);
+    observer->called = true;
+    const auto runtime = observer->coordinator->runtimeScene();
+    const auto read = observer->scene->read();
+    const auto query = observer->scene->query(
+        canvas::SceneQuery{canvas::WorldRect{-1000.0F, -1000.0F, 1000.0F, 1000.0F}});
+    const auto& invalidation = observer->scene->invalidationOutput();
+    bool invalidationMatches = invalidation.generation == observer->goldInvalidation.generation &&
+                               invalidation.fullScene == observer->goldInvalidation.fullScene &&
+                               invalidation.rects.size() == observer->goldInvalidation.rects.size();
+    if (invalidationMatches) {
+        for (std::size_t i = 0; i < invalidation.rects.size(); ++i) {
+            invalidationMatches = invalidation.rects[i].worldRect ==
+                                      observer->goldInvalidation.rects[i].worldRect &&
+                                  invalidation.rects[i].reasons ==
+                                      observer->goldInvalidation.rects[i].reasons;
+            if (!invalidationMatches) break;
+        }
+    }
+    observer->passed = runtime.generation() == canvas::semantic::SemanticGeneration(0) &&
+                       runtime.records().empty() && runtime.find(observer->gnewId) == nullptr &&
+                       observer->scene->revision() == canvas::SceneRevision(0) &&
+                       observer->scene->semanticGeneration() == canvas::semantic::SemanticGeneration(0) &&
+                       read.revision() == canvas::SceneRevision(0) && read.records().empty() &&
+                       read.find(observer->gnewId) == nullptr && query &&
+                       query.value().backToFront.empty() &&
+                       observer->scene->publishedBounds() == observer->goldBounds &&
+                       observer->scene->invalidationGeneration() == observer->goldInvalidation.generation &&
+                       invalidationMatches;
+    observer->allPassed = observer->allPassed && observer->passed;
+}
+
 void observeRecoveryGold(void* opaque) noexcept {
     auto* observer = static_cast<RecoveryObserver*>(opaque);
     observer->called = true;
@@ -126,6 +170,42 @@ int main() {
     const auto gnewObject = semanticObject(302, 200.0);
     if (!canvas::semantic::internal::ObjectStoreMutator::insertFresh(goldStore, goldObject) ||
         !canvas::semantic::internal::ObjectStoreMutator::insertFresh(gnewStore, gnewObject)) {
+        return EXIT_FAILURE;
+    }
+    canvas::Scene initialScene(std::make_unique<canvas::testing::FakeRenderScene>(),
+                               std::make_unique<canvas::testing::FakeSpatialIndex>());
+    canvas::SceneBinding initialBinding(initialScene);
+    canvas::IncrementalRuntimeCoordinator initialCoordinator(initialBinding);
+    InitialPublicationObserver initialObserver{
+        &initialCoordinator,
+        &initialScene,
+        gnewObject.id,
+        initialScene.publishedBounds(),
+        initialScene.invalidationOutput(),
+    };
+    canvas::IncrementalRuntimeTestAccess::observe(
+        initialCoordinator, observeInitialGold, &initialObserver);
+    const canvas::semantic::SemanticReadView initialView(
+        gnewStore, canvas::semantic::SemanticGeneration(1));
+    const auto initialResult = initialCoordinator.recover(
+        Compiler{}, canvas::SceneCommitInput(canvas::semantic::SemanticGeneration(1), initialView));
+    canvas::IncrementalRuntimeTestAccess::observe(initialCoordinator, nullptr, nullptr);
+    const auto initialRead = initialScene.read();
+    const auto initialQuery = initialScene.query(
+        canvas::SceneQuery{canvas::WorldRect{-1000.0F, -1000.0F, 1000.0F, 1000.0F}});
+    if (!initialResult || !initialObserver.called || !initialObserver.passed || !initialObserver.allPassed ||
+        initialCoordinator.runtimeScene().generation() != canvas::semantic::SemanticGeneration(1) ||
+        initialCoordinator.runtimeScene().records().size() != 1U ||
+        initialCoordinator.runtimeScene().find(gnewObject.id) == nullptr ||
+        initialScene.revision() != canvas::SceneRevision(1) ||
+        initialScene.semanticGeneration() != canvas::semantic::SemanticGeneration(1) ||
+        initialRead.records().size() != 1U || initialRead.find(gnewObject.id) == nullptr ||
+        !initialQuery || initialQuery.value().backToFront !=
+                             std::vector<canvas::ObjectId>{gnewObject.id} ||
+        initialScene.publishedBounds() != canvas::computeBounds(gnewObject).world ||
+        initialScene.invalidationGeneration() != canvas::SceneRevision(1) ||
+        initialScene.invalidationOutput().generation != canvas::SceneRevision(1) ||
+        !initialScene.invalidationOutput().fullScene) {
         return EXIT_FAILURE;
     }
     const canvas::semantic::SemanticReadView goldView(

@@ -546,8 +546,7 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
         return foundation::Result<SceneQueryResult>::failure(
             makeError(foundation::ErrorCode::kInvalidArgument, "Scene query bounds are invalid"));
     }
-    if (_publicationGate != nullptr && _publicationGate->transactionActive &&
-        _publishedSnapshotValid) {
+    if (_publicationGate != nullptr && _publicationGate->transactionActive) {
         try {
             SceneQueryResult result{
                 .revision = _publicationGate->previousRevision,

@@ -79,8 +79,7 @@ class Scene final {
                    ? _publicationGate->previousGeneration : _semanticGeneration;
     }
     [[nodiscard]] SceneReadView read() const {
-        if (_publicationGate != nullptr && _publicationGate->transactionActive &&
-            _publishedSnapshotValid) {
+        if (_publicationGate != nullptr && _publicationGate->transactionActive) {
             return SceneReadView(_publicationGate->previousRevision, _stablePublishedRecords);
         }
         return SceneReadView(_revision, _publishedSnapshotValid ? std::span<const SceneRecord>(_publishedRecords)
