@@ -28,15 +28,16 @@ canonical_main_at_packaging: 4faf351fc85360d0b843dc380c530c12cbb3a48b
 materialization_branch: aegis/gt-g2-integration-p31-v0-1-materialization
 package_materialization_ref: EXACT_THIS_COMMIT
 execution_branch_to_create: codex/gt-g2-unified-integration-candidate
+branch_creation_base_must_equal: 543e16e30e53da7568605827bfb51c42a84f6558
 task_anchor:
   revision: 543e16e30e53da7568605827bfb51c42a84f6558
-  relation: exact_start_then_descendant
+  relation: ancestor
 resume_cursor: null
 return_surface: CONTROL_REVIEW
 continue_until_terminal_state: true
 ```
 
-Repository identity is blocking. P32 must resolve this package from the same repository before mutation and fail closed on missing, mismatched, ambiguous, or unavailable identity.
+Repository identity is blocking. P32 must resolve this package from the same repository before mutation and fail closed on missing, mismatched, ambiguous, or unavailable identity. The execution branch must be created from the exact task-anchor revision before any functional mutation; after creation, descendants of the anchor are valid execution states.
 
 ## Frozen Inputs
 
