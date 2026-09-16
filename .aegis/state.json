@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.6",
+  "generator_version": "manual-deterministic-v0.1",
+  "project_id": "axiom",
+  "active_stage": "G3_ENTRY_READINESS_REVIEW",
+  "current_owner": "aegis",
+  "earliest_untrusted_layer": "G3_ENTRY_READINESS_REVIEW",
+  "status": "READY_WITH_FINDINGS",
+  "g2": {
+    "status": "CLOSED",
+    "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+    "official_pass_claimed": false
+  },
+  "g3": {
+    "status": "NOT_STARTED",
+    "ingress": "READY_FOR_REVIEW",
+    "implementation_authorized": false,
+    "p31_materialized": false
+  },
+  "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
+  "current_gate_decisions": [
+    {"gate_id": "g2-final-convergence", "decision_id": "g2-closure-2026-09-16", "verdict": "CLOSED"},
+    {"gate_id": "g3-entry-readiness", "decision_id": "g3-entry-readiness-2026-09-16", "verdict": "READY_WITH_FINDINGS"}
+  ],
+  "blocking_findings": [
+    "No separately materialized G3 Basic Canonical Canvas Implementation Plan was found.",
+    "Tier-A host and cross-platform evidence contracts remain open before G3 P31."
+  ],
+  "integration_applicability": [
+    {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"}
+  ],
+  "recommended_next_stage": "G3_ENTRY_READINESS_REVIEW",
+  "handoff": {
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "resolve G3 entry findings; then materialize G3 P31",
+    "g2_reopen": false,
+    "g3_implementation_start": false
+  }
+}

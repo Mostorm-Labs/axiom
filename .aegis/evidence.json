@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.6",
+  "evidence": [
+    {
+      "id": "ev-g2-canonical-main",
+      "kind": "repository-baseline",
+      "status": "available",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "supports": ["g2-canonical-main"],
+      "limitations": ["This record does not issue an official G2 PASS claim."]
+    },
+    {
+      "id": "ev-g3-entry-readiness",
+      "kind": "entry-review",
+      "status": "available",
+      "ref": "repo:.aegis/evidence.json#ev-g3-entry-readiness",
+      "supports": ["g3-entry-readiness", "g3-capability-authority"],
+      "inputs": [
+        "docs/planning/AXIOM_GATES_AND_STAGES.md#9-g3-basic-canonical-canvas",
+        "docs/planning/GATE_TASK_TRACKER.md#3-g3",
+        "docs/planning/R_MILESTONE_STATUS.md",
+        "docs/notion/authority/10-verification/evidence-gated-vertical-build-g0-g9-v0.1"
+      ],
+      "conclusion": {
+        "g2_to_g3_boundary": "satisfied",
+        "g3_duplicate_runtimescene": "forbidden",
+        "g3_implementation_authorized": false,
+        "g3_p31_materialized": false,
+        "status": "READY_WITH_FINDINGS"
+      }
+    }
+  ]
+}

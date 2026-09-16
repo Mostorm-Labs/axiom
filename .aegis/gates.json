@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.6",
+  "gates": [
+    {
+      "id": "g2-final-convergence",
+      "scope": "G2",
+      "status": "CLOSED",
+      "decision": {
+        "id": "g2-closure-2026-09-16",
+        "verdict": "CLOSED",
+        "authority_ref": "g2-canonical-main",
+        "result_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+        "official_pass_claimed": false
+      },
+      "evidence_ids": ["ev-g2-canonical-main"]
+    },
+    {
+      "id": "g3-entry-readiness",
+      "scope": "G3",
+      "status": "READY_WITH_FINDINGS",
+      "decision": {
+        "id": "g3-entry-readiness-2026-09-16",
+        "verdict": "READY_WITH_FINDINGS",
+        "authority_ref": "g3-capability-authority",
+        "official_gate_pass_claimed": false
+      },
+      "evidence_ids": ["ev-g3-entry-readiness"],
+      "findings": [
+        {
+          "id": "g3-finding-plan-source",
+          "classification": "MISSING_CURRENT_INPUT",
+          "summary": "No separately materialized document named G3 Basic Canonical Canvas Implementation Plan was found; repository planning section and task tracker are used as the current mirror input."
+        },
+        {
+          "id": "g3-finding-platform-contracts",
+          "classification": "OPEN_CONTRACT",
+          "summary": "Tier-A host, RNW screen-annotation seam, Android/iOS/iPadOS readback, macOS shared-core conformance, and cross-platform golden/tolerance contracts remain to be closed before P31."
+        }
+      ],
+      "next_action": "resolve_findings_then_materialize_G3_P31"
+    }
+  ]
+}

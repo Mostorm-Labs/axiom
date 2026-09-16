@@ -1,0 +1,75 @@
+{
+  "schema_version": "0.6",
+  "authorities": [
+    {
+      "id": "g2-canonical-main",
+      "scope": "gate:G2/runtime-foundation",
+      "kind": "closure-baseline",
+      "version": "canonical-main-2026-09-16",
+      "status": "Current",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "depends_on": [],
+      "content": {
+        "lifecycle_status": "CLOSED",
+        "owns": [
+          "RuntimeScene",
+          "SceneRecordStore",
+          "RuntimeSceneRecord",
+          "BoundsSystem",
+          "ReferenceGeometry",
+          "SpatialIndex",
+          "IncrementalRuntimeCoordinator",
+          "prepare_commit_boundary",
+          "atomic_publication",
+          "recovery_contract",
+          "RF01_baseline",
+          "POC03_acceptance_baseline"
+        ],
+        "source_basis": [
+          "git:07654767eac7b021ca6e89004e36448ccebb727d",
+          "docs/planning/AXIOM_GATES_AND_STAGES.md#8-g2-runtime-scene-foundation",
+          "docs/gates/GT-G2-00-A6-P31-MATERIALIZED-EXECUTION-PACKAGE.md"
+        ]
+      }
+    },
+    {
+      "id": "g3-capability-authority",
+      "scope": "capability:G3/basic-canonical-canvas",
+      "kind": "capability",
+      "version": "v0.1",
+      "status": "Current",
+      "ref": "repo:.aegis/authorities.json#g3-capability-authority",
+      "depends_on": ["g2-canonical-main"],
+      "content": {
+        "owner": "G3",
+        "objective": "renderer-neutral canonical canvas and basic product shell",
+        "owns": [
+          "RenderTarget",
+          "RenderFrame",
+          "immutable_visible_input",
+          "NonTiledReferenceRenderer",
+          "camera_view_pan_zoom_clip_dpr",
+          "hit_select_vertical_slice",
+          "headless_golden_path",
+          "Tier-A_host_surface_lifecycle_contracts"
+        ],
+        "depends_on_g2": "g2-canonical-main",
+        "forbidden": [
+          "duplicate_RuntimeScene",
+          "reimplement_G2_canonical_scene_state",
+          "modify_G2_frozen_contracts_without_escalation",
+          "Tile",
+          "RenderGroup",
+          "RasterCache",
+          "production_scheduler",
+          "G3_implementation_before_P31"
+        ],
+        "source_basis": [
+          "docs/planning/AXIOM_GATES_AND_STAGES.md#9-g3-basic-canonical-canvas",
+          "docs/planning/GATE_TASK_TRACKER.md#3-g3",
+          "docs/notion/authority/10-verification/evidence-gated-vertical-build-g0-g9-v0.1.md"
+        ]
+      }
+    }
+  ]
+}

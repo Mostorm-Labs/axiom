@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.6",
+  "project_id": "axiom",
+  "project_name": "Axiom",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d"
+  },
+  "control_plane": {
+    "mode": "repo_materialized",
+    "manifest_layout": ".aegis/",
+    "state_cache": ".aegis/state.json",
+    "remote_sources_are_reconciliation_inputs": true
+  },
+  "lifecycle": {
+    "current_stage": "G2_FINAL_CONVERGENCE_COMPLETE",
+    "current_owner": "aegis",
+    "next_stage": "G3_ENTRY_READINESS_REVIEW",
+    "next_owner": "aegis",
+    "g2_status": "CLOSED",
+    "g3_status": "NOT_STARTED",
+    "g3_ingress": "READY_FOR_REVIEW"
+  },
+  "policy": {
+    "do_not_reopen_g2": true,
+    "do_not_start_g3_implementation_before_entry_review": true,
+    "do_not_materialize_g3_p31_before_entry_review": true,
+    "g2_gate_pass_not_claimed_by_this_state": true,
+    "g3_gate_pass_not_claimed_by_this_state": true
+  }
+}
