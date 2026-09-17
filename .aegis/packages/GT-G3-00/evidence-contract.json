@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-00",
+  "profile": "Standard",
+  "blocking": [
+    {"id": "E-G3-STRUCTURAL", "obligations": ["G3-V1-semantic-preservation", "G3-V2-runtime-reference-equivalence"], "artifact": "exact result revision plus machine-readable structural comparison output"},
+    {"id": "E-G3-HEADLESS", "obligations": ["G3-V3-render-golden"], "artifact": "Headless golden/readback artifact and exact test identity"},
+    {"id": "E-G3-LIFECYCLE", "obligations": ["G3-V5-presentation-generation"], "artifact": "surface/presentation lifecycle trace and negative-test output"},
+    {"id": "E-G3-PLATFORM", "obligations": ["G3-V3-render-golden"], "artifact": "required Tier-A host build/readback evidence or explicit BLOCKED result"}
+  ],
+  "corroborative": [
+    {"id": "C-G3-LOCALITY", "obligations": ["G3-V4-locality-and-budget"], "artifact": "locality/performance counters"},
+    {"id": "C-G3-DIFF", "obligations": ["G3-V1-semantic-preservation", "G3-V2-runtime-reference-equivalence"], "artifact": "git diff --check and changed-path inventory"}
+  ],
+  "materialization": {
+    "required": true,
+    "mode": "repo_materialized",
+    "result_path": ".aegis/results/GT-G3-00/",
+    "review_surface": "CONTROL_REVIEW"
+  }
+}

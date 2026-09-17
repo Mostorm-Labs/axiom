@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-00",
+  "execution_authority_mode": "repo_materialized",
+  "implementation": {
+    "required_changes": [
+      "Implement the ordered G3-01 through G3-11 vertical slices from the P30 plan.",
+      "Add production runtime/render ownership seams and the minimum Headless/Windows/Web reference host paths required by the G3 authority.",
+      "Integrate the current verification workspace without creating a parallel verification framework."
+    ],
+    "authorized_mutation_scope": [
+      "runtime/render/**",
+      "runtime/render/tests/**",
+      "apps/axiom_canvas_demo/**",
+      "runtime/CMakeLists.txt",
+      "CMakeLists.txt",
+      "CMakePresets.json",
+      "verification/src/**",
+      "verification/packages/**",
+      "verification/schema/**",
+      "verification/schemas/**",
+      "verification/evidence/**",
+      "verification/reports/**",
+      "verification/tests/**",
+      "verification/tools/**",
+      "docs/aegis/results/GT-G3-00/**"
+    ],
+    "forbidden_changes": [
+      "runtime/semantic/**",
+      "reimplementation or modification of G2 RuntimeScene/SceneQuery/semantic contracts",
+      "SemanticDocument direct render path",
+      "POC SceneCompiler promotion to production",
+      "Tile, RenderGroup, RasterCache, Scheduler, ResourceBudget optimization implementation",
+      "G4 Arc/Ink/CanonicalVisible handoff or G6 editing semantics",
+      "final FrameGraph ABI or final Windows/Web surface topology freeze",
+      "parallel verification/gates framework",
+      "authority, package, or Gate verdict changes during P32"
+    ],
+    "preserved_work": [
+      "G2 canonical main at 07654767eac7b021ca6e89004e36448ccebb727d",
+      "G3 Entry Readiness and P30 plan",
+      "existing G0 verification workspace and schemas"
+    ]
+  },
+  "ordered_work_packages": [
+    "G3-01-per-view-render-core",
+    "G3-02-render-owned-visibility",
+    "G3-03-direct-reference-source",
+    "G3-04-frame-backend-contract",
+    "G3-05-headless-skia-backend",
+    "G3-06-surface-presentation-tracker",
+    "G3-07-headless-demo-cli",
+    "G3-08-camera-hit-select-harness",
+    "G3-09-windows-reference-host",
+    "G3-10-web-reference-host",
+    "G3-11-cross-platform-oracle-gate-report"
+  ],
+  "tests": {
+    "required": [
+      {"id": "red-first", "command_or_oracle": "Each WP begins with a failing contract/compile/oracle test against the pre-change tree.", "expected_result": "Observed RED is recorded before the corresponding implementation change.", "blocking_reason": "Prevents implementation without evidence of the frozen boundary."},
+      {"id": "g3-focused", "command_or_oracle": "cmake --preset g3-host-debug && cmake --build --preset g3-host-debug && ctest --preset g3-host-debug --output-on-failure", "expected_result": "PASS", "blocking_reason": "G3 host correctness and lifecycle closure."},
+      {"id": "g2-regression", "command_or_oracle": "cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure", "expected_result": "PASS", "blocking_reason": "G2 canonical foundation must remain unchanged."},
+      {"id": "verification-workspace", "command_or_oracle": "python3 verification/tools/validate_workspace.py; python3 -m unittest discover -s verification/tests -p 'test_*.py' -v; cd verification && npm run validate && npm run build && npm run typecheck", "expected_result": "PASS", "blocking_reason": "Current G0 workspace integration."},
+      {"id": "source-hygiene", "command_or_oracle": "git diff --check", "expected_result": "PASS", "blocking_reason": "No whitespace-corrupted result."}
+    ],
+    "optional": [
+      "g3-windows-release host build/readback when the Windows toolchain is available",
+      "g3-web-release host build/browser evidence when the WASM/browser toolchain is available",
+      "Tier-A physical evidence beyond the required host/reference artifacts"
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": ["provider CI for exact pushed result revision", "Windows/Web hosted runner evidence"]
+  },
+  "evidence": {
+    "blocking": ["E-G3-STRUCTURAL", "E-G3-HEADLESS", "E-G3-LIFECYCLE", "E-G3-PLATFORM"],
+    "corroborative": ["C-G3-LOCALITY", "C-G3-DIFF"]
+  },
+  "terminal_success": {
+    "all_of": [
+      "All 11 ordered work packages are implemented within the authorized scope.",
+      "All required tests and verification workspace commands pass at the exact result revision.",
+      "Required structural, headless, lifecycle, and platform evidence is reviewer-accessibly materialized; unavailable required platform evidence returns an explicit BLOCKED result.",
+      "G2 regression remains green and no forbidden path was changed.",
+      "Exact result revision is pushed and returned with changed-path inventory and evidence refs.",
+      "Implementation returns READY_FOR_CONTROL_REVIEW without issuing an official G3/P34/Gate PASS."
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE",
+    "PACKAGE_SCOPE_DIVERGENCE",
+    "BLOCKED_REPOSITORY_IDENTITY",
+    "BLOCKED_EXECUTION_DIVERGENCE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "official_gate_pass_forbidden": true
+  }
+}

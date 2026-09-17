@@ -30,7 +30,10 @@
   "recommended_next_stage": "G3_P31_TASK_PACKAGING",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "review repo-local P30 plan, then materialize G3 P31",
+    "next_action": "execute repo-local P31 package after explicit CODE_EXECUTION handoff",
+    "p31_package": ".aegis/packages/GT-G3-00/package.json",
+    "p31_package_id": "GT-G3-00-P31-v0.1",
+    "p31_materialized": false,
     "g2_reopen": false,
     "g3_implementation_start": false
   }
