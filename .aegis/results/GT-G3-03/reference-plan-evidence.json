@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "canonical_encoding_version": 1,
+  "canonical_byte_order": "little-endian",
+  "representative_canonical_byte_size": 2356,
+  "representative_digest": "fnv1a64:37f0c4d63b812e14",
+  "exact_structure_primary_oracle": true,
+  "byte_identical_replay": true,
+  "digest_identical_replay": true,
+  "mutation_sensitivity": {
+    "identity": true,
+    "order": true,
+    "transform": true,
+    "property": true,
+    "content": true,
+    "dependency": true,
+    "erase_mask": true,
+    "camera": true,
+    "clip": true
+  }
+}
