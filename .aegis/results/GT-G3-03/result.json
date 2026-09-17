@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "p34_verdict": "BLOCKED_IMPLEMENTATION",
+  "p35_classification": "IMPLEMENTATION_DEFECT",
+  "p36_authorization": ".aegis/results/GT-G3-03/p36-continuation-authorization.json",
+  "task_anchor": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+  "actual_starting_revision": "a419e6b488d7c5ad24d842e368ba6ff4f5ff5992",
+  "package_materialization_ref": "3c9b9b2854a773963314158de305ac422b5dd4d2",
+  "execution_branch": "codex/g3-03-direct-reference-source",
+  "tdd_red": {
+    "observed": true,
+    "diagnostic": "independent full-field expectation failed while RuntimeScene projection exposed default derived fields",
+    "target": "G3DirectReference"
+  },
+  "obligations": {
+    "G3-03-V1-nine-kind-structural-plan": "PASS",
+    "G3-03-V2-frame-clip-order-binding": "PASS",
+    "G3-03-V3-versioned-deterministic-digest": "PASS",
+    "G3-03-V4-visible-driven-locality": "PASS",
+    "G3-03-V5-boundary-hygiene": "PASS"
+  },
+  "focused_and_predecessor_tests": {
+    "passed": 3,
+    "failed": 0,
+    "tests": ["G3FrameState", "G3Visibility", "G3DirectReference"]
+  },
+  "rf01_g2_regression": {
+    "passed": 19,
+    "failed": 0
+  },
+  "p36_reverification": {
+    "independent_full_field_corpus": "PASS",
+    "independent_source_and_expected_corpus_helpers": true,
+    "focused_g3_tests": "PASS",
+    "rf01_g2_predecessor_matrix": "PASS",
+    "canonical_byte_size": 2932,
+    "canonical_digest": "fnv1a64:e6bc41c591b52e08"
+  },
+  "boundary_scan": {
+    "production_forbidden_dependencies": 0,
+    "production_runtime_scene_records_iteration": 0,
+    "visible_driven_find_loop": true
+  },
+  "mutation_scope_conformed": true,
+  "changed_paths": [
+    ".aegis/results/GT-G3-03/fixture-inventory.json",
+    ".aegis/results/GT-G3-03/reference-plan-evidence.json",
+    ".aegis/results/GT-G3-03/result.json",
+    ".aegis/results/GT-G3-03/traversal-counters.json",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/direct_reference_source.hpp",
+    "runtime/render/include/canvas/render/reference_draw_list.hpp",
+    "runtime/render/src/direct_reference_source.cpp",
+    "runtime/render/tests/direct_reference_source_test.cpp"
+  ],
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

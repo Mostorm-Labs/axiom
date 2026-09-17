@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "revision": "2026-09-13T04:49:44.764Z",
+    "trusted_section": "WP G3-03 — Build permanent Direct / Non-Tiled Reference Source",
+    "content_hash_kind": "canonical-trusted-statements-sha256",
+    "content_hash": "063c6be5b6e9a535e493a2585f2f4a4035cd1ec0724b36d0bad368bc726413a3"
+  },
+  "supporting_sources": [
+    {
+      "ref": "notion://3da4c57a-590c-81a5-957c-eba685849887",
+      "title": "G3 Render Boundary Authority v0.1",
+      "status": "DESIGN_AUTHORITY_DRAFT",
+      "use": "supporting boundary context only; the Current G3 v0.2 plan remains execution authority"
+    },
+    {
+      "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+      "use": "dependency ordering and reviewer-sized package plan"
+    }
+  ],
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_02_gate_decision": "gt-g3-02-p34-2026-09-17",
+    "g3_02_result_revision": "754619b716d7f4c27d2d8089a1276b8ac43df435",
+    "canonical_main_revision": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+    "required_state": "GT-G3-02_CLOSED"
+  },
+  "trusted_statements": {
+    "goal": "Build the permanent renderer-neutral Direct / Non-Tiled Reference Source used as the correctness oracle for later Tile and RenderGroup optimizations.",
+    "files": [
+      "runtime/render/include/canvas/render/reference_draw_list.hpp",
+      "runtime/render/include/canvas/render/direct_reference_source.hpp",
+      "runtime/render/src/direct_reference_source.cpp",
+      "runtime/render/tests/direct_reference_source_test.cpp"
+    ],
+    "consumes": [
+      "FrameState",
+      "VisibilityResult",
+      "G2 RuntimeScene record/read contract",
+      "optional explicitly supplied per-view transient snapshot"
+    ],
+    "produces": [
+      "deterministic backend-neutral ReferenceDrawList",
+      "direct renderer-neutral commands",
+      "stable versioned reference-plan digest",
+      "visible-record traversal diagnostics"
+    ],
+    "required_v1_coverage": [
+      "Shape",
+      "Image",
+      "VectorPath",
+      "RichText",
+      "VectorStroke",
+      "DabStroke",
+      "Connector",
+      "Sticky",
+      "Group"
+    ],
+    "group_semantics": "Group may contribute zero pixels but must retain deterministic traversal and order semantics.",
+    "determinism": [
+      "ReferenceDrawList order exactly follows VisibilityResult.backToFront.",
+      "The plan carries exact scene/frame/view/query identity and renderer-neutral command values.",
+      "The plan carries an explicit deterministic renderer-neutral world-to-view mapping derived from CameraState and logical viewport metrics, plus the viewport clip; commands remain independent of backend surface types.",
+      "Digest input is a versioned canonical byte encoding of the complete reference plan; digest never substitutes for structural equality.",
+      "Identical RuntimeScene, VisibilityResult, and FrameState input produces byte-identical canonical plan bytes and digest."
+    ],
+    "locality": "The normal source path is driven only by ordered visible IDs, performs one RuntimeScene read-contract lookup per visible ID, never iterates RuntimeScene.records(), and never iterates semantic objects.",
+    "forbidden": [
+      "generic stale Stroke or Text kind",
+      "Skia or platform backend types",
+      "SemanticDocument, ObjectStore, semantic object lookup, or SceneCompiler access",
+      "Tile, TileCache, RenderGroup, RasterCache, Scheduler, or ResourceBudget behavior",
+      "prediction, ink preview, Arc handoff, or CanonicalVisible semantics",
+      "G3-04 through G3-11 implementation",
+      "declaring ReferenceDrawList to be the final optimized FrameGraph ABI"
+    ],
+    "required_evidence": [
+      "one fixture covering all nine V1 kinds plus order, viewport/erase clip, and independently calculated camera mapping",
+      "deterministic exact structural replay and byte-identical digest replay",
+      "100000 total RuntimeScene records with approximately 500 ordered visible inputs and exactly visible-driven traversal",
+      "production boundary scan proving no semantic, Skia, Tile, backend, or later-WP dependency"
+    ]
+  }
+}

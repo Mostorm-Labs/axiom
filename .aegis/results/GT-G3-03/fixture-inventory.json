@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "fixture": "hand-authored-nine-kind-reference-plan",
+  "object_kinds": [
+    "Shape",
+    "Image",
+    "VectorPath",
+    "RichText",
+    "VectorStroke",
+    "DabStroke",
+    "Connector",
+    "Sticky",
+    "Group"
+  ],
+  "visibility_order_object_ids": [108, 100, 103, 101, 107, 102, 106, 104, 105],
+  "runtime_storage_order_differs": true,
+  "record_fields_compared": [
+    "objectId",
+    "kind",
+    "kindVersion",
+    "placement",
+    "transform",
+    "properties",
+    "content",
+    "eraseMasks",
+    "geometryBounds",
+    "visualBounds",
+    "worldBounds",
+    "referenceGeometryDigest",
+    "directDependencies"
+  ],
+  "typed_commands_compared": true,
+  "independent_expected_corpus": true,
+  "non_empty_derived_fields": {
+    "geometryBounds": true,
+    "visualBounds": true,
+    "worldBounds": true,
+    "referenceGeometryDigest": true,
+    "directDependencies": true
+  },
+  "group_ordered_zero_pixel_contribution": true,
+  "frame_and_query_identity_compared": true,
+  "independent_world_to_view_affine": [
+    1.9378248434212895,
+    -0.4948079185090459,
+    0.4948079185090459,
+    1.9378248434212895,
+    396.1657571437723,
+    309.2357231292123
+  ]
+}

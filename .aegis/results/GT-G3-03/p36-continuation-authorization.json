@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorized": true,
+  "surface": "CODE_REVERIFY",
+  "executor": "codex",
+  "exact_cursor": "24378e99b315183ba05631187ba145eb1a0525e0",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "scope": {
+    "required": [
+      "Replace self-derived expected values with an independently authored nine-kind corpus.",
+      "Populate distinguishable non-empty geometryBounds, visualBounds, worldBounds, referenceGeometryDigest, and directDependencies in the test fixture through an authorized test seam or equivalent test-only setup.",
+      "Compare every RuntimeSceneRecord field and every typed command against independent expected literals.",
+      "Refresh fixture-inventory and reference-plan evidence from the repaired executable output."
+    ],
+    "allowed_paths": [
+      "runtime/render/tests/direct_reference_source_test.cpp",
+      ".aegis/results/GT-G3-03/**"
+    ],
+    "forbidden": [
+      "production behavior changes",
+      "canonical type contract changes",
+      "runtime/scene/**",
+      "runtime/semantic/**",
+      "G3-04+ behavior",
+      "P20/P31 reopen"
+    ]
+  },
+  "required_reverification": [
+    "G3DirectReference",
+    "G3FrameState",
+    "G3Visibility",
+    "full RF01/G2 predecessor matrix",
+    "git diff --check"
+  ],
+  "terminal_success": [
+    "independent nine-kind full-field corpus passes",
+    "all frozen G3-03 obligations pass at the new exact result revision",
+    "only authorized paths changed",
+    "result and evidence are committed and pushed",
+    "return READY_FOR_CONTROL_REVIEW"
+  ],
+  "official_gate_pass_forbidden": true,
+  "next_surface": "CODE_REVERIFY"
+}

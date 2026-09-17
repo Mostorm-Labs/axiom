@@ -65,6 +65,30 @@
         "canonical_merge_revision": "47ffe5b69d7dda457d16203e41803086c880c174",
         "hosted_checks": "PASS"
       }
+    },
+    {
+      "id": "ev-gt-g3-02-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+      "supports": ["gt-g3-02", "int-pr86-g3-02"],
+      "inputs": [
+        "git:754619b716d7f4c27d2d8089a1276b8ac43df435",
+        "github:Mostorm-Labs/axiom#86",
+        "repo:.aegis/packages/GT-G3-02/package.json",
+        "repo:.aegis/results/GT-G3-02/result.json",
+        "repo:.aegis/results/GT-G3-02/locality-counters.json",
+        "github-actions:35190174039",
+        "github-actions:35190174038"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS_WITH_FINDINGS",
+        "integration_status": "integrated",
+        "result_revision": "754619b716d7f4c27d2d8089a1276b8ac43df435",
+        "canonical_merge_revision": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+        "hosted_checks": "PASS",
+        "non_blocking_finding": "The pre-integration generated state cache contained a pending G3-02 package-materialization placeholder; exact package locks and result evidence were valid."
+      }
     }
   ]
 }
