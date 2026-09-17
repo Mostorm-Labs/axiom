@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-03-STRUCTURE",
+      "obligations": ["G3-03-V1-nine-kind-structural-plan", "G3-03-V2-frame-clip-order-binding"],
+      "artifact": "RED/GREEN G3DirectReference transcript plus .aegis/results/GT-G3-03/fixture-inventory.json with independent nine-kind structural and identity/order/clip/camera assertions"
+    },
+    {
+      "id": "E-G3-03-DIGEST",
+      "obligations": ["G3-03-V3-versioned-deterministic-digest"],
+      "artifact": ".aegis/results/GT-G3-03/reference-plan-evidence.json with encoding version, canonical-byte size, exact digest, replay result, and mutation-sensitivity inventory"
+    },
+    {
+      "id": "E-G3-03-LOCALITY",
+      "obligations": ["G3-03-V4-visible-driven-locality"],
+      "artifact": ".aegis/results/GT-G3-03/traversal-counters.json plus focused 100K/500-visible test output"
+    },
+    {
+      "id": "E-G3-03-BOUNDARY",
+      "obligations": ["G3-03-V5-boundary-hygiene"],
+      "artifact": "Forbidden dependency/total-scene-iteration scan and G3-01/G3-02/G2 predecessor regression output"
+    }
+  ],
+  "corroborative": [
+    {"id": "C-G3-03-HYGIENE", "artifact": "git diff --check and exact changed-path inventory"}
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result, fixture inventory, reference-plan evidence, and traversal counters under .aegis/results/GT-G3-03/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

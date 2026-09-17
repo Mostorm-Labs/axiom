@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create runtime/render/include/canvas/render/reference_draw_list.hpp with renderer-neutral typed commands, exact frame/query identity, deterministic traversal entries, canonical byte encoding metadata, digest, and traversal diagnostics.",
+        "Create runtime/render/include/canvas/render/direct_reference_source.hpp exposing only the G3-03 build boundary over FrameState, VisibilityResult, and const RuntimeScene.",
+        "Create runtime/render/src/direct_reference_source.cpp mapping all nine V1 RuntimeScene kinds into exact typed reference commands in VisibilityResult.backToFront order.",
+        "Create runtime/render/tests/direct_reference_source_test.cpp with independent nine-kind, generation/lookup-negative, deterministic replay/mutation, and 100K/500-visible locality oracles.",
+        "Modify runtime/render/CMakeLists.txt only to compile direct_reference_source.cpp, add axiom_render_direct_reference_tests, and register CTest G3DirectReference.",
+        "Write durable G3-03 result, fixture inventory, reference-plan digest, and traversal-counter records under .aegis/results/GT-G3-03/."
+      ],
+      "implementation_rules": [
+        "ReferenceDrawList is an internal permanent direct/reference oracle and explicitly not the final optimized FrameGraph ABI.",
+        "DirectReferenceSource must validate FrameState.sceneGeneration, FrameState.sceneReadToken, VisibilityResult.sceneGeneration, VisibilityResult.sceneReadToken, and RuntimeScene.generation before plan construction.",
+        "The production loop must be driven only by VisibilityResult.backToFront and use RuntimeScene.find once for each visible ID; it must not iterate RuntimeScene.records() or any semantic store.",
+        "Every visible ID must produce an ordered traversal entry; missing records are an error, never a silent skip.",
+        "Shape, Image, VectorPath, RichText, VectorStroke, DabStroke, Connector, and Sticky produce typed renderer-neutral pixel commands; Group produces an explicit ordered zero-pixel traversal entry.",
+        "Each traversal entry preserves object ID, ObjectKind, kind version, placement/order, transform, properties, content, erase masks, geometry/visual/world bounds, reference-geometry digest, and direct dependencies required by the permanent oracle.",
+        "Plan metadata preserves view/camera/viewport/metrics, scene/read, surface/metrics, and frame identities exactly and includes an explicit renderer-neutral world-to-view affine mapping derived from CameraState and logical metrics; G3-03 does not invent backend or platform-surface transforms.",
+        "Canonical serialization is versioned, byte-order explicit, deterministic for every scalar/variant/vector/string, and covers the complete ReferenceDrawList; exact structure remains the primary oracle.",
+        "No optional transient selection/editor input is introduced by this package."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/include/canvas/render/reference_draw_list.hpp",
+        "runtime/render/include/canvas/render/direct_reference_source.hpp",
+        "runtime/render/src/direct_reference_source.cpp",
+        "runtime/render/tests/direct_reference_source_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        ".aegis/results/GT-G3-03/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "runtime/foundation/**",
+        "apps/**, verification/**, or any Demo/Shell code",
+        "CMakePresets.json or existing POC preset behavior",
+        "SemanticDocument, ObjectStore, Operation, ChangeSet, Storage, Sync, SceneCompiler, or semantic object lookup from runtime/render",
+        "Skia, IRenderBackend, platform surface, presentation, or native host behavior",
+        "Tile, TileCache, TileStore, RenderGroup, RasterCache, Scheduler, ResourceBudget, or background raster behavior",
+        "prediction, ink preview, Arc, CanonicalVisible, production selection/editor behavior, or G3-04 through G3-11 implementation",
+        "generic stale Stroke or Text kind",
+        "declaring the reference plan to be the final FrameGraph ABI",
+        "lossy digest-only verification in place of exact structural equality"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "exact current FrameState, VisibilityResult, and RuntimeScene read flow",
+        "ReferenceDrawList ownership and complete field/variant mapping",
+        "canonical byte encoding and digest version",
+        "visible-driven lookup loop and diagnostic counters",
+        "obligation-to-test mapping",
+        "unresolved semantic decisions, authority conflict, verification conflict, and package-scope conflict"
+      ],
+      "continue_condition": "All unresolved/conflict lists are empty; otherwise fail closed to the earliest owning layer."
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The frozen axiom_render_direct_reference_tests target cannot compile because canvas/render/direct_reference_source.hpp and canvas/render/reference_draw_list.hpp are absent.",
+      "observation_seam": "CMake build and CTest execution of axiom_render_direct_reference_tests / G3DirectReference"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G3-03-RED",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_direct_reference_tests",
+          "expected_result": "FAIL before production implementation for the frozen missing direct-reference boundary",
+          "blocking_reason": "TDD RED provenance"
+        },
+        {
+          "id": "G3-03-GREEN",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_direct_reference_tests && ctest --test-dir out/g3-host-debug -R '^G3DirectReference$' --output-on-failure",
+          "expected_result": "PASS and write exact fixture inventory, digest, and traversal evidence under .aegis/results/GT-G3-03/",
+          "blocking_reason": "G3-03 structural, digest, identity, and locality acceptance oracle"
+        },
+        {
+          "id": "G3-03-PREDECESSOR",
+          "command_or_oracle": "ctest --test-dir out/g3-host-debug -R '^G3(FrameState|Visibility)$' --output-on-failure && cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve G3-01, G3-02, and G2 canonical foundations"
+        },
+        {
+          "id": "G3-03-BOUNDARY-SCAN",
+          "command_or_oracle": "Scan exact changed G3-03 files for SemanticDocument/ObjectStore/SceneCompiler/semantic lookup, Skia/backend/platform/presentation, Tile/RenderGroup/RasterCache/Scheduler/ResourceBudget, Arc/Ink/CanonicalVisible, and G3-04+ dependencies; review the source loop for RuntimeScene.records() iteration.",
+          "expected_result": "No forbidden dependency and no total-scene iteration in the normal direct-source path",
+          "blocking_reason": "Authority and locality boundary"
+        },
+        {
+          "id": "G3-03-DIFF-CHECK",
+          "command_or_oracle": "git diff --check",
+          "expected_result": "PASS",
+          "blocking_reason": "Source hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": ["Exact-source CI for the pushed result revision"]
+    },
+    "evidence": {
+      "blocking": [
+        "E-G3-03-STRUCTURE",
+        "E-G3-03-DIGEST",
+        "E-G3-03-LOCALITY",
+        "E-G3-03-BOUNDARY"
+      ],
+      "corroborative": ["C-G3-03-HYGIENE"]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only G3-03 direct/reference source behavior and focused build/test wiring are implemented.",
+        "Required RED is observed and recorded before production implementation.",
+        "All five frozen G3-03 verification obligations pass at the exact result revision.",
+        "G3DirectReference, G3FrameState, G3Visibility, and full RF01/G2 regression pass at the exact result revision.",
+        "Nine-kind structural inventory, exact replay, stable digest, mutation sensitivity, 100K/500-visible traversal counters, boundary scan, and git diff --check pass.",
+        "Only authorized mutation paths differ from the package materialization revision.",
+        "Result/evidence records are committed and the exact result revision is pushed.",
+        "Return READY_FOR_CONTROL_REVIEW without issuing G3-03 P34 PASS or overall G3 PASS."
+      ]
+    },
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "PACKAGE_SCOPE_DIVERGENCE",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "VERIFICATION_DESIGN_DEFECT",
+      "TASK_PACKAGE_DEFECT"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

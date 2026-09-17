@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "obligations": [
+    {
+      "id": "G3-03-V1-nine-kind-structural-plan",
+      "requirement": "The DirectReferenceSource emits a deterministic backend-neutral structural plan for every G2 V1 RuntimeScene ObjectKind without using stale generic Stroke/Text kinds; Group remains an ordered traversal entry with explicit zero-pixel contribution.",
+      "oracle": "Build a hand-authored nine-record RuntimeScene fixture with distinguishable content, transforms, properties, bounds, erase masks, dependencies, and final visibility order; compare every output field against independently authored expected ReferenceDrawList values.",
+      "acceptance": "All nine kinds appear exactly once in the expected final order, every non-Group record maps to its exact typed renderer-neutral command, Group has deterministic order and zero pixel contribution, and no expected value is derived from the source under test.",
+      "evidence_required": "Focused G3DirectReference structural test transcript plus fixture inventory JSON."
+    },
+    {
+      "id": "G3-03-V2-frame-clip-order-binding",
+      "requirement": "The plan is bound to the exact FrameState and VisibilityResult identities and preserves final visibility order, viewport clip, and camera mapping without re-querying visibility.",
+      "oracle": "Use nontrivial camera center/zoom/rotation, logical surface metrics, viewport and erase clips, scene generation, read token, view/frame/surface/metrics generations, and a final order distinct from record storage order; independently calculate the expected renderer-neutral world-to-view affine mapping.",
+      "acceptance": "ReferenceDrawList metadata exactly matches the hand-authored FrameState/VisibilityResult values, its world-to-view mapping equals the independent expected affine mapping, command order exactly equals VisibilityResult.backToFront, and mismatched scene/read identities or a missing visible RuntimeScene record fail deterministically rather than silently skipping or mixing generations.",
+      "evidence_required": "Focused positive and negative G3DirectReference assertions."
+    },
+    {
+      "id": "G3-03-V3-versioned-deterministic-digest",
+      "requirement": "The permanent reference plan has a stable versioned canonical byte representation and digest; digest is corroborative and never replaces exact structural comparison.",
+      "oracle": "Build the same distinguishable plan twice and compare exact structures, canonical bytes, and digest; independently mutate representative identity, ordering, transform, property, content, dependency, erase-mask, camera, and clip fields and require the canonical bytes/digest to change.",
+      "acceptance": "Identical inputs yield byte-identical canonical bytes and digest, every representative semantic change is detected, encoding version is explicit, and exact structure remains the primary equality oracle.",
+      "evidence_required": "Committed reference-plan digest and replay/mutation test transcript."
+    },
+    {
+      "id": "G3-03-V4-visible-driven-locality",
+      "requirement": "With 100000 RuntimeScene records and approximately 500 visible IDs, DirectReferenceSource work is driven only by the visible set and performs no full RuntimeScene or SemanticDocument traversal.",
+      "oracle": "Construct a 100000-record RuntimeScene fixture and a 500-ID VisibilityResult; inspect production diagnostics and dependencies while generating the plan.",
+      "acceptance": "Exactly 500 visibility IDs are processed, exactly 500 RuntimeScene read-contract lookups are attempted, no RuntimeScene.records() iteration or semantic object iteration occurs in the normal source path, and output traversal entries correspond exactly to the 500 ordered visible IDs.",
+      "evidence_required": "Traversal counters JSON plus focused locality test and production boundary scan."
+    },
+    {
+      "id": "G3-03-V5-boundary-hygiene",
+      "requirement": "G3-03 introduces no Skia/backend/platform contract, SemanticDocument/ObjectStore access, Tile/cache/scheduler optimization, prediction/ink/Arc behavior, or G3-04+ implementation and preserves G3-01/G3-02/G2 behavior.",
+      "oracle": "Review-owned dependency scan over exact changed production/test files plus focused G3 predecessor tests and the full RF01/G2 regression matrix.",
+      "acceptance": "Forbidden dependency scan is empty, mutation scope is exact, G3FrameState and G3Visibility pass, full RF01/G2 tests pass, and git diff --check passes.",
+      "evidence_required": "Boundary scan, changed-path inventory, predecessor regression logs, and diff check."
+    }
+  ]
+}
