@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-02",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "revision": "2026-09-13T04:49:44.764Z",
+    "trusted_section": "WP G3-02 — Implement Render-owned VisibilityResolver",
+    "content_hash_kind": "canonical-trusted-statements-sha256",
+    "content_hash": "7ac2df621df429c5203b9702d5226488025ff131f42c58aa5042544056909b10"
+  },
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_01_gate_decision": "gt-g3-01-p34-2026-09-17",
+    "canonical_main_revision": "47ffe5b69d7dda457d16203e41803086c880c174",
+    "required_state": "GT-G3-01_CLOSED"
+  },
+  "trusted_statements": {
+    "goal": "Use the G2 SceneQuery contract to resolve candidates, visibility, and final order from FrameState inside Render Core rather than accepting a visible list from Demo or Shell.",
+    "files": [
+      "runtime/render/include/canvas/render/visibility_resolver.hpp",
+      "runtime/render/include/canvas/render/visibility_result.hpp",
+      "runtime/render/src/visibility_resolver.cpp",
+      "runtime/render/tests/visibility_resolver_test.cpp"
+    ],
+    "consumes": ["FrameState", "G2 SceneQuery contract", "G2 scene read view"],
+    "produces": [
+      "scene generation identity",
+      "candidate statistics",
+      "ordered visible record references",
+      "clip and effect dependency observations required by the direct path"
+    ],
+    "forbidden": [
+      "full SemanticDocument scan",
+      "demo-owned visibility",
+      "Tile coverage",
+      "treating candidate query order as final render order",
+      "any G3-03 through G3-11 implementation"
+    ],
+    "required_evidence": [
+      "100000 total records with approximately 500 visible and localized candidate traversal",
+      "camera-only invalidation without changing SemanticGeneration or RuntimeScene contents",
+      "zero total semantic object iteration in the normal render path"
+    ]
+  }
+}

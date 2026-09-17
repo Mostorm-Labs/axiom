@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-02",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create runtime/render/include/canvas/render/visibility_resolver.hpp.",
+        "Create runtime/render/include/canvas/render/visibility_result.hpp.",
+        "Create runtime/render/src/visibility_resolver.cpp.",
+        "Create runtime/render/tests/visibility_resolver_test.cpp.",
+        "Modify runtime/render/CMakeLists.txt only to compile the resolver and focused test.",
+        "Modify CMakePresets.json only so g3-host-debug builds the existing G2 Scene query dependency without changing old POC presets."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/include/canvas/render/visibility_resolver.hpp",
+        "runtime/render/include/canvas/render/visibility_result.hpp",
+        "runtime/render/src/visibility_resolver.cpp",
+        "runtime/render/tests/visibility_resolver_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        "CMakePresets.json",
+        ".aegis/results/GT-G3-02/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "apps/** or any Demo/Shell-owned visibility",
+        "SemanticDocument or ObjectStore access from runtime/render",
+        "Tile, TileCache, RenderGroup, RasterCache, scheduler, or resource-budget behavior",
+        "DirectReferenceSource, backend, presentation, platform host, or G3-03 through G3-11 implementation",
+        "candidate query order used as final render order",
+        "existing POC preset behavior"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "G3Visibility test cannot compile because canvas/render/visibility_resolver.hpp and its production implementation are absent.",
+      "observation_seam": "CMake build and CTest execution of axiom_render_visibility_tests / G3Visibility"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G3-02-RED",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_visibility_tests",
+          "expected_result": "FAIL before production implementation for the frozen missing boundary",
+          "blocking_reason": "TDD RED provenance"
+        },
+        {
+          "id": "G3-02-GREEN",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_visibility_tests && ctest --test-dir out/g3-host-debug -R '^G3Visibility$' --output-on-failure",
+          "expected_result": "PASS and write .aegis/results/GT-G3-02/locality-counters.json",
+          "blocking_reason": "G3-02 acceptance oracle"
+        },
+        {
+          "id": "G3-02-PREDECESSOR",
+          "command_or_oracle": "ctest --test-dir out/g3-host-debug -R '^G3FrameState$' --output-on-failure && cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve G3-01 and G2 canonical foundations"
+        },
+        {
+          "id": "G3-02-BOUNDARY-SCAN",
+          "command_or_oracle": "Scan exact changed G3-02 files for SemanticDocument, ObjectStore, Demo/Shell visible-list input, Tile/RenderGroup/RasterCache/Scheduler, and later-WP dependencies.",
+          "expected_result": "No forbidden dependency",
+          "blocking_reason": "Authority boundary"
+        },
+        {
+          "id": "G3-02-DIFF-CHECK",
+          "command_or_oracle": "git diff --check",
+          "expected_result": "PASS",
+          "blocking_reason": "Source hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": ["Exact-source CI for the pushed result revision"]
+    },
+    "evidence": {
+      "blocking": ["E-G3-02-VISIBILITY", "E-G3-02-LOCALITY", "E-G3-02-BOUNDARY"],
+      "corroborative": ["C-G3-02-HYGIENE"]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only G3-02 production behavior and build/test wiring are implemented.",
+        "Required RED is observed and recorded before production implementation.",
+        "G3Visibility, G3FrameState, and full RF01/G2 regression pass at the exact result revision.",
+        "100K locality counters, camera-only canonical-state isolation, boundary scan, and git diff --check pass.",
+        "Result/evidence record is committed and exact result revision is pushed.",
+        "Return READY_FOR_CONTROL_REVIEW without issuing G3 or G3-02 P34 PASS."
+      ]
+    },
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "PACKAGE_SCOPE_DIVERGENCE",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "VERIFICATION_DESIGN_DEFECT"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

@@ -46,6 +46,25 @@
         "implementation_plan": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md"
         ,"p31_package": "repo:.aegis/packages/GT-G3-01/package.json"
       }
+    },
+    {
+      "id": "ev-gt-g3-01-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:47ffe5b69d7dda457d16203e41803086c880c174",
+      "supports": ["gt-g3-01", "int-pr85-g3-01"],
+      "inputs": [
+        "git:eb3861aefecd55188ca29787d3cb9e112a05cdef",
+        "github:Mostorm-Labs/axiom#85",
+        "repo:.aegis/results/GT-G3-01/result.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "integration_status": "integrated",
+        "result_revision": "eb3861aefecd55188ca29787d3cb9e112a05cdef",
+        "canonical_merge_revision": "47ffe5b69d7dda457d16203e41803086c880c174",
+        "hosted_checks": "PASS"
+      }
     }
   ]
 }
