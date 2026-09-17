@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "verdict": "IMPLEMENTATION_DEFECT",
+  "status": "READY_FOR_P36",
+  "source_result_revision": "24378e99b315183ba05631187ba145eb1a0525e0",
+  "failed_frozen_obligations": [
+    "G3-03-V1-nine-kind-structural-plan",
+    "E-G3-03-STRUCTURE"
+  ],
+  "root_cause": "TEST_ORACLE_IMPLEMENTATION_INCOMPLETE",
+  "finding": {
+    "failure_mode": "The nine-kind fixture derives expected records from the same fixture helper used to build RuntimeScene input and leaves derived RuntimeScene fields at defaults.",
+    "impact": "The frozen structural oracle cannot independently detect loss or corruption of geometryBounds, visualBounds, worldBounds, referenceGeometryDigest, or directDependencies, and therefore cannot prove complete record-value preservation.",
+    "existing_independent_coverage": "G3-03-V2 identity/order/clip checks, V3 digest mutation checks, V4 locality counters, V5 boundary scan, and 19 RF01/G2 regressions pass, but none independently proves the missing full-field corpus.",
+    "unique_detection_value": "A hand-authored non-empty full-field expected corpus catches field omission or incorrect mapping that the current self-derived/default-empty fixture cannot detect.",
+    "why_frozen_evidence_missed_it": "The initial implementation focused on typed command, identity, digest, and locality behavior; the fixture inventory claimed complete fields without independently populating or comparing all derived fields.",
+    "routing": "P36 implementation-owned repair"
+  },
+  "preserved_valid_work": [
+    "typed nine-kind command mapping",
+    "FrameState/VisibilityResult/RuntimeScene identity validation",
+    "visible-driven RuntimeScene.find locality",
+    "versioned canonical bytes and digest",
+    "G3 predecessor and RF01/G2 regression coverage"
+  ],
+  "upstream_defect": false,
+  "p20_reopen": false,
+  "p31_reopen": false,
+  "p34_entry_authorized": false
+}
