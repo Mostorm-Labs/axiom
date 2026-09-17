@@ -3,7 +3,7 @@
   "task_id": "GT-G3-03",
   "stage": "P36_FIX_REVERIFICATION",
   "status": "READY_FOR_CONTROL_REVIEW",
-  "actual_starting_revision": "b0eecfe85ebd4c886149e1dfd6a2c1025f040c31",
+  "actual_starting_revision": "a419e6b488d7c5ad24d842e368ba6ff4f5ff5992",
   "repair_class": "IMPLEMENTATION_DEFECT",
   "repair_scope": [
     "runtime/render/tests/direct_reference_source_test.cpp",
@@ -11,6 +11,7 @@
   ],
   "evidence": {
     "independent_nine_kind_full_field_corpus": "PASS",
+    "source_expected_corpus_independence": "PASS",
     "typed_commands": "PASS",
     "g3_focused_matrix": {"passed": 3, "failed": 0},
     "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},

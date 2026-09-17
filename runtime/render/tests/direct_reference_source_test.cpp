@@ -6,7 +6,6 @@
 #include "object_store_mutator.hpp"
 
 #include <algorithm>
-#include <array>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
@@ -136,6 +135,56 @@ ObjectRecord fixtureRecord(std::uint64_t id, ObjectKind kind, std::uint64_t orde
     return record;
 }
 
+// The RuntimeScene input corpus is authored through the semantic fixture and
+// then given its own literal derived values. It intentionally does not call or
+// share storage with independentExpectedCorpus(), preserving oracle independence.
+std::vector<RuntimeSceneRecord> runtimeSourceCorpus() {
+    const ObjectKind kinds[] = {ObjectKind::kShape, ObjectKind::kImage,
+                                ObjectKind::kVectorPath, ObjectKind::kRichText,
+                                ObjectKind::kVectorStroke, ObjectKind::kDabStroke,
+                                ObjectKind::kConnector, ObjectKind::kSticky,
+                                ObjectKind::kGroup};
+    const WorldRect geometry[] = {
+        {10.0F, 20.0F, 16.0F, 28.0F}, {23.0F, 27.0F, 29.0F, 35.0F},
+        {36.0F, 34.0F, 42.0F, 42.0F}, {49.0F, 41.0F, 55.0F, 49.0F},
+        {62.0F, 48.0F, 68.0F, 56.0F}, {75.0F, 55.0F, 81.0F, 63.0F},
+        {88.0F, 62.0F, 94.0F, 70.0F}, {101.0F, 69.0F, 107.0F, 77.0F},
+        {114.0F, 76.0F, 120.0F, 84.0F}};
+    const WorldRect visual[] = {
+        {8.0F, 18.0F, 18.0F, 30.0F}, {21.0F, 25.0F, 31.0F, 37.0F},
+        {34.0F, 32.0F, 44.0F, 44.0F}, {47.0F, 39.0F, 57.0F, 51.0F},
+        {60.0F, 46.0F, 70.0F, 58.0F}, {73.0F, 53.0F, 83.0F, 65.0F},
+        {86.0F, 60.0F, 96.0F, 72.0F}, {99.0F, 67.0F, 109.0F, 79.0F},
+        {112.0F, 74.0F, 122.0F, 86.0F}};
+    const WorldRect world[] = {
+        {6.0F, 16.0F, 20.0F, 32.0F}, {19.0F, 23.0F, 33.0F, 39.0F},
+        {32.0F, 30.0F, 46.0F, 46.0F}, {45.0F, 37.0F, 59.0F, 53.0F},
+        {58.0F, 44.0F, 72.0F, 60.0F}, {71.0F, 51.0F, 85.0F, 67.0F},
+        {84.0F, 58.0F, 98.0F, 74.0F}, {97.0F, 65.0F, 111.0F, 81.0F},
+        {110.0F, 72.0F, 124.0F, 88.0F}};
+    std::vector<RuntimeSceneRecord> records;
+    records.reserve(9U);
+    for (std::size_t index = 0; index < 9U; ++index) {
+        const ObjectRecord source = fixtureRecord(100U + index, kinds[index], 20U - index);
+        records.push_back(RuntimeSceneRecord{
+            .objectId = source.id,
+            .kind = source.kind,
+            .kindVersion = source.kind_version,
+            .placement = source.placement,
+            .transform = source.transform,
+            .properties = source.properties,
+            .content = source.content,
+            .eraseMasks = source.erase_masks,
+            .geometryBounds = geometry[index],
+            .visualBounds = visual[index],
+            .worldBounds = world[index],
+            .referenceGeometryDigest = "fixture-independent-geometry-" + std::to_string(100 + index),
+            .directDependencies = {ObjectId::fromUint64(7000U + index),
+                                   ObjectId::fromUint64(8000U + index)}});
+    }
+    return records;
+}
+
 FrameState frame(WorldPoint center = WorldPoint{3.0F, -4.0F},
                  WorldRect viewport = WorldRect{-10.0F, -20.0F, 100.0F, 200.0F},
                  ViewId view = ViewId{9}) {
@@ -166,7 +215,7 @@ RuntimeScene makeRuntimeScene(ReferenceObjectStore& store) {
     assert(scene.replace(view));
     canvas::RuntimeSceneProjection projection;
     projection.generation = SemanticGeneration{7};
-    projection.records = independentExpectedCorpus();
+    projection.records = runtimeSourceCorpus();
     canvas::IncrementalRuntimeTestAccess::install(scene, std::move(projection));
     return scene;
 }
