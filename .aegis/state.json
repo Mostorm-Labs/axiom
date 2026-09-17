@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "G3_P32_IMPLEMENTATION",
+  "active_stage": "G3_P31_TASK_PACKAGING",
   "current_owner": "aegis-implementation",
-  "earliest_untrusted_layer": "G3_P32_IMPLEMENTATION",
-  "status": "READY_FOR_CODE_EXECUTION",
+  "earliest_untrusted_layer": "G3_P31_TASK_PACKAGING",
+  "status": "PACKAGE_REPAIR_IN_PROGRESS",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,11 +13,12 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "READY_FOR_CODE_EXECUTION",
-    "ingress": "READY_FOR_CODE_EXECUTION",
-    "implementation_authorized": true,
-    "p31_materialized": true,
-    "p31_materialized_ref": "96de16c9d648cedbd074a5e875d9bf9319afdd7f"
+    "status": "G3-01_PACKAGE_MATERIALIZING",
+    "ingress": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+    "implementation_authorized": false,
+    "p31_materialized": false,
+    "superseded_package": "GT-G3-00-P31-v0.1",
+    "current_package": "GT-G3-01-P31-v0.1"
   },
   "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
   "current_gate_decisions": [
@@ -28,15 +29,14 @@
   "integration_applicability": [
     {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"}
   ],
-  "recommended_next_stage": "G3_P32_IMPLEMENTATION",
+  "recommended_next_stage": "GT-G3-01_P32_IMPLEMENTATION",
   "handoff": {
-    "next_surface": "CODE_EXECUTION",
-    "next_action": "execute repo-local P31 package after explicit CODE_EXECUTION handoff",
-    "p31_package": ".aegis/packages/GT-G3-00/package.json",
-    "p31_package_id": "GT-G3-00-P31-v0.1",
-    "p31_materialized": true,
-    "package_materialization_ref": "96de16c9d648cedbd074a5e875d9bf9319afdd7f",
+    "next_surface": "CONTROL_REASONING",
+    "next_action": "freeze and bind GT-G3-01-P31-v0.1; do not execute GT-G3-00",
+    "p31_package": ".aegis/packages/GT-G3-01/package.json",
+    "p31_package_id": "GT-G3-01-P31-v0.1",
+    "p31_materialized": false,
     "g2_reopen": false,
-    "g3_implementation_start": true
+    "g3_implementation_start": false
   }
 }

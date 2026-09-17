@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-01-P31-v0.1",
+  "task_id": "GT-G3-01",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Establish the minimal per-view Render Core foundation and prove shared RuntimeScene versus independent view/camera/surface state.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-entry-readiness-review"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path": "authority.lock.json", "sha256": "5c388cadec58036e1f447fc5d082a69064da2465a729cef4aa968788ceb2028b"},
+  "verification_lock_ref": {"path": "verification.lock.json", "sha256": "1c24e72ea75f1d884bfb02b6d817e2aeb70a98140a136719abe41b157e25909e"},
+  "execution_contract_ref": {"path": "execution-contract.json", "sha256": "1e184ab04e9b6a4a2b3f80720f7a2260de0f216d2415bd9d8661a02627b68cf6"},
+  "implementation_context_ref": {"path": "implementation-context.md", "sha256": "9d0ae4b910af7dab7ff6a43aba68993e99689025d596781f379b192ac6d69126"},
+  "evidence_contract_ref": {"path": "evidence-contract.json", "sha256": "8d596a236de41e9bcee619e2a9470c24d9984ebd3ba8bfa6bb17879f8a40084a"},
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-01/",
+    "binding": "exact repository revision supplied by surface_handoff.package_materialization_ref"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate the exact GT-G3-01 package and execute only its RED-to-GREEN closure.",
+    "official_gate_pass_forbidden": true
+  }
+}

@@ -2,6 +2,8 @@
   "schema_version": "0.1",
   "package_id": "GT-G3-00-P31-v0.1",
   "task_id": "GT-G3-00",
+  "status": "SUPERSEDED_NON_EXECUTABLE",
+  "superseded_by": "GT-G3-01-P31-v0.1",
   "purpose": "Implement and verify the G3 Basic Canonical Canvas vertical slice under the current G3 v0.2 execution authority.",
   "repository": {
     "provider": "github",
@@ -43,9 +45,10 @@
     "binding": "exact repository revision supplied by surface_handoff.package_materialization_ref"
   },
   "handoff": {
-    "preferred_executor": "codex",
-    "next_surface": "CODE_EXECUTION",
-    "next_action": "Read this package, validate all bound hashes and repository ancestry, then execute the ordered closure contract.",
+    "preferred_executor": null,
+    "next_surface": "CONTROL_REASONING",
+    "next_action": "Use this record only as historical G3 orchestration context; execute reviewer-sized packages beginning with GT-G3-01.",
+    "execution_forbidden": true,
     "official_gate_pass_forbidden": true
   }
 }

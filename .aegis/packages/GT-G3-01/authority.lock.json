@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-01",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "revision": "2026-09-13T04:49:44.764Z",
+    "trusted_section": "WP G3-01 — Establish per-view Render Core foundation",
+    "content_hash_kind": "trusted-section-sha256",
+    "content_hash": "f4024647b5c35541acade080ebb8bc0ca811b6754471fb7d0c1e62411b15d629"
+  },
+  "dependency": {
+    "authority_ref": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+    "result_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+    "required_state": "G2_CLOSED"
+  },
+  "trusted_statements": {
+    "goal": "Establish the minimal production runtime/render per-view contract and separate shared RuntimeScene from per-view camera and surface state.",
+    "consumes": [
+      "G2 renderer-neutral scene read token and generation types",
+      "foundation world and view geometry"
+    ],
+    "produces": [
+      "immutable per-frame and per-view state",
+      "view identity",
+      "camera and viewport",
+      "logical and physical metrics",
+      "DPR and display scale",
+      "scene generation and read token",
+      "surface generation",
+      "metrics generation",
+      "frame identity"
+    ],
+    "forbidden": [
+      "Skia types",
+      "Tile or optimized FrameGraph ABI",
+      "SemanticDocument",
+      "selection or editor state inside shared RuntimeScene",
+      "any G3-02 through G3-11 implementation"
+    ]
+  }
+}

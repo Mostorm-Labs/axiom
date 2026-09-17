@@ -1,6 +1,8 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G3-00",
+  "status": "SUPERSEDED_NON_EXECUTABLE",
+  "superseded_by": "GT-G3-01-P31-v0.1",
   "execution_authority_mode": "repo_materialized",
   "implementation": {
     "required_changes": [
@@ -98,8 +100,9 @@
     "BLOCKED_EXECUTION_DIVERGENCE"
   ],
   "return_policy": {
-    "continue_until_terminal_state": true,
+    "continue_until_terminal_state": false,
     "return_surface": "CONTROL_REVIEW",
-    "official_gate_pass_forbidden": true
+    "official_gate_pass_forbidden": true,
+    "execution_forbidden": true
   }
 }
