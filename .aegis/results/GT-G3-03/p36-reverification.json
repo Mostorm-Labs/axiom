@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "actual_starting_revision": "b0eecfe85ebd4c886149e1dfd6a2c1025f040c31",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "repair_scope": [
+    "runtime/render/tests/direct_reference_source_test.cpp",
+    ".aegis/results/GT-G3-03/**"
+  ],
+  "evidence": {
+    "independent_nine_kind_full_field_corpus": "PASS",
+    "typed_commands": "PASS",
+    "g3_focused_matrix": {"passed": 3, "failed": 0},
+    "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},
+    "canonical_byte_size": 2932,
+    "canonical_digest": "fnv1a64:e6bc41c591b52e08",
+    "non_empty_derived_fields": [
+      "geometryBounds",
+      "visualBounds",
+      "worldBounds",
+      "referenceGeometryDigest",
+      "directDependencies"
+    ]
+  },
+  "test_only_seam": "friend-controlled RuntimeScene projection installation; no production contract change",
+  "git_diff_check": "PASS",
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

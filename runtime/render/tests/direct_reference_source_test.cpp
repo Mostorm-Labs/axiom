@@ -6,10 +6,26 @@
 #include "object_store_mutator.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
+namespace canvas {
+
+// Test-only access to the already-friended RuntimeScene publication seam.  This
+// installs a hand-authored projection without changing any production contract.
+class IncrementalRuntimeTestAccess final {
+  public:
+    static void install(RuntimeScene& scene, RuntimeSceneProjection projection) {
+        auto prepared = scene.prepare(std::move(projection));
+        assert(prepared.hasValue());
+        scene.publish(std::move(prepared.value()));
+    }
+};
+
+} // namespace canvas
 
 namespace {
 
@@ -37,6 +53,62 @@ using canvas::semantic::ReferenceObjectStore;
 using canvas::semantic::SemanticGeneration;
 using canvas::semantic::SemanticReadView;
 using canvas::semantic::internal::ObjectStoreMutator;
+
+RuntimeSceneRecord expectedRecord(std::uint64_t id, ObjectKind kind, std::uint64_t order,
+                                 std::size_t corpusIndex) {
+    RuntimeSceneRecord record;
+    record.objectId = ObjectId::fromUint64(id);
+    record.kind = kind;
+    record.kindVersion = 1;
+    record.placement.order_key = canvas::semantic::OrderKey(
+        std::vector<std::uint8_t>{static_cast<std::uint8_t>(order), 1U});
+    record.transform.tx = static_cast<double>(id);
+    record.properties.entries = {{0x10U,
+                                  canvas::semantic::PropertyValue{static_cast<float>(id)}}};
+    record.eraseMasks = {{ObjectId::fromUint64(9000U + id),
+                          canvas::semantic::FilledPathMask{}}};
+    switch (kind) {
+    case ObjectKind::kShape: record.content = canvas::semantic::ShapeContent{7U, 10.0, 20.0}; break;
+    case ObjectKind::kImage: record.content = canvas::semantic::ImageContent{}; break;
+    case ObjectKind::kVectorPath: record.content = canvas::semantic::VectorPathContent{}; break;
+    case ObjectKind::kRichText: record.content = canvas::semantic::RichTextContent{}; break;
+    case ObjectKind::kVectorStroke: record.content = canvas::semantic::VectorStrokeContent{}; break;
+    case ObjectKind::kDabStroke: record.content = canvas::semantic::DabStrokeContent{}; break;
+    case ObjectKind::kConnector: record.content = canvas::semantic::ConnectorContent{}; break;
+    case ObjectKind::kSticky: record.content = canvas::semantic::StickyContent{3.0, 4.0}; break;
+    case ObjectKind::kGroup: record.content = canvas::semantic::GroupContent{}; break;
+    }
+    // These are deliberately authored independently of the semantic fixture.
+    record.geometryBounds = WorldRect{
+        static_cast<float>(10 + corpusIndex * 13), static_cast<float>(20 + corpusIndex * 7),
+        static_cast<float>(16 + corpusIndex * 13), static_cast<float>(28 + corpusIndex * 7)};
+    record.visualBounds = WorldRect{
+        static_cast<float>(8 + corpusIndex * 13), static_cast<float>(18 + corpusIndex * 7),
+        static_cast<float>(18 + corpusIndex * 13), static_cast<float>(30 + corpusIndex * 7)};
+    record.worldBounds = WorldRect{
+        static_cast<float>(6 + corpusIndex * 13), static_cast<float>(16 + corpusIndex * 7),
+        static_cast<float>(20 + corpusIndex * 13), static_cast<float>(32 + corpusIndex * 7)};
+    record.referenceGeometryDigest = "fixture-independent-geometry-" + std::to_string(100 + corpusIndex);
+    record.directDependencies = {ObjectId::fromUint64(7000U + corpusIndex),
+                                  ObjectId::fromUint64(8000U + corpusIndex)};
+    return record;
+}
+
+std::vector<RuntimeSceneRecord> independentExpectedCorpus() {
+    const ObjectKind kinds[] = {ObjectKind::kShape, ObjectKind::kImage,
+                                ObjectKind::kVectorPath, ObjectKind::kRichText,
+                                ObjectKind::kVectorStroke, ObjectKind::kDabStroke,
+                                ObjectKind::kConnector, ObjectKind::kSticky,
+                                ObjectKind::kGroup};
+    std::vector<RuntimeSceneRecord> records;
+    records.reserve(9U);
+    // The corpus order is intentionally storage order; visibility uses a
+    // different order below so both lookup and traversal are exercised.
+    for (std::size_t index = 0; index < 9U; ++index) {
+        records.push_back(expectedRecord(100U + index, kinds[index], 20U - index, index));
+    }
+    return records;
+}
 
 ObjectRecord fixtureRecord(std::uint64_t id, ObjectKind kind, std::uint64_t order) {
     ObjectRecord record;
@@ -92,12 +164,16 @@ RuntimeScene makeRuntimeScene(ReferenceObjectStore& store) {
     RuntimeScene scene;
     SemanticReadView view(store, SemanticGeneration{7});
     assert(scene.replace(view));
+    canvas::RuntimeSceneProjection projection;
+    projection.generation = SemanticGeneration{7};
+    projection.records = independentExpectedCorpus();
+    canvas::IncrementalRuntimeTestAccess::install(scene, std::move(projection));
     return scene;
 }
 
 void emitsNineKindsInVisibilityOrder() {
     ReferenceObjectStore store;
-    std::vector<ObjectRecord> expectedRecords;
+    std::vector<RuntimeSceneRecord> expectedRecords;
     RuntimeScene scene = makeRuntimeScene(store);
     const FrameState input = frame();
     const VisibilityResult visibility{
@@ -116,18 +192,11 @@ void emitsNineKindsInVisibilityOrder() {
     assert(result.hasValue());
     const ReferenceDrawList& list = result.value();
     assert(list.entries.size() == 9U);
-    expectedRecords.reserve(9U);
-    const ObjectKind kinds[] = {ObjectKind::kShape, ObjectKind::kImage,
-                                ObjectKind::kVectorPath, ObjectKind::kRichText,
-                                ObjectKind::kVectorStroke, ObjectKind::kDabStroke,
-                                ObjectKind::kConnector, ObjectKind::kSticky,
-                                ObjectKind::kGroup};
-    for (std::uint64_t i = 0; i < 9U; ++i) {
-        expectedRecords.push_back(fixtureRecord(100U + i, kinds[i], 20U - i));
-    }
+    expectedRecords = independentExpectedCorpus();
     assert(list.entries.front().record.objectId == ObjectId::fromUint64(108));
     assert(list.entries.front().record.kind == ObjectKind::kGroup);
     assert(!list.entries.front().contributesPixels);
+    assert(!list.entries.front().record.referenceGeometryDigest.empty());
     assert(list.entries.front().record.transform.tx == 108.0);
     assert(list.entries.back().record.objectId == ObjectId::fromUint64(105));
     assert(list.entries.back().record.kind == ObjectKind::kDabStroke);
@@ -155,23 +224,23 @@ void emitsNineKindsInVisibilityOrder() {
         assert(list.entries[i].record.kind == expectedKinds[i]);
         assert(list.entries[i].command.index() == expectedCommands[i]);
         const auto expected = std::find_if(
-            expectedRecords.begin(), expectedRecords.end(), [&](const ObjectRecord& record) {
-                return record.id == list.entries[i].record.objectId;
+            expectedRecords.begin(), expectedRecords.end(), [&](const RuntimeSceneRecord& record) {
+                return record.objectId == list.entries[i].record.objectId;
             });
         assert(expected != expectedRecords.end());
-        assert(list.entries[i].record.objectId == expected->id);
+        assert(list.entries[i].record.objectId == expected->objectId);
         assert(list.entries[i].record.kind == expected->kind);
-        assert(list.entries[i].record.kindVersion == expected->kind_version);
+        assert(list.entries[i].record.kindVersion == expected->kindVersion);
         assert(list.entries[i].record.placement == expected->placement);
         assert(list.entries[i].record.transform == expected->transform);
         assert(list.entries[i].record.properties == expected->properties);
         assert(list.entries[i].record.content == expected->content);
-        assert(list.entries[i].record.eraseMasks == expected->erase_masks);
-        assert(list.entries[i].record.geometryBounds == WorldRect{});
-        assert(list.entries[i].record.visualBounds == WorldRect{});
-        assert(list.entries[i].record.worldBounds == WorldRect{});
-        assert(list.entries[i].record.referenceGeometryDigest.empty());
-        assert(list.entries[i].record.directDependencies.empty());
+        assert(list.entries[i].record.eraseMasks == expected->eraseMasks);
+        assert(list.entries[i].record.geometryBounds == expected->geometryBounds);
+        assert(list.entries[i].record.visualBounds == expected->visualBounds);
+        assert(list.entries[i].record.worldBounds == expected->worldBounds);
+        assert(list.entries[i].record.referenceGeometryDigest == expected->referenceGeometryDigest);
+        assert(list.entries[i].record.directDependencies == expected->directDependencies);
         switch (expectedKinds[i]) {
         case ObjectKind::kShape:
             assert(std::get<canvas::render::ShapeReferenceCommand>(list.entries[i].command).content ==
