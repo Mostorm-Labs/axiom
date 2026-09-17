@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-00",
+  "obligations": [
+    {
+      "id": "G3-V1-semantic-preservation",
+      "requirement": "Camera and presentation changes do not mutate canonical semantic state or RuntimeScene generation/content.",
+      "oracle": "Replay/fixture digest and RuntimeScene structural comparison before and after camera-only actions.",
+      "acceptance": "All G3 camera/hit/select tests pass with unchanged canonical digest.",
+      "evidence_required": "Reviewer-accessible test output and fixture digest artifact."
+    },
+    {
+      "id": "G3-V2-runtime-reference-equivalence",
+      "requirement": "Direct/incremental render input equals a fresh/full reference plan for all G2 V1 kinds.",
+      "oracle": "Independent structural comparison of direct plan/digest and full rebuild plan/digest.",
+      "acceptance": "No divergence across required fixture corpus and deterministic replay.",
+      "evidence_required": "Machine-readable comparison artifact with first-divergence diagnostics."
+    },
+    {
+      "id": "G3-V3-render-golden",
+      "requirement": "Headless production Render Core output is deterministic and platform observations satisfy approved tolerance classes.",
+      "oracle": "Headless golden plus explicit pixel-tolerance/readback comparison; missing required platform evidence is BLOCKED.",
+      "acceptance": "Headless PASS and each required host has its declared build/readback/lifecycle evidence.",
+      "evidence_required": "Golden/diff artifacts, host traces, and current G0 workspace report inputs."
+    },
+    {
+      "id": "G3-V4-locality-and-budget",
+      "requirement": "Render traversal and derived resource observations scale with visible/changed locality, without pulling G5 optimization semantics forward.",
+      "oracle": "100K/500-visible locality counters and bounded working-set observations.",
+      "acceptance": "No whole-document traversal in the normal render path; declared budget observations are recorded.",
+      "evidence_required": "Machine-readable locality/performance evidence."
+    },
+    {
+      "id": "G3-V5-presentation-generation",
+      "requirement": "Surface/frame/presentation generation mismatches are rejected or deferred deterministically; PresentSubmitted is distinct from Presented.",
+      "oracle": "Injected stale-generation and lifecycle transition tests.",
+      "acceptance": "All stale/resize/lifecycle negatives pass without exposing mixed generation output.",
+      "evidence_required": "Lifecycle trace and negative-test output."
+    }
+  ],
+  "source_workspace": "verification/"
+}

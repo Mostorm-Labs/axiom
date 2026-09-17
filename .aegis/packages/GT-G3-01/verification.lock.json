@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-01",
+  "obligations": [
+    {
+      "id": "G3-01-V1-view-independence",
+      "requirement": "Two views may reference the same RuntimeScene generation while retaining independent camera and surface generations.",
+      "oracle": "Construct two RenderViewRuntime instances with the same scene generation/read identity and distinguishable view, camera, viewport, metrics, surface, metrics-generation, and frame identities.",
+      "acceptance": "G3FrameState contract test proves shared scene identity and exact per-view independence.",
+      "evidence_required": "Focused G3FrameState test log."
+    },
+    {
+      "id": "G3-01-V2-immutable-complete-state",
+      "requirement": "FrameState carries all G3-01 required identities and metrics as immutable renderer-neutral state.",
+      "oracle": "Compile-time and runtime field/value assertions over the complete required state.",
+      "acceptance": "The contract test compiles and all exact field assertions pass.",
+      "evidence_required": "Build and test output for axiom_render_frame_state_tests."
+    },
+    {
+      "id": "G3-01-V3-boundary-hygiene",
+      "requirement": "The new foundation introduces no Skia, product-shell, SemanticDocument, Tile, or optimized FrameGraph dependency.",
+      "oracle": "Dependency/include scan over the exact changed production and test files plus successful G2 regression.",
+      "acceptance": "Forbidden dependency scan is empty and G2 scene tests pass.",
+      "evidence_required": "Boundary scan output and focused G2 regression log."
+    }
+  ]
+}

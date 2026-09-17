@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.6",
+  "evidence": [
+    {
+      "id": "ev-g2-canonical-main",
+      "kind": "gate-closure-and-repository-baseline",
+      "status": "available",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "supports": ["g2-canonical-main"],
+      "source_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+      "conclusion": {
+        "g2_verdict": "PASS",
+        "g2_status": "G2_CLOSED",
+        "canonical_main_runtime_foundation": true,
+        "g3_ingress_ready": true,
+        "result_revision_binding_verified": "07654767eac7b021ca6e89004e36448ccebb727d"
+      }
+    },
+    {
+      "id": "ev-g3-entry-readiness",
+      "kind": "entry-review",
+      "status": "available",
+      "ref": "repo:.aegis/evidence.json#ev-g3-entry-readiness",
+      "supports": ["g3-entry-readiness", "g3-capability-authority"],
+      "inputs": [
+        "notion://3c44c57a-590c-81a1-be07-e154c7c0d611",
+        "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+        "notion://3da4c57a-590c-8160-a895-e71681e78860",
+        "notion://3da4c57a-590c-81a5-957c-eba685849887",
+        "notion://3da4c57a-590c-81ba-a1a4-da47b2ab35de",
+        "notion://3da4c57a-590c-811a-963c-f294cf8e4009",
+        "notion://3da4c57a-590c-8175-9945-d6cadcc95e74",
+        "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
+      ],
+      "conclusion": {
+        "g2_to_g3_boundary": "satisfied",
+        "g3_duplicate_runtimescene": "forbidden",
+        "g3_implementation_authorized": false,
+        "g3_p31_materialized": true,
+        "p31_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+        "superseded_p31_package": "GT-G3-00-P31-v0.1",
+        "current_p31_package": "GT-G3-01-P31-v0.1",
+        "current_p31_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+        "status": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+        "boundary_review": "G3_READY_FOR_P31",
+        "implementation_plan": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md"
+        ,"p31_package": "repo:.aegis/packages/GT-G3-01/package.json"
+      }
+    }
+  ]
+}

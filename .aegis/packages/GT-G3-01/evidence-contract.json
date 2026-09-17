@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-01",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-01-FRAME-STATE",
+      "obligations": ["G3-01-V1-view-independence", "G3-01-V2-immutable-complete-state"],
+      "artifact": "RED and GREEN build/test transcript for axiom_render_frame_state_tests and G3FrameState"
+    },
+    {
+      "id": "E-G3-01-BOUNDARY",
+      "obligations": ["G3-01-V3-boundary-hygiene"],
+      "artifact": "Forbidden dependency scan and G2 scene regression output"
+    }
+  ],
+  "corroborative": [
+    {
+      "id": "C-G3-01-HYGIENE",
+      "artifact": "git diff --check and exact changed-path inventory"
+    }
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result record under .aegis/results/GT-G3-01/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-00-P31-v0.1",
+  "task_id": "GT-G3-00",
+  "status": "SUPERSEDED_NON_EXECUTABLE",
+  "superseded_by": "GT-G3-01-P31-v0.1",
+  "purpose": "Implement and verify the G3 Basic Canonical Canvas vertical slice under the current G3 v0.2 execution authority.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-entry-readiness-review"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "7ca1477afcc23f59b4f4e4d8c8bd0228f4ffcf2f2c81d029aa427d99857288d5"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "babbeae91f6b68ff52c9d1678ed0b4b4f140c84a6914a85c51c6b37bde567686"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "05e4369b8078e9f09f299e7a4af627e007a10b1069526ddda6284f74e8515de6"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "fecb497476e6e853f495617360e4d96ba7ddeb11e774393bc2ece08e4597b054"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "02414775933a0e7edfa890837411db0bafb3e5829bdea20996c279ffd583628d"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-00/",
+    "binding": "exact repository revision supplied by surface_handoff.package_materialization_ref"
+  },
+  "handoff": {
+    "preferred_executor": null,
+    "next_surface": "CONTROL_REASONING",
+    "next_action": "Use this record only as historical G3 orchestration context; execute reviewer-sized packages beginning with GT-G3-01.",
+    "execution_forbidden": true,
+    "official_gate_pass_forbidden": true
+  }
+}

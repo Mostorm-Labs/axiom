@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.6",
+  "generator_version": "manual-deterministic-v0.1",
+  "project_id": "axiom",
+  "active_stage": "GT-G3-01_P31_TASK_PACKAGING",
+  "current_owner": "aegis-implementation",
+  "earliest_untrusted_layer": "GT-G3-01_P31_TASK_PACKAGING",
+  "status": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+  "g2": {
+    "status": "CLOSED",
+    "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+    "official_pass_claimed": true,
+    "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
+  },
+  "g3": {
+    "status": "G3-01_READY_FOR_CODE_EXECUTION",
+    "ingress": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+    "implementation_authorized": false,
+    "p31_materialized": true,
+    "p31_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+    "superseded_package": "GT-G3-00-P31-v0.1",
+    "current_package": "GT-G3-01-P31-v0.1",
+    "current_package_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd"
+  },
+  "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
+  "current_gate_decisions": [
+    {"gate_id": "g2-final-convergence", "decision_id": "g2-closure-2026-09-16", "verdict": "PASS"},
+    {"gate_id": "g3-entry-readiness", "decision_id": "g3-entry-readiness-2026-09-16", "verdict": "READY_FOR_P31"}
+  ],
+  "blocking_findings": [],
+  "integration_applicability": [
+    {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"}
+  ],
+  "recommended_next_stage": "GT-G3-01_P32_IMPLEMENTATION",
+  "handoff": {
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "issue explicit CODE_EXECUTION handoff for GT-G3-01-P31-v0.1; do not execute GT-G3-00 or G3-02+",
+    "p31_package": ".aegis/packages/GT-G3-01/package.json",
+    "p31_package_id": "GT-G3-01-P31-v0.1",
+    "p31_materialized": true,
+    "package_materialization_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+    "g2_reopen": false,
+    "g3_implementation_start": false
+  }
+}
