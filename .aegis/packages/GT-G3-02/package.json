@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-02-P31-v0.1",
+  "task_id": "GT-G3-02",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Establish Render-owned localized visibility resolution over the canonical G2 SceneQuery boundary.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-02-render-owned-visibility"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "47ffe5b69d7dda457d16203e41803086c880c174",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path": "authority.lock.json", "sha256": "7482fc211e0277d3aaecd2653f2e2642c5f7674f952d6a504a11fcc0b412f6a7"},
+  "verification_lock_ref": {"path": "verification.lock.json", "sha256": "35aa9eb3d247f378217b8f5b9aa334bde070bbb0b7a715fe7cfff6d6852517cc"},
+  "execution_contract_ref": {"path": "execution-contract.json", "sha256": "a716308635a7eed1c40ac2f8f6a833c41f08cb73ec36b04cbcc3d4d425e8d251"},
+  "implementation_context_ref": {"path": "implementation-context.md", "sha256": "54712fb4df9a4d02bd61598ed9535c114ea586a584d99dcfbfa4ae6a72de7534"},
+  "evidence_contract_ref": {"path": "evidence-contract.json", "sha256": "9118ff82fe91d8aac5696ade6aee930043dab5abf55fea9dc568aaf690923bd9"},
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-02/",
+    "binding": "exact repository revision supplied by surface_handoff.package_materialization_ref"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate the exact GT-G3-02 package and execute only its RED-to-GREEN closure.",
+    "official_gate_pass_forbidden": true
+  }
+}

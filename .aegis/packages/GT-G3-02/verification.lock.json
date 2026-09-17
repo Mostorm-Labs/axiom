@@ -1,0 +1,34 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-02",
+  "obligations": [
+    {
+      "id": "G3-02-V1-render-owned-query",
+      "requirement": "VisibilityResolver derives the canonical SceneQuery from FrameState.worldViewport and returns the G2 query result's final back-to-front order; callers cannot supply a visible list.",
+      "oracle": "Exercise the production resolver with distinguishable viewports and records whose spatial candidate order does not define their SceneOrderKey order.",
+      "acceptance": "The exact viewport world rect reaches Scene::query and VisibilityResult contains the deterministic G2 back-to-front order.",
+      "evidence_required": "Focused G3Visibility contract test log."
+    },
+    {
+      "id": "G3-02-V2-locality",
+      "requirement": "A normal render visibility resolve over 100000 scene records and approximately 500 visible records remains localized and performs no SemanticDocument traversal.",
+      "oracle": "Build a real G2 Scene with a 100000-record spatial fixture, resolve a viewport covering approximately 500 records, and inspect SceneQuery diagnostics and production dependencies.",
+      "acceptance": "Visible count is approximately 500, examined candidates are materially below total records, resolver output visits only the query result, and production includes no semantic document or object-store traversal dependency.",
+      "evidence_required": "Locality counter JSON plus focused test and boundary-scan output."
+    },
+    {
+      "id": "G3-02-V3-camera-only-isolation",
+      "requirement": "Changing only per-view camera/viewport state invalidates and recomputes visibility without mutating SemanticGeneration or RuntimeScene content.",
+      "oracle": "Resolve two distinguishable FrameState values against the same canonical Scene and RuntimeScene identity and compare before/after canonical content.",
+      "acceptance": "Visibility membership changes while scene generation, read token, RuntimeScene generation, cardinality, and exact records remain unchanged.",
+      "evidence_required": "Focused camera-only isolation assertions."
+    },
+    {
+      "id": "G3-02-V4-boundary-hygiene",
+      "requirement": "G3-02 introduces no Demo/Shell visibility input, SemanticDocument scan, Tile coverage, or G3-03+ behavior.",
+      "oracle": "Review-owned dependency scan over exact changed production and test files plus full G2 and G3-01 regression.",
+      "acceptance": "Forbidden dependency scan is empty and all frozen predecessor tests pass.",
+      "evidence_required": "Boundary scan and predecessor regression logs."
+    }
+  ]
+}

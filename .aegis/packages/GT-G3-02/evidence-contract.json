@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-02",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-02-VISIBILITY",
+      "obligations": ["G3-02-V1-render-owned-query", "G3-02-V3-camera-only-isolation"],
+      "artifact": "RED/GREEN G3Visibility transcript with exact viewport, order, and canonical-isolation assertions"
+    },
+    {
+      "id": "E-G3-02-LOCALITY",
+      "obligations": ["G3-02-V2-locality"],
+      "artifact": ".aegis/results/GT-G3-02/locality-counters.json plus focused test output"
+    },
+    {
+      "id": "E-G3-02-BOUNDARY",
+      "obligations": ["G3-02-V4-boundary-hygiene"],
+      "artifact": "Forbidden dependency scan and G3-01/G2 predecessor regression output"
+    }
+  ],
+  "corroborative": [
+    {"id": "C-G3-02-HYGIENE", "artifact": "git diff --check and exact changed-path inventory"}
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result and locality records under .aegis/results/GT-G3-02/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
