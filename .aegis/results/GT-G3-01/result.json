@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-01",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "EVIDENCE_CAPTURE_COMPLETE",
+  "result_revision_binding": "the Git commit containing this record",
+  "actual_starting_revision": "59631153b2dc79429e08df61093d57c7dc6db79f",
+  "execution_branch": "codex/g3-entry-readiness-review",
+  "package": {
+    "id": "GT-G3-01-P31-v0.1",
+    "path": ".aegis/packages/GT-G3-01/package.json",
+    "materialization_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+    "authority_trusted_section_sha256": "0319a4b7d8f1f73d985019aad85c0a14f4adb76386fd84b4cda095baa994c6de"
+  },
+  "tdd": {
+    "red": {
+      "command": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_frame_state_tests",
+      "result": "EXPECTED_FAIL",
+      "diagnostic": "fatal error: 'canvas/render/render_view_runtime.hpp' file not found",
+      "classification": "missing frozen G3-01 production boundary"
+    },
+    "green": {
+      "command": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_frame_state_tests && ctest --test-dir out/g3-host-debug -R G3FrameState --output-on-failure",
+      "result": "PASS",
+      "tests_passed": 1,
+      "tests_failed": 0
+    }
+  },
+  "obligations": {
+    "G3-01-V1-view-independence": "PASS",
+    "G3-01-V2-immutable-complete-state": "PASS",
+    "G3-01-V3-boundary-hygiene": "PASS"
+  },
+  "regression": {
+    "command": "cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+    "result": "PASS",
+    "tests_passed": 19,
+    "tests_failed": 0
+  },
+  "changed_paths": [
+    "CMakeLists.txt",
+    "CMakePresets.json",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/frame_state.hpp",
+    "runtime/render/include/canvas/render/render_view_runtime.hpp",
+    "runtime/render/include/canvas/render/surface_metrics.hpp",
+    "runtime/render/tests/frame_state_contract_test.cpp",
+    ".aegis/results/GT-G3-01/result.json"
+  ],
+  "scope": {
+    "authorized_mutation_scope_conformed": true,
+    "forbidden_dependency_scan": "PASS",
+    "g3_02_through_g3_11_implemented": false,
+    "g2_runtime_or_semantic_sources_modified": false
+  },
+  "source_hygiene": {
+    "git_diff_check": "PASS"
+  },
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false
+}

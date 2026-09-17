@@ -7,6 +7,21 @@
   },
   "configurePresets": [
     {
+      "name": "g3-host-debug",
+      "displayName": "G3 Render Core Foundation (Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/g3-host-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_POC02": "OFF",
+        "CANVAS_BUILD_POC03": "OFF",
+        "CANVAS_BUILD_RF01": "OFF",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "ON"
+      }
+    },
+    {
       "name": "rf01-host-debug",
       "displayName": "RF-01 Scene Foundation (Debug)",
       "generator": "Ninja",
@@ -298,6 +313,7 @@
     }
   ],
   "buildPresets": [
+    { "name": "g3-host-debug", "configurePreset": "g3-host-debug" },
     { "name": "rf01-host-debug", "configurePreset": "rf01-host-debug" },
     { "name": "host-debug", "configurePreset": "host-debug" },
     { "name": "host-asan", "configurePreset": "host-asan" },
@@ -322,6 +338,11 @@
     { "name": "poc05-ios-device-release", "configurePreset": "poc05-ios-device-release" }
   ],
   "testPresets": [
+    {
+      "name": "g3-host-debug",
+      "configurePreset": "g3-host-debug",
+      "output": { "outputOnFailure": true }
+    },
     {
       "name": "rf01-host-debug",
       "configurePreset": "rf01-host-debug",
