@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-07-PIPELINE",
+      "obligations": ["G3-07-V1-production-pipeline", "G3-07-V3-nine-kind-canonical-fixture"],
+      "artifact": ".aegis/results/GT-G3-07/demo-cli-evidence.json with exact canonical/Scene/RuntimeScene/visibility/direct-plan/backend stage order, cross-stage generation/count/ID/kind correlation, plan digest, nine-kind inventory, region/erase/Group observations, and review-owned source bypass scan"
+    },
+    {
+      "id": "E-G3-07-ARTIFACTS",
+      "obligations": ["G3-07-V2-deterministic-artifacts", "G3-07-V4-failure-and-atomic-publication"],
+      "artifact": ".aegis/results/GT-G3-07/artifact-determinism-evidence.json with two-run byte comparisons, independent fixture/render hashes, exact raster digest/bytes, canonical JSON identity, complete negative matrix, clean-destination absence, existing-success preservation, and temporary-staging disposition"
+    },
+    {
+      "id": "E-G3-07-REGRESSION",
+      "obligations": ["G3-07-V5-boundary-and-regression"],
+      "artifact": ".aegis/results/GT-G3-07/scope-evidence.json with exact changed-path inventory, dependency/bypass/forbidden-behavior scans, locked Skia identity and zero source-build fallback, G3 focused/predecessor matrix, RF01/G2 matrix, and anchor diff check"
+    }
+  ],
+  "corroborative": [
+    {"id": "C-G3-07-HYGIENE", "artifact": ".aegis/results/GT-G3-07/implementation-design-preflight.json plus RED transcript and exact result metadata"}
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result, implementation preflight, demo CLI, artifact determinism, and scope records under .aegis/results/GT-G3-07/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

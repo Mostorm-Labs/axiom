@@ -1,0 +1,122 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "current": true,
+  "source": {
+    "provider": "repo-materialized-plan",
+    "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+    "title": "GT-G3-00 G3 Basic Canonical Canvas P30 Implementation Plan v0.1",
+    "revision": "bound-at-6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "trusted_section": "G3-07 Headless Canvas Demo CLI",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "68ff2639119311e68dbb4bfc7ef46d9de08e37ae857dce3e82b2b94fb7026553"
+  },
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_06_gate_decision": "gt-g3-06-p34-2026-09-19",
+    "g3_06_result_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+    "g3_06_main_integration": "int-pr92-g3-06",
+    "g3_06_main_integration_revision": "4ea688da42da0005eaed5cae4931f5c44936697e",
+    "control_plane_integration_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "canonical_main_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "required_state": "GT-G3-06_CONTROLLED_MAIN_INTEGRATION_COMPLETE"
+  },
+  "supporting_inputs": {
+    "skia_profile": "repo:tools/skia/profiles/r1-full-v1.json",
+    "skia_lock": "repo:r1-full-skia-sdk.lock.json",
+    "skia_lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+    "skia_profile_sha256": "37ecd74a897bf1ec6aab94014dc19b2b05fcaffece53b78f17f985cf39032248",
+    "skia_profile_identity": {
+      "profile": "r1-full-v1",
+      "profile_hash": "8708f3a6413f3e5231d568b077baaaccf67f22bfa144d9d89e760d3085070aa5",
+      "tag": "skia-sdk-r1-full-v1-54c1999dc79d094d",
+      "set_id": "54c1999dc79d094d3e65a73f0c6262195c42a381ea5519a58a94be0d8b85c5ac",
+      "target": "macos-arm64-metal",
+      "variant": "release",
+      "asset": "skia-sdk-r1-full-v1-macos-arm64-metal-release.zip",
+      "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+      "asset_sha256": "42bdc110c17239a4133c8d6e7d0da61c0215bd09a91cff3a770db995daea118f",
+      "asset_size": 36334501,
+      "resolved_sdk_root": ".deps/skia-sdk/macos-arm64-metal/release"
+    }
+  },
+  "trusted_statements": {
+    "goal": "Add a Headless Canvas Demo CLI that opens one checked-in fixed canonical fixture, drives it through the production G2 scene and G3 Render Core pipeline, and emits independently verifiable raster, digest, and evidence artifacts.",
+    "owns": [
+      "one opt-in Headless Canvas Demo executable",
+      "one checked-in G3-07 fixture descriptor and independent expected artifact oracle",
+      "deterministic command-line parsing and atomic artifact publication",
+      "demo-local assembly of existing canonical/runtime/render owners without changing their contracts"
+    ],
+    "consumes": [
+      "canonical semantic snapshot decode/bootstrap",
+      "Scene and RuntimeScene production projections",
+      "FrameState and SurfaceLifecycle",
+      "VisibilityResolver",
+      "DirectReferenceSource",
+      "FramePlanBuilder and FrameOrchestrator",
+      "SkiaHeadlessBackend",
+      "locked r1-full-v1 Skia consumer SDK"
+    ],
+    "produces": [
+      "render.rgba",
+      "render-digest.txt",
+      "render-evidence.json",
+      "deterministic nonzero process status on failure"
+    ],
+    "fixed_cli_contract": {
+      "executable": "axiom_headless_canvas_demo",
+      "invocation": "axiom_headless_canvas_demo --fixture <path-to-g3-07-fixture.axsnap> --output-dir <directory>",
+      "success_exit": 0,
+      "failure_exit": "nonzero for argument, input, decode/bootstrap, scene/runtime, render, or artifact-publication failure",
+      "outputs": ["render.rgba", "render-digest.txt", "render-evidence.json"],
+      "publication": "All three outputs become visible as one successful set through same-filesystem temporary staging and rename; a failed run leaves no new success evidence and never mixes old and new artifacts."
+    },
+    "fixed_fixture_contract": {
+      "fixture_id": "g3-07-nine-kind-v1",
+      "path": "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
+      "oracle_path": "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
+      "format": "canonical SemanticSnapshot v1 bytes decoded with SnapshotCodec and restored with SnapshotBootstrapper; no test-only object-store mutator",
+      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as zero-pixel traversal, and a supported simple FilledPath erase mask on Shape.",
+      "frame": {
+        "view_id": 801,
+        "camera_center": [128, 128],
+        "camera_zoom": 1,
+        "camera_rotation_radians": 0,
+        "camera_generation": 802,
+        "world_viewport": [0, 0, 256, 256],
+        "logical_size": [256, 256],
+        "physical_size": [256, 256],
+        "device_pixel_ratio": 1,
+        "display_scale": 1,
+        "surface_generation": 805,
+        "metrics_generation": 806,
+        "frame_id": 901
+      },
+      "raster": {
+        "width": 256,
+        "height": 256,
+        "color_type": "RGBA_8888",
+        "alpha_type": "premultiplied",
+        "color_space": "sRGB",
+        "clear_rgba": [0, 0, 0, 0],
+        "antialias": false,
+        "origin": "top_left",
+        "blend_mode": "src_over"
+      },
+      "accepted_expected_raster_digest": "fnv1a64:296a704f0d0b9165",
+      "accepted_expected_raster_sha256": "26079467c6f156ac2722518afe75b6914f758088f514163a7a0a74144fb9d4c0",
+      "oracle_independence": "The expected descriptor is checked in by P32 from package literals and review-owned hash calculation; the CLI and SkiaHeadlessBackend may not generate or rewrite it."
+    },
+    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage, projected through production Scene and RuntimeScene, queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. The CLI must not construct a final ReferenceDrawList or FramePlan directly and must not call test-only access seams.",
+    "forbidden": [
+      "direct SemanticDocument or ObjectStore traversal for rendering",
+      "manual construction of final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values in the CLI",
+      "test-only fixture/access helpers or friend-only mutation seams",
+      "changes to RuntimeScene, Scene, Render Core, SurfaceLifecycle, PresentationTracker, Headless backend, or any existing G3-01 through G3-06 public contract",
+      "CanonicalVisible, FrameCoverageManifest, Arc token/preview clearing, G4 Arc or Ink",
+      "camera interaction, hit/select, platform host, native surface, scheduler, Tile, RenderGroup, RasterCache, ResourceBudget, or final FrameGraph behavior",
+      "Skia lock/profile/producer changes or a source build"
+    ]
+  }
+}

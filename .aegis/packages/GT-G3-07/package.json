@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-07-P31-v0.1",
+  "task_id": "GT-G3-07",
+  "status": "CURRENT_PENDING_CONTROL_REVIEW",
+  "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-07-headless-canvas-demo"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "026683ab7431e3a80768a80ff7f1e18bf4e91160ca668c6c7ea3206120c5ffab"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "e486b04dc9fa3712ae3635917a743d151ee75351da388804e84db1a197fef03b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "6e1add3e6906d85815fcf21b7eea9590d663256d0f7631ec4080415ed3b32a64"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "1ca816355747cfbca75ab34bdcc2a2d75393d5e01184ae3b00f32f35143bfadd"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "cbc23cf0e81724e2f851b6d9b313fd20a87915b400609862b20ad0ccfbc33153"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-07/",
+    "binding": "exact repository revision descended from canonical main control-plane baseline 6bb6c21ac62f0baef55f01ee0867ac7de08e501b"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "Independently review GT-G3-07-P31-v0.1; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, independent nine-kind/golden oracle, atomic artifact publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
+    "official_gate_pass_forbidden": true
+  }
+}

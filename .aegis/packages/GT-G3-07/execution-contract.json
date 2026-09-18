@@ -1,0 +1,184 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create runtime/render/tools/headless_canvas_demo.cpp implementing only the frozen CLI, canonical fixture loading, production pipeline assembly, deterministic diagnostics, and atomic three-artifact publication.",
+        "Create runtime/render/fixtures/g3-07/nine-kind-v1.axsnap as a canonical SnapshotCodec-decodable SemanticSnapshot v1 fixture with exact IDs 501 through 509 and all nine V1 kinds.",
+        "Create runtime/render/fixtures/g3-07/nine-kind-v1.expected.json as the independently authored immutable fixture/output oracle with exact fixture SHA-256, frame/raster contract, nine-kind inventory, expected plan identity, raster digest fnv1a64:296a704f0d0b9165, and expected render.rgba SHA-256.",
+        "Create runtime/render/tests/headless_canvas_demo_test.cpp as an external process test that validates success replay, independent artifact hashes/bytes/fields, nine-kind stage membership, fixed pixel regions, failure matrix, and no partial/stale publication.",
+        "Modify runtime/render/CMakeLists.txt only to add an opt-in axiom_headless_canvas_demo target, its G3HeadlessCanvasDemo external-process test, checked-in fixture paths, and the existing locked Headless Skia consumer linkage.",
+        "Write durable G3-07 implementation preflight, CLI, determinism, scope, and result evidence under .aegis/results/GT-G3-07/."
+      ],
+      "implementation_rules": [
+        "The CLI accepts exactly --fixture <path> and --output-dir <directory>; reject unknown, duplicate, or missing options and positional input with nonzero status and a stable diagnostic class.",
+        "Decode the fixture with SnapshotCodec and restore it with SnapshotBootstrapper into IndexedObjectStore in Loading state. Do not include semantic/src private headers, use ObjectStoreMutator, or depend on test code.",
+        "Use the restored semantic read view to populate both production RuntimeScene and production Scene at one exact generation/read token. A small CLI-private ISemanticSceneCompiler adapter may translate the already computed FullSceneCompiler projection into public CompiledSceneSnapshot/Delta values solely to feed SceneBinding/IncrementalRuntimeCoordinator; it must not become a new public compiler, duplicate bounds/geometry mathematics, or expose a final rendering shortcut.",
+        "For the initial full load, use Scene, SceneBinding, IncrementalRuntimeCoordinator recovery/full rebuild, DirectRenderScene, and UniformGridSpatialIndex. Require Scene and RuntimeScene generation, record membership, and bounds to agree before framing.",
+        "Acquire the frozen SurfaceSnapshot from SurfaceLifecycle and build the immutable FrameState from the frozen fixture values and published Scene/RuntimeScene identities.",
+        "Call VisibilityResolver::resolve, DirectReferenceSource::build, FramePlanBuilder::build, and FrameOrchestrator::submit with SkiaHeadlessBackend in this order. Never manually construct the final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan.",
+        "Use only SkiaHeadlessBackend's successful HeadlessRasterObservation to obtain RGBA/digest output. Do not reimplement rendering, use test fixtures, or access Skia directly in the CLI.",
+        "Write render.rgba as exact raw RGBA bytes, render-digest.txt as the exact digest plus one LF, and render-evidence.json as canonical UTF-8 JSON with stable key order, one LF, no timestamp, no absolute path, and no environment-specific value.",
+        "render-evidence.json must contain schema_version, fixture_id, fixture_sha256, frame/view/surface/metrics/scene/read-token identities, canonical/Scene/RuntimeScene/visible/draw counts, ordered object IDs and ObjectKind names at every observable stage, traversed_object_kinds, reference_plan_digest, raster width/height/byte count/digest, golden_sha256, exact pipeline_stages, locked Skia SDK id, and result=PASS.",
+        "Compute fixture SHA-256 and render.rgba SHA-256 in the CLI with a small tool-local dependency-free implementation or an already linked accepted library. The test/reviewer must compute these hashes independently and compare them to the checked-in oracle.",
+        "Stage all outputs under a unique child of the destination's parent, fsync/close as available, and publish a complete set by same-filesystem rename only after input, render, oracle comparison, and all writes succeed. Preserve a pre-existing destination artifact set byte-for-byte on every failure and remove staging best-effort.",
+        "The expected descriptor is read-only oracle input. The executable may compare against it only when the test supplies it independently; ordinary CLI operation must not generate, overwrite, or self-bless expected values.",
+        "Use only the existing r1-full-v1 macos-arm64-metal/release SDK consumer path for this executor. Do not run Skia GN/Ninja, modify lock/profile files, or select a fallback SDK.",
+        "Do not alter any G2 or G3-01 through G3-06 source/header/test contract. Do not implement CanonicalVisible, FrameCoverageManifest, Arc, camera interaction, hit/select, platform hosts, scheduler, Tile/cache, or G3-08+ behavior."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/tools/headless_canvas_demo.cpp",
+        "runtime/render/tests/headless_canvas_demo_test.cpp",
+        "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
+        "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
+        "runtime/render/CMakeLists.txt",
+        ".aegis/results/GT-G3-07/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**, runtime/semantic/**, runtime/foundation/**",
+        "runtime/render/include/** and runtime/render/src/**",
+        "apps/**, verification/**, arc/**, pocs/**, or existing demo/shell behavior",
+        "CMakePresets.json and existing preset behavior",
+        "any existing G3-01 through G3-06 test or fixture",
+        "r1-full-skia-sdk.lock.json, skia-sdk.lock.json, tools/skia/**, third-party manifests, or dependency producer/release paths",
+        "test-only friend access, ObjectStoreMutator, semantic/src private includes, hand-built final render inputs, or a second RuntimeScene/scene compiler/render backend",
+        "CanonicalVisible, FrameCoverageManifest, ArcCanonicalToken, preview clearing, camera input, hit/select, native hosts, platform proof adapters, or G3-08 through G3-11 behavior",
+        "Tile, TileCache, RenderGroup, RasterCache, Scheduler, ResourceBudget, or final FrameGraph ABI"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "scope_reason": "G3-07 crosses the canonical semantic, G2 scene, G3 render, filesystem publication, and locked SDK consumer boundaries in a production executable.",
+      "fixed_design": {
+        "current_flow": "G3-01 through G3-06 provide all production stages and the private deterministic Headless backend, but no executable opens a canonical fixture and wires those owners end to end.",
+        "target_owner": "The CLI owns only input/output orchestration and demo-local assembly; canonical semantic storage, Scene/RuntimeScene, visibility, reference mapping, plan construction, backend execution, surface lifecycle, and presentation semantics remain with their existing owners.",
+        "target_flow": "fixed snapshot bytes -> SnapshotCodec -> SnapshotBootstrapper/IndexedObjectStore -> SemanticReadView -> SceneBinding/IncrementalRuntimeCoordinator and RuntimeScene -> FrameState from SurfaceLifecycle -> VisibilityResolver -> DirectReferenceSource -> FramePlanBuilder -> FrameOrchestrator -> SkiaHeadlessBackend -> atomic artifact set",
+        "failure_publication": "Validate and render completely before touching the published destination. Stage one complete three-file set, compare required oracle identities, then atomically replace the destination set without exposing a partially successful run; any error preserves previous success artifacts.",
+        "affected_types_and_files": [
+          "CLI-only orchestration in runtime/render/tools/headless_canvas_demo.cpp",
+          "canonical snapshot fixture and independent oracle in runtime/render/fixtures/g3-07/",
+          "process-level acceptance in runtime/render/tests/headless_canvas_demo_test.cpp",
+          "opt-in build/test wiring in runtime/render/CMakeLists.txt",
+          "durable evidence in .aegis/results/GT-G3-07/"
+        ]
+      },
+      "obligation_mapping": {
+        "G3-07-V1-production-pipeline": ["production owner call sequence", "cross-stage identity/count evidence", "source-level bypass scan"],
+        "G3-07-V2-deterministic-artifacts": ["two clean runs", "three-file byte equality", "external exact digest and SHA-256 oracle"],
+        "G3-07-V3-nine-kind-canonical-fixture": ["independent SnapshotCodec inventory", "IDs/kinds correlated at each stage", "eight regions plus erase and Group oracles"],
+        "G3-07-V4-failure-and-atomic-publication": ["argument/input/render/output negative matrix", "clean-destination absence", "existing-success unchanged comparison"],
+        "G3-07-V5-boundary-and-regression": ["authorized path and dependency scans", "locked SDK identity", "G3/RF01/G2 matrices", "git diff --check"]
+      },
+      "unresolved_semantic_decisions": [],
+      "authority_conflict": false,
+      "verification_conflict": false,
+      "package_scope_conflict": false,
+      "continue_condition": "Persist this preflight with empty unresolved/conflict fields before fixture or production mutation; otherwise fail closed to the earliest owning layer."
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "axiom_headless_canvas_demo and G3HeadlessCanvasDemo do not exist at the exact anchor, so the frozen executable/process oracle cannot build or run.",
+      "observation_seam": "CMake build of axiom_headless_canvas_demo and axiom_render_headless_canvas_demo_tests followed by CTest G3HeadlessCanvasDemo"
+    },
+    "locked_skia_consumer": {
+      "profile": "r1-full-v1",
+      "profile_sha256": "37ecd74a897bf1ec6aab94014dc19b2b05fcaffece53b78f17f985cf39032248",
+      "lock": "r1-full-skia-sdk.lock.json",
+      "lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "target": "macos-arm64-metal",
+      "variant": "release",
+      "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+      "fetch_and_verify": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-07-skia-sdk-resolution.json",
+      "cmake_root": "$PWD/.deps/skia-sdk/macos-arm64-metal/release",
+      "source_build_or_fallback_allowed": false
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G3-07-RED",
+          "command_or_oracle": "Configure the locked Headless Skia consumer build and run cmake --build out/g3-headless-skia --target axiom_headless_canvas_demo axiom_render_headless_canvas_demo_tests before implementation.",
+          "expected_result": "FAIL because both frozen G3-07 targets are absent at anchor 6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+          "blocking_reason": "TDD RED provenance"
+        },
+        {
+          "id": "G3-07-GREEN",
+          "command_or_oracle": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-07-skia-sdk-resolution.json && cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=$PWD/.deps/skia-sdk/macos-arm64-metal/release && cmake --build out/g3-headless-skia --target axiom_headless_canvas_demo axiom_render_headless_canvas_demo_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessCanvasDemo$' --output-on-failure",
+          "expected_result": "PASS with complete production pipeline, exact two-run artifacts, independent nine-kind/golden oracle, and atomic failure matrix",
+          "blocking_reason": "G3-07 executable acceptance oracle"
+        },
+        {
+          "id": "G3-07-G3-PREDECESSOR",
+          "command_or_oracle": "cmake --build out/g3-headless-skia && ctest --test-dir out/g3-headless-skia -R '^G3(HeadlessCanvasDemo|SurfacePresentation|HeadlessSkia|FrameState|Visibility|DirectReference|FrameOrchestration)$' --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve G3-01 through G3-06 and include the G3-07 focused oracle"
+        },
+        {
+          "id": "G3-07-RF01-G2-PREDECESSOR",
+          "command_or_oracle": "python tools/setup_build_environment.py --core --semantic --facts-output out/build-environment.json --status, then configure/build/test rf01-host-debug using the emitted AXIOM_PROTOC, AXIOM_SEMANTIC_RUNTIME_ROOT, and CMAKE_PREFIX_PATH (prefer tools.semantic.cmake_consumer.consumer_cmake_arguments); run ctest --preset rf01-host-debug --output-on-failure",
+          "expected_result": "PASS using the accepted Semantic SDK consumer path",
+          "blocking_reason": "Preserve RF01/G2 runtime foundation"
+        },
+        {
+          "id": "G3-07-ARTIFACT-ORACLE",
+          "command_or_oracle": "The external-process test runs the CLI twice in clean temporary directories and through every frozen failure case; it independently decodes the fixture, computes fixture/render SHA-256 and FNV-1a, parses evidence, samples fixed pixel regions, and byte-compares artifacts without calling production rendering code for expected values.",
+          "expected_result": "Exact independent expected descriptor and deterministic/atomic artifact contract PASS",
+          "blocking_reason": "Independent end-to-end artifact and failure proof"
+        },
+        {
+          "id": "G3-07-BOUNDARY-SCAN",
+          "command_or_oracle": "Compare exact changed paths to the allowlist and scan the CLI/CMake dependency closure for direct SemanticDocument/ObjectStore rendering traversal, ObjectStoreMutator or semantic/src private includes, manually built final render input types, test helpers, Skia direct use, G2/G3-01..06 changes, CanonicalVisible/Arc/camera/hit/select/platform/scheduler/cache/G3-08+ behavior, and dependency-lock changes.",
+          "expected_result": "No forbidden dependency, type construction, behavior, or path",
+          "blocking_reason": "Authority and mutation boundary"
+        },
+        {
+          "id": "G3-07-DIFF-CHECK",
+          "command_or_oracle": "git diff --check 6bb6c21ac62f0baef55f01ee0867ac7de08e501b..HEAD",
+          "expected_result": "PASS",
+          "blocking_reason": "Source hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": ["Exact-source CI for the pushed result revision"]
+    },
+    "evidence": {
+      "blocking": ["E-G3-07-PIPELINE", "E-G3-07-ARTIFACTS", "E-G3-07-REGRESSION"],
+      "corroborative": ["C-G3-07-HYGIENE"]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only the G3-07 demo executable, fixed fixture/oracle, process test, opt-in CMake wiring, and G3-07 evidence are added.",
+        "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or authority/verification/scope conflict before mutation.",
+        "Required missing-target RED is observed and recorded before implementation.",
+        "The fixture is independently decoded as exactly nine canonical objects spanning every V1 ObjectKind and is never produced or blessed by the CLI/backend under test.",
+        "The successful CLI path traverses every frozen production stage without manual final draw-list/plan construction or test-only mutation access.",
+        "Two clean runs emit byte-identical render.rgba, render-digest.txt, and render-evidence.json matching the exact independent oracle including fnv1a64:296a704f0d0b9165.",
+        "Every frozen failure case exits nonzero and proves both no-partial output on a clean destination and no stale/partial replacement of an existing success set.",
+        "G3HeadlessCanvasDemo, all six predecessor G3 tests, and the full RF01/G2 matrix pass at the exact result revision using the locked prebuilt SDK.",
+        "Only authorized mutation paths differ from anchor 6bb6c21ac62f0baef55f01ee0867ac7de08e501b; boundary scan and git diff --check pass.",
+        "Exact result revision is committed and pushed; return READY_FOR_CONTROL_REVIEW without issuing P34, G3-07, or overall G3 PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "PACKAGE_SCOPE_DIVERGENCE",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "VERIFICATION_DESIGN_DEFECT",
+        "TASK_PACKAGE_DEFECT"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "obligations": [
+    {
+      "id": "G3-07-V1-production-pipeline",
+      "requirement": "The fixed CLI fixture reaches the private Headless backend only through canonical semantic bootstrap, production Scene/RuntimeScene, VisibilityResolver, DirectReferenceSource, FramePlanBuilder, and FrameOrchestrator.",
+      "oracle": "Run the CLI on the checked-in fixture and require exact ordered pipeline_stages, nine canonical/runtime/visible/draw records, production reference_plan_digest, one accepted backend submission, and static scans proving the CLI source does not construct final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values and does not use test-only mutation seams.",
+      "acceptance": "Every production stage is present exactly once in the frozen order, all stage identities agree, counts are nine, the submitted plan digest is non-empty, and the source/dependency scan finds no bypass.",
+      "evidence_required": "Committed demo-cli evidence and review-owned pipeline/bypass scan."
+    },
+    {
+      "id": "G3-07-V2-deterministic-artifacts",
+      "requirement": "Identical fixed input rendered twice emits byte-identical artifact sets that exactly match the independent fixture oracle.",
+      "oracle": "Run the CLI into two clean output directories, byte-compare render.rgba, render-digest.txt, and render-evidence.json, require 256*256*4 RGBA bytes, compare the digest to fnv1a64:296a704f0d0b9165, and compare fixture SHA-256 plus golden SHA-256 to the checked-in expected descriptor using an external test/review process rather than the CLI under test.",
+      "acceptance": "Both runs exit zero; all three files are byte-identical; exact raster byte count, raster digest, fixture hash, and golden hash match the independent descriptor; no output embeds nondeterministic timestamps or paths.",
+      "evidence_required": "Artifact-determinism evidence with external hashes and exact byte comparisons."
+    },
+    {
+      "id": "G3-07-V3-nine-kind-canonical-fixture",
+      "requirement": "The CLI fixture is canonical, non-empty, and exercises every V1 ObjectKind through the complete production pipeline with reviewer-resolvable membership.",
+      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, then compare canonical object IDs/kinds with RuntimeScene, visibility, DirectReference traversal, and evidence JSON; sample the eight fixed non-transparent regions, the Shape erase hole, and Group zero-pixel contribution.",
+      "acceptance": "All nine kinds and IDs remain exactly correlated across stages; eight kinds contribute distinguishable pixels, the erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
+      "evidence_required": "Fixture inventory plus independent kind/ID/region oracle results."
+    },
+    {
+      "id": "G3-07-V4-failure-and-atomic-publication",
+      "requirement": "Input, render, or output failure is deterministic and cannot publish partial or stale success artifacts.",
+      "oracle": "Exercise missing fixture, malformed fixture, unsupported/invalid canonical fixture, unknown/duplicate/missing CLI arguments, unwritable output, forced production render rejection through a checked-in invalid fixture, and replacement of an existing distinguishable successful artifact set; inspect exit status and complete output directory before/after.",
+      "acceptance": "Each negative exits nonzero with a stable diagnostic class; a clean destination has none of the three success files; an existing successful destination remains byte-for-byte unchanged; temporary staging is removed or remains clearly non-success and no render-evidence.json claims result=PASS.",
+      "evidence_required": "Failure matrix and exact no-partial/no-stale-publication comparisons."
+    },
+    {
+      "id": "G3-07-V5-boundary-and-regression",
+      "requirement": "G3-07 stays a demo CLI consumer, preserves G2 and G3-01 through G3-06, and uses only the accepted prebuilt Skia SDK.",
+      "oracle": "Review-owned changed-path/dependency scan plus G3HeadlessCanvasDemo, G3SurfacePresentation, G3HeadlessSkia, G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration, full RF01/G2 tests, locked SDK identity, and git diff --check against the exact anchor.",
+      "acceptance": "Only authorized G3-07 tool/fixture/test/CMake/evidence paths differ; existing production contracts and dependency locks do not change; all matrices pass with SDK c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731 and no source fallback.",
+      "evidence_required": "Exact changed-path inventory, forbidden-dependency scan, SDK resolution, focused/predecessor logs, and diff check."
+    }
+  ]
+}
