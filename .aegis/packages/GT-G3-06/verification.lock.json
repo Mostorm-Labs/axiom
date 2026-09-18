@@ -5,8 +5,8 @@
     {
       "id": "G3-06-V1-surface-generation-lifecycle",
       "requirement": "Acquire and resize/rebind expose only the current valid renderer-neutral surface snapshot and never return or publish a stale generation.",
-      "oracle": "Create a distinguishable live surface, acquire it, accept a strictly newer resize/rebind, then attempt equal, older, wrong-view, invalid-metrics, and post-loss acquisition/rebind cases while comparing exact pre/post state.",
-      "acceptance": "The valid replacement is atomic; all invalid/stale cases are typed deterministic rejections with the last valid snapshot unchanged, and loss yields no acquired target.",
+      "oracle": "Create a distinguishable live surface, acquire it, accept a metrics-only resize with unchanged SurfaceGeneration and newer MetricsGeneration, accept a surface-only rebind with newer SurfaceGeneration and unchanged MetricsGeneration, accept a combined advance, then attempt both-equal, either-regressing, zero-generation, wrong-view, invalid-metrics, and post-loss old-surface cases while comparing exact pre/post state.",
+      "acceptance": "Each valid independent-axis replacement is atomic; both-equal/either-regressing and all other invalid/stale cases are typed deterministic rejections with the last valid snapshot unchanged, loss yields no acquired target, and post-loss rebind requires newer SurfaceGeneration.",
       "evidence_required": "Focused G3SurfacePresentation lifecycle transcript and surface-generation evidence JSON."
     },
     {

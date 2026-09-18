@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-06-P31-v0.1",
+  "package_id": "GT-G3-06-P31-v0.2",
   "task_id": "GT-G3-06",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Add renderer-neutral surface-generation lifecycle and PresentationTracker semantics that distinguish PresentSubmitted from Presented and reject stale feedback without introducing platform hosts or CanonicalVisible/Arc behavior.",
@@ -20,15 +20,15 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "ff8148791c4ecad756c1e6698e0759308333f7c26857c47f6c2013dad92838a3"
+    "sha256": "18e818f1ec842d630f0da22555c8b64469336b76a28ce4a4c1dc2eca63ca40b1"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "43da160b03ca5281094651154001c3511a5b2d9e8e83e598591805e5a07acb48"
+    "sha256": "9453df65eb2bd76ff40e3a072e1b96f4d5a3e1f72e7a728740ab7e5afbf4b81a"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "76560273f14e11c82e6579a3c91ec2cbf7d0c168c246c443c741c205efd76005"
+    "sha256": "f009448ec9dab5187ab3d47ac2e07bce4f83e89538905ff2fc2d1edf18100211"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
@@ -36,7 +36,7 @@
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "7d189da9701da37661bb5f6a1558cf6480f5b913812142b8c8bb571a61389bac"
+    "sha256": "3b24bc469e01197277e4c37daf75fab080ee7176b56bdab858f155dc56f58d7c"
   },
   "materialization": {
     "same_repository": true,
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-06-P31-v0.1; issue CODE_EXECUTION handoff only after exact package binding, lifecycle-state-machine, stale-generation, complete feedback-oracle, mutation-scope, and durable-evidence preflights pass.",
+    "next_action": "Independently review GT-G3-06-P31-v0.2; issue CODE_EXECUTION handoff only after exact package binding, independent surface/metrics generation advancement, stale-generation, complete feedback-oracle, mutation-scope, and durable-evidence preflights pass.",
     "official_gate_pass_forbidden": true
   }
 }
