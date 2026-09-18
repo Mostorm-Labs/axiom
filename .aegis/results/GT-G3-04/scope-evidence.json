@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "task_anchor": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+  "package_materialization_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+  "actual_starting_revision": "94e74639d2fcb64d14dba87ac2d8de72b2f0e713",
+  "scope_interpretation": {
+    "task_anchor_to_start": "P31 package and control-plane lineage only; no G3-04 production implementation",
+    "start_to_result": "P32 implementation and durable result evidence; every path is in the frozen authorized mutation scope"
+  },
+  "authorized_p32_paths": [
+    ".aegis/results/GT-G3-04/**",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/frame_plan.hpp",
+    "runtime/render/include/canvas/render/render_backend.hpp",
+    "runtime/render/src/frame_plan.cpp",
+    "runtime/render/src/render_backend.cpp",
+    "runtime/render/tests/frame_orchestration_test.cpp"
+  ],
+  "p32_mutation_scope_conformed": true,
+  "production_changes_before_actual_starting_revision": false
+}
