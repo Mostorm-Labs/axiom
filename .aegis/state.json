@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_P31_V0_3_REPAIR_COMPLETE",
-  "current_owner": "aegis-implementation",
+  "active_stage": "GT-G3-04_P34_CONTROL_REVIEW_COMPLETE",
+  "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_CONTROL_REVIEW",
+  "status": "READY_FOR_CONTROLLED_INTEGRATION",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,8 +13,8 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-03_CLOSED_G3-04_P31_READY_FOR_CONTROL_REVIEW",
-    "ingress": "READY_FOR_CONTROL_REVIEW",
+    "status": "G3-03_CLOSED_G3-04_P34_PASS_AWAITING_INTEGRATION",
+    "ingress": "READY_FOR_CONTROLLED_INTEGRATION",
     "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
@@ -28,19 +28,21 @@
     {"gate_id": "g3-entry-readiness", "decision_id": "g3-entry-readiness-2026-09-16", "verdict": "READY_FOR_P31"},
     {"gate_id": "gt-g3-01", "decision_id": "gt-g3-01-p34-2026-09-17", "verdict": "PASS"},
     {"gate_id": "gt-g3-02", "decision_id": "gt-g3-02-p34-2026-09-17", "verdict": "PASS_WITH_FINDINGS"},
-    {"gate_id": "gt-g3-03", "decision_id": "gt-g3-03-p34-2026-09-18", "verdict": "PASS"}
+    {"gate_id": "gt-g3-03", "decision_id": "gt-g3-03-p34-2026-09-18", "verdict": "PASS"},
+    {"gate_id": "gt-g3-04", "decision_id": "gt-g3-04-p34-2026-09-18", "verdict": "PASS"}
   ],
   "blocking_findings": [],
   "integration_applicability": [
     {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"},
     {"integration_id": "int-pr85-g3-01", "applicability": "current"},
     {"integration_id": "int-pr86-g3-02", "applicability": "current"},
-    {"integration_id": "int-pr87-g3-03", "applicability": "current"}
+    {"integration_id": "int-pr87-g3-03", "applicability": "current"},
+    {"integration_id": "int-branch-g3-04-p34-review", "applicability": "current"}
   ],
-  "recommended_next_stage": "GT-G3-04_P31_CONTROL_REVIEW",
+  "recommended_next_stage": "GT-G3-04_CONTROLLED_MAIN_INTEGRATION",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "independently review GT-G3-04-P31-v0.3; issue CODE_EXECUTION handoff only after package binding passes",
+    "next_action": "Integrate the reviewed GT-G3-04 result through a controlled main-branch review; do not treat the branch review as main integration.",
     "p31_package": ".aegis/packages/GT-G3-04/package.json",
     "p31_package_id": "GT-G3-04-P31-v0.3",
     "p31_materialized": true,
