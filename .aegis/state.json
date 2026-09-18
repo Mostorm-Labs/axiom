@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-06_P34_CONTROL_REVIEW_COMPLETE",
+  "active_stage": "GT-G3-06_CONTROLLED_MAIN_INTEGRATION_COMPLETE",
   "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_CONTROLLED_INTEGRATION",
+  "status": "READY_FOR_P31_MATERIALIZATION",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,8 +13,8 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-05_INTEGRATED_G3-06_P34_PASS_WITH_FINDINGS_AWAITING_INTEGRATION",
-    "ingress": "READY_FOR_CONTROLLED_INTEGRATION",
+    "status": "G3-06_INTEGRATED_G3-07_PENDING_P31",
+    "ingress": "READY_FOR_P31_MATERIALIZATION",
     "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
@@ -100,13 +100,17 @@
     },
     {
       "integration_id": "int-branch-g3-06-p34-review",
+      "applicability": "historical"
+    },
+    {
+      "integration_id": "int-pr92-g3-06",
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-06_CONTROLLED_MAIN_INTEGRATION",
+  "recommended_next_stage": "GT-G3-07_P31_TASK_PACKAGING",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Create and integrate a reviewed pull request for exact GT-G3-06 result 51602eaca54dccff7ce00c8f1f726e0bbe855bb2; do not treat the branch review as main integration.",
+    "next_action": "Materialize and independently review the GT-G3-07 P31 package from exact canonical main merge revision 4ea688da42da0005eaed5cae4931f5c44936697e; do not begin G3-07 implementation before P31 review.",
     "p31_package": ".aegis/packages/GT-G3-06/package.json",
     "p31_package_id": "GT-G3-06-P31-v0.2",
     "p31_materialized": true,
