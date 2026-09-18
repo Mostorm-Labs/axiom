@@ -15,13 +15,13 @@
     "remote_sources_are_reconciliation_inputs": true
   },
   "lifecycle": {
-    "current_stage": "GT-G3-06_P31_MATERIALIZED",
-    "current_owner": "aegis-implementation",
-    "next_stage": "GT-G3-06_P31_CONTROL_REVIEW",
-    "next_owner": "aegis-gate-review",
+    "current_stage": "GT-G3-06_P31_CONTROL_REVIEW_BLOCKED",
+    "current_owner": "aegis-gate-review",
+    "next_stage": "GT-G3-06_P31_TASK_PACKAGE_REPAIR",
+    "next_owner": "aegis-implementation",
     "g2_status": "CLOSED",
-    "g3_status": "G3-05_INTEGRATED_G3-06_P31_V0_1_MATERIALIZED",
-    "g3_ingress": "READY_FOR_P31_CONTROL_REVIEW"
+    "g3_status": "G3-05_INTEGRATED_G3-06_P31_BLOCKED_TASK_PACKAGE_DEFECT",
+    "g3_ingress": "BLOCKED_PENDING_P31_REPAIR"
   },
   "policy": {
     "do_not_reopen_g2": true,

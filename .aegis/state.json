@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-06_P31_MATERIALIZED",
-  "current_owner": "aegis-implementation",
-  "earliest_untrusted_layer": null,
-  "status": "READY_FOR_P31_CONTROL_REVIEW",
+  "active_stage": "GT-G3-06_P31_CONTROL_REVIEW_BLOCKED",
+  "current_owner": "aegis-gate-review",
+  "earliest_untrusted_layer": "implementation",
+  "status": "BLOCKED_TASK_PACKAGE_DEFECT",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,14 +13,14 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-05_INTEGRATED_G3-06_P31_V0_1_MATERIALIZED",
-    "ingress": "READY_FOR_P31_CONTROL_REVIEW",
+    "status": "G3-05_INTEGRATED_G3-06_P31_BLOCKED_TASK_PACKAGE_DEFECT",
+    "ingress": "BLOCKED_PENDING_P31_REPAIR",
     "implementation_authorized": false,
     "p31_materialized": true,
-    "p31_materialized_ref": null,
+    "p31_materialized_ref": "4df0143fa58bb078082483ed9ebe80585a2165f3",
     "superseded_package": "GT-G3-00-P31-v0.1",
     "current_package": "GT-G3-06-P31-v0.1",
-    "current_package_materialized_ref": null
+    "current_package_materialized_ref": "4df0143fa58bb078082483ed9ebe80585a2165f3"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -63,7 +63,13 @@
       "verdict": "PASS"
     }
   ],
-  "blocking_findings": [],
+  "blocking_findings": [
+    {
+      "id": "G3-06-P31-F1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "coupled_surface_and_metrics_generation_advancement"
+    }
+  ],
   "integration_applicability": [
     {
       "integration_id": "int-pr84-g2-canonical-main",
@@ -94,14 +100,14 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-06_P31_CONTROL_REVIEW",
+  "recommended_next_stage": "GT-G3-06_P31_TASK_PACKAGE_REPAIR",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-06-P31-v0.1 from the exact G3-05 main integration anchor; do not begin G3-06 P32 before package review passes.",
+    "next_action": "Repair GT-G3-06 P31 generation-axis semantics and oracles, publish v0.2, and rerun independent CONTROL_REVIEW before CODE_EXECUTION.",
     "p31_package": ".aegis/packages/GT-G3-06/package.json",
     "p31_package_id": "GT-G3-06-P31-v0.1",
     "p31_materialized": true,
-    "package_materialization_ref": null,
+    "package_materialization_ref": "4df0143fa58bb078082483ed9ebe80585a2165f3",
     "g2_reopen": false,
     "g3_implementation_start": false
   }

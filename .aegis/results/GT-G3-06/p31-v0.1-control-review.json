@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-06-P31-v0.1",
+  "package_materialization_ref": "4df0143fa58bb078082483ed9ebe80585a2165f3",
+  "task_anchor": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+  "verdict": "BLOCKED_TASK_PACKAGE_DEFECT",
+  "code_execution_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "remote_materialization_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_hash": "PASS",
+    "g3_05_gate_and_integration_binding": "PASS",
+    "verification_obligation_structure": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "durable_evidence_boundary": "PASS",
+    "surface_metrics_generation_independence": "FAIL"
+  },
+  "blocking_findings": [
+    {
+      "id": "G3-06-P31-F1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "coupled_surface_and_metrics_generation_advancement",
+      "failure_mode": "The v0.1 package requires both SurfaceGeneration and MetricsGeneration to strictly increase on every valid replacement. Current Authority treats them as distinct namespaces and permits resize/DPI/orientation to advance live MetricsGeneration without recreating the surface, while a surface rebind may advance SurfaceGeneration without requiring a simultaneous metrics epoch change.",
+      "impact": "A conforming executor could not represent a valid metrics-only resize or surface-only rebind and would encode lifecycle behavior that is stricter than, and inconsistent with, the frozen presentation contract.",
+      "required_repair": "Issue GT-G3-06-P31-v0.2. Freeze independent non-regressing generation rules: unchanged surface plus strictly newer metrics for metrics-only resize; strictly newer surface plus nondecreasing valid metrics generation for rebind; reject both-equal or either-regressing updates; after loss require a strictly newer surface generation. Add distinguishable tests and evidence for both update axes."
+    }
+  ],
+  "preserved_valid_work": [
+    "repository identity and exact G3-05 main integration anchor",
+    "G3-05 Gate decision and PR #91 occurrence binding",
+    "renderer-neutral surface and presentation ownership boundary",
+    "PresentSubmitted versus Presented state distinction",
+    "stale feedback, correlation, duplicate-idempotency, regression, and durable-evidence obligations",
+    "authorized mutation allowlist and forbidden scope"
+  ],
+  "next_action": "Return to aegis-implementation P31, repair only the independent generation advancement rules and their oracles in GT-G3-06-P31-v0.2, publish a new exact materialization revision, then rerun independent CONTROL_REVIEW before CODE_EXECUTION.",
+  "official_p34_pass_claimed": false,
+  "g3_06_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
