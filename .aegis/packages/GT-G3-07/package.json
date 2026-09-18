@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-07-P31-v0.2",
+  "package_id": "GT-G3-07-P31-v0.3",
   "task_id": "GT-G3-07",
   "status": "CURRENT_PENDING_CONTROL_REVIEW",
   "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
@@ -20,19 +20,19 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "57856df77fe289ace66d3f606946c44c170d0013388b731c6073b3c586949e13"
+    "sha256": "ffcd1f956cebb421bdae9baa6e399d9e6f478ebe3b29b679a1193e5cb52e1dee"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "b9df8b0fe939edf550b4cb3d7e874b399b145716f29b1bac040a2a47b82868b4"
+    "sha256": "1910b28d3cb8e37c21e8ccb97ebd64abc0869f6a53d0fc60df5ec702eb573cd3"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "9037b182238879ed9a6d981c43dce987bcff96a182af61fa52de000dbe84ef4e"
+    "sha256": "d8c4523dc3c342a9ed9c88eed29905b19a428907adba85730d194280f8edcd7a"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "9a1cf29dd278dc08f40cfa94a812b904213547e1f751866798ed5b7f474ea56b"
+    "sha256": "f735994f2e6f22e9bfcbfd4c9139deefa00163b4a3a324dc4b578ae79e9e9111"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.2; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, field-complete nine-kind/golden oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
+    "next_action": "Independently review GT-G3-07-P31-v0.3; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, field-complete nine-kind/golden oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
     "official_gate_pass_forbidden": true
   }
 }

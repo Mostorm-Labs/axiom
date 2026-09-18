@@ -78,7 +78,7 @@
       "path": "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
       "oracle_path": "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
       "format": "canonical SemanticSnapshot v1 bytes decoded with SnapshotCodec and restored with SnapshotBootstrapper; no test-only object-store mutator",
-      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as zero-pixel traversal, and a supported simple FilledPath erase mask on Shape.",
+      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as zero-pixel traversal, and a supported simple FilledPath erase mask on VectorStroke.",
       "semantic_baseline": {
         "document_id_low64": 775,
         "schema_version": 1,
@@ -100,7 +100,7 @@
             "transform_translation": [8, 8],
             "content": {"shape_kind": 1, "width": 24, "height": 24},
             "properties": [{"field_id": 256, "solid_fill_rgba": [1, 0, 0, 1]}],
-            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, 8], ["L", 16, 8], ["L", 16, 16], ["L", 8, 16], ["Z"]], "fill_rule": "non_zero"}]
+            "erase_masks": []
           },
           {
             "object_id": 502,
@@ -129,7 +129,8 @@
             "kind": "VectorStroke",
             "order_key_bytes": [5],
             "transform_translation": [8, 48],
-            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [1, 0, 1, 1], "nominal_size": 4, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 505, "samples": [[0, 0, 1, 0, 0], [24, 0, 1, 0, 0]]}
+            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [1, 0, 1, 1], "nominal_size": 4, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 505, "samples": [[0, 0, 1, 0, 0], [24, 0, 1, 0, 0]]},
+            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, -32], ["L", 16, -32], ["L", 16, -24], ["L", 8, -24], ["Z"]], "fill_rule": "non_zero"}]
           },
           {
             "object_id": 506,

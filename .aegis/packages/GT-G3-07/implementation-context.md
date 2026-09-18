@@ -17,7 +17,7 @@ command, or frame plan itself, and it must not use test-only friend seams.
 The fixture contains exact IDs 501 through 509 and one instance of each V1
 `ObjectKind`. Its 256x256 transparent RGBA oracle reuses the accepted G3-05
 nine-kind pixel semantics, including eight distinguishable pixel regions, one
-supported Shape erase hole, Group traversal with zero pixels, and digest
+supported VectorStroke erase hole, Group traversal with zero pixels, and digest
 `fnv1a64:296a704f0d0b9165`. Unlike the backend unit test, G3-07 owns an
 independent checked-in snapshot and expected descriptor; neither the CLI nor
 the backend may generate or rewrite that oracle. The snapshot's local geometry

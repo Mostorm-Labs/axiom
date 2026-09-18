@@ -19,8 +19,8 @@
     {
       "id": "G3-07-V3-nine-kind-canonical-fixture",
       "requirement": "The CLI fixture is canonical, non-empty, and exercises every V1 ObjectKind through the complete production pipeline with reviewer-resolvable membership.",
-      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the Shape erase hole, and Group zero-pixel contribution.",
-      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels, the erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
+      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the VectorStroke erase hole, and Group zero-pixel contribution.",
+      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels, the VectorStroke erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
       "evidence_required": "Fixture inventory plus independent kind/ID/region oracle results."
     },
     {

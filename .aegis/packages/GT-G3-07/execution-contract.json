@@ -5,7 +5,7 @@
     "implementation": {
       "required_changes": [
         "Create runtime/render/tools/headless_canvas_demo.cpp implementing only the frozen CLI, canonical fixture loading, production pipeline assembly, deterministic diagnostics, and atomic three-artifact publication.",
-        "Create runtime/render/fixtures/g3-07/nine-kind-v1.axsnap as a canonical SnapshotCodec-decodable SemanticSnapshot v1 fixture with exact IDs 501 through 509 and all nine V1 kinds.",
+        "Create runtime/render/fixtures/g3-07/nine-kind-v1.axsnap as a canonical SnapshotCodec-decodable SemanticSnapshot v1 fixture with exact IDs 501 through 509 and all nine V1 kinds; place the supported FilledPath erase mask on VectorStroke (ID 505), the only V1 stroke-bearing fixture kind for which canonical erase masks are valid.",
         "Create runtime/render/fixtures/g3-07/nine-kind-v1.expected.json as the independently authored immutable fixture/output oracle with exact fixture SHA-256, semantic/frame/raster literals, nine-kind inventory, expected cross-stage identities/counts, raster digest fnv1a64:296a704f0d0b9165, and render.rgba SHA-256 26079467c6f156ac2722518afe75b6914f758088f514163a7a0a74144fb9d4c0.",
         "Create runtime/render/tests/headless_canvas_demo_test.cpp as an external process test that validates success replay, independent artifact hashes/bytes/fields, nine-kind stage membership, fixed pixel regions, failure matrix, and no partial/stale publication.",
         "Modify runtime/render/CMakeLists.txt only to add an opt-in axiom_headless_canvas_demo target, its G3HeadlessCanvasDemo external-process test, checked-in fixture paths, and the existing locked Headless Skia consumer linkage.",
@@ -152,7 +152,7 @@
         "Only the G3-07 demo executable, fixed fixture/oracle, process test, opt-in CMake wiring, and G3-07 evidence are added.",
         "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or authority/verification/scope conflict before mutation.",
         "Required missing-target RED is observed and recorded before implementation.",
-        "The fixture is generated once during P32 from the exact authority.lock.json semantic literals by a disposable external generator that calls SnapshotCodec::encode, then checked in; the production CLI only decodes it. The process test independently decodes and field-compares all nine objects. The generator is not built, shipped, retained, or used to derive expected raster bytes/digests.",
+        "The fixture is generated once during P32 from the exact authority.lock.json semantic literals by a disposable external generator that calls SnapshotCodec::encode; its supported FilledPath erase mask belongs to VectorStroke ID 505, then the bytes are checked in. The production CLI only decodes it. The process test independently decodes and field-compares all nine objects. The generator is not built, shipped, retained, or used to derive expected raster bytes/digests.",
         "The successful CLI path traverses every frozen production stage without manual final draw-list/plan construction or test-only mutation access.",
         "Two clean runs emit byte-identical render.rgba, render-digest.txt, and render-evidence.json matching the exact independent oracle including fnv1a64:296a704f0d0b9165.",
         "Every frozen failure case exits nonzero and proves both no-partial output on a clean destination and no stale/partial replacement of an existing success set.",
