@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-05-P31-v0.1",
+  "package_materialization_ref": "ffd45881365734001d30098e2564de6160664693",
+  "task_anchor": "11fec1b308de03886ef5294b54654f48df95455f",
+  "verdict": "BLOCKED_TASK_PACKAGE_DEFECT",
+  "code_execution_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "scope_boundary": "PASS",
+    "execution_closure_completeness": "FAIL"
+  },
+  "blocking_findings": [
+    {
+      "id": "G3-05-P31-F1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "unfrozen_host_skia_consumer_identity",
+      "failure_mode": "The package permits an executor-selected host release SDK and uses a placeholder SDK path, so two conforming executions may bind different target identities or stop at different dependency states.",
+      "required_repair": "Freeze the exact Headless host target for this package (macos-arm64-metal release for the current CODE_EXECUTION host), exact r1-full lock/profile identity, exact sdk_id, exact fetch/verification command, and concrete CMake consumer path substitution rule."
+    },
+    {
+      "id": "G3-05-P31-F2",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "undefined_nine_kind_raster_semantics_and_golden_oracle",
+      "failure_mode": "The package requires all nine ReferenceCommand variants to render and a golden digest to match, but it does not freeze the renderer-owned mapping, unsupported-resource policy, deterministic text/image fixture policy, background/color/alpha contract, or an independently authored expected raster/golden value.",
+      "required_repair": "Freeze the minimal deterministic G3-05 mapping for each of the nine commands, including Group zero-pixel behavior, resource/text policy, transform/clip/erase handling, fixed raster/color/alpha configuration, and an independent expected-pixel or expected-digest oracle that cannot be generated from the backend under test."
+    }
+  ],
+  "preserved_valid_work": [
+    "repository identity and G3-04 main integration anchor",
+    "G3-05 private backend ownership boundary",
+    "authorized mutation allowlist and forbidden scope",
+    "five-obligation verification structure",
+    "reviewer-accessible durable evidence boundary"
+  ],
+  "next_action": "Return to aegis-implementation P31 and issue GT-G3-05-P31-v0.2 with the two frozen repairs; rerun independent CONTROL_REVIEW before any CODE_EXECUTION handoff.",
+  "official_gate_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

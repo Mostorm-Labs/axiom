@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_CONTROLLED_MAIN_INTEGRATION_COMPLETE",
+  "active_stage": "GT-G3-05_P31_CONTROL_REVIEW_BLOCKED",
   "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_P31_MATERIALIZATION",
+  "status": "BLOCKED_TASK_PACKAGE_DEFECT",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,14 +13,14 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-04_INTEGRATED_G3-05_PENDING_P31",
-    "ingress": "READY_FOR_P31_MATERIALIZATION",
+    "status": "G3-04_INTEGRATED_G3-05_P31_BLOCKED_TASK_PACKAGE_DEFECT",
+    "ingress": "BLOCKED_PENDING_P31_REPAIR",
     "implementation_authorized": false,
     "p31_materialized": true,
-    "p31_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+    "p31_materialized_ref": "ffd45881365734001d30098e2564de6160664693",
     "superseded_package": "GT-G3-00-P31-v0.1",
-    "current_package": "GT-G3-04-P31-v0.3",
-    "current_package_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af"
+    "current_package": "GT-G3-05-P31-v0.1",
+    "current_package_materialized_ref": "ffd45881365734001d30098e2564de6160664693"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -58,7 +58,10 @@
       "verdict": "PASS"
     }
   ],
-  "blocking_findings": [],
+  "blocking_findings": [
+    "G3-05-P31-F1-unfrozen-host-skia-consumer-identity",
+    "G3-05-P31-F2-undefined-nine-kind-raster-semantics-and-golden-oracle"
+  ],
   "integration_applicability": [
     {
       "integration_id": "int-pr84-g2-canonical-main",
@@ -85,14 +88,14 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-05_P31_TASK_PACKAGING",
+  "recommended_next_stage": "GT-G3-05_P31_REPAIR",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Materialize and independently review the GT-G3-05 P31 package from the exact canonical main merge revision; do not begin G3-05 implementation before P31 review.",
-    "p31_package": ".aegis/packages/GT-G3-04/package.json",
-    "p31_package_id": "GT-G3-04-P31-v0.3",
+    "next_action": "Repair GT-G3-05 P31 by freezing exact host Skia consumer identity and independent nine-kind raster/golden semantics; rerun CONTROL_REVIEW before CODE_EXECUTION.",
+    "p31_package": ".aegis/packages/GT-G3-05/package.json",
+    "p31_package_id": "GT-G3-05-P31-v0.1",
     "p31_materialized": true,
-    "package_materialization_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+    "package_materialization_ref": "ffd45881365734001d30098e2564de6160664693",
     "g2_reopen": false,
     "g3_implementation_start": false
   }
