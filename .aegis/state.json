@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_P31_TASK_PACKAGING",
+  "active_stage": "GT-G3-04_P31_CONTROL_REVIEW",
   "current_owner": "aegis-implementation",
-  "earliest_untrusted_layer": "GT-G3-03_P31_TASK_PACKAGING",
-  "status": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+  "earliest_untrusted_layer": null,
+  "status": "READY_FOR_CONTROL_REVIEW",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,13 +13,13 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-03_INTEGRATED_G3-04_READY_FOR_CODE_EXECUTION",
-    "ingress": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+    "status": "G3-03_CLOSED_G3-04_P31_READY_FOR_CONTROL_REVIEW",
+    "ingress": "READY_FOR_CONTROL_REVIEW",
     "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": "PENDING_THIS_MATERIALIZATION",
     "superseded_package": "GT-G3-00-P31-v0.1",
-    "current_package": "GT-G3-04-P31-v0.1",
+    "current_package": "GT-G3-04-P31-v0.2",
     "current_package_materialized_ref": "PENDING_THIS_MATERIALIZATION"
   },
   "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
@@ -27,23 +27,25 @@
     {"gate_id": "g2-final-convergence", "decision_id": "g2-closure-2026-09-16", "verdict": "PASS"},
     {"gate_id": "g3-entry-readiness", "decision_id": "g3-entry-readiness-2026-09-16", "verdict": "READY_FOR_P31"},
     {"gate_id": "gt-g3-01", "decision_id": "gt-g3-01-p34-2026-09-17", "verdict": "PASS"},
-    {"gate_id": "gt-g3-02", "decision_id": "gt-g3-02-p34-2026-09-17", "verdict": "PASS_WITH_FINDINGS"}
+    {"gate_id": "gt-g3-02", "decision_id": "gt-g3-02-p34-2026-09-17", "verdict": "PASS_WITH_FINDINGS"},
+    {"gate_id": "gt-g3-03", "decision_id": "gt-g3-03-p34-2026-09-18", "verdict": "PASS"}
   ],
   "blocking_findings": [],
   "integration_applicability": [
     {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"},
     {"integration_id": "int-pr85-g3-01", "applicability": "current"},
-    {"integration_id": "int-pr86-g3-02", "applicability": "current"}
+    {"integration_id": "int-pr86-g3-02", "applicability": "current"},
+    {"integration_id": "int-pr87-g3-03", "applicability": "current"}
   ],
-  "recommended_next_stage": "GT-G3-04_P32_IMPLEMENTATION",
+  "recommended_next_stage": "GT-G3-04_P31_CONTROL_REVIEW",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "execute only GT-G3-04-P31-v0.1 from the canonical G3-03 merge anchor; do not execute G3-05+",
+    "next_action": "independently review GT-G3-04-P31-v0.2; issue CODE_EXECUTION handoff only after package binding passes",
     "p31_package": ".aegis/packages/GT-G3-04/package.json",
-    "p31_package_id": "GT-G3-04-P31-v0.1",
+    "p31_package_id": "GT-G3-04-P31-v0.2",
     "p31_materialized": true,
     "package_materialization_ref": "PENDING_THIS_MATERIALIZATION",
     "g2_reopen": false,
-    "g3_implementation_start": true
+    "g3_implementation_start": false
   }
 }
