@@ -12,11 +12,18 @@
       ],
       "implementation_rules": [
         "Use only the existing r1-full-v1 release SDK consumer path; do not run Skia GN/Ninja, change either Skia lock, or vendor headers.",
+        "Bind this package only to macos-arm64-metal/release SDK c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731 installed at .deps/skia-sdk/macos-arm64-metal/release by the frozen fetch command; never select another target or variant implicitly.",
         "Keep Skia includes and objects private to the .cpp implementation; the public backend header remains renderer-neutral.",
         "Use a fixed offscreen raster configuration and explicit readback; no surface acquire/resize/present or PresentationTracker behavior.",
         "Consume exactly one const FramePlan per submit and do not query RuntimeScene, Scene, SemanticDocument, or any semantic store.",
         "Preserve exact FramePlan structural equality as the primary oracle; a digest/golden is corroborative output only.",
         "Render all nine typed ReferenceCommand variants through one production path; Group is an ordered zero-pixel traversal entry.",
+        "Apply worldToView first and record.transform second, clip to viewportClip and the 256x256 raster, clear to transparent black, use RGBA_8888 premultiplied sRGB src-over with antialiasing disabled and a top-left origin.",
+        "Use only integer-aligned fixture geometry. Shape fills transformed visualBounds; Image uses a resource_id-keyed 2x2 checkerboard placeholder; VectorPath fills the fixture path; RichText uses deterministic Unicode-scalar/run placeholder cells; VectorStroke uses axis-aligned butt-cap segments; DabStroke uses square dabs; Connector uses straight or orthogonal axis-aligned segments; Sticky fills width/height bounds; Group draws nothing.",
+        "Do not perform filesystem, network, image decode, or platform-font lookup. External image/font inputs use only the frozen deterministic placeholders.",
+        "Support the fixture's explicit simple FilledPath erase mask by destination-out clearing. Reject all other unsupported erase geometry before publishing an observation; never silently ignore a mask.",
+        "The golden fixture contains all nine variants in disjoint reviewer-resolvable integer regions. Every non-Group command has a distinct pixel contribution; Group has none.",
+        "The test must build expected RGBA bytes from hand-authored literals using test-only rectangle/path/checkerboard/cell/segment/square-dab reference operations. It must never call Skia or the production Headless backend to construct expected bytes, and expected and actual digests are computed independently.",
         "Rejected submissions must be typed, deterministic, and leave the previous successful observation unchanged."
       ],
       "authorized_mutation_scope": [
@@ -50,7 +57,83 @@
       ],
       "continue_condition": "All unresolved/conflict lists are empty; otherwise fail closed to the earliest owning layer."
     },
-    "oracle_precondition": {
+    "locked_skia_consumer": {
+      "profile": "r1-full-v1",
+      "profile_sha256": "37ecd74a897bf1ec6aab94014dc19b2b05fcaffece53b78f17f985cf39032248",
+      "lock": "r1-full-skia-sdk.lock.json",
+      "lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "tag": "skia-sdk-r1-full-v1-54c1999dc79d094d",
+      "set_id": "54c1999dc79d094d3e65a73f0c6262195c42a381ea5519a58a94be0d8b85c5ac",
+      "target": "macos-arm64-metal",
+      "variant": "release",
+      "asset": "skia-sdk-r1-full-v1-macos-arm64-metal-release.zip",
+      "asset_sha256": "42bdc110c17239a4133c8d6e7d0da61c0215bd09a91cff3a770db995daea118f",
+      "asset_size": 36334501,
+      "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+      "fetch_and_verify": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-05-skia-sdk-resolution.json",
+      "cmake_root": "$PWD/.deps/skia-sdk/macos-arm64-metal/release",
+      "source_build_or_fallback_allowed": false
+    },
+    "deterministic_raster_oracle": {
+      "surface": {
+        "width": 256,
+        "height": 256,
+        "color_type": "RGBA_8888",
+        "alpha_type": "premultiplied",
+        "color_space": "sRGB",
+        "clear_color_rgba": [0, 0, 0, 0],
+        "antialias": false,
+        "origin": "top_left",
+        "blend_mode": "src_over"
+      },
+      "transform_order": ["ReferenceDrawList.worldToView", "RuntimeSceneRecord.transform"],
+      "clip_order": ["ReferenceDrawList.viewportClip", "fixed 256x256 raster"],
+      "fixture_constraints": [
+        "all coordinates and transformed edges are integral",
+        "all eight pixel-contributing kinds occupy disjoint labeled regions",
+        "one supported simple FilledPath erase mask removes a strict subset of one region",
+        "Group remains present in traversal order and has no assigned pixels"
+      ],
+      "fixture_literals": {
+        "world_to_view": [1, 0, 0, 1, 0, 0],
+        "record_transform_for_all_entries": [1, 0, 0, 1, 0, 0],
+        "viewport_clip_xywh": [0, 0, 256, 256],
+        "shape": {"object_id": 501, "region_xywh": [8, 8, 24, 24], "rgba": [255, 0, 0, 255]},
+        "image": {"object_id": 502, "region_xywh": [40, 8, 24, 24], "resource_id_low64": 130, "checker_rgba": [[0, 255, 0, 255], [0, 128, 0, 255]], "cell_size": 4},
+        "vector_path": {"object_id": 503, "polygon_xy": [[72, 8], [96, 8], [96, 32], [72, 32]], "rgba": [0, 0, 255, 255], "fill_rule": "non_zero"},
+        "rich_text": {"object_id": 504, "origin_xy": [104, 8], "utf8": "A9", "cell_wh": [8, 12], "cell_gap": 2, "rgba": [255, 255, 0, 255]},
+        "vector_stroke": {"object_id": 505, "points_xy": [[8, 48], [32, 48]], "nominal_size": 4, "cap": "butt", "rgba": [255, 0, 255, 255]},
+        "dab_stroke": {"object_id": 506, "dabs": [{"center_xy": [52, 48], "size": 12, "opacity": 1}], "rgba": [0, 255, 255, 255]},
+        "connector": {"object_id": 507, "start_xy": [72, 48], "end_xy": [96, 48], "routing": "straight", "width": 4, "rgba": [255, 128, 0, 255]},
+        "sticky": {"object_id": 508, "origin_xy": [104, 40], "width": 24, "height": 20, "rgba": [255, 255, 128, 255]},
+        "group": {"object_id": 509, "pixel_region": null},
+        "erase_mask": {"target_object_id": 501, "filled_path_rect_xywh": [16, 16, 8, 8], "expected_rgba_after_erase": [0, 0, 0, 0]}
+      },
+      "command_mapping": {
+        "Shape": "solid rectangle over transformed visualBounds",
+        "Image": "resource_id-keyed 2x2 checkerboard placeholder within transformed visualBounds",
+        "VectorPath": "integer-aligned filled fixture path honoring fill_rule",
+        "RichText": "fixed-size run/scalar placeholder cells colored by TextStyle; no font resolution",
+        "VectorStroke": "axis-aligned sample-to-sample rectangles using brush color/opacity/nominal_size and butt caps",
+        "DabStroke": "integer-aligned square per DabInstance using brush color times dab opacity",
+        "Connector": "axis-aligned straight or orthogonal segment rectangles between fixture FreePoint endpoints",
+        "Sticky": "solid fixed sticky-color rectangle from content width/height",
+        "Group": "ordered zero-pixel entry"
+      },
+      "resource_policy": "Image and RichText placeholders are deterministic and keyed only by canonical payload values; no external I/O.",
+      "erase_policy": "Apply the fixture's explicit simple FilledPath mask as destination-out after the entry draw; reject unsupported mask geometry before observation replacement.",
+      "expected_pixels": "Start with exactly 256*256*4 zero bytes. Apply the fixture_literals in ReferenceDrawList.entries order with integer half-open [x,x+w) x [y,y+h) coverage, source-over premultiplied channel arithmetic, then destination-out clear the erase rectangle. Test-only helpers may set/fill/checker/segment/cell/square-dab bytes but may not inspect production readback while constructing expected bytes and may not call Skia or the production backend.",
+      "digest": "Compute the expected digest from the independent expected byte vector and the actual digest from readback independently; require exact byte and digest equality.",
+      "typed_rejections": [
+        "zero or overflow raster dimension",
+        "FramePlan frame/reference identity mismatch",
+        "non-integral or unsupported fixture geometry",
+        "unsupported erase-mask geometry",
+        "coordinate or byte-count overflow"
+      ],
+      "rejection_postcondition": "The complete prior successful observation, including dimensions, bytes, digest, plan identity, and kind traversal, remains unchanged."
+    },
+      "oracle_precondition": {
       "red_required": true,
       "expected_failure": "The frozen axiom_render_headless_skia_tests target cannot compile because the private Headless Skia backend boundary and opt-in target are absent.",
       "observation_seam": "CMake build and CTest execution of axiom_render_headless_skia_tests / G3HeadlessSkia"
@@ -65,8 +148,8 @@
         },
         {
           "id": "G3-05-GREEN",
-          "command_or_oracle": "cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=<verified-release-sdk-root> && cmake --build out/g3-headless-skia --target axiom_render_headless_skia_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessSkia$' --output-on-failure",
-          "expected_result": "PASS with deterministic fixed-raster replay, nine-kind coverage, exact golden evidence, and typed rejection isolation",
+          "command_or_oracle": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-05-skia-sdk-resolution.json && cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=$PWD/.deps/skia-sdk/macos-arm64-metal/release && cmake --build out/g3-headless-skia --target axiom_render_headless_skia_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessSkia$' --output-on-failure",
+          "expected_result": "PASS with deterministic fixed-raster replay, independent hand-authored expected RGBA bytes/digest, nine-kind coverage, and typed rejection isolation",
           "blocking_reason": "G3-05 Headless backend acceptance oracle"
         },
         {

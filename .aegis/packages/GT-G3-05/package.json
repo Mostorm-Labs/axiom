@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-05-P31-v0.1",
+  "package_id": "GT-G3-05-P31-v0.2",
   "task_id": "GT-G3-05",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Add the private Skia-backed Headless renderer for the immutable G3-04 FramePlan and prove deterministic raster/golden output without introducing surface or presentation lifecycle.",
@@ -20,23 +20,23 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "6dcd290c7484ff20708c6c6c7b8a7bbc362fd0ad0313040c12f641daf1b5fb5d"
+    "sha256": "b48f943ec493272cc45ce0ced365e4e5074f25f6a44c1498fb9b9a43a57315ad"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "937e35b0ea084a0c81dd7776c7eff0de946d60b7ff1377baa2570b9fbb7ca9de"
+    "sha256": "744e8a40e4e0220ae098cef88d0de6f2f1af18b3598546d1197c28956dc744de"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "cde8c910f3ff51796d1e0353cedc9ca68fe5ef382a968c56990432fd45738ac5"
+    "sha256": "cf079e9eb38495b8311e4d90292c9c9febd0c617d4e61b9f97be55d8df1959f7"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "f8fe21419acc547e1c7d5fa3e4f10349c310504153b2b40abccc598a40c73c90"
+    "sha256": "30750ec4261f7e503d2e0622efd84a64646c89297ec2b5e66d1cf11cbd4237e9"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "55cc846880408068ce1232fa1b43c3b2713ad485b217d0b9bcaca944a54b2cde"
+    "sha256": "fc806d25d141caf42fbacc1b204c68ac768501ecbefb9dd6ff14b942f641b191"
   },
   "materialization": {
     "same_repository": true,
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CONTROL_REASONING",
-    "next_action": "Independently review GT-G3-05-P31-v0.1; issue CODE_EXECUTION handoff only after package binding and Skia consumer preflight pass.",
+    "next_action": "Independently review GT-G3-05-P31-v0.2; issue CODE_EXECUTION handoff only after exact macOS Skia consumer binding and independent nine-kind pixel-oracle preflights pass.",
     "official_gate_pass_forbidden": true
   }
 }
