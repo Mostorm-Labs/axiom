@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "stage": "P32_IMPLEMENTATION_DESIGN_PREFLIGHT",
+  "package_id": "GT-G3-04-P31-v0.3",
+  "package_materialization_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+  "actual_starting_revision": "94e74639d2fcb64d14dba87ac2d8de72b2f0e713",
+  "execution_branch": "codex/g3-04-frame-orchestration-backend",
+  "repository_identity": "github:Mostorm-Labs/axiom",
+  "current_flow": "DirectReferenceSource::build validates FrameState, VisibilityResult, and RuntimeScene identity and returns an immutable-by-value ReferenceDrawList; no frame orchestration or backend submission boundary exists.",
+  "target_owner": "Render Core owns a minimal immutable-by-contract FramePlan value and renderer-neutral IRenderBackend submission seam. Platform adapters, native surfaces, presentation, and backend-specific rendering remain outside G3-04.",
+  "target_flow": "FrameState plus ReferenceDrawList are captured into FramePlan, submitted as const FramePlan to IRenderBackend exactly once, and produce an explicit typed accepted or rejected result.",
+  "prepare_commit_publication_abort": "G3-04 has no canonical-state prepare, commit, or publication phase. FramePlan construction is value creation; rejection returns explicitly with no canonical mutation or partial publication; surface presentation belongs to G3-06.",
+  "affected_types_and_files": [
+    "runtime/render/include/canvas/render/frame_plan.hpp",
+    "runtime/render/include/canvas/render/render_backend.hpp",
+    "runtime/render/src/frame_plan.cpp",
+    "runtime/render/src/render_backend.cpp",
+    "runtime/render/tests/frame_orchestration_test.cpp",
+    "runtime/render/CMakeLists.txt"
+  ],
+  "obligation_to_verification": {
+    "G3-04-V1-frame-plan-binding": "exact FramePlan structural equality plus unchanged FrameState, ReferenceDrawList, and RuntimeScene identity",
+    "G3-04-V2-private-backend-boundary": "const FramePlan-only fake backend input, one invocation, and forbidden dependency scan",
+    "G3-04-V3-deterministic-failure": "typed injected rejection with unchanged inputs and zero publication side effects",
+    "G3-04-V4-boundary-hygiene": "authorized path scan, G3 predecessor matrix, RF01/G2 regression, and git diff --check"
+  },
+  "test_plan": [
+    "Observe missing-boundary RED before production implementation.",
+    "Exercise distinguishable nine-kind structural binding through a deterministic fake backend.",
+    "Exercise accepted and rejected submissions with exact typed results and call counts.",
+    "Compare pre/post inputs and RuntimeScene identity.",
+    "Run boundary, predecessor, RF01/G2, and diff checks."
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "disposition": "CONTINUE_TO_RED_ORACLE"
+}

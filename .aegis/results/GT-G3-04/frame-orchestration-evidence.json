@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "package_id": "GT-G3-04-P31-v0.3",
+  "evidence": {
+    "frame_plan_structural_binding": "PASS",
+    "frame_state_exact": true,
+    "reference_draw_list_exact": true,
+    "distinguishable_reference_entries": 1,
+    "runtime_scene_generation_unchanged": true,
+    "runtime_scene_records_unchanged": true,
+    "frame_plan_type_const_members": true,
+    "frame_identity_mismatch_rejected": true
+  },
+  "oracles": [
+    "exact FramePlan structural equality",
+    "pre/post FrameState and ReferenceDrawList equality",
+    "pre/post RuntimeScene generation and record equality",
+    "mismatched FrameState and ReferenceDrawList rejection"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "task_anchor": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+  "actual_starting_revision": "94e74639d2fcb64d14dba87ac2d8de72b2f0e713",
+  "execution_branch": "codex/g3-04-frame-orchestration-backend",
+  "package": {
+    "id": "GT-G3-04-P31-v0.3",
+    "path": ".aegis/packages/GT-G3-04/package.json",
+    "materialization_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+    "binding_preflight": "PASS"
+  },
+  "implementation_design_preflight": {
+    "result": "PASS",
+    "evidence_ref": ".aegis/results/GT-G3-04/implementation-design-preflight.json"
+  },
+  "tdd": {
+    "red": {
+      "observed": true,
+      "target": "axiom_render_frame_orchestration_tests",
+      "diagnostic": "fatal error: canvas/render/frame_plan.hpp file not found",
+      "classification": "missing frozen G3-04 frame-plan/backend boundary"
+    },
+    "green": {
+      "result": "PASS",
+      "test": "G3FrameOrchestration",
+      "tests_passed": 1,
+      "tests_failed": 0
+    }
+  },
+  "obligations": {
+    "G3-04-V1-frame-plan-binding": "PASS",
+    "G3-04-V2-private-backend-boundary": "PASS",
+    "G3-04-V3-deterministic-failure": "PASS",
+    "G3-04-V4-boundary-hygiene": "PASS"
+  },
+  "focused_and_predecessor_tests": {
+    "passed": 4,
+    "failed": 0,
+    "tests": [
+      "G3FrameState",
+      "G3Visibility",
+      "G3DirectReference",
+      "G3FrameOrchestration"
+    ]
+  },
+  "rf01_g2_regression": {
+    "passed": 19,
+    "failed": 0
+  },
+  "evidence_refs": [
+    ".aegis/results/GT-G3-04/frame-orchestration-evidence.json",
+    ".aegis/results/GT-G3-04/backend-evidence.json"
+  ],
+  "scope": {
+    "authorized_mutation_scope_conformed": true,
+    "forbidden_dependency_scan": "PASS",
+    "skia_or_platform_types": false,
+    "surface_or_presentation_lifecycle": false,
+    "tile_cache_scheduler_or_later_wp": false,
+    "runtime_scene_semantic_or_predecessor_contract_modified": false
+  },
+  "changed_paths": [
+    ".aegis/results/GT-G3-04/backend-evidence.json",
+    ".aegis/results/GT-G3-04/frame-orchestration-evidence.json",
+    ".aegis/results/GT-G3-04/implementation-design-preflight.json",
+    ".aegis/results/GT-G3-04/result.json",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/frame_plan.hpp",
+    "runtime/render/include/canvas/render/render_backend.hpp",
+    "runtime/render/src/frame_plan.cpp",
+    "runtime/render/src/render_backend.cpp",
+    "runtime/render/tests/frame_orchestration_test.cpp"
+  ],
+  "source_hygiene": {
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}
