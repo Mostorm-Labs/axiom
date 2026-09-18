@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "verdict": "IMPLEMENTATION_DEFECT",
+  "status": "READY_FOR_P36",
+  "source_result_revision": "e95607937d884270828417c35412d8e3f682bdfc",
+  "failed_frozen_obligations": [
+    "G3-04-V1-frame-plan-binding",
+    "E-G3-04-PLAN"
+  ],
+  "root_cause": "TEST_ORACLE_IMPLEMENTATION_INCOMPLETE",
+  "finding": {
+    "failure_mode": "The focused G3FrameOrchestration fixture constructs one Shape ReferenceTraversalEntry even though the frozen oracle requires a distinguishable nine-kind ReferenceDrawList.",
+    "impact": "The accepted/rejected submission checks prove preservation only for a one-entry Shape list and cannot prove that FramePlan preserves the complete heterogeneous ReferenceDrawList required by the frozen V1 oracle.",
+    "existing_independent_coverage": "G3DirectReference proves nine-kind source mapping, while G3FrameOrchestration proves exact plan preservation, typed rejection, single backend invocation, and no canonical mutation for one Shape entry; neither independently exercises nine-kind content through the G3-04 orchestration boundary.",
+    "unique_detection_value": "A distinguishable nine-kind orchestration fixture catches entry loss, variant collapse, reordering, or partial heterogeneous-list preservation at the FramePlan/backend boundary.",
+    "why_frozen_evidence_missed_it": "The implementation reused a minimal distinguishable Shape fixture and recorded distinguishable_reference_entries as 1 while incorrectly marking the broader structural binding obligation PASS.",
+    "routing": "P36 implementation-owned test/oracle and evidence repair"
+  },
+  "preserved_valid_work": [
+    "immutable-by-contract FramePlan over exact FrameState and ReferenceDrawList values",
+    "FrameState/ReferenceDrawList identity mismatch rejection",
+    "private const FramePlan-only IRenderBackend seam",
+    "single backend invocation with typed accepted/rejected results",
+    "unchanged plan and RuntimeScene observation on accepted and rejected submissions",
+    "G3 predecessor and RF01/G2 regression coverage",
+    "authorized mutation scope and forbidden dependency boundary"
+  ],
+  "upstream_defect": false,
+  "p20_reopen": false,
+  "p31_reopen": false,
+  "production_change_required": false,
+  "p34_entry_authorized": false
+}
