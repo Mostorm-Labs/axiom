@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-04-P31-v0.2",
+  "package_id": "GT-G3-04-P31-v0.3",
   "task_id": "GT-G3-04",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Define the minimal immutable frame orchestration and private renderer backend contract over the closed G3-03 reference path.",
@@ -20,7 +20,7 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "094f48ef2701cdf9b18cd29d7efabd82eeb952884a4fdb661cf8960c9fea5fd5"
+    "sha256": "7eb1d9c1700a5e359b00fc850bdac562c194510a506be784dfc655500a66e028"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
@@ -28,7 +28,7 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "f3c1c8b43fc06801edf96586464f8e3f9ef37518d82856b786b44353bccbc84b"
+    "sha256": "0c9b008a847e72160251bedd239298f5bdd5faa159c3b0c7e7942e01e9e4200e"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",
-    "next_action": "Validate GT-G3-04-P31-v0.2 and execute only its RED-to-GREEN closure.",
+    "next_action": "Validate GT-G3-04-P31-v0.3, persist its ImplementationDesignPreflight, and execute only its RED-to-GREEN closure.",
     "official_gate_pass_forbidden": true
   }
 }

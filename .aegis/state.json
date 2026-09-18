@@ -2,7 +2,7 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_P31_REPAIR_COMPLETE",
+  "active_stage": "GT-G3-04_P31_V0_3_REPAIR_COMPLETE",
   "current_owner": "aegis-implementation",
   "earliest_untrusted_layer": null,
   "status": "READY_FOR_CONTROL_REVIEW",
@@ -17,10 +17,10 @@
     "ingress": "READY_FOR_CONTROL_REVIEW",
     "implementation_authorized": false,
     "p31_materialized": true,
-    "p31_materialized_ref": "c1f044c107897071d79c7a00307ce56c2803476f",
+    "p31_materialized_ref": "PENDING_THIS_MATERIALIZATION",
     "superseded_package": "GT-G3-00-P31-v0.1",
-    "current_package": "GT-G3-04-P31-v0.2",
-    "current_package_materialized_ref": "c1f044c107897071d79c7a00307ce56c2803476f"
+    "current_package": "GT-G3-04-P31-v0.3",
+    "current_package_materialized_ref": "PENDING_THIS_MATERIALIZATION"
   },
   "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
   "current_gate_decisions": [
@@ -40,11 +40,11 @@
   "recommended_next_stage": "GT-G3-04_P31_CONTROL_REVIEW",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "independently review GT-G3-04-P31-v0.2; issue CODE_EXECUTION handoff only after package binding passes",
+    "next_action": "independently review GT-G3-04-P31-v0.3; issue CODE_EXECUTION handoff only after package binding passes",
     "p31_package": ".aegis/packages/GT-G3-04/package.json",
-    "p31_package_id": "GT-G3-04-P31-v0.2",
+    "p31_package_id": "GT-G3-04-P31-v0.3",
     "p31_materialized": true,
-    "package_materialization_ref": "c1f044c107897071d79c7a00307ce56c2803476f",
+    "package_materialization_ref": "PENDING_THIS_MATERIALIZATION",
     "g2_reopen": false,
     "g3_implementation_start": false
   }

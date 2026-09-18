@@ -31,6 +31,42 @@
         "final FrameGraph ABI, Compositor, or public platform backend contract"
       ]
     },
+    "implementation_design_preflight": {
+      "required": true,
+      "scope_reason": "G3-04 introduces the frame-orchestration to renderer-backend subsystem boundary.",
+      "fixed_design": {
+        "current_flow": "DirectReferenceSource::build validates FrameState, VisibilityResult, and RuntimeScene identity and returns an immutable-by-value ReferenceDrawList; no frame orchestration or backend submission boundary exists.",
+        "target_owner": "The Render Core owns a minimal immutable-by-contract FramePlan value and a renderer-neutral IRenderBackend submission seam. Platform adapters, native surfaces, presentation, and backend-specific rendering remain outside G3-04.",
+        "target_flow": "FrameState plus ReferenceDrawList are captured into FramePlan, the orchestrator submits const FramePlan to IRenderBackend exactly once, and the backend returns an explicit typed accepted or rejected result.",
+        "prepare_commit_publication_abort": "G3-04 has no canonical-state prepare, commit, or publication phase. FramePlan construction is value creation; backend rejection is an explicit return with no canonical mutation or partial publication; surface presentation belongs to G3-06.",
+        "affected_types_and_files": [
+          "FramePlan in runtime/render/include/canvas/render/frame_plan.hpp",
+          "IRenderBackend and typed submission result in runtime/render/include/canvas/render/render_backend.hpp",
+          "frame-plan construction in runtime/render/src/frame_plan.cpp",
+          "backend submission orchestration in runtime/render/src/render_backend.cpp",
+          "deterministic fake-backend oracles in runtime/render/tests/frame_orchestration_test.cpp",
+          "focused build/test wiring in runtime/render/CMakeLists.txt"
+        ]
+      },
+      "obligation_mapping": {
+        "G3-04-V1-frame-plan-binding": ["FramePlan structural equality", "unchanged FrameState and ReferenceDrawList before and after submission"],
+        "G3-04-V2-private-backend-boundary": ["const FramePlan-only backend input", "public-header forbidden-dependency scan", "single fake-backend invocation"],
+        "G3-04-V3-deterministic-failure": ["typed rejection injection", "unchanged plan and canonical inputs", "zero publication side effects"],
+        "G3-04-V4-boundary-hygiene": ["authorized-path scan", "G3 predecessor matrix", "RF01/G2 regression", "git diff --check"]
+      },
+      "test_plan": [
+        "Observe the frozen missing-boundary RED before production implementation.",
+        "Exercise distinguishable nine-kind FrameState/ReferenceDrawList structural binding through a deterministic fake backend.",
+        "Exercise one accepted submission and one injected rejection with exact typed results and call counts.",
+        "Compare pre/post inputs and existing RuntimeScene identity to prove no canonical mutation or partial publication.",
+        "Run forbidden-dependency, changed-path, predecessor, RF01/G2, and diff-check verification."
+      ],
+      "unresolved_semantic_decisions": [],
+      "authority_conflict": false,
+      "verification_conflict": false,
+      "package_scope_conflict": false,
+      "continue_condition": "Persist this preflight and its empty conflict lists in .aegis/results/GT-G3-04/ before production mutation; continue in CODE_EXECUTION only while all conflict fields remain false and unresolved_semantic_decisions remains empty."
+    },
     "oracle_precondition": {
       "red_required": true,
       "expected_failure": "G3FrameOrchestration target cannot compile because the frozen frame-plan/backend contract is absent.",
@@ -48,7 +84,8 @@
     "hosted_verification": {"required": [], "optional": ["Exact-source CI for the pushed result revision"]},
     "evidence": {"blocking": ["E-G3-04-PLAN", "E-G3-04-BACKEND", "E-G3-04-REGRESSION"], "corroborative": ["C-G3-04-HYGIENE"]},
     "terminal_success": {"all_of": [
-      "Only G3-04 frame orchestration/backend contract behavior and focused test wiring are implemented.",
+        "Only G3-04 frame orchestration/backend contract behavior and focused test wiring are implemented.",
+        "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or scope/authority/verification conflict before production mutation.",
       "Required RED is observed and recorded before implementation.",
       "G3FrameOrchestration, G3FrameState, G3Visibility, G3DirectReference, and full RF01/G2 regression pass at the exact result revision.",
       "FrameState/ReferenceDrawList structural binding and deterministic backend rejection evidence are reviewer-accessibly materialized.",
