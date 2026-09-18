@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-04-P31-v0.1",
+  "task_id": "GT-G3-04",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Define the minimal immutable frame orchestration and private renderer backend contract over the closed G3-03 reference path.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-04-frame-orchestration-backend"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "fa0e1101839d29fb16b6bb3938c98fc1a84b37ffd73f743c8ba0d89f8d4edc95"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "79144a045d33dc0e5f9552ef212fa303e542354ed0fa14041a28106ca5c12a07"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "f3c1c8b43fc06801edf96586464f8e3f9ef37518d82856b786b44353bccbc84b"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3acb0e47446d46b922728d691ef57d88624a5ff47657030abc0cfadeafed3130"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f526fd0af995899bb53b0934d2bb3c18c2a5064774b2e1f17295d399a26ad9ce"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-04/",
+    "binding": "exact repository revision from canonical G3-03 merge SHA b995329df9cd299db4990362d1f3c6ac155ee4fb"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate GT-G3-04-P31-v0.1 and execute only its RED-to-GREEN closure.",
+    "official_gate_pass_forbidden": true
+  }
+}

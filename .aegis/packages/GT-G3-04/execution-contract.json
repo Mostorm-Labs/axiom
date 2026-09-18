@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create a minimal immutable renderer-neutral frame plan over FrameState and ReferenceDrawList.",
+        "Create a private IRenderBackend seam consuming only that frame plan and returning explicit typed submission success/rejection.",
+        "Add focused G3FrameOrchestration tests with a deterministic fake backend and rejection injection.",
+        "Modify runtime/render/CMakeLists.txt only to compile the authorized production/test files and register the focused test.",
+        "Write durable G3-04 result and evidence records under .aegis/results/GT-G3-04/."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/include/canvas/render/frame_plan.hpp",
+        "runtime/render/include/canvas/render/render_backend.hpp",
+        "runtime/render/src/frame_plan.cpp",
+        "runtime/render/src/render_backend.cpp",
+        "runtime/render/tests/frame_orchestration_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        ".aegis/results/GT-G3-04/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "runtime/foundation/**",
+        "apps/** or Demo/Shell behavior",
+        "CMakePresets.json and existing preset behavior",
+        "Skia, platform surface, native window, acquire/resize/present, or G3-05+ implementation",
+        "Tile, TileCache, RenderGroup, RasterCache, Scheduler, ResourceBudget, G3-07 through G3-11 behavior",
+        "RuntimeScene, SceneQuery, VisibilityResolver, DirectReferenceSource, or G2/G3 predecessor contract changes",
+        "final FrameGraph ABI, Compositor, or public platform backend contract"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "G3FrameOrchestration target cannot compile because the frozen frame-plan/backend contract is absent.",
+      "observation_seam": "CMake build and CTest execution of axiom_render_frame_orchestration_tests / G3FrameOrchestration"
+    },
+    "tests": {
+      "required": [
+        {"id": "G3-04-RED", "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_frame_orchestration_tests", "expected_result": "FAIL before implementation for the missing frame-plan/backend boundary", "blocking_reason": "TDD RED provenance"},
+        {"id": "G3-04-GREEN", "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_frame_orchestration_tests && ctest --test-dir out/g3-host-debug -R '^G3FrameOrchestration$' --output-on-failure", "expected_result": "PASS with structural plan binding, fake backend success, and rejection path", "blocking_reason": "G3-04 frame/backend acceptance oracle"},
+        {"id": "G3-04-PREDECESSOR", "command_or_oracle": "ctest --test-dir out/g3-host-debug -R '^G3(FrameState|Visibility|DirectReference)$' --output-on-failure && cmake --preset rf01-host-debug && cmake --build out/rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure", "expected_result": "PASS", "blocking_reason": "Preserve G3-01/G3-02/G3-03 and RF01/G2 foundations"},
+        {"id": "G3-04-BOUNDARY-SCAN", "command_or_oracle": "Scan exact changed files for Skia/platform/surface/presentation/Tile/cache/scheduler/G3-05+ and inspect that backend consumes only the immutable plan.", "expected_result": "No forbidden dependency or lifecycle behavior", "blocking_reason": "Authority boundary"},
+        {"id": "G3-04-DIFF-CHECK", "command_or_oracle": "git diff --check", "expected_result": "PASS", "blocking_reason": "Source hygiene"}
+      ]
+    },
+    "hosted_verification": {"required": [], "optional": ["Exact-source CI for the pushed result revision"]},
+    "evidence": {"blocking": ["E-G3-04-PLAN", "E-G3-04-BACKEND", "E-G3-04-REGRESSION"], "corroborative": ["C-G3-04-HYGIENE"]},
+    "terminal_success": {"all_of": [
+      "Only G3-04 frame orchestration/backend contract behavior and focused test wiring are implemented.",
+      "Required RED is observed and recorded before implementation.",
+      "G3FrameOrchestration, G3FrameState, G3Visibility, G3DirectReference, and full RF01/G2 regression pass at the exact result revision.",
+      "FrameState/ReferenceDrawList structural binding and deterministic backend rejection evidence are reviewer-accessibly materialized.",
+      "No surface lifecycle, Skia, Tile/cache/scheduler, final FrameGraph ABI, or later-WP behavior is introduced.",
+      "Only authorized mutation paths differ from the b995329df9cd299db4990362d1f3c6ac155ee4fb anchor.",
+      "Exact result revision is committed and pushed; return READY_FOR_CONTROL_REVIEW without issuing P34 or G3 PASS."
+    ]},
+    "terminal_blockers": ["AUTHORITY_CONFLICT", "MISSING_REQUIRED_INPUT", "ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "NEW_HIGH_IMPACT_FAILURE_MODE", "PACKAGE_SCOPE_DIVERGENCE", "BLOCKED_REPOSITORY_IDENTITY", "BLOCKED_EXECUTION_DIVERGENCE", "VERIFICATION_DESIGN_DEFECT", "TASK_PACKAGE_DEFECT"],
+    "return_policy": {"continue_until_terminal_state": true, "return_surface": "CONTROL_REVIEW", "official_gate_pass_forbidden": true}
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "current": true,
+  "source": {
+    "provider": "repo-materialized-plan",
+    "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+    "title": "GT-G3-00 G3 Basic Canonical Canvas P30 Implementation Plan v0.1",
+    "trusted_section": "G3-04 minimal frame orchestration/backend contract",
+    "revision": "bound-at-b995329df9cd299db4990362d1f3c6ac155ee4fb"
+  },
+  "dependency": {
+    "g3_03_gate_decision": "GT-G3-03 P34 control review",
+    "g3_03_result_revision": "fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+    "canonical_main_revision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+    "required_state": "GT-G3-03_INTEGRATED"
+  },
+  "trusted_statements": {
+    "goal": "Define a minimal renderer-neutral frame orchestration contract over FrameState, VisibilityResult, and ReferenceDrawList, plus a private IRenderBackend seam.",
+    "owns": [
+      "immutable gate-local frame plan",
+      "backend-neutral render target contract",
+      "private IRenderBackend interface and deterministic test backend seam"
+    ],
+    "consumes": ["FrameState", "VisibilityResult", "ReferenceDrawList"],
+    "produces": ["minimal frame plan", "backend submission result", "deterministic orchestration diagnostics"],
+    "forbidden": [
+      "Skia or platform types in public Render Core contracts",
+      "final FrameGraph ABI claim",
+      "surface acquire/resize/present lifecycle (G3-06)",
+      "private Skia backend implementation (G3-05)",
+      "Tile, RenderGroup, RasterCache, Scheduler, ResourceBudget, G3-07+ behavior",
+      "RuntimeScene, semantic, SceneQuery, or G2 contract changes"
+    ]
+  }
+}
