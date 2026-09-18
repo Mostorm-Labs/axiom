@@ -6,7 +6,23 @@
     "frame_plan_structural_binding": "PASS",
     "frame_state_exact": true,
     "reference_draw_list_exact": true,
-    "distinguishable_reference_entries": 1,
+    "distinguishable_reference_entries": 9,
+    "nine_kind_object_kinds": [
+      "Shape",
+      "Image",
+      "VectorPath",
+      "RichText",
+      "VectorStroke",
+      "DabStroke",
+      "Connector",
+      "Sticky",
+      "Group"
+    ],
+    "entry_order_and_membership": "PASS",
+    "complete_record_fields": "PASS",
+    "complete_command_variants": "PASS",
+    "diagnostics_exact": "PASS",
+    "canonical_payload_exact": "PASS",
     "runtime_scene_generation_unchanged": true,
     "runtime_scene_records_unchanged": true,
     "frame_plan_type_const_members": true,
@@ -16,6 +32,10 @@
     "exact FramePlan structural equality",
     "pre/post FrameState and ReferenceDrawList equality",
     "pre/post RuntimeScene generation and record equality",
-    "mismatched FrameState and ReferenceDrawList rejection"
+    "mismatched FrameState and ReferenceDrawList rejection",
+    "nine-kind cardinality/order/membership",
+    "complete RuntimeSceneRecord field comparison",
+    "complete typed ReferenceCommand variant comparison",
+    "accepted and rejected backend observation revalidation"
   ]
 }

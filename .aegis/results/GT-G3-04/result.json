@@ -28,6 +28,16 @@
       "test": "G3FrameOrchestration",
       "tests_passed": 1,
       "tests_failed": 0
+    },
+    "p36_repair_red": {
+      "observed": true,
+      "diagnostic": "Assertion failed: drawList.entries.size() == 9U against the pre-repair one-entry Shape fixture",
+      "classification": "IMPLEMENTATION_DEFECT"
+    },
+    "p36_repair_green": {
+      "result": "PASS",
+      "nine_kind_entries": 9,
+      "complete_record_and_command_oracle": "PASS"
     }
   },
   "obligations": {

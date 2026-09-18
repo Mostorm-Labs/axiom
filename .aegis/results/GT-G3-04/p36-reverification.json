@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "actual_starting_revision": "1835ac4cd3aa77b4b660883ae20307e4f9cf0192",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "repair_scope": [
+    "runtime/render/tests/frame_orchestration_test.cpp",
+    ".aegis/results/GT-G3-04/**"
+  ],
+  "evidence": {
+    "nine_kind_fixture": "PASS",
+    "nine_kind_cardinality": 9,
+    "nine_kind_order_and_membership": "PASS",
+    "complete_runtime_scene_record_fields": "PASS",
+    "complete_typed_reference_commands": "PASS",
+    "accepted_backend_observation": "PASS",
+    "rejected_backend_observation": "PASS",
+    "frame_state_and_reference_draw_list_unchanged": "PASS",
+    "identity_mismatch_rejection": "PASS",
+    "no_canonical_mutation_or_partial_publication": "PASS",
+    "g3_focused_matrix": {
+      "G3FrameOrchestration": "PASS",
+      "G3FrameState": "PASS",
+      "G3Visibility": "PASS",
+      "G3DirectReference": "PASS"
+    },
+    "rf01_g2_predecessor_matrix": {
+      "passed": 19,
+      "failed": 0
+    },
+    "forbidden_dependency_scan": "PASS",
+    "authorized_path_scan": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "production_files_changed": false,
+  "p20_reopen": false,
+  "p31_reopen": false,
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}
