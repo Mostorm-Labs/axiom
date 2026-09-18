@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "34267bb7d58e10fe449f96812dd0277e91c3633",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "reviewed_revision": "34267bb7d58e10fe449f96812dd0277e91c3633",
+  "verdict": "PASS",
+  "code_execution_authorized": true,
+  "p34_entry_authorized": false,
+  "p36_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "remote_materialization_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_binding": "PASS",
+    "canonical_codec_compatibility": "PASS",
+    "vector_stroke_mask_owner": "PASS",
+    "mask_render_spatial_intersection": "PASS",
+    "independent_golden_freshness": "PASS",
+    "verification_oracle_completeness": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "production_implementation_unchanged": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "G3-07-V1-production-pipeline": "PENDING_P32_EXECUTION",
+    "G3-07-V2-deterministic-artifacts": "PENDING_P32_EXECUTION",
+    "G3-07-V3-nine-kind-canonical-fixture": "P31_BINDING_PASS",
+    "G3-07-V4-failure-and-atomic-publication": "PENDING_P32_EXECUTION",
+    "G3-07-V5-boundary-and-regression": "PENDING_P32_EXECUTION"
+  },
+  "frozen_evidence_audit": {
+    "package_repair_materialization": "PASS",
+    "canonical_fixture_legality": "PASS",
+    "erase_oracle_unique_detection_value": "PASS",
+    "independent_expected_raster": "PASS",
+    "blocking_execution_evidence": "PENDING_P32_EXECUTION"
+  },
+  "repository_reality_audit": {
+    "canonical_main_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "anchor_is_ancestor": true,
+    "package_materialization_remote_head_matches": true,
+    "production_paths_changed": false,
+    "fixture_binary_changed": false,
+    "unauthorized_scope_changes": 0,
+    "git_diff_check": "PASS"
+  },
+  "repair_closure": {
+    "previous_blocker": "GT-G3-07-P31-v0.3-F1",
+    "new_mask_local_bounds": [8, -4, 16, 4],
+    "record_translation": [8, 48],
+    "stroke_world_strip_half_open": [8, 46, 32, 50],
+    "mask_world_bounds": [16, 44, 24, 52],
+    "strict_subset_intersection_half_open": [16, 46, 24, 50],
+    "retained_pixels_on_both_sides": true,
+    "fresh_expected_digest": "fnv1a64:7b8eb8c70c65afe5",
+    "fresh_expected_raster_sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
+    "old_shape_digest_reused": false
+  },
+  "next_action": "Issue the exact P32 CODE_EXECUTION handoff for GT-G3-07-P31-v0.4 using package materialization 34267bb7d58e10fe449f96812dd0277e91c3633 and task anchor 6bb6c21ac62f0baef55f01ee0867ac7de08e501b.",
+  "official_p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

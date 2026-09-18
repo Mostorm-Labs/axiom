@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "package_id": "GT-G3-07-P31-v0.4",
   "task_id": "GT-G3-07",
-  "status": "CURRENT_PENDING_CONTROL_REVIEW",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
   "repository": {
     "provider": "github",
@@ -45,8 +45,8 @@
   },
   "handoff": {
     "preferred_executor": "codex",
-    "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.4; issue CODE_EXECUTION handoff only after exact package binding, canonical codec legality, VectorStroke mask/render strict-subset intersection, independently recomputed golden digest, production-pipeline non-bypass, field-complete nine-kind oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute the complete frozen GT-G3-07-P31-v0.4 closure contract from this exact package; return READY_FOR_CONTROL_REVIEW only after all required P32 evidence is durable.",
     "official_gate_pass_forbidden": true
   }
 }

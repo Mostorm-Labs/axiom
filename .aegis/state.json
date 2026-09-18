@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-07_P31_V0_4_MATERIALIZED",
-  "current_owner": "aegis-implementation",
+  "active_stage": "GT-G3-07_P31_CONTROL_REVIEW_PASS",
+  "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "status": "PASS",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,11 +13,11 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-06_INTEGRATED_G3-07_P31_V0_4_PENDING_CONTROL_REVIEW",
-    "ingress": "READY_FOR_P31_CONTROL_REVIEW",
-    "implementation_authorized": false,
+    "status": "G3-06_INTEGRATED_G3-07_P31_V0_4_REVIEW_PASS_P32_AUTHORIZED",
+    "ingress": "READY_FOR_CODE_EXECUTION",
+    "implementation_authorized": true,
     "p31_materialized": true,
-    "p31_materialized_ref": null,
+    "p31_materialized_ref": "34267bb7d58e10fe449f96812dd0277e91c3633",
     "superseded_package": "GT-G3-07-P31-v0.3",
     "current_package": "GT-G3-07-P31-v0.4",
     "current_package_materialized_ref": null
@@ -107,14 +107,14 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-07_P31_CONTROL_REVIEW",
+  "recommended_next_stage": "GT-G3-07_P32",
   "handoff": {
-    "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.4 mask/render strict-subset intersection, fresh golden oracle, codec legality, lock integrity, and scope; issue CODE_EXECUTION only on review PASS.",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute GT-G3-07-P31-v0.4 complete frozen closure contract from exact materialization 34267bb7d58e10fe449f96812dd0277e91c3633; return READY_FOR_CONTROL_REVIEW after durable P32 evidence.",
     "p31_package": ".aegis/packages/GT-G3-07/package.json",
     "p31_package_id": "GT-G3-07-P31-v0.4",
     "p31_materialized": true,
-    "package_materialization_ref": null,
+    "package_materialization_ref": "34267bb7d58e10fe449f96812dd0277e91c3633",
     "g2_reopen": false,
     "g3_implementation_start": false
   }
