@@ -105,6 +105,26 @@
       },
       "evidence_ids": ["ev-gt-g3-05-p34"],
       "findings": []
+    },
+    {
+      "id": "gt-g3-06",
+      "scope": "G3/WP-G3-06",
+      "status": "CLOSED",
+      "decision": {
+        "id": "gt-g3-06-p34-2026-09-19",
+        "verdict": "PASS_WITH_FINDINGS",
+        "authority_ref": "g3-capability-authority",
+        "result_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+        "official_pass_claimed": true
+      },
+      "evidence_ids": ["ev-gt-g3-06-p34"],
+      "findings": [
+        {
+          "classification": "NON_BLOCKING_HARDENING",
+          "subject": "SurfaceLifecycle current() retains the last historical snapshot after loss",
+          "disposition": "The frozen acquire seam returns kUnavailable with no target, and every current production consumer checks availability before reading the retained value. A future successor may clarify the accessor name or visibility without changing the accepted G3-06 behavior."
+        }
+      ]
     }
   ]
 }

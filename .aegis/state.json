@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-06_P31_CONTROL_REVIEW_COMPLETE",
+  "active_stage": "GT-G3-06_P34_CONTROL_REVIEW_COMPLETE",
   "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_CODE_EXECUTION",
+  "status": "READY_FOR_CONTROLLED_INTEGRATION",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,9 +13,9 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-05_INTEGRATED_G3-06_P31_V0_2_APPROVED",
-    "ingress": "READY_FOR_CODE_EXECUTION",
-    "implementation_authorized": true,
+    "status": "G3-05_INTEGRATED_G3-06_P34_PASS_WITH_FINDINGS_AWAITING_INTEGRATION",
+    "ingress": "READY_FOR_CONTROLLED_INTEGRATION",
+    "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
     "superseded_package": "GT-G3-00-P31-v0.1",
@@ -61,6 +61,11 @@
       "gate_id": "gt-g3-05",
       "decision_id": "gt-g3-05-p34-2026-09-19",
       "verdict": "PASS"
+    },
+    {
+      "gate_id": "gt-g3-06",
+      "decision_id": "gt-g3-06-p34-2026-09-19",
+      "verdict": "PASS_WITH_FINDINGS"
     }
   ],
   "blocking_findings": [],
@@ -92,17 +97,21 @@
     {
       "integration_id": "int-pr91-g3-05",
       "applicability": "current"
+    },
+    {
+      "integration_id": "int-branch-g3-06-p34-review",
+      "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-06_P32_IMPLEMENTATION",
+  "recommended_next_stage": "GT-G3-06_CONTROLLED_MAIN_INTEGRATION",
   "handoff": {
-    "next_surface": "CODE_EXECUTION",
-    "next_action": "Execute the complete GT-G3-06-P31-v0.2 closure contract on codex/g3-06-surface-presentation-package and return exact durable evidence to CONTROL_REVIEW.",
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "Create and integrate a reviewed pull request for exact GT-G3-06 result 51602eaca54dccff7ce00c8f1f726e0bbe855bb2; do not treat the branch review as main integration.",
     "p31_package": ".aegis/packages/GT-G3-06/package.json",
     "p31_package_id": "GT-G3-06-P31-v0.2",
     "p31_materialized": true,
     "package_materialization_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
     "g2_reopen": false,
-    "g3_implementation_start": true
+    "g3_implementation_start": false
   }
 }
