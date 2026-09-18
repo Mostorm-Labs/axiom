@@ -19,15 +19,15 @@
     {
       "id": "G3-07-V3-nine-kind-canonical-fixture",
       "requirement": "The CLI fixture is canonical, non-empty, and exercises every V1 ObjectKind through the complete production pipeline with reviewer-resolvable membership.",
-      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, then compare canonical object IDs/kinds with RuntimeScene, visibility, DirectReference traversal, and evidence JSON; sample the eight fixed non-transparent regions, the Shape erase hole, and Group zero-pixel contribution.",
-      "acceptance": "All nine kinds and IDs remain exactly correlated across stages; eight kinds contribute distinguishable pixels, the erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
+      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the Shape erase hole, and Group zero-pixel contribution.",
+      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels, the erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
       "evidence_required": "Fixture inventory plus independent kind/ID/region oracle results."
     },
     {
       "id": "G3-07-V4-failure-and-atomic-publication",
       "requirement": "Input, render, or output failure is deterministic and cannot publish partial or stale success artifacts.",
-      "oracle": "Exercise missing fixture, malformed fixture, unsupported/invalid canonical fixture, unknown/duplicate/missing CLI arguments, unwritable output, forced production render rejection through a checked-in invalid fixture, and replacement of an existing distinguishable successful artifact set; inspect exit status and complete output directory before/after.",
-      "acceptance": "Each negative exits nonzero with a stable diagnostic class; a clean destination has none of the three success files; an existing successful destination remains byte-for-byte unchanged; temporary staging is removed or remains clearly non-success and no render-evidence.json claims result=PASS.",
+      "oracle": "Exercise missing fixture, malformed fixture, unsupported/invalid canonical fixture, unknown/duplicate/missing CLI arguments, an unwritable parent, production render rejection using a process-test-generated valid Snapshot v1 whose Shape width is 1.5, and an already-existing distinguishable successful output directory; inspect exit status and complete output path before/after.",
+      "acceptance": "Each negative exits nonzero with a stable diagnostic class; a previously absent destination remains absent; an existing successful destination is rejected and remains byte-for-byte unchanged; temporary sibling staging is removed or remains clearly non-success and no render-evidence.json claims result=PASS.",
       "evidence_required": "Failure matrix and exact no-partial/no-stale-publication comparisons."
     },
     {

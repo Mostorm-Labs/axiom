@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-07-P31-v0.1",
+  "package_id": "GT-G3-07-P31-v0.2",
   "task_id": "GT-G3-07",
   "status": "CURRENT_PENDING_CONTROL_REVIEW",
   "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
@@ -20,19 +20,19 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "026683ab7431e3a80768a80ff7f1e18bf4e91160ca668c6c7ea3206120c5ffab"
+    "sha256": "f98768a0e7ee069fd01815a6629f67034a6a6e3bcf5c0c419bfca9e62ea3a627"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "e486b04dc9fa3712ae3635917a743d151ee75351da388804e84db1a197fef03b"
+    "sha256": "b9df8b0fe939edf550b4cb3d7e874b399b145716f29b1bac040a2a47b82868b4"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "6e1add3e6906d85815fcf21b7eea9590d663256d0f7631ec4080415ed3b32a64"
+    "sha256": "8c16f16612dd07c34be4f9171cd5487c2dcd945d27c3f0aa753485c08fdd27c6"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "1ca816355747cfbca75ab34bdcc2a2d75393d5e01184ae3b00f32f35143bfadd"
+    "sha256": "735e766597671367bfdd9a7324aebc052d367d6152dc0bc6593a35c0ff2e15c7"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.1; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, independent nine-kind/golden oracle, atomic artifact publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
+    "next_action": "Independently review GT-G3-07-P31-v0.2; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, field-complete nine-kind/golden oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
     "official_gate_pass_forbidden": true
   }
 }

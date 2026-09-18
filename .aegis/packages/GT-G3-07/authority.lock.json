@@ -70,7 +70,8 @@
       "success_exit": 0,
       "failure_exit": "nonzero for argument, input, decode/bootstrap, scene/runtime, render, or artifact-publication failure",
       "outputs": ["render.rgba", "render-digest.txt", "render-evidence.json"],
-      "publication": "All three outputs become visible as one successful set through same-filesystem temporary staging and rename; a failed run leaves no new success evidence and never mixes old and new artifacts."
+      "output_directory_precondition": "The requested output directory must not already exist. An existing path is a deterministic failure and is never modified.",
+      "publication": "Create one unique sibling staging directory on the same filesystem, write and close all three files there, then rename the complete directory to the previously nonexistent requested output directory. A failed run removes staging best-effort, leaves the requested path absent, and never modifies an existing path."
     },
     "fixed_fixture_contract": {
       "fixture_id": "g3-07-nine-kind-v1",
@@ -78,6 +79,108 @@
       "oracle_path": "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
       "format": "canonical SemanticSnapshot v1 bytes decoded with SnapshotCodec and restored with SnapshotBootstrapper; no test-only object-store mutator",
       "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as zero-pixel traversal, and a supported simple FilledPath erase mask on Shape.",
+      "semantic_baseline": {
+        "document_id_low64": 775,
+        "schema_version": 1,
+        "semantic_generation": 803,
+        "scene_revision": 803,
+        "all_objects": {
+          "kind_version": 1,
+          "parent_id": null,
+          "transform_matrix": [1, 0, 0, 1],
+          "extra_properties": [],
+          "extra_erase_masks": []
+        },
+        "objects": [
+          {
+            "object_id": 501,
+            "kind": "Shape",
+            "order_key_bytes": [1],
+            "transform_translation": [8, 8],
+            "content": {"shape_kind": 1, "width": 24, "height": 24},
+            "properties": [{"field_id": 256, "solid_fill_rgba": [1, 0, 0, 1]}],
+            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, 8], ["L", 16, 8], ["L", 16, 16], ["L", 8, 16], ["Z"]], "fill_rule": "non_zero"}]
+          },
+          {
+            "object_id": 502,
+            "kind": "Image",
+            "order_key_bytes": [2],
+            "transform_translation": [40, 8],
+            "content": {"resource_id_low64": 130, "intrinsic_width": 24, "intrinsic_height": 24, "source_rect": null, "content_mode": "stretch", "width": 24, "height": 24}
+          },
+          {
+            "object_id": 503,
+            "kind": "VectorPath",
+            "order_key_bytes": [3],
+            "transform_translation": [72, 8],
+            "content": {"fill_rule": "non_zero", "commands": [["M", 0, 0], ["L", 24, 0], ["L", 24, 24], ["L", 0, 24], ["Z"]]},
+            "properties": [{"field_id": 256, "solid_fill_rgba": [0, 0, 1, 1]}]
+          },
+          {
+            "object_id": 504,
+            "kind": "RichText",
+            "order_key_bytes": [4],
+            "transform_translation": [104, 8],
+            "content": {"paragraph_id_low64": 2504, "alignment": "left", "line_height": 12, "spacing_before": 0, "spacing_after": 0, "runs": [{"text_utf8": "A9", "font_resource_id": null, "font_size": 12, "weight": 400, "italic": false, "underline": false, "rgba": [1, 1, 0, 1]}]}
+          },
+          {
+            "object_id": 505,
+            "kind": "VectorStroke",
+            "order_key_bytes": [5],
+            "transform_translation": [8, 48],
+            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [1, 0, 1, 1], "nominal_size": 4, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 505, "samples": [[0, 0, 1, 0, 0], [24, 0, 1, 0, 0]]}
+          },
+          {
+            "object_id": 506,
+            "kind": "DabStroke",
+            "order_key_bytes": [6],
+            "transform_translation": [52, 48],
+            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [0, 1, 1, 1], "nominal_size": 12, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 506, "dabs": [[0, 0, 12, 0, 1]]}
+          },
+          {
+            "object_id": 507,
+            "kind": "Connector",
+            "order_key_bytes": [7],
+            "transform_translation": [72, 48],
+            "content": {"start_free_point": [0, 0], "end_free_point": [24, 0], "routing": "straight"},
+            "properties": [{"field_id": 257, "solid_stroke": {"rgba": [1, 0.5019607843137255, 0, 1], "width": 4, "cap": "butt", "join": {"miter_limit": 4}, "dash": "solid"}}]
+          },
+          {
+            "object_id": 508,
+            "kind": "Sticky",
+            "order_key_bytes": [8],
+            "transform_translation": [104, 40],
+            "content": {"width": 24, "height": 20}
+          },
+          {
+            "object_id": 509,
+            "kind": "Group",
+            "order_key_bytes": [9],
+            "transform_translation": [160, 160],
+            "content": {}
+          }
+        ]
+      },
+      "scene_projection": {
+        "source": "Reuse each FullSceneCompiler record's objectId, computed worldBounds, and order rank; do not duplicate computeBounds or geometry logic.",
+        "revision": 803,
+        "flags": ["visible", "hit_testable"],
+        "content_revision": 1,
+        "render_payload": "slot equals low64 object ID narrowed to uint32, generation 1",
+        "hit_geometry": "slot equals low64 object ID narrowed to uint32, generation 1",
+        "kind_mapping": {
+          "Shape": "Shape",
+          "Image": "Image",
+          "VectorPath": "VectorPath",
+          "RichText": "RichText",
+          "VectorStroke": "VectorStroke",
+          "DabStroke": "DabStroke",
+          "Connector": "Shape",
+          "Sticky": "Shape",
+          "Group": "Shape"
+        },
+        "mapping_reason": "SceneObjectKind is a six-value coarse visibility/hit classification and is not semantic ObjectKind authority. RuntimeScene and DirectReferenceSource preserve all nine exact semantic kinds."
+      },
       "frame": {
         "view_id": 801,
         "camera_center": [128, 128],
@@ -108,7 +211,7 @@
       "accepted_expected_raster_sha256": "26079467c6f156ac2722518afe75b6914f758088f514163a7a0a74144fb9d4c0",
       "oracle_independence": "The expected descriptor is checked in by P32 from package literals and review-owned hash calculation; the CLI and SkiaHeadlessBackend may not generate or rewrite it."
     },
-    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage, projected through production Scene and RuntimeScene, queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. The CLI must not construct a final ReferenceDrawList or FramePlan directly and must not call test-only access seams.",
+    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage, projected through production Scene and RuntimeScene, queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. The CLI must not construct a final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan directly and must not call test-only access seams.",
     "forbidden": [
       "direct SemanticDocument or ObjectStore traversal for rendering",
       "manual construction of final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values in the CLI",

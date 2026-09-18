@@ -13,13 +13,13 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-06_INTEGRATED_G3-07_P31_V0_1_READY_FOR_CONTROL_REVIEW",
+    "status": "G3-06_INTEGRATED_G3-07_P31_V0_2_READY_FOR_CONTROL_REVIEW",
     "ingress": "READY_FOR_P31_CONTROL_REVIEW",
     "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": null,
     "superseded_package": "GT-G3-06-P31-v0.2",
-    "current_package": "GT-G3-07-P31-v0.1",
+    "current_package": "GT-G3-07-P31-v0.2",
     "current_package_materialized_ref": null
   },
   "current_authorities": [
@@ -110,9 +110,9 @@
   "recommended_next_stage": "GT-G3-07_P31_CONTROL_REVIEW",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.1 from exact canonical main revision 6bb6c21ac62f0baef55f01ee0867ac7de08e501b; issue CODE_EXECUTION handoff only if every frozen pipeline, oracle, atomic-publication, scope, and evidence preflight passes.",
+    "next_action": "Independently review GT-G3-07-P31-v0.2 from exact canonical main revision 6bb6c21ac62f0baef55f01ee0867ac7de08e501b; issue CODE_EXECUTION handoff only if every frozen pipeline, field-complete oracle, portable atomic-publication, scope, and evidence preflight passes.",
     "p31_package": ".aegis/packages/GT-G3-07/package.json",
-    "p31_package_id": "GT-G3-07-P31-v0.1",
+    "p31_package_id": "GT-G3-07-P31-v0.2",
     "p31_materialized": true,
     "package_materialization_ref": null,
     "g2_reopen": false,

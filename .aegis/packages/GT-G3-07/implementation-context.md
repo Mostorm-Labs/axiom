@@ -30,10 +30,12 @@ axiom_headless_canvas_demo \
   --output-dir <directory>
 ```
 
-A successful run atomically publishes exactly `render.rgba`,
-`render-digest.txt`, and `render-evidence.json`. Any input, decode, projection,
-render, or output failure exits nonzero and publishes no partial success set;
-if a prior successful set exists, it remains byte-for-byte unchanged.
+The requested output directory must not already exist. A successful run builds
+exactly `render.rgba`, `render-digest.txt`, and `render-evidence.json` in one
+same-filesystem sibling staging directory, then publishes the complete directory
+with one rename. Any input, decode, projection, render, or output failure exits
+nonzero and leaves an absent output path absent; an existing output path is
+rejected before staging and remains byte-for-byte unchanged.
 
 First action: persist the frozen design preflight, add only the process-level
 test/CMake target declaration needed to observe the missing-target RED, and
