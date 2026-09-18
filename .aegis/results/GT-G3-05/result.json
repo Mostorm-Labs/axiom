@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "task_anchor": "11fec1b308de03886ef5294b54654f48df95455f",
+  "actual_starting_revision": "772aae215c432174d3949a85f9d45d3cb9a92d21",
+  "execution_branch": "codex/g3-05-headless-skia-backend",
+  "package": {
+    "id": "GT-G3-05-P31-v0.2",
+    "path": ".aegis/packages/GT-G3-05/package.json",
+    "materialization_ref": "88837c067c2da694685c91267a2d94aae9ce652e",
+    "control_review_ref": "772aae215c432174d3949a85f9d45d3cb9a92d21",
+    "binding_preflight": "PASS"
+  },
+  "implementation_design_preflight": {
+    "result": "PASS",
+    "evidence_ref": ".aegis/results/GT-G3-05/implementation-design-preflight.json"
+  },
+  "tdd": {
+    "initial_red": {
+      "observed": true,
+      "target": "axiom_render_headless_skia_tests",
+      "diagnostics": [
+        "CMake reported CANVAS_RENDER_ENABLE_SKIA_HEADLESS unused and the target unknown before wiring",
+        "fatal error: canvas/render/skia_headless_backend.hpp file not found after test/target wiring"
+      ],
+      "classification": "missing frozen G3-05 backend boundary"
+    },
+    "contract_hardening_red": [
+      "empty ReferenceDrawList was accepted before kEmptyPlan preflight",
+      "orthogonal Connector was rendered as a straight line before routing-aware elbow mapping",
+      "non-fixed raster size was accepted before fixed 256x256 configuration enforcement"
+    ],
+    "green": {
+      "result": "PASS",
+      "test": "G3HeadlessSkia",
+      "tests_passed": 1,
+      "tests_failed": 0
+    }
+  },
+  "obligations": {
+    "G3-05-V1-private-skia-boundary": "PASS",
+    "G3-05-V2-deterministic-raster": "PASS",
+    "G3-05-V3-reference-command-coverage": "PASS",
+    "G3-05-V4-rejection-isolation": "PASS",
+    "G3-05-V5-boundary-hygiene": "PASS"
+  },
+  "focused_and_predecessor_tests": {
+    "passed": 5,
+    "failed": 0,
+    "tests": [
+      "G3HeadlessSkia",
+      "G3FrameState",
+      "G3Visibility",
+      "G3DirectReference",
+      "G3FrameOrchestration"
+    ]
+  },
+  "rf01_g2_regression": {
+    "passed": 19,
+    "failed": 0
+  },
+  "sdk_consumer": {
+    "target": "macos-arm64-metal",
+    "variant": "release",
+    "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+    "source_build": false,
+    "lock_or_profile_modified": false
+  },
+  "evidence_refs": [
+    ".aegis/results/GT-G3-05/headless-golden-evidence.json",
+    ".aegis/results/GT-G3-05/rejection-evidence.json",
+    ".aegis/results/GT-G3-05/scope-evidence.json"
+  ],
+  "source_hygiene": {
+    "runtime_boundary_check": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

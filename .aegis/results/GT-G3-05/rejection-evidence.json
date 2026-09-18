@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "package_id": "GT-G3-05-P31-v0.2",
+  "obligation": "G3-05-V4-rejection-isolation",
+  "cases": [
+    {"case": "zero dimension", "issue": "kInvalidConfiguration", "result": "PASS"},
+    {"case": "non-fixed dimension", "issue": "kInvalidConfiguration", "result": "PASS"},
+    {"case": "raster byte-count overflow", "issue": "kOverflow", "result": "PASS"},
+    {"case": "coordinate outside SkScalar range", "issue": "kOverflow", "result": "PASS"},
+    {"case": "FramePlan/reference frame mismatch", "issue": "kPlanIdentityMismatch", "result": "PASS"},
+    {"case": "empty ReferenceDrawList", "issue": "kEmptyPlan", "result": "PASS"},
+    {"case": "fractional visual bounds", "issue": "kUnsupportedGeometry", "result": "PASS"},
+    {"case": "fractional dab geometry", "issue": "kUnsupportedGeometry", "result": "PASS"},
+    {"case": "attached connector endpoint", "issue": "kUnsupportedGeometry", "result": "PASS"},
+    {"case": "SweptCircle erase mask", "issue": "kUnsupportedEraseMask", "result": "PASS"}
+  ],
+  "postconditions": {
+    "prior_successful_observation_dimensions_unchanged": true,
+    "prior_successful_observation_bytes_unchanged": true,
+    "prior_successful_observation_digest_unchanged": true,
+    "prior_successful_observation_plan_identity_unchanged": true,
+    "prior_successful_observation_traversal_unchanged": true,
+    "rejected_frame_plan_unchanged": true,
+    "partial_observation_publication": false,
+    "surface_or_presentation_publication": false
+  },
+  "focused_test": {
+    "name": "G3HeadlessSkia",
+    "result": "PASS"
+  }
+}
