@@ -22,23 +22,68 @@
     "current_package": "GT-G3-04-P31-v0.3",
     "current_package_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af"
   },
-  "current_authorities": ["g2-canonical-main", "g3-capability-authority"],
+  "current_authorities": [
+    "g2-canonical-main",
+    "g3-capability-authority"
+  ],
   "current_gate_decisions": [
-    {"gate_id": "g2-final-convergence", "decision_id": "g2-closure-2026-09-16", "verdict": "PASS"},
-    {"gate_id": "g3-entry-readiness", "decision_id": "g3-entry-readiness-2026-09-16", "verdict": "READY_FOR_P31"},
-    {"gate_id": "gt-g3-01", "decision_id": "gt-g3-01-p34-2026-09-17", "verdict": "PASS"},
-    {"gate_id": "gt-g3-02", "decision_id": "gt-g3-02-p34-2026-09-17", "verdict": "PASS_WITH_FINDINGS"},
-    {"gate_id": "gt-g3-03", "decision_id": "gt-g3-03-p34-2026-09-18", "verdict": "PASS"},
-    {"gate_id": "gt-g3-04", "decision_id": "gt-g3-04-p34-2026-09-18", "verdict": "PASS"}
+    {
+      "gate_id": "g2-final-convergence",
+      "decision_id": "g2-closure-2026-09-16",
+      "verdict": "PASS"
+    },
+    {
+      "gate_id": "g3-entry-readiness",
+      "decision_id": "g3-entry-readiness-2026-09-16",
+      "verdict": "READY_FOR_P31"
+    },
+    {
+      "gate_id": "gt-g3-01",
+      "decision_id": "gt-g3-01-p34-2026-09-17",
+      "verdict": "PASS"
+    },
+    {
+      "gate_id": "gt-g3-02",
+      "decision_id": "gt-g3-02-p34-2026-09-17",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "gate_id": "gt-g3-03",
+      "decision_id": "gt-g3-03-p34-2026-09-18",
+      "verdict": "PASS"
+    },
+    {
+      "gate_id": "gt-g3-04",
+      "decision_id": "gt-g3-04-p34-2026-09-18",
+      "verdict": "PASS"
+    }
   ],
   "blocking_findings": [],
   "integration_applicability": [
-    {"integration_id": "int-pr84-g2-canonical-main", "applicability": "current"},
-    {"integration_id": "int-pr85-g3-01", "applicability": "current"},
-    {"integration_id": "int-pr86-g3-02", "applicability": "current"},
-    {"integration_id": "int-pr87-g3-03", "applicability": "current"},
-    {"integration_id": "int-branch-g3-04-p34-review", "applicability": "current"},
-    {"integration_id": "int-pr88-g3-04", "applicability": "current"}
+    {
+      "integration_id": "int-pr84-g2-canonical-main",
+      "applicability": "current"
+    },
+    {
+      "integration_id": "int-pr85-g3-01",
+      "applicability": "current"
+    },
+    {
+      "integration_id": "int-pr86-g3-02",
+      "applicability": "current"
+    },
+    {
+      "integration_id": "int-pr87-g3-03",
+      "applicability": "current"
+    },
+    {
+      "integration_id": "int-branch-g3-04-p34-review",
+      "applicability": "historical"
+    },
+    {
+      "integration_id": "int-pr88-g3-04",
+      "applicability": "current"
+    }
   ],
   "recommended_next_stage": "GT-G3-05_P31_TASK_PACKAGING",
   "handoff": {
