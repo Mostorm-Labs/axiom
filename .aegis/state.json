@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-07_P31_CONTROL_REVIEW_COMPLETE",
+  "active_stage": "GT-G3-07_P31_CONTROL_REVIEW_BLOCKED",
   "current_owner": "aegis-gate-review",
-  "earliest_untrusted_layer": null,
-  "status": "READY_FOR_CODE_EXECUTION",
+  "earliest_untrusted_layer": "P31_TASK_PACKAGE",
+  "status": "BLOCKED_TASK_PACKAGE_DEFECT",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -14,8 +14,8 @@
   },
   "g3": {
     "status": "G3-06_INTEGRATED_G3-07_P31_V0_2_APPROVED",
-    "ingress": "READY_FOR_CODE_EXECUTION",
-    "implementation_authorized": true,
+    "ingress": "RETURN_TO_P31_REPAIR",
+    "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": null,
     "superseded_package": "GT-G3-06-P31-v0.2",
@@ -107,15 +107,15 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-07_P32_IMPLEMENTATION",
+  "recommended_next_stage": "GT-G3-07_P31_REPAIR",
   "handoff": {
-    "next_surface": "CODE_EXECUTION",
-    "next_action": "Execute the complete GT-G3-07-P31-v0.2 closure contract on codex/g3-07-headless-canvas-demo and return exact durable evidence to CONTROL_REVIEW.",
+    "next_surface": "CONTROL_REASONING",
+    "next_action": "Repair GT-G3-07-P31-v0.2 fixture/codec contract at P31, publish a new materialization revision, and rerun independent CONTROL_REVIEW before CODE_EXECUTION.",
     "p31_package": ".aegis/packages/GT-G3-07/package.json",
     "p31_package_id": "GT-G3-07-P31-v0.2",
     "p31_materialized": true,
     "package_materialization_ref": "259b38a7949c0060f8f1f508b58e56e95d456e5e",
     "g2_reopen": false,
-    "g3_implementation_start": true
+    "g3_implementation_start": false
   }
 }

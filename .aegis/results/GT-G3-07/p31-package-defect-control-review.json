@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.2",
+  "package_materialization_ref": "259b38a7949c0060f8f1f508b58e56e95d456e5e",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "reviewed_result_revision": "76a1ae2ca07a2c08f0247a532296c90a0f8200fd",
+  "verdict": "BLOCKED_TASK_PACKAGE_DEFECT",
+  "code_execution_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_binding": "PASS",
+    "verification_contract_presence": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "red_provenance": "PASS",
+    "repository_reality_fixture_compatibility": "FAIL"
+  },
+  "blocking_findings": [
+    {
+      "id": "G3-07-P31-F1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "shape_filled_path_erase_mask_fixture_is_not_codec_valid",
+      "failure_mode": "The frozen authority requires object 501 (Shape) to carry a non-empty FilledPath erase mask, while the repository's production validObjectRecordStructure() rejects non-empty erase_masks for every kind other than VectorStroke and DabStroke. SnapshotCodec::encode therefore rejects the exact frozen fixture before SnapshotBootstrapper::restore or the Render Core pipeline can run.",
+      "impact": "The required canonical fixture cannot be materialized through the mandated production SnapshotCodec path. Any executor that proceeds must either bypass canonical encoding/decoding, hand-author non-canonical bytes, or modify forbidden runtime/semantic production code; each violates the frozen execution contract and would invalidate the pipeline oracle.",
+      "existing_independent_coverage": "The P32 RED evidence independently proves the named G3-07 targets are absent at the anchor. The repository validator source and the frozen authority literal independently establish the incompatibility; no green implementation evidence can exist while this contradiction remains.",
+      "unique_detection_value": "This review catches a structurally unsatisfiable fixture requirement before implementation can fabricate bytes or weaken the canonical pipeline, preserving the independence of the codec/bootstrap oracle.",
+      "why_frozen_package_missed_it": "P31 froze the Shape erase-mask literal and the canonical codec requirement without reconciling them against validObjectRecordStructure() and the existing erase-mask applicability rule.",
+      "evidence_refs": [".aegis/packages/GT-G3-07/authority.lock.json:81-103", ".aegis/packages/GT-G3-07/execution-contract.json:8,16-18,39-45", "runtime/semantic/src/validator.cpp:548-588", ".aegis/results/GT-G3-07/red-evidence.json", ".aegis/results/GT-G3-07/terminal-blocker.json"]
+    }
+  ],
+  "preserved_valid_work": ["repository identity and exact G3-06 canonical main anchor", "locked Skia consumer identity", "G3-07 production pipeline ownership boundary", "atomic artifact publication contract", "RED provenance and durable evidence boundary", "authorized mutation scope and forbidden dependency boundary"],
+  "next_action": "Return to aegis-implementation P31. Repair GT-G3-07-P31-v0.2 by reconciling the fixture with the production canonical erase-mask contract (or, if Authority intends Shape masks, obtain an upstream Authority/semantic contract repair). Publish a new exact materialization revision and rerun independent CONTROL_REVIEW before any CODE_EXECUTION handoff.",
+  "p34_entry_authorized": false,
+  "p36_authorized": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
