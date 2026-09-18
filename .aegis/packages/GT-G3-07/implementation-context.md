@@ -18,7 +18,10 @@ The fixture contains exact IDs 501 through 509 and one instance of each V1
 `ObjectKind`. Its 256x256 transparent RGBA oracle reuses the accepted G3-05
 nine-kind pixel semantics, including eight distinguishable pixel regions, one
 supported VectorStroke erase hole, Group traversal with zero pixels, and digest
-`fnv1a64:296a704f0d0b9165`. Unlike the backend unit test, G3-07 owns an
+`fnv1a64:7b8eb8c70c65afe5`. The VectorStroke is the world-space strip
+`[8,46]-[32,50]`; its local erase rectangle `[8,-4]-[16,4]` is transformed to
+world `[16,44]-[24,52]`, so it clears exactly `[16,46]-[24,50]` while retaining
+stroke pixels on both sides. Unlike the backend unit test, G3-07 owns an
 independent checked-in snapshot and expected descriptor; neither the CLI nor
 the backend may generate or rewrite that oracle. The snapshot's local geometry
 and transform literals are frozen so the production bounds/transform ordering

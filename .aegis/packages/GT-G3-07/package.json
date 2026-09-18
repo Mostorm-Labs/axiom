@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-07-P31-v0.3",
+  "package_id": "GT-G3-07-P31-v0.4",
   "task_id": "GT-G3-07",
   "status": "CURRENT_PENDING_CONTROL_REVIEW",
   "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
@@ -20,19 +20,19 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "ffcd1f956cebb421bdae9baa6e399d9e6f478ebe3b29b679a1193e5cb52e1dee"
+    "sha256": "07d3cc7e3d078677ce917512f651da397ba08d5cd7c1aecbcf94be7dea0adc6c"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "1910b28d3cb8e37c21e8ccb97ebd64abc0869f6a53d0fc60df5ec702eb573cd3"
+    "sha256": "2dd6997f58ccc0f3354dd098e4209c470c95c01de998b4e7a082b30a5d605794"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "d8c4523dc3c342a9ed9c88eed29905b19a428907adba85730d194280f8edcd7a"
+    "sha256": "665156875c7d22c5f7b73aa6500f5addf81f1e0a47b80d269b738de3c2ac31eb"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "f735994f2e6f22e9bfcbfd4c9139deefa00163b4a3a324dc4b578ae79e9e9111"
+    "sha256": "4c5300a422c6915381540d64c78af0667c47419307a22b783510b1f07e7c07e3"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -46,7 +46,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Independently review GT-G3-07-P31-v0.3; issue CODE_EXECUTION handoff only after exact package binding, production-pipeline non-bypass, field-complete nine-kind/golden oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
+    "next_action": "Independently review GT-G3-07-P31-v0.4; issue CODE_EXECUTION handoff only after exact package binding, canonical codec legality, VectorStroke mask/render strict-subset intersection, independently recomputed golden digest, production-pipeline non-bypass, field-complete nine-kind oracle, portable whole-directory atomic publication, locked SDK, mutation-scope, and durable-evidence preflights pass.",
     "official_gate_pass_forbidden": true
   }
 }

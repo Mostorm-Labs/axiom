@@ -130,7 +130,7 @@
             "order_key_bytes": [5],
             "transform_translation": [8, 48],
             "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [1, 0, 1, 1], "nominal_size": 4, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 505, "samples": [[0, 0, 1, 0, 0], [24, 0, 1, 0, 0]]},
-            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, -32], ["L", 16, -32], ["L", 16, -24], ["L", 8, -24], ["Z"]], "fill_rule": "non_zero"}]
+            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, -4], ["L", 16, -4], ["L", 16, 4], ["L", 8, 4], ["Z"]], "fill_rule": "non_zero"}]
           },
           {
             "object_id": 506,
@@ -209,8 +209,8 @@
         "origin": "top_left",
         "blend_mode": "src_over"
       },
-      "accepted_expected_raster_digest": "fnv1a64:296a704f0d0b9165",
-      "accepted_expected_raster_sha256": "26079467c6f156ac2722518afe75b6914f758088f514163a7a0a74144fb9d4c0",
+      "accepted_expected_raster_digest": "fnv1a64:7b8eb8c70c65afe5",
+      "accepted_expected_raster_sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
       "oracle_independence": "The expected descriptor is checked in by P32 from package literals and review-owned hash calculation; the CLI and SkiaHeadlessBackend may not generate or rewrite it."
     },
     "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage, projected through production Scene and RuntimeScene, queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. The CLI must not construct a final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan directly and must not call test-only access seams.",

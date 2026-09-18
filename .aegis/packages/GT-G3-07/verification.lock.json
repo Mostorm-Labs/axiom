@@ -12,15 +12,15 @@
     {
       "id": "G3-07-V2-deterministic-artifacts",
       "requirement": "Identical fixed input rendered twice emits byte-identical artifact sets that exactly match the independent fixture oracle.",
-      "oracle": "Run the CLI into two clean output directories, byte-compare render.rgba, render-digest.txt, and render-evidence.json, require 256*256*4 RGBA bytes, compare the digest to fnv1a64:296a704f0d0b9165, and compare fixture SHA-256 plus golden SHA-256 to the checked-in expected descriptor using an external test/review process rather than the CLI under test.",
+      "oracle": "Run the CLI into two clean output directories, byte-compare render.rgba, render-digest.txt, and render-evidence.json, require 256*256*4 RGBA bytes, compare the digest to fnv1a64:7b8eb8c70c65afe5, and compare fixture SHA-256 plus render.rgba SHA-256 81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042 to the checked-in expected descriptor using an external test/review process rather than the CLI under test.",
       "acceptance": "Both runs exit zero; all three files are byte-identical; exact raster byte count, raster digest, fixture hash, and golden hash match the independent descriptor; no output embeds nondeterministic timestamps or paths.",
       "evidence_required": "Artifact-determinism evidence with external hashes and exact byte comparisons."
     },
     {
       "id": "G3-07-V3-nine-kind-canonical-fixture",
       "requirement": "The CLI fixture is canonical, non-empty, and exercises every V1 ObjectKind through the complete production pipeline with reviewer-resolvable membership.",
-      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the VectorStroke erase hole, and Group zero-pixel contribution.",
-      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels, the VectorStroke erase hole is transparent, Group is traversed and contributes none, and raster output is non-empty.",
+      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the VectorStroke retained pixels at [8,46] and [24,46], the transparent erased pixel at [16,46], and Group zero-pixel contribution.",
+      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels; VectorStroke mask 1501 maps from local [8,-4]-[16,4] to world [16,44]-[24,52], intersects the rendered stroke strip [8,46]-[32,50], clears exactly the strict-subset intersection [16,46]-[24,50], preserves pixels on both sides, Group is traversed and contributes none, and raster output is non-empty.",
       "evidence_required": "Fixture inventory plus independent kind/ID/region oracle results."
     },
     {
