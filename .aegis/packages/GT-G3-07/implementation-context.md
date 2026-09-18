@@ -20,7 +20,10 @@ nine-kind pixel semantics, including eight distinguishable pixel regions, one
 supported Shape erase hole, Group traversal with zero pixels, and digest
 `fnv1a64:296a704f0d0b9165`. Unlike the backend unit test, G3-07 owns an
 independent checked-in snapshot and expected descriptor; neither the CLI nor
-the backend may generate or rewrite that oracle.
+the backend may generate or rewrite that oracle. The snapshot's local geometry
+and transform literals are frozen so the production bounds/transform ordering
+reproduces those regions; P32 must not substitute a different camera or
+coordinate convention.
 
 The executable contract is:
 
