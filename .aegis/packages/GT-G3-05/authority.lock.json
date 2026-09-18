@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "current": true,
+  "source": {
+    "provider": "repo-materialized-plan",
+    "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+    "title": "GT-G3-00 G3 Basic Canonical Canvas P30 Implementation Plan v0.1",
+    "revision": "bound-at-11fec1b308de03886ef5294b54654f48df95455f",
+    "trusted_section": "G3-05 private Skia Headless backend",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "68ff2639119311e68dbb4bfc7ef46d9de08e37ae857dce3e82b2b94fb7026553"
+  },
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_04_gate_decision": "gt-g3-04-p34-2026-09-18",
+    "g3_04_result_revision": "250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+    "g3_04_main_integration_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+    "canonical_main_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+    "required_state": "GT-G3-04_INTEGRATED"
+  },
+  "supporting_inputs": {
+    "skia_profile": "repo:tools/skia/profiles/r1-full-v1.json",
+    "skia_lock": "repo:r1-full-skia-sdk.lock.json",
+    "skia_lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "trusted_statements": {
+    "goal": "Implement a private Skia-backed Headless backend that consumes the immutable G3-04 FramePlan and produces deterministic raster/readback evidence.",
+    "owns": [
+      "private Skia Headless backend implementation",
+      "renderer-neutral FramePlan to raster mapping",
+      "deterministic fixed-config raster observation",
+      "backend-local golden/readback evidence"
+    ],
+    "consumes": ["FramePlan", "ReferenceDrawList", "locked r1-full-v1 Skia consumer SDK"],
+    "produces": ["typed BackendSubmissionResult", "deterministic RGBA readback", "raster digest/golden evidence"],
+    "forbidden": [
+      "Skia types in public Render Core headers",
+      "surface acquire/resize/present or PresentationTracker behavior",
+      "Windows/Web/Android/iOS platform hosts",
+      "RuntimeScene, SceneQuery, SemanticDocument, or G2 contract changes",
+      "Tile, RenderGroup, RasterCache, Scheduler, or ResourceBudget behavior",
+      "G3-06 through G3-11 implementation",
+      "changing r1-full-skia-sdk.lock.json or rebuilding Skia"
+    ]
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create a public renderer-neutral runtime/render/include/canvas/render/skia_headless_backend.hpp with no Skia/platform types.",
+        "Create runtime/render/src/skia_headless_backend.cpp using the locked prebuilt r1-full-v1 Skia consumer package and the existing IRenderBackend boundary.",
+        "Create runtime/render/tests/skia_headless_backend_test.cpp with a distinguishable nine-kind FramePlan, deterministic replay/golden, fixed-config readback, and rejection-isolation oracles.",
+        "Modify runtime/render/CMakeLists.txt only to add an opt-in Headless Skia target, link CanvasSkia::Skia, and register G3HeadlessSkia tests.",
+        "Write durable G3-05 result, golden, rejection, and scope records under .aegis/results/GT-G3-05/."
+      ],
+      "implementation_rules": [
+        "Use only the existing r1-full-v1 release SDK consumer path; do not run Skia GN/Ninja, change either Skia lock, or vendor headers.",
+        "Keep Skia includes and objects private to the .cpp implementation; the public backend header remains renderer-neutral.",
+        "Use a fixed offscreen raster configuration and explicit readback; no surface acquire/resize/present or PresentationTracker behavior.",
+        "Consume exactly one const FramePlan per submit and do not query RuntimeScene, Scene, SemanticDocument, or any semantic store.",
+        "Preserve exact FramePlan structural equality as the primary oracle; a digest/golden is corroborative output only.",
+        "Render all nine typed ReferenceCommand variants through one production path; Group is an ordered zero-pixel traversal entry.",
+        "Rejected submissions must be typed, deterministic, and leave the previous successful observation unchanged."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/include/canvas/render/skia_headless_backend.hpp",
+        "runtime/render/src/skia_headless_backend.cpp",
+        "runtime/render/tests/skia_headless_backend_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        ".aegis/results/GT-G3-05/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "runtime/foundation/**",
+        "apps/**, verification/**, or Demo/Shell code",
+        "CMakePresets.json and existing preset behavior",
+        "r1-full-skia-sdk.lock.json, skia-sdk.lock.json, tools/skia/**, or any Skia producer/release path",
+        "surface acquire/resize/present, PresentationTracker, Windows/Web/Android/iOS hosts, or native handles",
+        "RuntimeScene, SceneQuery, SemanticDocument, ObjectStore, Tile, TileCache, RenderGroup, RasterCache, Scheduler, ResourceBudget, or G3-06+ behavior",
+        "final FrameGraph ABI or public platform backend contract"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "exact G3-04 FramePlan to IRenderBackend flow",
+        "private Skia ownership and renderer-neutral observation boundary",
+        "fixed raster/readback configuration and SDK identity",
+        "nine-kind command mapping and Group zero-pixel rule",
+        "obligation-to-test/evidence mapping",
+        "unresolved semantic decisions, authority conflict, verification conflict, and package-scope conflict"
+      ],
+      "continue_condition": "All unresolved/conflict lists are empty; otherwise fail closed to the earliest owning layer."
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The frozen axiom_render_headless_skia_tests target cannot compile because the private Headless Skia backend boundary and opt-in target are absent.",
+      "observation_seam": "CMake build and CTest execution of axiom_render_headless_skia_tests / G3HeadlessSkia"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G3-05-RED",
+          "command_or_oracle": "cmake -S . -B out/g3-headless-skia-red -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON && cmake --build out/g3-headless-skia-red --target axiom_render_headless_skia_tests",
+          "expected_result": "FAIL before implementation because the Headless backend target/boundary is absent or locked SDK consumer is not wired",
+          "blocking_reason": "TDD RED provenance"
+        },
+        {
+          "id": "G3-05-GREEN",
+          "command_or_oracle": "cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=<verified-release-sdk-root> && cmake --build out/g3-headless-skia --target axiom_render_headless_skia_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessSkia$' --output-on-failure",
+          "expected_result": "PASS with deterministic fixed-raster replay, nine-kind coverage, exact golden evidence, and typed rejection isolation",
+          "blocking_reason": "G3-05 Headless backend acceptance oracle"
+        },
+        {
+          "id": "G3-05-PREDECESSOR",
+          "command_or_oracle": "ctest --test-dir out/g3-host-debug -R '^G3(FrameState|Visibility|DirectReference|FrameOrchestration)$' --output-on-failure && cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve G3-01 through G3-04 and RF01/G2 foundations"
+        },
+        {
+          "id": "G3-05-SDK-CONSUMER",
+          "command_or_oracle": "Resolve and verify one host release asset through tools/skia/fetch.py with r1-full-skia-sdk.lock.json; record exact target, variant, sdk_id, manifest, and source-free consumer identity without building Skia.",
+          "expected_result": "PASS or explicit BLOCKED_ENVIRONMENT if the locked release asset cannot be resolved; no source fallback",
+          "blocking_reason": "Locked dependency authority"
+        },
+        {
+          "id": "G3-05-BOUNDARY-SCAN",
+          "command_or_oracle": "Scan exact changed files for Skia/platform types in public headers, surface/presentation lifecycle, RuntimeScene/semantic access, Tile/cache/scheduler, producer/release changes, and G3-06+ behavior.",
+          "expected_result": "Only private .cpp Skia use and authorized Headless paths are present",
+          "blocking_reason": "Authority boundary"
+        },
+        {
+          "id": "G3-05-DIFF-CHECK",
+          "command_or_oracle": "git diff --check",
+          "expected_result": "PASS",
+          "blocking_reason": "Source hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": ["Exact-source CI for the pushed result revision"]
+    },
+    "evidence": {
+      "blocking": ["E-G3-05-BOUNDARY", "E-G3-05-GOLDEN", "E-G3-05-REJECTION"],
+      "corroborative": ["C-G3-05-HYGIENE"]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only G3-05 private Headless Skia backend behavior and focused build/test wiring are implemented.",
+        "The locked r1-full-v1 consumer identity is resolved and no Skia source build or lock mutation occurs.",
+        "Required RED is observed and recorded before production implementation.",
+        "All five frozen G3-05 verification obligations pass at the exact result revision.",
+        "G3HeadlessSkia plus G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration, and full RF01/G2 regression pass at the exact result revision.",
+        "Nine-kind raster/golden, deterministic replay, rejection isolation, boundary scan, and git diff --check are reviewer-accessibly materialized.",
+        "Only authorized mutation paths differ from the 11fec1b308de03886ef5294b54654f48df95455f anchor.",
+        "Exact result revision is committed and pushed; return READY_FOR_CONTROL_REVIEW without issuing P34, G3-05, or overall G3 PASS."
+      ]
+    },
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "PACKAGE_SCOPE_DIVERGENCE",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "VERIFICATION_DESIGN_DEFECT",
+      "TASK_PACKAGE_DEFECT"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
