@@ -75,6 +75,21 @@
       "evidence_ids": ["ev-gt-g3-04-p34"],
       "applicability": "current",
       "actionability": "awaiting_controlled_main_integration"
+    },
+    {
+      "id": "int-pr88-g3-04",
+      "kind": "github-pull-request",
+      "ref": "github:Mostorm-Labs/axiom#88",
+      "target_ref": "refs/heads/main",
+      "integrated_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+      "status": "integrated",
+      "gate_decision_binding": {
+        "kind": "bound",
+        "gate_decision_id": "gt-g3-04-p34-2026-09-18"
+      },
+      "evidence_ids": ["ev-int-pr88-g3-04", "ev-gt-g3-04-p34"],
+      "applicability": "current",
+      "actionability": "historical_occurrence_preserved"
     }
   ]
 }

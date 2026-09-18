@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_P34_CONTROL_REVIEW_COMPLETE",
+  "active_stage": "GT-G3-04_CONTROLLED_MAIN_INTEGRATION_COMPLETE",
   "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_CONTROLLED_INTEGRATION",
+  "status": "READY_FOR_P31_MATERIALIZATION",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,8 +13,8 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-03_CLOSED_G3-04_P34_PASS_AWAITING_INTEGRATION",
-    "ingress": "READY_FOR_CONTROLLED_INTEGRATION",
+    "status": "G3-04_INTEGRATED_G3-05_PENDING_P31",
+    "ingress": "READY_FOR_P31_MATERIALIZATION",
     "implementation_authorized": false,
     "p31_materialized": true,
     "p31_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
@@ -37,12 +37,13 @@
     {"integration_id": "int-pr85-g3-01", "applicability": "current"},
     {"integration_id": "int-pr86-g3-02", "applicability": "current"},
     {"integration_id": "int-pr87-g3-03", "applicability": "current"},
-    {"integration_id": "int-branch-g3-04-p34-review", "applicability": "current"}
+    {"integration_id": "int-branch-g3-04-p34-review", "applicability": "current"},
+    {"integration_id": "int-pr88-g3-04", "applicability": "current"}
   ],
-  "recommended_next_stage": "GT-G3-04_CONTROLLED_MAIN_INTEGRATION",
+  "recommended_next_stage": "GT-G3-05_P31_TASK_PACKAGING",
   "handoff": {
     "next_surface": "CONTROL_REVIEW",
-    "next_action": "Integrate the reviewed GT-G3-04 result through a controlled main-branch review; do not treat the branch review as main integration.",
+    "next_action": "Materialize and independently review the GT-G3-05 P31 package from the exact canonical main merge revision; do not begin G3-05 implementation before P31 review.",
     "p31_package": ".aegis/packages/GT-G3-04/package.json",
     "p31_package_id": "GT-G3-04-P31-v0.3",
     "p31_materialized": true,

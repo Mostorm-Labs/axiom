@@ -164,6 +164,26 @@
         },
         "official_gate_pass_claimed": true
       }
+    },
+    {
+      "id": "ev-int-pr88-g3-04",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#88@11fec1b308de03886ef5294b54654f48df95455f",
+      "supports": ["int-pr88-g3-04"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#88",
+        "git:11fec1b308de03886ef5294b54654f48df95455f",
+        "git:29657fc645b0490f7733294cd5a952ced3bb0f34"
+      ],
+      "conclusion": {
+        "pull_request": 88,
+        "target_ref": "refs/heads/main",
+        "integrated_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+        "parent_revision": "29657fc645b0490f7733294cd5a952ced3bb0f34",
+        "gate_decision_id": "gt-g3-04-p34-2026-09-18",
+        "integration_status": "integrated"
+      }
     }
   ]
 }
