@@ -5,7 +5,9 @@ add_library(canvas_runtime_render STATIC
     src/visibility_resolver.cpp
     src/direct_reference_source.cpp
     src/frame_plan.cpp
-    src/render_backend.cpp)
+    src/render_backend.cpp
+    src/surface_lifecycle.cpp
+    src/presentation_tracker.cpp)
 
 if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     if(NOT CANVAS_SKIA_SDK_ROOT)
@@ -44,6 +46,21 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(axiom_render_surface_presentation_tests
+        tests/surface_presentation_test.cpp)
+    target_link_libraries(axiom_render_surface_presentation_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_surface_presentation_tests PRIVATE cxx_std_20)
+
+    if(MSVC)
+        target_compile_options(axiom_render_surface_presentation_tests
+            PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_render_surface_presentation_tests
+            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+
+    add_test(NAME G3SurfacePresentation COMMAND axiom_render_surface_presentation_tests)
+
     add_executable(axiom_render_frame_state_tests
         tests/frame_state_contract_test.cpp)
     target_link_libraries(axiom_render_frame_state_tests PRIVATE canvas_runtime_render)

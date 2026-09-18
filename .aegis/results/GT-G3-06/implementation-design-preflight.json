@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "stage": "P32_IMPLEMENTATION_DESIGN_PREFLIGHT",
+  "package_id": "GT-G3-06-P31-v0.2",
+  "package_materialization_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
+  "control_review_ref": "0d572f8cbdf2d77370b706dad4da3797747b264a",
+  "actual_starting_revision": "a89f674e0b877ed59398ef0a457142d33c6950db",
+  "execution_branch": "codex/g3-06-surface-presentation-tracker",
+  "repository_identity": "github:Mostorm-Labs/axiom",
+  "current_flow": "FrameState carries typed ViewId, FrameId, SurfaceGeneration, MetricsGeneration, and immutable SurfaceMetrics. FramePlan reaches the renderer-neutral IRenderBackend, and the private Headless Skia backend can produce deterministic raster evidence. Render Core has no live-surface snapshot or presentation feedback tracker.",
+  "target_owner": "Render Core owns renderer-neutral live-surface generation validation and frame-to-feedback correlation. Future platform hosts own native targets and transport proof facts; G3-06 owns no native resource, platform callback, scheduler, or CanonicalVisible policy.",
+  "target_flow": "A SurfaceLifecycle exposes one immutable current per-view snapshot. A matching FrameState is recorded as PresentSubmitted. Exact PlatformQualified Presented feedback may transition only that known record to Presented while its surface and metrics generations remain live.",
+  "prepare_commit_publication_abort": "Replacement/submission/feedback input is validated against typed identities and current live state before one value-state replacement. Metrics-only, surface-only, and combined generation advances are independent and non-regressing. Every invalid, stale, unknown, or duplicate case returns a typed disposition without partial mutation.",
+  "affected_types_and_files": [
+    "runtime/render/include/canvas/render/surface_lifecycle.hpp",
+    "runtime/render/include/canvas/render/presentation_tracker.hpp",
+    "runtime/render/src/surface_lifecycle.cpp",
+    "runtime/render/src/presentation_tracker.cpp",
+    "runtime/render/tests/surface_presentation_test.cpp",
+    "runtime/render/CMakeLists.txt",
+    ".aegis/results/GT-G3-06/**"
+  ],
+  "obligation_to_verification": {
+    "G3-06-V1-surface-generation-lifecycle": "exact acquire plus metrics-only, surface-only, combined, both-equal/either-regressing/zero/wrong-view/invalid/lost field-level oracles",
+    "G3-06-V2-submitted-versus-presented": "submission-only intermediate state followed by exact qualifying feedback transition",
+    "G3-06-V3-stale-feedback-rejection": "generation A submit, generation B or loss, rejected A feedback with unchanged state, successful B presentation",
+    "G3-06-V4-feedback-correlation-and-idempotency": "unknown/wrong-view/wrong-frame/generation mismatch/Approximate/None/non-presented/duplicate/two-frame isolation corpus",
+    "G3-06-V5-boundary-and-regression": "authorized path and public-header scans, G3 matrix, locked-SDK Headless, RF01/G2, and diff check"
+  },
+  "test_plan": [
+    "Add the field-complete G3SurfacePresentation test and build target before production code and observe the required missing-header/target RED.",
+    "Implement the smallest renderer-neutral SurfaceLifecycle and PresentationTracker state machines needed by the frozen corpus.",
+    "Run focused GREEN, G3 predecessor matrix, locked published Headless SDK test, RF01/G2 regression, scope scan, and diff check.",
+    "Materialize exact result, lifecycle, presentation, and scope evidence and push the result revision."
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "disposition": "CONTINUE_TO_RED_ORACLE"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "obligations": [
+    {
+      "id": "G3-06-V1-surface-generation-lifecycle",
+      "requirement": "Acquire and resize/rebind expose only the current valid renderer-neutral surface snapshot and never return or publish a stale generation.",
+      "oracle": "Create a distinguishable live surface, acquire it, accept a metrics-only resize with unchanged SurfaceGeneration and newer MetricsGeneration, accept a surface-only rebind with newer SurfaceGeneration and unchanged MetricsGeneration, accept a combined advance, then attempt both-equal, either-regressing, zero-generation, wrong-view, invalid-metrics, and post-loss old-surface cases while comparing exact pre/post state.",
+      "acceptance": "Each valid independent-axis replacement is atomic; both-equal/either-regressing and all other invalid/stale cases are typed deterministic rejections with the last valid snapshot unchanged, loss yields no acquired target, and post-loss rebind requires newer SurfaceGeneration.",
+      "evidence_required": "Focused G3SurfacePresentation lifecycle transcript and surface-generation evidence JSON."
+    },
+    {
+      "id": "G3-06-V2-submitted-versus-presented",
+      "requirement": "PresentSubmitted and Presented are independently observable states; submission alone never claims presentation.",
+      "oracle": "Submit a FrameState that exactly matches the current live surface, inspect the tracker before feedback, then supply exact PlatformQualified Presented feedback and inspect it again.",
+      "acceptance": "The record is PresentSubmitted before feedback and Presented only after the exact qualifying feedback; identifiers and optional timestamp remain exactly correlated.",
+      "evidence_required": "State-transition assertions and presentation-tracker evidence JSON."
+    },
+    {
+      "id": "G3-06-V3-stale-feedback-rejection",
+      "requirement": "Feedback from an old surface or metrics generation cannot become Presented after resize/rebind or surface loss.",
+      "oracle": "Submit frame A on generation A, advance the live surface to distinguishable generation B or mark it lost, inject A feedback, and compare current presentation state before/after; then submit and qualify frame B.",
+      "acceptance": "A feedback has a typed stale disposition and publishes nothing; frame B alone reaches Presented under exact live generations.",
+      "evidence_required": "Generation A/B negative and positive lifecycle corpus with unchanged-state assertions."
+    },
+    {
+      "id": "G3-06-V4-feedback-correlation-and-idempotency",
+      "requirement": "Unknown, mismatched, non-qualified, non-presented, and duplicate feedback cannot advance the wrong frame or manufacture Presented.",
+      "oracle": "Exercise wrong ViewId/FrameId, metrics/surface mismatch, Approximate/None evidence, Dropped/Failed/Unknown outcomes, feedback-before-submit, duplicate qualifying feedback, and two distinguishable in-flight frames.",
+      "acceptance": "Every negative case has a deterministic disposition and unchanged presented observation; one exact qualifying feedback advances only its matching record and duplicate feedback is idempotent.",
+      "evidence_required": "Complete negative-case inventory and exact pre/post tracker snapshots."
+    },
+    {
+      "id": "G3-06-V5-boundary-and-regression",
+      "requirement": "G3-06 remains renderer-neutral, does not implement platform hosts/CanonicalVisible/Arc or alter G2 and predecessor G3 contracts, and preserves the locked Headless backend consumer path.",
+      "oracle": "Review-owned changed-path/dependency scan plus G3 focused matrix, G3HeadlessSkia with the locked published SDK, RF01/G2 predecessor matrix, and git diff --check.",
+      "acceptance": "Only authorized G3-06 Render Core lifecycle paths differ; public headers have no platform/Skia types; all predecessor matrices pass and no forbidden paths change.",
+      "evidence_required": "Changed-path inventory, dependency scan, focused/predecessor logs, exact SDK identity, and diff check."
+    }
+  ]
+}

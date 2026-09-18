@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-06-P31-v0.2",
+  "package_materialization_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
+  "task_anchor": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+  "verdict": "PASS",
+  "code_execution_authorized": true,
+  "audits": {
+    "repository_identity": "PASS",
+    "remote_materialization_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_hash": "PASS",
+    "g3_05_gate_and_integration_binding": "PASS",
+    "verification_obligation_structure": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "execution_closure_completeness": "PASS",
+    "surface_metrics_generation_independence": "PASS",
+    "stale_generation_oracle": "PASS",
+    "submitted_presented_separation": "PASS",
+    "feedback_correlation_and_idempotency": "PASS",
+    "durable_evidence_boundary": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "G3-06-V1-surface-generation-lifecycle": "PASS",
+    "G3-06-V2-submitted-versus-presented": "PASS",
+    "G3-06-V3-stale-feedback-rejection": "PASS",
+    "G3-06-V4-feedback-correlation-and-idempotency": "PASS",
+    "G3-06-V5-boundary-and-regression": "PASS"
+  },
+  "frozen_evidence_audit": {
+    "blocking_evidence_ids": [
+      "E-G3-06-LIFECYCLE",
+      "E-G3-06-PRESENTATION",
+      "E-G3-06-REGRESSION"
+    ],
+    "corroborative_evidence_ids": ["C-G3-06-HYGIENE"],
+    "independent_generation_axes": "PASS",
+    "metrics_only_resize_oracle": "PASS",
+    "surface_only_rebind_oracle": "PASS",
+    "combined_advance_oracle": "PASS",
+    "stale_A_after_B_or_loss_oracle": "PASS",
+    "complete_feedback_negative_corpus": "PASS"
+  },
+  "repository_reality_audit": {
+    "canonical_main_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+    "anchor_is_ancestor": true,
+    "package_materialization_remote_head_matches": true,
+    "predecessor_production_paths_unchanged": true,
+    "g3_06_production_paths_present": false,
+    "unauthorized_scope_changes": 0,
+    "git_diff_check": "PASS"
+  },
+  "prior_findings": [
+    {
+      "id": "G3-06-P31-F1",
+      "subject": "coupled_surface_and_metrics_generation_advancement",
+      "disposition": "CLOSED",
+      "closure_evidence": "v0.2 independently freezes metrics-only, surface-only, and combined advancement plus both-equal/either-regressing rejection in authority, verification, execution, and evidence contracts."
+    }
+  ],
+  "next_action": "Issue the exact P32 CODE_EXECUTION handoff for codex/g3-06-surface-presentation-package using GT-G3-06-P31-v0.2 and task anchor 3136e754b9bddf3d36efbd1f0cdda534b189ac56.",
+  "official_p34_pass_claimed": false,
+  "g3_06_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "task_anchor": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+  "actual_starting_revision": "a89f674e0b877ed59398ef0a457142d33c6950db",
+  "execution_branch": "codex/g3-06-surface-presentation-tracker",
+  "package": {
+    "id": "GT-G3-06-P31-v0.2",
+    "path": ".aegis/packages/GT-G3-06/package.json",
+    "materialization_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
+    "control_review_ref": "0d572f8cbdf2d77370b706dad4da3797747b264a",
+    "binding_preflight": "PASS"
+  },
+  "implementation_design_preflight": {
+    "result": "PASS",
+    "evidence_ref": ".aegis/results/GT-G3-06/implementation-design-preflight.json"
+  },
+  "tdd": {
+    "initial_red": {
+      "observed": true,
+      "target": "axiom_render_surface_presentation_tests",
+      "diagnostic": "fatal error: canvas/render/presentation_tracker.hpp file not found",
+      "classification": "missing frozen G3-06 lifecycle/presentation boundary"
+    },
+    "contract_hardening_red": [
+      "surface-only rebind accepted changed metrics without MetricsGeneration advancement before kMetricsMismatch validation",
+      "presented record accepted a differing terminal timestamp as an exact duplicate before kFeedbackConflict validation"
+    ],
+    "green": {
+      "result": "PASS",
+      "test": "G3SurfacePresentation",
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "obligations": {
+    "G3-06-V1-surface-generation-lifecycle": "PASS",
+    "G3-06-V2-submitted-versus-presented": "PASS",
+    "G3-06-V3-stale-feedback-rejection": "PASS",
+    "G3-06-V4-feedback-correlation-and-idempotency": "PASS",
+    "G3-06-V5-boundary-and-regression": "PASS"
+  },
+  "verification": {
+    "focused": {"passed": 1, "failed": 0},
+    "g3_matrix": {"passed": 5, "failed": 0},
+    "locked_sdk_headless": {"passed": 1, "failed": 0},
+    "rf01_g2_matrix": {"passed": 19, "failed": 0},
+    "git_diff_check": "PASS"
+  },
+  "sdk_consumer": {
+    "target": "macos-arm64-metal",
+    "variant": "release",
+    "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+    "source_build": false,
+    "lock_or_profile_modified": false
+  },
+  "evidence_refs": [
+    ".aegis/results/GT-G3-06/surface-lifecycle-evidence.json",
+    ".aegis/results/GT-G3-06/presentation-tracker-evidence.json",
+    ".aegis/results/GT-G3-06/scope-evidence.json"
+  ],
+  "source_hygiene": {
+    "mutation_scope": "PASS",
+    "forbidden_dependency_scan": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

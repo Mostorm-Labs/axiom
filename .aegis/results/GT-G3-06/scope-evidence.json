@@ -1,0 +1,75 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "task_anchor": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+  "package_materialization_ref": "3057e9e69595db09a20c60597d88b9f292dbf328",
+  "control_review_ref": "0d572f8cbdf2d77370b706dad4da3797747b264a",
+  "actual_starting_revision": "a89f674e0b877ed59398ef0a457142d33c6950db",
+  "execution_branch": "codex/g3-06-surface-presentation-tracker",
+  "scope_interpretation": {
+    "task_anchor_to_start": "G3-06 P31 package, project-state, and independent control-review lineage only; no G3-06 production implementation",
+    "start_to_result": "P32 implementation and durable evidence only; all changed paths are in the frozen authorized mutation scope"
+  },
+  "authorized_p32_paths": [
+    ".aegis/results/GT-G3-06/**",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/surface_lifecycle.hpp",
+    "runtime/render/include/canvas/render/presentation_tracker.hpp",
+    "runtime/render/src/surface_lifecycle.cpp",
+    "runtime/render/src/presentation_tracker.cpp",
+    "runtime/render/tests/surface_presentation_test.cpp"
+  ],
+  "p32_changed_paths": [
+    ".aegis/results/GT-G3-06/implementation-design-preflight.json",
+    ".aegis/results/GT-G3-06/presentation-tracker-evidence.json",
+    ".aegis/results/GT-G3-06/result.json",
+    ".aegis/results/GT-G3-06/scope-evidence.json",
+    ".aegis/results/GT-G3-06/surface-lifecycle-evidence.json",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/presentation_tracker.hpp",
+    "runtime/render/include/canvas/render/surface_lifecycle.hpp",
+    "runtime/render/src/presentation_tracker.cpp",
+    "runtime/render/src/surface_lifecycle.cpp",
+    "runtime/render/tests/surface_presentation_test.cpp"
+  ],
+  "verification": {
+    "focused": {"test": "G3SurfacePresentation", "passed": 1, "failed": 0},
+    "g3_matrix": {
+      "passed": 5,
+      "failed": 0,
+      "tests": [
+        "G3SurfacePresentation",
+        "G3FrameState",
+        "G3Visibility",
+        "G3DirectReference",
+        "G3FrameOrchestration"
+      ]
+    },
+    "locked_headless_predecessor": {
+      "test": "G3HeadlessSkia",
+      "passed": 1,
+      "failed": 0,
+      "target": "macos-arm64-metal",
+      "variant": "release",
+      "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+      "source": "installed",
+      "downloaded_bytes": 0,
+      "source_build": false
+    },
+    "rf01_g2_matrix": {"passed": 19, "failed": 0},
+    "git_diff_check": "PASS"
+  },
+  "scans": {
+    "p32_authorized_path_check": "PASS",
+    "public_header_platform_or_skia_types": false,
+    "native_handle_or_host_contract": false,
+    "runtime_scene_semantic_or_foundation_mutation": false,
+    "canonical_visible_arc_or_coverage_manifest": false,
+    "scheduler_cache_or_g3_07_plus_behavior": false,
+    "skia_lock_profile_or_producer_mutation": false,
+    "skia_source_build": false,
+    "rf01_module_boundary_test": "PASS"
+  },
+  "p32_mutation_scope_conformed": true,
+  "production_changes_before_actual_starting_revision": false
+}

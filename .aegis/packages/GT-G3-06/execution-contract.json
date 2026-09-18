@@ -1,0 +1,179 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create runtime/render/include/canvas/render/surface_lifecycle.hpp with renderer-neutral live-surface/acquired-snapshot values and typed acquire/resize-rebind/loss results.",
+        "Create runtime/render/src/surface_lifecycle.cpp with atomic independent non-regressing SurfaceGeneration/MetricsGeneration replacement, exact SurfaceMetrics binding, unavailable/lost behavior, and no native handle ownership.",
+        "Create runtime/render/include/canvas/render/presentation_tracker.hpp with renderer-neutral submitted-frame records, feedback fields/outcome/evidence kinds, presentation state, and typed dispositions.",
+        "Create runtime/render/src/presentation_tracker.cpp with exact frame/generation correlation, PresentSubmitted != Presented, stale feedback rejection, negative outcome/evidence handling, and duplicate idempotency.",
+        "Create runtime/render/tests/surface_presentation_test.cpp with distinguishable generation A/B lifecycle fixtures and complete positive/negative field-level oracles.",
+        "Modify runtime/render/CMakeLists.txt only to compile the authorized sources, register axiom_render_surface_presentation_tests, and add CTest name G3SurfacePresentation.",
+        "Write durable G3-06 result, lifecycle, presentation, and scope evidence under .aegis/results/GT-G3-06/."
+      ],
+      "implementation_rules": [
+        "Keep all public types renderer-neutral and value-based; no native handle, Skia type, platform API, callback thread, or scheduler contract may enter the new public headers.",
+        "Use existing ViewId, FrameId, SurfaceGeneration, MetricsGeneration, SurfaceMetrics, and FrameState typed identities; do not add aliases between identity namespaces or change G3-01 types.",
+        "Treat generation value zero as invalid for live/replacement surface state. Keep SurfaceGeneration and MetricsGeneration independent: metrics-only resize requires equal surface plus newer metrics; surface rebind requires newer surface plus nondecreasing metrics; combined advance may increase both; reject both-equal or either-regressing updates. Unsigned overflow or exhaustion is a typed rejection, never wraparound.",
+        "Validate finite positive logical dimensions, nonzero physical dimensions, finite positive DPR/display scale, and exact metrics equality at submission.",
+        "Surface loss marks presentation state unavailable without mutating FrameState, RuntimeScene, semantic state, or previously recorded historical submission facts. Rebind after loss requires strictly newer SurfaceGeneration and nondecreasing valid MetricsGeneration.",
+        "Record PresentSubmitted only after exact current-view/surface/metrics/metrics-value validation. Do not call the existing backend or claim GPU/platform work from this value transition.",
+        "Only exact PlatformQualified Presented feedback for a known submitted frame on the current live generations may set Presented. Approximate/None and Dropped/Failed/Unknown never set Presented.",
+        "Stale, mismatched, unknown, feedback-before-submit, and duplicate feedback are deterministic, non-mutating dispositions. Duplicate exact terminal feedback is idempotent.",
+        "Do not implement CanonicalVisible, coverage manifests, Arc handoff, native proof primitives, platform hosts, Headless raster changes, or a final surface/backend ABI.",
+        "Use the accepted prebuilt Skia SDK only to rerun the existing G3HeadlessSkia predecessor test; do not rebuild Skia or modify any Skia lock/profile/producer path."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/include/canvas/render/surface_lifecycle.hpp",
+        "runtime/render/include/canvas/render/presentation_tracker.hpp",
+        "runtime/render/src/surface_lifecycle.cpp",
+        "runtime/render/src/presentation_tracker.cpp",
+        "runtime/render/tests/surface_presentation_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        ".aegis/results/GT-G3-06/**"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "runtime/foundation/**",
+        "apps/**, verification/**, arc/**, pocs/**, or Demo/Shell behavior",
+        "CMakePresets.json and existing preset behavior",
+        "runtime/render existing FrameState, VisibilityResolver, DirectReferenceSource, FramePlan, IRenderBackend, or SkiaHeadlessBackend contracts/implementation/tests",
+        "r1-full-skia-sdk.lock.json, skia-sdk.lock.json, tools/skia/**, or any dependency producer/release path",
+        "native platform handles, Windows/Web/Android/Apple surface hosts, VSync/rAF/scheduler ownership, or compositor proof adapters",
+        "CanonicalVisible, ArcCanonicalToken, preview clear, FrameCoverageManifest, or platform-specific proof qualification",
+        "Tile, TileCache, RenderGroup, RasterCache, Scheduler, ResourceBudget, final FrameGraph ABI, or G3-07 through G3-11 behavior"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "scope_reason": "G3-06 introduces a new renderer/platform lifecycle boundary and a generation-bound feedback state machine.",
+      "fixed_design": {
+        "current_flow": "FrameState already carries typed view/frame/surface/metrics generations and immutable metrics; G3-05 consumes FramePlan through a private Headless backend, but Render Core has no live-surface snapshot or presentation feedback tracker.",
+        "target_owner": "Render Core owns renderer-neutral surface-generation validation and presentation record correlation. Platform hosts will later own native targets and transport proof facts; G3-06 owns neither native resources nor scheduling.",
+        "target_flow": "A live per-view surface snapshot is acquired; an exact-matching FrameState becomes PresentSubmitted; a later exact qualifying feedback may transition that same record to Presented. Resize/rebind/loss invalidates prior generation feedback without changing canonical scene state.",
+        "prepare_commit_publication_abort": "Replacement input and feedback are fully validated against typed identities and live state before one atomic value-state replacement. Any invalid/stale case returns a typed disposition with the prior live surface and presentation observations unchanged.",
+        "affected_types_and_files": [
+          "surface lifecycle values and API in runtime/render/include/canvas/render/surface_lifecycle.hpp",
+          "surface lifecycle behavior in runtime/render/src/surface_lifecycle.cpp",
+          "presentation records/feedback/tracker in runtime/render/include/canvas/render/presentation_tracker.hpp",
+          "presentation state machine in runtime/render/src/presentation_tracker.cpp",
+          "field-complete lifecycle corpus in runtime/render/tests/surface_presentation_test.cpp",
+          "focused build/test wiring in runtime/render/CMakeLists.txt"
+        ]
+      },
+      "obligation_mapping": {
+        "G3-06-V1-surface-generation-lifecycle": ["exact initial/current acquired snapshot", "metrics-only, surface-only, and combined atomic replacements", "both-equal/either-regressing/zero/wrong-view/invalid/post-loss negative corpus"],
+        "G3-06-V2-submitted-versus-presented": ["submission-only intermediate observation", "exact qualifying feedback transition", "exact identifiers/timestamp"],
+        "G3-06-V3-stale-feedback-rejection": ["generation A submit", "generation B replacement or loss", "A rejection with unchanged state", "B success"],
+        "G3-06-V4-feedback-correlation-and-idempotency": ["all feedback fields and outcomes/evidence kinds", "unknown/mismatch/before-submit", "two-frame isolation", "duplicate idempotency"],
+        "G3-06-V5-boundary-and-regression": ["authorized-path and public-header scan", "G3 focused and Headless matrices", "RF01/G2 regression", "git diff --check"]
+      },
+      "test_plan": [
+        "Observe the frozen missing-target/header RED before production implementation.",
+        "Exercise live acquire, valid metrics-only/surface-only/combined replacements, loss, and every frozen invalid replacement while comparing exact pre/post snapshots.",
+        "Exercise submission-only state before any feedback and exact PlatformQualified Presented transition after feedback.",
+        "Exercise stale generation A feedback after B/loss and prove only a distinguishable B frame can reach Presented.",
+        "Exercise complete negative feedback/outcome/evidence/duplicate/two-frame correlation oracles.",
+        "Run forbidden-dependency and changed-path scans, all G3 predecessor tests including locked-SDK G3HeadlessSkia, RF01/G2, and diff check."
+      ],
+      "unresolved_semantic_decisions": [],
+      "authority_conflict": false,
+      "verification_conflict": false,
+      "package_scope_conflict": false,
+      "continue_condition": "Persist this preflight with empty unresolved/conflict fields before production mutation; otherwise fail closed to the earliest owning layer."
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "axiom_render_surface_presentation_tests / G3SurfacePresentation cannot compile or run because the frozen lifecycle and PresentationTracker headers, sources, and target do not exist.",
+      "observation_seam": "CMake build and CTest execution of axiom_render_surface_presentation_tests / G3SurfacePresentation"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G3-06-RED",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_surface_presentation_tests",
+          "expected_result": "FAIL before implementation because the frozen target and lifecycle/presentation boundary are absent",
+          "blocking_reason": "TDD RED provenance"
+        },
+        {
+          "id": "G3-06-GREEN",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build out/g3-host-debug --target axiom_render_surface_presentation_tests && ctest --test-dir out/g3-host-debug -R '^G3SurfacePresentation$' --output-on-failure",
+          "expected_result": "PASS with field-complete surface lifecycle, submission/presentation distinction, A/B stale-generation, feedback correlation, and duplicate-idempotency oracles",
+          "blocking_reason": "G3-06 lifecycle and presentation acceptance oracle"
+        },
+        {
+          "id": "G3-06-G3-PREDECESSOR",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build --preset g3-host-debug && ctest --preset g3-host-debug -R '^G3(FrameState|Visibility|DirectReference|FrameOrchestration|SurfacePresentation)$' --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve G3-01 through G3-04 and include G3-06 focused coverage"
+        },
+        {
+          "id": "G3-06-HEADLESS-PREDECESSOR",
+          "command_or_oracle": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-06-skia-sdk-resolution.json && cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=$PWD/.deps/skia-sdk/macos-arm64-metal/release && cmake --build out/g3-headless-skia --target axiom_render_headless_skia_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessSkia$' --output-on-failure",
+          "expected_result": "PASS using SDK c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731 with no source fallback",
+          "blocking_reason": "Preserve accepted G3-05 backend behavior and dependency authority"
+        },
+        {
+          "id": "G3-06-RF01-G2-PREDECESSOR",
+          "command_or_oracle": "cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "Preserve RF01/G2 runtime foundation"
+        },
+        {
+          "id": "G3-06-BOUNDARY-SCAN",
+          "command_or_oracle": "Scan exact changed paths and new public headers for native platform/Skia/Arc/CanonicalVisible/FrameCoverageManifest/scheduler/host/G2/G3-07+ dependencies and verify only authorized paths differ from the anchor.",
+          "expected_result": "No forbidden dependency, type, behavior, or path",
+          "blocking_reason": "Authority and mutation boundary"
+        },
+        {
+          "id": "G3-06-DIFF-CHECK",
+          "command_or_oracle": "git diff --check 3136e754b9bddf3d36efbd1f0cdda534b189ac56..HEAD",
+          "expected_result": "PASS",
+          "blocking_reason": "Source hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": ["Exact-source CI for the pushed result revision"]
+    },
+    "evidence": {
+      "blocking": ["E-G3-06-LIFECYCLE", "E-G3-06-PRESENTATION", "E-G3-06-REGRESSION"],
+      "corroborative": ["C-G3-06-HYGIENE"]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only G3-06 renderer-neutral surface lifecycle and PresentationTracker behavior plus focused build/test wiring are implemented.",
+        "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or authority/verification/scope conflict before production mutation.",
+        "Required RED is observed and recorded before production implementation.",
+        "All five G3-06 Verification obligations pass at the exact result revision.",
+        "G3SurfacePresentation, G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration, locked-SDK G3HeadlessSkia, and full RF01/G2 regression pass at the exact result revision.",
+        "Acquire/resize/rebind/loss, PresentSubmitted-versus-Presented, generation A/B stale rejection, complete feedback correlation, and duplicate-idempotency evidence are reviewer-accessibly materialized.",
+        "No native/platform/Skia/CanonicalVisible/Arc/FrameCoverageManifest/scheduler/G2/G3-07+ behavior is introduced.",
+        "Only authorized mutation paths differ from anchor 3136e754b9bddf3d36efbd1f0cdda534b189ac56.",
+        "Exact result revision is committed and pushed; return READY_FOR_CONTROL_REVIEW without issuing P34, G3-06, or overall G3 PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "PACKAGE_SCOPE_DIVERGENCE",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "VERIFICATION_DESIGN_DEFECT",
+        "TASK_PACKAGE_DEFECT"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

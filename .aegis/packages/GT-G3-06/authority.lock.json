@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "current": true,
+  "source": {
+    "provider": "repo-materialized-plan",
+    "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+    "title": "GT-G3-00 G3 Basic Canonical Canvas P30 Implementation Plan v0.1",
+    "revision": "bound-at-3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+    "trusted_section": "G3-06 surface generation and PresentationTracker",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "68ff2639119311e68dbb4bfc7ef46d9de08e37ae857dce3e82b2b94fb7026553"
+  },
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_05_gate_decision": "gt-g3-05-p34-2026-09-19",
+    "g3_05_result_revision": "dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+    "g3_05_main_integration": "int-pr91-g3-05",
+    "g3_05_main_integration_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+    "canonical_main_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+    "required_state": "GT-G3-05_INTEGRATED"
+  },
+  "supporting_authority": [
+    {
+      "ref": "repo:docs/notion/authority/07-runtime-data-flow/07-05-render-presented-v0.1.md",
+      "trusted_sections": ["Presentation vocabulary", "Shared vs per-view state", "Lifecycle"]
+    },
+    {
+      "ref": "repo:docs/notion/authority/07-runtime-data-flow/07-15-presented-proof-arc-handoff-v0.1.md",
+      "trusted_sections": ["Core invariants", "PresentedFeedback common contract"]
+    },
+    {
+      "ref": "repo:docs/notion/authority/06-module-design/implementation-contract-freeze/icf-04-presented-feedback-v0.2.md",
+      "trusted_sections": ["Stable logical feedback fields", "Stale evidence rules", "Thread/lifetime"]
+    }
+  ],
+  "trusted_statements": {
+    "goal": "Introduce the minimal renderer-neutral canonical-surface lifecycle and PresentationTracker that keep acquire/resize/present generation-bound and preserve PresentSubmitted != Presented.",
+    "owns": [
+      "renderer-neutral per-view live surface snapshot",
+      "generation-bound acquire and resize/rebind validation",
+      "frame presentation submission records",
+      "PresentedFeedback correlation and deterministic stale-generation rejection",
+      "PresentSubmitted versus Presented state distinction"
+    ],
+    "consumes": [
+      "ViewId",
+      "FrameId",
+      "SurfaceMetrics",
+      "SurfaceGeneration",
+      "MetricsGeneration",
+      "FrameState"
+    ],
+    "produces": [
+      "immutable acquired surface snapshot",
+      "typed lifecycle/submission/feedback disposition",
+      "generation-bound presentation observation"
+    ],
+    "fixed_semantics": {
+      "identity_namespaces": "ViewId, FrameId, SurfaceGeneration, and MetricsGeneration remain distinct and are compared by exact typed identity.",
+      "live_surface": "One per-view live surface snapshot binds nonzero SurfaceGeneration, nonzero MetricsGeneration, valid SurfaceMetrics, and availability. It owns no native handle or backend object.",
+      "acquire": "Acquire returns only the current immutable available snapshot. An unavailable/lost surface returns a typed rejection and no stale target.",
+      "resize_or_rebind": "SurfaceGeneration and MetricsGeneration advance independently without regression. A metrics-only resize keeps SurfaceGeneration equal and requires strictly newer MetricsGeneration. A surface rebind requires strictly newer SurfaceGeneration and a valid nondecreasing MetricsGeneration, which may remain equal when metrics are unchanged. Both-equal, either-regressing, wrong-view, invalid, or zero-generation replacements are deterministic rejections preserving the prior live snapshot. After loss, rebind requires strictly newer SurfaceGeneration.",
+      "submission": "Present submission accepts exactly one FrameState only when view, surface generation, metrics generation, and SurfaceMetrics exactly match the live snapshot. Acceptance records PresentSubmitted but cannot set Presented.",
+      "feedback": "Feedback binds exact ViewId, FrameId, SurfaceGeneration, MetricsGeneration, outcome, evidence kind, and optional presented_time_ns. Unknown frames, wrong view, old/live-mismatched generations, and post-loss feedback cannot change presented state.",
+      "presented_transition": "Only Presented outcome with PlatformQualified evidence, exact submitted-frame correlation, and exact current live surface/metrics generations transitions that record to Presented. Approximate/None, Dropped/Failed/Unknown, or mere submit cannot do so.",
+      "duplicates": "Duplicate terminal feedback is idempotent and cannot advance another frame or generation.",
+      "surface_loss": "Loss makes acquire fail and all prior-generation feedback stale while preserving canonical semantic and RuntimeScene state outside this module. A later rebind requires strictly newer generations.",
+      "scope_limit": "CanonicalVisible, FrameCoverageManifest, Arc tokens/clear, platform proof primitives, scheduling, and native host surfaces remain successor work."
+    },
+    "forbidden": [
+      "native window, swapchain, CAMetalLayer, WebGL, or platform surface types",
+      "Skia API or Headless raster implementation changes",
+      "CanonicalVisible, ArcCanonicalToken, preview clearing, or FrameCoverageManifest implementation",
+      "Windows/Web/Android/Apple host implementation",
+      "RuntimeScene, SceneQuery, semantic, ObjectStore, or G2 changes",
+      "Tile, RenderGroup, RasterCache, Scheduler, ResourceBudget, or final FrameGraph ABI",
+      "G3-07 through G3-11 implementation"
+    ]
+  }
+}

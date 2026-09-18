@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-06-LIFECYCLE",
+      "obligations": ["G3-06-V1-surface-generation-lifecycle", "G3-06-V3-stale-feedback-rejection"],
+      "artifact": ".aegis/results/GT-G3-06/surface-lifecycle-evidence.json with exact initial, metrics-only, surface-only, combined, and lost snapshots; atomic independent-axis replacement; every typed negative disposition; stale A rejection; fresh B success; and unchanged-state comparisons"
+    },
+    {
+      "id": "E-G3-06-PRESENTATION",
+      "obligations": ["G3-06-V2-submitted-versus-presented", "G3-06-V4-feedback-correlation-and-idempotency"],
+      "artifact": ".aegis/results/GT-G3-06/presentation-tracker-evidence.json with submission-only intermediate state, exact qualifying transition, all feedback fields/outcomes/evidence kinds, unknown/mismatch/before-submit/two-frame isolation, and duplicate idempotency"
+    },
+    {
+      "id": "E-G3-06-REGRESSION",
+      "obligations": ["G3-06-V5-boundary-and-regression"],
+      "artifact": ".aegis/results/GT-G3-06/scope-evidence.json with exact changed-path and public-header scans, G3 focused matrix, locked-SDK Headless identity/result, RF01/G2 matrix, and git diff check"
+    }
+  ],
+  "corroborative": [
+    {"id": "C-G3-06-HYGIENE", "artifact": "ImplementationDesignPreflight, RED transcript, source hygiene, and exact result metadata"}
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result, lifecycle, presentation, implementation-preflight, and scope records under .aegis/results/GT-G3-06/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
