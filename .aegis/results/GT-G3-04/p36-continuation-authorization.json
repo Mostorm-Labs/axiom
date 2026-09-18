@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorized": true,
+  "surface": "CODE_REVERIFY",
+  "executor": "codex",
+  "exact_cursor": "e95607937d884270828417c35412d8e3f682bdfc",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "scope": {
+    "required": [
+      "Replace the one-entry Shape orchestration fixture with a distinguishable ReferenceDrawList containing exactly one entry for each of the nine released ObjectKinds.",
+      "Give every entry reviewer-resolvable distinct identity and structural content, including its RuntimeSceneRecord and typed ReferenceCommand variant.",
+      "Assert exact nine-kind order, membership, entry cardinality, complete ReferenceTraversalEntry structural equality, FrameState equality, ReferenceDrawList diagnostics, canonical bytes, and digest before submission, inside the fake backend observation, and after accepted and rejected submissions.",
+      "Preserve and rerun the identity-mismatch rejection, single-call typed accepted/rejected results, and no canonical RuntimeScene mutation or partial-publication oracles.",
+      "Refresh committed G3-04 structural evidence and result records so their counts and conclusions match the repaired executable oracle."
+    ],
+    "allowed_paths": [
+      "runtime/render/tests/frame_orchestration_test.cpp",
+      ".aegis/results/GT-G3-04/**"
+    ],
+    "forbidden": [
+      "production behavior changes",
+      "canonical type contract changes",
+      "runtime/render/include/**",
+      "runtime/render/src/**",
+      "runtime/scene/**",
+      "runtime/semantic/**",
+      "CMake or preset changes",
+      "Skia, platform, surface, presentation, Tile/cache/scheduler, or G3-05+ behavior",
+      "P20 or P31 reopen"
+    ]
+  },
+  "required_reverification": [
+    "G3FrameOrchestration",
+    "G3FrameState",
+    "G3Visibility",
+    "G3DirectReference",
+    "full RF01/G2 predecessor matrix",
+    "forbidden dependency and changed-path scan",
+    "git diff --check"
+  ],
+  "terminal_success": [
+    "the focused orchestration test contains and validates all nine released ObjectKinds through the real FramePlan and IRenderBackend boundary",
+    "the repaired oracle compares complete heterogeneous ReferenceDrawList structure before, during, and after accepted and rejected submission",
+    "all frozen G3-04 obligations pass at a new exact pushed result revision",
+    "only authorized P36 paths differ from the exact cursor",
+    "repaired result and evidence records are committed and pushed",
+    "return READY_FOR_CONTROL_REVIEW without issuing P34 or G3 PASS"
+  ],
+  "terminal_blockers": [
+    "PACKAGE_SCOPE_DIVERGENCE",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE",
+    "ENVIRONMENT_BLOCKER"
+  ],
+  "continue_until_terminal_state": true,
+  "official_gate_pass_forbidden": true,
+  "next_surface": "CODE_REVERIFY"
+}

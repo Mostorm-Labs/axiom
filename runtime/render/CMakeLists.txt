@@ -1,6 +1,8 @@
 add_library(canvas_runtime_render STATIC
     src/visibility_resolver.cpp
-    src/direct_reference_source.cpp)
+    src/direct_reference_source.cpp
+    src/frame_plan.cpp
+    src/render_backend.cpp)
 target_include_directories(canvas_runtime_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_render PUBLIC
@@ -64,4 +66,20 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     endif()
 
     add_test(NAME G3DirectReference COMMAND axiom_render_direct_reference_tests)
+
+    add_executable(axiom_render_frame_orchestration_tests
+        tests/frame_orchestration_test.cpp)
+    target_link_libraries(axiom_render_frame_orchestration_tests
+        PRIVATE canvas_runtime_render canvas_runtime_scene canvas_runtime_semantic)
+    target_compile_features(axiom_render_frame_orchestration_tests PRIVATE cxx_std_20)
+
+    if(MSVC)
+        target_compile_options(axiom_render_frame_orchestration_tests
+            PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_render_frame_orchestration_tests
+            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+
+    add_test(NAME G3FrameOrchestration COMMAND axiom_render_frame_orchestration_tests)
 endif()

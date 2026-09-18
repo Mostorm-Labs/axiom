@@ -1,0 +1,34 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-04",
+  "obligations": [
+    {
+      "id": "G3-04-V1-frame-plan-binding",
+      "requirement": "The orchestration plan preserves exact FrameState and ReferenceDrawList identity/content without mutating canonical scene state.",
+      "oracle": "Build a distinguishable FrameState and nine-kind ReferenceDrawList, orchestrate them through the production boundary, and compare exact structural values before/after submission.",
+      "acceptance": "Plan identity/content equals supplied inputs; no RuntimeScene or semantic mutation occurs.",
+      "evidence_required": "Focused G3FrameOrchestration contract test and structural evidence JSON."
+    },
+    {
+      "id": "G3-04-V2-private-backend-boundary",
+      "requirement": "The backend seam consumes only the immutable renderer-neutral frame plan and exposes no Skia/platform types.",
+      "oracle": "Compile and run a deterministic fake backend implementing the private interface; review public headers and dependency scan.",
+      "acceptance": "Fake backend receives one immutable plan, returns a typed submission result, and forbidden backend/platform dependencies are absent.",
+      "evidence_required": "Focused backend contract output and boundary scan."
+    },
+    {
+      "id": "G3-04-V3-deterministic-failure",
+      "requirement": "Backend rejection is explicit and does not publish or mutate canonical state.",
+      "oracle": "Inject deterministic fake-backend rejection and compare pre/post plan, RuntimeScene identity, and diagnostics.",
+      "acceptance": "Rejected submission returns explicit failure with unchanged inputs and no partial frame publication.",
+      "evidence_required": "Negative-path test transcript and result artifact."
+    },
+    {
+      "id": "G3-04-V4-boundary-hygiene",
+      "requirement": "G3-04 does not implement surface lifecycle, Skia backend, Tile/cache/scheduler optimization, or G3-05+ behavior.",
+      "oracle": "Review-owned changed-path/dependency scan plus G3-01/G3-02/G3-03 and RF01/G2 regressions.",
+      "acceptance": "Only authorized orchestration/backend-contract paths change and all predecessor tests pass.",
+      "evidence_required": "Boundary scan, changed-path inventory, predecessor regression output, git diff --check."
+    }
+  ]
+}

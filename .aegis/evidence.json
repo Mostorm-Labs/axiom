@@ -89,6 +89,81 @@
         "hosted_checks": "PASS",
         "non_blocking_finding": "The pre-integration generated state cache contained a pending G3-02 package-materialization placeholder; exact package locks and result evidence were valid."
       }
+    },
+    {
+      "id": "ev-gt-g3-03-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:b995329df9cd299db4990362d1f3c6ac155ee4fb",
+      "supports": ["gt-g3-03", "int-pr87-g3-03"],
+      "inputs": [
+        "git:fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+        "github:Mostorm-Labs/axiom#87",
+        "repo:.aegis/packages/GT-G3-03/package.json",
+        "repo:.aegis/results/GT-G3-03/result.json",
+        "repo:.aegis/results/GT-G3-03/fixture-inventory.json",
+        "repo:.aegis/results/GT-G3-03/reference-plan-evidence.json",
+        "repo:.aegis/results/GT-G3-03/traversal-counters.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "integration_status": "integrated",
+        "result_revision": "fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+        "canonical_merge_revision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+        "hosted_checks": "NOT_REQUIRED",
+        "independent_review": {
+          "nine_kind_full_field_corpus": "PASS",
+          "source_expected_corpus_independence": "PASS",
+          "g3_focused_matrix": "PASS",
+          "rf01_g2_predecessor_matrix": "PASS",
+          "boundary_scan": "PASS",
+          "git_diff_check": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ev-gt-g3-04-p34",
+      "kind": "gate-review-and-p36-reverification",
+      "status": "available",
+      "ref": "git:250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+      "supports": ["gt-g3-04"],
+      "inputs": [
+        "git:250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+        "repo:.aegis/packages/GT-G3-04/package.json",
+        "repo:.aegis/results/GT-G3-04/result.json",
+        "repo:.aegis/results/GT-G3-04/p36-reverification.json",
+        "repo:.aegis/results/GT-G3-04/frame-orchestration-evidence.json",
+        "repo:.aegis/results/GT-G3-04/backend-evidence.json",
+        "repo:.aegis/results/GT-G3-04/p35-defect-classification.json",
+        "repo:.aegis/results/GT-G3-04/p36-continuation-authorization.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+        "execution_branch": "codex/g3-04-frame-orchestration-backend",
+        "frozen_requirement_audit": {
+          "G3-04-V1-frame-plan-binding": "PASS",
+          "G3-04-V2-private-backend-boundary": "PASS",
+          "G3-04-V3-deterministic-failure": "PASS",
+          "G3-04-V4-boundary-hygiene": "PASS"
+        },
+        "frozen_evidence_audit": {
+          "nine_kind_fixture": "PASS",
+          "complete_record_fields": "PASS",
+          "complete_command_variants": "PASS",
+          "accepted_and_rejected_backend_observations": "PASS",
+          "g3_focused_matrix": {"passed": 4, "failed": 0},
+          "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},
+          "git_diff_check": "PASS"
+        },
+        "repository_reality_audit": {
+          "remote_head_matches_result": "PASS",
+          "p36_mutation_scope": "PASS",
+          "production_files_changed": false,
+          "forbidden_dependency_scan": "PASS"
+        },
+        "official_gate_pass_claimed": true
+      }
     }
   ]
 }
