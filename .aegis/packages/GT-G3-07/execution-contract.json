@@ -152,7 +152,7 @@
         "Only the G3-07 demo executable, fixed fixture/oracle, process test, opt-in CMake wiring, and G3-07 evidence are added.",
         "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or authority/verification/scope conflict before mutation.",
         "Required missing-target RED is observed and recorded before implementation.",
-        "The fixture is independently decoded as exactly nine canonical objects spanning every V1 ObjectKind and is never produced or blessed by the CLI/backend under test.",
+        "The fixture is generated once during P32 from the exact authority.lock.json semantic literals by a disposable external generator that calls SnapshotCodec::encode, then checked in; the production CLI only decodes it. The process test independently decodes and field-compares all nine objects. The generator is not built, shipped, retained, or used to derive expected raster bytes/digests.",
         "The successful CLI path traverses every frozen production stage without manual final draw-list/plan construction or test-only mutation access.",
         "Two clean runs emit byte-identical render.rgba, render-digest.txt, and render-evidence.json matching the exact independent oracle including fnv1a64:296a704f0d0b9165.",
         "Every frozen failure case exits nonzero and proves both no-partial output on a clean destination and no stale/partial replacement of an existing success set.",
