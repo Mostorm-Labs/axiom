@@ -1,0 +1,12 @@
+{
+  "task_id": "GT-G3-07",
+  "result": "PASS",
+  "allowlist": ["runtime/render/tools/headless_canvas_demo.cpp", "runtime/render/tests/headless_canvas_demo_test.cpp", "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap", "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json", "runtime/render/CMakeLists.txt", ".aegis/results/GT-G3-07/**"],
+  "forbidden_production_paths_changed": false,
+  "skia_source_build": false,
+  "locked_skia_sdk": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+  "git_diff_check": "PASS",
+  "predecessor_matrix": "PASS: G3HeadlessCanvasDemo, G3SurfacePresentation, G3HeadlessSkia, G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration",
+  "rf01_g2_matrix": "PASS: 26/26 ctest tests",
+  "anchor_diff_check": "PASS"
+}

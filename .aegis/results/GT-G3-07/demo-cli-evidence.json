@@ -1,0 +1,14 @@
+{
+  "task_id": "GT-G3-07",
+  "result": "PASS",
+  "pipeline_stages": ["SnapshotCodec.decode", "SnapshotBootstrapper.restore", "IndexedObjectStore", "FullSceneCompiler", "Scene", "RuntimeScene", "VisibilityResolver", "DirectReferenceSource", "FramePlanBuilder", "FrameOrchestrator", "SkiaHeadlessBackend"],
+  "object_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+  "object_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky", "Group"],
+  "runtime_scene_count": 9,
+  "visible_count": 9,
+  "plan_digest": "fnv1a64:a9125e1fc2b4ec2f",
+  "backend_submission": "accepted",
+  "group_zero_pixel": true,
+  "vector_stroke_mask_strict_subset": true,
+  "source_bypass_scan": "PASS"
+}

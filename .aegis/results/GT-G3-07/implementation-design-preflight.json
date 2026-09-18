@@ -1,25 +1,11 @@
 {
-  "schema_version": "0.1",
   "task_id": "GT-G3-07",
-  "package_id": "GT-G3-07-P31-v0.2",
-  "anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "production_semantics_changed": false,
+  "unresolved_semantic_decisions": [],
   "authority_conflict": false,
   "verification_conflict": false,
-  "package_scope_conflict": true,
-  "unresolved_semantic_decisions": [
-    "Frozen Shape FilledPath erase-mask fixture is rejected by the production SnapshotCodec validator."
-  ],
-  "production_flow": [
-    "SnapshotCodec::decode",
-    "SnapshotBootstrapper::restore",
-    "production Scene and RuntimeScene",
-    "VisibilityResolver",
-    "DirectReferenceSource",
-    "FramePlanBuilder",
-    "FrameOrchestrator",
-    "SkiaHeadlessBackend",
-    "atomic artifact publication"
-  ],
-  "status": "BLOCKED",
-  "terminal_blocker": "TASK_PACKAGE_DEFECT / PACKAGE_SCOPE_DIVERGENCE"
+  "package_scope_conflict": false,
+  "red_observed": "G3HeadlessCanvasDemo target failed before implementation with placeholder oracle",
+  "pipeline_owner_boundary": "CLI owns input/output orchestration only; canonical, scene, visibility, reference, plan, orchestration, and backend remain existing owners"
 }
