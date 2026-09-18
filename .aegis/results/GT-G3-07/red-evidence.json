@@ -1,0 +1,8 @@
+{
+  "task_id": "GT-G3-07",
+  "anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "command": "cmake --build out/g3-headless-skia --target axiom_headless_canvas_demo axiom_render_headless_canvas_demo_tests",
+  "result": "FAIL",
+  "observed": "ninja: error: unknown target 'axiom_headless_canvas_demo'",
+  "classification": "G3-07-RED"
+}
