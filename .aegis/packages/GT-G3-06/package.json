@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-06-P31-v0.1",
+  "task_id": "GT-G3-06",
+  "status": "PENDING_CONTROL_REVIEW",
+  "purpose": "Add renderer-neutral surface-generation lifecycle and PresentationTracker semantics that distinguish PresentSubmitted from Presented and reject stale feedback without introducing platform hosts or CanonicalVisible/Arc behavior.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-06-surface-presentation-tracker"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "ff8148791c4ecad756c1e6698e0759308333f7c26857c47f6c2013dad92838a3"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "43da160b03ca5281094651154001c3511a5b2d9e8e83e598591805e5a07acb48"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "76560273f14e11c82e6579a3c91ec2cbf7d0c168c246c443c741c205efd76005"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "c803d7e4c72a4bb64068ac81fc0f281fedf2ee1ddb6f819e221d240b7dc92510"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "7d189da9701da37661bb5f6a1558cf6480f5b913812142b8c8bb571a61389bac"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-06/",
+    "binding": "exact repository revision descended from G3-05 main integration 3136e754b9bddf3d36efbd1f0cdda534b189ac56"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "Independently review GT-G3-06-P31-v0.1; issue CODE_EXECUTION handoff only after exact package binding, lifecycle-state-machine, stale-generation, complete feedback-oracle, mutation-scope, and durable-evidence preflights pass.",
+    "official_gate_pass_forbidden": true
+  }
+}
