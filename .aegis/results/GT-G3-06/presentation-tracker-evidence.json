@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "package_id": "GT-G3-06-P31-v0.2",
+  "obligations": [
+    "G3-06-V2-submitted-versus-presented",
+    "G3-06-V4-feedback-correlation-and-idempotency"
+  ],
+  "focused_oracle": {
+    "test": "G3SurfacePresentation",
+    "source": "runtime/render/tests/surface_presentation_test.cpp",
+    "result": "PASS",
+    "passed": 1,
+    "failed": 0
+  },
+  "submission_only_intermediate_state": {
+    "frame_id": 50,
+    "submit_disposition": "kSubmitted",
+    "state": "kPresentSubmitted",
+    "outcome": "kUnknown",
+    "evidence": "kNone",
+    "presented_time_ns": null,
+    "presented_claimed_by_submission": false
+  },
+  "qualifying_transition": {
+    "view_id": 41,
+    "frame_id": 50,
+    "surface_generation": 30,
+    "metrics_generation": 40,
+    "outcome": "kPresented",
+    "evidence": "kPlatformQualified",
+    "presented_time_ns": 919,
+    "disposition": "kPresented",
+    "resulting_state": "kPresented",
+    "exact_frame_state_preserved": true
+  },
+  "negative_feedback_corpus": [
+    {"case": "wrong_view", "disposition": "kWrongView"},
+    {"case": "feedback_before_submit_or_unknown_frame", "disposition": "kUnknownFrame"},
+    {"case": "older_surface_generation", "disposition": "kStaleGeneration"},
+    {"case": "older_metrics_generation", "disposition": "kStaleGeneration"},
+    {"case": "newer_mismatched_surface_generation", "disposition": "kGenerationMismatch"},
+    {"case": "newer_mismatched_metrics_generation", "disposition": "kGenerationMismatch"},
+    {"case": "approximate_evidence", "disposition": "kUnqualifiedEvidence"},
+    {"case": "no_evidence", "disposition": "kUnqualifiedEvidence"},
+    {"case": "dropped_outcome", "disposition": "kNonPresentedOutcome"},
+    {"case": "failed_outcome", "disposition": "kNonPresentedOutcome"},
+    {"case": "unknown_outcome", "disposition": "kNonPresentedOutcome"}
+  ],
+  "submission_rejection_corpus": [
+    {"case": "wrong_view", "disposition": "kWrongView"},
+    {"case": "surface_generation_mismatch", "disposition": "kGenerationMismatch"},
+    {"case": "metrics_generation_mismatch", "disposition": "kGenerationMismatch"},
+    {"case": "metrics_value_mismatch", "disposition": "kMetricsMismatch"},
+    {"case": "duplicate_frame_id", "disposition": "kDuplicate"}
+  ],
+  "correlation_and_idempotency": {
+    "two_distinguishable_frames": [300, 301],
+    "qualifying_feedback_advances_only_matching_frame": true,
+    "other_frame_remains": "kPresentSubmitted",
+    "exact_duplicate_terminal_feedback": "kDuplicate",
+    "exact_duplicate_is_non_mutating": true,
+    "conflicting_terminal_timestamp": "kFeedbackConflict",
+    "conflicting_terminal_payload_is_non_mutating": true,
+    "all_negative_cases_are_non_mutating": true
+  },
+  "present_submitted_is_not_presented": "PASS",
+  "field_complete_feedback_correlation": "PASS"
+}

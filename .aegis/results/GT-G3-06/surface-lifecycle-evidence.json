@@ -1,0 +1,96 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-06",
+  "package_id": "GT-G3-06-P31-v0.2",
+  "obligations": [
+    "G3-06-V1-surface-generation-lifecycle",
+    "G3-06-V3-stale-feedback-rejection"
+  ],
+  "focused_oracle": {
+    "test": "G3SurfacePresentation",
+    "source": "runtime/render/tests/surface_presentation_test.cpp",
+    "result": "PASS",
+    "passed": 1,
+    "failed": 0
+  },
+  "snapshots": {
+    "initial": {
+      "view_id": 41,
+      "surface_generation": 10,
+      "metrics_generation": 20,
+      "physical_size": [1600, 1200],
+      "device_pixel_ratio": 2.0,
+      "acquire": "kAcquired"
+    },
+    "metrics_only": {
+      "surface_generation": 10,
+      "metrics_generation": 21,
+      "physical_size": [1800, 1350],
+      "device_pixel_ratio": 2.25,
+      "disposition": "kReplaced"
+    },
+    "surface_only": {
+      "surface_generation": 11,
+      "metrics_generation": 21,
+      "metrics_unchanged": true,
+      "disposition": "kReplaced"
+    },
+    "combined": {
+      "surface_generation": 12,
+      "metrics_generation": 22,
+      "physical_size": [2048, 1536],
+      "device_pixel_ratio": 2.5,
+      "disposition": "kReplaced"
+    },
+    "lost": {
+      "available": false,
+      "acquire_disposition": "kUnavailable",
+      "acquired_snapshot_present": false
+    }
+  },
+  "typed_negative_dispositions": [
+    "kWrongView",
+    "kInvalidGeneration",
+    "kGenerationExhausted",
+    "kInvalidMetrics",
+    "kMetricsMismatch",
+    "kNoGenerationAdvance",
+    "kStaleGeneration",
+    "kUnavailable"
+  ],
+  "negative_oracles": {
+    "both_equal": "kNoGenerationAdvance",
+    "surface_regression": "kStaleGeneration",
+    "metrics_regression": "kStaleGeneration",
+    "zero_surface_generation": "kInvalidGeneration",
+    "zero_metrics_generation": "kInvalidGeneration",
+    "exhausted_generation": "kGenerationExhausted",
+    "wrong_view": "kWrongView",
+    "invalid_logical_metrics": "kInvalidMetrics",
+    "invalid_physical_metrics": "kInvalidMetrics",
+    "non_finite_metrics": "kInvalidMetrics",
+    "metrics_changed_without_generation_advance": "kMetricsMismatch",
+    "post_loss_non_newer_surface": "kStaleGeneration",
+    "prior_snapshot_preserved_for_every_rejection": true
+  },
+  "generation_a_b_oracle": {
+    "generation_a": {
+      "frame_id": 80,
+      "surface_generation": 60,
+      "metrics_generation": 70,
+      "feedback_after_advance": "kStaleGeneration",
+      "record_unchanged": true
+    },
+    "generation_b": {
+      "frame_id": 81,
+      "surface_generation": 61,
+      "metrics_generation": 71,
+      "submit": "kSubmitted",
+      "feedback": "kPresented"
+    },
+    "post_loss_feedback": "kStaleGeneration",
+    "post_loss_record_unchanged": true
+  },
+  "atomic_independent_axis_replacement": "PASS",
+  "unchanged_state_on_rejection": "PASS"
+}
