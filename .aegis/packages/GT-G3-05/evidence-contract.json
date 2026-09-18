@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-05-BOUNDARY",
+      "obligations": ["G3-05-V1-private-skia-boundary", "G3-05-V5-boundary-hygiene"],
+      "artifact": "RED/GREEN Headless contract transcript, public-header/dependency scan, changed-path inventory, and predecessor regression output"
+    },
+    {
+      "id": "E-G3-05-GOLDEN",
+      "obligations": ["G3-05-V2-deterministic-raster", "G3-05-V3-reference-command-coverage"],
+      "artifact": ".aegis/results/GT-G3-05/headless-golden-evidence.json with exact macos-arm64-metal/release SDK identity, fixed raster config, RGBA size/digest, independently authored expected-pixel source, exact-byte comparison, replay result, transform/clip/erase assertions, and nine-kind per-region coverage"
+    },
+    {
+      "id": "E-G3-05-REJECTION",
+      "obligations": ["G3-05-V4-rejection-isolation"],
+      "artifact": ".aegis/results/GT-G3-05/rejection-evidence.json with deterministic typed rejection for invalid dimensions, identity mismatch, unsupported geometry/mask, and overflow plus complete unchanged-prior-observation assertions"
+    }
+  ],
+  "corroborative": [
+    {"id": "C-G3-05-HYGIENE", "artifact": "git diff --check and exact changed-path inventory"}
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed result, golden, rejection, and scope records under .aegis/results/GT-G3-05/",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

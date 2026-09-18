@@ -2,10 +2,10 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G3-04_CONTROLLED_MAIN_INTEGRATION_COMPLETE",
+  "active_stage": "GT-G3-05_P31_CONTROL_REVIEW_COMPLETE",
   "current_owner": "aegis-gate-review",
   "earliest_untrusted_layer": null,
-  "status": "READY_FOR_P31_MATERIALIZATION",
+  "status": "READY_FOR_CODE_EXECUTION",
   "g2": {
     "status": "CLOSED",
     "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
@@ -13,14 +13,14 @@
     "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
   },
   "g3": {
-    "status": "G3-04_INTEGRATED_G3-05_PENDING_P31",
-    "ingress": "READY_FOR_P31_MATERIALIZATION",
-    "implementation_authorized": false,
+    "status": "G3-04_INTEGRATED_G3-05_P31_V0_2_APPROVED",
+    "ingress": "READY_FOR_CODE_EXECUTION",
+    "implementation_authorized": true,
     "p31_materialized": true,
-    "p31_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+    "p31_materialized_ref": "88837c067c2da694685c91267a2d94aae9ce652e",
     "superseded_package": "GT-G3-00-P31-v0.1",
-    "current_package": "GT-G3-04-P31-v0.3",
-    "current_package_materialized_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af"
+    "current_package": "GT-G3-05-P31-v0.2",
+    "current_package_materialized_ref": "88837c067c2da694685c91267a2d94aae9ce652e"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -85,15 +85,15 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "GT-G3-05_P31_TASK_PACKAGING",
+  "recommended_next_stage": "GT-G3-05_P32_IMPLEMENTATION",
   "handoff": {
-    "next_surface": "CONTROL_REVIEW",
-    "next_action": "Materialize and independently review the GT-G3-05 P31 package from the exact canonical main merge revision; do not begin G3-05 implementation before P31 review.",
-    "p31_package": ".aegis/packages/GT-G3-04/package.json",
-    "p31_package_id": "GT-G3-04-P31-v0.3",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute the complete GT-G3-05-P31-v0.2 closure contract on codex/g3-05-headless-skia-backend and return exact durable evidence to CONTROL_REVIEW.",
+    "p31_package": ".aegis/packages/GT-G3-05/package.json",
+    "p31_package_id": "GT-G3-05-P31-v0.2",
     "p31_materialized": true,
-    "package_materialization_ref": "8db1a6b045e4a16ddd745f445422925dba8a09af",
+    "package_materialization_ref": "88837c067c2da694685c91267a2d94aae9ce652e",
     "g2_reopen": false,
-    "g3_implementation_start": false
+    "g3_implementation_start": true
   }
 }

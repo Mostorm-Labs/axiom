@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "stage": "P32_IMPLEMENTATION_DESIGN_PREFLIGHT",
+  "package_id": "GT-G3-05-P31-v0.2",
+  "package_materialization_ref": "88837c067c2da694685c91267a2d94aae9ce652e",
+  "control_review_ref": "772aae215c432174d3949a85f9d45d3cb9a92d21",
+  "actual_starting_revision": "772aae215c432174d3949a85f9d45d3cb9a92d21",
+  "execution_branch": "codex/g3-05-headless-skia-backend",
+  "repository_identity": "github:Mostorm-Labs/axiom",
+  "current_flow": "G3-04 produces an immutable FramePlan containing FrameState and a complete ReferenceDrawList, then submits the plan through the renderer-neutral IRenderBackend const-reference seam.",
+  "target_owner": "Render Core privately owns Skia rasterization. The public backend header owns only renderer-neutral configuration, observation, typed issue, and submission behavior.",
+  "target_flow": "SkiaHeadlessBackend validates the complete immutable FramePlan, rasterizes all nine typed ReferenceCommand variants into a fixed offscreen surface, reads RGBA bytes, computes a corroborative digest, and atomically replaces the prior observation only after successful readback.",
+  "prepare_commit_publication_abort": "Validation and surface/readback are private preparation. Successful readback replaces the optional observation once. Every rejection returns before observation replacement and preserves the prior successful observation; there is no canonical-state or presentation publication.",
+  "fixed_raster_and_sdk": {
+    "width": 256,
+    "height": 256,
+    "color_type": "RGBA_8888",
+    "alpha_type": "premultiplied",
+    "color_space": "sRGB",
+    "clear_rgba": [0, 0, 0, 0],
+    "antialias": false,
+    "origin": "top_left",
+    "sdk_target": "macos-arm64-metal",
+    "sdk_variant": "release",
+    "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731"
+  },
+  "nine_kind_mapping": {
+    "Shape": "solid transformed visualBounds plus post-draw FilledPath clear mask",
+    "Image": "resource-id-keyed checkerboard placeholder",
+    "VectorPath": "filled canonical path honoring fill rule",
+    "RichText": "one deterministic placeholder cell per validated Unicode scalar",
+    "VectorStroke": "axis-aligned sample segments with butt caps",
+    "DabStroke": "integer-aligned square dabs",
+    "Connector": "straight segment or deterministic horizontal-then-vertical orthogonal elbow",
+    "Sticky": "fixed-color width/height rectangle",
+    "Group": "ordered traversal entry with zero pixel contribution"
+  },
+  "obligation_to_verification": {
+    "G3-05-V1-private-skia-boundary": "public-header scan, const FramePlan submission, private CanvasSkia linkage, and runtime boundary check",
+    "G3-05-V2-deterministic-raster": "independent 262144-byte RGBA corpus, independent FNV-1a digest, exact replay equality, transform/clip/erase assertions",
+    "G3-05-V3-reference-command-coverage": "distinguishable nine-kind fixture, per-region pixel assertions, traversal order, Group/no-Group pixel equality, and orthogonal connector oracle",
+    "G3-05-V4-rejection-isolation": "typed invalid-config, overflow, identity, empty-plan, unsupported-geometry, attached-endpoint, and erase-mask rejections with unchanged input/observation",
+    "G3-05-V5-boundary-hygiene": "authorized changed-path inventory, no public Skia/platform types, G3 predecessor matrix, RF01/G2 matrix, runtime boundary check, and git diff --check"
+  },
+  "test_plan": [
+    "Preserve the observed missing-backend RED before production implementation.",
+    "Require exact independent RGBA and digest equality for the frozen nine-kind fixture.",
+    "Exercise transform order, viewport clipping, erase, straight and orthogonal connector routing, replay, and Group zero-pixel behavior.",
+    "Exercise typed rejection and verify complete prior observation and immutable input preservation.",
+    "Run the G3 predecessor matrix, RF01/G2 matrix, dependency/boundary scans, SDK resolution, and source hygiene checks."
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "disposition": "CONTINUE_TO_DURABLE_VERIFICATION"
+}

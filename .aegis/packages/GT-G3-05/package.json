@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-05-P31-v0.2",
+  "task_id": "GT-G3-05",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Add the private Skia-backed Headless renderer for the immutable G3-04 FramePlan and prove deterministic raster/golden output without introducing surface or presentation lifecycle.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-05-headless-skia-backend"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "11fec1b308de03886ef5294b54654f48df95455f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b48f943ec493272cc45ce0ced365e4e5074f25f6a44c1498fb9b9a43a57315ad"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "744e8a40e4e0220ae098cef88d0de6f2f1af18b3598546d1197c28956dc744de"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "cf079e9eb38495b8311e4d90292c9c9febd0c617d4e61b9f97be55d8df1959f7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "30750ec4261f7e503d2e0622efd84a64646c89297ec2b5e66d1cf11cbd4237e9"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "fc806d25d141caf42fbacc1b204c68ac768501ecbefb9dd6ff14b942f641b191"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-05/",
+    "binding": "exact repository revision descended from the G3-04 main integration anchor 11fec1b308de03886ef5294b54654f48df95455f"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CONTROL_REASONING",
+    "next_action": "Independently review GT-G3-05-P31-v0.2; issue CODE_EXECUTION handoff only after exact macOS Skia consumer binding and independent nine-kind pixel-oracle preflights pass.",
+    "official_gate_pass_forbidden": true
+  }
+}

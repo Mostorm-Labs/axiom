@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-05",
+  "obligations": [
+    {
+      "id": "G3-05-V1-private-skia-boundary",
+      "requirement": "The Headless backend consumes only an immutable FramePlan at the Render Core boundary and does not expose Skia/platform types.",
+      "oracle": "Compile the backend through the public renderer-neutral header, inspect public includes and the exact changed-path dependency scan, and assert one const FramePlan submission.",
+      "acceptance": "Public headers contain no Skia/platform dependency; the backend accepts only const FramePlan and returns the existing typed BackendSubmissionResult.",
+      "evidence_required": "Focused Headless backend contract output and review-owned public-boundary scan."
+    },
+    {
+      "id": "G3-05-V2-deterministic-raster",
+      "requirement": "Identical FramePlan input rendered with the locked prebuilt Skia SDK produces byte-identical fixed-size RGBA readback and digest.",
+      "oracle": "Render the same distinguishable nine-kind FramePlan twice with fixed raster dimensions, color configuration, and no platform surface; compare exact RGBA bytes, dimensions, and digest. The test constructs expected RGBA bytes independently using hand-authored integer-aligned fixture regions and a test-only rectangle/path fill reference, then compares actual bytes and independently computes the digest.",
+      "acceptance": "Both submissions are accepted and readback bytes/digest are identical; the exact golden digest is recorded without treating digest as a replacement for structural plan equality.",
+      "evidence_required": "Committed Headless raster/golden evidence JSON and focused test transcript."
+    },
+    {
+      "id": "G3-05-V3-reference-command-coverage",
+      "requirement": "The Headless backend handles all nine G3-03 reference command variants deterministically, with Group retaining traversal semantics but contributing no pixels.",
+      "oracle": "Use a hand-authored distinguishable nine-kind FramePlan fixture. Assert all nine command variants are traversed in order, each pixel-contributing kind changes its assigned region, Group contributes zero pixels, and the expected byte vector is not obtained by invoking the backend under test.",
+      "acceptance": "All nine variants are accepted through the same private backend path; no semantic lookup or alternate scene traversal occurs.",
+      "evidence_required": "Nine-kind fixture inventory, independent expected-pixel corpus, command/raster assertions, and exact digest inputs."
+    },
+    {
+      "id": "G3-05-V4-rejection-isolation",
+      "requirement": "Invalid headless configuration or malformed plan input is rejected deterministically without canonical or FramePlan mutation or partial publication.",
+      "oracle": "Inject invalid raster configuration and identity-mismatched/empty plan cases; compare plan and backend observation before/after each rejection.",
+      "acceptance": "Typed rejection is deterministic, prior successful observation remains unchanged, and no surface/presentation publication is attempted.",
+      "evidence_required": "Negative-path test output and rejection evidence JSON."
+    },
+    {
+      "id": "G3-05-V5-boundary-hygiene",
+      "requirement": "G3-05 does not pull forward surface lifecycle, platform hosts, optimized caches, or later G3 work and preserves G3-01 through G3-04 and RF01/G2 behavior.",
+      "oracle": "Review-owned changed-path/dependency scan plus G3 focused matrix, RF01/G2 predecessor matrix, and git diff --check.",
+      "acceptance": "Only authorized Headless backend paths differ; predecessor tests pass and all forbidden dependency scans are empty.",
+      "evidence_required": "Changed-path inventory, dependency scan, predecessor logs, and diff check."
+    }
+  ]
+}
