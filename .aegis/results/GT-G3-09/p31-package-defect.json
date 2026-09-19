@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-09",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "classification": "TASK_PACKAGE_DEFECT",
+  "superseded_package": "GT-G3-09-P31-v0.1",
+  "replacement_package": "GT-G3-09-P31-v0.2",
+  "finding": "v0.1 required hosted Windows build/smoke evidence but did not authorize a CI workflow path that could produce reviewer-accessible evidence from the macOS execution host.",
+  "repair": "Authorize one G3-09 Windows validation workflow without changing the production semantic scope or terminal criteria.",
+  "target_wp_changed": false
+}

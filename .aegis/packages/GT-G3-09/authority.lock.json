@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-09",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a590c81b6bab3c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "trusted_section": "WP G3-09 — Implement Windows canonical surface reference host",
+    "content_hash": "0319a4b7d8f1f73d985019aad85c0a14f4adb76386fd84b4cda095baa994c6de"
+  },
+  "dependency": {
+    "g3_08_gate_decision": "gt-g3-08-p34-2026-09-19",
+    "g3_08_result_revision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+    "g3_08_integration_revision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+    "canonical_main_revision": "d3e15490db44732884f6146624ad3186feed78c2",
+    "required_state": "G3-08_CLOSED_AND_INTEGRATED"
+  },
+  "trusted_statements": {
+    "goal": "Implement a Windows reference host using the production Render Core and generation-bound canonical surface lifecycle.",
+    "consumes": [
+      "production RenderViewRuntime and Skia backend contracts",
+      "DemoSession camera and pointer commands",
+      "SurfaceLifecycle and PresentationTracker generation validation"
+    ],
+    "produces": [
+      "Windows-only canonical surface adapter",
+      "native metrics/surface generation and present feedback observation",
+      "portable stale-generation contract test and Windows smoke evidence"
+    ],
+    "forbidden": [
+      "SemanticDocument or SceneCompiler in the Windows adapter",
+      "GPU-to-CPU-readback-to-GDI live presentation",
+      "final D3D12/DXGI topology authority",
+      "Arc preview target or CanonicalVisible handoff",
+      "G3-10/G3-11 behavior"
+    ]
+  }
+}

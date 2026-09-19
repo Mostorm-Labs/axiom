@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-09",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create a Windows-only canonical surface adapter and reference host under apps/axiom_canvas_demo/platform/windows.",
+        "Add a portable stale-generation/metrics contract test before Windows-only code.",
+        "Add g3-windows-release reference preset without changing existing presets.",
+        "Record exact implementation, scope, and Windows smoke evidence under .aegis/results/GT-G3-09/."
+      ],
+      "authorized_mutation_scope": [
+        "apps/axiom_canvas_demo/platform/windows/**",
+        "apps/axiom_canvas_demo/tests/windows_surface_adapter_test.cpp",
+        "apps/axiom_canvas_demo/CMakeLists.txt",
+        "CMakePresets.json",
+        ".github/workflows/g3-windows-reference-host.yml",
+        ".aegis/packages/GT-G3-09/**",
+        ".aegis/results/GT-G3-09/**",
+        ".aegis/project.json",
+        ".aegis/state.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json"
+      ],
+      "forbidden_changes": [
+        "runtime/**",
+        "SemanticDocument, SceneCompiler, or RuntimeScene contract changes",
+        "GPU-to-CPU-readback-to-GDI live presentation",
+        "final D3D12/DXGI topology authority",
+        "G3-10, G3-11, G4, or G5 behavior"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The G3-09 portable adapter test target cannot compile because the adapter and target do not exist at the anchor.",
+      "observation_seam": "Configure g3-host-debug after adding the test target but before adding the adapter implementation."
+    },
+    "tests": {
+      "required": [
+        "cmake --preset g3-host-debug",
+        "cmake --build --preset g3-host-debug --target axiom_demo_windows_surface_tests",
+        "ctest --preset g3-host-debug -R '^G3WindowsSurfaceAdapter$' --output-on-failure",
+        "cmake --build --preset g3-host-debug",
+        "ctest --preset g3-host-debug --output-on-failure",
+        "cmake --preset rf01-host-debug",
+        "cmake --build --preset rf01-host-debug",
+        "ctest --preset rf01-host-debug --output-on-failure",
+        "cmake --preset g3-windows-release",
+        "cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows",
+        "git diff --check d3e15490db44732884f6146624ad3186feed78c2..HEAD"
+      ]
+    },
+    "hosted_verification": {
+      "required": ["windows-build-and-native-smoke"],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "surface-evidence.json",
+        "scope-evidence.json",
+        "windows-smoke-evidence.json"
+      ],
+      "corroborative": ["portable-regression-summary.json"]
+    },
+    "terminal_success": [
+      "Portable generation-bound adapter contract passes.",
+      "Windows target builds with the locked Windows reference configuration.",
+      "Native smoke records resize/DPI and Presented feedback without GDI live-present fallback.",
+      "Required G3 and RF01/G2 regressions pass; scope and diff checks pass.",
+      "Exact result revision is pushed and independently audited by P34.",
+      "P34 PASS and durable Gate decision close GT-G3-09 without starting G3-10."
+    ],
+    "explicit_terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_MISSING_INPUT",
+      "BLOCKED_UNRESOLVED_DECISION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_ENVIRONMENT",
+      "PACKAGE_SCOPE_DIVERGENCE"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

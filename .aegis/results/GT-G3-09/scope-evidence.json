@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-09",
+  "authorized_paths": [
+    "apps/axiom_canvas_demo/platform/windows/**",
+    "apps/axiom_canvas_demo/tests/windows_surface_adapter_test.cpp",
+    "apps/axiom_canvas_demo/CMakeLists.txt",
+    "CMakePresets.json",
+    ".github/workflows/g3-windows-reference-host.yml",
+    ".aegis/packages/GT-G3-09/**",
+    ".aegis/results/GT-G3-09/**"
+  ],
+  "forbidden_scan": {
+    "semantic_document_in_windows_adapter": false,
+    "scene_compiler_in_windows_adapter": false,
+    "runtime_scene_iteration_in_windows_adapter": false,
+    "gdi_live_present_in_windows_adapter": false,
+    "g3_10_or_g3_11_scope": false
+  },
+  "production_runtime_unchanged": true,
+  "result": "PASS"
+}

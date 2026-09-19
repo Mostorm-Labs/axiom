@@ -1,0 +1,71 @@
+name: G3-09 Windows canonical surface reference host
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'apps/axiom_canvas_demo/**'
+      - 'runtime/render/**'
+      - 'runtime/scene/**'
+      - 'runtime/semantic/**'
+      - 'runtime/foundation/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'r1-full-skia-sdk.lock.json'
+      - 'tools/skia/**'
+      - '.aegis/packages/GT-G3-09/**'
+      - '.github/workflows/g3-windows-reference-host.yml'
+
+jobs:
+  windows-reference-host:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Install locked Windows toolchain
+        shell: pwsh
+        run: |
+          python tools/bootstrap_deps.py --core --windows-llvm
+          $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
+          $installDir = Join-Path $PWD '.deps/llvm'
+          Start-Process $installer -ArgumentList '/S', "/D=$installDir" -Wait
+          (Join-Path $installDir 'bin') | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Fetch locked Skia SDK
+        shell: pwsh
+        run: |
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release
+      - name: Configure G3-09 Windows host
+        shell: pwsh
+        run: |
+          $sdkRoot = Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release
+          $config = Join-Path $sdkRoot 'lib/cmake/CanvasSkia/CanvasSkiaConfig.cmake'
+          if (-not (Test-Path $config -PathType Leaf)) {
+            throw "Locked Windows Skia SDK is missing CanvasSkiaConfig.cmake: $config"
+          }
+          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot"
+      - name: Build Windows host
+        shell: pwsh
+        run: cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows --parallel
+      - name: Run portable and Windows smoke
+        shell: pwsh
+        run: |
+          ctest --test-dir out/g3-windows-release --output-on-failure
+          New-Item -ItemType Directory -Force out/g3-09-windows-result | Out-Null
+          out/g3-windows-release/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe "--smoke-evidence=$PWD/out/g3-09-windows-result/windows-smoke-evidence.json"
+          if ($LASTEXITCODE -ne 0) { throw "Windows canonical surface smoke failed" }
+          $evidence = Get-Content out/g3-09-windows-result/windows-smoke-evidence.json | ConvertFrom-Json
+          $evidence | Add-Member -NotePropertyName workflow_run_id -NotePropertyValue $env:GITHUB_RUN_ID
+          $evidence | Add-Member -NotePropertyName run_url -NotePropertyValue "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          $evidence | ConvertTo-Json -Compress | Set-Content out/g3-09-windows-result/windows-smoke-evidence.json
+          if ($evidence.result -ne 'PASS') { throw "Windows canonical surface smoke reported $($evidence.result): $($evidence.error)" }
+      - name: Upload G3-09 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g3-09-windows-reference-host
+          path: out/g3-09-windows-result/windows-smoke-evidence.json

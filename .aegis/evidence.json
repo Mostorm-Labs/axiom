@@ -458,6 +458,38 @@
         "integration_status": "integrated",
         "integration_conformance": "conforming"
       }
+    },
+    {
+      "id": "ev-gt-g3-09-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+      "supports": ["gt-g3-09", "int-branch-g3-09-awaiting-integration"],
+      "inputs": [
+        "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "repo:.aegis/packages/GT-G3-09/package.json",
+        "repo:.aegis/results/GT-G3-09/result.json",
+        "repo:.aegis/results/GT-G3-09/surface-evidence.json",
+        "repo:.aegis/results/GT-G3-09/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-09/windows-smoke-evidence.json",
+        "repo:.aegis/results/GT-G3-09/p34-control-review.json",
+        "github:Mostorm-Labs/axiom/actions/runs/35425698446"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "execution_branch": "codex/g3-09-windows-canonical-surface-host",
+        "package_id": "GT-G3-09-P31-v0.2",
+        "windows_run_id": 35425698446,
+        "windows_job_id": 105851124944,
+        "windows_artifact_id": 10578969623,
+        "g3_host_debug": {"passed": 8, "failed": 0},
+        "rf01_g2_host_debug": {"passed": 19, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "awaiting_integration"
+      }
     }
   ]
 }
