@@ -66,7 +66,9 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   if (!ink_->finish().has_value()) return false;
-  return interaction_->commit(strokeId, interaction::OperationRequest{operationId});
+  if (!interaction_->commit(strokeId, interaction::OperationRequest{operationId})) return false;
+  preview_->cancel();
+  return true;
 }
 
 interaction::SubmitResult InkPlaygroundHost::submit(

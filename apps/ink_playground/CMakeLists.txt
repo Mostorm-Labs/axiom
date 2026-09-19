@@ -27,6 +27,7 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundHud COMMAND axiom_ink_playground_tests hud)
   add_test(NAME G4InkPlaygroundSurface COMMAND axiom_ink_playground_tests surface)
   add_test(NAME G4InkPlaygroundPreview COMMAND axiom_ink_playground_tests preview)
+  add_test(NAME G4InkPlaygroundRepeatedStrokes COMMAND axiom_ink_playground_tests repeated)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
 endif()
 

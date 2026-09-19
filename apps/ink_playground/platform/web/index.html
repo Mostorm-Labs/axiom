@@ -22,23 +22,34 @@
     throw new Error("Ink Playground surface binding failed");
   }
   let stroke = 0;
+  let sampleSequence = 0;
   const started = new Set();
+  const strokes = [];
+  let activeStroke = null;
   const nowNs = () => Math.round(performance.now() * 1000000);
+  const canvasPoint = sample => {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (sample.clientX - rect.left) * canvas.width / rect.width,
+      y: (sample.clientY - rect.top) * canvas.height / rect.height
+    };
+  };
   const send = (event, phase) => {
     const list = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
-    if (phase === "down") { stroke += 1n; started.add(event.pointerId); module._axiom_ink_begin(host, stroke); }
-    list.forEach((sample, i) => module._axiom_ink_sample(host, BigInt(i + 1), BigInt(nowNs()),
-      sample.offsetX, sample.offsetY, sample.pressure || 0.5, 0, BigInt(nowNs())));
-    if (phase === "up") { module._axiom_ink_commit(host, stroke, stroke); started.delete(event.pointerId); }
+    if (phase === "down") { stroke += 1; started.add(event.pointerId); activeStroke = []; strokes.push(activeStroke); module._axiom_ink_begin(host, stroke); }
+    list.forEach(sample => { const point = canvasPoint(sample); module._axiom_ink_sample(host, ++sampleSequence, nowNs(),
+      point.x, point.y, sample.pressure || 0.5, 0, nowNs()); activeStroke.push(point); });
+    if (phase === "up") { module._axiom_ink_commit(host, stroke, stroke); started.delete(event.pointerId); activeStroke = null; }
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.strokeStyle = "#1a5bff"; context.lineWidth = 3; context.beginPath();
-    const pointCount = Number(module._axiom_ink_point_count(host));
-    for (let i = 0; i < pointCount; ++i) {
-      const x = module._axiom_ink_point_x(host, BigInt(i)), y = module._axiom_ink_point_y(host, BigInt(i));
-      if (i === 0) context.moveTo(x, y); else context.lineTo(x, y);
-    }
-    context.stroke();
+    context.strokeStyle = "#1a5bff"; context.lineWidth = 3;
+    strokes.forEach(points => {
+      if (points.length === 0) return;
+      context.beginPath();
+      points.forEach((point, i) => { if (i === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y); });
+      context.stroke();
+    });
+    const pointCount = strokes.reduce((count, points) => count + points.length, 0);
     hud.textContent = JSON.stringify({ pointCount, coalescedBatch: list.length, surface: "available" });
   };
   canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); send(e, "down"); });

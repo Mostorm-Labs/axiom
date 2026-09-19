@@ -63,6 +63,22 @@ void preview_points_test() {
   assert(points[0].x == 10.0F && points[1].y == 40.0F);
 }
 
+void repeated_strokes_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  canvas::input::PointerSampleBatch first;
+  first.samples.push_back({1, 1'000'000, 10.0F, 20.0F, 0.5F, false});
+  assert(host.beginStroke(21));
+  assert(host.accept(first, 1'000'000));
+  assert(host.commitStroke(21, 121));
+
+  canvas::input::PointerSampleBatch second;
+  second.samples.push_back({2, 2'000'000, 100.0F, 120.0F, 0.7F, false});
+  assert(host.beginStroke(22));
+  assert(host.accept(second, 2'000'000));
+  assert(host.commitStroke(22, 122));
+  assert(host.submittedOperationCount() == 2);
+}
+
 void platform_test() {
   using namespace canvas::ink_playground;
   const auto windows = platformContract(PlatformKind::kWindows);
@@ -86,6 +102,7 @@ int main(int argc, char** argv) {
   else if (mode == "hud") hud_test();
   else if (mode == "surface") surface_test();
   else if (mode == "preview") preview_points_test();
+  else if (mode == "repeated") repeated_strokes_test();
   else if (mode == "platform") platform_test();
   else return 2;
   return 0;
