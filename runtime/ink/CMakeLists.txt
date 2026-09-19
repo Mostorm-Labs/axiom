@@ -3,7 +3,9 @@ add_library(canvas_runtime_ink STATIC
   src/ink_engine.cpp
   src/stroke_session.cpp
   src/pointer_trace.cpp
-  src/replay_runner.cpp)
+  src/replay_runner.cpp
+  src/preview_model.cpp
+  src/arc_preview_bridge.cpp)
 target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_ink PUBLIC canvas_runtime_foundation canvas_runtime_input)
 target_compile_features(canvas_runtime_ink PUBLIC cxx_std_20)
@@ -31,4 +33,13 @@ if(BUILD_TESTING)
     target_compile_options(axiom_pointer_trace_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   endif()
   add_test(NAME G4PointerTrace COMMAND axiom_pointer_trace_tests)
+  add_executable(axiom_preview_model_tests tests/preview_model_test.cpp)
+  target_link_libraries(axiom_preview_model_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_preview_model_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_preview_model_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_preview_model_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G4PreviewModel COMMAND axiom_preview_model_tests)
 endif()
