@@ -4,7 +4,7 @@
   "resolved_current_g": "G3",
   "current_work_package": "GT-G3-11",
   "current_stage": "P34_CONTROL_REVIEW",
-  "blocker_type": "BLOCKED_ENVIRONMENT",
+  "blocker_type": null,
   "owning_layer": "existing G0 Android instrumentation validation environment",
   "exact_failure": "GitHub Actions run 35434798504, job 105876244356: instrumentation and APK construction passed, but the required validation step failed because frozen semantic-conformance source-bound tests could not resolve historical commits.",
   "evidence": [
@@ -19,5 +19,16 @@
   "repository_revision": "695ddfba2abd87089dc3bc752cb0eb37e0d9ef98",
   "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
   "materialized_package": ".aegis/packages/GT-G3-11/package.json",
-  "successor_execution_started": false
+  "successor_execution_started": false,
+  "resolution": {
+    "g0_repair_pr": 103,
+    "g0_merge_revision": "9f6f0f351828a58fc9023f17c7306f009fbaf38d",
+    "g3_rerun_pr": 102,
+    "g3_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+    "hosted_android_run": 35438947330,
+    "hosted_android_job": 105886316012,
+    "hosted_android_artifact": 10582314926,
+    "hosted_pr_checks_run": 35438947386,
+    "status": "RESOLVED_FOR_P34_REVIEW"
+  }
 }

@@ -7,7 +7,7 @@
   "repository": "Mostorm-Labs/axiom",
   "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
   "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
-  "reviewed_branch_head": "695ddfba2abd87089dc3bc752cb0eb37e0d9ef98",
+  "reviewed_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
   "result_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
   "implementation_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
   "frozen_requirement_audit": {
@@ -23,12 +23,29 @@
     "local_schema_validation": "PASS: 24/24",
     "local_rf01_g2_matrix": "PASS: 19/19",
     "hosted_android_instrumentation": {
-      "workflow_run_id": 35436043544,
-      "job_id": 105878740998,
+      "workflow_run_id": 35438947330,
+      "job_id": 105886316012,
+      "artifact_id": 10582314926,
+      "head_sha": "af9f0c5786918608a29a72a1a69c8b8512b34894",
       "instrumentation_and_apk_steps": "PASS",
-      "validation_step": "FAIL"
+      "validation_step": "PASS",
+      "checkout_fetch_depth": 0,
+      "unrelated_g1_c8_tests_executed": false
     },
-    "hosted_pr_checks": "BLOCKED_BY_GT_G0_12_FAILURE",
+    "hosted_pr_checks": {
+      "workflow_run_id": 35438947386,
+      "jobs": [
+        "platform/pr-contract (android)",
+        "platform/pr-contract (apple)",
+        "platform/pr-contract (web)",
+        "platform/pr-contract (windows)",
+        "platform/pr-gate",
+        "platform/protocol-seed",
+        "verification/schema-validate",
+        "conformance/pr-seed"
+      ],
+      "conclusion": "PASS"
+    },
     "git_diff_check": "PASS"
   },
   "repository_reality_audit": {
@@ -39,23 +56,20 @@
     "package_binding": "PASS",
     "authorized_mutation_scope": "PASS",
     "closed_wp_result_identities_rewritten": false,
-    "g0_authority_or_schema_changed": false
+    "g0_authority_or_schema_changed": false,
+    "remote_head_matches_reviewed_head": true,
+    "upstream_g0_merge_revision": "9f6f0f351828a58fc9023f17c7306f009fbaf38d",
+    "pr_number": 102,
+    "pr_head": "af9f0c5786918608a29a72a1a69c8b8512b34894"
   },
-  "blocking_finding": {
-    "classification": "ENVIRONMENT / EVIDENCE BLOCKER",
-    "failure_mode": "The required hosted G0 Android validation job fails in pre-existing semantic-conformance source-bound tests because the runner checkout cannot resolve historical source/package revisions (including 1b370bd242ce19838889b28beb7b75979244cbab, e4facb7ab786b994dd5c9bb4bc3e4d57fe95d18e, and 666082e114310503b019873fb9e12744c19bcc1e).",
-    "impact": "The frozen hosted verification boundary is not green, so the cross-platform G3 completion evidence is not independently acceptable even though Android instrumentation itself produced its facts-only observation and all G3-11-local checks pass.",
-    "independent_coverage": "The G3 report, local report/CLI/schema tests, RF01 matrix, and non-Android hosted checks pass; none replaces the required hosted validation of the Android evidence job.",
-    "why_not_g3_11_implementation": "The failing tests are in existing semantic-conformance generators and no semantic-conformance source was changed by GT-G3-11. Repair would require changing the pre-existing G0 harness/evidence boundary outside the frozen GT-G3-11 mutation scope.",
-    "approved_substitute": false
-  },
-  "verdict": "BLOCKED_ENVIRONMENT",
-  "status": "TERMINAL_BLOCKER",
+  "blocking_finding": null,
+  "verdict": "PASS",
+  "status": "READY_FOR_INDEPENDENT_INTEGRATION_REVIEW",
   "official_gate_pass_claimed": false,
   "g3_11_pass_claimed": false,
   "overall_g3_pass_claimed": false,
   "integration_status": "NOT_INTEGRATED",
   "successor_started": false,
-  "next_surface": "CONTROL_REASONING",
-  "required_human_action": "Repair or provide an accepted durable substitute for the existing G0 Android semantic-conformance source-bound validation environment, then rerun the exact hosted evidence boundary and G3 completion review."
+  "next_surface": "CONTROL_REVIEW",
+  "required_human_action": "Review and merge PR #102; after merge, record the exact main integration SHA before any G3 completion promotion."
 }
