@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-09-P31-v0.2",
+  "task_id": "GT-G3-09",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Implement the Windows canonical surface reference host through the production Render Core.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-09-windows-canonical-surface-host"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "d3e15490db44732884f6146624ad3186feed78c2",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "8087be806be5a7e4cb68ed4b5e2ea6396de092c816c05a7ac461c8d8b28c53b9"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "6fe26033b0c2e059874422d5e2d970b81758936a1181eac100a479d3bd825c2b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "89aeb3fecb9563643f058887122f418ad14c3982d77654a7b67f136bf40a78b7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "6804bdd06e58d8be28819da2ece391a5952f2884eb6594f2d0fa15ed0f649ea1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f41b70a12b86d32e597540912a206c17003fbaef884c6add1f649e327d88f2bf"
+  },
+  "supersedes": "GT-G3-09-P31-v0.1",
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-09/",
+    "binding": "exact pushed repository revision descended from the task anchor"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute the complete frozen G3-09 closure contract and return the exact pushed result for independent P34 review.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

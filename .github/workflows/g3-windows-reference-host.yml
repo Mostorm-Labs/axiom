@@ -1,0 +1,52 @@
+name: G3-09 Windows canonical surface reference host
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'apps/axiom_canvas_demo/**'
+      - 'runtime/render/**'
+      - 'runtime/scene/**'
+      - 'runtime/semantic/**'
+      - 'runtime/foundation/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'r1-full-skia-sdk.lock.json'
+      - 'tools/skia/**'
+      - '.aegis/packages/GT-G3-09/**'
+      - '.github/workflows/g3-windows-reference-host.yml'
+
+jobs:
+  windows-reference-host:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install locked Windows toolchain
+        shell: pwsh
+        run: python tools/bootstrap_deps.py --core --windows-llvm
+      - name: Fetch locked Skia SDK
+        shell: pwsh
+        run: |
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release
+      - name: Configure G3-09 Windows host
+        shell: pwsh
+        run: |
+          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCANVAS_SKIA_SDK_ROOT="$PWD/.deps/skia-sdk/windows-x64-d3d12"
+      - name: Build Windows host
+        shell: pwsh
+        run: cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows --parallel
+      - name: Run portable and Windows smoke
+        shell: pwsh
+        run: |
+          ctest --preset g3-windows-release --output-on-failure
+          New-Item -ItemType Directory -Force out/g3-09-windows-result | Out-Null
+          out/g3-windows-release/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe
+          '{"result":"PASS","platform":"windows-2025","target":"g3-windows-release","host":"axiom_canvas_demo_windows"}' | Set-Content out/g3-09-windows-result/windows-smoke-evidence.json
+      - name: Upload G3-09 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-g3-09-windows-reference-host
+          path: out/g3-09-windows-result/windows-smoke-evidence.json
