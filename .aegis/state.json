@@ -2,7 +2,7 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G4-07_REPOSITORY_INTEGRATED",
+  "active_stage": "GT-G4-08_REPOSITORY_INTEGRATED",
   "current_owner": "aegis",
   "earliest_untrusted_layer": null,
   "status": "READY",
@@ -28,17 +28,17 @@
     "completion_decision_id": "g3-completion-2026-09-19"
   },
   "g4": {
-    "status": "G4-07_CLOSED_AND_INTEGRATED",
+    "status": "G4-08_CLOSED_AND_INTEGRATED",
     "ingress": "READY_FOR_SUCCESSOR_ROUTING",
     "implementation_authorized": false,
-    "current_work_package": "GT-G4-07",
+    "current_work_package": "GT-G4-08",
     "current_authority": "g4-capability-authority",
-    "task_anchor": "466b3235b1996aef62e7acedba15965b23f627c2",
+    "task_anchor": "04dd3bbd37aa83b85c12429ce3ae21eaec92aa3e",
     "plan_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
-    "result_revision": "693622a3eb56761da459c817346eb11e1f4d594e",
-    "reviewed_branch_head": "22b075551d0429ba98539514861d6b4016814810",
-    "integration_revision": "f6f44591bfae51767d4cdff80714981a23e34aae",
-    "gate_decision_id": "gt-g4-07-p34-2026-09-19"
+    "result_revision": "667cab1ddc89851fd8f297dd1d35c1134ea3b64f",
+    "reviewed_branch_head": "4de5d64e8825a5322199cfe04e21c3344002c56a",
+    "integration_revision": "34c7269ed69d02fc12ca3cbcc19e15815d028deb",
+    "gate_decision_id": "gt-g4-08-p34-2026-09-19"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -200,23 +200,27 @@
     {
       "integration_id": "int-pr117-g4-07",
       "applicability": "current"
+    },
+    {
+      "integration_id": "int-pr119-g4-08",
+      "applicability": "current"
     }
   ],
   "recommended_next_stage": "G4_SUCCESSOR_ROUTING",
   "handoff": {
     "next_surface": "CONTROL_REASONING",
-    "next_action": "G4-07 is closed and integrated through PR #117 at f6f44591bfae51767d4cdff80714981a23e34aae. Materialize GT-G4-08 separately from this exact main revision.",
-    "p31_package": ".aegis/packages/GT-G4-07/package.json",
-    "p31_package_id": "GT-G4-07-P31-v0.1",
+    "next_action": "G4-08 is closed and integrated through PR #119 at 34c7269ed69d02fc12ca3cbcc19e15815d028deb. Materialize GT-G4-09 separately from this exact main revision.",
+    "p31_package": ".aegis/packages/GT-G4-08/package.json",
+    "p31_package_id": "GT-G4-08-P31-v0.1",
     "p31_materialized": true,
-    "package_materialization_ref": "9b6705242e90f4272b0b6112589004d55d4ec9c2",
-    "result_revision": "693622a3eb56761da459c817346eb11e1f4d594e",
-    "reviewed_branch_head": "22b075551d0429ba98539514861d6b4016814810",
-    "integration_revision": "f6f44591bfae51767d4cdff80714981a23e34aae",
-    "gate_decision_id": "gt-g4-07-p34-2026-09-19",
+    "package_materialization_ref": "20af8c2dd52510f32d39ed9bd3c40d32ea69ce05",
+    "result_revision": "667cab1ddc89851fd8f297dd1d35c1134ea3b64f",
+    "reviewed_branch_head": "4de5d64e8825a5322199cfe04e21c3344002c56a",
+    "integration_revision": "34c7269ed69d02fc12ca3cbcc19e15815d028deb",
+    "gate_decision_id": "gt-g4-08-p34-2026-09-19",
     "g2_reopen": false,
     "g3_implementation_start": false,
     "g4_implementation_start": false,
-    "g4_p31_package": ".aegis/packages/GT-G4-07/package.json"
+    "g4_p31_package": ".aegis/packages/GT-G4-08/package.json"
   }
 }
