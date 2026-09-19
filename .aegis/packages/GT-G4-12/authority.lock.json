@@ -1,0 +1,6 @@
+{
+  "schema_version":"0.1","task_id":"GT-G4-12","current":true,
+  "source":{"provider":"notion","ref":"notion://3c84c57a590c81128f21c0494d187cdb","title":"G4 Interaction + Ink Implementation Plan v0.2","trusted_section":"WP G4-12 — Ink Playground 0.1 / Physical Integration","content_hash":"9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"},
+  "dependency":{"g4_11_gate_decision":"gt-g4-11-p34-2026-09-19","g4_11_integration_revision":"ab14b94cfc080ee1478f896268d619c327338a44"},
+  "trusted_statements":{"goal":"Use production modules to deliver the first physical-device writable Ink Playground 0.1.","required":["Windows and Android high-frequency input uses native Arc InputSource","Web uses a thin PointerEvent to WASM batch adapter","Pen and pressure","Select Move Eraser Pan Zoom Undo","HUD exposes sample Hz batch queue age ink ms preview revision prediction depth present evidence kind pending handoff count frame ms","physical latency evidence is separate from headless timing"],"forbidden":["platform brush selection or eraser semantics","direct SemanticDocument/ObjectStore/RuntimeScene mutation","new canonical operation vocabulary","G5 or G6 behavior","synthetic evidence presented as physical evidence"]}
+}
