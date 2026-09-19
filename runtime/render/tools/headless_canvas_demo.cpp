@@ -5,7 +5,6 @@
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/visibility_resolver.hpp"
 #include "canvas/scene/direct_render_scene.hpp"
-#include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/scene/scene_binding.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
@@ -13,6 +12,7 @@
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/semantic/snapshot.hpp"
 #include "canvas/semantic/snapshot_bootstrap.hpp"
+#include "../../scene/src/incremental_runtime_full_materialization_bridge.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -34,8 +34,16 @@ int fail(const char* m){std::cerr<<m<<'\n';return 1;}
 class DemoCompiler final : public ISemanticSceneCompiler {
  public:
   foundation::Result<CompiledSceneSnapshot> compileFull(const semantic::SemanticReadView& view) const override {
-    const auto source=view.allObjects(); CompiledSceneSnapshot out{SceneRevision(view.generation().value()),{}}; out.records.reserve(source.size());
-    for(const auto& s:source){const auto bounds=scene::computeBounds(s); SceneObjectKind k=SceneObjectKind::kShape; switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;default:break;} const auto flags=static_cast<SceneRecordFlags>(static_cast<std::uint32_t>(SceneRecordFlags::kVisible)|static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable)); out.records.push_back({s.id,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,bounds.world,ContentRevision(1),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.id)),1},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.id)),1}});}
+    const auto projection = internal::materializeFullScene(view);
+    if (!projection) return foundation::Result<CompiledSceneSnapshot>::failure(projection.error());
+    CompiledSceneSnapshot out{SceneRevision(projection.value().generation.value()),{}};
+    out.records.reserve(projection.value().records.size());
+    for (const auto& s : projection.value().records) {
+      SceneObjectKind k=SceneObjectKind::kShape;
+      switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;default:break;}
+      const auto flags=static_cast<SceneRecordFlags>(static_cast<std::uint32_t>(SceneRecordFlags::kVisible)|static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable));
+      out.records.push_back({s.objectId,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,s.worldBounds,ContentRevision(s.kindVersion),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion}});
+    }
     return foundation::Result<CompiledSceneSnapshot>::success(std::move(out));
   }
   foundation::Result<CompiledSceneDelta> compileDelta(const semantic::SemanticReadView&,const semantic::ChangeSet&) const override{return foundation::Result<CompiledSceneDelta>::failure({foundation::ErrorCode::kRequiresFullRebuild,"demo full"});}
