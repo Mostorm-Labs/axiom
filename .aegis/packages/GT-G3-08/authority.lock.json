@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "trusted_section": "WP G3-08 — Add demo-only camera, HitTest and transient selection harness"
+  },
+  "dependency": {
+    "g3_07_gate_decision": "gt-g3-07-p34-2026-09-19",
+    "g3_07_result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+    "g3_07_integration_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8",
+    "control_plane_reconciliation_revision": "636aca53536e5096868f9c5ed716ef6d0891a875",
+    "required_state": "GT-G3-07_CLOSED_AND_INTEGRATED"
+  },
+  "trusted_statements": {
+    "goal": "Add demo-only pan, zoom, G2-authoritative hit testing, and transient selection without establishing G4 production interaction contracts.",
+    "consumes": [
+      "G2 Scene::hitTest and its spatial-candidate then precise-hit pipeline",
+      "G3 FrameState CameraState and SurfaceMetrics",
+      "ObjectId as an observation-only transient selection identity"
+    ],
+    "produces": [
+      "CameraController with invertible world/view transforms, pan, and anchored zoom",
+      "SceneHitTestPort adapter and DemoHitSelectHarness",
+      "DemoTransientSnapshot carrying demo-only selected ObjectId and overlay identity"
+    ],
+    "forbidden": [
+      "SemanticDocument or canonical selection fields",
+      "RuntimeScene camera or selection mutation",
+      "production EditorSession, SelectionSession, tool, history, or operation design",
+      "platform-side precise hit-test implementation",
+      "G3-09 or later platform-host work"
+    ]
+  }
+}

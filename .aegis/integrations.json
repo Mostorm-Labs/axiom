@@ -168,6 +168,21 @@
       "evidence_ids": ["ev-gt-g3-07-p34", "ev-int-pr94-g3-07"],
       "applicability": "current",
       "actionability": "historical_occurrence_preserved"
+    },
+    {
+      "id": "int-branch-g3-08-awaiting-integration",
+      "kind": "github-branch-candidate",
+      "ref": "github:Mostorm-Labs/axiom@codex/g3-08-camera-hit-select-harness",
+      "target_ref": "refs/heads/main",
+      "source_result_revision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+      "status": "awaiting_integration",
+      "gate_decision_binding": {
+        "kind": "bound",
+        "gate_decision_id": "gt-g3-08-p34-2026-09-19"
+      },
+      "evidence_ids": ["ev-gt-g3-08-p34"],
+      "applicability": "current",
+      "actionability": "awaiting_repository_integration"
     }
   ]
 }

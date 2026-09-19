@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "stage": "P32",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "task_anchor": "636aca53536e5096868f9c5ed716ef6d0891a875",
+  "package_id": "GT-G3-08-P31-v0.1",
+  "package_materialization_ref": "29c6bd5b7b6956bb0bae651eafe3bd1d74e4619d",
+  "execution_branch": "codex/g3-08-camera-hit-select-harness",
+  "result_revision": "850db33694a51e07481e187f3ab4004eaed98122",
+  "reverification_revision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+  "required_evidence": [
+    "repo:.aegis/results/GT-G3-08/red-evidence.json",
+    "repo:.aegis/results/GT-G3-08/camera-evidence.json",
+    "repo:.aegis/results/GT-G3-08/hit-select-evidence.json",
+    "repo:.aegis/results/GT-G3-08/scope-evidence.json"
+  ],
+  "verification": {
+    "G3Camera": "PASS",
+    "G3DemoHitSelect": "PASS",
+    "g3_focused_matrix": {"passed": 7, "failed": 0},
+    "rf01_g2_matrix": {"passed": 19, "failed": 0},
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass_claimed": false
+}

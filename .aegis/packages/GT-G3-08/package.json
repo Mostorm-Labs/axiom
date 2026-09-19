@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-08-P31-v0.1",
+  "task_id": "GT-G3-08",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Add demo-only camera, G2-authoritative hit testing, and transient selection harness.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-08-camera-hit-select-harness"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "636aca53536e5096868f9c5ed716ef6d0891a875",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path": "authority.lock.json", "sha256": "2f70d01d402ebf25969dfb3cdd303792f52c8cdfa656cf4fef54d89ae81a03eb"},
+  "verification_lock_ref": {"path": "verification.lock.json", "sha256": "ad20181c2894d2ec15ad7bec7eae63020264c51be8f36bf92a50c4450f8c5b47"},
+  "execution_contract_ref": {"path": "execution-contract.json", "sha256": "6869635209f97ffd3286d7526aa0570276aebe1ec82b285dc69e9721719af310"},
+  "implementation_context_ref": {"path": "implementation-context.md", "sha256": "31c68affbe425b2da697eecd0349d8f4740e294b7f359c5fd981e5d4f643c080"},
+  "evidence_contract_ref": {"path": "evidence-contract.json", "sha256": "4e2b06b56c97d9818425a52e0f4a0263915ada7c7c296d731461f81c460ec82e"},
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-08/",
+    "binding": "exact pushed repository revision descended from the task anchor"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute the complete frozen G3-08 closure contract and return the exact pushed result for independent P34 review.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

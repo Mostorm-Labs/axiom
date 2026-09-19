@@ -1,0 +1,66 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create apps/axiom_canvas_demo/common/camera_controller.hpp and .cpp.",
+        "Create apps/axiom_canvas_demo/common/demo_transient_state.hpp and demo_hit_select.hpp/.cpp.",
+        "Create camera_controller_test.cpp and demo_hit_select_test.cpp with real behavior oracles.",
+        "Add minimal apps demo CMake wiring and root opt-in subdirectory wiring.",
+        "Commit durable RED, camera, hit-select, scope, result, and Gate review evidence under .aegis/results/GT-G3-08/."
+      ],
+      "authorized_mutation_scope": [
+        "apps/axiom_canvas_demo/**",
+        "CMakeLists.txt",
+        ".aegis/packages/GT-G3-08/**",
+        ".aegis/results/GT-G3-08/**",
+        ".aegis/project.json",
+        ".aegis/state.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json"
+      ],
+      "forbidden_changes": [
+        "runtime/semantic/**, runtime/scene/**, runtime/render/**, runtime/foundation/**",
+        "canonical data contracts, RuntimeScene contracts, or Scene hit-test behavior",
+        "EditorSession, SelectionSession, operation, history, tool, platform host, or G3-09+ behavior"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The G3Camera and G3DemoHitSelect targets cannot compile because the G3-08 production headers and sources do not exist at the anchor.",
+      "observation_seam": "Build the two exact test targets after adding tests/CMake but before production files."
+    },
+    "tests": {
+      "required": [
+        "cmake --preset g3-host-debug",
+        "cmake --build --preset g3-host-debug --target axiom_demo_camera_tests axiom_demo_hit_select_tests",
+        "ctest --preset g3-host-debug -R '^(G3Camera|G3DemoHitSelect)$' --output-on-failure",
+        "cmake --build --preset g3-host-debug",
+        "ctest --preset g3-host-debug --output-on-failure",
+        "cmake --preset rf01-host-debug",
+        "cmake --build --preset rf01-host-debug",
+        "ctest --preset rf01-host-debug --output-on-failure",
+        "git diff --check 636aca53536e5096868f9c5ed716ef6d0891a875..HEAD"
+      ]
+    },
+    "terminal_success": [
+      "Camera transform, pan, anchored zoom, input rejection, and generation tests pass.",
+      "Real G2 Scene hit/select test proves candidate-before-precise diagnostics and frontmost selection.",
+      "Selection changes transient overlay identity while semantic, Scene, and RuntimeScene observations stay unchanged.",
+      "Required G3 and RF01/G2 regressions pass; mutation scope and diff check pass.",
+      "Exact result revision is pushed and independently audited by P34.",
+      "P34 PASS and durable Gate decision close GT-G3-08 without starting G3-09."
+    ],
+    "explicit_terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_MISSING_INPUT",
+      "BLOCKED_UNRESOLVED_DECISION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_ENVIRONMENT",
+      "PACKAGE_SCOPE_DIVERGENCE"
+    ],
+    "continue_until_terminal_state": true
+  }
+}

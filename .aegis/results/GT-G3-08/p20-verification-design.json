@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "verification_id": "GT-G3-08-P20-v0.1",
+  "authority_ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+  "obligations": [
+    {
+      "id": "G3-08-V1-camera-transform",
+      "requirement": "Demo camera pan and anchored zoom are deterministic, invertible, and per-view only.",
+      "oracle": "World-to-view and view-to-world round trips, pan direction, zoom-anchor invariance, invalid input rejection, and monotonic camera generation.",
+      "acceptance": "All exact and tolerance-based transform assertions pass without semantic or RuntimeScene mutation."
+    },
+    {
+      "id": "G3-08-V2-g2-hit-authority",
+      "requirement": "Demo hit/select delegates to the G2 Scene hit-test contract instead of reimplementing precise hit testing.",
+      "oracle": "A real Scene fixture proves spatial candidates are examined before precise tests and the selected ID follows G2 front-to-back ordering.",
+      "acceptance": "The demo adapter issues one G2 HitTestRequest at the camera-derived world point and returns the G2-selected ObjectId."
+    },
+    {
+      "id": "G3-08-V3-transient-selection",
+      "requirement": "Selection is demo-only transient state and cannot change canonical semantic or RuntimeScene identity/content.",
+      "oracle": "Capture semantic generation, Scene revision/content digest, and RuntimeScene generation/content digest before selection; assert all remain identical while the transient overlay snapshot changes.",
+      "acceptance": "Only transient selection generation/overlay digest changes."
+    },
+    {
+      "id": "G3-08-V4-boundary-regression",
+      "requirement": "G3-08 introduces no production editor/session semantics and preserves G2 plus G3-01 through G3-07.",
+      "oracle": "Authorized-path scan, forbidden dependency/term scan, focused G3 tests, RF01/G2 tests, and git diff check.",
+      "acceptance": "All checks pass and no semantic, scene, or existing render contract file changes."
+    }
+  ]
+}

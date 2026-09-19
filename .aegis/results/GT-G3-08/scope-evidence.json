@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "evidence_id": "E-G3-08-REGRESSION",
+  "task_anchor": "636aca53536e5096868f9c5ed716ef6d0891a875",
+  "execution_branch": "codex/g3-08-camera-hit-select-harness",
+  "mutation_scope": {
+    "allowed_prefixes": [
+      "apps/axiom_canvas_demo/",
+      "CMakeLists.txt",
+      ".aegis/packages/GT-G3-08/",
+      ".aegis/results/GT-G3-08/"
+    ],
+    "forbidden_production_paths_changed": [],
+    "status": "PASS"
+  },
+  "dependency_scan": {
+    "forbidden_terms": 0,
+    "source_path_includes": 0,
+    "scene_access": "public canvas/scene headers and Scene::hitTest only",
+    "status": "PASS"
+  },
+  "verification": {
+    "g3_host_debug": {"passed": 7, "failed": 0},
+    "rf01_host_debug": {"passed": 19, "failed": 0},
+    "git_diff_check": "PASS"
+  },
+  "result": "PASS"
+}
