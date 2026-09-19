@@ -33,6 +33,9 @@ class WindowsCanonicalSurfaceHost final {
                                   std::uint32_t height,
                                   std::string* error);
     [[nodiscard]] bool pumpOnce(std::string* error);
+    [[nodiscard]] bool resizeForSmoke(std::uint32_t width,
+                                      std::uint32_t height,
+                                      std::string* error);
     [[nodiscard]] bool submit(render::IRenderBackend& backend,
                                const render::FramePlan& plan,
                                std::string* error);

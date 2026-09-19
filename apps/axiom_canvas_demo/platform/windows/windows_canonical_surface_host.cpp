@@ -92,6 +92,39 @@ bool WindowsCanonicalSurfaceHost::pumpOnce(std::string* error) {
     return true;
 }
 
+bool WindowsCanonicalSurfaceHost::resizeForSmoke(std::uint32_t width,
+                                                 std::uint32_t height,
+                                                 std::string* error) {
+    if (impl_ == nullptr || impl_->window == nullptr || surface_ == nullptr ||
+        error == nullptr || width == 0U || height == 0U) {
+        if (error != nullptr) *error = "Windows surface is not resizeable";
+        return false;
+    }
+    if (SetWindowPos(impl_->window, nullptr, 0, 0, static_cast<int>(width),
+                     static_cast<int>(height),
+                     SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE) == 0) {
+        *error = "SetWindowPos failed";
+        return false;
+    }
+    const auto current = surface_->lifecycle().current();
+    const auto replacement = render::SurfaceSnapshot{
+        current.viewId,
+        render::SurfaceGeneration{current.surfaceGeneration.value() + 1U},
+        render::MetricsGeneration{current.metricsGeneration.value() + 1U},
+        render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
+                               width, height, 1.0F, 1.0F}};
+    if (surface_->bind(replacement) != WindowsSurfaceDisposition::kRebound) {
+        *error = "Windows surface resize did not produce a fresh generation";
+        return false;
+    }
+    impl_->width = width;
+    impl_->height = height;
+    ++observation_.resizeEvents;
+    observation_.surfaceGeneration = replacement.surfaceGeneration.value();
+    observation_.metricsGeneration = replacement.metricsGeneration.value();
+    return true;
+}
+
 bool WindowsCanonicalSurfaceHost::submit(render::IRenderBackend& backend,
                                          const render::FramePlan& plan,
                                          std::string* error) {
@@ -138,6 +171,13 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t,
     return false;
 }
 bool WindowsCanonicalSurfaceHost::pumpOnce(std::string* error) {
+    if (error != nullptr) *error = "Windows host is only available on Windows";
+    return false;
+}
+
+bool WindowsCanonicalSurfaceHost::resizeForSmoke(std::uint32_t,
+                                                 std::uint32_t,
+                                                 std::string* error) {
     if (error != nullptr) *error = "Windows host is only available on Windows";
     return false;
 }

@@ -54,10 +54,14 @@ jobs:
       - name: Run portable and Windows smoke
         shell: pwsh
         run: |
-          ctest --preset g3-windows-release --output-on-failure
+          ctest --test-dir out/g3-windows-release --output-on-failure
           New-Item -ItemType Directory -Force out/g3-09-windows-result | Out-Null
-          out/g3-windows-release/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe
-          '{"result":"PASS","platform":"windows-2025","target":"g3-windows-release","host":"axiom_canvas_demo_windows"}' | Set-Content out/g3-09-windows-result/windows-smoke-evidence.json
+          out/g3-windows-release/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe "--smoke-evidence=$PWD/out/g3-09-windows-result/windows-smoke-evidence.json"
+          if ($LASTEXITCODE -ne 0) { throw "Windows canonical surface smoke failed" }
+          $evidence = Get-Content out/g3-09-windows-result/windows-smoke-evidence.json | ConvertFrom-Json
+          $evidence | Add-Member -NotePropertyName workflow_run_id -NotePropertyValue $env:GITHUB_RUN_ID
+          $evidence | Add-Member -NotePropertyName run_url -NotePropertyValue "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          $evidence | ConvertTo-Json -Compress | Set-Content out/g3-09-windows-result/windows-smoke-evidence.json
       - name: Upload G3-09 evidence
         uses: actions/upload-artifact@v4
         with:
