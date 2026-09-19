@@ -1,4 +1,5 @@
 add_library(canvas_runtime_interaction STATIC
+    src/eraser_session.cpp
     src/editor_session.cpp
     src/hit_test_service.cpp
     src/interaction_runtime.cpp
@@ -48,4 +49,13 @@ if(BUILD_TESTING)
         target_compile_options(axiom_transform_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4TransformSession COMMAND axiom_transform_session_tests)
+    add_executable(axiom_eraser_session_tests tests/eraser_session_test.cpp)
+    target_link_libraries(axiom_eraser_session_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_eraser_session_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_eraser_session_tests PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_eraser_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4EraserSession COMMAND axiom_eraser_session_tests)
 endif()
