@@ -6,7 +6,8 @@ add_library(canvas_runtime_interaction STATIC
     src/selection_session.cpp
     src/transform_session.cpp
     src/session_manager.cpp
-    src/editor_history.cpp)
+    src/editor_history.cpp
+    src/interaction_dependency_footprint.cpp)
 
 target_include_directories(canvas_runtime_interaction PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -69,4 +70,15 @@ if(BUILD_TESTING)
         target_compile_options(axiom_editor_history_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4EditorHistory COMMAND axiom_editor_history_tests)
+
+    add_executable(axiom_session_conflict_tests tests/session_conflict_test.cpp)
+    target_link_libraries(axiom_session_conflict_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_session_conflict_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_session_conflict_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME G4SessionConflict COMMAND axiom_session_conflict_tests)
+    add_executable(axiom_session_lifecycle_tests tests/session_lifecycle_test.cpp)
+    target_link_libraries(axiom_session_lifecycle_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_session_lifecycle_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_session_lifecycle_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME G4SessionLifecycle COMMAND axiom_session_lifecycle_tests)
 endif()

@@ -9,6 +9,8 @@ bool InteractionSessionManager::start(std::uint64_t sessionId) noexcept {
     if (activeCount_ != 0 || sessionId == 0) return false;
     activeSession_ = sessionId;
     activeCount_ = 1;
+    footprint_.clear();
+    cancellationReason_ = CancellationReason::kNone;
     return true;
 }
 
@@ -16,6 +18,7 @@ bool InteractionSessionManager::finish(std::uint64_t sessionId) noexcept {
     if (activeCount_ == 0 || activeSession_ != sessionId) return false;
     activeSession_ = 0;
     activeCount_ = 0;
+    footprint_.clear();
     return true;
 }
 
@@ -25,8 +28,35 @@ bool InteractionSessionManager::cancel(std::uint64_t sessionId) noexcept {
     return true;
 }
 
-void InteractionSessionManager::cancelAll() noexcept {
-    if (activeCount_ != 0) static_cast<void>(cancel(activeSession_));
+bool InteractionSessionManager::trackDependency(std::uint64_t sessionId, foundation::ObjectId id) noexcept {
+    return activeCount_ != 0 && activeSession_ == sessionId && footprint_.track(id);
+}
+bool InteractionSessionManager::onChangeSet(std::uint64_t sessionId, const semantic::ChangeSet& changes,
+                                            ConflictDecision* decision, CancellationReason* reason) noexcept {
+    if (decision == nullptr || activeCount_ == 0 || activeSession_ != sessionId) return false;
+    *decision = footprint_.evaluate(changes, reason);
+    if (*decision == ConflictDecision::kCancel) {
+        cancellationReason_ = CancellationReason::kTargetDeleted;
+        return cancel(sessionId);
+    }
+    return true;
+}
+bool InteractionSessionManager::suspend(std::uint64_t sessionId) noexcept {
+    if (activeCount_ == 0 || activeSession_ != sessionId) return false;
+    cancellationReason_ = CancellationReason::kSurfaceSuspended;
+    return cancel(sessionId);
+}
+bool InteractionSessionManager::sourceLost(std::uint64_t sessionId) noexcept {
+    if (activeCount_ == 0 || activeSession_ != sessionId) return false;
+    cancellationReason_ = CancellationReason::kSourceLost;
+    return cancel(sessionId);
+}
+
+void InteractionSessionManager::cancelAll(CancellationReason reason) noexcept {
+    if (activeCount_ != 0) {
+        cancellationReason_ = reason;
+        static_cast<void>(cancel(activeSession_));
+    }
 }
 
 } // namespace canvas::interaction

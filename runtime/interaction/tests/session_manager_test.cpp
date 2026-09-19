@@ -46,6 +46,8 @@ void session_lifecycle_and_detach_cancels_active_session() {
     assert(runtime.manager().activeCount() == 1);
     runtime.documentDetached();
     assert(runtime.manager().activeCount() == 0);
+    assert(runtime.manager().lastCancellationReason() ==
+           canvas::interaction::CancellationReason::kDocumentDetached);
     assert(transient.cancelledId == 7);
 }
 
