@@ -29,6 +29,18 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundPreview COMMAND axiom_ink_playground_tests preview)
   add_test(NAME G4InkPlaygroundRepeatedStrokes COMMAND axiom_ink_playground_tests repeated)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
+  if(WIN32)
+    add_executable(axiom_ink_playground_windows_pointer_utils_tests
+      tests/windows_pointer_utils_test.cpp)
+    target_compile_features(axiom_ink_playground_windows_pointer_utils_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_ink_playground_windows_pointer_utils_tests PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+      target_compile_options(axiom_ink_playground_windows_pointer_utils_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4InkPlaygroundWindowsPointerUtils
+      COMMAND axiom_ink_playground_windows_pointer_utils_tests)
+  endif()
 endif()
 
 if(WIN32 AND TARGET arc_Windows)

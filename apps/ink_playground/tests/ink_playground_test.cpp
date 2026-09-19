@@ -88,6 +88,7 @@ void platform_test() {
   assert(android.ingress == IngressKind::kNativeArcInputSource);
   assert(web.ingress == IngressKind::kPointerEventWasmBatch);
   for (const auto& contract : {windows, android, web}) {
+    (void)contract.entrypoint;
     assert(!contract.platformOwnsBrushSemantics);
     assert(!contract.platformOwnsSelectionSemantics);
     assert(!contract.platformOwnsEraserSemantics);
