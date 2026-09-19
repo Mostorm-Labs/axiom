@@ -5,7 +5,7 @@ export default defineConfig({
   testMatch: "browser-host.spec.mjs",
   use: { baseURL: "http://127.0.0.1:41873", headless: true },
   webServer: {
-    command: "python3 -m http.server 41873 --bind 127.0.0.1 --directory host",
+    command: "python3 -m http.server 41873 --bind 127.0.0.1 --directory ../../..",
     url: "http://127.0.0.1:41873",
     reuseExistingServer: false,
   },

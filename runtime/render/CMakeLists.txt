@@ -9,6 +9,10 @@ add_library(canvas_runtime_render STATIC
     src/surface_lifecycle.cpp
     src/presentation_tracker.cpp)
 
+if(EMSCRIPTEN)
+    target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
+endif()
+
 if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_headless_canvas_demo
         tools/headless_canvas_demo.cpp)
@@ -23,7 +27,10 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         message(FATAL_ERROR "CANVAS_SKIA_SDK_ROOT is required for the Headless Skia consumer")
     endif()
     list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
-    find_package(CanvasSkia CONFIG REQUIRED)
+    find_package(CanvasSkia CONFIG REQUIRED
+        PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+        NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH)
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
 endif()
@@ -37,6 +44,10 @@ if(MSVC)
     target_compile_options(canvas_runtime_render PRIVATE /W4 /permissive- /WX /EHsc)
 else()
     target_compile_options(canvas_runtime_render PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    if(EMSCRIPTEN)
+        target_compile_options(canvas_runtime_render PRIVATE
+            -Wno-missing-designated-field-initializers)
+    endif()
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)

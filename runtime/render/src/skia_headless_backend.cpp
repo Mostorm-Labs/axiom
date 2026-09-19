@@ -338,6 +338,54 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 
 } // namespace
 
+namespace internal {
+
+BackendSubmissionResult drawReferencePlanToSkCanvas(
+    SkCanvas& canvas, const FramePlan& plan) {
+    if (!(plan.referenceDrawList.frame == plan.frame)) {
+        return BackendSubmissionResult::rejected("frame identity mismatch");
+    }
+    if (plan.referenceDrawList.entries.empty()) {
+        return BackendSubmissionResult::rejected("empty reference draw list");
+    }
+    if (!validAffine(plan.referenceDrawList.worldToView) ||
+        !validRect(plan.referenceDrawList.viewportClip)) {
+        return BackendSubmissionResult::rejected("non-integral transform or clip");
+    }
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        if (!validRect(entry.record.visualBounds)) {
+            return BackendSubmissionResult::rejected("non-integral visual bounds");
+        }
+        const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
+                                          entry.record.transform.c, entry.record.transform.d,
+                                          entry.record.transform.tx, entry.record.transform.ty};
+        if (!validAffine(transform) || validateCommand(entry) != HeadlessSubmissionIssue::kNone) {
+            return BackendSubmissionResult::rejected("unsupported command geometry");
+        }
+        for (const auto& mask : entry.record.eraseMasks) {
+            const auto* filled = std::get_if<semantic::FilledPathMask>(&mask.geometry);
+            if (filled == nullptr || !validatePath(filled->path)) {
+                return BackendSubmissionResult::rejected("unsupported erase mask");
+            }
+        }
+    }
+    canvas.clear(SK_ColorTRANSPARENT);
+    canvas.save();
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        canvas.save();
+        canvas.concat(SkMatrix::Concat(matrix(entry.record.transform), worldMatrix));
+        drawCommand(canvas, entry);
+        eraseMasks(canvas, entry);
+        canvas.restore();
+    }
+    canvas.restore();
+    return BackendSubmissionResult::accepted();
+}
+
+} // namespace internal
+
 SkiaHeadlessBackend::SkiaHeadlessBackend(HeadlessRasterConfig config) : _config(config) {}
 
 BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
