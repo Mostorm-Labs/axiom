@@ -16,6 +16,7 @@ class InkEngine final {
   std::optional<StrokeRecord> finish();
   void cancel() noexcept { points_.clear(); cancelled_=true; active_=false; }
   bool cancelled() const noexcept { return cancelled_; }
- private: BrushDescriptor brush_; std::uint64_t id_=0; std::vector<StrokePoint> points_; bool active_=false; bool cancelled_=false;
+  std::size_t processedSampleCount() const noexcept { return processed_; }
+ private: BrushDescriptor brush_; std::uint64_t id_=0; std::vector<StrokePoint> points_; std::size_t processed_=0; bool active_=false; bool cancelled_=false;
 };
 }
