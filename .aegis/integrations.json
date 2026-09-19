@@ -185,6 +185,18 @@
       "evidence_ids": ["ev-gt-g3-08-p34", "ev-int-pr96-g3-08"],
       "applicability": "current",
       "actionability": "historical_occurrence_preserved"
+    },
+    {
+      "id": "int-branch-g3-09-awaiting-integration",
+      "kind": "github-pull-request",
+      "ref": "github:Mostorm-Labs/axiom#98",
+      "target_ref": "refs/heads/main",
+      "source_result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+      "status": "awaiting_integration",
+      "gate_decision_binding": {"kind": "bound", "gate_decision_id": "gt-g3-09-p34-2026-09-19"},
+      "evidence_ids": ["ev-gt-g3-09-p34"],
+      "applicability": "current",
+      "actionability": "awaiting_repository_integration"
     }
   ]
 }

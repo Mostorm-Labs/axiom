@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-09",
+  "stage": "P34_CONTROL_REVIEW",
+  "reviewed_branch_head": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+  "reviewed_result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+  "task_anchor": "d3e15490db44732884f6146624ad3186feed78c2",
+  "package_id": "GT-G3-09-P31-v0.2",
+  "package_materialization_ref": "aa95979800830bfe1b9084e85c43fed07d80a49e",
+  "frozen_requirement_audit": {
+    "G3-09-V1-generation-bound-target": "PASS",
+    "G3-09-V2-production-boundary": "PASS",
+    "G3-09-V3-windows-reference-host": "PASS"
+  },
+  "frozen_evidence_audit": {
+    "surface_evidence": "PASS",
+    "scope_evidence": "PASS",
+    "windows_smoke_evidence": "PASS",
+    "portable_regressions": {"g3_host_debug": {"passed": 8, "failed": 0}, "rf01_g2_host_debug": {"passed": 19, "failed": 0}},
+    "hosted_provider": {"run_id": 35425698446, "job_id": 105851124944, "artifact_id": 10578969623, "terminal": "success"},
+    "pr_checks": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "repository_reality_audit": {
+    "repository_identity": "github:Mostorm-Labs/axiom",
+    "remote_result_resolved": true,
+    "remote_head_matches_reviewed_head": true,
+    "task_anchor_ancestry": "PASS",
+    "package_hashes": "PASS",
+    "authorized_mutation_scope": "PASS",
+    "forbidden_dependency_scan": "PASS",
+    "runtime_production_scope_unchanged": true
+  },
+  "new_findings": {"blocking_high_impact": [], "non_blocking": []},
+  "verdict": "PASS",
+  "status": "CLOSED_AWAITING_INTEGRATION",
+  "official_gate_pass_claimed": true,
+  "g3_09_pass_claimed": true,
+  "overall_g3_pass_claimed": false,
+  "integration_status": "AWAITING_INTEGRATION",
+  "successor_execution_started": false
+}
