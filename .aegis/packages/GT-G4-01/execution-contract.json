@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-01",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": ["Create runtime/interaction/CMakeLists.txt, interaction_runtime.*, editor_session.*, session_manager.*, interaction_ports.hpp and runtime/interaction/tests/session_manager_test.cpp.","Modify the root CMake registration only as needed to build the production interaction seam and focused tests.","Bind explicit SemanticReadPort, SceneQueryPort, ViewStatePort, OperationSubmitPort and TransientPresentationPort interfaces."],
+      "authorized_mutation_scope": ["runtime/interaction/**","CMakeLists.txt",".aegis/packages/GT-G4-01/**",".aegis/results/GT-G4-01/**",".aegis/project.json",".aegis/state.json",".aegis/gates.json",".aegis/evidence.json",".aegis/integrations.json"],
+      "forbidden_changes": ["runtime/scene/**","runtime/semantic/**","runtime/foundation/**","G2/G3 frozen contracts","SemanticWritePort","direct SemanticDocument or RuntimeScene mutation","Arc backend implementation","G5 Tile/RenderGroup/RasterCache/Scheduler","G6 RichText/IME/ExternalSurface","G4-02 and later behavior"]
+    },
+    "oracle_precondition": {"red_required": true,"expected_failure":"The focused G4-01 session target and interaction production module do not exist at the anchor.","observation_seam":"Run the focused test/configure path before adding the interaction seam and record the expected missing-target failure."},
+    "tests": {"required":["cmake --preset rf01-host-debug","cmake --build --preset rf01-host-debug","ctest --preset rf01-host-debug -R 'G4.*Session|session_manager' --output-on-failure","ctest --preset rf01-host-debug --output-on-failure","git diff --check f2a64ebc49ce842d583ee2f6990124ceaf0b310b..HEAD"]},
+    "hosted_verification":{"required":[],"optional":[]},
+    "evidence":{"blocking":["session-evidence.json","scope-evidence.json"],"corroborative":["portable-regression-summary.json"]},
+    "terminal_success":["InteractionRuntime, EditorSession and InteractionSessionManager exist with explicit port bindings.","Focused RED/GREEN session tests and required RF01 regressions pass.","Forbidden dependency/scope scan and diff check pass.","Exact result revision is pushed and independently audited by P34.","P34 PASS and durable Gate decision close GT-G4-01 before G4-02 starts."],
+    "explicit_terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_MISSING_INPUT","BLOCKED_UNRESOLVED_DECISION","BLOCKED_EVIDENCE","BLOCKED_ENVIRONMENT","PACKAGE_SCOPE_DIVERGENCE"],
+    "continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW"
+  }
+}

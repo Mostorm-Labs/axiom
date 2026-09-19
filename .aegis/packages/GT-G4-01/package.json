@@ -1,0 +1,20 @@
+{
+  "schema_version":"0.1",
+  "package_id":"GT-G4-01-P31-v0.1",
+  "task_id":"GT-G4-01",
+  "status":"CURRENT_EXECUTABLE",
+  "purpose":"Materialize the G4 orchestration and port boundary before leaf interaction implementations.",
+  "repository":{"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-01-interaction-runtime-p31"},
+  "execution_authority_mode":"repo_materialized",
+  "task_anchor":{"revision":"f2a64ebc49ce842d583ee2f6990124ceaf0b310b","relation":"ancestor"},
+  "resume_cursor":null,
+  "continue_until_terminal_state":true,
+  "return_surface":"CONTROL_REVIEW",
+  "authority_lock_ref":{"path":"authority.lock.json","sha256":"33d5ef6d13c536f0af78a89b628ef8bb03fa74ea74bae987468df7c36e5e2f9c"},
+  "verification_lock_ref":{"path":"verification.lock.json","sha256":"4b3c121b2f5a40f73349b687f91502302eb651bafe9ae3118ffc75e76478af0e"},
+  "execution_contract_ref":{"path":"execution-contract.json","sha256":"0bb770978a8e0a4552ca96c1d61f6183395f23e166bfc17a77df835445312438"},
+  "implementation_context_ref":{"path":"implementation-context.md","sha256":"4108162250789ced68e00c2d5555dfd42c821608bd88cc015cff058568d61c11"},
+  "evidence_contract_ref":{"path":"evidence-contract.json","sha256":"0b8252150099c2ffc2487021cccf8cd1ad0e63e5a9ee5abeff4619c9a836859f"},
+  "materialization":{"same_repository":true,"path":".aegis/packages/GT-G4-01/","binding":"exact pushed repository revision descended from the task anchor"},
+  "handoff":{"preferred_executor":"codex","next_surface":"CODE_EXECUTION","next_action":"Execute the complete frozen GT-G4-01 closure contract and return the exact pushed result for independent P34 review.","official_gate_pass_forbidden_during_p32":true}
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-01",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+    "title": "G4 Interaction + Ink Implementation Plan v0.2",
+    "trusted_section": "WP G4-01 — Materialize InteractionRuntime / EditorSession / SessionManager",
+    "content_hash": "9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"
+  },
+  "dependency": {
+    "g3_gate_decision": "g3-completion-2026-09-19",
+    "g3_integration_revision": "20ddb28108367fce35744d4f991a07516318eb92",
+    "canonical_main_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
+    "required_state": "G3_CLOSED_GATE_PASS"
+  },
+  "trusted_statements": {
+    "goal": "Establish production InteractionRuntime, EditorSession and InteractionSessionManager orchestration roots with explicit read/query/view/submit/transient ports.",
+    "consumes": ["G1 SemanticReadPort", "G1 OperationSubmitPort", "G2 SceneQueryPort", "G3 per-view state and transient presentation seam"],
+    "produces": ["InteractionRuntime", "EditorSession", "InteractionSessionManager", "SemanticReadPort", "SceneQueryPort", "ViewStatePort", "OperationSubmitPort", "TransientPresentationPort bindings"],
+    "forbidden": ["SemanticWritePort", "direct SemanticDocument mutation", "direct RuntimeScene mutation", "Arc backend implementation ownership", "G5/G6 behavior", "POC-02 StrokeDocument as production authority"]
+  }
+}
