@@ -24,9 +24,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
       - name: Install locked Windows toolchain
         shell: pwsh
-        run: python tools/bootstrap_deps.py --core --windows-llvm
+        run: |
+          python tools/bootstrap_deps.py --core --windows-llvm
+          $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
+          $installDir = Join-Path $PWD '.deps/llvm'
+          Start-Process $installer -ArgumentList '/S', "/D=$installDir" -Wait
+          (Join-Path $installDir 'bin') | Out-File -FilePath $env:GITHUB_PATH -Append
       - name: Fetch locked Skia SDK
         shell: pwsh
         run: |
