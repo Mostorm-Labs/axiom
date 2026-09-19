@@ -29,6 +29,8 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "24.18.0"
@@ -109,8 +111,11 @@ jobs:
           python3 verification/tools/validate_workspace.py
           git diff --check
           cd verification
-          npm run validate
-          node --test tests/android_evidence.test.mjs
+          npm run build
+          node tools/validate_schemas.mjs
+          node tools/validate_platform_scenarios.mjs
+          node --test tests/android_16kb.test.mjs tests/android_evidence.test.mjs
+          npm run test --workspace @axiom/platform-harness-android
       - uses: actions/upload-artifact@v4
         if: always()
         with:

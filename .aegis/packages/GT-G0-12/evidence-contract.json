@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "artifacts": [
+    {"id":"android-hosted-run","path":".aegis/results/GT-G0-12/android-hosted-run.json","blocking":true},
+    {"id":"scope-evidence","path":".aegis/results/GT-G0-12/scope-evidence.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G0-12/portable-regression-summary.json","blocking":false}
+  ],
+  "review_boundary":"Exact pushed result revision plus hosted run/job/artifact identities and scope evidence.",
+  "substitute_evidence":"No substitute for hosted Android validation is accepted by this package."
+}

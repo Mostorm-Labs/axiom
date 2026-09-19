@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "obligations": [
+    {
+      "id": "GT-G0-12-V1-history-resolution",
+      "requirement": "Hosted validation can resolve immutable repository refs used by the Android evidence boundary.",
+      "oracle": "The workflow checkout uses complete repository history and the validation job reaches all Android-owned checks without a historical-ref resolution failure.",
+      "acceptance": "No required Android-owned command fails because a historical commit object is unavailable.",
+      "evidence_required": "github-actions:GT-G0-12 run/job"
+    },
+    {
+      "id": "GT-G0-12-V2-android-owned-validation",
+      "requirement": "The hosted Android gate validates only Android adapter obligations plus shared schema/scenario prerequisites.",
+      "oracle": "The workflow runs build, schema validation, platform scenario validation, Android 16 KB/evidence tests, and the Android harness package tests; it does not invoke the full verification workspace test graph.",
+      "acceptance": "All listed commands pass and historical G1 source-bound tests are not part of this gate.",
+      "evidence_required": "github-actions:GT-G0-12 run/job/artifact"
+    },
+    {
+      "id": "GT-G0-12-V3-facts-only-boundary",
+      "requirement": "Android instrumentation output remains facts-only and schema-valid.",
+      "oracle": "Existing Android evidence and 16 KB tests validate the generated instrumentation result and evidence envelope.",
+      "acceptance": "Android evidence tests pass with no expected-truth or semantic authority mutation.",
+      "evidence_required": "repo:verification/evidence/g0/gt-g0-12 and hosted artifact"
+    }
+  ]
+}

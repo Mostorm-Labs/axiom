@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G0-12-P31-v0.1",
+  "task_id": "GT-G0-12",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Repair the G0 Android hosted validation boundary so immutable history and Android-owned evidence are independently verifiable.",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g0-12-hosted-validation-repair"},
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {"revision":"b1eb2db741fe80822d608675f1646ea50b6acbc0","relation":"ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path":"authority.lock.json","sha256":"10395b2e0b2bdba3420e50934ed34879d80819f9752b78a7b01abb794652738d"},
+  "verification_lock_ref": {"path":"verification.lock.json","sha256":"ef34a386b0a497fa3037c50cabc4fd0cbb2e0a363efced7556d9d6decd927980"},
+  "execution_contract_ref": {"path":"execution-contract.json","sha256":"142c5e7b6be23079aa39551daded41458c7b53484c0cb4bc05dccefeb854999d"},
+  "implementation_context_ref": {"path":"implementation-context.md","sha256":"44a1227bd92cb3c56c828df21f4c1383e4b417bf47d187231c0fbb422193f65e"},
+  "evidence_contract_ref": {"path":"evidence-contract.json","sha256":"4ac28f7b57295f787568f58864a6f3bf4bbadf759fa5e2ac97c03d685a0469fd"},
+  "materialization": {"same_repository":true,"path":".aegis/packages/GT-G0-12/","binding":"exact pushed repository revision descended from task anchor"},
+  "handoff": {"preferred_executor":"codex","next_surface":"CODE_EXECUTION","next_action":"Execute the complete GT-G0-12 closure contract and return exact hosted Android evidence for independent review.","official_gate_pass_forbidden_during_p32":true}
+}
