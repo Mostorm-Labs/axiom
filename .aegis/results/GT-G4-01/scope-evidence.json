@@ -7,5 +7,5 @@
   "forbidden_symbol_scan": {"command": "rg -n 'SemanticWritePort|SemanticDocument|RuntimeScene|StrokeDocument|AddStrokeOperation|arc|G5|G6' runtime/interaction --glob '!tests/**'", "status": "PASS", "matches": 0},
   "git_diff_check": {"command": "git diff --check", "status": "PASS"},
   "mutation_scope": "PASS",
-  "result_revision": "PENDING_COMMIT"
+  "result_revision": "31b5df4844db07261330567fd4b8d7317290b01f"
 }
