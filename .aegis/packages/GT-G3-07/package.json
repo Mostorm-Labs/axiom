@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "task_id": "GT-G3-07",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-07-headless-canvas-demo"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "preserved_result": {
+    "revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+    "relation": "ancestor",
+    "completed_through": [
+      "production implementation",
+      "field-wise independent descriptor oracle",
+      "complete failure matrix",
+      "full 537-test regression"
+    ],
+    "next_action": "Align durable evidence to the corrected nine-structural/eight-pixel contract and rerun the frozen verification without production semantic changes."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "0f038d460c2cd9ed80db5a94ad1ed5bfb3419586f7dd84c40c3f485a7ed28c58"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "7dad620dfe859428fc320d1a24702bcf0743adac1af55add514ccb3a852925a9"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "c18d70c025bde40b9b2afc082e6893c7782bc91fb7aebcd194d023b84ee0c065"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "b3df123fc4af5b0c0c49a84d40ae48b85d3744e62668af0cdab9cc7432cee98e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "cc7c13768acc399a499c39512b0f71dae731bb341f059c6aa1b4aff21f8a5836"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-07/",
+    "binding": "exact repository revision descended from canonical main control-plane baseline 6bb6c21ac62f0baef55f01ee0867ac7de08e501b"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Review GT-G3-07-P31-v0.5 independently, then reverify the preserved implementation against the corrected nine-structural/eight-pixel contract and return READY_FOR_CONTROL_REVIEW only after all required evidence is durable.",
+    "official_gate_pass_forbidden": true
+  }
+}

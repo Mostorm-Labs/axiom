@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G3-07",
+  "result": "PASS",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "result_revision_under_test": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+  "pipeline_stages": ["SnapshotCodec.decode", "SnapshotBootstrapper.restore", "IndexedObjectStore", "FullSceneCompiler", "Scene", "RuntimeScene", "VisibilityResolver", "DirectReferenceSource", "FramePlanBuilder", "FrameOrchestrator", "SkiaHeadlessBackend"],
+  "structural_stage_ids": {
+    "canonical_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+    "scene_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+    "runtime_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509]
+  },
+  "structural_stage_kinds": {
+    "canonical_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky", "Group"],
+    "runtime_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky", "Group"],
+    "scene_coarse_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Shape", "Shape", "Shape"]
+  },
+  "pixel_stage_ids": {
+    "visibility_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "draw_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "reference_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "backend_ids": [501, 502, 503, 504, 505, 506, 507, 508]
+  },
+  "pixel_stage_kinds": {
+    "reference_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky"],
+    "backend_kinds": ["Shape", "Image", "VectorPath", "RichText", "VectorStroke", "DabStroke", "Connector", "Sticky"]
+  },
+  "structural_counts": {"canonical": 9, "scene": 9, "runtime": 9},
+  "pixel_counts": {"visibility": 8, "draw": 8, "reference": 8, "backend": 8},
+  "runtime_group_findable": true,
+  "group_absent_from_pixel_stages": true,
+  "group_zero_pixel": true,
+  "plan_digest": "fnv1a64:a9125e1fc2b4ec2f",
+  "backend_submission": "accepted",
+  "vector_stroke_mask_strict_subset": true,
+  "source_bypass_scan": "PASS",
+  "independence": "Stage membership is produced by the CLI's public-observable capture; review-owned oracle compares exact structural/pixel sets and does not derive Group membership from raster absence."
+}

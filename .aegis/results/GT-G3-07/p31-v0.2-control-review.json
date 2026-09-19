@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.2",
+  "package_materialization_ref": "259b38a7949c0060f8f1f508b58e56e95d456e5e",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "verdict": "PASS",
+  "code_execution_authorized": true,
+  "audits": {
+    "repository_identity": "PASS",
+    "canonical_main_exact_revision": "PASS",
+    "remote_materialization_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_hash": "PASS",
+    "g3_06_gate_and_integration_binding": "PASS",
+    "verification_obligation_structure": "PASS",
+    "field_complete_nine_kind_fixture_oracle": "PASS",
+    "production_pipeline_executability": "PASS",
+    "production_pipeline_non_bypass": "PASS",
+    "atomic_output_directory_publication": "PASS",
+    "locked_skia_consumer_binding": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "execution_closure_completeness": "PASS",
+    "red_precondition": "PASS",
+    "durable_evidence_boundary": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "G3-07-V1-production-pipeline": "PASS",
+    "G3-07-V2-deterministic-artifacts": "PASS",
+    "G3-07-V3-nine-kind-canonical-fixture": "PASS",
+    "G3-07-V4-failure-and-atomic-publication": "PASS",
+    "G3-07-V5-boundary-and-regression": "PASS"
+  },
+  "frozen_evidence_audit": {
+    "blocking_evidence_ids": ["E-G3-07-PIPELINE", "E-G3-07-ARTIFACTS", "E-G3-07-REGRESSION"],
+    "corroborative_evidence_ids": ["C-G3-07-HYGIENE"],
+    "independent_semantic_literals": "PASS",
+    "independent_raster_oracle": "PASS",
+    "whole_directory_atomic_publication": "PASS",
+    "locked_sdk_identity": "PASS",
+    "required_red": "PASS"
+  },
+  "repository_reality_audit": {
+    "repository": "github:Mostorm-Labs/axiom",
+    "canonical_main_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "materialization_remote_head": "259b38a7949c0060f8f1f508b58e56e95d456e5e",
+    "anchor_is_ancestor": true,
+    "implementation_files_present": false,
+    "red_target_absent_at_materialization": true,
+    "unauthorized_scope_changes": 0,
+    "git_diff_check": "PASS"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": []
+  },
+  "next_action": "Issue the exact P32 CODE_EXECUTION handoff for codex/g3-07-headless-canvas-demo using GT-G3-07-P31-v0.2 and task anchor 6bb6c21ac62f0baef55f01ee0867ac7de08e501b.",
+  "official_p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

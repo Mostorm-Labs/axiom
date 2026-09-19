@@ -10,6 +10,15 @@ add_library(canvas_runtime_render STATIC
     src/presentation_tracker.cpp)
 
 if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_headless_canvas_demo
+        tools/headless_canvas_demo.cpp)
+    target_link_libraries(axiom_headless_canvas_demo PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_headless_canvas_demo PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_headless_canvas_demo PRIVATE
+        G3_07_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+endif()
+
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     if(NOT CANVAS_SKIA_SDK_ROOT)
         message(FATAL_ERROR "CANVAS_SKIA_SDK_ROOT is required for the Headless Skia consumer")
     endif()
@@ -31,6 +40,16 @@ else()
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_headless_canvas_demo_tests
+        tests/headless_canvas_demo_test.cpp)
+    target_link_libraries(axiom_render_headless_canvas_demo_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_headless_canvas_demo_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_render_headless_canvas_demo_tests PRIVATE
+        G3_07_DEMO_BINARY="$<TARGET_FILE:axiom_headless_canvas_demo>"
+        G3_07_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    add_dependencies(axiom_render_headless_canvas_demo_tests axiom_headless_canvas_demo)
+    add_test(NAME G3HeadlessCanvasDemo COMMAND axiom_render_headless_canvas_demo_tests)
+
     add_executable(axiom_render_headless_skia_tests
         tests/skia_headless_backend_test.cpp)
     target_link_libraries(axiom_render_headless_skia_tests PRIVATE canvas_runtime_render)

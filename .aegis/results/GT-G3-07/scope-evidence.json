@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G3-07",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "result": "PASS",
+  "allowlist": ["runtime/render/tools/headless_canvas_demo.cpp", "runtime/render/tests/headless_canvas_demo_test.cpp", "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap", "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json", "runtime/render/CMakeLists.txt", ".aegis/results/GT-G3-07/**"],
+  "new_code_paths": ["runtime/render/tools/headless_canvas_demo.cpp", "runtime/render/tests/headless_canvas_demo_test.cpp"],
+  "new_evidence_paths": [".aegis/results/GT-G3-07/demo-cli-evidence.json", ".aegis/results/GT-G3-07/artifact-determinism-evidence.json", ".aegis/results/GT-G3-07/scope-evidence.json", ".aegis/results/GT-G3-07/p36-fix-reverification-v3.json"],
+  "forbidden_production_paths_changed": false,
+  "production_semantics_changed": false,
+  "canonical_type_contract_changed": false,
+  "g2_or_g3_predecessor_contract_changed": false,
+  "test_only_mutation_seam_added": false,
+  "skia_source_build": false,
+  "locked_skia_sdk": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+  "predecessor_matrix": "PASS: G3HeadlessCanvasDemo, G3SurfacePresentation, G3HeadlessSkia, G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration",
+  "rf01_g2_matrix": "PASS: 19/19 ctest tests",
+  "full_ctest": "PASS: 537/537",
+  "anchor_diff_check": "PASS",
+  "git_diff_check": "PASS",
+  "forbidden_dependency_scan": "PASS",
+  "scope_statement": "Only the authorized G3-07 CLI/test and durable evidence paths changed after the v0.5 package review; no G2/Scene/Render Core production path was modified."
+}

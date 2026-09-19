@@ -1,0 +1,9 @@
+{
+  "task_id": "GT-G3-07",
+  "status": "BLOCKED",
+  "terminal_blocker": "TASK_PACKAGE_DEFECT / PACKAGE_SCOPE_DIVERGENCE",
+  "reason": "Frozen fixture requires a Shape FilledPath erase mask, but production SnapshotCodec validation rejects non-empty erase_masks for Shape; the exact required fixture cannot be encoded through the mandated production codec without modifying forbidden production semantic code.",
+  "evidence": "runtime/semantic/src/validator.cpp validObjectRecordStructure()",
+  "production_changes_made": false,
+  "official_gate_pass_claimed": false
+}

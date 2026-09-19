@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P34_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_branch": "codex/g3-07-headless-canvas-demo",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "result_revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+  "review_basis": {
+    "result_and_evidence_boundary": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+    "full_ctest": {"passed": 537, "failed": 0},
+    "focused_g3_and_g2_matrix": "PASS",
+    "git_diff_check": "PASS",
+    "package_binding_preflight": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "production_pipeline_route": "PASS",
+    "independent_descriptor_and_failure_matrix": "PASS",
+    "canonical_nine_kind_inventory": "PASS",
+    "canonical_and_runtime_membership": "PASS",
+    "visibility_and_direct_reference_nine_kind_requirement": "STRUCTURALLY_UNSATISFIABLE"
+  },
+  "frozen_evidence_audit": {
+    "fieldwise_expected_descriptor": "PASS",
+    "cross_stage_observable_evidence": "PASS_FOR_CANONICAL_SCENE_RUNTIME_AND_EIGHT_PIXEL_OBJECTS",
+    "group_visibility_direct_reference_evidence": "UNAVAILABLE_BY_REPOSITORY_SEMANTICS",
+    "independent_oracle_status": "PASS_FOR_ALL_EXECUTABLE_OBSERVABLES"
+  },
+  "repository_reality_audit": {
+    "group_canonical_record_exists": true,
+    "group_runtime_record_exists": true,
+    "group_own_bounds": "empty",
+    "bounds_owner_behavior": "BoundsSystem returns empty geometry/visual/world bounds for ObjectKind::kGroup",
+    "visibility_behavior": "Scene::query uses spatial bounds; Group 509 is not returned for the viewport",
+    "reference_behavior": "DirectReferenceSource iterates VisibilityResult IDs and cannot receive Group 509 without a visibility entry",
+    "production_paths_reviewed": [
+      "runtime/scene/src/bounds_system.cpp",
+      "runtime/render/src/visibility_resolver.cpp",
+      "runtime/render/src/direct_reference_source.cpp"
+    ]
+  },
+  "defect_classification": {
+    "primary": "VERIFICATION_DESIGN_DEFECT",
+    "secondary": "TASK_PACKAGE_DEFECT",
+    "failure_mode": "The frozen contract simultaneously requires Group 509 to have empty own bounds and zero pixel contribution while requiring every nine semantic IDs to pass through bounds-driven visibility and DirectReference traversal.",
+    "impact": "The requirement cannot be proven without either falsifying evidence or changing G2 production semantics; continuing P36 would cause unauthorized redesign or an invalid Gate claim.",
+    "existing_independent_coverage": "Canonical snapshot decoding, Scene/RuntimeScene nine-record membership, eight pixel-object visibility/reference membership, raster and failure matrices, and full 537-test regression coverage.",
+    "unique_detection_value": "Repository reality audit exposes the impossible Group visibility premise and prevents a false nine-kind pixel-pipeline claim.",
+    "why_frozen_evidence_missed_it": "P31 inherited the nine-kind cross-stage wording without separating structural canonical membership from pixel-relevant visibility/reference membership.",
+    "routing": "Return to P20 Verification Design and P31 package materialization; preserve the valid implementation and P36 oracle work."
+  },
+  "required_contract_revision": {
+    "canonical_and_runtime": "Require all nine IDs and exact semantic kinds.",
+    "pixel_visibility_and_reference": "Require the eight pixel-relevant objects only.",
+    "group": {
+      "must_exist_in_canonical_and_runtime": true,
+      "own_bounds_may_be_empty": true,
+      "subtree_bounds_required_for_gt_g3_07": false,
+      "pixel_contribution": false,
+      "visibility_membership_required_for_gt_g3_07": false,
+      "direct_reference_pixel_entry_required_for_gt_g3_07": false
+    }
+  },
+  "verdict": "BLOCKED_EVIDENCE",
+  "status": "CONTINUE_P20_P31",
+  "production_semantics_change_authorized": false,
+  "p36_repair_required": false,
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false,
+  "next_surface": "CONTROL_REASONING"
+}

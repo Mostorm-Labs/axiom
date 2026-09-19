@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P34_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "package_materialization_ref": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+  "package_control_review_ref": "83770ee3891dd9c84ea6f80500efe920751ad6c7",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_branch": "codex/g3-07-headless-canvas-demo",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+  "frozen_requirement_audit": {
+    "G3-07-V1-production-pipeline-v2": "PASS",
+    "G3-07-V2-deterministic-artifacts-v2": "PASS",
+    "G3-07-V3-structural-and-pixel-membership-v2": "PASS",
+    "G3-07-V4-failure-and-publication-v2": "PASS",
+    "G3-07-V5-boundary-and-regression-v2": "PASS"
+  },
+  "frozen_evidence_audit": {
+    "package_content_hashes": "PASS: 5/5",
+    "p20_source_binding": "PASS",
+    "nine_record_structural_inventory": "PASS",
+    "eight_record_pixel_inventory": "PASS",
+    "runtime_group_findability": "PASS",
+    "group_pixel_absence_and_zero_contribution": "PASS",
+    "independent_descriptor_and_raster_oracle": "PASS",
+    "complete_failure_and_publication_matrix": "PASS",
+    "g3_focused_matrix": "PASS: 7/7",
+    "rf01_g2_matrix": "PASS: 19/19",
+    "full_ctest": "PASS: 537/537",
+    "git_diff_check": "PASS"
+  },
+  "repository_reality_audit": {
+    "repository_identity": "github:Mostorm-Labs/axiom",
+    "remote_result_resolved": true,
+    "remote_head_matches_result": true,
+    "task_anchor_ancestry": "PASS",
+    "package_materialization_ancestry": "PASS",
+    "authorized_mutation_scope": "PASS",
+    "forbidden_production_paths_changed": false,
+    "production_semantics_changed": false,
+    "canonical_type_contract_changed": false,
+    "dependency_lock_changed": false,
+    "source_bypass_scan": "PASS"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": []
+  },
+  "verdict": "PASS",
+  "status": "CLOSED",
+  "integration_status": "AWAITING_INTEGRATION",
+  "integration_revision": null,
+  "official_gate_pass_claimed": true,
+  "g3_07_pass_claimed": true,
+  "overall_g3_pass_claimed": false,
+  "successor_execution_started": false
+}

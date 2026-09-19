@@ -125,6 +125,21 @@
           "disposition": "The frozen acquire seam returns kUnavailable with no target, and every current production consumer checks availability before reading the retained value. A future successor may clarify the accessor name or visibility without changing the accepted G3-06 behavior."
         }
       ]
+    },
+    {
+      "id": "gt-g3-07",
+      "scope": "G3/WP-G3-07",
+      "status": "CLOSED",
+      "decision": {
+        "id": "gt-g3-07-p34-2026-09-19",
+        "verdict": "PASS",
+        "authority_ref": "g3-capability-authority",
+        "result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "official_pass_claimed": true,
+        "review_ref": "repo:.aegis/results/GT-G3-07/p34-control-review-v4.json"
+      },
+      "evidence_ids": ["ev-gt-g3-07-p34"],
+      "findings": []
     }
   ]
 }

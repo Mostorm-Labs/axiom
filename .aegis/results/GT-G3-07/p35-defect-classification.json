@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+  "result_revision": "56de20ed1f69221ec1fe0191847bb2b2fc4aaafa",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "status": "CONTINUE_P36",
+  "blocking_findings": [
+    {
+      "id": "GT-G3-07-P34-F1",
+      "subject": "headless_cli_bypasses_full_scene_compiler",
+      "failure_mode": "The headless demo constructs CompiledSceneSnapshot by iterating view.allObjects() and calling scene::computeBounds directly instead of invoking the frozen production FullSceneCompiler::compile path.",
+      "impact": "The required production ownership and geometry/bounds pipeline is not exercised; a divergence or defect in FullSceneCompiler can remain undetected while the demo evidence reports the pipeline stage as present.",
+      "existing_independent_coverage": "The repository source audit independently resolves the bypass in runtime/render/tools/headless_canvas_demo.cpp. Existing green demo and artifact evidence only exercise the adapter's duplicated path and therefore do not cover FullSceneCompiler execution.",
+      "unique_detection_value": "This finding uniquely detects production-pipeline bypass and prevents a false closure in which the nine-kind raster appears correct while the frozen compiler owner is never called.",
+      "why_existing_frozen_evidence_did_not_cover_it": "The implementation emitted pipeline stage labels and passed its own output checks, but the source-level ownership/bypass assertion was not enforced by the executable oracle.",
+      "why_it_is_severe_enough_to_override_closure_stability": "It is a frozen production-correctness and ownership requirement; accepting the result would certify behavior that does not use the mandated canonical compiler and can miss high-impact geometry/bounds regressions."
+    },
+    {
+      "id": "GT-G3-07-P34-F2",
+      "subject": "independent_raster_and_failure_oracle_incomplete",
+      "failure_mode": "The test does not compare the checked-in expected raster JSON, does not assert the fixture/render SHA-256 and fixed pixel regions, and omits frozen negative and atomic-publication cases including non-integral Shape rejection and unwritable-parent handling.",
+      "impact": "A changed renderer or publication path can continue to pass while producing the wrong pixels, stale/partial outputs, or accepting malformed inputs.",
+      "existing_independent_coverage": "Two-run byte equality, a digest, and a limited negative case provide partial coverage, but no independent expected-pixel comparison or complete failure matrix.",
+      "unique_detection_value": "Independent checked-in raster and complete failure cases detect output drift and partial-publication behavior that self-derived digests and the existing happy-path process test cannot detect.",
+      "why_existing_frozen_evidence_did_not_cover_it": "The current test asserts process success and self-reported metadata rather than comparing against the frozen external oracle and all named failure conditions.",
+      "why_it_is_severe_enough_to_override_closure_stability": "The missing checks leave deterministic artifact integrity and atomic failure safety unproven for the release-facing demo contract."
+    }
+  ],
+  "independent_coverage_already_present": [
+    "full CTest: 26/26 PASS at result revision",
+    "G3 focused matrix: 7/7 PASS",
+    "G2-A6 matrix: 3/3 PASS",
+    "git diff --check: PASS",
+    "durable demo-cli, artifact-determinism, scope, and implementation-preflight records"
+  ],
+  "repair_scope": {
+    "next_stage": "P36_FIX_REVERIFICATION",
+    "next_surface": "CODE_REVERIFY",
+    "allowed_paths": [
+      "runtime/render/tools/headless_canvas_demo.cpp",
+      "runtime/render/tests/headless_canvas_demo_test.cpp",
+      "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
+      "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
+      "runtime/render/CMakeLists.txt",
+      ".aegis/results/GT-G3-07/**"
+    ],
+    "required_repairs": [
+      "route CLI compilation through FullSceneCompiler::compile and map its InspectionRecords without duplicating bounds logic",
+      "compare independent checked-in expected raster and exact fixture/render hashes",
+      "add fixed pixel/mask/Group assertions and complete malformed, unsupported, invalid, unwritable-parent, and atomic-publication matrix",
+      "rerun frozen G3-07 evidence plus relevant G2/RF01 regressions"
+    ],
+    "forbidden": [
+      "Authority, Verification, or package redesign",
+      "G2 or G3-01 through G3-06 changes",
+      "Skia source rebuild",
+      "canonical contract changes outside the allowed paths"
+    ]
+  },
+  "official_gate_pass_claimed": false,
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

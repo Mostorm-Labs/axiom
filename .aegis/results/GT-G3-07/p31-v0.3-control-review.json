@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.3",
+  "package_materialization_ref": "de5c8690581084f82770ab1a80695727b7f67e33",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "verdict": "BLOCKED_TASK_PACKAGE_DEFECT",
+  "code_execution_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "package_lock_hashes": "PASS",
+    "authority_source_binding": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "canonical_codec_compatibility": "PASS",
+    "erase_oracle_semantic_coherence": "FAIL"
+  },
+  "blocking_findings": [
+    {
+      "id": "G3-07-P31-v0.3-F1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "subject": "relocated_erase_mask_no_longer_intersects_rendered_pixels",
+      "failure_mode": "The repair moves mask 1501 from invalid Shape 501 to VectorStroke 505, but freezes VectorStroke translation [8,48] and local mask path y=-32..-24, producing world mask bounds [16,16]-[24,24]. The VectorStroke samples render at local y=0 and therefore world y=48. The mask does not intersect the stroke or any other VectorStroke pixels.",
+      "impact": "The required erase-hole oracle becomes vacuous and loses unique detection value. The previous accepted raster digest cannot be reused because the Shape red fill and its erased pixels were removed while the new mask clears transparent background; any conforming implementation will produce different raster bytes/digest than the frozen golden values.",
+      "existing_independent_coverage": "Package lock hashes, validator compatibility, nine-kind inventory, and world-coordinate arithmetic are independently resolvable. No independent raster/golden artifact exists at P31 to prove the relocated mask and digest are coherent.",
+      "unique_detection_value": "This review catches a package repair that is syntactically codec-valid but semantically unable to exercise the required erase lifecycle; it prevents a green result based on a no-op mask and stale golden oracle.",
+      "why_frozen_evidence_did_not_cover_it": "P31-v0.3 changed the mask owner but preserved the prior pixel oracle and did not bind the relocated mask to a rendered stroke region or update the independently authored expected raster digest.",
+      "blocking_justification": "The failure defeats G3-07-V3's explicit erase-hole obligation and makes G3-07-V2's frozen digest structurally inconsistent; implementation cannot repair this without a new P31 package oracle.",
+      "evidence_refs": [
+        ".aegis/packages/GT-G3-07/authority.lock.json:128-132",
+        ".aegis/packages/GT-G3-07/authority.lock.json:180-188",
+        ".aegis/packages/GT-G3-07/verification.lock.json:22-23",
+        "runtime/render/src/skia_headless_backend.cpp:322-328",
+        "runtime/render/src/skia_headless_backend.cpp:369-391"
+      ]
+    }
+  ],
+  "preserved_valid_work": [
+    "repository identity and anchor binding",
+    "five lock hash integrity",
+    "canonical codec legality of VectorStroke erase masks",
+    "nine-kind fixture membership",
+    "authorized scope and forbidden production paths"
+  ],
+  "next_action": "Return to aegis-implementation P31. Produce GT-G3-07-P31-v0.4 with a mask geometry that intersects a rendered fixture region and a newly independently authored expected raster digest/descriptor; do not issue CODE_EXECUTION until control-review verifies the updated oracle.",
+  "p34_entry_authorized": false,
+  "p36_authorized": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

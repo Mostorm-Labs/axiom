@@ -1,0 +1,176 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P20_VERIFICATION_DESIGN",
+  "verification_id": "GT-G3-07-P20-v0.2",
+  "status": "READY_FOR_P31_REGENERATION",
+  "repository": "Mostorm-Labs/axiom",
+  "authority": {
+    "current_capability_authority": "g3-capability-authority",
+    "g2_dependency": "g2-canonical-main",
+    "architecture_change": false,
+    "production_semantics_change": false,
+    "decision_basis": "Group is a canonical structural object with empty own bounds and zero pixel contribution; its children, not the Group record, own pixel-relevant bounds. Subtree bounds are not required by GT-G3-07."
+  },
+  "inputs": {
+    "defective_package": "GT-G3-07-P31-v0.4",
+    "defective_package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+    "review_revision": "0c15b7a01733486786036924e4e28275ea830697",
+    "preserved_result_revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+    "repository_reality": [
+      "runtime/scene/src/bounds_system.cpp",
+      "runtime/render/src/visibility_resolver.cpp",
+      "runtime/render/src/direct_reference_source.cpp"
+    ]
+  },
+  "corrected_obligations": [
+    {
+      "id": "G3-07-V1-production-pipeline-v2",
+      "requirement": "The fixed fixture must traverse canonical bootstrap, production Scene/RuntimeScene, bounds-driven visibility, DirectReference, FramePlan, FrameOrchestrator, and the private Headless backend without a hand-built final render input.",
+      "invariant": "Canonical, structural, visibility, reference, and backend stages retain their distinct ownership and membership semantics.",
+      "failure_mode": "The CLI bypasses a production owner, manually injects Group or another object into a downstream pixel stage, or fabricates final render input.",
+      "existing_independent_coverage": ["source boundary scan", "exact ordered pipeline evidence", "process-level artifact oracle"],
+      "residual_proof_gap": "Exact stage membership must distinguish structural records from pixel-relevant records.",
+      "oracle": "Require the exact production stage order; require IDs 501..509 in canonical, Scene, and RuntimeScene; require IDs 501..508 in visibility, Scene draw list, DirectReference, and backend traversed kinds; require Group 509 absent from pixel-stage membership and prohibit manual final input construction.",
+      "fixture": "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
+      "execution": "G3HeadlessCanvasDemo plus review-owned source scan",
+      "evidence": "demo CLI evidence with exact per-stage IDs/kinds and source-boundary scan",
+      "classification": "blocking",
+      "evidence_qualification": {
+        "failure_mode": "The demo bypasses an owning production stage, fabricates final render input, or manually promotes Group into a pixel stage.",
+        "impact": "The demo could appear end-to-end while proving neither the production integration path nor the structural/pixel ownership boundary.",
+        "existing_independent_coverage": ["source boundary scan", "exact ordered pipeline evidence", "process-level artifact oracle"],
+        "new_evidence_unique_detection_value": "Exact per-stage membership detects bypass and unauthorized structural-to-pixel injection that final raster bytes alone cannot identify.",
+        "blocking_justification": "Without exact stage ownership and membership evidence, a high-impact integration bypass remains observationally compatible with the expected final image.",
+        "classification": "blocking"
+      },
+      "unique_detection_value": "Detects stage bypass, truncation, fabricated membership, and accidental structural-to-pixel promotion.",
+      "gate_criterion": "Nine structural records and eight pixel records are exact, ordered, and observed through their owning production stages."
+    },
+    {
+      "id": "G3-07-V2-deterministic-artifacts-v2",
+      "requirement": "Identical fixed input produces byte-identical artifacts matching the independently authored expected descriptor.",
+      "invariant": "Fixture identity, raster bytes, digest, dimensions, pixel samples, mask behavior, and Group zero-pixel behavior are deterministic.",
+      "failure_mode": "The CLI self-blesses output, emits nondeterministic artifacts, or silently changes raster/mask semantics.",
+      "existing_independent_coverage": ["external SHA-256", "FNV digest", "field-wise expected descriptor", "fixed pixel samples"],
+      "residual_proof_gap": "None after exact two-run and descriptor comparison.",
+      "oracle": "Byte-compare all three artifacts from two clean runs; externally compare fixture/render hashes and every frozen expected descriptor field; sample retained/erased VectorStroke pixels and Group zero-pixel region.",
+      "fixture": "nine-kind-v1.axsnap plus nine-kind-v1.expected.json",
+      "execution": "G3HeadlessCanvasDemo",
+      "evidence": "artifact determinism evidence",
+      "classification": "blocking",
+      "evidence_qualification": {
+        "failure_mode": "The demo self-blesses output, changes mask/raster semantics, or emits nondeterministic artifacts.",
+        "impact": "Consumers would receive unstable or semantically incorrect reference output while the producing implementation reports success.",
+        "existing_independent_coverage": ["external SHA-256", "FNV digest", "field-wise expected descriptor", "fixed pixel samples"],
+        "new_evidence_unique_detection_value": "Two-run byte identity plus an independently authored descriptor detects nondeterminism and shared-oracle self-acceptance.",
+        "blocking_justification": "The fixed demo is itself the G3-07 reference artifact; accepting it without independent deterministic comparison leaves its primary output unverified.",
+        "classification": "blocking"
+      },
+      "unique_detection_value": "Independently detects fixture/raster/oracle drift and self-generated golden acceptance.",
+      "gate_criterion": "Exact descriptor, hashes, bytes, mask samples, and Group zero-pixel observation match."
+    },
+    {
+      "id": "G3-07-V3-structural-and-pixel-membership-v2",
+      "requirement": "All nine V1 semantic kinds are retained in canonical and runtime state, while only the eight objects with pixel-relevant bounds enter bounds-driven visibility and reference rendering.",
+      "invariant": "Structural existence is not conflated with pixel visibility; Group 509 remains canonical/runtime state with empty own bounds and no pixel command.",
+      "failure_mode": "A semantic kind is lost before RuntimeScene, a pixel object is omitted, or Group is assigned fabricated geometry/visibility solely to satisfy evidence.",
+      "existing_independent_coverage": ["independent SnapshotCodec decode", "Scene and RuntimeScene record evidence", "visibility/reference/backend ID and kind arrays", "raster oracle"],
+      "residual_proof_gap": "Explicitly prove Group presence upstream and absence downstream without treating absence as object deletion.",
+      "oracle": "Assert IDs 501..509 and all nine kinds in decoded canonical state and RuntimeScene; assert all nine Scene records under the frozen coarse mapping; assert exactly IDs 501..508 and their eight semantic kinds in visibility, draw, DirectReference, and backend traversal; assert RuntimeScene still finds Group 509; assert Group contributes no pixels.",
+      "fixture": "nine-kind-v1.axsnap",
+      "execution": "G3HeadlessCanvasDemo and independent fixture decode",
+      "evidence": "nine-kind structural inventory plus eight-kind pixel pipeline evidence",
+      "classification": "blocking",
+      "evidence_qualification": {
+        "failure_mode": "A canonical kind disappears before runtime, a pixel object is omitted, or Group is given fabricated pixel geometry.",
+        "impact": "The demo would misrepresent canonical retention or render membership and could conceal data loss or an unauthorized semantics change.",
+        "existing_independent_coverage": ["independent SnapshotCodec decode", "Scene and RuntimeScene record evidence", "visibility/reference/backend membership arrays", "raster oracle"],
+        "new_evidence_unique_detection_value": "The paired nine-record structural and eight-record pixel assertions distinguish object retention from render eligibility, which neither assertion proves alone.",
+        "blocking_justification": "This boundary is the corrected core contract; without both inventories, structural loss and unauthorized Group pixel promotion remain materially undetected.",
+        "classification": "blocking"
+      },
+      "unique_detection_value": "Separately detects structural record loss, pixel object loss, and unauthorized Group geometry/pixel promotion.",
+      "gate_criterion": "Structural stages contain nine exact records; pixel stages contain eight exact records; Group is present structurally, absent from pixel membership, and contributes zero pixels."
+    },
+    {
+      "id": "G3-07-V4-failure-and-publication-v2",
+      "requirement": "Argument, fixture, render, or publication failures are deterministic and never publish partial or stale success artifacts.",
+      "invariant": "An absent destination stays absent; an existing successful destination remains byte-identical.",
+      "failure_mode": "Invalid input is accepted, render rejection publishes success, or a failed run corrupts/replaces prior output.",
+      "existing_independent_coverage": ["complete process failure matrix", "destination before/after byte comparison"],
+      "residual_proof_gap": "None after the complete matrix.",
+      "oracle": "Exercise missing/unknown/duplicate/positional arguments, missing/malformed/unsupported/invalid fixtures, non-integral Shape rejection, unavailable parent, and existing output.",
+      "fixture": "process-generated negative fixtures plus checked-in success fixture",
+      "execution": "G3HeadlessCanvasDemo",
+      "evidence": "failure and atomic-publication matrix",
+      "classification": "blocking",
+      "evidence_qualification": {
+        "failure_mode": "Invalid input or render rejection publishes partial output, or a failed invocation corrupts a prior successful destination.",
+        "impact": "Automation could consume incomplete or stale artifacts as a valid result and lose the last known-good evidence bundle.",
+        "existing_independent_coverage": ["complete process failure matrix", "destination before/after byte comparison"],
+        "new_evidence_unique_detection_value": "Process-level negative cases combined with exact destination preservation detect both accidental acceptance and non-atomic publication.",
+        "blocking_justification": "Publication integrity is externally observable and cannot be inferred from successful-path artifact tests.",
+        "classification": "blocking"
+      },
+      "unique_detection_value": "Detects parser drift, canonical-validation bypass, render-rejection handling, and stale/partial publication.",
+      "gate_criterion": "Every failure is nonzero and leaves the destination in its exact pre-run state."
+    },
+    {
+      "id": "G3-07-V5-boundary-and-regression-v2",
+      "requirement": "G3-07 remains a demo consumer and preserves G2 plus G3-01 through G3-06 while using the accepted prebuilt Skia SDK.",
+      "invariant": "No G2, canonical type, Render Core production contract, dependency lock, or Skia production path changes.",
+      "failure_mode": "The evidence repair redesigns production semantics, changes predecessors, or rebuilds/replaces locked dependencies.",
+      "existing_independent_coverage": ["changed-path scan", "full CTest", "locked SDK identity", "git diff check"],
+      "residual_proof_gap": "None when rerun against the exact result revision.",
+      "oracle": "Verify authorized paths, forbidden dependency/type scans, focused G3 matrix, complete RF01/G2 matrix, full CTest, SDK identity, and anchor diff hygiene.",
+      "fixture": "repository and build graph",
+      "execution": "review-owned boundary scan and frozen regression commands",
+      "evidence": "scope and regression evidence",
+      "classification": "blocking",
+      "evidence_qualification": {
+        "failure_mode": "The evidence repair changes frozen G2/G3 predecessor contracts or replaces the accepted dependency supply chain.",
+        "impact": "A locally green G3-07 result could regress canonical runtime behavior or cease to be reproducible against the accepted SDK identities.",
+        "existing_independent_coverage": ["changed-path scan", "full CTest", "locked SDK identity", "git diff check"],
+        "new_evidence_unique_detection_value": "Scope inspection detects unauthorized contract changes while regression execution independently detects behavioral fallout.",
+        "blocking_justification": "G3-07 is a consumer-layer task; predecessor or dependency mutation would invalidate both its authority boundary and the meaning of its evidence.",
+        "classification": "blocking"
+      },
+      "unique_detection_value": "Detects unauthorized semantic redesign and predecessor/dependency regressions.",
+      "gate_criterion": "Only authorized G3-07/evidence paths differ and all frozen regression/boundary checks pass."
+    }
+  ],
+  "explicit_non_requirements": [
+    "Group 509 is not required to appear in bounds-driven visibility, Scene draw-list membership, DirectReference pixel entries, or backend traversed kinds.",
+    "GT-G3-07 does not introduce Group subtree bounds, Group transforms over descendants, clip, opacity, blend isolation, or structural render traversal.",
+    "No G2 BoundsSystem, Scene query, spatial index, DirectReferenceSource, canonical type, or publication semantic change is authorized."
+  ],
+  "evidence_classification": {
+    "blocking": [
+      "exact nine-record structural membership",
+      "exact eight-record pixel membership",
+      "independent descriptor and raster oracle",
+      "complete failure/atomic-publication matrix",
+      "boundary and predecessor regression evidence"
+    ],
+    "corroborative": ["implementation preflight and historical RED transcript"]
+  },
+  "quality_gate": {
+    "important_requirements_have_credible_proof": true,
+    "blocking_evidence_has_unique_detection_value": true,
+    "requirement_oracle_evidence_are_separate": true,
+    "structurally_unsatisfiable_obligation_removed": true,
+    "unresolved_verification_decisions": []
+  },
+  "handoff": {
+    "next_stage": "P31_TASK_PACKAGING",
+    "next_owner": "aegis-implementation",
+    "required_package_id": "GT-G3-07-P31-v0.5",
+    "preserve_valid_result": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+    "required_action": "Regenerate the repo-materialized package from this P20 design, supersede v0.4 as executable truth, freeze evidence-only closure for any remaining backend traversed-kind/durable evidence alignment, and submit the new package to independent CONTROL_REVIEW before CODE_REVERIFY.",
+    "code_execution_authorized": false
+  },
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

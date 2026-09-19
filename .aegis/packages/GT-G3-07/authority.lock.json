@@ -1,0 +1,234 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "current": true,
+  "source": {
+    "provider": "repo-materialized-plan",
+    "ref": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md",
+    "title": "GT-G3-00 G3 Basic Canonical Canvas P30 Implementation Plan v0.1",
+    "revision": "bound-at-6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "trusted_section": "G3-07 Headless Canvas Demo CLI",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "68ff2639119311e68dbb4bfc7ef46d9de08e37ae857dce3e82b2b94fb7026553"
+  },
+  "verification_revision": {
+    "ref": "repo:.aegis/results/GT-G3-07/p20-verification-design-v0.2.json",
+    "verification_id": "GT-G3-07-P20-v0.2",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "f252f3c0a2fe787fdcdc6b68f08f85d0049362c1a2f1d0b84f8770d4c4abea76",
+    "supersedes_package_verification": "GT-G3-07-P31-v0.4"
+  },
+  "dependency": {
+    "authority_ref": "g3-capability-authority",
+    "g3_06_gate_decision": "gt-g3-06-p34-2026-09-19",
+    "g3_06_result_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+    "g3_06_main_integration": "int-pr92-g3-06",
+    "g3_06_main_integration_revision": "4ea688da42da0005eaed5cae4931f5c44936697e",
+    "control_plane_integration_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "canonical_main_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+    "required_state": "GT-G3-06_CONTROLLED_MAIN_INTEGRATION_COMPLETE"
+  },
+  "supporting_inputs": {
+    "skia_profile": "repo:tools/skia/profiles/r1-full-v1.json",
+    "skia_lock": "repo:r1-full-skia-sdk.lock.json",
+    "skia_lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+    "skia_profile_sha256": "37ecd74a897bf1ec6aab94014dc19b2b05fcaffece53b78f17f985cf39032248",
+    "skia_profile_identity": {
+      "profile": "r1-full-v1",
+      "profile_hash": "8708f3a6413f3e5231d568b077baaaccf67f22bfa144d9d89e760d3085070aa5",
+      "tag": "skia-sdk-r1-full-v1-54c1999dc79d094d",
+      "set_id": "54c1999dc79d094d3e65a73f0c6262195c42a381ea5519a58a94be0d8b85c5ac",
+      "target": "macos-arm64-metal",
+      "variant": "release",
+      "asset": "skia-sdk-r1-full-v1-macos-arm64-metal-release.zip",
+      "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+      "asset_sha256": "42bdc110c17239a4133c8d6e7d0da61c0215bd09a91cff3a770db995daea118f",
+      "asset_size": 36334501,
+      "resolved_sdk_root": ".deps/skia-sdk/macos-arm64-metal/release"
+    }
+  },
+  "trusted_statements": {
+    "goal": "Add a Headless Canvas Demo CLI that opens one checked-in fixed canonical fixture, drives it through the production G2 scene and G3 Render Core pipeline, and emits independently verifiable raster, digest, and evidence artifacts.",
+    "owns": [
+      "one opt-in Headless Canvas Demo executable",
+      "one checked-in G3-07 fixture descriptor and independent expected artifact oracle",
+      "deterministic command-line parsing and atomic artifact publication",
+      "demo-local assembly of existing canonical/runtime/render owners without changing their contracts"
+    ],
+    "consumes": [
+      "canonical semantic snapshot decode/bootstrap",
+      "Scene and RuntimeScene production projections",
+      "FrameState and SurfaceLifecycle",
+      "VisibilityResolver",
+      "DirectReferenceSource",
+      "FramePlanBuilder and FrameOrchestrator",
+      "SkiaHeadlessBackend",
+      "locked r1-full-v1 Skia consumer SDK"
+    ],
+    "produces": [
+      "render.rgba",
+      "render-digest.txt",
+      "render-evidence.json",
+      "deterministic nonzero process status on failure"
+    ],
+    "fixed_cli_contract": {
+      "executable": "axiom_headless_canvas_demo",
+      "invocation": "axiom_headless_canvas_demo --fixture <path-to-g3-07-fixture.axsnap> --output-dir <directory>",
+      "success_exit": 0,
+      "failure_exit": "nonzero for argument, input, decode/bootstrap, scene/runtime, render, or artifact-publication failure",
+      "outputs": ["render.rgba", "render-digest.txt", "render-evidence.json"],
+      "output_directory_precondition": "The requested output directory must not already exist. An existing path is a deterministic failure and is never modified.",
+      "publication": "Create one unique sibling staging directory on the same filesystem, write and close all three files there, then rename the complete directory to the previously nonexistent requested output directory. A failed run removes staging best-effort, leaves the requested path absent, and never modifies an existing path."
+    },
+    "fixed_fixture_contract": {
+      "fixture_id": "g3-07-nine-kind-v1",
+      "path": "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
+      "oracle_path": "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
+      "format": "canonical SemanticSnapshot v1 bytes decoded with SnapshotCodec and restored with SnapshotBootstrapper; no test-only object-store mutator",
+      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as a canonical/runtime structural record with empty own bounds and zero pixel contribution, and a supported simple FilledPath erase mask on VectorStroke.",
+      "semantic_baseline": {
+        "document_id_low64": 775,
+        "schema_version": 1,
+        "semantic_generation": 803,
+        "scene_revision": 803,
+        "omitted_fields": "Every field not listed below uses the canonical v1 zero/empty default; all optional fields are absent unless explicitly listed.",
+        "all_objects": {
+          "kind_version": 1,
+          "parent_id": null,
+          "transform_matrix": [1, 0, 0, 1],
+          "extra_properties": [],
+          "extra_erase_masks": []
+        },
+        "objects": [
+          {
+            "object_id": 501,
+            "kind": "Shape",
+            "order_key_bytes": [1],
+            "transform_translation": [8, 8],
+            "content": {"shape_kind": 1, "width": 24, "height": 24},
+            "properties": [{"field_id": 256, "solid_fill_rgba": [1, 0, 0, 1]}],
+            "erase_masks": []
+          },
+          {
+            "object_id": 502,
+            "kind": "Image",
+            "order_key_bytes": [2],
+            "transform_translation": [40, 8],
+            "content": {"resource_id_low64": 130, "intrinsic_width": 24, "intrinsic_height": 24, "source_rect": null, "content_mode": "stretch", "width": 24, "height": 24}
+          },
+          {
+            "object_id": 503,
+            "kind": "VectorPath",
+            "order_key_bytes": [3],
+            "transform_translation": [72, 8],
+            "content": {"fill_rule": "non_zero", "commands": [["M", 0, 0], ["L", 24, 0], ["L", 24, 24], ["L", 0, 24], ["Z"]]},
+            "properties": [{"field_id": 256, "solid_fill_rgba": [0, 0, 1, 1]}]
+          },
+          {
+            "object_id": 504,
+            "kind": "RichText",
+            "order_key_bytes": [4],
+            "transform_translation": [104, 8],
+            "content": {"paragraph_id_low64": 2504, "alignment": "left", "line_height": 12, "spacing_before": 0, "spacing_after": 0, "runs": [{"text_utf8": "A9", "font_resource_id": null, "font_size": 12, "weight": 400, "italic": false, "underline": false, "rgba": [1, 1, 0, 1]}]}
+          },
+          {
+            "object_id": 505,
+            "kind": "VectorStroke",
+            "order_key_bytes": [5],
+            "transform_translation": [8, 48],
+            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [1, 0, 1, 1], "nominal_size": 4, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 505, "samples": [[0, 0, 1, 0, 0], [24, 0, 1, 0, 0]]},
+            "erase_masks": [{"mask_id": 1501, "filled_path": [["M", 8, -4], ["L", 16, -4], ["L", 16, 4], ["L", 8, 4], ["Z"]], "fill_rule": "non_zero"}]
+          },
+          {
+            "object_id": 506,
+            "kind": "DabStroke",
+            "order_key_bytes": [6],
+            "transform_translation": [52, 48],
+            "content": {"brush_family_id": 1, "brush_version": 1, "rgba": [0, 1, 1, 1], "nominal_size": 12, "opacity": 1, "pressure_enabled": false, "tilt_enabled": false, "smoothing_amount": 0, "normalized_spacing": 0, "blend_mode": "normal", "deterministic_seed": 506, "dabs": [[0, 0, 12, 0, 1]]}
+          },
+          {
+            "object_id": 507,
+            "kind": "Connector",
+            "order_key_bytes": [7],
+            "transform_translation": [72, 48],
+            "content": {"start_free_point": [0, 0], "end_free_point": [24, 0], "routing": "straight"},
+            "properties": [{"field_id": 257, "solid_stroke": {"rgba": [1, 0.5019607843137255, 0, 1], "width": 4, "cap": "butt", "join": {"miter_limit": 4}, "dash": "solid"}}]
+          },
+          {
+            "object_id": 508,
+            "kind": "Sticky",
+            "order_key_bytes": [8],
+            "transform_translation": [104, 40],
+            "content": {"width": 24, "height": 20}
+          },
+          {
+            "object_id": 509,
+            "kind": "Group",
+            "order_key_bytes": [9],
+            "transform_translation": [160, 160],
+            "content": {}
+          }
+        ]
+      },
+      "scene_projection": {
+        "source": "Reuse each FullSceneCompiler record's objectId, computed worldBounds, and order rank; do not duplicate computeBounds or geometry logic.",
+        "revision": 803,
+        "flags": ["visible", "hit_testable"],
+        "content_revision": 1,
+        "render_payload": "slot equals low64 object ID narrowed to uint32, generation 1",
+        "hit_geometry": "slot equals low64 object ID narrowed to uint32, generation 1",
+        "kind_mapping": {
+          "Shape": "Shape",
+          "Image": "Image",
+          "VectorPath": "VectorPath",
+          "RichText": "RichText",
+          "VectorStroke": "VectorStroke",
+          "DabStroke": "DabStroke",
+          "Connector": "Shape",
+          "Sticky": "Shape",
+          "Group": "Shape"
+        },
+        "mapping_reason": "SceneObjectKind is a six-value coarse visibility/hit classification and is not semantic ObjectKind authority. Canonical storage, Scene, and RuntimeScene preserve all nine records. Bounds-driven visibility and DirectReference contain only pixel-relevant IDs 501 through 508; Group 509 remains structural and does not receive a pixel entry."
+      },
+      "frame": {
+        "view_id": 801,
+        "camera_center": [128, 128],
+        "camera_zoom": 1,
+        "camera_rotation_radians": 0,
+        "camera_generation": 802,
+        "world_viewport": [0, 0, 256, 256],
+        "logical_size": [256, 256],
+        "physical_size": [256, 256],
+        "device_pixel_ratio": 1,
+        "display_scale": 1,
+        "surface_generation": 805,
+        "metrics_generation": 806,
+        "frame_id": 901
+      },
+      "raster": {
+        "width": 256,
+        "height": 256,
+        "color_type": "RGBA_8888",
+        "alpha_type": "premultiplied",
+        "color_space": "sRGB",
+        "clear_rgba": [0, 0, 0, 0],
+        "antialias": false,
+        "origin": "top_left",
+        "blend_mode": "src_over"
+      },
+      "accepted_expected_raster_digest": "fnv1a64:7b8eb8c70c65afe5",
+      "accepted_expected_raster_sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
+      "oracle_independence": "The expected descriptor is checked in by P32 from package literals and review-owned hash calculation; the CLI and SkiaHeadlessBackend may not generate or rewrite it."
+    },
+    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage with all nine records, projected through production Scene and RuntimeScene with all nine records, then allow the eight bounded pixel objects to be queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. Group 509 remains findable in structural state but is not manually injected into bounds-driven pixel stages. The CLI must not construct a final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan directly and must not call test-only access seams.",
+    "forbidden": [
+      "direct SemanticDocument or ObjectStore traversal for rendering",
+      "manual construction of final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values in the CLI",
+      "test-only fixture/access helpers or friend-only mutation seams",
+      "changes to RuntimeScene, Scene, Render Core, SurfaceLifecycle, PresentationTracker, Headless backend, or any existing G3-01 through G3-06 public contract",
+      "CanonicalVisible, FrameCoverageManifest, Arc token/preview clearing, G4 Arc or Ink",
+      "camera interaction, hit/select, platform host, native surface, scheduler, Tile, RenderGroup, RasterCache, ResourceBudget, or final FrameGraph behavior",
+      "Skia lock/profile/producer changes or a source build"
+    ]
+  }
+}

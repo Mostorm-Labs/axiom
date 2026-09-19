@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "package_materialization_ref": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "preserved_result_revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+  "reviewed_revision": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+  "verdict": "PASS",
+  "code_execution_authorized": true,
+  "p34_entry_authorized": false,
+  "audits": {
+    "repository_identity": "PASS",
+    "remote_materialization_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "preserved_result_ancestry": "PASS",
+    "package_file_set": "PASS",
+    "package_lock_hashes": "PASS",
+    "p20_source_binding": "PASS",
+    "nine_structural_eight_pixel_contract": "PASS",
+    "group_non_requirement_boundary": "PASS",
+    "mutation_scope_boundary": "PASS",
+    "production_semantics_change_forbidden": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "G3-07-V1-production-pipeline-v2": "READY_FOR_CODE_REVERIFY",
+    "G3-07-V2-deterministic-artifacts-v2": "PRESERVED_PENDING_RERUN",
+    "G3-07-V3-structural-and-pixel-membership-v2": "READY_FOR_CODE_REVERIFY",
+    "G3-07-V4-failure-and-publication-v2": "PRESERVED_PENDING_RERUN",
+    "G3-07-V5-boundary-and-regression-v2": "PRESERVED_PENDING_RERUN"
+  },
+  "repository_reality_audit": {
+    "canonical_scene_runtime_records": 9,
+    "pixel_relevant_records": 8,
+    "group_own_bounds": "empty_allowed",
+    "group_subtree_bounds_required": false,
+    "group_pixel_entry_required": false,
+    "production_files_changed_by_p31": false,
+    "package_files_changed_by_p31": 6,
+    "unauthorized_scope_changes": 0
+  },
+  "authorized_next_action": "Reverify the preserved implementation under GT-G3-07-P31-v0.5, add only the CLI/test/durable evidence fields needed to prove exact backend pixel membership and RuntimeScene Group findability, run all frozen verification, and return the exact pushed result to CONTROL_REVIEW.",
+  "production_semantics_change_authorized": false,
+  "official_p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

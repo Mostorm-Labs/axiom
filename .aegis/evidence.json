@@ -340,6 +340,43 @@
         "gate_decision_id": "gt-g3-06-p34-2026-09-19",
         "integration_status": "integrated"
       }
+    },
+    {
+      "id": "ev-gt-g3-07-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:c37e1cc432d8d4356767a094d096f6b413160bd5",
+      "supports": ["gt-g3-07", "int-branch-g3-07-awaiting-integration"],
+      "inputs": [
+        "git:c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "git:ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+        "git:83770ee3891dd9c84ea6f80500efe920751ad6c7",
+        "repo:.aegis/packages/GT-G3-07/package.json",
+        "repo:.aegis/results/GT-G3-07/p20-verification-design-v0.2.json",
+        "repo:.aegis/results/GT-G3-07/demo-cli-evidence.json",
+        "repo:.aegis/results/GT-G3-07/artifact-determinism-evidence.json",
+        "repo:.aegis/results/GT-G3-07/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-07/p36-fix-reverification-v3.json",
+        "repo:.aegis/results/GT-G3-07/p34-control-review-v4.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "execution_branch": "codex/g3-07-headless-canvas-demo",
+        "package_id": "GT-G3-07-P31-v0.5",
+        "package_materialization_ref": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+        "structural_records": 9,
+        "pixel_records": 8,
+        "runtime_group_findable": true,
+        "group_pixel_contribution": false,
+        "g3_focused_matrix": {"passed": 7, "failed": 0},
+        "rf01_g2_matrix": {"passed": 19, "failed": 0},
+        "full_ctest": {"passed": 537, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "awaiting_integration"
+      }
     }
   ]
 }

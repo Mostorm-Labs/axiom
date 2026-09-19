@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P31_REPAIR",
+  "previous_package_id": "GT-G3-07-P31-v0.3",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "previous_control_review": "00fc32ec234e794aafbe5ee1594cc2ddf11c22a8",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "repair_class": "TASK_PACKAGE_DEFECT",
+  "production_code_changed": false,
+  "validator_semantics_changed": false,
+  "erase_mask_owner": "VectorStroke object 505",
+  "canonical_type_contract_changed": false,
+  "erase_mask_world_geometry": {
+    "owner": "VectorStroke object 505",
+    "record_translation": [8, 48],
+    "stroke_world_strip_half_open": [8, 46, 32, 50],
+    "mask_local_bounds": [8, -4, 16, 4],
+    "mask_world_bounds": [16, 44, 24, 52],
+    "strict_subset_intersection_half_open": [16, 46, 24, 50],
+    "retained_samples": [[8, 46], [24, 46]],
+    "erased_sample": [16, 46],
+    "intersection_nonempty": true,
+    "retained_pixels_on_both_sides": true
+  },
+  "independent_expected_raster": {
+    "source": "review-owned dependency-free byte-vector construction; no Skia or production backend call",
+    "rgba_bytes": 262144,
+    "fnv1a64": "fnv1a64:7b8eb8c70c65afe5",
+    "sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
+    "old_shape_mask_digest_reused": false
+  },
+  "preflight": {"authority_conflict": false, "verification_conflict": false, "scope_conflict": false, "unresolved_decisions": []},
+  "new_package_lock_hashes": {"authority.lock.json": "07d3cc7e3d078677ce917512f651da397ba08d5cd7c1aecbcf94be7dea0adc6c", "verification.lock.json": "2dd6997f58ccc0f3354dd098e4209c470c95c01de998b4e7a082b30a5d605794", "execution-contract.json": "665156875c7d22c5f7b73aa6500f5addf81f1e0a47b80d269b738de3c2ac31eb", "implementation-context.md": "4c5300a422c6915381540d64c78af0667c47419307a22b783510b1f07e7c07e3", "evidence-contract.json": "cbc23cf0e81724e2f851b6d9b313fd20a87915b400609862b20ad0ccfbc33153"},
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
