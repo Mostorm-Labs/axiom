@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "execution_branch": "codex/g0-12-hosted-validation-repair",
+  "authorized_paths": [
+    ".github/workflows/g0-android-instrumentation-adapter.yml",
+    ".aegis/packages/GT-G0-12/**",
+    ".aegis/results/GT-G0-12/**"
+  ],
+  "changed_paths": [
+    ".github/workflows/g0-android-instrumentation-adapter.yml",
+    ".aegis/packages/GT-G0-12/**",
+    ".aegis/results/GT-G0-12/**"
+  ],
+  "forbidden_scan": {
+    "semantic_conformance_source_changed": false,
+    "g1_evidence_changed": false,
+    "runtime_changed": false,
+    "g2_or_g3_result_identity_changed": false,
+    "synthetic_android_pass_evidence": false
+  },
+  "result": "PASS_WITH_HOSTED_EVIDENCE_PENDING"
+}
