@@ -1,41 +1,52 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G3-07",
+  "verification_id": "GT-G3-07-P20-v0.2",
+  "source": {
+    "ref": "repo:.aegis/results/GT-G3-07/p20-verification-design-v0.2.json",
+    "sha256": "f252f3c0a2fe787fdcdc6b68f08f85d0049362c1a2f1d0b84f8770d4c4abea76"
+  },
+  "supersedes": "GT-G3-07-P31-v0.4 verification binding",
   "obligations": [
     {
-      "id": "G3-07-V1-production-pipeline",
-      "requirement": "The fixed CLI fixture reaches the private Headless backend only through canonical semantic bootstrap, production Scene/RuntimeScene, VisibilityResolver, DirectReferenceSource, FramePlanBuilder, and FrameOrchestrator.",
-      "oracle": "Run the CLI on the checked-in fixture and require exact ordered pipeline_stages, nine canonical/runtime/visible/draw records, production reference_plan_digest, one accepted backend submission, and static scans proving the CLI source does not construct final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values and does not use test-only mutation seams.",
-      "acceptance": "Every production stage is present exactly once in the frozen order, all stage identities agree, counts are nine, the submitted plan digest is non-empty, and the source/dependency scan finds no bypass.",
-      "evidence_required": "Committed demo-cli evidence and review-owned pipeline/bypass scan."
+      "id": "G3-07-V1-production-pipeline-v2",
+      "requirement": "The fixed fixture traverses canonical bootstrap, production Scene/RuntimeScene, bounds-driven visibility, DirectReference, FramePlan, FrameOrchestrator, and the private Headless backend without a hand-built final render input.",
+      "oracle": "Require the exact production stage order; require IDs 501 through 509 in canonical, Scene, and RuntimeScene; require IDs 501 through 508 in visibility, Scene draw list, DirectReference, and backend traversal; require Group 509 absent from pixel-stage membership and prohibit manual downstream injection.",
+      "acceptance": "Nine structural records and eight pixel records are exact, ordered, and observed through their owning production stages; Group remains RuntimeScene-findable and has no pixel entry.",
+      "evidence_required": "Committed demo CLI evidence plus review-owned pipeline, membership, and source-bypass scan."
     },
     {
-      "id": "G3-07-V2-deterministic-artifacts",
-      "requirement": "Identical fixed input rendered twice emits byte-identical artifact sets that exactly match the independent fixture oracle.",
-      "oracle": "Run the CLI into two clean output directories, byte-compare render.rgba, render-digest.txt, and render-evidence.json, require 256*256*4 RGBA bytes, compare the digest to fnv1a64:7b8eb8c70c65afe5, and compare fixture SHA-256 plus render.rgba SHA-256 81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042 to the checked-in expected descriptor using an external test/review process rather than the CLI under test.",
-      "acceptance": "Both runs exit zero; all three files are byte-identical; exact raster byte count, raster digest, fixture hash, and golden hash match the independent descriptor; no output embeds nondeterministic timestamps or paths.",
-      "evidence_required": "Artifact-determinism evidence with external hashes and exact byte comparisons."
+      "id": "G3-07-V2-deterministic-artifacts-v2",
+      "requirement": "Identical fixed input rendered twice emits byte-identical artifacts matching the independently authored expected descriptor.",
+      "oracle": "Byte-compare all three artifacts from two clean runs; externally compare fixture/render hashes and every frozen expected descriptor field; sample retained and erased VectorStroke pixels and the Group zero-pixel region.",
+      "acceptance": "Both runs exit zero; files are byte-identical; raster byte count, hashes, digest, fixed samples, mask behavior, and Group zero-pixel observation match the independent descriptor.",
+      "evidence_required": "Artifact determinism evidence with external hashes, exact field comparisons, and pixel samples."
     },
     {
-      "id": "G3-07-V3-nine-kind-canonical-fixture",
-      "requirement": "The CLI fixture is canonical, non-empty, and exercises every V1 ObjectKind through the complete production pipeline with reviewer-resolvable membership.",
-      "oracle": "Independently decode the checked-in snapshot, assert exact ObjectIds 501..509 and one of each nine ObjectKind values, compare all nine IDs through Scene/visibility and compare all nine exact semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, and evidence JSON; verify the frozen six-value SceneObjectKind mapping separately; sample the eight fixed non-transparent regions, the VectorStroke retained pixels at [8,46] and [24,46], the transparent erased pixel at [16,46], and Group zero-pixel contribution.",
-      "acceptance": "All nine IDs remain exactly correlated across every stage; all nine semantic kinds remain exact wherever ObjectKind is represented; Scene uses the frozen coarse mapping without becoming semantic-kind authority; eight kinds contribute distinguishable pixels; VectorStroke mask 1501 maps from local [8,-4]-[16,4] to world [16,44]-[24,52], intersects the rendered stroke strip [8,46]-[32,50], clears exactly the strict-subset intersection [16,46]-[24,50], preserves pixels on both sides, Group is traversed and contributes none, and raster output is non-empty.",
-      "evidence_required": "Fixture inventory plus independent kind/ID/region oracle results."
+      "id": "G3-07-V3-structural-and-pixel-membership-v2",
+      "requirement": "All nine V1 semantic kinds remain in canonical and runtime state, while only the eight objects with pixel-relevant bounds enter visibility and reference rendering.",
+      "oracle": "Independently decode the snapshot and assert IDs 501 through 509 plus all nine kinds in canonical storage and RuntimeScene; assert all nine Scene records under the frozen coarse mapping; assert exactly IDs 501 through 508 and their eight semantic kinds in visibility, draw, DirectReference, and backend traversal; assert RuntimeScene find succeeds for Group 509 and Group contributes no pixels.",
+      "acceptance": "Structural stages contain nine exact records; pixel stages contain eight exact records; Group is structurally present, absent from pixel membership, and contributes zero pixels.",
+      "evidence_required": "Nine-kind structural inventory plus eight-kind pixel-pipeline membership evidence."
     },
     {
-      "id": "G3-07-V4-failure-and-atomic-publication",
-      "requirement": "Input, render, or output failure is deterministic and cannot publish partial or stale success artifacts.",
-      "oracle": "Exercise missing fixture, malformed fixture, unsupported/invalid canonical fixture, unknown/duplicate/missing CLI arguments, an unwritable parent, production render rejection using a process-test-generated valid Snapshot v1 whose Shape width is 1.5, and an already-existing distinguishable successful output directory; inspect exit status and complete output path before/after.",
-      "acceptance": "Each negative exits nonzero with a stable diagnostic class; a previously absent destination remains absent; an existing successful destination is rejected and remains byte-for-byte unchanged; temporary sibling staging is removed or remains clearly non-success and no render-evidence.json claims result=PASS.",
-      "evidence_required": "Failure matrix and exact no-partial/no-stale-publication comparisons."
+      "id": "G3-07-V4-failure-and-publication-v2",
+      "requirement": "Argument, fixture, render, or publication failures are deterministic and never publish partial or stale success artifacts.",
+      "oracle": "Exercise missing, unknown, duplicate, and positional arguments; missing, malformed, unsupported, and invalid fixtures; non-integral Shape rejection; unavailable parent; and an existing successful output directory, comparing the destination before and after.",
+      "acceptance": "Every failure exits nonzero; an absent destination remains absent; an existing successful destination remains byte-identical; no partial PASS evidence is published.",
+      "evidence_required": "Complete failure and atomic-publication matrix."
     },
     {
-      "id": "G3-07-V5-boundary-and-regression",
-      "requirement": "G3-07 stays a demo CLI consumer, preserves G2 and G3-01 through G3-06, and uses only the accepted prebuilt Skia SDK.",
-      "oracle": "Review-owned changed-path/dependency scan plus G3HeadlessCanvasDemo, G3SurfacePresentation, G3HeadlessSkia, G3FrameState, G3Visibility, G3DirectReference, G3FrameOrchestration, full RF01/G2 tests, locked SDK identity, and git diff --check against the exact anchor.",
-      "acceptance": "Only authorized G3-07 tool/fixture/test/CMake/evidence paths differ; existing production contracts and dependency locks do not change; all matrices pass with SDK c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731 and no source fallback.",
-      "evidence_required": "Exact changed-path inventory, forbidden-dependency scan, SDK resolution, focused/predecessor logs, and diff check."
+      "id": "G3-07-V5-boundary-and-regression-v2",
+      "requirement": "G3-07 remains a demo consumer and preserves G2 plus G3-01 through G3-06 while using the accepted prebuilt Skia SDK.",
+      "oracle": "Run authorized-path and forbidden-dependency scans, focused G3 tests, the complete RF01/G2 matrix, full CTest, SDK identity checks, and git diff --check against the anchor.",
+      "acceptance": "Only authorized G3-07 and evidence paths differ; production contracts and dependency locks are unchanged; all frozen matrices pass with the accepted SDK and no source fallback.",
+      "evidence_required": "Scope, dependency identity, regression, and diff evidence."
     }
+  ],
+  "explicit_non_requirements": [
+    "Group 509 need not appear in bounds-driven visibility, Scene draw-list membership, DirectReference pixel entries, or backend traversed kinds.",
+    "GT-G3-07 does not introduce Group subtree bounds, Group transforms over descendants, clip, opacity, blend isolation, or structural render traversal.",
+    "No G2 BoundsSystem, Scene query, spatial-index, DirectReferenceSource, canonical type, or publication semantic change is authorized."
   ]
 }

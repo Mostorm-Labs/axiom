@@ -7,7 +7,7 @@
         "Create runtime/render/tools/headless_canvas_demo.cpp implementing only the frozen CLI, canonical fixture loading, production pipeline assembly, deterministic diagnostics, and atomic three-artifact publication.",
         "Create runtime/render/fixtures/g3-07/nine-kind-v1.axsnap as a canonical SnapshotCodec-decodable SemanticSnapshot v1 fixture with exact IDs 501 through 509 and all nine V1 kinds; place the supported FilledPath erase mask on VectorStroke (ID 505), the only V1 stroke-bearing fixture kind for which canonical erase masks are valid.",
         "Create runtime/render/fixtures/g3-07/nine-kind-v1.expected.json as the independently authored immutable fixture/output oracle with exact fixture SHA-256, semantic/frame/raster literals, nine-kind inventory, expected cross-stage identities/counts, raster digest fnv1a64:7b8eb8c70c65afe5, and render.rgba SHA-256 81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042.",
-        "Create runtime/render/tests/headless_canvas_demo_test.cpp as an external process test that validates success replay, independent artifact hashes/bytes/fields, nine-kind stage membership, fixed pixel regions, failure matrix, and no partial/stale publication.",
+        "Create runtime/render/tests/headless_canvas_demo_test.cpp as an external process test that validates success replay, independent artifact hashes/bytes/fields, nine-record structural membership, eight-record pixel membership, fixed pixel regions, failure matrix, and no partial/stale publication.",
         "Modify runtime/render/CMakeLists.txt only to add an opt-in axiom_headless_canvas_demo target, its G3HeadlessCanvasDemo external-process test, checked-in fixture paths, and the existing locked Headless Skia consumer linkage.",
         "Write durable G3-07 implementation preflight, CLI, determinism, scope, and result evidence under .aegis/results/GT-G3-07/."
       ],
@@ -20,7 +20,7 @@
         "Call VisibilityResolver::resolve, DirectReferenceSource::build, FramePlanBuilder::build, and FrameOrchestrator::submit with SkiaHeadlessBackend in this order. Never manually construct the final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan.",
         "Use only SkiaHeadlessBackend's successful HeadlessRasterObservation to obtain RGBA/digest output. Do not reimplement rendering, use test fixtures, or access Skia directly in the CLI.",
         "Write render.rgba as exact raw RGBA bytes, render-digest.txt as the exact digest plus one LF, and render-evidence.json as canonical UTF-8 JSON with stable key order, one LF, no timestamp, no absolute path, and no environment-specific value.",
-        "render-evidence.json must contain schema_version, fixture_id, fixture_sha256, frame/view/surface/metrics/scene/read-token identities, canonical/Scene/RuntimeScene/visible/draw counts, ordered object IDs at every observable stage, exact ObjectKind names for canonical/RuntimeScene/draw/backend stages, frozen coarse SceneObjectKind names for Scene, traversed_object_kinds, reference_plan_digest, raster width/height/byte count/digest, golden_sha256, exact pipeline_stages, locked Skia SDK id, and result=PASS.",
+        "render-evidence.json must contain schema_version, fixture_id, fixture_sha256, frame/view/surface/metrics/scene/read-token identities, canonical/Scene/RuntimeScene structural counts, visible/draw/reference/backend pixel counts, ordered object IDs at every observable stage, exact ObjectKind names for canonical/RuntimeScene and pixel stages, frozen coarse SceneObjectKind names for Scene, traversed_object_kinds, reference_plan_digest, raster width/height/byte count/digest, golden_sha256, exact pipeline_stages, locked Skia SDK id, and result=PASS. Canonical/Scene/RuntimeScene must contain IDs 501 through 509; pixel stages must contain exactly IDs 501 through 508; Group 509 must remain RuntimeScene-findable and must not be manually injected downstream.",
         "Compute fixture SHA-256 and render.rgba SHA-256 in the CLI with a small tool-local dependency-free implementation or an already linked accepted library. The test/reviewer must compute these hashes independently and compare them to the checked-in oracle.",
         "Require the requested output directory not to exist. Stage all outputs in one unique sibling directory on the same filesystem, close every file, and publish the complete set by renaming the directory to the absent requested path only after input, render, and all writes succeed. If the requested path already exists, reject before staging and preserve it byte-for-byte. Remove staging best-effort on all failures.",
         "The expected descriptor is read-only oracle input. The executable may compare against it only when the test supplies it independently; ordinary CLI operation must not generate, overwrite, or self-bless expected values.",
@@ -64,11 +64,11 @@
         ]
       },
       "obligation_mapping": {
-        "G3-07-V1-production-pipeline": ["production owner call sequence", "cross-stage identity/count evidence", "source-level bypass scan"],
-        "G3-07-V2-deterministic-artifacts": ["two clean runs", "three-file byte equality", "external exact digest and SHA-256 oracle"],
-        "G3-07-V3-nine-kind-canonical-fixture": ["independent SnapshotCodec inventory", "IDs/kinds correlated at each stage", "eight regions plus erase and Group oracles"],
-        "G3-07-V4-failure-and-atomic-publication": ["argument/input/render/output negative matrix", "clean-destination absence", "existing-success unchanged comparison"],
-        "G3-07-V5-boundary-and-regression": ["authorized path and dependency scans", "locked SDK identity", "G3/RF01/G2 matrices", "git diff --check"]
+        "G3-07-V1-production-pipeline-v2": ["production owner call sequence", "nine structural versus eight pixel membership evidence", "source-level bypass scan"],
+        "G3-07-V2-deterministic-artifacts-v2": ["two clean runs", "three-file byte equality", "external exact digest and SHA-256 oracle"],
+        "G3-07-V3-structural-and-pixel-membership-v2": ["independent SnapshotCodec inventory", "nine canonical/Scene/RuntimeScene records", "eight visibility/draw/reference/backend records", "RuntimeScene Group findability", "eight regions plus erase and Group zero-pixel oracles"],
+        "G3-07-V4-failure-and-publication-v2": ["argument/input/render/output negative matrix", "clean-destination absence", "existing-success unchanged comparison"],
+        "G3-07-V5-boundary-and-regression-v2": ["authorized path and dependency scans", "locked SDK identity", "G3/RF01/G2/full matrices", "git diff --check"]
       },
       "unresolved_semantic_decisions": [],
       "authority_conflict": false,
@@ -104,7 +104,7 @@
         {
           "id": "G3-07-GREEN",
           "command_or_oracle": "python3 tools/skia/fetch.py --target macos-arm64-metal --variant release --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --install-root .deps/skia-sdk --summary-file out/g3-07-skia-sdk-resolution.json && cmake -S . -B out/g3-headless-skia -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_SKIA_SDK_ROOT=$PWD/.deps/skia-sdk/macos-arm64-metal/release && cmake --build out/g3-headless-skia --target axiom_headless_canvas_demo axiom_render_headless_canvas_demo_tests && ctest --test-dir out/g3-headless-skia -R '^G3HeadlessCanvasDemo$' --output-on-failure",
-          "expected_result": "PASS with complete production pipeline, exact two-run artifacts, independent nine-kind/golden oracle, and atomic failure matrix",
+          "expected_result": "PASS with complete production pipeline, exact nine-record structural and eight-record pixel membership, exact two-run artifacts, independent golden oracle, and atomic failure matrix",
           "blocking_reason": "G3-07 executable acceptance oracle"
         },
         {
@@ -121,7 +121,7 @@
         },
         {
           "id": "G3-07-ARTIFACT-ORACLE",
-          "command_or_oracle": "The external-process test runs the CLI twice with two previously nonexistent output paths and through every frozen failure case; it independently decodes the fixture, computes fixture/render SHA-256 and FNV-1a, parses evidence, samples fixed pixel regions, creates the exact valid nonintegral-Shape rejection snapshot, and byte-compares artifacts without calling production rendering code for expected raster values.",
+          "command_or_oracle": "The external-process test runs the CLI twice with two previously nonexistent output paths and through every frozen failure case; it independently decodes the fixture, computes fixture/render SHA-256 and FNV-1a, parses evidence, asserts IDs 501 through 509 in canonical/Scene/RuntimeScene, asserts IDs 501 through 508 in visibility/draw/DirectReference/backend traversal, proves RuntimeScene Group findability and Group pixel absence, samples fixed pixel regions, creates the exact valid nonintegral-Shape rejection snapshot, and byte-compares artifacts without calling production rendering code for expected raster values.",
           "expected_result": "Exact independent expected descriptor and deterministic/atomic artifact contract PASS",
           "blocking_reason": "Independent end-to-end artifact and failure proof"
         },
@@ -153,7 +153,7 @@
         "The frozen ImplementationDesignPreflight is persisted with no unresolved semantic decision or authority/verification/scope conflict before mutation.",
         "Required missing-target RED is observed and recorded before implementation.",
         "The fixture is generated once during P32 from the exact authority.lock.json semantic literals by a disposable external generator that calls SnapshotCodec::encode; its supported FilledPath erase mask belongs to VectorStroke ID 505 and its local [8,-4]-[16,4] rectangle maps to world [16,44]-[24,52], intersecting the rendered world stroke strip [8,46]-[32,50] in the strict subset [16,46]-[24,50], then the bytes are checked in. The production CLI only decodes it. The process test independently decodes and field-compares all nine objects. The generator is not built, shipped, retained, or used to derive expected raster bytes/digests.",
-        "The successful CLI path traverses every frozen production stage without manual final draw-list/plan construction or test-only mutation access.",
+        "The successful CLI path traverses every frozen production stage without manual final draw-list/plan construction or test-only mutation access; canonical/Scene/RuntimeScene contain all nine records, bounds-driven pixel stages contain exactly IDs 501 through 508, and Group 509 remains RuntimeScene-findable with zero pixel contribution.",
         "Two clean runs emit byte-identical render.rgba, render-digest.txt, and render-evidence.json matching the exact independent oracle including fnv1a64:7b8eb8c70c65afe5 and render.rgba SHA-256 81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042.",
         "Every frozen failure case exits nonzero and proves both no-partial output on a clean destination and no stale/partial replacement of an existing success set.",
         "G3HeadlessCanvasDemo, all six predecessor G3 tests, and the full RF01/G2 matrix pass at the exact result revision using the locked prebuilt SDK.",

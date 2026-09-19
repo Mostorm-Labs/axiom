@@ -11,6 +11,13 @@
     "content_hash_kind": "repository-file-sha256",
     "content_hash": "68ff2639119311e68dbb4bfc7ef46d9de08e37ae857dce3e82b2b94fb7026553"
   },
+  "verification_revision": {
+    "ref": "repo:.aegis/results/GT-G3-07/p20-verification-design-v0.2.json",
+    "verification_id": "GT-G3-07-P20-v0.2",
+    "content_hash_kind": "repository-file-sha256",
+    "content_hash": "f252f3c0a2fe787fdcdc6b68f08f85d0049362c1a2f1d0b84f8770d4c4abea76",
+    "supersedes_package_verification": "GT-G3-07-P31-v0.4"
+  },
   "dependency": {
     "authority_ref": "g3-capability-authority",
     "g3_06_gate_decision": "gt-g3-06-p34-2026-09-19",
@@ -78,7 +85,7 @@
       "path": "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap",
       "oracle_path": "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
       "format": "canonical SemanticSnapshot v1 bytes decoded with SnapshotCodec and restored with SnapshotBootstrapper; no test-only object-store mutator",
-      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as zero-pixel traversal, and a supported simple FilledPath erase mask on VectorStroke.",
+      "content": "Exactly one valid distinguishable object of each V1 ObjectKind with stable IDs 501 through 509, deterministic order, non-empty geometry for the eight pixel-contributing kinds, Group retained as a canonical/runtime structural record with empty own bounds and zero pixel contribution, and a supported simple FilledPath erase mask on VectorStroke.",
       "semantic_baseline": {
         "document_id_low64": 775,
         "schema_version": 1,
@@ -181,7 +188,7 @@
           "Sticky": "Shape",
           "Group": "Shape"
         },
-        "mapping_reason": "SceneObjectKind is a six-value coarse visibility/hit classification and is not semantic ObjectKind authority. RuntimeScene and DirectReferenceSource preserve all nine exact semantic kinds."
+        "mapping_reason": "SceneObjectKind is a six-value coarse visibility/hit classification and is not semantic ObjectKind authority. Canonical storage, Scene, and RuntimeScene preserve all nine records. Bounds-driven visibility and DirectReference contain only pixel-relevant IDs 501 through 508; Group 509 remains structural and does not receive a pixel entry."
       },
       "frame": {
         "view_id": 801,
@@ -213,7 +220,7 @@
       "accepted_expected_raster_sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
       "oracle_independence": "The expected descriptor is checked in by P32 from package literals and review-owned hash calculation; the CLI and SkiaHeadlessBackend may not generate or rewrite it."
     },
-    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage, projected through production Scene and RuntimeScene, queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. The CLI must not construct a final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan directly and must not call test-only access seams.",
+    "pipeline_invariant": "The fixture must be decoded and restored into canonical semantic storage with all nine records, projected through production Scene and RuntimeScene with all nine records, then allow the eight bounded pixel objects to be queried by VisibilityResolver, mapped by DirectReferenceSource, built by FramePlanBuilder, submitted by FrameOrchestrator to SkiaHeadlessBackend, and only then observed. Group 509 remains findable in structural state but is not manually injected into bounds-driven pixel stages. The CLI must not construct a final VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan directly and must not call test-only access seams.",
     "forbidden": [
       "direct SemanticDocument or ObjectStore traversal for rendering",
       "manual construction of final RuntimeSceneRecord, VisibilityResult, ReferenceDrawList, ReferenceTraversalEntry, ReferenceCommand, or FramePlan values in the CLI",

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-07-P31-v0.4",
+  "package_id": "GT-G3-07-P31-v0.5",
   "task_id": "GT-G3-07",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Add a fixed-fixture Headless Canvas Demo CLI that traverses the production canonical scene and Render Core pipeline and atomically emits deterministic raster, digest, and evidence artifacts.",
@@ -16,27 +16,38 @@
     "relation": "ancestor"
   },
   "resume_cursor": null,
+  "preserved_result": {
+    "revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+    "relation": "ancestor",
+    "completed_through": [
+      "production implementation",
+      "field-wise independent descriptor oracle",
+      "complete failure matrix",
+      "full 537-test regression"
+    ],
+    "next_action": "Align durable evidence to the corrected nine-structural/eight-pixel contract and rerun the frozen verification without production semantic changes."
+  },
   "continue_until_terminal_state": true,
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "07d3cc7e3d078677ce917512f651da397ba08d5cd7c1aecbcf94be7dea0adc6c"
+    "sha256": "0f038d460c2cd9ed80db5a94ad1ed5bfb3419586f7dd84c40c3f485a7ed28c58"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "2dd6997f58ccc0f3354dd098e4209c470c95c01de998b4e7a082b30a5d605794"
+    "sha256": "7dad620dfe859428fc320d1a24702bcf0743adac1af55add514ccb3a852925a9"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "665156875c7d22c5f7b73aa6500f5addf81f1e0a47b80d269b738de3c2ac31eb"
+    "sha256": "c18d70c025bde40b9b2afc082e6893c7782bc91fb7aebcd194d023b84ee0c065"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "4c5300a422c6915381540d64c78af0667c47419307a22b783510b1f07e7c07e3"
+    "sha256": "b3df123fc4af5b0c0c49a84d40ae48b85d3744e62668af0cdab9cc7432cee98e"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "cbc23cf0e81724e2f851b6d9b313fd20a87915b400609862b20ad0ccfbc33153"
+    "sha256": "cc7c13768acc399a499c39512b0f71dae731bb341f059c6aa1b4aff21f8a5836"
   },
   "materialization": {
     "same_repository": true,
@@ -46,7 +57,7 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",
-    "next_action": "Execute the complete frozen GT-G3-07-P31-v0.4 closure contract from this exact package; return READY_FOR_CONTROL_REVIEW only after all required P32 evidence is durable.",
+    "next_action": "Review GT-G3-07-P31-v0.5 independently, then reverify the preserved implementation against the corrected nine-structural/eight-pixel contract and return READY_FOR_CONTROL_REVIEW only after all required evidence is durable.",
     "official_gate_pass_forbidden": true
   }
 }
