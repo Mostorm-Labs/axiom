@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "artifacts": [
+    {"id":"surface-evidence","path":".aegis/results/GT-G3-10/surface-evidence.json","blocking":true},
+    {"id":"scope-evidence","path":".aegis/results/GT-G3-10/scope-evidence.json","blocking":true},
+    {"id":"web-smoke-evidence","path":".aegis/results/GT-G3-10/web-smoke-evidence.json","blocking":true},
+    {"id":"web-hosted-provider-evidence","path":".aegis/results/GT-G3-10/web-hosted-provider-evidence.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G3-10/portable-regression-summary.json","blocking":false}
+  ],
+  "review_boundary": "Exact pushed result revision plus durable repository evidence; P32 must not claim P34 PASS.",
+  "missing_hosted_evidence": "BLOCKED_ENVIRONMENT or BLOCKED_EVIDENCE; never synthesize Web PASS on a host without the locked Web SDK and browser smoke boundary."
+}

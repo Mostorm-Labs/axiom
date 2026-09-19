@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create a Web-only canonical surface host under apps/axiom_canvas_demo/platform/web.",
+        "Add the private runtime/render WebGL2 backend target binding required by the production Render Core; keep Skia types out of the Web host public seam.",
+        "Bind browser metrics/DPR and WebGL2 surface generations to the production Render Core lifecycle without scene traversal.",
+        "Add g3-web-release using the locked Emscripten and web-wasm-webgl2 consumer path without changing existing POC presets.",
+        "Add portable Web host contract tests and browser smoke/evidence generation under the current verification conventions.",
+        "Record exact implementation, scope, browser and build evidence under .aegis/results/GT-G3-10/."
+      ],
+      "authorized_mutation_scope": [
+        "apps/axiom_canvas_demo/platform/web/**",
+        "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+        "apps/axiom_canvas_demo/CMakeLists.txt",
+        "runtime/render/include/canvas/render/webgl_surface_backend.hpp",
+        "runtime/render/src/webgl_surface_backend.cpp",
+        "runtime/render/src/skia_headless_backend.cpp",
+        "runtime/render/tests/webgl_surface_backend_test.cpp",
+        "runtime/render/CMakeLists.txt",
+        "CMakePresets.json",
+        "verification/packages/platform-harness-web/**",
+        "verification/evidence/g3/gt-g3-10/**",
+        ".github/workflows/g3-web-reference-host.yml",
+        ".aegis/packages/GT-G3-10/**",
+        ".aegis/results/GT-G3-10/**",
+        ".aegis/project.json",
+        ".aegis/state.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json"
+      ],
+      "forbidden_changes": [
+        "runtime/scene/**",
+        "runtime/semantic/**",
+        "runtime/foundation/**",
+        "G2 RuntimeScene, SceneQuery, SemanticDocument or SceneCompiler contracts",
+        "existing POC web adapters or fixed-size/global POC state",
+        "final WebGPU/DComp/swapchain topology authority",
+        "G3-11, G4 or G5 behavior"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The G3-10 portable Web host contract target and g3-web-release preset cannot build because the target and host do not exist at the anchor.",
+      "observation_seam": "Configure g3-host-debug and run the focused Web host test before adding the Web host implementation."
+    },
+    "tests": {
+      "required": [
+        "cmake --preset g3-host-debug",
+        "cmake --build --preset g3-host-debug --target axiom_demo_web_surface_tests",
+        "ctest --preset g3-host-debug -R '^G3WebSurfaceHost$' --output-on-failure",
+        "cmake --build --preset g3-host-debug",
+        "ctest --preset g3-host-debug --output-on-failure",
+        "npm --prefix verification ci",
+        "npm --prefix verification run build",
+        "npm --prefix verification run test --workspace @axiom/platform-harness-web",
+        "cmake --preset g3-web-release",
+        "cmake --build --preset g3-web-release --target axiom_canvas_demo_web",
+        "git diff --check 1aafd5dcd99a641db2e1285a6c67efd8d7c0c409..HEAD"
+      ]
+    },
+    "hosted_verification": {"required": ["web-wasm-webgl2-build-and-browser-smoke"], "optional": []},
+    "evidence": {
+      "blocking": ["surface-evidence.json", "scope-evidence.json", "web-smoke-evidence.json"],
+      "corroborative": ["portable-regression-summary.json"]
+    },
+    "terminal_success": [
+      "Portable Web surface lifecycle and generation-bound adapter tests pass.",
+      "The Web target and private runtime WebGL2 backend build through the locked Emscripten and web-wasm-webgl2 SDK path.",
+      "Browser smoke records dynamic resize/DPR, WebGL2 binding, pointer forwarding and Presented feedback without JS scene traversal.",
+      "Required G3 and RF01/G2 regressions, scope and diff checks pass.",
+      "Exact result revision is pushed and independently audited by P34.",
+      "P34 PASS and durable Gate decision close GT-G3-10 without starting G3-11."
+    ],
+    "explicit_terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_MISSING_INPUT",
+      "BLOCKED_UNRESOLVED_DECISION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_ENVIRONMENT",
+      "PACKAGE_SCOPE_DIVERGENCE"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

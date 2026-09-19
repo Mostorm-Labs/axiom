@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "implementation_revision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+  "authorized_paths": [
+    "apps/axiom_canvas_demo/platform/web/**",
+    "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+    "apps/axiom_canvas_demo/CMakeLists.txt",
+    "runtime/render/include/canvas/render/webgl_surface_backend.hpp",
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/CMakeLists.txt",
+    "CMakePresets.json",
+    "verification/packages/platform-harness-web/**",
+    ".aegis/packages/GT-G3-10/**",
+    ".aegis/results/GT-G3-10/**"
+  ],
+  "forbidden_scan": {
+    "semantic_document_in_web_host": false,
+    "scene_compiler_in_web_host": false,
+    "runtime_scene_iteration_in_web_host": false,
+    "javascript_scene_traversal": false,
+    "react_high_frequency_state": false,
+    "fixed_800x600_backend_state": false,
+    "g3_11_or_successor_scope": false
+  },
+  "runtime_scene_semantic_foundation_unchanged": true,
+  "canonical_draw_policy_shared_from_runtime_render": true,
+  "result": "PASS"
+}

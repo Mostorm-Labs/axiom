@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Axiom G3-10 Web Reference Host</title>
+<style>#axiom-canvas { width: 320px; height: 180px; }</style>
+<canvas id="axiom-canvas" width="320" height="180"></canvas>
+<script type="module">
+  import createAxiomCanvasModule from "./axiom_canvas_demo_web.js";
+  const canvas = document.getElementById("axiom-canvas");
+  const facts = [];
+  const record = (kind, details = {}) => facts.push({ kind, ...details });
+  globalThis.axiomG310Ready = (async () => {
+    const module = await createAxiomCanvasModule({ canvas });
+    const selector = module.stringToNewUTF8("#axiom-canvas");
+    let handle = module._axiom_web_create(selector, 320, 180, 320, 180, 1);
+    module._free(selector);
+    if (!handle || !module._axiom_web_backend_ready(handle)) throw new Error("WebGL2 backend unavailable");
+    record("WEBGL2_BOUND");
+    const host = {
+      resize(logicalWidth, logicalHeight, dpr) {
+        const selectorValue = module.stringToNewUTF8("#axiom-canvas");
+        const physicalWidth = Math.max(1, Math.floor(logicalWidth * dpr));
+        const physicalHeight = Math.max(1, Math.floor(logicalHeight * dpr));
+        const accepted = module._axiom_web_resize(
+          handle, selectorValue, logicalWidth, logicalHeight, physicalWidth, physicalHeight, dpr);
+        module._free(selectorValue);
+        if (!accepted) throw new Error("resize/rebind rejected");
+        record("METRICS_CHANGED", { logicalWidth, logicalHeight, physicalWidth, physicalHeight, dpr });
+      },
+      loseSurface() {
+        if (!module._axiom_web_lose_surface(handle)) throw new Error("surface loss rejected");
+        record("SURFACE_UNAVAILABLE");
+      },
+      present() {
+        if (!module._axiom_web_present_smoke(handle)) throw new Error("present feedback rejected");
+        record("PRESENTED");
+      },
+      observation() {
+        return {
+          facts: facts.map((fact) => ({ ...fact })),
+          surfaceGeneration: Number(module._axiom_web_surface_generation(handle)),
+          metricsGeneration: Number(module._axiom_web_metrics_generation(handle)),
+          pointerSamples: Number(module._axiom_web_pointer_samples(handle)),
+          presentedFrames: Number(module._axiom_web_presented_frames(handle)),
+          width: canvas.width,
+          height: canvas.height,
+        };
+      },
+    };
+    canvas.addEventListener("pointermove", (event) => {
+      const samples = typeof event.getCoalescedEvents === "function" && event.getCoalescedEvents().length
+        ? event.getCoalescedEvents() : [event];
+      for (const sample of samples) {
+        if (!module._axiom_web_pointer_sample(handle, sample.clientX, sample.clientY,
+                                               sample.pressure, event.pointerId)) {
+          throw new Error("pointer sample rejected");
+        }
+      }
+      record("POINTER_BATCH_FORWARDED", { count: samples.length });
+    });
+    globalThis.axiomWebHost = Object.freeze(host);
+    record("HOST_READY");
+    return host;
+  })();
+</script>

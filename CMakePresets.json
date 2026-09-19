@@ -41,6 +41,25 @@
       }
     },
     {
+      "name": "g3-web-release",
+      "displayName": "G3 Web WASM/WebGL2 canonical surface reference host (Release)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/g3-web-release",
+      "toolchainFile": "${sourceDir}/.deps/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_POC02": "OFF",
+        "CANVAS_BUILD_POC03": "OFF",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_RF01_BUILD_TESTS": "OFF",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "OFF",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "CANVAS_SKIA_SDK_ROOT": "$env{AXIOM_SKIA_WEB_SDK_ROOT}"
+      }
+    },
+    {
       "name": "rf01-host-debug",
       "displayName": "RF-01 Scene Foundation (Debug)",
       "generator": "Ninja",
@@ -334,6 +353,7 @@
   "buildPresets": [
     { "name": "g3-host-debug", "configurePreset": "g3-host-debug" },
     { "name": "g3-windows-release", "configurePreset": "g3-windows-release" },
+    { "name": "g3-web-release", "configurePreset": "g3-web-release" },
     { "name": "rf01-host-debug", "configurePreset": "rf01-host-debug" },
     { "name": "host-debug", "configurePreset": "host-debug" },
     { "name": "host-asan", "configurePreset": "host-asan" },
