@@ -1,0 +1,22 @@
+add_library(canvas_runtime_input STATIC
+    src/input_router.cpp
+    src/arc_input_adapter.cpp
+    src/web_input_adapter.cpp)
+target_include_directories(canvas_runtime_input PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_compile_features(canvas_runtime_input PUBLIC cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_runtime_input PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_runtime_input PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+if(BUILD_TESTING)
+  add_executable(axiom_input_router_tests tests/input_router_test.cpp)
+  target_link_libraries(axiom_input_router_tests PRIVATE canvas_runtime_input)
+  target_compile_features(axiom_input_router_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_input_router_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_input_router_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G4InputRouter COMMAND axiom_input_router_tests)
+endif()
