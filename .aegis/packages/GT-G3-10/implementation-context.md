@@ -8,6 +8,12 @@ adds the private WebGL2 backend target binding plus the Web reference-host
 boundary; the host must not move semantic scene ownership into the host or
 bridge.
 
+The WebGL2 backend reuses the existing Skia canonical draw policy through a
+private helper in `runtime/render/src/skia_headless_backend.cpp`. That file is
+authorized only for this internal extraction; the command validation, draw
+ordering and pixel semantics remain unchanged. This avoids copying policy into
+the Web host while keeping the renderer-neutral public seam free of Skia types.
+
 The existing `verification/packages/platform-harness-web` is a verification
 adapter and evidence consumer; it is not the production Web host. The new host
 must be thin, own DOM/WebGL2 facts and forward lifecycle/input observations to
