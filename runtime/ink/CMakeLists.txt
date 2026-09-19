@@ -1,0 +1,23 @@
+add_library(canvas_runtime_ink STATIC
+  src/brush_engine.cpp
+  src/ink_engine.cpp
+  src/stroke_session.cpp)
+target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(canvas_runtime_ink PUBLIC canvas_runtime_foundation canvas_runtime_input)
+target_compile_features(canvas_runtime_ink PUBLIC cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_runtime_ink PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_runtime_ink PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+if(BUILD_TESTING)
+  add_executable(axiom_ink_engine_tests tests/ink_engine_test.cpp)
+  target_link_libraries(axiom_ink_engine_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_ink_engine_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_ink_engine_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_ink_engine_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G4InkEngine COMMAND axiom_ink_engine_tests)
+endif()
