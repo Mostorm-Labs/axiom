@@ -129,6 +129,7 @@ void assertStageCorrelation(const std::string& evidence) {
     assert(field(evidence, "visibility_ids") == "[501,502,503,504,505,506,507,508]");
     assert(field(evidence, "draw_ids") == "[501,502,503,504,505,506,507,508]");
     assert(field(evidence, "reference_ids") == "[501,502,503,504,505,506,507,508]");
+    assert(field(evidence, "backend_ids") == "[501,502,503,504,505,506,507,508]");
     assert(field(evidence, "canonical_kinds") ==
            "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Connector\",\"Sticky\",\"Group\"]");
     assert(field(evidence, "runtime_kinds") == field(evidence, "canonical_kinds"));
@@ -136,6 +137,9 @@ void assertStageCorrelation(const std::string& evidence) {
            "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Shape\",\"Shape\",\"Shape\"]");
     assert(field(evidence, "reference_kinds") ==
            "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Connector\",\"Sticky\"]");
+    assert(field(evidence, "backend_kinds") == field(evidence, "reference_kinds"));
+    assert(field(evidence, "runtime_group_findable") == "true");
+    assert(field(evidence, "group_absent_from_pixel_stages") == "true");
 }
 
 } // namespace

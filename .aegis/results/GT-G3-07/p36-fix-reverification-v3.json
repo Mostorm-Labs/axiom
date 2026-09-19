@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P36_FIX_REVERIFICATION",
+  "package_id": "GT-G3-07-P31-v0.5",
+  "package_materialization_ref": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+  "package_control_review_ref": "83770ee3891dd9c84ea6f80500efe920751ad6c7",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "preserved_result_revision": "5dafe5892f543bfe4ca15bea72b83913c828c5bd",
+  "observed_starting_revision": "83770ee3891dd9c84ea6f80500efe920751ad6c7",
+  "repair_class": "EVIDENCE_ALIGNMENT_ONLY",
+  "red_green": {
+    "red": "G3HeadlessCanvasDemo failed when the external oracle requested backend_ids absent from the prior evidence JSON.",
+    "green": "The same oracle passed after CLI-private backend-boundary observation and RuntimeScene Group findability evidence were added."
+  },
+  "corrected_contract_observation": {
+    "canonical_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+    "scene_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+    "runtime_ids": [501, 502, 503, 504, 505, 506, 507, 508, 509],
+    "visibility_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "draw_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "reference_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "backend_ids": [501, 502, 503, 504, 505, 506, 507, 508],
+    "runtime_group_findable": true,
+    "group_absent_from_pixel_stages": true,
+    "group_zero_pixel": true
+  },
+  "verification": {
+    "g3_headless_canvas_demo": "PASS",
+    "g3_predecessor_matrix": "PASS: 7/7",
+    "rf01_g2_matrix": "PASS: 19/19",
+    "full_ctest": "PASS: 537/537",
+    "git_diff_check": "PASS",
+    "forbidden_dependency_scan": "PASS"
+  },
+  "mutation_scope": ["runtime/render/tools/headless_canvas_demo.cpp", "runtime/render/tests/headless_canvas_demo_test.cpp", ".aegis/results/GT-G3-07/demo-cli-evidence.json", ".aegis/results/GT-G3-07/artifact-determinism-evidence.json", ".aegis/results/GT-G3-07/scope-evidence.json", ".aegis/results/GT-G3-07/p36-fix-reverification-v3.json"],
+  "production_semantics_changed": false,
+  "canonical_type_contract_changed": false,
+  "reviewer_accessible_after_push": true,
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "next_surface": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}

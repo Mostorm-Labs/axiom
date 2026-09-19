@@ -1,15 +1,35 @@
 {
+  "schema_version": "0.2",
   "task_id": "GT-G3-07",
+  "package_id": "GT-G3-07-P31-v0.5",
   "result": "PASS",
   "fixture_sha256": "b4d04c4424c50370991729bce124c48e8c822487c788de6d535e959aab27c37f",
   "render_sha256": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
   "render_bytes": 262144,
   "render_digest": "fnv1a64:7b8eb8c70c65afe5",
   "two_run_byte_equality": true,
+  "fieldwise_expected_descriptor": "PASS",
+  "fixed_pixel_samples": "PASS",
+  "vector_stroke_mask_strict_subset": "PASS",
+  "group_zero_pixel_region": "PASS",
+  "argument_failure_matrix": {
+    "missing_all": "PASS",
+    "unknown": "PASS",
+    "missing_fixture_value": "PASS",
+    "missing_output_value": "PASS",
+    "duplicate_fixture": "PASS",
+    "duplicate_output": "PASS",
+    "positional": "PASS"
+  },
+  "fixture_failure_matrix": {
+    "missing": "PASS",
+    "malformed": "PASS",
+    "unsupported_schema": "PASS",
+    "invalid_canonical": "PASS",
+    "non_integral_shape_render_rejection": "PASS"
+  },
   "existing_success_preserved": true,
   "clean_failure_destination_absent": true,
-  "missing_fixture_nonzero": true,
-  "temporary_staging_disposition": "removed on failure; complete directory rename on success"
-  ,"nine_kind_decode_and_id_order": true,
-  "vector_stroke_and_group_oracle": true
+  "temporary_staging_disposition": "removed on failure; complete directory rename on success",
+  "oracle_independence": "External process test independently decodes the fixture, calculates hashes, field-compares the checked-in descriptor, samples pixels, and creates negative snapshots without production rendering code for expected values."
 }
