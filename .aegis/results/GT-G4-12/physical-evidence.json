@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-12",
-  "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+  "result_revision": "a557741b81727563e41dd245a7cbf7a396ec0856",
   "platform": "windows",
-  "status": "BLOCKED_IMPLEMENTATION",
+  "status": "BLOCKED_ENVIRONMENT",
   "blocking": true,
   "execution_branch": "codex/g4-12-ink-playground",
   "identity": {
@@ -56,19 +56,14 @@
     "real_hwnd_code_present": true,
     "message_loop_code_present": true,
     "wm_pointer_code_present": true,
-    "coalesced_pen_history": false,
+    "coalesced_pen_history": true,
     "device_metadata_capture": false,
     "pointer_trace_persistence": false,
     "hud_telemetry_persistence": false,
     "sample_to_visible_latency_capture": false,
-    "first_true_error": "clang-cl compile failure in apps/ink_playground/platform/windows/main.cpp: incompatible pointer to integer conversion assigning HANDLE info.sourceDevice to uint64_t batch.device_id",
-    "additional_werror_failures": [
-      "nodiscard return value ignored in ArcSink::SourceLost",
-      "nodiscard return value ignored for SubmitBatch and commitStroke",
-      "nodiscard return value ignored for bindSurface",
-      "unused variable contract in apps/ink_playground/tests/ink_playground_test.cpp"
-    ],
-    "result": "No runnable Windows Ink Playground executable was produced; no physical input path was exercised."
+    "first_true_error": null,
+    "repair": "Converted POINTER_INFO::sourceDevice HANDLE to protocol device_id, ingested pointer and pen history batches, handled nodiscard results, and added a Windows conversion regression test.",
+    "result": "Runnable Windows Ink Playground executable produced; no physical input path was exercised on this Windows 10 host."
   },
   "verification": {
     "skia_fetch": {
@@ -82,21 +77,25 @@
     },
     "build": {
       "command": "cmake --build --preset g3-windows-release --target axiom_ink_playground_windows axiom_ink_playground_tests --parallel",
-      "status": "FAIL",
-      "completed_steps": "3/6",
-      "first_true_error": "apps/ink_playground/platform/windows/main.cpp(80): incompatible pointer to integer conversion assigning to uint64_t from HANDLE",
-      "package_produced": false
+      "status": "PASS",
+      "completed_steps": "complete",
+      "first_true_error": null,
+      "package_produced": true,
+      "package": "out/g4-12-windows-package.zip",
+      "package_sha256": "4de96729ca058339dfec7e9f7f0d7aef77f061a8edff9435b90e8d079f33662e"
     },
     "ctest": {
       "command": "ctest --test-dir out/g3-windows-release -R '^G4InkPlayground|^G3SurfacePresentation|^G4CanonicalHandoff$' --output-on-failure",
-      "status": "NOT_RUN",
-      "reason": "Required executables were not produced after the build failure."
+      "status": "PASS_G4_TARGETS",
+      "passed": 8,
+      "failed": 0,
+      "command_result": "100% tests passed, 0 tests failed out of 8"
     }
   },
   "pointer_trace": {
     "collected": false,
     "path": null,
-    "reason": "No runnable executable and no physical pen session."
+    "reason": "Executable is runnable, but no physical pen session was performed on Windows 10."
   },
   "hud": {
     "collected": false,
