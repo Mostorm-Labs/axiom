@@ -1,0 +1,6 @@
+{
+  "schema_version":"0.1","task_id":"GT-G4-12","result_revision":"4174dbe531ac85d682eaadfa77cc902a35baddee","oracle":"G4InkPlaygroundPlatform","status":"PASS_PORTABLE_BOUNDARY",
+  "platforms":{"windows":{"ingress":"native_arc_input_source","entrypoint":"apps/ink_playground/platform/windows/main.cpp"},"android":{"ingress":"native_arc_input_source","entrypoint":"apps/ink_playground/platform/android/bridge.cpp"},"web":{"ingress":"pointer_event_wasm_batch","entrypoint":"apps/ink_playground/platform/web/bridge.cpp"}},
+  "platform_owned_semantics":{"brush":false,"selection":false,"eraser":false},
+  "physical_execution_claimed":false
+}

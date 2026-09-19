@@ -1,0 +1,8 @@
+{
+  "schema_version":"0.1","task_id":"GT-G4-12","result_revision":"4174dbe531ac85d682eaadfa77cc902a35baddee","status":"BLOCKED_ENVIRONMENT","blocking":true,
+  "required":["current-revision physical device metadata","current-revision pointer trace output","representative capture","physical latency separated from headless timing","Windows or Android writable smoke"],
+  "observed_environment":{"host":"macos-arm64","adb_present":true,"connected_android_devices":0,"windows_host":false,"qualified_physical_runner":false},
+  "headless_or_host_tests_promoted_to_physical":false,
+  "historical_physical_artifacts_reused":false,
+  "next_action":"Run the exact G4-12 result revision on a qualified Windows pen device or Android physical device and bind device metadata, trace, representative capture and physical latency to this result revision."
+}
