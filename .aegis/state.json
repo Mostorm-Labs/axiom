@@ -2,7 +2,7 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G4-03_REPOSITORY_INTEGRATED",
+  "active_stage": "GT-G4-04_REPOSITORY_INTEGRATED",
   "current_owner": "aegis",
   "earliest_untrusted_layer": null,
   "status": "READY",
@@ -28,17 +28,17 @@
     "completion_decision_id": "g3-completion-2026-09-19"
   },
   "g4": {
-    "status": "G4-03_CLOSED_AND_INTEGRATED",
+    "status": "G4-04_CLOSED_AND_INTEGRATED",
     "ingress": "READY_FOR_SUCCESSOR_ROUTING",
     "implementation_authorized": false,
-    "current_work_package": "GT-G4-03",
+    "current_work_package": "GT-G4-04",
     "current_authority": "g4-capability-authority",
-    "task_anchor": "7910e781b3498913bb0de154f05eae58dc28059c",
+    "task_anchor": "399cc861b3ba3367bc9106c90879b676e340a49e",
     "plan_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
-    "result_revision": "17fba7c8a1d0d59318a8daca65e126967726e943",
-    "reviewed_branch_head": "a17cf3d87b62db9f5d5847b9e1cee18d7185d228",
-    "integration_revision": "893d0d450a6682ec5d498c761deb653ea6a7c21b",
-    "gate_decision_id": "gt-g4-03-p34-2026-09-19"
+    "result_revision": "339403b891f80d872e63a3cf880a18651b84225d",
+    "reviewed_branch_head": "af1d5b2ffbaebb0b77a056047ddc839f0dc42047",
+    "integration_revision": "f277f32a3a54bfeb095972d7bf2ff066e1ff4961",
+    "gate_decision_id": "gt-g4-04-p34-2026-09-19"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -173,7 +173,7 @@
   "recommended_next_stage": "G4_SUCCESSOR_ROUTING",
   "handoff": {
     "next_surface": "CONTROL_REASONING",
-    "next_action": "G4-03 is closed and integrated through PR #109 at 893d0d450a6682ec5d498c761deb653ea6a7c21b. Materialize GT-G4-04 separately from this exact main revision.",
+    "next_action": "G4-04 is closed and integrated through PR #111 at f277f32a3a54bfeb095972d7bf2ff066e1ff4961. Materialize GT-G4-05 separately from this exact main revision.",
     "p31_package": ".aegis/packages/GT-G4-01/package.json",
     "p31_package_id": "GT-G4-01-P31-v0.1",
     "p31_materialized": true,
