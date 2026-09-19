@@ -7,7 +7,8 @@ add_library(canvas_runtime_render STATIC
     src/frame_plan.cpp
     src/render_backend.cpp
     src/surface_lifecycle.cpp
-    src/presentation_tracker.cpp)
+    src/presentation_tracker.cpp
+    src/canonical_handoff.cpp)
 
 if(EMSCRIPTEN)
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
@@ -157,4 +158,14 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     endif()
 
     add_test(NAME G3FrameOrchestration COMMAND axiom_render_frame_orchestration_tests)
+
+    add_executable(axiom_canonical_handoff_tests tests/canonical_handoff_test.cpp)
+    target_link_libraries(axiom_canonical_handoff_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_canonical_handoff_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_canonical_handoff_tests PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_canonical_handoff_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4CanonicalHandoff COMMAND axiom_canonical_handoff_tests)
 endif()
