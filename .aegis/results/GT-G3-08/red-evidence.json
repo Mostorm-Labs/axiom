@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "stage": "P32_RED",
+  "task_anchor": "636aca53536e5096868f9c5ed716ef6d0891a875",
+  "command": "cmake --preset g3-host-debug && cmake --build --preset g3-host-debug --target axiom_demo_camera_tests axiom_demo_hit_select_tests",
+  "observed": {
+    "configure_status": 1,
+    "build_status": 1,
+    "failure": "apps/axiom_canvas_demo/common/camera_controller.cpp was absent, so the new production target could not be generated"
+  },
+  "expected_failure_observed": true
+}

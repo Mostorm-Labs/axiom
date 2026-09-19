@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "stage": "P32",
+  "task_anchor": "636aca53536e5096868f9c5ed716ef6d0891a875",
+  "execution_branch": "codex/g3-08-camera-hit-select-harness",
+  "target_owner": "demo-only camera, G2 HitTest delegation, transient selection snapshot",
+  "current_flow": "FrameState/CameraState -> demo camera conversion -> public Scene::hitTest -> transient selection snapshot",
+  "forbidden_flow": [
+    "SemanticDocument selection mutation",
+    "RuntimeScene camera or selection mutation",
+    "platform-side precise hit testing",
+    "EditorSession or G4 interaction ownership"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "preflight": "PASS"
+}
