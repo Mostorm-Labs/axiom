@@ -16,3 +16,4 @@ export * from "./ci/ChangeClassifier.js";
 export * from "./ci/PrDecision.js";
 export * from "./ci/FullConformance.js";
 export * from "./ci/GateReport.js";
+export * from "./ci/G3GateReport.js";

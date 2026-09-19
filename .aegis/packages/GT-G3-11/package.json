@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-11-P31-v0.1",
+  "task_id": "GT-G3-11",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose":"Integrate the current verification workspace into an independently generated G3 cross-platform Gate Report.",
+  "repository":{"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g3-11-cross-platform-oracle-gate-report"},
+  "execution_authority_mode":"repo_materialized",
+  "task_anchor":{"revision":"b1eb2db741fe80822d608675f1646ea50b6acbc0","relation":"ancestor"},
+  "resume_cursor":null,
+  "continue_until_terminal_state":true,
+  "return_surface":"CONTROL_REVIEW",
+  "authority_lock_ref":{"path":"authority.lock.json","sha256":"f3b23f7043b3dfeb368eefb626a4a1798cd33c65105973b244d3bbec012cc584"},
+  "verification_lock_ref":{"path":"verification.lock.json","sha256":"c06f20cfa34952d938e415873469e2737f3bd34bf11a6791e485b6c3302cd078"},
+  "execution_contract_ref":{"path":"execution-contract.json","sha256":"a5f8b84a552708a330d30ae68fc742201f32fd979fa1e3115c3b9843a560a721"},
+  "implementation_context_ref":{"path":"implementation-context.md","sha256":"6da534dd3dc89461340b1f53af9396a847ff134e7a47fa87bdcb9fa1737472a0"},
+  "evidence_contract_ref":{"path":"evidence-contract.json","sha256":"ca33f78ed18c660bbcf4c17f9edffc25357b6bc6b6887a864b1c690ebf64be6b"},
+  "materialization":{"same_repository":true,"path":".aegis/packages/GT-G3-11/","binding":"exact pushed repository revision descended from task anchor"},
+  "handoff":{"preferred_executor":"codex","next_surface":"CODE_EXECUTION","next_action":"Execute the complete frozen G3-11 closure contract and return the exact pushed result for independent P34 review.","official_gate_pass_forbidden_during_p32":true}
+}

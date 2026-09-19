@@ -14,6 +14,7 @@ import { fullRunSet } from "./commands/full_run_set.js";
 import { aggregateFull } from "./commands/aggregate_full.js";
 import { compareFull } from "./commands/compare_full.js";
 import { gateReport } from "./commands/gate_report.js";
+import { g3GateReport } from "./commands/g3_gate_report.js";
 import { ExitCode } from "./exit_codes.js";
 
 const usage = `axiom-platform-conformance <command>
@@ -28,6 +29,7 @@ Commands:
   aggregate-full --run-set PATH --records PATH --output PATH
   compare-full --left PATH --right PATH --output PATH
   gate-report --source-commit SHA --branch NAME --lineage PATH --hosted PATH --artifacts PATH --output PATH [--repository-root PATH]
+  g3-gate-report --source-commit SHA --branch NAME --lineage PATH --checks PATH --platforms PATH --output PATH
   list (reserved)
 
 Exit codes: 0 success, 2 invalid arguments, 10 invalid schema/corpus, 20 invalid evidence, 21 runner mismatch, 30 reserved command.`;
@@ -63,6 +65,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   if (command === "aggregate-full") return aggregateFull(args);
   if (command === "compare-full") return compareFull(args);
   if (command === "gate-report") return gateReport(args);
+  if (command === "g3-gate-report") return g3GateReport(args);
   if (command === "list") {
     return args.length === 0 ? notImplemented() : ExitCode.INVALID_ARGUMENTS;
   }

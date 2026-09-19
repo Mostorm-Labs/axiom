@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "source": {
+    "provider": "repository",
+    "id": "g3-capability-authority",
+    "revision": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+    "content_sha256": "be507e75b79b26c2b2f8dd30fd8d966e9e7977307249e76d2950736db32313fc",
+    "status": "Current"
+  },
+  "trusted_sections": [
+    "G3 owns the renderer-neutral canvas, cross-platform evidence, and Gate-level integration.",
+    "G3 must not modify G2 RuntimeScene or semantic contracts.",
+    "G3-11 integrates the current G0 verification workspace and emits an independently generated cross-platform Gate Report.",
+    "Required G3 evidence covers structural, runtime, render, performance/locality, stale-generation negatives, and platform applicability."
+  ],
+  "forbidden": ["G2 contract changes", "G4/G5 behavior", "hand-authored Gate PASS", "rewriting closed WP identities"]
+}

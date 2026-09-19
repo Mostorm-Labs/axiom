@@ -1,0 +1,209 @@
+{
+  "format": "axiom-g3-gate-report-v1",
+  "formatVersion": 1,
+  "authority": "G3_GATE_REPORT",
+  "gate": "G3",
+  "status": "PASS",
+  "sourceCommit": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "branch": "main",
+  "generatorVersion": "0.1.0",
+  "wpLineage": [
+    {
+      "taskId": "GT-G3-01",
+      "status": "PASS",
+      "resultRevision": "eb3861aefecd55188ca29787d3cb9e112a05cdef",
+      "integrationRevision": "47ffe5b69d7dda457d16203e41803086c880c174",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-01/result.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-02",
+      "status": "PASS_WITH_FINDINGS",
+      "resultRevision": "754619b716d7f4c27d2d8089a1276b8ac43df435",
+      "integrationRevision": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-02/result.json",
+        ".aegis/results/GT-G3-02/locality-counters.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-03",
+      "status": "PASS",
+      "resultRevision": "fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+      "integrationRevision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-03/result.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-04",
+      "status": "PASS",
+      "resultRevision": "250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+      "integrationRevision": "11fec1b308de03886ef5294b54654f48df95455f",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-04/result.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-05",
+      "status": "PASS",
+      "resultRevision": "dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+      "integrationRevision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-05/result.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-06",
+      "status": "PASS_WITH_FINDINGS",
+      "resultRevision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+      "integrationRevision": "4ea688da42da0005eaed5cae4931f5c44936697e",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-06/result.json",
+        ".aegis/results/GT-G3-06/surface-lifecycle-evidence.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-07",
+      "status": "PASS",
+      "resultRevision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+      "integrationRevision": "f4592e263a1101f0a03fd208e78b321389dc80c8",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-07/p34-control-review-v4.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-08",
+      "status": "PASS",
+      "resultRevision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+      "integrationRevision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-08/result.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-09",
+      "status": "PASS",
+      "resultRevision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+      "integrationRevision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-09/windows-smoke-evidence.json"
+      ]
+    },
+    {
+      "taskId": "GT-G3-10",
+      "status": "PASS",
+      "resultRevision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+      "integrationRevision": "40f806e6199c3bda520fb434d16428d12642c955",
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-10/web-smoke-evidence.json",
+        ".aegis/results/GT-G3-10/web-hosted-provider-evidence.json"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "structural-lineage",
+      "status": "PASS",
+      "required": true,
+      "evidenceRefs": [
+        ".aegis/gates.json",
+        ".aegis/integrations.json"
+      ],
+      "issues": []
+    },
+    {
+      "id": "runtime",
+      "status": "PASS",
+      "required": true,
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-02/result.json",
+        ".aegis/results/GT-G3-06/surface-lifecycle-evidence.json"
+      ],
+      "issues": []
+    },
+    {
+      "id": "render",
+      "status": "PASS",
+      "required": true,
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-05/headless-golden-evidence.json",
+        ".aegis/results/GT-G3-07/demo-cli-evidence.json"
+      ],
+      "issues": []
+    },
+    {
+      "id": "locality-performance",
+      "status": "PASS",
+      "required": true,
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-02/locality-counters.json"
+      ],
+      "issues": []
+    },
+    {
+      "id": "stale-generation-negatives",
+      "status": "PASS",
+      "required": true,
+      "evidenceRefs": [
+        ".aegis/results/GT-G3-06/presentation-tracker-evidence.json",
+        ".aegis/results/GT-G3-09/surface-evidence.json",
+        ".aegis/results/GT-G3-10/surface-evidence.json"
+      ],
+      "issues": []
+    }
+  ],
+  "platforms": [
+    {
+      "subject": "android",
+      "platformFamily": "ANDROID",
+      "status": "PASS",
+      "reality": "PHYSICAL",
+      "evidencePath": "verification/evidence/g0/gt-g0-17/g0-gate-report-main-a8d7248.json",
+      "sourceCommit": "a8d72489028e650def33630a979d05a2bbc0bf26"
+    },
+    {
+      "subject": "ios",
+      "platformFamily": "APPLE",
+      "status": "PASS",
+      "reality": "PHYSICAL",
+      "evidencePath": "verification/evidence/g0/gt-g0-17/g0-gate-report-main-a8d7248.json",
+      "sourceCommit": "a8d72489028e650def33630a979d05a2bbc0bf26"
+    },
+    {
+      "subject": "ipados",
+      "platformFamily": "APPLE",
+      "status": "PASS",
+      "reality": "PHYSICAL",
+      "evidencePath": "verification/evidence/g0/gt-g0-17/g0-gate-report-main-a8d7248.json",
+      "sourceCommit": "a8d72489028e650def33630a979d05a2bbc0bf26"
+    },
+    {
+      "subject": "web",
+      "platformFamily": "WEB",
+      "status": "PASS",
+      "reality": "PHYSICAL",
+      "evidencePath": ".aegis/results/GT-G3-10/web-hosted-provider-evidence.json",
+      "sourceCommit": "1d45b4e04ec0e623d188bc00b10ee9964a254b81"
+    },
+    {
+      "subject": "windows",
+      "platformFamily": "WINDOWS",
+      "status": "PASS",
+      "reality": "PHYSICAL",
+      "evidencePath": ".aegis/results/GT-G3-09/windows-smoke-evidence.json",
+      "sourceCommit": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a"
+    }
+  ],
+  "issues": [],
+  "inputSha256": {
+    "checks": "5804d418fab0c03fc437331fec5b5f18eafe0b81cc3790977ee0b7b5202c241f",
+    "lineage": "b13fc160d2be06c5deffa73a5f983088640c961fe8f41fd54639db6ce6f1ca28",
+    "platforms": "6f8d14d8169c45133eb63c8f35981eb7c7154c9a9fadbac4c510c162d76c9753"
+  },
+  "promotion": {
+    "allowed": true,
+    "reason": "All G3 obligations passed"
+  }
+}
