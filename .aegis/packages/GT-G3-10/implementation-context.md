@@ -22,5 +22,7 @@ the production Render Core boundary. Canonical draw-command policy remains in
 
 First incomplete action: add the portable Web host contract test and prove RED
 before adding the host implementation. On non-Emscripten hosts the Web target
-is intentionally unavailable; the required Web build/browser smoke is hosted
-evidence and must be recorded as an explicit environment result when absent.
+is intentionally unavailable. Hosted proof is produced by the authorized
+`.github/workflows/g3-web-reference-host.yml`; generic platform-harness CI may
+skip production-WASM smoke only when no G3 Web build artifact exists, while the
+dedicated workflow requires that smoke.
