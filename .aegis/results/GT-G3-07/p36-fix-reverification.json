@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P36_FIX_REVERIFICATION",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "result_revision": "cbb7279a68cea1fcdf7accc281129daa908cf102",
+  "repair_parent_revision": "01c022911255aee5aeffe3e2cec91886f20830ba",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "repair_scope_conformed": true,
+  "production_contracts_changed": false,
+  "p34_blockers_closed": {
+    "full_scene_compiler_is_exercised": true,
+    "adapter_does_not_duplicate_bounds_computation": true,
+    "independent_expected_fixture_is_checked": true,
+    "fixture_sha256_checked": "b4d04c4424c50370991729bce124c48e8c822487c788de6d535e959aab27c37f",
+    "render_sha256_checked": "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042",
+    "fixed_pixel_regions_checked": true,
+    "vector_stroke_retained_and_erased_pixels_checked": true,
+    "group_zero_pixel_region_checked": true,
+    "malformed_fixture_rejected_without_publication": true,
+    "missing_fixture_rejected_without_publication": true,
+    "unwritable_parent_rejected_without_publication": true,
+    "existing_success_preserved_on_failure": true
+  },
+  "verification": {
+    "clean_build_directory": "out/g3-p36-clean",
+    "full_ctest": {"status": "PASS", "passed": 537, "failed": 0, "not_run": 0},
+    "g3_headless_canvas_demo": "PASS",
+    "g3_headless_skia": "PASS",
+    "g2_a6_incremental_equivalence": "PASS",
+    "g2_a6_atomic_publication": "PASS",
+    "g2_a6_recovery": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "mutation_scope": [
+    "runtime/render/tools/headless_canvas_demo.cpp",
+    "runtime/render/tests/headless_canvas_demo_test.cpp",
+    ".aegis/results/GT-G3-07/p35-defect-classification.json",
+    ".aegis/results/GT-G3-07/p36-fix-reverification.json"
+  ],
+  "reviewer_accessible": true,
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "next_surface": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
