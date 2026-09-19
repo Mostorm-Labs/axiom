@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "artifacts": [
+    {"id":"g3-gate-report","path":".aegis/results/GT-G3-11/g3-gate-report.json","blocking":true},
+    {"id":"report-generation-evidence","path":".aegis/results/GT-G3-11/report-generation-evidence.json","blocking":true},
+    {"id":"scope-evidence","path":".aegis/results/GT-G3-11/scope-evidence.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G3-11/portable-regression-summary.json","blocking":false}
+  ],
+  "review_boundary":"Exact pushed result revision plus generated report and bound input hashes; P32 must not claim G3 Gate PASS.",
+  "missing_platform_evidence":"The generated report must explicitly be BLOCKED when a required platform record is missing or not PASS."
+}

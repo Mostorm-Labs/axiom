@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "stage": "P34_CONTROL_REVIEW",
+  "routing": "EARLIEST_UNTRUSTED_LAYER",
+  "owner": "G0/G1 verification and hosted-evidence authority",
+  "classification": "ENVIRONMENT / EVIDENCE BLOCKER",
+  "observed_run": {
+    "workflow_run_id": 35436043544,
+    "job_id": 105878740998,
+    "head_sha": "695ddfba2abd87089dc3bc752cb0eb37e0d9ef98",
+    "conclusion": "FAILURE"
+  },
+  "failure_families": [
+    "C5 source ref 1342dc52aaeb7e1bf09a38e08d44ef72523a9d79 is not resolvable in hosted checkout",
+    "C6 package ref 8a43af6ebb9b88ecefb79141eb90b5680405a449 is not resolvable in hosted checkout",
+    "blocked v0.3 source ref 1b370bd242ce19838889b28beb7b75979244cbab is not resolvable in hosted checkout",
+    "C7 package ref e4facb7ab786b994dd5c9bb4bc3e4d57fe95d18e is not resolvable in hosted checkout",
+    "P36 execution start ref 666082e114310503b019873fb9e12744c19bcc1e is not resolvable in hosted checkout",
+    "C8 source-scope assertion rejects the current G3-expanded repository baseline"
+  ],
+  "local_reproduction": {
+    "command": "npm run test --workspace @axiom/semantic-conformance-cli",
+    "result": "137 passed, 1 failed",
+    "failed_test": "C8 generator consumes the native observation envelope and emits exactly eight artifacts",
+    "failure": "C8 source scope mismatch against current G3 baseline"
+  },
+  "required_upstream_action": "Materialize and review a G0/G1-owned repair package that defines the accepted historical-ref checkout/evidence strategy and reconciles the C8 source-scope contract, or issue an explicit durable substitute-evidence authority.",
+  "g3_action": "No G3-11 implementation mutation or evidence weakening is authorized; rerun G3 completion review only after upstream action produces accepted hosted evidence.",
+  "successor_started": false,
+  "status": "RESOLVED",
+  "resolution": {
+    "owner": "G0/G1 verification and hosted-evidence authority",
+    "repair_pr": 103,
+    "merge_revision": "9f6f0f351828a58fc9023f17c7306f009fbaf38d",
+    "exact_hosted_run": 35438947330,
+    "exact_hosted_job": 105886316012,
+    "exact_hosted_artifact": 10582314926,
+    "g3_rerun_pr": 102,
+    "g3_rerun_head": "af9f0c5786918608a29a72a1a69c8b8512b34894"
+  }
+}

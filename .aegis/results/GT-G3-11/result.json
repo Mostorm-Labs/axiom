@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_id": "GT-G3-11-P31-v0.1",
+  "package_ref": ".aegis/packages/GT-G3-11/package.json",
+  "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "actual_starting_revision": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
+  "implementation_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
+  "result_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
+  "package_materialization_ref": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
+  "evidence_refs": [
+    ".aegis/results/GT-G3-11/g3-gate-report.json",
+    ".aegis/results/GT-G3-11/report-generation-evidence.json",
+    ".aegis/results/GT-G3-11/scope-evidence.json",
+    ".aegis/results/GT-G3-11/portable-regression-summary.json"
+  ],
+  "verification": {
+    "g3_report_unit_tests": "PASS",
+    "g3_cli_regression_tests": "PASS",
+    "schema_validation": "PASS",
+    "rf01_g2_matrix": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass_claimed": false,
+  "g3_pass_claimed": false,
+  "successor_started": false,
+  "next_surface": "CONTROL_REVIEW",
+  "reviewed_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+  "hosted_evidence": {
+    "workflow_run_id": 35438947330,
+    "job_id": 105886316012,
+    "artifact_id": 10582314926,
+    "head_sha": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+    "status": "PASS"
+  },
+  "hosted_pr_checks": {
+    "workflow_run_id": 35438947386,
+    "status": "PASS"
+  }
+}

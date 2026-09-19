@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add a G3-specific cross-platform Gate Report generator and CLI command under verification.",
+        "Add strict schema and tests for WP lineage, runtime/render/locality/stale evidence, platform applicability, and explicit BLOCKED results.",
+        "Generate durable .aegis/results/GT-G3-11 evidence from exact main revision b1eb2db741fe80822d608675f1646ea50b6acbc0.",
+        "Reconcile .aegis project state to the current control-plane baseline while preserving G3-10 implementation integration occurrence 40f806e6199c3bda520fb434d16428d12642c955."
+      ],
+      "authorized_mutation_scope": [
+        "verification/packages/platform-harness-runner/src/ci/G3GateReport.ts",
+        "verification/packages/platform-harness-runner/src/index.ts",
+        "verification/packages/platform-harness-runner/test/G3GateReport.test.mjs",
+        "verification/packages/platform-conformance-cli/src/commands/g3_gate_report.ts",
+        "verification/packages/platform-conformance-cli/src/main.ts",
+        "verification/schemas/platform/g3-gate-report.schema.json",
+        "verification/schemas/platform/fixtures/g3-gate-report.valid.json",
+        "verification/tools/validate_schemas.mjs",
+        ".aegis/packages/GT-G3-11/**",
+        ".aegis/results/GT-G3-11/**",
+        ".aegis/project.json",
+        ".aegis/state.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json"
+      ],
+      "forbidden_changes": ["runtime/**", "SemanticDocument or RuntimeScene contracts", "G0 authority or G0 report schema", "G4/G5 behavior", "closed G3-01 through G3-10 result identities"]
+    },
+    "tests": {"required": [
+      {"id":"g3-gate-report-unit","command_or_oracle":"npm --prefix verification run build --workspace @axiom/platform-harness-runner && node --test verification/packages/platform-harness-runner/test/G3GateReport.test.mjs","expected_result":"PASS","blocking_reason":"Independent report aggregation and BLOCKED semantics."},
+      {"id":"g3-gate-report-cli","command_or_oracle":"npm --prefix verification run build --workspace @axiom/platform-conformance-cli && node --test verification/packages/platform-conformance-cli/test/cli.test.mjs","expected_result":"PASS","blocking_reason":"CLI binding and invalid evidence rejection."},
+      {"id":"verification-workspace","command_or_oracle":"npm --prefix verification run validate","expected_result":"PASS","blocking_reason":"No regression in existing G0 verification workspace."},
+      {"id":"g3-regression","command_or_oracle":"cmake --preset rf01-host-debug && cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure","expected_result":"PASS","blocking_reason":"G2/RF01 predecessor regression."},
+      {"id":"diff-check","command_or_oracle":"git diff --check b1eb2db741fe80822d608675f1646ea50b6acbc0..HEAD","expected_result":"PASS","blocking_reason":"Repository hygiene."}
+    ]},
+    "evidence": {"blocking":["g3-gate-report.json","report-generation-evidence.json","scope-evidence.json"],"corroborative":["portable-regression-summary.json"]},
+    "terminal_success": ["All ten predecessor WP decisions validate as PASS/PASS_WITH_FINDINGS and remain integrated.","Runtime/render/locality/stale-generation obligations are independently PASS.","Required platform status is explicit; missing required evidence is BLOCKED, never PASS.","Generated G3 Gate Report is schema-valid and bound to exact main revision.","Predecessor verification and RF01 regressions pass; exact result revision is pushed and independently reviewable."],
+    "explicit_terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_MISSING_INPUT","BLOCKED_EVIDENCE","BLOCKED_ENVIRONMENT","PACKAGE_SCOPE_DIVERGENCE","NEW_HIGH_IMPACT_FAILURE_MODE"],
+    "continue_until_terminal_state":true,
+    "return_surface":"CONTROL_REVIEW"
+  }
+}

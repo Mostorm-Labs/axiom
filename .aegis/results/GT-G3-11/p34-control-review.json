@@ -1,0 +1,75 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "stage": "P34_CONTROL_REVIEW",
+  "package_id": "GT-G3-11-P31-v0.1",
+  "package_materialization_ref": "e604dcce7bc506c4fc590472d65c6f8324379d3e",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
+  "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "reviewed_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+  "result_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
+  "implementation_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
+  "frozen_requirement_audit": {
+    "g3_lineage_and_report_contract": "PASS",
+    "exact_result_and_package_binding": "PASS",
+    "required_platform_records": "PASS_IN_PRODUCER_REPORT",
+    "g3_report_schema_and_input_hashes": "PASS",
+    "authorized_mutation_scope": "PASS"
+  },
+  "frozen_evidence_audit": {
+    "local_g3_report_unit_tests": "PASS: 3/3",
+    "local_g3_cli_regressions": "PASS: 24/24",
+    "local_schema_validation": "PASS: 24/24",
+    "local_rf01_g2_matrix": "PASS: 19/19",
+    "hosted_android_instrumentation": {
+      "workflow_run_id": 35438947330,
+      "job_id": 105886316012,
+      "artifact_id": 10582314926,
+      "head_sha": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+      "instrumentation_and_apk_steps": "PASS",
+      "validation_step": "PASS",
+      "checkout_fetch_depth": 0,
+      "unrelated_g1_c8_tests_executed": false
+    },
+    "hosted_pr_checks": {
+      "workflow_run_id": 35438947386,
+      "jobs": [
+        "platform/pr-contract (android)",
+        "platform/pr-contract (apple)",
+        "platform/pr-contract (web)",
+        "platform/pr-contract (windows)",
+        "platform/pr-gate",
+        "platform/protocol-seed",
+        "verification/schema-validate",
+        "conformance/pr-seed"
+      ],
+      "conclusion": "PASS"
+    },
+    "git_diff_check": "PASS"
+  },
+  "repository_reality_audit": {
+    "repository_identity": "github:Mostorm-Labs/axiom",
+    "remote_result_resolved": true,
+    "remote_head_matches_result": true,
+    "task_anchor_ancestry": "PASS",
+    "package_binding": "PASS",
+    "authorized_mutation_scope": "PASS",
+    "closed_wp_result_identities_rewritten": false,
+    "g0_authority_or_schema_changed": false,
+    "remote_head_matches_reviewed_head": true,
+    "upstream_g0_merge_revision": "9f6f0f351828a58fc9023f17c7306f009fbaf38d",
+    "pr_number": 102,
+    "pr_head": "af9f0c5786918608a29a72a1a69c8b8512b34894"
+  },
+  "blocking_finding": null,
+  "verdict": "PASS",
+  "status": "READY_FOR_INDEPENDENT_INTEGRATION_REVIEW",
+  "official_gate_pass_claimed": false,
+  "g3_11_pass_claimed": false,
+  "overall_g3_pass_claimed": false,
+  "integration_status": "NOT_INTEGRATED",
+  "successor_started": false,
+  "next_surface": "CONTROL_REVIEW",
+  "required_human_action": "Review and merge PR #102; after merge, record the exact main integration SHA before any G3 completion promotion."
+}
