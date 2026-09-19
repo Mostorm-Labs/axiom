@@ -3,6 +3,7 @@
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/semantic/semantic_read_view.hpp"
 
 #include <cassert>
 #include <memory>
@@ -32,6 +33,43 @@ using canvas::render::CameraGeneration;
 using canvas::render::CameraState;
 using canvas::render::SurfaceMetrics;
 
+class CanonicalFixtureStore final : public canvas::semantic::ObjectStore {
+  public:
+    explicit CanonicalFixtureStore(canvas::semantic::ObjectRecord record)
+        : records_{std::move(record)} {}
+
+    std::size_t size() const noexcept override { return records_.size(); }
+    bool contains(const canvas::semantic::ObjectId& id) const noexcept override {
+        return find(id) != nullptr;
+    }
+    const canvas::semantic::ObjectRecord* find(
+        const canvas::semantic::ObjectId& id) const noexcept override {
+        for (const auto& value : records_) {
+            if (value.id == id) return &value;
+        }
+        return nullptr;
+    }
+    std::vector<canvas::semantic::ObjectRecord> allObjects() const override { return records_; }
+    std::vector<canvas::semantic::ObjectRecord> children(
+        const std::optional<canvas::semantic::ObjectId>&) const override {
+        return {};
+    }
+
+  private:
+    std::vector<canvas::semantic::ObjectRecord> records_;
+};
+
+canvas::semantic::ObjectRecord canonicalShape() {
+    canvas::semantic::ObjectRecord value;
+    value.id = canvas::semantic::ObjectId::fromUint64(202);
+    value.kind = canvas::semantic::ObjectKind::kShape;
+    value.kind_version = 1U;
+    value.placement.order_key = canvas::semantic::OrderKey({2U});
+    value.transform.tx = 1.0;
+    value.content = canvas::semantic::ShapeContent{1U, 20.0, 20.0};
+    return value;
+}
+
 SceneRecord record(std::uint64_t id, std::uint64_t order) {
     return SceneRecord{
         .objectId = ObjectId::fromUint64(id),
@@ -54,11 +92,17 @@ void delegatesToG2AndKeepsSelectionTransient() {
         .sourceRevision = SceneRevision{9},
         .records = {record(101, 1), record(202, 2)},
     }));
+    CanonicalFixtureStore canonical(canonicalShape());
+    const auto canonicalBefore = canonical.allObjects();
     RuntimeScene runtime;
+    assert(runtime.replace(canvas::semantic::SemanticReadView(
+        canonical, canvas::semantic::SemanticGeneration{17})));
+    const auto runtimeBefore = std::vector<canvas::RuntimeSceneRecord>(
+        runtime.records().begin(), runtime.records().end());
+    const auto runtimeGenerationBefore = runtime.generation();
+    const auto canonicalGenerationBefore = canvas::semantic::SemanticGeneration{17};
     const auto sceneBefore = scene.read().records();
     const auto revisionBefore = scene.revision();
-    const auto runtimeGenerationBefore = runtime.generation();
-    const auto runtimeSizeBefore = runtime.records().size();
 
     SceneHitTestPort port(scene);
     DemoHitSelectHarness harness(port);
@@ -82,8 +126,11 @@ void delegatesToG2AndKeepsSelectionTransient() {
     for (std::size_t index = 0; index < sceneBefore.size(); ++index) {
         assert(scene.read().records()[index] == sceneBefore[index]);
     }
+    assert(canonical.allObjects() == canonicalBefore);
     assert(runtime.generation() == runtimeGenerationBefore);
-    assert(runtime.records().size() == runtimeSizeBefore);
+    assert(std::vector<canvas::RuntimeSceneRecord>(runtime.records().begin(), runtime.records().end()) ==
+           runtimeBefore);
+    assert(canonicalGenerationBefore == canvas::semantic::SemanticGeneration{17});
 
     const auto cleared = harness.selectAtViewPoint(WorldPoint{180.0F, 180.0F},
                                                    camera,
