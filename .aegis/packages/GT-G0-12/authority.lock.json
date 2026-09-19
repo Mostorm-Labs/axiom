@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "source": {
+    "provider": "repository",
+    "id": "g0-platform-verification-authority",
+    "revision": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+    "status": "Current"
+  },
+  "trusted_sections": [
+    "G0 Android instrumentation is a facts-only hosted platform adapter.",
+    "Android evidence must validate its own schema, platform scenarios, 16 KB alignment, instrumentation envelope, and adapter package contract.",
+    "Historical G1 semantic-conformance evidence is not an Android adapter obligation.",
+    "The repair must not modify G1 semantic contracts, G2 runtime contracts, or G3 implementation behavior."
+  ],
+  "forbidden": [
+    "runtime/**",
+    "verification/packages/semantic-conformance-cli/**",
+    "verification/tools/generate_g1_04_*.mjs",
+    "G1/G2/G3 result identities",
+    "synthetic Android PASS evidence"
+  ]
+}

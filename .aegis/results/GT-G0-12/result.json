@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "stage": "P32_CODE_EXECUTION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_id": "GT-G0-12-P31-v0.1",
+  "package_ref": ".aegis/packages/GT-G0-12/package.json",
+  "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
+  "execution_branch": "codex/g0-12-hosted-validation-repair",
+  "implementation_revision": "501c51e7398dc1ac8b4eb4dce42a01047966a559",
+  "result_revision": "501c51e7398dc1ac8b4eb4dce42a01047966a559",
+  "evidence_refs": [
+    ".aegis/results/GT-G0-12/scope-evidence.json",
+    ".aegis/results/GT-G0-12/portable-regression-summary.json",
+    ".aegis/results/GT-G0-12/android-hosted-run.json"
+  ],
+  "hosted_evidence": {
+    "required": true,
+    "workflow_run_id": 35438558523,
+    "job_id": 105885303428,
+    "artifact_id": 10582853307,
+    "head_sha": "501c51e7398dc1ac8b4eb4dce42a01047966a559",
+    "status": "PASS"
+  },
+  "official_gate_pass_claimed": false,
+  "g3_pass_claimed": false,
+  "successor_started": false
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G0-12",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Use a full-history checkout in .github/workflows/g0-android-instrumentation-adapter.yml.",
+        "Restrict the Android hosted validation step to shared schema/scenario checks and Android adapter/harness tests.",
+        "Materialize exact P31/P34 evidence under .aegis/packages/GT-G0-12/ and .aegis/results/GT-G0-12/."
+      ],
+      "authorized_mutation_scope": [
+        ".github/workflows/g0-android-instrumentation-adapter.yml",
+        ".aegis/packages/GT-G0-12/**",
+        ".aegis/results/GT-G0-12/**"
+      ],
+      "forbidden_changes": [
+        "verification/packages/semantic-conformance-cli/**",
+        "verification/tools/generate_g1_04_*.mjs",
+        "runtime/**",
+        "G1/G2/G3 result identities",
+        "synthetic Android PASS evidence"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "workflow-contract",
+          "command_or_oracle": "node --test verification/tests/android_16kb.test.mjs verification/tests/android_evidence.test.mjs",
+          "expected_result": "PASS",
+          "blocking_reason": "Android workflow retains its required commands and evidence boundary."
+        },
+        {
+          "id": "android-harness-package",
+          "command_or_oracle": "npm --prefix verification run test --workspace @axiom/platform-harness-android",
+          "expected_result": "PASS",
+          "blocking_reason": "Android adapter package contract remains valid."
+        },
+        {
+          "id": "scope-diff",
+          "command_or_oracle": "git diff --check b1eb2db741fe80822d608675f1646ea50b6acbc0..HEAD",
+          "expected_result": "PASS",
+          "blocking_reason": "No whitespace or unauthorized source mutation."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": ["GT-G0-12 Android instrumentation hosted run"],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": ["android-hosted-run.json", "scope-evidence.json"],
+      "corroborative": ["portable-regression-summary.json"]
+    },
+    "terminal_success": [
+      "Hosted Android instrumentation reaches and passes Android-owned validation without running the unrelated G1 semantic-conformance workspace test graph.",
+      "Full-history checkout is present and no historical source-bound resolution failure occurs in the Android gate.",
+      "Exact result revision is pushed and independently reviewable."
+    ],
+    "explicit_terminal_blockers": ["BLOCKED_AUTHORITY", "BLOCKED_EVIDENCE", "BLOCKED_ENVIRONMENT", "PACKAGE_SCOPE_DIVERGENCE"],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
