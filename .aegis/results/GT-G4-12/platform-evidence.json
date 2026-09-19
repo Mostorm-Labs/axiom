@@ -1,6 +1,23 @@
 {
-  "schema_version":"0.1","task_id":"GT-G4-12","result_revision":"4174dbe531ac85d682eaadfa77cc902a35baddee","oracle":"G4InkPlaygroundPlatform","status":"PASS_PORTABLE_BOUNDARY",
-  "platforms":{"windows":{"ingress":"native_arc_input_source","entrypoint":"apps/ink_playground/platform/windows/main.cpp"},"android":{"ingress":"native_arc_input_source","entrypoint":"apps/ink_playground/platform/android/bridge.cpp"},"web":{"ingress":"pointer_event_wasm_batch","entrypoint":"apps/ink_playground/platform/web/bridge.cpp"}},
-  "platform_owned_semantics":{"brush":false,"selection":false,"eraser":false},
-  "physical_execution_claimed":false
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "result_revision": "6d2391d56c7487fab7c6d258358aaf4a368f74c2",
+  "obligation": "G4-12-V2-platform-thin",
+  "status": "PASS_WITH_ENVIRONMENT_LIMIT",
+  "windows": {
+    "entrypoint": "WinMain + HWND + WM_POINTER",
+    "native_input_source": "arc::CreateWindowsInputSource",
+    "device_capture": "NOT_RUN_WINDOWS_HOST_UNAVAILABLE"
+  },
+  "android": {
+    "entrypoint": "JNI-callable native host seam",
+    "native_input_source": "arc::CreateAndroidInputSource",
+    "device_capture": "NOT_RUN_ANDROID_HOST_UNAVAILABLE"
+  },
+  "web": {
+    "entrypoint": "WASM + PointerEvent/coalesced batch",
+    "production_page": "apps/ink_playground/platform/web/index.html",
+    "browser_smoke": "BLOCKED_LOADING_RUNTIME"
+  },
+  "platform_semantics_owned": false
 }

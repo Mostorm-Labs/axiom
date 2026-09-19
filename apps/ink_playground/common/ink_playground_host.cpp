@@ -1,6 +1,7 @@
 #include "ink_playground_host.hpp"
 
 #include <memory>
+#include <limits>
 #include <vector>
 
 namespace canvas::ink_playground {
@@ -85,6 +86,36 @@ void InkPlaygroundHost::recordPresentation(std::string evidenceKind,
   hud_.presentEvidenceKind = std::move(evidenceKind);
   hud_.pendingHandoffCount = pendingHandoffs;
   hud_.frameMs = frameMs;
+}
+
+bool InkPlaygroundHost::bindSurface(std::uint32_t width,
+                                    std::uint32_t height) noexcept {
+  if (width == 0U || height == 0U) return false;
+  surface_ = SurfaceBinding{1U, width, height, true};
+  return true;
+}
+
+bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
+                                      std::uint32_t height) noexcept {
+  if (width == 0U || height == 0U || surface_.generation == 0U ||
+      surface_.generation == std::numeric_limits<std::uint64_t>::max()) {
+    return false;
+  }
+  ++surface_.generation;
+  surface_.width = width;
+  surface_.height = height;
+  surface_.available = true;
+  return true;
+}
+
+bool InkPlaygroundHost::loseSurface() noexcept {
+  if (surface_.generation == 0U) return false;
+  surface_.available = false;
+  return true;
+}
+
+std::vector<ink::StrokePoint> InkPlaygroundHost::previewPoints() const {
+  return preview_->snapshot().confirmed;
 }
 
 }  // namespace canvas::ink_playground

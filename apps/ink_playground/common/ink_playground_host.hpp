@@ -26,6 +26,13 @@ struct HudSnapshot final {
   double frameMs = 0.0;
 };
 
+struct SurfaceBinding final {
+  std::uint64_t generation = 0;
+  std::uint32_t width = 0;
+  std::uint32_t height = 0;
+  bool available = false;
+};
+
 // Application composition root. It owns no canonical document state: the
 // production runtime modules remain the owners of input, ink, interaction,
 // render and presentation semantics.
@@ -42,6 +49,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                             std::uint64_t observationTimeNs);
   [[nodiscard]] bool commitStroke(std::uint64_t strokeId,
                                   std::uint64_t operationId) noexcept;
+
+  [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool loseSurface() noexcept;
+  [[nodiscard]] const SurfaceBinding& surface() const noexcept { return surface_; }
+  [[nodiscard]] std::vector<ink::StrokePoint> previewPoints() const;
 
   [[nodiscard]] bool productionPathComplete() const noexcept {
     return input_ != nullptr && ink_ != nullptr && preview_ != nullptr &&
@@ -71,6 +84,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   HudSnapshot hud_;
   std::size_t submittedOperationCount_ = 0;
   std::uint64_t strokeStartNs_ = 0;
+  SurfaceBinding surface_{};
 };
 
 }  // namespace canvas::ink_playground

@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Axiom Ink Playground</title>
+<style>
+  body { margin: 0; font: 14px sans-serif; background: #eef1f7; }
+  #ink { display: block; width: min(100vw, 1024px); height: min(80vh, 768px);
+         background: white; touch-action: none; border: 1px solid #c5cad6; }
+  #hud { padding: 8px; color: #25304a; }
+</style>
+<canvas id="ink" width="1024" height="768"></canvas><pre id="hud">loading</pre>
+<script type="module">
+  const canvas = document.getElementById("ink");
+  const hud = document.getElementById("hud");
+  addEventListener("error", event => { hud.textContent = `Ink Playground error: ${event.message}`; });
+  addEventListener("unhandledrejection", event => { hud.textContent = `Ink Playground rejection: ${event.reason}`; });
+  try {
+  const imported = await import("./axiom_ink_playground_web.js");
+  const createAxiomInkPlayground = imported.default;
+  const module = await createAxiomInkPlayground({ canvas });
+  const host = module._axiom_ink_create();
+  if (!host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
+    throw new Error("Ink Playground surface binding failed");
+  }
+  let stroke = 0;
+  const started = new Set();
+  const nowNs = () => Math.round(performance.now() * 1000000);
+  const send = (event, phase) => {
+    const list = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
+    if (phase === "down") { stroke += 1n; started.add(event.pointerId); module._axiom_ink_begin(host, stroke); }
+    list.forEach((sample, i) => module._axiom_ink_sample(host, BigInt(i + 1), BigInt(nowNs()),
+      sample.offsetX, sample.offsetY, sample.pressure || 0.5, 0, BigInt(nowNs())));
+    if (phase === "up") { module._axiom_ink_commit(host, stroke, stroke); started.delete(event.pointerId); }
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.strokeStyle = "#1a5bff"; context.lineWidth = 3; context.beginPath();
+    const pointCount = Number(module._axiom_ink_point_count(host));
+    for (let i = 0; i < pointCount; ++i) {
+      const x = module._axiom_ink_point_x(host, BigInt(i)), y = module._axiom_ink_point_y(host, BigInt(i));
+      if (i === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    }
+    context.stroke();
+    hud.textContent = JSON.stringify({ pointCount, coalescedBatch: list.length, surface: "available" });
+  };
+  canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); send(e, "down"); });
+  canvas.addEventListener("pointermove", e => { if (started.has(e.pointerId)) send(e, "move"); });
+  canvas.addEventListener("pointerup", e => send(e, "up"));
+  canvas.addEventListener("pointercancel", e => { started.delete(e.pointerId); });
+  globalThis.axiomInkPlayground = { module, host };
+  } catch (error) {
+    hud.textContent = `Ink Playground load error: ${error?.stack || error}`;
+  }
+</script>

@@ -36,6 +36,33 @@ void hud_test() {
   assert(hud.frameMs == 8.25);
 }
 
+void surface_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(320, 180));
+  assert(host.surface().available);
+  assert(host.surface().generation == 1);
+  assert(host.resizeSurface(640, 360));
+  assert(host.surface().generation == 2);
+  assert(host.surface().width == 640);
+  assert(host.loseSurface());
+  assert(!host.surface().available);
+  assert(host.resizeSurface(800, 450));
+  assert(host.surface().generation == 3);
+  assert(host.surface().available);
+}
+
+void preview_points_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.beginStroke(11));
+  canvas::input::PointerSampleBatch batch;
+  batch.samples.push_back({1, 1'000'000, 10.0F, 20.0F, 0.5F, false});
+  batch.samples.push_back({2, 2'000'000, 30.0F, 40.0F, 0.7F, false});
+  assert(host.accept(batch, 2'000'000));
+  const auto points = host.previewPoints();
+  assert(points.size() == 2);
+  assert(points[0].x == 10.0F && points[1].y == 40.0F);
+}
+
 void platform_test() {
   using namespace canvas::ink_playground;
   const auto windows = platformContract(PlatformKind::kWindows);
@@ -57,6 +84,8 @@ int main(int argc, char** argv) {
   const std::string_view mode = argc > 1 ? argv[1] : "composition";
   if (mode == "composition") composition_test();
   else if (mode == "hud") hud_test();
+  else if (mode == "surface") surface_test();
+  else if (mode == "preview") preview_points_test();
   else if (mode == "platform") platform_test();
   else return 2;
   return 0;

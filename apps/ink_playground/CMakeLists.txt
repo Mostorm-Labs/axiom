@@ -25,6 +25,8 @@ if(BUILD_TESTING)
   endif()
   add_test(NAME G4InkPlaygroundComposition COMMAND axiom_ink_playground_tests composition)
   add_test(NAME G4InkPlaygroundHud COMMAND axiom_ink_playground_tests hud)
+  add_test(NAME G4InkPlaygroundSurface COMMAND axiom_ink_playground_tests surface)
+  add_test(NAME G4InkPlaygroundPreview COMMAND axiom_ink_playground_tests preview)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
 endif()
 
@@ -44,9 +46,11 @@ if(EMSCRIPTEN)
   add_executable(axiom_ink_playground_web platform/web/bridge.cpp)
   target_link_libraries(axiom_ink_playground_web PRIVATE axiom_ink_playground_common)
   set_target_properties(axiom_ink_playground_web PROPERTIES SUFFIX ".js")
+  configure_file(platform/web/index.html
+      ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
   target_link_options(axiom_ink_playground_web PRIVATE
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_commit']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()
