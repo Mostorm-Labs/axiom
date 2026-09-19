@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-01",
+  "kind": "scope-and-boundary-evidence",
+  "status": "available",
+  "authorized_paths": ["runtime/interaction/**", "CMakeLists.txt", ".aegis/packages/GT-G4-01/**", ".aegis/results/GT-G4-01/**", ".aegis/project.json", ".aegis/state.json", ".aegis/gates.json", ".aegis/evidence.json", ".aegis/integrations.json"],
+  "forbidden_symbol_scan": {"command": "rg -n 'SemanticWritePort|SemanticDocument|RuntimeScene|StrokeDocument|AddStrokeOperation|arc|G5|G6' runtime/interaction --glob '!tests/**'", "status": "PASS", "matches": 0},
+  "git_diff_check": {"command": "git diff --check", "status": "PASS"},
+  "mutation_scope": "PASS",
+  "result_revision": "PENDING_COMMIT"
+}

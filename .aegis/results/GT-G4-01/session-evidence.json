@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-01",
+  "kind": "implementation-evidence",
+  "status": "available",
+  "red": {
+    "command": "cmake --build --preset rf01-host-debug --target axiom_interaction_session_tests",
+    "observed": "FAIL",
+    "failure": "ninja: error: unknown target 'axiom_interaction_session_tests'",
+    "meaning": "The G4-01 interaction seam was absent at the task anchor."
+  },
+  "green": {
+    "focused_command": "ctest --preset rf01-host-debug -R '^G4InteractionSessionManager$' --output-on-failure",
+    "passed": 1,
+    "failed": 0,
+    "assertions": [
+      "session ownership starts exactly one active session",
+      "document detach cancels the active session and transient presentation",
+      "rejected operation leaves the active session and canonical boundary untouched"
+    ]
+  },
+  "required_regressions": {
+    "configure": "cmake --preset rf01-host-debug",
+    "build": "cmake --build --preset rf01-host-debug",
+    "ctest": {"command": "ctest --test-dir out/rf01-host-debug --output-on-failure", "passed": 20, "failed": 0}
+  },
+  "result_revision": "PENDING_COMMIT"
+}
