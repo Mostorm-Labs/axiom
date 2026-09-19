@@ -42,7 +42,12 @@ jobs:
       - name: Configure G3-09 Windows host
         shell: pwsh
         run: |
-          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCANVAS_SKIA_SDK_ROOT="$PWD/.deps/skia-sdk/windows-x64-d3d12"
+          $sdkRoot = Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release
+          $config = Join-Path $sdkRoot 'lib/cmake/CanvasSkia/CanvasSkiaConfig.cmake'
+          if (-not (Test-Path $config -PathType Leaf)) {
+            throw "Locked Windows Skia SDK is missing CanvasSkiaConfig.cmake: $config"
+          }
+          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot"
       - name: Build Windows host
         shell: pwsh
         run: cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows --parallel
