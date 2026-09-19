@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-11",
+  "resolved_current_g": "G3",
+  "current_work_package": "GT-G3-11",
+  "current_stage": "P34_CONTROL_REVIEW",
+  "blocker_type": "BLOCKED_ENVIRONMENT",
+  "owning_layer": "existing G0 Android instrumentation validation environment",
+  "exact_failure": "GitHub Actions run 35434798504, job 105876244356: instrumentation and APK construction passed, but the required validation step failed because frozen semantic-conformance source-bound tests could not resolve historical commits.",
+  "evidence": [
+    "github-actions:35434798504/job/105876244356",
+    "github:Mostorm-Labs/axiom#102",
+    "git:e604dcce7bc506c4fc590472d65c6f8324379d3e",
+    "repo:.aegis/results/GT-G3-11/p34-control-review.json"
+  ],
+  "why_autonomous_resolution_is_not_safe": "The failed source-bound tests belong to the pre-existing G0 verification harness and resolving them requires an upstream environment/evidence decision outside the authorized GT-G3-11 mutation scope. Changing G3-11 code or weakening the required hosted check would falsify the Gate boundary.",
+  "required_human_action_or_decision": "Repair the existing G0 hosted validation checkout/evidence contract or approve a durable equivalent, then rerun the exact hosted check.",
+  "last_trustworthy_closed_boundary": "G3-10 CLOSED_AND_INTEGRATED at main revision 40f806e6199c3bda520fb434d16428d12642c955",
+  "repository_revision": "e604dcce7bc506c4fc590472d65c6f8324379d3e",
+  "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
+  "materialized_package": ".aegis/packages/GT-G3-11/package.json",
+  "successor_execution_started": false
+}
