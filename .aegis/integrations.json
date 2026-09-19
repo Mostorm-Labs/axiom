@@ -216,6 +216,30 @@
       "evidence_ids": ["ev-gt-g3-10-p34"],
       "applicability": "current",
       "actionability": "historical_occurrence_preserved"
+    },
+    {
+      "id": "int-pr102-g3-11",
+      "kind": "github-pull-request",
+      "ref": "github:Mostorm-Labs/axiom#102",
+      "target_ref": "refs/heads/main",
+      "integrated_revision": "20ddb28108367fce35744d4f991a07516318eb92",
+      "status": "integrated",
+      "gate_decision_binding": {"kind": "bound", "gate_decision_id": "g3-completion-2026-09-19"},
+      "evidence_ids": ["ev-g3-completion"],
+      "applicability": "current",
+      "actionability": "historical_occurrence_preserved"
+    },
+    {
+      "id": "int-pr104-g3-completion-record",
+      "kind": "github-pull-request",
+      "ref": "github:Mostorm-Labs/axiom#104",
+      "target_ref": "refs/heads/main",
+      "integrated_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
+      "status": "integrated",
+      "gate_decision_binding": {"kind": "bound", "gate_decision_id": "g3-completion-2026-09-19"},
+      "evidence_ids": ["ev-g3-completion"],
+      "applicability": "current",
+      "actionability": "historical_occurrence_preserved"
     }
   ]
 }

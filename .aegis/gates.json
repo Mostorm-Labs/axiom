@@ -186,6 +186,35 @@
       },
       "evidence_ids": ["ev-gt-g3-10-p34"],
       "findings": []
+    },
+    {
+      "id": "g3-completion",
+      "scope": "G3",
+      "status": "CLOSED",
+      "decision": {
+        "id": "g3-completion-2026-09-19",
+        "verdict": "PASS",
+        "authority_ref": "g3-capability-authority",
+        "result_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
+        "official_pass_claimed": true,
+        "source_report": "repo:.aegis/results/GT-G3-11/g3-gate-report.json"
+      },
+      "evidence_ids": ["ev-g3-completion"],
+      "findings": []
+    },
+    {
+      "id": "g4-entry-readiness",
+      "scope": "G4",
+      "status": "READY_FOR_P31",
+      "decision": {
+        "id": "g4-entry-readiness-2026-09-19",
+        "verdict": "READY_FOR_P31",
+        "authority_ref": "g4-capability-authority",
+        "official_gate_pass_claimed": false
+      },
+      "evidence_ids": ["ev-g4-entry-readiness"],
+      "findings": [],
+      "next_action": "materialize_and_review_GT-G4-01-P31"
     }
   ]
 }
