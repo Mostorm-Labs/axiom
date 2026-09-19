@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "stage": "P32",
+  "implementation_revision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+  "result": "PASS",
+  "platform": "darwin-arm64-hosted-chromium",
+  "target": "g3-web-release",
+  "host": "axiom_canvas_demo_web",
+  "sdk": {
+    "target": "web-wasm-webgl2",
+    "variant": "release",
+    "sdk_id": "8c5326038b9082ec2171a03ade3c953390fa7557dc7fd1f79196693a70fcda16",
+    "sha256": "be577648c98cdacaf4f7b21cc4bc1fab780b63228d5d0e641c32e11a88282663",
+    "emscripten": "6.0.6"
+  },
+  "browser_oracle": "production WASM host binds WebGL2 and preserves generation-bound browser facts",
+  "observations": {
+    "wasm_loaded": true,
+    "webgl2_skia_surface_bound": true,
+    "dynamic_resize_and_dpr": true,
+    "surface_loss_and_rebind": true,
+    "surface_generation": 3,
+    "metrics_generation": 3,
+    "physical_width": 480,
+    "physical_height": 240,
+    "pointer_samples_forwarded": 1,
+    "presented_frames": 1,
+    "present_feedback": "platform-qualified",
+    "javascript_scene_traversal": false
+  },
+  "playwright": {
+    "passed": 2,
+    "failed": 0
+  }
+}
