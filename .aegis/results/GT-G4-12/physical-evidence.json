@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-12",
-  "result_revision": "e040a0d938bd93e53508b1c95fb47430a82658fe",
+  "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
   "obligation": "G4-12-V4-physical-boundary",
   "status": "BLOCKED_ENVIRONMENT",
   "windows": {
@@ -16,8 +16,17 @@
   },
   "web": {
     "hosted_browser": "macOS in-app browser",
-    "status": "BLOCKED_HOSTED_SMOKE",
-    "reason": "Generated page remains in loading state; no capture promoted"
+    "status": "PASS_WEB_BROWSER_SMOKE",
+    "input": "macos-browser-mouse-or-trackpad",
+    "url": "http://127.0.0.1:4282/?run=web-smoke-b34899",
+    "checks": [
+      "multiple_strokes_rendered",
+      "stroke_boundaries_preserved",
+      "coordinate_mapping_checked",
+      "no_bigint_runtime_error"
+    ],
+    "physical_capture": null,
+    "promotion": "hosted_browser_smoke_only_not_physical_evidence"
   },
   "headless_timing_promoted_to_physical": false,
   "historical_artifacts_reused": false
