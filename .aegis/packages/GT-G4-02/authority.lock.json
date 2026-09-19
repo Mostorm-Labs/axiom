@@ -1,0 +1,6 @@
+{
+  "schema_version":"0.1","task_id":"GT-G4-02","current":true,
+  "source":{"provider":"notion","ref":"notion://3c84c57a590c81b6bab3c36fc6842c4f","title":"G4 Interaction + Ink Implementation Plan v0.2","trusted_section":"WP G4-02 — Production Pointer ingress + InputRouter","content_hash":"9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a"},
+  "dependency":{"g4_01_gate_decision":"gt-g4-01-p34-2026-09-19","g4_01_integration_revision":"4698e9c530efd06b84cb6a037267bfb61cffcd88","canonical_main_revision":"4698e9c530efd06b84cb6a037267bfb61cffcd88","required_state":"G4-01_CLOSED_AND_INTEGRATED"},
+  "trusted_statements":{"goal":"Normalize confirmed pointer batches through one production InputRouter.","consumes":["Arc InputSource/PointerSampleBatch semantics","InteractionSessionManager"],"produces":["normalized PointerSampleBatch","pointer capture dispatch"],"forbidden":["React/RN JS hot path","POC-02 StrokeDocument","silent confirmed-sample drop","predicted samples as canonical input","G4-03 or later behavior"]}
+}
