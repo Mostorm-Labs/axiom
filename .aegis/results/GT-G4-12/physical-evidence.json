@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-12",
-  "result_revision": "a557741b81727563e41dd245a7cbf7a396ec0856",
+  "result_revision": "5591625",
   "platform": "windows",
   "status": "BLOCKED_ENVIRONMENT",
   "blocking": true,
   "execution_branch": "codex/g4-12-ink-playground",
   "identity": {
     "head_verified": true,
-    "head": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+    "head": "5591625",
     "git_diff_check": "PASS"
   },
   "host": {
@@ -82,7 +82,7 @@
       "first_true_error": null,
       "package_produced": true,
       "package": "out/g4-12-windows-package.zip",
-      "package_sha256": "4de96729ca058339dfec7e9f7f0d7aef77f061a8edff9435b90e8d079f33662e"
+      "package_sha256": "3c5a66e774b1150bedfab880ba8d605b90141eda8688ead29eeb5b275b28cc31"
     },
     "ctest": {
       "command": "ctest --test-dir out/g3-windows-release -R '^G4InkPlayground|^G3SurfacePresentation|^G4CanonicalHandoff$' --output-on-failure",
