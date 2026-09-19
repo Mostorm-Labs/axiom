@@ -488,7 +488,34 @@
         "git_diff_check": "PASS",
         "mutation_scope": "PASS",
         "official_gate_pass_claimed": true,
-        "integration_status": "awaiting_integration"
+        "integration_status": "integrated",
+        "integration_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "integration_ref": "github:Mostorm-Labs/axiom#98"
+      }
+    },
+    {
+      "id": "ev-int-pr98-g3-09",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#98@d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+      "supports": ["int-branch-g3-09-awaiting-integration"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#98",
+        "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "git:8b969c83ee16ec009148293dee2784504c00dbe3",
+        "git:d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "git:d3e15490db44732884f6146624ad3186feed78c2"
+      ],
+      "conclusion": {
+        "pull_request": 98,
+        "target_ref": "refs/heads/main",
+        "source_result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "source_gate_closure_revision": "8b969c83ee16ec009148293dee2784504c00dbe3",
+        "integrated_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "parent_revision": "d3e15490db44732884f6146624ad3186feed78c2",
+        "gate_decision_id": "gt-g3-09-p34-2026-09-19",
+        "integration_status": "integrated",
+        "integration_conformance": "conforming"
       }
     }
   ]
