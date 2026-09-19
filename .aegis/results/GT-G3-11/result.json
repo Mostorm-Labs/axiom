@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "task_id": "GT-G3-11",
   "stage": "P32_IMPLEMENTATION",
-  "status": "READY_FOR_CONTROL_REVIEW",
+  "status": "CLOSED_AND_INTEGRATED",
   "package_id": "GT-G3-11-P31-v0.1",
   "package_ref": ".aegis/packages/GT-G3-11/package.json",
   "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
@@ -24,11 +24,11 @@
     "rf01_g2_matrix": "PASS",
     "git_diff_check": "PASS"
   },
-  "official_gate_pass_claimed": false,
-  "g3_pass_claimed": false,
+  "official_gate_pass_claimed": true,
+  "g3_pass_claimed": true,
   "successor_started": false,
-  "next_surface": "CONTROL_REVIEW",
-  "reviewed_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+  "next_surface": "G3_CLOSED",
+  "reviewed_branch_head": "eab492aab99463d8f295ed8f32e24eb9e6717f4d",
   "hosted_evidence": {
     "workflow_run_id": 35438947330,
     "job_id": 105886316012,
@@ -39,5 +39,7 @@
   "hosted_pr_checks": {
     "workflow_run_id": 35438947386,
     "status": "PASS"
-  }
+  },
+  "integration_revision": "20ddb28108367fce35744d4f991a07516318eb92",
+  "integration_ref": "github:Mostorm-Labs/axiom#102"
 }
