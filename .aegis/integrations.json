@@ -154,18 +154,20 @@
     },
     {
       "id": "int-branch-g3-07-awaiting-integration",
-      "kind": "github-branch-candidate",
-      "ref": "github:Mostorm-Labs/axiom@codex/g3-07-headless-canvas-demo",
+      "kind": "github-pull-request",
+      "ref": "github:Mostorm-Labs/axiom#94",
       "target_ref": "refs/heads/main",
       "source_result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
-      "status": "awaiting_integration",
+      "source_gate_closure_revision": "26b7ac9bca009862188461258c00e3716e7e0f8d",
+      "integrated_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8",
+      "status": "integrated",
       "gate_decision_binding": {
         "kind": "bound",
         "gate_decision_id": "gt-g3-07-p34-2026-09-19"
       },
-      "evidence_ids": ["ev-gt-g3-07-p34"],
+      "evidence_ids": ["ev-gt-g3-07-p34", "ev-int-pr94-g3-07"],
       "applicability": "current",
-      "actionability": "awaiting_repository_integration"
+      "actionability": "historical_occurrence_preserved"
     }
   ]
 }
