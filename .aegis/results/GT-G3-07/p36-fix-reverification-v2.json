@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P36_FIX_REVERIFICATION",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "observed_starting_revision": "6da250fa387133e52b5d8b26f62ab1c45a3135a8",
+  "repair_parent_revision": "a3727c9f607e1d4a808d44c99a69f2c9865dd62b",
+  "classification": "IMPLEMENTATION_DEFECT_REVERIFIED_WITH_SCOPE_BLOCKER",
+  "oracle_repair": {
+    "independent_descriptor_field_comparison": "PASS",
+    "cross_stage_ids_and_kinds": "PASS_FOR_OBSERVABLE_STAGES",
+    "argument_failure_matrix": "PASS",
+    "fixture_failure_matrix": "PASS",
+    "non_integral_shape_render_rejection": "PASS",
+    "existing_success_preserved": "PASS"
+  },
+  "verification": {
+    "g3_headless_canvas_demo": "PASS",
+    "g3_predecessor_matrix": "PASS",
+    "g2_a6_matrix": "PASS",
+    "full_ctest": {"status": "PASS", "passed": 537, "failed": 0, "not_run": 0},
+    "git_diff_check": "PASS"
+  },
+  "terminal_blocker": {
+    "class": "PACKAGE_SCOPE_DIVERGENCE",
+    "status": "BLOCKED_CONTROL_REVIEW",
+    "reason": "The frozen P31 contract requires Group 509 to be correlated through visibility and DirectReference while also requiring Group zero-pixel/empty bounds. Repository reality makes BoundsSystem return empty bounds for Group; Scene::query therefore excludes Group 509 from visibility, and DirectReferenceSource consumes only visibility IDs. Closing this contradiction requires an upstream package/verification or G2 production semantic decision, all forbidden by the current P36 mutation scope.",
+    "evidence_paths": ["runtime/scene/src/bounds_system.cpp", "runtime/render/src/visibility_resolver.cpp", "runtime/render/src/direct_reference_source.cpp"],
+    "production_changes_made": false
+  },
+  "mutation_scope": [
+    "runtime/render/tools/headless_canvas_demo.cpp",
+    "runtime/render/tests/headless_canvas_demo_test.cpp",
+    ".aegis/results/GT-G3-07/p36-fix-reverification-v2.json"
+  ],
+  "reviewer_accessible": true,
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "next_surface": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
