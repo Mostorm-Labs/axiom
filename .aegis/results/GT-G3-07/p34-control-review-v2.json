@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-07",
+  "stage": "P34_CONTROL_REVIEW",
+  "package_id": "GT-G3-07-P31-v0.4",
+  "package_materialization_ref": "a298972ffe932bb6335186e2c90fbcaddf7523fa",
+  "task_anchor": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+  "review_revision": "87400e5ec8f75624a6290c00ce3c241032f49269",
+  "result_revision": "a3727c9f607e1d4a808d44c99a69f2c9865dd62b",
+  "evidence_revision": "87400e5ec8f75624a6290c00ce3c241032f49269",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "status": "CONTINUE_P36",
+  "identity_audit": {
+    "repository": "Mostorm-Labs/axiom",
+    "branch_head_matches_origin": true,
+    "result_revision_is_required_code_result": true,
+    "durable_evidence_revision_is_distinct_and_reviewer_accessible": true,
+    "anchor_ancestry": true
+  },
+  "frozen_requirement_audit": {
+    "pipeline_owner_route": "PASS",
+    "deterministic_hash_and_pixel_checks": "PARTIAL",
+    "nine_kind_complete_cross_stage_oracle": "FAIL",
+    "complete_failure_and_atomic_publication_matrix": "FAIL",
+    "regression_and_scope": "PASS"
+  },
+  "blocking_findings": [
+    {
+      "id": "GT-G3-07-P34-V1",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "subject": "independent_expected_descriptor_is_not_field_compared",
+      "failure_mode": "The external test only checks that expected.json contains oracle_independence and the render SHA string; it does not parse and compare the frozen fixture ID/kind/raster/vector-stroke/group fields as an independent descriptor.",
+      "impact": "A changed expected descriptor or mismatched semantic/raster field can pass while the test continues to validate only self-selected constants.",
+      "existing_independent_coverage": "Fixture and render SHA-256, FNV digest, fixed pixels, and byte repeatability are covered; complete descriptor field equality is not.",
+      "unique_detection_value": "A field-wise expected descriptor comparison detects semantic, bounds, mask, region, and raster metadata drift that hash/string-presence checks do not.",
+      "why_frozen_evidence_did_not_cover_it": "The current test reads expected.json as raw text and checks substring presence rather than independently parsing its frozen fields.",
+      "blocking_justification": "G3-07-V2/V3 explicitly freeze an independent immutable oracle; without field-wise comparison, the core artifact and nine-kind proof remains incomplete."
+    },
+    {
+      "id": "GT-G3-07-P34-V2",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "subject": "cross_stage_membership_and_negative_matrix_are_incomplete",
+      "failure_mode": "The CLI evidence contains only a single object_ids list and object_kinds list, while the test does not verify all nine IDs and semantic kinds through canonical storage, RuntimeScene, DirectReference traversal, Scene coarse mapping, and evidence JSON. The test also omits unknown/duplicate/missing CLI argument cases, unsupported/invalid canonical fixtures, and the required non-integral Shape render-rejection fixture.",
+      "impact": "The frozen end-to-end identity correlation and failure/atomic-publication contract can regress without detection.",
+      "existing_independent_coverage": "The happy-path fixture decode, two-run artifacts, malformed/missing fixture, existing-success preservation, and unwritable-parent checks provide partial coverage only.",
+      "unique_detection_value": "Cross-stage membership and the omitted negative cases uniquely detect stage truncation, argument parsing drift, canonical rejection bypass, and production render rejection failures.",
+      "why_frozen_evidence_did_not_cover_it": "The implementation evidence records summarized counts and labels but did not expose or assert the complete frozen per-stage fields and failure matrix.",
+      "blocking_justification": "G3-07-V1, V3, and V4 are blocking obligations in the P31 evidence contract; the residual gaps are correctness and atomicity proof gaps, not optional hardening."
+    }
+  ],
+  "required_p36_scope": [
+    "remain within the existing GT-G3-07 authorized paths",
+    "parse and field-compare the independent expected descriptor",
+    "emit and verify complete per-stage IDs/kinds and frozen SceneObjectKind mapping",
+    "add unknown/duplicate/missing CLI argument, unsupported/invalid fixture, and non-integral Shape rejection cases",
+    "rerun the frozen G3-07, RF01/G2, and scope evidence"
+  ],
+  "production_semantics_change_authorized": false,
+  "p34_pass_claimed": false,
+  "g3_07_pass_claimed": false,
+  "overall_g3_pass_claimed": false
+}
