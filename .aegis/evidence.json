@@ -11,6 +11,15 @@
       "conclusion": {"g3_verdict": "PASS", "g3_status": "CLOSED", "g3_11_verdict": "PASS", "canonical_main_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "integration_revision": "20ddb28108367fce35744d4f991a07516318eb92", "official_pass_claimed": true, "successor_started": false}
     },
     {
+      "id": "ev-gt-g4-01-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:4698e9c530efd06b84cb6a037267bfb61cffcd88",
+      "supports": ["gt-g4-01", "int-pr105-g4-01"],
+      "inputs": ["git:31b5df4844db07261330567fd4b8d7317290b01f", "git:80829780ac439c4ce06b699ff1affc0b42190684", "github:Mostorm-Labs/axiom#105", "repo:.aegis/packages/GT-G4-01/package.json", "repo:.aegis/results/GT-G4-01/result.json", "repo:.aegis/results/GT-G4-01/session-evidence.json", "repo:.aegis/results/GT-G4-01/scope-evidence.json"],
+      "conclusion": {"gate_verdict":"PASS", "result_revision":"31b5df4844db07261330567fd4b8d7317290b01f", "integration_status":"integrated", "integration_revision":"4698e9c530efd06b84cb6a037267bfb61cffcd88", "focused_session_tests":{"passed":1,"failed":0}, "rf01_regression":{"passed":20,"failed":0}, "mutation_scope":"PASS", "official_gate_pass_claimed":true}
+    },
+    {
       "id": "ev-g4-entry-readiness",
       "kind": "successor-entry-review",
       "status": "available",
