@@ -16,6 +16,8 @@ bool InteractionRuntime::commit(std::uint64_t sessionId, const OperationRequest&
     return manager_.finish(sessionId);
 }
 
-void InteractionRuntime::documentDetached() noexcept { manager_.cancelAll(); }
+void InteractionRuntime::documentDetached() noexcept {
+    manager_.cancelAll(CancellationReason::kDocumentDetached);
+}
 
 } // namespace canvas::interaction
