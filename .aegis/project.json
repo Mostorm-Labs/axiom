@@ -6,7 +6,7 @@
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
     "canonical_branch": "main",
-    "canonical_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8"
+    "canonical_revision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4"
   },
   "control_plane": {
     "mode": "repo_materialized",
@@ -15,13 +15,13 @@
     "remote_sources_are_reconciliation_inputs": true
   },
   "lifecycle": {
-    "current_stage": "GT-G3-08_P34_GATE_CLOSED",
-    "current_owner": "aegis-gate-review",
-    "next_stage": "GT-G3-08_REPOSITORY_INTEGRATION",
-    "next_owner": "repository-integration-owner",
+    "current_stage": "GT-G3-08_REPOSITORY_INTEGRATED",
+    "current_owner": "aegis",
+    "next_stage": "G3_SUCCESSOR_ROUTING",
+    "next_owner": "aegis",
     "g2_status": "CLOSED",
-    "g3_status": "G3-08_GATE_CLOSED_AWAITING_INTEGRATION",
-    "g3_ingress": "AWAITING_REPOSITORY_INTEGRATION"
+    "g3_status": "G3-08_CLOSED_AND_INTEGRATED",
+    "g3_ingress": "READY_FOR_SUCCESSOR_ROUTING"
   },
   "policy": {
     "do_not_reopen_g2": true,
