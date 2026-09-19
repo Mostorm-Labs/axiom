@@ -6,8 +6,8 @@
     "provider": "notion",
     "ref": "notion://3c84c57a590c81b6bab3c36fc6842c4f",
     "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
-    "trusted_section": "WP G3-10 — Implement Web WASM/WebGL2 canonical surface reference host",
-    "content_hash": "b7745492113391929bd1ba7c13f4a27a439a7c181c3159ac191599edeb25b77b"
+    "trusted_section": "WP G3-10 \u2014 Implement Web WASM/WebGL2 canonical surface reference host",
+    "content_hash": "be507e75b79b26c2b2f8dd30fd8d966e9e7977307249e76d2950736db32313fc"
   },
   "dependency": {
     "g3_09_gate_decision": "gt-g3-09-p34-2026-09-19",
@@ -21,11 +21,11 @@
     "consumes": [
       "production FrameState, SurfaceLifecycle, PresentationTracker and IRenderBackend contracts",
       "browser canvas metrics, device pixel ratio, resize and pointer commands",
-      "locked Emscripten 6.0.6 and web-wasm-webgl2 Skia SDK consumer path"
+      "private production WebGL2 backend seam backed by the locked Emscripten 6.0.6 and web-wasm-webgl2 Skia SDK consumer path"
     ],
     "produces": [
       "Web-only canonical surface bridge with dynamic metrics and surface generations",
-      "WebGL2 context binding and generation-bound submit/present observation",
+      "private production WebGL2 backend target binding and generation-bound submit/present observation",
       "browser smoke and portable lifecycle evidence"
     ],
     "forbidden": [
@@ -33,7 +33,8 @@
       "fixed 800x600 backend/global POC state",
       "React state on the high-frequency canvas path",
       "final WebGPU/swapchain topology authority",
-      "G3-11, G4, G5 or changes under runtime/**"
+      "copying canonical draw-command or scene traversal policy into the Web host",
+      "G3-11, G4, G5 or changes under runtime/scene, runtime/semantic or runtime/foundation"
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G3-10-P31-v0.1",
+  "package_id": "GT-G3-10-P31-v0.2",
   "task_id": "GT-G3-10",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Implement the thin Web WASM/WebGL2 canonical surface reference host through the production Render Core.",
@@ -20,7 +20,7 @@
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "adc8da28c20c506f341b6725440d1ff6a96628238c11de6325215bcbd16b18f3"
+    "sha256": "9b50627a434c749b0d037ec92dbeee6564c2d6d9aa936c67c4cdd6aec01fdf62"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
@@ -28,11 +28,11 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "f0f8089ac32bf43c0a7f842ccc36c25a7a9cf5c02d3b2c4bc15bf663d6c4e441"
+    "sha256": "41b5c9f6cc232d14d19c0a936e00e16b8fcf97573cfd550077740f908d3cd722"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "1705bcad0eea0c80f0acd0f084d9f288b9bdbd73c7ce1b00679b4a8eff8c53ac"
+    "sha256": "d19e8af8ddd6373412fdedbed5cd1bee0ea5ae721c8cfdca163a75f02bb26a5e"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -43,6 +43,7 @@
     "path": ".aegis/packages/GT-G3-10/",
     "binding": "exact pushed repository revision descended from the task anchor"
   },
+  "supersedes": "GT-G3-10-P31-v0.1",
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",
