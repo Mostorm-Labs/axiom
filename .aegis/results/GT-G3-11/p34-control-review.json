@@ -7,7 +7,7 @@
   "repository": "Mostorm-Labs/axiom",
   "execution_branch": "codex/g3-11-cross-platform-oracle-gate-report",
   "task_anchor": "b1eb2db741fe80822d608675f1646ea50b6acbc0",
-  "reviewed_branch_head": "af9f0c5786918608a29a72a1a69c8b8512b34894",
+  "reviewed_branch_head": "eab492aab99463d8f295ed8f32e24eb9e6717f4d",
   "result_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
   "implementation_revision": "f81f31160c3c2cac0949ffbbc878f22f9b8a2923",
   "frozen_requirement_audit": {
@@ -60,16 +60,19 @@
     "remote_head_matches_reviewed_head": true,
     "upstream_g0_merge_revision": "9f6f0f351828a58fc9023f17c7306f009fbaf38d",
     "pr_number": 102,
-    "pr_head": "af9f0c5786918608a29a72a1a69c8b8512b34894"
+    "pr_head": "eab492aab99463d8f295ed8f32e24eb9e6717f4d",
+    "main_integration_revision": "20ddb28108367fce35744d4f991a07516318eb92"
   },
   "blocking_finding": null,
   "verdict": "PASS",
-  "status": "READY_FOR_INDEPENDENT_INTEGRATION_REVIEW",
-  "official_gate_pass_claimed": false,
-  "g3_11_pass_claimed": false,
-  "overall_g3_pass_claimed": false,
-  "integration_status": "NOT_INTEGRATED",
+  "status": "CLOSED_AND_INTEGRATED",
+  "official_gate_pass_claimed": true,
+  "g3_11_pass_claimed": true,
+  "overall_g3_pass_claimed": true,
+  "integration_status": "INTEGRATED",
   "successor_started": false,
-  "next_surface": "CONTROL_REVIEW",
-  "required_human_action": "Review and merge PR #102; after merge, record the exact main integration SHA before any G3 completion promotion."
+  "next_surface": "G3_CLOSED",
+  "required_human_action": null,
+  "integration_revision": "20ddb28108367fce35744d4f991a07516318eb92",
+  "integration_ref": "github:Mostorm-Labs/axiom#102"
 }
