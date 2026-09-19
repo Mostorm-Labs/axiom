@@ -23,6 +23,12 @@ void roundTripIncludesRotationAndSurfaceCenter() {
     const WorldPoint world{72.0F, 19.0F};
     const auto view = controller.worldToView(world, metrics);
     assert(view.hasValue());
+    const float cosine = std::cos(0.35F);
+    const float sine = std::sin(0.35F);
+    const float dx = world.x - 30.0F;
+    const float dy = world.y + 10.0F;
+    assert(close(view.value().x, 400.0F + 2.5F * (cosine * dx + sine * dy)));
+    assert(close(view.value().y, 300.0F + 2.5F * (-sine * dx + cosine * dy)));
     const auto restored = controller.viewToWorld(view.value(), metrics);
     assert(restored.hasValue());
     assert(close(restored.value().x, world.x));

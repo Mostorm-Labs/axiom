@@ -57,8 +57,8 @@ Result<WorldPoint> CameraController::worldToView(
     const float dx = world.x - center_.x;
     const float dy = world.y - center_.y;
     const WorldPoint result{
-        metrics.logicalWidth * 0.5F + zoom_ * (cosine * dx - sine * dy),
-        metrics.logicalHeight * 0.5F + zoom_ * (sine * dx + cosine * dy),
+        metrics.logicalWidth * 0.5F + zoom_ * (cosine * dx + sine * dy),
+        metrics.logicalHeight * 0.5F + zoom_ * (-sine * dx + cosine * dy),
     };
     if (!finitePoint(result)) {
         return Result<WorldPoint>::failure(invalid("camera transform overflow"));
@@ -76,8 +76,8 @@ Result<WorldPoint> CameraController::viewToWorld(
     const float dx = (view.x - metrics.logicalWidth * 0.5F) / zoom_;
     const float dy = (view.y - metrics.logicalHeight * 0.5F) / zoom_;
     const WorldPoint result{
-        center_.x + cosine * dx + sine * dy,
-        center_.y - sine * dx + cosine * dy,
+        center_.x + cosine * dx - sine * dy,
+        center_.y + sine * dx + cosine * dy,
     };
     if (!finitePoint(result)) {
         return Result<WorldPoint>::failure(invalid("camera transform overflow"));
@@ -92,8 +92,8 @@ bool CameraController::panByViewDelta(WorldPoint delta) noexcept {
     const float cosine = std::cos(rotationRadians_);
     const float sine = std::sin(rotationRadians_);
     const WorldPoint next{
-        center_.x - (cosine * delta.x + sine * delta.y) / zoom_,
-        center_.y - (-sine * delta.x + cosine * delta.y) / zoom_,
+        center_.x - (cosine * delta.x - sine * delta.y) / zoom_,
+        center_.y - (sine * delta.x + cosine * delta.y) / zoom_,
     };
     if (!finitePoint(next)) {
         return false;

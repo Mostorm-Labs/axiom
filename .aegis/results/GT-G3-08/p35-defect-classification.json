@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "stage": "P35",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "subject": "camera rotation convention diverges from the existing production DirectReferenceSource affine",
+  "failure_mode": "For nonzero camera rotation, CameraController maps the same world point to a different view point than the render plan and converts pointer coordinates back to the wrong world point.",
+  "impact": "Demo hit/select can select a different object than the one visibly under the pointer whenever the camera is rotated.",
+  "frozen_requirement": "G3-08-V1 camera transform plus G3-08-V2 G2-authoritative hit delegation at the camera-derived world point",
+  "root_cause": "The forward and inverse sine signs in the new demo controller were transposed relative to runtime/render/src/direct_reference_source.cpp.",
+  "repair_scope": [
+    "apps/axiom_canvas_demo/tests/camera_controller_test.cpp",
+    "apps/axiom_canvas_demo/common/camera_controller.cpp",
+    ".aegis/results/GT-G3-08/**"
+  ],
+  "production_semantics_change": false,
+  "next_stage": "P36_FIX_REVERIFICATION"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "stage": "P36_FIX_REVERIFICATION",
+  "classification_ref": "repo:.aegis/results/GT-G3-08/p35-defect-classification.json",
+  "repair_parent_revision": "f1fba601563eaf8bd3abe4a3e5d987a83e8be747",
+  "repair": "Align CameraController forward, inverse, and pan rotations with DirectReferenceSource worldToView affine.",
+  "red_oracle": "G3Camera failed the exact nonzero-rotation affine assertion before the repair.",
+  "focused_reverification": {
+    "G3Camera": "PASS",
+    "G3DemoHitSelect": "PASS"
+  },
+  "full_reverification": {
+    "g3_host_debug": {"passed": 7, "failed": 0},
+    "rf01_host_debug": {"passed": 19, "failed": 0},
+    "git_diff_check": "PASS"
+  },
+  "result_revision": "PENDING_FINAL_FIX_COMMIT"
+}
