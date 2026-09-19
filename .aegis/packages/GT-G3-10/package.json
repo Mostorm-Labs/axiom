@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G3-10-P31-v0.1",
+  "task_id": "GT-G3-10",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Implement the thin Web WASM/WebGL2 canonical surface reference host through the production Render Core.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g3-10-web-canonical-surface-host"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "1aafd5dcd99a641db2e1285a6c67efd8d7c0c409",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "adc8da28c20c506f341b6725440d1ff6a96628238c11de6325215bcbd16b18f3"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f61ad98294afd3d4ec2ce52cfea8071efcaded2d09ad6ab793b935695cce6b68"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "f0f8089ac32bf43c0a7f842ccc36c25a7a9cf5c02d3b2c4bc15bf663d6c4e441"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "1705bcad0eea0c80f0acd0f084d9f288b9bdbd73c7ce1b00679b4a8eff8c53ac"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "36468448dbfe1d80b88c27621b5f348bdeb38af1d1fde33f5e8a9fb32cd869dc"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G3-10/",
+    "binding": "exact pushed repository revision descended from the task anchor"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute the complete frozen G3-10 closure contract and return the exact pushed result for independent P34 review.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

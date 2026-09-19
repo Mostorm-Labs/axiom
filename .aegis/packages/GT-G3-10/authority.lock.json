@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a590c81b6bab3c36fc6842c4f",
+    "title": "G3 Basic Canonical Canvas Implementation Plan v0.2",
+    "trusted_section": "WP G3-10 — Implement Web WASM/WebGL2 canonical surface reference host",
+    "content_hash": "b7745492113391929bd1ba7c13f4a27a439a7c181c3159ac191599edeb25b77b"
+  },
+  "dependency": {
+    "g3_09_gate_decision": "gt-g3-09-p34-2026-09-19",
+    "g3_09_result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+    "g3_09_integration_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+    "canonical_main_revision": "1aafd5dcd99a641db2e1285a6c67efd8d7c0c409",
+    "required_state": "G3-09_CLOSED_AND_INTEGRATED"
+  },
+  "trusted_statements": {
+    "goal": "Implement a thin Web WASM/WebGL2 reference host using the production Render Core and generation-bound canonical surface lifecycle.",
+    "consumes": [
+      "production FrameState, SurfaceLifecycle, PresentationTracker and IRenderBackend contracts",
+      "browser canvas metrics, device pixel ratio, resize and pointer commands",
+      "locked Emscripten 6.0.6 and web-wasm-webgl2 Skia SDK consumer path"
+    ],
+    "produces": [
+      "Web-only canonical surface bridge with dynamic metrics and surface generations",
+      "WebGL2 context binding and generation-bound submit/present observation",
+      "browser smoke and portable lifecycle evidence"
+    ],
+    "forbidden": [
+      "SemanticDocument, SceneCompiler, RuntimeScene iteration or JS scene traversal in the host",
+      "fixed 800x600 backend/global POC state",
+      "React state on the high-frequency canvas path",
+      "final WebGPU/swapchain topology authority",
+      "G3-11, G4, G5 or changes under runtime/**"
+    ]
+  }
+}

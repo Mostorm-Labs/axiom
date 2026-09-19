@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-10",
+  "obligations": [
+    {
+      "id": "G3-10-V1-generation-bound-web-target",
+      "requirement": "A Web target binds view, surface generation, metrics generation, device-pixel metrics and frame identity.",
+      "oracle": "Portable Web host tests reject stale/lost generation and accept a fresh generation while preserving canonical scene identity.",
+      "acceptance": "All generation transition assertions pass without mutating the prior accepted target.",
+      "evidence_required": "repo:.aegis/results/GT-G3-10/surface-evidence.json"
+    },
+    {
+      "id": "G3-10-V2-thin-production-boundary",
+      "requirement": "The Web host and bridge contain no semantic scene traversal, POC compiler ownership or fixed global render state.",
+      "oracle": "Review-owned source scan rejects SemanticDocument, SceneCompiler, RuntimeScene iteration, fixed 800x600 globals and React state in the production Web adapter.",
+      "acceptance": "Scope/boundary scan passes over the exact result revision.",
+      "evidence_required": "repo:.aegis/results/GT-G3-10/scope-evidence.json"
+    },
+    {
+      "id": "G3-10-V3-browser-reference-host",
+      "requirement": "The Web target builds through the locked Emscripten/WebGL2 path and browser smoke records resize/DPR, surface loss/rebind, pointer bridge and presentation observations.",
+      "oracle": "Web build and browser runner evidence; unavailable Web SDK/browser evidence is a blocking environment result, never a fake PASS.",
+      "acceptance": "g3-web-release target and browser smoke produce valid evidence.",
+      "evidence_required": "repo:.aegis/results/GT-G3-10/web-smoke-evidence.json"
+    }
+  ]
+}
