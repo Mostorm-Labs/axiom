@@ -28,9 +28,9 @@
     "completion_decision_id": "g3-completion-2026-09-19"
   },
   "g4": {
-    "status": "READY_FOR_P31",
-    "ingress": "READY_FOR_ENTRY_REVIEW",
-    "implementation_authorized": false,
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "ingress": "P32_RESULT_READY",
+    "implementation_authorized": true,
     "current_work_package": "GT-G4-01",
     "current_authority": "g4-capability-authority",
     "task_anchor": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
@@ -169,18 +169,18 @@
   "recommended_next_stage": "GT-G4-01_P31_CONTROL_REVIEW",
   "handoff": {
     "next_surface": "CONTROL_REASONING",
-    "next_action": "G3 is closed at canonical main f2a64ebc49ce842d583ee2f6990124ceaf0b310b. Review the independent GT-G4-01 P31 package before any implementation.",
+    "next_action": "Review the exact GT-G4-01 P32 result and evidence at the pushed branch head before integration.",
     "p31_package": ".aegis/packages/GT-G4-01/package.json",
     "p31_package_id": "GT-G4-01-P31-v0.1",
     "p31_materialized": true,
-    "package_materialization_ref": "pending_exact_push_revision",
-    "result_revision": null,
-    "reviewed_branch_head": null,
+    "package_materialization_ref": "a817b5dd650f9d0ae168c5b3954a3e2d1c38d848",
+    "result_revision": "31b5df4844db07261330567fd4b8d7317290b01f",
+    "reviewed_branch_head": "75200d21aa63b80f70a06975f8378d51b5229849",
     "integration_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
     "gate_decision_id": "g4-entry-readiness-2026-09-19",
     "g2_reopen": false,
     "g3_implementation_start": false,
-    "g4_implementation_start": false,
+    "g4_implementation_start": true,
     "g4_p31_package": ".aegis/packages/GT-G4-01/package.json"
   }
 }
