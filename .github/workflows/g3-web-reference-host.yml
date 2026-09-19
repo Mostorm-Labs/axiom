@@ -1,0 +1,69 @@
+name: G3-10 Web WASM/WebGL2 canonical surface reference host
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'apps/axiom_canvas_demo/**'
+      - 'runtime/render/**'
+      - 'runtime/scene/**'
+      - 'runtime/semantic/**'
+      - 'runtime/foundation/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'r1-full-skia-sdk.lock.json'
+      - 'tools/skia/**'
+      - 'verification/packages/platform-harness-web/**'
+      - '.aegis/packages/GT-G3-10/**'
+      - '.github/workflows/g3-web-reference-host.yml'
+
+jobs:
+  web-reference-host:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+          cache: npm
+          cache-dependency-path: verification/package-lock.json
+      - name: Bootstrap locked Web dependencies
+        run: python3 tools/bootstrap_deps.py --core --web
+      - name: Fetch locked Web Skia SDK
+        run: >-
+          python3 tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json
+          --lock r1-full-skia-sdk.lock.json --target web-wasm-webgl2
+          --variant release --summary-file "$GITHUB_STEP_SUMMARY"
+      - name: Configure and build G3-10 Web target
+        shell: bash
+        run: |
+          source .deps/emsdk/emsdk_env.sh
+          export AXIOM_SKIA_WEB_SDK_ROOT="$GITHUB_WORKSPACE/.deps/skia-sdk/web-wasm-webgl2/release"
+          cmake --preset g3-web-release
+          cmake --build --preset g3-web-release --target axiom_canvas_demo_web --parallel
+          test -f out/g3-web-release/apps/axiom_canvas_demo/axiom_canvas_demo_web.js
+          test -f out/g3-web-release/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm
+          echo "AXIOM_G3_WEB_BUILD_DIR=$GITHUB_WORKSPACE/out/g3-web-release/apps/axiom_canvas_demo" >> "$GITHUB_ENV"
+      - name: Install browser and run production smoke
+        working-directory: verification
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          npm run build
+          AXIOM_G3_WEB_BUILD_DIR="$GITHUB_WORKSPACE/out/g3-web-release/apps/axiom_canvas_demo" \
+            npm run test --workspace @axiom/platform-harness-web
+      - name: Write hosted Web evidence
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p out/g3-10-web-result
+          cat > out/g3-10-web-result/web-hosted-evidence.json <<EOF
+          {"schema_version":"0.1","task_id":"GT-G3-10","result":"${{ job.status == 'success' && 'PASS' || 'FAIL' }}","workflow_run_id":"${GITHUB_RUN_ID}","job_id":"${GITHUB_JOB}","run_url":"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}","target":"g3-web-release","platform":"ubuntu-24.04-chromium"}
+          EOF
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gt-g3-10-web-reference-host
+          path: out/g3-10-web-result/web-hosted-evidence.json

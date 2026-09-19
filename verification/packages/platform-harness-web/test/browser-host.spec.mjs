@@ -22,6 +22,7 @@ test("browser host maps DOM facts and pointer input directly to the WASM facade"
 });
 
 test("production WASM host binds WebGL2 and preserves generation-bound browser facts", async ({ page }) => {
+  test.skip(!process.env.AXIOM_G3_WEB_BUILD_DIR, "dedicated G3-10 Web build is not present");
   await page.goto("/out/g3-web-release/apps/axiom_canvas_demo/index.html");
   await page.evaluate(() => globalThis.axiomG310Ready);
   const observed = await page.evaluate(async () => {
