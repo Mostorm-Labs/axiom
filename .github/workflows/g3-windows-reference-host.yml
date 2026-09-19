@@ -47,7 +47,7 @@ jobs:
           if (-not (Test-Path $config -PathType Leaf)) {
             throw "Locked Windows Skia SDK is missing CanvasSkiaConfig.cmake: $config"
           }
-          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot"
+          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot"
       - name: Build Windows host
         shell: pwsh
         run: cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows --parallel
