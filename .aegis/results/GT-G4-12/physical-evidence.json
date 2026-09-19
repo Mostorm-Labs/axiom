@@ -2,17 +2,22 @@
   "schema_version": "0.1",
   "task_id": "GT-G4-12",
   "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
-  "obligation": "G4-12-V4-physical-boundary",
-  "status": "BLOCKED_ENVIRONMENT",
-  "windows": {
-    "required_os": "Windows 11 x64",
-    "observed_os": "Windows 10 Pro 10.0.19045",
-    "qualified_device": false,
-    "capture": null
+  "platform": "windows",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "blocking": true,
+  "execution_branch": "codex/g4-12-ink-playground",
+  "identity": {
+    "head_verified": true,
+    "head": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+    "git_diff_check": "PASS"
   },
-  "android": {
-    "qualified_device": false,
-    "capture": null
+  "host": {
+    "windows_version": "Microsoft Windows 10 Pro 10.0.19045",
+    "architecture": "x64",
+    "manufacturer": "Micro-Star International Co., Ltd.",
+    "model": "MS-7C83",
+    "windows_11_required": true,
+    "windows_11_satisfied": false
   },
   "web": {
     "hosted_browser": "macOS in-app browser",
@@ -20,6 +25,8 @@
     "input": "macos-browser-mouse-or-trackpad",
     "url": "http://127.0.0.1:4282/?run=web-smoke-b34899",
     "checks": [
+      "wasm_loaded",
+      "surface_available",
       "multiple_strokes_rendered",
       "stroke_boundaries_preserved",
       "coordinate_mapping_checked",
@@ -28,6 +35,96 @@
     "physical_capture": null,
     "promotion": "hosted_browser_smoke_only_not_physical_evidence"
   },
+  "device": {
+    "observed_hid_pen_entry": "HID-compliant pen / HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
+    "device_metadata_qualified_for_physical_evidence": false,
+    "pressure_capability_verified": false,
+    "reason": "Host is Windows 10 and no physical Windows Ink interaction was executed."
+  },
+  "locked_skia_sdk": {
+    "profile": "r1-full-v1",
+    "target": "windows-x64-d3d12",
+    "variant": "release",
+    "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
+    "path": "D:\\GitRepos\\mostorm-labs\\canvas\\.deps\\skia-sdk\\windows-x64-d3d12\\release",
+    "source": "Mostorm-Labs/Axiom locked GitHub Release asset",
+    "source_rebuild_used": false
+  },
+  "implementation": {
+    "entrypoint": "apps/ink_playground/platform/windows/main.cpp",
+    "winmain_present": true,
+    "real_hwnd_code_present": true,
+    "message_loop_code_present": true,
+    "wm_pointer_code_present": true,
+    "coalesced_pen_history": false,
+    "device_metadata_capture": false,
+    "pointer_trace_persistence": false,
+    "hud_telemetry_persistence": false,
+    "sample_to_visible_latency_capture": false,
+    "first_true_error": "clang-cl compile failure in apps/ink_playground/platform/windows/main.cpp: incompatible pointer to integer conversion assigning HANDLE info.sourceDevice to uint64_t batch.device_id",
+    "additional_werror_failures": [
+      "nodiscard return value ignored in ArcSink::SourceLost",
+      "nodiscard return value ignored for SubmitBatch and commitStroke",
+      "nodiscard return value ignored for bindSurface",
+      "unused variable contract in apps/ink_playground/tests/ink_playground_test.cpp"
+    ],
+    "result": "No runnable Windows Ink Playground executable was produced; no physical input path was exercised."
+  },
+  "verification": {
+    "skia_fetch": {
+      "command": "python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release --summary-file out/g4-12-windows-skia-summary.md",
+      "status": "PASS",
+      "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa"
+    },
+    "configure": {
+      "command": "cmake --preset g3-windows-release -DCANVAS_BUILD_ARC=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON",
+      "status": "PASS"
+    },
+    "build": {
+      "command": "cmake --build --preset g3-windows-release --target axiom_ink_playground_windows axiom_ink_playground_tests --parallel",
+      "status": "FAIL",
+      "completed_steps": "3/6",
+      "first_true_error": "apps/ink_playground/platform/windows/main.cpp(80): incompatible pointer to integer conversion assigning to uint64_t from HANDLE",
+      "package_produced": false
+    },
+    "ctest": {
+      "command": "ctest --test-dir out/g3-windows-release -R '^G4InkPlayground|^G3SurfacePresentation|^G4CanonicalHandoff$' --output-on-failure",
+      "status": "NOT_RUN",
+      "reason": "Required executables were not produced after the build failure."
+    }
+  },
+  "pointer_trace": {
+    "collected": false,
+    "path": null,
+    "reason": "No runnable executable and no physical pen session."
+  },
+  "hud": {
+    "collected": false,
+    "sample_hz": null,
+    "batch_size": null,
+    "queue_age_ms": null,
+    "ink_processing_ms": null,
+    "preview_revision": null,
+    "prediction_depth": null,
+    "frame_time_ms": null,
+    "presentation_evidence_kind": null
+  },
+  "physical_latency": {
+    "collected": false,
+    "sample_to_visible_ms": null,
+    "headless_or_application_timing_promoted": false
+  },
+  "capture": {
+    "path": null,
+    "sha256": null,
+    "collected": false,
+    "reason": "No physical session was run; no screenshot or video was fabricated."
+  },
+  "secondary_environment_blocker": "The current machine is Windows 10 x64, while PASS_PHYSICAL requires Windows 11 x64 with a real pressure-sensitive Windows Ink pen.",
   "headless_timing_promoted_to_physical": false,
-  "historical_artifacts_reused": false
+  "historical_physical_artifacts_reused": false,
+  "physical_validation_claimed": false,
+  "official_gate_pass": false,
+  "g4_pass": false,
+  "next_surface": "CONTROL_REVIEW"
 }
