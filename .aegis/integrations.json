@@ -151,6 +151,21 @@
       "evidence_ids": ["ev-int-pr92-g3-06", "ev-gt-g3-06-p34"],
       "applicability": "current",
       "actionability": "historical_occurrence_preserved"
+    },
+    {
+      "id": "int-branch-g3-07-awaiting-integration",
+      "kind": "github-branch-candidate",
+      "ref": "github:Mostorm-Labs/axiom@codex/g3-07-headless-canvas-demo",
+      "target_ref": "refs/heads/main",
+      "source_result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+      "status": "awaiting_integration",
+      "gate_decision_binding": {
+        "kind": "bound",
+        "gate_decision_id": "gt-g3-07-p34-2026-09-19"
+      },
+      "evidence_ids": ["ev-gt-g3-07-p34"],
+      "applicability": "current",
+      "actionability": "awaiting_repository_integration"
     }
   ]
 }
