@@ -62,7 +62,9 @@ jobs:
           $evidence | Add-Member -NotePropertyName workflow_run_id -NotePropertyValue $env:GITHUB_RUN_ID
           $evidence | Add-Member -NotePropertyName run_url -NotePropertyValue "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
           $evidence | ConvertTo-Json -Compress | Set-Content out/g3-09-windows-result/windows-smoke-evidence.json
+          if ($evidence.result -ne 'PASS') { throw "Windows canonical surface smoke reported $($evidence.result): $($evidence.error)" }
       - name: Upload G3-09 evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: gt-g3-09-windows-reference-host

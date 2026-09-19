@@ -17,13 +17,13 @@ struct WindowsCanonicalSurfaceHost::Impl {
 
 namespace {
 
-LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM, LPARAM) {
+LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
     if (message == WM_CLOSE || message == WM_DESTROY) {
         DestroyWindow(window);
         PostQuitMessage(0);
         return 0;
     }
-    return DefWindowProcW(window, message, 0, 0);
+    return DefWindowProcW(window, message, wParam, lParam);
 }
 
 } // namespace
@@ -63,7 +63,8 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
                                     static_cast<int>(height), nullptr, nullptr,
                                     klass.hInstance, nullptr);
     if (impl_->window == nullptr) {
-        *error = "CreateWindowExW failed";
+        *error = "CreateWindowExW failed with error " +
+                 std::to_string(static_cast<unsigned long>(GetLastError()));
         return false;
     }
     ShowWindow(impl_->window, SW_SHOWNOACTIVATE);
