@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+  "status": "PASS",
+  "checks": {
+    "portable_regression": {
+      "command": "cmake --build --preset rf01-host-debug && ctest --preset rf01-host-debug --output-on-failure",
+      "status": "PASS",
+      "tests_passed": 42,
+      "tests_failed": 0
+    },
+    "diff_check": {
+      "command": "git diff --check ab14b94cfc080ee1478f896268d619c327338a44..HEAD",
+      "status": "PASS"
+    },
+    "web_wasm_build": {
+      "command": "cmake -S . -B out/g4-12-web-debug3 ... && ninja -C out/g4-12-web-debug3 axiom_ink_playground_web -j1",
+      "status": "PASS",
+      "sdk_target": "web-wasm-webgl2",
+      "sdk_variant": "release",
+      "sdk_id": "8c5326038b9082ec2171a03ade3c953390fa7557dc7fd1f79196693a70fcda16"
+    },
+    "web_host_page_test": {
+      "command": "python3 apps/ink_playground/tests/web_host_page_test.py",
+      "status": "PASS"
+    },
+    "repeated_strokes_regression": {
+      "command": "ctest --preset rf01-host-debug -R '^G4InkPlaygroundRepeatedStrokes$' --output-on-failure",
+      "status": "PASS"
+    }
+  },
+  "changed_files": [
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/android/bridge.cpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/web/index.html",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/ink_playground_test.cpp",
+    "apps/ink_playground/tests/web_host_page_test.py"
+  ],
+  "diff_stat": " .aegis/packages/GT-G4-12/authority.lock.json       |   6 +\n .aegis/packages/GT-G4-12/evidence-contract.json    |  10 ++\n .aegis/packages/GT-G4-12/execution-contract.json   |  11 ++\n .aegis/packages/GT-G4-12/implementation-context.md |   9 ++\n .aegis/packages/GT-G4-12/package.json              |  20 ++++\n .aegis/packages/GT-G4-12/verification.lock.json    |   8 ++\n .aegis/results/GT-G4-12/composition-evidence.json  |   6 +\n .aegis/results/GT-G4-12/hud-evidence.json          |   5 +\n .aegis/results/GT-G4-12/physical-evidence.json     |   8 ++\n .aegis/results/GT-G4-12/platform-evidence.json     |   6 +\n .../GT-G4-12/portable-regression-summary.json      |   5 +\n .aegis/results/GT-G4-12/result.json                |   6 +\n .aegis/results/GT-G4-12/scope-evidence.json        |   6 +\n .../GT-G4-12/windows-physical-evidence.json        |  99 +++++++++++++++++\n CMakeLists.txt                                     |  13 ++-\n apps/ink_playground/CMakeLists.txt                 |  56 ++++++++++\n apps/ink_playground/common/ink_playground_host.cpp | 121 +++++++++++++++++++++\n apps/ink_playground/common/ink_playground_host.hpp |  90 +++++++++++++++\n apps/ink_playground/common/platform_contract.cpp   |  20 ++++\n apps/ink_playground/common/platform_contract.hpp   |  22 ++++\n apps/ink_playground/platform/android/bridge.cpp    |  98 +++++++++++++++++\n apps/ink_playground/platform/web/bridge.cpp        |  64 +++++++++++\n .../platform/web/pointer_event_batch_adapter.ts    |  27 +++++\n apps/ink_playground/platform/windows/main.cpp      | 107 ++++++++++++++++++\n apps/ink_playground/tests/ink_playground_test.cpp  |  92 ++++++++++++++++\n 25 files changed, 911 insertions(+), 4 deletions(-)\n"
+}

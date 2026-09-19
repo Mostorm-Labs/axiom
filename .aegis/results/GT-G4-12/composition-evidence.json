@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+  "obligation": "G4-12-V1-composition",
+  "status": "PASS",
+  "production_dependencies": [
+    "InputRouter",
+    "InkEngine",
+    "PreviewModel",
+    "InteractionRuntime",
+    "SurfaceLifecycle",
+    "PresentationTracker"
+  ],
+  "canonical_store_owned_by_host": false,
+  "tests": [
+    "G4InkPlaygroundComposition",
+    "G4InkPlaygroundSurface",
+    "G4InkPlaygroundPreview"
+  ]
+}
