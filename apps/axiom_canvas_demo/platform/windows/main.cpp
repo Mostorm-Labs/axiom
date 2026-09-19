@@ -43,8 +43,7 @@ int smokeEvidence(const std::string& path) {
         .surfaceGeneration = canvas::render::SurfaceGeneration{snapshot.surfaceGeneration},
         .metricsGeneration = canvas::render::MetricsGeneration{snapshot.metricsGeneration},
         .frameId = canvas::render::FrameId{1}};
-    canvas::render::ReferenceDrawList drawList{};
-    drawList.frame = frame;
+    canvas::render::ReferenceDrawList drawList{.frame = frame};
     const auto plan = canvas::render::FramePlanBuilder::build(frame, drawList);
     SmokeBackend backend;
     if (!plan || !host.submit(backend, plan.value(), &error)) {
