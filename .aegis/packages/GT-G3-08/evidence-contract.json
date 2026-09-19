@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G3-08",
+  "profile": "Standard",
+  "blocking": [
+    {
+      "id": "E-G3-08-CAMERA",
+      "artifact": ".aegis/results/GT-G3-08/camera-evidence.json",
+      "obligations": ["G3-08-V1-camera-transform"]
+    },
+    {
+      "id": "E-G3-08-HIT-SELECT",
+      "artifact": ".aegis/results/GT-G3-08/hit-select-evidence.json",
+      "obligations": ["G3-08-V2-g2-hit-authority", "G3-08-V3-transient-selection"]
+    },
+    {
+      "id": "E-G3-08-REGRESSION",
+      "artifact": ".aegis/results/GT-G3-08/scope-evidence.json",
+      "obligations": ["G3-08-V4-boundary-regression"]
+    }
+  ],
+  "durable_boundary": {
+    "required": true,
+    "accepted": "Exact pushed result revision plus committed RED, camera, hit-select, scope, result, and P34 review records.",
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
