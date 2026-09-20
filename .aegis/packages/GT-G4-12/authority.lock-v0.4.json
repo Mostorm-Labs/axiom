@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a590c81128f21c0494d187cdb",
+    "title": "G4 Interaction + Ink Implementation Plan v0.2",
+    "trusted_section": "WP G4-12 — Ink Playground 0.1 / Physical Integration",
+    "content_hash": "9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"
+  },
+  "dependency": {
+    "canonical_main_revision": "bb8509ac78d646679f90da9ef0af1b92bca1ced0",
+    "g4_05_win_arc_integration_revision": "bb8509ac78d646679f90da9ef0af1b92bca1ced0",
+    "g4_05_arc_result_revision": "2d18eacbff3b8732dbf4f44741a23c3ee6d93070",
+    "g4_05_arc_evidence": ".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json"
+  },
+  "trusted_statements": {
+    "goal": "Close the current G4 functional integration profile with a runnable Ink Playground 0.1 on Web, Windows, and Android.",
+    "required": [
+      "Web functional smoke with independent strokes and aligned coordinates",
+      "Windows functional smoke with real HWND and native input",
+      "Windows Arc functional qualification with automatic preview release",
+      "Android functional smoke with installable Activity and MotionEvent history",
+      "Durable platform evidence bound to exact revisions"
+    ],
+    "deferred": [
+      "Pressure-qualified pen evidence",
+      "Capture-bound physical latency",
+      "Render-owned coverage manifest hardening"
+    ],
+    "forbidden": [
+      "platform brush selection or eraser semantics",
+      "direct SemanticDocument/ObjectStore/RuntimeScene mutation",
+      "new canonical operation vocabulary",
+      "synthetic pressure or physical evidence",
+      "G5 or G6 behavior"
+    ]
+  }
+}

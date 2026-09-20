@@ -1,51 +1,99 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-12",
-  "result_revision": "2cb6c0aba20aed78a26aa7742141be92365bd94e",
+  "result_revision": "b34899a4e3cb0e26772d5b96bc4be1cda628d6d7",
+  "task_anchor": "ab14b94cfc080ee1478f896268d619c327338a44",
   "platform": "windows",
-  "status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
-  "machine": {
-    "windows_version": "Microsoft Windows 10 专业版",
-    "version": "10.0.19045",
-    "build": "19045",
-    "architecture": "64-bit"
+  "status": "BLOCKED_IMPLEMENTATION",
+  "blocking": true,
+  "repository_identity": {
+    "pull_request": 127,
+    "execution_branch": "codex/g4-12-ink-playground",
+    "head_matches_required_revision": true,
+    "diff_check": "PASS"
   },
-  "device": {
-    "input_type": "mouse_or_standard_pointer",
-    "pressure": "not_available",
-    "pressure_test": "not_requested",
-    "pen_metadata": [
-      {
-        "FriendlyName": "HID-compliant pen",
-        "InstanceId": "HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
-        "Status": "OK"
-      }
-    ]
+  "host": {
+    "os": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "architecture": "64-bit",
+    "manufacturer": "Micro-Star International Co., Ltd.",
+    "model": "MS-7C83",
+    "meets_required_windows_11_device_contract": false
+  },
+  "device": {},
+  "locked_skia_sdk": {
+    "profile": "r1-full-v1",
+    "target": "windows-x64-d3d12",
+    "variant": "release",
+    "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
+    "path": "D:\\GitRepos\\mostorm-labs\\canvas\\.deps\\skia-sdk\\windows-x64-d3d12\\release",
+    "source": "locked GitHub Release asset",
+    "source_rebuild_used": false
+  },
+  "implementation_blocker": {
+    "entrypoint": "apps/ink_playground/platform/windows/main.cpp",
+    "entrypoint_behavior": "Creates arc::CreateWindowsInputSource() and immediately exits.",
+    "missing_runtime_layers": [
+      "real HWND creation and Windows message loop",
+      "WM_POINTER and coalesced pen history ingestion",
+      "Windows Ink pen pressure and device metadata capture",
+      "InkPlaygroundHost wiring to a writable visible canvas",
+      "pointer trace and HUD telemetry persistence",
+      "physical sample-to-visible latency measurement",
+      "representative screen or video capture"
+    ],
+    "windows_target_link_error": "lld-link: error: undefined symbol: WinMain",
+    "cause": "axiom_ink_playground_windows is a WIN32 executable but the thin shell defines int main() instead of WinMain, so the required target cannot be linked.",
+    "ctest_contract_error": "No such test preset in repository: g3-windows-release"
+  },
+  "verification": {
+    "configure": {
+      "command": "cmake --preset g3-windows-release -DCANVAS_BUILD_ARC=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON",
+      "status": "PASS"
+    },
+    "build": {
+      "command": "cmake --build --preset g3-windows-release --target axiom_ink_playground_windows --parallel",
+      "status": "FAIL",
+      "completed_steps": "34/35",
+      "first_error": "lld-link: error: undefined symbol: WinMain"
+    },
+    "ctest": {
+      "command": "ctest --preset g3-windows-release -R '^G4InkPlayground|^G3SurfacePresentation|^G4CanonicalHandoff$' --output-on-failure",
+      "status": "FAIL",
+      "output": [
+        "CMake Error: No such test preset in D:/GitRepos/mostorm-labs/canvas: g3-windows-release",
+        "Available test presets do not include g3-windows-release."
+      ]
+    }
   },
   "pointer_trace": {
-    "status": "not_available",
-    "path": null,
-    "sha256": null,
-    "reason": "pressure qualification was explicitly out of scope and evidence output directory was not configured"
+    "collected": false,
+    "reason": "Windows entrypoint cannot create or run a real pen input surface."
   },
   "hud": {
-    "status": "not_available",
-    "reason": "evidence output directory was not configured during the run"
+    "collected": false,
+    "reason": "No runnable physical Ink Playground surface exists at the required revision."
   },
   "physical_latency": {
-    "status": "not_available",
-    "reason": "physical latency is out of scope for this functional smoke run"
+    "collected": false,
+    "reason": "No physical sample-to-visible path exists at the required revision."
   },
   "capture": {
-    "path": "D:\\GitRepos\\mostorm-labs\\canvas\\out\\g4-12-windows-functional\\window-capture.png",
-    "sha256": "cb9afa0c147c4c177344814d8a8149025898611afdf0b5a90487ecd2f5134f69",
-    "kind": "native window screenshot",
-    "status": "captured"
+    "path": null,
+    "sha256": null,
+    "collected": false,
+    "reason": "No runnable physical Ink Playground surface exists; no capture was fabricated."
+  },
+  "platform_semantics_check": {
+    "brush_implemented_in_platform_code": false,
+    "selection_implemented_in_platform_code": false,
+    "eraser_implemented_in_platform_code": false,
+    "canonical_mutation_implemented_in_platform_code": false
   },
   "headless_timing_promoted_to_physical": false,
-  "limitations": [
-    "Windows 10 functional smoke only",
-    "Pressure qualification not requested",
-    "Not PASS_WINDOWS_PRESSURE or PASS_PHYSICAL"
-  ]
+  "historical_physical_artifacts_reused": false,
+  "physical_validation_claimed": false,
+  "official_gate_pass": false,
+  "g4_pass": false,
+  "next_surface": "CONTROL_REVIEW"
 }

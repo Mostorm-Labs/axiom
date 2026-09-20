@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.1",
+  "authority_id": "g4-capability-authority-v0.3",
+  "scope": "capability:G4/interaction-ink",
+  "version": "v0.3",
+  "status": "Current",
+  "effective_decision": "USER_CONFIRMED_SCOPE_SUPERSESSION",
+  "supersedes": "g4-capability-authority-v0.2",
+  "preserves": {
+    "completed_work": "GT-G4-01 through GT-G4-11 and their accepted Gate decisions remain unchanged.",
+    "implementation": "Existing GT-G4-12 Web, Windows, and Android implementation revisions remain valid.",
+    "historical_evidence": "All pressure and complete-physical BLOCKED_ENVIRONMENT records remain accurate historical evidence and are not rewritten as PASS."
+  },
+  "objective": "Close the current G4 Interaction + Ink production vertical slice with a runnable Ink Playground 0.1 and functional integration evidence on Web, Windows, and Android.",
+  "canonical_truth": "SemanticDocument",
+  "canonical_mutation_path": "G1 Operation Engine",
+  "current_completion_profile": {
+    "profile_id": "G4_FUNCTIONAL_INTEGRATION_V0_1",
+    "required_platform_results": [
+      {
+        "platform": "web",
+        "required_status": "PASS_WEB_BROWSER_SMOKE",
+        "minimum_behavior": [
+          "WASM host loads",
+          "writable surface accepts real browser input",
+          "multiple strokes render without cross-stroke connection",
+          "pointer and canvas coordinates align"
+        ]
+      },
+      {
+        "platform": "windows",
+        "required_status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+        "allowed_input": ["mouse", "touch", "non_pressure_pen", "pressure_pen"],
+        "minimum_behavior": [
+          "real HWND starts and remains responsive",
+          "native pointer ingress reaches the playground",
+          "multiple stroke lifecycles remain isolated",
+          "pointer trace and HUD evidence are durable"
+        ]
+      },
+      {
+        "platform": "android",
+        "required_status": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+        "allowed_input": ["touch", "mouse", "non_pressure_pen", "pressure_pen"],
+        "minimum_behavior": [
+          "installable Activity launches on a physical device",
+          "native MotionEvent history reaches the playground",
+          "multiple stroke lifecycles remain isolated",
+          "pointer trace, HUD, and capture evidence are durable"
+        ]
+      }
+    ],
+    "terminal_conclusion": "G4 current capability may pass after independent completion review accepts all three functional results and the existing G4 work-package lineage.",
+    "pressure_required": false,
+    "capture_bound_physical_latency_required": false
+  },
+  "deferred_successor_capability": {
+    "status": "Draft/Deferred",
+    "scope_id": "G4_PHYSICAL_PRESSURE_EXTENSION",
+    "reason": "Pressure-qualified pen behavior and capture-bound physical latency are deferred as a later product capability expansion.",
+    "requirements_preserved_for_successor": [
+      "real pressure-capable pen device metadata",
+      "varying pressure trace",
+      "coalesced or historical pen samples where supplied by the platform",
+      "capture-bound sample-to-visible physical latency",
+      "qualified screen or video capture",
+      "explicit PASS_WINDOWS_PRESSURE or PASS_ANDROID_PRESSURE before any future PASS_PHYSICAL"
+    ],
+    "not_implied_by_current_completion": [
+      "pressure support is validated",
+      "touch or mouse pressure fields are pen pressure evidence",
+      "PASS_WINDOWS_PRESSURE",
+      "PASS_ANDROID_PRESSURE",
+      "PASS_PHYSICAL"
+    ]
+  },
+  "ownership_unchanged": [
+    "InteractionRuntime",
+    "EditorSession",
+    "InteractionSessionManager",
+    "InputRouter",
+    "InkEngine",
+    "PreviewModel",
+    "CanonicalVisible_handoff",
+    "Selection",
+    "TransformSession",
+    "EraserSession_V1",
+    "EditorHistory",
+    "Ink_Playground_0.1"
+  ],
+  "forbidden": [
+    "duplicate_canonical_write_path",
+    "SemanticWritePort_from_interaction",
+    "POC02_StrokeDocument_as_production_authority",
+    "G5_tile_render_group_raster_cache_scheduler",
+    "G6_rich_text_ime_external_surface",
+    "invent_open_conflict_rebase_semantics",
+    "invent_partial_erase_strategy",
+    "invent_arc_token_binary_representation",
+    "synthetic_or_non_pressure_input_presented_as_pressure_evidence",
+    "current_G4_PASS_presented_as_PASS_PHYSICAL"
+  ],
+  "source_basis": [
+    "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+    "user-confirmed:defer-pressure-and-accept-three-platform-functional-evidence",
+    "repo:.aegis/results/GT-G4-12/platform-evidence.json",
+    "repo:.aegis/results/GT-G4-12/windows-functional-smoke-evidence.json",
+    "repo:.aegis/results/GT-G4-12/android-control-review-v0.3.json"
+  ]
+}

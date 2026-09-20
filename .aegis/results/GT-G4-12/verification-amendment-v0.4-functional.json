@@ -1,0 +1,130 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "stage": "P20_VERIFICATION_DESIGN_AMENDMENT",
+  "amendment_id": "GT-G4-12-P20-v0.4-functional",
+  "status": "PROPOSED_PENDING_CONTROL_REVIEW",
+  "supersedes": "GT-G4-12-P20-v0.3-android",
+  "authority_ref": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+  "decision_basis": "Current G4 completion is limited to three-platform functional integration. Pressure-qualified pen evidence and capture-bound physical latency are deferred successor capability work.",
+  "profiles": {
+    "web_functional_smoke": {
+      "status_name": "PASS_WEB_BROWSER_SMOKE",
+      "required": true,
+      "input_devices": ["mouse", "trackpad", "touch", "pen"],
+      "required_observations": [
+        "WASM host loads",
+        "writable browser surface accepts real input",
+        "multiple strokes render independently",
+        "coordinate mapping is aligned",
+        "durable browser smoke record is bound to the exact host revision"
+      ],
+      "pressure_required": false
+    },
+    "windows_functional_smoke": {
+      "status_name": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+      "required": true,
+      "host": "Windows 10 x64 10.0.19045 or newer",
+      "input_devices": ["mouse", "touch", "non_pressure_pen", "pressure_pen"],
+      "required_observations": [
+        "real HWND starts and remains responsive",
+        "native pointer ingress is exercised",
+        "multiple stroke lifecycles remain isolated",
+        "pointer trace and HUD evidence are durable"
+      ],
+      "pressure_required": false
+    },
+    "android_functional_smoke": {
+      "status_name": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+      "required": true,
+      "host": "Android API 26+ physical device",
+      "input_devices": ["touch", "mouse", "non_pressure_pen", "pressure_pen"],
+      "required_observations": [
+        "installable Activity launches",
+        "MotionEvent history reaches native host",
+        "multiple stroke lifecycles remain isolated",
+        "pointer trace, HUD, and capture evidence are durable"
+      ],
+      "pressure_required": false
+    }
+  },
+  "current_gate": {
+    "required_profiles": [
+      "web_functional_smoke",
+      "windows_functional_smoke",
+      "android_functional_smoke"
+    ],
+    "completion_status": "PASS_G4_FUNCTIONAL_INTEGRATION",
+    "allowed_conclusion": "G4 current functional integration completion after independent review",
+    "forbidden_conclusions": [
+      "PASS_WINDOWS_PRESSURE",
+      "PASS_ANDROID_PRESSURE",
+      "PASS_PHYSICAL",
+      "G4 physical ink completion"
+    ]
+  },
+  "deferred_successor_profile": {
+    "status": "DEFERRED_SUCCESSOR",
+    "required_for": "future G4 physical pressure extension",
+    "requirements": [
+      "pressure-capable pen metadata",
+      "varying pressure trace",
+      "platform historical/coalesced pen samples",
+      "capture-bound sample-to-visible physical latency",
+      "screen or video capture with SHA-256"
+    ],
+    "current_evidence": {
+      "windows_pressure": "BLOCKED_ENVIRONMENT",
+      "android_pressure": "BLOCKED_ENVIRONMENT",
+      "physical_latency": "DEFERRED_NOT_A_CURRENT_GATE_REQUIREMENT"
+    }
+  },
+  "verification_mapping": [
+    {
+      "requirement": "All three platform hosts accept real functional input and present independent strokes",
+      "failure_mode": "One platform builds or launches but cannot render, preserve stroke boundaries, or map coordinates",
+      "oracle": "Independent platform functional smoke evidence plus platform-specific host tests",
+      "artifacts": [
+        ".aegis/results/GT-G4-12/platform-evidence.json",
+        ".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json",
+        ".aegis/results/GT-G4-12/android-functional-smoke-evidence.json"
+      ],
+      "classification": "blocking"
+    },
+    {
+      "requirement": "No current completion claim implies pressure support",
+      "failure_mode": "Touch/mouse pressure fields or absence of a stylus are misreported as pressure evidence",
+      "oracle": "Explicit deferred profile and preserved BLOCKED_ENVIRONMENT pressure records",
+      "artifacts": [
+        ".aegis/results/GT-G4-12/windows-pressure-evidence.json",
+        ".aegis/results/GT-G4-12/android-pressure-evidence.json",
+        ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json"
+      ],
+      "classification": "blocking_for_claim_integrity"
+    }
+  ],
+  "implementation_impact": {
+    "production_semantics_change": false,
+    "runtime_architecture_change": false,
+    "code_changes_required": false,
+    "authorized_paths_for_package_refresh": [
+      ".aegis/packages/GT-G4-12/**",
+      ".aegis/results/GT-G4-12/**"
+    ],
+    "forbidden_paths": [
+      "runtime/semantic/**",
+      "runtime/scene/**",
+      "runtime/render/**",
+      "runtime/interaction/**",
+      "runtime/ink/**",
+      "G5/**",
+      "G6/**"
+    ]
+  },
+  "decision_request": {
+    "recommended": "ACCEPT_FUNCTIONAL_COMPLETION_PROFILE",
+    "next_stage": "P31_TASK_PACKAGING",
+    "required_package_id": "GT-G4-12-P31-v0.4",
+    "code_execution_authorized": false
+  }
+}

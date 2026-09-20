@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "package_materialization_ref": "54df39f7df909125dc192f6307204e3c4c64f680",
+  "task_anchor": "bb8509ac78d646679f90da9ef0af1b92bca1ced0",
+  "reviewed_branch": "codex/g4-12-ink-playground",
+  "reviewed_revision": "54df39f7df909125dc192f6307204e3c4c64f680",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "P31 v0.4 is materially bound to the exact main merge revision bb8509ac78d646679f90da9ef0af1b92bca1ced0.",
+      "Common Ink Playground composition uses production InputRouter, InkEngine, PreviewModel, InteractionRuntime, SurfaceLifecycle, and PresentationTracker.",
+      "Web, Windows, and Android functional host paths and independent stroke lifecycle requirements are represented by the current evidence set.",
+      "Windows Arc functional qualification is accepted under the user-approved human visual profile: real layered Arc preview, canonical overlap, automatic preview release, no visible gap, and responsive HWND.",
+      "Pressure and capture-bound physical latency remain explicitly deferred and are not required by the current G4 functional completion authority."
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS_WITH_FINDINGS",
+    "resolved": [
+      {"path":".aegis/results/GT-G4-12/composition-evidence.json","status":"PASS","revision":"b34899a4e3cb0e26772d5b96bc4be1cda628d6d7"},
+      {"path":".aegis/results/GT-G4-12/platform-evidence.json","status":"PASS_WITH_ENVIRONMENT_LIMIT","revision":"b34899a4e3cb0e26772d5b96bc4be1cda628d6d7"},
+      {"path":".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json","status":"PASS_WINDOWS_FUNCTIONAL_SMOKE","revision":"a2a9fc36a9e2d55b0cb185e521b57dfb6f81ffcb"},
+      {"path":".aegis/results/GT-G4-12/android-functional-smoke-evidence.json","status":"PASS_ANDROID_FUNCTIONAL_SMOKE","revision":"894939c9f53a38c2b6b49fe4ae596d8cb042ea26"},
+      {"path":".aegis/results/GT-G4-12/hud-evidence.json","status":"PASS","revision":"b34899a4e3cb0e26772d5b96bc4be1cda628d6d7"},
+      {"path":".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json","status":"READY_FOR_CONTROL_REVIEW","revision":"2d18eacbff3b8732dbf4f44741a23c3ee6d93070"},
+      {"path":".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/p34-control-review-v3.json","status":"PASS_WITH_FINDINGS","revision":"2d18eacbff3b8732dbf4f44741a23c3ee6d93070"}
+    ],
+    "findings": [
+      {
+        "id":"PRESSURE_AND_PHYSICAL_DEFERRED",
+        "classification":"NON_BLOCKING_FINDING",
+        "description":"Windows and Android pressure records remain BLOCKED_ENVIRONMENT; physical latency is deferred. No pressure or physical pass is claimed.",
+        "successor":"G4_PHYSICAL_PRESSURE_EXTENSION"
+      },
+      {
+        "id":"RENDER_COVERAGE_MANIFEST_DEFERRED",
+        "classification":"NON_BLOCKING_FINDING",
+        "description":"The integrated Windows Arc result is accepted under the approved human visual functional profile; formal Render-owned coverage manifest hardening remains successor work.",
+        "successor":"G4_ARC_RENDER_COVERAGE_HARDENING"
+      },
+      {
+        "id":"MACOS_WINDOWS_BACKEND_CI_BOUNDARY",
+        "classification":"NON_BLOCKING_FINDING",
+        "description":"The merge PR had a macOS Arc/POC-06 check fail because the workflow attempted to compile arc/platform/windows/windows_backend.cpp without windows.h. This is a CI target-boundary issue, not evidence of Windows runtime failure.",
+        "successor":"CI_PLATFORM_TARGET_BOUNDARY_REPAIR"
+      }
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "checks": [
+      "Exact package materialization revision is pushed and reviewer-resolvable.",
+      "Exact main integration anchor is an ancestor of the reviewed branch.",
+      "All v0.4 package lock SHA-256 references match materialized bytes.",
+      "git diff --check bb8509ac78d646679f90da9ef0af1b92bca1ced0..54df39f7df909125dc192f6307204e3c4c64f680 passes.",
+      "Local portable regression suite passes 42/42."
+    ],
+    "failed": []
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "accepted_capability": "PASS_G4_FUNCTIONAL_INTEGRATION",
+    "official_gate_pass": true,
+    "g4_12_functional_pass": true,
+    "g4_physical_pass": false,
+    "g4_pass": false,
+    "next_stage": "FUNCTIONAL_COMPLETION_RECORDED",
+    "forbidden_conclusions": [
+      "PASS_WINDOWS_PRESSURE",
+      "PASS_ANDROID_PRESSURE",
+      "PASS_PHYSICAL",
+      "G4 physical ink completion"
+    ]
+  }
+}

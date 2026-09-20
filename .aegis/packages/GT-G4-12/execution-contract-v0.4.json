@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [],
+      "authorized_mutation_scope": [".aegis/packages/GT-G4-12/**", ".aegis/results/GT-G4-12/**"],
+      "forbidden_changes": ["runtime/semantic/**", "runtime/scene/**", "runtime/render/**", "runtime/interaction/**", "runtime/ink/**", "G5/**", "G6/**"]
+    },
+    "starting_identity": {"minimum_ancestor":"bb8509ac78d646679f90da9ef0af1b92bca1ced0","relation":"ancestor"},
+    "required_verification": [
+      "validate all v0.4 package lock hashes",
+      "reconcile Web, Windows, Android functional evidence",
+      "reconcile integrated Windows Arc qualification evidence",
+      "git diff --check bb8509ac78d646679f90da9ef0af1b92bca1ced0..HEAD"
+    ],
+    "terminal_success": "READY_FOR_CONTROL_REVIEW with exact v0.4 package and evidence identities",
+    "terminal_blockers": ["BLOCKED_REPOSITORY_IDENTITY", "BLOCKED_EVIDENCE", "PACKAGE_SCOPE_DIVERGENCE"],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

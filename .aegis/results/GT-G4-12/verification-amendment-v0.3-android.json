@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "stage": "P20_VERIFICATION_DESIGN_AMENDMENT",
+  "amendment_id": "GT-G4-12-P20-v0.3-android",
+  "status": "PROPOSED_PENDING_CONTROL_REVIEW",
+  "supersedes": "GT-G4-12-P20-v0.2",
+  "authority_unchanged": true,
+  "platform_scope": "Android native Ink Playground on a qualified Android device",
+  "profiles": {
+    "android_functional_smoke": {
+      "status_name": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+      "host": "Android API 26 or newer, arm64-v8a or x86_64",
+      "input_devices": ["touch", "mouse", "non_pressure_pen", "pressure_pen"],
+      "pressure_required": false,
+      "required_observations": [
+        "APK identity and SHA-256 are recorded",
+        "install and launcher Activity start successfully",
+        "SurfaceView remains responsive",
+        "MotionEvent batches including historical samples reach the native host",
+        "multiple strokes render with independent stroke boundaries",
+        "HUD telemetry is persisted",
+        "pointer trace and screen capture path plus SHA-256 are persisted"
+      ],
+      "allowed_conclusion": "Android functional smoke only",
+      "forbidden_conclusions": ["PASS_ANDROID_PRESSURE", "PASS_PHYSICAL", "G4-12 PASS", "G4 PASS"]
+    },
+    "android_pressure_qualified": {
+      "status_name": "PASS_ANDROID_PRESSURE",
+      "host": "Android API 26 or newer with a pressure-capable stylus",
+      "input_devices": ["pressure_pen"],
+      "pressure_required": true,
+      "required_observations": [
+        "device metadata identifies a stylus",
+        "pressure values vary across a controlled trace",
+        "historical/coalesced samples are persisted",
+        "HUD telemetry and capture-bound physical latency are persisted"
+      ],
+      "allowed_conclusion": "Android pressure evidence",
+      "forbidden_conclusions": ["PASS_PHYSICAL without the complete profile"]
+    }
+  },
+  "debug_policy": {
+    "touch_allowed_for_functional_smoke": true,
+    "non_pressure_pen_allowed_for_functional_smoke": true,
+    "missing_pressure_is_not_an_implementation_failure_for_functional_smoke": true,
+    "missing_pressure_blocks_android_pressure_qualified": true,
+    "application_timing_is_not_physical_latency": true
+  },
+  "verification_mapping": [
+    {
+      "requirement": "A runnable Android host accepts native input and presents a writable surface",
+      "failure_mode": "A library builds but no installable Activity or responsive surface exists",
+      "oracle": "APK install/launch plus repeated-stroke smoke with capture",
+      "artifact": ".aegis/results/GT-G4-12/android-functional-smoke-evidence.json",
+      "blocking": true
+    },
+    {
+      "requirement": "Android pointer history reaches the production host",
+      "failure_mode": "Only the latest MotionEvent is forwarded or stroke boundaries are lost",
+      "oracle": "Persisted pointer trace with historical sample count and per-stroke IDs",
+      "artifact": ".aegis/results/GT-G4-12/android-pointer-trace.json",
+      "blocking": true
+    },
+    {
+      "requirement": "Android pressure is preserved when a pressure stylus exists",
+      "failure_mode": "Touch or non-pressure input is misreported as pressure capability",
+      "oracle": "Independent device metadata and varying-pressure trace",
+      "artifact": ".aegis/results/GT-G4-12/android-pressure-evidence.json",
+      "blocking": true
+    }
+  ],
+  "implementation_impact": {
+    "production_semantics_change": false,
+    "runtime_architecture_change": false,
+    "authorized_paths": ["apps/ink_playground/**", ".aegis/results/GT-G4-12/**", ".aegis/packages/GT-G4-12/**"],
+    "forbidden_paths": ["runtime/semantic/**", "runtime/scene/**", "runtime/render/**", "runtime/interaction/**", "runtime/ink/**", "G5/**", "G6/**"]
+  },
+  "decision_request": {
+    "recommended": "ACCEPT_WITH_TIERED_ANDROID_EVIDENCE",
+    "next_stage": "P31_TASK_PACKAGING",
+    "required_package_id": "GT-G4-12-P31-v0.3"
+  }
+}

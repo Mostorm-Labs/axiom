@@ -1,0 +1,20 @@
+{
+  "schema_version":"0.1",
+  "package_id":"GT-G4-12-P31-v0.1",
+  "task_id":"GT-G4-12",
+  "status":"CURRENT_EXECUTABLE",
+  "purpose":"Ink Playground 0.1 physical integration",
+  "repository":{"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-12-ink-playground"},
+  "execution_authority_mode":"repo_materialized",
+  "task_anchor":{"revision":"ab14b94cfc080ee1478f896268d619c327338a44","relation":"ancestor"},
+  "resume_cursor":null,
+  "continue_until_terminal_state":true,
+  "return_surface":"CONTROL_REVIEW",
+  "authority_lock_ref":{"path":"authority.lock.json","sha256":"c73eb8c0f06446cf7c6805db7f12f3b51ca726ed26b649ff4da4490c45ece986"},
+  "verification_lock_ref":{"path":"verification.lock.json","sha256":"751e4bda0f9b929ff69f668462c9a59fa16a421faa35c3faf1360b68d21b61c9"},
+  "execution_contract_ref":{"path":"execution-contract.json","sha256":"6fffba596ff45450301563dfbe47a1d3635b1f831954486426abee32341ab9f5"},
+  "implementation_context_ref":{"path":"implementation-context.md","sha256":"d130cac0bfc3b3a9f1bd3904a5f6a53d66fadda723040dbf4eddbc16250a2449"},
+  "evidence_contract_ref":{"path":"evidence-contract.json","sha256":"36c21ed2a2c32b61cad4017353d0091e6aac32639792ec3fb0b90007acf06f39"},
+  "materialization":{"same_repository":true,"path":".aegis/packages/GT-G4-12/"},
+  "handoff":{"preferred_executor":"codex","next_surface":"CODE_EXECUTION","official_gate_pass_forbidden_during_p32":true}
+}

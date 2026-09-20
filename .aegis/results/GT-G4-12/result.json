@@ -1,12 +1,17 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "task_id": "GT-G4-12",
-  "result_revision": "2cb6c0aba20aed78a26aa7742141be92365bd94e",
-  "status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
-  "windows_version": "10.0.19045",
-  "input_type": "mouse_or_standard_pointer",
-  "pressure": "not_available",
-  "capture_path": "D:\\GitRepos\\mostorm-labs\\canvas\\out\\g4-12-windows-functional\\window-capture.png",
-  "capture_sha256": "cb9afa0c147c4c177344814d8a8149025898611afdf0b5a90487ecd2f5134f69",
-  "control_review": "required"
+  "stage": "P32",
+  "status": "BLOCKED_ENVIRONMENT",
+  "continue_execution": false,
+  "result_revision": "a2a9fc36a9e2d55b0cb185e521b57dfb6f81ffcb",
+  "execution_branch": "codex/g4-12-ink-playground",
+  "official_gate_pass": false,
+  "g4_pass": false,
+  "next_surface": "CONTROL_REVIEW",
+  "evidence_input_refs": [
+    ".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json",
+    ".aegis/results/GT-G4-12/windows-pressure-evidence.json",
+    ".aegis/results/GT-G4-12/physical-evidence.json"
+  ]
 }

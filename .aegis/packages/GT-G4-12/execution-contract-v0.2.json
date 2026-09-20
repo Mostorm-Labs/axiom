@@ -1,0 +1,14 @@
+{
+  "schema_version":"0.2","task_id":"GT-G4-12","package_id":"GT-G4-12-P31-v0.2",
+  "execution_closure_contract":{
+    "implementation":{"required_changes":[],"authorized_mutation_scope":[".aegis/results/GT-G4-12/**","apps/ink_playground/**"],"forbidden_changes":["runtime/semantic/**","runtime/scene/**","runtime/render/**","runtime/interaction/**","runtime/input/**","runtime/ink/**","arc/include/**","canonical operation vocabulary","G5/**","G6/**"]},
+    "starting_identity":{"minimum_ancestor":"559162596e80e2572677b973b98692d9b5803a18","reviewed_branch_head_at_materialization":"ecfc465d9fd8f61c7b529725d029ba35931e171"},
+    "tests":{"required":["cmake --build --preset g3-windows-release --target axiom_ink_playground_windows axiom_ink_playground_tests axiom_ink_playground_windows_pointer_utils_tests --parallel","ctest --test-dir out/g3-windows-release -R '^G4InkPlayground' --output-on-failure","git diff --check ab14b94cfc080ee1478f896268d619c327338a44..HEAD"]},
+    "windows_functional_smoke":{"required":true,"host":"Windows 10 x64 10.0.19045 or newer","allowed_input":["mouse","touch","non_pressure_pen","pressure_pen"],"required_observations":["real HWND starts","window remains responsive","WM_POINTER input is visible","pointer trace or event trace is persisted","HUD telemetry is persisted","screenshot or video path and SHA-256 are persisted"],"terminal_status":"PASS_WINDOWS_FUNCTIONAL_SMOKE","pressure_required":false},
+    "windows_pressure_qualification":{"required_for_complete_physical":true,"host":"Windows 10 x64 10.0.19045 or newer","required_input":"real pressure pen","required_observations":["device metadata","varying pressure trace","coalesced history","HUD telemetry","physical sample-to-visible latency","capture path and SHA-256"],"terminal_status":"PASS_WINDOWS_PRESSURE"},
+    "complete_physical":{"requires":["PASS_WINDOWS_FUNCTIONAL_SMOKE","PASS_WINDOWS_PRESSURE"],"terminal_status":"PASS_PHYSICAL"},
+    "terminal_blockers":["BLOCKED_IMPLEMENTATION","BLOCKED_ENVIRONMENT","BLOCKED_EVIDENCE","PACKAGE_SCOPE_DIVERGENCE"],
+    "forbidden_claims":["Pressure support from mouse or non-pressure input","PASS_PHYSICAL without pressure evidence","G4-12 PASS","G4 PASS"],
+    "continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW"
+  }
+}

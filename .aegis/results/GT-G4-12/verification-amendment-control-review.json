@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "stage": "P20_AMENDMENT_CONTROL_REVIEW",
+  "amendment_id": "GT-G4-12-P20-v0.2",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewed_revision": "73ec0642237c3c85d7e138bb36d8a5dcdd6e9188",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "checks": [
+      "Pen and pressure remains an explicit capability requirement",
+      "Win10/non-pressure input is allowed only for lower-tier functional smoke",
+      "Complete physical acceptance still requires pressure-capable input and capture"
+    ],
+    "findings": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "checks": [
+      "Functional smoke evidence is distinct from pressure evidence",
+      "Physical latency remains capture-bound",
+      "Headless/application timing cannot be promoted to physical evidence",
+      "Missing pressure is non-blocking only for functional smoke and blocking for pressure qualification"
+    ],
+    "findings": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "checks": [
+      "No runtime semantic, scene, render, interaction, or ink contract change is authorized",
+      "Existing Windows repair revision 559162596e80e2572677b973b98692d9b5803a18 is an ancestor of the execution branch",
+      "Existing Web smoke evidence remains valid as hosted browser smoke only",
+      "Windows 10 evidence may now be collected under the functional smoke profile"
+    ],
+    "findings": []
+  },
+  "decision": {
+    "verdict": "ACCEPTED_FOR_P31_REGENERATION",
+    "scope": "GT-G4-12 verification amendment only",
+    "code_execution_authorized": false,
+    "next_stage": "P31_TASK_PACKAGING",
+    "required_package_id": "GT-G4-12-P31-v0.2",
+    "forbidden_verdicts": ["PASS_PHYSICAL", "G4-12 PASS", "G4 PASS"]
+  }
+}

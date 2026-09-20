@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "supersedes": "GT-G4-12-P31-v0.3",
+  "authority_ref": "authority.lock-v0.4.json",
+  "obligations": [
+    {"id":"G4-12-V1-composition","requirement":"Common Ink Playground composes production InputRouter, InkEngine, InteractionRuntime and Render Core without a second semantic path.","oracle":"G4InkPlaygroundComposition","acceptance":"PASS","evidence_required":"repo:.aegis/results/GT-G4-12/composition-evidence.json"},
+    {"id":"G4-12-V2-platforms","requirement":"Web, Windows, and Android hosts accept functional input and preserve independent stroke lifecycles.","oracle":"Platform host tests plus Web, Windows, and Android functional evidence","acceptance":"PASS_WEB_BROWSER_SMOKE + PASS_WINDOWS_FUNCTIONAL_SMOKE + PASS_ANDROID_FUNCTIONAL_SMOKE","evidence_required":"repo:.aegis/results/GT-G4-12/platform-evidence.json; repo:.aegis/results/GT-G4-12/windows-functional-smoke-evidence.json; repo:.aegis/results/GT-G4-12/android-functional-smoke-evidence.json"},
+    {"id":"G4-12-V3-windows-arc","requirement":"Windows Arc preview is visibly distinct, overlaps canonical output, and releases automatically after the matching canonical presentation.","oracle":"Approved human visual Windows Arc functional qualification profile","acceptance":"PASS_WINDOWS_ARC_FUNCTIONAL_QUALIFICATION_WITH_FINDINGS","evidence_required":"repo:.aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json; repo:.aegis/results/GT-G4-05-WIN-ARC-PREVIEW/p34-control-review-v3.json"},
+    {"id":"G4-12-V4-hud","requirement":"HUD exposes the frozen operational fields.","oracle":"G4InkPlaygroundHud","acceptance":"PASS","evidence_required":"repo:.aegis/results/GT-G4-12/hud-evidence.json"},
+    {"id":"G4-12-V5-no-pressure-claim","requirement":"Current functional completion does not imply pressure or complete physical qualification.","oracle":"Preserved pressure BLOCKED_ENVIRONMENT records and functional authority","acceptance":"PASS_WITH_DEFERRED_SUCCESSOR","evidence_required":"repo:.aegis/results/GT-G4-12/windows-pressure-evidence.json; repo:.aegis/results/GT-G4-12/android-pressure-evidence.json; repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json"}
+  ],
+  "deferred_successor": {
+    "pressure": "PASS_WINDOWS_PRESSURE/PASS_ANDROID_PRESSURE required only for future physical-pressure extension",
+    "latency": "capture-bound physical latency deferred",
+    "coverage": "Render-owned coverage manifest deferred successor hardening"
+  }
+}

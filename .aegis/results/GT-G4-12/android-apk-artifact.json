@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "894939c9f53a38c2b6b49fe4ae596d8cb042ea26",
+  "artifact": ".aegis/results/GT-G4-12/android-installed-app-debug.apk",
+  "sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "native_elf": "lib/arm64-v8a/libaxiom_ink_playground_android.so",
+  "native_elf_sha256": "4ce81ad14cd42eeb0c9a315f59a560e618a850ee27c1b89bf4a08ea43f45640c",
+  "elf_load_alignments": ["0x4000", "0x4000", "0x4000"],
+  "device": {
+    "serial": "29251FDH2004Z0",
+    "model": "Pixel 7",
+    "device": "panther",
+    "android_release": "17",
+    "api": 37,
+    "abi": "arm64-v8a"
+  },
+  "build": "PASS",
+  "install": "PASS",
+  "installed_apk_sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "launcher_activity": "dev.mostorm.axiom.inkplayground/.MainActivity",
+  "cold_launch": "PASS",
+  "native_library_load": "PASS",
+  "page_size_compatibility_warning_after_fix": false,
+  "artifact_provenance": "Pulled byte-for-byte from the installed package on the reviewed Pixel 7 after the user-confirmed session.",
+  "rebuild_finding": {
+    "classification": "NON_BLOCKING_FINDING",
+    "description": "A later offline debug rebuild succeeded but produced a different APK and native ELF digest. Debug packaging is not byte-reproducible under the current toolchain, so the later build is not substituted for the exact installed artifact under test.",
+    "later_rebuild_apk_sha256": "b6ef3586c63777f7852af0b8270291b55691f0cf6133dbb29c14c6c7ff1c3806",
+    "later_rebuild_native_elf_sha256": "fdfa727fa6425dca865c91148612f40b578b0b55e1ab3cb78d73ae201f5c6587",
+    "impact": "No impact on the exact installed artifact identity or the observed functional-smoke behavior; deterministic release packaging remains successor hardening."
+  },
+  "official_gate_pass": false
+}

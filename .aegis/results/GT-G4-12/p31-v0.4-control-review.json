@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "stage": "P31_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "package_materialization_ref": "46b143426f32c1f3f3f606cd83bc0d4fe6a09089",
+  "task_anchor": "bb8509ac78d646679f90da9ef0af1b92bca1ced0",
+  "upstream_integration": {
+    "task_id": "GT-G4-05-WIN-ARC-PREVIEW",
+    "main_merge_revision": "bb8509ac78d646679f90da9ef0af1b92bca1ced0",
+    "accepted_result": "PASS_WINDOWS_ARC_FUNCTIONAL_QUALIFICATION_WITH_FINDINGS"
+  },
+  "package_binding_audit": {
+    "status": "PASS",
+    "checks": [
+      "Repository identity is github/Mostorm-Labs/axiom.",
+      "Package is repo_materialized under .aegis/packages/GT-G4-12/.",
+      "All five v0.4 lock references resolve inside the package directory.",
+      "All five referenced SHA-256 values match the materialized bytes.",
+      "task_anchor is the exact integrated main merge revision and is an ancestor of the execution branch.",
+      "resume_cursor is null and continue_until_terminal_state is true.",
+      "Pressure and complete physical qualification remain explicit deferred successor work."
+    ]
+  },
+  "verification_binding_audit": {
+    "status": "PASS_WITH_FINDINGS",
+    "blocking_obligations": [
+      "Web functional smoke",
+      "Windows functional smoke",
+      "Android functional smoke",
+      "Windows Arc human visual functional qualification",
+      "Composition and HUD evidence",
+      "No pressure/physical pass claim"
+    ],
+    "findings": [
+      {
+        "classification": "NON_BLOCKING_FINDING",
+        "id": "WINDOWS_ARC_COVERAGE_MANIFEST_DEFERRED",
+        "description": "The approved human-visual Arc qualification profile is bound; formal Render-owned coverage manifest hardening remains a successor task."
+      },
+      {
+        "classification": "NON_BLOCKING_FINDING",
+        "id": "PRESSURE_DEFERRED",
+        "description": "Pressure and capture-bound physical latency are preserved as successor capability evidence and cannot be claimed by this package."
+      }
+    ]
+  },
+  "scope_audit": {
+    "status": "PASS",
+    "implementation_mutation_authorized": false,
+    "package_refresh_scope": [".aegis/packages/GT-G4-12/**", ".aegis/results/GT-G4-12/**"],
+    "forbidden": ["runtime/semantic/**", "runtime/scene/**", "runtime/render/**", "runtime/interaction/**", "runtime/ink/**", "G5/**", "G6/**"]
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "code_execution_authorized": true,
+    "next_stage": "P32_CODE_EXECUTION",
+    "return_surface": "CONTROL_REVIEW",
+    "forbidden_conclusions": ["PASS_WINDOWS_PRESSURE", "PASS_ANDROID_PRESSURE", "PASS_PHYSICAL", "G4 PASS"]
+  }
+}

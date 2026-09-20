@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.3",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "task_id": "GT-G4-12",
+  "status": "PROPOSED_PENDING_CONTROL_REVIEW",
+  "purpose": "Tiered Android Ink Playground functional smoke and separately qualified pressure evidence",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-12-ink-playground"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "1bf20a459fa076680e9339c7eaeb785471a72f54",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "supersedes": "GT-G4-12-P31-v0.2",
+  "authority_lock_ref": {
+    "path": "authority.lock-v0.3.json",
+    "sha256": "293cd4dce683568f354d08a77aa885e5f19faf1cdefbfa472f750da02ed9d488"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock-v0.3.json",
+    "sha256": "a8f16e2cd31548dbdc37edbcf2738e175435426aa62cf0e36a4ffcd1c14d9104"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract-v0.3.json",
+    "sha256": "2e23b7589d6eefb5b4147fceb085c67855fee34854c78affca08587bac48fbcc"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context-v0.3.md",
+    "sha256": "e44986d28f5321ef55247b4bee1625f7426b2fb429a22c0a987ca35718031d27"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract-v0.3.json",
+    "sha256": "b74200f54dc8775ffef8670d7701f414ba1030493421355cfb9bfca1de7bbd83"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-12/"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "After independent CONTROL_REVIEW accepts the Android amendment, build/install the APK and run functional smoke on the connected device."
+  }
+}

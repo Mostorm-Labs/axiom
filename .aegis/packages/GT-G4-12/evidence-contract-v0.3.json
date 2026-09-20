@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "artifacts": [
+    {"id": "android-functional-smoke", "path": ".aegis/results/GT-G4-12/android-functional-smoke-evidence.json", "blocking": true},
+    {"id": "android-pointer-trace", "path": ".aegis/results/GT-G4-12/android-pointer-trace.json", "blocking": true},
+    {"id": "android-pressure", "path": ".aegis/results/GT-G4-12/android-pressure-evidence.json", "blocking": true},
+    {"id": "android-apk", "path": ".aegis/results/GT-G4-12/android-apk-artifact.json", "blocking": true},
+    {"id": "portable-regression-summary", "path": ".aegis/results/GT-G4-12/portable-regression-summary.json", "blocking": false}
+  ],
+  "profiles": {"functional_smoke": "Android API 26+ with touch or non-pressure input", "pressure": "Android API 26+ with real pressure stylus", "complete_physical": "functional smoke + pressure + capture-bound latency"},
+  "review_boundary": "Exact pushed result revision, APK digest, device identity, and durable device evidence"
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G4-12",
+  "result_revision": "a2a9fc36a9e2d55b0cb185e521b57dfb6f81ffcb",
+  "platform": "windows",
+  "status": "BLOCKED_ENVIRONMENT",
+  "functional_smoke": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+  "pressure": "BLOCKED_ENVIRONMENT",
+  "capture": {
+    "path": ".aegis/results/GT-G4-12/windows-functional-smoke-capture.png",
+    "sha256": "dd57cc01cfaf50e8ff0079004fa5f4e0f3b67be45555c29c3bb079ad18222c92"
+  },
+  "headless_timing_promoted_to_physical": false,
+  "reason": "Windows functional mouse smoke passed with a durable pointer trace, but complete physical evidence remains blocked: no pressure-capable pen session, no physical latency, and the retained capture predates the confirmed drawing session.",
+  "pointer_trace": {
+    "path": ".aegis/results/GT-G4-12/pointer-trace.json",
+    "sha256": "49c0dfd0d3cb442038553b80e5635c107f0917468070f26c1665f4d03edbee0d",
+    "events_observed": 406,
+    "down_events": 24,
+    "up_events": 24,
+    "post_up_moves": 0,
+    "lifecycle_errors": 0,
+    "input_type": "mouse"
+  },
+  "hud": {
+    "path": ".aegis/results/GT-G4-12/hud-telemetry.json",
+    "sha256": "bcf64bfb951cebef3f55652ee4703ef3985ea98ed181747fffa0c072788807d5"
+  }
+}

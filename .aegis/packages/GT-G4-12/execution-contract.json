@@ -1,0 +1,11 @@
+{
+  "schema_version":"0.1","task_id":"GT-G4-12",
+  "execution_closure_contract":{"implementation":{"required_changes":["Add common Ink Playground host/HUD composition layer.","Add Web thin PointerEvent-to-WASM batch adapter and Windows/Android native Arc entrypoint shells.","Add focused composition, platform-boundary and HUD tests.","Emit durable evidence separating physical from headless timing."],"authorized_mutation_scope":["apps/ink_playground/**",".aegis/packages/GT-G4-12/**",".aegis/results/GT-G4-12/**","CMakeLists.txt"],"forbidden_changes":["runtime/semantic/**","runtime/scene/**","runtime/render/**","runtime/interaction/**","runtime/input/**","runtime/ink/**","arc/include/**","canonical operation vocabulary","G5/**","G6/**"]},
+  "implementation_design_preflight":{"required":true,"unresolved_semantic_decisions":[],"authority_conflict":false,"verification_conflict":false,"package_scope_conflict":false},
+  "oracle_precondition":{"red_required":true,"expected_failure":"No Ink Playground host/HUD composition target exists at task anchor.","observation_seam":"apps/ink_playground/tests/ink_playground_test.cpp"},
+  "tests":{"required":["cmake --preset rf01-host-debug","cmake --build --preset rf01-host-debug","ctest --preset rf01-host-debug -R '^G4InkPlayground' --output-on-failure","ctest --preset rf01-host-debug --output-on-failure","git diff --check ab14b94cfc080ee1478f896268d619c327338a44..HEAD"]},
+  "hosted_verification":{"required":["Qualified Windows or Android physical capture when a supported runner is available"],"optional":["Web browser smoke"]},
+  "evidence":{"blocking":["composition-evidence.json","platform-evidence.json","hud-evidence.json","physical-evidence.json","scope-evidence.json"],"corroborative":["portable-regression-summary.json"]},
+  "terminal_success":["Common production composition tests pass.","Platform shells remain thin and route through native/wasm adapters.","HUD fields are exact.","Physical evidence is PASS only with qualified capture, otherwise durable BLOCKED_ENVIRONMENT.","No forbidden production contract changes.","Exact pushed result is independently reviewable."],
+  "explicit_terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_VERIFICATION","BLOCKED_ENVIRONMENT","PACKAGE_SCOPE_DIVERGENCE"],"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW"}
+}
