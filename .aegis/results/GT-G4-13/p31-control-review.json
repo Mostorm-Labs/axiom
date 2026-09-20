@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-13",
+  "stage": "P31_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-13-P31-v0.1",
+  "package_materialization_ref": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
+  "task_anchor": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+  "authority_audit": {
+    "status": "PASS",
+    "checks": [
+      "G4 functional completion authority v0.3 is current and its content hash is bound in authority.lock.json.",
+      "G4-12 integrated closure is bound to main revision 0a1e074013521fe42a9430bfe707af5a4705d7bc.",
+      "The package is report/closure-only and forbids runtime or successor-G implementation."
+    ]
+  },
+  "verification_audit": {
+    "status": "PASS",
+    "obligation_ids": ["G4-13-V1-lineage", "G4-13-V2-functional-profile", "G4-13-V3-arc-profile", "G4-13-V4-deferred-boundary", "G4-13-V5-integrity"],
+    "required_artifacts": ["g4-gate-report.json", "repository-integrity.json", "p34-control-review.json"]
+  },
+  "repository_audit": {
+    "status": "PASS",
+    "anchor_ancestor": true,
+    "package_lock_hashes": "PASS",
+    "authority_source_hash": "PASS",
+    "mutation_scope": "GT-G4-13 package only"
+  },
+  "decision": {
+    "verdict": "PASS",
+    "p31_authorized": true,
+    "next_stage": "P32_CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "deferred_successor_capabilities": ["pressure-qualified pen evidence", "capture-bound physical latency", "formal render-owned coverage manifest"]
+  }
+}
