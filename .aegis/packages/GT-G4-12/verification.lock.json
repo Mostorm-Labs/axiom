@@ -1,8 +1,17 @@
 {
-  "schema_version":"0.1","task_id":"GT-G4-12","obligations":[
-    {"id":"G4-12-V1-composition","requirement":"Common Ink Playground composes production InputRouter, InkEngine, InteractionRuntime and Render Core without a second semantic path.","oracle":"Focused host composition test resolves each production dependency and rejects direct canonical-store ownership.","acceptance":"G4InkPlaygroundComposition passes.","evidence_required":"repo:.aegis/results/GT-G4-12/composition-evidence.json"},
-    {"id":"G4-12-V2-platform-thin","requirement":"Windows/Android use native Arc InputSource and Web uses thin PointerEvent-to-WASM batch forwarding.","oracle":"Platform adapter tests inspect forwarding and never construct brush/selection/eraser semantics.","acceptance":"G4InkPlaygroundPlatform passes where host toolchains exist.","evidence_required":"repo:.aegis/results/GT-G4-12/platform-evidence.json"},
-    {"id":"G4-12-V3-hud","requirement":"HUD exposes the frozen operational fields.","oracle":"HUD snapshot has exact field names and preserves values from production feedback ports.","acceptance":"G4InkPlaygroundHud passes.","evidence_required":"repo:.aegis/results/GT-G4-12/hud-evidence.json"},
-    {"id":"G4-12-V4-physical-boundary","requirement":"Physical evidence is separate from synthetic/headless timing.","oracle":"Evidence compiler labels device metadata/trace/capture and refuses to promote headless timing to physical evidence.","acceptance":"G4-12 physical evidence is PASS only with qualified device capture; otherwise exact BLOCKED_ENVIRONMENT is emitted.","evidence_required":"repo:.aegis/results/GT-G4-12/physical-evidence.json"}
-  ]
+  "schema_version":"0.2",
+  "task_id":"GT-G4-12",
+  "package_id":"GT-G4-12-P31-v0.2",
+  "supersedes":".aegis/packages/GT-G4-12/verification-v0.1.superseded.json",
+  "amendment_ref":".aegis/results/GT-G4-12/verification-amendment-v0.2.json",
+  "amendment_control_review_ref":".aegis/results/GT-G4-12/verification-amendment-control-review.json",
+  "obligations":[
+    {"id":"G4-12-V1-composition","requirement":"Common Ink Playground composes production InputRouter, InkEngine, InteractionRuntime and Render Core without a second semantic path.","oracle":"G4InkPlaygroundComposition","acceptance":"PASS","evidence_required":"repo:.aegis/results/GT-G4-12/composition-evidence.json"},
+    {"id":"G4-12-V2-platform-thin","requirement":"Windows and Android use native Arc InputSource and Web uses thin PointerEvent-to-WASM forwarding.","oracle":"G4InkPlaygroundPlatform plus platform host build","acceptance":"PASS where the host toolchain exists","evidence_required":"repo:.aegis/results/GT-G4-12/platform-evidence.json"},
+    {"id":"G4-12-V3-hud","requirement":"HUD exposes the frozen operational fields.","oracle":"G4InkPlaygroundHud","acceptance":"PASS","evidence_required":"repo:.aegis/results/GT-G4-12/hud-evidence.json"},
+    {"id":"G4-12-V4-windows-functional-smoke","requirement":"A Windows 10 x64 or newer host can start the real HWND playground, receive pointer input, render visibly, and persist functional smoke evidence.","oracle":"Windows functional smoke with screenshot/video capture and pointer/HUD record","acceptance":"PASS_WINDOWS_FUNCTIONAL_SMOKE","evidence_required":"repo:.aegis/results/GT-G4-12/windows-functional-smoke-evidence.json","pressure_required":false},
+    {"id":"G4-12-V5-windows-pressure","requirement":"A real pressure-capable pen produces varying pressure values and qualified device metadata.","oracle":"Independent pressure trace plus device metadata","acceptance":"PASS_WINDOWS_PRESSURE","evidence_required":"repo:.aegis/results/GT-G4-12/windows-pressure-evidence.json","pressure_required":true},
+    {"id":"G4-12-V6-physical-boundary","requirement":"Complete physical evidence binds pointer trace, pressure/device metadata, HUD, physical latency, and capture hash.","oracle":"Capture-bound physical evidence compiler","acceptance":"PASS_PHYSICAL only after V4 and V5","evidence_required":"repo:.aegis/results/GT-G4-12/physical-evidence.json"}
+  ],
+  "debug_policy":{"win10_allowed":true,"non_pressure_pen_allowed":true,"mouse_allowed":true,"non_pressure_input_is_not_pressure_evidence":true,"headless_timing_promoted_to_physical":false}
 }

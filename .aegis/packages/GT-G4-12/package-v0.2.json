@@ -1,0 +1,20 @@
+{
+  "schema_version":"0.2",
+  "package_id":"GT-G4-12-P31-v0.2",
+  "task_id":"GT-G4-12",
+  "status":"CURRENT_EXECUTABLE",
+  "purpose":"Tiered Windows Ink Playground validation: functional smoke, pressure qualification, and complete physical evidence",
+  "repository":{"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-12-ink-playground"},
+  "execution_authority_mode":"repo_materialized",
+  "task_anchor":{"revision":"ecfc465d9fd8f61c7b529725d029ba35931e171","relation":"ancestor"},
+  "resume_cursor":null,
+  "continue_until_terminal_state":true,
+  "return_surface":"CONTROL_REVIEW",
+  "supersedes":"GT-G4-12-P31-v0.1",
+  "authority":{"source_ref":".aegis/packages/GT-G4-12/authority.lock.json","production_semantics_change":false},
+  "verification_lock_ref":{"path":"verification.lock.json","sha256":"921ffd1856063f85e6fccd642cc9282e8d14adf0765874d99beb92363922f218"},
+  "execution_contract_ref":{"path":"execution-contract-v0.2.json","sha256":"b43e51e14775af66924c6e55da9ac38acf5abccd4d1ae42e5523979c6f04d034"},
+  "evidence_contract_ref":{"path":"evidence-contract-v0.2.json","sha256":"77290caa87326dc0e3d045bb5b1b957f3885dfd38838c1ffa08e7455af3f85fe"},
+  "materialization":{"same_repository":true,"path":".aegis/packages/GT-G4-12/"},
+  "handoff":{"preferred_executor":"codex","next_surface":"CODE_EXECUTION","official_gate_pass_forbidden_during_p32":true,"next_action":"Run Windows functional smoke first; then run pressure-qualified profile if a pressure pen is available; return exact durable evidence to CONTROL_REVIEW."}
+}

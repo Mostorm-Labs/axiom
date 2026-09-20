@@ -1,0 +1,14 @@
+{
+  "schema_version":"0.2","task_id":"GT-G4-12","package_id":"GT-G4-12-P31-v0.2",
+  "artifacts":[
+    {"id":"composition-evidence","path":".aegis/results/GT-G4-12/composition-evidence.json","blocking":true},
+    {"id":"platform-evidence","path":".aegis/results/GT-G4-12/platform-evidence.json","blocking":true},
+    {"id":"hud-evidence","path":".aegis/results/GT-G4-12/hud-evidence.json","blocking":true},
+    {"id":"windows-functional-smoke-evidence","path":".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json","blocking":true},
+    {"id":"windows-pressure-evidence","path":".aegis/results/GT-G4-12/windows-pressure-evidence.json","blocking":true},
+    {"id":"physical-evidence","path":".aegis/results/GT-G4-12/physical-evidence.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G4-12/portable-regression-summary.json","blocking":false}
+  ],
+  "profiles":{"functional_smoke":"Win10+ with mouse/touch/non-pressure pen allowed","pressure":"Win10+ with a real pressure pen required","complete_physical":"functional_smoke + pressure + capture-bound latency"},
+  "review_boundary":"Exact pushed result revision and durable repository evidence"
+}
