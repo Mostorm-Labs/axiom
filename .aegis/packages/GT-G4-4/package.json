@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "task_id": "GT-G4-4",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Multi-pointer input and gesture arbitration foundation through automated closure and qualification readiness",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-4-multipointer"},
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {"revision":"7be89f11d7abc26c3788aa5f8a3b324571baa27c","relation":"ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path":"authority.lock.json","sha256":"1dfb7fc0451c25781861d96f0bf4634380aa285c7c8c581a3dfda06dd72c5a44"},
+  "verification_lock_ref": {"path":"verification.lock.json","sha256":"06482165b3a10efde0f37701b7e402cc30ad5654ab212d15f176011c13df3b14"},
+  "execution_contract_ref": {"path":"execution-contract.json","sha256":"a8452f21729d23edb0e40248575af54e5c9ba8c9919044fefedd7e8f8207adb3"},
+  "implementation_context_ref": {"path":"implementation-context.md","sha256":"a4bdcb0392e38f081f65eda58fb17f1630cb554c2d4f90b82c98eb194d5e6a75"},
+  "evidence_contract_ref": {"path":"evidence-contract.json","sha256":"a66e82d19dc82e6dc4084afceadf9d31411b88a3a66a4505a242e7b689a21463"},
+  "supersedes": "GT-G4-4-P31-v0.1",
+  "materialization": {"same_repository":true,"path":".aegis/packages/GT-G4-4/","base_revision":"7be89f11d7abc26c3788aa5f8a3b324571baa27c","binding":"exact pushed repository revision descended from the G4 functional integration anchor"},
+  "handoff": {"preferred_executor":"codex","next_surface":"CODE_EXECUTION","next_action":"Reconcile the preserved implementation and available platform evidence, complete G4.4-00 through G4.4-10 automated closure, and return READY_FOR_PHYSICAL_VERIFICATION without claiming G4.4 PASS.","official_gate_pass_forbidden_during_p32":true}
+}

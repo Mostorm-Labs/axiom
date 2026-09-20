@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 public final class InkPlaygroundView extends View {
@@ -24,17 +25,21 @@ public final class InkPlaygroundView extends View {
     private final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint hud = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final ArrayList<Stroke> strokes = new ArrayList<>();
+    private final HashMap<Integer, Stroke> activeStrokes = new HashMap<>();
+    private final HashMap<Integer, Long> pointerStrokeIds = new HashMap<>();
     private final File evidenceDir;
     private final StringBuilder trace = new StringBuilder("[\n");
     private long handle;
     private long sequence;
     private long strokeId;
-    private long strokeStartNanos;
-    private Stroke active;
     private boolean traceFirst = true;
     private String lastTool = "none";
     private float lastPressure;
     private int batchCount;
+    private float viewportScale = 1f;
+    private float viewportCenterX;
+    private float viewportCenterY;
+    private float pinchBaseline;
 
     public InkPlaygroundView(Context context) {
         super(context);
@@ -57,32 +62,61 @@ public final class InkPlaygroundView extends View {
                 canvas.drawLine(a.x, a.y, b.x, b.y, ink);
             }
         }
-        if (active != null) for (int i = 1; i < active.points.size(); ++i) {
+        for (Stroke active : activeStrokes.values()) for (int i = 1; i < active.points.size(); ++i) {
             Point a = active.points.get(i - 1), b = active.points.get(i);
             canvas.drawLine(a.x, a.y, b.x, b.y, ink);
         }
         hud.setStyle(Paint.Style.FILL);
         canvas.drawText(String.format(Locale.US, "Axiom Ink  |  strokes %d  points %d  tool %s  pressure %.2f", strokes.size(), pointCount(), lastTool, lastPressure), 24f, 42f, hud);
-        canvas.drawText("Touch or stylus input  |  functional smoke", 24f, 78f, hud);
+        canvas.drawText(String.format(Locale.US, "pointers %d  viewport %.2fx center %.0f,%.0f", activeStrokes.size(), viewportScale, viewportCenterX, viewportCenterY), 24f, 78f, hud);
     }
 
-    private int pointCount() { int count = active == null ? 0 : active.points.size(); for (Stroke s : strokes) count += s.points.size(); return count; }
+    private int pointCount() { int count = 0; for (Stroke active : activeStrokes.values()) count += active.points.size(); for (Stroke s : strokes) count += s.points.size(); return count; }
 
     @Override public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getActionMasked();
-        if (action == MotionEvent.ACTION_CANCEL) { if (handle != 0) nativeSurfaceLost(handle); active = null; invalidate(); return true; }
-        if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_MOVE && action != MotionEvent.ACTION_UP) return true;
-        final boolean down = action == MotionEvent.ACTION_DOWN;
-        final boolean up = action == MotionEvent.ACTION_UP;
-        final int history = event.getHistorySize();
-        final int pointerIndex = event.getActionIndex();
-        final int pointerId = event.getPointerId(pointerIndex);
-        if (down) {
+        if (action == MotionEvent.ACTION_CANCEL) { if (handle != 0) nativeCancelAll(handle); activeStrokes.clear(); pointerStrokeIds.clear(); pinchBaseline = 0f; persistEvidence(); invalidate(); return true; }
+        if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_POINTER_DOWN &&
+            action != MotionEvent.ACTION_MOVE && action != MotionEvent.ACTION_UP &&
+            action != MotionEvent.ACTION_POINTER_UP) return true;
+        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+            final int pointerIndex = event.getActionIndex();
+            final int pointerId = event.getPointerId(pointerIndex);
             if (handle == 0) handle = nativeCreate(getWidth(), getHeight());
-            strokeId++; strokeStartNanos = event.getEventTime() * 1000000L;
-            active = new Stroke(); strokes.add(active);
-            nativeBegin(handle, strokeId);
+            strokeId++;
+            Stroke active = new Stroke(); activeStrokes.put(pointerId, active);
+            pointerStrokeIds.put(pointerId, strokeId);
+            nativeBegin(handle, pointerId, strokeId);
+            emitPointer(event, pointerIndex, true, false);
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            for (int pointerIndex = 0; pointerIndex < event.getPointerCount(); ++pointerIndex) {
+                emitPointer(event, pointerIndex, false, false);
+            }
+        } else {
+            final int pointerIndex = event.getActionIndex();
+            emitPointer(event, pointerIndex, false, true);
         }
+        updateViewportGesture(event);
+        invalidate(); return true;
+    }
+
+    private void updateViewportGesture(MotionEvent event) {
+        if (event.getPointerCount() < 2) { pinchBaseline = 0f; return; }
+        final float dx = event.getX(1) - event.getX(0);
+        final float dy = event.getY(1) - event.getY(0);
+        final float distance = (float)Math.hypot(dx, dy);
+        if (pinchBaseline == 0f) pinchBaseline = distance;
+        viewportScale = pinchBaseline == 0f ? 1f : distance / pinchBaseline;
+        viewportCenterX = (event.getX(0) + event.getX(1)) * 0.5f;
+        viewportCenterY = (event.getY(0) + event.getY(1)) * 0.5f;
+    }
+
+    private void emitPointer(MotionEvent event, int pointerIndex, boolean down, boolean up) {
+        final int pointerId = event.getPointerId(pointerIndex);
+        final Stroke active = activeStrokes.get(pointerId);
+        final Long activeStrokeId = pointerStrokeIds.get(pointerId);
+        if (active == null || activeStrokeId == null) return;
+        final int history = event.getHistorySize();
         final int count = history + 1;
         for (int i = 0; i < count; ++i) {
             final boolean current = i == history;
@@ -91,15 +125,16 @@ public final class InkPlaygroundView extends View {
             final float pressure = current ? event.getPressure(pointerIndex) : event.getHistoricalPressure(pointerIndex, i);
             final long timeNs = (current ? event.getEventTime() : event.getHistoricalEventTime(i)) * 1000000L;
             final int tool = current ? event.getToolType(pointerIndex) : event.getToolType(pointerIndex);
+            final float major = current ? event.getTouchMajor(pointerIndex) : event.getHistoricalTouchMajor(pointerIndex, i);
+            final float minor = current ? event.getTouchMinor(pointerIndex) : event.getHistoricalTouchMinor(pointerIndex, i);
             lastTool = tool == MotionEvent.TOOL_TYPE_STYLUS ? "stylus" : tool == MotionEvent.TOOL_TYPE_ERASER ? "eraser" : "touch";
             lastPressure = pressure; active.points.add(new Point(x, y, pressure));
             if (!traceFirst) trace.append(",\n"); traceFirst = false;
-            trace.append(String.format(Locale.US, "  {\"stroke\":%d,\"sequence\":%d,\"x\":%.3f,\"y\":%.3f,\"pressure\":%.5f,\"tool\":\"%s\",\"time_ns\":%d}", strokeId, ++sequence, x, y, pressure, lastTool, timeNs));
+            trace.append(String.format(Locale.US, "  {\"stroke\":%d,\"pointer_id\":%d,\"sequence\":%d,\"x\":%.3f,\"y\":%.3f,\"pressure\":%.5f,\"touch_major\":%.3f,\"touch_minor\":%.3f,\"tool\":\"%s\",\"time_ns\":%d}", activeStrokeId, pointerId, ++sequence, x, y, pressure, major, minor, lastTool, timeNs));
             nativeMotion(handle, pointerId, sequence, timeNs, x, y, pressure, down && i == 0 ? 1 : 0, up && i == history ? 1 : 0, tool);
         }
         batchCount = count;
-        if (up) { nativeCommit(handle, strokeId); strokes.set(strokes.size() - 1, active); active = null; persistEvidence(); }
-        invalidate(); return true;
+        if (up) { nativeCommit(handle, pointerId, activeStrokeId); strokes.add(active); activeStrokes.remove(pointerId); pointerStrokeIds.remove(pointerId); persistEvidence(); }
     }
 
     private void persistEvidence() {
@@ -111,7 +146,7 @@ public final class InkPlaygroundView extends View {
             File captureFile = new File(evidenceDir, "ink-playground.png");
             try (FileOutputStream output = new FileOutputStream(captureFile)) { bitmap.compress(Bitmap.CompressFormat.PNG, 100, output); }
             String sha = sha256(captureFile);
-            String record = String.format(Locale.US, "{\"platform\":\"android\",\"device\":\"%s\",\"model\":\"%s\",\"sdk\":%d,\"batch\":%d,\"pressure\":%.5f,\"capture\":\"%s\",\"capture_sha256\":\"%s\"}\n", Build.DEVICE, Build.MODEL, Build.VERSION.SDK_INT, batchCount, lastPressure, captureFile.getAbsolutePath(), sha);
+            String record = String.format(Locale.US, "{\"platform\":\"android\",\"device\":\"%s\",\"model\":\"%s\",\"sdk\":%d,\"batch\":%d,\"pressure\":%.5f,\"viewport_scale\":%.5f,\"capture\":\"%s\",\"capture_sha256\":\"%s\"}\n", Build.DEVICE, Build.MODEL, Build.VERSION.SDK_INT, batchCount, lastPressure, viewportScale, captureFile.getAbsolutePath(), sha);
             write(new File(evidenceDir, "functional-smoke.json"), record.getBytes(StandardCharsets.UTF_8));
         } catch (Exception ignored) { }
     }
@@ -121,9 +156,10 @@ public final class InkPlaygroundView extends View {
 
     private static native long nativeCreate(int width, int height);
     private static native void nativeDestroy(long handle);
-    private static native int nativeBegin(long handle, long strokeId);
+    private static native int nativeBegin(long handle, int pointerId, long strokeId);
     private static native int nativeMotion(long handle, int pointerId, long sequence, long timeNs, float x, float y, float pressure, int down, int up, int tool);
-    private static native int nativeCommit(long handle, long strokeId);
+    private static native int nativeCommit(long handle, int pointerId, long strokeId);
     private static native int nativeResize(long handle, int width, int height);
     private static native int nativeSurfaceLost(long handle);
+    private static native int nativeCancelAll(long handle);
 }

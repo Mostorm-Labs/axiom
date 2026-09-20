@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "G4.4-11_UNIFIED_PHYSICAL_QUALIFICATION",
+  "status": "READY_FOR_FINAL_CONTROL_REVIEW",
+  "execution_branch": "codex/g4-4-multipointer",
+  "source_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+  "qualification_build_revision": "fab8f6601f1c8eeb9b99bc5b106fea1a2c91b7d8",
+  "automated_evidence_revision": "e976da0ca2bee0b5d525caa05014e0cc0f7fdfee",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "qualification_apk": {
+    "path": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "5acaa856643dc56e556d791ffa4d171686b57a52518a27213e6fcdb7affa2f30",
+    "build": "PASS",
+    "install": "PASS",
+    "launch": "PASS"
+  },
+  "device": {
+    "platform": "android",
+    "model": "Pixel 7",
+    "device": "panther",
+    "serial": "29251FDH2004Z0",
+    "os": "Android 17",
+    "sdk": 37,
+    "build_fingerprint": "google/panther/panther:17/CP2A.260705.006/15641320:user/release-keys",
+    "input_capability": "multitouch finger",
+    "active_pen_supported_for_this_run": false
+  },
+  "human_executed_scenarios": {
+    "operator": "user",
+    "reported_result": "ALL_NORMAL",
+    "scenarios": [
+      {"id": "separate-strokes", "result": "PASS", "description": "Three separated single-finger strokes terminate independently without accidental joins."},
+      {"id": "concurrent-pointers", "result": "PASS", "description": "Two fingers move concurrently and both pointer streams respond."},
+      {"id": "two-finger-viewport", "result": "PASS", "description": "Pinch out, pinch in and two-finger pan remain continuous without crash."},
+      {"id": "member-lift", "result": "PASS", "description": "One member lifts while the remaining pointer continues, then terminates without stuck or cross-wired session."},
+      {"id": "pointer-reuse", "result": "PASS", "description": "Ten rapid taps or short strokes continue correctly across pointer-id reuse."},
+      {"id": "background-source-loss", "result": "PASS", "description": "Background and resume leave no stale pointer; a new stroke works after return."}
+    ]
+  },
+  "trace_summary": {
+    "events": 5227,
+    "complete_strokes": 41,
+    "pointer_ids": [0, 1, 2],
+    "max_concurrent_strokes": 3,
+    "overlapping_cross_pointer_stroke_pairs": 24,
+    "sequence_range": [1, 5227],
+    "tools": ["touch"],
+    "pressure_observed_range": [0.16471, 1.0],
+    "touch_major_range": [92.0, 518.0],
+    "touch_minor_range": [70.0, 166.0],
+    "final_active_pointer_count": 0,
+    "viewport_scale": 0.98324
+  },
+  "artifacts": [
+    {"path": ".aegis/results/GT-G4-4/g4-4-11-android-pointer-trace.json", "sha256": "16dd071cd9d20e2f2f8b758ee4b90546ec5087c97c8e1b7ab7f23f7baf5a4afb"},
+    {"path": ".aegis/results/GT-G4-4/g4-4-11-android-functional.json", "sha256": "e406a5d3203211b53bdf9b710a5d4c4963b3cb3c40eb1597549a4e50eb246e84"},
+    {"path": ".aegis/results/GT-G4-4/g4-4-11-android-capture.png", "sha256": "e7020de2f8157ad5e75dcf6b6dbb4bba0bdab7528ef0ed0442ef21f253b4b552"},
+    {"path": ".aegis/results/GT-G4-4/g4-4-11-android-device-screenshot.png", "sha256": "2bc1e5ebdeffe1bb3d79a9b744fe34c6899939250bba2bd34ace7103e76d3566"}
+  ],
+  "capability_profile_exclusions": [
+    {"scenario": "pen or stylus drawing", "status": "NOT_APPLICABLE", "reason": "No active pen was available on this device; Authority requires pen/pressure only on a supporting qualification device."},
+    {"scenario": "pressure performance qualification", "status": "NOT_APPLICABLE", "reason": "Pressure qualification was explicitly removed for unsupported Windows and Android profiles."},
+    {"scenario": "pen plus palm", "status": "NOT_APPLICABLE", "reason": "Requires active pen hardware; automated arbitration semantics remain covered."},
+    {"scenario": "Windows touch-frame multitouch", "status": "NOT_EXERCISED", "reason": "The Windows qualification machine exposed mouse input only; its available mouse profile remains corroborative evidence."}
+  ],
+  "evidence_boundaries": {
+    "physical_pressure_pass_claimed": false,
+    "physical_pen_pass_claimed": false,
+    "windows_multitouch_pass_claimed": false,
+    "synthetic_promoted_to_physical": false
+  },
+  "return_surface": "CONTROL_REVIEW"
+}

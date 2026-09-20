@@ -1,0 +1,23 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "current":true,
+  "source":{
+    "provider":"notion",
+    "architecture_ref":"notion://3e14c57a590c814fbe38cd3800d7b291",
+    "implementation_plan_ref":"notion://3e14c57a590c810fa529c1ef7b5c5b6e",
+    "title":"G4.4 Multi-Pointer Input & Gesture Arbitration",
+    "architecture_last_edited_at":"2026-09-20T02:53:01.054Z",
+    "implementation_plan_last_edited_at":"2026-09-20T15:45:04.363Z"
+  },
+  "dependency":{"g4_integration_revision":"7be89f11d7abc26c3788aa5f8a3b324571baa27c","g4_status":"PASS_G4_FUNCTIONAL_INTEGRATION"},
+  "invariants":["PointerKey is transient identity", "PointerKey is not StrokeId", "one pointer one claim", "canonical mutations remain ordered", "pointer/gesture state is derived and not SemanticDocument truth", "cancel and source loss are isolated per session"],
+  "execution_cadence":{
+    "automated_work_packages":["G4.4-00","G4.4-01","G4.4-02","G4.4-03","G4.4-04","G4.4-05","G4.4-06","G4.4-07","G4.4-08","G4.4-09","G4.4-10"],
+    "automated_terminal_state":"READY_FOR_PHYSICAL_VERIFICATION",
+    "physical_gate_stage":"G4.4-11",
+    "pressure_or_pen_required_only_when_device_supports_it":true,
+    "g4_4_pass_before_g4_4_11_forbidden":true
+  },
+  "forbidden":["new canonical ObjectKind or Operation","G4.5 BrushProgram","G4.6 presentation","G5 tile/cache/scheduler"]
+}

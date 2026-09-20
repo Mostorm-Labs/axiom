@@ -16,13 +16,18 @@ std::string serializePointerTrace(
   out << std::setprecision(9);
   for (std::size_t i = 0; i < samples.size(); ++i) {
     const auto& sample = samples[i];
-    out << "    {\"pointer_id\": " << sample.pointerId
+    out << "    {\"source_device_id\": " << sample.sourceDeviceId
+        << ", \"pointer_id\": " << sample.pointerId
+        << ", \"generation\": " << sample.generation
         << ", \"timestamp_ms\": " << sample.timestampMs
         << ", \"input_type\": \"" << sample.inputType
         << "\", \"phase\": \"" << sample.phase
         << "\", \"x\": " << sample.x << ", \"y\": " << sample.y
         << ", \"pressure\": " << sample.pressure
-        << ", \"batch_size\": " << sample.batchSize << "}";
+        << ", \"batch_size\": " << sample.batchSize
+        << ", \"contact_width\": " << sample.contactWidth
+        << ", \"contact_height\": " << sample.contactHeight
+        << ", \"contact_area\": " << sample.contactWidth * sample.contactHeight << "}";
     if (i + 1U != samples.size()) out << ",";
     out << "\n";
   }

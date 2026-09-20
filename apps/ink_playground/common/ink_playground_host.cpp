@@ -24,6 +24,14 @@ bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
          interaction_->startSession(strokeId);
 }
 
+bool InkPlaygroundHost::beginStroke(const input::PointerKey& key, std::uint64_t strokeId) noexcept {
+  if (!key.valid() || keyedStrokeIds_.contains(key)) return false;
+  if (!ink_->begin(key, strokeId) || !preview_->beginKeyed(strokeId) ||
+      !interaction_->startSession(key, strokeId)) return false;
+  keyedStrokeIds_.emplace(key, strokeId);
+  return true;
+}
+
 bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
                                std::uint64_t observationTimeNs) {
   if (batch.samples.empty() ||
@@ -43,7 +51,11 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
       confirmed.push_back(point);
     }
   }
-  if (!preview_->update(confirmed, predicted)) return false;
+  const auto keyed = batch.samples.front().key;
+  if (keyed.valid()) {
+    const auto it = keyedStrokeIds_.find(keyed);
+    if (it == keyedStrokeIds_.end() || !preview_->updateKeyed(it->second, confirmed, predicted)) return false;
+  } else if (!preview_->update(confirmed, predicted)) return false;
   const auto firstNs = batch.samples.front().timestampNs;
   const auto lastNs = batch.samples.back().timestampNs;
   strokeStartNs_ = strokeStartNs_ == 0 ? firstNs : strokeStartNs_;
@@ -58,9 +70,46 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
   hud_.inkMs = observationTimeNs >= strokeStartNs_
                    ? static_cast<double>(observationTimeNs - strokeStartNs_) / 1'000'000.0
                    : 0.0;
-  hud_.previewRevision = preview_->snapshot().revision;
-  hud_.predictionDepth = preview_->snapshot().predicted.size();
+  if (keyed.valid()) {
+    const auto* state = preview_->snapshot(keyedStrokeIds_.at(keyed));
+    hud_.previewRevision = state == nullptr ? 0 : state->revision;
+    hud_.predictionDepth = state == nullptr ? 0 : state->predicted.size();
+  } else {
+    hud_.previewRevision = preview_->snapshot().revision;
+    hud_.predictionDepth = preview_->snapshot().predicted.size();
+  }
   return true;
+}
+
+bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
+                                     std::uint64_t operationId) noexcept {
+  const auto* state = preview_->snapshot(strokeId);
+  if (state == nullptr || !ink_->finish(key).has_value()) return false;
+  const auto committedPoints = state->confirmed;
+  if (!interaction_->commit(key, strokeId, interaction::OperationRequest{operationId})) return false;
+  if (!committedPoints.empty()) committedStrokes_.push_back(committedPoints);
+  preview_->cancelKeyed(strokeId);
+  keyedStrokeIds_.erase(key);
+  return true;
+}
+
+bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
+  const auto entry = keyedStrokeIds_.find(key);
+  if (entry == keyedStrokeIds_.end()) return false;
+  ink_->cancel(key);
+  preview_->cancelKeyed(entry->second);
+  if (!interaction_->cancel(key, entry->second)) return false;
+  keyedStrokeIds_.erase(entry);
+  return true;
+}
+
+void InkPlaygroundHost::cancelAllPointers() noexcept {
+  for (const auto& [key, strokeId] : keyedStrokeIds_) {
+    ink_->cancel(key);
+    preview_->cancelKeyed(strokeId);
+  }
+  keyedStrokeIds_.clear();
+  interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
 }
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,

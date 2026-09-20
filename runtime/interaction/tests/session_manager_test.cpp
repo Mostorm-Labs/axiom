@@ -71,5 +71,21 @@ void rejected_operation_does_not_mutate_session_canonical_state() {
 int main() {
     session_lifecycle_and_detach_cancels_active_session();
     rejected_operation_does_not_mutate_session_canonical_state();
+    TransientPort transient;
+    canvas::interaction::InteractionSessionManager keyed(transient);
+    const canvas::input::PointerKey first{2, 1, 1};
+    const canvas::input::PointerKey second{2, 2, 1};
+    assert(keyed.start(first, 101));
+    assert(keyed.start(second, 102));
+    assert(keyed.keyedActiveCount() == 2);
+    assert(keyed.cancel(first, 101));
+    assert(transient.cancelledId == 101);
+    assert(keyed.finish(second, 102));
+    assert(keyed.keyedActiveCount() == 0);
+    assert(keyed.start(first, 103));
+    assert(keyed.start(second, 104));
+    keyed.cancelAllKeyed(canvas::interaction::CancellationReason::kSourceLost);
+    assert(keyed.keyedActiveCount() == 0);
+    assert(keyed.lastCancellationReason() == canvas::interaction::CancellationReason::kSourceLost);
     return 0;
 }

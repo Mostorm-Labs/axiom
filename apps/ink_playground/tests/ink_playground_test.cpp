@@ -105,6 +105,24 @@ void platform_test() {
     assert(!contract.entrypoint.empty());
   }
 }
+
+void multipointer_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  const canvas::input::PointerKey first{7, 1, 1};
+  const canvas::input::PointerKey second{7, 2, 1};
+  assert(host.beginStroke(first, 101));
+  assert(host.beginStroke(second, 102));
+  canvas::input::PointerSampleBatch firstBatch;
+  firstBatch.samples.push_back({1, 1'000'000, 10.0F, 10.0F, 0.5F, false, first});
+  canvas::input::PointerSampleBatch secondBatch;
+  secondBatch.samples.push_back({1, 1'000'000, 20.0F, 20.0F, 0.5F, false, second});
+  assert(host.accept(firstBatch, 1'000'000));
+  assert(host.accept(secondBatch, 1'000'000));
+  assert(host.cancelStroke(first));
+  assert(host.commitStroke(second, 102, 202));
+  assert(!host.commitStroke(first, 101, 201));
+  assert(host.canonicalStrokes().size() == 1);
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -115,6 +133,7 @@ int main(int argc, char** argv) {
   else if (mode == "preview") preview_points_test();
   else if (mode == "repeated") repeated_strokes_test();
   else if (mode == "platform") platform_test();
+  else if (mode == "multipointer") multipointer_test();
   else return 2;
   return 0;
 }

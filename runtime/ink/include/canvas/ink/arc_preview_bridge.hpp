@@ -3,6 +3,7 @@
 #include "canvas/ink/preview_model.hpp"
 
 #include <cstdint>
+#include <unordered_map>
 
 namespace canvas::ink {
 
@@ -18,11 +19,14 @@ class ArcPreviewBridge final {
  public:
   explicit ArcPreviewBridge(PreviewPresentationPort& port) noexcept : port_(port) {}
   PreviewDisposition present(const PreviewSnapshot& snapshot) noexcept;
+  PreviewDisposition presentKeyed(const PreviewSnapshot& snapshot) noexcept;
   [[nodiscard]] bool canonicalOnly() const noexcept { return canonicalOnly_; }
+  [[nodiscard]] bool canonicalOnly(std::uint64_t strokeId) const noexcept;
 
  private:
   PreviewPresentationPort& port_;
   bool canonicalOnly_ = false;
+  std::unordered_map<std::uint64_t, bool> keyedCanonicalOnly_;
 };
 
 }  // namespace canvas::ink

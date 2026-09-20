@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <span>
+#include <unordered_map>
 #include <vector>
 
 namespace canvas::ink {
@@ -18,6 +19,12 @@ struct PreviewSnapshot final {
 class PreviewModel final {
  public:
   bool begin(std::uint64_t strokeId) noexcept;
+  bool beginKeyed(std::uint64_t strokeId) noexcept;
+  bool updateKeyed(std::uint64_t strokeId,
+                   std::span<const StrokePoint> confirmedAppend,
+                   std::span<const StrokePoint> predictedTail);
+  void cancelKeyed(std::uint64_t strokeId) noexcept;
+  [[nodiscard]] const PreviewSnapshot* snapshot(std::uint64_t strokeId) const noexcept;
   bool update(std::span<const StrokePoint> confirmedAppend,
               std::span<const StrokePoint> predictedTail);
   void cancel() noexcept;
@@ -26,6 +33,7 @@ class PreviewModel final {
  private:
   PreviewSnapshot state_;
   bool active_ = false;
+  std::unordered_map<std::uint64_t, PreviewSnapshot> keyed_;
 };
 
 }  // namespace canvas::ink

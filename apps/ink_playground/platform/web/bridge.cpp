@@ -49,6 +49,28 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_sample(
   batch.samples.push_back({sequence, timestampNs, x, y, pressure, predicted != 0});
   return host(value)->accept(batch, observationTimeNs);
 }
+EMSCRIPTEN_KEEPALIVE int axiom_ink_begin_pointer(
+    std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
+    std::uint32_t generation, std::uint32_t strokeId) {
+  return host(value) != nullptr &&
+         host(value)->beginStroke({source, pointer, generation}, strokeId);
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_pointer_sample(
+    std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
+    std::uint32_t generation, std::uint32_t sequence, std::uint32_t timestampNs,
+    float x, float y, float pressure, int predicted, std::uint32_t observationTimeNs) {
+  if (host(value) == nullptr) return 0;
+  canvas::input::PointerSampleBatch batch;
+  batch.samples.push_back({sequence, timestampNs, x, y, pressure, predicted != 0,
+                           {source, pointer, generation}});
+  return host(value)->accept(batch, observationTimeNs);
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_commit_pointer(
+    std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
+    std::uint32_t generation, std::uint32_t strokeId, std::uint32_t operationId) {
+  return host(value) != nullptr &&
+         host(value)->commitStroke({source, pointer, generation}, strokeId, operationId);
+}
 EMSCRIPTEN_KEEPALIVE int axiom_ink_commit(
     std::uint32_t value, std::uint32_t strokeId, std::uint32_t operationId) {
   return host(value) != nullptr && host(value)->commitStroke(strokeId, operationId);

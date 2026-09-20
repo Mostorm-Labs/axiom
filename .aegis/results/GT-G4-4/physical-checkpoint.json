@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P32_PHYSICAL_CHECKPOINT",
+  "status": "BLOCKED_ENVIRONMENT",
+  "result_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+  "execution_branch": "codex/g4-4-multipointer",
+  "required_device": "one real device supporting pen and multitouch concurrently",
+  "required_scenarios": [
+    "pen drawing",
+    "two-finger pan/pinch",
+    "pen+palm",
+    "broad finger contact",
+    "pointer identity continuity",
+    "repeated down/up pointer reuse",
+    "cancellation",
+    "contact-area sample capture"
+  ],
+  "evidence_observed": [
+    "PASS_ANDROID_MULTITOUCH_FUNCTIONAL_CHECKPOINT",
+    "PASS_WINDOWS_NATIVE_FUNCTIONAL_CHECKPOINT",
+    "Windows 10 x64 real HWND and message loop",
+    "660 WM_POINTER/mouse events over 59016 ms",
+    "18 complete down/up strokes",
+    "pointer generation reuse 1 through 18",
+    "Skia canonical presentation reached canonical-visible",
+    "full Windows build and 29/29 CTest PASS"
+  ],
+  "windows_checkpoint": {
+    "windows_version": "10.0.19045",
+    "input_types": [
+      "mouse"
+    ],
+    "pointer_ids": [
+      1
+    ],
+    "source_device_ids": [
+      1
+    ],
+    "generation_min": 1,
+    "generation_max": 18,
+    "event_count": 660,
+    "stroke_count": 18,
+    "max_concurrent_pointers": 1,
+    "max_history_batch": 1,
+    "nonzero_contact_samples": 0,
+    "pressure_values": [
+      0.5
+    ],
+    "cancel_events": 0,
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-4/windows-pointer-trace.json",
+      "sha256": "ba0cf8d0be8859c7009ab969e5b27d5dfb98f360f274d869f90c18d4e1aa9321"
+    },
+    "hud_telemetry": {
+      "path": ".aegis/results/GT-G4-4/windows-hud-telemetry.json",
+      "sha256": "e6b50b9311a35d36900878c38c136f58e4ba041a11698fa12014b1c9639eae33"
+    },
+    "capture": null
+  },
+  "enumerated_but_unqualified_devices": [
+    {
+      "friendly_name": "HID-compliant pen",
+      "instance_id": "HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
+      "parent": "ROOT\\HIDCLASS\\0000",
+      "reason": "virtual/root HID identity and no pen events observed"
+    },
+    {
+      "friendly_name": "HID-compliant touch screen",
+      "instance_id": "HID\\VMULTIA&COL01\\1&2D595CA7&0&0000",
+      "parent": "ROOT\\HIDCLASS\\0000",
+      "reason": "virtual/root HID identity and no touch events observed"
+    }
+  ],
+  "missing_physical_evidence": [
+    "real pen input",
+    "real concurrent multitouch",
+    "pen+palm",
+    "broad contact geometry",
+    "cancellation event",
+    "coalesced history batch greater than one",
+    "reviewer-accessible screenshot or video capture"
+  ],
+  "synthetic_substitute_accepted": false,
+  "headless_or_mouse_promoted_to_physical": false,
+  "reason": "The Windows native path is built and functional, but this machine produced mouse-only input and no reviewer-accessible capture. The frozen pen-plus-multitouch physical oracle remains unavailable.",
+  "resume_stage": "P32_PHYSICAL_CHECKPOINT",
+  "return_surface": "CONTROL_REVIEW"
+}

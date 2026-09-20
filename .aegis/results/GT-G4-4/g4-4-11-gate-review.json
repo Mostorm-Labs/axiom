@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "automated_evidence_revision": "e976da0ca2bee0b5d525caa05014e0cc0f7fdfee",
+  "physical_evidence_revision": "ceaffa30f62a39fe0a6bf7d83d342a78243ce44e",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "checks": [
+      "No single-active-pointer invariant remains in the frozen input, ink and preview contracts.",
+      "Two and four concurrent synthetic streams, generation fencing and per-session fault isolation pass.",
+      "Two-finger viewport, broad-touch hysteresis and pen-palm precedence automated semantics pass.",
+      "Arc keyed multi-preview and per-stroke handoff regression pass.",
+      "No canonical ObjectKind or Operation was added."
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "automated": "33/33 PASS",
+    "windows_available_profile": "29/29 PASS plus mouse-only native evidence",
+    "android_physical_profile": "PASS_MULTITOUCH_FUNCTIONAL_QUALIFICATION",
+    "web_profile": "PASS_AUTOMATED_CONFORMANCE",
+    "capability_exclusions": "PASS_EXPLICIT_NOT_APPLICABLE_BOUNDARY",
+    "artifact_hashes": "PASS"
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "repository": "Mostorm-Labs/axiom",
+    "execution_branch": "codex/g4-4-multipointer",
+    "task_anchor_ancestor": true,
+    "package_hashes": "PASS",
+    "git_diff_check": "PASS",
+    "forbidden_scope_changes": "NONE"
+  },
+  "decision": {
+    "verdict": "PASS",
+    "status": "PASS_G4_4",
+    "official_g4_4_pass": true,
+    "official_g4_pass_reissued": false,
+    "pressure_or_pen_pass_claimed": false,
+    "windows_multitouch_pass_claimed": false,
+    "next_stage": "G4.5_P31_MATERIALIZATION"
+  }
+}

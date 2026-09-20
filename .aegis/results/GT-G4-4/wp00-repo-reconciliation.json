@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P30_RECONCILIATION",
+  "task_anchor": "7be89f11d7abc26c3788aa5f8a3b324571baa27c",
+  "execution_branch": "codex/g4-4-multipointer",
+  "baseline": {
+    "pointer_sample": "sequence,timestampNs,x,y,pressure,predicted",
+    "pointer_sample_batch": "vector<PointerSample>,terminalCancel",
+    "input_router": "single global confirmed/predicted counters and last sequence",
+    "ink_engine": "single active stroke, one point vector and active flag",
+    "preview_model": "single PreviewSnapshot and active flag",
+    "arc_preview_bridge": "single canonicalOnly state",
+    "interaction_session_manager": "single activeSession and activeCount",
+    "platform_adapters": ["web adapter exists", "arc adapter exists", "Windows/Android hosts require identity normalization"],
+    "test_surface": ["runtime/input/tests", "runtime/ink/tests", "runtime/interaction/tests", "apps/ink_playground tests"]
+  },
+  "required_scope": [
+    "PointerKey and generation fencing",
+    "PointerCapabilities and ContactGeometry normalization",
+    "GestureArbiter and exclusive claims",
+    "multi-stroke sessions with ordered canonical commit",
+    "two-finger viewport gesture substrate",
+    "broad-touch eraser and palm baseline",
+    "keyed Arc previews with per-stroke handoff isolation",
+    "deterministic corpus/replay/fault tests",
+    "platform adapter normalization and physical checkpoint",
+    "multi-pointer playground and final gate evidence"
+  ],
+  "forbidden_scope": ["new canonical ObjectKind or Operation", "SemanticDocument pointer state", "G4.5 BrushProgram", "G4.6 presentation", "G5 tile/cache/scheduler", "rewriting historical G4 evidence"],
+  "physical_checkpoint": {
+    "required": ["pen drawing", "two-finger pan/pinch", "pen+palm", "broad finger", "pointer reuse", "cancellation", "contact-area capture"],
+    "blocking_if_unavailable": true,
+    "accepted_substitute": "none; synthetic input is corroborative only"
+  },
+  "status": "RECONCILIATION_COMPLETE"
+}

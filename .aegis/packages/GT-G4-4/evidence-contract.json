@@ -1,0 +1,16 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "review_boundary":"Exact result revision, package locks, automated tests, corpus, qualification bundle and available device-profile evidence",
+  "artifacts":[
+    {"id":"p31-control-review","path":".aegis/results/GT-G4-4/p31-control-review.json","blocking":true},
+    {"id":"result","path":".aegis/results/GT-G4-4/result.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G4-4/portable-regression-summary.json","blocking":true},
+    {"id":"corpus-evidence","path":".aegis/results/GT-G4-4/corpus-evidence.json","blocking":true},
+    {"id":"qualification-bundle-manifest","path":".aegis/results/GT-G4-4/qualification-bundle-manifest.json","blocking":true},
+    {"id":"ready-for-physical-verification","path":".aegis/results/GT-G4-4/ready-for-physical-verification.json","blocking":true},
+    {"id":"physical-checkpoint","path":".aegis/results/GT-G4-4/physical-checkpoint.json","blocking":false,"role":"available profile evidence and G4.4-11 input"},
+    {"id":"p34-v0.2-control-review","path":".aegis/results/GT-G4-4/p34-v0.2-control-review.json","blocking":true}
+  ],
+  "claim_boundary":"P32/P34 may establish READY_FOR_PHYSICAL_VERIFICATION for G4.4-00 through G4.4-10. Only G4.4-11 may issue final G4.4 PASS."
+}

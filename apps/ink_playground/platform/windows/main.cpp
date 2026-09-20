@@ -3,6 +3,7 @@
 #include "windows_pointer_utils.hpp"
 #include "windows_smoke_evidence.hpp"
 #include "canvas/render/canonical_handoff.hpp"
+#include "canvas/input/active_pointer_registry.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
 #include "canvas/render/skia_ink_backend.hpp"
 #endif
@@ -19,6 +20,7 @@
 #include <memory>
 #include <string>
 #include <sstream>
+#include <unordered_map>
 #include <vector>
 
 namespace {
@@ -26,7 +28,9 @@ using canvas::ink_playground::InkPlaygroundHost;
 
 class ArcSink final : public arc::PointerSampleSink {
  public:
-  explicit ArcSink(InkPlaygroundHost& host) : host_(host) {}
+  ArcSink(InkPlaygroundHost& host,
+          const std::unordered_map<std::uint64_t, canvas::input::PointerKey>& activeKeys)
+      : host_(host), activeKeys_(activeKeys) {}
   arc::Status Push(const arc_pointer_sample_batch_v0& batch) override {
     canvas::input::PointerSampleBatch samples;
     samples.samples.reserve(batch.sample_count);
@@ -34,9 +38,12 @@ class ArcSink final : public arc::PointerSampleSink {
     for (std::uint32_t index = 0; index < batch.sample_count; ++index) {
       const auto* sample = reinterpret_cast<const arc_pointer_sample_v0*>(raw +
           static_cast<std::size_t>(index) * batch.sample_stride);
+      const auto key = activeKeys_.find(sample->pointer_id);
+      if (key == activeKeys_.end()) return arc::Status::kInvalidState;
       samples.samples.push_back({sample->sample_sequence, sample->timestamp_us * 1000U,
                                  sample->x, sample->y, sample->pressure,
-                                 sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT});
+                                 sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT,
+                                 key->second});
     }
     const auto now = static_cast<std::uint64_t>(
         std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -46,17 +53,21 @@ class ArcSink final : public arc::PointerSampleSink {
   void SourceLost(std::uint64_t, arc::Status) override { (void)host_.loseSurface(); }
  private:
   InkPlaygroundHost& host_;
+  const std::unordered_map<std::uint64_t, canvas::input::PointerKey>& activeKeys_;
 };
 
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<arc::InputSource> input; std::unique_ptr<arc::Bridge> previewBridge;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
-  std::uint64_t previewRevision = 0;
-  std::vector<arc_preview_primitive_v0> previewPoints;
-  bool previewInputActive = false;
+  struct ActivePreview { std::uint64_t stroke = 0; std::uint64_t revision = 0;
+    std::vector<arc_preview_primitive_v0> points; bool active = false; };
+  std::unordered_map<std::uint64_t, ActivePreview> previews;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
   std::vector<PendingHandoff> pendingHandoffs;
-  std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
+  std::uint64_t deviceId = 0;
+  canvas::input::ActivePointerRegistry pointerRegistry;
+  std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
+  std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   bool runtimePreviewVisible = true;
 #if defined(CANVAS_RENDER_HAS_SKIA)
@@ -66,44 +77,45 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
 
-void beginArcPreview(State& value) {
+void beginArcPreview(State& value, std::uint64_t pointerId) {
   if (value.previewBridge == nullptr) return;
-  value.previewRevision = 0;
-  value.previewPoints.clear();
-  value.previewInputActive = true;
+  auto& preview = value.previews[pointerId];
+  preview = State::ActivePreview{value.pointerStrokes.at(pointerId), 0, {}, true};
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
-  begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = value.stroke; begin.view_id = 1;
+  begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = preview.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
   begin.brush.struct_size = sizeof(begin.brush); begin.brush.abi_version = ARC_ABI_VERSION;
   (void)value.previewBridge->Begin(begin);
 }
 
-void pushArcPreview(State& value, float x, float y) {
+void pushArcPreview(State& value, std::uint64_t pointerId, float x, float y) {
   if (value.previewBridge == nullptr) return;
-  value.previewPoints.push_back(
+  auto& preview = value.previews.at(pointerId);
+  preview.points.push_back(
       arc_preview_primitive_v0{ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, x, y, 2.0F, 0.0F, 1.0F});
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
-  update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = value.stroke;
-  update.preview_revision = ++value.previewRevision;
+  update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = preview.stroke;
+  update.preview_revision = ++preview.revision;
   update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
-  update.confirmed_append = value.previewPoints.data();
-  update.confirmed_append_count = static_cast<std::uint32_t>(value.previewPoints.size());
+  update.confirmed_append = preview.points.data();
+  update.confirmed_append_count = static_cast<std::uint32_t>(preview.points.size());
   update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
   (void)value.previewBridge->Push(update);
 }
 
-void commitArcHandoff(State& value) {
+void commitArcHandoff(State& value, std::uint64_t pointerId) {
   if (value.previewBridge == nullptr) return;
-  const auto revision = value.previewRevision;
+  auto& preview = value.previews.at(pointerId);
+  const auto revision = preview.revision;
   if (revision == 0) return;
-  arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, value.stroke, revision,
+  arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, preview.stroke, revision,
                            value.previewGeneration};
   if (value.previewBridge->SealInput(seal) != arc::Status::kOk) return;
-  arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, value.stroke, revision,
-                                 value.stroke, value.previewGeneration, {1, value.stroke}};
+  arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, preview.stroke, revision,
+                                 preview.stroke, value.previewGeneration, {1, preview.stroke}};
   if (value.previewBridge->CanonicalCommitted(commit) != arc::Status::kOk) return;
-  value.previewInputActive = false;
-  value.pendingHandoffs.push_back({value.stroke, revision});
+  preview.active = false;
+  value.pendingHandoffs.push_back({preview.stroke, revision});
   value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
 }
 
@@ -179,24 +191,27 @@ bool finalizeCanonicalPresentation(State& value) {
 
 bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, LPARAM lParam) {
   constexpr UINT kMousePointerId = 1U;
-  using canvas::ink_playground::windows_input::PointerLifecycleEvent;
   const auto timestampMs = static_cast<std::uint64_t>(GetMessageTime());
-  PointerLifecycleEvent event = PointerLifecycleEvent::kIgnore;
+  bool begin = false;
+  bool end = false;
   std::uint32_t phase = ARC_POINTER_PHASE_MOVE;
   if (message == WM_LBUTTONDOWN) {
-    event = value.lifecycle.begin(kMousePointerId, timestampMs);
+    const auto key = value.pointerRegistry.begin(1, kMousePointerId);
+    if (!key.valid()) return false;
+    value.activeKeys[kMousePointerId] = key;
+    begin = true;
     phase = ARC_POINTER_PHASE_DOWN;
   } else if (message == WM_LBUTTONUP) {
-    event = value.lifecycle.end(kMousePointerId);
+    end = value.activeKeys.contains(kMousePointerId);
     phase = ARC_POINTER_PHASE_UP;
-  } else if ((wParam & MK_LBUTTON) != 0U) {
-    event = value.lifecycle.update(kMousePointerId);
+  } else if ((wParam & MK_LBUTTON) == 0U || !value.activeKeys.contains(kMousePointerId)) {
+    return false;
   }
-  if (event == PointerLifecycleEvent::kIgnore) return false;
-  if (event == PointerLifecycleEvent::kBegin) {
+  if (begin) {
     ++value.stroke;
-    if (!value.host->beginStroke(value.stroke)) return false;
-    beginArcPreview(value);
+    value.pointerStrokes[kMousePointerId] = value.stroke;
+    if (!value.host->beginStroke(value.activeKeys.at(kMousePointerId), value.stroke)) return false;
+    beginArcPreview(value, kMousePointerId);
     SetCapture(window);
   }
 
@@ -225,20 +240,49 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   batch.sample_count = 1;
   batch.sample_stride = sizeof(sample);
   if (value.input->SubmitBatch(batch) != arc::Status::kOk) return false;
-  pushArcPreview(value, x, y);
+  pushArcPreview(value, kMousePointerId, x, y);
   value.deviceId = kMousePointerId;
-  value.trace.push_back({kMousePointerId, timestampMs, "mouse",
-                         phase == ARC_POINTER_PHASE_DOWN ? "down" :
-                         (phase == ARC_POINTER_PHASE_UP ? "up" : "move"),
-                         x, y, sample.pressure, 1U});
+  const auto key = value.activeKeys.at(kMousePointerId);
+  value.trace.push_back({key.source, kMousePointerId, key.generation, timestampMs, "mouse",
+                          phase == ARC_POINTER_PHASE_DOWN ? "down" :
+                          (phase == ARC_POINTER_PHASE_UP ? "up" : "move"),
+                          x, y, sample.pressure, 1U, 0.0F, 0.0F});
   persistEvidence(value);
-  if (event == PointerLifecycleEvent::kEnd) {
-    if (!value.host->commitStroke(value.stroke, value.stroke)) return false;
-    commitArcHandoff(value);
+  if (end) {
+    const auto stroke = value.pointerStrokes.at(kMousePointerId);
+    if (!value.host->commitStroke(value.activeKeys.at(kMousePointerId), stroke, stroke)) return false;
+    commitArcHandoff(value, kMousePointerId);
+    (void)value.pointerRegistry.end(value.activeKeys.at(kMousePointerId));
+    value.activeKeys.erase(kMousePointerId);
+    value.pointerStrokes.erase(kMousePointerId);
     if (GetCapture() == window) ReleaseCapture();
   }
   InvalidateRect(window, nullptr, FALSE);
   return true;
+}
+
+void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestampMs) {
+  const auto keyEntry = value.activeKeys.find(pointerId);
+  if (keyEntry == value.activeKeys.end()) return;
+  const auto key = keyEntry->second;
+  const auto strokeEntry = value.pointerStrokes.find(pointerId);
+  if (strokeEntry != value.pointerStrokes.end()) {
+    const auto preview = value.previews.find(pointerId);
+    if (value.previewBridge != nullptr && preview != value.previews.end()) {
+      arc_preview_cancel_v0 cancel{sizeof(cancel), ARC_ABI_VERSION, preview->second.stroke,
+                                   value.previewGeneration, 1U, 0U};
+      (void)value.previewBridge->Cancel(cancel);
+    }
+    (void)value.host->cancelStroke(key);
+  }
+  value.trace.push_back({key.source, static_cast<std::uint32_t>(pointerId), key.generation,
+                         timestampMs, "unknown", "cancel", 0.0F, 0.0F, 0.0F, 0U,
+                         0.0F, 0.0F});
+  (void)value.pointerRegistry.end(key);
+  value.activeKeys.erase(pointerId);
+  value.pointerStrokes.erase(pointerId);
+  value.previews.erase(pointerId);
+  persistEvidence(value);
 }
 
 void persistEvidence(const State& value) {
@@ -297,7 +341,9 @@ void paint(HWND window, State& value) {
   SetTextColor(bufferDc, RGB(30, 30, 30));
   const auto& hud = value.host->hud();
   std::wstringstream status;
-  const wchar_t* qualificationState = value.previewInputActive
+  const bool previewInputActive = std::any_of(value.previews.begin(), value.previews.end(),
+      [](const auto& item) { return item.second.active; });
+  const wchar_t* qualificationState = previewInputActive
                                           ? L"PREVIEW_ONLY"
                                           : (!value.pendingHandoffs.empty() ? L"OVERLAP"
                                                                             : L"CANONICAL_ONLY");
@@ -313,11 +359,13 @@ void paint(HWND window, State& value) {
   // Optional presentation-only mirror. It is never used for canonical
   // handoff eligibility and is off by default so Arc evidence cannot be
   // satisfied by this debug layer.
-  if (value.runtimePreviewVisible && value.previewInputActive)
-      for (const auto& points : {value.host->transientPreviewPoints()}) {
-    for (std::size_t i = 1; i < points.size(); ++i) {
-      MoveToEx(bufferDc, static_cast<int>(points[i - 1].x), static_cast<int>(points[i - 1].y), nullptr);
-      LineTo(bufferDc, static_cast<int>(points[i].x), static_cast<int>(points[i].y));
+  if (value.runtimePreviewVisible && previewInputActive)
+      for (const auto& [pointerId, preview] : value.previews) {
+    static_cast<void>(pointerId);
+    if (!preview.active) continue;
+    for (std::size_t i = 1; i < preview.points.size(); ++i) {
+      MoveToEx(bufferDc, static_cast<int>(preview.points[i - 1].x), static_cast<int>(preview.points[i - 1].y), nullptr);
+      LineTo(bufferDc, static_cast<int>(preview.points[i].x), static_cast<int>(preview.points[i].y));
     }
   }
   BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, bufferDc, 0, 0, SRCCOPY);
@@ -352,20 +400,25 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (info.pointerType == PT_MOUSE) return 0;
     const auto phase = message == WM_POINTERDOWN ? ARC_POINTER_PHASE_DOWN :
         (message == WM_POINTERUP ? ARC_POINTER_PHASE_UP : ARC_POINTER_PHASE_MOVE);
-    using canvas::ink_playground::windows_input::PointerLifecycleEvent;
-    PointerLifecycleEvent lifecycleEvent = PointerLifecycleEvent::kIgnore;
+    bool begin = false;
+    bool end = false;
     if (phase == ARC_POINTER_PHASE_DOWN) {
-      lifecycleEvent = value->lifecycle.begin(pointerId, info.dwTime);
+      const auto source = canvas::ink_playground::windows_input::functionalDeviceId(
+          info.sourceDevice, static_cast<std::uint64_t>(pointerId));
+      const auto key = value->pointerRegistry.begin(source, pointerId);
+      if (!key.valid()) return 0;
+      value->activeKeys[pointerId] = key;
+      begin = true;
     } else if (phase == ARC_POINTER_PHASE_UP) {
-      lifecycleEvent = value->lifecycle.end(pointerId);
-    } else {
-      lifecycleEvent = value->lifecycle.update(pointerId);
+      end = value->activeKeys.contains(pointerId);
+    } else if (!value->activeKeys.contains(pointerId)) {
+      return 0;
     }
-    if (lifecycleEvent == PointerLifecycleEvent::kIgnore) return 0;
-    if (lifecycleEvent == PointerLifecycleEvent::kBegin) {
+    if (begin) {
       ++value->stroke;
-      if (!value->host->beginStroke(value->stroke)) return 0;
-      beginArcPreview(*value);
+      value->pointerStrokes[pointerId] = value->stroke;
+      if (!value->host->beginStroke(value->activeKeys.at(pointerId), value->stroke)) return 0;
+      beginArcPreview(*value, pointerId);
     }
     std::vector<POINTER_INFO> pointerHistory;
     UINT32 pointerHistoryCount = 0;
@@ -381,7 +434,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       pointerHistory.assign(1U, info);
     } else {
       pointerHistory = canvas::ink_playground::windows_input::normalizePointerHistory(
-          pointerHistory, false, value->lifecycle.strokeStartTime());
+          pointerHistory, false);
     }
     if (pointerHistory.empty()) pointerHistory.push_back(info);
     std::vector<POINTER_PEN_INFO> penHistory;
@@ -402,6 +455,17 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     std::vector<arc_pointer_sample_v0> samples;
     samples.reserve(pointerHistory.size());
+    float contactWidth = 0.0F;
+    float contactHeight = 0.0F;
+    if (info.pointerType == PT_TOUCH) {
+      POINTER_TOUCH_INFO touchInfo{};
+      if (GetPointerTouchInfo(pointerId, &touchInfo) != FALSE) {
+        contactWidth = static_cast<float>(
+            std::abs(touchInfo.rcContact.right - touchInfo.rcContact.left));
+        contactHeight = static_cast<float>(
+            std::abs(touchInfo.rcContact.bottom - touchInfo.rcContact.top));
+      }
+    }
     for (std::size_t index = 0; index < pointerHistory.size(); ++index) {
       const auto& history = pointerHistory[index];
       const auto historyPhase = index == 0U && phase == ARC_POINTER_PHASE_DOWN
@@ -423,12 +487,14 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       sample.phase = historyPhase;
       sample.provenance = ARC_SAMPLE_CONFIRMED_CURRENT;
       samples.push_back(sample);
-      value->trace.push_back({pointerId, history.dwTime,
+      const auto key = value->activeKeys.at(pointerId);
+      value->trace.push_back({key.source, pointerId, key.generation, history.dwTime,
                               info.pointerType == PT_PEN ? "pen" :
                               (info.pointerType == PT_TOUCH ? "touch" : "mouse"),
                               historyPhase == ARC_POINTER_PHASE_DOWN ? "down" :
                               (historyPhase == ARC_POINTER_PHASE_UP ? "up" : "move"),
-                              sample.x, sample.y, sample.pressure, pointerHistory.size()});
+                               sample.x, sample.y, sample.pressure, pointerHistory.size(),
+                               contactWidth, contactHeight});
     }
     arc_pointer_sample_batch_v0 batch{}; batch.struct_size = sizeof(batch); batch.abi_version = ARC_ABI_VERSION;
     batch.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; batch.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL;
@@ -436,16 +502,31 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     value->deviceId = canvas::ink_playground::windows_input::functionalDeviceId(
         info.sourceDevice, static_cast<std::uint64_t>(pointerId));
     batch.device_id = value->deviceId;
-    batch.input_capabilities = ARC_INPUT_CAPABILITY_PRESSURE | ARC_INPUT_CAPABILITY_HISTORY;
-    batch.tool = info.pointerType == PT_PEN ? ARC_INPUT_TOOL_PEN : ARC_INPUT_TOOL_MOUSE;
+    batch.input_capabilities = ARC_INPUT_CAPABILITY_HISTORY;
+    if (info.pointerType == PT_PEN) batch.input_capabilities |= ARC_INPUT_CAPABILITY_PRESSURE;
+    batch.tool = canvas::ink_playground::windows_input::arcToolForPointerType(info.pointerType);
     batch.samples = samples.data(); batch.sample_count = static_cast<std::uint32_t>(samples.size());
     batch.sample_stride = sizeof(arc_pointer_sample_v0);
     if (value->input->SubmitBatch(batch) != arc::Status::kOk) return 0;
-    if (!samples.empty()) pushArcPreview(*value, samples.back().x, samples.back().y);
+    if (!samples.empty()) pushArcPreview(*value, pointerId, samples.back().x, samples.back().y);
     persistEvidence(*value);
-    if (phase == ARC_POINTER_PHASE_UP && !value->host->commitStroke(value->stroke, value->stroke)) return 0;
-    if (phase == ARC_POINTER_PHASE_UP) commitArcHandoff(*value);
+    if (end) {
+      const auto stroke = value->pointerStrokes.at(pointerId);
+      if (!value->host->commitStroke(value->activeKeys.at(pointerId), stroke, stroke)) return 0;
+      commitArcHandoff(*value, pointerId);
+      (void)value->pointerRegistry.end(value->activeKeys.at(pointerId));
+      value->activeKeys.erase(pointerId);
+      value->pointerStrokes.erase(pointerId);
+    }
     InvalidateRect(window, nullptr, FALSE); return 0;
+  }
+  if (message == WM_POINTERCAPTURECHANGED) {
+    if (value != nullptr) {
+      cancelPointer(*value, GET_POINTERID_WPARAM(wParam),
+                    static_cast<std::uint64_t>(GetMessageTime()));
+      InvalidateRect(window, nullptr, FALSE);
+    }
+    return 0;
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
@@ -478,7 +559,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (!value.host->bindSurface(1024, 768)) return 1;
   value.input = arc::CreateWindowsInputSource();
   value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateWindowsBackend(), arc::CreateNullBackend());
-  value.sink = std::make_unique<ArcSink>(*value.host);
+  value.sink = std::make_unique<ArcSink>(*value.host, value.activeKeys);
   if (value.input == nullptr || value.input->Start(*value.sink) != arc::Status::kOk) return 1;
   value.window = CreateWindowExW(0, klass.lpszClassName, L"Axiom Ink Playground", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);

@@ -1,0 +1,18 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "result_boundary":"P32_PRE_PHYSICAL_CHECKPOINT",
+  "coverage":{
+    "concurrent_pointer_streams":4,
+    "pointer_reuse_generation_fencing":"PASS",
+    "per_pointer_fault_isolation":"PASS",
+    "exclusive_gesture_claim":"PASS",
+    "two_finger_viewport_geometry":"PASS",
+    "broad_contact_hysteresis":"PASS",
+    "keyed_multi_preview":"PASS",
+    "ordered_canonical_candidates":"PASS",
+    "platform_normalization_profiles":["windows","android","web"]
+  },
+  "tests":["G4MultiPointerFoundation","G4PlatformNormalization","G4GestureArbiter","G4ViewportGesture","G4MultiPointerReplay","G4MultiPointerPlayground"],
+  "claim_boundary":"portable deterministic evidence only; not physical device PASS"
+}

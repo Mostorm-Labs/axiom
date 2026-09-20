@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "G4.4-11_GATE_CLOSURE",
+  "status": "PASS_G4_4",
+  "execution_branch": "codex/g4-4-multipointer",
+  "implementation_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "task_anchor": "7be89f11d7abc26c3788aa5f8a3b324571baa27c",
+  "completed_through": "G4.4-11 unified physical qualification evidence collection",
+  "portable_verification": "33/33 PASS",
+  "windows_verification": {
+    "configure": "PASS",
+    "build": "PASS",
+    "ctest": "29/29 PASS",
+    "ctest_output": ".aegis/results/GT-G4-4/windows-build-ctest.txt",
+    "ctest_output_sha256": "79effea6b0e45da1aaabc67084363a65210e531ffe405818be5fc290f60e36c1",
+    "functional_checkpoint": "PASS_WINDOWS_NATIVE_FUNCTIONAL_CHECKPOINT"
+  },
+  "qualification_bundle": ".aegis/results/GT-G4-4/qualification-bundle-manifest.json",
+  "physical_qualification": {
+    "stage": "G4.4-11",
+    "status": "PASS_CAPABILITY_PROFILED_PHYSICAL_QUALIFICATION",
+    "available_profiles": ["Windows mouse", "Android multitouch with exact APK and reviewer-accessible artifacts"],
+    "capability_dependent": ["pen", "pressure", "pen plus palm", "Windows touch-frame"],
+    "current_automated_blocker": false,
+    "required_for_final_g4_4_pass": true,
+    "evidence": ".aegis/results/GT-G4-4/g4-4-11-physical-qualification.json"
+  },
+  "gate_review": ".aegis/results/GT-G4-4/g4-4-11-gate-review.json",
+  "official_g4_4_pass_claimed": true,
+  "official_g4_pass_claimed": false,
+  "return_surface": "CONTROL_REVIEW"
+}

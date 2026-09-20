@@ -5,13 +5,14 @@
 extern "C" {
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height);
 void axiom_ink_android_destroy_host(void* handle);
-int axiom_ink_android_begin(void* handle, std::uint64_t strokeId);
+int axiom_ink_android_begin(void* handle, std::uint64_t pointerId, std::uint64_t strokeId);
 int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
                             std::uint64_t sequence, std::uint64_t timestampNs,
                             float x, float y, float pressure, int phase, int tool);
-int axiom_ink_android_commit(void* handle, std::uint64_t strokeId);
+int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_t strokeId);
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height);
 int axiom_ink_android_surface_lost(void* handle);
+int axiom_ink_android_cancel_all(void* handle);
 
 JNIEXPORT jlong JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCreate(
@@ -28,8 +29,9 @@ Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeDestroy(
 
 JNIEXPORT jint JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBegin(
-    JNIEnv*, jclass, jlong handle, jlong strokeId) {
+    JNIEnv*, jclass, jlong handle, jint pointerId, jlong strokeId) {
   return axiom_ink_android_begin(reinterpret_cast<void*>(handle),
+                                 static_cast<std::uint64_t>(pointerId),
                                  static_cast<std::uint64_t>(strokeId));
 }
 
@@ -47,8 +49,9 @@ Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeMotion(
 
 JNIEXPORT jint JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCommit(
-    JNIEnv*, jclass, jlong handle, jlong strokeId) {
+    JNIEnv*, jclass, jlong handle, jint pointerId, jlong strokeId) {
   return axiom_ink_android_commit(reinterpret_cast<void*>(handle),
+                                  static_cast<std::uint64_t>(pointerId),
                                   static_cast<std::uint64_t>(strokeId));
 }
 
@@ -64,5 +67,11 @@ JNIEXPORT jint JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeSurfaceLost(
     JNIEnv*, jclass, jlong handle) {
   return axiom_ink_android_surface_lost(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCancelAll(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_cancel_all(reinterpret_cast<void*>(handle));
 }
 }
