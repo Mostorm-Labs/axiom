@@ -78,6 +78,16 @@ if(ARC_BUILD_PLATFORM_TARGETS)
     "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/web_backend.cpp")
   arc_add_platform_target(Windows
     "${CMAKE_CURRENT_SOURCE_DIR}/platform/windows/windows_backend.cpp")
+  if(WIN32)
+    target_link_libraries(arc_Windows PRIVATE user32 gdi32)
+    add_executable(arc_windows_preview_backend_tests
+      tests/windows_preview_backend_test.cpp)
+    target_link_libraries(arc_windows_preview_backend_tests PRIVATE Arc::Windows user32)
+    target_compile_options(arc_windows_preview_backend_tests PRIVATE
+      /W4 /permissive- /WX /EHsc)
+    add_test(NAME arc_windows_preview_backend_tests
+      COMMAND arc_windows_preview_backend_tests)
+  endif()
   arc_add_platform_target(Android
     "${CMAKE_CURRENT_SOURCE_DIR}/platform/android/android_backend.cpp")
   arc_add_platform_target(macOS "${ARC_APPLE_SOURCE}")
