@@ -9,6 +9,7 @@ add_library(canvas_runtime_interaction STATIC
     src/editor_history.cpp
     src/interaction_dependency_footprint.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/multi_contact_coordinator.cpp)
 
 target_include_directories(canvas_runtime_interaction PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -99,6 +100,16 @@ if(BUILD_TESTING)
         target_compile_options(axiom_gesture_arbiter_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4GestureArbiter COMMAND axiom_gesture_arbiter_tests)
+    add_executable(axiom_multi_contact_coordinator_tests
+        tests/multi_contact_coordinator_test.cpp)
+    target_link_libraries(axiom_multi_contact_coordinator_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_multi_contact_coordinator_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_multi_contact_coordinator_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_multi_contact_coordinator_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4MultiContactCoordinator COMMAND axiom_multi_contact_coordinator_tests)
     add_executable(axiom_viewport_gesture_tests tests/viewport_gesture_test.cpp)
     target_link_libraries(axiom_viewport_gesture_tests PRIVATE canvas_runtime_interaction)
     target_compile_features(axiom_viewport_gesture_tests PRIVATE cxx_std_20)

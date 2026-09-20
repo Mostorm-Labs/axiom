@@ -30,6 +30,7 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundRepeatedStrokes COMMAND axiom_ink_playground_tests repeated)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
   add_test(NAME G4MultiPointerPlayground COMMAND axiom_ink_playground_tests multipointer)
+  add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp
@@ -76,5 +77,5 @@ if(EMSCRIPTEN)
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_commit_pointer','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_pointer_sample_phase','_axiom_ink_commit_pointer','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

@@ -25,10 +25,15 @@ class AndroidSink final : public arc::PointerSampleSink {
           static_cast<std::size_t>(i) * batch.sample_stride);
       const auto key = activeKeys_.find(sample->pointer_id);
       if (key == activeKeys_.end()) return arc::Status::kInvalidState;
+      const auto phase = sample->phase == ARC_POINTER_PHASE_DOWN
+          ? canvas::input::PointerPhase::kDown
+          : sample->phase == ARC_POINTER_PHASE_UP ? canvas::input::PointerPhase::kUp
+          : sample->phase == ARC_POINTER_PHASE_CANCEL ? canvas::input::PointerPhase::kCancel
+          : canvas::input::PointerPhase::kMove;
       samples.samples.push_back({sample->sample_sequence, sample->timestamp_us * 1000U,
                                  sample->x, sample->y, sample->pressure,
                                  sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT,
-                                 key->second});
+                                 key->second, {}, {}, phase});
     }
     const auto now = static_cast<std::uint64_t>(
         std::chrono::duration_cast<std::chrono::nanoseconds>(

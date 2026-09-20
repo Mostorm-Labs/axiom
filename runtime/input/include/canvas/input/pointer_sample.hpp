@@ -1,5 +1,6 @@
 #pragma once
 #include "canvas/input/pointer_capabilities.hpp"
+#include "canvas/input/pointer_phase.hpp"
 #include "canvas/input/pointer_key.hpp"
 
 #include <cstdint>
@@ -15,5 +16,6 @@ struct PointerSample final {
   PointerKey key{};
   ContactGeometry contact{};
   PointerCapabilities capabilities{};
+  PointerPhase phase = PointerPhase::kMove;
 };
 }  // namespace canvas::input

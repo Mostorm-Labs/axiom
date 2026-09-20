@@ -123,6 +123,32 @@ void multipointer_test() {
   assert(!host.commitStroke(first, 101, 201));
   assert(host.canonicalStrokes().size() == 1);
 }
+
+void provisional_zero_mutation_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  const canvas::input::PointerKey first{9, 1, 1};
+  const canvas::input::PointerKey second{9, 2, 1};
+  assert(host.beginStroke(first, 301));
+  canvas::input::PointerSampleBatch downA;
+  downA.samples.push_back({1, 1'000'000, 10.0F, 10.0F, 0.5F, false,
+                           first, {}, {}, canvas::input::PointerPhase::kDown});
+  assert(host.accept(downA, 1'000'000));
+  canvas::input::PointerSampleBatch moveA;
+  moveA.samples.push_back({2, 2'000'000, 11.0F, 11.0F, 0.5F, false,
+                           first, {}, {}, canvas::input::PointerPhase::kMove});
+  assert(host.accept(moveA, 2'000'000));
+  assert(host.canonicalStrokes().empty());
+  assert(host.submittedOperationCount() == 0);
+  assert(host.beginStroke(second, 302));
+  canvas::input::PointerSampleBatch downB;
+  downB.samples.push_back({3, 3'000'000, 30.0F, 30.0F, 0.5F, false,
+                           second, {}, {}, canvas::input::PointerPhase::kDown});
+  assert(host.accept(downB, 3'000'000));
+  assert(host.canonicalStrokes().empty());
+  assert(host.submittedOperationCount() == 0);
+  assert(host.pointerDisposition(first) != canvas::interaction::ContactDisposition::kInk);
+  assert(host.pointerDisposition(second) != canvas::interaction::ContactDisposition::kInk);
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -134,6 +160,7 @@ int main(int argc, char** argv) {
   else if (mode == "repeated") repeated_strokes_test();
   else if (mode == "platform") platform_test();
   else if (mode == "multipointer") multipointer_test();
+  else if (mode == "provisional") provisional_zero_mutation_test();
   else return 2;
   return 0;
 }

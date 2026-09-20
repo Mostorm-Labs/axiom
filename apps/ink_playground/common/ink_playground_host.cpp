@@ -43,6 +43,34 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
   confirmed.reserve(batch.samples.size());
   predicted.reserve(batch.samples.size());
   for (const auto& sample : batch.samples) {
+    const bool trackedContact = sample.key.valid() &&
+        (contactDispositions_.contains(sample.key) ||
+         sample.phase == input::PointerPhase::kDown);
+    if (trackedContact) {
+      const auto disposition = contactCoordinator_.update(sample);
+      contactDispositions_[sample.key] = disposition;
+      if (disposition == interaction::ContactDisposition::kViewportGesture) {
+        for (const auto& [existing, existingStroke] : keyedStrokeIds_) {
+          (void)ink_->cancel(existing);
+          (void)preview_->cancelKeyed(existingStroke);
+          (void)interaction_->cancel(existing, existingStroke);
+        }
+        keyedStrokeIds_.clear();
+      }
+      if (disposition == interaction::ContactDisposition::kIgnored &&
+          keyedStrokeIds_.contains(sample.key)) {
+        const auto ignoredStroke = keyedStrokeIds_.at(sample.key);
+        (void)ink_->cancel(sample.key);
+        (void)preview_->cancelKeyed(ignoredStroke);
+        (void)interaction_->cancel(sample.key, ignoredStroke);
+        keyedStrokeIds_.erase(sample.key);
+      }
+      if (disposition == interaction::ContactDisposition::kViewportGesture ||
+          disposition == interaction::ContactDisposition::kIgnored ||
+          !keyedStrokeIds_.contains(sample.key)) {
+        continue;
+      }
+    }
     const ink::StrokePoint point{sample.x, sample.y, sample.pressure};
     if (sample.predicted) {
       predicted.push_back(point);
@@ -50,6 +78,10 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
       if (!ink_->append(sample)) return false;
       confirmed.push_back(point);
     }
+  }
+  if (confirmed.empty() && predicted.empty()) {
+    hud_.batch = batch.samples.size();
+    return true;
   }
   const auto keyed = batch.samples.front().key;
   if (keyed.valid()) {
@@ -83,6 +115,7 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
 
 bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
+  if (!keyedStrokeIds_.contains(key)) return false;
   const auto* state = preview_->snapshot(strokeId);
   if (state == nullptr || !ink_->finish(key).has_value()) return false;
   const auto committedPoints = state->confirmed;
@@ -109,7 +142,16 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
     preview_->cancelKeyed(strokeId);
   }
   keyedStrokeIds_.clear();
+  contactDispositions_.clear();
+  contactCoordinator_.reset();
   interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
+}
+
+interaction::ContactDisposition InkPlaygroundHost::pointerDisposition(
+    const input::PointerKey& key) const noexcept {
+  const auto found = contactDispositions_.find(key);
+  return found == contactDispositions_.end()
+      ? interaction::ContactDisposition::kTerminal : found->second;
 }
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
