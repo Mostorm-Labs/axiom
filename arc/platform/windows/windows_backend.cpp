@@ -1,3 +1,22 @@
+#if !defined(_WIN32)
+// The native Win32 implementation must only be compiled by a Windows
+// toolchain. Other hosts still build every Arc platform target as a portable
+// conformance surface, so use the protocol-only backend factory there.
+#define ARC_PLATFORM_KIND ARC_PLATFORM_WINDOWS
+#define ARC_CREATE_BACKEND CreateWindowsBackend
+#define ARC_CREATE_INPUT_SOURCE CreateWindowsInputSource
+#define ARC_REQUIRES_PLATFORM_HANDLE 1
+#define ARC_INPUT_CAPABILITIES \
+  (ARC_INPUT_CAPABILITY_PRESSURE | ARC_INPUT_CAPABILITY_TILT | \
+   ARC_INPUT_CAPABILITY_CONTACT | ARC_INPUT_CAPABILITY_HISTORY | \
+   ARC_INPUT_CAPABILITY_HOVER | ARC_INPUT_CAPABILITY_ERASER)
+#define ARC_PRESENTATION_CAPABILITIES \
+  (ARC_PRESENTATION_CAPABILITY_INDEPENDENT_TARGET | \
+   ARC_PRESENTATION_CAPABILITY_REPLACE_TRUNCATE | \
+   ARC_PRESENTATION_CAPABILITY_PRESENT_RECEIPT | \
+   ARC_PRESENTATION_CAPABILITY_SHARED_GPU_DEVICE)
+#include "../backend_factory.inc"
+#else
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -209,3 +228,4 @@ class WindowsInputSource final : public InputSource {
 } // namespace
 std::unique_ptr<InputSource> CreateWindowsInputSource() { return std::make_unique<WindowsInputSource>(); }
 } // namespace arc
+#endif
