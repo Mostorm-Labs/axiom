@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "status": "READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION",
+  "implementation_revision": "7d3b5bea6e2914fbc1313ad17ae0ab4b756ecfb5",
+  "execution_ref": "codex/g4-4-positiononly-corrective",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "policy": "AutoIntent",
+  "required_physical_scenarios": ["AutoIntent pending-to-viewport", "AutoIntent ink-then-second-ink", "MultiInk 2-contact", "GesturePriority late second", "PositionOnly masked pinch", "cancel and pointer reuse"],
+  "pressure_tilt": "NOT_REQUIRED_FOR_THIS_CORRECTIVE_PROFILE",
+  "official_gate_pass": false,
+  "artifacts": ["repository-reconciliation.json", "policy-matrix-evidence.json", "positiononly-capability-evidence.json", "provisional-session-zero-mutation.json", "platform-ingress-conformance.json", "portable-regression-summary.json", "result.json"]
+}

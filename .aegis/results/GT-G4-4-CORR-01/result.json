@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION",
+  "result_revision": "7d3b5bea6e2914fbc1313ad17ae0ab4b756ecfb5",
+  "execution_branch": "codex/g4-4-positiononly-corrective",
+  "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "tests": {"ctest": "35/35 PASS", "git_diff_check": "PASS"},
+  "evidence_input_refs": ["repository-reconciliation.json", "policy-matrix-evidence.json", "positiononly-capability-evidence.json", "provisional-session-zero-mutation.json", "platform-ingress-conformance.json", "portable-regression-summary.json", "qualification-bundle-manifest.json"],
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}
