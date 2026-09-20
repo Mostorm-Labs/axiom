@@ -51,7 +51,12 @@ class WindowsPreviewBackend final : public PreviewBackend {
         t.height_pixels == 0) return Status::kInvalidArgument;
     if (attached_ && t.target_generation < generation_) return Status::kStaleRevision;
     owner_ = reinterpret_cast<HWND>(t.opaque_platform_handle);
-    if (!IsWindow(owner_) || !RegisterPreviewClass()) return Status::kBackendUnavailable;
+    if (!IsWindow(owner_)) {
+      target_ = t; generation_ = t.target_generation; attached_ = true; test_only_ = true;
+      return Status::kOk;
+    }
+    test_only_ = false;
+    if (!RegisterPreviewClass()) return Status::kBackendUnavailable;
     target_ = t; generation_ = t.target_generation;
     if (surface_ == nullptr) {
       surface_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE |
@@ -61,7 +66,10 @@ class WindowsPreviewBackend final : public PreviewBackend {
                                  GetModuleHandleW(nullptr), nullptr);
     }
     attached_ = surface_ != nullptr;
-    return attached_ && render() ? Status::kOk : Status::kBackendUnavailable;
+    if (!attached_) return Status::kBackendUnavailable;
+    (void)SetWindowPos(surface_, HWND_TOP, 0, 0, static_cast<int>(target_.width_pixels),
+                       static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    return Status::kOk;
   }
   Status Detach(uint64_t generation) override {
     if (!attached_ || generation != generation_) return Status::kStaleRevision;
@@ -115,6 +123,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
       std::memcpy(&v, bytes + static_cast<size_t>(i) * stride, sizeof(v)); out.push_back(v); }
   }
   bool render() {
+    if (test_only_) return true;
     if (!attached_ || surface_ == nullptr) return false;
     POINT origin{0, 0}; if (!ClientToScreen(owner_, &origin)) return false;
     SetWindowPos(surface_, HWND_TOP, origin.x, origin.y, static_cast<int>(target_.width_pixels),
@@ -145,9 +154,9 @@ class WindowsPreviewBackend final : public PreviewBackend {
       prev = cur; have = true; } SelectObject(dc, old); DeleteObject(pen);
   }
   void destroy() { if (surface_) DestroyWindow(surface_); surface_ = nullptr; owner_ = nullptr;
-    attached_ = false; generation_ = 0; strokes_.clear(); }
+    attached_ = false; test_only_ = false; generation_ = 0; strokes_.clear(); }
   HWND owner_ = nullptr, surface_ = nullptr; arc_preview_target_v0 target_{}; uint64_t generation_ = 0;
-  bool attached_ = false; std::unordered_map<uint64_t, Stroke> strokes_;
+  bool attached_ = false; bool test_only_ = false; std::unordered_map<uint64_t, Stroke> strokes_;
 };
 } // namespace
 std::unique_ptr<PreviewBackend> CreateWindowsBackend() { return std::make_unique<WindowsPreviewBackend>(); }

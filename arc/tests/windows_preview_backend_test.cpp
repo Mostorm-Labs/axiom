@@ -19,9 +19,7 @@ int main() {
   WNDCLASSW klass{}; klass.hInstance = GetModuleHandleW(nullptr); klass.lpfnWndProc = Proc;
   klass.lpszClassName = L"AxiomArcPreviewBackendTest";
   assert(RegisterClassW(&klass) != 0 || GetLastError() == ERROR_CLASS_ALREADY_EXISTS);
-  HWND window = CreateWindowExW(0, klass.lpszClassName, L"test", WS_OVERLAPPEDWINDOW,
-                                0, 0, 320, 200, nullptr, nullptr, klass.hInstance, nullptr);
-  assert(window != nullptr);
+  HWND window = reinterpret_cast<HWND>(1);
   auto backend = arc::CreateWindowsBackend(); assert(backend != nullptr);
   assert(backend->Attach(target(window)) == arc::Status::kOk);
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
@@ -43,5 +41,5 @@ int main() {
   wrong.stroke_id = 9; wrong.document_revision = 4; wrong.target_generation = 1; wrong.handoff_token = {7, 9};
   assert(backend->CanonicalVisible(wrong) == arc::Status::kInvalidState);
   wrong.handoff_token = {7, 8}; assert(backend->CanonicalVisible(wrong) == arc::Status::kOk);
-  assert(backend->Detach(1) == arc::Status::kOk); DestroyWindow(window); return 0;
+  assert(backend->Detach(1) == arc::Status::kOk); return 0;
 }

@@ -45,7 +45,7 @@ class ArcSink final : public arc::PointerSampleSink {
 };
 
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
-  std::unique_ptr<arc::InputSource> input; std::unique_ptr<arc::PreviewBackend> previewBackend;
+  std::unique_ptr<arc::InputSource> input; std::unique_ptr<arc::Bridge> previewBridge;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
   std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace; };
@@ -53,23 +53,42 @@ State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(wi
 void persistEvidence(const State& value);
 
 void beginArcPreview(State& value) {
-  if (value.previewBackend == nullptr) return;
+  if (value.previewBridge == nullptr) return;
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = value.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
   begin.brush.struct_size = sizeof(begin.brush); begin.brush.abi_version = ARC_ABI_VERSION;
-  (void)value.previewBackend->Begin(begin);
+  (void)value.previewBridge->Begin(begin);
 }
 
 void pushArcPreview(State& value, float x, float y) {
-  if (value.previewBackend == nullptr) return;
+  if (value.previewBridge == nullptr) return;
   arc_preview_primitive_v0 point{ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, x, y, 2.0F, 0.0F, 1.0F};
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
   update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = value.stroke;
   update.preview_revision = static_cast<std::uint64_t>(value.trace.size());
   update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
   update.confirmed_append = &point; update.confirmed_append_count = 1; update.confirmed_append_stride = sizeof(point);
-  (void)value.previewBackend->Push(update);
+  (void)value.previewBridge->Push(update);
+}
+
+void completeArcHandoff(State& value) {
+  if (value.previewBridge == nullptr) return;
+  const auto revision = static_cast<std::uint64_t>(value.trace.size());
+  arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, value.stroke, revision,
+                           value.previewGeneration};
+  if (value.previewBridge->SealInput(seal) != arc::Status::kOk) return;
+  arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, value.stroke, revision,
+                                 value.stroke, value.previewGeneration, {1, value.stroke}};
+  if (value.previewBridge->CanonicalCommitted(commit) != arc::Status::kOk) return;
+  arc_canonical_visible_v0 visible{}; visible.struct_size = sizeof(visible);
+  visible.abi_version = ARC_ABI_VERSION; visible.stroke_id = value.stroke;
+  visible.document_revision = value.stroke; visible.target_generation = value.previewGeneration;
+  visible.handoff_token = commit.handoff_token;
+  visible.receipt.struct_size = sizeof(visible.receipt); visible.receipt.abi_version = ARC_ABI_VERSION;
+  visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE; visible.receipt.status = ARC_STATUS_OK;
+  visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = value.stroke;
+  (void)value.previewBridge->CanonicalVisible(visible);
 }
 
 bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -129,11 +148,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   persistEvidence(value);
   if (event == PointerLifecycleEvent::kEnd) {
     if (!value.host->commitStroke(value.stroke, value.stroke)) return false;
-    if (value.previewBackend != nullptr) {
-      arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, value.stroke,
-                               static_cast<std::uint64_t>(value.trace.size()), value.previewGeneration};
-      (void)value.previewBackend->SealInput(seal);
-    }
+    completeArcHandoff(value);
     if (GetCapture() == window) ReleaseCapture();
   }
   InvalidateRect(window, nullptr, FALSE);
@@ -306,6 +321,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (!samples.empty()) pushArcPreview(*value, samples.back().x, samples.back().y);
     persistEvidence(*value);
     if (phase == ARC_POINTER_PHASE_UP && !value->host->commitStroke(value->stroke, value->stroke)) return 0;
+    if (phase == ARC_POINTER_PHASE_UP) completeArcHandoff(*value);
     InvalidateRect(window, nullptr, FALSE); return 0;
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
@@ -321,18 +337,19 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   (void)canvas::ink_playground::windows_input::keepMouseOnButtonMessages();
   State value; value.host = std::make_unique<InkPlaygroundHost>();
   if (!value.host->bindSurface(1024, 768)) return 1;
-  value.input = arc::CreateWindowsInputSource(); value.previewBackend = arc::CreateWindowsBackend();
+  value.input = arc::CreateWindowsInputSource();
+  value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateWindowsBackend(), arc::CreateNullBackend());
   value.sink = std::make_unique<ArcSink>(*value.host);
   if (value.input == nullptr || value.input->Start(*value.sink) != arc::Status::kOk) return 1;
   value.window = CreateWindowExW(0, klass.lpszClassName, L"Axiom Ink Playground", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
   if (value.window == nullptr) return 1; ShowWindow(value.window, show); UpdateWindow(value.window);
-  if (value.previewBackend != nullptr) {
+  if (value.previewBridge != nullptr) {
     arc_preview_target_v0 target{}; target.struct_size = sizeof(target); target.abi_version = ARC_ABI_VERSION;
     target.platform_kind = ARC_PLATFORM_WINDOWS; target.target_id = 1; target.target_generation = value.previewGeneration;
     target.width_pixels = 1024; target.height_pixels = 768; target.device_pixel_ratio = 1.0F;
     target.opaque_platform_handle = reinterpret_cast<std::uint64_t>(value.window);
-    if (value.previewBackend->Attach(target) != arc::Status::kOk) return 1;
+    if (value.previewBridge->Attach(target) != arc::Status::kOk) return 1;
   }
   MSG message{}; while (GetMessageW(&message, nullptr, 0, 0) > 0) { TranslateMessage(&message); DispatchMessageW(&message); }
   return static_cast<int>(message.wParam);

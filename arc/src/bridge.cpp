@@ -98,6 +98,8 @@ class NullBackend final : public PreviewBackend {
     return {.struct_size = sizeof(arc_backend_capabilities_v0),
             .abi_version = ARC_ABI_VERSION,
             .platform_kind = ARC_PLATFORM_HEADLESS,
+            .reserved = 0,
+            .input_capabilities = 0,
             .presentation_capabilities =
                 ARC_PRESENTATION_CAPABILITY_INDEPENDENT_TARGET |
                 ARC_PRESENTATION_CAPABILITY_REPLACE_TRUNCATE |
@@ -231,6 +233,7 @@ class Bridge::Impl {
           .target_generation = state.snapshot.target_generation,
           .source_to_device = state.begin.value.source_to_device,
           .truncate_confirmed_to = 0,
+          .reserved = 0,
           .confirmed_append = state.snapshot.confirmed.data(),
           .confirmed_append_count =
               static_cast<uint32_t>(state.snapshot.confirmed.size()),
