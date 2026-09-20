@@ -6,7 +6,8 @@ add_library(canvas_runtime_ink STATIC
   src/replay_runner.cpp
   src/multipointer_replay.cpp
   src/preview_model.cpp
-  src/arc_preview_bridge.cpp)
+  src/arc_preview_bridge.cpp
+  src/programmable_brush.cpp)
 target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_ink PUBLIC canvas_runtime_foundation canvas_runtime_input)
 target_compile_features(canvas_runtime_ink PUBLIC cxx_std_20)
@@ -52,4 +53,13 @@ if(BUILD_TESTING)
     target_compile_options(axiom_multipointer_replay_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   endif()
   add_test(NAME G4MultiPointerReplay COMMAND axiom_multipointer_replay_tests)
+  add_executable(axiom_programmable_brush_tests tests/programmable_brush_test.cpp)
+  target_link_libraries(axiom_programmable_brush_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_programmable_brush_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_programmable_brush_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_programmable_brush_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45ProgrammableBrush COMMAND axiom_programmable_brush_tests)
 endif()

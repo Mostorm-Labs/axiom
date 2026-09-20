@@ -24,7 +24,8 @@ target_include_directories(arc_protocol INTERFACE
 
 add_library(arc_core STATIC
   src/bridge.cpp
-  src/host_adapter.cpp)
+  src/host_adapter.cpp
+  src/temporal_transient.cpp)
 add_library(Arc::Core ALIAS arc_core)
 set_target_properties(arc_core PROPERTIES EXPORT_NAME Core)
 target_include_directories(arc_core PUBLIC
@@ -137,6 +138,15 @@ if(ARC_BUILD_TESTS AND BUILD_TESTING)
     endif()
   endif()
   add_test(NAME arc_host_adapter_tests COMMAND arc_host_adapter_tests)
+  add_executable(arc_temporal_transient_tests tests/temporal_transient_test.cpp)
+  target_link_libraries(arc_temporal_transient_tests PRIVATE Arc::Core)
+  if(NOT MSVC)
+    target_compile_options(arc_temporal_transient_tests PRIVATE -Wall -Wextra -Wpedantic)
+    if(ARC_WARNINGS_AS_ERRORS)
+      target_compile_options(arc_temporal_transient_tests PRIVATE -Werror)
+    endif()
+  endif()
+  add_test(NAME arc_temporal_transient_tests COMMAND arc_temporal_transient_tests)
   add_executable(arc_protocol_c_smoke tests/protocol_c_smoke.c)
   target_link_libraries(arc_protocol_c_smoke PRIVATE Arc::Protocol)
   add_test(NAME arc_protocol_c_smoke COMMAND arc_protocol_c_smoke)
