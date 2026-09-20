@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "stage":"P34_CONTROL_REVIEW",
+  "review_surface":"CONTROL_REVIEW",
+  "package_id":"GT-G4-4-P31-v0.1",
+  "package_materialization_revision":"172c6630ca184dd06fff5b3e944f57ca2a4ad416",
+  "result_revision":"0660e502c7f665e453ebbe50eada2b7af9ea72dd",
+  "frozen_requirement_audit":{"status":"PASS_PORTABLE","checks":["PointerKey and generation fencing implemented","claims exclusive","multi-stroke and four-stream fault isolation implemented","viewport and contact hysteresis implemented","keyed preview and handoff isolation implemented","no canonical ObjectKind or Operation added"]},
+  "frozen_evidence_audit":{"status":"BLOCKED_ENVIRONMENT","portable_tests":"33/33 PASS","android_hosted_build":"BLOCKED_JDK17_UNAVAILABLE","windows_hosted_build":"UNAVAILABLE_ON_MACOS","physical_checkpoint":"MISSING"},
+  "repository_reality_audit":{"status":"PASS","anchor_ancestor":true,"git_diff_check":"PASS","mutation_scope":"authorized runtime and G4.4 evidence only"},
+  "decision":{"verdict":"BLOCKED_ENVIRONMENT","classification":"ENVIRONMENT_EVIDENCE_BLOCKER","implementation_defect":false,"official_g4_4_pass":false,"resume_stage":"P32_PHYSICAL_CHECKPOINT"}
+}
