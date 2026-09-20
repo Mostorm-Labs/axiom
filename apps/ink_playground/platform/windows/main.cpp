@@ -47,6 +47,8 @@ class ArcSink final : public arc::PointerSampleSink {
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<arc::InputSource> input; std::unique_ptr<arc::Bridge> previewBridge;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
+  std::uint64_t previewRevision = 0;
+  std::vector<arc_preview_primitive_v0> previewPoints;
   std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace; };
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
@@ -54,6 +56,8 @@ void persistEvidence(const State& value);
 
 void beginArcPreview(State& value) {
   if (value.previewBridge == nullptr) return;
+  value.previewRevision = 0;
+  value.previewPoints.clear();
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = value.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
@@ -63,18 +67,22 @@ void beginArcPreview(State& value) {
 
 void pushArcPreview(State& value, float x, float y) {
   if (value.previewBridge == nullptr) return;
-  arc_preview_primitive_v0 point{ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, x, y, 2.0F, 0.0F, 1.0F};
+  value.previewPoints.push_back(
+      arc_preview_primitive_v0{ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, x, y, 2.0F, 0.0F, 1.0F});
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
   update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = value.stroke;
-  update.preview_revision = static_cast<std::uint64_t>(value.trace.size());
+  update.preview_revision = ++value.previewRevision;
   update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
-  update.confirmed_append = &point; update.confirmed_append_count = 1; update.confirmed_append_stride = sizeof(point);
+  update.confirmed_append = value.previewPoints.data();
+  update.confirmed_append_count = static_cast<std::uint32_t>(value.previewPoints.size());
+  update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
   (void)value.previewBridge->Push(update);
 }
 
 void completeArcHandoff(State& value) {
   if (value.previewBridge == nullptr) return;
-  const auto revision = static_cast<std::uint64_t>(value.trace.size());
+  const auto revision = value.previewRevision;
+  if (revision == 0) return;
   arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, value.stroke, revision,
                            value.previewGeneration};
   if (value.previewBridge->SealInput(seal) != arc::Status::kOk) return;
