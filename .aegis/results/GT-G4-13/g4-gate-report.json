@@ -1,0 +1,40 @@
+{
+  "format": "axiom-g4-gate-report-v1",
+  "formatVersion": 1,
+  "authority": "G4_GATE_REPORT",
+  "gate": "G4",
+  "status": "PASS_WITH_FINDINGS",
+  "completion_profile": "G4_FUNCTIONAL_INTEGRATION_V0_1",
+  "sourceCommit": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+  "branch": "codex/g4-13-gate-report",
+  "generatorVersion": "0.1.0",
+  "packageId": "GT-G4-13-P31-v0.1",
+  "packageMaterializationRef": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
+  "wpLineage": [
+    {"taskId":"GT-G4-01","status":"PASS","resultRevision":"31b5df4844db07261330567fd4b8d7317290b01f","integrationRevision":"4698e9c530efd06b84cb6a037267bfb61cffcd88","evidenceRefs":[".aegis/results/GT-G4-01/result.json",".aegis/results/GT-G4-01/p34-control-review.json"]},
+    {"taskId":"GT-G4-02","status":"PASS","resultRevision":"1d27367f3093b039b8a95d11145d87dda78850dd","integrationRevision":"e0b2749f1c1bd3addd22897cfadd201b51d95246","evidenceRefs":[".aegis/results/GT-G4-02/result.json",".aegis/results/GT-G4-02/p34-control-review.json"]},
+    {"taskId":"GT-G4-03","status":"PASS","resultRevision":"17fba7c8a1d0d59318a8daca65e126967726e943","integrationRevision":"893d0d450a6682ec5d498c761deb653ea6a7c21b","evidenceRefs":[".aegis/results/GT-G4-03/result.json",".aegis/results/GT-G4-03/p34-control-review.json"]},
+    {"taskId":"GT-G4-04","status":"PASS","resultRevision":"339403b891f80d872e63a3cf880a18651b84225d","integrationRevision":"f277f32a3a54bfeb095972d7bf2ff066e1ff4961","evidenceRefs":[".aegis/results/GT-G4-04/result.json",".aegis/results/GT-G4-04/p34-control-review.json"]},
+    {"taskId":"GT-G4-05","status":"PASS","resultRevision":"db16ef7c753b491f421e3ce895e4b2c6683358b3","integrationRevision":"3615a9898a694710e432c93b28ffc96d87532338","evidenceRefs":[".aegis/results/GT-G4-05/result.json",".aegis/results/GT-G4-05/p34-control-review.json"]},
+    {"taskId":"GT-G4-06","status":"PASS","resultRevision":"74f086db7dc6945facac704f5269f09ac3b67e0a","integrationRevision":"a7abd85b54c5671dcab8ee964315a1eb522a9b8f","evidenceRefs":[".aegis/results/GT-G4-06/result.json",".aegis/results/GT-G4-06/p34-control-review.json"]},
+    {"taskId":"GT-G4-07","status":"PASS","resultRevision":"693622a3eb56761da459c817346eb11e1f4d594e","integrationRevision":"f6f44591bfae51767d4cdff80714981a23e34aae","evidenceRefs":[".aegis/results/GT-G4-07/result.json",".aegis/results/GT-G4-07/p34-control-review.json"]},
+    {"taskId":"GT-G4-08","status":"PASS","resultRevision":"667cab1ddc89851fd8f297dd1d35c1134ea3b64f","integrationRevision":"34c7269ed69d02fc12ca3cbcc19e15815d028deb","evidenceRefs":[".aegis/results/GT-G4-08/result.json",".aegis/results/GT-G4-08/p34-control-review.json"]},
+    {"taskId":"GT-G4-09","status":"PASS","resultRevision":"225b5977ec70e158d12884f53eeb256c1b2a86f0","integrationRevision":"3c6adadd40f8972cff96550a4d29e3b944bfc153","evidenceRefs":[".aegis/results/GT-G4-09/result.json",".aegis/results/GT-G4-09/p34-control-review.json"]},
+    {"taskId":"GT-G4-10","status":"PASS","resultRevision":"3f0f32c66e58c4f80752f2e7bdc6a33d220215f5","integrationRevision":"8e4543b670c1aaad65dac666fe67b2b5365d6d2d","evidenceRefs":[".aegis/results/GT-G4-10/result.json",".aegis/results/GT-G4-10/p34-control-review.json"]},
+    {"taskId":"GT-G4-11","status":"PASS","resultRevision":"b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7","integrationRevision":"0565c2a05b6b333e45b637753ff890c0f9802746","evidenceRefs":[".aegis/results/GT-G4-11/result.json",".aegis/results/GT-G4-11/p34-control-review.json"]},
+    {"taskId":"GT-G4-12","status":"PASS_WITH_FINDINGS","resultRevision":"50a1d864ad72375f42404dcec8ff0226ec70cde8","packageMaterializationRef":"54df39f7df909125dc192f6307204e3c4c64f680","integrationRevision":"0a1e074013521fe42a9430bfe707af5a4705d7bc","evidenceRefs":[".aegis/results/GT-G4-12/p34-control-review-v0.4.json",".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",".aegis/results/GT-G4-12/platform-evidence.json"]}
+  ],
+  "checks": [
+    {"id":"lineage","status":"PASS","required":true,"issues":[]},
+    {"id":"functional-platform-profile","status":"PASS","required":true,"evidenceRefs":[".aegis/results/GT-G4-12/platform-evidence.json",".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json",".aegis/results/GT-G4-12/android-functional-smoke-evidence.json"],"issues":[]},
+    {"id":"windows-arc-human-visual-profile","status":"PASS_WITH_FINDINGS","required":true,"evidenceRefs":[".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/p34-control-review-v3.json",".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json"],"issues":["formal Render-owned coverage manifest remains deferred"]},
+    {"id":"deferred-boundary","status":"PASS","required":true,"evidenceRefs":[".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",".aegis/results/GT-G4-12/windows-pressure-evidence.json",".aegis/results/GT-G4-12/android-pressure-evidence.json"],"issues":[]},
+    {"id":"repository-integrity","status":"PASS","required":true,"evidenceRefs":[".aegis/results/GT-G4-13/repository-integrity.json"],"issues":[]}
+  ],
+  "deferredSuccessorCapabilities":["G4_PHYSICAL_PRESSURE_EXTENSION","G4_ARC_RENDER_COVERAGE_HARDENING","capture-bound physical latency"],
+  "findings":[
+    {"classification":"NON_BLOCKING_FINDING","id":"PRESSURE_AND_PHYSICAL_DEFERRED","description":"Pressure-qualified pen and capture-bound physical latency remain deferred by current authority; no pressure or physical PASS is claimed."},
+    {"classification":"NON_BLOCKING_FINDING","id":"RENDER_COVERAGE_MANIFEST_DEFERRED","description":"Formal Render-owned coverage manifest is successor hardening, not a current functional-profile blocker."}
+  ],
+  "promotion":{"allowed":true,"scope":"PASS_G4_FUNCTIONAL_INTEGRATION","physicalPass":false,"pressurePass":false,"reason":"All required current G4 functional obligations and integrated work-package lineage passed under the current authority."}
+}

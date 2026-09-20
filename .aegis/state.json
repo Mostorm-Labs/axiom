@@ -2,7 +2,7 @@
   "schema_version": "0.6",
   "generator_version": "manual-deterministic-v0.1",
   "project_id": "axiom",
-  "active_stage": "GT-G4-11_REPOSITORY_INTEGRATED",
+  "active_stage": "G4_FUNCTIONAL_COMPLETION_RECORDED",
   "current_owner": "aegis",
   "earliest_untrusted_layer": null,
   "status": "READY",
@@ -28,17 +28,17 @@
     "completion_decision_id": "g3-completion-2026-09-19"
   },
   "g4": {
-    "status": "G4-11_CLOSED_AND_INTEGRATED",
+    "status": "G4_FUNCTIONAL_INTEGRATION_CLOSED_WITH_FINDINGS",
     "ingress": "READY_FOR_SUCCESSOR_ROUTING",
     "implementation_authorized": false,
-    "current_work_package": "GT-G4-11",
-    "current_authority": "g4-capability-authority",
-    "task_anchor": "abfcee6d41a4da880c057a6078d2f5ea348692a8",
+    "current_work_package": "GT-G4-13",
+    "current_authority": "g4-capability-authority-v0.3",
+    "task_anchor": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
     "plan_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
-    "result_revision": "b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7",
-    "reviewed_branch_head": "b0e70b32",
-    "integration_revision": "0565c2a05b6b333e45b637753ff890c0f9802746",
-    "gate_decision_id": "gt-g4-11-p34-2026-09-19"
+    "result_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+    "reviewed_branch_head": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
+    "integration_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+    "gate_decision_id": "g4-completion-2026-09-20"
   },
   "current_authorities": [
     "g2-canonical-main",
@@ -218,21 +218,21 @@
       "applicability": "current"
     }
   ],
-  "recommended_next_stage": "G4_SUCCESSOR_ROUTING",
+  "recommended_next_stage": "G4_PHYSICAL_PRESSURE_EXTENSION_OR_SUCCESSOR_ROUTING",
   "handoff": {
     "next_surface": "CONTROL_REASONING",
-    "next_action": "G4-11 is closed and integrated through PR #125 at 0565c2a05b6b333e45b637753ff890c0f9802746. Materialize GT-G4-12 separately from this exact main revision.",
-    "p31_package": ".aegis/packages/GT-G4-11/package.json",
-    "p31_package_id": "GT-G4-11-P31-v0.1",
+    "next_action": "G4 current functional profile is closed with findings at 0a1e074013521fe42a9430bfe707af5a4705d7bc. Pressure/physical latency and coverage hardening remain deferred successor capabilities.",
+    "p31_package": ".aegis/packages/GT-G4-13/package.json",
+    "p31_package_id": "GT-G4-13-P31-v0.1",
     "p31_materialized": true,
     "package_materialization_ref": "32a113f639a9b798155724a17bca584c095e895e",
-    "result_revision": "b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7",
-    "reviewed_branch_head": "b0e70b32",
-    "integration_revision": "0565c2a05b6b333e45b637753ff890c0f9802746",
-    "gate_decision_id": "gt-g4-11-p34-2026-09-19",
+    "result_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+    "reviewed_branch_head": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
+    "integration_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+    "gate_decision_id": "g4-completion-2026-09-20",
     "g2_reopen": false,
     "g3_implementation_start": false,
     "g4_implementation_start": false,
-    "g4_p31_package": ".aegis/packages/GT-G4-11/package.json"
+    "g4_p31_package": ".aegis/packages/GT-G4-13/package.json"
   }
 }

@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-13",
+  "obligations": [
+    {
+      "id": "G4-13-V1-lineage",
+      "requirement": "Every required G4 work package has a durable accepted Gate decision and exact result revision.",
+      "oracle": "The final report enumerates GT-G4-01 through GT-G4-12 and matches gates.json/evidence.json/integrations.json.",
+      "acceptance": "No required WP is skipped and G4-12 is bound to the exact merged main revision.",
+      "evidence_required": ".aegis/results/GT-G4-13/g4-gate-report.json"
+    },
+    {
+      "id": "G4-13-V2-functional-profile",
+      "requirement": "The current G4 functional profile has accepted Web, Windows and Android results.",
+      "oracle": "Independent review resolves each platform evidence file and checks its exact status and revision.",
+      "acceptance": "PASS_WEB_BROWSER_SMOKE, PASS_WINDOWS_FUNCTIONAL_SMOKE and PASS_ANDROID_FUNCTIONAL_SMOKE are present.",
+      "evidence_required": ".aegis/results/GT-G4-12/platform-evidence.json"
+    },
+    {
+      "id": "G4-13-V3-arc-profile",
+      "requirement": "Windows Arc preview qualification is included under the approved human-visual functional profile.",
+      "oracle": "The report binds the Windows Arc P34 review and the main merge revision.",
+      "acceptance": "Preview visible, canonical overlap, automatic preview release, no visible gap, responsive HWND; no pressure claim.",
+      "evidence_required": ".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/p34-control-review-v3.json"
+    },
+    {
+      "id": "G4-13-V4-deferred-boundary",
+      "requirement": "Deferred successor capabilities are not presented as current G4 PASS requirements.",
+      "oracle": "The report explicitly records pressure, capture-bound latency and coverage-manifest deferral.",
+      "acceptance": "No physical or pressure PASS is emitted.",
+      "evidence_required": ".aegis/results/GT-G4-13/g4-gate-report.json"
+    },
+    {
+      "id": "G4-13-V5-integrity",
+      "requirement": "The final report and control records are reproducible from the exact integrated main revision.",
+      "oracle": "SHA-256 values and git diff --check are recorded and independently recomputable.",
+      "acceptance": "Report inputs resolve at the pinned revisions and repository scope is limited to G4-13 control artifacts.",
+      "evidence_required": ".aegis/results/GT-G4-13/repository-integrity.json"
+    }
+  ]
+}
