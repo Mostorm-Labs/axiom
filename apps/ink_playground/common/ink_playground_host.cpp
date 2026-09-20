@@ -65,8 +65,10 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
+  const auto committedPoints = preview_->snapshot().confirmed;
   if (!ink_->finish().has_value()) return false;
   if (!interaction_->commit(strokeId, interaction::OperationRequest{operationId})) return false;
+  if (!committedPoints.empty()) committedStrokes_.push_back(committedPoints);
   preview_->cancel();
   return true;
 }
@@ -118,6 +120,13 @@ bool InkPlaygroundHost::loseSurface() noexcept {
 
 std::vector<ink::StrokePoint> InkPlaygroundHost::previewPoints() const {
   return preview_->snapshot().confirmed;
+}
+
+std::vector<std::vector<ink::StrokePoint>> InkPlaygroundHost::previewStrokes() const {
+  auto strokes = committedStrokes_;
+  const auto active = preview_->snapshot().confirmed;
+  if (!active.empty()) strokes.push_back(active);
+  return strokes;
 }
 
 }  // namespace canvas::ink_playground

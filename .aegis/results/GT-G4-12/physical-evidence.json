@@ -1,129 +1,15 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "task_id": "GT-G4-12",
-  "result_revision": "559162596e80e2572677b973b98692d9b5803a18",
+  "result_revision": "1bf20a459fa076680e9339c7eaeb785471a72f54",
   "platform": "windows",
   "status": "BLOCKED_ENVIRONMENT",
-  "blocking": true,
-  "execution_branch": "codex/g4-12-ink-playground",
-  "identity": {
-    "head_verified": true,
-    "head": "559162596e80e2572677b973b98692d9b5803a18",
-    "git_diff_check": "PASS"
-  },
-  "host": {
-    "windows_version": "Microsoft Windows 10 Pro 10.0.19045",
-    "architecture": "x64",
-    "manufacturer": "Micro-Star International Co., Ltd.",
-    "model": "MS-7C83",
-    "windows_11_required": true,
-    "windows_11_satisfied": false
-  },
-  "web": {
-    "hosted_browser": "macOS in-app browser",
-    "status": "PASS_WEB_BROWSER_SMOKE",
-    "input": "macos-browser-mouse-or-trackpad",
-    "url": "http://127.0.0.1:4282/?run=web-smoke-b34899",
-    "checks": [
-      "wasm_loaded",
-      "surface_available",
-      "multiple_strokes_rendered",
-      "stroke_boundaries_preserved",
-      "coordinate_mapping_checked",
-      "no_bigint_runtime_error"
-    ],
-    "physical_capture": null,
-    "promotion": "hosted_browser_smoke_only_not_physical_evidence"
-  },
-  "device": {
-    "observed_hid_pen_entry": "HID-compliant pen / HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
-    "device_metadata_qualified_for_physical_evidence": false,
-    "pressure_capability_verified": false,
-    "reason": "Host is Windows 10 and no physical Windows Ink interaction was executed."
-  },
-  "locked_skia_sdk": {
-    "profile": "r1-full-v1",
-    "target": "windows-x64-d3d12",
-    "variant": "release",
-    "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
-    "path": "D:\\GitRepos\\mostorm-labs\\canvas\\.deps\\skia-sdk\\windows-x64-d3d12\\release",
-    "source": "Mostorm-Labs/Axiom locked GitHub Release asset",
-    "source_rebuild_used": false
-  },
-  "implementation": {
-    "entrypoint": "apps/ink_playground/platform/windows/main.cpp",
-    "winmain_present": true,
-    "real_hwnd_code_present": true,
-    "message_loop_code_present": true,
-    "wm_pointer_code_present": true,
-    "coalesced_pen_history": true,
-    "device_metadata_capture": false,
-    "pointer_trace_persistence": false,
-    "hud_telemetry_persistence": false,
-    "sample_to_visible_latency_capture": false,
-    "first_true_error": null,
-    "repair": "Converted POINTER_INFO::sourceDevice HANDLE to protocol device_id, ingested pointer and pen history batches, handled nodiscard results, and added a Windows conversion regression test.",
-    "result": "Runnable Windows Ink Playground executable produced; no physical input path was exercised on this Windows 10 host."
-  },
-  "verification": {
-    "skia_fetch": {
-      "command": "python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release --summary-file out/g4-12-windows-skia-summary.md",
-      "status": "PASS",
-      "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa"
-    },
-    "configure": {
-      "command": "cmake --preset g3-windows-release -DCANVAS_BUILD_ARC=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_RENDER_BUILD_TESTS=ON",
-      "status": "PASS"
-    },
-    "build": {
-      "command": "cmake --build --preset g3-windows-release --target axiom_ink_playground_windows axiom_ink_playground_tests --parallel",
-      "status": "PASS",
-      "completed_steps": "complete",
-      "first_true_error": null,
-      "package_produced": true,
-      "package": "out/g4-12-windows-package.zip",
-      "package_sha256": "0c122636f66b8afa4d5789692699b4c79a3cc06175d64a7354cc798a54eefb9b"
-    },
-    "ctest": {
-      "command": "ctest --test-dir out/g3-windows-release -R '^G4InkPlayground|^G3SurfacePresentation|^G4CanonicalHandoff$' --output-on-failure",
-      "status": "PASS_G4_TARGETS",
-      "passed": 8,
-      "failed": 0,
-      "command_result": "100% tests passed, 0 tests failed out of 8"
-    }
-  },
-  "pointer_trace": {
-    "collected": false,
-    "path": null,
-    "reason": "Executable is runnable, but no physical pen session was performed on Windows 10."
-  },
-  "hud": {
-    "collected": false,
-    "sample_hz": null,
-    "batch_size": null,
-    "queue_age_ms": null,
-    "ink_processing_ms": null,
-    "preview_revision": null,
-    "prediction_depth": null,
-    "frame_time_ms": null,
-    "presentation_evidence_kind": null
-  },
-  "physical_latency": {
-    "collected": false,
-    "sample_to_visible_ms": null,
-    "headless_or_application_timing_promoted": false
-  },
+  "functional_smoke": "BLOCKED_ENVIRONMENT",
+  "pressure": "BLOCKED_ENVIRONMENT",
   "capture": {
-    "path": null,
-    "sha256": null,
-    "collected": false,
-    "reason": "No physical session was run; no screenshot or video was fabricated."
+    "path": ".aegis/results/GT-G4-12/windows-functional-smoke-capture.png",
+    "sha256": "dd57cc01cfaf50e8ff0079004fa5f4e0f3b67be45555c29c3bb079ad18222c92"
   },
-  "secondary_environment_blocker": "The current machine is Windows 10 x64, while PASS_PHYSICAL requires Windows 11 x64 with a real pressure-sensitive Windows Ink pen.",
   "headless_timing_promoted_to_physical": false,
-  "historical_physical_artifacts_reused": false,
-  "physical_validation_claimed": false,
-  "official_gate_pass": false,
-  "g4_pass": false,
-  "next_surface": "CONTROL_REVIEW"
+  "reason": "No real pointer event trace and no pressure pen evidence were collected."
 }

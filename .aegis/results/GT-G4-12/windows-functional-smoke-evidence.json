@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G4-12",
+  "result_revision": "1bf20a459fa076680e9339c7eaeb785471a72f54",
+  "execution_branch": "codex/g4-12-ink-playground",
+  "status": "BLOCKED_ENVIRONMENT",
+  "host": {
+    "windows_version": "Microsoft Windows 10 Pro 10.0.19045",
+    "architecture": "x64",
+    "responding_process": true
+  },
+  "build": {
+    "configure": "PASS",
+    "build": "PASS",
+    "ctest": "PASS",
+    "ctest_total": 7,
+    "ctest_passed": 7,
+    "ctest_failed": 0
+  },
+  "input_type": "not_observed",
+  "device_metadata": null,
+  "pointer_trace": {
+    "path": null,
+    "sha256": null,
+    "events_observed": 0,
+    "reason": "Desktop automation could not bind the native HWND for pointer injection; no trace fabricated."
+  },
+  "hud_telemetry": {
+    "path": null,
+    "sample_hz": null,
+    "batch_size": null,
+    "queue_age_ms": null,
+    "ink_processing_ms": null,
+    "preview_revision": null,
+    "prediction_depth": null
+  },
+  "pressure_trace": "not_available",
+  "physical_latency": "not_available",
+  "capture": {
+    "path": ".aegis/results/GT-G4-12/windows-functional-smoke-capture.png",
+    "sha256": "dd57cc01cfaf50e8ff0079004fa5f4e0f3b67be45555c29c3bb079ad18222c92",
+    "kind": "desktop screenshot",
+    "window_input_visible": false
+  },
+  "headless_timing_promoted_to_physical": false,
+  "next_surface": "CONTROL_REVIEW"
+}

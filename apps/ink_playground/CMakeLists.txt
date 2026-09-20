@@ -31,8 +31,11 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
-      tests/windows_pointer_utils_test.cpp)
+      tests/windows_pointer_utils_test.cpp
+      platform/windows/windows_smoke_evidence.cpp)
     target_compile_features(axiom_ink_playground_windows_pointer_utils_tests PRIVATE cxx_std_20)
+    target_link_libraries(axiom_ink_playground_windows_pointer_utils_tests PRIVATE
+      canvas_runtime_ink)
     if(MSVC)
       target_compile_options(axiom_ink_playground_windows_pointer_utils_tests PRIVATE /W4 /permissive- /WX /EHsc)
     else()
@@ -44,7 +47,9 @@ if(BUILD_TESTING)
 endif()
 
 if(WIN32 AND TARGET arc_Windows)
-  add_executable(axiom_ink_playground_windows WIN32 platform/windows/main.cpp)
+  add_executable(axiom_ink_playground_windows WIN32
+    platform/windows/main.cpp
+    platform/windows/windows_smoke_evidence.cpp)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
       axiom_ink_playground_common Arc::Windows)
 endif()
