@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G4-12",
+  "result_revision": "a2a9fc36a9e2d55b0cb185e521b57dfb6f81ffcb",
+  "execution_branch": "codex/g4-12-ink-playground",
+  "status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+  "host": {
+    "windows_version": "Microsoft Windows 10 Pro 10.0.19045",
+    "architecture": "x64",
+    "responding_process": true
+  },
+  "build": {
+    "configure": "PASS",
+    "build": "PASS",
+    "ctest": "PASS",
+    "ctest_total": 7,
+    "ctest_passed": 7,
+    "ctest_failed": 0
+  },
+  "input_type": "mouse",
+  "device_metadata": null,
+  "pointer_trace": {
+    "path": ".aegis/results/GT-G4-12/pointer-trace.json",
+    "sha256": "49c0dfd0d3cb442038553b80e5635c107f0917468070f26c1665f4d03edbee0d",
+    "events_observed": 406,
+    "down_events": 24,
+    "up_events": 24,
+    "post_up_moves": 0,
+    "lifecycle_errors": 0
+  },
+  "hud_telemetry": {
+    "path": ".aegis/results/GT-G4-12/hud-telemetry.json",
+    "sha256": "bcf64bfb951cebef3f55652ee4703ef3985ea98ed181747fffa0c072788807d5",
+    "sample_hz": 0,
+    "batch_size": 1,
+    "queue_age_ms": 34.5057,
+    "ink_processing_ms": 34.5057,
+    "preview_revision": 1010,
+    "prediction_depth": 0
+  },
+  "pressure_trace": "not_available",
+  "physical_latency": "not_available",
+  "capture": {
+    "path": ".aegis/results/GT-G4-12/windows-functional-smoke-capture.png",
+    "sha256": "dd57cc01cfaf50e8ff0079004fa5f4e0f3b67be45555c29c3bb079ad18222c92",
+    "kind": "desktop screenshot",
+    "window_input_visible": false,
+    "limitation": "Capture predates the confirmed drawing session and shows the real HWND only; visible drawing was confirmed interactively by the user and is not promoted to capture evidence."
+  },
+  "headless_timing_promoted_to_physical": false,
+  "next_surface": "CONTROL_REVIEW"
+}\n
