@@ -151,6 +151,14 @@ int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t he
 int axiom_ink_android_surface_lost(void* handle) {
   auto* value = asHost(handle); return value != nullptr && value->host->loseSurface();
 }
+int axiom_ink_android_cancel_all(void* handle) {
+  auto* value = asHost(handle);
+  if (value == nullptr) return 0;
+  value->host->cancelAllPointers();
+  value->activeKeys.clear();
+  value->pointerStrokes.clear();
+  return 1;
+}
 void* axiom_ink_android_create_input_source() {
   return arc::CreateAndroidInputSource().release();
 }

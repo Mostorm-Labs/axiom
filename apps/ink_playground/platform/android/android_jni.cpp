@@ -12,6 +12,7 @@ int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
 int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_t strokeId);
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height);
 int axiom_ink_android_surface_lost(void* handle);
+int axiom_ink_android_cancel_all(void* handle);
 
 JNIEXPORT jlong JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCreate(
@@ -66,5 +67,11 @@ JNIEXPORT jint JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeSurfaceLost(
     JNIEnv*, jclass, jlong handle) {
   return axiom_ink_android_surface_lost(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCancelAll(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_cancel_all(reinterpret_cast<void*>(handle));
 }
 }

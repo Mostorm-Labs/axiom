@@ -31,4 +31,8 @@ void InteractionRuntime::documentDetached() noexcept {
     manager_.cancelAllKeyed(CancellationReason::kDocumentDetached);
 }
 
+void InteractionRuntime::cancelKeyedSessions(CancellationReason reason) noexcept {
+    manager_.cancelAllKeyed(reason);
+}
+
 } // namespace canvas::interaction

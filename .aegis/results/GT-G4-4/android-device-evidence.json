@@ -1,0 +1,12 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "platform":"android",
+  "device":{"model":"Pixel 7","device":"panther","os":"Android 17","adb_serial":"29251FDH2004Z0"},
+  "apk":{"sha256":"f48f9b3e6b6f51dcfbc3e6a3ba4ab9bffc8e145b1b3f3c9f3f6e5f21ca48b49b","build":"PASS","install":"PASS","launch":"PASS"},
+  "trace":{"path":".aegis/results/GT-G4-4/android-multipointer-trace.json","sha256":"63401a83768fe0f1dee8984447963b5fc9f2d5994b8f3c99fc25ada4fab73774","events":10533,"pointer_ids":[0,1],"stroke_count":31,"touch_major_range":[100.0,367.0],"touch_minor_range":[85.0,183.0]},
+  "functional":{"path":".aegis/results/GT-G4-4/android-multipointer-functional.json","sha256":"6c83552543c6c70266a2dc90f6be5dec3a63d9992e5d774099f1de7e47cdf6dd","viewport_scale":1.57294},
+  "capture":{"path":".aegis/results/GT-G4-4/android-multipointer-capture.png","sha256":"a97aeb9a08f85ac0a211cc245e6fcbe8a3d485eac40f98eeab238caec5b91a18"},
+  "decision":"PASS_ANDROID_MULTITOUCH_FUNCTIONAL_CHECKPOINT",
+  "limitations":["no active pen was present","pen+palm was not demonstrated","Windows hosted/device checkpoint remains required"]
+}

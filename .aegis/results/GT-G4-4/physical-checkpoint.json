@@ -5,8 +5,8 @@
   "status":"BLOCKED_ENVIRONMENT",
   "required_device":"one real device supporting pen and multitouch concurrently",
   "required_scenarios":["pen drawing","two-finger pan/pinch","pen+palm","broad finger contact","pointer identity continuity","repeated down/up pointer reuse","cancellation","contact-area sample capture"],
-  "evidence_observed":[],
+  "evidence_observed":["PASS_ANDROID_MULTITOUCH_FUNCTIONAL_CHECKPOINT","pointer identity continuity","repeated pointer reuse","broad contact geometry capture","two-finger viewport scale"],
   "synthetic_substitute_accepted":false,
-  "reason":"No ADB device is connected, this macOS host has no JDK 17 for the Android APK build, Windows native code cannot be hosted here, and no reviewer-accessible G4.4 physical capture bound to result revision 0660e502c7f665e453ebbe50eada2b7af9ea72dd exists.",
+  "reason":"Android multitouch evidence is now reviewer-accessible, but the Pixel 7 had no active pen and Windows native code cannot be hosted on macOS. Pen drawing, pen+palm, and the Windows native checkpoint remain unproven.",
   "resume_stage":"P32_PHYSICAL_CHECKPOINT"
 }

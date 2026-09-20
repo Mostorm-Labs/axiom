@@ -93,6 +93,15 @@ bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t
   return true;
 }
 
+void InkPlaygroundHost::cancelAllPointers() noexcept {
+  for (const auto& [key, strokeId] : keyedStrokeIds_) {
+    ink_->cancel(key);
+    preview_->cancelKeyed(strokeId);
+  }
+  keyedStrokeIds_.clear();
+  interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
+}
+
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   const auto committedPoints = preview_->snapshot().confirmed;
