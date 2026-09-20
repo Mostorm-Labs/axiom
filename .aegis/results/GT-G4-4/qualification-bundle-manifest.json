@@ -1,0 +1,73 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "work_package": "G4.4-10",
+  "status": "QUALIFICATION_ARTIFACT_READY",
+  "execution_branch": "codex/g4-4-multipointer",
+  "source_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "task_anchor": "7be89f11d7abc26c3788aa5f8a3b324571baa27c",
+  "automated_profile": {
+    "preset": "g3-host-debug",
+    "build": "PASS",
+    "ctest": "33/33 PASS",
+    "git_diff_check": "PASS",
+    "corpus": {
+      "concurrent_synthetic_streams": 4,
+      "pointer_reuse_generation_fencing": "PASS",
+      "per_pointer_fault_isolation": "PASS",
+      "two_finger_viewport_geometry": "PASS",
+      "broad_contact_hysteresis": "PASS",
+      "keyed_multi_preview": "PASS",
+      "ordered_canonical_candidates": "PASS"
+    }
+  },
+  "platform_profiles": {
+    "windows": {
+      "status": "PASS_AVAILABLE_MOUSE_PROFILE",
+      "os": "Windows 10 x64 10.0.19045",
+      "build": "PASS",
+      "ctest": "29/29 PASS",
+      "input": "mouse",
+      "events": 660,
+      "complete_strokes": 18,
+      "pointer_generation_range": [1, 18],
+      "max_concurrent_pointers": 1,
+      "artifacts": [
+        {"path": ".aegis/results/GT-G4-4/windows-build-ctest.txt", "sha256": "79effea6b0e45da1aaabc67084363a65210e531ffe405818be5fc290f60e36c1"},
+        {"path": ".aegis/results/GT-G4-4/windows-pointer-trace.json", "sha256": "ba0cf8d0be8859c7009ab969e5b27d5dfb98f360f274d869f90c18d4e1aa9321"},
+        {"path": ".aegis/results/GT-G4-4/windows-hud-telemetry.json", "sha256": "e6b50b9311a35d36900878c38c136f58e4ba041a11698fa12014b1c9639eae33"},
+        {"path": ".aegis/results/GT-G4-4/windows-launch-metadata.json", "sha256": "15e4b53f7122feca5db8d54f21c800633034ee721a0858fe4e0c25b33a7cf07b"}
+      ],
+      "not_exercised": ["touch concurrency", "pen", "pressure", "palm", "contact geometry", "physical cancellation"]
+    },
+    "android": {
+      "status": "PASS_AVAILABLE_MULTITOUCH_PROFILE",
+      "device": "Pixel 7 / panther / Android 17",
+      "pointer_ids": [0, 1],
+      "events": 10533,
+      "complete_strokes": 31,
+      "viewport_scale": 1.57294,
+      "artifacts": [
+        {"path": ".aegis/results/GT-G4-4/android-multipointer-trace.json", "sha256": "63401a83768fe0f1dee8984447963b5fc9f2d5994b8f3c99fc25ada4fab73774"},
+        {"path": ".aegis/results/GT-G4-4/android-multipointer-functional.json", "sha256": "6c83552543c6c70266a2dc90f6be5dec3a63d9992e5d774099f1de7e47cdf6dd"},
+        {"path": ".aegis/results/GT-G4-4/android-multipointer-capture.png", "sha256": "a97aeb9a08f85ac0a211cc245e6fcbe8a3d485eac40f98eeab238caec5b91a18"}
+      ],
+      "not_exercised": ["active pen", "pressure qualification", "pen plus palm"]
+    },
+    "web": {
+      "status": "PASS_AUTOMATED_CONFORMANCE",
+      "coverage": ["PointerEvent.pointerId", "per-pointer generation map", "independent active stroke map", "coalesced event batches", "pointer capture", "pointercancel cleanup", "touch-action none", "canvas coordinate normalization"],
+      "tests": ["G4PlatformNormalization", "G4InkPlaygroundPlatform", "G4MultiPointerPlayground"],
+      "physical_run": "DEFERRED_TO_G4.4-11"
+    }
+  },
+  "capability_policy": {
+    "pressure_validation": "NOT_REQUIRED_ON_UNSUPPORTED_DEVICE",
+    "pen_validation": "NOT_REQUIRED_ON_UNSUPPORTED_DEVICE",
+    "unsupported_capability_is_not_pass": true,
+    "unsupported_capability_is_not_current_automated_blocker": true
+  },
+  "next_stage": "G4.4-11_UNIFIED_PHYSICAL_QUALIFICATION",
+  "official_g4_4_pass_claimed": false
+}

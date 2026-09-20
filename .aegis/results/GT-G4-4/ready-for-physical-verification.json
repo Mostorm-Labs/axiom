@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P32_AUTOMATED_CLOSURE",
+  "status": "READY_FOR_PHYSICAL_VERIFICATION",
+  "execution_branch": "codex/g4-4-multipointer",
+  "source_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "completed_work_packages": ["G4.4-00", "G4.4-01", "G4.4-02", "G4.4-03", "G4.4-04", "G4.4-05", "G4.4-06", "G4.4-07", "G4.4-08", "G4.4-09", "G4.4-10"],
+  "closure_equation": {
+    "code_complete": true,
+    "automated_verification_pass": true,
+    "qualification_artifact_ready": true,
+    "result": "READY_FOR_PHYSICAL_VERIFICATION"
+  },
+  "verification": {
+    "host_build": "PASS",
+    "host_ctest": "33/33 PASS",
+    "windows_build_ctest": "29/29 PASS",
+    "git_diff_check": "PASS",
+    "qualification_bundle": ".aegis/results/GT-G4-4/qualification-bundle-manifest.json"
+  },
+  "successor": {
+    "stage": "G4.4-11",
+    "name": "Unified Physical Qualification + Gate Closure",
+    "capability_profiled": true,
+    "pen_pressure_required_only_when_supported": true
+  },
+  "claim_boundary": {
+    "g4_4_pass": false,
+    "g4_pass": false,
+    "g4_5_execution_authorized": false
+  }
+}

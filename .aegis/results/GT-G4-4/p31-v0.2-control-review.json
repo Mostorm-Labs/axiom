@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P31_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "package_materialization_ref": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "task_anchor": "7be89f11d7abc26c3788aa5f8a3b324571baa27c",
+  "superseded_package": {
+    "package_id": "GT-G4-4-P31-v0.1",
+    "classification": "TASK_PACKAGE_DEFECT",
+    "reason": "The earlier package froze a work-package-local physical checkpoint that the updated implementation-plan Authority moves to successor stage G4.4-11. Its BLOCKED_ENVIRONMENT record remains historical and is not an implementation defect."
+  },
+  "authority_audit": {
+    "status": "PASS",
+    "architecture_ref": "notion://3e14c57a590c814fbe38cd3800d7b291",
+    "implementation_plan_ref": "notion://3e14c57a590c810fa529c1ef7b5c5b6e",
+    "implementation_plan_last_edited_at": "2026-09-20T15:45:04.363Z",
+    "accepted_cadence": "G4.4-00 through G4.4-10 automated closure, then G4.4-11 unified physical qualification"
+  },
+  "package_binding_audit": {
+    "status": "PASS",
+    "repository": "Mostorm-Labs/axiom",
+    "remote_ref": "refs/heads/codex/g4-4-multipointer",
+    "anchor_ancestor": true,
+    "five_package_lock_hashes": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "verification_audit": {
+    "status": "PASS",
+    "current_blocking_boundary": "Automated correctness plus qualification-artifact readiness",
+    "successor_blocking_boundary": "G4.4-11 capability-profiled physical evidence and final G4.4 Gate",
+    "pressure_policy": "Pen and pressure are required only when the qualification device supports them",
+    "claim_boundary": "No G4.4 PASS before G4.4-11"
+  },
+  "decision": {
+    "verdict": "PASS",
+    "p31_authorized": true,
+    "preserved_implementation_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
+    "next_stage": "P32_CODE_EXECUTION",
+    "terminal_success": "READY_FOR_PHYSICAL_VERIFICATION",
+    "official_g4_4_pass_forbidden": true
+  }
+}
