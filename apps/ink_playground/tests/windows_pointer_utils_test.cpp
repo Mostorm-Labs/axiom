@@ -41,6 +41,31 @@ int main() {
       canvas::ink_playground::windows_input::normalizePointerHistory(newestFirst, false);
   if (moveHistory.size() != 2U || moveHistory.front().ptPixelLocation.x != 110 ||
       moveHistory.back().ptPixelLocation.x != 120) return 5;
+
+  using canvas::ink_playground::windows_input::PointerLifecycle;
+  using canvas::ink_playground::windows_input::PointerLifecycleEvent;
+  PointerLifecycle lifecycle;
+  if (lifecycle.update(1U) != PointerLifecycleEvent::kIgnore ||
+      lifecycle.end(1U) != PointerLifecycleEvent::kIgnore ||
+      lifecycle.begin(1U, 100U) != PointerLifecycleEvent::kBegin ||
+      lifecycle.update(2U) != PointerLifecycleEvent::kIgnore ||
+      lifecycle.update(1U) != PointerLifecycleEvent::kUpdate ||
+      lifecycle.end(1U) != PointerLifecycleEvent::kEnd ||
+      lifecycle.update(1U) != PointerLifecycleEvent::kIgnore ||
+      lifecycle.end(1U) != PointerLifecycleEvent::kIgnore ||
+      lifecycle.begin(1U, 200U) != PointerLifecycleEvent::kBegin ||
+      lifecycle.strokeStartTime() != 200U) {
+    return 6;
+  }
+
+  newestFirst.resize(2);
+  newestFirst[0].pointerFlags = POINTER_FLAG_INCONTACT;
+  newestFirst[0].dwTime = 210U;
+  newestFirst[1].pointerFlags = POINTER_FLAG_INCONTACT;
+  newestFirst[1].dwTime = 190U;
+  const auto currentStrokeHistory =
+      canvas::ink_playground::windows_input::normalizePointerHistory(newestFirst, false, 200U);
+  if (currentStrokeHistory.size() != 1U || currentStrokeHistory.front().dwTime != 210U) return 7;
   using canvas::ink_playground::windows_input::PointerEvidenceSample;
   using canvas::ink_playground::windows_input::serializePointerTrace;
   const std::string trace = serializePointerTrace(

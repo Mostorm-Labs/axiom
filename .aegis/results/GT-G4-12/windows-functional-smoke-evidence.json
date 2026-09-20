@@ -1,9 +1,9 @@
 {
   "schema_version": "0.2",
   "task_id": "GT-G4-12",
-  "result_revision": "1bf20a459fa076680e9339c7eaeb785471a72f54",
+  "result_revision": "e43b7ef9c4c0979f01a22720e61cf6f5af511791",
   "execution_branch": "codex/g4-12-ink-playground",
-  "status": "BLOCKED_ENVIRONMENT",
+  "status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
   "host": {
     "windows_version": "Microsoft Windows 10 Pro 10.0.19045",
     "architecture": "x64",
@@ -17,22 +17,26 @@
     "ctest_passed": 7,
     "ctest_failed": 0
   },
-  "input_type": "not_observed",
+  "input_type": "mouse",
   "device_metadata": null,
   "pointer_trace": {
-    "path": null,
-    "sha256": null,
-    "events_observed": 0,
-    "reason": "Desktop automation could not bind the native HWND for pointer injection; no trace fabricated."
+    "path": ".aegis/results/GT-G4-12/pointer-trace.json",
+    "sha256": "49c0dfd0d3cb442038553b80e5635c107f0917468070f26c1665f4d03edbee0d",
+    "events_observed": 406,
+    "down_events": 24,
+    "up_events": 24,
+    "post_up_moves": 0,
+    "lifecycle_errors": 0
   },
   "hud_telemetry": {
-    "path": null,
-    "sample_hz": null,
-    "batch_size": null,
-    "queue_age_ms": null,
-    "ink_processing_ms": null,
-    "preview_revision": null,
-    "prediction_depth": null
+    "path": ".aegis/results/GT-G4-12/hud-telemetry.json",
+    "sha256": "bcf64bfb951cebef3f55652ee4703ef3985ea98ed181747fffa0c072788807d5",
+    "sample_hz": 0,
+    "batch_size": 1,
+    "queue_age_ms": 34.5057,
+    "ink_processing_ms": 34.5057,
+    "preview_revision": 1010,
+    "prediction_depth": 0
   },
   "pressure_trace": "not_available",
   "physical_latency": "not_available",
