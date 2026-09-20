@@ -2,28 +2,53 @@
   "schema_version": "0.3",
   "task_id": "GT-G4-12",
   "package_id": "GT-G4-12-P31-v0.3",
-  "status": "AWAITING_USER_INTERACTIVE_SMOKE",
+  "status": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+  "result_revision": "894939c9f53a38c2b6b49fe4ae596d8cb042ea26",
+  "execution_branch": "codex/g4-12-ink-playground",
   "device": {
     "serial": "29251FDH2004Z0",
     "model": "Pixel 7",
+    "device": "panther",
     "android_release": "17",
-    "api": 37
+    "api": 37,
+    "abi": "arm64-v8a"
   },
   "apk_sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "installed_apk_sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "launcher_activity": "dev.mostorm.axiom.inkplayground/.MainActivity",
   "install_and_launch": "PASS",
-  "visible_writable_surface": "PASS_DIAGNOSTIC",
+  "visible_writable_surface": "PASS_USER_OBSERVED",
   "native_process_crash": false,
-  "required_user_observations": [
-    "draw first stroke and lift",
-    "draw second stroke at a different position",
-    "draw a third stroke",
-    "confirm strokes do not connect to one another",
-    "confirm touch position and drawn position align"
-  ],
-  "pointer_trace": "awaiting user physical interaction",
-  "capture": "awaiting user physical interaction",
-  "pressure": "not_available unless a real stylus is connected",
-  "pass_android_functional_smoke": false,
+  "user_observation": {
+    "observer": "user",
+    "confirmation": "completed",
+    "observed": {
+      "first_stroke_draws_and_lifts": true,
+      "second_stroke_draws_at_a_different_position": true,
+      "third_stroke_draws": true,
+      "cross_stroke_connection_absent": true,
+      "touch_and_draw_coordinates_align": true
+    }
+  },
+  "device_artifacts": {
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-12/android-device-pointer-trace.json",
+      "sha256": "cb320087ec448c0be1d1e06d1a0a213424e1377b7a2a63e87edda5159bf28873",
+      "note": "Cumulative device trace contains prior diagnostic activity and the user interaction session; provenance is qualified in android-pointer-trace.json."
+    },
+    "functional_record": {
+      "path": ".aegis/results/GT-G4-12/android-functional-smoke-device.json",
+      "sha256": "dc2b6ae3399e5451c5eb70f5cc1646fa8fe27931fac99bb5e007b044fadff123"
+    },
+    "capture": {
+      "path": ".aegis/results/GT-G4-12/android-functional-smoke-capture.png",
+      "sha256": "f861816a1a2e2b1fc249a4f25f7a18af4e9f971dc1c56269f87148f899746cfe",
+      "dimensions": "1080x2400",
+      "hud": "strokes 28, points 1438, tool touch, pressure 0.62"
+    }
+  },
+  "pressure": "not_qualified_without_real_stylus",
+  "pass_android_functional_smoke": true,
   "pass_android_pressure": false,
   "pass_physical": false,
   "official_gate_pass": false

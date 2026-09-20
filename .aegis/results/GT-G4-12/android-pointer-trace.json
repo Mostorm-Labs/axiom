@@ -2,17 +2,39 @@
   "schema_version": "0.3",
   "task_id": "GT-G4-12",
   "package_id": "GT-G4-12-P31-v0.3",
-  "status": "DIAGNOSTIC_ONLY_AWAITING_PHYSICAL_TRACE",
-  "diagnostic_source": "adb input swipe",
-  "diagnostic_observations": {
-    "strokes": 2,
-    "points": 195,
-    "sample_sequence_monotonic_across_strokes": true,
-    "stroke_boundaries_preserved": true,
-    "native_process_crash": false
+  "status": "PASS_ANDROID_HISTORY_FOR_FUNCTIONAL_SMOKE_WITH_PROVENANCE_FINDING",
+  "result_revision": "894939c9f53a38c2b6b49fe4ae596d8cb042ea26",
+  "device_trace": {
+    "path": ".aegis/results/GT-G4-12/android-device-pointer-trace.json",
+    "sha256": "cb320087ec448c0be1d1e06d1a0a213424e1377b7a2a63e87edda5159bf28873",
+    "format": "device-produced JSON pointer sample array",
+    "cumulative": true,
+    "points": 1438,
+    "strokes": 28,
+    "first_sequence": 1,
+    "last_sequence": 1438,
+    "sample_sequence_strictly_monotonic": true,
+    "stroke_ids_distinct": true,
+    "tool_types": ["touch"]
   },
-  "physical_trace_collected": false,
-  "pressure": "not_available_from_touch",
-  "physical_evidence_claimed": false,
+  "corroborating_evidence": {
+    "user_confirmed_at_least_three_interactive_strokes": true,
+    "user_confirmed_stroke_boundaries_preserved": true,
+    "user_confirmed_coordinate_alignment": true,
+    "capture_path": ".aegis/results/GT-G4-12/android-functional-smoke-capture.png",
+    "capture_sha256": "f861816a1a2e2b1fc249a4f25f7a18af4e9f971dc1c56269f87148f899746cfe",
+    "capture_hud_strokes": 28,
+    "capture_hud_points": 1438
+  },
+  "provenance_finding": {
+    "classification": "NON_BLOCKING_FINDING",
+    "description": "The application appends device samples across launches, so the durable trace is cumulative and includes earlier ADB diagnostic activity alongside the user session. Individual manual samples cannot be isolated with cryptographic certainty from the raw file.",
+    "why_non_blocking": "Independent user observation proves repeated-stroke behavior and coordinate alignment; the capture binds the final device state; the trace independently proves monotonic sequences and distinct stroke IDs. A clean per-session trace would improve auditability but has no unique detection value for this functional-smoke decision.",
+    "successor_hardening": "Clear or session-tag trace output before future physical sessions."
+  },
+  "pressure": "touch_values_not_accepted_as_pressure_stylus_evidence",
+  "pass_android_history_for_functional_smoke": true,
+  "pass_android_pressure": false,
+  "pass_physical": false,
   "official_gate_pass": false
 }
