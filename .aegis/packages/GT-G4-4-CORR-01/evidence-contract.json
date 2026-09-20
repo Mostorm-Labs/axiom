@@ -1,0 +1,66 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "review_boundary": "Exact corrective result revision plus package locks, required policy/capability oracles, platform-ingress conformance, preserved regressions and exact-build qualification manifest.",
+  "artifacts": [
+    {
+      "id": "repository-reconciliation",
+      "path": ".aegis/results/GT-G4-4-CORR-01/repository-reconciliation.json",
+      "blocking": true
+    },
+    {
+      "id": "policy-matrix-evidence",
+      "path": ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+      "blocking": true
+    },
+    {
+      "id": "positiononly-capability-evidence",
+      "path": ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
+      "blocking": true
+    },
+    {
+      "id": "provisional-session-zero-mutation",
+      "path": ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
+      "blocking": true
+    },
+    {
+      "id": "platform-ingress-conformance",
+      "path": ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
+      "blocking": true
+    },
+    {
+      "id": "portable-regression-summary",
+      "path": ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "qualification-bundle-manifest",
+      "path": ".aegis/results/GT-G4-4-CORR-01/qualification-bundle-manifest.json",
+      "blocking": true
+    },
+    {
+      "id": "result",
+      "path": ".aegis/results/GT-G4-4-CORR-01/result.json",
+      "blocking": true
+    }
+  ],
+  "capability_policy": {
+    "default_multi_contact_policy": "AutoIntent",
+    "missing_pressure": "UNAVAILABLE_NOT_FAILURE",
+    "invalid_contact_geometry": "DISABLE_AREA_HEURISTICS_NOT_PINCH",
+    "unknown_tool": "VALID_POSITIONONLY_STATE",
+    "unsupported_optional_capability_may_not_be_promoted_to_pass": true
+  },
+  "physical_successor": {
+    "state_required_from_p32": "READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION",
+    "final_gate_pass_forbidden_in_p32": true,
+    "targeted_scenarios": [
+      "AutoIntent Pending->pan/pinch",
+      "AutoIntent Ink->second Ink",
+      "MultiInk 2-contact drawing no pinch",
+      "GesturePriority late second ignored",
+      "PositionOnly masked pinch",
+      "cancel and pointer reuse"
+    ]
+  }
+}
