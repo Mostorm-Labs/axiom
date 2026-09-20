@@ -3,7 +3,7 @@
   "task_id": "GT-G4-12",
   "result_revision": "2cb6c0aba20aed78a26aa7742141be92365bd94e",
   "platform": "windows",
-  "status": "BLOCKED_ENVIRONMENT",
+  "status": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
   "machine": {
     "windows_version": "Microsoft Windows 10 专业版",
     "version": "10.0.19045",
@@ -11,8 +11,9 @@
     "architecture": "64-bit"
   },
   "device": {
-    "input_type": "no_pressure_pen_used",
+    "input_type": "mouse_or_standard_pointer",
     "pressure": "not_available",
+    "pressure_test": "not_requested",
     "pen_metadata": [
       {
         "FriendlyName": "HID-compliant pen",
@@ -25,27 +26,26 @@
     "status": "not_available",
     "path": null,
     "sha256": null,
-    "reason": "no pressure qualification requested; evidence output directory was not configured during the run"
+    "reason": "pressure qualification was explicitly out of scope and evidence output directory was not configured"
   },
   "hud": {
     "status": "not_available",
-    "reason": "no evidence output was emitted during the run"
+    "reason": "evidence output directory was not configured during the run"
   },
   "physical_latency": {
     "status": "not_available",
-    "reason": "no physical input trace or capture"
+    "reason": "physical latency is out of scope for this functional smoke run"
   },
   "capture": {
-    "path": null,
-    "sha256": null,
-    "status": "not_available",
-    "reason": "Computer Use sky RPC unavailable and native capture failed because System.Drawing Add-Type was blocked by LIB environment path"
+    "path": "D:\\GitRepos\\mostorm-labs\\canvas\\out\\g4-12-windows-functional\\window-capture.png",
+    "sha256": "cb9afa0c147c4c177344814d8a8149025898611afdf0b5a90487ecd2f5134f69",
+    "kind": "native window screenshot",
+    "status": "captured"
   },
   "headless_timing_promoted_to_physical": false,
   "limitations": [
-    "Host is Windows 10 build 19045, not Windows 11",
-    "No pressure pen input was collected",
-    "No representative screenshot or video capture was obtained",
-    "No PASS_PHYSICAL claim"
+    "Windows 10 functional smoke only",
+    "Pressure qualification not requested",
+    "Not PASS_WINDOWS_PRESSURE or PASS_PHYSICAL"
   ]
 }
