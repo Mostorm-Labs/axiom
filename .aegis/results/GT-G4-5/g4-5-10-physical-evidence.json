@@ -2,8 +2,8 @@
   "schema_version": "0.1",
   "task_id": "GT-G4-5",
   "stage": "G4.5-10_UNIFIED_TIER_A_PHYSICAL_QUALIFICATION",
-  "subject_result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
-  "status": "BLOCKED_ENVIRONMENT",
+  "subject_result_revision": "892925dbe8bf56d0641cdfd8a5affa051c582031",
+  "status": "BLOCKED_ENVIRONMENT_WITH_ANDROID_FUNCTIONAL_EVIDENCE",
   "blocker_class": "MISSING_REQUIRED_INPUT",
   "failure_mode": "The current environment does not provide a runnable, exact-build G4.5 programmable-brush physical host on all required platform profiles.",
   "observations": {
@@ -11,9 +11,22 @@
       "device": "Pixel 7",
       "adb_serial": "29251FDH2004Z0",
       "connected": true,
-      "available_artifact": "Hosted arm64 native axiom_brush_lab executable",
-      "installable_g4_5_apk": false,
-      "reason": "The existing installed ink_playground APK is a G4.4 input host and is not a G4.5 programmable-brush host."
+      "available_artifact": "Exact-build Android APK installed on Pixel 7",
+      "apk_sha256": "797e6628c718d75521f6d5a7b4b0661e59b1f5d5c8fed26034b024e813c74063",
+      "installable_g4_5_apk": true,
+      "functional_status": "PASS_ANDROID_FUNCTIONAL_SMOKE_WITH_FINDINGS",
+      "evidence": {
+        "capture_sha256": "b915099f78da9cdb4842a9eb383fc7b9310fca90b3047c5e7f7faab7f2a17215",
+        "pointer_trace_sha256": "06f672a2e8c935148a119bd580311827a85dccabd888d9c7f844814f01536d6e",
+        "brush_evidence_sha256": "29c18c0d6b9d35e87b874dd3c4247bd60bb122e894c661bf0d7436bc3b9cc815",
+        "families_observed": ["pencil", "chalk", "marker", "water_color_lite", "highlighter", "laser"],
+        "visual_observation": "Screenshot shows distinct gray, brown, blue, cyan, yellow and red strokes; selector was usable at the bottom of the screen."
+      },
+      "findings": [
+        "Brush family differences are currently renderer-level color/width/opacity treatments, not full texture/shape-dab semantics.",
+        "Water Color Lite毛笔质感 enhancement was built but not separately re-sampled after the final install.",
+        "Laser transient expiry was not independently measured in this session."
+      ]
     },
     "windows": {
       "hosted_qualification": "PASS",
@@ -37,7 +50,6 @@
     "synthetic_or_headless_promotion": false
   },
   "required_human_or_external_input": [
-    "Provide or authorize an installable G4.5 Android host/APK bound to the exact result revision.",
     "Provide Windows and Web interactive G4.5 physical hosts or explicitly amend G4.5-10 to accept a different physical evidence route."
   ],
   "claim_boundary": "G4.5-00 through G4.5-09 remain PASS_WITH_FINDINGS / READY_FOR_PHYSICAL_VERIFICATION. No final G4.5 PASS is issued. G4.6 is not started."
