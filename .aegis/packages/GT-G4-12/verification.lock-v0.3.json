@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "supersedes": "GT-G4-12-P31-v0.2",
+  "amendment_ref": ".aegis/results/GT-G4-12/verification-amendment-v0.3-android.json",
+  "obligations": [
+    {
+      "id": "G4-12-V7-android-functional-smoke",
+      "requirement": "An Android API 26+ device can install and launch the native Ink Playground, accept touch or pen MotionEvent history, draw multiple independent strokes, and persist trace/HUD/capture evidence.",
+      "oracle": "APK install/launch plus user-observed repeated-stroke functional smoke",
+      "acceptance": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+      "evidence_required": ".aegis/results/GT-G4-12/android-functional-smoke-evidence.json",
+      "pressure_required": false
+    },
+    {
+      "id": "G4-12-V8-android-history",
+      "requirement": "Historical MotionEvent samples and monotonically increasing sample sequences reach the native Arc input path without merging stroke boundaries.",
+      "oracle": "Android host contract test plus durable physical pointer trace",
+      "acceptance": "PASS",
+      "evidence_required": ".aegis/results/GT-G4-12/android-pointer-trace.json"
+    },
+    {
+      "id": "G4-12-V9-android-pressure",
+      "requirement": "A real Android pressure stylus produces varying pressure values and identifiable stylus metadata.",
+      "oracle": "Independent stylus metadata and varying-pressure trace",
+      "acceptance": "PASS_ANDROID_PRESSURE",
+      "evidence_required": ".aegis/results/GT-G4-12/android-pressure-evidence.json",
+      "pressure_required": true
+    },
+    {
+      "id": "G4-12-V10-android-artifact",
+      "requirement": "The installed APK and native arm64 library are content-addressed and Android 16 KiB page compatible.",
+      "oracle": "APK SHA-256, install result, launcher result, and verification/tools/check_android_16kb_elf.py",
+      "acceptance": "PASS",
+      "evidence_required": ".aegis/results/GT-G4-12/android-apk-artifact.json"
+    }
+  ],
+  "debug_policy": {
+    "touch_allowed_for_functional_smoke": true,
+    "synthetic_adb_input_is_diagnostic_only": true,
+    "missing_pressure_blocks_only_pressure_qualification": true,
+    "physical_or_gate_pass_from_p32": false
+  }
+}

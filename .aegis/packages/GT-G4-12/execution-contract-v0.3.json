@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add an Android Gradle application shell under apps/ink_playground/platform/android",
+        "Expose a SurfaceView/Activity that forwards MotionEvent history and tool metadata to the existing native host",
+        "Persist Android functional-smoke and pointer-trace evidence only from an actual device session"
+      ],
+      "authorized_mutation_scope": ["apps/ink_playground/**", ".aegis/results/GT-G4-12/**", ".aegis/packages/GT-G4-12/**"],
+      "forbidden_changes": ["runtime/semantic/**", "runtime/scene/**", "runtime/render/**", "runtime/interaction/**", "runtime/ink/**", "arc/include/**", "canonical operation vocabulary", "G5/**", "G6/**"]
+    },
+    "starting_identity": {"minimum_ancestor": "1bf20a459fa076680e9339c7eaeb785471a72f54", "relation": "ancestor"},
+    "tests": [
+      {"id": "android-host-contract", "command_or_oracle": "python3 apps/ink_playground/tests/android_host_contract_test.py", "expected_result": "PASS", "blocking_reason": "detects missing Activity/Manifest/SurfaceView/native JNI seam"},
+      {"id": "native-regressions", "command_or_oracle": "cmake --build --preset rf01-host-debug --parallel && ctest --preset rf01-host-debug --output-on-failure", "expected_result": "PASS", "blocking_reason": "protects production composition and platform boundaries"},
+      {"id": "android-apk", "command_or_oracle": "./gradlew --offline --no-daemon :app:assembleDebug", "expected_result": "PASS when Android toolchain is available", "blocking_reason": "creates the installable reviewer artifact"}
+    ],
+    "android_functional_smoke": {
+      "required": true,
+      "device": "connected Android API 26+ device",
+      "required_observations": ["APK SHA-256", "install", "launcher Activity", "surface responsive", "multiple independent strokes", "pointer trace", "HUD", "capture path and SHA-256"],
+      "terminal_status": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+      "pressure_required": false
+    },
+    "android_pressure_qualification": {
+      "required_for_complete_physical": true,
+      "required_input": "pressure-capable stylus",
+      "required_observations": ["stylus metadata", "varying pressure", "historical samples", "capture-bound latency"],
+      "terminal_status": "PASS_ANDROID_PRESSURE"
+    },
+    "terminal_success": ["android functional smoke evidence is durable", "required regressions pass", "exact APK and device identities are recorded"],
+    "terminal_blockers": ["BLOCKED_IMPLEMENTATION", "BLOCKED_ENVIRONMENT", "BLOCKED_EVIDENCE", "PACKAGE_SCOPE_DIVERGENCE"],
+    "forbidden_claims": ["PASS_ANDROID_PRESSURE without pressure evidence", "PASS_PHYSICAL", "G4-12 PASS", "G4 PASS"],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

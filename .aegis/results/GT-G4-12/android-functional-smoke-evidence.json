@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "status": "AWAITING_USER_INTERACTIVE_SMOKE",
+  "device": {
+    "serial": "29251FDH2004Z0",
+    "model": "Pixel 7",
+    "android_release": "17",
+    "api": 37
+  },
+  "apk_sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "install_and_launch": "PASS",
+  "visible_writable_surface": "PASS_DIAGNOSTIC",
+  "native_process_crash": false,
+  "required_user_observations": [
+    "draw first stroke and lift",
+    "draw second stroke at a different position",
+    "draw a third stroke",
+    "confirm strokes do not connect to one another",
+    "confirm touch position and drawn position align"
+  ],
+  "pointer_trace": "awaiting user physical interaction",
+  "capture": "awaiting user physical interaction",
+  "pressure": "not_available unless a real stylus is connected",
+  "pass_android_functional_smoke": false,
+  "pass_android_pressure": false,
+  "pass_physical": false,
+  "official_gate_pass": false
+}

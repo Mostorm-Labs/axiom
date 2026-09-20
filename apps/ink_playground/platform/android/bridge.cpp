@@ -28,7 +28,7 @@ class AndroidSink final : public arc::PointerSampleSink {
             std::chrono::steady_clock::now().time_since_epoch()).count());
     return host_.accept(samples, now) ? arc::Status::kOk : arc::Status::kInvalidState;
   }
-  void SourceLost(std::uint64_t, arc::Status) override { host_.loseSurface(); }
+  void SourceLost(std::uint64_t, arc::Status) override { (void)host_.loseSurface(); }
  private:
   InkPlaygroundHost& host_;
 };
@@ -41,9 +41,9 @@ struct AndroidHost final {
 };
 AndroidHost* asHost(void* value) { return static_cast<AndroidHost*>(value); }
 
-void submitSample(AndroidHost& value, std::uint64_t pointerId, std::uint64_t sequence,
+bool submitSample(AndroidHost& value, std::uint64_t pointerId, std::uint64_t sequence,
                   std::uint64_t timestampNs, float x, float y, float pressure,
-                  std::uint32_t phase) {
+                  std::uint32_t phase, int tool) {
   arc_pointer_sample_v0 sample{};
   sample.pointer_id = pointerId; sample.sample_sequence = sequence;
   sample.timestamp_us = timestampNs / 1000U; sample.x = x; sample.y = y;
@@ -52,9 +52,13 @@ void submitSample(AndroidHost& value, std::uint64_t pointerId, std::uint64_t seq
   batch.abi_version = ARC_ABI_VERSION; batch.schema_version = ARC_PROTOCOL_SCHEMA_VERSION;
   batch.coordinate_space = ARC_COORDINATE_SPACE_VIEW_LOGICAL; batch.view_id = 1;
   batch.viewport_revision = 1; batch.device_id = pointerId;
-  batch.input_capabilities = ARC_INPUT_CAPABILITY_PRESSURE | ARC_INPUT_CAPABILITY_HISTORY;
-  batch.tool = ARC_INPUT_TOOL_PEN; batch.samples = &sample; batch.sample_count = 1;
-  batch.sample_stride = sizeof(sample); value.input->SubmitBatch(batch);
+  batch.input_capabilities = ARC_INPUT_CAPABILITY_HISTORY;
+  batch.tool = (tool == 2 || tool == 4) ? ARC_INPUT_TOOL_PEN : ARC_INPUT_TOOL_TOUCH;
+  if (batch.tool == ARC_INPUT_TOOL_PEN)
+    batch.input_capabilities |= ARC_INPUT_CAPABILITY_PRESSURE;
+  batch.samples = &sample; batch.sample_count = 1;
+  batch.sample_stride = sizeof(sample);
+  return value.input->SubmitBatch(batch) == arc::Status::kOk;
 }
 }  // namespace
 
@@ -79,9 +83,30 @@ int axiom_ink_android_motion(void* handle, std::uint64_t pointerId,
   if (value == nullptr || value->input == nullptr) return 0;
   if (down != 0) { ++value->stroke; if (!value->host->beginStroke(value->stroke)) return 0; }
   const auto phase = down != 0 ? ARC_POINTER_PHASE_DOWN : (up != 0 ? ARC_POINTER_PHASE_UP : ARC_POINTER_PHASE_MOVE);
-  submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure, phase);
-  if (up != 0) value->host->commitStroke(value->stroke, value->stroke);
+  if (!submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure,
+                    phase, ARC_INPUT_TOOL_PEN)) return 0;
+  if (up != 0 && !value->host->commitStroke(value->stroke, value->stroke)) return 0;
   return 1;
+}
+int axiom_ink_android_begin(void* handle, std::uint64_t strokeId) {
+  auto* value = asHost(handle);
+  if (value == nullptr || strokeId == 0U) return 0;
+  value->stroke = strokeId;
+  return value->host->beginStroke(strokeId);
+}
+int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
+                            std::uint64_t sequence, std::uint64_t timestampNs,
+                            float x, float y, float pressure, int phase, int tool) {
+  auto* value = asHost(handle);
+  if (value == nullptr || value->input == nullptr || sequence == 0U) return 0;
+  const std::uint32_t arcPhase = phase == 1 ? ARC_POINTER_PHASE_DOWN
+      : phase == 3 ? ARC_POINTER_PHASE_UP : ARC_POINTER_PHASE_MOVE;
+  return submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure,
+                      arcPhase, tool);
+}
+int axiom_ink_android_commit(void* handle, std::uint64_t strokeId) {
+  auto* value = asHost(handle);
+  return value != nullptr && value->host->commitStroke(strokeId, strokeId);
 }
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height) {
   auto* value = asHost(handle); return value != nullptr && value->host->resizeSurface(width, height);

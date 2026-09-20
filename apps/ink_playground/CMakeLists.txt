@@ -55,9 +55,14 @@ if(WIN32 AND TARGET arc_Windows)
 endif()
 
 if(ANDROID AND TARGET arc_Android)
-  add_library(axiom_ink_playground_android SHARED platform/android/bridge.cpp)
+  add_library(axiom_ink_playground_android SHARED
+      platform/android/bridge.cpp
+      platform/android/android_jni.cpp)
   target_link_libraries(axiom_ink_playground_android PRIVATE
       axiom_ink_playground_common Arc::Android)
+  target_link_options(axiom_ink_playground_android PRIVATE
+      "-Wl,-z,max-page-size=16384"
+      "-Wl,-z,common-page-size=16384")
 endif()
 
 if(EMSCRIPTEN)

@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.3",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "artifact": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+  "sha256": "e9c0beef594743aaaca95935487826ceb8d33fc064f80d3549ddc8379993da35",
+  "native_elf": "lib/arm64-v8a/libaxiom_ink_playground_android.so",
+  "native_elf_sha256": "eb61d90185649e2aacbec6bce70eca7e48d98e4ce5f1e67adae6de81d20b8070",
+  "elf_load_alignments": ["0x4000", "0x4000", "0x4000"],
+  "device": {
+    "serial": "29251FDH2004Z0",
+    "model": "Pixel 7",
+    "device": "panther",
+    "android_release": "17",
+    "api": 37,
+    "abi": "arm64-v8a"
+  },
+  "build": "PASS",
+  "install": "PASS",
+  "launcher_activity": "dev.mostorm.axiom.inkplayground/.MainActivity",
+  "cold_launch": "PASS",
+  "native_library_load": "PASS",
+  "page_size_compatibility_warning_after_fix": false,
+  "official_gate_pass": false
+}
