@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "package_id": "GT-G4-4-P31-v0.2",
+  "package_materialization_revision": "fd6c9597aa59aff2b62f9b9a51f37da2aaad0055",
+  "result_revision": "e976da0ca2bee0b5d525caa05014e0cc0f7fdfee",
+  "supersedes_review_for_package": "GT-G4-4-P31-v0.1",
+  "prior_blocker_classification": {
+    "classification": "TASK_PACKAGE_DEFECT",
+    "reason": "The updated implementation-plan Authority moved unified physical qualification from WP-local P32 blocking evidence to G4.4-11. The prior review remains historical."
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "checks": ["PointerKey and generation fencing implemented", "claims exclusive", "multi-stroke and four-stream fault isolation implemented", "viewport and contact hysteresis implemented", "keyed preview and handoff isolation implemented", "platform qualification instrumentation ready", "no canonical ObjectKind or Operation added"]
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS_AUTOMATED_CLOSURE",
+    "portable_tests": "33/33 PASS",
+    "windows_native_tests": "29/29 PASS",
+    "android_multitouch_profile": "PASS_AVAILABLE_PROFILE",
+    "windows_mouse_profile": "PASS_AVAILABLE_PROFILE",
+    "web_profile": "PASS_AUTOMATED_CONFORMANCE",
+    "qualification_artifact": "READY",
+    "unified_physical_gate": "DEFERRED_TO_G4.4-11"
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "anchor_ancestor": true,
+    "package_locks": "PASS",
+    "git_diff_check": "PASS",
+    "mutation_scope": "authorized runtime and G4.4 evidence only"
+  },
+  "decision": {
+    "verdict": "PASS_AUTOMATED_CLOSURE",
+    "status": "READY_FOR_PHYSICAL_VERIFICATION",
+    "implementation_defect": false,
+    "official_g4_4_pass": false,
+    "g4_5_execution_authorized": false,
+    "next_stage": "G4.4-11_UNIFIED_PHYSICAL_QUALIFICATION"
+  }
+}
