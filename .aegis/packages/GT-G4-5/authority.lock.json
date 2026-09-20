@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "current": true,
+  "source": {
+    "provider": "notion",
+    "architecture_ref": "notion://3e04c57a590c816ab407cbb55ac4b79a",
+    "architecture_title": "G4.5 Programmable Brush System Architecture v0.1",
+    "architecture_last_edited_at": "2026-09-20T02:53:34.794Z",
+    "architecture_content_sha256": "3b8155ce2baea0b0a45c46f0cfe04fee5797dfa09ee91d4af903d7a7ea3695b7",
+    "implementation_plan_ref": "notion://3e04c57a590c81668022f1773d5307eb",
+    "implementation_plan_title": "G4.5 Programmable Brush System Foundation Implementation Plan v0.1",
+    "implementation_plan_last_edited_at": "2026-09-20T15:46:28.109Z",
+    "implementation_plan_content_sha256": "b53f8db7b88d0a249a14562130eb711d142f20b512898902f43e71a0a5e307f6"
+  },
+  "dependency": {
+    "g4_status": "PASS_G4_FUNCTIONAL_INTEGRATION",
+    "g4_4_gate_revision": "eb4ca06e2bb44471f413234377b1cfb4e1e76bdf",
+    "g4_4_integration_pr": "https://github.com/Mostorm-Labs/axiom/pull/131",
+    "g4_4_main_merge_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52"
+  },
+  "semantic_invariants": [
+    "BrushDefinition is an authoring/runtime model and is not a SemanticDocument canonical object by default",
+    "BrushProgram is immutable, versioned, renderer-neutral internal IR and is not a shader, Skia Paint, GPU object, or canonical state",
+    "BrushRuntime is the single semantic evaluator and produces separate commit and preview artifacts",
+    "Arc consumes render-ready primitives, material and resource bindings without interpreting brush semantics",
+    "Canonical StrokeRecord remains BrushDescriptor plus deterministic_seed plus VectorStrokeData or DabStrokeData",
+    "FinePen, Highlighter and TexturedMarker historical replay and golden behavior remain unchanged",
+    "Laser is TemporalTransient and performs zero canonical mutation",
+    "Platform capability differences are explicit profile data and must not silently change semantics"
+  ],
+  "v1_brush_families": {
+    "pen": "Vector",
+    "pencil": "TexturedDab",
+    "chalk": "TexturedDab",
+    "marker": "TexturedOrChiselDab",
+    "water_color_lite": "SoftAlphaDab",
+    "highlighter": "ExistingVectorFamily",
+    "laser": "TemporalTransient"
+  },
+  "execution_cadence": {
+    "automated_work_packages": ["G4.5-00", "G4.5-01", "G4.5-02", "G4.5-03", "G4.5-04", "G4.5-05", "G4.5-06", "G4.5-07", "G4.5-08", "G4.5-09"],
+    "automated_terminal_state": "READY_FOR_PHYSICAL_VERIFICATION",
+    "physical_gate_stage": "G4.5-10",
+    "pressure_and_tilt_required_only_when_device_profile_supports_them": true,
+    "g4_5_pass_before_g4_5_10_forbidden": true
+  },
+  "open_or_deferred": [
+    "user-defined BrushDefinition persistence and sync",
+    "true wet-mix or canvas-read pigment semantics",
+    "new resource-slot wire schema",
+    "G5 tile, cache, scheduler and resource-budget work"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-P31-v0.1",
+  "task_id": "GT-G4-5",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Programmable brush system foundation through deterministic automated closure and unified physical-qualification readiness",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-programmable-brush"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "e77bb593a8f23086c82f03df866440e51acd397a7c200bcc57e24f3ab9fba33c"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "418b050e6808f9d49b27309d31013fa9f391af8d2a53032305c961d9d87f58e4"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "105159bcdce0c14bf4e0e0708b8f40e9269e5b0e259255535b68bf272cc9719d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "21d19738684c35969c30a87f11e87628639f9b044fcd0edde57ad4060db81b2c"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4e8b8efdc4fa80f61fa26fb9e10d6bcc1ef8228f5e059c69ebe4467074989259"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5/",
+    "base_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "binding": "exact pushed repository revision on codex/g4-5-programmable-brush descended from the G4.4 main merge"
+  },
+  "supersedes": null,
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Execute G4.5-00 through G4.5-09 from the first incomplete cursor, emit deterministic and golden qualification artifacts, and return READY_FOR_PHYSICAL_VERIFICATION without claiming G4.5 PASS.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}
