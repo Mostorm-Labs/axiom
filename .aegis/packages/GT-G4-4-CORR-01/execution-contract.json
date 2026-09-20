@@ -1,0 +1,138 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add runtime-neutral PointerPhase to normalized common input.",
+        "Represent contact-geometry validity explicitly and preserve unknown/unavailable optional capabilities.",
+        "Implement common MultiContactPolicy with AutoIntent as default.",
+        "Implement common MultiContactCoordinator with Pending, Ink, ViewportGesture, Ignored and Terminal dispositions.",
+        "Implement spatial DrawActivation using radial displacement and accumulated path length; sample-count activation is forbidden.",
+        "Reuse existing keyed Ink/Preview/Interaction session substrate for provisional Pending state with zero canonical mutation before promotion.",
+        "Implement all-or-none multi-pointer viewport claim.",
+        "Implement exact AutoIntent, MultiInk and GesturePriority transition tables.",
+        "Move generic-contact second-pointer decision from platform-specific hosts into common coordination.",
+        "Emit exact-revision corrective automated evidence and qualification bundle."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/input/include/canvas/input/pointer_capabilities.hpp",
+        "runtime/input/include/canvas/input/pointer_sample.hpp",
+        "runtime/input/include/canvas/input/pointer_sample_batch.hpp",
+        "runtime/input/include/canvas/input/platform_normalization.hpp",
+        "runtime/input/tests/multipointer_foundation_test.cpp",
+        "runtime/input/tests/platform_normalization_test.cpp",
+        "runtime/interaction/include/canvas/interaction/gesture_arbiter.hpp",
+        "runtime/interaction/src/gesture_arbiter.cpp",
+        "runtime/interaction/tests/gesture_arbiter_test.cpp",
+        "runtime/interaction/CMakeLists.txt",
+        "runtime/interaction/include/canvas/interaction/multi_contact_policy.hpp",
+        "runtime/interaction/include/canvas/interaction/multi_contact_coordinator.hpp",
+        "runtime/interaction/src/multi_contact_coordinator.cpp",
+        "runtime/interaction/tests/multi_contact_coordinator_test.cpp",
+        "apps/ink_playground/common/ink_playground_host.hpp",
+        "apps/ink_playground/common/ink_playground_host.cpp",
+        "apps/ink_playground/tests/ink_playground_test.cpp",
+        "apps/ink_playground/CMakeLists.txt",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/platform/android/bridge.cpp",
+        "apps/ink_playground/platform/android/android_jni.cpp",
+        "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/InkPlaygroundView.java",
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/platform/web/index.html",
+        ".aegis/packages/GT-G4-4-CORR-01/**",
+        ".aegis/results/GT-G4-4-CORR-01/**"
+      ],
+      "forbidden_changes": [
+        "runtime/semantic/** changes",
+        "new canonical ObjectKind or Operation",
+        "canonical StrokeRecord schema changes",
+        "G4.5 programmable brush semantic changes",
+        "GestureTakeover or mid-stroke seal for navigation",
+        "concurrent Ink plus pinch for the same generic-contact cohort",
+        "platform-private arbitration state machines",
+        "sample-count based DrawActivation",
+        "pressure/contact geometry requirement for pinch",
+        "Arc protocol/schema expansion",
+        "G4.6 viewport UI implementation",
+        "rewriting historical G4/G4.4 evidence"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G4AutoIntentPolicy",
+          "command_or_oracle": "CTest/new coordinator test: default AutoIntent, Pending->Viewport, Ink->second Ink",
+          "expected_result": "PASS",
+          "blocking_reason": "default policy semantics"
+        },
+        {
+          "id": "G4MultiInkPolicy",
+          "command_or_oracle": "CTest/new coordinator test: 2/4 independent Ink sessions and zero auto-pinch",
+          "expected_result": "PASS",
+          "blocking_reason": "manual multi-ink semantics"
+        },
+        {
+          "id": "G4GesturePriorityPolicy",
+          "command_or_oracle": "CTest/new coordinator test: Pending->Viewport; late second ignored while A continues",
+          "expected_result": "PASS",
+          "blocking_reason": "navigation-priority semantics"
+        },
+        {
+          "id": "G4PositionOnlyPolicy",
+          "command_or_oracle": "CTest/capability-masked corpus with no pressure/contact geometry/tool metadata",
+          "expected_result": "PASS",
+          "blocking_reason": "minimum capability baseline"
+        },
+        {
+          "id": "G4RelevantRegression",
+          "command_or_oracle": "cmake --preset g3-host-debug && cmake --build --preset g3-host-debug && ctest --preset g3-host-debug",
+          "expected_result": "all relevant tests PASS",
+          "blocking_reason": "preserve accepted G4/G4.4 behavior"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing applicable repository CI lanes"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        ".aegis/results/GT-G4-4-CORR-01/repository-reconciliation.json",
+        ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+        ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
+        ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
+        ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
+        ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
+        ".aegis/results/GT-G4-4-CORR-01/qualification-bundle-manifest.json",
+        ".aegis/results/GT-G4-4-CORR-01/result.json"
+      ],
+      "corroborative": []
+    },
+    "terminal_success": {
+      "all_of": [
+        "All frozen policy/capability/oracle tests pass.",
+        "Existing relevant G4/G4.4 regressions pass.",
+        "Exact-revision qualification bundle is materialized.",
+        "Result status is READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION.",
+        "No forbidden scope change is present.",
+        "P32 does not claim G4.4 or G4.5 Gate PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}
