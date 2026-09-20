@@ -576,6 +576,14 @@ Status Bridge::CanonicalVisible(const arc_canonical_visible_v0& visible) {
   if (backend_status != Status::kOk && impl_->backend() != attempted_backend) {
     (void)impl_->backend()->CanonicalVisible(visible);
   }
+  // A prior presentation failure may have switched the bridge to its
+  // canonical-only fallback. The primary platform backend can still own a
+  // visible transient surface, so a matching CanonicalVisible must always
+  // be offered to that backend as a cleanup attempt as well.
+  if (impl_->use_fallback_ && impl_->primary_ != nullptr &&
+      attempted_backend != impl_->primary_.get()) {
+    (void)impl_->primary_->CanonicalVisible(visible);
+  }
   const uint64_t final_preview_revision = state.preview_revision;
   impl_->RememberRetired(visible.stroke_id, visible.handoff_token);
   impl_->strokes_.erase(iterator);

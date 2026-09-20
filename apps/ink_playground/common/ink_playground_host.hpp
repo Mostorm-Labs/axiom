@@ -6,6 +6,7 @@
 #include "canvas/interaction/interaction_runtime.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
+#include "canvas/render/render_backend.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -53,9 +54,14 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool loseSurface() noexcept;
+  [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
+                                           double frameMs) noexcept;
   [[nodiscard]] const SurfaceBinding& surface() const noexcept { return surface_; }
   [[nodiscard]] std::vector<ink::StrokePoint> previewPoints() const;
+  [[nodiscard]] std::vector<ink::StrokePoint> transientPreviewPoints() const;
   [[nodiscard]] std::vector<std::vector<ink::StrokePoint>> previewStrokes() const;
+  void setRuntimePreviewVisible(bool visible) noexcept { runtimePreviewVisible_ = visible; }
+  [[nodiscard]] bool runtimePreviewVisible() const noexcept { return runtimePreviewVisible_; }
   [[nodiscard]] const std::vector<std::vector<ink::StrokePoint>>& canonicalStrokes() const noexcept {
     return committedStrokes_;
   }
@@ -90,6 +96,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::uint64_t strokeStartNs_ = 0;
   SurfaceBinding surface_{};
   std::vector<std::vector<ink::StrokePoint>> committedStrokes_;
+  bool runtimePreviewVisible_ = true;
 };
 
 }  // namespace canvas::ink_playground

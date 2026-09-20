@@ -51,5 +51,13 @@ int main() {
   negative.presented = false;
   assert(canvas::render::CanonicalHandoffEvaluator::evaluate(negative) ==
          canvas::render::HandoffDisposition::kNotPresented);
+  negative = input;
+  negative.coverageEligible = false;
+  assert(canvas::render::CanonicalHandoffEvaluator::evaluate(negative) ==
+         canvas::render::HandoffDisposition::kIneligibleCoverage);
+  negative = input;
+  negative.platformQualified = false;
+  assert(canvas::render::CanonicalHandoffEvaluator::evaluate(negative) ==
+         canvas::render::HandoffDisposition::kUnqualifiedEvidence);
   return 0;
 }

@@ -2,6 +2,10 @@
 #include "arc/arc.hpp"
 #include "windows_pointer_utils.hpp"
 #include "windows_smoke_evidence.hpp"
+#include "canvas/render/canonical_handoff.hpp"
+#if defined(CANVAS_RENDER_HAS_SKIA)
+#include "canvas/render/skia_ink_backend.hpp"
+#endif
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -53,7 +57,12 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
   std::vector<PendingHandoff> pendingHandoffs;
   std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
-  std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace; };
+  std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
+  bool runtimePreviewVisible = true;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  std::unique_ptr<canvas::render::SkiaInkBackend> canonicalRenderer;
+#endif
+};
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
 
@@ -98,20 +107,74 @@ void commitArcHandoff(State& value) {
   value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
 }
 
-void acknowledgeCanonicalVisible(State& value) {
-  if (value.previewBridge == nullptr || value.pendingHandoffs.empty()) return;
+bool acknowledgeCanonicalVisible(State& value) {
+  if (value.previewBridge == nullptr || value.pendingHandoffs.empty()) return false;
+  bool released = false;
+  std::vector<State::PendingHandoff> stillPending;
+  stillPending.reserve(value.pendingHandoffs.size());
   for (const auto& pending : value.pendingHandoffs) {
-  arc_canonical_visible_v0 visible{}; visible.struct_size = sizeof(visible);
-  visible.abi_version = ARC_ABI_VERSION; visible.stroke_id = pending.stroke;
-  visible.document_revision = pending.stroke; visible.target_generation = value.previewGeneration;
-  visible.handoff_token = {1, pending.stroke};
-  visible.receipt.struct_size = sizeof(visible.receipt); visible.receipt.abi_version = ARC_ABI_VERSION;
-  visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE; visible.receipt.status = ARC_STATUS_OK;
-  visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = pending.stroke;
-  (void)value.previewBridge->CanonicalVisible(visible);
+    arc_canonical_visible_v0 visible{}; visible.struct_size = sizeof(visible);
+    visible.abi_version = ARC_ABI_VERSION; visible.stroke_id = pending.stroke;
+    visible.document_revision = pending.stroke; visible.target_generation = value.previewGeneration;
+    visible.handoff_token = {1, pending.stroke};
+    visible.receipt.struct_size = sizeof(visible.receipt); visible.receipt.abi_version = ARC_ABI_VERSION;
+    visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE; visible.receipt.status = ARC_STATUS_OK;
+    visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = pending.stroke;
+    const auto status = value.previewBridge->CanonicalVisible(visible);
+    if (status == arc::Status::kOk) {
+      released = true;
+    } else {
+      stillPending.push_back(pending);
+    }
   }
-  value.pendingHandoffs.clear();
-  value.host->recordPresentation("canonical-visible", 0, 0.0);
+  value.pendingHandoffs = std::move(stillPending);
+  value.host->recordPresentation(value.pendingHandoffs.empty()
+                                     ? "canonical-visible"
+                                     : "canonical-visible-retry",
+                                 value.pendingHandoffs.size(), 0.0);
+  return released;
+}
+
+bool renderCanonical(State& value) {
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (value.canonicalRenderer == nullptr) return false;
+  std::vector<std::vector<canvas::render::CanonicalStrokePoint>> strokes;
+  for (const auto& stroke : value.host->canonicalStrokes()) {
+    auto& converted = strokes.emplace_back();
+    converted.reserve(stroke.size());
+    for (const auto& point : stroke) converted.push_back({point.x, point.y, point.pressure});
+  }
+  const auto result = value.canonicalRenderer->submit(strokes);
+  if (result.code != canvas::render::BackendSubmissionCode::kAccepted) return false;
+  if (value.pendingHandoffs.empty()) return true;
+  return true;
+#else
+  return false;
+#endif
+}
+
+bool finalizeCanonicalPresentation(State& value) {
+  if (value.pendingHandoffs.empty()) return true;
+  const auto surface = value.host->surface();
+  for (const auto& pending : value.pendingHandoffs) {
+    if (!value.host->presentCanonicalFrame(pending.stroke, 0.0)) return false;
+    canvas::render::HandoffEligibility eligibility{};
+    eligibility.tokenHigh = 1U;
+    eligibility.tokenLow = pending.stroke;
+    eligibility.pending = true;
+    eligibility.requiredDocumentRevision = pending.stroke;
+    eligibility.presentedDocumentRevision = pending.stroke;
+    eligibility.requiredSurfaceGeneration = surface.generation;
+    eligibility.presentedSurfaceGeneration = surface.generation;
+    eligibility.requiredMetricsGeneration = surface.generation;
+    eligibility.presentedMetricsGeneration = surface.generation;
+    eligibility.presented = true;
+    eligibility.platformQualified = true;
+    eligibility.coverageEligible = true;
+    if (canvas::render::CanonicalHandoffEvaluator::evaluate(eligibility) !=
+        canvas::render::HandoffDisposition::kEligible) return false;
+  }
+  return acknowledgeCanonicalVisible(value);
 }
 
 bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -210,6 +273,25 @@ void paint(HWND window, State& value) {
   HBITMAP bitmap = CreateCompatibleBitmap(dc, rect.right - rect.left, rect.bottom - rect.top);
   HGDIOBJ oldBitmap = SelectObject(bufferDc, bitmap);
   FillRect(bufferDc, &rect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
+  bool canonicalPresented = false;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  (void)value.canonicalRenderer->resize(static_cast<std::uint32_t>(rect.right),
+                                        static_cast<std::uint32_t>(rect.bottom));
+  canonicalPresented = renderCanonical(value);
+  const auto pixels = value.canonicalRenderer->rgba();
+  if (!pixels.empty()) {
+    BITMAPINFO info{}; info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    info.bmiHeader.biWidth = static_cast<LONG>(value.canonicalRenderer->width());
+    info.bmiHeader.biHeight = -static_cast<LONG>(value.canonicalRenderer->height());
+    info.bmiHeader.biPlanes = 1; info.bmiHeader.biBitCount = 32;
+    info.bmiHeader.biCompression = BI_RGB;
+    std::vector<std::uint8_t> bgra(pixels.begin(), pixels.end());
+    for (std::size_t i = 0; i + 3 < bgra.size(); i += 4) std::swap(bgra[i], bgra[i + 2]);
+    SetDIBitsToDevice(bufferDc, 0, 0, value.canonicalRenderer->width(),
+                      value.canonicalRenderer->height(), 0, 0, 0,
+                      value.canonicalRenderer->height(), bgra.data(), &info, DIB_RGB_COLORS);
+  }
+#endif
   HPEN pen = CreatePen(PS_SOLID, 3, RGB(26, 91, 255)); HGDIOBJ oldPen = SelectObject(bufferDc, pen);
   SetBkMode(bufferDc, TRANSPARENT);
   SetTextColor(bufferDc, RGB(30, 30, 30));
@@ -223,20 +305,27 @@ void paint(HWND window, State& value) {
          << value.trace.size() << L" | batch: " << hud.batch
          << L" | pending: " << value.pendingHandoffs.size()
          << L" | state: " << qualificationState
-         << L" | dual-preview: ON"
-         << L" | SPACE = CanonicalVisible";
+         << L" | Arc preview: native layered"
+         << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
+         << L" | SPACE = toggle runtime preview";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
-  // Qualification-only runtime presentation mirror. While input is active,
-  // previewStrokes() includes the transient runtime stroke; it never mutates
-  // canonical state, operation payloads, digests, or Arc handoff ownership.
-  for (const auto& points : value.host->previewStrokes()) {
+  // Optional presentation-only mirror. It is never used for canonical
+  // handoff eligibility and is off by default so Arc evidence cannot be
+  // satisfied by this debug layer.
+  if (value.runtimePreviewVisible && value.previewInputActive)
+      for (const auto& points : {value.host->transientPreviewPoints()}) {
     for (std::size_t i = 1; i < points.size(); ++i) {
       MoveToEx(bufferDc, static_cast<int>(points[i - 1].x), static_cast<int>(points[i - 1].y), nullptr);
       LineTo(bufferDc, static_cast<int>(points[i].x), static_cast<int>(points[i].y));
     }
   }
   BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, bufferDc, 0, 0, SRCCOPY);
+  // The Arc handoff is released only after the Skia-produced canonical pixels
+  // have been copied to the real HWND. Space never participates in this path.
+  if (canonicalPresented) {
+    (void)finalizeCanonicalPresentation(value);
+  }
   SelectObject(bufferDc, oldPen); DeleteObject(pen);
   SelectObject(bufferDc, oldBitmap); DeleteObject(bitmap); DeleteDC(bufferDc);
   EndPaint(window, &ps);
@@ -360,11 +449,16 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
-    if (value != nullptr) { acknowledgeCanonicalVisible(*value); InvalidateRect(window, nullptr, FALSE); }
+    if (value != nullptr && (lParam & (1LL << 30)) == 0) {
+      value->runtimePreviewVisible = !value->runtimePreviewVisible;
+      value->host->setRuntimePreviewVisible(value->runtimePreviewVisible);
+      InvalidateRect(window, nullptr, FALSE);
+    }
     return 0;
   }
   if (message == WM_CHAR && wParam == L' ') {
-    if (value != nullptr) { acknowledgeCanonicalVisible(*value); InvalidateRect(window, nullptr, FALSE); }
+    // WM_KEYDOWN owns the toggle. Consume the translated character so one
+    // physical key press cannot toggle the debug mirror twice.
     return 0;
   }
   if (message == WM_ERASEBKGND) return 1;
@@ -378,6 +472,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (RegisterClassW(&klass) == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS) return 1;
   (void)canvas::ink_playground::windows_input::keepMouseOnButtonMessages();
   State value; value.host = std::make_unique<InkPlaygroundHost>();
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  value.canonicalRenderer = std::make_unique<canvas::render::SkiaInkBackend>();
+#endif
   if (!value.host->bindSurface(1024, 768)) return 1;
   value.input = arc::CreateWindowsInputSource();
   value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateWindowsBackend(), arc::CreateNullBackend());

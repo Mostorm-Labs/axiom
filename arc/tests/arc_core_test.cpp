@@ -155,6 +155,7 @@ void TestLifecycleAndStaleAck() {
 
 void TestPresentationFailureFallsBack() {
   auto primary = std::make_unique<RecordingBackend>(true);
+  auto* primary_raw = primary.get();
   Bridge bridge(std::move(primary), arc::CreateNullBackend());
   assert(bridge.Attach(Target()) == Status::kOk);
   assert(bridge.Begin(Begin(12)) == Status::kOk);
@@ -169,6 +170,36 @@ void TestPresentationFailureFallsBack() {
   assert(!bridge.TakeCanonicalRedrawRequest());
   assert(bridge.Find(12) != nullptr);
   assert(bridge.diagnostics().fallback_activations == 1);
+
+  arc_preview_seal_v0 seal{.struct_size = sizeof(arc_preview_seal_v0),
+                           .abi_version = ARC_ABI_VERSION,
+                           .stroke_id = 12,
+                           .final_preview_revision = 1,
+                           .target_generation = 7};
+  assert(bridge.SealInput(seal) == Status::kOk);
+  arc_canonical_commit_v0 commit{.struct_size = sizeof(arc_canonical_commit_v0),
+                                 .abi_version = ARC_ABI_VERSION,
+                                 .stroke_id = 12,
+                                 .final_preview_revision = 1,
+                                 .document_revision = 12,
+                                 .target_generation = 7,
+                                 .handoff_token = Token(12)};
+  assert(bridge.CanonicalCommitted(commit) == Status::kOk);
+  arc_canonical_visible_v0 visible{
+      .struct_size = sizeof(arc_canonical_visible_v0),
+      .abi_version = ARC_ABI_VERSION,
+      .stroke_id = 12,
+      .document_revision = 12,
+      .target_generation = 7,
+      .handoff_token = Token(12),
+      .receipt = {.struct_size = sizeof(arc_presentation_receipt_v0),
+                  .abi_version = ARC_ABI_VERSION,
+                  .evidence = ARC_EVIDENCE_COMPOSITOR_VISIBLE,
+                  .status = ARC_STATUS_OK,
+                  .target_generation = 7}};
+  assert(bridge.CanonicalVisible(visible) == Status::kOk);
+  assert(bridge.Find(12) == nullptr);
+  assert(primary_raw->visible == 1);
 }
 
 void TestMultiplePendingStrokesAndGenerationRecovery() {

@@ -67,6 +67,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
     }
     attached_ = surface_ != nullptr;
     if (!attached_) return Status::kBackendUnavailable;
+    ShowWindow(surface_, SW_HIDE);
     (void)SetWindowPos(surface_, HWND_TOP, 0, 0, static_cast<int>(target_.width_pixels),
                        static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
     return Status::kOk;
@@ -124,10 +125,28 @@ class WindowsPreviewBackend final : public PreviewBackend {
   }
   bool render() {
     if (test_only_) return true;
-    if (!attached_ || surface_ == nullptr) return false;
+    if (!attached_) return false;
+    // A fully cleared layered window is not sufficient on every Windows
+    // compositor path: the last submitted pixels may remain latched while
+    // the surface is still visible. Explicitly hide the transient target
+    // when Arc has no strokes left; the next Begin/Push path shows it again.
+    if (strokes_.empty()) {
+      ShowWindow(surface_, SW_HIDE);
+      return true;
+    }
+    if (surface_ == nullptr) {
+      if (!RegisterPreviewClass()) return false;
+      surface_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE |
+                                      WS_EX_TOOLWINDOW, kClassName, L"Axiom Arc Preview",
+                                  WS_POPUP, 0, 0, static_cast<int>(target_.width_pixels),
+                                  static_cast<int>(target_.height_pixels), owner_, nullptr,
+                                  GetModuleHandleW(nullptr), nullptr);
+      if (surface_ == nullptr) return false;
+    }
     POINT origin{0, 0}; if (!ClientToScreen(owner_, &origin)) return false;
     SetWindowPos(surface_, HWND_TOP, origin.x, origin.y, static_cast<int>(target_.width_pixels),
                  static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    ShowWindow(surface_, SW_SHOWNA);
     HDC screen = GetDC(nullptr), mem = CreateCompatibleDC(screen); BITMAPINFO bi{};
     bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER); bi.bmiHeader.biWidth = target_.width_pixels;
     bi.bmiHeader.biHeight = -static_cast<LONG>(target_.height_pixels); bi.bmiHeader.biPlanes = 1;

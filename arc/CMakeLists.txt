@@ -84,7 +84,7 @@ if(ARC_BUILD_PLATFORM_TARGETS)
       tests/windows_preview_backend_test.cpp)
     target_link_libraries(arc_windows_preview_backend_tests PRIVATE Arc::Windows user32)
     target_compile_options(arc_windows_preview_backend_tests PRIVATE
-      /W4 /permissive- /WX /EHsc)
+      /W4 /permissive- /WX /EHsc /UNDEBUG)
     add_test(NAME arc_windows_preview_backend_tests
       COMMAND arc_windows_preview_backend_tests)
   endif()

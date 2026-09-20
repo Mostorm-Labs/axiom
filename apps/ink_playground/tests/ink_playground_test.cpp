@@ -41,6 +41,7 @@ void surface_test() {
   assert(host.bindSurface(320, 180));
   assert(host.surface().available);
   assert(host.surface().generation == 1);
+  assert(host.presentCanonicalFrame(1, 0.0));
   assert(host.resizeSurface(640, 360));
   assert(host.surface().generation == 2);
   assert(host.surface().width == 640);
@@ -62,6 +63,10 @@ void preview_points_test() {
   assert(points.size() == 2);
   assert(points[0].x == 10.0F && points[1].y == 40.0F);
   assert(host.canonicalStrokes().empty());
+  assert(host.runtimePreviewVisible());
+  host.setRuntimePreviewVisible(false);
+  assert(!host.runtimePreviewVisible());
+  assert(host.transientPreviewPoints().size() == 2);
 }
 
 void repeated_strokes_test() {
