@@ -127,6 +127,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       pointerHistory.resize(pointerHistoryCount);
     }
     if (pointerHistory.empty()) pointerHistory.push_back(info);
+    pointerHistory = canvas::ink_playground::windows_input::normalizePointerHistory(
+        pointerHistory, phase == ARC_POINTER_PHASE_DOWN);
+    if (pointerHistory.empty()) pointerHistory.push_back(info);
     std::vector<POINTER_PEN_INFO> penHistory;
     if (info.pointerType == PT_PEN) {
       UINT32 penHistoryCount = 0;
@@ -136,6 +139,11 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         penHistory.resize(penHistoryCount);
         if (!GetPointerPenInfoHistory(pointerId, &penHistoryCount, penHistory.data())) return 0;
         penHistory.resize(penHistoryCount);
+        std::reverse(penHistory.begin(), penHistory.end());
+        if (penHistory.size() > pointerHistory.size()) {
+          penHistory.erase(penHistory.begin(),
+                           penHistory.end() - static_cast<std::ptrdiff_t>(pointerHistory.size()));
+        }
       }
     }
     std::vector<arc_pointer_sample_v0> samples;

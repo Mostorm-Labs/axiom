@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <algorithm>
 #include "canvas/ink/ink_engine.hpp"
 
 namespace canvas::ink_playground::windows_input {
@@ -28,6 +29,25 @@ namespace canvas::ink_playground::windows_input {
 inline void appendCommittedStroke(std::vector<canvas::ink::StrokePoint>& retained,
                                   const std::vector<canvas::ink::StrokePoint>& stroke) {
   retained.insert(retained.end(), stroke.begin(), stroke.end());
+}
+
+[[nodiscard]] inline std::vector<POINTER_INFO> normalizePointerHistory(
+    const std::vector<POINTER_INFO>& newestFirst, bool isDown) {
+  std::vector<POINTER_INFO> normalized;
+  normalized.reserve(newestFirst.size());
+  for (auto it = newestFirst.rbegin(); it != newestFirst.rend(); ++it) {
+    if ((it->pointerFlags & POINTER_FLAG_INCONTACT) == 0) {
+      continue;
+    }
+    normalized.push_back(*it);
+  }
+  if (isDown && !normalized.empty()) {
+    const auto down = std::find_if(normalized.begin(), normalized.end(), [](const POINTER_INFO& info) {
+      return (info.pointerFlags & POINTER_FLAG_DOWN) != 0;
+    });
+    if (down != normalized.end()) normalized.erase(normalized.begin(), down);
+  }
+  return normalized;
 }
 
 }  // namespace canvas::ink_playground::windows_input

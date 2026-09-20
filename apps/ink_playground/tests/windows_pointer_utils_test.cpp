@@ -22,6 +22,25 @@ int main() {
   if (retained.size() != 2U || retained.back().x != 3.0F || retained.back().pressure != 0.75F) {
     return 3;
   }
+  std::vector<POINTER_INFO> newestFirst(3);
+  newestFirst[0].pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT;
+  newestFirst[0].ptPixelLocation = {100, 100};
+  newestFirst[1].pointerFlags = POINTER_FLAG_INRANGE;
+  newestFirst[1].ptPixelLocation = {80, 80};
+  newestFirst[2].pointerFlags = POINTER_FLAG_INRANGE;
+  newestFirst[2].ptPixelLocation = {60, 60};
+  const auto downHistory =
+      canvas::ink_playground::windows_input::normalizePointerHistory(newestFirst, true);
+  if (downHistory.size() != 1U || downHistory.front().ptPixelLocation.x != 100) return 4;
+
+  newestFirst[0].pointerFlags = POINTER_FLAG_INCONTACT;
+  newestFirst[0].ptPixelLocation = {120, 120};
+  newestFirst[1].pointerFlags = POINTER_FLAG_INCONTACT;
+  newestFirst[1].ptPixelLocation = {110, 110};
+  const auto moveHistory =
+      canvas::ink_playground::windows_input::normalizePointerHistory(newestFirst, false);
+  if (moveHistory.size() != 2U || moveHistory.front().ptPixelLocation.x != 110 ||
+      moveHistory.back().ptPixelLocation.x != 120) return 5;
   using canvas::ink_playground::windows_input::PointerEvidenceSample;
   using canvas::ink_playground::windows_input::serializePointerTrace;
   const std::string trace = serializePointerTrace(
