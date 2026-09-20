@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-05-WIN-ARC-PREVIEW",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-05-WIN-ARC-PREVIEW-P31-v0.1",
+  "package_ref": "https://app.notion.com/p/3e14c57a590c81449604c8884333ebca",
+  "task_anchor": "ab14b94cfc080ee1478f896268d619c327338a44",
+  "reviewed_branch": "codex/g4-05-win-arc-preview",
+  "reviewed_revision": "82d83ac0bd1a6ba150d4b56115b9bc0f4bab3d0d",
+  "implementation_revision": "2d18eacbff3b8732dbf4f44741a23c3ee6d93070",
+  "prior_review_revision": "3e8f4946ff6b0a5933cfebcfb67407d70d3e2c2b",
+  "frozen_requirement_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "The Windows playground no longer uses the Space key to directly release Arc preview.",
+      "Surface metrics are synchronized before PresentationTracker submission.",
+      "The matching-token, wrong-token, cancel, fallback-cleanup, and hidden-empty-layer backend regressions are covered by the submitted Windows/Arc tests.",
+      "Qualification appearance remains outside canonical StrokeRecord, BrushDescriptor, operation payload, and persistence paths."
+    ],
+    "failed": [
+      {
+        "id": "SYNTHETIC_COVERAGE_ELIGIBILITY",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure_mode": "finalizeCanonicalPresentation constructs HandoffEligibility in the Windows app and unconditionally sets presented, platformQualified, and coverageEligible to true. No Render-owned FrameCoverageManifest or live coverage computation is consumed.",
+        "impact": "CanonicalVisible(token) can be emitted when the submitted pixels do not cover the committed stroke, so the Arc layer may disappear with a gap or with an incomplete canonical takeover.",
+        "existing_independent_coverage": "CanonicalHandoffEvaluator unit tests only validate the boolean contract; they do not validate the Windows producer of coverage facts.",
+        "new_evidence_unique_detection_value": "A real Render-owned coverage manifest bound to the presented frame and matching token would detect missing/ineligible canonical coverage.",
+        "why_frozen_evidence_did_not_cover_it": "The prior P36 implementation added a Skia raster readback and presentation receipt but did not add a coverage manifest or an independent cross-boundary oracle.",
+        "blocking_justification": "This violates the explicit Authority rule that PlatformQualified is not coverage and that Render Core owns coverage interpretation.",
+        "why_severe_enough_to_override_closure_stability": "Premature Arc release is the central correctness invariant of the qualification and can produce a user-visible data/presentation gap."
+      },
+      {
+        "id": "PRIMARY_WINDOW_PREVIEW_MIRROR_REMAINS_IN_QUALIFICATION_PATH",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure_mode": "runtimePreviewVisible defaults to true and the primary HWND paints transientPreviewPoints() while the native Arc layered backend also paints the preview. The evidence does not show this mirror disabled for the qualifying capture.",
+        "impact": "A capture can show a preview even if the Arc transient backend is absent or incorrect, so the claimed visible state does not independently prove the production Arc path.",
+        "existing_independent_coverage": "Backend tests prove a layered surface can render in isolation, but no end-to-end capture proves the qualifying window uses only that surface.",
+        "new_evidence_unique_detection_value": "A capture and trace with the mirror disabled, plus backend-owned state telemetry, would detect substitution or duplicate preview rendering.",
+        "why_frozen_evidence_did_not_cover_it": "P36 added a debug toggle but left the default mirror enabled and supplied only a prose observation.",
+        "blocking_justification": "The package forbids mock-only/demo-only preview as completion evidence and requires the real Arc transient layer to be the qualification source.",
+        "why_severe_enough_to_override_closure_stability": "Mirror substitution can make a false Arc qualification appear successful while the real backend is broken."
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "P36 evidence binds implementation revision 2d18eacbff3b8732dbf4f44741a23c3ee6d93070 and reports 12/12 claimed tests.",
+      "The evidence explicitly avoids pressure, official G4, and G4-12 PASS claims.",
+      "The result and evidence JSON parse successfully."
+    ],
+    "failed": [
+      {
+        "id": "NO_REVIEWER_ACCESSIBLE_ARC_CAPTURE",
+        "classification": "EVIDENCE_GAP",
+        "failure_mode": "windows-arc-handoff-evidence.json contains only textual behavioral_observation; no reviewer-accessible screenshot/video artifact, content hash, or repository/provider artifact demonstrates all three visual states.",
+        "impact": "The reviewer cannot independently distinguish Arc PreviewBackend output from the HWND mirror or inspect overlap, no-gap, duplicate-darkening, and release timing.",
+        "existing_independent_coverage": "None for the end-to-end Windows qualification run.",
+        "new_evidence_unique_detection_value": "A durable capture bound to the exact run and state-transition trace has unique detection value for the visual qualification."
+      },
+      {
+        "id": "NO_DURABLE_STATE_TRANSITION_TRACE",
+        "classification": "EVIDENCE_GAP",
+        "failure_mode": "The submitted evidence does not contain pointer trace, HUD telemetry, Presented/coverage facts, CanonicalVisible(token), or Arc release events bound to a run.",
+        "impact": "Manual observation cannot prove that release followed matching Render-owned eligibility rather than an accidental or synthetic path.",
+        "existing_independent_coverage": "The code tests cover negative protocol cases, but no end-to-end producer trace covers the Windows handoff.",
+        "new_evidence_unique_detection_value": "A signed/hash-bound trace uniquely correlates input, preview lifecycle, canonical presentation, eligibility, and release."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "origin/codex/g4-05-win-arc-preview resolves to the declared reviewer revision 82d83ac0bd1a6ba150d4b56115b9bc0f4bab3d0d.",
+      "The task anchor ab14b94cfc080ee1478f896268d619c327338a44 is an ancestor.",
+      "The focused host test set passes 8/8 in the available macOS review environment.",
+      "The submitted JSON evidence files parse successfully."
+    ],
+    "failed": [
+      {
+        "id": "DIFF_CHECK_FAILED",
+        "classification": "IMPLEMENTATION_DEFECT",
+        "detail": "git diff --check origin/main...82d83ac0bd1a6ba150d4b56115b9bc0f4bab3d0d fails on CRLF/trailing whitespace in .aegis/results/GT-G4-12/result.json and .aegis/results/GT-G4-12/windows-physical-evidence.json."
+      },
+      {
+        "id": "NO_PR_OR_PROVIDER_CHECKS",
+        "classification": "EVIDENCE_GAP",
+        "detail": "No pull request or provider check run exists for the exact reviewed head. A provider PR is required only after P34 passes; it cannot cure the current implementation/evidence blockers."
+      }
+    ]
+  },
+  "p35_classification": {
+    "status": "IMPLEMENTATION_DEFECT_AND_EVIDENCE_GAP",
+    "repair_owner": "aegis-implementation",
+    "authorized_p36_scope": [
+      "Move coverage eligibility production to the Render-owned presentation/coverage path; the Windows host may transport facts but must not synthesize coverageEligible.",
+      "Bind CanonicalVisible(token) to the actual presented frame, live surface/metrics generations, matching document revision, and eligible coverage manifest.",
+      "Disable/remove the primary HWND transient preview mirror for qualification capture; keep any debug mirror outside the qualification path and prove it cannot satisfy evidence.",
+      "Emit durable pointer/HUD/state-transition evidence including Presented, coverage eligibility, CanonicalVisible(token), and Arc release events.",
+      "Persist a reviewer-accessible Windows capture/video with hashes for Preview-only, Overlap, and Canonical-only states.",
+      "Normalize all changed evidence files so git diff --check passes, then rerun the original frozen tests plus the Windows-specific regressions."
+    ],
+    "forbidden_scope": [
+      "Android or Web redesign",
+      "Canonical brush/persistence/semantic changes",
+      "Timer, Space-key, or heuristic preview release",
+      "Calling a local manual observation PASS_WINDOWS_ARC_QUALIFICATION without durable capture and trace"
+    ]
+  },
+  "decision": {
+    "verdict": "BLOCKED",
+    "merge_authorized": false,
+    "g4_05_win_arc_preview_pass": false,
+    "g4_12_rematerialization_authorized": false,
+    "g4_12_next_stage_authorized": false,
+    "next_stage": "P36_FIX_REVERIFICATION",
+    "required_return_surface": "CONTROL_REVIEW",
+    "forbidden_conclusions": [
+      "PASS_WINDOWS_ARC_QUALIFICATION",
+      "G4-05 PASS",
+      "G4-12 PASS",
+      "G4 PASS"
+    ]
+  }
+}
