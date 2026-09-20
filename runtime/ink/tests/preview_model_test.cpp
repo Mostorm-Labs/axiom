@@ -46,5 +46,22 @@ int main() {
   assert(port.calls == 2);
   model.cancel();
   assert(model.snapshot().confirmed.empty());
+  assert(model.beginKeyed(10));
+  assert(model.beginKeyed(11));
+  assert(model.updateKeyed(10, confirmedOne, predictedOne));
+  assert(model.updateKeyed(11, confirmedTwo, predictedTwo));
+  assert(model.snapshot(10)->strokeId == 10);
+  assert(model.snapshot(11)->strokeId == 11);
+  model.cancelKeyed(10);
+  assert(model.snapshot(10) == nullptr);
+  assert(model.snapshot(11) != nullptr);
+  RecordingPort keyedPort;
+  canvas::ink::ArcPreviewBridge keyedBridge(keyedPort);
+  assert(keyedBridge.presentKeyed(*model.snapshot(11)) == canvas::ink::PreviewDisposition::kPresented);
+  keyedPort.available = false;
+  canvas::ink::PreviewSnapshot unavailable{12, 1, {confirmedOne[0]}, {predictedOne[0]}};
+  assert(keyedBridge.presentKeyed(unavailable) == canvas::ink::PreviewDisposition::kCanonicalOnly);
+  assert(keyedBridge.canonicalOnly(12));
+  assert(!keyedBridge.canonicalOnly(11));
   return 0;
 }

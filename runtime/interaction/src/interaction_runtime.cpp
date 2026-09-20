@@ -11,13 +11,24 @@ bool InteractionRuntime::startSession(std::uint64_t sessionId) noexcept {
     return editor_.canStart() && manager_.start(sessionId);
 }
 
+bool InteractionRuntime::startSession(const input::PointerKey& key, std::uint64_t sessionId) noexcept {
+    return editor_.canStart() && manager_.start(key, sessionId);
+}
+
 bool InteractionRuntime::commit(std::uint64_t sessionId, const OperationRequest& request) noexcept {
     if (manager_.activeCount() == 0 || !editor_.commit(request)) return false;
     return manager_.finish(sessionId);
 }
 
+bool InteractionRuntime::commit(const input::PointerKey& key, std::uint64_t sessionId,
+                                const OperationRequest& request) noexcept {
+    if (!editor_.commit(request)) return false;
+    return manager_.finish(key, sessionId);
+}
+
 void InteractionRuntime::documentDetached() noexcept {
     manager_.cancelAll(CancellationReason::kDocumentDetached);
+    manager_.cancelAllKeyed(CancellationReason::kDocumentDetached);
 }
 
 } // namespace canvas::interaction

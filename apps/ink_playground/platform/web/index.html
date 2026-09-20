@@ -25,7 +25,9 @@
   let sampleSequence = 0;
   const started = new Set();
   const strokes = [];
-  let activeStroke = null;
+  const activeStrokes = new Map();
+  const generations = new Map();
+  const webSource = 1;
   const nowNs = () => Math.round(performance.now() * 1000000);
   const canvasPoint = sample => {
     const rect = canvas.getBoundingClientRect();
@@ -36,10 +38,12 @@
   };
   const send = (event, phase) => {
     const list = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
-    if (phase === "down") { stroke += 1; started.add(event.pointerId); activeStroke = []; strokes.push(activeStroke); module._axiom_ink_begin(host, stroke); }
-    list.forEach(sample => { const point = canvasPoint(sample); module._axiom_ink_sample(host, ++sampleSequence, nowNs(),
-      point.x, point.y, sample.pressure || 0.5, 0, nowNs()); activeStroke.push(point); });
-    if (phase === "up") { module._axiom_ink_commit(host, stroke, stroke); started.delete(event.pointerId); activeStroke = null; }
+    if (phase === "down") { stroke += 1; started.add(event.pointerId); const generation = (generations.get(event.pointerId) || 0) + 1; generations.set(event.pointerId, generation); const active = []; activeStrokes.set(event.pointerId, { points: active, stroke, generation }); strokes.push(active); module._axiom_ink_begin_pointer(host, webSource, event.pointerId, generation, stroke); }
+    const activeStroke = activeStrokes.get(event.pointerId);
+    if (!activeStroke) return;
+    list.forEach(sample => { const point = canvasPoint(sample); module._axiom_ink_pointer_sample(host, webSource, event.pointerId, activeStroke.generation, ++sampleSequence, nowNs(),
+      point.x, point.y, sample.pressure || 0.5, 0, nowNs()); activeStroke.points.push(point); });
+    if (phase === "up") { module._axiom_ink_commit_pointer(host, webSource, event.pointerId, activeStroke.generation, activeStroke.stroke, activeStroke.stroke); started.delete(event.pointerId); activeStrokes.delete(event.pointerId); }
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = "#1a5bff"; context.lineWidth = 3;
@@ -55,7 +59,7 @@
   canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); send(e, "down"); });
   canvas.addEventListener("pointermove", e => { if (started.has(e.pointerId)) send(e, "move"); });
   canvas.addEventListener("pointerup", e => send(e, "up"));
-  canvas.addEventListener("pointercancel", e => { started.delete(e.pointerId); });
+  canvas.addEventListener("pointercancel", e => { started.delete(e.pointerId); activeStrokes.delete(e.pointerId); });
   globalThis.axiomInkPlayground = { module, host };
   } catch (error) {
     hud.textContent = `Ink Playground load error: ${error?.stack || error}`;

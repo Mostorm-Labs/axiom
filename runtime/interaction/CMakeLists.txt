@@ -8,10 +8,11 @@ add_library(canvas_runtime_interaction STATIC
     src/session_manager.cpp
     src/editor_history.cpp
     src/interaction_dependency_footprint.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
 
 target_include_directories(canvas_runtime_interaction PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(canvas_runtime_interaction PUBLIC canvas_runtime_foundation canvas_runtime_semantic)
+target_link_libraries(canvas_runtime_interaction PUBLIC canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_input)
 target_compile_features(canvas_runtime_interaction PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -81,4 +82,14 @@ if(BUILD_TESTING)
     target_compile_features(axiom_session_lifecycle_tests PRIVATE cxx_std_20)
     target_compile_options(axiom_session_lifecycle_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     add_test(NAME G4SessionLifecycle COMMAND axiom_session_lifecycle_tests)
+    add_executable(axiom_gesture_arbiter_tests tests/gesture_arbiter_test.cpp)
+    target_link_libraries(axiom_gesture_arbiter_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_gesture_arbiter_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_gesture_arbiter_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME G4GestureArbiter COMMAND axiom_gesture_arbiter_tests)
+    add_executable(axiom_viewport_gesture_tests tests/viewport_gesture_test.cpp)
+    target_link_libraries(axiom_viewport_gesture_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_viewport_gesture_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_viewport_gesture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    add_test(NAME G4ViewportGesture COMMAND axiom_viewport_gesture_tests)
 endif()

@@ -23,5 +23,14 @@ int main() {
   }
   assert(engine.processedSampleCount() == 14400);
   assert(engine.finish().has_value());
+  const canvas::input::PointerKey keyA{3, 1, 1};
+  const canvas::input::PointerKey keyB{3, 2, 1};
+  assert(engine.begin(keyA, 30));
+  assert(engine.begin(keyB, 31));
+  assert(engine.activeStrokeCount() == 2);
+  assert(engine.append(keyA, {1, 100, 4.0F, 4.0F, 0.5F, false, keyA}));
+  assert(engine.append(keyB, {1, 100, 8.0F, 8.0F, 0.5F, false, keyB}));
+  assert(engine.finish(keyA)->id == 30);
+  assert(engine.finish(keyB)->id == 31);
   return 0;
 }

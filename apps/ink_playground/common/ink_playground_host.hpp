@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 namespace canvas::ink_playground {
 
@@ -46,9 +47,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   InkPlaygroundHost();
 
   [[nodiscard]] bool beginStroke(std::uint64_t strokeId) noexcept;
+  [[nodiscard]] bool beginStroke(const input::PointerKey& key, std::uint64_t strokeId) noexcept;
   [[nodiscard]] bool accept(const input::PointerSampleBatch& batch,
                             std::uint64_t observationTimeNs);
   [[nodiscard]] bool commitStroke(std::uint64_t strokeId,
+                                  std::uint64_t operationId) noexcept;
+  [[nodiscard]] bool commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                   std::uint64_t operationId) noexcept;
 
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
@@ -97,6 +101,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   SurfaceBinding surface_{};
   std::vector<std::vector<ink::StrokePoint>> committedStrokes_;
   bool runtimePreviewVisible_ = true;
+  std::unordered_map<input::PointerKey, std::uint64_t, input::PointerKeyHash> keyedStrokeIds_;
 };
 
 }  // namespace canvas::ink_playground
