@@ -4,10 +4,11 @@
   "execution_closure_contract":{
     "implementation":{"required_changes":["Implement G4.4-01 through G4.4-10 within existing input/ink/interaction/host seams"],"authorized_mutation_scope":["runtime/input/**","runtime/ink/**","runtime/interaction/**","apps/ink_playground/**","tests/**",".aegis/packages/GT-G4-4/**",".aegis/results/GT-G4-4/**",".aegis/project.json",".aegis/gates.json",".aegis/evidence.json",".aegis/integrations.json",".aegis/state.json"],"forbidden_changes":["semantic/**","G4.5/**","G5/**","historical G4 evidence"]},
     "tests":{"required":["identity/generation tests","arbiter claim tests","multi-session replay tests","viewport/eraser/palm tests","keyed preview tests","full G4 regression CTest"]},
-    "evidence":{"blocking":["wp00-repo-reconciliation.json","p31-control-review.json","p34-control-review.json","result.json","physical-checkpoint.json"],"corroborative":["corpus-evidence.json","replay-evidence.json"]},
-    "terminal_success":["all required WPs have durable results", "G4.4 Gate Review PASS or explicit BLOCKED_ENVIRONMENT at physical checkpoint", "no forbidden scope changes"],
+    "evidence":{"blocking":["wp00-repo-reconciliation.json","p31-control-review.json","portable-regression-summary.json","corpus-evidence.json","qualification-bundle-manifest.json","ready-for-physical-verification.json","result.json"],"corroborative":["physical-checkpoint.json","android-device-evidence.json","windows-pointer-trace.json","windows-hud-telemetry.json"]},
+    "terminal_success":["G4.4-00 through G4.4-10 code complete", "all frozen automated tests pass", "qualification artifacts are reviewer accessible and bound to an exact revision", "status is READY_FOR_PHYSICAL_VERIFICATION", "no forbidden scope changes", "no G4.4 PASS is claimed before G4.4-11"],
     "explicit_terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","BLOCKED_ENVIRONMENT","BLOCKED_REPOSITORY_IDENTITY"],
     "continue_until_terminal_state":true,
-    "return_surface":"CONTROL_REVIEW"
+    "return_surface":"CONTROL_REVIEW",
+    "successor_stage":{"id":"G4.4-11","name":"Unified Physical Qualification + Gate Closure","physical_scenarios_are_capability_profiled":true,"pen_pressure_optional_when_unsupported":true,"required_for_final_g4_4_pass":true}
   }
 }

@@ -8,6 +8,7 @@
     {"id":"G44-V4-gestures","requirement":"two-finger viewport and broad-touch baseline work","oracle":"gesture and hysteresis tests","acceptance":"viewport claim excludes ink/eraser"},
     {"id":"G44-V5-preview","requirement":"Arc previews are keyed and isolated","oracle":"multi-preview tests","acceptance":"release/canonical fallback is per stroke"},
     {"id":"G44-V6-regression","requirement":"G4 regression remains green","oracle":"full related CTest suite","acceptance":"zero failures"},
-    {"id":"G44-V7-physical","requirement":"real pen and multitouch checkpoint","oracle":"reviewer-accessible device evidence","acceptance":"all required physical scenarios or explicit terminal environment blocker"}
+    {"id":"G44-V7-qualification-readiness","requirement":"platform adapters and playground can emit self-contained qualification artifacts bound to an exact build revision","oracle":"qualification bundle manifest plus automated platform conformance and available device-profile evidence","acceptance":"Windows, Android and Web profiles are represented; unsupported device capabilities are explicit rather than promoted to PASS"},
+    {"id":"G44-V8-unified-physical-gate","requirement":"capability-profiled physical qualification and final Gate closure","oracle":"G4.4-11 reviewer-accessible physical evidence","acceptance":"required scenarios are executed according to actual device capability; pen/pressure is required only on a supporting device","blocking_for_current_automated_closure":false,"blocking_for_final_g4_4_gate":true}
   ]
 }
