@@ -61,6 +61,7 @@ void preview_points_test() {
   const auto points = host.previewPoints();
   assert(points.size() == 2);
   assert(points[0].x == 10.0F && points[1].y == 40.0F);
+  assert(host.canonicalStrokes().empty());
 }
 
 void repeated_strokes_test() {
@@ -77,7 +78,7 @@ void repeated_strokes_test() {
   assert(host.accept(second, 2'000'000));
   assert(host.commitStroke(22, 122));
   assert(host.submittedOperationCount() == 2);
-  const auto strokes = host.previewStrokes();
+  const auto strokes = host.canonicalStrokes();
   assert(strokes.size() == 2);
   assert(strokes[0].front().x == 10.0F);
   assert(strokes[1].front().x == 100.0F);

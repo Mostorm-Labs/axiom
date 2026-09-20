@@ -196,7 +196,7 @@ void paint(HWND window, State& value) {
          << value.trace.size() << L" | batch: " << hud.batch;
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
-  for (const auto& points : value.host->previewStrokes()) {
+  for (const auto& points : value.host->canonicalStrokes()) {
     for (std::size_t i = 1; i < points.size(); ++i) {
       MoveToEx(bufferDc, static_cast<int>(points[i - 1].x), static_cast<int>(points[i - 1].y), nullptr);
       LineTo(bufferDc, static_cast<int>(points[i].x), static_cast<int>(points[i].y));

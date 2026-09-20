@@ -56,6 +56,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] const SurfaceBinding& surface() const noexcept { return surface_; }
   [[nodiscard]] std::vector<ink::StrokePoint> previewPoints() const;
   [[nodiscard]] std::vector<std::vector<ink::StrokePoint>> previewStrokes() const;
+  [[nodiscard]] const std::vector<std::vector<ink::StrokePoint>>& canonicalStrokes() const noexcept {
+    return committedStrokes_;
+  }
 
   [[nodiscard]] bool productionPathComplete() const noexcept {
     return input_ != nullptr && ink_ != nullptr && preview_ != nullptr &&

@@ -20,10 +20,10 @@ struct Stroke {
   bool sealed = false;
   bool committed = false;
 };
-LRESULT CALLBACK PreviewProc(HWND w, UINT m, WPARAM, LPARAM) {
+LRESULT CALLBACK PreviewProc(HWND w, UINT m, WPARAM wparam, LPARAM lparam) {
   if (m == WM_NCHITTEST) return HTTRANSPARENT;
   if (m == WM_MOUSEACTIVATE) return MA_NOACTIVATE;
-  return DefWindowProcW(w, m, 0, 0);
+  return DefWindowProcW(w, m, wparam, lparam);
 }
 bool RegisterPreviewClass() {
   static bool done = false;
@@ -143,7 +143,8 @@ class WindowsPreviewBackend final : public PreviewBackend {
     }
     SIZE size{static_cast<LONG>(target_.width_pixels), static_cast<LONG>(target_.height_pixels)};
     BLENDFUNCTION blend{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
-    const BOOL ok = UpdateLayeredWindow(surface_, screen, &origin, &size, mem, &origin, 0,
+    POINT source{0, 0};
+    const BOOL ok = UpdateLayeredWindow(surface_, screen, &origin, &size, mem, &source, 0,
                                         &blend, ULW_ALPHA);
     SelectObject(mem, old); DeleteObject(bm); DeleteDC(mem); ReleaseDC(nullptr, screen); return ok != FALSE;
   }
