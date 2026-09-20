@@ -1,0 +1,14 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "current":true,
+  "source":{
+    "provider":"notion",
+    "architecture_ref":"notion://3c84c57a590c814fbe38cd3800d7b291",
+    "implementation_plan_ref":"notion://3e14c57a590c810fa529c1ef7b5c5b6e",
+    "title":"G4.4 Multi-Pointer Input & Gesture Arbitration"
+  },
+  "dependency":{"g4_integration_revision":"7be89f11d7abc26c3788aa5f8a3b324571baa27c","g4_status":"PASS_G4_FUNCTIONAL_INTEGRATION"},
+  "invariants":["PointerKey is transient identity", "PointerKey is not StrokeId", "one pointer one claim", "canonical mutations remain ordered", "pointer/gesture state is derived and not SemanticDocument truth", "cancel and source loss are isolated per session"],
+  "forbidden":["new canonical ObjectKind or Operation","G4.5 BrushProgram","G4.6 presentation","G5 tile/cache/scheduler"]
+}

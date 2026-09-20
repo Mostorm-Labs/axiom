@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "obligations":[
+    {"id":"G44-V1-identity","requirement":"PointerKey identity and generation fencing prevent stale reuse","oracle":"deterministic registry tests","acceptance":"stale generation is rejected"},
+    {"id":"G44-V2-arbitration","requirement":"claims are exclusive and cancellation isolated","oracle":"arbiter state-machine tests","acceptance":"one pointer cannot be double-consumed"},
+    {"id":"G44-V3-sessions","requirement":"multiple strokes commit in deterministic order","oracle":"four-stream replay corpus","acceptance":"canonical order is stable"},
+    {"id":"G44-V4-gestures","requirement":"two-finger viewport and broad-touch baseline work","oracle":"gesture and hysteresis tests","acceptance":"viewport claim excludes ink/eraser"},
+    {"id":"G44-V5-preview","requirement":"Arc previews are keyed and isolated","oracle":"multi-preview tests","acceptance":"release/canonical fallback is per stroke"},
+    {"id":"G44-V6-regression","requirement":"G4 regression remains green","oracle":"full related CTest suite","acceptance":"zero failures"},
+    {"id":"G44-V7-physical","requirement":"real pen and multitouch checkpoint","oracle":"reviewer-accessible device evidence","acceptance":"all required physical scenarios or explicit terminal environment blocker"}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "stage":"P31_CONTROL_REVIEW",
+  "review_surface":"CONTROL_REVIEW",
+  "reviewer_role":"aegis-gate-review",
+  "package_id":"GT-G4-4-P31-v0.1",
+  "package_materialization_ref":"PENDING_MATERIALIZATION_COMMIT",
+  "task_anchor":"7be89f11d7abc26c3788aa5f8a3b324571baa27c",
+  "authority_audit":{"status":"PASS","checks":["Both supplied Notion authorities are bound in authority.lock.json.","G4 functional integration baseline is an ancestor of the execution branch.","G4.5/G5 scope is explicitly forbidden."]},
+  "verification_audit":{"status":"PASS","obligation_ids":["G44-V1-identity","G44-V2-arbitration","G44-V3-sessions","G44-V4-gestures","G44-V5-preview","G44-V6-regression","G44-V7-physical"],"physical_checkpoint":"blocking for full Gate PASS; synthetic evidence cannot substitute"},
+  "repository_audit":{"status":"PASS","anchor_ancestor":true,"package_lock_hashes":"PASS","wp00_reconciliation":".aegis/results/GT-G4-4/wp00-repo-reconciliation.json","mutation_scope":"GT-G4-4 package and authorized runtime/test seams only"},
+  "decision":{"verdict":"PASS","p31_authorized":true,"next_stage":"P32_CODE_EXECUTION","official_gate_pass_forbidden_during_p32":true}
+}

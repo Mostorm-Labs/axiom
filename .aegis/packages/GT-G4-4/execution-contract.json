@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-4",
+  "execution_closure_contract":{
+    "implementation":{"required_changes":["Implement G4.4-01 through G4.4-10 within existing input/ink/interaction/host seams"],"authorized_mutation_scope":["runtime/input/**","runtime/ink/**","runtime/interaction/**","apps/ink_playground/**","tests/**",".aegis/packages/GT-G4-4/**",".aegis/results/GT-G4-4/**",".aegis/project.json",".aegis/gates.json",".aegis/evidence.json",".aegis/integrations.json",".aegis/state.json"],"forbidden_changes":["semantic/**","G4.5/**","G5/**","historical G4 evidence"]},
+    "tests":{"required":["identity/generation tests","arbiter claim tests","multi-session replay tests","viewport/eraser/palm tests","keyed preview tests","full G4 regression CTest"]},
+    "evidence":{"blocking":["wp00-repo-reconciliation.json","p31-control-review.json","p34-control-review.json","result.json","physical-checkpoint.json"],"corroborative":["corpus-evidence.json","replay-evidence.json"]},
+    "terminal_success":["all required WPs have durable results", "G4.4 Gate Review PASS or explicit BLOCKED_ENVIRONMENT at physical checkpoint", "no forbidden scope changes"],
+    "explicit_terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","BLOCKED_ENVIRONMENT","BLOCKED_REPOSITORY_IDENTITY"],
+    "continue_until_terminal_state":true,
+    "return_surface":"CONTROL_REVIEW"
+  }
+}
