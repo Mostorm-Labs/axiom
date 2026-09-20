@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "package_id": "GT-G4-4-CORR-01-P31-v0.1",
   "task_id": "GT-G4-4-CORR-01",
-  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "Correct G4.4 PositionOnly and multi-contact arbitration with AutoIntent default while preserving accepted multi-pointer and downstream G4.5 work.",
   "repository": {
     "provider": "github",
@@ -47,7 +47,13 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",
-    "next_action": "Run package/evidence preflights; then execute the frozen corrective closure contract until READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION or an explicit terminal blocker.",
+    "next_action": "Execute the frozen corrective closure contract from the first incomplete action until READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION or an explicit terminal blocker.",
     "official_gate_pass_forbidden_during_p32": true
+  },
+  "preflight": {
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "evidence_ref": ".aegis/results/GT-G4-4-CORR-01/p31-preflight.json",
+    "evidence_revision": "67e5e270dd49a837b289f49cf21c3a853089ee35"
   }
 }
