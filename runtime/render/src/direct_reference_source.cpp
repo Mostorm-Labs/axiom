@@ -407,6 +407,12 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
         .visibleRecords = visibility.visibleRecords,
         .worldToView = worldToView(frame),
         .viewportClip = frame.worldViewport,
+        .entries = {},
+        .diagnostics = {},
+        .canonicalEncodingVersion = ReferenceDrawList::kCanonicalEncodingVersion,
+        .canonicalByteOrder = CanonicalByteOrder::kLittleEndian,
+        .canonicalBytes = {},
+        .digest = {},
     };
     list.entries.reserve(visibility.backToFront.size());
     for (const foundation::ObjectId id : visibility.backToFront) {

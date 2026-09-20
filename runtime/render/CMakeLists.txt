@@ -33,7 +33,9 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
+    target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
 endif()
 target_include_directories(canvas_runtime_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -68,7 +70,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
     target_compile_features(axiom_render_headless_skia_tests PRIVATE cxx_std_20)
     if(MSVC)
         target_compile_options(axiom_render_headless_skia_tests
-            PRIVATE /W4 /permissive- /WX /EHsc)
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_render_headless_skia_tests
             PRIVATE -Wall -Wextra -Wpedantic -Werror)
@@ -84,7 +86,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     if(MSVC)
         target_compile_options(axiom_render_surface_presentation_tests
-            PRIVATE /W4 /permissive- /WX /EHsc)
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_render_surface_presentation_tests
             PRIVATE -Wall -Wextra -Wpedantic -Werror)
@@ -163,7 +165,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     target_link_libraries(axiom_canonical_handoff_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_canonical_handoff_tests PRIVATE cxx_std_20)
     if(MSVC)
-        target_compile_options(axiom_canonical_handoff_tests PRIVATE /W4 /permissive- /WX /EHsc)
+        target_compile_options(axiom_canonical_handoff_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_canonical_handoff_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()

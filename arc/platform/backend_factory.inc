@@ -35,6 +35,8 @@ class PlatformPreviewBackend final : public PreviewBackend {
     return {.struct_size = sizeof(arc_backend_capabilities_v0),
             .abi_version = ARC_ABI_VERSION,
             .platform_kind = ARC_PLATFORM_KIND,
+            .reserved = 0,
+            .input_capabilities = 0,
             .presentation_capabilities = ARC_PRESENTATION_CAPABILITIES,
             .max_pending_strokes = 64,
             .max_primitives_per_update = 1u << 20u,
@@ -92,7 +94,9 @@ class PlatformInputSource final : public InputSource {
     return {.struct_size = sizeof(arc_backend_capabilities_v0),
             .abi_version = ARC_ABI_VERSION,
             .platform_kind = ARC_PLATFORM_KIND,
+            .reserved = 0,
             .input_capabilities = ARC_INPUT_CAPABILITIES,
+            .presentation_capabilities = 0,
             .max_pending_strokes = 64,
             .max_primitives_per_update = 1u << 20u,
             .max_queue_bytes = 64u * 1024u * 1024u};

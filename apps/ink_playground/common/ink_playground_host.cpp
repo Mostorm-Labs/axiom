@@ -96,6 +96,12 @@ bool InkPlaygroundHost::bindSurface(std::uint32_t width,
                                     std::uint32_t height) noexcept {
   if (width == 0U || height == 0U) return false;
   surface_ = SurfaceBinding{1U, width, height, true};
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
+      render::ViewId{1}, render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation},
+      render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
+                             width, height, 1.0F, 1.0F}});
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
   return true;
 }
 
@@ -109,16 +115,52 @@ bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
   surface_.width = width;
   surface_.height = height;
   surface_.available = true;
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
+      render::ViewId{1}, render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation},
+      render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
+                             width, height, 1.0F, 1.0F}});
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
   return true;
 }
 
 bool InkPlaygroundHost::loseSurface() noexcept {
   if (surface_.generation == 0U) return false;
   surface_.available = false;
+  (void)lifecycle_->markLost(render::ViewId{1});
+  return true;
+}
+
+bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
+                                              double frameMs) noexcept {
+  if (!surface_.available || frameId == 0U) return false;
+  const render::FrameState frame{
+      render::ViewId{1},
+      render::CameraState{foundation::WorldPoint{0.0F, 0.0F}, 1.0F, 0.0F,
+                          render::CameraGeneration{1}},
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)},
+      render::SurfaceMetrics{static_cast<float>(surface_.width),
+                             static_cast<float>(surface_.height), surface_.width,
+                             surface_.height, 1.0F, 1.0F},
+      semantic::SemanticGeneration{1}, foundation::SceneRevision{frameId},
+      render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId}};
+  if (tracker_->submit(frame) != render::PresentFeedbackDisposition::kSubmitted) return false;
+  const auto feedback = tracker_->receive(render::PresentedFeedback{
+      frame.viewId, frame.frameId, frame.surfaceGeneration, frame.metricsGeneration,
+      render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified,
+      std::nullopt});
+  if (feedback != render::PresentFeedbackDisposition::kPresented) return false;
+  recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
   return true;
 }
 
 std::vector<ink::StrokePoint> InkPlaygroundHost::previewPoints() const {
+  return preview_->snapshot().confirmed;
+}
+
+std::vector<ink::StrokePoint> InkPlaygroundHost::transientPreviewPoints() const {
   return preview_->snapshot().confirmed;
 }
 

@@ -98,6 +98,8 @@ class NullBackend final : public PreviewBackend {
     return {.struct_size = sizeof(arc_backend_capabilities_v0),
             .abi_version = ARC_ABI_VERSION,
             .platform_kind = ARC_PLATFORM_HEADLESS,
+            .reserved = 0,
+            .input_capabilities = 0,
             .presentation_capabilities =
                 ARC_PRESENTATION_CAPABILITY_INDEPENDENT_TARGET |
                 ARC_PRESENTATION_CAPABILITY_REPLACE_TRUNCATE |
@@ -231,6 +233,7 @@ class Bridge::Impl {
           .target_generation = state.snapshot.target_generation,
           .source_to_device = state.begin.value.source_to_device,
           .truncate_confirmed_to = 0,
+          .reserved = 0,
           .confirmed_append = state.snapshot.confirmed.data(),
           .confirmed_append_count =
               static_cast<uint32_t>(state.snapshot.confirmed.size()),
@@ -572,6 +575,14 @@ Status Bridge::CanonicalVisible(const arc_canonical_visible_v0& visible) {
   (void)impl_->Invoke(backend_status, "canonical_visible");
   if (backend_status != Status::kOk && impl_->backend() != attempted_backend) {
     (void)impl_->backend()->CanonicalVisible(visible);
+  }
+  // A prior presentation failure may have switched the bridge to its
+  // canonical-only fallback. The primary platform backend can still own a
+  // visible transient surface, so a matching CanonicalVisible must always
+  // be offered to that backend as a cleanup attempt as well.
+  if (impl_->use_fallback_ && impl_->primary_ != nullptr &&
+      attempted_backend != impl_->primary_.get()) {
+    (void)impl_->primary_->CanonicalVisible(visible);
   }
   const uint64_t final_preview_revision = state.preview_revision;
   impl_->RememberRetired(visible.stroke_id, visible.handoff_token);
