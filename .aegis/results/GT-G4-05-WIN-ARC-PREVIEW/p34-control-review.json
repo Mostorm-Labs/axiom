@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-05-WIN-ARC-PREVIEW",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-05-WIN-ARC-PREVIEW-P31-v0.1",
+  "package_ref": "https://app.notion.com/p/3e14c57a590c81449604c8884333ebca",
+  "task_anchor": "ab14b94cfc080ee1478f896268d619c327338a44",
+  "reviewed_branch": "codex/g4-05-win-arc-preview",
+  "reviewed_revision": "9457847bdcd7543588b06fd11744259e2077ba7a",
+  "declared_result_revision": "2cb6c0aba20aed78a26aa7742141be92365bd94e",
+  "frozen_requirement_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "A Windows Arc PreviewBackend creates a real layered native Windows surface.",
+      "The backend implements begin, update, seal, canonical-commit, matching-token release, cancel, and target-generation checks.",
+      "Qualification tint and alpha are confined to transient presentation code rather than canonical StrokeRecord, BrushDescriptor, operation, or persistence data.",
+      "Windows pointer history and pressure ingestion are wired through the Arc InputSource."
+    ],
+    "failed": [
+      {
+        "id": "RENDER_OWNED_HANDOFF_NOT_CONNECTED",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure_mode": "The Windows playground synthesizes a deterministic presentation receipt and calls CanonicalVisible directly from the Space key handler instead of deriving eligibility from canonical Presented, PlatformQualified evidence, matching coverage, and CanonicalHandoffEvaluator.",
+        "impact": "Arc preview can retire without proof that the canonical pixels have taken over, permitting a visible gap and invalidating the required production handoff path.",
+        "source": "apps/ink_playground/platform/windows/main.cpp"
+      },
+      {
+        "id": "QUALIFICATION_MIRROR_BYPASSES_ARC_PROOF",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure_mode": "The primary HWND paints previewStrokes(), including the active transient stroke, as a qualification-only mirror while the Arc backend separately paints the transient layer.",
+        "impact": "A visible preview in a capture does not independently prove that the production Arc PreviewBackend produced it; the mirror can mask backend loss or rendering failure.",
+        "source": "apps/ink_playground/platform/windows/main.cpp"
+      },
+      {
+        "id": "MANDATORY_HANDOFF_TESTS_MISSING",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure_mode": "The branch does not test that not-presented, ineligible coverage, wrong/stale token, cancel, or backend loss cannot cause takeover, nor that matching eligible Presented plus coverage does cause takeover.",
+        "impact": "The release invariant and failure paths required by the package remain unverified."
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "The durable result binds a Windows 10 functional smoke to result revision 2cb6c0aba20aed78a26aa7742141be92365bd94e.",
+      "The evidence does not falsely claim pressure or full physical qualification."
+    ],
+    "failed": [
+      {
+        "id": "ARC_QUALIFICATION_NOT_CLAIMED_OR_PROVEN",
+        "classification": "EVIDENCE_GAP",
+        "failure_mode": "Durable evidence reports only PASS_WINDOWS_FUNCTIONAL_SMOKE and contains no Arc state-transition trace proving Preview-only, Overlap, and Canonical-only through the production handoff path.",
+        "impact": "Manual functional drawing cannot detect premature release, fake takeover, stale preview, or mirror substitution.",
+        "existing_independent_coverage": "None for the end-to-end Windows Arc handoff.",
+        "unique_detection_value": "A transition trace bound to Presented, coverage eligibility, token, backend state, and capture distinguishes real takeover from manual state switching."
+      },
+      {
+        "id": "PHYSICAL_CAPTURE_NOT_REVIEWER_ACCESSIBLE",
+        "classification": "EVIDENCE_GAP",
+        "failure_mode": "The screenshot is referenced only by a local D: path and digest and is not present at a reviewer-accessible durable location.",
+        "impact": "The reviewer cannot inspect the claimed visual state, identify the Arc layer, or verify absence of gaps, duplicate darkening, and stale preview."
+      },
+      {
+        "id": "TRACE_AND_HUD_UNAVAILABLE",
+        "classification": "EVIDENCE_GAP",
+        "failure_mode": "pointer_trace and HUD evidence are explicitly marked not_available.",
+        "impact": "There is no durable correlation between physical input, preview lifecycle, Presented/coverage eligibility, CanonicalVisible, and Arc release."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "The task anchor is an ancestor of the reviewed revision.",
+      "The reviewed revision is reviewer-resolvable at origin/codex/g4-05-win-arc-preview.",
+      "No Semantic or Skia dependency source rebuild was introduced."
+    ],
+    "failed": [
+      {
+        "id": "DIFF_CHECK_FAILED",
+        "classification": "IMPLEMENTATION_DEFECT",
+        "detail": "git diff --check origin/main...9457847bdcd7543588b06fd11744259e2077ba7a fails because both added GT-G4-12 evidence JSON files contain CRLF/trailing whitespace."
+      },
+      {
+        "id": "NO_REVIEWABLE_PR_OR_PROVIDER_CHECKS",
+        "classification": "EVIDENCE_GAP",
+        "detail": "No pull request or provider check run exists for the reviewed head. This is not the primary blocker, but integration must not proceed without a reviewable exact head."
+      }
+    ]
+  },
+  "p35_classification": {
+    "status": "IMPLEMENTATION_DEFECT_AND_EVIDENCE_GAP",
+    "task_package_status": "CURRENT_PACKAGE_MATERIALLY_SUPERSEDES_HISTORICAL_G4_05_P31_AND_P34",
+    "repair_owner": "aegis-implementation",
+    "authorized_p36_scope": [
+      "Connect the Windows playground to the existing PresentationTracker and CanonicalHandoffEvaluator path.",
+      "Issue CanonicalVisible(token) only after a matching Presented result with PlatformQualified evidence and eligible canonical coverage.",
+      "Remove the active-stroke HWND mirror from Arc qualification or make it impossible for the mirror to satisfy Arc evidence.",
+      "Add negative and positive handoff tests for early/not-presented, ineligible coverage, wrong/stale token, cancel, backend loss, and matching eligible takeover.",
+      "Prove qualification mode leaves canonical operation, stroke, and digest unchanged.",
+      "Persist reviewer-accessible Windows capture and a state-transition trace/HUD bound to exact result and evidence revisions.",
+      "Normalize the evidence files and make git diff --check pass."
+    ],
+    "forbidden_scope": [
+      "Android or Web redesign",
+      "Canonical brush or persistence changes",
+      "Heuristic or timer-based preview release",
+      "Treating a debug mirror or manual Space-key transition as Arc qualification evidence"
+    ]
+  },
+  "decision": {
+    "verdict": "BLOCKED",
+    "merge_authorized": false,
+    "g4_05_win_arc_preview_pass": false,
+    "g4_12_rematerialization_authorized": false,
+    "g4_12_next_stage_authorized": false,
+    "next_stage": "P36_FIX_REVERIFICATION",
+    "required_return_surface": "CONTROL_REVIEW",
+    "forbidden_conclusions": [
+      "PASS_WINDOWS_ARC_QUALIFICATION",
+      "G4-12 PASS",
+      "G4 PASS"
+    ]
+  }
+}

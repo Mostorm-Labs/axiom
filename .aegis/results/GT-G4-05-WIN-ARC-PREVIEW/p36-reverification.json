@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-05-WIN-ARC-PREVIEW",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_id": "GT-G4-05-WIN-ARC-PREVIEW-P31-v0.1",
+  "package_ref": "https://app.notion.com/p/3e14c57a590c81449604c8884333ebca",
+  "task_anchor": "ab14b94cfc080ee1478f896268d619c327338a44",
+  "execution_branch": "codex/g4-05-win-arc-preview",
+  "implementation_revision": "2d18eacbff3b8732dbf4f44741a23c3ee6d93070",
+  "evidence_refs": [
+    ".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json"
+  ],
+  "repair_scope": [
+    "Windows PresentationTracker surface metrics synchronization",
+    "Arc primary cleanup after fallback",
+    "Windows transient layer release without host-window minimization",
+    "Regression coverage for handoff, fallback cleanup, and preview release"
+  ],
+  "verification": {
+    "focused": "PASS: arc_core_tests and arc_windows_preview_backend_tests",
+    "render": "PASS: G3HeadlessSkia, G3SurfacePresentation, G4CanonicalHandoff",
+    "playground": "PASS: 7 G4InkPlayground tests",
+    "ctest_total": "12/12 passed",
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW",
+  "return_policy": "Independent P34 review required; do not infer G4 or G4-12 PASS from this handoff."
+}
