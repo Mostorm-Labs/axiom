@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1", "task_id": "GT-G4-5", "result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b", "obligation": "G45-V10-qualification-readiness",
+  "provider": {"github": "Mostorm-Labs/axiom", "workflow_run_id": 35525653663, "run_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/35525653663", "head_sha": "49349d7141ec6d2e47f39fd385494113a186d08b"},
+  "profiles": {
+    "windows-x64": {"job": "qualification/windows-x64", "artifact_id": 10609527152, "artifact": "g4-5-windows-x64-49349d7141ec6d2e47f39fd385494113a186d08b", "status": "PASS", "executable_sha256": "55d364509315d8711ff3fcb4702156771f90859f8f096e2151e098a3c321ccd0"},
+    "web-wasm32": {"job": "qualification/web-wasm32", "artifact_id": 10610390693, "artifact": "g4-5-web-wasm32-49349d7141ec6d2e47f39fd385494113a186d08b", "status": "PASS", "js_sha256": "c1de392922ffd5721ad0766b10a7102b270a4726499f6bd00083e8c832441e12", "wasm_sha256": "167fdc775cf2fcd9818bcc1e907d2316bac55925270cf7c2b87d59e128536aab"},
+    "android-arm64-v8a": {"job": "qualification/android-arm64-v8a", "artifact_id": 10610400144, "artifact": "g4-5-android-arm64-v8a-49349d7141ec6d2e47f39fd385494113a186d08b", "status": "PASS", "executable_sha256": "94426795218371eb62c0e04e567e6edae690742fc6cab6714871559d50f5a230"}
+  },
+  "capability_policy": {"pressure": "NOT_EXERCISED", "tilt": "NOT_EXERCISED", "not_promoted_to_pass": true},
+  "self_contained_artifacts": true
+}

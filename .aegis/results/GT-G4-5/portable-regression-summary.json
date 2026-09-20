@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
+  "host": {"preset": "g3-host-debug", "configure": "PASS", "build": "PASS", "ctest": {"passed": 36, "failed": 0}},
+  "arc_core": {"build": "PASS", "ctest": {"passed": 5, "failed": 0}, "portable_windows_target": "PASS"},
+  "semantic_locked_sdk": {"resolver": "tools/setup_build_environment.py --core --semantic", "source_rebuild": false, "ctest": {"passed": 511, "failed": 0}},
+  "scope": {"git_diff_check": "PASS", "semantic_schema_changed": false, "dependency_locks_changed": false},
+  "claim_boundary": "Automated regression evidence only; no physical or official G4.5 PASS claim."
+}
