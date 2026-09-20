@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-13-P31-v0.1",
+  "task_id": "GT-G4-13",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Final G4 functional completion audit and Gate Report",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-13-gate-report"},
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {"revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc","relation":"ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path":"authority.lock.json","sha256":"66203266f7dfb42998b52a7c70e1a4fc79144641f5b24fc1e386e8dd20f2102b"},
+  "verification_lock_ref": {"path":"verification.lock.json","sha256":"cef7ee8f654381e7035b146c20d6d442c567dc408ed79e0f4f6599139f42569f"},
+  "execution_contract_ref": {"path":"execution-contract.json","sha256":"5f8041472729e0b26bb9227b255051609df2586895ba873f4a843828da76fbe4"},
+  "implementation_context_ref": {"path":"implementation-context.md","sha256":"08dee51cfb15ba7b8c341d91ad2147e856d46ac5b556b1dce69bd5813dd51c04"},
+  "evidence_contract_ref": {"path":"evidence-contract.json","sha256":"efd65a5aa71104f730940019f8a84886932d2debc61a1f6c1e7021de4ff73874"},
+  "materialization": {"same_repository":true,"path":".aegis/packages/GT-G4-13/","base_revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc"},
+  "handoff": {"preferred_executor":"codex","next_surface":"CODE_EXECUTION","official_gate_pass_forbidden_during_p32":true,"next_action":"Generate and independently review the final G4 functional Gate Report."}
+}

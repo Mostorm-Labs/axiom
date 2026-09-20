@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-13",
+  "artifacts": [
+    {"id":"g4-gate-report","path":".aegis/results/GT-G4-13/g4-gate-report.json","blocking":true},
+    {"id":"repository-integrity","path":".aegis/results/GT-G4-13/repository-integrity.json","blocking":true},
+    {"id":"p34-control-review","path":".aegis/results/GT-G4-13/p34-control-review.json","blocking":true},
+    {"id":"closure-summary","path":".aegis/results/GT-G4-13/closure-summary.json","blocking":false}
+  ],
+  "review_boundary": "Exact merged main revision, exact G4-12 evidence lineage, and durable G4-13 report.",
+  "official_claim_boundary": "PASS_G4_FUNCTIONAL_INTEGRATION only; no physical or pressure PASS."
+}

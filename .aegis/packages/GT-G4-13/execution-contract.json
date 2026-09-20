@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-13",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": ["Materialize the final G4 Gate Report and repository-integrity evidence.", "Record the G4-12 integrated closure and G4 functional completion decision in Aegis manifests."],
+      "authorized_mutation_scope": [".aegis/packages/GT-G4-13/**", ".aegis/results/GT-G4-13/**", ".aegis/project.json", ".aegis/gates.json", ".aegis/evidence.json", ".aegis/integrations.json", ".aegis/state.json"],
+      "forbidden_changes": ["runtime/**", "apps/**", "tests/**", "G5 or any successor G implementation", "rewriting historical G4 evidence", "pressure or capture-bound physical PASS claims"]
+    },
+    "tests": {"required": ["python3 -m json.tool on every new JSON artifact", "git diff --check 0a1e074013521fe42a9430bfe707af5a4705d7bc..HEAD", "recompute every package lock SHA-256", "verify exact G4-12 result and integration ancestry"]},
+    "evidence": {"blocking": ["g4-gate-report.json", "repository-integrity.json", "p34-control-review.json"], "corroborative": ["closure-summary.json"]},
+    "terminal_success": ["All required G4 work packages are durably enumerated.", "Current G4 functional profile is independently accepted.", "Deferred successor capabilities remain explicit and non-blocking.", "Final G4 Gate Report is reproducible and marked PASS for the current functional profile only."],
+    "explicit_terminal_blockers": ["BLOCKED_AUTHORITY", "BLOCKED_MISSING_INPUT", "BLOCKED_EVIDENCE", "PACKAGE_SCOPE_DIVERGENCE"],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

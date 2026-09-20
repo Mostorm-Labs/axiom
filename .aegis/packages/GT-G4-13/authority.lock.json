@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-13",
+  "current": true,
+  "source": {
+    "provider": "repo",
+    "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+    "title": "G4 functional completion authority v0.3",
+    "trusted_section": "current_completion_profile",
+    "content_hash": "sha256:19f37395b0d7b506059b730c6ee5dc38a9f9ee5466d91f5d5363d32818fc2bf8"
+  },
+  "plan_source": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+  "dependency": {
+    "g4_12_gate_decision": "repo:.aegis/results/GT-G4-12/p34-control-review-v0.4.json",
+    "g4_12_integration_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc"
+  },
+  "trusted_statements": {
+    "objective": "Produce the final G4 functional completion audit and Gate Report.",
+    "current_profile": "G4_FUNCTIONAL_INTEGRATION_V0_1",
+    "required_platforms": ["web", "windows", "android"],
+    "accepted_windows_arc_profile": "human_visual_functional_qualification",
+    "deferred": ["pressure-qualified pen evidence", "capture-bound physical latency", "formal render-owned coverage manifest"],
+    "forbidden": ["new product implementation", "PASS_WINDOWS_PRESSURE", "PASS_ANDROID_PRESSURE", "PASS_PHYSICAL", "G4 physical ink completion", "starting G5 or successor G"]
+  }
+}
