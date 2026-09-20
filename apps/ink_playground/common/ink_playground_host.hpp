@@ -54,6 +54,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                   std::uint64_t operationId) noexcept;
   [[nodiscard]] bool commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                   std::uint64_t operationId) noexcept;
+  [[nodiscard]] bool cancelStroke(const input::PointerKey& key) noexcept;
   void cancelAllPointers() noexcept;
 
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;

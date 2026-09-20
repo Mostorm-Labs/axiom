@@ -26,6 +26,11 @@ bool InteractionRuntime::commit(const input::PointerKey& key, std::uint64_t sess
     return manager_.finish(key, sessionId);
 }
 
+bool InteractionRuntime::cancel(const input::PointerKey& key,
+                                std::uint64_t sessionId) noexcept {
+    return manager_.cancel(key, sessionId);
+}
+
 void InteractionRuntime::documentDetached() noexcept {
     manager_.cancelAll(CancellationReason::kDocumentDetached);
     manager_.cancelAllKeyed(CancellationReason::kDocumentDetached);

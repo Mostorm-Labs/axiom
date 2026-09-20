@@ -1,5 +1,6 @@
 #include "../platform/windows/windows_pointer_utils.hpp"
 #include "../platform/windows/windows_smoke_evidence.hpp"
+#include "arc/protocol.h"
 #include "canvas/ink/ink_engine.hpp"
 
 #if defined(_WIN32)
@@ -68,14 +69,25 @@ int main() {
   if (currentStrokeHistory.size() != 1U || currentStrokeHistory.front().dwTime != 210U) return 7;
   using canvas::ink_playground::windows_input::PointerEvidenceSample;
   using canvas::ink_playground::windows_input::serializePointerTrace;
+  if (canvas::ink_playground::windows_input::arcToolForPointerType(PT_TOUCH) !=
+          ARC_INPUT_TOOL_TOUCH ||
+      canvas::ink_playground::windows_input::arcToolForPointerType(PT_PEN) !=
+          ARC_INPUT_TOOL_PEN ||
+      canvas::ink_playground::windows_input::arcToolForPointerType(PT_MOUSE) !=
+          ARC_INPUT_TOOL_MOUSE) {
+    return 8;
+  }
   const std::string trace = serializePointerTrace(
-      {PointerEvidenceSample{7U, 11U, "mouse", "down", 10.5F, 20.25F, 0.5F, 2U}},
+      {PointerEvidenceSample{0x1234U, 7U, 3U, 11U, "touch", "down", 10.5F,
+                             20.25F, 0.5F, 2U, 6.0F, 4.0F}},
       0x1234U);
   return trace ==
                  "{\n  \"schema_version\": \"0.1\",\n  \"device_id\": 4660,\n"
-                 "  \"events\": [\n    {\"pointer_id\": 7, \"timestamp_ms\": 11, "
-                 "\"input_type\": \"mouse\", \"phase\": \"down\", \"x\": 10.5, "
-                 "\"y\": 20.25, \"pressure\": 0.5, \"batch_size\": 2}\n  ]\n}\n"
+                 "  \"events\": [\n    {\"source_device_id\": 4660, \"pointer_id\": 7, "
+                 "\"generation\": 3, \"timestamp_ms\": 11, \"input_type\": \"touch\", "
+                 "\"phase\": \"down\", \"x\": 10.5, \"y\": 20.25, \"pressure\": 0.5, "
+                 "\"batch_size\": 2, \"contact_width\": 6, \"contact_height\": 4, "
+                 "\"contact_area\": 24}\n  ]\n}\n"
              ? 0
              : 2;
 }

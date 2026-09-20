@@ -93,6 +93,16 @@ bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t
   return true;
 }
 
+bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
+  const auto entry = keyedStrokeIds_.find(key);
+  if (entry == keyedStrokeIds_.end()) return false;
+  ink_->cancel(key);
+  preview_->cancelKeyed(entry->second);
+  if (!interaction_->cancel(key, entry->second)) return false;
+  keyedStrokeIds_.erase(entry);
+  return true;
+}
+
 void InkPlaygroundHost::cancelAllPointers() noexcept {
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);

@@ -118,9 +118,10 @@ void multipointer_test() {
   secondBatch.samples.push_back({1, 1'000'000, 20.0F, 20.0F, 0.5F, false, second});
   assert(host.accept(firstBatch, 1'000'000));
   assert(host.accept(secondBatch, 1'000'000));
+  assert(host.cancelStroke(first));
   assert(host.commitStroke(second, 102, 202));
-  assert(host.commitStroke(first, 101, 201));
-  assert(host.canonicalStrokes().size() == 2);
+  assert(!host.commitStroke(first, 101, 201));
+  assert(host.canonicalStrokes().size() == 1);
 }
 }  // namespace
 

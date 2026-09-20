@@ -4,6 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include "arc/protocol.h"
 
 #include <cstdint>
 #include <vector>
@@ -11,6 +12,13 @@
 #include "canvas/ink/ink_engine.hpp"
 
 namespace canvas::ink_playground::windows_input {
+
+[[nodiscard]] inline arc_input_tool_t arcToolForPointerType(
+    POINTER_INPUT_TYPE pointerType) noexcept {
+  if (pointerType == PT_PEN) return ARC_INPUT_TOOL_PEN;
+  if (pointerType == PT_TOUCH) return ARC_INPUT_TOOL_TOUCH;
+  return ARC_INPUT_TOOL_MOUSE;
+}
 
 enum class PointerLifecycleEvent : std::uint8_t { kIgnore, kBegin, kUpdate, kEnd };
 

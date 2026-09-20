@@ -14,6 +14,7 @@ class InteractionRuntime final {
     [[nodiscard]] bool commit(std::uint64_t sessionId, const OperationRequest& request) noexcept;
     [[nodiscard]] bool commit(const input::PointerKey& key, std::uint64_t sessionId,
                               const OperationRequest& request) noexcept;
+    [[nodiscard]] bool cancel(const input::PointerKey& key, std::uint64_t sessionId) noexcept;
     void documentDetached() noexcept;
     void cancelKeyedSessions(CancellationReason reason) noexcept;
     [[nodiscard]] const InteractionSessionManager& manager() const noexcept { return manager_; }
