@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "result_revision": "2cb6c0aba20aed78a26aa7742141be92365bd94e",
+  "platform": "windows",
+  "status": "BLOCKED_ENVIRONMENT",
+  "machine": {
+    "windows_version": "Microsoft Windows 10 专业版",
+    "version": "10.0.19045",
+    "build": "19045",
+    "architecture": "64-bit"
+  },
+  "device": {
+    "input_type": "no_pressure_pen_used",
+    "pressure": "not_available",
+    "pen_metadata": [
+      {
+        "FriendlyName": "HID-compliant pen",
+        "InstanceId": "HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
+        "Status": "OK"
+      }
+    ]
+  },
+  "pointer_trace": {
+    "status": "not_available",
+    "path": null,
+    "sha256": null,
+    "reason": "no pressure qualification requested; evidence output directory was not configured during the run"
+  },
+  "hud": {
+    "status": "not_available",
+    "reason": "no evidence output was emitted during the run"
+  },
+  "physical_latency": {
+    "status": "not_available",
+    "reason": "no physical input trace or capture"
+  },
+  "capture": {
+    "path": null,
+    "sha256": null,
+    "status": "not_available",
+    "reason": "Computer Use sky RPC unavailable and native capture failed because System.Drawing Add-Type was blocked by LIB environment path"
+  },
+  "headless_timing_promoted_to_physical": false,
+  "limitations": [
+    "Host is Windows 10 build 19045, not Windows 11",
+    "No pressure pen input was collected",
+    "No representative screenshot or video capture was obtained",
+    "No PASS_PHYSICAL claim"
+  ]
+}
