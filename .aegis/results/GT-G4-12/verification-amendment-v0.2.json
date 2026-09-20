@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.2",
+  "task_id": "GT-G4-12",
+  "stage": "P20_VERIFICATION_DESIGN_AMENDMENT",
+  "amendment_id": "GT-G4-12-P20-v0.2",
+  "status": "PROPOSED_PENDING_CONTROL_REVIEW",
+  "current_authority_unchanged": true,
+  "authority_source": {
+    "provider": "notion",
+    "ref": "notion://3c84c57a590c81128f21c0494d187cdb",
+    "title": "G4 Interaction + Ink Implementation Plan v0.2",
+    "scope": "WP G4-12 Ink Playground 0.1 / Physical Integration"
+  },
+  "supersession_policy": {
+    "previous_package": ".aegis/packages/GT-G4-12/verification.lock.json",
+    "previous_requirement": "G4-12-V4-physical-boundary",
+    "previous_requirement_preserved_as": "SUPERSEDED_HISTORICAL_AFTER_ACCEPTANCE",
+    "reason": "The previous executable package encoded Windows 11 as a hard environment prerequisite, although the capability contract is about pointer ingestion, writable presentation, telemetry, and separately qualified pressure evidence."
+  },
+  "proposed_gate_profiles": {
+    "windows_functional_smoke": {
+      "status_name": "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+      "host": "Windows 10 x64 10.0.19045 or newer",
+      "input_devices": ["mouse", "touch", "non_pressure_pen", "pressure_pen"],
+      "purpose": "Validate the runnable Windows host and pointer pipeline without making a pressure claim.",
+      "required_observations": [
+        "WinMain and real HWND start",
+        "message loop remains responsive",
+        "WM_POINTER ingress is exercised",
+        "HANDLE sourceDevice conversion produces a stable protocol device_id",
+        "pointer history/coalesced batch is accepted when the OS supplies it",
+        "visible writable canvas responds to input",
+        "HUD telemetry and a screenshot or video capture are persisted"
+      ],
+      "pressure_fields": "optional; record null or unsupported when unavailable",
+      "allowed_conclusion": "Windows functional smoke only",
+      "forbidden_conclusions": ["PASS_WINDOWS_PRESSURE", "PASS_PHYSICAL", "G4-12 PASS", "G4 PASS"]
+    },
+    "windows_pressure_qualified": {
+      "status_name": "PASS_WINDOWS_PRESSURE",
+      "host": "Windows 10 x64 10.0.19045 or newer",
+      "input_devices": ["pressure_pen"],
+      "purpose": "Qualify pressure and pen metadata independently of the Windows OS-version floor.",
+      "required_observations": [
+        "device metadata identifies a real pen",
+        "pressure values vary across a controlled trace",
+        "pointer history/coalesced samples are persisted",
+        "HUD and physical sample-to-visible latency are captured",
+        "capture path and SHA-256 are recorded"
+      ],
+      "allowed_conclusion": "Windows pressure evidence",
+      "forbidden_conclusions": ["PASS_PHYSICAL without the complete G4-12 profile"]
+    },
+    "g4_12_physical": {
+      "status_name": "PASS_PHYSICAL",
+      "host": "Supported Windows desktop host or qualified Android device",
+      "input_devices": ["pressure_pen"],
+      "required_profiles": ["windows_functional_smoke", "windows_pressure_qualified"],
+      "required_observations": [
+        "pointer trace",
+        "device metadata",
+        "pressure trace",
+        "HUD telemetry",
+        "sample-to-visible physical latency",
+        "screen or video capture with SHA-256"
+      ],
+      "allowed_conclusion": "Complete physical evidence only after all required observations pass"
+    }
+  },
+  "debug_policy": {
+    "win10_allowed": true,
+    "non_pressure_pen_allowed": true,
+    "mouse_allowed": true,
+    "non_pressure_input_is_not_pressure_evidence": true,
+    "missing_pressure_is_not_an_implementation_failure_for_functional_smoke": true,
+    "missing_pressure_remains_blocking_for_windows_pressure_qualified": true,
+    "headless_or_application_timing_promoted_to_physical": false
+  },
+  "verification_mapping": [
+    {
+      "requirement": "Windows host is runnable and accepts pointer input",
+      "invariant": "A supported desktop host can exercise the native ingress and visible playground",
+      "failure_mode": "Builds pass but the host cannot start, receive WM_POINTER, or display input",
+      "oracle": "Windows functional smoke with capture",
+      "classification": "blocking_for_windows_functional_smoke_corrobative_for_full_physical"
+    },
+    {
+      "requirement": "Pen pressure is preserved",
+      "invariant": "A real pressure-capable pen produces non-constant pressure values",
+      "failure_mode": "Mouse or non-pressure pen is mistaken for pressure support",
+      "oracle": "Independent pressure trace and device metadata",
+      "classification": "blocking_for_windows_pressure_qualified_and_full_physical"
+    },
+    {
+      "requirement": "Physical latency is measured",
+      "invariant": "Sample-to-visible latency comes from a physical session",
+      "failure_mode": "Headless or app timing is reported as physical latency",
+      "oracle": "Capture-bound latency record with trace and screenshot/video hash",
+      "classification": "blocking_for_full_physical"
+    }
+  ],
+  "implementation_impact": {
+    "production_semantics_change": false,
+    "runtime_architecture_change": false,
+    "required_code_changes": [],
+    "required_followup": "Regenerate GT-G4-12 P31 as a re-verification package after independent CONTROL_REVIEW accepts this amendment."
+  },
+  "decision_request": {
+    "recommended": "ACCEPT_WITH_TIERED_EVIDENCE",
+    "acceptance_effect": "Win10 and non-pressure input may produce functional smoke evidence; pressure and complete physical evidence retain separate capability requirements.",
+    "code_execution_authorized": false,
+    "next_owner": "aegis-implementation",
+    "next_stage": "P31_TASK_PACKAGING",
+    "required_package_id": "GT-G4-12-P31-v0.2"
+  },
+  "forbidden_verdicts": ["PASS_PHYSICAL", "G4-12 PASS", "G4 PASS"]
+}
