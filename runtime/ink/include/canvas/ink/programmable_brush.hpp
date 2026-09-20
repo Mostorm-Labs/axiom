@@ -145,6 +145,7 @@ struct BrushPrimitive final {
 struct BrushCommitArtifact final {
   BrushRepresentation representation = BrushRepresentation::kVector;
   std::vector<BrushPrimitive> primitives;
+  std::vector<BrushInputSample> sourceSamples;
   std::uint64_t deterministicSeed = 0;
   std::uint64_t digest = 0;
   bool canonicalMutation = false;

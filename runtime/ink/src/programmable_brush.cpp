@@ -231,6 +231,7 @@ BrushRuntimeResult BrushRuntime::evaluate(BrushSessionId session,
   const auto& definition = program.definition();
   result.commit.representation = program.representation();
   result.commit.deterministicSeed = state.seed;
+  result.commit.sourceSamples = state.samples;
   result.commit.canonicalMutation =
       program.representation() != BrushRepresentation::kTemporalTransient;
   result.preview.session = session;
