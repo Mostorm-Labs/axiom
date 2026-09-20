@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "support_role": "aegis-project-state",
+  "manifest_schema": "0.6",
+  "authority_scope": "capability:G4/interaction-ink",
+  "checks": {
+    "single_current_authority_for_scope_and_kind": true,
+    "superseded_authority_preserved": true,
+    "supersession_edge_resolves": true,
+    "replacement_dependency_resolves": true,
+    "historical_gate_and_integration_occurrences_rewritten": false
+  },
+  "state_cache": {
+    "path": ".aegis/state.json",
+    "modified": false,
+    "reason": "No repository-local deterministic tools.aegis_state recomputation entry point is present. state.json is a generated cache and is not manually guessed during authority supersession.",
+    "required_followup": "Recompute and compare state.json when the deterministic Project State tool is available or during the v0.4 package materialization workflow."
+  },
+  "support_conclusion": "Authority manifest supersession is structurally valid; generated state cache refresh remains downstream support work and does not alter the P23 decision."
+}

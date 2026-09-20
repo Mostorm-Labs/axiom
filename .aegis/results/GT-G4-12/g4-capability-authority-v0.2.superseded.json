@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "authority_id": "g4-capability-authority",
+  "scope": "capability:G4/interaction-ink",
+  "version": "v0.2",
+  "status": "Superseded",
+  "superseded_by": "g4-capability-authority-v0.3",
+  "supersession_reason": "The current completion profile is reduced to three-platform functional integration; pressure-qualified and capture-bound physical latency work is explicitly deferred to a successor capability.",
+  "historical_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+  "historical_content": {
+    "owner": "G4",
+    "objective": "interaction and ink production vertical slice with Ink Playground 0.1",
+    "canonical_truth": "SemanticDocument",
+    "canonical_mutation_path": "G1 Operation Engine",
+    "owns": ["InteractionRuntime", "EditorSession", "InteractionSessionManager", "InputRouter", "InkEngine", "PreviewModel", "CanonicalVisible_handoff", "Selection", "TransformSession", "EraserSession_V1", "EditorHistory", "Ink_Playground_0.1"],
+    "source_basis": ["notion://3c84c57a-590c-8112-8f21-c0494d187cdb", "git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "repo:.aegis/results/GT-G3-11/g3-gate-report.json"]
+  },
+  "evidence_status_preserved": true
+}

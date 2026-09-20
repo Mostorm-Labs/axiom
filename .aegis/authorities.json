@@ -88,8 +88,9 @@
       "scope": "capability:G4/interaction-ink",
       "kind": "capability",
       "version": "v0.2",
-      "status": "Current",
+      "status": "Superseded",
       "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+      "superseded_by": "g4-capability-authority-v0.3",
       "depends_on": ["g3-capability-authority"],
       "content": {
         "owner": "G4",
@@ -99,6 +100,29 @@
         "owns": ["InteractionRuntime", "EditorSession", "InteractionSessionManager", "InputRouter", "InkEngine", "PreviewModel", "CanonicalVisible_handoff", "Selection", "TransformSession", "EraserSession_V1", "EditorHistory", "Ink_Playground_0.1"],
         "forbidden": ["duplicate_canonical_write_path", "SemanticWritePort_from_interaction", "POC02_StrokeDocument_as_production_authority", "G5_tile_render_group_raster_cache_scheduler", "G6_rich_text_ime_external_surface", "invent_open_conflict_rebase_semantics", "invent_partial_erase_strategy", "invent_arc_token_binary_representation"],
         "source_basis": ["notion://3c84c57a-590c-8112-8f21-c0494d187cdb", "git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "repo:.aegis/results/GT-G3-11/g3-gate-report.json"]
+      },
+      "supersession_record": ".aegis/results/GT-G4-12/authority-supersession-v0.3.json"
+    },
+    {
+      "id": "g4-capability-authority-v0.3",
+      "scope": "capability:G4/interaction-ink",
+      "kind": "capability",
+      "version": "v0.3",
+      "status": "Current",
+      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "depends_on": ["g3-capability-authority"],
+      "supersedes": "g4-capability-authority",
+      "change_class": "semantic",
+      "content": {
+        "owner": "G4",
+        "objective": "three-platform functional interaction and ink integration completion with Ink Playground 0.1",
+        "current_completion_profile": ["PASS_WEB_BROWSER_SMOKE", "PASS_WINDOWS_FUNCTIONAL_SMOKE", "PASS_ANDROID_FUNCTIONAL_SMOKE"],
+        "deferred_successor": "pressure-qualified pen evidence and capture-bound physical latency",
+        "canonical_truth": "SemanticDocument",
+        "canonical_mutation_path": "G1 Operation Engine",
+        "production_semantics_change": false,
+        "forbidden": ["synthetic_or_non_pressure_input_presented_as_pressure_evidence", "PASS_PHYSICAL_from_functional_smoke_only", "G5_tile_render_group_raster_cache_scheduler", "G6_rich_text_ime_external_surface"],
+        "source_basis": ["repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json", "user-confirmed:defer-pressure-and-accept-three-platform-functional-evidence"]
       }
     }
   ]

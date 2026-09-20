@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "stage": "P23_AUTHORITY_SUPERSESSION",
+  "review_surface": "CONTROL_REASONING",
+  "decision_id": "gt-g4-12-p23-functional-completion-v0.3",
+  "previous_authority": {
+    "id": "g4-capability-authority",
+    "version": "v0.2",
+    "status": "Superseded",
+    "source_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+    "replacement_record": ".aegis/results/GT-G4-12/g4-capability-authority-v0.2.superseded.json"
+  },
+  "replacement_authority": {
+    "id": "g4-capability-authority-v0.3",
+    "version": "v0.3",
+    "status": "Current",
+    "change_class": "semantic",
+    "record": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json"
+  },
+  "supersession_reason": "The product owner selected three-platform functional integration as the current G4 completion profile and explicitly deferred pressure-qualified and capture-bound physical latency work to a later product capability expansion.",
+  "five_axis_drift_review": {
+    "product": "SCOPE_REDUCED_WITH_EXPLICIT_SUCCESSOR",
+    "semantic": "NO_DRIFT",
+    "architecture": "NO_DRIFT",
+    "implementation": "NO_DRIFT",
+    "verification": "AMENDMENT_REQUIRED"
+  },
+  "preserved_history": [
+    ".aegis/packages/GT-G4-12/package-v0.2.json",
+    ".aegis/packages/GT-G4-12/package-v0.3.json",
+    ".aegis/results/GT-G4-12/verification-amendment-v0.2.json",
+    ".aegis/results/GT-G4-12/verification-amendment-v0.3-android.json",
+    ".aegis/results/GT-G4-12/windows-pressure-evidence.json",
+    ".aegis/results/GT-G4-12/android-pressure-evidence.json",
+    ".aegis/results/GT-G4-12/physical-evidence.json"
+  ],
+  "downstream_effect": {
+    "required": [
+      "Independent CONTROL_REVIEW of this supersession and verification amendment",
+      "Materialize GT-G4-12-P31-v0.4 against the accepted authority",
+      "Run a new completion review against all three functional platform evidence records"
+    ],
+    "forbidden": [
+      "Reuse GT-G4-12-P31-v0.3 as if its pressure requirement changed in place",
+      "Declare G4 PASS before v0.4 package review",
+      "Declare pressure or complete physical PASS"
+    ]
+  },
+  "decision": "AUTHORITY_SUPERSEDED_AND_PROMOTED",
+  "next_surface": "CONTROL_REVIEW"
+}
