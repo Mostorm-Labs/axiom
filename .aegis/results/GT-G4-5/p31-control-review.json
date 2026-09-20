@@ -4,9 +4,9 @@
   "stage": "P31_CONTROL_REVIEW",
   "review_surface": "CONTROL_REVIEW",
   "reviewer_role": "aegis-gate-review",
-  "package_id": "GT-G4-5-P31-v0.1",
+  "package_id": "GT-G4-5-P31-v0.2",
   "package_path": ".aegis/packages/GT-G4-5/package.json",
-  "package_materialization_ref": "9bede8eea5fef2eaf0afc8e485b2011249790dc4",
+  "package_materialization_ref": "PENDING_V0_2_REVIEW_MATERIALIZATION",
   "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
   "frozen_requirement_audit": {
     "status": "PASS",
@@ -25,6 +25,7 @@
       "all eleven verification obligations contain an explicit requirement, independent oracle, acceptance rule and required evidence",
       "deterministic, negative, structural, visual-golden, regression and zero-canonical-mutation proof paths are frozen",
       "Windows, Web and Android qualification readiness is blocking for automated closure",
+      "the repaired package narrowly authorizes the previously omitted hosted qualification producer and its static contract test",
       "device physical evidence is non-blocking for G4.5-00 through G4.5-09 and blocking only at G4.5-10",
       "unsupported pressure or tilt is recorded as NOT_APPLICABLE or NOT_EXERCISED and cannot be promoted to PASS"
     ],

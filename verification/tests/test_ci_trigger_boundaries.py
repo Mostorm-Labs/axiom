@@ -148,6 +148,7 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertIn("macos-15", workflow)
         self.assertIn("AXIOM_BUILD_BRUSH_LAB=ON", workflow)
         self.assertIn("tools/setup_build_environment.py --core", workflow)
+        self.assertIn('"ndk;27.2.12479018"', workflow)
         self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
         self.assertNotIn("tools/skia/build.py", workflow)
         self.assertIn("actions/upload-artifact@v4", workflow)

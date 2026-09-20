@@ -124,6 +124,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install locked Android NDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018"
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
       - name: Resolve locked core dependencies
         run: python3 tools/setup_build_environment.py --core --facts-output out/g4-5-android-environment.json --status
       - name: Configure, build and materialize qualification bundle
