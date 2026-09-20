@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G4-5-P31-v0.1",
+  "package_id": "GT-G4-5-P31-v0.2",
   "task_id": "GT-G4-5",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "Programmable brush system foundation through deterministic automated closure and unified physical-qualification readiness",
@@ -28,11 +28,11 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "105159bcdce0c14bf4e0e0708b8f40e9269e5b0e259255535b68bf272cc9719d"
+    "sha256": "9b0dbd6dc67517b92b52b3cb9bd737e0033d78470a83a3255980e8d69772f101"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "21d19738684c35969c30a87f11e87628639f9b044fcd0edde57ad4060db81b2c"
+    "sha256": "b1b1dbfc37e8733fc424450b1f64b70782efed978a35e2d717379bd4ad8b3a24"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -44,7 +44,7 @@
     "base_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
     "binding": "exact pushed repository revision on codex/g4-5-programmable-brush descended from the G4.4 main merge"
   },
-  "supersedes": null,
+  "supersedes": "GT-G4-5-P31-v0.1",
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",

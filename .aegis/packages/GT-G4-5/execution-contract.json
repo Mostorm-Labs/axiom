@@ -6,7 +6,8 @@
       "required_changes": [
         "Complete G4.5-00 authority and repository reconciliation",
         "Implement G4.5-01 through G4.5-09 programmable-brush automated closure",
-        "Produce qualification builds and evidence bundles for the unified G4.5-10 physical checkpoint"
+        "Produce qualification builds and evidence bundles for the unified G4.5-10 physical checkpoint",
+        "Provide one narrow hosted G4.5 qualification workflow because no existing Windows workflow can build the Brush Lab target from an arbitrary exact revision"
       ],
       "authorized_mutation_scope": [
         "runtime/ink/**",
@@ -17,6 +18,8 @@
         "verification/corpus/brush/g4_5/**",
         "tests/** only for G4.5 and regression coverage",
         "CMakeLists.txt and relevant nested CMakeLists.txt",
+        ".github/workflows/g4-5-programmable-brush.yml only for the frozen cross-platform qualification lane",
+        "verification/tests/test_ci_trigger_boundaries.py only for the G4.5 workflow routing and consumer-policy contract",
         ".aegis/packages/GT-G4-5/**",
         ".aegis/results/GT-G4-5/**"
       ],

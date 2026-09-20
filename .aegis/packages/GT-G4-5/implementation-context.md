@@ -50,3 +50,14 @@ Use the locked published Semantic SDK and Skia SDK. Resolve them through reposit
 ## Physical-validation cadence
 
 Do not interrupt G4.5-00 through G4.5-09 for repeated device checkpoints. Produce complete qualification builds and manifests, then execute the unified G4.5-10 checkpoint. Pressure and tilt checks apply only to device profiles that actually support them; otherwise record `NOT_APPLICABLE` or `NOT_EXERCISED` without claiming that capability passed.
+
+## P31 v0.2 package repair
+
+P31 v0.1 froze Windows, Web and Android qualification builds as blocking for
+G4.5-09, but omitted the workflow mutation needed to obtain a Windows build.
+The repository has Windows runners, but every existing lane is hard-wired to a
+different product target and cannot build Brush Lab at an arbitrary exact
+revision. P31 v0.2 preserves all completed implementation and adds only a
+narrow G4.5 hosted qualification workflow plus its static routing/consumer
+contract test. It does not authorize changes to shared CI orchestration or to
+any dependency lock.

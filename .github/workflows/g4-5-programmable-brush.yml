@@ -1,0 +1,154 @@
+name: G4.5 Programmable Brush Qualification
+
+on:
+  pull_request:
+    paths:
+      - "runtime/ink/**"
+      - "runtime/foundation/**"
+      - "runtime/input/**"
+      - "apps/brush_lab/**"
+      - "arc/**"
+      - "verification/corpus/brush/g4_5/**"
+      - ".aegis/packages/GT-G4-5/**"
+      - ".github/workflows/g4-5-programmable-brush.yml"
+      - "CMakeLists.txt"
+  workflow_dispatch:
+
+concurrency:
+  group: g4-5-programmable-brush-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: qualification/windows-x64
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Resolve locked core dependencies and LLVM
+        shell: pwsh
+        run: |
+          python tools/setup_build_environment.py --core --facts-output out/g4-5-windows-environment.json --status
+          python tools/bootstrap_deps.py --windows-llvm
+          $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
+          $installDir = Join-Path $PWD ".deps/llvm"
+          Start-Process $installer -ArgumentList "/S", "/D=$installDir" -Wait
+          (Join-Path $installDir "bin") | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Configure, build, test and materialize qualification bundle
+        shell: pwsh
+        run: |
+          cmake -S . -B out/g4-5-windows -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
+            -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
+            -DCANVAS_BUILD_POC01=OFF `
+            -DCANVAS_BUILD_RF01=OFF `
+            -DCANVAS_BUILD_RENDER=OFF `
+            -DAXIOM_BUILD_BRUSH_LAB=ON `
+            -DBUILD_TESTING=ON
+          cmake --build out/g4-5-windows --parallel
+          ctest --test-dir out/g4-5-windows -R "^(G4|G45)" --output-on-failure
+          New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
+          & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
+          Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-environment.json out/g4-5-windows-qualification/build-environment.json
+          $sha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
+          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $sha } |
+            ConvertTo-Json | Set-Content -Encoding utf8NoBOM out/g4-5-windows-qualification/identity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-5-windows-x64-${{ github.event.pull_request.head.sha || github.sha }}
+          path: out/g4-5-windows-qualification
+          if-no-files-found: error
+          retention-days: 30
+
+  web:
+    name: qualification/web-wasm32
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve locked core and Web toolchains
+        run: |
+          python3 tools/setup_build_environment.py --core --facts-output out/g4-5-web-environment.json --status
+          python3 tools/bootstrap_deps.py --web
+      - name: Configure, build and materialize qualification bundle
+        shell: bash
+        run: |
+          source .deps/emsdk/emsdk_env.sh
+          emcmake cmake -S . -B out/g4-5-web -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_RF01=OFF \
+            -DCANVAS_BUILD_RENDER=OFF \
+            -DAXIOM_BUILD_BRUSH_LAB=ON \
+            -DBUILD_TESTING=ON
+          cmake --build out/g4-5-web --parallel
+          mkdir -p out/g4-5-web-qualification
+          node out/g4-5-web/apps/brush_lab/axiom_brush_lab.js out/g4-5-web-qualification
+          cp out/g4-5-web/apps/brush_lab/axiom_brush_lab.js out/g4-5-web-qualification/
+          cp out/g4-5-web/apps/brush_lab/axiom_brush_lab.wasm out/g4-5-web-qualification/
+          cp out/g4-5-web-environment.json out/g4-5-web-qualification/build-environment.json
+          js_sha=$(shasum -a 256 out/g4-5-web-qualification/axiom_brush_lab.js | awk '{print $1}')
+          wasm_sha=$(shasum -a 256 out/g4-5-web-qualification/axiom_brush_lab.wasm | awk '{print $1}')
+          printf '{"source_revision":"%s","profile":"web-wasm32","js_sha256":"%s","wasm_sha256":"%s"}\n' \
+            "$(git rev-parse HEAD)" "$js_sha" "$wasm_sha" > out/g4-5-web-qualification/identity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-5-web-wasm32-${{ github.event.pull_request.head.sha || github.sha }}
+          path: out/g4-5-web-qualification
+          if-no-files-found: error
+          retention-days: 30
+
+  android:
+    name: qualification/android-arm64-v8a
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve locked core dependencies
+        run: python3 tools/setup_build_environment.py --core --facts-output out/g4-5-android-environment.json --status
+      - name: Configure, build and materialize qualification bundle
+        shell: bash
+        run: |
+          cmake -S . -B out/g4-5-android -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-26 \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_RF01=OFF \
+            -DCANVAS_BUILD_RENDER=OFF \
+            -DAXIOM_BUILD_BRUSH_LAB=ON \
+            -DBUILD_TESTING=OFF
+          cmake --build out/g4-5-android --parallel
+          mkdir -p out/g4-5-android-qualification
+          cp out/g4-5-android/apps/brush_lab/axiom_brush_lab out/g4-5-android-qualification/
+          cp out/g4-5-android-environment.json out/g4-5-android-qualification/build-environment.json
+          exe_sha=$(sha256sum out/g4-5-android-qualification/axiom_brush_lab | awk '{print $1}')
+          printf '{"source_revision":"%s","profile":"android-arm64-v8a","executable_sha256":"%s"}\n' \
+            "$(git rev-parse HEAD)" "$exe_sha" > out/g4-5-android-qualification/identity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-5-android-arm64-v8a-${{ github.event.pull_request.head.sha || github.sha }}
+          path: out/g4-5-android-qualification
+          if-no-files-found: error
+          retention-days: 30
