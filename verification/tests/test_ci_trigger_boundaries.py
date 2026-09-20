@@ -147,6 +147,8 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertIn("ubuntu-24.04", workflow)
         self.assertIn("macos-15", workflow)
         self.assertIn("AXIOM_BUILD_BRUSH_LAB=ON", workflow)
+        web_job = workflow.split("  web:", 1)[1].split("\n  android:", 1)[0]
+        self.assertIn("BUILD_TESTING=OFF", web_job)
         self.assertIn("tools/setup_build_environment.py --core", workflow)
         self.assertIn('"ndk;27.2.12479018"', workflow)
         self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)

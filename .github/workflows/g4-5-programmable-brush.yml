@@ -96,7 +96,7 @@ jobs:
             -DCANVAS_BUILD_RF01=OFF \
             -DCANVAS_BUILD_RENDER=OFF \
             -DAXIOM_BUILD_BRUSH_LAB=ON \
-            -DBUILD_TESTING=ON
+            -DBUILD_TESTING=OFF
           cmake --build out/g4-5-web --parallel
           mkdir -p out/g4-5-web-qualification
           node out/g4-5-web/apps/brush_lab/axiom_brush_lab.js out/g4-5-web-qualification
