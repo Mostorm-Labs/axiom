@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P31_PREFLIGHT",
+  "package_binding_preflight": "PASS",
+  "evidence_contract_preflight": "PASS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "anchor_relation": "ancestor",
+    "anchor_ancestry_verified": true
+  },
+  "package_refs": {
+    "authority_lock_ref": "78d313a5aaf1ec033d30dc0a0ead2de451912c7d0b76aa7c739dc6d703d07101",
+    "verification_lock_ref": "9c6b65f376f0a29a28a5a44a7e3890a17c6cf571232bb186c240c925c973fd51",
+    "execution_contract_ref": "ca0d3b110d1948605d8b9a29029561146b65611f492cdacb2ac83f39967d5040",
+    "implementation_context_ref": "8dbc4f0dbd7c7abc1b473fb99eabc95493a027798fc67c0798c1f4812ac66c75",
+    "evidence_contract_ref": "87b785dc5466d26be56fc946de4c6fe01eb1767cb75cf438ddb6639bb2c6b229",
+    "all_hashes_match": true
+  },
+  "frozen_defaults": {
+    "multi_contact_policy": "AutoIntent"
+  },
+  "executable": true,
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "next_action": "Promote package to CURRENT_EXECUTABLE and issue P32 Codex handoff.",
+  "official_gate_pass_claimed": false
+}
