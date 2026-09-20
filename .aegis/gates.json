@@ -303,6 +303,22 @@
       "decision": {"id":"gt-g4-11-p34-2026-09-19","verdict":"PASS","authority_ref":"g4-capability-authority","result_revision":"b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7","reviewed_branch_head":"b0e70b32","official_pass_claimed":true,"review_ref":"repo:.aegis/results/GT-G4-11/p34-control-review.json"},
       "evidence_ids": ["ev-gt-g4-11-p34"],
       "findings": []
+    },
+    {
+      "id": "gt-g4-12",
+      "scope": "G4/WP-G4-12",
+      "status": "CLOSED",
+      "decision": {"id":"gt-g4-12-p34-2026-09-20","verdict":"PASS_WITH_FINDINGS","authority_ref":"g4-capability-authority-v0.3","result_revision":"50a1d864ad72375f42404dcec8ff0226ec70cde8","integration_revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc","official_pass_claimed":true,"review_ref":"repo:.aegis/results/GT-G4-12/p34-control-review-v0.4.json"},
+      "evidence_ids": ["ev-gt-g4-12-p34"],
+      "findings": ["PRESSURE_AND_PHYSICAL_DEFERRED","RENDER_COVERAGE_MANIFEST_DEFERRED"]
+    },
+    {
+      "id": "g4-completion",
+      "scope": "G4",
+      "status": "CLOSED_WITH_FINDINGS",
+      "decision": {"id":"g4-completion-2026-09-20","verdict":"PASS_WITH_FINDINGS","authority_ref":"g4-capability-authority-v0.3","result_revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc","official_pass_claimed":true,"source_report":"repo:.aegis/results/GT-G4-13/g4-gate-report.json","accepted_capability":"PASS_G4_FUNCTIONAL_INTEGRATION","physical_pass":false,"pressure_pass":false},
+      "evidence_ids": ["ev-g4-completion"],
+      "findings": ["pressure-qualified pen evidence deferred","capture-bound physical latency deferred","formal Render-owned coverage manifest deferred"]
     }
   ]
 }

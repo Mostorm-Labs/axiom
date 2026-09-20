@@ -1,0 +1,14 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-13",
+  "stage":"P34_CONTROL_REVIEW",
+  "review_surface":"CONTROL_REVIEW",
+  "reviewer_role":"aegis-gate-review",
+  "package_id":"GT-G4-13-P31-v0.1",
+  "package_materialization_ref":"1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
+  "reviewed_revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc",
+  "frozen_requirement_audit":{"status":"PASS","passed":["All twelve G4 work packages are enumerated with durable accepted Gate decisions.","G4-12 is bound to the exact merged main revision 0a1e074013521fe42a9430bfe707af5a4705d7bc.","The current profile requires functional Web, Windows and Android evidence plus approved Windows Arc human-visual qualification.","Pressure, capture-bound physical latency and coverage-manifest hardening are explicitly deferred by current authority."],"failed":[]},
+  "frozen_evidence_audit":{"status":"PASS_WITH_FINDINGS","resolved":["PASS_WEB_BROWSER_SMOKE","PASS_WINDOWS_FUNCTIONAL_SMOKE","PASS_ANDROID_FUNCTIONAL_SMOKE","PASS_WINDOWS_ARC_FUNCTIONAL_QUALIFICATION_WITH_FINDINGS"],"findings":["pressure-qualified pen evidence deferred","capture-bound physical latency deferred","formal Render-owned coverage manifest deferred"],"failed":[]},
+  "repository_reality_audit":{"status":"PASS","checks":["main integration revision resolves to 0a1e074013521fe42a9430bfe707af5a4705d7bc","GT-G4-13 P31 locks and authority source hash recompute","repository-integrity.json records exact input hashes","git diff --check passes","mutation scope contains only GT-G4-13 control artifacts and Aegis manifests"],"failed":[]},
+  "decision":{"verdict":"PASS_WITH_FINDINGS","official_gate_pass":true,"accepted_capability":"PASS_G4_FUNCTIONAL_INTEGRATION","physical_pass":false,"pressure_pass":false,"g4_pass_scope":"functional integration only","next_stage":"G4_SUCCESSOR_ROUTING","forbidden_conclusions":["PASS_WINDOWS_PRESSURE","PASS_ANDROID_PRESSURE","PASS_PHYSICAL","G4 physical ink completion"]}
+}
