@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-05-WIN-ARC-PREVIEW",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "implementation_revision": "2d18eacbff3b8732dbf4f44741a23c3ee6d93070",
+  "execution_branch": "codex/g4-05-win-arc-preview",
+  "platform": "windows-x64",
+  "environment": {
+    "windows": "Windows 10 10.0.19045",
+    "compiler": "clang-cl from repository .deps/llvm with VS 2026 x64 developer environment",
+    "skia": "locked windows-x64-d3d12 release SDK"
+  },
+  "behavioral_observation": {
+    "preview_only": "transient light-blue Arc layered preview visible during input",
+    "overlap": "canonical dark-blue stroke remains while matching handoff is pending",
+    "canonical_only": "light-blue Arc layer disappears after canonical presentation and matching CanonicalVisible(token)",
+    "window_activation": "host window remains restored and responsive after preview release",
+    "space_key": "toggles runtime debug mirror only; does not release Arc preview"
+  },
+  "root_cause_repaired": [
+    "PresentationTracker used stale 1x1 metrics after the real HWND was bound, rejecting canonical presentation as kMetricsMismatch and accumulating pending handoffs.",
+    "Fallback cleanup did not notify the Windows primary backend, and empty Arc layers could retain compositor pixels.",
+    "Windows release path now hides the transient layer without moving or destroying the host window."
+  ],
+  "tests": {
+    "build": "PASS",
+    "ctest_filter": "arc_core_tests|arc_windows_preview_backend_tests|G3HeadlessSkia|G3SurfacePresentation|G4CanonicalHandoff|G4InkPlayground",
+    "ctest": "12/12 passed",
+    "git_diff_check": "PASS"
+  },
+  "limitations": [
+    "Windows 10 local functional qualification only",
+    "No pressure qualification",
+    "No official G4 or G4-12 Gate PASS claimed"
+  ],
+  "official_gate_pass": false
+}
