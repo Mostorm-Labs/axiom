@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "task_id": "GT-G4-4",
   "stage": "G4.4-11_GATE_CLOSURE",
-  "status": "READY_FOR_FINAL_CONTROL_REVIEW",
+  "status": "PASS_G4_4",
   "execution_branch": "codex/g4-4-multipointer",
   "implementation_revision": "59ceca85aa1292ef99416ffe0b46e6ba6ebff3eb",
   "package_id": "GT-G4-4-P31-v0.2",
@@ -21,14 +21,15 @@
   "qualification_bundle": ".aegis/results/GT-G4-4/qualification-bundle-manifest.json",
   "physical_qualification": {
     "stage": "G4.4-11",
-    "status": "READY_FOR_FINAL_CONTROL_REVIEW",
+    "status": "PASS_CAPABILITY_PROFILED_PHYSICAL_QUALIFICATION",
     "available_profiles": ["Windows mouse", "Android multitouch with exact APK and reviewer-accessible artifacts"],
     "capability_dependent": ["pen", "pressure", "pen plus palm", "Windows touch-frame"],
     "current_automated_blocker": false,
     "required_for_final_g4_4_pass": true,
     "evidence": ".aegis/results/GT-G4-4/g4-4-11-physical-qualification.json"
   },
-  "official_g4_4_pass_claimed": false,
+  "gate_review": ".aegis/results/GT-G4-4/g4-4-11-gate-review.json",
+  "official_g4_4_pass_claimed": true,
   "official_g4_pass_claimed": false,
   "return_surface": "CONTROL_REVIEW"
 }
