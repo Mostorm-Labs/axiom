@@ -49,6 +49,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
   std::uint64_t previewRevision = 0;
   std::vector<arc_preview_primitive_v0> previewPoints;
+  bool previewInputActive = false;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
   std::vector<PendingHandoff> pendingHandoffs;
   std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
@@ -60,6 +61,7 @@ void beginArcPreview(State& value) {
   if (value.previewBridge == nullptr) return;
   value.previewRevision = 0;
   value.previewPoints.clear();
+  value.previewInputActive = true;
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = value.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
@@ -91,6 +93,7 @@ void commitArcHandoff(State& value) {
   arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, value.stroke, revision,
                                  value.stroke, value.previewGeneration, {1, value.stroke}};
   if (value.previewBridge->CanonicalCommitted(commit) != arc::Status::kOk) return;
+  value.previewInputActive = false;
   value.pendingHandoffs.push_back({value.stroke, revision});
   value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
 }
@@ -212,9 +215,14 @@ void paint(HWND window, State& value) {
   SetTextColor(bufferDc, RGB(30, 30, 30));
   const auto& hud = value.host->hud();
   std::wstringstream status;
+  const wchar_t* qualificationState = value.previewInputActive
+                                          ? L"PREVIEW_ONLY"
+                                          : (!value.pendingHandoffs.empty() ? L"OVERLAP"
+                                                                            : L"CANONICAL_ONLY");
   status << L"Axiom Ink Playground | HWND ready | WM_POINTER enabled | samples: "
          << value.trace.size() << L" | batch: " << hud.batch
          << L" | pending: " << value.pendingHandoffs.size()
+         << L" | state: " << qualificationState
          << L" | SPACE = CanonicalVisible";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
@@ -348,6 +356,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
+    if (value != nullptr) { acknowledgeCanonicalVisible(*value); InvalidateRect(window, nullptr, FALSE); }
+    return 0;
+  }
+  if (message == WM_CHAR && wParam == L' ') {
     if (value != nullptr) { acknowledgeCanonicalVisible(*value); InvalidateRect(window, nullptr, FALSE); }
     return 0;
   }

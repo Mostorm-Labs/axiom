@@ -149,7 +149,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
     SelectObject(mem, old); DeleteObject(bm); DeleteDC(mem); ReleaseDC(nullptr, screen); return ok != FALSE;
   }
   static void draw(HDC dc, const std::vector<arc_preview_primitive_v0>& p) {
-    if (p.empty()) return; HPEN pen = CreatePen(PS_SOLID, 3, RGB(25, 85, 220)); HGDIOBJ old = SelectObject(dc, pen);
+    if (p.empty()) return; HPEN pen = CreatePen(PS_SOLID, 8, RGB(40, 190, 235)); HGDIOBJ old = SelectObject(dc, pen);
     POINT prev{}; bool have = false; for (const auto& v : p) { POINT cur{(LONG)v.x, (LONG)v.y};
       if (have) { MoveToEx(dc, prev.x, prev.y, nullptr); LineTo(dc, cur.x, cur.y); }
       prev = cur; have = true; } SelectObject(dc, old); DeleteObject(pen);
