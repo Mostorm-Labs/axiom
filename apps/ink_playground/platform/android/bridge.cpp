@@ -1,17 +1,21 @@
 #include "ink_playground_host.hpp"
 #include "arc/arc.hpp"
+#include "canvas/input/active_pointer_registry.hpp"
 
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <unordered_map>
 
 namespace {
 using canvas::ink_playground::InkPlaygroundHost;
 
 class AndroidSink final : public arc::PointerSampleSink {
  public:
-  explicit AndroidSink(InkPlaygroundHost& host) : host_(host) {}
+  AndroidSink(InkPlaygroundHost& host,
+              const std::unordered_map<std::uint64_t, canvas::input::PointerKey>& activeKeys)
+      : host_(host), activeKeys_(activeKeys) {}
   arc::Status Push(const arc_pointer_sample_batch_v0& batch) override {
     canvas::input::PointerSampleBatch samples;
     samples.samples.reserve(batch.sample_count);
@@ -19,9 +23,12 @@ class AndroidSink final : public arc::PointerSampleSink {
     for (std::uint32_t i = 0; i < batch.sample_count; ++i) {
       const auto* sample = reinterpret_cast<const arc_pointer_sample_v0*>(raw +
           static_cast<std::size_t>(i) * batch.sample_stride);
+      const auto key = activeKeys_.find(sample->pointer_id);
+      if (key == activeKeys_.end()) return arc::Status::kInvalidState;
       samples.samples.push_back({sample->sample_sequence, sample->timestamp_us * 1000U,
                                  sample->x, sample->y, sample->pressure,
-                                 sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT});
+                                 sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT,
+                                 key->second});
     }
     const auto now = static_cast<std::uint64_t>(
         std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -31,6 +38,7 @@ class AndroidSink final : public arc::PointerSampleSink {
   void SourceLost(std::uint64_t, arc::Status) override { (void)host_.loseSurface(); }
  private:
   InkPlaygroundHost& host_;
+  const std::unordered_map<std::uint64_t, canvas::input::PointerKey>& activeKeys_;
 };
 
 struct AndroidHost final {
@@ -38,6 +46,9 @@ struct AndroidHost final {
   std::unique_ptr<arc::InputSource> input = arc::CreateAndroidInputSource();
   std::unique_ptr<AndroidSink> sink;
   std::uint64_t stroke = 0;
+  canvas::input::ActivePointerRegistry pointerRegistry;
+  std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
+  std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
 };
 AndroidHost* asHost(void* value) { return static_cast<AndroidHost*>(value); }
 
@@ -67,7 +78,7 @@ void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height) {
   if (width == 0U || height == 0U) return nullptr;
   auto value = std::make_unique<AndroidHost>();
   if (value->input == nullptr || !value->host->bindSurface(width, height)) return nullptr;
-  value->sink = std::make_unique<AndroidSink>(*value->host);
+  value->sink = std::make_unique<AndroidSink>(*value->host, value->activeKeys);
   if (value->input->Start(*value->sink) != arc::Status::kOk) return nullptr;
   return value.release();
 }
@@ -81,18 +92,37 @@ int axiom_ink_android_motion(void* handle, std::uint64_t pointerId,
                              float x, float y, float pressure, int down, int up) {
   auto* value = asHost(handle);
   if (value == nullptr || value->input == nullptr) return 0;
-  if (down != 0) { ++value->stroke; if (!value->host->beginStroke(value->stroke)) return 0; }
+  if (down != 0) {
+    const auto key = value->pointerRegistry.begin(1, pointerId);
+    if (!key.valid()) return 0;
+    value->activeKeys[pointerId] = key;
+    ++value->stroke;
+    value->pointerStrokes[pointerId] = value->stroke;
+    if (!value->host->beginStroke(key, value->stroke)) return 0;
+  }
   const auto phase = down != 0 ? ARC_POINTER_PHASE_DOWN : (up != 0 ? ARC_POINTER_PHASE_UP : ARC_POINTER_PHASE_MOVE);
   if (!submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure,
                     phase, ARC_INPUT_TOOL_PEN)) return 0;
-  if (up != 0 && !value->host->commitStroke(value->stroke, value->stroke)) return 0;
+  if (up != 0) {
+    const auto key = value->activeKeys.find(pointerId);
+    const auto stroke = value->pointerStrokes.find(pointerId);
+    if (key == value->activeKeys.end() || stroke == value->pointerStrokes.end() ||
+        !value->host->commitStroke(key->second, stroke->second, stroke->second)) return 0;
+    (void)value->pointerRegistry.end(key->second);
+    value->activeKeys.erase(key);
+    value->pointerStrokes.erase(stroke);
+  }
   return 1;
 }
-int axiom_ink_android_begin(void* handle, std::uint64_t strokeId) {
+int axiom_ink_android_begin(void* handle, std::uint64_t pointerId, std::uint64_t strokeId) {
   auto* value = asHost(handle);
   if (value == nullptr || strokeId == 0U) return 0;
+  const auto key = value->pointerRegistry.begin(1, pointerId);
+  if (!key.valid()) return 0;
+  value->activeKeys[pointerId] = key;
+  value->pointerStrokes[pointerId] = strokeId;
   value->stroke = strokeId;
-  return value->host->beginStroke(strokeId);
+  return value->host->beginStroke(key, strokeId);
 }
 int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
                             std::uint64_t sequence, std::uint64_t timestampNs,
@@ -104,9 +134,16 @@ int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
   return submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure,
                       arcPhase, tool);
 }
-int axiom_ink_android_commit(void* handle, std::uint64_t strokeId) {
+int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_t strokeId) {
   auto* value = asHost(handle);
-  return value != nullptr && value->host->commitStroke(strokeId, strokeId);
+  if (value == nullptr) return 0;
+  const auto key = value->activeKeys.find(pointerId);
+  if (key == value->activeKeys.end() ||
+      !value->host->commitStroke(key->second, strokeId, strokeId)) return 0;
+  (void)value->pointerRegistry.end(key->second);
+  value->activeKeys.erase(key);
+  value->pointerStrokes.erase(pointerId);
+  return 1;
 }
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height) {
   auto* value = asHost(handle); return value != nullptr && value->host->resizeSurface(width, height);
