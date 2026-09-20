@@ -49,6 +49,8 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
   std::uint64_t previewRevision = 0;
   std::vector<arc_preview_primitive_v0> previewPoints;
+  struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
+  std::vector<PendingHandoff> pendingHandoffs;
   std::uint64_t deviceId = 0; canvas::ink_playground::windows_input::PointerLifecycle lifecycle;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace; };
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
@@ -79,7 +81,7 @@ void pushArcPreview(State& value, float x, float y) {
   (void)value.previewBridge->Push(update);
 }
 
-void completeArcHandoff(State& value) {
+void commitArcHandoff(State& value) {
   if (value.previewBridge == nullptr) return;
   const auto revision = value.previewRevision;
   if (revision == 0) return;
@@ -89,14 +91,24 @@ void completeArcHandoff(State& value) {
   arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, value.stroke, revision,
                                  value.stroke, value.previewGeneration, {1, value.stroke}};
   if (value.previewBridge->CanonicalCommitted(commit) != arc::Status::kOk) return;
+  value.pendingHandoffs.push_back({value.stroke, revision});
+  value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
+}
+
+void acknowledgeCanonicalVisible(State& value) {
+  if (value.previewBridge == nullptr || value.pendingHandoffs.empty()) return;
+  for (const auto& pending : value.pendingHandoffs) {
   arc_canonical_visible_v0 visible{}; visible.struct_size = sizeof(visible);
-  visible.abi_version = ARC_ABI_VERSION; visible.stroke_id = value.stroke;
-  visible.document_revision = value.stroke; visible.target_generation = value.previewGeneration;
-  visible.handoff_token = commit.handoff_token;
+  visible.abi_version = ARC_ABI_VERSION; visible.stroke_id = pending.stroke;
+  visible.document_revision = pending.stroke; visible.target_generation = value.previewGeneration;
+  visible.handoff_token = {1, pending.stroke};
   visible.receipt.struct_size = sizeof(visible.receipt); visible.receipt.abi_version = ARC_ABI_VERSION;
   visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE; visible.receipt.status = ARC_STATUS_OK;
-  visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = value.stroke;
+  visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = pending.stroke;
   (void)value.previewBridge->CanonicalVisible(visible);
+  }
+  value.pendingHandoffs.clear();
+  value.host->recordPresentation("canonical-visible", 0, 0.0);
 }
 
 bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -156,7 +168,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   persistEvidence(value);
   if (event == PointerLifecycleEvent::kEnd) {
     if (!value.host->commitStroke(value.stroke, value.stroke)) return false;
-    completeArcHandoff(value);
+    commitArcHandoff(value);
     if (GetCapture() == window) ReleaseCapture();
   }
   InvalidateRect(window, nullptr, FALSE);
@@ -201,7 +213,9 @@ void paint(HWND window, State& value) {
   const auto& hud = value.host->hud();
   std::wstringstream status;
   status << L"Axiom Ink Playground | HWND ready | WM_POINTER enabled | samples: "
-         << value.trace.size() << L" | batch: " << hud.batch;
+         << value.trace.size() << L" | batch: " << hud.batch
+         << L" | pending: " << value.pendingHandoffs.size()
+         << L" | SPACE = CanonicalVisible";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
   for (const auto& points : value.host->canonicalStrokes()) {
@@ -329,10 +343,14 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (!samples.empty()) pushArcPreview(*value, samples.back().x, samples.back().y);
     persistEvidence(*value);
     if (phase == ARC_POINTER_PHASE_UP && !value->host->commitStroke(value->stroke, value->stroke)) return 0;
-    if (phase == ARC_POINTER_PHASE_UP) completeArcHandoff(*value);
+    if (phase == ARC_POINTER_PHASE_UP) commitArcHandoff(*value);
     InvalidateRect(window, nullptr, FALSE); return 0;
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
+  if (message == WM_KEYDOWN && wParam == VK_SPACE) {
+    if (value != nullptr) { acknowledgeCanonicalVisible(*value); InvalidateRect(window, nullptr, FALSE); }
+    return 0;
+  }
   if (message == WM_ERASEBKGND) return 1;
   if (message == WM_DESTROY) { if (value != nullptr && value->input != nullptr) value->input->Stop(); PostQuitMessage(0); return 0; }
   return DefWindowProcW(window, message, wParam, lParam);
