@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.3",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "reviewed_result_revision": "894939c9f53a38c2b6b49fe4ae596d8cb042ea26",
+  "reviewed_evidence_revision": "9aa2c274f94d547dac2a17cfc6c690e487badd45",
+  "reviewed_branch": "codex/g4-12-ink-playground",
+  "reviewed_remote_revision": "9aa2c274f94d547dac2a17cfc6c690e487badd45",
+  "package_locks": {
+    "authority": "293cd4dce683568f354d08a77aa885e5f19faf1cdefbfa472f750da02ed9d488",
+    "verification": "a8f16e2cd31548dbdc37edbcf2738e175435426aa62cf0e36a4ffcd1c14d9104",
+    "execution_contract": "2e23b7589d6eefb5b4147fceb085c67855fee34854c78affca08587bac48fbcc",
+    "implementation_context": "e44986d28f5321ef55247b4bee1625f7426b2fb429a22c0a987ca35718031d27",
+    "evidence_contract": "b74200f54dc8775ffef8670d7701f414ba1030493421355cfb9bfca1de7bbd83"
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "Android API 26+ installable Activity and writable surface exist.",
+      "Touch is authorized for functional smoke and is not treated as pressure capability.",
+      "MotionEvent history, distinct stroke IDs, and monotonically increasing sequences are persisted.",
+      "Pressure is separately qualified and remains blocked without a real pressure stylus.",
+      "Forbidden runtime semantic/scene/render/interaction/ink paths were not changed by the Android implementation."
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS_WITH_FINDINGS",
+    "passed": [
+      "User confirmed first, second, and third strokes, independent stroke boundaries, and coordinate alignment.",
+      "Pixel 7 device identity, installed APK digest, launcher Activity, and native ELF digest are durable.",
+      "Device-produced trace has 1438 points across 28 distinct strokes with strictly monotonic sequences.",
+      "Device capture is durable at 1080x2400 and its SHA-256 matches the functional evidence and HUD summary.",
+      "Six G4 Ink Playground host tests pass; Android host contract and 16 KiB ELF checks pass.",
+      "Pressure evidence explicitly remains BLOCKED_ENVIRONMENT and no pressure or physical pass is claimed."
+    ],
+    "findings": [
+      {
+        "classification": "NON_BLOCKING_FINDING",
+        "id": "ANDROID_TRACE_CUMULATIVE_PROVENANCE",
+        "description": "The device trace is cumulative and contains earlier ADB diagnostic activity before the user session; individual manual samples are not cryptographically isolated.",
+        "alternate_coverage": "User observation plus final device capture independently cover repeated-stroke behavior, stroke isolation, and coordinate alignment; the trace still independently covers monotonic sequence and distinct stroke IDs.",
+        "successor_hardening": "Clear or session-tag the device trace before future physical sessions."
+      },
+      {
+        "classification": "NON_BLOCKING_FINDING",
+        "id": "ANDROID_DEBUG_APK_NON_REPRODUCIBLE_DIGEST",
+        "description": "A later offline debug rebuild succeeded but produced a different APK digest from the installed artifact.",
+        "alternate_coverage": "The reviewed APK was pulled byte-for-byte from the installed Pixel 7 package and is content-addressed in the durable evidence.",
+        "successor_hardening": "Define reproducible debug packaging or use a signed release artifact for future sessions."
+      }
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "passed": [
+      "Exact result revision is an ancestor of the reviewed evidence revision.",
+      "Reviewed evidence revision is pushed and matches origin/codex/g4-12-ink-playground.",
+      "Android implementation remains within apps/ink_playground/** and the authorized GT-G4-12 evidence/package boundary.",
+      "Fresh Android host contract, native build, six G4 tests, 16 KiB ELF check, and durable evidence consistency checks pass.",
+      "No synthetic ADB input is promoted to physical evidence and no runtime architecture contract is changed."
+    ],
+    "failed": []
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "accepted_capability": "PASS_ANDROID_FUNCTIONAL_SMOKE",
+    "pressure_status": "BLOCKED_ENVIRONMENT",
+    "physical_status": "BLOCKED_ENVIRONMENT",
+    "official_gate_pass": false,
+    "g4_12_pass": false,
+    "g4_pass": false,
+    "next_surface": "CONTROL_REVIEW",
+    "forbidden_conclusions": [
+      "PASS_ANDROID_PRESSURE",
+      "PASS_PHYSICAL",
+      "G4-12 PASS",
+      "G4 PASS"
+    ]
+  }
+}
