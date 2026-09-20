@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.4",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "task_id": "GT-G4-12",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Three-platform functional Ink Playground completion with integrated Windows Arc functional qualification",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom","canonical_branch":"main","execution_ref":"codex/g4-12-ink-playground"},
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {"revision":"bb8509ac78d646679f90da9ef0af1b92bca1ced0","relation":"ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "supersedes": "GT-G4-12-P31-v0.3",
+  "authority_lock_ref": {"path":"authority.lock-v0.4.json","sha256":"2e918ddbcd19ee76ce0e89b578f53910886a24759298c9106adc56b691de2b58"},
+  "verification_lock_ref": {"path":"verification.lock-v0.4.json","sha256":"0bc19332d3702b703ed3d1bc502713451b1b8bc11d4a9a42219897de135983c7"},
+  "execution_contract_ref": {"path":"execution-contract-v0.4.json","sha256":"ade4584fc4339b6841e6c817bc458d8d3dab4bfbd2a215a086abb21bf1ec5fb3"},
+  "implementation_context_ref": {"path":"implementation-context-v0.4.md","sha256":"797bb40cac0b6080d2ac0a845ea7441d0592b82f4ad3436c33715457020340d8"},
+  "evidence_contract_ref": {"path":"evidence-contract-v0.4.json","sha256":"ef8cd69e4bd37cf1ca5994eb2a9a877de970cf89b685180136087fc3564dde69"},
+  "materialization": {"same_repository":true,"path":".aegis/packages/GT-G4-12/","base_revision":"bb8509ac78d646679f90da9ef0af1b92bca1ced0"},
+  "upstream_integration": {"task_id":"GT-G4-05-WIN-ARC-PREVIEW","main_merge_revision":"bb8509ac78d646679f90da9ef0af1b92bca1ced0","accepted_result":"PASS_WINDOWS_ARC_FUNCTIONAL_QUALIFICATION_WITH_FINDINGS"},
+  "handoff": {"preferred_executor":"codex","next_surface":"CODE_EXECUTION","official_gate_pass_forbidden_during_p32":true,"next_action":"Reconcile exact v0.4 package locks and all three functional platform evidence records plus integrated Windows Arc qualification evidence."}
+}

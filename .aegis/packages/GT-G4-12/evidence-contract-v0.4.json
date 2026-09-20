@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.4",
+  "task_id": "GT-G4-12",
+  "package_id": "GT-G4-12-P31-v0.4",
+  "artifacts": [
+    {"id":"composition-evidence","path":".aegis/results/GT-G4-12/composition-evidence.json","blocking":true},
+    {"id":"platform-evidence","path":".aegis/results/GT-G4-12/platform-evidence.json","blocking":true},
+    {"id":"windows-functional-smoke","path":".aegis/results/GT-G4-12/windows-functional-smoke-evidence.json","blocking":true},
+    {"id":"android-functional-smoke","path":".aegis/results/GT-G4-12/android-functional-smoke-evidence.json","blocking":true},
+    {"id":"windows-arc-qualification","path":".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/windows-arc-handoff-evidence.json","blocking":true},
+    {"id":"windows-arc-control-review","path":".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/p34-control-review-v3.json","blocking":true},
+    {"id":"hud-evidence","path":".aegis/results/GT-G4-12/hud-evidence.json","blocking":true},
+    {"id":"pressure-successor-records","path":".aegis/results/GT-G4-12/windows-pressure-evidence.json","blocking":true}
+  ],
+  "review_boundary": "Exact pushed package revision, exact main anchor, and durable repository evidence",
+  "approved_profile": "three-platform functional integration plus Windows Arc human visual functional qualification",
+  "forbidden_claims": ["PASS_WINDOWS_PRESSURE", "PASS_ANDROID_PRESSURE", "PASS_PHYSICAL", "G4 physical ink completion"]
+}
