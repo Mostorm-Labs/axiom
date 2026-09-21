@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P36_FIX_REVERIFICATION",
+  "reviewed_base_revision": "a0aa7fba72dde31d79ec0086aa40872de7c3da51",
+  "implementation_revision": "6a2a6a4bc5fd4848e0c8014a8a1cd5d3ff0148c0",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "repairs": {
+    "android_pointer_zero_maps_to_valid_runtime_identity": "PASS",
+    "viewport_cancelled_pointer_sessions_are_released": "PASS",
+    "runtime_owned_scale_and_translation_drive_android_canvas": "PASS",
+    "post_zoom_ink_uses_inverse_viewport_transform": "PASS",
+    "second_contact_does_not_switch_runtime_coordinate_spaces": "PASS"
+  },
+  "red_green": {
+    "red": "G4ViewportGestureState rejected a post-zoom view-space sample because it was persisted without inverse viewport transformation",
+    "green": "G4ViewportGestureState and G4AndroidPointerIdentity pass after the runtime-owned transform and Android identity repairs"
+  },
+  "regression": {
+    "command": "ctest --preset g3-host-debug --output-on-failure",
+    "passed": 37,
+    "failed": 0,
+    "git_diff_check": "PASS"
+  },
+  "physical_evidence_ref": ".aegis/results/GT-G4-4-CORR-01/android-corrective-physical-verification.json",
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}
