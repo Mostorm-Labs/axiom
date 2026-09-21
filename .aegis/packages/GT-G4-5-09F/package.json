@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "package_id": "GT-G4-5-09F-P31-v0.1",
   "task_id": "GT-G4-5-09F",
-  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "Implement the G4.5-09F Reference Brush Fidelity + Windows ARC Sync Proof without reopening accepted G4.5-00 through G4.5-09 work.",
   "repository": {
     "provider": "github",
@@ -64,5 +64,12 @@
     "next_surface": "CODE_EXECUTION",
     "next_action": "Resolve and validate this repo-local P31 package, perform ImplementationDesignPreflight and test-first RED observation, then implement the complete 09F closure contract until READY_FOR_G4_5_10_PHYSICAL_VERIFICATION or an explicit terminal blocker.",
     "official_gate_pass_forbidden_during_p32": true
+  },
+  "preflight": {
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "authority_source_binding_preflight": "PASS",
+    "evidence_ref": ".aegis/results/GT-G4-5-09F/p31-preflight-v0.1.json",
+    "evidence_revision": "17ced57a2646c35698626761f9e7aa2251fb7430"
   }
 }
