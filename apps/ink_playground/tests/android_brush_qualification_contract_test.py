@@ -7,7 +7,7 @@ ACTIVITY = next((ROOT / "platform" / "android" / "app" / "src" / "main" / "java"
 BRIDGE = (ROOT / "platform" / "android" / "android_jni.cpp").read_text()
 NATIVE = (ROOT / "platform" / "android" / "bridge.cpp").read_text()
 JAVA_TEXT = JAVA.read_text()
-ACTIVITY_TEXT = ACTIVITY.read_text()
+ACTIVITY_TEXT = ACTIVITY.read_text(encoding="utf-8")
 
 
 assert "nativeBrushBegin" in JAVA_TEXT

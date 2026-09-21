@@ -3,6 +3,7 @@
 #include "arc/arc.hpp"
 #include "canvas/input/active_pointer_registry.hpp"
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/ink/reference_brush_catalog.hpp"
 #include "canvas/render/skia_ink_backend.hpp"
 
 #include <chrono>
@@ -55,8 +56,9 @@ struct AndroidHost final {
   std::unique_ptr<InkPlaygroundHost> host = std::make_unique<InkPlaygroundHost>();
   std::unique_ptr<arc::InputSource> input = arc::CreateAndroidInputSource();
   std::unique_ptr<AndroidSink> sink;
-  canvas::ink::ResourceCatalog brushResources;
-  canvas::ink::BrushRuntime brushRuntime{brushResources};
+  canvas::ink::ReferenceBrushCatalog brushCatalog =
+      canvas::ink::makeReferenceBrushCatalog();
+  canvas::ink::BrushRuntime brushRuntime{brushCatalog.resources};
   std::unordered_map<std::uint64_t, std::shared_ptr<const canvas::ink::BrushProgram>> brushPrograms;
   std::unordered_map<std::uint64_t, std::uint64_t> brushSessions;
   std::uint64_t brushStroke = 0;
@@ -77,7 +79,11 @@ struct AndroidHost final {
 };
 AndroidHost* asHost(void* value) { return static_cast<AndroidHost*>(value); }
 
-canvas::ink::BrushDefinition brushDefinition(std::uint64_t family) {
+canvas::ink::BrushDefinition brushDefinition(
+    const canvas::ink::ReferenceBrushCatalog& catalog, std::uint64_t family) {
+  if (family >= 1U && family <= 5U) {
+    return catalog.presets[family - 1U].definition;
+  }
   canvas::ink::BrushDefinition definition;
   definition.definitionId = family;
   definition.family = static_cast<canvas::ink::BrushFamily>(family);
@@ -93,7 +99,7 @@ canvas::ink::BrushDefinition brushDefinition(std::uint64_t family) {
 
 bool initializeBrushPrograms(AndroidHost& value) {
   for (std::uint64_t family = 1; family <= 7; ++family) {
-    const auto definition = brushDefinition(family);
+    const auto definition = brushDefinition(value.brushCatalog, family);
     const auto result = canvas::ink::BrushCompiler{}.compile(
         definition, canvas::ink::BrushCapabilityProfile{
             .pressure = false, .tilt = false, .shapeResource = true,
@@ -138,10 +144,6 @@ extern "C" {
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height) {
   if (width == 0U || height == 0U) return nullptr;
   auto value = std::make_unique<AndroidHost>();
-  for (std::uint64_t family = 2; family <= 5; ++family) {
-    value->brushResources.add({100U + family}, canvas::ink::BrushResourceKind::kShape);
-    value->brushResources.add({200U + family}, canvas::ink::BrushResourceKind::kGrain);
-  }
   if (!initializeBrushPrograms(*value)) return nullptr;
   if (value->input == nullptr || !value->host->bindSurface(width, height)) return nullptr;
 #if defined(CANVAS_RENDER_HAS_SKIA)

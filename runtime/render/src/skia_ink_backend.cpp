@@ -128,7 +128,11 @@ BackendSubmissionResult SkiaInkBackend::submitProgrammableDabs(
                       dab.size / static_cast<float>(dab.resourceHeight));
         SkPaint paint;
         paint.setAntiAlias(true);
-        paint.setColor(SK_ColorBLACK);
+        const auto color = dab.colorRgba;
+        paint.setColor(SkColorSetARGB((color >> 24U) & 0xffU,
+                                      (color >> 16U) & 0xffU,
+                                      (color >> 8U) & 0xffU,
+                                      color & 0xffU));
         paint.setAlphaf(dab.opacity);
         auto image = bitmap.asImage();
         canvas->drawImage(image,

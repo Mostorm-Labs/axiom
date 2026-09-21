@@ -30,6 +30,8 @@ struct ProgrammableDab final {
     std::uint32_t resourceWidth = 0;
     std::uint32_t resourceHeight = 0;
     std::span<const std::uint8_t> resourceAlpha{};
+    // Presentation color only; canonical brush semantics remain in the dab/resource data.
+    std::uint32_t colorRgba = 0xff000000U;
 };
 
 // Render Core's small Windows ink surface consumer. The immutable canonical

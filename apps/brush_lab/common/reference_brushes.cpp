@@ -1,102 +1,19 @@
 #include "reference_brushes.hpp"
 
-#include <sstream>
+#include "canvas/ink/reference_brush_catalog.hpp"
 
 namespace canvas::brush_lab {
-namespace {
-
-ink::BrushDefinition definition(std::uint64_t id, ink::BrushFamily family,
-                                float size, float opacity, float spacing,
-                                ink::ResourceId shape, ink::ResourceId grain) {
-  return {.definitionId = id,
-          .version = 2,
-          .family = family,
-          .nominalSize = size,
-          .opacity = opacity,
-          .spacing = spacing,
-          .pressureSizeInfluence = 0.55F,
-          .pressureOpacityInfluence = 0.2F,
-          .tiltSizeInfluence = 0.1F,
-          .tiltRotationInfluence = 0.1F,
-          .shapeResource = shape,
-          .grainResource = grain};
-}
-
-}  // namespace
-
 ReferenceBrushSet makeReferenceBrushSet() {
-  ReferenceBrushSet out;
-  const auto add = [&](ReferenceBrushId id, const char* name,
-                       ink::BrushDefinition value) {
-    out.presets.push_back({id, name, value});
-    out.resources.add(ink::makeProceduralShape(value.shapeResource, 16,
-                                                id == ReferenceBrushId::kDryChalk
-                                                    ? ink::BrushResourcePattern::kBristle
-                                                    : ink::BrushResourcePattern::kRound));
-    out.resources.add(ink::makeProceduralGrain(value.grainResource, 16,
-                                               id == ReferenceBrushId::kSoftAirbrush
-                                                   ? ink::BrushResourcePattern::kSpeckle
-                                                   : ink::BrushResourcePattern::kPaper));
-  };
-  add(ReferenceBrushId::kFineInk, "RB-01 Fine Ink",
-      definition(501, ink::BrushFamily::kPencil, 6.0F, 0.95F, 0.16F, {5011}, {5012}));
-  add(ReferenceBrushId::kPressureMarker, "RB-02 Pressure Marker",
-      definition(502, ink::BrushFamily::kMarker, 14.0F, 0.82F, 0.24F, {5021}, {5022}));
-  add(ReferenceBrushId::kDryChalk, "RB-03 Dry Chalk",
-      definition(503, ink::BrushFamily::kChalk, 12.0F, 0.72F, 0.3F, {5031}, {5032}));
-  add(ReferenceBrushId::kSoftAirbrush, "RB-04 Soft Airbrush",
-      definition(504, ink::BrushFamily::kWaterColorLite, 22.0F, 0.34F, 0.18F, {5041}, {5042}));
-  add(ReferenceBrushId::kDecorativeBroad, "RB-05 Decorative Broad",
-      definition(505, ink::BrushFamily::kMarker, 20.0F, 0.68F, 0.32F, {5051}, {5052}));
-  return out;
+  return ink::makeReferenceBrushCatalog();
 }
 
 std::string referenceBrushManifestJson() {
-  const auto set = makeReferenceBrushSet();
-  std::ostringstream out;
-  out << "{\"schema_version\":\"0.1\",\"brush_count\":5,\"brushes\":[";
-  for (std::size_t i = 0; i < set.presets.size(); ++i) {
-    const auto& preset = set.presets[i];
-    const auto program = compileReferenceBrush(preset, set.resources);
-    const auto resource = set.resources.renderResource(preset.definition.shapeResource,
-                                                       preset.definition.grainResource);
-    if (i != 0) out << ',';
-    out << "{\"id\":" << static_cast<unsigned>(preset.id)
-        << ",\"name\":\"" << preset.name << "\",\"program_identity\":"
-        << (program ? program.program->identity() : 0)
-        << ",\"shape_hash\":"
-        << (set.resources.resource(preset.definition.shapeResource)
-                ? set.resources.resource(preset.definition.shapeResource)->contentHash
-                : 0)
-        << ",\"grain_hash\":"
-        << (set.resources.resource(preset.definition.grainResource)
-                ? set.resources.resource(preset.definition.grainResource)->contentHash
-                : 0)
-        << ",\"render_resource_hash\":" << (resource ? resource->contentHash : 0)
-        << '}';
-  }
-  out << "]}";
-  return out.str();
+  return ink::referenceBrushCatalogManifestJson();
 }
 
-const ReferenceBrushPreset* ReferenceBrushSet::find(ReferenceBrushId id) const noexcept {
-  for (const auto& preset : presets) if (preset.id == id) return &preset;
-  return nullptr;
-}
-
-ink::BrushCompileResult compileReferenceBrush(
+ink::BrushCompileResult compileQualificationBrush(
     const ReferenceBrushPreset& preset, const ink::ResourceCatalog& resources) {
-  const auto compiled = ink::BrushCompiler{}.compile(
-      preset.definition, {.pressure = true, .tilt = true, .shapeResource = true,
-                          .grainResource = true, .temporalTransient = true});
-  if (!compiled) return compiled;
-  const auto* shape = resources.resource(preset.definition.shapeResource);
-  const auto* grain = resources.resource(preset.definition.grainResource);
-  if (shape == nullptr || grain == nullptr || !resources.renderResource(
-          preset.definition.shapeResource, preset.definition.grainResource)) {
-    return {nullptr, ink::BrushCompileError::kUnsupportedCapability};
-  }
-  return compiled;
+  return ink::compileReferenceBrush(preset, resources);
 }
 
 ReferenceBrushPreset editDryChalk(const ReferenceBrushPreset& preset,
@@ -106,6 +23,55 @@ ReferenceBrushPreset editDryChalk(const ReferenceBrushPreset& preset,
   out.definition.spacing = edit.spacing;
   out.definition.opacity = edit.opacity;
   return out;
+}
+
+QualificationStroke runReferenceBrushStroke(
+    const ReferenceBrushPreset& preset, const ink::ResourceCatalog& resources,
+    std::span<const ink::BrushInputSample> samples, std::uint64_t sessionId) {
+  QualificationStroke out;
+  if (samples.empty() || sessionId == 0U) return out;
+  const auto compiled = compileQualificationBrush(preset, resources);
+  if (!compiled) return out;
+  ink::BrushRuntime runtime(resources);
+  const ink::BrushSessionId session{sessionId};
+  if (!runtime.begin(session, *compiled.program, 0x4A450000ULL + sessionId)) return out;
+  const auto appended = runtime.append(session, samples);
+  if (!appended) {
+    (void)runtime.cancel(session);
+    return out;
+  }
+  out.preview = appended.preview.primitives;
+  out.commit = runtime.finish(session).commit;
+  return out;
+}
+
+ReferenceBrushStrokeSession::ReferenceBrushStrokeSession(
+    const ReferenceBrushPreset& preset, const ink::ResourceCatalog& resources,
+    std::uint64_t sessionId)
+    : runtime_(resources), session_{sessionId} {
+  const auto compiled = compileQualificationBrush(preset, resources);
+  if (compiled && sessionId != 0U &&
+      runtime_.begin(session_, *compiled.program, 0x4A450000ULL + sessionId)) {
+    program_ = compiled.program;
+    active_ = true;
+  }
+}
+
+ink::BrushRuntimeResult ReferenceBrushStrokeSession::append(
+    std::span<const ink::BrushInputSample> samples) {
+  if (!active_) return {};
+  return runtime_.append(session_, samples);
+}
+
+ink::BrushRuntimeResult ReferenceBrushStrokeSession::finish() {
+  if (!active_) return {};
+  active_ = false;
+  return runtime_.finish(session_);
+}
+
+void ReferenceBrushStrokeSession::cancel() noexcept {
+  if (active_) (void)runtime_.cancel(session_);
+  active_ = false;
 }
 
 }  // namespace canvas::brush_lab

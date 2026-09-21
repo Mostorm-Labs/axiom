@@ -1,5 +1,6 @@
 #include "ink_playground_host.hpp"
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/ink/reference_brush_catalog.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 
 #include <emscripten/emscripten.h>
@@ -24,8 +25,9 @@ Host* host(Handle value) {
 }
 
 struct BrushState final {
-  canvas::ink::ResourceCatalog resources;
-  canvas::ink::BrushRuntime runtime{resources};
+  canvas::ink::ReferenceBrushCatalog catalog =
+      canvas::ink::makeReferenceBrushCatalog();
+  canvas::ink::BrushRuntime runtime{catalog.resources};
   std::unordered_map<std::uint32_t, std::shared_ptr<const canvas::ink::BrushProgram>> programs;
   std::unordered_map<std::uint32_t, std::uint64_t> sessions;
   std::unordered_map<std::uint32_t, canvas::ink::BrushPrimitive> primitives;
@@ -42,7 +44,11 @@ std::unordered_map<Handle, BrushState>& brushes() {
   static std::unordered_map<Handle, BrushState> values;
   return values;
 }
-canvas::ink::BrushDefinition brushDefinition(std::uint32_t family) {
+canvas::ink::BrushDefinition brushDefinition(
+    const canvas::ink::ReferenceBrushCatalog& catalog, std::uint32_t family) {
+  if (family >= 1U && family <= 5U) {
+    return catalog.presets[family - 1U].definition;
+  }
   canvas::ink::BrushDefinition definition;
   definition.definitionId = family;
   definition.family = static_cast<canvas::ink::BrushFamily>(family);
@@ -57,13 +63,9 @@ canvas::ink::BrushDefinition brushDefinition(std::uint32_t family) {
 }
 bool initBrushes(Handle handle) {
   auto& state = brushes()[handle];
-  for (std::uint32_t family = 2; family <= 5; ++family) {
-    state.resources.add({100U + family}, canvas::ink::BrushResourceKind::kShape);
-    state.resources.add({200U + family}, canvas::ink::BrushResourceKind::kGrain);
-  }
   for (std::uint32_t family = 1; family <= 7; ++family) {
     const auto result = canvas::ink::BrushCompiler{}.compile(
-        brushDefinition(family), {.pressure = false, .tilt = false,
+        brushDefinition(state.catalog, family), {.pressure = false, .tilt = false,
           .shapeResource = true, .grainResource = true, .temporalTransient = true});
     if (!result) return false;
     state.programs.emplace(family, result.program);
