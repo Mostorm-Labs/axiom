@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "stage": "P31_PREFLIGHT",
+  "package_id": "GT-G4-5-09F-P31-v0.1",
+  "observed_package_revision": "9fa50d12dd46bd40036c84799b69f542011b47c4",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-reference-brush-fidelity",
+    "task_anchor": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6",
+    "anchor_relation": "ancestor",
+    "merge_base": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6"
+  },
+  "package_refs": {
+    "authority.lock.json": "ed4d9da83caa937c75f58451ee64a28d376baf3df8a7e38344c05cf6b50cbcda",
+    "verification.lock.json": "8ec88e56923405d0f10fa2ba6c74458f839c0f63761db69310684f3bab4a64b1",
+    "execution-contract.json": "60de68d7066610e9e8d585cc0322293e32b4849567741608cea81683e6868841",
+    "implementation-context.md": "88197148426c9c97835b04f3d927b887a0706083232880d07fc713a57573eb74",
+    "evidence-contract.json": "295483e68d8797e93d65cb4b906a4df27f08791f32825d56583eb20820b038b1"
+  },
+  "checks": {
+    "repository_identity": "PASS",
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "authority_current": "PASS",
+    "source_identity_and_snapshot_present": "PASS",
+    "local_ref_paths_same_directory": "PASS",
+    "local_ref_sha256_materialization": "PASS",
+    "verification_structure": "PASS",
+    "evidence_paths_cover_blocking_contract": "PASS",
+    "terminal_criteria_unambiguous": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "branch_delta_control_plane_only": "PASS",
+    "implementation_design_preflight_required": true,
+    "unresolved_semantic_decisions": []
+  },
+  "current_branch_delta": [
+    ".aegis/packages/GT-G4-5-09F/authority.lock.json",
+    ".aegis/packages/GT-G4-5-09F/evidence-contract.json",
+    ".aegis/packages/GT-G4-5-09F/execution-contract.json",
+    ".aegis/packages/GT-G4-5-09F/implementation-context.md",
+    ".aegis/packages/GT-G4-5-09F/package.json",
+    ".aegis/packages/GT-G4-5-09F/verification.lock.json"
+  ],
+  "frozen_scope": {
+    "preserve_v1": true,
+    "reference_brush_version": 2,
+    "reference_brush_count": 5,
+    "common_render_resource": true,
+    "distance_based_spacing": true,
+    "canonical_skia_dab_path": true,
+    "windows_arc_dab_resource_path": true,
+    "space_dual_color_presentation_only": true,
+    "android_web_new_physical_round": false
+  },
+  "executable": true,
+  "official_gate_pass_claimed": false,
+  "next_stage": "P32_IMPLEMENTATION",
+  "expected_terminal": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION"
+}
