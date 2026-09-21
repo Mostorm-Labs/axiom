@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "record": "P31_PACKAGE_REPAIR",
+  "repaired_package_id": "GT-G4-4-CORR-01-P31-v0.2",
+  "supersedes": "GT-G4-4-CORR-01-P31-v0.1",
+  "reason": "Current product scope guarantees and verifies AutoIntent only. MultiInk and GesturePriority are deferred and a new corrective physical-device round is not blocking.",
+  "preserved": [
+    "accepted G4.4 substrate",
+    "existing G4.5 programmable brush work",
+    "previously completed physical evidence as historical/corroborative"
+  ],
+  "removed_from_blocking_scope": [
+    "MultiInk implementation/test",
+    "GesturePriority implementation/test",
+    "multi-mode product switch",
+    "new corrective physical qualification round"
+  ],
+  "added_or_retained_blocking_scope": [
+    "PointerPhase",
+    "capability validity",
+    "PendingContact",
+    "spatial DrawActivation",
+    "AutoIntent coordinator",
+    "atomic viewport claim",
+    "PositionOnly AutoIntent",
+    "platform common ownership",
+    "G4/G4.4 regressions"
+  ],
+  "official_gate_pass_claimed": false
+}
