@@ -57,11 +57,15 @@ ContactDisposition MultiContactCoordinator::update(const input::PointerSample& s
       contact.disposition = ContactDisposition::kInk;
       canonicalMutation_ = true;
     } else if (policy_ == MultiContactPolicy::kGesturePriority && !contacts_.empty()) {
-      contact.disposition = ContactDisposition::kIgnored;
+      const bool inkLocked = std::any_of(contacts_.begin(), contacts_.end(), [](const auto& entry) {
+        return entry.second.disposition == ContactDisposition::kInk;
+      });
+      if (inkLocked) contact.disposition = ContactDisposition::kIgnored;
     }
     const auto [it, inserted] = contacts_.emplace(sample.key, contact);
     if (!inserted) return ContactDisposition::kIgnored;
-    if (policy_ == MultiContactPolicy::kAutoIntent && contacts_.size() >= 2U) {
+    if ((policy_ == MultiContactPolicy::kAutoIntent ||
+         policy_ == MultiContactPolicy::kGesturePriority) && contacts_.size() >= 2U) {
       static_cast<void>(tryViewportClaim());
     }
     return it->second.disposition;
@@ -86,6 +90,7 @@ ContactDisposition MultiContactCoordinator::update(const input::PointerSample& s
   if (sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel) {
     it->second.disposition = ContactDisposition::kTerminal;
     contacts_.erase(it);
+    if (contacts_.empty()) viewportClaimed_ = false;
   }
   return result;
 }
