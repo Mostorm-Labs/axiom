@@ -1,42 +1,49 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
+  "obligation_set": "AUTOINTENT_ONLY_V0_2",
+  "deferred_not_in_obligation_set": [
+    "MultiInk",
+    "GesturePriority",
+    "new corrective physical-device round"
+  ],
   "obligations": [
     {
       "id": "CORR-V1-pointer-phase",
       "requirement": "Common normalized input carries Down/Move/Up/Cancel phase and deterministic pointer lifecycle.",
-      "oracle": "Unit and replay traces cover Down->Move*->Up|Cancel, predicted samples cannot create ownership transitions.",
+      "oracle": "Unit and replay traces cover Down->Move*->Up|Cancel; predicted samples cannot create ownership transitions.",
       "acceptance": "Equivalent traces produce identical ownership transitions; invalid terminal ordering is rejected.",
       "evidence_required": [
-        "policy-matrix-evidence.json",
+        "auto-intent-evidence.json",
         "portable-regression-summary.json"
       ]
     },
     {
       "id": "CORR-V2-positiononly",
-      "requirement": "PositionOnly input supports multi-pointer routing and two-finger pan/pinch without pressure/contact geometry/tool metadata.",
-      "oracle": "Capability-masked two-pointer corpus with pressure/contact geometry unavailable.",
+      "requirement": "PositionOnly input supports AutoIntent multi-pointer routing and two-finger pan/pinch without pressure/contact geometry/tool metadata.",
+      "oracle": "Capability-masked two-pointer AutoIntent corpus with pressure/contact geometry unavailable.",
       "acceptance": "Viewport claim and pan/pinch succeed; unsupported optional capability does not fail core gesture.",
       "evidence_required": [
         "positiononly-capability-evidence.json"
       ]
     },
     {
-      "id": "CORR-V3-auto-default",
-      "requirement": "AutoIntent is the runtime/product default when no explicit policy is configured.",
-      "oracle": "Default-construction test plus platform-host integration smoke.",
-      "acceptance": "All common/platform entry paths resolve default policy as AutoIntent.",
+      "id": "CORR-V3-auto-current",
+      "requirement": "AutoIntent is the only current/default common multi-contact behavior in this corrective.",
+      "oracle": "Common coordinator and Windows/Android/Web host integration smoke.",
+      "acceptance": "All common/platform generic-contact entry paths resolve the same AutoIntent behavior; no alternate mode branch is required.",
       "evidence_required": [
-        "policy-matrix-evidence.json"
+        "auto-intent-evidence.json",
+        "platform-ingress-conformance.json"
       ]
     },
     {
       "id": "CORR-V4-draw-activation",
-      "requirement": "AutoIntent/GesturePriority draw activation is spatial and sample-rate independent.",
+      "requirement": "AutoIntent draw activation is spatial and sample-rate independent.",
       "oracle": "Equivalent geometric paths at low/high sample rates plus sub-slop jitter.",
-      "acceptance": "Equivalent paths yield same activation result; jitter remains Pending; sample count alone never locks Ink.",
+      "acceptance": "Equivalent paths yield the same activation result; jitter remains Pending; sample count alone never locks Ink.",
       "evidence_required": [
-        "policy-matrix-evidence.json"
+        "auto-intent-evidence.json"
       ]
     },
     {
@@ -49,58 +56,39 @@
       ]
     },
     {
-      "id": "CORR-V6-multiink",
-      "requirement": "MultiInk creates isolated independent Ink sessions and disables automatic pinch.",
-      "oracle": "2-contact and 4-contact interleaved corpus.",
-      "acceptance": "2/4 independent sessions, isolated cancel/up behavior, zero viewport gesture activation.",
+      "id": "CORR-V6-auto-multiink-after-lock",
+      "requirement": "Under AutoIntent, contacts arriving after Ink cohort lock create isolated independent Ink sessions.",
+      "oracle": "A crosses DrawActivation, then B/C/D Down with interleaved moves/cancel/up.",
+      "acceptance": "Each later contact owns an isolated Ink session; cancellation or completion of one does not affect the others.",
       "evidence_required": [
-        "policy-matrix-evidence.json"
+        "auto-intent-evidence.json"
       ]
     },
     {
-      "id": "CORR-V7-gesture-priority",
-      "requirement": "GesturePriority ignores a late second contact after first Ink lock without disturbing the first stroke.",
-      "oracle": "A activates Ink; B Down/Move/Up|Cancel; continue A.",
-      "acceptance": "A remains same Ink session and commits normally; B creates no Ink/Viewport session and has zero effect on A.",
-      "evidence_required": [
-        "policy-matrix-evidence.json"
-      ]
-    },
-    {
-      "id": "CORR-V8-atomic-viewport-claim",
-      "requirement": "Two-pointer viewport claim is all-or-none.",
+      "id": "CORR-V7-atomic-viewport-claim",
+      "requirement": "AutoIntent two-pointer viewport claim is all-or-none.",
       "oracle": "Inject claim conflict on one member.",
       "acceptance": "No partial viewport ownership remains after failed group claim.",
       "evidence_required": [
-        "policy-matrix-evidence.json"
+        "auto-intent-evidence.json"
       ]
     },
     {
-      "id": "CORR-V9-platform-common-ownership",
+      "id": "CORR-V8-platform-common-ownership",
       "requirement": "Windows/Android/Web report facts and phases but do not implement divergent second-pointer semantics.",
       "oracle": "Static/runtime platform ingress conformance checks.",
-      "acceptance": "Generic-contact second-pointer decision is owned by common coordinator on all three hosts.",
+      "acceptance": "Generic-contact second-pointer decision is owned by the common AutoIntent coordinator on all three hosts.",
       "evidence_required": [
         "platform-ingress-conformance.json"
       ]
     },
     {
-      "id": "CORR-V10-regression",
+      "id": "CORR-V9-regression",
       "requirement": "Accepted G4/G4.4 PointerKey, multi-stroke, Arc keyed preview and canonical ordered-commit behavior remains valid.",
       "oracle": "Existing relevant G4/G4.4 CTest suites and scope diff audit.",
       "acceptance": "All frozen regressions pass with no semantic schema/ObjectKind/Operation change.",
       "evidence_required": [
         "portable-regression-summary.json"
-      ]
-    },
-    {
-      "id": "CORR-V11-corrective-physical-readiness",
-      "requirement": "Corrective build and targeted scenarios are packaged for one exact-revision physical qualification.",
-      "oracle": "Qualification manifest validates revision, build identity, policy scenarios and capability profile.",
-      "acceptance": "Bundle is reviewer-resolvable and status is READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION; no Gate PASS is claimed.",
-      "evidence_required": [
-        "qualification-bundle-manifest.json",
-        "result.json"
       ]
     }
   ]
