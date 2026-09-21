@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+  "status": "PASS",
+  "platforms": {
+    "windows": {"reports": ["PointerKey", "PointerPhase", "position", "optional_capabilities"], "common_coordinator": true},
+    "android": {"reports": ["PointerKey", "PointerPhase", "position", "optional_capabilities"], "common_coordinator": true},
+    "web": {"reports": ["PointerKey", "PointerPhase", "position", "optional_capabilities"], "common_coordinator": true}
+  },
+  "platform_private_second_pointer_arbitration": false,
+  "web_phase_bridge": "axiom_ink_pointer_sample_phase"
+}

@@ -475,11 +475,10 @@ Status Bridge::Push(const arc_preview_update_v0& update) {
                            .stroke_id = update.stroke_id,
                            .preview_revision = update.preview_revision});
   arc_preview_update_v0 owned_update = update;
-  owned_update.truncate_confirmed_to = 0;
-  owned_update.confirmed_append = state.confirmed.data();
-  owned_update.confirmed_append_count =
-      static_cast<uint32_t>(state.confirmed.size());
-  owned_update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
+  // The bridge keeps a complete snapshot for recovery, but the backend only
+  // needs the caller's replacement prefix and newly appended geometry. Sending
+  // the entire stroke on every move turns a coalesced stroke into O(n^2)
+  // presentation work on layered Windows surfaces.
   owned_update.predicted_tail = state.predicted.data();
   owned_update.predicted_tail_count =
       static_cast<uint32_t>(state.predicted.size());

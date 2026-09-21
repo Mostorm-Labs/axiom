@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "obligation_set": "AUTOINTENT_ONLY_V0_3_PRESERVED_IMPLEMENTATION",
+  "review_boundary": "Preserved runtime revision 3240a3b6567a898452462f4687939e799572c49d plus current v0.3 package/evidence reconciliation.",
+  "artifacts": [
+    {
+      "id": "auto-intent-evidence",
+      "path": ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
+      "blocking": true
+    },
+    {
+      "id": "positiononly-capability-evidence",
+      "path": ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
+      "blocking": true
+    },
+    {
+      "id": "provisional-session-zero-mutation",
+      "path": ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
+      "blocking": true
+    },
+    {
+      "id": "platform-ingress-conformance",
+      "path": ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
+      "blocking": true
+    },
+    {
+      "id": "portable-regression-summary",
+      "path": ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "p32-reconciliation-v0.3",
+      "path": ".aegis/results/GT-G4-4-CORR-01/p32-reconciliation-v0.3.json",
+      "blocking": true
+    },
+    {
+      "id": "result",
+      "path": ".aegis/results/GT-G4-4-CORR-01/result.json",
+      "blocking": true
+    }
+  ],
+  "deferred": {
+    "retained_implementation_allowed": [
+      "MultiInk",
+      "GesturePriority",
+      "existing mode-switch seams"
+    ],
+    "blocking": false,
+    "new_physical_device_round_required": false
+  },
+  "return_contract": {
+    "state_required_from_p32": "READY_FOR_CONTROL_REVIEW",
+    "final_gate_pass_forbidden_in_p32": true
+  }
+}

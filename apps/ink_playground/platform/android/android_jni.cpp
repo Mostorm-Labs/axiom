@@ -13,6 +13,14 @@ int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height);
 int axiom_ink_android_surface_lost(void* handle);
 int axiom_ink_android_cancel_all(void* handle);
+int axiom_ink_android_viewport_claimed(void* handle);
+int axiom_ink_android_set_multi_contact_policy(void* handle, int policy);
+int axiom_ink_android_multi_contact_policy(void* handle);
+float axiom_ink_android_viewport_scale(void* handle);
+float axiom_ink_android_viewport_center_x(void* handle);
+float axiom_ink_android_viewport_center_y(void* handle);
+float axiom_ink_android_viewport_translation_x(void* handle);
+float axiom_ink_android_viewport_translation_y(void* handle);
 
 JNIEXPORT jlong JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCreate(
@@ -73,5 +81,54 @@ JNIEXPORT jint JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCancelAll(
     JNIEnv*, jclass, jlong handle) {
   return axiom_ink_android_cancel_all(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportClaimed(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_claimed(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeSetMultiContactPolicy(
+    JNIEnv*, jclass, jlong handle, jint policy) {
+  return axiom_ink_android_set_multi_contact_policy(
+      reinterpret_cast<void*>(handle), policy);
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeMultiContactPolicy(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_multi_contact_policy(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportScale(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_scale(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportCenterX(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_center_x(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportCenterY(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_center_y(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportTranslationX(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_translation_x(reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportTranslationY(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_viewport_translation_y(reinterpret_cast<void*>(handle));
 }
 }

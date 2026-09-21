@@ -10,6 +10,8 @@ struct ViewportGesture final {
   float centerX = 0.0F;
   float centerY = 0.0F;
   float scale = 1.0F;
+  float translationX = 0.0F;
+  float translationY = 0.0F;
 };
 
 class TwoFingerViewportGesture final {
@@ -20,17 +22,34 @@ class TwoFingerViewportGesture final {
     const float dy = second.y - first.y;
     const float distance = std::sqrt(dx * dx + dy * dy);
     if (distance <= 0.0F) return false;
-    if (!active_) { baselineDistance_ = distance; active_ = true; }
-    state_ = { (first.x + second.x) * 0.5F, (first.y + second.y) * 0.5F,
-                distance / baselineDistance_ };
+    if (!active_) {
+      baselineDistance_ = distance;
+      baselineCenterX_ = (first.x + second.x) * 0.5F;
+      baselineCenterY_ = (first.y + second.y) * 0.5F;
+      active_ = true;
+    }
+    const float centerX = (first.x + second.x) * 0.5F;
+    const float centerY = (first.y + second.y) * 0.5F;
+    const float scale = distance / baselineDistance_;
+    state_ = { centerX, centerY, scale,
+               centerX - scale * baselineCenterX_,
+               centerY - scale * baselineCenterY_ };
     return true;
   }
-  void reset() noexcept { active_ = false; baselineDistance_ = 0.0F; state_ = {}; }
+  void reset() noexcept {
+    active_ = false;
+    baselineDistance_ = 0.0F;
+    baselineCenterX_ = 0.0F;
+    baselineCenterY_ = 0.0F;
+    state_ = {};
+  }
   [[nodiscard]] const ViewportGesture& state() const noexcept { return state_; }
 
  private:
   ViewportGesture state_{};
   float baselineDistance_ = 0.0F;
+  float baselineCenterX_ = 0.0F;
+  float baselineCenterY_ = 0.0F;
   bool active_ = false;
 };
 

@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "record": "P34_AUTHORITY_WAIVER",
+  "date": "2026-09-21",
+  "authority_source": {
+    "kind": "explicit_product_owner_directive",
+    "statement": "Allow current third-contact behavior during an active AutoIntent ViewportGesture cohort; do not block Gate, do not require cleanup or code change.",
+    "notion_refs": [
+      "notion://3e14c57a-590c-812d-942b-d37761abfedd",
+      "notion://3e14c57a-590c-817b-ac1d-d9506534b09b"
+    ]
+  },
+  "superseded_gate_expectation": "Active ViewportGesture cohort must reject every later generic contact from independent Ink.",
+  "current_gate_expectation": "Current Gate guarantees two-contact AutoIntent viewport arbitration. Behavior of third+ generic contacts during an already-active viewport cohort is accepted as non-blocking and is not a current blocking invariant.",
+  "accepted_deviation": {
+    "trace": [
+      "A+B already ViewportGesture",
+      "C Down -> Pending",
+      "C may cross DrawActivation -> Ink"
+    ],
+    "disposition": "ACCEPTED_NON_BLOCKING_DEVIATION",
+    "code_fix_required": false,
+    "physical_retest_required": false,
+    "successor_hardening_optional": true
+  },
+  "preserved_history": {
+    "blocked_review": ".aegis/results/GT-G4-4-CORR-01/p34-gate-review-v0.3.json",
+    "blocked_review_revision": "9fb23858c6ffc697ac06035655476d0b737aac70",
+    "delete_or_rewrite_historical_finding": false
+  }
+}

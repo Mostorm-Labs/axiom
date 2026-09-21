@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "classification": "IMPLEMENTATION_FIX_WITH_PHYSICAL_CONFIRMATION",
+  "implementation_revision": "d490472fa7531c57adf6eeaaaf42d70fb7d8c430",
+  "physical_observation_revision": "0519f1feb73436646c1f60d05b376413735cd3c0",
+  "execution_branch": "codex/g4-4-positiononly-corrective",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "repair": {
+    "ui_thread_does_sampling_runtime_submission_and_invalidate_only": true,
+    "trace_json_png_sha_and_functional_json_are_background_work": true,
+    "evidence_persistence_is_debounced_ms": 500,
+    "trace_snapshot_is_bounded_by_snapshot_sequence": true,
+    "runtime_ink_and_gesture_semantics_changed": false
+  },
+  "physical_verification": {
+    "platform": "android",
+    "device": "Pixel 7",
+    "model": "panther",
+    "adb_serial": "29251FDH2004Z0",
+    "user_confirmation": "PASS_ANDROID_FAST_STROKE_RESPONSIVENESS",
+    "confirmed": [
+      "rapid consecutive strokes no longer show a delayed final segment",
+      "rapid long stroke remains responsive",
+      "strokes remain separated",
+      "viewport and multi-contact behavior remain functional"
+    ],
+    "observation_apk_sha256": "233468553d63c097e925b8c6e6f43540602c57a1b431d84b1d44207e119a149a",
+    "current_apk_sha256": "a6ecd2f8a1445506a0c1daddd94e1da7032b7208565b62a667bb4ecc41b47c65",
+    "current_apk_delta_is_behavior_preserving": true
+  },
+  "durable_artifacts": {
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/android-evidence-persistence-pointer-trace.json",
+      "sha256": "fd3cde77e9c06fb1e5640a23728d315bbdabea508e27353087f45742f4999311"
+    },
+    "capture": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/android-evidence-persistence-capture.png",
+      "sha256": "40dfd360aaab8c159c69371c89b8b6145ab68a009633dfe3acab5cd9cfd3f4a4"
+    },
+    "functional_smoke": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/android-evidence-persistence-functional-smoke.json",
+      "sha256": "17bf693254665746edd18a14065e7d6af30f2947baa0a7145ddf3760332f56b3"
+    }
+  },
+  "portable_regression": {
+    "android_host_contract": "PASS",
+    "android_gradle_assemble_debug": "PASS",
+    "ctest": "38/38 PASS",
+    "git_diff_check": "PASS"
+  },
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}

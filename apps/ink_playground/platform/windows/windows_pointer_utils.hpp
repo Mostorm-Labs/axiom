@@ -5,13 +5,84 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "arc/protocol.h"
+#include "canvas/interaction/multi_contact_coordinator.hpp"
 
 #include <cstdint>
 #include <vector>
 #include <algorithm>
+#include <span>
 #include "canvas/ink/ink_engine.hpp"
 
 namespace canvas::ink_playground::windows_input {
+
+inline std::size_t appendPreviewSamples(
+    std::vector<arc_preview_primitive_v0>& points,
+    std::uint64_t& lastSampleSequence,
+    std::span<const arc_pointer_sample_v0> samples) {
+  const auto before = points.size();
+  for (const auto& sample : samples) {
+    if (sample.sample_sequence <= lastSampleSequence) continue;
+    points.push_back({ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, sample.x, sample.y,
+                      2.0F, 0.0F, 1.0F});
+    lastSampleSequence = sample.sample_sequence;
+  }
+  return points.size() - before;
+}
+
+struct ViewportPoint final {
+  float x = 0.0F;
+  float y = 0.0F;
+};
+
+[[nodiscard]] inline ViewportPoint toViewportPoint(float x, float y, float scale,
+                                                    float translationX,
+                                                    float translationY) noexcept {
+  return {x * scale + translationX, y * scale + translationY};
+}
+
+enum class PlatformPointerAction : std::uint8_t {
+  kContinuePreview,
+  kSuppressPreview,
+  kCommitAndRelease,
+  kReleaseWithoutCommit
+};
+
+[[nodiscard]] inline PlatformPointerAction platformPointerAction(
+    canvas::interaction::ContactDisposition disposition, bool end) noexcept {
+  if (disposition == canvas::interaction::ContactDisposition::kViewportGesture ||
+      disposition == canvas::interaction::ContactDisposition::kIgnored ||
+      disposition == canvas::interaction::ContactDisposition::kTerminal) {
+    return end ? PlatformPointerAction::kReleaseWithoutCommit
+               : PlatformPointerAction::kSuppressPreview;
+  }
+  return end ? PlatformPointerAction::kCommitAndRelease
+             : PlatformPointerAction::kContinuePreview;
+}
+
+[[nodiscard]] inline bool cancelsAllActivePointers(UINT message) noexcept {
+  return message == WM_KILLFOCUS || message == WM_CANCELMODE || message == WM_DESTROY;
+}
+
+[[nodiscard]] inline canvas::interaction::MultiContactPolicy nextMultiContactPolicy(
+    canvas::interaction::MultiContactPolicy policy) noexcept {
+  using Policy = canvas::interaction::MultiContactPolicy;
+  return policy == Policy::kAutoIntent ? Policy::kMultiInk
+       : policy == Policy::kMultiInk ? Policy::kGesturePriority : Policy::kAutoIntent;
+}
+
+[[nodiscard]] inline const wchar_t* multiContactPolicyName(
+    canvas::interaction::MultiContactPolicy policy) noexcept {
+  using Policy = canvas::interaction::MultiContactPolicy;
+  return policy == Policy::kAutoIntent ? L"AutoIntent"
+       : policy == Policy::kMultiInk ? L"MultiInk" : L"GesturePriority";
+}
+
+[[nodiscard]] inline const char* multiContactPolicyNameUtf8(
+    canvas::interaction::MultiContactPolicy policy) noexcept {
+  using Policy = canvas::interaction::MultiContactPolicy;
+  return policy == Policy::kAutoIntent ? "AutoIntent"
+       : policy == Policy::kMultiInk ? "MultiInk" : "GesturePriority";
+}
 
 [[nodiscard]] inline arc_input_tool_t arcToolForPointerType(
     POINTER_INPUT_TYPE pointerType) noexcept {

@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P31_PREFLIGHT",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.3",
+  "package_binding_preflight": "PASS",
+  "evidence_contract_preflight": "PASS",
+  "source_binding_preflight": "PASS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "anchor_relation": "ancestor",
+    "preserved_runtime_boundary": "3240a3b6567a898452462f4687939e799572c49d",
+    "runtime_delta_after_boundary": []
+  },
+  "local_ref_hashes_match": true,
+  "source_bindings_match": true,
+  "frozen_scope": {
+    "current_blocking_behavior": "AutoIntent",
+    "retained_deferred_implementation_allowed": [
+      "MultiInk",
+      "GesturePriority",
+      "existing mode-switch seams"
+    ],
+    "runtime_cleanup_required": false,
+    "runtime_mutation_authorized": false,
+    "new_blocking_physical_round": false
+  },
+  "executable": true,
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "official_gate_pass_claimed": false
+}

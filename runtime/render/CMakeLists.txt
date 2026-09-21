@@ -53,6 +53,22 @@ else()
     endif()
 endif()
 
+if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_skia_ink_backend_tests
+        tests/skia_ink_backend_test.cpp)
+    target_link_libraries(axiom_render_skia_ink_backend_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_skia_ink_backend_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_skia_ink_backend_tests
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_skia_ink_backend_tests
+            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4WindowsSkiaInkViewport
+        COMMAND axiom_render_skia_ink_backend_tests)
+endif()
+
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_render_headless_canvas_demo_tests
         tests/headless_canvas_demo_test.cpp)

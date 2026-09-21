@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P34_GATE_REVIEW",
+  "review_version": "v0.4",
+  "review_surface": "CONTROL_REVIEW",
+  "supersedes_review": ".aegis/results/GT-G4-4-CORR-01/p34-gate-review-v0.3.json",
+  "authority_waiver_ref": ".aegis/results/GT-G4-4-CORR-01/p34-authority-waiver-v0.1.json",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "runtime_result_revision": "3240a3b6567a898452462f4687939e799572c49d"
+  },
+  "scope": {
+    "blocking": [
+      "AutoIntent two-contact arbitration",
+      "AutoIntent ink-lock then later independent Ink",
+      "PositionOnly",
+      "provisional zero canonical mutation",
+      "common runtime ownership across Windows/Android/Web",
+      "preserved G4/G4.4 regressions"
+    ],
+    "non_blocking": [
+      "MultiInk",
+      "GesturePriority",
+      "existing mode-switch seams",
+      "third+ generic contact behavior during active ViewportGesture",
+      "new physical-device round"
+    ]
+  },
+  "frozen_requirement_audit": {
+    "verdict": "PASS",
+    "passed": [
+      "Default/current blocking behavior is AutoIntent.",
+      "Pending first contact + second compatible contact -> ViewportGesture.",
+      "Ink-locked first contact + later compatible contacts -> independent Ink sessions.",
+      "PositionOnly viewport arbitration works without pressure/contact geometry/tool metadata.",
+      "Pending provisional cancellation into viewport has zero canonical mutation.",
+      "Windows/Android/Web route generic multi-contact semantics through common runtime.",
+      "No semantic schema/ObjectKind/Operation change is required by this corrective."
+    ],
+    "accepted_non_blocking_deviation": [
+      "Third+ generic contact may independently activate Ink while A+B remain an active ViewportGesture cohort."
+    ]
+  },
+  "frozen_evidence_audit": {
+    "verdict": "PASS",
+    "blocking_evidence_resolved": [
+      "auto-intent-evidence.json",
+      "positiononly-capability-evidence.json",
+      "provisional-session-zero-mutation.json",
+      "platform-ingress-conformance.json",
+      "portable-regression-summary.json",
+      "p32-reconciliation-v0.3.json",
+      "result.json"
+    ],
+    "physical_retest_required": false
+  },
+  "repository_reality_audit": {
+    "verdict": "PASS_WITH_FINDING",
+    "facts": [
+      "MultiContactCoordinator defaults to AutoIntent.",
+      "Common coordinator source remained unchanged from primary AutoIntent evidence through runtime result boundary/current branch before control-only review changes.",
+      "Windows consumes common host pointerDisposition after runtime submission.",
+      "Android normalizes phase and submits samples into common host/runtime.",
+      "Web phase bridge submits PointerPhase into common host/runtime.",
+      "Retained MultiInk/GesturePriority code is deferred and non-blocking."
+    ],
+    "findings": [
+      {
+        "id": "P34-NB-01",
+        "classification": "NON_BLOCKING_FINDING",
+        "subject": "Third+ contact during active ViewportGesture may become Ink",
+        "disposition": "ACCEPTED_NON_BLOCKING_DEVIATION",
+        "authority_waiver_ref": ".aegis/results/GT-G4-4-CORR-01/p34-authority-waiver-v0.1.json",
+        "successor_hardening_optional": true
+      }
+    ]
+  },
+  "gate_review": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "official_pass_claimed": true,
+    "blocking_findings": [],
+    "non_blocking_findings": [
+      "P34-NB-01"
+    ]
+  },
+  "result_revision": "3240a3b6567a898452462f4687939e799572c49d",
+  "next_surface": "INTEGRATION",
+  "next_action": "Integrate codex/g4-4-positiononly-corrective into main, preserve the accepted deviation record, then forward-integrate main into codex/g4-5-programmable-brush."
+}

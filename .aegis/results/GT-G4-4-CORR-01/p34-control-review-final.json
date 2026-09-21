@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P34_CONTROL_REVIEW",
+  "reviewed_revision": "9b7942396576e27fe453093f02c739a3a0b851ed",
+  "repository_identity": "PASS",
+  "task_anchor_ancestry": "PASS",
+  "package_binding": "PASS",
+  "evidence_binding": {
+    "result_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+    "materialized_ref": "fe628874e2c67895f3e724478102861f9647149e",
+    "final_bundle_commit": "9b7942396576e27fe453093f02c739a3a0b851ed",
+    "all_required_artifacts_present": true
+  },
+  "fresh_regression": {"configure": "PASS", "build": "PASS", "ctest": "36/36 PASS", "git_diff_check": "PASS"},
+  "findings_closed": [
+    "GesturePriority Pending plus second contact forms all-or-none viewport claim",
+    "Unknown Up/Cancel is rejected without creating state",
+    "Mixed Ink cohort cannot partially claim viewport",
+    "Viewport claim resets after cohort termination",
+    "Host cached dispositions reflect atomic viewport claim"
+  ],
+  "decision": "PASS_FOR_CORRECTIVE_PHYSICAL_VERIFICATION",
+  "physical_verification_authorized": true,
+  "official_gate_pass": false,
+  "next_action": "Run targeted Android and Web qualification; collect Windows physical evidence",
+  "next_surface": "CODE_EXECUTION"
+}

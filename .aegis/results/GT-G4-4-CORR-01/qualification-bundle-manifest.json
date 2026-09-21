@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "implementation_revision": "2377ae3a6884ad4eb9e00efd7e6d43000e86025b",
+  "materialized_ref": "454eca06b4d2ac2d4dc9a850aaca8f6a5a5d7469",
+  "execution_ref": "codex/g4-4-positiononly-corrective",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "policy": "AutoIntent",
+  "required_physical_scenarios": ["AutoIntent pending-to-viewport", "AutoIntent ink-then-second-ink", "MultiInk 2-contact", "GesturePriority late second", "PositionOnly masked pinch", "cancel and pointer reuse"],
+  "pressure_tilt": "NOT_REQUIRED_FOR_THIS_CORRECTIVE_PROFILE",
+  "official_gate_pass": false,
+  "artifacts": ["repository-reconciliation.json", "policy-matrix-evidence.json", "positiononly-capability-evidence.json", "provisional-session-zero-mutation.json", "platform-ingress-conformance.json", "portable-regression-summary.json", "android-corrective-physical-verification.json", "p36-android-viewport-reverification.json", "p36-android-evidence-persistence-reverification.json", "p36-web-viewport-reverification.json", "web/web-pointer-trace.json", "web/web-functional-smoke.json", "web/web-ink-playground.png", "result.json"]
+}

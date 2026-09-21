@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P34_GATE_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.3",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "observed_head": "19ba1b339832c182b1428e7295e7e933738acb25",
+    "runtime_result_revision": "3240a3b6567a898452462f4687939e799572c49d",
+    "result_record_revision": "a35a987b148a6bdbbca4fed048c264ae55bce213",
+    "package_execution_binding_revision": "19ba1b339832c182b1428e7295e7e933738acb25"
+  },
+  "scope": {
+    "blocking": [
+      "AutoIntent",
+      "PositionOnly",
+      "common runtime/platform consolidation"
+    ],
+    "explicitly_non_blocking": [
+      "MultiInk",
+      "GesturePriority",
+      "existing mode-switch seams",
+      "new physical-device round"
+    ]
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "AutoIntent is the default/current guarantee.",
+      "First Pending contact plus second compatible contact forms ViewportGesture.",
+      "After first contact locks Ink, later compatible contacts may form independent Ink sessions.",
+      "PositionOnly does not require pressure/contact geometry/tool metadata for viewport arbitration.",
+      "Pending provisional Ink/Preview can be cancelled into viewport with zero canonical mutation.",
+      "Windows/Android/Web route generic multi-contact semantics through the common host/runtime.",
+      "No runtime/product delta exists after preserved runtime boundary 3240a3b6567a898452462f4687939e799572c49d.",
+      "No new blocking physical-device round is required."
+    ],
+    "failed": [
+      {
+        "id": "AUTOINTENT-VIEWPORT-COHORT-ISOLATION",
+        "requirement": "While an AutoIntent ViewportGesture cohort is active, a newly arriving generic contact must not independently become Ink.",
+        "authority_basis": "Current corrective Authority states that an active ViewportGesture cohort rejects new generic contacts from independent Ink by default; Step 3 design also states third+ generic contacts are ignored for V1.",
+        "classification": "FROZEN_REQUIREMENT_FAILURE"
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "auto-intent-evidence.json resolves and supports default AutoIntent plus the basic Pending->Viewport and Ink-lock->later-Ink transitions.",
+      "positiononly-capability-evidence.json resolves and supports capability-masked viewport arbitration.",
+      "provisional-session-zero-mutation.json resolves and supports zero canonical mutation before viewport ownership.",
+      "platform-ingress-conformance.json resolves and supports common semantic ownership for Windows/Android/Web.",
+      "portable-regression-summary.json resolves and reports the preserved relevant regression suite PASS.",
+      "p32-reconciliation-v0.3.json and result.json are reviewer-resolvable."
+    ],
+    "failed": [
+      {
+        "id": "AUTOINTENT-THIRD-CONTACT-ORACLE-GAP",
+        "intended_failure_mode": "A third generic contact joins while a two-contact viewport cohort is active and later becomes Ink.",
+        "existing_independent_coverage": "None found in the current blocking AutoIntent tests/evidence. multi_contact_coordinator_test.cpp covers two-contact viewport and multi-contact Ink, but not third-contact behavior during an active viewport cohort.",
+        "residual_proof_gap": "The current evidence set cannot detect accidental concurrent viewport + third-contact Ink.",
+        "classification": "TASK_PACKAGE_DEFECT"
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "passed": [
+      "MultiContactCoordinator default constructor remains MultiContactPolicy::kAutoIntent.",
+      "runtime/interaction/src/multi_contact_coordinator.cpp has the same blob SHA at 61e40210, 3240a3b6, and current branch.",
+      "PointerSample and PointerCapabilities core files are unchanged from the primary AutoIntent evidence revision through current branch.",
+      "Current Windows pointer path consumes host pointerDisposition after common runtime submission.",
+      "Current Android path converts platform phase to PointerPhase and submits to host.accept.",
+      "Current Web phase bridge submits PointerPhase to host.accept."
+    ],
+    "failed": [
+      {
+        "id": "AUTOINTENT-THIRD-CONTACT-BECOMES-INK",
+        "source": [
+          "runtime/interaction/src/multi_contact_coordinator.cpp",
+          "apps/ink_playground/common/ink_playground_host.cpp"
+        ],
+        "deterministic_trace": [
+          "A Down -> Pending",
+          "B Down while A Pending -> A+B become ViewportGesture and viewportClaimed_=true",
+          "C Down -> C remains Pending because existing contacts are ViewportGesture, not Ink; tryViewportClaim() returns false because viewportClaimed_ is already true",
+          "C Move beyond radial/path slop -> AutoIntent activates C from Pending to Ink",
+          "Host retains C's provisional keyed stroke and accepts Ink samples while the A+B viewport cohort remains active"
+        ],
+        "impact": "A third finger/contact can create unintended canonical ink while a two-finger pan/pinch gesture is active. This violates the current AutoIntent cohort contract and can produce unwanted document content.",
+        "classification": "FROZEN_REQUIREMENT_FAILURE"
+      }
+    ]
+  },
+  "new_findings": {
+    "blocking_high_impact": [
+      {
+        "id": "P34-F01",
+        "failure_mode": "Active AutoIntent viewport cohort does not exclude a third generic contact from independently activating Ink.",
+        "impact": "Unexpected drawing during navigation; canonical document content may be created from a contact that should be gesture-consumed/ignored.",
+        "existing_independent_coverage": "No current blocking oracle covers third-contact activation during an already claimed viewport cohort.",
+        "new_evidence_unique_detection_value": "Direct current-source state-transition audit exposes a path not exercised by the frozen evidence.",
+        "why_existing_frozen_evidence_did_not_cover_it": "P31 v0.3 narrowed the verification lock and omitted the already-authoritative active-viewport third-contact invariant.",
+        "blocking_justification": "This is a current AutoIntent correctness requirement, not a deferred mode or confidence-only check. The implementation deterministically violates it and the failure can mutate canonical canvas content.",
+        "why_severe_enough_to_override_closure_stability": "The finding is a frozen product/runtime correctness invariant with document-content impact, not a newly invented hardening criterion.",
+        "root_cause": "TASK_PACKAGE_DEFECT_WITH_IMPLEMENTATION_NONCONFORMANCE",
+        "required_route": "P31 task-package repair preserving current valid implementation, followed by a narrowly scoped code fix/reverification. No new physical-device round is required."
+      }
+    ],
+    "non_blocking": [
+      {
+        "id": "P34-N01",
+        "finding": "MultiInk/GesturePriority/mode-switch code remains in the branch.",
+        "disposition": "NON_BLOCKING_BY_CURRENT_AUTHORITY",
+        "reason": "P31 v0.3 explicitly permits retaining these paths as deferred implementation and excludes them from current product/Gate guarantees."
+      },
+      {
+        "id": "P34-N02",
+        "finding": "result.json materialized_ref points to the reconciliation commit rather than the later result-record commit.",
+        "disposition": "NON_BLOCKING_PROVENANCE_FINDING",
+        "reason": "The current package independently binds exact result_record_revision, reconciliation_revision, finalization_revision, and execution binding revision, leaving no unresolved reviewer-accessibility gap."
+      }
+    ]
+  },
+  "gate_review": {
+    "frozen_requirements": {
+      "passed": [
+        "AutoIntent basic arbitration",
+        "PositionOnly baseline",
+        "provisional zero mutation",
+        "common platform ownership",
+        "preserved result boundary"
+      ],
+      "failed": [
+        "active viewport cohort isolation from third-contact Ink"
+      ]
+    },
+    "frozen_evidence": {
+      "passed": [
+        "current blocking artifacts are reviewer-resolvable"
+      ],
+      "failed": [
+        "no blocking oracle covers third-contact behavior during active viewport cohort"
+      ]
+    },
+    "verdict": "BLOCKED"
+  },
+  "official_gate_pass": false,
+  "next_route": {
+    "owner": "P31_TASK_PACKAGING",
+    "classification": "TASK_PACKAGE_DEFECT",
+    "preserve_valid_work": true,
+    "physical_retest_required": false,
+    "recommended_delta": "Add one explicit AutoIntent viewport-cohort third-contact obligation/oracle, then fix coordinator so additional generic contacts remain gesture-consumed/ignored while viewportClaimed_ is true; rerun only the narrow automated oracle plus relevant regressions."
+  }
+}

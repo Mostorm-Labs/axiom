@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P34_CONTROL_REVIEW",
+  "reviewed_revision": "00847c1734a47ad7db537b7b5dc810ae229039a2",
+  "implementation_revision": "6a2a6a4bc5fd4848e0c8014a8a1cd5d3ff0148c0",
+  "repository_identity": "PASS",
+  "task_anchor_ancestry": "PASS",
+  "package_binding": "PASS",
+  "fresh_regression": {
+    "configure": "PASS",
+    "build": "PASS",
+    "ctest": "37/37 PASS",
+    "git_diff_check": "PASS"
+  },
+  "evidence_audit": {
+    "android_corrective_physical_verification": "PASS_WITH_HUMAN_VISUAL_CONFIRMATION",
+    "pointer_trace_hash": "PASS",
+    "capture_hash": "PASS",
+    "apk_identity": "PASS"
+  },
+  "findings_closed": [
+    "Android pointer id zero is normalized to a valid Runtime identity",
+    "Viewport-cancelled pointer sessions are released for reuse",
+    "Runtime-owned viewport scale and translation drive Android Canvas",
+    "Post-zoom strokes use the inverse viewport transform",
+    "Second-contact admission no longer switches coordinate spaces or causes a visible jump"
+  ],
+  "findings": [
+    {
+      "severity": "NON_BLOCKING_FINDING",
+      "scope": "qualification",
+      "text": "This corrective review covers the Android PositionOnly viewport loop only; Windows/Web qualification and the remaining frozen multi-contact physical scenarios are not re-run by this review."
+    },
+    {
+      "severity": "NON_BLOCKING_FINDING",
+      "scope": "capability",
+      "text": "Pressure/pen qualification remains intentionally out of scope for this corrective profile."
+    }
+  ],
+  "decision": "PASS_ANDROID_CORRECTIVE_FUNCTIONAL_VERIFICATION_WITH_FINDINGS",
+  "official_gate_pass": false,
+  "g4_4_gate_pass": false,
+  "next_action": "Continue the separately scoped Web and Windows physical qualification when their test surfaces are available.",
+  "next_surface": "CONTROL_REVIEW"
+}

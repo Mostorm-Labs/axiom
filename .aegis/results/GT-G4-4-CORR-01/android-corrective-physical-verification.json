@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "CORRECTIVE_PHYSICAL_VERIFICATION",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "result_revision": "6a2a6a4bc5fd4848e0c8014a8a1cd5d3ff0148c0",
+  "platform": "android",
+  "device": {
+    "model": "Pixel 7",
+    "device": "panther",
+    "adb_serial": "29251FDH2004Z0"
+  },
+  "installed_apk": {
+    "path": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "c8472385ebdd1d6f64fd6d8cf6f3d1aaa18ee3e31e8d5a05ead01847f335d278",
+    "build": "PASS",
+    "install": "PASS",
+    "launch": "PASS"
+  },
+  "human_observation": {
+    "observer": "user",
+    "reported_result": "PASS_ANDROID_CORRECTIVE_FUNCTIONAL_CHECKPOINT",
+    "confirmed": [
+      "second-contact admission no longer causes a viewport jump",
+      "two-finger pinch changes viewport scale",
+      "two-finger pan follows the expected direction",
+      "drawing after zoom remains aligned with touch coordinates",
+      "single-pointer strokes remain retained after viewport interaction"
+    ]
+  },
+  "artifacts": {
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/android-corrective-pointer-trace.json",
+      "sha256": "8b5c9fa5efc0df44524f7773d98c3e62b3fac46c4509302e136405da4dbe51f6"
+    },
+    "capture": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/android-corrective-capture.png",
+      "sha256": "709e6153b4742824ee196c35be33ba0ab43a2b99679bcb76cf35aec0c033632c"
+    }
+  },
+  "portable_regression": {
+    "command": "ctest --preset g3-host-debug --output-on-failure",
+    "passed": 37,
+    "failed": 0,
+    "git_diff_check": "PASS"
+  },
+  "limitations": [
+    "pressure and pen qualification remain out of scope",
+    "this record does not claim G4.4 Gate PASS or G4.5 Gate PASS"
+  ],
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}

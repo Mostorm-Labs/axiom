@@ -18,5 +18,9 @@ assert "arm64-v8a" in gradle
 assert "getHistorySize" in view
 assert "getHistoricalX" in view
 assert "sequence = 0" not in view.replace("private long sequence;", "")
+assert "newSingleThreadScheduledExecutor" in view
+assert "evidenceExecutor.schedule" in view
+assert "500, TimeUnit.MILLISECONDS" in view
+assert "sample.sequence > snapshot.traceSequence" in view
 assert "-z,max-page-size=16384" in cmake
 assert "-z,common-page-size=16384" in cmake
