@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "package_id": "GT-G4-4-CORR-01-P31-v0.2",
   "task_id": "GT-G4-4-CORR-01",
-  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "Correct G4.4 PositionOnly and common AutoIntent arbitration only, preserving accepted multi-pointer substrate, completed physical testing, and downstream G4.5 work.",
   "repository": {
     "provider": "github",
@@ -54,5 +54,12 @@
   "repair_record": {
     "ref": ".aegis/results/GT-G4-4-CORR-01/p31-package-repair-v0.2.json",
     "revision": "36937146de3aee6b3d633cb607824578e322af79"
+  },
+  "preflight": {
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "source_binding_preflight": "PASS",
+    "evidence_ref": ".aegis/results/GT-G4-4-CORR-01/p31-preflight-v0.2.json",
+    "evidence_revision": "76e49e45c5a5ea8a435e0fd5401bfcaf93a6f930"
   }
 }
