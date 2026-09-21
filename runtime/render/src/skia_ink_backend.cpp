@@ -9,6 +9,7 @@
 #include "include/core/SkSurface.h"
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 
 namespace canvas::render {
@@ -41,11 +42,24 @@ BackendSubmissionResult SkiaInkBackend::resize(std::uint32_t width,
 
 BackendSubmissionResult SkiaInkBackend::submit(
     std::span<const std::vector<CanonicalStrokePoint>> strokes) {
+    return submit(strokes, CanonicalViewportTransform{});
+}
+
+BackendSubmissionResult SkiaInkBackend::submit(
+    std::span<const std::vector<CanonicalStrokePoint>> strokes,
+    CanonicalViewportTransform viewport) {
     if (impl_ == nullptr || !impl_->surface || width_ == 0U || height_ == 0U) {
         return BackendSubmissionResult::rejected("Skia ink surface is not initialized");
     }
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F ||
+        !std::isfinite(viewport.translationX) || !std::isfinite(viewport.translationY)) {
+        return BackendSubmissionResult::rejected("invalid Skia viewport transform");
+    }
     SkCanvas* canvas = impl_->surface->getCanvas();
     canvas->clear(SK_ColorWHITE);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
     SkPaint paint;
     paint.setAntiAlias(true);
     paint.setColor(SK_ColorBLUE);
@@ -64,6 +78,7 @@ BackendSubmissionResult SkiaInkBackend::submit(
         for (std::size_t i = 1; i < stroke.size(); ++i) path.lineTo(stroke[i].x, stroke[i].y);
         canvas->drawPath(path.detach(), paint);
     }
+    canvas->restore();
     const SkImageInfo info = SkImageInfo::Make(static_cast<int>(width_),
                                                static_cast<int>(height_),
                                                kRGBA_8888_SkColorType,
