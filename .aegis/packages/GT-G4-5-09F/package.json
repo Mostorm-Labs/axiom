@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-09F-P31-v0.1",
+  "task_id": "GT-G4-5-09F",
+  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "purpose": "Implement the G4.5-09F Reference Brush Fidelity + Windows ARC Sync Proof without reopening accepted G4.5-00 through G4.5-09 work.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-reference-brush-fidelity",
+    "integration_target_ref": "codex/g4-5-programmable-brush"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6",
+    "relation": "ancestor",
+    "description": "post-G4.4-reconciled G4.5 control/result head before 09F"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "dependencies": {
+    "g4_5_package": {
+      "path": ".aegis/packages/GT-G4-5/package.json",
+      "package_id": "GT-G4-5-P31-v0.2"
+    },
+    "g4_5_forward_reconciliation": {
+      "path": ".aegis/results/GT-G4-5/g4-4-forward-reconciliation.json",
+      "merge_revision": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+      "result_binding_revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6"
+    },
+    "gate_amendment": "notion://3e24c57a-590c-815c-a970-d9fbaa423ead",
+    "implementation_design": "notion://3e24c57a-590c-81de-9860-ec26d18c386b"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "ed4d9da83caa937c75f58451ee64a28d376baf3df8a7e38344c05cf6b50cbcda"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "8ec88e56923405d0f10fa2ba6c74458f839c0f63761db69310684f3bab4a64b1"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "60de68d7066610e9e8d585cc0322293e32b4849567741608cea81683e6868841"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "88197148426c9c97835b04f3d927b887a0706083232880d07fc713a57573eb74"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "295483e68d8797e93d65cb4b906a4df27f08791f32825d56583eb20820b038b1"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-09F/",
+    "base_revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6",
+    "binding": "exact pushed repository revision on codex/g4-5-reference-brush-fidelity"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Resolve and validate this repo-local P31 package, perform ImplementationDesignPreflight and test-first RED observation, then implement the complete 09F closure contract until READY_FOR_G4_5_10_PHYSICAL_VERIFICATION or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}
