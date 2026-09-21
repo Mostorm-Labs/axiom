@@ -140,6 +140,10 @@ class WindowsPreviewBackend final : public PreviewBackend {
     // when Arc has no strokes left; the next Begin/Push path shows it again.
     if (strokes_.empty()) {
       ShowWindow(surface_, SW_HIDE);
+      // The layered window may keep the last DIB contents after it is hidden.
+      // Mark the cache invalid so the first update of the next stroke performs
+      // a full clear/redraw instead of appending onto stale pixels.
+      bitmapInitialized_ = false;
       return true;
     }
     if (surface_ == nullptr) {
@@ -249,6 +253,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
   bool bitmapInitialized_ = false;
   bool attached_ = false; bool test_only_ = false; std::unordered_map<uint64_t, Stroke> strokes_;
 };
+
 } // namespace
 std::unique_ptr<PreviewBackend> CreateWindowsBackend() { return std::make_unique<WindowsPreviewBackend>(); }
 
