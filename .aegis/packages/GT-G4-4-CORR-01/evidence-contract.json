@@ -1,14 +1,9 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
-  "obligation_set": "AUTOINTENT_ONLY_V0_2",
-  "review_boundary": "Exact corrective result revision plus package locks, AutoIntent/PositionOnly oracles, platform-ingress conformance and preserved G4/G4.4 regressions.",
+  "obligation_set": "AUTOINTENT_ONLY_V0_3_PRESERVED_IMPLEMENTATION",
+  "review_boundary": "Preserved runtime revision 3240a3b6567a898452462f4687939e799572c49d plus current v0.3 package/evidence reconciliation.",
   "artifacts": [
-    {
-      "id": "repository-reconciliation",
-      "path": ".aegis/results/GT-G4-4-CORR-01/repository-reconciliation.json",
-      "blocking": true
-    },
     {
       "id": "auto-intent-evidence",
       "path": ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
@@ -35,26 +30,24 @@
       "blocking": true
     },
     {
+      "id": "p32-reconciliation-v0.3",
+      "path": ".aegis/results/GT-G4-4-CORR-01/p32-reconciliation-v0.3.json",
+      "blocking": true
+    },
+    {
       "id": "result",
       "path": ".aegis/results/GT-G4-4-CORR-01/result.json",
       "blocking": true
     }
   ],
-  "capability_policy": {
-    "current_supported_multi_contact_behavior": "AutoIntent",
-    "default_multi_contact_behavior": "AutoIntent",
-    "missing_pressure": "UNAVAILABLE_NOT_FAILURE",
-    "invalid_contact_geometry": "DISABLE_AREA_HEURISTICS_NOT_PINCH",
-    "unknown_tool": "VALID_POSITIONONLY_STATE",
-    "unsupported_optional_capability_may_not_be_promoted_to_pass": true
-  },
   "deferred": {
-    "non_blocking_modes": [
+    "retained_implementation_allowed": [
       "MultiInk",
-      "GesturePriority"
+      "GesturePriority",
+      "existing mode-switch seams"
     ],
-    "new_physical_device_round_required": false,
-    "historical_physical_evidence_role": "corroborative_only_not_proof_of_new_corrective_code"
+    "blocking": false,
+    "new_physical_device_round_required": false
   },
   "return_contract": {
     "state_required_from_p32": "READY_FOR_CONTROL_REVIEW",
