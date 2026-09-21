@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "evidence_kind": "AUTOINTENT_CURRENT_GUARANTEE_RECONCILIATION",
+  "status": "PASS",
+  "subject_runtime_revision": "3240a3b6567a898452462f4687939e799572c49d",
+  "current_product_guarantee": "AutoIntent",
+  "deferred_non_blocking_implementation": [
+    "MultiInk",
+    "GesturePriority",
+    "existing mode-switch seams"
+  ],
+  "evidence_inputs": [
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+      "blob_sha": "df394a57d795b83cb0a401f50325a449fd91b00a",
+      "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+      "used_claims": [
+        "default_policy AutoIntent",
+        "Pending+second -> viewport PASS",
+        "Ink+second -> independent Ink PASS",
+        "spatial activation PASS"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
+      "blob_sha": "8062ad8d8b9c573736f096de57ffa6855093f122",
+      "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+      "used_claims": [
+        "masked two-pointer viewport claim PASS",
+        "pressure/contact geometry unavailable not failure"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
+      "blob_sha": "eb32d60f88d85830153faa4add82721414277fe0",
+      "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+      "used_claims": [
+        "Pending provisional -> viewport has zero canonical mutation"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
+      "blob_sha": "c723c6d8e4259eda1de20c11901cc7ee7337dd19",
+      "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+      "used_claims": [
+        "Windows/Android/Web use common coordinator",
+        "no platform-private second-pointer arbitration"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
+      "blob_sha": "5e13bfe34a06003174747819a9399b0b67335356",
+      "implementation_revision": "6a2a6a4bc5fd4848e0c8014a8a1cd5d3ff0148c0",
+      "used_claims": [
+        "37/37 portable regression PASS"
+      ]
+    }
+  ],
+  "current_repository_audit": {
+    "common_auto_intent_source": "runtime/interaction/src/multi_contact_coordinator.cpp",
+    "common_auto_intent_source_semantic_rewrite_after_primary_evidence": false,
+    "current_default_constructor_policy": "AutoIntent",
+    "common_host_calls_multi_contact_coordinator": true,
+    "android_routes_phase_aware_samples_to_common_host": true,
+    "web_routes_phase_aware_samples_to_common_host": true,
+    "windows_consumes_common_host_pointer_disposition": true,
+    "runtime_delta_after_subject_revision": [],
+    "branch_descendants_after_subject_revision": "control-plane .aegis only"
+  },
+  "later_corroborative_records": [
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/p36-android-evidence-persistence-reverification.json",
+      "reported_ctest": "38/38 PASS",
+      "runtime_semantics_changed": false
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/p36-web-viewport-reverification.json",
+      "reported_ctest": "38/38 PASS",
+      "runtime_multi_contact_policy_semantics_changed": false
+    }
+  ],
+  "conclusion": "PASS_AUTOINTENT_CURRENT_GUARANTEE",
+  "official_gate_pass": false
+}
