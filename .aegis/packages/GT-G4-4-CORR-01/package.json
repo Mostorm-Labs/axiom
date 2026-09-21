@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1",
-  "package_id": "GT-G4-4-CORR-01-P31-v0.2",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.3",
   "task_id": "GT-G4-4-CORR-01",
-  "status": "CURRENT_EXECUTABLE",
-  "purpose": "Correct G4.4 PositionOnly and common AutoIntent arbitration only, preserving accepted multi-pointer substrate, completed physical testing, and downstream G4.5 work.",
+  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "purpose": "Reconcile and accept the already-implemented G4.4 common AutoIntent/PositionOnly corrective without runtime cleanup; retain existing deferred mode code as non-blocking implementation.",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
@@ -15,28 +15,33 @@
     "revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
     "relation": "ancestor"
   },
-  "resume_cursor": null,
+  "resume_cursor": {
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "accepted_revision": "3240a3b6567a898452462f4687939e799572c49d",
+    "completed_through": "runtime implementation and platform corrective work",
+    "next_action": "reconcile preserved implementation against P31 v0.3; materialize control evidence only"
+  },
   "continue_until_terminal_state": true,
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "23937baca99c872959804e95ec5e894fb3198fbbc71ea9475ece53c3f9bed029"
+    "sha256": "47e889cc06fe69253d939513daebf7595b64c18242f603d41c3023bfb27baa8b"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "dd971de1a9adee2ee6300a6e8b426b55455cb2d0b4bfba5e31153d57c1dbaa38"
+    "sha256": "eb5d29f69a5a1ae2991063e99bc6db194403e11a86e63cbee37f01d55d6d2045"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "df570aee9868995fa9d2f0e37e4be5e064545b4e236ea6a30b7b5d5e660a16bd"
+    "sha256": "7e4186ceaf4e1fb80d88915b582d59f1ef4d7dc165d7e24d58bb1bfe8abafc7e"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "250eb0acb35f8e25fa603f5ead58cd51f90f01c4bea6efd4775a6246fbf984fe"
+    "sha256": "71e53d55d4aecb4bc9491309991fb5d135246846c4db87eb7cb66966e736152a"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "d679f8c0dfac488d98a8dcbce4baf28ee322594e4428424bdbb90e6055a02c53"
+    "sha256": "3cff4248e07ed77c06b2c776ec875c052f0584a20dfbff1640a5e544cf6bbed3"
   },
   "materialization": {
     "same_repository": true,
@@ -47,19 +52,8 @@
   "handoff": {
     "preferred_executor": "codex",
     "next_surface": "CODE_EXECUTION",
-    "next_action": "Execute the AutoIntent-only corrective closure contract until READY_FOR_CONTROL_REVIEW or an explicit terminal blocker. Do not implement or verify deferred MultiInk/GesturePriority modes and do not require a new physical-device round.",
+    "next_action": "Perform no-code P32 reconciliation against preserved runtime boundary 3240a3b6567a898452462f4687939e799572c49d and return READY_FOR_CONTROL_REVIEW if v0.3 obligations resolve.",
     "official_gate_pass_forbidden_during_p32": true
   },
-  "supersedes": "GT-G4-4-CORR-01-P31-v0.1",
-  "repair_record": {
-    "ref": ".aegis/results/GT-G4-4-CORR-01/p31-package-repair-v0.2.json",
-    "revision": "36937146de3aee6b3d633cb607824578e322af79"
-  },
-  "preflight": {
-    "package_binding_preflight": "PASS",
-    "evidence_contract_preflight": "PASS",
-    "source_binding_preflight": "PASS",
-    "evidence_ref": ".aegis/results/GT-G4-4-CORR-01/p31-preflight-v0.2.json",
-    "evidence_revision": "76e49e45c5a5ea8a435e0fd5401bfcaf93a6f930"
-  }
+  "supersedes": "GT-G4-4-CORR-01-P31-v0.2"
 }
