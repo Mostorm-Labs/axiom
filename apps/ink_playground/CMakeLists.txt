@@ -77,9 +77,11 @@ if(EMSCRIPTEN)
   set_target_properties(axiom_ink_playground_web PROPERTIES SUFFIX ".js")
   configure_file(platform/web/index.html
       ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+  configure_file(platform/web/evidence_worker.js
+      ${CMAKE_CURRENT_BINARY_DIR}/evidence_worker.js COPYONLY)
   target_link_options(axiom_ink_playground_web PRIVATE
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_pointer_sample_phase','_axiom_ink_commit_pointer','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_pointer_sample_phase','_axiom_ink_commit_pointer','_axiom_ink_cancel_pointer','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

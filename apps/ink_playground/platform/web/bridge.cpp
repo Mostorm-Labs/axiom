@@ -86,6 +86,24 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_commit_pointer(
   return host(value) != nullptr &&
          host(value)->commitStroke({source, pointer, generation}, strokeId, operationId);
 }
+EMSCRIPTEN_KEEPALIVE int axiom_ink_cancel_pointer(
+    std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
+    std::uint32_t generation) {
+  return host(value) != nullptr &&
+         host(value)->cancelStroke({source, pointer, generation});
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_viewport_claimed(std::uint32_t value) {
+  return host(value) != nullptr && host(value)->viewportGestureClaimed();
+}
+EMSCRIPTEN_KEEPALIVE float axiom_ink_viewport_scale(std::uint32_t value) {
+  return host(value) == nullptr ? 1.0F : host(value)->viewportGesture().scale;
+}
+EMSCRIPTEN_KEEPALIVE float axiom_ink_viewport_translation_x(std::uint32_t value) {
+  return host(value) == nullptr ? 0.0F : host(value)->viewportGesture().translationX;
+}
+EMSCRIPTEN_KEEPALIVE float axiom_ink_viewport_translation_y(std::uint32_t value) {
+  return host(value) == nullptr ? 0.0F : host(value)->viewportGesture().translationY;
+}
 EMSCRIPTEN_KEEPALIVE int axiom_ink_commit(
     std::uint32_t value, std::uint32_t strokeId, std::uint32_t operationId) {
   return host(value) != nullptr && host(value)->commitStroke(strokeId, operationId);
