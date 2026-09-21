@@ -2,7 +2,8 @@ add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
     common/platform_contract.cpp)
 target_include_directories(axiom_ink_playground_common PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/common)
+    ${CMAKE_CURRENT_SOURCE_DIR}/common
+    ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_input canvas_runtime_ink
     canvas_runtime_interaction canvas_runtime_render)
@@ -31,6 +32,8 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
   add_test(NAME G4MultiPointerPlayground COMMAND axiom_ink_playground_tests multipointer)
   add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
+  add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
+  add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp

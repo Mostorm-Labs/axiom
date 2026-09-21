@@ -1,5 +1,6 @@
 #include "ink_playground_host.hpp"
 
+#include <cmath>
 #include <memory>
 #include <limits>
 #include <vector>
@@ -47,6 +48,8 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
         (contactDispositions_.contains(sample.key) ||
          sample.phase == input::PointerPhase::kDown);
     if (trackedContact) {
+      if (!sample.predicted) contactSamples_[sample.key] = sample;
+      const bool viewportWasClaimed = contactCoordinator_.viewportClaimed();
       const auto disposition = contactCoordinator_.update(sample);
       contactDispositions_[sample.key] = disposition;
       if (disposition == interaction::ContactDisposition::kViewportGesture) {
@@ -59,6 +62,32 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
           (void)interaction_->cancel(existing, existingStroke);
         }
         keyedStrokeIds_.clear();
+        const input::PointerSample* first = nullptr;
+        const input::PointerSample* second = nullptr;
+        for (const auto& [key, current] : contactSamples_) {
+          if (contactCoordinator_.disposition(key) !=
+              interaction::ContactDisposition::kViewportGesture) continue;
+          if (first == nullptr) first = &current;
+          else { second = &current; break; }
+        }
+        if (first != nullptr && second != nullptr) {
+          if (viewportGesture_.update(*first, *second)) {
+            viewportState_ = viewportGesture_.state();
+            const float gestureScale = viewportState_.scale;
+            viewportState_.scale = gestureScale * committedViewportScale_;
+            viewportState_.translationX = gestureScale * committedViewportTranslationX_ +
+                viewportState_.translationX;
+            viewportState_.translationY = gestureScale * committedViewportTranslationY_ +
+                viewportState_.translationY;
+          }
+        }
+      }
+      if (viewportWasClaimed && !contactCoordinator_.viewportClaimed()) {
+        committedViewportScale_ = viewportState_.scale;
+        committedViewportTranslationX_ = viewportState_.translationX;
+        committedViewportTranslationY_ = viewportState_.translationY;
+        viewportGesture_.reset();
+        contactSamples_.clear();
       }
       if (disposition == interaction::ContactDisposition::kIgnored &&
           keyedStrokeIds_.contains(sample.key)) {
@@ -74,11 +103,22 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
         continue;
       }
     }
-    const ink::StrokePoint point{sample.x, sample.y, sample.pressure};
+    input::PointerSample contentSample = sample;
+    if (sample.key.valid()) {
+      if (!std::isfinite(viewportState_.scale) || viewportState_.scale <= 0.0F) {
+        return false;
+      }
+      contentSample.x =
+          (sample.x - viewportState_.translationX) / viewportState_.scale;
+      contentSample.y =
+          (sample.y - viewportState_.translationY) / viewportState_.scale;
+    }
+    const ink::StrokePoint point{contentSample.x, contentSample.y,
+                                 contentSample.pressure};
     if (sample.predicted) {
       predicted.push_back(point);
     } else {
-      if (!ink_->append(sample)) return false;
+      if (!ink_->append(contentSample)) return false;
       confirmed.push_back(point);
     }
   }
@@ -146,7 +186,13 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
   }
   keyedStrokeIds_.clear();
   contactDispositions_.clear();
+  contactSamples_.clear();
   contactCoordinator_.reset();
+  viewportGesture_.reset();
+  viewportState_ = {};
+  committedViewportScale_ = 1.0F;
+  committedViewportTranslationX_ = 0.0F;
+  committedViewportTranslationY_ = 0.0F;
   interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
 }
 

@@ -1,7 +1,9 @@
 #include "ink_playground_host.hpp"
 #include "platform_contract.hpp"
+#include "platform/android/android_pointer_identity.hpp"
 
 #include <cassert>
+#include <limits>
 #include <string_view>
 
 namespace {
@@ -149,6 +151,57 @@ void provisional_zero_mutation_test() {
   assert(host.pointerDisposition(first) == canvas::interaction::ContactDisposition::kViewportGesture);
   assert(host.pointerDisposition(second) == canvas::interaction::ContactDisposition::kViewportGesture);
 }
+
+void viewport_gesture_state_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  const canvas::input::PointerKey first{10, 1, 1};
+  const canvas::input::PointerKey second{10, 2, 1};
+  assert(host.beginStroke(first, 401));
+  assert(host.beginStroke(second, 402));
+  canvas::input::PointerSampleBatch downA;
+  downA.samples.push_back({1, 1, 0.0F, 0.0F, 0.0F, false, first, {}, {}, canvas::input::PointerPhase::kDown});
+  assert(host.accept(downA, 1));
+  canvas::input::PointerSampleBatch downB;
+  downB.samples.push_back({2, 2, 20.0F, 0.0F, 0.0F, false, second, {}, {}, canvas::input::PointerPhase::kDown});
+  assert(host.accept(downB, 2));
+  assert(host.viewportGestureClaimed());
+  assert(host.viewportGesture().scale == 1.0F);
+  canvas::input::PointerSampleBatch moveB;
+  moveB.samples.push_back({3, 3, 40.0F, 0.0F, 0.0F, false, second, {}, {}, canvas::input::PointerPhase::kMove});
+  assert(host.accept(moveB, 3));
+  assert(host.viewportGesture().scale == 2.0F);
+  assert(host.viewportGesture().centerX == 20.0F);
+  assert(host.viewportGesture().translationX == 0.0F);
+  canvas::input::PointerSampleBatch upA;
+  upA.samples.push_back({4, 4, 0.0F, 0.0F, 0.0F, false, first, {}, {}, canvas::input::PointerPhase::kUp});
+  assert(host.accept(upA, 4));
+  canvas::input::PointerSampleBatch upB;
+  upB.samples.push_back({5, 5, 40.0F, 0.0F, 0.0F, false, second, {}, {}, canvas::input::PointerPhase::kUp});
+  assert(host.accept(upB, 5));
+  assert(!host.viewportGestureClaimed());
+  assert(host.viewportGesture().scale == 2.0F);
+  const canvas::input::PointerKey third{10, 3, 1};
+  assert(host.beginStroke(third, 403));
+  canvas::input::PointerSampleBatch downC;
+  downC.samples.push_back({6, 6, 20.0F, 20.0F, 0.0F, false, third, {}, {}, canvas::input::PointerPhase::kDown});
+  assert(host.accept(downC, 6));
+  canvas::input::PointerSampleBatch upC;
+  upC.samples.push_back({7, 7, 24.0F, 24.0F, 0.0F, false, third, {}, {}, canvas::input::PointerPhase::kUp});
+  assert(host.accept(upC, 7));
+  assert(host.commitStroke(third, 403, 403));
+  assert(host.canonicalStrokes().size() == 1);
+  assert(host.canonicalStrokes().front().front().x == 10.0F);
+  assert(host.canonicalStrokes().front().front().y == 10.0F);
+}
+
+void android_pointer_identity_test() {
+  using canvas::ink_playground::androidPointerIdentity;
+  assert(androidPointerIdentity(0).has_value());
+  assert(*androidPointerIdentity(0) == 1);
+  assert(*androidPointerIdentity(1) == 2);
+  assert(*androidPointerIdentity(31) == 32);
+  assert(!androidPointerIdentity(std::numeric_limits<std::uint64_t>::max()).has_value());
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -161,6 +214,8 @@ int main(int argc, char** argv) {
   else if (mode == "platform") platform_test();
   else if (mode == "multipointer") multipointer_test();
   else if (mode == "provisional") provisional_zero_mutation_test();
+  else if (mode == "viewport") viewport_gesture_state_test();
+  else if (mode == "android-pointer-identity") android_pointer_identity_test();
   else return 2;
   return 0;
 }
