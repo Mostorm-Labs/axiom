@@ -28,7 +28,8 @@ std::uint64_t hashBytes(ResourceId id, BrushResourceKind kind,
 
 BrushAlphaResource make(ResourceId id, std::uint32_t extent,
                         BrushResourceKind kind, BrushResourcePattern pattern) {
-  BrushAlphaResource out{.id = id, .kind = kind, .width = extent, .height = extent};
+  BrushAlphaResource out{.id = id, .kind = kind, .width = extent, .height = extent,
+                         .alpha = {}, .contentHash = 0};
   if (!id.valid() || extent == 0 || extent > 512) return {};
   out.alpha.resize(static_cast<std::size_t>(extent) * extent);
   for (std::uint32_t y = 0; y < extent; ++y) {

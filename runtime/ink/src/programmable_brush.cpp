@@ -2,6 +2,7 @@
 #include "canvas/ink/brush_resource.hpp"
 
 #include <bit>
+#include <algorithm>
 #include <cmath>
 #include <limits>
 
