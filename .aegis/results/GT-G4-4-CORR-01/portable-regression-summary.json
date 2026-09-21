@@ -1,11 +1,11 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
-  "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+  "implementation_revision": "6a2a6a4bc5fd4848e0c8014a8a1cd5d3ff0148c0",
   "configure": "PASS",
   "build": "PASS",
   "ctest_command": "ctest --preset g3-host-debug --output-on-failure",
-  "tests_passed": 35,
+  "tests_passed": 37,
   "tests_failed": 0,
   "git_diff_check": "PASS",
   "regressions": ["G4 interaction", "PointerKey", "multi-stroke", "Arc keyed preview", "G3 relevant suites"]
