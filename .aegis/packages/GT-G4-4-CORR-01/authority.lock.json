@@ -2,29 +2,33 @@
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
   "current": true,
+  "package_repair": "P31-v0.2-auto-intent-only",
   "sources": [
     {
       "provider": "notion",
       "ref": "notion://3e14c57a-590c-812d-942b-d37761abfedd",
       "title": "G4.4 PositionOnly Input Corrective Amendment v0.1",
-      "snapshot_at": "2026-09-20T22:01:09.549Z",
-      "content_sha256": "9b1c460e986a03dcaa785513e524e89735786f167485810e17cec68f0401c4d7"
+      "snapshot_at": "2026-09-21T07:22:31.563Z",
+      "content_sha256": "eb353310e0cde3f6a13c016ebb796c41ebd07b844fdd469337bec10f8b5ba99c"
     },
     {
       "provider": "notion",
       "ref": "notion://3e14c57a-590c-817b-ac1d-d9506534b09b",
       "title": "GT-G4-4-CORR-01 Corrective Implementation Design and P31 Freeze Candidate v0.1",
-      "snapshot_at": "2026-09-20T22:00:34.975Z",
-      "content_sha256": "28c65ed5c562388681f843626f53efefd7a336814d33b074adcb2338fb710625"
+      "snapshot_at": "2026-09-21T07:22:31.563Z",
+      "content_sha256": "9405cb4c694a421ee5a05e353c4cc7a11ce82c14a123feab8e4ea7dd498e4beb"
     }
   ],
   "trusted_statements": {
-    "default_multi_contact_policy": "AutoIntent",
-    "policies": [
-      "AutoIntent",
+    "current_supported_multi_contact_behavior": "AutoIntent",
+    "current_default_multi_contact_behavior": "AutoIntent",
+    "deferred_non_blocking_design_ideas": [
       "MultiInk",
-      "GesturePriority"
+      "GesturePriority",
+      "product-visible mode switch",
+      "per-cohort policy switching"
     ],
+    "deferred_modes_not_authorized_for_current_implementation": true,
     "minimum_pointer_core": [
       "PointerKey",
       "position",
@@ -41,9 +45,7 @@
       "confidence",
       "hardwareEraser"
     ],
-    "auto_intent": "second compatible contact while first is Pending forms viewport gesture; once Ink-locked, later compatible contacts become independent Ink sessions",
-    "multi_ink": "eligible contacts become independent Ink sessions; automatic two-finger viewport gesture disabled",
-    "gesture_priority": "second compatible contact while first is Pending forms viewport gesture; if first is already Ink-locked, later contact is ignored and first continues drawing",
+    "auto_intent": "Second compatible contact while first is Pending forms viewport gesture; once Ink-locked, later compatible contacts become independent Ink sessions.",
     "no_gesture_takeover": true,
     "no_concurrent_ink_and_pinch_same_generic_cohort": true,
     "sample_count_activation_forbidden": true,
@@ -54,12 +56,13 @@
     "position_only_pinch_required": true,
     "pressure_or_contact_geometry_required_for_pinch": false,
     "platform_private_arbitration_forbidden": true,
-    "canonical_semantics_change": false
+    "canonical_semantics_change": false,
+    "new_blocking_physical_requalification_required": false
   },
   "dependency": {
     "accepted_g4_4_main_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
     "g4_4_gate_revision": "eb4ca06e2bb44471f413234377b1cfb4e1e76bdf",
     "downstream_g4_5_branch": "codex/g4-5-programmable-brush",
-    "downstream_preservation_rule": "Preserve existing G4.5 brush implementation; forward-integrate corrective main later and rerun interaction-coupled evidence only."
+    "downstream_preservation_rule": "Preserve existing G4.5 brush implementation and completed physical observations; forward-integrate corrective main later and rerun automated interaction regression only."
   }
 }
