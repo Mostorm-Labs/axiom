@@ -57,6 +57,8 @@ class WindowsPreviewBackend final : public PreviewBackend {
     }
     test_only_ = false;
     if (!RegisterPreviewClass()) return Status::kBackendUnavailable;
+    if (target_.width_pixels != t.width_pixels || target_.height_pixels != t.height_pixels)
+      releaseBitmap();
     target_ = t; generation_ = t.target_generation;
     if (surface_ == nullptr) {
       surface_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE |
@@ -84,13 +86,19 @@ class WindowsPreviewBackend final : public PreviewBackend {
     if (!attached_ || u.target_generation != generation_) return Status::kStaleRevision;
     auto it = strokes_.find(u.stroke_id); if (it == strokes_.end()) return Status::kNotFound;
     if (u.truncate_confirmed_to > it->second.confirmed.size()) return Status::kInvalidArgument;
+    const auto previousCount = it->second.confirmed.size();
+    const bool appendOnly = bitmapInitialized_ && u.truncate_confirmed_to == previousCount &&
+                            u.predicted_tail_count == 0U && u.confirmed_append_count != 0U;
     it->second.confirmed.resize(u.truncate_confirmed_to);
     append(it->second.confirmed, u.confirmed_append, u.confirmed_append_count,
            u.confirmed_append_stride);
     it->second.predicted.clear();
     append(it->second.predicted, u.predicted_tail, u.predicted_tail_count,
            u.predicted_tail_stride);
-    return render() ? Status::kOk : Status::kPresentationFailed;
+    const bool presented = appendOnly && strokes_.size() == 1U
+                               ? renderAppend(it->second.confirmed, previousCount)
+                               : render();
+    return presented ? Status::kOk : Status::kPresentationFailed;
   }
   Status SealInput(const arc_preview_seal_v0& s) override {
     if (!attached_ || s.target_generation != generation_) return Status::kStaleRevision;
@@ -147,35 +155,98 @@ class WindowsPreviewBackend final : public PreviewBackend {
     SetWindowPos(surface_, HWND_TOP, origin.x, origin.y, static_cast<int>(target_.width_pixels),
                  static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
     ShowWindow(surface_, SW_SHOWNA);
-    HDC screen = GetDC(nullptr), mem = CreateCompatibleDC(screen); BITMAPINFO bi{};
-    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER); bi.bmiHeader.biWidth = target_.width_pixels;
-    bi.bmiHeader.biHeight = -static_cast<LONG>(target_.height_pixels); bi.bmiHeader.biPlanes = 1;
-    bi.bmiHeader.biBitCount = 32; bi.bmiHeader.biCompression = BI_RGB; void* bits = nullptr;
-    HBITMAP bm = CreateDIBSection(mem, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
-    if (!bm || !bits) { if (bm) DeleteObject(bm); DeleteDC(mem); ReleaseDC(nullptr, screen); return false; }
+    HDC screen = GetDC(nullptr);
+    if (mem_ == nullptr || bitmap_ == nullptr || bits_ == nullptr) {
+      mem_ = CreateCompatibleDC(screen);
+      BITMAPINFO bi{}; bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+      bi.bmiHeader.biWidth = target_.width_pixels;
+      bi.bmiHeader.biHeight = -static_cast<LONG>(target_.height_pixels);
+      bi.bmiHeader.biPlanes = 1; bi.bmiHeader.biBitCount = 32; bi.bmiHeader.biCompression = BI_RGB;
+      bitmap_ = CreateDIBSection(mem_, &bi, DIB_RGB_COLORS, &bits_, nullptr, 0);
+      if (!mem_ || !bitmap_ || !bits_) {
+        if (bitmap_) DeleteObject(bitmap_); bitmap_ = nullptr;
+        if (mem_) DeleteDC(mem_); mem_ = nullptr; bits_ = nullptr;
+        ReleaseDC(nullptr, screen); return false;
+      }
+      oldBitmap_ = SelectObject(mem_, bitmap_);
+    }
     const size_t count = static_cast<size_t>(target_.width_pixels) * target_.height_pixels;
-    std::fill_n(static_cast<std::uint32_t*>(bits), count, 0u); HGDIOBJ old = SelectObject(mem, bm);
-    for (const auto& [id, s] : strokes_) { (void)id; draw(mem, s.confirmed); draw(mem, s.predicted); }
-    auto* rgba = static_cast<std::uint32_t*>(bits);
+    std::fill_n(static_cast<std::uint32_t*>(bits_), count, 0u);
+    for (const auto& [id, s] : strokes_) { (void)id; draw(mem_, s.confirmed); draw(mem_, s.predicted); }
+    auto* rgba = static_cast<std::uint32_t*>(bits_);
     for (size_t i = 0; i < count; ++i) {
       if ((rgba[i] & 0x00ffffffu) != 0) rgba[i] = (rgba[i] & 0x00ffffffu) | 0x88000000u;
     }
     SIZE size{static_cast<LONG>(target_.width_pixels), static_cast<LONG>(target_.height_pixels)};
     BLENDFUNCTION blend{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
     POINT source{0, 0};
-    const BOOL ok = UpdateLayeredWindow(surface_, screen, &origin, &size, mem, &source, 0,
+    const BOOL ok = UpdateLayeredWindow(surface_, screen, &origin, &size, mem_, &source, 0,
                                         &blend, ULW_ALPHA);
-    SelectObject(mem, old); DeleteObject(bm); DeleteDC(mem); ReleaseDC(nullptr, screen); return ok != FALSE;
+    bitmapInitialized_ = ok != FALSE; ReleaseDC(nullptr, screen); return ok != FALSE;
+  }
+  bool renderAppend(const std::vector<arc_preview_primitive_v0>& points,
+                    std::size_t previousCount) {
+    if (points.empty() || previousCount >= points.size()) return render();
+    if (surface_ == nullptr || mem_ == nullptr || bits_ == nullptr) return render();
+    HDC screen = GetDC(nullptr);
+    POINT origin{0, 0}; if (!ClientToScreen(owner_, &origin)) { ReleaseDC(nullptr, screen); return false; }
+    SetWindowPos(surface_, HWND_TOP, origin.x, origin.y, static_cast<int>(target_.width_pixels),
+                 static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    ShowWindow(surface_, SW_SHOWNA);
+    drawRange(mem_, points, previousCount > 1U ? previousCount - 2U : 0U);
+    const size_t count = static_cast<size_t>(target_.width_pixels) * target_.height_pixels;
+    auto* rgba = static_cast<std::uint32_t*>(bits_);
+    for (size_t i = 0; i < count; ++i)
+      if ((rgba[i] & 0x00ffffffu) != 0) rgba[i] = (rgba[i] & 0x00ffffffu) | 0x88000000u;
+    SIZE size{static_cast<LONG>(target_.width_pixels), static_cast<LONG>(target_.height_pixels)};
+    BLENDFUNCTION blend{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA}; POINT source{0, 0};
+    const BOOL ok = UpdateLayeredWindow(surface_, screen, &origin, &size, mem_, &source, 0,
+                                        &blend, ULW_ALPHA);
+    bitmapInitialized_ = ok != FALSE; ReleaseDC(nullptr, screen); return ok != FALSE;
   }
   static void draw(HDC dc, const std::vector<arc_preview_primitive_v0>& p) {
-    if (p.empty()) return; HPEN pen = CreatePen(PS_SOLID, 8, RGB(40, 190, 235)); HGDIOBJ old = SelectObject(dc, pen);
-    POINT prev{}; bool have = false; for (const auto& v : p) { POINT cur{(LONG)v.x, (LONG)v.y};
-      if (have) { MoveToEx(dc, prev.x, prev.y, nullptr); LineTo(dc, cur.x, cur.y); }
-      prev = cur; have = true; } SelectObject(dc, old); DeleteObject(pen);
+    if (p.empty()) return;
+    HPEN pen = CreatePen(PS_SOLID, 8, RGB(40, 190, 235)); HGDIOBJ old = SelectObject(dc, pen);
+    std::vector<POINT> points; points.reserve(p.size());
+    for (const auto& v : p) points.push_back({static_cast<LONG>(v.x), static_cast<LONG>(v.y)});
+    MoveToEx(dc, points.front().x, points.front().y, nullptr);
+    if (points.size() == 2U) {
+      LineTo(dc, points.back().x, points.back().y);
+    } else {
+      for (std::size_t i = 0; i + 1U < points.size(); ++i) {
+        const POINT& p0 = points[i == 0U ? i : i - 1U];
+        const POINT& p1 = points[i];
+        const POINT& p2 = points[i + 1U];
+        const POINT& p3 = points[i + 2U < points.size() ? i + 2U : i + 1U];
+        POINT controls[3] = {
+            {p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6},
+            {p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6}, p2};
+        PolyBezierTo(dc, controls, 3);
+      }
+    }
+    SelectObject(dc, old); DeleteObject(pen);
   }
-  void destroy() { if (surface_) DestroyWindow(surface_); surface_ = nullptr; owner_ = nullptr;
-    attached_ = false; test_only_ = false; generation_ = 0; strokes_.clear(); }
+  static void drawRange(HDC dc, const std::vector<arc_preview_primitive_v0>& p,
+                        std::size_t start) {
+    if (p.empty() || start >= p.size()) return;
+    std::vector<arc_preview_primitive_v0> tail(p.begin() + static_cast<std::ptrdiff_t>(start), p.end());
+    draw(dc, tail);
+  }
+  void releaseBitmap() {
+    if (mem_ && oldBitmap_) SelectObject(mem_, oldBitmap_);
+    if (bitmap_) DeleteObject(bitmap_); bitmap_ = nullptr;
+    if (mem_) DeleteDC(mem_); mem_ = nullptr; bits_ = nullptr; oldBitmap_ = nullptr;
+    bitmapInitialized_ = false;
+  }
+  void destroy() {
+    if (surface_) DestroyWindow(surface_); surface_ = nullptr;
+    releaseBitmap();
+    owner_ = nullptr;
+    attached_ = false; test_only_ = false; generation_ = 0; bitmapInitialized_ = false; strokes_.clear(); }
   HWND owner_ = nullptr, surface_ = nullptr; arc_preview_target_v0 target_{}; uint64_t generation_ = 0;
+  HDC mem_ = nullptr; HBITMAP bitmap_ = nullptr; HGDIOBJ oldBitmap_ = nullptr;
+  void* bits_ = nullptr;
+  bool bitmapInitialized_ = false;
   bool attached_ = false; bool test_only_ = false; std::unordered_map<uint64_t, Stroke> strokes_;
 };
 } // namespace

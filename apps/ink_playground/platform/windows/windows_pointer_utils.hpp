@@ -10,9 +10,24 @@
 #include <cstdint>
 #include <vector>
 #include <algorithm>
+#include <span>
 #include "canvas/ink/ink_engine.hpp"
 
 namespace canvas::ink_playground::windows_input {
+
+inline std::size_t appendPreviewSamples(
+    std::vector<arc_preview_primitive_v0>& points,
+    std::uint64_t& lastSampleSequence,
+    std::span<const arc_pointer_sample_v0> samples) {
+  const auto before = points.size();
+  for (const auto& sample : samples) {
+    if (sample.sample_sequence <= lastSampleSequence) continue;
+    points.push_back({ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0, sample.x, sample.y,
+                      2.0F, 0.0F, 1.0F});
+    lastSampleSequence = sample.sample_sequence;
+  }
+  return points.size() - before;
+}
 
 struct ViewportPoint final {
   float x = 0.0F;

@@ -24,8 +24,20 @@ int main() {
       .scale = 2.0F, .translationX = 3.0F, .translationY = 4.0F};
   assert(backend.submit(strokes, viewport).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
+  assert(backend.rasterizationCount() == 1U);
   const auto pixels = backend.rgba();
   assert(isBlue(pixels, backend.width(), 13U, 14U));
   assert(!isBlue(pixels, backend.width(), 5U, 5U));
+
+  // Repeating the current size is a paint-time no-op. In particular it must
+  // not replace/clear the already rendered surface, because the Windows host
+  // may receive many WM_PAINT messages while input is moving.
+  assert(backend.resize(64U, 64U).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(isBlue(backend.rgba(), backend.width(), 13U, 14U));
+
+  assert(backend.submit(strokes, viewport).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(backend.rasterizationCount() == 1U);
   return 0;
 }

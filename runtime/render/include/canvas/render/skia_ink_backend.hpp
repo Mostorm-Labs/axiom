@@ -40,6 +40,9 @@ class SkiaInkBackend final {
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }
     [[nodiscard]] std::uint32_t height() const noexcept { return height_; }
+    [[nodiscard]] std::uint64_t rasterizationCount() const noexcept {
+        return rasterizationCount_;
+    }
 
   private:
     struct Impl;
@@ -47,6 +50,10 @@ class SkiaInkBackend final {
     std::uint32_t width_ = 0;
     std::uint32_t height_ = 0;
     std::vector<std::uint8_t> pixels_;
+    std::vector<std::vector<CanonicalStrokePoint>> submittedStrokes_;
+    CanonicalViewportTransform submittedViewport_{};
+    bool hasSubmission_ = false;
+    std::uint64_t rasterizationCount_ = 0;
 };
 
 }  // namespace canvas::render

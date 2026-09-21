@@ -25,6 +25,22 @@ int main() {
   if (retained.size() != 2U || retained.back().x != 3.0F || retained.back().pressure != 0.75F) {
     return 3;
   }
+  std::vector<arc_preview_primitive_v0> previewPoints;
+  std::uint64_t lastPreviewSequence = 0;
+  arc_pointer_sample_v0 previewSamples[2]{};
+  previewSamples[0].sample_sequence = 1;
+  previewSamples[0].x = 10.0F;
+  previewSamples[0].y = 11.0F;
+  previewSamples[1].sample_sequence = 2;
+  previewSamples[1].x = 12.0F;
+  previewSamples[1].y = 13.0F;
+  if (canvas::ink_playground::windows_input::appendPreviewSamples(
+          previewPoints, lastPreviewSequence, previewSamples) != 2U ||
+      canvas::ink_playground::windows_input::appendPreviewSamples(
+          previewPoints, lastPreviewSequence, previewSamples) != 0U ||
+      previewPoints.size() != 2U || lastPreviewSequence != 2U) {
+    return 13;
+  }
   std::vector<POINTER_INFO> newestFirst(3);
   newestFirst[0].pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT;
   newestFirst[0].ptPixelLocation = {100, 100};
