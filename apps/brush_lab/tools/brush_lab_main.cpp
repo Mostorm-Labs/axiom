@@ -1,4 +1,5 @@
 #include "brush_lab.hpp"
+#include "reference_brushes.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -18,6 +19,8 @@ int main(int argc, char** argv) {
   std::filesystem::create_directories(output);
   std::ofstream manifest(output / "manifest.json", std::ios::binary);
   manifest << canvas::brush_lab::manifestJson() << '\n';
+  std::ofstream referenceManifest(output / "reference-brush-manifest.json", std::ios::binary);
+  referenceManifest << canvas::brush_lab::referenceBrushManifestJson() << '\n';
   for (const auto family : {canvas::ink::BrushFamily::kPen,
                             canvas::ink::BrushFamily::kPencil,
                             canvas::ink::BrushFamily::kChalk,
@@ -29,5 +32,5 @@ int main(int argc, char** argv) {
     std::ofstream svg(output / (scenario.name + ".svg"), std::ios::binary);
     svg << scenario.svg << '\n';
   }
-  return manifest && !manifest.bad() ? 0 : 1;
+  return manifest && referenceManifest && !manifest.bad() && !referenceManifest.bad() ? 0 : 1;
 }

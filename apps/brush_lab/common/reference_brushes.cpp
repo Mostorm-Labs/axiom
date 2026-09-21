@@ -1,5 +1,7 @@
 #include "reference_brushes.hpp"
 
+#include <sstream>
+
 namespace canvas::brush_lab {
 namespace {
 
@@ -47,6 +49,34 @@ ReferenceBrushSet makeReferenceBrushSet() {
   add(ReferenceBrushId::kDecorativeBroad, "RB-05 Decorative Broad",
       definition(505, ink::BrushFamily::kMarker, 20.0F, 0.68F, 0.32F, {5051}, {5052}));
   return out;
+}
+
+std::string referenceBrushManifestJson() {
+  const auto set = makeReferenceBrushSet();
+  std::ostringstream out;
+  out << "{\"schema_version\":\"0.1\",\"brush_count\":5,\"brushes\":[";
+  for (std::size_t i = 0; i < set.presets.size(); ++i) {
+    const auto& preset = set.presets[i];
+    const auto program = compileReferenceBrush(preset, set.resources);
+    const auto resource = set.resources.renderResource(preset.definition.shapeResource,
+                                                       preset.definition.grainResource);
+    if (i != 0) out << ',';
+    out << "{\"id\":" << static_cast<unsigned>(preset.id)
+        << ",\"name\":\"" << preset.name << "\",\"program_identity\":"
+        << (program ? program.program->identity() : 0)
+        << ",\"shape_hash\":"
+        << (set.resources.resource(preset.definition.shapeResource)
+                ? set.resources.resource(preset.definition.shapeResource)->contentHash
+                : 0)
+        << ",\"grain_hash\":"
+        << (set.resources.resource(preset.definition.grainResource)
+                ? set.resources.resource(preset.definition.grainResource)->contentHash
+                : 0)
+        << ",\"render_resource_hash\":" << (resource ? resource->contentHash : 0)
+        << '}';
+  }
+  out << "]}";
+  return out.str();
 }
 
 const ReferenceBrushPreset* ReferenceBrushSet::find(ReferenceBrushId id) const noexcept {

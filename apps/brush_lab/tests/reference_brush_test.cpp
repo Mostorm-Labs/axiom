@@ -2,11 +2,15 @@
 
 #include <array>
 #include <cassert>
+#include <string>
 
 int main() {
   using namespace canvas::brush_lab;
   const auto set = makeReferenceBrushSet();
   assert(set.presets.size() == 5);
+  const auto manifest = referenceBrushManifestJson();
+  assert(manifest.find("\"brush_count\":5") != std::string::npos);
+  assert(manifest.find("RB-03 Dry Chalk") != std::string::npos);
   for (const auto& preset : set.presets) {
     assert(preset.definition.version == 2);
     assert(preset.definition.shapeResource.valid());

@@ -3,6 +3,7 @@
 #include "canvas/ink/brush_resource.hpp"
 
 #include <vector>
+#include <string>
 
 namespace canvas::brush_lab {
 
@@ -33,6 +34,7 @@ struct DryChalkEdit final {
 };
 
 [[nodiscard]] ReferenceBrushSet makeReferenceBrushSet();
+[[nodiscard]] std::string referenceBrushManifestJson();
 [[nodiscard]] ink::BrushCompileResult compileReferenceBrush(
     const ReferenceBrushPreset& preset, const ink::ResourceCatalog& resources);
 [[nodiscard]] ReferenceBrushPreset editDryChalk(const ReferenceBrushPreset& preset,
