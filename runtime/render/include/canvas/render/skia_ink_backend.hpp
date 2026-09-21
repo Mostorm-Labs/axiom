@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/render/render_backend.hpp"
+#include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
 #include <span>
@@ -37,6 +38,9 @@ class SkiaInkBackend final {
     [[nodiscard]] BackendSubmissionResult submit(
         std::span<const std::vector<CanonicalStrokePoint>> strokes,
         CanonicalViewportTransform viewport);
+    [[nodiscard]] BackendSubmissionResult submitPrimitives(
+        std::span<const canvas::ink::BrushPrimitive> primitives,
+        CanonicalViewportTransform viewport = {});
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }
     [[nodiscard]] std::uint32_t height() const noexcept { return height_; }
@@ -51,6 +55,7 @@ class SkiaInkBackend final {
     std::uint32_t height_ = 0;
     std::vector<std::uint8_t> pixels_;
     std::vector<std::vector<CanonicalStrokePoint>> submittedStrokes_;
+    std::vector<canvas::ink::BrushPrimitive> submittedPrimitives_;
     CanonicalViewportTransform submittedViewport_{};
     bool hasSubmission_ = false;
     std::uint64_t rasterizationCount_ = 0;

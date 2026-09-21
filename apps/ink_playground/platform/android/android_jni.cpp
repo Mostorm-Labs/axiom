@@ -1,6 +1,7 @@
 #include <jni.h>
 
 #include <cstdint>
+#include <vector>
 
 extern "C" {
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height);
@@ -31,6 +32,9 @@ std::uint64_t axiom_ink_android_brush_digest(void* handle);
 std::uint64_t axiom_ink_android_brush_primitive_count(void* handle);
 std::uint64_t axiom_ink_android_brush_family(void* handle);
 int axiom_ink_android_brush_canonical_mutation(void* handle);
+int axiom_ink_android_brush_render(void* handle, std::uint32_t width,
+                                   std::uint32_t height, std::uint8_t* rgba,
+                                   std::uint32_t stride);
 float axiom_ink_android_brush_size(void* handle, std::uint64_t pointerId);
 float axiom_ink_android_brush_opacity(void* handle, std::uint64_t pointerId);
 int axiom_ink_android_brush_representation(void* handle, std::uint64_t pointerId);
@@ -216,5 +220,21 @@ Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushRepresentation
     JNIEnv*, jclass, jlong handle, jint pointerId) {
   return axiom_ink_android_brush_representation(reinterpret_cast<void*>(handle),
                                                 static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushRgba(
+    JNIEnv* env, jclass, jlong handle, jint width, jint height) {
+  if (width <= 0 || height <= 0) return nullptr;
+  std::vector<std::uint8_t> rgba(static_cast<std::size_t>(width) * height * 4U);
+  if (axiom_ink_android_brush_render(reinterpret_cast<void*>(handle),
+                                     static_cast<std::uint32_t>(width),
+                                     static_cast<std::uint32_t>(height), rgba.data(),
+                                     static_cast<std::uint32_t>(width) * 4U) == 0) return nullptr;
+  jbyteArray result = env->NewByteArray(static_cast<jsize>(rgba.size()));
+  if (result == nullptr) return nullptr;
+  env->SetByteArrayRegion(result, 0, static_cast<jsize>(rgba.size()),
+                          reinterpret_cast<const jbyte*>(rgba.data()));
+  return result;
 }
 }

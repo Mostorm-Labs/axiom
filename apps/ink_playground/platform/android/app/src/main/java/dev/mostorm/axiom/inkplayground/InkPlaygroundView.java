@@ -1,10 +1,11 @@
 package dev.mostorm.axiom.inkplayground;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Bitmap;
+import java.nio.ByteBuffer;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
@@ -101,22 +102,31 @@ public final class InkPlaygroundView extends View {
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawColor(Color.WHITE);
-        canvas.save();
-        canvas.translate(viewportTranslationX, viewportTranslationY);
-        canvas.scale(viewportScale, viewportScale);
-        for (Stroke stroke : strokes) {
-            for (int i = 1; i < stroke.points.size(); ++i) {
-                Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
-                if (a.family == 5) drawTexturedBrush(canvas, ink, a, b);
+        final byte[] nativeRgba = handle == 0 ? null : nativeBrushRgba(handle, getWidth(), getHeight());
+        final boolean nativeSkiaRendered = nativeRgba != null;
+        if (nativeSkiaRendered) {
+            final Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(nativeRgba));
+            canvas.drawBitmap(bitmap, 0f, 0f, null);
+        }
+        if (!nativeSkiaRendered) {
+            canvas.save();
+            canvas.translate(viewportTranslationX, viewportTranslationY);
+            canvas.scale(viewportScale, viewportScale);
+            for (Stroke stroke : strokes) {
+                for (int i = 1; i < stroke.points.size(); ++i) {
+                    Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
+                    if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, ink, a, b);
+                    else drawBrushSegment(canvas, ink, a, b);
+                }
+            }
+            if (!viewportMode) for (Stroke active : activeStrokes.values()) for (int i = 1; i < active.points.size(); ++i) {
+                Point a = active.points.get(i - 1), b = active.points.get(i);
+                if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, ink, a, b);
                 else drawBrushSegment(canvas, ink, a, b);
             }
+            canvas.restore();
         }
-        if (!viewportMode) for (Stroke active : activeStrokes.values()) for (int i = 1; i < active.points.size(); ++i) {
-            Point a = active.points.get(i - 1), b = active.points.get(i);
-            if (a.family == 5) drawTexturedBrush(canvas, ink, a, b);
-            else drawBrushSegment(canvas, ink, a, b);
-        }
-        canvas.restore();
         hud.setStyle(Paint.Style.FILL);
         canvas.drawText(String.format(Locale.US, "Axiom Brush Lab  |  strokes %d  points %d  family %s  pressure %.2f", strokes.size(), pointCount(), brushFamilyName(activeBrushFamily), lastPressure), 24f, 42f, hud);
         canvas.drawText(String.format(Locale.US, "pointers %d  viewport %.2fx center %.0f,%.0f  mode %s", activeStrokes.size(), viewportScale, viewportCenterX, viewportCenterY, multiContactPolicyLabel()), 24f, 78f, hud);
@@ -264,16 +274,23 @@ public final class InkPlaygroundView extends View {
         final float length = (float)Math.hypot(dx, dy);
         final float nx = length == 0f ? 0f : -dy / length;
         final float ny = length == 0f ? 1f : dx / length;
-        final float pressureWidth = Math.max(10f, a.size * (0.72f + 0.55f * a.pressure));
-        paint.setColor(Color.rgb(196, 76, 91));
+        final float pressureWidth = Math.max(4f, a.size * (a.family == 2 ? 0.42f :
+                a.family == 3 ? 0.95f : a.family == 4 ? 1.35f : 1.05f) *
+                (0.72f + 0.55f * a.pressure));
+        if (a.family == 2) paint.setColor(Color.rgb(55, 55, 55));
+        else if (a.family == 3) paint.setColor(Color.rgb(135, 94, 61));
+        else if (a.family == 4) paint.setColor(Color.rgb(35, 111, 236));
+        else paint.setColor(Color.rgb(38, 170, 210));
         paint.setStyle(Paint.Style.STROKE); paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(pressureWidth);
-        paint.setAlpha(Math.max(35, Math.min(125, (int)(105f * a.opacity))));
+        final int baseAlpha = a.family == 2 ? 190 : a.family == 3 ? 105 : a.family == 4 ? 175 : 105;
+        paint.setAlpha(Math.max(25, Math.min(220, (int)(baseAlpha * a.opacity))));
         canvas.drawLine(a.x, a.y, b.x, b.y, paint);
-        for (int i = -2; i <= 2; ++i) {
-            final float jitter = i * pressureWidth * 0.19f;
+        final int strands = a.family == 2 ? 1 : a.family == 3 ? 4 : a.family == 4 ? 2 : 5;
+        for (int i = -strands; i <= strands; ++i) {
+            final float jitter = i * pressureWidth * (a.family == 3 ? 0.28f : 0.19f);
             paint.setStrokeWidth(Math.max(1.5f, pressureWidth * (0.08f + 0.02f * (i + 3))));
-            paint.setAlpha(Math.max(12, 58 - Math.abs(i) * 10));
+            paint.setAlpha(Math.max(10, (a.family == 2 ? 70 : 58) - Math.abs(i) * 10));
             canvas.drawLine(a.x + nx * jitter, a.y + ny * jitter, b.x + nx * jitter, b.y + ny * jitter, paint);
         }
         paint.setAlpha(255);
@@ -328,7 +345,7 @@ public final class InkPlaygroundView extends View {
         for (Stroke stroke : snapshot.strokes) {
             for (int i = 1; i < stroke.points.size(); ++i) {
                 Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
-                if (a.family == 5) drawTexturedBrush(canvas, capturePaint, a, b);
+                if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, capturePaint, a, b);
                 else drawBrushSegment(canvas, capturePaint, a, b);
             }
         }
@@ -377,6 +394,7 @@ public final class InkPlaygroundView extends View {
     private static native float nativeBrushSize(long handle, int pointerId);
     private static native float nativeBrushOpacity(long handle, int pointerId);
     private static native int nativeBrushRepresentation(long handle, int pointerId);
+    private static native byte[] nativeBrushRgba(long handle, int width, int height);
     private static native int nativeSetMultiContactPolicy(long handle, int policy);
     private static native int nativeMultiContactPolicy(long handle);
     private static native int nativeViewportClaimed(long handle);

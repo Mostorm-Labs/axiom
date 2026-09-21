@@ -17,6 +17,10 @@ assert "brushSelector" in ACTIVITY_TEXT
 assert "selectBrushFamily" in ACTIVITY_TEXT
 assert "selectedBrushFamily" in JAVA_TEXT
 assert "drawTexturedBrush" in JAVA_TEXT
+assert "case 2:" in JAVA_TEXT
+assert "case 3:" in JAVA_TEXT
+assert "case 4:" in JAVA_TEXT
+assert "case 5:" in JAVA_TEXT
 assert "毛笔质感" in ACTIVITY_TEXT
 assert "g4-5-android" in JAVA_TEXT
 assert "programmable_brush" in NATIVE

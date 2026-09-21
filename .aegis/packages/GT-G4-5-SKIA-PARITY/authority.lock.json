@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "current": true,
+  "source": {
+    "provider": "repo_materialized",
+    "parent_package": ".aegis/packages/GT-G4-5/package.json",
+    "parent_package_id": "GT-G4-5-P31-v0.2",
+    "parent_authority_content_sha256": "3b8155ce2baea0b0a45c46f0cfe04fee5797dfa09ee91d4af903d7a7ea3695b7",
+    "materialized_at_revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6"
+  },
+  "trusted_statements": [
+    "BrushRuntime is the single semantic evaluator and emits renderer-neutral BrushPrimitive artifacts.",
+    "Arc consumes render-ready primitives and does not interpret brush semantics.",
+    "BrushDefinition v1/v2 semantics, canonical StrokeRecord, G4.4 input arbitration and accepted G4.5 behavior remain unchanged.",
+    "Shape and Grain are stable renderer-neutral resource bindings.",
+    "The accepted Skia SDK supply chain is locked by r1-full-skia-sdk.lock.json and must be consumed, not rebuilt."
+  ],
+  "scope_addition": "This package adds only the cross-platform renderer integration and parity qualification needed to consume the existing BrushPrimitive programmable-DAB output on Android and Web through Skia."
+}

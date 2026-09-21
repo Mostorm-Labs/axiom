@@ -1,0 +1,23 @@
+{
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "artifacts": {
+    "android_apk": {
+      "path": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+      "sha256": "c52bb9ff0530b2e86ce123c5b316d6e10fea96e284e2510178bf82a8f602e4b7",
+      "bytes": 6047163
+    },
+    "web_js": {
+      "path": "out/g4-5-web-skia-parity/apps/ink_playground/axiom_ink_playground_web.js",
+      "sha256": "c84fcc4368d5eb827b5a5af8d108768746465659d22bcc39a7dc75e1fde45158",
+      "bytes": 170727
+    },
+    "web_wasm": {
+      "path": "out/g4-5-web-skia-parity/apps/ink_playground/axiom_ink_playground_web.wasm",
+      "sha256": "72dd1a70f9756933e33aa5fd093db0f51303ae6f53c3681cb1aa59b59ecc41b3",
+      "bytes": 11196602
+    }
+  },
+  "physical_verification": "not performed in this implementation turn",
+  "gate_pass_forbidden": true
+}
