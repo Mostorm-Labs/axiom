@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "current": true,
+  "authority_state": "CURRENT",
+  "sources": [
+    {
+      "provider": "notion",
+      "ref": "notion://3e24c57a-590c-815c-a970-d9fbaa423ead",
+      "title": "G4.5-10 Gate Amendment - Reference Brush Fidelity & Windows ARC Sync Proof v0.1",
+      "snapshot_at": "2026-09-21T09:23:01.738Z",
+      "content_hash_scope": "normalized implementation-relevant Amendment requirements reproduced in materialized_excerpt",
+      "materialized_excerpt": "G4.5-09F is blocking before final G4.5 PASS. Five morphologically distinct reference brushes are required. At least one brush is live-editable. RB-03/RB-05 require real Shape/Grain materialization. V2 dab emission must be spacing-driven and sample-rate independent. Canonical Skia and Windows ARC must consume the same BrushProgram-derived primitive/resource semantics. Space toggles presentation-only dual-color diagnostics. No full Brush Studio, persistence/sync, Procreate import, WetMix, CanvasAwareRaster, new canonical schema, or Arc-owned brush semantics.",
+      "content_sha256": "513c313fb5ebef5755cae5e56f30a8390a49620e0d964509d42571cfb759a6af"
+    },
+    {
+      "provider": "notion",
+      "ref": "notion://3e24c57a-590c-81de-9860-ec26d18c386b",
+      "title": "GT-G4-5-09F - Reference Brush Fidelity Implementation Design & P31 Freeze v0.1",
+      "snapshot_at": "2026-09-21T09:23:02.009Z",
+      "content_hash_scope": "normalized P30/P31 frozen design reproduced in materialized_excerpt",
+      "materialized_excerpt": "Preserve BrushDefinition v1 semantics. Reference fidelity uses BrushDefinition v2. Materialized immutable alpha resources carry stable content hashes. Common ink code composes Shape and Grain into one derived render-ready alpha resource consumed by both Skia and ARC. V2 DAB emission uses distance-based arc-length spacing and deterministic dab ordinals. ARC receives render-ready primitives/resources only. Windows uses existing Arc lifecycle and canonical-visible handoff. P32 terminates at READY_FOR_G4_5_10_PHYSICAL_VERIFICATION.",
+      "content_sha256": "6ff12d821eb32ac511b9366b89a439bedefe85a9280f624bcf2c5e4b6525c04e"
+    },
+    {
+      "provider": "notion",
+      "ref": "notion://3e04c57a-590c-816a-b407-cbb55ac4b79a",
+      "title": "G4.5 Programmable Brush System Architecture v0.1",
+      "snapshot_at": "2026-09-20T02:53:34.794Z",
+      "content_hash_scope": "normalized inherited architecture invariants reproduced in materialized_excerpt",
+      "materialized_excerpt": "Axiom owns brush semantics, prediction and canonicalization. Arc receives Axiom-generated render-ready transient representation and is not a second Brush Engine. BrushProgram is immutable, versioned and renderer-neutral. BrushRuntime emits commit and preview artifacts without directly mutating SemanticDocument. Existing FinePen, Highlighter and TexturedMarker replay semantics remain compatible. True wet pigment and new RasterStroke/MediaStroke semantics are out of scope.",
+      "content_sha256": "927c9997f0d64d724df790e28256c28186808bc76bfdd9e1ea541046bc540005"
+    }
+  ],
+  "trusted_statements": {
+    "task_delta": "G4.5-09F forward delta; G4.5-00 through G4.5-09 remain historically accepted",
+    "reference_brushes": [
+      "RB-01 Fine Ink/Pen",
+      "RB-02 Pressure Marker/Script",
+      "RB-03 Dry Chalk/Crayon/Rough Texture",
+      "RB-04 Soft Airbrush",
+      "RB-05 Decorative/Textured Broad Stroke"
+    ],
+    "editable_reference": "RB-03",
+    "brush_version_policy": "Preserve BrushDefinition v1; use version 2 for reference fidelity semantics",
+    "single_semantic_owner": "common Axiom BrushRuntime",
+    "arc_role": "low-latency renderer of common render-ready resource plus primitive stream",
+    "diagnostic_space": "presentation-only dual-color mode",
+    "new_android_web_physical_round_required": false,
+    "final_gate_owner": "G4.5-10 independent review after Windows physical/visual evidence"
+  },
+  "forbidden_authority_expansion": [
+    "canonical semantic schema/ObjectKind/Operation/StrokeRecord changes",
+    "true WetMedia or CanvasAwareRaster",
+    "user-defined brush persistence or sync",
+    "Procreate/ABR import",
+    "Arc-owned spacing/pressure/random/Shape/Grain semantics",
+    "G5 optimization implementation"
+  ]
+}
