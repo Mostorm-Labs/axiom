@@ -1,19 +1,19 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
+  "package_repair": "P31-v0.2-auto-intent-only",
   "execution_closure_contract": {
     "implementation": {
       "required_changes": [
         "Add runtime-neutral PointerPhase to normalized common input.",
         "Represent contact-geometry validity explicitly and preserve unknown/unavailable optional capabilities.",
-        "Implement common MultiContactPolicy with AutoIntent as default.",
-        "Implement common MultiContactCoordinator with Pending, Ink, ViewportGesture, Ignored and Terminal dispositions.",
+        "Implement one common AutoIntent multi-contact coordinator with Pending, Ink, ViewportGesture and Terminal dispositions.",
         "Implement spatial DrawActivation using radial displacement and accumulated path length; sample-count activation is forbidden.",
         "Reuse existing keyed Ink/Preview/Interaction session substrate for provisional Pending state with zero canonical mutation before promotion.",
         "Implement all-or-none multi-pointer viewport claim.",
-        "Implement exact AutoIntent, MultiInk and GesturePriority transition tables.",
+        "Implement AutoIntent exact transitions: Pending+second contact -> viewport; Ink-locked+later contacts -> independent Ink sessions.",
         "Move generic-contact second-pointer decision from platform-specific hosts into common coordination.",
-        "Emit exact-revision corrective automated evidence and qualification bundle."
+        "Emit exact-result-revision AutoIntent, PositionOnly, platform-ingress and regression evidence."
       ],
       "authorized_mutation_scope": [
         "runtime/input/include/canvas/input/pointer_capabilities.hpp",
@@ -26,7 +26,6 @@
         "runtime/interaction/src/gesture_arbiter.cpp",
         "runtime/interaction/tests/gesture_arbiter_test.cpp",
         "runtime/interaction/CMakeLists.txt",
-        "runtime/interaction/include/canvas/interaction/multi_contact_policy.hpp",
         "runtime/interaction/include/canvas/interaction/multi_contact_coordinator.hpp",
         "runtime/interaction/src/multi_contact_coordinator.cpp",
         "runtime/interaction/tests/multi_contact_coordinator_test.cpp",
@@ -48,6 +47,9 @@
         "new canonical ObjectKind or Operation",
         "canonical StrokeRecord schema changes",
         "G4.5 programmable brush semantic changes",
+        "MultiInk mode implementation",
+        "GesturePriority mode implementation",
+        "product-configurable multi-mode switching",
         "GestureTakeover or mid-stroke seal for navigation",
         "concurrent Ink plus pinch for the same generic-contact cohort",
         "platform-private arbitration state machines",
@@ -55,32 +57,21 @@
         "pressure/contact geometry requirement for pinch",
         "Arc protocol/schema expansion",
         "G4.6 viewport UI implementation",
-        "rewriting historical G4/G4.4 evidence"
+        "new blocking physical qualification round",
+        "rewriting historical G4/G4.4 physical evidence"
       ]
     },
     "tests": {
       "required": [
         {
           "id": "G4AutoIntentPolicy",
-          "command_or_oracle": "CTest/new coordinator test: default AutoIntent, Pending->Viewport, Ink->second Ink",
+          "command_or_oracle": "CTest/new coordinator test: Pending->Viewport, Ink->later independent Ink, multi-contact cohort lifecycle",
           "expected_result": "PASS",
-          "blocking_reason": "default policy semantics"
-        },
-        {
-          "id": "G4MultiInkPolicy",
-          "command_or_oracle": "CTest/new coordinator test: 2/4 independent Ink sessions and zero auto-pinch",
-          "expected_result": "PASS",
-          "blocking_reason": "manual multi-ink semantics"
-        },
-        {
-          "id": "G4GesturePriorityPolicy",
-          "command_or_oracle": "CTest/new coordinator test: Pending->Viewport; late second ignored while A continues",
-          "expected_result": "PASS",
-          "blocking_reason": "navigation-priority semantics"
+          "blocking_reason": "current supported multi-contact behavior"
         },
         {
           "id": "G4PositionOnlyPolicy",
-          "command_or_oracle": "CTest/capability-masked corpus with no pressure/contact geometry/tool metadata",
+          "command_or_oracle": "CTest/capability-masked AutoIntent corpus with no pressure/contact geometry/tool metadata",
           "expected_result": "PASS",
           "blocking_reason": "minimum capability baseline"
         },
@@ -101,22 +92,23 @@
     "evidence": {
       "blocking": [
         ".aegis/results/GT-G4-4-CORR-01/repository-reconciliation.json",
-        ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+        ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
         ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
         ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
         ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
         ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
-        ".aegis/results/GT-G4-4-CORR-01/qualification-bundle-manifest.json",
         ".aegis/results/GT-G4-4-CORR-01/result.json"
       ],
-      "corroborative": []
+      "corroborative": [
+        "existing previously completed physical-device evidence, historical only"
+      ]
     },
     "terminal_success": {
       "all_of": [
-        "All frozen policy/capability/oracle tests pass.",
+        "All AutoIntent and PositionOnly frozen obligations pass.",
         "Existing relevant G4/G4.4 regressions pass.",
-        "Exact-revision qualification bundle is materialized.",
-        "Result status is READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION.",
+        "All blocking evidence is exact-result-revision bound and reviewer-resolvable.",
+        "Result status is READY_FOR_CONTROL_REVIEW.",
         "No forbidden scope change is present.",
         "P32 does not claim G4.4 or G4.5 Gate PASS."
       ]
