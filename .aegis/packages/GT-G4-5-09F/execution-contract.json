@@ -1,0 +1,217 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Preserve BrushDefinition version 1 semantics and add a version 2 reference-fidelity path",
+        "Materialize immutable Shape and Grain alpha resources with stable content hashes",
+        "Compose one common derived render-ready brush alpha resource from source Shape/Grain content",
+        "Implement distance-based V2 DAB emission using BrushProgram spacing and deterministic dab ordinal",
+        "Implement five reference brush presets and live-editable RB-03 qualification controls",
+        "Extend canonical Skia rendering with a renderer-neutral programmable DAB submission path",
+        "Add generic Arc preview resource upload/caching and Windows textured DAB rendering",
+        "Integrate Windows Arc preview and canonical Skia from the same common BrushRuntime primitive/resource semantics",
+        "Repurpose Space to presentation-only ARC/runtime dual-color diagnostic; retain legacy mirror on another key only if still useful",
+        "Materialize 09F automated evidence, exact Windows qualification bundle and G5 reference-brush workload"
+      ],
+      "authorized_mutation_scope": [
+        "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+        "runtime/ink/src/programmable_brush.cpp",
+        "runtime/ink/include/canvas/ink/brush_resource.hpp",
+        "runtime/ink/src/brush_resource.cpp",
+        "runtime/ink/CMakeLists.txt",
+        "runtime/ink/tests/programmable_brush_test.cpp",
+        "runtime/ink/tests/reference_brush_fidelity_test.cpp",
+        "runtime/render/include/canvas/render/skia_ink_backend.hpp",
+        "runtime/render/src/skia_ink_backend.cpp",
+        "runtime/render/CMakeLists.txt",
+        "runtime/render/tests/skia_ink_backend_test.cpp",
+        "runtime/render/tests/skia_programmable_brush_test.cpp",
+        "arc/include/arc/protocol.h",
+        "arc/include/arc/arc.hpp",
+        "arc/src/bridge.cpp",
+        "arc/platform/windows/windows_backend.cpp",
+        "arc/CMakeLists.txt",
+        "arc/tests/arc_core_test.cpp",
+        "arc/tests/windows_preview_backend_test.cpp",
+        "apps/brush_lab/common/brush_lab.hpp",
+        "apps/brush_lab/common/brush_lab.cpp",
+        "apps/brush_lab/common/reference_brushes.hpp",
+        "apps/brush_lab/common/reference_brushes.cpp",
+        "apps/brush_lab/tools/brush_lab_main.cpp",
+        "apps/brush_lab/tests/brush_lab_test.cpp",
+        "apps/brush_lab/tests/reference_brush_test.cpp",
+        "apps/brush_lab/CMakeLists.txt",
+        "apps/ink_playground/common/reference_brush_qualification.hpp",
+        "apps/ink_playground/common/reference_brush_qualification.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/tests/reference_brush_qualification_test.cpp",
+        "apps/ink_playground/CMakeLists.txt",
+        "verification/corpus/brush/g4_5/09f/**",
+        ".github/workflows/g4-5-programmable-brush.yml",
+        ".aegis/packages/GT-G4-5-09F/**",
+        ".aegis/results/GT-G4-5-09F/**"
+      ],
+      "preserved_work": [
+        "G4.4 AutoIntent/PositionOnly common input arbitration",
+        "G4.5-00 through G4.5-09 accepted implementation and evidence",
+        "G4.5 post-G4.4 forward reconciliation at 231ac28604cb9ed9e02cf01336202d829b1aa854",
+        "BrushDefinition v1 semantic behavior and existing V1 golden corpus",
+        "Arc preview lifecycle and canonical-visible handoff"
+      ],
+      "forbidden_changes": [
+        "runtime/semantic public schema or wire changes",
+        "new canonical ObjectKind, Operation or StrokeRecord fields",
+        "changes to G4.4 multi-contact ownership semantics",
+        "true WetMedia or CanvasAwareRaster behavior",
+        "user-defined BrushDefinition persistence or sync",
+        "Procreate/ABR importer implementation",
+        "copied third-party brush resource content",
+        "Arc-owned spacing, pressure mapping, random channels or Shape/Grain interpretation",
+        "G5 Tile/Cache/Scheduler/resource-budget implementation",
+        "historical G4/G4.4/G4.5 evidence rewrites",
+        "semantic-sdk.lock.json or r1-full-skia-sdk.lock.json changes"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "current flow",
+        "target common resource and primitive flow",
+        "affected types/files",
+        "obligation-to-test mapping",
+        "unresolved semantic decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "test_first_policy": {
+      "required": true,
+      "instruction": "Add the frozen 09F acceptance tests first and observe the current implementation failing the new spacing/resource/Arc fidelity obligations before production implementation changes. Existing accepted regressions must remain green."
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G45ReferenceBrushCompile",
+          "command_or_oracle": "CTest test named G45ReferenceBrushCompile",
+          "expected_result": "PASS",
+          "blocking_reason": "five V2 reference definitions and RB-03 editability"
+        },
+        {
+          "id": "G45ReferenceBrushResources",
+          "command_or_oracle": "CTest test named G45ReferenceBrushResources",
+          "expected_result": "PASS",
+          "blocking_reason": "real Shape/Grain and derived render-resource materialization"
+        },
+        {
+          "id": "G45ReferenceBrushSpacing",
+          "command_or_oracle": "CTest test named G45ReferenceBrushSpacing",
+          "expected_result": "PASS",
+          "blocking_reason": "distance-based sample-rate-independent V2 emission"
+        },
+        {
+          "id": "G45ReferenceBrushPrimitiveParity",
+          "command_or_oracle": "CTest test named G45ReferenceBrushPrimitiveParity",
+          "expected_result": "PASS",
+          "blocking_reason": "preview/canonical primitive semantic parity"
+        },
+        {
+          "id": "G45ReferenceBrushGolden",
+          "command_or_oracle": "CTest test named G45ReferenceBrushGolden with Skia enabled",
+          "expected_result": "PASS",
+          "blocking_reason": "canonical textured-dab fidelity path"
+        },
+        {
+          "id": "G45WindowsArcBrushParity",
+          "command_or_oracle": "CTest test named G45WindowsArcBrushParity on Windows plus Arc resource lifecycle tests",
+          "expected_result": "PASS",
+          "blocking_reason": "Windows ARC consumes common resource/primitives"
+        },
+        {
+          "id": "G45WindowsDualColorDiagnostic",
+          "command_or_oracle": "CTest test named G45WindowsDualColorDiagnostic",
+          "expected_result": "PASS",
+          "blocking_reason": "Space diagnostic is presentation-only"
+        },
+        {
+          "id": "G4G45Regression",
+          "command_or_oracle": "ctest relevant suite matching existing G4/G45 tests with output-on-failure",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted interaction and brush behavior"
+        },
+        {
+          "id": "ArcRegression",
+          "command_or_oracle": "existing Arc core/platform/Windows preview tests",
+          "expected_result": "PASS",
+          "blocking_reason": "resource extension must preserve Arc lifecycle"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [
+        "G4.5 Programmable Brush Qualification exact-result workflow: windows-x64, web-wasm32 and android-arm64-v8a all success",
+        "Arc / POC-06 exact-result workflow success",
+        "applicable CI boundary contract success"
+      ],
+      "optional": [
+        "unaffected repository lanes not triggered by the diff"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        ".aegis/results/GT-G4-5-09F/repo-reconciliation.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-program-manifest.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-resource-manifest.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-input-corpus.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-primitive-parity.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-sample-rate-independence.json",
+        ".aegis/results/GT-G4-5-09F/reference-brush-golden-summary.json",
+        ".aegis/results/GT-G4-5-09F/windows-arc-runtime-parity.json",
+        ".aegis/results/GT-G4-5-09F/windows-dual-color-diagnostic.json",
+        ".aegis/results/GT-G4-5-09F/portable-regression-summary.json",
+        ".aegis/results/GT-G4-5-09F/qualification-bundle-manifest.json",
+        ".aegis/results/GT-G4-5-09F/g5-reference-brush-workload.json",
+        ".aegis/results/GT-G4-5-09F/g4-5-09f-result.json",
+        ".aegis/results/GT-G4-5-09F/result.json"
+      ],
+      "corroborative_or_successor": [
+        "historical G4.5 physical evidence",
+        "G4.5-10 Windows five-brush continuous recording",
+        "G4.5-10 Space diagnostic recording for RB-01/RB-03/RB-04",
+        "G4.5-10 RB-03 live-edit recording",
+        "G4.5-10 ARC-active/handoff/canonical-only screenshots",
+        "final G4.5 Gate report"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all frozen 09F automated obligations pass",
+        "exact-result required hosted verification passes",
+        "Windows qualification bundle is materialized and reviewer-accessible",
+        "G5 reference-brush workload is materialized",
+        "no forbidden scope change exists",
+        "result status is READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+        "no final G4.5 Gate PASS is claimed"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW"
+    }
+  }
+}
