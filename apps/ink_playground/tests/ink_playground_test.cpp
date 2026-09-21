@@ -146,8 +146,8 @@ void provisional_zero_mutation_test() {
   assert(host.accept(downB, 3'000'000));
   assert(host.canonicalStrokes().empty());
   assert(host.submittedOperationCount() == 0);
-  assert(host.pointerDisposition(first) != canvas::interaction::ContactDisposition::kInk);
-  assert(host.pointerDisposition(second) != canvas::interaction::ContactDisposition::kInk);
+  assert(host.pointerDisposition(first) == canvas::interaction::ContactDisposition::kViewportGesture);
+  assert(host.pointerDisposition(second) == canvas::interaction::ContactDisposition::kViewportGesture);
 }
 }  // namespace
 

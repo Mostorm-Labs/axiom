@@ -50,6 +50,9 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
       const auto disposition = contactCoordinator_.update(sample);
       contactDispositions_[sample.key] = disposition;
       if (disposition == interaction::ContactDisposition::kViewportGesture) {
+        for (auto& [key, cachedDisposition] : contactDispositions_) {
+          cachedDisposition = contactCoordinator_.disposition(key);
+        }
         for (const auto& [existing, existingStroke] : keyedStrokeIds_) {
           (void)ink_->cancel(existing);
           (void)preview_->cancelKeyed(existingStroke);
