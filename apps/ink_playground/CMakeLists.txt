@@ -1,12 +1,13 @@
 add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
-    common/platform_contract.cpp)
+    common/platform_contract.cpp
+    common/reference_brush_qualification.cpp)
 target_include_directories(axiom_ink_playground_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/common
     ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_input canvas_runtime_ink
-    canvas_runtime_interaction canvas_runtime_render)
+    canvas_runtime_interaction canvas_runtime_render axiom_brush_lab_common)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -35,6 +36,18 @@ if(BUILD_TESTING)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
   add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
   add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
+  add_executable(axiom_reference_brush_qualification_tests
+    tests/reference_brush_qualification_test.cpp)
+  target_link_libraries(axiom_reference_brush_qualification_tests PRIVATE
+    axiom_ink_playground_common)
+  target_compile_features(axiom_reference_brush_qualification_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_reference_brush_qualification_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_reference_brush_qualification_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45WindowsDualColorDiagnostic
+    COMMAND axiom_reference_brush_qualification_tests)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp

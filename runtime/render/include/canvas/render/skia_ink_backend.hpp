@@ -20,6 +20,17 @@ struct CanonicalViewportTransform final {
     float translationY = 0.0F;
 };
 
+struct ProgrammableDab final {
+    float x = 0.0F;
+    float y = 0.0F;
+    float size = 0.0F;
+    float rotationDegrees = 0.0F;
+    float opacity = 0.0F;
+    std::uint32_t resourceWidth = 0;
+    std::uint32_t resourceHeight = 0;
+    std::span<const std::uint8_t> resourceAlpha{};
+};
+
 // Render Core's small Windows ink surface consumer. The immutable canonical
 // stroke list is rasterized by the locked CanvasSkia SDK; the platform host
 // only presents the resulting pixels and never evaluates brush semantics.
@@ -37,6 +48,9 @@ class SkiaInkBackend final {
     [[nodiscard]] BackendSubmissionResult submit(
         std::span<const std::vector<CanonicalStrokePoint>> strokes,
         CanonicalViewportTransform viewport);
+    [[nodiscard]] BackendSubmissionResult submitProgrammableDabs(
+        std::span<const ProgrammableDab> dabs,
+        CanonicalViewportTransform viewport = {});
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }
     [[nodiscard]] std::uint32_t height() const noexcept { return height_; }

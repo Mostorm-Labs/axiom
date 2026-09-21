@@ -163,6 +163,19 @@ typedef struct arc_brush_descriptor_v0 {
   uint32_t resource_content_hash_size;
 } arc_brush_descriptor_v0;
 
+typedef struct arc_preview_resource_v0 {
+  uint32_t struct_size;
+  uint32_t abi_version;
+  uint32_t schema_version;
+  uint32_t resource_kind;
+  uint64_t resource_id;
+  uint64_t content_hash;
+  uint32_t width;
+  uint32_t height;
+  const uint8_t* alpha;
+  uint32_t alpha_size;
+} arc_preview_resource_v0;
+
 typedef struct arc_preview_primitive_v0 {
   uint32_t kind;
   uint32_t reserved;

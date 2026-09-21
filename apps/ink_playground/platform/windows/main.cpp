@@ -78,6 +78,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   std::size_t maxConcurrentPointers = 0;
   bool runtimePreviewVisible = true;
+  bool dualColorDiagnostic = false;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   std::unique_ptr<canvas::render::SkiaInkBackend> canonicalRenderer;
   std::vector<std::uint8_t> canonicalBgra;
@@ -408,7 +409,9 @@ void paint(HWND window, State& value) {
                       DIB_RGB_COLORS);
   }
 #endif
-  HPEN pen = CreatePen(PS_SOLID, 3, RGB(26, 91, 255)); HGDIOBJ oldPen = SelectObject(bufferDc, pen);
+  HPEN pen = CreatePen(PS_SOLID, 3, value.dualColorDiagnostic
+                                      ? RGB(239, 61, 116)
+                                      : RGB(26, 91, 255)); HGDIOBJ oldPen = SelectObject(bufferDc, pen);
   SetBkMode(bufferDc, TRANSPARENT);
   SetTextColor(bufferDc, RGB(30, 30, 30));
   const auto& hud = value.host->hud();
@@ -431,7 +434,8 @@ void paint(HWND window, State& value) {
          << L" | state: " << qualificationState
          << L" | Arc preview: native layered"
          << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
-         << L" | SPACE = preview | P = pointer mode";
+         << L" | dual color: " << (value.dualColorDiagnostic ? L"ON" : L"OFF")
+         << L" | SPACE = dual color | M = mirror | P = pointer mode";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
   // Optional presentation-only mirror. It is never used for canonical
@@ -442,8 +446,13 @@ void paint(HWND window, State& value) {
     static_cast<void>(pointerId);
     if (!preview.active) continue;
     for (std::size_t i = 1; i < preview.points.size(); ++i) {
+      HPEN mirrorPen = CreatePen(PS_SOLID, 3, value.dualColorDiagnostic
+                                            ? RGB(25, 199, 232)
+                                            : RGB(26, 91, 255));
+      HGDIOBJ oldMirrorPen = SelectObject(bufferDc, mirrorPen);
       MoveToEx(bufferDc, static_cast<int>(preview.points[i - 1].x), static_cast<int>(preview.points[i - 1].y), nullptr);
       LineTo(bufferDc, static_cast<int>(preview.points[i].x), static_cast<int>(preview.points[i].y));
+      SelectObject(bufferDc, oldMirrorPen); DeleteObject(mirrorPen);
     }
   }
   BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, bufferDc, 0, 0, SRCCOPY);
@@ -635,6 +644,13 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
     if (value != nullptr && (lParam & (1LL << 30)) == 0) {
+      value->dualColorDiagnostic = !value->dualColorDiagnostic;
+      InvalidateRect(window, nullptr, FALSE);
+    }
+    return 0;
+  }
+  if (message == WM_KEYDOWN && wParam == L'M') {
+    if (value != nullptr && (lParam & (1LL << 30)) == 0) {
       value->runtimePreviewVisible = !value->runtimePreviewVisible;
       value->host->setRuntimePreviewVisible(value->runtimePreviewVisible);
       InvalidateRect(window, nullptr, FALSE);
@@ -650,9 +666,8 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     return 0;
   }
-  if (message == WM_CHAR && wParam == L' ') {
-    // WM_KEYDOWN owns the toggle. Consume the translated character so one
-    // physical key press cannot toggle the debug mirror twice.
+  if (message == WM_CHAR && (wParam == L' ' || wParam == L'M' || wParam == L'm')) {
+    // WM_KEYDOWN owns presentation toggles. Consume translated characters.
     return 0;
   }
   if (message == WM_ERASEBKGND) return 1;

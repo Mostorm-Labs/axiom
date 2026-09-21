@@ -1,6 +1,7 @@
 #include "arc/arc.hpp"
 
 #include <cassert>
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -27,6 +28,12 @@ struct RecordingBackend final : PreviewBackend {
             .max_queue_bytes = 1 << 20};
   }
   Status Attach(const arc_preview_target_v0&) override { ++attaches; return Status::kOk; }
+  Status UploadResource(const arc_preview_resource_v0& resource) override {
+    ++uploads;
+    last_resource_id = resource.resource_id;
+    last_resource_hash = resource.content_hash;
+    return Status::kOk;
+  }
   Status Detach(uint64_t) override { ++detaches; return Status::kOk; }
   Status Begin(const arc_preview_begin_v0&) override { ++begins; return Status::kOk; }
   Status Push(const arc_preview_update_v0& update) override {
@@ -49,12 +56,15 @@ struct RecordingBackend final : PreviewBackend {
   uint32_t attaches = 0;
   uint32_t detaches = 0;
   uint32_t begins = 0;
+  uint32_t uploads = 0;
   uint32_t pushes = 0;
   uint32_t seals = 0;
   uint32_t commits = 0;
   uint32_t visible = 0;
   uint32_t cancels = 0;
   std::vector<std::uint32_t> confirmed_counts;
+  std::uint64_t last_resource_id = 0;
+  std::uint64_t last_resource_hash = 0;
 };
 
 arc_preview_target_v0 Target() {
@@ -66,6 +76,31 @@ arc_preview_target_v0 Target() {
           .width_pixels = 800,
           .height_pixels = 600,
           .device_pixel_ratio = 1.0F};
+}
+
+void resourceUploadContract() {
+  auto backend = std::make_unique<RecordingBackend>();
+  auto* recording = backend.get();
+  Bridge bridge(std::move(backend), arc::CreateNullBackend());
+  const std::array<std::uint8_t, 4> alpha{0, 64, 128, 255};
+  const arc_preview_resource_v0 resource{
+      .struct_size = sizeof(arc_preview_resource_v0),
+      .abi_version = ARC_ABI_VERSION,
+      .schema_version = ARC_PROTOCOL_SCHEMA_VERSION,
+      .resource_kind = 1,
+      .resource_id = 44,
+      .content_hash = 55,
+      .width = 2,
+      .height = 2,
+      .alpha = alpha.data(),
+      .alpha_size = static_cast<std::uint32_t>(alpha.size())};
+  assert(bridge.UploadResource(resource) == Status::kOk);
+  assert(recording->uploads == 1);
+  assert(recording->last_resource_id == 44);
+  assert(recording->last_resource_hash == 55);
+  auto invalid = resource;
+  invalid.alpha_size = 3;
+  assert(bridge.UploadResource(invalid) == Status::kInvalidArgument);
 }
 
 arc_brush_descriptor_v0 Brush() {
@@ -321,5 +356,6 @@ int main() {
   TestBeginCollisionIsNotSilentlyIdempotent();
   TestCapacityDegradesPresentationWithoutInputFailure();
   TestBridgeForwardsOnlyIncrementalPreviewGeometry();
+  resourceUploadContract();
   return 0;
 }

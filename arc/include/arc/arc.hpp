@@ -34,6 +34,9 @@ class PreviewBackend {
   virtual ~PreviewBackend() = default;
   virtual arc_backend_capabilities_v0 Capabilities() const = 0;
   virtual Status Attach(const arc_preview_target_v0& target) = 0;
+  virtual Status UploadResource(const arc_preview_resource_v0&) {
+    return Status::kBackendUnavailable;
+  }
   virtual Status Detach(uint64_t target_generation) = 0;
   virtual Status Begin(const arc_preview_begin_v0& begin) = 0;
   virtual Status Push(const arc_preview_update_v0& update) = 0;
@@ -134,6 +137,7 @@ class Bridge {
   Bridge& operator=(const Bridge&) = delete;
 
   Status Attach(const arc_preview_target_v0& target);
+  Status UploadResource(const arc_preview_resource_v0& resource);
   Status Detach(uint64_t target_generation);
   Status Begin(const arc_preview_begin_v0& begin);
   Status Push(const arc_preview_update_v0& update);

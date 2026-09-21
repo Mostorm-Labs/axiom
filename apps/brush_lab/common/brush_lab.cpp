@@ -87,7 +87,7 @@ Scenario evaluate(ink::BrushFamily family) {
   const auto count = finished.preview.primitives.size();
   return {std::string(nameOf(family)), compiled.program->identity(),
           finished.commit.digest, count, finished.commit.canonicalMutation,
-          svg.str(), {samples.size(), count, count * sizeof(ink::BrushPrimitive)}};
+          svg.str(), {samples.size(), count, count * 40U}};
 }
 
 std::string manifestJson() {

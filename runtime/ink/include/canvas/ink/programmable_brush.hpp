@@ -8,6 +8,9 @@
 
 namespace canvas::ink {
 
+struct BrushAlphaResource;
+struct BrushRenderResource;
+
 struct ResourceId final {
   std::uint64_t value = 0;
   [[nodiscard]] constexpr bool valid() const noexcept { return value != 0; }
@@ -97,11 +100,17 @@ enum class BrushResourceKind : std::uint8_t { kShape = 1, kGrain = 2 };
 class ResourceCatalog final {
  public:
   bool add(ResourceId id, BrushResourceKind kind);
+  bool add(BrushAlphaResource resource);
   [[nodiscard]] bool contains(ResourceId id) const noexcept;
   [[nodiscard]] bool contains(ResourceId id, BrushResourceKind kind) const noexcept;
+  [[nodiscard]] const BrushAlphaResource* resource(ResourceId id) const noexcept;
+  [[nodiscard]] std::shared_ptr<const BrushRenderResource> renderResource(
+      ResourceId shape, ResourceId grain) const;
 
  private:
   std::unordered_map<std::uint64_t, BrushResourceKind> resources_;
+  std::unordered_map<std::uint64_t, std::shared_ptr<const BrushAlphaResource>> alphaResources_;
+  mutable std::unordered_map<std::uint64_t, std::shared_ptr<const BrushRenderResource>> renderResources_;
 };
 
 struct BrushSessionId final {
@@ -139,6 +148,8 @@ struct BrushPrimitive final {
   BrushRepresentation representation = BrushRepresentation::kVector;
   ResourceId shapeResource{};
   ResourceId grainResource{};
+  ResourceId renderResource{};
+  std::uint64_t dabOrdinal = 0;
   bool operator==(const BrushPrimitive&) const = default;
 };
 
@@ -198,6 +209,7 @@ class BrushRuntime final {
     std::uint64_t revision = 0;
     std::uint64_t lastSequence = 0;
     std::vector<BrushInputSample> samples;
+    ResourceId renderResource{};
   };
   [[nodiscard]] BrushRuntimeResult evaluate(BrushSessionId session,
                                             const Session& state) const;

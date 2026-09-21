@@ -70,6 +70,17 @@ if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_skia_programmable_brush_tests
+        tests/skia_programmable_brush_test.cpp)
+    target_link_libraries(axiom_render_skia_programmable_brush_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_skia_programmable_brush_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_skia_programmable_brush_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_skia_programmable_brush_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G45ReferenceBrushGolden COMMAND axiom_render_skia_programmable_brush_tests)
+
     add_executable(axiom_render_headless_canvas_demo_tests
         tests/headless_canvas_demo_test.cpp)
     target_link_libraries(axiom_render_headless_canvas_demo_tests PRIVATE canvas_runtime_render)

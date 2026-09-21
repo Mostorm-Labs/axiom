@@ -71,7 +71,7 @@ void definitionAndCompilerContract() {
   assert(noResources.error == ink::BrushCompileError::kUnsupportedCapability);
 
   auto wrongVersion = makeDefinition(ink::BrushFamily::kPen);
-  wrongVersion.version = 2;
+  wrongVersion.version = 3;
   assert(compiler.compile(wrongVersion, fullCapabilities()).error ==
          ink::BrushCompileError::kUnsupportedVersion);
 }

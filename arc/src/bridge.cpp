@@ -109,6 +109,7 @@ class NullBackend final : public PreviewBackend {
             .max_queue_bytes = std::numeric_limits<uint64_t>::max()};
   }
   Status Attach(const arc_preview_target_v0&) override { return Status::kOk; }
+  Status UploadResource(const arc_preview_resource_v0&) override { return Status::kOk; }
   Status Detach(uint64_t) override { return Status::kOk; }
   Status Begin(const arc_preview_begin_v0&) override { return Status::kOk; }
   Status Push(const arc_preview_update_v0&) override { return Status::kOk; }
@@ -326,6 +327,16 @@ Status Bridge::Attach(const arc_preview_target_v0& target) {
   const Status result = impl_->Invoke(impl_->backend()->Attach(target), "attach");
   if (replacing) impl_->ReplayFallback();
   return result;
+}
+
+Status Bridge::UploadResource(const arc_preview_resource_v0& resource) {
+  if (resource.struct_size < sizeof(resource) || resource.abi_version != ARC_ABI_VERSION ||
+      resource.schema_version != ARC_PROTOCOL_SCHEMA_VERSION || resource.resource_id == 0 ||
+      resource.content_hash == 0 || resource.width == 0 || resource.height == 0 ||
+      resource.alpha == nullptr || resource.alpha_size != resource.width * resource.height) {
+    return Status::kInvalidArgument;
+  }
+  return impl_->Invoke(impl_->backend()->UploadResource(resource), "upload_resource");
 }
 
 Status Bridge::Detach(uint64_t target_generation) {

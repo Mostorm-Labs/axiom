@@ -1,4 +1,5 @@
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/ink/brush_resource.hpp"
 
 #include <bit>
 #include <cmath>
@@ -51,7 +52,8 @@ std::uint64_t programIdentity(const BrushDefinition& value,
 
 std::uint64_t primitiveDigest(std::span<const BrushPrimitive> primitives,
                               std::uint64_t seed,
-                              BrushRepresentation representation) noexcept {
+                              BrushRepresentation representation,
+                              std::uint32_t definitionVersion) noexcept {
   std::uint64_t hash = kFnvOffset;
   hashWord(hash, seed);
   hashWord(hash, static_cast<std::uint8_t>(representation));
@@ -63,6 +65,10 @@ std::uint64_t primitiveDigest(std::span<const BrushPrimitive> primitives,
     hashFloat(hash, primitive.opacity);
     hashWord(hash, primitive.shapeResource.value);
     hashWord(hash, primitive.grainResource.value);
+    if (definitionVersion >= 2U) {
+      hashWord(hash, primitive.renderResource.value);
+      hashWord(hash, primitive.dabOrdinal);
+    }
   }
   return hash;
 }
@@ -72,7 +78,7 @@ std::uint64_t primitiveDigest(std::span<const BrushPrimitive> primitives,
 BrushCompileResult BrushCompiler::compile(
     const BrushDefinition& definition,
     const BrushCapabilityProfile& capabilities) const {
-  if (definition.version != 1U) {
+  if (definition.version != 1U && definition.version != 2U) {
     return {nullptr, BrushCompileError::kUnsupportedVersion};
   }
   const auto familyValue = static_cast<std::uint8_t>(definition.family);
@@ -124,6 +130,19 @@ bool ResourceCatalog::add(ResourceId id, BrushResourceKind kind) {
   return id.valid() && resources_.emplace(id.value, kind).second;
 }
 
+bool ResourceCatalog::add(BrushAlphaResource resource) {
+  if (!resource.id.valid() || resource.width == 0 || resource.height == 0 ||
+      resource.alpha.size() != static_cast<std::size_t>(resource.width) * resource.height ||
+      resource.contentHash == 0 || resources_.contains(resource.id.value)) {
+    return false;
+  }
+  const auto id = resource.id.value;
+  resources_.emplace(id, resource.kind);
+  alphaResources_.emplace(id,
+      std::make_shared<const BrushAlphaResource>(std::move(resource)));
+  return true;
+}
+
 bool ResourceCatalog::contains(ResourceId id) const noexcept {
   return id.valid() && resources_.contains(id.value);
 }
@@ -131,6 +150,41 @@ bool ResourceCatalog::contains(ResourceId id) const noexcept {
 bool ResourceCatalog::contains(ResourceId id, BrushResourceKind kind) const noexcept {
   const auto found = resources_.find(id.value);
   return id.valid() && found != resources_.end() && found->second == kind;
+}
+
+const BrushAlphaResource* ResourceCatalog::resource(ResourceId id) const noexcept {
+  const auto found = alphaResources_.find(id.value);
+  return found == alphaResources_.end() ? nullptr : found->second.get();
+}
+
+std::shared_ptr<const BrushRenderResource> ResourceCatalog::renderResource(
+    ResourceId shapeId, ResourceId grainId) const {
+  const auto* shape = resource(shapeId);
+  const auto* grain = resource(grainId);
+  if (shape == nullptr || grain == nullptr || shape->kind != BrushResourceKind::kShape ||
+      grain->kind != BrushResourceKind::kGrain || shape->width != grain->width ||
+      shape->height != grain->height) return {};
+  std::uint64_t key = shape->contentHash ^ (grain->contentHash + 0x9e3779b97f4a7c15ULL +
+                                            (shape->contentHash << 6U) +
+                                            (shape->contentHash >> 2U));
+  if (key == 0) key = 1;
+  if (const auto found = renderResources_.find(key); found != renderResources_.end()) {
+    return found->second;
+  }
+  auto out = std::make_shared<BrushRenderResource>();
+  out->id = {key};
+  out->shape = shapeId;
+  out->grain = grainId;
+  out->width = shape->width;
+  out->height = shape->height;
+  out->contentHash = key;
+  out->alpha.resize(shape->alpha.size());
+  for (std::size_t i = 0; i < out->alpha.size(); ++i) {
+    out->alpha[i] = static_cast<std::uint8_t>(
+        (static_cast<unsigned>(shape->alpha[i]) * grain->alpha[i] + 127U) / 255U);
+  }
+  renderResources_.emplace(key, out);
+  return out;
 }
 
 float deterministicChannel(std::uint64_t seed, RandomChannel channel,
@@ -177,7 +231,18 @@ bool BrushRuntime::begin(BrushSessionId session, const BrushProgram& program,
     lastError_ = BrushRuntimeError::kResourceKindMismatch;
     return false;
   }
-  sessions_.emplace(session.value, Session{&program, deterministicSeed, 0, 0, {}});
+  ResourceId renderResource;
+  if (definition.version == 2U && definition.shapeResource.valid()) {
+    const auto derived = resources_.renderResource(definition.shapeResource,
+                                                   definition.grainResource);
+    if (!derived) {
+      lastError_ = BrushRuntimeError::kMissingResource;
+      return false;
+    }
+    renderResource = derived->id;
+  }
+  sessions_.emplace(session.value,
+                    Session{&program, deterministicSeed, 0, 0, {}, renderResource});
   return true;
 }
 
@@ -239,8 +304,34 @@ BrushRuntimeResult BrushRuntime::evaluate(BrushSessionId session,
   if (program.representation() == BrushRepresentation::kTemporalTransient) {
     result.preview.durationMs = 650;
   }
-  for (std::size_t index = 0; index < state.samples.size(); ++index) {
-    const auto& sample = state.samples[index];
+  std::vector<BrushInputSample> emissionSamples;
+  if (definition.version == 1U || state.samples.size() == 1U) {
+    emissionSamples = state.samples;
+  } else {
+    emissionSamples.push_back(state.samples.front());
+    const float interval = definition.nominalSize * definition.spacing;
+    float nextDistance = interval;
+    float traversed = 0.0F;
+    for (std::size_t i = 1; i < state.samples.size(); ++i) {
+      const auto& a = state.samples[i - 1U];
+      const auto& b = state.samples[i];
+      const float dx = b.x - a.x;
+      const float dy = b.y - a.y;
+      const float length = std::hypot(dx, dy);
+      while (length > 0.0F && nextDistance <= traversed + length + 0.0001F) {
+        const float t = std::clamp((nextDistance - traversed) / length, 0.0F, 1.0F);
+        emissionSamples.push_back({a.x + dx * t, a.y + dy * t,
+                                   a.pressure + (b.pressure - a.pressure) * t,
+                                   a.tiltX + (b.tiltX - a.tiltX) * t,
+                                   a.tiltY + (b.tiltY - a.tiltY) * t,
+                                   static_cast<std::uint64_t>(emissionSamples.size() + 1U)});
+        nextDistance += interval;
+      }
+      traversed += length;
+    }
+  }
+  for (std::size_t index = 0; index < emissionSamples.size(); ++index) {
+    const auto& sample = emissionSamples[index];
     const float pressureSize =
         1.0F + definition.pressureSizeInfluence * (sample.pressure - 1.0F);
     const float pressureOpacity =
@@ -260,11 +351,13 @@ BrushRuntimeResult BrushRuntime::evaluate(BrushSessionId session,
     primitive.representation = program.representation();
     primitive.shapeResource = definition.shapeResource;
     primitive.grainResource = definition.grainResource;
+    primitive.renderResource = state.renderResource;
+    primitive.dabOrdinal = index;
     result.preview.primitives.push_back(primitive);
     if (result.commit.canonicalMutation) result.commit.primitives.push_back(primitive);
   }
   result.commit.digest = primitiveDigest(result.commit.primitives, state.seed,
-                                         program.representation());
+                                         program.representation(), definition.version);
   return result;
 }
 

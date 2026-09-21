@@ -26,6 +26,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <charconv>
 #include <unordered_map>
 #include <vector>
 
@@ -38,6 +39,13 @@ struct Stroke {
   arc_handoff_token_v0 token{};
   bool sealed = false;
   bool committed = false;
+  uint64_t resourceId = 0;
+};
+struct Resource {
+  uint64_t contentHash = 0;
+  uint32_t width = 0;
+  uint32_t height = 0;
+  std::vector<std::uint8_t> alpha;
 };
 LRESULT CALLBACK PreviewProc(HWND w, UINT m, WPARAM wparam, LPARAM lparam) {
   if (m == WM_NCHITTEST) return HTTRANSPARENT;
@@ -93,13 +101,35 @@ class WindowsPreviewBackend final : public PreviewBackend {
                        static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
     return Status::kOk;
   }
+  Status UploadResource(const arc_preview_resource_v0& resource) override {
+    if (resource.resource_id == 0 || resource.content_hash == 0 ||
+        resource.alpha == nullptr || resource.width == 0 || resource.height == 0 ||
+        resource.alpha_size != resource.width * resource.height) return Status::kInvalidArgument;
+    auto& cached = resources_[resource.resource_id];
+    if (cached.contentHash != 0 && cached.contentHash != resource.content_hash)
+      return Status::kInvalidState;
+    cached.contentHash = resource.content_hash;
+    cached.width = resource.width;
+    cached.height = resource.height;
+    cached.alpha.assign(resource.alpha, resource.alpha + resource.alpha_size);
+    return Status::kOk;
+  }
   Status Detach(uint64_t generation) override {
     if (!attached_ || generation != generation_) return Status::kStaleRevision;
     destroy(); return Status::kOk;
   }
   Status Begin(const arc_preview_begin_v0& b) override {
     if (!attached_ || b.target_generation != generation_) return Status::kStaleRevision;
-    strokes_[b.stroke_id] = Stroke{}; return Status::kOk;
+    Stroke stroke{};
+    if (b.brush.resource_id != nullptr && b.brush.resource_id_size != 0) {
+      const auto* begin = b.brush.resource_id;
+      const auto* end = begin + b.brush.resource_id_size;
+      const auto parsed = std::from_chars(begin, end, stroke.resourceId);
+      if (parsed.ec != std::errc{} || parsed.ptr != end) return Status::kInvalidArgument;
+    }
+    if (stroke.resourceId != 0 && !resources_.contains(stroke.resourceId))
+      return Status::kNotFound;
+    strokes_[b.stroke_id] = std::move(stroke); return Status::kOk;
   }
   Status Push(const arc_preview_update_v0& u) override {
     if (!attached_ || u.target_generation != generation_) return Status::kStaleRevision;
@@ -115,7 +145,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
     append(it->second.predicted, u.predicted_tail, u.predicted_tail_count,
            u.predicted_tail_stride);
     const bool presented = appendOnly && strokes_.size() == 1U
-                               ? renderAppend(it->second.confirmed, previousCount)
+                               ? renderAppend(it->second, it->second.confirmed, previousCount)
                                : render();
     return presented ? Status::kOk : Status::kPresentationFailed;
   }
@@ -195,7 +225,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
     }
     const size_t count = static_cast<size_t>(target_.width_pixels) * target_.height_pixels;
     std::fill_n(static_cast<std::uint32_t*>(bits_), count, 0u);
-    for (const auto& [id, s] : strokes_) { (void)id; draw(mem_, s.confirmed); draw(mem_, s.predicted); }
+    for (const auto& [id, s] : strokes_) { (void)id; draw(mem_, s, s.confirmed); draw(mem_, s, s.predicted); }
     auto* rgba = static_cast<std::uint32_t*>(bits_);
     for (size_t i = 0; i < count; ++i) {
       if ((rgba[i] & 0x00ffffffu) != 0) rgba[i] = (rgba[i] & 0x00ffffffu) | 0x88000000u;
@@ -207,7 +237,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
                                         &blend, ULW_ALPHA);
     bitmapInitialized_ = ok != FALSE; ReleaseDC(nullptr, screen); return ok != FALSE;
   }
-  bool renderAppend(const std::vector<arc_preview_primitive_v0>& points,
+  bool renderAppend(const Stroke& stroke, const std::vector<arc_preview_primitive_v0>& points,
                     std::size_t previousCount) {
     if (points.empty() || previousCount >= points.size()) return render();
     if (surface_ == nullptr || mem_ == nullptr || bits_ == nullptr) return render();
@@ -216,7 +246,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
     SetWindowPos(surface_, HWND_TOP, origin.x, origin.y, static_cast<int>(target_.width_pixels),
                  static_cast<int>(target_.height_pixels), SWP_NOACTIVATE | SWP_SHOWWINDOW);
     ShowWindow(surface_, SW_SHOWNA);
-    drawRange(mem_, points, previousCount > 1U ? previousCount - 2U : 0U);
+    drawRange(mem_, stroke, points, previousCount > 1U ? previousCount - 2U : 0U);
     const size_t count = static_cast<size_t>(target_.width_pixels) * target_.height_pixels;
     auto* rgba = static_cast<std::uint32_t*>(bits_);
     for (size_t i = 0; i < count; ++i)
@@ -227,9 +257,25 @@ class WindowsPreviewBackend final : public PreviewBackend {
                                         &blend, ULW_ALPHA);
     bitmapInitialized_ = ok != FALSE; ReleaseDC(nullptr, screen); return ok != FALSE;
   }
-  static void draw(HDC dc, const std::vector<arc_preview_primitive_v0>& p) {
+  void draw(HDC dc, const Stroke& stroke, const std::vector<arc_preview_primitive_v0>& p) {
     if (p.empty()) return;
     HPEN pen = CreatePen(PS_SOLID, 8, RGB(40, 190, 235)); HGDIOBJ old = SelectObject(dc, pen);
+    const auto resource = resources_.find(stroke.resourceId);
+    if (resource != resources_.end() && resource->second.width != 0) {
+      for (const auto& v : p) {
+        if (v.kind != ARC_PREVIEW_PRIMITIVE_DAB) continue;
+        const auto& texture = resource->second;
+        for (std::uint32_t y = 0; y < texture.height; y += 2U) {
+          for (std::uint32_t x = 0; x < texture.width; x += 2U) {
+            if (texture.alpha[static_cast<std::size_t>(y) * texture.width + x] < 128U) continue;
+            const int px = static_cast<int>(v.x + (static_cast<float>(x) / texture.width - 0.5F) * v.radius * 2.0F);
+            const int py = static_cast<int>(v.y + (static_cast<float>(y) / texture.height - 0.5F) * v.radius * 2.0F);
+            Ellipse(dc, px - 1, py - 1, px + 2, py + 2);
+          }
+        }
+      }
+      SelectObject(dc, old); DeleteObject(pen); return;
+    }
     std::vector<POINT> points; points.reserve(p.size());
     for (const auto& v : p) points.push_back({static_cast<LONG>(v.x), static_cast<LONG>(v.y)});
     MoveToEx(dc, points.front().x, points.front().y, nullptr);
@@ -249,11 +295,11 @@ class WindowsPreviewBackend final : public PreviewBackend {
     }
     SelectObject(dc, old); DeleteObject(pen);
   }
-  static void drawRange(HDC dc, const std::vector<arc_preview_primitive_v0>& p,
+  void drawRange(HDC dc, const Stroke& stroke, const std::vector<arc_preview_primitive_v0>& p,
                         std::size_t start) {
     if (p.empty() || start >= p.size()) return;
     std::vector<arc_preview_primitive_v0> tail(p.begin() + static_cast<std::ptrdiff_t>(start), p.end());
-    draw(dc, tail);
+    draw(dc, stroke, tail);
   }
   void releaseBitmap() {
     if (mem_ && oldBitmap_) SelectObject(mem_, oldBitmap_);
@@ -271,6 +317,7 @@ class WindowsPreviewBackend final : public PreviewBackend {
   void* bits_ = nullptr;
   bool bitmapInitialized_ = false;
   bool attached_ = false; bool test_only_ = false; std::unordered_map<uint64_t, Stroke> strokes_;
+  std::unordered_map<uint64_t, Resource> resources_;
 };
 
 } // namespace

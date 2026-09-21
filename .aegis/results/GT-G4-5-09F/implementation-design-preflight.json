@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "PASS",
+  "current_flow": [
+    "BrushDefinition v1 compiles to a family-selected representation",
+    "ResourceCatalog stores only resource identity and kind",
+    "BrushRuntime emits one primitive for every raw input sample",
+    "canonical Skia and Windows ARC draw fixed-color paths independently of programmable resources"
+  ],
+  "target_common_resource_and_primitive_flow": [
+    "BrushDefinition v2 references immutable Shape and Grain alpha resources",
+    "common ink runtime validates and composes one stable render-ready alpha resource",
+    "common ink runtime emits distance-spaced DAB primitives with deterministic ordinal and resource identity",
+    "canonical Skia and Windows ARC consume the same resource and ordered primitive semantics without recomputing brush behavior"
+  ],
+  "affected_types_files": {
+    "ink": [
+      "BrushDefinition",
+      "BrushProgram",
+      "ResourceCatalog",
+      "BrushAlphaResource",
+      "BrushRenderResource",
+      "BrushPrimitive",
+      "BrushRuntime"
+    ],
+    "render": ["SkiaInkBackend programmable DAB submission"],
+    "arc": ["preview resource upload", "Windows textured DAB presentation"],
+    "apps": ["five reference brushes", "RB-03 live edit", "Space dual-color diagnostic"]
+  },
+  "obligation_to_test_mapping": {
+    "09F-V1-reference-compile-editability": "G45ReferenceBrushCompile",
+    "09F-V2-materialized-resources": "G45ReferenceBrushResources",
+    "09F-V3-spacing-sample-rate-independence": "G45ReferenceBrushSpacing",
+    "09F-V4-primitive-semantic-parity": "G45ReferenceBrushPrimitiveParity",
+    "09F-V5-canonical-skia-fidelity": "G45ReferenceBrushGolden",
+    "09F-V6-windows-arc-parity": "G45WindowsArcBrushParity",
+    "09F-V7-space-diagnostic": "G45WindowsDualColorDiagnostic",
+    "09F-V8-regression-qualification-readiness": ["G4G45Regression", "ArcRegression"]
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

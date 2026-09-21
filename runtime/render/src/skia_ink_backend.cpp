@@ -3,13 +3,17 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkImageInfo.h"
+#include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPath.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
+#include "include/core/SkBitmap.h"
+#include "include/core/SkMatrix.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <limits>
 
 namespace canvas::render {
@@ -48,6 +52,60 @@ BackendSubmissionResult SkiaInkBackend::resize(std::uint32_t width,
 BackendSubmissionResult SkiaInkBackend::submit(
     std::span<const std::vector<CanonicalStrokePoint>> strokes) {
     return submit(strokes, CanonicalViewportTransform{});
+}
+
+BackendSubmissionResult SkiaInkBackend::submitProgrammableDabs(
+    std::span<const ProgrammableDab> dabs, CanonicalViewportTransform viewport) {
+    if (impl_ == nullptr || !impl_->surface || width_ == 0U || height_ == 0U) {
+        return BackendSubmissionResult::rejected("Skia ink surface is not initialized");
+    }
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F ||
+        !std::isfinite(viewport.translationX) || !std::isfinite(viewport.translationY)) {
+        return BackendSubmissionResult::rejected("invalid Skia viewport transform");
+    }
+    SkCanvas* canvas = impl_->surface->getCanvas();
+    ++rasterizationCount_;
+    canvas->clear(SK_ColorWHITE);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
+    for (const auto& dab : dabs) {
+        if (dab.resourceWidth == 0U || dab.resourceHeight == 0U ||
+            dab.resourceAlpha.size() != static_cast<std::size_t>(dab.resourceWidth) * dab.resourceHeight ||
+            !std::isfinite(dab.x) || !std::isfinite(dab.y) || !std::isfinite(dab.size) || dab.size <= 0.0F ||
+            !std::isfinite(dab.opacity) || dab.opacity < 0.0F || dab.opacity > 1.0F) {
+            canvas->restore();
+            return BackendSubmissionResult::rejected("invalid programmable dab");
+        }
+        SkBitmap bitmap;
+        bitmap.allocPixels(SkImageInfo::MakeA8(static_cast<int>(dab.resourceWidth),
+                                               static_cast<int>(dab.resourceHeight)));
+        std::memcpy(bitmap.getPixels(), dab.resourceAlpha.data(), dab.resourceAlpha.size());
+        canvas->save();
+        canvas->translate(dab.x, dab.y);
+        canvas->rotate(dab.rotationDegrees);
+        canvas->scale(dab.size / static_cast<float>(dab.resourceWidth),
+                      dab.size / static_cast<float>(dab.resourceHeight));
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setColor(SK_ColorBLACK);
+        paint.setAlphaf(dab.opacity);
+        auto image = bitmap.asImage();
+        canvas->drawImage(image,
+                          -static_cast<float>(dab.resourceWidth) * 0.5F,
+                          -static_cast<float>(dab.resourceHeight) * 0.5F,
+                          SkSamplingOptions{}, &paint);
+        canvas->restore();
+    }
+    canvas->restore();
+    const SkImageInfo info = SkImageInfo::Make(static_cast<int>(width_), static_cast<int>(height_),
+                                               kRGBA_8888_SkColorType, kPremul_SkAlphaType,
+                                               SkColorSpace::MakeSRGB());
+    if (!impl_->surface->readPixels(info, pixels_.data(), static_cast<std::size_t>(width_) * 4U, 0, 0)) {
+        return BackendSubmissionResult::rejected("Skia programmable readback failed");
+    }
+    hasSubmission_ = false;
+    return BackendSubmissionResult::accepted();
 }
 
 BackendSubmissionResult SkiaInkBackend::submit(
