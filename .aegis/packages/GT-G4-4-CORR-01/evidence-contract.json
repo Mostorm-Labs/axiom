@@ -1,7 +1,8 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-4-CORR-01",
-  "review_boundary": "Exact corrective result revision plus package locks, required policy/capability oracles, platform-ingress conformance, preserved regressions and exact-build qualification manifest.",
+  "obligation_set": "AUTOINTENT_ONLY_V0_2",
+  "review_boundary": "Exact corrective result revision plus package locks, AutoIntent/PositionOnly oracles, platform-ingress conformance and preserved G4/G4.4 regressions.",
   "artifacts": [
     {
       "id": "repository-reconciliation",
@@ -9,8 +10,8 @@
       "blocking": true
     },
     {
-      "id": "policy-matrix-evidence",
-      "path": ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+      "id": "auto-intent-evidence",
+      "path": ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
       "blocking": true
     },
     {
@@ -34,33 +35,29 @@
       "blocking": true
     },
     {
-      "id": "qualification-bundle-manifest",
-      "path": ".aegis/results/GT-G4-4-CORR-01/qualification-bundle-manifest.json",
-      "blocking": true
-    },
-    {
       "id": "result",
       "path": ".aegis/results/GT-G4-4-CORR-01/result.json",
       "blocking": true
     }
   ],
   "capability_policy": {
-    "default_multi_contact_policy": "AutoIntent",
+    "current_supported_multi_contact_behavior": "AutoIntent",
+    "default_multi_contact_behavior": "AutoIntent",
     "missing_pressure": "UNAVAILABLE_NOT_FAILURE",
     "invalid_contact_geometry": "DISABLE_AREA_HEURISTICS_NOT_PINCH",
     "unknown_tool": "VALID_POSITIONONLY_STATE",
     "unsupported_optional_capability_may_not_be_promoted_to_pass": true
   },
-  "physical_successor": {
-    "state_required_from_p32": "READY_FOR_CORRECTIVE_PHYSICAL_VERIFICATION",
-    "final_gate_pass_forbidden_in_p32": true,
-    "targeted_scenarios": [
-      "AutoIntent Pending->pan/pinch",
-      "AutoIntent Ink->second Ink",
-      "MultiInk 2-contact drawing no pinch",
-      "GesturePriority late second ignored",
-      "PositionOnly masked pinch",
-      "cancel and pointer reuse"
-    ]
+  "deferred": {
+    "non_blocking_modes": [
+      "MultiInk",
+      "GesturePriority"
+    ],
+    "new_physical_device_round_required": false,
+    "historical_physical_evidence_role": "corroborative_only_not_proof_of_new_corrective_code"
+  },
+  "return_contract": {
+    "state_required_from_p32": "READY_FOR_CONTROL_REVIEW",
+    "final_gate_pass_forbidden_in_p32": true
   }
 }
