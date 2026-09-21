@@ -25,6 +25,13 @@ class MultiContactCoordinator final {
   [[nodiscard]] bool viewportClaimed() const noexcept { return viewportClaimed_; }
   [[nodiscard]] bool canonicalMutation() const noexcept { return canonicalMutation_; }
   [[nodiscard]] std::size_t activeCount() const noexcept { return contacts_.size(); }
+  [[nodiscard]] bool setPolicy(MultiContactPolicy policy) noexcept {
+    if (!contacts_.empty()) return false;
+    policy_ = policy;
+    viewportClaimed_ = false;
+    canonicalMutation_ = false;
+    return true;
+  }
   void reset() noexcept;
 
  private:

@@ -182,6 +182,16 @@ int axiom_ink_android_viewport_claimed(void* handle) {
   auto* value = asHost(handle);
   return value != nullptr && value->host->viewportGestureClaimed();
 }
+int axiom_ink_android_set_multi_contact_policy(void* handle, int policy) {
+  auto* value = asHost(handle);
+  if (value == nullptr || policy < 0 || policy > 2) return 0;
+  const auto selected = static_cast<canvas::interaction::MultiContactPolicy>(policy);
+  return value->host->setMultiContactPolicy(selected);
+}
+int axiom_ink_android_multi_contact_policy(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? -1 : static_cast<int>(value->host->multiContactPolicy());
+}
 float axiom_ink_android_viewport_scale(void* handle) {
   auto* value = asHost(handle);
   return value == nullptr ? 1.0F : value->host->viewportGesture().scale;

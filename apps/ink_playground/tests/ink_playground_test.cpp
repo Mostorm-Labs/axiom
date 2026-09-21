@@ -202,6 +202,18 @@ void android_pointer_identity_test() {
   assert(*androidPointerIdentity(31) == 32);
   assert(!androidPointerIdentity(std::numeric_limits<std::uint64_t>::max()).has_value());
 }
+
+void multi_contact_policy_selection_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.multiContactPolicy() == canvas::interaction::MultiContactPolicy::kAutoIntent);
+  assert(host.setMultiContactPolicy(canvas::interaction::MultiContactPolicy::kMultiInk));
+  assert(host.multiContactPolicy() == canvas::interaction::MultiContactPolicy::kMultiInk);
+  const canvas::input::PointerKey key{11, 1, 1};
+  assert(host.beginStroke(key, 501));
+  assert(!host.setMultiContactPolicy(canvas::interaction::MultiContactPolicy::kGesturePriority));
+  assert(host.cancelStroke(key));
+  assert(host.setMultiContactPolicy(canvas::interaction::MultiContactPolicy::kGesturePriority));
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -216,6 +228,7 @@ int main(int argc, char** argv) {
   else if (mode == "provisional") provisional_zero_mutation_test();
   else if (mode == "viewport") viewport_gesture_state_test();
   else if (mode == "android-pointer-identity") android_pointer_identity_test();
+  else if (mode == "multi-contact-policy") multi_contact_policy_selection_test();
   else return 2;
   return 0;
 }

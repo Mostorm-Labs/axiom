@@ -34,6 +34,7 @@ if(BUILD_TESTING)
   add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
   add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
+  add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp

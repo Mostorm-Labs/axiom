@@ -43,6 +43,7 @@ public final class InkPlaygroundView extends View {
     private float viewportTranslationY;
     private float pinchBaseline;
     private boolean viewportMode;
+    private int selectedMultiContactPolicy;
 
     public InkPlaygroundView(Context context) {
         super(context);
@@ -75,10 +76,31 @@ public final class InkPlaygroundView extends View {
         canvas.restore();
         hud.setStyle(Paint.Style.FILL);
         canvas.drawText(String.format(Locale.US, "Axiom Ink  |  strokes %d  points %d  tool %s  pressure %.2f", strokes.size(), pointCount(), lastTool, lastPressure), 24f, 42f, hud);
-        canvas.drawText(String.format(Locale.US, "pointers %d  viewport %.2fx center %.0f,%.0f", activeStrokes.size(), viewportScale, viewportCenterX, viewportCenterY), 24f, 78f, hud);
+        canvas.drawText(String.format(Locale.US, "pointers %d  viewport %.2fx center %.0f,%.0f  mode %s", activeStrokes.size(), viewportScale, viewportCenterX, viewportCenterY, multiContactPolicyLabel()), 24f, 78f, hud);
     }
 
     private int pointCount() { int count = 0; for (Stroke active : activeStrokes.values()) count += active.points.size(); for (Stroke s : strokes) count += s.points.size(); return count; }
+
+    public String cycleMultiContactPolicy() {
+        final int next = (selectedMultiContactPolicy + 1) % 3;
+        if (setMultiContactPolicy(next)) invalidate();
+        return multiContactPolicyLabel();
+    }
+
+    private boolean setMultiContactPolicy(int policy) {
+        if (handle == 0) {
+            selectedMultiContactPolicy = policy;
+            return true;
+        }
+        if (nativeSetMultiContactPolicy(handle, policy) == 0) return false;
+        selectedMultiContactPolicy = nativeMultiContactPolicy(handle);
+        return true;
+    }
+
+    private String multiContactPolicyLabel() {
+        return selectedMultiContactPolicy == 0 ? "AutoIntent" :
+            selectedMultiContactPolicy == 1 ? "MultiInk" : "GesturePriority";
+    }
 
     @Override public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getActionMasked();
@@ -89,7 +111,10 @@ public final class InkPlaygroundView extends View {
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             final int pointerIndex = event.getActionIndex();
             final int pointerId = event.getPointerId(pointerIndex);
-            if (handle == 0) handle = nativeCreate(getWidth(), getHeight());
+            if (handle == 0) {
+                handle = nativeCreate(getWidth(), getHeight());
+                nativeSetMultiContactPolicy(handle, selectedMultiContactPolicy);
+            }
             strokeId++;
             Stroke active = new Stroke(); activeStrokes.put(pointerId, active);
             pointerStrokeIds.put(pointerId, strokeId);
@@ -186,6 +211,8 @@ public final class InkPlaygroundView extends View {
     private static native int nativeResize(long handle, int width, int height);
     private static native int nativeSurfaceLost(long handle);
     private static native int nativeCancelAll(long handle);
+    private static native int nativeSetMultiContactPolicy(long handle, int policy);
+    private static native int nativeMultiContactPolicy(long handle);
     private static native int nativeViewportClaimed(long handle);
     private static native float nativeViewportScale(long handle);
     private static native float nativeViewportCenterX(long handle);

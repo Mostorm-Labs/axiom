@@ -66,6 +66,14 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] const interaction::ViewportGesture& viewportGesture() const noexcept {
     return viewportState_;
   }
+  [[nodiscard]] interaction::MultiContactPolicy multiContactPolicy() const noexcept {
+    return contactCoordinator_.policy();
+  }
+  [[nodiscard]] bool setMultiContactPolicy(
+      interaction::MultiContactPolicy policy) noexcept {
+    if (!keyedStrokeIds_.empty()) return false;
+    return contactCoordinator_.setPolicy(policy);
+  }
 
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
