@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "stage": "P34_CONTROL_REVIEW",
+  "status": "PASS_WITH_FINDINGS",
+  "reviewer_role": "aegis-gate-review",
+  "subject_result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
+  "package_materialization_ref": "bbdc1bfa96a5a8a9bca99b38fb7d29eb97201f78",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "G4.5-00 through G4.5-09 automated closure is implemented",
+      "BrushDefinition/BrushProgram/BrushRuntime ownership boundaries are preserved",
+      "persistent commit maps only to existing canonical StrokeRecord alternatives",
+      "Laser uses Arc TemporalTransient with zero canonical mutation",
+      "G4.5-10 remains the only final G4.5 Gate boundary"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "passed": [
+      "All blocking evidence-contract artifacts are reviewer-resolvable",
+      "Host 36/36, Arc 5/5 and locked Semantic 511/511 fresh runs pass",
+      "Independent seven-family golden corpus and Brush Lab manifest hashes match",
+      "Windows/Web/Android hosted qualification artifacts are exact-source bound and PASS",
+      "Unsupported/unexercised pressure and tilt are not promoted to PASS"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "repository": "Mostorm-Labs/axiom",
+    "execution_branch": "codex/g4-5-programmable-brush",
+    "result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
+    "evidence_materialization_revision": "35794150f561874cc78e84c52f20125d3e761640",
+    "package_v0_2_materialization": "bbdc1bfa96a5a8a9bca99b38fb7d29eb97201f78",
+    "anchor_ancestor": true,
+    "git_diff_check": "PASS",
+    "scope_audit": "PASS"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "G45-P34-F1",
+        "classification": "SUCCESSOR_PHYSICAL_CHECKPOINT",
+        "finding": "Pressure and tilt were not exercised by the hosted qualification profiles.",
+        "disposition": "Carry to G4.5-10; capability policy permits NOT_EXERCISED and does not promote it to PASS."
+      },
+      {
+        "id": "G45-P34-F2",
+        "classification": "NON_BLOCKING_HARDENING",
+        "finding": "GitHub reports Node.js 20 action deprecation annotations.",
+        "disposition": "No current G4.5 correctness or release failure; successor CI maintenance."
+      }
+    ]
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "automated_boundary": "READY_FOR_PHYSICAL_VERIFICATION",
+    "g4_5_00_through_09_pass": true,
+    "final_g4_5_pass": false,
+    "next_stage": "G4.5-10 unified Tier-A physical qualification + G5 workload freeze + final Gate"
+  },
+  "claim_boundary": "This is a reviewer-owned placeholder only. It is not a P34 verdict, capability PASS, or G4.5 PASS."
+}

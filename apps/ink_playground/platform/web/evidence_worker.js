@@ -13,18 +13,29 @@ self.addEventListener("message", async event => {
   context.save();
   context.translate(snapshot.viewportTranslationX, snapshot.viewportTranslationY);
   context.scale(snapshot.viewportScale, snapshot.viewportScale);
-  context.strokeStyle = "#1a5bff";
-  context.lineWidth = 3;
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  snapshot.strokes.forEach(points => {
+  const styles = {
+    1:{color:"#1a5bff",width:3,alpha:1,dash:[]}, 2:{color:"#343434",width:2,alpha:.78,dash:[3,2]},
+    3:{color:"#806048",width:7,alpha:.52,dash:[1,5]}, 4:{color:"#2070f0",width:14,alpha:.72,dash:[]},
+    5:{color:"#26aac8",width:19,alpha:.38,dash:[]}, 6:{color:"#ffd820",width:24,alpha:.34,dash:[]},
+    7:{color:"#ff1840",width:4,alpha:1,dash:[10,6]}
+  };
+  snapshot.strokes.forEach(stroke => {
+    const points = stroke.points;
+    const style = styles[stroke.family] || styles[1];
     if (points.length === 0) return;
+    context.strokeStyle = style.color;
+    context.globalAlpha = style.alpha;
+    context.lineWidth = style.width;
+    context.setLineDash(style.dash);
+    context.lineCap = stroke.family === 3 ? "butt" : "round";
+    context.lineJoin = "round";
     context.beginPath();
     points.forEach((point, index) => {
       if (index === 0) context.moveTo(point.x, point.y);
       else context.lineTo(point.x, point.y);
     });
     context.stroke();
+    context.globalAlpha = 1;
   });
   context.restore();
   const captureBlob = await capture.convertToBlob({ type: "image/png" });

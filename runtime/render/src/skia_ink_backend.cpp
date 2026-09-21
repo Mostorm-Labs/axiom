@@ -1,4 +1,5 @@
 #include "canvas/render/skia_ink_backend.hpp"
+#include "canvas/render/skia_brush_renderer.hpp"
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
@@ -41,7 +42,46 @@ BackendSubmissionResult SkiaInkBackend::resize(std::uint32_t width,
     height_ = height;
     pixels_.assign(static_cast<std::size_t>(width) * height * 4U, 0U);
     submittedStrokes_.clear();
+    submittedPrimitives_.clear();
     hasSubmission_ = false;
+    return BackendSubmissionResult::accepted();
+}
+
+BackendSubmissionResult SkiaInkBackend::submitPrimitives(
+    std::span<const canvas::ink::BrushPrimitive> primitives,
+    CanonicalViewportTransform viewport) {
+    if (impl_ == nullptr || !impl_->surface || width_ == 0U || height_ == 0U) {
+        return BackendSubmissionResult::rejected("Skia ink surface is not initialized");
+    }
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F ||
+        !std::isfinite(viewport.translationX) || !std::isfinite(viewport.translationY)) {
+        return BackendSubmissionResult::rejected("invalid Skia viewport transform");
+    }
+    if (hasSubmission_ && submittedPrimitives_.size() == primitives.size() &&
+        std::equal(primitives.begin(), primitives.end(), submittedPrimitives_.begin()) &&
+        viewport.scale == submittedViewport_.scale &&
+        viewport.translationX == submittedViewport_.translationX &&
+        viewport.translationY == submittedViewport_.translationY) {
+        return BackendSubmissionResult::accepted();
+    }
+    SkCanvas* canvas = impl_->surface->getCanvas();
+    ++rasterizationCount_;
+    canvas->clear(SK_ColorWHITE);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
+    internal::drawBrushPrimitivesToSkCanvas(*canvas, primitives);
+    canvas->restore();
+    const auto info = SkImageInfo::Make(static_cast<int>(width_), static_cast<int>(height_),
+                                        kRGBA_8888_SkColorType, kPremul_SkAlphaType,
+                                        SkColorSpace::MakeSRGB());
+    if (!impl_->surface->readPixels(info, pixels_.data(), static_cast<size_t>(width_) * 4U, 0, 0)) {
+        return BackendSubmissionResult::rejected("Skia programmable-DAB readback failed");
+    }
+    submittedPrimitives_.assign(primitives.begin(), primitives.end());
+    submittedStrokes_.clear();
+    submittedViewport_ = viewport;
+    hasSubmission_ = true;
     return BackendSubmissionResult::accepted();
 }
 

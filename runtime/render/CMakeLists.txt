@@ -1,5 +1,7 @@
 option(CANVAS_RENDER_ENABLE_SKIA_HEADLESS
     "Build the private G3 Headless Skia backend" OFF)
+option(CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH
+    "Build the shared Skia programmable-DAB renderer" OFF)
 
 add_library(canvas_runtime_render STATIC
     src/visibility_resolver.cpp
@@ -10,20 +12,23 @@ add_library(canvas_runtime_render STATIC
     src/presentation_tracker.cpp
     src/canonical_handoff.cpp)
 
-if(EMSCRIPTEN)
+if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
+                   CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
 endif()
 
-if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
-    add_executable(axiom_headless_canvas_demo
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+      add_executable(axiom_headless_canvas_demo
         tools/headless_canvas_demo.cpp)
-    target_link_libraries(axiom_headless_canvas_demo PRIVATE canvas_runtime_render)
-    target_compile_features(axiom_headless_canvas_demo PRIVATE cxx_std_20)
-    target_compile_definitions(axiom_headless_canvas_demo PRIVATE
+      target_link_libraries(axiom_headless_canvas_demo PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_headless_canvas_demo PRIVATE cxx_std_20)
+      target_compile_definitions(axiom_headless_canvas_demo PRIVATE
         G3_07_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    endif()
 endif()
 
-if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
     if(NOT CANVAS_SKIA_SDK_ROOT)
         message(FATAL_ERROR "CANVAS_SKIA_SDK_ROOT is required for the Headless Skia consumer")
     endif()
@@ -32,15 +37,19 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
-    target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+      target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    endif()
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
 endif()
 target_include_directories(canvas_runtime_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_render PUBLIC
-    canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene)
+    canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene
+    canvas_runtime_ink)
 target_compile_features(canvas_runtime_render PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -53,7 +62,7 @@ else()
     endif()
 endif()
 
-if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_render_skia_ink_backend_tests
         tests/skia_ink_backend_test.cpp)
     target_link_libraries(axiom_render_skia_ink_backend_tests PRIVATE canvas_runtime_render)
@@ -67,6 +76,16 @@ if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     endif()
     add_test(NAME G4WindowsSkiaInkViewport
         COMMAND axiom_render_skia_ink_backend_tests)
+    add_executable(axiom_render_skia_brush_primitive_tests
+        tests/skia_brush_primitive_test.cpp)
+    target_link_libraries(axiom_render_skia_brush_primitive_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_skia_brush_primitive_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4SkiaBrushPrimitiveDab COMMAND axiom_render_skia_brush_primitive_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)

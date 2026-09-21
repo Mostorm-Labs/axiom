@@ -1,10 +1,11 @@
 package dev.mostorm.axiom.inkplayground;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Bitmap;
+import java.nio.ByteBuffer;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +24,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public final class InkPlaygroundView extends View {
-    private static final class Point { final float x, y, pressure; Point(float x, float y, float p) { this.x=x; this.y=y; this.pressure=p; } }
+    private static final class Point { final float x, y, pressure, size, opacity; final int representation, family; Point(float x, float y, float p, float s, float o, int r, int f) { this.x=x; this.y=y; this.pressure=p; this.size=s; this.opacity=o; this.representation=r; this.family=f; } }
     private static final class Stroke { final ArrayList<Point> points = new ArrayList<>(); }
     private static final class TraceSample {
         final long stroke, pointerId, sequence, timeNs;
@@ -42,17 +43,18 @@ public final class InkPlaygroundView extends View {
         final long traceSequence;
         final float lastPressure, viewportScale, viewportTranslationX, viewportTranslationY;
         final String device, model;
+        final String brushEvidence;
         EvidenceSnapshot(ArrayList<Stroke> strokes,
                          int width, int height, int batchCount, int sdk, long traceSequence,
                          float lastPressure, float viewportScale,
                          float viewportTranslationX, float viewportTranslationY,
-                         String device, String model) {
+                         String device, String model, String brushEvidence) {
             this.strokes = strokes; this.width = width; this.height = height;
             this.batchCount = batchCount; this.sdk = sdk; this.lastPressure = lastPressure;
             this.traceSequence = traceSequence;
             this.viewportScale = viewportScale; this.viewportTranslationX = viewportTranslationX;
             this.viewportTranslationY = viewportTranslationY;
-            this.device = device; this.model = model;
+            this.device = device; this.model = model; this.brushEvidence = brushEvidence;
         }
     }
     static { System.loadLibrary("axiom_ink_playground_android"); }
@@ -80,13 +82,17 @@ public final class InkPlaygroundView extends View {
     private float pinchBaseline;
     private boolean viewportMode;
     private int selectedMultiContactPolicy;
+    private int activeBrushFamily = 1;
+    private final StringBuilder brushEvidence = new StringBuilder("[\n");
+    private boolean brushEvidenceFirst = true;
+    private int selectedBrushFamily = 1;
 
     public InkPlaygroundView(Context context) {
         super(context);
         setBackgroundColor(Color.WHITE);
         ink.setColor(Color.rgb(26, 91, 255)); ink.setStyle(Paint.Style.STROKE); ink.setStrokeWidth(6f); ink.setStrokeCap(Paint.Cap.ROUND); ink.setStrokeJoin(Paint.Join.ROUND);
         hud.setColor(Color.rgb(37, 48, 74)); hud.setTextSize(28f);
-        evidenceDir = new File(context.getFilesDir(), "g4-12-android");
+        evidenceDir = new File(context.getFilesDir(), "g4-5-android");
         evidenceDir.mkdirs();
         setFocusable(true);
     }
@@ -96,22 +102,33 @@ public final class InkPlaygroundView extends View {
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawColor(Color.WHITE);
-        canvas.save();
-        canvas.translate(viewportTranslationX, viewportTranslationY);
-        canvas.scale(viewportScale, viewportScale);
-        for (Stroke stroke : strokes) {
-            for (int i = 1; i < stroke.points.size(); ++i) {
-                Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
-                canvas.drawLine(a.x, a.y, b.x, b.y, ink);
+        final byte[] nativeRgba = handle == 0 ? null : nativeBrushRgba(handle, getWidth(), getHeight());
+        final boolean nativeSkiaRendered = nativeRgba != null;
+        if (nativeSkiaRendered) {
+            final Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(nativeRgba));
+            canvas.drawBitmap(bitmap, 0f, 0f, null);
+        }
+        if (!nativeSkiaRendered) {
+            canvas.save();
+            canvas.translate(viewportTranslationX, viewportTranslationY);
+            canvas.scale(viewportScale, viewportScale);
+            for (Stroke stroke : strokes) {
+                for (int i = 1; i < stroke.points.size(); ++i) {
+                    Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
+                    if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, ink, a, b);
+                    else drawBrushSegment(canvas, ink, a, b);
+                }
             }
+            if (!viewportMode) for (Stroke active : activeStrokes.values()) for (int i = 1; i < active.points.size(); ++i) {
+                Point a = active.points.get(i - 1), b = active.points.get(i);
+                if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, ink, a, b);
+                else drawBrushSegment(canvas, ink, a, b);
+            }
+            canvas.restore();
         }
-        if (!viewportMode) for (Stroke active : activeStrokes.values()) for (int i = 1; i < active.points.size(); ++i) {
-            Point a = active.points.get(i - 1), b = active.points.get(i);
-            canvas.drawLine(a.x, a.y, b.x, b.y, ink);
-        }
-        canvas.restore();
         hud.setStyle(Paint.Style.FILL);
-        canvas.drawText(String.format(Locale.US, "Axiom Ink  |  strokes %d  points %d  tool %s  pressure %.2f", strokes.size(), pointCount(), lastTool, lastPressure), 24f, 42f, hud);
+        canvas.drawText(String.format(Locale.US, "Axiom Brush Lab  |  strokes %d  points %d  family %s  pressure %.2f", strokes.size(), pointCount(), brushFamilyName(activeBrushFamily), lastPressure), 24f, 42f, hud);
         canvas.drawText(String.format(Locale.US, "pointers %d  viewport %.2fx center %.0f,%.0f  mode %s", activeStrokes.size(), viewportScale, viewportCenterX, viewportCenterY, multiContactPolicyLabel()), 24f, 78f, hud);
     }
 
@@ -152,9 +169,11 @@ public final class InkPlaygroundView extends View {
                 nativeSetMultiContactPolicy(handle, selectedMultiContactPolicy);
             }
             strokeId++;
+            activeBrushFamily = selectedBrushFamily;
             Stroke active = new Stroke(); activeStrokes.put(pointerId, active);
             pointerStrokeIds.put(pointerId, strokeId);
             nativeBegin(handle, pointerId, strokeId);
+            nativeBrushBegin(handle, pointerId, activeBrushFamily);
             emitPointer(event, pointerIndex, true, false);
         } else if (action == MotionEvent.ACTION_MOVE) {
             for (int pointerIndex = 0; pointerIndex < event.getPointerCount(); ++pointerIndex) {
@@ -204,29 +223,84 @@ public final class InkPlaygroundView extends View {
             final float y = (viewY - viewportTranslationY) / viewportScale;
             final float pressure = current ? event.getPressure(pointerIndex) : event.getHistoricalPressure(pointerIndex, i);
             final long timeNs = (current ? event.getEventTime() : event.getHistoricalEventTime(i)) * 1000000L;
-            final int tool = current ? event.getToolType(pointerIndex) : event.getToolType(pointerIndex);
+            final int tool = event.getToolType(pointerIndex);
             final float major = current ? event.getTouchMajor(pointerIndex) : event.getHistoricalTouchMajor(pointerIndex, i);
             final float minor = current ? event.getTouchMinor(pointerIndex) : event.getHistoricalTouchMinor(pointerIndex, i);
             lastTool = tool == MotionEvent.TOOL_TYPE_STYLUS ? "stylus" : tool == MotionEvent.TOOL_TYPE_ERASER ? "eraser" : "touch";
             lastPressure = pressure;
-            if (!viewportMode) active.points.add(new Point(x, y, pressure));
-            trace.add(new TraceSample(activeStrokeId, pointerId, ++sequence, x, y, pressure,
+            final long sampleSequence = ++sequence;
+            trace.add(new TraceSample(activeStrokeId, pointerId, sampleSequence, x, y, pressure,
                     major, minor, lastTool, timeNs));
-            nativeMotion(handle, pointerId, sequence, timeNs, viewX, viewY, pressure, down && i == 0 ? 1 : 0, up && i == history ? 1 : 0, tool);
+            nativeMotion(handle, pointerId, sampleSequence, timeNs, viewX, viewY, pressure,
+                    down && i == 0 ? 1 : 0, up && i == history ? 1 : 0, tool);
+            nativeBrushSample(handle, pointerId, sampleSequence, x, y, pressure);
+            final boolean claimedByViewport = nativeViewportClaimed(handle) != 0;
+            if (!claimedByViewport) {
+                float brushSize = nativeBrushSize(handle, pointerId);
+                float brushOpacity = nativeBrushOpacity(handle, pointerId);
+                int brushRepresentation = nativeBrushRepresentation(handle, pointerId);
+                active.points.add(new Point(x, y, pressure, brushSize, brushOpacity,
+                        brushRepresentation, activeBrushFamily));
+            }
         }
         batchCount = count;
         if (up) {
-            if (!viewportMode && nativeCommit(handle, pointerId, activeStrokeId) != 0) strokes.add(active);
-            else if (viewportMode) nativeCommit(handle, pointerId, activeStrokeId);
-            activeStrokes.remove(pointerId); pointerStrokeIds.remove(pointerId); scheduleEvidenceSnapshot();
+            final boolean committed = nativeCommit(handle, pointerId, activeStrokeId) != 0;
+            final boolean brushFinished = nativeBrushFinish(handle, pointerId) != 0;
+            if (committed && brushFinished) appendBrushEvidence(pointerId);
+            if (committed) strokes.add(active);
+            activeStrokes.remove(pointerId);
+            pointerStrokeIds.remove(pointerId);
+            scheduleEvidenceSnapshot();
         }
+    }
+
+    private static void drawBrushSegment(Canvas canvas, Paint paint, Point a, Point b) {
+        paint.setAlpha(Math.max(20, Math.min(255, (int)(255f * a.opacity))));
+        if (a.family == 7 || a.representation == 3) { paint.setColor(Color.rgb(255, 24, 64)); paint.setStrokeWidth(Math.max(3f, a.size * 0.65f)); }
+        else if (a.family == 6) { paint.setColor(Color.rgb(255, 216, 32)); paint.setStrokeWidth(Math.max(10f, a.size * 0.9f)); }
+        else if (a.family == 3) { paint.setColor(Color.rgb(120, 96, 72)); paint.setStrokeWidth(Math.max(4f, a.size * 0.7f)); }
+        else if (a.family == 4) { paint.setColor(Color.rgb(32, 112, 240)); paint.setStrokeWidth(Math.max(8f, a.size * 1.25f)); }
+        else if (a.family == 5) { paint.setColor(Color.rgb(38, 170, 210)); paint.setStrokeWidth(Math.max(9f, a.size * 1.1f)); }
+        else if (a.family == 2) { paint.setColor(Color.rgb(65, 65, 65)); paint.setStrokeWidth(Math.max(3f, a.size * 0.5f)); }
+        else { paint.setColor(Color.rgb(26, 91, 255)); paint.setStrokeWidth(Math.max(3f, a.size * 0.65f)); }
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawLine(a.x, a.y, b.x, b.y, paint);
+        paint.setAlpha(255);
+    }
+
+    private static void drawTexturedBrush(Canvas canvas, Paint paint, Point a, Point b) {
+        final float dx = b.x - a.x, dy = b.y - a.y;
+        final float length = (float)Math.hypot(dx, dy);
+        final float nx = length == 0f ? 0f : -dy / length;
+        final float ny = length == 0f ? 1f : dx / length;
+        final float pressureWidth = Math.max(4f, a.size * (a.family == 2 ? 0.42f :
+                a.family == 3 ? 0.95f : a.family == 4 ? 1.35f : 1.05f) *
+                (0.72f + 0.55f * a.pressure));
+        if (a.family == 2) paint.setColor(Color.rgb(55, 55, 55));
+        else if (a.family == 3) paint.setColor(Color.rgb(135, 94, 61));
+        else if (a.family == 4) paint.setColor(Color.rgb(35, 111, 236));
+        else paint.setColor(Color.rgb(38, 170, 210));
+        paint.setStyle(Paint.Style.STROKE); paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeWidth(pressureWidth);
+        final int baseAlpha = a.family == 2 ? 190 : a.family == 3 ? 105 : a.family == 4 ? 175 : 105;
+        paint.setAlpha(Math.max(25, Math.min(220, (int)(baseAlpha * a.opacity))));
+        canvas.drawLine(a.x, a.y, b.x, b.y, paint);
+        final int strands = a.family == 2 ? 1 : a.family == 3 ? 4 : a.family == 4 ? 2 : 5;
+        for (int i = -strands; i <= strands; ++i) {
+            final float jitter = i * pressureWidth * (a.family == 3 ? 0.28f : 0.19f);
+            paint.setStrokeWidth(Math.max(1.5f, pressureWidth * (0.08f + 0.02f * (i + 3))));
+            paint.setAlpha(Math.max(10, (a.family == 2 ? 70 : 58) - Math.abs(i) * 10));
+            canvas.drawLine(a.x + nx * jitter, a.y + ny * jitter, b.x + nx * jitter, b.y + ny * jitter, paint);
+        }
+        paint.setAlpha(255);
     }
 
     private EvidenceSnapshot snapshotEvidence() {
         ArrayList<Stroke> strokesCopy = new ArrayList<>(strokes);
         return new EvidenceSnapshot(strokesCopy, getWidth(), getHeight(), batchCount,
                 Build.VERSION.SDK_INT, sequence, lastPressure, viewportScale, viewportTranslationX,
-                viewportTranslationY, Build.DEVICE, Build.MODEL);
+                viewportTranslationY, Build.DEVICE, Build.MODEL, brushEvidence.toString() + "\n]\n");
     }
 
     private synchronized void scheduleEvidenceSnapshot() {
@@ -247,6 +321,7 @@ public final class InkPlaygroundView extends View {
             }
             traceJson.append("\n]\n");
             write(new File(evidenceDir, "pointer-trace.json"), traceJson.toString().getBytes(StandardCharsets.UTF_8));
+            write(new File(evidenceDir, "programmable-brush-evidence.json"), snapshot.brushEvidence.getBytes(StandardCharsets.UTF_8));
         Bitmap bitmap = Bitmap.createBitmap(Math.max(1, snapshot.width), Math.max(1, snapshot.height), Bitmap.Config.ARGB_8888);
             Canvas capture = new Canvas(bitmap); drawSnapshot(capture, snapshot);
             File captureFile = new File(evidenceDir, "ink-playground.png");
@@ -270,11 +345,33 @@ public final class InkPlaygroundView extends View {
         for (Stroke stroke : snapshot.strokes) {
             for (int i = 1; i < stroke.points.size(); ++i) {
                 Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
-                canvas.drawLine(a.x, a.y, b.x, b.y, capturePaint);
+                if (a.family >= 2 && a.family <= 5) drawTexturedBrush(canvas, capturePaint, a, b);
+                else drawBrushSegment(canvas, capturePaint, a, b);
             }
         }
         canvas.restore();
     }
+    private void appendBrushEvidence(int pointerId) {
+        if (!brushEvidenceFirst) brushEvidence.append(",\n");
+        brushEvidenceFirst = false;
+        brushEvidence.append(String.format(Locale.US,
+                "  {\"family\":\"%s\",\"family_id\":%d,\"digest\":%d,\"primitive_count\":%d,\"canonical_mutation\":%s}",
+                brushFamilyName(nativeBrushFamily(handle)), nativeBrushFamily(handle),
+                nativeBrushDigest(handle), nativeBrushPrimitiveCount(handle),
+                nativeBrushCanonicalMutation(handle) != 0 ? "true" : "false"));
+    }
+    private static String brushFamilyName(int family) {
+        switch (family) {
+            case 1: return "pen"; case 2: return "pencil"; case 3: return "chalk";
+            case 4: return "marker"; case 5: return "water_color_lite";
+            case 6: return "highlighter"; case 7: return "laser"; default: return "unknown";
+        }
+    }
+    public void selectBrushFamily(int family) {
+        if (family >= 1 && family <= 7) { selectedBrushFamily = family; activeBrushFamily = family; invalidate(); }
+    }
+    public int selectedBrushFamily() { return selectedBrushFamily; }
+
     private static void write(File file, byte[] bytes) throws Exception { try (FileOutputStream out = new FileOutputStream(file)) { out.write(bytes); } }
     private static String sha256(File file) throws Exception { MessageDigest digest = MessageDigest.getInstance("SHA-256"); byte[] data = java.nio.file.Files.readAllBytes(file.toPath()); byte[] hash = digest.digest(data); StringBuilder value = new StringBuilder(); for (byte b : hash) value.append(String.format("%02x", b)); return value.toString(); }
     public void close() { if (handle != 0) { nativeDestroy(handle); handle = 0; } evidenceExecutor.shutdown(); }
@@ -287,6 +384,17 @@ public final class InkPlaygroundView extends View {
     private static native int nativeResize(long handle, int width, int height);
     private static native int nativeSurfaceLost(long handle);
     private static native int nativeCancelAll(long handle);
+    private static native int nativeBrushBegin(long handle, int pointerId, int family);
+    private static native int nativeBrushSample(long handle, int pointerId, long sequence, float x, float y, float pressure);
+    private static native int nativeBrushFinish(long handle, int pointerId);
+    private static native long nativeBrushDigest(long handle);
+    private static native long nativeBrushPrimitiveCount(long handle);
+    private static native int nativeBrushFamily(long handle);
+    private static native int nativeBrushCanonicalMutation(long handle);
+    private static native float nativeBrushSize(long handle, int pointerId);
+    private static native float nativeBrushOpacity(long handle, int pointerId);
+    private static native int nativeBrushRepresentation(long handle, int pointerId);
+    private static native byte[] nativeBrushRgba(long handle, int width, int height);
     private static native int nativeSetMultiContactPolicy(long handle, int policy);
     private static native int nativeMultiContactPolicy(long handle);
     private static native int nativeViewportClaimed(long handle);

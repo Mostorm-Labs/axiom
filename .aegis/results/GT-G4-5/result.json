@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "result_revision": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+  "status": "BLOCKED_ENVIRONMENT_WITH_ANDROID_FUNCTIONAL_EVIDENCE",
+  "package_id": "GT-G4-5-P31-v0.2",
+  "package_materialization_ref": "bbdc1bfa96a5a8a9bca99b38fb7d29eb97201f78",
+  "execution_branch": "codex/g4-5-programmable-brush",
+  "completed_work_packages": [
+    "G4.5-00",
+    "G4.5-01",
+    "G4.5-02",
+    "G4.5-03",
+    "G4.5-04",
+    "G4.5-05",
+    "G4.5-06",
+    "G4.5-07",
+    "G4.5-08",
+    "G4.5-09"
+  ],
+  "result_boundary": "Post-corrective exact merge revision plus durable forward-reconciliation evidence and existing G4.5 qualification/physical evidence.",
+  "next_stage": "Resume existing G4.5-10 unified Tier-A physical qualification / final Gate boundary; do not reopen G4.5-00 through G4.5-09.",
+  "terminal_blocker": "G4.5-10 still requires Windows and Web physical hosts; Android Pixel 7 functional evidence is now available with findings.",
+  "claim_boundary": "G4.5-00 through G4.5-09 remain PASS_WITH_FINDINGS after post-corrective automated reverification. Final G4.5 PASS is not claimed by this reconciliation.",
+  "materialized_ref": "303a09a605b90ee541d2cd71e22fc4a1782fa736",
+  "forward_reconciliation": {
+    "source_main_revision": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+    "pre_reconciliation_g4_5_revision": "c486969e781b9f3319e2e1781559cff1ede30c1e",
+    "merge_revision": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+    "evidence_ref": ".aegis/results/GT-G4-5/g4-4-forward-reconciliation.json",
+    "evidence_materialization_ref": "303a09a605b90ee541d2cd71e22fc4a1782fa736",
+    "automated_status": "PASS",
+    "g4_5_qualification_run": 35577229198,
+    "arc_poc06_run": 35577229240,
+    "physical_retest_required_by_reconciliation": false
+  }
+}

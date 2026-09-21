@@ -128,6 +128,33 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("android", workflow.lower())
         self.assertNotIn("windows", workflow.lower())
 
+    def test_g45_workflow_is_narrow_consumer_only_cross_platform_qualification(self):
+        workflow = (WORKFLOWS / "g4-5-programmable-brush.yml").read_text(
+            encoding="utf-8"
+        )
+        trigger = trigger_block("g4-5-programmable-brush.yml")
+        for path in (
+            '"runtime/ink/**"',
+            '"apps/brush_lab/**"',
+            '"arc/**"',
+            '"verification/corpus/brush/g4_5/**"',
+            '".aegis/packages/GT-G4-5/**"',
+            '".github/workflows/g4-5-programmable-brush.yml"',
+        ):
+            self.assertIn(path, trigger)
+        self.assertIn("workflow_dispatch:", trigger)
+        self.assertIn("windows-2025", workflow)
+        self.assertIn("ubuntu-24.04", workflow)
+        self.assertIn("macos-15", workflow)
+        self.assertIn("AXIOM_BUILD_BRUSH_LAB=ON", workflow)
+        web_job = workflow.split("  web:", 1)[1].split("\n  android:", 1)[0]
+        self.assertIn("BUILD_TESTING=OFF", web_job)
+        self.assertIn("tools/setup_build_environment.py --core", workflow)
+        self.assertIn('"ndk;27.2.12479018"', workflow)
+        self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
+        self.assertNotIn("tools/skia/build.py", workflow)
+        self.assertIn("actions/upload-artifact@v4", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()

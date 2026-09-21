@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add a renderer-neutral BrushPrimitiveDAB-to-Skia programmable-DAB seam consuming existing BrushRuntime output.",
+        "Make spacing, size, opacity, rotation, Shape and Grain resource bindings renderer-owned by the common Skia implementation.",
+        "Connect Android native Skia surface or RGBA bridge to the common renderer.",
+        "Connect Web WebGL2 Skia surface to the common renderer and remove Canvas2D from the parity path.",
+        "Preserve the existing Android/Web parameter-unification edits as starting work; do not reinterpret BrushDefinition at platform edges.",
+        "Add deterministic cross-platform primitive/raster digest and adapter regression fixtures."
+      ],
+      "forbidden_changes": [
+        "Semantic schema, ObjectKind, Operation or StrokeRecord changes",
+        "G4.4 input arbitration or MultiContactPolicy changes",
+        "BrushDefinition v1/v2 semantic changes",
+        "platform-private spacing, pressure, random, Shape or Grain semantics",
+        "Canvas2D or Android Canvas fallback presented as Skia parity",
+        "WetMedia, CanvasAwareRaster, user brush persistence/sync, Procreate/ABR importer",
+        "G5 tile/cache/scheduler/resource-budget work",
+        "Skia source rebuild or lock-file changes",
+        "G4.5 Gate PASS"
+      ]
+    },
+    "tests": {"required": [
+      {"id":"package-binding","command_or_oracle":"repository identity, package hash and anchor preflight","expected_result":"PASS","blocking_reason":"execution authority integrity"},
+      {"id":"implementation-design","command_or_oracle":"ImplementationDesignPreflight record","expected_result":"PASS with no unresolved decisions","blocking_reason":"cross-module renderer ownership"},
+      {"id":"red-parity","command_or_oracle":"SKIA-PARITY-1..4 acceptance oracle on pre-change code","expected_result":"RED for missing Android/Web Skia integration","blocking_reason":"test proves it detects missing behavior"},
+      {"id":"automated-regressions","command_or_oracle":"relevant CTest/Python Android/Web contract suites","expected_result":"all pass","blocking_reason":"frozen regression boundary"},
+      {"id":"android-build","command_or_oracle":"Android APK build","expected_result":"PASS","blocking_reason":"required target artifact"},
+      {"id":"web-build","command_or_oracle":"Web WASM build","expected_result":"PASS","blocking_reason":"required target artifact"},
+      {"id":"parity-fixture","command_or_oracle":"fixed BrushPrimitive fixture adapter/render digest","expected_result":"PASS","blocking_reason":"cross-platform parity"}
+    ]},
+    "evidence": {"blocking":["repo-reconciliation.json","implementation-design-preflight.json","red-oracle-preflight.json","portable-regression-summary.json","renderer-parity-report.json","android-build.json","web-build.json","qualification-bundle-manifest.json","result.json"],"corroborative":["android-render-trace.json","web-render-trace.json"]},
+    "terminal_success":["common Skia programmable-DAB path is implemented and consumed by Android and Web","all frozen automated tests and builds pass","parity evidence and exact artifact hashes are durable","status is READY_FOR_CONTROL_REVIEW","no forbidden scope change is present"],
+    "terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","BLOCKED_ENVIRONMENT","BLOCKED_REPOSITORY_IDENTITY","FROZEN_VERIFICATION_FAILURE","NEW_HIGH_IMPACT_FAILURE_MODE"],
+    "continue_until_terminal_state":true,
+    "return_surface":"CONTROL_REVIEW"
+  }
+}

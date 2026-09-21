@@ -1,12 +1,13 @@
 package dev.mostorm.axiom.inkplayground;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.graphics.Color;
-import android.view.Gravity;
+import android.os.Bundle;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 public final class MainActivity extends Activity {
     private InkPlaygroundView view;
@@ -15,20 +16,32 @@ public final class MainActivity extends Activity {
         super.onCreate(state);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         view = new InkPlaygroundView(this);
-        FrameLayout root = new FrameLayout(this);
-        root.addView(view, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+
+        Spinner brushSelector = new Spinner(this);
+        brushSelector.setTag("brushSelector");
+        String[] families = {"Pen", "Pencil", "Chalk", "Marker", "Water Color Lite", "Highlighter", "Laser"};
+        brushSelector.setPrompt("毛笔质感 / 选择笔型");
+        brushSelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, families));
+        brushSelector.setSelection(view.selectedBrushFamily() - 1);
+        brushSelector.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View item, int position, long id) {
+                view.selectBrushFamily(position + 1);
+            }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
+        });
+
         Button policy = new Button(this);
         policy.setText("双指模式：AutoIntent");
         policy.setTextColor(Color.WHITE);
         policy.setBackgroundColor(Color.rgb(35, 91, 210));
         policy.setOnClickListener(v ->
                 policy.setText("双指模式：" + view.cycleMultiContactPolicy()));
-        FrameLayout.LayoutParams policyParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM);
-        policyParams.setMargins(24, 0, 24, 24);
-        root.addView(policy, policyParams);
+
+        root.addView(view, new LinearLayout.LayoutParams(-1, 0, 1f));
+        root.addView(brushSelector, new LinearLayout.LayoutParams(-1, 128));
+        root.addView(policy, new LinearLayout.LayoutParams(-1, -2));
         setContentView(root);
     }
 

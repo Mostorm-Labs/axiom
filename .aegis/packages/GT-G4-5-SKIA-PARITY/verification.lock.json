@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "obligations": [
+    {"id":"SKIA-PARITY-1","requirement":"One renderer-neutral BrushPrimitiveDAB representation is consumed by Android and Web Skia paths.","oracle":"Cross-platform adapter tests inspect the same primitive fields and resource bindings.","acceptance":"No platform renderer reconstructs spacing, size, opacity, rotation, Shape or Grain semantics from BrushDefinition.","evidence_required":["primitive adapter report"]},
+    {"id":"SKIA-PARITY-2","requirement":"Skia programmable-DAB rendering applies spacing, size, opacity, rotation, Shape and Grain deterministically.","oracle":"Fixed fixture raster and primitive digest snapshots.","acceptance":"Identical input/program/resource fixture produces identical canonical digest on the common renderer seam.","evidence_required":["renderer snapshot corpus","digest report"]},
+    {"id":"SKIA-PARITY-3","requirement":"Android native Skia surface or RGBA bridge consumes the common renderer output.","oracle":"Android build and adapter/instrumentation test.","acceptance":"Android no longer uses Java Canvas2D as the programmable-DAB implementation path.","evidence_required":["Android build report"]},
+    {"id":"SKIA-PARITY-4","requirement":"Web WebGL2 Skia surface consumes the common renderer output.","oracle":"Web build and host contract test.","acceptance":"Web playground routes brush rendering through the Skia WebGL2 surface; Canvas2D fallback is not parity evidence.","evidence_required":["Web build report"]},
+    {"id":"SKIA-PARITY-5","requirement":"Cross-platform parity is regression-safe.","oracle":"Relevant G4/G4.4/G4.5 automated suites plus scope/diff audit.","acceptance":"No semantic schema, input arbitration, historical evidence, lock, WetMedia, persistence or G5 changes.","evidence_required":["regression summary","scope audit"]},
+    {"id":"SKIA-PARITY-6","requirement":"Exact Android/Web qualification artifacts are bound to the result revision.","oracle":"Manifest hash validation.","acceptance":"Durable evidence is reviewer-resolvable and status is READY_FOR_CONTROL_REVIEW.","evidence_required":["qualification manifest","result.json"]}
+  ],
+  "oracle_precondition": {"red_required": true, "expected_failure": "Before implementation, Android uses Java Canvas rendering and Web playground uses Canvas2D; the common Skia parity fixture must fail at the adapter/renderer seam.", "observation_seam": "apps/ink_playground platform adapters and runtime/render Skia backend"}
+}

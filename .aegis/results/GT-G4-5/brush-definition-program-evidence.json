@@ -1,0 +1,8 @@
+{
+  "schema_version": "0.1", "task_id": "GT-G4-5", "result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
+  "obligations": ["G45-V1-definition-capabilities", "G45-V2-program-compiler"],
+  "oracle": "axiom_programmable_brush_tests / G45ProgrammableBrush",
+  "observed": {"definitions": 7, "families": ["pen", "pencil", "chalk", "marker", "water_color_lite", "highlighter", "laser"], "negative_fixtures": "PASS", "stable_program_identity": "PASS", "immutable_versioned_ir": "PASS"},
+  "test_status": "PASS",
+  "claim_boundary": "Renderer/platform-neutral runtime evidence; no canonical schema mutation."
+}

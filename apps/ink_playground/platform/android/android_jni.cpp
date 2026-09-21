@@ -1,6 +1,7 @@
 #include <jni.h>
 
 #include <cstdint>
+#include <vector>
 
 extern "C" {
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height);
@@ -21,6 +22,23 @@ float axiom_ink_android_viewport_center_x(void* handle);
 float axiom_ink_android_viewport_center_y(void* handle);
 float axiom_ink_android_viewport_translation_x(void* handle);
 float axiom_ink_android_viewport_translation_y(void* handle);
+int axiom_ink_android_brush_begin(void* handle, std::uint64_t pointerId,
+                                  std::uint64_t family);
+int axiom_ink_android_brush_sample(void* handle, std::uint64_t pointerId,
+                                   std::uint64_t sequence, float x, float y,
+                                   float pressure);
+int axiom_ink_android_brush_finish(void* handle, std::uint64_t pointerId);
+std::uint64_t axiom_ink_android_brush_digest(void* handle);
+std::uint64_t axiom_ink_android_brush_primitive_count(void* handle);
+std::uint64_t axiom_ink_android_brush_family(void* handle);
+int axiom_ink_android_brush_canonical_mutation(void* handle);
+int axiom_ink_android_brush_render(void* handle, std::uint32_t width,
+                                   std::uint32_t height, std::uint8_t* rgba,
+                                   std::uint32_t stride);
+float axiom_ink_android_brush_size(void* handle, std::uint64_t pointerId);
+float axiom_ink_android_brush_opacity(void* handle, std::uint64_t pointerId);
+int axiom_ink_android_brush_representation(void* handle, std::uint64_t pointerId);
+
 
 JNIEXPORT jlong JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCreate(
@@ -130,5 +148,93 @@ JNIEXPORT jfloat JNICALL
 Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeViewportTranslationY(
     JNIEnv*, jclass, jlong handle) {
   return axiom_ink_android_viewport_translation_y(reinterpret_cast<void*>(handle));
+}JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushBegin(
+    JNIEnv*, jclass, jlong handle, jint pointerId, jint family) {
+  return axiom_ink_android_brush_begin(reinterpret_cast<void*>(handle),
+                                       static_cast<std::uint64_t>(pointerId),
+                                       static_cast<std::uint64_t>(family));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushSample(
+    JNIEnv*, jclass, jlong handle, jint pointerId, jlong sequence,
+    jfloat x, jfloat y, jfloat pressure) {
+  return axiom_ink_android_brush_sample(reinterpret_cast<void*>(handle),
+                                         static_cast<std::uint64_t>(pointerId),
+                                         static_cast<std::uint64_t>(sequence),
+                                         x, y, pressure);
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushFinish(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_brush_finish(reinterpret_cast<void*>(handle),
+                                         static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jlong JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushDigest(
+    JNIEnv*, jclass, jlong handle) {
+  return static_cast<jlong>(axiom_ink_android_brush_digest(
+      reinterpret_cast<void*>(handle)));
+}
+
+JNIEXPORT jlong JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushPrimitiveCount(
+    JNIEnv*, jclass, jlong handle) {
+  return static_cast<jlong>(axiom_ink_android_brush_primitive_count(
+      reinterpret_cast<void*>(handle)));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushFamily(
+    JNIEnv*, jclass, jlong handle) {
+  return static_cast<jint>(axiom_ink_android_brush_family(
+      reinterpret_cast<void*>(handle)));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushCanonicalMutation(
+    JNIEnv*, jclass, jlong handle) {
+  return axiom_ink_android_brush_canonical_mutation(
+      reinterpret_cast<void*>(handle));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushSize(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_brush_size(reinterpret_cast<void*>(handle),
+                                       static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushOpacity(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_brush_opacity(reinterpret_cast<void*>(handle),
+                                          static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushRepresentation(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_brush_representation(reinterpret_cast<void*>(handle),
+                                                static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushRgba(
+    JNIEnv* env, jclass, jlong handle, jint width, jint height) {
+  if (width <= 0 || height <= 0) return nullptr;
+  std::vector<std::uint8_t> rgba(static_cast<std::size_t>(width) * height * 4U);
+  if (axiom_ink_android_brush_render(reinterpret_cast<void*>(handle),
+                                     static_cast<std::uint32_t>(width),
+                                     static_cast<std::uint32_t>(height), rgba.data(),
+                                     static_cast<std::uint32_t>(width) * 4U) == 0) return nullptr;
+  jbyteArray result = env->NewByteArray(static_cast<jsize>(rgba.size()));
+  if (result == nullptr) return nullptr;
+  env->SetByteArrayRegion(result, 0, static_cast<jsize>(rgba.size()),
+                          reinterpret_cast<const jbyte*>(rgba.data()));
+  return result;
 }
 }

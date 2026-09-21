@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "stage": "P31_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-5-P31-v0.2",
+  "package_path": ".aegis/packages/GT-G4-5/package.json",
+  "package_materialization_ref": "bbdc1bfa96a5a8a9bca99b38fb7d29eb97201f78",
+  "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "G4.5-00 through G4.5-09 are frozen as the automated implementation boundary",
+      "BrushDefinition, BrushProgram, BrushRuntime and Arc ownership boundaries are explicit",
+      "canonical StrokeRecord and historical brush replay compatibility are preserved",
+      "V1 persistent brush families and Laser temporal-transient semantics are enumerated",
+      "G4.5-10 is separately frozen as the unified physical qualification and final Gate boundary"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "passed": [
+      "all eleven verification obligations contain an explicit requirement, independent oracle, acceptance rule and required evidence",
+      "deterministic, negative, structural, visual-golden, regression and zero-canonical-mutation proof paths are frozen",
+      "Windows, Web and Android qualification readiness is blocking for automated closure",
+      "the repaired package narrowly authorizes the previously omitted hosted qualification producer and its static contract test",
+      "device physical evidence is non-blocking for G4.5-00 through G4.5-09 and blocking only at G4.5-10",
+      "unsupported pressure or tilt is recorded as NOT_APPLICABLE or NOT_EXERCISED and cannot be promoted to PASS"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "repository": "Mostorm-Labs/axiom",
+    "canonical_main_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "remote_ref": "refs/heads/codex/g4-5-programmable-brush",
+    "remote_materialization_exact": true,
+    "anchor_ancestor": true,
+    "g4_4_gate_revision": "eb4ca06e2bb44471f413234377b1cfb4e1e76bdf",
+    "g4_4_integration_pr": "https://github.com/Mostorm-Labs/axiom/pull/131",
+    "five_package_lock_hashes": "PASS",
+    "json_parse": "PASS",
+    "independent_obligation_traversal": "PASS_11_OF_11",
+    "git_diff_check": "PASS",
+    "scope_assessment": "Executable and bounded; semantic schema, dependency locks, G4.6, G5 and historical evidence are explicitly excluded."
+  },
+  "authority_audit": {
+    "status": "PASS",
+    "architecture_ref": "notion://3e04c57a590c816ab407cbb55ac4b79a",
+    "architecture_last_edited_at": "2026-09-20T02:53:34.794Z",
+    "architecture_content_sha256": "3b8155ce2baea0b0a45c46f0cfe04fee5797dfa09ee91d4af903d7a7ea3695b7",
+    "implementation_plan_ref": "notion://3e04c57a590c81668022f1773d5307eb",
+    "implementation_plan_last_edited_at": "2026-09-20T15:46:28.109Z",
+    "implementation_plan_content_sha256": "b53f8db7b88d0a249a14562130eb711d142f20b512898902f43e71a0a5e307f6",
+    "accepted_cadence": "Complete automated G4.5-00 through G4.5-09 before one unified G4.5-10 physical checkpoint."
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "G45-P31-F1",
+        "classification": "STALE_SUPPORTING_CACHE",
+        "finding": "The repository project-state cache predates G4.4 integration.",
+        "disposition": "Package-local exact GitHub, Gate and task-anchor bindings control execution; refresh of the broader project-state cache is successor governance work and does not weaken this package identity."
+      }
+    ]
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "p31_authorized": true,
+    "next_stage": "P32_CODE_EXECUTION",
+    "terminal_success": "READY_FOR_PHYSICAL_VERIFICATION",
+    "official_g4_5_pass_forbidden": true,
+    "final_g4_5_pass_owner": "independent CONTROL_REVIEW after G4.5-10"
+  }
+}
