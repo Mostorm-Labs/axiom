@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P31_PREFLIGHT",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.2",
+  "package_binding_preflight": "PASS",
+  "evidence_contract_preflight": "PASS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "anchor_relation": "ancestor",
+    "anchor_ancestry_verified": true
+  },
+  "package_refs": {
+    "authority_lock_ref": "63f0ea4ef54a70d1525b3952802d36e569d41b545fef332dfaa65b76d82924fe",
+    "verification_lock_ref": "dd971de1a9adee2ee6300a6e8b426b55455cb2d0b4bfba5e31153d57c1dbaa38",
+    "execution_contract_ref": "df570aee9868995fa9d2f0e37e4be5e064545b4e236ea6a30b7b5d5e660a16bd",
+    "implementation_context_ref": "250eb0acb35f8e25fa603f5ead58cd51f90f01c4bea6efd4775a6246fbf984fe",
+    "evidence_contract_ref": "d679f8c0dfac488d98a8dcbce4baf28ee322594e4428424bdbb90e6055a02c53",
+    "all_hashes_match": true
+  },
+  "frozen_scope": {
+    "current_supported_behavior": "AutoIntent",
+    "deferred_modes": [
+      "MultiInk",
+      "GesturePriority"
+    ],
+    "new_blocking_physical_round": false
+  },
+  "structural_checks": {
+    "verification_requirement_oracle_acceptance_evidence_separated": true,
+    "blocking_evidence_complete": true,
+    "terminal_success_READY_FOR_CONTROL_REVIEW": true,
+    "continue_until_terminal_state": true,
+    "unresolved_semantic_decisions": []
+  },
+  "executable": true,
+  "official_gate_pass_claimed": false
+}
