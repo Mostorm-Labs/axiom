@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "record": "P31_PACKAGE_REPAIR",
+  "repaired_package_id": "GT-G4-4-CORR-01-P31-v0.3",
+  "supersedes": "GT-G4-4-CORR-01-P31-v0.2",
+  "reason": "Current Authority requires AutoIntent as the only blocking/current product guarantee, while already-existing broader policy implementation is explicitly allowed to remain without cleanup.",
+  "preserved_runtime_boundary": "3240a3b6567a898452462f4687939e799572c49d",
+  "runtime_mutation_required": false,
+  "retained_non_blocking_implementation": [
+    "MultiInk",
+    "GesturePriority",
+    "existing mode-switch seams"
+  ],
+  "blocking_scope": [
+    "AutoIntent",
+    "PositionOnly",
+    "common platform ownership",
+    "provisional zero mutation",
+    "preserved G4/G4.4 regression"
+  ],
+  "official_gate_pass_claimed": false
+}
