@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "CORRECTIVE_PHYSICAL_VERIFICATION",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "result_revision": "d569197741569a5522745efa83ad34d1a7929070",
+  "platform": "android",
+  "device": {"model":"Pixel 7","device":"panther","adb_serial":"29251FDH2004Z0"},
+  "apk": {
+    "sha256":"f2f49665517c277da2fa5199d0dfe7cf51035e6379776c71ed432f9fe31e6253",
+    "build":"PASS","install":"PASS","launch":"PASS"
+  },
+  "human_observation": {
+    "observer":"user",
+    "result":"PASS_ANDROID_MULTICONTACT_POLICY_FUNCTIONAL_CHECKPOINT",
+    "confirmed_modes":["AutoIntent","MultiInk","GesturePriority"],
+    "confirmed":[
+      "bottom mode selector is reachable",
+      "mode selection changes the Runtime policy",
+      "Android drawing remains functional after mode changes",
+      "two-finger behavior was accepted by the user"
+    ]
+  },
+  "artifacts": {
+    "pointer_trace":{"path":".aegis/results/GT-G4-4-CORR-01/android-policy-pointer-trace.json","sha256":"71ce07d70c0e36f611d3c6792022de6125f2ef587ec48b092f59a241f811ce3e"},
+    "capture":{"path":".aegis/results/GT-G4-4-CORR-01/android-policy-capture.png","sha256":"4fda803876e502e30eeb598ec4e651e029ac1c766bceff4cbcac4e6e79717eed"}
+  },
+  "trace_summary":{"events":6208,"pointer_ids":[0,1],"stroke_count":40},
+  "portable_regression":{"ctest":"38/38 PASS","git_diff_check":"PASS"},
+  "official_gate_pass":false,
+  "next_surface":"CONTROL_REVIEW"
+}
