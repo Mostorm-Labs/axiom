@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-10",
+  "source_revision": "fe0f69b627267d26c242a90ec3b6a5da5015f62e",
+  "executable_sha256": "bf45167a046e1da35960fc5abb0aafbd7c7ec645846d52721229328cee381b21",
+  "device_metadata": {
+    "windows_version": "Windows 10 专业版 10.0.19045 build 19045",
+    "architecture": "x64",
+    "computer": "HIMEKO",
+    "cpu": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+    "gpu": [
+      "Intel(R) UHD Graphics 630 driver 31.0.101.2111",
+      "OrayIddDriver Device driver 17.50.19.949"
+    ],
+    "input_devices": [
+      "HID-compliant pen present",
+      "HID-compliant touch screen present",
+      "HID-compliant mouse present"
+    ],
+    "actual_input_used": "none",
+    "input_capture": "not_available",
+    "screen_resolution": "not_available",
+    "display_scale": "not_available"
+  },
+  "test_time_utc": "2026-09-21T17:06:03.7686053Z",
+  "capture_path": null,
+  "capture_sha256": null,
+  "test_steps": [
+    "Collect operating system metadata",
+    "Collect CPU/GPU metadata",
+    "Collect present HID input devices",
+    "Determine actual input used for qualification"
+  ],
+  "observed_result": {
+    "os": "Windows 10 专业版 10.0.19045 build 19045",
+    "cpu": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+    "gpu": [
+      "Intel(R) UHD Graphics 630 driver 31.0.101.2111",
+      "OrayIddDriver Device driver 17.50.19.949"
+    ],
+    "present_hid": [
+      "HID-compliant pen present",
+      "HID-compliant touch screen present",
+      "HID-compliant mouse present"
+    ],
+    "actual_input_used": "none because visual host unavailable",
+    "resolution": "not_available",
+    "scale": "not_available"
+  },
+  "pass": true,
+  "status": "METADATA_ONLY"
+}
