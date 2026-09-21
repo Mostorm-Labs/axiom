@@ -16,10 +16,45 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public final class InkPlaygroundView extends View {
     private static final class Point { final float x, y, pressure; Point(float x, float y, float p) { this.x=x; this.y=y; this.pressure=p; } }
     private static final class Stroke { final ArrayList<Point> points = new ArrayList<>(); }
+    private static final class TraceSample {
+        final long stroke, pointerId, sequence, timeNs;
+        final float x, y, pressure, major, minor;
+        final String tool;
+        TraceSample(long stroke, long pointerId, long sequence, float x, float y,
+                    float pressure, float major, float minor, String tool, long timeNs) {
+            this.stroke = stroke; this.pointerId = pointerId; this.sequence = sequence;
+            this.x = x; this.y = y; this.pressure = pressure; this.major = major;
+            this.minor = minor; this.tool = tool; this.timeNs = timeNs;
+        }
+    }
+    private static final class EvidenceSnapshot {
+        final ArrayList<Stroke> strokes;
+        final int width, height, batchCount, sdk;
+        final long traceSequence;
+        final float lastPressure, viewportScale, viewportTranslationX, viewportTranslationY;
+        final String device, model;
+        EvidenceSnapshot(ArrayList<Stroke> strokes,
+                         int width, int height, int batchCount, int sdk, long traceSequence,
+                         float lastPressure, float viewportScale,
+                         float viewportTranslationX, float viewportTranslationY,
+                         String device, String model) {
+            this.strokes = strokes; this.width = width; this.height = height;
+            this.batchCount = batchCount; this.sdk = sdk; this.lastPressure = lastPressure;
+            this.traceSequence = traceSequence;
+            this.viewportScale = viewportScale; this.viewportTranslationX = viewportTranslationX;
+            this.viewportTranslationY = viewportTranslationY;
+            this.device = device; this.model = model;
+        }
+    }
     static { System.loadLibrary("axiom_ink_playground_android"); }
 
     private final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -28,11 +63,12 @@ public final class InkPlaygroundView extends View {
     private final HashMap<Integer, Stroke> activeStrokes = new HashMap<>();
     private final HashMap<Integer, Long> pointerStrokeIds = new HashMap<>();
     private final File evidenceDir;
-    private final StringBuilder trace = new StringBuilder("[\n");
+    private final ConcurrentLinkedQueue<TraceSample> trace = new ConcurrentLinkedQueue<>();
+    private final ScheduledExecutorService evidenceExecutor = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> pendingEvidence;
     private long handle;
     private long sequence;
     private long strokeId;
-    private boolean traceFirst = true;
     private String lastTool = "none";
     private float lastPressure;
     private int batchCount;
@@ -104,7 +140,7 @@ public final class InkPlaygroundView extends View {
 
     @Override public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getActionMasked();
-        if (action == MotionEvent.ACTION_CANCEL) { if (handle != 0) nativeCancelAll(handle); activeStrokes.clear(); pointerStrokeIds.clear(); pinchBaseline = 0f; persistEvidence(); invalidate(); return true; }
+        if (action == MotionEvent.ACTION_CANCEL) { if (handle != 0) nativeCancelAll(handle); activeStrokes.clear(); pointerStrokeIds.clear(); pinchBaseline = 0f; scheduleEvidenceSnapshot(); invalidate(); return true; }
         if (action != MotionEvent.ACTION_DOWN && action != MotionEvent.ACTION_POINTER_DOWN &&
             action != MotionEvent.ACTION_MOVE && action != MotionEvent.ACTION_UP &&
             action != MotionEvent.ACTION_POINTER_UP) return true;
@@ -174,34 +210,74 @@ public final class InkPlaygroundView extends View {
             lastTool = tool == MotionEvent.TOOL_TYPE_STYLUS ? "stylus" : tool == MotionEvent.TOOL_TYPE_ERASER ? "eraser" : "touch";
             lastPressure = pressure;
             if (!viewportMode) active.points.add(new Point(x, y, pressure));
-            if (!traceFirst) trace.append(",\n"); traceFirst = false;
-            trace.append(String.format(Locale.US, "  {\"stroke\":%d,\"pointer_id\":%d,\"sequence\":%d,\"x\":%.3f,\"y\":%.3f,\"pressure\":%.5f,\"touch_major\":%.3f,\"touch_minor\":%.3f,\"tool\":\"%s\",\"time_ns\":%d}", activeStrokeId, pointerId, ++sequence, x, y, pressure, major, minor, lastTool, timeNs));
+            trace.add(new TraceSample(activeStrokeId, pointerId, ++sequence, x, y, pressure,
+                    major, minor, lastTool, timeNs));
             nativeMotion(handle, pointerId, sequence, timeNs, viewX, viewY, pressure, down && i == 0 ? 1 : 0, up && i == history ? 1 : 0, tool);
         }
         batchCount = count;
         if (up) {
             if (!viewportMode && nativeCommit(handle, pointerId, activeStrokeId) != 0) strokes.add(active);
             else if (viewportMode) nativeCommit(handle, pointerId, activeStrokeId);
-            activeStrokes.remove(pointerId); pointerStrokeIds.remove(pointerId); persistEvidence();
+            activeStrokes.remove(pointerId); pointerStrokeIds.remove(pointerId); scheduleEvidenceSnapshot();
         }
     }
 
-    private void persistEvidence() {
+    private EvidenceSnapshot snapshotEvidence() {
+        ArrayList<Stroke> strokesCopy = new ArrayList<>(strokes);
+        return new EvidenceSnapshot(strokesCopy, getWidth(), getHeight(), batchCount,
+                Build.VERSION.SDK_INT, sequence, lastPressure, viewportScale, viewportTranslationX,
+                viewportTranslationY, Build.DEVICE, Build.MODEL);
+    }
+
+    private synchronized void scheduleEvidenceSnapshot() {
+        final EvidenceSnapshot snapshot = snapshotEvidence();
+        if (pendingEvidence != null) pendingEvidence.cancel(false);
+        pendingEvidence = evidenceExecutor.schedule(() -> persistEvidence(snapshot),
+                500, TimeUnit.MILLISECONDS);
+    }
+
+    private void persistEvidence(EvidenceSnapshot snapshot) {
         try {
-            String json = trace + "\n]\n";
-            write(new File(evidenceDir, "pointer-trace.json"), json.getBytes(StandardCharsets.UTF_8));
-            Bitmap bitmap = Bitmap.createBitmap(Math.max(1, getWidth()), Math.max(1, getHeight()), Bitmap.Config.ARGB_8888);
-            Canvas capture = new Canvas(bitmap); draw(capture);
+            StringBuilder traceJson = new StringBuilder("[\n");
+            int index = 0;
+            for (TraceSample sample : trace) {
+                if (sample.sequence > snapshot.traceSequence) continue;
+                if (index++ != 0) traceJson.append(",\n");
+                traceJson.append(String.format(Locale.US, "  {\"stroke\":%d,\"pointer_id\":%d,\"sequence\":%d,\"x\":%.3f,\"y\":%.3f,\"pressure\":%.5f,\"touch_major\":%.3f,\"touch_minor\":%.3f,\"tool\":\"%s\",\"time_ns\":%d}", sample.stroke, sample.pointerId, sample.sequence, sample.x, sample.y, sample.pressure, sample.major, sample.minor, sample.tool, sample.timeNs));
+            }
+            traceJson.append("\n]\n");
+            write(new File(evidenceDir, "pointer-trace.json"), traceJson.toString().getBytes(StandardCharsets.UTF_8));
+        Bitmap bitmap = Bitmap.createBitmap(Math.max(1, snapshot.width), Math.max(1, snapshot.height), Bitmap.Config.ARGB_8888);
+            Canvas capture = new Canvas(bitmap); drawSnapshot(capture, snapshot);
             File captureFile = new File(evidenceDir, "ink-playground.png");
             try (FileOutputStream output = new FileOutputStream(captureFile)) { bitmap.compress(Bitmap.CompressFormat.PNG, 100, output); }
             String sha = sha256(captureFile);
-            String record = String.format(Locale.US, "{\"platform\":\"android\",\"device\":\"%s\",\"model\":\"%s\",\"sdk\":%d,\"batch\":%d,\"pressure\":%.5f,\"viewport_scale\":%.5f,\"capture\":\"%s\",\"capture_sha256\":\"%s\"}\n", Build.DEVICE, Build.MODEL, Build.VERSION.SDK_INT, batchCount, lastPressure, viewportScale, captureFile.getAbsolutePath(), sha);
+            String record = String.format(Locale.US, "{\"platform\":\"android\",\"device\":\"%s\",\"model\":\"%s\",\"sdk\":%d,\"batch\":%d,\"pressure\":%.5f,\"viewport_scale\":%.5f,\"capture\":\"%s\",\"capture_sha256\":\"%s\"}\n", snapshot.device, snapshot.model, snapshot.sdk, snapshot.batchCount, snapshot.lastPressure, snapshot.viewportScale, captureFile.getAbsolutePath(), sha);
             write(new File(evidenceDir, "functional-smoke.json"), record.getBytes(StandardCharsets.UTF_8));
         } catch (Exception ignored) { }
     }
+    private static void drawSnapshot(Canvas canvas, EvidenceSnapshot snapshot) {
+        canvas.drawColor(Color.WHITE);
+        canvas.save();
+        canvas.translate(snapshot.viewportTranslationX, snapshot.viewportTranslationY);
+        canvas.scale(snapshot.viewportScale, snapshot.viewportScale);
+        Paint capturePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        capturePaint.setColor(Color.rgb(26, 91, 255));
+        capturePaint.setStyle(Paint.Style.STROKE);
+        capturePaint.setStrokeWidth(6f);
+        capturePaint.setStrokeCap(Paint.Cap.ROUND);
+        capturePaint.setStrokeJoin(Paint.Join.ROUND);
+        for (Stroke stroke : snapshot.strokes) {
+            for (int i = 1; i < stroke.points.size(); ++i) {
+                Point a = stroke.points.get(i - 1), b = stroke.points.get(i);
+                canvas.drawLine(a.x, a.y, b.x, b.y, capturePaint);
+            }
+        }
+        canvas.restore();
+    }
     private static void write(File file, byte[] bytes) throws Exception { try (FileOutputStream out = new FileOutputStream(file)) { out.write(bytes); } }
     private static String sha256(File file) throws Exception { MessageDigest digest = MessageDigest.getInstance("SHA-256"); byte[] data = java.nio.file.Files.readAllBytes(file.toPath()); byte[] hash = digest.digest(data); StringBuilder value = new StringBuilder(); for (byte b : hash) value.append(String.format("%02x", b)); return value.toString(); }
-    public void close() { if (handle != 0) { nativeDestroy(handle); handle = 0; } }
+    public void close() { if (handle != 0) { nativeDestroy(handle); handle = 0; } evidenceExecutor.shutdown(); }
 
     private static native long nativeCreate(int width, int height);
     private static native void nativeDestroy(long handle);
