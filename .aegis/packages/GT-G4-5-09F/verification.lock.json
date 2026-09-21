@@ -1,0 +1,100 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "obligation_set": "G45_09F_REFERENCE_FIDELITY_V0_1",
+  "sources": [
+    "notion://3e24c57a-590c-815c-a970-d9fbaa423ead#5-6",
+    "notion://3e24c57a-590c-81de-9860-ec26d18c386b#5-7"
+  ],
+  "obligations": [
+    {
+      "id": "09F-V1-reference-compile-editability",
+      "requirement": "Five reference BrushDefinition v2 presets compile through the common pipeline and RB-03 is genuinely definition-driven and live-editable.",
+      "oracle": "CTest G45ReferenceBrushCompile plus generated reference-brush-program-manifest.json.",
+      "acceptance": "5/5 reference definitions compile; identical definition/compiler/resources reproduce ProgramIdentity; semantic RB-03 parameter edits change ProgramIdentity/output; reverting edits restores the original identity; existing V1 golden behavior remains unchanged.",
+      "evidence_required": [
+        "reference-brush-program-manifest.json",
+        "portable-regression-summary.json"
+      ]
+    },
+    {
+      "id": "09F-V2-materialized-resources",
+      "requirement": "Textured reference brushes resolve real immutable Shape/Grain alpha content and one deterministic common render-ready alpha resource.",
+      "oracle": "CTest G45ReferenceBrushResources plus reference-brush-resource-manifest.json.",
+      "acceptance": "RB-03 and RB-05 resolve Shape and Grain bytes with stable hashes; common composed render resource hash is deterministic; missing/mismatched materialization fails explicitly; no backend/GPU handle enters common semantic data.",
+      "evidence_required": [
+        "reference-brush-resource-manifest.json"
+      ]
+    },
+    {
+      "id": "09F-V3-spacing-sample-rate-independence",
+      "requirement": "BrushDefinition v2 DAB emission is controlled by path distance and spacing rather than raw platform sample count.",
+      "oracle": "CTest G45ReferenceBrushSpacing over sparse/dense equivalent geometric corpus and chunk-boundary variants.",
+      "acceptance": "Sparse and dense equivalent paths yield the same stable dab positions/count/digest under frozen tolerance; spacing changes produce predictable density changes; chunked and one-shot evaluation are identical.",
+      "evidence_required": [
+        "reference-brush-input-corpus.json",
+        "reference-brush-sample-rate-independence.json"
+      ]
+    },
+    {
+      "id": "09F-V4-primitive-semantic-parity",
+      "requirement": "Preview and canonical V2 artifacts bind the same ordered primitive semantics, ProgramIdentity, render resource and deterministic seed/channel state.",
+      "oracle": "CTest G45ReferenceBrushPrimitiveParity plus reference-brush-primitive-parity.json.",
+      "acceptance": "Dab ordinal, position, size, rotation and opacity are stable; preview/canonical stable primitive prefix matches; ProgramIdentity/resource hash/seed bindings match; presentation-only diagnostic tint is excluded from semantic digest.",
+      "evidence_required": [
+        "reference-brush-primitive-parity.json"
+      ]
+    },
+    {
+      "id": "09F-V5-canonical-skia-fidelity",
+      "requirement": "Canonical Skia renders V2 programmable DABs from the common render-ready alpha resource rather than reducing textured references to a fixed solid path.",
+      "oracle": "CTest G45ReferenceBrushGolden plus exact reference-brush-golden-summary.json.",
+      "acceptance": "RB-03/RB-04/RB-05 raster output is structurally distinct from a constant-width solid line; size/rotation/opacity edits change raster output as expected; existing canonical path-render tests stay green.",
+      "evidence_required": [
+        "reference-brush-golden-summary.json"
+      ]
+    },
+    {
+      "id": "09F-V6-windows-arc-parity",
+      "requirement": "Windows ARC consumes the same common render-ready resource and mapped primitive stream without owning brush evaluation.",
+      "oracle": "CTest G45WindowsArcBrushParity, Arc core resource tests and exact Windows qualification trace.",
+      "acceptance": "ARC resource upload uses the same render resource ID/hash; Begin descriptor binds that resource; DAB geometry equals common primitive mapping; missing resource fails explicitly; no Arc spacing/pressure/random/family evaluator is introduced.",
+      "evidence_required": [
+        "windows-arc-runtime-parity.json"
+      ]
+    },
+    {
+      "id": "09F-V7-space-diagnostic",
+      "requirement": "Space toggles only high-contrast ARC/canonical presentation colors for qualification.",
+      "oracle": "CTest G45WindowsDualColorDiagnostic plus windows-dual-color-diagnostic.json.",
+      "acceptance": "OFF uses normal colors; ON uses distinct ARC and canonical diagnostic colors; ProgramIdentity, primitive digest, resource hashes and canonical brush data do not change; any retained legacy mirror moves away from Space.",
+      "evidence_required": [
+        "windows-dual-color-diagnostic.json"
+      ]
+    },
+    {
+      "id": "09F-V8-regression-qualification-readiness",
+      "requirement": "The 09F delta preserves accepted G4/G4.4/G4.5 behavior and produces an exact Windows qualification bundle plus G5 reference workload.",
+      "oracle": "Relevant G4/G45 CTest, G4.5 Programmable Brush Qualification exact-result workflow, Arc/POC-06 exact-result workflow, scope audit and qualification manifest validation.",
+      "acceptance": "Existing relevant tests pass; Windows/Web/Android G4.5 qualification jobs pass; Arc/POC-06 passes; no forbidden diff exists; exact Windows bundle contains the reference-brush executable/evidence path; result is READY_FOR_G4_5_10_PHYSICAL_VERIFICATION.",
+      "evidence_required": [
+        "portable-regression-summary.json",
+        "qualification-bundle-manifest.json",
+        "g5-reference-brush-workload.json",
+        "g4-5-09f-result.json",
+        "result.json"
+      ]
+    }
+  ],
+  "successor_physical_obligation": {
+    "blocking_for_p32": false,
+    "blocking_for_final_g4_5_gate": true,
+    "required": [
+      "continuous Windows five-brush recording",
+      "Space diagnostic recording for RB-01/RB-03/RB-04",
+      "RB-03 live edit recording",
+      "ARC-active/handoff/canonical-only screenshots",
+      "exact build/device observation record"
+    ]
+  }
+}
