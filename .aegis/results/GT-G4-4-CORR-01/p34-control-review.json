@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P34_CONTROL_REVIEW",
+  "reviewed_revision": "f118b4bda5ce6d29adb4f0c3828abaa6463904fe",
+  "repository_identity": "PASS",
+  "task_anchor_ancestry": "PASS",
+  "package_binding": "PASS",
+  "fresh_regression": {"configure": "PASS", "build": "PASS", "ctest": "35/35 PASS", "git_diff_check": "PASS"},
+  "decision": "BLOCKED_IMPLEMENTATION",
+  "classification": "FROZEN_REQUIREMENT_FAILURE",
+  "findings": [
+    {
+      "obligation": "CORR-V7-gesture-priority",
+      "severity": "BLOCKING",
+      "finding": "GesturePriority ignores the second contact whenever any contact exists, including when the first contact is still Pending. Frozen Authority requires Pending plus second compatible contact to form a viewport gesture."
+    },
+    {
+      "obligation": "CORR-V1-pointer-phase",
+      "severity": "BLOCKING",
+      "finding": "The evidence claims invalid terminal ordering is rejected, but no oracle covers it and an Up or Cancel for an unknown PointerKey returns Ignored."
+    },
+    {
+      "obligation": "CORR-V8-atomic-viewport-claim",
+      "severity": "BLOCKING",
+      "finding": "The evidence claims injected claim-conflict coverage, but the coordinator exposes no conflict path and the test contains no atomic failure oracle."
+    },
+    {
+      "obligation": "CORR-V1-pointer-phase",
+      "severity": "BLOCKING",
+      "finding": "viewportClaimed remains latched after the viewport cohort terminates, so a later cohort cannot establish another viewport claim without a global reset."
+    }
+  ],
+  "next_stage": "P36_FIX_REVERIFICATION",
+  "physical_verification_authorized": false,
+  "official_gate_pass": false
+}
