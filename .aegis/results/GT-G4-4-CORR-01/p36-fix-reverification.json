@@ -3,13 +3,14 @@
   "task_id": "GT-G4-4-CORR-01",
   "stage": "P36_FIX_REVERIFICATION",
   "review_block_revision": "a2c3b2f17b5b2c01705fcaaa62e148418c512202",
-  "implementation_revision": "feb3fc3f1008f9bea11fc3c4ecf9aac4fbe9d53d",
+  "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
   "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
   "classification": "IMPLEMENTATION_DEFECT",
   "repairs": {
     "gesture_priority_pending_second_forms_viewport": "PASS",
     "invalid_unknown_terminal_rejected_as_ignored_without_state": "PASS",
     "mixed_ink_cohort_cannot_partially_claim_viewport": "PASS",
+    "host_cached_dispositions_are_atomic": "PASS",
     "viewport_claim_resets_after_cohort_termination": "PASS"
   },
   "red_green": {
