@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "package_id": "GT-G4-4-CORR-01-P31-v0.3",
   "task_id": "GT-G4-4-CORR-01",
-  "status": "CURRENT_EXECUTABLE_PENDING_PREFLIGHT",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "Reconcile and accept the already-implemented G4.4 common AutoIntent/PositionOnly corrective without runtime cleanup; retain existing deferred mode code as non-blocking implementation.",
   "repository": {
     "provider": "github",
@@ -55,5 +55,16 @@
     "next_action": "Perform no-code P32 reconciliation against preserved runtime boundary 3240a3b6567a898452462f4687939e799572c49d and return READY_FOR_CONTROL_REVIEW if v0.3 obligations resolve.",
     "official_gate_pass_forbidden_during_p32": true
   },
-  "supersedes": "GT-G4-4-CORR-01-P31-v0.2"
+  "supersedes": "GT-G4-4-CORR-01-P31-v0.2",
+  "preflight": {
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "source_binding_preflight": "PASS",
+    "evidence_ref": ".aegis/results/GT-G4-4-CORR-01/p31-preflight-v0.3.json",
+    "evidence_revision": "fcab978825b2ab314f613da82a02fbc2bf779ba7"
+  },
+  "repair_record": {
+    "ref": ".aegis/results/GT-G4-4-CORR-01/p31-package-repair-v0.3.json",
+    "revision": "3ced18732c6b6ddc361831de78cb5334799f2669"
+  }
 }
