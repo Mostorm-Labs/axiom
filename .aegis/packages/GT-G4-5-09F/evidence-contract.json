@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09F",
+  "obligation_set": "G45_09F_REFERENCE_FIDELITY_V0_1",
+  "review_boundary": "Exact P32 result revision on codex/g4-5-reference-brush-fidelity plus required hosted workflow runs/artifacts.",
+  "artifacts": [
+    {
+      "id": "repo-reconciliation",
+      "path": ".aegis/results/GT-G4-5-09F/repo-reconciliation.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V8-regression-qualification-readiness"
+      ]
+    },
+    {
+      "id": "program-manifest",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-program-manifest.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V1-reference-compile-editability"
+      ]
+    },
+    {
+      "id": "resource-manifest",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-resource-manifest.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V2-materialized-resources",
+        "09F-V6-windows-arc-parity"
+      ]
+    },
+    {
+      "id": "input-corpus",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-input-corpus.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V3-spacing-sample-rate-independence"
+      ]
+    },
+    {
+      "id": "primitive-parity",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-primitive-parity.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V4-primitive-semantic-parity"
+      ]
+    },
+    {
+      "id": "sample-rate-independence",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-sample-rate-independence.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V3-spacing-sample-rate-independence"
+      ]
+    },
+    {
+      "id": "golden-summary",
+      "path": ".aegis/results/GT-G4-5-09F/reference-brush-golden-summary.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V5-canonical-skia-fidelity"
+      ]
+    },
+    {
+      "id": "arc-runtime-parity",
+      "path": ".aegis/results/GT-G4-5-09F/windows-arc-runtime-parity.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V6-windows-arc-parity"
+      ]
+    },
+    {
+      "id": "dual-color",
+      "path": ".aegis/results/GT-G4-5-09F/windows-dual-color-diagnostic.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V7-space-diagnostic"
+      ]
+    },
+    {
+      "id": "portable-regression",
+      "path": ".aegis/results/GT-G4-5-09F/portable-regression-summary.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V8-regression-qualification-readiness"
+      ]
+    },
+    {
+      "id": "qualification-bundle",
+      "path": ".aegis/results/GT-G4-5-09F/qualification-bundle-manifest.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V8-regression-qualification-readiness"
+      ]
+    },
+    {
+      "id": "g5-workload",
+      "path": ".aegis/results/GT-G4-5-09F/g5-reference-brush-workload.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V8-regression-qualification-readiness"
+      ]
+    },
+    {
+      "id": "09f-result",
+      "path": ".aegis/results/GT-G4-5-09F/g4-5-09f-result.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V1-reference-compile-editability",
+        "09F-V2-materialized-resources",
+        "09F-V3-spacing-sample-rate-independence",
+        "09F-V4-primitive-semantic-parity",
+        "09F-V5-canonical-skia-fidelity",
+        "09F-V6-windows-arc-parity",
+        "09F-V7-space-diagnostic",
+        "09F-V8-regression-qualification-readiness"
+      ]
+    },
+    {
+      "id": "result",
+      "path": ".aegis/results/GT-G4-5-09F/result.json",
+      "blocking": true,
+      "obligations": [
+        "09F-V8-regression-qualification-readiness"
+      ]
+    }
+  ],
+  "hosted": {
+    "required": [
+      {
+        "workflow": "G4.5 Programmable Brush Qualification",
+        "exact_result_revision": true,
+        "required_jobs": [
+          "qualification/windows-x64",
+          "qualification/web-wasm32",
+          "qualification/android-arm64-v8a"
+        ]
+      },
+      {
+        "workflow": "Arc / POC-06",
+        "exact_result_revision": true,
+        "required_conclusion": "success"
+      },
+      {
+        "workflow": "CI Boundary Contract",
+        "when_applicable": true,
+        "required_conclusion": "success"
+      }
+    ]
+  },
+  "successor_physical": {
+    "blocking_for_p32": false,
+    "blocking_for_final_g4_5_gate": true,
+    "artifacts": [
+      "continuous five-brush Windows video",
+      "Space diagnostic video",
+      "RB-03 live-edit video",
+      "ARC-active/handoff/canonical-only screenshots",
+      "physical observation record"
+    ]
+  },
+  "return_contract": {
+    "required_status": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+    "official_final_g4_5_pass_forbidden": true
+  }
+}
