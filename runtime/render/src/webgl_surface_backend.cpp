@@ -1,4 +1,5 @@
 #include "canvas/render/webgl_surface_backend.hpp"
+#include "canvas/render/skia_brush_renderer.hpp"
 
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkSurface.h"
@@ -11,11 +12,6 @@
 
 #include <GLES3/gl3.h>
 #include <emscripten/html5.h>
-
-class SkCanvas;
-namespace canvas::render::internal {
-BackendSubmissionResult drawReferencePlanToSkCanvas(SkCanvas&, const FramePlan&);
-}
 
 namespace canvas::render {
 
@@ -87,8 +83,18 @@ BackendSubmissionResult WebGlSurfaceBackend::submit(const FramePlan& plan) {
         plan.frame.metrics.physicalHeight != impl_->config.physicalHeight) {
         return BackendSubmissionResult::rejected("frame metrics do not match WebGL2 target");
     }
-    const auto result = internal::drawReferencePlanToSkCanvas(*impl_->surface->getCanvas(), plan);
-    if (result.code != BackendSubmissionCode::kAccepted) return result;
+    (void)plan;
+    // The playground programmable-DAB path uses submitBrushPrimitives. The
+    // legacy FramePlan path remains a lifecycle smoke seam and does not draw
+    // brush content here.
+    impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
+    return BackendSubmissionResult::accepted();
+}
+
+BackendSubmissionResult WebGlSurfaceBackend::submitBrushPrimitives(
+    std::span<const canvas::ink::BrushPrimitive> primitives) {
+    if (!ready()) return BackendSubmissionResult::rejected(impl_->error);
+    internal::drawBrushPrimitivesToSkCanvas(*impl_->surface->getCanvas(), primitives);
     impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
     return BackendSubmissionResult::accepted();
 }

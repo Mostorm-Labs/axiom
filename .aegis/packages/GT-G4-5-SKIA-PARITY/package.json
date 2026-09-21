@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-SKIA-PARITY-P31-v0.1",
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Cross-platform Skia programmable-DAB renderer parity for the accepted G4.5 BrushPrimitive path",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-programmable-brush"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {"revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6", "relation": "ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {"path": "authority.lock.json", "sha256": "71e5cd66c139a1e089af1005c06ebec0616aec06a690c5e0f86e980d44f2b6e6"},
+  "verification_lock_ref": {"path": "verification.lock.json", "sha256": "784ed1c29982be63e3974eb8cb121659434db77fe4a88936e855ca23d395de5a"},
+  "execution_contract_ref": {"path": "execution-contract.json", "sha256": "c7b8ff117f7c6066014261aea545d7b6e65f79abb971e4ccba5ca56cfe50d55f"},
+  "implementation_context_ref": {"path": "implementation-context.md", "sha256": "f06adaf1a47231ef748d6aa4fd27ac1e3f0a38c6946070495872ef18a0c186a2"},
+  "evidence_contract_ref": {"path": "evidence-contract.json", "sha256": "29fae5e65693a50f745caeb1f649b1aaa4f150603a2a7ef556f435d152439cb2"},
+  "materialization": {"same_repository": true, "path": ".aegis/packages/GT-G4-5-SKIA-PARITY/", "base_revision": "3b5c60b99f2c257b0d6bd87853c39abe86788fc6", "binding": "exact repository package files bound by SHA-256"},
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Resolve this package, run repository/package/anchor preflights, run the RED parity oracle, implement the complete frozen cross-platform Skia renderer closure, materialize evidence, and return READY_FOR_CONTROL_REVIEW.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

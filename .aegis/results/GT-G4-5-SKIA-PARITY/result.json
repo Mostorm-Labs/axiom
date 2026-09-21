@@ -1,0 +1,24 @@
+{
+  "task_id": "GT-G4-5-SKIA-PARITY",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "279086e3cf49dfe33b668f6d77175273d6f848ff",
+  "materialized_ref": ".aegis/results/GT-G4-5-SKIA-PARITY",
+  "evidence_inputs": [
+    {
+      "path": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+      "sha256": "c52bb9ff0530b2e86ce123c5b316d6e10fea96e284e2510178bf82a8f602e4b7",
+      "bytes": 6047163
+    },
+    {
+      "path": "out/g4-5-web-skia-parity/apps/ink_playground/axiom_ink_playground_web.js",
+      "sha256": "c84fcc4368d5eb827b5a5af8d108768746465659d22bcc39a7dc75e1fde45158",
+      "bytes": 170727
+    },
+    {
+      "path": "out/g4-5-web-skia-parity/apps/ink_playground/axiom_ink_playground_web.wasm",
+      "sha256": "72dd1a70f9756933e33aa5fd093db0f51303ae6f53c3681cb1aa59b59ecc41b3",
+      "bytes": 11196602
+    }
+  ],
+  "claim_boundary": "No G4.5 Gate PASS; independent CONTROL_REVIEW required"
+}

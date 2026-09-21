@@ -15,8 +15,8 @@ assert "sampleSequence = 0;" not in source.replace("let sampleSequence = 0;", ""
 assert "getBoundingClientRect" in source
 assert "sample.offsetX" not in source
 assert "const strokes = [];" in source
-assert "strokes.push(activeStroke.points);" in source
-assert "[...committed, ...active].forEach" in source
+assert "strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });" in source
+assert "committed.forEach(stroke => drawBrushSegment" in source
 assert "BigInt(" not in source
 assert "const trace = [];" in source
 assert "scheduleEvidenceSnapshot" in source
@@ -34,6 +34,17 @@ assert "preventDefault" in source
 assert "gesturechange" in source
 assert "wheel" in source
 assert "handleWheel" in source
+assert "id=\"brushSelector\"" in source
+assert "selectedBrushFamily" in source
+assert "brushFamilyName" in source
+assert "family: selectedBrushFamily" in source
+assert "drawBrushSegment" in source
+assert "_axiom_ink_brush_begin" in source
+assert "_axiom_ink_brush_sample" in source
+assert "_axiom_ink_brush_size" in source
+assert "_axiom_ink_brush_representation" in source
+assert "axiom_ink_brush_begin" in bridge_source
+assert "axiom_ink_brush_sample" in bridge_source
 assert "addEventListener(\"wheel\", handleWheel, { passive: false, capture: true })" in source
 assert "trackpadTranslationX -= event.deltaX" in source
 assert "trackpadTranslationY -= event.deltaY" in source

@@ -3,11 +3,13 @@
 #include "arc/arc.hpp"
 #include "canvas/input/active_pointer_registry.hpp"
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/render/skia_ink_backend.hpp"
 
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <algorithm>
 #include <span>
 #include <unordered_map>
 
@@ -63,6 +65,11 @@ struct AndroidHost final {
   std::uint64_t lastBrushFamily = 0;
   bool lastBrushCanonicalMutation = false;
   std::unordered_map<std::uint64_t, canvas::ink::BrushPrimitive> brushPrimitives;
+  std::vector<canvas::ink::BrushPrimitive> committedBrushPrimitives;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  std::unique_ptr<canvas::render::SkiaInkBackend> skiaRenderer =
+      std::make_unique<canvas::render::SkiaInkBackend>();
+#endif
   std::uint64_t stroke = 0;
   canvas::input::ActivePointerRegistry pointerRegistry;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
@@ -137,6 +144,10 @@ void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height) {
   }
   if (!initializeBrushPrograms(*value)) return nullptr;
   if (value->input == nullptr || !value->host->bindSurface(width, height)) return nullptr;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (value->skiaRenderer->resize(width, height).code !=
+      canvas::render::BackendSubmissionCode::kAccepted) return nullptr;
+#endif
   value->sink = std::make_unique<AndroidSink>(*value->host, value->activeKeys);
   if (value->input->Start(*value->sink) != arc::Status::kOk) return nullptr;
   return value.release();
@@ -209,7 +220,13 @@ int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_
   return committed && released;
 }
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height) {
-  auto* value = asHost(handle); return value != nullptr && value->host->resizeSurface(width, height);
+  auto* value = asHost(handle);
+  if (value == nullptr || !value->host->resizeSurface(width, height)) return 0;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (value->skiaRenderer->resize(width, height).code !=
+      canvas::render::BackendSubmissionCode::kAccepted) return 0;
+#endif
+  return 1;
 }
 int axiom_ink_android_surface_lost(void* handle) {
   auto* value = asHost(handle);
@@ -307,8 +324,40 @@ int axiom_ink_android_brush_finish(void* handle, std::uint64_t pointerId) {
   value->lastBrushDigest = result.commit.digest;
   value->lastBrushPrimitiveCount = result.preview.primitives.size();
   value->lastBrushCanonicalMutation = result.commit.canonicalMutation;
+  value->committedBrushPrimitives.insert(value->committedBrushPrimitives.end(),
+                                         result.commit.primitives.begin(),
+                                         result.commit.primitives.end());
   value->brushSessions.erase(found);
   return 1;
+}
+int axiom_ink_android_brush_render(void* handle, std::uint32_t width,
+                                   std::uint32_t height, std::uint8_t* rgba,
+                                   std::uint32_t stride) {
+  auto* value = asHost(handle);
+  if (value == nullptr || rgba == nullptr || stride < width * 4U) return 0;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (value->skiaRenderer->width() != width || value->skiaRenderer->height() != height) {
+    if (value->skiaRenderer->resize(width, height).code !=
+        canvas::render::BackendSubmissionCode::kAccepted) return 0;
+  }
+  std::vector<canvas::ink::BrushPrimitive> primitives = value->committedBrushPrimitives;
+  for (const auto& [id, primitive] : value->brushPrimitives) {
+    (void)id;
+    primitives.push_back(primitive);
+  }
+  if (value->skiaRenderer->submitPrimitives(primitives).code !=
+      canvas::render::BackendSubmissionCode::kAccepted) return 0;
+  const auto pixels = value->skiaRenderer->rgba();
+  for (std::uint32_t y = 0; y < height; ++y) {
+    std::copy_n(pixels.data() + static_cast<std::size_t>(y) * width * 4U,
+                static_cast<std::size_t>(width) * 4U,
+                rgba + static_cast<std::size_t>(y) * stride);
+  }
+  return 1;
+#else
+  (void)width; (void)height; (void)stride;
+  return 0;
+#endif
 }
 float axiom_ink_android_brush_size(void* handle, std::uint64_t pointerId) {
   auto* value = asHost(handle);
