@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.3",
+  "task_id": "GT-G4-4-CORR-01",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Reconcile and accept the already-implemented G4.4 common AutoIntent/PositionOnly corrective without runtime cleanup; retain existing deferred mode code as non-blocking implementation.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-4-positiononly-corrective"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "codex/g4-4-positiononly-corrective",
+    "accepted_revision": "3240a3b6567a898452462f4687939e799572c49d",
+    "completed_through": "runtime implementation and platform corrective work",
+    "next_action": "reconcile preserved implementation against P31 v0.3; materialize control evidence only"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "47e889cc06fe69253d939513daebf7595b64c18242f603d41c3023bfb27baa8b"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "eb5d29f69a5a1ae2991063e99bc6db194403e11a86e63cbee37f01d55d6d2045"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "7e4186ceaf4e1fb80d88915b582d59f1ef4d7dc165d7e24d58bb1bfe8abafc7e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "71e53d55d4aecb4bc9491309991fb5d135246846c4db87eb7cb66966e736152a"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "3cff4248e07ed77c06b2c776ec875c052f0584a20dfbff1640a5e544cf6bbed3"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-4-CORR-01/",
+    "base_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "binding": "exact pushed revision on codex/g4-4-positiononly-corrective descended from accepted G4.4 main merge"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Perform no-code P32 reconciliation against preserved runtime boundary 3240a3b6567a898452462f4687939e799572c49d and return READY_FOR_CONTROL_REVIEW if v0.3 obligations resolve.",
+    "official_gate_pass_forbidden_during_p32": true
+  },
+  "supersedes": "GT-G4-4-CORR-01-P31-v0.2",
+  "preflight": {
+    "package_binding_preflight": "PASS",
+    "evidence_contract_preflight": "PASS",
+    "source_binding_preflight": "PASS",
+    "evidence_ref": ".aegis/results/GT-G4-4-CORR-01/p31-preflight-v0.3.json",
+    "evidence_revision": "fcab978825b2ab314f613da82a02fbc2bf779ba7"
+  },
+  "repair_record": {
+    "ref": ".aegis/results/GT-G4-4-CORR-01/p31-package-repair-v0.3.json",
+    "revision": "3ced18732c6b6ddc361831de78cb5334799f2669"
+  },
+  "execution_result": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "runtime_result_revision": "3240a3b6567a898452462f4687939e799572c49d",
+    "result_record_revision": "a35a987b148a6bdbbca4fed048c264ae55bce213",
+    "reconciliation_revision": "42f9abecbe9f84f15d89a1f15a527ff2ad8afac7",
+    "finalization_revision": "597b5a0ecaaa4a83d4da6fdd880766d9d8f743d9",
+    "runtime_mutation_performed": false,
+    "next_stage": "P34_GATE_REVIEW"
+  }
+}

@@ -1,4 +1,5 @@
 #include "ink_playground_host.hpp"
+#include "android_pointer_identity.hpp"
 #include "arc/arc.hpp"
 #include "canvas/input/active_pointer_registry.hpp"
 #include "canvas/ink/programmable_brush.hpp"
@@ -27,10 +28,15 @@ class AndroidSink final : public arc::PointerSampleSink {
           static_cast<std::size_t>(i) * batch.sample_stride);
       const auto key = activeKeys_.find(sample->pointer_id);
       if (key == activeKeys_.end()) return arc::Status::kInvalidState;
+      const auto phase = sample->phase == ARC_POINTER_PHASE_DOWN
+          ? canvas::input::PointerPhase::kDown
+          : sample->phase == ARC_POINTER_PHASE_UP ? canvas::input::PointerPhase::kUp
+          : sample->phase == ARC_POINTER_PHASE_CANCEL ? canvas::input::PointerPhase::kCancel
+          : canvas::input::PointerPhase::kMove;
       samples.samples.push_back({sample->sample_sequence, sample->timestamp_us * 1000U,
                                  sample->x, sample->y, sample->pressure,
                                  sample->provenance == ARC_SAMPLE_PLATFORM_PREDICTION_HINT,
-                                 key->second});
+                                 key->second, {}, {}, phase});
     }
     const auto now = static_cast<std::uint64_t>(
         std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -110,6 +116,15 @@ bool submitSample(AndroidHost& value, std::uint64_t pointerId, std::uint64_t seq
   batch.sample_stride = sizeof(sample);
   return value.input->SubmitBatch(batch) == arc::Status::kOk;
 }
+
+bool releasePointer(AndroidHost& value, std::uint64_t pointerId) noexcept {
+  const auto key = value.activeKeys.find(pointerId);
+  if (key == value.activeKeys.end()) return false;
+  const bool ended = value.pointerRegistry.end(key->second);
+  value.activeKeys.erase(key);
+  value.pointerStrokes.erase(pointerId);
+  return ended;
+}
 }  // namespace
 
 extern "C" {
@@ -161,10 +176,12 @@ int axiom_ink_android_motion(void* handle, std::uint64_t pointerId,
 int axiom_ink_android_begin(void* handle, std::uint64_t pointerId, std::uint64_t strokeId) {
   auto* value = asHost(handle);
   if (value == nullptr || strokeId == 0U) return 0;
-  const auto key = value->pointerRegistry.begin(1, pointerId);
+  const auto identity = canvas::ink_playground::androidPointerIdentity(pointerId);
+  if (!identity.has_value()) return 0;
+  const auto key = value->pointerRegistry.begin(1, *identity);
   if (!key.valid()) return 0;
-  value->activeKeys[pointerId] = key;
-  value->pointerStrokes[pointerId] = strokeId;
+  value->activeKeys[*identity] = key;
+  value->pointerStrokes[*identity] = strokeId;
   value->stroke = strokeId;
   return value->host->beginStroke(key, strokeId);
 }
@@ -173,35 +190,85 @@ int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
                             float x, float y, float pressure, int phase, int tool) {
   auto* value = asHost(handle);
   if (value == nullptr || value->input == nullptr || sequence == 0U) return 0;
+  const auto identity = canvas::ink_playground::androidPointerIdentity(pointerId);
+  if (!identity.has_value()) return 0;
   const std::uint32_t arcPhase = phase == 1 ? ARC_POINTER_PHASE_DOWN
       : phase == 3 ? ARC_POINTER_PHASE_UP : ARC_POINTER_PHASE_MOVE;
-  return submitSample(*value, pointerId, sequence, timestampNs, x, y, pressure,
+  return submitSample(*value, *identity, sequence, timestampNs, x, y, pressure,
                       arcPhase, tool);
 }
 int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_t strokeId) {
   auto* value = asHost(handle);
   if (value == nullptr) return 0;
-  const auto key = value->activeKeys.find(pointerId);
-  if (key == value->activeKeys.end() ||
-      !value->host->commitStroke(key->second, strokeId, strokeId)) return 0;
-  (void)value->pointerRegistry.end(key->second);
-  value->activeKeys.erase(key);
-  value->pointerStrokes.erase(pointerId);
-  return 1;
+  const auto identity = canvas::ink_playground::androidPointerIdentity(pointerId);
+  if (!identity.has_value()) return 0;
+  const auto key = value->activeKeys.find(*identity);
+  if (key == value->activeKeys.end()) return 0;
+  const bool committed = value->host->commitStroke(key->second, strokeId, strokeId);
+  const bool released = releasePointer(*value, *identity);
+  return committed && released;
 }
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height) {
   auto* value = asHost(handle); return value != nullptr && value->host->resizeSurface(width, height);
 }
 int axiom_ink_android_surface_lost(void* handle) {
-  auto* value = asHost(handle); return value != nullptr && value->host->loseSurface();
+  auto* value = asHost(handle);
+  if (value == nullptr) return 0;
+  for (const auto& [pointerId, session] : value->brushSessions) {
+    (void)pointerId;
+    (void)value->brushRuntime.cancel({session});
+  }
+  value->brushSessions.clear();
+  value->brushPrimitives.clear();
+  return value->host->loseSurface();
 }
 int axiom_ink_android_cancel_all(void* handle) {
   auto* value = asHost(handle);
   if (value == nullptr) return 0;
   value->host->cancelAllPointers();
+  for (const auto& [pointerId, session] : value->brushSessions) {
+    (void)pointerId;
+    (void)value->brushRuntime.cancel({session});
+  }
+  value->brushSessions.clear();
+  value->brushPrimitives.clear();
   value->activeKeys.clear();
   value->pointerStrokes.clear();
   return 1;
+}
+int axiom_ink_android_viewport_claimed(void* handle) {
+  auto* value = asHost(handle);
+  return value != nullptr && value->host->viewportGestureClaimed();
+}
+int axiom_ink_android_set_multi_contact_policy(void* handle, int policy) {
+  auto* value = asHost(handle);
+  if (value == nullptr || policy < 0 || policy > 2) return 0;
+  const auto selected = static_cast<canvas::interaction::MultiContactPolicy>(policy);
+  return value->host->setMultiContactPolicy(selected);
+}
+int axiom_ink_android_multi_contact_policy(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? -1 : static_cast<int>(value->host->multiContactPolicy());
+}
+float axiom_ink_android_viewport_scale(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? 1.0F : value->host->viewportGesture().scale;
+}
+float axiom_ink_android_viewport_center_x(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? 0.0F : value->host->viewportGesture().centerX;
+}
+float axiom_ink_android_viewport_center_y(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? 0.0F : value->host->viewportGesture().centerY;
+}
+float axiom_ink_android_viewport_translation_x(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? 0.0F : value->host->viewportGesture().translationX;
+}
+float axiom_ink_android_viewport_translation_y(void* handle) {
+  auto* value = asHost(handle);
+  return value == nullptr ? 0.0F : value->host->viewportGesture().translationY;
 }
 int axiom_ink_android_brush_begin(void* handle, std::uint64_t pointerId,
                                   std::uint64_t family) {

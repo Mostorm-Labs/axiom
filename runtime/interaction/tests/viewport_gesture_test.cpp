@@ -12,6 +12,13 @@ int main() {
   assert(gesture.update({2, 20, 0.0F, 0.0F, 0.0F, false, a},
                         {2, 20, 20.0F, 0.0F, 0.0F, false, b}));
   assert(gesture.state().scale == 2.0F);
+  assert(gesture.state().translationX == 0.0F);
+  assert(gesture.state().translationY == 0.0F);
+  assert(gesture.update({3, 30, 5.0F, 7.0F, 0.0F, false, a},
+                        {3, 30, 25.0F, 7.0F, 0.0F, false, b}));
+  assert(gesture.state().scale == 2.0F);
+  assert(gesture.state().translationX == 5.0F);
+  assert(gesture.state().translationY == 7.0F);
   canvas::interaction::ContactHysteresis palm(20.0F, 10.0F);
   assert(!palm.update({3.0F, 3.0F, 0.0F}));
   assert(palm.update({5.0F, 5.0F, 0.0F}));

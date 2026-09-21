@@ -2,7 +2,8 @@ add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
     common/platform_contract.cpp)
 target_include_directories(axiom_ink_playground_common PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/common)
+    ${CMAKE_CURRENT_SOURCE_DIR}/common
+    ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_input canvas_runtime_ink
     canvas_runtime_interaction canvas_runtime_render)
@@ -30,13 +31,17 @@ if(BUILD_TESTING)
   add_test(NAME G4InkPlaygroundRepeatedStrokes COMMAND axiom_ink_playground_tests repeated)
   add_test(NAME G4InkPlaygroundPlatform COMMAND axiom_ink_playground_tests platform)
   add_test(NAME G4MultiPointerPlayground COMMAND axiom_ink_playground_tests multipointer)
+  add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
+  add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
+  add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
+  add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp
       platform/windows/windows_smoke_evidence.cpp)
     target_compile_features(axiom_ink_playground_windows_pointer_utils_tests PRIVATE cxx_std_20)
     target_link_libraries(axiom_ink_playground_windows_pointer_utils_tests PRIVATE
-      canvas_runtime_ink Arc::Windows)
+      canvas_runtime_ink canvas_runtime_interaction Arc::Windows)
     if(MSVC)
       target_compile_options(axiom_ink_playground_windows_pointer_utils_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
@@ -72,9 +77,11 @@ if(EMSCRIPTEN)
   set_target_properties(axiom_ink_playground_web PROPERTIES SUFFIX ".js")
   configure_file(platform/web/index.html
       ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+  configure_file(platform/web/evidence_worker.js
+      ${CMAKE_CURRENT_BINARY_DIR}/evidence_worker.js COPYONLY)
   target_link_options(axiom_ink_playground_web PRIVATE
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_commit_pointer','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_pointer_sample_phase','_axiom_ink_commit_pointer','_axiom_ink_cancel_pointer','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

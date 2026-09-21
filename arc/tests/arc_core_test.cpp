@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace {
 
@@ -28,8 +29,9 @@ struct RecordingBackend final : PreviewBackend {
   Status Attach(const arc_preview_target_v0&) override { ++attaches; return Status::kOk; }
   Status Detach(uint64_t) override { ++detaches; return Status::kOk; }
   Status Begin(const arc_preview_begin_v0&) override { ++begins; return Status::kOk; }
-  Status Push(const arc_preview_update_v0&) override {
+  Status Push(const arc_preview_update_v0& update) override {
     ++pushes;
+    confirmed_counts.push_back(update.confirmed_append_count);
     return fail_push ? Status::kPresentationFailed : Status::kOk;
   }
   Status SealInput(const arc_preview_seal_v0&) override { ++seals; return Status::kOk; }
@@ -52,6 +54,7 @@ struct RecordingBackend final : PreviewBackend {
   uint32_t commits = 0;
   uint32_t visible = 0;
   uint32_t cancels = 0;
+  std::vector<std::uint32_t> confirmed_counts;
 };
 
 arc_preview_target_v0 Target() {
@@ -289,6 +292,26 @@ void TestCapacityDegradesPresentationWithoutInputFailure() {
   assert(bridge.using_fallback());
 }
 
+void TestBridgeForwardsOnlyIncrementalPreviewGeometry() {
+  auto primary = std::make_unique<RecordingBackend>();
+  auto* primary_raw = primary.get();
+  Bridge bridge(std::move(primary), arc::CreateNullBackend());
+  assert(bridge.Attach(Target()) == Status::kOk);
+  assert(bridge.Begin(Begin(33)) == Status::kOk);
+  arc_preview_primitive_v0 first{.kind = ARC_PREVIEW_PRIMITIVE_VECTOR_POINT,
+                                 .x = 1.0F, .y = 2.0F};
+  arc_preview_primitive_v0 second{.kind = ARC_PREVIEW_PRIMITIVE_VECTOR_POINT,
+                                  .x = 3.0F, .y = 4.0F};
+  assert(bridge.Push(Update(33, 1, &first)) == Status::kOk);
+  auto second_update = Update(33, 2, &second);
+  second_update.truncate_confirmed_to = 1;
+  assert(bridge.Push(second_update) == Status::kOk);
+  assert(primary_raw->confirmed_counts.size() == 2U);
+  assert(primary_raw->confirmed_counts[0] == 1U);
+  assert(primary_raw->confirmed_counts[1] == 1U);
+  assert(bridge.Find(33)->confirmed.size() == 2U);
+}
+
 }  // namespace
 
 int main() {
@@ -297,5 +320,6 @@ int main() {
   TestMultiplePendingStrokesAndGenerationRecovery();
   TestBeginCollisionIsNotSilentlyIdempotent();
   TestCapacityDegradesPresentationWithoutInputFailure();
+  TestBridgeForwardsOnlyIncrementalPreviewGeometry();
   return 0;
 }

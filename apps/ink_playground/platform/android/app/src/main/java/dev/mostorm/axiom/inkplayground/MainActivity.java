@@ -1,9 +1,11 @@
 package dev.mostorm.axiom.inkplayground;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -16,6 +18,7 @@ public final class MainActivity extends Activity {
         view = new InkPlaygroundView(this);
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
+
         Spinner brushSelector = new Spinner(this);
         brushSelector.setTag("brushSelector");
         String[] families = {"Pen", "Pencil", "Chalk", "Marker", "Water Color Lite", "Highlighter", "Laser"};
@@ -28,8 +31,17 @@ public final class MainActivity extends Activity {
             }
             @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
         });
+
+        Button policy = new Button(this);
+        policy.setText("双指模式：AutoIntent");
+        policy.setTextColor(Color.WHITE);
+        policy.setBackgroundColor(Color.rgb(35, 91, 210));
+        policy.setOnClickListener(v ->
+                policy.setText("双指模式：" + view.cycleMultiContactPolicy()));
+
         root.addView(view, new LinearLayout.LayoutParams(-1, 0, 1f));
         root.addView(brushSelector, new LinearLayout.LayoutParams(-1, 128));
+        root.addView(policy, new LinearLayout.LayoutParams(-1, -2));
         setContentView(root);
     }
 

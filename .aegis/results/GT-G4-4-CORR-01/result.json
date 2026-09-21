@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P32_IMPLEMENTATION",
+  "execution_mode": "RECONCILE_PRESERVED_IMPLEMENTATION_NO_RUNTIME_MUTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "3240a3b6567a898452462f4687939e799572c49d",
+  "materialized_ref": "42f9abecbe9f84f15d89a1f15a527ff2ad8afac7",
+  "execution_branch": "codex/g4-4-positiononly-corrective",
+  "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "package_id": "GT-G4-4-CORR-01-P31-v0.3",
+  "runtime_mutation_performed": false,
+  "current_blocking_behavior": "AutoIntent",
+  "retained_non_blocking_implementation": [
+    "MultiInk",
+    "GesturePriority",
+    "existing mode-switch seams"
+  ],
+  "verification": {
+    "auto_intent_preserved_evidence": "PASS",
+    "positiononly_preserved_evidence": "PASS",
+    "platform_common_ownership_audit": "PASS",
+    "descendant_runtime_delta_audit": "PASS"
+  },
+  "evidence_input_refs": [
+    "auto-intent-evidence.json",
+    "positiononly-capability-evidence.json",
+    "provisional-session-zero-mutation.json",
+    "platform-ingress-conformance.json",
+    "portable-regression-summary.json",
+    "p32-reconciliation-v0.3.json"
+  ],
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}

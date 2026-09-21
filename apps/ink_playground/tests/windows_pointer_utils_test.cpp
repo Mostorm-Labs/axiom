@@ -2,11 +2,13 @@
 #include "../platform/windows/windows_smoke_evidence.hpp"
 #include "arc/protocol.h"
 #include "canvas/ink/ink_engine.hpp"
+#include "canvas/interaction/multi_contact_coordinator.hpp"
 
 #if defined(_WIN32)
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <vector>
 
 int main() {
@@ -22,6 +24,22 @@ int main() {
       retained, {{3.0F, 4.0F, 0.75F}});
   if (retained.size() != 2U || retained.back().x != 3.0F || retained.back().pressure != 0.75F) {
     return 3;
+  }
+  std::vector<arc_preview_primitive_v0> previewPoints;
+  std::uint64_t lastPreviewSequence = 0;
+  arc_pointer_sample_v0 previewSamples[2]{};
+  previewSamples[0].sample_sequence = 1;
+  previewSamples[0].x = 10.0F;
+  previewSamples[0].y = 11.0F;
+  previewSamples[1].sample_sequence = 2;
+  previewSamples[1].x = 12.0F;
+  previewSamples[1].y = 13.0F;
+  if (canvas::ink_playground::windows_input::appendPreviewSamples(
+          previewPoints, lastPreviewSequence, previewSamples) != 2U ||
+      canvas::ink_playground::windows_input::appendPreviewSamples(
+          previewPoints, lastPreviewSequence, previewSamples) != 0U ||
+      previewPoints.size() != 2U || lastPreviewSequence != 2U) {
+    return 13;
   }
   std::vector<POINTER_INFO> newestFirst(3);
   newestFirst[0].pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT;
@@ -81,15 +99,53 @@ int main() {
       {PointerEvidenceSample{0x1234U, 7U, 3U, 11U, "touch", "down", 10.5F,
                              20.25F, 0.5F, 2U, 6.0F, 4.0F}},
       0x1234U);
-  return trace ==
+  if (trace !=
                  "{\n  \"schema_version\": \"0.1\",\n  \"device_id\": 4660,\n"
                  "  \"events\": [\n    {\"source_device_id\": 4660, \"pointer_id\": 7, "
                  "\"generation\": 3, \"timestamp_ms\": 11, \"input_type\": \"touch\", "
                  "\"phase\": \"down\", \"x\": 10.5, \"y\": 20.25, \"pressure\": 0.5, "
                  "\"batch_size\": 2, \"contact_width\": 6, \"contact_height\": 4, "
-                 "\"contact_area\": 24}\n  ]\n}\n"
-             ? 0
-             : 2;
+                 "\"contact_area\": 24}\n  ]\n}\n") {
+    return 2;
+  }
+
+  using canvas::ink_playground::windows_input::PlatformPointerAction;
+  using canvas::ink_playground::windows_input::platformPointerAction;
+  using canvas::interaction::ContactDisposition;
+  if (platformPointerAction(ContactDisposition::kViewportGesture, false) !=
+          PlatformPointerAction::kSuppressPreview ||
+      platformPointerAction(ContactDisposition::kViewportGesture, true) !=
+          PlatformPointerAction::kReleaseWithoutCommit ||
+      platformPointerAction(ContactDisposition::kIgnored, true) !=
+          PlatformPointerAction::kReleaseWithoutCommit ||
+      platformPointerAction(ContactDisposition::kPending, true) !=
+          PlatformPointerAction::kCommitAndRelease ||
+      platformPointerAction(ContactDisposition::kInk, true) !=
+          PlatformPointerAction::kCommitAndRelease) {
+    return 9;
+  }
+
+  const auto transformed = canvas::ink_playground::windows_input::toViewportPoint(
+      10.0F, 20.0F, 2.0F, 3.0F, 4.0F);
+  if (transformed.x != 23.0F || transformed.y != 44.0F) return 10;
+  if (!canvas::ink_playground::windows_input::cancelsAllActivePointers(WM_KILLFOCUS) ||
+      !canvas::ink_playground::windows_input::cancelsAllActivePointers(WM_CANCELMODE) ||
+      !canvas::ink_playground::windows_input::cancelsAllActivePointers(WM_DESTROY) ||
+      canvas::ink_playground::windows_input::cancelsAllActivePointers(WM_PAINT)) {
+    return 11;
+  }
+  using canvas::interaction::MultiContactPolicy;
+  if (std::wstring_view(canvas::ink_playground::windows_input::multiContactPolicyName(
+          MultiContactPolicy::kAutoIntent)) != L"AutoIntent" ||
+      canvas::ink_playground::windows_input::nextMultiContactPolicy(
+          MultiContactPolicy::kAutoIntent) != MultiContactPolicy::kMultiInk ||
+      canvas::ink_playground::windows_input::nextMultiContactPolicy(
+          MultiContactPolicy::kMultiInk) != MultiContactPolicy::kGesturePriority ||
+      canvas::ink_playground::windows_input::nextMultiContactPolicy(
+          MultiContactPolicy::kGesturePriority) != MultiContactPolicy::kAutoIntent) {
+    return 12;
+  }
+  return 0;
 }
 
 #else

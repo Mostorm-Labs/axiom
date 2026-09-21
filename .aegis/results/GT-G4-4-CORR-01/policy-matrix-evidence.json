@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "implementation_revision": "61e40210c04da5a09990c0612904a3b361ba8220",
+  "status": "PASS",
+  "default_policy": "AutoIntent",
+  "spatial_activation": {"radial_slop": 8.0, "path_slop": 12.0, "sample_count_activation": false},
+  "scenarios": {
+    "auto_intent_pending_then_viewport": "PASS",
+    "auto_intent_ink_then_second_ink": "PASS",
+    "multi_ink_two_and_four_independent": "PASS",
+    "gesture_priority_late_second_ignored": "PASS",
+    "predicted_sample_no_ownership_transition": "PASS",
+    "invalid_terminal_order_rejected": "PASS"
+  },
+  "oracle": "G4MultiContactCoordinator",
+  "portable_ctest": "PASS"
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "obligation_set": "AUTOINTENT_ONLY_V0_3_PRESERVED_IMPLEMENTATION",
+  "deferred_not_in_blocking_obligation_set": [
+    "MultiInk",
+    "GesturePriority",
+    "mode-switch behavior",
+    "new corrective physical-device round"
+  ],
+  "obligations": [
+    {
+      "id": "CORR-V1-auto-intent",
+      "requirement": "AutoIntent is the current/default common multi-contact behavior and satisfies Pending->Viewport plus Ink-lock->later independent Ink.",
+      "oracle": "Existing G4MultiContactCoordinator evidence plus repository reconciliation proving common coordinator source remained semantically unchanged through runtime boundary.",
+      "acceptance": "AutoIntent scenarios remain PASS at preserved runtime boundary; retained deferred modes do not alter default/current AutoIntent guarantee.",
+      "evidence_required": [
+        "auto-intent-evidence.json",
+        "p32-reconciliation-v0.3.json"
+      ]
+    },
+    {
+      "id": "CORR-V2-positiononly",
+      "requirement": "PositionOnly supports AutoIntent two-pointer viewport arbitration without pressure/contact geometry/tool metadata.",
+      "oracle": "Existing capability-masked evidence plus current common coordinator/platform ingress audit.",
+      "acceptance": "Missing optional capabilities do not block AutoIntent viewport claim.",
+      "evidence_required": [
+        "positiononly-capability-evidence.json",
+        "p32-reconciliation-v0.3.json"
+      ]
+    },
+    {
+      "id": "CORR-V3-provisional-zero-mutation",
+      "requirement": "Pending provisional Ink/Preview cancelled into viewport causes zero canonical mutation.",
+      "oracle": "Existing provisional-session-zero-mutation evidence and preserved host/common ownership flow.",
+      "acceptance": "No canonical operation/stroke is committed before viewport claim.",
+      "evidence_required": [
+        "provisional-session-zero-mutation.json"
+      ]
+    },
+    {
+      "id": "CORR-V4-platform-common-ownership",
+      "requirement": "Windows/Android/Web route generic second-pointer semantics through common runtime rather than platform-private arbitration.",
+      "oracle": "Current-source repository audit plus existing platform ingress conformance evidence.",
+      "acceptance": "Common coordinator remains the semantic owner; later platform presentation/evidence changes do not introduce an independent second-pointer state machine.",
+      "evidence_required": [
+        "platform-ingress-conformance.json",
+        "p32-reconciliation-v0.3.json"
+      ]
+    },
+    {
+      "id": "CORR-V5-regression",
+      "requirement": "Accepted G4/G4.4 PointerKey, multi-stroke, Arc keyed preview and canonical operation behavior remains preserved for this corrective.",
+      "oracle": "Preserved automated regression records plus descendant-delta audit; later runtime boundary changes are reviewed as platform/presentation descendants without common AutoIntent semantic rewrite.",
+      "acceptance": "No identified frozen regression failure remains open; no semantic schema/ObjectKind/Operation change.",
+      "evidence_required": [
+        "portable-regression-summary.json",
+        "p32-reconciliation-v0.3.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "package_repair": "P31-v0.3-preserve-existing-deferred-modes",
+  "execution_mode": "RECONCILE_PRESERVED_IMPLEMENTATION_NO_RUNTIME_MUTATION",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Do not rewrite already-completed runtime implementation.",
+        "Preserve PointerPhase, capability validity, common MultiContactCoordinator, Pending/DrawActivation, provisional cancellation, atomic viewport ownership, and platform-to-common routing.",
+        "Allow already-existing MultiInk/GesturePriority/mode-switch paths to remain as deferred non-blocking implementation; do not expand or validate them as current product guarantees.",
+        "Materialize v0.3 reconciliation evidence that binds the preserved runtime boundary to current AutoIntent-only Authority."
+      ],
+      "authorized_mutation_scope": [
+        ".aegis/packages/GT-G4-4-CORR-01/**",
+        ".aegis/results/GT-G4-4-CORR-01/**"
+      ],
+      "forbidden_changes": [
+        "any runtime/product code mutation during this v0.3 reconciliation",
+        "runtime/semantic/** changes",
+        "G4.5 programmable brush semantic changes",
+        "new or expanded MultiInk/GesturePriority behavior",
+        "cleanup/removal of existing deferred mode implementation solely to satisfy this corrective",
+        "GestureTakeover",
+        "concurrent Ink plus pinch for the same generic-contact cohort",
+        "platform-private second-pointer arbitration",
+        "sample-count based DrawActivation",
+        "new blocking physical qualification round"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "G4AutoIntentPreservedEvidence",
+          "command_or_oracle": "Resolve policy-matrix-evidence.json and verify common AutoIntent coordinator source has no semantic rewrite through runtime boundary.",
+          "expected_result": "PASS",
+          "blocking_reason": "AutoIntent current guarantee"
+        },
+        {
+          "id": "G4PositionOnlyPreservedEvidence",
+          "command_or_oracle": "Resolve positiononly-capability-evidence.json and inspect current normalized input/common coordinator contract.",
+          "expected_result": "PASS",
+          "blocking_reason": "PositionOnly minimum profile"
+        },
+        {
+          "id": "G4PlatformCommonOwnershipAudit",
+          "command_or_oracle": "Inspect current Windows/Android/Web ingress and host routing for common coordinator ownership.",
+          "expected_result": "PASS",
+          "blocking_reason": "platform consolidation"
+        },
+        {
+          "id": "G4DescendantDeltaAudit",
+          "command_or_oracle": "Verify no runtime/product files changed after runtime boundary revision 3240a3b6567a898452462f4687939e799572c49d.",
+          "expected_result": "PASS",
+          "blocking_reason": "preserved result identity"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing applicable repository CI lanes"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
+        ".aegis/results/GT-G4-4-CORR-01/positiononly-capability-evidence.json",
+        ".aegis/results/GT-G4-4-CORR-01/provisional-session-zero-mutation.json",
+        ".aegis/results/GT-G4-4-CORR-01/platform-ingress-conformance.json",
+        ".aegis/results/GT-G4-4-CORR-01/portable-regression-summary.json",
+        ".aegis/results/GT-G4-4-CORR-01/p32-reconciliation-v0.3.json",
+        ".aegis/results/GT-G4-4-CORR-01/result.json"
+      ],
+      "corroborative": [
+        "previous Android/Web/Windows physical/evidence records",
+        "deferred-mode tests/evidence from earlier broader package"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Current AutoIntent-only obligations are satisfied by reviewer-resolvable preserved evidence plus v0.3 repository reconciliation.",
+        "Runtime boundary is 3240a3b6567a898452462f4687939e799572c49d and current branch has no runtime/product delta after that boundary.",
+        "Existing deferred mode code is treated as non-blocking retained implementation, not a current product guarantee.",
+        "Result status is READY_FOR_CONTROL_REVIEW.",
+        "No runtime code mutation is performed by v0.3 reconciliation.",
+        "P32 does not claim official P34/G4.4/G4.5 Gate PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

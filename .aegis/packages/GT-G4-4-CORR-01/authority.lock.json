@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "current": true,
+  "package_repair": "P31-v0.3-preserve-existing-deferred-modes",
+  "sources": [
+    {
+      "provider": "notion",
+      "ref": "notion://3e14c57a-590c-812d-942b-d37761abfedd",
+      "title": "G4.4 PositionOnly Input Corrective Amendment v0.1",
+      "snapshot_at": "2026-09-21T07:45:03.433Z",
+      "content_hash_scope": "Notion section #1 through immediately before #8",
+      "content_sha256": "18af9416b62b96771daa6bf70ed728213f27bef2d851a1d1a22e92fbe0fac183"
+    },
+    {
+      "provider": "notion",
+      "ref": "notion://3e14c57a-590c-817b-ac1d-d9506534b09b",
+      "title": "GT-G4-4-CORR-01 Corrective Implementation Design and P31 Freeze Candidate v0.1",
+      "snapshot_at": "2026-09-21T07:45:03.433Z",
+      "content_hash_scope": "Notion section #0 through immediately before #15",
+      "content_sha256": "01d0c7a9773c295f897e2157d8d02b9e0ff0efbd2647f83e29770408b37222db"
+    }
+  ],
+  "trusted_statements": {
+    "current_supported_multi_contact_behavior": "AutoIntent",
+    "current_default_multi_contact_behavior": "AutoIntent",
+    "blocking_verification_behavior": "AutoIntent",
+    "existing_deferred_implementation_may_remain": [
+      "MultiInk",
+      "GesturePriority",
+      "existing mode-switch seams"
+    ],
+    "deferred_implementation_cleanup_required": false,
+    "deferred_implementation_may_not_be_treated_as_current_product_guarantee": true,
+    "deferred_implementation_expansion_in_this_corrective": false,
+    "minimum_pointer_core": [
+      "PointerKey",
+      "position",
+      "phase",
+      "timestamp",
+      "InputSourceId"
+    ],
+    "auto_intent": "Second compatible contact while first is Pending forms viewport gesture; once Ink-locked, later compatible contacts become independent Ink sessions.",
+    "no_gesture_takeover": true,
+    "no_concurrent_ink_and_pinch_same_generic_cohort": true,
+    "sample_count_activation_forbidden": true,
+    "draw_activation_basis": [
+      "radialDisplacement",
+      "accumulatedPathLength"
+    ],
+    "position_only_pinch_required": true,
+    "pressure_or_contact_geometry_required_for_pinch": false,
+    "platform_private_arbitration_forbidden": true,
+    "canonical_semantics_change": false,
+    "new_blocking_physical_requalification_required": false
+  },
+  "preserved_implementation": {
+    "runtime_boundary_revision": "3240a3b6567a898452462f4687939e799572c49d",
+    "runtime_files_changed_after_boundary": false,
+    "later_branch_changes_after_boundary": "control-plane .aegis only",
+    "common_auto_intent_source_unchanged_since_primary_auto_intent_evidence": true
+  },
+  "dependency": {
+    "accepted_g4_4_main_revision": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "downstream_g4_5_branch": "codex/g4-5-programmable-brush",
+    "downstream_rule": "After Gate acceptance and main integration, reconcile G4.5 with corrective main; do not rerun already-completed physical qualification solely for this corrective."
+  }
+}

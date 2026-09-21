@@ -1,0 +1,91 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "WINDOWS_PHYSICAL_VERIFICATION",
+  "result_revision": "d569197741569a5522745efa83ad34d1a7929070",
+  "execution_branch": "codex/g4-4-positiononly-corrective",
+  "platform": "windows",
+  "status": "BLOCKED_ENVIRONMENT",
+  "device": {
+    "windows": "Microsoft Windows 10 Pro",
+    "windows_version": "10.0.19045",
+    "architecture": "x64",
+    "manufacturer": "Micro-Star International Co., Ltd.",
+    "model": "MS-7C83",
+    "enumerated_pointer_devices": [
+      {
+        "name": "HID-compliant pen",
+        "instance_id": "HID\\VMULTIA&COL05\\1&2D595CA7&0&0004",
+        "classification": "virtual_or_unproven"
+      },
+      {
+        "name": "HID-compliant touch screen",
+        "instance_id": "HID\\VMULTIA&COL01\\1&2D595CA7&0&0000",
+        "classification": "virtual_or_unproven"
+      }
+    ],
+    "device_enumeration_promoted_to_physical_evidence": false
+  },
+  "input": {
+    "type": "not_observed",
+    "event_count": 0,
+    "pointer_ids": [],
+    "generations": [],
+    "stroke_count": 0,
+    "max_concurrent_pointers": 0,
+    "cancel_count": 0,
+    "real_touch": false,
+    "real_mouse": false,
+    "virtual_input_used": false
+  },
+  "functional_observation": {
+    "winmain": "PASS",
+    "real_hwnd": "PASS",
+    "message_loop_responsive": "PASS",
+    "wm_pointer_enabled": "OBSERVED_IN_WINDOW_HUD",
+    "physical_pointer_flow": "NOT_OBSERVED",
+    "pointer_reuse": "NOT_OBSERVED",
+    "cancellation": "NOT_OBSERVED",
+    "position_only": "NOT_OBSERVED",
+    "auto_intent_multitouch": "NOT_OBSERVED"
+  },
+  "locked_skia": {
+    "profile": "r1-full-v1",
+    "target": "windows-x64-d3d12",
+    "variant": "release",
+    "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
+    "source_rebuild": false
+  },
+  "verification": {
+    "configure": "PASS",
+    "build": "PASS",
+    "warnings_as_errors_retained": true,
+    "ctest": "34/34 PASS",
+    "git_diff_check": "PASS"
+  },
+  "artifacts": {
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/windows-pointer-trace.json",
+      "sha256": "62f08082f7d611ab6077261503a99ab71e206d1681765eee717208aaa1a3c532"
+    },
+    "hud_telemetry": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/windows-hud-telemetry.json",
+      "sha256": "f232976993bb18a1d076098046fd4b1e334375f696c4984d9a349c4c0b247496"
+    },
+    "capture": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/windows-capture.png",
+      "sha256": "3e161e62e3373d990f17c6cd107e67b706b3ad939d9aaf84717e5f746a5a4bd1"
+    }
+  },
+  "blocker": {
+    "class": "ENVIRONMENT_BLOCKER",
+    "reason": "No real mouse or touch event was received during the exact-revision observation. The required pointer identity, generation reuse, cancel and multi-contact scenarios therefore have no trustworthy physical trace."
+  },
+  "claims": {
+    "pass_windows_pressure": false,
+    "pass_physical": false,
+    "g4_4_gate_pass": false,
+    "g4_gate_pass": false
+  },
+  "next_surface": "CONTROL_REVIEW"
+}
