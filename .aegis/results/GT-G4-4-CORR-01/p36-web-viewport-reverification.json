@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-4-CORR-01",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "classification": "IMPLEMENTATION_FIX_WITH_HUMAN_FUNCTIONAL_CONFIRMATION",
+  "implementation_revision": "2377ae3a6884ad4eb9e00efd7e6d43000e86025b",
+  "execution_branch": "codex/g4-4-positiononly-corrective",
+  "package_ref": ".aegis/packages/GT-G4-4-CORR-01/package.json",
+  "repair": {
+    "browser_page_zoom_suppressed_over_canvas": true,
+    "trackpad_wheel_pan_changes_canvas_presentation_only": true,
+    "trackpad_pinch_changes_canvas_presentation_only": true,
+    "runtime_touch_viewport_state_remains_axiom_owned": true,
+    "post_transform_pointer_coordinates_use_inverse_viewport_mapping": true,
+    "evidence_persistence_runs_in_web_worker": true,
+    "runtime_multi_contact_policy_semantics_changed": false
+  },
+  "human_observation": {
+    "observer": "user",
+    "reported_result": "PASS_WEB_FUNCTIONAL_SMOKE_WITH_VIEWPORT_EVIDENCE",
+    "confirmed": [
+      "drawing remains functional",
+      "canvas pinch does not zoom the browser page",
+      "two-finger trackpad pan moves the canvas rather than the page",
+      "drawing remains aligned after viewport transformation",
+      "web evidence export completes"
+    ]
+  },
+  "machine_evidence": {
+    "sample_count": 266,
+    "stroke_count": 5,
+    "strokes_have_down_move_up_lifecycle": true,
+    "sequence_is_contiguous_and_unique": true,
+    "pointer_ids": [1],
+    "tools": ["mouse"],
+    "viewport_scale": 0.9361403148596358,
+    "trace_digest_matches_functional_record": true,
+    "capture_digest_matches_functional_record": true
+  },
+  "durable_artifacts": {
+    "pointer_trace": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/web/web-pointer-trace.json",
+      "sha256": "31d1884f40de6e1d0242a3db52274873738d676175ae5515d3a3d3df6c20216a"
+    },
+    "capture": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/web/web-ink-playground.png",
+      "sha256": "d05683d0dead8c1c277968c3e7a06ce9c243520e82db7f66c7689f399491f5d0"
+    },
+    "functional_smoke": {
+      "path": ".aegis/results/GT-G4-4-CORR-01/web/web-functional-smoke.json",
+      "sha256": "4f7e9c94c6ea2a207cca33539290157aa6156709489634636586b5085b0324a6"
+    }
+  },
+  "verification": {
+    "web_host_page_test": "PASS",
+    "wasm_build": "PASS",
+    "ctest": "38/38 PASS",
+    "git_diff_check": "PASS"
+  },
+  "limitations": [
+    "The exported pointer trace contains mouse drawing samples, not native multi-touch pointer samples.",
+    "Trackpad pan and page-zoom isolation are supported by the implementation path and user observation; the export format does not independently trace wheel or gesture events.",
+    "This record does not claim G4.4, G4.5, or G4 Gate PASS."
+  ],
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW"
+}
