@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "pre_change_revision": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+  "red_required": true,
+  "observed": [
+    {
+      "oracle": "G45VectorGeometryMorphology",
+      "status": "RED",
+      "failure": "vector_stroke_geometry.hpp is absent; acceptance test cannot compile against the missing common vector geometry contract."
+    },
+    {
+      "oracle": "G45VectorIncrementalEquivalence",
+      "status": "RED",
+      "failure": "same missing production vector geometry API prevents compilation."
+    }
+  ],
+  "expected_missing_behaviors": [
+    "BrushCompiler rejects version 2",
+    "BrushRuntime emits raw-sample primitives rather than filled variable-width geometry",
+    "Skia canonical path remains fixed-width",
+    "Windows Arc consumes raw pointer fixed-radius points",
+    "Space remains legacy mirror toggle"
+  ],
+  "production_mutation_started_after_red": true
+}

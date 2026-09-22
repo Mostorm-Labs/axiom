@@ -4,6 +4,7 @@
 #include "windows_smoke_evidence.hpp"
 #include "canvas/render/canonical_handoff.hpp"
 #include "canvas/input/active_pointer_registry.hpp"
+#include "canvas/ink/vector_stroke_geometry.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
 #include "canvas/render/skia_ink_backend.hpp"
 #endif
@@ -67,6 +68,8 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
   struct ActivePreview { std::uint64_t stroke = 0; std::uint64_t revision = 0;
     std::vector<arc_preview_primitive_v0> points; std::uint64_t lastSampleSequence = 0;
+    std::vector<canvas::ink::BrushInputSample> semanticSamples;
+    canvas::ink::VectorStrokeGeometry geometry;
     bool active = false; };
   std::unordered_map<std::uint64_t, ActivePreview> previews;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
@@ -78,6 +81,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   std::size_t maxConcurrentPointers = 0;
   bool runtimePreviewVisible = true;
+  bool dualColorDiagnostic = false;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   std::unique_ptr<canvas::render::SkiaInkBackend> canonicalRenderer;
   std::vector<std::uint8_t> canonicalBgra;
@@ -90,7 +94,9 @@ void persistEvidence(const State& value);
 void beginArcPreview(State& value, std::uint64_t pointerId) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews[pointerId];
-  preview = State::ActivePreview{value.pointerStrokes.at(pointerId), 0, {}, 0, true};
+  preview = State::ActivePreview{};
+  preview.stroke = value.pointerStrokes.at(pointerId);
+  preview.active = true;
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = preview.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
@@ -102,17 +108,33 @@ void pushArcPreview(State& value, std::uint64_t pointerId,
                     std::span<const arc_pointer_sample_v0> samples) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews.at(pointerId);
-  const auto appendStart = preview.points.size();
-  const auto appended = canvas::ink_playground::windows_input::appendPreviewSamples(
-      preview.points, preview.lastSampleSequence, samples);
+  const auto previousSampleCount = preview.semanticSamples.size();
+  for (const auto& sample : samples) {
+    if (sample.sample_sequence <= preview.lastSampleSequence) continue;
+    preview.semanticSamples.push_back({sample.x, sample.y, sample.pressure,
+                                       sample.tilt_x, sample.tilt_y,
+                                       sample.sample_sequence});
+    preview.lastSampleSequence = sample.sample_sequence;
+  }
+  if (preview.semanticSamples.empty() || preview.semanticSamples.size() == previousSampleCount) return;
+  const auto geometry = canvas::ink::generateVectorStroke(
+      preview.semanticSamples, {.size = 8.0F, .thinning = 0.65F,
+                                .smoothing = 0.35F});
+  preview.geometry = geometry;
+  preview.points = canvas::ink_playground::windows_input::vectorGeometryToArcPoints(geometry);
+  const auto appendStart = previousSampleCount;
+  const auto appended = preview.points.size() > appendStart
+                            ? preview.points.size() - appendStart : preview.points.size();
   if (appended == 0U) return;
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
   update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = preview.stroke;
   update.preview_revision = ++preview.revision;
   update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
-  update.truncate_confirmed_to = static_cast<std::uint32_t>(appendStart);
-  update.confirmed_append = preview.points.data() + appendStart;
-  update.confirmed_append_count = static_cast<std::uint32_t>(preview.points.size() - appendStart);
+  update.truncate_confirmed_to = static_cast<std::uint32_t>(
+      geometry.stableVertexCount < appendStart ? geometry.stableVertexCount : appendStart);
+  update.confirmed_append = preview.points.data() + update.truncate_confirmed_to;
+  update.confirmed_append_count = static_cast<std::uint32_t>(
+      preview.points.size() - update.truncate_confirmed_to);
   update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
   (void)value.previewBridge->Push(update);
 }
@@ -185,15 +207,19 @@ bool acknowledgeCanonicalVisible(State& value) {
 bool renderCanonical(State& value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   if (value.canonicalRenderer == nullptr) return false;
-  std::vector<std::vector<canvas::render::CanonicalStrokePoint>> strokes;
+  std::vector<canvas::ink::VectorStrokeGeometry> geometry;
   for (const auto& stroke : value.host->canonicalStrokes()) {
-    auto& converted = strokes.emplace_back();
-    converted.reserve(stroke.size());
-    for (const auto& point : stroke) converted.push_back({point.x, point.y, point.pressure});
+    std::vector<canvas::ink::BrushInputSample> samples;
+    samples.reserve(stroke.size());
+    std::uint64_t sequence = 0;
+    for (const auto& point : stroke)
+      samples.push_back({point.x, point.y, point.pressure, 0.0F, 0.0F, ++sequence});
+    geometry.push_back(canvas::ink::generateVectorStroke(
+        samples, {.size = 8.0F, .thinning = 0.65F, .smoothing = 0.35F}));
   }
   const auto& viewport = value.host->viewportGesture();
-  const auto result = value.canonicalRenderer->submit(
-      strokes, canvas::render::CanonicalViewportTransform{
+  const auto result = value.canonicalRenderer->submitVectorGeometry(
+      geometry, canvas::render::CanonicalViewportTransform{
           viewport.scale, viewport.translationX, viewport.translationY});
   if (result.code != canvas::render::BackendSubmissionCode::kAccepted) return false;
   if (value.pendingHandoffs.empty()) return true;
@@ -431,7 +457,8 @@ void paint(HWND window, State& value) {
          << L" | state: " << qualificationState
          << L" | Arc preview: native layered"
          << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
-         << L" | SPACE = preview | P = pointer mode";
+         << L" | dual color: " << (value.dualColorDiagnostic ? L"ON" : L"OFF")
+         << L" | SPACE = dual color | M = mirror | P = pointer mode";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
   // Optional presentation-only mirror. It is never used for canonical
@@ -635,8 +662,11 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
     if (value != nullptr && (lParam & (1LL << 30)) == 0) {
-      value->runtimePreviewVisible = !value->runtimePreviewVisible;
-      value->host->setRuntimePreviewVisible(value->runtimePreviewVisible);
+      value->dualColorDiagnostic = !value->dualColorDiagnostic;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+      if (value->canonicalRenderer != nullptr)
+        value->canonicalRenderer->setDiagnosticColor(value->dualColorDiagnostic);
+#endif
       InvalidateRect(window, nullptr, FALSE);
     }
     return 0;
@@ -650,7 +680,15 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     return 0;
   }
-  if (message == WM_CHAR && wParam == L' ') {
+  if (message == WM_KEYDOWN && wParam == L'M') {
+    if (value != nullptr && (lParam & (1LL << 30)) == 0) {
+      value->runtimePreviewVisible = !value->runtimePreviewVisible;
+      value->host->setRuntimePreviewVisible(value->runtimePreviewVisible);
+      InvalidateRect(window, nullptr, FALSE);
+    }
+    return 0;
+  }
+  if (message == WM_CHAR && (wParam == L' ' || wParam == L'M' || wParam == L'm')) {
     // WM_KEYDOWN owns the toggle. Consume the translated character so one
     // physical key press cannot toggle the debug mirror twice.
     return 0;

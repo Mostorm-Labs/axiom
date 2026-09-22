@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <cmath>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -229,25 +230,22 @@ class WindowsPreviewBackend final : public PreviewBackend {
   }
   static void draw(HDC dc, const std::vector<arc_preview_primitive_v0>& p) {
     if (p.empty()) return;
-    HPEN pen = CreatePen(PS_SOLID, 8, RGB(40, 190, 235)); HGDIOBJ old = SelectObject(dc, pen);
-    std::vector<POINT> points; points.reserve(p.size());
-    for (const auto& v : p) points.push_back({static_cast<LONG>(v.x), static_cast<LONG>(v.y)});
-    MoveToEx(dc, points.front().x, points.front().y, nullptr);
-    if (points.size() == 2U) {
-      LineTo(dc, points.back().x, points.back().y);
-    } else {
-      for (std::size_t i = 0; i + 1U < points.size(); ++i) {
-        const POINT& p0 = points[i == 0U ? i : i - 1U];
-        const POINT& p1 = points[i];
-        const POINT& p2 = points[i + 1U];
-        const POINT& p3 = points[i + 2U < points.size() ? i + 2U : i + 1U];
-        POINT controls[3] = {
-            {p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6},
-            {p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6}, p2};
-        PolyBezierTo(dc, controls, 3);
-      }
+    SetBkMode(dc, TRANSPARENT);
+    for (std::size_t i = 1; i < p.size(); ++i) {
+      const auto& a = p[i - 1U];
+      const auto& b = p[i];
+      const int width = (std::max)(1, static_cast<int>(std::lround(
+          (std::max)(a.radius + b.radius, 1.0F))));
+      const BYTE alpha = static_cast<BYTE>(std::clamp(
+          (a.opacity + b.opacity) * 127.5F, 16.0F, 255.0F));
+      const COLORREF color = RGB(40, static_cast<BYTE>(120U + alpha / 3U), 235);
+      HPEN pen = CreatePen(PS_SOLID, width, color);
+      HGDIOBJ old = SelectObject(dc, pen);
+      MoveToEx(dc, static_cast<int>(std::lround(a.x)), static_cast<int>(std::lround(a.y)), nullptr);
+      LineTo(dc, static_cast<int>(std::lround(b.x)), static_cast<int>(std::lround(b.y)));
+      SelectObject(dc, old);
+      DeleteObject(pen);
     }
-    SelectObject(dc, old); DeleteObject(pen);
   }
   static void drawRange(HDC dc, const std::vector<arc_preview_primitive_v0>& p,
                         std::size_t start) {

@@ -43,6 +43,7 @@ BackendSubmissionResult SkiaInkBackend::resize(std::uint32_t width,
     pixels_.assign(static_cast<std::size_t>(width) * height * 4U, 0U);
     submittedStrokes_.clear();
     submittedPrimitives_.clear();
+    submittedGeometry_.clear();
     hasSubmission_ = false;
     return BackendSubmissionResult::accepted();
 }
@@ -80,7 +81,63 @@ BackendSubmissionResult SkiaInkBackend::submitPrimitives(
     }
     submittedPrimitives_.assign(primitives.begin(), primitives.end());
     submittedStrokes_.clear();
+    submittedGeometry_.clear();
     submittedViewport_ = viewport;
+    hasSubmission_ = true;
+    return BackendSubmissionResult::accepted();
+}
+
+BackendSubmissionResult SkiaInkBackend::submitVectorGeometry(
+    std::span<const canvas::ink::VectorStrokeGeometry> geometry,
+    CanonicalViewportTransform viewport) {
+    if (impl_ == nullptr || !impl_->surface || width_ == 0U || height_ == 0U) {
+        return BackendSubmissionResult::rejected("Skia ink surface is not initialized");
+    }
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F) {
+        return BackendSubmissionResult::rejected("invalid Skia viewport transform");
+    }
+    if (geometry.size() == submittedGeometry_.size() && hasSubmission_ &&
+        viewport.scale == submittedViewport_.scale &&
+        viewport.translationX == submittedViewport_.translationX &&
+        viewport.translationY == submittedViewport_.translationY) {
+        bool same = true;
+        for (std::size_t i = 0; i < geometry.size(); ++i) {
+            if (geometry[i].geometryDigest != submittedGeometry_[i].geometryDigest) {
+                same = false; break;
+            }
+        }
+        if (same) return BackendSubmissionResult::accepted();
+    }
+    SkCanvas* canvas = impl_->surface->getCanvas();
+    ++rasterizationCount_;
+    canvas->clear(SK_ColorWHITE);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
+    SkPaint paint; paint.setAntiAlias(true);
+    paint.setColor(diagnosticColor_ ? SkColorSetRGB(239, 61, 116) : SK_ColorBLUE);
+    for (const auto& stroke : geometry) {
+        if (stroke.vertices.size() < 2U || stroke.indices.size() < 3U) continue;
+        for (std::size_t i = 0; i + 2U < stroke.indices.size(); i += 3U) {
+            const auto& a = stroke.vertices[stroke.indices[i]];
+            const auto& b = stroke.vertices[stroke.indices[i + 1U]];
+            const auto& c = stroke.vertices[stroke.indices[i + 2U]];
+            SkPathBuilder triangle;
+            triangle.moveTo(a.x, a.y);
+            triangle.lineTo(b.x, b.y);
+            triangle.lineTo(c.x, c.y);
+            triangle.close();
+            canvas->drawPath(triangle.detach(), paint);
+        }
+    }
+    canvas->restore();
+    const auto info = SkImageInfo::Make(static_cast<int>(width_), static_cast<int>(height_),
+                                        kRGBA_8888_SkColorType, kPremul_SkAlphaType,
+                                        SkColorSpace::MakeSRGB());
+    if (!impl_->surface->readPixels(info, pixels_.data(), static_cast<size_t>(width_) * 4U, 0, 0))
+        return BackendSubmissionResult::rejected("Skia vector geometry readback failed");
+    submittedGeometry_.assign(geometry.begin(), geometry.end());
+    submittedPrimitives_.clear(); submittedStrokes_.clear(); submittedViewport_ = viewport;
     hasSubmission_ = true;
     return BackendSubmissionResult::accepted();
 }
@@ -168,6 +225,7 @@ BackendSubmissionResult SkiaInkBackend::submit(
         return BackendSubmissionResult::rejected("Skia canonical readback failed");
     }
     submittedStrokes_.assign(strokes.begin(), strokes.end());
+    submittedGeometry_.clear();
     submittedViewport_ = viewport;
     hasSubmission_ = true;
     return BackendSubmissionResult::accepted();

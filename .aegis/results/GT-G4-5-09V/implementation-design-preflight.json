@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "current_raw_input_shortcut": "Windows appendPreviewSamples converts raw pointer samples directly to fixed-radius ARC_PREVIEW_PRIMITIVE_VECTOR_POINT values.",
+  "target_geometry_owner": "Axiom runtime/ink vector geometry generator produces renderer-neutral filled variable-width geometry; Arc receives render-ready geometry only.",
+  "preview_flow": "PointerSampleBatch -> BrushRuntime RB-V01 session -> common incremental vector geometry -> Arc preview payload.",
+  "canonical_flow": "BrushRuntime commit stores existing canonical-compatible descriptor/source samples; replay regenerates RB-V01 geometry and Skia renders the same geometry contract.",
+  "arc_mapping": "Extend Arc payload narrowly for render-ready vector geometry; no Arc smoothing, pressure, width, taper, or family evaluation.",
+  "space_diagnostic": "Space will toggle presentation-only Arc/canonical diagnostic color; legacy runtime mirror, if retained, moves to another control.",
+  "obligation_to_code": {
+    "09V-V1": ["runtime/ink programmable brush compiler", "vector reference brush definition"],
+    "09V-V2": ["runtime/ink vector_stroke_geometry", "incremental equivalence test"],
+    "09V-V3": ["canonical brush commit/replay", "vector preview canonical parity test"],
+    "09V-V4": ["runtime/render Skia vector path", "Skia vector golden"],
+    "09V-V5": ["arc protocol/bridge", "Windows Arc vector parity"],
+    "09V-V6": ["Windows presentation toggle", "dual-color diagnostic"],
+    "09V-V7": ["existing CanonicalVisible handoff", "handoff regression"],
+    "09V-V8": ["qualification evidence exporter", "vector workload evidence"]
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

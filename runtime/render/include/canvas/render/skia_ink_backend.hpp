@@ -2,6 +2,7 @@
 
 #include "canvas/render/render_backend.hpp"
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/ink/vector_stroke_geometry.hpp"
 
 #include <cstdint>
 #include <span>
@@ -41,6 +42,10 @@ class SkiaInkBackend final {
     [[nodiscard]] BackendSubmissionResult submitPrimitives(
         std::span<const canvas::ink::BrushPrimitive> primitives,
         CanonicalViewportTransform viewport = {});
+    [[nodiscard]] BackendSubmissionResult submitVectorGeometry(
+        std::span<const canvas::ink::VectorStrokeGeometry> geometry,
+        CanonicalViewportTransform viewport = {});
+    void setDiagnosticColor(bool enabled) noexcept { diagnosticColor_ = enabled; }
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }
     [[nodiscard]] std::uint32_t height() const noexcept { return height_; }
@@ -56,8 +61,10 @@ class SkiaInkBackend final {
     std::vector<std::uint8_t> pixels_;
     std::vector<std::vector<CanonicalStrokePoint>> submittedStrokes_;
     std::vector<canvas::ink::BrushPrimitive> submittedPrimitives_;
+    std::vector<canvas::ink::VectorStrokeGeometry> submittedGeometry_;
     CanonicalViewportTransform submittedViewport_{};
     bool hasSubmission_ = false;
+    bool diagnosticColor_ = false;
     std::uint64_t rasterizationCount_ = 0;
 };
 

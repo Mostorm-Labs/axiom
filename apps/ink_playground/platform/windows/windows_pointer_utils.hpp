@@ -12,8 +12,25 @@
 #include <algorithm>
 #include <span>
 #include "canvas/ink/ink_engine.hpp"
+#include "canvas/ink/vector_stroke_geometry.hpp"
 
 namespace canvas::ink_playground::windows_input {
+
+[[nodiscard]] inline std::vector<arc_preview_primitive_v0> vectorGeometryToArcPoints(
+    const canvas::ink::VectorStrokeGeometry& geometry) {
+  std::vector<arc_preview_primitive_v0> points;
+  points.reserve(geometry.vertices.size() / 2U);
+  for (std::size_t i = 0; i + 1U < geometry.vertices.size(); i += 2U) {
+    const auto& left = geometry.vertices[i];
+    const auto& right = geometry.vertices[i + 1U];
+    points.push_back({ARC_PREVIEW_PRIMITIVE_VECTOR_POINT, 0,
+                      (left.x + right.x) * 0.5F,
+                      (left.y + right.y) * 0.5F,
+                      (left.width + right.width) * 0.25F, 0.0F,
+                      (left.opacity + right.opacity) * 0.5F});
+  }
+  return points;
+}
 
 inline std::size_t appendPreviewSamples(
     std::vector<arc_preview_primitive_v0>& points,

@@ -47,6 +47,7 @@ struct BrushDefinition final {
   float spacing = 0.1F;
   float pressureSizeInfluence = 0.0F;
   float pressureOpacityInfluence = 0.0F;
+  float smoothing = 0.0F;
   float tiltSizeInfluence = 0.0F;
   float tiltRotationInfluence = 0.0F;
   ResourceId shapeResource{};

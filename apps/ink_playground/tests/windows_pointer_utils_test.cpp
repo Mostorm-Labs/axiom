@@ -41,6 +41,19 @@ int main() {
       previewPoints.size() != 2U || lastPreviewSequence != 2U) {
     return 13;
   }
+  const std::vector<canvas::ink::BrushInputSample> vectorSamples{
+      {10.0F, 10.0F, 0.2F, 0.0F, 0.0F, 1U},
+      {20.0F, 10.0F, 1.0F, 0.0F, 0.0F, 2U},
+      {30.0F, 10.0F, 1.0F, 0.0F, 0.0F, 3U}};
+  const auto vectorGeometry = canvas::ink::generateVectorStroke(
+      vectorSamples, {.size = 10.0F, .thinning = 0.5F, .smoothing = 0.0F});
+  const auto arcPoints =
+      canvas::ink_playground::windows_input::vectorGeometryToArcPoints(vectorGeometry);
+  if (arcPoints.size() != vectorSamples.size() ||
+      arcPoints.front().kind != ARC_PREVIEW_PRIMITIVE_VECTOR_POINT ||
+      arcPoints[1].radius <= arcPoints.front().radius) {
+    return 14;
+  }
   std::vector<POINTER_INFO> newestFirst(3);
   newestFirst[0].pointerFlags = POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT;
   newestFirst[0].ptPixelLocation = {100, 100};

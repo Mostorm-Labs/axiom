@@ -10,11 +10,11 @@ semantic::PiecewiseLinearCurve01 identityCurve() {
 semantic::BrushDescriptor canonicalDescriptor(const BrushDefinition& definition,
                                                BrushRepresentation representation) {
   semantic::BrushDescriptor result;
-  result.brush_version = 1;
+  result.brush_version = definition.version;
   result.color = {0.05F, 0.10F, 0.20F, 1.0F};
   result.nominal_size = definition.nominalSize;
   result.opacity = definition.opacity;
-  result.smoothing.amount = 0.0F;
+  result.smoothing.amount = definition.smoothing;
   result.spacing.normalized_spacing = definition.spacing;
   const bool pressureEnabled = definition.pressureSizeInfluence > 0.0F ||
                                definition.pressureOpacityInfluence > 0.0F;

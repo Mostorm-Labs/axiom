@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "actual_starting_revision": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+  "package_materialization_ref": "973e3e049a8362fbdced0f1d33ce6a9358b3f1ac",
+  "first_unmet_obligation": "09V-V3",
+  "conflict": {
+    "required": "Persist explicit immutable RB-V01 brush version 2 in the existing canonical BrushDescriptor and replay it deterministically.",
+    "observed": "runtime/semantic/src/validator.cpp validBrush() accepts brush_version == 1 only for vector brush families 1 and 2.",
+    "impact": "toCanonicalStroke emits brush_version 2 for RB-V01, but the canonical validator rejects that StrokeRecord, so canonical persistence/replay cannot satisfy the frozen oracle.",
+    "scope": "The necessary semantic validator change is outside execution-contract.json authorized_mutation_scope and changes frozen canonical acceptance semantics."
+  },
+  "partial_verification": {
+    "command": "ctest --test-dir out/g4-5-gui -R '^(G45ProgrammableBrush|G45VectorGeometryMorphology|G45VectorIncrementalEquivalence|G45VectorV2Compile|G45VectorBrushParameterIdentity|G45CanonicalSkiaVectorGolden|G45WindowsArcVectorParity|G4InkPlaygroundWindowsPointerUtils)$' --output-on-failure",
+    "result": "PASS",
+    "passed": 8,
+    "failed": 0
+  },
+  "not_claimed": [
+    "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+    "G4.5 Gate PASS",
+    "G4 Gate PASS"
+  ],
+  "owner_handoff": "CONTROL_REVIEW -> P31 task package correction / semantic authority review",
+  "required_resolution": [
+    "Authorize and verify the minimal semantic validator support for BrushDescriptor family 1 version 2 without schema expansion, or choose a version binding already accepted by the validator.",
+    "Add a frozen canonical validation/replay oracle for the resolved binding.",
+    "Reissue P31 package with exact mutation scope and evidence obligations."
+  ]
+}

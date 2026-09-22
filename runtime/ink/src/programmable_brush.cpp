@@ -1,4 +1,5 @@
 #include "canvas/ink/programmable_brush.hpp"
+#include "canvas/ink/vector_stroke_geometry.hpp"
 
 #include <bit>
 #include <cmath>
@@ -42,6 +43,7 @@ std::uint64_t programIdentity(const BrushDefinition& value,
   hashFloat(hash, value.spacing);
   hashFloat(hash, value.pressureSizeInfluence);
   hashFloat(hash, value.pressureOpacityInfluence);
+  if (value.version >= 2U) hashFloat(hash, value.smoothing);
   hashFloat(hash, value.tiltSizeInfluence);
   hashFloat(hash, value.tiltRotationInfluence);
   hashWord(hash, value.shapeResource.value);
@@ -72,7 +74,7 @@ std::uint64_t primitiveDigest(std::span<const BrushPrimitive> primitives,
 BrushCompileResult BrushCompiler::compile(
     const BrushDefinition& definition,
     const BrushCapabilityProfile& capabilities) const {
-  if (definition.version != 1U) {
+  if (definition.version != 1U && definition.version != 2U) {
     return {nullptr, BrushCompileError::kUnsupportedVersion};
   }
   const auto familyValue = static_cast<std::uint8_t>(definition.family);
@@ -82,6 +84,7 @@ BrushCompileResult BrushCompiler::compile(
       definition.spacing <= 0.0F || definition.spacing > 4.0F ||
       !finiteUnit(definition.pressureSizeInfluence) ||
       !finiteUnit(definition.pressureOpacityInfluence) ||
+      !finiteUnit(definition.smoothing) ||
       !finiteUnit(definition.tiltSizeInfluence) ||
       !finiteUnit(definition.tiltRotationInfluence)) {
     return {nullptr, BrushCompileError::kInvalidDefinition};
@@ -98,6 +101,9 @@ BrushCompileResult BrushCompiler::compile(
   }
 
   BrushRepresentation representation = BrushRepresentation::kVector;
+  if (definition.version == 2U && definition.family != BrushFamily::kPen) {
+    return {nullptr, BrushCompileError::kInvalidDefinition};
+  }
   if (isDab(definition.family)) {
     representation = BrushRepresentation::kDab;
     if (!definition.shapeResource.valid() || !definition.grainResource.valid() ||
@@ -238,6 +244,21 @@ BrushRuntimeResult BrushRuntime::evaluate(BrushSessionId session,
   result.preview.revision = state.revision;
   if (program.representation() == BrushRepresentation::kTemporalTransient) {
     result.preview.durationMs = 650;
+  }
+  if (definition.version == 2U && definition.family == BrushFamily::kPen) {
+    const auto geometry = generateVectorStroke(
+        state.samples, {.size = definition.nominalSize,
+                        .thinning = definition.pressureSizeInfluence,
+                        .smoothing = definition.smoothing});
+    result.preview.primitives.reserve(geometry.vertices.size());
+    for (const auto& vertex : geometry.vertices) {
+      result.preview.primitives.push_back({vertex.x, vertex.y, vertex.width,
+                                           0.0F, vertex.opacity,
+                                           BrushRepresentation::kVector, {}, {}});
+      if (result.commit.canonicalMutation) result.commit.primitives.push_back(result.preview.primitives.back());
+    }
+    result.commit.digest = geometry.geometryDigest;
+    return result;
   }
   for (std::size_t index = 0; index < state.samples.size(); ++index) {
     const auto& sample = state.samples[index];

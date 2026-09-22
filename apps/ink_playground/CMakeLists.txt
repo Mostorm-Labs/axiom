@@ -49,6 +49,8 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME G4InkPlaygroundWindowsPointerUtils
       COMMAND axiom_ink_playground_windows_pointer_utils_tests)
+    add_test(NAME G45WindowsArcVectorParity
+      COMMAND axiom_ink_playground_windows_pointer_utils_tests)
   endif()
 endif()
 

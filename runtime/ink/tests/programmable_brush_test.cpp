@@ -72,8 +72,15 @@ void definitionAndCompilerContract() {
 
   auto wrongVersion = makeDefinition(ink::BrushFamily::kPen);
   wrongVersion.version = 2;
+  const auto vectorV2 = compiler.compile(wrongVersion, fullCapabilities());
+  assert(vectorV2);
+  wrongVersion.smoothing = 0.75F;
+  const auto smoothedV2 = compiler.compile(wrongVersion, fullCapabilities());
+  assert(smoothedV2);
+  assert(smoothedV2.program->identity() != vectorV2.program->identity());
+  wrongVersion.family = ink::BrushFamily::kChalk;
   assert(compiler.compile(wrongVersion, fullCapabilities()).error ==
-         ink::BrushCompileError::kUnsupportedVersion);
+         ink::BrushCompileError::kInvalidDefinition);
 }
 
 void resourceAndRuntimeContract() {
