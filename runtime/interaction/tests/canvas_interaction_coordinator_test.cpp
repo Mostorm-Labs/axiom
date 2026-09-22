@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
+#include "canvas/interaction/viewport_interaction_controller.hpp"
 
 #include <cassert>
 
@@ -14,6 +15,7 @@ static PointerSample sample(PointerKey key, PointerPhase phase, float x, float y
 
 int main() {
   CanvasInteractionCoordinator coordinator;
+  ViewportInteractionController viewport;
   const PointerKey a{1, 1, 1};
   const PointerKey b{1, 2, 1};
   auto first = coordinator.route(sample(a, PointerPhase::kDown, 0.0F, 0.0F, 1));
@@ -24,6 +26,8 @@ int main() {
   assert(second.viewportClaimed && second.becameViewport);
   assert(second.route == InteractionRoute::kViewport);
   assert(!second.routesToInk);
+  assert(coordinator.route(sample(a, PointerPhase::kMove, 40.0F, 0.0F, 3), viewport)
+             .routedSample.x == 40.0F);
   assert(coordinator.viewportSamples().size() == 2U);
   assert(!coordinator.canonicalMutation());
   auto predicted = sample(a, PointerPhase::kMove, 60.0F, 0.0F, 3);

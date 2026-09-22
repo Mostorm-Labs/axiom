@@ -53,8 +53,9 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
     // session's existing append behavior.
     const bool trackedContact = sample.key.valid() &&
         (sample.phase == input::PointerPhase::kDown || coordinator_->hasContact(sample.key));
+    interaction::InteractionRoutingResult routing{};
     if (trackedContact) {
-      const auto routing = coordinator_->route(sample);
+      routing = coordinator_->route(sample, *viewportController_);
       if (routing.becameViewport) {
         for (const auto& key : routing.cancelPointers) {
           const auto existing = keyedStrokeIds_.find(key);
@@ -82,12 +83,7 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
         continue;
       }
     }
-    input::PointerSample contentSample = sample;
-    if (sample.key.valid()) {
-      const auto content = viewportController_->viewToContent(sample.x, sample.y);
-      contentSample.x = content.first;
-      contentSample.y = content.second;
-    }
+    const input::PointerSample contentSample = trackedContact ? routing.routedSample : sample;
     const ink::StrokePoint point{contentSample.x, contentSample.y,
                                  contentSample.pressure};
     if (sample.predicted) {

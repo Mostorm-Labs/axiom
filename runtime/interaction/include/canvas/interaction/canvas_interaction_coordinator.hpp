@@ -7,6 +7,8 @@
 
 namespace canvas::interaction {
 
+class ViewportInteractionController;
+
 struct InteractionRoutingResult final {
   enum class Route : std::uint8_t { kInk, kViewport, kPending, kIgnored };
   ContactDisposition disposition = ContactDisposition::kIgnored;
@@ -31,6 +33,9 @@ class CanvasInteractionCoordinator final {
 
   [[nodiscard]] InteractionRoutingResult route(
       const input::PointerSample& sample) noexcept;
+  [[nodiscard]] InteractionRoutingResult route(
+      const input::PointerSample& sample,
+      const ViewportInteractionController& viewport) noexcept;
   [[nodiscard]] ContactDisposition disposition(
       const input::PointerKey& key) const noexcept {
     return contacts_.disposition(key);

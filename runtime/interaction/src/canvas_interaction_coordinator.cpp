@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
+#include "canvas/interaction/viewport_interaction_controller.hpp"
 
 #include <algorithm>
 
@@ -48,6 +49,18 @@ InteractionRoutingResult CanvasInteractionCoordinator::route(
     samples_.erase(sample.key);
   }
   if (result.endedViewport) samples_.clear();
+  return result;
+}
+
+InteractionRoutingResult CanvasInteractionCoordinator::route(
+    const input::PointerSample& sample,
+    const ViewportInteractionController& viewport) noexcept {
+  auto result = route(sample);
+  if (sample.key.valid()) {
+    const auto content = viewport.viewToContent(sample.x, sample.y);
+    result.routedSample.x = content.first;
+    result.routedSample.y = content.second;
+  }
   return result;
 }
 

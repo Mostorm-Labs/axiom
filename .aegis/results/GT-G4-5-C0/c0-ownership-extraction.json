@@ -11,17 +11,22 @@
   ],
   "status": "PASS",
   "task_id": "GT-G4-5-C0",
-  "typed_result_contract": {
-    "route": ["kInk", "kViewport", "kPending", "kIgnored"],
-    "routesToInk": "runtime-derived",
-    "cancelsInk": "runtime-derived",
-    "routedSample": "runtime-provided"
-  },
   "tests": [
     "C0CanvasInteractionCoordinator",
     "C0ViewportInteractionController",
     "c0_web_navigation_contract_test"
   ],
+  "typed_result_contract": {
+    "cancelsInk": "runtime-derived",
+    "route": [
+      "kInk",
+      "kViewport",
+      "kPending",
+      "kIgnored"
+    ],
+    "routedSample": "runtime-provided",
+    "routesToInk": "runtime-derived"
+  },
   "web_no_longer_owns": [
     "trackpadScale",
     "trackpadTranslationX",
