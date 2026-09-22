@@ -14,6 +14,22 @@ InteractionRoutingResult CanvasInteractionCoordinator::route(
     samples_[sample.key] = sample;
   }
   result.disposition = contacts_.update(sample);
+  result.routedSample = sample;
+  if (result.disposition == ContactDisposition::kInk) {
+    result.route = InteractionRoute::kInk;
+    result.routesToInk = true;
+  } else if (result.disposition == ContactDisposition::kViewportGesture) {
+    result.route = InteractionRoute::kViewport;
+  } else if (result.disposition == ContactDisposition::kPending) {
+    // Pending preserves ownership arbitration, but the composition root may
+    // still append the sample to an already-open Ink session. Activation is
+    // represented by the disposition, not by suppressing the routed sample.
+    result.route = InteractionRoute::kInk;
+    result.routesToInk = true;
+  } else {
+    result.route = InteractionRoute::kIgnored;
+    result.cancelsInk = true;
+  }
   const bool isViewport = contacts_.viewportClaimed();
   result.viewportClaimed = isViewport;
   result.becameViewport = !wasViewport && isViewport;

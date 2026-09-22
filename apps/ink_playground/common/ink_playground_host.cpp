@@ -70,8 +70,7 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
         (void)viewportController_->updateGesture(viewportSamples[0], viewportSamples[1]);
       }
       if (routing.endedViewport) viewportController_->endGesture();
-      const auto disposition = routing.disposition;
-      if (disposition == interaction::ContactDisposition::kIgnored &&
+      if (routing.cancelsInk && sample.phase != input::PointerPhase::kUp &&
           keyedStrokeIds_.contains(sample.key)) {
         const auto ignoredStroke = keyedStrokeIds_.at(sample.key);
         (void)ink_->cancel(sample.key);
@@ -79,9 +78,7 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
         (void)interaction_->cancel(sample.key, ignoredStroke);
         keyedStrokeIds_.erase(sample.key);
       }
-      if (disposition == interaction::ContactDisposition::kViewportGesture ||
-          disposition == interaction::ContactDisposition::kIgnored ||
-          !keyedStrokeIds_.contains(sample.key)) {
+      if (!routing.routesToInk) {
         continue;
       }
     }

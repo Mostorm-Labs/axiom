@@ -8,13 +8,20 @@
 namespace canvas::interaction {
 
 struct InteractionRoutingResult final {
+  enum class Route : std::uint8_t { kInk, kViewport, kPending, kIgnored };
   ContactDisposition disposition = ContactDisposition::kIgnored;
+  Route route = Route::kIgnored;
+  bool routesToInk = false;
+  bool cancelsInk = false;
   bool viewportClaimed = false;
   bool becameViewport = false;
   bool endedViewport = false;
   bool canonicalMutation = false;
+  input::PointerSample routedSample{};
   std::vector<input::PointerKey> cancelPointers;
 };
+
+using InteractionRoute = InteractionRoutingResult::Route;
 
 class CanvasInteractionCoordinator final {
  public:

@@ -11,6 +11,12 @@
   ],
   "status": "PASS",
   "task_id": "GT-G4-5-C0",
+  "typed_result_contract": {
+    "route": ["kInk", "kViewport", "kPending", "kIgnored"],
+    "routesToInk": "runtime-derived",
+    "cancelsInk": "runtime-derived",
+    "routedSample": "runtime-provided"
+  },
   "tests": [
     "C0CanvasInteractionCoordinator",
     "C0ViewportInteractionController",

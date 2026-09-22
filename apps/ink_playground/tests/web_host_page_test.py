@@ -52,6 +52,9 @@ assert "_axiom_ink_apply_viewport_gesture" in source
 assert "axiom_ink_apply_viewport_wheel_pan" in bridge_source
 assert "axiom_ink_apply_viewport_ctrl_wheel_zoom" in bridge_source
 assert "axiom_ink_apply_viewport_gesture" in bridge_source
+assert "_axiom_ink_apply_viewport_wheel_pan" not in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" not in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_apply_viewport_gesture" not in (page.parents[2] / "CMakeLists.txt").read_text()
 assert "let trackpadScale" not in source
 assert "let trackpadTranslationX" not in source
 assert "let trackpadTranslationY" not in source
