@@ -1,0 +1,138 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C0",
+  "obligations": [
+    {
+      "id": "C0-V1",
+      "requirement": "Runtime owns contact orchestration and viewport transform semantics after extraction.",
+      "oracle": "C0OwnershipExtraction",
+      "acceptance": [
+        "InkPlaygroundHost does not store MultiContactCoordinator",
+        "InkPlaygroundHost does not store contact sample/disposition caches",
+        "InkPlaygroundHost does not store TwoFingerViewportGesture or committed viewport transform fields",
+        "new runtime coordinator/controller own those responsibilities"
+      ],
+      "evidence_required": [
+        "c0-ownership-extraction.json"
+      ]
+    },
+    {
+      "id": "C0-V2",
+      "requirement": "Accepted AutoIntent behavior is unchanged.",
+      "oracle": "C0AutoIntentPreservation",
+      "acceptance": [
+        "Pending first plus compatible second -> ViewportGesture",
+        "Ink-lock first plus later second -> independent Ink",
+        "PositionOnly passes",
+        "predicted samples do not transition ownership",
+        "provisional to viewport has zero canonical mutation",
+        "radial/path slop remain 8/12"
+      ],
+      "evidence_required": [
+        "c0-auto-intent-preservation.json",
+        "c0-behavior-trace-equivalence.json"
+      ]
+    },
+    {
+      "id": "C0-V3",
+      "requirement": "The accepted third-plus-contact finding is preserved, not silently hardened.",
+      "oracle": "C0AcceptedFindingPreservation",
+      "acceptance": [
+        "frozen third-plus trace reproduces accepted behavior",
+        "evidence labels it accepted non-blocking finding",
+        "no new product-quality claim is made"
+      ],
+      "evidence_required": [
+        "c0-accepted-finding.json"
+      ]
+    },
+    {
+      "id": "C0-V4",
+      "requirement": "Touch viewport composition remains equivalent while accumulation moves into runtime.",
+      "oracle": "C0ViewportComposition",
+      "acceptance": [
+        "first two-finger gesture matches old state",
+        "gesture end commits transform",
+        "second gesture composes on prior transform",
+        "reset returns identity",
+        "view-to-content inverse transform matches old host behavior"
+      ],
+      "evidence_required": [
+        "c0-viewport-composition.json"
+      ]
+    },
+    {
+      "id": "C0-V5",
+      "requirement": "Web viewport navigation semantics move to runtime without behavioral drift.",
+      "oracle": "C0WebNavigationParity",
+      "acceptance": [
+        "wheel pan trace matches old transform",
+        "Ctrl-wheel anchor zoom matches old transform",
+        "browser gesture relative scale trace matches old transform",
+        "zoom clamp remains 0.25 through 8.0 for migrated Web navigation",
+        "Web no longer stores cumulative trackpad transform variables"
+      ],
+      "evidence_required": [
+        "c0-web-navigation-parity.json"
+      ]
+    },
+    {
+      "id": "C0-V6",
+      "requirement": "Platforms remain input/presentation adapters and do not gain private interaction policy.",
+      "oracle": "C0PlatformOwnership",
+      "acceptance": [
+        "Web routes normalized navigation into common runtime",
+        "Android continues forwarding raw view coordinates to native runtime",
+        "Windows Android Web contain no private AutoIntent implementation",
+        "Android local viewport state is read-only realization/evidence"
+      ],
+      "evidence_required": [
+        "c0-platform-ownership.json"
+      ]
+    },
+    {
+      "id": "C0-V7",
+      "requirement": "Existing interaction and R01 foundations remain valid.",
+      "oracle": "C0Regression",
+      "acceptance": [
+        "G4MultiContactCoordinator PASS",
+        "G4ViewportGesture PASS",
+        "G4GestureArbiter PASS",
+        "relevant InkPlayground integration tests PASS",
+        "G45PerfectFreehandReference PASS",
+        "available portable G4/G4.4 interaction regressions PASS"
+      ],
+      "evidence_required": [
+        "regression-summary.json"
+      ]
+    },
+    {
+      "id": "C0-V8",
+      "requirement": "C0 stays within frozen ownership-refactor scope and materializes reviewer-accessible evidence.",
+      "oracle": "C0ScopeAndEvidence",
+      "acceptance": [
+        "no runtime/ink behavior changes",
+        "no semantic schema changes",
+        "no Skia/render changes",
+        "no Arc changes",
+        "no Dear ImGui changes",
+        "exact result/evidence revision is pushed on the task branch"
+      ],
+      "evidence_required": [
+        "scope-diff.json",
+        "result.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Common CanvasInteractionCoordinator/ViewportInteractionController APIs do not exist and Web still owns cumulative trackpad transform state.",
+    "observation_seam": "runtime/interaction ownership tests plus Web navigation ownership/static test",
+    "failure_if_unexpected_green": "VERIFICATION_DESIGN_DEFECT"
+  },
+  "accepted_non_blocking_finding": {
+    "id": "P34-NB-01",
+    "statement": "Third-plus generic contact may independently activate Ink while a two-contact ViewportGesture cohort is active.",
+    "required_disposition": "PRESERVE_UNCHANGED"
+  }
+}

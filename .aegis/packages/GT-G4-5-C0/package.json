@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C0-P31-v0.1",
+  "task_id": "GT-G4-5-C0",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Extract remaining interaction routing and viewport state/navigation ownership into runtime/interaction while preserving accepted G4.4 behavior.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-runtime-interaction-consolidation"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "2ae9b308186b647d8808d8e7c52e4a0b140380f32b54a34af373f57a5c89d82e"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "c18f8a0f0fd743d5e33292883d88ddcba7939ef0490b7a6843d098647482b6cd"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "e53630579b271d1c3cb1632406d46e2aa17876ac0b50114921342ff470153276"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "3e655aee476d63fcc44575af76c0223c067be874532332c84c80d4797f816351"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "ae3673788bed771cbd201f1072e83cffe86e99dc681434e4a9ce353f743988d8"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "d29eb5434f82c46406be5075013cf108f03253a48ed02053e25797bf20d20da0"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C0/",
+    "base_revision": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+    "binding": "exact package files bound by SHA-256"
+  },
+  "dependencies": {
+    "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+    "g4_4_interaction_authority": ".aegis/results/GT-G4-4-CORR-01/p34-gate-review-v0.4.json"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate package and accepted G4.4/R01 bindings, observe frozen RED ownership oracles, extract runtime interaction ownership without semantic drift, materialize all evidence, and return only at READY_FOR_D0_PACKAGE_REVIEW or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}
