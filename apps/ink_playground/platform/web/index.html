@@ -46,12 +46,9 @@
   let runtimeScale = 1;
   let runtimeTranslationX = 0;
   let runtimeTranslationY = 0;
-  let trackpadScale = 1;
-  let trackpadTranslationX = 0;
-  let trackpadTranslationY = 0;
-  const viewportScale = () => trackpadScale * runtimeScale;
-  const viewportTranslationX = () => trackpadScale * runtimeTranslationX + trackpadTranslationX;
-  const viewportTranslationY = () => trackpadScale * runtimeTranslationY + trackpadTranslationY;
+  const viewportScale = () => runtimeScale;
+  const viewportTranslationX = () => runtimeTranslationX;
+  const viewportTranslationY = () => runtimeTranslationY;
   const updateViewport = () => {
     runtimeScale = module._axiom_ink_viewport_scale(host);
     runtimeTranslationX = module._axiom_ink_viewport_translation_x(host);
@@ -85,13 +82,11 @@
     const rect = canvas.getBoundingClientRect();
     const physicalX = (sample.clientX - rect.left) * canvas.width / rect.width;
     const physicalY = (sample.clientY - rect.top) * canvas.height / rect.height;
-    const viewX = (physicalX - trackpadTranslationX) / trackpadScale;
-    const viewY = (physicalY - trackpadTranslationY) / trackpadScale;
     return {
-      viewX,
-      viewY,
-      x: (viewX - runtimeTranslationX) / runtimeScale,
-      y: (viewY - runtimeTranslationY) / runtimeScale
+      viewX: physicalX,
+      viewY: physicalY,
+      x: (physicalX - runtimeTranslationX) / runtimeScale,
+      y: (physicalY - runtimeTranslationY) / runtimeScale
     };
   };
   const drawBrushSegment = (context, points, family, runtime = {}) => {
@@ -247,6 +242,7 @@
     if (event.cancelable) event.preventDefault();
   };
   let gestureStartScale = 1;
+  let gestureLastScale = 1;
   const handleWheel = event => {
     const rect = canvas.getBoundingClientRect();
     const overCanvas = event.target === canvas ||
@@ -257,32 +253,31 @@
     const anchorX = (event.clientX - rect.left) * canvas.width / rect.width;
     const anchorY = (event.clientY - rect.top) * canvas.height / rect.height;
     if (!event.ctrlKey) {
-      trackpadTranslationX -= event.deltaX;
-      trackpadTranslationY -= event.deltaY;
+      module._axiom_ink_apply_viewport_wheel_pan(host, event.deltaX, event.deltaY);
+      updateViewport();
       requestRender();
       return;
     }
     const factor = Math.exp(-event.deltaY * 0.01);
-    trackpadScale = Math.max(0.25, Math.min(8, trackpadScale * factor));
-    trackpadTranslationX = anchorX - factor * (anchorX - trackpadTranslationX);
-    trackpadTranslationY = anchorY - factor * (anchorY - trackpadTranslationY);
+    module._axiom_ink_apply_viewport_ctrl_wheel_zoom(host, event.deltaY, anchorX, anchorY);
+    updateViewport();
     requestRender();
   };
   addEventListener("wheel", handleWheel, { passive: false, capture: true });
   canvas.addEventListener("gesturestart", event => {
     swallowPageZoom(event);
-    gestureStartScale = trackpadScale;
+    gestureStartScale = 1;
+    gestureLastScale = 1;
   }, { passive: false });
   canvas.addEventListener("gesturechange", event => {
     swallowPageZoom(event);
     const rect = canvas.getBoundingClientRect();
     const anchorX = (event.clientX - rect.left) * canvas.width / rect.width;
     const anchorY = (event.clientY - rect.top) * canvas.height / rect.height;
-    const nextScale = Math.max(0.25, Math.min(8, gestureStartScale * event.scale));
-    const ratio = nextScale / trackpadScale;
-    trackpadScale = nextScale;
-    trackpadTranslationX = anchorX - ratio * (anchorX - trackpadTranslationX);
-    trackpadTranslationY = anchorY - ratio * (anchorY - trackpadTranslationY);
+    const scaleDelta = event.scale / gestureLastScale;
+    module._axiom_ink_apply_viewport_gesture(host, scaleDelta, anchorX, anchorY);
+    gestureLastScale = event.scale;
+    updateViewport();
     requestRender();
   }, { passive: false });
   canvas.addEventListener("gestureend", swallowPageZoom, { passive: false });

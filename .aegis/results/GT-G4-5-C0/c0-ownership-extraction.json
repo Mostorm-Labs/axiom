@@ -1,0 +1,24 @@
+{
+  "host_no_longer_owns": [
+    "MultiContactCoordinator",
+    "contact sample/disposition caches",
+    "TwoFingerViewportGesture",
+    "committed viewport fields"
+  ],
+  "runtime_owners": [
+    "CanvasInteractionCoordinator",
+    "ViewportInteractionController"
+  ],
+  "status": "PASS",
+  "task_id": "GT-G4-5-C0",
+  "tests": [
+    "C0CanvasInteractionCoordinator",
+    "C0ViewportInteractionController",
+    "c0_web_navigation_contract_test"
+  ],
+  "web_no_longer_owns": [
+    "trackpadScale",
+    "trackpadTranslationX",
+    "trackpadTranslationY"
+  ]
+}

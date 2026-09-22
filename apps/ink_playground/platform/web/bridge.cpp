@@ -229,6 +229,26 @@ EMSCRIPTEN_KEEPALIVE float axiom_ink_viewport_translation_x(std::uint32_t value)
 EMSCRIPTEN_KEEPALIVE float axiom_ink_viewport_translation_y(std::uint32_t value) {
   return host(value) == nullptr ? 0.0F : host(value)->viewportGesture().translationY;
 }
+EMSCRIPTEN_KEEPALIVE int axiom_ink_apply_viewport_wheel_pan(
+    std::uint32_t value, float deltaX, float deltaY) {
+  if (host(value) == nullptr) return 0;
+  return host(value)->applyViewportNavigation(
+      {canvas::interaction::ViewportNavigationKind::kWheelPan, deltaX, deltaY}) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_apply_viewport_ctrl_wheel_zoom(
+    std::uint32_t value, float deltaY, float anchorX, float anchorY) {
+  if (host(value) == nullptr) return 0;
+  return host(value)->applyViewportNavigation(
+      {canvas::interaction::ViewportNavigationKind::kCtrlWheelZoom, 0.0F, deltaY,
+       anchorX, anchorY}) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_apply_viewport_gesture(
+    std::uint32_t value, float scaleDelta, float anchorX, float anchorY) {
+  if (host(value) == nullptr) return 0;
+  return host(value)->applyViewportNavigation(
+      {canvas::interaction::ViewportNavigationKind::kBrowserGesture, 0.0F, 0.0F,
+       anchorX, anchorY, scaleDelta}) ? 1 : 0;
+}
 EMSCRIPTEN_KEEPALIVE int axiom_ink_commit(
     std::uint32_t value, std::uint32_t strokeId, std::uint32_t operationId) {
   return host(value) != nullptr && host(value)->commitStroke(strokeId, operationId);

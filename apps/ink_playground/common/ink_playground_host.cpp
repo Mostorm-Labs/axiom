@@ -4,6 +4,7 @@
 #include <memory>
 #include <limits>
 #include <vector>
+#include <algorithm>
 
 namespace canvas::ink_playground {
 
@@ -17,7 +18,9 @@ InkPlaygroundHost::InkPlaygroundHost()
           render::ViewId{1}, render::SurfaceGeneration{1},
           render::MetricsGeneration{1},
           render::SurfaceMetrics{1.0F, 1.0F, 1, 1, 1.0F, 1.0F}})),
-      tracker_(std::make_unique<render::PresentationTracker>(*lifecycle_)) {}
+      tracker_(std::make_unique<render::PresentationTracker>(*lifecycle_)),
+      coordinator_(std::make_unique<interaction::CanvasInteractionCoordinator>()),
+      viewportController_(std::make_unique<interaction::ViewportInteractionController>()) {}
 
 bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
   strokeStartNs_ = 0;
@@ -44,51 +47,30 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
   confirmed.reserve(batch.samples.size());
   predicted.reserve(batch.samples.size());
   for (const auto& sample : batch.samples) {
+    // Legacy/native ingress may omit phase on already-open sessions. Only
+    // feed contacts into the coordinator once a down has established them or
+    // the runtime already owns the key; otherwise preserve the keyed ink
+    // session's existing append behavior.
     const bool trackedContact = sample.key.valid() &&
-        (contactDispositions_.contains(sample.key) ||
-         sample.phase == input::PointerPhase::kDown);
+        (sample.phase == input::PointerPhase::kDown || coordinator_->hasContact(sample.key));
     if (trackedContact) {
-      if (!sample.predicted) contactSamples_[sample.key] = sample;
-      const bool viewportWasClaimed = contactCoordinator_.viewportClaimed();
-      const auto disposition = contactCoordinator_.update(sample);
-      contactDispositions_[sample.key] = disposition;
-      if (disposition == interaction::ContactDisposition::kViewportGesture) {
-        for (auto& [key, cachedDisposition] : contactDispositions_) {
-          cachedDisposition = contactCoordinator_.disposition(key);
-        }
-        for (const auto& [existing, existingStroke] : keyedStrokeIds_) {
-          (void)ink_->cancel(existing);
-          (void)preview_->cancelKeyed(existingStroke);
-          (void)interaction_->cancel(existing, existingStroke);
-        }
-        keyedStrokeIds_.clear();
-        const input::PointerSample* first = nullptr;
-        const input::PointerSample* second = nullptr;
-        for (const auto& [key, current] : contactSamples_) {
-          if (contactCoordinator_.disposition(key) !=
-              interaction::ContactDisposition::kViewportGesture) continue;
-          if (first == nullptr) first = &current;
-          else { second = &current; break; }
-        }
-        if (first != nullptr && second != nullptr) {
-          if (viewportGesture_.update(*first, *second)) {
-            viewportState_ = viewportGesture_.state();
-            const float gestureScale = viewportState_.scale;
-            viewportState_.scale = gestureScale * committedViewportScale_;
-            viewportState_.translationX = gestureScale * committedViewportTranslationX_ +
-                viewportState_.translationX;
-            viewportState_.translationY = gestureScale * committedViewportTranslationY_ +
-                viewportState_.translationY;
-          }
+      const auto routing = coordinator_->route(sample);
+      if (routing.becameViewport) {
+        for (const auto& key : routing.cancelPointers) {
+          const auto existing = keyedStrokeIds_.find(key);
+          if (existing == keyedStrokeIds_.end()) continue;
+          (void)ink_->cancel(key);
+          (void)preview_->cancelKeyed(existing->second);
+          (void)interaction_->cancel(key, existing->second);
+          keyedStrokeIds_.erase(existing);
         }
       }
-      if (viewportWasClaimed && !contactCoordinator_.viewportClaimed()) {
-        committedViewportScale_ = viewportState_.scale;
-        committedViewportTranslationX_ = viewportState_.translationX;
-        committedViewportTranslationY_ = viewportState_.translationY;
-        viewportGesture_.reset();
-        contactSamples_.clear();
+      const auto viewportSamples = coordinator_->viewportSamples();
+      if (viewportSamples.size() >= 2U) {
+        (void)viewportController_->updateGesture(viewportSamples[0], viewportSamples[1]);
       }
+      if (routing.endedViewport) viewportController_->endGesture();
+      const auto disposition = routing.disposition;
       if (disposition == interaction::ContactDisposition::kIgnored &&
           keyedStrokeIds_.contains(sample.key)) {
         const auto ignoredStroke = keyedStrokeIds_.at(sample.key);
@@ -105,13 +87,9 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
     }
     input::PointerSample contentSample = sample;
     if (sample.key.valid()) {
-      if (!std::isfinite(viewportState_.scale) || viewportState_.scale <= 0.0F) {
-        return false;
-      }
-      contentSample.x =
-          (sample.x - viewportState_.translationX) / viewportState_.scale;
-      contentSample.y =
-          (sample.y - viewportState_.translationY) / viewportState_.scale;
+      const auto content = viewportController_->viewToContent(sample.x, sample.y);
+      contentSample.x = content.first;
+      contentSample.y = content.second;
     }
     const ink::StrokePoint point{contentSample.x, contentSample.y,
                                  contentSample.pressure};
@@ -185,22 +163,19 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
     preview_->cancelKeyed(strokeId);
   }
   keyedStrokeIds_.clear();
-  contactDispositions_.clear();
-  contactSamples_.clear();
-  contactCoordinator_.reset();
-  viewportGesture_.reset();
-  viewportState_ = {};
-  committedViewportScale_ = 1.0F;
-  committedViewportTranslationX_ = 0.0F;
-  committedViewportTranslationY_ = 0.0F;
+  coordinator_->reset();
+  viewportController_->reset();
   interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
 }
 
 interaction::ContactDisposition InkPlaygroundHost::pointerDisposition(
     const input::PointerKey& key) const noexcept {
-  const auto found = contactDispositions_.find(key);
-  return found == contactDispositions_.end()
-      ? interaction::ContactDisposition::kTerminal : found->second;
+  return coordinator_->disposition(key);
+}
+
+bool InkPlaygroundHost::applyViewportNavigation(
+    const interaction::ViewportNavigationSample& sample) noexcept {
+  return viewportController_->applyNavigation(sample);
 }
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,

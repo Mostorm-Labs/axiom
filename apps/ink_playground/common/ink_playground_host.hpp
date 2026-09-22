@@ -4,8 +4,8 @@
 #include "canvas/ink/ink_engine.hpp"
 #include "canvas/ink/preview_model.hpp"
 #include "canvas/interaction/interaction_runtime.hpp"
-#include "canvas/interaction/multi_contact_coordinator.hpp"
-#include "canvas/interaction/viewport_gesture.hpp"
+#include "canvas/interaction/canvas_interaction_coordinator.hpp"
+#include "canvas/interaction/viewport_interaction_controller.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/render_backend.hpp"
@@ -15,6 +15,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <utility>
 
 namespace canvas::ink_playground {
 
@@ -61,18 +62,23 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] interaction::ContactDisposition pointerDisposition(
       const input::PointerKey& key) const noexcept;
   [[nodiscard]] bool viewportGestureClaimed() const noexcept {
-    return contactCoordinator_.viewportClaimed();
+    return coordinator_->viewportClaimed();
   }
   [[nodiscard]] const interaction::ViewportGesture& viewportGesture() const noexcept {
-    return viewportState_;
+    return viewportController_->state();
+  }
+  [[nodiscard]] bool applyViewportNavigation(
+      const interaction::ViewportNavigationSample& sample) noexcept;
+  [[nodiscard]] std::pair<float, float> viewToContent(float x, float y) const noexcept {
+    return viewportController_->viewToContent(x, y);
   }
   [[nodiscard]] interaction::MultiContactPolicy multiContactPolicy() const noexcept {
-    return contactCoordinator_.policy();
+    return coordinator_->policy();
   }
   [[nodiscard]] bool setMultiContactPolicy(
       interaction::MultiContactPolicy policy) noexcept {
     if (!keyedStrokeIds_.empty()) return false;
-    return contactCoordinator_.setPolicy(policy);
+    return coordinator_->setPolicy(policy);
   }
 
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
@@ -122,16 +128,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::vector<std::vector<ink::StrokePoint>> committedStrokes_;
   bool runtimePreviewVisible_ = true;
   std::unordered_map<input::PointerKey, std::uint64_t, input::PointerKeyHash> keyedStrokeIds_;
-  interaction::MultiContactCoordinator contactCoordinator_{};
-  std::unordered_map<input::PointerKey, interaction::ContactDisposition,
-                     input::PointerKeyHash> contactDispositions_;
-  std::unordered_map<input::PointerKey, input::PointerSample,
-                     input::PointerKeyHash> contactSamples_;
-  interaction::TwoFingerViewportGesture viewportGesture_;
-  interaction::ViewportGesture viewportState_{};
-  float committedViewportScale_ = 1.0F;
-  float committedViewportTranslationX_ = 0.0F;
-  float committedViewportTranslationY_ = 0.0F;
+  std::unique_ptr<interaction::CanvasInteractionCoordinator> coordinator_;
+  std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
 };
 
 }  // namespace canvas::ink_playground

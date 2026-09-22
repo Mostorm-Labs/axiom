@@ -46,8 +46,15 @@ assert "_axiom_ink_brush_representation" in source
 assert "axiom_ink_brush_begin" in bridge_source
 assert "axiom_ink_brush_sample" in bridge_source
 assert "addEventListener(\"wheel\", handleWheel, { passive: false, capture: true })" in source
-assert "trackpadTranslationX -= event.deltaX" in source
-assert "trackpadTranslationY -= event.deltaY" in source
+assert "_axiom_ink_apply_viewport_wheel_pan" in source
+assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" in source
+assert "_axiom_ink_apply_viewport_gesture" in source
+assert "axiom_ink_apply_viewport_wheel_pan" in bridge_source
+assert "axiom_ink_apply_viewport_ctrl_wheel_zoom" in bridge_source
+assert "axiom_ink_apply_viewport_gesture" in bridge_source
+assert "let trackpadScale" not in source
+assert "let trackpadTranslationX" not in source
+assert "let trackpadTranslationY" not in source
 assert "viewportScale" in source
 assert "viewportTranslationX" in source
 assert "viewportTranslationY" in source
