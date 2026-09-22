@@ -11,6 +11,7 @@ struct VectorStrokeParameters final {
   float size = 1.0F;
   float thinning = 0.0F;
   float smoothing = 0.0F;
+  bool simulatePressure = false;
   float startTaper = 0.35F;
   float endTaper = 0.35F;
 };

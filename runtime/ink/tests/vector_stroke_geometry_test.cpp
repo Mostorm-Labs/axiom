@@ -56,4 +56,35 @@ int main() {
   assert(artifact);
   assert(artifact.commit.digest == oneShot.geometryDigest);
   assert(artifact.commit.primitives.size() == oneShot.vertices.size());
+
+  const std::array taperSamples{
+      BrushInputSample{0, 0, 0.5F, 0, 0, 1}, BrushInputSample{10, 0, 0.5F, 0, 0, 2},
+      BrushInputSample{20, 0, 0.5F, 0, 0, 3}, BrushInputSample{30, 0, 0.5F, 0, 0, 4},
+      BrushInputSample{40, 0, 0.5F, 0, 0, 5}, BrushInputSample{50, 0, 0.5F, 0, 0, 6},
+      BrushInputSample{60, 0, 0.5F, 0, 0, 7}, BrushInputSample{70, 0, 0.5F, 0, 0, 8},
+      BrushInputSample{80, 0, 0.5F, 0, 0, 9}};
+  const auto tapered = generateVectorStroke(
+      taperSamples, {.size = 12.0F, .thinning = 0.0F, .smoothing = 0.0F});
+  assert(tapered.vertices[0].width < tapered.vertices[2].width);
+  assert(tapered.vertices[2].width < tapered.vertices[4].width);
+  assert(tapered.vertices[tapered.vertices.size() - 1U].width <
+         tapered.vertices[tapered.vertices.size() - 3U].width);
+  assert(tapered.vertices[tapered.vertices.size() - 3U].width <
+         tapered.vertices[tapered.vertices.size() - 5U].width);
+
+  const auto fast = generateVectorStroke(
+      taperSamples, {.size = 12.0F, .thinning = 0.65F, .smoothing = 0.0F,
+                      .simulatePressure = true, .startTaper = 0.0F,
+                      .endTaper = 0.0F});
+  const std::array slowSamples{
+      BrushInputSample{0, 0, 0.5F, 0, 0, 1}, BrushInputSample{1, 0, 0.5F, 0, 0, 2},
+      BrushInputSample{2, 0, 0.5F, 0, 0, 3}, BrushInputSample{3, 0, 0.5F, 0, 0, 4},
+      BrushInputSample{4, 0, 0.5F, 0, 0, 5}, BrushInputSample{5, 0, 0.5F, 0, 0, 6},
+      BrushInputSample{6, 0, 0.5F, 0, 0, 7}, BrushInputSample{7, 0, 0.5F, 0, 0, 8},
+      BrushInputSample{8, 0, 0.5F, 0, 0, 9}};
+  const auto slow = generateVectorStroke(
+      slowSamples, {.size = 12.0F, .thinning = 0.65F, .smoothing = 0.0F,
+                     .simulatePressure = true, .startTaper = 0.0F,
+                     .endTaper = 0.0F});
+  assert(fast.vertices[8].width < slow.vertices[8].width);
 }

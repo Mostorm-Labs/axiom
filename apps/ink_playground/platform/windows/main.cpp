@@ -70,10 +70,12 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
     std::vector<arc_preview_primitive_v0> points; std::uint64_t lastSampleSequence = 0;
     std::vector<canvas::ink::BrushInputSample> semanticSamples;
     canvas::ink::VectorStrokeGeometry geometry;
+    bool simulatePressure = false;
     bool active = false; };
   std::unordered_map<std::uint64_t, ActivePreview> previews;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
   std::vector<PendingHandoff> pendingHandoffs;
+  std::vector<canvas::ink::VectorStrokeGeometry> canonicalGeometry;
   std::uint64_t deviceId = 0;
   canvas::input::ActivePointerRegistry pointerRegistry;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
@@ -91,11 +93,13 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
 
-void beginArcPreview(State& value, std::uint64_t pointerId) {
+void beginArcPreview(State& value, std::uint64_t pointerId,
+                     bool simulatePressure) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews[pointerId];
   preview = State::ActivePreview{};
   preview.stroke = value.pointerStrokes.at(pointerId);
+  preview.simulatePressure = simulatePressure;
   preview.active = true;
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = preview.stroke; begin.view_id = 1;
@@ -119,19 +123,20 @@ void pushArcPreview(State& value, std::uint64_t pointerId,
   if (preview.semanticSamples.empty() || preview.semanticSamples.size() == previousSampleCount) return;
   const auto geometry = canvas::ink::generateVectorStroke(
       preview.semanticSamples, {.size = 8.0F, .thinning = 0.65F,
-                                .smoothing = 0.35F});
+                                .smoothing = 0.35F,
+                                .simulatePressure = preview.simulatePressure});
   preview.geometry = geometry;
   preview.points = canvas::ink_playground::windows_input::vectorGeometryToArcPoints(geometry);
-  const auto appendStart = previousSampleCount;
+  const auto appendStart = preview.semanticSamples.size() > 0U
+                               ? preview.semanticSamples.size() - 1U : 0U;
   const auto appended = preview.points.size() > appendStart
-                            ? preview.points.size() - appendStart : preview.points.size();
+                            ? preview.points.size() - appendStart : 0U;
   if (appended == 0U) return;
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
   update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = preview.stroke;
   update.preview_revision = ++preview.revision;
   update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
-  update.truncate_confirmed_to = static_cast<std::uint32_t>(
-      geometry.stableVertexCount < appendStart ? geometry.stableVertexCount : appendStart);
+  update.truncate_confirmed_to = static_cast<std::uint32_t>(appendStart);
   update.confirmed_append = preview.points.data() + update.truncate_confirmed_to;
   update.confirmed_append_count = static_cast<std::uint32_t>(
       preview.points.size() - update.truncate_confirmed_to);
@@ -171,6 +176,7 @@ void commitArcHandoff(State& value, std::uint64_t pointerId) {
   arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, preview.stroke, revision,
                                  preview.stroke, value.previewGeneration, {1, preview.stroke}};
   if (value.previewBridge->CanonicalCommitted(commit) != arc::Status::kOk) return;
+  value.canonicalGeometry.push_back(preview.geometry);
   preview.active = false;
   value.pendingHandoffs.push_back({preview.stroke, revision});
   value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
@@ -207,19 +213,9 @@ bool acknowledgeCanonicalVisible(State& value) {
 bool renderCanonical(State& value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   if (value.canonicalRenderer == nullptr) return false;
-  std::vector<canvas::ink::VectorStrokeGeometry> geometry;
-  for (const auto& stroke : value.host->canonicalStrokes()) {
-    std::vector<canvas::ink::BrushInputSample> samples;
-    samples.reserve(stroke.size());
-    std::uint64_t sequence = 0;
-    for (const auto& point : stroke)
-      samples.push_back({point.x, point.y, point.pressure, 0.0F, 0.0F, ++sequence});
-    geometry.push_back(canvas::ink::generateVectorStroke(
-        samples, {.size = 8.0F, .thinning = 0.65F, .smoothing = 0.35F}));
-  }
   const auto& viewport = value.host->viewportGesture();
   const auto result = value.canonicalRenderer->submitVectorGeometry(
-      geometry, canvas::render::CanonicalViewportTransform{
+      value.canonicalGeometry, canvas::render::CanonicalViewportTransform{
           viewport.scale, viewport.translationX, viewport.translationY});
   if (result.code != canvas::render::BackendSubmissionCode::kAccepted) return false;
   if (value.pendingHandoffs.empty()) return true;
@@ -276,7 +272,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     ++value.stroke;
     value.pointerStrokes[kMousePointerId] = value.stroke;
     if (!value.host->beginStroke(value.activeKeys.at(kMousePointerId), value.stroke)) return false;
-    beginArcPreview(value, kMousePointerId);
+    beginArcPreview(value, kMousePointerId, true);
     SetCapture(window);
   }
 
@@ -525,7 +521,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       ++value->stroke;
       value->pointerStrokes[pointerId] = value->stroke;
       if (!value->host->beginStroke(value->activeKeys.at(pointerId), value->stroke)) return 0;
-      beginArcPreview(*value, pointerId);
+      beginArcPreview(*value, pointerId, info.pointerType != PT_PEN);
     }
     std::vector<POINTER_INFO> pointerHistory;
     UINT32 pointerHistoryCount = 0;
