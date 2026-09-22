@@ -25,11 +25,20 @@
   "checks": {
     "RepositoryIdentityPreflight": "PASS",
     "AuthoritySourceBindingPreflight": "PASS",
-    "PackageBindingPreflight": "PASS_PENDING_MATERIALIZATION_REF",
+    "PackageBindingPreflight": "PASS",
     "EvidenceContractPreflight": "PASS",
     "ClosureContractPreflight": "PASS",
     "ScopeConflict": false,
     "UnresolvedSemanticDecision": false
   },
-  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION after exact package materialization ref is resolved"
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION",
+  "package_materialization_ref": "973e3e049a8362fbdced0f1d33ce6a9358b3f1ac",
+  "package_ref": ".aegis/packages/GT-G4-5-09V/package.json",
+  "hash_validation": {
+    "authority.lock.json": "PASS",
+    "verification.lock.json": "PASS",
+    "execution-contract.json": "PASS",
+    "implementation-context.md": "PASS",
+    "evidence-contract.json": "PASS"
+  }
 }
