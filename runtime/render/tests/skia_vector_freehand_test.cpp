@@ -1,7 +1,9 @@
 #include "canvas/render/skia_ink_backend.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cassert>
+#include <vector>
 
 int main() {
   const std::array samples{
@@ -23,4 +25,12 @@ int main() {
   assert(backend.submitVectorGeometry(std::span(&geometry, 1)).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(backend.rasterizationCount() == count);
+
+  const auto normalPixels = std::vector<std::uint8_t>(backend.rgba().begin(),
+                                                       backend.rgba().end());
+  backend.setDiagnosticColor(true);
+  assert(backend.submitVectorGeometry(std::span(&geometry, 1)).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(backend.rasterizationCount() == count + 1U);
+  assert(!std::equal(normalPixels.begin(), normalPixels.end(), backend.rgba().begin()));
 }

@@ -475,12 +475,16 @@ bool validBrush(const BrushDescriptor& brush, bool dab_representation) noexcept 
     }
     switch (brush.brush_family_id) {
         case 1U:
+            if ((brush.brush_version != 1U && brush.brush_version != 2U) ||
+                dab_representation || brush.texture_resource_id.has_value()) {
+                return false;
+            }
+            return brush.blend_mode == BrushBlendMode::kNormal;
         case 2U:
             if (brush.brush_version != 1U || dab_representation || brush.texture_resource_id.has_value()) {
                 return false;
             }
-            return (brush.brush_family_id == 1U && brush.blend_mode == BrushBlendMode::kNormal) ||
-                   (brush.brush_family_id == 2U && brush.blend_mode == BrushBlendMode::kHighlighter);
+            return brush.blend_mode == BrushBlendMode::kHighlighter;
         case 3U:
             return brush.brush_version == 1U && dab_representation &&
                    brush.blend_mode == BrushBlendMode::kNormal &&

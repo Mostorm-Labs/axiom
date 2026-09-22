@@ -45,7 +45,11 @@ class SkiaInkBackend final {
     [[nodiscard]] BackendSubmissionResult submitVectorGeometry(
         std::span<const canvas::ink::VectorStrokeGeometry> geometry,
         CanonicalViewportTransform viewport = {});
-    void setDiagnosticColor(bool enabled) noexcept { diagnosticColor_ = enabled; }
+    void setDiagnosticColor(bool enabled) noexcept {
+        if (diagnosticColor_ == enabled) return;
+        diagnosticColor_ = enabled;
+        hasSubmission_ = false;
+    }
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }
     [[nodiscard]] std::uint32_t height() const noexcept { return height_; }

@@ -132,8 +132,10 @@ TEST(LeafStructureValidation, EnforcesStrokeCardinalityRepresentationAndDabDomai
         ObjectKind::kVectorStroke, dabStroke())).ok());
     EXPECT_FALSE(validatePayloadStructure(strokeOperation(
         ObjectKind::kDabStroke, vectorStroke())).ok());
-    EXPECT_FALSE(validatePayloadStructure(strokeOperation(
+    EXPECT_TRUE(validatePayloadStructure(strokeOperation(
         ObjectKind::kVectorStroke, vectorStroke(1U, 2U))).ok());
+    EXPECT_FALSE(validatePayloadStructure(strokeOperation(
+        ObjectKind::kVectorStroke, vectorStroke(2U, 2U))).ok());
     EXPECT_FALSE(validatePayloadStructure(strokeOperation(
         ObjectKind::kDabStroke, dabStroke(3U, 2U))).ok());
 }
