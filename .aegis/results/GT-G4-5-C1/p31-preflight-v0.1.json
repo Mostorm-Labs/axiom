@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "stage": "P31",
+  "status": "PASS_PENDING_MATERIALIZATION_REF",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "task_anchor": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+    "accepted_c0_result": "d861e05e18a0665c0c91c7523925b3990bb0c88e",
+    "anchor_relation": "control-only descendant of accepted C0 result",
+    "execution_ref": "codex/g4-5-cross-platform-interaction-ingress"
+  },
+  "authority": {
+    "c0_control_review": "ACCEPTED",
+    "c1_architecture": "CURRENT",
+    "c1_p30": "CURRENT",
+    "unresolved_semantic_decision": false
+  },
+  "baseline": {
+    "common_runtime_semantics": "C0 accepted",
+    "web_ingress_fragmented": true,
+    "android_ingress_uses_arc_as_canonical_bus": true,
+    "windows_ingress_interprets_runtime_semantics": true,
+    "apple_adapter_missing": true
+  },
+  "checks": {
+    "RepositoryIdentityPreflight": "PASS",
+    "AuthoritySourceBindingPreflight": "PASS",
+    "BaselineBindingPreflight": "PASS",
+    "EvidenceContractPreflight": "PASS",
+    "ClosureContractPreflight": "PASS",
+    "PackageBindingPreflight": "PASS_PENDING_MATERIALIZATION_REF",
+    "ScopeConflict": false,
+    "UnresolvedSemanticDecision": false
+  },
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION after exact package materialization and local SHA validation"
+}
