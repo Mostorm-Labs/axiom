@@ -1,0 +1,802 @@
+{
+  "schema_version": "0.1",
+  "reference_id": "perfect-freehand-176e00f",
+  "required_fixtures": [
+    {
+      "id": "single_point_dot",
+      "class": "normal",
+      "points": [
+        [
+          10,
+          10,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "two_point_line",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          48,
+          12,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "straight_real_pressure",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.2
+        ],
+        [
+          20,
+          0,
+          0.3
+        ],
+        [
+          40,
+          0,
+          0.45
+        ],
+        [
+          60,
+          0,
+          0.6
+        ],
+        [
+          80,
+          0,
+          0.8
+        ],
+        [
+          100,
+          0,
+          0.95
+        ]
+      ],
+      "options": {
+        "size": 18,
+        "thinning": 0.75,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "smooth_curve",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          20,
+          8,
+          0.5
+        ],
+        [
+          40,
+          30,
+          0.5
+        ],
+        [
+          60,
+          55,
+          0.5
+        ],
+        [
+          90,
+          70,
+          0.5
+        ],
+        [
+          120,
+          72,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 14,
+        "thinning": 0.5,
+        "smoothing": 0.65,
+        "streamline": 0.35,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "simulated_pressure_speed",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          42,
+          0
+        ],
+        [
+          72,
+          0
+        ],
+        [
+          90,
+          0
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": true,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "sparse_zigzag",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          70,
+          35,
+          0.5
+        ],
+        [
+          18,
+          82,
+          0.5
+        ],
+        [
+          95,
+          122,
+          0.5
+        ],
+        [
+          30,
+          168,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 12,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "dense_zigzag",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          14,
+          7,
+          0.5
+        ],
+        [
+          28,
+          14,
+          0.5
+        ],
+        [
+          20,
+          28,
+          0.5
+        ],
+        [
+          12,
+          42,
+          0.5
+        ],
+        [
+          28,
+          54,
+          0.5
+        ],
+        [
+          44,
+          66,
+          0.5
+        ],
+        [
+          34,
+          80,
+          0.5
+        ],
+        [
+          24,
+          94,
+          0.5
+        ],
+        [
+          42,
+          106,
+          0.5
+        ],
+        [
+          60,
+          118,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 12,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "sharp_turn_normal",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          50,
+          0,
+          0.5
+        ],
+        [
+          20,
+          32,
+          0.5
+        ],
+        [
+          48,
+          62,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 10,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "duplicate_points",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          20,
+          0,
+          0.5
+        ],
+        [
+          20,
+          0,
+          0.5
+        ],
+        [
+          40,
+          10,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "taper_both_ends",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.4
+        ],
+        [
+          16,
+          3,
+          0.45
+        ],
+        [
+          32,
+          8,
+          0.55
+        ],
+        [
+          50,
+          16,
+          0.65
+        ],
+        [
+          70,
+          22,
+          0.7
+        ],
+        [
+          92,
+          24,
+          0.75
+        ]
+      ],
+      "options": {
+        "size": 12,
+        "thinning": 0.6,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": 24
+        },
+        "end": {
+          "cap": true,
+          "taper": 36
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "round_caps",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          30,
+          0,
+          0.5
+        ],
+        [
+          60,
+          12,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 20,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "flat_caps",
+      "class": "normal",
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          30,
+          0,
+          0.5
+        ],
+        [
+          60,
+          12,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 20,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": false,
+          "taper": false
+        },
+        "end": {
+          "cap": false,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "high_dpi_coordinates",
+      "class": "normal",
+      "points": [
+        [
+          1000.125,
+          800.5,
+          0.3
+        ],
+        [
+          1024.625,
+          812.75,
+          0.5
+        ],
+        [
+          1052.875,
+          846.125,
+          0.8
+        ],
+        [
+          1090.5,
+          860.375,
+          0.6
+        ]
+      ],
+      "options": {
+        "size": 13.5,
+        "thinning": 0.7,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "long_wave_512",
+      "class": "normal",
+      "generator": {
+        "kind": "formula",
+        "count": 512,
+        "x": "i*2.0",
+        "y": "60.0*sin(i*0.08)+0.015*i",
+        "pressure": "0.5+0.35*sin(i*0.031)"
+      },
+      "options": {
+        "size": 9,
+        "thinning": 0.65,
+        "smoothing": 0.55,
+        "streamline": 0.4,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "known_consecutive_sharp_112",
+      "class": "REFERENCE_KNOWN_LIMITATION",
+      "source_issue": 112,
+      "points": [
+        [
+          0,
+          78.5,
+          0.5
+        ],
+        [
+          176.88,
+          67.52,
+          0.5
+        ],
+        [
+          168.8,
+          121.46,
+          0.5
+        ],
+        [
+          210.15,
+          83.46,
+          0.5
+        ],
+        [
+          173.42,
+          141.42,
+          0.5
+        ],
+        [
+          171.35,
+          156.35,
+          0.5
+        ],
+        [
+          187.66,
+          143.84,
+          0.5
+        ],
+        [
+          159.42,
+          190.15,
+          0.5
+        ],
+        [
+          198.97,
+          169.7,
+          0.5
+        ],
+        [
+          233.96,
+          138.3,
+          0.5
+        ],
+        [
+          225.52,
+          162.55,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "known_backtrack_48",
+      "class": "REFERENCE_KNOWN_LIMITATION",
+      "source_issue": 48,
+      "points": [
+        [
+          0,
+          0,
+          0.5
+        ],
+        [
+          40,
+          0,
+          0.5
+        ],
+        [
+          80,
+          0,
+          0.5
+        ],
+        [
+          55,
+          2,
+          0.5
+        ],
+        [
+          30,
+          4,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 16,
+        "thinning": 0.5,
+        "smoothing": 0.5,
+        "streamline": 0.5,
+        "simulatePressure": false,
+        "start": {
+          "cap": true,
+          "taper": false
+        },
+        "end": {
+          "cap": true,
+          "taper": false
+        },
+        "last": true
+      }
+    },
+    {
+      "id": "known_minimal_u_32",
+      "class": "REFERENCE_KNOWN_LIMITATION",
+      "source_issue": 32,
+      "points": [
+        [
+          10,
+          10,
+          0.5
+        ],
+        [
+          10,
+          86,
+          0.5
+        ],
+        [
+          62,
+          86,
+          0.5
+        ],
+        [
+          62,
+          10,
+          0.5
+        ]
+      ],
+      "options": {
+        "size": 4,
+        "thinning": 0,
+        "smoothing": 0,
+        "streamline": 0,
+        "simulatePressure": false,
+        "start": {
+          "cap": false,
+          "taper": 0
+        },
+        "end": {
+          "cap": false,
+          "taper": 0
+        },
+        "last": true
+      }
+    }
+  ],
+  "fixture_rules": {
+    "expected_outputs_must_be_generated_by_pinned_upstream": true,
+    "cpp_expected_outputs_may_not_be_self_generated": true,
+    "normal_and_known_limitation_fixtures_both_require_reference_parity": true,
+    "known_limitation_does_not_mean_product_quality_acceptance": true
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-R01",
+  "obligations": [
+    {
+      "id": "R0-V1",
+      "requirement": "The exact perfect-freehand commit and required source blobs are content-bound before fixture generation.",
+      "oracle": "PFSourceBinding",
+      "acceptance": [
+        "commit equals pinned reference",
+        "all required blob SHAs match reference.lock.json",
+        "no default-branch/latest fallback"
+      ],
+      "evidence_required": [
+        "reference-source-manifest.json"
+      ]
+    },
+    {
+      "id": "R0-V2",
+      "requirement": "MIT attribution accompanies copied/adapted reference material.",
+      "oracle": "PFLicenseAttribution",
+      "acceptance": [
+        "license blob identity is recorded",
+        "MIT text and copyright notice are retained in verification/reference/perfect_freehand"
+      ],
+      "evidence_required": [
+        "reference-license-record.json"
+      ]
+    },
+    {
+      "id": "R0-V3",
+      "requirement": "The input/options corpus is deterministic and matches corpus-plan.json.",
+      "oracle": "PFCorpusIdentity",
+      "acceptance": [
+        "all required fixture IDs exist",
+        "normal and REFERENCE_KNOWN_LIMITATION classes are preserved",
+        "corpus digest is stable",
+        "long_wave_512 is materialized to concrete input points"
+      ],
+      "evidence_required": [
+        "corpus-inputs.json"
+      ]
+    },
+    {
+      "id": "R0-V4",
+      "requirement": "Expected StrokePoint and outline fixtures are produced by the pinned upstream implementation, not by the C++ port.",
+      "oracle": "PFReferenceOutputProvenance",
+      "acceptance": [
+        "every fixture binds upstream commit, input ID, source manifest and generator provenance",
+        "expected point counts are recorded",
+        "generation happens before production C++ kernel mutation"
+      ],
+      "evidence_required": [
+        "reference-stroke-points.json",
+        "reference-outlines.json",
+        "reference-generation-record.json"
+      ]
+    },
+    {
+      "id": "R0-V5",
+      "requirement": "Known upstream failure modes are separated from normal parity fixtures without changing pinned behavior.",
+      "oracle": "PFKnownLimitationRegistry",
+      "acceptance": [
+        "issues 112,58,48,57,85,32 are recorded",
+        "known-limit fixtures remain parity obligations",
+        "no silent behavioral fix under the reference version"
+      ],
+      "evidence_required": [
+        "known-limitations.json",
+        "r0-reference-freeze-result.json"
+      ]
+    },
+    {
+      "id": "R1-V1",
+      "requirement": "C++ conditioned StrokePoint output matches the pinned source.",
+      "oracle": "PFStrokePointParity",
+      "acceptance": [
+        "point count/order exact",
+        "coordinates/vectors/distance/runningLength max abs error <= 1e-6",
+        "pressure max abs error <= 1e-9"
+      ],
+      "evidence_required": [
+        "r1-stroke-point-parity.json"
+      ]
+    },
+    {
+      "id": "R1-V2",
+      "requirement": "C++ ordered outline output matches the pinned source.",
+      "oracle": "PFOutlineParity",
+      "acceptance": [
+        "outline point count/order exact",
+        "outline coordinates max abs error <= 1e-5",
+        "final winding follows pinned source"
+      ],
+      "evidence_required": [
+        "r1-outline-parity.json"
+      ]
+    },
+    {
+      "id": "R1-V3",
+      "requirement": "Real and simulated pressure behavior matches the pinned source.",
+      "oracle": "PFPressureParity",
+      "acceptance": [
+        "real-pressure fixtures pass",
+        "simulated-pressure fixture passes",
+        "initial-pressure averaging is covered"
+      ],
+      "evidence_required": [
+        "r1-special-cases.json"
+      ]
+    },
+    {
+      "id": "R1-V4",
+      "requirement": "One-point and two-point special handling matches the pinned source.",
+      "oracle": "PFSingleTwoPointParity",
+      "acceptance": [
+        "single-point synthetic behavior passes",
+        "two-point subdivision passes",
+        "dot output behavior passes"
+      ],
+      "evidence_required": [
+        "r1-special-cases.json"
+      ]
+    },
+    {
+      "id": "R1-V5",
+      "requirement": "Taper and cap semantics match the pinned source.",
+      "oracle": "PFTaperCapParity",
+      "acceptance": [
+        "distance-based taper passes",
+        "round caps pass",
+        "flat caps pass",
+        "end-noise behavior covered by fixture or focused test"
+      ],
+      "evidence_required": [
+        "r1-special-cases.json"
+      ]
+    },
+    {
+      "id": "R1-V6",
+      "requirement": "Normal sharp-corner behavior matches the pinned source.",
+      "oracle": "PFCornerParity",
+      "acceptance": [
+        "negative-dot-product sharp-turn path passes",
+        "rounded corner-cap construction passes"
+      ],
+      "evidence_required": [
+        "r1-special-cases.json"
+      ]
+    },
+    {
+      "id": "R1-V7",
+      "requirement": "Known-limit fixtures reproduce the pinned source and remain labeled.",
+      "oracle": "PFKnownLimitationParity",
+      "acceptance": [
+        "known_consecutive_sharp_112 passes parity",
+        "known_backtrack_48 passes parity",
+        "known_minimal_u_32 passes parity",
+        "no product-quality PASS is inferred"
+      ],
+      "evidence_required": [
+        "r1-known-limitations-parity.json"
+      ]
+    },
+    {
+      "id": "R1-V8",
+      "requirement": "The one-shot C++ evaluator is deterministic on repeated execution.",
+      "oracle": "PFDeterminism",
+      "acceptance": [
+        "same build/toolchain produces identical counts and scalar bit patterns or documented deterministic normalized digest",
+        "no random state/time/platform input"
+      ],
+      "evidence_required": [
+        "r1-determinism.json"
+      ]
+    },
+    {
+      "id": "R1-V9",
+      "requirement": "R0+R1 does not mutate renderer/platform/Arc/canonical semantics and preserves relevant ink regressions.",
+      "oracle": "R01ScopeAndRegression",
+      "acceptance": [
+        "diff stays within authorized scope",
+        "no Skia/platform/Arc/semantic files changed",
+        "existing G45ProgrammableBrush and relevant runtime/ink tests pass"
+      ],
+      "evidence_required": [
+        "scope-diff.json",
+        "regression-summary.json",
+        "result.json"
+      ]
+    }
+  ],
+  "tolerance_contract": {
+    "stroke_point_scalar_abs_max": 0.000001,
+    "pressure_abs_max": 1e-9,
+    "outline_coordinate_abs_max": 0.00001,
+    "counts_and_order": "exact",
+    "non_finite_classification": "exact"
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "sequence": [
+      "Complete R0 reference fixture materialization first.",
+      "Add R1 acceptance tests against the intended C++ kernel API without implementing the production kernel.",
+      "Run the tests against the pre-change production code."
+    ],
+    "expected_failure": "R1 kernel API/implementation is absent, so parity tests must not pass.",
+    "observation_seam": "runtime/ink pure vector reference kernel tests",
+    "failure_if_unexpected_green": "VERIFICATION_DESIGN_DEFECT"
+  }
+}
