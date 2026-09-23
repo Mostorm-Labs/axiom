@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P12_P13_AUTHORITY_AMENDMENT_PROPOSAL",
+  "amendment_id": "GT-G4-5-C2-P12-P13-v0.2",
+  "status": "PROPOSED_PENDING_CONTROL_REVIEW",
+  "classification": "AUTHORITY_CONFLICT_REQUIRES_EXPLICIT_SUPERSESSION",
+  "proposal_ref": "docs/planning/GT_G4_5_C2_BRUSH_RESOLUTION_CANONICAL_AMENDMENT_V0_2.md",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "observed_revision_before_commit": "b3138f5af25d2fdbca08e4f95d3666e3218de7dc",
+    "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a"
+  },
+  "current_authority_preserved": [
+    ".aegis/packages/GT-G4-5/authority.lock.json",
+    ".aegis/packages/GT-G4-5-09V/authority.lock.json",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-stroke-wire-schema-v0.1.md",
+    "docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-family-registry-v1-release-v0.1.md",
+    ".aegis/packages/GT-G4-5-C2/package.json"
+  ],
+  "decisions_proposed": {
+    "resolution": "Complete explicit VectorReferenceV1 parameter set; no brush-name defaults or implicit pressure-to-thinning mapping",
+    "r1_binding": "Pinned perfect-freehand 176e00f2399f4969e1b0965c5921d96a3e50ce9f; existing R1 kernel remains unchanged",
+    "easing": "versioned Linear easing identifier only",
+    "taper": "disabled and fixed for the proposed new profile; editable taper deferred",
+    "seed": "explicit uint64, unchanged, no host RNG",
+    "canonical_operation": "retain AddStroke mutation kind; BrushCommitIntent is transient",
+    "canonical_storage": "typed additive versioned VectorReference payload carrying resolved options and confirmed samples",
+    "legacy": "existing v1 StrokeRecord and interpreter remain unchanged; old readers reject unsupported new payloads"
+  },
+  "required_control_decisions": [
+    "accept or reject additive semantic/wire extension despite the current 09V no-expansion clause",
+    "accept exact complete v2 parameter/profile mapping and disabled taper policy",
+    "accept numeric representation, canonicalization and exact equality rules",
+    "accept compatibility/version dispatch, old-reader rejection and codec/validator impact",
+    "accept P20 V11/V12 render observation seam and tolerance"
+  ],
+  "package_state": {
+    "c2_v0_1": "TASK_PACKAGE_DEFECT preserved",
+    "c2_p31_v0_2": "NOT_REGENERATED",
+    "p32_entry": "NOT_AUTHORIZED",
+    "production_changes": false,
+    "gate_pass_claimed": false
+  },
+  "next_action": "CONTROL_REVIEW of this P12/P13 proposal. If accepted, complete the P12/P13 wire/registry annex and P20 V11/V12 proof lock, then regenerate GT-G4-5-C2-P31-v0.2."
+}
