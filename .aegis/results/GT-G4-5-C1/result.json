@@ -1,0 +1,26 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "READY_FOR_D0_PACKAGE_REVIEW",
+  "terminal_status": "READY_FOR_D0_PACKAGE_REVIEW",
+  "return_surface": "CONTROL_REVIEW",
+  "exact_revision": "WORKTREE_UNCOMMITTED",
+  "blocking_obligations": [],
+  "verification": {
+    "C1-V3": "PASS",
+    "C1-V4": "PASS",
+    "C1-V5": "PASS",
+    "C1CommonIngress": "PASS",
+    "C1CrossPlatformFixtureParity": "PASS",
+    "C1AppleContract": "PASS",
+    "C1LifecycleCancel": "PASS",
+    "C1ArcDependencyBoundary": "PASS",
+    "C1C0Regression": "PASS",
+    "scope-diff": "PASS",
+    "git-diff-check": "PASS"
+  },
+  "environment_notes": [
+    "No new hosted physical Android/Windows/Apple qualification was required by C1; no physical evidence was fabricated.",
+    "Repository-configured dependency-limited tests remain skipped as recorded by ctest."
+  ],
+  "reason": "Common ingress and platform ownership migration implemented for Web, Android and Windows while preserving BrushRuntime/Skia and Windows Arc preview/canonical presentation fanout; all blocking local oracles and regression tests pass. Exact pushed revision still pending."
+}

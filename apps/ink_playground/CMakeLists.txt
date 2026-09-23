@@ -1,6 +1,8 @@
 add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
-    common/platform_contract.cpp)
+    common/platform_contract.cpp
+    common/platform_interaction_controller.cpp
+    platform/apple/apple_input_adapter.cpp)
 target_include_directories(axiom_ink_playground_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/common
     ${CMAKE_CURRENT_SOURCE_DIR})
@@ -35,6 +37,15 @@ if(BUILD_TESTING)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
   add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
   add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
+  add_executable(axiom_c1_apple_input_contract_tests tests/c1_apple_input_contract_test.cpp)
+  target_link_libraries(axiom_c1_apple_input_contract_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_c1_apple_input_contract_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_c1_apple_input_contract_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_c1_apple_input_contract_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME C1AppleContract COMMAND axiom_c1_apple_input_contract_tests)
   if(WIN32)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp
@@ -83,5 +94,5 @@ if(EMSCRIPTEN)
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sUSE_WEBGL2=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_begin','_axiom_ink_batch','_axiom_ink_sample','_axiom_ink_commit','_axiom_ink_begin_pointer','_axiom_ink_pointer_sample','_axiom_ink_pointer_sample_phase','_axiom_ink_commit_pointer','_axiom_ink_cancel_pointer','_axiom_ink_brush_begin','_axiom_ink_brush_sample','_axiom_ink_brush_finish','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

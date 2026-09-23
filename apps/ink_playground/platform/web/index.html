@@ -191,18 +191,20 @@
     const coalesced = event.getCoalescedEvents ? event.getCoalescedEvents() : [];
     const list = coalesced.length === 0 ? [event] : coalesced;
     let generation = generations.get(event.pointerId) || 1;
-    if (phase === "down") { stroke += 1; started.add(event.pointerId); generation += 1; generations.set(event.pointerId, generation); const active = []; activeStrokes.set(event.pointerId, { points: active, stroke, generation, pointerId: event.pointerId, family: selectedBrushFamily }); module._axiom_ink_begin_pointer(host, webSource, event.pointerId, generation, stroke); module._axiom_ink_brush_begin(host, event.pointerId, selectedBrushFamily); }
+    if (phase === "down") { stroke += 1; started.add(event.pointerId); generation += 1; generations.set(event.pointerId, generation); const active = []; activeStrokes.set(event.pointerId, { points: active, stroke, generation, pointerId: event.pointerId, family: selectedBrushFamily }); }
     const activeStroke = activeStrokes.get(event.pointerId);
     if (!activeStroke) return;
     list.forEach(sample => {
       const point = canvasPoint(sample);
-      const phaseCode = phase === "down" ? 0 : phase === "up" ? 2 : phase === "cancel" ? 3 : 1;
+      const phaseCode = phase === "down" && sample === list[0] ? 0
+        : phase === "up" && sample === list[list.length - 1] ? 2
+        : phase === "cancel" ? 3 : 1;
       const pressure = sample.pressure || 0.5;
       const timeNs = Math.round(sample.timeStamp * 1000000);
-      module._axiom_ink_pointer_sample_phase(host, webSource, event.pointerId,
-        activeStroke.generation, ++sampleSequence, timeNs, point.viewX, point.viewY,
-        pressure, 0, phaseCode, nowNs());
-      module._axiom_ink_brush_sample(host, event.pointerId, sampleSequence, point.x, point.y, pressure);
+      const sequence = ++sampleSequence;
+      module._axiom_ink_platform_batch(host, webSource, event.pointerId, sequence, timeNs,
+        point.viewX, point.viewY, pressure, phaseCode, selectedBrushFamily,
+        point.x, point.y);
       runtimeBrush.set(event.pointerId, {
         size: module._axiom_ink_brush_size(host, event.pointerId),
         opacity: module._axiom_ink_brush_opacity(host, event.pointerId),
@@ -221,17 +223,14 @@
     }
     lastBatch = list.length;
     if (phase === "up") {
-      const committed = module._axiom_ink_commit_pointer(host, webSource, event.pointerId,
-        activeStroke.generation, activeStroke.stroke, activeStroke.stroke);
-      module._axiom_ink_brush_finish(host, event.pointerId);
-      if (committed && !viewportClaimed) strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });
+      if (!viewportClaimed) strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });
       runtimeBrush.delete(event.pointerId);
       started.delete(event.pointerId);
       activeStrokes.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     } else if (phase === "cancel") {
-      module._axiom_ink_cancel_pointer(host, webSource, event.pointerId,
-        activeStroke.generation);
+      module._axiom_ink_platform_batch(host, webSource, event.pointerId, ++sampleSequence,
+        nowNs(), 0, 0, 0, 3, selectedBrushFamily, 0, 0);
       started.delete(event.pointerId);
       activeStrokes.delete(event.pointerId);
       scheduleEvidenceSnapshot();

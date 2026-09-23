@@ -172,8 +172,6 @@ public final class InkPlaygroundView extends View {
             activeBrushFamily = selectedBrushFamily;
             Stroke active = new Stroke(); activeStrokes.put(pointerId, active);
             pointerStrokeIds.put(pointerId, strokeId);
-            nativeBegin(handle, pointerId, strokeId);
-            nativeBrushBegin(handle, pointerId, activeBrushFamily);
             emitPointer(event, pointerIndex, true, false);
         } else if (action == MotionEvent.ACTION_MOVE) {
             for (int pointerIndex = 0; pointerIndex < event.getPointerCount(); ++pointerIndex) {
@@ -231,9 +229,9 @@ public final class InkPlaygroundView extends View {
             final long sampleSequence = ++sequence;
             trace.add(new TraceSample(activeStrokeId, pointerId, sampleSequence, x, y, pressure,
                     major, minor, lastTool, timeNs));
-            nativeMotion(handle, pointerId, sampleSequence, timeNs, viewX, viewY, pressure,
-                    down && i == 0 ? 1 : 0, up && i == history ? 1 : 0, tool);
-            nativeBrushSample(handle, pointerId, sampleSequence, x, y, pressure);
+            nativePlatformBatch(handle, pointerId, sampleSequence, timeNs, viewX, viewY, pressure,
+                    down && i == 0 ? 1 : up && i == history ? 3 : 2,
+                    activeBrushFamily, x, y);
             final boolean claimedByViewport = nativeViewportClaimed(handle) != 0;
             if (!claimedByViewport) {
                 float brushSize = nativeBrushSize(handle, pointerId);
@@ -245,10 +243,8 @@ public final class InkPlaygroundView extends View {
         }
         batchCount = count;
         if (up) {
-            final boolean committed = nativeCommit(handle, pointerId, activeStrokeId) != 0;
-            final boolean brushFinished = nativeBrushFinish(handle, pointerId) != 0;
-            if (committed && brushFinished) appendBrushEvidence(pointerId);
-            if (committed) strokes.add(active);
+            appendBrushEvidence(pointerId);
+            strokes.add(active);
             activeStrokes.remove(pointerId);
             pointerStrokeIds.remove(pointerId);
             scheduleEvidenceSnapshot();
@@ -378,15 +374,10 @@ public final class InkPlaygroundView extends View {
 
     private static native long nativeCreate(int width, int height);
     private static native void nativeDestroy(long handle);
-    private static native int nativeBegin(long handle, int pointerId, long strokeId);
-    private static native int nativeMotion(long handle, int pointerId, long sequence, long timeNs, float x, float y, float pressure, int down, int up, int tool);
-    private static native int nativeCommit(long handle, int pointerId, long strokeId);
+    private static native int nativePlatformBatch(long handle, int pointerId, long sequence, long timeNs, float x, float y, float pressure, int phase, int family, float contentX, float contentY);
     private static native int nativeResize(long handle, int width, int height);
     private static native int nativeSurfaceLost(long handle);
     private static native int nativeCancelAll(long handle);
-    private static native int nativeBrushBegin(long handle, int pointerId, int family);
-    private static native int nativeBrushSample(long handle, int pointerId, long sequence, float x, float y, float pressure);
-    private static native int nativeBrushFinish(long handle, int pointerId);
     private static native long nativeBrushDigest(long handle);
     private static native long nativeBrushPrimitiveCount(long handle);
     private static native int nativeBrushFamily(long handle);

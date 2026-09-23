@@ -70,9 +70,66 @@ bool initBrushes(Handle handle) {
   }
   return true;
 }
+
+int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointer,
+                        std::uint64_t sequence, std::uint64_t timestampNs,
+                        float x, float y, float pressure, int phase, int family,
+                        float contentX, float contentY) {
+  auto* target = host(value);
+  const auto brushIt = brushes().find(value);
+  if (target == nullptr || brushIt == brushes().end()) return 0;
+  canvas::input::PlatformPointerBatch batch;
+  batch.samples.push_back({source, pointer, sequence, timestampNs, x, y, pressure,
+                           0.0F, 0.0F, {}, {},
+                           canvas::input::SampleProvenance::kConfirmedCurrent,
+                           phase == 0 ? canvas::input::PointerPhase::kDown
+                           : phase == 2 ? canvas::input::PointerPhase::kUp
+                           : phase == 3 ? canvas::input::PointerPhase::kCancel
+                                        : canvas::input::PointerPhase::kMove});
+  if (!target->acceptPlatformBatch(batch, timestampNs)) return 0;
+  auto& state = brushIt->second;
+  if (phase == 0) {
+    const auto program = state.programs.find(static_cast<std::uint32_t>(family));
+    if (program == state.programs.end()) return 0;
+    const auto session = ++state.serial;
+    if (!state.runtime.begin({session}, *program->second,
+                             0x4500ULL + static_cast<std::uint64_t>(family) + session)) return 0;
+    state.sessions[pointer] = session;
+    state.family = static_cast<std::uint32_t>(family);
+  }
+  const auto session = state.sessions.find(pointer);
+  if (session != state.sessions.end() && !target->viewportGestureClaimed()) {
+    const canvas::ink::BrushInputSample sample{contentX, contentY, pressure, 0.0F, 0.0F, sequence};
+    const auto result = state.runtime.append({session->second},
+        std::span<const canvas::ink::BrushInputSample>(&sample, 1));
+    if (!result) return 0;
+    if (!result.preview.primitives.empty()) state.primitives[pointer] = result.preview.primitives.back();
+  }
+  if (phase == 2) {
+    if (session == state.sessions.end()) return 0;
+    const auto result = state.runtime.finish({session->second});
+    if (!result) return 0;
+    state.digest = result.commit.digest;
+    state.primitiveCount = result.commit.primitives.size();
+    for (const auto& primitive : result.commit.primitives) state.primitives[pointer] = primitive;
+    state.sessions.erase(session);
+  } else if (phase == 3 && session != state.sessions.end()) {
+    (void)state.runtime.cancel({session->second});
+    state.sessions.erase(session);
+    state.primitives.erase(pointer);
+  }
+  return 1;
+}
 }
 
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
+    std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
+    std::uint64_t sequence, std::uint64_t timestampNs, float x, float y,
+    float pressure, int phase, int family, float contentX, float contentY) {
+  return submitPlatformBatch(value, source, pointer, sequence, timestampNs, x, y,
+                             pressure, phase, family, contentX, contentY);
+}
 EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_ink_create() {
   static Handle nextHandle = 1U;
   while (nextHandle == 0U || hosts().contains(nextHandle)) ++nextHandle;

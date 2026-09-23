@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/input/input_router.hpp"
+#include "canvas/input/platform_input_contract.hpp"
 #include "canvas/ink/ink_engine.hpp"
 #include "canvas/ink/preview_model.hpp"
 #include "canvas/interaction/interaction_runtime.hpp"
@@ -9,11 +10,13 @@
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/render_backend.hpp"
+#include "platform_interaction_controller.hpp"
 
 #include <cstddef>
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <optional>
 #include <unordered_map>
 #include <utility>
 
@@ -53,6 +56,18 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool beginStroke(const input::PointerKey& key, std::uint64_t strokeId) noexcept;
   [[nodiscard]] bool accept(const input::PointerSampleBatch& batch,
                             std::uint64_t observationTimeNs);
+  [[nodiscard]] bool acceptPlatformBatch(const input::PlatformPointerBatch& batch,
+                                         std::uint64_t observationTimeNs);
+  [[nodiscard]] std::optional<input::PointerKey> platformKey(
+      input::InputSourceId source, input::PointerId pointer) const noexcept {
+    return platformController_.keyFor(source, pointer);
+  }
+  [[nodiscard]] std::optional<std::uint64_t> platformStrokeId(
+      const input::PointerKey& key) const noexcept {
+    const auto it = keyedStrokeIds_.find(key);
+    return it == keyedStrokeIds_.end() ? std::nullopt
+                                       : std::optional<std::uint64_t>(it->second);
+  }
   [[nodiscard]] bool commitStroke(std::uint64_t strokeId,
                                   std::uint64_t operationId) noexcept;
   [[nodiscard]] bool commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
@@ -130,6 +145,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unordered_map<input::PointerKey, std::uint64_t, input::PointerKeyHash> keyedStrokeIds_;
   std::unique_ptr<interaction::CanvasInteractionCoordinator> coordinator_;
   std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
+  PlatformInteractionController platformController_;
+  std::uint64_t nextPlatformStrokeId_ = 1;
 };
 
 }  // namespace canvas::ink_playground

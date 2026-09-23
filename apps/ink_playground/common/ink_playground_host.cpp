@@ -127,6 +127,39 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
   return true;
 }
 
+bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
+                                            std::uint64_t observationTimeNs) {
+  const auto routed = platformController_.submit(batch);
+  if (!routed.accepted && !routed.terminalCancel) return false;
+  std::unordered_map<input::PointerKey, input::PointerSampleBatch,
+                     input::PointerKeyHash> grouped;
+  for (const auto& sample : routed.normalized.samples) {
+    if (!sample.key.valid()) continue;
+    if (sample.phase == input::PointerPhase::kDown) {
+      if (!beginStroke(sample.key, nextPlatformStrokeId_++)) return false;
+    }
+    if (sample.phase != input::PointerPhase::kCancel) {
+      grouped[sample.key].samples.push_back(sample);
+    }
+  }
+  for (auto& [key, drawable] : grouped) {
+    (void)key;
+    if (!drawable.samples.empty() && !accept(drawable, observationTimeNs)) return false;
+  }
+  for (const auto& sample : routed.normalized.samples) {
+    if (sample.phase == input::PointerPhase::kUp) {
+      const auto it = keyedStrokeIds_.find(sample.key);
+      if (it != keyedStrokeIds_.end() && !commitStroke(sample.key, it->second, it->second)) {
+        return false;
+      }
+    } else if (sample.phase == input::PointerPhase::kCancel) {
+      (void)cancelStroke(sample.key);
+    }
+  }
+  if (routed.terminalCancel) cancelAllPointers();
+  return true;
+}
+
 bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   if (!keyedStrokeIds_.contains(key)) return false;
