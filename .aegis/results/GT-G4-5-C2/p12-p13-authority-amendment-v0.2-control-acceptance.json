@@ -1,0 +1,122 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "amendment_id": "GT-G4-5-C2-P12-P13-v0.2",
+  "stage": "P21_P23_AUTHORITY_ACCEPTANCE",
+  "status": "ACCEPTED_DESIGN_DIRECTION_PENDING_ANNEXES",
+  "decision_source": "explicit user acceptance in current control conversation",
+  "decision_quote": "接受这个扩展，继续吧",
+  "decision_kind": "USER_CONTROL_ACCEPTANCE_NOT_INDEPENDENT_GATE_REVIEW",
+  "accepted_proposal": "docs/planning/GT_G4_5_C2_BRUSH_RESOLUTION_CANONICAL_AMENDMENT_V0_2.md",
+  "accepted_proposal_revision": "eb294f5d5b527b4233b102083531fe367f926c26",
+  "accepted_proposal_sha256": "ca2a1b0bccd4381b9f5fd0f968ced408488aeda0b5902d2dd80be6b5739fe48a",
+  "accepted_at": "2026-09-23",
+  "supersession": {
+    "previous_authority": ".aegis/packages/GT-G4-5-09V/authority.lock.json",
+    "previous_restriction": "No canonical ObjectKind, Operation, StrokeRecord or BrushDescriptor schema expansion is authorized by 09V.",
+    "replacement_scope": "GT-G4-5-C2 VectorReference profile only",
+    "effect": "The blanket no-expansion constraint no longer blocks designing the accepted new profile. Actual wire changes require the remaining accepted annexes and a regenerated executable package. No existing package is executable under this record alone.",
+    "historical_bindings": [
+      {
+        "path": ".aegis/packages/GT-G4-5-09V/authority.lock.json",
+        "revision": "eb294f5d5b527b4233b102083531fe367f926c26",
+        "sha256": "cb1ce5beb45a86ebf4c6eebbfa6b884012c5e481550c4284e42e3ab7f713f9d8"
+      },
+      {
+        "path": ".aegis/packages/GT-G4-5-C2/authority.lock.json",
+        "revision": "eb294f5d5b527b4233b102083531fe367f926c26",
+        "sha256": "1073165f6492797cf71e503e401393c5c697d1437f952a105eb7416cec75f1c2"
+      }
+    ],
+    "additional_affected_constraints": [
+      "C2 v0.1 prohibition on canonical schema/StrokeRecord changes must be replaced in the future package, not ignored during P32",
+      "G4.5 legacy StrokeRecord-shape invariant continues to govern existing v1 records; new profile needs its own accepted versioned annex"
+    ],
+    "historical_documents_modified": false,
+    "upstream_notion_modified": false,
+    "reason": "The accepted C2 extension requires lossless persistence and replay of resolved VectorStroke execution parameters.",
+    "preserve": [
+      "All existing v1 BrushDescriptor/StrokeRecord encodings and replay behavior",
+      "Existing AddStroke operation kind and semantic mutation authority",
+      "Existing G4/G4.4 interaction semantics and R1 reference kernel",
+      "No DAB, wet-media, Arc-owned brush semantics or renderer GPU state in canonical data"
+    ]
+  },
+  "accepted_decisions": {
+    "profile": "VectorReferenceV1",
+    "parameter_source": "complete explicit parameter set; no brush-name or platform heuristic mapping",
+    "r1_binding": "perfect-freehand commit 176e00f2399f4969e1b0965c5921d96a3e50ce9f",
+    "easing": "Linear easingId only",
+    "taper": "fixed disabled for VectorReferenceV1",
+    "seed": "explicit uint64, no host RNG",
+    "operation": "retain AddStroke; CreateStrokeOperation is an internal builder action only",
+    "canonical_extension": "typed VectorReference payload with versioned dispatch; old v1 payloads unchanged",
+    "replay": "serialized resolved options plus confirmed samples are sufficient; no catalog/Arc/preview side table"
+  },
+  "accepted_numeric_semantics": {
+    "size": "explicit finite f64 > 0 in content-space units, subject to schema hard limits",
+    "thinning": "explicit finite f64 in [-1,1]",
+    "smoothing_streamline": "explicit finite f64 in [0,1]",
+    "canonicalization": "normalize negative zero; reject missing, non-finite, out-of-range or unsupported parameters; no clamp/default",
+    "resolution_equality": "exact normalized typed projection, not struct memory",
+    "last": "session-owned false during activity, true on seal/reconstruction",
+    "seed": "explicit uint64, zero valid; unchanged in canonical storage",
+    "pressure": "explicit absence or finite f64 [0,1], not persisted NaN; only adapter supplies R1 missing-pressure sentinel",
+    "outline": "R1 tolerance 1e-5 with exact count/order; not tolerance on durable data",
+    "not_yet_frozen": "wire tags/IDs, projection field order, compatibility version matrix, exact hard-limit bindings and renderer observation"
+  },
+  "five_axis_impact": {
+    "product": "Complete explicit new profile; Linear easing and disabled taper accepted. No legacy brush conversion or implicit initial preset.",
+    "semantic": "Typed durable options plus confirmed samples; preserve AddStroke/ObjectKind identities and v1 interpretation. Wire annex pending.",
+    "architecture": "Existing single Brush Engine, Core mutation authority and preview/canonical thread boundaries preserved. No R2/C4 redesign authorized.",
+    "implementation": "No production changes; C2 v0.1 remains blocked and v0.2 is not yet materialized.",
+    "verification": "V11/V12 objectives accepted; existing C2 obligations retained. Concrete P20 fixtures, oracle and render seam pending."
+  },
+  "pending_work_in_dependency_order": [
+    {
+      "owner": "aegis-modeling",
+      "stage": "P12_P13",
+      "deliverables": [
+        "Typed wire layout, registry IDs and field presence rules",
+        "Version matrix for operations, object records and snapshots with old-reader rejection",
+        "Canonical projection/equality and hard-limit bindings",
+        "Descriptor neutral encoding and size consistency for the new profile",
+        "Explicit initial authoring/qualification profile without guessed brush mappings",
+        "Impact on AddStroke, Insert/Restore/Split, codecs, validation, digest and SDK consumption"
+      ]
+    },
+    {
+      "owner": "aegis-governance",
+      "stage": "P21_P23",
+      "deliverables": ["Review completed annexes against this accepted design direction and publish exact scope-limited authority bindings"]
+    },
+    {
+      "owner": "aegis-verification",
+      "stage": "P20",
+      "deliverables": ["Freeze V11/V12 independent fixtures, RED seams and exact render observation; classify uncovered renderer dependencies without silently adding R2 scope"]
+    },
+    {
+      "owner": "aegis-implementation",
+      "stage": "P30_P31",
+      "deliverables": ["Regenerate all C2 package locks and file scopes, preserving V1-V10 obligations; validate hashes and closure before P32 entry review"]
+    }
+  ],
+  "verification_owner_followup": {
+    "required": true,
+    "obligations": ["C2-V11 BrushResolutionDeterminism", "C2-V12 CanonicalReconstruction"],
+    "required_before_p32": [
+      "exact wire representation and projection contract for the accepted numeric semantics",
+      "codec/validator/old-reader rejection matrix",
+      "render observation seam and tolerance",
+      "independent live/replay fixtures and RED oracle"
+    ]
+  },
+  "code_execution_authorized": false,
+  "official_gate_pass_forbidden": true,
+  "p31_amendment_pass_claimed": false,
+  "p31_v02_materialized": false,
+  "previous_execution_blocker_preserved": ".aegis/results/GT-G4-5-C2/terminal-blocker.json",
+  "next_owner": "aegis-modeling",
+  "next_stage": "P12_P13_WIRE_REGISTRY_COMPATIBILITY_ANNEX",
+  "return_surface": "CONTROL_REVIEW"
+}
