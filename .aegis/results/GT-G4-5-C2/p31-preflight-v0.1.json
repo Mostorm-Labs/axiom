@@ -32,9 +32,24 @@
     "BaselineBindingPreflight": "PASS",
     "EvidenceContractPreflight": "PASS",
     "ClosureContractPreflight": "PASS",
-    "PackageBindingPreflight": "PASS_PENDING_MATERIALIZATION_REF",
+    "PackageBindingPreflight": "PASS",
     "ScopeConflict": false,
     "UnresolvedSemanticDecision": false
   },
-  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION after exact package materialization and local SHA validation"
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION",
+  "package_materialization_ref": "a1fa1bc0b70f06137b0a55dfa8313adbfa59647b",
+  "package_ref": ".aegis/packages/GT-G4-5-C2/package.json",
+  "hash_validation": {
+    "authority.lock.json": "PASS",
+    "baseline.lock.json": "PASS",
+    "verification.lock.json": "PASS",
+    "execution-contract.json": "PASS",
+    "implementation-context.md": "PASS",
+    "evidence-contract.json": "PASS"
+  },
+  "scope_materialization_check": {
+    "base": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "materialization": "a1fa1bc0b70f06137b0a55dfa8313adbfa59647b",
+    "result": "PASS_CONTROL_FILES_ONLY"
+  }
 }
