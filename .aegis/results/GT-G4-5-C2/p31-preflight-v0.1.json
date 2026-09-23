@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31",
+  "status": "PASS_PENDING_MATERIALIZATION_REF",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "accepted_c1_result": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+    "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+    "anchor_relation": "accepted C1 control-review descendant",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "authority": {
+    "c1_control_review": "ACCEPTED_WITH_ARCHITECTURE_SUPERSESSION",
+    "c2_architecture": "CURRENT_V0_2",
+    "c2_p16": "FROZEN",
+    "c2_p30": "CURRENT",
+    "unresolved_semantic_decision": false
+  },
+  "baseline": {
+    "brush_runtime_full_history_append": true,
+    "web_platform_brush_runtime": true,
+    "android_platform_brush_runtime": true,
+    "windows_raw_pointer_preview": true,
+    "r01_one_shot_oracle_available": true
+  },
+  "checks": {
+    "RepositoryIdentityPreflight": "PASS",
+    "AuthoritySourceBindingPreflight": "PASS",
+    "BaselineBindingPreflight": "PASS",
+    "EvidenceContractPreflight": "PASS",
+    "ClosureContractPreflight": "PASS",
+    "PackageBindingPreflight": "PASS_PENDING_MATERIALIZATION_REF",
+    "ScopeConflict": false,
+    "UnresolvedSemanticDecision": false
+  },
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION after exact package materialization and local SHA validation"
+}
