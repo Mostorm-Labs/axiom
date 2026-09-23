@@ -1,13 +1,16 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-5-C2",
-  "status": "RED_OBSERVED",
+  "status": "PRELIMINARY_STATIC_RED_ONLY",
+  "complete_frozen_red_preflight": false,
+  "test_retained": false,
+  "limitations": "The temporary four-test source probe was removed with the rejected implementation draft. It was not the full frozen behavioral oracle set. The combined Web/Android test stopped at the Web failure; Android ownership was confirmed by source inspection only.",
   "oracle": "C2-red",
   "observations": {
     "common_preview_contract_missing": "RED",
     "move_append_full_history_evaluation": "RED",
     "web_platform_brush_runtime_ownership": "RED",
-    "android_platform_brush_runtime_ownership": "RED",
+    "android_platform_brush_runtime_ownership": "SOURCE_INSPECTION_ONLY",
     "windows_raw_pointer_preview_derivation": "RED"
   },
   "unexpected_green": false,
