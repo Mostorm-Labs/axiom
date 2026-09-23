@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "stage": "P32_CONTROL_REVIEW",
+  "review_version": "v0.1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-cross-platform-interaction-ingress",
+    "reviewed_result_revision": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+    "implementation_revision": "f695027ce296564e373ae0d754a7d0c177ae77b0",
+    "accepted_p31_control_ref": "c32bb26b2a8e35158852114fd845f5d566249221"
+  },
+  "verdict": "ACCEPTED_WITH_ARCHITECTURE_SUPERSESSION",
+  "accepted_boundary": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+  "accepted_scope": [
+    "common PlatformPointerBatch contract",
+    "PlatformInteractionIngress and pointer lifecycle/generation",
+    "PassThroughInputCaptureGate",
+    "Web common-ingress migration",
+    "Android common-ingress migration",
+    "Windows common-ingress migration",
+    "Apple extracted-event adapter contract",
+    "cross-platform fixture parity",
+    "runtime/input Arc independence",
+    "C0/G4.4/R01 regression preservation"
+  ],
+  "verification": {
+    "full_ctest": "574/574 PASS",
+    "c1_targeted": "18/18 PASS",
+    "ownership_oracle": "5/5 PASS",
+    "git_diff_check": "PASS",
+    "scope_diff": "PASS"
+  },
+  "non_blocking_findings": [
+    {
+      "id": "C1-CR-NB01",
+      "classification": "STALE_EVIDENCE_METADATA",
+      "subject": "regression-summary.json still lists Web/Android/Windows ownership under blocked",
+      "disposition": "NON_BLOCKING",
+      "rationale": "final ownership oracle is 5/5 PASS; c1-web/android/windows ownership evidence and result.json report PASS. The stale list predates the completed migration."
+    },
+    {
+      "id": "C1-CR-NB02",
+      "classification": "EVIDENCE_BINDING_METADATA",
+      "subject": "result.json exact_revision points to f695027... while branch HEAD 5087ca34... only updates result.json binding",
+      "disposition": "NON_BLOCKING",
+      "rationale": "f695027... to 5087ca34... changes only result.json; accepted reviewer boundary is bound directly to 5087ca34...."
+    }
+  ],
+  "architecture_supersession": {
+    "source": "C1 Post-P32 Architecture Amendment v0.1 / G4.5 C2 Common Brush Processing & Output Fanout Architecture v0.1",
+    "superseded_p31_assumption": [
+      "pointer-level Arc fanout as downstream architecture",
+      "C1 as final owner of platform-local BrushRuntime removal"
+    ],
+    "preserved_c1_meaning": "C1 is the ingress/lifecycle unification stage.",
+    "carried_to_c2": [
+      "remove Web platform-local BrushRuntime/session ownership",
+      "remove Android platform-local BrushRuntime/session ownership",
+      "replace Windows pointer-derived Arc preview geometry with common BrushPreviewDelta-driven preview",
+      "make common Brush Engine the Preview/Canonical fanout boundary",
+      "incrementalize Vector preview evaluation before Arc hot-path adoption"
+    ],
+    "rule": "Do not cite the old C1 pointer-to-Arc fanout wording as downstream authority."
+  },
+  "successor_routing": {
+    "previous_label": "READY_FOR_D0_PACKAGE_REVIEW",
+    "interpreted_as": "C1 terminal implementation status under the original package",
+    "actual_next_stage": "G4.5 C2 Common Brush Processing & Output Fanout",
+    "d0_after_c2": true
+  },
+  "gate_pass": false
+}
