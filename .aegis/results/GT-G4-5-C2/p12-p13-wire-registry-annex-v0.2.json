@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "amendment_id": "GT-G4-5-C2-P12-P13-v0.2",
+  "stage": "P12_P13_WIRE_REGISTRY_COMPATIBILITY_ANNEX",
+  "status": "PROPOSED_PENDING_P21_P23_REVIEW",
+  "classification": "AUTHORITY_ANNEX_PROPOSAL",
+  "document_ref": "docs/planning/GT_G4_5_C2_VECTOR_REFERENCE_V1_WIRE_REGISTRY_ANNEX_V0_2.md",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom", "execution_ref": "codex/g4-5-common-brush-processing", "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a"},
+  "preserved": ["ObjectKind.VectorStroke=5", "OperationKind.AddStroke=10", "all v1 brush/stroke wire and digest behavior", "R1 commit 176e00f2399f4969e1b0965c5921d96a3e50ce9f"],
+  "proposed_registry": {"brush_family_id": 4, "brush_family_symbol": "VECTOR_REFERENCE", "brush_version": 1, "execution_profile_id": 1, "algorithm_version": 1, "easing_id": 1, "taper_policy_id": 1},
+  "wire_extension": {"stroke_record_new_oneof_tag": 5, "payload_name": "VectorReferenceV1", "sample_pressure": "optional finite f64; absence distinct from zero", "seed_source": "StrokeRecord.deterministic_seed field 2 only", "version_dispatch": "explicit reviewed object/operation/snapshot version pair"},
+  "compatibility": {"old_readers": "reject explicit new version before apply", "new_readers": "accept v1 unchanged and v2 after exact validation", "unknown_profile_or_version": "reject", "downgrade_or_catalog_fallback": "forbidden"},
+  "projection": {"name": "axiom.vector-reference-projection-v1", "numeric": "normalized f64 little-endian IEEE-754; negative zero becomes positive zero", "sample_order": "input order preserved", "digest": "SHA-256(domain axiom.semantic.digest.v1 + little-endian projection version + canonical bytes)", "excluded": ["prediction", "pointer ids/timestamps", "Arc", "SkPath", "mesh", "GPU", "catalog", "renderer cache"]},
+  "initial_profile": {"definition_id": "00000000000000000000000000000001", "definition_version": 1, "size": 8.0, "thinning": 0.5, "smoothing": 0.5, "streamline": 0.5, "easing_id": 1, "start_cap": true, "end_cap": true, "simulate_pressure": true, "taper_policy_id": 1},
+  "implementation_authorized": false,
+  "p31_regeneration_authorized": false,
+  "next_owner": "aegis-governance",
+  "next_stage": "P21_P23_AUTHORITY_REVIEW"
+}
