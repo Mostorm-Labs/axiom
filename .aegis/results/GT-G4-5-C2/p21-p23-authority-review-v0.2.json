@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "amendment_id": "GT-G4-5-C2-P12-P13-v0.2",
+  "stage": "P21_P23_AUTHORITY_REVIEW",
+  "status": "BLOCKED_AUTHORITY",
+  "reviewed_revision": "6facaf4ab2900c19299fdf4953ad78cc2392f0c9",
+  "materialized_ref": "origin/codex/g4-5-common-brush-processing",
+  "source_map": {
+    "accepted_design": "eb294f5d5b527b4233b102083531fe367f926c26",
+    "wire_annex": "docs/planning/GT_G4_5_C2_VECTOR_REFERENCE_V1_WIRE_REGISTRY_ANNEX_V0_2.md",
+    "verification_annex": "docs/planning/GT_G4_5_C2_V11_V12_VERIFICATION_ANNEX_V0_2.md",
+    "legacy_brush_registry": "schema/axiom/v1/registry/brush_family_registry_v1.yaml",
+    "legacy_object_registry": "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+    "legacy_operation_profile": "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml",
+    "legacy_snapshot_proto": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+    "headless_renderer_api": "runtime/render/include/canvas/render/skia_headless_backend.hpp"
+  },
+  "findings": [
+    {
+      "id": "P21-C2-AUTH-01",
+      "classification": "AUTHORITY_CONFLICT",
+      "severity": "blocking",
+      "owner": "aegis-modeling / P23",
+      "statement": "The annex proposes VectorStroke kind_version=2, but the current object-kind registry releases only VectorStroke version 1 and requires exact-pair fail-closed behavior.",
+      "evidence": "schema/axiom/v1/registry/object_kind_registry_v1.yaml: released VectorStroke accepted_versions [1]; annex compatibility table proposes kind version 2.",
+      "required_closure": "Publish an explicit scoped supersession/release for the ObjectKind version pair, including content-branch/version binding and old-reader rejection, or remove the v2 object-version proposal. Do not make P32 infer it."
+    },
+    {
+      "id": "P21-C2-AUTH-02",
+      "classification": "AUTHORITY_CONFLICT",
+      "severity": "blocking",
+      "owner": "aegis-modeling / P23",
+      "statement": "The annex proposes operation payload_version=2 and snapshot schema_version=2, while current frozen profiles accept only version 1.",
+      "evidence": "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml: schema_version/payload_version accepted [1]; snapshot.proto and runtime snapshot codec accept schema_version 1.",
+      "required_closure": "Freeze the exact version carrier and compatibility matrix across AddStroke, Insert, Restore, Split, snapshots and old readers; explicitly supersede the affected v1 clauses only for this profile."
+    },
+    {
+      "id": "P21-C2-AUTH-03",
+      "classification": "MISSING_CONTRACT",
+      "severity": "blocking",
+      "owner": "aegis-modeling / P12-P13",
+      "statement": "The proposed projection/digest order is described as an ordered field list, but the current canonical authority requires canonical protobuf tag/presence rules and the existing verification contract treats digest as acceleration rather than semantic authority.",
+      "evidence": "annex section 6 versus docs/notion/authority/10-verification/semantic-conformance-golden-corpus-v0.1.md and schema/axiom/v1/canonical/canonical_profile_v1.yaml.",
+      "required_closure": "Specify whether the new projection is canonical protobuf bytes or a separate named semantic projection, bind presence/length encoding for every new field, and make projection equality the primary oracle. SHA-256 may remain a derived digest only unless separately authorized."
+    },
+    {
+      "id": "P21-C2-AUTH-04",
+      "classification": "AUTHORITY_CONFLICT",
+      "severity": "blocking",
+      "owner": "aegis-modeling / P23",
+      "statement": "The proposed brush family id 4 is currently in the unassigned range, so the amendment must explicitly release it; a proposal table alone is not a registry release.",
+      "evidence": "schema/axiom/v1/registry/brush_family_registry_v1.yaml: unassigned_family_range [4, 4294967295].",
+      "required_closure": "Publish the atomic registry update and supersession binding, preserving family/version exact-pair rejection."
+    },
+    {
+      "id": "P21-C2-VERIFY-01",
+      "classification": "TEST_DEFECT",
+      "severity": "blocking",
+      "owner": "aegis-verification / P20",
+      "statement": "The V12 render seam names SkiaHeadlessBackend::render, but the repository API exposes submit(FramePlan) and observation(); no render method exists.",
+      "evidence": "docs/planning/GT_G4_5_C2_V11_V12_VERIFICATION_ANNEX_V0_2.md:71 versus runtime/render/include/canvas/render/skia_headless_backend.hpp:45-49.",
+      "required_closure": "Replace the seam with the exact existing submit()/observation() contract and freeze the non-empty plan, raster digest and tolerance rules. This is a P20 verification-design repair, not an implementation choice."
+    }
+  ],
+  "decision": {
+    "authority_review": "BLOCKED",
+    "supersession": "NOT_PUBLISHED",
+    "verification_review": "NOT_ACCEPTED_PENDING_P20_REPAIR",
+    "p31_v02": "NOT_REGENERATED",
+    "p32": "NOT_AUTHORIZED",
+    "production_changes": false,
+    "gate_pass_claimed": false
+  },
+  "preserved_history": [
+    "GT-G4-5-C2-P31-v0.1 remains TASK_PACKAGE_DEFECT",
+    "accepted design direction remains historical input, not executable authority",
+    "all legacy v1 wire/interpreter behavior remains unchanged"
+  ],
+  "next_action": "Return to P12/P13 for explicit version-carrier/registry/supersession closure and to P20 for the exact submit()/observation() render seam; rerun P21/P23 and P20 review before regenerating GT-G4-5-C2-P31-v0.2."
+}
