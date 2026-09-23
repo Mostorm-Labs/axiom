@@ -1,0 +1,43 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "status": "BLOCKED_TASK_PACKAGE_DEFECT",
+  "current_flow": {
+    "brush_runtime": "BrushRuntime::append stores all samples and evaluates the complete history",
+    "web": "platform bridge owns BrushRuntime and Brush sessions",
+    "android": "platform bridge owns BrushRuntime and Brush sessions",
+    "windows": "host derives Arc preview primitives from raw pointer samples"
+  },
+  "target_flow": "C1 -> C0 -> common BrushSession -> IncrementalVectorEvaluator -> renderer-neutral preview/confirmed commit outputs",
+  "binding_gap": {
+    "required_reference_parameters": [
+      "thinning",
+      "smoothing",
+      "streamline",
+      "simulatePressure",
+      "startCap",
+      "startTaper",
+      "endCap",
+      "endTaper",
+      "last"
+    ],
+    "available_brush_definition_fields": [
+      "nominalSize",
+      "opacity",
+      "spacing",
+      "pressureSizeInfluence",
+      "pressureOpacityInfluence",
+      "tiltSizeInfluence",
+      "tiltRotationInfluence"
+    ],
+    "missing_frozen_mapping": true,
+    "reason": "Choosing a mapping would change BrushDefinition semantics and cannot be inferred by P32."
+  },
+  "unresolved_semantic_decisions": [
+    "Define and authorize the BrushDefinition-to-R1-StrokeOptions mapping used by the C2 incremental vector evaluator."
+  ],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": true,
+  "continue": false
+}
