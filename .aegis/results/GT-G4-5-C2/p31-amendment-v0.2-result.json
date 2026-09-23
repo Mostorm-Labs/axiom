@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31_TASK_PACKAGING",
+  "package_id": "GT-G4-5-C2-P31-v0.2",
+  "status": "BLOCKED_AUTHORITY",
+  "classification": "AUTHORITY_CONFLICT",
+  "result_revision_binding": "containing commit",
+  "production_changes": false,
+  "package_files_changed": false,
+  "p31_amendment_pass": false,
+  "p32_reentry_authorized": false,
+  "terminal": true,
+  "continue_execution": false,
+  "blocker_evidence": ".aegis/results/GT-G4-5-C2/p31-amendment-v0.2-preflight.json",
+  "preserved_previous_package": "GT-G4-5-C2-P31-v0.1",
+  "next_surface": "CONTROL_REVIEW",
+  "gate_pass_forbidden": true,
+  "summary": "The requested amendment is captured and audited, but cannot be materialized as an executable package until BrushDefinition resolution semantics and the additive canonical semantic/wire contract are accepted by the owning authority. No P32 implementation was started."
+}
