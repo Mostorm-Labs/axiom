@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import tarfile
 import tempfile
+import inspect
 
 ROOT = Path(__file__).resolve().parents[3]
 ANCHOR = "4144dfd80b665df435d141382de05196d3b8eb0f"
@@ -24,7 +25,14 @@ def materialize_anchor(destination: Path) -> None:
     archive_path = destination / "anchor.tar"
     archive_path.write_bytes(archive.stdout)
     with tarfile.open(archive_path) as stream:
-        stream.extractall(destination / "source", filter="data")
+        target = destination / "source"
+        # Python 3.12+ supports tarfile's data filter; older hosted/macOS
+        # runners do not.  git archive is trusted input, so retain the same
+        # extraction semantics while keeping the frozen oracle runnable.
+        if "filter" in inspect.signature(stream.extractall).parameters:
+            stream.extractall(target, filter="data")
+        else:
+            stream.extractall(target)
 
 def source_text(anchor_root: Path, path: str) -> str:
     return (anchor_root / path).read_text(encoding="utf-8")

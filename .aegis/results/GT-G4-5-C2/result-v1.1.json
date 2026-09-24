@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "task_id": "GT-G4-5-C2",
   "stage": "P32_IMPLEMENTATION",
-  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "package_id": "GT-G4-5-C2-P31-v1.2",
   "status": "READY_FOR_CONTROL_REVIEW",
   "implementation_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
   "result_record_revision": "60872ded4f0d9eaef9b10fc27c8f29e1a0a57868",
@@ -23,6 +23,7 @@
     ".aegis/results/GT-G4-5-C2/regression-summary.json",
     ".aegis/results/GT-G4-5-C2/scope-diff.json",
     ".aegis/results/GT-G4-5-C2/hosted-provider-evidence-v1.1.json",
+    ".aegis/results/GT-G4-5-C2/descriptor-refreeze-v1.2.json",
     ".aegis/results/GT-G4-5-C2/raw-v1.1/**"
   ],
   "verification": {
@@ -33,7 +34,8 @@
     "contract_check": "PASS",
     "fixed_anchor_red_oracle": "PASS",
     "git_diff_check": "PASS",
-    "hosted_provider_identity": "RESOLVED_WITH_G1_DESCRIPTOR_LOCK_BLOCKER"
+  "hosted_provider_identity": "PENDING_HOSTED_REVERIFICATION_AFTER_G1_REFREEZE",
+  "descriptor_refreeze": "PASS_REVIEW_READY"
   },
   "official_gate_pass": false,
   "next_surface": "CONTROL_REVIEW",
