@@ -96,7 +96,14 @@ void setBrushSnapshot(const BrushExecutionSnapshot& source, p::BrushExecutionSna
 }
 bool getBrushSnapshot(const p::BrushExecutionSnapshot& source, BrushExecutionSnapshot& destination) {
     if (!source.has_snapshot_version() || !source.has_package_id() || !source.has_package_revision() || !source.has_pipeline_version() || !source.has_defaults_version() || !source.has_profile_id() || !source.has_vector() || !source.has_paint() || !source.has_seed() || !source.has_signal_schema_version()) return false;
-    if (!getId(source.package_id(), destination.package_id)) return false; destination.snapshot_version=source.snapshot_version(); destination.package_revision=source.package_revision(); destination.pipeline_version=source.pipeline_version(); destination.defaults_version=source.defaults_version(); destination.profile_id=source.profile_id(); destination.signal_schema_version=source.signal_schema_version(); destination.seed=source.seed();
+    if (!getId(source.package_id(), destination.package_id)) return false;
+    destination.snapshot_version = source.snapshot_version();
+    destination.package_revision = source.package_revision();
+    destination.pipeline_version = source.pipeline_version();
+    destination.defaults_version = source.defaults_version();
+    destination.profile_id = source.profile_id();
+    destination.signal_schema_version = source.signal_schema_version();
+    destination.seed = source.seed();
     destination.stages.clear(); for (const auto& stage : source.stages()) { if (!stage.has_stage_id() || !stage.has_declared_mode() || !stage.has_active() || !stage.has_node_id() || !stage.has_node_version()) return false; destination.stages.push_back({stage.stage_id(),stage.declared_mode(),stage.node_id(),stage.node_version(),stage.active()}); }
     const auto& v=source.vector(); if(!v.has_size()||!v.has_thinning()||!v.has_smoothing()||!v.has_streamline()||!v.has_pressure_source()||!v.has_missing_pressure()||!v.has_easing_id()||!v.has_start_cap()||!v.has_end_cap()||!v.has_start_taper()||!v.has_end_taper())return false; destination.vector={v.size(),v.thinning(),v.smoothing(),v.streamline(),v.pressure_source(),v.missing_pressure(),v.easing_id(),v.start_cap(),v.end_cap(),v.start_taper(),v.end_taper()};
     const auto& paint=source.paint(); if(!paint.has_red()||!paint.has_green()||!paint.has_blue()||!paint.has_alpha()||!paint.has_opacity()||!paint.has_blend()||!paint.has_color_space())return false; destination.paint={paint.red(),paint.green(),paint.blue(),paint.alpha(),paint.opacity(),paint.blend(),paint.color_space()};
