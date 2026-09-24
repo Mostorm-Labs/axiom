@@ -1,0 +1,5 @@
+#pragma once
+#include "canvas/ink/vector_path_node.hpp"
+#include <cstdint>
+#include <span>
+namespace canvas::ink { struct BrushSample final { double x=0,y=0,pressure=0; bool pressurePresent=false; std::uint64_t sequence=0; }; struct BrushPreviewDelta final { std::uint64_t revision=0; std::vector<reference::StrokeOutlinePoint> outline; }; struct BrushCommitIntent final { std::uint64_t session=0,revision=0,seed=0; std::vector<BrushSample> confirmed; std::vector<reference::StrokeOutlinePoint> outline; }; enum class BrushSessionError : std::uint8_t { kNone=0,kInvalid,kSequence,kPressure,kEmpty }; class BrushSession final { public: BrushSession(std::uint64_t,ResolvedBrushState); bool begin(); BrushSessionError append(std::span<const BrushSample>,std::span<const BrushSample>,BrushPreviewDelta&); BrushSessionError seal(BrushCommitIntent&); void cancel() noexcept; [[nodiscard]] BrushSessionError error() const noexcept{return error_;} private: std::uint64_t id_; ResolvedBrushState state_; bool active_=false; std::uint64_t revision_=0,lastSequence_=0; std::vector<BrushSample> confirmed_; BrushSessionError error_=BrushSessionError::kNone; }; }

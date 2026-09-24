@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.5",
+  "task_id": "GT-G4-5-C2",
+  "status": "READY_FOR_P32_REENTRY_REVIEW",
+  "purpose": "Repair and freeze the executable P31 package for the v0.4 Brush Engine schema and common runtime.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_refs": [
+    "docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md",
+    "docs/planning/brush-engine-v0.4/CONTRACT.md",
+    "docs/planning/brush-engine-v0.4/PLAN.md",
+    "docs/planning/brush-engine-v0.4/VERIFICATION.md",
+    "docs/planning/brush-engine-v0.4/brush_engine.proto",
+    "docs/planning/brush-engine-v0.4/manifest.schema.json",
+    "docs/planning/brush-engine-v0.4/pipeline.schema.json"
+  ],
+  "supersedes": [
+    "GT-G4-5-C2-P31-v0.4",
+    "GT-G4-5-C2-P31-v0.3",
+    "GT-G4-5-C2-P31-v0.1"
+  ],
+  "p32_authorized": false,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "55e5963d7ee9382950675a8666c5c272b2a73a57ee787f0bb75f215409a2e18f"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "ab8ebafd79c472169dba44d85760330b43ab4c94f80f5413dfd7a861db81bdb0"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "53e7e85e138b5bc21378a9b38a350fb725c8f609ee8765621dd75af5f9973e4a"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "da7e1550a8dc12262dfc2db3d68a99752bbf0ada654937263b0abc929873efe7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "bd21536bd1c7feed51daa4451639737cabd3a5446db04dfd68cc89ac5e1b38fb"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "87b2b4c5642c636d2f37fae72604a4eb8fddb6502e23b437cfcc1b21da721c59"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C2-P31-v0.5/",
+    "base_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "binding": "exact package files bound by package-manifest.json"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "Resolve the repaired package, review the exact authority/schema boundary, then issue an explicit P32 surface handoff only after control acceptance.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

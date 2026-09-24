@@ -7,9 +7,15 @@ add_library(canvas_runtime_ink STATIC
   src/multipointer_replay.cpp
   src/preview_model.cpp
   src/arc_preview_bridge.cpp
-  src/programmable_brush.cpp)
+  src/programmable_brush.cpp
+  src/brush_package.cpp
+  src/resolved_brush_state.cpp
+  src/brush_execution_plan.cpp
+  src/vector_path_node.cpp
+  src/brush_session.cpp)
 target_sources(canvas_runtime_ink PRIVATE src/vector_stroke_reference.cpp)
-target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_link_libraries(canvas_runtime_ink PUBLIC canvas_runtime_foundation canvas_runtime_input)
 target_compile_features(canvas_runtime_ink PUBLIC cxx_std_20)
 if(TARGET canvas_runtime_semantic)
@@ -67,6 +73,18 @@ if(BUILD_TESTING)
     target_compile_options(axiom_multipointer_replay_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   endif()
   add_test(NAME G4MultiPointerReplay COMMAND axiom_multipointer_replay_tests)
+  add_executable(axiom_brush_package_tests tests/brush_package_test.cpp)
+  target_link_libraries(axiom_brush_package_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_package_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPackage COMMAND axiom_brush_package_tests)
+  add_executable(axiom_brush_plan_tests tests/brush_plan_test.cpp)
+  target_link_libraries(axiom_brush_plan_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_plan_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPlan COMMAND axiom_brush_plan_tests)
+  add_executable(axiom_brush_session_tests tests/brush_session_test.cpp)
+  target_link_libraries(axiom_brush_session_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_session_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushSession COMMAND axiom_brush_session_tests)
   add_executable(axiom_programmable_brush_tests tests/programmable_brush_test.cpp)
   target_link_libraries(axiom_programmable_brush_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_programmable_brush_tests PRIVATE cxx_std_20)

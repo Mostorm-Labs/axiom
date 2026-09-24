@@ -1,0 +1,4 @@
+#include "canvas/ink/brush_session.hpp"
+#include <cassert>
+#include <array>
+int main(){ canvas::ink::BrushPackage p; p.packageId="0123456789abcdef0123456789abcdef"; auto state=canvas::ink::resolveBrushState(p,42); canvas::ink::BrushSession s(7,state); assert(s.begin()); const std::array c1{canvas::ink::BrushSample{0,0,0,false,1},canvas::ink::BrushSample{8,0,0,false,2}}; const std::array pred{canvas::ink::BrushSample{16,0,0,false,100}}; canvas::ink::BrushPreviewDelta d; assert(s.append(c1,pred,d)==canvas::ink::BrushSessionError::kNone); assert(!d.outline.empty()); const std::array c2{canvas::ink::BrushSample{16,0,0,false,3}}; assert(s.append(c2,{},d)==canvas::ink::BrushSessionError::kNone); canvas::ink::BrushCommitIntent intent; assert(s.seal(intent)==canvas::ink::BrushSessionError::kNone); assert(intent.seed==42 && intent.confirmed.size()==3 && !intent.outline.empty()); return 0; }

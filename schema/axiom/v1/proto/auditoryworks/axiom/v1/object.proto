@@ -6,6 +6,7 @@ import "auditoryworks/axiom/v1/geometry.proto";
 import "auditoryworks/axiom/v1/property.proto";
 import "auditoryworks/axiom/v1/vector_path.proto";
 import "auditoryworks/axiom/v1/brush_stroke.proto";
+import "auditoryworks/axiom/v1/brush_engine.proto";
 import "auditoryworks/axiom/v1/erase_mask.proto";
 import "auditoryworks/axiom/v1/rich_text.proto";
 import "auditoryworks/axiom/v1/connector.proto";
@@ -27,6 +28,7 @@ message ObjectContent {
     ConnectorContent connector = 7;
     StickyContent sticky = 8;
     GroupContent group = 9;
+    BrushStrokeContent brush_stroke = 10;
   }
 }
 message ObjectRecord {

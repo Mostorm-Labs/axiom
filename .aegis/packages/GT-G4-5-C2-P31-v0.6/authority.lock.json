@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.5",
+  "authority_status": "CURRENT_SCOPED_DESIGN",
+  "authority_refs": [
+    {
+      "path": "docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md",
+      "sha256": "676816fec2d3e5128ed9accae923a5827beb1de6990810b53ef2863b0fc2b996"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/CONTRACT.md",
+      "sha256": "5f101ad6c320f81b6c8bdbbfe345f9d7d0a919670652ca8e812692f74038fe01"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/PLAN.md",
+      "sha256": "97b8564ad33d99233fc33326c79c583ddb83d653384179e17e3680aabf83234e"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/VERIFICATION.md",
+      "sha256": "3f35749d7548b372bcbd9ea5ea74088335e5014ea3bd7ce7f2a53e6ac1598b2d"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/brush_engine.proto",
+      "sha256": "664318b75d592091ed87c444fe23f946ab6f00b046ab964d35d6b860a7787b7a"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/manifest.schema.json",
+      "sha256": "568c2941e534391b0f57c82f1fda45cbc351f92c000cb3109b3f9ee297b17c12"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/pipeline.schema.json",
+      "sha256": "cea2f6f297e40a0acb4e7a30a52c1151e782d2a68d8a90864a0f53b9a498470e"
+    }
+  ],
+  "resolved_conflicts": [
+    "The v0.4 contract explicitly authorizes the Brush Engine schema carriers in brush_engine.proto and the (ObjectKind 5,2)/(payload v2)/(snapshot v2) branch; P32 must materialize these carriers atomically.",
+    "The prohibition is limited to unapproved fields, IDs, versions, or fallbacks; it does not prohibit the approved v0.4 schema release.",
+    "Runtime Core remains the sole AddStroke builder and new authoring never calls legacy V1 authoring classes."
+  ],
+  "frozen_semantic_boundary": {
+    "new_profile": "vector-solid-v1",
+    "object_kind": {
+      "id": 5,
+      "version": 2,
+      "content_tag": 10
+    },
+    "legacy_object_kind": {
+      "id": 5,
+      "version": 1,
+      "content_tag": 5
+    },
+    "operation": {
+      "kind": "AddStroke",
+      "schema_version": 1,
+      "payload_version_new": 2,
+      "payload_version_legacy": 1
+    },
+    "snapshot_version_new": 2,
+    "snapshot_version_legacy": 1,
+    "unknown_versions": "reject_before_mutation",
+    "legacy_mode": "read_only_document_compatibility"
+  }
+}

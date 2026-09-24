@@ -1,0 +1,11 @@
+{
+  "reference_fixture": "simulated_pressure_speed",
+  "reference_commit": "176e00f2399f4969e1b0965c5921d96a3e50ce9f",
+  "input": "add-stroke.json",
+  "expected": "document-snapshot.json",
+  "operation_payload_version": 2,
+  "snapshot_schema_version": 2,
+  "recompute_evaluator_on_document_replay": false,
+  "expected_nonempty_outline_vertices": 50,
+  "semantic_comparison": "exact stored snapshot/samples/outline; R1 reevaluation tolerance is separate"
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-5-C2",
+  "execution_closure_contract":{
+    "required_changes":[
+      "Introduce BrushPackage manifest/resource reader and deterministic normalization.",
+      "Introduce ResolvedBrushState and BrushExecutionPlan typed DAG with off/auto/on activation and dependency closure.",
+      "Introduce one common BrushSession lifecycle prepare/begin/append/seal/cancel with confirmed/predicted isolation.",
+      "Introduce BrushPreviewDelta and reliable BrushCommitIntent outputs with bounded preview handoff and CanonicalVisible receipt matching.",
+      "Integrate pinned Perfect Freehand R1 as VectorPathNode/perfect-freehand-r1 adapter and preserve its fixtures as oracle.",
+      "Move Web/Android/Windows ownership to the common session and remove new-path family/primitive interpretation.",
+      "Define the validated AddStroke intent adapter and fail closed before an unallocated persistence extension.",
+      "Add read-only legacy V1 decoder boundary and ensure new authoring cannot call legacy brush classes.",
+      "Add deterministic, replay, activation, prediction, handoff, platform ownership and regression evidence."
+    ],
+    "forbidden_changes":[
+      "Extend BrushDefinition/BrushCompiler/BrushProgram/BrushRuntime as the new engine.",
+      "Create a second engine beside the new Brush Engine.",
+      "Use BrushFamily or product preset names to choose runtime pipeline semantics.",
+      "Interpret brush families, resources or geometry in platform bridges or renderers.",
+      "Persist an unapproved new protobuf field, allocate a new ObjectKind/OperationKind, or invent a version fallback.",
+      "Change C0/C1 input/routing, Arc selection, renderer architecture, or canvas-aware WetMix semantics.",
+      "Enter P32 or claim Gate PASS in this package."
+    ],
+    "authorized_mutation_scope":{
+      "new":[
+        "runtime/ink/include/canvas/ink/brush_package.hpp",
+        "runtime/ink/src/brush_package.cpp",
+        "runtime/ink/include/canvas/ink/resolved_brush_state.hpp",
+        "runtime/ink/src/resolved_brush_state.cpp",
+        "runtime/ink/include/canvas/ink/brush_execution_plan.hpp",
+        "runtime/ink/src/brush_execution_plan.cpp",
+        "runtime/ink/include/canvas/ink/brush_session.hpp",
+        "runtime/ink/src/brush_session.cpp",
+        "runtime/ink/include/canvas/ink/brush_preview_delta.hpp",
+        "runtime/ink/include/canvas/ink/brush_commit_intent.hpp",
+        "runtime/ink/include/canvas/ink/vector_path_node.hpp",
+        "runtime/ink/src/vector_path_node.cpp",
+        "runtime/ink/include/canvas/ink/legacy_v1_readonly.hpp",
+        "runtime/ink/src/legacy_v1_readonly.cpp",
+        "runtime/ink/tests/brush_package_test.cpp",
+        "runtime/ink/tests/brush_plan_test.cpp",
+        "runtime/ink/tests/brush_session_test.cpp",
+        "runtime/ink/tests/brush_operation_intent_test.cpp",
+        ".aegis/results/GT-G4-5-C2/**"
+      ],
+      "replace_or_remove":[
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/platform/android/bridge.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "runtime/render/include/canvas/render/skia_brush_renderer.hpp",
+        "runtime/render/src/skia_brush_renderer.cpp",
+        "apps/brush_lab/common/brush_lab.cpp"
+      ],
+      "legacy_only":[
+        "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+        "runtime/ink/src/programmable_brush.cpp",
+        "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp",
+        "runtime/ink/src/canonical_brush_commit.cpp"
+      ],
+      "immutable":".aegis/packages/GT-G4-5-C2-P31-v0.4/**"
+    },
+    "required_tests":[
+      "BrushPackage normalization and deterministic semantic identity",
+      "off/auto/on activation pruning, dependency closure, cycle/missing-provider rejection",
+      "ResolvedBrushState and plan replay determinism",
+      "Perfect Freehand R1 VectorPathNode fixture parity",
+      "confirmed/predicted stable-prefix and replaceable-tail isolation",
+      "bounded preview latest-wins with reliable seal/cancel/commit events",
+      "BrushCommitIntent does not construct Operation and AddStroke adapter rejects unknown schema",
+      "Web/Android/Windows source ownership checks",
+      "legacy V1 read-only decode and no new-authoring call path",
+      "C0/C1 and R01 regression plus git diff check"
+    ],
+    "terminal_success":"All new Brush Engine contracts and blocking evidence pass; no new authoring path reaches legacy brush classes; no authority/schema conflict remains.",
+    "terminal_blockers":["BLOCKED_AUTHORITY","BLOCKED_SCHEMA_RELEASE","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","BLOCKED_REPOSITORY_IDENTITY","BLOCKED_EXECUTION_DIVERGENCE"]
+  }
+}

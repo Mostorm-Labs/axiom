@@ -28,3 +28,12 @@ validation_pipeline:
   - prepare_apply_plan
   - atomic_apply
   - revision_advance_and_changeset
+
+versioned_payload_boundary:
+  schema_version: 1
+  add_stroke:
+    payload_version_new: 2
+    payload_version_legacy: 1
+    new_object_pair: {id: 5, version: 2, content_tag: 10}
+    legacy_object_pair: {id: 5, version: 1, content_tag: 5}
+  unknown_versions: reject_before_mutation

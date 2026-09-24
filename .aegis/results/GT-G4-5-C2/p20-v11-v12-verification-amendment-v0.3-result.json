@@ -1,0 +1,12 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-5-C2",
+  "stage":"P20_VERIFICATION_DESIGN",
+  "amendment_id":"GT-G4-5-C2-P20-v0.3",
+  "status":"ACCEPTED_FOR_P31_REGENERATION",
+  "supersedes":"GT-G4-5-C2-P20-v0.2",
+  "closed_findings":["P21-C2-VERIFY-01"],
+  "render_observation":{"submit":"SkiaHeadlessBackend::submit(FramePlan)","observation":"SkiaHeadlessBackend::observation()","empty_plan":"reject","empty_observation":"reject"},
+  "blocking_oracles":["C2-V11 BrushResolutionDeterminism","C2-V12 CanonicalReconstruction"],
+  "production_changes":false
+}
