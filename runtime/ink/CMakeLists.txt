@@ -12,7 +12,8 @@ add_library(canvas_runtime_ink STATIC
   src/resolved_brush_state.cpp
   src/brush_execution_plan.cpp
   src/vector_path_node.cpp
-  src/brush_session.cpp)
+  src/brush_session.cpp
+  src/legacy_v1_readonly.cpp)
 target_sources(canvas_runtime_ink PRIVATE src/vector_stroke_reference.cpp)
 target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
@@ -85,6 +86,10 @@ if(BUILD_TESTING)
   target_link_libraries(axiom_brush_session_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_brush_session_tests PRIVATE cxx_std_20)
   add_test(NAME G45BrushSession COMMAND axiom_brush_session_tests)
+  add_executable(axiom_brush_operation_intent_tests tests/brush_operation_intent_test.cpp)
+  target_link_libraries(axiom_brush_operation_intent_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_operation_intent_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushOperationIntent COMMAND axiom_brush_operation_intent_tests)
   add_executable(axiom_programmable_brush_tests tests/programmable_brush_test.cpp)
   target_link_libraries(axiom_programmable_brush_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_programmable_brush_tests PRIVATE cxx_std_20)

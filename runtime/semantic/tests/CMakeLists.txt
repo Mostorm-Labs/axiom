@@ -21,6 +21,15 @@ endif()
 
 gtest_discover_tests(canvas_semantic_codec_test)
 
+add_executable(canvas_semantic_brush_engine_codec_test brush_engine_codec_test.cpp)
+target_link_libraries(canvas_semantic_brush_engine_codec_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_brush_engine_codec_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_brush_engine_codec_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_brush_engine_codec_test TEST_PREFIX "brush_engine_codec.")
+
 add_executable(canvas_semantic_codec_operation_ingress_test codec_operation_ingress_test.cpp)
 target_link_libraries(canvas_semantic_codec_operation_ingress_test
   PRIVATE canvas_runtime_semantic GTest::gtest_main)

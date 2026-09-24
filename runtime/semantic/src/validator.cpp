@@ -521,7 +521,11 @@ bool validStrokeRecord(const StrokeRecord& stroke, bool dab_representation) noex
 }
 
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
-    if (!validId(object.id) || object.kind_version != 1U) return false;
+    if (!validId(object.id)) return false;
+    if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
+        return std::holds_alternative<BrushStrokeContent>(object.content);
+    }
+    if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
             return std::holds_alternative<ShapeContent>(object.content);
@@ -581,6 +585,15 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;
     }
+    if (const auto* brush = std::get_if<BrushStrokeContent>(&object.content)) {
+        if (object.kind != ObjectKind::kVectorStroke || object.kind_version != 2U) return false;
+        if (brush->stroke.snapshot.snapshot_version != 2U || brush->stroke.snapshot.profile_id == 0U ||
+            brush->stroke.confirmed_samples.empty() || brush->stroke.vector_output.outline.empty()) return false;
+        for (const auto& sample : brush->stroke.confirmed_samples) {
+            if (!finiteVec(sample.position) || (sample.pressure.has_value() && !std::isfinite(*sample.pressure))) return false;
+        }
+        for (const auto& point : brush->stroke.vector_output.outline) if (!finiteVec(point)) return false;
+    }
     if (const auto* sticky = std::get_if<StickyContent>(&object.content)) {
         if (!std::isfinite(sticky->width) || sticky->width <= 0.0 ||
             !std::isfinite(sticky->height) || sticky->height <= 0.0) return false;
@@ -637,8 +650,13 @@ ValidationResult validateEnvelope(
     if (operation.id.isZero() || operation.document_id.isZero()) {
         return {ValidationIssue::kInvalidId};
     }
-    if (!presence.schema_version || !presence.payload_version ||
-        operation.schema_version != 1U || operation.payload_version != 1U) {
+    const bool new_brush_add = static_cast<OperationKind>(operation.payload.index() + 1U) == OperationKind::kAddStroke &&
+                               operation.schema_version == 1U && operation.payload_version == 2U &&
+                               std::holds_alternative<AddStrokeOp>(operation.payload) &&
+                               std::get<AddStrokeOp>(operation.payload).object.kind == ObjectKind::kVectorStroke &&
+                               std::get<AddStrokeOp>(operation.payload).object.kind_version == 2U;
+    if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
+        (operation.payload_version != 1U && !new_brush_add)) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};

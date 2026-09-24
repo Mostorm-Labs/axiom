@@ -332,6 +332,20 @@ bool normalizeContent(ObjectContent& content) {
                 return normalizeStroke(value.stroke);
             } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
                 return normalizeStroke(value.stroke);
+            } else if constexpr (std::is_same_v<Item, BrushStrokeContent>) {
+                auto& snapshot = value.stroke.snapshot;
+                if (!normalizeDouble(snapshot.vector.size) || !normalizeDouble(snapshot.vector.thinning) ||
+                    !normalizeDouble(snapshot.vector.smoothing) || !normalizeDouble(snapshot.vector.streamline) ||
+                    !normalizeDouble(snapshot.vector.start_taper) || !normalizeDouble(snapshot.vector.end_taper) ||
+                    !normalizeDouble(snapshot.paint.red) || !normalizeDouble(snapshot.paint.green) ||
+                    !normalizeDouble(snapshot.paint.blue) || !normalizeDouble(snapshot.paint.alpha) ||
+                    !normalizeDouble(snapshot.paint.opacity)) return false;
+                for (auto& sample : value.stroke.confirmed_samples) {
+                    if (!normalizeVec(sample.position)) return false;
+                    if (sample.pressure.has_value() && !normalizeDouble(*sample.pressure)) return false;
+                }
+                for (auto& point : value.stroke.vector_output.outline) if (!normalizeVec(point)) return false;
+                return true;
             } else if constexpr (std::is_same_v<Item, ConnectorContent>) {
                 return normalizeConnector(value);
             } else if constexpr (std::is_same_v<Item, StickyContent>) {

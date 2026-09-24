@@ -11,14 +11,25 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[3]
+ANCHOR = "4144dfd80b665df435d141382de05196d3b8eb0f"
 
-def source_text(path: str) -> str:
-    return (ROOT / path).read_text(encoding="utf-8")
+def materialize_anchor(destination: Path) -> None:
+    archive = subprocess.run(
+        ["git", "archive", ANCHOR], cwd=ROOT, check=True, stdout=subprocess.PIPE
+    )
+    archive_path = destination / "anchor.tar"
+    archive_path.write_bytes(archive.stdout)
+    with tarfile.open(archive_path) as stream:
+        stream.extractall(destination / "source", filter="data")
 
-def run_legacy_runtime_probe() -> dict[str, object]:
+def source_text(anchor_root: Path, path: str) -> str:
+    return (anchor_root / path).read_text(encoding="utf-8")
+
+def run_legacy_runtime_probe(anchor_root: Path, probe_root: Path) -> dict[str, object]:
     source = r'''
 #include "canvas/ink/programmable_brush.hpp"
 #include <iostream>
@@ -52,8 +63,8 @@ int main() {
         exe = td / "probe"
         cpp.write_text(source, encoding="utf-8")
         compile_cmd = [
-            os.environ.get("CXX", "c++"), "-std=c++20", "-O0", "-I", str(ROOT / "runtime/ink/include"),
-            str(cpp), str(ROOT / "runtime/ink/src/programmable_brush.cpp"), "-o", str(exe),
+            os.environ.get("CXX", "c++"), "-std=c++20", "-O0", "-I", str(anchor_root / "runtime/ink/include"),
+            str(cpp), str(anchor_root / "runtime/ink/src/programmable_brush.cpp"), "-o", str(exe),
         ]
         build = subprocess.run(compile_cmd, cwd=ROOT, text=True, capture_output=True)
         if build.returncode != 0:
@@ -70,19 +81,22 @@ int main() {
         return observed
 
 def main() -> int:
-    missing_new_surface = not (ROOT / "runtime/ink/include/canvas/ink/brush_session.hpp").exists()
-    host = source_text("apps/ink_playground/common/ink_playground_host.cpp")
-    web = source_text("apps/ink_playground/platform/web/bridge.cpp")
-    android = source_text("apps/ink_playground/platform/android/bridge.cpp")
-    windows = source_text("apps/ink_playground/platform/windows/main.cpp")
-    schema_missing = not (ROOT / "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto").exists()
-    legacy_owner_tokens = ["BrushRuntime", "BrushDefinition", "BrushPrimitive"]
-    platform_hits = {
-        "web": any(token in web for token in legacy_owner_tokens),
-        "android": any(token in android for token in legacy_owner_tokens),
-        "windows": any(token in windows for token in legacy_owner_tokens),
-    }
-    runtime_probe = run_legacy_runtime_probe()
+    with tempfile.TemporaryDirectory(prefix="axiom-c2-red-anchor-") as td:
+        workspace = Path(td)
+        materialize_anchor(workspace)
+        anchor_root = workspace / "source"
+        missing_new_surface = not (anchor_root / "runtime/ink/include/canvas/ink/brush_session.hpp").exists()
+        web = source_text(anchor_root, "apps/ink_playground/platform/web/bridge.cpp")
+        android = source_text(anchor_root, "apps/ink_playground/platform/android/bridge.cpp")
+        windows = source_text(anchor_root, "apps/ink_playground/platform/windows/main.cpp")
+        schema_missing = not (anchor_root / "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto").exists()
+        legacy_owner_tokens = ["BrushRuntime", "BrushDefinition", "BrushPrimitive"]
+        platform_hits = {
+            "web": any(token in web for token in legacy_owner_tokens),
+            "android": any(token in android for token in legacy_owner_tokens),
+            "windows": any(token in windows for token in legacy_owner_tokens),
+        }
+        runtime_probe = run_legacy_runtime_probe(anchor_root, workspace)
     full_history = runtime_probe.get("full_history_re_evaluated") is True
     # The anchor API exposes only full preview vectors on every append; the
     # probe therefore treats this as the frozen observable one-shot path.
@@ -100,6 +114,7 @@ def main() -> int:
         "schema_version": "0.1",
         "kind": "C2_RED_ORACLE",
         "anchor_surface": "legacy task-anchor implementation",
+        "anchor_revision": ANCHOR,
         "expected_red": sorted(expected_red),
         "observed": observed,
         "platform_source_hits": platform_hits,
