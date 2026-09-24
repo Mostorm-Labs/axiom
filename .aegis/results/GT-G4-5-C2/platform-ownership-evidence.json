@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "status": "PASS",
+  "checked_revision": "4c4de6c2467c3dc2b48c087ed87cb9d44a8cae00",
+  "source_checks": {
+    "web_legacy_runtime_tokens": false,
+    "android_legacy_runtime_tokens": false,
+    "windows_platform_runtime_owner": false,
+    "common_host_brush_session_owner": true
+  },
+  "target_verification": [
+    "cmake --build out/c2-proto -j2",
+    "ctest --test-dir out/c2-proto -R G4InkPlaygroundPlatform"
+  ],
+  "ownership": "platforms normalize input and present render points; InkPlaygroundHost owns BrushSession"
+}

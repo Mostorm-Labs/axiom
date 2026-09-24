@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "status": "PASS",
+  "build": "cmake --build out/c2-proto -j2",
+  "ctest": {
+    "passed": 580,
+    "failed": 0
+  },
+  "contract_check": "PASS",
+  "git_diff_check": "PASS"
+}
