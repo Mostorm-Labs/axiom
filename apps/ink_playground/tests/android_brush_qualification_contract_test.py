@@ -10,9 +10,8 @@ JAVA_TEXT = JAVA.read_text()
 ACTIVITY_TEXT = ACTIVITY.read_text()
 
 
-assert "nativeBrushBegin" in JAVA_TEXT
-assert "nativeBrushSample" in JAVA_TEXT
-assert "nativeBrushFinish" in JAVA_TEXT
+assert "nativePlatformBatch" in JAVA_TEXT
+assert "nativePlatformBatch" in (ROOT / "platform" / "android" / "android_jni.cpp").read_text()
 assert "brushSelector" in ACTIVITY_TEXT
 assert "selectBrushFamily" in ACTIVITY_TEXT
 assert "selectedBrushFamily" in JAVA_TEXT
@@ -23,7 +22,10 @@ assert "case 4:" in JAVA_TEXT
 assert "case 5:" in JAVA_TEXT
 assert "毛笔质感" in ACTIVITY_TEXT
 assert "g4-5-android" in JAVA_TEXT
-assert "programmable_brush" in NATIVE
-assert "BrushFamily" in NATIVE
-assert "family <= 7" in NATIVE
-assert "canonicalMutation" in NATIVE
+assert "InkPlaygroundHost" in NATIVE
+assert "PlatformPointerBatch" in NATIVE
+assert "BrushRuntime" not in NATIVE
+assert "BrushDefinition" not in NATIVE
+assert "BrushPrimitive" not in NATIVE
+assert "BrushFamily" not in NATIVE
+assert "programmable_brush" not in NATIVE

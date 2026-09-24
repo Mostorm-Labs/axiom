@@ -24,9 +24,11 @@ assert "setTimeout(() => persistEvidence" in source
 assert "convertToBlob" in worker_source
 assert "crypto.subtle.digest" in worker_source
 assert "exportEvidence" in source
-assert "_axiom_ink_cancel_pointer" in source
-assert "axiom_ink_cancel_pointer" in bridge_source
-assert "_axiom_ink_cancel_pointer" in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_platform_batch" in source
+assert "axiom_ink_platform_batch" in bridge_source
+assert "_axiom_ink_platform_batch" in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "phaseCode" in source
+assert "phase === \"cancel\"" in source
 assert "_axiom_ink_viewport_claimed" in source
 assert "axiom_ink_viewport_claimed" in bridge_source
 assert "touch-action: none" in source
@@ -39,12 +41,12 @@ assert "selectedBrushFamily" in source
 assert "brushFamilyName" in source
 assert "family: selectedBrushFamily" in source
 assert "drawBrushSegment" in source
-assert "_axiom_ink_brush_begin" in source
-assert "_axiom_ink_brush_sample" in source
+assert "_axiom_ink_brush_begin" not in source
+assert "_axiom_ink_brush_sample" not in source
 assert "_axiom_ink_brush_size" in source
 assert "_axiom_ink_brush_representation" in source
-assert "axiom_ink_brush_begin" in bridge_source
-assert "axiom_ink_brush_sample" in bridge_source
+assert "axiom_ink_brush_begin" not in source
+assert "axiom_ink_brush_sample" not in source
 assert "addEventListener(\"wheel\", handleWheel, { passive: false, capture: true })" in source
 assert "_axiom_ink_apply_viewport_wheel_pan" in source
 assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" in source
@@ -52,9 +54,9 @@ assert "_axiom_ink_apply_viewport_gesture" in source
 assert "axiom_ink_apply_viewport_wheel_pan" in bridge_source
 assert "axiom_ink_apply_viewport_ctrl_wheel_zoom" in bridge_source
 assert "axiom_ink_apply_viewport_gesture" in bridge_source
-assert "_axiom_ink_apply_viewport_wheel_pan" not in (page.parents[2] / "CMakeLists.txt").read_text()
-assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" not in (page.parents[2] / "CMakeLists.txt").read_text()
-assert "_axiom_ink_apply_viewport_gesture" not in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_apply_viewport_wheel_pan" in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" in (page.parents[2] / "CMakeLists.txt").read_text()
+assert "_axiom_ink_apply_viewport_gesture" in (page.parents[2] / "CMakeLists.txt").read_text()
 assert "let trackpadScale" not in source
 assert "let trackpadTranslationX" not in source
 assert "let trackpadTranslationY" not in source
@@ -64,7 +66,7 @@ assert "viewportTranslationY" in source
 assert "viewportTranslationX: viewportTranslationX().toFixed(2)" in source
 assert "viewportTranslationY: viewportTranslationY().toFixed(2)" in source
 assert "coalesced.length === 0" in source
-assert "_axiom_ink_pointer_sample_phase" in source
+assert "_axiom_ink_pointer_sample_phase" not in source
 assert "_axiom_ink_viewport_scale" in source
 assert "trace_sha256" in worker_source
 assert "Cannot mix BigInt" not in source

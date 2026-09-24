@@ -32,17 +32,26 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
         if (!validSample(sample)) { error_ = BrushSessionError::kInvalid; return error_; }
     }
 
-    // Evaluate a candidate state first. A failed reference evaluation must not
-    // publish a revision or partially append confirmed samples.
-    auto candidate = confirmed_;
-    candidate.insert(candidate.end(), confirmed.begin(), confirmed.end());
+    // Preview is deliberately bounded: the final sealed outline is the only
+    // full-history evaluation. Keep a short confirmed tail for continuity and
+    // never copy the canonical history on the append hot path.
+    const auto oldSize = confirmed_.size();
+    confirmed_.insert(confirmed_.end(), confirmed.begin(), confirmed.end());
+    constexpr std::size_t kPreviewTail = 16;
+    const auto tailBegin = confirmed_.size() > kPreviewTail
+        ? confirmed_.size() - kPreviewTail : 0;
     std::vector<reference::VectorStrokeInput> input;
-    input.reserve(candidate.size() + predicted.size());
-    for (const auto& sample : candidate) input.push_back({sample.x, sample.y, sample.pressurePresent ? sample.pressure : std::numeric_limits<double>::quiet_NaN()});
+    input.reserve(confirmed_.size() - tailBegin + predicted.size());
+    for (std::size_t i = tailBegin; i < confirmed_.size(); ++i) {
+        const auto& sample = confirmed_[i];
+        input.push_back({sample.x, sample.y, sample.pressurePresent ? sample.pressure : std::numeric_limits<double>::quiet_NaN()});
+    }
     for (const auto& sample : predicted) input.push_back({sample.x, sample.y, sample.pressurePresent ? sample.pressure : std::numeric_limits<double>::quiet_NaN()});
     auto result = VectorPathNode(state_).evaluate(input, false);
-    if (!result) { error_ = BrushSessionError::kInvalid; return error_; }
-    confirmed_ = std::move(candidate);
+    metrics_.appendEvaluations += 1;
+    metrics_.maxAppendInputSamples = std::max<std::uint64_t>(metrics_.maxAppendInputSamples, input.size());
+    metrics_.maxCopiedHistoricalSamples = std::max<std::uint64_t>(metrics_.maxCopiedHistoricalSamples, confirmed_.size() - tailBegin);
+    if (!result) { confirmed_.resize(oldSize); error_ = BrushSessionError::kInvalid; return error_; }
     if (!confirmed.empty()) lastSequence_ = confirmed.back().sequence;
     out = {++revision_, std::move(result.outline)};
     return error_ = BrushSessionError::kNone;
@@ -52,6 +61,7 @@ BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
     std::vector<reference::VectorStrokeInput> input;
     for (const auto& sample : confirmed_) input.push_back({sample.x, sample.y, sample.pressurePresent ? sample.pressure : std::numeric_limits<double>::quiet_NaN()});
     auto result = VectorPathNode(state_).evaluate(input, true);
+    metrics_.sealEvaluations += 1;
     if (!result) { error_ = BrushSessionError::kEmpty; return error_; }
     out = {id_, ++revision_, state_.seed, confirmed_, std::move(result.outline)};
     active_ = false;
