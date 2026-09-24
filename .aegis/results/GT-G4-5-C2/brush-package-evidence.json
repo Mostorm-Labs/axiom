@@ -1,13 +1,18 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
   "status": "PASS",
-  "tests": [
-    "G45BrushPackage"
-  ],
-  "properties": [
-    "bounded JSON parsing",
-    "deterministic canonical identity",
-    "unknown/invalid ranges reject"
-  ]
+  "checked_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+  "obligation": "package-normalization",
+  "command": "python docs/planning/brush-engine-v0.4/check_contract.py",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+    "source_tree_sha256": "b1be5f410f6505ae4cd72a747856619df8a6ae47c0f27599259b9b5cbe70697a"
+  },
+  "raw_observation": {
+    "contract": "PASS"
+  },
+  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.1/contract.stdout"
 }

@@ -1,11 +1,19 @@
 {
   "schema_version": "0.1",
   "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
   "status": "PASS",
-  "forbidden_path_scan": "PASS",
-  "legacy_platform_tokens_removed": [
-    "apps/ink_playground/platform/web/bridge.cpp",
-    "apps/ink_playground/platform/android/bridge.cpp"
-  ],
-  "note": "Windows helper renamed to make normalization boundary explicit"
+  "checked_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+  "obligation": "scope-diff",
+  "command": "git diff --check && python tools/check_docs.py",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+    "source_tree_sha256": "b1be5f410f6505ae4cd72a747856619df8a6ae47c0f27599259b9b5cbe70697a"
+  },
+  "raw_observation": {
+    "git_diff_check": "PASS",
+    "docs_check": "363 Markdown files"
+  },
+  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.1/docs.stdout"
 }
