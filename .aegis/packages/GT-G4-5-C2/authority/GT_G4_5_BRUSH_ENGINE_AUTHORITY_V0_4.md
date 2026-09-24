@@ -9,7 +9,7 @@ Required analysis/output: ownership, state transitions, bounded handoff,
 retirement map and P31 scope below. Quality gate: P20 verification design.
 Handoff: P20 → P21/P23 → P30/P31; this turn stops before P32.
 
-Semantic authority is [the complete P12/P13 contract](brush-engine-v0.4/CONTRACT.md)
+Semantic authority is [the complete P12/P13 contract](../../../../docs/planning/brush-engine-v0.4/CONTRACT.md)
 and its schema/examples. This document does not override its fields/versions.
 
 ## Owners and data flow

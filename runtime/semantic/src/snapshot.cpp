@@ -12,9 +12,11 @@
 namespace canvas::semantic {
 
 namespace {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
 bool supportedSnapshotVersion(std::uint32_t version) noexcept {
     return version == 1U || version == 2U;
 }
+#endif
 }
 
 CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot) {

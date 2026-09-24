@@ -46,7 +46,7 @@ if(BUILD_TESTING)
     target_compile_options(axiom_c1_apple_input_contract_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   endif()
   add_test(NAME C1AppleContract COMMAND axiom_c1_apple_input_contract_tests)
-  if(WIN32)
+  if(WIN32 AND TARGET Arc::Windows)
     add_executable(axiom_ink_playground_windows_pointer_utils_tests
       tests/windows_pointer_utils_test.cpp
       platform/windows/windows_smoke_evidence.cpp)
