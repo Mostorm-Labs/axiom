@@ -67,7 +67,7 @@ void pushArcPreview(State& value, std::uint64_t pointerId,
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews.at(pointerId);
   const auto appendStart = preview.points.size();
-  const auto appended = canvas::ink_playground::windows_input::appendPreviewSamples(
+  const auto appended = canvas::ink_playground::windows_input::appendNormalizedPreviewSamples(
       preview.points, preview.lastSampleSequence, samples);
   if (appended == 0U) return;
   arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
@@ -236,9 +236,12 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     value.activeKeys[kMousePointerId] = *key;
     value.pointerStrokes[kMousePointerId] = value.host->platformStrokeId(*key).value_or(value.stroke);
     value.maxConcurrentPointers = (std::max)(value.maxConcurrentPointers, value.activeKeys.size());
+    if (!value.host->beginBrushSession(kMousePointerId, 1U)) return false;
     beginArcPreview(value, kMousePointerId);
   }
   pushArcPreview(value, kMousePointerId, std::span<const PointerSample>(&sample, 1));
+  if (!begin && !value.host->appendBrushSample(kMousePointerId, sample.x, sample.y,
+                                                sample.pressure, sample.sample_sequence)) return false;
   value.deviceId = kMousePointerId;
   const auto key = value.activeKeys.at(kMousePointerId);
   value.trace.push_back({key.source, kMousePointerId, key.generation, timestampMs, "mouse",
@@ -247,6 +250,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
                           x, y, sample.pressure, 1U, 0.0F, 0.0F});
   if (end) persistEvidence(value);
   if (end) {
+    if (!value.host->finishBrushSession(kMousePointerId)) return false;
     commitArcHandoff(value, kMousePointerId);
     value.activeKeys.erase(kMousePointerId);
     value.pointerStrokes.erase(kMousePointerId);
@@ -269,6 +273,7 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
       (void)value.previewBridge->Cancel(cancel);
     }
     (void)value.host->cancelStroke(key);
+    (void)value.host->cancelBrushSession(pointerId);
   }
   value.trace.push_back({key.source, static_cast<std::uint32_t>(pointerId), key.generation,
                          timestampMs, "unknown", "cancel", 0.0F, 0.0F, 0.0F, 0U,
@@ -543,6 +548,12 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (!key) return 0;
       value->activeKeys[pointerId] = *key;
       value->pointerStrokes[pointerId] = value->host->platformStrokeId(*key).value_or(value->stroke);
+      if (!value->host->beginBrushSession(pointerId, 1U)) return 0;
+    }
+    for (const auto& sample : samples) {
+      if (sample.phase != ARC_POINTER_PHASE_DOWN &&
+          !value->host->appendBrushSample(pointerId, sample.x, sample.y,
+                                          sample.pressure, sample.sample_sequence)) return 0;
     }
     if (value->host->viewportGestureClaimed()) {
       suppressAllArcPreviews(*value);
@@ -551,6 +562,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     if (end) persistEvidence(*value);
     if (end) {
+      if (!value->host->finishBrushSession(pointerId)) return 0;
       commitArcHandoff(*value, pointerId);
       value->activeKeys.erase(pointerId);
       value->pointerStrokes.erase(pointerId);

@@ -650,13 +650,32 @@ ValidationResult validateEnvelope(
     if (operation.id.isZero() || operation.document_id.isZero()) {
         return {ValidationIssue::kInvalidId};
     }
-    const bool new_brush_add = static_cast<OperationKind>(operation.payload.index() + 1U) == OperationKind::kAddStroke &&
-                               operation.schema_version == 1U && operation.payload_version == 2U &&
-                               std::holds_alternative<AddStrokeOp>(operation.payload) &&
-                               std::get<AddStrokeOp>(operation.payload).object.kind == ObjectKind::kVectorStroke &&
-                               std::get<AddStrokeOp>(operation.payload).object.kind_version == 2U;
+    const auto isNewBrush = [](const ObjectRecord& object) noexcept {
+        return object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
+               std::holds_alternative<BrushStrokeContent>(object.content);
+    };
+    bool containsNewBrush = false;
+    bool containsLegacyStroke = false;
+    const auto classify = [&](const ObjectRecord& object) noexcept {
+        containsNewBrush |= isNewBrush(object);
+        containsLegacyStroke |= object.kind == ObjectKind::kVectorStroke &&
+                                object.kind_version == 1U &&
+                                std::holds_alternative<VectorStrokeContent>(object.content);
+    };
+    std::visit([&](const auto& payload) {
+        using Payload = std::decay_t<decltype(payload)>;
+        if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
+            classify(payload.object);
+        } else if constexpr (std::is_same_v<Payload, InsertObjectsOp> ||
+                             std::is_same_v<Payload, RestoreObjectsOp>) {
+            for (const auto& object : payload.objects) classify(object);
+        } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {
+            for (const auto& split : payload.splits)
+                for (const auto& object : split.replacements) classify(object);
+        }
+    }, operation.payload);
     if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
-        (operation.payload_version != 1U && !new_brush_add)) {
+        (operation.payload_version != 1U && !(containsNewBrush && !containsLegacyStroke && operation.payload_version == 2U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};

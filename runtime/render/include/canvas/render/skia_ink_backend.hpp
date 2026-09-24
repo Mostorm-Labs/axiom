@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/render/render_backend.hpp"
+#include "canvas/render/brush_render_point.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
@@ -40,6 +41,9 @@ class SkiaInkBackend final {
         CanonicalViewportTransform viewport);
     [[nodiscard]] BackendSubmissionResult submitPrimitives(
         std::span<const canvas::ink::BrushPrimitive> primitives,
+        CanonicalViewportTransform viewport = {});
+    [[nodiscard]] BackendSubmissionResult submitBrushPoints(
+        std::span<const BrushRenderPoint> points,
         CanonicalViewportTransform viewport = {});
     [[nodiscard]] std::span<const std::uint8_t> rgba() const noexcept { return pixels_; }
     [[nodiscard]] std::uint32_t width() const noexcept { return width_; }

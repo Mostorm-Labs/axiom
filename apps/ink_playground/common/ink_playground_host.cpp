@@ -5,6 +5,7 @@
 #include <limits>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 namespace canvas::ink_playground {
 
@@ -192,6 +193,83 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
   coordinator_->reset();
   viewportController_->reset();
   interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
+  for (auto& [pointer, session] : brushSessions_) {
+    (void)pointer;
+    session->cancel();
+  }
+  brushSessions_.clear();
+  brushPreviews_.clear();
+}
+
+bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
+                                          std::uint32_t profile) noexcept {
+  if (pointerId == 0U || brushSessions_.contains(pointerId)) return false;
+  ink::BrushPackage package;
+  package.packageId = "0123456789abcdef0123456789abcdef";
+  package.revision = 1U;
+  package.vector.size = 16.0;
+  package.vector.thinning = 0.5;
+  package.vector.smoothing = 0.5;
+  package.vector.streamline = 0.5;
+  // Profile is a versioned capability selector, not a product BrushFamily.
+  if (profile != 1U) return false;
+  auto state = ink::resolveBrushState(package, 0x4500ULL + pointerId);
+  auto session = std::make_unique<ink::BrushSession>(pointerId, std::move(state));
+  if (!session->begin()) return false;
+  brushSessions_.emplace(pointerId, std::move(session));
+  brushPreviews_.erase(pointerId);
+  return true;
+}
+
+bool InkPlaygroundHost::appendBrushSample(std::uint64_t pointerId, double x, double y,
+                                          double pressure, std::uint64_t sequence,
+                                          bool predicted) noexcept {
+  const auto it = brushSessions_.find(pointerId);
+  if (it == brushSessions_.end()) return false;
+  ink::BrushSample sample{x, y, pressure, true, sequence};
+  ink::BrushPreviewDelta delta;
+  const auto error = predicted
+      ? it->second->append({}, std::span<const ink::BrushSample>(&sample, 1), delta)
+      : it->second->append(std::span<const ink::BrushSample>(&sample, 1), {}, delta);
+  if (error != ink::BrushSessionError::kNone) return false;
+  brushPreviews_[pointerId] = std::move(delta.outline);
+  return true;
+}
+
+bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
+  const auto it = brushSessions_.find(pointerId);
+  if (it == brushSessions_.end()) return false;
+  ink::BrushCommitIntent intent;
+  if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
+  brushDigest_ = std::hash<std::uint64_t>{}(intent.seed ^ intent.revision ^ intent.session);
+  for (const auto& point : intent.outline) {
+    committedBrushPoints_.push_back({static_cast<float>(point.x), static_cast<float>(point.y),
+                                     1.0F, 0.0F, 1.0F, 1U});
+  }
+  brushSessions_.erase(it);
+  brushPreviews_.erase(pointerId);
+  return true;
+}
+
+bool InkPlaygroundHost::cancelBrushSession(std::uint64_t pointerId) noexcept {
+  const auto it = brushSessions_.find(pointerId);
+  if (it == brushSessions_.end()) return false;
+  it->second->cancel();
+  brushSessions_.erase(it);
+  brushPreviews_.erase(pointerId);
+  return true;
+}
+
+std::vector<render::BrushRenderPoint> InkPlaygroundHost::brushRenderPoints() const {
+  auto result = committedBrushPoints_;
+  for (const auto& [pointer, outline] : brushPreviews_) {
+    (void)pointer;
+    for (const auto& point : outline) {
+      result.push_back({static_cast<float>(point.x), static_cast<float>(point.y),
+                        1.0F, 0.0F, 0.7F, 1U});
+    }
+  }
+  return result;
 }
 
 interaction::ContactDisposition InkPlaygroundHost::pointerDisposition(

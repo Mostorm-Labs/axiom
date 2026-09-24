@@ -4,6 +4,8 @@
 #include "canvas/input/platform_input_contract.hpp"
 #include "canvas/ink/ink_engine.hpp"
 #include "canvas/ink/preview_model.hpp"
+#include "canvas/ink/brush_session.hpp"
+#include "canvas/render/brush_render_point.hpp"
 #include "canvas/interaction/interaction_runtime.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
@@ -72,6 +74,18 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                   std::uint64_t operationId) noexcept;
   [[nodiscard]] bool commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                   std::uint64_t operationId) noexcept;
+  // New Brush Engine composition boundary. Platform code may normalize input
+  // and present output, but it cannot own BrushRuntime/BrushDefinition state.
+  [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
+                                       std::uint32_t profile = 1U) noexcept;
+  [[nodiscard]] bool appendBrushSample(std::uint64_t pointerId, double x, double y,
+                                       double pressure, std::uint64_t sequence,
+                                       bool predicted = false) noexcept;
+  [[nodiscard]] bool finishBrushSession(std::uint64_t pointerId) noexcept;
+  [[nodiscard]] bool cancelBrushSession(std::uint64_t pointerId) noexcept;
+  [[nodiscard]] std::vector<render::BrushRenderPoint> brushRenderPoints() const;
+  [[nodiscard]] std::size_t brushPrimitiveCount() const noexcept { return committedBrushPoints_.size(); }
+  [[nodiscard]] std::uint64_t brushDigest() const noexcept { return brushDigest_; }
   [[nodiscard]] bool cancelStroke(const input::PointerKey& key) noexcept;
   void cancelAllPointers() noexcept;
   [[nodiscard]] interaction::ContactDisposition pointerDisposition(
@@ -147,6 +161,10 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
   PlatformInteractionController platformController_;
   std::uint64_t nextPlatformStrokeId_ = 1;
+  std::unordered_map<std::uint64_t, std::unique_ptr<ink::BrushSession>> brushSessions_;
+  std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
+  std::vector<render::BrushRenderPoint> committedBrushPoints_;
+  std::uint64_t brushDigest_ = 0;
 };
 
 }  // namespace canvas::ink_playground

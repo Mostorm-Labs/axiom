@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v1.0",
+  "obligations": [
+    {
+      "id": "package-normalization",
+      "requirement": "Manifest/pipeline JSON is bounded, versioned, deterministic and rejects unknown/duplicate/nonfinite/out-of-range input.",
+      "oracle": "C2-V11 resolution fixtures plus parser negative corpus.",
+      "acceptance": "Equivalent semantic inputs produce identical canonical projection; every frozen negative rejects before begin.",
+      "evidence_required": "brush-package-evidence.json"
+    },
+    {
+      "id": "plan-activation-closure",
+      "requirement": "Only input/vector/rendering nodes activate for profile 1; dependencies and unsupported stages fail closed.",
+      "oracle": "C2-PLAN activation matrix and provider/resource counters.",
+      "acceptance": "Active tuples are exactly [1,2,3]; inactive stages perform zero calls/loads/allocations.",
+      "evidence_required": "brush-plan-evidence.json"
+    },
+    {
+      "id": "resolution-determinism",
+      "requirement": "Resolved state is self-contained and deterministic across hosts and catalog removal.",
+      "oracle": "C2-V11 typed projection comparison.",
+      "acceptance": "Repeated resolution, signed-zero normalization and field mutation expectations pass.",
+      "evidence_required": "brush-package-evidence.json"
+    },
+    {
+      "id": "r01-vector-node-parity",
+      "requirement": "VectorPathNode maps the frozen ResolvedBrushState fields to pinned Perfect Freehand R1 exactly; legacy BrushDefinition v1 has no new-authoring mapping.",
+      "oracle": "Accepted R01 corpus plus the frozen adapter mapping table in CONTRACT.md.",
+      "acceptance": "Every mapped option matches the table; preview uses last=false, seal uses last=true; legacy definitions reject before begin.",
+      "evidence_required": "vector-node-evidence.json"
+    },
+    {
+      "id": "snapshot-replay",
+      "requirement": "New authoring seals a complete snapshot/outline and replay is catalog/evaluator independent.",
+      "oracle": "C2-V12 live create, AddStroke, fresh-document replay, undo/redo and Skia observation.",
+      "acceptance": "Exact stored record/projection and nonempty render observation match; no fallback branch.",
+      "evidence_required": "snapshot-replay-evidence.json"
+    },
+    {
+      "id": "wire-schema-release",
+      "requirement": "Approved v0.4 new schema carriers are materialized atomically and legacy carriers remain distinct.",
+      "oracle": "C2-WIRE examples and mutation corpus.",
+      "acceptance": "(5,2)/tag10 and payload/snapshot v2 accept; old reader rejects new carriers without mutation; mixed versions reject.",
+      "evidence_required": "wire-schema-evidence.json"
+    },
+    {
+      "id": "prediction-isolation",
+      "requirement": "Predicted input is replaceable preview-only state.",
+      "oracle": "C2-PREDICT confirmed/predicted sequence fixtures.",
+      "acceptance": "Prediction never changes sealed samples/outline/seed; invalid batches are atomic.",
+      "evidence_required": "prediction-evidence.json"
+    },
+    {
+      "id": "preview-handoff",
+      "requirement": "Preview latest-wins is bounded while terminal controls and commit intent are reliable.",
+      "oracle": "C2-HANDOFF 64-session stall and receipt fault injection.",
+      "acceptance": "No lost seal/cancel/intent; matching CanonicalVisible retires only its preview.",
+      "evidence_required": "handoff-evidence.json"
+    },
+    {
+      "id": "commit-intent-boundary",
+      "requirement": "BrushCommitIntent is confirmed-only and Runtime Core alone builds AddStroke.",
+      "oracle": "Intent/operation boundary tests and unknown-schema negatives.",
+      "acceptance": "Brush code constructs no Operation; adapter rejects unknown schema and retries exact bytes.",
+      "evidence_required": "brush-operation-intent-evidence.json"
+    },
+    {
+      "id": "platform-ownership",
+      "requirement": "Web/Android/Windows normalize/present only and share common BrushSession ownership.",
+      "oracle": "Platform source checks plus accepted C0/C1 routed traces and target builds.",
+      "acceptance": "No platform-local BrushRuntime/family/primitive interpretation remains in new path.",
+      "evidence_required": "platform-ownership-evidence.json"
+    },
+    {
+      "id": "legacy-readonly",
+      "requirement": "V1 documents remain decodable/renderable read-only and no new authoring reaches legacy classes.",
+      "oracle": "Frozen V1 fixtures and source reachability checks.",
+      "acceptance": "View/copy-original work; mutation/autosave/new stroke are rejected for legacy documents.",
+      "evidence_required": "legacy-readonly-evidence.json"
+    },
+    {
+      "id": "c0-c1-regression",
+      "requirement": "Existing C0/C1/input, semantic, scene, render and R01 behavior remains valid.",
+      "oracle": "Existing CTest and platform contract suites.",
+      "acceptance": "Required regression commands pass with only explicitly retired authoring assertions changed.",
+      "evidence_required": "regression-summary.json"
+    },
+    {
+      "id": "scope-diff",
+      "requirement": "Changes stay within frozen package scope and no official Gate PASS is emitted.",
+      "oracle": "Git diff scope validator and package binding checker.",
+      "acceptance": "No forbidden path or dependency/lock mutation appears.",
+      "evidence_required": "scope-diff.json"
+    }
+  ],
+  "red_required": true,
+  "red_oracle": {
+    "path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+    "sha256": "62303f942b6b06282c3c526427efdf983ccf8b3ba2a1a7efd503aa6a376cd5dd",
+    "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+    "expected_exit_code": 0,
+    "expected_observation": "all frozen pre-change gaps RED; production_mutation=false"
+  },
+  "evidence_input_identity": "Each artifact records command, exit code, executable/input hashes and raw observations."
+}

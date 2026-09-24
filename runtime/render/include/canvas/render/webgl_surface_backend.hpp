@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/render/render_backend.hpp"
+#include "canvas/render/brush_render_point.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
@@ -30,6 +31,8 @@ class WebGlSurfaceBackend final : public IRenderBackend {
     [[nodiscard]] BackendSubmissionResult submit(const FramePlan& plan) override;
     [[nodiscard]] BackendSubmissionResult submitBrushPrimitives(
         std::span<const canvas::ink::BrushPrimitive> primitives);
+    [[nodiscard]] BackendSubmissionResult submitBrushPoints(
+        std::span<const BrushRenderPoint> points);
 
   private:
     struct Impl;

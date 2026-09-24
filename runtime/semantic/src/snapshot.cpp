@@ -11,12 +11,18 @@
 
 namespace canvas::semantic {
 
+namespace {
+bool supportedSnapshotVersion(std::uint32_t version) noexcept {
+    return version == 1U || version == 2U;
+}
+}
+
 CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot) {
 #if !defined(CANVAS_SEMANTIC_PROTOBUF)
     (void)snapshot;
     return {SemanticError::kRuntimeUnavailable, {}};
 #else
-    if (snapshot.schema_version != 1U) return {SemanticError::kUnsupportedVersion, {}};
+    if (!supportedSnapshotVersion(snapshot.schema_version)) return {SemanticError::kUnsupportedVersion, {}};
     if (snapshot.document_id.isZero()) return {SemanticError::kInvalidSemanticValue, {}};
     std::vector<ObjectRecord> objects = snapshot.objects;
     for (auto& object : objects) {
@@ -59,7 +65,7 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     std::copy_n(wire.document_id().value().begin(), raw_document_id.bytes.size(), raw_document_id.bytes.begin());
     DocumentId document_id(raw_document_id);
     if (document_id.isZero()) return {SemanticError::kInvalidSemanticValue, std::nullopt};
-    if (wire.schema_version() != 1U) return {SemanticError::kUnsupportedVersion, std::nullopt};
+    if (!supportedSnapshotVersion(wire.schema_version())) return {SemanticError::kUnsupportedVersion, std::nullopt};
     SemanticSnapshot result;
     result.document_id = document_id;
     result.schema_version = wire.schema_version();

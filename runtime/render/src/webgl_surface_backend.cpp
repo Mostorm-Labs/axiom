@@ -99,4 +99,21 @@ BackendSubmissionResult WebGlSurfaceBackend::submitBrushPrimitives(
     return BackendSubmissionResult::accepted();
 }
 
+BackendSubmissionResult WebGlSurfaceBackend::submitBrushPoints(
+    std::span<const BrushRenderPoint> points) {
+    std::vector<canvas::ink::BrushPrimitive> primitives;
+    primitives.reserve(points.size());
+    for (const auto& point : points) {
+        canvas::ink::BrushPrimitive primitive;
+        primitive.x = point.x;
+        primitive.y = point.y;
+        primitive.size = point.size;
+        primitive.rotation = point.rotation;
+        primitive.opacity = point.opacity;
+        primitive.representation = static_cast<canvas::ink::BrushRepresentation>(point.representation);
+        primitives.push_back(primitive);
+    }
+    return submitBrushPrimitives(primitives);
+}
+
 } // namespace canvas::render

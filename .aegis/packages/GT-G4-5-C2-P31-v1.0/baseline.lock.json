@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "task_anchor": {
+    "revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "relation": "ancestor"
+  },
+  "accepted_dependencies": {
+    "c1_control_ref": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "c1_result": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+    "r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+    "r01_reference_commit": "176e00f2399f4969e1b0965c5921d96a3e50ce9f"
+  },
+  "starting_position_policy": "anchor_must_be_ancestor; HEAD_equality_not_required",
+  "predecessor_package": "GT-G4-5-C2-P31-v0.4"
+}
