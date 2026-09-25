@@ -1,0 +1,75 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-5-C2-P31-v1.2",
+  "result_ref": ".aegis/results/GT-G4-5-C2/result-v1.2.json",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "reviewed_revision": "0bc511d1727025584b66fc28970ae976ed0a22dc",
+    "implementation_revision": "4ca9b62acc798b625d85b64c9dfadabc40622b33",
+    "remote_branch_revision": "0bc511d1727025584b66fc28970ae976ed0a22dc",
+    "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "task_anchor_ancestry": "PASS",
+    "pull_request": 135
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "failed": [],
+    "passed": [
+      "P31 v1.2 package manifest and all content-addressed locks resolve",
+      "G45-SR01 brush_engine.proto additive carrier is authority mapped",
+      "G45-SR02 ObjectContent brush_stroke tag 10 is authority mapped",
+      "All preexisting ObjectContent fields and Operation registry identity are preserved",
+      "All repaired P32 implementation obligations remain satisfied"
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "failed": [],
+    "passed": [
+      "All P32 blocking artifacts are package v1.2 and implementation revision bound",
+      "Descriptor refreeze has zero unmapped changes and lock SHA 9c0896c3162f1fc3199b38e8f3603de3e8add0b07f800dbb3cc7005664573f83",
+      "Local full CTest rerun is 583/583 PASS",
+      "Fixed-anchor RED oracle observes all six frozen gaps RED",
+      "Hosted G1 semantic-codec run 36074533164 job 107882674007 artifact 10839332025 PASS",
+      "Hosted G4.5 qualification run 36074538146 Web/Android/Windows PASS"
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "checks": {
+      "repository_identity": "PASS",
+      "remote_head_matches_reviewed_head": "PASS",
+      "task_anchor_ancestry": "PASS",
+      "package_binding": "PASS",
+      "result_evidence_boundary": "PASS",
+      "descriptor_lock_matches_hosted_protoc": "PASS",
+      "hosted_semantic_build_and_differential": "PASS",
+      "hosted_g4_5_qualification": "PASS",
+      "local_full_ctest": "583/583 PASS",
+      "git_diff_check": "PASS"
+    }
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "GitHub Actions reports Node.js 20 action deprecation; the affected actions completed successfully and this is maintenance hardening, not a frozen G4.5 failure mode."
+    ]
+  },
+  "gate_review": {
+    "frozen_requirements": {"passed": ["all frozen obligations"], "failed": []},
+    "frozen_evidence": {"passed": ["all blocking evidence and provider identities"], "failed": []},
+    "verdict": "PASS_WITH_FINDINGS"
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "official_gate_pass": true,
+    "scope": "GT-G4-5-C2 only",
+    "forbidden_verdicts": ["G4 overall PASS", "G5 AUTHORIZED"]
+  }
+}
