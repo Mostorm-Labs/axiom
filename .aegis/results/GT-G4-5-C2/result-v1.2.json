@@ -5,7 +5,7 @@
   "package_id": "GT-G4-5-C2-P31-v1.2",
   "status": "READY_FOR_CONTROL_REVIEW",
   "implementation_revision": "4ca9b62acc798b625d85b64c9dfadabc40622b33",
-  "result_record_revision": "PENDING_COMMIT_REVISION",
+  "result_record_revision": "2afecd883b63703968ae599e0e5c1e93d24412b55eeb48ad9fdbbcf8358ea8ef",
   "materialized_ref": "refs/heads/codex/g4-5-common-brush-processing",
   "repository": "github.com/Mostorm-Labs/axiom",
   "evidence_input_refs": [
@@ -29,8 +29,15 @@
   ],
   "verification": {
     "full_build": "PASS",
-    "full_ctest": {"passed": 583, "failed": 0},
-    "platform_contracts": {"web": "PASS", "android": "PASS", "c1": "PASS"},
+    "full_ctest": {
+      "passed": 583,
+      "failed": 0
+    },
+    "platform_contracts": {
+      "web": "PASS",
+      "android": "PASS",
+      "c1": "PASS"
+    },
     "complexity": "PASS",
     "contract_check": "PASS",
     "fixed_anchor_red_oracle": "PASS",
