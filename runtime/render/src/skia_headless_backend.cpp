@@ -1,4 +1,5 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/render/skia_scene_renderer.hpp"
 
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkCanvas.h"
@@ -39,14 +40,17 @@ bool pointInScalarRange(const semantic::Vec2& point) noexcept {
 bool validAffine(const WorldToViewAffine& affine) noexcept {
     return scalarRange(affine.a) && scalarRange(affine.b) &&
            scalarRange(affine.c) && scalarRange(affine.d) &&
-           scalarRange(affine.tx) && scalarRange(affine.ty) &&
-           integral(affine.a) && integral(affine.b) && integral(affine.c) &&
-           integral(affine.d) && integral(affine.tx) && integral(affine.ty);
+           scalarRange(affine.tx) && scalarRange(affine.ty);
 }
 
 bool validRect(const foundation::WorldRect& rect) noexcept {
     return rect.isFiniteAndOrdered() && integral(rect.left) && integral(rect.top) &&
            integral(rect.right) && integral(rect.bottom);
+}
+
+bool validBrushRect(const foundation::WorldRect& value) noexcept {
+    return value.isFiniteAndOrdered() && scalarRange(value.left) && scalarRange(value.top) &&
+           scalarRange(value.right) && scalarRange(value.bottom);
 }
 
 bool validUtf8(const std::string& text) noexcept {
@@ -217,6 +221,13 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
                     return HeadlessSubmissionIssue::kUnsupportedGeometry;
                 }
             }
+        } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
+            if (command.content.stroke.vector_output.outline.empty()) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+            for (const auto& point : command.content.stroke.vector_output.outline) {
+                if (!pointInScalarRange(point)) return HeadlessSubmissionIssue::kOverflow;
+            }
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
@@ -297,6 +308,28 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
                 dabColor.a *= stroke.brush.opacity * dab.opacity;
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
+        } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            if (stroke.vector_output.outline.empty()) return;
+            const auto& paintState = stroke.snapshot.paint;
+            SkPaint paint;
+            paint.setAntiAlias(true);
+            paint.setColor4f(SkColor4f{static_cast<float>(paintState.red),
+                                      static_cast<float>(paintState.green),
+                                      static_cast<float>(paintState.blue),
+                                      static_cast<float>(paintState.alpha * paintState.opacity)});
+            paint.setStyle(SkPaint::kFill_Style);
+            SkPathBuilder path(stroke.vector_output.fill_rule == 2U
+                                   ? SkPathFillType::kEvenOdd
+                                   : SkPathFillType::kWinding);
+            path.moveTo(stroke.vector_output.outline.front().x,
+                        stroke.vector_output.outline.front().y);
+            for (std::size_t index = 1; index < stroke.vector_output.outline.size(); ++index) {
+                path.lineTo(stroke.vector_output.outline[index].x,
+                            stroke.vector_output.outline[index].y);
+            }
+            if (stroke.vector_output.closed) path.close();
+            canvas.drawPath(path.detach(), paint);
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
@@ -350,10 +383,12 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     }
     if (!validAffine(plan.referenceDrawList.worldToView) ||
         !validRect(plan.referenceDrawList.viewportClip)) {
-        return BackendSubmissionResult::rejected("non-integral transform or clip");
+        return BackendSubmissionResult::rejected("invalid transform or clip");
     }
     for (const auto& entry : plan.referenceDrawList.entries) {
-        if (!validRect(entry.record.visualBounds)) {
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command);
+        if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
+                         : validRect(entry.record.visualBounds))) {
             return BackendSubmissionResult::rejected("non-integral visual bounds");
         }
         const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
@@ -369,7 +404,9 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
             }
         }
     }
-    canvas.clear(SK_ColorTRANSPARENT);
+    // Canonical surfaces are opaque document targets. Preview has its own
+    // transparent clear in SkiaRenderer::renderPreview.
+    canvas.clear(SK_ColorWHITE);
     canvas.save();
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
@@ -400,9 +437,11 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     if (_config.width != 256U || _config.height != 256U) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "headless raster must be 256x256");
     if (!(plan.referenceDrawList.frame == plan.frame)) return reject(HeadlessSubmissionIssue::kPlanIdentityMismatch, "frame identity mismatch");
     if (plan.referenceDrawList.entries.empty()) return reject(HeadlessSubmissionIssue::kEmptyPlan, "empty reference draw list");
-    if (!validAffine(plan.referenceDrawList.worldToView) || !validRect(plan.referenceDrawList.viewportClip)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "non-integral transform or clip");
+    if (!validAffine(plan.referenceDrawList.worldToView) || !validRect(plan.referenceDrawList.viewportClip)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid transform or clip");
     for (const auto& entry : plan.referenceDrawList.entries) {
-        if (!validRect(entry.record.visualBounds)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "non-integral visual bounds");
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command);
+        if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
+                         : validRect(entry.record.visualBounds))) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid visual bounds");
         const WorldToViewAffine recordTransform{entry.record.transform.a, entry.record.transform.b, entry.record.transform.c, entry.record.transform.d, entry.record.transform.tx, entry.record.transform.ty};
         if (!scalarRange(recordTransform.a) || !scalarRange(recordTransform.b) ||
             !scalarRange(recordTransform.c) || !scalarRange(recordTransform.d) ||

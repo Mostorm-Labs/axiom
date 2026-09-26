@@ -30,6 +30,9 @@ struct BrushPaintConfig final {
 };
 
 struct BrushPackage final {
+  // Stable logical selector. This is intentionally distinct from the
+  // canonical 32-character manifest package identity.
+  std::string profileId = "vector-solid-v1";
   std::string packageId;
   std::uint32_t revision = 1;
   BrushVectorConfig vector;
@@ -42,9 +45,15 @@ struct BrushPackage final {
 struct BrushPackageResult final {
   BrushPackage package;
   std::string canonical;
+  std::string canonicalDigest;
   std::string error;
   explicit operator bool() const noexcept { return error.empty(); }
 };
+
+// SHA-256 of the complete canonical package representation. This is the
+// cross-platform package identity; it is deliberately not a truncated/FNV
+// runtime counter.
+[[nodiscard]] std::string brushPackageCanonicalDigest(const BrushPackage& package);
 
 [[nodiscard]] BrushPackageResult parseBrushPackage(std::string_view manifestJson,
                                                    std::string_view pipelineJson);

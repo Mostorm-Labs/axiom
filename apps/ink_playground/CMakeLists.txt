@@ -1,5 +1,7 @@
 add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
+    common/brush_commit_adapter.cpp
+    common/platform_brush_baseline_observation.cpp
     common/platform_contract.cpp
     common/platform_interaction_controller.cpp
     platform/apple/apple_input_adapter.cpp)
@@ -37,6 +39,32 @@ if(BUILD_TESTING)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
   add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
   add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
+  add_executable(axiom_platform_brush_baseline_runner tests/platform_brush_baseline_runner.cpp)
+  target_link_libraries(axiom_platform_brush_baseline_runner PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_platform_brush_baseline_runner PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_platform_brush_baseline_runner PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_platform_brush_baseline_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_executable(axiom_brush_runtime_pipeline_tests tests/brush_runtime_pipeline_test.cpp)
+  target_link_libraries(axiom_brush_runtime_pipeline_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_brush_runtime_pipeline_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_brush_runtime_pipeline_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_brush_runtime_pipeline_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45BrushRuntimePipeline COMMAND axiom_brush_runtime_pipeline_tests)
+  add_executable(axiom_brush_commit_adapter_tests tests/brush_commit_adapter_test.cpp)
+  target_link_libraries(axiom_brush_commit_adapter_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_brush_commit_adapter_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_brush_commit_adapter_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_brush_commit_adapter_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45BrushCommitAdapter COMMAND axiom_brush_commit_adapter_tests)
   add_executable(axiom_c1_apple_input_contract_tests tests/c1_apple_input_contract_test.cpp)
   target_link_libraries(axiom_c1_apple_input_contract_tests PRIVATE axiom_ink_playground_common)
   target_compile_features(axiom_c1_apple_input_contract_tests PRIVATE cxx_std_20)
@@ -72,11 +100,18 @@ if(WIN32 AND TARGET arc_Windows)
 endif()
 
 if(ANDROID AND TARGET arc_Android)
+  if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
+    list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
+    find_package(CanvasSkia CONFIG REQUIRED
+      PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  endif()
   add_library(axiom_ink_playground_android SHARED
       platform/android/bridge.cpp
-      platform/android/android_jni.cpp)
+      platform/android/android_jni.cpp
+      platform/android/android_egl_surface_provider.cpp)
   target_link_libraries(axiom_ink_playground_android PRIVATE
-      axiom_ink_playground_common Arc::Android)
+      axiom_ink_playground_common Arc::Android CanvasSkia::Skia)
   target_link_options(axiom_ink_playground_android PRIVATE
       "-Wl,-z,max-page-size=16384"
       "-Wl,-z,common-page-size=16384")
@@ -94,5 +129,6 @@ if(EMSCRIPTEN)
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sUSE_WEBGL2=1"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString']"
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

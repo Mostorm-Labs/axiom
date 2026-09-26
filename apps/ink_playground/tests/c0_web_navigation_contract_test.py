@@ -21,9 +21,9 @@ assert "_axiom_ink_apply_viewport_gesture" in page
 assert "axiom_ink_apply_viewport_wheel_pan" in bridge
 assert "axiom_ink_apply_viewport_ctrl_wheel_zoom" in bridge
 assert "axiom_ink_apply_viewport_gesture" in bridge
-assert "_axiom_ink_apply_viewport_wheel_pan" not in cmake
-assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" not in cmake
-assert "_axiom_ink_apply_viewport_gesture" not in cmake
+assert "_axiom_ink_apply_viewport_wheel_pan" in cmake
+assert "_axiom_ink_apply_viewport_ctrl_wheel_zoom" in cmake
+assert "_axiom_ink_apply_viewport_gesture" in cmake
 
 # Frozen navigation mapping remains explicit at the platform boundary.
 assert "deltaX" in page and "deltaY" in page

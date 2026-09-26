@@ -3,23 +3,24 @@
 <title>Axiom Ink Playground</title>
 <style>
   body { margin: 0; font: 14px sans-serif; background: #eef1f7; }
-  #ink { display: block; width: min(100vw, 1024px); height: min(80vh, 768px);
+  #surfaceStack { position: relative; width: min(100vw, 1024px); height: min(80vh, 768px); }
+  #ink, #arcPreview { position: absolute; inset: 0; width: 100%; height: 100%;
          background: white; touch-action: none; border: 1px solid #c5cad6; }
+  #arcPreview { pointer-events: none; background: transparent; border: 0; }
   #brushBar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px; background: #f7f8fb; }
   #brushSelector { min-width: 180px; padding: 6px; font-size: 14px; }
   #hud { padding: 8px; color: #25304a; }
   #evidence { margin: 0 8px 8px; padding: 8px 12px; }
 </style>
 <div id="brushBar"><label for="brushSelector">笔刷：</label><select id="brushSelector">
-  <option value="1">Pen</option><option value="2">Pencil</option><option value="3">Chalk</option>
-  <option value="4">Marker</option><option value="5">Water Color Lite</option>
-  <option value="6">Highlighter</option><option value="7">Laser</option>
+  <option value="1">vector-solid-v1</option>
 </select><span id="brushDescription">选择后再画下一笔</span></div>
-<canvas id="ink" width="1024" height="768"></canvas>
+<div id="surfaceStack"><canvas id="ink" width="1024" height="768"></canvas><canvas id="arcPreview" width="1024" height="768"></canvas></div>
 <pre id="hud">loading</pre>
 <button id="evidence" type="button" disabled>导出 Web 证据</button>
 <script type="module">
   const canvas = document.getElementById("ink");
+  const previewCanvas = document.getElementById("arcPreview");
   const brushSelector = document.getElementById("brushSelector");
   const brushDescription = document.getElementById("brushDescription");
   const hud = document.getElementById("hud");
@@ -31,16 +32,39 @@
   const createAxiomInkPlayground = imported.default;
   const module = await createAxiomInkPlayground({ canvas });
   const host = module._axiom_ink_create();
-  if (!host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
+  // The Web App owns canvas/context creation. WASM only wraps the current
+  // context through the provider registration seam.
+  const webgl = canvas.getContext("webgl2", { alpha: true, antialias: false,
+    depth: false, stencil: true, premultipliedAlpha: true, preserveDrawingBuffer: true });
+  if (!webgl || !host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
     throw new Error("Ink Playground surface binding failed");
   }
+  const previewGl = previewCanvas.getContext("webgl2", { alpha: true, antialias: false,
+    depth: false, stencil: true, premultipliedAlpha: true, preserveDrawingBuffer: true });
+  if (!previewGl) throw new Error("ARC preview WebGL2 surface binding failed");
+  if (!module._axiom_ink_bind_preview_surface(host, previewCanvas.width, previewCanvas.height)) {
+    throw new Error("ARC preview provider binding failed");
+  }
+  previewCanvas.addEventListener("webglcontextlost", event => { event.preventDefault(); module._axiom_ink_lose_surface(host); });
+  previewCanvas.addEventListener("webglcontextrestored", () => {
+    previewCanvas.getContext("webgl2");
+    module._axiom_ink_rebind_surface(host);
+  });
+  canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); module._axiom_ink_lose_surface(host); });
+  canvas.addEventListener("webglcontextrestored", () => module._axiom_ink_rebind_surface(host));
+  const baselineObservation = () => {
+    const artifact = `${location.href}|${navigator.userAgent}`;
+    const bytes = new TextEncoder().encode(`${artifact}\0`);
+    const pointer = module._malloc(bytes.length);
+    module.HEAPU8.set(bytes, pointer);
+    const result = module._axiom_ink_run_baseline_observation(host, pointer);
+    const json = result ? module.UTF8ToString(result) : null;
+    module._free(pointer);
+    return json;
+  };
   const skiaBrushSurface = true;
-  let stroke = 0;
   let sampleSequence = 0;
   const started = new Set();
-  const strokes = [];
-  const activeStrokes = new Map();
-  const generations = new Map();
   const trace = [];
   const webSource = 1;
   let runtimeScale = 1;
@@ -60,24 +84,15 @@
   let renderPending = false;
   let lastBatch = 0;
   let latestEvidence = null;
-  let selectedBrushFamily = Number(brushSelector.value);
-  const brushFamilyName = family => ({1:"Pen",2:"Pencil",3:"Chalk",4:"Marker",5:"Water Color Lite",6:"Highlighter",7:"Laser"}[family] || "Pen");
-  const brushStyle = (family, runtime = {}) => ({
-    1:{color:"#1a5bff",width:3,alpha:1,dash:[]},
-    2:{color:"#343434",width:2,alpha:.78,dash:[3,2]},
-    3:{color:"#806048",width:7,alpha:.52,dash:[1,5]},
-    4:{color:"#2070f0",width:14,alpha:.72,dash:[]},
-    5:{color:"#26aac8",width:19,alpha:.38,dash:[]},
-    6:{color:"#ffd820",width:24,alpha:.34,dash:[]},
-    7:{color:"#ff1840",width:4,alpha:1,dash:[10,6]}
-  }[family] || {color:"#1a5bff",width:3,alpha:1,dash:[]});
+  let selectedBrushFamily = 1;
+  const brushFamilyName = () => "vector-solid-v1";
+  brushSelector.innerHTML = '<option value="1">vector-solid-v1</option>';
   brushSelector.addEventListener("change", () => {
-    selectedBrushFamily = Number(brushSelector.value);
-    brushDescription.textContent = `${brushFamilyName(selectedBrushFamily)}：下一笔使用此笔刷`;
+    selectedBrushFamily = 1;
+    brushDescription.textContent = "vector-solid-v1";
     requestRender();
   });
   const nowNs = () => Math.round(performance.now() * 1000000);
-  const runtimeBrush = new Map();
   const canvasPoint = sample => {
     const rect = canvas.getBoundingClientRect();
     const physicalX = (sample.clientX - rect.left) * canvas.width / rect.width;
@@ -89,45 +104,10 @@
       y: (physicalY - runtimeTranslationY) / runtimeScale
     };
   };
-  const drawBrushSegment = (context, points, family, runtime = {}) => {
-    if (!points.length) return;
-    const style = brushStyle(family);
-    context.save();
-    context.strokeStyle = style.color;
-    context.globalAlpha = style.alpha;
-    context.lineWidth = runtime.size ? Math.max(1, runtime.size) : style.width;
-    context.setLineDash(style.dash);
-    context.lineCap = family === 3 ? "butt" : "round";
-    context.lineJoin = "round";
-    context.beginPath();
-    points.forEach((point, i) => i === 0 ? context.moveTo(point.x, point.y) : context.lineTo(point.x, point.y));
-    context.stroke();
-    if (family === 3 || family === 5) {
-      context.globalAlpha = family === 3 ? .16 : .10;
-      context.lineWidth = Math.max(1, style.width * .22);
-      context.setLineDash(family === 3 ? [2, 7] : [5, 9]);
-      context.stroke();
-    }
-    context.restore();
-  };
-  const drawStrokes = (context, committed, active = []) => {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.save();
-    context.translate(viewportTranslationX(), viewportTranslationY());
-    context.scale(viewportScale(), viewportScale());
-    committed.forEach(stroke => drawBrushSegment(context, stroke.points, stroke.family, stroke.runtime));
-    active.forEach(stroke => drawBrushSegment(context, stroke.points, stroke.family, runtimeBrush.get(stroke.pointerId)));
-    context.restore();
-  };
   const render = () => {
     renderPending = false;
     module._axiom_ink_brush_render(host);
-    if (!skiaBrushSurface) {
-      drawStrokes(canvas.getContext("2d"), strokes,
-        [...activeStrokes.values()]);
-    }
-    const pointCount = strokes.reduce((count, stroke) => count + stroke.points.length, 0) +
-      [...activeStrokes.values()].reduce((count, active) => count + active.points.length, 0);
+    const pointCount = trace.length;
     hud.textContent = JSON.stringify({
       pointCount,
       coalescedBatch: lastBatch,
@@ -135,7 +115,7 @@
       viewportScale: viewportScale().toFixed(2),
       viewportTranslationX: viewportTranslationX().toFixed(2),
       viewportTranslationY: viewportTranslationY().toFixed(2),
-      surface: skiaBrushSurface ? "skia-webgl2" : "canvas2d-fallback"
+      surface: "skia-webgl2"
     });
   };
   const requestRender = () => {
@@ -151,7 +131,20 @@
     viewportScale: viewportScale(),
     viewportTranslationX: viewportTranslationX(),
     viewportTranslationY: viewportTranslationY(),
-    strokes: [...strokes]
+    userAgent: navigator.userAgent,
+    renderPath: {
+      input_boundary: "PointerEvent.coalescedEvents→WASM",
+      runtime_boundary: "C++ InkPlaygroundHost",
+      renderer: "Skia Ganesh",
+      surface_type: "WebGL2 canvas framebuffer",
+      submission_count: Number(module._axiom_ink_render_submission_count(host)),
+      readback_count: 0,
+      cpu_copy_count: 0,
+      present_count: Number(module._axiom_ink_render_flush_count(host)),
+      viewport_transform_applied: "true"
+    },
+    baselineObservation: baselineObservation(),
+    captureBlob: canvas.toDataURL("image/png")
   });
   const persistEvidence = snapshot => {
     const traceSnapshot = trace.filter(sample => sample.sequence <= snapshot.traceSequence);
@@ -173,8 +166,10 @@
   const exportEvidence = () => {
     if (!latestEvidence) return false;
     download(latestEvidence.traceBlob, "web-pointer-trace.json");
-    download(latestEvidence.captureBlob, "web-ink-playground.png");
+    if (latestEvidence.captureBlob) download(latestEvidence.captureBlob, "web-ink-playground.png");
     download(latestEvidence.recordBlob, "web-functional-smoke.json");
+    if (latestEvidence.baselineBlob) download(latestEvidence.baselineBlob,
+      "observation.json");
     return true;
   };
   evidenceWorker.addEventListener("message", event => {
@@ -190,10 +185,8 @@
   const send = (event, phase) => {
     const coalesced = event.getCoalescedEvents ? event.getCoalescedEvents() : [];
     const list = coalesced.length === 0 ? [event] : coalesced;
-    let generation = generations.get(event.pointerId) || 1;
-    if (phase === "down") { stroke += 1; started.add(event.pointerId); generation += 1; generations.set(event.pointerId, generation); const active = []; activeStrokes.set(event.pointerId, { points: active, stroke, generation, pointerId: event.pointerId, family: selectedBrushFamily }); }
-    const activeStroke = activeStrokes.get(event.pointerId);
-    if (!activeStroke) return;
+    if (phase === "down") started.add(event.pointerId);
+    if (!started.has(event.pointerId)) return;
     list.forEach(sample => {
       const point = canvasPoint(sample);
       const phaseCode = phase === "down" && sample === list[0] ? 0
@@ -205,34 +198,22 @@
       module._axiom_ink_platform_batch(host, webSource, event.pointerId, sequence, timeNs,
         point.viewX, point.viewY, pressure, phaseCode, selectedBrushFamily,
         point.x, point.y);
-      runtimeBrush.set(event.pointerId, {
-        size: module._axiom_ink_brush_size(host, event.pointerId),
-        opacity: module._axiom_ink_brush_opacity(host, event.pointerId),
-        representation: module._axiom_ink_brush_representation(host, event.pointerId)
-      });
-      activeStroke.points.push({ ...point, pressure });
-      trace.push({ stroke: activeStroke.stroke, pointer_id: event.pointerId,
-        generation: activeStroke.generation, sequence: sampleSequence,
+      trace.push({ pointer_id: event.pointerId, sequence: sampleSequence,
         x: point.x, y: point.y, pressure, tool: sample.pointerType || "mouse",
         phase, time_ns: timeNs });
     });
     updateViewport();
     const viewportClaimed = module._axiom_ink_viewport_claimed(host) !== 0;
     if (viewportClaimed) {
-      activeStrokes.forEach(active => active.points.length = 0);
     }
     lastBatch = list.length;
     if (phase === "up") {
-      if (!viewportClaimed) strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });
-      runtimeBrush.delete(event.pointerId);
       started.delete(event.pointerId);
-      activeStrokes.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     } else if (phase === "cancel") {
       module._axiom_ink_platform_batch(host, webSource, event.pointerId, ++sampleSequence,
         nowNs(), 0, 0, 0, 3, selectedBrushFamily, 0, 0);
       started.delete(event.pointerId);
-      activeStrokes.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     }
     requestRender();
@@ -283,7 +264,7 @@
   canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); send(e, "down"); });
   canvas.addEventListener("pointermove", e => { if (started.has(e.pointerId)) send(e, "move"); });
   canvas.addEventListener("pointerup", e => send(e, "up"));
-  canvas.addEventListener("pointercancel", e => { if (activeStrokes.has(e.pointerId)) send(e, "cancel"); });
+  canvas.addEventListener("pointercancel", e => { if (started.has(e.pointerId)) send(e, "cancel"); });
   requestRender();
   globalThis.axiomInkPlayground = { module, host, exportEvidence,
     getLatestEvidence: () => latestEvidence };

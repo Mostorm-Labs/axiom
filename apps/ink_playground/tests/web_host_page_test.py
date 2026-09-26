@@ -7,21 +7,20 @@ bridge = page.parent / "bridge.cpp"
 bridge_source = bridge.read_text(encoding="utf-8")
 worker = page.parent / "evidence_worker.js"
 worker_source = worker.read_text(encoding="utf-8")
-assert "let stroke = 0;" in source
-assert "stroke += 1;" in source
 assert "let sampleSequence = 0;" in source
 assert "++sampleSequence" in source
 assert "sampleSequence = 0;" not in source.replace("let sampleSequence = 0;", "")
 assert "getBoundingClientRect" in source
 assert "sample.offsetX" not in source
-assert "const strokes = [];" in source
-assert "strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });" in source
-assert "committed.forEach(stroke => drawBrushSegment" in source
+assert "const strokes = [];" not in source
+assert "activeStrokes" not in source
+assert "drawBrushSegment" not in source
+assert "getContext(\"2d\")" not in source
 assert "BigInt(" not in source
 assert "const trace = [];" in source
 assert "scheduleEvidenceSnapshot" in source
 assert "setTimeout(() => persistEvidence" in source
-assert "convertToBlob" in worker_source
+assert "convertToBlob" not in worker_source
 assert "crypto.subtle.digest" in worker_source
 assert "exportEvidence" in source
 assert "_axiom_ink_platform_batch" in source
@@ -39,12 +38,13 @@ assert "handleWheel" in source
 assert "id=\"brushSelector\"" in source
 assert "selectedBrushFamily" in source
 assert "brushFamilyName" in source
-assert "family: selectedBrushFamily" in source
-assert "drawBrushSegment" in source
+assert "selectedBrushFamily" in source
+assert "SkiaRenderer→WebGLSurfaceProvider" in worker_source
+assert "getContext(\"webgl2\"" in source
 assert "_axiom_ink_brush_begin" not in source
 assert "_axiom_ink_brush_sample" not in source
-assert "_axiom_ink_brush_size" in source
-assert "_axiom_ink_brush_representation" in source
+assert "_axiom_ink_brush_size" not in source
+assert "_axiom_ink_brush_representation" not in source
 assert "axiom_ink_brush_begin" not in source
 assert "axiom_ink_brush_sample" not in source
 assert "addEventListener(\"wheel\", handleWheel, { passive: false, capture: true })" in source

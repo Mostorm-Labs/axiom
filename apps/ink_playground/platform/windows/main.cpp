@@ -1,11 +1,14 @@
 #include "ink_playground_host.hpp"
+#include "platform_brush_baseline_observation.hpp"
 #include "../../common/arc_input_fanout_adapter.hpp"
 #include "arc/arc.hpp"
 #include "windows_pointer_utils.hpp"
 #include "windows_smoke_evidence.hpp"
 #include "canvas/render/canonical_handoff.hpp"
+#include "canvas/ink/arc_runtime_sinks.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
-#include "canvas/render/skia_ink_backend.hpp"
+#include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/skia_surface_provider.hpp"
 #endif
 
 #if defined(_WIN32)
@@ -27,6 +30,7 @@
 namespace {
 using canvas::ink_playground::InkPlaygroundHost;
 using canvas::ink_playground::arc_input_fanout::PointerSample;
+class WindowsArcRuntimeSinks;
 
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<arc::Bridge> previewBridge; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
@@ -41,9 +45,14 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   std::size_t maxConcurrentPointers = 0;
+  std::uint64_t cpuCopyCount = 0;
+  std::uint64_t presentCount = 0;
   bool runtimePreviewVisible = true;
+  bool runtimeSinksInstalled = false;
+  std::unique_ptr<WindowsArcRuntimeSinks> runtimeSinks;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  std::unique_ptr<canvas::render::SkiaInkBackend> canonicalRenderer;
+  std::unique_ptr<canvas::render::SkiaRenderer> canonicalRenderer;
+  canvas::render::RasterSkiaSurfaceProvider* canonicalProvider = nullptr;
   std::vector<std::uint8_t> canonicalBgra;
   std::uint64_t canonicalRasterization = 0;
 #endif
@@ -51,7 +60,100 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
 
-void beginArcPreview(State& value, std::uint64_t pointerId) {
+// Windows is an ARC realization only. Runtime owns preview/session semantics;
+// this adapter translates the typed runtime seam into the ARC ABI and keeps
+// platform preview state out of the canonical document/render path.
+class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
+                                     public canvas::ink::CanonicalVisibilitySink {
+ public:
+  explicit WindowsArcRuntimeSinks(State& state) : state_(state) {}
+  canvas::ink::PreviewSubmitResult begin(
+      const canvas::ink::PreviewIdentity& identity,
+      const canvas::ink::BrushPreviewDelta&) noexcept override {
+    if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+    arc_preview_begin_v0 begin{};
+    begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
+    begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = identity.session;
+    begin.view_id = 1U; begin.viewport_revision = identity.sessionGeneration;
+    begin.target_generation = state_.previewGeneration;
+    begin.brush.struct_size = sizeof(begin.brush); begin.brush.abi_version = ARC_ABI_VERSION;
+    return state_.previewBridge->Begin(begin) == arc::Status::kOk
+        ? canvas::ink::PreviewSubmitResult::kAccepted
+        : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+  }
+  canvas::ink::PreviewSubmitResult update(
+      const canvas::ink::PreviewIdentity& identity,
+      const canvas::ink::BrushPreviewDelta& delta) noexcept override {
+    if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+    points_.clear(); points_.reserve(delta.outline.size());
+    for (const auto& point : delta.outline) {
+      points_.push_back({1U, 0U, static_cast<float>(point.x), static_cast<float>(point.y),
+                         1.0F, 0.0F, 1.0F});
+    }
+    arc_preview_update_v0 update{};
+    update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
+    update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = identity.session;
+    update.preview_revision = delta.revision; update.view_id = 1U;
+    update.viewport_revision = identity.sessionGeneration;
+    update.target_generation = state_.previewGeneration;
+    update.truncate_confirmed_to = 0U; update.confirmed_append = points_.data();
+    update.confirmed_append_count = static_cast<std::uint32_t>(points_.size());
+    update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
+    return state_.previewBridge->Push(update) == arc::Status::kOk
+        ? canvas::ink::PreviewSubmitResult::kAccepted
+        : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+  }
+  canvas::ink::PreviewSubmitResult cancel(
+      const canvas::ink::PreviewIdentity& identity) noexcept override {
+    if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+    arc_preview_cancel_v0 cancel{sizeof(cancel), ARC_ABI_VERSION, identity.session,
+                                 state_.previewGeneration, 1U, 0U};
+    return state_.previewBridge->Cancel(cancel) == arc::Status::kOk
+        ? canvas::ink::PreviewSubmitResult::kAccepted
+        : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+  }
+  canvas::ink::HandoffResult canonicalCommitted(
+      const canvas::ink::CanonicalHandoffIdentity& identity,
+      const canvas::semantic::CanonicalCommitRecord&) noexcept override {
+    if (state_.previewBridge == nullptr) return canvas::ink::HandoffResult::kIgnored;
+    arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, identity.session,
+                             identity.commit.ordinal.value(), state_.previewGeneration};
+    if (state_.previewBridge->SealInput(seal) != arc::Status::kOk) {
+      return canvas::ink::HandoffResult::kIgnored;
+    }
+    arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, identity.session,
+                                   identity.commit.ordinal.value(), identity.commit.ordinal.value(),
+                                   state_.previewGeneration, {identity.commit.runtime_epoch.value(),
+                                                              identity.commit.ordinal.value()}};
+    return state_.previewBridge->CanonicalCommitted(commit) == arc::Status::kOk
+        ? canvas::ink::HandoffResult::kAccepted
+        : canvas::ink::HandoffResult::kIgnored;
+  }
+  canvas::ink::HandoffResult canonicalVisible(
+      const canvas::ink::CanonicalHandoffIdentity& identity,
+      const canvas::render::FrameState&) noexcept override {
+    if (state_.previewBridge == nullptr) return canvas::ink::HandoffResult::kIgnored;
+    arc_canonical_visible_v0 visible{};
+    visible.struct_size = sizeof(visible); visible.abi_version = ARC_ABI_VERSION;
+    visible.stroke_id = identity.session; visible.document_revision = identity.commit.ordinal.value();
+    visible.target_generation = identity.surfaceGeneration.value();
+    visible.handoff_token = {identity.commit.runtime_epoch.value(), identity.commit.ordinal.value()};
+    visible.receipt.struct_size = sizeof(visible.receipt);
+    visible.receipt.abi_version = ARC_ABI_VERSION;
+    visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE;
+    visible.receipt.status = ARC_STATUS_OK;
+    visible.receipt.target_generation = identity.surfaceGeneration.value();
+    visible.receipt.presentation_id = identity.commit.ordinal.value();
+    return state_.previewBridge->CanonicalVisible(visible) == arc::Status::kOk
+        ? canvas::ink::HandoffResult::kAccepted
+        : canvas::ink::HandoffResult::kIgnored;
+  }
+ private:
+  State& state_;
+  std::vector<arc_preview_primitive_v0> points_;
+};
+
+[[maybe_unused]] void beginArcPreview(State& value, std::uint64_t pointerId) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews[pointerId];
   preview = State::ActivePreview{value.pointerStrokes.at(pointerId), 0, {}, 0, true};
@@ -62,7 +164,7 @@ void beginArcPreview(State& value, std::uint64_t pointerId) {
   (void)value.previewBridge->Begin(begin);
 }
 
-void pushArcPreview(State& value, std::uint64_t pointerId,
+[[maybe_unused]] void pushArcPreview(State& value, std::uint64_t pointerId,
                     std::span<const PointerSample> samples) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews.at(pointerId);
@@ -81,7 +183,7 @@ void pushArcPreview(State& value, std::uint64_t pointerId,
   (void)value.previewBridge->Push(update);
 }
 
-void suppressArcPreview(State& value, std::uint64_t pointerId) {
+[[maybe_unused]] void suppressArcPreview(State& value, std::uint64_t pointerId) {
   const auto preview = value.previews.find(pointerId);
   if (value.previewBridge == nullptr || preview == value.previews.end() ||
       !preview->second.active) {
@@ -93,7 +195,7 @@ void suppressArcPreview(State& value, std::uint64_t pointerId) {
   preview->second.active = false;
 }
 
-void suppressAllArcPreviews(State& value) {
+[[maybe_unused]] void suppressAllArcPreviews(State& value) {
   std::vector<std::uint64_t> pointerIds;
   pointerIds.reserve(value.previews.size());
   for (const auto& [pointerId, preview] : value.previews) {
@@ -102,7 +204,7 @@ void suppressAllArcPreviews(State& value) {
   for (const auto pointerId : pointerIds) suppressArcPreview(value, pointerId);
 }
 
-void commitArcHandoff(State& value, std::uint64_t pointerId) {
+[[maybe_unused]] void commitArcHandoff(State& value, std::uint64_t pointerId) {
   if (value.previewBridge == nullptr) return;
   auto& preview = value.previews.at(pointerId);
   const auto revision = preview.revision;
@@ -118,7 +220,7 @@ void commitArcHandoff(State& value, std::uint64_t pointerId) {
   value.host->recordPresentation("canonical-covered", value.pendingHandoffs.size(), 0.0);
 }
 
-bool acknowledgeCanonicalVisible(State& value) {
+[[maybe_unused]] bool acknowledgeCanonicalVisible(State& value) {
   if (value.previewBridge == nullptr || value.pendingHandoffs.empty()) return false;
   bool released = false;
   std::vector<State::PendingHandoff> stillPending;
@@ -149,17 +251,7 @@ bool acknowledgeCanonicalVisible(State& value) {
 bool renderCanonical(State& value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   if (value.canonicalRenderer == nullptr) return false;
-  std::vector<std::vector<canvas::render::CanonicalStrokePoint>> strokes;
-  for (const auto& stroke : value.host->canonicalStrokes()) {
-    auto& converted = strokes.emplace_back();
-    converted.reserve(stroke.size());
-    for (const auto& point : stroke) converted.push_back({point.x, point.y, point.pressure});
-  }
-  const auto& viewport = value.host->viewportGesture();
-  const auto result = value.canonicalRenderer->submit(
-      strokes, canvas::render::CanonicalViewportTransform{
-          viewport.scale, viewport.translationX, viewport.translationY});
-  if (result.code != canvas::render::BackendSubmissionCode::kAccepted) return false;
+  if (!value.host->presentCanonicalFrame(value.host->submittedOperationCount() + 1U, 0.0)) return false;
   if (value.pendingHandoffs.empty()) return true;
   return true;
 #else
@@ -236,12 +328,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     value.activeKeys[kMousePointerId] = *key;
     value.pointerStrokes[kMousePointerId] = value.host->platformStrokeId(*key).value_or(value.stroke);
     value.maxConcurrentPointers = (std::max)(value.maxConcurrentPointers, value.activeKeys.size());
-    if (!value.host->beginBrushSession(kMousePointerId, 1U)) return false;
-    beginArcPreview(value, kMousePointerId);
   }
-  pushArcPreview(value, kMousePointerId, std::span<const PointerSample>(&sample, 1));
-  if (!begin && !value.host->appendBrushSample(kMousePointerId, sample.x, sample.y,
-                                                sample.pressure, sample.sample_sequence)) return false;
   value.deviceId = kMousePointerId;
   const auto key = value.activeKeys.at(kMousePointerId);
   value.trace.push_back({key.source, kMousePointerId, key.generation, timestampMs, "mouse",
@@ -250,8 +337,6 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
                           x, y, sample.pressure, 1U, 0.0F, 0.0F});
   if (end) persistEvidence(value);
   if (end) {
-    if (!value.host->finishBrushSession(kMousePointerId)) return false;
-    commitArcHandoff(value, kMousePointerId);
     value.activeKeys.erase(kMousePointerId);
     value.pointerStrokes.erase(kMousePointerId);
     if (GetCapture() == window) ReleaseCapture();
@@ -266,13 +351,6 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
   const auto key = keyEntry->second;
   const auto strokeEntry = value.pointerStrokes.find(pointerId);
   if (strokeEntry != value.pointerStrokes.end()) {
-    const auto preview = value.previews.find(pointerId);
-    if (value.previewBridge != nullptr && preview != value.previews.end()) {
-      arc_preview_cancel_v0 cancel{sizeof(cancel), ARC_ABI_VERSION, preview->second.stroke,
-                                   value.previewGeneration, 1U, 0U};
-      (void)value.previewBridge->Cancel(cancel);
-    }
-    (void)value.host->cancelStroke(key);
     (void)value.host->cancelBrushSession(pointerId);
   }
   value.trace.push_back({key.source, static_cast<std::uint32_t>(pointerId), key.generation,
@@ -285,7 +363,6 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
 }
 
 void cancelAllPointers(State& value, std::uint64_t timestampMs) {
-  suppressAllArcPreviews(value);
   for (const auto& [pointerId, key] : value.activeKeys) {
     value.trace.push_back({key.source, static_cast<std::uint32_t>(pointerId), key.generation,
                            timestampMs, "unknown", "cancel", 0.0F, 0.0F, 0.0F, 0U,
@@ -332,7 +409,43 @@ void persistEvidence(const State& value) {
           << "  \"viewport_translation_x\": "
           << value.host->viewportGesture().translationX << ",\n"
           << "  \"viewport_translation_y\": "
-          << value.host->viewportGesture().translationY << "\n}\n";
+          << value.host->viewportGesture().translationY << ",\n"
+          << "  \"render_path\": {\n"
+          << "    \"renderer\": \"Skia raster\",\n"
+          << "    \"surface_type\": \"CPU raster buffer to GDI\",\n"
+#if defined(CANVAS_RENDER_HAS_SKIA)
+          << "    \"submission_count\": "
+          << (value.canonicalRenderer ? value.canonicalRenderer->submissionCount() : 0) << ",\n"
+          << "    \"readback_count\": "
+          << (value.canonicalProvider ? value.canonicalProvider->readbackCount() : 0) << ",\n"
+#else
+          << "    \"submission_count\": 0,\n    \"readback_count\": 0,\n"
+#endif
+          << "    \"cpu_copy_count\": " << value.cpuCopyCount << ",\n"
+          << "    \"present_count\": " << value.presentCount << ",\n"
+          << "    \"viewport_transform_applied\": \"true\"\n  }\n}\n";
+  std::ofstream baselineFile(directory / "observation.json", std::ios::binary | std::ios::trunc);
+  wchar_t modulePath[MAX_PATH]{};
+  const DWORD moduleLength = GetModuleFileNameW(nullptr, modulePath, MAX_PATH);
+  std::error_code artifactError;
+  const auto artifact = moduleLength == 0 ? std::string{} :
+      std::filesystem::path(modulePath).filename().string() + ":" +
+      std::to_string(std::filesystem::file_size(modulePath, artifactError));
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  const auto submissions = value.canonicalRenderer ? value.canonicalRenderer->submissionCount() : 0;
+  const auto readbacks = value.canonicalProvider ? value.canonicalProvider->readbackCount() : 0;
+  const auto copies = value.cpuCopyCount +
+      (value.canonicalProvider ? value.canonicalProvider->cpuCopyCount() : 0);
+#else
+  const std::uint64_t submissions = 0;
+  const std::uint64_t readbacks = 0;
+  const auto copies = value.cpuCopyCount;
+#endif
+  baselineFile << canvas::ink_playground::platformBrushBaselineObservationJson(
+      "windows", "PHYSICAL", artifactError ? std::string{} : artifact, *value.host,
+      {"WM_POINTER history→PlatformPointerBatch", "C++ InkPlaygroundHost", "Skia raster",
+       "CPU raster buffer→BGRA copy→GDI", submissions, readbacks, copies,
+       value.presentCount, "true"});
 }
 
 void paint(HWND window, State& value) {
@@ -343,28 +456,31 @@ void paint(HWND window, State& value) {
   FillRect(bufferDc, &rect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
   bool canonicalPresented = false;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  (void)value.canonicalRenderer->resize(static_cast<std::uint32_t>(rect.right),
-                                        static_cast<std::uint32_t>(rect.bottom));
   canonicalPresented = renderCanonical(value);
-  const auto pixels = value.canonicalRenderer->rgba();
-  if (!pixels.empty()) {
+  const auto width = static_cast<std::uint32_t>(rect.right);
+  const auto height = static_cast<std::uint32_t>(rect.bottom);
+  (void)value.canonicalProvider->resize(width, height);
+  if (value.canonicalBgra.size() != static_cast<std::size_t>(width) * height * 4U) {
+    value.canonicalBgra.resize(static_cast<std::size_t>(width) * height * 4U);
+  }
+  if (value.canonicalProvider->readbackRgba(value.canonicalBgra).code ==
+      canvas::render::BackendSubmissionCode::kAccepted) {
     BITMAPINFO info{}; info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    info.bmiHeader.biWidth = static_cast<LONG>(value.canonicalRenderer->width());
-    info.bmiHeader.biHeight = -static_cast<LONG>(value.canonicalRenderer->height());
+    info.bmiHeader.biWidth = static_cast<LONG>(width);
+    info.bmiHeader.biHeight = -static_cast<LONG>(height);
     info.bmiHeader.biPlanes = 1; info.bmiHeader.biBitCount = 32;
     info.bmiHeader.biCompression = BI_RGB;
     const auto rasterization = value.canonicalRenderer->rasterizationCount();
-    if (value.canonicalBgra.size() != pixels.size() ||
-        value.canonicalRasterization != rasterization) {
-      value.canonicalBgra.assign(pixels.begin(), pixels.end());
+    if (value.canonicalRasterization != rasterization) {
+      ++value.cpuCopyCount;
       for (std::size_t i = 0; i + 3 < value.canonicalBgra.size(); i += 4)
         std::swap(value.canonicalBgra[i], value.canonicalBgra[i + 2]);
       value.canonicalRasterization = rasterization;
     }
-    SetDIBitsToDevice(bufferDc, 0, 0, value.canonicalRenderer->width(),
-                      value.canonicalRenderer->height(), 0, 0, 0,
-                      value.canonicalRenderer->height(), value.canonicalBgra.data(), &info,
+    SetDIBitsToDevice(bufferDc, 0, 0, width, height, 0, 0, 0,
+                      height, value.canonicalBgra.data(), &info,
                       DIB_RGB_COLORS);
+    ++value.presentCount;
   }
 #endif
   HPEN pen = CreatePen(PS_SOLID, 3, RGB(26, 91, 255)); HGDIOBJ oldPen = SelectObject(bufferDc, pen);
@@ -396,15 +512,8 @@ void paint(HWND window, State& value) {
   // Optional presentation-only mirror. It is never used for canonical
   // handoff eligibility and is off by default so Arc evidence cannot be
   // satisfied by this debug layer.
-  if (value.runtimePreviewVisible && previewInputActive)
-      for (const auto& [pointerId, preview] : value.previews) {
-    static_cast<void>(pointerId);
-    if (!preview.active) continue;
-    for (std::size_t i = 1; i < preview.points.size(); ++i) {
-      MoveToEx(bufferDc, static_cast<int>(preview.points[i - 1].x), static_cast<int>(preview.points[i - 1].y), nullptr);
-      LineTo(bufferDc, static_cast<int>(preview.points[i].x), static_cast<int>(preview.points[i].y));
-    }
-  }
+  // Preview pixels are owned by the independent ARC overlay/provider. The
+  // canonical HWND is never a second preview raster path.
   BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, bufferDc, 0, 0, SRCCOPY);
   // The Arc handoff is released only after the Skia-produced canonical pixels
   // have been copied to the real HWND. Space never participates in this path.
@@ -449,8 +558,6 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (begin) {
       ++value->stroke;
       value->pointerStrokes[pointerId] = value->stroke;
-      if (!value->host->beginStroke(value->activeKeys.at(pointerId), value->stroke)) return 0;
-      beginArcPreview(*value, pointerId);
     }
     std::vector<POINTER_INFO> pointerHistory;
     UINT32 pointerHistoryCount = 0;
@@ -548,22 +655,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (!key) return 0;
       value->activeKeys[pointerId] = *key;
       value->pointerStrokes[pointerId] = value->host->platformStrokeId(*key).value_or(value->stroke);
-      if (!value->host->beginBrushSession(pointerId, 1U)) return 0;
     }
-    for (const auto& sample : samples) {
-      if (sample.phase != ARC_POINTER_PHASE_DOWN &&
-          !value->host->appendBrushSample(pointerId, sample.x, sample.y,
-                                          sample.pressure, sample.sample_sequence)) return 0;
-    }
-    if (value->host->viewportGestureClaimed()) {
-      suppressAllArcPreviews(*value);
-    } else if (!samples.empty()) {
-      pushArcPreview(*value, pointerId, samples);
-    }
+    // Runtime owns viewport arbitration and typed ARC preview publication.
     if (end) persistEvidence(*value);
     if (end) {
-      if (!value->host->finishBrushSession(pointerId)) return 0;
-      commitArcHandoff(*value, pointerId);
       value->activeKeys.erase(pointerId);
       value->pointerStrokes.erase(pointerId);
       value->previews.erase(pointerId);
@@ -623,10 +718,22 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   (void)canvas::ink_playground::windows_input::keepMouseOnButtonMessages();
   State value; value.host = std::make_unique<InkPlaygroundHost>();
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  value.canonicalRenderer = std::make_unique<canvas::render::SkiaInkBackend>();
+  value.canonicalRenderer = std::make_unique<canvas::render::SkiaRenderer>();
 #endif
   if (!value.host->bindSurface(1024, 768)) return 1;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  auto provider = std::make_unique<canvas::render::RasterSkiaSurfaceProvider>();
+  if (provider->resize(1024, 768).code != canvas::render::BackendSubmissionCode::kAccepted) return 1;
+  if (!value.host->registerSurfaceProvider("windows-gdi", std::move(provider))) return 1;
+  value.canonicalProvider = dynamic_cast<canvas::render::RasterSkiaSurfaceProvider*>(
+      value.host->activeSurfaceProvider());
+  if (value.canonicalProvider == nullptr) return 1;
+#endif
   value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateWindowsBackend(), arc::CreateNullBackend());
+  value.runtimeSinks = std::make_unique<WindowsArcRuntimeSinks>(value);
+  value.host->setArcPreviewSink(value.runtimeSinks.get());
+  value.host->setCanonicalVisibilitySink(value.runtimeSinks.get());
+  value.runtimeSinksInstalled = true;
   value.window = CreateWindowExW(0, klass.lpszClassName, L"Axiom Ink Playground", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
   if (value.window == nullptr) return 1; ShowWindow(value.window, show); UpdateWindow(value.window);

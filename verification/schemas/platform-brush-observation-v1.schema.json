@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:axiom:verification:platform-brush-observation:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fixture_digest", "platform", "reality", "artifact_identity", "runtime_identity", "input", "brush", "render_path", "classification", "diagnostics"],
+  "properties": {
+    "schema_version": { "const": "platform-brush-baseline-v1" },
+    "fixture_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "platform": { "enum": ["android", "web", "windows", "host"] },
+    "reality": { "enum": ["PHYSICAL", "EMULATOR", "HOSTED", "STATIC_ONLY"] },
+    "artifact_identity": { "type": ["string", "null"] },
+    "runtime_identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["semantic_generation", "scene_revision", "surface_generation", "canonical_commit_ordinal"],
+      "properties": {
+        "semantic_generation": { "type": "integer", "minimum": 0 },
+        "scene_revision": { "type": "integer", "minimum": 0 },
+        "surface_generation": { "type": "integer", "minimum": 0 },
+        "canonical_commit_ordinal": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["normalized_samples", "pointer_identity", "phase_lifecycle", "viewport_claim", "content_coordinates"],
+      "properties": {
+        "normalized_samples": { "type": "array", "items": { "$ref": "#/$defs/normalized_sample" } }, "pointer_identity": { "type": "array" },
+        "phase_lifecycle": { "type": "array" }, "viewport_claim": { "type": "array" },
+        "content_coordinates": { "type": "array" },
+        "interaction_decisions": { "type": "array", "items": { "$ref": "#/$defs/interaction_decision" } }
+      }
+    },
+    "brush": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile_id", "package_id", "package_revision", "package_digest", "resolved_state_digest", "preview_outline_digest", "sealed_outline_digest", "replay_digest"],
+      "properties": {
+        "profile_id": { "const": "vector-solid-v1" },
+        "package_id": { "const": "00000000000000000000000000000042" }, "package_revision": { "const": 1 }, "package_digest": { "type": ["string", "null"] },
+        "resolved_state_digest": { "type": ["string", "null"] }, "preview_outline_digest": { "type": ["string", "null"] },
+        "sealed_outline_digest": { "type": ["string", "null"] }, "replay_digest": { "type": ["string", "null"] }
+      }
+    },
+    "render_path": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_boundary", "runtime_boundary", "renderer", "surface_type", "submission_count", "readback_count", "cpu_copy_count", "present_count", "viewport_transform_applied"],
+      "properties": {
+        "input_boundary": { "type": "string" }, "runtime_boundary": { "type": "string" },
+        "renderer": { "type": "string" }, "surface_type": { "type": "string" },
+        "submission_count": { "type": "integer", "minimum": 0 }, "readback_count": { "type": "integer", "minimum": 0 },
+        "cpu_copy_count": { "type": "integer", "minimum": 0 }, "present_count": { "type": "integer", "minimum": 0 },
+        "viewport_transform_applied": { "enum": ["true", "false", "partial", "unknown"] }
+      }
+    },
+    "preview_surface": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_surface_generation", "preview_surface_generation", "preview_content_revision", "preview_submitted_revision", "preview_dirty", "preview_submission_count", "preview_present_count", "geometry_source", "preview_style", "resize_events", "surface_lost_events", "rebind_events"],
+      "properties": {
+        "canonical_surface_generation": { "type": "integer", "minimum": 0 },
+        "preview_surface_generation": { "type": "integer", "minimum": 0 },
+        "preview_content_revision": { "type": "integer", "minimum": 0 },
+        "preview_submitted_revision": { "type": "integer", "minimum": 0 },
+        "preview_dirty": { "type": "boolean" },
+        "preview_submission_count": { "type": "integer", "minimum": 0 },
+        "preview_present_count": { "type": "integer", "minimum": 0 },
+        "geometry_source": { "const": "BrushPreviewDelta.outline" },
+        "resize_events": { "type": "integer", "minimum": 0 }, "surface_lost_events": { "type": "integer", "minimum": 0 }, "rebind_events": { "type": "integer", "minimum": 0 },
+        "preview_style": {
+          "type": "object", "additionalProperties": false,
+          "required": ["color", "blend"],
+          "properties": {
+            "color": { "type": "array", "prefixItems": [
+              { "const": 1.0 }, { "const": 0.85 }, { "const": 0.0 }, { "const": 0.55 }
+            ], "minItems": 4, "maxItems": 4 },
+            "blend": { "const": "src_over" }
+          }
+        }
+      }
+    },
+    "classification": { "enum": ["PASS", "PASS_WITH_FINDINGS", "BLOCKED_EVIDENCE"] },
+    "diagnostics": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "normalized_sample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "pointer", "generation", "sequence", "x", "y", "pressure", "phase", "disposition", "viewport_claimed", "down_timestamp_ns", "down_time_delta_ns"],
+      "properties": {
+        "source": { "type": "string" }, "pointer": { "type": "integer", "minimum": 1 }, "generation": { "type": "integer", "minimum": 1 }, "sequence": { "type": "integer", "minimum": 1 },
+        "x": { "type": "number" }, "y": { "type": "number" }, "pressure": { "type": "number", "minimum": 0, "maximum": 1 }, "phase": { "enum": ["down", "move", "up", "cancel"] },
+        "disposition": { "enum": ["pending", "ink", "viewport", "ignored", "terminal", "unknown"] }, "viewport_claimed": { "type": "boolean" },
+        "down_timestamp_ns": { "type": "integer", "minimum": 0 }, "down_time_delta_ns": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "interaction_decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sequence", "pointer", "generation", "phase", "disposition", "viewport_claimed", "down_timestamp_ns", "down_time_delta_ns"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 1 }, "pointer": { "type": "integer", "minimum": 1 }, "generation": { "type": "integer", "minimum": 1 },
+        "phase": { "enum": ["down", "move", "up", "cancel"] }, "disposition": { "enum": ["pending", "ink", "viewport", "ignored", "terminal", "unknown"] },
+        "viewport_claimed": { "type": "boolean" }, "down_timestamp_ns": { "type": "integer", "minimum": 0 }, "down_time_delta_ns": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

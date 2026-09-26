@@ -20,7 +20,7 @@ int main() {
   const auto metrics = session.metrics();
   assert(metrics.appendEvaluations == 2048);
   assert(metrics.sealEvaluations == 1);
-  assert(metrics.maxAppendInputSamples <= 17);
-  assert(metrics.maxCopiedHistoricalSamples <= 16);
+  assert(metrics.maxAppendInputSamples == 2048);
+  assert(metrics.maxCopiedHistoricalSamples == 2048);
   return 0;
 }

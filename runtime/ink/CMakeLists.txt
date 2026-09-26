@@ -9,6 +9,7 @@ add_library(canvas_runtime_ink STATIC
   src/arc_preview_bridge.cpp
   src/programmable_brush.cpp
   src/brush_package.cpp
+  src/brush_package_catalog.cpp
   src/resolved_brush_state.cpp
   src/brush_execution_plan.cpp
   src/vector_path_node.cpp
@@ -79,6 +80,10 @@ if(BUILD_TESTING)
   target_link_libraries(axiom_brush_package_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_brush_package_tests PRIVATE cxx_std_20)
   add_test(NAME G45BrushPackage COMMAND axiom_brush_package_tests)
+  add_executable(axiom_brush_package_catalog_tests tests/brush_package_catalog_test.cpp)
+  target_link_libraries(axiom_brush_package_catalog_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_package_catalog_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPackageCatalog COMMAND axiom_brush_package_catalog_tests)
   add_executable(axiom_brush_plan_tests tests/brush_plan_test.cpp)
   target_link_libraries(axiom_brush_plan_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_brush_plan_tests PRIVATE cxx_std_20)

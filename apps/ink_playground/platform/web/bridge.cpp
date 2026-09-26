@@ -1,11 +1,14 @@
 #include "ink_playground_host.hpp"
+#include "platform_brush_baseline_observation.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
+#include "canvas/render/skia_renderer.hpp"
 
 #include <emscripten/emscripten.h>
 
 #include <cstdint>
 #include <memory>
 #include <span>
+#include <string>
 #include <unordered_map>
 
 namespace {
@@ -29,7 +32,7 @@ struct BrushState final {
   std::uint32_t family = 1;
   int representation = 1;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  std::unique_ptr<canvas::render::WebGlSurfaceBackend> renderer;
+  std::unique_ptr<canvas::render::SkiaRenderer> renderer;
 #endif
 };
 std::unordered_map<Handle, BrushState>& brushes() {
@@ -42,6 +45,8 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
                         std::uint64_t sequence, std::uint64_t timestampNs,
                         float x, float y, float pressure, int phase, int family,
                         float contentX, float contentY) {
+  (void)contentX;
+  (void)contentY;
   auto* target = host(value);
   const auto brushIt = brushes().find(value);
   if (target == nullptr || brushIt == brushes().end()) return 0;
@@ -55,11 +60,7 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
                                         : canvas::input::PointerPhase::kMove});
   if (!target->acceptPlatformBatch(batch, timestampNs)) return 0;
   auto& state = brushIt->second;
-  if (phase == 0 && !target->beginBrushSession(pointer, static_cast<std::uint32_t>(family))) return 0;
-  if (phase != 0 && !target->viewportGestureClaimed() &&
-      !target->appendBrushSample(pointer, contentX, contentY, pressure, sequence)) return 0;
   if (phase == 2) {
-    if (!target->finishBrushSession(pointer)) return 0;
     state.digest = target->brushDigest();
     state.primitiveCount = target->brushPrimitiveCount();
   } else if (phase == 3) {
@@ -177,12 +178,49 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_render(std::uint32_t value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   auto& state = found->second;
   if (!state.renderer) return 0;
-  const auto points = host(value)->brushRenderPoints();
-  return state.renderer->submitBrushPoints(points).code ==
-      canvas::render::BackendSubmissionCode::kAccepted ? 1 : 0;
+  auto* provider = host(value)->activeSurfaceProvider();
+  if (provider == nullptr) return 0;
+  return host(value)->presentCanonicalFrame(state.serial + 1U, 0.0) ? (++state.serial, 1) : 0;
 #else
   return 0;
 #endif
+}
+EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_ink_render_submission_count(std::uint32_t value) {
+  const auto found = brushes().find(value);
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  return found == brushes().end() || !found->second.renderer ? 0 : found->second.renderer->submissionCount();
+#else
+  (void)value; return 0;
+#endif
+}
+EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_ink_render_flush_count(std::uint32_t value) {
+  const auto found = brushes().find(value);
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  return found == brushes().end() || host(value) == nullptr || host(value)->activeSurfaceProvider() == nullptr
+      ? 0 : host(value)->activeSurfaceProvider()->presentCount();
+#else
+  (void)value; return 0;
+#endif
+}
+EMSCRIPTEN_KEEPALIVE const char* axiom_ink_run_baseline_observation(
+    std::uint32_t value, const char* artifactIdentity) {
+  static std::string json;
+  const auto found = brushes().find(value);
+  if (host(value) == nullptr || found == brushes().end()) return nullptr;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (!found->second.renderer || host(value)->activeSurfaceProvider() == nullptr) return nullptr;
+  const auto submissions = found->second.renderer->submissionCount();
+  const auto presents = host(value)->activeSurfaceProvider()->presentCount();
+#else
+  const std::uint64_t submissions = 0;
+  const std::uint64_t presents = 0;
+#endif
+  json = canvas::ink_playground::platformBrushBaselineObservationJson(
+      "web", "HOSTED", artifactIdentity == nullptr ? "" : artifactIdentity,
+      *host(value),
+      {"PointerEvent.coalescedEvents→WASM→PlatformPointerBatch", "C++ InkPlaygroundHost",
+       "Skia Ganesh", "WebGL2 canvas framebuffer", submissions, 0, 0, presents, "true"});
+  return json.c_str();
 }
 EMSCRIPTEN_KEEPALIVE float axiom_ink_brush_size(std::uint32_t value, std::uint32_t pointer) {
   const auto state = brushes().find(value); if (state == brushes().end()) return 6.0F;
@@ -237,11 +275,26 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_surface(
   if (host(value) == nullptr || !host(value)->bindSurface(width, height)) return 0;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   auto& state = brushes()[value];
-  state.renderer = std::make_unique<canvas::render::WebGlSurfaceBackend>(
-      canvas::render::WebGlSurfaceConfig{"#ink", width, height});
-  if (!state.renderer->ready()) return 0;
+  // The Web App owns the HTMLCanvasElement and WebGL2 context. The provider
+  // only wraps the current app-owned context; it never queries #ink or
+  // creates a DOM resource on the WASM side.
+  auto provider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(width, height);
+  if (!provider || !provider->ready()) return 0;
+  state.renderer = std::make_unique<canvas::render::SkiaRenderer>();
+  if (!host(value)->registerSurfaceProvider("webgl-window", std::move(provider))) return 0;
 #endif
   return 1;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_preview_surface(
+    std::uint32_t value, std::uint32_t width, std::uint32_t height) {
+  if (host(value) == nullptr || width == 0U || height == 0U) return 0;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  auto provider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(width, height);
+  if (!provider || !provider->ready()) return 0;
+  return host(value)->registerPreviewSurfaceProvider("arc-preview-surface", std::move(provider)) ? 1 : 0;
+#else
+  return 0;
+#endif
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_resize_surface(
     std::uint32_t value, std::uint32_t width, std::uint32_t height) {
@@ -249,6 +302,9 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_resize_surface(
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_lose_surface(std::uint32_t value) {
   return host(value) != nullptr && host(value)->loseSurface();
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_rebind_surface(std::uint32_t value) {
+  return host(value) != nullptr && host(value)->rebindSurface();
 }
 EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_ink_point_count(std::uint32_t value) {
   return host(value) == nullptr ? 0U : host(value)->previewPoints().size();

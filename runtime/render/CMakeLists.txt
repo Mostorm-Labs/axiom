@@ -9,8 +9,11 @@ add_library(canvas_runtime_render STATIC
     src/frame_plan.cpp
     src/render_backend.cpp
     src/surface_lifecycle.cpp
+    src/render_target.cpp
+    src/runtime_app_binding.cpp
     src/presentation_tracker.cpp
-    src/canonical_handoff.cpp)
+    src/canonical_handoff.cpp
+    src/preview_surface.cpp)
 
 if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
                    CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
@@ -37,10 +40,10 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
         PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
-    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
-      target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
-    endif()
+    target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
@@ -49,7 +52,7 @@ target_include_directories(canvas_runtime_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_render PUBLIC
     canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene
-    canvas_runtime_ink)
+    canvas_runtime_ink canvas_runtime_input)
 target_compile_features(canvas_runtime_render PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -71,8 +74,8 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         target_compile_options(axiom_render_skia_ink_backend_tests
             PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
-        target_compile_options(axiom_render_skia_ink_backend_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      target_compile_options(axiom_render_skia_ink_backend_tests
+        PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
     endif()
     add_test(NAME G4WindowsSkiaInkViewport
         COMMAND axiom_render_skia_ink_backend_tests)
@@ -83,9 +86,22 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     if(MSVC)
         target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
-        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
     endif()
     add_test(NAME G4SkiaBrushPrimitiveDab COMMAND axiom_render_skia_brush_primitive_tests)
+endif()
+
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_runtime_app_binding_tests
+        tests/runtime_app_binding_test.cpp)
+    target_link_libraries(axiom_runtime_app_binding_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_runtime_app_binding_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_runtime_app_binding_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_runtime_app_binding_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3RuntimeAppBinding COMMAND axiom_runtime_app_binding_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
@@ -114,6 +130,44 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(axiom_render_target_tests tests/render_target_test.cpp)
+    target_link_libraries(axiom_render_target_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_target_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_target_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_target_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3RenderTargetSwitching COMMAND axiom_render_target_tests)
+
+    add_executable(axiom_render_skia_surface_provider_tests
+        tests/skia_surface_provider_test.cpp)
+    target_link_libraries(axiom_render_skia_surface_provider_tests
+        PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_skia_surface_provider_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_render_skia_surface_provider_tests
+        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_render_skia_surface_provider_tests
+        PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3SkiaSurfaceProvider COMMAND axiom_render_skia_surface_provider_tests)
+
+    add_executable(axiom_render_preview_surface_tests
+        tests/preview_surface_test.cpp)
+    target_link_libraries(axiom_render_preview_surface_tests
+        PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_preview_surface_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_render_preview_surface_tests
+        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_render_preview_surface_tests
+        PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3PreviewSurface COMMAND axiom_render_preview_surface_tests)
+
     add_executable(axiom_render_surface_presentation_tests
         tests/surface_presentation_test.cpp)
     target_link_libraries(axiom_render_surface_presentation_tests PRIVATE canvas_runtime_render)

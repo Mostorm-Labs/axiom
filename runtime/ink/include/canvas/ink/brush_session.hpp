@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <span>
+#include <optional>
 
 namespace canvas::ink {
 enum class BrushSessionError : std::uint8_t { kNone=0,kInvalid,kSequence,kPressure,kEmpty };
@@ -24,6 +25,7 @@ class BrushSession final {
     [[nodiscard]] BrushSessionError error() const noexcept { return error_; }
     [[nodiscard]] BrushSessionMetrics metrics() const noexcept { return metrics_; }
   private:
+    [[nodiscard]] std::optional<BrushSample> normalize(const BrushSample&) const;
     std::uint64_t id_;
     ResolvedBrushState state_;
     bool active_ = false;
