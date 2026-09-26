@@ -106,13 +106,20 @@ int main() {
   assert(camera.appendBrushSample(9U, 56.0, 24.0, 0.5, 2U));
   assert(camera.finishBrushSession(9U));
   assert(camera.presentCanonicalFrame(1U, 0.0));
+  const auto frameBeforeNavigation = camera.canonicalFrameCount();
+  assert(camera.applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kWheelPan,
+      12.0F, -8.0F, 0.0F, 0.0F, 1.0F}));
+  // Viewport-only navigation is a render invalidation, not just a state
+  // update.  The canonical surface must be refreshed before the next brush
+  // preview or semantic commit arrives.
+  assert(camera.canonicalFrameCount() == frameBeforeNavigation + 1U);
   std::vector<std::uint8_t> before(256U * 256U * 4U);
   assert(camera.activeSurfaceProvider()->readbackRgba(before).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(camera.applyViewportNavigation({
       canvas::interaction::ViewportNavigationKind::kBrowserGesture,
       0.0F, 0.0F, 128.0F, 128.0F, 2.0F}));
-  assert(camera.presentCanonicalFrame(2U, 0.0, false));
   std::vector<std::uint8_t> after(256U * 256U * 4U);
   assert(camera.activeSurfaceProvider()->readbackRgba(after).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
@@ -126,7 +133,6 @@ int main() {
       canvas::interaction::ViewportNavigationKind::kBrowserGesture,
       0.0F, 0.0F, 128.0F, 128.0F, 1.0635F}));
   assert(camera.viewportGesture().scale > 2.0F);
-  assert(camera.presentCanonicalFrame(3U, 0.0, false));
 
   // A new sample after a settled pinch must keep the same viewport on the
   // retained preview geometry.  Passing the append API's default transform
@@ -239,7 +245,6 @@ int main() {
   assert(worldViewport.applyViewportNavigation({
       canvas::interaction::ViewportNavigationKind::kWheelPan,
       192.0F, 192.0F, 0.0F, 0.0F}));
-  assert(worldViewport.presentCanonicalFrame(1U, 0.0));
   assert(worldViewport.canonicalFrameCount() == 1U);
   return 0;
 }

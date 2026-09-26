@@ -60,11 +60,44 @@ WebGlSurfaceProvider::~WebGlSurfaceProvider() = default;
 bool WebGlSurfaceProvider::ready() const noexcept { return impl_ && impl_->surface != nullptr; }
 const std::string& WebGlSurfaceProvider::error() const noexcept { return impl_->error; }
 RenderTargetInfo WebGlSurfaceProvider::describe() const noexcept { return {"webgl-window", RenderTargetKind::kGpuWindow, RenderTargetBackend::kWebGL2, RenderTargetFormat::kRgba8888, {static_cast<float>(impl_->config.physicalWidth), static_cast<float>(impl_->config.physicalHeight), impl_->config.physicalWidth, impl_->config.physicalHeight, 1.0F, 1.0F}, {true, false, false, false, true, true}}; }
-SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire() noexcept { if (!ready() || impl_->lost) return SkiaSurfaceAcquireResult::rejected(SkiaSurfaceAcquireCode::kLost, impl_->lost ? "WebGL surface is lost" : impl_->error); impl_->acquired = true; return SkiaSurfaceAcquireResult::acquired({impl_->surface.get(), impl_->generation}); }
+SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire() noexcept {
+  if (!ready() || impl_->lost) {
+    return SkiaSurfaceAcquireResult::rejected(
+        SkiaSurfaceAcquireCode::kLost,
+        impl_->lost ? "WebGL surface is lost" : impl_->error);
+  }
+  if (emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
+    return SkiaSurfaceAcquireResult::rejected(
+        SkiaSurfaceAcquireCode::kUnavailable, "WebGL context activation failed");
+  }
+  impl_->acquired = true;
+  return SkiaSurfaceAcquireResult::acquired({impl_->surface.get(), impl_->generation});
+}
 void WebGlSurfaceProvider::release() noexcept { if (impl_) impl_->acquired = false; }
 BackendSubmissionResult WebGlSurfaceProvider::lose() noexcept { if (!impl_) return BackendSubmissionResult::rejected("WebGL surface is not initialized"); impl_->acquired = false; impl_->lost = true; return BackendSubmissionResult::accepted(); }
-BackendSubmissionResult WebGlSurfaceProvider::present() noexcept { if (!ready()) return BackendSubmissionResult::rejected("WebGL surface is not ready"); impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo); ++impl_->presents; return BackendSubmissionResult::accepted(); }
-BackendSubmissionResult WebGlSurfaceProvider::resize(std::uint32_t, std::uint32_t) noexcept { return BackendSubmissionResult::rejected("WebGL surface resize requires provider recreation"); }
+BackendSubmissionResult WebGlSurfaceProvider::present() noexcept {
+  if (!ready()) return BackendSubmissionResult::rejected("WebGL surface is not ready");
+  if (emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
+    return BackendSubmissionResult::rejected("WebGL context activation failed");
+  }
+  impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
+  ++impl_->presents;
+  return BackendSubmissionResult::accepted();
+}
+BackendSubmissionResult WebGlSurfaceProvider::resize(
+    std::uint32_t width, std::uint32_t height) noexcept {
+  if (!impl_ || width == 0U || height == 0U) {
+    return BackendSubmissionResult::rejected("WebGL surface dimensions are invalid");
+  }
+  // Registration validates the provider by replaying its declared metrics.
+  // That operation is intentionally idempotent for the already-created
+  // app-owned context. A real size change still requires the Web App to
+  // recreate the provider so the framebuffer is wrapped at the new size.
+  if (width == impl_->config.physicalWidth && height == impl_->config.physicalHeight) {
+    return BackendSubmissionResult::accepted();
+  }
+  return BackendSubmissionResult::rejected("WebGL surface resize requires provider recreation");
+}
 BackendSubmissionResult WebGlSurfaceProvider::readbackRgba(std::span<std::uint8_t>) noexcept { return BackendSubmissionResult::rejected("WebGL provider does not expose readback"); }
 std::uint64_t WebGlSurfaceProvider::presentCount() const noexcept { return impl_ == nullptr ? 0 : impl_->presents; }
 std::uint64_t WebGlSurfaceProvider::generation() const noexcept { return impl_ == nullptr ? 0 : impl_->generation; }

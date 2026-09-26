@@ -34,14 +34,9 @@
   const host = module._axiom_ink_create();
   // The Web App owns canvas/context creation. WASM only wraps the current
   // context through the provider registration seam.
-  const webgl = canvas.getContext("webgl2", { alpha: true, antialias: false,
-    depth: false, stencil: true, premultipliedAlpha: true, preserveDrawingBuffer: true });
-  if (!webgl || !host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
+  if (!host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
     throw new Error("Ink Playground surface binding failed");
   }
-  const previewGl = previewCanvas.getContext("webgl2", { alpha: true, antialias: false,
-    depth: false, stencil: true, premultipliedAlpha: true, preserveDrawingBuffer: true });
-  if (!previewGl) throw new Error("ARC preview WebGL2 surface binding failed");
   if (!module._axiom_ink_bind_preview_surface(host, previewCanvas.width, previewCanvas.height)) {
     throw new Error("ARC preview provider binding failed");
   }
@@ -54,9 +49,7 @@
   canvas.addEventListener("webglcontextrestored", () => module._axiom_ink_rebind_surface(host));
   const baselineObservation = () => {
     const artifact = `${location.href}|${navigator.userAgent}`;
-    const bytes = new TextEncoder().encode(`${artifact}\0`);
-    const pointer = module._malloc(bytes.length);
-    module.HEAPU8.set(bytes, pointer);
+    const pointer = module.stringToNewUTF8(artifact);
     const result = module._axiom_ink_run_baseline_observation(host, pointer);
     const json = result ? module.UTF8ToString(result) : null;
     module._free(pointer);
@@ -106,7 +99,9 @@
   };
   const render = () => {
     renderPending = false;
-    module._axiom_ink_brush_render(host);
+    // Keep the two surfaces independently dirty-gated. A frame tick may
+    // submit the retained amber preview without clearing/repainting canonical.
+    module._axiom_ink_preview_render(host);
     const pointCount = trace.length;
     hud.textContent = JSON.stringify({
       pointCount,
@@ -195,7 +190,8 @@
       const pressure = sample.pressure || 0.5;
       const timeNs = Math.round(sample.timeStamp * 1000000);
       const sequence = ++sampleSequence;
-      module._axiom_ink_platform_batch(host, webSource, event.pointerId, sequence, timeNs,
+      module._axiom_ink_platform_batch(host, webSource, event.pointerId,
+        BigInt(sequence), BigInt(timeNs),
         point.viewX, point.viewY, pressure, phaseCode, selectedBrushFamily,
         point.x, point.y);
       trace.push({ pointer_id: event.pointerId, sequence: sampleSequence,
@@ -211,8 +207,9 @@
       started.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     } else if (phase === "cancel") {
-      module._axiom_ink_platform_batch(host, webSource, event.pointerId, ++sampleSequence,
-        nowNs(), 0, 0, 0, 3, selectedBrushFamily, 0, 0);
+      module._axiom_ink_platform_batch(host, webSource, event.pointerId,
+        BigInt(++sampleSequence), BigInt(nowNs()), 0, 0, 0, 3,
+        selectedBrushFamily, 0, 0);
       started.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     }

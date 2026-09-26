@@ -129,6 +129,6 @@ if(EMSCRIPTEN)
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sUSE_WEBGL2=1"
-      "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString']"
+      "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']"
       "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
 endif()

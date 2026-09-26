@@ -564,7 +564,31 @@ interaction::ContactDisposition InkPlaygroundHost::pointerDisposition(
 
 bool InkPlaygroundHost::applyViewportNavigation(
     const interaction::ViewportNavigationSample& sample) noexcept {
-  return viewportController_->applyNavigation(sample);
+  if (viewportController_ == nullptr ||
+      !viewportController_->applyNavigation(sample)) {
+    return false;
+  }
+
+  const auto viewport = viewportController_->state();
+  // Navigation is also a preview-surface transform invalidation.  Without
+  // this update an already-retained amber outline keeps its pre-gesture
+  // matrix until the next brush sample arrives, which makes the pinch appear
+  // to be applied one input event late.
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale,
+                                           viewport.translationX,
+                                           viewport.translationY)) {
+    return false;
+  }
+
+  // Navigation changes the canonical camera even when no new semantic or
+  // brush input arrives.  Treat it as an independent canonical-surface
+  // invalidation so the Web/Android/Windows display cannot remain at the old
+  // transform until the next pointer sample happens to trigger a frame.
+  if (surface_.available && activeSurfaceProvider() != nullptr) {
+    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
+  return true;
 }
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
@@ -627,6 +651,10 @@ bool InkPlaygroundHost::bindSurface(std::uint32_t width,
       render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
                              width, height, 1.0F, 1.0F}});
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
+#if !defined(__EMSCRIPTEN__)
+  // Native hosts use the deterministic transparent overlay until their
+  // platform provider is registered. Web owns both canvas/context resources
+  // and registers its preview provider explicitly after the canonical one.
   auto previewProvider = std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
   if (previewProvider->resize(width, height).code != render::BackendSubmissionCode::kAccepted) {
     return false;
@@ -642,6 +670,7 @@ bool InkPlaygroundHost::bindSurface(std::uint32_t width,
   previewProvider_ = previewRaw;
   previewController_ = std::make_unique<render::PreviewSurfaceController>(
       skiaRenderer_, *previewProvider_);
+#endif
   ++resizeEvents_;
   return true;
 }
@@ -743,13 +772,24 @@ bool InkPlaygroundHost::registerSurfaceProvider(
 
 bool InkPlaygroundHost::registerPreviewSurfaceProvider(
     std::string profileId, std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
-  if (appBinding_ == nullptr || provider == nullptr || profileId.empty()) return false;
+  if (appBinding_ == nullptr || provider == nullptr || profileId.empty()) {
+    AXIOM_ANDROID_DIAG("preview registration missing binding/provider/profile");
+    return false;
+  }
   auto info = provider->describe();
   info.profileId = profileId;
-  if (appBinding_->registerPreviewSurfaceProfile(render::SurfaceProfile{info, std::move(provider)}) !=
-      render::SurfaceProviderDisposition::kCommitted) return false;
-  if (appBinding_->selectPreviewRenderProfile(profileId, info.format) !=
-      render::SurfaceProviderDisposition::kCommitted) return false;
+  const auto registered = appBinding_->registerPreviewSurfaceProfile(
+      render::SurfaceProfile{info, std::move(provider)});
+  if (registered != render::SurfaceProviderDisposition::kCommitted) {
+    AXIOM_ANDROID_DIAG("preview registration rejected code=%u",
+                       static_cast<unsigned>(registered));
+    return false;
+  }
+  const auto selection = appBinding_->selectPreviewRenderProfile(profileId, info.format);
+  if (selection != render::SurfaceProviderDisposition::kCommitted) {
+    AXIOM_ANDROID_DIAG("preview selection rejected code=%u", static_cast<unsigned>(selection));
+    return false;
+  }
   auto* selected = appBinding_->previewSurfaces()->activeProvider();
   if (selected == nullptr) return false;
   previewProvider_ = selected;

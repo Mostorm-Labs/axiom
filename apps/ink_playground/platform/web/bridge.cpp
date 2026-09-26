@@ -63,6 +63,7 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
   if (phase == 2) {
     state.digest = target->brushDigest();
     state.primitiveCount = target->brushPrimitiveCount();
+    if (!target->presentCanonicalFrame(target->canonicalFrameCount() + 1U, 0.0)) return 0;
   } else if (phase == 3) {
     (void)target->cancelBrushSession(pointer);
   }
@@ -180,10 +181,15 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_render(std::uint32_t value) {
   if (!state.renderer) return 0;
   auto* provider = host(value)->activeSurfaceProvider();
   if (provider == nullptr) return 0;
-  return host(value)->presentCanonicalFrame(state.serial + 1U, 0.0) ? (++state.serial, 1) : 0;
+  return host(value)->presentBrushPreview() ? 1 : 0;
 #else
   return 0;
 #endif
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_preview_render(std::uint32_t value) {
+  const auto found = brushes().find(value);
+  if (found == brushes().end() || host(value) == nullptr) return 0;
+  return host(value)->presentBrushPreview() ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_ink_render_submission_count(std::uint32_t value) {
   const auto found = brushes().find(value);
@@ -278,7 +284,12 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_surface(
   // The Web App owns the HTMLCanvasElement and WebGL2 context. The provider
   // only wraps the current app-owned context; it never queries #ink or
   // creates a DOM resource on the WASM side.
-  auto provider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(width, height);
+  // The Emscripten WebGL registry only knows contexts created through its
+  // html5_webgl API.  A raw canvas.getContext() is not discoverable through
+  // emscripten_webgl_get_current_context(), so create/register the app-owned
+  // canvas context here and keep its lifetime in the provider.
+  auto provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
+      canvas::render::WebGlSurfaceConfig{"#ink", width, height, 0});
   if (!provider || !provider->ready()) return 0;
   state.renderer = std::make_unique<canvas::render::SkiaRenderer>();
   if (!host(value)->registerSurfaceProvider("webgl-window", std::move(provider))) return 0;
@@ -289,9 +300,17 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_preview_surface(
     std::uint32_t value, std::uint32_t width, std::uint32_t height) {
   if (host(value) == nullptr || width == 0U || height == 0U) return 0;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  auto provider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(width, height);
-  if (!provider || !provider->ready()) return 0;
-  return host(value)->registerPreviewSurfaceProvider("arc-preview-surface", std::move(provider)) ? 1 : 0;
+  auto provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
+      canvas::render::WebGlSurfaceConfig{"#arcPreview", width, height, 0});
+  if (!provider || !provider->ready()) {
+    if (provider) EM_ASM_({ console.error("ARC WebGL provider: " + UTF8ToString($0)); },
+                           provider->error().c_str());
+    return 0;
+  }
+  const bool registered = host(value)->registerPreviewSurfaceProvider(
+      "arc-preview-surface", std::move(provider));
+  if (!registered) EM_ASM({ console.error("ARC preview provider registration rejected"); });
+  return registered ? 1 : 0;
 #else
   return 0;
 #endif
