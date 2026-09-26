@@ -6,10 +6,34 @@ add_library(canvas_runtime_ink STATIC
   src/replay_runner.cpp
   src/multipointer_replay.cpp
   src/preview_model.cpp
-  src/arc_preview_bridge.cpp)
-target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  src/arc_preview_bridge.cpp
+  src/programmable_brush.cpp
+  src/brush_package.cpp
+  src/brush_package_catalog.cpp
+  src/resolved_brush_state.cpp
+  src/brush_execution_plan.cpp
+  src/vector_path_node.cpp
+    src/brush_session.cpp
+    src/brush_preview_handoff.cpp
+  src/legacy_v1_readonly.cpp)
+target_sources(canvas_runtime_ink PRIVATE src/vector_stroke_reference.cpp)
+target_include_directories(canvas_runtime_ink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
 target_link_libraries(canvas_runtime_ink PUBLIC canvas_runtime_foundation canvas_runtime_input)
 target_compile_features(canvas_runtime_ink PUBLIC cxx_std_20)
+if(TARGET canvas_runtime_semantic)
+  add_library(canvas_runtime_ink_semantic_adapter STATIC src/canonical_brush_commit.cpp)
+  target_include_directories(canvas_runtime_ink_semantic_adapter PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  target_link_libraries(canvas_runtime_ink_semantic_adapter PUBLIC
+    canvas_runtime_ink canvas_runtime_semantic)
+  target_compile_features(canvas_runtime_ink_semantic_adapter PUBLIC cxx_std_20)
+  if(MSVC)
+    target_compile_options(canvas_runtime_ink_semantic_adapter PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(canvas_runtime_ink_semantic_adapter PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+endif()
 if(MSVC)
   target_compile_options(canvas_runtime_ink PRIVATE /W4 /permissive- /WX /EHsc)
 else()
@@ -52,4 +76,65 @@ if(BUILD_TESTING)
     target_compile_options(axiom_multipointer_replay_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
   endif()
   add_test(NAME G4MultiPointerReplay COMMAND axiom_multipointer_replay_tests)
+  add_executable(axiom_brush_package_tests tests/brush_package_test.cpp)
+  target_link_libraries(axiom_brush_package_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_package_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPackage COMMAND axiom_brush_package_tests)
+  add_executable(axiom_brush_package_catalog_tests tests/brush_package_catalog_test.cpp)
+  target_link_libraries(axiom_brush_package_catalog_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_package_catalog_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPackageCatalog COMMAND axiom_brush_package_catalog_tests)
+  add_executable(axiom_brush_plan_tests tests/brush_plan_test.cpp)
+  target_link_libraries(axiom_brush_plan_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_plan_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPlan COMMAND axiom_brush_plan_tests)
+  add_executable(axiom_brush_session_tests tests/brush_session_test.cpp)
+  target_link_libraries(axiom_brush_session_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_session_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushSession COMMAND axiom_brush_session_tests)
+  add_executable(axiom_brush_operation_intent_tests tests/brush_operation_intent_test.cpp)
+  target_link_libraries(axiom_brush_operation_intent_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_operation_intent_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushOperationIntent COMMAND axiom_brush_operation_intent_tests)
+  add_executable(axiom_brush_preview_handoff_tests tests/brush_preview_handoff_test.cpp)
+  target_link_libraries(axiom_brush_preview_handoff_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_preview_handoff_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushPreviewHandoff COMMAND axiom_brush_preview_handoff_tests)
+  add_executable(axiom_brush_complexity_tests tests/brush_complexity_test.cpp)
+  target_link_libraries(axiom_brush_complexity_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_brush_complexity_tests PRIVATE cxx_std_20)
+  add_test(NAME G45BrushComplexity COMMAND axiom_brush_complexity_tests)
+  add_executable(axiom_programmable_brush_tests tests/programmable_brush_test.cpp)
+  target_link_libraries(axiom_programmable_brush_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_programmable_brush_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_programmable_brush_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_programmable_brush_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45ProgrammableBrush COMMAND axiom_programmable_brush_tests)
+  add_executable(axiom_g45_perfect_freehand_reference_tests
+    tests/vector_stroke_reference_test.cpp)
+  target_link_libraries(axiom_g45_perfect_freehand_reference_tests PRIVATE
+    canvas_runtime_ink)
+  target_compile_features(axiom_g45_perfect_freehand_reference_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_g45_perfect_freehand_reference_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_g45_perfect_freehand_reference_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G45PerfectFreehandReference
+    COMMAND axiom_g45_perfect_freehand_reference_tests)
+  if(TARGET canvas_runtime_ink_semantic_adapter)
+    add_executable(axiom_canonical_brush_commit_tests tests/canonical_brush_commit_test.cpp)
+    target_link_libraries(axiom_canonical_brush_commit_tests PRIVATE
+      canvas_runtime_ink_semantic_adapter)
+    target_compile_features(axiom_canonical_brush_commit_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_canonical_brush_commit_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_canonical_brush_commit_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G45CanonicalBrushCommit COMMAND axiom_canonical_brush_commit_tests)
+  endif()
 endif()

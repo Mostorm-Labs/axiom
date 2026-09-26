@@ -24,6 +24,8 @@ android {
                     "-DARC_BUILD_TESTS=OFF",
                     "-DARC_BUILD_EXTERNAL_CONSUMER_TEST=OFF",
                     "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+                    "-DCANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH=ON",
+                    "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/android-arm64-v8a-gles3",
                     "-DCANVAS_POC02_BUILD_PLATFORM_SHELLS=OFF",
                     "-DBUILD_TESTING=OFF",
                     "-DCMAKE_CXX_FLAGS=-Wno-error=missing-field-initializers -Wno-missing-field-initializers"

@@ -25,6 +25,9 @@ int main() {
   assert(backend.submit(strokes, viewport).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(backend.rasterizationCount() == 1U);
+  assert(backend.submissionCount() == 1U);
+  assert(backend.readbackCount() == 1U);
+  assert(backend.cpuCopyCount() == 1U);
   const auto pixels = backend.rgba();
   assert(isBlue(pixels, backend.width(), 13U, 14U));
   assert(!isBlue(pixels, backend.width(), 5U, 5U));
@@ -39,5 +42,8 @@ int main() {
   assert(backend.submit(strokes, viewport).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(backend.rasterizationCount() == 1U);
+  assert(backend.submissionCount() == 1U);
+  assert(backend.readbackCount() == 1U);
+  assert(backend.cpuCopyCount() == 1U);
   return 0;
 }

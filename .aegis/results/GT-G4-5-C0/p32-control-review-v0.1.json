@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C0",
+  "stage": "P32_CONTROL_REVIEW",
+  "review_version": "v0.1",
+  "review_surface": "CONTROL_REVIEW",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-runtime-interaction-consolidation",
+    "reviewed_result_revision": "20b9b307e9329b27b839ef6067e31c215a4da042",
+    "accepted_p31_control_ref": "3baf08a5e13844f17cd042a3c48eda59e5519c3d"
+  },
+  "verdict": "RETURN_TO_P33",
+  "accepted_work": [
+    "CanvasInteractionCoordinator implementation",
+    "ViewportInteractionController implementation",
+    "Web wheel/Ctrl-wheel/browser gesture migration into runtime",
+    "AutoIntent/PositionOnly/slop/predicted/zero-mutation preservation",
+    "P34-NB-01 preservation",
+    "C0 runtime tests",
+    "InkPlayground 11/11 tests",
+    "Web contract tests",
+    "R01 perfect-freehand regression"
+  ],
+  "non_blocking_environment_limit": {
+    "subject": "full semantic/render CTest configure",
+    "reason": "locked GoogleTest source is unavailable in current worktree",
+    "disposition": "NON_BLOCKING_FOR_C0",
+    "rationale": "P31 did not freeze full semantic/render CTest as a blocking oracle; frozen C0/G4/G4.4/InkPlayground/Web/R01 oracles have reviewer-accessible results."
+  },
+  "blocking_findings": [
+    {
+      "id": "C0-CR-B01",
+      "classification": "FROZEN_CLOSURE_INCOMPLETE",
+      "subject": "routing decision ownership remains in InkPlaygroundHost",
+      "evidence": [
+        "P31 requires routing decisions and view-to-content routing to move out of InkPlaygroundHost.",
+        "InteractionRoutingResult lacks an explicit route-to-ink/content-space routing action.",
+        "InkPlaygroundHost still branches on ContactDisposition and keyedStrokeIds_ to decide whether the sample continues to Ink."
+      ],
+      "required_fix": "Extend the runtime routing result/controller contract so the composition root applies typed route/cancel/content-sample actions without re-deciding interaction semantics."
+    },
+    {
+      "id": "C0-CR-B02",
+      "classification": "SCOPE_VIOLATION",
+      "subject": "apps/ink_playground/CMakeLists.txt changed outside exact authorized mutation scope",
+      "evidence": [
+        "P31 exact existing-path allowlist does not include apps/ink_playground/CMakeLists.txt.",
+        "Result revision adds the new viewport exports to EXPORTED_FUNCTIONS in that file.",
+        "scope-diff.json incorrectly reports authorized_paths_only=true."
+      ],
+      "required_fix": "Restore the file to the P31 baseline and verify Web export/contract behavior using authorized paths. If the export change is actually required, stop and return TASK_PACKAGE_DEFECT to P31 instead of retaining the unauthorized mutation."
+    }
+  ],
+  "evidence_consistency_findings": [
+    {
+      "id": "C0-CR-NB01",
+      "classification": "CONTROL_METADATA_FINDING",
+      "subject": "result.json still says blocking evidence pending exact pushed revision / remote_push_required",
+      "disposition": "refresh on successful P33 closure"
+    }
+  ],
+  "resume_policy": {
+    "preserve_valid_work": true,
+    "resume_cursor": {
+      "execution_ref": "codex/g4-5-runtime-interaction-consolidation",
+      "revision": "20b9b307e9329b27b839ef6067e31c215a4da042",
+      "completed_through": [
+        "runtime coordinator/controller implementation",
+        "Web navigation migration",
+        "behavior preservation tests",
+        "reviewer-accessible C0 evidence materialization"
+      ],
+      "next_action": [
+        "close C0-CR-B01 routing-ownership gap",
+        "reconcile C0-CR-B02 unauthorized CMake mutation",
+        "rerun frozen C0 oracles and regressions",
+        "regenerate scope-diff/result evidence with exact pushed revision"
+      ]
+    }
+  },
+  "success_after_resume": "READY_FOR_D0_PACKAGE_REVIEW",
+  "gate_pass": false
+}

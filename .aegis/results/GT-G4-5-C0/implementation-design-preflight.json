@@ -1,0 +1,36 @@
+{
+  "affected_files": [
+    "runtime/interaction",
+    "apps/ink_playground/common/ink_playground_host.*",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/web/index.html"
+  ],
+  "api": [
+    "InteractionRoutingResult",
+    "ViewportNavigationSample",
+    "applyViewportNavigation",
+    "viewToContent"
+  ],
+  "current_owner_map": {
+    "InkPlaygroundHost": "contact caches, MultiContactCoordinator, viewport gesture and committed transform",
+    "Web index.html": "cumulative trackpad transform and navigation"
+  },
+  "preserved": [
+    "AutoIntent",
+    "PositionOnly",
+    "predicted no transition",
+    "zero canonical mutation",
+    "radial slop 8",
+    "path slop 12",
+    "P34-NB-01"
+  ],
+  "status": "PASS",
+  "target_owner_map": {
+    "CanvasInteractionCoordinator": "contact samples, routing/disposition and viewport claim transitions",
+    "InkPlaygroundHost": "composition root applying typed routing actions",
+    "ViewportInteractionController": "gesture composition, committed transform, inverse mapping and Web navigation",
+    "Web index.html": "event normalization only"
+  },
+  "task_id": "GT-G4-5-C0",
+  "unresolved_semantic_decisions": []
+}

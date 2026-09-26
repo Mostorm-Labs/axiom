@@ -1,0 +1,86 @@
+{
+  "snapshot_version": 1,
+  "package_id": {
+    "value": "00000000000000000000000000000042"
+  },
+  "package_revision": 1,
+  "pipeline_version": 1,
+  "defaults_version": 1,
+  "profile_id": 1,
+  "stages": [
+    {
+      "stage_id": 1,
+      "declared_mode": 3,
+      "active": true,
+      "node_id": 1,
+      "node_version": 1
+    },
+    {
+      "stage_id": 2,
+      "declared_mode": 3,
+      "active": true,
+      "node_id": 2,
+      "node_version": 1
+    },
+    {
+      "stage_id": 3,
+      "declared_mode": 1,
+      "active": false,
+      "node_id": 0,
+      "node_version": 0
+    },
+    {
+      "stage_id": 4,
+      "declared_mode": 1,
+      "active": false,
+      "node_id": 0,
+      "node_version": 0
+    },
+    {
+      "stage_id": 5,
+      "declared_mode": 1,
+      "active": false,
+      "node_id": 0,
+      "node_version": 0
+    },
+    {
+      "stage_id": 6,
+      "declared_mode": 3,
+      "active": true,
+      "node_id": 3,
+      "node_version": 1
+    },
+    {
+      "stage_id": 7,
+      "declared_mode": 1,
+      "active": false,
+      "node_id": 0,
+      "node_version": 0
+    }
+  ],
+  "vector": {
+    "size": 16,
+    "thinning": 0.5,
+    "smoothing": 0.5,
+    "streamline": 0.5,
+    "pressure_source": 1,
+    "missing_pressure": 1,
+    "easing_id": 1,
+    "start_cap": true,
+    "end_cap": true,
+    "start_taper": 0,
+    "end_taper": 0
+  },
+  "paint": {
+    "red": 0.05,
+    "green": 0.1,
+    "blue": 0.2,
+    "alpha": 1,
+    "opacity": 1,
+    "blend": 1,
+    "color_space": 1
+  },
+  "resources": [],
+  "seed": 42,
+  "signal_schema_version": 1
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "TASK_PACKAGE_DEFECT",
+  "terminal": true,
+  "continue_execution": false,
+  "blocker": "The frozen C2 contract requires incremental Vector preview parity against the accepted R1 one-shot evaluator, but the package does not define the semantic mapping from BrushDefinition v1 to R1 StrokeOptions.",
+  "evidence": {
+    "brush_definition": "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+    "r1_options": "runtime/ink/include/canvas/ink/vector_stroke_reference.hpp",
+    "diagnostic": ".aegis/results/GT-G4-5-C2/brush-oracle-binding-probe.cpp",
+    "diagnostic_result": "different legal thinning mappings produced different R1 outlines",
+    "predecessor_regressions": "G45ProgrammableBrush and G45PerfectFreehandReference passed"
+  },
+  "required_owner": "P31 package/authority owner",
+  "required_resolution": "Freeze the BrushDefinition-to-R1-StrokeOptions mapping and update the C2 package/verification bindings before P32 resumes.",
+  "gate_pass_forbidden": true
+}

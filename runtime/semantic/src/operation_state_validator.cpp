@@ -92,8 +92,9 @@ StatefulResult requireKindVersion(
     if (!isKnownObjectKind(record.kind) || !isKnownObjectKind(kind)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
-    if (record.kind != kind || record.kind_version != kind_version || kind_version != 1U ||
-        record.kind_version != 1U) {
+    const bool brush_v2 = kind == ObjectKind::kVectorStroke && kind_version == 2U &&
+                          std::holds_alternative<BrushStrokeContent>(record.content);
+    if (record.kind != kind || record.kind_version != kind_version || (!brush_v2 && kind_version != 1U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return StatefulResult{};
@@ -113,7 +114,10 @@ StatefulResult requirePropertyApplicability(
 }
 
 StatefulResult validateRecordStateForOperation(const ObjectRecord& record, StateRule rule) {
-    if (!isKnownObjectKind(record.kind) || record.kind_version != 1U) {
+    if (!isKnownObjectKind(record.kind) ||
+        (record.kind_version != 1U &&
+         !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 2U &&
+           std::holds_alternative<BrushStrokeContent>(record.content)))) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return supportsRule(rule, record.kind) ? StatefulResult{}

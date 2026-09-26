@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "status": "PASS_WITH_ENVIRONMENT_FINDING",
+  "source_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+  "provider": "github-actions",
+  "pull_request": 135,
+  "runs": [
+    {"workflow": "g4-5-programmable-brush", "run_id": 36070151458, "jobs": {"android": 107868957401, "web": 107868957543, "windows": 107868957666}},
+    {"workflow": "g0-pr-ci-dag", "run_id": 36070151403, "jobs": {"platform_protocol_seed": 107868957877}},
+    {"workflow": "g1-semantic-codec", "run_id": 36070151626, "job": 107868957823, "artifact_id": 10838185657, "conclusion": "FAIL_DESCRIPTOR_LOCK_MISMATCH"},
+    {"workflow": "g3-web-reference-host", "run_id": 36070151404, "job": 107868957061, "conclusion": "PENDING_AT_CAPTURE"},
+    {"workflow": "g3-windows-reference-host", "run_id": 36070151530, "job": 107868957220, "conclusion": "PENDING_AT_CAPTURE"}
+  ],
+  "finding": {
+    "classification": "BLOCKED_ENVIRONMENT",
+    "failure_mode": "The repository-wide semantic descriptor lock check regenerates a descriptor that differs from the committed lock at byte 537.",
+    "scope": "Existing G1 schema/toolchain lock boundary; not introduced by G4.5 Brush Engine files.",
+    "required_route": "Repair or explicitly reconcile the G1 descriptor lock authority before using semantic-codec hosted PASS for this Gate."
+  }
+}

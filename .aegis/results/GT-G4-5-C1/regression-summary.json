@@ -1,0 +1,27 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "PASS",
+  "passed": [
+    "C1CommonIngress",
+    "C1CrossPlatformFixtureParity",
+    "C1AppleContract",
+    "C0CanvasInteractionCoordinator",
+    "C0ViewportInteractionController",
+    "G4GestureArbiter",
+    "G4ViewportGesture",
+    "G45PerfectFreehandReference",
+    "InkPlayground existing command tests",
+    "git diff --check"
+  ],
+  "blocked": [
+    "C1WebOwnership",
+    "C1AndroidOwnership",
+    "C1WindowsOwnership",
+    "full hosted platform builds unavailable on current macOS host"
+  ],
+  "tests": {
+    "full_ctest": "574/574 passed (repository-configured skipped cases preserved)",
+    "ownership_oracle": "5/5 passed",
+    "git_diff_check": "PASS"
+  }
+}

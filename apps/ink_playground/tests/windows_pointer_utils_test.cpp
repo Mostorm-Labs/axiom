@@ -34,9 +34,9 @@ int main() {
   previewSamples[1].sample_sequence = 2;
   previewSamples[1].x = 12.0F;
   previewSamples[1].y = 13.0F;
-  if (canvas::ink_playground::windows_input::appendPreviewSamples(
+  if (canvas::ink_playground::windows_input::appendNormalizedPreviewSamples(
           previewPoints, lastPreviewSequence, previewSamples) != 2U ||
-      canvas::ink_playground::windows_input::appendPreviewSamples(
+      canvas::ink_playground::windows_input::appendNormalizedPreviewSamples(
           previewPoints, lastPreviewSequence, previewSamples) != 0U ||
       previewPoints.size() != 2U || lastPreviewSequence != 2U) {
     return 13;

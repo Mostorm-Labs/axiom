@@ -1,0 +1,23 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-5-C2",
+  "stage":"P21_P23_AUTHORITY_REVIEW",
+  "status":"ACCEPTED_SCOPED_SUPERSESSION",
+  "reviewed_revision":"WORKTREE_CONTROL_AMENDMENT_V0.3",
+  "supersedes":"GT-G4-5-C2-P12-P13-v0.2",
+  "accepted_authority_refs":[
+    "docs/planning/GT_G4_5_C2_P12_P13_AUTHORITY_AMENDMENT_V0_3.md",
+    "docs/planning/GT_G4_5_C2_P14_P16_EXECUTION_BOUNDARY_AMENDMENT_V0_3.md",
+    "docs/planning/GT_G4_5_C2_V11_V12_VERIFICATION_ANNEX_V0_3.md"
+  ],
+  "closed_findings":["P21-C2-AUTH-01","P21-C2-AUTH-02","P21-C2-AUTH-03","P21-C2-AUTH-04","P21-C2-VERIFY-01"],
+  "supersession_scope":[
+    "VectorReference proposal family 4 and kind/operation/snapshot v2 are removed",
+    "existing V1 registries and operation envelope remain current",
+    "named semantic projection is primary equality oracle; digest is derived",
+    "render seam is submit(FramePlan)+observation()"
+  ],
+  "preserved_history":["GT-G4-5-C2-P31-v0.1 TASK_PACKAGE_DEFECT","all accepted V1/C0/C1/R01 evidence"],
+  "production_changes":false,
+  "p32_authorized":false
+}

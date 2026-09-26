@@ -1,0 +1,178 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-5-C2-P31-v1.0",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "reviewed_revision": "a995ebf3d288f1dcb06812d11b21538f6524f00e",
+    "remote_branch_revision": "a995ebf3d288f1dcb06812d11b21538f6524f00e",
+    "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "task_anchor_ancestry": "PASS"
+  },
+  "identity_audit": {
+    "package_manifest": "PASS",
+    "package_lock_sha256": "PASS",
+    "package_anchor": "PASS",
+    "producer_result_revision": "BLOCKED_EVIDENCE",
+    "producer_result_revision_declared": "1b8671638ee6c5653e9d41722d5c05238d711249",
+    "producer_result_revision_observed": "a995ebf3d288f1dcb06812d11b21538f6524f00e",
+    "materialized_ref": "refs/heads/codex/g4-5-common-brush-processing",
+    "materialized_ref_resolves": "PASS",
+    "result_boundary_matches_materialized_ref": false
+  },
+  "frozen_requirement_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "P31 package binding and anchor ancestry",
+      "Common BrushSession, confirmed/predicted isolation and preview handoff are represented by the current implementation and local focused tests",
+      "v0.4 schema carrier, AddStroke v2 and snapshot v2 focused tests are present and pass",
+      "RED oracle executes against the exact task anchor with all frozen gaps RED",
+      "No official Gate PASS was emitted by the producer"
+    ],
+    "failed": [
+      {
+        "id": "C2-REGRESSION-PLATFORM-CONTRACT",
+        "requirement": "C2-REGRESSION requires existing platform contract suites to pass while preserving only explicitly retired authoring assertions.",
+        "observations": [
+          "python apps/ink_playground/tests/web_host_page_test.py -> exit 1: missing _axiom_ink_cancel_pointer assertion",
+          "python apps/ink_playground/tests/android_brush_qualification_contract_test.py -> exit 1: missing nativeBrushBegin/nativeBrushSample/nativeBrushFinish assertions"
+        ],
+        "classification": "TASK_PACKAGE_DEFECT",
+        "routing": "P31 package/verification contract repair; do not change the common ownership implementation solely to satisfy retired platform-local runtime assertions"
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "All package-manifest SHA-256 locks recompute",
+      "Fixed-anchor RED oracle exit 0 with all six expected observations RED",
+      "Local focused implementation/build evidence is reviewer-readable",
+      "Repository branch and reviewed HEAD are remotely resolvable"
+    ],
+    "failed": [
+      {
+        "id": "RESULT_IDENTITY_MISMATCH",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "The blocking result.json and p32-reentry-acceptance-v1.0.json identify 1b867163..., while the materialized branch and current repository HEAD are a995ebf3...",
+        "impact": "A reviewer cannot establish that the blocking evidence inputs describe the reviewed implementation boundary.",
+        "existing_independent_coverage": "None; local files do not repair a stale result identity.",
+        "new_evidence_unique_detection_value": "Exact revision reconciliation detects evidence/result substitution or stale closure records.",
+        "blocking_justification": "The P31 evidence contract requires an exact result revision and reviewer-accessible materialized ref.",
+        "why_frozen_evidence_missed_it": "The producer updated the branch after writing the result record without rewriting all result-bound evidence.",
+        "why_severe_enough": "Identity ambiguity invalidates every downstream evidence binding; this is a prerequisite proof-capability failure."
+      },
+      {
+        "id": "HOSTED_PROVIDER_IDENTITY_MISSING",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "P31 requires repository CI for affected CMake/semantic/platform targets, but no GitHub Actions run/attempt/job/artifact identity exists for the reviewed branch HEAD.",
+        "impact": "Hosted platform and semantic verification cannot be independently tied to the reviewed revision.",
+        "existing_independent_coverage": "Local build/CTest evidence covers portable execution only and is not a hosted provider observation.",
+        "new_evidence_unique_detection_value": "Provider run/job/artifact identities would establish independent target/toolchain execution at the exact HEAD.",
+        "blocking_justification": "The hosted_verification.required contract is explicit and the affected platform paths are part of the closure target.",
+        "why_frozen_evidence_missed_it": "The producer supplied local summaries and a workflow definition but no completed run identity.",
+        "why_severe_enough": "Without provider identity, the required cross-platform proof boundary remains open."
+      },
+      {
+        "id": "EVIDENCE_INPUT_IDENTITY_INCOMPLETE",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "Most blocking evidence artifacts contain only test names and prose properties; they do not expose the verification.lock-required command, exit code, executable/input hashes, or raw observations.",
+        "impact": "A reviewer cannot independently reconstruct whether the claimed semantic and platform observations were produced by the reviewed inputs.",
+        "existing_independent_coverage": "The fixed-anchor RED transcript is complete, but it covers only the pre-change oracle and cannot prove post-change obligations.",
+        "new_evidence_unique_detection_value": "Raw command/result identity distinguishes real target execution from stale summaries or green-cache claims.",
+        "blocking_justification": "The frozen evidence contract explicitly requires these identities for every artifact.",
+        "why_frozen_evidence_missed_it": "P32 recorded compact summaries instead of the required raw evidence bundle.",
+        "why_severe_enough": "The missing identity data leaves the core semantic/platform proof capability unavailable, not merely less convenient to review."
+      }
+    ],
+    "task_package_findings": [
+      {
+        "id": "C2-PERF-UNPACKAGED",
+        "classification": "TASK_PACKAGE_DEFECT",
+        "failure_mode": "The frozen VERIFICATION.md defines C2-PERF as a blocking structural complexity obligation, but P31 verification.lock.json and evidence-contract.json enumerate no performance.json/C2Complexity artifact or executable command.",
+        "impact": "The required O(n²) hot-path/full-history-copy failure mode has no closure oracle in the executable package.",
+        "existing_independent_coverage": "The RED transcript observes legacy full-history reevaluation only; no post-change 512/2048 structural count is present.",
+        "new_evidence_unique_detection_value": "A dedicated complexity oracle measures history copies and one-shot evaluations, which ordinary unit/CTest totals do not detect.",
+        "blocking_justification": "This is an explicit frozen blocking obligation omitted from the generated P31 package, so P34 cannot silently waive it.",
+        "why_frozen_evidence_missed_it": "The P31 lock/evidence contract was generated without carrying forward the eleven-artifact verification list.",
+        "why_severe_enough": "Unbounded history work is a release-critical interaction performance failure mode and the package has no independent detection path."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "PASS_WITH_BLOCKERS",
+    "checks": {
+      "repository_identity": "PASS",
+      "remote_head_matches_reviewed_head": "PASS",
+      "task_anchor_ancestry": "PASS",
+      "git_diff_check_anchor_to_head": "FAIL_NONBLOCKING_FORMATTING_ONLY",
+      "package_binding": "PASS",
+      "platform_source_ownership": "PASS_FOR_NEW_PATH",
+      "local_full_regression_summary": "STALE_OR_INCOMPLETE: evidence says 580, current producer claim says 582"
+    },
+    "non_blocking_findings": [
+      {
+        "id": "STALE_EVIDENCE_COUNTS",
+        "classification": "NON_BLOCKING_FINDING",
+        "description": "regression-summary.json reports 580 passed while the producer result reports 582; this is subsumed by the result/evidence identity blocker and must be regenerated for any re-review."
+      },
+      {
+        "id": "LEGACY_TOKEN_REACHABILITY_REQUIRES_BOUNDARY_SCAN",
+        "classification": "NON_BLOCKING_FINDING",
+        "description": "Legacy programmable-brush symbols remain in compatibility/history and qualification surfaces. Current bridge ownership checks pass for the new path; a reviewer-owned reachability scan is still required before closure."
+      }
+    ]
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "The stale Web/Android assertions are routed as TASK_PACKAGE_DEFECT rather than implementation repair because they encode the retired platform-local ownership that the frozen P32 change explicitly removes."
+    ]
+  },
+  "gate_review": {
+    "frozen_requirements": {
+      "passed": [
+        "package binding",
+        "common runtime/schema focused obligations",
+        "fixed-anchor RED precondition",
+        "new-path ownership source checks"
+      ],
+    "failed": [
+      "C2-REGRESSION platform contract suite closure"
+    ]
+    },
+    "frozen_evidence": {
+      "passed": [
+        "package locks",
+        "anchor RED transcript",
+        "reviewer-readable local focused evidence"
+      ],
+      "failed": [
+        "exact result identity",
+      "required hosted provider identity"
+        ,"required post-change raw input/command identities"
+        ,"C2-PERF complexity evidence omitted from executable package"
+      ]
+    },
+    "verdict": "BLOCKED"
+  },
+  "decision": {
+    "verdict": "BLOCKED",
+    "official_gate_pass": false,
+    "classification": ["BLOCKED_EVIDENCE", "TASK_PACKAGE_DEFECT"],
+    "implementation_defect": false,
+    "next_route": "P31_PACKAGE_REPAIR_AND_P32_REVERIFY",
+    "preserve_valid_implementation_work": true,
+    "required_before_re_review": [
+      "Regenerate result.json and every blocking evidence artifact against a single exact pushed revision.",
+      "Provide hosted CI run/attempt/job/artifact identities for affected semantic/platform targets at that revision.",
+      "Repair or supersede the stale Web/Android qualification assertions so the regression contract matches the accepted common-host ownership boundary.",
+      "Run an independent legacy reachability scan and refresh regression totals/raw outputs."
+    ]
+  }
+}

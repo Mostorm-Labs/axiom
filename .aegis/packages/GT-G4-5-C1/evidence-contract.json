@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "result_directory": ".aegis/results/GT-G4-5-C1/",
+  "durable_boundary": "exact pushed task-branch result revision containing implementation and all blocking evidence",
+  "artifacts": [
+    {
+      "id": "repo-reconciliation.json",
+      "path": ".aegis/results/GT-G4-5-C1/repo-reconciliation.json",
+      "blocking": true
+    },
+    {
+      "id": "implementation-design-preflight.json",
+      "path": ".aegis/results/GT-G4-5-C1/implementation-design-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "red-oracle-preflight.json",
+      "path": ".aegis/results/GT-G4-5-C1/red-oracle-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-common-ingress.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-common-ingress.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-cross-platform-fixture-parity.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-cross-platform-fixture-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-web-ownership.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-web-ownership.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-android-ownership.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-android-ownership.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-windows-ownership.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-windows-ownership.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-apple-contract.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-apple-contract.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-lifecycle-cancel.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-lifecycle-cancel.json",
+      "blocking": true
+    },
+    {
+      "id": "c1-arc-dependency-boundary.json",
+      "path": ".aegis/results/GT-G4-5-C1/c1-arc-dependency-boundary.json",
+      "blocking": true
+    },
+    {
+      "id": "regression-summary.json",
+      "path": ".aegis/results/GT-G4-5-C1/regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "scope-diff.json",
+      "path": ".aegis/results/GT-G4-5-C1/scope-diff.json",
+      "blocking": true
+    },
+    {
+      "id": "result.json",
+      "path": ".aegis/results/GT-G4-5-C1/result.json",
+      "blocking": true
+    }
+  ],
+  "environment_policy": {
+    "unpinned_dependency_substitution": "FORBIDDEN",
+    "unavailable_physical_windows_or_ios_device": "may be recorded as deferred only where package marks physical qualification optional"
+  },
+  "claim_boundary": "P32 may return READY_FOR_D0_PACKAGE_REVIEW only. It may not claim D0 R2 G4.5 Gate or release PASS."
+}

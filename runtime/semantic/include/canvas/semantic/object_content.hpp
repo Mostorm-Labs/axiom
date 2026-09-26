@@ -335,6 +335,17 @@ struct GroupContent final {
     bool operator==(const GroupContent&) const = default;
 };
 
+struct BrushStageBinding final { std::uint32_t stage_id=0, declared_mode=0, node_id=0, node_version=0; bool active=false; bool operator==(const BrushStageBinding&) const = default; };
+struct BrushVectorParameters final { double size=0, thinning=0, smoothing=0, streamline=0; std::uint32_t pressure_source=0, missing_pressure=0, easing_id=0; bool start_cap=false, end_cap=false; double start_taper=0, end_taper=0; bool operator==(const BrushVectorParameters&) const = default; };
+struct BrushSolidPaint final { double red=0, green=0, blue=0, alpha=0, opacity=0; std::uint32_t blend=0, color_space=0; bool operator==(const BrushSolidPaint&) const = default; };
+struct BrushResourceBinding final { ObjectId resource_id{}; std::string content_sha256; std::uint32_t kind=0, decode_version=0, channel=0, color_space=0, sampling=0, wrap=0; bool operator==(const BrushResourceBinding&) const = default; };
+struct BrushExecutionSnapshot final { std::uint32_t snapshot_version=1, package_revision=1, pipeline_version=1, defaults_version=1, profile_id=1, signal_schema_version=1; ObjectId package_id{}; std::vector<BrushStageBinding> stages; BrushVectorParameters vector{}; BrushSolidPaint paint{}; std::vector<BrushResourceBinding> resources; std::uint64_t seed=0; bool operator==(const BrushExecutionSnapshot&) const = default; };
+struct BrushConfirmedSample final { Vec2 position{}; std::optional<double> pressure; bool operator==(const BrushConfirmedSample&) const = default; };
+struct BrushVectorOutput final { std::vector<Vec2> outline; std::uint32_t fill_rule=1; bool closed=true; bool operator==(const BrushVectorOutput&) const = default; };
+struct BrushStrokeRecord final { BrushExecutionSnapshot snapshot{}; std::vector<BrushConfirmedSample> confirmed_samples; BrushVectorOutput vector_output{}; bool operator==(const BrushStrokeRecord&) const = default; };
+struct BrushStrokeContent final { BrushStrokeRecord stroke{}; bool operator==(const BrushStrokeContent&) const = default; };
+
+
 // Frozen V1 ObjectContent branches. Compatibility between ObjectKind and its
 // branch is an Operation validation concern beginning in GT-G1-04.
 using ObjectContent = std::variant<
@@ -346,6 +357,7 @@ using ObjectContent = std::variant<
     DabStrokeContent,
     ConnectorContent,
     StickyContent,
-    GroupContent>;
+    GroupContent,
+    BrushStrokeContent>;
 
 } // namespace canvas::semantic

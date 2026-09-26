@@ -1,0 +1,34 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "PASS",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "pre_c1_flows": {
+    "web": "PointerEvent/coalesced samples -> JS generation/stroke/brush lifecycle -> WASM/host",
+    "android": "MotionEvent -> Java/native pointer registry -> Arc InputSource -> host",
+    "windows": "WM_POINTER history -> platform registry/disposition -> Arc pointer batch -> host",
+    "apple": "No existing InkPlayground extracted-event adapter contract"
+  },
+  "target_design": {
+    "common_batch": "PlatformPointerBatch carries source/pointer/generation, phase, coordinates, timestamp, provenance, capabilities, contact and tilt",
+    "ingress": "PlatformInteractionIngress owns generation, lifecycle, cancel/source-lost and emits typed normalized records",
+    "capture_gate": "PassThroughInputCaptureGate is a host-neutral capture decision seam",
+    "composition": "common InkPlayground controller consumes ingress actions; Arc conversion remains common integration fanout only",
+    "platform_mapping": "Web/Android/Windows extract native facts and submit bounded batches; Apple adapter maps portable extracted facts"
+  },
+  "preserved": ["AutoIntent", "MultiInk seam", "GesturePriority seam", "radial slop 8", "path slop 12", "predicted non-ownership", "P34-NB-01", "C0 viewport semantics", "coordinate units"],
+  "forbidden_confirmed": ["semantic schema changes", "perfect-freehand changes", "common Skia renderer", "Arc core/protocol changes", "front-buffer optimization"],
+  "obligation_to_evidence": {
+    "C1-V1": ["c1-common-ingress.json", "c1-arc-dependency-boundary.json"],
+    "C1-V2": ["c1-cross-platform-fixture-parity.json"],
+    "C1-V3": ["c1-web-ownership.json"],
+    "C1-V4": ["c1-android-ownership.json"],
+    "C1-V5": ["c1-windows-ownership.json"],
+    "C1-V6": ["c1-apple-contract.json"],
+    "C1-V7": ["c1-lifecycle-cancel.json"],
+    "C1-V8": ["regression-summary.json"],
+    "C1-V9": ["scope-diff.json", "result.json"]
+  }
+}

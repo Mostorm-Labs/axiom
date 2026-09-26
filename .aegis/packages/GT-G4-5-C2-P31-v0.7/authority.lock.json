@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.7",
+  "authority_status": "CURRENT_SCOPED_DESIGN",
+  "authority_refs": [
+    {
+      "path": "docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md",
+      "sha256": "7d6c6fe8c567b570b1b11e599bf5d1415309ef5769d73c7ad876a0955a47343b"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/CONTRACT.md",
+      "sha256": "50c6975dfd4886740f11b7ad7d5510d40356c660dc7406481160be676f599484"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/PLAN.md",
+      "sha256": "97b8564ad33d99233fc33326c79c583ddb83d653384179e17e3680aabf83234e"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/VERIFICATION.md",
+      "sha256": "3f35749d7548b372bcbd9ea5ea74088335e5014ea3bd7ce7f2a53e6ac1598b2d"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/brush_engine.proto",
+      "sha256": "664318b75d592091ed87c444fe23f946ab6f00b046ab964d35d6b860a7787b7a"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/manifest.schema.json",
+      "sha256": "568c2941e534391b0f57c82f1fda45cbc351f92c000cb3109b3f9ee297b17c12"
+    },
+    {
+      "path": "docs/planning/brush-engine-v0.4/pipeline.schema.json",
+      "sha256": "cea2f6f297e40a0acb4e7a30a52c1151e782d2a68d8a90864a0f53b9a498470e"
+    }
+  ],
+  "resolved_conflicts": [
+    "The v0.4 contract explicitly authorizes the Brush Engine schema carriers in brush_engine.proto and the (ObjectKind 5,2)/(payload v2)/(snapshot v2) branch; P32 must materialize these carriers atomically.",
+    "The prohibition is limited to unapproved fields, IDs, versions, or fallbacks; it does not prohibit the approved v0.4 schema release.",
+    "Runtime Core remains the sole AddStroke builder and new authoring never calls legacy V1 authoring classes."
+  ],
+  "frozen_semantic_boundary": {
+    "new_profile": "vector-solid-v1",
+    "object_kind": {
+      "id": 5,
+      "version": 2,
+      "content_tag": 10
+    },
+    "legacy_object_kind": {
+      "id": 5,
+      "version": 1,
+      "content_tag": 5
+    },
+    "operation": {
+      "kind": "AddStroke",
+      "schema_version": 1,
+      "payload_version_new": 2,
+      "payload_version_legacy": 1
+    },
+    "snapshot_version_new": 2,
+    "snapshot_version_legacy": 1,
+    "unknown_versions": "reject_before_mutation",
+    "legacy_mode": "read_only_document_compatibility",
+    "r1_adapter_mapping": {
+      "size": "size",
+      "thinning": "thinning",
+      "smoothing": "smoothing",
+      "streamline": "streamline",
+      "pressure_source_simulated": "simulate_pressure=true",
+      "pressure_source_device": "simulate_pressure=false",
+      "start_cap": "start_cap",
+      "end_cap": "end_cap",
+      "tapers": "zero; disabled; no full-length flags",
+      "preview_last": "false",
+      "seal_last": "true",
+      "easing": "linear"
+    },
+    "legacy_definition_boundary": {
+      "source": "BrushDefinition v1",
+      "new_authoring": "reject_before_begin_no_R1_mapping",
+      "v1_documents": "read_only_decode_render_preserve_original_no_writer"
+    }
+  }
+}

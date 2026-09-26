@@ -59,6 +59,10 @@ struct FrameState final {
     const SurfaceGeneration surfaceGeneration{};
     const MetricsGeneration metricsGeneration{};
     const FrameId frameId{};
+    // View-space clip for the renderer.  worldViewport remains the query
+    // rectangle in world coordinates; callers that do not have a separate
+    // clip retain the legacy fallback in DirectReferenceSource.
+    const foundation::WorldRect viewportClip{0.0F, 0.0F, -1.0F, -1.0F};
 
     bool operator==(const FrameState&) const = default;
 };

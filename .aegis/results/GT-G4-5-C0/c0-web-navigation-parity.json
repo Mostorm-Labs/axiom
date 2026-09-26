@@ -1,0 +1,18 @@
+{
+  "browser_gesture": "relative scale delta delegated to runtime",
+  "ctrl_wheel_zoom": {
+    "anchor_preserving": true,
+    "clamp": [
+      0.25,
+      8.0
+    ],
+    "factor": "exp(-deltaY*0.01)"
+  },
+  "static_oracle": "PASS",
+  "status": "PASS",
+  "task_id": "GT-G4-5-C0",
+  "wheel_pan": {
+    "translationX": "-deltaX",
+    "translationY": "-deltaY"
+  }
+}

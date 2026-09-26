@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-09V-P31-v0.1",
+  "task_id": "GT-G4-5-09V",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Implement and prove the VectorStroke-first RB-V01 freehand brush with single Axiom semantics, canonical Skia rendering, Windows Arc preview parity, dual-color diagnostic, and safe handoff.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-vector-freehand-arc-parity",
+    "rejected_execution_ref": "codex/g4-5-reference-brush-fidelity"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "f3b8787844b5dad80ba2318e96d1a66180bb4278",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "cb1ce5beb45a86ebf4c6eebbfa6b884012c5e481550c4284e42e3ab7f713f9d8"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "a1ef246836f86696b44c792bd3a0f04a6006fda19463e0e065c757272c9200ad"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "cf70700df7d9aab485e6c4f1ac57a38d00d7eeeba8af08b7acc65faf625d04bd"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "785f79c59f18ae6ef1a48d1b9fde12f0371dec21ea75693bc762d5a1da8ec2b1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "396841b11b28279afd251278447a2a533a53a55dd44286da14f2af43b98dbad8"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-09V/",
+    "base_revision": "f3b8787844b5dad80ba2318e96d1a66180bb4278",
+    "binding": "exact repository package files bound by SHA-256"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Resolve this package, run repository/package/anchor and evidence preflights, record ImplementationDesignPreflight, run the frozen RED oracles before production mutation, execute the complete closure contract, materialize exact evidence, and return only at terminal success or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

@@ -541,6 +541,14 @@ Json writeContent(const ObjectContent& value) {
         },
         [](const GroupContent&) {
             Json result = Json::object(); result["group"] = Json::object(); return result;
+        },
+        [](const BrushStrokeContent& content) {
+            Json message = Json::object();
+            message["confirmed_sample_count"] = content.stroke.confirmed_samples.size();
+            message["outline_point_count"] = content.stroke.vector_output.outline.size();
+            message["fill_rule"] = content.stroke.vector_output.fill_rule;
+            message["closed"] = content.stroke.vector_output.closed;
+            Json result = Json::object(); result["brush_stroke"] = std::move(message); return result;
         }}, value);
 }
 

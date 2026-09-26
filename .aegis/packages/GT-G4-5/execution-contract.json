@@ -1,0 +1,100 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Complete G4.5-00 authority and repository reconciliation",
+        "Implement G4.5-01 through G4.5-09 programmable-brush automated closure",
+        "Produce qualification builds and evidence bundles for the unified G4.5-10 physical checkpoint",
+        "Provide one narrow hosted G4.5 qualification workflow because no existing Windows workflow can build the Brush Lab target from an arbitrary exact revision"
+      ],
+      "authorized_mutation_scope": [
+        "runtime/ink/**",
+        "runtime/render/** only where narrowly required for renderer-neutral artifact or qualification integration",
+        "arc/** only for temporal-transient presentation",
+        "apps/brush_lab/**",
+        "apps/ink_playground/** only where needed for qualification-host integration",
+        "verification/corpus/brush/g4_5/**",
+        "tests/** only for G4.5 and regression coverage",
+        "CMakeLists.txt and relevant nested CMakeLists.txt",
+        ".github/workflows/g4-5-programmable-brush.yml only for the frozen cross-platform qualification lane",
+        "verification/tests/test_ci_trigger_boundaries.py only for the G4.5 workflow routing and consumer-policy contract",
+        ".aegis/packages/GT-G4-5/**",
+        ".aegis/results/GT-G4-5/**"
+      ],
+      "forbidden_changes": [
+        "runtime/semantic public schema or wire changes",
+        "new canonical ObjectKind or Operation",
+        "new RasterStroke or MediaStroke canonical semantics",
+        "changes to canonical StrokeRecord structure",
+        "G4.6 presentation work",
+        "G5 tile, cache, scheduler or resource-budget implementation",
+        "user-defined BrushDefinition persistence or sync",
+        "true wet-mix or canvas-read pigment semantics",
+        "historical G4 or G4.4 evidence rewrites",
+        "semantic-sdk.lock.json or r1-full-skia-sdk.lock.json changes",
+        "source rebuild of accepted Semantic or Skia SDKs"
+      ]
+    },
+    "tests": {
+      "required": [
+        "BrushDefinition and capability validation tests",
+        "BrushProgram compiler snapshot and negative tests",
+        "BrushRuntime incremental, cancellation and multi-session replay tests",
+        "resource binding and missing-resource tests",
+        "domain-separated deterministic dynamics tests",
+        "V1 brush-family structural and visual golden tests",
+        "Laser fake-clock lifecycle and zero-canonical-mutation tests",
+        "Brush Lab headless corpus and artifact-manifest tests",
+        "full relevant G4/G4.4 and semantic brush regression suites"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "wp00-repo-reconciliation.json",
+        "p31-control-review.json",
+        "portable-regression-summary.json",
+        "brush-definition-program-evidence.json",
+        "runtime-resource-dynamics-evidence.json",
+        "v1-brush-golden-manifest.json",
+        "laser-transient-evidence.json",
+        "brush-lab-workload-evidence.json",
+        "qualification-bundle-manifest.json",
+        "ready-for-physical-verification.json",
+        "result.json"
+      ],
+      "corroborative_or_successor": [
+        "windows-physical-evidence.json",
+        "web-physical-evidence.json",
+        "android-physical-evidence.json",
+        "g5-workload-freeze.json",
+        "g4-5-final-gate-report.json"
+      ]
+    },
+    "terminal_success": [
+      "G4.5-00 through G4.5-09 code and automated evidence are complete",
+      "all frozen deterministic, golden, structural and regression obligations pass",
+      "qualification builds and self-contained artifact bundles are bound to an exact result revision",
+      "status is READY_FOR_PHYSICAL_VERIFICATION",
+      "no forbidden scope change is present",
+      "no G4.5 PASS is claimed before G4.5-10"
+    ],
+    "explicit_terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_IMPLEMENTATION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_ENVIRONMENT",
+      "BLOCKED_REPOSITORY_IDENTITY"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "successor_stage": {
+      "id": "G4.5-10",
+      "name": "Unified Tier-A Physical Qualification + G5 Workload Freeze + Gate Report",
+      "physical_scenarios_are_capability_profiled": true,
+      "pressure_and_tilt_optional_when_unsupported": true,
+      "required_for_final_g4_5_pass": true
+    }
+  }
+}

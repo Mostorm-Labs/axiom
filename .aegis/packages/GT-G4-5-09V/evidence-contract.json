@@ -1,0 +1,99 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "review_boundary": "Exact package/materialization identity, exact result revision, deterministic vector geometry/replay evidence, Windows Arc/canonical parity evidence, hosted qualification runs, exact Windows bundle.",
+  "artifacts": [
+    {
+      "id": "repo-reconciliation",
+      "path": ".aegis/results/GT-G4-5-09V/repo-reconciliation.json",
+      "blocking": true
+    },
+    {
+      "id": "implementation-design-preflight",
+      "path": ".aegis/results/GT-G4-5-09V/implementation-design-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "red-oracle-preflight",
+      "path": ".aegis/results/GT-G4-5-09V/red-oracle-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "vector-reference-definition",
+      "path": ".aegis/results/GT-G4-5-09V/vector-reference-definition.json",
+      "blocking": true
+    },
+    {
+      "id": "vector-program-manifest",
+      "path": ".aegis/results/GT-G4-5-09V/vector-program-manifest.json",
+      "blocking": true
+    },
+    {
+      "id": "vector-input-corpus",
+      "path": ".aegis/results/GT-G4-5-09V/vector-input-corpus.json",
+      "blocking": true
+    },
+    {
+      "id": "vector-incremental-equivalence",
+      "path": ".aegis/results/GT-G4-5-09V/vector-incremental-equivalence.json",
+      "blocking": true
+    },
+    {
+      "id": "vector-preview-canonical-parity",
+      "path": ".aegis/results/GT-G4-5-09V/vector-preview-canonical-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "windows-arc-vector-parity",
+      "path": ".aegis/results/GT-G4-5-09V/windows-arc-vector-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "windows-dual-color-diagnostic",
+      "path": ".aegis/results/GT-G4-5-09V/windows-dual-color-diagnostic.json",
+      "blocking": true
+    },
+    {
+      "id": "handoff-result",
+      "path": ".aegis/results/GT-G4-5-09V/handoff-result.json",
+      "blocking": true
+    },
+    {
+      "id": "g4-5-vector-workload",
+      "path": ".aegis/results/GT-G4-5-09V/g4-5-vector-workload.json",
+      "blocking": true
+    },
+    {
+      "id": "portable-regression-summary",
+      "path": ".aegis/results/GT-G4-5-09V/portable-regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "qualification-bundle-manifest",
+      "path": ".aegis/results/GT-G4-5-09V/qualification-bundle-manifest.json",
+      "blocking": true
+    },
+    {
+      "id": "result",
+      "path": ".aegis/results/GT-G4-5-09V/result.json",
+      "blocking": true
+    }
+  ],
+  "hosted_bindings_required": [
+    "G4.5 Programmable Brush Qualification exact-result run",
+    "Arc / POC-06 exact-result run"
+  ],
+  "physical_gate_evidence": {
+    "blocking_for_p32": false,
+    "blocking_for_final_g4_5_10": true,
+    "examples": [
+      "Windows continuous recording",
+      "Arc-active screenshot",
+      "handoff screenshot",
+      "canonical-only screenshot",
+      "parameter-edit recording",
+      "physical observation record"
+    ]
+  },
+  "claim_boundary": "P32 may return READY_FOR_G4_5_10_PHYSICAL_VERIFICATION / READY_FOR_CONTROL_REVIEW only. Independent Gate review owns final G4.5 PASS."
+}

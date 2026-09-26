@@ -55,6 +55,14 @@ std::string geometryText(const semantic::ObjectRecord& r) {
         } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
             out << ":dstroke:" << c.stroke.deterministic_seed; encodeBrush(out, c.stroke.brush);
             if (const auto* data = std::get_if<semantic::DabStrokeData>(&c.stroke.data)) for (const auto& dab : data->dabs) out << ':' << dab.center.x << ',' << dab.center.y << ',' << dab.size << ',' << dab.rotation << ',' << dab.opacity;
+        } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
+            out << ":brush-v2:" << c.stroke.snapshot.snapshot_version << ':'
+                << c.stroke.snapshot.package_revision << ':' << c.stroke.snapshot.seed
+                << ':' << c.stroke.confirmed_samples.size() << ':'
+                << c.stroke.vector_output.outline.size();
+            for (const auto& point : c.stroke.vector_output.outline) {
+                out << ':' << point.x << ',' << point.y;
+            }
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             out << ":connector:" << static_cast<unsigned>(c.routing);
             for (const auto* endpoint : {&c.start, &c.end}) std::visit([&](const auto& value) {
@@ -94,6 +102,11 @@ std::vector<semantic::ObjectId> dependencies(const semantic::ObjectRecord& r) {
     }
     if (const auto* stroke = std::get_if<semantic::DabStrokeContent>(&r.content)) {
         if (stroke->stroke.brush.texture_resource_id) result.push_back(stroke->stroke.brush.texture_resource_id->value);
+    }
+    if (const auto* stroke = std::get_if<semantic::BrushStrokeContent>(&r.content)) {
+        for (const auto& resource : stroke->stroke.snapshot.resources) {
+            if (!resource.resource_id.isZero()) result.push_back(resource.resource_id);
+        }
     }
     if (const auto* text = std::get_if<semantic::RichTextContent>(&r.content)) {
         for (const auto& paragraph : text->document.paragraphs) for (const auto& run : paragraph.runs)

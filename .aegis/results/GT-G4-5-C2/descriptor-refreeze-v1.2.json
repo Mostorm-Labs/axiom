@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31_G1_REFREEZE",
+  "package_id": "GT-G4-5-C2-P31-v1.2",
+  "authority_baseline": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "generator": "protoc 36.0",
+  "command": "protoc --proto_path=schema/axiom/v1/proto --include_imports --descriptor_set_out=schema/axiom/v1/descriptor/descriptor.lock.pb <sorted proto sources>",
+  "exit_code": 0,
+  "before_descriptor_sha256": "13fdd9834bc049894646ae0a4e103bfb43260725ad8b784a14cfdfd93083afc9",
+  "after_descriptor_sha256": "9c0896c3162f1fc3199b38e8f3603de3e8add0b07f800dbb3cc7005664573f83",
+  "lock_sha256": "9c0896c3162f1fc3199b38e8f3603de3e8add0b07f800dbb3cc7005664573f83",
+  "review": {
+    "tool": "verification/tools/descriptor_refreeze_diff.py",
+    "unmapped_changes": 0,
+    "preexisting_object_content_fields_preserved": true,
+    "operation_registry_preserved": true,
+    "approved_changes": ["G45-SR01", "G45-SR02"]
+  },
+  "status": "PASS_REVIEW_READY"
+}

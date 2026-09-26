@@ -1,0 +1,298 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Evolve the existing runtime/ink BrushRuntime into the single common Brush session implementation; do not create a parallel Brush engine.",
+        "Add renderer-neutral BrushInputBatch BrushPreviewDelta BrushCommitIntent and output sink/hub contracts.",
+        "Keep the R1 one-shot perfect-freehand evaluator as the permanent reference oracle.",
+        "Add an incremental Vector preview evaluator whose move-time append path does not call the full-history one-shot evaluator.",
+        "Separate confirmed and predicted Brush session state; prediction is preview-only and replaceable.",
+        "Freeze same-session ordered execution through BrushPreviewDeltaReady with no mandatory C1-C0-C2 queue/thread hop.",
+        "Add a bounded preview mailbox or equivalent handoff with latest-wins semantics for superseded non-terminal revisions and reliable terminal/cancel/retire events.",
+        "Add reliable non-droppable canonical BrushCommitIntent handoff semantics independent of preview presentation.",
+        "Add CanonicalVisible receipt identity handling so pen-up does not retire preview and stale receipts cannot retire newer preview.",
+        "Move Web and Android BrushRuntime/session ownership into common InkPlayground composition.",
+        "Replace Windows raw-pointer-derived preview geometry with consumption of common BrushPreviewDelta or a transitional common preview sink.",
+        "Remove or neutralize the obsolete pointer-level arc_input_fanout_adapter from the authoritative C2 path.",
+        "Add workload counters/timing for incremental work, preview queue/backpressure and long-stroke complexity.",
+        "Preserve C0 C1 and R1 behavior."
+      ],
+      "forbidden_changes": [
+        "Change AutoIntent MultiInk GesturePriority or C0 routing semantics",
+        "Change C1 PlatformPointerBatch pointer lifecycle or coordinate-unit semantics",
+        "Change radial/path slop",
+        "Modify pinned R1 perfect-freehand reference behavior or known limitation identity",
+        "Create a second Brush engine alongside BrushRuntime",
+        "Add Dear ImGui or Debug Controller implementation",
+        "Implement R2 common Skia canonical Vector renderer architecture",
+        "Redesign C4 Arc PreviewBackend Presenter backend selection or native low-latency backend",
+        "Change canonical semantic schema ObjectKind StrokeRecord or Operation authority",
+        "Put persistence sync RuntimeScene or tile work on the preview critical path",
+        "Claim D0 R2 G4.5 Gate or release PASS"
+      ],
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/ink/CMakeLists.txt",
+          "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+          "runtime/ink/src/programmable_brush.cpp",
+          "runtime/ink/include/canvas/ink/arc_preview_bridge.hpp",
+          "runtime/ink/src/arc_preview_bridge.cpp",
+          "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp",
+          "runtime/ink/src/canonical_brush_commit.cpp",
+          "runtime/ink/include/canvas/ink/preview_model.hpp",
+          "runtime/ink/src/preview_model.cpp",
+          "runtime/ink/tests/programmable_brush_test.cpp",
+          "runtime/ink/tests/canonical_brush_commit_test.cpp",
+          "runtime/ink/tests/preview_model_test.cpp",
+          "apps/ink_playground/CMakeLists.txt",
+          "apps/ink_playground/common/ink_playground_host.hpp",
+          "apps/ink_playground/common/ink_playground_host.cpp",
+          "apps/ink_playground/common/platform_interaction_controller.hpp",
+          "apps/ink_playground/common/platform_interaction_controller.cpp",
+          "apps/ink_playground/common/arc_input_fanout_adapter.hpp",
+          "apps/ink_playground/platform/web/bridge.cpp",
+          "apps/ink_playground/platform/android/bridge.cpp",
+          "apps/ink_playground/platform/android/android_jni.cpp",
+          "apps/ink_playground/platform/windows/main.cpp",
+          "apps/ink_playground/platform/windows/windows_pointer_utils.hpp",
+          "apps/ink_playground/tests/ink_playground_test.cpp",
+          "apps/ink_playground/tests/web_host_page_test.py",
+          "apps/ink_playground/tests/android_brush_qualification_contract_test.py",
+          "apps/ink_playground/tests/windows_pointer_utils_test.cpp",
+          "apps/ink_playground/tests/c1_platform_ownership_contract_test.py"
+        ],
+        "new_files_allowed": [
+          "runtime/ink/include/canvas/ink/brush_input_batch.hpp",
+          "runtime/ink/include/canvas/ink/brush_preview_delta.hpp",
+          "runtime/ink/include/canvas/ink/brush_commit_intent.hpp",
+          "runtime/ink/include/canvas/ink/incremental_vector_evaluator.hpp",
+          "runtime/ink/src/incremental_vector_evaluator.cpp",
+          "runtime/ink/include/canvas/ink/brush_output_hub.hpp",
+          "runtime/ink/src/brush_output_hub.cpp",
+          "runtime/ink/include/canvas/ink/preview_mailbox.hpp",
+          "runtime/ink/src/preview_mailbox.cpp",
+          "runtime/ink/include/canvas/ink/canonical_visible_receipt.hpp",
+          "runtime/ink/tests/c2_incremental_vector_test.cpp",
+          "runtime/ink/tests/c2_output_handoff_test.cpp",
+          "runtime/ink/tests/c2_thread_model_test.cpp",
+          "runtime/ink/tests/c2_hot_path_complexity_test.cpp",
+          "apps/ink_playground/common/common_brush_controller.hpp",
+          "apps/ink_playground/common/common_brush_controller.cpp",
+          "apps/ink_playground/tests/c2_platform_brush_ownership_contract_test.py",
+          ".aegis/results/GT-G4-5-C2/**"
+        ],
+        "package_files_immutable_after_p32_entry": ".aegis/packages/GT-G4-5-C2/**",
+        "other_production_paths": "FORBIDDEN unless execution returns TASK_PACKAGE_DEFECT or AUTHORITY_CONFLICT to CONTROL_REVIEW"
+      },
+      "preserved_work": {
+        "accepted_c1_result": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+        "accepted_c1_control_ref": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+        "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+        "rule": "Preserve C1 ingress and C0 routing. Preserve R1 one-shot evaluator as reference. Replace only downstream Brush ownership/hot-path behavior."
+      },
+      "thread_model": {
+        "synchronous_through": "BrushPreviewDeltaReady",
+        "mandatory_thread_hops_between_C1_C0_C2": 0,
+        "same_session_ordered": true,
+        "preview_after_ready": "bounded high-priority async handoff",
+        "canonical_after_seal": "independent reliable async handoff",
+        "preview_retire_authority": "matching CanonicalVisible receipt"
+      },
+      "performance_constraints": [
+        "No move-time append may call the full-history one-shot evaluator.",
+        "For repeated deterministic local geometry, max per-append work at 2048 samples must be <= 1.25x the max at 512 samples for the same batch size.",
+        "Preview handoff storage is bounded and inspectable.",
+        "No synchronous wait for Arc GPU/presentation completion on the Brush hot path.",
+        "No canonical document/scene/persistence/sync work on move-time preview path.",
+        "Common CPU InputBatchAccepted to BrushPreviewDeltaReady targets <=1.0 ms p95 where qualification hardware is available; this target is not a product guarantee."
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "C2-red",
+          "command_or_oracle": "run new C2 incremental ownership/thread-model oracles against pre-change code",
+          "expected_result": "RED",
+          "blocking_reason": "prove the frozen C2 gaps are observable before mutation"
+        },
+        {
+          "id": "C2CommonBrushPipeline",
+          "command_or_oracle": "common contract/session tests",
+          "expected_result": "PASS",
+          "blocking_reason": "single common Brush authority"
+        },
+        {
+          "id": "C2IncrementalParity",
+          "command_or_oracle": "incremental reconstructed Vector output vs accepted R1 one-shot fixtures",
+          "expected_result": "PASS",
+          "blocking_reason": "preview correctness"
+        },
+        {
+          "id": "C2HotPathComplexity",
+          "command_or_oracle": "512/2048 long-stroke work-counter workload",
+          "expected_result": "PASS",
+          "blocking_reason": "low-latency non-scaling append"
+        },
+        {
+          "id": "C2PrefixTailSemantics",
+          "command_or_oracle": "confirmed/predicted stable-prefix replacement tests",
+          "expected_result": "PASS",
+          "blocking_reason": "prediction and canonical separation"
+        },
+        {
+          "id": "C2SessionOrderingThreadModel",
+          "command_or_oracle": "same-session ordering and no mandatory intermediate queue contract tests",
+          "expected_result": "PASS",
+          "blocking_reason": "P16 execution model"
+        },
+        {
+          "id": "C2PreviewMailbox",
+          "command_or_oracle": "bounded 100-revision backlog/latest-wins plus terminal reliability test",
+          "expected_result": "PASS",
+          "blocking_reason": "preview backpressure safety"
+        },
+        {
+          "id": "C2CanonicalHandoff",
+          "command_or_oracle": "commit reliability/non-coalescing/cancel/no-preview-block tests",
+          "expected_result": "PASS",
+          "blocking_reason": "canonical authority correctness"
+        },
+        {
+          "id": "C2CanonicalVisibleRetire",
+          "command_or_oracle": "seal/stale receipt/matching receipt tests",
+          "expected_result": "PASS",
+          "blocking_reason": "handoff correctness"
+        },
+        {
+          "id": "C2PlatformBrushOwnership",
+          "command_or_oracle": "Web Android Windows static/source ownership checks",
+          "expected_result": "PASS",
+          "blocking_reason": "remove second Brush/preview semantics"
+        },
+        {
+          "id": "C2C0C1Regression",
+          "command_or_oracle": "C0 C1 interaction/input regressions and InkPlayground tests",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted predecessor behavior"
+        },
+        {
+          "id": "R01-regression",
+          "command_or_oracle": "G45PerfectFreehandReference and R1 parity tests",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve oracle"
+        },
+        {
+          "id": "scope-diff",
+          "command_or_oracle": "diff from C2 task anchor",
+          "expected_result": "authorized C2 paths only",
+          "blocking_reason": "stage isolation"
+        },
+        {
+          "id": "git-diff-check",
+          "command_or_oracle": "git diff --check",
+          "expected_result": "PASS",
+          "blocking_reason": "repository hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "available Web/Android/macOS host timing runs for p95 engineering target",
+        "Windows physical preview timing when environment is available"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "repo-reconciliation.json",
+        "implementation-design-preflight.json",
+        "red-oracle-preflight.json",
+        "c2-common-brush-pipeline.json",
+        "c2-incremental-parity.json",
+        "c2-prefix-tail-semantics.json",
+        "c2-hot-path-complexity.json",
+        "c2-thread-model.json",
+        "c2-session-ordering.json",
+        "c2-preview-mailbox.json",
+        "c2-canonical-handoff.json",
+        "c2-canonical-visible-retire.json",
+        "c2-platform-brush-ownership.json",
+        "c2-performance-summary.json",
+        "regression-summary.json",
+        "scope-diff.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "optional platform timing traces",
+        "optional visual preview captures"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "current BrushRuntime full-history append flow",
+        "target BrushInputBatch BrushPreviewDelta BrushCommitIntent types",
+        "incremental evaluator stable-prefix replaceable-tail strategy",
+        "one-shot oracle binding",
+        "same-session execution ownership",
+        "preview mailbox capacity and terminal-event preservation strategy",
+        "canonical commit reliability/backpressure strategy",
+        "CanonicalVisible identity and retire state machine",
+        "Web Android common Brush ownership migration",
+        "Windows common preview consumption migration",
+        "obligation-to-code/test/evidence mapping",
+        "affected files",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "terminal_success": {
+      "all_of": [
+        "one common BrushSession implementation owns routed Ink processing",
+        "incremental Vector preview matches one-shot oracle",
+        "move-time append does not full-history evaluate",
+        "confirmed/predicted states are separated and prediction never enters commit",
+        "Web and Android platform-local BrushRuntime ownership is removed",
+        "Windows no longer derives preview geometry from raw pointer input",
+        "BrushPreviewDelta and BrushCommitIntent contracts are common and renderer-neutral",
+        "C1 C0 C2 path has no required intermediate thread hop",
+        "same BrushSession execution is ordered",
+        "preview mailbox is bounded/latest-wins only for superseded non-terminal revisions",
+        "terminal cancel retire semantics are reliable",
+        "canonical commit handoff is reliable non-droppable and independent of preview presentation",
+        "matching CanonicalVisible is required for preview retire",
+        "C0 C1 R1 regressions pass",
+        "latency complexity and backpressure evidence is materialized",
+        "scope diff is authorized",
+        "exact pushed result/evidence revision is reviewer-resolvable",
+        "result status is READY_FOR_D0_PACKAGE_REVIEW"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "success_status": "READY_FOR_D0_PACKAGE_REVIEW"
+    }
+  }
+}

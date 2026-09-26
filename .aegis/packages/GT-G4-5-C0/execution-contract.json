@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C0",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add runtime-owned CanvasInteractionCoordinator and typed InteractionRoutingResult without changing MultiContactCoordinator semantics.",
+        "Add runtime-owned ViewportInteractionController and ViewportNavigationSample.",
+        "Move contact caches, viewport composition state, view-to-content transform and routing decisions out of InkPlaygroundHost.",
+        "Keep InkPlaygroundHost as composition root applying typed runtime routing actions to InkEngine, PreviewModel and InteractionRuntime.",
+        "Migrate Web wheel pan, Ctrl-wheel zoom and browser gesture cumulative transform state into common runtime navigation.",
+        "Remove Web cumulative trackpadScale/trackpadTranslation product state while retaining minimal event-normalization state if needed.",
+        "Preserve Android raw view-coordinate ingress and Windows common-runtime consumption.",
+        "Add behavior-trace equivalence, viewport composition, Web navigation parity, ownership and regression evidence."
+      ],
+      "forbidden_changes": [
+        "Change AutoIntent, MultiInk or GesturePriority semantics",
+        "Change radial/path slop or add sample-count activation",
+        "Fix or harden the accepted third-plus contact finding",
+        "Promote MultiInk or GesturePriority to blocking product guarantees",
+        "Modify runtime/ink behavior or the perfect-freehand reference kernel",
+        "Modify BrushDescriptor StrokeRecord ObjectKind Operation or semantic validation",
+        "Add or modify Skia/render architecture",
+        "Add or modify Arc backend/lifecycle",
+        "Add Dear ImGui or Debug Controller work",
+        "Add brush incremental optimization",
+        "Claim D0 R2 G4.5 or final Gate PASS"
+      ],
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/interaction/CMakeLists.txt",
+          "apps/ink_playground/common/ink_playground_host.hpp",
+          "apps/ink_playground/common/ink_playground_host.cpp",
+          "apps/ink_playground/tests/ink_playground_test.cpp",
+          "apps/ink_playground/platform/web/bridge.cpp",
+          "apps/ink_playground/platform/web/index.html",
+          "apps/ink_playground/tests/web_host_page_test.py"
+        ],
+        "new_files_allowed": [
+          "runtime/interaction/include/canvas/interaction/canvas_interaction_coordinator.hpp",
+          "runtime/interaction/src/canvas_interaction_coordinator.cpp",
+          "runtime/interaction/include/canvas/interaction/viewport_interaction_controller.hpp",
+          "runtime/interaction/src/viewport_interaction_controller.cpp",
+          "runtime/interaction/tests/canvas_interaction_coordinator_test.cpp",
+          "runtime/interaction/tests/viewport_interaction_controller_test.cpp",
+          "runtime/interaction/tests/c0_behavior_trace_fixtures.hpp",
+          "apps/ink_playground/tests/c0_web_navigation_contract_test.py",
+          ".aegis/results/GT-G4-5-C0/**"
+        ],
+        "package_files_immutable_after_p32_entry": ".aegis/packages/GT-G4-5-C0/**",
+        "other_production_paths": "FORBIDDEN unless a package defect or authority conflict is returned to CONTROL_REVIEW."
+      },
+      "preserved_work": {
+        "accepted_r01_boundary": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+        "g4_4_behavior_authority": "GT-G4-4-CORR-01 P34 PASS_WITH_FINDINGS",
+        "rule": "Preserve existing runtime interaction algorithms and R01 perfect-freehand work. C0 extracts ownership only."
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "C0-red",
+          "command_or_oracle": "new C0 ownership/equivalence tests against pre-change code",
+          "expected_result": "RED",
+          "blocking_reason": "proves extraction oracle is meaningful"
+        },
+        {
+          "id": "C0BehaviorTraceEquivalence",
+          "command_or_oracle": "frozen old/new contact trace equivalence suite",
+          "expected_result": "PASS",
+          "blocking_reason": "behavior-preserving refactor"
+        },
+        {
+          "id": "C0AutoIntentPreservation",
+          "command_or_oracle": "AutoIntent PositionOnly predicted and zero-mutation scenarios",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted G4.4 guarantee"
+        },
+        {
+          "id": "C0AcceptedFindingPreservation",
+          "command_or_oracle": "third-plus active viewport trace",
+          "expected_result": "PASS with accepted-finding label",
+          "blocking_reason": "do not silently change waived behavior"
+        },
+        {
+          "id": "C0ViewportComposition",
+          "command_or_oracle": "two gesture sessions plus inverse coordinate transform",
+          "expected_result": "PASS",
+          "blocking_reason": "runtime viewport state correctness"
+        },
+        {
+          "id": "C0WebNavigationParity",
+          "command_or_oracle": "frozen wheel/Ctrl-wheel/browser gesture traces",
+          "expected_result": "PASS",
+          "blocking_reason": "Web migration without drift"
+        },
+        {
+          "id": "C0PlatformOwnership",
+          "command_or_oracle": "source/static ownership checks",
+          "expected_result": "PASS",
+          "blocking_reason": "no second platform interaction engine"
+        },
+        {
+          "id": "existing-interaction-regressions",
+          "command_or_oracle": "G4MultiContactCoordinator G4ViewportGesture G4GestureArbiter plus relevant InkPlayground tests",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted interaction foundation"
+        },
+        {
+          "id": "R01-regression",
+          "command_or_oracle": "G45PerfectFreehandReference",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted successor boundary"
+        },
+        {
+          "id": "scope-diff",
+          "command_or_oracle": "diff from task anchor",
+          "expected_result": "authorized C0 paths only",
+          "blocking_reason": "stage isolation"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "exact task-branch CI or portable build lanes if available"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "repo-reconciliation.json",
+        "implementation-design-preflight.json",
+        "red-oracle-preflight.json",
+        "g4-4-authority-reconciliation.json",
+        "c0-ownership-extraction.json",
+        "c0-behavior-trace-equivalence.json",
+        "c0-auto-intent-preservation.json",
+        "c0-accepted-finding.json",
+        "c0-viewport-composition.json",
+        "c0-web-navigation-parity.json",
+        "c0-platform-ownership.json",
+        "regression-summary.json",
+        "scope-diff.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "optional hosted CI run refs"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "current owner map",
+        "target owner map",
+        "CanvasInteractionCoordinator API and action semantics",
+        "ViewportInteractionController API and transform composition",
+        "Web event normalization and common navigation mapping",
+        "old-vs-new trace oracle mapping",
+        "accepted third-plus finding preservation",
+        "affected files",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "terminal_success": {
+      "all_of": [
+        "runtime coordinator/controller own routing and viewport transform semantics",
+        "InkPlaygroundHost no longer owns contact caches coordinator gesture instance or committed viewport transform",
+        "Web no longer owns cumulative trackpad viewport transform semantics",
+        "accepted AutoIntent traces and PositionOnly/zero-mutation guarantees remain equivalent",
+        "accepted third-plus finding remains unchanged and recorded",
+        "migrated Web navigation matches frozen pre-C0 behavior",
+        "Android/Windows remain common-runtime consumers without new private semantics",
+        "interaction plus R01 regressions pass",
+        "scope diff is authorized",
+        "exact result/evidence revision is pushed",
+        "result status is READY_FOR_D0_PACKAGE_REVIEW"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "success_status": "READY_FOR_D0_PACKAGE_REVIEW"
+    }
+  }
+}

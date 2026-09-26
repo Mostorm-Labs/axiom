@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "flow": "BrushDefinition -> BrushCompiler -> BrushRuntime -> BrushPrimitive -> shared Skia DAB renderer -> Android RGBA/Web WebGL2 surface",
+  "owners": [
+    "runtime/render/skia_brush_renderer.cpp",
+    "runtime/render/src/skia_ink_backend.cpp",
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "apps/ink_playground/platform/android/bridge.cpp",
+    "apps/ink_playground/platform/web/bridge.cpp"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

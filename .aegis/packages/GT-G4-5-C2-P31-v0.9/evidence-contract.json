@@ -1,0 +1,162 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.8",
+  "blocking": [
+    {
+      "artifact": "repo-reconciliation.json",
+      "obligation": "scope-diff",
+      "owner": "P32",
+      "inputs": [
+        "repository identity",
+        "task anchor",
+        "package hashes"
+      ]
+    },
+    {
+      "artifact": "implementation-design-preflight.json",
+      "obligation": "package-normalization",
+      "owner": "P32",
+      "inputs": [
+        "authority.lock.json",
+        "execution-contract.json"
+      ]
+    },
+    {
+      "artifact": "red-oracle-preflight.json",
+      "obligation": "scope-diff",
+      "owner": "P32",
+      "inputs": [
+        "anchor revision",
+        "frozen RED commands"
+      ]
+    },
+    {
+      "artifact": "red-oracle-transcript.json",
+      "obligation": "red-precondition",
+      "owner": "P32",
+      "inputs": [
+        "exact oracle path and sha256",
+        "anchor revision"
+      ]
+    },
+    {
+      "artifact": "brush-package-evidence.json",
+      "obligation": "package-normalization,resolution-determinism",
+      "owner": "P32",
+      "inputs": [
+        "package fixtures",
+        "resolved projection"
+      ]
+    },
+    {
+      "artifact": "brush-plan-evidence.json",
+      "obligation": "plan-activation-closure",
+      "owner": "P32",
+      "inputs": [
+        "plan fixtures",
+        "node/resource counters"
+      ]
+    },
+    {
+      "artifact": "vector-node-evidence.json",
+      "obligation": "r01-vector-node-parity",
+      "owner": "P32",
+      "inputs": [
+        "R01 corpus",
+        "reference commit"
+      ]
+    },
+    {
+      "artifact": "snapshot-replay-evidence.json",
+      "obligation": "snapshot-replay",
+      "owner": "P32",
+      "inputs": [
+        "AddStroke bytes",
+        "fresh-document replay",
+        "Skia observation"
+      ]
+    },
+    {
+      "artifact": "wire-schema-evidence.json",
+      "obligation": "wire-schema-release",
+      "owner": "P32",
+      "inputs": [
+        "approved proto/registry",
+        "negative corpus"
+      ]
+    },
+    {
+      "artifact": "prediction-evidence.json",
+      "obligation": "prediction-isolation",
+      "owner": "P32",
+      "inputs": [
+        "confirmed/predicted traces"
+      ]
+    },
+    {
+      "artifact": "handoff-evidence.json",
+      "obligation": "preview-handoff",
+      "owner": "P32",
+      "inputs": [
+        "64-session fault injection"
+      ]
+    },
+    {
+      "artifact": "brush-operation-intent-evidence.json",
+      "obligation": "commit-intent-boundary",
+      "owner": "P32",
+      "inputs": [
+        "intent/adapter tests"
+      ]
+    },
+    {
+      "artifact": "platform-ownership-evidence.json",
+      "obligation": "platform-ownership",
+      "owner": "P32",
+      "inputs": [
+        "platform source checks",
+        "target builds"
+      ]
+    },
+    {
+      "artifact": "legacy-readonly-evidence.json",
+      "obligation": "legacy-readonly",
+      "owner": "P32",
+      "inputs": [
+        "V1 fixtures",
+        "reachability scan"
+      ]
+    },
+    {
+      "artifact": "regression-summary.json",
+      "obligation": "c0-c1-regression",
+      "owner": "P32",
+      "inputs": [
+        "CTest/platform regression outputs"
+      ]
+    },
+    {
+      "artifact": "scope-diff.json",
+      "obligation": "scope-diff",
+      "owner": "P32",
+      "inputs": [
+        "git diff",
+        "forbidden path scan"
+      ]
+    },
+    {
+      "artifact": "result.json",
+      "obligation": "all",
+      "owner": "P32",
+      "inputs": [
+        "exact result revision",
+        "reviewer-accessible materialized ref"
+      ]
+    }
+  ],
+  "corroborative": [
+    "optional-host-timing.json",
+    "optional-visual-capture.json"
+  ],
+  "return_rule": "P32 returns exact evidence_input_refs and materialized_ref; it does not author duplicate proof totals or a Gate verdict."
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "current": true,
+  "sources": [
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-817d-9c5b-cbadecf8ab34",
+      "title": "G4.5 C1 Cross-Platform Interaction Ingress Architecture v0.1",
+      "revision": "2026-09-22T20:00:54.756Z",
+      "trusted_content_sha256": "98da23dcf22d6b2a602c0a48878bd08ceecea4f6a6a308b731a86325f688453f"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-8105-aa36-dc7cca842ebd",
+      "title": "G4.5 C1 Implementation Plan v0.1",
+      "revision": "2026-09-22T20:25:01.090Z",
+      "trusted_content_sha256": "f9912660f082deed5554854156fa91ef980984bfab25b4ec9f3b8ff6cde55f29"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-81ee-ac39-febe1d53d46e",
+      "title": "GT-G4-5-C0 P33 Control Review v0.1",
+      "revision": "2026-09-22T20:24:20.534Z",
+      "trusted_content_sha256": "fc5a8b03862160d1da74778d0747accf022049c8adbe12ad41a3b3d54e1f815a"
+    }
+  ],
+  "repository_authority": [
+    {
+      "path": ".aegis/results/GT-G4-5-C0/p33-control-review-v0.1.json",
+      "blob_sha": "b9e453020d7b68307d6ef93ae5199dc2017dbb69",
+      "accepted_claims": [
+        "C0 closure accepted",
+        "typed routing closed",
+        "Web CMake baseline restored",
+        "C1 is successor before D0"
+      ]
+    }
+  ],
+  "trusted_statements": [
+    "C1 unifies cross-platform interaction ingress after C0; it does not redesign interaction semantics.",
+    "C0 accepted result boundary is d861e05e18a0665c0c91c7523925b3990bb0c88e.",
+    "Platform code owns OS event extraction and native capture/lifecycle realization only.",
+    "runtime/input owns common normalized input, pointer generation/lifecycle, provenance, capabilities, and the pass-through InputCaptureGate.",
+    "runtime/input must not depend on Arc.",
+    "Arc ABI is not the canonical Canvas platform-input contract.",
+    "Any Axiom-to-Arc input conversion belongs in common composition/integration code, not platform OS files and not runtime/input.",
+    "Web, Android, and Windows must stop owning common pointer generation and interaction/Brush routing policy.",
+    "Apple gets a shared extracted-event adapter contract and fixture parity; C1 does not invent a full AppKit/UIKit Product Shell.",
+    "Current C0/G4.4 AutoIntent, viewport, slop, predicted-sample, and accepted P34-NB-01 behavior must remain unchanged.",
+    "C1 successor is D0 Dear ImGui Common UI Foundation."
+  ]
+}

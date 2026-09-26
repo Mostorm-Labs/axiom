@@ -1,0 +1,57 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-R01",
+  "current": true,
+  "sources": [
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-814c-845b-d2062c6aea19",
+      "title": "G4.5 Brush + Arc Architecture v0.3 - Perfect Freehand Conformance + Cross-platform Skia First",
+      "revision": "2026-09-22T12:15:05.914Z",
+      "trusted_content_sha256": "4a173a4fc0e633ace76637e58fffd62121ae46f457fe4329f737870a90482af5"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-81a1-b4df-e88a85db3e74",
+      "title": "Perfect Freehand Reference Algorithm Analysis v0.1",
+      "revision": "2026-09-22T12:15:51.507Z",
+      "trusted_content_sha256": "07f901dfdd67cb0224b48f64bb10428d286587a8ae62f6fa64d1c2719f955703"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-81b1-9b4f-ff82087d65c0",
+      "title": "G4.5 R0+R1 Implementation Plan v0.1 - Perfect Freehand Reference + C++ Conformance",
+      "revision": "2026-09-22T16:47:54.797Z",
+      "trusted_content_sha256": "9099e2afcf83772daa9c5d9c0db0be29c974d4b74d21fa2cfa6ff86642af60b5"
+    }
+  ],
+  "trusted_statements": [
+    "G4.5 R0 freezes the perfect-freehand reference source and corpus before implementation.",
+    "G4.5 R1 implements a pure renderer-neutral C++ one-shot algorithm conforming to the pinned reference.",
+    "R0/R1 does not implement Skia, Web, Android, macOS, Windows, Arc, handoff, canonical schema, or incremental optimization.",
+    "The reference geometry contract is ordered closed outline points, not a triangle mesh or centerline stroke.",
+    "Streamline and smoothing are distinct reference concepts and must remain distinct internally.",
+    "Known upstream sharp-corner/backtracking limitations are reproduced and labeled, not silently fixed under the same algorithm version.",
+    "Reference calculations use double precision and expose StrokePoint intermediate data to tests.",
+    "The one-shot evaluator remains the future correctness oracle for incremental optimization.",
+    "Task GT-G4-5-R01 contains only R0 Reference Source/Corpus Freeze and R1 Pure C++ Algorithm Conformance.",
+    "Trusted task anchor is 52acd2fb9274b201dd4eee478e49ac35937ed3cf.",
+    "Interrupted 09V P32 head a02ebdb1d811cfbe6e22295ddcacb66cedec49b9 is reconciliation evidence only and is not an execution base.",
+    "R0 exit is PF_REFERENCE_FROZEN; R1 exit is PF_GEOMETRY_PARITY_PASS.",
+    "Terminal P32 status is READY_FOR_R2_PACKAGE_REVIEW and is not a G4.5 Gate verdict."
+  ],
+  "stage_boundary": {
+    "included": [
+      "R0_REFERENCE_FREEZE",
+      "R1_CPP_ALGORITHM_CONFORMANCE"
+    ],
+    "excluded": [
+      "R2_SKIA_RENDERER",
+      "R3_CROSS_PLATFORM",
+      "R4_WINDOWS_CANONICAL",
+      "R5_WINDOWS_ARC",
+      "R6_HANDOFF",
+      "R7_INCREMENTAL_OPTIMIZATION"
+    ]
+  }
+}

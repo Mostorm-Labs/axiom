@@ -1,0 +1,7 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "PASS",
+  "reason": "Windows ownership migration requires preserving accepted Arc preview/canonical presentation and evidence behavior; the attempted reduced entrypoint was reverted before durable completion.",
+  "obligation": "C1-V5",
+  "result": "Windows WM_POINTER/history extraction now feeds InkPlaygroundHost::acceptPlatformBatch. Arc is retained only as preview/presentation fanout; common ingress owns lifecycle/routing and old ContactDisposition action routing is removed."
+}

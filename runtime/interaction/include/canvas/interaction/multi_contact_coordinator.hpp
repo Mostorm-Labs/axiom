@@ -42,9 +42,10 @@ class MultiContactCoordinator final {
     float lastX = 0.0F;
     float lastY = 0.0F;
     float path = 0.0F;
+    std::uint64_t downTimestampNs = 0;
   };
   [[nodiscard]] bool activatesInk(Contact& contact, float x, float y) noexcept;
-  [[nodiscard]] bool tryViewportClaim() noexcept;
+  [[nodiscard]] bool tryViewportClaim(std::uint64_t nowNs) noexcept;
   MultiContactPolicy policy_;
   std::unordered_map<input::PointerKey, Contact, input::PointerKeyHash> contacts_;
   bool viewportClaimed_ = false;

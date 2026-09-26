@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pipelineVersion": {
+      "const": 1
+    },
+    "defaultsVersion": {
+      "const": 1
+    },
+    "profile": {
+      "const": "vector-solid-v1"
+    },
+    "stages": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "vector": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "taper": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "shape": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "grain": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "rendering": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "wetMix": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "off",
+                "auto",
+                "on"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "vector": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 4096
+        },
+        "thinning": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "smoothing": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "streamline": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pressureSource": {
+          "enum": [
+            "simulated",
+            "device"
+          ]
+        },
+        "missingPressure": {
+          "enum": [
+            "reject",
+            "half"
+          ]
+        },
+        "easing": {
+          "const": "linear"
+        },
+        "startCap": {
+          "type": "boolean"
+        },
+        "endCap": {
+          "type": "boolean"
+        },
+        "startTaper": {
+          "const": 0
+        },
+        "endTaper": {
+          "const": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "paint": {
+      "type": "object",
+      "properties": {
+        "rgba": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "blend": {
+          "const": "source-over"
+        },
+        "colorSpace": {
+          "const": "srgb"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "pipelineVersion",
+    "defaultsVersion",
+    "profile"
+  ],
+  "additionalProperties": false
+}

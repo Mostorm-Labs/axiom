@@ -1,0 +1,17 @@
+{
+  "schema_version":"0.1",
+  "task_id":"GT-G4-5-SKIA-PARITY",
+  "review_boundary":"Exact result revision, package locks, scope audit, deterministic Skia renderer tests, Android/Web build identities and parity artifact hashes",
+  "artifacts":[
+    {"id":"repo-reconciliation","path":".aegis/results/GT-G4-5-SKIA-PARITY/repo-reconciliation.json","blocking":true},
+    {"id":"implementation-design-preflight","path":".aegis/results/GT-G4-5-SKIA-PARITY/implementation-design-preflight.json","blocking":true},
+    {"id":"red-oracle-preflight","path":".aegis/results/GT-G4-5-SKIA-PARITY/red-oracle-preflight.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G4-5-SKIA-PARITY/portable-regression-summary.json","blocking":true},
+    {"id":"renderer-parity-report","path":".aegis/results/GT-G4-5-SKIA-PARITY/renderer-parity-report.json","blocking":true},
+    {"id":"android-build","path":".aegis/results/GT-G4-5-SKIA-PARITY/android-build.json","blocking":true},
+    {"id":"web-build","path":".aegis/results/GT-G4-5-SKIA-PARITY/web-build.json","blocking":true},
+    {"id":"qualification-bundle-manifest","path":".aegis/results/GT-G4-5-SKIA-PARITY/qualification-bundle-manifest.json","blocking":true},
+    {"id":"result","path":".aegis/results/GT-G4-5-SKIA-PARITY/result.json","blocking":true}
+  ],
+  "claim_boundary":"P32 may return READY_FOR_CONTROL_REVIEW only. Independent CONTROL_REVIEW owns any Gate verdict."
+}

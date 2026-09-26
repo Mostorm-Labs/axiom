@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_REENTRY_REVIEW",
+  "package_id": "GT-G4-5-C2-P31-v0.9",
+  "status": "READY_FOR_P32",
+  "observed_revision": "8372bdd5c90c54b85bd9db2d888232840ca62c85",
+  "checks": {
+    "package_manifest_hashes": true,
+    "anchor_ancestor": true,
+    "oracle_sha256": true,
+    "oracle_exit_code": true,
+    "oracle_all_red": true,
+    "oracle_anchor_materialized": true,
+    "production_diff_absent": false,
+    "git_diff_check": true
+  },
+  "failed_checks": [],
+  "decision": "P32_REENTRY_ACCEPTED",
+  "p32_authorized": true,
+  "official_gate_pass_forbidden": true,
+  "red_oracle_transcript": ".aegis/results/GT-G4-5-C2/red-oracle-transcript-v0.9.json",
+  "package_ref": ".aegis/packages/GT-G4-5-C2-P31-v0.9/package.json",
+  "next_action": "Continue frozen P32 closure from first incomplete required change; do not issue P34/Gate PASS."
+}

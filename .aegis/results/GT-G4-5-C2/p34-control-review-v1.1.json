@@ -1,0 +1,86 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "reviewed_revision": "60872ded4f0d9eaef9b10fc27c8f29e1a0a57868",
+    "implementation_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+    "remote_branch_revision": "4470e4f8c051689a48bb2d23de0ccef1ce2a5a5a",
+    "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "task_anchor_ancestry": "PASS",
+    "pull_request": 135
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS_WITH_ENVIRONMENT_BLOCKER",
+    "passed": [
+      "P31 v1.1 package manifest and lock SHA-256 binding",
+      "Web and Android contract suites now match accepted common-host ownership",
+      "C2-PERF bounded preview implementation and independent G45BrushComplexity test",
+      "Full local CTest 583/583 PASS",
+      "Fixed-anchor RED oracle PASS",
+      "Web/Android/C1 platform contract checks PASS",
+      "Hosted G4.5 qualification Android and Web jobs PASS",
+      "Hosted Web reference and Windows configure defects from the previous run were repaired"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "All P32 blocking evidence artifacts now carry checked_revision, command, exit_code, input_hashes and raw evidence source",
+      "performance.json is present and bound to the v1.1 package",
+      "Hosted provider run/job/artifact identities are recorded in hosted-provider-evidence-v1.1.json",
+      "Result and evidence are materially bound to the current pushed branch"
+    ],
+    "failed": [
+      {
+        "id": "G1-DESCRIPTOR-LOCK-MISMATCH",
+        "classification": "BLOCKED_ENVIRONMENT",
+        "failure_mode": "Hosted semantic-codec run 36070781792/job 107870978337 regenerates descriptor SHA/content differing from committed schema/axiom/v1/descriptor/descriptor.lock.pb at byte 537.",
+        "impact": "The required hosted semantic provider lane cannot be accepted as PASS for the reviewed revision.",
+        "existing_independent_coverage": "Local semantic CTest and G4.5 codec tests pass, but do not independently validate the repository-wide locked descriptor on the hosted toolchain.",
+        "new_evidence_unique_detection_value": "The hosted protoc 36.0 descriptor comparison detects schema-lock drift outside the local macOS build path.",
+        "blocking_justification": "P31 hosted_verification requires repository CI for affected semantic targets; the provider lane is terminal FAIL.",
+        "why_frozen_evidence_did_not_cover_it": "The prior P32 evidence used local CTest summaries and did not execute the hosted G1 descriptor lock comparison.",
+        "why_severe_enough": "Semantic schema identity is a release-critical compatibility prerequisite for v2 wire carriers; accepting it would allow unbound schema bytes into the Gate.",
+        "required_route": "Repair/reconcile G1 descriptor lock authority or obtain an approved durable equivalent, then rerun exact hosted semantic lane."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "PASS_WITH_FINDING",
+    "checks": {
+      "repository_identity": "PASS",
+      "remote_head_matches_reviewed_head": "PASS",
+      "package_binding": "PASS",
+      "task_anchor_ancestry": "PASS",
+      "git_diff_check": "PASS",
+      "local_full_ctest": "583/583 PASS",
+      "platform_contracts": "PASS",
+      "hosted_g4_5_qualification": "PASS_ANDROID_WEB; WINDOWS_PENDING_AT_CAPTURE"
+    },
+    "non_blocking_findings": [
+      "Hosted semantic-consumer depends on the same G1 descriptor lock boundary and remains pending/failed while that upstream mismatch is unresolved.",
+      "P34 does not claim official Gate PASS while any required hosted provider lane is unresolved."
+    ]
+  },
+  "gate_review": {
+    "frozen_requirements": {"passed": ["all repaired P32 obligations"], "failed": []},
+    "frozen_evidence": {"passed": ["local and G4.5 hosted qualification evidence"], "failed": ["required hosted semantic provider lane"]},
+    "verdict": "BLOCKED"
+  },
+  "decision": {
+    "verdict": "BLOCKED",
+    "official_gate_pass": false,
+    "classification": ["BLOCKED_ENVIRONMENT"],
+    "implementation_defect": false,
+    "next_route": "G1_DESCRIPTOR_LOCK_RECONCILIATION_THEN_P34_REVERIFY",
+    "preserve_valid_implementation_work": true
+  }
+}

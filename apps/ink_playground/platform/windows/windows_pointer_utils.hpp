@@ -15,7 +15,7 @@
 
 namespace canvas::ink_playground::windows_input {
 
-inline std::size_t appendPreviewSamples(
+inline std::size_t appendNormalizedPreviewSamples(
     std::vector<arc_preview_primitive_v0>& points,
     std::uint64_t& lastSampleSequence,
     std::span<const arc_pointer_sample_v0> samples) {

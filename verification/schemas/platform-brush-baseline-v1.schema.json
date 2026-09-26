@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:axiom:verification:platform-brush-baseline:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "quantization", "brush_package", "logical_sources", "samples"],
+  "properties": {
+    "schema_version": { "const": "platform-brush-baseline-v1" },
+    "quantization": { "const": 1000 },
+    "brush_package": { "type": "object", "additionalProperties": true, "required": ["profile_id", "package_id", "revision"] },
+    "logical_sources": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+    "samples": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sample" } }
+  },
+  "$defs": {
+    "sample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "pointer", "sequence", "timestamp_ns", "x", "y", "pressure", "phase"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 }, "pointer": { "type": "integer", "minimum": 1 },
+        "sequence": { "type": "integer", "minimum": 1 }, "timestamp_ns": { "type": "integer", "minimum": 1 },
+        "x": { "type": "number" }, "y": { "type": "number" }, "pressure": { "type": "number", "minimum": 0, "maximum": 1 },
+        "phase": { "enum": ["down", "move", "up", "cancel"] }
+      }
+    }
+  }
+}

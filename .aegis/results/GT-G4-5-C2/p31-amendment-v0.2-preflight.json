@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31_TASK_PACKAGING",
+  "requested_package_id": "GT-G4-5-C2-P31-v0.2",
+  "status": "BLOCKED_AUTHORITY",
+  "classification": "AUTHORITY_CONFLICT",
+  "continue_execution": false,
+  "production_changes": false,
+  "package_regenerated": false,
+  "p32_authorized": false,
+  "official_gate_pass": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "observed_revision": "b4644cbf6e75fe3fc32c184b378e674098be3631",
+    "observed_remote_revision": "b4644cbf6e75fe3fc32c184b378e674098be3631",
+    "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "previous_package_materialization": "a1fa1bc0b70f06137b0a55dfa8313adbfa59647b"
+  },
+  "preserved_history": {
+    "package_id": "GT-G4-5-C2-P31-v0.1",
+    "execution_status": "TASK_PACKAGE_DEFECT",
+    "terminal_evidence": ".aegis/results/GT-G4-5-C2/terminal-blocker.json",
+    "package_files_changed": false,
+    "note": "The historical package still labels itself CURRENT_EXECUTABLE; its P32 terminal blocker prohibits resumption. This preflight does not reactivate it or supersede it with an executable package."
+  },
+  "checks": {
+    "repository_identity": "PASS",
+    "remote_revision_matches_observed_revision": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "previous_package_materialization_ancestry": "PASS",
+    "previous_package_local_sha256": "PASS",
+    "previous_worktree_clean": true,
+    "v02_PackageBindingPreflight": "BLOCKED_NOT_MATERIALIZED",
+    "v02_EvidenceContractPreflight": "BLOCKED_UNFROZEN_ORACLES",
+    "P31_Amendment_PASS": false,
+    "P32_Entry_Review": "NOT_ENTERED"
+  },
+  "request_capture": {
+    "classification": "USER_REQUEST_NOT_A_SUBSTITUTE_FOR_MISSING_FIELD_LEVEL_AUTHORITY",
+    "resolution_pipeline": "BrushDefinition -> BrushCompiler -> ResolvedBrushExecutionParameters -> algorithm-specific options -> Brush Engine",
+    "resolved_vector_fields": ["size", "thinning", "smoothing", "streamline", "easing", "startCap", "endCap", "simulatePressure"],
+    "commit_intent_fields": ["strokeId", "brushDefinitionId", "brushVersion", "resolvedParameters", "algorithmVersion", "canonicalRepresentation", "canonicalPayload", "deterministicSeed"],
+    "canonical_pipeline": "BrushCommitIntent -> Runtime Core Operation Builder -> Operation -> SemanticDocument -> RuntimeScene -> Canonical Renderer",
+    "requested_obligations": ["C2-V11 BrushResolutionDeterminism", "C2-V12 CanonicalReconstruction"],
+    "required_invariants": [
+      "Brush Engine does not create Operations or directly mutate the document",
+      "Resolution precedes BrushSession on the ordered preview-critical path",
+      "Arc does not resolve BrushDefinition; replay does not guess brush parameters",
+      "Operation is semantic mutation, not GPU geometry or Arc preview state",
+      "Live canonical and serialized/reloaded/replayed canonical results agree",
+      "Original C2 ordering, prediction isolation, mailbox, reliable commit and CanonicalVisible obligations remain in force"
+    ],
+    "requested_status_not_claimed": "READY_FOR_P32_REENTRY_REVIEW"
+  },
+  "blockers": [
+    {
+      "id": "C2-AMEND-B01",
+      "classification": "MISSING_REQUIRED_INPUT",
+      "earliest_untrusted_layer": "Brush resolution semantic authority",
+      "finding": "The request names resolved fields but does not freeze their source values/formulas, defaults, ranges, override precedence, version dispatch or v1 compatibility. The current BrushDefinition has no thinning, smoothing, streamline, cap or easing fields. R1 StrokeOptions has taper and completion options omitted from the proposed list, and no configurable easing field. Upstream defaults or example settings are not an authorized BrushDefinition mapping.",
+      "implementation_reality_refs": [
+        "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+        "runtime/ink/include/canvas/ink/vector_stroke_reference.hpp"
+      ],
+      "required_resolution": "Freeze a complete mapping table or explicit versioned parameter-set contract for every R1 option, including taper and last, easing compatibility, numeric representation, seed source, invalid-input behavior and legacy definition handling. Do not choose values in P32."
+    },
+    {
+      "id": "C2-AMEND-B02",
+      "classification": "AUTHORITY_CONFLICT",
+      "earliest_untrusted_layer": "Canonical semantic/wire authority",
+      "finding": "The request simultaneously prohibits changing semantic schema authority and requires persistent fields not expressible in the current StrokeRecord/BrushDescriptor contract. AddStrokeOp wraps an ObjectRecord; there is no CreateStrokeOperation variant. StrokeRecord holds brush, deterministic_seed and vector samples or dabs, without a full resolved-parameter snapshot or separate algorithm version. Calling new persistent fields an Operation payload extension does not supply their wire contract, version registry, codec/validator support or compatibility authority.",
+      "authority_refs": [
+        "docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-stroke-wire-schema-v0.1.md",
+        "docs/notion/authority/04-semantic-schema/05-leaf-schemas/brush-family-registry-v1-release-v0.1.md"
+      ],
+      "implementation_reality_refs": [
+        "runtime/semantic/include/canvas/semantic/object_content.hpp",
+        "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+        "runtime/semantic/src/protobuf_object_mapping.cpp",
+        "runtime/semantic/src/validator.cpp"
+      ],
+      "required_resolution": "Obtain accepted semantic/wire authority for an additive versioned extension, or an accepted lossless mapping into existing canonical fields. Freeze AddStrokeOp versus a new operation decision, serialization and validation, unsupported-version behavior, old-data compatibility, interpreter identity, exact authorized paths and SDK implications before regenerating an executable package. Do not add opaque sidecars or overload unrelated fields to evade the authority boundary."
+    },
+    {
+      "id": "C2-AMEND-B03",
+      "classification": "VERIFICATION_DESIGN_DEFECT",
+      "earliest_untrusted_layer": "Verification design dependent on B01/B02",
+      "finding": "C2-V11 requests bitwise determinism or a frozen tolerance without selecting either. C2-V12 names Live == Replay but does not bind the persisted format, reconstruction interpreter, render observation seam, fixture corpus or pixel/numeric acceptance. RuntimeScene equality alone cannot prove rendered equality, and a render comparison alone cannot prove preserved canonical parameters.",
+      "required_resolution": "After B01/B02 freeze exact resolution/round-trip/replay fixtures and equality domains, deterministic numeric acceptance, existing renderer observation harness/environment and authorized test scope. Bind both V11/V12 to RED expectations and blocking artifacts; do not silently weaken the obligations to DTO/source checks."
+    }
+  ],
+  "ownership_handoff": {
+    "type": "ownership_handoff",
+    "from_owner": "aegis-implementation",
+    "to": "aegis",
+    "reason": "earlier_untrusted_layer",
+    "requested_stage": "P31_TASK_PACKAGING",
+    "earliest_untrusted_layer": "Brush resolution and canonical semantic/wire authority",
+    "status": "BLOCKED_AUTHORITY",
+    "suggested_next_stage": "Resolve semantic authority and compatibility, reconcile the no-schema-change restriction, then freeze verification and return to P31"
+  },
+  "return_surface": "CONTROL_REVIEW",
+  "materialization_binding": "Exact containing commit returned to the user after push; this preflight is blocker evidence, not an executable package or a P31 approval."
+}

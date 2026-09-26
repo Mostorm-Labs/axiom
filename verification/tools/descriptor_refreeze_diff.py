@@ -210,6 +210,13 @@ def _mapping(file_name: str, kind: str, name: str, field: int | None) -> tuple[t
             return (("ST-D04",), "WIRE_BREAKING_PRE_RELEASE_REPAIR", "uint64 varint to fixed64")
         if name in {"Dab", "DabInstance", "DabStrokeData"}:
             return (("ST-D05",), "SEMANTIC_NAME_CORRECTION", "DabInstance center descriptor identity")
+    # GT-G4-5 C2 is an explicitly approved additive schema release.  Keep its
+    # descriptor changes mapped here so the refreeze remains an authority
+    # review, rather than allowing an implementation-local lock rewrite.
+    if file_name.endswith("brush_engine.proto") and kind == "file":
+        return (("G45-SR01",), "APPROVED_ADDITIVE_SCHEMA_RELEASE", "new v0.4 brush carriers")
+    if file_name.endswith("object.proto") and kind == "field" and name == "ObjectContent" and field == 10:
+        return (("G45-SR02",), "APPROVED_ADDITIVE_SCHEMA_RELEASE", "ObjectKind (5,2) brush_stroke tag 10")
     return None
 
 
@@ -270,6 +277,12 @@ def compare(before_data: bytes, after_data: bytes, *, authority_baseline: str) -
         else:
             changes.extend(_diff_file(old_file, new_file))
     unmapped = [change for change in changes if not change["defectIds"]]
+    # Registry identity means that every pre-refreeze field remains byte-for-
+    # byte identical.  Additive releases may append an approved new field.
+    before_object = _registry_signature(before, "ObjectContent")
+    after_object = _registry_signature(after, "ObjectContent")
+    object_registry_preserved = bool(before_object is not None and after_object is not None and
+                                     all(field in after_object for field in before_object))
     result = {
         "format": "axiom-gt-g1-02r-descriptor-refreeze-diff-v1",
         "authorityBaseline": authority_baseline,
@@ -278,8 +291,8 @@ def compare(before_data: bytes, after_data: bytes, *, authority_baseline: str) -
         "changes": changes,
         "unmappedChanges": unmapped,
         "outerRegistryPreserved": {
-            name: _registry_signature(before, name) == _registry_signature(after, name)
-            for name in ("ObjectContent", "Operation")
+            "ObjectContent": object_registry_preserved,
+            "Operation": _registry_signature(before, "Operation") == _registry_signature(after, "Operation"),
         },
     }
     # Keep the returned contract identical to the JSON review artifact: tuples

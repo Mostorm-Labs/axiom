@@ -180,6 +180,19 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content)
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent> ||
                              std::is_same_v<T, semantic::DabStrokeContent>) {
             encodeStroke(out, value.stroke);
+        } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
+            out.u32(value.stroke.snapshot.snapshot_version);
+            out.u32(value.stroke.snapshot.package_revision);
+            out.u64(value.stroke.snapshot.seed);
+            out.u64(value.stroke.confirmed_samples.size());
+            for (const auto& sample : value.stroke.confirmed_samples) {
+                out.vec2(sample.position); encodeOptional(out, sample.pressure,
+                    [&](const double pressure) { out.f64(pressure); });
+            }
+            out.u32(value.stroke.vector_output.fill_rule);
+            out.boolean(value.stroke.vector_output.closed);
+            out.u64(value.stroke.vector_output.outline.size());
+            for (const auto& point : value.stroke.vector_output.outline) out.vec2(point);
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             encodeEndpoint(out, value.start); encodeEndpoint(out, value.end);
             out.byte(static_cast<std::uint8_t>(value.routing));
@@ -358,6 +371,11 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
             return foundation::Result<ReferenceCommand>::success(RichTextReferenceCommand{*value});
         break;
     case semantic::ObjectKind::kVectorStroke:
+        if (record.kindVersion == 2U) {
+            if (const auto* value = std::get_if<semantic::BrushStrokeContent>(&record.content))
+                return foundation::Result<ReferenceCommand>::success(BrushStrokeReferenceCommand{*value});
+            break;
+        }
         if (const auto* value = std::get_if<semantic::VectorStrokeContent>(&record.content))
             return foundation::Result<ReferenceCommand>::success(VectorStrokeReferenceCommand{*value});
         break;
@@ -406,7 +424,9 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
         .candidatesExamined = visibility.candidatesExamined,
         .visibleRecords = visibility.visibleRecords,
         .worldToView = worldToView(frame),
-        .viewportClip = frame.worldViewport,
+        .viewportClip = frame.viewportClip.isFiniteAndOrdered()
+                            ? frame.viewportClip
+                            : frame.worldViewport,
         .entries = {},
         .diagnostics = {},
         .canonicalEncodingVersion = ReferenceDrawList::kCanonicalEncodingVersion,
