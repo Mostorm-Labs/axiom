@@ -61,6 +61,10 @@ bool RegisterPreviewClass() {
   done = true; return true;
 }
 
+// Deprecated compatibility adapter.  The Ink Playground production path no
+// longer instantiates this primitive/GDI renderer: Windows preview pixels are
+// produced by the Runtime Skia adapter and this ARC backend is retained only
+// for ABI/conformance tests and older consumers.
 class WindowsPreviewBackend final : public PreviewBackend {
  public:
   ~WindowsPreviewBackend() override { destroy(); }

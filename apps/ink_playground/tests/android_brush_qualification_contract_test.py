@@ -27,3 +27,13 @@ assert "programmable_brush" in NATIVE
 assert "BrushFamily" in NATIVE
 assert "family <= 7" in NATIVE
 assert "canonicalMutation" in NATIVE
+
+# Performance/visual-continuity contract: the Android view must retain the
+# last committed Skia frame and avoid a full JNI readback on every UI frame
+# while a stroke is in flight.  The preview and the committed frame are still
+# required to use the same BrushPrimitive parameters; this contract only
+# checks that the expensive full-frame transfer is not on the hot path.
+assert "committedBitmap" in JAVA_TEXT
+assert "nativeBrushRgba" in JAVA_TEXT
+assert "activeStrokes.isEmpty()" in JAVA_TEXT
+assert "committedBitmapValid" in JAVA_TEXT

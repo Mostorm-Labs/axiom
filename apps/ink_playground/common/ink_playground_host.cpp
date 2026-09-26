@@ -304,6 +304,18 @@ std::vector<ink::StrokePoint> InkPlaygroundHost::transientPreviewPoints() const 
   return preview_->snapshot().confirmed;
 }
 
+std::vector<std::vector<ink::StrokePoint>> InkPlaygroundHost::transientPreviewStrokes() const {
+  std::vector<std::vector<ink::StrokePoint>> strokes;
+  const auto append = [&strokes](const ink::PreviewSnapshot& snapshot) {
+    std::vector<ink::StrokePoint> points = snapshot.confirmed;
+    points.insert(points.end(), snapshot.predicted.begin(), snapshot.predicted.end());
+    if (!points.empty()) strokes.push_back(std::move(points));
+  };
+  append(preview_->snapshot());
+  for (const auto& snapshot : preview_->keyedSnapshots()) append(snapshot);
+  return strokes;
+}
+
 std::vector<std::vector<ink::StrokePoint>> InkPlaygroundHost::previewStrokes() const {
   auto strokes = committedStrokes_;
   const auto active = preview_->snapshot().confirmed;

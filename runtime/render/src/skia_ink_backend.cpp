@@ -235,4 +235,73 @@ BackendSubmissionResult SkiaInkBackend::submit(
     return BackendSubmissionResult::accepted();
 }
 
+BackendSubmissionResult SkiaInkBackend::submitPreview(
+    std::span<const std::vector<CanonicalStrokePoint>> strokes,
+    CanonicalViewportTransform viewport, SkiaPreviewStyle style) {
+    if (impl_ == nullptr || !impl_->surface || width_ == 0U || height_ == 0U) {
+        return BackendSubmissionResult::rejected("Skia preview surface is not initialized");
+    }
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F ||
+        !std::isfinite(viewport.translationX) || !std::isfinite(viewport.translationY) ||
+        !std::isfinite(style.opacity) || style.opacity < 0.0F || style.opacity > 1.0F) {
+        return BackendSubmissionResult::rejected("invalid Skia preview transform or style");
+    }
+    SkCanvas* canvas = impl_->surface->getCanvas();
+    ++rasterizationCount_;
+    canvas->clear(SK_ColorTRANSPARENT);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    paint.setColor(SkColorSetARGB((style.colorRgba >> 24U) & 0xffU,
+                                  (style.colorRgba >> 16U) & 0xffU,
+                                  (style.colorRgba >> 8U) & 0xffU,
+                                  style.colorRgba & 0xffU));
+    paint.setAlphaf(style.opacity);
+    paint.setStyle(SkPaint::kStroke_Style);
+    paint.setStrokeCap(SkPaint::kRound_Cap);
+    paint.setStrokeJoin(SkPaint::kRound_Join);
+    paint.setStrokeWidth(3.0F);
+    for (const auto& stroke : strokes) {
+        if (stroke.empty()) continue;
+        if (stroke.size() == 1U) {
+            canvas->drawCircle(stroke.front().x, stroke.front().y, 1.5F, paint);
+            continue;
+        }
+        SkPathBuilder path;
+        path.moveTo(stroke.front().x, stroke.front().y);
+        if (stroke.size() == 2U) {
+            path.lineTo(stroke.back().x, stroke.back().y);
+        } else {
+            for (std::size_t i = 0; i + 1U < stroke.size(); ++i) {
+                const auto& p0 = stroke[i == 0U ? i : i - 1U];
+                const auto& p1 = stroke[i];
+                const auto& p2 = stroke[i + 1U];
+                const auto& p3 = stroke[i + 2U < stroke.size() ? i + 2U : i + 1U];
+                path.cubicTo(p1.x + (p2.x - p0.x) / 6.0F,
+                             p1.y + (p2.y - p0.y) / 6.0F,
+                             p2.x - (p3.x - p1.x) / 6.0F,
+                             p2.y - (p3.y - p1.y) / 6.0F, p2.x, p2.y);
+            }
+        }
+        canvas->drawPath(path.detach(), paint);
+    }
+    canvas->restore();
+    const auto info = SkImageInfo::Make(static_cast<int>(width_),
+                                        static_cast<int>(height_),
+                                        kRGBA_8888_SkColorType,
+                                        kPremul_SkAlphaType,
+                                        SkColorSpace::MakeSRGB());
+    if (!impl_->surface->readPixels(info, pixels_.data(),
+                                    static_cast<std::size_t>(width_) * 4U, 0, 0)) {
+        return BackendSubmissionResult::rejected("Skia preview readback failed");
+    }
+    submittedStrokes_.assign(strokes.begin(), strokes.end());
+    submittedPrimitives_.clear();
+    submittedViewport_ = viewport;
+    hasSubmission_ = true;
+    return BackendSubmissionResult::accepted();
+}
+
 }  // namespace canvas::render

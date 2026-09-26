@@ -2,9 +2,11 @@
 <meta charset="utf-8">
 <title>Axiom Ink Playground</title>
 <style>
-  body { margin: 0; font: 14px sans-serif; background: #eef1f7; }
+  body { margin: 0; font: 14px sans-serif; background: #eef1f7;
+         overscroll-behavior: none; user-select: none; }
   #ink { display: block; width: min(100vw, 1024px); height: min(80vh, 768px);
-         background: white; touch-action: none; border: 1px solid #c5cad6; }
+         background: white; touch-action: none; border: 1px solid #c5cad6;
+         user-select: none; -webkit-user-select: none; }
   #brushBar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px; background: #f7f8fb; }
   #brushSelector { min-width: 180px; padding: 6px; font-size: 14px; }
   #hud { padding: 8px; color: #25304a; }
@@ -31,15 +33,19 @@
   const createAxiomInkPlayground = imported.default;
   const module = await createAxiomInkPlayground({ canvas });
   const host = module._axiom_ink_create();
-  if (!host || !module._axiom_ink_bind_surface(host, canvas.width, canvas.height)) {
+  if (!host) {
     throw new Error("Ink Playground surface binding failed");
   }
-  const skiaBrushSurface = true;
+  // Keep the browser-native path available when WebGL2/Skia context creation
+  // is rejected.  The runtime host still handles pointer input in that mode.
+  const skiaBrushSurface = module._axiom_ink_bind_surface(host, canvas.width, canvas.height) !== 0;
   let stroke = 0;
   let sampleSequence = 0;
   const started = new Set();
   const strokes = [];
   const activeStrokes = new Map();
+  const pointerLocations = new Map();
+  let pointerGesture = null;
   const generations = new Map();
   const trace = [];
   const webSource = 1;
@@ -94,6 +100,45 @@
       y: (viewY - runtimeTranslationY) / runtimeScale
     };
   };
+  const physicalPoint = event => {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (event.clientX - rect.left) * canvas.width / rect.width,
+      y: (event.clientY - rect.top) * canvas.height / rect.height
+    };
+  };
+  const updatePointerGesture = () => {
+    if (!pointerGesture || pointerLocations.size < 2) return;
+    // The Runtime is authoritative whenever it has claimed the two contacts.
+    // The local Pointer Events gesture is only a browser fallback for hosts
+    // that do not expose the Runtime viewport claim.
+    if (module._axiom_ink_viewport_claimed(host) !== 0) return;
+    const points = [...pointerLocations.values()];
+    const first = points[0], second = points[1];
+    const dx = second.x - first.x, dy = second.y - first.y;
+    const distance = Math.hypot(dx, dy);
+    if (!(distance > 0)) return;
+    const center = { x: (first.x + second.x) * 0.5, y: (first.y + second.y) * 0.5 };
+    const ratio = Math.max(0.25, Math.min(8, distance / pointerGesture.startDistance));
+    trackpadScale = Math.max(0.25, Math.min(8, pointerGesture.baseScale * ratio));
+    trackpadTranslationX = center.x - ratio * (pointerGesture.startCenter.x - pointerGesture.baseTx);
+    trackpadTranslationY = center.y - ratio * (pointerGesture.startCenter.y - pointerGesture.baseTy);
+  };
+  const beginPointerGestureIfNeeded = event => {
+    pointerLocations.set(event.pointerId, physicalPoint(event));
+    if (pointerLocations.size !== 2 || pointerGesture) return;
+    const points = [...pointerLocations.values()];
+    const dx = points[1].x - points[0].x, dy = points[1].y - points[0].y;
+    const distance = Math.hypot(dx, dy);
+    if (!(distance > 0)) return;
+    pointerGesture = {
+      startDistance: distance,
+      startCenter: {x: (points[0].x + points[1].x) * 0.5, y: (points[0].y + points[1].y) * 0.5},
+      baseScale: trackpadScale,
+      baseTx: trackpadTranslationX,
+      baseTy: trackpadTranslationY
+    };
+  };
   const drawBrushSegment = (context, points, family, runtime = {}) => {
     if (!points.length) return;
     const style = brushStyle(family);
@@ -126,6 +171,8 @@
   };
   const render = () => {
     renderPending = false;
+    module._axiom_ink_set_render_viewport(host, viewportScale(),
+      viewportTranslationX(), viewportTranslationY());
     module._axiom_ink_brush_render(host);
     if (!skiaBrushSurface) {
       drawStrokes(canvas.getContext("2d"), strokes,
@@ -199,6 +246,7 @@
     if (phase === "down") { stroke += 1; started.add(event.pointerId); generation += 1; generations.set(event.pointerId, generation); const active = []; activeStrokes.set(event.pointerId, { points: active, stroke, generation, pointerId: event.pointerId, family: selectedBrushFamily }); module._axiom_ink_begin_pointer(host, webSource, event.pointerId, generation, stroke); module._axiom_ink_brush_begin(host, event.pointerId, selectedBrushFamily); }
     const activeStroke = activeStrokes.get(event.pointerId);
     if (!activeStroke) return;
+    let viewportClaimed = false;
     list.forEach(sample => {
       const point = canvasPoint(sample);
       const phaseCode = phase === "down" ? 0 : phase === "up" ? 2 : phase === "cancel" ? 3 : 1;
@@ -207,28 +255,34 @@
       module._axiom_ink_pointer_sample_phase(host, webSource, event.pointerId,
         activeStroke.generation, ++sampleSequence, timeNs, point.viewX, point.viewY,
         pressure, 0, phaseCode, nowNs());
-      module._axiom_ink_brush_sample(host, event.pointerId, sampleSequence, point.x, point.y, pressure);
-      runtimeBrush.set(event.pointerId, {
-        size: module._axiom_ink_brush_size(host, event.pointerId),
-        opacity: module._axiom_ink_brush_opacity(host, event.pointerId),
-        representation: module._axiom_ink_brush_representation(host, event.pointerId)
-      });
-      activeStroke.points.push({ ...point, pressure });
+      updateViewport();
+      viewportClaimed = module._axiom_ink_viewport_claimed(host) !== 0;
+      if (!viewportClaimed) {
+        module._axiom_ink_brush_sample(host, event.pointerId, sampleSequence, point.x, point.y, pressure);
+        runtimeBrush.set(event.pointerId, {
+          size: module._axiom_ink_brush_size(host, event.pointerId),
+          opacity: module._axiom_ink_brush_opacity(host, event.pointerId),
+          representation: module._axiom_ink_brush_representation(host, event.pointerId)
+        });
+        activeStroke.points.push({ ...point, pressure });
+      }
       trace.push({ stroke: activeStroke.stroke, pointer_id: event.pointerId,
         generation: activeStroke.generation, sequence: sampleSequence,
         x: point.x, y: point.y, pressure, tool: sample.pointerType || "mouse",
         phase, time_ns: timeNs });
     });
     updateViewport();
-    const viewportClaimed = module._axiom_ink_viewport_claimed(host) !== 0;
+    viewportClaimed = viewportClaimed || module._axiom_ink_viewport_claimed(host) !== 0;
     if (viewportClaimed) {
       activeStrokes.forEach(active => active.points.length = 0);
+      activeStrokes.forEach(active => module._axiom_ink_brush_cancel(host, active.pointerId));
     }
     lastBatch = list.length;
     if (phase === "up") {
-      const committed = module._axiom_ink_commit_pointer(host, webSource, event.pointerId,
+      const committed = !viewportClaimed && module._axiom_ink_commit_pointer(host, webSource, event.pointerId,
         activeStroke.generation, activeStroke.stroke, activeStroke.stroke);
-      module._axiom_ink_brush_finish(host, event.pointerId);
+      if (!viewportClaimed) module._axiom_ink_brush_finish(host, event.pointerId);
+      else module._axiom_ink_brush_cancel(host, event.pointerId);
       if (committed && !viewportClaimed) strokes.push({ points: activeStroke.points, family: activeStroke.family, runtime: runtimeBrush.get(event.pointerId) });
       runtimeBrush.delete(event.pointerId);
       started.delete(event.pointerId);
@@ -286,10 +340,37 @@
     requestRender();
   }, { passive: false });
   canvas.addEventListener("gestureend", swallowPageZoom, { passive: false });
-  canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); send(e, "down"); });
-  canvas.addEventListener("pointermove", e => { if (started.has(e.pointerId)) send(e, "move"); });
-  canvas.addEventListener("pointerup", e => send(e, "up"));
-  canvas.addEventListener("pointercancel", e => { if (activeStrokes.has(e.pointerId)) send(e, "cancel"); });
+  canvas.addEventListener("touchstart", swallowPageZoom, { passive: false });
+  canvas.addEventListener("touchmove", swallowPageZoom, { passive: false });
+  canvas.addEventListener("touchend", swallowPageZoom, { passive: false });
+  canvas.addEventListener("contextmenu", swallowPageZoom, { passive: false });
+  canvas.addEventListener("pointerdown", e => {
+    swallowPageZoom(e);
+    canvas.setPointerCapture(e.pointerId);
+    beginPointerGestureIfNeeded(e);
+    send(e, "down");
+    if (pointerGesture) { updatePointerGesture(); requestRender(); }
+  });
+  canvas.addEventListener("pointermove", e => {
+    swallowPageZoom(e);
+    if (pointerLocations.has(e.pointerId)) pointerLocations.set(e.pointerId, physicalPoint(e));
+    if (started.has(e.pointerId)) send(e, "move");
+    if (pointerGesture) { updatePointerGesture(); requestRender(); }
+  });
+  canvas.addEventListener("pointerup", e => {
+    swallowPageZoom(e);
+    if (started.has(e.pointerId)) send(e, "up");
+    pointerLocations.delete(e.pointerId);
+    if (pointerLocations.size < 2) pointerGesture = null;
+    requestRender();
+  });
+  canvas.addEventListener("pointercancel", e => {
+    swallowPageZoom(e);
+    if (activeStrokes.has(e.pointerId)) send(e, "cancel");
+    pointerLocations.delete(e.pointerId);
+    if (pointerLocations.size < 2) pointerGesture = null;
+    requestRender();
+  });
   requestRender();
   globalThis.axiomInkPlayground = { module, host, exportEvidence,
     getLatestEvidence: () => latestEvidence };

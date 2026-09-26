@@ -3,9 +3,9 @@
 #include "windows_pointer_utils.hpp"
 #include "windows_smoke_evidence.hpp"
 #include "canvas/render/canonical_handoff.hpp"
+#include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/input/active_pointer_registry.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
-#include "canvas/render/skia_ink_backend.hpp"
 #endif
 
 #if defined(_WIN32)
@@ -15,6 +15,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -66,7 +67,6 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<arc::InputSource> input; std::unique_ptr<arc::Bridge> previewBridge;
   std::unique_ptr<ArcSink> sink; std::uint64_t stroke = 0; std::uint64_t previewGeneration = 1;
   struct ActivePreview { std::uint64_t stroke = 0; std::uint64_t revision = 0;
-    std::vector<arc_preview_primitive_v0> points; std::uint64_t lastSampleSequence = 0;
     bool active = false; };
   std::unordered_map<std::uint64_t, ActivePreview> previews;
   struct PendingHandoff { std::uint64_t stroke = 0; std::uint64_t revision = 0; };
@@ -75,12 +75,21 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   canvas::input::ActivePointerRegistry pointerRegistry;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
   std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
+  std::vector<std::vector<canvas::render::CanonicalStrokePoint>> retainedPreviewStrokes;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   std::size_t maxConcurrentPointers = 0;
   bool runtimePreviewVisible = true;
   bool dualColorDiagnostic = false;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   std::unique_ptr<canvas::render::SkiaInkBackend> canonicalRenderer;
+  std::unique_ptr<canvas::render::SkiaInkBackend> previewRenderer;
+  std::vector<std::uint8_t> previewBgra;
+  HWND previewWindow = nullptr;
+  HDC previewDc = nullptr;
+  HBITMAP previewBitmap = nullptr;
+  HGDIOBJ previewOldBitmap = nullptr;
+  void* previewBits = nullptr;
+  bool previewVisible = false;
   std::vector<std::uint8_t> canonicalBgra;
   std::uint64_t canonicalRasterization = 0;
 #endif
@@ -88,10 +97,16 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
 
+LRESULT CALLBACK PreviewWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+  if (message == WM_NCHITTEST) return HTTRANSPARENT;
+  if (message == WM_MOUSEACTIVATE) return MA_NOACTIVATE;
+  return DefWindowProcW(window, message, wParam, lParam);
+}
+
 void beginArcPreview(State& value, std::uint64_t pointerId) {
-  if (value.previewBridge == nullptr) return;
   auto& preview = value.previews[pointerId];
-  preview = State::ActivePreview{value.pointerStrokes.at(pointerId), 0, {}, 0, true};
+  preview = State::ActivePreview{value.pointerStrokes.at(pointerId), 0, true};
+  if (value.previewBridge == nullptr) return;
   arc_preview_begin_v0 begin{}; begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
   begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = preview.stroke; begin.view_id = 1;
   begin.viewport_revision = 1; begin.target_generation = value.previewGeneration;
@@ -101,20 +116,21 @@ void beginArcPreview(State& value, std::uint64_t pointerId) {
 
 void pushArcPreview(State& value, std::uint64_t pointerId,
                     std::span<const arc_pointer_sample_v0> samples) {
-  if (value.previewBridge == nullptr) return;
+  (void)samples;
   auto& preview = value.previews.at(pointerId);
-  const auto appendStart = preview.points.size();
-  const auto appended = canvas::ink_playground::windows_input::appendPreviewSamples(
-      preview.points, preview.lastSampleSequence, samples);
-  if (appended == 0U) return;
-  arc_preview_update_v0 update{}; update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
-  update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = preview.stroke;
-  update.preview_revision = ++preview.revision;
-  update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL; update.target_generation = value.previewGeneration;
-  update.truncate_confirmed_to = static_cast<std::uint32_t>(appendStart);
-  update.confirmed_append = preview.points.data() + appendStart;
-  update.confirmed_append_count = static_cast<std::uint32_t>(preview.points.size() - appendStart);
-  update.confirmed_append_stride = sizeof(arc_preview_primitive_v0);
+  const auto revision = ++preview.revision;
+  if (value.previewBridge == nullptr) return;
+  // Keep the protocol's lifecycle/revision ledger in sync without sending
+  // platform-derived geometry. Runtime owns the retained outline; the empty
+  // payload is deliberately not a rendering input.
+  arc_preview_update_v0 update{};
+  update.struct_size = sizeof(update);
+  update.abi_version = ARC_ABI_VERSION;
+  update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION;
+  update.stroke_id = preview.stroke;
+  update.preview_revision = revision;
+  update.coordinate_space = ARC_COORDINATE_SPACE_DEVICE_PIXEL;
+  update.target_generation = value.previewGeneration;
   (void)value.previewBridge->Push(update);
 }
 
@@ -144,6 +160,9 @@ void commitArcHandoff(State& value, std::uint64_t pointerId) {
   auto& preview = value.previews.at(pointerId);
   const auto revision = preview.revision;
   if (revision == 0) return;
+  // Geometry is retained by Runtime and rendered by the independent Skia
+  // preview surface. ARC receives lifecycle-only messages through the null
+  // protocol adapter; it never receives or derives primitive geometry here.
   arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, preview.stroke, revision,
                            value.previewGeneration};
   if (value.previewBridge->SealInput(seal) != arc::Status::kOk) return;
@@ -156,7 +175,7 @@ void commitArcHandoff(State& value, std::uint64_t pointerId) {
 }
 
 bool acknowledgeCanonicalVisible(State& value) {
-  if (value.previewBridge == nullptr || value.pendingHandoffs.empty()) return false;
+  if (value.pendingHandoffs.empty()) return false;
   bool released = false;
   std::vector<State::PendingHandoff> stillPending;
   stillPending.reserve(value.pendingHandoffs.size());
@@ -166,16 +185,18 @@ bool acknowledgeCanonicalVisible(State& value) {
     visible.document_revision = pending.stroke; visible.target_generation = value.previewGeneration;
     visible.handoff_token = {1, pending.stroke};
     visible.receipt.struct_size = sizeof(visible.receipt); visible.receipt.abi_version = ARC_ABI_VERSION;
-    visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE; visible.receipt.status = ARC_STATUS_OK;
-    visible.receipt.target_generation = value.previewGeneration; visible.receipt.presentation_id = pending.stroke;
-    const auto status = value.previewBridge->CanonicalVisible(visible);
-    if (status == arc::Status::kOk) {
+    visible.receipt.evidence = ARC_EVIDENCE_DETERMINISTIC_ORACLE;
+    visible.receipt.status = ARC_STATUS_OK;
+    visible.receipt.target_generation = value.previewGeneration;
+    visible.receipt.presentation_id = pending.stroke;
+    if (value.previewBridge->CanonicalVisible(visible) == arc::Status::kOk) {
       released = true;
     } else {
       stillPending.push_back(pending);
     }
   }
   value.pendingHandoffs = std::move(stillPending);
+  if (value.pendingHandoffs.empty()) value.retainedPreviewStrokes.clear();
   value.host->recordPresentation(value.pendingHandoffs.empty()
                                      ? "canonical-visible"
                                      : "canonical-visible-retry",
@@ -203,6 +224,83 @@ bool renderCanonical(State& value) {
   return false;
 #endif
 }
+
+#if defined(CANVAS_RENDER_HAS_SKIA)
+bool presentSkiaPreview(State& value) {
+  if (value.previewWindow == nullptr || value.previewRenderer == nullptr) return false;
+  if (!value.runtimePreviewVisible) {
+    ShowWindow(value.previewWindow, SW_HIDE);
+    value.previewVisible = false;
+    return true;
+  }
+  auto strokes = value.retainedPreviewStrokes;
+  for (const auto& stroke : value.host->transientPreviewStrokes()) {
+    auto& converted = strokes.emplace_back();
+    converted.reserve(stroke.size());
+    for (const auto& point : stroke) {
+      converted.push_back({point.x, point.y, point.pressure});
+    }
+  }
+  if (strokes.empty()) {
+    ShowWindow(value.previewWindow, SW_HIDE);
+    value.previewVisible = false;
+    return true;
+  }
+  const auto& viewport = value.host->viewportGesture();
+  const auto result = value.previewRenderer->submitPreview(
+      strokes, canvas::render::CanonicalViewportTransform{
+          viewport.scale, viewport.translationX, viewport.translationY});
+  if (result.code != canvas::render::BackendSubmissionCode::kAccepted) return false;
+  const auto pixels = value.previewRenderer->rgba();
+  const auto expected = static_cast<std::size_t>(value.previewRenderer->width()) *
+                        value.previewRenderer->height() * 4U;
+  if (pixels.size() != expected) return false;
+  if (value.previewBgra.size() != expected) value.previewBgra.resize(expected);
+  for (std::size_t i = 0; i < expected; i += 4U) {
+    value.previewBgra[i] = pixels[i + 2U];
+    value.previewBgra[i + 1U] = pixels[i + 1U];
+    value.previewBgra[i + 2U] = pixels[i];
+    value.previewBgra[i + 3U] = pixels[i + 3U];
+  }
+  if (value.previewDc == nullptr || value.previewBitmap == nullptr) {
+    HDC screen = GetDC(nullptr);
+    value.previewDc = CreateCompatibleDC(screen);
+    BITMAPINFO info{}; info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    info.bmiHeader.biWidth = static_cast<LONG>(value.previewRenderer->width());
+    info.bmiHeader.biHeight = -static_cast<LONG>(value.previewRenderer->height());
+    info.bmiHeader.biPlanes = 1; info.bmiHeader.biBitCount = 32;
+    info.bmiHeader.biCompression = BI_RGB;
+    value.previewBitmap = CreateDIBSection(value.previewDc, &info, DIB_RGB_COLORS,
+                                           &value.previewBits, nullptr, 0);
+    if (value.previewDc == nullptr || value.previewBitmap == nullptr || value.previewBits == nullptr) {
+      if (value.previewBitmap != nullptr) DeleteObject(value.previewBitmap);
+      if (value.previewDc != nullptr) DeleteDC(value.previewDc);
+      value.previewBitmap = nullptr; value.previewDc = nullptr; value.previewBits = nullptr;
+      ReleaseDC(nullptr, screen);
+      return false;
+    }
+    value.previewOldBitmap = SelectObject(value.previewDc, value.previewBitmap);
+    ReleaseDC(nullptr, screen);
+  }
+  std::memcpy(value.previewBits, value.previewBgra.data(), expected);
+  POINT origin{0, 0};
+  if (!ClientToScreen(value.window, &origin)) return false;
+  SIZE size{static_cast<LONG>(value.previewRenderer->width()),
+            static_cast<LONG>(value.previewRenderer->height())};
+  POINT source{0, 0};
+  BLENDFUNCTION blend{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+  HDC screen = GetDC(nullptr);
+  const BOOL updated = UpdateLayeredWindow(value.previewWindow, screen, &origin, &size,
+                                           value.previewDc, &source, 0, &blend, ULW_ALPHA);
+  ReleaseDC(nullptr, screen);
+  if (!updated) {
+    return false;
+  }
+  ShowWindow(value.previewWindow, SW_SHOWNA);
+  value.previewVisible = true;
+  return true;
+}
+#endif
 
 bool finalizeCanonicalPresentation(State& value) {
   if (value.pendingHandoffs.empty()) return true;
@@ -290,6 +388,14 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   if (end) persistEvidence(value);
   if (end) {
     const auto stroke = value.pointerStrokes.at(kMousePointerId);
+    const auto runtimePreview = value.host->transientPreviewStrokes();
+    value.retainedPreviewStrokes.clear();
+    for (const auto& points : runtimePreview) {
+      auto& converted = value.retainedPreviewStrokes.emplace_back();
+      converted.reserve(points.size());
+      for (const auto& point : points)
+        converted.push_back({point.x, point.y, point.pressure});
+    }
     if (!value.host->commitStroke(value.activeKeys.at(kMousePointerId), stroke, stroke)) return false;
     commitArcHandoff(value, kMousePointerId);
     (void)value.pointerRegistry.end(value.activeKeys.at(kMousePointerId));
@@ -322,6 +428,7 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
   value.activeKeys.erase(pointerId);
   value.pointerStrokes.erase(pointerId);
   value.previews.erase(pointerId);
+  value.retainedPreviewStrokes.clear();
   persistEvidence(value);
 }
 
@@ -337,6 +444,7 @@ void cancelAllPointers(State& value, std::uint64_t timestampMs) {
   value.activeKeys.clear();
   value.pointerStrokes.clear();
   value.previews.clear();
+  value.retainedPreviewStrokes.clear();
   if (GetCapture() == value.window) ReleaseCapture();
   persistEvidence(value);
 }
@@ -432,35 +540,36 @@ void paint(HWND window, State& value) {
          << value.host->viewportGesture().translationY
          << L" | pending: " << value.pendingHandoffs.size()
          << L" | state: " << qualificationState
-         << L" | Arc preview: native layered"
+         << L" | Skia preview: independent layered surface"
          << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
          << L" | dual color: " << (value.dualColorDiagnostic ? L"ON" : L"OFF")
          << L" | SPACE = dual color | M = mirror | P = pointer mode";
   const auto text = status.str();
   TextOutW(bufferDc, 16, 16, text.c_str(), static_cast<int>(text.size()));
-  // Optional presentation-only mirror. It is never used for canonical
-  // handoff eligibility and is off by default so Arc evidence cannot be
-  // satisfied by this debug layer.
-  if (value.runtimePreviewVisible && previewInputActive)
-      for (const auto& [pointerId, preview] : value.previews) {
-    static_cast<void>(pointerId);
-    if (!preview.active) continue;
-    for (std::size_t i = 1; i < preview.points.size(); ++i) {
-      HPEN mirrorPen = CreatePen(PS_SOLID, 3, value.dualColorDiagnostic
-                                            ? RGB(25, 199, 232)
-                                            : RGB(26, 91, 255));
-      HGDIOBJ oldMirrorPen = SelectObject(bufferDc, mirrorPen);
-      MoveToEx(bufferDc, static_cast<int>(preview.points[i - 1].x), static_cast<int>(preview.points[i - 1].y), nullptr);
-      LineTo(bufferDc, static_cast<int>(preview.points[i].x), static_cast<int>(preview.points[i].y));
-      SelectObject(bufferDc, oldMirrorPen); DeleteObject(mirrorPen);
-    }
-  }
   BitBlt(dc, 0, 0, rect.right - rect.left, rect.bottom - rect.top, bufferDc, 0, 0, SRCCOPY);
   // The Arc handoff is released only after the Skia-produced canonical pixels
   // have been copied to the real HWND. Space never participates in this path.
   if (canonicalPresented) {
     (void)finalizeCanonicalPresentation(value);
   }
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (value.previewRenderer != nullptr &&
+      (value.previewRenderer->width() != static_cast<std::uint32_t>(rect.right) ||
+       value.previewRenderer->height() != static_cast<std::uint32_t>(rect.bottom))) {
+    (void)value.previewRenderer->resize(static_cast<std::uint32_t>(rect.right),
+                                        static_cast<std::uint32_t>(rect.bottom));
+    if (value.previewDc != nullptr && value.previewOldBitmap != nullptr)
+      SelectObject(value.previewDc, value.previewOldBitmap);
+    if (value.previewBitmap != nullptr) DeleteObject(value.previewBitmap);
+    if (value.previewDc != nullptr) DeleteDC(value.previewDc);
+    value.previewBitmap = nullptr;
+    value.previewDc = nullptr;
+    value.previewBits = nullptr;
+    value.previewOldBitmap = nullptr;
+    value.previewBgra.clear();
+  }
+  (void)presentSkiaPreview(value);
+#endif
   SelectObject(bufferDc, oldPen); DeleteObject(pen);
   SelectObject(bufferDc, oldBitmap); DeleteObject(bitmap); DeleteDC(bufferDc);
   EndPaint(window, &ps);
@@ -611,6 +720,14 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (end) {
       if (action == canvas::ink_playground::windows_input::PlatformPointerAction::kCommitAndRelease) {
         const auto stroke = value->pointerStrokes.at(pointerId);
+        const auto runtimePreview = value->host->transientPreviewStrokes();
+        value->retainedPreviewStrokes.clear();
+        for (const auto& points : runtimePreview) {
+          auto& converted = value->retainedPreviewStrokes.emplace_back();
+          converted.reserve(points.size());
+          for (const auto& point : points)
+            converted.push_back({point.x, point.y, point.pressure});
+        }
         if (!value->host->commitStroke(key, stroke, stroke)) return 0;
         commitArcHandoff(*value, pointerId);
       }
@@ -636,6 +753,18 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     if (message == WM_DESTROY) {
       if (value != nullptr && value->input != nullptr) value->input->Stop();
+#if defined(CANVAS_RENDER_HAS_SKIA)
+      if (value != nullptr) {
+        if (value->previewDc != nullptr && value->previewOldBitmap != nullptr)
+          SelectObject(value->previewDc, value->previewOldBitmap);
+        if (value != nullptr && value->previewBitmap != nullptr)
+          DeleteObject(value->previewBitmap);
+        if (value != nullptr && value->previewDc != nullptr)
+          DeleteDC(value->previewDc);
+        if (value != nullptr && value->previewWindow != nullptr)
+          DestroyWindow(value->previewWindow);
+      }
+#endif
       PostQuitMessage(0);
       return 0;
     }
@@ -678,19 +807,37 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   WNDCLASSW klass{}; klass.hInstance = instance; klass.lpfnWndProc = WindowProc; klass.lpszClassName = L"AxiomInkPlayground";
   if (RegisterClassW(&klass) == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS) return 1;
+  WNDCLASSW previewClass{}; previewClass.hInstance = instance;
+  previewClass.lpfnWndProc = PreviewWindowProc;
+  previewClass.lpszClassName = L"AxiomInkPlaygroundSkiaPreview";
+  if (RegisterClassW(&previewClass) == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS) return 1;
   (void)canvas::ink_playground::windows_input::keepMouseOnButtonMessages();
   State value; value.host = std::make_unique<InkPlaygroundHost>();
 #if defined(CANVAS_RENDER_HAS_SKIA)
   value.canonicalRenderer = std::make_unique<canvas::render::SkiaInkBackend>();
+  value.previewRenderer = std::make_unique<canvas::render::SkiaInkBackend>();
 #endif
   if (!value.host->bindSurface(1024, 768)) return 1;
   value.input = arc::CreateWindowsInputSource();
-  value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateWindowsBackend(), arc::CreateNullBackend());
+  // ARC remains a lifecycle/receipt adapter.  Preview pixels are produced by
+  // the same Skia adapter used by the other clients and presented by the
+  // independent layered window below.
+  value.previewBridge = std::make_unique<arc::Bridge>(arc::CreateNullBackend(), arc::CreateNullBackend());
   value.sink = std::make_unique<ArcSink>(*value.host, value.activeKeys);
   if (value.input == nullptr || value.input->Start(*value.sink) != arc::Status::kOk) return 1;
   value.window = CreateWindowExW(0, klass.lpszClassName, L"Axiom Ink Playground", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
   if (value.window == nullptr) return 1; ShowWindow(value.window, show); UpdateWindow(value.window);
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  value.previewWindow = CreateWindowExW(
+      WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW,
+      previewClass.lpszClassName, L"Axiom Skia Preview", WS_POPUP, 0, 0, 1024, 768,
+      value.window, nullptr, instance, nullptr);
+  if (value.previewWindow == nullptr ||
+      value.previewRenderer->resize(1024, 768).code !=
+          canvas::render::BackendSubmissionCode::kAccepted) return 1;
+  ShowWindow(value.previewWindow, SW_HIDE);
+#endif
   if (value.previewBridge != nullptr) {
     arc_preview_target_v0 target{}; target.struct_size = sizeof(target); target.abi_version = ARC_ABI_VERSION;
     target.platform_kind = ARC_PLATFORM_WINDOWS; target.target_id = 1; target.target_generation = value.previewGeneration;

@@ -34,6 +34,16 @@ const PreviewSnapshot* PreviewModel::snapshot(std::uint64_t strokeId) const noex
   return it == keyed_.end() ? nullptr : &it->second;
 }
 
+std::vector<PreviewSnapshot> PreviewModel::keyedSnapshots() const {
+  std::vector<PreviewSnapshot> snapshots;
+  snapshots.reserve(keyed_.size());
+  for (const auto& [strokeId, snapshot] : keyed_) {
+    (void)strokeId;
+    snapshots.push_back(snapshot);
+  }
+  return snapshots;
+}
+
 bool PreviewModel::update(std::span<const StrokePoint> confirmedAppend,
                           std::span<const StrokePoint> predictedTail) {
   if (!active_ || (confirmedAppend.empty() && predictedTail.empty())) return false;

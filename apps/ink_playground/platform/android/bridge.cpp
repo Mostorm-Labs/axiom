@@ -81,19 +81,36 @@ AndroidHost* asHost(void* value) { return static_cast<AndroidHost*>(value); }
 
 canvas::ink::BrushDefinition brushDefinition(
     const canvas::ink::ReferenceBrushCatalog& catalog, std::uint64_t family) {
-  if (family >= 1U && family <= 5U) {
-    return catalog.presets[family - 1U].definition;
+  // UI family ids are the stable cross-platform ids (Pen..Laser), not the
+  // reference-catalog ordering.  Select a matching material definition and
+  // then restore the UI family so Android and Web consume identical programs.
+  if (family == 2U) {
+    auto definition = catalog.presets[0].definition;
+    definition.family = canvas::ink::BrushFamily::kPencil;
+    return definition;
+  }
+  if (family == 3U) {
+    auto definition = catalog.presets[2].definition;
+    definition.family = canvas::ink::BrushFamily::kChalk;
+    return definition;
+  }
+  if (family == 4U) {
+    auto definition = catalog.presets[1].definition;
+    definition.family = canvas::ink::BrushFamily::kMarker;
+    return definition;
+  }
+  if (family == 5U) {
+    auto definition = catalog.presets[3].definition;
+    definition.family = canvas::ink::BrushFamily::kWaterColorLite;
+    return definition;
   }
   canvas::ink::BrushDefinition definition;
   definition.definitionId = family;
   definition.family = static_cast<canvas::ink::BrushFamily>(family);
-  definition.nominalSize = family == 6 ? 18.0F : 7.0F;
-  definition.opacity = family == 5 ? 0.35F : 0.8F;
-  definition.spacing = (family >= 2 && family <= 5) ? 0.2F : 0.08F;
-  if (family >= 2 && family <= 5) {
-    definition.shapeResource = {100U + family};
-    definition.grainResource = {200U + family};
-  }
+  definition.version = 2;
+  definition.nominalSize = family == 6 ? 18.0F : family == 7 ? 7.0F : 6.0F;
+  definition.opacity = family == 6 ? 0.34F : 0.8F;
+  definition.spacing = family == 6 ? 0.18F : 0.08F;
   return definition;
 }
 
@@ -102,7 +119,7 @@ bool initializeBrushPrograms(AndroidHost& value) {
     const auto definition = brushDefinition(value.brushCatalog, family);
     const auto result = canvas::ink::BrushCompiler{}.compile(
         definition, canvas::ink::BrushCapabilityProfile{
-            .pressure = false, .tilt = false, .shapeResource = true,
+            .pressure = true, .tilt = true, .shapeResource = true,
             .grainResource = true, .temporalTransient = true});
     if (!result) return false;
     value.brushPrograms.emplace(family, result.program);
@@ -221,6 +238,18 @@ int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_
   const bool released = releasePointer(*value, *identity);
   return committed && released;
 }
+int axiom_ink_android_release_pointer(void* handle, std::uint64_t pointerId) {
+  auto* value = asHost(handle);
+  if (value == nullptr) return 0;
+  const auto identity = canvas::ink_playground::androidPointerIdentity(pointerId);
+  if (!identity.has_value()) return 0;
+  const auto active = value->activeKeys.find(*identity);
+  if (active == value->activeKeys.end()) return 1;
+  const bool released = value->pointerRegistry.end(active->second);
+  value->activeKeys.erase(active);
+  value->pointerStrokes.erase(*identity);
+  return released ? 1 : 0;
+}
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height) {
   auto* value = asHost(handle);
   if (value == nullptr || !value->host->resizeSurface(width, height)) return 0;
@@ -329,8 +358,19 @@ int axiom_ink_android_brush_finish(void* handle, std::uint64_t pointerId) {
   value->committedBrushPrimitives.insert(value->committedBrushPrimitives.end(),
                                          result.commit.primitives.begin(),
                                          result.commit.primitives.end());
+  value->brushPrimitives.erase(pointerId);
   value->brushSessions.erase(found);
   return 1;
+}
+int axiom_ink_android_brush_cancel(void* handle, std::uint64_t pointerId) {
+  auto* value = asHost(handle);
+  if (value == nullptr) return 0;
+  const auto found = value->brushSessions.find(pointerId);
+  if (found == value->brushSessions.end()) return 0;
+  const bool cancelled = value->brushRuntime.cancel({found->second});
+  value->brushSessions.erase(found);
+  value->brushPrimitives.erase(pointerId);
+  return cancelled ? 1 : 0;
 }
 int axiom_ink_android_brush_render(void* handle, std::uint32_t width,
                                    std::uint32_t height, std::uint8_t* rgba,
@@ -347,7 +387,10 @@ int axiom_ink_android_brush_render(void* handle, std::uint32_t width,
     (void)id;
     primitives.push_back(primitive);
   }
-  if (value->skiaRenderer->submitPrimitives(primitives).code !=
+  const auto viewport = value->host->viewportGesture();
+  if (value->skiaRenderer->submitPrimitives(
+          primitives, canvas::render::CanonicalViewportTransform{
+              viewport.scale, viewport.translationX, viewport.translationY}).code !=
       canvas::render::BackendSubmissionCode::kAccepted) return 0;
   const auto pixels = value->skiaRenderer->rgba();
   for (std::uint32_t y = 0; y < height; ++y) {

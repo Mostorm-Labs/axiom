@@ -2,6 +2,7 @@
 #include "canvas/render/skia_brush_renderer.hpp"
 
 #include "include/core/SkColorSpace.h"
+#include "include/core/SkCanvas.h"
 #include "include/core/SkSurface.h"
 #include "include/gpu/ganesh/GrBackendSurface.h"
 #include "include/gpu/ganesh/GrDirectContext.h"
@@ -12,6 +13,8 @@
 
 #include <GLES3/gl3.h>
 #include <emscripten/html5.h>
+
+#include <cmath>
 
 namespace canvas::render {
 
@@ -92,9 +95,20 @@ BackendSubmissionResult WebGlSurfaceBackend::submit(const FramePlan& plan) {
 }
 
 BackendSubmissionResult WebGlSurfaceBackend::submitBrushPrimitives(
-    std::span<const canvas::ink::BrushPrimitive> primitives) {
+    std::span<const canvas::ink::BrushPrimitive> primitives,
+    CanonicalViewportTransform viewport) {
     if (!ready()) return BackendSubmissionResult::rejected(impl_->error);
-    internal::drawBrushPrimitivesToSkCanvas(*impl_->surface->getCanvas(), primitives);
+    if (!std::isfinite(viewport.scale) || viewport.scale <= 0.0F ||
+        !std::isfinite(viewport.translationX) || !std::isfinite(viewport.translationY)) {
+        return BackendSubmissionResult::rejected("invalid WebGL viewport transform");
+    }
+    auto* canvas = impl_->surface->getCanvas();
+    canvas->clear(SK_ColorWHITE);
+    canvas->save();
+    canvas->translate(viewport.translationX, viewport.translationY);
+    canvas->scale(viewport.scale, viewport.scale);
+    internal::drawBrushPrimitivesToSkCanvas(*canvas, primitives);
+    canvas->restore();
     impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
     return BackendSubmissionResult::accepted();
 }

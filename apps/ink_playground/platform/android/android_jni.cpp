@@ -11,6 +11,7 @@ int axiom_ink_android_sample(void* handle, std::uint64_t pointerId,
                             std::uint64_t sequence, std::uint64_t timestampNs,
                             float x, float y, float pressure, int phase, int tool);
 int axiom_ink_android_commit(void* handle, std::uint64_t pointerId, std::uint64_t strokeId);
+int axiom_ink_android_release_pointer(void* handle, std::uint64_t pointerId);
 int axiom_ink_android_resize(void* handle, std::uint32_t width, std::uint32_t height);
 int axiom_ink_android_surface_lost(void* handle);
 int axiom_ink_android_cancel_all(void* handle);
@@ -28,6 +29,7 @@ int axiom_ink_android_brush_sample(void* handle, std::uint64_t pointerId,
                                    std::uint64_t sequence, float x, float y,
                                    float pressure);
 int axiom_ink_android_brush_finish(void* handle, std::uint64_t pointerId);
+int axiom_ink_android_brush_cancel(void* handle, std::uint64_t pointerId);
 std::uint64_t axiom_ink_android_brush_digest(void* handle);
 std::uint64_t axiom_ink_android_brush_primitive_count(void* handle);
 std::uint64_t axiom_ink_android_brush_family(void* handle);
@@ -79,6 +81,13 @@ Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeCommit(
   return axiom_ink_android_commit(reinterpret_cast<void*>(handle),
                                   static_cast<std::uint64_t>(pointerId),
                                   static_cast<std::uint64_t>(strokeId));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeReleasePointer(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_release_pointer(
+      reinterpret_cast<void*>(handle), static_cast<std::uint64_t>(pointerId));
 }
 
 JNIEXPORT jint JNICALL
@@ -171,6 +180,13 @@ Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushFinish(
     JNIEnv*, jclass, jlong handle, jint pointerId) {
   return axiom_ink_android_brush_finish(reinterpret_cast<void*>(handle),
                                          static_cast<std::uint64_t>(pointerId));
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeBrushCancel(
+    JNIEnv*, jclass, jlong handle, jint pointerId) {
+  return axiom_ink_android_brush_cancel(reinterpret_cast<void*>(handle),
+                                        static_cast<std::uint64_t>(pointerId));
 }
 
 JNIEXPORT jlong JNICALL

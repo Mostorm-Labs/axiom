@@ -83,6 +83,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] const SurfaceBinding& surface() const noexcept { return surface_; }
   [[nodiscard]] std::vector<ink::StrokePoint> previewPoints() const;
   [[nodiscard]] std::vector<ink::StrokePoint> transientPreviewPoints() const;
+  [[nodiscard]] std::vector<std::vector<ink::StrokePoint>> transientPreviewStrokes() const;
   [[nodiscard]] std::vector<std::vector<ink::StrokePoint>> previewStrokes() const;
   void setRuntimePreviewVisible(bool visible) noexcept { runtimePreviewVisible_ = visible; }
   [[nodiscard]] bool runtimePreviewVisible() const noexcept { return runtimePreviewVisible_; }

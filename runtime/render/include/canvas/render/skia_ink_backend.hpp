@@ -21,6 +21,15 @@ struct CanonicalViewportTransform final {
     float translationY = 0.0F;
 };
 
+// Preview presentation is intentionally a render-layer concern.  The color
+// and opacity are not part of BrushPackage/BrushSession semantics; they are
+// applied only while the independent preview surface is rasterized.
+struct SkiaPreviewStyle final {
+    // AARRGGBB, matching the existing programmable-dab presentation color.
+    std::uint32_t colorRgba = 0xffffd900U;
+    float opacity = 0.55F;
+};
+
 struct ProgrammableDab final {
     float x = 0.0F;
     float y = 0.0F;
@@ -54,6 +63,10 @@ class SkiaInkBackend final {
     [[nodiscard]] BackendSubmissionResult submitProgrammableDabs(
         std::span<const ProgrammableDab> dabs,
         CanonicalViewportTransform viewport = {});
+    [[nodiscard]] BackendSubmissionResult submitPreview(
+        std::span<const std::vector<CanonicalStrokePoint>> strokes,
+        CanonicalViewportTransform viewport = {},
+        SkiaPreviewStyle style = {});
     [[nodiscard]] BackendSubmissionResult submitPrimitives(
         std::span<const canvas::ink::BrushPrimitive> primitives,
         CanonicalViewportTransform viewport = {});

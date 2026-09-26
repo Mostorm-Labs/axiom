@@ -25,6 +25,7 @@ class PreviewModel final {
                    std::span<const StrokePoint> predictedTail);
   void cancelKeyed(std::uint64_t strokeId) noexcept;
   [[nodiscard]] const PreviewSnapshot* snapshot(std::uint64_t strokeId) const noexcept;
+  [[nodiscard]] std::vector<PreviewSnapshot> keyedSnapshots() const;
   bool update(std::span<const StrokePoint> confirmedAppend,
               std::span<const StrokePoint> predictedTail);
   void cancel() noexcept;

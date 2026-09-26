@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/render/render_backend.hpp"
+#include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
@@ -29,7 +30,8 @@ class WebGlSurfaceBackend final : public IRenderBackend {
     [[nodiscard]] const std::string& error() const noexcept;
     [[nodiscard]] BackendSubmissionResult submit(const FramePlan& plan) override;
     [[nodiscard]] BackendSubmissionResult submitBrushPrimitives(
-        std::span<const canvas::ink::BrushPrimitive> primitives);
+        std::span<const canvas::ink::BrushPrimitive> primitives,
+        CanonicalViewportTransform viewport = {});
 
   private:
     struct Impl;

@@ -6,6 +6,7 @@
 #include <emscripten/emscripten.h>
 
 #include <cstdint>
+#include <cmath>
 #include <memory>
 #include <span>
 #include <unordered_map>
@@ -30,12 +31,14 @@ struct BrushState final {
   canvas::ink::BrushRuntime runtime{catalog.resources};
   std::unordered_map<std::uint32_t, std::shared_ptr<const canvas::ink::BrushProgram>> programs;
   std::unordered_map<std::uint32_t, std::uint64_t> sessions;
-  std::unordered_map<std::uint32_t, canvas::ink::BrushPrimitive> primitives;
+  std::unordered_map<std::uint32_t, std::vector<canvas::ink::BrushPrimitive>> primitives;
+  std::vector<canvas::ink::BrushPrimitive> committedPrimitives;
   std::uint64_t serial = 0;
   std::uint64_t digest = 0;
   std::uint64_t primitiveCount = 0;
   std::uint32_t family = 1;
   int representation = 1;
+  canvas::render::CanonicalViewportTransform renderViewport{};
 #if defined(CANVAS_RENDER_HAS_SKIA)
   std::unique_ptr<canvas::render::WebGlSurfaceBackend> renderer;
 #endif
@@ -46,26 +49,40 @@ std::unordered_map<Handle, BrushState>& brushes() {
 }
 canvas::ink::BrushDefinition brushDefinition(
     const canvas::ink::ReferenceBrushCatalog& catalog, std::uint32_t family) {
-  if (family >= 1U && family <= 5U) {
-    return catalog.presets[family - 1U].definition;
+  if (family == 2U) {
+    auto definition = catalog.presets[0].definition;
+    definition.family = canvas::ink::BrushFamily::kPencil;
+    return definition;
+  }
+  if (family == 3U) {
+    auto definition = catalog.presets[2].definition;
+    definition.family = canvas::ink::BrushFamily::kChalk;
+    return definition;
+  }
+  if (family == 4U) {
+    auto definition = catalog.presets[1].definition;
+    definition.family = canvas::ink::BrushFamily::kMarker;
+    return definition;
+  }
+  if (family == 5U) {
+    auto definition = catalog.presets[3].definition;
+    definition.family = canvas::ink::BrushFamily::kWaterColorLite;
+    return definition;
   }
   canvas::ink::BrushDefinition definition;
   definition.definitionId = family;
   definition.family = static_cast<canvas::ink::BrushFamily>(family);
-  definition.nominalSize = family == 6 ? 18.0F : 7.0F;
-  definition.opacity = family == 5 ? 0.35F : 0.8F;
-  definition.spacing = family >= 2 && family <= 5 ? 0.2F : 0.08F;
-  if (family >= 2 && family <= 5) {
-    definition.shapeResource = {100U + family};
-    definition.grainResource = {200U + family};
-  }
+  definition.version = 2;
+  definition.nominalSize = family == 6 ? 18.0F : family == 7 ? 7.0F : 6.0F;
+  definition.opacity = family == 6 ? 0.34F : 0.8F;
+  definition.spacing = family == 6 ? 0.18F : 0.08F;
   return definition;
 }
 bool initBrushes(Handle handle) {
   auto& state = brushes()[handle];
   for (std::uint32_t family = 1; family <= 7; ++family) {
     const auto result = canvas::ink::BrushCompiler{}.compile(
-        brushDefinition(state.catalog, family), {.pressure = false, .tilt = false,
+        brushDefinition(state.catalog, family), {.pressure = true, .tilt = true,
           .shapeResource = true, .grainResource = true, .temporalTransient = true});
     if (!result) return false;
     state.programs.emplace(family, result.program);
@@ -167,7 +184,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_sample(std::uint32_t value, std::uint32
   const canvas::ink::BrushInputSample sample{x, y, pressure, 0.0F, 0.0F, sequence};
   const auto result = state.runtime.append({session->second}, std::span<const canvas::ink::BrushInputSample>(&sample, 1));
   if (result && !result.preview.primitives.empty()) {
-    state.primitives[pointer] = result.preview.primitives.back();
+    state.primitives[pointer] = result.preview.primitives;
     state.representation = static_cast<int>(result.preview.primitives.back().representation);
   }
   return result ? 1 : 0;
@@ -182,9 +199,23 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_finish(std::uint32_t value, std::uint32
   if (!result) return 0;
   state.digest = result.commit.digest;
   state.primitiveCount = result.commit.primitives.size();
-  for (const auto& primitive : result.commit.primitives) state.primitives[pointer] = primitive;
+  state.committedPrimitives.insert(state.committedPrimitives.end(),
+                                   result.commit.primitives.begin(),
+                                   result.commit.primitives.end());
+  state.primitives.erase(pointer);
   state.sessions.erase(session);
   return 1;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_cancel(std::uint32_t value, std::uint32_t pointer) {
+  const auto found = brushes().find(value);
+  if (found == brushes().end()) return 0;
+  auto& state = found->second;
+  const auto session = state.sessions.find(pointer);
+  if (session == state.sessions.end()) return 0;
+  const bool cancelled = state.runtime.cancel({session->second});
+  state.sessions.erase(session);
+  state.primitives.erase(pointer);
+  return cancelled ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_render(std::uint32_t value) {
   const auto found = brushes().find(value);
@@ -193,31 +224,47 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_render(std::uint32_t value) {
   auto& state = found->second;
   if (!state.renderer) return 0;
   std::vector<canvas::ink::BrushPrimitive> primitives;
-  primitives.reserve(state.primitives.size());
-  for (const auto& [pointer, primitive] : state.primitives) {
+  primitives = state.committedPrimitives;
+  primitives.reserve(primitives.size() + state.primitives.size());
+  for (const auto& [pointer, preview] : state.primitives) {
     (void)pointer;
-    primitives.push_back(primitive);
+    primitives.insert(primitives.end(), preview.begin(), preview.end());
   }
-  return state.renderer->submitBrushPrimitives(primitives).code ==
+  const auto runtimeViewport = host(value)->viewportGesture();
+  const auto viewport = canvas::render::CanonicalViewportTransform{
+      runtimeViewport.scale * state.renderViewport.scale,
+      runtimeViewport.translationX * state.renderViewport.scale + state.renderViewport.translationX,
+      runtimeViewport.translationY * state.renderViewport.scale + state.renderViewport.translationY};
+  return state.renderer->submitBrushPrimitives(
+      primitives, canvas::render::CanonicalViewportTransform{
+          viewport.scale, viewport.translationX, viewport.translationY}).code ==
       canvas::render::BackendSubmissionCode::kAccepted ? 1 : 0;
 #else
   return 0;
 #endif
 }
+EMSCRIPTEN_KEEPALIVE int axiom_ink_set_render_viewport(
+    std::uint32_t value, float scale, float translationX, float translationY) {
+  const auto found = brushes().find(value);
+  if (found == brushes().end() || !std::isfinite(scale) || scale <= 0.0F ||
+      !std::isfinite(translationX) || !std::isfinite(translationY)) return 0;
+  found->second.renderViewport = {scale, translationX, translationY};
+  return 1;
+}
 EMSCRIPTEN_KEEPALIVE float axiom_ink_brush_size(std::uint32_t value, std::uint32_t pointer) {
   const auto state = brushes().find(value); if (state == brushes().end()) return 6.0F;
   const auto primitive = state->second.primitives.find(pointer);
-  return primitive == state->second.primitives.end() ? 6.0F : primitive->second.size;
+  return primitive == state->second.primitives.end() || primitive->second.empty() ? 6.0F : primitive->second.back().size;
 }
 EMSCRIPTEN_KEEPALIVE float axiom_ink_brush_opacity(std::uint32_t value, std::uint32_t pointer) {
   const auto state = brushes().find(value); if (state == brushes().end()) return 1.0F;
   const auto primitive = state->second.primitives.find(pointer);
-  return primitive == state->second.primitives.end() ? 1.0F : primitive->second.opacity;
+  return primitive == state->second.primitives.end() || primitive->second.empty() ? 1.0F : primitive->second.back().opacity;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_brush_representation(std::uint32_t value, std::uint32_t pointer) {
   const auto state = brushes().find(value); if (state == brushes().end()) return 1;
   const auto primitive = state->second.primitives.find(pointer);
-  return primitive == state->second.primitives.end() ? 1 : static_cast<int>(primitive->second.representation);
+  return primitive == state->second.primitives.end() || primitive->second.empty() ? 1 : static_cast<int>(primitive->second.back().representation);
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_viewport_claimed(std::uint32_t value) {
   return host(value) != nullptr && host(value)->viewportGestureClaimed();
