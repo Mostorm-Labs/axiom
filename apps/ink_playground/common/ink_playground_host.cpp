@@ -14,7 +14,9 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#define AXIOM_ANDROID_DIAG(...) static_cast<void>(0)
+#include <cstdio>
+#include <array>
+#define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
 class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
@@ -804,6 +806,29 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       ? viewport.scale : 1.0F;
   const float centerX = static_cast<float>(surface_.width) * 0.5F;
   const float centerY = static_cast<float>(surface_.height) * 0.5F;
+  // Visibility queries are expressed in world space, while the platform
+  // surface bounds are view-space pixels.  Convert all four view corners
+  // through the inverse camera transform before querying the Scene.  Using
+  // {0,0,width,height} here silently drops strokes whose entire world-space
+  // bounds are outside that screen-space rectangle (the Android "only lines
+  // crossing the centre become canonical" symptom).
+  const auto viewToWorld = [&](float viewX, float viewY) {
+    return foundation::WorldPoint{
+        (viewX - viewport.translationX) / zoom,
+        (viewY - viewport.translationY) / zoom};
+  };
+  const std::array<foundation::WorldPoint, 4> worldCorners{
+      viewToWorld(0.0F, 0.0F), viewToWorld(static_cast<float>(surface_.width), 0.0F),
+      viewToWorld(0.0F, static_cast<float>(surface_.height)),
+      viewToWorld(static_cast<float>(surface_.width), static_cast<float>(surface_.height))};
+  foundation::WorldRect worldViewport{worldCorners[0].x, worldCorners[0].y,
+                                      worldCorners[0].x, worldCorners[0].y};
+  for (std::size_t i = 1; i < worldCorners.size(); ++i) {
+    worldViewport.left = std::min(worldViewport.left, worldCorners[i].x);
+    worldViewport.top = std::min(worldViewport.top, worldCorners[i].y);
+    worldViewport.right = std::max(worldViewport.right, worldCorners[i].x);
+    worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
+  }
   const render::FrameState frame{
       render::ViewId{1},
       render::CameraState{foundation::WorldPoint{
@@ -814,14 +839,15 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       // ReferenceDrawList's clip is a view-space contract in the current
       // renderer authority. Keep it covering the physical target; the
       // camera above carries the actual pinch transform.
-      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
-                            static_cast<float>(surface_.height)},
+      worldViewport,
       render::SurfaceMetrics{static_cast<float>(surface_.width),
                              static_cast<float>(surface_.height), surface_.width,
                              surface_.height, 1.0F, 1.0F},
       semanticGeneration, runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId}};
+      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}};
   if (!sceneCoordinator_->runtimeScene().records().empty()) {
     const auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
     if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }

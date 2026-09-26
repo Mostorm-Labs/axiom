@@ -224,5 +224,22 @@ int main() {
   assert(concurrent.previewActive());
   assert(concurrent.presentCanonicalFrame(1U, 0.0));
   assert(!concurrent.previewActive());
+
+  // A stroke may live entirely outside the physical 0..surfaceWidth range
+  // while still being visible in the camera's world viewport.  Canonical
+  // visibility must use that world-space viewport rather than the legacy
+  // screen-space rectangle; otherwise only strokes crossing the board centre
+  // survive the Scene query.
+  canvas::ink_playground::InkPlaygroundHost worldViewport;
+  assert(worldViewport.bindSurface(256, 256));
+  assert(worldViewport.beginBrushSession(112U, 1U));
+  assert(worldViewport.appendBrushSample(112U, 320.0, 320.0, 0.5, 1U));
+  assert(worldViewport.appendBrushSample(112U, 360.0, 340.0, 0.5, 2U));
+  assert(worldViewport.finishBrushSession(112U));
+  assert(worldViewport.applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kWheelPan,
+      192.0F, 192.0F, 0.0F, 0.0F}));
+  assert(worldViewport.presentCanonicalFrame(1U, 0.0));
+  assert(worldViewport.canonicalFrameCount() == 1U);
   return 0;
 }

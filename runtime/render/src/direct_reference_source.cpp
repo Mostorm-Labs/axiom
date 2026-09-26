@@ -424,7 +424,9 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
         .candidatesExamined = visibility.candidatesExamined,
         .visibleRecords = visibility.visibleRecords,
         .worldToView = worldToView(frame),
-        .viewportClip = frame.worldViewport,
+        .viewportClip = frame.viewportClip.isFiniteAndOrdered()
+                            ? frame.viewportClip
+                            : frame.worldViewport,
         .entries = {},
         .diagnostics = {},
         .canonicalEncodingVersion = ReferenceDrawList::kCanonicalEncodingVersion,

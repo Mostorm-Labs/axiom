@@ -378,9 +378,12 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     if (!(plan.referenceDrawList.frame == plan.frame)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
-    if (plan.referenceDrawList.entries.empty()) {
-        return BackendSubmissionResult::rejected("empty reference draw list");
-    }
+    // An empty visibility result is a valid canonical frame: the scene may be
+    // non-empty while every object is outside the current world viewport.
+    // The renderer still clears the target and presents that frame.  The
+    // headless backend keeps its stricter fixture contract in submit(), while
+    // the shared provider path must not turn an off-screen stroke into a
+    // failed canonical handoff.
     if (!validAffine(plan.referenceDrawList.worldToView) ||
         !validRect(plan.referenceDrawList.viewportClip)) {
         return BackendSubmissionResult::rejected("invalid transform or clip");

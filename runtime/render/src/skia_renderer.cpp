@@ -25,6 +25,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         provider.release();
         return BackendSubmissionResult::rejected("stale Skia surface generation");
     }
+    if (plan.referenceDrawList.entries.empty()) {
+        acquired.frame.surface->getCanvas()->clear(SK_ColorWHITE);
+        provider.release();
+        ++submissions_;
+        ++rasterizations_;
+        return provider.present();
+    }
     const auto result = internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan);
     provider.release();
