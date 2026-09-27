@@ -33,6 +33,10 @@ class WindowsArcRuntimeSinks;
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<arc::Bridge> previewBridge; std::uint64_t previewGeneration = 1;
   std::uint64_t stroke = 0;
+  // GetMessageTime() has millisecond resolution and several mouse messages
+  // can arrive in one tick. BrushSession requires strictly increasing
+  // confirmed sample sequences, so keep an independent process-local clock.
+  std::uint64_t mouseSampleSequence = 0;
   std::uint64_t deviceId = 0;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
   std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
@@ -181,7 +185,12 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
 bool renderCanonical(State& value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   return value.canonicalRenderer != nullptr &&
-         value.host->presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0);
+         // While a mouse/pointer is down, the canonical redraw is only a
+         // backing-surface update. The matching CanonicalVisible handoff must
+         // happen after release, otherwise WM_PAINT clears the live Arc
+         // preview before the user can see it.
+         value.host->presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0,
+                                           value.activeKeys.empty());
 #else
   return false;
 #endif
@@ -211,7 +220,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   const auto y = static_cast<float>(static_cast<short>(HIWORD(lParam)));
   NativePointerSample sample{};
   sample.pointer_id = kMousePointerId;
-  sample.sample_sequence = (timestampMs << 16U) | phase;
+  sample.sample_sequence = ++value.mouseSampleSequence;
   sample.timestamp_us = timestampMs * 1000U;
   sample.x = x;
   sample.y = y;
@@ -343,12 +352,15 @@ void persistEvidence(const State& value) {
   const std::uint64_t readbacks = 0;
   const auto copies = value.cpuCopyCount;
 #endif
+  canvas::ink_playground::BaselineRenderPath renderPath{
+      "WM_POINTER history→PlatformPointerBatch", "C++ InkPlaygroundHost", "Skia raster",
+      "CPU raster buffer→BGRA copy→GDI", submissions, readbacks, copies,
+      value.presentCount, "true"};
+  renderPath.canonicalProviderIdentity = "windows-canonical-raster";
+  renderPath.previewProviderIdentity = "windows-skia-arc-preview";
   baselineFile << canvas::ink_playground::platformBrushBaselineObservationJson(
       "windows", "PHYSICAL", artifactError ? std::string{} : artifact, *value.host,
-      {"WM_POINTER history→PlatformPointerBatch", "C++ InkPlaygroundHost", "Skia raster",
-       "CPU raster buffer→BGRA copy→GDI", submissions, readbacks, copies,
-       value.presentCount, "true", "windows-canonical-raster",
-       "windows-skia-arc-preview", "BrushPreviewDelta.outline"});
+      renderPath);
 }
 
 void paint(HWND window, State& value) {
@@ -363,7 +375,7 @@ void paint(HWND window, State& value) {
   canonicalPresented = renderCanonical(value);
   const auto width = static_cast<std::uint32_t>(rect.right);
   const auto height = static_cast<std::uint32_t>(rect.bottom);
-  (void)value.canonicalProvider->resize(width, height);
+   // Surface dimensions and generations are owned by InkPlaygroundHost::resizeSurface.
   if (value.canonicalBgra.size() != static_cast<std::size_t>(width) * height * 4U) {
     value.canonicalBgra.resize(static_cast<std::size_t>(width) * height * 4U);
   }
@@ -388,6 +400,29 @@ void paint(HWND window, State& value) {
   }
 #endif
   HPEN pen = CreatePen(PS_SOLID, 3, RGB(26, 91, 255)); HGDIOBJ oldPen = SelectObject(bufferDc, pen);
+  // Some Windows compositor configurations accept the layered Arc overlay
+  // update but do not expose it above a redirected top-level window. Keep a
+  // presentation-only Amber fallback in the owner surface, using the same
+  // Runtime preview points. It never enters canonical state or handoff.
+  if (value.host->previewActive()) {
+    const auto preview = value.host->brushPreviewOutline();
+    if (preview.size() >= 2U) {
+      std::vector<POINT> polygon;
+      polygon.reserve(preview.size());
+      for (const auto& point : preview) {
+        polygon.push_back({static_cast<LONG>(point.x), static_cast<LONG>(point.y)});
+      }
+      HBRUSH amber = CreateSolidBrush(RGB(255, 170, 0));
+      HGDIOBJ oldAmber = SelectObject(bufferDc, amber);
+      HPEN outline = CreatePen(PS_SOLID, 1, RGB(255, 170, 0));
+      HGDIOBJ oldOutline = SelectObject(bufferDc, outline);
+      Polygon(bufferDc, polygon.data(), static_cast<int>(polygon.size()));
+      SelectObject(bufferDc, oldOutline);
+      SelectObject(bufferDc, oldAmber);
+      DeleteObject(outline);
+      DeleteObject(amber);
+    }
+  }
   SetBkMode(bufferDc, TRANSPARENT);
   SetTextColor(bufferDc, RGB(30, 30, 30));
   const auto& hud = value.host->hud();
@@ -440,15 +475,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #if defined(CANVAS_RENDER_HAS_SKIA)
     const auto width = static_cast<std::uint32_t>(LOWORD(lParam));
     const auto height = static_cast<std::uint32_t>(HIWORD(lParam));
-    const auto previewResized = value->previewProvider != nullptr &&
-        value->previewProvider->resize(width, height).code ==
-            canvas::render::BackendSubmissionCode::kAccepted;
-    const auto previewBound = previewResized &&
-        value->host->resizePreviewSurface(canvas::render::SurfaceMetrics{
-            static_cast<float>(width), static_cast<float>(height), width, height,
-            1.0F, 1.0F}) == canvas::render::SurfaceProviderDisposition::kCommitted;
-    if (width != 0U && height != 0U && value->host->resizeSurface(width, height) &&
-        previewBound && attachPreviewTarget(*value, width, height)) {
+    if (width != 0U && height != 0U && value->previewProvider != nullptr &&
+        value->host->resizeSurface(width, height) &&
+        attachPreviewTarget(*value, width, height)) {
       InvalidateRect(window, nullptr, FALSE);
     }
 #else
@@ -648,7 +677,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
 #endif
   value.window = CreateWindowExW(0, klass.lpszClassName, L"Axiom Ink Playground", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
-  if (value.window == nullptr) return 1; ShowWindow(value.window, show); UpdateWindow(value.window);
+  if (value.window == nullptr) return 1;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   auto previewProvider = std::make_unique<canvas::ink_playground::WindowsSkiaPreviewSurfaceProvider>(value.window);
   if (previewProvider->resize(1024, 768).code != canvas::render::BackendSubmissionCode::kAccepted) return 1;
@@ -664,6 +693,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   if (!attachPreviewTarget(value, 1024, 768)) return 1;
 #endif
+  ShowWindow(value.window, show);
+  UpdateWindow(value.window);
   MSG message{}; while (GetMessageW(&message, nullptr, 0, 0) > 0) { TranslateMessage(&message); DispatchMessageW(&message); }
   return static_cast<int>(message.wParam);
 }

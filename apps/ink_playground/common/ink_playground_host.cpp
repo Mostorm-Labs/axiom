@@ -940,6 +940,11 @@ std::vector<ink::StrokePoint> InkPlaygroundHost::previewPoints() const {
   return preview_->snapshot().confirmed;
 }
 
+std::vector<ink::reference::StrokeOutlinePoint> InkPlaygroundHost::brushPreviewOutline() const {
+  if (brushPreviews_.empty()) return {};
+  return brushPreviews_.begin()->second;
+}
+
 std::vector<ink::StrokePoint> InkPlaygroundHost::transientPreviewPoints() const {
   return preview_->snapshot().confirmed;
 }

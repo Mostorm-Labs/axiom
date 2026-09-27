@@ -215,6 +215,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] const SurfaceBinding& surface() const noexcept { return surface_; }
   [[nodiscard]] std::vector<ink::StrokePoint> previewPoints() const;
+  // Current render-ready outline produced by the active BrushSession. This is
+  // presentation data only; it never mutates canonical state.
+  [[nodiscard]] std::vector<ink::reference::StrokeOutlinePoint> brushPreviewOutline() const;
   [[nodiscard]] std::vector<ink::StrokePoint> transientPreviewPoints() const;
   [[nodiscard]] std::vector<std::vector<ink::StrokePoint>> previewStrokes() const;
   void setRuntimePreviewVisible(bool visible) noexcept { runtimePreviewVisible_ = visible; }

@@ -114,7 +114,8 @@ WindowsSkiaPreviewSurfaceProvider::present() noexcept {
     return canvas::render::BackendSubmissionResult::rejected(
         "Windows preview overlay is unavailable");
   }
-  if (raster_.readbackRgba(rgba_).code != canvas::render::BackendSubmissionCode::kAccepted) {
+  const auto readback = raster_.readbackRgba(rgba_);
+  if (readback.code != canvas::render::BackendSubmissionCode::kAccepted) {
     return canvas::render::BackendSubmissionResult::rejected(
         "Windows preview readback failed");
   }
@@ -146,7 +147,17 @@ WindowsSkiaPreviewSurfaceProvider::present() noexcept {
   const auto updated = UpdateLayeredWindow(overlay_, screen, &origin, &size, memoryDc_,
                                            nullptr, 0, &blend, ULW_ALPHA);
   ReleaseDC(nullptr, screen);
-  if (!updated) return canvas::render::BackendSubmissionResult::rejected("UpdateLayeredWindow failed");
+  if (!updated) {
+    return canvas::render::BackendSubmissionResult::rejected("UpdateLayeredWindow failed");
+  }
+  // The preview is an owned, independent overlay. Reassert its z-order after
+  // every present because the owner HWND is repainted/activated frequently
+  // during mouse input; otherwise the layered window can remain behind the
+  // canonical surface even though its pixels were submitted successfully.
+  SetWindowPos(overlay_, HWND_TOPMOST, origin.x, origin.y,
+               static_cast<int>(width_), static_cast<int>(height_),
+               SWP_NOACTIVATE | SWP_SHOWWINDOW);
+  ShowWindow(overlay_, SW_SHOWNOACTIVATE);
   return canvas::render::BackendSubmissionResult::accepted();
 }
 
@@ -173,10 +184,10 @@ bool WindowsSkiaPreviewSurfaceProvider::ensureOverlay() noexcept {
   if (owner_ == nullptr) return false;
   const auto instance = reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(owner_, GWLP_HINSTANCE));
   if (!registerOverlayClass(instance)) return false;
-  overlay_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW,
+  overlay_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_NOACTIVATE | WS_EX_TOPMOST,
                              kOverlayClass, L"Axiom ARC Preview", WS_POPUP,
                              0, 0, static_cast<int>(width_), static_cast<int>(height_),
-                             owner_, nullptr, instance, nullptr);
+                             nullptr, nullptr, instance, nullptr);
   if (overlay_ == nullptr) return false;
   const auto screen = GetDC(nullptr);
   memoryDc_ = CreateCompatibleDC(screen);
