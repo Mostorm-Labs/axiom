@@ -94,6 +94,7 @@ endif()
 if(WIN32 AND TARGET arc_Windows)
   add_executable(axiom_ink_playground_windows WIN32
     platform/windows/main.cpp
+    platform/windows/windows_skia_preview_surface_provider.cpp
     platform/windows/windows_smoke_evidence.cpp)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
       axiom_ink_playground_common Arc::Windows)

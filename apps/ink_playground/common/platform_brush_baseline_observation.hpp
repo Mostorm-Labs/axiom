@@ -25,6 +25,9 @@ struct BaselineRenderPath final {
   bool previewDirty = false;
   std::uint64_t previewSubmissionCount = 0;
   std::uint64_t previewPresentCount = 0;
+  std::string_view canonicalProviderIdentity = "unknown";
+  std::string_view previewProviderIdentity = "unknown";
+  std::string_view previewGeometrySource = "BrushPreviewDelta.outline";
 };
 
 inline constexpr std::string_view kPlatformBrushBaselineFixtureDigest =

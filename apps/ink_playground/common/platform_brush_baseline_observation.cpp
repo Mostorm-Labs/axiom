@@ -210,7 +210,10 @@ std::string platformBrushBaselineObservationJson(
       << observed.previewSubmittedRevision << ",\"preview_dirty\":"
       << (observed.previewDirty ? "true" : "false") << ",\"preview_submission_count\":"
       << observed.previewSubmissionCount << ",\"preview_present_count\":"
-      << observed.previewPresentCount << ",\"geometry_source\":\"BrushPreviewDelta.outline\","
+      << observed.previewPresentCount << ",\"canonical_provider\":\""
+      << escape(observed.canonicalProviderIdentity) << "\",\"preview_provider\":\""
+      << escape(observed.previewProviderIdentity) << "\",\"geometry_source\":\""
+      << escape(observed.previewGeometrySource) << "\","
       << "\"preview_style\":{\"color\":[1.0,0.85,0.0,0.55],\"blend\":\"src_over\"},\"resize_events\":"
       << host.resizeEventCount() << ",\"surface_lost_events\":" << host.surfaceLostCount()
       << ",\"rebind_events\":" << host.rebindEventCount() << "},\n"

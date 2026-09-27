@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "source_branch": "codex/g4-5-common-brush-processing",
+  "source_revision": "0aaf52668776e4fb8e2fa6d310a717c836012416",
+  "implementation_branch": "codex/g4-5-common-windows-skia-preview",
+  "scope": "Windows preview only; common Runtime/BrushPackage/Scene/Skia pipeline preserved",
+  "geometry_source": "BrushPreviewDelta.outline",
+  "renderer": "SkiaRenderer",
+  "canonical_surface": "independent provider",
+  "preview_surface": "WindowsSkiaPreviewSurfaceProvider",
+  "arc_role": "typed lifecycle and canonical handoff only",
+  "classification": "READY_FOR_CONTROL_REVIEW",
+  "platform_evidence": "BLOCKED_EVIDENCE",
+  "blockers": [
+    "No Windows toolchain/device is available on this macOS host",
+    "Existing common-baseline tests contain unrelated -Werror unused-variable failures"
+  ]
+}
