@@ -94,3 +94,14 @@ def test_windows_touch_trace_registers_pointer_key_before_history_trace():
     history_loop = source.index("for (std::size_t index = 0; index < samples.size(); ++index)")
     registration = source.index("value->activeKeys[pointerId] = *key")
     assert registration < history_loop
+
+
+def test_windows_amber_fallback_applies_runtime_viewport_transform():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    fallback = source.split("presentation-only Amber fallback", 1)[1].split(
+        "SetBkMode", 1
+    )[0]
+    assert "previewViewport()" in fallback
+    assert ".scale" in fallback
+    assert ".translationX" in fallback
+    assert ".translationY" in fallback

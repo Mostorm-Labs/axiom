@@ -15,6 +15,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -403,14 +404,19 @@ void paint(HWND window, State& value) {
   // Some Windows compositor configurations accept the layered Arc overlay
   // update but do not expose it above a redirected top-level window. Keep a
   // presentation-only Amber fallback in the owner surface, using the same
-  // Runtime preview points. It never enters canonical state or handoff.
+  // Runtime preview outline and viewport transform as the Skia overlay.
+  // It never enters canonical state or handoff.
   if (value.host->previewActive()) {
     const auto preview = value.host->brushPreviewOutline();
     if (preview.size() >= 2U) {
+      const auto viewport = value.host->previewViewport();
       std::vector<POINT> polygon;
       polygon.reserve(preview.size());
       for (const auto& point : preview) {
-        polygon.push_back({static_cast<LONG>(point.x), static_cast<LONG>(point.y)});
+        polygon.push_back({static_cast<LONG>(std::lround(
+                                point.x * viewport.scale + viewport.translationX)),
+                           static_cast<LONG>(std::lround(
+                                point.y * viewport.scale + viewport.translationY))});
       }
       HBRUSH amber = CreateSolidBrush(RGB(255, 170, 0));
       HGDIOBJ oldAmber = SelectObject(bufferDc, amber);
