@@ -8,21 +8,27 @@
          background: white; touch-action: none; border: 1px solid #c5cad6; }
   #arcPreview { pointer-events: none; background: transparent; border: 0; }
   #brushBar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px; background: #f7f8fb; }
-  #brushSelector { min-width: 180px; padding: 6px; font-size: 14px; }
+  #toolPalette { display: flex; gap: 6px; flex-wrap: wrap; }
+  #toolPalette button { padding: 6px 10px; border: 1px solid #b8c0d0; background: white; border-radius: 4px; cursor: pointer; }
+  #toolPalette button.active { color: white; background: #4058a8; border-color: #4058a8; }
   #hud { padding: 8px; color: #25304a; }
   #evidence { margin: 0 8px 8px; padding: 8px 12px; }
 </style>
-<div id="brushBar"><label for="brushSelector">笔刷：</label><select id="brushSelector">
-  <option value="1">vector-solid-v1</option>
-</select><span id="brushDescription">选择后再画下一笔</span></div>
+<div id="brushBar"><span>工具：</span><div id="toolPalette" role="toolbar" aria-label="笔刷和橡皮擦">
+  <button type="button" data-tool="brush" data-profile="vector-solid-v1" data-family="1">vector-solid-v1</button>
+  <button type="button" data-tool="brush" data-profile="marker-flat-v1" data-family="2">marker-flat-v1</button>
+  <button type="button" data-tool="brush" data-profile="chalk-grain-v1" data-family="3">chalk-grain-v1</button>
+  <button type="button" data-tool="object-eraser">Object Eraser</button>
+  <button type="button" data-tool="partial-eraser">Partial Eraser</button>
+</div><span id="brushDescription">vector-solid-v1</span></div>
 <div id="surfaceStack"><canvas id="ink" width="1024" height="768"></canvas><canvas id="arcPreview" width="1024" height="768"></canvas></div>
 <pre id="hud">loading</pre>
 <button id="evidence" type="button" disabled>导出 Web 证据</button>
 <script type="module">
   const canvas = document.getElementById("ink");
   const previewCanvas = document.getElementById("arcPreview");
-  const brushSelector = document.getElementById("brushSelector");
   const brushDescription = document.getElementById("brushDescription");
+  const toolPalette = document.getElementById("toolPalette");
   const hud = document.getElementById("hud");
   const evidenceButton = document.getElementById("evidence");
   addEventListener("error", event => { hud.textContent = `Ink Playground error: ${event.message}`; });
@@ -78,12 +84,39 @@
   let lastBatch = 0;
   let latestEvidence = null;
   let selectedBrushFamily = 1;
-  const brushFamilyName = () => "vector-solid-v1";
-  brushSelector.innerHTML = '<option value="1">vector-solid-v1</option>';
-  brushSelector.addEventListener("change", () => {
-    selectedBrushFamily = 1;
-    brushDescription.textContent = "vector-solid-v1";
+  let activeTool = "brush";
+  let activeProfile = "vector-solid-v1";
+  const brushFamilyName = () => activeProfile;
+  const brushProfileName = () => activeProfile;
+  const setToolSelection = button => {
+    const nextTool = button.dataset.tool;
+    const nextProfile = button.dataset.profile || activeProfile;
+    const nextFamily = Number(button.dataset.family || selectedBrushFamily);
+    if (nextTool === "brush") {
+      const profilePtr = module.stringToNewUTF8(nextProfile);
+      if (!module._axiom_ink_select_brush_profile(host, profilePtr, 1)) {
+        module._free(profilePtr); return false;
+      }
+      module._free(profilePtr);
+      selectedBrushFamily = nextFamily;
+      activeProfile = nextProfile;
+    }
+    const mode = nextTool === "object-eraser" ? 1 : nextTool === "partial-eraser" ? 2 : 0;
+    if (!module._axiom_ink_select_tool(host, mode)) return false;
+    activeTool = nextTool;
+    brushDescription.textContent = button.textContent;
+    for (const candidate of toolPalette.querySelectorAll("button")) {
+      candidate.classList.toggle("active", candidate === button);
+      candidate.setAttribute("aria-pressed", candidate === button ? "true" : "false");
+    }
     requestRender();
+    return true;
+  };
+  const initialButton = toolPalette.querySelector('[data-profile="vector-solid-v1"]');
+  if (!setToolSelection(initialButton)) throw new Error("initial tool selection failed");
+  toolPalette.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (button) setToolSelection(button);
   });
   const nowNs = () => Math.round(performance.now() * 1000000);
   const canvasPoint = sample => {
@@ -97,7 +130,7 @@
       y: (physicalY - runtimeTranslationY) / runtimeScale
     };
   };
-  const render = () => {
+  function render() {
     renderPending = false;
     // Keep the two surfaces independently dirty-gated. A frame tick may
     // submit the retained amber preview without clearing/repainting canonical.
@@ -111,13 +144,14 @@
       viewportTranslationX: viewportTranslationX().toFixed(2),
       viewportTranslationY: viewportTranslationY().toFixed(2),
       surface: "skia-webgl2"
+      ,brushProfile: brushProfileName(), tool: activeTool
     });
-  };
-  const requestRender = () => {
+  }
+  function requestRender() {
     if (renderPending) return;
     renderPending = true;
     requestAnimationFrame(render);
-  };
+  }
   const snapshotEvidence = () => ({
     version: ++evidenceVersion,
     width: canvas.width,
@@ -180,7 +214,9 @@
   const send = (event, phase) => {
     const coalesced = event.getCoalescedEvents ? event.getCoalescedEvents() : [];
     const list = coalesced.length === 0 ? [event] : coalesced;
-    if (phase === "down") started.add(event.pointerId);
+    if (phase === "down") {
+      started.add(event.pointerId);
+    }
     if (!started.has(event.pointerId)) return;
     list.forEach(sample => {
       const point = canvasPoint(sample);

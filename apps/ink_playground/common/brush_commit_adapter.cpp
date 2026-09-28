@@ -27,7 +27,8 @@ semantic::BrushExecutionSnapshot snapshot(const ink::BrushCommitIntent& intent,
   value.package_revision = package.revision;
   value.pipeline_version = 1U;
   value.defaults_version = 1U;
-  value.profile_id = 1U;
+  value.profile_id = package.profileId == "vector-solid-v1" ? 1U
+      : package.profileId == "marker-flat-v1" ? 2U : 3U;
   value.signal_schema_version = 1U;
   value.package_id = identity(package.packageId);
   value.vector.size = package.vector.size;
@@ -46,6 +47,13 @@ semantic::BrushExecutionSnapshot snapshot(const ink::BrushCommitIntent& intent,
   value.paint.blend = 1U;
   value.paint.color_space = 1U;
   value.seed = intent.seed;
+  value.material_mode = static_cast<std::uint32_t>(package.material);
+  value.marker_head_angle = package.marker.headAngle;
+  value.marker_head_width = package.marker.headWidth;
+  if (package.material == ink::BrushMaterialMode::kChalkGrain) {
+    value.resources.push_back({identity(package.grain.resourceId), package.grain.resourceSha256,
+                               1U, package.grain.resourceVersion, 0U, 1U, 1U, 1U});
+  }
   value.stages = {
       {1U, static_cast<std::uint32_t>(package.inputMode), 1U, 1U, package.inputMode != ink::BrushStageMode::kOff},
       {2U, static_cast<std::uint32_t>(package.vectorMode), 2U, 1U, package.vectorMode != ink::BrushStageMode::kOff},

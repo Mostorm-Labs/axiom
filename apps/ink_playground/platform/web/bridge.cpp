@@ -79,6 +79,28 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
   return submitPlatformBatch(value, source, pointer, sequence, timestampNs, x, y,
                              pressure, phase, family, contentX, contentY);
 }
+EMSCRIPTEN_KEEPALIVE int axiom_ink_select_brush_profile(
+    std::uint32_t value, const char* profile, std::uint32_t revision) {
+  return host(value) != nullptr && profile != nullptr &&
+         host(value)->selectBrushProfile(profile, revision) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_select_tool(std::uint32_t value, int tool) {
+  if (host(value) == nullptr || tool < 0 || tool > 2) return 0;
+  return host(value)->selectTool(static_cast<Host::ToolMode>(tool)) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_begin(std::uint32_t value, std::uint32_t pointer) {
+  return host(value) != nullptr && host(value)->eraserBegin(pointer) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_sample(std::uint32_t value, std::uint32_t pointer,
+                                                  float x, float y) {
+  return host(value) != nullptr && host(value)->eraserSample(pointer, x, y) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_finish(std::uint32_t value, std::uint32_t pointer) {
+  return host(value) != nullptr && host(value)->eraserFinish(pointer) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_cancel(std::uint32_t value, std::uint32_t pointer) {
+  return host(value) != nullptr && host(value)->eraserCancel(pointer) ? 1 : 0;
+}
 EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_ink_create() {
   static Handle nextHandle = 1U;
   while (nextHandle == 0U || hosts().contains(nextHandle)) ++nextHandle;

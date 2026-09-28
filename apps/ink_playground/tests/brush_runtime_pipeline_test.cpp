@@ -3,7 +3,139 @@
 #include <cassert>
 #include <vector>
 
+void partialEraserCommitsRendererNeutralMask() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(77U, 1U));
+  assert(host.appendBrushSample(77U, 24.0, 64.0, 0.5, 1U));
+  assert(host.appendBrushSample(77U, 48.0, 64.0, 0.5, 2U));
+  assert(host.appendBrushSample(77U, 80.0, 64.0, 0.5, 3U));
+  assert(host.appendBrushSample(77U, 104.0, 64.0, 0.5, 4U));
+  assert(host.finishBrushSession(77U));
+  assert(host.semanticObjectCount() == 1U);
+  const auto beforeGeneration = host.semanticGeneration().value();
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(88U));
+  assert(host.eraserSample(88U, 64.0, 64.0));
+  assert(host.eraserFinish(88U));
+
+  // Partial erase retains the source stroke and commits a renderer-neutral
+  // mask.  The runtime must not manufacture closed polygon fragments from
+  // an outline vertex subset; doing so creates phantom arcs/triangles.
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.semanticGeneration().value() > beforeGeneration);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  std::vector<std::uint8_t> pixels(256U * 256U * 4U);
+  assert(host.activeSurfaceProvider()->readbackRgba(pixels).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  const auto center = static_cast<std::size_t>((64U * 256U + 64U) * 4U);
+  assert(pixels[center + 3U] == 0U);
+  const auto far = static_cast<std::size_t>((24U * 256U + 24U) * 4U);
+  assert(pixels[far + 3U] != 0U);
+}
+
+void partialEraserAllowsTraceToEnterStroke() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(177U, 1U));
+  assert(host.appendBrushSample(177U, 24.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(177U, 104.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(177U));
+  const auto beforeGeneration = host.semanticGeneration().value();
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(188U));
+  assert(host.eraserSample(188U, -100.0, 96.0));
+  assert(host.eraserSample(188U, 64.0, 96.0));
+  assert(host.eraserFinish(188U));
+  assert(host.semanticGeneration().value() > beforeGeneration);
+  assert(host.semanticObjectCount() == 1U);
+}
+
+void partialEraserWorksForAllBrushPackages() {
+  const char* profiles[] = {"vector-solid-v1", "marker-flat-v1", "chalk-grain-v1"};
+  for (const auto* profile : profiles) {
+    canvas::ink_playground::InkPlaygroundHost host;
+    assert(host.bindSurface(256, 256));
+    assert(host.selectBrushProfile(profile, 1U));
+    assert(host.beginBrushSession(277U, profile == std::string_view("vector-solid-v1") ? 1U
+        : profile == std::string_view("marker-flat-v1") ? 2U : 3U));
+    assert(host.appendBrushSample(277U, 24.0, 128.0, 0.5, 1U));
+    assert(host.appendBrushSample(277U, 104.0, 128.0, 0.5, 2U));
+    assert(host.finishBrushSession(277U));
+    const auto before = host.semanticGeneration().value();
+    assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
+    assert(host.eraserBegin(288U));
+    assert(host.eraserSample(288U, 64.0, 128.0));
+    assert(host.eraserFinish(288U));
+    assert(host.semanticGeneration().value() > before);
+    assert(host.semanticObjectCount() == 1U);
+  }
+}
+
+void objectEraserClearsCanonicalSurfaceImmediately() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(377U, 1U));
+  assert(host.appendBrushSample(377U, 64.0, 64.0, 0.5, 1U));
+  assert(host.appendBrushSample(377U, 128.0, 64.0, 0.5, 2U));
+  assert(host.finishBrushSession(377U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  const auto beforeEraseFrame = host.canonicalFrameCount();
+  assert(host.semanticObjectCount() == 1U);
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kObjectEraser));
+  assert(host.eraserBegin(378U));
+  assert(host.eraserSample(378U, 96.0, 64.0));
+  assert(host.eraserFinish(378U));
+  assert(host.semanticObjectCount() == 0U);
+  assert(host.canonicalFrameCount() == beforeEraseFrame + 1U);
+
+  std::vector<std::uint8_t> pixels(256U * 256U * 4U);
+  assert(host.activeSurfaceProvider()->readbackRgba(pixels).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  const auto center = static_cast<std::size_t>((64U * 256U + 96U) * 4U);
+  assert(pixels[center + 0U] == 255U);
+  assert(pixels[center + 1U] == 255U);
+  assert(pixels[center + 2U] == 255U);
+}
+
+void partialEraserPublishesRealtimePreview() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(387U, 1U));
+  assert(host.appendBrushSample(387U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(387U, 160.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(387U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
+  const auto beforePreview = host.previewSubmissionCount();
+  assert(host.eraserBegin(388U));
+  assert(host.eraserSample(388U, 64.0, 96.0));
+  assert(host.previewActive());
+  assert(host.previewSubmissionCount() > beforePreview);
+  std::vector<std::uint8_t> previewPixels(256U * 256U * 4U);
+  assert(host.previewSurfaceProvider()->readbackRgba(previewPixels).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  const auto previewCenter = static_cast<std::size_t>((96U * 256U + 64U) * 4U);
+  // Partial erase shows the growing final effect on the independent overlay:
+  // the swept region is opaque canvas background rather than amber tool ink.
+  assert(previewPixels[previewCenter + 0U] == 255U);
+  assert(previewPixels[previewCenter + 1U] == 255U);
+  assert(previewPixels[previewCenter + 2U] == 255U);
+  assert(previewPixels[previewCenter + 3U] == 255U);
+  assert(host.eraserCancel(388U));
+  assert(!host.previewActive());
+}
+
 int main() {
+  partialEraserCommitsRendererNeutralMask();
+  partialEraserAllowsTraceToEnterStroke();
+  partialEraserWorksForAllBrushPackages();
+  objectEraserClearsCanonicalSurfaceImmediately();
+  partialEraserPublishesRealtimePreview();
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256, 256));
   assert(host.beginBrushSession(7, 1U));

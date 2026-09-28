@@ -25,6 +25,12 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         provider.release();
         return BackendSubmissionResult::rejected("stale Skia surface generation");
     }
+    if (plan.referenceDrawList.frame.surfaceGeneration != plan.frame.surfaceGeneration ||
+        plan.referenceDrawList.frame.frameId != plan.frame.frameId ||
+        plan.referenceDrawList.frame.sceneGeneration != plan.frame.sceneGeneration) {
+        provider.release();
+        return BackendSubmissionResult::rejected("inconsistent FramePlan identity");
+    }
     if (plan.referenceDrawList.entries.empty()) {
         acquired.frame.surface->getCanvas()->clear(SK_ColorWHITE);
         provider.release();

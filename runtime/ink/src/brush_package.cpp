@@ -54,6 +54,13 @@ std::string canonical(const BrushPackage& value) {
       << static_cast<unsigned>(value.inputMode) << '|'
       << static_cast<unsigned>(value.vectorMode) << '|'
       << static_cast<unsigned>(value.renderingMode);
+  if (value.profileId != "vector-solid-v1") {
+    out << '|' << static_cast<unsigned>(value.material) << '|'
+        << value.marker.headAngle << '|' << value.marker.headWidth << '|'
+        << value.grain.resourceId << '|' << value.grain.resourceSha256 << '|'
+        << value.grain.resourceVersion << '|' << value.grain.density << '|'
+        << value.grain.spacing << '|' << value.grain.opacity;
+  }
   return out.str();
 }
 
@@ -99,27 +106,68 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
         manifest.value("schemaVersion", 0) != 1 ||
         pipeline.value("pipelineVersion", 0) != 1 ||
         pipeline.value("defaultsVersion", 0) != 1 ||
-        pipeline.value("profile", std::string()) != "vector-solid-v1") {
+        (pipeline.value("profile", std::string()) != "vector-solid-v1" &&
+         pipeline.value("profile", std::string()) != "marker-flat-v1" &&
+         pipeline.value("profile", std::string()) != "chalk-grain-v1")) {
       result.error = "unsupported_version";
       return result;
     }
     result.package.packageId = manifest.at("packageId").get<std::string>();
     result.package.profileId = pipeline.value("profile", std::string());
     result.package.revision = manifest.at("revision").get<std::uint32_t>();
-    if (result.package.profileId != "vector-solid-v1" ||
+    if ((result.package.profileId != "vector-solid-v1" &&
+         result.package.profileId != "marker-flat-v1" &&
+         result.package.profileId != "chalk-grain-v1") ||
         !validId(result.package.packageId) || result.package.revision == 0 ||
-        !manifest.value("resources", Json::array()).empty()) {
+        (result.package.profileId != "chalk-grain-v1" &&
+         !manifest.value("resources", Json::array()).empty())) {
       result.error = "invalid_manifest";
       return result;
     }
     const auto stages = pipeline.value("stages", Json::object());
+    if (result.package.profileId == "marker-flat-v1") result.package.material = BrushMaterialMode::kMarkerFlat;
+    if (result.package.profileId == "chalk-grain-v1") result.package.material = BrushMaterialMode::kChalkGrain;
     result.package.inputMode = parseMode(stages, "input", BrushStageMode::kOn);
     result.package.vectorMode = parseMode(stages, "vector", BrushStageMode::kOn);
     result.package.renderingMode = parseMode(stages, "rendering", BrushStageMode::kOn);
-    for (const char* name : {"taper", "shape", "grain", "wetMix"}) {
+    for (const char* name : {"taper", "shape", "wetMix"}) {
       const auto mode = parseMode(stages, name, BrushStageMode::kOff);
-      if (mode == BrushStageMode::kOn) {
+      if (mode == BrushStageMode::kOn &&
+          !(result.package.profileId == "marker-flat-v1" && std::string_view(name) == "shape")) {
         result.error = "unsupported_stage";
+        return result;
+      }
+    }
+    const auto marker = pipeline.value("marker", Json::object());
+    result.package.marker.headAngle = marker.value("headAngle", 0.0);
+    result.package.marker.headWidth = marker.value("headWidth", 1.0);
+    if (result.package.profileId == "marker-flat-v1" &&
+        (!finite(result.package.marker.headAngle) || !finite(result.package.marker.headWidth) ||
+         result.package.marker.headWidth <= 0.0)) {
+      result.error = "invalid_marker";
+      return result;
+    }
+    if (result.package.profileId == "chalk-grain-v1") {
+      const auto grain = pipeline.value("grain", Json::object());
+      result.package.grain.resourceId = grain.value("resourceId", std::string());
+      result.package.grain.resourceSha256 = grain.value("sha256", std::string());
+      result.package.grain.resourceVersion = grain.value("version", 0U);
+      result.package.grain.density = grain.value("density", 0.0);
+      result.package.grain.spacing = grain.value("spacing", 0.0);
+      result.package.grain.opacity = grain.value("opacity", 1.0);
+      if (result.package.grain.resourceId.empty() || result.package.grain.resourceSha256.size() != 64 ||
+          result.package.grain.resourceVersion == 0 || !finite(result.package.grain.density) ||
+          result.package.grain.density <= 0.0 || !finite(result.package.grain.spacing) ||
+          result.package.grain.spacing <= 0.0 || !validUnit(result.package.grain.opacity)) {
+        result.error = "invalid_grain_resource";
+        return result;
+      }
+      const auto resources = manifest.value("resources", Json::array());
+      if (resources.size() != 1U || !resources.front().is_object() ||
+          resources.front().value("id", std::string()) != result.package.grain.resourceId ||
+          resources.front().value("sha256", std::string()) != result.package.grain.resourceSha256 ||
+          resources.front().value("version", 0U) != result.package.grain.resourceVersion) {
+        result.error = "grain_resource_mismatch";
         return result;
       }
     }

@@ -32,6 +32,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <optional>
 #include <unordered_map>
@@ -92,6 +93,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                 public interaction::OperationSubmitPort,
                                 public interaction::TransientPresentationPort {
   public:
+  enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   InkPlaygroundHost();
 
   [[nodiscard]] bool beginStroke(std::uint64_t strokeId) noexcept;
@@ -118,6 +120,17 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   // and present output, but it cannot own BrushRuntime/BrushDefinition state.
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        std::uint32_t profile = 1U) noexcept;
+  [[nodiscard]] bool selectTool(ToolMode mode) noexcept;
+  [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
+                                        std::uint32_t revision = 1U) noexcept;
+  [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
+  [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y) noexcept;
+  [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
+  [[nodiscard]] bool eraserCancel(std::uint64_t pointerId) noexcept;
+  [[nodiscard]] ToolMode toolMode() const noexcept { return toolMode_; }
+  [[nodiscard]] const std::string& selectedBrushProfile() const noexcept {
+    return selectedBrushProfile_;
+  }
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        const ink::BrushPackage& package,
                                        std::uint64_t seed) noexcept;
@@ -270,6 +283,10 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, ink::BrushPackage> brushSessionPackages_;
   std::unordered_map<std::uint64_t, std::uint64_t> brushSessionSeeds_;
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
+  ToolMode toolMode_ = ToolMode::kBrush;
+  std::string selectedBrushProfile_ = "vector-solid-v1";
+  std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
+  std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
   std::vector<render::BrushRenderPoint> committedBrushPoints_;
   std::uint64_t brushDigest_ = 0;
   std::uint64_t brushResolvedStateDigest_ = 0;

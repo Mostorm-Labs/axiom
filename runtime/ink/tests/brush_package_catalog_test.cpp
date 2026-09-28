@@ -13,6 +13,14 @@ int main() {
   assert(loaded.package.vector.missingPressure == canvas::ink::BrushMissingPressure::kReject);
   assert(!loaded.canonical.empty());
   assert(!catalog.loadDefault("vector-solid-v1", 2));
+  const auto marker = catalog.loadDefault("marker-flat-v1", 1);
+  assert(marker);
+  assert(marker.package.profileId == "marker-flat-v1");
+  const auto chalk = catalog.loadDefault("chalk-grain-v1", 1);
+  assert(chalk);
+  assert(chalk.package.profileId == "chalk-grain-v1");
+  assert(marker.canonicalDigest != chalk.canonicalDigest);
+  assert(marker.canonicalDigest != loaded.canonicalDigest);
   assert(!catalog.loadDefault("other", 1));
   return 0;
 }

@@ -16,6 +16,7 @@
 #include <functional>
 #include <cstdio>
 #include <array>
+#include <unordered_set>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
@@ -263,7 +264,14 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       continue;
     }
     if (sample.phase == input::PointerPhase::kDown && routing.routesToInk) {
-      if (!beginBrushSession(sample.key.pointer, 1U)) { AXIOM_ANDROID_DIAG("begin failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
+      if (toolMode_ != ToolMode::kBrush) {
+        if (!eraserBegin(sample.key.pointer)) return false;
+        // Let the down sample publish the initial eraser footprint below.
+      } else {
+        const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
+            : selectedBrushProfile_ == "marker-flat-v1" ? 2U : 3U;
+        if (!beginBrushSession(sample.key.pointer, profile)) { AXIOM_ANDROID_DIAG("begin failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
+      }
     }
     if (sample.phase == input::PointerPhase::kDown) {
       baselineDownTimestamps_[sample.key] = sample.timestampNs;
@@ -294,18 +302,24 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
                                  viewportController_->state().scale,
                                  viewportController_->state().translationX,
                                  viewportController_->state().translationY});
-    if (routing.routesToInk && sample.phase != input::PointerPhase::kCancel) {
+    if (routing.routesToInk && toolMode_ == ToolMode::kBrush && sample.phase != input::PointerPhase::kCancel) {
       if (!appendBrushSample(sample.key.pointer, routing.routedSample.x,
                              routing.routedSample.y, sample.pressure,
                              sample.sequence, sample.predicted, false)) { AXIOM_ANDROID_DIAG("append failed pointer=%llu seq=%llu phase=%d", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence), static_cast<int>(sample.phase)); return false; }
       previewDirty = true;
     }
+    if (routing.routesToInk && toolMode_ != ToolMode::kBrush &&
+        sample.phase != input::PointerPhase::kCancel) {
+      if (!eraserSample(sample.key.pointer, routing.routedSample.x, routing.routedSample.y)) return false;
+    }
     if (sample.phase == input::PointerPhase::kUp) {
       if (brushSessions_.contains(sample.key.pointer) &&
           !finishBrushSession(sample.key.pointer)) { AXIOM_ANDROID_DIAG("finish failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
+      if (eraserTraces_.contains(sample.key.pointer) && !eraserFinish(sample.key.pointer)) return false;
       baselineDownTimestamps_.erase(sample.key);
     } else if (sample.phase == input::PointerPhase::kCancel) {
       (void)cancelBrushSession(sample.key.pointer);
+      (void)eraserCancel(sample.key.pointer);
       baselineDownTimestamps_.erase(sample.key);
     }
   }
@@ -375,12 +389,16 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
   brushSessionSeeds_.clear();
   brushPreviews_.clear();
   pendingCanonicalIdentities_.clear();
+  eraserTraces_.clear();
+  eraserPreviewRevisions_.clear();
 }
 
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           std::uint32_t profile) noexcept {
-  if (profile != 1U) return false;
-  const auto loaded = brushCatalog_.loadDefault("vector-solid-v1", 1U);
+  const auto profileId = profile == 1U ? "vector-solid-v1"
+      : profile == 2U ? "marker-flat-v1" : profile == 3U ? "chalk-grain-v1" : "";
+  if (*profileId == '\0') return false;
+  const auto loaded = brushCatalog_.loadDefault(profileId, 1U);
   if (!loaded) return false;
   return beginBrushSession(pointerId, loaded.package, 0x4500ULL + pointerId);
 }
@@ -388,7 +406,9 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           const ink::BrushPackage& package,
                                           std::uint64_t seed) noexcept {
-  if (pointerId == 0U || package.profileId != "vector-solid-v1" ||
+  if (pointerId == 0U ||
+      (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
+       package.profileId != "chalk-grain-v1") ||
       package.packageId.empty() ||
       brushSessions_.contains(pointerId)) return false;
   auto state = ink::resolveBrushState(package, seed);
@@ -424,6 +444,209 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
     return false;
   }
   return true;
+}
+
+bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
+  if (!brushSessions_.empty()) return false;
+  toolMode_ = mode;
+  return true;
+}
+
+bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
+                                           std::uint32_t revision) noexcept {
+  if (!brushSessions_.empty() || revision != 1U) return false;
+  const auto loaded = brushCatalog_.loadDefault(profileId, revision);
+  if (!loaded) return false;
+  selectedBrushProfile_ = std::string(profileId);
+  return true;
+}
+
+bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
+  if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
+  eraserTraces_[pointerId] = {};
+  eraserPreviewRevisions_[pointerId] = 0U;
+  if (previewController_ == nullptr || previewProvider_ == nullptr ||
+      !previewController_->begin(1U, pointerId, 1U, previewProvider_->generation())) {
+    eraserTraces_.erase(pointerId);
+    eraserPreviewRevisions_.erase(pointerId);
+    return false;
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y) noexcept {
+  const auto it = eraserTraces_.find(pointerId);
+  if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
+  it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
+  constexpr std::size_t kSegments = 24U;
+  constexpr double kRadius = 18.0;
+  ink::BrushPreviewDelta delta;
+  delta.revision = ++eraserPreviewRevisions_[pointerId];
+  const auto& trace = it->second;
+  if (trace.size() == 1U) {
+    delta.outline.reserve(kSegments);
+    for (std::size_t i = 0; i < kSegments; ++i) {
+      const double angle = 2.0 * 3.14159265358979323846 * static_cast<double>(i) /
+                           static_cast<double>(kSegments);
+      delta.outline.push_back({x + kRadius * std::cos(angle),
+                               y + kRadius * std::sin(angle)});
+    }
+  } else {
+    // Build one closed swept-band contour from the retained eraser trace.
+    // This keeps the erased region visibly continuous instead of showing
+    // only the latest pointer-centered circle.
+    std::vector<ink::reference::StrokeOutlinePoint> left;
+    std::vector<ink::reference::StrokeOutlinePoint> right;
+    left.reserve(trace.size());
+    right.reserve(trace.size());
+    for (std::size_t i = 0; i < trace.size(); ++i) {
+      const auto& current = trace[i];
+      const auto& previous = trace[i == 0U ? i : i - 1U];
+      const auto& next = trace[i + 1U < trace.size() ? i + 1U : i];
+      const double dx = static_cast<double>(next.x - previous.x);
+      const double dy = static_cast<double>(next.y - previous.y);
+      const double length = std::hypot(dx, dy);
+      const double nx = length > 0.0 ? -dy / length : 0.0;
+      const double ny = length > 0.0 ? dx / length : 1.0;
+      left.push_back({current.x + kRadius * nx, current.y + kRadius * ny});
+      right.push_back({current.x - kRadius * nx, current.y - kRadius * ny});
+    }
+    delta.outline.reserve(left.size() + right.size());
+    delta.outline.insert(delta.outline.end(), left.begin(), left.end());
+    for (auto reverse = right.rbegin(); reverse != right.rend(); ++reverse) {
+      delta.outline.push_back(*reverse);
+    }
+  }
+  const auto viewport = viewportController_->state();
+  render::PreviewStyleOverride style;
+  if (toolMode_ == ToolMode::kPartialEraser) {
+    // Preview is an independent transparent overlay.  For partial erase we
+    // paint the swept region with the canvas background so the user sees the
+    // final visual effect grow sample-by-sample; semantic masks are still
+    // committed only by eraserFinish(). Object eraser keeps the amber tool
+    // indicator and its existing commit-time disappearance semantics.
+    style.red = 1.0F;
+    style.green = 1.0F;
+    style.blue = 1.0F;
+    style.alpha = 1.0F;
+    style.opacityMultiplier = 1.0F;
+    style.overrideColor = true;
+    style.overrideOpacity = true;
+  }
+  return previewController_->updateForSession(pointerId, delta, viewport.scale,
+                                               viewport.translationX,
+                                               viewport.translationY) &&
+         previewController_->renderIfDirty(style);
+}
+
+bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
+  const auto it = eraserTraces_.find(pointerId);
+  if (it == eraserTraces_.end()) return false;
+  if (it->second.empty() || runtimeSceneHost_ == nullptr) {
+    eraserTraces_.erase(it);
+    eraserPreviewRevisions_.erase(pointerId);
+    if (previewController_ != nullptr && previewController_->active()) {
+      (void)previewController_->cancelSession(pointerId);
+      (void)previewController_->retireSession(pointerId, previewProvider_->generation());
+    }
+    return false;
+  }
+  std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
+  for (const auto& point : it->second) {
+    const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+        point, 18.0F, canvas::HitTestFilter{canvas::HitTestKindMask::kVectorStroke, false}, 64U});
+    if (!tested) {
+      eraserTraces_.erase(it);
+      eraserPreviewRevisions_.erase(pointerId);
+      if (previewController_ != nullptr && previewController_->active() &&
+          previewProvider_ != nullptr) {
+        (void)previewController_->cancelSession(pointerId);
+        (void)previewController_->retireSession(pointerId, previewProvider_->generation());
+      }
+      return false;
+    }
+    for (const auto id : tested.value().frontToBack) hit.insert(id);
+  }
+  if (hit.empty()) {
+    eraserTraces_.erase(it);
+    eraserPreviewRevisions_.erase(pointerId);
+    if (previewController_ != nullptr && previewController_->active()) {
+      (void)previewController_->cancelSession(pointerId);
+      (void)previewController_->retireSession(pointerId, previewProvider_->generation());
+    }
+    return true;
+  }
+  semantic::Operation operation;
+  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(submittedOperationCount_ + 1U));
+  operation.document_id = documentId_;
+  operation.schema_version = 1U;
+  operation.payload_version = 1U;
+  if (toolMode_ == ToolMode::kObjectEraser) {
+    semantic::DeleteObjectsOp payload;
+    payload.object_ids.assign(hit.begin(), hit.end());
+    std::sort(payload.object_ids.begin(), payload.object_ids.end());
+    operation.payload = std::move(payload);
+  } else {
+    constexpr double radius = 18.0;
+    semantic::AddEraseMasksOp maskPayload;
+    std::size_t replacementOrdinal = 0U;
+    for (const auto id : hit) {
+      // Keep the canonical stroke intact and attach a renderer-neutral mask.
+      // Splitting by deleting outline vertices and implicitly closing each
+      // remainder manufactures long phantom edges (and the visible arcs/
+      // triangles reported in the Web UI). SplitStrokes needs a true polygon
+      // clipper; until that authority exists, fail over to the same mask
+      // representation used by marker/chalk.
+      if (it->second.empty()) continue;
+      semantic::SweptCircleMask swept;
+      for (std::size_t i = 1; i < it->second.size(); ++i) {
+        const auto& a = it->second[i - 1U];
+        const auto& b = it->second[i];
+        swept.segments.push_back({
+            {{a.x, a.y}, radius}, {{b.x, b.y}, radius},
+            {a.x + (b.x - a.x) / 3.0F, a.y + (b.y - a.y) / 3.0F},
+            {a.x + (b.x - a.x) * 2.0F / 3.0F, a.y + (b.y - a.y) * 2.0F / 3.0F}});
+      }
+      if (swept.segments.empty()) {
+        const auto& p = it->second.front();
+        swept.segments.push_back({{{p.x, p.y}, radius}, {{p.x, p.y}, radius},
+                                  {p.x, p.y}, {p.x, p.y}});
+      }
+      maskPayload.items.push_back({id, {{foundation::ObjectId::fromUint64(
+          (submittedOperationCount_ + 1U) * 1000U + ++replacementOrdinal), swept}}});
+    }
+    operation.payload = std::move(maskPayload);
+  }
+  const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
+      semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  eraserTraces_.erase(it);
+  eraserPreviewRevisions_.erase(pointerId);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied &&
+      applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) return false;
+  if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+    semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+    canvas::SceneCommitInput input(applied.commit_record->before_generation,
+                                   applied.commit_record->after_generation, view,
+                                   &applied.commit_record->change_set);
+    if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+  }
+  ++submittedOperationCount_;
+  if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+  if (previewController_ != nullptr && previewController_->active()) {
+    if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
+        !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::eraserCancel(std::uint64_t pointerId) noexcept {
+  const bool erased = eraserTraces_.erase(pointerId) != 0U;
+  eraserPreviewRevisions_.erase(pointerId);
+  if (previewController_ != nullptr && previewController_->active()) {
+    if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
+        !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
+  }
+  return erased;
 }
 
 bool InkPlaygroundHost::appendBrushSample(std::uint64_t pointerId, double x, double y,
@@ -888,22 +1111,20 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
-  if (!sceneCoordinator_->runtimeScene().records().empty()) {
-    const auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
-    if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
-    const auto references = render::DirectReferenceSource::build(
-        frame, visibility.value(), sceneCoordinator_->runtimeScene());
-    if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
-    const auto plan = render::FramePlanBuilder::build(frame, references.value());
-    if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
-    const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value());
-    if (rendered.code != render::BackendSubmissionCode::kAccepted) {
-      AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
-                         rendered.message.c_str(),
-                         static_cast<unsigned long long>(frame.surfaceGeneration.value()),
-                         static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
-      return false;
-    }
+  const auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
+  const auto references = render::DirectReferenceSource::build(
+      frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
+  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value());
+  if (rendered.code != render::BackendSubmissionCode::kAccepted) {
+    AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
+                       rendered.message.c_str(),
+                       static_cast<unsigned long long>(frame.surfaceGeneration.value()),
+                       static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
+    return false;
   }
   const auto trackerSubmit = tracker_->submit(frame);
   if (trackerSubmit != render::PresentFeedbackDisposition::kSubmitted) { AXIOM_ANDROID_DIAG("present tracker submit failed code=%d framegen=%llu livegen=%llu metrics=%ux%u", static_cast<int>(trackerSubmit), static_cast<unsigned long long>(frame.surfaceGeneration.value()), static_cast<unsigned long long>(lifecycle_->current().surfaceGeneration.value()), frame.metrics.physicalWidth, frame.metrics.physicalHeight); return false; }

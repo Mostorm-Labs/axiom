@@ -1,0 +1,24 @@
+{
+  "pipelineVersion": 1,
+  "defaultsVersion": 1,
+  "profile": "chalk-grain-v1",
+  "stages": {
+    "input": { "mode": "on" }, "vector": { "mode": "on" },
+    "taper": { "mode": "off" }, "shape": { "mode": "off" },
+    "grain": { "mode": "on" }, "rendering": { "mode": "on" },
+    "wetMix": { "mode": "off" }
+  },
+  "vector": {
+    "size": 16, "thinning": 0.5, "smoothing": 0.5, "streamline": 0.5,
+    "pressureSource": "simulated", "missingPressure": "reject",
+    "easing": "linear", "startCap": true, "endCap": true,
+    "startTaper": 0, "endTaper": 0
+  },
+  "grain": {
+    "resourceId": "chalk-grain-default",
+    "sha256": "d5309d8989c2ad9bcfb0dd61a1ebc1306b706cabd00437ddcd9636599920f8c7",
+    "version": 1, "density": 0.65, "spacing": 2.0, "opacity": 0.55
+  },
+  "paint": { "rgba": [0.12, 0.1, 0.08, 0.8], "opacity": 0.8,
+             "blend": "source-over", "colorSpace": "srgb" }
+}

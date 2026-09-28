@@ -16,7 +16,9 @@ assert "const strokes = [];" not in source
 assert "activeStrokes" not in source
 assert "drawBrushSegment" not in source
 assert "getContext(\"2d\")" not in source
-assert "BigInt(" not in source
+assert "BigInt(sequence)" in source
+assert "BigInt(timeNs)" in source
+assert "BigInt(++sampleSequence)" in source
 assert "const trace = [];" in source
 assert "scheduleEvidenceSnapshot" in source
 assert "setTimeout(() => persistEvidence" in source
@@ -35,7 +37,20 @@ assert "preventDefault" in source
 assert "gesturechange" in source
 assert "wheel" in source
 assert "handleWheel" in source
-assert "id=\"brushSelector\"" in source
+assert "id=\"toolPalette\"" in source
+assert "marker-flat-v1" in source
+assert "chalk-grain-v1" in source
+assert "data-tool=\"brush\"" in source
+assert "Object Eraser" in source
+assert "Partial Eraser" in source
+assert "_axiom_ink_select_tool" in source
+assert "_axiom_ink_select_brush_profile" in source
+assert "setToolSelection" in source
+assert "const setToolSelection = button =>" in source
+assert "_axiom_ink_eraser_begin(host, event.pointerId)" not in source
+assert "_axiom_ink_eraser_finish(host, event.pointerId)" not in source
+assert "_axiom_ink_eraser_cancel(host, event.pointerId)" not in source
+assert "activeTool = \"brush\"" in source
 assert "selectedBrushFamily" in source
 assert "brushFamilyName" in source
 assert "selectedBrushFamily" in source

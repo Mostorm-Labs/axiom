@@ -1,0 +1,20 @@
+{
+  "pipelineVersion": 1,
+  "defaultsVersion": 1,
+  "profile": "marker-flat-v1",
+  "stages": {
+    "input": { "mode": "on" }, "vector": { "mode": "on" },
+    "taper": { "mode": "off" }, "shape": { "mode": "on" },
+    "grain": { "mode": "off" }, "rendering": { "mode": "on" },
+    "wetMix": { "mode": "off" }
+  },
+  "vector": {
+    "size": 16, "thinning": 0.5, "smoothing": 0.5, "streamline": 0.5,
+    "pressureSource": "simulated", "missingPressure": "reject",
+    "easing": "linear", "startCap": true, "endCap": true,
+    "startTaper": 0, "endTaper": 0
+  },
+  "marker": { "headAngle": 0.78539816339, "headWidth": 1.0 },
+  "paint": { "rgba": [0.1, 0.2, 0.8, 0.7], "opacity": 0.7,
+             "blend": "source-over", "colorSpace": "srgb" }
+}
