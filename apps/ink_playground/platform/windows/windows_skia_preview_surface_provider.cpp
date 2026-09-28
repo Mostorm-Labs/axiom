@@ -184,7 +184,11 @@ bool WindowsSkiaPreviewSurfaceProvider::ensureOverlay() noexcept {
   if (owner_ == nullptr) return false;
   const auto instance = reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(owner_, GWLP_HINSTANCE));
   if (!registerOverlayClass(instance)) return false;
-  overlay_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_NOACTIVATE | WS_EX_TOPMOST,
+  // The preview is a separate top-level layered window. Without hit-test
+  // transparency it intercepts the next finger's WM_POINTERDOWN while the
+  // first finger is drawing, so Runtime never sees a concurrent contact.
+  overlay_ = CreateWindowExW(WS_EX_LAYERED | WS_EX_NOACTIVATE | WS_EX_TOPMOST |
+                                 WS_EX_TRANSPARENT,
                              kOverlayClass, L"Axiom ARC Preview", WS_POPUP,
                              0, 0, static_cast<int>(width_), static_cast<int>(height_),
                              nullptr, nullptr, instance, nullptr);

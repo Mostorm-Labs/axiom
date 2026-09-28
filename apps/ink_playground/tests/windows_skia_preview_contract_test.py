@@ -71,7 +71,9 @@ def test_windows_preview_reasserts_overlay_z_order_after_present():
               "windows_skia_preview_surface_provider.cpp").read_text(encoding="utf-8")
     assert "SetWindowPos(overlay_, HWND_TOPMOST" in source
     assert "WS_EX_TOPMOST" in source
-    assert "WS_EX_TRANSPARENT" not in source
+    # A visible top-level layered HWND must let a second touch reach the
+    # canonical owner while the first contact's preview is visible.
+    assert "WS_EX_TRANSPARENT" in source
     assert "WS_POPUP" in source
     assert "nullptr, nullptr, instance, nullptr" in source
     assert "ShowWindow(overlay_, SW_SHOWNOACTIVATE)" in source
