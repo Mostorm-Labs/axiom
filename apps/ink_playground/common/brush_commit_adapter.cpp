@@ -77,10 +77,30 @@ semantic::Operation BrushCommitAdapter::build(
 
   semantic::ObjectRecord object;
   object.id = canvas::foundation::ObjectId::fromUint64(operationId);
-  object.kind = semantic::ObjectKind::kVectorStroke;
+  const bool chalkDab = package.profileId == "chalk-grain-v1" && package.revision == 2U;
+  object.kind = chalkDab ? semantic::ObjectKind::kDabStroke : semantic::ObjectKind::kVectorStroke;
   object.kind_version = 2U;
   object.placement.order_key = semantic::OrderKey(
       {static_cast<std::uint8_t>((operationId % 254U) + 1U)});
+  if (chalkDab) {
+    semantic::DabBrushStrokeContent content;
+    content.stroke.snapshot = snapshot(intent, package);
+    content.stroke.dab_digest = intent.dabDigest;
+    content.stroke.confirmed_samples.reserve(intent.confirmed.size());
+    for (const auto& sample : intent.confirmed) {
+      semantic::BrushConfirmedSample confirmed;
+      confirmed.position = {sample.x, sample.y};
+      if (sample.pressurePresent) confirmed.pressure = sample.pressure;
+      content.stroke.confirmed_samples.push_back(confirmed);
+    }
+    content.stroke.dab_output.dabs.reserve(intent.dabs.size());
+    for (const auto& dab : intent.dabs) {
+      content.stroke.dab_output.dabs.push_back({{dab.x, dab.y}, dab.size, dab.rotation, dab.opacity});
+    }
+    object.content = std::move(content);
+    operation.payload = semantic::AddStrokeOp{std::move(object)};
+    return operation;
+  }
   semantic::BrushStrokeContent content;
   content.stroke.snapshot = snapshot(intent, package);
   content.stroke.confirmed_samples.reserve(intent.confirmed.size());
@@ -105,8 +125,10 @@ semantic::Operation BrushCommitAdapter::build(
 
 bool BrushCommitAdapter::valid(const ink::BrushCommitIntent& intent,
                                const ink::BrushPackage& package) noexcept {
+  const bool chalkDab = package.profileId == "chalk-grain-v1" && package.revision == 2U;
   if (intent.session == 0U || intent.revision == 0U || intent.confirmed.empty() ||
-      intent.outline.size() < 3U || package.packageId.empty() || package.revision == 0U) {
+      (chalkDab ? intent.dabs.empty() || intent.dabDigest == 0U : intent.outline.size() < 3U) ||
+      package.packageId.empty() || package.revision == 0U) {
     return false;
   }
   for (const auto& sample : intent.confirmed) {
@@ -117,6 +139,11 @@ bool BrushCommitAdapter::valid(const ink::BrushCommitIntent& intent,
   }
   for (const auto& point : intent.outline) {
     if (!std::isfinite(point.x) || !std::isfinite(point.y)) return false;
+  }
+  for (const auto& dab : intent.dabs) {
+    if (!std::isfinite(dab.x) || !std::isfinite(dab.y) || !std::isfinite(dab.size) ||
+        dab.size <= 0.0 || !std::isfinite(dab.rotation) ||
+        !std::isfinite(dab.opacity) || dab.opacity < 0.0F || dab.opacity > 1.0F) return false;
   }
   return true;
 }

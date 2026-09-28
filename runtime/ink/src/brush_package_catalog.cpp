@@ -51,14 +51,20 @@ constexpr std::string_view kChalkPipeline = R"json({
   "grain": {"resourceId":"chalk-grain-default","sha256":"d5309d8989c2ad9bcfb0dd61a1ebc1306b706cabd00437ddcd9636599920f8c7","version":1,"density":0.65,"spacing":2.0,"opacity":0.55},
   "paint": {"rgba":[0.12,0.1,0.08,0.8],"opacity":0.8,"blend":"source-over","colorSpace":"srgb"}
 })json";
+constexpr std::string_view kChalkV2Manifest = R"json({
+  "schemaVersion": 1, "packageId": "00000000000000000000000000000045", "revision": 2,
+  "pipeline": "pipeline.json", "resources": [{"id":"chalk-grain-default","sha256":"d5309d8989c2ad9bcfb0dd61a1ebc1306b706cabd00437ddcd9636599920f8c7","version":1}], "metadata": {"name": "Chalk Grain Dab"}
+})json";
 }  // namespace
 
 BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
                                                      std::uint32_t revision) const {
-  if (revision != 1U || (profile != "vector-solid-v1" && profile != "marker-flat-v1" && profile != "chalk-grain-v1")) {
+  if ((revision != 1U && !(profile == "chalk-grain-v1" && revision == 2U)) ||
+      (profile != "vector-solid-v1" && profile != "marker-flat-v1" && profile != "chalk-grain-v1")) {
     return {{}, {}, {}, "unknown_profile_or_revision"};
   }
   if (profile == "marker-flat-v1") return parseBrushPackage(kMarkerManifest, kMarkerPipeline);
+  if (profile == "chalk-grain-v1" && revision == 2U) return parseBrushPackage(kChalkV2Manifest, kChalkPipeline);
   if (profile == "chalk-grain-v1") return parseBrushPackage(kChalkManifest, kChalkPipeline);
   return parseBrushPackage(kManifest, kPipeline);
 }

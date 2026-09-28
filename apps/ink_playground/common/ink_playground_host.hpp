@@ -131,6 +131,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] const std::string& selectedBrushProfile() const noexcept {
     return selectedBrushProfile_;
   }
+  [[nodiscard]] std::uint32_t selectedBrushRevision() const noexcept {
+    return selectedBrushRevision_;
+  }
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        const ink::BrushPackage& package,
                                        std::uint64_t seed) noexcept;
@@ -285,6 +288,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
   std::string selectedBrushProfile_ = "vector-solid-v1";
+  std::uint32_t selectedBrushRevision_ = 1U;
   std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
   std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
   std::vector<render::BrushRenderPoint> committedBrushPoints_;

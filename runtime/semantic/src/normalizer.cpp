@@ -346,6 +346,22 @@ bool normalizeContent(ObjectContent& content) {
                 }
                 for (auto& point : value.stroke.vector_output.outline) if (!normalizeVec(point)) return false;
                 return true;
+            } else if constexpr (std::is_same_v<Item, DabBrushStrokeContent>) {
+                auto& snapshot = value.stroke.snapshot;
+                if (!normalizeDouble(snapshot.vector.size) || !normalizeDouble(snapshot.vector.thinning) ||
+                    !normalizeDouble(snapshot.vector.smoothing) || !normalizeDouble(snapshot.vector.streamline) ||
+                    !normalizeDouble(snapshot.paint.red) || !normalizeDouble(snapshot.paint.green) ||
+                    !normalizeDouble(snapshot.paint.blue) || !normalizeDouble(snapshot.paint.alpha) ||
+                    !normalizeDouble(snapshot.paint.opacity)) return false;
+                for (auto& sample : value.stroke.confirmed_samples) {
+                    if (!normalizeVec(sample.position)) return false;
+                    if (sample.pressure && !normalizeDouble(*sample.pressure)) return false;
+                }
+                for (auto& dab : value.stroke.dab_output.dabs) {
+                    if (!normalizeVec(dab.center) || !normalizeDouble(dab.size) ||
+                        !normalizeFloat(dab.rotation) || !normalizeFloat(dab.opacity)) return false;
+                }
+                return true;
             } else if constexpr (std::is_same_v<Item, ConnectorContent>) {
                 return normalizeConnector(value);
             } else if constexpr (std::is_same_v<Item, StickyContent>) {

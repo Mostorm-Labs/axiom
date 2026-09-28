@@ -24,7 +24,9 @@ bool BrushPreviewHandoff::seal(std::uint64_t session, BrushCommitIntent intent) 
 
 bool BrushPreviewHandoff::cancel(std::uint64_t session) noexcept {
     if (session == 0U) return false;
-    terminals_[session] = Terminal{{session, 0U, 0U, {}, {}}, true};
+    BrushCommitIntent cancelled;
+    cancelled.session = session;
+    terminals_[session] = Terminal{std::move(cancelled), true};
     return true;
 }
 

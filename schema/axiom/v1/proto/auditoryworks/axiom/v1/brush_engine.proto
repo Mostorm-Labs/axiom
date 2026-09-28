@@ -5,6 +5,7 @@ package auditoryworks.axiom.v1;
 
 import "auditoryworks/axiom/v1/common.proto";
 import "auditoryworks/axiom/v1/geometry.proto";
+import "auditoryworks/axiom/v1/brush_stroke.proto";
 
 message BrushStageBinding {
   uint32 stage_id = 1;
@@ -58,6 +59,9 @@ message BrushExecutionSnapshot {
   repeated BrushResourceBinding resources = 10;
   fixed64 seed = 11;
   uint32 signal_schema_version = 12;
+  uint32 material_mode = 13;
+  double marker_head_angle = 14;
+  double marker_head_width = 15;
 }
 message BrushConfirmedSample {
   Vec2 position = 1;
@@ -75,4 +79,13 @@ message BrushStrokeRecord {
 }
 message BrushStrokeContent {
   BrushStrokeRecord stroke = 1;
+}
+message DabBrushStrokeRecord {
+  BrushExecutionSnapshot snapshot = 1;
+  repeated BrushConfirmedSample confirmed_samples = 2;
+  DabStrokeData dab_output = 3;
+  fixed64 dab_digest = 4;
+}
+message DabBrushStrokeContent {
+  DabBrushStrokeRecord stroke = 1;
 }

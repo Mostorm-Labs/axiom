@@ -5,8 +5,11 @@
 namespace canvas::semantic {
 
 bool BrushEngineCodec::acceptsNewObject(const ObjectRecord& object) noexcept {
-    return object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
-           std::holds_alternative<BrushStrokeContent>(object.content);
+    return object.kind_version == 2U &&
+           ((object.kind == ObjectKind::kVectorStroke &&
+             std::holds_alternative<BrushStrokeContent>(object.content)) ||
+            (object.kind == ObjectKind::kDabStroke &&
+             std::holds_alternative<DabBrushStrokeContent>(object.content)));
 }
 
 bool BrushEngineCodec::acceptsNewAddStroke(const Operation& operation) noexcept {

@@ -13,6 +13,7 @@ add_library(canvas_runtime_ink STATIC
   src/resolved_brush_state.cpp
   src/brush_execution_plan.cpp
   src/vector_path_node.cpp
+  src/chalk_dab_evaluator.cpp
     src/brush_session.cpp
     src/brush_preview_handoff.cpp
   src/legacy_v1_readonly.cpp)

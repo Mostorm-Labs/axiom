@@ -40,9 +40,11 @@ struct PreviewGeometry final {
         std::uint64_t session = 0;
         std::uint64_t revision = 0;
         std::vector<ink::reference::StrokeOutlinePoint> outline;
+        std::vector<ink::BrushDab> dabs;
     };
     std::vector<Contour> contours;
     std::vector<ink::reference::StrokeOutlinePoint> outline;
+    std::vector<ink::BrushDab> dabs;
 };
 
 struct SurfaceRenderState final {

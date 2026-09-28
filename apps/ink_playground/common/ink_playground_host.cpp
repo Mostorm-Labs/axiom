@@ -398,7 +398,8 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
   const auto profileId = profile == 1U ? "vector-solid-v1"
       : profile == 2U ? "marker-flat-v1" : profile == 3U ? "chalk-grain-v1" : "";
   if (*profileId == '\0') return false;
-  const auto loaded = brushCatalog_.loadDefault(profileId, 1U);
+  const auto loaded = brushCatalog_.loadDefault(profileId,
+      profileId == selectedBrushProfile_ ? selectedBrushRevision_ : 1U);
   if (!loaded) return false;
   return beginBrushSession(pointerId, loaded.package, 0x4500ULL + pointerId);
 }
@@ -454,10 +455,12 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
 
 bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
                                            std::uint32_t revision) noexcept {
-  if (!brushSessions_.empty() || revision != 1U) return false;
+  if (!brushSessions_.empty() ||
+      (revision != 1U && !(profileId == "chalk-grain-v1" && revision == 2U))) return false;
   const auto loaded = brushCatalog_.loadDefault(profileId, revision);
   if (!loaded) return false;
   selectedBrushProfile_ = std::string(profileId);
+  selectedBrushRevision_ = revision;
   return true;
 }
 
@@ -554,7 +557,9 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
   std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
   for (const auto& point : it->second) {
     const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-        point, 18.0F, canvas::HitTestFilter{canvas::HitTestKindMask::kVectorStroke, false}, 64U});
+        point, 18.0F, canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
+            static_cast<std::uint32_t>(canvas::HitTestKindMask::kVectorStroke) |
+            static_cast<std::uint32_t>(canvas::HitTestKindMask::kDabStroke)), false}, 64U});
     if (!tested) {
       eraserTraces_.erase(it);
       eraserPreviewRevisions_.erase(pointerId);
@@ -690,13 +695,15 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
   const auto package = brushSessionPackages_.at(pointerId);
   const auto seed = brushSessionSeeds_.at(pointerId);
   ink::BrushSession replay(pointerId, ink::resolveBrushState(package, seed));
-  ink::BrushPreviewDelta replayPreview;
+    ink::BrushPreviewDelta replayPreview;
   ink::BrushCommitIntent replayIntent;
   if (!replay.begin() ||
       replay.append(intent.confirmed, {}, replayPreview) != ink::BrushSessionError::kNone ||
       replay.seal(replayIntent) != ink::BrushSessionError::kNone) return false;
   brushReplayDigest_ = hashOutline(replayIntent.outline);
   if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+  if (package.profileId == "chalk-grain-v1" && package.revision == 2U &&
+      replayIntent.dabDigest != intent.dabDigest) return false;
   if (!BrushCommitAdapter::valid(intent, package)) return false;
   brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
                                      brushReplayDigest_), intent.revision);

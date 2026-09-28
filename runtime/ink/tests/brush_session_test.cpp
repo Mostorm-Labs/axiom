@@ -1,6 +1,8 @@
 #include "canvas/ink/brush_session.hpp"
 #include <cassert>
 #include <array>
+#include <cmath>
+#include <cstdio>
 int main(){
   canvas::ink::BrushPackage p; p.packageId="0123456789abcdef0123456789abcdef";
   auto state=canvas::ink::resolveBrushState(p,42);
@@ -47,5 +49,42 @@ int main(){
   }
   assert(previewMinX <= 0.0 && previewMaxX >= 152.0);
   assert(!longIntent.outline.empty());
+
+  canvas::ink::BrushPackage chalk;
+  chalk.packageId = "0123456789abcdef0123456789abcdef";
+  chalk.profileId = "chalk-grain-v1";
+  chalk.revision = 2U;
+  chalk.material = canvas::ink::BrushMaterialMode::kChalkGrain;
+  chalk.grain.spacing = 2.0;
+  chalk.grain.density = 0.65;
+  chalk.grain.opacity = 0.55;
+  auto chalkState = canvas::ink::resolveBrushState(chalk, 99U);
+  canvas::ink::BrushSession chalkSession(11U, chalkState);
+  assert(chalkSession.begin());
+  std::array<canvas::ink::BrushSample, 4> chalkSamples{{
+      {0.0, 0.0, 0.5, true, 1}, {8.0, 0.0, 0.5, true, 2},
+      {16.0, 0.0, 0.5, true, 3}, {24.0, 0.5, 0.5, true, 4}}};
+  canvas::ink::BrushPreviewDelta chalkPreview;
+  assert(chalkSession.append(chalkSamples, {}, chalkPreview) == canvas::ink::BrushSessionError::kNone);
+  assert(!chalkPreview.dabs.empty());
+  // A preview append may evaluate the normalized path once, not run a
+  // second full-history finalization just to place dabs.
+  assert(chalkSession.metrics().appendEvaluations == 1U);
+  assert(chalkSession.metrics().sealEvaluations == 0U);
+  canvas::ink::BrushCommitIntent chalkIntent;
+  assert(chalkSession.seal(chalkIntent) == canvas::ink::BrushSessionError::kNone);
+  assert(chalkIntent.dabs == chalkPreview.dabs);
+  assert(chalkIntent.dabDigest != 0U);
+
+  canvas::ink::BrushSession resampled(12U, chalkState);
+  assert(resampled.begin());
+  const std::array<canvas::ink::BrushSample, 7> resampledInput{{
+      {0.0, 0.0, 0.5, true, 1}, {4.0, 0.0, 0.5, true, 2},
+      {8.0, 0.0, 0.5, true, 3}, {12.0, 0.0, 0.5, true, 4},
+      {16.0, 0.0, 0.5, true, 5}, {20.0, 0.0, 0.5, true, 6},
+      {24.0, 0.5, 0.5, true, 7}}};
+  canvas::ink::BrushPreviewDelta resampledPreview;
+  assert(resampled.append(resampledInput, {}, resampledPreview) == canvas::ink::BrushSessionError::kNone);
+  assert(resampledPreview.dabs.size() == chalkPreview.dabs.size());
   return 0;
 }

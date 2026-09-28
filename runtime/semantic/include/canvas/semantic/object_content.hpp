@@ -344,6 +344,14 @@ struct BrushConfirmedSample final { Vec2 position{}; std::optional<double> press
 struct BrushVectorOutput final { std::vector<Vec2> outline; std::uint32_t fill_rule=1; bool closed=true; bool operator==(const BrushVectorOutput&) const = default; };
 struct BrushStrokeRecord final { BrushExecutionSnapshot snapshot{}; std::vector<BrushConfirmedSample> confirmed_samples; BrushVectorOutput vector_output{}; bool operator==(const BrushStrokeRecord&) const = default; };
 struct BrushStrokeContent final { BrushStrokeRecord stroke{}; bool operator==(const BrushStrokeContent&) const = default; };
+struct DabBrushStrokeRecord final {
+    BrushExecutionSnapshot snapshot{};
+    std::vector<BrushConfirmedSample> confirmed_samples;
+    DabStrokeData dab_output{};
+    std::uint64_t dab_digest = 0;
+    bool operator==(const DabBrushStrokeRecord&) const = default;
+};
+struct DabBrushStrokeContent final { DabBrushStrokeRecord stroke{}; bool operator==(const DabBrushStrokeContent&) const = default; };
 
 
 // Frozen V1 ObjectContent branches. Compatibility between ObjectKind and its
@@ -358,6 +366,7 @@ using ObjectContent = std::variant<
     ConnectorContent,
     StickyContent,
     GroupContent,
-    BrushStrokeContent>;
+    BrushStrokeContent,
+    DabBrushStrokeContent>;
 
 } // namespace canvas::semantic

@@ -193,6 +193,20 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content)
             out.boolean(value.stroke.vector_output.closed);
             out.u64(value.stroke.vector_output.outline.size());
             for (const auto& point : value.stroke.vector_output.outline) out.vec2(point);
+        } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
+            out.u32(value.stroke.snapshot.snapshot_version);
+            out.u32(value.stroke.snapshot.package_revision);
+            out.u64(value.stroke.snapshot.seed);
+            out.u64(value.stroke.dab_digest);
+            out.u64(value.stroke.confirmed_samples.size());
+            for (const auto& sample : value.stroke.confirmed_samples) {
+                out.vec2(sample.position); encodeOptional(out, sample.pressure,
+                    [&](const double pressure) { out.f64(pressure); });
+            }
+            out.u64(value.stroke.dab_output.dabs.size());
+            for (const auto& dab : value.stroke.dab_output.dabs) {
+                out.vec2(dab.center); out.f64(dab.size); out.f32(dab.rotation); out.f32(dab.opacity);
+            }
         } else if constexpr (std::is_same_v<T, semantic::ConnectorContent>) {
             encodeEndpoint(out, value.start); encodeEndpoint(out, value.end);
             out.byte(static_cast<std::uint8_t>(value.routing));
@@ -380,6 +394,11 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
             return foundation::Result<ReferenceCommand>::success(VectorStrokeReferenceCommand{*value});
         break;
     case semantic::ObjectKind::kDabStroke:
+        if (record.kindVersion == 2U) {
+            if (const auto* value = std::get_if<semantic::DabBrushStrokeContent>(&record.content))
+                return foundation::Result<ReferenceCommand>::success(DabBrushStrokeReferenceCommand{*value});
+            break;
+        }
         if (const auto* value = std::get_if<semantic::DabStrokeContent>(&record.content))
             return foundation::Result<ReferenceCommand>::success(DabStrokeReferenceCommand{*value});
         break;

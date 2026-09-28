@@ -68,6 +68,19 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
                 result = have ? foundation::unionRects(result, r) : r; have = true;
             }
             return result;
+        } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
+            const auto& dabs = content.stroke.dab_output.dabs;
+            if (dabs.empty()) return {};
+            foundation::WorldRect result{}; bool have = false;
+            for (const auto& dab : dabs) {
+                const float radius = static_cast<float>(std::max(0.0, dab.size) * 0.5);
+                const foundation::WorldRect r{static_cast<float>(dab.center.x) - radius,
+                    static_cast<float>(dab.center.y) - radius,
+                    static_cast<float>(dab.center.x) + radius,
+                    static_cast<float>(dab.center.y) + radius};
+                result = have ? foundation::unionRects(result, r) : r; have = true;
+            }
+            return result;
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
             const auto& outline = content.stroke.vector_output.outline;
             if (outline.empty()) return {};

@@ -241,6 +241,12 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
             for (const auto& point : command.content.stroke.vector_output.outline) {
                 if (!pointInScalarRange(point)) return HeadlessSubmissionIssue::kOverflow;
             }
+        } else if constexpr (std::is_same_v<T, DabBrushStrokeReferenceCommand>) {
+            if (command.content.stroke.dab_output.dabs.empty()) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            for (const auto& dab : command.content.stroke.dab_output.dabs) {
+                if (!pointInScalarRange(dab.center) || !scalarRange(dab.size)) return HeadlessSubmissionIssue::kOverflow;
+                if (!finite(dab.rotation) || !finite(dab.opacity) || dab.size <= 0.0) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
@@ -358,6 +364,13 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
                     canvas.drawCircle(static_cast<float>(point.x), static_cast<float>(point.y), radius, grain);
                 }
             }
+        } else if constexpr (std::is_same_v<T, DabBrushStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            internal::drawDabInstancesToSkCanvas(canvas, stroke.dab_output.dabs,
+                {static_cast<float>(stroke.snapshot.paint.red),
+                 static_cast<float>(stroke.snapshot.paint.green),
+                 static_cast<float>(stroke.snapshot.paint.blue),
+                 static_cast<float>(stroke.snapshot.paint.alpha * stroke.snapshot.paint.opacity)});
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
@@ -433,7 +446,8 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         return BackendSubmissionResult::rejected("invalid transform or clip");
     }
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command);
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
         if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
                          : validRect(entry.record.visualBounds))) {
             return BackendSubmissionResult::rejected("non-integral visual bounds");
@@ -490,7 +504,8 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     if (plan.referenceDrawList.entries.empty()) return reject(HeadlessSubmissionIssue::kEmptyPlan, "empty reference draw list");
     if (!validAffine(plan.referenceDrawList.worldToView) || !validRect(plan.referenceDrawList.viewportClip)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid transform or clip");
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command);
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
         if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
                          : validRect(entry.record.visualBounds))) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid visual bounds");
         const WorldToViewAffine recordTransform{entry.record.transform.a, entry.record.transform.b, entry.record.transform.c, entry.record.transform.d, entry.record.transform.tx, entry.record.transform.ty};

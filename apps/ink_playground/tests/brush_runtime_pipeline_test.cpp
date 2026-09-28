@@ -74,6 +74,17 @@ void partialEraserWorksForAllBrushPackages() {
   }
 }
 
+void chalkRevisionSelectionIsRetained() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.selectBrushProfile("chalk-grain-v1", 1U));
+  assert(host.selectedBrushRevision() == 1U);
+  assert(host.beginBrushSession(281U, 3U));
+  assert(host.cancelBrushSession(281U));
+  assert(host.selectBrushProfile("chalk-grain-v1", 2U));
+  assert(host.selectedBrushRevision() == 2U);
+}
+
 void objectEraserClearsCanonicalSurfaceImmediately() {
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256, 256));
@@ -131,6 +142,7 @@ void partialEraserPublishesRealtimePreview() {
 }
 
 int main() {
+  chalkRevisionSelectionIsRetained();
   partialEraserCommitsRendererNeutralMask();
   partialEraserAllowsTraceToEnterStroke();
   partialEraserWorksForAllBrushPackages();

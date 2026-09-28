@@ -213,6 +213,8 @@ GeometryCount geometryUnits(const ObjectContent& content) noexcept {
         } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
             if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), geometry_accounting_v1::kDabInstance);
             return {0U, ValidationIssue::kIntegerOverflow};
+        } else if constexpr (std::is_same_v<Item, DabBrushStrokeContent>) {
+            return multiplyGeometryUnits(value.stroke.dab_output.dabs.size(), geometry_accounting_v1::kDabInstance);
         }
         else return {0U, ValidationIssue::kNone};
     }, content);
@@ -525,6 +527,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
         return std::holds_alternative<BrushStrokeContent>(object.content);
     }
+    if (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U) {
+        return std::holds_alternative<DabBrushStrokeContent>(object.content);
+    }
     if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
@@ -593,6 +598,23 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
             if (!finiteVec(sample.position) || (sample.pressure.has_value() && !std::isfinite(*sample.pressure))) return false;
         }
         for (const auto& point : brush->stroke.vector_output.outline) if (!finiteVec(point)) return false;
+    }
+    if (const auto* dab = std::get_if<DabBrushStrokeContent>(&object.content)) {
+        if (object.kind != ObjectKind::kDabStroke || object.kind_version != 2U ||
+            dab->stroke.snapshot.snapshot_version != 2U ||
+            dab->stroke.snapshot.profile_id != 3U ||
+            dab->stroke.snapshot.package_revision != 2U ||
+            dab->stroke.confirmed_samples.empty() || dab->stroke.dab_output.dabs.empty() ||
+            dab->stroke.dab_digest == 0U) return false;
+        for (const auto& sample : dab->stroke.confirmed_samples) {
+            if (!finiteVec(sample.position) ||
+                (sample.pressure.has_value() && !std::isfinite(*sample.pressure))) return false;
+        }
+        for (const auto& mark : dab->stroke.dab_output.dabs) {
+            if (!finiteVec(mark.center) || !std::isfinite(mark.size) || mark.size <= 0.0 ||
+                !std::isfinite(mark.rotation) || !std::isfinite(mark.opacity) ||
+                mark.opacity < 0.0F || mark.opacity > 1.0F) return false;
+        }
     }
     if (const auto* sticky = std::get_if<StickyContent>(&object.content)) {
         if (!std::isfinite(sticky->width) || sticky->width <= 0.0 ||

@@ -19,6 +19,10 @@ int main() {
   const auto chalk = catalog.loadDefault("chalk-grain-v1", 1);
   assert(chalk);
   assert(chalk.package.profileId == "chalk-grain-v1");
+  const auto chalkV2 = catalog.loadDefault("chalk-grain-v1", 2);
+  assert(chalkV2);
+  assert(chalkV2.package.revision == 2U);
+  assert(chalkV2.canonicalDigest != chalk.canonicalDigest);
   assert(marker.canonicalDigest != chalk.canonicalDigest);
   assert(marker.canonicalDigest != loaded.canonicalDigest);
   assert(!catalog.loadDefault("other", 1));

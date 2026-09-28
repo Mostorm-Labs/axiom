@@ -23,6 +23,8 @@ struct BrushCommitIntent final {
     std::uint64_t seed = 0;
     std::vector<BrushSample> confirmed;
     std::vector<reference::StrokeOutlinePoint> outline;
+    std::vector<BrushDab> dabs;
+    std::uint64_t dabDigest = 0;
 };
 
 }  // namespace canvas::ink

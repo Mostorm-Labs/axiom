@@ -94,7 +94,8 @@
     const nextFamily = Number(button.dataset.family || selectedBrushFamily);
     if (nextTool === "brush") {
       const profilePtr = module.stringToNewUTF8(nextProfile);
-      if (!module._axiom_ink_select_brush_profile(host, profilePtr, 1)) {
+        const revision = nextProfile === "chalk-grain-v1" ? 2 : 1;
+        if (!module._axiom_ink_select_brush_profile(host, profilePtr, revision)) {
         module._free(profilePtr); return false;
       }
       module._free(profilePtr);

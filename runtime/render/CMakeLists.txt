@@ -41,6 +41,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)

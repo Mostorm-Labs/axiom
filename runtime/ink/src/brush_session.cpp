@@ -1,7 +1,7 @@
 #include "canvas/ink/brush_session.hpp"
+#include "canvas/ink/chalk_dab_evaluator.hpp"
 #include <limits>
 #include <cmath>
-#include <limits>
 
 namespace canvas::ink {
 namespace {
@@ -10,6 +10,7 @@ bool validSample(const BrushSample& sample) {
         (sample.pressurePresent && (!std::isfinite(sample.pressure) || sample.pressure < 0.0 || sample.pressure > 1.0))) return false;
     return true;
 }
+
 }
 
 std::optional<BrushSample> BrushSession::normalize(const BrushSample& sample) const {
@@ -75,7 +76,13 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
     metrics_.maxCopiedHistoricalSamples = std::max<std::uint64_t>(metrics_.maxCopiedHistoricalSamples, confirmed_.size());
     if (!result) { confirmed_.resize(oldSize); error_ = BrushSessionError::kInvalid; return error_; }
     if (!confirmed.empty()) lastSequence_ = confirmed.back().sequence;
-    out = {++revision_, std::move(result.outline)};
+    out.revision = ++revision_;
+    out.outline = std::move(result.outline);
+    if (state_.package.profileId == "chalk-grain-v1" && state_.package.revision == 2U) {
+        out.dabs = ChalkDabEvaluator::evaluate(state_, input);
+    } else {
+        out.dabs.clear();
+    }
     return error_ = BrushSessionError::kNone;
 }
 BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
@@ -85,7 +92,13 @@ BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
     auto result = VectorPathNode(state_).evaluate(input, true);
     metrics_.sealEvaluations += 1;
     if (!result) { error_ = BrushSessionError::kEmpty; return error_; }
-    out = {id_, ++revision_, state_.seed, confirmed_, std::move(result.outline)};
+    out.session = id_;
+    out.revision = ++revision_;
+    out.seed = state_.seed;
+    out.confirmed = confirmed_;
+    out.outline = std::move(result.outline);
+    out.dabs = ChalkDabEvaluator::evaluate(state_, input);
+    out.dabDigest = ChalkDabEvaluator::digest(out.dabs, state_.seed);
     active_ = false;
     return error_ = BrushSessionError::kNone;
 }

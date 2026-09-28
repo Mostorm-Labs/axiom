@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <type_traits>
 
 namespace canvas::render {
 
@@ -96,10 +97,22 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         path.close();
         canvas->drawPath(path.detach(), paint);
     };
+    auto drawDabs = [&](const auto& dabs) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(dabs)>,
+                                     std::vector<canvas::ink::BrushDab>>) {
+            internal::drawPreviewDabsToSkCanvas(*canvas, dabs,
+                paint.getColor4f().fR, paint.getColor4f().fG,
+                paint.getColor4f().fB, alpha);
+        }
+    };
     if (!geometry.contours.empty()) {
-        for (const auto& contour : geometry.contours) drawOutline(contour.outline);
+        for (const auto& contour : geometry.contours) {
+            if (contour.dabs.empty()) drawOutline(contour.outline);
+            else drawDabs(contour.dabs);
+        }
     } else {
-        drawOutline(geometry.outline);
+        if (geometry.dabs.empty()) drawOutline(geometry.outline);
+        else drawDabs(geometry.dabs);
     }
     canvas->restore();
     provider.release();

@@ -29,6 +29,24 @@ int main() {
   assert(content->stroke.confirmed_samples.size() == intent.confirmed.size());
   assert(content->stroke.vector_output.outline.size() == intent.outline.size());
 
+  package.profileId = "chalk-grain-v1";
+  package.revision = 2U;
+  package.material = canvas::ink::BrushMaterialMode::kChalkGrain;
+  package.grain.resourceId = "chalk-grain-default";
+  package.grain.resourceSha256 = std::string(64, 'a');
+  package.grain.resourceVersion = 1U;
+  intent.dabs = {{1.0, 2.0, 8.0, 0.1F, 0.5F}, {3.0, 4.0, 8.0, 0.2F, 0.45F}};
+  intent.dabDigest = 0x1234U;
+  assert(canvas::ink_playground::BrushCommitAdapter::valid(intent, package));
+  const auto dabOperation = canvas::ink_playground::BrushCommitAdapter::build(
+      intent, package, 12U,
+      canvas::semantic::DocumentId(canvas::foundation::ObjectId::fromUint64(9U)));
+  const auto* dabAdd = std::get_if<canvas::semantic::AddStrokeOp>(&dabOperation.payload);
+  assert(dabAdd != nullptr);
+  assert(dabAdd->object.kind == canvas::semantic::ObjectKind::kDabStroke);
+  assert(dabAdd->object.kind_version == 2U);
+  assert(std::holds_alternative<canvas::semantic::DabBrushStrokeContent>(dabAdd->object.content));
+
   auto invalid = intent;
   invalid.outline[1].x = std::numeric_limits<double>::quiet_NaN();
   assert(!canvas::ink_playground::BrushCommitAdapter::valid(invalid, package));
