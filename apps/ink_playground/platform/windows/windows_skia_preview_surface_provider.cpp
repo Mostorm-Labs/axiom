@@ -11,8 +11,26 @@ namespace {
 constexpr wchar_t kOverlayClass[] = L"AxiomSkiaPreviewOverlay";
 
 LRESULT CALLBACK overlayProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+  if (message == WM_NCCREATE) {
+    const auto* create = reinterpret_cast<const CREATESTRUCTW*>(lParam);
+    SetWindowLongPtrW(window, GWLP_USERDATA,
+                      reinterpret_cast<LONG_PTR>(create->lpCreateParams));
+    return TRUE;
+  }
   if (message == WM_NCHITTEST) return HTTRANSPARENT;
   if (message == WM_MOUSEACTIVATE) return MA_NOACTIVATE;
+  if (message == WM_POINTERDOWN || message == WM_POINTERUPDATE ||
+      message == WM_POINTERUP || message == WM_POINTERCAPTURECHANGED) {
+    const auto owner = reinterpret_cast<HWND>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    if (owner != nullptr && IsWindow(owner)) {
+      // A topmost layered preview can become the native touch target after
+      // the first contact makes it visible. Forward pointer lifecycle
+      // messages explicitly so concurrent contacts still reach Runtime's
+      // owner WindowProc and common MultiContactCoordinator.
+      SendMessageW(owner, message, wParam, lParam);
+      return 0;
+    }
+  }
   return DefWindowProcW(window, message, wParam, lParam);
 }
 
@@ -191,7 +209,7 @@ bool WindowsSkiaPreviewSurfaceProvider::ensureOverlay() noexcept {
                                  WS_EX_TRANSPARENT,
                              kOverlayClass, L"Axiom ARC Preview", WS_POPUP,
                              0, 0, static_cast<int>(width_), static_cast<int>(height_),
-                             nullptr, nullptr, instance, nullptr);
+                             owner_, nullptr, instance, owner_);
   if (overlay_ == nullptr) return false;
   const auto screen = GetDC(nullptr);
   memoryDc_ = CreateCompatibleDC(screen);

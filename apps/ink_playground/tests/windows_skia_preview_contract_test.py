@@ -75,8 +75,10 @@ def test_windows_preview_reasserts_overlay_z_order_after_present():
     # canonical owner while the first contact's preview is visible.
     assert "WS_EX_TRANSPARENT" in source
     assert "WS_POPUP" in source
-    assert "nullptr, nullptr, instance, nullptr" in source
+    assert "owner_, nullptr, instance, owner_" in source
     assert "ShowWindow(overlay_, SW_SHOWNOACTIVATE)" in source
+    assert "WM_POINTERDOWN" in source
+    assert "SendMessageW(owner" in source
 
 
 def test_windows_owner_surface_has_presentation_only_amber_fallback():
