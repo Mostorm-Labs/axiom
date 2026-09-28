@@ -84,9 +84,10 @@ def test_windows_preview_reasserts_overlay_z_order_after_present():
 def test_windows_owner_surface_has_presentation_only_amber_fallback():
     source = WINDOWS_MAIN.read_text(encoding="utf-8")
     assert "presentation-only Amber fallback" in source
-    assert "value.host->brushPreviewOutline()" in source
+    assert "value.host->brushPreviewOutlines()" in source
+    assert "for (const auto& preview : previews)" in source
     assert "RGB(255, 170, 0)" in source
-    assert "brushPreviewOutline()" in source
+    assert "brushPreviewOutlines()" in source
     assert "CreateSolidBrush(RGB(255, 170, 0))" in source
     assert "Polygon(bufferDc" in source
 

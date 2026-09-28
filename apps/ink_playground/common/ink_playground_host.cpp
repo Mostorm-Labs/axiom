@@ -945,6 +945,17 @@ std::vector<ink::reference::StrokeOutlinePoint> InkPlaygroundHost::brushPreviewO
   return brushPreviews_.begin()->second;
 }
 
+std::vector<std::vector<ink::reference::StrokeOutlinePoint>>
+InkPlaygroundHost::brushPreviewOutlines() const {
+  std::vector<std::vector<ink::reference::StrokeOutlinePoint>> result;
+  result.reserve(brushPreviews_.size());
+  for (const auto& [pointer, outline] : brushPreviews_) {
+    static_cast<void>(pointer);
+    result.push_back(outline);
+  }
+  return result;
+}
+
 std::vector<ink::StrokePoint> InkPlaygroundHost::transientPreviewPoints() const {
   return preview_->snapshot().confirmed;
 }

@@ -407,22 +407,25 @@ void paint(HWND window, State& value) {
   // Runtime preview outline and viewport transform as the Skia overlay.
   // It never enters canonical state or handoff.
   if (value.host->previewActive()) {
-    const auto preview = value.host->brushPreviewOutline();
-    if (preview.size() >= 2U) {
+    const auto previews = value.host->brushPreviewOutlines();
+    if (!previews.empty()) {
       const auto viewport = value.host->previewViewport();
-      std::vector<POINT> polygon;
-      polygon.reserve(preview.size());
-      for (const auto& point : preview) {
-        polygon.push_back({static_cast<LONG>(std::lround(
-                                point.x * viewport.scale + viewport.translationX)),
-                           static_cast<LONG>(std::lround(
-                                point.y * viewport.scale + viewport.translationY))});
-      }
       HBRUSH amber = CreateSolidBrush(RGB(255, 170, 0));
       HGDIOBJ oldAmber = SelectObject(bufferDc, amber);
       HPEN outline = CreatePen(PS_SOLID, 1, RGB(255, 170, 0));
       HGDIOBJ oldOutline = SelectObject(bufferDc, outline);
-      Polygon(bufferDc, polygon.data(), static_cast<int>(polygon.size()));
+      for (const auto& preview : previews) {
+        if (preview.size() < 2U) continue;
+        std::vector<POINT> polygon;
+        polygon.reserve(preview.size());
+        for (const auto& point : preview) {
+          polygon.push_back({static_cast<LONG>(std::lround(
+                                  point.x * viewport.scale + viewport.translationX)),
+                             static_cast<LONG>(std::lround(
+                                  point.y * viewport.scale + viewport.translationY))});
+        }
+        Polygon(bufferDc, polygon.data(), static_cast<int>(polygon.size()));
+      }
       SelectObject(bufferDc, oldOutline);
       SelectObject(bufferDc, oldAmber);
       DeleteObject(outline);

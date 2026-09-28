@@ -222,6 +222,7 @@ int main() {
   assert(concurrent.beginBrushSession(102U, 1U));
   assert(concurrent.appendBrushSample(102U, 80.0, 80.0, 0.5, 2U, false, false));
   assert(concurrent.previewRenderState().dirty);
+  assert(concurrent.brushPreviewOutlines().size() == 2U);
   assert(concurrent.presentBrushPreview());
   assert(concurrent.previewActive());
   assert(concurrent.finishBrushSession(101U));
