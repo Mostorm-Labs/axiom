@@ -573,14 +573,6 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       sample.phase = historyPhase;
       sample.provenance = ARC_SAMPLE_CONFIRMED_CURRENT;
       samples.push_back(sample);
-      const auto key = value->activeKeys.at(pointerId);
-      value->trace.push_back({key.source, pointerId, key.generation, history.dwTime,
-                              info.pointerType == PT_PEN ? "pen" :
-                              (info.pointerType == PT_TOUCH ? "touch" : "mouse"),
-                              historyPhase == ARC_POINTER_PHASE_DOWN ? "down" :
-                              (historyPhase == ARC_POINTER_PHASE_UP ? "up" : "move"),
-                               sample.x, sample.y, sample.pressure, pointerHistory.size(),
-                               contactWidth, contactHeight});
     }
     value->deviceId = canvas::ink_playground::windows_input::functionalDeviceId(
         info.sourceDevice, static_cast<std::uint64_t>(pointerId));
@@ -602,6 +594,25 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (!key) return 0;
       value->activeKeys[pointerId] = *key;
       value->pointerStrokes[pointerId] = value->host->platformStrokeId(*key).value_or(value->stroke);
+    }
+    // Register a new touch/pen key before recording its coalesced history.
+    // WM_POINTERDOWN reaches this adapter before the host has exposed the
+    // keyed session, so reading activeKeys.at(pointerId) in the history loop
+    // would throw std::out_of_range and terminate the process on the first
+    // real touch stroke.
+    const auto active = value->activeKeys.find(pointerId);
+    if (active == value->activeKeys.end()) return 0;
+    for (std::size_t index = 0; index < samples.size(); ++index) {
+      const auto& sample = samples[index];
+      const auto& history = pointerHistory[index];
+      value->trace.push_back({active->second.source, pointerId, active->second.generation,
+                              history.dwTime,
+                              info.pointerType == PT_PEN ? "pen" :
+                              (info.pointerType == PT_TOUCH ? "touch" : "mouse"),
+                              sample.phase == ARC_POINTER_PHASE_DOWN ? "down" :
+                              (sample.phase == ARC_POINTER_PHASE_UP ? "up" : "move"),
+                              sample.x, sample.y, sample.pressure, pointerHistory.size(),
+                              contactWidth, contactHeight});
     }
     // Runtime owns viewport arbitration and typed ARC preview publication.
     if (end) persistEvidence(*value);

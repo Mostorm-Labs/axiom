@@ -85,3 +85,12 @@ def test_windows_owner_surface_has_presentation_only_amber_fallback():
     assert "brushPreviewOutline()" in source
     assert "CreateSolidBrush(RGB(255, 170, 0))" in source
     assert "Polygon(bufferDc" in source
+
+
+def test_windows_touch_trace_registers_pointer_key_before_history_trace():
+    """A WM_POINTER down must not call unordered_map::at before registration."""
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "value->activeKeys.at(pointerId)" not in source
+    history_loop = source.index("for (std::size_t index = 0; index < samples.size(); ++index)")
+    registration = source.index("value->activeKeys[pointerId] = *key")
+    assert registration < history_loop
