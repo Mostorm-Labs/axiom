@@ -269,7 +269,8 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
         // Let the down sample publish the initial eraser footprint below.
       } else {
         const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
-            : selectedBrushProfile_ == "marker-flat-v1" ? 2U : 3U;
+            : selectedBrushProfile_ == "marker-flat-v1" ? 2U
+            : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
         if (!beginBrushSession(sample.key.pointer, profile)) { AXIOM_ANDROID_DIAG("begin failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
       }
     }
@@ -396,7 +397,8 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           std::uint32_t profile) noexcept {
   const auto profileId = profile == 1U ? "vector-solid-v1"
-      : profile == 2U ? "marker-flat-v1" : profile == 3U ? "chalk-grain-v1" : "";
+      : profile == 2U ? "marker-flat-v1"
+      : profile == 3U ? "chalk-grain-v1" : profile == 4U ? "membrane-v1" : "";
   if (*profileId == '\0') return false;
   const auto loaded = brushCatalog_.loadDefault(profileId,
       profileId == selectedBrushProfile_ ? selectedBrushRevision_ : 1U);
@@ -409,7 +411,7 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           std::uint64_t seed) noexcept {
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
-       package.profileId != "chalk-grain-v1") ||
+       package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1") ||
       package.packageId.empty() ||
       brushSessions_.contains(pointerId)) return false;
   auto state = ink::resolveBrushState(package, seed);
@@ -456,7 +458,8 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
 bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
                                            std::uint32_t revision) noexcept {
   if (!brushSessions_.empty() ||
-      (revision != 1U && !(profileId == "chalk-grain-v1" && revision == 2U))) return false;
+      (revision != 1U && !(profileId == "chalk-grain-v1" &&
+                            (revision == 2U || revision == 3U || revision == 4U)))) return false;
   const auto loaded = brushCatalog_.loadDefault(profileId, revision);
   if (!loaded) return false;
   selectedBrushProfile_ = std::string(profileId);
@@ -702,8 +705,10 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
       replay.seal(replayIntent) != ink::BrushSessionError::kNone) return false;
   brushReplayDigest_ = hashOutline(replayIntent.outline);
   if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
-  if (package.profileId == "chalk-grain-v1" && package.revision == 2U &&
-      replayIntent.dabDigest != intent.dabDigest) return false;
+  const bool usesDabs = (package.profileId == "chalk-grain-v1" &&
+                         package.revision >= 2U && package.revision <= 4U) ||
+                        package.profileId == "membrane-v1";
+  if (usesDabs && replayIntent.dabDigest != intent.dabDigest) return false;
   if (!BrushCommitAdapter::valid(intent, package)) return false;
   brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
                                      brushReplayDigest_), intent.revision);

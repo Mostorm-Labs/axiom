@@ -13,6 +13,11 @@ struct BrushDab final {
     double size = 0.0;
     float rotation = 0.0F;
     float opacity = 0.0F;
+    std::uint32_t materialRevision = 0;
+    // Runtime material identity used by the shared renderer.  Zero preserves
+    // the legacy solid-dab representation; package-backed materials use their
+    // BrushMaterialMode value without exposing package semantics to platforms.
+    std::uint32_t materialMode = 0;
     bool operator==(const BrushDab&) const = default;
 };
 

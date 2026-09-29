@@ -40,6 +40,7 @@ assert "handleWheel" in source
 assert "id=\"toolPalette\"" in source
 assert "marker-flat-v1" in source
 assert "chalk-grain-v1" in source
+assert "membrane-v1" in source
 assert "data-tool=\"brush\"" in source
 assert "Object Eraser" in source
 assert "Partial Eraser" in source

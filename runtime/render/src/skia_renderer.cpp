@@ -100,9 +100,21 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     auto drawDabs = [&](const auto& dabs) {
         if constexpr (std::is_same_v<std::decay_t<decltype(dabs)>,
                                      std::vector<canvas::ink::BrushDab>>) {
-            internal::drawPreviewDabsToSkCanvas(*canvas, dabs,
-                paint.getColor4f().fR, paint.getColor4f().fG,
-                paint.getColor4f().fB, alpha);
+            const auto materialRevision = dabs.empty() ? 0U : dabs.front().materialRevision;
+            const auto materialMode = dabs.empty() ? 0U : dabs.front().materialMode;
+            if (materialMode == 4U) {
+                internal::drawPreviewMembraneDabsToSkCanvas(*canvas, dabs,
+                    paint.getColor4f().fR, paint.getColor4f().fG,
+                    paint.getColor4f().fB, alpha);
+            } else if (materialRevision >= 3U) {
+                internal::drawPreviewChalkDabsToSkCanvas(*canvas, dabs,
+                    paint.getColor4f().fR, paint.getColor4f().fG,
+                    paint.getColor4f().fB, alpha, materialRevision);
+            } else {
+                internal::drawPreviewDabsToSkCanvas(*canvas, dabs,
+                    paint.getColor4f().fR, paint.getColor4f().fG,
+                    paint.getColor4f().fB, alpha);
+            }
         }
     };
     if (!geometry.contours.empty()) {

@@ -47,6 +47,41 @@ int main() {
   assert(dabAdd->object.kind_version == 2U);
   assert(std::holds_alternative<canvas::semantic::DabBrushStrokeContent>(dabAdd->object.content));
 
+  package.revision = 3U;
+  package.shape.resourceId = "chalk-shape-screenshot-extract-v1";
+  package.shape.resourceSha256 = std::string(64, 'b');
+  package.shape.resourceVersion = 1U;
+  intent.revision = 4U;
+  const auto v3Operation = canvas::ink_playground::BrushCommitAdapter::build(
+      intent, package, 13U,
+      canvas::semantic::DocumentId(canvas::foundation::ObjectId::fromUint64(9U)));
+  const auto* v3Add = std::get_if<canvas::semantic::AddStrokeOp>(&v3Operation.payload);
+  assert(v3Add != nullptr);
+  const auto* v3Content = std::get_if<canvas::semantic::DabBrushStrokeContent>(&v3Add->object.content);
+  assert(v3Content != nullptr);
+  assert(v3Content->stroke.snapshot.package_revision == 3U);
+  assert(v3Content->stroke.snapshot.resources.size() == 2U);
+  assert(v3Content->stroke.snapshot.resources[0].kind == 1U);
+  assert(v3Content->stroke.snapshot.resources[1].kind == 2U);
+
+  package.profileId = "membrane-v1";
+  package.material = canvas::ink::BrushMaterialMode::kMembrane;
+  package.revision = 1U;
+  package.shape.resourceId = "membrane-shape";
+  package.shape.resourceSha256 = std::string(64, 'c');
+  package.grain.resourceId = "membrane-grain";
+  package.grain.resourceSha256 = std::string(64, 'd');
+  assert(canvas::ink_playground::BrushCommitAdapter::valid(intent, package));
+  const auto membraneOperation = canvas::ink_playground::BrushCommitAdapter::build(
+      intent, package, 14U,
+      canvas::semantic::DocumentId(canvas::foundation::ObjectId::fromUint64(9U)));
+  const auto* membraneAdd = std::get_if<canvas::semantic::AddStrokeOp>(&membraneOperation.payload);
+  assert(membraneAdd != nullptr);
+  const auto* membraneContent = std::get_if<canvas::semantic::DabBrushStrokeContent>(&membraneAdd->object.content);
+  assert(membraneContent != nullptr);
+  assert(membraneContent->stroke.snapshot.profile_id == 4U);
+  assert(membraneContent->stroke.snapshot.material_mode == 4U);
+
   auto invalid = intent;
   invalid.outline[1].x = std::numeric_limits<double>::quiet_NaN();
   assert(!canvas::ink_playground::BrushCommitAdapter::valid(invalid, package));

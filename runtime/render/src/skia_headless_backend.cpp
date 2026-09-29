@@ -366,11 +366,19 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
             }
         } else if constexpr (std::is_same_v<T, DabBrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
-            internal::drawDabInstancesToSkCanvas(canvas, stroke.dab_output.dabs,
-                {static_cast<float>(stroke.snapshot.paint.red),
-                 static_cast<float>(stroke.snapshot.paint.green),
-                 static_cast<float>(stroke.snapshot.paint.blue),
-                 static_cast<float>(stroke.snapshot.paint.alpha * stroke.snapshot.paint.opacity)});
+            const semantic::ColorValue color{
+                static_cast<float>(stroke.snapshot.paint.red),
+                static_cast<float>(stroke.snapshot.paint.green),
+                static_cast<float>(stroke.snapshot.paint.blue),
+                static_cast<float>(stroke.snapshot.paint.alpha * stroke.snapshot.paint.opacity)};
+            if (stroke.snapshot.material_mode == 4U) {
+                internal::drawMembraneDabsToSkCanvas(canvas, stroke.dab_output.dabs, color);
+            } else if (stroke.snapshot.package_revision >= 3U) {
+                internal::drawChalkDabsToSkCanvas(canvas, stroke.dab_output.dabs,
+                                                   color, stroke.snapshot.package_revision);
+            } else {
+                internal::drawDabInstancesToSkCanvas(canvas, stroke.dab_output.dabs, color);
+            }
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);

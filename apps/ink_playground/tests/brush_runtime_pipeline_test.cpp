@@ -85,6 +85,13 @@ void chalkRevisionSelectionIsRetained() {
   assert(host.selectedBrushRevision() == 2U);
 }
 
+void membraneProfileSelectionIsRetained() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.selectBrushProfile("membrane-v1", 1U));
+  assert(host.selectedBrushProfile() == "membrane-v1");
+}
+
 void objectEraserClearsCanonicalSurfaceImmediately() {
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256, 256));
@@ -143,6 +150,7 @@ void partialEraserPublishesRealtimePreview() {
 
 int main() {
   chalkRevisionSelectionIsRetained();
+  membraneProfileSelectionIsRetained();
   partialEraserCommitsRendererNeutralMask();
   partialEraserAllowsTraceToEnterStroke();
   partialEraserWorksForAllBrushPackages();

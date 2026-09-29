@@ -22,4 +22,11 @@ class ChalkDabEvaluator final {
         std::span<const BrushDab> dabs, std::uint64_t seed);
 };
 
+class MembraneDabEvaluator final {
+ public:
+  [[nodiscard]] static std::vector<BrushDab> evaluate(
+      const ResolvedBrushState& state,
+      std::span<const reference::VectorStrokeInput> samples);
+};
+
 } // namespace canvas::ink

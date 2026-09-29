@@ -40,6 +40,47 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
         PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    set(CANVAS_CHALK_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+              "kCanvasChalkShapePng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v2.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v2.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+              "kCanvasChalkGrainPng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v2.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v2.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+              "kCanvasMembraneShapePng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/shape.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/shape.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp"
+              "kCanvasMembraneGrainPng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/grain.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/grain.png")
+    add_custom_target(canvas_chalk_texture_assets DEPENDS
+      "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp")
+    add_dependencies(canvas_runtime_render canvas_chalk_texture_assets)
+    target_include_directories(canvas_runtime_render PRIVATE "${CANVAS_CHALK_GENERATED_DIR}")
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
@@ -90,6 +131,32 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
     endif()
     add_test(NAME G4SkiaBrushPrimitiveDab COMMAND axiom_render_skia_brush_primitive_tests)
+    add_executable(axiom_render_chalk_texture_tests
+        tests/chalk_texture_test.cpp)
+    target_link_libraries(axiom_render_chalk_texture_tests PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_render_chalk_texture_tests PRIVATE
+      "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_render_chalk_texture_tests PRIVATE cxx_std_20)
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE
+        -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+        -Wno-error=gnu-anonymous-struct)
+    if(MSVC)
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4SkiaChalkTexture COMMAND axiom_render_chalk_texture_tests)
+    add_executable(axiom_render_chalk_continuous_texture_tests
+        tests/chalk_continuous_texture_test.cpp)
+    target_link_libraries(axiom_render_chalk_continuous_texture_tests PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_render_chalk_continuous_texture_tests PRIVATE
+        ${PROJECT_SOURCE_DIR}/runtime/render/include
+        "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_render_chalk_continuous_texture_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_render_chalk_continuous_texture_tests PRIVATE
+      -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+      -Wno-error=gnu-anonymous-struct)
+    add_test(NAME G4SkiaChalkContinuousTexture COMMAND axiom_render_chalk_continuous_texture_tests)
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)

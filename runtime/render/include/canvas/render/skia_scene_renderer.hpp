@@ -25,4 +25,25 @@ void drawPreviewDabsToSkCanvas(
     SkCanvas& canvas, std::span<const ink::BrushDab> dabs,
     float red, float green, float blue, float alpha);
 
+void drawChalkDabsToSkCanvas(
+    SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,
+    const semantic::ColorValue& color, std::uint32_t materialRevision);
+
+void drawPreviewChalkDabsToSkCanvas(
+    SkCanvas& canvas, std::span<const ink::BrushDab> dabs,
+    float red, float green, float blue, float alpha,
+    std::uint32_t materialRevision);
+
+void drawMembraneDabsToSkCanvas(
+    SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,
+    const semantic::ColorValue& color);
+
+void drawPreviewMembraneDabsToSkCanvas(
+    SkCanvas& canvas, std::span<const ink::BrushDab> dabs,
+    float red, float green, float blue, float alpha);
+
+void drawContinuousChalkDabsToSkCanvas(
+    SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,
+    const semantic::ColorValue& color, std::uint32_t materialRevision);
+
 } // namespace canvas::render::internal

@@ -1,11 +1,37 @@
 {
   "classification": "READY_FOR_WEB_PHYSICAL_VERIFICATION",
   "profile": "chalk-grain-v1",
-  "revision": 2,
-  "legacy_revision": 1,
+  "revision": 4,
+  "legacy_revisions": [
+    1,
+    2,
+    3
+  ],
   "package_catalog": "BrushPackageCatalog::loadDefault",
   "revision_1_replay_preserved": true,
   "revision_2_canonical_digest_distinct": true,
+  "revision_3_canonical_digest_distinct": true,
+  "revision_4_canonical_digest_distinct": true,
+  "shape_resource": {
+    "id": "chalk-shape-screenshot-extract-v1",
+    "sha256": "4171df4f399e11b7bc44fa9c688c19f7517622b95c845d63eadda91bbd8feaae",
+    "provenance": "screenshot-extracted provisional resource"
+  },
+  "grain_resource": {
+    "id": "chalk-grain-screenshot-extract-v1",
+    "sha256": "d6c0834bd8e9992c3ca448ca5747b76db4ec7f79cd3d82167273c7d71e1bd520",
+    "provenance": "screenshot-extracted provisional resource"
+  },
+  "revision_4_shape_resource": {
+    "id": "chalk-shape-screenshot-extract-v2",
+    "sha256": "d88a0c58d904a5041bed7f1d79273f4dadcbd92b31e0bb76a0c5dc376ecf594a",
+    "provenance": "user-provided Shape Editor screenshot"
+  },
+  "revision_4_grain_resource": {
+    "id": "chalk-grain-screenshot-extract-v2",
+    "sha256": "b0770b02eaaf52869ea4dbe16b034c32d59149fbece1a9abf21fec55712a8fe6",
+    "provenance": "user-provided Grain Editor screenshot"
+  },
   "dab_spacing_formula": "max(0.5, vector.size * grain.spacing * 0.1)",
   "default_spacing_world_units": 3.2
 }

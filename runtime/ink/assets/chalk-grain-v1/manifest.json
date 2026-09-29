@@ -1,12 +1,23 @@
 {
   "schemaVersion": 1,
-  "packageId": "00000000000000000000000000000044",
-  "revision": 1,
+  "packageId": "00000000000000000000000000000046",
+  "revision": 3,
   "pipeline": "pipeline.json",
-  "resources": [{
-    "id": "chalk-grain-default",
-    "sha256": "d5309d8989c2ad9bcfb0dd61a1ebc1306b706cabd00437ddcd9636599920f8c7",
-    "version": 1
-  }],
-  "metadata": { "name": "Chalk Grain" }
+  "resources": [
+    {
+      "id": "chalk-shape-screenshot-extract-v1",
+      "sha256": "4171df4f399e11b7bc44fa9c688c19f7517622b95c845d63eadda91bbd8feaae",
+      "version": 1,
+      "kind": "shape"
+    },
+    {
+      "id": "chalk-grain-screenshot-extract-v1",
+      "sha256": "d6c0834bd8e9992c3ca448ca5747b76db4ec7f79cd3d82167273c7d71e1bd520",
+      "version": 1,
+      "kind": "grain"
+    }
+  ],
+  "metadata": {
+    "name": "Chalk Grain Screenshot Extract (provisional)"
+  }
 }

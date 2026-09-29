@@ -1,4 +1,5 @@
 #include "canvas/ink/brush_session.hpp"
+#include "canvas/ink/brush_package_catalog.hpp"
 #include <cassert>
 #include <array>
 #include <cmath>
@@ -86,5 +87,38 @@ int main(){
   canvas::ink::BrushPreviewDelta resampledPreview;
   assert(resampled.append(resampledInput, {}, resampledPreview) == canvas::ink::BrushSessionError::kNone);
   assert(resampledPreview.dabs.size() == chalkPreview.dabs.size());
+
+  auto chalkV3 = chalk;
+  chalkV3.revision = 3U;
+  auto chalkV3State = canvas::ink::resolveBrushState(chalkV3, 99U);
+  canvas::ink::BrushSession chalkV3Session(13U, chalkV3State);
+  assert(chalkV3Session.begin());
+  canvas::ink::BrushPreviewDelta chalkV3Preview;
+  assert(chalkV3Session.append(chalkSamples, {}, chalkV3Preview) ==
+         canvas::ink::BrushSessionError::kNone);
+  assert(!chalkV3Preview.dabs.empty());
+  canvas::ink::BrushCommitIntent chalkV3Intent;
+  assert(chalkV3Session.seal(chalkV3Intent) == canvas::ink::BrushSessionError::kNone);
+  assert(chalkV3Intent.dabs == chalkV3Preview.dabs);
+  assert(chalkV3Preview.dabs.front().materialRevision == 3U);
+  auto chalkV4 = chalkV3;
+  chalkV4.revision = 4U;
+  auto chalkV4State = canvas::ink::resolveBrushState(chalkV4, 99U);
+  canvas::ink::BrushSession chalkV4Session(14U, chalkV4State);
+  assert(chalkV4Session.begin());
+  canvas::ink::BrushPreviewDelta chalkV4Preview;
+  assert(chalkV4Session.append(chalkSamples, {}, chalkV4Preview) ==
+         canvas::ink::BrushSessionError::kNone);
+  assert(!chalkV4Preview.dabs.empty());
+  assert(chalkV4Preview.dabs.front().materialRevision == 4U);
+  const auto membranePackage = canvas::ink::BrushPackageCatalog().loadDefault("membrane-v1", 1);
+  assert(membranePackage);
+  auto membraneState = canvas::ink::resolveBrushState(membranePackage.package, 0x1234U);
+  canvas::ink::BrushSession membraneSession(23U, std::move(membraneState));
+  assert(membraneSession.begin());
+  canvas::ink::BrushPreviewDelta membranePreview;
+  assert(membraneSession.append(chalkSamples, {}, membranePreview) ==
+         canvas::ink::BrushSessionError::kNone);
+  assert(!membranePreview.dabs.empty());
   return 0;
 }

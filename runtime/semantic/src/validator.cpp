@@ -602,8 +602,10 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* dab = std::get_if<DabBrushStrokeContent>(&object.content)) {
         if (object.kind != ObjectKind::kDabStroke || object.kind_version != 2U ||
             dab->stroke.snapshot.snapshot_version != 2U ||
-            dab->stroke.snapshot.profile_id != 3U ||
-            dab->stroke.snapshot.package_revision != 2U ||
+            (dab->stroke.snapshot.profile_id != 3U && dab->stroke.snapshot.profile_id != 4U) ||
+            (dab->stroke.snapshot.profile_id == 3U &&
+             (dab->stroke.snapshot.package_revision < 2U ||
+              dab->stroke.snapshot.package_revision > 4U)) ||
             dab->stroke.confirmed_samples.empty() || dab->stroke.dab_output.dabs.empty() ||
             dab->stroke.dab_digest == 0U) return false;
         for (const auto& sample : dab->stroke.confirmed_samples) {

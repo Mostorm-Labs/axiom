@@ -1,0 +1,11 @@
+{
+  "pipelineVersion": 1,
+  "defaultsVersion": 1,
+  "profile": "membrane-v1",
+  "source": {"parser": "keimbio/Spectator", "brushName": "Membrane", "brushUuid": "6F0DDE1B-935E-40AF-B0B2-A0F3727037E0"},
+  "stages": {"input": {"mode": "on"}, "vector": {"mode": "on"}, "taper": {"mode": "off"}, "shape": {"mode": "on"}, "grain": {"mode": "on"}, "rendering": {"mode": "on"}, "wetMix": {"mode": "off"}},
+  "vector": {"size": 16, "thinning": 0, "smoothing": 0, "streamline": 0, "pressureSource": "device", "missingPressure": "half", "easing": "linear", "startCap": true, "endCap": true, "startTaper": 0, "endTaper": 0},
+  "shape": {"resourceId": "membrane-shape", "sha256": "5660f0e297ff65ccab4e8e9ffcf918523bb44157ff8770c1dffd0379e1e7b34e", "version": 1},
+  "grain": {"resourceId": "membrane-grain", "sha256": "1e25a30049035541827d7e7b9ea24a785f707a3b9f877a363abcb4efd8ed5007", "version": 1, "density": 1, "spacing": 0.017490354098603473, "opacity": 1},
+  "paint": {"rgba": [0.05, 0.1, 0.2, 1], "opacity": 0.5, "blend": "source-over", "colorSpace": "srgb"}
+}

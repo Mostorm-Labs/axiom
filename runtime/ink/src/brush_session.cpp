@@ -78,8 +78,11 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
     if (!confirmed.empty()) lastSequence_ = confirmed.back().sequence;
     out.revision = ++revision_;
     out.outline = std::move(result.outline);
-    if (state_.package.profileId == "chalk-grain-v1" && state_.package.revision == 2U) {
+    if (state_.package.profileId == "chalk-grain-v1" &&
+        (state_.package.revision >= 2U && state_.package.revision <= 4U)) {
         out.dabs = ChalkDabEvaluator::evaluate(state_, input);
+    } else if (state_.package.profileId == "membrane-v1") {
+        out.dabs = MembraneDabEvaluator::evaluate(state_, input);
     } else {
         out.dabs.clear();
     }
@@ -97,7 +100,14 @@ BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
     out.seed = state_.seed;
     out.confirmed = confirmed_;
     out.outline = std::move(result.outline);
-    out.dabs = ChalkDabEvaluator::evaluate(state_, input);
+    if (state_.package.profileId == "membrane-v1") {
+        out.dabs = MembraneDabEvaluator::evaluate(state_, input);
+    } else if (state_.package.profileId == "chalk-grain-v1" &&
+               state_.package.revision >= 2U && state_.package.revision <= 4U) {
+      out.dabs = ChalkDabEvaluator::evaluate(state_, input);
+    } else {
+      out.dabs.clear();
+    }
     out.dabDigest = ChalkDabEvaluator::digest(out.dabs, state_.seed);
     active_ = false;
     return error_ = BrushSessionError::kNone;

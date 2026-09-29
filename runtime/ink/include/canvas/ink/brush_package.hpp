@@ -9,7 +9,12 @@ namespace canvas::ink {
 enum class BrushPressureSource : std::uint8_t { kSimulated = 1, kDevice = 2 };
 enum class BrushMissingPressure : std::uint8_t { kReject = 1, kHalf = 2 };
 enum class BrushStageMode : std::uint8_t { kOff = 1, kAuto = 2, kOn = 3 };
-enum class BrushMaterialMode : std::uint8_t { kSolidVector = 1, kMarkerFlat = 2, kChalkGrain = 3 };
+enum class BrushMaterialMode : std::uint8_t {
+  kSolidVector = 1,
+  kMarkerFlat = 2,
+  kChalkGrain = 3,
+  kMembrane = 4,
+};
 
 struct BrushVectorConfig final {
   double size = 16.0;
@@ -20,8 +25,9 @@ struct BrushVectorConfig final {
   BrushMissingPressure missingPressure = BrushMissingPressure::kReject;
   bool startCap = true;
   bool endCap = true;
+  double startTaper = 0.0;
+  double endTaper = 0.0;
 };
-
 struct BrushPaintConfig final {
   double red = 0.05;
   double green = 0.10;
@@ -33,6 +39,12 @@ struct BrushPaintConfig final {
 struct BrushMarkerConfig final {
   double headAngle = 0.0;
   double headWidth = 1.0;
+};
+
+struct BrushShapeConfig final {
+  std::string resourceId;
+  std::string resourceSha256;
+  std::uint32_t resourceVersion = 0;
 };
 
 struct BrushGrainConfig final {
@@ -54,6 +66,7 @@ struct BrushPackage final {
   BrushPaintConfig paint;
   BrushMaterialMode material = BrushMaterialMode::kSolidVector;
   BrushMarkerConfig marker;
+  BrushShapeConfig shape;
   BrushGrainConfig grain;
   BrushStageMode inputMode = BrushStageMode::kOn;
   BrushStageMode vectorMode = BrushStageMode::kOn;

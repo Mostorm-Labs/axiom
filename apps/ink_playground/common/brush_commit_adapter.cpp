@@ -28,7 +28,8 @@ semantic::BrushExecutionSnapshot snapshot(const ink::BrushCommitIntent& intent,
   value.pipeline_version = 1U;
   value.defaults_version = 1U;
   value.profile_id = package.profileId == "vector-solid-v1" ? 1U
-      : package.profileId == "marker-flat-v1" ? 2U : 3U;
+      : package.profileId == "marker-flat-v1" ? 2U
+      : package.profileId == "chalk-grain-v1" ? 3U : 4U;
   value.signal_schema_version = 1U;
   value.package_id = identity(package.packageId);
   value.vector.size = package.vector.size;
@@ -39,6 +40,8 @@ semantic::BrushExecutionSnapshot snapshot(const ink::BrushCommitIntent& intent,
   value.vector.missing_pressure = static_cast<std::uint32_t>(package.vector.missingPressure);
   value.vector.start_cap = package.vector.startCap;
   value.vector.end_cap = package.vector.endCap;
+  value.vector.start_taper = package.vector.startTaper;
+  value.vector.end_taper = package.vector.endTaper;
   value.paint.red = package.paint.red;
   value.paint.green = package.paint.green;
   value.paint.blue = package.paint.blue;
@@ -50,9 +53,15 @@ semantic::BrushExecutionSnapshot snapshot(const ink::BrushCommitIntent& intent,
   value.material_mode = static_cast<std::uint32_t>(package.material);
   value.marker_head_angle = package.marker.headAngle;
   value.marker_head_width = package.marker.headWidth;
-  if (package.material == ink::BrushMaterialMode::kChalkGrain) {
+  if (package.material == ink::BrushMaterialMode::kChalkGrain ||
+      package.material == ink::BrushMaterialMode::kMembrane) {
+    if (!package.shape.resourceId.empty()) {
+      value.resources.push_back({identity(package.shape.resourceId), package.shape.resourceSha256,
+                                 1U, package.shape.resourceVersion, 0U, 1U, 1U, 1U});
+    }
     value.resources.push_back({identity(package.grain.resourceId), package.grain.resourceSha256,
-                               1U, package.grain.resourceVersion, 0U, 1U, 1U, 1U});
+                               package.shape.resourceId.empty() ? 2U : 2U,
+                               package.grain.resourceVersion, 0U, 1U, 1U, 1U});
   }
   value.stages = {
       {1U, static_cast<std::uint32_t>(package.inputMode), 1U, 1U, package.inputMode != ink::BrushStageMode::kOff},
@@ -77,12 +86,14 @@ semantic::Operation BrushCommitAdapter::build(
 
   semantic::ObjectRecord object;
   object.id = canvas::foundation::ObjectId::fromUint64(operationId);
-  const bool chalkDab = package.profileId == "chalk-grain-v1" && package.revision == 2U;
-  object.kind = chalkDab ? semantic::ObjectKind::kDabStroke : semantic::ObjectKind::kVectorStroke;
+  const bool texturedDab = (package.profileId == "chalk-grain-v1" &&
+                            package.revision >= 2U && package.revision <= 4U) ||
+                           package.profileId == "membrane-v1";
+  object.kind = texturedDab ? semantic::ObjectKind::kDabStroke : semantic::ObjectKind::kVectorStroke;
   object.kind_version = 2U;
   object.placement.order_key = semantic::OrderKey(
       {static_cast<std::uint8_t>((operationId % 254U) + 1U)});
-  if (chalkDab) {
+  if (texturedDab) {
     semantic::DabBrushStrokeContent content;
     content.stroke.snapshot = snapshot(intent, package);
     content.stroke.dab_digest = intent.dabDigest;
@@ -125,9 +136,11 @@ semantic::Operation BrushCommitAdapter::build(
 
 bool BrushCommitAdapter::valid(const ink::BrushCommitIntent& intent,
                                const ink::BrushPackage& package) noexcept {
-  const bool chalkDab = package.profileId == "chalk-grain-v1" && package.revision == 2U;
+  const bool texturedDab = (package.profileId == "chalk-grain-v1" &&
+                            package.revision >= 2U && package.revision <= 4U) ||
+                           package.profileId == "membrane-v1";
   if (intent.session == 0U || intent.revision == 0U || intent.confirmed.empty() ||
-      (chalkDab ? intent.dabs.empty() || intent.dabDigest == 0U : intent.outline.size() < 3U) ||
+      (texturedDab ? intent.dabs.empty() || intent.dabDigest == 0U : intent.outline.size() < 3U) ||
       package.packageId.empty() || package.revision == 0U) {
     return false;
   }

@@ -48,6 +48,7 @@ std::string canonical(const BrushPackage& value) {
       << static_cast<unsigned>(value.vector.pressureSource) << '|'
       << static_cast<unsigned>(value.vector.missingPressure) << '|'
       << value.vector.startCap << '|' << value.vector.endCap << '|'
+      << value.vector.startTaper << '|' << value.vector.endTaper << '|'
       << value.paint.red << '|' << value.paint.green << '|'
       << value.paint.blue << '|' << value.paint.alpha << '|'
       << value.paint.opacity << '|'
@@ -56,8 +57,12 @@ std::string canonical(const BrushPackage& value) {
       << static_cast<unsigned>(value.renderingMode);
   if (value.profileId != "vector-solid-v1") {
     out << '|' << static_cast<unsigned>(value.material) << '|'
-        << value.marker.headAngle << '|' << value.marker.headWidth << '|'
-        << value.grain.resourceId << '|' << value.grain.resourceSha256 << '|'
+        << value.marker.headAngle << '|' << value.marker.headWidth << '|';
+    if (!value.shape.resourceId.empty()) {
+      out << value.shape.resourceId << '|' << value.shape.resourceSha256 << '|'
+          << value.shape.resourceVersion << '|';
+    }
+    out << value.grain.resourceId << '|' << value.grain.resourceSha256 << '|'
         << value.grain.resourceVersion << '|' << value.grain.density << '|'
         << value.grain.spacing << '|' << value.grain.opacity;
   }
@@ -108,7 +113,8 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
         pipeline.value("defaultsVersion", 0) != 1 ||
         (pipeline.value("profile", std::string()) != "vector-solid-v1" &&
          pipeline.value("profile", std::string()) != "marker-flat-v1" &&
-         pipeline.value("profile", std::string()) != "chalk-grain-v1")) {
+        pipeline.value("profile", std::string()) != "chalk-grain-v1" &&
+        pipeline.value("profile", std::string()) != "membrane-v1")) {
       result.error = "unsupported_version";
       return result;
     }
@@ -117,9 +123,11 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
     result.package.revision = manifest.at("revision").get<std::uint32_t>();
     if ((result.package.profileId != "vector-solid-v1" &&
          result.package.profileId != "marker-flat-v1" &&
-         result.package.profileId != "chalk-grain-v1") ||
+         result.package.profileId != "chalk-grain-v1" &&
+         result.package.profileId != "membrane-v1") ||
         !validId(result.package.packageId) || result.package.revision == 0 ||
         (result.package.profileId != "chalk-grain-v1" &&
+         result.package.profileId != "membrane-v1" &&
          !manifest.value("resources", Json::array()).empty())) {
       result.error = "invalid_manifest";
       return result;
@@ -127,13 +135,23 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
     const auto stages = pipeline.value("stages", Json::object());
     if (result.package.profileId == "marker-flat-v1") result.package.material = BrushMaterialMode::kMarkerFlat;
     if (result.package.profileId == "chalk-grain-v1") result.package.material = BrushMaterialMode::kChalkGrain;
+    if (result.package.profileId == "membrane-v1") result.package.material = BrushMaterialMode::kMembrane;
     result.package.inputMode = parseMode(stages, "input", BrushStageMode::kOn);
     result.package.vectorMode = parseMode(stages, "vector", BrushStageMode::kOn);
     result.package.renderingMode = parseMode(stages, "rendering", BrushStageMode::kOn);
-    for (const char* name : {"taper", "shape", "wetMix"}) {
+    for (const char* name : {"taper", "shape", "grain", "wetMix"}) {
       const auto mode = parseMode(stages, name, BrushStageMode::kOff);
-      if (mode == BrushStageMode::kOn &&
-          !(result.package.profileId == "marker-flat-v1" && std::string_view(name) == "shape")) {
+      const bool markerShape = result.package.profileId == "marker-flat-v1" &&
+                               std::string_view(name) == "shape";
+      const bool chalkGrain = result.package.profileId == "chalk-grain-v1" &&
+                              std::string_view(name) == "grain";
+      const bool texturedShape = (result.package.profileId == "chalk-grain-v1" &&
+                                      (result.package.revision == 3U || result.package.revision == 4U) &&
+                                      (std::string_view(name) == "shape" ||
+                                       std::string_view(name) == "taper")) ||
+          (result.package.profileId == "membrane-v1" &&
+           (std::string_view(name) == "shape" || std::string_view(name) == "grain"));
+      if (mode == BrushStageMode::kOn && !markerShape && !chalkGrain && !texturedShape) {
         result.error = "unsupported_stage";
         return result;
       }
@@ -147,7 +165,19 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
       result.error = "invalid_marker";
       return result;
     }
-    if (result.package.profileId == "chalk-grain-v1") {
+    if (result.package.profileId == "chalk-grain-v1" || result.package.profileId == "membrane-v1") {
+      const auto shape = pipeline.value("shape", Json::object());
+      result.package.shape.resourceId = shape.value("resourceId", std::string());
+      result.package.shape.resourceSha256 = shape.value("sha256", std::string());
+      result.package.shape.resourceVersion = shape.value("version", 0U);
+      const bool requiresShape = result.package.profileId == "membrane-v1" ||
+                                 result.package.revision == 3U || result.package.revision == 4U;
+      if (requiresShape && (result.package.shape.resourceId.empty() ||
+                            result.package.shape.resourceSha256.size() != 64U ||
+                            result.package.shape.resourceVersion == 0U)) {
+        result.error = "invalid_shape_resource";
+        return result;
+      }
       const auto grain = pipeline.value("grain", Json::object());
       result.package.grain.resourceId = grain.value("resourceId", std::string());
       result.package.grain.resourceSha256 = grain.value("sha256", std::string());
@@ -163,11 +193,31 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
         return result;
       }
       const auto resources = manifest.value("resources", Json::array());
-      if (resources.size() != 1U || !resources.front().is_object() ||
-          resources.front().value("id", std::string()) != result.package.grain.resourceId ||
-          resources.front().value("sha256", std::string()) != result.package.grain.resourceSha256 ||
-          resources.front().value("version", 0U) != result.package.grain.resourceVersion) {
+      const auto hasResource = [&resources](const std::string& id,
+                                            const std::string& sha,
+                                            std::uint32_t version,
+                                            const char* kind) {
+        for (const auto& resource : resources) {
+          if (resource.is_object() && resource.value("id", std::string()) == id &&
+              resource.value("sha256", std::string()) == sha &&
+              resource.value("version", 0U) == version &&
+              (kind == nullptr || resource.value("kind", std::string()) == kind)) return true;
+        }
+        return false;
+      };
+      if ((!requiresShape && resources.size() != 1U) ||
+          (requiresShape && resources.size() != 2U) ||
+          !hasResource(result.package.grain.resourceId, result.package.grain.resourceSha256,
+                       result.package.grain.resourceVersion, requiresShape ? "grain" : nullptr) ||
+          (requiresShape && !hasResource(result.package.shape.resourceId,
+                                          result.package.shape.resourceSha256,
+                                          result.package.shape.resourceVersion, "shape"))) {
         result.error = "grain_resource_mismatch";
+        return result;
+      }
+      if (requiresShape && pipeline.value("shape", Json::object()).value("resourceId", std::string()) !=
+          result.package.shape.resourceId) {
+        result.error = "shape_resource_mismatch";
         return result;
       }
     }
@@ -186,8 +236,13 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
     else { result.error = "invalid_missing_pressure"; return result; }
     result.package.vector.startCap = vector.value("startCap", true);
     result.package.vector.endCap = vector.value("endCap", true);
+    result.package.vector.startTaper = vector.value("startTaper", 0.0);
+    result.package.vector.endTaper = vector.value("endTaper", 0.0);
     if (vector.value("easing", std::string("linear")) != "linear" ||
-        vector.value("startTaper", 0.0) != 0.0 || vector.value("endTaper", 0.0) != 0.0) {
+        ((vector.value("startTaper", 0.0) != 0.0 || vector.value("endTaper", 0.0) != 0.0) &&
+         !((result.package.profileId == "chalk-grain-v1" &&
+            (result.package.revision == 3U || result.package.revision == 4U)) ||
+           result.package.profileId == "membrane-v1"))) {
       result.error = "unsupported_vector_option";
       return result;
     }
@@ -199,6 +254,7 @@ BrushPackageResult parseBrushPackage(std::string_view manifestJson,
           result.package.vector.size <= 4096.0 && finite(result.package.vector.thinning) &&
           result.package.vector.thinning >= -1.0 && result.package.vector.thinning <= 1.0 &&
           validUnit(result.package.vector.smoothing) && validUnit(result.package.vector.streamline) &&
+          validUnit(result.package.vector.startTaper) && validUnit(result.package.vector.endTaper) &&
           validUnit(result.package.paint.red) && validUnit(result.package.paint.green) &&
           validUnit(result.package.paint.blue) && validUnit(result.package.paint.alpha) &&
           validUnit(result.package.paint.opacity))) {

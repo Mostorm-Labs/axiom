@@ -18,6 +18,7 @@
   <button type="button" data-tool="brush" data-profile="vector-solid-v1" data-family="1">vector-solid-v1</button>
   <button type="button" data-tool="brush" data-profile="marker-flat-v1" data-family="2">marker-flat-v1</button>
   <button type="button" data-tool="brush" data-profile="chalk-grain-v1" data-family="3">chalk-grain-v1</button>
+  <button type="button" data-tool="brush" data-profile="membrane-v1" data-family="4">Membrane</button>
   <button type="button" data-tool="object-eraser">Object Eraser</button>
   <button type="button" data-tool="partial-eraser">Partial Eraser</button>
 </div><span id="brushDescription">vector-solid-v1</span></div>
@@ -36,7 +37,12 @@
   try {
   const imported = await import("./axiom_ink_playground_web.js");
   const createAxiomInkPlayground = imported.default;
-  const module = await createAxiomInkPlayground({ canvas });
+  const module = await createAxiomInkPlayground({
+    canvas,
+    // Keep the local physical-test page from reusing an older WASM after a
+    // rebuild. The query is intentionally limited to the generated binary.
+    locateFile: path => `${path}?v=membrane-20260929-2`
+  });
   const host = module._axiom_ink_create();
   // The Web App owns canvas/context creation. WASM only wraps the current
   // context through the provider registration seam.
@@ -94,7 +100,7 @@
     const nextFamily = Number(button.dataset.family || selectedBrushFamily);
     if (nextTool === "brush") {
       const profilePtr = module.stringToNewUTF8(nextProfile);
-        const revision = nextProfile === "chalk-grain-v1" ? 2 : 1;
+        const revision = nextProfile === "chalk-grain-v1" ? 4 : 1;
         if (!module._axiom_ink_select_brush_profile(host, profilePtr, revision)) {
         module._free(profilePtr); return false;
       }
