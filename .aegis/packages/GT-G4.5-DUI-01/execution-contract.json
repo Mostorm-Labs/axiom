@@ -1,0 +1,86 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-DUI-01",
+  "implementation": {
+    "required_changes": [
+      "Pin Dear ImGui ocornut/imgui v1.92.9b commit f1cc2ae15e53a861a874c3034aae6798fde194ab in deps.lock.json and resolve/materialize it through the repository dependency policy; do not follow master/docking or ad-hoc clone/vendor during builds.",
+      "Add common debug contracts and implementation: RuntimeFacade reuse seam, read-only Diagnostics snapshots, typed DebugControl/receipts, Telemetry/Trace interfaces.",
+      "Implement MutexCopySnapshotChannel as permanent reference and optionally PinnedTripleSlotSpsc behind an explicit switch; PinnedTripleSlot cannot become default without its frozen evidence.",
+      "Implement bounded DebugCommand queues with deterministic verification deadline hooks and bounded receipt retention.",
+      "Implement Debug input capture routing with per-sequence ownership latch and terminal-delivery guarantee.",
+      "Implement common C++ Dear ImGui controller/panel model and ImGuiSkiaRenderer without creating Runtime/Arc -> ImGui dependencies.",
+      "Implement all eight baseline panels with unavailable capability states where subsystems are not yet present.",
+      "Implement Telemetry rolling metrics and optional bounded Trace session arena; Trace may remain disabled by default until evidence passes.",
+      "Implement Windows embedded Debug host and host-scoped SiblingOverlay candidate, with EmbeddedComposite reference/fallback.",
+      "Implement canonical SurfaceMode PlatformDefault/CpuReference/GpuDefault debug control on the Windows reference host without encoding GDI/DXGI/SkSurface types into common APIs.",
+      "Extend existing verification/native/platform infrastructure with DUI20 cases, fault controls and evidence emitters.",
+      "Add build/reference switches and presets needed to run OFF, reference, candidate and Windows physical profiles."
+    ],
+    "forbidden_changes": [
+      "Do not change canonical Document/Operation semantics for Debug UI.",
+      "Do not move product-safe Tool/Camera/Undo/Redo semantics into DebugControl.",
+      "Do not expose RuntimeScene*, SpatialIndex*, TileEntry*, SkCanvas*, SkSurface*, GPU resource pointers or HWND through Runtime public semantic APIs.",
+      "Do not make Runtime or Arc depend on Dear ImGui or SDL3.",
+      "Do not redefine Arc presenter ownership or replace current Arc semantics to make SiblingOverlay pass.",
+      "Do not treat current Arc GDI layered-window presenter as the future GPU product presenter.",
+      "Do not rebuild Skia; consume r1-full-skia-sdk.lock.json through the accepted resolver.",
+      "Do not silently fall back when a declared capability is unsupported; return Unsupported/Unavailable.",
+      "Do not delete reference/rollback paths before candidate promotion evidence is accepted.",
+      "Do not select another Dear ImGui version/commit without returning to P31 package control."
+    ]
+  },
+  "work_packages": [
+    {"id":"DUI-WP00","name":"Dependency and build scaffold","depends_on":[],"scope":"pin Dear ImGui; add debug build options/targets; preserve OFF build"},
+    {"id":"DUI-WP01","name":"Debug contract foundation","depends_on":["DUI-WP00"],"scope":"Diagnostics/DebugControl/Telemetry types, capabilities, generation stamps, DebugUiContext composition"},
+    {"id":"DUI-WP02","name":"Snapshot and command infrastructure","depends_on":["DUI-WP01"],"scope":"MutexCopy reference, optional PinnedTripleSlot candidate, bounded command/receipt queues, verification hooks"},
+    {"id":"DUI-WP03","name":"Input capture integration","depends_on":["DUI-WP01"],"scope":"InputCaptureGate/owner latch/terminal reserve on Windows host path and reusable common seam"},
+    {"id":"DUI-WP04","name":"Common ImGui controller and panels","depends_on":["DUI-WP01","DUI-WP02","DUI-WP03"],"scope":"ImGuiSkiaRenderer, 8 panels, RuntimeFacade product-safe controls, unavailable states"},
+    {"id":"DUI-WP05","name":"Telemetry and Trace","depends_on":["DUI-WP02"],"scope":"rolling metrics, bounded session arena, overflow/stop semantics, async GPU timing capability seam"},
+    {"id":"DUI-WP06","name":"Windows overlay and SurfaceMode","depends_on":["DUI-WP04"],"scope":"embedded host, SiblingOverlay candidate, EmbeddedComposite reference, PlatformDebugControl surface rebind"},
+    {"id":"DUI-WP07","name":"Verification materialization","depends_on":["DUI-WP02","DUI-WP03","DUI-WP05","DUI-WP06"],"scope":"DUI20 native/platform scenarios, fault controls, evidence writers, reference/candidate differential"},
+    {"id":"DUI-WP08","name":"Windows physical qualification package","depends_on":["DUI-WP07"],"scope":"actual Arc presenter profile, independent composition observation, CPU/GPU rebind evidence; may return candidate-not-promoted with valid fallback"}
+  ],
+  "tests": {
+    "required": [
+      {"id":"DUI20-BUILD-001","command_or_oracle":"CMake build/test matrix: Debug OFF, diagnostics minimal, DebugControl, full controller","expected_result":"all applicable targets pass and Runtime/Arc link graph has no ImGui/SDL3","blocking_reason":"dependency isolation"},
+      {"id":"DUI20-SNAP-001","command_or_oracle":"all ten frozen schedule classes on active snapshot channel; Pinned candidate also independent race analysis + MutexCopy differential","expected_result":"no torn/race/integrity failure; candidate failure falls back to MutexCopy","blocking_reason":"snapshot correctness"},
+      {"id":"DUI20-CMD-001","command_or_oracle":"capacity/deadline/generation/destroy/no-HOL/receipt-eviction scenarios","expected_result":"exactly one finite terminal state per admitted command","blocking_reason":"control liveness"},
+      {"id":"DUI20-INPUT-001","command_or_oracle":"saturated Debug input queue with terminal/focus/capture/teardown cases","expected_result":"terminal guaranteed and zero Canvas leakage","blocking_reason":"input ownership"},
+      {"id":"DUI20-SCALE-001","command_or_oracle":"1K vs 100K fixed-visible-set structural workload","expected_result":"fast path remains independent of total document count","blocking_reason":"scalability invariant"}
+    ]
+  },
+  "hosted_verification": {
+    "required": ["Windows build/tests for the selected implementation slice once code is pushed"],
+    "optional": ["Web/Android build parity if those adapters are implemented in this package", "Apple portability compile checks"]
+  },
+  "evidence": {
+    "blocking": [
+      "DUI20 active snapshot-channel correctness artifacts",
+      "DUI20 command liveness ledger",
+      "DUI20 Debug input ownership/terminal traces",
+      "DUI20 scale structural evidence",
+      "Windows SurfaceRebind generation evidence when Windows claim is made",
+      "Independent composed-output evidence when SiblingOverlay is promoted",
+      "Trace bounded stop evidence only when Trace is enabled"
+    ],
+    "corroborative": ["ordinary screenshots/video","UI styling snapshots","unsupported GPU timing observations"]
+  },
+  "terminal_success": {
+    "all_of": [
+      "All required work packages for the selected implementation slice are implemented and reviewer-accessible.",
+      "All always-blocking DUI20 obligations applicable to the slice pass.",
+      "Every enabled candidate either passes promotion evidence or is explicitly left non-default with its accepted reference active.",
+      "Windows implementation uses the repository-real current Arc presenter profile without redefining Arc ownership.",
+      "Evidence artifacts are bound to exact result revision/profile and durable for control review.",
+      "Executor returns READY_FOR_CONTROL_REVIEW and does not claim P34/Gate PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY","AUTHORITY_CONFLICT","MISSING_REQUIRED_INPUT","ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE","TASK_PACKAGE_DEFECT","VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE","DEPENDENCY_AUTHORITY_BLOCKER","BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW"}
+}
