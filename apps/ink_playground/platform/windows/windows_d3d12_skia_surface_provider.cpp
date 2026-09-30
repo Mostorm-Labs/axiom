@@ -1,4 +1,5 @@
 #include "windows_d3d12_skia_surface_provider.hpp"
+#include "windows_input_diagnostics.hpp"
 
 #if defined(_WIN32) && defined(CANVAS_RENDER_HAS_SKIA)
 #ifndef NOMINMAX
@@ -34,6 +35,14 @@ LRESULT CALLBACK overlayProc(HWND window, UINT message, WPARAM wParam, LPARAM lP
   }
   if (message == WM_NCHITTEST) return HTTRANSPARENT;
   if (message == WM_MOUSEACTIVATE) return MA_NOACTIVATE;
+  if (message == WM_POINTERDOWN || message == WM_POINTERUPDATE ||
+      message == WM_POINTERUP || message == WM_POINTERCAPTURECHANGED || message == WM_TOUCH ||
+      message == WM_LBUTTONDOWN || message == WM_MOUSEMOVE || message == WM_LBUTTONUP) {
+    const auto owner = reinterpret_cast<HWND>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    if (auto* diagnostic = windows_input::diagnosticStream(owner)) {
+      windows_input::logInputMessage(*diagnostic, "overlay", window, message, wParam);
+    }
+  }
   if (message == WM_POINTERDOWN || message == WM_POINTERUPDATE ||
       message == WM_POINTERUP || message == WM_POINTERCAPTURECHANGED) {
     const auto owner = reinterpret_cast<HWND>(GetWindowLongPtrW(window, GWLP_USERDATA));

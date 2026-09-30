@@ -2,6 +2,7 @@
 #include "platform_brush_baseline_observation.hpp"
 #include "arc/arc.hpp"
 #include "windows_pointer_utils.hpp"
+#include "windows_input_diagnostics.hpp"
 #include "windows_smoke_evidence.hpp"
 #include "canvas/render/canonical_handoff.hpp"
 #include "canvas/ink/arc_runtime_sinks.hpp"
@@ -52,7 +53,6 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::uint64_t lastPointerTimestampNs = 0;
   std::ofstream pointerDiagnostic;
   std::filesystem::path pointerDiagnosticPath;
-  std::uint32_t pointerDiagnosticMoves = 0;
   bool nativeTouchChannelSeen = false;
   std::uint64_t deviceId = 0;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
@@ -610,6 +610,13 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         static_cast<CREATESTRUCTW*>(reinterpret_cast<void*>(lParam))->lpCreateParams));
     return TRUE;
   }
+  if (value != nullptr && value->pointerDiagnostic &&
+      (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_MOUSEMOVE ||
+       message == WM_POINTERDOWN || message == WM_POINTERUPDATE || message == WM_POINTERUP ||
+       message == WM_POINTERCAPTURECHANGED || message == WM_TOUCH)) {
+    canvas::ink_playground::windows_input::logInputMessage(value->pointerDiagnostic, "owner",
+                                                         window, message, wParam);
+  }
   if (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_MOUSEMOVE) {
     if (value != nullptr) {
       if (value->pointerDiagnostic && message != WM_MOUSEMOVE) {
@@ -675,8 +682,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       }
       return 0;
     }
-    const bool diagnose = value->pointerDiagnostic &&
-        (message != WM_POINTERUPDATE || value->pointerDiagnosticMoves++ < 100U);
+    const bool diagnose = static_cast<bool>(value->pointerDiagnostic);
     if (diagnose) {
       value->pointerDiagnostic << "received phase=" << message << " id=" << pointerId
           << " type=" << info.pointerType << " flags=" << info.pointerFlags
@@ -864,7 +870,14 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
           << " preview_sessions=" << value->host->brushPreviewOutlines().size()
           << " disposition=" << static_cast<int>(activeDisposition)
           << " policy=" << static_cast<int>(value->host->multiContactPolicy())
-          << " viewport=" << value->host->viewportGestureClaimed() << std::endl;
+          << " viewport=" << value->host->viewportGestureClaimed()
+          << " canonical_strokes=" << value->host->submittedOperationCount() << std::endl;
+      for (const auto& [contactId, contactKey] : value->activeKeys) {
+        value->pointerDiagnostic << "active-contact id=" << contactId
+            << " source=" << contactKey.source << " generation=" << contactKey.generation
+            << " disposition=" << static_cast<int>(value->host->pointerDisposition(contactKey))
+            << std::endl;
+      }
     }
     // Runtime owns viewport arbitration and typed ARC preview publication.
     if (end) persistEvidence(*value);
@@ -1022,6 +1035,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (value.pointerDiagnostic) {
     value.pointerDiagnostic << "window-created hwnd="
         << reinterpret_cast<std::uintptr_t>(value.window) << std::endl;
+    SetPropW(value.window, canvas::ink_playground::windows_input::kDiagnosticStreamProperty,
+             reinterpret_cast<HANDLE>(static_cast<std::ostream*>(&value.pointerDiagnostic)));
   }
   SetTimer(value.window, State::kRenderTimerId, State::kRenderIntervalMs, nullptr);
   createWindowsToolPalette(value, instance);
