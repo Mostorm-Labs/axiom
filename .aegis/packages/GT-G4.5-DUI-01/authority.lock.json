@@ -1,0 +1,42 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.5-DUI-01",
+  "current": true,
+  "repository": "Mostorm-Labs/axiom",
+  "trusted_basis": [
+    {"stage":"P15","url":"https://app.notion.com/p/3eb4c57a590c81a1a53ee2a673f78c13","title":"Debug UI Contract v0.1 - P15 Module Design"},
+    {"stage":"P16","url":"https://app.notion.com/p/3eb4c57a590c81699a7df6abd3c2df3b","title":"Debug UI Runtime Data Flow v0.1 - P16"},
+    {"stage":"P17","url":"https://app.notion.com/p/3eb4c57a590c8195a2c1e13115d8a654","title":"Debug UI Platform Contract v0.1 - P17"},
+    {"stage":"P18","url":"https://app.notion.com/p/3eb4c57a590c811ca2fae3ab1a391f84","title":"Debug UI Engineering / Optimization v0.1 - P18"},
+    {"stage":"P20","url":"https://app.notion.com/p/3eb4c57a590c81239619d733e519ac87","title":"Debug UI P20 Verification Design v0.1"},
+    {"stage":"P20_CLOSURE","url":"https://app.notion.com/p/3eb4c57a590c810191c0d413b1c5ce47","title":"Debug UI P20 Closure Review v0.1"}
+  ],
+  "frozen_statements": [
+    "Product-safe controls reuse RuntimeFacade; ImGui is a consumer, not an owner.",
+    "Diagnostics are read-only immutable snapshots; DebugControl is typed derived-state control; Telemetry is separate time-series infrastructure.",
+    "CanonicalCanvasSurface, ArcPreviewSurface, and DebugControllerSurface retain distinct ownership.",
+    "DebugSnapshotStamp.surfaceGeneration means the canonical Axiom view surface generation only.",
+    "Windows current Arc presenter is an independent host-scoped preview target; Debug UI must not redefine Arc ownership.",
+    "Debug input ownership latches per pointer sequence before Canvas ingress.",
+    "All queues/buffers are bounded and every admitted non-replaceable command has a finite terminal route.",
+    "Reference paths remain available until candidate evidence promotes the candidate.",
+    "P20 proof obligations are frozen; P31/P32 may materialize/execute them but may not invent terminal criteria."
+  ],
+  "repository_facts_at_anchor": {
+    "anchor_revision": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+    "windows_canonical_host": "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.cpp",
+    "windows_arc_presenter": "arc/platform/windows/windows_backend.cpp",
+    "windows_arc_presenter_profile": "WS_POPUP layered GDI/DIB preview window using UpdateLayeredWindow; HTTRANSPARENT; MA_NOACTIVATE",
+    "windows_verification_surface": "verification/native/platform/windows/src/windows_surface_host.cpp",
+    "windows_verification_backend": "D3D12 WARP + DXGI flip-discard hidden HWND harness",
+    "imgui_present_in_repo": false,
+    "imgui_locked_dependency_present": false,
+    "verification_root_option": "AXIOM_BUILD_VERIFICATION",
+    "imgui_materialization": {
+      "repository": "ocornut/imgui",
+      "version": "v1.92.9b",
+      "commit": "f1cc2ae15e53a861a874c3034aae6798fde194ab",
+      "policy": "must be added to deps.lock.json and resolved through existing dependency mechanism; no floating master/docking"
+    }
+  }
+}
