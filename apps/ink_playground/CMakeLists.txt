@@ -104,6 +104,16 @@ if(WIN32 AND TARGET arc_Windows)
     platform/windows/windows_smoke_evidence.cpp)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
       axiom_ink_playground_common Arc::Windows CanvasSkia::Skia d3d12 dxgi dcomp)
+  if(BUILD_TESTING)
+    add_executable(axiom_ink_playground_windows_preview_popup_tests
+      tests/windows_preview_popup_test.cpp
+      platform/windows/windows_d3d12_skia_surface_provider.cpp)
+    target_compile_features(axiom_ink_playground_windows_preview_popup_tests PRIVATE cxx_std_20)
+    target_link_libraries(axiom_ink_playground_windows_preview_popup_tests PRIVATE
+      axiom_ink_playground_common Arc::Windows CanvasSkia::Skia d3d12 dxgi dcomp)
+    add_test(NAME G4InkPlaygroundWindowsPreviewPopup
+      COMMAND axiom_ink_playground_windows_preview_popup_tests)
+  endif()
 endif()
 
 if(ANDROID AND TARGET arc_Android)

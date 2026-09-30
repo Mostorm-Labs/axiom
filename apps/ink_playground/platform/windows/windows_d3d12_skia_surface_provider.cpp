@@ -301,11 +301,16 @@ bool WindowsD3D12SkiaSurfaceProvider::ensureOverlay() noexcept {
   if (!owner_) return false;
   const auto instance = reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(owner_, GWLP_HINSTANCE));
   if (!registerOverlayClass(instance)) return false;
-  overlay_ = CreateWindowExW(WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT,
+  overlay_ = CreateWindowExW(WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW |
+                             WS_EX_LAYERED | WS_EX_TRANSPARENT,
                              kOverlayClass, L"Axiom D3D12 Arc Preview", WS_POPUP,
                              0, 0, static_cast<int>(width_), static_cast<int>(height_),
                              owner_, nullptr, instance, owner_);
   if (!overlay_) return false;
+  // HTTRANSPARENT does not exclude a popup from Windows touch hit testing.
+  // Layered transparency lets the system route input to the owner while
+  // DirectComposition continues to display the preview swap chain.
+  if (!SetLayeredWindowAttributes(overlay_, 0, 255, LWA_ALPHA)) return false;
   // The preview popup is display-only. Do not register it as a touch or
   // pointer target: a visible transparent popup can otherwise become the
   // Windows input target when a second finger lands while the first stroke
