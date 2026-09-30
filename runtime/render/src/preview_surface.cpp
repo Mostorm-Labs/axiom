@@ -142,12 +142,22 @@ bool PreviewSurfaceController::retireSession(
     if (geometry_.contours.size() == before) return false;
     ++geometry_.revision;
     state_.contentRevision = geometry_.revision;
-    state_.dirty = true;
-    if (!renderIfDirty()) return false;
+
+    // The final session is retired at the canonical handoff boundary. Hide
+    // the transient overlay immediately and skip an empty preview submission.
+    // A platform provider may synchronize an empty present with composition or
+    // vsync, which makes the preview appear to linger after pen-up.
     if (geometry_.contours.empty()) {
         provider_.setOverlayVisible(false);
         active_ = false;
+        state_.dirty = false;
+        state_.submittedRevision = state_.contentRevision;
+        state_.presentCount = provider_.presentCount();
+        return true;
     }
+
+    state_.dirty = true;
+    if (!renderIfDirty()) return false;
     return true;
 }
 
@@ -187,10 +197,13 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     geometry_.dabs.clear();
     ++geometry_.revision;
     state_.contentRevision = geometry_.revision;
-    state_.dirty = true;
-    if (!renderIfDirty()) return false;
+    // CanonicalVisible is the handoff boundary. Hide the transient surface
+    // before doing any further provider work so a platform present path with
+    // vsync or composition latency cannot leave the old preview on screen.
     provider_.setOverlayVisible(false);
     active_ = false;
+    state_.dirty = false;
+    state_.submittedRevision = state_.contentRevision;
     return true;
 }
 

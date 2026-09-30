@@ -12,6 +12,12 @@
 #include <vector>
 
 int main() {
+  using canvas::ink_playground::windows_input::isPromotedPointerMouseMessage;
+  if (!isPromotedPointerMouseMessage(static_cast<LPARAM>(0xFF515700U)) ||
+      !isPromotedPointerMouseMessage(static_cast<LPARAM>(0xFF515780U)) ||
+      isPromotedPointerMouseMessage(static_cast<LPARAM>(0x00000000U))) {
+    return 14;
+  }
   const auto value = canvas::ink_playground::windows_input::deviceIdFromHandle(
       reinterpret_cast<HANDLE>(static_cast<std::uintptr_t>(0x1234U)));
   if (value != 0x1234U ||
