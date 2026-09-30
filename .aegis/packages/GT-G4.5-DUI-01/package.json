@@ -1,0 +1,18 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.5-DUI-01",
+  "title": "Debug UI P31 Materialized Execution Package v0.1",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom"},
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/gt-g4-5-debug-ui-controller",
+  "task_anchor": {"revision":"518b9b7a66924ef2ea96af4cfa11fdce4b0d721b","relation":"ancestor"},
+  "resume_cursor": null,
+  "authority_lock_ref": {"path":"authority.lock.json","sha256":"8cad284a49e699571765c239febaadd7d35684a35c4d731893340d1a00a0afac"},
+  "verification_lock_ref": {"path":"verification.lock.json","sha256":"ddf100c84dbac3c3269c5b0a47106ca5a7fa45a4a5f8720cb534e395887ddab3"},
+  "execution_contract_ref": {"path":"execution-contract.json","sha256":"ea9a3dddca79f36e3c063bbe1d15913061b52f3a2ec5df47d0e7463144c84907"},
+  "implementation_context_ref": {"path":"implementation-context.md","sha256":"19e0e9c690583b8e165f262ff70212ad6205d1a5427a06bad93aa74bdcce1677"},
+  "evidence_contract_ref": {"path":"evidence-contract.json","sha256":"311ef36d7c6ad516101b6646bd155e322c50e8958fda9dee7ffba08368f89d9c"},
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex"
+}
