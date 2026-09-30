@@ -1,0 +1,18 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.5-DUI-01",
+  "output_root": "verification/out/debug-ui/<run-id>",
+  "identity_required": ["repository","result_revision","dirty_tree","build_profile","compiler_toolchain","platform_profile","graphics_backend","surface_mode","arc_presenter_profile","scenario_id","seed","reference_candidate_mode"],
+  "required_artifacts": [
+    "run-manifest.json","build-profile.json","platform-profile.json","obligation-result.json","dependency-report.json",
+    "snapshot/integrity-ledger.json","command/command-ledger.json","input/ownership-ledger.json","performance.json","memory.json"
+  ],
+  "conditional_artifacts": [
+    {"when":"PinnedTripleSlotSpsc promoted","items":["snapshot/interleaving.json","snapshot/race-report.*","snapshot/differential.json"]},
+    {"when":"Trace enabled","items":["trace/session-ledger.json","trace/overflow.json","trace/capture-metadata.json"]},
+    {"when":"Windows SurfaceMode claim","items":["platform/observation.json","platform/surface-generation-trace.json"]},
+    {"when":"SiblingOverlay promoted","items":["windows/overlay-result.json","windows/independent-composition-capture-metadata.json"]}
+  ],
+  "review_boundary": "exact result revision plus reviewer-accessible repository evidence and hosted CI refs where applicable",
+  "producer_may_claim_gate_pass": false
+}
