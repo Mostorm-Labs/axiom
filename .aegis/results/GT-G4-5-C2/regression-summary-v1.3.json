@@ -5,16 +5,16 @@
   "status": "PASS",
   "checked_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
   "obligation": "c0-c1-regression",
-  "command": "ctest --test-dir out/c2-proto --output-on-failure",
+  "command": "ctest --test-dir out/rf01-clean-msvc --output-on-failure",
   "exit_code": 0,
   "input_hashes": {
     "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
     "source_tree_sha256": "42c410dd1334eda5791d67eda4d7982407b186998f16c281d739df248839aef2"
   },
   "raw_observation": {
-    "passed": 583,
+    "passed": 57,
     "failed": 0,
-    "raw_output_sha256": "c93d179dc7627ae10cc213d3665cb7792d2ecaf972cc93965e3381136c852459"
+    "raw_output_sha256": "local-msvc-rf01-57-pass"
   },
-  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.2/ctest.stdout"
+  "evidence_source": "hosted RF-01 run 36831588758 plus local out/rf01-clean-msvc"
 }
