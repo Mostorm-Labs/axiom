@@ -549,6 +549,13 @@ Json writeContent(const ObjectContent& value) {
             message["fill_rule"] = content.stroke.vector_output.fill_rule;
             message["closed"] = content.stroke.vector_output.closed;
             Json result = Json::object(); result["brush_stroke"] = std::move(message); return result;
+        },
+        [](const DabBrushStrokeContent& content) {
+            Json message = Json::object();
+            message["confirmed_sample_count"] = content.stroke.confirmed_samples.size();
+            message["dab_count"] = content.stroke.dab_output.dabs.size();
+            message["dab_digest"] = u64(content.stroke.dab_digest);
+            Json result = Json::object(); result["dab_brush_stroke"] = std::move(message); return result;
         }}, value);
 }
 
