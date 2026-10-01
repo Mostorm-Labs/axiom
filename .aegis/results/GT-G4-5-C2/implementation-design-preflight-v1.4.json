@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION",
+  "package_id": "GT-G4-5-C2-P31-v1.4",
+  "status": "PASS",
+  "checked_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+  "authority_mapping": "authority.lock.json:frozen_semantic_boundary.r1_adapter_mapping",
+  "mapping": {
+    "size": "size",
+    "thinning": "thinning",
+    "smoothing": "smoothing",
+    "streamline": "streamline",
+    "simulate_pressure": "true for simulated source",
+    "start_cap": "start_cap",
+    "end_cap": "end_cap",
+    "tapers": "zero/disabled",
+    "preview_last": false,
+    "seal_last": true,
+    "easing": "linear"
+  },
+  "legacy_boundary": "V1 read/render only; new authoring rejects legacy BrushDefinition before begin",
+  "production_mutation": "none in this preflight record",
+  "package_scope_conflict": false,
+  "raw_observation": "Current v1.4 package mapping is complete and consistent with frozen authority.",
+  "command": "P31 package mapping preflight",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "source_tree_sha256": "42c410dd1334eda5791d67eda4d7982407b186998f16c281d739df248839aef2"
+  }
+}

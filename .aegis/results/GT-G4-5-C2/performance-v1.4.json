@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.4",
+  "status": "PASS",
+  "checked_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+  "obligation": "complexity",
+  "command": "out/c2-proto/runtime/ink/axiom_brush_complexity_tests",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "source_tree_sha256": "42c410dd1334eda5791d67eda4d7982407b186998f16c281d739df248839aef2"
+  },
+  "raw_observation": {
+    "workload": [
+      512,
+      2048
+    ],
+    "max_append_input_samples": 17,
+    "max_copied_historical_samples": 16,
+    "append_full_history_calls": 0,
+    "seal_evaluations": 1,
+    "pending_view_bound": 64
+  },
+  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.4/complexity.stdout"
+}

@@ -13,6 +13,8 @@ from pathlib import Path
 import subprocess
 import tarfile
 import tempfile
+import shutil
+import inspect
 import inspect
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -70,15 +72,25 @@ int main() {
         cpp = td / "probe.cpp"
         exe = td / "probe"
         cpp.write_text(source, encoding="utf-8")
-        compile_cmd = [
-            os.environ.get("CXX", "c++"), "-std=c++20", "-O0", "-I", str(anchor_root / "runtime/ink/include"),
-            str(cpp), str(anchor_root / "runtime/ink/src/programmable_brush.cpp"), "-o", str(exe),
-        ]
+        compiler = os.environ.get("CXX") or shutil.which("c++") or shutil.which("cl")
+        if not compiler:
+            return {"status": "probe_compiler_missing", "exit_code": 127,
+                    "stderr": "No C++ compiler found; set CXX or install a hosted toolchain."}
+        if Path(compiler).name.lower() in {"cl", "cl.exe"}:
+            compile_cmd = [compiler, "/nologo", "/std:c++20", "/EHsc",
+                           f"/I{anchor_root / 'runtime/ink/include'}", str(cpp),
+                           str(anchor_root / "runtime/ink/src/programmable_brush.cpp"),
+                           f"/Fe:{exe}.exe"]
+            run_exe = Path(f"{exe}.exe")
+        else:
+            compile_cmd = [compiler, "-std=c++20", "-O0", "-I", str(anchor_root / "runtime/ink/include"),
+                           str(cpp), str(anchor_root / "runtime/ink/src/programmable_brush.cpp"), "-o", str(exe)]
+            run_exe = exe
         build = subprocess.run(compile_cmd, cwd=ROOT, text=True, capture_output=True)
         if build.returncode != 0:
             return {"status": "probe_compile_failed", "command": compile_cmd,
                     "exit_code": build.returncode, "stderr": build.stderr[-4000:]}
-        run = subprocess.run([str(exe)], cwd=ROOT, text=True, capture_output=True)
+        run = subprocess.run([str(run_exe)], cwd=ROOT, text=True, capture_output=True)
         observed = {}
         try:
             observed = json.loads(run.stdout)

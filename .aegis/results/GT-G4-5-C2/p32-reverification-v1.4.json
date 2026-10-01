@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_REVERIFICATION",
+  "package_id": "GT-G4-5-C2-P31-v1.4",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "implementation_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+  "materialized_ref": "refs/heads/codex/g4-5-common-brush-processing",
+  "evidence_input_refs": [
+    ".aegis/results/GT-G4-5-C2/hosted-provider-evidence-v1.3.json",
+    ".aegis/results/GT-G4-5-C2/raw-v1.3-manifest.json",
+    ".aegis/results/GT-G4-5-C2/descriptor-refreeze-v1.3.json",
+    ".aegis/results/GT-G4-5-C2/regression-summary-v1.3.json"
+  ],
+  "verification": {
+    "hosted_checks": "PASS",
+    "local_rf01_ctest": {
+      "passed": 57,
+      "failed": 0
+    },
+    "git_diff_check": "PASS",
+    "descriptor_lock_sha256": "8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d"
+  },
+  "official_gate_pass": false,
+  "next_surface": "CONTROL_REVIEW",
+  "next_stage": "P34_GATE_REVIEW",
+  "implementation_producer_is_final_reviewer": false,
+  "command": "P32 frozen evidence closure",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "source_tree_sha256": "42c410dd1334eda5791d67eda4d7982407b186998f16c281d739df248839aef2"
+  },
+  "raw_observation": "hosted checks PASS; local RF01 57/57 PASS"
+}
