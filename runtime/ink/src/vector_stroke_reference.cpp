@@ -41,7 +41,9 @@ std::vector<StrokeOutlinePoint> drawRoundEnd(P c,P direction,double r){std::vect
 std::vector<StrokeOutlinePoint> drawFlatEnd(P c,P direction,double r){P d=mul(uni(direction),r);return {{c.x+d.x,c.y+d.y},{c.x+d.x*.99,c.y+d.y*.99},{c.x-d.x*.99,c.y-d.y*.99},{c.x-d.x,c.y-d.y}};}
 }
 std::vector<StrokePoint> getStrokePoints(std::span<const VectorStrokeInput> input,const StrokeOptions& o){
- if(input.empty()) return {}; const double t=kMinStreamlineT+(1-o.streamline)*kStreamlineRange; std::vector<VectorStrokeInput> pts(input.begin(),input.end());
+ if(input.empty()) return {};
+ const double t=kMinStreamlineT+(1-o.streamline)*kStreamlineRange;
+ std::vector<VectorStrokeInput> pts(input.begin(),input.end());
  if(pts.size()==2){auto last=pts[1];pts.resize(1);for(int i=1;i<5;i++)pts.push_back({pts[0].x+(last.x-pts[0].x)*i/4.0,pts[0].y+(last.y-pts[0].y)*i/4.0,std::numeric_limits<double>::quiet_NaN()});}
  if(pts.size()==1) pts.push_back({pts[0].x+1,pts[0].y+1,pts[0].pressure});
  std::vector<StrokePoint> out{{pts[0].x,pts[0].y,std::isfinite(pts[0].pressure)&&pts[0].pressure>=0?pts[0].pressure:kDefaultFirstPressure,1,1,0,0}}; bool reached=false; double running=0;

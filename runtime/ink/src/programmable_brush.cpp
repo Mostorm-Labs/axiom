@@ -30,6 +30,14 @@ bool isDab(BrushFamily family) noexcept {
          family == BrushFamily::kMarker || family == BrushFamily::kWaterColorLite;
 }
 
+// Brush primitives are part of the cross-platform deterministic output. Keep
+// the public float representation while rounding the arithmetic boundary so
+// MSVC, clang and libc++ produce identical serialized SVG/digest values.
+float stablePrimitiveFloat(float value) noexcept {
+  return static_cast<float>(std::round(static_cast<double>(value) * 100.0) /
+                            100.0);
+}
+
 std::uint64_t programIdentity(const BrushDefinition& value,
                               BrushRepresentation representation) noexcept {
   std::uint64_t hash = kFnvOffset;
@@ -248,15 +256,15 @@ BrushRuntimeResult BrushRuntime::evaluate(BrushSessionId session,
     BrushPrimitive primitive;
     primitive.x = sample.x;
     primitive.y = sample.y;
-    primitive.size = definition.nominalSize * pressureSize *
-                     (0.85F + 0.3F * deterministicChannel(
-                                             state.seed, RandomChannel::kSize, index));
-    primitive.rotation =
+    primitive.size = stablePrimitiveFloat(
+        definition.nominalSize * pressureSize *
+        (0.85F + 0.3F * deterministicChannel(state.seed, RandomChannel::kSize, index)));
+    primitive.rotation = stablePrimitiveFloat(
         6.283185307F * deterministicChannel(state.seed, RandomChannel::kRotation, index) +
-        sample.tiltX * definition.tiltRotationInfluence;
-    primitive.opacity = definition.opacity * pressureOpacity *
-                        (0.9F + 0.1F * deterministicChannel(
-                                            state.seed, RandomChannel::kOpacity, index));
+        sample.tiltX * definition.tiltRotationInfluence);
+    primitive.opacity = stablePrimitiveFloat(
+        definition.opacity * pressureOpacity *
+        (0.9F + 0.1F * deterministicChannel(state.seed, RandomChannel::kOpacity, index)));
     primitive.representation = program.representation();
     primitive.shapeResource = definition.shapeResource;
     primitive.grainResource = definition.grainResource;

@@ -217,6 +217,8 @@ def _mapping(file_name: str, kind: str, name: str, field: int | None) -> tuple[t
         return (("G45-SR01",), "APPROVED_ADDITIVE_SCHEMA_RELEASE", "new v0.4 brush carriers")
     if file_name.endswith("object.proto") and kind == "field" and name == "ObjectContent" and field == 10:
         return (("G45-SR02",), "APPROVED_ADDITIVE_SCHEMA_RELEASE", "ObjectKind (5,2) brush_stroke tag 10")
+    if file_name.endswith("object.proto") and kind == "field" and name == "ObjectContent" and field == 11:
+        return (("G45-C4-SR01",), "APPROVED_ADDITIVE_SCHEMA_RELEASE", "ObjectKind (6,2) dab_brush_stroke tag 11")
     return None
 
 
