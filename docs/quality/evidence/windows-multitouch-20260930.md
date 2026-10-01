@@ -91,3 +91,34 @@ An attempt to build all configured targets stopped at deprecated
 `skia_brush_primitive_test.cpp`, treated as errors by the existing /WX policy.
 See `windows-build-all.log`. No deprecated-API warning was disabled and no
 Runtime source was changed to obtain a green full suite.
+
+## Follow-up: 2026-10-01 physical recovery and Vector recheck
+
+The pending physical trial above is preserved as the historical state at the
+time of the fix. The user subsequently confirmed that real Windows multitouch
+drawing recovered. Native owner events for 183/184 show the first contact
+locked to Ink before the second DOWN, two concurrent preview outlines and two
+independent canonical submissions. A later mixed trial reached five contacts.
+Simultaneous Pending contacts 188/189 instead formed a viewport gesture; this
+does not establish preemption of an already locked Ink contact.
+
+The later report of missing canonical strokes occurred with Object Eraser
+selected in the captured window. That explains why a new-stroke count is an
+inappropriate oracle for that trial, but does not by itself prove the cause of
+every reported failure. A newly launched default Vector window, using the same
+9085b973 executable without another production-code change, then recorded
+native contacts 215–243, eight concurrent active contacts/preview outlines,
+27 successful scene applies and 27 final scene objects, starting from zero.
+
+The raw logs, negative control, regression results, screenshot and SHA256
+manifest are archived in [the dated evidence bundle](windows-multitouch-20261001/README.md).
+Counter meanings, source revision, screenshot timing and verification limits
+are recorded in [windows-result.json](windows-multitouch-20261001/windows-result.json).
+This is user-confirmed functional recovery with supporting logs, not a formal
+three-repeat protocol closure or a G4/G4.5 Gate PASS.
+
+The [multi-platform retrospective](../../engineering/multiplatform-multitouch-brush-retrospective-20261001.md)
+documents Windows input transparency, Android/Web lifecycle and identity
+pitfalls, shared session/presentation boundaries and prioritized remaining
+risks. Android, Web and shared Runtime production code were not changed during
+this documentation and evidence follow-up.

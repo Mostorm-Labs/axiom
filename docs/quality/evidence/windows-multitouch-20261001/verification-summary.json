@@ -1,0 +1,84 @@
+{
+  "required_build": "passed",
+  "native_popup_regression_before": "failed: no initialized layered transparency",
+  "native_popup_regression_after": "passed",
+  "relevant_ctest": {
+    "passed": 22,
+    "failed": 1,
+    "failure": "G45BrushLab",
+    "log": "windows-ctest.log.gz"
+  },
+  "windows_python_contract": {
+    "passed": 42,
+    "failed": 5,
+    "log": "windows-python-contract.log.gz"
+  },
+  "full_pytest": {
+    "passed": 458,
+    "failed": 31,
+    "skipped": 4,
+    "subtests_passed": 209,
+    "log": "windows-pytest-full-utf8.log.gz",
+    "failures": [
+      "FAILED apps/ink_playground/tests/windows_skia_preview_contract_test.py::test_windows_preview_uses_runtime_skia_provider",
+      "FAILED apps/ink_playground/tests/windows_skia_preview_contract_test.py::test_windows_hides_preview_presentation_before_canonical_redraw",
+      "FAILED apps/ink_playground/tests/windows_skia_preview_contract_test.py::test_windows_final_pointer_up_completes_canonical_handoff_immediately",
+      "FAILED apps/ink_playground/tests/windows_skia_preview_contract_test.py::test_windows_owner_surface_has_presentation_only_amber_fallback",
+      "FAILED apps/ink_playground/tests/windows_skia_preview_contract_test.py::test_windows_amber_fallback_applies_runtime_viewport_transform",
+      "FAILED tools/brush/tests/test_membrane_brushset_parser.py::test_membrane_is_resolved_from_brushset_with_real_resources",
+      "FAILED tools/brush/tests/test_membrane_brushset_parser.py::test_membrane_report_is_stable_and_not_screenshot_assets",
+      "SUBFAILED(consumer='C:/Users/NearHub/Documents/ChatGPT/axiom/out/eh-r_l0z67b/runtime/semantic/tests/CMakeFiles/canvas_semantic_g1_04_c_fixture_decoder_test.dir/__/tools/g1_04_c_fixture_decoder.cpp.obj') tools/semantic/tests/test_runtime_cmake_discovery.py::RuntimeCMakeDiscoveryTest::test_all_fixture_decoder_consumers_compile_with_windows_exception_contract",
+      "SUBFAILED(consumer='C:/Users/NearHub/Documents/ChatGPT/axiom/out/eh-r_l0z67b/runtime/semantic/tests/CMakeFiles/canvas_semantic_g1_04_c_projection_test.dir/__/tools/g1_04_c_fixture_decoder.cpp.obj') tools/semantic/tests/test_runtime_cmake_discovery.py::RuntimeCMakeDiscoveryTest::test_all_fixture_decoder_consumers_compile_with_windows_exception_contract",
+      "SUBFAILED(consumer='C:/Users/NearHub/Documents/ChatGPT/axiom/out/eh-r_l0z67b/runtime/semantic/tests/CMakeFiles/canvas_semantic_g1_04_c_observer_contract_test.dir/__/tools/g1_04_c_fixture_decoder.cpp.obj') tools/semantic/tests/test_runtime_cmake_discovery.py::RuntimeCMakeDiscoveryTest::test_all_fixture_decoder_consumers_compile_with_windows_exception_contract",
+      "SUBFAILED(consumer='C:/Users/NearHub/Documents/ChatGPT/axiom/out/eh-r_l0z67b/runtime/semantic/tests/CMakeFiles/canvas_semantic_g1_04_c_observer_coverage_test.dir/__/tools/g1_04_c_fixture_decoder.cpp.obj') tools/semantic/tests/test_runtime_cmake_discovery.py::RuntimeCMakeDiscoveryTest::test_all_fixture_decoder_consumers_compile_with_windows_exception_contract",
+      "SUBFAILED(consumer='C:/Users/NearHub/Documents/ChatGPT/axiom/out/eh-r_l0z67b/runtime/semantic/tests/CMakeFiles/canvas_semantic_g1_04_c_observation_export.dir/__/tools/g1_04_c_fixture_decoder.cpp.obj') tools/semantic/tests/test_runtime_cmake_discovery.py::RuntimeCMakeDiscoveryTest::test_all_fixture_decoder_consumers_compile_with_windows_exception_contract",
+      "FAILED tools/skia/tests/test_sdk_tools.py::SdkMetadataTest::test_active_poc_workflows_are_limited_to_unfinished_gates",
+      "FAILED tools/skia/tests/test_sdk_tools.py::SdkMetadataTest::test_gn_archive_closure_uses_dependency_outputs_in_order",
+      "FAILED verification/tests/test_g1_02r_descriptor_refreeze.py::G102RDescriptorRefreezeTest::test_every_descriptor_change_maps_to_a_closed_machine_projection_defect",
+      "FAILED verification/tests/test_g1_02r_descriptor_refreeze.py::G102RDescriptorRefreezeTest::test_outer_object_content_and_operation_registry_identity_is_preserved",
+      "FAILED verification/tests/test_g1_02r_descriptor_refreeze.py::G102RDescriptorRefreezeTest::test_written_review_artifact_is_deterministic_and_machine_readable",
+      "FAILED verification/tests/test_g1_02r_evidence.py::G102REvidenceTest::test_complete_evidence_is_commit_bound_and_preserves_historical_g1_02",
+      "FAILED verification/tests/test_g1_02r_machine_projection.py::G1_02RMachineProjectionTest::test_image_content_mode_machine_projection_matches_release_identity",
+      "FAILED verification/tests/test_g1_02r_machine_projection.py::G1_02RMachineProjectionTest::test_richtext_machine_projection_matches_current_reconciliation_authority",
+      "FAILED verification/tests/test_g1_02r_machine_projection.py::G1_02RMachineProjectionTest::test_stroke_machine_projection_matches_current_reconciliation_authority",
+      "FAILED verification/tests/test_g1_02r_semantic_differential.py::G102RSemanticDifferentialTest::test_leaf_fixture_differential_compares_wire_and_semantic_projection",
+      "FAILED verification/tests/test_g1_04_authority_publication.py::G104AuthorityPublicationTest::test_current_matrix_is_manifest_published_and_complete",
+      "FAILED verification/tests/test_g1_04_authority_publication.py::G104AuthorityPublicationTest::test_manifest_parser_rejects_duplicate_current_authority_key",
+      "FAILED verification/tests/test_g1_04_c_fixture_compiler.py::G104CFixtureCompilerTest::test_accepted_c0_c1_paths_match_task_anchor",
+      "FAILED verification/tests/test_g1_04_c_fixture_compiler.py::G104CFixtureCompilerTest::test_clean_regeneration_matches_committed_tree",
+      "FAILED verification/tests/test_g1_04_geometry_binding.py::GeometryProductionBindingTest::test_current_production_mapping_matches_projection",
+      "FAILED verification/tests/test_geometry_accounting_projection.py::GeometryAccountingProjectionTest::test_projection_matches_authority_and_hard_limit",
+      "FAILED verification/tests/test_semantic_contract.py::SemanticContractTest::test_g1_02r_machine_projection_contract_has_complete_independent_leaf_closure",
+      "FAILED verification/tests/test_semantic_sdk.py::SemanticSdkTest::test_archive_is_deterministic_and_manifest_is_verified",
+      "FAILED verification/tests/test_semantic_sdk.py::SemanticSdkTest::test_locked_archive_can_ignore_current_producer_recipe"
+    ]
+  },
+  "full_ctest_initial": {
+    "passed": 24,
+    "not_run": 49,
+    "failed": 1,
+    "log": "windows-ctest-full.log.gz"
+  },
+  "full_build": {
+    "status": "blocked",
+    "reason": "Existing tests use deprecated SkiaInkBackend under /WX",
+    "log": "windows-build-all.log.gz"
+  },
+  "functional_checkpoint_passed": false,
+  "tested_revision": "9085b973186a0ab69b5b95a182dcafb4a04661ca",
+  "full_suite_green": false,
+  "local_configuration": {
+    "preset": "g3-windows-release",
+    "build_type": "Release",
+    "compiler": "clang-cl 22.1.8",
+    "CANVAS_BUILD_ARC": true,
+    "CANVAS_RENDER_BUILD_TESTS": true,
+    "CMAKE_CXX_FLAGS": "/clang:-Wno-missing-designated-field-initializers",
+    "test_assertions": "/UNDEBUG applied to executable targets ending in _tests via the archived local CMake hook; production flags unchanged",
+    "test_hook": "windows-test-assertions.cmake",
+    "cmake_hook_variable": "CMAKE_PROJECT_canvas_v2_pocs_INCLUDE",
+    "preset_default_difference": "preset defaults render tests OFF; this local run explicitly enabled them",
+    "sdk": "locked prebuilt Windows x64 D3D12 Skia SDK; no source rebuild",
+    "vsdevcmd": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/Tools/VsDevCmd.bat -arch=x64"
+  }
+}
