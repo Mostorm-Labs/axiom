@@ -1,0 +1,54 @@
+#pragma once
+
+#include "canvas/debug_ui/snapshot.hpp"
+#include "canvas/debug_ui/command.hpp"
+#include "canvas/debug_ui/input_capture.hpp"
+#include "canvas/debug_ui/panels.hpp"
+#include "canvas/debug_ui/runtime_facade.hpp"
+
+#include <array>
+#include <cstdint>
+#include <optional>
+#include <string_view>
+
+namespace canvas::debug_ui {
+
+enum class DebugPanel : std::uint8_t {
+    kOverview = 0, kInput, kCanvas, kArcPreview, kSurface, kBrush, kTelemetry, kInspection,
+    kCount,
+};
+
+struct DebugUiContext final {
+    MutexCopySnapshotChannel* snapshots = nullptr;
+    BoundedCommandQueue* commands = nullptr;
+    InputCaptureGate* input = nullptr;
+};
+
+struct PanelState final {
+    DebugPanel panel = DebugPanel::kOverview;
+    bool available = true;
+    std::string_view label{};
+};
+
+class DebugController final {
+  public:
+    explicit DebugController(DebugUiContext context) : context_(context) {}
+    [[nodiscard]] DebugSnapshot snapshot() const { return context_.snapshots->read(); }
+    [[nodiscard]] std::array<PanelState, static_cast<std::size_t>(DebugPanel::kCount)> panels() const;
+    [[nodiscard]] std::optional<CommandReceipt> submit(DebugCommand command);
+
+  private:
+    DebugUiContext context_;
+};
+
+class ImGuiSkiaRenderer final {
+  public:
+    [[nodiscard]] static constexpr std::string_view backendName() noexcept {
+        return "ImGuiSkiaRenderer/reference";
+    }
+    [[nodiscard]] std::uint64_t render(const DebugSnapshot& snapshot) noexcept {
+        return snapshot.stamp.sequence;
+    }
+};
+
+}  // namespace canvas::debug_ui

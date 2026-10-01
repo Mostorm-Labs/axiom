@@ -405,6 +405,7 @@ def bootstrap_core(lock: dict, use_archives: bool, use_raw: bool) -> None:
         ("googletest", "googletest"),
         ("nlohmann_json", "nlohmann-json"),
         ("xxhash", "xxhash"),
+        ("imgui", "imgui"),
     ):
         dependency = lock["dependencies"][key]
         if use_raw:
