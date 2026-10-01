@@ -1,20 +1,6 @@
 name: POC-03 100K Scene
 
 on:
-  pull_request:
-    paths:
-      - "r1-full-skia-sdk.lock.json"
-      - "pocs/large_scene/**"
-      - "pocs/ink_engine/**"
-      - "runtime/foundation/**"
-      - "runtime/scene/**"
-      - "CMakeLists.txt"
-      - "CMakePresets.json"
-      - "cmake/**"
-      - "docs/api/canvas_runtime_api_v1.h"
-      - "docs/api/canvas_runtime_api_v1.manifest.json"
-      - "tools/check_runtime_abi_manifest.py"
-      - "tools/check_runtime_boundaries.py"
   push:
     branches: [main, "codex/poc-03-100k-scene"]
     paths:

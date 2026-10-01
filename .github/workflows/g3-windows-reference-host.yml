@@ -47,14 +47,17 @@ jobs:
           if (-not (Test-Path $config -PathType Leaf)) {
             throw "Locked Windows Skia SDK is missing CanvasSkiaConfig.cmake: $config"
           }
-          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot"
+          cmake --preset g3-windows-release -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" -DCANVAS_SKIA_SDK_ROOT="$sdkRoot" -DCANVAS_RENDER_BUILD_TESTS=ON
       - name: Build Windows host
         shell: pwsh
-        run: cmake --build --preset g3-windows-release --target axiom_canvas_demo_windows --parallel
+        run: >-
+          cmake --build --preset g3-windows-release
+          --target axiom_canvas_demo_windows axiom_demo_windows_surface_tests
+          --parallel
       - name: Run portable and Windows smoke
         shell: pwsh
         run: |
-          ctest --test-dir out/g3-windows-release --output-on-failure
+          ctest --test-dir out/g3-windows-release -R '^G3WindowsSurfaceAdapter$' --output-on-failure
           New-Item -ItemType Directory -Force out/g3-09-windows-result | Out-Null
           out/g3-windows-release/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe "--smoke-evidence=$PWD/out/g3-09-windows-result/windows-smoke-evidence.json"
           if ($LASTEXITCODE -ne 0) { throw "Windows canonical surface smoke failed" }

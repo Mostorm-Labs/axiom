@@ -39,6 +39,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: Bootstrap locked core dependencies
+        run: python tools/bootstrap_deps.py --core
       - name: Configure dependency-free RF-01 contract
         run: cmake --preset rf01-host-debug
       - name: Build C11, C++20, Scene, and Fake participant checks

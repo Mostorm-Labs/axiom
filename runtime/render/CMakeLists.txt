@@ -208,33 +208,38 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     endif()
     add_test(NAME G3RenderTargetSwitching COMMAND axiom_render_target_tests)
 
-    add_executable(axiom_render_skia_surface_provider_tests
-        tests/skia_surface_provider_test.cpp)
-    target_link_libraries(axiom_render_skia_surface_provider_tests
-        PRIVATE canvas_runtime_render)
-    target_compile_features(axiom_render_skia_surface_provider_tests PRIVATE cxx_std_20)
-    if(MSVC)
-      target_compile_options(axiom_render_skia_surface_provider_tests
-        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
-    else()
-      target_compile_options(axiom_render_skia_surface_provider_tests
-        PRIVATE -Wall -Wextra -Wpedantic -Werror)
-    endif()
-    add_test(NAME G3SkiaSurfaceProvider COMMAND axiom_render_skia_surface_provider_tests)
+    # These tests exercise the Skia-only providers below.  Keep them out of
+    # non-Skia host configurations (such as POC-03/RF-01), where the provider
+    # symbols are intentionally not compiled into canvas_runtime_render.
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+      add_executable(axiom_render_skia_surface_provider_tests
+          tests/skia_surface_provider_test.cpp)
+      target_link_libraries(axiom_render_skia_surface_provider_tests
+          PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_render_skia_surface_provider_tests PRIVATE cxx_std_20)
+      if(MSVC)
+        target_compile_options(axiom_render_skia_surface_provider_tests
+          PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+      else()
+        target_compile_options(axiom_render_skia_surface_provider_tests
+          PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+      add_test(NAME G3SkiaSurfaceProvider COMMAND axiom_render_skia_surface_provider_tests)
 
-    add_executable(axiom_render_preview_surface_tests
-        tests/preview_surface_test.cpp)
-    target_link_libraries(axiom_render_preview_surface_tests
-        PRIVATE canvas_runtime_render)
-    target_compile_features(axiom_render_preview_surface_tests PRIVATE cxx_std_20)
-    if(MSVC)
-      target_compile_options(axiom_render_preview_surface_tests
-        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
-    else()
-      target_compile_options(axiom_render_preview_surface_tests
-        PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      add_executable(axiom_render_preview_surface_tests
+          tests/preview_surface_test.cpp)
+      target_link_libraries(axiom_render_preview_surface_tests
+          PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_render_preview_surface_tests PRIVATE cxx_std_20)
+      if(MSVC)
+        target_compile_options(axiom_render_preview_surface_tests
+          PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+      else()
+        target_compile_options(axiom_render_preview_surface_tests
+          PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+      add_test(NAME G3PreviewSurface COMMAND axiom_render_preview_surface_tests)
     endif()
-    add_test(NAME G3PreviewSurface COMMAND axiom_render_preview_surface_tests)
 
     add_executable(axiom_render_surface_presentation_tests
         tests/surface_presentation_test.cpp)
