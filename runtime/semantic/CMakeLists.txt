@@ -20,6 +20,7 @@ add_library(canvas_runtime_semantic STATIC
     src/operation_specific_validation.cpp
     src/rich_text_state_plan.cpp
     src/codec.cpp
+    src/brush_engine_codec.cpp
     src/snapshot.cpp
     src/snapshot_bootstrap.cpp
     src/protobuf_object_mapping.cpp

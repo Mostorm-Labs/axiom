@@ -14,6 +14,10 @@
 namespace canvas::semantic {
 namespace {
 
+bool supportedSnapshotVersion(std::uint32_t version) noexcept {
+    return version == 1U || version == 2U;
+}
+
 SnapshotBootstrapResult rejectWithoutFailure(StatefulIssue issue) {
     SnapshotBootstrapResult result;
     result.semantic_error = StatefulResult{issue};
@@ -37,7 +41,7 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     if (objects.size() != 0U) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
-    if (snapshot.schema_version != 1U || snapshot.document_id.isZero()) {
+    if (!supportedSnapshotVersion(snapshot.schema_version) || snapshot.document_id.isZero()) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
 

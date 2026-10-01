@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.1",
+  "task_id": "GT-G4-5-C2",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Centralize routed Ink into one incremental common Brush hot path and split preview/canonical outputs after Brush processing.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "1073165f6492797cf71e503e401393c5c697d1437f952a105eb7416cec75f1c2"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "30958b09e60ca1e8068976bd91f43bb5c5c323f7d5844fe9bcb32299c0bbdca3"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "d1e78ff3ee358d96a33e36c8c1e788f18951e544ab15385aa4e01fd9daeabd54"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "1864ced80450435a18ca23ad6148d68b7876ca6f94421bf8489690852bb4100c"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "72c06438dcf7d066a88baf0989020cdfcd69c231907748126596ae7d9923c53a"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "bd5c22bbb9e432bda6b6fb848bc955691be1636c2870b9d24d2147b2138d18f4"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C2/",
+    "base_revision": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "binding": "exact package files bound by SHA-256"
+  },
+  "dependencies": {
+    "accepted_c1_result": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+    "accepted_c1_control_ref": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate package and predecessor/oracle bindings, observe frozen RED C2 gaps, implement the common incremental Brush hot path and output fanout under the P16 thread model, materialize all blocking evidence, and return only at READY_FOR_D0_PACKAGE_REVIEW or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

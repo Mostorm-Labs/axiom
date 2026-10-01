@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "stage": "G4_5_FORWARD_RECONCILIATION",
+  "status": "PASS",
+  "date": "2026-09-21",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "branch": "codex/g4-5-programmable-brush"
+  },
+  "ancestry": {
+    "pre_reconciliation_g4_5_revision": "c486969e781b9f3319e2e1781559cff1ede30c1e",
+    "corrective_main_revision": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+    "merge_revision": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+    "merge_parents": [
+      "c486969e781b9f3319e2e1781559cff1ede30c1e",
+      "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b"
+    ]
+  },
+  "reconciliation_policy": {
+    "preserve_g4_4": [
+      "AutoIntent common runtime arbitration",
+      "PositionOnly normalized pointer phase/capability handling",
+      "common viewport ownership",
+      "Android pointer identity generation handling",
+      "Windows Arc presentation corrections"
+    ],
+    "preserve_g4_5": [
+      "Programmable Brush BrushDefinition/BrushProgram/BrushRuntime",
+      "seven V1 brush families",
+      "Android brush qualification JNI/UI/evidence",
+      "Brush Lab qualification surface",
+      "Arc TemporalTransient"
+    ],
+    "physical_retest_triggered_by_reconciliation": false
+  },
+  "conflict_resolution": {
+    "files": [
+      "apps/ink_playground/platform/android/android_jni.cpp",
+      "apps/ink_playground/platform/android/bridge.cpp",
+      "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/InkPlaygroundView.java",
+      "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/MainActivity.java",
+      "arc/CMakeLists.txt",
+      "arc/platform/windows/windows_backend.cpp"
+    ],
+    "strategy": "semantic three-way reconciliation; no whole-file winner",
+    "static_contract_checks": "PASS",
+    "conflict_markers_present": false
+  },
+  "hosted_verification": {
+    "g4_5_qualification": {
+      "run_id": 35577229198,
+      "run_number": 8,
+      "head_sha": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+      "conclusion": "success",
+      "jobs": {
+        "android_arm64_v8a": "success",
+        "windows_x64": "success",
+        "web_wasm32": "success"
+      },
+      "artifacts": [
+        {
+          "name": "g4-5-android-arm64-v8a-231ac28604cb9ed9e02cf01336202d829b1aa854",
+          "digest": "sha256:ba178c6ade0996745030982f9b9168bc1f9c73c90dcb65341813087c84a0f7be"
+        },
+        {
+          "name": "g4-5-windows-x64-231ac28604cb9ed9e02cf01336202d829b1aa854",
+          "digest": "sha256:4a089b6c0fe625fe72c7db4a7d142e48686058d4bae414f60d78dfe94b1cb2cf"
+        },
+        {
+          "name": "g4-5-web-wasm32-231ac28604cb9ed9e02cf01336202d829b1aa854",
+          "digest": "sha256:e0e834f6df67f4af17d43b8188e3b99d950d9611f549d603c7f8c59ad0c20071"
+        }
+      ]
+    },
+    "arc_poc06": {
+      "run_id": 35577229240,
+      "run_number": 28,
+      "head_sha": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+      "conclusion": "success",
+      "jobs": {
+        "contract_and_boundary": "success",
+        "platform_targets": "success",
+        "poc06_headless": "success"
+      }
+    },
+    "ci_boundary_contract": {
+      "run_id": 35577229224,
+      "head_sha": "231ac28604cb9ed9e02cf01336202d829b1aa854",
+      "conclusion": "success"
+    }
+  },
+  "conclusion": {
+    "automated_forward_reconciliation": "PASS",
+    "g4_5_00_through_09_reopened": false,
+    "g4_5_brush_semantics_preserved": true,
+    "g4_4_common_input_semantics_preserved": true,
+    "next_stage": "Resume existing G4.5 closure at G4.5-10 / final Gate boundary",
+    "final_g4_5_pass_claimed": false
+  }
+}

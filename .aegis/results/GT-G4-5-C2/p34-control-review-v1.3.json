@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "GT-G4-5-C2-P31-v1.3",
+  "result_ref": ".aegis/results/GT-G4-5-C2/result-v1.3.json",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "reviewed_revision": "08190661dc8dd0b84d4ff856b0ef00551e5f5fad",
+    "implementation_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "remote_branch_revision": "08190661dc8dd0b84d4ff856b0ef00551e5f5fad",
+    "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "task_anchor_ancestry": "PASS",
+    "pull_request": 135,
+    "review_record_policy": "This additive P34 record is not part of the implementation boundary it reviews."
+  },
+  "identity_audit": {
+    "repository_identity": "PASS",
+    "package_manifest_hashes": "PASS",
+    "package_anchor": "PASS",
+    "materialized_ref_resolves": "PASS",
+    "implementation_revision_is_ancestor_of_reviewed_revision": "PASS",
+    "result_record_revision": {
+      "declared": "b233f2a4196a437cdf9e6c701a2b9393a2f44deb",
+      "observed_result_file_revision": "08190661dc8dd0b84d4ff856b0ef00551e5f5fad",
+      "status": "MISMATCH"
+    },
+    "package_supersedes": {
+      "declared": ["GT-G4-5-C2-P31-v1.3"],
+      "status": "SELF_REFERENCE_TASK_PACKAGE_DEFECT"
+    }
+  },
+  "frozen_requirement_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "Repository identity and task-anchor ancestry resolve",
+      "Descriptor refreeze records zero unmapped changes and lock SHA 8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d",
+      "Implementation revision 494dfc8060094a9b9719d44d9cf827c26aeb836d is represented by the hosted qualification and platform checks",
+      "Hosted provider checks recorded for G1, G3, G4.5, RF-01, POC-02, POC-06 and SDK validation are green",
+      "Local RF-01 MSVC evidence records 57/57 passing tests",
+      "No evidence record issues an official overall G4 or G4.5 Gate PASS"
+    ],
+    "failed": [
+      {
+        "id": "P32-DESIGN-PREFLIGHT-BLOCKED",
+        "classification": "TASK_PACKAGE_DEFECT",
+        "failure_mode": "The required implementation-design-preflight artifact is explicitly BLOCKED_TASK_PACKAGE_DEFECT and records an unresolved BrushDefinition-to-R1 mapping/package-scope conflict.",
+        "impact": "The frozen package does not present a complete, self-consistent preflight closure for the implementation it authorizes.",
+        "existing_independent_coverage": "Hosted qualification and focused runtime tests cover selected behavior, but cannot replace the package normalization and preflight authority boundary.",
+        "new_evidence_unique_detection_value": "The preflight status detects an unresolved upstream package decision before Gate closure.",
+        "blocking_justification": "The named blocking artifact is not a PASS result and its unresolved scope decision is upstream of P32; P34 cannot reinterpret it as implementation completion.",
+        "why_existing_frozen_evidence_did_not_cover_it": "The producer materialized later evidence without replacing the self-blocked preflight record.",
+        "why_it_is_severe_enough_to_override_closure_stability": "This is a package/authority-boundary defect, not a confidence gap; accepting it would authorize an implementation against an unresolved frozen mapping."
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "status": "BLOCKED",
+    "passed": [
+      "Package lock files recompute to their declared SHA-256 values",
+      "Remote branch resolves to the reviewed revision 08190661dc8dd0b84d4ff856b0ef00551e5f5fad",
+      "Hosted provider evidence records concrete GitHub Actions run/job/artifact identities and completed conclusions",
+      "Descriptor refreeze, performance, platform ownership, regression and scope records are bound to implementation revision 494dfc8060094a9b9719d44d9cf827c26aeb836d"
+    ],
+    "failed": [
+      {
+        "id": "RESULT_IDENTITY_MISMATCH",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "result-v1.3.json declares result_record_revision b233f2a4196a437cdf9e6c701a2b9393a2f44deb, while the reviewer-accessible result file is contained in 08190661dc8dd0b84d4ff856b0ef00551e5f5fad.",
+        "impact": "A reviewer cannot establish a single exact result-record boundary for the claimed closure.",
+        "existing_independent_coverage": "The branch and provider runs are resolvable, but neither repairs the stale self-identity in the result record.",
+        "new_evidence_unique_detection_value": "Exact result identity reconciliation detects stale or substituted result metadata.",
+        "blocking_justification": "The frozen evidence contract requires an exact reviewer-accessible result revision; this prerequisite is unsatisfied.",
+        "why_existing_frozen_evidence_did_not_cover_it": "Evidence-only normalization commits changed the result file without updating its declared result_record_revision to the containing materialization.",
+        "why_it_is_severe_enough_to_override_closure_stability": "Identity ambiguity invalidates downstream evidence binding, independent of green test outcomes."
+      },
+      {
+        "id": "EVIDENCE_INPUT_REFS_INCOMPLETE",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "result-v1.3.json references only four versioned files, while evidence-contract.json defines eighteen blocking artifact names and requires exact evidence_input_refs for the closure.",
+        "impact": "The result does not declare the complete evidence graph that a reviewer must audit; several blocking artifacts are therefore outside the returned result boundary.",
+        "existing_independent_coverage": "Individual v1.3 files exist locally and on the reviewed branch, but their existence is not equivalent to result-bound evidence input identity.",
+        "new_evidence_unique_detection_value": "Review-owned traversal of the package contract detects omitted blocking evidence that aggregate hosted status cannot detect.",
+        "blocking_justification": "The package return_rule explicitly requires exact evidence_input_refs for every blocking artifact.",
+        "why_existing_frozen_evidence_did_not_cover_it": "The producer carried forward a compact four-file list while materializing the expanded v1.3 closure.",
+        "why_it_is_severe_enough_to_override_closure_stability": "Missing result-bound inputs leave proof obligations without a declared review boundary, not merely less diagnostic detail."
+      },
+      {
+        "id": "RED_ORACLE_BINDING_MISMATCH",
+        "classification": "BLOCKED_EVIDENCE",
+        "failure_mode": "red-oracle-transcript-v1.3.json is labeled package GT-G4-5-C2-P31-v0.8 and carries oracle SHA c627f331..., while verification.lock.json for v1.3 requires oracle SHA 62303f942... .",
+        "impact": "The required fixed-anchor RED precondition cannot be proven against the v1.3 frozen oracle and package.",
+        "existing_independent_coverage": "The transcript does show an exit-0 historical RED observation, but it is not the exact locked oracle identity required by v1.3.",
+        "new_evidence_unique_detection_value": "Oracle SHA/package binding detects stale precondition evidence that could otherwise be mistaken for current closure proof.",
+        "blocking_justification": "The verification lock marks the RED oracle as required and content-addressed; the observed transcript is a different artifact.",
+        "why_existing_frozen_evidence_did_not_cover_it": "The producer copied a historical v0.8 transcript into the v1.3 evidence set without regenerating the locked oracle transcript.",
+        "why_it_is_severe_enough_to_override_closure_stability": "A mismatched precondition means the implementation sequence itself is not independently established under the active package."
+      }
+    ],
+    "non_blocking": [
+      {
+        "id": "WORKTREE_UNTRACKED_BUILD_OUTPUTS",
+        "classification": "NON_BLOCKING_HARDENING",
+        "description": "The review checkout contains untracked build-windows-clang, build-windows-real and evidence directories. They are not part of the committed boundary and do not alter the reviewed tree."
+      },
+      {
+        "id": "CI_ACTION_DEPRECATION_MAINTENANCE",
+        "classification": "NON_BLOCKING_HARDENING",
+        "description": "The green PR checks include known action-runtime maintenance warnings; no reviewed check failed."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "status": "PASS_WITH_BLOCKERS",
+    "checks": {
+      "repository_identity": "PASS",
+      "remote_head_matches_reviewed_head": "PASS",
+      "task_anchor_ancestry": "PASS",
+      "package_lock_hashes": "PASS",
+      "implementation_ancestor": "PASS",
+      "hosted_provider_checks": "PASS",
+      "result_evidence_boundary": "FAIL",
+      "red_oracle_identity": "FAIL",
+      "working_tree_committed_boundary": "PASS_WITH_UNTRACKED_LOCAL_OUTPUTS"
+    }
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Untracked local build/evidence outputs are review-environment residue only.",
+      "CI action-runtime deprecation is maintenance hardening."
+    ]
+  },
+  "gate_review": {
+    "frozen_requirements": {
+      "passed": ["repository and implementation identity", "descriptor and hosted implementation observations"],
+      "failed": ["complete v1.3 package/preflight closure"]
+    },
+    "frozen_evidence": {
+      "passed": ["package lock hashes", "hosted provider identities", "implementation-bound targeted evidence"],
+      "failed": ["exact result-record identity", "complete evidence_input_refs", "v1.3 RED oracle identity"]
+    },
+    "verdict": "BLOCKED"
+  },
+  "decision": {
+    "verdict": "BLOCKED",
+    "official_gate_pass": false,
+    "classification": ["BLOCKED_EVIDENCE", "TASK_PACKAGE_DEFECT"],
+    "implementation_defect": false,
+    "next_route": "P31_PACKAGE_REPAIR_AND_P32_REVERIFY",
+    "preserve_valid_implementation_work": true,
+    "required_before_re_review": [
+      "Repair the self-referential package supersedes metadata or issue a corrected P31 package revision.",
+      "Regenerate implementation-design-preflight and RED oracle transcript against the exact v1.3 locks.",
+      "Regenerate result-v1.3.json so result_record_revision names its containing materialized commit.",
+      "Populate result evidence_input_refs with every blocking artifact required by evidence-contract.json, using one consistent revision boundary.",
+      "Return a new exact pushed materialized_ref and rerun the frozen affected checks before requesting P34 again."
+    ],
+    "reviewed_implementation_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "reviewed_materialized_revision": "08190661dc8dd0b84d4ff856b0ef00551e5f5fad"
+  }
+}

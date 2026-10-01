@@ -1,0 +1,7 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "PASS",
+  "reason": "Android ownership migration requires preserving accepted BrushRuntime/Skia preview behavior; the attempted batch-only draft was reverted before durable completion.",
+  "obligation": "C1-V4",
+  "result": "Android MotionEvent/history now submits one JNI platform batch per extracted sample to common ingress; Java no longer calls begin/sample/commit or brush lifecycle APIs. BrushRuntime and Skia RGBA rendering remain preserved in native bridge."
+}

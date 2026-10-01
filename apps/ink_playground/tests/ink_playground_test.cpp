@@ -42,15 +42,15 @@ void surface_test() {
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(320, 180));
   assert(host.surface().available);
-  assert(host.surface().generation == 1);
+  assert(host.surface().generation == 2);
   assert(host.presentCanonicalFrame(1, 0.0));
   assert(host.resizeSurface(640, 360));
-  assert(host.surface().generation == 2);
+  assert(host.surface().generation == 3);
   assert(host.surface().width == 640);
   assert(host.loseSurface());
   assert(!host.surface().available);
   assert(host.resizeSurface(800, 450));
-  assert(host.surface().generation == 3);
+  assert(host.surface().generation == 4);
   assert(host.surface().available);
 }
 

@@ -1,0 +1,65 @@
+{
+  "pipelineVersion": 1,
+  "defaultsVersion": 1,
+  "profile": "chalk-grain-v1",
+  "stages": {
+    "input": {
+      "mode": "on"
+    },
+    "vector": {
+      "mode": "on"
+    },
+    "taper": {
+      "mode": "on"
+    },
+    "shape": {
+      "mode": "on"
+    },
+    "grain": {
+      "mode": "on"
+    },
+    "rendering": {
+      "mode": "on"
+    },
+    "wetMix": {
+      "mode": "off"
+    }
+  },
+  "vector": {
+    "size": 16,
+    "thinning": 0.5,
+    "smoothing": 0.4314516,
+    "streamline": 0.4314516,
+    "pressureSource": "simulated",
+    "missingPressure": "reject",
+    "easing": "linear",
+    "startCap": true,
+    "endCap": true,
+    "startTaper": 0.3717391,
+    "endTaper": 0.2913043
+  },
+  "shape": {
+    "resourceId": "chalk-shape-screenshot-extract-v1",
+    "sha256": "4171df4f399e11b7bc44fa9c688c19f7517622b95c845d63eadda91bbd8feaae",
+    "version": 1
+  },
+  "grain": {
+    "resourceId": "chalk-grain-screenshot-extract-v1",
+    "sha256": "d6c0834bd8e9992c3ca448ca5747b76db4ec7f79cd3d82167273c7d71e1bd520",
+    "version": 1,
+    "density": 0.9,
+    "spacing": 2.0,
+    "opacity": 0.8
+  },
+  "paint": {
+    "rgba": [
+      0.12,
+      0.1,
+      0.08,
+      0.8
+    ],
+    "opacity": 0.8,
+    "blend": "source-over",
+    "colorSpace": "srgb"
+  }
+}

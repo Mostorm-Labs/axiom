@@ -1,0 +1,201 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-R01",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "R0: verify the pinned perfect-freehand commit and all source blob identities from reference.lock.json.",
+        "R0: retain MIT attribution for copied/adapted reference material.",
+        "R0: materialize corpus-plan.json to concrete deterministic corpus inputs.",
+        "R0: generate independent expected StrokePoint and outline fixtures by executing the pinned upstream reference before C++ kernel mutation.",
+        "R0: materialize known-limitations registry and R0 freeze evidence.",
+        "R1: add a renderer-neutral C++ one-shot vector-stroke reference kernel using double precision.",
+        "R1: expose test-visible conditioned StrokePoint data: point, pressure, vector, distance, runningLength.",
+        "R1: implement pinned one/two-point handling, streamline, duplicate filtering, minimum-length behavior, pressure defaults, simulated pressure, initial-pressure averaging, radius/thinning, outline smoothing, taper, caps, sharp corners, dot behavior and final outline ordering.",
+        "R1: compare C++ StrokePoint and outline results against independently generated R0 fixtures under frozen tolerances.",
+        "R1: preserve a clean one-shot reference evaluator for future R7 incremental-equivalence work.",
+        "R1: materialize parity, determinism, scope and regression evidence."
+      ],
+      "forbidden_changes": [
+        "Any Skia include, path builder, canvas draw or raster-golden implementation",
+        "runtime/render changes",
+        "Web, Android, Apple/macOS, Windows platform changes",
+        "Arc protocol/backend/input/presentation changes",
+        "BrushDescriptor, StrokeRecord, ObjectKind, Operation or semantic validator changes",
+        "BrushCompiler/BrushRuntime product integration for RB-V01",
+        "incremental evaluator, stable prefix, replaceable tail, partial redraw or latency optimization",
+        "DAB, Texture, Pencil, Chalk, Watercolor or Natural Media implementation",
+        "silently fixing known perfect-freehand limitations under the pinned reference identity",
+        "claiming R2, cross-platform, Windows, Arc, G4.5 or release PASS"
+      ],
+      "preserved_work": {
+        "task_anchor": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+        "interrupted_09v_head": "a02ebdb1d811cfbe6e22295ddcacb66cedec49b9",
+        "policy": "Do not cherry-pick production mutations from interrupted 09V into R01. Source-reading notes and test ideas may be re-derived; current approximate vector geometry and Windows GDI Arc work remain on the interrupted branch."
+      },
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/ink/CMakeLists.txt"
+        ],
+        "new_files_allowed": [
+          "runtime/ink/include/canvas/ink/vector_stroke_reference.hpp",
+          "runtime/ink/src/vector_stroke_reference.cpp",
+          "runtime/ink/tests/vector_stroke_reference_test.cpp",
+          "runtime/ink/tests/vector_stroke_reference_fixtures.hpp",
+          "verification/reference/perfect_freehand/**",
+          "tools/reference/perfect_freehand/**",
+          ".aegis/results/GT-G4-5-R01/**"
+        ],
+        "package_files_immutable_after_p32_entry": ".aegis/packages/GT-G4-5-R01/**",
+        "other_production_paths": "FORBIDDEN; return TASK_PACKAGE_DEFECT or AUTHORITY_CONFLICT rather than expanding scope."
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "R01-red",
+          "command_or_oracle": "R1 parity acceptance tests against pre-change code after R0 fixture generation",
+          "expected_result": "RED because the C++ kernel is absent",
+          "blocking_reason": "proves the oracle does not merely restate the implementation"
+        },
+        {
+          "id": "PFSourceBinding",
+          "command_or_oracle": "reference manifest/blob verifier",
+          "expected_result": "PASS",
+          "blocking_reason": "reference identity"
+        },
+        {
+          "id": "PFCorpusIdentity",
+          "command_or_oracle": "corpus manifest verifier",
+          "expected_result": "PASS",
+          "blocking_reason": "input identity"
+        },
+        {
+          "id": "PFStrokePointParity",
+          "command_or_oracle": "G45PerfectFreehandStrokePointParity or equivalent frozen CTest",
+          "expected_result": "PASS",
+          "blocking_reason": "conditioned centerline parity"
+        },
+        {
+          "id": "PFOutlineParity",
+          "command_or_oracle": "G45PerfectFreehandOutlineParity or equivalent frozen CTest",
+          "expected_result": "PASS",
+          "blocking_reason": "outline parity"
+        },
+        {
+          "id": "PFSpecialCases",
+          "command_or_oracle": "pressure + one/two-point + taper/cap + normal corner acceptance set",
+          "expected_result": "PASS",
+          "blocking_reason": "reference behavior completeness"
+        },
+        {
+          "id": "PFKnownLimitationParity",
+          "command_or_oracle": "known-limit reference parity set",
+          "expected_result": "PASS",
+          "blocking_reason": "no silent baseline change"
+        },
+        {
+          "id": "PFDeterminism",
+          "command_or_oracle": "repeat one-shot corpus evaluation and compare normalized digest/scalars",
+          "expected_result": "PASS",
+          "blocking_reason": "future oracle stability"
+        },
+        {
+          "id": "existing-ink-regressions",
+          "command_or_oracle": "relevant runtime/ink CTest including G45ProgrammableBrush",
+          "expected_result": "PASS",
+          "blocking_reason": "preserve accepted ink foundation"
+        },
+        {
+          "id": "scope-diff",
+          "command_or_oracle": "diff from task anchor",
+          "expected_result": "only authorized R01 paths",
+          "blocking_reason": "stage isolation"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing repository CI that exercises the exact result revision and runtime/ink tests"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "reference-source-manifest.json",
+        "reference-license-record.json",
+        "corpus-inputs.json",
+        "reference-stroke-points.json",
+        "reference-outlines.json",
+        "known-limitations.json",
+        "reference-generation-record.json",
+        "r0-reference-freeze-result.json",
+        "red-oracle-preflight.json",
+        "implementation-design-preflight.json",
+        "r1-stroke-point-parity.json",
+        "r1-outline-parity.json",
+        "r1-special-cases.json",
+        "r1-known-limitations-parity.json",
+        "r1-determinism.json",
+        "scope-diff.json",
+        "regression-summary.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "optional upstream test-run log",
+        "optional exact-branch hosted CI run"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "PF_REFERENCE_FROZEN is satisfied with independently generated reviewer-resolvable reference fixtures.",
+        "All normal StrokePoint and outline fixtures meet frozen counts/order/tolerances.",
+        "All frozen special-case oracles pass.",
+        "All known-limit fixtures reproduce the pinned reference and remain labeled.",
+        "One-shot C++ evaluator determinism passes.",
+        "Diff contains no Skia/platform/Arc/canonical/product-integration changes.",
+        "Relevant existing runtime/ink regressions pass.",
+        "Exact result/evidence revision is pushed on codex/g4-5-pf-reference-conformance.",
+        "result status is READY_FOR_R2_PACKAGE_REVIEW."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "reference fixture generation path/toolchain before production mutation",
+        "source/blob verification method",
+        "C++ module/API/type layout",
+        "double-precision and tolerance handling",
+        "upstream function-to-C++ responsibility mapping",
+        "fixture-to-obligation mapping",
+        "known-limitation isolation",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "success_status": "READY_FOR_R2_PACKAGE_REVIEW"
+    }
+  }
+}

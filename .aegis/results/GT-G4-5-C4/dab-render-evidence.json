@@ -1,0 +1,15 @@
+{
+  "canonical_command": "DabBrushStrokeReferenceCommand",
+  "shared_helper": "drawContinuousChalkDabsToSkCanvas for revision 4; drawChalkDabsToSkCanvas for revision 3; drawDabInstancesToSkCanvas for revisions 1-2",
+  "canonical_preview_surface_separation": true,
+  "viewport_transform": true,
+  "material_sampling": {
+    "shape": "user-provided Shape Editor screenshot-derived 256x256 alpha mask",
+    "grain": "user-provided Grain Editor screenshot-derived 256x256 grayscale texture in canvas space",
+    "authority": "shared Skia helper",
+    "revision_4_composition": "continuous grain-covered stroke body with deterministic irregular low-opacity shape overlays"
+  },
+  "erase_mask": "existing renderer-neutral mask path",
+  "host_render_tests": "G4SkiaChalkTexture and G4SkiaChalkContinuousTexture PASS",
+  "g3_snapshot_authority_blocker": "preserved"
+}

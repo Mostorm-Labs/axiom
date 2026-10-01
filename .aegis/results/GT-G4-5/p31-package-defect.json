@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "stage": "P35_TO_P31_REPAIR",
+  "classification": "TASK_PACKAGE_DEFECT",
+  "superseded_package": "GT-G4-5-P31-v0.1",
+  "finding": "Windows qualification is frozen as blocking, but v0.1 did not authorize the workflow mutation required to produce it.",
+  "repository_reality": {
+    "existing_arbitrary_revision_g4_5_windows_lane": false,
+    "existing_windows_lanes": "Hard-wired to other product targets and therefore not a valid Brush Lab qualification oracle."
+  },
+  "preserved_work": [
+    "5e75dbe8eaee4342b2d2a5ea8fb6a17f0b23b807",
+    "ac07a7da1d576867429be67f38f2f6db9872b57e"
+  ],
+  "repair": "Supersede v0.1 with v0.2 and authorize only .github/workflows/g4-5-programmable-brush.yml plus its static boundary contract test.",
+  "claim_boundary": "This record repairs execution scope only; it is not G4.5-09 or G4.5 PASS."
+}

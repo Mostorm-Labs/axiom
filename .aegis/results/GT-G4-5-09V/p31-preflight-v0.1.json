@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "stage": "P31",
+  "status": "PASS",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "main_revision": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+    "task_anchor": "f3b8787844b5dad80ba2318e96d1a66180bb4278",
+    "anchor_relation": "ancestor",
+    "execution_ref": "codex/g4-5-vector-freehand-arc-parity"
+  },
+  "reconciliation": {
+    "programmable_brush_head": "f3b8787844b5dad80ba2318e96d1a66180bb4278",
+    "programmable_brush_ahead_of_main": 19,
+    "rejected_09f_head": "73d7f365038c9da23573b0c0820a21ae42446b4d",
+    "rejected_09f_reason": "contains superseded DAB/Texture implementation outside current G4.5 authority"
+  },
+  "authority_resolution": {
+    "prior_blocker": "editable taper could not be persisted in existing canonical schema",
+    "resolution": "RB-V01 start/end taper is fixed by immutable brush family/version semantics; live controls are size, pressure/thinning, smoothing/streamline",
+    "canonical_schema_change": false
+  },
+  "checks": {
+    "RepositoryIdentityPreflight": "PASS",
+    "AuthoritySourceBindingPreflight": "PASS",
+    "PackageBindingPreflight": "PASS",
+    "EvidenceContractPreflight": "PASS",
+    "ClosureContractPreflight": "PASS",
+    "ScopeConflict": false,
+    "UnresolvedSemanticDecision": false
+  },
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION",
+  "package_materialization_ref": "973e3e049a8362fbdced0f1d33ce6a9358b3f1ac",
+  "package_ref": ".aegis/packages/GT-G4-5-09V/package.json",
+  "hash_validation": {
+    "authority.lock.json": "PASS",
+    "verification.lock.json": "PASS",
+    "execution-contract.json": "PASS",
+    "implementation-context.md": "PASS",
+    "evidence-contract.json": "PASS"
+  }
+}

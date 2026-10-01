@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "review_boundary": "Exact result revision, package locks, scope audit, deterministic tests, independent golden corpus, qualification bundle and available capability-profile evidence",
+  "artifacts": [
+    {"id":"wp00-repo-reconciliation","path":".aegis/results/GT-G4-5/wp00-repo-reconciliation.json","blocking":true},
+    {"id":"p31-control-review","path":".aegis/results/GT-G4-5/p31-control-review.json","blocking":true},
+    {"id":"result","path":".aegis/results/GT-G4-5/result.json","blocking":true},
+    {"id":"portable-regression-summary","path":".aegis/results/GT-G4-5/portable-regression-summary.json","blocking":true},
+    {"id":"brush-definition-program-evidence","path":".aegis/results/GT-G4-5/brush-definition-program-evidence.json","blocking":true},
+    {"id":"runtime-resource-dynamics-evidence","path":".aegis/results/GT-G4-5/runtime-resource-dynamics-evidence.json","blocking":true},
+    {"id":"v1-brush-golden-manifest","path":".aegis/results/GT-G4-5/v1-brush-golden-manifest.json","blocking":true},
+    {"id":"laser-transient-evidence","path":".aegis/results/GT-G4-5/laser-transient-evidence.json","blocking":true},
+    {"id":"brush-lab-workload-evidence","path":".aegis/results/GT-G4-5/brush-lab-workload-evidence.json","blocking":true},
+    {"id":"qualification-bundle-manifest","path":".aegis/results/GT-G4-5/qualification-bundle-manifest.json","blocking":true},
+    {"id":"ready-for-physical-verification","path":".aegis/results/GT-G4-5/ready-for-physical-verification.json","blocking":true},
+    {"id":"p34-control-review","path":".aegis/results/GT-G4-5/p34-control-review.json","blocking":true},
+    {"id":"g4-5-10-physical-evidence","path":".aegis/results/GT-G4-5/g4-5-10-physical-evidence.json","blocking":false,"role":"successor-stage input; blocking only for final G4.5 Gate"},
+    {"id":"g5-workload-freeze","path":".aegis/results/GT-G4-5/g5-workload-freeze.json","blocking":false,"role":"successor-stage output"},
+    {"id":"g4-5-final-gate-report","path":".aegis/results/GT-G4-5/g4-5-final-gate-report.json","blocking":false,"role":"successor-stage final Gate output"}
+  ],
+  "capability_policy": {
+    "unsupported_pen_pressure_or_tilt": "NOT_APPLICABLE",
+    "supported_but_not_exercised": "NOT_EXERCISED",
+    "neither_status_may_be_promoted_to_pass": true
+  },
+  "claim_boundary": "P32/P34 may establish READY_FOR_PHYSICAL_VERIFICATION for G4.5-00 through G4.5-09. Only independent review of G4.5-10 may issue final G4.5 PASS."
+}

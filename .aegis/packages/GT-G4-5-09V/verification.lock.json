@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "obligations": [
+    {
+      "id": "09V-V1",
+      "requirement": "RB-V01 compiles as an immutable Vector brush version with canonical-expressible live parameters and fixed/versioned taper semantics.",
+      "oracle": "G45VectorV2Compile + G45VectorBrushParameterIdentity",
+      "acceptance": [
+        "existing v1 program identities/goldens remain unchanged",
+        "RB-V01 version is explicit and deterministic",
+        "size, pressure/thinning and smoothing changes alter expected program/geometry state",
+        "taper is not stored as a transient-only per-stroke parameter"
+      ],
+      "evidence_required": [
+        "vector-reference-definition.json",
+        "vector-program-manifest.json"
+      ]
+    },
+    {
+      "id": "09V-V2",
+      "requirement": "Common Axiom vector geometry generation produces continuous filled variable-width geometry and supports incremental stable-prefix / replaceable-tail evaluation.",
+      "oracle": "G45VectorGeometryMorphology + G45VectorIncrementalEquivalence",
+      "acceptance": [
+        "output is not one primitive per raw sample and not a constant-width centerline",
+        "one-shot and chunked confirmed input converge within frozen numeric tolerance",
+        "stable prefix remains stable while the active tail may be replaced",
+        "fixed start/end taper is visible and deterministic"
+      ],
+      "evidence_required": [
+        "vector-input-corpus.json",
+        "vector-incremental-equivalence.json"
+      ]
+    },
+    {
+      "id": "09V-V3",
+      "requirement": "Canonical persistence/replay uses the existing StrokeRecord/BrushDescriptor schema and can regenerate RB-V01 semantics.",
+      "oracle": "G45VectorCanonicalReplay",
+      "acceptance": [
+        "no canonical schema change",
+        "brush version is preserved in canonical descriptor",
+        "pressure/thinning is faithfully represented through the existing pressure curve contract",
+        "smoothing is faithfully persisted",
+        "replay regenerates equivalent stable vector geometry"
+      ],
+      "evidence_required": [
+        "vector-preview-canonical-parity.json"
+      ]
+    },
+    {
+      "id": "09V-V4",
+      "requirement": "Axiom canonical Skia rendering consumes common vector geometry semantics rather than the existing fixed 3 px path approximation.",
+      "oracle": "G45CanonicalSkiaVectorGolden",
+      "acceptance": [
+        "pressure/width variation affects raster output",
+        "fixed taper affects raster output",
+        "same canonical fixture produces stable geometry/raster digest",
+        "existing legacy render tests remain green"
+      ],
+      "evidence_required": [
+        "vector-preview-canonical-parity.json"
+      ]
+    },
+    {
+      "id": "09V-V5",
+      "requirement": "Windows Arc preview consumes Axiom-produced render-ready vector geometry and does not reconstruct freehand semantics from raw pointer samples.",
+      "oracle": "G45WindowsArcVectorParity",
+      "acceptance": [
+        "raw pointer -> appendPreviewSamples fixed-radius shortcut is not the qualification path",
+        "Arc preview payload is derived from common vector geometry",
+        "Arc owns raster/presentation only",
+        "preview stable geometry digest matches the common semantic output"
+      ],
+      "evidence_required": [
+        "windows-arc-vector-parity.json"
+      ]
+    },
+    {
+      "id": "09V-V6",
+      "requirement": "Space dual-color diagnostic changes presentation color only.",
+      "oracle": "G45WindowsDualColorDiagnostic",
+      "acceptance": [
+        "Arc and canonical colors are visibly distinct when diagnostic is ON",
+        "program identity, vector geometry digest and canonical brush data are unchanged",
+        "legacy runtime-preview mirror no longer owns Space if retained"
+      ],
+      "evidence_required": [
+        "windows-dual-color-diagnostic.json"
+      ]
+    },
+    {
+      "id": "09V-V7",
+      "requirement": "Preview -> CanonicalCommitted -> CanonicalVisible -> Arc clear remains token/generation safe with no material geometry pop.",
+      "oracle": "G45ArcCanonicalVisibleHandoff",
+      "acceptance": [
+        "wrong/stale token cannot clear current preview",
+        "Arc clear occurs only after eligible canonical presentation evidence",
+        "handoff parity detects path/width/taper discontinuity"
+      ],
+      "evidence_required": [
+        "handoff-result.json"
+      ]
+    },
+    {
+      "id": "09V-V8",
+      "requirement": "Vector-heavy workload metrics are exported for G5 without implementing G5 optimization.",
+      "oracle": "G45VectorWorkloadEvidence",
+      "acceptance": [
+        "captures input samples, geometry vertex/point counts, tail replacements, BrushRuntime CPU time, preview submit bytes and handoff timing",
+        "no Tile/SpatialIndex/Scheduler/ResourceBudget implementation is introduced"
+      ],
+      "evidence_required": [
+        "g4-5-vector-workload.json"
+      ]
+    },
+    {
+      "id": "09V-V9",
+      "requirement": "Portable and historical regressions remain green and exact Windows qualification artifacts are reviewer-resolvable.",
+      "oracle": "G4/G4.4/G4.5 CTest + G4.5 Programmable Brush Qualification + Arc/POC-06 exact-result verification",
+      "acceptance": [
+        "relevant Windows/Web/Android builds/tests pass",
+        "Arc/POC-06 passes",
+        "no forbidden diff",
+        "exact Windows qualification bundle is bound to the result revision"
+      ],
+      "evidence_required": [
+        "portable-regression-summary.json",
+        "qualification-bundle-manifest.json",
+        "result.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failures": [
+      "BrushCompiler currently rejects BrushDefinition version 2.",
+      "BrushRuntime vector path currently emits one BrushPrimitive per input sample instead of a freehand filled geometry stream.",
+      "SkiaInkBackend canonical submit currently renders a fixed 3 px stroked path.",
+      "Windows appendPreviewSamples currently maps raw pointer samples directly to fixed-radius ARC_PREVIEW_PRIMITIVE_VECTOR_POINT values.",
+      "Space currently toggles the legacy runtime preview mirror rather than the dual-color semantic-neutral diagnostic."
+    ],
+    "observation_seam": "runtime/ink vector compiler/runtime + runtime/render Skia canonical path + Windows Arc preview integration"
+  }
+}

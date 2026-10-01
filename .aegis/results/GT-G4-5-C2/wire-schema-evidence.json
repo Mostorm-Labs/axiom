@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "status": "PASS",
+  "checked_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+  "obligation": "wire-schema-release",
+  "command": "ctest --test-dir out/c2-proto -R \"BrushEngineCodec|brush_snapshot_v2\"",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+    "source_tree_sha256": "b1be5f410f6505ae4cd72a747856619df8a6ae47c0f27599259b9b5cbe70697a"
+  },
+  "raw_observation": {
+    "schema": "(5,2)/tag10, AddStroke v2, snapshot v2"
+  },
+  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.1/ctest.stdout"
+}

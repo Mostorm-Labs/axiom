@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v0.9",
+  "stage": "P32_REENTRY_REVIEW",
+  "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+  "oracle_path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+  "oracle_sha256": "62303f942b6b06282c3c526427efdf983ccf8b3ba2a1a7efd503aa6a376cd5dd",
+  "anchor_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "exit_code": 0,
+  "stdout": "{\"anchor_revision\": \"4144dfd80b665df435d141382de05196d3b8eb0f\", \"anchor_surface\": \"legacy task-anchor implementation\", \"exit_code\": 0, \"expected_red\": [\"android_platform_brush_runtime_ownership\", \"common_preview_contract_missing\", \"move_append_full_history_evaluation\", \"new_wire_schema_carrier_missing\", \"web_platform_brush_runtime_ownership\", \"windows_raw_pointer_preview_derivation\"], \"kind\": \"C2_RED_ORACLE\", \"legacy_runtime_probe\": {\"command\": [\"c++\", \"-std=c++20\", \"-O0\", \"-I\", \"/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-c2-red-anchor-ko9a3m5h/source/runtime/ink/include\", \"/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-c2-red-k_48hm1l/probe.cpp\", \"/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-c2-red-anchor-ko9a3m5h/source/runtime/ink/src/programmable_brush.cpp\", \"-o\", \"/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-c2-red-k_48hm1l/probe\", \"&&\", \"/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-c2-red-k_48hm1l/probe\"], \"exit_code\": 0, \"first_preview_count\": 2, \"full_history_re_evaluated\": true, \"second_preview_count\": 3, \"status\": \"executed\"}, \"observed\": {\"android_platform_brush_runtime_ownership\": \"RED\", \"common_preview_contract_missing\": \"RED\", \"move_append_full_history_evaluation\": \"RED\", \"new_wire_schema_carrier_missing\": \"RED\", \"web_platform_brush_runtime_ownership\": \"RED\", \"windows_raw_pointer_preview_derivation\": \"RED\"}, \"platform_source_hits\": {\"android\": true, \"web\": true, \"windows\": false}, \"production_mutation\": false, \"schema_version\": \"0.1\", \"unexpected_green\": []}",
+  "stderr": "",
+  "checks": {
+    "all_red": true,
+    "production_mutation": false,
+    "anchor_materialized": true
+  },
+  "input_identity": {
+    "repository_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "oracle_sha256": "62303f942b6b06282c3c526427efdf983ccf8b3ba2a1a7efd503aa6a376cd5dd"
+  }
+}

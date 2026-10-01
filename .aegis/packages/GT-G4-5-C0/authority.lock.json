@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C0",
+  "current": true,
+  "sources": [
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-8111-a0f3-cacc38673252",
+      "title": "G4.5 Common Runtime Ownership Architecture v0.1",
+      "revision": "2026-09-22T18:06:57.058Z",
+      "trusted_content_sha256": "7b3b165f6d40aec538384cf8c08b82ca29312ffb95805b965ef607f11c2452a3"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-8137-90a7-d24e481732ea",
+      "title": "G4.5 C0 Implementation Plan v0.1 - Runtime Interaction Consolidation",
+      "revision": "2026-09-22T18:45:17.072Z",
+      "trusted_content_sha256": "bfed5ebeac6100b15b3f109b8b65290445c74113a36d0922184db01e0c9b37e7"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-814b-902d-ccfe34e58714",
+      "title": "GT-G4-5-R01 P32 Control Review v0.1",
+      "revision": "2026-09-22T18:40:59.856Z",
+      "trusted_content_sha256": "c2697459765f0dfe560afb7663a44d2e8f8ffc7a8be164d2cb0b59ed3d234da6"
+    }
+  ],
+  "repository_authority": [
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/p34-gate-review-v0.4.json",
+      "blob_sha": "abc4913741abfb8be94c5c7aead9fc8f247b371c",
+      "accepted_claims": [
+        "AutoIntent current blocking guarantee",
+        "PositionOnly compatibility",
+        "provisional zero canonical mutation",
+        "common runtime ownership across Windows Android Web",
+        "third-plus contact deviation is accepted non-blocking"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/auto-intent-evidence.json",
+      "blob_sha": "324337105d538b07c873420483968b1091bbc061",
+      "accepted_claims": [
+        "Pending first plus second becomes ViewportGesture",
+        "Ink-locked first plus later second becomes independent Ink",
+        "predicted samples are non-owning",
+        "PositionOnly remains supported"
+      ]
+    },
+    {
+      "path": ".aegis/results/GT-G4-4-CORR-01/policy-matrix-evidence.json",
+      "blob_sha": "df394a57d795b83cb0a401f50325a449fd91b00a",
+      "accepted_claims": [
+        "radial slop 8",
+        "path slop 12",
+        "no sample-count activation",
+        "MultiInk and GesturePriority code seams exist"
+      ]
+    }
+  ],
+  "trusted_statements": [
+    "C0 is a behavior-preserving ownership extraction, not a redesign of G4.4 interaction semantics.",
+    "AutoIntent remains the current default and blocking product guarantee.",
+    "MultiInk and GesturePriority remain implemented but deferred non-blocking modes.",
+    "The accepted third-plus-contact during active two-contact ViewportGesture finding remains unchanged in C0.",
+    "Existing MultiContactCoordinator and TwoFingerViewportGesture semantics are preserved and composed by new runtime-owned orchestration.",
+    "InkPlaygroundHost must stop owning contact arbitration caches, gesture math, committed viewport transform, and view-to-content transform policy.",
+    "Web must stop owning cumulative trackpad viewport scale and translation; it only normalizes browser events into common runtime navigation input.",
+    "Android and Windows remain thin consumers of common runtime interaction state.",
+    "C0 must not modify brush algorithms, Skia/render, Arc, semantic schema, or Dear ImGui."
+  ]
+}

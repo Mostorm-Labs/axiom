@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "amendment_id": "GT-G4-5-C2-P12-P13-v0.2",
+  "stage": "P20_VERIFICATION_DESIGN_ANNEX",
+  "status": "PROPOSED_PENDING_P20_REVIEW",
+  "document_ref": "docs/planning/GT_G4_5_C2_V11_V12_VERIFICATION_ANNEX_V0_2.md",
+  "obligations": [
+    {"id": "C2-V11", "name": "BrushResolutionDeterminism", "blocking": true, "oracle": "typed normalized ResolvedBrushExecutionParameters projection and rejection matrix", "red_seam": "pre-BrushSession common resolver/commit-intent boundary", "expected_prechange_red": "VectorReference profile unsupported or absent; no implicit brush-name mapping may pass", "evidence": "c2-brush-resolution-determinism.json"},
+    {"id": "C2-V12", "name": "CanonicalReconstruction", "blocking": true, "oracle": "fresh decode/apply/replay projection plus canonical renderer raster observation", "red_seam": "DirectReferenceSource -> VectorStrokeReferenceCommand -> SkiaHeadlessBackend::render", "expected_prechange_red": "typed VectorReference unsupported and renderer consumer missing", "render_failure_class": "RENDERER_CONSUMER_MISSING", "evidence": "c2-canonical-reconstruction.json"}
+  ],
+  "negative_fixtures": ["missing required parameter", "non-finite or out-of-range parameter", "unknown profile/algorithm/easing/taper", "descriptor size mismatch", "catalog unavailable after resolution", "seed mutation", "unknown version", "old-v1 coexistence", "prediction-only sample inclusion"],
+  "render_fallback": "forbidden",
+  "r1_binding": "176e00f2399f4969e1b0965c5921d96a3e50ce9f",
+  "implementation_authorized": false,
+  "p31_regeneration_authorized": false,
+  "next_owner": "aegis-verification",
+  "next_stage": "P20_VERIFICATION_REVIEW"
+}

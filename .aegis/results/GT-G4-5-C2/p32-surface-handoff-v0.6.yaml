@@ -1,0 +1,28 @@
+type: surface_handoff
+task_id: GT-G4-5-C2
+stage: P32
+stage_owner: aegis-implementation
+from_surface: CONTROL_REVIEW
+to_surface: CODE_EXECUTION
+preferred_executor: codex
+reason: p32_reentry_review_passed
+repository:
+  provider: github
+  full_name: Mostorm-Labs/axiom
+package_ref:
+  path: .aegis/packages/GT-G4-5-C2-P31-v0.6/package.json
+  materialization_ref: codex/g4-5-common-brush-processing
+  package_id: GT-G4-5-C2-P31-v0.6
+task_anchor:
+  revision: 4144dfd80b665df435d141382de05196d3b8eb0f
+  relation: ancestor
+resume_cursor: null
+continue_until_terminal_state: true
+return_surface: CONTROL_REVIEW
+next_action: >-
+  Validate v0.6 package bindings on the code surface, record the actual starting
+  revision, run the frozen RED oracle, then execute the complete v0.6 closure
+  contract from package/resolve through schema/replay/platform evidence.
+constraints:
+  p32_authorized: false
+  official_gate_pass_forbidden: true

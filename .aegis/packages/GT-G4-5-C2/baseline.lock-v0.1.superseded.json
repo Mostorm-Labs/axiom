@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+  "accepted_c1_result": "5087ca34b3b956844d0899c88ff2f4320d491e70",
+  "accepted_c1_control_ref": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+  "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+  "files": {
+    "runtime/ink/CMakeLists.txt": "7a219f8170b236f45f3e4e996e25b72c425bc7a2",
+    "runtime/ink/include/canvas/ink/programmable_brush.hpp": "f7be70e417bb0dcb6a12592a81ca0a80afde1854",
+    "runtime/ink/src/programmable_brush.cpp": "c338d28655f591066ebb54248c324c94566e5891",
+    "runtime/ink/include/canvas/ink/arc_preview_bridge.hpp": "2029d0dad95b4b9ecf1cf9b0b8b0ee84fcc8a51f",
+    "runtime/ink/src/arc_preview_bridge.cpp": "a1cacea3e3f77d06feba8097454cd7c28853cd17",
+    "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp": "8180f7f7eeb0b9df3eb9b6a624d8ac726dd14fe9",
+    "runtime/ink/src/canonical_brush_commit.cpp": "3b0da9958fe7ba598df9cb0b5e774070d269c63d",
+    "runtime/ink/include/canvas/ink/preview_model.hpp": "9af5a8930f65de6c14dfcb8ab69813aaf221df9a",
+    "runtime/ink/src/preview_model.cpp": "38d205bceeaf28de9cf4d5da394e4263b5be8259",
+    "apps/ink_playground/CMakeLists.txt": "1d55adf7bc985dc02575c666950dc8bb2206b974",
+    "apps/ink_playground/common/ink_playground_host.hpp": "c82dd563ba84a9405d1df8eb5cb6be5f57b8509d",
+    "apps/ink_playground/common/ink_playground_host.cpp": "f61d169491387e5617ee5f89cfc9dd37f7f5e0f5",
+    "apps/ink_playground/common/platform_interaction_controller.hpp": "e1162d61b00e3dfe211d8493a307a2dc763ddc4a",
+    "apps/ink_playground/common/platform_interaction_controller.cpp": "7447a551b4d9556922eab16c4b110d9dd38195ad",
+    "apps/ink_playground/common/arc_input_fanout_adapter.hpp": "938957a46c9551582f1c94e1515fa87c1a5d81e6",
+    "apps/ink_playground/platform/web/bridge.cpp": "8a81dac5fb858869fe1577ff3fc948e6099f744b",
+    "apps/ink_playground/platform/android/bridge.cpp": "e079d03ebc51d9ca1538218bb36b32b55d7c6ee3",
+    "apps/ink_playground/platform/windows/main.cpp": "7570fa321df0e255eb2a6e72fa9ab488503d2a57"
+  },
+  "observed_c2_debt": {
+    "brush_runtime_append": "full-session history is evaluated on every append",
+    "web": "platform bridge owns BrushRuntime and Brush session state",
+    "android": "platform bridge owns BrushRuntime and Brush session state",
+    "windows": "Win32 builds Arc preview primitives from raw pointer samples",
+    "arc_input_fanout_adapter": "pointer-level Arc fanout alias is superseded downstream architecture"
+  }
+}

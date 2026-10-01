@@ -186,7 +186,7 @@ TEST(G106Snapshot, ProtobufOffContractOrRoundTrip) {
 TEST(G106Snapshot, RejectsInvalidEnvelopeAndDuplicateIds) {
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
     auto snapshot = minimal();
-    snapshot.schema_version = 2U;
+    snapshot.schema_version = 3U;
     EXPECT_EQ(SnapshotCodec::encode(snapshot).error, SemanticError::kUnsupportedVersion);
     snapshot = minimal();
     snapshot.document_id = DocumentId{};

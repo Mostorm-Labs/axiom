@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-R01-P31-v0.1",
+  "task_id": "GT-G4-5-R01",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Freeze the pinned perfect-freehand reference corpus and prove pure C++ one-shot StrokePoint/outline conformance before any Skia or platform work.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-pf-reference-conformance",
+    "rejected_execution_ref": "codex/g4-5-vector-freehand-arc-parity"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "e4fa94a3f71a4cdab070cd4099b5b8388133bf34451ca8dd04ef8f1d12fe81db"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "6b5c4b7ff5efdc16a9f619ea5b2776b26549edab27083f9b19eb70e1453a5066"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "843ac2e8d0bb3048276a539acc83dc73c4059364d3ab840d638df9a6a9a58006"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "27388ed2761e72bd40cc0a3a24281df416a558647fd05f9f5e29b46e7ef56e8b"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "7773187b15a1431242ac249a8073d07044e47aa7da73ec79f13d3068849b35d1"
+  },
+  "reference_lock_ref": {
+    "path": "reference.lock.json",
+    "sha256": "2ba67eeaaa8c5231c342fdfbce1a7b19d42d2105d1b573994a9b4e864b3d28e6"
+  },
+  "corpus_plan_ref": {
+    "path": "corpus-plan.json",
+    "sha256": "d475e688074591bf981fffcdb997558f487d9419f645efd7ac44c83e1dcfdbc7"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-R01/",
+    "base_revision": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+    "binding": "exact package files bound by SHA-256"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Resolve and validate this package, complete R0 reference freeze, observe the R1 RED oracle before production kernel mutation, implement the pure C++ one-shot reference kernel, satisfy all frozen parity/evidence obligations, and return only at READY_FOR_R2_PACKAGE_REVIEW or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

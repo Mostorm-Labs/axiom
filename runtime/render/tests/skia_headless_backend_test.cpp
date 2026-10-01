@@ -383,6 +383,31 @@ void transformClipAndEraseAreObservable() {
     assert(pixel(observation, 11U, 20U) == (Rgba{0U, 0U, 0U, 0U}));
 }
 
+void sweptCircleEraseMaskIsRendered() {
+    const FrameState frame = fixtureFrame(FrameId{913});
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {shapeEntry()};
+    list.visibleRecords = 1U;
+    list.candidatesExamined = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    list.entries[0].record.eraseMasks = {{
+        ObjectId::fromUint64(1502U),
+        canvas::semantic::SweptCircleMask{{{
+            {{10.0, 28.0}, 3.0},
+            {{30.0, 28.0}, 3.0},
+            {16.6666666667, 28.0},
+            {23.3333333333, 28.0},
+        }}}
+    }};
+    const FramePlan plan{frame, list};
+
+    SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
+    assert(backend.submit(plan).code == BackendSubmissionCode::kAccepted);
+    const auto& observation = *backend.observation();
+    assert(pixel(observation, 20U, 28U)[3] == 0U);
+    assert(pixel(observation, 20U, 12U) == (Rgba{255U, 0U, 0U, 255U}));
+}
+
 void orthogonalConnectorUsesDeterministicElbow() {
     const FrameState frame = fixtureFrame(FrameId{916});
     ReferenceTraversalEntry entry = connectorEntry();
@@ -520,6 +545,7 @@ void deterministicRejectionsPreservePriorObservation() {
 int main() {
     exactNineKindGoldenIsIndependentAndDeterministic();
     transformClipAndEraseAreObservable();
+    sweptCircleEraseMaskIsRendered();
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
     return 0;

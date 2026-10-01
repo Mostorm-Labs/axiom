@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "stage": "G4.5-00",
+  "status": "RECONCILED_FOR_P31",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "task_anchor": "e5d0f418816b85a652f457a8d2235130c65f0a52",
+    "g4_4_gate_revision": "eb4ca06e2bb44471f413234377b1cfb4e1e76bdf",
+    "g4_4_integration_pr": "https://github.com/Mostorm-Labs/axiom/pull/131",
+    "g4_4_gate_is_ancestor_of_anchor": true
+  },
+  "project_state_observation": {
+    "cached_canonical_revision": "4924139d1d8a4bd380c01b618155cca2c4f23abe",
+    "cached_lifecycle_stage": "G4_FUNCTIONAL_COMPLETION_RECORDED",
+    "classification": "STALE_SUPPORTING_CACHE",
+    "handling": "Do not rewrite historical bindings during P31. The exact GitHub main revision, G4.4 Gate revision and PR integration occurrence bound by this package control execution."
+  },
+  "existing_seams": [
+    "keyed multi-stroke InkEngine session support",
+    "keyed preview model and Arc preview bridge",
+    "frozen canonical BrushDescriptor and StrokeRecord alternatives",
+    "FinePen, Highlighter and TexturedMarker semantic wire/golden corpus",
+    "Arc preview and presentation infrastructure",
+    "Windows, Web and Android G4.4 pointer adapters"
+  ],
+  "baseline_gaps": [
+    "runtime BrushDefinition and capability model",
+    "immutable renderer-neutral BrushProgram IR and compiler",
+    "single BrushRuntime semantic evaluator with commit/preview artifacts",
+    "shape/grain logical-resource binding foundation",
+    "domain-separated deterministic dynamics channels",
+    "six persistent V1 family coverage through the common pipeline",
+    "Laser temporal transient lifecycle",
+    "Brush Lab, independent visual corpus and exact-build qualification bundle"
+  ],
+  "scope_decision": "Implement gaps in runtime ink, narrow render/Arc integration, Brush Lab, qualification hosts and G4.5 corpus without changing canonical semantic schema or entering G5 implementation.",
+  "claim_boundary": "This record supports P31 package materialization only and is not implementation completion or G4.5 PASS."
+}

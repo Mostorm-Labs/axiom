@@ -1,0 +1,191 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "obligations": [
+    {
+      "id": "C2-V1",
+      "requirement": "Routed Ink enters one common Brush session and emits renderer-neutral preview/commit contracts.",
+      "oracle": "C2CommonBrushPipeline",
+      "acceptance": [
+        "BrushInputBatch or equivalent common input exists",
+        "BrushPreviewDelta exists without Skia/GPU/platform types",
+        "BrushCommitIntent exists and is confirmed-only",
+        "Brush Engine does not mutate SemanticDocument directly"
+      ],
+      "evidence_required": [
+        "c2-common-brush-pipeline.json"
+      ]
+    },
+    {
+      "id": "C2-V2",
+      "requirement": "Incremental Vector preview reconstructs the accepted one-shot reference result.",
+      "oracle": "C2IncrementalParity",
+      "acceptance": [
+        "for frozen Vector fixtures, applying preview deltas reconstructs the same current outline/geometry as one-shot evaluation",
+        "counts/order remain exact where the one-shot oracle requires exactness",
+        "numeric coordinate error stays within R1 outline tolerance 1e-5",
+        "final sealed result matches one-shot reference",
+        "known reference limitations remain reference limitations rather than silent fixes"
+      ],
+      "evidence_required": [
+        "c2-incremental-parity.json"
+      ]
+    },
+    {
+      "id": "C2-V3",
+      "requirement": "Hot-path append work does not scale with total historical stroke length.",
+      "oracle": "C2HotPathComplexity",
+      "acceptance": [
+        "one-shot full-history evaluator call count during move-time incremental append is zero",
+        "work counters expose new-sample and replaceable-tail work",
+        "for deterministic repeated local geometry, max per-append evaluated work at 2048 samples is <= 1.25x the max at 512 samples for the same batch size",
+        "512 and 2048 sample workloads complete without unbounded preview backlog"
+      ],
+      "evidence_required": [
+        "c2-hot-path-complexity.json",
+        "c2-performance-summary.json"
+      ]
+    },
+    {
+      "id": "C2-V4",
+      "requirement": "Confirmed and predicted state are separated with deterministic replacement.",
+      "oracle": "C2PrefixTailSemantics",
+      "acceptance": [
+        "predicted samples affect preview only",
+        "new confirmed input replaces overlapping predicted tail",
+        "predicted data never appears in BrushCommitIntent",
+        "session revision is monotonic",
+        "stable prefix cannot be mutated by a later non-overlapping append"
+      ],
+      "evidence_required": [
+        "c2-prefix-tail-semantics.json"
+      ]
+    },
+    {
+      "id": "C2-V5",
+      "requirement": "Same-session execution is ordered through BrushPreviewDeltaReady without mandatory inter-module thread hops.",
+      "oracle": "C2SessionOrderingThreadModel",
+      "acceptance": [
+        "sample N+1 cannot overtake N",
+        "one logical BrushSession mutation is active at a time",
+        "C1 to C0 to C2 path can execute synchronously/directly without a required queue",
+        "Arc/GPU completion is not awaited by Brush append",
+        "canonical runtime work is not on move-time preview path"
+      ],
+      "evidence_required": [
+        "c2-thread-model.json",
+        "c2-session-ordering.json"
+      ]
+    },
+    {
+      "id": "C2-V6",
+      "requirement": "Preview handoff is bounded/latest-wins for superseded non-terminal revisions while terminal semantics remain reliable.",
+      "oracle": "C2PreviewMailbox",
+      "acceptance": [
+        "mailbox capacity is finite and inspectable",
+        "100 queued non-terminal revisions without consumption do not grow storage beyond capacity",
+        "newest valid revision is retained",
+        "superseded non-terminal revisions may be skipped",
+        "cancel terminal and retire control events are not lost or silently coalesced"
+      ],
+      "evidence_required": [
+        "c2-preview-mailbox.json"
+      ]
+    },
+    {
+      "id": "C2-V7",
+      "requirement": "Canonical commit handoff is reliable and independent of preview presentation.",
+      "oracle": "C2CanonicalHandoff",
+      "acceptance": [
+        "BrushCommitIntent is emitted only from confirmed state on seal",
+        "commit intents are never latest-wins/coalesced",
+        "commit failure/backpressure is explicit",
+        "unrelated canonical congestion does not block move-time preview append",
+        "cancel before seal emits no commit intent"
+      ],
+      "evidence_required": [
+        "c2-canonical-handoff.json"
+      ]
+    },
+    {
+      "id": "C2-V8",
+      "requirement": "Preview retirement is driven by matching CanonicalVisible identity, not pen-up.",
+      "oracle": "C2CanonicalVisibleRetire",
+      "acceptance": [
+        "pen-up/seal leaves final preview logically live",
+        "stale or mismatched receipt cannot retire the preview",
+        "matching session revision generation receipt retires exactly the intended preview",
+        "canonical failure cannot masquerade as retirement success"
+      ],
+      "evidence_required": [
+        "c2-canonical-visible-retire.json"
+      ]
+    },
+    {
+      "id": "C2-V9",
+      "requirement": "Platform-local Brush ownership and raw-pointer preview geometry are removed.",
+      "oracle": "C2PlatformBrushOwnership",
+      "acceptance": [
+        "Web platform bridge does not own BrushRuntime or Brush session algorithm state",
+        "Android platform bridge does not own BrushRuntime or Brush session algorithm state",
+        "Windows does not derive Arc preview geometry from raw pointer samples after routing",
+        "pointer-level arc_input_fanout_adapter is removed or explicitly non-authoritative and unused by the C2 path",
+        "common composition owns Brush begin append seal cancel"
+      ],
+      "evidence_required": [
+        "c2-platform-brush-ownership.json"
+      ]
+    },
+    {
+      "id": "C2-V10",
+      "requirement": "Accepted C0/C1/R1 behavior remains valid and C2 stays inside scope.",
+      "oracle": "C2RegressionScope",
+      "acceptance": [
+        "C0 interaction regressions PASS",
+        "C1 ingress/ownership regressions PASS",
+        "R1 perfect-freehand reference regression PASS",
+        "git diff --check PASS",
+        "production diff contains only authorized C2 paths",
+        "exact result/evidence revision is pushed and reviewer-resolvable"
+      ],
+      "evidence_required": [
+        "regression-summary.json",
+        "scope-diff.json",
+        "result.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Pre-C2 BrushRuntime re-evaluates full session history on append; Web/Android own BrushRuntime sessions; Windows derives preview geometry from raw pointer samples; common BrushPreviewDelta and BrushCommitIntent contracts do not yet satisfy C2.",
+    "observation_seam": "C2 incremental/ownership/thread-model tests and source/static ownership checks",
+    "failure_if_unexpected_green": "VERIFICATION_DESIGN_DEFECT"
+  },
+  "performance_workloads": {
+    "input_hz_equivalent": [
+      120,
+      240
+    ],
+    "batch_sizes": [
+      1,
+      4,
+      8
+    ],
+    "sample_counts": [
+      64,
+      512,
+      2048
+    ],
+    "modes": [
+      "confirmed_only",
+      "confirmed_plus_prediction",
+      "sharp_turn",
+      "sparse_zigzag"
+    ]
+  },
+  "engineering_target": {
+    "metric": "InputBatchAccepted_to_BrushPreviewDeltaReady",
+    "p95_ms_target": 1,
+    "classification": "provisional_engineering_target_not_product_guarantee"
+  }
+}

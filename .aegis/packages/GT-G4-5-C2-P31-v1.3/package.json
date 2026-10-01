@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v1.3",
+  "task_id": "GT-G4-5-C2",
+  "status": "READY_FOR_P32",
+  "purpose": "Repair and freeze the executable P31 package for the v0.4 Brush Engine schema and common runtime.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_refs": [
+    "docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md",
+    "docs/planning/brush-engine-v0.4/CONTRACT.md",
+    "docs/planning/brush-engine-v0.4/PLAN.md",
+    "docs/planning/brush-engine-v0.4/VERIFICATION.md",
+    "docs/planning/brush-engine-v0.4/brush_engine.proto",
+    "docs/planning/brush-engine-v0.4/manifest.schema.json",
+    "docs/planning/brush-engine-v0.4/pipeline.schema.json"
+  ],
+  "supersedes": [
+    "GT-G4-5-C2-P31-v1.3"
+  ],
+  "p32_authorized": true,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "31320471fc4be5d3c2bb5bea885aff6caaabae5b9221ecdc306cd631615581bb"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "ab8ebafd79c472169dba44d85760330b43ab4c94f80f5413dfd7a861db81bdb0"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "c665414d9ccf9bcc1f7134ddbc342917398f834ab210c24f0575ca5eb7131594"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5cbbab4e888008371414c4f5a408c86281d5d4fb7981a862a0be967c6f7a167e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0f549f8302593bee454d1f4d57aa6040ea11c3266fb759cb529901a0a392a057"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "2a75a57168548285296fdeac05270815f626306671738bc5c9896c38cb96a3e1"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C2-P31-v1.3",
+    "base_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "binding": "exact package files bound by package-manifest.json"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Regenerate the complete frozen P32 evidence closure from the repaired package, including C2-PERF raw observations and hosted provider identities; return READY_FOR_CONTROL_REVIEW or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  },
+  "red_oracle": {
+    "path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+    "sha256": "62303f942b6b06282c3c526427efdf983ccf8b3ba2a1a7efd503aa6a376cd5dd",
+    "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+    "expected_exit_code": 0,
+    "expected_observation": "all frozen pre-change gaps RED",
+    "production_mutation": false
+  },
+  "package_manifest_ref": {
+    "path": "package-manifest.json",
+    "sha256": "8c2c99057fcba4c0097e82c34b6c95d55de7bed1cd29dedd52d00a3d0608f0d8"
+  },
+  "descriptor_refreeze_ref": {
+    "path": "descriptor-refreeze.json",
+    "sha256": "75d95433bd27deefd97d321abb93f6b5b939e9021a15f6352677d254e2439278"
+  },
+  "maintenance_scope": {
+    "classification": "ADDITIVE_SCHEMA_RECONCILIATION_AND_CI_MAINTENANCE",
+    "approved_changes": [
+      "G45-C4-SR01 ObjectContent.dab_brush_stroke tag 11 from GT-G4-5-C4",
+      "RF01 preset disables Ink Playground consumer",
+      "vector_stroke_reference misleading-indentation warning fix",
+      "Brush Lab deterministic golden refresh"
+    ],
+    "input_routing_untouched": true,
+    "g4_gate_pass_forbidden": true
+  }
+}

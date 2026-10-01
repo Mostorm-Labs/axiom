@@ -48,6 +48,8 @@ ImpactClassification classifyImpact(
                 } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
                     return content.stroke.brush.texture_resource_id.has_value() &&
                            !content.stroke.brush.texture_resource_id->value.isZero();
+                } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
+                    return !content.stroke.snapshot.resources.empty();
                 } else {
                     return false;
                 }

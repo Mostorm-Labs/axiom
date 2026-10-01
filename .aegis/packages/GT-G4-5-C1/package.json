@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C1-P31-v0.1",
+  "task_id": "GT-G4-5-C1",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Unify cross-platform interaction ingress/adapters/lifecycle behind the accepted C0 runtime semantics.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-cross-platform-interaction-ingress"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "dfd5359604007940913221fcbf30a785996295041aba415d0d3c015af370c956"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "b2920f9ef996481d31c2333d6555ad4d10ca26d625c655b368fa241b9c2502aa"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "8936eca3fb88b5ff5b40a73a240ba48fda9a4dd13ed21cec5605fb9d3aaefb45"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "64fe5332e4e7f41d46f8a9aef5f42f289c6ffa469e97d47513a9d7b465625c76"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e671018116673cc1e5897f6cd8484f1dff5dca7b498e80863fae413d73e57db8"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "8f54f37407b3f554c621394cb3434a2d14d861e235ee4efcba0c0537bbe9cc6b"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C1/",
+    "base_revision": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+    "binding": "exact package files bound by SHA-256"
+  },
+  "dependencies": {
+    "accepted_c0_result": "d861e05e18a0665c0c91c7523925b3990bb0c88e",
+    "accepted_c0_control_ref": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+    "accepted_r01_result": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "next_action": "Validate package/C0 bindings, observe frozen RED ownership oracles, implement common ingress and platform migrations without semantic drift, materialize all blocking evidence, and return only at READY_FOR_D0_PACKAGE_REVIEW or an explicit terminal blocker.",
+    "official_gate_pass_forbidden_during_p32": true
+  }
+}

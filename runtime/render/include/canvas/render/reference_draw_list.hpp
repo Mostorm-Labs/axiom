@@ -47,6 +47,14 @@ struct DabStrokeReferenceCommand final {
     semantic::DabStrokeContent content;
     bool operator==(const DabStrokeReferenceCommand&) const = default;
 };
+struct BrushStrokeReferenceCommand final {
+    semantic::BrushStrokeContent content;
+    bool operator==(const BrushStrokeReferenceCommand&) const = default;
+};
+struct DabBrushStrokeReferenceCommand final {
+    semantic::DabBrushStrokeContent content;
+    bool operator==(const DabBrushStrokeReferenceCommand&) const = default;
+};
 struct ConnectorReferenceCommand final {
     semantic::ConnectorContent content;
     bool operator==(const ConnectorReferenceCommand&) const = default;
@@ -68,7 +76,9 @@ using ReferenceCommand = std::variant<
     DabStrokeReferenceCommand,
     ConnectorReferenceCommand,
     StickyReferenceCommand,
-    GroupReferenceCommand>;
+    GroupReferenceCommand,
+    BrushStrokeReferenceCommand,
+    DabBrushStrokeReferenceCommand>;
 
 struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;

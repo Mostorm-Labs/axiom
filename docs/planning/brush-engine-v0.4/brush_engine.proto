@@ -1,0 +1,80 @@
+// P12/P13 normative schema input, materialize during P32. Not compiled here.
+edition = "2024";
+package auditoryworks.axiom.v1;
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+
+message BrushStageBinding {
+  uint32 stage_id = 1;
+  uint32 declared_mode = 2;
+  bool active = 3;
+  uint32 node_id = 4;
+  uint32 node_version = 5;
+}
+message BrushVectorParameters {
+  double size = 1;
+  double thinning = 2;
+  double smoothing = 3;
+  double streamline = 4;
+  uint32 pressure_source = 5;
+  uint32 missing_pressure = 6;
+  uint32 easing_id = 7;
+  bool start_cap = 8;
+  bool end_cap = 9;
+  double start_taper = 10;
+  double end_taper = 11;
+}
+message BrushSolidPaint {
+  double red = 1;
+  double green = 2;
+  double blue = 3;
+  double alpha = 4;
+  double opacity = 5;
+  uint32 blend = 6;
+  uint32 color_space = 7;
+}
+message BrushResourceBinding {
+  Id128 resource_id = 1;
+  bytes content_sha256 = 2;
+  uint32 kind = 3;
+  uint32 decode_version = 4;
+  uint32 channel = 5;
+  uint32 color_space = 6;
+  uint32 sampling = 7;
+  uint32 wrap = 8;
+}
+message BrushExecutionSnapshot {
+  uint32 snapshot_version = 1;
+  Id128 package_id = 2;
+  uint32 package_revision = 3;
+  uint32 pipeline_version = 4;
+  uint32 defaults_version = 5;
+  uint32 profile_id = 6;
+  repeated BrushStageBinding stages = 7;
+  BrushVectorParameters vector = 8;
+  BrushSolidPaint paint = 9;
+  repeated BrushResourceBinding resources = 10;
+  fixed64 seed = 11;
+  uint32 signal_schema_version = 12;
+}
+message BrushConfirmedSample {
+  Vec2 position = 1;
+  double pressure = 2; // absent is distinct from explicitly present zero
+}
+message BrushVectorOutput {
+  repeated Vec2 outline = 1;
+  uint32 fill_rule = 2;
+  bool closed = 3;
+}
+message BrushStrokeRecord {
+  BrushExecutionSnapshot snapshot = 1;
+  repeated BrushConfirmedSample confirmed_samples = 2;
+  BrushVectorOutput vector_output = 3;
+}
+message BrushStrokeContent {
+  BrushStrokeRecord stroke = 1;
+}
+// Production object.proto: import brush_engine.proto and add EXACTLY
+// BrushStrokeContent brush_stroke = 10; to ObjectContent.value.
+// Bind (kind_id=5, kind_version=2) exclusively to this branch.
+// Keep VectorStrokeContent tag 5 bound exclusively to (5,1).

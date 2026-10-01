@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "current": true,
+  "sources": [
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-81f3-91ba-e7922b856377",
+      "title": "G4.5 Brush + Arc Architecture v0.2 - VectorStroke First",
+      "revision": "2026-09-22T05:45:01.321Z",
+      "trusted_content_sha256": "08385350e023e19f3f5d734f73e08386695f2c076de76859f87a759633641926"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-81c9-a3de-e510225cb94a",
+      "title": "G4.5-10 Gate Amendment v0.2 - Vector Freehand + Windows Arc Parity",
+      "revision": "2026-09-22T05:46:04.622Z",
+      "trusted_content_sha256": "cced4b23ecadde4aadde142bee63d780fa76a11cd0998f995a11cb9f15955a5c"
+    },
+    {
+      "provider": "notion",
+      "page_id": "3e34c57a-590c-8120-9141-eaf2c669c961",
+      "title": "G4.5 VectorStroke + Arc Implementation Plan v0.2",
+      "revision": "2026-09-22T05:46:02.553Z",
+      "trusted_content_sha256": "ed6a1960664f0ff28d813dc30e2e19991ba3cafdd7dd9a93649e2cc0675b68b6"
+    }
+  ],
+  "trusted_statements": [
+    "G4.5 implements VectorStroke only; Dab/Texture/Natural Media are design-only.",
+    "Axiom is the single brush semantic owner; Arc consumes render-ready vector preview geometry and never runs a second freehand algorithm.",
+    "RB-V01 start/end taper remains visible but is frozen by immutable brush family/version semantics for G4.5 V1 qualification.",
+    "G4.5 live controls are size, pressure/thinning, and smoothing/streamline.",
+    "No canonical ObjectKind, Operation, StrokeRecord, or BrushDescriptor schema expansion is authorized by 09V.",
+    "Axiom canonical uses Skia; Windows Arc reference preview uses an independently owned Skia-capable preview path.",
+    "Space diagnostic is presentation-only and must not alter semantic identity, geometry digest, or canonical data.",
+    "RB-V01 must be a real continuous variable-width filled vector stroke, not a fixed-width drawLine approximation.",
+    "Same confirmed input and same program version must produce deterministic stable geometry.",
+    "Chunked incremental evaluation and one-shot evaluation must converge within frozen tolerance.",
+    "Windows Arc must consume Axiom-produced vector geometry; no Arc-owned width/smoothing/taper algorithm is permitted.",
+    "Physical handoff must show Arc-active -> overlap -> canonical-only without material path, width, or taper pop.",
+    "DAB/Texture implementation is not required for G4.5 PASS.",
+    "GT-G4-5-09V supersedes the old 09F execution path for current G4.5 work.",
+    "Trusted base is codex/g4-5-programmable-brush at the reconciled anchor.",
+    "The superseded 09F branch must not be used as execution base.",
+    "P32 must preserve existing V1 brush behavior and G4/G4.4/G4.5 regressions."
+  ],
+  "resolved_semantic_decision": {
+    "rb_v01_identity": "BrushFamily::kPen + brush/definition version 2 (or an equivalently explicit immutable version binding without canonical schema expansion)",
+    "taper": "fixed/versioned interpreter semantics; not a G4.5 per-stroke live parameter",
+    "live_controls": [
+      "size",
+      "pressure/thinning",
+      "smoothing/streamline"
+    ],
+    "future_editable_taper": "requires later BrushDescriptor/semantic schema review before persistence"
+  },
+  "preserved_authority": [
+    "Existing published BrushDefinition/BrushProgram v1 identities and behavior remain compatible.",
+    "Existing canonical StrokeRecord alternatives remain unchanged.",
+    "G4.4 input arbitration and handoff semantics remain unchanged.",
+    "DAB/Texture code on the superseded 09F branch is not inherited into 09V."
+  ]
+}

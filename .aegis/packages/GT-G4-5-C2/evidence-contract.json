@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "result_directory": ".aegis/results/GT-G4-5-C2/",
+  "durable_boundary": "exact pushed task-branch revision containing implementation and all blocking evidence",
+  "artifacts": [
+    {
+      "id": "repo-reconciliation.json",
+      "path": ".aegis/results/GT-G4-5-C2/repo-reconciliation.json",
+      "blocking": true
+    },
+    {
+      "id": "implementation-design-preflight.json",
+      "path": ".aegis/results/GT-G4-5-C2/implementation-design-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "red-oracle-preflight.json",
+      "path": ".aegis/results/GT-G4-5-C2/red-oracle-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-common-brush-pipeline.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-common-brush-pipeline.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-incremental-parity.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-incremental-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-prefix-tail-semantics.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-prefix-tail-semantics.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-hot-path-complexity.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-hot-path-complexity.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-thread-model.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-thread-model.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-session-ordering.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-session-ordering.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-preview-mailbox.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-preview-mailbox.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-canonical-handoff.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-canonical-handoff.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-canonical-visible-retire.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-canonical-visible-retire.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-platform-brush-ownership.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-platform-brush-ownership.json",
+      "blocking": true
+    },
+    {
+      "id": "c2-performance-summary.json",
+      "path": ".aegis/results/GT-G4-5-C2/c2-performance-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "regression-summary.json",
+      "path": ".aegis/results/GT-G4-5-C2/regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "scope-diff.json",
+      "path": ".aegis/results/GT-G4-5-C2/scope-diff.json",
+      "blocking": true
+    },
+    {
+      "id": "result.json",
+      "path": ".aegis/results/GT-G4-5-C2/result.json",
+      "blocking": true
+    }
+  ],
+  "environment_policy": {
+    "unpinned_dependency_substitution": "FORBIDDEN",
+    "unavailable_physical_windows_or_ios_device": "not blocking for C2 unless a frozen required local oracle depends on it"
+  },
+  "claim_boundary": "P32 may return READY_FOR_D0_PACKAGE_REVIEW only. It may not claim D0 R2 G4.5 Gate or release PASS."
+}

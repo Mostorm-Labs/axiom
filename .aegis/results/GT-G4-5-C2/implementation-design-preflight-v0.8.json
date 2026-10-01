@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION_DESIGN_PREFLIGHT",
+  "package_id": "GT-G4-5-C2-P31-v0.8",
+  "status": "SUPERSEDED_INCOMPLETE_REVIEW",
+  "observed_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "current_flow": "Legacy BrushDefinition/BrushRuntime and platform-local preview paths feed transient primitives; semantic runtime has existing V1 carriers.",
+  "target_flow": "Manifest/package resolution -> immutable ResolvedBrushState -> constrained plan -> common BrushSession -> VectorPathNode/R1 preview -> immutable commit intent -> Runtime Core AddStroke v2 codec/replay -> common platform presentation.",
+  "ownership": "Common composition owns package, plan and sessions; Runtime Core owns AddStroke construction and document mutation; platforms normalize/present only; render consumes stored outline.",
+  "affected_types": [
+    "BrushPackage",
+    "ResolvedBrushState",
+    "BrushExecutionPlan",
+    "BrushSession",
+    "BrushPreviewDelta",
+    "BrushCommitIntent",
+    "VectorPathNode",
+    "legacy_v1_readonly",
+    "brush_engine_codec"
+  ],
+  "obligation_bindings": {
+    "package-normalization": "brush_package + brush_package_test",
+    "plan-activation-closure": "brush_execution_plan + brush_plan_test",
+    "r01-vector-node-parity": "vector_path_node + vector-node evidence",
+    "prediction-isolation": "brush_session + brush_session_test",
+    "preview-handoff": "preview delta/host integration evidence",
+    "wire-schema-release": "brush_engine_codec + semantic tests",
+    "legacy-readonly": "legacy_v1_readonly + reachability scan",
+    "platform-ownership": "common host/bridges + platform source checks"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "production_mutation_started": false,
+  "decision": "RED_BEHAVIORAL_PROBES_PENDING",
+  "p32_authorized": false,
+  "correction": "Initial static checks and preview counts do not prove V11/V12 behavioral RED. Replaced by actual legacy canonical and protobuf probes before final review."
+}

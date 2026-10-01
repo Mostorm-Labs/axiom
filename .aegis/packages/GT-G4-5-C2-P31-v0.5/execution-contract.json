@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "execution_closure_contract": {
+    "required_changes": [
+      "Add bounded manifest/pipeline JSON reader, validation and deterministic BrushPackage normalization.",
+      "Add ResolvedBrushState and constrained BrushExecutionPlan with exact profile-1 dependency closure and off/auto/on activation.",
+      "Add common BrushSession prepare/begin/append/seal/cancel with confirmed input and replaceable prediction isolation.",
+      "Add BrushPreviewDelta, bounded latest-wins handoff, reliable terminal controls, immutable BrushCommitIntent and CanonicalVisible receipt matching.",
+      "Add VectorPathNode adapter bound to accepted Perfect Freehand R1 and preserve the external R01 fixtures as oracle.",
+      "Materialize the approved brush_engine.proto carriers, registries, validators, canonical codec, AddStroke v2 adapter, snapshot/replay and undo/redo atomically.",
+      "Move Web/Android/Windows new-path ownership to common composition; remove platform-local family/primitive interpretation.",
+      "Add a read-only V1 decoder boundary; ensure new authoring cannot call legacy brush classes.",
+      "Add all frozen evidence artifacts and run C0/C1/R01/semantic/scene/render/platform regressions."
+    ],
+    "forbidden_changes": [
+      "Extend BrushDefinition/BrushCompiler/BrushProgram/BrushRuntime as the new engine.",
+      "Create a second engine beside the new Brush Engine.",
+      "Use BrushFamily or product preset names to choose runtime pipeline semantics.",
+      "Interpret brush families, resources or geometry in platform bridges or renderers.",
+      "Persist fields, IDs, versions, operation kinds, object kinds or fallbacks outside the approved v0.4 brush_engine.proto and registry boundary.",
+      "Change C0/C1 input/routing, Arc selection, renderer backend architecture, or canvas-aware WetMix semantics.",
+      "Modify accepted SDK/dependency lock files or rebuild Protobuf/Skia from source.",
+      "Issue an official P34/Gate PASS during P32."
+    ],
+    "authorized_mutation_scope": {
+      "new": [
+        "docs/planning/brush-engine-v0.4/brush_engine.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+        "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+        "schema/axiom/v1/registry/operation_registry_v1.yaml",
+        "runtime/ink/include/canvas/ink/brush_package.hpp",
+        "runtime/ink/src/brush_package.cpp",
+        "runtime/ink/include/canvas/ink/resolved_brush_state.hpp",
+        "runtime/ink/src/resolved_brush_state.cpp",
+        "runtime/ink/include/canvas/ink/brush_execution_plan.hpp",
+        "runtime/ink/src/brush_execution_plan.cpp",
+        "runtime/ink/include/canvas/ink/brush_session.hpp",
+        "runtime/ink/src/brush_session.cpp",
+        "runtime/ink/include/canvas/ink/brush_preview_delta.hpp",
+        "runtime/ink/include/canvas/ink/brush_commit_intent.hpp",
+        "runtime/ink/include/canvas/ink/vector_path_node.hpp",
+        "runtime/ink/src/vector_path_node.cpp",
+        "runtime/ink/include/canvas/ink/legacy_v1_readonly.hpp",
+        "runtime/ink/src/legacy_v1_readonly.cpp",
+        "runtime/semantic/include/canvas/semantic/brush_engine_codec.hpp",
+        "runtime/semantic/src/brush_engine_codec.cpp",
+        "runtime/semantic/tests/brush_engine_codec_test.cpp",
+        "runtime/ink/tests/brush_package_test.cpp",
+        "runtime/ink/tests/brush_plan_test.cpp",
+        "runtime/ink/tests/brush_session_test.cpp",
+        "runtime/ink/tests/brush_operation_intent_test.cpp",
+        ".aegis/results/GT-G4-5-C2/**"
+      ],
+      "replace_or_remove": [
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/platform/android/bridge.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "runtime/render/include/canvas/render/skia_brush_renderer.hpp",
+        "runtime/render/src/skia_brush_renderer.cpp",
+        "apps/brush_lab/common/brush_lab.cpp",
+        "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+        "runtime/ink/src/programmable_brush.cpp",
+        "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp",
+        "runtime/ink/src/canonical_brush_commit.cpp"
+      ],
+      "immutable": ".aegis/packages/GT-G4-5-C2-P31-v0.5/**"
+    },
+    "required_tests": [
+      "Package normalization and deterministic semantic identity",
+      "Plan activation pruning, dependency closure, cycle/missing-provider rejection",
+      "R01 VectorPathNode parity and chunk/last conformance",
+      "Snapshot/operation v2 encode, decode, validation, replay, undo and redo",
+      "Confirmed/predicted isolation and bounded preview handoff",
+      "BrushCommitIntent/AddStroke boundary and unknown-schema rejection",
+      "Web/Android/Windows ownership and target compilation",
+      "Legacy V1 read-only decode/render and no new-authoring reachability",
+      "C0/C1/R01/semantic/scene/render regression plus scope diff"
+    ],
+    "hosted_verification": {
+      "required": [
+        "repository CI for affected CMake/semantic/platform targets"
+      ],
+      "optional": [
+        "named-host timing and visual capture"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "all evidence-contract artifacts"
+      ],
+      "corroborative": [
+        "optional-host-timing.json",
+        "optional-visual-capture.json"
+      ]
+    },
+    "terminal_success": "Every frozen obligation passes, approved schema carriers are atomically materialized, no new authoring reaches legacy classes, and reviewer-accessible evidence/result materialization is available.",
+    "terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_SCHEMA_RELEASE",
+      "BLOCKED_IMPLEMENTATION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

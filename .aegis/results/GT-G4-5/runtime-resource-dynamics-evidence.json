@@ -1,0 +1,7 @@
+{
+  "schema_version": "0.1", "task_id": "GT-G4-5", "result_revision": "49349d7141ec6d2e47f39fd385494113a186d08b",
+  "obligations": ["G45-V3-runtime-artifacts", "G45-V4-resource-binding", "G45-V5-deterministic-dynamics"],
+  "oracle": "axiom_programmable_brush_tests / G45ProgrammableBrush",
+  "observed": {"keyed_multi_session_replay": "PASS", "incremental_chunk_equivalence": "PASS", "commit_preview_separation": "PASS", "missing_and_mismatched_resource_rejection": "PASS", "domain_separated_random_channels": "PASS", "deterministic_replay": "PASS"},
+  "test_status": "PASS"
+}

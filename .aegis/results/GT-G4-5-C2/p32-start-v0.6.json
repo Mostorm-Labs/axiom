@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_CODE_EXECUTION",
+  "package_id": "GT-G4-5-C2-P31-v0.6",
+  "status": "STARTED",
+  "starting_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "preflight": {
+    "repository_identity": true,
+    "task_anchor_ancestor": true,
+    "binding:authority_lock_ref": true,
+    "binding:baseline_lock_ref": true,
+    "binding:verification_lock_ref": true,
+    "binding:execution_contract_ref": true,
+    "binding:implementation_context_ref": true,
+    "binding:evidence_contract_ref": true
+  },
+  "next_action": "ImplementationDesignPreflight then RED Oracle Preflight",
+  "official_gate_pass_forbidden": true
+}

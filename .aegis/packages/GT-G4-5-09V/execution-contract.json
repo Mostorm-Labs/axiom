@@ -1,0 +1,232 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-09V",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Preserve published v1 BrushDefinition/BrushProgram behavior and add the minimal explicit RB-V01 Vector brush version path (preferred: Pen/version 2) without canonical schema expansion.",
+        "Add canonical-expressible smoothing/streamline authoring/runtime mapping for RB-V01 while preserving v1 identity compatibility.",
+        "Encode pressure/thinning faithfully through the existing canonical PressureMapping curve rather than dropping influence strength during commit.",
+        "Implement a renderer-neutral common VectorStroke geometry generator owned by Axiom, with continuous filled variable-width geometry, fixed/versioned start/end taper, deterministic one-shot evaluation, and incremental stable-prefix/replaceable-tail output.",
+        "Use the same common vector geometry semantics for active preview and canonical replay/render.",
+        "Replace the Windows qualification path that converts raw pointer samples directly into fixed-radius Arc vector points with mapping from common Axiom vector preview geometry.",
+        "Extend the Arc preview payload only as narrowly as required to carry render-ready vector geometry; Arc must not own smoothing, pressure, width, taper or family semantics.",
+        "Render RB-V01 canonical geometry through Skia and render Arc preview through the independently owned Arc preview renderer/backend.",
+        "Implement Space dual-color diagnostic as a presentation-only override; move legacy preview-mirror toggle away from Space if retained.",
+        "Preserve CanonicalCommitted/CanonicalVisible handoff safety and add parity checks for geometry continuity.",
+        "Expose RB-V01 qualification controls for size, pressure/thinning and smoothing/streamline; taper remains fixed/versioned.",
+        "Materialize automated evidence, G5 vector workload metrics and an exact Windows qualification bundle."
+      ],
+      "forbidden_changes": [
+        "Any ObjectKind, Operation, StrokeRecord or BrushDescriptor field/schema change",
+        "Editable/persisted startTaper or endTaper fields in G4.5",
+        "Changing published v1 brush semantics or historical v1 program identity/goldens",
+        "Arc-owned smoothing, pressure mapping, width profile, taper or freehand geometry algorithm",
+        "DAB/Texture resource materialization or renderer work from superseded 09F",
+        "Pencil/Chalk/Watercolor fidelity implementation",
+        "WetMedia/CanvasAwareRaster",
+        "user brush persistence/sync",
+        "G5 Tile/SpatialIndex/Cache/Scheduler/ResourceBudget implementation",
+        "hardware-specific native Arc backend replacement",
+        "direct GPU queue-priority optimization",
+        "claiming final G4.5 Gate PASS during P32"
+      ],
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+          "runtime/ink/src/programmable_brush.cpp",
+          "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp",
+          "runtime/ink/src/canonical_brush_commit.cpp",
+          "runtime/ink/CMakeLists.txt",
+          "runtime/ink/tests/programmable_brush_test.cpp",
+          "runtime/render/include/canvas/render/skia_ink_backend.hpp",
+          "runtime/render/src/skia_ink_backend.cpp",
+          "runtime/render/CMakeLists.txt",
+          "arc/include/arc/protocol.h",
+          "arc/include/arc/arc.hpp",
+          "arc/src/bridge.cpp",
+          "arc/platform/windows/windows_backend.cpp",
+          "arc/CMakeLists.txt",
+          "arc/tests/arc_core_test.cpp",
+          "arc/tests/windows_preview_backend_test.cpp",
+          "apps/brush_lab/common/brush_lab.hpp",
+          "apps/brush_lab/common/brush_lab.cpp",
+          "apps/brush_lab/tools/brush_lab_main.cpp",
+          "apps/brush_lab/tests/brush_lab_test.cpp",
+          "apps/brush_lab/CMakeLists.txt",
+          "apps/ink_playground/platform/windows/main.cpp",
+          "apps/ink_playground/platform/windows/windows_pointer_utils.hpp",
+          "apps/ink_playground/tests/windows_pointer_utils_test.cpp",
+          "apps/ink_playground/CMakeLists.txt",
+          ".github/workflows/g4-5-programmable-brush.yml"
+        ],
+        "new_files_allowed": [
+          "runtime/ink/include/canvas/ink/vector_stroke_geometry.hpp",
+          "runtime/ink/src/vector_stroke_geometry.cpp",
+          "runtime/ink/tests/vector_stroke_geometry_test.cpp",
+          "runtime/render/tests/skia_vector_freehand_test.cpp",
+          "apps/brush_lab/common/vector_reference_brush.hpp",
+          "apps/brush_lab/common/vector_reference_brush.cpp",
+          "apps/brush_lab/tests/vector_reference_brush_test.cpp",
+          "apps/ink_playground/tests/windows_vector_arc_parity_test.cpp",
+          "verification/corpus/brush/g4_5/09v/**",
+          ".aegis/results/GT-G4-5-09V/**"
+        ],
+        "conditional_build_wiring": "Other build files may change only when strictly required to wire an authorized target; any additional production-source path is a package-scope blocker."
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "09V-red",
+          "command_or_oracle": "Add/run the frozen 09V acceptance tests against the pre-change implementation before production mutation",
+          "expected_result": "RED for the expected failures frozen in verification.lock.json",
+          "blocking_reason": "proves the new oracles detect the current missing VectorStroke behavior"
+        },
+        {
+          "id": "G45VectorV2Compile",
+          "command_or_oracle": "CTest/unit oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "versioned RB-V01 contract"
+        },
+        {
+          "id": "G45VectorBrushParameterIdentity",
+          "command_or_oracle": "CTest/unit oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "live parameter determinism and v1 compatibility"
+        },
+        {
+          "id": "G45VectorGeometryMorphology",
+          "command_or_oracle": "CTest/golden geometry oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "real freehand vector geometry"
+        },
+        {
+          "id": "G45VectorIncrementalEquivalence",
+          "command_or_oracle": "CTest/corpus oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "one-shot/chunked convergence and stable tail contract"
+        },
+        {
+          "id": "G45VectorCanonicalReplay",
+          "command_or_oracle": "CTest/canonical roundtrip oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "persistent deterministic replay without schema expansion"
+        },
+        {
+          "id": "G45CanonicalSkiaVectorGolden",
+          "command_or_oracle": "Skia raster/golden oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "canonical visual fidelity"
+        },
+        {
+          "id": "G45WindowsArcVectorParity",
+          "command_or_oracle": "Windows Arc adapter/backend oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "single semantic owner"
+        },
+        {
+          "id": "G45WindowsDualColorDiagnostic",
+          "command_or_oracle": "Windows qualification contract oracle",
+          "expected_result": "PASS",
+          "blocking_reason": "diagnostic does not alter semantics"
+        },
+        {
+          "id": "G45ArcCanonicalVisibleHandoff",
+          "command_or_oracle": "Arc handoff/token regression",
+          "expected_result": "PASS",
+          "blocking_reason": "safe preview release"
+        },
+        {
+          "id": "G45VectorWorkloadEvidence",
+          "command_or_oracle": "evidence exporter/corpus replay",
+          "expected_result": "PASS",
+          "blocking_reason": "G5 workload handoff"
+        },
+        {
+          "id": "existing-regressions",
+          "command_or_oracle": "relevant G4/G4.4/G4.5 CTest/Python suites",
+          "expected_result": "all PASS",
+          "blocking_reason": "preserve accepted behavior"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [
+        "G4.5 Programmable Brush Qualification on exact result revision: Windows x64 PASS, Web wasm32 PASS, Android arm64-v8a PASS",
+        "Arc / POC-06 on exact result revision: contract/boundary and platform-target lanes PASS"
+      ],
+      "optional": [
+        "other unaffected repository CI lanes"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "repo-reconciliation.json",
+        "implementation-design-preflight.json",
+        "red-oracle-preflight.json",
+        "vector-reference-definition.json",
+        "vector-program-manifest.json",
+        "vector-input-corpus.json",
+        "vector-incremental-equivalence.json",
+        "vector-preview-canonical-parity.json",
+        "windows-arc-vector-parity.json",
+        "windows-dual-color-diagnostic.json",
+        "handoff-result.json",
+        "g4-5-vector-workload.json",
+        "portable-regression-summary.json",
+        "qualification-bundle-manifest.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "Windows physical video/screenshots are final G4.5-10 Gate evidence, not P32 blocking evidence."
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all 09V automated obligations PASS",
+        "exact-result hosted verification PASS",
+        "Windows exact qualification bundle is materialized and reviewer-resolvable",
+        "no forbidden diff or superseded 09F dependency is present",
+        "status is READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+        "no final G4.5 Gate PASS is claimed"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "current raw-input -> Arc fixed-point shortcut",
+        "target common vector geometry ownership and preview/canonical flows",
+        "canonical replay mapping for Pen/version 2",
+        "Arc payload/render mapping",
+        "Space diagnostic placement",
+        "obligation-to-code/test mapping",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION",
+  "package_id": "GT-G4-5-C2-P31-v0.6",
+  "status": "TASK_PACKAGE_DEFECT",
+  "terminal": true,
+  "continue_execution": false,
+  "observed_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "classification": "TASK_PACKAGE_DEFECT",
+  "blocker": "The v0.6 closure binds VectorPathNode to the accepted Perfect Freehand R1 oracle but still does not freeze the semantic mapping from the existing BrushDefinition v1 fields to R1 StrokeOptions.",
+  "evidence": {
+    "existing_definition": "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+    "existing_r1_options": "runtime/ink/include/canvas/ink/vector_stroke_reference.hpp",
+    "diagnostic": ".aegis/results/GT-G4-5-C2/brush-oracle-binding-probe.cpp",
+    "prior_diagnostic_result": "Different legal thinning choices produce different R1 outlines; the choice is observable behavior.",
+    "implementation_design_preflight": ".aegis/results/GT-G4-5-C2/implementation-design-preflight.json",
+    "red_preflight": ".aegis/results/GT-G4-5-C2/red-oracle-preflight.json"
+  },
+  "unresolved_semantic_decisions": [
+    "Freeze the exact mapping for thinning, smoothing, streamline, simulatePressure, startCap, startTaper, endCap, endTaper, and last.",
+    "State whether legacy BrushDefinition fields such as nominalSize, opacity, spacing, pressureSizeInfluence, pressureOpacityInfluence, tiltSizeInfluence, and tiltRotationInfluence are ignored, mapped, or rejected for C2 profile 1."
+  ],
+  "scope_status": {
+    "v0_6_scope_bindings_present": true,
+    "v0_6_hash_and_reentry_review_passed": true,
+    "production_mutation_started": false,
+    "production_diff_introduced": false
+  },
+  "required_owner": "P31 package/authority owner",
+  "required_resolution": "Amend the trusted Authority/Verification binding and v0.6 package with the exact BrushDefinition-to-R1 mapping, then recompute package hashes and rerun P32_REENTRY_REVIEW.",
+  "official_gate_pass_forbidden": true,
+  "ownership_handoff": {
+    "to": "P31 task packaging / authority owner",
+    "reason": "Required semantic decision is absent from the frozen package; P32 must not infer it."
+  }
+}

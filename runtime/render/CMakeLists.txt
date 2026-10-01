@@ -1,5 +1,7 @@
 option(CANVAS_RENDER_ENABLE_SKIA_HEADLESS
     "Build the private G3 Headless Skia backend" OFF)
+option(CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH
+    "Build the shared Skia programmable-DAB renderer" OFF)
 
 add_library(canvas_runtime_render STATIC
     src/visibility_resolver.cpp
@@ -7,23 +9,29 @@ add_library(canvas_runtime_render STATIC
     src/frame_plan.cpp
     src/render_backend.cpp
     src/surface_lifecycle.cpp
+    src/render_target.cpp
+    src/runtime_app_binding.cpp
     src/presentation_tracker.cpp
-    src/canonical_handoff.cpp)
+    src/canonical_handoff.cpp
+    src/preview_surface.cpp)
 
-if(EMSCRIPTEN)
+if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
+                   CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
 endif()
 
-if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
-    add_executable(axiom_headless_canvas_demo
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+      add_executable(axiom_headless_canvas_demo
         tools/headless_canvas_demo.cpp)
-    target_link_libraries(axiom_headless_canvas_demo PRIVATE canvas_runtime_render)
-    target_compile_features(axiom_headless_canvas_demo PRIVATE cxx_std_20)
-    target_compile_definitions(axiom_headless_canvas_demo PRIVATE
+      target_link_libraries(axiom_headless_canvas_demo PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_headless_canvas_demo PRIVATE cxx_std_20)
+      target_compile_definitions(axiom_headless_canvas_demo PRIVATE
         G3_07_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    endif()
 endif()
 
-if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
     if(NOT CANVAS_SKIA_SDK_ROOT)
         message(FATAL_ERROR "CANVAS_SKIA_SDK_ROOT is required for the Headless Skia consumer")
     endif()
@@ -32,15 +40,61 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
         NO_DEFAULT_PATH
         NO_CMAKE_FIND_ROOT_PATH)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    set(CANVAS_CHALK_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+              "kCanvasChalkShapePng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v2.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v2.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+              "kCanvasChalkGrainPng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v2.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v2.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+              "kCanvasMembraneShapePng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/shape.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/shape.png")
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp"
+              "kCanvasMembraneGrainPng"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/grain.png"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/membrane-v1/grain.png")
+    add_custom_target(canvas_chalk_texture_assets DEPENDS
+      "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/chalk_grain_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/membrane_shape_png.hpp"
+      "${CANVAS_CHALK_GENERATED_DIR}/membrane_grain_png.hpp")
+    add_dependencies(canvas_runtime_render canvas_chalk_texture_assets)
+    target_include_directories(canvas_runtime_render PRIVATE "${CANVAS_CHALK_GENERATED_DIR}")
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
 endif()
 target_include_directories(canvas_runtime_render PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(canvas_runtime_render PUBLIC
-    canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene)
+    canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene
+    canvas_runtime_ink canvas_runtime_input)
 target_compile_features(canvas_runtime_render PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -53,7 +107,7 @@ else()
     endif()
 endif()
 
-if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_render_skia_ink_backend_tests
         tests/skia_ink_backend_test.cpp)
     target_link_libraries(axiom_render_skia_ink_backend_tests PRIVATE canvas_runtime_render)
@@ -62,11 +116,60 @@ if(WIN32 AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         target_compile_options(axiom_render_skia_ink_backend_tests
             PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
-        target_compile_options(axiom_render_skia_ink_backend_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      target_compile_options(axiom_render_skia_ink_backend_tests
+        PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
     endif()
     add_test(NAME G4WindowsSkiaInkViewport
         COMMAND axiom_render_skia_ink_backend_tests)
+    add_executable(axiom_render_skia_brush_primitive_tests
+        tests/skia_brush_primitive_test.cpp)
+    target_link_libraries(axiom_render_skia_brush_primitive_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_skia_brush_primitive_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
+    endif()
+    add_test(NAME G4SkiaBrushPrimitiveDab COMMAND axiom_render_skia_brush_primitive_tests)
+    add_executable(axiom_render_chalk_texture_tests
+        tests/chalk_texture_test.cpp)
+    target_link_libraries(axiom_render_chalk_texture_tests PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_render_chalk_texture_tests PRIVATE
+      "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_render_chalk_texture_tests PRIVATE cxx_std_20)
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE
+        -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+        -Wno-error=gnu-anonymous-struct)
+    if(MSVC)
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4SkiaChalkTexture COMMAND axiom_render_chalk_texture_tests)
+    add_executable(axiom_render_chalk_continuous_texture_tests
+        tests/chalk_continuous_texture_test.cpp)
+    target_link_libraries(axiom_render_chalk_continuous_texture_tests PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_render_chalk_continuous_texture_tests PRIVATE
+        ${PROJECT_SOURCE_DIR}/runtime/render/include
+        "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_render_chalk_continuous_texture_tests PRIVATE cxx_std_20)
+    target_compile_options(axiom_render_chalk_continuous_texture_tests PRIVATE
+      -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+      -Wno-error=gnu-anonymous-struct)
+    add_test(NAME G4SkiaChalkContinuousTexture COMMAND axiom_render_chalk_continuous_texture_tests)
+endif()
+
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_runtime_app_binding_tests
+        tests/runtime_app_binding_test.cpp)
+    target_link_libraries(axiom_runtime_app_binding_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_runtime_app_binding_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_runtime_app_binding_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_runtime_app_binding_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3RuntimeAppBinding COMMAND axiom_runtime_app_binding_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
@@ -95,6 +198,49 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(axiom_render_target_tests tests/render_target_test.cpp)
+    target_link_libraries(axiom_render_target_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_target_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_target_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_target_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G3RenderTargetSwitching COMMAND axiom_render_target_tests)
+
+    # These tests exercise the Skia-only providers below.  Keep them out of
+    # non-Skia host configurations (such as POC-03/RF-01), where the provider
+    # symbols are intentionally not compiled into canvas_runtime_render.
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+      add_executable(axiom_render_skia_surface_provider_tests
+          tests/skia_surface_provider_test.cpp)
+      target_link_libraries(axiom_render_skia_surface_provider_tests
+          PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_render_skia_surface_provider_tests PRIVATE cxx_std_20)
+      if(MSVC)
+        target_compile_options(axiom_render_skia_surface_provider_tests
+          PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+      else()
+        target_compile_options(axiom_render_skia_surface_provider_tests
+          PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+      add_test(NAME G3SkiaSurfaceProvider COMMAND axiom_render_skia_surface_provider_tests)
+
+      add_executable(axiom_render_preview_surface_tests
+          tests/preview_surface_test.cpp)
+      target_link_libraries(axiom_render_preview_surface_tests
+          PRIVATE canvas_runtime_render)
+      target_compile_features(axiom_render_preview_surface_tests PRIVATE cxx_std_20)
+      if(MSVC)
+        target_compile_options(axiom_render_preview_surface_tests
+          PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+      else()
+        target_compile_options(axiom_render_preview_surface_tests
+          PRIVATE -Wall -Wextra -Wpedantic -Werror)
+      endif()
+      add_test(NAME G3PreviewSurface COMMAND axiom_render_preview_surface_tests)
+    endif()
+
     add_executable(axiom_render_surface_presentation_tests
         tests/surface_presentation_test.cpp)
     target_link_libraries(axiom_render_surface_presentation_tests PRIVATE canvas_runtime_render)

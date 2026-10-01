@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+  "accepted_c0_result": "d861e05e18a0665c0c91c7523925b3990bb0c88e",
+  "accepted_c0_control_ref": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+  "files": {
+    "runtime/input/CMakeLists.txt": "a5dc22205e6f2784dcb62ecaccbb0dbf609670c9",
+    "runtime/input/include/canvas/input/pointer_sample.hpp": "b08b2f8f952dbe4493db7ca549b9e676b3fb6eda",
+    "runtime/input/include/canvas/input/pointer_capabilities.hpp": "2531d74814b2450ce81b9e973601280561ffe408",
+    "runtime/input/include/canvas/input/platform_normalization.hpp": "d69f956f833b07cff0c64a3ff7bba9064d743dfc",
+    "runtime/input/include/canvas/input/web_input_adapter.hpp": "637bc2340cfc1ccd56ebe1f121c52269c63f720e",
+    "runtime/input/src/web_input_adapter.cpp": "6f63272f8b8dc62dd01289724a636ec1e5e08dd0",
+    "apps/ink_playground/CMakeLists.txt": "3fc3493ccf20b745a9a859a9189a24e736af7ba7",
+    "apps/ink_playground/common/ink_playground_host.hpp": "7911416e9e299485ad569b3d1700efa9b635e408",
+    "apps/ink_playground/common/ink_playground_host.cpp": "ad70e075274b8f9bfed4bbfa86ab96d7825924c4",
+    "apps/ink_playground/common/platform_contract.hpp": "8b1e3fe2ab027e34a6e47f81f987abfe101c1151",
+    "apps/ink_playground/common/platform_contract.cpp": "8ddac9fd3e2b13b274ba20d2e2c12f714a1916d7",
+    "apps/ink_playground/platform/web/bridge.cpp": "c39c170420bfc546cee56ed9d93a16324423cc37",
+    "apps/ink_playground/platform/web/index.html": "215ea046669d55d574d7cf45d005ab7f06763344",
+    "apps/ink_playground/platform/web/pointer_event_batch_adapter.ts": "3f4a54ae18b5be47654388faf15001715d00de66",
+    "apps/ink_playground/platform/android/bridge.cpp": "23b2b085473d4808d6d46b6ce4eb82654d15f4bc",
+    "apps/ink_playground/platform/android/android_jni.cpp": "6741f987cc6eed06ee1c5ea8662b06d388bd402a",
+    "apps/ink_playground/platform/android/android_pointer_identity.hpp": "a55d0489c51298f9c719d62630a092f49dfe6d30",
+    "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/InkPlaygroundView.java": "7e97d043f5ac3722dfccfd50002e416583b3c97c",
+    "apps/ink_playground/platform/windows/main.cpp": "218837adec2678761344cfc94e2d3aa279bbb3c3",
+    "apps/ink_playground/platform/windows/windows_pointer_utils.hpp": "22e3982db15614eef32f85fed1c5563b643e4eef"
+  },
+  "observed_pre_c1_ownership": {
+    "web": [
+      "JS owns pointer generations and stroke ids",
+      "JS directly calls pointer begin/sample/commit/cancel",
+      "JS directly calls Brush begin/sample/finish"
+    ],
+    "android": [
+      "Java/JNI owns stroke lifecycle",
+      "native bridge owns ActivePointerRegistry",
+      "native bridge constructs arc_pointer_sample_v0 and routes Arc InputSource back into Runtime"
+    ],
+    "windows": [
+      "Win32 owns ActivePointerRegistry",
+      "Win32 constructs arc_pointer_sample_v0",
+      "Win32 interprets ContactDisposition via platformPointerAction",
+      "Win32 chooses commit/release and preview suppression"
+    ],
+    "apple": [
+      "no equivalent InkPlayground AppKit/UIKit adapter exists"
+    ]
+  }
+}

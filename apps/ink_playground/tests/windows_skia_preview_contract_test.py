@@ -1,0 +1,148 @@
+"""Windows preview must consume Runtime geometry and present through Skia.
+
+This is intentionally RED on the common baseline: the old Windows host still
+stores ARC primitives and creates the GDI ARC backend as its production
+preview renderer.
+"""
+
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[3]
+WINDOWS_MAIN = ROOT / "apps" / "ink_playground" / "platform" / "windows" / "main.cpp"
+WINDOWS_CMAKE = ROOT / "apps" / "ink_playground" / "CMakeLists.txt"
+
+
+def test_windows_preview_does_not_own_pointer_geometry():
+    source = WINDOWS_MAIN.read_text()
+    assert "std::vector<arc_preview_primitive_v0> points" not in source
+    assert "appendNormalizedPreviewSamples" not in source
+    assert "pushArcPreview" not in source
+
+
+def test_windows_preview_uses_runtime_skia_provider():
+    source = WINDOWS_MAIN.read_text()
+    cmake = WINDOWS_CMAKE.read_text()
+    assert "WindowsSkiaPreviewSurfaceProvider" in source
+    assert "registerPreviewSurfaceProvider" in source
+    assert "SkiaRenderer" in source
+    assert "windows_skia_preview_surface_provider.cpp" in cmake
+
+
+def test_windows_preview_has_independent_overlay_identity():
+    source = WINDOWS_MAIN.read_text()
+    assert "previewProvider" in source
+    assert "windows-skia-arc-preview" in source
+    assert "geometry_source" in source or "BrushPreviewDelta.outline" in source
+    assert "CreateWindowsBackend" not in source
+
+
+def test_windows_resize_uses_host_surface_contract():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "host->resizePreviewSurface" not in source
+    assert ".canonicalProviderIdentity" in source
+    assert ".previewProviderIdentity" in source
+
+
+def test_windows_initializes_render_surfaces_before_first_paint():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert source.index("registerPreviewSurfaceProvider(") < source.index("ShowWindow(value.window, show)")
+    assert source.index("attachPreviewTarget(value,") < source.index("ShowWindow(value.window, show)")
+    paint = source.split("void paint(HWND window, State& value) {", 1)[1].split(
+        "LRESULT CALLBACK WindowProc", 1
+    )[0]
+    assert "canonicalProvider->resize(" not in paint
+
+
+def test_windows_mouse_samples_use_process_monotonic_sequences():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "mouseSampleSequence" in source
+    assert "sample.sample_sequence = ++value.mouseSampleSequence" in source
+
+
+def test_windows_keeps_preview_until_mouse_release_canonical_handoff():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0," in source
+    assert "value.activeKeys.empty()" in source
+
+
+def test_windows_hides_preview_presentation_before_canonical_redraw():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "previewPresentationEnabled" in source
+    assert "setOverlayVisible(false)" in source
+    assert "value.previewPresentationEnabled && value.host->previewActive()" in source
+    assert "value->previewDirty && value->previewPresentationEnabled" in source
+    assert "if (end && value.activeKeys.size() <= 1U) hidePreviewPresentation(value)" in source
+    assert "if (end && value->activeKeys.size() <= 1U) hidePreviewPresentation(*value)" in source
+
+
+def test_windows_final_pointer_up_completes_canonical_handoff_immediately():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0, true)" in source
+    assert "presentCanonicalFrame(value->host->canonicalFrameCount() + 1U, 0.0, true)" in source
+
+
+def test_windows_preview_reasserts_overlay_z_order_after_present():
+    source = (ROOT / "apps" / "ink_playground" / "platform" / "windows" /
+              "windows_skia_preview_surface_provider.cpp").read_text(encoding="utf-8")
+    assert "SetWindowPos(overlay_, HWND_TOPMOST" in source
+    assert "WS_EX_TOPMOST" in source
+    # A visible top-level layered HWND must let a second touch reach the
+    # canonical owner while the first contact's preview is visible.
+    assert "WS_EX_TRANSPARENT" in source
+    assert "WS_POPUP" in source
+    assert "owner_, nullptr, instance, owner_" in source
+    assert "ShowWindow(overlay_, SW_SHOWNOACTIVATE)" in source
+    assert "WM_POINTERDOWN" in source
+    assert "SendMessageW(owner" in source
+
+
+def test_windows_owner_surface_has_presentation_only_amber_fallback():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "presentation-only Amber fallback" in source
+    assert "value.host->brushPreviewOutlines()" in source
+    assert "for (const auto& preview : previews)" in source
+    assert "RGB(255, 170, 0)" in source
+    assert "brushPreviewOutlines()" in source
+    assert "CreateSolidBrush(RGB(255, 170, 0))" in source
+    assert "Polygon(bufferDc" in source
+
+
+def test_windows_touch_trace_registers_pointer_key_before_history_trace():
+    """A WM_POINTER down must not call unordered_map::at before registration."""
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "value->activeKeys.at(pointerId)" not in source
+    history_loop = source.index("for (std::size_t index = 0; index < samples.size(); ++index)")
+    registration = source.index("value->activeKeys[pointerId] = *key")
+    assert registration < history_loop
+
+
+def test_windows_amber_fallback_applies_runtime_viewport_transform():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    fallback = source.split("presentation-only Amber fallback", 1)[1].split(
+        "SetBkMode", 1
+    )[0]
+    assert "previewViewport()" in fallback
+    assert ".scale" in fallback
+    assert ".translationX" in fallback
+    assert ".translationY" in fallback
+
+
+def test_windows_pointer_input_submits_preview_without_waiting_for_timer():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    mouse_handler = source.split("bool submitMouseSample", 1)[1].split(
+        "void cancelPointer", 1
+    )[0]
+    pointer_handler = source.split("if (message == WM_POINTERDOWN", 1)[1].split(
+        "if (message == WM_POINTERCAPTURECHANGED", 1
+    )[0]
+    assert "presentBrushPreview()" in mouse_handler
+    assert "presentBrushPreview()" in pointer_handler
+
+
+def test_windows_pointer_up_reuses_already_presented_canonical_frame():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "canonicalFrameReady" in source
+    assert "value.canonicalFrameReady = true" in source
+    assert "!value.canonicalFrameReady" in source
+    assert "canonicalFrameReady = false" in source

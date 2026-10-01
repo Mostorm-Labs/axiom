@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION",
+  "package_id": "GT-G4-5-C2-P31-v0.7",
+  "status": "BLOCKED_EVIDENCE",
+  "terminal": true,
+  "continue_execution": false,
+  "observed_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "classification": "TASK_PACKAGE_DEFECT",
+  "blocker": "The frozen RED oracle is required by verification.lock.json and execution-contract.json, but its executable source is absent from the repository and is not included in the P31 package or authorized mutation scope.",
+  "required_input": {
+    "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+    "path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+    "exists": false,
+    "tracked": false,
+    "history_commits": [],
+    "prior_record": ".aegis/results/GT-G4-5-C2/red-oracle-preflight.json",
+    "prior_record_test_retained": false,
+    "prior_record_complete_frozen_red_preflight": false
+  },
+  "preflight": {
+    "repository_identity": "PASS",
+    "package_manifest_hashes": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "implementation_mutation_started": false,
+    "git_diff_check": "PASS"
+  },
+  "required_owner": "P31 task packaging / verification binding owner",
+  "required_resolution": "Materialize or bind the complete executable frozen RED oracle in the corrected P31 package, include its exact hash and authorized scope, recompute package hashes, and rerun P32_REENTRY_REVIEW.",
+  "official_gate_pass_forbidden": true,
+  "ownership_handoff": {
+    "to": "P31 task packaging / verification binding owner",
+    "reason": "P32 cannot satisfy a required acceptance precondition without an exact executable oracle."
+  }
+}

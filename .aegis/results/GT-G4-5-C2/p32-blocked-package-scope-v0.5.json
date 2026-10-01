@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_CODE_EXECUTION",
+  "package_id": "GT-G4-5-C2-P31-v0.5",
+  "status": "BLOCKED_P31_TASK_PACKAGE_DEFECT",
+  "observed_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "blocker_class": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "reason": "Frozen P32 closure requires mutation of existing common composition, semantic codec/model, scene/render and build/test files that are outside the v0.5 authorized mutation scope. P32 cannot infer or expand that scope.",
+  "missing_scope_by_area": {
+    "common_composition": [
+      "apps/ink_playground/CMakeLists.txt",
+      "apps/ink_playground/common/ink_playground_host.hpp",
+      "apps/ink_playground/common/ink_playground_host.cpp",
+      "apps/ink_playground/common/platform_interaction_controller.hpp",
+      "apps/ink_playground/common/platform_interaction_controller.cpp",
+      "apps/ink_playground/common/platform_contract.hpp",
+      "apps/ink_playground/common/platform_contract.cpp"
+    ],
+    "semantic_codec_and_model": [
+      "runtime/semantic/CMakeLists.txt",
+      "runtime/semantic/src/codec.cpp",
+      "runtime/semantic/src/protobuf_object_mapping.cpp",
+      "runtime/semantic/src/validator.cpp",
+      "runtime/semantic/src/operation_state_validator.cpp",
+      "runtime/semantic/src/snapshot.cpp",
+      "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "schema/axiom/v1/registry/brush_family_registry_v1.yaml"
+    ],
+    "scene_and_render": [
+      "runtime/scene/CMakeLists.txt",
+      "runtime/scene/src/scene_record_store.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/render/src/skia_headless_backend.cpp",
+      "runtime/render/src/frame_plan.cpp",
+      "runtime/render/src/skia_ink_backend.cpp",
+      "runtime/render/src/webgl_surface_backend.cpp"
+    ],
+    "build_and_tests": [
+      "runtime/ink/CMakeLists.txt",
+      "runtime/semantic/tests/CMakeLists.txt",
+      "runtime/render/tests/skia_brush_primitive_test.cpp"
+    ]
+  },
+  "examples_of_frozen_requirements_without_scope": [
+    "Move Web/Android/Windows ownership to common composition",
+    "Materialize validators, canonical codec, AddStroke v2 adapter, snapshot/replay and undo/redo",
+    "Skia consumes stored canonical outline and snapshot paint",
+    "Run affected CMake/semantic/platform targets"
+  ],
+  "required_next_action": "Return to P31, add the exact existing-file modifications and their test/evidence bindings to one corrected package, recompute package hashes and rerun P32_REENTRY_REVIEW.",
+  "production_mutation_started": false,
+  "official_gate_pass_forbidden": true
+}

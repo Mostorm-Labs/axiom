@@ -1,0 +1,24 @@
+{
+  "authorized_paths_only": true,
+  "baseline_package_files_excluded": true,
+  "changed_paths": [
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/web/index.html",
+    "apps/ink_playground/tests/web_host_page_test.py",
+    "apps/ink_playground/tests/c0_web_navigation_contract_test.py",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/interaction/include/canvas/interaction/canvas_interaction_coordinator.hpp",
+    "runtime/interaction/include/canvas/interaction/viewport_interaction_controller.hpp",
+    "runtime/interaction/src/canvas_interaction_coordinator.cpp",
+    "runtime/interaction/src/viewport_interaction_controller.cpp",
+    "runtime/interaction/tests/canvas_interaction_coordinator_test.cpp",
+    "runtime/interaction/tests/viewport_interaction_controller_test.cpp",
+    ".aegis/results/GT-G4-5-C0/**"
+  ],
+  "cmake_baseline_restored": true,
+  "forbidden_path_hits": [],
+  "status": "PASS",
+  "task_id": "GT-G4-5-C0"
+}

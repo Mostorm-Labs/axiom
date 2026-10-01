@@ -95,6 +95,7 @@ class SemanticCodec final {
     // Experimental G1-02 probe. Protobuf types remain private to codec.cpp;
     // this returns the canonical runtime bytes without exposing that ABI.
     static CodecResult encodeProtobufOperation(OperationKind kind);
+    static CodecResult encodeProtobufOperation(const Operation& operation);
     // Decode a complete canonical protobuf Operation while keeping generated
     // DTOs private to codec.cpp. Callers may normalize the returned operation
     // before applying it through the existing semantic validation surfaces.

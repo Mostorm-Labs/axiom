@@ -12,6 +12,12 @@
 #include <vector>
 
 int main() {
+  using canvas::ink_playground::windows_input::isPromotedPointerMouseMessage;
+  if (!isPromotedPointerMouseMessage(static_cast<LPARAM>(0xFF515700U)) ||
+      !isPromotedPointerMouseMessage(static_cast<LPARAM>(0xFF515780U)) ||
+      isPromotedPointerMouseMessage(static_cast<LPARAM>(0x00000000U))) {
+    return 14;
+  }
   const auto value = canvas::ink_playground::windows_input::deviceIdFromHandle(
       reinterpret_cast<HANDLE>(static_cast<std::uintptr_t>(0x1234U)));
   if (value != 0x1234U ||
@@ -34,9 +40,9 @@ int main() {
   previewSamples[1].sample_sequence = 2;
   previewSamples[1].x = 12.0F;
   previewSamples[1].y = 13.0F;
-  if (canvas::ink_playground::windows_input::appendPreviewSamples(
+  if (canvas::ink_playground::windows_input::appendNormalizedPreviewSamples(
           previewPoints, lastPreviewSequence, previewSamples) != 2U ||
-      canvas::ink_playground::windows_input::appendPreviewSamples(
+      canvas::ink_playground::windows_input::appendNormalizedPreviewSamples(
           previewPoints, lastPreviewSequence, previewSamples) != 0U ||
       previewPoints.size() != 2U || lastPreviewSequence != 2U) {
     return 13;

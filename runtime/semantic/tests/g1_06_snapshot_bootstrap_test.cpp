@@ -263,7 +263,7 @@ TEST(G106SnapshotBootstrap, RejectsZeroDocumentAndUnsupportedSchema) {
     expectLoadingFailure<ReferenceObjectStore>(zero, StatefulIssue::kInvalidApplicability);
 
     SemanticSnapshot version = emptySnapshot();
-    version.schema_version = 2U;
+    version.schema_version = 3U;
     expectLoadingFailure<IndexedObjectStore>(version, StatefulIssue::kInvalidApplicability);
 }
 
@@ -315,7 +315,7 @@ TEST(G106SnapshotBootstrap, NegativeFixturesRejectAtomicallyOnReferenceAndIndexe
     expectLoadingFailureOnBothProviders(zero_document_id, empty_target);
 
     SemanticSnapshot unsupported_schema = emptySnapshot();
-    unsupported_schema.schema_version = 2U;
+    unsupported_schema.schema_version = 3U;
     expectLoadingFailureOnBothProviders(unsupported_schema, empty_target);
 }
 

@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-R01",
+  "stage": "P31",
+  "status": "PASS_PENDING_MATERIALIZATION_REF",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "main_revision": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+    "task_anchor": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+    "anchor_relation": "ancestor",
+    "execution_ref": "codex/g4-5-pf-reference-conformance"
+  },
+  "reconciliation": {
+    "clean_start_revision": "52acd2fb9274b201dd4eee478e49ac35937ed3cf",
+    "interrupted_09v_head": "a02ebdb1d811cfbe6e22295ddcacb66cedec49b9",
+    "interrupted_09v_disposition": "PRESERVE_FOR_RECONCILIATION_DO_NOT_USE_AS_EXECUTION_BASE",
+    "reason": "R01 must not inherit approximate triangle-strip, Windows GDI Arc, renderer, or semantic-validator mutations."
+  },
+  "external_reference": {
+    "repository": "steveruizok/perfect-freehand",
+    "commit": "176e00f2399f4969e1b0965c5921d96a3e50ce9f",
+    "required_blob_count": 11,
+    "license": "MIT"
+  },
+  "checks": {
+    "RepositoryIdentityPreflight": "PASS",
+    "AuthoritySourceBindingPreflight": "PASS",
+    "ReferenceBindingPreflight": "PASS",
+    "CorpusPlanPreflight": "PASS",
+    "EvidenceContractPreflight": "PASS",
+    "ClosureContractPreflight": "PASS",
+    "PackageBindingPreflight": "PASS",
+    "ScopeConflict": false,
+    "UnresolvedSemanticDecision": false
+  },
+  "expected_p32_entry": "READY_FOR_P32_CODE_EXECUTION",
+  "package_materialization_ref": "c6ec12cb27b502aa69efc5658db0c2a2602df783",
+  "package_ref": ".aegis/packages/GT-G4-5-R01/package.json",
+  "hash_validation": {
+    "authority.lock.json": "PASS",
+    "reference.lock.json": "PASS",
+    "corpus-plan.json": "PASS",
+    "verification.lock.json": "PASS",
+    "execution-contract.json": "PASS",
+    "implementation-context.md": "PASS",
+    "evidence-contract.json": "PASS"
+  }
+}

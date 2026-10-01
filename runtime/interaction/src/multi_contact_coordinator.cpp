@@ -7,6 +7,7 @@ namespace canvas::interaction {
 namespace {
 constexpr float kRadialSlop = 8.0F;
 constexpr float kPathSlop = 12.0F;
+constexpr std::uint64_t kViewportChordWindowNs = 250'000'000ULL;
 }
 
 bool MultiContactCoordinator::activatesInk(Contact& contact, float x, float y) noexcept {
@@ -21,11 +22,24 @@ bool MultiContactCoordinator::activatesInk(Contact& contact, float x, float y) n
   return radial >= kRadialSlop || contact.path >= kPathSlop;
 }
 
-bool MultiContactCoordinator::tryViewportClaim() noexcept {
+bool MultiContactCoordinator::tryViewportClaim(std::uint64_t nowNs) noexcept {
   if (contacts_.size() < 2U || viewportClaimed_) return false;
+  std::uint64_t earliestDownNs = nowNs;
+  std::uint64_t latestDownNs = 0;
   for (const auto& [key, contact] : contacts_) {
     static_cast<void>(key);
     if (contact.disposition != ContactDisposition::kPending) return false;
+    earliestDownNs = std::min(earliestDownNs, contact.downTimestampNs);
+    latestDownNs = std::max(latestDownNs, contact.downTimestampNs);
+  }
+  if (policy_ == MultiContactPolicy::kAutoIntent &&
+      latestDownNs - earliestDownNs > kViewportChordWindowNs) {
+    for (auto& [key, contact] : contacts_) {
+      static_cast<void>(key);
+      contact.disposition = ContactDisposition::kInk;
+    }
+    canonicalMutation_ = true;
+    return false;
   }
   viewportClaimed_ = true;
   for (auto& [key, contact] : contacts_) {
@@ -49,6 +63,8 @@ ContactDisposition MultiContactCoordinator::update(const input::PointerSample& s
     Contact contact;
     contact.startX = contact.lastX = sample.x;
     contact.startY = contact.lastY = sample.y;
+    contact.downTimestampNs = sample.timestampNs;
+    if (viewportClaimed_) return ContactDisposition::kIgnored;
     if (policy_ == MultiContactPolicy::kMultiInk ||
         (policy_ == MultiContactPolicy::kAutoIntent && !contacts_.empty() &&
          std::any_of(contacts_.begin(), contacts_.end(), [](const auto& entry) {
@@ -66,7 +82,7 @@ ContactDisposition MultiContactCoordinator::update(const input::PointerSample& s
     if (!inserted) return ContactDisposition::kIgnored;
     if ((policy_ == MultiContactPolicy::kAutoIntent ||
          policy_ == MultiContactPolicy::kGesturePriority) && contacts_.size() >= 2U) {
-      static_cast<void>(tryViewportClaim());
+      static_cast<void>(tryViewportClaim(sample.timestampNs));
     }
     return it->second.disposition;
   }

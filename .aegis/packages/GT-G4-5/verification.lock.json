@@ -1,0 +1,85 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5",
+  "obligations": [
+    {
+      "id": "G45-V1-definition-capabilities",
+      "requirement": "BrushDefinition and capability profiles are deterministic, renderer-neutral, platform-neutral runtime models with explicit validation.",
+      "oracle": "Table-driven construction, normalization, versioning and rejection tests across every V1 brush family and capability combination.",
+      "acceptance": "Equivalent definitions normalize identically; unsupported versions, invalid ranges and unavailable required capabilities fail explicitly; no renderer, GPU or platform handle enters the model.",
+      "evidence_required": ["automated test report", "definition fixture manifest"]
+    },
+    {
+      "id": "G45-V2-program-compiler",
+      "requirement": "BrushProgram is immutable, versioned, renderer-neutral IR with stable identity and compiler rejection for unsupported capability requirements.",
+      "oracle": "Independent fixture-to-program snapshots, stable identity/digest tests and negative compiler fixtures.",
+      "acceptance": "The same definition and capability profile produce the same program identity and structure; unsupported or malformed programs cannot execute.",
+      "evidence_required": ["program snapshot corpus", "compiler negative-test report"]
+    },
+    {
+      "id": "G45-V3-runtime-artifacts",
+      "requirement": "BrushRuntime is the single semantic evaluator and emits isolated incremental commit and preview artifacts for keyed sessions.",
+      "oracle": "Deterministic multi-session replay, chunk-boundary equivalence, commit/preview separation and cancellation tests.",
+      "acceptance": "Incremental and one-shot evaluation are equivalent; cancellation removes only the keyed transient session; preview state cannot mutate canonical state.",
+      "evidence_required": ["runtime replay corpus", "session isolation report"]
+    },
+    {
+      "id": "G45-V4-resource-binding",
+      "requirement": "Shape and grain resources use stable ResourceId bindings with explicit missing-resource behavior and no canonical GPU handles.",
+      "oracle": "Known, missing, mismatched and unavailable-resource fixtures evaluated independently of the renderer.",
+      "acceptance": "Every resource reference resolves deterministically or returns an explicit failure/degraded status permitted by the frozen profile; GPU and backend handles never enter canonical records.",
+      "evidence_required": ["resource fixture manifest", "resource binding test report"]
+    },
+    {
+      "id": "G45-V5-deterministic-dynamics",
+      "requirement": "Dynamics and random channels are deterministic and domain-separated by stable seed/channel/sample identity.",
+      "oracle": "Golden numeric sequences, channel-independence tests, replay on supported host toolchains and existing TexturedMarker v1 goldens.",
+      "acceptance": "Equal inputs reproduce equal output; adding or consuming one channel does not perturb another; TexturedMarker v1 remains byte/structure compatible under its existing oracle.",
+      "evidence_required": ["random-channel golden corpus", "cross-host deterministic summary"]
+    },
+    {
+      "id": "G45-V6-v1-families",
+      "requirement": "Pen, Pencil, Chalk, Marker, Water Color Lite and Highlighter persistent experiences compile and evaluate through the common pipeline.",
+      "oracle": "Per-family structural program snapshots, deterministic runtime fixtures and independently frozen visual/golden corpus.",
+      "acceptance": "All six persistent families satisfy their frozen representation and output invariants without platform-specific semantic forks.",
+      "evidence_required": ["V1 family matrix", "golden visual corpus", "golden comparison report"]
+    },
+    {
+      "id": "G45-V7-laser-transient",
+      "requirement": "Laser uses Arc temporal transient presentation, has monotonic release/fade/expiry and performs zero canonical mutation.",
+      "oracle": "Fake-clock lifecycle tests, transient snapshot sequences and before/after canonical document digest comparison.",
+      "acceptance": "Lifecycle is deterministic and monotonic; expiry removes the transient; canonical document digest and operation history are unchanged.",
+      "evidence_required": ["laser lifecycle trace", "zero-mutation digest evidence"]
+    },
+    {
+      "id": "G45-V8-brush-lab-corpus-workload",
+      "requirement": "Brush Lab can exercise definitions, programs, runtime artifacts and visual corpus while emitting qualification and G5 workload counters.",
+      "oracle": "Headless Brush Lab scenarios plus manifest completeness and artifact hash validation.",
+      "acceptance": "Every V1 family and Laser has a reproducible scenario, expected artifact and workload record bound to the exact result revision.",
+      "evidence_required": ["brush lab scenario manifest", "artifact hashes", "workload counter bundle"]
+    },
+    {
+      "id": "G45-V9-regression-boundary",
+      "requirement": "G4/G4.4 interaction behavior and historical FinePen, Highlighter and TexturedMarker replay/goldens remain unchanged.",
+      "oracle": "Existing G4/G4.4 test suites, semantic wire/golden corpus and repository diff/scope audit.",
+      "acceptance": "All related tests pass with no canonical schema, ObjectKind, Operation, lock-file or historical evidence rewrite.",
+      "evidence_required": ["portable regression summary", "semantic golden report", "scope evidence"]
+    },
+    {
+      "id": "G45-V10-qualification-readiness",
+      "requirement": "Windows, Web and Android qualification builds and self-contained evidence bundles are ready for one unified physical checkpoint.",
+      "oracle": "Qualification manifest validates build identity, capability profile, scenario inventory, expected observations and artifact hashes.",
+      "acceptance": "All three platform profiles are represented; unsupported pen pressure or tilt is recorded NOT_APPLICABLE or NOT_EXERCISED rather than failed or promoted to PASS.",
+      "evidence_required": ["qualification bundle manifest", "ready-for-physical-verification record"]
+    },
+    {
+      "id": "G45-V11-unified-physical-gate",
+      "requirement": "G4.5-10 performs capability-profiled Tier-A physical qualification, freezes the G5 workload and issues the final Gate report.",
+      "oracle": "Reviewer-accessible G4.5-10 physical observations and exact-build qualification evidence.",
+      "acceptance": "Required scenarios pass on the available device profiles; pressure and tilt checks are required only on supporting profiles; G4.5 PASS is issued only by independent CONTROL_REVIEW.",
+      "evidence_required": ["G4.5-10 platform evidence", "G5 workload freeze", "final Gate report"],
+      "blocking_for_current_automated_closure": false,
+      "blocking_for_final_g4_5_gate": true
+    }
+  ]
+}

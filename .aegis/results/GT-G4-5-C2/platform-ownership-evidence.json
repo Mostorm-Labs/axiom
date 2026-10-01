@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "status": "PASS",
+  "checked_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+  "obligation": "platform-ownership",
+  "command": "python apps/ink_playground/tests/web_host_page_test.py && python apps/ink_playground/tests/android_brush_qualification_contract_test.py && python apps/ink_playground/tests/c1_platform_ownership_contract_test.py",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "35e1eaad1411be75713f553a7a58cdbc647000ee",
+    "source_tree_sha256": "b1be5f410f6505ae4cd72a747856619df8a6ae47c0f27599259b9b5cbe70697a"
+  },
+  "raw_observation": {
+    "web": 0,
+    "android": 0,
+    "c1": 0,
+    "host_owner": "InkPlaygroundHost",
+    "hosted_provider_runs": {
+      "g4_5_qualification": 36070151458,
+      "host_core": 36070151461,
+      "host_arm64": 36070151483
+    }
+  },
+  "evidence_source": ".aegis/results/GT-G4-5-C2/raw-v1.1/contracts.stdout"
+}

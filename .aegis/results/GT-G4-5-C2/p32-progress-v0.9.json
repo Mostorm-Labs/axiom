@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P32_IMPLEMENTATION",
+  "package_id": "GT-G4-5-C2-P31-v0.9",
+  "status": "PARTIAL_CLOSURE_CONTINUE",
+  "result_revision": "a2df9908",
+  "completed_slice": [
+    "fixed-anchor RED oracle re-entry binding",
+    "independent BrushPreviewDelta and confirmed-only BrushCommitIntent boundaries",
+    "legacy V1 read-only capability boundary",
+    "versioned brush-engine codec acceptance seam for (ObjectKind 5,2) and AddStroke payload v2",
+    "semantic validation/normalization support for BrushStrokeContent",
+    "targeted and full regression verification",
+    "atomic BrushSession append validation and candidate evaluation"
+  ],
+  "verification": {
+    "package_manifest": "PASS",
+    "red_oracle_anchor_snapshot": "PASS",
+    "contract_check": "PASS",
+    "git_diff_check": "PASS",
+    "targeted_tests": "PASS",
+    "full_build": "PASS",
+    "full_ctest": {
+      "passed": 579,
+      "failed": 0,
+      "build_exit": 0,
+      "ctest_exit": 0
+    }
+  },
+  "remaining_required_closure": [
+    "complete v2 protobuf codec encode/decode and mutation corpus",
+    "snapshot/replay/undo/redo evidence for stored BrushStrokeContent",
+    "incremental preview stability and bounded latest-wins handoff",
+    "platform ownership migration for Web/Android/Windows",
+    "legacy read-only reachability scan",
+    "renderer/scene integration and all blocking evidence artifacts"
+  ],
+  "official_gate_pass": false,
+  "continue_execution": true,
+  "next_action": "Continue P32 from complete v2 codec and snapshot/replay implementation; do not return as terminal success."
+}

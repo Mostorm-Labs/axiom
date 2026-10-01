@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.4",
+  "status": "PASS",
+  "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+  "provider": "github-actions",
+  "pull_request": 135,
+  "runs": [
+    {
+      "workflow": "g1-semantic-codec",
+      "run_id": 36831588798,
+      "job": 110269207391,
+      "artifact_id": 11147134924,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "g4-5-programmable-brush",
+      "run_id": 36831588770,
+      "jobs": {
+        "android": {
+          "job": 110269207563,
+          "artifact_id": 11147600705,
+          "conclusion": "PASS"
+        },
+        "web": {
+          "job": 110269207363,
+          "artifact_id": 11147510937,
+          "conclusion": "PASS"
+        },
+        "windows": {
+          "job": 110269207568,
+          "artifact_id": 11147298612,
+          "conclusion": "PASS"
+        }
+      }
+    },
+    {
+      "workflow": "rf01",
+      "run_id": 36831588758,
+      "jobs": {
+        "ubuntu-24.04": {
+          "job": 110269207566,
+          "conclusion": "PASS"
+        },
+        "macos-15": {
+          "job": 110269207330,
+          "conclusion": "PASS"
+        },
+        "windows-2025": {
+          "job": 110269207482,
+          "conclusion": "PASS"
+        }
+      }
+    },
+    {
+      "workflow": "g3-09-windows-reference-host",
+      "run_id": 36831588749,
+      "job": 110269207419,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "g3-10-web-reference-host",
+      "run_id": 36831588799,
+      "job": 110269207407,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "poc02",
+      "run_id": 36831588864,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "poc06",
+      "run_id": 36831588734,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "semantic-sdk-consumer-validation",
+      "run_id": 36831588986,
+      "result_job": 110273620119,
+      "jobs_conclusion": "PASS"
+    },
+    {
+      "workflow": "build-environment-contract",
+      "run_id": 36831589143,
+      "result_job": 110274035761,
+      "jobs_conclusion": "PASS"
+    },
+    {
+      "workflow": "g0-pr-ci-dag",
+      "run_id": 36831588810,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "ci-boundary-contract",
+      "run_id": 36831588765,
+      "conclusion": "PASS"
+    },
+    {
+      "workflow": "g0-platform-protocol-seed",
+      "run_id": 36831588794,
+      "conclusion": "PASS"
+    }
+  ],
+  "descriptor_lock_sha256": "8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d",
+  "finding": null,
+  "source_of_truth": "GitHub Actions run/job/artifact API at completion; all 62 check runs completed success or intentional skip.",
+  "command": "GitHub Actions provider API",
+  "exit_code": 0,
+  "input_hashes": {
+    "source_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+    "source_tree_sha256": "42c410dd1334eda5791d67eda4d7982407b186998f16c281d739df248839aef2"
+  },
+  "raw_observation": "all recorded provider checks PASS"
+}

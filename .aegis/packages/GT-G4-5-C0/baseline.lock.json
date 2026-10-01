@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C0",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+  "main_ancestor": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+  "accepted_r01_boundary": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+  "files": {
+    "apps/ink_playground/common/ink_playground_host.hpp": "1a4667c175f01c06234b914bbaf266602756ad86",
+    "apps/ink_playground/common/ink_playground_host.cpp": "30426394e8ac9314afb2f612bd883498bb2ade26",
+    "apps/ink_playground/platform/web/index.html": "92c81d0821930cba2e8025315775bdd859202ee8",
+    "apps/ink_playground/platform/web/bridge.cpp": "0d738f1271cfcf5ffe3a923c226e33079153937f",
+    "runtime/interaction/src/multi_contact_coordinator.cpp": "5efac84f87c8187faa205e6925b10a4e8c984c6a",
+    "runtime/interaction/include/canvas/interaction/viewport_gesture.hpp": "c9444c2432bd2a3350b78eece8aecc8c2c902f88"
+  },
+  "observed_ownership_leaks": {
+    "ink_playground_host": [
+      "owns MultiContactCoordinator",
+      "owns contact disposition and sample caches",
+      "owns TwoFingerViewportGesture",
+      "owns committed viewport scale and translation",
+      "owns viewport claim transition orchestration",
+      "owns view-to-content transform policy"
+    ],
+    "web": [
+      "owns trackpadScale",
+      "owns trackpadTranslationX and trackpadTranslationY",
+      "owns wheel pan accumulation",
+      "owns Ctrl-wheel anchor zoom accumulation",
+      "owns browser gesture scale accumulation"
+    ]
+  },
+  "current_web_navigation_behavior": {
+    "pan": "translationX -= deltaX; translationY -= deltaY",
+    "ctrl_wheel_factor": "exp(-deltaY * 0.01)",
+    "zoom_min": 0.25,
+    "zoom_max": 8,
+    "anchor_rule": "translation = anchor - ratio * (anchor - translation)",
+    "browser_gesture": "absolute browser scale must be normalized to relative scaleDelta before common runtime"
+  }
+}

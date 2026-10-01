@@ -1,0 +1,22 @@
+{
+  "api": "VectorStrokeInput -> StrokePoint[] -> StrokeOutlinePoint[]",
+  "authority_conflict": false,
+  "current_flow": "pinned upstream source -> independently generated JSON fixtures -> pure C++ one-shot evaluator -> parity tests",
+  "mapping": [
+    "getStrokePoints -> getStrokePoints",
+    "getStrokeOutlinePoints -> getStrokeOutlinePoints",
+    "getStrokeRadius/simulatePressure -> local helpers"
+  ],
+  "package_scope_conflict": false,
+  "precision": "double",
+  "schema_version": "0.1",
+  "status": "PASS",
+  "task_id": "GT-G4-5-R01",
+  "tolerances": {
+    "outline": 1e-05,
+    "pressure": 1e-09,
+    "stroke_point": 1e-06
+  },
+  "unresolved_semantic_decisions": [],
+  "verification_conflict": false
+}

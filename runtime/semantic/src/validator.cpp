@@ -213,6 +213,8 @@ GeometryCount geometryUnits(const ObjectContent& content) noexcept {
         } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
             if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), geometry_accounting_v1::kDabInstance);
             return {0U, ValidationIssue::kIntegerOverflow};
+        } else if constexpr (std::is_same_v<Item, DabBrushStrokeContent>) {
+            return multiplyGeometryUnits(value.stroke.dab_output.dabs.size(), geometry_accounting_v1::kDabInstance);
         }
         else return {0U, ValidationIssue::kNone};
     }, content);
@@ -521,7 +523,14 @@ bool validStrokeRecord(const StrokeRecord& stroke, bool dab_representation) noex
 }
 
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
-    if (!validId(object.id) || object.kind_version != 1U) return false;
+    if (!validId(object.id)) return false;
+    if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
+        return std::holds_alternative<BrushStrokeContent>(object.content);
+    }
+    if (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U) {
+        return std::holds_alternative<DabBrushStrokeContent>(object.content);
+    }
+    if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
             return std::holds_alternative<ShapeContent>(object.content);
@@ -581,6 +590,34 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;
     }
+    if (const auto* brush = std::get_if<BrushStrokeContent>(&object.content)) {
+        if (object.kind != ObjectKind::kVectorStroke || object.kind_version != 2U) return false;
+        if (brush->stroke.snapshot.snapshot_version != 2U || brush->stroke.snapshot.profile_id == 0U ||
+            brush->stroke.confirmed_samples.empty() || brush->stroke.vector_output.outline.empty()) return false;
+        for (const auto& sample : brush->stroke.confirmed_samples) {
+            if (!finiteVec(sample.position) || (sample.pressure.has_value() && !std::isfinite(*sample.pressure))) return false;
+        }
+        for (const auto& point : brush->stroke.vector_output.outline) if (!finiteVec(point)) return false;
+    }
+    if (const auto* dab = std::get_if<DabBrushStrokeContent>(&object.content)) {
+        if (object.kind != ObjectKind::kDabStroke || object.kind_version != 2U ||
+            dab->stroke.snapshot.snapshot_version != 2U ||
+            (dab->stroke.snapshot.profile_id != 3U && dab->stroke.snapshot.profile_id != 4U) ||
+            (dab->stroke.snapshot.profile_id == 3U &&
+             (dab->stroke.snapshot.package_revision < 2U ||
+              dab->stroke.snapshot.package_revision > 4U)) ||
+            dab->stroke.confirmed_samples.empty() || dab->stroke.dab_output.dabs.empty() ||
+            dab->stroke.dab_digest == 0U) return false;
+        for (const auto& sample : dab->stroke.confirmed_samples) {
+            if (!finiteVec(sample.position) ||
+                (sample.pressure.has_value() && !std::isfinite(*sample.pressure))) return false;
+        }
+        for (const auto& mark : dab->stroke.dab_output.dabs) {
+            if (!finiteVec(mark.center) || !std::isfinite(mark.size) || mark.size <= 0.0 ||
+                !std::isfinite(mark.rotation) || !std::isfinite(mark.opacity) ||
+                mark.opacity < 0.0F || mark.opacity > 1.0F) return false;
+        }
+    }
     if (const auto* sticky = std::get_if<StickyContent>(&object.content)) {
         if (!std::isfinite(sticky->width) || sticky->width <= 0.0 ||
             !std::isfinite(sticky->height) || sticky->height <= 0.0) return false;
@@ -637,8 +674,32 @@ ValidationResult validateEnvelope(
     if (operation.id.isZero() || operation.document_id.isZero()) {
         return {ValidationIssue::kInvalidId};
     }
-    if (!presence.schema_version || !presence.payload_version ||
-        operation.schema_version != 1U || operation.payload_version != 1U) {
+    const auto isNewBrush = [](const ObjectRecord& object) noexcept {
+        return object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
+               std::holds_alternative<BrushStrokeContent>(object.content);
+    };
+    bool containsNewBrush = false;
+    bool containsLegacyStroke = false;
+    const auto classify = [&](const ObjectRecord& object) noexcept {
+        containsNewBrush |= isNewBrush(object);
+        containsLegacyStroke |= object.kind == ObjectKind::kVectorStroke &&
+                                object.kind_version == 1U &&
+                                std::holds_alternative<VectorStrokeContent>(object.content);
+    };
+    std::visit([&](const auto& payload) {
+        using Payload = std::decay_t<decltype(payload)>;
+        if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
+            classify(payload.object);
+        } else if constexpr (std::is_same_v<Payload, InsertObjectsOp> ||
+                             std::is_same_v<Payload, RestoreObjectsOp>) {
+            for (const auto& object : payload.objects) classify(object);
+        } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {
+            for (const auto& split : payload.splits)
+                for (const auto& object : split.replacements) classify(object);
+        }
+    }, operation.payload);
+    if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
+        (operation.payload_version != 1U && !(containsNewBrush && !containsLegacyStroke && operation.payload_version == 2U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};

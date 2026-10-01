@@ -1,0 +1,23 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "RED_OBSERVED",
+  "oracle": "C1-red",
+  "command": "python inline runner for apps/ink_playground/tests/c1_platform_ownership_contract_test.py",
+  "expected_red": true,
+  "unexpected_green": ["test_runtime_input_is_arc_independent"],
+  "failed_oracles": [
+    "test_common_ingress_contract_exists",
+    "test_platforms_submit_to_common_ingress",
+    "test_platforms_do_not_own_canonical_lifecycle_or_arc_bus",
+    "test_apple_adapter_contract_exists"
+  ],
+  "observations": {
+    "common_ingress_files": "missing",
+    "web_android_windows_common_ingress_submission": "missing",
+    "android_windows_platform_lifecycle_and_arc_bus": "still owned by platform code",
+    "apple_adapter": "missing",
+    "runtime_input_arc_dependency": "already absent"
+  },
+  "classification": "EXPECTED_RED",
+  "next_action": "Implement only the frozen C1 common ingress and platform ownership migration scope."
+}

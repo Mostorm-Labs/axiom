@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "obligations": [
+    {
+      "id": "C1-V1",
+      "requirement": "One common normalized platform input contract and ingress own pointer generation/lifecycle without changing C0 semantics.",
+      "oracle": "C1CommonIngress",
+      "acceptance": [
+        "PlatformPointerBatch or equivalent common envelope exists",
+        "common ingress owns ActivePointerRegistry/generation",
+        "Down/reuse/Up/Cancel/source-lost behavior is deterministic",
+        "provenance/capabilities/contact/tilt survive normalization",
+        "PassThroughInputCaptureGate exists",
+        "runtime/input has no Arc dependency"
+      ],
+      "evidence_required": [
+        "c1-common-ingress.json",
+        "c1-arc-dependency-boundary.json"
+      ]
+    },
+    {
+      "id": "C1-V2",
+      "requirement": "Equivalent extracted platform facts produce equivalent common normalized traces.",
+      "oracle": "C1CrossPlatformFixtureParity",
+      "acceptance": [
+        "fixture corpus covers mouse touch multi-touch history/coalesced pressure tool contact tilt predicted cancel source-lost stale sequence and pointer-id reuse",
+        "Web Android Windows Apple fixtures map to the same expected common records when source facts are equivalent"
+      ],
+      "evidence_required": [
+        "c1-cross-platform-fixture-parity.json"
+      ]
+    },
+    {
+      "id": "C1-V3",
+      "requirement": "Web is only an OS/browser event extractor plus capture/navigation realization.",
+      "oracle": "C1WebOwnership",
+      "acceptance": [
+        "JS no longer owns PointerKey generation",
+        "JS no longer allocates Canvas stroke/operation ids",
+        "JS no longer directly owns Brush begin/sample/finish lifecycle",
+        "JS no longer decides commit/cancel policy",
+        "coalesced samples enter one common batch call per PointerEvent",
+        "C0 navigation behavior remains unchanged"
+      ],
+      "evidence_required": [
+        "c1-web-ownership.json"
+      ]
+    },
+    {
+      "id": "C1-V4",
+      "requirement": "Android MotionEvent ingress uses the common contract and does not use Arc as the canonical Canvas input bus.",
+      "oracle": "C1AndroidOwnership",
+      "acceptance": [
+        "Java extracts MotionEvent/history/tool/pressure/contact only",
+        "history/current samples cross JNI as one common batch per MotionEvent or equivalent bounded batch call",
+        "Android platform bridge does not own ActivePointerRegistry",
+        "Android platform files do not construct arc_pointer_sample_v0 for canonical Canvas input",
+        "Java no longer computes content-space Brush routing or owns Brush session lifecycle"
+      ],
+      "evidence_required": [
+        "c1-android-ownership.json"
+      ]
+    },
+    {
+      "id": "C1-V5",
+      "requirement": "Windows WM_POINTER ingress uses the common contract and does not interpret interaction semantics.",
+      "oracle": "C1WindowsOwnership",
+      "acceptance": [
+        "Windows keeps OS history/pen/contact extraction only",
+        "platformPointerAction(ContactDisposition,...) or equivalent semantic interpretation is removed",
+        "Windows platform State no longer owns common pointer generation",
+        "Windows platform code does not construct Arc pointer batches as canonical Canvas input",
+        "commit/release and preview eligibility are driven by common typed results",
+        "portable/static contract is reviewer-accessible even when physical Windows qualification is deferred"
+      ],
+      "evidence_required": [
+        "c1-windows-ownership.json"
+      ]
+    },
+    {
+      "id": "C1-V6",
+      "requirement": "Apple extracted-event records conform to the same common ingress schema without inventing a Product Shell.",
+      "oracle": "C1AppleContract",
+      "acceptance": [
+        "portable Apple adapter represents macOS and iOS/iPadOS extracted pointer/touch events",
+        "coalesced and predicted provenance are distinct",
+        "pressure tilt contact cancel/source-lost map to common records",
+        "fixture parity passes",
+        "physical iOS/Pencil proof may be deferred and is labeled deferred"
+      ],
+      "evidence_required": [
+        "c1-apple-contract.json"
+      ]
+    },
+    {
+      "id": "C1-V7",
+      "requirement": "Platform interaction loss/cancel converges through one common lifecycle path.",
+      "oracle": "C1LifecycleCancel",
+      "acceptance": [
+        "pointer cancel",
+        "capture lost",
+        "source lost",
+        "focus/app lifecycle loss",
+        "terminal batch cancel",
+        "pointer-id reuse after end"
+      ],
+      "evidence_required": [
+        "c1-lifecycle-cancel.json"
+      ]
+    },
+    {
+      "id": "C1-V8",
+      "requirement": "C0/G4.4 and R01 accepted behavior remains valid.",
+      "oracle": "C1Regression",
+      "acceptance": [
+        "C0CanvasInteractionCoordinator PASS",
+        "C0ViewportInteractionController PASS",
+        "G4GestureArbiter PASS",
+        "G4MultiContactCoordinator PASS",
+        "G4ViewportGesture PASS",
+        "relevant InkPlayground regressions PASS",
+        "C0 Web navigation contract PASS",
+        "G45PerfectFreehandReference PASS"
+      ],
+      "evidence_required": [
+        "regression-summary.json"
+      ]
+    },
+    {
+      "id": "C1-V9",
+      "requirement": "C1 stays inside exact authorized scope and materializes independently reviewable evidence.",
+      "oracle": "C1ScopeAndEvidence",
+      "acceptance": [
+        "no semantic schema changes",
+        "no perfect-freehand changes",
+        "no ImGui/Skia Vector renderer/C3 Arc renderer-presenter work",
+        "Arc core/protocol unchanged unless package defect is returned",
+        "exact pushed result revision contains all blocking evidence"
+      ],
+      "evidence_required": [
+        "scope-diff.json",
+        "result.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Pre-C1 platform code still owns generation/session routing, Android and Windows still use Arc pointer batches as the canonical Canvas input path, and the common ingress/fixture parity API does not exist.",
+    "observation_seam": "new C1 common-ingress tests plus platform ownership/static tests",
+    "failure_if_unexpected_green": "VERIFICATION_DESIGN_DEFECT"
+  },
+  "deferred_physical_qualification": {
+    "windows": "physical interaction qualification may be deferred; common contract/static/compile evidence remains blocking",
+    "ios_ipados": "physical Pencil/device qualification may be deferred; portable Apple adapter/fixture evidence remains blocking"
+  }
+}

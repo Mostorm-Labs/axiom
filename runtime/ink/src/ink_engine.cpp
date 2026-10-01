@@ -9,7 +9,15 @@ bool InkEngine::begin(const input::PointerKey& key, std::uint64_t id) noexcept {
 }
 bool InkEngine::append(const input::PointerSample& sample) noexcept {
   if (sample.key.valid()) return append(sample.key, sample);
-  if(!active_ || sample.predicted || sample.sequence==0 || sample.timestampNs==0) return false; if(!points_.empty() && sample.sequence<=points_.size()) return false; points_.push_back(BrushEngine::point(brush_,sample)); ++processed_; return true;
+  if (!active_ || sample.predicted || sample.sequence == 0 || sample.timestampNs == 0) {
+    return false;
+  }
+  if (!points_.empty() && sample.sequence <= points_.size()) {
+    return false;
+  }
+  points_.push_back(BrushEngine::point(brush_, sample));
+  ++processed_;
+  return true;
 }
 bool InkEngine::append(const input::PointerKey& key, const input::PointerSample& sample) noexcept {
   auto it = sessions_.find(key);

@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "BLOCKED_AUTHORITY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/g4-5-common-brush-processing",
+    "observed_revision": "b4644cbf6e75fe3fc32c184b378e674098be3631",
+    "remote_revision": "b4644cbf6e75fe3fc32c184b378e674098be3631",
+    "task_anchor": "85cd05961243dcf5fa56179fcd309638a1c87d2a",
+    "previous_package_materialization": "a1fa1bc0b70f06137b0a55dfa8313adbfa59647b"
+  },
+  "checks": {
+    "repository_identity": "PASS",
+    "remote_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "previous_package_ancestry": "PASS",
+    "previous_package_sha256": "PASS",
+    "worktree_before_materialization": "CLEAN",
+    "production_diff": "NONE",
+    "package_binding_preflight": "NOT_RUN_FOR_V0.2_BECAUSE_PACKAGE_NOT_MATERIALIZED",
+    "evidence_contract_preflight": "BLOCKED_BY_AUTHORITY"
+  },
+  "exact_package_hashes_v0.1": {
+    "authority.lock.json": "1073165f6492797cf71e503e401393c5c697d1437f952a105eb7416cec75f1c2",
+    "baseline.lock.json": "30958b09e60ca1e8068976bd91f43bb5c5c323f7d5844fe9bcb32299c0bbdca3",
+    "verification.lock.json": "d1e78ff3ee358d96a33e36c8c1e788f18951e544ab15385aa4e01fd9daeabd54",
+    "execution-contract.json": "1864ced80450435a18ca23ad6148d68b7876ca6f94421bf8489690852bb4100c",
+    "implementation-context.md": "72c06438dcf7d066a88baf0989020cdfcd69c231907748126596ae7d9923c53a",
+    "evidence-contract.json": "bd5c22bbb9e432bda6b6fb848bc955691be1636c2870b9d24d2147b2138d18f4"
+  },
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_forbidden": true
+}

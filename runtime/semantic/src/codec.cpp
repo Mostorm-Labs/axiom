@@ -1,5 +1,6 @@
 #include "canvas/semantic/codec.hpp"
 #include "canvas/semantic/object_content.hpp"
+#include "canvas/semantic/validator.hpp"
 
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
@@ -1397,6 +1398,34 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         decoded.payload().payload_case() != operation.payload().payload_case()) {
         return {SemanticError::kMalformedWire, {}};
     }
+    return {SemanticError::kNone, {bytes.begin(), bytes.end()}};
+#endif
+}
+
+CodecResult SemanticCodec::encodeProtobufOperation(const Operation& operation) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)operation;
+    return {SemanticError::kRuntimeUnavailable, {}};
+#else
+    OperationFieldPresence presence{true, true};
+    const auto envelope = validateEnvelope(operation, presence);
+    if (!envelope.ok()) return {SemanticError::kUnsupportedVersion, {}};
+    const auto structure = validatePayloadStructure(operation);
+    if (!structure.ok()) return {SemanticError::kInvalidSemanticValue, {}};
+    auditoryworks::axiom::v1::Operation wire;
+    wire.mutable_operation_id()->set_value(std::string(reinterpret_cast<const char*>(operation.id.value().bytes.data()), 16));
+    wire.mutable_document_id()->set_value(std::string(reinterpret_cast<const char*>(operation.document_id.value().bytes.data()), 16));
+    wire.set_schema_version(operation.schema_version);
+    wire.set_payload_version(operation.payload_version);
+    auto* payload = wire.mutable_payload();
+    if (const auto* add = std::get_if<AddStrokeOp>(&operation.payload)) {
+        if (!internal::toProtobufObjectRecord(add->object, *payload->mutable_add_stroke()->mutable_object()))
+            return {SemanticError::kInvalidSemanticValue, {}};
+    } else {
+        return encodeProtobufOperation(operation.kind());
+    }
+    std::string bytes;
+    if (!wire.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
     return {SemanticError::kNone, {bytes.begin(), bytes.end()}};
 #endif
 }

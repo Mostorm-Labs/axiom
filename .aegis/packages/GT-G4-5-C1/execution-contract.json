@@ -1,0 +1,266 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C1",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Add a host-neutral platform input envelope, sample provenance, common pointer lifecycle/generation ingress, and PassThroughInputCaptureGate in runtime/input.",
+        "Keep runtime/input independent of Arc headers/libraries.",
+        "Add common InkPlayground input composition so platform code submits platform batches and no longer owns begin/commit/cancel/Brush routing decisions.",
+        "If Arc conversion is required, place it in common app/integration code and feed it from common normalized/routed input; do not use Arc as the canonical platform input bus.",
+        "Migrate Web PointerEvent/coalesced input to one common batch ingress and remove JS generation/stroke/Brush session/commit ownership.",
+        "Migrate Android MotionEvent/history to one common JNI batch ingress and remove native ActivePointerRegistry/Arc canonical-input packing/Java Brush routing ownership.",
+        "Migrate Windows WM_POINTER history to the common ingress and remove platform ContactDisposition interpretation/common generation/Arc canonical-input packing/commit routing.",
+        "Add a portable Apple extracted-event adapter contract for macOS and iOS/iPadOS facts using the same PlatformPointerBatch schema.",
+        "Create a frozen cross-platform fixture corpus and lifecycle/cancel parity evidence.",
+        "Preserve C0/G4.4/R01 behavior and exact scope."
+      ],
+      "forbidden_changes": [
+        "Change AutoIntent MultiInk GesturePriority semantics",
+        "Change radial/path slop or interaction coordinate units",
+        "Fix or harden P34-NB-01",
+        "Modify perfect-freehand algorithm/reference corpus",
+        "Move qualification brush profile defaults as a C2 substitute",
+        "Add Dear ImGui",
+        "Implement common Skia VectorStroke rendering",
+        "Redesign Arc PreviewBackend Presenter backend selection or handoff lifecycle",
+        "Modify arc/include/arc/protocol.h or Arc core unless a TASK_PACKAGE_DEFECT is returned to CONTROL_REVIEW",
+        "Modify canonical semantic schema or Operation contracts",
+        "Add front-buffer/direct-presentation latency optimization",
+        "Claim D0 R2 G4.5 Gate or release PASS"
+      ],
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/input/CMakeLists.txt",
+          "runtime/input/include/canvas/input/pointer_sample.hpp",
+          "runtime/input/include/canvas/input/pointer_capabilities.hpp",
+          "runtime/input/include/canvas/input/platform_normalization.hpp",
+          "runtime/input/include/canvas/input/web_input_adapter.hpp",
+          "runtime/input/src/web_input_adapter.cpp",
+          "runtime/input/tests/input_router_test.cpp",
+          "runtime/input/tests/multipointer_foundation_test.cpp",
+          "runtime/input/tests/platform_normalization_test.cpp",
+          "apps/ink_playground/CMakeLists.txt",
+          "apps/ink_playground/common/ink_playground_host.hpp",
+          "apps/ink_playground/common/ink_playground_host.cpp",
+          "apps/ink_playground/common/platform_contract.hpp",
+          "apps/ink_playground/common/platform_contract.cpp",
+          "apps/ink_playground/platform/web/bridge.cpp",
+          "apps/ink_playground/platform/web/index.html",
+          "apps/ink_playground/platform/web/pointer_event_batch_adapter.ts",
+          "apps/ink_playground/platform/android/bridge.cpp",
+          "apps/ink_playground/platform/android/android_jni.cpp",
+          "apps/ink_playground/platform/android/android_pointer_identity.hpp",
+          "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/InkPlaygroundView.java",
+          "apps/ink_playground/platform/windows/main.cpp",
+          "apps/ink_playground/platform/windows/windows_pointer_utils.hpp",
+          "apps/ink_playground/tests/ink_playground_test.cpp",
+          "apps/ink_playground/tests/web_host_page_test.py",
+          "apps/ink_playground/tests/android_host_contract_test.py",
+          "apps/ink_playground/tests/android_brush_qualification_contract_test.py",
+          "apps/ink_playground/tests/windows_pointer_utils_test.cpp",
+          "apps/ink_playground/tests/c0_web_navigation_contract_test.py"
+        ],
+        "new_files_allowed": [
+          "runtime/input/include/canvas/input/sample_provenance.hpp",
+          "runtime/input/include/canvas/input/platform_input_contract.hpp",
+          "runtime/input/include/canvas/input/input_capture_gate.hpp",
+          "runtime/input/include/canvas/input/platform_interaction_ingress.hpp",
+          "runtime/input/src/platform_interaction_ingress.cpp",
+          "runtime/input/tests/platform_interaction_ingress_test.cpp",
+          "runtime/input/tests/c1_platform_fixture_test.cpp",
+          "apps/ink_playground/common/platform_interaction_controller.hpp",
+          "apps/ink_playground/common/platform_interaction_controller.cpp",
+          "apps/ink_playground/common/arc_input_fanout_adapter.hpp",
+          "apps/ink_playground/common/arc_input_fanout_adapter.cpp",
+          "apps/ink_playground/platform/apple/apple_input_adapter.hpp",
+          "apps/ink_playground/platform/apple/apple_input_adapter.cpp",
+          "apps/ink_playground/tests/c1_platform_ownership_contract_test.py",
+          "apps/ink_playground/tests/c1_apple_input_contract_test.cpp",
+          "apps/ink_playground/tests/fixtures/c1_platform_input/**",
+          ".aegis/results/GT-G4-5-C1/**"
+        ],
+        "package_files_immutable_after_p32_entry": ".aegis/packages/GT-G4-5-C1/**",
+        "other_production_paths": "FORBIDDEN unless execution returns TASK_PACKAGE_DEFECT or AUTHORITY_CONFLICT to CONTROL_REVIEW"
+      },
+      "preserved_work": {
+        "c0_result": "d861e05e18a0665c0c91c7523925b3990bb0c88e",
+        "c0_control_ref": "0ced5c44df47fb2aeff4369473df054c7856a1f9",
+        "r01_reference": "4c4a2a727ff6a61374f6b216de7fa4e51c85ba7c",
+        "rule": "Preserve C0 routing/viewport semantics and R01 geometry; C1 changes ingress ownership only."
+      },
+      "performance_constraints": [
+        "Preserve coalesced/history batching: Web should use one common ingress call per PointerEvent batch, not one WASM call per coalesced sample.",
+        "Android should use one bounded JNI common-ingress batch per MotionEvent or equivalent batch, not one JNI transition per historical sample.",
+        "Windows should submit one common ingress batch per WM_POINTER history batch.",
+        "Do not introduce synchronous Runtime-to-platform callbacks on each sample."
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "C1-red",
+          "command_or_oracle": "new common-ingress/ownership tests against pre-change code",
+          "expected_result": "RED",
+          "blocking_reason": "prove C1 oracle detects the actual ownership gap"
+        },
+        {
+          "id": "C1CommonIngress",
+          "command_or_oracle": "common ingress lifecycle/provenance/capability tests",
+          "expected_result": "PASS",
+          "blocking_reason": "common input authority"
+        },
+        {
+          "id": "C1CrossPlatformFixtureParity",
+          "command_or_oracle": "Web Android Windows Apple extracted-fixture to normalized-trace corpus",
+          "expected_result": "PASS",
+          "blocking_reason": "cross-platform contract parity"
+        },
+        {
+          "id": "C1WebOwnership",
+          "command_or_oracle": "Web static/contract tests",
+          "expected_result": "PASS",
+          "blocking_reason": "no second Web interaction/session authority"
+        },
+        {
+          "id": "C1AndroidOwnership",
+          "command_or_oracle": "Android static/contract tests",
+          "expected_result": "PASS",
+          "blocking_reason": "no second Android interaction/Arc-input authority"
+        },
+        {
+          "id": "C1WindowsOwnership",
+          "command_or_oracle": "Windows static/portable contract tests",
+          "expected_result": "PASS",
+          "blocking_reason": "no second Windows interaction authority"
+        },
+        {
+          "id": "C1AppleContract",
+          "command_or_oracle": "portable Apple adapter fixture tests",
+          "expected_result": "PASS",
+          "blocking_reason": "same contract for future AppKit/UIKit extraction"
+        },
+        {
+          "id": "C1LifecycleCancel",
+          "command_or_oracle": "cancel capture-lost source-lost focus/app-loss pointer-id-reuse tests",
+          "expected_result": "PASS",
+          "blocking_reason": "cross-platform lifecycle convergence"
+        },
+        {
+          "id": "C1ArcDependencyBoundary",
+          "command_or_oracle": "source/build dependency check",
+          "expected_result": "PASS",
+          "blocking_reason": "Runtime remains Arc-independent and platform code no longer packs Arc canonical input"
+        },
+        {
+          "id": "C1C0Regression",
+          "command_or_oracle": "C0/G4.4 interaction plus R01 regressions",
+          "expected_result": "PASS or documented non-blocking locked-dependency limit already accepted by C0",
+          "blocking_reason": "preserve accepted behavior"
+        },
+        {
+          "id": "scope-diff",
+          "command_or_oracle": "diff from C1 task anchor",
+          "expected_result": "authorized C1 paths only",
+          "blocking_reason": "stage isolation"
+        },
+        {
+          "id": "git-diff-check",
+          "command_or_oracle": "git diff --check",
+          "expected_result": "PASS",
+          "blocking_reason": "repository hygiene"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "macOS build/run of portable/common C1 tests when toolchain is available",
+        "Android host build when SDK/NDK is available",
+        "Windows compile/physical interaction qualification when environment becomes available",
+        "iOS/iPadOS simulator/device qualification when environment becomes available"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "repo-reconciliation.json",
+        "implementation-design-preflight.json",
+        "red-oracle-preflight.json",
+        "c1-common-ingress.json",
+        "c1-cross-platform-fixture-parity.json",
+        "c1-web-ownership.json",
+        "c1-android-ownership.json",
+        "c1-windows-ownership.json",
+        "c1-apple-contract.json",
+        "c1-lifecycle-cancel.json",
+        "c1-arc-dependency-boundary.json",
+        "regression-summary.json",
+        "scope-diff.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "optional hosted build/device run refs",
+        "screenshots or traces from available hosts"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "pre-C1 per-platform ingress flow",
+        "target PlatformPointerBatch and PlatformInteractionIngress API",
+        "pointer generation/source-lost lifecycle",
+        "common InkPlayground session composition",
+        "Arc fanout dependency location",
+        "Web batch bridge mapping",
+        "Android JNI batch mapping",
+        "Windows history batch mapping",
+        "Apple extracted-event adapter mapping",
+        "obligation-to-test/evidence mapping",
+        "affected files",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "terminal_success": {
+      "all_of": [
+        "one common normalized platform input contract exists",
+        "common ingress owns pointer generation and lifecycle",
+        "PassThroughInputCaptureGate exists",
+        "Web no longer owns common generation stroke or Brush routing lifecycle",
+        "Android no longer owns common generation or uses Arc ABI as canonical Canvas input",
+        "Windows no longer interprets ContactDisposition or uses Arc ABI as canonical Canvas input",
+        "Apple adapter contract and fixture parity exist",
+        "common loss/cancel lifecycle passes",
+        "runtime/input has no Arc dependency",
+        "C0/G4.4/R01 regressions remain accepted",
+        "scope diff is authorized",
+        "exact result/evidence revision is pushed and reviewer-resolvable",
+        "result status is READY_FOR_D0_PACKAGE_REVIEW"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "success_status": "READY_FOR_D0_PACKAGE_REVIEW"
+    }
+  }
+}

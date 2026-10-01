@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-R01",
+  "result_directory": ".aegis/results/GT-G4-5-R01/",
+  "durable_boundary": "exact pushed task-branch result revision containing the implementation plus blocking evidence files",
+  "artifacts": [
+    {
+      "id": "reference-source-manifest.json",
+      "path": ".aegis/results/GT-G4-5-R01/reference-source-manifest.json",
+      "blocking": true
+    },
+    {
+      "id": "reference-license-record.json",
+      "path": ".aegis/results/GT-G4-5-R01/reference-license-record.json",
+      "blocking": true
+    },
+    {
+      "id": "corpus-inputs.json",
+      "path": ".aegis/results/GT-G4-5-R01/corpus-inputs.json",
+      "blocking": true
+    },
+    {
+      "id": "reference-stroke-points.json",
+      "path": ".aegis/results/GT-G4-5-R01/reference-stroke-points.json",
+      "blocking": true
+    },
+    {
+      "id": "reference-outlines.json",
+      "path": ".aegis/results/GT-G4-5-R01/reference-outlines.json",
+      "blocking": true
+    },
+    {
+      "id": "known-limitations.json",
+      "path": ".aegis/results/GT-G4-5-R01/known-limitations.json",
+      "blocking": true
+    },
+    {
+      "id": "reference-generation-record.json",
+      "path": ".aegis/results/GT-G4-5-R01/reference-generation-record.json",
+      "blocking": true
+    },
+    {
+      "id": "r0-reference-freeze-result.json",
+      "path": ".aegis/results/GT-G4-5-R01/r0-reference-freeze-result.json",
+      "blocking": true
+    },
+    {
+      "id": "red-oracle-preflight.json",
+      "path": ".aegis/results/GT-G4-5-R01/red-oracle-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "implementation-design-preflight.json",
+      "path": ".aegis/results/GT-G4-5-R01/implementation-design-preflight.json",
+      "blocking": true
+    },
+    {
+      "id": "r1-stroke-point-parity.json",
+      "path": ".aegis/results/GT-G4-5-R01/r1-stroke-point-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "r1-outline-parity.json",
+      "path": ".aegis/results/GT-G4-5-R01/r1-outline-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "r1-special-cases.json",
+      "path": ".aegis/results/GT-G4-5-R01/r1-special-cases.json",
+      "blocking": true
+    },
+    {
+      "id": "r1-known-limitations-parity.json",
+      "path": ".aegis/results/GT-G4-5-R01/r1-known-limitations-parity.json",
+      "blocking": true
+    },
+    {
+      "id": "r1-determinism.json",
+      "path": ".aegis/results/GT-G4-5-R01/r1-determinism.json",
+      "blocking": true
+    },
+    {
+      "id": "scope-diff.json",
+      "path": ".aegis/results/GT-G4-5-R01/scope-diff.json",
+      "blocking": true
+    },
+    {
+      "id": "regression-summary.json",
+      "path": ".aegis/results/GT-G4-5-R01/regression-summary.json",
+      "blocking": true
+    },
+    {
+      "id": "result.json",
+      "path": ".aegis/results/GT-G4-5-R01/result.json",
+      "blocking": true
+    }
+  ],
+  "external_reference_evidence": {
+    "required": true,
+    "repository": "steveruizok/perfect-freehand",
+    "commit": "176e00f2399f4969e1b0965c5921d96a3e50ce9f",
+    "must_bind_reference_lock": true
+  },
+  "claim_boundary": "P32 may return READY_FOR_R2_PACKAGE_REVIEW only. It may not claim PF rendering parity, cross-platform parity, Windows parity, Arc parity, G4.5 PASS or any release verdict."
+}

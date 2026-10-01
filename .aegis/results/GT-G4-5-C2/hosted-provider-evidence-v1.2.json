@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.2",
+  "status": "PASS",
+  "source_revision": "4ca9b62acc798b625d85b64c9dfadabc40622b33",
+  "provider": "github-actions",
+  "pull_request": 135,
+  "runs": [
+    {"workflow": "g1-semantic-codec", "run_id": 36074533164, "job": 107882674007, "artifact_id": 10839332025, "conclusion": "PASS"},
+    {"workflow": "g4-5-programmable-brush", "run_id": 36074538146, "jobs": {"android": "PASS", "web": "PASS", "windows": "PASS"}}
+  ],
+  "descriptor_lock_sha256": "9c0896c3162f1fc3199b38e8f3603de3e8add0b07f800dbb3cc7005664573f83",
+  "finding": null
+}

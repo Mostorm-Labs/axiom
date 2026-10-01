@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "stage": "P31_TASK_PACKAGING_REPAIR",
+  "package_id": "GT-G4-5-C2-P31-v0.5",
+  "status": "READY_FOR_P32_REENTRY_REVIEW",
+  "supersedes": [
+    "GT-G4-5-C2-P31-v0.4"
+  ],
+  "observed_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+  "preflight": {
+    "repository_identity": "PASS",
+    "task_anchor_ancestor": "PASS",
+    "authority_lock_ref_hash": "PASS",
+    "baseline_lock_ref_hash": "PASS",
+    "verification_lock_ref_hash": "PASS",
+    "execution_contract_ref_hash": "PASS",
+    "implementation_context_ref_hash": "PASS",
+    "evidence_contract_ref_hash": "PASS",
+    "manifest_authority.lock.json": "PASS",
+    "manifest_baseline.lock.json": "PASS",
+    "manifest_evidence-contract.json": "PASS",
+    "manifest_execution-contract.json": "PASS",
+    "manifest_implementation-context.md": "PASS",
+    "manifest_package.json": "PASS",
+    "manifest_verification.lock.json": "PASS",
+    "authority_docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/CONTRACT.md": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/PLAN.md": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/VERIFICATION.md": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/brush_engine.proto": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/manifest.schema.json": "PASS",
+    "authority_docs/planning/brush-engine-v0.4/pipeline.schema.json": "PASS",
+    "p32_not_yet_authorized": "PASS",
+    "approved_proto_scope": "PASS",
+    "approved_object_version_scope": "PASS",
+    "approved_payload_version_scope": "PASS",
+    "approved_snapshot_version_scope": "PASS",
+    "forbidden_unapproved_changes": "PASS"
+  },
+  "resolved_findings": [
+    "stale authority lock now binds exact current authority sources",
+    "approved v0.4 schema carriers are explicitly included in P32 scope",
+    "unapproved schema fields, IDs, versions and fallbacks remain forbidden",
+    "verification obligations distinguish package, plan, R1, wire, replay, prediction, handoff, platform and legacy evidence"
+  ],
+  "remaining_control_action": "Control review must accept this repaired package before a P32 surface handoff; p32_authorized remains false.",
+  "official_gate_pass_forbidden": true
+}

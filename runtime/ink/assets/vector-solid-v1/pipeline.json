@@ -1,0 +1,33 @@
+{
+  "pipelineVersion": 1,
+  "defaultsVersion": 1,
+  "profile": "vector-solid-v1",
+  "stages": {
+    "input": { "mode": "on" },
+    "vector": { "mode": "on" },
+    "taper": { "mode": "off" },
+    "shape": { "mode": "off" },
+    "grain": { "mode": "off" },
+    "rendering": { "mode": "on" },
+    "wetMix": { "mode": "off" }
+  },
+  "vector": {
+    "size": 16,
+    "thinning": 0.5,
+    "smoothing": 0.5,
+    "streamline": 0.5,
+    "pressureSource": "simulated",
+    "missingPressure": "reject",
+    "easing": "linear",
+    "startCap": true,
+    "endCap": true,
+    "startTaper": 0,
+    "endTaper": 0
+  },
+  "paint": {
+    "rgba": [0.05, 0.1, 0.2, 1],
+    "opacity": 1,
+    "blend": "source-over",
+    "colorSpace": "srgb"
+  }
+}

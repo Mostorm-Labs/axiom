@@ -1,0 +1,286 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.1",
+  "execution_closure_contract": {
+    "required_changes": [
+      "Add bounded manifest/pipeline JSON reader, validation and deterministic BrushPackage normalization.",
+      "Add ResolvedBrushState and constrained BrushExecutionPlan with exact profile-1 dependency closure and off/auto/on activation.",
+      "Add common BrushSession prepare/begin/append/seal/cancel with confirmed input and replaceable prediction isolation.",
+      "Add BrushPreviewDelta, bounded latest-wins handoff, reliable terminal controls, immutable BrushCommitIntent and CanonicalVisible receipt matching.",
+      "Add VectorPathNode adapter bound to accepted Perfect Freehand R1 and preserve the external R01 fixtures as oracle.",
+      "Materialize the approved brush_engine.proto carriers, registries, validators, canonical codec, AddStroke v2 adapter, snapshot/replay and undo/redo atomically.",
+      "Move Web/Android/Windows new-path ownership to common composition; remove platform-local family/primitive interpretation.",
+      "Add a read-only V1 decoder boundary; ensure new authoring cannot call legacy brush classes.",
+      "Add all frozen evidence artifacts, including C2-PERF complexity evidence, and run C0/C1/R01/semantic/scene/render/platform regressions.",
+      "Reconcile Web/Android contract tests with the accepted common-host ownership boundary."
+    ],
+    "forbidden_changes": [
+      "Extend BrushDefinition/BrushCompiler/BrushProgram/BrushRuntime as the new engine.",
+      "Create a second engine beside the new Brush Engine.",
+      "Use BrushFamily or product preset names to choose runtime pipeline semantics.",
+      "Interpret brush families, resources or geometry in platform bridges or renderers.",
+      "Persist fields, IDs, versions, operation kinds, object kinds or fallbacks outside the approved v0.4 brush_engine.proto and registry boundary.",
+      "Change C0/C1 input/routing, Arc selection, renderer backend architecture, or canvas-aware WetMix semantics.",
+      "Modify accepted SDK/dependency lock files or rebuild Protobuf/Skia from source.",
+      "Issue an official P34/Gate PASS during P32."
+    ],
+    "authorized_mutation_scope": {
+      "new": [
+        "apps/ink_playground/tests/c2_red_oracle_test.py",
+        "docs/planning/brush-engine-v0.4/brush_engine.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+        "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+        "schema/axiom/v1/registry/operation_registry_v1.yaml",
+        "runtime/ink/include/canvas/ink/brush_package.hpp",
+        "runtime/ink/src/brush_package.cpp",
+        "runtime/ink/include/canvas/ink/resolved_brush_state.hpp",
+        "runtime/ink/src/resolved_brush_state.cpp",
+        "runtime/ink/include/canvas/ink/brush_execution_plan.hpp",
+        "runtime/ink/src/brush_execution_plan.cpp",
+        "runtime/ink/include/canvas/ink/brush_session.hpp",
+        "runtime/ink/src/brush_session.cpp",
+        "runtime/ink/include/canvas/ink/brush_preview_delta.hpp",
+        "runtime/ink/include/canvas/ink/brush_commit_intent.hpp",
+        "runtime/ink/include/canvas/ink/vector_path_node.hpp",
+        "runtime/ink/src/vector_path_node.cpp",
+        "runtime/ink/include/canvas/ink/legacy_v1_readonly.hpp",
+        "runtime/ink/src/legacy_v1_readonly.cpp",
+        "runtime/semantic/include/canvas/semantic/brush_engine_codec.hpp",
+        "runtime/semantic/src/brush_engine_codec.cpp",
+        "runtime/semantic/tests/brush_engine_codec_test.cpp",
+        "runtime/ink/tests/brush_package_test.cpp",
+        "runtime/ink/tests/brush_plan_test.cpp",
+        "runtime/ink/tests/brush_session_test.cpp",
+        "runtime/ink/tests/brush_operation_intent_test.cpp",
+        ".aegis/results/GT-G4-5-C2/**",
+        "apps/ink_playground/tests/web_host_page_test.py",
+        "apps/ink_playground/tests/android_brush_qualification_contract_test.py"
+      ],
+      "replace_or_remove": [
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/platform/android/bridge.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "runtime/render/include/canvas/render/skia_brush_renderer.hpp",
+        "runtime/render/src/skia_brush_renderer.cpp",
+        "apps/brush_lab/common/brush_lab.cpp",
+        "runtime/ink/include/canvas/ink/programmable_brush.hpp",
+        "runtime/ink/src/programmable_brush.cpp",
+        "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp",
+        "runtime/ink/src/canonical_brush_commit.cpp",
+        "apps/ink_playground/CMakeLists.txt",
+        "apps/ink_playground/common/ink_playground_host.hpp",
+        "apps/ink_playground/common/ink_playground_host.cpp",
+        "apps/ink_playground/common/platform_interaction_controller.hpp",
+        "apps/ink_playground/common/platform_interaction_controller.cpp",
+        "apps/ink_playground/common/platform_contract.hpp",
+        "apps/ink_playground/common/platform_contract.cpp",
+        "runtime/semantic/CMakeLists.txt",
+        "runtime/semantic/include/canvas/semantic/object_content.hpp",
+        "runtime/semantic/include/canvas/semantic/object_record.hpp",
+        "runtime/semantic/include/canvas/semantic/operation.hpp",
+        "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+        "runtime/semantic/src/codec.cpp",
+        "runtime/semantic/src/protobuf_object_mapping.cpp",
+        "runtime/semantic/src/protobuf_object_mapping.hpp",
+        "runtime/semantic/src/validator.cpp",
+        "runtime/semantic/src/operation_state_validator.cpp",
+        "runtime/semantic/src/snapshot.cpp",
+        "runtime/semantic/src/snapshot_bootstrap.cpp",
+        "runtime/semantic/tests/CMakeLists.txt",
+        "runtime/scene/CMakeLists.txt",
+        "runtime/scene/src/scene_record_store.cpp",
+        "runtime/scene/src/runtime_scene_projection.cpp",
+        "runtime/render/CMakeLists.txt",
+        "runtime/render/src/frame_plan.cpp",
+        "runtime/render/src/skia_headless_backend.cpp",
+        "runtime/render/src/skia_ink_backend.cpp",
+        "runtime/render/src/webgl_surface_backend.cpp",
+        "runtime/ink/CMakeLists.txt",
+        "runtime/semantic/tests/codec_test.cpp",
+        "runtime/semantic/tests/codec_negative_test.cpp",
+        "runtime/semantic/tests/codec_operation_ingress_test.cpp",
+        "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+        "runtime/semantic/tests/g1_06_replay_test.cpp",
+        "runtime/scene/tests/runtime_record_projection_test.cpp",
+        "runtime/render/tests/skia_headless_backend_test.cpp",
+        "runtime/render/tests/skia_ink_backend_test.cpp",
+        "runtime/render/tests/skia_brush_primitive_test.cpp"
+      ],
+      "immutable": ".aegis/packages/GT-G4-5-C2-P31-v0.5/**"
+    },
+    "required_tests": [
+      "Package normalization and deterministic semantic identity",
+      "Plan activation pruning, dependency closure, cycle/missing-provider rejection",
+      "R01 VectorPathNode parity and chunk/last conformance",
+      "Snapshot/operation v2 encode, decode, validation, replay, undo and redo",
+      "Confirmed/predicted isolation and bounded preview handoff",
+      "BrushCommitIntent/AddStroke boundary and unknown-schema rejection",
+      "Web/Android/Windows ownership and target compilation",
+      "Legacy V1 read-only decode/render and no new-authoring reachability",
+      "C0/C1/R01/semantic/scene/render regression plus scope diff"
+    ],
+    "hosted_verification": {
+      "required": [
+        "repository CI for affected CMake/semantic/platform targets"
+      ],
+      "optional": [
+        "named-host timing and visual capture"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "all evidence-contract artifacts"
+      ],
+      "corroborative": [
+        "optional-host-timing.json",
+        "optional-visual-capture.json"
+      ]
+    },
+    "terminal_success": "Every frozen obligation passes, approved schema carriers are atomically materialized, no new authoring reaches legacy classes, and reviewer-accessible evidence/result materialization is available.",
+    "terminal_blockers": [
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_SCHEMA_RELEASE",
+      "BLOCKED_IMPLEMENTATION",
+      "BLOCKED_EVIDENCE",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    },
+    "scope_bindings": [
+      {
+        "id": "common-composition",
+        "files": [
+          "apps/ink_playground/CMakeLists.txt",
+          "apps/ink_playground/common/ink_playground_host.hpp",
+          "apps/ink_playground/common/ink_playground_host.cpp",
+          "apps/ink_playground/common/platform_interaction_controller.hpp",
+          "apps/ink_playground/common/platform_interaction_controller.cpp",
+          "apps/ink_playground/common/platform_contract.hpp",
+          "apps/ink_playground/common/platform_contract.cpp",
+          "apps/ink_playground/platform/web/bridge.cpp",
+          "apps/ink_playground/platform/android/bridge.cpp",
+          "apps/ink_playground/platform/windows/main.cpp"
+        ],
+        "obligations": [
+          "prediction-isolation",
+          "preview-handoff",
+          "platform-ownership",
+          "c0-c1-regression"
+        ],
+        "verification_commands": [
+          "cmake --build <build> --target ink_playground_common_tests",
+          "ctest --test-dir <build> -R C0|C1"
+        ]
+      },
+      {
+        "id": "semantic-model-codec",
+        "files": [
+          "runtime/semantic/CMakeLists.txt",
+          "runtime/semantic/include/canvas/semantic/object_content.hpp",
+          "runtime/semantic/include/canvas/semantic/object_record.hpp",
+          "runtime/semantic/include/canvas/semantic/operation.hpp",
+          "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+          "runtime/semantic/src/codec.cpp",
+          "runtime/semantic/src/protobuf_object_mapping.cpp",
+          "runtime/semantic/src/protobuf_object_mapping.hpp",
+          "runtime/semantic/src/validator.cpp",
+          "runtime/semantic/src/operation_state_validator.cpp",
+          "runtime/semantic/src/snapshot.cpp",
+          "runtime/semantic/src/snapshot_bootstrap.cpp",
+          "runtime/semantic/tests/CMakeLists.txt",
+          "runtime/semantic/tests/codec_test.cpp",
+          "runtime/semantic/tests/codec_negative_test.cpp",
+          "runtime/semantic/tests/codec_operation_ingress_test.cpp",
+          "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+          "runtime/semantic/tests/g1_06_replay_test.cpp"
+        ],
+        "obligations": [
+          "package-normalization",
+          "resolution-determinism",
+          "snapshot-replay",
+          "wire-schema-release",
+          "commit-intent-boundary"
+        ],
+        "verification_commands": [
+          "cmake --build <build> --target canvas_runtime_semantic_tests",
+          "ctest --test-dir <build> -R semantic"
+        ]
+      },
+      {
+        "id": "scene-render",
+        "files": [
+          "runtime/scene/CMakeLists.txt",
+          "runtime/scene/src/scene_record_store.cpp",
+          "runtime/scene/src/runtime_scene_projection.cpp",
+          "runtime/scene/tests/runtime_record_projection_test.cpp",
+          "runtime/render/CMakeLists.txt",
+          "runtime/render/src/frame_plan.cpp",
+          "runtime/render/src/skia_headless_backend.cpp",
+          "runtime/render/src/skia_ink_backend.cpp",
+          "runtime/render/src/webgl_surface_backend.cpp",
+          "runtime/render/include/canvas/render/skia_brush_renderer.hpp",
+          "runtime/render/src/skia_brush_renderer.cpp",
+          "runtime/render/tests/skia_headless_backend_test.cpp",
+          "runtime/render/tests/skia_ink_backend_test.cpp",
+          "runtime/render/tests/skia_brush_primitive_test.cpp"
+        ],
+        "obligations": [
+          "snapshot-replay",
+          "wire-schema-release",
+          "c0-c1-regression"
+        ],
+        "verification_commands": [
+          "cmake --build <build> --target axiom_render_skia_ink_backend_tests axiom_render_skia_brush_primitive_tests",
+          "ctest --test-dir <build> -R \"G3|G4\""
+        ]
+      },
+      {
+        "id": "ink-and-brush-lab",
+        "files": [
+          "runtime/ink/CMakeLists.txt",
+          "apps/brush_lab/common/brush_lab.cpp"
+        ],
+        "obligations": [
+          "package-normalization",
+          "plan-activation-closure",
+          "r01-vector-node-parity",
+          "legacy-readonly"
+        ],
+        "verification_commands": [
+          "cmake --build <build> --target canvas_runtime_ink brush_lab_tests",
+          "ctest --test-dir <build> -R \"Brush|R01\""
+        ]
+      },
+      {
+        "id": "evidence-and-scope",
+        "files": [
+          ".aegis/results/GT-G4-5-C2/**"
+        ],
+        "obligations": [
+          "scope-diff",
+          "c0-c1-regression"
+        ],
+        "verification_commands": [
+          "git diff --check",
+          "python docs/planning/brush-engine-v0.4/check_contract.py"
+        ]
+      }
+    ],
+    "mapping_binding": "authority.lock.json:frozen_semantic_boundary.r1_adapter_mapping and legacy_definition_boundary; package.json:red_oracle",
+    "red_oracle_binding": {
+      "path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+      "sha256": "62303f942b6b06282c3c526427efdf983ccf8b3ba2a1a7efd503aa6a376cd5dd",
+      "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+      "expected_exit_code": 0,
+      "expected_observation": "all frozen pre-change gaps RED"
+    }
+  },
+  "package_id": "GT-G4-5-C2-P31-v1.0"
+}

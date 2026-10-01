@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.1",
+  "package_id": "GT-G4-5-C2-P31-v0.8",
+  "task_id": "GT-G4-5-C2",
+  "status": "READY_FOR_P32_REENTRY_REVIEW",
+  "purpose": "Repair and freeze the executable P31 package for the v0.4 Brush Engine schema and common runtime.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/g4-5-common-brush-processing"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_refs": [
+    "docs/planning/GT_G4_5_BRUSH_ENGINE_AUTHORITY_V0_4.md",
+    "docs/planning/brush-engine-v0.4/CONTRACT.md",
+    "docs/planning/brush-engine-v0.4/PLAN.md",
+    "docs/planning/brush-engine-v0.4/VERIFICATION.md",
+    "docs/planning/brush-engine-v0.4/brush_engine.proto",
+    "docs/planning/brush-engine-v0.4/manifest.schema.json",
+    "docs/planning/brush-engine-v0.4/pipeline.schema.json"
+  ],
+  "supersedes": [
+    "GT-G4-5-C2-P31-v0.7",
+    "GT-G4-5-C2-P31-v0.7",
+    "GT-G4-5-C2-P31-v0.6",
+    "GT-G4-5-C2-P31-v0.5",
+    "GT-G4-5-C2-P31-v0.4",
+    "GT-G4-5-C2-P31-v0.3",
+    "GT-G4-5-C2-P31-v0.1"
+  ],
+  "p32_authorized": false,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "6685f181d59d5154bd74f0f517094853f9dc9872c69aa6b26166a9f29578ca81"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "ab8ebafd79c472169dba44d85760330b43ab4c94f80f5413dfd7a861db81bdb0"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "6b428b5cf6e8f65799f17b6364a1898c28c39c3f763c6ae7267978aa377e4aad"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "257b9c5f8b01364b958c04575a86409d5b6c92543d69338d4007b8217f3f81c2"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "9fbd4bd6ddc91d94123b7686fec5ec7a60a93647f4d148122066ae095901b501"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "826ee693fb5793d0502ee37d8e03872dd90b6a6690a8268d4cf8141fe7be7757"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/GT-G4-5-C2-P31-v0.7/",
+    "base_revision": "4144dfd80b665df435d141382de05196d3b8eb0f",
+    "binding": "exact package files bound by package-manifest.json"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CONTROL_REVIEW",
+    "next_action": "Resolve the v0.8 package, run P32_REENTRY_REVIEW including the executable RED oracle, then issue the explicit P32 surface handoff only after control acceptance.",
+    "official_gate_pass_forbidden_during_p32": true
+  },
+  "red_oracle": {
+    "path": "apps/ink_playground/tests/c2_red_oracle_test.py",
+    "sha256": "c627f331ebfbd84e51432d4a0d135d7669ab003b8d2d620bee23c2c21fd8da02",
+    "command": "python apps/ink_playground/tests/c2_red_oracle_test.py",
+    "expected_exit_code": 0,
+    "expected_observation": "all frozen pre-change gaps RED",
+    "production_mutation": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "task_id": "GT-G4-5-C1",
+  "status": "PASS",
+  "reason": "Web ownership migration requires preserving the accepted Brush/Skia and viewport behavior; the attempted batch-only draft was reverted before durable completion.",
+  "obligation": "C1-V3",
+  "result": "Web PointerEvent/coalesced batches now submit through _axiom_ink_platform_batch; common runtime owns pointer generation, stroke lifecycle, BrushRuntime session and canonical routing. Existing viewport/evidence/Skia rendering remains in the host contract."
+}
