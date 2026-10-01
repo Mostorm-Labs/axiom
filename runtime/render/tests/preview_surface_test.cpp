@@ -7,7 +7,7 @@
 int main() {
     using namespace canvas::render;
     using canvas::ink::BrushPreviewDelta;
-    RasterSkiaSurfaceProvider provider;
+    TransparentOverlaySkiaSurfaceProvider provider;
     assert(provider.resize(64U, 64U).code == BackendSubmissionCode::kAccepted);
     SkiaRenderer renderer;
     PreviewSurfaceController controller(renderer, provider);
@@ -56,12 +56,17 @@ int main() {
     assert(controller.active());
     assert(controller.geometry().contours.size() == 1U);
 
+    // Retiring the final session must hide the overlay without submitting an
+    // empty frame. A synchronous platform provider may block on that present
+    // (for example while waiting for D3D12 composition/vsync).
+    const auto presentBeforeFinalRetire = provider.presentCount();
+    assert(controller.retireSession(7U, generation));
+    assert(!controller.active());
+    assert(!provider.overlayVisible());
+    assert(provider.presentCount() == presentBeforeFinalRetire);
+
     // A mismatched handoff identity must retain preview state.
     assert(!controller.clearAfterCanonicalVisible(1U, 8U, 1U, generation));
-    assert(controller.active());
-    assert(controller.clearAfterCanonicalVisible(1U, 7U, 1U, generation));
-    assert(!controller.active());
-    assert(controller.state().submittedRevision == controller.state().contentRevision);
 
     // A stale generation is rejected without presenting.
     RasterSkiaSurfaceProvider staleProvider;

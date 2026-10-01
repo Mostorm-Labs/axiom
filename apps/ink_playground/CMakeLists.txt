@@ -92,12 +92,28 @@ if(BUILD_TESTING)
 endif()
 
 if(WIN32 AND TARGET arc_Windows)
+  if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
+    list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
+    find_package(CanvasSkia CONFIG REQUIRED
+      PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  endif()
   add_executable(axiom_ink_playground_windows WIN32
     platform/windows/main.cpp
-    platform/windows/windows_skia_preview_surface_provider.cpp
+    platform/windows/windows_d3d12_skia_surface_provider.cpp
     platform/windows/windows_smoke_evidence.cpp)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
-      axiom_ink_playground_common Arc::Windows)
+      axiom_ink_playground_common Arc::Windows CanvasSkia::Skia d3d12 dxgi dcomp)
+  if(BUILD_TESTING)
+    add_executable(axiom_ink_playground_windows_preview_popup_tests
+      tests/windows_preview_popup_test.cpp
+      platform/windows/windows_d3d12_skia_surface_provider.cpp)
+    target_compile_features(axiom_ink_playground_windows_preview_popup_tests PRIVATE cxx_std_20)
+    target_link_libraries(axiom_ink_playground_windows_preview_popup_tests PRIVATE
+      axiom_ink_playground_common Arc::Windows CanvasSkia::Skia d3d12 dxgi dcomp)
+    add_test(NAME G4InkPlaygroundWindowsPreviewPopup
+      COMMAND axiom_ink_playground_windows_preview_popup_tests)
+  endif()
 endif()
 
 if(ANDROID AND TARGET arc_Android)

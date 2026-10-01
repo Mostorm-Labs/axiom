@@ -116,7 +116,7 @@ WindowsSkiaPreviewSurfaceProvider::resize(std::uint32_t width,
     return canvas::render::BackendSubmissionResult::rejected(
         "failed to query Windows preview owner");
   }
-  POINT origin{client.left, client.top};
+  POINT origin{client.left + overlayOffsetX_, client.top + overlayOffsetY_};
   ClientToScreen(owner_, &origin);
   SetWindowPos(overlay_, HWND_TOP, origin.x, origin.y,
                static_cast<int>(width), static_cast<int>(height),
@@ -157,7 +157,7 @@ WindowsSkiaPreviewSurfaceProvider::present() noexcept {
   POINT origin{};
   RECT client{};
   if (!GetClientRect(owner_, &client)) return canvas::render::BackendSubmissionResult::rejected("owner unavailable");
-  origin = {client.left, client.top};
+  origin = {client.left + overlayOffsetX_, client.top + overlayOffsetY_};
   ClientToScreen(owner_, &origin);
   SIZE size{static_cast<LONG>(width_), static_cast<LONG>(height_)};
   BLENDFUNCTION blend{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};

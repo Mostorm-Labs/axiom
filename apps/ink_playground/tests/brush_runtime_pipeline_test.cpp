@@ -246,6 +246,7 @@ int main() {
   pinchMove.samples.push_back(platformSample(2U, 3U, 80.0F, 20.0F,
                                              canvas::input::PointerPhase::kMove));
   assert(pinch.acceptPlatformBatch(pinchMove, 3'000'000U));
+  assert(pinch.viewportGestureClaimed());
   assert(pinch.viewportGesture().scale == 3.0F);
   assert(pinch.semanticObjectCount() == 0U);
 
@@ -362,6 +363,11 @@ int main() {
   pinchDownB.samples.push_back(platform(42U, 2U, 100'000'000U, 50.0F, 10.0F,
                                          canvas::input::PointerPhase::kDown));
   assert(pinchAuto.acceptPlatformBatch(pinchDownB, 100'000'000U));
+  assert(pinchAuto.viewportGestureClaimed());
+  canvas::input::PlatformPointerBatch pinchMoveB;
+  pinchMoveB.samples.push_back(platform(42U, 3U, 120'000'000U, 80.0F, 10.0F,
+                                         canvas::input::PointerPhase::kMove));
+  assert(pinchAuto.acceptPlatformBatch(pinchMoveB, 120'000'000U));
   assert(pinchAuto.viewportGestureClaimed());
 
   // Two ink contacts must retain two independent preview contours. Finishing

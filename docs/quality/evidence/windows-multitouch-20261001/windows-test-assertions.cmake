@@ -1,0 +1,18 @@
+# Local diagnostic configuration: keep assertion-based tests meaningful in Release.
+# Production libraries and executables retain their normal Release flags.
+function(axiom_enable_windows_test_assertions directory)
+  get_property(test_targets DIRECTORY "${directory}" PROPERTY BUILDSYSTEM_TARGETS)
+  foreach(test_target IN LISTS test_targets)
+    if(test_target MATCHES "_tests$")
+      get_target_property(test_type "${test_target}" TYPE)
+      if(test_type STREQUAL "EXECUTABLE")
+        target_compile_options("${test_target}" PRIVATE /UNDEBUG)
+      endif()
+    endif()
+  endforeach()
+  get_property(test_subdirectories DIRECTORY "${directory}" PROPERTY SUBDIRECTORIES)
+  foreach(test_subdirectory IN LISTS test_subdirectories)
+    axiom_enable_windows_test_assertions("${test_subdirectory}")
+  endforeach()
+endfunction()
+cmake_language(DEFER CALL axiom_enable_windows_test_assertions "${CMAKE_SOURCE_DIR}")

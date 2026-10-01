@@ -66,6 +66,22 @@ def test_windows_keeps_preview_until_mouse_release_canonical_handoff():
     assert "value.activeKeys.empty()" in source
 
 
+def test_windows_hides_preview_presentation_before_canonical_redraw():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "previewPresentationEnabled" in source
+    assert "setOverlayVisible(false)" in source
+    assert "value.previewPresentationEnabled && value.host->previewActive()" in source
+    assert "value->previewDirty && value->previewPresentationEnabled" in source
+    assert "if (end && value.activeKeys.size() <= 1U) hidePreviewPresentation(value)" in source
+    assert "if (end && value->activeKeys.size() <= 1U) hidePreviewPresentation(*value)" in source
+
+
+def test_windows_final_pointer_up_completes_canonical_handoff_immediately():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0, true)" in source
+    assert "presentCanonicalFrame(value->host->canonicalFrameCount() + 1U, 0.0, true)" in source
+
+
 def test_windows_preview_reasserts_overlay_z_order_after_present():
     source = (ROOT / "apps" / "ink_playground" / "platform" / "windows" /
               "windows_skia_preview_surface_provider.cpp").read_text(encoding="utf-8")
@@ -110,3 +126,23 @@ def test_windows_amber_fallback_applies_runtime_viewport_transform():
     assert ".scale" in fallback
     assert ".translationX" in fallback
     assert ".translationY" in fallback
+
+
+def test_windows_pointer_input_submits_preview_without_waiting_for_timer():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    mouse_handler = source.split("bool submitMouseSample", 1)[1].split(
+        "void cancelPointer", 1
+    )[0]
+    pointer_handler = source.split("if (message == WM_POINTERDOWN", 1)[1].split(
+        "if (message == WM_POINTERCAPTURECHANGED", 1
+    )[0]
+    assert "presentBrushPreview()" in mouse_handler
+    assert "presentBrushPreview()" in pointer_handler
+
+
+def test_windows_pointer_up_reuses_already_presented_canonical_frame():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "canonicalFrameReady" in source
+    assert "value.canonicalFrameReady = true" in source
+    assert "!value.canonicalFrameReady" in source
+    assert "canonicalFrameReady = false" in source

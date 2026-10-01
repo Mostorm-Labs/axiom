@@ -132,6 +132,13 @@ class PointerLifecycle final {
   return EnableMouseInPointer(FALSE) != FALSE;
 }
 
+[[nodiscard]] inline bool isPromotedPointerMouseMessage(LPARAM extraInfo) noexcept {
+  // Windows marks mouse messages synthesized from touch/pen input with this
+  // signature. They must not open a second Runtime session alongside the
+  // corresponding WM_POINTER contact.
+  return (static_cast<std::uintptr_t>(extraInfo) & 0xFFFFFF00U) == 0xFF515700U;
+}
+
 [[nodiscard]] inline std::uint64_t functionalDeviceId(HANDLE handle,
                                                        std::uint64_t fallback) noexcept {
   const auto value = deviceIdFromHandle(handle);

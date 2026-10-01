@@ -1,0 +1,114 @@
+{
+  "diagnostic_log": "pointer-diagnostic-before.log.gz",
+  "pointer_ids": [
+    172,
+    175,
+    176
+  ],
+  "contacts": [
+    {
+      "pointer": 172,
+      "down": [
+        {
+          "time_ms": 18396046,
+          "line": 505
+        }
+      ],
+      "up": [
+        {
+          "time_ms": 18397500,
+          "line": 1718
+        }
+      ],
+      "updates": 241,
+      "begin_keys": [
+        {
+          "source": 131181,
+          "generation": 1,
+          "present": 1
+        }
+      ],
+      "dispositions": [
+        0,
+        1,
+        4
+      ]
+    },
+    {
+      "pointer": 175,
+      "down": [
+        {
+          "time_ms": 18398625,
+          "line": 1724
+        }
+      ],
+      "up": [
+        {
+          "time_ms": 18399546,
+          "line": 2300
+        }
+      ],
+      "updates": 114,
+      "begin_keys": [
+        {
+          "source": 131181,
+          "generation": 1,
+          "present": 1
+        }
+      ],
+      "dispositions": [
+        0,
+        1,
+        4
+      ]
+    },
+    {
+      "pointer": 176,
+      "down": [
+        {
+          "time_ms": 18400187,
+          "line": 2305
+        }
+      ],
+      "up": [
+        {
+          "time_ms": 18401671,
+          "line": 3306
+        }
+      ],
+      "updates": 199,
+      "begin_keys": [
+        {
+          "source": 131181,
+          "generation": 1,
+          "present": 1
+        }
+      ],
+      "dispositions": [
+        0,
+        1,
+        4
+      ]
+    }
+  ],
+  "max_active_pointers": 1,
+  "max_frame_contacts": 1,
+  "max_preview_outline_entries": 1,
+  "canonical_operation_count": 4,
+  "viewport_claimed_anywhere_in_mixed_run": false,
+  "wm_pointer_received": true,
+  "wm_touch_received": false,
+  "wm_pointer_capture_changed": false,
+  "overlay_received_input": false,
+  "overlay_observation_scope": "instrumented pointer/touch/mouse; WM_GESTURE not instrumented",
+  "promoted_mouse_down_count": 1,
+  "mouse_capture_observed": true,
+  "disposition_values": {
+    "0": "Pending",
+    "1": "Ink",
+    "2": "Viewport",
+    "3": "Ignored",
+    "4": "Terminal"
+  },
+  "input_injected_by_agent": false
+}

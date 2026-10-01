@@ -47,6 +47,7 @@ class WindowsSkiaPreviewSurfaceProvider final
     return raster_.presentCount();
   }
   void setOverlayVisible(bool visible) noexcept override;
+  void setOverlayOffset(int x, int y) noexcept { overlayOffsetX_ = x; overlayOffsetY_ = y; }
   [[nodiscard]] bool overlayVisible() const noexcept override { return visible_; }
 
  private:
@@ -65,6 +66,8 @@ class WindowsSkiaPreviewSurfaceProvider final
   std::uint32_t width_ = 0;
   std::uint32_t height_ = 0;
   bool visible_ = false;
+  int overlayOffsetX_ = 0;
+  int overlayOffsetY_ = 0;
   bool lost_ = false;
 
 #if defined(_WIN32)
