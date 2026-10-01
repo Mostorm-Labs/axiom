@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4-5-C2",
+  "package_id": "GT-G4-5-C2-P31-v1.3",
+  "checked_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
+  "status": "PASS",
+  "observations": {
+    "local_rf01_clean_msvc": {
+      "configure": "cmake -S . -B out/rf01-clean-msvc -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=/wd4702 -DCMAKE_C_FLAGS=/wd4702 -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_POC02=OFF -DCANVAS_BUILD_POC03=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_RF01_BUILD_TESTS=ON -DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+      "build": "cmake --build out/rf01-clean-msvc --parallel",
+      "test": "ctest --test-dir out/rf01-clean-msvc --output-on-failure",
+      "test_exit_code": 0,
+      "tests_passed": 57,
+      "tests_failed": 0,
+      "git_diff_check": "PASS"
+    },
+    "hosted_provider_evidence_sha256": "af75bbcf185c863f1afb4c48cbbcdfcfb8aec1536122c3fc06555ac49da49e06"
+  }
+}
