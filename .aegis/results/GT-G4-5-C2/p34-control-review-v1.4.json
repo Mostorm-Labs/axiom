@@ -10,9 +10,9 @@
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
     "execution_ref": "codex/g4-5-common-brush-processing",
-    "reviewed_revision": "ffbb0f606e894307263378ff9eb02bef259ca89c",
+    "reviewed_revision": "a6cd46c9",
     "implementation_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
-    "remote_branch_revision": "ffbb0f606e894307263378ff9eb02bef259ca89c",
+    "remote_branch_revision": "a6cd46c9",
     "task_anchor": "4144dfd80b665df435d141382de05196d3b8eb0f",
     "task_anchor_ancestry": "PASS",
     "pull_request": 135,
@@ -30,7 +30,9 @@
       "status": "PASS"
     },
     "package_supersedes": {
-      "declared": ["GT-G4-5-C2-P31-v1.3"],
+      "declared": [
+        "GT-G4-5-C2-P31-v1.3"
+      ],
       "status": "PASS"
     }
   },
@@ -95,11 +97,15 @@
   },
   "gate_review": {
     "frozen_requirements": {
-      "passed": ["all frozen GT-G4-5-C2 obligations"],
+      "passed": [
+        "all frozen GT-G4-5-C2 obligations"
+      ],
       "failed": []
     },
     "frozen_evidence": {
-      "passed": ["all v1.4 blocking evidence and provider identities"],
+      "passed": [
+        "all v1.4 blocking evidence and provider identities"
+      ],
       "failed": []
     },
     "verdict": "PASS_WITH_FINDINGS"
@@ -109,7 +115,11 @@
     "official_gate_pass": false,
     "scope": "GT-G4-5-C2 P34 evidence closure only",
     "ready_for": "CONTROL_REVIEW_RETURN",
-    "forbidden_verdicts": ["G4 overall PASS", "G4.5 overall PASS", "G5 AUTHORIZED"],
+    "forbidden_verdicts": [
+      "G4 overall PASS",
+      "G4.5 overall PASS",
+      "G5 AUTHORIZED"
+    ],
     "implementation_defect": false,
     "next_route": "RETURN_TO_CONTROL_REVIEW",
     "reviewed_implementation_revision": "494dfc8060094a9b9719d44d9cf827c26aeb836d",
