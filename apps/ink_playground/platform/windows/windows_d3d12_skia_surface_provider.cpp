@@ -201,26 +201,15 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(
     visible_ = false;
     if (overlay_) ShowWindow(overlay_, SW_HIDE);
   }
-  // Keep the D3D device, queue and Skia context alive across a normal
-  // maximize/restore. Recreating the whole device while the owner visual is
-  // attached leaves a short interval where DComp can sample an uninitialised
-  // backbuffer, which is the black frame seen during the next stroke.
-  if (impl_->swapChain && impl_->context &&
-      resizeGpuSurfaceBuffers(width, height)) {
-    width_ = width;
-    height_ = height;
-    ++generation_;
-    if (generation_ == 0U) generation_ = 1U;
-    lost_ = false;
-    repositionOverlay();
-    std::fprintf(stderr, "[d3d12] resize-buffers ready owner=%d gen=%llu\\n",
-                 attachToOwner_ ? 1 : 0,
-                 static_cast<unsigned long long>(generation_));
-    return canvas::render::BackendSubmissionResult::accepted();
-  }
   width_ = width;
   height_ = height;
+  // Ganesh wraps each DXGI backbuffer in a GrD3DTextureResource.  ResizeBuffers
+  // invalidates those resources in place, while Skia may still release the
+  // wrappers on a later present.  A resize therefore has to be a full provider
+  // lifecycle transition: fence the queue, detach the visual, release every
+  // wrapped surface/context, then create a new swap chain and wrappers.
   destroyGpuSurface();
+  if (!attachToOwner_) destroyOverlay();
   if (!createGpuSurface() || !ensureOverlay()) {
     std::fprintf(stderr, "[d3d12] resize failed owner=%d new=%ux%u\\n",
                  attachToOwner_ ? 1 : 0, width, height);
@@ -374,57 +363,6 @@ bool WindowsD3D12SkiaSurfaceProvider::createGpuSurface() noexcept {
   }
   return true;
 }
-bool WindowsD3D12SkiaSurfaceProvider::resizeGpuSurfaceBuffers(
-    std::uint32_t width, std::uint32_t height) noexcept {
-  if (!impl_ || !impl_->swapChain || !impl_->context || !impl_->queue ||
-      !impl_->fence || !impl_->fenceEvent) return false;
-  impl_->context->flushAndSubmit();
-  const auto targetFence = ++impl_->fenceValue;
-  if (FAILED(impl_->queue->Signal(impl_->fence.Get(), targetFence))) return false;
-  if (impl_->fence->GetCompletedValue() < targetFence) {
-    if (FAILED(impl_->fence->SetEventOnCompletion(targetFence, impl_->fenceEvent)) ||
-        WaitForSingleObject(impl_->fenceEvent, 5000) != WAIT_OBJECT_0) {
-      return false;
-    }
-  }
-  if (impl_->visual && impl_->composition) {
-    (void)impl_->visual->SetContent(nullptr);
-    (void)impl_->composition->Commit();
-    (void)impl_->composition->WaitForCommitCompletion();
-  }
-  for (auto& surface : impl_->surfaces) surface.reset();
-  for (auto& buffer : impl_->buffers) buffer.Reset();
-  const auto resizeHr = impl_->swapChain->ResizeBuffers(
-      static_cast<UINT>(impl_->buffers.size()), width, height,
-      DXGI_FORMAT_B8G8R8A8_UNORM, 0);
-  if (FAILED(resizeHr)) {
-    std::fprintf(stderr, "[d3d12] ResizeBuffers failed owner=%d %ux%u hr=0x%08lx\\n",
-                 attachToOwner_ ? 1 : 0, width, height,
-                 static_cast<unsigned long>(resizeHr));
-    return false;
-  }
-  impl_->bufferFenceValues.fill(0U);
-  impl_->currentBufferIndex = impl_->swapChain->GetCurrentBackBufferIndex();
-  for (UINT i = 0; i < impl_->buffers.size(); ++i) {
-    const auto bufferHr = impl_->swapChain->GetBuffer(i, IID_PPV_ARGS(&impl_->buffers[i]));
-    if (FAILED(bufferHr)) return false;
-    GrD3DTextureResourceInfo resourceInfo(
-        impl_->buffers[i].Get(), nullptr, D3D12_RESOURCE_STATE_PRESENT,
-        DXGI_FORMAT_B8G8R8A8_UNORM, 1U, 1U,
-        DXGI_STANDARD_MULTISAMPLE_QUALITY_PATTERN);
-    const auto target = GrBackendRenderTargets::MakeD3D(
-        static_cast<int>(width), static_cast<int>(height), resourceInfo);
-    impl_->surfaces[i] = SkSurfaces::WrapBackendRenderTarget(
-        impl_->context.get(), target, kTopLeft_GrSurfaceOrigin,
-        kBGRA_8888_SkColorType, SkColorSpace::MakeSRGB(), nullptr);
-    if (!impl_->surfaces[i]) return false;
-  }
-  if (impl_->visual && impl_->composition) {
-    if (FAILED(impl_->visual->SetContent(impl_->swapChain.Get()))) return false;
-    return SUCCEEDED(impl_->composition->Commit());
-  }
-  return true;
-}
 bool WindowsD3D12SkiaSurfaceProvider::ensureOverlay() noexcept {
   if (attachToOwner_) {
     if (!owner_ || !impl_->swapChain) return false;
@@ -459,27 +397,25 @@ bool WindowsD3D12SkiaSurfaceProvider::ensureOverlay() noexcept {
   if (!owner_) return false;
   const auto instance = reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(owner_, GWLP_HINSTANCE));
   if (!registerOverlayClass(instance)) return false;
-  // This HWND is only a DirectComposition target.  Do not combine a
-  // composition swap-chain with WS_EX_LAYERED: USER32's layered-window
-  // redirection surface treats transparent premultiplied pixels as an
-  // opaque black backing during maximize/activation transitions.  The
-  // composition visual already supplies alpha; NOREDIRECTIONBITMAP keeps
-  // the popup out of that extra GDI redirection path.
+  // This HWND is a display-only DirectComposition target. Layered alpha
+  // transparency is required here because HTTRANSPARENT/WS_EX_TRANSPARENT
+  // alone do not keep a visible popup out of Windows touch hit testing when a
+  // second contact lands. The owner HWND remains the actual input target.
   overlay_ = CreateWindowExW(WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW |
-                             WS_EX_NOREDIRECTIONBITMAP | WS_EX_TRANSPARENT,
+                             WS_EX_LAYERED | WS_EX_TRANSPARENT,
                              kOverlayClass, L"Axiom D3D12 Arc Preview", WS_POPUP,
                              0, 0, static_cast<int>(width_), static_cast<int>(height_),
                              owner_, nullptr, instance, owner_);
   if (!overlay_) return false;
-  // HTTRANSPARENT does not exclude a popup from Windows touch hit testing;
-  // the owner remains the sole native input target and the overlay forwards
-  // only messages Windows may route to it during a compositor transition.
-  // The preview popup is display-only. Do not register it as a touch or
-  // pointer target: a visible transparent popup can otherwise become the
-  // Windows input target when a second finger lands while the first stroke
-  // is active. The owner HWND is the sole native input target; the forwarding
-  // handlers below remain only for messages Windows may route to the popup
-  // during a compositor transition.
+  // HTTRANSPARENT does not exclude a popup from Windows touch hit testing.
+  // Initialize layered alpha while keeping the window enabled so a click landing
+  // during maximize/restore is not interpreted as an interaction with a
+  // disabled window (which produces the Windows "ding" and drops the mouse
+  // down). HTTRANSPARENT/MA_NOACTIVATE and the explicit forwarding handlers
+  // keep the owner HWND as the real input target without disabling this HWND.
+  // Do not register it as a touch or pointer target: concurrent contacts
+  // must continue to arrive at the owner HWND.
+  if (!SetLayeredWindowAttributes(overlay_, 0, 255, LWA_ALPHA)) return false;
   if (FAILED(DCompositionCreateDevice(nullptr, IID_PPV_ARGS(&impl_->composition)))) return false;
   if (FAILED(impl_->composition->CreateTargetForHwnd(overlay_, TRUE, &impl_->target)) ||
       FAILED(impl_->composition->CreateVisual(&impl_->visual)) ||
@@ -507,14 +443,19 @@ void WindowsD3D12SkiaSurfaceProvider::destroyGpuSurface() noexcept {
     (void)impl_->composition->WaitForCommitCompletion();
   }
   if (impl_->visual) impl_->visual->SetContent(nullptr);
+  // Drop Ganesh's cache while the wrapped DXGI resources are still valid.
+  // Calling this after swapChain.Reset() leaves GrD3DTextureResource release
+  // callbacks holding stale ID3D12Resource pointers during maximize/restore.
+  if (impl_->context) impl_->context->freeGpuResources();
   for (auto& surface : impl_->surfaces) surface.reset();
+  // The SkSurface wrappers are now gone, so no Skia object may retain a
+  // backbuffer when the DXGI resources are released.
+  if (impl_->context) {
+    impl_->context->freeGpuResources();
+    impl_->context.reset();
+  }
   for (auto& buffer : impl_->buffers) buffer.Reset();
   impl_->swapChain.Reset();
-  // The D3D12 command queue is fenced above.  Keep the context alive until
-  // all wrapped surfaces and resources have been released; abandoning it
-  // before the final COM releases can leave a queued clear/present referring
-  // to a destroyed resource and produces the maximize black frame.
-  if (impl_->context) { impl_->context->flushAndSubmit(); impl_->context.reset(); }
   impl_->queue.Reset(); impl_->device.Reset(); impl_->adapter.Reset();
   impl_->fence.Reset();
 }

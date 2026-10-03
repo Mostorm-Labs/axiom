@@ -64,8 +64,6 @@ class WindowsD3D12SkiaSurfaceProvider final
 #if defined(_WIN32)
   [[nodiscard]] bool ensureOverlay() noexcept;
   [[nodiscard]] bool createGpuSurface() noexcept;
-  [[nodiscard]] bool resizeGpuSurfaceBuffers(std::uint32_t width,
-                                             std::uint32_t height) noexcept;
   void destroyGpuSurface() noexcept;
   void destroyOverlay() noexcept;
   void repositionOverlay() noexcept;
