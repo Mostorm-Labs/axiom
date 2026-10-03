@@ -4,7 +4,11 @@
 #include "canvas/debug_ui/command.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #include "canvas/debug_ui/panels.hpp"
-#include "canvas/debug_ui/runtime_facade.hpp"
+#include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/runtime/diagnostics.hpp"
+#include "canvas/runtime/debug_control.hpp"
+#include "canvas/runtime/telemetry.hpp"
+#include "canvas/runtime/surface_debug_control.hpp"
 
 #include <array>
 #include <cstdint>
@@ -27,6 +31,13 @@ struct DebugUiContext final {
     MutexCopySnapshotChannel* snapshots = nullptr;
     BoundedCommandQueue* commands = nullptr;
     InputCaptureGate* input = nullptr;
+    canvas::runtime::RuntimeFacade* runtime = nullptr;
+    const canvas::runtime::IAxiomDiagnostics* diagnostics = nullptr;
+    const canvas::runtime::IArcDiagnostics* arcDiagnostics = nullptr;
+    const canvas::runtime::IPlatformDiagnostics* platformDiagnostics = nullptr;
+    const canvas::runtime::ITelemetry* telemetry = nullptr;
+    canvas::runtime::AxiomDebugControl* axiomDebug = nullptr;
+    canvas::runtime::PlatformDebugControl* platform = nullptr;
 };
 
 struct PanelState final {
@@ -46,10 +57,12 @@ class DebugController final {
     DebugUiContext context_;
 };
 
-// Common panel construction. Platform hosts provide only the product-safe
-// tool selection callback; all panel layout and ImGui interaction stays here.
+// Common panel construction. Product controls and surface experiments are
+// submitted to owner interfaces; the panel never owns runtime truth.
 void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
-                      const std::function<bool(int)>& selectTool);
+                      canvas::runtime::RuntimeFacade* runtime,
+                      canvas::runtime::AxiomDebugControl* axiomDebug,
+                      canvas::runtime::PlatformDebugControl* platform);
 
 class ImGuiSkiaRenderer final {
   public:

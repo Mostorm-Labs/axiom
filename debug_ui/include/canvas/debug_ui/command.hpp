@@ -11,6 +11,9 @@
 
 namespace canvas::debug_ui {
 
+inline constexpr std::size_t kDefaultDebugCommandQueueCapacity = 256;
+inline constexpr std::size_t kDefaultDebugCommandReceiptCapacity = 1024;
+
 enum class DebugCommandKind : std::uint8_t {
     kRequestSurfaceMode,
     kInvalidatePreview,
@@ -22,6 +25,7 @@ enum class ReceiptState : std::uint8_t {
     kAccepted,
     kCompleted,
     kRejected,
+    kStaleGeneration,
     kExpired,
     kDestroyed,
     kEvicted,
@@ -43,7 +47,9 @@ struct CommandReceipt final {
 
 class BoundedCommandQueue final {
   public:
-    explicit BoundedCommandQueue(std::size_t capacity, std::size_t receiptCapacity = 256);
+    explicit BoundedCommandQueue(
+        std::size_t capacity = kDefaultDebugCommandQueueCapacity,
+        std::size_t receiptCapacity = kDefaultDebugCommandReceiptCapacity);
     [[nodiscard]] std::optional<CommandReceipt> admit(DebugCommand command);
     [[nodiscard]] std::optional<DebugCommand> take(std::uint64_t currentSequence,
                                                     std::uint64_t currentGeneration);

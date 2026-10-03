@@ -1005,6 +1005,31 @@ bool InkPlaygroundHost::registerSurfaceProvider(
   return true;
 }
 
+bool InkPlaygroundHost::selectCanonicalSurfaceProfile(
+    std::string_view profileId, std::uint64_t expectedGeneration,
+    render::RenderTargetFormat format) noexcept {
+  if (appBinding_ == nullptr || profileId.empty()) return false;
+  if (appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
+      expectedGeneration) return false;
+  if (appBinding_->selectRenderProfile(profileId, format) !=
+      render::SurfaceProviderDisposition::kCommitted) return false;
+  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.width = appBinding_->surfaces().activeInfo().metrics.physicalWidth;
+  surface_.height = appBinding_->surfaces().activeInfo().metrics.physicalHeight;
+  surface_.available = true;
+  return true;
+}
+
+bool InkPlaygroundHost::rebindCanonicalSurface(std::uint64_t expectedGeneration) noexcept {
+  if (appBinding_ == nullptr ||
+      appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
+          expectedGeneration) return false;
+  if (appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted) return false;
+  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.available = true;
+  return true;
+}
+
 bool InkPlaygroundHost::registerPreviewSurfaceProvider(
     std::string profileId, std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
   if (appBinding_ == nullptr || provider == nullptr || profileId.empty()) {

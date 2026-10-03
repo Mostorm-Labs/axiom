@@ -8,6 +8,8 @@
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "windows_d3d12_skia_surface_provider.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
+#include "canvas/runtime/surface_debug_queue.hpp"
+#include "canvas/runtime/debug_command_queue.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
@@ -32,6 +34,12 @@
 namespace {
 using canvas::ink_playground::InkPlaygroundHost;
 class WindowsArcRuntimeSinks;
+class WindowsRuntimeFacade;
+class WindowsAxiomDebugControl;
+class WindowsPlatformDebugControl;
+class WindowsArcDiagnostics;
+class WindowsPlatformDiagnostics;
+class WindowsTelemetry;
 
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   static constexpr int kToolbarHeight = 56;
@@ -61,6 +69,10 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::uint64_t deviceId = 0;
   std::unordered_map<std::uint64_t, canvas::input::PointerKey> activeKeys;
   std::unordered_map<std::uint64_t, std::uint64_t> pointerStrokes;
+  canvas::debug_ui::InputCaptureGate inputCapture;
+  std::uint64_t inputSequence = 0;
+  std::unordered_map<std::uint64_t, canvas::debug_ui::DebugInputSequence>
+      canvasInputSequences;
   std::vector<canvas::ink_playground::windows_input::PointerEvidenceSample> trace;
   std::size_t maxConcurrentPointers = 0;
   std::uint64_t cpuCopyCount = 0;
@@ -73,6 +85,8 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   bool previewPresentationEnabled = true;
   bool previewDirty = false;
   bool debugF12Down = false;
+  canvas::runtime::SurfaceMode canonicalSurfaceMode =
+      canvas::runtime::SurfaceMode::kPlatformDefault;
   std::unique_ptr<WindowsArcRuntimeSinks> runtimeSinks;
   bool canonicalFrameReady = false;
   bool resizePosted = false;
@@ -85,6 +99,16 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   canvas::ink_playground::WindowsD3D12SkiaSurfaceProvider* previewProvider = nullptr;
 #endif
   std::unique_ptr<canvas::debug_ui::WindowsDebugUiHost> debugUi;
+  canvas::debug_ui::MutexCopySnapshotChannel debugSnapshots;
+  std::unique_ptr<WindowsRuntimeFacade> runtimeFacade;
+  std::unique_ptr<WindowsAxiomDebugControl> axiomDebugControl;
+  std::unique_ptr<WindowsPlatformDebugControl> platformDebugControl;
+  std::unique_ptr<WindowsArcDiagnostics> arcDiagnostics;
+  std::unique_ptr<WindowsPlatformDiagnostics> platformDiagnostics;
+  std::unique_ptr<WindowsTelemetry> telemetry;
+  canvas::runtime::SurfaceModeReceipt lastSurfaceReceipt{};
+  bool hasSurfaceReceipt = false;
+  int selectedTool = 4101;
 };
 enum : int {
   kToolVector = 4101, kToolMarker, kToolChalk, kToolMembrane,
@@ -109,12 +133,282 @@ bool selectWindowsTool(State& value, int command) {
     return false;
   }
   if (!selected) return false;
+  value.selectedTool = command;
   for (const auto& [id, button] : value.toolButtons) {
     SendMessageW(button, BM_SETCHECK, id == command ? BST_CHECKED : BST_UNCHECKED, 0);
   }
   InvalidateRect(value.window, nullptr, FALSE);
   return true;
 }
+
+bool beginCanvasInput(State& value, std::uint64_t pointerId) noexcept {
+  if (value.canvasInputSequences.contains(pointerId)) return true;
+  const canvas::debug_ui::DebugInputSequence sequence{pointerId, ++value.inputSequence};
+  if (value.inputCapture.begin(sequence, canvas::debug_ui::DebugInputOwner::kCanvas) !=
+      canvas::debug_ui::DebugInputOwner::kCanvas) {
+    return false;
+  }
+  value.canvasInputSequences.emplace(pointerId, sequence);
+  return true;
+}
+
+bool canvasOwnsInput(const State& value, std::uint64_t pointerId) noexcept {
+  const auto it = value.canvasInputSequences.find(pointerId);
+  if (it == value.canvasInputSequences.end()) return false;
+  const auto owner = value.inputCapture.owner(it->second);
+  return owner.has_value() && *owner == canvas::debug_ui::DebugInputOwner::kCanvas;
+}
+
+void endCanvasInput(State& value, std::uint64_t pointerId) noexcept {
+  const auto it = value.canvasInputSequences.find(pointerId);
+  if (it == value.canvasInputSequences.end()) return;
+  (void)value.inputCapture.terminal(it->second);
+  value.canvasInputSequences.erase(it);
+}
+
+void clearCanvasInput(State& value) noexcept {
+  for (const auto& [pointerId, sequence] : value.canvasInputSequences) {
+    (void)pointerId;
+    (void)value.inputCapture.terminal(sequence);
+  }
+  value.canvasInputSequences.clear();
+}
+
+class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
+ public:
+  explicit WindowsRuntimeFacade(State& state) : state_(state) {}
+  [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
+    const auto viewport = state_.host->viewportGesture();
+    return {1U, state_.host->semanticGeneration().value(),
+            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 1U,
+            static_cast<std::uint32_t>(state_.selectedTool),
+            state_.host->surface().generation, viewport.scale,
+            viewport.translationX, viewport.translationY};
+  }
+  [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
+    const auto diagnostics = readDiagnostics();
+    return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,
+            diagnostics.documentRevision, diagnostics.viewGeneration,
+            diagnostics.surfaceGeneration, diagnostics.toolId,
+            state_.host->selectedBrushProfile() == "vector-solid-v1" ? 1U :
+                state_.host->selectedBrushProfile() == "marker-flat-v1" ? 2U :
+                state_.host->selectedBrushProfile() == "chalk-grain-v1" ? 3U : 4U,
+            state_.host->selectedBrushRevision(),
+            state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
+                state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U,
+            diagnostics.cameraScale, diagnostics.cameraTranslationX,
+            diagnostics.cameraTranslationY};
+  }
+  [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
+      const canvas::runtime::ProductControlRequest& request) noexcept override {
+    canvas::runtime::ProductControlReceipt receipt{request.requestId,
+        canvas::runtime::ProductControlState::kRejected, 1U};
+    if (request.runtimeGeneration != 0U && request.runtimeGeneration != 1U) return receipt;
+    if (request.action == canvas::runtime::ProductControlAction::kSetBrush) {
+      static constexpr const char* kProfiles[] = {
+          "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
+      const auto profile = request.brushId >= 1U && request.brushId <= 4U
+          ? kProfiles[request.brushId - 1U] : nullptr;
+      const auto revision = request.brushRevision == 0U
+          ? (request.brushId == 3U ? 4U : 1U) : request.brushRevision;
+      if (profile != nullptr && state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
+          state_.host->selectBrushProfile(profile, revision)) {
+        state_.selectedTool = static_cast<int>(request.toolId);
+        receipt.state = canvas::runtime::ProductControlState::kApplied;
+      }
+      return receipt;
+    }
+    if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
+      canvas::interaction::ViewportNavigationSample navigation{};
+      navigation.anchorX = request.anchorX;
+      navigation.anchorY = request.anchorY;
+      navigation.deltaX = request.deltaX;
+      navigation.deltaY = request.deltaY;
+      navigation.scaleDelta = request.scaleDelta;
+      navigation.kind = request.cameraAction == 2U
+          ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
+          : canvas::interaction::ViewportNavigationKind::kWheelPan;
+      if (state_.host->applyViewportNavigation(navigation)) {
+        receipt.state = canvas::runtime::ProductControlState::kApplied;
+      }
+      return receipt;
+    }
+    if (request.action == canvas::runtime::ProductControlAction::kUndo ||
+        request.action == canvas::runtime::ProductControlAction::kRedo) {
+      // Undo/redo are intentionally capability-gated until the host exposes
+      // the production operation history.  The facade reports this explicitly
+      // instead of pretending that a debug click mutated canonical state.
+      receipt.state = canvas::runtime::ProductControlState::kUnsupported;
+      return receipt;
+    }
+    if (request.action == canvas::runtime::ProductControlAction::kSetEraser) {
+      const auto mode = request.eraserId == 1U
+          ? InkPlaygroundHost::ToolMode::kObjectEraser
+          : request.eraserId == 2U ? InkPlaygroundHost::ToolMode::kPartialEraser
+                                   : InkPlaygroundHost::ToolMode::kBrush;
+      if (request.eraserId != 0U && state_.host->selectTool(mode)) {
+        state_.selectedTool = static_cast<int>(request.toolId);
+        for (const auto& [id, button] : state_.toolButtons) {
+          SendMessageW(button, BM_SETCHECK, id == request.toolId ? BST_CHECKED : BST_UNCHECKED, 0);
+        }
+        InvalidateRect(state_.window, nullptr, FALSE);
+        receipt.state = canvas::runtime::ProductControlState::kApplied;
+      }
+      return receipt;
+    }
+    if (request.action != canvas::runtime::ProductControlAction::kSetTool) {
+      receipt.state = canvas::runtime::ProductControlState::kUnsupported;
+      return receipt;
+    }
+    if (!selectWindowsTool(state_, static_cast<int>(request.toolId))) return receipt;
+    receipt.state = canvas::runtime::ProductControlState::kApplied;
+    return receipt;
+  }
+ private:
+  State& state_;
+};
+
+class WindowsArcDiagnostics final : public canvas::runtime::ArcDiagnostics {
+ public:
+  explicit WindowsArcDiagnostics(const State& state) : state_(state) {}
+  [[nodiscard]] canvas::runtime::ArcDiagnosticsSnapshot readArcDiagnostics() const noexcept override {
+    return {state_.host->previewPresentCount(),
+            static_cast<std::uint64_t>(state_.activeKeys.size()),
+            state_.host->hud().batch,
+            state_.host->hud().pendingHandoffCount,
+            state_.host->previewActive()};
+  }
+ private:
+  const State& state_;
+};
+
+class WindowsPlatformDiagnostics final : public canvas::runtime::PlatformDiagnostics {
+ public:
+  explicit WindowsPlatformDiagnostics(const State& state) : state_(state) {}
+  [[nodiscard]] canvas::runtime::PlatformDiagnosticsSnapshot readPlatformDiagnostics() const noexcept override {
+    const auto* canonical = state_.host->activeSurfaceProvider();
+    const auto* preview = state_.host->previewSurfaceProvider();
+    const auto& binding = state_.host->surface();
+    return {canonical != nullptr ? canonical->generation() : 0U,
+            preview != nullptr ? preview->generation() : 0U,
+            binding.width, binding.height, 1.0F,
+            state_.presentCount, state_.host->surfaceLostCount(), binding.available};
+  }
+ private:
+  const State& state_;
+};
+
+class WindowsTelemetry final : public canvas::runtime::Telemetry {
+ public:
+  explicit WindowsTelemetry(const State& state) : state_(state) {}
+  [[nodiscard]] canvas::runtime::TelemetrySnapshot readTelemetry() const noexcept override {
+    const auto& hud = state_.host->hud();
+    return {state_.pointerSampleSequence,
+            static_cast<std::uint64_t>(state_.host->hud().batch),
+            state_.host->previewPresentCount(),
+            state_.host->canonicalFrameCount(),
+            hud.inkMs};
+  }
+ private:
+  const State& state_;
+};
+
+class WindowsAxiomDebugControl final : public canvas::runtime::AxiomDebugControl {
+ public:
+  explicit WindowsAxiomDebugControl(State& state) : state_(state), queue_() {}
+  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt enqueue(
+      const canvas::runtime::AxiomDebugCommand& command) noexcept override {
+    return queue_.enqueue(command, 1U, state_.host->semanticGeneration().value(),
+                          state_.pointerSampleSequence);
+  }
+  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt receipt(
+      std::uint64_t requestId) const noexcept override {
+    const auto result = queue_.receipt(requestId);
+    return result.value_or(canvas::runtime::AxiomDebugCommandReceipt{
+        requestId, canvas::runtime::AxiomDebugCommandState::kRejected});
+  }
+  void process() noexcept {
+    const auto command = queue_.take(1U, state_.host->semanticGeneration().value(),
+                                     state_.pointerSampleSequence);
+    if (!command) return;
+    const bool supported = command->kind ==
+        canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw ||
+        command->kind == canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics;
+    if (supported) InvalidateRect(state_.window, nullptr, FALSE);
+    (void)queue_.complete(command->requestId,
+        supported ? canvas::runtime::AxiomDebugCommandState::kApplied
+                  : canvas::runtime::AxiomDebugCommandState::kUnsupported,
+        state_.presentCount, 1U, state_.host->semanticGeneration().value());
+  }
+ private:
+  State& state_;
+  canvas::runtime::BoundedAxiomDebugCommandQueue queue_;
+};
+
+class WindowsPlatformDebugControl final : public canvas::runtime::PlatformDebugControl {
+ public:
+  explicit WindowsPlatformDebugControl(State& state) : state_(state), queue_() {}
+  [[nodiscard]] canvas::runtime::SurfaceModeReceipt enqueueSurfaceMode(
+      const canvas::runtime::SurfaceModeRequest& request) noexcept override {
+    const auto generation = state_.host->activeSurfaceProvider() == nullptr
+        ? 0U : state_.host->activeSurfaceProvider()->generation();
+    return queue_.enqueue(request, generation, state_.pointerSampleSequence);
+  }
+  void processPendingSurfaceModes() noexcept override {
+    const auto generation = state_.host->activeSurfaceProvider() == nullptr
+        ? 0U : state_.host->activeSurfaceProvider()->generation();
+    const auto request = queue_.take(generation, state_.pointerSampleSequence);
+    if (!request) {
+      if (const auto latest = queue_.latestReceipt()) {
+        state_.lastSurfaceReceipt = *latest;
+        state_.hasSurfaceReceipt = true;
+      }
+      return;
+    }
+    const auto receipt = requestSurfaceMode(*request);
+    state_.canonicalSurfaceMode = receipt.state == canvas::runtime::SurfaceControlState::kApplied
+        ? request->mode : state_.canonicalSurfaceMode;
+    state_.lastSurfaceReceipt = queue_.complete(request->requestId, receipt.state, receipt.generation);
+    state_.hasSurfaceReceipt = true;
+  }
+  [[nodiscard]] canvas::runtime::SurfaceModeReceipt requestSurfaceMode(
+      const canvas::runtime::SurfaceModeRequest& request) noexcept override {
+    canvas::runtime::SurfaceModeReceipt receipt{};
+    receipt.requestId = request.requestId;
+    receipt.target = request.target;
+    receipt.mode = request.mode;
+    if (request.target != canvas::runtime::SurfaceRole::kCanonicalCanvas) {
+      receipt.state = canvas::runtime::SurfaceControlState::kUnsupported;
+      return receipt;
+    }
+    const auto currentGeneration = state_.host->activeSurfaceProvider() == nullptr
+        ? 0U : state_.host->activeSurfaceProvider()->generation();
+    receipt.generation = currentGeneration;
+    if (currentGeneration == 0U || request.expectedGeneration != currentGeneration) {
+      receipt.state = canvas::runtime::SurfaceControlState::kStaleGeneration;
+      return receipt;
+    }
+    const char* profile = request.mode == canvas::runtime::SurfaceMode::kCpuReference
+        ? "cpu-raster" : "windows-d3d12-canonical";
+    const auto format = request.mode == canvas::runtime::SurfaceMode::kCpuReference
+        ? canvas::render::RenderTargetFormat::kRgba8888
+        : canvas::render::RenderTargetFormat::kBgra8888;
+    if (!state_.host->selectCanonicalSurfaceProfile(profile, request.expectedGeneration, format)) {
+      receipt.state = canvas::runtime::SurfaceControlState::kUnavailable;
+      return receipt;
+    }
+    if (state_.host->activeSurfaceProvider() == nullptr) {
+      receipt.state = canvas::runtime::SurfaceControlState::kUnavailable;
+      return receipt;
+    }
+    receipt.state = canvas::runtime::SurfaceControlState::kApplied;
+    receipt.generation = state_.host->activeSurfaceProvider()->generation();
+    return receipt;
+  }
+ private:
+  State& state_;
+  canvas::runtime::BoundedSurfaceModeQueue queue_;
+};
 
 void hidePreviewPresentation(State& value) noexcept {
   value.previewPresentationEnabled = false;
@@ -336,9 +630,12 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     return false;
   }
   if (begin) {
+    if (!beginCanvasInput(value, kMousePointerId)) return false;
     ++value.stroke;
     enablePreviewPresentation(value);
     SetCapture(window);
+  } else if (!canvasOwnsInput(value, kMousePointerId)) {
+    return false;
   }
 
   const auto x = static_cast<float>(static_cast<short>(LOWORD(lParam)));
@@ -366,7 +663,10 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
         << " sequence=" << sample.sample_sequence
         << " timestamp=" << value.lastMouseTimestampNs << std::endl;
   }
-  if (!accepted) return false;
+  if (!accepted) {
+    if (begin) endCanvasInput(value, kMousePointerId);
+    return false;
+  }
   if (begin) {
     const auto key = value.host->platformKey(1U, kMousePointerId);
     if (!key) return false;
@@ -385,6 +685,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   if (end) {
     value.activeKeys.erase(kMousePointerId);
     value.pointerStrokes.erase(kMousePointerId);
+    endCanvasInput(value, kMousePointerId);
     if (GetCapture() == window) ReleaseCapture();
     // Complete the canonical-visible receipt on pointer-up. Waiting for a
     // later WM_PAINT leaves the first preview session active when the paint
@@ -435,6 +736,8 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
     if (!begin && !end && (touch.dwFlags & TOUCHEVENTF_MOVE) == 0U) continue;
     if (begin && value.activeKeys.contains(pointerId)) continue;
     if (!begin && !value.activeKeys.contains(pointerId)) continue;
+    if (begin && !beginCanvasInput(value, pointerId)) continue;
+    if (!begin && !canvasOwnsInput(value, pointerId)) continue;
     POINT point{static_cast<LONG>(touch.x / 100), static_cast<LONG>(touch.y / 100)};
     if (ScreenToClient(window, &point) == FALSE) continue;
     const auto sequence = ++value.pointerSampleSequence;
@@ -456,7 +759,10 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
           << " x=" << point.x << " y=" << point.y << " sequence=" << sequence
           << " accepted=" << accepted << std::endl;
     }
-    if (!accepted) continue;
+    if (!accepted) {
+      if (begin) endCanvasInput(value, pointerId);
+      continue;
+    }
     acceptedAny = true;
     if (begin) {
       const auto key = value.host->platformKey(1U, pointerId);
@@ -468,6 +774,8 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
     if (end) {
       value.activeKeys.erase(pointerId);
       value.pointerStrokes.erase(pointerId);
+      endCanvasInput(value, pointerId);
+      endCanvasInput(value, pointerId);
       if (value.activeKeys.empty() && GetCapture() == window) ReleaseCapture();
     }
     value.previewDirty = true;
@@ -496,6 +804,7 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
                          0.0F, 0.0F});
   value.activeKeys.erase(pointerId);
   value.pointerStrokes.erase(pointerId);
+  endCanvasInput(value, pointerId);
   persistEvidence(value);
 }
 
@@ -508,6 +817,7 @@ void cancelAllPointers(State& value, std::uint64_t timestampMs) {
   value.host->cancelAllPointers();
   value.activeKeys.clear();
   value.pointerStrokes.clear();
+  clearCanvasInput(value);
   if (GetCapture() == value.window) ReleaseCapture();
   persistEvidence(value);
 }
@@ -591,9 +901,15 @@ void persistEvidence(const State& value) {
 void paint(HWND window, State& value) {
   if (value.debugUi != nullptr) {
     canvas::debug_ui::DebugSnapshot snapshot{};
-    snapshot.stamp = {value.previewGeneration, value.pointerSampleSequence};
+    snapshot.stamp.sequence = value.pointerSampleSequence;
+    snapshot.stamp.snapshotSequence = value.pointerSampleSequence;
+    snapshot.stamp.monotonicTimeNs = static_cast<std::uint64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count());
+    snapshot.stamp.frameId = value.presentCount;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-    snapshot.canonicalSurfaceGeneration = value.canonicalProvider != nullptr ? value.canonicalProvider->generation() : 0;
+    snapshot.canonicalSurfaceGeneration = value.host->activeSurfaceProvider() != nullptr
+        ? value.host->activeSurfaceProvider()->generation() : 0;
     snapshot.previewSurfaceGeneration = value.previewProvider != nullptr ? value.previewProvider->generation() : 0;
 #else
     snapshot.canonicalSurfaceGeneration = 0;
@@ -602,11 +918,74 @@ void paint(HWND window, State& value) {
     snapshot.canonicalRevision = value.host->submittedOperationCount();
     snapshot.previewRevision = value.host->previewPresentCount();
     snapshot.activePointerCount = static_cast<std::uint32_t>(value.activeKeys.size());
+    snapshot.selectedTool = static_cast<std::uint32_t>(value.selectedTool);
+    snapshot.stamp.runtimeGeneration = 1U;
+    snapshot.stamp.documentGeneration = value.host->semanticGeneration().value();
+    snapshot.stamp.viewGeneration = 1U;
+    snapshot.stamp.surfaceGeneration = snapshot.canonicalSurfaceGeneration;
+    snapshot.stamp.generation = snapshot.stamp.surfaceGeneration;
+    if (value.runtimeFacade != nullptr) {
+      const auto runtimeState = value.runtimeFacade->readRuntimeState();
+      snapshot.stamp.runtimeGeneration = runtimeState.runtimeGeneration;
+      snapshot.stamp.documentGeneration = runtimeState.documentGeneration;
+      snapshot.stamp.viewGeneration = runtimeState.viewGeneration;
+      snapshot.selectedTool = runtimeState.toolId != 0U
+          ? runtimeState.toolId : snapshot.selectedTool;
+    }
+    snapshot.canonicalSurfaceMode = value.canonicalSurfaceMode;
+    if (value.hasSurfaceReceipt) {
+      snapshot.surfaceControlRequestId = value.lastSurfaceReceipt.requestId;
+      snapshot.surfaceControlState = value.lastSurfaceReceipt.state;
+      snapshot.surfaceControlGeneration = value.lastSurfaceReceipt.generation;
+    }
     snapshot.arcPresenterActive = value.host->previewActive();
     snapshot.traceEnabled = false;
-    snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kAvailable);
+    snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInput)] =
+        canvas::debug_ui::CapabilityState::kAvailable;
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kCanonicalSurface)] =
+        value.host->surface().available ? canvas::debug_ui::CapabilityState::kAvailable
+                                        : canvas::debug_ui::CapabilityState::kDegraded;
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kArcPreviewSurface)] =
+        value.previewProvider != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                         : canvas::debug_ui::CapabilityState::kUnavailable;
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kSurfaceMode)] =
+        value.platformDebugControl != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                               : canvas::debug_ui::CapabilityState::kUnavailable;
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTelemetry)] =
+        value.telemetry != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                   : canvas::debug_ui::CapabilityState::kUnavailable;
     snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInspection)] = canvas::debug_ui::CapabilityState::kUnavailable;
-    value.debugUi->frame(snapshot);
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTrace)] = canvas::debug_ui::CapabilityState::kUnavailable;
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kGpuTiming)] = canvas::debug_ui::CapabilityState::kUnavailable;
+    snapshot.inputBatchCount = value.host->hud().batch;
+    snapshot.handoffCount = value.host->hud().pendingHandoffCount;
+    snapshot.presentCount = value.presentCount;
+    snapshot.surfaceLostCount = value.host->surfaceLostCount();
+    snapshot.sampleHz = value.host->hud().sampleHz;
+    snapshot.frameMs = value.host->hud().frameMs;
+    snapshot.queueAgeMs = value.host->hud().queueAgeMs;
+    snapshot.surfaceAvailable = value.host->surface().available;
+    if (value.arcDiagnostics != nullptr) {
+      const auto arc = value.arcDiagnostics->readArcDiagnostics();
+      snapshot.previewRevision = arc.previewRevision;
+      snapshot.activePointerCount = static_cast<std::uint32_t>(arc.activePointerCount);
+      snapshot.inputBatchCount = arc.inputBatchCount;
+      snapshot.handoffCount = arc.handoffCount;
+      snapshot.arcPresenterActive = arc.previewActive;
+    }
+    if (value.platformDiagnostics != nullptr) {
+      const auto platform = value.platformDiagnostics->readPlatformDiagnostics();
+      snapshot.canonicalSurfaceGeneration = platform.canonicalSurfaceGeneration;
+      snapshot.previewSurfaceGeneration = platform.previewSurfaceGeneration;
+      snapshot.stamp.surfaceGeneration = platform.canonicalSurfaceGeneration;
+      snapshot.stamp.generation = platform.canonicalSurfaceGeneration;
+      snapshot.surfaceAvailable = platform.surfaceAvailable;
+      snapshot.presentCount = platform.presentCount;
+      snapshot.surfaceLostCount = platform.lostCount;
+    }
+    value.debugSnapshots.publish(snapshot);
+    value.debugUi->frame(value.debugSnapshots.read());
   }
   PAINTSTRUCT ps{};
   HDC dc = BeginPaint(window, &ps);
@@ -690,6 +1069,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) {
+    if (value->axiomDebugControl != nullptr) value->axiomDebugControl->process();
+    if (value->platformDebugControl != nullptr) {
+      value->platformDebugControl->processPendingSurfaceModes();
+    }
     const bool f12Down = (GetAsyncKeyState(VK_F12) & 0x8000) != 0;
     if (f12Down && !value->debugF12Down && value->debugUi != nullptr) {
       value->debugUi->toggle();
@@ -874,7 +1257,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     } else if (!value->activeKeys.contains(pointerId)) {
       return 0;
     }
+    if (!begin && !canvasOwnsInput(*value, pointerId)) return 0;
     if (begin) {
+      if (!beginCanvasInput(*value, pointerId)) return 0;
       ++value->stroke;
       // A previous pointer-up retires the transient presentation. Re-enable
       // it for every new native pointer session, just like the mouse path.
@@ -983,7 +1368,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
           << " timestamp=" << common.samples.front().timestampNs
           << " accepted=" << accepted << std::endl;
     }
-    if (!accepted) return 0;
+    if (!accepted) {
+      if (begin) endCanvasInput(*value, pointerId);
+      return 0;
+    }
     if (begin) {
       const auto key = value->host->platformKey(value->deviceId, pointerId);
       if (diagnose) {
@@ -1040,6 +1428,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (end) {
       value->activeKeys.erase(pointerId);
       value->pointerStrokes.erase(pointerId);
+      endCanvasInput(*value, pointerId);
       if (value->activeKeys.empty()) {
         if (GetCapture() == window) ReleaseCapture();
         if (!value->host->presentCanonicalFrame(
@@ -1085,6 +1474,11 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
             << GET_POINTERID_WPARAM(wParam) << " active="
             << value->activeKeys.size() << std::endl;
       }
+      // Capture loss is terminal for a Debug-owned sequence, but a native
+      // Canvas pointer remains governed by its existing Runtime cancel path.
+      // Clear only the shared ownership records here; the normal platform
+      // cancel handler below still retires active Canvas sessions.
+      if (value->activeKeys.empty()) clearCanvasInput(*value);
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
@@ -1098,6 +1492,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
     }
+    if (value != nullptr) clearCanvasInput(*value);
     if (message == WM_DESTROY) {
       PostQuitMessage(0);
       return 0;
@@ -1179,9 +1574,20 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (value.window == nullptr) return 1;
   value.debugUi = std::make_unique<canvas::debug_ui::WindowsDebugUiHost>();
   if (!value.debugUi->initialize(value.window)) return 1;
-  value.debugUi->setToolSelector([&value](int command) {
-    return selectWindowsTool(value, command);
-  });
+  value.debugUi->setInputCaptureGate(&value.inputCapture);
+  value.runtimeFacade = std::make_unique<WindowsRuntimeFacade>(value);
+  value.axiomDebugControl = std::make_unique<WindowsAxiomDebugControl>(value);
+  value.platformDebugControl = std::make_unique<WindowsPlatformDebugControl>(value);
+  value.arcDiagnostics = std::make_unique<WindowsArcDiagnostics>(value);
+  value.platformDiagnostics = std::make_unique<WindowsPlatformDiagnostics>(value);
+  value.telemetry = std::make_unique<WindowsTelemetry>(value);
+  value.debugUi->setRuntimeFacade(value.runtimeFacade.get());
+  value.debugUi->setDiagnostics(value.runtimeFacade.get());
+  value.debugUi->setAxiomDebugControl(value.axiomDebugControl.get());
+  value.debugUi->setPlatformDebugControl(value.platformDebugControl.get());
+  value.debugUi->setArcDiagnostics(value.arcDiagnostics.get());
+  value.debugUi->setPlatformDiagnostics(value.platformDiagnostics.get());
+  value.debugUi->setTelemetry(value.telemetry.get());
   const BOOL touchRegistered = RegisterTouchWindow(value.window, TWF_WANTPALM);
   const BOOL pointerTouchRegistered = RegisterPointerInputTarget(value.window, PT_TOUCH);
   const BOOL pointerPenRegistered = RegisterPointerInputTarget(value.window, PT_PEN);

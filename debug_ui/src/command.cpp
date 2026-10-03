@@ -25,11 +25,11 @@ std::optional<DebugCommand> BoundedCommandQueue::take(std::uint64_t currentSeque
     std::lock_guard lock(mutex_);
     for (auto it = pending_.begin(); it != pending_.end();) {
         if (it->generation != currentGeneration) {
-            terminalLocked(it->id, ReceiptState::kDestroyed);
+            terminalLocked(it->id, ReceiptState::kStaleGeneration);
             it = pending_.erase(it);
             continue;
         }
-        if (it->deadlineSequence < currentSequence) {
+        if (it->deadlineSequence != 0 && it->deadlineSequence < currentSequence) {
             terminalLocked(it->id, ReceiptState::kExpired);
             it = pending_.erase(it);
             continue;

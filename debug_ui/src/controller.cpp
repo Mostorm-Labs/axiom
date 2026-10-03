@@ -30,7 +30,9 @@ std::optional<CommandReceipt> DebugController::submit(DebugCommand command) {
 }
 
 void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
-                      const std::function<bool(int)>& selectTool) {
+                      canvas::runtime::RuntimeFacade* runtime,
+                      canvas::runtime::AxiomDebugControl* axiomDebug,
+                      canvas::runtime::PlatformDebugControl* platform) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(410.0f, 560.0f), ImGuiCond_Always);
     constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar |
@@ -69,11 +71,79 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         {"Vector", 4101}, {"Marker", 4102}, {"Chalk", 4103},
         {"Membrane", 4104}, {"Object Eraser", 4105}, {"Partial Eraser", 4106},
     }};
+    static std::uint64_t nextRequestId = 1;
     for (const auto& tool : tools) {
         const bool selected = selectedTool == tool.second;
-        if (ImGui::Selectable(tool.first, selected) && selectTool) {
-            (void)selectTool(tool.second);
+        if (ImGui::Selectable(tool.first, selected) && runtime != nullptr) {
+            canvas::runtime::ProductControlRequest request{};
+            request.action = tool.second >= 4105
+                ? canvas::runtime::ProductControlAction::kSetEraser
+                : canvas::runtime::ProductControlAction::kSetBrush;
+            request.requestId = nextRequestId++;
+            request.runtimeGeneration = snapshot.stamp.runtimeGeneration;
+            request.deadlineSequence = snapshot.stamp.sequence + 120U;
+            request.toolId = static_cast<std::uint32_t>(tool.second);
+            request.brushId = static_cast<std::uint32_t>(tool.second - 4100);
+            request.eraserId = static_cast<std::uint32_t>(tool.second - 4104);
+            (void)runtime->submitProductControl(request);
         }
+    }
+    ImGui::Separator();
+    ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f), "Canonical surface mode");
+    const auto requestSurface = [&](canvas::runtime::SurfaceMode mode) {
+        if (platform == nullptr) return;
+        canvas::runtime::SurfaceModeRequest request{};
+        request.requestId = nextRequestId++;
+        request.target = canvas::runtime::SurfaceRole::kCanonicalCanvas;
+        request.mode = mode;
+        request.expectedGeneration = snapshot.stamp.surfaceGeneration;
+        request.deadlineSequence = snapshot.stamp.sequence + 120U;
+        (void)platform->enqueueSurfaceMode(request);
+    };
+    if (ImGui::Button("Platform default")) requestSurface(canvas::runtime::SurfaceMode::kPlatformDefault);
+    ImGui::SameLine();
+    if (ImGui::Button("CPU reference")) requestSurface(canvas::runtime::SurfaceMode::kCpuReference);
+    ImGui::SameLine();
+    if (ImGui::Button("GPU default")) requestSurface(canvas::runtime::SurfaceMode::kGpuDefault);
+    const char* mode = snapshot.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kCpuReference
+        ? "CPU reference" : (snapshot.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kGpuDefault
+        ? "GPU default" : "Platform default");
+    ImGui::Text("resolved: %s / canonical generation %llu", mode,
+                static_cast<unsigned long long>(snapshot.stamp.surfaceGeneration));
+    if (snapshot.surfaceControlRequestId != 0U) {
+        const char* receipt = "failed";
+        switch (snapshot.surfaceControlState) {
+        case canvas::runtime::SurfaceControlState::kQueued: receipt = "queued"; break;
+        case canvas::runtime::SurfaceControlState::kApplied: receipt = "applied"; break;
+        case canvas::runtime::SurfaceControlState::kUnsupported: receipt = "unsupported"; break;
+        case canvas::runtime::SurfaceControlState::kStaleGeneration: receipt = "stale-generation"; break;
+        case canvas::runtime::SurfaceControlState::kQueueFull: receipt = "queue-full"; break;
+        case canvas::runtime::SurfaceControlState::kExpired: receipt = "expired"; break;
+        case canvas::runtime::SurfaceControlState::kUnavailable: receipt = "unavailable"; break;
+        case canvas::runtime::SurfaceControlState::kFailed: receipt = "failed"; break;
+        }
+        ImGui::Text("surface request %llu: %s / generation %llu",
+                    static_cast<unsigned long long>(snapshot.surfaceControlRequestId), receipt,
+                    static_cast<unsigned long long>(snapshot.surfaceControlGeneration));
+    }
+    ImGui::Separator();
+    ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f), "Runtime debug controls");
+    const auto enqueueDebug = [&](canvas::runtime::AxiomDebugCommandKind kind) {
+        if (axiomDebug == nullptr) return;
+        canvas::runtime::AxiomDebugCommand command{};
+        command.requestId = nextRequestId++;
+        command.kind = kind;
+        command.expectedRuntimeGeneration = snapshot.stamp.runtimeGeneration;
+        command.expectedDocumentGeneration = snapshot.stamp.documentGeneration;
+        command.deadlineSequence = snapshot.stamp.sequence + 120U;
+        (void)axiomDebug->enqueue(command);
+    };
+    if (ImGui::Button("Force full redraw")) {
+        enqueueDebug(canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Reset rolling metrics")) {
+        enqueueDebug(canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics);
     }
     ImGui::Separator();
     ImGui::Text("gen %llu  seq %llu  pointers %u",
@@ -83,6 +153,16 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
     ImGui::Text("canonical %llu  preview %llu",
                 static_cast<unsigned long long>(snapshot.canonicalRevision),
                 static_cast<unsigned long long>(snapshot.previewRevision));
+    ImGui::Text("input batches %llu  handoffs %llu",
+                static_cast<unsigned long long>(snapshot.inputBatchCount),
+                static_cast<unsigned long long>(snapshot.handoffCount));
+    ImGui::Text("present %llu  lost %llu  frame %.2f ms",
+                static_cast<unsigned long long>(snapshot.presentCount),
+                static_cast<unsigned long long>(snapshot.surfaceLostCount),
+                snapshot.frameMs);
+    ImGui::Text("surface: %s  sample %.1f Hz  queue %.2f ms",
+                snapshot.surfaceAvailable ? "available" : "unavailable",
+                snapshot.sampleHz, snapshot.queueAgeMs);
     ImGui::Text("Arc presenter: %s", snapshot.arcPresenterActive ? "active" : "idle");
     ImGui::End();
 }

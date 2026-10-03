@@ -47,6 +47,9 @@ bool isInputMessage(UINT message) noexcept {
     case WM_SYSKEYUP:
     case WM_CHAR:
     case WM_SYSCHAR:
+    case WM_CANCELMODE:
+    case WM_CAPTURECHANGED:
+    case WM_KILLFOCUS:
       return true;
     default:
       return false;
@@ -106,6 +109,7 @@ bool WindowsDebugUiHost::initialize(HWND w) {
 }
 
 void WindowsDebugUiHost::shutdown() noexcept {
+  releaseInputCapture();
   if (context_) {
     ImGui::SetCurrentContext(context_);
     ImGui_ImplWin32_Shutdown();
@@ -157,6 +161,16 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
                                        LPARAM lParam) {
   if (!visible_ || !context_ || source != overlay_) return false;
   if (!isInputMessage(message)) return false;
+  const bool down = message == WM_LBUTTONDOWN || message == WM_RBUTTONDOWN ||
+                    message == WM_MBUTTONDOWN || message == WM_XBUTTONDOWN;
+  const bool up = message == WM_LBUTTONUP || message == WM_RBUTTONUP ||
+                  message == WM_MBUTTONUP || message == WM_XBUTTONUP;
+  const bool cancel = message == WM_CANCELMODE || message == WM_CAPTURECHANGED ||
+                      message == WM_KILLFOCUS;
+  if (down) {
+    activeInputSequence_ = DebugInputSequence{0U, ++inputSequence_};
+    (void)inputCapture_->begin(*activeInputSequence_, DebugInputOwner::kDebug);
+  }
   ImGui::SetCurrentContext(context_);
   const LRESULT handled = ImGui_ImplWin32_WndProcHandler(source, message, wParam, lParam);
   // Win32 backend events are queued until the next NewFrame. Consume the
@@ -169,9 +183,19 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
   InvalidateRect(overlay_, nullptr, FALSE);
   const ImGuiIO& io = ImGui::GetIO();
   if (handled != 0 || io.WantCaptureMouse || io.WantCaptureKeyboard) {
+    if (up || cancel) releaseInputCapture();
     return true;
   }
+  if (down) releaseInputCapture();
+  if (up || cancel) releaseInputCapture();
   return false;
+}
+
+void WindowsDebugUiHost::releaseInputCapture() noexcept {
+  if (activeInputSequence_.has_value()) {
+    (void)inputCapture_->terminal(*activeInputSequence_);
+    activeInputSequence_.reset();
+  }
 }
 
 void WindowsDebugUiHost::syncOverlay() noexcept {
@@ -220,11 +244,7 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   impl_->lastFrame = now;
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
-  buildImGuiPanels(snapshot_, selectedTool_, [this](int command) {
-    if (!toolSelector_ || !toolSelector_(command)) return false;
-    selectedTool_ = command;
-    return true;
-  });
+  buildImGuiPanels(snapshot_, selectedTool_, runtime_, axiomDebug_, platform_);
   ImGui::Render();
   ImGuiSkiaRenderer renderer;
   (void)renderer.render(ImGui::GetDrawData(), impl_->surface.get(), impl_->fontTexture.get());
@@ -233,6 +253,7 @@ void WindowsDebugUiHost::renderFrame() noexcept {
 
 void WindowsDebugUiHost::frame(const DebugSnapshot& s) {
   snapshot_ = s;
+  if (snapshot_.selectedTool != 0U) selectedTool_ = static_cast<int>(snapshot_.selectedTool);
   if (!initialized_) return;
   syncOverlay();
   if (visible_) { renderFrame(); raise(); InvalidateRect(overlay_, nullptr, FALSE); }

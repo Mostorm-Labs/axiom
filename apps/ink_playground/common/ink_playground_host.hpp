@@ -210,6 +210,11 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool rebindPreviewSurface() noexcept;
   [[nodiscard]] bool registerSurfaceProvider(std::string profileId,
                                               std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
+  [[nodiscard]] bool selectCanonicalSurfaceProfile(std::string_view profileId,
+                                                    std::uint64_t expectedGeneration,
+                                                    render::RenderTargetFormat format =
+                                                        render::RenderTargetFormat::kBgra8888) noexcept;
+  [[nodiscard]] bool rebindCanonicalSurface(std::uint64_t expectedGeneration) noexcept;
   [[nodiscard]] bool registerPreviewSurfaceProvider(std::string profileId,
                                                     std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
   [[nodiscard]] render::SkiaSurfaceProvider* activeSurfaceProvider() noexcept;
