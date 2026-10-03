@@ -159,13 +159,16 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
   if (!isInputMessage(message)) return false;
   ImGui::SetCurrentContext(context_);
   const LRESULT handled = ImGui_ImplWin32_WndProcHandler(source, message, wParam, lParam);
+  // Win32 backend events are queued until the next NewFrame. Consume the
+  // queue before reading capture state; otherwise WantCaptureMouse describes
+  // the previous frame and hover/click handling becomes intermittent.
+  if (impl_ != nullptr && !impl_->rendering) renderFrame();
+  // Hover is useful even when ImGui does not request capture. Always repaint
+  // the overlay after consuming an input event, then decide ownership from
+  // the capture state produced by the new frame.
+  InvalidateRect(overlay_, nullptr, FALSE);
   const ImGuiIO& io = ImGui::GetIO();
   if (handled != 0 || io.WantCaptureMouse || io.WantCaptureKeyboard) {
-    // Win32 backend events are queued until the next NewFrame. Rebuild the
-    // common panel immediately so a click is reflected before the next host
-    // paint, matching Skia Viewer’s onPrePaint/onPaint lifecycle.
-    if (impl_ != nullptr && !impl_->rendering) renderFrame();
-    InvalidateRect(overlay_, nullptr, FALSE);
     return true;
   }
   return false;

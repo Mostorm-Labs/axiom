@@ -58,6 +58,17 @@ def test_overlay_does_not_reenter_imgui_render_from_paint_messages():
     assert "bool rendering" in source
 
 
+def test_overlay_rebuilds_frame_before_using_capture_state():
+    source = HOST.read_text(encoding="utf-8")
+    handler = source.split("bool WindowsDebugUiHost::handleMessage", 1)[1].split(
+        "void WindowsDebugUiHost::syncOverlay", 1
+    )[0]
+    render_pos = handler.index("renderFrame();")
+    capture_pos = handler.index("const ImGuiIO& io")
+    assert render_pos < capture_pos
+    assert handler.count("InvalidateRect(overlay_, nullptr, FALSE);") == 1
+
+
 def test_skia_imgui_renderer_uses_white_font_paint_with_a8_atlas():
     renderer = RENDERER_IMPL.read_text(encoding="utf-8")
     assert "paint.setColor(SK_ColorWHITE)" in renderer
