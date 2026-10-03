@@ -21,6 +21,37 @@ namespace {
 constexpr wchar_t kDebugUiClass[] = L"AxiomDebugUiPanel";
 constexpr int kPanelWidth = 410;
 constexpr int kPanelHeight = 560;
+
+bool isInputMessage(UINT message) noexcept {
+  switch (message) {
+    case WM_MOUSEMOVE:
+    case WM_NCMOUSEMOVE:
+    case WM_MOUSELEAVE:
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_LBUTTONDBLCLK:
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
+    case WM_RBUTTONDBLCLK:
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONUP:
+    case WM_MBUTTONDBLCLK:
+    case WM_XBUTTONDOWN:
+    case WM_XBUTTONUP:
+    case WM_XBUTTONDBLCLK:
+    case WM_MOUSEWHEEL:
+    case WM_MOUSEHWHEEL:
+    case WM_KEYDOWN:
+    case WM_KEYUP:
+    case WM_SYSKEYDOWN:
+    case WM_SYSKEYUP:
+    case WM_CHAR:
+    case WM_SYSCHAR:
+      return true;
+    default:
+      return false;
+  }
+}
 }
 
 struct WindowsDebugUiHost::Impl final {
@@ -30,6 +61,7 @@ struct WindowsDebugUiHost::Impl final {
   int width = 0;
   int height = 0;
   std::chrono::steady_clock::time_point lastFrame{};
+  bool rendering = false;
 };
 
 WindowsDebugUiHost::WindowsDebugUiHost() = default;
@@ -124,6 +156,7 @@ void WindowsDebugUiHost::toggle() noexcept {
 bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
                                        LPARAM lParam) {
   if (!visible_ || !context_ || source != overlay_) return false;
+  if (!isInputMessage(message)) return false;
   ImGui::SetCurrentContext(context_);
   const LRESULT handled = ImGui_ImplWin32_WndProcHandler(source, message, wParam, lParam);
   const ImGuiIO& io = ImGui::GetIO();
@@ -131,7 +164,7 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
     // Win32 backend events are queued until the next NewFrame. Rebuild the
     // common panel immediately so a click is reflected before the next host
     // paint, matching Skia Viewer’s onPrePaint/onPaint lifecycle.
-    renderFrame();
+    if (impl_ != nullptr && !impl_->rendering) renderFrame();
     InvalidateRect(overlay_, nullptr, FALSE);
     return true;
   }
@@ -165,10 +198,14 @@ void WindowsDebugUiHost::raise() noexcept {
 }
 
 void WindowsDebugUiHost::renderFrame() noexcept {
-  if (!visible_ || !context_ || !ensureSurface()) return;
+  if (!visible_ || !context_ || !ensureSurface() || impl_ == nullptr || impl_->rendering) return;
+  impl_->rendering = true;
   ImGui::SetCurrentContext(context_);
   RECT client{};
-  if (!GetClientRect(overlay_, &client)) return;
+  if (!GetClientRect(overlay_, &client)) {
+    impl_->rendering = false;
+    return;
+  }
   ImGuiIO& io = ImGui::GetIO();
   io.DisplaySize = ImVec2(static_cast<float>(client.right - client.left),
                           static_cast<float>(client.bottom - client.top));
@@ -188,6 +225,7 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   ImGui::Render();
   ImGuiSkiaRenderer renderer;
   (void)renderer.render(ImGui::GetDrawData(), impl_->surface.get(), impl_->fontTexture.get());
+  impl_->rendering = false;
 }
 
 void WindowsDebugUiHost::frame(const DebugSnapshot& s) {

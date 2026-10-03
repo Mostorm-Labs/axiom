@@ -50,6 +50,14 @@ def test_overlay_input_rebuilds_common_imgui_frame_before_blit():
     assert "renderFrame();" in handler
 
 
+def test_overlay_does_not_reenter_imgui_render_from_paint_messages():
+    source = HOST.read_text(encoding="utf-8")
+    assert "message == WM_PAINT" in source
+    assert "case WM_MOUSEMOVE" in source
+    assert "if (!isInputMessage(message)) return false;" in source
+    assert "bool rendering" in source
+
+
 def test_skia_imgui_renderer_uses_white_font_paint_with_a8_atlas():
     renderer = RENDERER_IMPL.read_text(encoding="utf-8")
     assert "paint.setColor(SK_ColorWHITE)" in renderer
