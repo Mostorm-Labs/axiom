@@ -6,6 +6,7 @@
 #include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
 #include "include/core/SkPixmap.h"
+#include "include/core/SkMatrix.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkVertices.h"
 #include "include/effects/SkImageFilters.h"
@@ -133,22 +134,27 @@ bool ImGuiSkiaRenderer::render(ImDrawData* drawData, SkSurface* surface,
                     const ImDrawIdx index = list->IdxBuffer[cursor + i];
                     const ImDrawVert& vertex = list->VtxBuffer[command.VtxOffset + index];
                     positions[i] = SkPoint::Make(vertex.pos.x, vertex.pos.y);
-                    texCoords[i] = SkPoint::Make(vertex.uv.x * fontTexture->width(),
-                                                 vertex.uv.y * fontTexture->height());
+                    // Skia Viewer keeps ImGui UVs normalized and maps them into
+                    // the A8 atlas through the shader's local matrix.
+                    texCoords[i] = SkPoint::Make(vertex.uv.x, vertex.uv.y);
                     colors[i] = toSkColor(vertex.col);
                     indices[i] = static_cast<std::uint16_t>(i);
                 }
                 SkPaint paint;
                 paint.setAntiAlias(false);
-                paint.setShader(fontTexture->makeShader(SkTileMode::kClamp,
-                                                         SkTileMode::kClamp,
-                                                         SkSamplingOptions()));
+                paint.setColor(SK_ColorWHITE);
+                const SkMatrix atlasMatrix = SkMatrix::Scale(
+                    1.0f / static_cast<float>(fontTexture->width()),
+                    1.0f / static_cast<float>(fontTexture->height()));
+                paint.setShader(fontTexture->makeShader(
+                    SkTileMode::kClamp, SkTileMode::kClamp,
+                    SkSamplingOptions(SkFilterMode::kLinear), atlasMatrix));
                 auto vertices = SkVertices::MakeCopy(SkVertices::kTriangles_VertexMode,
                                                       static_cast<int>(vertexCount),
                                                       positions.data(), texCoords.data(),
                                                       colors.data(), static_cast<int>(vertexCount),
                                                       indices.data());
-                if (vertices) canvas->drawVertices(vertices, SkBlendMode::kSrcOver, paint);
+                if (vertices) canvas->drawVertices(vertices, SkBlendMode::kModulate, paint);
                 cursor += triangles * 3U;
             }
             canvas->restore();

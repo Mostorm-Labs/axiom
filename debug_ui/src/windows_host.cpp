@@ -6,10 +6,12 @@
 #include "backends/imgui_impl_win32.h"
 #include "include/core/SkColorType.h"
 #include "include/core/SkImageInfo.h"
+#include "include/core/SkPixmap.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
 
 #include <algorithm>
+#include <chrono>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg,
                                                               WPARAM wParam, LPARAM lParam);
@@ -27,6 +29,7 @@ struct WindowsDebugUiHost::Impl final {
   sk_sp<SkImage> fontTexture;
   int width = 0;
   int height = 0;
+  std::chrono::steady_clock::time_point lastFrame{};
 };
 
 WindowsDebugUiHost::WindowsDebugUiHost() = default;
@@ -95,12 +98,10 @@ bool WindowsDebugUiHost::ensureSurface() noexcept {
   unsigned char* pixels = nullptr;
   int width = 0;
   int height = 0;
-  int bpp = 0;
-  ImGui::GetIO().Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &bpp);
-  if (!pixels || width <= 0 || height <= 0 || bpp != 4) return false;
-  const SkImageInfo fontInfo = SkImageInfo::Make(width, height,
-      kRGBA_8888_SkColorType, kPremul_SkAlphaType);
-  const SkPixmap fontPixmap(fontInfo, pixels, static_cast<size_t>(width * bpp));
+  ImGui::GetIO().Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
+  if (!pixels || width <= 0 || height <= 0) return false;
+  const SkImageInfo fontInfo = SkImageInfo::MakeA8(width, height);
+  const SkPixmap fontPixmap(fontInfo, pixels, fontInfo.minRowBytes());
   impl_->fontTexture = SkImages::RasterFromPixmapCopy(fontPixmap);
   const SkImageInfo surfaceInfo = SkImageInfo::Make(kPanelWidth, kPanelHeight,
       kBGRA_8888_SkColorType, kPremul_SkAlphaType);
@@ -127,6 +128,10 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
   const LRESULT handled = ImGui_ImplWin32_WndProcHandler(source, message, wParam, lParam);
   const ImGuiIO& io = ImGui::GetIO();
   if (handled != 0 || io.WantCaptureMouse || io.WantCaptureKeyboard) {
+    // Win32 backend events are queued until the next NewFrame. Rebuild the
+    // common panel immediately so a click is reflected before the next host
+    // paint, matching Skia Viewer’s onPrePaint/onPaint lifecycle.
+    renderFrame();
     InvalidateRect(overlay_, nullptr, FALSE);
     return true;
   }
@@ -162,6 +167,17 @@ void WindowsDebugUiHost::raise() noexcept {
 void WindowsDebugUiHost::renderFrame() noexcept {
   if (!visible_ || !context_ || !ensureSurface()) return;
   ImGui::SetCurrentContext(context_);
+  RECT client{};
+  if (!GetClientRect(overlay_, &client)) return;
+  ImGuiIO& io = ImGui::GetIO();
+  io.DisplaySize = ImVec2(static_cast<float>(client.right - client.left),
+                          static_cast<float>(client.bottom - client.top));
+  const auto now = std::chrono::steady_clock::now();
+  const float elapsed = impl_->lastFrame.time_since_epoch().count() == 0
+      ? (1.0f / 60.0f)
+      : std::chrono::duration<float>(now - impl_->lastFrame).count();
+  io.DeltaTime = (std::max)(elapsed, 1.0f / 1000.0f);
+  impl_->lastFrame = now;
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
   buildImGuiPanels(snapshot_, selectedTool_, [this](int command) {
