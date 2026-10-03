@@ -8,8 +8,13 @@
 
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <optional>
 #include <string_view>
+
+struct ImDrawData;
+class SkImage;
+class SkSurface;
 
 namespace canvas::debug_ui {
 
@@ -41,6 +46,11 @@ class DebugController final {
     DebugUiContext context_;
 };
 
+// Common panel construction. Platform hosts provide only the product-safe
+// tool selection callback; all panel layout and ImGui interaction stays here.
+void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
+                      const std::function<bool(int)>& selectTool);
+
 class ImGuiSkiaRenderer final {
   public:
     [[nodiscard]] static constexpr std::string_view backendName() noexcept {
@@ -49,6 +59,10 @@ class ImGuiSkiaRenderer final {
     [[nodiscard]] std::uint64_t render(const DebugSnapshot& snapshot) noexcept {
         return snapshot.stamp.sequence;
     }
+#if defined(CANVAS_DEBUG_UI_HAS_SKIA)
+    [[nodiscard]] bool render(ImDrawData* drawData, SkSurface* surface,
+                               SkImage* fontTexture) noexcept;
+#endif
 };
 
 }  // namespace canvas::debug_ui

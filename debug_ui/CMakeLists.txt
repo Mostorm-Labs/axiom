@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.30)
-add_library(canvas_debug_ui STATIC src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp)
+add_library(canvas_debug_ui STATIC
+  src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_widgets.cpp)
+target_include_directories(canvas_debug_ui PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui)
 if(WIN32)
-  target_sources(canvas_debug_ui PRIVATE src/windows_host.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_widgets.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/backends/imgui_impl_win32.cpp)
+  target_sources(canvas_debug_ui PRIVATE src/windows_host.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/backends/imgui_impl_win32.cpp)
   target_include_directories(canvas_debug_ui PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui ${CMAKE_SOURCE_DIR}/.deps/imgui/backends)
   if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
     list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
@@ -11,7 +17,7 @@ if(WIN32)
   endif()
   if(TARGET CanvasSkia::Skia)
     target_link_libraries(canvas_debug_ui PRIVATE CanvasSkia::Skia msimg32)
-    target_compile_definitions(canvas_debug_ui PRIVATE CANVAS_DEBUG_UI_HAS_SKIA=1)
+    target_compile_definitions(canvas_debug_ui PUBLIC CANVAS_DEBUG_UI_HAS_SKIA=1)
   endif()
 endif()
 target_include_directories(canvas_debug_ui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

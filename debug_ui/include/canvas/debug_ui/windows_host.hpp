@@ -10,7 +10,7 @@ struct ImGuiContext;
 namespace canvas::debug_ui {
 class WindowsDebugUiHost final {
  public:
-  WindowsDebugUiHost() = default;
+  WindowsDebugUiHost();
   ~WindowsDebugUiHost();
   bool initialize(HWND window);
   void shutdown() noexcept;
@@ -30,10 +30,13 @@ class WindowsDebugUiHost final {
                                             WPARAM wParam, LPARAM lParam);
   void paintOverlay(HDC dc) const;
   void syncOverlay() noexcept;
-  void selectToolAt(int x, int y);
+  void renderFrame() noexcept;
+  [[nodiscard]] bool ensureSurface() noexcept;
   HWND window_ = nullptr;
   HWND overlay_ = nullptr;
   ImGuiContext* context_ = nullptr;
+  struct Impl;
+  std::unique_ptr<Impl> impl_;
   DebugSnapshot snapshot_{};
   bool initialized_ = false;
   bool visible_ = false;
@@ -43,7 +46,6 @@ class WindowsDebugUiHost final {
   int placementWidth_ = 0;
   int placementHeight_ = 0;
   bool placementShown_ = false;
-  std::vector<unsigned char> pixels_;
   std::function<bool(int)> toolSelector_;
   int selectedTool_ = 4101;
 };
