@@ -36,6 +36,11 @@ class WindowsD3D12SkiaSurfaceProvider final
   [[nodiscard]] std::uint64_t cpuCopyCount() const noexcept override { return 0; }
   [[nodiscard]] std::uint64_t presentCount() const noexcept override { return presents_; }
   void setOverlayVisible(bool) noexcept override;
+  // Temporarily remove the owner-attached composition content before a
+  // resize. The owner HWND's background remains visible while the new D3D12
+  // backbuffers are being created.
+  void suspendForResize() noexcept;
+  void reposition() noexcept;
   void setOverlayOffset(int x, int y) noexcept { overlayOffsetX_ = x; overlayOffsetY_ = y; }
   [[nodiscard]] bool overlayVisible() const noexcept override { return visible_; }
 
@@ -59,6 +64,8 @@ class WindowsD3D12SkiaSurfaceProvider final
 #if defined(_WIN32)
   [[nodiscard]] bool ensureOverlay() noexcept;
   [[nodiscard]] bool createGpuSurface() noexcept;
+  [[nodiscard]] bool resizeGpuSurfaceBuffers(std::uint32_t width,
+                                             std::uint32_t height) noexcept;
   void destroyGpuSurface() noexcept;
   void destroyOverlay() noexcept;
   void repositionOverlay() noexcept;

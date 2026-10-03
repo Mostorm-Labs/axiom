@@ -7,6 +7,7 @@
 #include "canvas/render/canonical_handoff.hpp"
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "windows_d3d12_skia_surface_provider.hpp"
+#include "canvas/debug_ui/windows_host.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
@@ -36,6 +37,9 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   static constexpr int kToolbarHeight = 56;
   static constexpr UINT kRenderTimerId = 0xA710;
   static constexpr UINT kRenderIntervalMs = 16;
+  static constexpr UINT kOverlaySyncMessage = WM_APP + 0x31;
+  static constexpr UINT kDeferredResizeMessage = WM_APP + 0x32;
+  static constexpr UINT kResizeDebounceTimerId = 0xA711;
   HWND toolbarLabel = nullptr;
   std::unordered_map<int, HWND> toolButtons;
   std::unique_ptr<arc::Bridge> previewBridge; std::uint64_t previewGeneration = 1;
@@ -68,13 +72,19 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   // slow canonical raster/readback cannot leave a stale preview on screen.
   bool previewPresentationEnabled = true;
   bool previewDirty = false;
+  bool debugF12Down = false;
   std::unique_ptr<WindowsArcRuntimeSinks> runtimeSinks;
+  bool canonicalFrameReady = false;
+  bool resizePosted = false;
+  bool resizeInProgress = false;
+  std::uint32_t pendingWidth = 0;
+  std::uint32_t pendingHeight = 0;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   std::unique_ptr<canvas::render::SkiaRenderer> canonicalRenderer;
   canvas::ink_playground::WindowsD3D12SkiaSurfaceProvider* canonicalProvider = nullptr;
   canvas::ink_playground::WindowsD3D12SkiaSurfaceProvider* previewProvider = nullptr;
-  bool canonicalFrameReady = false;
 #endif
+  std::unique_ptr<canvas::debug_ui::WindowsDebugUiHost> debugUi;
 };
 enum : int {
   kToolVector = 4101, kToolMarker, kToolChalk, kToolMembrane,
@@ -113,6 +123,7 @@ void hidePreviewPresentation(State& value) noexcept {
     value.previewProvider->setOverlayVisible(false);
   }
 #endif
+  if (value.debugUi != nullptr) value.debugUi->reposition();
 }
 
 void retireVisiblePreviewPresentation(State& value) noexcept {
@@ -122,6 +133,7 @@ void retireVisiblePreviewPresentation(State& value) noexcept {
 
 void enablePreviewPresentation(State& value) noexcept {
   value.previewPresentationEnabled = true;
+  if (value.debugUi != nullptr) value.debugUi->reposition();
 }
 
 void createWindowsToolPalette(State& value, HINSTANCE instance) {
@@ -280,13 +292,21 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
 
 bool renderCanonical(State& value) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  return value.canonicalRenderer != nullptr &&
-         // While a mouse/pointer is down, the canonical redraw is only a
-         // backing-surface update. The matching CanonicalVisible handoff must
-         // happen after release, otherwise WM_PAINT clears the live Arc
-         // preview before the user can see it.
-         value.host->presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0,
-                                           value.activeKeys.empty());
+  if (value.canonicalRenderer == nullptr || value.host == nullptr) return false;
+  // While a mouse/pointer is down, the canonical redraw is only a backing
+  // surface update. The matching CanonicalVisible handoff must happen after
+  // release, otherwise WM_PAINT clears the live Arc preview before the user
+  // can see it.
+  const auto accepted = value.host->presentCanonicalFrame(
+      value.host->canonicalFrameCount() + 1U, 0.0, value.activeKeys.empty());
+  if (value.pointerDiagnostic) {
+    value.pointerDiagnostic << "canonical-present accepted=" << accepted
+        << " provider-generation="
+        << (value.canonicalProvider == nullptr ? 0ULL : value.canonicalProvider->generation())
+        << " frames=" << value.host->canonicalFrameCount()
+        << " objects=" << value.host->submittedOperationCount() << std::endl;
+  }
+  return accepted;
 #else
   return false;
 #endif
@@ -569,14 +589,37 @@ void persistEvidence(const State& value) {
 }
 
 void paint(HWND window, State& value) {
+  if (value.debugUi != nullptr) {
+    canvas::debug_ui::DebugSnapshot snapshot{};
+    snapshot.stamp = {value.previewGeneration, value.pointerSampleSequence};
+#if defined(CANVAS_RENDER_HAS_SKIA)
+    snapshot.canonicalSurfaceGeneration = value.canonicalProvider != nullptr ? value.canonicalProvider->generation() : 0;
+    snapshot.previewSurfaceGeneration = value.previewProvider != nullptr ? value.previewProvider->generation() : 0;
+#else
+    snapshot.canonicalSurfaceGeneration = 0;
+    snapshot.previewSurfaceGeneration = 0;
+#endif
+    snapshot.canonicalRevision = value.host->submittedOperationCount();
+    snapshot.previewRevision = value.host->previewPresentCount();
+    snapshot.activePointerCount = static_cast<std::uint32_t>(value.activeKeys.size());
+    snapshot.arcPresenterActive = value.host->previewActive();
+    snapshot.traceEnabled = false;
+    snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kAvailable);
+    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInspection)] = canvas::debug_ui::CapabilityState::kUnavailable;
+    value.debugUi->frame(snapshot);
+  }
   PAINTSTRUCT ps{};
   HDC dc = BeginPaint(window, &ps);
   RECT rect{};
   GetClientRect(window, &rect);
   FillRect(dc, &rect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
-  if (value.activeKeys.empty() && !value.canonicalFrameReady) {
-    (void)renderCanonical(value);
-    value.canonicalFrameReady = true;
+  if (!value.resizeInProgress && value.activeKeys.empty() &&
+      !value.canonicalFrameReady) {
+    // A resize can invalidate the D3D12 surface before the deferred resize
+    // message has rebuilt it.  Only mark the canonical frame ready after the
+    // provider has actually accepted and presented the frame; otherwise one
+    // transient resize failure permanently suppresses all later redraws.
+    value.canonicalFrameReady = renderCanonical(value);
   }
   SetBkMode(dc, TRANSPARENT);
   const auto& hud = value.host->hud();
@@ -600,6 +643,7 @@ void paint(HWND window, State& value) {
   const auto text = status.str();
   SetTextColor(dc, RGB(30, 30, 30));
   TextOutW(dc, 16, 34, text.c_str(), static_cast<int>(text.size()));
+  if (value.debugUi != nullptr) value.debugUi->paint(dc);
   EndPaint(window, &ps);
 }
 
@@ -616,6 +660,11 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
        message == WM_POINTERCAPTURECHANGED || message == WM_TOUCH)) {
     canvas::ink_playground::windows_input::logInputMessage(value->pointerDiagnostic, "owner",
                                                          window, message, wParam);
+  }
+  if (value != nullptr && value->debugUi != nullptr &&
+      message != WM_KEYDOWN && message != WM_KEYUP &&
+      value->debugUi->handleMessage(window, message, wParam, lParam)) {
+    return 0;
   }
   if (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP || message == WM_MOUSEMOVE) {
     if (value != nullptr) {
@@ -641,9 +690,25 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) {
+    const bool f12Down = (GetAsyncKeyState(VK_F12) & 0x8000) != 0;
+    if (f12Down && !value->debugF12Down && value->debugUi != nullptr) {
+      value->debugUi->toggle();
+      if (value->pointerDiagnostic) {
+        value->pointerDiagnostic << "debug-ui-poll visible="
+            << value->debugUi->visible() << std::endl;
+      }
+      InvalidateRect(window, nullptr, FALSE);
+      UpdateWindow(window);
+    }
+    value->debugF12Down = f12Down;
+    if (!value->resizeInProgress && value->activeKeys.empty() &&
+        !value->canonicalFrameReady) {
+      value->canonicalFrameReady = renderCanonical(*value);
+    }
     if (value->previewDirty && value->previewPresentationEnabled) {
       (void)value->host->presentBrushPreview();
       value->previewDirty = false;
+      if (value->debugUi != nullptr) value->debugUi->raise();
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
@@ -659,16 +724,107 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     const auto width = static_cast<std::uint32_t>(LOWORD(lParam));
     const auto canvasHeight = static_cast<int>(HIWORD(lParam)) - State::kToolbarHeight;
     const auto height = static_cast<std::uint32_t>((std::max)(canvasHeight, 0));
-    if (width != 0U && height != 0U && value->previewProvider != nullptr &&
-        value->host->resizeSurface(width, height) &&
-        attachPreviewTarget(*value, width, height)) {
-      RECT canvasRect{}; GetClientRect(window, &canvasRect);
-      canvasRect.top = State::kToolbarHeight;
-      InvalidateRect(window, &canvasRect, FALSE);
+    if (value->pointerDiagnostic) {
+      value->pointerDiagnostic << "wm-size width=" << width << " height=" << height
+          << " wparam=" << wParam << std::endl;
+    }
+    if (width != 0U && height != 0U && value->previewProvider != nullptr) {
+      value->pendingWidth = width;
+      value->pendingHeight = height;
+      value->resizeInProgress = true;
+      // The old canonical surface may no longer match the client metrics.
+      // Keep retrying until a frame from the new generation is actually
+      // presented instead of treating the old ready bit as authoritative.
+      value->canonicalFrameReady = false;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+      // Do not detach the owner-attached canonical visual here.  During a
+      // maximize Windows can deliver several WM_SIZE messages in one turn;
+      // SetContent(nullptr)+Commit on every intermediate size races the
+      // DComp/D3D12 queue and has caused driver crashes and black frames.
+      // The deferred resize path replaces the surface once, then presents a
+      // fresh canonical frame before the new generation is considered ready.
+      if (value->previewProvider != nullptr) value->previewProvider->setOverlayVisible(false);
+#endif
+      // Coalesce the whole maximize animation.  Every WM_SIZE resets this
+      // short debounce; only the final client size rebuilds the D3D12
+      // surfaces, so an intermediate black backbuffer is never presented.
+      SetTimer(window, State::kResizeDebounceTimerId, 120, nullptr);
     }
 #else
     (void)lParam;
 #endif
+    return 0;
+  }
+  if (message == WM_TIMER && value != nullptr &&
+      wParam == State::kResizeDebounceTimerId) {
+    if (value->pointerDiagnostic) value->pointerDiagnostic << "resize-debounce-fired" << std::endl;
+    KillTimer(window, State::kResizeDebounceTimerId);
+    if (!value->resizePosted) {
+      value->resizePosted = true;
+      PostMessageW(window, State::kDeferredResizeMessage, 0, 0);
+    }
+    return 0;
+  }
+  if (message == State::kDeferredResizeMessage && value != nullptr) {
+    value->resizePosted = false;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+    RECT client{};
+    if (!GetClientRect(window, &client)) return 0;
+    const auto width = static_cast<std::uint32_t>(client.right);
+    const auto height = static_cast<std::uint32_t>(
+        (std::max)(static_cast<int>(client.bottom) - State::kToolbarHeight, 0));
+    if (value->pointerDiagnostic) {
+      value->pointerDiagnostic << "deferred-resize width=" << width << " height=" << height
+          << " begin" << std::endl;
+    }
+    bool resized = false;
+    const bool hostResized = width != 0U && height != 0U &&
+        value->previewProvider != nullptr && value->host->resizeSurface(width, height);
+    const bool targetAttached = hostResized && attachPreviewTarget(*value, width, height);
+    if (hostResized && targetAttached) {
+      // The canonical D3D12 provider is rebuilt together with the preview
+      // provider.  Present one fresh frame immediately after the new
+      // generation is bound; otherwise the new owner-attached backbuffer is
+      // visible as its driver-default black contents until the next stroke.
+      value->canonicalFrameReady = renderCanonical(*value);
+      // resizeSurface rebinds the preview controller to the new generation;
+      // render it before allowing the provider to show its popup again.
+      if (value->host->previewActive()) {
+        (void)value->host->presentBrushPreview();
+      }
+      RECT canvasRect{}; GetClientRect(window, &canvasRect);
+      canvasRect.top = State::kToolbarHeight;
+      InvalidateRect(window, &canvasRect, FALSE);
+      resized = true;
+    }
+    if (value->pointerDiagnostic) {
+      value->pointerDiagnostic << "deferred-resize result host=" << hostResized
+          << " target=" << targetAttached << " canonical="
+          << value->canonicalFrameReady << std::endl;
+    }
+    value->resizeInProgress = false;
+    if (!resized) {
+      // Keep the retry bounded to the message loop.  A transient DXGI/DComp
+      // rejection during a maximize must not leave canonicalFrameReady false
+      // forever (which used to make the canonical document appear to vanish).
+      value->canonicalFrameReady = false;
+      InvalidateRect(window, nullptr, FALSE);
+    }
+#endif
+    return 0;
+  }
+  if ((message == WM_MOVE || message == WM_WINDOWPOSCHANGED) && value != nullptr) {
+    // USER32 sends these notifications before the owner has finished moving.
+    // Defer popup placement until the new client-to-screen origin is stable.
+    const auto result = DefWindowProcW(window, message, wParam, lParam);
+    PostMessageW(window, State::kOverlaySyncMessage, 0, 0);
+    return result;
+  }
+  if (message == State::kOverlaySyncMessage && value != nullptr) {
+#if defined(CANVAS_RENDER_HAS_SKIA)
+    if (value->previewProvider != nullptr) value->previewProvider->reposition();
+#endif
+    if (value->debugUi != nullptr) value->debugUi->reposition();
     return 0;
   }
   if (message == WM_POINTERDOWN || message == WM_POINTERUPDATE || message == WM_POINTERUP) {
@@ -1021,6 +1177,11 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
       WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
   if (value.window == nullptr) return 1;
+  value.debugUi = std::make_unique<canvas::debug_ui::WindowsDebugUiHost>();
+  if (!value.debugUi->initialize(value.window)) return 1;
+  value.debugUi->setToolSelector([&value](int command) {
+    return selectWindowsTool(value, command);
+  });
   const BOOL touchRegistered = RegisterTouchWindow(value.window, TWF_WANTPALM);
   const BOOL pointerTouchRegistered = RegisterPointerInputTarget(value.window, PT_TOUCH);
   const BOOL pointerPenRegistered = RegisterPointerInputTarget(value.window, PT_PEN);
@@ -1066,7 +1227,13 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (!value.host->resizeSurface(static_cast<std::uint32_t>(client.right), canvasHeight) ||
       !attachPreviewTarget(value, static_cast<std::uint32_t>(client.right), canvasHeight)) return 1;
 #endif
-  ShowWindow(value.window, show);
+  // Some launchers (notably cmd/start wrappers) pass nCmdShow=0 even when
+  // the user expects a normal interactive window.  Passing that value
+  // through would leave the process alive with a hidden main HWND, which
+  // looks like a failed launch.  Preserve an explicit minimized request but
+  // normalize the unspecified/hidden value to a visible interactive window.
+  const int effectiveShow = (show == 0 || show == SW_HIDE) ? SW_SHOWNORMAL : show;
+  ShowWindow(value.window, effectiveShow);
   UpdateWindow(value.window);
   MSG message{}; while (GetMessageW(&message, nullptr, 0, 0) > 0) { TranslateMessage(&message); DispatchMessageW(&message); }
   return static_cast<int>(message.wParam);

@@ -82,9 +82,11 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     const float alpha = style.overrideOpacity
         ? std::clamp(style.opacityMultiplier, 0.0F, 1.0F)
         : 1.0F;
-    paint.setColor4f({style.overrideColor ? style.red : 0.10F,
-                      style.overrideColor ? style.green : 0.36F,
-                      style.overrideColor ? style.blue : 0.95F, alpha}, nullptr);
+    // The default PreviewStyleOverride is a pale blue-green transient tint;
+    // callers such as the partial eraser can still provide an explicit color.
+    paint.setColor4f({style.overrideColor ? style.red : 0.20F,
+                      style.overrideColor ? style.green : 0.78F,
+                      style.overrideColor ? style.blue : 0.72F, alpha}, nullptr);
     auto drawOutline = [&](const auto& outline) {
         if (outline.empty()) return;
         SkPathBuilder path;

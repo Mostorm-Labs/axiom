@@ -14,11 +14,14 @@ class SkiaRenderer;
 // Render-only styling. It never mutates BrushPackage, ResolvedBrushState or
 // semantic BrushStrokeContent.
 struct PreviewStyleOverride final {
-    float red = 1.0F;
-    float green = 0.85F;
-    float blue = 0.0F;
-    float alpha = 0.55F;
-    float opacityMultiplier = 0.55F;
+    // Presentation-only tint for the transient Arc layer.  Keep it light
+    // enough to distinguish it from canonical ink while remaining visible on
+    // the white canvas during fast input.
+    float red = 0.20F;
+    float green = 0.78F;
+    float blue = 0.72F;
+    float alpha = 0.46F;
+    float opacityMultiplier = 0.46F;
     bool overrideColor = true;
     bool overrideOpacity = true;
     // SkBlendMode::kClear is 0; kSrcOver is 1. Keep the wire value explicit
