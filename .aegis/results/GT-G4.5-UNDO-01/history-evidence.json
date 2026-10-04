@@ -1,5 +1,5 @@
 {
-  "result_revision": "134f55ecea63bbec4fda430f6e2dbd95890083cc",
+  "result_revision": "9b132f73aab12b3076bb8628d7bf6e8fec7cc725",
   "oracle": "G4EditorHistory + G45BrushRuntimePipeline + DUI20DebugUiContracts",
   "observed": {
     "typed_compensation": "PASS",
@@ -8,7 +8,18 @@
     "duplicate_legacy_identity_does_not_advance_revision": "PASS",
     "projection_failure_semantic_acceptance_and_recovery": "PASS",
     "surface_lost_semantic_acceptance": "PASS",
+    "active_viewport_gesture_blocks_history": "PASS",
     "ui_and_windows_targets_build": "PASS"
   },
-  "evidence_files": ["build.log", "ctest.log", "diff-check.log", "executable-sha256.txt", "result.json", "scope-evidence.json"]
+  "evidence_files": [
+    "build.log",
+    "ctest.log",
+    "diff-check.log",
+    "executable-sha256.txt",
+    "result.json",
+    "source-manifest.json",
+    "design-preflight.json",
+    "scope-evidence.json"
+  ],
+  "generated_at_utc": "20261004T113627Z"
 }

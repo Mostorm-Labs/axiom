@@ -1,0 +1,35 @@
+{
+  "schema_version": "aegis-source-manifest-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "source_revision": "9b132f73aab12b3076bb8628d7bf6e8fec7cc725",
+  "base_revision": "d56554da0b00022da0296563fceb5625a0e24f86",
+  "branch": "codex/gt-g4-5-debug-ui-controller",
+  "repository": "Mostorm-Labs/axiom",
+  "changed_files": [
+    ".aegis/packages/GT-G4.5-UNDO-01/authority.lock.json",
+    ".aegis/packages/GT-G4.5-UNDO-01/evidence-contract.json",
+    ".aegis/packages/GT-G4.5-UNDO-01/execution-contract.json",
+    ".aegis/packages/GT-G4.5-UNDO-01/implementation-context.md",
+    ".aegis/packages/GT-G4.5-UNDO-01/package.json",
+    ".aegis/packages/GT-G4.5-UNDO-01/verification.lock.json",
+    ".aegis/results/GT-G4.5-UNDO-01/build.log",
+    ".aegis/results/GT-G4.5-UNDO-01/ctest.log",
+    ".aegis/results/GT-G4.5-UNDO-01/executable-sha256.txt",
+    ".aegis/results/GT-G4.5-UNDO-01/history-evidence.json",
+    ".aegis/results/GT-G4.5-UNDO-01/result.json",
+    ".aegis/results/GT-G4.5-UNDO-01/scope-evidence.json",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
+    "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+    "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+    "debug_ui/src/controller.cpp",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp"
+  ],
+  "executable": {
+    "path": "build-windows-real/apps/ink_playground/RelWithDebInfo/axiom_ink_playground_windows.exe",
+    "sha256": "FDF08FCA40A536682EC2CC59068CCA913672C0C4B250C455439DCD4E1EEC9DF8"
+  },
+  "generated_at_utc": "20261004T113627Z"
+}
