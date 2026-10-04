@@ -1,0 +1,87 @@
+{
+  "schema_version": "aegis-control-review-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/gt-g4-5-debug-ui-controller",
+  "reviewed_branch_head": "aa8dade224a3812cd2c37136db62da446319687a",
+  "implementation_result_revision": "9b132f73aab12b3076bb8628d7bf6e8fec7cc725",
+  "result_evidence_revision": "aa8dade224a3812cd2c37136db62da446319687a",
+  "package_ref": ".aegis/packages/GT-G4.5-UNDO-01/package.json",
+  "evidence_refs": [
+    ".aegis/results/GT-G4.5-UNDO-01/result.json",
+    ".aegis/results/GT-G4.5-UNDO-01/source-manifest.json",
+    ".aegis/results/GT-G4.5-UNDO-01/design-preflight.json",
+    ".aegis/results/GT-G4.5-UNDO-01/history-evidence.json",
+    ".aegis/results/GT-G4.5-UNDO-01/scope-evidence.json",
+    ".aegis/results/GT-G4.5-UNDO-01/build.log",
+    ".aegis/results/GT-G4.5-UNDO-01/ctest.log",
+    ".aegis/results/GT-G4.5-UNDO-01/diff-check.log",
+    ".aegis/results/GT-G4.5-UNDO-01/executable-sha256.txt"
+  ],
+  "package_lock_audit": {
+    "repository_identity": "PASS",
+    "task_anchor_ancestry": "PASS",
+    "authority_lock": "PASS",
+    "verification_lock": "PASS",
+    "execution_contract": "PASS",
+    "evidence_contract": "PASS",
+    "all_package_sha256_refs": "PASS"
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "findings": [],
+    "obligations": {
+      "UNDO-HOST-001": "PASS: exact brush ObjectRecord and pixels restore",
+      "UNDO-ERASE-001": "PASS: object and partial eraser preimage/masks restore",
+      "UNDO-STATE-001": "PASS: empty, active/canceled, redo clearing, loss and projection recovery",
+      "UNDO-ID-001": "PASS: legacy/local/compensation collision and duplicate semantics",
+      "UNDO-CONTROL-001": "PASS: RuntimeFacade, ImGui controls and Windows shortcuts"
+    }
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "focused_ctest": "14/14 PASS",
+    "git_diff_check": "PASS",
+    "executable_identity": "PASS: FDF08FCA40A536682EC2CC59068CCA913672C0C4B250C455439DCD4E1EEC9DF8",
+    "evidence_boundary": "PASS: source manifest and design preflight are durable in reviewed branch"
+  },
+  "repository_reality_audit": {
+    "status": "PASS_WITH_FINDINGS",
+    "scope_review": "PASS: pointer routing, AutoIntent, BrushEngine, Canonical apply and Arc ownership unchanged",
+    "remote_head_matches_local": true,
+    "full_ctest_observation": "111/118 passed; 1 RF-01 module-boundary failure; 6 existing Windows targets not run"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "UNDO-REVIEW-001",
+        "classification": "NON_BLOCKING_HARDENING",
+        "finding": "Full CTest remains non-green because an existing RF-01 module-boundary check flags debug queue headers and six existing Windows targets are unbuilt or compiler-incompatible.",
+        "impact": "Does not invalidate the Undo/Redo focused obligations; it prevents claiming the entire repository suite is green.",
+        "coverage": "The 14-test scoped regression and package evidence independently cover the Undo/Redo change.",
+        "route": "Successor maintenance for the existing Debug UI/Windows build matrix."
+      },
+      {
+        "id": "DUI-P32-REVIEW-001",
+        "classification": "OUT_OF_SCOPE_EXISTING_BLOCKER",
+        "finding": "GT-G4.5-DUI-01 remains BLOCKED_EVIDENCE on its own P32 review handoff.",
+        "impact": "This review cannot close or imply closure of Debug UI P32.",
+        "route": "Separate Debug UI Control Review / evidence refresh."
+      }
+    ]
+  },
+  "verdict": "PASS_WITH_FINDINGS",
+  "scope": "GT-G4.5-UNDO-01 only",
+  "official_gate_pass": false,
+  "forbidden_claims": [
+    "G4.5 Gate PASS",
+    "G4 PASS",
+    "P34 overall PASS",
+    "release PASS"
+  ],
+  "next_action": "Keep Undo/Redo available for downstream integration after review; route non-blocking findings to successor maintenance and keep Debug UI P32 separately blocked.",
+  "reviewed_at_utc": "2026-10-04T12:58:39.717168+00:00"
+}
