@@ -1,10 +1,30 @@
 {
-  "profile": "off/reference/controller-candidate/full",
-  "debug_off": {"configure": "PASS", "build": "PASS"},
-  "reference": {"configure": "PASS", "build": "PASS", "ctest": "1/1 PASS"},
-  "controller_candidate_trace_overlay_flags": {"configure": "PASS", "build": "PASS", "ctest": "1/1 PASS"},
-  "full": {"configure": "PASS", "build": "PASS", "ctest": "1/1 PASS"},
-  "toolchain": "VS 2022 BuildTools + clang-cl 22.1.8",
+  "result_revision": "e530a71ef17cc790bb1f77d9f7ebea553f677c7c",
+  "profiles": {
+    "off": {
+      "configure": "PASS",
+      "build": "PASS",
+      "ctest": "PASS"
+    },
+    "reference": {
+      "configure": "PASS",
+      "build": "PASS",
+      "ctest": "PASS"
+    },
+    "controller": {
+      "configure": "PASS",
+      "build": "PASS",
+      "ctest": "PASS"
+    },
+    "full": {
+      "configure": "PASS",
+      "build": "PASS",
+      "ctest": "PASS"
+    }
+  },
+  "toolchain": "Visual Studio 18 2026 MSVC 19.51.36246.0",
+  "key_ctest": "13/13 PASS",
+  "python_contract": "21/21 PASS",
   "git_diff_check": "PASS",
   "physical_windows": "not claimed"
 }

@@ -1,19 +1,19 @@
 {
+  "format": "aegis-debug-ui-evidence-v1",
+  "task_id": "GT-G4.5-DUI-01",
   "repository": "Mostorm-Labs/axiom",
   "branch": "codex/gt-g4-5-debug-ui-controller",
-  "result_revision": "431ef24712567f1f1fa6cfe3d0e5ede50990edf4",
-  "dirty_tree": "source changes present",
-  "build_profile": "reference",
-  "compiler_toolchain": "VS 2022 BuildTools + clang-cl 22.1.8",
-  "platform_profile": "Windows host; no physical qualification claimed",
-  "graphics_backend": "reference contract only",
+  "result_revision": "e530a71ef17cc790bb1f77d9f7ebea553f677c7c",
+  "dirty_tree": "source changes committed; generated build directories remain untracked staging",
+  "build_profile": "Windows RelWithDebInfo",
+  "compiler_toolchain": "Visual Studio 18 2026 MSVC 19.51.36246.0",
+  "skia_sdk_root": "D:\\GitRepos\\mostorm-labs\\canvas\\.deps\\skia-sdk\\windows-x64-d3d12\\release",
+  "graphics_backend": "Skia Ganesh + Windows D3D12 canonical/preview providers",
   "surface_mode": "EmbeddedComposite/reference",
   "arc_presenter_profile": "existing Arc presenter unchanged",
-  "scenario_id": "DUI-WP00-WP05-contracts",
-  "seed": 0,
-  "reference_candidate_mode": "reference",
+  "physical_windows": "not claimed",
   "status": "READY_FOR_CONTROL_REVIEW",
-  "preflight": "PASS",
+  "final_gate_pass": false,
   "package_sha256s": {
     "authority.lock.json": "179ac8020f1af2d6b330673805bd08b24ed7c5547746fdebf55ca3ffe0f2687d",
     "evidence-contract.json": "e59e811d59c07776034ebab23f1848f67957f9a356d4c08651b180a3fc5e20d8",
@@ -21,5 +21,42 @@
     "implementation-context.md": "b3cc154f99a92341f58a3ac9cd9e0f4ad6641ee86dfab1174775d59b3ce8c1f5",
     "package.json": "3f3dad7633c60e30ba60b78421f007692003499b19d025a30e2f0f82df65b18c",
     "verification.lock.json": "ddf100c84dbac3c3269c5b0a47106ca5a7fa45a4a5f8720cb534e395887ddab3"
-  }
+  },
+  "verification": {
+    "key_ctest": "13/13 PASS",
+    "python_contract": "21/21 PASS",
+    "git_diff_check": "PASS",
+    "profile_matrix": {
+      "off": {
+        "configure": "PASS",
+        "build": "PASS",
+        "ctest": "PASS"
+      },
+      "reference": {
+        "configure": "PASS",
+        "build": "PASS",
+        "ctest": "PASS"
+      },
+      "controller": {
+        "configure": "PASS",
+        "build": "PASS",
+        "ctest": "PASS"
+      },
+      "full": {
+        "configure": "PASS",
+        "build": "PASS",
+        "ctest": "PASS"
+      }
+    }
+  },
+  "executables": {
+    "windows": "57e71a7a23e22fd6efcc45cffb77d8caad0872db0fe44ad9787d902c64135ec7",
+    "debug_ui_tests": "0e5858213397a62a25d7b7206e39c51d545917f072531ee6023b1210a682010d"
+  },
+  "dependency_boundary": {
+    "runtime_arc_forbidden_imgui_sdl3_source_hits": 0
+  },
+  "blockers": [
+    "No Windows physical/real-device qualification in this execution; P34/G4.5 Gate not claimed"
+  ]
 }

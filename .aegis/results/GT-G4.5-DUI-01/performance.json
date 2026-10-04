@@ -1,4 +1,6 @@
 {
-  "fast_path": "snapshot copy only",
-  "scale_evidence": "pending"
+  "fast_path": "MutexCopy fixed-value snapshot copy",
+  "total_document_traversal": "not present in snapshot path",
+  "structural_1k_vs_100k": "BLOCKED_EVIDENCE",
+  "reason": "No frozen scale runner materialized in repository"
 }
