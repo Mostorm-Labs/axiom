@@ -140,6 +140,14 @@ endif()
 if(EMSCRIPTEN)
   add_executable(axiom_ink_playground_web platform/web/bridge.cpp)
   target_link_libraries(axiom_ink_playground_web PRIVATE axiom_ink_playground_common)
+  target_include_directories(axiom_ink_playground_web PRIVATE ${CANVAS_SKIA_SDK_ROOT})
+  if(AXIOM_BUILD_DEBUG_UI)
+    target_link_libraries(axiom_ink_playground_web PRIVATE canvas_debug_ui)
+    target_include_directories(axiom_ink_playground_web PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui)
+    target_compile_definitions(axiom_ink_playground_web PRIVATE AXIOM_WEB_DEBUG_UI=1)
+  else()
+    target_compile_definitions(axiom_ink_playground_web PRIVATE AXIOM_WEB_DEBUG_UI=0)
+  endif()
   set_target_properties(axiom_ink_playground_web PROPERTIES SUFFIX ".js")
   configure_file(platform/web/index.html
       ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
@@ -150,5 +158,5 @@ if(EMSCRIPTEN)
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sUSE_WEBGL2=1"
       "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']"
-      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_select_tool','_axiom_ink_select_brush_profile','_axiom_ink_eraser_begin','_axiom_ink_eraser_sample','_axiom_ink_eraser_finish','_axiom_ink_eraser_cancel','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y']")
+      "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_select_tool','_axiom_ink_select_brush_profile','_axiom_ink_eraser_begin','_axiom_ink_eraser_sample','_axiom_ink_eraser_finish','_axiom_ink_eraser_cancel','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y','_axiom_ink_selected_tool','_axiom_ink_debug_ui_init','_axiom_ink_debug_ui_toggle','_axiom_ink_debug_ui_visible','_axiom_ink_debug_ui_wants_capture_mouse','_axiom_ink_debug_ui_wants_capture_keyboard','_axiom_ink_debug_ui_render','_axiom_ink_debug_ui_pointer','_axiom_ink_debug_ui_key','_axiom_ink_debug_ui_capture_begin','_axiom_ink_debug_ui_capture_route','_axiom_ink_debug_ui_capture_terminal','_axiom_ink_debug_ui_resize']")
 endif()

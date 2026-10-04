@@ -253,6 +253,9 @@ bool ImGuiSkiaRenderer::render(ImDrawData* drawData, SkSurface* surface,
                 SkPaint paint;
                 paint.setAntiAlias(false);
                 paint.setColor(SK_ColorWHITE);
+                // ImGui stores normalized UVs; the local matrix maps them into
+                // the atlas image's normalized shader space, as in Skia's
+                // Viewer ImGuiLayer.
                 const SkMatrix atlasMatrix = SkMatrix::Scale(
                     1.0f / static_cast<float>(fontTexture->width()),
                     1.0f / static_cast<float>(fontTexture->height()));

@@ -7,6 +7,11 @@
   #ink, #arcPreview { position: absolute; inset: 0; width: 100%; height: 100%;
          background: white; touch-action: none; border: 1px solid #c5cad6; }
   #arcPreview { pointer-events: none; background: transparent; border: 0; }
+  #debugUi { position: absolute; left: 12px; top: 12px; width: 410px; height: 560px;
+             display: none; pointer-events: auto; border: 0; background: transparent; z-index: 5; }
+  #debugUi.visible { display: block; }
+  #debugUiToggle { margin-left: 8px; padding: 6px 10px; border: 1px solid #b8c0d0;
+                   border-radius: 4px; background: #fff; cursor: pointer; }
   #brushBar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px; background: #f7f8fb; }
   #toolPalette { display: flex; gap: 6px; flex-wrap: wrap; }
   #toolPalette button { padding: 6px 10px; border: 1px solid #b8c0d0; background: white; border-radius: 4px; cursor: pointer; }
@@ -21,13 +26,15 @@
   <button type="button" data-tool="brush" data-profile="membrane-v1" data-family="4">Membrane</button>
   <button type="button" data-tool="object-eraser">Object Eraser</button>
   <button type="button" data-tool="partial-eraser">Partial Eraser</button>
-</div><span id="brushDescription">vector-solid-v1</span></div>
-<div id="surfaceStack"><canvas id="ink" width="1024" height="768"></canvas><canvas id="arcPreview" width="1024" height="768"></canvas></div>
+</div><span id="brushDescription">vector-solid-v1</span><button id="debugUiToggle" type="button">Debug UI</button></div>
+<div id="surfaceStack"><canvas id="ink" width="1024" height="768"></canvas><canvas id="arcPreview" width="1024" height="768"></canvas><canvas id="debugUi" width="410" height="560" tabindex="0"></canvas></div>
 <pre id="hud">loading</pre>
 <button id="evidence" type="button" disabled>导出 Web 证据</button>
 <script type="module">
   const canvas = document.getElementById("ink");
   const previewCanvas = document.getElementById("arcPreview");
+  const debugCanvas = document.getElementById("debugUi");
+  const debugUiToggle = document.getElementById("debugUiToggle");
   const brushDescription = document.getElementById("brushDescription");
   const toolPalette = document.getElementById("toolPalette");
   const hud = document.getElementById("hud");
@@ -35,13 +42,13 @@
   addEventListener("error", event => { hud.textContent = `Ink Playground error: ${event.message}`; });
   addEventListener("unhandledrejection", event => { hud.textContent = `Ink Playground rejection: ${event.reason}`; });
   try {
-  const imported = await import("./axiom_ink_playground_web.js");
+  const imported = await import("./axiom_ink_playground_web.js?v=web-debug-ui-physical-67858ac25317aea8-894ad48310e25986");
   const createAxiomInkPlayground = imported.default;
   const module = await createAxiomInkPlayground({
     canvas,
     // Keep the local physical-test page from reusing an older WASM after a
     // rebuild. The query is intentionally limited to the generated binary.
-    locateFile: path => `${path}?v=membrane-20260929-2`
+    locateFile: path => `${path}?v=web-debug-ui-physical-67858ac25317aea8-894ad48310e25986`
   });
   const host = module._axiom_ink_create();
   // The Web App owns canvas/context creation. WASM only wraps the current
@@ -52,6 +59,123 @@
   if (!module._axiom_ink_bind_preview_surface(host, previewCanvas.width, previewCanvas.height)) {
     throw new Error("ARC preview provider binding failed");
   }
+  if (!module._axiom_ink_debug_ui_init(host, debugCanvas.width, debugCanvas.height)) {
+    throw new Error("Debug UI surface binding failed");
+  }
+  const setDebugVisibility = visible => {
+    debugCanvas.classList.toggle("visible", visible);
+    debugUiToggle.textContent = visible ? "Hide Debug UI" : "Debug UI";
+    requestAnimationFrame(() => module._axiom_ink_debug_ui_render(host));
+  };
+  debugUiToggle.addEventListener("click", () => {
+    setDebugVisibility(module._axiom_ink_debug_ui_toggle(host) !== 0);
+  });
+  const debugPoint = event => {
+    const rect = debugCanvas.getBoundingClientRect();
+    return [(event.clientX - rect.left) * debugCanvas.width / rect.width,
+      (event.clientY - rect.top) * debugCanvas.height / rect.height];
+  };
+  const debugPointers = new Set();
+  const debugPointerButtons = new Map();
+  const forwardedDebugPointers = new Set();
+  const debugUiWantsMouse = () => module._axiom_ink_debug_ui_wants_capture_mouse(host) !== 0;
+  const imguiKeyForEvent = event => {
+    const named = {
+      Tab: 512, ArrowLeft: 513, ArrowRight: 514, ArrowUp: 515, ArrowDown: 516,
+      PageUp: 517, PageDown: 518, Home: 519, End: 520, Insert: 521, Delete: 522,
+      Backspace: 523, Space: 524, Enter: 525, Escape: 526,
+      ControlLeft: 527, ShiftLeft: 528, AltLeft: 529, MetaLeft: 530,
+      ControlRight: 531, ShiftRight: 532, AltRight: 533, MetaRight: 534,
+      F1: 572, F2: 573, F3: 574, F4: 575, F5: 576, F6: 577,
+      F7: 578, F8: 579, F9: 580, F10: 581, F11: 582, F12: 583
+    };
+    if (named[event.code] !== undefined) return named[event.code];
+    if (/^Digit[0-9]$/.test(event.code)) return 536 + Number(event.code.slice(5));
+    if (/^Key[A-Z]$/.test(event.code)) return 546 + event.code.charCodeAt(3) - 65;
+    return 0;
+  };
+  const sendDebugKey = (event, down) => {
+    const key = imguiKeyForEvent(event);
+    if (key !== 0) module._axiom_ink_debug_ui_key(host, key, down ? 1 : 0);
+  };
+  const forwardDebugPointer = (event, phase) => {
+    if (phase === "down") canvas.setPointerCapture(event.pointerId);
+    send(event, phase);
+  };
+  debugCanvas.addEventListener("pointerdown", event => {
+    const [x, y] = debugPoint(event);
+    const mouseButton = event.button >= 0 && event.button < 5 ? event.button : 0;
+    debugPointerButtons.set(event.pointerId, mouseButton);
+    debugCanvas.setPointerCapture(event.pointerId);
+    module._axiom_ink_debug_ui_capture_begin(host, BigInt(event.pointerId));
+    module._axiom_ink_debug_ui_pointer(host, 0, event.pointerId, mouseButton,
+      x, y);
+    requestRender();
+    // This canvas is only the visible ImGui panel rectangle, so its down
+    // sequence is owned by Debug for the full terminal lifecycle. The
+    // underlying Ink canvas remains the owner everywhere outside this rect.
+    debugPointers.add(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+  debugCanvas.addEventListener("pointermove", event => {
+    if (!debugCanvas.hasPointerCapture(event.pointerId)) return;
+    const [x, y] = debugPoint(event);
+    const mouseButton = debugPointerButtons.get(event.pointerId) ?? 0;
+    if (debugPointers.has(event.pointerId) && module._axiom_ink_debug_ui_capture_route(host, BigInt(event.pointerId))) {
+      module._axiom_ink_debug_ui_pointer(host, 1, event.pointerId, mouseButton, x, y);
+    } else if (forwardedDebugPointers.has(event.pointerId)) {
+      forwardDebugPointer(event, "move");
+    }
+    event.stopPropagation();
+  });
+  debugCanvas.addEventListener("pointerup", event => {
+    const [x, y] = debugPoint(event);
+    const mouseButton = debugPointerButtons.get(event.pointerId) ?? 0;
+    if (debugPointers.has(event.pointerId) && module._axiom_ink_debug_ui_capture_route(host, BigInt(event.pointerId))) {
+      module._axiom_ink_debug_ui_pointer(host, 2, event.pointerId, mouseButton, x, y);
+      debugPointers.delete(event.pointerId);
+      requestRender();
+    } else if (forwardedDebugPointers.has(event.pointerId)) {
+      forwardDebugPointer(event, "up");
+      forwardedDebugPointers.delete(event.pointerId);
+    }
+    module._axiom_ink_debug_ui_capture_terminal(host, BigInt(event.pointerId));
+    debugPointerButtons.delete(event.pointerId);
+    if (debugCanvas.hasPointerCapture(event.pointerId)) debugCanvas.releasePointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+  debugCanvas.addEventListener("pointercancel", event => {
+    const [x, y] = debugPoint(event);
+    const mouseButton = debugPointerButtons.get(event.pointerId) ?? 0;
+    if (debugPointers.has(event.pointerId) && module._axiom_ink_debug_ui_capture_route(host, BigInt(event.pointerId))) {
+      module._axiom_ink_debug_ui_pointer(host, 3, event.pointerId, mouseButton, x, y);
+      debugPointers.delete(event.pointerId);
+    } else if (forwardedDebugPointers.has(event.pointerId)) {
+      forwardDebugPointer(event, "cancel");
+      forwardedDebugPointers.delete(event.pointerId);
+    }
+    module._axiom_ink_debug_ui_capture_terminal(host, BigInt(event.pointerId));
+    debugPointerButtons.delete(event.pointerId);
+    if (debugCanvas.hasPointerCapture(event.pointerId)) debugCanvas.releasePointerCapture(event.pointerId);
+    event.stopPropagation();
+  });
+  debugCanvas.addEventListener("wheel", event => {
+    if (debugUiWantsMouse()) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, { passive: false });
+  debugCanvas.addEventListener("keydown", event => {
+    sendDebugKey(event, true);
+    if (module._axiom_ink_debug_ui_wants_capture_keyboard(host)) event.preventDefault();
+    event.stopPropagation();
+  });
+  debugCanvas.addEventListener("keyup", event => {
+    sendDebugKey(event, false);
+    event.stopPropagation();
+  });
   previewCanvas.addEventListener("webglcontextlost", event => { event.preventDefault(); module._axiom_ink_lose_surface(host); });
   previewCanvas.addEventListener("webglcontextrestored", () => {
     previewCanvas.getContext("webgl2");
@@ -94,6 +218,24 @@
   let activeProfile = "vector-solid-v1";
   const brushFamilyName = () => activeProfile;
   const brushProfileName = () => activeProfile;
+  const syncToolSelection = () => {
+    const selected = Number(module._axiom_ink_selected_tool(host));
+    const button = [...toolPalette.querySelectorAll("button")].find(candidate => {
+      const tool = candidate.dataset.tool;
+      const id = tool === "object-eraser" ? 4105 : tool === "partial-eraser" ? 4106
+        : 4100 + Number(candidate.dataset.family || 0);
+      return id === selected;
+    });
+    if (!button) return;
+    activeTool = button.dataset.tool;
+    activeProfile = button.dataset.profile || activeProfile;
+    selectedBrushFamily = Number(button.dataset.family || selectedBrushFamily);
+    brushDescription.textContent = button.textContent;
+    for (const candidate of toolPalette.querySelectorAll("button")) {
+      candidate.classList.toggle("active", candidate === button);
+      candidate.setAttribute("aria-pressed", candidate === button ? "true" : "false");
+    }
+  };
   const setToolSelection = button => {
     const nextTool = button.dataset.tool;
     const nextProfile = button.dataset.profile || activeProfile;
@@ -142,6 +284,8 @@
     // Keep the two surfaces independently dirty-gated. A frame tick may
     // submit the retained amber preview without clearing/repainting canonical.
     module._axiom_ink_preview_render(host);
+    if (module._axiom_ink_debug_ui_visible(host)) module._axiom_ink_debug_ui_render(host);
+    syncToolSelection();
     const pointCount = trace.length;
     hud.textContent = JSON.stringify({
       pointCount,
@@ -264,6 +408,10 @@
   let gestureStartScale = 1;
   let gestureLastScale = 1;
   const handleWheel = event => {
+    if (module._axiom_ink_debug_ui_visible(host) && debugUiWantsMouse()) {
+      if (event.cancelable) event.preventDefault();
+      return;
+    }
     const rect = canvas.getBoundingClientRect();
     const overCanvas = event.target === canvas ||
       (event.clientX >= rect.left && event.clientX <= rect.right &&
@@ -305,8 +453,26 @@
   canvas.addEventListener("pointermove", e => { if (started.has(e.pointerId)) send(e, "move"); });
   canvas.addEventListener("pointerup", e => send(e, "up"));
   canvas.addEventListener("pointercancel", e => { if (started.has(e.pointerId)) send(e, "cancel"); });
+  addEventListener("keydown", event => {
+    if (event.key === "F12") {
+      event.preventDefault();
+      setDebugVisibility(module._axiom_ink_debug_ui_toggle(host) !== 0);
+      return;
+    }
+    if (module._axiom_ink_debug_ui_visible(host)) {
+      sendDebugKey(event, true);
+      if (module._axiom_ink_debug_ui_wants_capture_keyboard(host)) event.preventDefault();
+    }
+  });
+  addEventListener("keyup", event => {
+    if (module._axiom_ink_debug_ui_visible(host)) sendDebugKey(event, false);
+  });
+  addEventListener("resize", () => {
+    if (module._axiom_ink_debug_ui_visible(host)) module._axiom_ink_debug_ui_render(host);
+  });
   requestRender();
   globalThis.axiomInkPlayground = { module, host, exportEvidence,
+    toggleDebugUi: () => setDebugVisibility(module._axiom_ink_debug_ui_toggle(host) !== 0),
     getLatestEvidence: () => latestEvidence };
   } catch (error) {
     hud.textContent = `Ink Playground load error: ${error?.stack || error}`;
