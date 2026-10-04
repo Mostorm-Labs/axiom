@@ -44,7 +44,7 @@ class PlatformDebugControl {
     return requestSurfaceMode(request);
   }
   // Owner safe-point application hook. It is intentionally separate from UI
-  // admission so a WndProc/ImGui callback never performs a heavy rebind.
+  // admission so a platform callback never performs a heavy rebind.
   virtual void processPendingSurfaceModes() noexcept {}
   [[nodiscard]] virtual SurfaceModeReceipt requestSurfaceMode(
       const SurfaceModeRequest& request) noexcept = 0;
