@@ -1,0 +1,37 @@
+{
+  "schema_version": "aegis-undo-redo-result-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "134f55ecea63bbec4fda430f6e2dbd95890083cc",
+  "branch": "codex/gt-g4-5-debug-ui-controller",
+  "package_ref": ".aegis/packages/GT-G4.5-UNDO-01/package.json",
+  "build_profile": "build-windows-real / RelWithDebInfo / Visual Studio 18 2026 MSVC",
+  "app_executable": "build-windows-real/apps/ink_playground/RelWithDebInfo/axiom_ink_playground_windows.exe",
+  "app_executable_sha256": "74462E9DEBE047622767F0E5DBE4D8FA06DCBD2830479BA1B74686E2D9AC6AB8",
+  "tests": {
+    "G4EditorHistory": "PASS",
+    "DUI20DebugUiContracts": "PASS",
+    "G45BrushRuntimePipeline": "PASS",
+    "git_diff_check": "PASS",
+    "full_ctest": "NOT_CLAIMED: incremental profile has unmaterialized targets; CTest reports Not Run for unrelated tests"
+  },
+  "implemented": [
+    "Application-owned EditorHistory for brush, object eraser and partial eraser",
+    "Exact typed inverse operations",
+    "Fresh collision-safe compensation identities",
+    "Semantic acceptance separated from derived Scene presentation/recovery",
+    "RuntimeFacade canUndo/canRedo and product receipts",
+    "Windows Ctrl+Z/Ctrl+Y and ImGui Undo/Redo controls",
+    "Exact ObjectRecord and canonical pixel restoration regression coverage"
+  ],
+  "preserved": ["three-platform pointer routing", "AutoIntent", "BrushEngine", "Canonical semantic vocabulary", "Arc ownership"],
+  "prior_debug_ui_p32": {
+    "status": "BLOCKED_EVIDENCE",
+    "evidence": "verification/out/debug-ui/p32-refresh-20261004/control-review-handoff.json",
+    "not_closed_by_this_package": true
+  },
+  "official_gate_pass": false,
+  "physical_windows": "NOT_CLAIMED",
+  "next_surface": "CONTROL_REVIEW"
+}

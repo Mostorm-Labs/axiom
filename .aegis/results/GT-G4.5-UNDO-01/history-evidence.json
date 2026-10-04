@@ -1,0 +1,14 @@
+{
+  "result_revision": "134f55ecea63bbec4fda430f6e2dbd95890083cc",
+  "oracle": "G4EditorHistory + G45BrushRuntimePipeline + DUI20DebugUiContracts",
+  "observed": {
+    "typed_compensation": "PASS",
+    "rejected_compensation_retryable": "PASS",
+    "exact_object_and_pixel_restore": "PASS",
+    "duplicate_legacy_identity_does_not_advance_revision": "PASS",
+    "projection_failure_semantic_acceptance_and_recovery": "PASS",
+    "surface_lost_semantic_acceptance": "PASS",
+    "ui_and_windows_targets_build": "PASS"
+  },
+  "evidence_files": ["build.log", "ctest.log", "diff-check.log", "executable-sha256.txt", "result.json", "scope-evidence.json"]
+}
