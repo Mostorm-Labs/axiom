@@ -1,0 +1,44 @@
+{
+  "schema_version": "aegis-debug-ui-web-physical-result-v1",
+  "task_id": "GT-G4.5-DUI-01",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_branch": "codex/gt-g4-5-web-debug-ui-physical",
+  "task_anchor": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+  "result_revision": "99e5c4eaecc2e3b0d9d60f876520d68ca5f9db8e",
+  "scope": "Windows-hosted browser Web Debug UI physical verification",
+  "implementation": "common ImGui controller + ImGuiSkiaRenderer + independent WebGlSurfaceProvider debug canvas",
+  "verification": {
+    "web_debug_ui_build": "PASS",
+    "web_debug_ui_contract": "4/4 PASS",
+    "web_host_page_contract": "PASS",
+    "debug_off_web_build": "PASS",
+    "git_diff_check": "PASS",
+    "browser_smoke": "PASS",
+    "brush_selection_immediate_snapshot": "PASS",
+    "canvas_pointer_outside_debug": "PASS",
+    "f12_visibility_toggle": "PASS",
+    "undo_shortcut_exercised": "PASS",
+    "macos_physical": "NOT_PERFORMED",
+    "windows_native_executable": "NOT_CLAIMED",
+    "full_p20_closure": "REQUIRES_CONTROL_REVIEW"
+  },
+  "artifacts": {
+    "browser_url": "http://127.0.0.1:8765/index.html",
+    "build_profile": "g4-5-web-debug-ui-physical",
+    "locked_skia_sdk": "r1-full-v1 web-wasm-webgl2 release",
+    "js_sha256": "67858ac25317aea8b186803c0270ea6efb240b22be620c784e6e7dc5bef1a90d",
+    "wasm_sha256": "894ad48310e2598677ad8fa9473b70846a505db02935bc219954be260c1d2189",
+    "test_command": "python -m pytest -q apps/ink_playground/tests/web_host_page_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+    "test_result": "4 passed",
+    "source_observation": "Windows Codex In-app Browser"
+  },
+  "constraints": [
+    "No macOS physical verification performed by request.",
+    "No official P34, G4.5 Gate, or final release PASS claimed.",
+    "Existing untracked build/evidence directories were not staged."
+  ],
+  "next_surface": "CONTROL_REVIEW",
+  "official_gate_passed": false
+}
