@@ -15,5 +15,8 @@ class InkPlaygroundHistoryTestAccess final {
   static void clearFailure(InkPlaygroundHost& host) noexcept {
     IncrementalRuntimeTestAccess::clear(*host.sceneCoordinator_);
   }
+  static void exhaustOperationIds(InkPlaygroundHost& host) noexcept {
+    host.nextHistoryOperationOrdinal_ = 0U;
+  }
 };
 }  // namespace canvas::ink_playground

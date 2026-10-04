@@ -630,6 +630,7 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
   }
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
+  if (inverse.id.isZero()) return false;
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
@@ -745,6 +746,7 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
       intent, package, operationId, documentId_);
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
+  if (inverse.id.isZero()) return false;
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;

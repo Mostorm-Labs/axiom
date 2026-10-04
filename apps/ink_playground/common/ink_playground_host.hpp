@@ -261,12 +261,14 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
     return submittedOperationCount_;
   }
   [[nodiscard]] bool canUndo() const noexcept {
-    return historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
-           history_.canUndo();
+    return historySceneReady() && !coordinator_->viewportClaimed() &&
+           brushSessions_.empty() && eraserTraces_.empty() &&
+           keyedStrokeIds_.empty() && history_.canUndo();
   }
   [[nodiscard]] bool canRedo() const noexcept {
-    return historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
-           history_.canRedo();
+    return historySceneReady() && !coordinator_->viewportClaimed() &&
+           brushSessions_.empty() && eraserTraces_.empty() &&
+           keyedStrokeIds_.empty() && history_.canRedo();
   }
   [[nodiscard]] bool undo() noexcept {
     return canUndo() && history_.undo();

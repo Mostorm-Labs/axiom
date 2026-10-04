@@ -67,6 +67,42 @@ void canceledAndActiveInputDoNotMutateHistory() {
   assert(host.canRedo() && host.redo());
 }
 
+void activeViewportGestureBlocksHistoryUntilAllContactsEnd() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 963U);
+  drawHistoryStroke(host, 964U, 96.0);
+  assert(host.undo());
+  assert(host.canUndo() && host.canRedo());
+  const auto records = HistoryAccess::objects(host);
+  const auto generation = host.semanticGeneration();
+  const auto commit = host.canonicalCommitOrdinal();
+  auto send = [&host](std::uint64_t pointer, std::uint64_t sequence,
+                      canvas::input::PointerPhase phase, float x) {
+    canvas::input::PlatformPointerBatch batch;
+    batch.samples.push_back({7U, pointer, sequence, sequence * 1'000'000U,
+                             x, 20.0F, 0.5F, 0.0F, 0.0F, {}, {},
+                             canvas::input::SampleProvenance::kConfirmedCurrent,
+                             phase});
+    assert(host.acceptPlatformBatch(batch, sequence * 1'000'000U));
+  };
+  send(965U, 1U, canvas::input::PointerPhase::kDown, 20.0F);
+  send(966U, 2U, canvas::input::PointerPhase::kDown, 40.0F);
+  assert(host.viewportGestureClaimed());
+  assert(!host.canUndo() && !host.canRedo());
+  assert(!host.undo() && !host.redo());
+  send(965U, 3U, canvas::input::PointerPhase::kUp, 20.0F);
+  assert(!host.canUndo() && !host.canRedo());
+  assert(!host.undo() && !host.redo());
+  send(966U, 4U, canvas::input::PointerPhase::kUp, 40.0F);
+  assert(host.canUndo() && host.canRedo());
+  assert(HistoryAccess::objects(host) == records);
+  assert(host.semanticGeneration() == generation);
+  assert(host.canonicalCommitOrdinal() == commit);
+  assert(host.redo());
+  assert(host.semanticObjectCount() == 2U);
+}
+
 void legacyIdentitiesCannotCollideWithNewBrushOrHistory() {
   Host host;
   assert(host.bindSurface(256, 256));
@@ -112,6 +148,33 @@ void acceptedUndoSurvivesProjectionFailureAndRecoversWithoutReplay() {
   assert(host.semanticGeneration().value() == generation + 1U);
   assert(host.canRedo() && host.redo());
   assert(host.semanticObjectCount() == 1U);
+}
+
+void exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation() {
+  for (const auto mode : {Host::ToolMode::kBrush, Host::ToolMode::kObjectEraser,
+                          Host::ToolMode::kPartialEraser}) {
+    Host host;
+    assert(host.bindSurface(256, 256));
+    drawHistoryStroke(host, 985U);
+    const auto records = HistoryAccess::objects(host);
+    const auto generation = host.semanticGeneration();
+    const auto commit = host.canonicalCommitOrdinal();
+    HistoryAccess::exhaustOperationIds(host);
+    assert(host.selectTool(mode));
+    if (mode == Host::ToolMode::kBrush) {
+      assert(host.beginBrushSession(986U, 1U));
+      assert(host.appendBrushSample(986U, 32.0, 96.0, 0.5, 1U));
+      assert(host.appendBrushSample(986U, 128.0, 96.0, 0.5, 2U));
+      assert(!host.finishBrushSession(986U));
+    } else {
+      assert(host.eraserBegin(986U));
+      assert(host.eraserSample(986U, 80.0, 64.0));
+      assert(!host.eraserFinish(986U));
+    }
+    assert(HistoryAccess::objects(host) == records);
+    assert(host.semanticGeneration() == generation);
+    assert(host.canonicalCommitOrdinal() == commit);
+  }
 }
 }  // namespace
 
@@ -334,18 +397,26 @@ void objectEraserUndoRedoRestoresSemanticObject() {
   assert(host.appendBrushSample(930U, 128.0, 64.0, 0.5, 2U));
   assert(host.finishBrushSession(930U));
   assert(host.semanticObjectCount() == 1U);
+  const auto beforeRecords = HistoryAccess::objects(host);
+  const auto beforePixels = canonicalPixels(host);
 
   assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kObjectEraser));
   assert(host.eraserBegin(931U));
   assert(host.eraserSample(931U, 80.0, 64.0));
   assert(host.eraserFinish(931U));
   assert(host.semanticObjectCount() == 0U);
+  const auto erasedRecords = HistoryAccess::objects(host);
+  const auto erasedPixels = canonicalPixels(host);
   assert(host.canUndo());
   assert(host.undo());
   assert(host.semanticObjectCount() == 1U);
+  assert(HistoryAccess::objects(host) == beforeRecords);
+  assert(canonicalPixels(host) == beforePixels);
   assert(host.canRedo());
   assert(host.redo());
   assert(host.semanticObjectCount() == 0U);
+  assert(HistoryAccess::objects(host) == erasedRecords);
+  assert(canonicalPixels(host) == erasedPixels);
 }
 
 void partialEraserUndoRedoRestoresMaskSemantics() {
@@ -356,11 +427,14 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
   assert(host.appendBrushSample(940U, 128.0, 96.0, 0.5, 2U));
   assert(host.finishBrushSession(940U));
   assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  const auto beforeRecords = HistoryAccess::objects(host);
+  const auto beforePixels = canonicalPixels(host);
 
   assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
   assert(host.eraserBegin(941U));
   assert(host.eraserSample(941U, 80.0, 96.0));
   assert(host.eraserFinish(941U));
+  const auto erasedRecords = HistoryAccess::objects(host);
   std::vector<std::uint8_t> erased(256U * 256U * 4U);
   assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
   assert(host.activeSurfaceProvider()->readbackRgba(erased).code ==
@@ -374,6 +448,8 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
   assert(host.activeSurfaceProvider()->readbackRgba(restored).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(restored[erasedPixel + 3U] != 0U);
+  assert(HistoryAccess::objects(host) == beforeRecords);
+  assert(restored == beforePixels);
 
   assert(host.redo());
   std::vector<std::uint8_t> redone(256U * 256U * 4U);
@@ -381,9 +457,13 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
   assert(host.activeSurfaceProvider()->readbackRgba(redone).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(redone[erasedPixel + 3U] == 0U);
+  assert(HistoryAccess::objects(host) == erasedRecords);
+  assert(redone == erased);
 }
 
 int main() {
+  activeViewportGestureBlocksHistoryUntilAllContactsEnd();
+  exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation();
   localBrushSkipsIdentityAlreadyUsedByLegacySubmit();
   legacyIdentitiesCannotCollideWithNewBrushOrHistory();
   acceptedUndoSurvivesProjectionFailureAndRecoversWithoutReplay();
