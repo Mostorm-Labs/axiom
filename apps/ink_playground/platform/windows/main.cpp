@@ -898,94 +898,105 @@ void persistEvidence(const State& value) {
       renderPath);
 }
 
+canvas::debug_ui::DebugSnapshot buildDebugSnapshot(State& value) {
+  canvas::debug_ui::DebugSnapshot snapshot{};
+  snapshot.stamp.sequence = value.pointerSampleSequence;
+  snapshot.stamp.snapshotSequence = value.pointerSampleSequence;
+  snapshot.stamp.monotonicTimeNs = static_cast<std::uint64_t>(
+      std::chrono::duration_cast<std::chrono::nanoseconds>(
+          std::chrono::steady_clock::now().time_since_epoch()).count());
+  snapshot.stamp.frameId = value.presentCount;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  snapshot.canonicalSurfaceGeneration = value.host->activeSurfaceProvider() != nullptr
+      ? value.host->activeSurfaceProvider()->generation() : 0;
+  snapshot.previewSurfaceGeneration = value.previewProvider != nullptr ? value.previewProvider->generation() : 0;
+#else
+  snapshot.canonicalSurfaceGeneration = 0;
+  snapshot.previewSurfaceGeneration = 0;
+#endif
+  snapshot.canonicalRevision = value.host->submittedOperationCount();
+  snapshot.previewRevision = value.host->previewPresentCount();
+  snapshot.activePointerCount = static_cast<std::uint32_t>(value.activeKeys.size());
+  snapshot.selectedTool = static_cast<std::uint32_t>(value.selectedTool);
+  snapshot.stamp.runtimeGeneration = 1U;
+  snapshot.stamp.documentGeneration = value.host->semanticGeneration().value();
+  snapshot.stamp.viewGeneration = 1U;
+  snapshot.stamp.surfaceGeneration = snapshot.canonicalSurfaceGeneration;
+  snapshot.stamp.generation = snapshot.stamp.surfaceGeneration;
+  if (value.runtimeFacade != nullptr) {
+    const auto runtimeState = value.runtimeFacade->readRuntimeState();
+    snapshot.stamp.runtimeGeneration = runtimeState.runtimeGeneration;
+    snapshot.stamp.documentGeneration = runtimeState.documentGeneration;
+    snapshot.stamp.viewGeneration = runtimeState.viewGeneration;
+    snapshot.selectedTool = runtimeState.toolId != 0U
+        ? runtimeState.toolId : snapshot.selectedTool;
+  }
+  snapshot.canonicalSurfaceMode = value.canonicalSurfaceMode;
+  if (value.hasSurfaceReceipt) {
+    snapshot.surfaceControlRequestId = value.lastSurfaceReceipt.requestId;
+    snapshot.surfaceControlState = value.lastSurfaceReceipt.state;
+    snapshot.surfaceControlGeneration = value.lastSurfaceReceipt.generation;
+  }
+  snapshot.arcPresenterActive = value.host->previewActive();
+  snapshot.traceEnabled = false;
+  snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInput)] =
+      canvas::debug_ui::CapabilityState::kAvailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kCanonicalSurface)] =
+      value.host->surface().available ? canvas::debug_ui::CapabilityState::kAvailable
+                                      : canvas::debug_ui::CapabilityState::kDegraded;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kArcPreviewSurface)] =
+      value.previewProvider != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                       : canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kSurfaceMode)] =
+      value.platformDebugControl != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                             : canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTelemetry)] =
+      value.telemetry != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
+                                 : canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInspection)] = canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTrace)] = canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kGpuTiming)] = canvas::debug_ui::CapabilityState::kUnavailable;
+  snapshot.inputBatchCount = value.host->hud().batch;
+  snapshot.handoffCount = value.host->hud().pendingHandoffCount;
+  snapshot.presentCount = value.presentCount;
+  snapshot.surfaceLostCount = value.host->surfaceLostCount();
+  snapshot.sampleHz = value.host->hud().sampleHz;
+  snapshot.frameMs = value.host->hud().frameMs;
+  snapshot.queueAgeMs = value.host->hud().queueAgeMs;
+  snapshot.surfaceAvailable = value.host->surface().available;
+  if (value.arcDiagnostics != nullptr) {
+    const auto arc = value.arcDiagnostics->readArcDiagnostics();
+    snapshot.previewRevision = arc.previewRevision;
+    snapshot.activePointerCount = static_cast<std::uint32_t>(arc.activePointerCount);
+    snapshot.inputBatchCount = arc.inputBatchCount;
+    snapshot.handoffCount = arc.handoffCount;
+    snapshot.arcPresenterActive = arc.previewActive;
+  }
+  if (value.platformDiagnostics != nullptr) {
+    const auto platform = value.platformDiagnostics->readPlatformDiagnostics();
+    snapshot.canonicalSurfaceGeneration = platform.canonicalSurfaceGeneration;
+    snapshot.previewSurfaceGeneration = platform.previewSurfaceGeneration;
+    snapshot.stamp.surfaceGeneration = platform.canonicalSurfaceGeneration;
+    snapshot.stamp.generation = platform.canonicalSurfaceGeneration;
+    snapshot.surfaceAvailable = platform.surfaceAvailable;
+    snapshot.presentCount = platform.presentCount;
+    snapshot.surfaceLostCount = platform.lostCount;
+  }
+  return snapshot;
+}
+
 void paint(HWND window, State& value) {
   if (value.debugUi != nullptr) {
-    canvas::debug_ui::DebugSnapshot snapshot{};
-    snapshot.stamp.sequence = value.pointerSampleSequence;
-    snapshot.stamp.snapshotSequence = value.pointerSampleSequence;
-    snapshot.stamp.monotonicTimeNs = static_cast<std::uint64_t>(
-        std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()).count());
-    snapshot.stamp.frameId = value.presentCount;
-#if defined(CANVAS_RENDER_HAS_SKIA)
-    snapshot.canonicalSurfaceGeneration = value.host->activeSurfaceProvider() != nullptr
-        ? value.host->activeSurfaceProvider()->generation() : 0;
-    snapshot.previewSurfaceGeneration = value.previewProvider != nullptr ? value.previewProvider->generation() : 0;
-#else
-    snapshot.canonicalSurfaceGeneration = 0;
-    snapshot.previewSurfaceGeneration = 0;
-#endif
-    snapshot.canonicalRevision = value.host->submittedOperationCount();
-    snapshot.previewRevision = value.host->previewPresentCount();
-    snapshot.activePointerCount = static_cast<std::uint32_t>(value.activeKeys.size());
-    snapshot.selectedTool = static_cast<std::uint32_t>(value.selectedTool);
-    snapshot.stamp.runtimeGeneration = 1U;
-    snapshot.stamp.documentGeneration = value.host->semanticGeneration().value();
-    snapshot.stamp.viewGeneration = 1U;
-    snapshot.stamp.surfaceGeneration = snapshot.canonicalSurfaceGeneration;
-    snapshot.stamp.generation = snapshot.stamp.surfaceGeneration;
-    if (value.runtimeFacade != nullptr) {
-      const auto runtimeState = value.runtimeFacade->readRuntimeState();
-      snapshot.stamp.runtimeGeneration = runtimeState.runtimeGeneration;
-      snapshot.stamp.documentGeneration = runtimeState.documentGeneration;
-      snapshot.stamp.viewGeneration = runtimeState.viewGeneration;
-      snapshot.selectedTool = runtimeState.toolId != 0U
-          ? runtimeState.toolId : snapshot.selectedTool;
-    }
-    snapshot.canonicalSurfaceMode = value.canonicalSurfaceMode;
-    if (value.hasSurfaceReceipt) {
-      snapshot.surfaceControlRequestId = value.lastSurfaceReceipt.requestId;
-      snapshot.surfaceControlState = value.lastSurfaceReceipt.state;
-      snapshot.surfaceControlGeneration = value.lastSurfaceReceipt.generation;
-    }
-    snapshot.arcPresenterActive = value.host->previewActive();
-    snapshot.traceEnabled = false;
-    snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInput)] =
-        canvas::debug_ui::CapabilityState::kAvailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kCanonicalSurface)] =
-        value.host->surface().available ? canvas::debug_ui::CapabilityState::kAvailable
-                                        : canvas::debug_ui::CapabilityState::kDegraded;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kArcPreviewSurface)] =
-        value.previewProvider != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
-                                         : canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kSurfaceMode)] =
-        value.platformDebugControl != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
-                                               : canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTelemetry)] =
-        value.telemetry != nullptr ? canvas::debug_ui::CapabilityState::kAvailable
-                                   : canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kInspection)] = canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kTrace)] = canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.capabilities[static_cast<std::size_t>(canvas::debug_ui::Capability::kGpuTiming)] = canvas::debug_ui::CapabilityState::kUnavailable;
-    snapshot.inputBatchCount = value.host->hud().batch;
-    snapshot.handoffCount = value.host->hud().pendingHandoffCount;
-    snapshot.presentCount = value.presentCount;
-    snapshot.surfaceLostCount = value.host->surfaceLostCount();
-    snapshot.sampleHz = value.host->hud().sampleHz;
-    snapshot.frameMs = value.host->hud().frameMs;
-    snapshot.queueAgeMs = value.host->hud().queueAgeMs;
-    snapshot.surfaceAvailable = value.host->surface().available;
-    if (value.arcDiagnostics != nullptr) {
-      const auto arc = value.arcDiagnostics->readArcDiagnostics();
-      snapshot.previewRevision = arc.previewRevision;
-      snapshot.activePointerCount = static_cast<std::uint32_t>(arc.activePointerCount);
-      snapshot.inputBatchCount = arc.inputBatchCount;
-      snapshot.handoffCount = arc.handoffCount;
-      snapshot.arcPresenterActive = arc.previewActive;
-    }
-    if (value.platformDiagnostics != nullptr) {
-      const auto platform = value.platformDiagnostics->readPlatformDiagnostics();
-      snapshot.canonicalSurfaceGeneration = platform.canonicalSurfaceGeneration;
-      snapshot.previewSurfaceGeneration = platform.previewSurfaceGeneration;
-      snapshot.stamp.surfaceGeneration = platform.canonicalSurfaceGeneration;
-      snapshot.stamp.generation = platform.canonicalSurfaceGeneration;
-      snapshot.surfaceAvailable = platform.surfaceAvailable;
-      snapshot.presentCount = platform.presentCount;
-      snapshot.surfaceLostCount = platform.lostCount;
-    }
+    const auto snapshot = buildDebugSnapshot(value);
     value.debugSnapshots.publish(snapshot);
-    value.debugUi->frame(value.debugSnapshots.read());
+    // Do not rebuild the full ImGui/Skia overlay from a canvas paint while a
+    // pointer is active. WM_PAINT shares the input thread and can otherwise
+    // delay coalesced pointer delivery. The pointer-up path and the next idle
+    // timer refresh the panel after the stroke is complete.
+    if (value.activeKeys.empty() && !value.resizeInProgress) {
+      value.debugUi->frame(snapshot);
+    }
   }
   PAINTSTRUCT ps{};
   HDC dc = BeginPaint(window, &ps);
@@ -1072,6 +1083,18 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (value->axiomDebugControl != nullptr) value->axiomDebugControl->process();
     if (value->platformDebugControl != nullptr) {
       value->platformDebugControl->processPendingSurfaceModes();
+    }
+    // Debug state must advance independently of canvas WM_PAINT. This keeps
+    // receipts and product-control mutations visible while the app is idle.
+    // The canvas and the Debug UI share this Win32 message thread. A full
+    // ImGui→Skia overlay rebuild can allocate and rasterize for several
+    // milliseconds, which would delay WM_POINTER/WM_MOUSEMOVE dispatch and
+    // make coalesced input appear to have a lower sample rate. During an
+    // active stroke, let input and preview presentation own the thread; the
+    // next idle tick and the pointer-up invalidation refresh diagnostics.
+    if (value->debugUi != nullptr && value->debugUi->visible() &&
+        value->activeKeys.empty() && !value->resizeInProgress) {
+      value->debugUi->refresh();
     }
     const bool f12Down = (GetAsyncKeyState(VK_F12) & 0x8000) != 0;
     if (f12Down && !value->debugF12Down && value->debugUi != nullptr) {
@@ -1588,6 +1611,11 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   value.debugUi->setArcDiagnostics(value.arcDiagnostics.get());
   value.debugUi->setPlatformDiagnostics(value.platformDiagnostics.get());
   value.debugUi->setTelemetry(value.telemetry.get());
+  value.debugUi->setSnapshotRefresh([&value]() {
+    const auto snapshot = buildDebugSnapshot(value);
+    value.debugSnapshots.publish(snapshot);
+    return snapshot;
+  });
   const BOOL touchRegistered = RegisterTouchWindow(value.window, TWF_WANTPALM);
   const BOOL pointerTouchRegistered = RegisterPointerInputTarget(value.window, PT_TOUCH);
   const BOOL pointerPenRegistered = RegisterPointerInputTarget(value.window, PT_PEN);

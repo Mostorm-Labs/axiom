@@ -29,10 +29,11 @@ std::optional<CommandReceipt> DebugController::submit(DebugCommand command) {
     return context_.commands == nullptr ? std::nullopt : context_.commands->admit(std::move(command));
 }
 
-void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
+bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
                       canvas::runtime::RuntimeFacade* runtime,
                       canvas::runtime::AxiomDebugControl* axiomDebug,
                       canvas::runtime::PlatformDebugControl* platform) {
+    bool submittedControl = false;
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(410.0f, 560.0f), ImGuiCond_Always);
     constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar |
@@ -40,7 +41,7 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
     if (!ImGui::Begin("Axiom Debug UI", nullptr, flags)) {
         ImGui::End();
-        return;
+        return false;
     }
     ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f),
                        "Axiom Debug UI / common ImGui + Skia");
@@ -86,6 +87,7 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
             request.brushId = static_cast<std::uint32_t>(tool.second - 4100);
             request.eraserId = static_cast<std::uint32_t>(tool.second - 4104);
             (void)runtime->submitProductControl(request);
+            submittedControl = true;
         }
     }
     ImGui::Separator();
@@ -99,6 +101,7 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         request.expectedGeneration = snapshot.stamp.surfaceGeneration;
         request.deadlineSequence = snapshot.stamp.sequence + 120U;
         (void)platform->enqueueSurfaceMode(request);
+        submittedControl = true;
     };
     if (ImGui::Button("Platform default")) requestSurface(canvas::runtime::SurfaceMode::kPlatformDefault);
     ImGui::SameLine();
@@ -137,6 +140,7 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         command.expectedDocumentGeneration = snapshot.stamp.documentGeneration;
         command.deadlineSequence = snapshot.stamp.sequence + 120U;
         (void)axiomDebug->enqueue(command);
+        submittedControl = true;
     };
     if (ImGui::Button("Force full redraw")) {
         enqueueDebug(canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw);
@@ -165,6 +169,7 @@ void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
                 snapshot.sampleHz, snapshot.queueAgeMs);
     ImGui::Text("Arc presenter: %s", snapshot.arcPresenterActive ? "active" : "idle");
     ImGui::End();
+    return submittedControl;
 }
 
 #if defined(CANVAS_DEBUG_UI_HAS_SKIA)

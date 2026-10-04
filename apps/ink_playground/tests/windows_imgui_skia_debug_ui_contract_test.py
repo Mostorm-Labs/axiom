@@ -133,3 +133,34 @@ def test_windows_composition_root_shares_input_capture_gate_with_debug_host():
     assert "setInputCaptureGate" in header
     assert "setInputCaptureGate(&value.inputCapture)" in source
     assert "DebugInputOwner::kCanvas" in source
+
+
+def test_overlay_refreshes_snapshot_before_panel_render():
+    host = HOST.read_text(encoding="utf-8")
+    header = (ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "windows_host.hpp").read_text(encoding="utf-8")
+    main = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "std::function<DebugSnapshot()> snapshotRefresh_" in header
+    assert "if (snapshotRefresh_)" in host
+    assert "snapshot_ = snapshotRefresh_();" in host
+    assert "value.debugUi->setSnapshotRefresh" in main
+    assert "debugUi->refresh();" in main
+
+
+def test_overlay_uses_one_imgui_new_frame_per_render_pass():
+    source = HOST.read_text(encoding="utf-8")
+    render = source.split("void WindowsDebugUiHost::renderFrame()", 1)[1].split(
+        "void WindowsDebugUiHost::refresh", 1
+    )[0]
+    assert render.count("ImGui::NewFrame();") == 1
+    assert render.count("ImGui_ImplWin32_NewFrame();") == 1
+    assert "const bool submitted = drawPanels();" in render
+
+
+def test_windows_timer_does_not_rasterize_debug_overlay_during_active_stroke():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    timer = source.split("if (message == WM_TIMER", 1)[1].split(
+        "if (message == WM_SIZE", 1
+    )[0]
+    assert "value->activeKeys.empty()" in timer
+    assert "value->resizeInProgress" in timer
+    assert "debugUi->refresh();" in timer

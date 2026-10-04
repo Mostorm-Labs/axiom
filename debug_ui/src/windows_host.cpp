@@ -227,6 +227,12 @@ void WindowsDebugUiHost::raise() noexcept {
 void WindowsDebugUiHost::renderFrame() noexcept {
   if (!visible_ || !context_ || !ensureSurface() || impl_ == nullptr || impl_->rendering) return;
   impl_->rendering = true;
+  if (snapshotRefresh_) {
+    snapshot_ = snapshotRefresh_();
+    if (snapshot_.selectedTool != 0U) {
+      selectedTool_ = static_cast<int>(snapshot_.selectedTool);
+    }
+  }
   ImGui::SetCurrentContext(context_);
   RECT client{};
   if (!GetClientRect(overlay_, &client)) {
@@ -242,13 +248,36 @@ void WindowsDebugUiHost::renderFrame() noexcept {
       : std::chrono::duration<float>(now - impl_->lastFrame).count();
   io.DeltaTime = (std::max)(elapsed, 1.0f / 1000.0f);
   impl_->lastFrame = now;
-  ImGui_ImplWin32_NewFrame();
-  ImGui::NewFrame();
-  buildImGuiPanels(snapshot_, selectedTool_, runtime_, axiomDebug_, platform_);
-  ImGui::Render();
   ImGuiSkiaRenderer renderer;
-  (void)renderer.render(ImGui::GetDrawData(), impl_->surface.get(), impl_->fontTexture.get());
+  const auto drawPanels = [&]() {
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+    const bool submitted = buildImGuiPanels(snapshot_, selectedTool_, runtime_,
+                                            axiomDebug_, platform_);
+    ImGui::Render();
+    (void)renderer.render(ImGui::GetDrawData(), impl_->surface.get(),
+                          impl_->fontTexture.get());
+    return submitted;
+  };
+  const bool submitted = drawPanels();
+  // Controls are submitted while building the ImGui frame. Refresh the
+  // owner snapshot and redraw once so the result is visible in the same
+  // input dispatch, without waiting for canvas WM_PAINT or the next timer.
+  if (submitted && snapshotRefresh_) {
+    snapshot_ = snapshotRefresh_();
+    if (snapshot_.selectedTool != 0U) {
+      selectedTool_ = static_cast<int>(snapshot_.selectedTool);
+    }
+    (void)drawPanels();
+  }
   impl_->rendering = false;
+}
+
+void WindowsDebugUiHost::refresh() noexcept {
+  if (!initialized_ || !visible_ || impl_ == nullptr || impl_->rendering) return;
+  renderFrame();
+  raise();
+  if (overlay_) InvalidateRect(overlay_, nullptr, FALSE);
 }
 
 void WindowsDebugUiHost::frame(const DebugSnapshot& s) {

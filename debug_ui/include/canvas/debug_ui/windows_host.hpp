@@ -19,6 +19,9 @@ class WindowsDebugUiHost final {
   [[nodiscard]] bool visible() const noexcept { return visible_; }
   [[nodiscard]] bool handleMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
   void frame(const DebugSnapshot& snapshot);
+  // Refresh the visible overlay from the platform-owned snapshot without
+  // requiring the canvas HWND to receive WM_PAINT.
+  void refresh() noexcept;
   // Re-anchor the owned debug window after the owner moves or resizes.  This
   // is deliberately separate from frame(): window geometry must not depend
   // on the owner receiving a paint message.
@@ -46,6 +49,12 @@ class WindowsDebugUiHost final {
   }
   void setTelemetry(const canvas::runtime::ITelemetry* telemetry) noexcept {
     telemetry_ = telemetry;
+  }
+  // The platform owner can provide a fresh immutable diagnostics snapshot
+  // immediately before an overlay frame. This keeps product state changes
+  // made by a panel click visible without waiting for the canvas WM_PAINT.
+  void setSnapshotRefresh(std::function<DebugSnapshot()> refresh) {
+    snapshotRefresh_ = std::move(refresh);
   }
   void setAxiomDebugControl(canvas::runtime::AxiomDebugControl* control) noexcept {
     axiomDebug_ = control;
@@ -77,6 +86,7 @@ class WindowsDebugUiHost final {
   const canvas::runtime::IArcDiagnostics* arcDiagnostics_ = nullptr;
   const canvas::runtime::IPlatformDiagnostics* platformDiagnostics_ = nullptr;
   const canvas::runtime::ITelemetry* telemetry_ = nullptr;
+  std::function<DebugSnapshot()> snapshotRefresh_;
   canvas::runtime::AxiomDebugControl* axiomDebug_ = nullptr;
   canvas::runtime::PlatformDebugControl* platform_ = nullptr;
   int selectedTool_ = 4101;

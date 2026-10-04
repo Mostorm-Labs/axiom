@@ -59,10 +59,10 @@ class DebugController final {
 
 // Common panel construction. Product controls and surface experiments are
 // submitted to owner interfaces; the panel never owns runtime truth.
-void buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
-                      canvas::runtime::RuntimeFacade* runtime,
-                      canvas::runtime::AxiomDebugControl* axiomDebug,
-                      canvas::runtime::PlatformDebugControl* platform);
+[[nodiscard]] bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
+                                    canvas::runtime::RuntimeFacade* runtime,
+                                    canvas::runtime::AxiomDebugControl* axiomDebug,
+                                    canvas::runtime::PlatformDebugControl* platform);
 
 class ImGuiSkiaRenderer final {
   public:
