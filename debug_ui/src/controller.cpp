@@ -90,6 +90,31 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
             submittedControl = true;
         }
     }
+    ImGui::BeginDisabled(runtime == nullptr || !snapshot.canUndo);
+    if (ImGui::Button("Undo (Ctrl+Z)")) {
+        (void)runtime->undo(nextRequestId++, snapshot.stamp.runtimeGeneration);
+        submittedControl = true;
+    }
+    ImGui::EndDisabled();
+    ImGui::SameLine();
+    ImGui::BeginDisabled(runtime == nullptr || !snapshot.canRedo);
+    if (ImGui::Button("Redo (Ctrl+Y)")) {
+        (void)runtime->redo(nextRequestId++, snapshot.stamp.runtimeGeneration);
+        submittedControl = true;
+    }
+    ImGui::EndDisabled();
+    if (snapshot.productControlRequestId != 0U) {
+        const char* state = "rejected";
+        switch (snapshot.productControlState) {
+        case canvas::runtime::ProductControlState::kApplied: state = "applied"; break;
+        case canvas::runtime::ProductControlState::kQueued: state = "queued"; break;
+        case canvas::runtime::ProductControlState::kUnsupported: state = "unsupported"; break;
+        case canvas::runtime::ProductControlState::kFailed: state = "failed"; break;
+        case canvas::runtime::ProductControlState::kRejected: state = "rejected"; break;
+        }
+        ImGui::Text("product request %llu: %s",
+                    static_cast<unsigned long long>(snapshot.productControlRequestId), state);
+    }
     ImGui::Separator();
     ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f), "Canonical surface mode");
     const auto requestSurface = [&](canvas::runtime::SurfaceMode mode) {

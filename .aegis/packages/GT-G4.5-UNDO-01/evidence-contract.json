@@ -1,0 +1,14 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "output_root": ".aegis/results/GT-G4.5-UNDO-01/",
+  "required_artifacts": [
+    "result.json",
+    "source-manifest.json",
+    "build.log",
+    "ctest.log",
+    "design-preflight.json"
+  ],
+  "review_boundary": "Exact local source manifest and commits when committed; no hosted or physical claim without provider evidence.",
+  "producer_may_claim_gate_pass": false
+}

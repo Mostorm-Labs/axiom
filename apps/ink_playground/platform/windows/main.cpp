@@ -108,6 +108,8 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<WindowsTelemetry> telemetry;
   canvas::runtime::SurfaceModeReceipt lastSurfaceReceipt{};
   bool hasSurfaceReceipt = false;
+  canvas::runtime::ProductControlReceipt lastProductReceipt{};
+  bool hasProductReceipt = false;
   int selectedTool = 4101;
 };
 enum : int {
@@ -183,7 +185,8 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 1U,
             static_cast<std::uint32_t>(state_.selectedTool),
             state_.host->surface().generation, viewport.scale,
-            viewport.translationX, viewport.translationY};
+            viewport.translationX, viewport.translationY,
+            state_.host->canUndo(), state_.host->canRedo()};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
@@ -197,7 +200,7 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
                 state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U,
             diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY};
+            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -235,10 +238,16 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
     }
     if (request.action == canvas::runtime::ProductControlAction::kUndo ||
         request.action == canvas::runtime::ProductControlAction::kRedo) {
-      // Undo/redo are intentionally capability-gated until the host exposes
-      // the production operation history.  The facade reports this explicitly
-      // instead of pretending that a debug click mutated canonical state.
-      receipt.state = canvas::runtime::ProductControlState::kUnsupported;
+      const bool applied = request.action == canvas::runtime::ProductControlAction::kUndo
+          ? state_.host->undo() : state_.host->redo();
+      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
+                              : canvas::runtime::ProductControlState::kRejected;
+      state_.lastProductReceipt = receipt;
+      state_.hasProductReceipt = true;
+      if (applied) {
+        state_.canonicalFrameReady = false;
+        InvalidateRect(state_.window, nullptr, FALSE);
+      }
       return receipt;
     }
     if (request.action == canvas::runtime::ProductControlAction::kSetEraser) {
@@ -930,6 +939,12 @@ canvas::debug_ui::DebugSnapshot buildDebugSnapshot(State& value) {
     snapshot.stamp.viewGeneration = runtimeState.viewGeneration;
     snapshot.selectedTool = runtimeState.toolId != 0U
         ? runtimeState.toolId : snapshot.selectedTool;
+    snapshot.canUndo = runtimeState.canUndo;
+    snapshot.canRedo = runtimeState.canRedo;
+    if (value.hasProductReceipt) {
+      snapshot.productControlRequestId = value.lastProductReceipt.requestId;
+      snapshot.productControlState = value.lastProductReceipt.state;
+    }
   }
   snapshot.canonicalSurfaceMode = value.canonicalSurfaceMode;
   if (value.hasSurfaceReceipt) {
@@ -1523,6 +1538,23 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
+  if (message == WM_KEYDOWN && (GetKeyState(VK_CONTROL) & 0x8000) != 0 &&
+      (wParam == L'Z' || wParam == L'Y')) {
+    if (value != nullptr && value->runtimeFacade != nullptr &&
+        (lParam & (1LL << 30)) == 0) {
+      const auto generation = value->runtimeFacade->readRuntimeState().runtimeGeneration;
+      static std::uint64_t nextHistoryRequestId = 0x100000U;
+      const auto receipt = wParam == L'Z'
+          ? value->runtimeFacade->undo(nextHistoryRequestId++, generation)
+          : value->runtimeFacade->redo(nextHistoryRequestId++, generation);
+      if (receipt.state == canvas::runtime::ProductControlState::kApplied) {
+        value->canonicalFrameReady = false;
+        value->previewPresentationEnabled = true;
+        InvalidateRect(window, nullptr, FALSE);
+      }
+    }
+    return 0;
+  }
   if (message == WM_KEYDOWN && wParam == VK_SPACE) {
     if (value != nullptr && (lParam & (1LL << 30)) == 0) {
       value->runtimePreviewVisible = !value->runtimePreviewVisible;

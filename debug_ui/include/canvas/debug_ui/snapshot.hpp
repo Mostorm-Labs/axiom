@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 #include "canvas/runtime/surface_debug_control.hpp"
+#include "canvas/runtime/runtime_facade.hpp"
 
 namespace canvas::debug_ui {
 
@@ -57,6 +58,11 @@ struct DebugSnapshot final {
     bool arcPresenterActive = false;
     bool traceEnabled = false;
     std::uint32_t selectedTool = 0;
+    bool canUndo = false;
+    bool canRedo = false;
+    std::uint64_t productControlRequestId = 0;
+    canvas::runtime::ProductControlState productControlState =
+        canvas::runtime::ProductControlState::kRejected;
     canvas::runtime::SurfaceMode canonicalSurfaceMode =
         canvas::runtime::SurfaceMode::kPlatformDefault;
     std::uint64_t surfaceControlRequestId = 0;

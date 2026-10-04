@@ -1,0 +1,41 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "obligations": [
+    {
+      "id": "UNDO-HOST-001",
+      "requirement": "Exact brush ObjectRecord and raster pixels are restored by redo with fresh compensations.",
+      "oracle": "G45BrushRuntimePipeline",
+      "acceptance": "Relevant assertions/build succeed; scope review confirms preserved algorithms.",
+      "evidence_required": "result.json + test logs + source hashes"
+    },
+    {
+      "id": "UNDO-ERASE-001",
+      "requirement": "Object and partial eraser undo/redo restore complete preimage and exact masks/pixels.",
+      "oracle": "G45BrushRuntimePipeline",
+      "acceptance": "Relevant assertions/build succeed; scope review confirms preserved algorithms.",
+      "evidence_required": "result.json + test logs + source hashes"
+    },
+    {
+      "id": "UNDO-STATE-001",
+      "requirement": "Empty, active/canceled input, redo clearing, surface-loss and projection-failure paths preserve coherent history.",
+      "oracle": "G45BrushRuntimePipeline",
+      "acceptance": "Relevant assertions/build succeed; scope review confirms preserved algorithms.",
+      "evidence_required": "result.json + test logs + source hashes"
+    },
+    {
+      "id": "UNDO-ID-001",
+      "requirement": "Local, legacy and compensation identities do not collide or advance generation on duplicate acceptance.",
+      "oracle": "G45BrushRuntimePipeline",
+      "acceptance": "Relevant assertions/build succeed; scope review confirms preserved algorithms.",
+      "evidence_required": "result.json + test logs + source hashes"
+    },
+    {
+      "id": "UNDO-CONTROL-001",
+      "requirement": "Windows facade, ImGui buttons and Ctrl+Z/Ctrl+Y use product controls without changes to pointer routing.",
+      "oracle": "Windows build and scoped code review; physical UI validation remains NOT_CLAIMED",
+      "acceptance": "Relevant assertions/build succeed; scope review confirms preserved algorithms.",
+      "evidence_required": "result.json + test logs + source hashes"
+    }
+  ]
+}

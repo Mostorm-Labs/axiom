@@ -41,6 +41,8 @@ struct RuntimeStateSnapshot final {
   float cameraScale = 1.0F;
   float cameraTranslationX = 0.0F;
   float cameraTranslationY = 0.0F;
+  bool canUndo = false;
+  bool canRedo = false;
 };
 
 struct RuntimeDiagnosticsSnapshot final {
@@ -53,6 +55,8 @@ struct RuntimeDiagnosticsSnapshot final {
   float cameraScale = 1.0F;
   float cameraTranslationX = 0.0F;
   float cameraTranslationY = 0.0F;
+  bool canUndo = false;
+  bool canRedo = false;
 };
 
 class RuntimeDiagnostics : public DiagnosticsProvider {
@@ -96,7 +100,7 @@ class RuntimeFacade : public RuntimeDiagnostics {
             diagnostics.documentRevision, diagnostics.viewGeneration,
             diagnostics.surfaceGeneration, diagnostics.toolId, 0U, 0U, 0U,
             diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY};
+            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo};
   }
   [[nodiscard]] virtual ProductControlReceipt submitProductControl(
       const ProductControlRequest& request) noexcept = 0;

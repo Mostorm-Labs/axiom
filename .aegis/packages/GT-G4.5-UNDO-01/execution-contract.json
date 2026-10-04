@@ -1,0 +1,89 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "apps/ink_playground/common/ink_playground_host.hpp",
+      "apps/ink_playground/common/ink_playground_host.cpp",
+      "apps/ink_playground/platform/windows/main.cpp",
+      "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
+      "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+      "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+      "debug_ui/src/controller.cpp",
+      ".aegis/packages/GT-G4.5-UNDO-01/**",
+      ".aegis/results/GT-G4.5-UNDO-01/**"
+    ],
+    "required_changes": [
+      "Application EditorHistory integration for brush and both erasers",
+      "Exact inverse capture before accepted operation",
+      "Fresh collision-safe operation identities",
+      "Recover derived Scene after publication failure; keep accepted Semantic history",
+      "RuntimeFacade history capabilities and consumer controls",
+      "Windows keyboard shortcuts and history result display"
+    ],
+    "forbidden_changes": [
+      "touch/pointer routing",
+      "AutoIntent algorithms",
+      "BrushEngine algorithms",
+      "Semantic schema/apply algorithms",
+      "Arc ownership",
+      "direct ObjectStore mutation",
+      "snapshot rewind",
+      "rewriting old package authority",
+      "claiming P34/G4.5 Gate PASS"
+    ]
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Before WIP, InkPlaygroundHost history API is absent; new ID/projection failure tests expose defects in WIP."
+  },
+  "tests": {
+    "required": [
+      "Windows executable and relevant test targets build",
+      "G4EditorHistory",
+      "G45BrushRuntimePipeline",
+      "DUI20DebugUiContracts",
+      "available full CTest regression",
+      "git diff --check"
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [
+      "hosted Windows run when changes are pushed"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "result.json",
+      "source-manifest.json",
+      "build.log",
+      "ctest.log",
+      "design-preflight.json"
+    ],
+    "corroborative": [
+      "physical Windows observations (not claimed by automated tests)"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Required implementation and local regression complete",
+      "Evidence names remaining unrelated failures honestly",
+      "Exact local implementation/source hash boundary is recorded",
+      "Return READY_FOR_CONTROL_REVIEW only for this implementation; prior Debug UI review is unresolved"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "AUTHORITY_CONFLICT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

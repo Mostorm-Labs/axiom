@@ -123,7 +123,8 @@ InkPlaygroundHost::InkPlaygroundHost()
           std::make_unique<canvas::UniformGridSpatialIndex>())),
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
-      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>()) {}
+      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>()),
+      history_(*this) {}
 
 bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
   strokeStartNs_ = 0;
@@ -585,7 +586,9 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
     return true;
   }
   semantic::Operation operation;
-  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(submittedOperationCount_ + 1U));
+  const auto operationOrdinal = localOperationOrdinal();
+  if (operationOrdinal == 0U) return false;
+  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(operationOrdinal));
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
@@ -621,25 +624,49 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
                                   {p.x, p.y}, {p.x, p.y}});
       }
       maskPayload.items.push_back({id, {{foundation::ObjectId::fromUint64(
-          (submittedOperationCount_ + 1U) * 1000U + ++replacementOrdinal), swept}}});
+          operationOrdinal * 1000U + ++replacementOrdinal), swept}}});
     }
     operation.payload = std::move(maskPayload);
+  }
+  semantic::Operation inverse;
+  inverse.id = allocateOperationId();
+  inverse.document_id = documentId_;
+  inverse.schema_version = 1U;
+  inverse.payload_version = 1U;
+  if (toolMode_ == ToolMode::kObjectEraser) {
+    semantic::RestoreObjectsOp restore;
+    for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
+      const auto* record = semanticObjects_.find(id);
+      if (record != nullptr) restore.objects.push_back(*record);
+    }
+    inverse.payload = std::move(restore);
+  } else {
+    semantic::RemoveEraseMasksOp remove;
+    for (const auto& item : std::get<semantic::AddEraseMasksOp>(operation.payload).items) {
+      semantic::EraseMaskRemoveItem target;
+      target.object_id = item.object_id;
+      for (const auto& mask : item.masks) target.mask_ids.push_back(mask.id);
+      remove.items.push_back(std::move(target));
+    }
+    inverse.payload = std::move(remove);
   }
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   eraserTraces_.erase(it);
   eraserPreviewRevisions_.erase(pointerId);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied &&
-      applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) return false;
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  if (!history_.record(operation, {std::move(inverse)})) return false;
+  ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
     canvas::SceneCommitInput input(applied.commit_record->before_generation,
                                    applied.commit_record->after_generation, view,
                                    &applied.commit_record->change_set);
-    if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+    // Semantic acceptance is final. Scene is derived and can recover at the
+    // next frame; a failed projection must not lose the accepted history.
+    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
   }
-  ++submittedOperationCount_;
-  if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+  if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return true;
   if (previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
@@ -712,16 +739,24 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
   if (!BrushCommitAdapter::valid(intent, package)) return false;
   brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
                                      brushReplayDigest_), intent.revision);
-  const auto operationId = submittedOperationCount_ + 1U;
+  const auto operationId = localOperationOrdinal();
+  if (operationId == 0U) return false;
   const auto operation = BrushCommitAdapter::build(
       intent, package, operationId, documentId_);
+  semantic::Operation inverse;
+  inverse.id = allocateOperationId();
+  inverse.document_id = documentId_;
+  inverse.schema_version = 1U;
+  inverse.payload_version = 1U;
+  inverse.payload = semantic::DeleteObjectsOp{{foundation::ObjectId::fromUint64(operationId)}};
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied &&
-      applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) {
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) {
     return false;
   }
+  if (!history_.record(operation, {std::move(inverse)})) return false;
+  ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
       sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
@@ -731,9 +766,7 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
         view, &applied.commit_record->change_set);
     const auto synchronized = sceneCoordinator_->apply(*sceneCompiler_, sceneInput);
     AXIOM_ANDROID_DIAG("scene apply pointer=%llu ok=%d objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), synchronized ? 1 : 0, semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
-    if (!synchronized) return false;
   }
-  ++submittedOperationCount_;
   if (applied.commit_record.has_value()) {
     const ink::CanonicalHandoffIdentity identity{
         1U, pointerId, 1U, applied.commit_record->operation_id,
@@ -853,7 +886,79 @@ interaction::SubmitResult InkPlaygroundHost::submit(
       applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) {
     return interaction::SubmitResult::rejected();
   }
-  ++submittedOperationCount_;
+  // A duplicate operation is idempotently accepted by the semantic engine,
+  // but it is not a new local document revision and must not advance the
+  // host's product revision counter.
+  if (applied.disposition == semantic::ApplyDisposition::kApplied) {
+    ++submittedOperationCount_;
+  }
+  return interaction::SubmitResult::acceptedResult();
+}
+
+semantic::OperationId InkPlaygroundHost::allocateOperationId() {
+  while (nextHistoryOperationOrdinal_ != 0U) {
+    const auto id = semantic::OperationId(
+        foundation::ObjectId::fromUint64(nextHistoryOperationOrdinal_++));
+    if (!appliedOperations_.find(id).has_value()) return id;
+  }
+  return {};
+}
+
+std::uint64_t InkPlaygroundHost::localOperationOrdinal() const noexcept {
+  // Preserve the existing low-ID/order-key sequence for ordinary drawings;
+  // the compatibility port can consume arbitrary identities independently.
+  auto ordinal = static_cast<std::uint64_t>(submittedOperationCount_ + 1U);
+  while (ordinal != 0U && ordinal < (std::uint64_t{1} << 63U)) {
+    const auto id = foundation::ObjectId::fromUint64(ordinal);
+    if (!appliedOperations_.find(semantic::OperationId(id)).has_value() &&
+        !semanticObjects_.contains(id)) return ordinal;
+    ++ordinal;
+  }
+  return 0U;
+}
+
+bool InkPlaygroundHost::historySceneReady() const noexcept {
+  return runtimeSceneHost_ != nullptr && sceneCoordinator_ != nullptr &&
+         runtimeSceneHost_->semanticGeneration() == semanticGeneration_.current() &&
+         sceneCoordinator_->runtimeScene().generation() == semanticGeneration_.current();
+}
+
+bool InkPlaygroundHost::recoverHistoryScene() noexcept {
+  if (historySceneReady()) return true;
+  if (sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return false;
+  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+  const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
+  return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
+}
+
+interaction::SubmitResult InkPlaygroundHost::submit(
+    std::span<const semantic::Operation> operations, semantic::ApplySource source) {
+  // This host records only one-operation compensation entries. Reject larger
+  // batches before mutation; other EditorHistory owners may support them.
+  if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
+      !historySceneReady()) return interaction::SubmitResult::rejected();
+  for (const auto& operation : operations) {
+    const auto applied = operationEngine_.apply(
+        operation, source, semanticObjects_, appliedOperations_, semanticGeneration_,
+        canonicalCommitClock_);
+    if (applied.disposition != semantic::ApplyDisposition::kApplied) {
+      return interaction::SubmitResult::rejected();
+    }
+    if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
+        sceneCompiler_ != nullptr) {
+      semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+      canvas::SceneCommitInput input(applied.commit_record->before_generation,
+                                     applied.commit_record->after_generation, view,
+                                     &applied.commit_record->change_set);
+      (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    }
+    ++submittedOperationCount_;
+  }
+  if (!operations.empty()) {
+    // Once Semantic has accepted, presentation/projection failure cannot
+    // reject that mutation. The next frame recovers the derived Scene.
+    (void)presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
   return interaction::SubmitResult::acceptedResult();
 }
 
@@ -1100,7 +1205,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
       activeSurfaceProvider() == nullptr) { AXIOM_ANDROID_DIAG("present reject missing deps"); return false; }
   const auto semanticGeneration = semanticGeneration_.current();
-  if (runtimeSceneHost_->semanticGeneration() != semanticGeneration) { AXIOM_ANDROID_DIAG("present reject scene generation"); return false; }
+  if (!recoverHistoryScene()) { AXIOM_ANDROID_DIAG("present reject scene generation"); return false; }
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
