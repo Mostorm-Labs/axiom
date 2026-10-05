@@ -157,6 +157,7 @@ bool PreviewSurfaceController::retireSession(
     }
 
     state_.dirty = true;
+    if (presentationDeferred_) return true;
     if (!renderIfDirty()) return false;
     return true;
 }
@@ -184,6 +185,21 @@ bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) 
     ++state_.submissionCount;
     state_.presentCount = provider_.presentCount();
     state_.submittedRevision = state_.contentRevision;
+    state_.dirty = false;
+    return true;
+}
+
+bool PreviewSurfaceController::markPresented(std::uint64_t contentRevision,
+                                             std::uint64_t surfaceGeneration,
+                                             std::uint64_t presentCount) noexcept {
+    if (!active_ || surfaceGeneration != geometry_.surfaceGeneration.value() ||
+        contentRevision != state_.contentRevision) {
+        return false;
+    }
+    state_.submittedRevision = contentRevision;
+    state_.generation = surfaceGeneration;
+    state_.presentCount = presentCount;
+    state_.submissionCount += 1U;
     state_.dirty = false;
     return true;
 }

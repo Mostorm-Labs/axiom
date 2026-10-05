@@ -96,12 +96,12 @@ struct WindowsD3D12SkiaSurfaceProvider::Impl final {
   ComPtr<IDCompositionTarget> target;
   ComPtr<IDCompositionVisual> visual;
   sk_sp<GrDirectContext> context;
-  std::array<ComPtr<ID3D12Resource>, 2> buffers;
-  std::array<sk_sp<SkSurface>, 2> surfaces;
+  std::array<ComPtr<ID3D12Resource>, 3> buffers;
+  std::array<sk_sp<SkSurface>, 3> surfaces;
   ComPtr<ID3D12Fence> fence;
   HANDLE fenceEvent = nullptr;
   std::uint64_t fenceValue = 0;
-  std::array<std::uint64_t, 2> bufferFenceValues{};
+  std::array<std::uint64_t, 3> bufferFenceValues{};
   std::uint32_t currentBufferIndex = 0;
 };
 
@@ -140,13 +140,21 @@ canvas::render::SkiaSurfaceAcquireResult WindowsD3D12SkiaSurfaceProvider::acquir
   const auto ready = impl_->bufferFenceValues[index];
   if (ready != 0U && impl_->fence && impl_->fenceEvent &&
       impl_->fence->GetCompletedValue() < ready) {
+    // Preview is transient. Never block the input/message thread while DWM
+    // consumes a backbuffer; the render pump retries its latest dirty frame.
+    // Canonical retains the strict wait so committed frames remain correct.
+    if (!attachToOwner_) {
+      return canvas::render::SkiaSurfaceAcquireResult::rejected(
+          canvas::render::SkiaSurfaceAcquireCode::kUnavailable,
+          "preview backbuffer busy");
+    }
     if (SUCCEEDED(impl_->fence->SetEventOnCompletion(ready, impl_->fenceEvent))) {
       (void)WaitForSingleObject(impl_->fenceEvent, 5000);
     }
   }
   impl_->currentBufferIndex = index;
   return canvas::render::SkiaSurfaceAcquireResult::acquired(
-      {impl_->surfaces[index].get(), generation_});
+      {impl_->surfaces[index].get(), generation()});
 }
 void WindowsD3D12SkiaSurfaceProvider::release() noexcept {}
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::lose() noexcept {
@@ -171,9 +179,13 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::present
   // this surface only publishes the latest preview frame.
   const auto presentHr = impl_->swapChain->Present(0, 0);
   if (FAILED(presentHr)) {
+    if (presentHr == DXGI_ERROR_WAS_STILL_DRAWING || presentHr == DXGI_STATUS_OCCLUDED) {
+      return canvas::render::BackendSubmissionResult::rejected(
+          "D3D12 present temporarily unavailable");
+    }
     std::fprintf(stderr, "[d3d12] present failed owner=%d gen=%llu index=%u hr=0x%08lx\\n",
                  attachToOwner_ ? 1 : 0,
-                 static_cast<unsigned long long>(generation_), index,
+                 static_cast<unsigned long long>(generation()), index,
                  static_cast<unsigned long>(presentHr));
     lost_ = true;
     return canvas::render::BackendSubmissionResult::rejected("D3D12 present failed");
@@ -182,7 +194,7 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::present
   if (impl_->queue && impl_->fence && SUCCEEDED(impl_->queue->Signal(impl_->fence.Get(), fence))) {
     impl_->bufferFenceValues[index] = fence;
   }
-  ++presents_;
+  presents_.fetch_add(1U, std::memory_order_release);
   return canvas::render::BackendSubmissionResult::accepted();
 }
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(
@@ -196,9 +208,9 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(
   }
   std::fprintf(stderr, "[d3d12] resize owner=%d old=%ux%u new=%ux%u gen=%llu\\n",
                attachToOwner_ ? 1 : 0, width_, height_, width, height,
-               static_cast<unsigned long long>(generation_));
+               static_cast<unsigned long long>(generation()));
   if (!attachToOwner_) {
-    visible_ = false;
+    visible_.store(false, std::memory_order_release);
     if (overlay_) ShowWindow(overlay_, SW_HIDE);
   }
   width_ = width;
@@ -215,12 +227,12 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(
                  attachToOwner_ ? 1 : 0, width, height);
     return canvas::render::BackendSubmissionResult::rejected("D3D12 surface creation failed");
   }
-  ++generation_;
-  if (generation_ == 0U) generation_ = 1U;
+  const auto nextGeneration = generation_.fetch_add(1U, std::memory_order_acq_rel) + 1U;
+  if (nextGeneration == 0U) generation_.store(1U, std::memory_order_release);
   lost_ = false;
   repositionOverlay();
   std::fprintf(stderr, "[d3d12] resize ready owner=%d gen=%llu\\n", attachToOwner_ ? 1 : 0,
-               static_cast<unsigned long long>(generation_));
+               static_cast<unsigned long long>(generation()));
   return canvas::render::BackendSubmissionResult::accepted();
 }
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::readbackRgba(
@@ -228,15 +240,15 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::readbac
   return canvas::render::BackendSubmissionResult::rejected("GPU provider has no readback");
 }
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::advanceGeneration() noexcept {
-  if (generation_ == std::numeric_limits<std::uint64_t>::max()) {
+  if (generation() == std::numeric_limits<std::uint64_t>::max()) {
     return canvas::render::BackendSubmissionResult::rejected("D3D12 generation exhausted");
   }
-  ++generation_;
+  generation_.fetch_add(1U, std::memory_order_acq_rel);
   lost_ = false;
   return canvas::render::BackendSubmissionResult::accepted();
 }
 void WindowsD3D12SkiaSurfaceProvider::setOverlayVisible(bool visible) noexcept {
-  visible_ = visible;
+  visible_.store(visible, std::memory_order_release);
   if (attachToOwner_) {
     // The canonical provider is attached directly to the owner HWND.  It is
     // always part of the document presentation; only the transient Arc
@@ -315,7 +327,8 @@ bool WindowsD3D12SkiaSurfaceProvider::createGpuSurface() noexcept {
   if (!impl_->context) return false;
   DXGI_SWAP_CHAIN_DESC1 desc{};
   desc.Width = width_; desc.Height = height_; desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-  desc.BufferCount = 2; desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  desc.BufferCount = static_cast<UINT>(impl_->buffers.size());
+  desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
   // CreateSwapChainForComposition is a DirectComposition swap-chain API.  Its
   // contract requires the sequential flip model; FLIP_DISCARD is supported by
   // Skia's HWND viewer path, but is not a valid/stable choice for a composition
@@ -476,7 +489,7 @@ void WindowsD3D12SkiaSurfaceProvider::repositionOverlay() noexcept {
   // Moving the owner must not detach, hide, or recommit the DComp visual.
   // Keeping the existing swap-chain content latched avoids exposing the
   // driver's undefined/black backbuffer during a normal window drag.
-  const UINT visibility = visible_ ? SWP_SHOWWINDOW : SWP_HIDEWINDOW;
+  const UINT visibility = visible_.load(std::memory_order_acquire) ? SWP_SHOWWINDOW : SWP_HIDEWINDOW;
   SetWindowPos(overlay_, HWND_TOP, origin.x, origin.y,
                static_cast<int>(width_), static_cast<int>(height_),
                SWP_NOACTIVATE | visibility);
@@ -499,6 +512,8 @@ canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::present
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(std::uint32_t, std::uint32_t) noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::readbackRgba(std::span<std::uint8_t>) noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::advanceGeneration() noexcept { return {}; }
-void WindowsD3D12SkiaSurfaceProvider::setOverlayVisible(bool visible) noexcept { visible_ = visible; }
+void WindowsD3D12SkiaSurfaceProvider::setOverlayVisible(bool visible) noexcept {
+  visible_.store(visible, std::memory_order_release);
+}
 }  // namespace canvas::ink_playground
 #endif

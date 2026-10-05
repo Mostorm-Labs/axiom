@@ -24,15 +24,19 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <condition_variable>
+#include <atomic>
 #include <memory>
 #include <string>
 #include <sstream>
 #include <span>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
 namespace {
 using canvas::ink_playground::InkPlaygroundHost;
+using canvas::ink_playground::PreviewPresentationCapture;
 class WindowsArcRuntimeSinks;
 class WindowsRuntimeFacade;
 class WindowsAxiomDebugControl;
@@ -47,6 +51,8 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   static constexpr UINT kRenderIntervalMs = 16;
   static constexpr UINT kOverlaySyncMessage = WM_APP + 0x31;
   static constexpr UINT kDeferredResizeMessage = WM_APP + 0x32;
+  static constexpr UINT kRenderWakeMessage = WM_APP + 0x33;
+  static constexpr UINT kPreviewPresentedMessage = WM_APP + 0x34;
   static constexpr UINT kResizeDebounceTimerId = 0xA711;
   HWND toolbarLabel = nullptr;
   std::unordered_map<int, HWND> toolButtons;
@@ -82,8 +88,19 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   // the preview session alive until CanonicalVisible, but the platform
   // presentation must disappear immediately on the final pointer-up so a
   // slow canonical raster/readback cannot leave a stale preview on screen.
-  bool previewPresentationEnabled = true;
-  bool previewDirty = false;
+  std::atomic_bool previewPresentationEnabled{true};
+  std::atomic_bool previewDirty{false};
+  std::atomic_bool renderWakePosted{false};
+  bool evidenceDirty = false;
+  std::atomic_bool canonicalPending{false};
+  std::mutex previewPumpMutex;
+  std::condition_variable previewPumpCv;
+  bool previewPumpPending = false;
+  bool previewPumpStop = false;
+  std::thread previewPump;
+  std::mutex previewCompletionMutex;
+  std::optional<PreviewPresentationCapture> previewCompletion;
+  std::uint64_t previewCompletionPresentCount = 0;
   bool debugF12Down = false;
   canvas::runtime::SurfaceMode canonicalSurfaceMode =
       canvas::runtime::SurfaceMode::kPlatformDefault;
@@ -112,6 +129,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   bool hasProductReceipt = false;
   int selectedTool = 4101;
 };
+void requestPreviewRender(State& value) noexcept;
 enum : int {
   kToolVector = 4101, kToolMarker, kToolChalk, kToolMembrane,
   kToolObjectEraser, kToolPartialEraser
@@ -422,10 +440,17 @@ class WindowsPlatformDebugControl final : public canvas::runtime::PlatformDebugC
 void hidePreviewPresentation(State& value) noexcept {
   value.previewPresentationEnabled = false;
 #if defined(CANVAS_RENDER_HAS_SKIA)
-  if (value.previewProvider != nullptr) {
-    value.previewProvider->setOverlayVisible(false);
-  }
+  if (value.host != nullptr) value.host->setPreviewOverlayVisible(false);
 #endif
+  if (value.debugUi != nullptr) value.debugUi->reposition();
+}
+
+// Stop accepting new preview frames for a completed stroke, but keep the
+// already-presented overlay visible until CanonicalVisible retires it. Hiding
+// at pointer-up exposes the old canonical surface for one message-loop turn
+// while the committed frame is still being rendered, which produces a flash.
+void stopPreviewPresentation(State& value) noexcept {
+  value.previewPresentationEnabled = false;
   if (value.debugUi != nullptr) value.debugUi->reposition();
 }
 
@@ -438,6 +463,15 @@ void enablePreviewPresentation(State& value) noexcept {
   value.previewPresentationEnabled = true;
   if (value.debugUi != nullptr) value.debugUi->reposition();
 }
+
+void wakeRenderPump(State& value) noexcept {
+  requestPreviewRender(value);
+  if (value.window == nullptr || value.renderWakePosted.exchange(true)) return;
+  (void)PostMessageW(value.window, State::kRenderWakeMessage, 0, 0);
+}
+
+void startPreviewRenderPump(State& value);
+void stopPreviewRenderPump(State& value) noexcept;
 
 void createWindowsToolPalette(State& value, HINSTANCE instance) {
   constexpr int kButtonWidth = 132;
@@ -471,6 +505,54 @@ struct NativePointerSample final {
 };
 State* state(HWND window) { return reinterpret_cast<State*>(GetWindowLongPtrW(window, GWLP_USERDATA)); }
 void persistEvidence(const State& value);
+
+void requestPreviewRender(State& value) noexcept {
+  {
+    std::lock_guard lock(value.previewPumpMutex);
+    value.previewPumpPending = true;
+  }
+  value.previewPumpCv.notify_one();
+}
+
+void startPreviewRenderPump(State& value) {
+  value.previewPump = std::thread([&value] {
+    for (;;) {
+      std::unique_lock lock(value.previewPumpMutex);
+      value.previewPumpCv.wait(lock, [&] {
+        return value.previewPumpStop || value.previewPumpPending;
+      });
+      if (value.previewPumpStop) return;
+      value.previewPumpPending = false;
+      lock.unlock();
+      PreviewPresentationCapture capture{};
+      std::uint64_t presentCount = 0;
+      const bool gateOpen = value.host != nullptr && !value.canonicalPending &&
+          value.previewPresentationEnabled;
+      const bool captured = gateOpen && value.host->capturePreviewPresentation(capture);
+      const bool rendered = captured && value.host->renderPreviewPresentation(capture, &presentCount);
+      if (rendered) {
+        {
+          std::lock_guard completionLock(value.previewCompletionMutex);
+          value.previewCompletion = capture;
+          value.previewCompletionPresentCount = presentCount;
+        }
+        if (value.window != nullptr) {
+          (void)PostMessageW(value.window, State::kPreviewPresentedMessage, 0, 0);
+        }
+      }
+    }
+  });
+}
+
+void stopPreviewRenderPump(State& value) noexcept {
+  {
+    std::lock_guard lock(value.previewPumpMutex);
+    value.previewPumpStop = true;
+    value.previewPumpPending = true;
+  }
+  value.previewPumpCv.notify_one();
+  if (value.previewPump.joinable()) value.previewPump.join();
+}
 
 bool attachPreviewTarget(State& value, std::uint32_t width,
                          std::uint32_t height) noexcept {
@@ -508,13 +590,26 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
       const canvas::ink::PreviewIdentity& identity,
       const canvas::ink::BrushPreviewDelta&) noexcept override {
     if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+    // Runtime pointer identities may be reused after a stroke retires (the
+    // mouse adapter intentionally uses one stable pointer id).  ARC keeps
+    // retired stroke tombstones, so its lifecycle id must be fresh per
+    // session rather than being the platform pointer id.
+    const auto strokeId = beginArcStroke(identity.session);
     arc_preview_begin_v0 begin{};
     begin.struct_size = sizeof(begin); begin.abi_version = ARC_ABI_VERSION;
-    begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = identity.session;
+    begin.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; begin.stroke_id = strokeId;
     begin.view_id = 1U; begin.viewport_revision = identity.sessionGeneration;
     begin.target_generation = state_.previewGeneration;
     begin.brush.struct_size = sizeof(begin.brush); begin.brush.abi_version = ARC_ABI_VERSION;
-    return state_.previewBridge->Begin(begin) == arc::Status::kOk
+    const auto status = state_.previewBridge->Begin(begin);
+    if (state_.pointerDiagnostic) state_.pointerDiagnostic << "arc begin session="
+        << identity.session << " stroke=" << strokeId << " status="
+        << static_cast<std::uint32_t>(status) << '\n';
+    if (status != arc::Status::kOk) {
+      arcStrokeIds_.erase(identity.session);
+      revisions_.erase(identity.session);
+    }
+    return status == arc::Status::kOk
         ? canvas::ink::PreviewSubmitResult::kAccepted
         : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
   }
@@ -522,25 +617,36 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
       const canvas::ink::PreviewIdentity& identity,
       const canvas::ink::BrushPreviewDelta&) noexcept override {
     if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
+    const auto strokeId = arcStrokeId(identity.session);
     arc_preview_update_v0 update{};
     update.struct_size = sizeof(update); update.abi_version = ARC_ABI_VERSION;
-    update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = identity.session;
+    update.schema_version = ARC_PROTOCOL_SCHEMA_VERSION; update.stroke_id = strokeId;
     update.preview_revision = ++revisions_[identity.session];
     update.view_id = 1U;
     update.viewport_revision = identity.sessionGeneration;
     update.target_generation = state_.previewGeneration;
     // The ARC protocol is lifecycle-only on Windows. Runtime's Skia preview
     // provider owns and renders BrushPreviewDelta.outline.
-    return state_.previewBridge->Push(update) == arc::Status::kOk
+    const auto status = state_.previewBridge->Push(update);
+    if (state_.pointerDiagnostic && status != arc::Status::kOk) {
+      state_.pointerDiagnostic << "arc push session=" << identity.session
+          << " stroke=" << strokeId << " revision=" << update.preview_revision
+          << " status=" << static_cast<std::uint32_t>(status) << '\n';
+    }
+    return status == arc::Status::kOk
         ? canvas::ink::PreviewSubmitResult::kAccepted
         : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
   }
   canvas::ink::PreviewSubmitResult cancel(
       const canvas::ink::PreviewIdentity& identity) noexcept override {
     if (state_.previewBridge == nullptr) return canvas::ink::PreviewSubmitResult::kCanonicalOnly;
-    arc_preview_cancel_v0 cancel{sizeof(cancel), ARC_ABI_VERSION, identity.session,
+    const auto strokeId = arcStrokeId(identity.session);
+    arc_preview_cancel_v0 cancel{sizeof(cancel), ARC_ABI_VERSION, strokeId,
                                  state_.previewGeneration, 1U, 0U};
-    return state_.previewBridge->Cancel(cancel) == arc::Status::kOk
+    const auto status = state_.previewBridge->Cancel(cancel);
+    arcStrokeIds_.erase(identity.session);
+    revisions_.erase(identity.session);
+    return status == arc::Status::kOk
         ? canvas::ink::PreviewSubmitResult::kAccepted
         : canvas::ink::PreviewSubmitResult::kCanonicalOnly;
   }
@@ -548,28 +654,38 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
       const canvas::ink::CanonicalHandoffIdentity& identity,
       const canvas::semantic::CanonicalCommitRecord&) noexcept override {
     if (state_.previewBridge == nullptr) return canvas::ink::HandoffResult::kIgnored;
+    const auto strokeId = arcStrokeId(identity.session);
     const auto revision = revisions_[identity.session];
     if (revision == 0U) return canvas::ink::HandoffResult::kRejected;
-    arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, identity.session,
+    arc_preview_seal_v0 seal{sizeof(seal), ARC_ABI_VERSION, strokeId,
                              revision, state_.previewGeneration};
-    if (state_.previewBridge->SealInput(seal) != arc::Status::kOk) {
+    const auto sealStatus = state_.previewBridge->SealInput(seal);
+    if (state_.pointerDiagnostic) state_.pointerDiagnostic << "arc seal session="
+        << identity.session << " revision=" << revision << " status="
+        << static_cast<std::uint32_t>(sealStatus) << '\n';
+    if (sealStatus != arc::Status::kOk) {
       return canvas::ink::HandoffResult::kIgnored;
     }
-    arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, identity.session,
+    arc_canonical_commit_v0 commit{sizeof(commit), ARC_ABI_VERSION, strokeId,
                                    revision, identity.commit.ordinal.value(),
                                    state_.previewGeneration, {identity.commit.runtime_epoch.value(),
                                                               identity.commit.ordinal.value()}};
-    return state_.previewBridge->CanonicalCommitted(commit) == arc::Status::kOk
-        ? canvas::ink::HandoffResult::kAccepted
-        : canvas::ink::HandoffResult::kIgnored;
+    const auto commitStatus = state_.previewBridge->CanonicalCommitted(commit);
+    if (state_.pointerDiagnostic) state_.pointerDiagnostic << "arc committed session="
+        << identity.session << " revision=" << revision << " document="
+        << identity.commit.ordinal.value() << " status="
+        << static_cast<std::uint32_t>(commitStatus) << '\n';
+    return commitStatus == arc::Status::kOk ? canvas::ink::HandoffResult::kAccepted
+                                            : canvas::ink::HandoffResult::kIgnored;
   }
   canvas::ink::HandoffResult canonicalVisible(
       const canvas::ink::CanonicalHandoffIdentity& identity,
       const canvas::render::FrameState&) noexcept override {
     if (state_.previewBridge == nullptr) return canvas::ink::HandoffResult::kIgnored;
+    const auto strokeId = arcStrokeId(identity.session);
     arc_canonical_visible_v0 visible{};
     visible.struct_size = sizeof(visible); visible.abi_version = ARC_ABI_VERSION;
-    visible.stroke_id = identity.session; visible.document_revision = identity.commit.ordinal.value();
+    visible.stroke_id = strokeId; visible.document_revision = identity.commit.ordinal.value();
     visible.target_generation = identity.surfaceGeneration.value();
     visible.handoff_token = {identity.commit.runtime_epoch.value(), identity.commit.ordinal.value()};
     visible.receipt.struct_size = sizeof(visible.receipt);
@@ -579,17 +695,34 @@ class WindowsArcRuntimeSinks final : public canvas::ink::ArcPreviewSink,
     visible.receipt.target_generation = identity.surfaceGeneration.value();
     visible.receipt.presentation_id = identity.commit.ordinal.value();
     const auto result = state_.previewBridge->CanonicalVisible(visible);
+    if (state_.pointerDiagnostic) state_.pointerDiagnostic << "arc visible session="
+        << identity.session << " document=" << identity.commit.ordinal.value()
+        << " generation=" << identity.surfaceGeneration.value() << " status="
+        << static_cast<std::uint32_t>(result) << '\n';
     if (result != arc::Status::kOk) {
       return canvas::ink::HandoffResult::kIgnored;
     }
-    // This is the only platform-side retirement point.  The runtime has
-    // already validated the matching handoff token and the D3D12 canonical
-    // provider has presented the frame before invoking this callback.
-    hidePreviewPresentation(state_);
+    // This callback acknowledges one session's handoff.  The preview HWND is
+    // shared by all active sessions, so visibility is retired by the render
+    // pump only after Runtime has retired every matching session.
+    arcStrokeIds_.erase(identity.session);
+    revisions_.erase(identity.session);
     return canvas::ink::HandoffResult::kAccepted;
   }
  private:
+  std::uint64_t beginArcStroke(std::uint64_t session) {
+    const auto id = nextStrokeId_++;
+    arcStrokeIds_[session] = id;
+    revisions_[session] = 0U;
+    return id;
+  }
+  std::uint64_t arcStrokeId(std::uint64_t session) const {
+    auto it = arcStrokeIds_.find(session);
+    return it == arcStrokeIds_.end() ? 0U : it->second;
+  }
   State& state_;
+  std::uint64_t nextStrokeId_ = 1U;
+  std::unordered_map<std::uint64_t, std::uint64_t> arcStrokeIds_;
   std::unordered_map<std::uint64_t, std::uint64_t> revisions_;
 };
 
@@ -601,13 +734,24 @@ bool renderCanonical(State& value) {
   // release, otherwise WM_PAINT clears the live Arc preview before the user
   // can see it.
   const auto accepted = value.host->presentCanonicalFrame(
-      value.host->canonicalFrameCount() + 1U, 0.0, value.activeKeys.empty());
+      value.host->canonicalFrameCount() + 1U, 0.0,
+      value.activeKeys.empty() || value.host->pendingCanonicalHandoffCount() != 0U);
   if (value.pointerDiagnostic) {
     value.pointerDiagnostic << "canonical-present accepted=" << accepted
         << " provider-generation="
         << (value.canonicalProvider == nullptr ? 0ULL : value.canonicalProvider->generation())
         << " frames=" << value.host->canonicalFrameCount()
-        << " objects=" << value.host->submittedOperationCount() << std::endl;
+        << " objects=" << value.host->submittedOperationCount() << '\n';
+  }
+  // A final pointer-up gates the preview worker until every matching
+  // CanonicalVisible receipt has retired.  Only clear that gate after the
+  // host reports no pending handoffs; otherwise an in-flight worker
+  // completion can make the just-retired overlay visible again.
+  if (accepted && value.host->pendingCanonicalHandoffCount() == 0U) {
+    value.canonicalPending = false;
+  }
+  if (accepted && !value.host->previewActive()) {
+    retireVisiblePreviewPresentation(value);
   }
   return accepted;
 #else
@@ -670,7 +814,7 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   if (value.pointerDiagnostic) {
     value.pointerDiagnostic << "mouse accepted=" << accepted << " phase=" << message
         << " sequence=" << sample.sample_sequence
-        << " timestamp=" << value.lastMouseTimestampNs << std::endl;
+        << " timestamp=" << value.lastMouseTimestampNs << '\n';
   }
   if (!accepted) {
     if (begin) endCanvasInput(value, kMousePointerId);
@@ -690,38 +834,26 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
                           phase == ARC_POINTER_PHASE_DOWN ? "down" :
                           (phase == ARC_POINTER_PHASE_UP ? "up" : "move"),
                           x, y, sample.pressure, 1U, 0.0F, 0.0F});
-  if (end) persistEvidence(value);
+  if (end) value.evidenceDirty = true;
   if (end) {
     value.activeKeys.erase(kMousePointerId);
     value.pointerStrokes.erase(kMousePointerId);
     endCanvasInput(value, kMousePointerId);
     if (GetCapture() == window) ReleaseCapture();
-    // Complete the canonical-visible receipt on pointer-up. Waiting for a
-    // later WM_PAINT leaves the first preview session active when the paint
-    // message is delayed behind input or composition work.
+    // Canonical presentation is scheduled by the render pump. Waiting for a
+    // D3D12 fence here would delay the next pointer message.
     if (value.activeKeys.empty()) {
-      if (!value.host->presentCanonicalFrame(
-              value.host->canonicalFrameCount() + 1U, 0.0, true)) {
-        return false;
-      }
-      // Canonical presentation has completed and the runtime handoff has
-      // been offered. Keep the visual retirement synchronous with this input
-      // boundary; the runtime still owns the semantic session until its
-      // matching CanonicalVisible receipt.
-      // The canonical provider has presented this frame. Hide the platform
-      // overlay immediately even if Runtime keeps the session pending while
-      // it finishes the matching token receipt.
-      hidePreviewPresentation(value);
-      value.canonicalFrameReady = true;
+      value.canonicalFrameReady = false;
+      value.canonicalPending = true;
+      // Stop submitting newer preview frames at the input boundary. Keep the
+      // last presented overlay until the canonical frame retires the session,
+      // so the compositor never exposes an intermediate blank/old frame.
+      stopPreviewPresentation(value);
     }
   }
   value.previewDirty = true;
-  if (!end && value.previewPresentationEnabled) {
-    // Submit the latest preview in the input message itself. The timer remains
-    // only as a recovery path; normal drawing must not wait behind WM_TIMER.
-    (void)value.host->presentBrushPreview();
-    value.previewDirty = false;
-  }
+  // Skia/D3D12 preview work is intentionally deferred to the render pump.
+  wakeRenderPump(value);
   if (end) {
     RECT canvasRect{}; GetClientRect(window, &canvasRect);
     canvasRect.top = State::kToolbarHeight;
@@ -766,7 +898,7 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
     if (value.pointerDiagnostic) {
       value.pointerDiagnostic << "touch id=" << pointerId << " flags=" << touch.dwFlags
           << " x=" << point.x << " y=" << point.y << " sequence=" << sequence
-          << " accepted=" << accepted << std::endl;
+          << " accepted=" << accepted << '\n';
     }
     if (!accepted) {
       if (begin) endCanvasInput(value, pointerId);
@@ -788,15 +920,13 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
       if (value.activeKeys.empty() && GetCapture() == window) ReleaseCapture();
     }
     value.previewDirty = true;
-    if (!end && value.previewPresentationEnabled) {
-      (void)value.host->presentBrushPreview();
-      value.previewDirty = false;
-    }
     if (end && value.activeKeys.empty()) {
-      (void)value.host->presentCanonicalFrame(value.host->canonicalFrameCount() + 1U, 0.0, true);
-      hidePreviewPresentation(value);
+      value.canonicalFrameReady = false;
+      value.canonicalPending = true;
+      stopPreviewPresentation(value);
     }
   }
+  if (acceptedAny) wakeRenderPump(value);
   return acceptedAny;
 }
 
@@ -814,7 +944,8 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
   value.activeKeys.erase(pointerId);
   value.pointerStrokes.erase(pointerId);
   endCanvasInput(value, pointerId);
-  persistEvidence(value);
+  value.evidenceDirty = true;
+  wakeRenderPump(value);
 }
 
 void cancelAllPointers(State& value, std::uint64_t timestampMs) {
@@ -828,7 +959,8 @@ void cancelAllPointers(State& value, std::uint64_t timestampMs) {
   value.pointerStrokes.clear();
   clearCanvasInput(value);
   if (GetCapture() == value.window) ReleaseCapture();
-  persistEvidence(value);
+  value.evidenceDirty = true;
+  wakeRenderPump(value);
 }
 
 void persistEvidence(const State& value) {
@@ -1076,7 +1208,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (value->pointerDiagnostic && message != WM_MOUSEMOVE) {
         value->pointerDiagnostic << "mouse phase=" << message << " x="
             << static_cast<short>(LOWORD(lParam)) << " y="
-            << static_cast<short>(HIWORD(lParam)) << std::endl;
+            << static_cast<short>(HIWORD(lParam)) << '\n';
       }
       const bool promoted =
           canvas::ink_playground::windows_input::isPromotedPointerMouseMessage(
@@ -1094,7 +1226,32 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     selectWindowsTool(*value, LOWORD(wParam));
     return 0;
   }
-  if (message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) {
+  if (message == State::kRenderWakeMessage && value != nullptr) {
+    value->renderWakePosted = false;
+  }
+  if (message == State::kPreviewPresentedMessage && value != nullptr) {
+    std::optional<PreviewPresentationCapture> capture;
+    std::uint64_t presentCount = 0;
+    {
+      std::lock_guard completionLock(value->previewCompletionMutex);
+      capture = value->previewCompletion;
+      presentCount = value->previewCompletionPresentCount;
+      value->previewCompletion.reset();
+    }
+    if (!value->canonicalPending && capture.has_value() && value->host != nullptr &&
+        value->host->acknowledgePreviewPresentation(*capture, presentCount)) {
+      value->previewDirty = false;
+    } else if (value->previewDirty) {
+      requestPreviewRender(*value);
+    }
+    if (value->debugUi != nullptr) value->debugUi->raise();
+    RECT canvasRect{}; GetClientRect(window, &canvasRect);
+    canvasRect.top = State::kToolbarHeight;
+    InvalidateRect(window, &canvasRect, FALSE);
+    return 0;
+  }
+  if ((message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) ||
+      (message == State::kRenderWakeMessage && value != nullptr)) {
     if (value->axiomDebugControl != nullptr) value->axiomDebugControl->process();
     if (value->platformDebugControl != nullptr) {
       value->platformDebugControl->processPendingSurfaceModes();
@@ -1116,28 +1273,22 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       value->debugUi->toggle();
       if (value->pointerDiagnostic) {
         value->pointerDiagnostic << "debug-ui-poll visible="
-            << value->debugUi->visible() << std::endl;
+            << value->debugUi->visible() << '\n';
       }
       InvalidateRect(window, nullptr, FALSE);
       UpdateWindow(window);
     }
     value->debugF12Down = f12Down;
-    if (!value->resizeInProgress && value->activeKeys.empty() &&
+    if (value->evidenceDirty && value->activeKeys.empty()) {
+      persistEvidence(*value);
+      value->evidenceDirty = false;
+    }
+    if (!value->resizeInProgress &&
+        (value->activeKeys.empty() || value->host->pendingCanonicalHandoffCount() != 0U) &&
         !value->canonicalFrameReady) {
       value->canonicalFrameReady = renderCanonical(*value);
     }
-    if (value->previewDirty && value->previewPresentationEnabled) {
-      (void)value->host->presentBrushPreview();
-      value->previewDirty = false;
-      if (value->debugUi != nullptr) value->debugUi->raise();
-      RECT canvasRect{}; GetClientRect(window, &canvasRect);
-      canvasRect.top = State::kToolbarHeight;
-      InvalidateRect(window, &canvasRect, FALSE);
-    } else if (value->previewDirty) {
-      // Drop queued preview presentation after pointer-up; Runtime retains
-      // the session until CanonicalVisible, but no stale frame is submitted.
-      value->previewDirty = false;
-    }
+    if (value->previewDirty && value->previewPresentationEnabled) requestPreviewRender(*value);
     return 0;
   }
   if (message == WM_SIZE && value != nullptr) {
@@ -1147,7 +1298,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     const auto height = static_cast<std::uint32_t>((std::max)(canvasHeight, 0));
     if (value->pointerDiagnostic) {
       value->pointerDiagnostic << "wm-size width=" << width << " height=" << height
-          << " wparam=" << wParam << std::endl;
+          << " wparam=" << wParam << '\n';
     }
     if (width != 0U && height != 0U && value->previewProvider != nullptr) {
       value->pendingWidth = width;
@@ -1164,7 +1315,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       // DComp/D3D12 queue and has caused driver crashes and black frames.
       // The deferred resize path replaces the surface once, then presents a
       // fresh canonical frame before the new generation is considered ready.
-      if (value->previewProvider != nullptr) value->previewProvider->setOverlayVisible(false);
+  if (value->host != nullptr) value->host->setPreviewOverlayVisible(false);
 #endif
       // Coalesce the whole maximize animation.  Every WM_SIZE resets this
       // short debounce; only the final client size rebuilds the D3D12
@@ -1178,7 +1329,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   }
   if (message == WM_TIMER && value != nullptr &&
       wParam == State::kResizeDebounceTimerId) {
-    if (value->pointerDiagnostic) value->pointerDiagnostic << "resize-debounce-fired" << std::endl;
+    if (value->pointerDiagnostic) value->pointerDiagnostic << "resize-debounce-fired" << '\n';
     KillTimer(window, State::kResizeDebounceTimerId);
     if (!value->resizePosted) {
       value->resizePosted = true;
@@ -1196,7 +1347,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         (std::max)(static_cast<int>(client.bottom) - State::kToolbarHeight, 0));
     if (value->pointerDiagnostic) {
       value->pointerDiagnostic << "deferred-resize width=" << width << " height=" << height
-          << " begin" << std::endl;
+          << " begin" << '\n';
     }
     bool resized = false;
     const bool hostResized = width != 0U && height != 0U &&
@@ -1210,9 +1361,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       value->canonicalFrameReady = renderCanonical(*value);
       // resizeSurface rebinds the preview controller to the new generation;
       // render it before allowing the provider to show its popup again.
-      if (value->host->previewActive()) {
-        (void)value->host->presentBrushPreview();
-      }
+      if (value->host->previewActive()) value->previewDirty = true;
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
@@ -1221,7 +1370,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (value->pointerDiagnostic) {
       value->pointerDiagnostic << "deferred-resize result host=" << hostResized
           << " target=" << targetAttached << " canonical="
-          << value->canonicalFrameReady << std::endl;
+          << value->canonicalFrameReady << '\n';
     }
     value->resizeInProgress = false;
     if (!resized) {
@@ -1255,7 +1404,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (!GetPointerInfo(pointerId, &info)) {
       if (value->pointerDiagnostic) {
         value->pointerDiagnostic << "pointer-info-failed phase=" << message
-            << " id=" << pointerId << " error=" << GetLastError() << std::endl;
+            << " id=" << pointerId << " error=" << GetLastError() << '\n';
       }
       return 0;
     }
@@ -1266,7 +1415,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
           << " time=" << info.dwTime << " device="
           << reinterpret_cast<std::uintptr_t>(info.sourceDevice)
           << " capture=" << reinterpret_cast<std::uintptr_t>(GetCapture())
-          << " active=" << value->activeKeys.size() << std::endl;
+          << " active=" << value->activeKeys.size() << '\n';
     }
     if (info.pointerType == PT_MOUSE) {
       // Some Windows configurations expose the mouse through WM_POINTER even
@@ -1404,7 +1553,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
           << " source=" << value->deviceId << " samples=" << common.samples.size()
           << " sequence=" << common.samples.front().sequence
           << " timestamp=" << common.samples.front().timestampNs
-          << " accepted=" << accepted << std::endl;
+          << " accepted=" << accepted << '\n';
     }
     if (!accepted) {
       if (begin) endCanvasInput(*value, pointerId);
@@ -1420,7 +1569,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
               << " generation=" << key->generation
               << " disposition=" << static_cast<int>(value->host->pointerDisposition(*key));
         }
-        value->pointerDiagnostic << "" << std::endl;
+        value->pointerDiagnostic << "" << '\n';
       }
       if (!key) return 0;
       value->activeKeys[pointerId] = *key;
@@ -1453,35 +1602,30 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
           << " disposition=" << static_cast<int>(activeDisposition)
           << " policy=" << static_cast<int>(value->host->multiContactPolicy())
           << " viewport=" << value->host->viewportGestureClaimed()
-          << " canonical_strokes=" << value->host->submittedOperationCount() << std::endl;
+          << " canonical_strokes=" << value->host->submittedOperationCount() << '\n';
       for (const auto& [contactId, contactKey] : value->activeKeys) {
         value->pointerDiagnostic << "active-contact id=" << contactId
             << " source=" << contactKey.source << " generation=" << contactKey.generation
             << " disposition=" << static_cast<int>(value->host->pointerDisposition(contactKey))
-            << std::endl;
+            << '\n';
       }
     }
     // Runtime owns viewport arbitration and typed ARC preview publication.
-    if (end) persistEvidence(*value);
+    if (end) value->evidenceDirty = true;
     if (end) {
       value->activeKeys.erase(pointerId);
       value->pointerStrokes.erase(pointerId);
       endCanvasInput(*value, pointerId);
       if (value->activeKeys.empty()) {
         if (GetCapture() == window) ReleaseCapture();
-        if (!value->host->presentCanonicalFrame(
-                value->host->canonicalFrameCount() + 1U, 0.0, true)) {
-          return 0;
-        }
-        hidePreviewPresentation(*value);
-        value->canonicalFrameReady = true;
+        value->canonicalFrameReady = false;
+        value->canonicalPending = true;
+        stopPreviewPresentation(*value);
       }
     }
     value->previewDirty = true;
-    if (!end && value->previewPresentationEnabled) {
-      (void)value->host->presentBrushPreview();
-      value->previewDirty = false;
-    }
+    // The render timer presents the retained preview after this message.
+    wakeRenderPump(*value);
     if (end) {
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
@@ -1491,7 +1635,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   }
   if (message == WM_TOUCH) {
     if (value != nullptr && value->pointerDiagnostic) {
-      value->pointerDiagnostic << "wm-touch count=" << LOWORD(wParam) << std::endl;
+      value->pointerDiagnostic << "wm-touch count=" << LOWORD(wParam) << '\n';
     }
     if (value != nullptr) {
       value->nativeTouchChannelSeen = true;
@@ -1510,7 +1654,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (value->pointerDiagnostic) {
         value->pointerDiagnostic << "capture-changed id="
             << GET_POINTERID_WPARAM(wParam) << " active="
-            << value->activeKeys.size() << std::endl;
+            << value->activeKeys.size() << '\n';
       }
       // Capture loss is terminal for a Debug-owned sequence, but a native
       // Canvas pointer remains governed by its existing Runtime cancel path.
@@ -1614,7 +1758,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
     }
     if (value.pointerDiagnostic) {
       value.pointerDiagnostic << "startup pid=" << GetCurrentProcessId()
-          << " diag=" << value.pointerDiagnosticPath.string() << std::endl;
+          << " diag=" << value.pointerDiagnosticPath.string() << '\n';
     }
   }
 #if defined(CANVAS_RENDER_HAS_SKIA)
@@ -1657,11 +1801,11 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
         << " pointer-pen=" << pointerPenRegistered
         << " digitizer=" << GetSystemMetrics(SM_DIGITIZER)
         << " max-touches=" << GetSystemMetrics(SM_MAXIMUMTOUCHES)
-        << " error=" << GetLastError() << std::endl;
+        << " error=" << GetLastError() << '\n';
   }
   if (value.pointerDiagnostic) {
     value.pointerDiagnostic << "window-created hwnd="
-        << reinterpret_cast<std::uintptr_t>(value.window) << std::endl;
+        << reinterpret_cast<std::uintptr_t>(value.window) << '\n';
     SetPropW(value.window, canvas::ink_playground::windows_input::kDiagnosticStreamProperty,
              reinterpret_cast<HANDLE>(static_cast<std::ostream*>(&value.pointerDiagnostic)));
   }
@@ -1692,7 +1836,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   if (!value.host->resizeSurface(static_cast<std::uint32_t>(client.right), canvasHeight) ||
       !attachPreviewTarget(value, static_cast<std::uint32_t>(client.right), canvasHeight)) return 1;
+  value.host->setPlatformPresentationDeferred(true);
 #endif
+  startPreviewRenderPump(value);
   // Some launchers (notably cmd/start wrappers) pass nCmdShow=0 even when
   // the user expects a normal interactive window.  Passing that value
   // through would leave the process alive with a hidden main HWND, which
@@ -1702,6 +1848,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   ShowWindow(value.window, effectiveShow);
   UpdateWindow(value.window);
   MSG message{}; while (GetMessageW(&message, nullptr, 0, 0) > 0) { TranslateMessage(&message); DispatchMessageW(&message); }
+  stopPreviewRenderPump(value);
   return static_cast<int>(message.wParam);
 }
 #else
