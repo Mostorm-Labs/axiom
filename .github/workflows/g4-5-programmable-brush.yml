@@ -53,11 +53,17 @@ jobs:
         shell: pwsh
         run: |
           $sdkRoot = Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release
+          @'
+          import subprocess
+          import sys
+          compiler, *args = sys.argv[1:]
+          raise SystemExit(subprocess.run([compiler, *args, "-Wno-unused-variable", "-Wno-unused-parameter"]).returncode)
+          '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
             -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_CXX_FLAGS="-Wno-unused-variable -Wno-unused-parameter" `
             -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
             -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
+            -DCMAKE_CXX_COMPILER_LAUNCHER="python;$PWD/.deps/qualification-compiler-launcher.py" `
             -DCANVAS_BUILD_POC01=OFF `
             -DCANVAS_BUILD_RF01=ON `
             -DCANVAS_BUILD_RENDER=ON `
@@ -192,9 +198,16 @@ jobs:
         shell: bash
         run: |
           sdk_root="$PWD/.deps/skia-sdk/macos-arm64-metal/release"
+          cat > "$PWD/.deps/qualification-cxx-launcher" <<'EOF'
+          import subprocess
+          import sys
+          compiler, *args = sys.argv[1:]
+          raise SystemExit(subprocess.run([compiler, *args, "-Wno-unused-variable", "-Wno-unused-parameter"]).returncode)
+          EOF
+          mv "$PWD/.deps/qualification-cxx-launcher" "$PWD/.deps/qualification-compiler-launcher.py"
           cmake -S . -B out/g4-5-macos -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_FLAGS="-Wno-unused-variable -Wno-unused-parameter" \
+            -DCMAKE_CXX_COMPILER_LAUNCHER="python3;$PWD/.deps/qualification-compiler-launcher.py" \
             -DCANVAS_BUILD_POC01=OFF \
             -DCANVAS_BUILD_RF01=ON \
             -DCANVAS_BUILD_RENDER=ON \
