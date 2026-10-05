@@ -58,13 +58,12 @@ jobs:
           import sys
           compiler, *args = sys.argv[1:]
           flags = [
-              "-clang:-Wno-unused-variable",
-              "-clang:-Wno-unused-parameter",
-              "-clang:-Wno-unused-but-set-variable",
-              "-clang:-Wno-unused-function",
+              "/wd4100",
+              "/wd4189",
+              "/wd4505",
           ]
           if any("\\tests\\" in arg or "/tests/" in arg for arg in args):
-              flags.append("-clang:-UNDEBUG")
+              flags.append("/UNDEBUG")
           raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
           '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
