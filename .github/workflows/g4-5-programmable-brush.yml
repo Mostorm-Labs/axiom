@@ -64,7 +64,9 @@ jobs:
           ]
           if any("\\tests\\" in arg or "/tests/" in arg for arg in args):
               flags.append("/UNDEBUG")
-          raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
+          insertion = args.index("--") if "--" in args else len(args)
+          command = [compiler, *args[:insertion], *flags, *args[insertion:]]
+          raise SystemExit(subprocess.run(command).returncode)
           '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
             -DCMAKE_BUILD_TYPE=Release `
@@ -220,7 +222,9 @@ jobs:
           ]
           if any("/tests/" in arg for arg in args):
               flags.append("-UNDEBUG")
-          raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
+          insertion = args.index("--") if "--" in args else len(args)
+          command = [compiler, *args[:insertion], *flags, *args[insertion:]]
+          raise SystemExit(subprocess.run(command).returncode)
           EOF
           mv "$PWD/.deps/qualification-cxx-launcher" "$PWD/.deps/qualification-compiler-launcher.py"
           cmake -S . -B out/g4-5-macos -G Ninja \
