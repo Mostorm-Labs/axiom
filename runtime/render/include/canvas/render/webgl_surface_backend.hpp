@@ -8,6 +8,7 @@
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <span>
 #include <string>
@@ -22,6 +23,9 @@ struct WebGlSurfaceConfig final {
     std::uint32_t physicalWidth = 0;
     std::uint32_t physicalHeight = 0;
     std::int32_t appOwnedContext = 0;
+    // Only an overlay host supplies this platform composition callback.
+    // Canonical/debug providers retain their independent visibility owners.
+    std::function<void(bool)> overlayVisibility = {};
 };
 
 // Web-owned resource provider. WebGL is a Skia surface realization, not a
@@ -54,6 +58,8 @@ class WebGlSurfaceProvider final : public SkiaSurfaceProvider {
     [[nodiscard]] std::uint64_t presentCount() const noexcept override;
     [[nodiscard]] std::uint64_t generation() const noexcept override;
     [[nodiscard]] BackendSubmissionResult advanceGeneration() noexcept override;
+    void setOverlayVisible(bool visible) noexcept override;
+    [[nodiscard]] bool overlayVisible() const noexcept override;
 
   private:
     struct Impl;

@@ -42,13 +42,13 @@
   addEventListener("error", event => { hud.textContent = `Ink Playground error: ${event.message}`; });
   addEventListener("unhandledrejection", event => { hud.textContent = `Ink Playground rejection: ${event.reason}`; });
   try {
-  const imported = await import("./axiom_ink_playground_web.js?v=web-debug-ui-physical-67858ac25317aea8-894ad48310e25986");
+  const imported = await import("./axiom_ink_playground_web.js?v=web-debug-ui-physical-e12833e3-2adfa914");
   const createAxiomInkPlayground = imported.default;
   const module = await createAxiomInkPlayground({
     canvas,
     // Keep the local physical-test page from reusing an older WASM after a
     // rebuild. The query is intentionally limited to the generated binary.
-    locateFile: path => `${path}?v=web-debug-ui-physical-67858ac25317aea8-894ad48310e25986`
+    locateFile: path => `${path}?v=web-debug-ui-physical-e12833e3-2adfa914`
   });
   const host = module._axiom_ink_create();
   // The Web App owns canvas/context creation. WASM only wraps the current

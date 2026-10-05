@@ -20,6 +20,11 @@
 #include <string>
 #include <unordered_map>
 
+EM_JS(void, axiom_web_preview_visibility, (int visible), {
+  const canvas = document.getElementById("arcPreview");
+  if (canvas) canvas.style.visibility = visible ? "visible" : "hidden";
+});
+
 namespace {
 using Host = canvas::ink_playground::InkPlaygroundHost;
 using Handle = std::uint32_t;
@@ -697,7 +702,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_preview_surface(
   if (host(value) == nullptr || width == 0U || height == 0U) return 0;
 #if defined(CANVAS_RENDER_HAS_SKIA)
   auto provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
-      canvas::render::WebGlSurfaceConfig{"#arcPreview", width, height, 0});
+      canvas::render::WebGlSurfaceConfig{"#arcPreview", width, height, 0,
+          [](bool visible) { axiom_web_preview_visibility(visible ? 1 : 0); }});
   if (!provider || !provider->ready()) {
     if (provider) EM_ASM_({ console.error("ARC WebGL provider: " + UTF8ToString($0)); },
                            provider->error().c_str());

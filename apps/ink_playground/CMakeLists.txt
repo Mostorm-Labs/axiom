@@ -153,6 +153,8 @@ if(EMSCRIPTEN)
       ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
   configure_file(platform/web/evidence_worker.js
       ${CMAKE_CURRENT_BINARY_DIR}/evidence_worker.js COPYONLY)
+  configure_file(tests/web_preview_lifecycle_test.html
+      ${CMAKE_CURRENT_BINARY_DIR}/web_preview_lifecycle_test.html COPYONLY)
   target_link_options(axiom_ink_playground_web PRIVATE
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
