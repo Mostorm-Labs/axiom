@@ -58,11 +58,13 @@ jobs:
           import sys
           compiler, *args = sys.argv[1:]
           flags = [
-              "/clang:-Wno-unused-variable",
-              "/clang:-Wno-unused-parameter",
-              "/clang:-Wno-unused-but-set-variable",
-              "/clang:-Wno-unused-function",
+              "-clang:-Wno-unused-variable",
+              "-clang:-Wno-unused-parameter",
+              "-clang:-Wno-unused-but-set-variable",
+              "-clang:-Wno-unused-function",
           ]
+          if any("\\tests\\" in arg or "/tests/" in arg for arg in args):
+              flags.append("-clang:-UNDEBUG")
           raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
           '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
@@ -217,6 +219,8 @@ jobs:
               "-Wno-error=gnu-anonymous-struct",
               "-Wno-error=nested-anon-types",
           ]
+          if any("/tests/" in arg for arg in args):
+              flags.append("-UNDEBUG")
           raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
           EOF
           mv "$PWD/.deps/qualification-cxx-launcher" "$PWD/.deps/qualification-compiler-launcher.py"
