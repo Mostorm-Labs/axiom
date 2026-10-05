@@ -1,0 +1,47 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "output_root": ".aegis/results/GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "identity_required": [
+    "repository",
+    "result_revision",
+    "dirty_tree",
+    "execution_ref",
+    "task_anchor",
+    "compiler_toolchain",
+    "build_profile",
+    "platform_profile",
+    "skia_sdk_identity",
+    "brush_package/profile identity",
+    "scenario_id",
+    "evidence producer"
+  ],
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "implementation-design-preflight.json",
+    "common-skia-vector-path.json",
+    "vector-chunked-equivalence.json",
+    "brush-package-parameterization.json",
+    "portable-vector-qualification.json",
+    "windows-handoff-qualification.json",
+    "handoff-result.json",
+    "g4-5-vector-workload.json",
+    "portable-regression-summary.json",
+    "qualification-bundle-manifest.json",
+    "physical-gate-input-manifest.json",
+    "result.json"
+  ],
+  "provider_refs_required": [
+    "exact Web qualification run/ref",
+    "exact Android qualification run/ref",
+    "exact macOS qualification run/ref",
+    "exact Windows automated qualification run/ref"
+  ],
+  "physical_gate_boundary": {
+    "producer_status": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+    "producer_may_claim_gate_pass": false,
+    "physical_recording_owned_by": "independent G4.5-10 Gate reviewer",
+    "required_input_manifest": "physical-gate-input-manifest.json"
+  },
+  "reviewer_boundary": "Exact result revision on reviewer-resolvable remote branch/PR plus the required evidence/provider refs."
+}
