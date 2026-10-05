@@ -52,6 +52,11 @@ jobs:
       - name: Configure, build, test and materialize qualification bundle
         shell: pwsh
         run: |
+          $ErrorActionPreference = 'Stop'
+          Get-ChildItem verification/corpus/brush/g4_5/v1 -File | ForEach-Object {
+            $text = [System.IO.File]::ReadAllText($_.FullName)
+            [System.IO.File]::WriteAllText($_.FullName, ($text -replace "`r`n", "`n"), [System.Text.UTF8Encoding]::new($false))
+          }
           $sdkRoot = Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release
           @'
           import subprocess
@@ -84,6 +89,7 @@ jobs:
             -DBUILD_TESTING=ON
           cmake --build out/g4-5-windows --parallel
           ctest --test-dir out/g4-5-windows -R "^(G4|G45)" --output-on-failure
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
           & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
           Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
