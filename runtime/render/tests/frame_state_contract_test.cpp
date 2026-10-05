@@ -72,6 +72,8 @@ void twoViewsShareSceneIdentityWithoutSharingPerViewState() {
 
     const FrameState& first = primary.frameState();
     const FrameState& second = overview.frameState();
+    static_cast<void>(first);
+    static_cast<void>(second);
 
     assert(first.sceneGeneration == sharedSceneGeneration);
     assert(second.sceneGeneration == sharedSceneGeneration);
