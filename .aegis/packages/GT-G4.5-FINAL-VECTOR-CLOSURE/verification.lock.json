@@ -1,0 +1,114 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "authority_override": "3f04c57a590c8167931dc07c2684720f",
+  "obligations": [
+    {
+      "id": "FVC-V1",
+      "requirement": "Preview and canonical qualification paths use one common Brush outline -> Skia path-building rule without changing current raster morphology.",
+      "oracle": "New focused G45BrushOutlineSkiaPath test plus preview/canonical/headless raster differential and source-ownership check.",
+      "acceptance": [
+        "one shared helper owns outline -> moveTo/lineTo/close path construction",
+        "preview and canonical/headless BrushStroke paths call the shared helper",
+        "pre-refactor and post-refactor current fixtures have identical raster/digest output",
+        "DAB/material renderers are unchanged"
+      ],
+      "evidence_required": [
+        "common-skia-vector-path.json"
+      ]
+    },
+    {
+      "id": "FVC-V2",
+      "requirement": "RB-V01 / Perfect-Freehand-class geometry remains deterministic independent of input chunking, without requiring a stable-prefix implementation.",
+      "oracle": "G45PerfectFreehandReference + G45BrushSession + focused one-shot-vs-chunked final sealed-geometry corpus.",
+      "acceptance": [
+        "same input/package produces deterministic final geometry",
+        "one-shot and chunked confirmed input converge within the frozen reference tolerance",
+        "predicted samples do not enter canonical output/digest",
+        "preview/seal/replay remain attributable to the same Brush semantics"
+      ],
+      "evidence_required": [
+        "vector-chunked-equivalence.json"
+      ]
+    },
+    {
+      "id": "FVC-V3",
+      "requirement": "Parameterized Brush Engine semantics remain proven without a live parameter editor.",
+      "oracle": "Existing BrushPackage/BrushPlan/BrushSession/BrushRuntimePipeline tests over materially different frozen brush profiles.",
+      "acceptance": [
+        "multiple real packages exercise different vector/material/pressure/taper/resource configurations",
+        "resolved package/profile/program identity is deterministic",
+        "canonical BrushExecutionSnapshot captures the selected frozen configuration",
+        "no live slider/editor API is required"
+      ],
+      "evidence_required": [
+        "brush-package-parameterization.json"
+      ]
+    },
+    {
+      "id": "FVC-V4",
+      "requirement": "The same common Vector outline/path rule is qualified on headless/common, Web, Android, and macOS as required by Current Architecture.",
+      "oracle": "Exact-result build/test/raster qualification for each required platform using the same shared helper and frozen corpus.",
+      "acceptance": [
+        "same input corpus maps to the same geometry digest",
+        "the same common path helper is used",
+        "no Canvas2D/Java Canvas/platform-private brush algorithm is used as parity evidence",
+        "macOS uses the minimum real Skia qualification surface/host; product shell work is not required"
+      ],
+      "evidence_required": [
+        "portable-vector-qualification.json"
+      ]
+    },
+    {
+      "id": "FVC-V5",
+      "requirement": "Current Windows canonical Skia + independent transient preview + CanonicalVisible handoff remain correct at the exact result revision.",
+      "oracle": "G45BrushPreviewHandoff + G4CanonicalHandoff + G4WindowsPreviewDispatch + Windows preview popup/contract tests + automated exact-revision handoff observation.",
+      "acceptance": [
+        "Arc/preview consumes Axiom-produced render-ready geometry and owns no brush algorithm",
+        "transient preview remains until matching canonical presentation eligibility",
+        "wrong/stale identity cannot retire the current preview",
+        "no material path/width/taper discontinuity is detected",
+        "no new Space diagnostic feature is required"
+      ],
+      "evidence_required": [
+        "windows-handoff-qualification.json",
+        "handoff-result.json"
+      ]
+    },
+    {
+      "id": "FVC-V6",
+      "requirement": "Relevant regressions remain green and vector workload/latency/CPU metrics are exported for G5 without implementing G5 optimization.",
+      "oracle": "Relevant G4/G4.4/G4.5 CTest/Python suites plus exact-result workload exporter.",
+      "acceptance": [
+        "relevant Windows/Web/Android/macOS builds/tests pass",
+        "Debug UI and Undo/Redo coexistence regressions remain green",
+        "workload reports input/geometry/render/handoff metrics available in current instrumentation",
+        "no Tile/SpatialIndex/Cache/Scheduler/ResourceBudget implementation is introduced"
+      ],
+      "evidence_required": [
+        "portable-regression-summary.json",
+        "g4-5-vector-workload.json"
+      ]
+    },
+    {
+      "id": "FVC-V7",
+      "requirement": "The exact-result qualification bundle is reviewer-resolvable and ready for independent G4.5-10 physical verification.",
+      "oracle": "Evidence manifest identity/provenance validation.",
+      "acceptance": [
+        "all blocking automated obligations are bound to one exact result revision",
+        "required provider/hosted verification refs are recorded",
+        "physical Gate input bundle and observation instructions are materialized",
+        "producer status is READY_FOR_G4_5_10_PHYSICAL_VERIFICATION and does not claim G4.5 PASS"
+      ],
+      "evidence_required": [
+        "qualification-bundle-manifest.json",
+        "physical-gate-input-manifest.json",
+        "result.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": false,
+    "reason": "This package is a behavior-preserving renderer-ownership refactor plus qualification/evidence closure. Existing behavior is expected to be GREEN before and after; no semantic RED is required."
+  }
+}
