@@ -1,0 +1,39 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "title": "G4.5 Final Vector Closure P31 Materialized Execution Package v0.1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/gt-g4-5-final-vector-closure",
+  "task_anchor": {
+    "revision": "e73dc2c4fe9ea5e509b31fe7c72363d53859fee8",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "6e9f5941277dc7da193ae55cfc3edcacab715ddfdd68b94ede68be5cbc49d487"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "7a0a468855eaee0ede92f2e90622352bf47420698dd3ad3373bb08a7f60f7c99"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "a6f4e35b5e4d3f08af0107d526f4de3b203313ca4bc55c538cfcce7a5774facc"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0336782c66bda497f4e93cefd39836d1fccd65becd57ca09875a5c05694ed344"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "af7d42c55ff475068f4a95f3177b3650f65a4ce548369369826ba094bfb97930"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex"
+}
