@@ -1,4 +1,5 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 
 #include "include/core/SkBlendMode.h"
@@ -338,17 +339,10 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
                                       static_cast<float>(paintState.blue),
                                       static_cast<float>(paintState.alpha * paintState.opacity)});
             paint.setStyle(SkPaint::kFill_Style);
-            SkPathBuilder path(stroke.vector_output.fill_rule == 2U
-                                   ? SkPathFillType::kEvenOdd
-                                   : SkPathFillType::kWinding);
-            path.moveTo(stroke.vector_output.outline.front().x,
-                        stroke.vector_output.outline.front().y);
-            for (std::size_t index = 1; index < stroke.vector_output.outline.size(); ++index) {
-                path.lineTo(stroke.vector_output.outline[index].x,
-                            stroke.vector_output.outline[index].y);
-            }
-            if (stroke.vector_output.closed) path.close();
-            canvas.drawPath(path.detach(), paint);
+            canvas.drawPath(buildVectorBrushOutlineSkPath(
+                std::span<const semantic::Vec2>(stroke.vector_output.outline.data(),
+                                                 stroke.vector_output.outline.size()),
+                stroke.vector_output.fill_rule, stroke.vector_output.closed), paint);
             // Chalk is still driven by the same canonical outline, but its
             // package material adds deterministic translucent grain marks at
             // render time. This keeps BrushEngine geometry identical while

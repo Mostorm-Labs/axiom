@@ -1,0 +1,45 @@
+{
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "execution_ref": "codex/gt-g4-5-final-vector-closure",
+  "starting_revision": "f37cd87cae4a01ec11e0c0882b9a303d06019649",
+  "task_anchor": "e73dc2c4fe9ea5e509b31fe7c72363d53859fee8",
+  "anchor_relation_verified": "ancestor",
+  "current_flow": {
+    "preview": "SkiaRenderer::renderPreview local drawOutline builds a closed SkPath from PreviewGeometry outline and draws it",
+    "canonical_headless": "skia_headless_backend.cpp drawCommand BrushStrokeReferenceCommand local path builder selects fill rule, builds outline, conditionally closes, and draws it",
+    "material": "DAB/material renderers are separate drawDabs/dab helper paths"
+  },
+  "target_flow": {
+    "owner": "runtime/render brush_outline_skia_path helper",
+    "preview_callsite": "SkiaRenderer::renderPreview",
+    "canonical_callsite": "SkiaHeadlessBackend drawCommand BrushStrokeReferenceCommand",
+    "morphology": "preserve moveTo, lineTo sequence, fill rule, conditional/required close semantics, and draw paint unchanged"
+  },
+  "preserved_semantics": [
+    "BrushEngine and Perfect-Freehand geometry",
+    "BrushSession complete contour publication",
+    "CanonicalVisible and preview retirement",
+    "Arc ownership and Windows providers",
+    "DAB/material rendering"
+  ],
+  "qualification_plan": [
+    "focused helper path structure test",
+    "existing headless and preview renderer tests",
+    "G4.5 BrushPackage/BrushSession/reference and handoff regressions",
+    "portable and Windows qualification evidence after implementation"
+  ],
+  "obligation_mapping": {
+    "FVC-V1": ["brush_outline_skia_path.cpp", "skia_renderer.cpp", "skia_headless_backend.cpp", "brush_outline_skia_path_test.cpp", "common-skia-vector-path.json"],
+    "FVC-V2": ["existing G45PerfectFreehandReference/G45BrushSession corpus", "vector-chunked-equivalence.json"],
+    "FVC-V3": ["existing package/plan/runtime tests", "brush-package-parameterization.json"],
+    "FVC-V4": ["exact-result platform qualification", "portable-vector-qualification.json"],
+    "FVC-V5": ["existing Windows handoff tests", "windows-handoff-qualification.json"],
+    "FVC-V6": ["regression suites and workload exporter", "portable-regression-summary.json", "g4-5-vector-workload.json"],
+    "FVC-V7": ["qualification manifests", "result.json"]
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "status": "PASS"
+}

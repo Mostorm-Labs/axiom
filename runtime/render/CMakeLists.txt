@@ -82,6 +82,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     add_dependencies(canvas_runtime_render canvas_chalk_texture_assets)
     target_include_directories(canvas_runtime_render PRIVATE "${CANVAS_CHALK_GENERATED_DIR}")
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/brush_outline_skia_path.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
@@ -108,6 +109,25 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_brush_outline_skia_path_tests
+        tests/brush_outline_skia_path_test.cpp)
+    target_link_libraries(axiom_render_brush_outline_skia_path_tests
+        PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_render_brush_outline_skia_path_tests
+        PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_definitions(axiom_render_brush_outline_skia_path_tests
+        PRIVATE G45_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    target_compile_features(axiom_render_brush_outline_skia_path_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_brush_outline_skia_path_tests
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_brush_outline_skia_path_tests
+            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G45BrushOutlineSkiaPath
+        COMMAND axiom_render_brush_outline_skia_path_tests)
+
     add_executable(axiom_render_skia_ink_backend_tests
         tests/skia_ink_backend_test.cpp)
     target_link_libraries(axiom_render_skia_ink_backend_tests PRIVATE canvas_runtime_render)
