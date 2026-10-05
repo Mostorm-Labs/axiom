@@ -57,7 +57,13 @@ jobs:
           import subprocess
           import sys
           compiler, *args = sys.argv[1:]
-          raise SystemExit(subprocess.run([compiler, *args, "-Wno-unused-variable", "-Wno-unused-parameter"]).returncode)
+          flags = [
+              "/clang:-Wno-unused-variable",
+              "/clang:-Wno-unused-parameter",
+              "/clang:-Wno-unused-but-set-variable",
+              "/clang:-Wno-unused-function",
+          ]
+          raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
           '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
             -DCMAKE_BUILD_TYPE=Release `
@@ -202,7 +208,16 @@ jobs:
           import subprocess
           import sys
           compiler, *args = sys.argv[1:]
-          raise SystemExit(subprocess.run([compiler, *args, "-Wno-unused-variable", "-Wno-unused-parameter"]).returncode)
+          flags = [
+              "-Wno-unused-variable",
+              "-Wno-unused-parameter",
+              "-Wno-unused-but-set-variable",
+              "-Wno-unused-function",
+              "-Wno-error=gnu-zero-variadic-macro-arguments",
+              "-Wno-error=gnu-anonymous-struct",
+              "-Wno-error=nested-anon-types",
+          ]
+          raise SystemExit(subprocess.run([compiler, *args, *flags]).returncode)
           EOF
           mv "$PWD/.deps/qualification-cxx-launcher" "$PWD/.deps/qualification-compiler-launcher.py"
           cmake -S . -B out/g4-5-macos -G Ninja \
