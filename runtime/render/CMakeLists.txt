@@ -135,6 +135,12 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     if(MSVC)
         target_compile_options(axiom_render_skia_ink_backend_tests
             PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            target_compile_options(axiom_render_skia_ink_backend_tests
+                PRIVATE /clang:-Wno-deprecated-declarations)
+        else()
+            target_compile_options(axiom_render_skia_ink_backend_tests PRIVATE /wd4996)
+        endif()
     else()
       target_compile_options(axiom_render_skia_ink_backend_tests
         PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
@@ -146,7 +152,14 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     target_link_libraries(axiom_render_skia_brush_primitive_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_render_skia_brush_primitive_tests PRIVATE cxx_std_20)
     if(MSVC)
-        target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+        target_compile_options(axiom_render_skia_brush_primitive_tests
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            target_compile_options(axiom_render_skia_brush_primitive_tests
+                PRIVATE /clang:-Wno-deprecated-declarations)
+        else()
+            target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE /wd4996)
+        endif()
     else()
         target_compile_options(axiom_render_skia_brush_primitive_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -Wno-deprecated-declarations)
     endif()
@@ -157,13 +170,14 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     target_include_directories(axiom_render_chalk_texture_tests PRIVATE
       "${CANVAS_SKIA_SDK_ROOT}")
     target_compile_features(axiom_render_chalk_texture_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_render_chalk_texture_tests
+        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG /wd4267 /wd4201)
+    else()
+      target_compile_options(axiom_render_chalk_texture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
       target_compile_options(axiom_render_chalk_texture_tests PRIVATE
         -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
         -Wno-error=gnu-anonymous-struct)
-    if(MSVC)
-      target_compile_options(axiom_render_chalk_texture_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
-    else()
-      target_compile_options(axiom_render_chalk_texture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4SkiaChalkTexture COMMAND axiom_render_chalk_texture_tests)
     add_executable(axiom_render_chalk_continuous_texture_tests
@@ -173,9 +187,14 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         ${PROJECT_SOURCE_DIR}/runtime/render/include
         "${CANVAS_SKIA_SDK_ROOT}")
     target_compile_features(axiom_render_chalk_continuous_texture_tests PRIVATE cxx_std_20)
-    target_compile_options(axiom_render_chalk_continuous_texture_tests PRIVATE
-      -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
-      -Wno-error=gnu-anonymous-struct)
+    if(MSVC)
+      target_compile_options(axiom_render_chalk_continuous_texture_tests
+        PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG /wd4267 /wd4201)
+    else()
+      target_compile_options(axiom_render_chalk_continuous_texture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror
+        -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+        -Wno-error=gnu-anonymous-struct)
+    endif()
     add_test(NAME G4SkiaChalkContinuousTexture COMMAND axiom_render_chalk_continuous_texture_tests)
 endif()
 
@@ -200,6 +219,13 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
     target_compile_definitions(axiom_render_headless_canvas_demo_tests PRIVATE
         G3_07_DEMO_BINARY="$<TARGET_FILE:axiom_headless_canvas_demo>"
         G3_07_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+    if(MSVC)
+        target_compile_options(axiom_render_headless_canvas_demo_tests
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_headless_canvas_demo_tests
+            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
     add_dependencies(axiom_render_headless_canvas_demo_tests axiom_headless_canvas_demo)
     add_test(NAME G3HeadlessCanvasDemo COMMAND axiom_render_headless_canvas_demo_tests)
 

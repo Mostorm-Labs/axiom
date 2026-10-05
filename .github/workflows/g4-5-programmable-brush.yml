@@ -6,10 +6,11 @@ on:
       - "runtime/ink/**"
       - "runtime/foundation/**"
       - "runtime/input/**"
+      - "runtime/render/**"
       - "apps/brush_lab/**"
       - "arc/**"
       - "verification/corpus/brush/g4_5/**"
-      - ".aegis/packages/GT-G4-5/**"
+      - ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
       - ".github/workflows/g4-5-programmable-brush.yml"
       - "CMakeLists.txt"
   workflow_dispatch:
@@ -163,5 +164,56 @@ jobs:
         with:
           name: g4-5-android-arm64-v8a-${{ github.event.pull_request.head.sha || github.sha }}
           path: out/g4-5-android-qualification
+          if-no-files-found: error
+          retention-days: 30
+
+  macos:
+    name: qualification/macos-arm64
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve locked core dependencies
+        run: |
+          python3 tools/setup_build_environment.py --core --facts-output out/g4-5-macos-environment.json --status
+      - name: Fetch locked macOS Skia SDK
+        run: |
+          python3 tools/skia/fetch.py \
+            --profile tools/skia/profiles/r1-full-v1.json \
+            --lock r1-full-skia-sdk.lock.json \
+            --target macos-arm64-metal \
+            --variant release
+      - name: Configure, build, test and materialize qualification bundle
+        shell: bash
+        run: |
+          sdk_root="$PWD/.deps/skia-sdk/macos-arm64-metal/release"
+          cmake -S . -B out/g4-5-macos -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_RF01=ON \
+            -DCANVAS_BUILD_RENDER=ON \
+            -DCANVAS_RENDER_BUILD_TESTS=ON \
+            -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON \
+            -DCANVAS_BUILD_INK_PLAYGROUND=OFF \
+            -DCANVAS_SKIA_SDK_ROOT="$sdk_root" \
+            -DAXIOM_BUILD_BRUSH_LAB=ON \
+            -DBUILD_TESTING=ON
+          cmake --build out/g4-5-macos --parallel
+          ctest --test-dir out/g4-5-macos -R '^(G4|G45)' --output-on-failure
+          mkdir -p out/g4-5-macos-qualification
+          out/g4-5-macos/apps/brush_lab/axiom_brush_lab out/g4-5-macos-qualification
+          cp out/g4-5-macos/apps/brush_lab/axiom_brush_lab out/g4-5-macos-qualification/
+          cp out/g4-5-macos-environment.json out/g4-5-macos-qualification/build-environment.json
+          exe_sha=$(shasum -a 256 out/g4-5-macos-qualification/axiom_brush_lab | awk '{print $1}')
+          printf '{"source_revision":"%s","profile":"macos-arm64","executable_sha256":"%s"}\n' \
+            "$(git rev-parse HEAD)" "$exe_sha" > out/g4-5-macos-qualification/identity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-5-macos-arm64-${{ github.event.pull_request.head.sha || github.sha }}
+          path: out/g4-5-macos-qualification
           if-no-files-found: error
           retention-days: 30
