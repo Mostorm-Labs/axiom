@@ -1,0 +1,17 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "current": true,
+  "dependency": {"baseline_task": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF", "baseline_revision": "4612f1311abac54eca635a7d6324db48206b781a"},
+  "authorized_goal": "Make Debug UI CMake consumers build without a Skia SDK while preserving the real Windows ImGui/Skia host when CanvasSkia::Skia is available.",
+  "trusted_statements": [
+    "This repair addresses an existing consumer-build boundary failure present before the queue relocation.",
+    "Windows host rendering remains Skia-backed whenever the locked CanvasSkia target is available.",
+    "No touch routing, AutoIntent, BrushEngine, Canonical, viewport, Arc, surface-provider, Debug UI behavior, or Undo/Redo semantics may change."
+  ],
+  "forbidden_authority_expansion": [
+    "No Skia SDK source rebuild or lock change.",
+    "No runtime or rendering semantic changes.",
+    "No changes outside the authorized CMake/test/package/evidence paths."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "debug_ui/CMakeLists.txt",
+      "apps/ink_playground/tests/skia_consumer_boundary_contract_test.py",
+      ".aegis/packages/GT-G4.5-SKIA-CONSUMER-BOUNDARY/**",
+      ".aegis/results/GT-G4.5-SKIA-CONSUMER-BOUNDARY/**"
+    ],
+    "required_changes": [
+      "Compile Windows Skia host/backend sources only when CanvasSkia::Skia is available.",
+      "Keep generic Debug UI contract library buildable without Skia.",
+      "Add a source contract regression test for the no-Skia consumer boundary.",
+      "Re-run local consumer configure/build/test and PR required checks."
+    ],
+    "forbidden_changes": [
+      "No touch, pointer, AutoIntent, BrushEngine, Canonical, viewport, Arc, surface-provider, ImGui panel behavior, or Undo/Redo changes.",
+      "No dependency lock or Skia SDK changes.",
+      "No bypass of required CI checks."
+    ]
+  },
+  "tests": {"required": ["skia_consumer_boundary_contract_test.py", "Windows consumer native Semantic check", "Windows qualification", "git diff --check"]},
+  "terminal_success": {"all_of": ["No-Skia consumer no longer compiles Windows Skia host", "Skia-enabled Windows host still builds", "required checks pass", "return READY_FOR_CONTROL_REVIEW without Gate PASS claim"]},
+  "terminal_blockers": {"explicit_classes": ["ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "BLOCKED_EVIDENCE"]},
+  "return_policy": {"continue_until_terminal_state": true, "return_surface": "CONTROL_REVIEW"}
+}

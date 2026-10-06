@@ -1,0 +1,8 @@
+{
+  "format": "aegis-result-v1",
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "producer_may_claim_gate_pass": false,
+  "required_local_evidence": ["repo-reconciliation.json", "red-oracle.json", "build.log", "ctest.log", "scope-audit.json"],
+  "next_action": "Push repair commit and await PR required checks; merge only after all required checks pass."
+}
