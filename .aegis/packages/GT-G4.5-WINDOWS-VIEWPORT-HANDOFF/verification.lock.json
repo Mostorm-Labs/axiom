@@ -1,0 +1,39 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "obligations": [
+    {
+      "id": "WVH-CANONICAL-PINCH-001",
+      "requirement": "While a Windows pinch owns the viewport gesture, each accepted camera change eventually produces a Canonical frame using the current viewport transform before the next idle state.",
+      "oracle": "Instrumented Windows dispatch test submits a multi-contact viewport gesture and observes monotonically increasing canonicalFrameCount plus changed canonical viewport pixels/transform for intermediate gesture states.",
+      "acceptance": "No second stroke or pointer-up is required for Canonical to track the current pinch transform; concurrent ink contacts must not be misclassified as viewport navigation.",
+      "evidence_required": ["windows-viewport-qualification.json", "focused CTest output"]
+    },
+    {
+      "id": "WVH-HANDOFF-001",
+      "requirement": "After a pinch settles, the first completed stroke retires its preview immediately after the matching CanonicalVisible receipt.",
+      "oracle": "Windows preview dispatch regression submits pinch, first post-pinch stroke, pointer-up, and one render tick; it asserts pendingCanonicalHandoffCount==0, previewActive==false, overlayVisible==false without a second stroke.",
+      "acceptance": "Preview retirement is tied to matching CanonicalVisible identity and never to an unrelated later pointer-down.",
+      "evidence_required": ["windows-handoff-qualification.json", "focused CTest output"]
+    },
+    {
+      "id": "WVH-INPUT-REGRESSION-001",
+      "requirement": "Existing AutoIntent pinch versus multi-contact ink behavior remains unchanged.",
+      "oracle": "G45BrushRuntimePipeline and Windows pointer/preview dispatch tests retain their existing multi-contact assertions.",
+      "acceptance": "Two-contact concurrent writing still retains independent preview contours and commits both strokes; pinch remains viewport-only.",
+      "evidence_required": ["portable-regression-summary.json"]
+    },
+    {
+      "id": "WVH-SCOPE-001",
+      "requirement": "The repair does not change BrushEngine, Vector/DAB renderer semantics, or surface-provider architecture.",
+      "oracle": "Source scope audit and git diff allowlist.",
+      "acceptance": "Only the authorized host scheduling, Windows dispatch, focused tests, and package/evidence files change.",
+      "evidence_required": ["scope-audit.json", "result.json"]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "At the task anchor, Windows deferred presentation skips Canonical refresh during viewport navigation and the post-pinch first-stroke handoff is not covered by a passing regression oracle.",
+    "observation_seam": "apps/ink_playground/common/ink_playground_host.cpp and apps/ink_playground/platform/windows/main.cpp"
+  }
+}

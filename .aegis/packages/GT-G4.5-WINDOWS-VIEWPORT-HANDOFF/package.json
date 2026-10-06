@@ -1,0 +1,39 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "title": "Windows viewport canonical refresh and preview handoff repair",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/gt-g4-5-windows-viewport-handoff",
+  "task_anchor": {
+    "revision": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "1a092d14a1ef16f1cd48e82b2bf4b42888709bd4c2d02aaf915e09da24b61d49"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "aaba069044591580545b2e0342714be04ed4a24282ba5945fc1ccb28924b3028"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "bd42097c53cdf525bc4b2cc4c62e1e0dfa214cc6bdd786eb13dcd631804d79ec"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "29bce8ea224feaf4331c243526cd9f9c81a21783c4ef7e3a22f556d24e2f0b46"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "3ae22a71f21bfc2985c5b6b7c03743683c3f5a70158a289ae6266e6568e92c70"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex"
+}

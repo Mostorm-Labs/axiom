@@ -1,0 +1,38 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "output_root": ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/",
+  "identity_required": [
+    "repository",
+    "result_revision",
+    "dirty_tree",
+    "execution_ref",
+    "task_anchor",
+    "compiler_toolchain",
+    "build_profile",
+    "windows_platform_profile",
+    "canonical_surface_generation",
+    "preview_surface_generation",
+    "scenario_id",
+    "evidence_producer"
+  ],
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "design-preflight.json",
+    "red-oracle.json",
+    "windows-viewport-qualification.json",
+    "windows-handoff-qualification.json",
+    "portable-regression-summary.json",
+    "scope-audit.json",
+    "physical-gate-input-manifest.json",
+    "result.json"
+  ],
+  "provider_refs_required": ["exact Windows automated qualification run/ref"],
+  "physical_gate_boundary": {
+    "producer_status": "READY_FOR_CONTROL_REVIEW",
+    "producer_may_claim_gate_pass": false,
+    "physical_recording_owner": "independent Windows physical verification reviewer",
+    "required_input_manifest": "physical-gate-input-manifest.json"
+  },
+  "reviewer_boundary": "Exact result revision on reviewer-resolvable remote branch/PR plus exact Windows automated qualification and physical-gate input manifest."
+}

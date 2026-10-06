@@ -1,0 +1,37 @@
+{
+  "schema_version": "aegis-p31-preflight-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "stage": "P31",
+  "status": "READY_FOR_P32_CODE_EXECUTION",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/gt-g4-5-windows-viewport-handoff",
+    "task_anchor": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
+    "anchor_relation": "ancestor",
+    "observed_revision": "77b40bef01627f75aa72db8519bed5e4ba8cca7f"
+  },
+  "parent_result": {
+    "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+    "status": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+    "revision": "77b40bef01627f75aa72db8519bed5e4ba8cca7f"
+  },
+  "checks": {
+    "RepositoryIdentityPreflight": "PASS",
+    "AuthoritySourceBindingPreflight": "PASS",
+    "PackageBindingPreflight": "PASS",
+    "EvidenceContractPreflight": "PASS",
+    "ClosureContractPreflight": "PASS",
+    "ImplementationDesignPreflight": "PASS_PENDING_P32_EXECUTION",
+    "ScopeConflict": false,
+    "UnresolvedSemanticDecision": false
+  },
+  "red_oracle_precondition": {
+    "required_in_p32": true,
+    "expected_failure": "The task anchor does not provide a passing oracle for Canonical refresh during deferred pinch or first-post-pinch preview retirement.",
+    "observation_seam": "InkPlaygroundHost viewport invalidation and Windows render-pump handoff"
+  },
+  "package_ref": ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/package.json",
+  "package_materialization_ref": "P31_LOCAL_MATERIALIZATION_PENDING_COMMIT",
+  "next_action": "Enter P32 only after the package is durably materialized; run RED oracle, then add focused failing tests before production mutation."
+}
