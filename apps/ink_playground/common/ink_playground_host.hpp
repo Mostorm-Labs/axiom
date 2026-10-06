@@ -11,11 +11,13 @@
 #include "canvas/interaction/editor_history.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
+#include "canvas/interaction/selection_session.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/runtime_app_binding.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/render_view_runtime.hpp"
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/render_backend.hpp"
 #include "platform_interaction_controller.hpp"
@@ -133,6 +135,28 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        std::uint32_t profile = 1U) noexcept;
   [[nodiscard]] bool selectTool(ToolMode mode) noexcept;
+  [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
+  [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
+  [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  void clearSelection() noexcept { selection_.cancel(); }
+  [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
+    return selection_.summary().count;
+  }
+  [[nodiscard]] foundation::ObjectId selectedPrimaryObject() const noexcept {
+    return selection_.primary();
+  }
+  [[nodiscard]] std::uint64_t selectedPrimaryObjectValue() const noexcept {
+    const auto id = selectedPrimaryObject();
+    std::uint64_t value = 0;
+    for (std::size_t i = 0; i < sizeof(value); ++i) {
+      value |= static_cast<std::uint64_t>(id.bytes[i]) << (i * 8U);
+    }
+    return value;
+  }
+  [[nodiscard]] bool renderSelectionOverlay() noexcept;
+  [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
+    return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
+  }
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
@@ -380,6 +404,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
+  std::unique_ptr<render::RenderViewRuntime> selectionView_;
   interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;
   render::SkiaRenderer previewRenderer_;
@@ -394,6 +419,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::optional<ink::CanonicalHandoffIdentity> lastCanonicalIdentity_;
   std::unordered_map<std::uint64_t, ink::CanonicalHandoffIdentity>
       pendingCanonicalIdentities_;
+  interaction::SelectionSession selection_;
+  bool selectionMode_ = false;
 };
 
 }  // namespace canvas::ink_playground

@@ -32,6 +32,7 @@
 #include <span>
 #include <thread>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace {
@@ -128,11 +129,13 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   canvas::runtime::ProductControlReceipt lastProductReceipt{};
   bool hasProductReceipt = false;
   int selectedTool = 4101;
+  int selectionPreviousTool = 4101;
+  std::unordered_set<std::uint64_t> selectionPointers;
 };
 void requestPreviewRender(State& value) noexcept;
 enum : int {
   kToolVector = 4101, kToolMarker, kToolChalk, kToolMembrane,
-  kToolObjectEraser, kToolPartialEraser
+  kToolObjectEraser, kToolPartialEraser, kToolSelection
 };
 
 bool selectWindowsTool(State& value, int command) {
@@ -143,12 +146,18 @@ bool selectWindowsTool(State& value, int command) {
         command == kToolMarker ? "marker-flat-v1" :
         command == kToolChalk ? "chalk-grain-v1" : "membrane-v1";
     const auto revision = command == kToolChalk ? 4U : 1U;
-    selected = value.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
+    selected = value.host->setSelectionMode(false) &&
+               value.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
                value.host->selectBrushProfile(profile, revision);
   } else if (command == kToolObjectEraser) {
-    selected = value.host->selectTool(InkPlaygroundHost::ToolMode::kObjectEraser);
+    selected = value.host->setSelectionMode(false) &&
+               value.host->selectTool(InkPlaygroundHost::ToolMode::kObjectEraser);
   } else if (command == kToolPartialEraser) {
-    selected = value.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser);
+    selected = value.host->setSelectionMode(false) &&
+               value.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser);
+  } else if (command == kToolSelection) {
+    if (!value.host->selectionMode()) value.selectionPreviousTool = value.selectedTool;
+    selected = value.host->setSelectionMode(true);
   } else {
     return false;
   }
@@ -192,6 +201,7 @@ void clearCanvasInput(State& value) noexcept {
     (void)value.inputCapture.terminal(sequence);
   }
   value.canvasInputSequences.clear();
+  value.selectionPointers.clear();
 }
 
 class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
@@ -205,7 +215,10 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             state_.host->surface().generation, viewport.scale,
             viewport.translationX, viewport.translationY,
             state_.host->canUndo(), state_.host->canRedo(),
-            0U, 0U, static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U};
+            0U, 0U, static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U,
+            state_.host->selectionMode(),
+            static_cast<std::uint32_t>(state_.host->selectedObjectCount()),
+            state_.host->selectedPrimaryObjectValue()};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
@@ -219,7 +232,9 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
                 state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U,
             diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo};
+            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo,
+            diagnostics.selectionMode, diagnostics.selectedObjectCount,
+            diagnostics.selectedPrimaryObject};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -233,7 +248,8 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
           ? kProfiles[request.brushId - 1U] : nullptr;
       const auto revision = request.brushRevision == 0U
           ? (request.brushId == 3U ? 4U : 1U) : request.brushRevision;
-      if (profile != nullptr && state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
+      if (profile != nullptr && state_.host->setSelectionMode(false) &&
+          state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
           state_.host->selectBrushProfile(profile, revision)) {
         state_.selectedTool = static_cast<int>(request.toolId);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
@@ -252,6 +268,26 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
           : canvas::interaction::ViewportNavigationKind::kWheelPan;
       if (state_.host->applyViewportNavigation(navigation)) {
         receipt.state = canvas::runtime::ProductControlState::kApplied;
+      }
+      return receipt;
+    }
+    if (request.action == canvas::runtime::ProductControlAction::kSetSelectionMode) {
+      if (request.selectionMode && !state_.host->selectionMode()) {
+        state_.selectionPreviousTool = state_.selectedTool;
+      }
+      if (state_.host->setSelectionMode(request.selectionMode)) {
+        if (request.selectionMode) {
+          state_.selectedTool = kToolSelection;
+        } else if (state_.selectedTool == kToolSelection) {
+          state_.selectedTool = state_.selectionPreviousTool;
+        }
+        state_.selectionPointers.clear();
+        clearCanvasInput(state_);
+        state_.canonicalFrameReady = false;
+        receipt.state = canvas::runtime::ProductControlState::kApplied;
+        state_.lastProductReceipt = receipt;
+        state_.hasProductReceipt = true;
+        InvalidateRect(state_.window, nullptr, FALSE);
       }
       return receipt;
     }
@@ -274,7 +310,8 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
           ? InkPlaygroundHost::ToolMode::kObjectEraser
           : request.eraserId == 2U ? InkPlaygroundHost::ToolMode::kPartialEraser
                                    : InkPlaygroundHost::ToolMode::kBrush;
-      if (request.eraserId != 0U && state_.host->selectTool(mode)) {
+      if (request.eraserId != 0U && state_.host->setSelectionMode(false) &&
+          state_.host->selectTool(mode)) {
         state_.selectedTool = static_cast<int>(request.toolId);
         for (const auto& [id, button] : state_.toolButtons) {
           SendMessageW(button, BM_SETCHECK, id == request.toolId ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -481,7 +518,8 @@ void createWindowsToolPalette(State& value, HINSTANCE instance) {
   constexpr Tool tools[] = {
       {kToolVector, L"Vector"}, {kToolMarker, L"Marker"},
       {kToolChalk, L"Chalk"}, {kToolMembrane, L"Membrane"},
-      {kToolObjectEraser, L"Object Eraser"}, {kToolPartialEraser, L"Partial Eraser"}};
+      {kToolObjectEraser, L"Object Eraser"}, {kToolPartialEraser, L"Partial Eraser"},
+      {kToolSelection, L"Selection"}};
   value.toolbarLabel = CreateWindowExW(0, L"STATIC", L"Brush / Eraser:", WS_CHILD | WS_VISIBLE,
                                        10, 8, 105, 24, value.window, nullptr, instance, nullptr);
   for (std::size_t index = 0; index < std::size(tools); ++index) {
@@ -773,15 +811,20 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     // click through both WM_LBUTTON* and WM_POINTER/PT_MOUSE.  The first
     // lifecycle message owns the session; a duplicate down must not create a
     // second Runtime pointer session.
-    if (value.activeKeys.contains(kMousePointerId)) return false;
+    if (value.activeKeys.contains(kMousePointerId) ||
+        value.selectionPointers.contains(kMousePointerId)) return false;
     begin = true;
     phase = ARC_POINTER_PHASE_DOWN;
   } else if (message == WM_LBUTTONUP) {
-    if (!value.activeKeys.contains(kMousePointerId)) return false;
+    if (value.host->selectionMode()) {
+      if (!value.selectionPointers.contains(kMousePointerId)) return false;
+    } else if (!value.activeKeys.contains(kMousePointerId)) return false;
     end = true;
     phase = ARC_POINTER_PHASE_UP;
   } else if ((wParam & MK_LBUTTON) == 0U || !value.activeKeys.contains(kMousePointerId)) {
-    return false;
+    if (!value.host->selectionMode() || !value.selectionPointers.contains(kMousePointerId)) {
+      return false;
+    }
   }
   if (begin) {
     if (!beginCanvasInput(value, kMousePointerId)) return false;
@@ -795,6 +838,21 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   const auto x = static_cast<float>(static_cast<short>(LOWORD(lParam)));
   const auto y = static_cast<float>(static_cast<short>(HIWORD(lParam)) - State::kToolbarHeight);
   if (begin && y < 0.0F) return false;
+  const bool selectionMode = value.host->selectionMode();
+  if (selectionMode && begin) {
+    value.selectionPointers.insert(kMousePointerId);
+    (void)value.host->selectAtViewPoint(x, y);
+    InvalidateRect(window, nullptr, FALSE);
+    return true;
+  }
+  if (selectionMode) {
+    if (end) {
+      value.selectionPointers.erase(kMousePointerId);
+      endCanvasInput(value, kMousePointerId);
+      if (GetCapture() == window) ReleaseCapture();
+    }
+    return true;
+  }
   NativePointerSample sample{};
   sample.pointer_id = kMousePointerId;
   sample.sample_sequence = ++value.mouseSampleSequence;
@@ -1074,6 +1132,9 @@ canvas::debug_ui::DebugSnapshot buildDebugSnapshot(State& value) {
         ? runtimeState.toolId : snapshot.selectedTool;
     snapshot.canUndo = runtimeState.canUndo;
     snapshot.canRedo = runtimeState.canRedo;
+    snapshot.selectionMode = runtimeState.selectionMode;
+    snapshot.selectedObjectCount = runtimeState.selectedObjectCount;
+    snapshot.selectedPrimaryObject = runtimeState.selectedPrimaryObject;
     if (value.hasProductReceipt) {
       snapshot.productControlRequestId = value.lastProductReceipt.requestId;
       snapshot.productControlState = value.lastProductReceipt.state;
@@ -1433,6 +1494,23 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       const auto mouseLParam = MAKELPARAM(static_cast<short>(clientPoint.x),
                                           static_cast<short>(clientPoint.y));
       (void)submitMouseSample(window, *value, mouseMessage, mouseWParam, mouseLParam);
+      return 0;
+    }
+    if (value->host->selectionMode() &&
+        (message == WM_POINTERDOWN || message == WM_POINTERUP)) {
+      POINT clientPoint = info.ptPixelLocation;
+      if (ScreenToClient(window, &clientPoint) == FALSE) return 0;
+      const float x = static_cast<float>(clientPoint.x);
+      const float y = static_cast<float>(clientPoint.y - State::kToolbarHeight);
+      if (message == WM_POINTERDOWN) {
+        if (!beginCanvasInput(*value, pointerId)) return 0;
+        value->selectionPointers.insert(pointerId);
+        if (y >= 0.0F) (void)value->host->selectAtViewPoint(x, y);
+        InvalidateRect(window, nullptr, FALSE);
+      } else if (value->selectionPointers.erase(pointerId) != 0U) {
+        endCanvasInput(*value, pointerId);
+        InvalidateRect(window, nullptr, FALSE);
+      }
       return 0;
     }
     value->nativeTouchChannelSeen = true;

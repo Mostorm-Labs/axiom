@@ -247,6 +247,16 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       !appBinding_->registerInputSource({source, "platform"})) return false;
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  if (selectionMode_) {
+    for (const auto& sample : routed.normalized.samples) {
+      if (sample.phase == input::PointerPhase::kDown ||
+          sample.phase == input::PointerPhase::kUp) {
+        (void)selectAtViewPoint(sample.x, sample.y);
+      }
+    }
+    if (routed.terminalCancel) selection_.cancel();
+    return routed.accepted || routed.terminalCancel;
+  }
   bool previewDirty = false;
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routed.normalized.samples) {
@@ -462,6 +472,70 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
   if (!brushSessions_.empty()) return false;
   toolMode_ = mode;
   return true;
+}
+
+bool InkPlaygroundHost::setSelectionMode(bool enabled) noexcept {
+  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) {
+    return false;
+  }
+  selectionMode_ = enabled;
+  if (!enabled) selection_.cancel();
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
+  if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+      foundation::WorldPoint{content.first, content.second}, 4.0F,
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+  if (!tested || tested.value().frontToBack.empty()) {
+    selection_.cancel();
+    selectionView_.reset();
+    canonicalPresentationDirty_ = true;
+    return true;
+  }
+  const bool selected = selection_.click(tested.value().frontToBack.front());
+  if (selected) canonicalPresentationDirty_ = true;
+  return selected && renderSelectionOverlay();
+}
+
+bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
+  if (!selectionMode_ || selection_.primary().isZero() ||
+      sceneCoordinator_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
+    selectionView_.reset();
+    return false;
+  }
+  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
+  if (record == nullptr || !record->worldBounds.isFiniteAndOrdered()) {
+    selectionView_.reset();
+    return false;
+  }
+  const auto viewport = viewportController_->state();
+  const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+      ? viewport.scale : 1.0F;
+  const auto center = foundation::WorldPoint{
+      (static_cast<float>(surface_.width) * 0.5F - viewport.translationX) / zoom,
+      (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
+  const auto frame = render::FrameState{
+      render::ViewId{1},
+      render::CameraState{center, zoom, 0.0F, render::CameraGeneration{1}},
+      foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
+      render::SurfaceMetrics{static_cast<float>(surface_.width),
+                             static_cast<float>(surface_.height), surface_.width,
+                             surface_.height, 1.0F, 1.0F},
+      semanticGeneration_.current(), runtimeSceneHost_->revision(),
+      render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation},
+      render::FrameId{canonicalFrameCount_ + 1U},
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}};
+  selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+  return selectionView_->editingOverlay().update(render::EditingOverlayInput{
+      record->objectId, record->worldBounds, record->transform, true, false, false,
+      render::HandleCapabilities{true, true, true}});
 }
 
 bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
@@ -1352,7 +1426,9 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
-  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value());
+  if (selectionMode_) (void)renderSelectionOverlay();
+  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
+                                                  selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),

@@ -214,6 +214,25 @@ void multi_contact_policy_selection_test() {
   assert(host.cancelStroke(key));
   assert(host.setMultiContactPolicy(canvas::interaction::MultiContactPolicy::kGesturePriority));
 }
+
+void selection_input_does_not_mutate_canonical_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.setSelectionMode(true));
+  canvas::input::PlatformPointerBatch batch;
+  batch.samples.push_back({17U, 1U, 1U, 1'000'000U, 24.0F, 32.0F, 0.5F,
+                           0.0F, 0.0F, {}, {},
+                           canvas::input::SampleProvenance::kConfirmedCurrent,
+                           canvas::input::PointerPhase::kDown});
+  batch.samples.push_back({17U, 1U, 2U, 2'000'000U, 30.0F, 38.0F, 0.5F,
+                           0.0F, 0.0F, {}, {},
+                           canvas::input::SampleProvenance::kConfirmedCurrent,
+                           canvas::input::PointerPhase::kUp});
+  assert(host.acceptPlatformBatch(batch, 2'000'000U));
+  assert(host.selectionMode());
+  assert(host.submittedOperationCount() == 0U);
+  assert(host.canonicalStrokes().empty());
+  assert(host.brushPreviewOutlines().empty());
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -229,6 +248,7 @@ int main(int argc, char** argv) {
   else if (mode == "viewport") viewport_gesture_state_test();
   else if (mode == "android-pointer-identity") android_pointer_identity_test();
   else if (mode == "multi-contact-policy") multi_contact_policy_selection_test();
+  else if (mode == "selection") selection_input_does_not_mutate_canonical_test();
   else return 2;
   return 0;
 }

@@ -18,7 +18,8 @@
 namespace canvas::render {
 
 BackendSubmissionResult SkiaRenderer::renderFrame(
-    SkiaSurfaceProvider& provider, const FramePlan& plan) {
+    SkiaSurfaceProvider& provider, const FramePlan& plan,
+    const EditingOverlay* selectionOverlay) {
     const auto acquired = provider.acquire();
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return BackendSubmissionResult::rejected(acquired.message);
@@ -42,6 +43,34 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     }
     const auto result = internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan);
+    if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr &&
+        selectionOverlay->selectionOutline().visible) {
+        auto* canvas = acquired.frame.surface->getCanvas();
+        SkPaint chrome;
+        chrome.setAntiAlias(true);
+        chrome.setStyle(SkPaint::kStroke_Style);
+        chrome.setStrokeWidth(2.0F);
+        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
+        const auto& outline = selectionOverlay->selectionOutline();
+        SkPathBuilder path;
+        path.moveTo(outline.corners[0].x, outline.corners[0].y);
+        path.lineTo(outline.corners[1].x, outline.corners[1].y);
+        path.lineTo(outline.corners[2].x, outline.corners[2].y);
+        path.lineTo(outline.corners[3].x, outline.corners[3].y);
+        path.close();
+        canvas->drawPath(path.detach(), chrome);
+        chrome.setStyle(SkPaint::kFill_Style);
+        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
+                                HandleKind::kTopRight, HandleKind::kRight,
+                                HandleKind::kBottomRight, HandleKind::kBottom,
+                                HandleKind::kBottomLeft, HandleKind::kLeft,
+                                HandleKind::kRotation}) {
+            const auto& handle = selectionOverlay->handle(kind);
+            if (handle.kind == HandleKind::kNone) continue;
+            canvas->drawCircle(handle.center.x, handle.center.y,
+                               handle.visualRadius, chrome);
+        }
+    }
     provider.release();
     if (result.code != BackendSubmissionCode::kAccepted) return result;
     ++submissions_;

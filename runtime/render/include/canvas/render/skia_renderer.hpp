@@ -4,6 +4,7 @@
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/render/preview_surface.hpp"
+#include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
@@ -23,7 +24,8 @@ struct CanonicalViewportTransform;
 class SkiaRenderer final {
   public:
     [[nodiscard]] BackendSubmissionResult renderFrame(
-        SkiaSurfaceProvider& provider, const FramePlan& plan);
+        SkiaSurfaceProvider& provider, const FramePlan& plan,
+        const EditingOverlay* selectionOverlay = nullptr);
     [[nodiscard]] BackendSubmissionResult renderPreview(
         SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
         const PreviewStyleOverride& style = {});
