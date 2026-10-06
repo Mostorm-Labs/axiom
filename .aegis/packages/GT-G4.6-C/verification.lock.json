@@ -1,0 +1,31 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-C",
+  "obligations": [
+    {
+      "id": "G46C-BUNDLE-001",
+      "requirement": "Canvas Interaction Playground 0.1 can run all frozen scenarios and exports exact-identity HUD/trace/evidence.",
+      "oracle": "qualification bundle manifest + scenario run"
+    },
+    {
+      "id": "G46C-PHYS-002",
+      "requirement": "Blocking physical checklist passes on required capability-profiled Windows/Web/Android runs.",
+      "oracle": "platform observation records bound to exact build/result"
+    },
+    {
+      "id": "G46C-WORKLOAD-003",
+      "requirement": "Deterministic downstream workload corpus is frozen with scene/view/overlay/candidate/op/invalidation/frame metrics.",
+      "oracle": "corpus manifest + replay digests"
+    },
+    {
+      "id": "G46C-COEXIST-004",
+      "requirement": "G4.5 Pen/Laser coexist with editing overlay without canonical pollution or stale presentation.",
+      "oracle": "coexistence smoke + traces"
+    },
+    {
+      "id": "G46C-REGRESS-005",
+      "requirement": "G4/G4.5 and accepted A/B regressions remain green.",
+      "oracle": "regression matrix"
+    }
+  ]
+}
