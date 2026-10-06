@@ -30,10 +30,11 @@ class BoundedAxiomDebugCommandQueue final {
     AxiomDebugCommandReceipt receipt{command.requestId,
                                      AxiomDebugCommandState::kQueued, 0,
                                      runtimeGeneration, documentGeneration};
-    if (command.requestId == 0U || command.expectedRuntimeGeneration != 0U &&
-        command.expectedRuntimeGeneration != runtimeGeneration ||
-        command.expectedDocumentGeneration != 0U &&
-        command.expectedDocumentGeneration != documentGeneration) {
+    if (command.requestId == 0U ||
+        (command.expectedRuntimeGeneration != 0U &&
+         command.expectedRuntimeGeneration != runtimeGeneration) ||
+        (command.expectedDocumentGeneration != 0U &&
+         command.expectedDocumentGeneration != documentGeneration)) {
       receipt.state = AxiomDebugCommandState::kStaleGeneration;
       return receipt;
     }
@@ -41,7 +42,7 @@ class BoundedAxiomDebugCommandQueue final {
       receipt.state = AxiomDebugCommandState::kExpired;
       return receipt;
     }
-    if (capacity_ == 0U || pending_.size() >= capacity_ ||
+    if ((capacity_ == 0U || pending_.size() >= capacity_) ||
         receiptCapacity_ == 0U || receipts_.contains(command.requestId)) {
       receipt.state = AxiomDebugCommandState::kQueueFull;
       return receipt;
@@ -61,10 +62,10 @@ class BoundedAxiomDebugCommandQueue final {
       std::uint64_t sequence) {
     std::lock_guard lock(mutex_);
     for (auto it = pending_.begin(); it != pending_.end();) {
-      if (it->expectedRuntimeGeneration != 0U &&
-          it->expectedRuntimeGeneration != runtimeGeneration ||
-          it->expectedDocumentGeneration != 0U &&
-          it->expectedDocumentGeneration != documentGeneration) {
+      if ((it->expectedRuntimeGeneration != 0U &&
+           it->expectedRuntimeGeneration != runtimeGeneration) ||
+          (it->expectedDocumentGeneration != 0U &&
+           it->expectedDocumentGeneration != documentGeneration)) {
         terminalLocked(it->requestId, AxiomDebugCommandState::kStaleGeneration);
         it = pending_.erase(it);
         continue;

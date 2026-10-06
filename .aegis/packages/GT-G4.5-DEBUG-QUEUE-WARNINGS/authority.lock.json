@@ -1,0 +1,9 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.5-DEBUG-QUEUE-WARNINGS",
+  "current": true,
+  "dependency": {"baseline_task": "GT-G4.5-SKIA-CONSUMER-BOUNDARY", "baseline_revision": "7adf277e81050ba03be39d948d4b8fb4c0c9a656"},
+  "authorized_goal": "Make the existing Debug command queue compile under clang-cl warning-as-error without changing queue semantics.",
+  "trusted_statements": ["Only explicit parentheses around existing &&/|| expressions are authorized.", "No touch, BrushEngine, Canonical, viewport, Skia, Arc, or UI behavior changes."],
+  "forbidden_authority_expansion": ["No queue algorithm redesign.", "No dependency or workflow bypass."]
+}
