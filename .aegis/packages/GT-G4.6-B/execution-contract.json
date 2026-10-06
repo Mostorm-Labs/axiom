@@ -1,0 +1,116 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-B",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "runtime/foundation/**",
+      "runtime/render/**",
+      "runtime/interaction/**",
+      "runtime/scene/**",
+      "apps/ink_playground/**",
+      "debug_ui/**",
+      ".aegis/packages/GT-G4.6-B/**",
+      ".aegis/results/GT-G4.6-B/**"
+    ],
+    "required_changes": [
+      "Materialize a product-facing ViewportController/equivalent by reusing RuntimeFacade camera control and FrameState/RenderViewRuntime; add setZoom/setCenter and fit target support only where required by the frozen G4.6 baseline.",
+      "Implement deterministic fit computation using the frozen policy and accepted visual/world bounds sources.",
+      "Implement baseline SnapResolver/equivalent for center/edge snapping, transient guides/target highlight, view-space thresholds, hysteresis and deterministic tie-break.",
+      "Use the accepted Scene/Spatial query seam for candidates and expose camera/overlay/candidate diagnostics for package C.",
+      "Wire pan/continuous zoom/50-100-200 presets/fit Document/Selection/Object into the playground/product-safe control path without adding canonical mutations."
+    ],
+    "forbidden_changes": [
+      "Do not persist camera or snap state in SemanticDocument.",
+      "Do not modify SetTransforms semantics or bypass TransformSession.",
+      "Do not scan the entire SemanticDocument on pointer move when an accepted spatial/scene query seam exists.",
+      "Do not implement equal spacing, distribution commands, auto-layout, minimap, polished camera animation, or G5 cache/tile/scheduler work.",
+      "Do not reinterpret G4.6-A editing overlay ownership."
+    ]
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "G46B-T1",
+        "command_or_oracle": "affected target build + focused CTest",
+        "expected_result": "green",
+        "blocking_reason": "compile/regression"
+      },
+      {
+        "id": "G46B-T2",
+        "command_or_oracle": "camera generation negative-control matrix",
+        "expected_result": "camera/view changes; semantic/shared-scene generation unchanged",
+        "blocking_reason": "ownership"
+      },
+      {
+        "id": "G46B-T3",
+        "command_or_oracle": "zoom-anchor and fit policy matrix",
+        "expected_result": "frozen policy satisfied deterministically",
+        "blocking_reason": "viewport correctness"
+      },
+      {
+        "id": "G46B-T4",
+        "command_or_oracle": "snap deterministic trace including engage/release/ties/rotation/multiselect exclusion",
+        "expected_result": "exact policy result; zero canonical op until transform commit",
+        "blocking_reason": "snap correctness"
+      },
+      {
+        "id": "G46B-T5",
+        "command_or_oracle": "query structural instrumentation",
+        "expected_result": "accepted scene/spatial query path used; no document-wide hot-path scan",
+        "blocking_reason": "G5 workload validity"
+      },
+      {
+        "id": "G46B-T6",
+        "command_or_oracle": "A + G4/G4.5 focused regression + git diff --check",
+        "expected_result": "green",
+        "blocking_reason": "predecessor preservation"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "repository required CI for affected C++ and Tier-A adapters"
+    ],
+    "optional": [
+      "physical feel checks deferred to C"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "camera trace",
+      "fit policy matrix",
+      "snap trace",
+      "query structural evidence",
+      "focused regression",
+      "scope audit"
+    ],
+    "corroborative": [
+      "interactive screenshots/video"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Viewport and snap baseline implemented on exact reviewer-accessible result.",
+      "All automated policy/ownership obligations pass.",
+      "GT-G4.6-A accepted behavior preserved.",
+      "Return READY_FOR_CONTROL_REVIEW without G4.6 Gate PASS claim."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
