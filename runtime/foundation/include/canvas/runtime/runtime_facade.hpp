@@ -10,6 +10,7 @@ enum class ProductControlAction : std::uint8_t {
   kSetTool,
   kSetBrush,
   kSetEraser,
+  kSetSelectionMode,
   kSetCamera,
   kUndo,
   kRedo,
@@ -43,6 +44,9 @@ struct RuntimeStateSnapshot final {
   float cameraTranslationY = 0.0F;
   bool canUndo = false;
   bool canRedo = false;
+  bool selectionMode = false;
+  std::uint32_t selectedObjectCount = 0;
+  std::uint64_t selectedPrimaryObject = 0;
 };
 
 struct RuntimeDiagnosticsSnapshot final {
@@ -57,6 +61,13 @@ struct RuntimeDiagnosticsSnapshot final {
   float cameraTranslationY = 0.0F;
   bool canUndo = false;
   bool canRedo = false;
+  std::uint64_t overlayUpdateCount = 0;
+  std::uint64_t transientTransformCount = 0;
+  std::uint64_t canonicalOperationCount = 0;
+  std::uint64_t cameraGeneration = 0;
+  bool selectionMode = false;
+  std::uint32_t selectedObjectCount = 0;
+  std::uint64_t selectedPrimaryObject = 0;
 };
 
 class RuntimeDiagnostics : public DiagnosticsProvider {
@@ -83,6 +94,7 @@ struct ProductControlRequest final {
   float anchorX = 0.0F;
   float anchorY = 0.0F;
   float scaleDelta = 1.0F;
+  bool selectionMode = false;
 };
 
 struct ProductControlReceipt final {
@@ -135,6 +147,16 @@ class RuntimeFacade : public RuntimeDiagnostics {
     request.runtimeGeneration = runtimeGeneration;
     request.toolId = eraserId;
     request.eraserId = eraserId;
+    return submitProductControl(request);
+  }
+  [[nodiscard]] virtual ProductControlReceipt setSelectionMode(
+      bool enabled, std::uint64_t requestId,
+      std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetSelectionMode;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.selectionMode = enabled;
     return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt undo(

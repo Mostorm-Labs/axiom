@@ -5,6 +5,7 @@ add_library(canvas_runtime_interaction STATIC
     src/interaction_runtime.cpp
     src/selection_session.cpp
     src/transform_session.cpp
+    src/transform_handle_drag.cpp
     src/session_manager.cpp
     src/editor_history.cpp
     src/interaction_dependency_footprint.cpp)
@@ -55,6 +56,16 @@ if(BUILD_TESTING)
         target_compile_options(axiom_transform_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4TransformSession COMMAND axiom_transform_session_tests)
+    add_executable(axiom_transform_handle_drag_tests
+        tests/transform_handle_drag_test.cpp)
+    target_link_libraries(axiom_transform_handle_drag_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_transform_handle_drag_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46TransformHandleDrag COMMAND axiom_transform_handle_drag_tests)
     add_executable(axiom_eraser_session_tests tests/eraser_session_test.cpp)
     target_link_libraries(axiom_eraser_session_tests PRIVATE canvas_runtime_interaction)
     target_compile_features(axiom_eraser_session_tests PRIVATE cxx_std_20)

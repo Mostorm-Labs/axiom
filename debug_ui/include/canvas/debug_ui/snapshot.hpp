@@ -60,6 +60,9 @@ struct DebugSnapshot final {
     std::uint32_t selectedTool = 0;
     bool canUndo = false;
     bool canRedo = false;
+    bool selectionMode = false;
+    std::uint32_t selectedObjectCount = 0;
+    std::uint64_t selectedPrimaryObject = 0;
     std::uint64_t productControlRequestId = 0;
     canvas::runtime::ProductControlState productControlState =
         canvas::runtime::ProductControlState::kRejected;

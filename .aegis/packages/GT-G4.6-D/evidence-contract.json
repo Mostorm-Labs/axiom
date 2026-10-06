@@ -1,0 +1,17 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.6-D",
+  "output_root": ".aegis/results/GT-G4.6-D/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "scope-audit.json",
+    "build.log",
+    "ctest.log",
+    "tab-contract.json",
+    "selection-trace.json",
+    "overlay-ownership.json",
+    "result.json"
+  ],
+  "review_boundary": "exact result revision + reviewer-accessible branch/PR + applicable hosted CI",
+  "producer_may_claim_gate_pass": false
+}
