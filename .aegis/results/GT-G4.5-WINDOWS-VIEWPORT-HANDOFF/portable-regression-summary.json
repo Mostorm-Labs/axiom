@@ -1,0 +1,23 @@
+{
+  "result_revision": "660935465e47bdd6ed1e4f8ebfad695e56952285",
+  "build_targets": [
+    "axiom_ink_playground_windows",
+    "axiom_brush_runtime_pipeline_tests",
+    "axiom_windows_preview_dispatch_tests",
+    "axiom_ink_playground_windows_pointer_utils_tests"
+  ],
+  "contract_tests": {
+    "windows_tool_palette": 5,
+    "windows_debug_ui_encoding": 1,
+    "windows_d3d12_surface": 27,
+    "windows_skia_preview": 19,
+    "windows_pointer_diagnostics": 4
+  },
+  "tests_failed": 0,
+  "tests_total": 22,
+  "ctest_regex": "^(G45Brush|G3PreviewSurface|G4CanonicalHandoff|G4InkPlayground|G4WindowsPreviewDispatch)",
+  "tests_passed": 22,
+  "schema_version": "aegis-portable-regression-summary-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "git_diff_check": "PASS"
+}
