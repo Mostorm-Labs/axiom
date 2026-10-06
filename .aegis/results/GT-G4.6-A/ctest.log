@@ -1,0 +1,9 @@
+Focused runtime/render/interaction tests
+command: ctest --test-dir out/g46-red3 -C Debug --output-on-failure -R "G46(EditingOverlay|TransformHandleDrag)|G4(TransformSession|SelectionSession|EditorHistory|MultiContactCoordinator|ViewportGesture|CanonicalHandoff)"
+result: 8/8 passed
+
+Focused Windows/Ink Playground tests
+command: ctest --test-dir out/g46-windows -C Debug --output-on-failure -R "G4InkPlayground|G45BrushRuntimePipeline|G4MultiContactPolicySelection|G4WindowsPreviewDispatch|G4InkPlaygroundWindowsPreviewPopup|G4InkPlaygroundWindowsPointerUtils"
+result: 11/11 passed
+
+git diff --check: PASS

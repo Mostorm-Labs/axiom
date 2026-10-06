@@ -1,0 +1,11 @@
+GT-G4.6-A affected runtime build
+configuration: out/g46-red3
+command: cmake --build out/g46-red3 --config Debug --target axiom_render_editing_overlay_tests axiom_transform_handle_drag_tests --parallel 4
+status: PASS
+
+GT-G4.6-A Windows host build
+configuration: out/g46-windows
+profile: CANVAS_SKIA_SDK_VARIANT=release, CANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON, AXIOM_DEBUG_UI_PROFILE=full
+command: cmake --build out/g46-windows --config Debug --target axiom_ink_playground_windows axiom_windows_preview_dispatch_tests axiom_ink_playground_windows_preview_popup_tests --parallel 4
+status: PASS
+host: out/g46-windows/apps/ink_playground/Debug/axiom_ink_playground_windows.exe

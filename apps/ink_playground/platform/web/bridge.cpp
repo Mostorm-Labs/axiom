@@ -64,7 +64,8 @@ class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             static_cast<std::uint64_t>(host_.submittedOperationCount()), 1U,
             static_cast<std::uint32_t>(host_.toolMode()), host_.surface().generation,
             view.scale, view.translationX, view.translationY,
-            host_.canUndo(), host_.canRedo()};
+            host_.canUndo(), host_.canRedo(),
+            0U, 0U, static_cast<std::uint64_t>(host_.submittedOperationCount()), 0U};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
