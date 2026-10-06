@@ -9,12 +9,19 @@
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
   "schema_version": "aegis-physical-gate-input-manifest-v1",
   "automated_substitute": "Not used as physical evidence",
-  "recording": "pending independent reviewer input",
+  "recording": "not attached; user confirmation only",
   "official_gate_pass_claimed": false,
   "producer_status": "BLOCKED_EVIDENCE",
-  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "result_revision": "36edd006247f17e252b9053e7cc906f8e34b3adf",
   "local_executable": "build-windows-real/apps/ink_playground/RelWithDebInfo/axiom_ink_playground_windows.exe",
   "local_executable_sha256": "a9d17e0c9428439ff61ae1de85318280e853c7ea3876774b844f5178dd3a8b1f",
-  "physical_verification": "PENDING_INDEPENDENT_REVIEWER",
-  "hosted_handoff_qualification": "NOT_EXECUTED"
+  "physical_verification": "PASS_REPORTED_BY_USER_PENDING_INDEPENDENT_REVIEWER_RECORD",
+  "hosted_handoff_qualification": "NOT_EXECUTED",
+  "user_reported_at_utc": "2026-10-06T03:25:09Z",
+  "user_reported_scenarios": {
+    "pinch_then_first_post_pinch_stroke": "PASS",
+    "preview_retires_without_second_stroke": "PASS",
+    "canonical_updates_during_pinch": "PASS",
+    "multi_contact_ink": "PASS"
+  }
 }
