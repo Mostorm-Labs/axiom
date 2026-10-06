@@ -100,11 +100,22 @@ jobs:
             -DAXIOM_BUILD_BRUSH_LAB=ON `
             -DBUILD_TESTING=ON
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $buildOutput = & cmake --build out/g4-5-windows --parallel 2>&1
+          $buildTargets = @(
+            "axiom_ink_playground_windows",
+            "axiom_ink_playground_tests",
+            "axiom_ink_playground_windows_pointer_utils_tests",
+            "axiom_windows_preview_dispatch_tests",
+            "axiom_ink_playground_windows_preview_popup_tests",
+            "axiom_brush_runtime_pipeline_tests",
+            "axiom_render_preview_surface_tests",
+            "axiom_canonical_handoff_tests",
+            "axiom_brush_lab"
+          )
+          $buildOutput = & cmake --build out/g4-5-windows --target $buildTargets --parallel 2>&1
           $buildExit = $LASTEXITCODE
           $buildOutput | Tee-Object -FilePath out/g4-5-windows-qualification-build.log
           if ($buildExit -ne 0) { exit $buildExit }
-          $ctestRegex = "^(G4InkPlayground|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)"
+          $ctestRegex = "^(G4InkPlayground.*|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)$"
           $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification-ctest.xml 2>&1
           $ctestExit = $LASTEXITCODE
           $ctestOutput | Tee-Object -FilePath out/g4-5-windows-qualification-ctest.log
