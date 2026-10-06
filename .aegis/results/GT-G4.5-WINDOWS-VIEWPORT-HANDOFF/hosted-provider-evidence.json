@@ -1,0 +1,144 @@
+{
+  "schema_version": "aegis-hosted-provider-evidence-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "run": {
+    "databaseId": 37406861424,
+    "headSha": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37406861424"
+  },
+  "run_attempt": 1,
+  "job": {
+    "completedAt": "2026-10-06T03:03:47Z",
+    "conclusion": "success",
+    "databaseId": 112086253913,
+    "name": "qualification/windows-x64",
+    "startedAt": "2026-10-06T03:00:05Z",
+    "status": "completed",
+    "steps": [
+      {
+        "completedAt": "2026-10-06T03:00:07Z",
+        "conclusion": "success",
+        "name": "Set up job",
+        "number": 1,
+        "startedAt": "2026-10-06T03:00:06Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:00:15Z",
+        "conclusion": "success",
+        "name": "Run actions/checkout@v4",
+        "number": 2,
+        "startedAt": "2026-10-06T03:00:07Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:00:15Z",
+        "conclusion": "success",
+        "name": "Run actions/setup-python@v5",
+        "number": 3,
+        "startedAt": "2026-10-06T03:00:15Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:00:19Z",
+        "conclusion": "success",
+        "name": "Run ilammy/msvc-dev-cmd@v1",
+        "number": 4,
+        "startedAt": "2026-10-06T03:00:15Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:01:40Z",
+        "conclusion": "success",
+        "name": "Resolve locked core dependencies and LLVM",
+        "number": 5,
+        "startedAt": "2026-10-06T03:00:19Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:01:46Z",
+        "conclusion": "success",
+        "name": "Fetch locked Windows Skia SDK",
+        "number": 6,
+        "startedAt": "2026-10-06T03:01:40Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:03:43Z",
+        "conclusion": "success",
+        "name": "Configure, build, test and materialize qualification bundle",
+        "number": 7,
+        "startedAt": "2026-10-06T03:01:46Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:03:44Z",
+        "conclusion": "success",
+        "name": "Run actions/upload-artifact@v4",
+        "number": 8,
+        "startedAt": "2026-10-06T03:03:43Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:03:44Z",
+        "conclusion": "success",
+        "name": "Post Run actions/setup-python@v5",
+        "number": 15,
+        "startedAt": "2026-10-06T03:03:44Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:03:46Z",
+        "conclusion": "success",
+        "name": "Post Run actions/checkout@v4",
+        "number": 16,
+        "startedAt": "2026-10-06T03:03:44Z",
+        "status": "completed"
+      },
+      {
+        "completedAt": "2026-10-06T03:03:46Z",
+        "conclusion": "success",
+        "name": "Complete job",
+        "number": 17,
+        "startedAt": "2026-10-06T03:03:46Z",
+        "status": "completed"
+      }
+    ],
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37406861424/job/112086253913"
+  },
+  "artifact": {
+    "id": 11387807780,
+    "node_id": "MDg6QXJ0aWZhY3QxMTM4NzgwNzc4MA==",
+    "name": "g4-5-windows-x64-21b61ce7127445539ce2ddaefabe29763b17b2b2",
+    "size_in_bytes": 168814,
+    "url": "https://api.github.com/repos/Mostorm-Labs/axiom/actions/artifacts/11387807780",
+    "archive_download_url": "https://api.github.com/repos/Mostorm-Labs/axiom/actions/artifacts/11387807780/zip",
+    "expired": false,
+    "digest": "sha256:eaa96066bb6b41880dcf0f2061ceb2113e7045ccc2f21e4c9a7b08c995e39a17",
+    "created_at": "2026-10-06T03:03:44Z",
+    "updated_at": "2026-10-06T03:03:44Z",
+    "expires_at": "2026-11-05T03:03:43Z",
+    "workflow_run": {
+      "id": 37406861424,
+      "repository_id": 1306396623,
+      "head_repository_id": 1306396623,
+      "head_branch": "codex/gt-g4-5-windows-viewport-handoff",
+      "head_sha": "21b61ce7127445539ce2ddaefabe29763b17b2b2"
+    }
+  },
+  "artifact_identity": {
+    "source_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+    "executable_sha256": "a35ef2f4ed1f9fcc7c1880fe69f3f97fc11098f7cf6497221f205437894eda69",
+    "profile": "windows-x64"
+  },
+  "coverage": {
+    "brush_renderer_regression": "PASS",
+    "windows_viewport_handoff": "NOT_EXECUTED",
+    "reason": "g4-5-programmable-brush.yml configures CANVAS_BUILD_INK_PLAYGROUND=OFF; G4WindowsPreviewDispatch and G45BrushRuntimePipeline are absent from the hosted CTest log."
+  },
+  "blocking_requirement_satisfied": false,
+  "job_log_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37406861424/job/112086253913"
+}

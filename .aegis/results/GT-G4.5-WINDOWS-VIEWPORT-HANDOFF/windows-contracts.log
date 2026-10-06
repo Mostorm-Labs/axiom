@@ -1,4 +1,5 @@
-  File "<string>", line 1
-    import importlib.util, pathlib, json; names=['windows_skia_preview_contract_test.py','windows_d3d12_surface_contract_test.py','windows_pointer_diagnostics_contract_test.py','windows_debug_ui_encoding_contract_test.py','windows_tool_palette_contract_test.py']; out={};\nfor name in names:\n p=pathlib.Path('apps/ink_playground/tests')/name; s=importlib.util.spec_from_file_location('m',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); fs=[getattr(m,n) for n in dir(m) if n.startswith('test_')]; [f() for f in fs]; out[name]={'status':'PASS','tests':len(fs)}\npathlib.Path('.aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-contracts.json').write_text(json.dumps(out,indent=2),encoding='utf-8')
-                                                                                                                                                                                                                                                                                ^
-SyntaxError: unexpected character after line continuation character
+windows_skia_preview_contract_test.py: PASS (19 tests)
+windows_d3d12_surface_contract_test.py: PASS (27 tests)
+windows_pointer_diagnostics_contract_test.py: PASS (4 tests)
+windows_debug_ui_encoding_contract_test.py: PASS (1 tests)
+windows_tool_palette_contract_test.py: PASS (5 tests)

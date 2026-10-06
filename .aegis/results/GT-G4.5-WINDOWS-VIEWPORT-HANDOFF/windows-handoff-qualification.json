@@ -1,18 +1,23 @@
 {
-  "result_revision": "660935465e47bdd6ed1e4f8ebfad695e56952285",
-  "status": "PASS",
+  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "status": "LOCAL_AUTOMATED_PASS_HOSTED_EVIDENCE_BLOCKED",
   "focused_test": "G4WindowsPreviewDispatch",
-  "workflow_run": 37403116124,
+  "workflow_run": 37406861424,
   "scenarios": {
     "preview_retired_without_second_stroke": "PASS",
     "pointer_up_then_one_render_tick": "PASS",
     "overlay_hidden": "PASS",
     "pinch_then_render_tick": "PASS",
     "first_post_pinch_stroke": "PASS",
-    "pending_handoff_zero": "PASS"
+    "pending_handoff_zero": "PASS",
+    "runtime_autointent_pinch_then_first_stroke": "PASS_LOCAL",
+    "canceled_pinch_contour_removed": "PASS_LOCAL"
   },
   "schema_version": "aegis-windows-handoff-qualification-v1",
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
   "physical_verification": "DEFERRED_TO_INDEPENDENT_REVIEWER",
-  "workflow_job": 112074540144
+  "workflow_job": 112086253913,
+  "hosted_handoff_qualification": "NOT_EXECUTED",
+  "local_evidence": "ctest-windows.log",
+  "code_fix": "cancelBrushSession retires the canceled preview contour, rather than leaving an empty active contour."
 }

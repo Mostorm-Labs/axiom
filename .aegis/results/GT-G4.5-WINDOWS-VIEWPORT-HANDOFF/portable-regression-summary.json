@@ -1,17 +1,32 @@
 {
-  "result_revision": "660935465e47bdd6ed1e4f8ebfad695e56952285",
+  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
   "build_targets": [
     "axiom_ink_playground_windows",
-    "axiom_brush_runtime_pipeline_tests",
+    "axiom_ink_playground_tests",
     "axiom_windows_preview_dispatch_tests",
     "axiom_ink_playground_windows_pointer_utils_tests"
   ],
   "contract_tests": {
-    "windows_tool_palette": 5,
-    "windows_debug_ui_encoding": 1,
-    "windows_d3d12_surface": 27,
-    "windows_skia_preview": 19,
-    "windows_pointer_diagnostics": 4
+    "windows_skia_preview_contract_test.py": {
+      "status": "PASS",
+      "tests": 19
+    },
+    "windows_d3d12_surface_contract_test.py": {
+      "status": "PASS",
+      "tests": 27
+    },
+    "windows_pointer_diagnostics_contract_test.py": {
+      "status": "PASS",
+      "tests": 4
+    },
+    "windows_debug_ui_encoding_contract_test.py": {
+      "status": "PASS",
+      "tests": 1
+    },
+    "windows_tool_palette_contract_test.py": {
+      "status": "PASS",
+      "tests": 5
+    }
   },
   "tests_failed": 0,
   "tests_total": 22,
@@ -19,5 +34,26 @@
   "tests_passed": 22,
   "schema_version": "aegis-portable-regression-summary-v1",
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
-  "git_diff_check": "PASS"
+  "git_diff_check": "PASS",
+  "full_ctest": {
+    "total": 120,
+    "passed": 117,
+    "failed_or_not_run": 3,
+    "log": "ctest-full-windows.log",
+    "failures": [
+      {
+        "name": "canvas_rf01_module_boundaries",
+        "detail": "debug_command_queue.hpp and surface_debug_queue.hpp contain forbidden thread dependencies; files unchanged by this package."
+      },
+      {
+        "name": "arc_protocol_c_smoke",
+        "detail": "Not Run: executable missing; target build fails with MSVC C syntax errors in protocol_c_smoke.c, unchanged by this package."
+      },
+      {
+        "name": "G3HeadlessCanvasDemo",
+        "detail": "decoded.ok() / nine-object snapshot assertion failed at headless_canvas_demo_test.cpp:187; file unchanged by this package."
+      }
+    ]
+  },
+  "hosted_evidence": "hosted-provider-evidence.json"
 }

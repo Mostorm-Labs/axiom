@@ -2,14 +2,13 @@
   "schema_version": "aegis-result-v1",
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
   "stage": "P32_IMPLEMENTATION",
-  "status": "READY_FOR_CONTROL_REVIEW",
+  "status": "BLOCKED_EVIDENCE",
   "package_ref": ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/package.json",
   "package_materialization_ref": "1081447dc3f7b1d546f1e90eeb9456c958d0d001",
   "task_anchor": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
   "execution_branch": "codex/gt-g4-5-windows-viewport-handoff",
-  "implementation_revision": "660935465e47bdd6ed1e4f8ebfad695e56952285",
-  "result_revision": "660935465e47bdd6ed1e4f8ebfad695e56952285",
-  "evidence_materialization_revision": "515d0edd202047d21cc4825a8a5cf0607b721202",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
   "materialized_ref": "refs/heads/codex/gt-g4-5-windows-viewport-handoff",
   "evidence_input_refs": [
     ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/repo-reconciliation.json",
@@ -19,18 +18,23 @@
     ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-handoff-qualification.json",
     ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/portable-regression-summary.json",
     ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/scope-audit.json",
-    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/physical-gate-input-manifest.json"
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/physical-gate-input-manifest.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/hosted-provider-evidence.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-contracts.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/ctest-full-windows.log"
   ],
   "verification": {
     "red_oracle": "PASS",
     "implementation_design_preflight": "PASS",
     "build_targets": "PASS",
-    "focused_tests": "PASS: G45BrushRuntimePipeline, G4WindowsPreviewDispatch, G4InkPlaygroundWindowsPointerUtils",
-    "portable_ctest": "PASS: 22/22",
-    "windows_contracts": "PASS: 56/56 direct Python contract invocations",
-    "windows_automated_qualification": "PASS: workflow 37403116124, job 112074540144",
+    "focused_tests": "PASS: 22/22 (ctest-windows.log)",
+    "portable_ctest": "PASS: 22/22 package regression tests",
+    "windows_contracts": "PASS: 56 tests (windows-contracts.json)",
+    "windows_automated_qualification": "BLOCKED: required viewport/handoff scenarios not executed by hosted run 37406861424",
     "git_diff_check": "PASS",
-    "scope_audit": "PASS"
+    "scope_audit": "PASS",
+    "hosted_brush_renderer_regression": "PASS: exact run 37406861424 / job 112086253913",
+    "full_ctest": "117/120; three out-of-package failures recorded in portable-regression-summary.json"
   },
   "preserved": [
     "AutoIntent and three-platform input behavior",
@@ -40,12 +44,20 @@
     "Arc ownership and Debug UI"
   ],
   "physical_verification": {
-    "status": "DEFERRED",
+    "status": "PENDING",
     "owner": "independent Windows physical verification reviewer",
     "manifest": ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/physical-gate-input-manifest.json"
   },
   "official_gate_pass": false,
   "g4_5_pass_claimed": false,
   "p34_pass_claimed": false,
-  "next_surface": "CONTROL_REVIEW"
+  "next_surface": "CONTROL_REVIEW",
+  "blocker": {
+    "class": "BLOCKED_EVIDENCE",
+    "related_package_gap": "TASK_PACKAGE_DEFECT",
+    "requirement": "Hosted Windows viewport/handoff automated qualification bound to the exact result revision.",
+    "observation": "Available successful hosted Windows job disables Ink Playground and only runs brush renderer/core tests. No existing workflow executes G4WindowsPreviewDispatch.",
+    "scope_constraint": "Workflow files are outside the frozen authorized mutation scope.",
+    "repair_owner": "P31 package scope/evidence repair; preserve implementation 21b61ce7 and passing local regression work."
+  }
 }
