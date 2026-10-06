@@ -115,18 +115,17 @@ jobs:
           $buildExit = $LASTEXITCODE
           $buildOutput | Tee-Object -FilePath out/g4-5-windows-qualification-build.log
           if ($buildExit -ne 0) { exit $buildExit }
+          New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
           $ctestRegex = "^(G4InkPlayground.*|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)$"
-          $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification-ctest.xml 2>&1
+          $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification/ctest.xml 2>&1
           $ctestExit = $LASTEXITCODE
           $ctestOutput | Tee-Object -FilePath out/g4-5-windows-qualification-ctest.log
           if ($ctestExit -ne 0) { exit $ctestExit }
-          New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
           & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows/apps/ink_playground/axiom_ink_playground_windows.exe out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-qualification-ctest.log out/g4-5-windows-qualification/
-          Copy-Item out/g4-5-windows-qualification-ctest.xml out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-qualification-build.log out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-environment.json out/g4-5-windows-qualification/build-environment.json
           $brushSha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
