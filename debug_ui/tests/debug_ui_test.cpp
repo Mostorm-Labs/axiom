@@ -2,10 +2,10 @@
 #include "canvas/debug_ui/telemetry.hpp"
 #include "canvas/debug_ui/surface.hpp"
 #include "canvas/debug_ui/panels.hpp"
-#include "canvas/runtime/surface_debug_queue.hpp"
+#include "canvas/debug_ui/surface_debug_queue.hpp"
 #include "canvas/runtime/diagnostics.hpp"
 #include "canvas/runtime/debug_control.hpp"
-#include "canvas/runtime/debug_command_queue.hpp"
+#include "canvas/debug_ui/debug_command_queue.hpp"
 #include "canvas/runtime/telemetry.hpp"
 #include <cassert>
 #include <type_traits>

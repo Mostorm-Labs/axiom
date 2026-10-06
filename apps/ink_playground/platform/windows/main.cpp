@@ -8,8 +8,8 @@
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "windows_d3d12_skia_surface_provider.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
-#include "canvas/runtime/surface_debug_queue.hpp"
-#include "canvas/runtime/debug_command_queue.hpp"
+#include "canvas/debug_ui/surface_debug_queue.hpp"
+#include "canvas/debug_ui/debug_command_queue.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
