@@ -1,0 +1,73 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-C",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "url": "https://app.notion.com/p/3e04c57a590c811cbda0f366fcf2c126",
+      "title": "G4.6 Architecture v0.1"
+    },
+    {
+      "stage": "Roadmap",
+      "url": "https://app.notion.com/p/3e04c57a590c81a0a7c9fcdb11e1b089",
+      "title": "G4.6 Implementation Plan v0.1"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:cc985b174cafc5d5dd743bd66701cfe117278de8"
+    }
+  ],
+  "dependency": {
+    "required_predecessors": [
+      "GT-G4.6-A accepted result",
+      "GT-G4.6-B accepted result"
+    ]
+  },
+  "physical_policy": {
+    "principle": "Physical qualification is a fixed scenario checklist, not an open-ended subjective review.",
+    "blocking_scenarios": [
+      "selection chrome logical size and DPR crispness at 50/100/200/400%",
+      "mouse/touch/pen handle acquisition using frozen visual/hit geometry",
+      "move/resize/rotate/cancel with no visible commit jump or stale chrome",
+      "slow/fast pan, wheel/pinch zoom, zoomAt anchor, 50/100/200 presets, fit document/selection",
+      "snap engage/release hysteresis and guide continuity under deterministic traces",
+      "G4.5 Pen + Laser coexistence with editing overlay"
+    ],
+    "required_profiles": [
+      "Windows",
+      "Web",
+      "Android"
+    ],
+    "evidence_identity": [
+      "result revision",
+      "build id/hash",
+      "platform/device profile",
+      "scenario id",
+      "exported trace/screenshot where applicable"
+    ]
+  },
+  "frozen_workloads": [
+    "select/deselect/multi-select",
+    "handle hover",
+    "move/resize/rotate",
+    "move+snap guide",
+    "slow/fast pan",
+    "continuous zoom",
+    "zoom settle",
+    "zoom-to-fit",
+    "100K+transform",
+    "100K+overlay",
+    "100K+G4.5 active ink/Laser coexistence"
+  ],
+  "forbidden_authority_expansion": [
+    "No new product features.",
+    "No G4.7 text implementation.",
+    "No G5 optimization implementation.",
+    "No lowering of A/B automated obligations based on physical feel."
+  ]
+}
