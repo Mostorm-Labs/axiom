@@ -60,6 +60,41 @@ void pumpPreviewMessages(State& s) {
   }
 }
 
+canvas::input::PlatformPointerSample runtimeSample(
+    std::uint64_t pointer, std::uint64_t sequence, std::uint64_t timestamp,
+    float x, float y, canvas::input::PointerPhase phase) {
+  return canvas::input::PlatformPointerSample{
+      7U, pointer, sequence, timestamp, x, y, 0.5F, 0.0F, 0.0F, {}, {},
+      canvas::input::SampleProvenance::kConfirmedCurrent, phase};
+}
+
+void deliverRuntimeSample(State& s, std::uint64_t pointer, std::uint64_t sequence,
+                          std::uint64_t timestamp, float x, float y,
+                          canvas::input::PointerPhase phase) {
+  canvas::input::PlatformPointerBatch batch;
+  batch.samples.push_back(runtimeSample(pointer, sequence, timestamp, x, y, phase));
+  assert(s.host->acceptPlatformBatch(batch, timestamp));
+  if (phase == canvas::input::PointerPhase::kDown) {
+    const auto key = s.host->platformKey(7U, pointer);
+    assert(key.has_value());
+    s.activeKeys[pointer] = *key;
+    s.pointerStrokes[pointer] = s.host->platformStrokeId(*key).value_or(++s.stroke);
+    enablePreviewPresentation(s);
+  } else if (phase == canvas::input::PointerPhase::kUp ||
+             phase == canvas::input::PointerPhase::kCancel) {
+    s.activeKeys.erase(pointer);
+    s.pointerStrokes.erase(pointer);
+    if (s.activeKeys.empty()) {
+      s.canonicalFrameReady = false;
+      s.canonicalPending = s.host->pendingCanonicalHandoffCount() != 0U;
+      if (s.canonicalPending) stopPreviewPresentation(s);
+      else enablePreviewPresentation(s);
+    }
+  }
+  s.previewDirty = true;
+  wakeRenderPump(s);
+}
+
 void run() {
   State s;
   s.host = std::make_unique<InkPlaygroundHost>();
@@ -100,6 +135,33 @@ void run() {
   s.host->setCanonicalVisibilitySink(s.runtimeSinks.get());
   startPreviewRenderPump(s);
   tick(s);
+  // Reproduce the real Runtime multi-contact sequence rather than calling
+  // applyViewportNavigation directly. A settled pinch must not leave the
+  // Windows canonical-pending gate blocking the first post-pinch preview.
+  deliverRuntimeSample(s, 41U, 1U, 1'000'000U, 24.0F, 24.0F,
+                       canvas::input::PointerPhase::kDown);
+  deliverRuntimeSample(s, 42U, 2U, 100'000'000U, 64.0F, 24.0F,
+                       canvas::input::PointerPhase::kDown);
+  deliverRuntimeSample(s, 42U, 3U, 120'000'000U, 96.0F, 24.0F,
+                       canvas::input::PointerPhase::kMove);
+  tick(s);
+  deliverRuntimeSample(s, 41U, 4U, 140'000'000U, 24.0F, 24.0F,
+                       canvas::input::PointerPhase::kUp);
+  deliverRuntimeSample(s, 42U, 5U, 160'000'000U, 96.0F, 24.0F,
+                       canvas::input::PointerPhase::kUp);
+  tick(s);
+  const auto postPinchPreviewBaseline = s.host->previewPresentCount();
+  deliverRuntimeSample(s, 43U, 6U, 500'000'000U, 32.0F, 40.0F,
+                       canvas::input::PointerPhase::kDown);
+  deliverRuntimeSample(s, 43U, 7U, 510'000'000U, 96.0F, 96.0F,
+                       canvas::input::PointerPhase::kMove);
+  waitForPreview(s, postPinchPreviewBaseline + 1U);
+  assert(s.host->previewPresentCount() > postPinchPreviewBaseline);
+  deliverRuntimeSample(s, 43U, 8U, 520'000'000U, 128.0F, 128.0F,
+                       canvas::input::PointerPhase::kUp);
+  tick(s);
+  assert(s.host->pendingCanonicalHandoffCount() == 0U);
+  assert(!s.host->previewActive() && !p->overlayVisible());
   // A settled pinch/navigation must be visible before the first post-gesture
   // stroke. The first stroke must then complete its CanonicalVisible handoff
   // on the next render tick without requiring another pointer-down.
@@ -185,7 +247,7 @@ void run() {
     assert(s.host->pendingCanonicalHandoffCount() == 0U);
     assert(!p->overlayVisible());
   }
-  assert(s.host->semanticObjectCount() == 7U);
+  assert(s.host->semanticObjectCount() == 8U);
   stopPreviewRenderPump(s);
   DestroyWindow(s.window);
 }

@@ -880,7 +880,9 @@ bool InkPlaygroundHost::cancelBrushSession(std::uint64_t pointerId) noexcept {
           ink::PreviewSubmitResult::kRejected) {
     return false;
   }
-  if (previewController_ == nullptr || !previewController_->cancelSession(pointerId) ||
+  if (previewController_ == nullptr || previewProvider_ == nullptr ||
+      !previewController_->cancelSession(pointerId) ||
+      !previewController_->retireSession(pointerId, previewProvider_->generation()) ||
       (!platformPresentationDeferred_ && !previewController_->renderIfDirty())) return false;
   brushSessions_.erase(it);
   brushSessionPackages_.erase(pointerId);
