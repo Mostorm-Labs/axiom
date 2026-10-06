@@ -2,13 +2,13 @@
   "schema_version": "aegis-result-v1",
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
   "stage": "P32_IMPLEMENTATION",
-  "status": "BLOCKED_EVIDENCE",
+  "status": "READY_FOR_CONTROL_REVIEW",
   "package_ref": ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/package.json",
   "package_materialization_ref": "1081447dc3f7b1d546f1e90eeb9456c958d0d001",
   "task_anchor": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
   "execution_branch": "codex/gt-g4-5-windows-viewport-handoff",
   "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
-  "result_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
   "materialized_ref": "refs/heads/codex/gt-g4-5-windows-viewport-handoff",
   "evidence_input_refs": [
     ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/repo-reconciliation.json",
@@ -27,13 +27,13 @@
     "red_oracle": "PASS",
     "implementation_design_preflight": "PASS",
     "build_targets": "PASS",
-    "focused_tests": "PASS: 22/22 (ctest-windows.log)",
+    "focused_tests": "PASS: 12/12 hosted; 22/22 local",
     "portable_ctest": "PASS: 22/22 package regression tests",
     "windows_contracts": "PASS: 56 tests (windows-contracts.json)",
-    "windows_automated_qualification": "BLOCKED: required viewport/handoff scenarios not executed by hosted run 37406861424",
+    "windows_automated_qualification": "PASS: exact run 37413349672 / job 112106477039 / artifact 11390770528 bound to result revision 88948b2065d0789aeddee2fad9425e856b856cf4",
     "git_diff_check": "PASS",
     "scope_audit": "PASS",
-    "hosted_brush_renderer_regression": "PASS: exact run 37406861424 / job 112086253913",
+    "hosted_brush_renderer_regression": "PASS: exact run 37413349672 / job 112106477039",
     "full_ctest": "117/120; three out-of-package failures recorded in portable-regression-summary.json"
   },
   "preserved": [
@@ -51,13 +51,5 @@
   "official_gate_pass": false,
   "g4_5_pass_claimed": false,
   "p34_pass_claimed": false,
-  "next_surface": "CONTROL_REVIEW",
-  "blocker": {
-    "class": "BLOCKED_EVIDENCE",
-    "related_package_gap": "TASK_PACKAGE_DEFECT",
-    "requirement": "Hosted Windows viewport/handoff automated qualification bound to the exact result revision.",
-    "observation": "Available successful hosted Windows job disables Ink Playground and only runs brush renderer/core tests. No existing workflow executes G4WindowsPreviewDispatch.",
-    "scope_constraint": "Workflow files are outside the frozen authorized mutation scope.",
-    "repair_owner": "P31 package scope/evidence repair; preserve implementation 21b61ce7 and passing local regression work."
-  }
+  "next_surface": "CONTROL_REVIEW"
 }
