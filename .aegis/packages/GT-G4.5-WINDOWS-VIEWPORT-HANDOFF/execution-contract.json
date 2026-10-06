@@ -9,6 +9,7 @@
       "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
       "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
       "apps/ink_playground/tests/windows_skia_preview_contract_test.py",
+      ".github/workflows/g4-5-programmable-brush.yml",
       ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**",
       ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**"
     ],
@@ -17,6 +18,7 @@
       "Allow the Windows render pump to present current viewport Canonical frames during an active viewport gesture without treating ordinary concurrent ink as a camera gesture.",
       "Ensure the first post-pinch accepted stroke reaches CanonicalVisible and retires its matching preview in the same render cycle, without requiring a second stroke.",
       "Add focused regression tests for pinch Canonical refresh, first-post-pinch handoff, and preserved multi-contact ink behavior.",
+      "Authorize the Windows qualification workflow to build and run the real Ink Playground viewport/handoff targets with locked Arc and Skia dependencies.",
       "Materialize exact-result build, CTest, scope, and physical-verification input evidence."
     ],
     "forbidden_changes": [
@@ -43,8 +45,12 @@
     ]
   },
   "hosted_verification": {
-    "required": ["windows-x64 automated qualification bound to the exact result revision"],
-    "optional": ["real Windows physical pinch and first-post-pinch stroke recording"]
+    "required": [
+      "windows-x64 automated qualification bound to the exact result revision"
+    ],
+    "optional": [
+      "real Windows physical pinch and first-post-pinch stroke recording"
+    ]
   },
   "evidence": {
     "blocking": [
@@ -58,7 +64,9 @@
       "physical-gate-input-manifest.json",
       "result.json"
     ],
-    "corroborative": ["screenshots or recordings from physical Windows testing"]
+    "corroborative": [
+      "screenshots or recordings from physical Windows testing"
+    ]
   },
   "terminal_success": {
     "all_of": [

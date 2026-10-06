@@ -8,11 +8,19 @@ on:
       - "runtime/input/**"
       - "runtime/render/**"
       - "apps/brush_lab/**"
+      - "apps/ink_playground/**"
+      - "debug_ui/**"
       - "arc/**"
       - "verification/corpus/brush/g4_5/**"
       - ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
+      - ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**"
       - ".github/workflows/g4-5-programmable-brush.yml"
       - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "deps.lock.json"
+      - "r1-full-skia-sdk.lock.json"
+      - "tools/skia/**"
+      - "tools/bootstrap_deps.py"
   workflow_dispatch:
 
 concurrency:
@@ -43,7 +51,7 @@ jobs:
           python tools/bootstrap_deps.py --windows-llvm
           $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
           $installDir = Join-Path $PWD ".deps/llvm"
-          Start-Process $installer -ArgumentList "/S", "/D=$installDir" -Wait
+          Start-Process $installer -ArgumentList "/S", "/D=$installDir" -WindowStyle Hidden -Wait
           (Join-Path $installDir "bin") | Out-File -FilePath $env:GITHUB_PATH -Append
       - name: Fetch locked Windows Skia SDK
         shell: pwsh
@@ -78,24 +86,41 @@ jobs:
             -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
             -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
             -DCMAKE_CXX_COMPILER_LAUNCHER="python;$PWD/.deps/qualification-compiler-launcher.py" `
+            -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" `
             -DCANVAS_BUILD_POC01=OFF `
             -DCANVAS_BUILD_RF01=ON `
             -DCANVAS_BUILD_RENDER=ON `
             -DCANVAS_RENDER_BUILD_TESTS=ON `
             -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON `
-            -DCANVAS_BUILD_INK_PLAYGROUND=OFF `
+            -DCANVAS_BUILD_ARC=ON `
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON `
+            -DAXIOM_BUILD_DEBUG_UI=ON `
+            -DAXIOM_DEBUG_UI_PROFILE=full `
             -DCANVAS_SKIA_SDK_ROOT="$sdkRoot" `
             -DAXIOM_BUILD_BRUSH_LAB=ON `
             -DBUILD_TESTING=ON
-          cmake --build out/g4-5-windows --parallel
-          ctest --test-dir out/g4-5-windows -R "^(G4|G45)" --output-on-failure
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $buildOutput = & cmake --build out/g4-5-windows --parallel 2>&1
+          $buildExit = $LASTEXITCODE
+          $buildOutput | Tee-Object -FilePath out/g4-5-windows-qualification-build.log
+          if ($buildExit -ne 0) { exit $buildExit }
+          $ctestRegex = "^(G4InkPlayground|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)"
+          $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification-ctest.xml 2>&1
+          $ctestExit = $LASTEXITCODE
+          $ctestOutput | Tee-Object -FilePath out/g4-5-windows-qualification-ctest.log
+          if ($ctestExit -ne 0) { exit $ctestExit }
           New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
           & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows/apps/ink_playground/axiom_ink_playground_windows.exe out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-qualification-ctest.log out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-qualification-ctest.xml out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-qualification-build.log out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-environment.json out/g4-5-windows-qualification/build-environment.json
-          $sha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
-          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $sha } |
+          $brushSha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
+          $inkSha = (Get-FileHash out/g4-5-windows-qualification/axiom_ink_playground_windows.exe -Algorithm SHA256).Hash.ToLower()
+          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $brushSha; brush_lab_sha256 = $brushSha; ink_playground_sha256 = $inkSha; focused_ctest = $ctestRegex; workflow_run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT } |
             ConvertTo-Json | Set-Content -Encoding utf8NoBOM out/g4-5-windows-qualification/identity.json
       - uses: actions/upload-artifact@v4
         with:

@@ -1,7 +1,7 @@
 {
   "format": "aegis-execution-package-v1",
   "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
-  "title": "Windows viewport canonical refresh and preview handoff repair",
+  "title": "Windows viewport canonical refresh and preview handoff repair (P31 CI scope repair)",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom"
@@ -23,7 +23,7 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "bd42097c53cdf525bc4b2cc4c62e1e0dfa214cc6bdd786eb13dcd631804d79ec"
+    "sha256": "a5e2839692047bdd0f6710257637772793e0b519b5467e6796c6e1bba31661cb"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
@@ -35,5 +35,7 @@
   },
   "continue_until_terminal_state": true,
   "return_surface": "CONTROL_REVIEW",
-  "preferred_executor": "codex"
+  "preferred_executor": "codex",
+  "supersedes": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF-P31-v1.0",
+  "package_revision_note": "P31 scope repair authorizes the exact workflow required for hosted Windows viewport/handoff qualification; implementation scope and frozen runtime semantics remain unchanged."
 }
