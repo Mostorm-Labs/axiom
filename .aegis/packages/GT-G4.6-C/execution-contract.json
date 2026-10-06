@@ -1,0 +1,101 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-C",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "apps/ink_playground/**",
+      "verification/**",
+      "debug_ui/**",
+      ".github/workflows/**",
+      ".aegis/packages/GT-G4.6-C/**",
+      ".aegis/results/GT-G4.6-C/**",
+      "runtime/**/tests/**"
+    ],
+    "required_changes": [
+      "Assemble Canvas Interaction Playground 0.1 from accepted A/B plus existing G4.5 Pen/Laser paths; no new interaction semantics.",
+      "Provide deterministic scenario selector and HUD/export for frame time, overlay updates, transient transforms, camera generation, scene generation, candidate count, canonical op count and invalidation observations.",
+      "Materialize replayable workload corpus for all frozen G4.6 downstream workloads including 100K transform/overlay/active-ink coexistence profiles.",
+      "Produce Windows/Web/Android capability-profiled qualification artifacts and fixed physical checklist evidence bound to exact revision/build/device profile.",
+      "Run full frozen regression matrix and emit reviewer-accessible result/evidence artifacts."
+    ],
+    "forbidden_changes": [
+      "Do not alter A/B semantics to make a physical run easier.",
+      "Do not implement G4.7 RichText or G5 optimization.",
+      "Do not add new canonical schema/operations or change brush/Arc ownership.",
+      "Do not claim official G4.6 Gate PASS from the execution package; return evidence to control review."
+    ]
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "G46C-T1",
+        "command_or_oracle": "qualification bundle self-check",
+        "expected_result": "all scenario ids runnable and evidence export complete",
+        "blocking_reason": "qualification readiness"
+      },
+      {
+        "id": "G46C-T2",
+        "command_or_oracle": "deterministic workload replay",
+        "expected_result": "stable replay digests/metrics schema for applicable traces",
+        "blocking_reason": "G4.7/G5 handoff"
+      },
+      {
+        "id": "G46C-T3",
+        "command_or_oracle": "Windows/Web/Android physical checklist",
+        "expected_result": "all blocking scenarios pass or return exact blocker",
+        "blocking_reason": "Tier-A presentation qualification"
+      },
+      {
+        "id": "G46C-T4",
+        "command_or_oracle": "G4/G4.5/A/B regression matrix + git diff --check",
+        "expected_result": "green",
+        "blocking_reason": "closure regression"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "Windows/Web/Android applicable hosted build/test jobs and exact artifact refs"
+    ],
+    "optional": [
+      "additional device profiles"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "qualification bundle",
+      "required platform observations",
+      "workload corpus/replay",
+      "regression matrix",
+      "exact identity manifest"
+    ],
+    "corroborative": [
+      "extra videos/screenshots beyond frozen scenarios"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Canvas Interaction Playground 0.1 is qualification-complete.",
+      "All frozen automated and physical obligations pass on exact evidence identities.",
+      "Downstream G4.6 interaction/presentation workload corpus is frozen and reviewer-accessible.",
+      "Return READY_FOR_CONTROL_REVIEW for independent G4.6 Gate review; do not self-issue Gate PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
