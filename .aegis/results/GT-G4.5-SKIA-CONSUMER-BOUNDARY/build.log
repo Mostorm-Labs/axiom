@@ -1,0 +1,4 @@
+{
+  "generic_no_skia_consumer": {"configure": "PASS with VS 2026 cl", "build_targets": ["canvas_debug_ui", "axiom_debug_ui_tests"], "result": "PASS", "build_dir": "out/consumer-boundary-msvc-20261006-cl"},
+  "skia_enabled_windows_host": {"configure": "existing build-windows-real Skia SDK", "build_targets": ["canvas_debug_ui", "axiom_debug_ui_tests", "axiom_ink_playground_windows"], "result": "PASS"}
+}

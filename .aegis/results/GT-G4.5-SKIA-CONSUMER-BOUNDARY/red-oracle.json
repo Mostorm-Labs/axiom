@@ -1,0 +1,6 @@
+{
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "oracle": "skia_consumer_boundary_contract_test.py",
+  "before_fix": "RED: generic consumer path contained unconditional src/windows_host.cpp selection.",
+  "after_fix": "GREEN: Windows Skia sources are selected only inside if(WIN32 AND TARGET CanvasSkia::Skia)."
+}

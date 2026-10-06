@@ -6,15 +6,18 @@ add_library(canvas_debug_ui STATIC
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_widgets.cpp)
 target_include_directories(canvas_debug_ui PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui)
-if(WIN32)
-  target_sources(canvas_debug_ui PRIVATE src/windows_host.cpp ${CMAKE_SOURCE_DIR}/.deps/imgui/backends/imgui_impl_win32.cpp)
-  target_include_directories(canvas_debug_ui PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui ${CMAKE_SOURCE_DIR}/.deps/imgui/backends)
-endif()
 if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
   list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
   find_package(CanvasSkia CONFIG REQUIRED
     PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+endif()
+if(WIN32 AND TARGET CanvasSkia::Skia)
+  target_sources(canvas_debug_ui PRIVATE
+    src/windows_host.cpp
+    ${CMAKE_SOURCE_DIR}/.deps/imgui/backends/imgui_impl_win32.cpp)
+  target_include_directories(canvas_debug_ui PRIVATE
+    ${CMAKE_SOURCE_DIR}/.deps/imgui/backends)
 endif()
 if(TARGET CanvasSkia::Skia)
   target_link_libraries(canvas_debug_ui PRIVATE CanvasSkia::Skia)
