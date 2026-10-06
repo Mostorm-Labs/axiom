@@ -1151,7 +1151,7 @@ void paint(HWND window, State& value) {
   GetClientRect(window, &rect);
   FillRect(dc, &rect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
   if (!value.resizeInProgress && value.activeKeys.empty() &&
-      !value.canonicalFrameReady) {
+      (value.host->canonicalPresentationDirty() || !value.canonicalFrameReady)) {
     // A resize can invalidate the D3D12 surface before the deferred resize
     // message has rebuilt it.  Only mark the canonical frame ready after the
     // provider has actually accepted and presented the frame; otherwise one
@@ -1284,8 +1284,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       value->evidenceDirty = false;
     }
     if (!value->resizeInProgress &&
-        (value->activeKeys.empty() || value->host->pendingCanonicalHandoffCount() != 0U) &&
-        !value->canonicalFrameReady) {
+        (value->activeKeys.empty() ||
+         value->host->pendingCanonicalHandoffCount() != 0U ||
+         value->host->canonicalPresentationDirty()) &&
+        (value->host->canonicalPresentationDirty() || !value->canonicalFrameReady)) {
       value->canonicalFrameReady = renderCanonical(*value);
     }
     if (value->previewDirty && value->previewPresentationEnabled) requestPreviewRender(*value);

@@ -103,6 +103,25 @@ void activeViewportGestureBlocksHistoryUntilAllContactsEnd() {
   assert(host.semanticObjectCount() == 2U);
 }
 
+void deferredViewportNavigationStillPresentsCanonical() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 965U);
+  assert(host.presentCanonicalFrame(1U, 0.0));
+  host.setPlatformPresentationDeferred(true);
+  const auto before = host.canonicalFrameCount();
+  assert(host.applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+      128.0F, 128.0F, 0.0F, 0.0F, 1.5F}));
+  // Deferred Windows presentation records a render invalidation instead of
+  // presenting from the input callback. The render pump consumes that bit.
+  assert(host.canonicalFrameCount() == before);
+  assert(host.canonicalPresentationDirty());
+  assert(host.presentCanonicalFrame(before + 1U, 0.0, false));
+  assert(host.canonicalFrameCount() == before + 1U);
+  assert(!host.canonicalPresentationDirty());
+}
+
 void legacyIdentitiesCannotCollideWithNewBrushOrHistory() {
   Host host;
   assert(host.bindSurface(256, 256));
@@ -463,6 +482,7 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
 
 int main() {
   activeViewportGestureBlocksHistoryUntilAllContactsEnd();
+  deferredViewportNavigationStillPresentsCanonical();
   exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation();
   localBrushSkipsIdentityAlreadyUsedByLegacySubmit();
   legacyIdentitiesCannotCollideWithNewBrushOrHistory();

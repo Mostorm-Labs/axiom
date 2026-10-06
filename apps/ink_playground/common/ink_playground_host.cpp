@@ -340,8 +340,14 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
     // A viewport-only frame redraws the canonical document but is not the
     // canonical-visible receipt for the active brush commit.  Retained amber
     // preview must survive this redraw until the matching commit frame.
-    if (!platformPresentationDeferred_ &&
-        !presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+    if (platformPresentationDeferred_) {
+      // Windows consumes this invalidation from its render pump. Keeping it
+      // in Runtime makes the scheduling decision explicit without doing a
+      // fence wait from the input callback.
+      canonicalPresentationDirty_ = true;
+    } else if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) {
+      return false;
+    }
   }
   // Preview submission is display-frame gated by the platform host. The
   // batch only updates Runtime-retained geometry; Java/Choreographer calls
@@ -925,8 +931,11 @@ bool InkPlaygroundHost::applyViewportNavigation(
   // invalidation so the Web/Android/Windows display cannot remain at the old
   // transform until the next pointer sample happens to trigger a frame.
   if (surface_.available && activeSurfaceProvider() != nullptr) {
-    return platformPresentationDeferred_ ? true
-        : presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    if (platformPresentationDeferred_) {
+      canonicalPresentationDirty_ = true;
+      return true;
+    }
+    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
   }
   return true;
 }
@@ -1358,6 +1367,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
   recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
   ++canonicalFrameCount_;
+  canonicalPresentationDirty_ = false;
   if (retirePreview && semanticObjects_.size() != 0U) {
     std::lock_guard providerLock(previewProviderMutex_);
     std::lock_guard previewLock(previewStateMutex_);

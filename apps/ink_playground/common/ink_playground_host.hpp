@@ -255,6 +255,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
                                            double frameMs,
                                            bool retirePreview = true) noexcept;
+  // A deferred platform presenter uses this bit to schedule a Canonical
+  // redraw after a viewport-only change.  It is cleared only after the
+  // current viewport has been successfully presented.
+  [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
+    return canonicalPresentationDirty_;
+  }
   [[nodiscard]] std::uint64_t canonicalFrameCount() const noexcept {
     return canonicalFrameCount_;
   }
@@ -380,6 +386,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   mutable std::mutex previewRenderMutex_;
   mutable std::mutex previewProviderMutex_;
   std::uint64_t canonicalFrameCount_ = 0;
+  bool canonicalPresentationDirty_ = false;
   bool platformPresentationDeferred_ = false;
   std::uint64_t resizeEvents_ = 0;
   std::uint64_t surfaceLostEvents_ = 0;

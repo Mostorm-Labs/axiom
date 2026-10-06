@@ -100,6 +100,30 @@ void run() {
   s.host->setCanonicalVisibilitySink(s.runtimeSinks.get());
   startPreviewRenderPump(s);
   tick(s);
+  // A settled pinch/navigation must be visible before the first post-gesture
+  // stroke. The first stroke must then complete its CanonicalVisible handoff
+  // on the next render tick without requiring another pointer-down.
+  const auto framesBeforePinch = s.host->canonicalFrameCount();
+  assert(s.host->applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+      128.0F, 128.0F, 0.0F, 0.0F, 1.25F}));
+  assert(s.host->canonicalPresentationDirty());
+  tick(s);
+  assert(s.host->canonicalFrameCount() == framesBeforePinch + 1U);
+  assert(!s.host->canonicalPresentationDirty());
+  const auto pinchFirstStrokeBaseline = s.host->canonicalFrameCount();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                           MAKELPARAM(24, 84)));
+  assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                           MAKELPARAM(96, 144)));
+  waitForPreview(s, s.host->previewPresentCount() + 1U);
+  assert(s.host->previewActive());
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                           MAKELPARAM(132, 180)));
+  tick(s);
+  assert(s.host->canonicalFrameCount() == pinchFirstStrokeBaseline + 1U);
+  assert(s.host->pendingCanonicalHandoffCount() == 0U);
+  assert(!s.host->previewActive() && !p->overlayVisible());
   const auto baseAcquire = p->acquisitions;
   assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(10, 80)));
   for (int i=0;i<100;++i)
@@ -161,7 +185,7 @@ void run() {
     assert(s.host->pendingCanonicalHandoffCount() == 0U);
     assert(!p->overlayVisible());
   }
-  assert(s.host->semanticObjectCount() == 6U);
+  assert(s.host->semanticObjectCount() == 7U);
   stopPreviewRenderPump(s);
   DestroyWindow(s.window);
 }
