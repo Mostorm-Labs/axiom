@@ -1,0 +1,97 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "apps/ink_playground/common/ink_playground_host.hpp",
+      "apps/ink_playground/common/ink_playground_host.cpp",
+      "apps/ink_playground/platform/windows/main.cpp",
+      "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
+      "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+      "apps/ink_playground/tests/windows_skia_preview_contract_test.py",
+      ".github/workflows/g4-5-programmable-brush.yml",
+      ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**",
+      ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**"
+    ],
+    "required_changes": [
+      "Add an explicit viewport-dirty/render scheduling path for Windows deferred presentation.",
+      "Allow the Windows render pump to present current viewport Canonical frames during an active viewport gesture without treating ordinary concurrent ink as a camera gesture.",
+      "Ensure the first post-pinch accepted stroke reaches CanonicalVisible and retires its matching preview in the same render cycle, without requiring a second stroke.",
+      "Add focused regression tests for pinch Canonical refresh, first-post-pinch handoff, and preserved multi-contact ink behavior.",
+      "Authorize the Windows qualification workflow to build and run the real Ink Playground viewport/handoff targets with locked Arc and Skia dependencies.",
+      "Materialize exact-result build, CTest, scope, and physical-verification input evidence."
+    ],
+    "forbidden_changes": [
+      "No BrushEngine, Perfect-Freehand, BrushPackage, BrushPreviewDelta, Vector, DAB, Chalk, or Membrane semantic changes.",
+      "No change to AutoIntent timing/ownership rules except the minimum host scheduling seam needed to distinguish an already-claimed viewport gesture from active ink.",
+      "No Windows D3D12/Skia provider or DirectComposition redesign.",
+      "No CanonicalVisible identity or Arc protocol redesign.",
+      "No Debug UI architecture or Undo/Redo changes.",
+      "No G5 tile/spatial/cache/scheduler work.",
+      "No G4.5/P34 Gate PASS claim."
+    ]
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "The new viewport and post-pinch handoff tests fail or are absent at the task anchor.",
+    "observation_seam": "Windows host render timer and common InkPlaygroundHost viewport/canonical presentation seam"
+  },
+  "tests": {
+    "required": [
+      "Build axiom_ink_playground_windows, axiom_ink_playground_tests, axiom_windows_preview_dispatch_tests, and axiom_ink_playground_windows_pointer_utils_tests.",
+      "Run G4InkPlayground*, G45BrushRuntimePipeline, G4WindowsPreviewDispatch, G3PreviewSurface, and G4CanonicalHandoff.",
+      "Run all applicable Windows contract tests including windows_skia_preview_contract_test.py and windows_d3d12_surface_contract_test.py.",
+      "Run git diff --check and the authorized source scope audit."
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "windows-x64 automated qualification bound to the exact result revision"
+    ],
+    "optional": [
+      "real Windows physical pinch and first-post-pinch stroke recording"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "repo-reconciliation.json",
+      "design-preflight.json",
+      "red-oracle.json",
+      "windows-viewport-qualification.json",
+      "windows-handoff-qualification.json",
+      "portable-regression-summary.json",
+      "scope-audit.json",
+      "physical-gate-input-manifest.json",
+      "result.json"
+    ],
+    "corroborative": [
+      "screenshots or recordings from physical Windows testing"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Viewport Canonical refresh and first-post-pinch preview retirement tests pass.",
+      "Existing multi-contact ink and renderer regression tests pass.",
+      "Windows exact-result automated qualification is materialized and reviewer-resolvable.",
+      "No forbidden diff is present.",
+      "Producer status is READY_FOR_CONTROL_REVIEW and does not claim G4.5/P34 PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

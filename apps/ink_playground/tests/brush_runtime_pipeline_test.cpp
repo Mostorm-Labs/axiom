@@ -1,7 +1,201 @@
 #include "ink_playground_host.hpp"
+#include "ink_playground_history_test_access.hpp"
 
 #include <cassert>
 #include <vector>
+
+namespace {
+using Host = canvas::ink_playground::InkPlaygroundHost;
+using HistoryAccess = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+
+std::vector<std::uint8_t> canonicalPixels(Host& host) {
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  std::vector<std::uint8_t> pixels(256U * 256U * 4U);
+  assert(host.activeSurfaceProvider()->readbackRgba(pixels).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  return pixels;
+}
+
+void drawHistoryStroke(Host& host, std::uint64_t pointer, double y = 64.0) {
+  assert(host.beginBrushSession(pointer, 1U));
+  assert(host.appendBrushSample(pointer, 32.0, y, 0.5, 1U));
+  assert(host.appendBrushSample(pointer, 160.0, y, 0.5, 2U));
+  assert(host.finishBrushSession(pointer));
+}
+
+void allBrushHistoryRestoresExactRecordsAndPixels() {
+  const char* profiles[] = {"vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
+  for (const auto* profile : profiles) {
+    Host host;
+    assert(host.bindSurface(256, 256));
+    assert(host.selectBrushProfile(profile, profile == std::string_view("chalk-grain-v1") ? 4U : 1U));
+    drawHistoryStroke(host, 950U);
+    const auto records = HistoryAccess::objects(host);
+    const auto pixels = canonicalPixels(host);
+    const auto generation = host.semanticGeneration().value();
+    const auto commit = host.canonicalCommitOrdinal();
+    const auto surface = host.surface().generation;
+    for (int i = 0; i != 3; ++i) {
+      assert(host.undo());
+      assert(HistoryAccess::objects(host).empty());
+      assert(host.redo());
+      assert(HistoryAccess::objects(host) == records);
+      assert(canonicalPixels(host) == pixels);
+    }
+    assert(host.semanticGeneration().value() == generation + 6U);
+    assert(host.canonicalCommitOrdinal() == commit + 6U);
+    assert(host.surface().generation == surface);
+  }
+}
+
+void canceledAndActiveInputDoNotMutateHistory() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 960U);
+  const auto generation = host.semanticGeneration();
+  assert(host.beginBrushSession(961U, 1U));
+  assert(host.appendBrushSample(961U, 32.0, 32.0, 0.5, 1U));
+  assert(!host.canUndo() && !host.undo() && !host.redo());
+  assert(host.cancelBrushSession(961U));
+  assert(host.semanticGeneration() == generation);
+  assert(host.canUndo() && host.undo());
+  assert(host.canRedo());
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(962U));
+  assert(!host.canRedo() && !host.redo());
+  assert(host.eraserCancel(962U));
+  assert(host.canRedo() && host.redo());
+}
+
+void activeViewportGestureBlocksHistoryUntilAllContactsEnd() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 963U);
+  drawHistoryStroke(host, 964U, 96.0);
+  assert(host.undo());
+  assert(host.canUndo() && host.canRedo());
+  const auto records = HistoryAccess::objects(host);
+  const auto generation = host.semanticGeneration();
+  const auto commit = host.canonicalCommitOrdinal();
+  auto send = [&host](std::uint64_t pointer, std::uint64_t sequence,
+                      canvas::input::PointerPhase phase, float x) {
+    canvas::input::PlatformPointerBatch batch;
+    batch.samples.push_back({7U, pointer, sequence, sequence * 1'000'000U,
+                             x, 20.0F, 0.5F, 0.0F, 0.0F, {}, {},
+                             canvas::input::SampleProvenance::kConfirmedCurrent,
+                             phase});
+    assert(host.acceptPlatformBatch(batch, sequence * 1'000'000U));
+  };
+  send(965U, 1U, canvas::input::PointerPhase::kDown, 20.0F);
+  send(966U, 2U, canvas::input::PointerPhase::kDown, 40.0F);
+  assert(host.viewportGestureClaimed());
+  assert(!host.canUndo() && !host.canRedo());
+  assert(!host.undo() && !host.redo());
+  send(965U, 3U, canvas::input::PointerPhase::kUp, 20.0F);
+  assert(!host.canUndo() && !host.canRedo());
+  assert(!host.undo() && !host.redo());
+  send(966U, 4U, canvas::input::PointerPhase::kUp, 40.0F);
+  assert(host.canUndo() && host.canRedo());
+  assert(HistoryAccess::objects(host) == records);
+  assert(host.semanticGeneration() == generation);
+  assert(host.canonicalCommitOrdinal() == commit);
+  assert(host.redo());
+  assert(host.semanticObjectCount() == 2U);
+}
+
+void deferredViewportNavigationStillPresentsCanonical() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 965U);
+  assert(host.presentCanonicalFrame(1U, 0.0));
+  host.setPlatformPresentationDeferred(true);
+  const auto before = host.canonicalFrameCount();
+  assert(host.applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+      128.0F, 128.0F, 0.0F, 0.0F, 1.5F}));
+  // Deferred Windows presentation records a render invalidation instead of
+  // presenting from the input callback. The render pump consumes that bit.
+  assert(host.canonicalFrameCount() == before);
+  assert(host.canonicalPresentationDirty());
+  assert(host.presentCanonicalFrame(before + 1U, 0.0, false));
+  assert(host.canonicalFrameCount() == before + 1U);
+  assert(!host.canonicalPresentationDirty());
+}
+
+void legacyIdentitiesCannotCollideWithNewBrushOrHistory() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  auto& port = static_cast<canvas::interaction::OperationSubmitPort&>(host);
+  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  const auto count = host.submittedOperationCount();
+  const auto generation = host.semanticGeneration();
+  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  assert(host.submittedOperationCount() == count);
+  assert(host.semanticGeneration() == generation);
+  assert(port.submit(canvas::interaction::OperationRequest{(std::uint64_t{1} << 63U) + 1U}).accepted);
+  drawHistoryStroke(host, 970U);
+  const auto records = HistoryAccess::objects(host);
+  assert(host.undo() && host.redo());
+  assert(HistoryAccess::objects(host) == records);
+}
+
+void localBrushSkipsIdentityAlreadyUsedByLegacySubmit() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  auto& port = static_cast<canvas::interaction::OperationSubmitPort&>(host);
+  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  drawHistoryStroke(host, 975U);
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.undo() && host.redo());
+}
+
+void acceptedUndoSurvivesProjectionFailureAndRecoversWithoutReplay() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  drawHistoryStroke(host, 980U);
+  const auto generation = host.semanticGeneration().value();
+  HistoryAccess::failPublication(host);
+  // Semantic has committed even if the derived Scene fails to publish.
+  assert(host.undo());
+  assert(host.semanticObjectCount() == 0U);
+  assert(host.semanticGeneration().value() == generation + 1U);
+  assert(!host.canUndo());
+  assert(!host.canRedo());
+  assert(!host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  HistoryAccess::clearFailure(host);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.semanticGeneration().value() == generation + 1U);
+  assert(host.canRedo() && host.redo());
+  assert(host.semanticObjectCount() == 1U);
+}
+
+void exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation() {
+  for (const auto mode : {Host::ToolMode::kBrush, Host::ToolMode::kObjectEraser,
+                          Host::ToolMode::kPartialEraser}) {
+    Host host;
+    assert(host.bindSurface(256, 256));
+    drawHistoryStroke(host, 985U);
+    const auto records = HistoryAccess::objects(host);
+    const auto generation = host.semanticGeneration();
+    const auto commit = host.canonicalCommitOrdinal();
+    HistoryAccess::exhaustOperationIds(host);
+    assert(host.selectTool(mode));
+    if (mode == Host::ToolMode::kBrush) {
+      assert(host.beginBrushSession(986U, 1U));
+      assert(host.appendBrushSample(986U, 32.0, 96.0, 0.5, 1U));
+      assert(host.appendBrushSample(986U, 128.0, 96.0, 0.5, 2U));
+      assert(!host.finishBrushSession(986U));
+    } else {
+      assert(host.eraserBegin(986U));
+      assert(host.eraserSample(986U, 80.0, 64.0));
+      assert(!host.eraserFinish(986U));
+    }
+    assert(HistoryAccess::objects(host) == records);
+    assert(host.semanticGeneration() == generation);
+    assert(host.canonicalCommitOrdinal() == commit);
+  }
+}
+}  // namespace
 
 void partialEraserCommitsRendererNeutralMask() {
   canvas::ink_playground::InkPlaygroundHost host;
@@ -148,7 +342,153 @@ void partialEraserPublishesRealtimePreview() {
   assert(!host.previewActive());
 }
 
+void undoRedoReplaysCanonicalBrushCommit() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(!host.canUndo());
+  assert(!host.canRedo());
+  assert(!host.undo());
+  assert(!host.redo());
+  assert(host.beginBrushSession(901U, 1U));
+  assert(host.appendBrushSample(901U, 24.0, 64.0, 0.5, 1U));
+  assert(host.appendBrushSample(901U, 96.0, 64.0, 0.5, 2U));
+  assert(host.finishBrushSession(901U));
+  const auto committedGeneration = host.semanticGeneration().value();
+  const auto committedDigest = host.brushDigest();
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.canUndo());
+  assert(!host.canRedo());
+  assert(host.undo());
+  assert(host.semanticObjectCount() == 0U);
+  assert(host.semanticGeneration().value() > committedGeneration);
+  assert(host.canRedo());
+  assert(host.redo());
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.semanticGeneration().value() > committedGeneration);
+  assert(host.canUndo());
+  assert(!host.canRedo());
+  assert(host.brushDigest() == committedDigest);
+}
+
+void freshCommitClearsRedoHistory() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  for (std::uint64_t pointer = 910U; pointer < 912U; ++pointer) {
+    assert(host.beginBrushSession(pointer, 1U));
+    assert(host.appendBrushSample(pointer, static_cast<double>(pointer), 32.0, 0.5, pointer));
+    assert(host.appendBrushSample(pointer, static_cast<double>(pointer + 20U), 32.0, 0.5,
+                                  pointer + 1U));
+    assert(host.finishBrushSession(pointer));
+  }
+  assert(host.canUndo());
+  assert(host.undo());
+  assert(host.canRedo());
+  assert(host.beginBrushSession(912U, 1U));
+  assert(host.appendBrushSample(912U, 180.0, 32.0, 0.5, 1000U));
+  assert(host.appendBrushSample(912U, 210.0, 32.0, 0.5, 1001U));
+  assert(host.finishBrushSession(912U));
+  assert(!host.canRedo());
+}
+
+void undoRemainsAcceptedWhenPresentationIsUnavailable() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(920U, 1U));
+  assert(host.appendBrushSample(920U, 32.0, 32.0, 0.5, 1U));
+  assert(host.appendBrushSample(920U, 80.0, 32.0, 0.5, 2U));
+  assert(host.finishBrushSession(920U));
+  assert(host.loseSurface());
+  // Semantic acceptance owns the history cursor even when the render target
+  // is lost. Reporting rejection after mutation would strand the entry.
+  assert(host.undo());
+  assert(host.semanticObjectCount() == 0U);
+  assert(!host.canUndo());
+  assert(host.canRedo());
+  assert(host.redo());
+  assert(host.semanticObjectCount() == 1U);
+}
+
+void objectEraserUndoRedoRestoresSemanticObject() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(930U, 1U));
+  assert(host.appendBrushSample(930U, 32.0, 64.0, 0.5, 1U));
+  assert(host.appendBrushSample(930U, 128.0, 64.0, 0.5, 2U));
+  assert(host.finishBrushSession(930U));
+  assert(host.semanticObjectCount() == 1U);
+  const auto beforeRecords = HistoryAccess::objects(host);
+  const auto beforePixels = canonicalPixels(host);
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kObjectEraser));
+  assert(host.eraserBegin(931U));
+  assert(host.eraserSample(931U, 80.0, 64.0));
+  assert(host.eraserFinish(931U));
+  assert(host.semanticObjectCount() == 0U);
+  const auto erasedRecords = HistoryAccess::objects(host);
+  const auto erasedPixels = canonicalPixels(host);
+  assert(host.canUndo());
+  assert(host.undo());
+  assert(host.semanticObjectCount() == 1U);
+  assert(HistoryAccess::objects(host) == beforeRecords);
+  assert(canonicalPixels(host) == beforePixels);
+  assert(host.canRedo());
+  assert(host.redo());
+  assert(host.semanticObjectCount() == 0U);
+  assert(HistoryAccess::objects(host) == erasedRecords);
+  assert(canonicalPixels(host) == erasedPixels);
+}
+
+void partialEraserUndoRedoRestoresMaskSemantics() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.beginBrushSession(940U, 1U));
+  assert(host.appendBrushSample(940U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(940U, 128.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(940U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  const auto beforeRecords = HistoryAccess::objects(host);
+  const auto beforePixels = canonicalPixels(host);
+
+  assert(host.selectTool(canvas::ink_playground::InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(941U));
+  assert(host.eraserSample(941U, 80.0, 96.0));
+  assert(host.eraserFinish(941U));
+  const auto erasedRecords = HistoryAccess::objects(host);
+  std::vector<std::uint8_t> erased(256U * 256U * 4U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.activeSurfaceProvider()->readbackRgba(erased).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  const auto erasedPixel = static_cast<std::size_t>((96U * 256U + 80U) * 4U);
+  assert(erased[erasedPixel + 3U] == 0U);
+
+  assert(host.undo());
+  std::vector<std::uint8_t> restored(256U * 256U * 4U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.activeSurfaceProvider()->readbackRgba(restored).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(restored[erasedPixel + 3U] != 0U);
+  assert(HistoryAccess::objects(host) == beforeRecords);
+  assert(restored == beforePixels);
+
+  assert(host.redo());
+  std::vector<std::uint8_t> redone(256U * 256U * 4U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.activeSurfaceProvider()->readbackRgba(redone).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(redone[erasedPixel + 3U] == 0U);
+  assert(HistoryAccess::objects(host) == erasedRecords);
+  assert(redone == erased);
+}
+
 int main() {
+  activeViewportGestureBlocksHistoryUntilAllContactsEnd();
+  deferredViewportNavigationStillPresentsCanonical();
+  exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation();
+  localBrushSkipsIdentityAlreadyUsedByLegacySubmit();
+  legacyIdentitiesCannotCollideWithNewBrushOrHistory();
+  acceptedUndoSurvivesProjectionFailureAndRecoversWithoutReplay();
+  allBrushHistoryRestoresExactRecordsAndPixels();
+  canceledAndActiveInputDoNotMutateHistory();
   chalkRevisionSelectionIsRetained();
   membraneProfileSelectionIsRetained();
   partialEraserCommitsRendererNeutralMask();
@@ -156,6 +496,11 @@ int main() {
   partialEraserWorksForAllBrushPackages();
   objectEraserClearsCanonicalSurfaceImmediately();
   partialEraserPublishesRealtimePreview();
+  undoRedoReplaysCanonicalBrushCommit();
+  freshCommitClearsRedoHistory();
+  undoRemainsAcceptedWhenPresentationIsUnavailable();
+  objectEraserUndoRedoRestoresSemanticObject();
+  partialEraserUndoRedoRestoresMaskSemantics();
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256, 256));
   assert(host.beginBrushSession(7, 1U));

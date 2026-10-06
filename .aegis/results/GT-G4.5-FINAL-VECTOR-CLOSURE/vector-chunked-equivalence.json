@@ -1,0 +1,20 @@
+{
+  "hosted_profiles": [
+    "web-wasm32",
+    "android-arm64-v8a",
+    "macos-arm64",
+    "windows-x64"
+  ],
+  "local_ctest": {
+    "configuration": "RelWithDebInfo",
+    "failed": 0,
+    "regex": "^(G4|G45)",
+    "passed": 50
+  },
+  "exact_helper": "buildVectorBrushOutlineSkPath",
+  "oracle": "G45BrushOutlineSkiaPath plus hosted exact-result manifests",
+  "status": "PASS",
+  "pre_refactor_morphology_preserved": true,
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "result_revision": "39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "aegis-windows-viewport-qualification-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "workflow_run": 37413349672,
+  "workflow_job": 112106477039,
+  "profile": "windows-x64",
+  "workflow_conclusion": "success",
+  "hosted_viewport_qualification": "PASS",
+  "focused": "G4WindowsPreviewDispatch PASS",
+  "focused_ctest_count": "12/12",
+  "canonical_surface_generation": "runtime/provider generation validated by G4WindowsPreviewDispatch",
+  "preview_surface_generation": "runtime/provider generation validated by G4WindowsPreviewDispatch",
+  "scenarios": {
+    "concurrent_ink_regression": "PASS",
+    "canonical_presentation_dirty_clears": "PASS",
+    "canonical_frame_advances_during_pinch": "PASS",
+    "deferred_viewport_dirty": "PASS",
+    "first_post_pinch_preview_retired": "PASS"
+  },
+  "artifact_id": 11390770528,
+  "artifact_name": "g4-5-windows-x64-88948b2065d0789aeddee2fad9425e856b856cf4",
+  "artifact_digest": "sha256:a2f79462c03fb45543ee14a6f528d247a16c5216b12d120e6f581b72454ac2b9",
+  "executable_sha256": "1eacb644f0dffb2a2f0a946cc6ee8bf9ada7ee7d7dced544f22e9ffcc86af6fb",
+  "evidence_artifact": "g4-5-windows-x64-88948b2065d0789aeddee2fad9425e856b856cf4",
+  "local_ctest": "PASS 22/22",
+  "local_build": "RelWithDebInfo",
+  "ctest_log": "out/hosted-37413349672-windows/g4-5-windows-qualification-ctest.log"
+}

@@ -1,0 +1,26 @@
+{
+  "forbidden_hits": [],
+  "authorized_source_paths": [
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    ".github/workflows/g4-5-programmable-brush.yml"
+  ],
+  "package_artifacts": "restricted to authorized package/result roots",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "schema_version": "aegis-scope-audit-v1",
+  "git_diff_check": "PASS",
+  "status": "PASS",
+  "outside_authorized_source_diff": [],
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "source_diff": [
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    ".github/workflows/g4-5-programmable-brush.yml"
+  ]
+}

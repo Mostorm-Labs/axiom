@@ -101,6 +101,7 @@ void cameraOnlyChangeLeavesCanonicalSceneUnchanged() {
     auto scene = makeScene(source);
     canvas::RuntimeScene runtimeScene;
     const auto runtimeGenerationBefore = runtimeScene.generation();
+    static_cast<void>(runtimeGenerationBefore);
     const auto runtimeRecordsBefore = std::vector<canvas::RuntimeSceneRecord>{
         runtimeScene.records().begin(), runtimeScene.records().end()};
     const auto beforeRecords = std::vector<SceneRecord>{scene->read().records().begin(),

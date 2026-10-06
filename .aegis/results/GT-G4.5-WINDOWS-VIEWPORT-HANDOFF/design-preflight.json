@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "unresolved_semantic_decisions": [],
+  "verification_conflict": false,
+  "current_flow": "deferred Windows input updates Runtime viewport and render pump presents preview/Canonical",
+  "target_flow": "Runtime owns canonicalPresentationDirty; Windows render pump consumes it and preserves CanonicalVisible handoff",
+  "owners": {
+    "handoff": "CanonicalVisible",
+    "runtime": "InkPlaygroundHost",
+    "platform": "Windows WindowProc render pump"
+  },
+  "preserved": [
+    "AutoIntent",
+    "multi-contact ink",
+    "BrushEngine",
+    "Vector/DAB",
+    "surface provider architecture"
+  ],
+  "schema_version": "aegis-implementation-design-preflight-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "authority_conflict": false,
+  "package_scope_conflict": false
+}

@@ -1,0 +1,170 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Extract one common Brush outline -> SkPath helper from the duplicate preview and canonical/headless Vector outline path-building loops.",
+        "Use the shared helper from transient preview and canonical/headless BrushStroke qualification paths.",
+        "Preserve current moveTo + lineTo + close + fill morphology exactly; this task is not authorized to change vector appearance.",
+        "Add focused structural/raster tests proving shared ownership and behavior preservation.",
+        "Add only the minimum qualification/evidence support needed to produce exact-result headless/Web/Android/macOS/Windows automated evidence.",
+        "If no current macOS route can exercise the common Brush Vector renderer, add the minimum qualification-only macOS Skia host/target; do not build Product Shell/UI.",
+        "Materialize a reviewer-resolvable exact-result evidence bundle and physical-Gate input manifest."
+      ],
+      "forbidden_changes": [
+        "No live size/thinning/smoothing/streamline editor or new RuntimeFacade brush-tuning API.",
+        "No stable-prefix/replaceable-tail Perfect-Freehand evaluator rewrite and no change to BrushPreviewDelta complete-contour semantics.",
+        "No Space diagnostic, preview visibility redesign, preview tint feature, or preview lifecycle/style change.",
+        "No BrushPackage/ResolvedBrushState/BrushExecutionSnapshot/BrushStrokeRecord canonical semantic redesign.",
+        "No change to Perfect-Freehand algorithm semantics or pinned reference corpus.",
+        "No Arc-owned brush algorithm or Arc protocol redesign.",
+        "No Windows D3D12 canonical/preview surface-provider rewrite.",
+        "No CanonicalVisible handoff redesign.",
+        "No Debug UI architecture or Undo/Redo redesign.",
+        "No DAB/Natural Media expansion and no G5 Tile/SpatialIndex/Cache/Scheduler/ResourceBudget implementation.",
+        "No final G4.5 Gate PASS claim from P32."
+      ],
+      "authorized_mutation_scope": {
+        "existing": [
+          "runtime/render/src/skia_renderer.cpp",
+          "runtime/render/src/skia_headless_backend.cpp",
+          "runtime/render/CMakeLists.txt",
+          "runtime/render/tests/**",
+          "apps/ink_playground/CMakeLists.txt",
+          "apps/ink_playground/tests/**",
+          "apps/ink_playground/platform/apple/**",
+          ".github/workflows/**"
+        ],
+        "new_files_allowed": [
+          "runtime/render/include/canvas/render/brush_outline_skia_path.hpp",
+          "runtime/render/src/brush_outline_skia_path.cpp",
+          "runtime/render/tests/brush_outline_skia_path_test.cpp",
+          "apps/ink_playground/platform/apple/**",
+          "verification/corpus/brush/g4_5/final-vector/**",
+          ".aegis/results/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
+        ],
+        "conditional_scope_rule": "Additional production-source paths are forbidden unless a blocking qualification cannot be materialized without a minimal adapter. Any broader runtime/ink, arc, debug_ui, or Windows-provider mutation is TASK_PACKAGE_DEFECT and must return to P31."
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "FVC-path-helper",
+          "command_or_oracle": "Add/run G45BrushOutlineSkiaPath and existing Skia headless/preview tests.",
+          "expected_result": "PASS with byte/digest-equivalent current raster fixtures and shared helper ownership.",
+          "blocking_reason": "prevents preview/canonical renderer drift"
+        },
+        {
+          "id": "FVC-pf",
+          "command_or_oracle": "G45PerfectFreehandReference + G45BrushSession + one-shot-vs-chunked final geometry corpus.",
+          "expected_result": "PASS",
+          "blocking_reason": "preserves RB-V01 geometry correctness without requiring internal incremental optimization"
+        },
+        {
+          "id": "FVC-package",
+          "command_or_oracle": "G45BrushPackage + G45BrushPlan + G45BrushRuntimePipeline + G45BrushCommitAdapter.",
+          "expected_result": "PASS",
+          "blocking_reason": "proves package-driven parameterized semantics"
+        },
+        {
+          "id": "FVC-handoff",
+          "command_or_oracle": "G45BrushPreviewHandoff + G4CanonicalHandoff + G4WindowsPreviewDispatch + G4InkPlaygroundWindowsPreviewPopup + current Windows preview contract tests.",
+          "expected_result": "PASS",
+          "blocking_reason": "preserves exact preview/canonical handoff"
+        },
+        {
+          "id": "FVC-portable",
+          "command_or_oracle": "Exact-result Web/Android/macOS Vector qualification using the same frozen corpus and shared path helper.",
+          "expected_result": "PASS",
+          "blocking_reason": "current Architecture cross-platform renderer Gate"
+        },
+        {
+          "id": "FVC-regression",
+          "command_or_oracle": "Relevant G4/G4.4/G4.5 CTest/Python suites.",
+          "expected_result": "all applicable PASS",
+          "blocking_reason": "no regression while closing G4.5"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [
+        "Web/Emscripten exact-result build and Vector qualification on the materialized result revision.",
+        "Android arm64-v8a exact-result build/Vector qualification on the materialized result revision.",
+        "macOS exact-result Skia Vector qualification using the minimum real qualification host/target.",
+        "Windows exact-result build and automated preview/canonical handoff qualification."
+      ],
+      "optional": [
+        "Additional unaffected repository CI lanes.",
+        "Windows final physical recording/screenshots; these belong to independent G4.5-10 Gate review and are not producer-owned P32 PASS evidence."
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "repo-reconciliation.json",
+        "implementation-design-preflight.json",
+        "common-skia-vector-path.json",
+        "vector-chunked-equivalence.json",
+        "brush-package-parameterization.json",
+        "portable-vector-qualification.json",
+        "windows-handoff-qualification.json",
+        "handoff-result.json",
+        "g4-5-vector-workload.json",
+        "portable-regression-summary.json",
+        "qualification-bundle-manifest.json",
+        "physical-gate-input-manifest.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "ordinary screenshots/video produced during automated smoke runs",
+        "existing historical Web Debug UI physical evidence from earlier revisions"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "must_record": [
+        "current duplicate preview/canonical outline-to-SkPath code locations",
+        "target shared helper ownership and call sites",
+        "proof that preview lifecycle/BrushSession/Arc/CanonicalVisible semantics are unchanged",
+        "portable qualification execution plan and macOS minimum-host decision",
+        "obligation-to-code/test/evidence mapping",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "terminal_success": {
+      "all_of": [
+        "Shared Brush outline -> SkPath ownership is implemented with behavior-preserving raster evidence.",
+        "All blocking geometry/package/handoff/regression obligations pass.",
+        "Required Web/Android/macOS/Windows automated qualification is bound to the exact result revision.",
+        "Vector workload and exact-result qualification bundle are materialized in a reviewer-accessible repository boundary.",
+        "No forbidden diff is present.",
+        "Producer result status is READY_FOR_G4_5_10_PHYSICAL_VERIFICATION.",
+        "No official G4.5/P34 Gate PASS is claimed."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW"
+    }
+  }
+}

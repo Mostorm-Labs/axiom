@@ -1,0 +1,31 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "current": true,
+  "source": {
+    "provider": "user-conversation",
+    "date": "2026-10-04",
+    "instruction": "按照这个步骤开始实现吧",
+    "accepted_plan": "Finish Debug UI evidence/review; separate Undo/Redo package; Application owner EditorHistory; RuntimeFacade consumers; Windows Ctrl+Z/Ctrl+Y; verify semantic/pixel restoration, generations, fresh identities, redo clearing and empty history."
+  },
+  "existing_authority": ".aegis/packages/GT-G4-10/authority.lock.json",
+  "existing_authority_sha256": "fe26c8766554d41d7d74999a26a61619630f1db5b3c57998712d6a1fb2073780",
+  "trusted_statements": {
+    "owner": "InkPlaygroundHost application composition owns local EditorHistory and submits ordinary typed compensating Operations through OperationEngine.",
+    "acceptance": "OperationEngine kApplied is semantic acceptance. Failed derived Scene publication/presentation never reports an accepted mutation as side-effect-free rejection. Projection recovery is separate; further history commands require coherent Scene.",
+    "inverse": "AddStroke -> DeleteObjects; object erase -> exact RestoreObjects preimage; partial erase -> exact RemoveEraseMasks identities.",
+    "ui": "RuntimeFacade carries product actions and canUndo/canRedo; Debug UI owns no history, document or surface state.",
+    "preserve": [
+      "three-platform input routing",
+      "AutoIntent",
+      "BrushEngine",
+      "Canonical operation vocabulary and apply semantics",
+      "Arc handoff ownership"
+    ]
+  },
+  "prior_debug_ui_review": {
+    "status": "BLOCKED_EVIDENCE",
+    "ref": "verification/out/debug-ui/p32-refresh-20261004/control-review-handoff.json",
+    "release_dependency": "Unresolved; this package does not close Debug UI P32 or issue a Gate verdict."
+  }
+}

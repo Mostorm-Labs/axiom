@@ -1,0 +1,8 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "obligations": [
+    {"id": "SKIA-CONSUMER-001", "requirement": "A Windows consumer configure without CanvasSkia::Skia does not compile windows_host.cpp or imgui_impl_win32.cpp.", "oracle": "skia_consumer_boundary_contract_test.py + Windows native consumer job"},
+    {"id": "SKIA-HOST-002", "requirement": "The Skia-enabled Windows Debug UI source guard remains available for the real host.", "oracle": "Windows qualification build + existing Windows ImGui/Skia contract tests"}
+  ]
+}

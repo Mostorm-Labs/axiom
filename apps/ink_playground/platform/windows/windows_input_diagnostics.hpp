@@ -56,7 +56,7 @@ inline void logInputMessage(std::ostream& out, const char* role, HWND window,
       out << " pointer_error=" << GetLastError();
     }
   }
-  out << std::endl;
+  out << '\n';
 }
 }  // namespace canvas::ink_playground::windows_input
 #endif

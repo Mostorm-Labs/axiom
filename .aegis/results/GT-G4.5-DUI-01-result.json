@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "task_id": "GT-G4.5-DUI-01",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_id": "GT-G4.5-DUI-01",
+  "execution_branch": "codex/gt-g4-5-debug-ui-controller",
+  "task_anchor": "518b9b7a66924ef2ea96af4cfa11fdce4b0d721b",
+  "implementation_revision": "e530a71ef17cc790bb1f77d9f7ebea553f677c7c",
+  "result_revision": "e530a71ef17cc790bb1f77d9f7ebea553f677c7c",
+  "scope_completed": [
+    "DUI-WP00",
+    "DUI-WP01",
+    "DUI-WP02",
+    "DUI-WP03",
+    "DUI-WP04",
+    "DUI-WP05",
+    "DUI-WP06 reference contract"
+  ],
+  "verification": {
+    "package_preflight": "PASS",
+    "debug_off_configure": "PASS",
+    "reference_build": "PASS",
+    "full_build": "PASS",
+    "candidate_build_trace_overlay_flags": "PASS",
+    "debug_ui_contract_test": "PASS",
+    "git_diff_check": "PASS",
+    "windows_physical": "NOT CLAIMED",
+    "windows_surface_rebind": "NOT CLAIMED",
+    "key_ctest": "13/13 PASS",
+    "python_contract": "21/21 PASS",
+    "physical_windows": "NOT CLAIMED"
+  },
+  "constraints": {
+    "trace_default": false,
+    "sibling_overlay_default": false,
+    "runtime_arc_imgui_dependency": "absent",
+    "official_gate_pass": false
+  },
+  "evidence_root": ".aegis/results/GT-G4.5-DUI-01",
+  "next_surface": "CONTROL_REVIEW"
+}

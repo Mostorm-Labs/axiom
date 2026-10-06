@@ -1,0 +1,140 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Axiom Web preview lifecycle regression</title>
+<style>
+  #surfaces { position: relative; height: 256px; }
+  canvas { position: absolute; inset: 0; width: 256px; height: 256px; }
+  #debugUi { left: 270px; width: 410px; height: 560px; }
+  #result { white-space: pre-wrap; margin-top: 320px; }
+</style>
+<div id="surfaces"><canvas id="ink" width="256" height="256"></canvas>
+<canvas id="arcPreview" width="256" height="256"></canvas>
+<canvas id="debugUi" width="410" height="560"></canvas></div>
+<pre id="result">RUNNING</pre>
+<script type="module">
+// Runs the production WASM bridge and Skia/WebGL providers, with deterministic
+// input samples. This is a browser regression, not physical-touch evidence.
+const results = [];
+const assert = (condition, message) => { if (!condition) throw new Error(message); };
+try {
+  const binaryBase = new URL((new URLSearchParams(location.search).get("binary") || ".") + "/",
+    location.href).href.replace(/\/$/, "");
+  const create = (await import(`${binaryBase}/axiom_ink_playground_web.js`)).default;
+  const module = await create({ canvas: document.getElementById("ink"),
+    locateFile: path => `${binaryBase}/${path}` });
+  const host = module._axiom_ink_create();
+  assert(host && module._axiom_ink_bind_surface(host, 256, 256), "canonical bind");
+  assert(module._axiom_ink_bind_preview_surface(host, 256, 256), "preview bind");
+  assert(module._axiom_ink_debug_ui_init(host, 410, 560), "debug bind");
+  const preview = document.getElementById("arcPreview");
+  const visible = () => getComputedStyle(preview).visibility !== "hidden";
+  let sequence = 0;
+  let timestamp = 1_000_000_000;
+  const send = (pointer, phase, x, y, gap = 16_000_000) => {
+    timestamp += gap;
+    assert(module._axiom_ink_platform_batch(host, 1, pointer,
+      BigInt(++sequence), BigInt(timestamp), x, y, .5, phase, 1, x, y),
+      `pointer ${pointer} phase ${phase} accepted`);
+    assert(module._axiom_ink_preview_render(host), "preview tick");
+  };
+  const observe = () => {
+    const identity = module.stringToNewUTF8("web-preview-lifecycle-regression");
+    const value = module._axiom_ink_run_baseline_observation(host, identity);
+    const result = JSON.parse(module.UTF8ToString(value));
+    module._free(identity);
+    return result;
+  };
+  const pixels = id => {
+    const gl = document.getElementById(id).getContext("webgl2");
+    const buffer = new Uint8Array(256 * 256 * 4);
+    gl.readPixels(0, 0, 256, 256, gl.RGBA, gl.UNSIGNED_BYTE, buffer);
+    return buffer;
+  };
+  const canonicalInkPixels = () => {
+    const buffer = pixels("ink");
+    let count = 0;
+    for (let i = 0; i < buffer.length; i += 4) {
+      if (buffer[i + 3] && buffer[i] < 230 && buffer[i + 1] < 230) ++count;
+    }
+    return count;
+  };
+  const begin = (pointer, y) => {
+    send(pointer, 0, 30, y, 500_000_000);
+    send(pointer, 1, 60, y);
+    send(pointer, 1, 110, y);
+    assert(visible(), "active preview must be visible");
+    assert(pixels("arcPreview").some((v, i) => i % 4 === 3 && v),
+      "active preview must have pixels");
+  };
+  const finish = (pointer, y) => send(pointer, 2, 160, y);
+  const test = (name, action) => {
+    action();
+    results.push({ name, result: "PASS" });
+  };
+  test("canonical handoff hides final preview without another pointer event", () => {
+    begin(1, 30);
+    finish(1, 30);
+    assert(!visible(), "retired preview pixels are still visible");
+    assert(canonicalInkPixels() > 0, "canonical stroke must persist");
+    assert(!observe().preview_surface.preview_dirty, "handoff must retire dirty state");
+  });
+  test("five sequential strokes restore and retire preview", () => {
+    for (let i = 0; i < 5; ++i) {
+      begin(10 + i, 50 + i * 20);
+      finish(10 + i, 50 + i * 20);
+      assert(!visible(), `stroke ${i} must retire preview`);
+    }
+  });
+  test("Debug UI refresh cannot reveal retired preview", () => {
+    module._axiom_ink_debug_ui_toggle(host);
+    begin(20, 165);
+    finish(20, 165);
+    module._axiom_ink_debug_ui_render(host);
+    assert(!visible(), "debug redraw must retain hidden preview");
+    module._axiom_ink_debug_ui_toggle(host);
+    module._axiom_ink_debug_ui_toggle(host);
+    assert(!visible(), "F12-equivalent toggles must retain hidden preview");
+  });
+  test("retiring one pointer preserves the second active contour", () => {
+    begin(30, 180);
+    begin(31, 205);
+    finish(30, 180);
+    assert(visible(), "second active pointer must retain preview");
+    const buffer = pixels("arcPreview");
+    const alphaInBand = (y, radius) => {
+      let count = 0;
+      for (let row = y - radius; row <= y + radius; ++row) {
+        for (let x = 20; x < 180; ++x) {
+          if (buffer[((255 - row) * 256 + x) * 4 + 3]) ++count;
+        }
+      }
+      return count;
+    };
+    assert(alphaInBand(180, 8) === 0, "retired first contour must be absent");
+    assert(alphaInBand(205, 8) > 0, "second contour pixels must remain");
+    finish(31, 205);
+    assert(!visible(), "last concurrent pointer must hide preview");
+  });
+  test("pointer cancel hides the empty preview", () => {
+    const ordinal = observe().runtime_identity.canonical_commit_ordinal;
+    begin(40, 230);
+    send(40, 3, 110, 230);
+    assert(!visible(), "cancel must leave no visible pixels");
+    assert(observe().runtime_identity.canonical_commit_ordinal === ordinal,
+      "cancel must not commit canonical");
+  });
+  test("eraser with no hit retires its preview", () => {
+    assert(module._axiom_ink_select_tool(host, 1), "object eraser selection");
+    send(50, 0, 210, 20, 500_000_000);
+    send(50, 1, 240, 20);
+    assert(visible(), "eraser indicator visible");
+    send(50, 2, 240, 20);
+    assert(!visible(), "no-hit eraser preview must retire");
+  });
+  module._axiom_ink_destroy(host);
+  document.getElementById("result").textContent = JSON.stringify({ status: "PASS", results }, null, 2);
+} catch (error) {
+  document.getElementById("result").textContent = JSON.stringify({ status: "FAIL", results,
+    error: error.stack || String(error) }, null, 2);
+}
+</script>

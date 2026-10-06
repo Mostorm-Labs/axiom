@@ -1,0 +1,93 @@
+{
+  "schema_version": "aegis-gate-review-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_ref": ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/package.json",
+  "package_materialization_ref": "1081447dc3f7b1d546f1e90eeb9456c958d0d001",
+  "reviewed_branch": "codex/gt-g4-5-windows-viewport-handoff",
+  "reviewed_revision": "a0deb739e1b32c5ffaab67153f1a66ae2c41688c",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "evidence_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "frozen_locks": {
+    "authority_lock_sha256": "1a092d14a1ef16f1cd48e82b2bf4b42888709bd4c2d02aaf915e09da24b61d49",
+    "verification_lock_sha256": "aaba069044591580545b2e0342714be04ed4a24282ba5945fc1ccb28924b3028",
+    "execution_contract_sha256": "a5e2839692047bdd0f6710257637772793e0b519b5467e6796c6e1bba31661cb",
+    "evidence_contract_sha256": "3ae22a71f21bfc2985c5b6b7c03743683c3f5a70158a289ae6266e6568e92c70"
+  },
+  "provider_identity": {
+    "workflow_run": 37413349672,
+    "workflow_run_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37413349672",
+    "windows_job": 112106477039,
+    "windows_job_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37413349672/job/112106477039",
+    "artifact": 11390770528,
+    "artifact_digest": "sha256:a2f79462c03fb45543ee14a6f528d247a16c5216b12d120e6f581b72454ac2b9",
+    "artifact_source_revision": "88948b2065d0789aeddee2fad9425e856b856cf4"
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "Windows viewport Canonical refresh is covered by the focused dispatch and runtime pipeline tests.",
+      "The first post-pinch stroke reaches CanonicalVisible and retires its matching preview in one render cycle.",
+      "Existing multi-contact ink and AutoIntent behavior remains covered by the focused regression suite.",
+      "BrushEngine, Vector/DAB semantics, CanonicalVisible authority, Arc ownership, Debug UI, and surface-provider architecture remain outside the implementation diff.",
+      "The authorized CI workflow builds and runs the real Windows Ink Playground qualification targets."
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS_WITH_FINDINGS",
+    "passed": [
+      "All blocking evidence inputs exist and parse as JSON or recorded logs.",
+      "The exact hosted Windows run, job, artifact, digest, and source revision are independently resolvable.",
+      "Hosted focused CTest reports 12/12 passing, including G4WindowsPreviewDispatch, G45BrushRuntimePipeline, G3PreviewSurface, G4CanonicalHandoff, and G4InkPlayground*.",
+      "Artifact manifest hashes match every listed evidence file.",
+      "The result explicitly avoids claiming G4.5 or overall Gate PASS."
+    ],
+    "findings": [
+      {
+        "id": "PHYSICAL_RECORDING_NOT_ATTACHED",
+        "classification": "NON_BLOCKING_FINDING",
+        "description": "The physical input manifest records user-reported Windows verification, but no independent recording is attached.",
+        "impact": "The package has automated qualification plus a user report, while forensic physical replay remains unavailable.",
+        "reason_non_blocking": "Physical recording is optional/corroborative in the frozen evidence contract; hosted automated qualification independently covers the frozen blocking obligations.",
+        "successor": "Attach an independent physical recording if release audit requires replayable hardware evidence."
+      },
+      {
+        "id": "OUT_OF_PACKAGE_FULL_CTEST_FAILURES",
+        "classification": "NON_BLOCKING_FINDING",
+        "description": "The recorded full Windows CTest summary is 117/120; three failures are explicitly outside this package and unchanged by its authorized source scope.",
+        "impact": "The repository still has unrelated baseline failures in RF01 module boundaries, arc protocol C smoke availability, and G3 headless demo snapshot.",
+        "reason_non_blocking": "The frozen contract requires the focused Windows/brush/preview suites and contract tests, all of which pass; these failures are not evidence of a failure mode introduced by this package.",
+        "successor": "Track the three baseline failures in their owning packages before using a full-repository green result as a release criterion."
+      }
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "passed": [
+      "Repository identity is github/Mostorm-Labs/axiom and the reviewed branch is origin-resolvable.",
+      "The task anchor 77b40bef is an ancestor of the implementation and evidence revisions.",
+      "The exact result revision 88948b20 is the hosted qualification head; reviewer materialization is at branch head a0deb739.",
+      "The source diff matches the authorized P31 workflow/host/test scope; no forbidden source paths are present.",
+      "git diff --check passes for the materialized change set and all evidence JSON parses successfully."
+    ],
+    "failed": []
+  },
+  "decision": {
+    "verdict": "PASS_WITH_FINDINGS",
+    "accepted_capability": "PASS_WINDOWS_VIEWPORT_HANDOFF_AUTOMATED_QUALIFICATION_WITH_FINDINGS",
+    "official_package_gate_pass": true,
+    "overall_g4_5_gate_pass_claimed": false,
+    "physical_pass_claimed": false,
+    "merge_authorized": "subject to the repository merge policy and any required independent physical-record review",
+    "next_stage": "CONTROLLED_INTEGRATION_OR_INDEPENDENT_PHYSICAL_RECORD_REVIEW",
+    "forbidden_conclusions": [
+      "G4.5 overall PASS",
+      "P34 overall program PASS",
+      "physical verification PASS without independent reviewer record"
+    ]
+  }
+}

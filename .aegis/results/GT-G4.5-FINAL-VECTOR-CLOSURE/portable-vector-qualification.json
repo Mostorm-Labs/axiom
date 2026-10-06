@@ -1,0 +1,26 @@
+{
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "profiles": {
+    "macos": {
+      "job": "qualification/macos-arm64",
+      "artifact": "g4-5-macos-arm64-39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+    },
+    "web": {
+      "job": "qualification/web-wasm32",
+      "artifact": "g4-5-web-wasm32-39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+    },
+    "windows": {
+      "job": "qualification/windows-x64",
+      "artifact": "g4-5-windows-x64-39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+    },
+    "android": {
+      "job": "qualification/android-arm64-v8a",
+      "artifact": "g4-5-android-arm64-v8a-39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+    }
+  },
+  "result_revision": "39a639b4ac8ea72f16f66c52524f85b7f4aca123",
+  "provider_run": 37293099922,
+  "status": "PASS_AUTOMATED",
+  "common_vector_helper": "buildVectorBrushOutlineSkPath",
+  "physical_verification": "deferred"
+}

@@ -33,6 +33,38 @@ def test_windows_d3d12_preview_present_does_not_wait_for_vsync():
     assert "swapChain->Present(1, 0)" not in source
 
 
+def test_windows_d3d12_preview_rebinds_popup_target_around_resize():
+    """Resize must fence and detach the provider before creating new resources."""
+    source = SOURCE.read_text(encoding="utf-8")
+    resize_block = source.split(
+        "canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(",
+        1,
+    )[1].split(
+        "canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::readbackRgba",
+        1,
+    )[0]
+    assert "destroyGpuSurface();" in resize_block
+    assert "destroyOverlay();" in resize_block
+    assert resize_block.index("destroyGpuSurface()") < resize_block.index(
+        "createGpuSurface()"
+    )
+    assert resize_block.index("destroyOverlay()") < resize_block.index(
+        "createGpuSurface()"
+    )
+
+
+def test_windows_d3d12_resize_recreates_context_instead_of_resizing_wrapped_buffers():
+    """Wrapped Ganesh D3D resources require a full provider teardown on resize."""
+    source = SOURCE.read_text(encoding="utf-8")
+    resize = source.split(
+        "canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::resize(",
+        1,
+    )[1].split("canvas::render::BackendSubmissionResult WindowsD3D12SkiaSurfaceProvider::readbackRgba", 1)[0]
+    assert "resizeGpuSurfaceBuffers" not in resize
+    assert "destroyGpuSurface();" in resize
+    assert "createGpuSurface()" in resize
+
+
 def test_windows_d3d12_overlay_forwards_mouse_lifecycle_to_owner():
     source = SOURCE.read_text(encoding="utf-8")
     assert "WM_LBUTTONDOWN" in source
@@ -57,18 +89,37 @@ def test_windows_d3d12_forwards_each_pointer_without_global_capture():
     assert "SendMessageW(owner, message, wParam, lParam)" in pointer_block
 
 
-def test_windows_d3d12_preview_overlay_is_display_only_and_disabled_for_input():
+def test_windows_d3d12_preview_overlay_is_display_only_and_touch_transparent():
     source = SOURCE.read_text(encoding="utf-8")
     create = source.split("overlay_ = CreateWindowExW", 1)[1].split(
         "if (!overlay_)", 1
     )[0]
-    assert "WS_EX_NOACTIVATE" in create
-    assert "WS_EX_TRANSPARENT" in create
-    post_create = source.split("if (!overlay_)", 1)[1].split(
+    create_pos = source.index("overlay_ = CreateWindowExW")
+    post_create = source[create_pos:].split("if (!overlay_)", 1)[1].split(
         "if (FAILED(DCompositionCreateDevice", 1
     )[0]
+    assert "WS_EX_NOACTIVATE" in create
+    assert "WS_EX_TRANSPARENT" in create
+    # Layered alpha transparency is required for Windows touch hit testing;
+    # HTTRANSPARENT alone is insufficient once the preview popup is visible.
+    assert "WS_EX_LAYERED" in create
+    assert "WS_EX_NOREDIRECTIONBITMAP" not in create
     assert "EnableWindow(overlay_, FALSE)" not in post_create
+    assert "SetLayeredWindowAttributes(overlay_, 0, 255, LWA_ALPHA)" in post_create
     assert "HTTRANSPARENT" in source
+
+
+def test_windows_d3d12_preview_overlay_never_disables_owner_input_after_resize():
+    source = SOURCE.read_text(encoding="utf-8")
+    assert "EnableWindow(overlay_, FALSE)" not in source
+    assert "return HTTRANSPARENT;" in source
+    assert "return MA_NOACTIVATE;" in source
+
+
+def test_windows_d3d12_preview_overlay_initializes_layered_alpha_for_touch_passthrough():
+    source = SOURCE.read_text(encoding="utf-8")
+    assert "WS_EX_LAYERED" in source
+    assert "SetLayeredWindowAttributes(overlay_, 0, 255, LWA_ALPHA)" in source
 
 
 def test_windows_canonical_is_owner_attached_gpu_surface_without_cpu_readback():
@@ -87,18 +138,18 @@ def test_owner_attached_surface_has_independent_composition_target():
     assert "if (attachToOwner_)" in source
 
 
-def test_matching_canonical_visible_hides_transient_overlay():
+def test_matching_canonical_visible_only_acknowledges_session_handoff():
     source = MAIN.read_text(encoding="utf-8")
     callback = source.split("canvas::ink::HandoffResult canonicalVisible(", 1)[1].split(
         "private:", 1
     )[0]
     assert "previewBridge->CanonicalVisible(visible)" in callback
-    assert callback.index("previewBridge->CanonicalVisible(visible)") < callback.index(
-        "hidePreviewPresentation(state_)"
-    )
-    assert callback.index("hidePreviewPresentation(state_)") < callback.index(
-        "return canvas::ink::HandoffResult::kAccepted"
-    )
+    assert "hidePreviewPresentation(state_)" not in callback
+    render = source.split("bool renderCanonical(State& value)", 1)[1].split(
+        "void paint(", 1
+    )[0]
+    assert "!value.host->previewActive()" in render
+    assert "retireVisiblePreviewPresentation(value)" in render
 
 
 def test_pointer_down_reenables_preview_after_previous_stroke_retired():

@@ -1,0 +1,25 @@
+{
+  "schema_version": "aegis-implementation-design-preflight-v1",
+  "task_id": "GT-G4.5-UNDO-01",
+  "source_revision": "9b132f73aab12b3076bb8628d7bf6e8fec7cc725",
+  "authority": ".aegis/packages/GT-G4.5-UNDO-01/authority.lock.json",
+  "package": ".aegis/packages/GT-G4.5-UNDO-01/package.json",
+  "checks": {
+    "repository": "Mostorm-Labs/axiom",
+    "branch": "codex/gt-g4-5-debug-ui-controller",
+    "base_ancestor": true,
+    "package_sha256": "8a49b7f9b33702fe71b7b387764d4bafda806ad6ad52b42e4891df3489427893",
+    "input_routing_preserved": true,
+    "brush_engine_preserved": true,
+    "canonical_semantics_preserved": true,
+    "arc_ownership_preserved": true
+  },
+  "decisions": [
+    "Application owner InkPlaygroundHost stores EditorHistory.",
+    "RuntimeFacade exposes typed undo/redo product controls.",
+    "Debug UI consumes canUndo/canRedo and receipts only.",
+    "Windows maps Ctrl+Z/Ctrl+Y to RuntimeFacade.",
+    "Undo/Redo is disabled while a viewport gesture is active."
+  ],
+  "generated_at_utc": "20261004T113627Z"
+}

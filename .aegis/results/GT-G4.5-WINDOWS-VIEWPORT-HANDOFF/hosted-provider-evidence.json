@@ -1,0 +1,76 @@
+{
+  "schema_version": "aegis-hosted-provider-evidence-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "run": {
+    "databaseId": 37413349672,
+    "headSha": "88948b2065d0789aeddee2fad9425e856b856cf4",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37413349672"
+  },
+  "run_attempt": 1,
+  "job": {
+    "databaseId": 112106477039,
+    "name": "qualification/windows-x64",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37413349672/job/112106477039",
+    "focused_tests": [
+      "G3PreviewSurface",
+      "G4CanonicalHandoff",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundHud",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundPreview",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4InkPlaygroundPlatform",
+      "G45BrushRuntimePipeline",
+      "G4InkPlaygroundWindowsPointerUtils",
+      "G4WindowsPreviewDispatch",
+      "G4InkPlaygroundWindowsPreviewPopup"
+    ],
+    "focused_test_count": 12,
+    "focused_tests_passed": 12
+  },
+  "artifact": {
+    "id": 11390770528,
+    "name": "g4-5-windows-x64-88948b2065d0789aeddee2fad9425e856b856cf4",
+    "digest": "sha256:a2f79462c03fb45543ee14a6f528d247a16c5216b12d120e6f581b72454ac2b9",
+    "url": "https://api.github.com/repos/Mostorm-Labs/axiom/actions/artifacts/11390770528",
+    "archive_download_url": "https://api.github.com/repos/Mostorm-Labs/axiom/actions/artifacts/11390770528/zip",
+    "expired": false,
+    "workflow_run": {
+      "id": 37413349672,
+      "head_branch": "codex/gt-g4-5-windows-viewport-handoff",
+      "head_sha": "88948b2065d0789aeddee2fad9425e856b856cf4"
+    }
+  },
+  "artifact_identity": {
+    "source_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+    "executable_sha256": "1eacb644f0dffb2a2f0a946cc6ee8bf9ada7ee7d7dced544f22e9ffcc86af6fb",
+    "brush_lab_sha256": "1a8b861a40d6914d0942941b5ace5c506f6a89971f4af5f6854e7fbaad1751f8",
+    "profile": "windows-x64",
+    "locked_compiler": "clang-cl 22.1.8 / MSVC 14.51 / Windows SDK 10.0.26100.0"
+  },
+  "coverage": {
+    "brush_renderer_regression": "PASS",
+    "windows_viewport_handoff": "PASS",
+    "focused_ctest": "PASS: 12/12",
+    "ctest_log": "out/hosted-37413349672-windows/g4-5-windows-qualification-ctest.log",
+    "scenarios": [
+      "viewport Canonical refresh during pinch",
+      "first post-pinch CanonicalVisible handoff",
+      "preview retirement without second stroke",
+      "preserved multi-contact ink"
+    ]
+  },
+  "blocking_requirement_satisfied": true,
+  "provider_refs": {
+    "workflow_run": 37413349672,
+    "job": 112106477039,
+    "artifact": 11390770528,
+    "artifact_digest": "sha256:a2f79462c03fb45543ee14a6f528d247a16c5216b12d120e6f581b72454ac2b9"
+  }
+}

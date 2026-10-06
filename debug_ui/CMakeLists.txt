@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.30)
+add_library(canvas_debug_ui STATIC
+  src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
+  ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_widgets.cpp)
+target_include_directories(canvas_debug_ui PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui)
+if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
+  list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
+  find_package(CanvasSkia CONFIG REQUIRED
+    PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+    NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+endif()
+if(WIN32 AND TARGET CanvasSkia::Skia)
+  target_sources(canvas_debug_ui PRIVATE
+    src/windows_host.cpp
+    ${CMAKE_SOURCE_DIR}/.deps/imgui/backends/imgui_impl_win32.cpp)
+  target_include_directories(canvas_debug_ui PRIVATE
+    ${CMAKE_SOURCE_DIR}/.deps/imgui/backends)
+endif()
+if(TARGET CanvasSkia::Skia)
+  target_link_libraries(canvas_debug_ui PRIVATE CanvasSkia::Skia)
+  target_compile_definitions(canvas_debug_ui PUBLIC CANVAS_DEBUG_UI_HAS_SKIA=1)
+  if(WIN32)
+    target_link_libraries(canvas_debug_ui PRIVATE msimg32)
+  endif()
+endif()
+target_include_directories(canvas_debug_ui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_compile_features(canvas_debug_ui PUBLIC cxx_std_20)
+target_link_libraries(canvas_debug_ui PUBLIC canvas_runtime_foundation)
+target_compile_definitions(canvas_debug_ui PUBLIC AXIOM_DEBUG_UI_PROFILE="${AXIOM_DEBUG_UI_PROFILE}")
+if(AXIOM_DEBUG_UI_ENABLE_TRACE)
+ target_compile_definitions(canvas_debug_ui PUBLIC AXIOM_DEBUG_UI_ENABLE_TRACE=1)
+endif()
+if(AXIOM_DEBUG_UI_ENABLE_SIBLING_OVERLAY)
+ target_compile_definitions(canvas_debug_ui PUBLIC AXIOM_DEBUG_UI_ENABLE_SIBLING_OVERLAY=1)
+endif()
+if(MSVC)
+  target_compile_options(canvas_debug_ui PRIVATE /W4 /permissive- /WX /EHsc /utf-8)
+else()
+  target_compile_options(canvas_debug_ui PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+if(BUILD_TESTING)
+ add_executable(axiom_debug_ui_tests tests/debug_ui_test.cpp)
+ target_link_libraries(axiom_debug_ui_tests PRIVATE canvas_debug_ui)
+ target_compile_features(axiom_debug_ui_tests PRIVATE cxx_std_20)
+ if(MSVC)
+  target_compile_options(axiom_debug_ui_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+ else()
+  target_compile_options(axiom_debug_ui_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+ endif()
+ add_test(NAME DUI20DebugUiContracts COMMAND axiom_debug_ui_tests)
+endif()

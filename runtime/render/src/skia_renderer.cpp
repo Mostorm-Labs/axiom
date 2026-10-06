@@ -1,6 +1,7 @@
 #include "canvas/render/skia_renderer.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
+#include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 
@@ -82,20 +83,16 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     const float alpha = style.overrideOpacity
         ? std::clamp(style.opacityMultiplier, 0.0F, 1.0F)
         : 1.0F;
-    paint.setColor4f({style.overrideColor ? style.red : 0.10F,
-                      style.overrideColor ? style.green : 0.36F,
-                      style.overrideColor ? style.blue : 0.95F, alpha}, nullptr);
+    // The default PreviewStyleOverride is a pale blue-green transient tint;
+    // callers such as the partial eraser can still provide an explicit color.
+    paint.setColor4f({style.overrideColor ? style.red : 0.20F,
+                      style.overrideColor ? style.green : 0.78F,
+                      style.overrideColor ? style.blue : 0.72F, alpha}, nullptr);
     auto drawOutline = [&](const auto& outline) {
         if (outline.empty()) return;
-        SkPathBuilder path;
-        path.moveTo(static_cast<float>(outline.front().x),
-                    static_cast<float>(outline.front().y));
-        for (std::size_t i = 1; i < outline.size(); ++i) {
-            path.lineTo(static_cast<float>(outline[i].x),
-                        static_cast<float>(outline[i].y));
-        }
-        path.close();
-        canvas->drawPath(path.detach(), paint);
+        canvas->drawPath(buildVectorBrushOutlineSkPath(
+            std::span<const std::remove_cvref_t<decltype(outline.front())>>(
+                outline.data(), outline.size())), paint);
     };
     auto drawDabs = [&](const auto& dabs) {
         if constexpr (std::is_same_v<std::decay_t<decltype(dabs)>,

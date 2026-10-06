@@ -1,0 +1,9 @@
+{
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_ref": "codex/g4-5-skia-consumer-boundary-fix",
+  "task_anchor": "4612f1311abac54eca635a7d6324db48206b781a",
+  "observed_revision": "WORKTREE_BEFORE_COMMIT",
+  "baseline_failure": "Windows Semantic consumer compiled debug_ui/src/windows_host.cpp without CanvasSkia::Skia and failed on include/core/SkColorType.h; same failure existed on parent 45b1f2f3.",
+  "scope": ["debug_ui/CMakeLists.txt", "apps/ink_playground/tests/skia_consumer_boundary_contract_test.py", ".aegis/packages/GT-G4.5-SKIA-CONSUMER-BOUNDARY/**", ".aegis/results/GT-G4.5-SKIA-CONSUMER-BOUNDARY/**"]
+}

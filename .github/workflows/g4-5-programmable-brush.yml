@@ -6,12 +6,22 @@ on:
       - "runtime/ink/**"
       - "runtime/foundation/**"
       - "runtime/input/**"
+      - "runtime/render/**"
       - "apps/brush_lab/**"
+      - "apps/ink_playground/**"
+      - "debug_ui/**"
       - "arc/**"
       - "verification/corpus/brush/g4_5/**"
       - ".aegis/packages/GT-G4-5/**"
+      - ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
+      - ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**"
       - ".github/workflows/g4-5-programmable-brush.yml"
       - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "deps.lock.json"
+      - "r1-full-skia-sdk.lock.json"
+      - "tools/skia/**"
+      - "tools/bootstrap_deps.py"
   workflow_dispatch:
 
 concurrency:
@@ -42,28 +52,86 @@ jobs:
           python tools/bootstrap_deps.py --windows-llvm
           $installer = Resolve-Path .deps/downloads/LLVM-22.1.8-win64.exe
           $installDir = Join-Path $PWD ".deps/llvm"
-          Start-Process $installer -ArgumentList "/S", "/D=$installDir" -Wait
+          Start-Process $installer -ArgumentList "/S", "/D=$installDir" -WindowStyle Hidden -Wait
           (Join-Path $installDir "bin") | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Fetch locked Windows Skia SDK
+        shell: pwsh
+        run: |
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release
       - name: Configure, build, test and materialize qualification bundle
         shell: pwsh
         run: |
+          $ErrorActionPreference = 'Stop'
+          Get-ChildItem verification/corpus/brush/g4_5/v1 -File | ForEach-Object {
+            $text = [System.IO.File]::ReadAllText($_.FullName)
+            [System.IO.File]::WriteAllText($_.FullName, ($text -replace "`r`n", "`n"), [System.Text.UTF8Encoding]::new($false))
+          }
+          $sdkRoot = Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release
+          @'
+          import subprocess
+          import sys
+          compiler, *args = sys.argv[1:]
+          flags = [
+              "/wd4100",
+              "/wd4189",
+              "/wd4505",
+          ]
+          if any("\\tests\\" in arg or "/tests/" in arg for arg in args):
+              flags.append("/UNDEBUG")
+          insertion = args.index("--") if "--" in args else len(args)
+          command = [compiler, *args[:insertion], *flags, *args[insertion:]]
+          raise SystemExit(subprocess.run(command).returncode)
+          '@ | Set-Content -Encoding utf8NoBOM .deps/qualification-compiler-launcher.py
           cmake -S . -B out/g4-5-windows -G Ninja `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_C_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
             -DCMAKE_CXX_COMPILER="$PWD/.deps/llvm/bin/clang-cl.exe" `
+            -DCMAKE_CXX_COMPILER_LAUNCHER="python;$PWD/.deps/qualification-compiler-launcher.py" `
+            -DCMAKE_CXX_FLAGS="/clang:-Wno-missing-designated-field-initializers" `
             -DCANVAS_BUILD_POC01=OFF `
-            -DCANVAS_BUILD_RF01=OFF `
-            -DCANVAS_BUILD_RENDER=OFF `
+            -DCANVAS_BUILD_RF01=ON `
+            -DCANVAS_BUILD_RENDER=ON `
+            -DCANVAS_RENDER_BUILD_TESTS=ON `
+            -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON `
+            -DCANVAS_BUILD_ARC=ON `
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON `
+            -DAXIOM_BUILD_DEBUG_UI=ON `
+            -DAXIOM_DEBUG_UI_PROFILE=full `
+            -DCANVAS_SKIA_SDK_ROOT="$sdkRoot" `
             -DAXIOM_BUILD_BRUSH_LAB=ON `
             -DBUILD_TESTING=ON
-          cmake --build out/g4-5-windows --parallel
-          ctest --test-dir out/g4-5-windows -R "^(G4|G45)" --output-on-failure
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $buildTargets = @(
+            "axiom_ink_playground_windows",
+            "axiom_ink_playground_tests",
+            "axiom_ink_playground_windows_pointer_utils_tests",
+            "axiom_windows_preview_dispatch_tests",
+            "axiom_ink_playground_windows_preview_popup_tests",
+            "axiom_brush_runtime_pipeline_tests",
+            "axiom_render_preview_surface_tests",
+            "axiom_canonical_handoff_tests",
+            "axiom_brush_lab"
+          )
+          $buildOutput = & cmake --build out/g4-5-windows --target $buildTargets --parallel 2>&1
+          $buildExit = $LASTEXITCODE
+          $buildOutput | Tee-Object -FilePath out/g4-5-windows-qualification-build.log
+          if ($buildExit -ne 0) { exit $buildExit }
           New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
+          $ctestRegex = "^(G4InkPlayground.*|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)$"
+          $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification/ctest.xml 2>&1
+          $ctestExit = $LASTEXITCODE
+          $ctestOutput | Tee-Object -FilePath out/g4-5-windows-qualification-ctest.log
+          if ($ctestExit -ne 0) { exit $ctestExit }
           & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows/apps/ink_playground/axiom_ink_playground_windows.exe out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-qualification-ctest.log out/g4-5-windows-qualification/
+          Copy-Item out/g4-5-windows-qualification-build.log out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-environment.json out/g4-5-windows-qualification/build-environment.json
-          $sha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
-          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $sha } |
+          $brushSha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
+          $inkSha = (Get-FileHash out/g4-5-windows-qualification/axiom_ink_playground_windows.exe -Algorithm SHA256).Hash.ToLower()
+          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $brushSha; brush_lab_sha256 = $brushSha; ink_playground_sha256 = $inkSha; focused_ctest = $ctestRegex; workflow_run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT } |
             ConvertTo-Json | Set-Content -Encoding utf8NoBOM out/g4-5-windows-qualification/identity.json
       - uses: actions/upload-artifact@v4
         with:
@@ -154,5 +222,77 @@ jobs:
         with:
           name: g4-5-android-arm64-v8a-${{ github.event.pull_request.head.sha || github.sha }}
           path: out/g4-5-android-qualification
+          if-no-files-found: error
+          retention-days: 30
+
+  macos:
+    name: qualification/macos-arm64
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve locked core dependencies
+        run: |
+          python3 tools/setup_build_environment.py --core --facts-output out/g4-5-macos-environment.json --status
+      - name: Fetch locked macOS Skia SDK
+        run: |
+          python3 tools/skia/fetch.py \
+            --profile tools/skia/profiles/r1-full-v1.json \
+            --lock r1-full-skia-sdk.lock.json \
+            --target macos-arm64-metal \
+            --variant release
+      - name: Configure, build, test and materialize qualification bundle
+        shell: bash
+        run: |
+          sdk_root="$PWD/.deps/skia-sdk/macos-arm64-metal/release"
+          cat > "$PWD/.deps/qualification-cxx-launcher" <<'EOF'
+          import subprocess
+          import sys
+          compiler, *args = sys.argv[1:]
+          flags = [
+              "-Wno-unused-variable",
+              "-Wno-unused-parameter",
+              "-Wno-unused-but-set-variable",
+              "-Wno-unused-function",
+              "-Wno-error=gnu-zero-variadic-macro-arguments",
+              "-Wno-error=gnu-anonymous-struct",
+              "-Wno-error=nested-anon-types",
+          ]
+          if any("/tests/" in arg for arg in args):
+              flags.append("-UNDEBUG")
+          insertion = args.index("--") if "--" in args else len(args)
+          command = [compiler, *args[:insertion], *flags, *args[insertion:]]
+          raise SystemExit(subprocess.run(command).returncode)
+          EOF
+          mv "$PWD/.deps/qualification-cxx-launcher" "$PWD/.deps/qualification-compiler-launcher.py"
+          cmake -S . -B out/g4-5-macos -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_COMPILER_LAUNCHER="python3;$PWD/.deps/qualification-compiler-launcher.py" \
+            -DCANVAS_BUILD_POC01=OFF \
+            -DCANVAS_BUILD_RF01=ON \
+            -DCANVAS_BUILD_RENDER=ON \
+            -DCANVAS_RENDER_BUILD_TESTS=ON \
+            -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON \
+            -DCANVAS_BUILD_INK_PLAYGROUND=OFF \
+            -DCANVAS_SKIA_SDK_ROOT="$sdk_root" \
+            -DAXIOM_BUILD_BRUSH_LAB=ON \
+            -DBUILD_TESTING=ON
+          cmake --build out/g4-5-macos --parallel
+          ctest --test-dir out/g4-5-macos -R '^(G4|G45)' --output-on-failure
+          mkdir -p out/g4-5-macos-qualification
+          out/g4-5-macos/apps/brush_lab/axiom_brush_lab out/g4-5-macos-qualification
+          cp out/g4-5-macos/apps/brush_lab/axiom_brush_lab out/g4-5-macos-qualification/
+          cp out/g4-5-macos-environment.json out/g4-5-macos-qualification/build-environment.json
+          exe_sha=$(shasum -a 256 out/g4-5-macos-qualification/axiom_brush_lab | awk '{print $1}')
+          printf '{"source_revision":"%s","profile":"macos-arm64","executable_sha256":"%s"}\n' \
+            "$(git rev-parse HEAD)" "$exe_sha" > out/g4-5-macos-qualification/identity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-5-macos-arm64-${{ github.event.pull_request.head.sha || github.sha }}
+          path: out/g4-5-macos-qualification
           if-no-files-found: error
           retention-days: 30

@@ -1,0 +1,17 @@
+{
+  "identity_rules": [
+    "matching-session",
+    "canonical-visible eligibility",
+    "stale identity cannot retire current preview"
+  ],
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "tests": [
+    "G45BrushPreviewHandoff",
+    "G4CanonicalHandoff",
+    "G4WindowsPreviewDispatch",
+    "G4InkPlaygroundWindowsPreviewPopup"
+  ],
+  "result_revision": "39a639b4ac8ea72f16f66c52524f85b7f4aca123",
+  "status": "PASS_AUTOMATED",
+  "physical_gate": "independent G4.5-10 review"
+}

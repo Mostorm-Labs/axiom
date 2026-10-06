@@ -26,6 +26,7 @@ struct WebGlSurfaceProvider::Impl final {
     bool acquired = false;
     bool lost = false;
     bool ownsContext = false;
+    bool overlayVisible = true;
     ~Impl() { surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
 };
 WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(std::make_unique<Impl>()) {
@@ -54,7 +55,7 @@ std::unique_ptr<WebGlSurfaceProvider> WebGlSurfaceProvider::fromCurrentContext(
   const auto current = emscripten_webgl_get_current_context();
   if (current <= 0) return nullptr;
   return std::make_unique<WebGlSurfaceProvider>(WebGlSurfaceConfig{
-      {}, physicalWidth, physicalHeight, static_cast<std::int32_t>(current)});
+      {}, physicalWidth, physicalHeight, static_cast<std::int32_t>(current), {}});
 }
 WebGlSurfaceProvider::~WebGlSurfaceProvider() = default;
 bool WebGlSurfaceProvider::ready() const noexcept { return impl_ && impl_->surface != nullptr; }
@@ -101,6 +102,14 @@ BackendSubmissionResult WebGlSurfaceProvider::resize(
 BackendSubmissionResult WebGlSurfaceProvider::readbackRgba(std::span<std::uint8_t>) noexcept { return BackendSubmissionResult::rejected("WebGL provider does not expose readback"); }
 std::uint64_t WebGlSurfaceProvider::presentCount() const noexcept { return impl_ == nullptr ? 0 : impl_->presents; }
 std::uint64_t WebGlSurfaceProvider::generation() const noexcept { return impl_ == nullptr ? 0 : impl_->generation; }
+void WebGlSurfaceProvider::setOverlayVisible(bool visible) noexcept {
+  if (impl_ == nullptr) return;
+  impl_->overlayVisible = visible;
+  if (impl_->config.overlayVisibility) impl_->config.overlayVisibility(visible);
+}
+bool WebGlSurfaceProvider::overlayVisible() const noexcept {
+  return impl_ != nullptr && impl_->overlayVisible;
+}
 BackendSubmissionResult WebGlSurfaceProvider::advanceGeneration() noexcept {
   if (!ready() || impl_->generation == std::numeric_limits<std::uint64_t>::max()) return BackendSubmissionResult::rejected("WebGL surface generation unavailable");
   ++impl_->generation;

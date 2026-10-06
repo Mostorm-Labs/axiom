@@ -1,0 +1,9 @@
+{
+  "post_change_observation": "GREEN: dirty state consumed by render pump; pinch and first post-pinch stroke retire preview in one render tick",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "test": "G45BrushRuntimePipeline + G4WindowsPreviewDispatch",
+  "schema_version": "aegis-red-oracle-v1",
+  "pre_change_observation": "RED observed at package anchor: deferred viewport did not present Canonical and first post-pinch handoff lacked focused oracle",
+  "status": "PASS",
+  "expected_failure_confirmed": true
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "aegis-windows-handoff-qualification-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "status": "AUTOMATED_QUALIFICATION_PASS_PHYSICAL_REVIEW_PENDING",
+  "focused_test": "G4WindowsPreviewDispatch",
+  "workflow_run": 37413349672,
+  "workflow_job": 112106477039,
+  "hosted_handoff_qualification": "PASS",
+  "scenarios": {
+    "preview_retired_without_second_stroke": "PASS",
+    "pointer_up_then_one_render_tick": "PASS",
+    "overlay_hidden": "PASS",
+    "pinch_then_render_tick": "PASS",
+    "first_post_pinch_stroke": "PASS",
+    "pending_handoff_zero": "PASS",
+    "runtime_autointent_pinch_then_first_stroke": "PASS_AUTOMATED",
+    "canceled_pinch_contour_removed": "PASS_AUTOMATED"
+  },
+  "local_evidence": "ctest-windows.log",
+  "hosted_evidence": "out/hosted-37413349672-windows/g4-5-windows-qualification-ctest.log",
+  "physical_verification": "DEFERRED_TO_INDEPENDENT_REVIEWER"
+}

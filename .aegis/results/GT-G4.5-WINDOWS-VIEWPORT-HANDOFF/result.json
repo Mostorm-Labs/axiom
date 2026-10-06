@@ -1,0 +1,55 @@
+{
+  "schema_version": "aegis-result-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_ref": ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/package.json",
+  "package_materialization_ref": "1081447dc3f7b1d546f1e90eeb9456c958d0d001",
+  "task_anchor": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
+  "execution_branch": "codex/gt-g4-5-windows-viewport-handoff",
+  "implementation_revision": "21b61ce7127445539ce2ddaefabe29763b17b2b2",
+  "result_revision": "88948b2065d0789aeddee2fad9425e856b856cf4",
+  "materialized_ref": "refs/heads/codex/gt-g4-5-windows-viewport-handoff",
+  "evidence_input_refs": [
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/repo-reconciliation.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/design-preflight.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/red-oracle.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-viewport-qualification.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-handoff-qualification.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/portable-regression-summary.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/scope-audit.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/physical-gate-input-manifest.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/hosted-provider-evidence.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/windows-contracts.json",
+    ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/ctest-full-windows.log"
+  ],
+  "verification": {
+    "red_oracle": "PASS",
+    "implementation_design_preflight": "PASS",
+    "build_targets": "PASS",
+    "focused_tests": "PASS: 12/12 hosted; 22/22 local",
+    "portable_ctest": "PASS: 22/22 package regression tests",
+    "windows_contracts": "PASS: 56 tests (windows-contracts.json)",
+    "windows_automated_qualification": "PASS: exact run 37413349672 / job 112106477039 / artifact 11390770528 bound to result revision 88948b2065d0789aeddee2fad9425e856b856cf4",
+    "git_diff_check": "PASS",
+    "scope_audit": "PASS",
+    "hosted_brush_renderer_regression": "PASS: exact run 37413349672 / job 112106477039",
+    "full_ctest": "117/120; three out-of-package failures recorded in portable-regression-summary.json"
+  },
+  "preserved": [
+    "AutoIntent and three-platform input behavior",
+    "BrushEngine and Vector/DAB semantics",
+    "CanonicalVisible authority",
+    "Windows D3D12/Skia surface-provider architecture",
+    "Arc ownership and Debug UI"
+  ],
+  "physical_verification": {
+    "status": "USER_REPORTED_PASS_PENDING_INDEPENDENT_REVIEWER",
+    "owner": "independent Windows physical verification reviewer",
+    "manifest": ".aegis/results/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/physical-gate-input-manifest.json"
+  },
+  "official_gate_pass": false,
+  "g4_5_pass_claimed": false,
+  "p34_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

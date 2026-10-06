@@ -1,0 +1,27 @@
+{
+  "vector_only": true,
+  "forbidden_scope": [
+    "DAB-to-SkPath conversion",
+    "BrushEngine changes",
+    "Arc/Windows provider redesign",
+    "Debug UI/Undo-Redo redesign"
+  ],
+  "dab_branches": [
+    "drawPreviewDabsToSkCanvas",
+    "drawPreviewChalkDabsToSkCanvas",
+    "drawPreviewMembraneDabsToSkCanvas",
+    "drawBrushPrimitivesToSkCanvas"
+  ],
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "preview_callsite": "runtime/render/src/skia_renderer.cpp",
+  "status": "PASS",
+  "canonical_callsite": "runtime/render/src/skia_headless_backend.cpp",
+  "morphology": [
+    "moveTo",
+    "lineTo",
+    "close",
+    "fill"
+  ],
+  "result_revision": "39a639b4ac8ea72f16f66c52524f85b7f4aca123",
+  "helper": "buildVectorBrushOutlineSkPath"
+}

@@ -1,0 +1,28 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.5-WINDOWS-VIEWPORT-HANDOFF",
+  "current": true,
+  "source": {
+    "provider": "repo_materialized",
+    "ref": ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/authority.lock.json",
+    "content_hash": "6e9f5941277dc7da193ae55cfc3edcacab715ddfdd68b94ede68be5cbc49d487"
+  },
+  "dependency": {
+    "baseline_task": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+    "baseline_revision": "77b40bef01627f75aa72db8519bed5e4ba8cca7f",
+    "baseline_status": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION"
+  },
+  "trusted_statements": [
+    "BrushEngine, AutoIntent, Vector/DAB representations, Canonical semantics, and accepted three-platform input behavior remain unchanged.",
+    "CanonicalVisible remains the sole authority that retires a committed preview session.",
+    "A viewport gesture changes the per-view camera and must invalidate the Canonical presentation without mutating the shared semantic document.",
+    "Windows may defer GPU presentation from input callbacks, but the render pump must eventually present every current viewport state and every accepted canonical commit.",
+    "The independent Windows preview surface remains presentation-only and must not receive pointer ownership from the overlay."
+  ],
+  "authorized_goal": "Repair Windows viewport-driven Canonical refresh and the first-post-pinch CanonicalVisible preview retirement path, with explicit regression evidence and physical verification inputs.",
+  "forbidden_authority_expansion": [
+    "No Vector/DAB semantic or geometry redesign.",
+    "No Windows surface-provider or DirectComposition architecture redesign.",
+    "No Debug UI, RuntimeFacade product-control, Undo/Redo, Arc protocol, or input arbitration redesign."
+  ]
+}

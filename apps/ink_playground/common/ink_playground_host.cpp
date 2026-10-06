@@ -123,7 +123,8 @@ InkPlaygroundHost::InkPlaygroundHost()
           std::make_unique<canvas::UniformGridSpatialIndex>())),
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
-      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>()) {}
+      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>()),
+      history_(*this) {}
 
 bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
   strokeStartNs_ = 0;
@@ -339,7 +340,14 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
     // A viewport-only frame redraws the canonical document but is not the
     // canonical-visible receipt for the active brush commit.  Retained amber
     // preview must survive this redraw until the matching commit frame.
-    if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+    if (platformPresentationDeferred_) {
+      // Windows consumes this invalidation from its render pump. Keeping it
+      // in Runtime makes the scheduling decision explicit without doing a
+      // fence wait from the input callback.
+      canonicalPresentationDirty_ = true;
+    } else if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) {
+      return false;
+    }
   }
   // Preview submission is display-frame gated by the platform host. The
   // batch only updates Runtime-retained geometry; Java/Choreographer calls
@@ -409,6 +417,7 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           const ink::BrushPackage& package,
                                           std::uint64_t seed) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
        package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1") ||
@@ -468,6 +477,7 @@ bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
 }
 
 bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
   eraserTraces_[pointerId] = {};
   eraserPreviewRevisions_[pointerId] = 0U;
@@ -481,6 +491,7 @@ bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
 }
 
 bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
@@ -539,13 +550,15 @@ bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y
     style.overrideColor = true;
     style.overrideOpacity = true;
   }
+  previewController_->setPresentationStyle(style);
   return previewController_->updateForSession(pointerId, delta, viewport.scale,
                                                viewport.translationX,
                                                viewport.translationY) &&
-         previewController_->renderIfDirty(style);
+         (platformPresentationDeferred_ ? true : previewController_->renderIfDirty(style));
 }
 
 bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end()) return false;
   if (it->second.empty() || runtimeSceneHost_ == nullptr) {
@@ -585,7 +598,9 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
     return true;
   }
   semantic::Operation operation;
-  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(submittedOperationCount_ + 1U));
+  const auto operationOrdinal = localOperationOrdinal();
+  if (operationOrdinal == 0U) return false;
+  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(operationOrdinal));
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
@@ -621,25 +636,51 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
                                   {p.x, p.y}, {p.x, p.y}});
       }
       maskPayload.items.push_back({id, {{foundation::ObjectId::fromUint64(
-          (submittedOperationCount_ + 1U) * 1000U + ++replacementOrdinal), swept}}});
+          operationOrdinal * 1000U + ++replacementOrdinal), swept}}});
     }
     operation.payload = std::move(maskPayload);
+  }
+  semantic::Operation inverse;
+  inverse.id = allocateOperationId();
+  if (inverse.id.isZero()) return false;
+  inverse.document_id = documentId_;
+  inverse.schema_version = 1U;
+  inverse.payload_version = 1U;
+  if (toolMode_ == ToolMode::kObjectEraser) {
+    semantic::RestoreObjectsOp restore;
+    for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
+      const auto* record = semanticObjects_.find(id);
+      if (record != nullptr) restore.objects.push_back(*record);
+    }
+    inverse.payload = std::move(restore);
+  } else {
+    semantic::RemoveEraseMasksOp remove;
+    for (const auto& item : std::get<semantic::AddEraseMasksOp>(operation.payload).items) {
+      semantic::EraseMaskRemoveItem target;
+      target.object_id = item.object_id;
+      for (const auto& mask : item.masks) target.mask_ids.push_back(mask.id);
+      remove.items.push_back(std::move(target));
+    }
+    inverse.payload = std::move(remove);
   }
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   eraserTraces_.erase(it);
   eraserPreviewRevisions_.erase(pointerId);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied &&
-      applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) return false;
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  if (!history_.record(operation, {std::move(inverse)})) return false;
+  ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
     canvas::SceneCommitInput input(applied.commit_record->before_generation,
                                    applied.commit_record->after_generation, view,
                                    &applied.commit_record->change_set);
-    if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+    // Semantic acceptance is final. Scene is derived and can recover at the
+    // next frame; a failed projection must not lose the accepted history.
+    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
   }
-  ++submittedOperationCount_;
-  if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+  if (!platformPresentationDeferred_ &&
+      !presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return true;
   if (previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
@@ -648,6 +689,7 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
 }
 
 bool InkPlaygroundHost::eraserCancel(std::uint64_t pointerId) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const bool erased = eraserTraces_.erase(pointerId) != 0U;
   eraserPreviewRevisions_.erase(pointerId);
   if (previewController_ != nullptr && previewController_->active()) {
@@ -660,6 +702,7 @@ bool InkPlaygroundHost::eraserCancel(std::uint64_t pointerId) noexcept {
 bool InkPlaygroundHost::appendBrushSample(std::uint64_t pointerId, double x, double y,
                                           double pressure, std::uint64_t sequence,
                                           bool predicted, bool renderPreview) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
   ink::BrushSample sample{x, y, pressure, true, sequence};
@@ -678,17 +721,75 @@ bool InkPlaygroundHost::appendBrushSample(std::uint64_t pointerId, double x, dou
       !previewController_->updateForSession(pointerId, delta, viewport.scale,
                                   viewport.translationX,
                                   viewport.translationY)) { AXIOM_ANDROID_DIAG("preview update failed rev=%llu active=%d state_rev=%llu gen=%llu geom_gen=%llu geom_rev=%llu", static_cast<unsigned long long>(delta.revision), previewController_ != nullptr && previewController_->active() ? 1 : 0, previewController_ == nullptr ? 0ULL : static_cast<unsigned long long>(previewController_->state().contentRevision), previewProvider_ == nullptr ? 0ULL : static_cast<unsigned long long>(previewProvider_->generation()), previewController_ == nullptr ? 0ULL : static_cast<unsigned long long>(previewController_->geometry().surfaceGeneration.value()), previewController_ == nullptr ? 0ULL : static_cast<unsigned long long>(previewController_->geometry().revision)); return false; }
-  if (renderPreview && !previewController_->renderIfDirty()) { AXIOM_ANDROID_DIAG("preview render failed rev=%llu", static_cast<unsigned long long>(delta.revision)); return false; }
+  if (renderPreview && !platformPresentationDeferred_ &&
+      !previewController_->renderIfDirty()) { AXIOM_ANDROID_DIAG("preview render failed rev=%llu", static_cast<unsigned long long>(delta.revision)); return false; }
   brushPreviews_[pointerId] = std::move(delta.outline);
   brushPreviewDigest_ = hashOutline(brushPreviews_[pointerId]);
   return true;
 }
 
 bool InkPlaygroundHost::presentBrushPreview() noexcept {
-  return previewController_ != nullptr && previewController_->renderIfDirty();
+  std::lock_guard lock(previewStateMutex_);
+  return previewController_ != nullptr &&
+      previewController_->renderIfDirty(previewController_->presentationStyle());
+}
+
+bool InkPlaygroundHost::capturePreviewPresentation(
+    PreviewPresentationCapture& capture) noexcept {
+  std::lock_guard lock(previewStateMutex_);
+  if (previewController_ == nullptr || !previewController_->active() ||
+      !previewController_->state().dirty) return false;
+  capture.geometry = previewController_->geometry();
+  capture.style = previewController_->presentationStyle();
+  capture.contentRevision = previewController_->state().contentRevision;
+  capture.surfaceGeneration = previewController_->state().generation;
+  return true;
+}
+
+bool InkPlaygroundHost::renderPreviewPresentation(
+    const PreviewPresentationCapture& capture,
+    std::uint64_t* presentCount) noexcept {
+  std::lock_guard renderLock(previewRenderMutex_);
+  std::lock_guard providerLock(previewProviderMutex_);
+  render::SkiaSurfaceProvider* provider = nullptr;
+  {
+    std::lock_guard stateLock(previewStateMutex_);
+    if (previewController_ == nullptr || !previewController_->active() ||
+        previewProvider_ == nullptr ||
+        previewProvider_->generation() != capture.surfaceGeneration) return false;
+    provider = previewProvider_;
+  }
+  const auto result = previewRenderer_.renderPreview(*provider, capture.geometry,
+                                                  capture.style);
+  if (result.code != render::BackendSubmissionCode::kAccepted) return false;
+  if (presentCount != nullptr) *presentCount = provider->presentCount();
+  return true;
+}
+
+bool InkPlaygroundHost::acknowledgePreviewPresentation(
+    const PreviewPresentationCapture& capture, std::uint64_t presentCount) noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard stateLock(previewStateMutex_);
+  if (previewController_ == nullptr || previewProvider_ == nullptr ||
+      previewProvider_->generation() != capture.surfaceGeneration) return false;
+  const bool accepted = previewController_->markPresented(
+      capture.contentRevision, capture.surfaceGeneration, presentCount);
+  if (accepted) previewProvider_->setOverlayVisible(true);
+  return accepted;
+}
+
+void InkPlaygroundHost::setPreviewOverlayVisible(bool visible) noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(visible);
+}
+
+void InkPlaygroundHost::setPlatformPresentationDeferred(bool deferred) noexcept {
+  platformPresentationDeferred_ = deferred;
+  if (previewController_ != nullptr) previewController_->setPresentationDeferred(deferred);
 }
 
 bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
@@ -712,16 +813,25 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
   if (!BrushCommitAdapter::valid(intent, package)) return false;
   brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
                                      brushReplayDigest_), intent.revision);
-  const auto operationId = submittedOperationCount_ + 1U;
+  const auto operationId = localOperationOrdinal();
+  if (operationId == 0U) return false;
   const auto operation = BrushCommitAdapter::build(
       intent, package, operationId, documentId_);
+  semantic::Operation inverse;
+  inverse.id = allocateOperationId();
+  if (inverse.id.isZero()) return false;
+  inverse.document_id = documentId_;
+  inverse.schema_version = 1U;
+  inverse.payload_version = 1U;
+  inverse.payload = semantic::DeleteObjectsOp{{foundation::ObjectId::fromUint64(operationId)}};
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied &&
-      applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) {
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) {
     return false;
   }
+  if (!history_.record(operation, {std::move(inverse)})) return false;
+  ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
       sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
@@ -731,9 +841,7 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
         view, &applied.commit_record->change_set);
     const auto synchronized = sceneCoordinator_->apply(*sceneCompiler_, sceneInput);
     AXIOM_ANDROID_DIAG("scene apply pointer=%llu ok=%d objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), synchronized ? 1 : 0, semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
-    if (!synchronized) return false;
   }
-  ++submittedOperationCount_;
   if (applied.commit_record.has_value()) {
     const ink::CanonicalHandoffIdentity identity{
         1U, pointerId, 1U, applied.commit_record->operation_id,
@@ -763,6 +871,7 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
 }
 
 bool InkPlaygroundHost::cancelBrushSession(std::uint64_t pointerId) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
   it->second->cancel();
@@ -771,8 +880,10 @@ bool InkPlaygroundHost::cancelBrushSession(std::uint64_t pointerId) noexcept {
           ink::PreviewSubmitResult::kRejected) {
     return false;
   }
-  if (previewController_ == nullptr || !previewController_->cancelSession(pointerId) ||
-      !previewController_->renderIfDirty()) return false;
+  if (previewController_ == nullptr || previewProvider_ == nullptr ||
+      !previewController_->cancelSession(pointerId) ||
+      !previewController_->retireSession(pointerId, previewProvider_->generation()) ||
+      (!platformPresentationDeferred_ && !previewController_->renderIfDirty())) return false;
   brushSessions_.erase(it);
   brushSessionPackages_.erase(pointerId);
   brushSessionSeeds_.erase(pointerId);
@@ -799,6 +910,7 @@ interaction::ContactDisposition InkPlaygroundHost::pointerDisposition(
 
 bool InkPlaygroundHost::applyViewportNavigation(
     const interaction::ViewportNavigationSample& sample) noexcept {
+  std::lock_guard lock(previewStateMutex_);
   if (viewportController_ == nullptr ||
       !viewportController_->applyNavigation(sample)) {
     return false;
@@ -821,6 +933,10 @@ bool InkPlaygroundHost::applyViewportNavigation(
   // invalidation so the Web/Android/Windows display cannot remain at the old
   // transform until the next pointer sample happens to trigger a frame.
   if (surface_.available && activeSurfaceProvider() != nullptr) {
+    if (platformPresentationDeferred_) {
+      canonicalPresentationDirty_ = true;
+      return true;
+    }
     return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
   }
   return true;
@@ -853,7 +969,81 @@ interaction::SubmitResult InkPlaygroundHost::submit(
       applied.disposition != semantic::ApplyDisposition::kAlreadyApplied) {
     return interaction::SubmitResult::rejected();
   }
-  ++submittedOperationCount_;
+  // A duplicate operation is idempotently accepted by the semantic engine,
+  // but it is not a new local document revision and must not advance the
+  // host's product revision counter.
+  if (applied.disposition == semantic::ApplyDisposition::kApplied) {
+    ++submittedOperationCount_;
+  }
+  return interaction::SubmitResult::acceptedResult();
+}
+
+semantic::OperationId InkPlaygroundHost::allocateOperationId() {
+  while (nextHistoryOperationOrdinal_ != 0U) {
+    const auto id = semantic::OperationId(
+        foundation::ObjectId::fromUint64(nextHistoryOperationOrdinal_++));
+    if (!appliedOperations_.find(id).has_value()) return id;
+  }
+  return {};
+}
+
+std::uint64_t InkPlaygroundHost::localOperationOrdinal() const noexcept {
+  // Preserve the existing low-ID/order-key sequence for ordinary drawings;
+  // the compatibility port can consume arbitrary identities independently.
+  auto ordinal = static_cast<std::uint64_t>(submittedOperationCount_ + 1U);
+  while (ordinal != 0U && ordinal < (std::uint64_t{1} << 63U)) {
+    const auto id = foundation::ObjectId::fromUint64(ordinal);
+    if (!appliedOperations_.find(semantic::OperationId(id)).has_value() &&
+        !semanticObjects_.contains(id)) return ordinal;
+    ++ordinal;
+  }
+  return 0U;
+}
+
+bool InkPlaygroundHost::historySceneReady() const noexcept {
+  return runtimeSceneHost_ != nullptr && sceneCoordinator_ != nullptr &&
+         runtimeSceneHost_->semanticGeneration() == semanticGeneration_.current() &&
+         sceneCoordinator_->runtimeScene().generation() == semanticGeneration_.current();
+}
+
+bool InkPlaygroundHost::recoverHistoryScene() noexcept {
+  if (historySceneReady()) return true;
+  if (sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return false;
+  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+  const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
+  return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
+}
+
+interaction::SubmitResult InkPlaygroundHost::submit(
+    std::span<const semantic::Operation> operations, semantic::ApplySource source) {
+  // This host records only one-operation compensation entries. Reject larger
+  // batches before mutation; other EditorHistory owners may support them.
+  if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
+      !historySceneReady()) return interaction::SubmitResult::rejected();
+  for (const auto& operation : operations) {
+    const auto applied = operationEngine_.apply(
+        operation, source, semanticObjects_, appliedOperations_, semanticGeneration_,
+        canonicalCommitClock_);
+    if (applied.disposition != semantic::ApplyDisposition::kApplied) {
+      return interaction::SubmitResult::rejected();
+    }
+    if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
+        sceneCompiler_ != nullptr) {
+      semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+      canvas::SceneCommitInput input(applied.commit_record->before_generation,
+                                     applied.commit_record->after_generation, view,
+                                     &applied.commit_record->change_set);
+      (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    }
+    ++submittedOperationCount_;
+  }
+  if (!operations.empty()) {
+    // Once Semantic has accepted, presentation/projection failure cannot
+    // reject that mutation. The next frame recovers the derived Scene.
+    if (!platformPresentationDeferred_) {
+      (void)presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    }
+  }
   return interaction::SubmitResult::acceptedResult();
 }
 
@@ -912,6 +1102,8 @@ bool InkPlaygroundHost::bindSurface(std::uint32_t width,
 
 bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
                                       std::uint32_t height) noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard lock(previewStateMutex_);
   if (width == 0U || height == 0U || surface_.generation == 0U ||
       surface_.generation == std::numeric_limits<std::uint64_t>::max()) {
     return false;
@@ -947,6 +1139,7 @@ bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
 }
 
 bool InkPlaygroundHost::loseSurface() noexcept {
+  std::lock_guard lock(previewStateMutex_);
   if (surface_.generation == 0U) return false;
   if (appBinding_ == nullptr ||
       appBinding_->markSurfaceLost() != render::SurfaceProviderDisposition::kCommitted) {
@@ -962,6 +1155,8 @@ bool InkPlaygroundHost::loseSurface() noexcept {
 }
 
 bool InkPlaygroundHost::rebindSurface() noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard lock(previewStateMutex_);
   if (appBinding_ == nullptr ||
       appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted ||
       appBinding_->rebindPreviewSurface() != render::SurfaceProviderDisposition::kCommitted) {
@@ -975,6 +1170,8 @@ bool InkPlaygroundHost::rebindSurface() noexcept {
 }
 
 bool InkPlaygroundHost::rebindPreviewSurface() noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard lock(previewStateMutex_);
   if (appBinding_ == nullptr || previewProvider_ == nullptr ||
       appBinding_->rebindPreviewSurface() !=
           render::SurfaceProviderDisposition::kCommitted) {
@@ -1002,6 +1199,31 @@ bool InkPlaygroundHost::registerSurfaceProvider(
       render::MetricsGeneration{surface_.generation},
       appBinding_->surfaces().activeInfo().metrics});
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
+  return true;
+}
+
+bool InkPlaygroundHost::selectCanonicalSurfaceProfile(
+    std::string_view profileId, std::uint64_t expectedGeneration,
+    render::RenderTargetFormat format) noexcept {
+  if (appBinding_ == nullptr || profileId.empty()) return false;
+  if (appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
+      expectedGeneration) return false;
+  if (appBinding_->selectRenderProfile(profileId, format) !=
+      render::SurfaceProviderDisposition::kCommitted) return false;
+  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.width = appBinding_->surfaces().activeInfo().metrics.physicalWidth;
+  surface_.height = appBinding_->surfaces().activeInfo().metrics.physicalHeight;
+  surface_.available = true;
+  return true;
+}
+
+bool InkPlaygroundHost::rebindCanonicalSurface(std::uint64_t expectedGeneration) noexcept {
+  if (appBinding_ == nullptr ||
+      appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
+          expectedGeneration) return false;
+  if (appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted) return false;
+  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.available = true;
   return true;
 }
 
@@ -1075,7 +1297,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
       activeSurfaceProvider() == nullptr) { AXIOM_ANDROID_DIAG("present reject missing deps"); return false; }
   const auto semanticGeneration = semanticGeneration_.current();
-  if (runtimeSceneHost_->semanticGeneration() != semanticGeneration) { AXIOM_ANDROID_DIAG("present reject scene generation"); return false; }
+  if (!recoverHistoryScene()) { AXIOM_ANDROID_DIAG("present reject scene generation"); return false; }
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
@@ -1147,8 +1369,11 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
   recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
   ++canonicalFrameCount_;
-  if (retirePreview && semanticObjects_.size() != 0U && previewController_ != nullptr &&
-      previewController_->active()) {
+  canonicalPresentationDirty_ = false;
+  if (retirePreview && semanticObjects_.size() != 0U) {
+    std::lock_guard providerLock(previewProviderMutex_);
+    std::lock_guard previewLock(previewStateMutex_);
+    if (previewController_ == nullptr || !previewController_->active()) return true;
     std::vector<std::uint64_t> retired;
     for (const auto& [pointer, identity] : pendingCanonicalIdentities_) {
       if (canonicalVisibilitySink_ != nullptr) {

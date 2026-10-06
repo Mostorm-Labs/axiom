@@ -1,5 +1,6 @@
 #include <array>
 #include <cassert>
+#include <cctype>
 #include <cstdint>
 #include <cstdlib>
 #include <cstdio>
@@ -38,15 +39,42 @@ std::string text(const fs::path& path) {
 }
 
 std::string sha256(const fs::path& path) {
+#if defined(_WIN32)
+    const std::string command =
+        "certutil -hashfile \"" + path.string() + "\" SHA256";
+    FILE* pipe = _popen(command.c_str(), "r");
+#else
     const std::string command = "shasum -a 256 '" + path.string() + "'";
     FILE* pipe = popen(command.c_str(), "r");
+#endif
     assert(pipe != nullptr);
     char buffer[256]{};
     const auto count = fread(buffer, 1, sizeof(buffer) - 1U, pipe);
+#if defined(_WIN32)
+    assert(_pclose(pipe) == 0);
+#else
     assert(pclose(pipe) == 0);
+#endif
     std::istringstream stream(std::string(buffer, count));
     std::string digest;
-    stream >> digest;
+    if (!(stream >> digest) || digest.size() != 64U) {
+        std::string line;
+        while (std::getline(stream, line)) {
+            std::string compact;
+            for (const auto character : line) {
+                if (std::isxdigit(static_cast<unsigned char>(character))) {
+                    compact.push_back(character);
+                }
+            }
+            if (compact.size() == 64U) {
+                digest = compact;
+                break;
+            }
+        }
+    }
+    for (auto& character : digest) {
+        character = static_cast<char>(std::tolower(static_cast<unsigned char>(character)));
+    }
     return digest;
 }
 

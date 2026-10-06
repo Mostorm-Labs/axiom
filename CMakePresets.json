@@ -60,6 +60,17 @@
       }
     },
     {
+      "name": "g4-5-web-debug-ui-physical",
+      "displayName": "G4.5 Web ImGui Debug UI physical verification (Windows browser)",
+      "inherits": "g3-web-release",
+      "binaryDir": "${sourceDir}/out/g4-5-web-debug-ui-physical",
+      "cacheVariables": {
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "full",
+        "BUILD_TESTING": "OFF"
+      }
+    },
+    {
       "name": "rf01-host-debug",
       "displayName": "RF-01 Scene Foundation (Debug)",
       "generator": "Ninja",
@@ -356,6 +367,7 @@
     { "name": "g3-host-debug", "configurePreset": "g3-host-debug" },
     { "name": "g3-windows-release", "configurePreset": "g3-windows-release" },
     { "name": "g3-web-release", "configurePreset": "g3-web-release" },
+    { "name": "g4-5-web-debug-ui-physical", "configurePreset": "g4-5-web-debug-ui-physical" },
     { "name": "rf01-host-debug", "configurePreset": "rf01-host-debug" },
     { "name": "host-debug", "configurePreset": "host-debug" },
     { "name": "host-asan", "configurePreset": "host-asan" },

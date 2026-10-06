@@ -31,14 +31,17 @@ bool verifyPopup(HWND owner) {
   PopupSearch search{owner};
   EnumThreadWindows(GetCurrentThreadId(), findPopup,
                     reinterpret_cast<LPARAM>(&search));
+  const auto style = search.popup == nullptr
+      ? 0L : GetWindowLongPtrW(search.popup, GWL_EXSTYLE);
   BYTE alpha = 0;
   DWORD flags = 0;
   COLORREF color = 0;
-  if (!search.popup ||
+  if (!search.popup || (style & WS_EX_TRANSPARENT) == 0 ||
+      (style & WS_EX_LAYERED) == 0 || (style & WS_EX_NOACTIVATE) == 0 ||
+      !IsWindowEnabled(search.popup) ||
       !GetLayeredWindowAttributes(search.popup, &color, &alpha, &flags) ||
-      alpha != 255 || flags != LWA_ALPHA ||
-      (GetWindowLongPtrW(search.popup, GWL_EXSTYLE) & WS_EX_TRANSPARENT) == 0) {
-    std::cerr << "Preview popup lacks initialized layered input transparency\n";
+      alpha != 255 || flags != LWA_ALPHA) {
+    std::cerr << "Preview popup is not an initialized layered transparent target\n";
     return false;
   }
   provider.setOverlayVisible(true);

@@ -1,0 +1,8 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.5-SKIA-CONSUMER-BOUNDARY",
+  "output_root": ".aegis/results/GT-G4.5-SKIA-CONSUMER-BOUNDARY/",
+  "required_artifacts": ["repo-reconciliation.json", "red-oracle.json", "build.log", "ctest.log", "scope-audit.json", "result.json"],
+  "review_boundary": "Exact repair commit and PR required checks; no physical or Gate PASS claim.",
+  "producer_may_claim_gate_pass": false
+}

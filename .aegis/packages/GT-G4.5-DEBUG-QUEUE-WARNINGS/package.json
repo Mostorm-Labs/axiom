@@ -1,0 +1,16 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.5-DEBUG-QUEUE-WARNINGS",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-5-debug-queue-warning-fix",
+  "task_anchor": {"revision": "7adf277e81050ba03be39d948d4b8fb4c0c9a656", "relation": "ancestor"},
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {"path": "authority.lock.json"},
+  "verification_lock_ref": {"path": "verification.lock.json"},
+  "execution_contract_ref": {"path": "execution-contract.json"},
+  "evidence_contract_ref": {"path": "evidence-contract.json"}
+}

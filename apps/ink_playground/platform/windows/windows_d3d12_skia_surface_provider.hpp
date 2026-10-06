@@ -9,6 +9,7 @@
 #endif
 
 #include <cstdint>
+#include <atomic>
 #include <memory>
 
 namespace canvas::ink_playground {
@@ -30,14 +31,25 @@ class WindowsD3D12SkiaSurfaceProvider final
   [[nodiscard]] canvas::render::BackendSubmissionResult present() noexcept override;
   [[nodiscard]] canvas::render::BackendSubmissionResult resize(std::uint32_t, std::uint32_t) noexcept override;
   [[nodiscard]] canvas::render::BackendSubmissionResult readbackRgba(std::span<std::uint8_t>) noexcept override;
-  [[nodiscard]] std::uint64_t generation() const noexcept override { return generation_; }
+  [[nodiscard]] std::uint64_t generation() const noexcept override {
+    return generation_.load(std::memory_order_acquire);
+  }
   [[nodiscard]] canvas::render::BackendSubmissionResult advanceGeneration() noexcept override;
   [[nodiscard]] std::uint64_t readbackCount() const noexcept override { return 0; }
   [[nodiscard]] std::uint64_t cpuCopyCount() const noexcept override { return 0; }
-  [[nodiscard]] std::uint64_t presentCount() const noexcept override { return presents_; }
+  [[nodiscard]] std::uint64_t presentCount() const noexcept override {
+    return presents_.load(std::memory_order_acquire);
+  }
   void setOverlayVisible(bool) noexcept override;
+  // Temporarily remove the owner-attached composition content before a
+  // resize. The owner HWND's background remains visible while the new D3D12
+  // backbuffers are being created.
+  void suspendForResize() noexcept;
+  void reposition() noexcept;
   void setOverlayOffset(int x, int y) noexcept { overlayOffsetX_ = x; overlayOffsetY_ = y; }
-  [[nodiscard]] bool overlayVisible() const noexcept override { return visible_; }
+  [[nodiscard]] bool overlayVisible() const noexcept override {
+    return visible_.load(std::memory_order_acquire);
+  }
 
  private:
   struct Impl;
@@ -49,11 +61,11 @@ class WindowsD3D12SkiaSurfaceProvider final
   bool attachToOwner_ = false;
   std::uint32_t width_ = 0;
   std::uint32_t height_ = 0;
-  std::uint64_t generation_ = 0;
-  std::uint64_t presents_ = 0;
+  std::atomic<std::uint64_t> generation_{0};
+  std::atomic<std::uint64_t> presents_{0};
   int overlayOffsetX_ = 0;
   int overlayOffsetY_ = 0;
-  bool visible_ = false;
+  std::atomic_bool visible_{false};
   bool lost_ = false;
 
 #if defined(_WIN32)

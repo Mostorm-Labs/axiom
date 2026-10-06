@@ -14,11 +14,14 @@ class SkiaRenderer;
 // Render-only styling. It never mutates BrushPackage, ResolvedBrushState or
 // semantic BrushStrokeContent.
 struct PreviewStyleOverride final {
-    float red = 1.0F;
-    float green = 0.85F;
-    float blue = 0.0F;
-    float alpha = 0.55F;
-    float opacityMultiplier = 0.55F;
+    // Presentation-only tint for the transient Arc layer.  Keep it light
+    // enough to distinguish it from canonical ink while remaining visible on
+    // the white canvas during fast input.
+    float red = 0.20F;
+    float green = 0.78F;
+    float blue = 0.72F;
+    float alpha = 0.46F;
+    float opacityMultiplier = 0.46F;
     bool overrideColor = true;
     bool overrideOpacity = true;
     // SkBlendMode::kClear is 0; kSrcOver is 1. Keep the wire value explicit
@@ -87,6 +90,20 @@ class PreviewSurfaceController final {
     [[nodiscard]] bool rebind(std::uint64_t surfaceGeneration) noexcept;
     [[nodiscard]] bool renderIfDirty(
         const PreviewStyleOverride& style = {}) noexcept;
+    void setPresentationStyle(const PreviewStyleOverride& style) noexcept {
+        presentationStyle_ = style;
+    }
+    [[nodiscard]] const PreviewStyleOverride& presentationStyle() const noexcept {
+        return presentationStyle_;
+    }
+    // Called by a platform render pump after it presents a copied geometry
+    // snapshot. A newer content revision remains dirty and will be retried.
+    [[nodiscard]] bool markPresented(std::uint64_t contentRevision,
+                                     std::uint64_t surfaceGeneration,
+                                     std::uint64_t presentCount) noexcept;
+    void setPresentationDeferred(bool deferred) noexcept {
+        presentationDeferred_ = deferred;
+    }
     [[nodiscard]] bool clearAfterCanonicalVisible(
         std::uint64_t surfaceGeneration) noexcept;
     [[nodiscard]] bool clearAfterCanonicalVisible(
@@ -104,6 +121,8 @@ class PreviewSurfaceController final {
     PreviewGeometry geometry_{};
     SurfaceRenderState state_{};
     bool active_ = false;
+    bool presentationDeferred_ = false;
+    PreviewStyleOverride presentationStyle_{};
     std::uint64_t defaultSession_ = 0;
 };
 

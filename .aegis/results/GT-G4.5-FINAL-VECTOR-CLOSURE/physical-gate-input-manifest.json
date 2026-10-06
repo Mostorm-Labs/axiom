@@ -1,0 +1,26 @@
+{
+  "task_id": "GT-G4.5-FINAL-VECTOR-CLOSURE",
+  "physical_recording_owner": "independent G4.5-10 Gate reviewer",
+  "status": "READY_FOR_G4_5_10_PHYSICAL_VERIFICATION",
+  "hosted_inputs": {
+    "artifact_root": "hosted-37293099922",
+    "run_id": 37293099922,
+    "profiles": [
+      "web-wasm32",
+      "android-arm64-v8a",
+      "macos-arm64",
+      "windows-x64"
+    ]
+  },
+  "producer_ownership": "P32",
+  "required_observations": [
+    "real Windows physical host and input",
+    "preview/canonical alignment",
+    "vector brush output",
+    "stale preview retirement",
+    "resize/lost/rebind"
+  ],
+  "gate_pass_claimed": false,
+  "schema_version": "aegis-g4.5-10-physical-input-v1",
+  "subject_result_revision": "39a639b4ac8ea72f16f66c52524f85b7f4aca123"
+}

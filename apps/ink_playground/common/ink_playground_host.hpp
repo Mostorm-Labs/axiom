@@ -8,6 +8,7 @@
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/render/brush_render_point.hpp"
 #include "canvas/interaction/interaction_runtime.hpp"
+#include "canvas/interaction/editor_history.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
 #include "canvas/render/presentation_tracker.hpp"
@@ -34,7 +35,9 @@
 #include <string>
 #include <string_view>
 #include <memory>
+#include <mutex>
 #include <optional>
+#include <span>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -84,6 +87,13 @@ struct BaselineViewportObservation final {
   float translationY = 0.0F;
 };
 
+struct PreviewPresentationCapture final {
+  render::PreviewGeometry geometry{};
+  render::PreviewStyleOverride style{};
+  std::uint64_t contentRevision = 0;
+  std::uint64_t surfaceGeneration = 0;
+};
+
 // Application composition root. It owns no canonical document state: the
 // production runtime modules remain the owners of input, ink, interaction,
 // render and presentation semantics.
@@ -91,7 +101,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                 public interaction::SceneQueryPort,
                                 public interaction::ViewStatePort,
                                 public interaction::OperationSubmitPort,
+                                public interaction::HistorySubmitPort,
                                 public interaction::TransientPresentationPort {
+  friend class InkPlaygroundHistoryTestAccess;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   InkPlaygroundHost();
@@ -142,6 +154,16 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                        bool predicted = false,
                                        bool renderPreview = true) noexcept;
   [[nodiscard]] bool presentBrushPreview() noexcept;
+  [[nodiscard]] bool capturePreviewPresentation(
+      PreviewPresentationCapture& capture) noexcept;
+  [[nodiscard]] bool renderPreviewPresentation(
+      const PreviewPresentationCapture& capture,
+      std::uint64_t* presentCount = nullptr) noexcept;
+  [[nodiscard]] bool acknowledgePreviewPresentation(
+      const PreviewPresentationCapture& capture,
+      std::uint64_t presentCount) noexcept;
+  void setPreviewOverlayVisible(bool visible) noexcept;
+  void setPlatformPresentationDeferred(bool deferred) noexcept;
   [[nodiscard]] bool finishBrushSession(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool cancelBrushSession(std::uint64_t pointerId) noexcept;
   [[nodiscard]] std::vector<render::BrushRenderPoint> brushRenderPoints() const;
@@ -163,8 +185,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
     return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
   }
   [[nodiscard]] std::uint64_t canonicalCommitOrdinal() const noexcept {
-    return lastCanonicalIdentity_.has_value()
-        ? lastCanonicalIdentity_->commit.ordinal.value() : 0U;
+    return canonicalCommitClock_.lastCommittedOrdinal().value();
   }
   [[nodiscard]] std::size_t semanticObjectCount() const noexcept {
     return semanticObjects_.size();
@@ -210,6 +231,11 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool rebindPreviewSurface() noexcept;
   [[nodiscard]] bool registerSurfaceProvider(std::string profileId,
                                               std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
+  [[nodiscard]] bool selectCanonicalSurfaceProfile(std::string_view profileId,
+                                                    std::uint64_t expectedGeneration,
+                                                    render::RenderTargetFormat format =
+                                                        render::RenderTargetFormat::kBgra8888) noexcept;
+  [[nodiscard]] bool rebindCanonicalSurface(std::uint64_t expectedGeneration) noexcept;
   [[nodiscard]] bool registerPreviewSurfaceProvider(std::string profileId,
                                                     std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
   [[nodiscard]] render::SkiaSurfaceProvider* activeSurfaceProvider() noexcept;
@@ -223,9 +249,18 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t surfaceLostCount() const noexcept { return surfaceLostEvents_; }
   [[nodiscard]] std::uint64_t rebindEventCount() const noexcept { return rebindEvents_; }
   [[nodiscard]] bool previewActive() const noexcept;
+  [[nodiscard]] std::size_t pendingCanonicalHandoffCount() const noexcept {
+    return pendingCanonicalIdentities_.size();
+  }
   [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
                                            double frameMs,
                                            bool retirePreview = true) noexcept;
+  // A deferred platform presenter uses this bit to schedule a Canonical
+  // redraw after a viewport-only change.  It is cleared only after the
+  // current viewport has been successfully presented.
+  [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
+    return canonicalPresentationDirty_;
+  }
   [[nodiscard]] std::uint64_t canonicalFrameCount() const noexcept {
     return canonicalFrameCount_;
   }
@@ -252,6 +287,22 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] std::size_t submittedOperationCount() const noexcept {
     return submittedOperationCount_;
   }
+  [[nodiscard]] bool canUndo() const noexcept {
+    return historySceneReady() && !coordinator_->viewportClaimed() &&
+           brushSessions_.empty() && eraserTraces_.empty() &&
+           keyedStrokeIds_.empty() && history_.canUndo();
+  }
+  [[nodiscard]] bool canRedo() const noexcept {
+    return historySceneReady() && !coordinator_->viewportClaimed() &&
+           brushSessions_.empty() && eraserTraces_.empty() &&
+           keyedStrokeIds_.empty() && history_.canRedo();
+  }
+  [[nodiscard]] bool undo() noexcept {
+    return canUndo() && history_.undo();
+  }
+  [[nodiscard]] bool redo() noexcept {
+    return canRedo() && history_.redo();
+  }
   void recordPresentation(std::string evidenceKind, std::size_t pendingHandoffs,
                           double frameMs);
 
@@ -261,6 +312,13 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t generation() const noexcept override { return 1; }
   [[nodiscard]] interaction::SubmitResult submit(
       const interaction::OperationRequest&) override;
+  [[nodiscard]] semantic::OperationId allocateOperationId() override;
+  [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
+  [[nodiscard]] bool historySceneReady() const noexcept;
+  [[nodiscard]] bool recoverHistoryScene() noexcept;
+  [[nodiscard]] interaction::SubmitResult submit(
+      std::span<const semantic::Operation> operations,
+      semantic::ApplySource source) override;
   void cancel(std::uint64_t) noexcept override;
 
   std::unique_ptr<input::InputRouter> input_;
@@ -296,6 +354,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::uint64_t brushResolvedStateDigest_ = 0;
   std::string brushPackageDigest_;
   std::uint64_t brushPreviewDigest_ = 0;
+  mutable std::recursive_mutex previewStateMutex_;
   std::uint64_t brushSealedOutlineDigest_ = 0;
   std::uint64_t brushReplayDigest_ = 0;
   std::vector<BaselineTraceSample> baselineTrace_;
@@ -313,6 +372,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   semantic::CanonicalCommitClock canonicalCommitClock_{semantic::RuntimeEpoch{1}};
   semantic::OperationEngine operationEngine_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
+  std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;
@@ -320,8 +380,14 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
+  interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;
+  render::SkiaRenderer previewRenderer_;
+  mutable std::mutex previewRenderMutex_;
+  mutable std::mutex previewProviderMutex_;
   std::uint64_t canonicalFrameCount_ = 0;
+  bool canonicalPresentationDirty_ = false;
+  bool platformPresentationDeferred_ = false;
   std::uint64_t resizeEvents_ = 0;
   std::uint64_t surfaceLostEvents_ = 0;
   std::uint64_t rebindEvents_ = 0;
