@@ -1,0 +1,9 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.5-DEBUG-QUEUE-WARNINGS",
+  "implementation": {"authorized_mutation_scope": ["debug_ui/include/canvas/debug_ui/debug_command_queue.hpp", "apps/ink_playground/tests/debug_queue_warning_contract_test.py", ".aegis/packages/GT-G4.5-DEBUG-QUEUE-WARNINGS/**", ".aegis/results/GT-G4.5-DEBUG-QUEUE-WARNINGS/**"], "required_changes": ["Parenthesize four mixed logical conditions and preserve semantics.", "Add static contract regression."], "forbidden_changes": ["No runtime behavior or public API changes."]},
+  "tests": {"required": ["warning contract", "clang-cl Debug UI consumer build", "existing Windows focused CTest", "git diff --check"]},
+  "terminal_success": {"all_of": ["clang-cl consumer build passes", "existing Windows host checks remain green", "required PR checks pass", "return READY_FOR_CONTROL_REVIEW without Gate PASS claim"]},
+  "terminal_blockers": {"explicit_classes": ["ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "BLOCKED_EVIDENCE"]},
+  "return_policy": {"continue_until_terminal_state": true, "return_surface": "CONTROL_REVIEW"}
+}
