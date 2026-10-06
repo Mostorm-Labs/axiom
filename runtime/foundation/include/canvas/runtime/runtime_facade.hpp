@@ -57,6 +57,10 @@ struct RuntimeDiagnosticsSnapshot final {
   float cameraTranslationY = 0.0F;
   bool canUndo = false;
   bool canRedo = false;
+  std::uint64_t overlayUpdateCount = 0;
+  std::uint64_t transientTransformCount = 0;
+  std::uint64_t canonicalOperationCount = 0;
+  std::uint64_t cameraGeneration = 0;
 };
 
 class RuntimeDiagnostics : public DiagnosticsProvider {

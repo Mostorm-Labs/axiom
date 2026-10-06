@@ -204,7 +204,8 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             static_cast<std::uint32_t>(state_.selectedTool),
             state_.host->surface().generation, viewport.scale,
             viewport.translationX, viewport.translationY,
-            state_.host->canUndo(), state_.host->canRedo()};
+            state_.host->canUndo(), state_.host->canRedo(),
+            0U, 0U, static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();

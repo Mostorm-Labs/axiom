@@ -1,0 +1,109 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-A",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "runtime/render/**",
+      "runtime/interaction/**",
+      "runtime/foundation/**",
+      "apps/ink_playground/**",
+      ".aegis/packages/GT-G4.6-A/**",
+      ".aegis/results/GT-G4.6-A/**"
+    ],
+    "required_changes": [
+      "Reconcile exact existing seams at the anchor before mutation: SelectionState/SelectionSession, TransformSession/TransientSceneOverride, FrameState/RenderViewRuntime, RuntimeFacade, current render composition seam.",
+      "Add a per-view EditingOverlay state/presentation seam without changing shared RuntimeScene ownership.",
+      "Implement production selection outline, hover/active handles, capability-driven corner/side/rotation handles, oriented selection geometry, screen-space vector chrome and independent hit-slop geometry.",
+      "Wire handle hit/drag to the existing TransformSession and transient override; chrome follows preview geometry; final commit remains the existing SetTransforms path.",
+      "Expose diagnostics needed by G4.6-C: overlay update count, transient transform count, view/camera generation and canonical operation count.",
+      "Preserve existing Undo/Redo behavior and interaction/brush/Arc regression behavior."
+    ],
+    "forbidden_changes": [
+      "Do not add or change canonical ObjectKind, Operation, PropertyBag fields, selection schema, or transform semantics.",
+      "Do not submit SetTransforms on pointer-move frames.",
+      "Do not write chrome/handle state into SemanticDocument or shared RuntimeScene.",
+      "Do not replace existing SelectionSession, TransformSession, EditorHistory, InputRouter, BrushEngine or Arc ownership.",
+      "Do not implement viewport-fit or snap policy beyond the seams required for package B.",
+      "Do not implement G5 cache/tile/scheduler optimizations."
+    ]
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "G46A-T1",
+        "command_or_oracle": "build all affected runtime/render/interaction targets and run focused CTest",
+        "expected_result": "all affected targets/tests pass",
+        "blocking_reason": "compile/regression"
+      },
+      {
+        "id": "G46A-T2",
+        "command_or_oracle": "overlay isolation + two-view test",
+        "expected_result": "zero semantic/shared-scene mutation; independent view state",
+        "blocking_reason": "ownership invariant"
+      },
+      {
+        "id": "G46A-T3",
+        "command_or_oracle": "zoom/DPR selection chrome matrix",
+        "expected_result": "stable logical-pixel visual size and independent hit slop",
+        "blocking_reason": "presentation contract"
+      },
+      {
+        "id": "G46A-T4",
+        "command_or_oracle": "move/resize/rotate/cancel operation ledger",
+        "expected_result": "0 canonical ops during drag; exactly 1 on commit; 0 on cancel",
+        "blocking_reason": "canonical mutation invariant"
+      },
+      {
+        "id": "G46A-T5",
+        "command_or_oracle": "existing G4/G4.5/Undo focused regressions + git diff --check",
+        "expected_result": "green",
+        "blocking_reason": "upstream preservation"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "repository required CI for affected C++/platform targets"
+    ],
+    "optional": [
+      "Windows/Web/Android smoke at this slice"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "overlay isolation",
+      "chrome zoom/DPR matrix",
+      "transform operation ledger",
+      "focused regression results",
+      "scope audit"
+    ],
+    "corroborative": [
+      "screenshots/video of styling"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Required editing-overlay/selection/transform presentation is implemented on a reviewer-accessible exact result revision.",
+      "All frozen automated obligations pass.",
+      "No upstream canonical/brush/Arc semantics changed.",
+      "Return READY_FOR_CONTROL_REVIEW; do not claim G4.6 Gate PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
