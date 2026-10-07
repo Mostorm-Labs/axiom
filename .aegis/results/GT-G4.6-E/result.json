@@ -2,7 +2,7 @@
   "task_id": "GT-G4.6-E",
   "stage": "P32",
   "state": "AWAITING_HOSTED_VERIFICATION",
-  "result_revision": "a4581e14585c0412f0a7e93ff5d6b4bc9b822ff2",
+  "result_revision": "47a3d917ebef971e7c2ce0b9dc4ef731560f0639",
   "package_materialization_ref": "0460c6b2a3ca63c13cf3595592275cee2ea43c17",
   "execution_ref": "codex/g4-6-e-transform-host",
   "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
@@ -30,7 +30,8 @@
     "input_and_transform": "PASS (fresh after capture-release fix)",
     "module_boundaries": "PASS",
     "diff_check": "PASS",
-    "locked_sdk_offline": "PASS"
+    "locked_sdk_offline": "PASS",
+    "final_build_log": "build-final.log"
   },
   "physical_verification": "NOT_PERFORMED",
   "hosted_verification": "required on exact evidence head before READY_FOR_CONTROL_REVIEW",
@@ -62,11 +63,11 @@
     },
     {
       "path": ".aegis/results/GT-G4.6-E/input-and-transform.log",
-      "sha256": "a8b90befe3813841c4ad42aba4f29e09486274dbf7157f33c4a32a9b8987eb7d"
+      "sha256": "6c073a02219454a7cc7b48debac6b934a60284161a29c89a089f7ff6c70a6ca9"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/scope-audit.json",
-      "sha256": "96480bc3f1fe5fb4d1877f740b24b6be09c73c62cdc474c0cc19eca09a7526bc"
+      "sha256": "135c4770f78fa197b185b7dba174cd5dcd8fff97aacae1803a6261e097d3c360"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/boundary.log",
@@ -99,10 +100,24 @@
     {
       "path": ".aegis/results/GT-G4.6-E/sdk-offline.log",
       "sha256": "8b55025fa4f21af106c631f64ce5e2dd64c3b627a2ba1e229953951ae9c94bc0"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/build-final.log",
+      "sha256": "6757a6959438ff6541e4b563a194295274023a26fcc530fd46e32bac702a77f6"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/windows-selection.log",
+      "sha256": "28dc618390dd505b8d098fc0db9dd283dfbd84b3a0570d4d5cb6c69e48bab974"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/tool-capture-red.log",
+      "sha256": "20a7ec661d281fad69c49f285738045499b76d525cb04168033ba205d18c44ca"
     }
   ],
-  "materialized_ref": "a4581e14585c0412f0a7e93ff5d6b4bc9b822ff2",
-  "implementation_result_revision": "13a12ebe",
-  "status": "AWAITING_HOSTED_VERIFICATION",
-  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI; no G4.6/P34 PASS"
+  "implementation_result_revision": "47a3d917ebef971e7c2ce0b9dc4ef731560f0639",
+  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI; no G4.6/P34 PASS",
+  "reviewer_materialization": {
+    "pull_request": "https://github.com/Mostorm-Labs/axiom/pull/142",
+    "rule": "Evidence commit and hosted check head are reported externally after durable push; this artifact has no self-referential SHA requirement."
+  }
 }

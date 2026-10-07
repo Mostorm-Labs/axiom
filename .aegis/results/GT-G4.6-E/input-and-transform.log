@@ -1,3 +1,8 @@
+PASS: real selection-pointer resize preview/commit/history
+PASS: cancel/tool/resize/loss/invalid/focus leave zero mutations
+PASS: secondary cannot steal; no-op/rejected release mutate zero
+PASS: viewport zoom/pan, repeated side/corner/rotate/move and exact history pixels
+PASS: accepted commit remains in history when derived publication fails
 [axiom] finish begin pointer=700 objects=0 scene_gen=0
 [axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
@@ -94,11 +99,12 @@
 [axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
 [axiom] present begin frame=2 objects=1 scene_records=1
-PASS: real selection-pointer resize preview/commit/history
-PASS: cancel/tool/resize/loss/invalid/focus leave zero mutations
-PASS: secondary cannot steal; no-op/rejected release mutate zero
-PASS: viewport zoom/pan, repeated side/corner/rotate/move and exact history pixels
-PASS: accepted commit remains in history when derived publication fails
+Input preview acquisitions=45
+cancel message=256
+cancel message=8
+cancel message=533
+cancel message=5
+PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale
 [axiom] present begin frame=1 objects=0 scene_records=0
 [axiom] present begin frame=2 objects=0 scene_records=0
 [axiom] present begin frame=3 objects=0 scene_records=0
@@ -109,7 +115,6 @@ PASS: accepted commit remains in history when derived publication fails
 [axiom] finish begin pointer=4294967295 objects=1 scene_gen=1
 [axiom] scene apply pointer=4294967295 ok=1 objects=2 scene_gen=2
 [axiom] present begin frame=6 objects=2 scene_records=2
-Input preview acquisitions=50
 [axiom] finish begin pointer=4294967295 objects=2 scene_gen=2
 [axiom] scene apply pointer=4294967295 ok=1 objects=3 scene_gen=3
 [axiom] present begin frame=7 objects=3 scene_records=3
@@ -131,8 +136,3 @@ Input preview acquisitions=50
 [axiom] finish begin pointer=900 objects=0 scene_gen=0
 [axiom] scene apply pointer=900 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
-cancel message=256
-cancel message=8
-cancel message=533
-cancel message=5
-PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale

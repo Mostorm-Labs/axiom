@@ -8,7 +8,7 @@
 [axiom] finish begin pointer=4294967295 objects=1 scene_gen=1
 [axiom] scene apply pointer=4294967295 ok=1 objects=2 scene_gen=2
 [axiom] present begin frame=6 objects=2 scene_records=2
-Input preview acquisitions=68
+Input preview acquisitions=49
 [axiom] finish begin pointer=4294967295 objects=2 scene_gen=2
 [axiom] scene apply pointer=4294967295 ok=1 objects=3 scene_gen=3
 [axiom] present begin frame=7 objects=3 scene_records=3
@@ -34,4 +34,4 @@ cancel message=256
 cancel message=8
 cancel message=533
 cancel message=5
-PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale
+Assertion failed: GetCapture() != s.window, file D:\GitRepos\mostorm-labs\canvas\apps\ink_playground\tests\windows_preview_dispatch_test.cpp, line 308
