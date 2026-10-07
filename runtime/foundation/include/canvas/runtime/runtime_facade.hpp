@@ -103,9 +103,23 @@ struct ProductControlReceipt final {
   std::uint64_t runtimeGeneration = 0;
 };
 
+enum class SelectionPointerPhase : std::uint8_t { kDown, kMove, kUp, kCancel };
+struct SelectionPointerRequest final {
+  std::uint64_t pointerId = 0;
+  SelectionPointerPhase phase = SelectionPointerPhase::kMove;
+  float viewX = 0.0F;
+  float viewY = 0.0F;
+  std::uint64_t requestId = 0;
+  std::uint64_t runtimeGeneration = 0;
+};
+
 class RuntimeFacade : public RuntimeDiagnostics {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
+      const SelectionPointerRequest& request) noexcept {
+    return {request.requestId, ProductControlState::kUnsupported, request.runtimeGeneration};
+  }
   [[nodiscard]] virtual RuntimeStateSnapshot readRuntimeState() const noexcept {
     const auto diagnostics = readDiagnostics();
     return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,

@@ -375,12 +375,13 @@ void transformClipAndEraseAreObservable() {
     SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
     assert(backend.submit(plan).code == BackendSubmissionCode::kAccepted);
     const auto& observation = *backend.observation();
-    // worldToView first maps x=8 to 8, then record transform moves it to x=11.
+    // ADR-0012: local x=8 -> object/world x=11 -> view x=14.
     assert(pixel(observation, 10U, 8U) == (Rgba{0U, 0U, 0U, 0U}));
-    assert(pixel(observation, 11U, 8U) == (Rgba{255U, 0U, 0U, 255U}));
+    assert(pixel(observation, 11U, 8U) == (Rgba{0U, 0U, 0U, 0U}));
+    assert(pixel(observation, 14U, 8U) == (Rgba{255U, 0U, 0U, 255U}));
     assert(pixel(observation, 39U, 19U) == (Rgba{255U, 0U, 0U, 255U}));
     assert(pixel(observation, 40U, 19U) == (Rgba{0U, 0U, 0U, 0U}));
-    assert(pixel(observation, 11U, 20U) == (Rgba{0U, 0U, 0U, 0U}));
+    assert(pixel(observation, 14U, 20U) == (Rgba{0U, 0U, 0U, 0U}));
 }
 
 void sweptCircleEraseMaskIsRendered() {

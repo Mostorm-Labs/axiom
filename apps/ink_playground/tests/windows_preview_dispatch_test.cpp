@@ -1,6 +1,7 @@
 // Run production Win32 dispatch and Runtime rendering. Synthetic messages are
 // regression tests, not physical mouse/touch qualification.
 #include "../platform/windows/main.cpp"
+#include "ink_playground_history_test_access.hpp"
 #include <cassert>
 #include <chrono>
 #include <iostream>
@@ -251,5 +252,87 @@ void run() {
   stopPreviewRenderPump(s);
   DestroyWindow(s.window);
 }
+void selectionDispatch() {
+  State s;
+  s.host = std::make_unique<InkPlaygroundHost>();
+  assert(s.host->bindSurface(256, 256));
+  s.window = CreateWindowExW(0, L"AxiomPreviewDispatchTest", L"transform dispatch",
+      WS_POPUP, 0, 0, 256, 312, nullptr, nullptr, GetModuleHandleW(nullptr), &s);
+  assert(s.window);
+  s.runtimeFacade = std::make_unique<WindowsRuntimeFacade>(s);
+  assert(s.host->beginBrushSession(900U));
+  assert(s.host->appendBrushSample(900U, 32, 64, 0.5, 1U));
+  assert(s.host->appendBrushSample(900U, 160, 64, 0.5, 2U));
+  assert(s.host->finishBrushSession(900U));
+  assert(s.runtimeFacade->setSelectionMode(true, 1U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(s.host->selectAtViewPoint(80, 64));
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  const auto original = Access::objects(*s.host);
+  const auto operations = s.host->submittedOperationCount();
+  const auto handle = s.host->selectionOverlay()->handle(canvas::render::HandleKind::kRight).center;
+  const auto point = [&](int dx) { return MAKELPARAM(static_cast<short>(handle.x + dx),
+      static_cast<short>(handle.y + State::kToolbarHeight)); };
+  const auto beginDrag = [&] {
+    assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON, point(0)));
+    assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON, point(40)));
+    assert(s.host->selectionTransformActive());
+    assert(s.host->transientTransformCount() == 1U);
+    assert(Access::objects(*s.host) == original);
+  };
+  beginDrag();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0, point(40)));
+  assert(s.host->submittedOperationCount() == operations + 1U);
+  assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+  assert(s.host->undo());
+  const auto afterUndoOperations = s.host->submittedOperationCount();
+  for (const auto message : {WM_KEYDOWN, WM_KILLFOCUS, WM_CAPTURECHANGED, WM_SIZE}) {
+    beginDrag();
+    std::cout << "cancel message=" << message << std::endl;
+    WindowProc(s.window, message, message == WM_KEYDOWN ? VK_ESCAPE : 0U, 0);
+    assert(!s.host->selectionTransformActive());
+    assert(s.host->transientTransformCount() == 0U);
+    assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+    assert(GetCapture() != s.window);
+    assert(Access::objects(*s.host) == original);
+  }
+  beginDrag();
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 77U, reinterpret_cast<LPARAM>(s.window));
+  assert(s.host->selectionTransformActive());
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 77U, 0);
+  assert(!s.host->selectionTransformActive());
+  beginDrag();
+  assert(s.runtimeFacade->setSelectionMode(false, 2U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(!s.host->selectionTransformActive());
+  assert(s.host->submittedOperationCount() == afterUndoOperations);
+  assert(s.runtimeFacade->submitSelectionPointer({77U,
+      canvas::runtime::SelectionPointerPhase::kDown, 80, 64, 3U, 999U}).state ==
+         canvas::runtime::ProductControlState::kRejected);
+  assert(s.runtimeFacade->setSelectionMode(true, 4U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(s.host->selectAtViewPoint(80, 64));
+  using P = canvas::runtime::SelectionPointerPhase;
+  // The production native touch/pen and legacy touch adapters use this same
+  // sequence owner. IDs are independent of the mouse and cannot steal a drag.
+  assert(submitSelectionSample(s, 71U, P::kDown, handle.x, handle.y));
+  assert(submitSelectionSample(s, 72U, P::kDown, handle.x, handle.y));
+  assert(submitSelectionSample(s, 71U, P::kMove, handle.x + 30, handle.y));
+  assert(submitSelectionSample(s, 72U, P::kUp, handle.x + 100, handle.y));
+  assert(s.host->selectionTransformActive());
+  assert(submitSelectionSample(s, 71U, P::kCancel, 0, 0));
+  assert(!s.host->selectionTransformActive());
+  assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+  assert(Access::objects(*s.host) == original);
+  const canvas::debug_ui::DebugInputSequence debugSequence{91U, 1000U};
+  assert(s.inputCapture.begin(debugSequence, canvas::debug_ui::DebugInputOwner::kDebug) ==
+         canvas::debug_ui::DebugInputOwner::kDebug);
+  s.canvasInputSequences[91U] = debugSequence;
+  assert(!submitSelectionSample(s, 91U, P::kDown, handle.x, handle.y));
+  assert(!s.host->selectionTransformActive());
+  clearCanvasInput(s);
+  std::cout << "PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale\n";
+  DestroyWindow(s.window);
 }
-int main() { run(); }
+}
+int main() { run(); selectionDispatch(); }

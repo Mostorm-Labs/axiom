@@ -479,7 +479,7 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
     for (const auto& entry : plan.referenceDrawList.entries) {
         canvas.save();
-        canvas.concat(SkMatrix::Concat(matrix(entry.record.transform), worldMatrix));
+        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry);
         eraseMasks(canvas, entry);
         canvas.restore();
@@ -544,7 +544,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
         canvas->save();
-        canvas->concat(SkMatrix::Concat(matrix(entry.record.transform), worldMatrix));
+        canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(*canvas, entry);
         eraseMasks(*canvas, entry);
         canvas->restore();
