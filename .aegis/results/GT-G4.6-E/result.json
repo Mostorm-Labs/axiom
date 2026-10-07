@@ -34,7 +34,12 @@
       ]
     }
   },
-  "physical_verification": "NOT_PERFORMED",
+  "physical_verification": {
+    "status": "USER_REPORTED_PASS_PENDING_INDEPENDENT_REVIEWER",
+    "source": "User confirmed the current version is working in this chat",
+    "independent_recording_available": false,
+    "blocking_in_package": false
+  },
   "hosted_verification": {
     "status": "PASS_ON_IMPLEMENTATION_HEAD",
     "head_sha": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
@@ -63,7 +68,8 @@
         "status": "success",
         "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482470"
       }
-    ]
+    ],
+    "evidence_head_requirement": "Implementation-head runs below are corroborative. Applicable hosted checks must also complete successfully on the exact evidence materialized_ref before the producer returns READY_FOR_CONTROL_REVIEW; exact run identities are returned externally."
   },
   "official_gate_pass_claimed": false,
   "evidence_refs": [
@@ -105,10 +111,10 @@
     }
   ],
   "implementation_result_revision": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
-  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI on implementation head; no G4.6/P34 PASS",
+  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI on evidence head; no self-referential commit requirement",
   "reviewer_materialization": {
     "pull_request": "https://github.com/Mostorm-Labs/axiom/pull/142",
     "materialized_ref": "refs/heads/codex/g4-6-e-transform-host",
-    "rule": "Evidence commit and hosted check head are reported externally after durable push; this artifact has no self-referential SHA requirement."
+    "rule": "Exact evidence commit and hosted check head are reported externally after durable push. READY_FOR_CONTROL_REVIEW is valid only after all applicable hosted checks pass on that exact evidence commit; no self-referential SHA requirement."
   }
 }
