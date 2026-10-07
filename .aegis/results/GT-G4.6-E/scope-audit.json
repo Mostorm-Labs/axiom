@@ -1,8 +1,8 @@
 {
   "task_id": "GT-G4.6-E",
   "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
-  "result_revision": "05d0b63417c4f1081360e4f55c7b28cf5bfafdc3",
-  "status": "PASS",
+  "result_revision": "a4581e14585c0412f0a7e93ff5d6b4bc9b822ff2",
+  "status": "PASS_WITH_EXTERNAL_CHECKS_PENDING",
   "changed_files": [
     ".aegis/packages/GT-G4.6-E/authority.lock.json",
     ".aegis/packages/GT-G4.6-E/evidence-contract.json",
@@ -41,5 +41,6 @@
     "CMAKE_C_STANDARD=11 for existing Arc C11 test",
     "published Semantic SDK codec enabled",
     "MSVC /wd4100 /wd4189 for generated code"
-  ]
+  ],
+  "materialized_ref": "a4581e14585c0412f0a7e93ff5d6b4bc9b822ff2"
 }
