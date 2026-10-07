@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <array>
 #include <unordered_set>
+#include <chrono>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
@@ -560,7 +561,8 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
   const auto frame = render::FrameState{
       render::ViewId{1},
-      render::CameraState{center, zoom, 0.0F, render::CameraGeneration{1}},
+      render::CameraState{center, zoom, 0.0F,
+                          render::CameraGeneration{cameraGeneration()}},
       foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
       render::SurfaceMetrics{static_cast<float>(surface_.width),
                              static_cast<float>(surface_.height), surface_.width,
@@ -572,12 +574,73 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
-  return selectionView_->editingOverlay().update(render::EditingOverlayInput{
+  const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, record->visualBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
       render::HandleCapabilities{true, true, true}});
+  if (updated) ++selectionOverlayUpdates_;
+  return updated;
+}
+
+bool InkPlaygroundHost::seedQualificationFixture(std::size_t objectCount) noexcept {
+  if (objectCount == 0U || !brushSessions_.empty() || !eraserTraces_.empty() ||
+      !keyedStrokeIds_.empty() || !historySceneReady()) return false;
+  const auto ordinal = localOperationOrdinal();
+  if (ordinal == 0U) return false;
+  semantic::InsertObjectsOp payload;
+  payload.objects.reserve(objectCount);
+  for (std::size_t index = 0; index < objectCount; ++index) {
+    semantic::ObjectRecord object;
+    object.id = foundation::ObjectId::fromUint64(0x400000ULL + index + 1U);
+    object.kind = semantic::ObjectKind::kShape;
+    object.kind_version = 1U;
+    object.placement.order_key = semantic::OrderKey{
+        {static_cast<std::uint8_t>(1U + (index / (254U * 254U))),
+         static_cast<std::uint8_t>(1U + ((index / 254U) % 254U)),
+         static_cast<std::uint8_t>(1U + (index % 254U))}};
+    object.transform.tx = static_cast<double>((index % 8U) * 32U);
+    object.transform.ty = static_cast<double>((index / 8U) * 32U);
+    object.content = semantic::ShapeContent{1U, 24.0, 24.0};
+    payload.objects.push_back(std::move(object));
+  }
+  semantic::Operation operation{
+      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),
+      documentId_, 1U, 1U, std::move(payload)};
+  const auto applied = operationEngine_.apply(
+      operation, semantic::ApplySource::kLocalCommand, semanticObjects_,
+      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied ||
+      !applied.commit_record.has_value()) return false;
+  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+  const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+      applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+  if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+  const auto queryStart = std::chrono::steady_clock::now();
+  const auto query = runtimeSceneHost_->query(canvas::SceneQuery{
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}});
+  const auto queryEnd = std::chrono::steady_clock::now();
+  if (!query) return false;
+  ++submittedOperationCount_;
+  qualificationObservation_.sceneGeneration = runtimeSceneHost_->revision().value();
+  qualificationObservation_.cameraGeneration = cameraGeneration();
+  qualificationObservation_.candidatesExamined = query.value().diagnostics.candidatesExamined;
+  const auto& invalidation = runtimeSceneHost_->invalidationOutput();
+  qualificationObservation_.invalidationRectCount = invalidation.rects.size();
+  qualificationObservation_.fullSceneInvalidation = invalidation.fullScene;
+  qualificationObservation_.queryMs = std::chrono::duration<double, std::milli>(
+      queryEnd - queryStart).count();
+  qualificationObservation_.canonicalOperationCount = submittedOperationCount_;
+  const auto renderStart = std::chrono::steady_clock::now();
+  const bool rendered = presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  const auto renderEnd = std::chrono::steady_clock::now();
+  if (!rendered) return false;
+  qualificationObservation_.renderMs = std::chrono::duration<double, std::milli>(
+      renderEnd - renderStart).count();
+  canonicalPresentationDirty_ = true;
+  return true;
 }
 
 void InkPlaygroundHost::cancelSelectionTransform() noexcept {
@@ -1738,7 +1801,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
                               (centerX - viewport.translationX) / zoom,
                               (centerY - viewport.translationY) / zoom},
                           zoom, 0.0F,
-                          render::CameraGeneration{1}},
+                              render::CameraGeneration{cameraGeneration()}},
       // ReferenceDrawList's clip is a view-space contract in the current
       // renderer authority. Keep it covering the physical target; the
       // camera above carries the actual pinch transform.

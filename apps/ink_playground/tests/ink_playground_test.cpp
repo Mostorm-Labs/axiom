@@ -247,6 +247,52 @@ void selection_input_does_not_mutate_canonical_test() {
   assert(host.canonicalStrokes().empty());
   assert(host.brushPreviewOutlines().empty());
 }
+
+void qualification_view_observations_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginBrushSession(900U));
+  assert(host.appendBrushSample(900U, 40.0, 40.0, 0.5, 1U));
+  assert(host.appendBrushSample(900U, 140.0, 40.0, 0.5, 2U));
+  assert(host.finishBrushSession(900U));
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(80.0F, 40.0F));
+  const auto before = host.selectionOverlay()->updateCount();
+  assert(before > 0U);
+  assert(host.applyViewportNavigation({
+      canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+      0.0F, 0.0F, 128.0F, 128.0F, 1.5F}));
+  assert(host.renderSelectionOverlay());
+  assert(host.selectionOverlay()->viewGeneration() == host.cameraGeneration());
+  assert(host.selectionOverlayUpdates() > before);
+}
+
+void qualification_fixture_uses_canonical_operation_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  const auto before = host.submittedOperationCount();
+  assert(host.seedQualificationFixture(3U));
+  assert(host.qualificationObjectCount() == 3U);
+  assert(host.submittedOperationCount() == before + 1U);
+  assert(host.semanticGeneration().value() == 1U);
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(16.0F, 16.0F));
+  assert(host.selectionTransformActive() == false);
+  assert(host.submittedOperationCount() == before + 1U);
+}
+
+void qualification_metrics_are_real_observations_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.seedQualificationFixture(4U));
+  const auto metrics = host.qualificationObservation();
+  assert(metrics.sceneGeneration == host.qualificationSceneGeneration());
+  assert(metrics.cameraGeneration == host.cameraGeneration());
+  assert(metrics.candidatesExamined > 0U);
+  assert(metrics.invalidationRectCount > 0U || metrics.fullSceneInvalidation);
+  assert(metrics.queryMs >= 0.0);
+  assert(metrics.renderMs >= 0.0);
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -263,6 +309,9 @@ int main(int argc, char** argv) {
   else if (mode == "viewport-fit") viewport_fit_and_generation_test();
   else if (mode == "android-pointer-identity") android_pointer_identity_test();
   else if (mode == "multi-contact-policy") multi_contact_policy_selection_test();
+  else if (mode == "qualification-observations") qualification_view_observations_test();
+  else if (mode == "qualification-fixture") qualification_fixture_uses_canonical_operation_test();
+  else if (mode == "qualification-metrics") qualification_metrics_are_real_observations_test();
   else if (mode == "selection") selection_input_does_not_mutate_canonical_test();
   else return 2;
   return 0;
