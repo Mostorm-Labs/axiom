@@ -1,0 +1,138 @@
+{
+  "schema_version": "aegis-control-review-v1",
+  "task_id": "GT-G4.6-C",
+  "stage": "P31_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "repository": "Mostorm-Labs/axiom",
+  "reviewed_branch": "codex/g4-6-c-qualification",
+  "reviewed_head": "b873fcfbd9e8252f1a97db273745dd0bcc92656a",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/pull/144",
+  "package_ref": ".aegis/packages/GT-G4.6-C/package.json",
+  "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "package_revision": "v0.2-p31-binding-repair",
+  "package_sha256": "c7aee19f4bc4e2659764057e61f8aded615c327e81ffaf1bbeb4e7a34a426336",
+  "review_evidence_ref": {
+    "path": ".aegis/results/GT-G4.6-C/p31-review-audit.json",
+    "sha256": "48b8dbdc205cc656fbeefe6693aafa4b7aac3d62a89263d25f9631882ac6b2eb"
+  },
+  "task_anchor": {
+    "revision": "cc985b174cafc5d5dd743bd66701cfe117278de8",
+    "relation": "ancestor",
+    "observed_in_reviewed_head": true
+  },
+  "audits": {
+    "repository_identity": {
+      "status": "PASS",
+      "remote": "https://github.com/Mostorm-Labs/Axiom.git",
+      "resolved_repository": "Mostorm-Labs/axiom",
+      "pull_request_head_exact": true
+    },
+    "package_binding": {
+      "status": "PASS",
+      "authority_sha256": "b5b86347b5380b0d7e248a0dfbdb8d40e5dbf5a266eae5acca7b77a49106e289",
+      "verification_sha256": "81052e744df96d801efff18a051d9d50a15f44e3846a71cc38cce7a1142e4ced",
+      "execution_sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+      "evidence_sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+      "implementation_context_sha256": "53cde8ca4627d74ecde6ab6af063bf248f3113d6ff5f681c2aac01e0499a1242",
+      "source_snapshots": "PASS",
+      "committed_blob_hashes": "PASS"
+    },
+    "predecessor_bindings": {
+      "status": "PASS",
+      "GT-G4.6-A": {
+        "result_revision": "58868e060d3c0327bcff7823c924188cd808ee6b",
+        "accepted_capability": "PASS_G4_6_A_EDITING_PRESENTATION",
+        "control_review_ref": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json",
+        "ancestry": "PASS"
+      },
+      "GT-G4.6-B": {
+        "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+        "accepted_capability": "PASS_G4_6_B_VIEW_CONSTRAINT_PRESENTATION",
+        "control_review_ref": ".aegis/results/GT-G4.6-B/p34-control-review.json",
+        "materialized_baseline": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+        "ancestry": "PASS"
+      }
+    },
+    "frozen_requirement_audit": {
+      "status": "PASS",
+      "passed": [
+        "C composes accepted A/B and existing G4.5 Pen/Laser owners without redefining interaction or brush semantics",
+        "qualification bundle, platform qualification, workload corpus, coexistence, and regression obligations are explicit",
+        "Windows/Web/Android physical checklist remains blocking for C terminal success",
+        "100K transform/overlay/active-ink workload categories and required observations are preserved",
+        "forbidden G4.7, G5, canonical schema, BrushEngine, Arc, InputRouter, and Undo/Redo expansion is explicit",
+        "authorized mutation scope is bounded and excludes runtime production implementation files"
+      ],
+      "failed": []
+    },
+    "frozen_evidence_audit": {
+      "status": "PASS",
+      "passed": [
+        "all five blocking obligations retain distinct requirement, oracle, acceptance, and evidence mappings",
+        "exact result revision, artifact hash, platform/device profile, scenario, workload digest, and hosted provider identity fields are required",
+        "physical templates, pending records, and synthetic timings cannot be promoted to PASS",
+        "review boundary requires reviewer-accessible artifacts at an exact result revision"
+      ],
+      "failed": []
+    },
+    "repository_reality_audit": {
+      "status": "PASS",
+      "changed_paths": 12,
+      "production_files_changed": false,
+      "scope_diff": "PASS: all changes from the B baseline are C package/result metadata",
+      "git_diff_check": "PASS",
+      "source_owner_feasibility": "PASS_P31: existing SelectionSession, TransformSession/TransientSceneOverride, FrameState/RenderViewRuntime, RuntimeFacade, and G4.5 brush/Laser owners are present; C integration is not yet implemented",
+      "predecessor_b_provider_identity": "PASS: four historical runs, attempt 1, nine successful jobs resolve to d9423fe90cfb6109fcb3914e69b4c27c01b646b4; these are predecessor evidence, not C qualification",
+      "original_closure_preserved": "PASS: mutation scope, required/forbidden changes, six physical scenarios, eleven workloads, terminal success/blockers, and required artifacts match the original materialization"
+    }
+  },
+  "findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "C-P31-F1",
+        "classification": "NON_BLOCKING_FINDING",
+        "finding": "Web and Android adapters do not yet expose every selection/transform entry point.",
+        "impact": "C P32 must wire existing common owners or emit an exact capability blocker; it must not invent replacement scene or transform semantics.",
+        "disposition": "P32 execution constraint explicitly covered by package context and contract"
+      },
+      {
+        "id": "C-P31-F2",
+        "classification": "NON_BLOCKING_FINDING",
+        "finding": "No C qualification result, physical observation record, workload replay corpus, or hosted C provider run exists at P31 review time.",
+        "impact": "These are required C P32/P33 execution outputs and remain blocking for C terminal success.",
+        "disposition": "deferred to frozen P32 execution; absence does not invalidate a readiness package"
+      },
+      {
+        "id": "C-P31-F3",
+        "classification": "NON_BLOCKING_FINDING",
+        "finding": "The preserved Notion snapshots report native verification as unverified and the broad project-state cache is stale.",
+        "impact": "The repo-materialized locks, source hashes, and accepted predecessor records provide the declared execution authority; no freshness or supersession conflict was found.",
+        "disposition": "retain as provenance note; no Authority reopening"
+      },
+      {
+        "id": "C-P31-F4",
+        "classification": "NON_BLOCKING_FINDING",
+        "finding": "A records an existing full-build failure outside its focused acceptance scope; its accepted finding is not a C regression waiver.",
+        "impact": "C must enumerate, build and run the applicable frozen inventory. Any required failure or Not Run remains a blocker; unrelated baseline failures retain exact identity and disposition.",
+        "disposition": "apply the existing C regression contract without changing accepted A/B decisions or excluding required tests"
+      }
+    ]
+  },
+  "verdict": "PASS_WITH_FINDINGS",
+  "p31_authorized": true,
+  "next_stage": "GT-G4.6-C_P32_CODE_EXECUTION",
+  "terminal_state": "READY_FOR_P32",
+  "execution_entry_conditions": [
+    "Resolve this reviewed package revision and the durable review record independently before production mutation.",
+    "Run repository/package/evidence preflight and ImplementationDesignPreflight on descendant reality, preserving valid ancestry.",
+    "Wire platform adapters to existing owners; unresolved authority, verification, or scope decisions fail closed.",
+    "Materialize replay fixtures, artifact schemas, exact hosted providers and capability-profiled physical records under the frozen five obligations.",
+    "Automated readiness is a checkpoint; C terminal success still requires all applicable automated and physical obligations."
+  ],
+  "official_g4_6_gate_pass": false,
+  "official_g4_6_c_pass": false,
+  "reviewed_at_utc": "2026-10-07",
+  "review_boundary_note": "This record independently accepts the C P31 execution package for implementation. It is not a P32 result, P34 Gate decision, capability PASS, or overall G4.6 Gate PASS."
+}

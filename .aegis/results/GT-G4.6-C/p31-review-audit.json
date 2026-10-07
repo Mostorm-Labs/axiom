@@ -1,0 +1,360 @@
+{
+  "schema_version": "aegis-p31-independent-audit-v1",
+  "task_id": "GT-G4.6-C",
+  "reviewed_revision": "b873fcfbd9e8252f1a97db273745dd0bcc92656a",
+  "observed_at_utc": "2026-10-07T10:47:11.078964+00:00",
+  "repository_identity": {
+    "nameWithOwner": "Mostorm-Labs/axiom",
+    "url": "https://github.com/Mostorm-Labs/axiom"
+  },
+  "pull_request": {
+    "baseRefName": "codex/g4-6-b-view-constraint",
+    "baseRefOid": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+    "headRefName": "codex/g4-6-c-qualification",
+    "headRefOid": "b873fcfbd9e8252f1a97db273745dd0bcc92656a",
+    "isDraft": true,
+    "state": "OPEN",
+    "statusCheckRollup": [],
+    "url": "https://github.com/Mostorm-Labs/axiom/pull/144"
+  },
+  "package_sha256": "c7aee19f4bc4e2659764057e61f8aded615c327e81ffaf1bbeb4e7a34a426336",
+  "bindings": [
+    {
+      "name": "authority_lock_ref",
+      "path": ".aegis/packages/GT-G4.6-C/authority.lock.json",
+      "sha256": "b5b86347b5380b0d7e248a0dfbdb8d40e5dbf5a266eae5acca7b77a49106e289",
+      "status": "PASS"
+    },
+    {
+      "name": "verification_lock_ref",
+      "path": ".aegis/packages/GT-G4.6-C/verification.lock.json",
+      "sha256": "81052e744df96d801efff18a051d9d50a15f44e3846a71cc38cce7a1142e4ced",
+      "status": "PASS"
+    },
+    {
+      "name": "execution_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-C/execution-contract.json",
+      "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+      "status": "PASS"
+    },
+    {
+      "name": "evidence_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-C/evidence-contract.json",
+      "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+      "status": "PASS"
+    },
+    {
+      "name": "implementation_context_ref",
+      "path": ".aegis/packages/GT-G4.6-C/implementation-context.md",
+      "sha256": "53cde8ca4627d74ecde6ab6af063bf248f3113d6ff5f681c2aac01e0499a1242",
+      "status": "PASS"
+    },
+    {
+      "name": "scope_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-C/execution-contract.json",
+      "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+      "status": "PASS"
+    },
+    {
+      "name": "evidence_compilation_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-C/evidence-contract.json",
+      "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+      "status": "PASS"
+    }
+  ],
+  "sources": [
+    {
+      "path": ".aegis/packages/GT-G4.6-C/sources/architecture.json",
+      "source_id": "3e04c57a590c811cbda0f366fcf2c126",
+      "revision": "2026-09-19T15:40:17.184Z",
+      "snapshot_sha256": "c2cb3afa406c67d07d5aa9a69a0a37cc1cab703a0b1730dd861f63070408f815",
+      "content_sha256": "4d236388e6fa2bf002d4cf92eb89708e3073db029b46f62f1a91b094db917cb6",
+      "native_verification": {
+        "state": "unverified"
+      },
+      "status": "PASS"
+    },
+    {
+      "path": ".aegis/packages/GT-G4.6-C/sources/roadmap.json",
+      "source_id": "3e04c57a590c81a0a7c9fcdb11e1b089",
+      "revision": "2026-10-04T13:28:16.316Z",
+      "snapshot_sha256": "0c1ba8bab53f2ddab217c0c7f69949fda37332a71ea56db42e034eaa50c32948",
+      "content_sha256": "3fe21f38450aeea07fb00b16f00cbdca3b5b58188186888d2942f9b3234d014b",
+      "native_verification": {
+        "state": "unverified"
+      },
+      "status": "PASS"
+    },
+    {
+      "path": ".aegis/packages/GT-G4.6-C/sources/compressed-p31.json",
+      "source_id": "3f14c57a590c81f0bebcffc4650876d1",
+      "revision": "2026-10-06T08:47:44.326Z",
+      "snapshot_sha256": "d7c4f28b072a5facc3a828b99916a57aca4c22a581d76e7ebe25cbb9a4aa5872",
+      "content_sha256": "8bed29c968eb5d263ba3a067e05d068655502431183237c1ae90b3e63716c082",
+      "native_verification": {
+        "state": "unverified"
+      },
+      "status": "PASS"
+    }
+  ],
+  "predecessors": [
+    {
+      "task_id": "GT-G4.6-A",
+      "result_revision": "58868e060d3c0327bcff7823c924188cd808ee6b",
+      "ancestry": "PASS",
+      "refs": [
+        {
+          "kind": "control_review_ref",
+          "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+          "path": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json",
+          "sha256": "0ab60b0077332e59de257b961390dfec02c4b655a65a24b601bb5e3b74eb764f",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "task_id": "GT-G4.6-B",
+      "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "ancestry": "PASS",
+      "refs": [
+        {
+          "kind": "control_review_ref",
+          "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+          "path": ".aegis/results/GT-G4.6-B/p34-control-review.json",
+          "sha256": "659f314fcca638522e3164d2da41bad61fc5ee46b6e1920161404e04a19b340f",
+          "status": "PASS"
+        },
+        {
+          "kind": "result_ref",
+          "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+          "path": ".aegis/results/GT-G4.6-B/result.json",
+          "sha256": "7ec4c9c5d865206e1f002664508bc97084396be07bc0ff6a22b931ca2e0349e8",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "anchor_and_baseline_ancestry": "PASS",
+  "original_contract_preservation": [
+    {
+      "section": "authority.physical_policy",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "authority.frozen_workloads",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "authority.forbidden_authority_expansion",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "implementation.authorized_mutation_scope",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "implementation.required_changes",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "implementation.forbidden_changes",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "closure.evidence",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "closure.terminal_success",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "closure.terminal_blockers",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "evidence.required_artifacts",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "evidence.review_boundary",
+      "status": "UNCHANGED"
+    },
+    {
+      "section": "evidence.producer_may_claim_gate_pass",
+      "status": "UNCHANGED"
+    }
+  ],
+  "obligation_audit": [
+    {
+      "id": "G46C-BUNDLE-001",
+      "acceptance_separate_from_oracle": true,
+      "mapped_artifacts": [
+        "build-manifest.json",
+        "scenario-manifest.json",
+        "hud-metrics.json"
+      ],
+      "blocking": true,
+      "status": "PASS_P31_MAPPING"
+    },
+    {
+      "id": "G46C-PHYS-002",
+      "acceptance_separate_from_oracle": true,
+      "mapped_artifacts": [
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json"
+      ],
+      "blocking": true,
+      "status": "PASS_P31_MAPPING"
+    },
+    {
+      "id": "G46C-WORKLOAD-003",
+      "acceptance_separate_from_oracle": true,
+      "mapped_artifacts": [
+        "workload-corpus-manifest.json",
+        "hud-metrics.json"
+      ],
+      "blocking": true,
+      "status": "PASS_P31_MAPPING"
+    },
+    {
+      "id": "G46C-COEXIST-004",
+      "acceptance_separate_from_oracle": true,
+      "mapped_artifacts": [
+        "hud-metrics.json",
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json",
+        "regression-matrix.json"
+      ],
+      "blocking": true,
+      "status": "PASS_P31_MAPPING"
+    },
+    {
+      "id": "G46C-REGRESS-005",
+      "acceptance_separate_from_oracle": true,
+      "mapped_artifacts": [
+        "regression-matrix.json",
+        "scope-audit.json"
+      ],
+      "blocking": true,
+      "status": "PASS_P31_MAPPING"
+    }
+  ],
+  "physical_scenario_count": 6,
+  "frozen_workload_count": 11,
+  "package_delta_paths": [
+    ".aegis/packages/GT-G4.6-C/.gitattributes",
+    ".aegis/packages/GT-G4.6-C/authority.lock.json",
+    ".aegis/packages/GT-G4.6-C/evidence-contract.json",
+    ".aegis/packages/GT-G4.6-C/execution-contract.json",
+    ".aegis/packages/GT-G4.6-C/implementation-context.md",
+    ".aegis/packages/GT-G4.6-C/package.json",
+    ".aegis/packages/GT-G4.6-C/sources/architecture.json",
+    ".aegis/packages/GT-G4.6-C/sources/compressed-p31.json",
+    ".aegis/packages/GT-G4.6-C/sources/roadmap.json",
+    ".aegis/packages/GT-G4.6-C/verification.lock.json",
+    ".aegis/results/GT-G4.6-C/.gitattributes",
+    ".aegis/results/GT-G4.6-C/p31-materialization-preflight.json"
+  ],
+  "b_review_only_delta": [
+    ".aegis/results/GT-G4.6-B/hosted-provider-evidence.json",
+    ".aegis/results/GT-G4.6-B/p34-control-review.json",
+    ".aegis/results/GT-G4.6-B/repo-reconciliation.json",
+    ".aegis/results/GT-G4.6-B/result.json"
+  ],
+  "predecessor_b_provider_observations": [
+    {
+      "id": 37596639205,
+      "run_attempt": 1,
+      "head_sha": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "conclusion": "success",
+      "workflow_path": ".github/workflows/rf01.yml",
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37596639205",
+      "jobs": [
+        {
+          "id": 112710784251,
+          "name": "host-contract (windows-2025)",
+          "conclusion": "success"
+        },
+        {
+          "id": 112710784575,
+          "name": "host-contract (macos-15)",
+          "conclusion": "success"
+        },
+        {
+          "id": 112710784616,
+          "name": "host-contract (ubuntu-24.04)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37596639249,
+      "run_attempt": 1,
+      "head_sha": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "conclusion": "success",
+      "workflow_path": ".github/workflows/g4-5-programmable-brush.yml",
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37596639249",
+      "jobs": [
+        {
+          "id": 112710784439,
+          "name": "qualification/web-wasm32",
+          "conclusion": "success"
+        },
+        {
+          "id": 112710784653,
+          "name": "qualification/macos-arm64",
+          "conclusion": "success"
+        },
+        {
+          "id": 112710784715,
+          "name": "qualification/android-arm64-v8a",
+          "conclusion": "success"
+        },
+        {
+          "id": 112710784859,
+          "name": "qualification/windows-x64",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37596639175,
+      "run_attempt": 1,
+      "head_sha": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "conclusion": "success",
+      "workflow_path": ".github/workflows/g3-windows-reference-host.yml",
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37596639175",
+      "jobs": [
+        {
+          "id": 112710784050,
+          "name": "windows-reference-host",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37596639188,
+      "run_attempt": 1,
+      "head_sha": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "conclusion": "success",
+      "workflow_path": ".github/workflows/g3-web-reference-host.yml",
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37596639188",
+      "jobs": [
+        {
+          "id": 112710783734,
+          "name": "web-reference-host",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "git_diff_check": {
+    "command": "git diff --check 7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0 b873fcfbd9e8252f1a97db273745dd0bcc92656a",
+    "exit_code": 0
+  },
+  "verification_boundary": "Package readiness review. No current C build/test/physical/Gate success claim.",
+  "status": "PASS_P31_READINESS_CHECKS"
+}
