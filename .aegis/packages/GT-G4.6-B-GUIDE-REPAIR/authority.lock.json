@@ -1,0 +1,9 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-B-GUIDE-REPAIR",
+  "repository": { "provider": "github", "full_name": "Mostorm-Labs/axiom" },
+  "source_authority": { "package": ".aegis/packages/GT-G4.6-B", "accepted_result": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4", "control_review": ".aegis/results/GT-G4.6-B/p34-control-review.json" },
+  "defect": "B accepted SnapResolver computes transient corrections but does not materialize the frozen transient guide line presentation.",
+  "frozen_semantics": ["6 logical px engage", "10 logical px release", "deterministic tie-break", "selected/transformed exclusion", "guides transient and canonical-neutral"],
+  "ownership": "SnapResolver -> EditingOverlay -> common SkiaRenderer -> platform surface provider"
+}

@@ -200,8 +200,9 @@ def test_windows_mouse_submission_ignores_duplicate_lifecycle_messages():
     mouse_handler = source.split("bool submitMouseSample", 1)[1].split(
         "void cancelPointer", 1
     )[0]
-    assert "if (value.activeKeys.contains(kMousePointerId)) return false;" in mouse_handler
-    assert "if (!value.activeKeys.contains(kMousePointerId)) return false;" in mouse_handler
+    assert "value.activeKeys.contains(kMousePointerId)" in mouse_handler
+    assert "value.selectionPointers.contains(kMousePointerId)" in mouse_handler
+    assert "!value.activeKeys.contains(kMousePointerId)" in mouse_handler
 
 
 def test_windows_submits_compatibility_mouse_when_device_exposes_no_touch_channel():

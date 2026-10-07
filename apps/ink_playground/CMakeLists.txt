@@ -13,6 +13,17 @@ target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_interaction canvas_runtime_render)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
 
+# Resolve the published SDK in this directory as well as runtime/render: the
+# imported target there is directory-scoped, and qualification uses its headers.
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+  if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
+    list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
+    find_package(CanvasSkia CONFIG REQUIRED
+      PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  endif()
+endif()
+
 if(MSVC)
   target_compile_options(axiom_ink_playground_common PRIVATE /W4 /permissive- /WX /EHsc)
 else()
@@ -70,6 +81,30 @@ if(BUILD_TESTING)
     target_compile_options(axiom_platform_brush_baseline_runner PRIVATE /W4 /permissive- /WX /EHsc)
   else()
     target_compile_options(axiom_platform_brush_baseline_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  if((CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+      AND CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  add_executable(axiom_g46c_qualification_runner tests/g46c_qualification_runner.cpp)
+  target_link_libraries(axiom_g46c_qualification_runner PRIVATE axiom_ink_playground_common)
+  if(TARGET CanvasSkia::Skia)
+    target_link_libraries(axiom_g46c_qualification_runner PRIVATE CanvasSkia::Skia)
+  endif()
+  target_compile_features(axiom_g46c_qualification_runner PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_g46c_qualification_runner PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_g46c_qualification_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G46CQualificationBundle
+    COMMAND axiom_g46c_qualification_runner
+      "${CMAKE_BINARY_DIR}/g46c-qualification" "$<CONFIG>")
+  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  add_test(NAME G46CQualificationBehavior
+    COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/g46c_qualification_behavior_test.py"
+      "$<TARGET_FILE:axiom_g46c_qualification_runner>")
+  else()
+    message(STATUS "G4.6-C qualification unavailable: requires published Skia and Semantic codec profiles")
   endif()
   add_executable(axiom_brush_runtime_pipeline_tests tests/brush_runtime_pipeline_test.cpp)
   target_link_libraries(axiom_brush_runtime_pipeline_tests PRIVATE axiom_ink_playground_common)

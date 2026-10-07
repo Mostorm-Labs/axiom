@@ -1,0 +1,14 @@
+{
+  "schema_version": "aegis-execution-result-v1",
+  "task_id": "GT-G4.6-C",
+  "stage": "P32",
+  "terminal_state": "BLOCKED_EVIDENCE",
+  "result_revision": "7992019c752335cfa711e5242e6e0fce8ba1d15b",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/codex/g4-6-c-qualification",
+  "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "evidence_input_refs": [".aegis/results/GT-G4.6-C/build-manifest.json", ".aegis/results/GT-G4.6-C/scenario-manifest.json", ".aegis/results/GT-G4.6-C/hud-metrics.json", ".aegis/results/GT-G4.6-C/workload-corpus-manifest.json", ".aegis/results/GT-G4.6-C/platform/windows.json", ".aegis/results/GT-G4.6-C/platform/web.json", ".aegis/results/GT-G4.6-C/platform/android.json", ".aegis/results/GT-G4.6-C/regression-matrix.json"],
+  "provider_refs": [],
+  "explicit_blockers": ["7 frozen workload/scenario selectors remain to be implemented", "Windows/Web physical checklist observations not yet recorded", "Android adb device unauthorized", "hosted Web/Android C provider refs pending"],
+  "official_g4_6_gate_pass": false,
+  "official_g4_6_c_pass": false
+}

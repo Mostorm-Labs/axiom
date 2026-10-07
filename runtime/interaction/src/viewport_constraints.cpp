@@ -164,6 +164,25 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
   };
   result.x = retainOrEngage(activeX_, x, true);
   result.y = retainOrEngage(activeY_, y, false);
+  const auto guideFor = [&](const std::optional<SnapCandidate>& candidate,
+                            bool horizontal) -> std::optional<SnapGuide> {
+    if (!candidate.has_value()) return std::nullopt;
+    const auto target = std::find_if(targets.begin(), targets.end(), [&](const SnapTarget& item) {
+      return item.objectId == candidate->targetObjectId && !item.selected &&
+             !item.transformed && item.viewBounds.isFiniteAndOrdered();
+    });
+    if (target == targets.end()) return std::nullopt;
+    const auto feature = featureValue(target->viewBounds, candidate->targetFeature, horizontal);
+    const auto sourceStart = horizontal ? source.viewBounds.top : source.viewBounds.left;
+    const auto sourceEnd = horizontal ? source.viewBounds.bottom : source.viewBounds.right;
+    const auto targetStart = horizontal ? target->viewBounds.top : target->viewBounds.left;
+    const auto targetEnd = horizontal ? target->viewBounds.bottom : target->viewBounds.right;
+    return SnapGuide{horizontal ? SnapGuideAxis::kVertical : SnapGuideAxis::kHorizontal,
+                     feature, std::min(sourceStart, targetStart),
+                     std::max(sourceEnd, targetEnd)};
+  };
+  result.xGuide = guideFor(result.x, true);
+  result.yGuide = guideFor(result.y, false);
   return result;
 }
 

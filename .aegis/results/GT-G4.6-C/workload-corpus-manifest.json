@@ -1,0 +1,10 @@
+{
+  "schema_version": "GT-G4.6-C-P32-workloads-v1",
+  "result_revision": "7992019c752335cfa711e5242e6e0fce8ba1d15b",
+  "corpus_source": "apps/ink_playground/tests/g46c_qualification_runner.cpp",
+  "workloads_implemented": ["select/deselect", "move/resize/rotate", "slow/fast pan/zoom/fit", "100K transform/overlay"],
+  "workloads_pending": ["multi-select", "handle hover", "move+snap guide", "continuous zoom", "zoom settle", "zoom-to-fit", "100K active Pen/Laser coexistence"],
+  "100K_observation": {"objects": 100000, "candidates_examined": 192, "query_ms": 2.969, "render_ms": 50.042, "deterministic_digest": "1aebbcec858870c"},
+  "replay": "single exact-revision run materialized; repeated replay required by control review",
+  "status": "PASS_AUTOMATED_WITH_REPLAY_REVIEW_PENDING"
+}

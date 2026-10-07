@@ -46,6 +46,15 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr &&
         selectionOverlay->selectionOutline().visible) {
         auto* canvas = acquired.frame.surface->getCanvas();
+        SkPaint guidePaint;
+        guidePaint.setAntiAlias(true);
+        guidePaint.setStyle(SkPaint::kStroke_Style);
+        guidePaint.setStrokeWidth(1.0F);
+        guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
+        for (const auto& guide : selectionOverlay->guides()) {
+            canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
+                             guidePaint);
+        }
         SkPaint chrome;
         chrome.setAntiAlias(true);
         chrome.setStyle(SkPaint::kStroke_Style);

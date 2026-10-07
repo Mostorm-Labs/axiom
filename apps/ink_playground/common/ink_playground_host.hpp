@@ -60,6 +60,18 @@ struct HudSnapshot final {
   double frameMs = 0.0;
 };
 
+struct QualificationObservation final {
+  std::uint64_t sceneGeneration = 0;
+  std::uint64_t cameraGeneration = 0;
+  std::uint64_t candidatesExamined = 0;
+  std::uint64_t overlayUpdates = 0;
+  std::uint64_t canonicalOperationCount = 0;
+  std::uint64_t invalidationRectCount = 0;
+  bool fullSceneInvalidation = false;
+  double queryMs = 0.0;
+  double renderMs = 0.0;
+};
+
 struct SurfaceBinding final {
   std::uint64_t generation = 0;
   std::uint32_t width = 0;
@@ -141,12 +153,22 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  // Qualification/composition seam: toggle an already hit object without
+  // introducing a second selection model or changing production pointer
+  // routing semantics.
+  [[nodiscard]] bool toggleSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
                                       float x, float y) noexcept;
   void cancelSelectionTransform() noexcept;
   [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active(); }
   [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
-  void clearSelection() noexcept { selection_.cancel(); }
+  void clearSelection() noexcept {
+    cancelSelectionTransform();
+    selection_.cancel();
+    selectionView_.reset();
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+  }
   [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
     return selection_.summary().count;
   }
@@ -162,6 +184,21 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
     return value;
   }
   [[nodiscard]] bool renderSelectionOverlay() noexcept;
+  // Qualification fixture setup uses the existing semantic operation lane;
+  // it never mutates the object store directly.
+  [[nodiscard]] bool seedQualificationFixture(std::size_t objectCount) noexcept;
+  [[nodiscard]] std::size_t qualificationObjectCount() const noexcept {
+    return semanticObjects_.size();
+  }
+  [[nodiscard]] std::uint64_t qualificationSceneGeneration() const noexcept {
+    return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
+  }
+  [[nodiscard]] std::uint64_t selectionOverlayUpdates() const noexcept {
+    return selectionOverlayUpdates_;
+  }
+  [[nodiscard]] QualificationObservation qualificationObservation() const noexcept {
+    return qualificationObservation_;
+  }
   [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
     return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
   }
@@ -451,6 +488,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   bool editingChanged_ = false;
   interaction::SnapResolver snapResolver_{};
   std::uint64_t snapCandidateCount_ = 0;
+  std::vector<render::SnapGuideGeometry> snapGuides_;
+  std::uint64_t selectionOverlayUpdates_ = 0;
+  QualificationObservation qualificationObservation_{};
 };
 
 }  // namespace canvas::ink_playground

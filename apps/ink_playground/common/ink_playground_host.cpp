@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <array>
 #include <unordered_set>
+#include <chrono>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
@@ -533,12 +534,34 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
   if (!tested || tested.value().frontToBack.empty()) {
     selection_.cancel();
     selectionView_.reset();
+    snapGuides_.clear();
     canonicalPresentationDirty_ = true;
     return true;
   }
   const bool selected = selection_.click(tested.value().frontToBack.front());
-  if (selected) canonicalPresentationDirty_ = true;
+  if (selected) {
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+  }
   return selected && renderSelectionOverlay();
+}
+
+bool InkPlaygroundHost::toggleSelectionAtViewPoint(float x, float y) noexcept {
+  if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+      foundation::WorldPoint{content.first, content.second}, 4.0F,
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+  if (!tested || tested.value().frontToBack.empty()) return false;
+  if (!selection_.toggle(tested.value().frontToBack.front())) return false;
+  snapGuides_.clear();
+  canonicalPresentationDirty_ = true;
+  if (selection_.primary().isZero()) {
+    selectionView_.reset();
+    return true;
+  }
+  return renderSelectionOverlay();
 }
 
 bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
@@ -560,7 +583,8 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
   const auto frame = render::FrameState{
       render::ViewId{1},
-      render::CameraState{center, zoom, 0.0F, render::CameraGeneration{1}},
+      render::CameraState{center, zoom, 0.0F,
+                          render::CameraGeneration{cameraGeneration()}},
       foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
       render::SurfaceMetrics{static_cast<float>(surface_.width),
                              static_cast<float>(surface_.height), surface_.width,
@@ -572,18 +596,83 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
-  return selectionView_->editingOverlay().update(render::EditingOverlayInput{
+  const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, record->visualBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
-      render::HandleCapabilities{true, true, true}});
+      render::HandleCapabilities{true, true, true}, snapGuides_});
+  if (updated) ++selectionOverlayUpdates_;
+  return updated;
+}
+
+bool InkPlaygroundHost::seedQualificationFixture(std::size_t objectCount) noexcept {
+  if (objectCount == 0U || !brushSessions_.empty() || !eraserTraces_.empty() ||
+      !keyedStrokeIds_.empty() || !historySceneReady()) return false;
+  const auto ordinal = localOperationOrdinal();
+  if (ordinal == 0U) return false;
+  semantic::InsertObjectsOp payload;
+  payload.objects.reserve(objectCount);
+  for (std::size_t index = 0; index < objectCount; ++index) {
+    semantic::ObjectRecord object;
+    object.id = foundation::ObjectId::fromUint64(0x400000ULL + index + 1U);
+    object.kind = semantic::ObjectKind::kShape;
+    object.kind_version = 1U;
+    object.placement.order_key = semantic::OrderKey{
+        {static_cast<std::uint8_t>(1U + (index / (254U * 254U))),
+         static_cast<std::uint8_t>(1U + ((index / 254U) % 254U)),
+         static_cast<std::uint8_t>(1U + (index % 254U))}};
+    object.transform.tx = static_cast<double>((index % 8U) * 32U);
+    object.transform.ty = static_cast<double>((index / 8U) * 32U);
+    object.content = semantic::ShapeContent{1U, 24.0, 24.0};
+    payload.objects.push_back(std::move(object));
+  }
+  semantic::Operation operation{
+      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),
+      documentId_, 1U, 1U, std::move(payload)};
+  const auto applied = operationEngine_.apply(
+      operation, semantic::ApplySource::kLocalCommand, semanticObjects_,
+      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied ||
+      !applied.commit_record.has_value()) return false;
+  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+  const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+      applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+  if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+  const auto queryStart = std::chrono::steady_clock::now();
+  const auto query = runtimeSceneHost_->query(canvas::SceneQuery{
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}});
+  const auto queryEnd = std::chrono::steady_clock::now();
+  if (!query) return false;
+  ++submittedOperationCount_;
+  qualificationObservation_.sceneGeneration = runtimeSceneHost_->revision().value();
+  qualificationObservation_.cameraGeneration = cameraGeneration();
+  qualificationObservation_.candidatesExamined = query.value().diagnostics.candidatesExamined;
+  const auto& invalidation = runtimeSceneHost_->invalidationOutput();
+  qualificationObservation_.invalidationRectCount = invalidation.rects.size();
+  qualificationObservation_.fullSceneInvalidation = invalidation.fullScene;
+  qualificationObservation_.queryMs = std::chrono::duration<double, std::milli>(
+      queryEnd - queryStart).count();
+  qualificationObservation_.canonicalOperationCount = submittedOperationCount_;
+  const auto renderStart = std::chrono::steady_clock::now();
+  const bool rendered = presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  const auto renderEnd = std::chrono::steady_clock::now();
+  if (!rendered) return false;
+  qualificationObservation_.renderMs = std::chrono::duration<double, std::milli>(
+      renderEnd - renderStart).count();
+  canonicalPresentationDirty_ = true;
+  return true;
 }
 
 void InkPlaygroundHost::cancelSelectionTransform() noexcept {
   transformDrag_.cancel();
   snapResolver_.reset();
   snapCandidateCount_ = 0;
+  snapGuides_.clear();
+  if (selectionMode_ && !selection_.primary().isZero()) {
+    (void)renderSelectionOverlay();
+  }
   editingPointer_ = 0;
   editingChanged_ = false;
   canonicalPresentationDirty_ = true;
@@ -701,6 +790,21 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
       const auto resolved = snapResolver_.resolve(
           interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);
       snapCandidateCount_ = resolved.candidatesExamined;
+      snapGuides_.clear();
+      const auto appendGuide = [&](const auto& guide) {
+        if (!guide.has_value()) return;
+        if (guide->axis == interaction::SnapGuideAxis::kVertical) {
+          snapGuides_.push_back({render::SnapGuideAxis::kVertical,
+                                 {guide->position, guide->spanStart},
+                                 {guide->position, guide->spanEnd}});
+        } else {
+          snapGuides_.push_back({render::SnapGuideAxis::kHorizontal,
+                                 {guide->spanStart, guide->position},
+                                 {guide->spanEnd, guide->position}});
+        }
+      };
+      appendGuide(resolved.xGuide);
+      appendGuide(resolved.yGuide);
       const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
       if (resolved.x.has_value()) next.tx += resolved.x->correction / scale;
       if (resolved.y.has_value()) next.ty += resolved.y->correction / scale;
@@ -708,6 +812,10 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     editingChanged_ = !(next==editingInitial_);
     const std::array values{std::pair{selection_.primary(),next}};
     if (!transformDrag_.preview(values)) { cancelSelectionTransform(); return false; }
+    // Refresh the transient overlay immediately so a guide appears/disappears
+    // in the same interaction frame as the resolved snap, without waiting for
+    // a canonical operation or a later unrelated repaint.
+    (void)renderSelectionOverlay();
     canonicalPresentationDirty_ = true;
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
@@ -1738,7 +1846,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
                               (centerX - viewport.translationX) / zoom,
                               (centerY - viewport.translationY) / zoom},
                           zoom, 0.0F,
-                          render::CameraGeneration{1}},
+                              render::CameraGeneration{cameraGeneration()}},
       // ReferenceDrawList's clip is a view-space contract in the current
       // renderer authority. Keep it covering the physical target; the
       // camera above carries the actual pinch transform.
