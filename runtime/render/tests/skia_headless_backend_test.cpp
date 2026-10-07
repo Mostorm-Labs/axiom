@@ -375,12 +375,13 @@ void transformClipAndEraseAreObservable() {
     SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
     assert(backend.submit(plan).code == BackendSubmissionCode::kAccepted);
     const auto& observation = *backend.observation();
-    // worldToView first maps x=8 to 8, then record transform moves it to x=11.
+    // ADR-0012: local x=8 -> object/world x=11 -> view x=14.
     assert(pixel(observation, 10U, 8U) == (Rgba{0U, 0U, 0U, 0U}));
-    assert(pixel(observation, 11U, 8U) == (Rgba{255U, 0U, 0U, 255U}));
+    assert(pixel(observation, 11U, 8U) == (Rgba{0U, 0U, 0U, 0U}));
+    assert(pixel(observation, 14U, 8U) == (Rgba{255U, 0U, 0U, 255U}));
     assert(pixel(observation, 39U, 19U) == (Rgba{255U, 0U, 0U, 255U}));
     assert(pixel(observation, 40U, 19U) == (Rgba{0U, 0U, 0U, 0U}));
-    assert(pixel(observation, 11U, 20U) == (Rgba{0U, 0U, 0U, 0U}));
+    assert(pixel(observation, 14U, 20U) == (Rgba{0U, 0U, 0U, 0U}));
 }
 
 void sweptCircleEraseMaskIsRendered() {
@@ -406,6 +407,21 @@ void sweptCircleEraseMaskIsRendered() {
     const auto& observation = *backend.observation();
     assert(pixel(observation, 20U, 28U)[3] == 0U);
     assert(pixel(observation, 20U, 12U) == (Rgba{255U, 0U, 0U, 255U}));
+}
+
+void fractionalLocalEraseMaskIsRendered() {
+    const FrameState frame = fixtureFrame(FrameId{914});
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {shapeEntry()};
+    list.visibleRecords = 1U;
+    list.candidatesExamined = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    list.entries[0].record.eraseMasks = {{ObjectId::fromUint64(1503U),
+        canvas::semantic::FilledPathMask{rectanglePath(16.5, 16.5, 8.0, 8.0)}}};
+    SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
+    assert(backend.submit(FramePlan{frame, list}).code == BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(), 20U, 20U)[3] == 0U);
+    assert(pixel(*backend.observation(), 15U, 20U) == (Rgba{255U, 0U, 0U, 255U}));
 }
 
 void orthogonalConnectorUsesDeterministicElbow() {
@@ -546,6 +562,7 @@ int main() {
     exactNineKindGoldenIsIndependentAndDeterministic();
     transformClipAndEraseAreObservable();
     sweptCircleEraseMaskIsRendered();
+    fractionalLocalEraseMaskIsRendered();
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
     return 0;

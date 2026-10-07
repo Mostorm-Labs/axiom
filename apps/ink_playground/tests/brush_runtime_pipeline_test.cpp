@@ -342,6 +342,69 @@ void partialEraserPublishesRealtimePreview() {
   assert(!host.previewActive());
 }
 
+void brushPreviewRestoresTintAfterPartialErase() {
+  for (const bool deferred : {false, true}) {
+    for (const bool cancel : {false, true}) {
+      for (const std::uint32_t profile : {1U, 2U, 3U, 4U}) {
+        Host host;
+        assert(host.bindSurface(256, 256));
+        drawHistoryStroke(host, 389U);
+        assert(host.presentCanonicalFrame(1U, 0.0));
+        host.setPlatformPresentationDeferred(deferred);
+        assert(host.applyViewportNavigation({
+            canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+            0.0F, 0.0F, 0.0F, 0.0F, 1.5F}));
+        assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+        assert(host.selectTool(Host::ToolMode::kPartialEraser));
+        assert(host.eraserBegin(390U));
+        assert(host.eraserSample(390U, 80.0, 64.0));
+        if (deferred) {
+          canvas::ink_playground::PreviewPresentationCapture eraser;
+          assert(host.capturePreviewPresentation(eraser));
+          assert(host.renderPreviewPresentation(eraser));
+          assert(host.acknowledgePreviewPresentation(eraser, host.previewPresentCount()));
+        }
+        std::vector<std::uint8_t> rgba(256U * 256U * 4U);
+        assert(host.previewSurfaceProvider()->readbackRgba(rgba).code ==
+               canvas::render::BackendSubmissionCode::kAccepted);
+        const auto erasedCenter = (96U * 256U + 120U) * 4U;
+        assert(rgba[erasedCenter] == 255U && rgba[erasedCenter + 1U] == 255U &&
+               rgba[erasedCenter + 2U] == 255U && rgba[erasedCenter + 3U] == 255U);
+        assert(cancel ? host.eraserCancel(390U) : host.eraserFinish(390U));
+        assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+        assert(!host.previewActive());
+        assert(host.selectTool(Host::ToolMode::kBrush));
+        assert(host.selectBrushProfile(profile == 1U ? "vector-solid-v1" :
+            profile == 2U ? "marker-flat-v1" : profile == 3U ? "chalk-grain-v1" :
+            "membrane-v1", profile == 3U ? 4U : 1U));
+        const auto before = host.previewPresentCount();
+        assert(host.beginBrushSession(390U, profile));
+        assert(host.appendBrushSample(390U, 32.0, 120.0, 0.5, 1U));
+        assert(host.appendBrushSample(390U, 120.0, 120.0, 0.5, 2U));
+        if (deferred) {
+          canvas::ink_playground::PreviewPresentationCapture brush;
+          assert(host.capturePreviewPresentation(brush));
+          assert(host.renderPreviewPresentation(brush));
+          assert(host.acknowledgePreviewPresentation(brush, host.previewPresentCount()));
+        } else {
+          assert(host.presentBrushPreview());
+        }
+        assert(host.previewActive() && host.previewPresentCount() > before);
+        assert(host.previewSurfaceProvider()->readbackRgba(rgba).code ==
+               canvas::render::BackendSubmissionCode::kAccepted);
+        bool visibleTint = false;
+        for (std::size_t i = 0; i < rgba.size(); i += 4U) {
+          visibleTint |= rgba[i + 3U] != 0U && rgba[i + 1U] > rgba[i] + 10U;
+        }
+        assert(visibleTint && "brush preview must regain its tint after partial erase");
+        assert(host.finishBrushSession(390U));
+        assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+        assert(!host.previewActive());
+      }
+    }
+  }
+}
+
 void undoRedoReplaysCanonicalBrushCommit() {
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256, 256));
@@ -481,6 +544,7 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
 }
 
 int main() {
+  brushPreviewRestoresTintAfterPartialErase();
   activeViewportGestureBlocksHistoryUntilAllContactsEnd();
   deferredViewportNavigationStillPresentsCanonical();
   exhaustedHistoryIdsRejectBeforeBrushOrEraseMutation();

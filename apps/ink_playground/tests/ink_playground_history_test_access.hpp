@@ -9,6 +9,10 @@ class InkPlaygroundHistoryTestAccess final {
   static std::vector<semantic::ObjectRecord> objects(const InkPlaygroundHost& host) {
     return host.semanticObjects_.allObjects();
   }
+  static std::vector<RuntimeSceneRecord> runtimeRecords(const InkPlaygroundHost& host) {
+    const auto records = host.sceneCoordinator_->runtimeScene().records();
+    return {records.begin(), records.end()};
+  }
   static void failPublication(InkPlaygroundHost& host) noexcept {
     IncrementalRuntimeTestAccess::failAt(*host.sceneCoordinator_, RuntimeCheckpoint::kBeforePublication);
   }

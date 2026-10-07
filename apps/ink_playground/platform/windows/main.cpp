@@ -133,6 +133,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unordered_set<std::uint64_t> selectionPointers;
 };
 void requestPreviewRender(State& value) noexcept;
+void clearCanvasInput(State& value) noexcept;
 enum : int {
   kToolVector = 4101, kToolMarker, kToolChalk, kToolMembrane,
   kToolObjectEraser, kToolPartialEraser, kToolSelection
@@ -162,6 +163,7 @@ bool selectWindowsTool(State& value, int command) {
     return false;
   }
   if (!selected) return false;
+  if (!value.selectionPointers.empty()) clearCanvasInput(value);
   value.selectedTool = command;
   for (const auto& [id, button] : value.toolButtons) {
     SendMessageW(button, BM_SETCHECK, id == command ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -196,17 +198,40 @@ void endCanvasInput(State& value, std::uint64_t pointerId) noexcept {
 }
 
 void clearCanvasInput(State& value) noexcept {
+  const bool hadSelectionPointers = !value.selectionPointers.empty();
+  if (value.host != nullptr && hadSelectionPointers) {
+    value.host->cancelSelectionTransform();
+    value.canonicalFrameReady = false;
+  }
   for (const auto& [pointerId, sequence] : value.canvasInputSequences) {
     (void)pointerId;
     (void)value.inputCapture.terminal(sequence);
   }
   value.canvasInputSequences.clear();
   value.selectionPointers.clear();
+  if (hadSelectionPointers && GetCapture() == value.window) ReleaseCapture();
 }
 
 class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
  public:
   explicit WindowsRuntimeFacade(State& state) : state_(state) {}
+  [[nodiscard]] canvas::runtime::ProductControlReceipt submitSelectionPointer(
+      const canvas::runtime::SelectionPointerRequest& request) noexcept override {
+    using P = canvas::runtime::SelectionPointerPhase;
+    canvas::runtime::ProductControlReceipt receipt{request.requestId,
+        canvas::runtime::ProductControlState::kRejected, 1U};
+    if (request.runtimeGeneration != 0U && request.runtimeGeneration != 1U) return receipt;
+    const auto phase = request.phase == P::kDown ? canvas::input::PointerPhase::kDown
+        : request.phase == P::kUp ? canvas::input::PointerPhase::kUp
+        : request.phase == P::kCancel ? canvas::input::PointerPhase::kCancel
+                                     : canvas::input::PointerPhase::kMove;
+    if (state_.host->selectionPointer(request.pointerId, phase, request.viewX, request.viewY)) {
+      receipt.state = canvas::runtime::ProductControlState::kApplied;
+    }
+    state_.canonicalFrameReady = false;
+    InvalidateRect(state_.window, nullptr, FALSE);
+    return receipt;
+  }
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto viewport = state_.host->viewportGesture();
     return {1U, state_.host->semanticGeneration().value(),
@@ -215,7 +240,9 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             state_.host->surface().generation, viewport.scale,
             viewport.translationX, viewport.translationY,
             state_.host->canUndo(), state_.host->canRedo(),
-            0U, 0U, static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U,
+            state_.host->selectionOverlay() == nullptr ? 0U : state_.host->selectionOverlay()->updateCount(),
+            static_cast<std::uint64_t>(state_.host->transientTransformCount()),
+            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U,
             state_.host->selectionMode(),
             static_cast<std::uint32_t>(state_.host->selectedObjectCount()),
             state_.host->selectedPrimaryObjectValue()};
@@ -252,11 +279,13 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
           state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
           state_.host->selectBrushProfile(profile, revision)) {
         state_.selectedTool = static_cast<int>(request.toolId);
+        clearCanvasInput(state_);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
       }
       return receipt;
     }
     if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
+      if (!state_.selectionPointers.empty()) clearCanvasInput(state_);
       canvas::interaction::ViewportNavigationSample navigation{};
       navigation.anchorX = request.anchorX;
       navigation.anchorY = request.anchorY;
@@ -281,7 +310,6 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
         } else if (state_.selectedTool == kToolSelection) {
           state_.selectedTool = state_.selectionPreviousTool;
         }
-        state_.selectionPointers.clear();
         clearCanvasInput(state_);
         state_.canonicalFrameReady = false;
         receipt.state = canvas::runtime::ProductControlState::kApplied;
@@ -313,6 +341,7 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
       if (request.eraserId != 0U && state_.host->setSelectionMode(false) &&
           state_.host->selectTool(mode)) {
         state_.selectedTool = static_cast<int>(request.toolId);
+        clearCanvasInput(state_);
         for (const auto& [id, button] : state_.toolButtons) {
           SendMessageW(button, BM_SETCHECK, id == request.toolId ? BST_CHECKED : BST_UNCHECKED, 0);
         }
@@ -798,6 +827,30 @@ bool renderCanonical(State& value) {
 #endif
 }
 
+// All platform selection channels share ownership and the product owner seam.
+// Drawing continues through its existing PlatformPointerBatch/AutoIntent path.
+bool submitSelectionSample(State& value, std::uint64_t pointer,
+    canvas::runtime::SelectionPointerPhase phase, float x, float y) {
+  using P = canvas::runtime::SelectionPointerPhase;
+  if (value.runtimeFacade == nullptr) return false;
+  if (phase == P::kDown) {
+    if (y < 0.0F || value.selectionPointers.contains(pointer) ||
+        (value.canvasInputSequences.contains(pointer) && !canvasOwnsInput(value, pointer)) ||
+        !beginCanvasInput(value, pointer)) return false;
+    value.selectionPointers.insert(pointer);
+  } else if (!value.selectionPointers.contains(pointer) || !canvasOwnsInput(value, pointer)) {
+    return false;
+  }
+  const auto receipt = value.runtimeFacade->submitSelectionPointer(
+      {pointer, phase, x, y, ++value.pointerSampleSequence, 1U});
+  const bool accepted = receipt.state == canvas::runtime::ProductControlState::kApplied;
+  if (!accepted || phase == P::kUp || phase == P::kCancel) {
+    value.selectionPointers.erase(pointer);
+    endCanvasInput(value, pointer);
+  }
+  return accepted;
+}
+
 bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, LPARAM lParam) {
   constexpr UINT kMousePointerId = 0xFFFFFFFFU;
   const auto tickNs = static_cast<std::uint64_t>(
@@ -839,19 +892,12 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
   const auto y = static_cast<float>(static_cast<short>(HIWORD(lParam)) - State::kToolbarHeight);
   if (begin && y < 0.0F) return false;
   const bool selectionMode = value.host->selectionMode();
-  if (selectionMode && begin) {
-    value.selectionPointers.insert(kMousePointerId);
-    (void)value.host->selectAtViewPoint(x, y);
-    InvalidateRect(window, nullptr, FALSE);
-    return true;
-  }
   if (selectionMode) {
-    if (end) {
-      value.selectionPointers.erase(kMousePointerId);
-      endCanvasInput(value, kMousePointerId);
-      if (GetCapture() == window) ReleaseCapture();
-    }
-    return true;
+    using P = canvas::runtime::SelectionPointerPhase;
+    const bool accepted = submitSelectionSample(value, kMousePointerId,
+        begin ? P::kDown : end ? P::kUp : P::kMove, x, y);
+    if ((end || !accepted) && GetCapture() == window) ReleaseCapture();
+    return accepted;
   }
   NativePointerSample sample{};
   sample.pointer_id = kMousePointerId;
@@ -934,6 +980,15 @@ bool submitTouchInput(HWND window, State& value, HTOUCHINPUT touchHandle,
     const bool begin = (touch.dwFlags & TOUCHEVENTF_DOWN) != 0U;
     const bool end = (touch.dwFlags & TOUCHEVENTF_UP) != 0U;
     if (!begin && !end && (touch.dwFlags & TOUCHEVENTF_MOVE) == 0U) continue;
+    if (value.host->selectionMode()) {
+      POINT point{static_cast<LONG>(touch.x / 100), static_cast<LONG>(touch.y / 100)};
+      if (ScreenToClient(window, &point) == FALSE) continue;
+      using P = canvas::runtime::SelectionPointerPhase;
+      acceptedAny |= submitSelectionSample(value, pointerId,
+          begin ? P::kDown : end ? P::kUp : P::kMove,
+          static_cast<float>(point.x), static_cast<float>(point.y - State::kToolbarHeight));
+      continue;
+    }
     if (begin && value.activeKeys.contains(pointerId)) continue;
     if (!begin && !value.activeKeys.contains(pointerId)) continue;
     if (begin && !beginCanvasInput(value, pointerId)) continue;
@@ -1327,7 +1382,8 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     // active stroke, let input and preview presentation own the thread; the
     // next idle tick and the pointer-up invalidation refresh diagnostics.
     if (value->debugUi != nullptr && value->debugUi->visible() &&
-        value->activeKeys.empty() && !value->resizeInProgress) {
+        value->activeKeys.empty() && !value->host->selectionTransformActive() &&
+        !value->resizeInProgress) {
       value->debugUi->refresh();
     }
     const bool f12Down = (GetAsyncKeyState(VK_F12) & 0x8000) != 0;
@@ -1356,6 +1412,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_SIZE && value != nullptr) {
+    if (!value->selectionPointers.empty()) clearCanvasInput(*value);
 #if defined(CANVAS_RENDER_HAS_SKIA)
     const auto width = static_cast<std::uint32_t>(LOWORD(lParam));
     const auto canvasHeight = static_cast<int>(HIWORD(lParam)) - State::kToolbarHeight;
@@ -1496,21 +1553,16 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       (void)submitMouseSample(window, *value, mouseMessage, mouseWParam, mouseLParam);
       return 0;
     }
-    if (value->host->selectionMode() &&
-        (message == WM_POINTERDOWN || message == WM_POINTERUP)) {
+    if (value->host->selectionMode()) {
       POINT clientPoint = info.ptPixelLocation;
       if (ScreenToClient(window, &clientPoint) == FALSE) return 0;
       const float x = static_cast<float>(clientPoint.x);
       const float y = static_cast<float>(clientPoint.y - State::kToolbarHeight);
-      if (message == WM_POINTERDOWN) {
-        if (!beginCanvasInput(*value, pointerId)) return 0;
-        value->selectionPointers.insert(pointerId);
-        if (y >= 0.0F) (void)value->host->selectAtViewPoint(x, y);
-        InvalidateRect(window, nullptr, FALSE);
-      } else if (value->selectionPointers.erase(pointerId) != 0U) {
-        endCanvasInput(*value, pointerId);
-        InvalidateRect(window, nullptr, FALSE);
-      }
+      using P = canvas::runtime::SelectionPointerPhase;
+      (void)submitSelectionSample(*value, pointerId,
+          (info.pointerFlags & POINTER_FLAG_CANCELED) != 0U ? P::kCancel
+          : message == WM_POINTERDOWN ? P::kDown
+          : message == WM_POINTERUP ? P::kUp : P::kMove, x, y);
       return 0;
     }
     value->nativeTouchChannelSeen = true;
@@ -1741,11 +1793,25 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       // Canvas pointer remains governed by its existing Runtime cancel path.
       // Clear only the shared ownership records here; the normal platform
       // cancel handler below still retires active Canvas sessions.
-      if (value->activeKeys.empty()) clearCanvasInput(*value);
+      if (value->host->selectionMode()) {
+        if (reinterpret_cast<HWND>(lParam) != window) {
+          (void)submitSelectionSample(*value, GET_POINTERID_WPARAM(wParam),
+              canvas::runtime::SelectionPointerPhase::kCancel, 0.0F, 0.0F);
+        }
+      } else if (value->activeKeys.empty()) {
+        // Preserve the existing drawing-mode capture routing.
+        clearCanvasInput(*value);
+      }
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
     }
+    return 0;
+  }
+  if (message == WM_CAPTURECHANGED && value != nullptr &&
+      reinterpret_cast<HWND>(lParam) != window && !value->selectionPointers.empty()) {
+    clearCanvasInput(*value);
+    InvalidateRect(window, nullptr, FALSE);
     return 0;
   }
   if (canvas::ink_playground::windows_input::cancelsAllActivePointers(message)) {
@@ -1763,6 +1829,13 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_PAINT) { if (value != nullptr) paint(window, *value); return 0; }
+  if (message == WM_KEYDOWN && wParam == VK_ESCAPE && value != nullptr &&
+      !value->selectionPointers.empty()) {
+    clearCanvasInput(*value);
+    if (GetCapture() == window) ReleaseCapture();
+    InvalidateRect(window, nullptr, FALSE);
+    return 0;
+  }
   if (message == WM_KEYDOWN && (GetKeyState(VK_CONTROL) & 0x8000) != 0 &&
       (wParam == L'Z' || wParam == L'Y')) {
     if (value != nullptr && value->runtimeFacade != nullptr &&

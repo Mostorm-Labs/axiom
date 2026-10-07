@@ -13,6 +13,10 @@ class TransientSceneOverride final {
   void clear() noexcept;
   [[nodiscard]] std::size_t size() const noexcept { return values_.size(); }
   [[nodiscard]] bool empty() const noexcept { return values_.empty(); }
+  [[nodiscard]] const semantic::Transform2D* find(foundation::ObjectId id) const noexcept {
+    const auto it = values_.find(id);
+    return it == values_.end() ? nullptr : &it->second;
+  }
  private: friend class TransformSession; std::unordered_map<foundation::ObjectId, semantic::Transform2D, foundation::ObjectIdHash> values_;
 };
 enum class TransformConflict { kNone, kCancel, kReResolve };
