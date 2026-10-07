@@ -1,0 +1,15 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.6-E",
+  "output_root": ".aegis/results/GT-G4.6-E",
+  "required_artifacts": [
+    "preflight.json",
+    "build.log",
+    "ctest.log",
+    "input-and-transform.log",
+    "scope-audit.json",
+    "result.json"
+  ],
+  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI on evidence head; no self-referential commit requirement",
+  "producer_may_claim_gate_pass": false
+}

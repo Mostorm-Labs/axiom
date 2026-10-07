@@ -147,13 +147,15 @@ void drawSolidRect(SkCanvas& canvas, const foundation::WorldRect& bounds,
     canvas.drawRect(rect(bounds), paint);
 }
 
-bool validatePath(const semantic::VectorPathGeometry& geometry) noexcept {
+bool validatePath(const semantic::VectorPathGeometry& geometry,
+                  bool requireIntegral = true) noexcept {
     for (const auto& command : geometry.commands) {
         bool ok = true;
         std::visit([&](const auto& value) {
             using T = std::decay_t<decltype(value)>;
-            auto pointOk = [](const semantic::Vec2& point) {
-                return pointInScalarRange(point) && integral(point.x) && integral(point.y);
+            auto pointOk = [requireIntegral](const semantic::Vec2& point) {
+                return pointInScalarRange(point) &&
+                    (!requireIntegral || (integral(point.x) && integral(point.y)));
             };
             if constexpr (std::is_same_v<T, semantic::MoveTo>) ok = pointOk(value.point);
             else if constexpr (std::is_same_v<T, semantic::LineTo>) ok = pointOk(value.end);
@@ -463,7 +465,9 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         for (const auto& mask : entry.record.eraseMasks) {
             const bool valid = std::visit([](const auto& geometry) {
                 using T = std::decay_t<decltype(geometry)>;
-                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path);
+                // Object-local erase geometry can be fractional after inverse
+                // affine mapping, independently of headless object fixtures.
+                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false);
                 else return validateSweptMask(geometry);
             }, mask.geometry);
             if (!valid) {
@@ -479,7 +483,7 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
     for (const auto& entry : plan.referenceDrawList.entries) {
         canvas.save();
-        canvas.concat(SkMatrix::Concat(matrix(entry.record.transform), worldMatrix));
+        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry);
         eraseMasks(canvas, entry);
         canvas.restore();
@@ -526,7 +530,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
         for (const auto& mask : entry.record.eraseMasks) {
             const bool valid = std::visit([](const auto& geometry) {
                 using T = std::decay_t<decltype(geometry)>;
-                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path);
+                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false);
                 else return validateSweptMask(geometry);
             }, mask.geometry);
             if (!valid) return reject(HeadlessSubmissionIssue::kUnsupportedEraseMask, "unsupported erase mask");
@@ -544,7 +548,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
         canvas->save();
-        canvas->concat(SkMatrix::Concat(matrix(entry.record.transform), worldMatrix));
+        canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(*canvas, entry);
         eraseMasks(*canvas, entry);
         canvas->restore();

@@ -1,0 +1,14 @@
+Test project D:/GitRepos/mostorm-labs/canvas/build-windows-real
+    Start 64: G3HeadlessCanvasDemo
+1/1 Test #64: G3HeadlessCanvasDemo .............Exit code 0xc0000409***Exception:   3.49 sec
+fixture unavailable
+Assertion failed: std::system((binary + " --fixture '" + fixture_arg + "' --output-dir '" + first.string() + "'").c_str()) == 0, file D:\GitRepos\mostorm-labs\canvas\runtime\render\tests\headless_canvas_demo_test.cpp, line 202
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   3.52 sec
+
+The following tests FAILED:
+	 64 - G3HeadlessCanvasDemo (Exit code 0xc0000409)
+Errors while running CTest

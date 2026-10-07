@@ -1,0 +1,19 @@
+{
+  "task_id": "GT-G4.6-B",
+  "camera_generation_negative_control": {
+    "semantic_generation_before_after_fit": "unchanged",
+    "scene_revision_before_after_fit": "unchanged/nonzero",
+    "camera_generation": "increments only when camera state changes",
+    "evidence_test": "G46BViewportFitHost"
+  },
+  "zoom_anchor": "existing ViewportInteractionController anchor invariance regression remains green",
+  "fit_policy": {
+    "padding_logical_px": 32,
+    "min_zoom": 0.05,
+    "max_zoom": 32,
+    "empty_target": "rejected without camera change",
+    "degenerate_target": "epsilon extent and max clamp",
+    "rotation": "projected rotated bounds",
+    "dpr": "ignored for logical fit semantics"
+  }
+}

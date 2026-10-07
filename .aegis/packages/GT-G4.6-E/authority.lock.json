@@ -1,0 +1,45 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-E",
+  "current": true,
+  "entry_control": "User authorized the proposed Transform host integration successor package and implementation on 2026-10-07.",
+  "trusted_basis": [
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": ".aegis/packages/GT-G4.6-A/authority.lock.json",
+      "sha256": "4149a98ff8e31f9a7026af1ddc5b0120bc6b7b7bedd80c2ac9ec036bd2338070"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": ".aegis/packages/GT-G4.6-D/authority.lock.json",
+      "sha256": "1116ca7ca6319f2d6c31e26556c9e416799da473a07c9844523634750f9fe020"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "docs/adr/0012-coordinate-spaces-dpi-transforms.md",
+      "sha256": "f27c39fa582d29ee0e11a6d1f011c69f284e1dad2f5c8a5e84f268b4fd74d238"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+      "sha256": "80b1fe84f261f6803af80940bf9e4afb7893489654b2c95a9eaf9ae153daf0b4"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "sha256": "cc1fd6850cb91c27f04f2430bdd38ab5bc27517b12ba5222984e89f3cd752dd8"
+    }
+  ],
+  "frozen_statements": [
+    "Reuse SelectionSession, EditingOverlay, TransformHandleDrag, TransformSession, TransientSceneOverride, OperationEngine and EditorHistory.",
+    "Per-view preview only; zero canonical mutations during motion, exactly one final SetTransforms on changed successful release; no mutation on cancel or no-op.",
+    "Transform preview and canonical pixels follow ADR-0012: local -> object/world -> viewport. Correct the existing reversed Skia matrix composition at this adapter boundary; do not change transform schema or brush geometry.",
+    "Use the existing RuntimeFacade product-control seam for Windows selection pointer requests; UI does not own transforms.",
+    "Single-pointer editing owner; secondary selection contacts cannot steal or commit the first drag. Drawing-mode AutoIntent and multi-ink routing remain unchanged."
+  ]
+}

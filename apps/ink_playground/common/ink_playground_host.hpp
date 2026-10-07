@@ -11,11 +11,15 @@
 #include "canvas/interaction/editor_history.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
+#include "canvas/interaction/viewport_constraints.hpp"
+#include "canvas/interaction/selection_session.hpp"
+#include "canvas/interaction/transform_handle_drag.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/runtime_app_binding.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/render_view_runtime.hpp"
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/render_backend.hpp"
 #include "platform_interaction_controller.hpp"
@@ -102,6 +106,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                 public interaction::ViewStatePort,
                                 public interaction::OperationSubmitPort,
                                 public interaction::HistorySubmitPort,
+                                public interaction::TransformSubmitPort,
                                 public interaction::TransientPresentationPort {
   friend class InkPlaygroundHistoryTestAccess;
   public:
@@ -133,6 +138,33 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        std::uint32_t profile = 1U) noexcept;
   [[nodiscard]] bool selectTool(ToolMode mode) noexcept;
+  [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
+  [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
+  [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
+                                      float x, float y) noexcept;
+  void cancelSelectionTransform() noexcept;
+  [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active(); }
+  [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
+  void clearSelection() noexcept { selection_.cancel(); }
+  [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
+    return selection_.summary().count;
+  }
+  [[nodiscard]] foundation::ObjectId selectedPrimaryObject() const noexcept {
+    return selection_.primary();
+  }
+  [[nodiscard]] std::uint64_t selectedPrimaryObjectValue() const noexcept {
+    const auto id = selectedPrimaryObject();
+    std::uint64_t value = 0;
+    for (std::size_t i = 0; i < sizeof(value); ++i) {
+      value |= static_cast<std::uint64_t>(id.bytes[i]) << (i * 8U);
+    }
+    return value;
+  }
+  [[nodiscard]] bool renderSelectionOverlay() noexcept;
+  [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
+    return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
+  }
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
@@ -212,6 +244,16 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] bool applyViewportNavigation(
       const interaction::ViewportNavigationSample& sample) noexcept;
+  [[nodiscard]] bool fitViewportToContent(
+      const std::optional<foundation::WorldRect>& target = std::nullopt) noexcept;
+  [[nodiscard]] bool fitViewportToSelection() noexcept;
+  [[nodiscard]] bool fitViewportToObject(foundation::ObjectId objectId) noexcept;
+  [[nodiscard]] std::uint64_t cameraGeneration() const noexcept {
+    return viewportController_ == nullptr ? 0U : viewportController_->cameraGeneration();
+  }
+  [[nodiscard]] std::uint64_t snapCandidateCount() const noexcept {
+    return snapCandidateCount_;
+  }
   [[nodiscard]] std::pair<float, float> viewToContent(float x, float y) const noexcept {
     return viewportController_->viewToContent(x, y);
   }
@@ -288,12 +330,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
     return submittedOperationCount_;
   }
   [[nodiscard]] bool canUndo() const noexcept {
-    return historySceneReady() && !coordinator_->viewportClaimed() &&
+    return historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canUndo();
   }
   [[nodiscard]] bool canRedo() const noexcept {
-    return historySceneReady() && !coordinator_->viewportClaimed() &&
+    return historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canRedo();
   }
@@ -312,6 +354,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t generation() const noexcept override { return 1; }
   [[nodiscard]] interaction::SubmitResult submit(
       const interaction::OperationRequest&) override;
+  [[nodiscard]] interaction::SubmitResult submit(const semantic::SetTransformsOp&) override;
   [[nodiscard]] semantic::OperationId allocateOperationId() override;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
@@ -380,6 +423,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
+  std::unique_ptr<render::RenderViewRuntime> selectionView_;
   interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;
   render::SkiaRenderer previewRenderer_;
@@ -394,6 +438,19 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::optional<ink::CanonicalHandoffIdentity> lastCanonicalIdentity_;
   std::unordered_map<std::uint64_t, ink::CanonicalHandoffIdentity>
       pendingCanonicalIdentities_;
+  interaction::SelectionSession selection_;
+  bool selectionMode_ = false;
+  interaction::TransientSceneOverride transformOverrides_;
+  interaction::TransformHandleDrag transformDrag_{*this, transformOverrides_};
+  std::uint64_t editingPointer_ = 0;
+  render::HandleKind editingHandle_ = render::HandleKind::kNone;
+  foundation::WorldRect editingLocalBounds_{};
+  semantic::Transform2D editingInitial_{};
+  foundation::WorldPoint editingDownWorld_{};
+  semantic::SemanticGeneration editingGeneration_{};
+  bool editingChanged_ = false;
+  interaction::SnapResolver snapResolver_{};
+  std::uint64_t snapCandidateCount_ = 0;
 };
 
 }  // namespace canvas::ink_playground

@@ -61,10 +61,12 @@ class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto view = host_.viewportGesture();
     return {1U, host_.semanticGeneration().value(),
-            static_cast<std::uint64_t>(host_.submittedOperationCount()), 1U,
+            static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
             static_cast<std::uint32_t>(host_.toolMode()), host_.surface().generation,
             view.scale, view.translationX, view.translationY,
-            host_.canUndo(), host_.canRedo()};
+            host_.canUndo(), host_.canRedo(),
+            0U, 0U, static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
+            false, 0U, 0U, host_.snapCandidateCount()};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
@@ -78,7 +80,8 @@ class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             host_.toolMode() == Host::ToolMode::kObjectEraser ? 1U
             : host_.toolMode() == Host::ToolMode::kPartialEraser ? 2U : 0U,
             diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo};
+            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo,
+            false, 0U, 0U, diagnostics.snapCandidateCount};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -114,14 +117,21 @@ class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
       return receipt;
     }
     if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
-      canvas::interaction::ViewportNavigationSample navigation{};
-      navigation.anchorX = request.anchorX; navigation.anchorY = request.anchorY;
-      navigation.deltaX = request.deltaX; navigation.deltaY = request.deltaY;
-      navigation.scaleDelta = request.scaleDelta;
-      navigation.kind = request.cameraAction == 2U
-          ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
-          : canvas::interaction::ViewportNavigationKind::kWheelPan;
-      receipt.state = host_.applyViewportNavigation(navigation)
+      const bool applied = request.cameraAction ==
+              static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kFitToContent)
+          ? (request.cameraFitTarget == canvas::runtime::CameraFitTarget::kSelection
+                 ? host_.fitViewportToSelection()
+                 : request.cameraFitTarget == canvas::runtime::CameraFitTarget::kObject
+                     ? host_.fitViewportToObject(
+                         canvas::foundation::ObjectId::fromUint64(request.cameraObjectId))
+                     : host_.fitViewportToContent())
+          : host_.applyViewportNavigation({
+              request.cameraAction == static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kZoomAt)
+                  ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
+                  : canvas::interaction::ViewportNavigationKind::kWheelPan,
+              request.deltaX, request.deltaY, request.anchorX, request.anchorY,
+              request.scaleDelta});
+      receipt.state = applied
           ? canvas::runtime::ProductControlState::kApplied
           : canvas::runtime::ProductControlState::kRejected;
       return receipt;

@@ -1,0 +1,44 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-A",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "url": "https://app.notion.com/p/3e04c57a590c811cbda0f366fcf2c126",
+      "title": "G4.6 Canvas Interaction Presentation Architecture v0.1"
+    },
+    {
+      "stage": "Roadmap",
+      "url": "https://app.notion.com/p/3e04c57a590c81a0a7c9fcdb11e1b089",
+      "title": "G4.6 Canvas Interaction Presentation Baseline Implementation Plan v0.1"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:cc985b174cafc5d5dd743bd66701cfe117278de8",
+      "title": "post-G4.5 canonical main baseline"
+    }
+  ],
+  "entry_control": {
+    "statement": "G4.5 is formally closed; G4.6 successor execution is authorized by the user control instruction on 2026-10-06.",
+    "repository_anchor": "cc985b174cafc5d5dd743bd66701cfe117278de8",
+    "state_cache_note": ".aegis/state.json is known stale and is not Authority; do not reopen G4.5 solely because the generated cache lags."
+  },
+  "frozen_statements": [
+    "G4.6 introduces no new canonical ObjectKind or Operation.",
+    "Selection/handle/hover state is per-view transient editor state and never enters SemanticDocument or shared RuntimeScene.",
+    "Transform preview reuses G4 TransformSession + TransientSceneOverride; pointer-move frames emit zero canonical operations and commit emits one final SetTransforms.",
+    "Selection chrome is vector/screen-space presentation with visual size independent from hit slop.",
+    "Existing G4 selection/transform semantics, Undo/Redo, input routing, brush engine, Arc ownership, and canonical mutation semantics are reused rather than rebuilt."
+  ],
+  "forbidden_authority_expansion": [
+    "No G5 Tile/RenderGroup/RasterCache/Scheduler implementation.",
+    "No G6 RichText editing/IME/editor overlay work.",
+    "No brush/Arc semantic redesign.",
+    "No canonical schema/property additions for editor chrome."
+  ]
+}
