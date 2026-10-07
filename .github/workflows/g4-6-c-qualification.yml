@@ -1,0 +1,148 @@
+name: GT-G4.6-C Qualification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "apps/ink_playground/**"
+      - "runtime/**"
+      - "debug_ui/**"
+      - "arc/**"
+      - ".aegis/packages/GT-G4.6-C/**"
+      - ".aegis/results/GT-G4.6-C/**"
+      - ".github/workflows/g4-6-c-qualification.yml"
+      - "CMakeLists.txt"
+      - "r1-full-skia-sdk.lock.json"
+      - "tools/skia/**"
+
+permissions:
+  contents: read
+
+jobs:
+  windows-c-qualification:
+    name: g4.6-c/windows-qualification
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Resolve locked Semantic SDK
+        shell: pwsh
+        run: |
+          python tools/setup_build_environment.py --core --semantic --github-env $env:GITHUB_ENV --facts-output out/g4-6-c-windows-environment.json --status
+      - name: Fetch locked Windows Skia SDK
+        shell: pwsh
+        run: |
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release
+      - name: Configure and build C qualification runner
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sdk = (Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release).Path
+          cmake -S . -B out/g4-6-c-windows -G "Visual Studio 18 2026" -A x64 `
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo `
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_POC02=OFF -DCANVAS_BUILD_POC03=OFF `
+            -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_ARC=ON `
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON `
+            -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_RENDER_BUILD_TESTS=ON `
+            -DAXIOM_BUILD_DEBUG_UI=ON -DAXIOM_DEBUG_UI_PROFILE=full `
+            -DCANVAS_SKIA_SDK_ROOT="$sdk" -DAXIOM_PROTOC="$env:AXIOM_PROTOC" `
+            -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DBUILD_TESTING=ON
+          cmake --build out/g4-6-c-windows --config RelWithDebInfo --target axiom_g46c_qualification_runner --parallel 2
+      - name: Run qualification and export provider identity
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $result = 'out/g4-6-c-windows-qualification'
+          New-Item -ItemType Directory -Force $result | Out-Null
+          & out/g4-6-c-windows/apps/ink_playground/RelWithDebInfo/axiom_g46c_qualification_runner.exe $result $env:GITHUB_SHA
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $runner = (Resolve-Path out/g4-6-c-windows/apps/ink_playground/RelWithDebInfo/axiom_g46c_qualification_runner.exe).Path
+          @{ task_id='GT-G4.6-C'; result_revision=$env:GITHUB_SHA; platform='windows'; profile='windows-2025'; runner_sha256=(Get-FileHash $runner -Algorithm SHA256).Hash.ToLower(); qualification_sha256=(Get-FileHash "$result/qualification-run.json" -Algorithm SHA256).Hash.ToLower(); provider_run_id=$env:GITHUB_RUN_ID; run_attempt=$env:GITHUB_RUN_ATTEMPT } | ConvertTo-Json | Set-Content -Encoding utf8NoBOM "$result/provider-evidence.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gt-g4-6-c-windows-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g4-6-c-windows-qualification
+            out/g4-6-c-windows-environment.json
+          if-no-files-found: error
+
+  web-c-build:
+    name: g4.6-c/web-build-identity
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve locked Web toolchain
+        run: |
+          python3 tools/setup_build_environment.py --core --github-env "$GITHUB_ENV" --facts-output out/g4-6-c-web-environment.json --status
+          python3 tools/bootstrap_deps.py --web
+      - name: Build Web playground identity
+        shell: bash
+        run: |
+          source .deps/emsdk/emsdk_env.sh
+          emcmake cmake -S . -B out/g4-6-c-web -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=OFF \
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON -DAXIOM_BUILD_DEBUG_UI=OFF -DBUILD_TESTING=OFF
+          cmake --build out/g4-6-c-web --target axiom_ink_playground_web --parallel
+          mkdir -p out/g4-6-c-web-provider
+          cp out/g4-6-c-web/apps/ink_playground/axiom_ink_playground_web.js out/g4-6-c-web-provider/
+          cp out/g4-6-c-web/apps/ink_playground/axiom_ink_playground_web.wasm out/g4-6-c-web-provider/
+          sha256sum out/g4-6-c-web-provider/* > out/g4-6-c-web-provider/sha256sums.txt
+          printf '{"task_id":"GT-G4.6-C","result_revision":"%s","platform":"web","profile":"web-wasm32","provider_run_id":"%s","run_attempt":"%s"}\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > out/g4-6-c-web-provider/provider-evidence.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gt-g4-6-c-web-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g4-6-c-web-provider
+            out/g4-6-c-web-environment.json
+          if-no-files-found: error
+
+  android-c-build:
+    name: g4.6-c/android-build-identity
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve Android toolchain and locked dependencies
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018"
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+          python3 tools/setup_build_environment.py --core --github-env "$GITHUB_ENV" --facts-output out/g4-6-c-android-environment.json --status
+          python3 tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target android-arm64-v8a-gles3 --variant release
+      - name: Build Android playground identity
+        shell: bash
+        run: |
+          cmake -S . -B out/g4-6-c-android -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 \
+            -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_ARC=ON \
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON -DAXIOM_BUILD_DEBUG_UI=OFF -DBUILD_TESTING=OFF \
+            -DCANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH=ON \
+            -DCANVAS_SKIA_SDK_ROOT="$GITHUB_WORKSPACE/.deps/skia-sdk/android-arm64-v8a-gles3/release"
+          cmake --build out/g4-6-c-android --target axiom_ink_playground_android --parallel
+          mkdir -p out/g4-6-c-android-provider
+          cp out/g4-6-c-android/apps/ink_playground/libaxiom_ink_playground_android.so out/g4-6-c-android-provider/
+          sha256sum out/g4-6-c-android-provider/* > out/g4-6-c-android-provider/sha256sums.txt
+          printf '{"task_id":"GT-G4.6-C","result_revision":"%s","platform":"android","profile":"android-arm64-v8a","provider_run_id":"%s","run_attempt":"%s"}\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > out/g4-6-c-android-provider/provider-evidence.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gt-g4-6-c-android-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g4-6-c-android-provider
+            out/g4-6-c-android-environment.json
+          if-no-files-found: error
