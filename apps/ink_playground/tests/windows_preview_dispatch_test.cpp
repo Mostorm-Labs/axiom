@@ -305,6 +305,7 @@ void selectionDispatch() {
   assert(s.runtimeFacade->setSelectionMode(false, 2U, 1U).state ==
          canvas::runtime::ProductControlState::kApplied);
   assert(!s.host->selectionTransformActive());
+  assert(GetCapture() != s.window);
   assert(s.host->submittedOperationCount() == afterUndoOperations);
   assert(s.runtimeFacade->submitSelectionPointer({77U,
       canvas::runtime::SelectionPointerPhase::kDown, 80, 64, 3U, 999U}).state ==
