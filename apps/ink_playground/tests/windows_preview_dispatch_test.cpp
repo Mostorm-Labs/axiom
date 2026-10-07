@@ -299,7 +299,7 @@ void selectionDispatch() {
   beginDrag();
   WindowProc(s.window, WM_POINTERCAPTURECHANGED, 77U, reinterpret_cast<LPARAM>(s.window));
   assert(s.host->selectionTransformActive());
-  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 77U, 0);
+  WindowProc(s.window, WM_CAPTURECHANGED, 0U, 0);
   assert(!s.host->selectionTransformActive());
   beginDrag();
   assert(s.runtimeFacade->setSelectionMode(false, 2U, 1U).state ==
@@ -320,8 +320,9 @@ void selectionDispatch() {
   assert(submitSelectionSample(s, 72U, P::kDown, handle.x, handle.y));
   assert(submitSelectionSample(s, 71U, P::kMove, handle.x + 30, handle.y));
   assert(submitSelectionSample(s, 72U, P::kUp, handle.x + 100, handle.y));
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 72U, 0);
   assert(s.host->selectionTransformActive());
-  assert(submitSelectionSample(s, 71U, P::kCancel, 0, 0));
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 71U, 0);
   assert(!s.host->selectionTransformActive());
   assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
   assert(Access::objects(*s.host) == original);

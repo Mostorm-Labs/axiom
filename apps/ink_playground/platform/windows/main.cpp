@@ -1793,7 +1793,13 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       // Canvas pointer remains governed by its existing Runtime cancel path.
       // Clear only the shared ownership records here; the normal platform
       // cancel handler below still retires active Canvas sessions.
-      if (value->activeKeys.empty() && reinterpret_cast<HWND>(lParam) != window) {
+      if (value->host->selectionMode()) {
+        if (reinterpret_cast<HWND>(lParam) != window) {
+          (void)submitSelectionSample(*value, GET_POINTERID_WPARAM(wParam),
+              canvas::runtime::SelectionPointerPhase::kCancel, 0.0F, 0.0F);
+        }
+      } else if (value->activeKeys.empty()) {
+        // Preserve the existing drawing-mode capture routing.
         clearCanvasInput(*value);
       }
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
