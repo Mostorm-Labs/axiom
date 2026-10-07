@@ -1,7 +1,10 @@
 {
-  "hot_path": "InkPlaygroundHost uses runtime Scene/RuntimeScene projection and existing spatial hit/query seam",
+  "hot_path": "InkPlaygroundHost::selectionPointer computes transient source bounds, calls Scene::query(WorldRect), then resolves returned ObjectIds through RuntimeScene::find",
   "document_scan_per_pointer_move": false,
   "fit_bounds_source": "published Scene bounds or selected/object RuntimeScene record",
-  "structure_tests": ["G46BQueryStructure", "G46BViewportFitHost"],
+  "structure_tests": ["G46BQueryStructure (RED before repair, GREEN after repair)", "G46BViewportFitHost"],
+  "red_observation": "The pre-repair test failed because selectionPointer scanned runtimeScene().records().",
+  "green_observation": "The repaired hot path contains Scene::query(WorldRect) and no runtimeScene().records() scan.",
+  "query_bounds": "transient transformed bounds expanded by engage threshold in world units",
   "scene_generation_negative_control": "semantic generation unchanged across fit"
 }

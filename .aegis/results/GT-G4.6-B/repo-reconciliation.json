@@ -3,14 +3,16 @@
   "repository": "Mostorm-Labs/axiom",
   "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
   "execution_ref": "codex/g4-6-b-view-constraint",
-  "observed_revision": "02c69c459413e50a27d872f16808278d16347e74",
+  "observed_revision": "2389cb6221345d5ef3ef078a7d111aa3556d7695",
   "anchor": "cc985b174cafc5d5dd743bd66701cfe117278de8",
   "anchor_relation": "ancestor",
   "predecessor": {
     "task_id": "GT-G4.6-A",
     "result_revision": "58868e060d3c0327bcff7823c924188cd808ee6b",
-    "result_state": "READY_FOR_CONTROL_REVIEW",
+    "result_state": "PASS_WITH_FINDINGS_ACCEPTED_CAPABILITY",
+    "control_review": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json",
     "result_in_ancestry": true
   },
-  "status": "RECONCILED"
+  "status": "RECONCILED",
+  "b_repair": "Snap candidate collection now uses Scene::query(WorldRect) and RuntimeScene::find(ObjectId); no RuntimeScene::records() scan remains in selectionPointer."
 }
