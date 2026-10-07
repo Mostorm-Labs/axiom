@@ -310,7 +310,6 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
         } else if (state_.selectedTool == kToolSelection) {
           state_.selectedTool = state_.selectionPreviousTool;
         }
-        state_.selectionPointers.clear();
         clearCanvasInput(state_);
         state_.canonicalFrameReady = false;
         receipt.state = canvas::runtime::ProductControlState::kApplied;

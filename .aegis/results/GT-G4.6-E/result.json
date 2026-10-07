@@ -12,7 +12,8 @@
     "focused_ctest": {
       "passed": 56,
       "total": 56,
-      "log": "ctest.log"
+      "log": "ctest.log",
+      "command": "ctest --test-dir build-windows-real -C RelWithDebInfo -R ^(G46.*|G4.*|G45.*|DUI20.*|G3HeadlessSkia)$ --output-on-failure"
     },
     "full_ctest": {
       "passed": 123,
@@ -26,7 +27,7 @@
         }
       ]
     },
-    "input_and_transform": "PASS",
+    "input_and_transform": "PASS (fresh after capture-release fix)",
     "module_boundaries": "PASS",
     "diff_check": "PASS",
     "locked_sdk_offline": "PASS"
@@ -53,7 +54,7 @@
     },
     {
       "path": ".aegis/results/GT-G4.6-E/ctest.log",
-      "sha256": "9b832ca2aa49f09bf8a8a1fd450ef46df75dea772cec0be5ee3f66ec69cbe753"
+      "sha256": "7d1b52218cc110af07b81023ae9a81ebd4ddc65d9364f628ff0614b9975350fb"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/ctest-full-codec.log",
