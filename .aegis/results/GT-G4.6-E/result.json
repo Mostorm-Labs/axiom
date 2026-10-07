@@ -41,9 +41,48 @@
     "blocking_in_package": false
   },
   "hosted_verification": {
-    "status": "PASS_ON_IMPLEMENTATION_HEAD",
-    "head_sha": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+    "status": "PASS_ON_EVIDENCE_HEAD",
+    "head_sha": "c3d3961cc5fe64a2bde75c3c547af04d4e241cee",
     "runs": [
+      {
+        "workflow": "G3-09 Windows canonical surface reference host",
+        "run_id": 37576634081,
+        "job_id": 112646882253,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37576634081"
+      },
+      {
+        "workflow": "G3-10 Web WASM/WebGL2 canonical surface reference host",
+        "run_id": 37576634064,
+        "job_id": 112646882280,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37576634064"
+      },
+      {
+        "workflow": "RF-01 Scene Foundation",
+        "run_id": 37576634023,
+        "jobs": [
+          "112646983624",
+          "112646983373",
+          "112646983572"
+        ],
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37576634023"
+      },
+      {
+        "workflow": "G4.5 Programmable Brush Qualification",
+        "run_id": 37576634095,
+        "jobs": [
+          "112646962916",
+          "112646962817",
+          "112646962851",
+          "112646962754"
+        ],
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37576634095"
+      }
+    ],
+    "implementation_head_runs": [
       {
         "workflow": "G3-09 Windows canonical surface reference host",
         "run_id": 37574482320,
@@ -69,7 +108,7 @@
         "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482470"
       }
     ],
-    "evidence_head_requirement": "Implementation-head runs below are corroborative. Applicable hosted checks must also complete successfully on the exact evidence materialized_ref before the producer returns READY_FOR_CONTROL_REVIEW; exact run identities are returned externally."
+    "evidence_head_requirement": "All applicable hosted checks completed successfully on this exact evidence materialized_ref."
   },
   "official_gate_pass_claimed": false,
   "evidence_refs": [
