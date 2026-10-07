@@ -1,0 +1,45 @@
+{
+  "task_id": "GT-G4.6-E",
+  "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+  "result_revision": "05d0b63417c4f1081360e4f55c7b28cf5bfafdc3",
+  "status": "PASS",
+  "changed_files": [
+    ".aegis/packages/GT-G4.6-E/authority.lock.json",
+    ".aegis/packages/GT-G4.6-E/evidence-contract.json",
+    ".aegis/packages/GT-G4.6-E/execution-contract.json",
+    ".aegis/packages/GT-G4.6-E/implementation-context.md",
+    ".aegis/packages/GT-G4.6-E/package.json",
+    ".aegis/packages/GT-G4.6-E/verification.lock.json",
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+    "apps/ink_playground/tests/selection_transform_test.cpp",
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+    "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/tests/skia_headless_backend_test.cpp"
+  ],
+  "unexpected_files": [],
+  "unchanged_dependency_locks": [
+    "semantic-sdk.lock.json",
+    "r1-full-skia-sdk.lock.json",
+    "deps.lock.json"
+  ],
+  "preserved_boundaries": [
+    "drawing-mode input/AutoIntent",
+    "BrushEngine",
+    "Arc ownership",
+    "Vector/DAB morphology",
+    "SurfaceProvider implementation",
+    "operation schema and mutation semantics"
+  ],
+  "render_adapter_correction": "ADR-0012: local -> object/world -> viewport; changed only matrix composition order",
+  "local_environment_notes": [
+    "CMAKE_C_STANDARD=11 for existing Arc C11 test",
+    "published Semantic SDK codec enabled",
+    "MSVC /wd4100 /wd4189 for generated code"
+  ]
+}

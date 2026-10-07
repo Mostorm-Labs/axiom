@@ -1,0 +1,103 @@
+{
+  "task_id": "GT-G4.6-E",
+  "stage": "P32",
+  "state": "AWAITING_HOSTED_VERIFICATION",
+  "result_revision": "05d0b63417c4f1081360e4f55c7b28cf5bfafdc3",
+  "package_materialization_ref": "0460c6b2a3ca63c13cf3595592275cee2ea43c17",
+  "execution_ref": "codex/g4-6-e-transform-host",
+  "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+  "package_ref": ".aegis/packages/GT-G4.6-E/package.json",
+  "local_verification": {
+    "target_build": "PASS",
+    "focused_ctest": {
+      "passed": 56,
+      "total": 56,
+      "log": "ctest.log"
+    },
+    "full_ctest": {
+      "passed": 123,
+      "total": 124,
+      "log": "ctest-full-codec.log",
+      "failures": [
+        {
+          "name": "G3HeadlessCanvasDemo",
+          "classification": "pre-existing Windows test command quoting defect outside authorized scope",
+          "detail": "std::system uses POSIX single quotes; cmd treats them as filename characters; fixture unavailable at headless_canvas_demo_test.cpp:202"
+        }
+      ]
+    },
+    "input_and_transform": "PASS",
+    "module_boundaries": "PASS",
+    "diff_check": "PASS",
+    "locked_sdk_offline": "PASS"
+  },
+  "physical_verification": "NOT_PERFORMED",
+  "hosted_verification": "required on exact evidence head before READY_FOR_CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "evidence_refs": [
+    {
+      "path": ".aegis/results/GT-G4.6-E/preflight.json",
+      "sha256": "8617614bd0e73c7111176ed65ef05ebbfcf29f8bd1c6c0d6ef3b3bf59cfc41bf"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/build.log",
+      "sha256": "b849fbe5fcb30d56d4a10f1ddb3e31fe75c3d7e8e9a3d8f5b8e7014b9ddb4fa1"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/build-codec.log",
+      "sha256": "90210ee81f7cd7a8c2219e7f0c00ec9b0e4e343e698f580e1fc488e71834976c"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/build-proof.log",
+      "sha256": "f0b52053ceab2e5dbd1b16efc62dca8865cc5a7219939f40661e33097b227f2d"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/ctest.log",
+      "sha256": "9b832ca2aa49f09bf8a8a1fd450ef46df75dea772cec0be5ee3f66ec69cbe753"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/ctest-full-codec.log",
+      "sha256": "1488fd80d68d3d9914a7af594efa3e45b24d2e9fa0fa58f545741ebb7b14d76a"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/input-and-transform.log",
+      "sha256": "a8b90befe3813841c4ad42aba4f29e09486274dbf7157f33c4a32a9b8987eb7d"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/scope-audit.json",
+      "sha256": "96480bc3f1fe5fb4d1877f740b24b6be09c73c62cdc474c0cc19eca09a7526bc"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/boundary.log",
+      "sha256": "8702f579cb3b160cf0840f3df9a68d37a477a2a8d42922b8a7456fc2c07178da"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/git-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/red.log",
+      "sha256": "792e9efb800b51b39649003cc1ad059f32fb38fd1b1fa99951587bc926c44630"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/windows-red.log",
+      "sha256": "c89e427833ac7f44a0a15f47085d48cc63401680e3b3497e3e03e5684121269b"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/lifecycle-red.log",
+      "sha256": "e0869264cd5d34dd26b8fd5d180a91e18bdf9f0ebfbb0c7bf5715b55360fa183"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/surface-mode-red.log",
+      "sha256": "ba544c2709440f266e2d0fac2f110af3a3b5ef99c517a9c45cb71eefe0f6af0b"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/headless-demo.log",
+      "sha256": "b0a91a28d0c2bb260bf7eb1c5e924dc04f4980193bd469e07867005faa01df5a"
+    },
+    {
+      "path": ".aegis/results/GT-G4.6-E/sdk-offline.log",
+      "sha256": "8b55025fa4f21af106c631f64ce5e2dd64c3b627a2ba1e229953951ae9c94bc0"
+    }
+  ]
+}
