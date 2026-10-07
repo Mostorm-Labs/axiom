@@ -1,0 +1,20 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.6-C",
+  "output_root": ".aegis/results/GT-G4.6-C/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "scope-audit.json",
+    "build-manifest.json",
+    "scenario-manifest.json",
+    "hud-metrics.json",
+    "workload-corpus-manifest.json",
+    "platform/windows.json",
+    "platform/web.json",
+    "platform/android.json",
+    "regression-matrix.json",
+    "result.json"
+  ],
+  "review_boundary": "exact qualification result revision + reviewer-accessible artifacts + hosted CI/provider refs",
+  "producer_may_claim_gate_pass": false
+}
