@@ -95,7 +95,7 @@ std::optional<SnapCandidate> SnapResolver::resolveAxis(
     for (const auto targetFeature : {SnapFeatureKind::kMinEdge,
                                      SnapFeatureKind::kCenter,
                                      SnapFeatureKind::kMaxEdge}) {
-      for (const auto [sourceFeature, sourceValue] : sourceFeatures) {
+      for (const auto& [sourceFeature, sourceValue] : sourceFeatures) {
         const float correction = featureValue(target.viewBounds, targetFeature, horizontal) -
                                  sourceValue;
         SnapCandidate candidate{target.objectId, targetFeature, sourceFeature, correction};
@@ -148,7 +148,7 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
     return std::abs(refreshed.correction) <= release
         ? std::optional<SnapCandidate>(refreshed) : std::nullopt;
   };
-  auto retainOrEngage = [release, &currentCorrection](
+  auto retainOrEngage = [&currentCorrection](
       std::optional<SnapCandidate>& active, std::optional<SnapCandidate> candidate,
       bool horizontal) {
     if (active.has_value()) {
