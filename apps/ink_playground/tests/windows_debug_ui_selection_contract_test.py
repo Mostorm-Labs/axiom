@@ -24,7 +24,8 @@ def test_debug_ui_uses_capability_tabs_and_exposes_selection_control():
 def test_selection_click_is_separate_from_brush_pointer_path():
     main = WINDOWS_MAIN.read_text(encoding="utf-8")
     assert "selectionMode" in main
-    assert "selectAtViewPoint" in main
+    assert "submitSelectionPointer" in main
+    assert "selectionPointer" in main
     assert "beginCanvasInput" in main
     assert "selectionMode &&" in main
 

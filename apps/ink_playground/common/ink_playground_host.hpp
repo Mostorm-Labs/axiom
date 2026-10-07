@@ -153,6 +153,10 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  // Qualification/composition seam: toggle an already hit object without
+  // introducing a second selection model or changing production pointer
+  // routing semantics.
+  [[nodiscard]] bool toggleSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
                                       float x, float y) noexcept;
   void cancelSelectionTransform() noexcept;

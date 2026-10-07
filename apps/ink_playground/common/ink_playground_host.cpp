@@ -546,6 +546,24 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
   return selected && renderSelectionOverlay();
 }
 
+bool InkPlaygroundHost::toggleSelectionAtViewPoint(float x, float y) noexcept {
+  if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+      foundation::WorldPoint{content.first, content.second}, 4.0F,
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+  if (!tested || tested.value().frontToBack.empty()) return false;
+  if (!selection_.toggle(tested.value().frontToBack.front())) return false;
+  snapGuides_.clear();
+  canonicalPresentationDirty_ = true;
+  if (selection_.primary().isZero()) {
+    selectionView_.reset();
+    return true;
+  }
+  return renderSelectionOverlay();
+}
+
 bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
   if (!selectionMode_ || selection_.primary().isZero() ||
       sceneCoordinator_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
