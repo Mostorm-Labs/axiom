@@ -1,0 +1,64 @@
+{
+  "schema_version": "aegis-control-review-v1",
+  "task_id": "GT-G4.6-B",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "repository": "Mostorm-Labs/axiom",
+  "package_ref": ".aegis/packages/GT-G4.6-B/package.json",
+  "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "reviewed_branch": "codex/g4-6-b-view-constraint",
+  "reviewed_head": "e620caa57c6622b6040395c37b7af97fa8c5216d",
+  "implementation_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+  "pull_request": {
+    "number": 143,
+    "url": "https://github.com/Mostorm-Labs/axiom/pull/143",
+    "head": "e620caa57c6622b6040395c37b7af97fa8c5216d",
+    "base": "cc985b174cafc5d5dd743bd66701cfe117278de8"
+  },
+  "predecessor": {
+    "task_id": "GT-G4.6-A",
+    "reviewed_head": "38c3f0b3b7b635abec8e41bc578131b6c47117b3",
+    "accepted_capability": "PASS_WITH_FINDINGS",
+    "review_ref": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json"
+  },
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "G46B-CAMERA-001": "PASS: camera generation changes without SemanticGeneration or shared Scene rebuild",
+    "G46B-ZOOM-002": "PASS: existing anchor invariance regression remains green",
+    "G46B-FIT-003": "PASS: padding/clamp/empty/degenerate/rotation/DPR matrix",
+    "G46B-SNAP-004": "PASS: thresholds/hysteresis/tie-break/selected exclusion and transient-only behavior",
+    "G46B-QUERY-005": "PASS: Scene::query(WorldRect) -> ObjectId -> RuntimeScene::find; no records scan in pointer hot path",
+    "G46B-PREDECESSOR-006": "PASS: A accepted capability and focused regressions preserved"
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "focused_ctest": "18/18 passed",
+    "affected_targets_build": "PASS",
+    "query_red_green": "PASS",
+    "git_diff_check": "PASS",
+    "hosted_required_checks": "9/9 PASS",
+    "hosted_head_exact": true,
+    "provider_evidence_ref": ".aegis/results/GT-G4.6-B/hosted-provider-evidence.json"
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "identity": "github/Mostorm-Labs/axiom",
+    "anchor_ancestry": "PASS",
+    "scope_audit": "PASS",
+    "forbidden_semantics_changed": false,
+    "materialized_ref": "https://github.com/Mostorm-Labs/axiom/pull/143"
+  },
+  "findings": [
+    {
+      "id": "B-HOSTED-WARNING-FIX",
+      "classification": "CLOSED",
+      "description": "Initial hosted run exposed warning-as-error portability failures; minimal cross-compiler cleanup was applied and the final 9/9 matrix passed."
+    }
+  ],
+  "verdict": "PASS_WITH_FINDINGS",
+  "accepted_capability": "PASS_G4_6_B_VIEW_CONSTRAINT_PRESENTATION",
+  "official_g4_6_gate_pass": false,
+  "official_p34_overall_pass": false,
+  "next_stage": "G4.6-C_IMPLEMENTATION_AFTER_CONTROL_ACCEPTANCE",
+  "reviewed_at_utc": "2026-10-07"
+}
