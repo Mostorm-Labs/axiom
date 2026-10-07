@@ -158,7 +158,13 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   void cancelSelectionTransform() noexcept;
   [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active(); }
   [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
-  void clearSelection() noexcept { selection_.cancel(); }
+  void clearSelection() noexcept {
+    cancelSelectionTransform();
+    selection_.cancel();
+    selectionView_.reset();
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+  }
   [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
     return selection_.summary().count;
   }

@@ -534,11 +534,15 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
   if (!tested || tested.value().frontToBack.empty()) {
     selection_.cancel();
     selectionView_.reset();
+    snapGuides_.clear();
     canonicalPresentationDirty_ = true;
     return true;
   }
   const bool selected = selection_.click(tested.value().frontToBack.front());
-  if (selected) canonicalPresentationDirty_ = true;
+  if (selected) {
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+  }
   return selected && renderSelectionOverlay();
 }
 
