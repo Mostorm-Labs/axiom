@@ -23,7 +23,13 @@
       "Do not implement G4.7 RichText or G5 optimization.",
       "Do not add new canonical schema/operations or change brush/Arc ownership.",
       "Do not claim official G4.6 Gate PASS from the execution package; return evidence to control review."
-    ]
+    ],
+    "preserved_work": [
+      "A result 58868e060d3c0327bcff7823c924188cd808ee6b and B result d9423fe90cfb6109fcb3914e69b4c27c01b646b4, including later valid D/E Windows host integration in execution ancestry.",
+      "Existing Windows multi-contact input, asynchronous preview pump, canonical-visible handoff and transformed partial-erase fixes.",
+      "Existing vector-only SkPath helper and separate DAB/Chalk/Membrane pipelines."
+    ],
+    "integration_boundary": "Expose existing common interaction and G4.5 owners through Playground platform adapters and instrumentation; production runtime implementation files stay outside this C scope."
   },
   "tests": {
     "required": [
@@ -31,27 +37,44 @@
         "id": "G46C-T1",
         "command_or_oracle": "qualification bundle self-check",
         "expected_result": "all scenario ids runnable and evidence export complete",
-        "blocking_reason": "qualification readiness"
+        "blocking_reason": "qualification readiness",
+        "obligation_ids": [
+          "G46C-BUNDLE-001"
+        ]
       },
       {
         "id": "G46C-T2",
         "command_or_oracle": "deterministic workload replay",
         "expected_result": "stable replay digests/metrics schema for applicable traces",
-        "blocking_reason": "G4.7/G5 handoff"
+        "blocking_reason": "G4.7/G5 handoff",
+        "obligation_ids": [
+          "G46C-WORKLOAD-003"
+        ]
       },
       {
         "id": "G46C-T3",
         "command_or_oracle": "Windows/Web/Android physical checklist",
         "expected_result": "all blocking scenarios pass or return exact blocker",
-        "blocking_reason": "Tier-A presentation qualification"
+        "blocking_reason": "Tier-A presentation qualification",
+        "obligation_ids": [
+          "G46C-PHYS-002",
+          "G46C-COEXIST-004"
+        ]
       },
       {
         "id": "G46C-T4",
         "command_or_oracle": "G4/G4.5/A/B regression matrix + git diff --check",
         "expected_result": "green",
-        "blocking_reason": "closure regression"
+        "blocking_reason": "closure regression",
+        "obligation_ids": [
+          "G46C-REGRESS-005"
+        ]
       }
-    ]
+    ],
+    "regression_inventory": {
+      "ctest_name_regex": "^(G4|G45|G46|C0|C1|DUI20|G3PreviewSurface|G3FrameState|G3SurfacePresentation|G3SkiaSurfaceProvider)",
+      "rule": "Enumerate configured tests and build required targets before execution; --no-tests=error; no silently missing profiles/targets. Preserve applicable existing Python/Node platform contract checks."
+    }
   },
   "hosted_verification": {
     "required": [
@@ -59,7 +82,8 @@
     ],
     "optional": [
       "additional device profiles"
-    ]
+    ],
+    "binding_policy": "Jobs/artifacts must identify the exact result SHA and attempt. Existing G4.5 brush-lab or G3 demo jobs alone do not prove G4.6 editing qualification. Use published locked Semantic/Skia SDK consumer paths from AGENTS.md."
   },
   "evidence": {
     "blocking": [
@@ -96,6 +120,35 @@
   },
   "return_policy": {
     "continue_until_terminal_state": true,
-    "return_surface": "CONTROL_REVIEW"
-  }
+    "return_surface": "CONTROL_REVIEW",
+    "required_fields": [
+      "terminal_state",
+      "result_revision",
+      "materialized_ref",
+      "package_materialization_ref",
+      "evidence_input_refs",
+      "provider_refs",
+      "explicit_blockers"
+    ]
+  },
+  "preflight": {
+    "required": [
+      "RepositoryIdentityPreflight",
+      "PackageBindingPreflight",
+      "EvidenceContractPreflight",
+      "ImplementationDesignPreflight"
+    ],
+    "independent_p31_control_review_required_before_production_mutation": true,
+    "predecessor_bindings": "package.json accepted_predecessors; exact result/review hash/ancestry, not current PR head equality",
+    "semantic_conflicts": "Return AUTHORITY_CONFLICT or TASK_PACKAGE_DEFECT to the earliest owning layer; no silent semantics rewrite."
+  },
+  "execution_sequence": [
+    "Reconcile the exact B baseline and preserve valid ancestor implementations.",
+    "Implement the deterministic scenario selector/HUD/export using existing owners; inspect platform capability gaps before any production mutation.",
+    "Materialize all frozen workload fixtures/traces and repeat replay on exact result identities.",
+    "Run required regressions and applicable hosted Windows/Web/Android build/test jobs; retain provider run/attempt/job/artifact refs.",
+    "At automated/qualification readiness, prepare exact physical checklist and runnable artifacts. This is a navigation checkpoint, not terminal C success.",
+    "Perform fixed physical qualification and freeze downstream evidence; unavailable required observations return a truthful terminal blocker.",
+    "Return exact result_revision, reviewer-accessible materialized_ref and evidence_input_refs to independent CONTROL_REVIEW; no Gate verdict."
+  ]
 }

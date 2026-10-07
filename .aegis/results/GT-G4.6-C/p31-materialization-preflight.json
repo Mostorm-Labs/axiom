@@ -1,0 +1,136 @@
+{
+  "format": "aegis-p31-materialization-preflight-v1",
+  "task_id": "GT-G4.6-C",
+  "stage": "P31",
+  "package_revision": "v0.2-p31-binding-repair",
+  "package_sha256": "c7aee19f4bc4e2659764057e61f8aded615c327e81ffaf1bbeb4e7a34a426336",
+  "original_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "execution_baseline_revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+  "repository_identity": {
+    "status": "PASS",
+    "remote": "https://github.com/Mostorm-Labs/Axiom.git",
+    "resolved_repository": {
+      "nameWithOwner": "Mostorm-Labs/axiom",
+      "url": "https://github.com/Mostorm-Labs/axiom"
+    }
+  },
+  "PackageBindingPreflight": {
+    "status": "PASS_STRUCTURAL_BINDINGS",
+    "lock_refs": {
+      "authority_lock_ref": {
+        "path": "authority.lock.json",
+        "sha256": "b5b86347b5380b0d7e248a0dfbdb8d40e5dbf5a266eae5acca7b77a49106e289",
+        "status": "PASS"
+      },
+      "verification_lock_ref": {
+        "path": "verification.lock.json",
+        "sha256": "81052e744df96d801efff18a051d9d50a15f44e3846a71cc38cce7a1142e4ced",
+        "status": "PASS"
+      },
+      "execution_contract_ref": {
+        "path": "execution-contract.json",
+        "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+        "status": "PASS"
+      },
+      "evidence_contract_ref": {
+        "path": "evidence-contract.json",
+        "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+        "status": "PASS"
+      },
+      "implementation_context_ref": {
+        "path": "implementation-context.md",
+        "sha256": "53cde8ca4627d74ecde6ab6af063bf248f3113d6ff5f681c2aac01e0499a1242",
+        "status": "PASS"
+      },
+      "scope_contract_ref": {
+        "path": "execution-contract.json",
+        "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+        "status": "PASS"
+      },
+      "evidence_compilation_contract_ref": {
+        "path": "evidence-contract.json",
+        "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+        "status": "PASS"
+      }
+    },
+    "source_refs": [
+      {
+        "path": "sources/architecture.json",
+        "sha256": "c2cb3afa406c67d07d5aa9a69a0a37cc1cab703a0b1730dd861f63070408f815",
+        "status": "PASS"
+      },
+      {
+        "path": "sources/roadmap.json",
+        "sha256": "0c1ba8bab53f2ddab217c0c7f69949fda37332a71ea56db42e034eaa50c32948",
+        "status": "PASS"
+      },
+      {
+        "path": "sources/compressed-p31.json",
+        "sha256": "d7c4f28b072a5facc3a828b99916a57aca4c22a581d76e7ebe25cbb9a4aa5872",
+        "status": "PASS"
+      }
+    ],
+    "exact_predecessors": [
+      {
+        "task_id": "GT-G4.6-A",
+        "result_revision": "58868e060d3c0327bcff7823c924188cd808ee6b",
+        "accepted_capability": "PASS_G4_6_A_EDITING_PRESENTATION",
+        "review_ref": {
+          "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+          "path": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json",
+          "sha256": "0ab60b0077332e59de257b961390dfec02c4b655a65a24b601bb5e3b74eb764f"
+        },
+        "ancestry": "PASS"
+      },
+      {
+        "task_id": "GT-G4.6-B",
+        "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+        "accepted_capability": "PASS_G4_6_B_VIEW_CONSTRAINT_PRESENTATION",
+        "review_ref": {
+          "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+          "path": ".aegis/results/GT-G4.6-B/p34-control-review.json",
+          "sha256": "659f314fcca638522e3164d2da41bad61fc5ee46b6e1920161404e04a19b340f"
+        },
+        "ancestry": "PASS"
+      }
+    ]
+  },
+  "EvidenceContractPreflight": {
+    "status": "PASS_STRUCTURAL_MAPPING",
+    "mapped_obligations": [
+      "G46C-BUNDLE-001",
+      "G46C-PHYS-002",
+      "G46C-WORKLOAD-003",
+      "G46C-COEXIST-004",
+      "G46C-REGRESS-005"
+    ],
+    "original_terminal_and_physical_requirements": "PRESERVED",
+    "implementation_or_physical_evidence_validated": false
+  },
+  "scope": {
+    "changed_paths": [
+      ".aegis/packages/GT-G4.6-C/.gitattributes",
+      ".aegis/packages/GT-G4.6-C/authority.lock.json",
+      ".aegis/packages/GT-G4.6-C/evidence-contract.json",
+      ".aegis/packages/GT-G4.6-C/execution-contract.json",
+      ".aegis/packages/GT-G4.6-C/implementation-context.md",
+      ".aegis/packages/GT-G4.6-C/package.json",
+      ".aegis/packages/GT-G4.6-C/sources/architecture.json",
+      ".aegis/packages/GT-G4.6-C/sources/compressed-p31.json",
+      ".aegis/packages/GT-G4.6-C/sources/roadmap.json",
+      ".aegis/packages/GT-G4.6-C/verification.lock.json",
+      ".aegis/results/GT-G4.6-C/.gitattributes",
+      ".aegis/results/GT-G4.6-C/p31-materialization-preflight.json"
+    ],
+    "production_files_changed": false,
+    "line_endings": "Package and result-local .gitattributes force LF; verify committed blob bytes match SHA-256."
+  },
+  "independent_control_review": {
+    "status": "PENDING",
+    "required_before_p32_production_mutation": true
+  },
+  "producer_claims": {
+    "p32_implementation_complete": false,
+    "g4_6_gate_pass": false
+  }
+}

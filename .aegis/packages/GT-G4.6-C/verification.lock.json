@@ -5,27 +5,69 @@
     {
       "id": "G46C-BUNDLE-001",
       "requirement": "Canvas Interaction Playground 0.1 can run all frozen scenarios and exports exact-identity HUD/trace/evidence.",
-      "oracle": "qualification bundle manifest + scenario run"
+      "oracle": "qualification bundle manifest + scenario run",
+      "acceptance": "All frozen scenarios have runnable selectors/adapters on required capability profiles and export result/build/scenario/device identity and the required HUD/trace fields. Unsupported or absent required scenarios return exact blockers; fixture setup must use existing canonical operations.",
+      "evidence_required": [
+        "build-manifest.json",
+        "scenario-manifest.json",
+        "hud-metrics.json"
+      ],
+      "blocking": true
     },
     {
       "id": "G46C-PHYS-002",
       "requirement": "Blocking physical checklist passes on required capability-profiled Windows/Web/Android runs.",
-      "oracle": "platform observation records bound to exact build/result"
+      "oracle": "platform observation records bound to exact build/result",
+      "acceptance": "The fixed six-scenario checklist is observed on Windows/Web/Android with exact result revision, build hash, platform/device/capabilities and trace/screenshot refs. Every required case passes; missing hardware, unsupported required capabilities or absent human observations remain blockers.",
+      "evidence_required": [
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json"
+      ],
+      "blocking": true
     },
     {
       "id": "G46C-WORKLOAD-003",
       "requirement": "Deterministic downstream workload corpus is frozen with scene/view/overlay/candidate/op/invalidation/frame metrics.",
-      "oracle": "corpus manifest + replay digests"
+      "oracle": "corpus manifest + replay digests",
+      "acceptance": "Every frozen workload, including the 100K profiles, has content-addressed fixture/trace inputs and independently rerunnable replay output. Repeated replay preserves semantic/presentation digest and deterministic counters; real timings are reported separately. No synthetic timing, generation or invalidation values may stand in for real observations.",
+      "evidence_required": [
+        "workload-corpus-manifest.json",
+        "hud-metrics.json"
+      ],
+      "blocking": true
     },
     {
       "id": "G46C-COEXIST-004",
       "requirement": "G4.5 Pen/Laser coexist with editing overlay without canonical pollution or stale presentation.",
-      "oracle": "coexistence smoke + traces"
+      "oracle": "coexistence smoke + traces",
+      "acceptance": "Existing Pen/Laser owners coexist with per-view editing chrome; overlay and Laser remain non-canonical, successful Pen commits follow existing semantics and clear/cancel/handoff leaves no stale presentation. Preserve existing brush/Arc regression behavior.",
+      "evidence_required": [
+        "hud-metrics.json",
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json",
+        "regression-matrix.json"
+      ],
+      "blocking": true
     },
     {
       "id": "G46C-REGRESS-005",
       "requirement": "G4/G4.5 and accepted A/B regressions remain green.",
-      "oracle": "regression matrix"
+      "oracle": "regression matrix",
+      "acceptance": "Run and retain the applicable G4/G4.5 and accepted A/B suite inventory, execution logs and git diff --check. Required failures/Not Run are blocking; no filtering or new waiver based on physical feel. Preserve unrelated baseline findings with their exact identities and disposition.",
+      "evidence_required": [
+        "regression-matrix.json",
+        "scope-audit.json"
+      ],
+      "blocking": true
     }
-  ]
+  ],
+  "verification_spec": {
+    "id": "GT-G4.6-C-P31-v0.2",
+    "origin_package_revision": "68a6c4370efa589e58a33540b745d8c851ef711f",
+    "trusted_basis_ref": "authority.lock.json",
+    "scope_contract_ref": "execution-contract.json"
+  },
+  "evidence_compilation_contract_ref": "evidence-contract.json"
 }
