@@ -25,6 +25,7 @@ enum class ProductControlState : std::uint8_t {
 };
 
 enum class CameraControlAction : std::uint8_t { kPan, kZoomAt, kFitToContent };
+enum class CameraFitTarget : std::uint8_t { kDocument, kSelection, kObject, kWorldRect };
 
 // Product-safe state exposed to Product Shell and the Debug Controller.  The
 // values are an aggregate projection; they never expose RuntimeScene or
@@ -47,6 +48,7 @@ struct RuntimeStateSnapshot final {
   bool selectionMode = false;
   std::uint32_t selectedObjectCount = 0;
   std::uint64_t selectedPrimaryObject = 0;
+  std::uint64_t snapCandidateCount = 0;
 };
 
 struct RuntimeDiagnosticsSnapshot final {
@@ -68,6 +70,7 @@ struct RuntimeDiagnosticsSnapshot final {
   bool selectionMode = false;
   std::uint32_t selectedObjectCount = 0;
   std::uint64_t selectedPrimaryObject = 0;
+  std::uint64_t snapCandidateCount = 0;
 };
 
 class RuntimeDiagnostics : public DiagnosticsProvider {
@@ -95,6 +98,8 @@ struct ProductControlRequest final {
   float anchorY = 0.0F;
   float scaleDelta = 1.0F;
   bool selectionMode = false;
+  CameraFitTarget cameraFitTarget = CameraFitTarget::kDocument;
+  std::uint64_t cameraObjectId = 0;
 };
 
 struct ProductControlReceipt final {
@@ -215,6 +220,28 @@ class RuntimeFacade : public RuntimeDiagnostics {
       std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
     return setCamera(CameraControlAction::kFitToContent, 0.0F, 0.0F, 0.0F,
                      0.0F, 1.0F, requestId, runtimeGeneration);
+  }
+  [[nodiscard]] ProductControlReceipt fitToSelection(
+      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetCamera;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);
+    request.cameraFitTarget = CameraFitTarget::kSelection;
+    return submitProductControl(request);
+  }
+  [[nodiscard]] ProductControlReceipt fitToObject(
+      std::uint64_t objectId, std::uint64_t requestId,
+      std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetCamera;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);
+    request.cameraFitTarget = CameraFitTarget::kObject;
+    request.cameraObjectId = objectId;
+    return submitProductControl(request);
   }
 };
 

@@ -194,6 +194,20 @@ void viewport_gesture_state_test() {
   assert(host.canonicalStrokes().front().front().y == 10.0F);
 }
 
+void viewport_fit_and_generation_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(800, 600));
+  assert(host.beginBrushSession(900));
+  assert(host.appendBrushSample(900, 40.0, 50.0, 0.5, 1U));
+  assert(host.finishBrushSession(900));
+  const auto semanticBefore = host.semanticGeneration();
+  const auto cameraBefore = host.cameraGeneration();
+  assert(host.fitViewportToContent());
+  assert(host.cameraGeneration() > cameraBefore);
+  assert(host.semanticGeneration() == semanticBefore);
+  assert(host.viewportGesture().scale == 32.0F);
+}
+
 void android_pointer_identity_test() {
   using canvas::ink_playground::androidPointerIdentity;
   assert(androidPointerIdentity(0).has_value());
@@ -246,6 +260,7 @@ int main(int argc, char** argv) {
   else if (mode == "multipointer") multipointer_test();
   else if (mode == "provisional") provisional_zero_mutation_test();
   else if (mode == "viewport") viewport_gesture_state_test();
+  else if (mode == "viewport-fit") viewport_fit_and_generation_test();
   else if (mode == "android-pointer-identity") android_pointer_identity_test();
   else if (mode == "multi-contact-policy") multi_contact_policy_selection_test();
   else if (mode == "selection") selection_input_does_not_mutate_canonical_test();

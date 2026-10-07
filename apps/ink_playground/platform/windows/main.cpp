@@ -235,17 +235,17 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto viewport = state_.host->viewportGesture();
     return {1U, state_.host->semanticGeneration().value(),
-            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 1U,
+            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), state_.host->cameraGeneration(),
             static_cast<std::uint32_t>(state_.selectedTool),
             state_.host->surface().generation, viewport.scale,
             viewport.translationX, viewport.translationY,
             state_.host->canUndo(), state_.host->canRedo(),
             state_.host->selectionOverlay() == nullptr ? 0U : state_.host->selectionOverlay()->updateCount(),
             static_cast<std::uint64_t>(state_.host->transientTransformCount()),
-            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), 0U,
+            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), state_.host->cameraGeneration(),
             state_.host->selectionMode(),
             static_cast<std::uint32_t>(state_.host->selectedObjectCount()),
-            state_.host->selectedPrimaryObjectValue()};
+            state_.host->selectedPrimaryObjectValue(), state_.host->snapCandidateCount()};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
@@ -261,7 +261,7 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
             diagnostics.cameraScale, diagnostics.cameraTranslationX,
             diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo,
             diagnostics.selectionMode, diagnostics.selectedObjectCount,
-            diagnostics.selectedPrimaryObject};
+            diagnostics.selectedPrimaryObject, diagnostics.snapCandidateCount};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -286,16 +286,21 @@ class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
     }
     if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
       if (!state_.selectionPointers.empty()) clearCanvasInput(state_);
-      canvas::interaction::ViewportNavigationSample navigation{};
-      navigation.anchorX = request.anchorX;
-      navigation.anchorY = request.anchorY;
-      navigation.deltaX = request.deltaX;
-      navigation.deltaY = request.deltaY;
-      navigation.scaleDelta = request.scaleDelta;
-      navigation.kind = request.cameraAction == 2U
-          ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
-          : canvas::interaction::ViewportNavigationKind::kWheelPan;
-      if (state_.host->applyViewportNavigation(navigation)) {
+      const bool applied = request.cameraAction ==
+              static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kFitToContent)
+          ? (request.cameraFitTarget == canvas::runtime::CameraFitTarget::kSelection
+                 ? state_.host->fitViewportToSelection()
+                 : request.cameraFitTarget == canvas::runtime::CameraFitTarget::kObject
+                     ? state_.host->fitViewportToObject(
+                         canvas::foundation::ObjectId::fromUint64(request.cameraObjectId))
+                     : state_.host->fitViewportToContent())
+          : state_.host->applyViewportNavigation({
+              request.cameraAction == static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kZoomAt)
+                  ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
+                  : canvas::interaction::ViewportNavigationKind::kWheelPan,
+              request.deltaX, request.deltaY, request.anchorX, request.anchorY,
+              request.scaleDelta});
+      if (applied) {
         receipt.state = canvas::runtime::ProductControlState::kApplied;
       }
       return receipt;

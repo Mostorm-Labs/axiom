@@ -93,6 +93,40 @@ std::uint64_t hashOutline(const std::vector<canvas::ink::reference::StrokeOutlin
   return hash;
 }
 
+canvas::foundation::WorldRect transformedBounds(
+    const canvas::foundation::WorldRect& bounds,
+    const canvas::semantic::Transform2D& transform) noexcept {
+  const std::array<canvas::foundation::WorldPoint, 4> corners{{
+      {static_cast<float>(transform.a * bounds.left + transform.c * bounds.top + transform.tx),
+       static_cast<float>(transform.b * bounds.left + transform.d * bounds.top + transform.ty)},
+      {static_cast<float>(transform.a * bounds.right + transform.c * bounds.top + transform.tx),
+       static_cast<float>(transform.b * bounds.right + transform.d * bounds.top + transform.ty)},
+      {static_cast<float>(transform.a * bounds.right + transform.c * bounds.bottom + transform.tx),
+       static_cast<float>(transform.b * bounds.right + transform.d * bounds.bottom + transform.ty)},
+      {static_cast<float>(transform.a * bounds.left + transform.c * bounds.bottom + transform.tx),
+       static_cast<float>(transform.b * bounds.left + transform.d * bounds.bottom + transform.ty)},
+  }};
+  canvas::foundation::WorldRect result{corners[0].x, corners[0].y, corners[0].x, corners[0].y};
+  for (const auto& corner : corners) {
+    result.left = std::min(result.left, corner.x);
+    result.top = std::min(result.top, corner.y);
+    result.right = std::max(result.right, corner.x);
+    result.bottom = std::max(result.bottom, corner.y);
+  }
+  return result;
+}
+
+canvas::foundation::WorldRect viewBounds(
+    const canvas::foundation::WorldRect& world,
+    const canvas::interaction::ViewportGesture& viewport) noexcept {
+  const float scale = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+      ? viewport.scale : 1.0F;
+  return {world.left * scale + viewport.translationX,
+          world.top * scale + viewport.translationY,
+          world.right * scale + viewport.translationX,
+          world.bottom * scale + viewport.translationY};
+}
+
 }  // namespace
 
 namespace canvas::ink_playground {
@@ -548,6 +582,8 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
 
 void InkPlaygroundHost::cancelSelectionTransform() noexcept {
   transformDrag_.cancel();
+  snapResolver_.reset();
+  snapCandidateCount_ = 0;
   editingPointer_ = 0;
   editingChanged_ = false;
   canonicalPresentationDirty_ = true;
@@ -637,6 +673,23 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
       const double sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
       next={t.a*sx,t.b*sx,t.c*sy,t.d*sy,t.tx+t.a*ax*(1-sx)+t.c*ay*(1-sy),
                                          t.ty+t.b*ax*(1-sx)+t.d*ay*(1-sy)};
+    }
+    if (sceneCoordinator_ != nullptr) {
+      const auto viewport = viewportController_->state();
+      const auto sourceWorld = transformedBounds(editingLocalBounds_, next);
+      std::vector<interaction::SnapTarget> targets;
+      targets.reserve(sceneCoordinator_->runtimeScene().records().size());
+      for (const auto& record : sceneCoordinator_->runtimeScene().records()) {
+        if (record.objectId == selection_.primary()) continue;
+        targets.push_back({record.objectId, viewBounds(record.worldBounds, viewport),
+                           false, transformOverrides_.find(record.objectId) != nullptr});
+      }
+      const auto resolved = snapResolver_.resolve(
+          interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);
+      snapCandidateCount_ = resolved.candidatesExamined;
+      const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
+      if (resolved.x.has_value()) next.tx += resolved.x->correction / scale;
+      if (resolved.y.has_value()) next.ty += resolved.y->correction / scale;
     }
     editingChanged_ = !(next==editingInitial_);
     const std::array values{std::pair{selection_.primary(),next}};
@@ -1221,6 +1274,56 @@ bool InkPlaygroundHost::applyViewportNavigation(
     return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
   }
   return true;
+}
+
+bool InkPlaygroundHost::fitViewportToContent(
+    const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
+  if (viewportController_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
+    return false;
+  }
+  std::optional<foundation::WorldRect> target = requestedTarget;
+  if (!target.has_value() && runtimeSceneHost_ != nullptr) {
+    const auto bounds = runtimeSceneHost_->publishedBounds();
+    if (!runtimeSceneHost_->read().records().empty() && bounds.isFiniteAndOrdered()) {
+      target = bounds;
+    }
+  }
+  if (!target.has_value()) return false;
+  const auto fit = interaction::computeViewportFit(
+      target, static_cast<float>(surface_.width), static_cast<float>(surface_.height),
+      0.0F, 1.0F);
+  if (!fit.accepted) return false;
+  const float translationX = static_cast<float>(surface_.width) * 0.5F - fit.zoom * fit.centerX;
+  const float translationY = static_cast<float>(surface_.height) * 0.5F - fit.zoom * fit.centerY;
+  if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
+  const auto viewport = viewportController_->state();
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+                                          viewport.translationY)) {
+    return false;
+  }
+  if (surface_.available && activeSurfaceProvider() != nullptr) {
+    if (platformPresentationDeferred_) {
+      canonicalPresentationDirty_ = true;
+      return true;
+    }
+    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::fitViewportToSelection() noexcept {
+  if (selection_.primary().isZero() || sceneCoordinator_ == nullptr) return false;
+  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
+  if (record == nullptr) return false;
+  return fitViewportToContent(record->worldBounds);
+}
+
+bool InkPlaygroundHost::fitViewportToObject(foundation::ObjectId objectId) noexcept {
+  if (objectId.isZero() || sceneCoordinator_ == nullptr) return false;
+  const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
+  if (record == nullptr) return false;
+  return fitViewportToContent(record->worldBounds);
 }
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,

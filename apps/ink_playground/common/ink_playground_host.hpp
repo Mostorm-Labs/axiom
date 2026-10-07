@@ -11,6 +11,7 @@
 #include "canvas/interaction/editor_history.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
+#include "canvas/interaction/viewport_constraints.hpp"
 #include "canvas/interaction/selection_session.hpp"
 #include "canvas/interaction/transform_handle_drag.hpp"
 #include "canvas/render/presentation_tracker.hpp"
@@ -243,6 +244,16 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] bool applyViewportNavigation(
       const interaction::ViewportNavigationSample& sample) noexcept;
+  [[nodiscard]] bool fitViewportToContent(
+      const std::optional<foundation::WorldRect>& target = std::nullopt) noexcept;
+  [[nodiscard]] bool fitViewportToSelection() noexcept;
+  [[nodiscard]] bool fitViewportToObject(foundation::ObjectId objectId) noexcept;
+  [[nodiscard]] std::uint64_t cameraGeneration() const noexcept {
+    return viewportController_ == nullptr ? 0U : viewportController_->cameraGeneration();
+  }
+  [[nodiscard]] std::uint64_t snapCandidateCount() const noexcept {
+    return snapCandidateCount_;
+  }
   [[nodiscard]] std::pair<float, float> viewToContent(float x, float y) const noexcept {
     return viewportController_->viewToContent(x, y);
   }
@@ -438,6 +449,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   foundation::WorldPoint editingDownWorld_{};
   semantic::SemanticGeneration editingGeneration_{};
   bool editingChanged_ = false;
+  interaction::SnapResolver snapResolver_{};
+  std::uint64_t snapCandidateCount_ = 0;
 };
 
 }  // namespace canvas::ink_playground
