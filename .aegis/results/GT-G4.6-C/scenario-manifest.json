@@ -1,10 +1,29 @@
 {
-  "schema_version": "GT-G4.6-C-P32-scenarios-v1",
-  "result_revision": "7992019c752335cfa711e5242e6e0fce8ba1d15b",
-  "automated_selectors_implemented": ["select-deselect", "move-resize-rotate", "slow-fast-pan-zoom-fit", "100K-transform-overlay"],
-  "required_selectors_pending": ["handle-hover", "multi-select", "move-snap-guide", "continuous-zoom", "zoom-settle", "zoom-to-fit", "100K-active-ink-laser"],
-  "physical_checklist": ["DPR 50/100/200/400", "mouse-touch-pen handle acquisition", "move-resize-rotate-cancel", "pan-wheel-pinch-fit", "snap 6px/10px hysteresis", "Pen/Laser coexistence"],
+  "schema_version": "GT-G4.6-C-P32-scenarios-v2",
+  "result_revision": "ab0848d49bdc3d39394dcbeee063802ffbf2b975",
+  "automated_selectors_implemented": [
+    "select-deselect",
+    "multi-select",
+    "handle-hover",
+    "move-resize-rotate",
+    "move-snap-guide",
+    "slow-fast-pan-zoom-fit",
+    "continuous-zoom",
+    "zoom-settle",
+    "zoom-to-fit",
+    "100K-transform-overlay",
+    "100K-active-ink-laser"
+  ],
+  "required_selector_count": 11,
+  "physical_checklist": [
+    "DPR 50/100/200/400",
+    "mouse/touch/pen handle acquisition",
+    "move/resize/rotate/cancel",
+    "pan/wheel/pinch/anchor zoom/fit",
+    "snap hysteresis and guide continuity",
+    "Pen/Laser coexistence with editing overlay"
+  ],
   "selection_owner": "runtime interaction SelectionSession/TransformHandleDrag",
   "camera_owner": "runtime interaction ViewportInteractionController/FrameState",
-  "physical_status": "PENDING_PHYSICAL_OBSERVATION"
+  "physical_status": "BLOCKED_PENDING_PLATFORM_OBSERVATION"
 }

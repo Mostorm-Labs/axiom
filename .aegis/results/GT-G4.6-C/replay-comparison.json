@@ -1,0 +1,75 @@
+{
+  "schema_version": "GT-G4.6-C-replay-comparison-v1",
+  "result_revision": "ab0848d49bdc3d39394dcbeee063802ffbf2b975",
+  "replay_1": "qualification-replay-1/qualification-run.json",
+  "replay_2": "qualification-replay-2/qualification-run.json",
+  "excluded_from_equality": [
+    "elapsed_ms",
+    "frame_ms_samples",
+    "query_ms_samples",
+    "frame_p50_ms",
+    "frame_p95_ms",
+    "frame_p99_ms",
+    "query_p95_ms",
+    "query_ms",
+    "fixture_render_ms"
+  ],
+  "all_deterministic_fields_equal": true,
+  "scenarios": [
+    {
+      "scenario_id": "select-deselect",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "multi-select",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "handle-hover",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "move-resize-rotate",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "move-snap-guide",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "slow-fast-pan-zoom-fit",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "continuous-zoom",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "zoom-settle",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "zoom-to-fit",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "100K-transform-overlay",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    },
+    {
+      "scenario_id": "100K-active-ink-laser",
+      "deterministic_fields_equal": true,
+      "differences": {}
+    }
+  ]
+}

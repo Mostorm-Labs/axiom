@@ -1,8 +1,13 @@
 {
   "platform": "Windows",
-  "result_revision": "7992019c752335cfa711e5242e6e0fce8ba1d15b",
-  "build_sha256": "5f41b4ff1db29ca411b2c21100d5adfc141496b7aafa627fb72ad5d3b1d5a7b0",
-  "device_profile": "local Windows host; physical checklist awaiting user observation",
+  "result_revision": "ab0848d49bdc3d39394dcbeee063802ffbf2b975",
+  "build_sha256": "b1715f9861be8091296f9f7be0eb3ff90f19e9b629811e67dd7f89e2c658b662",
+  "qualification_runner_sha256": "46322da47b51cdb4d04e8de82506972a5766ffed69856752a91615a86d84737f",
+  "device_profile": "local Windows host",
   "automated_bundle": "PASS",
-  "physical_status": "PENDING_PHYSICAL_OBSERVATION"
+  "physical_checklist_status": "PENDING_USER_OBSERVATION",
+  "physical_status": "BLOCKED_EVIDENCE",
+  "missing": [
+    "exported Windows checklist trace/screenshot bound to exact build"
+  ]
 }
