@@ -1,7 +1,8 @@
 {
   "schema_version": "GT-G4.6-C-P32-scenarios-v1",
   "result_revision": "bf0a0f2d89b7a54f8d7e94d3543459bf6c00f6ed",
-  "automated_selectors": ["select-deselect", "handle-hover", "multi-select", "move-resize-rotate", "move-snap-guide", "slow-fast-pan", "continuous-zoom", "zoom-settle", "zoom-to-fit", "100K-transform-overlay", "100K-active-ink-laser"],
+  "automated_selectors_implemented": ["select-deselect", "move-resize-rotate", "slow-fast-pan-zoom-fit", "100K-transform-overlay"],
+  "required_selectors_pending": ["handle-hover", "multi-select", "move-snap-guide", "continuous-zoom", "zoom-settle", "zoom-to-fit", "100K-active-ink-laser"],
   "physical_checklist": ["DPR 50/100/200/400", "mouse-touch-pen handle acquisition", "move-resize-rotate-cancel", "pan-wheel-pinch-fit", "snap 6px/10px hysteresis", "Pen/Laser coexistence"],
   "selection_owner": "runtime interaction SelectionSession/TransformHandleDrag",
   "camera_owner": "runtime interaction ViewportInteractionController/FrameState",
