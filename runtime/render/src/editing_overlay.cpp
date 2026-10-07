@@ -41,6 +41,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         return false;
     }
     input_ = input;
+    guides_.assign(input.guides.begin(), input.guides.end());
     ++updateCount_;
 
     const ScreenPoint localTopLeft{input.worldBounds.left, input.worldBounds.top};
@@ -95,6 +96,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 void EditingOverlay::clear() noexcept {
     input_ = {};
     outline_ = {};
+    guides_.clear();
     for (auto& handle : handles_) handle = {};
 }
 

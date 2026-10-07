@@ -478,6 +478,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   bool editingChanged_ = false;
   interaction::SnapResolver snapResolver_{};
   std::uint64_t snapCandidateCount_ = 0;
+  std::vector<render::SnapGuideGeometry> snapGuides_;
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
 };

@@ -579,7 +579,7 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
-      render::HandleCapabilities{true, true, true}});
+      render::HandleCapabilities{true, true, true}, snapGuides_});
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }
@@ -647,6 +647,10 @@ void InkPlaygroundHost::cancelSelectionTransform() noexcept {
   transformDrag_.cancel();
   snapResolver_.reset();
   snapCandidateCount_ = 0;
+  snapGuides_.clear();
+  if (selectionMode_ && !selection_.primary().isZero()) {
+    (void)renderSelectionOverlay();
+  }
   editingPointer_ = 0;
   editingChanged_ = false;
   canonicalPresentationDirty_ = true;
@@ -764,6 +768,21 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
       const auto resolved = snapResolver_.resolve(
           interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);
       snapCandidateCount_ = resolved.candidatesExamined;
+      snapGuides_.clear();
+      const auto appendGuide = [&](const auto& guide) {
+        if (!guide.has_value()) return;
+        if (guide->axis == interaction::SnapGuideAxis::kVertical) {
+          snapGuides_.push_back({render::SnapGuideAxis::kVertical,
+                                 {guide->position, guide->spanStart},
+                                 {guide->position, guide->spanEnd}});
+        } else {
+          snapGuides_.push_back({render::SnapGuideAxis::kHorizontal,
+                                 {guide->spanStart, guide->position},
+                                 {guide->spanEnd, guide->position}});
+        }
+      };
+      appendGuide(resolved.xGuide);
+      appendGuide(resolved.yGuide);
       const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
       if (resolved.x.has_value()) next.tx += resolved.x->correction / scale;
       if (resolved.y.has_value()) next.ty += resolved.y->correction / scale;
@@ -771,6 +790,10 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     editingChanged_ = !(next==editingInitial_);
     const std::array values{std::pair{selection_.primary(),next}};
     if (!transformDrag_.preview(values)) { cancelSelectionTransform(); return false; }
+    // Refresh the transient overlay immediately so a guide appears/disappears
+    // in the same interaction frame as the resolved snap, without waiting for
+    // a canonical operation or a later unrelated repaint.
+    (void)renderSelectionOverlay();
     canonicalPresentationDirty_ = true;
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();

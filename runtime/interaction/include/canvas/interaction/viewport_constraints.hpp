@@ -31,6 +31,15 @@ struct ViewportFitResult final {
 
 enum class SnapFeatureKind : std::uint8_t { kMinEdge = 0, kCenter = 1, kMaxEdge = 2 };
 
+enum class SnapGuideAxis : std::uint8_t { kVertical = 0, kHorizontal = 1 };
+
+struct SnapGuide final {
+  SnapGuideAxis axis = SnapGuideAxis::kVertical;
+  float position = 0.0F;
+  float spanStart = 0.0F;
+  float spanEnd = 0.0F;
+};
+
 struct SnapTarget final {
   foundation::ObjectId objectId{};
   foundation::WorldRect viewBounds{};
@@ -50,6 +59,8 @@ struct SnapCandidate final {
 struct SnapResolution final {
   std::optional<SnapCandidate> x;
   std::optional<SnapCandidate> y;
+  std::optional<SnapGuide> xGuide;
+  std::optional<SnapGuide> yGuide;
   std::uint64_t candidatesExamined = 0;
 };
 

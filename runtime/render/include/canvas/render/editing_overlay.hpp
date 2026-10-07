@@ -7,6 +7,8 @@
 
 #include <array>
 #include <cstddef>
+#include <span>
+#include <vector>
 
 namespace canvas::render {
 
@@ -14,6 +16,14 @@ struct ScreenPoint final {
     float x = 0.0F;
     float y = 0.0F;
     bool operator==(const ScreenPoint&) const = default;
+};
+
+enum class SnapGuideAxis : std::uint8_t { kVertical = 0, kHorizontal = 1 };
+
+struct SnapGuideGeometry final {
+    SnapGuideAxis axis = SnapGuideAxis::kVertical;
+    ScreenPoint start{};
+    ScreenPoint end{};
 };
 
 enum class HandleKind : std::uint8_t {
@@ -58,6 +68,7 @@ struct EditingOverlayInput final {
     bool hovered = false;
     bool active = false;
     HandleCapabilities capabilities{};
+    std::span<const SnapGuideGeometry> guides{};
 };
 
 class EditingOverlay final {
@@ -83,6 +94,9 @@ class EditingOverlay final {
     [[nodiscard]] const SelectionOutline& selectionOutline() const noexcept {
         return outline_;
     }
+    [[nodiscard]] const std::vector<SnapGuideGeometry>& guides() const noexcept {
+        return guides_;
+    }
     [[nodiscard]] HandleKind hitTest(ScreenPoint point, float hitSlop = 0.0F) const noexcept;
 
   private:
@@ -91,6 +105,7 @@ class EditingOverlay final {
     EditingOverlayInput input_{};
     SelectionOutline outline_{};
     std::array<HandleGeometry, kHandleCount> handles_{};
+    std::vector<SnapGuideGeometry> guides_{};
     std::uint64_t updateCount_ = 0;
 };
 

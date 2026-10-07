@@ -33,13 +33,20 @@ void snapPolicy() {
       {ObjectId::fromUint64(4), WorldRect{100, 40, 200, 140}, false, true}};
   const auto first = resolver.resolve(source, targets);
   assert(first.candidatesExamined == 2 && first.x.has_value() && first.y.has_value());
+  assert(first.xGuide.has_value() && first.yGuide.has_value());
+  assert(first.xGuide->axis == SnapGuideAxis::kVertical);
+  assert(std::abs(first.xGuide->position - 94.0F) < 1.0e-5F);
+  assert(first.xGuide->spanStart <= 0.0F && first.xGuide->spanEnd >= 100.0F);
+  assert(first.yGuide->axis == SnapGuideAxis::kHorizontal);
+  assert(std::abs(first.yGuide->position - 50.0F) < 1.0e-5F);
   assert(first.x->targetObjectId == ObjectId::fromUint64(3));
   assert(first.x->targetFeature == SnapFeatureKind::kMinEdge);
   assert(first.x->sourceFeature == SnapFeatureKind::kMinEdge);
   const auto retained = resolver.resolve(SnapSource{WorldRect{95, 40, 115, 60}}, targets);
   assert(retained.x.has_value() && retained.x->targetObjectId == ObjectId::fromUint64(3));
   const auto released = resolver.resolve(SnapSource{WorldRect{111, 40, 131, 60}}, targets);
-  assert(!released.x.has_value() && released.y.has_value());
+  assert(!released.x.has_value() && !released.xGuide.has_value() && released.y.has_value() &&
+         released.yGuide.has_value());
   const auto tie = resolver.resolve(SnapSource{WorldRect{95, 40, 115, 60}}, targets);
   assert(tie.x.has_value() && tie.x->targetObjectId == ObjectId::fromUint64(3));
 }

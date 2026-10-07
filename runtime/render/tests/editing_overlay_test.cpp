@@ -20,6 +20,8 @@ using canvas::render::MetricsGeneration;
 using canvas::render::RenderViewRuntime;
 using canvas::render::SurfaceGeneration;
 using canvas::render::SurfaceMetrics;
+using canvas::render::SnapGuideGeometry;
+using canvas::render::SnapGuideAxis;
 using canvas::render::ViewId;
 
 ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
@@ -90,6 +92,21 @@ void unsupported_handle_capabilities_do_not_create_hit_targets() {
     assert(view.editingOverlay().handle(HandleKind::kTop).kind == HandleKind::kTop);
     assert(view.editingOverlay().handle(HandleKind::kRotation).kind == HandleKind::kNone);
 }
+
+void guides_are_transient_screen_space_overlay_geometry() {
+    RenderViewRuntime view(frame(ViewId(6), CameraGeneration(15), 1.0F));
+    const std::array guides{
+        SnapGuideGeometry{SnapGuideAxis::kVertical, {120.0F, 10.0F}, {120.0F, 240.0F}},
+        SnapGuideGeometry{SnapGuideAxis::kHorizontal, {20.0F, 90.0F}, {220.0F, 90.0F}}};
+    EditingOverlayInput input{id(15), WorldRect{-10.0F, -10.0F, 10.0F, 10.0F}, {}, true,
+                              false, true, HandleCapabilities{}, guides};
+    assert(view.editingOverlay().update(input));
+    assert(view.editingOverlay().guides().size() == 2U);
+    assert(view.editingOverlay().guides()[0].axis == SnapGuideAxis::kVertical);
+    assert(view.editingOverlay().guides()[1].start.y == 90.0F);
+    view.editingOverlay().clear();
+    assert(view.editingOverlay().guides().empty());
+}
 } // namespace
 
 int main() {
@@ -97,5 +114,6 @@ int main() {
     chrome_is_screen_space_stable_and_hit_slop_is_larger();
     chrome_is_stable_across_device_pixel_ratios();
     unsupported_handle_capabilities_do_not_create_hit_targets();
+    guides_are_transient_screen_space_overlay_geometry();
     return 0;
 }

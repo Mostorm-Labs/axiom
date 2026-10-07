@@ -1,0 +1,62 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.6-B-GUIDE-REPAIR",
+  "title": "G4.6-B Snap Guide Presentation Repair",
+  "repository": { "provider": "github", "full_name": "Mostorm-Labs/axiom" },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-6-b-guide-repair",
+  "task_anchor": { "revision": "d1c9547744762cf5688862555b4d0893d269514f", "relation": "ancestor" },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "predecessor_requirements": ["GT-G4.6-B accepted result d9423fe90cfb6109fcb3914e69b4c27c01b646b4 is in ancestry"],
+  "origin_package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "package_revision": "guide-repair-v1",
+  "scope_contract": {
+    "authorized_mutation_scope": [
+      "runtime/interaction/include/canvas/interaction/viewport_constraints.hpp",
+      "runtime/interaction/src/viewport_constraints.cpp",
+      "runtime/interaction/tests/viewport_constraints_test.cpp",
+      "runtime/render/include/canvas/render/editing_overlay.hpp",
+      "runtime/render/src/editing_overlay.cpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/tests/editing_overlay_test.cpp",
+      "apps/ink_playground/common/**",
+      ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/**",
+      ".aegis/results/GT-G4.6-B-GUIDE-REPAIR/**"
+    ],
+    "required_changes": [
+      "Expose active X/Y snap guides from the existing SnapResolution without changing candidate policy or correction values.",
+      "Carry transient screen-space guide geometry through the common EditingOverlay.",
+      "Render transient guides through the common SkiaRenderer path used by platform adapters.",
+      "Clear guides on cancel, release, deselection, and stale transform state.",
+      "Add regression coverage for guide geometry and release behavior."
+    ],
+    "forbidden_changes": [
+      "Do not change engage/release thresholds, candidate ordering, selected-object exclusion, or correction math.",
+      "Do not add canonical schema or operations, persist guides, or alter TransformSession/SetTransforms semantics.",
+      "Do not create platform-specific guide implementations or a second overlay model.",
+      "Do not modify BrushEngine, InputRouter, Arc, Undo/Redo, G4.5 rendering, or G4.6-C workload semantics."
+    ]
+  },
+  "verification": {
+    "required": [
+      { "id": "G46B-GUIDE-001", "oracle": "SnapResolution active guide geometry follows selected target feature", "expected": "PASS" },
+      { "id": "G46B-GUIDE-002", "oracle": "EditingOverlay stores and clears transient guides", "expected": "PASS" },
+      { "id": "G46B-GUIDE-003", "oracle": "common SkiaRenderer draws guide geometry on canonical overlay path", "expected": "PASS" },
+      { "id": "G46B-GUIDE-004", "oracle": "existing G4.6-B focused and G4/G4.5 regression matrix", "expected": "PASS" },
+      { "id": "G46B-GUIDE-005", "oracle": "git diff --check and scope audit", "expected": "PASS" }
+    ]
+  },
+  "evidence_contract": {
+    "blocking": ["guide trace", "focused tests", "affected target build", "scope audit", "exact result identity"],
+    "corroborative": ["Windows/Web/Android screenshots or physical traces"]
+  },
+  "terminal_success": [
+    "Guide presentation is implemented through common interaction/render owners.",
+    "Focused and required regression evidence is green.",
+    "Return READY_FOR_CONTROL_REVIEW without claiming G4.6 Gate PASS."
+  ],
+  "terminal_blockers": ["BLOCKED_REPOSITORY_IDENTITY", "AUTHORITY_CONFLICT", "FROZEN_VERIFICATION_FAILURE", "BLOCKED_EVIDENCE"]
+}
