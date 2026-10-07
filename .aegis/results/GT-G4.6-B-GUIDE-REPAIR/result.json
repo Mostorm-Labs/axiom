@@ -4,7 +4,10 @@
   "execution_ref": "codex/g4-6-b-guide-repair",
   "result_revision": "98299e93e0334dc63077f1ae490cffcc8fb5bce5",
   "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
-  "baseline": {"b_result": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4", "c_baseline": "d1c9547744762cf5688862555b4d0893d269514f"},
+  "baseline": {
+    "b_result": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+    "c_baseline": "d1c9547744762cf5688862555b4d0893d269514f"
+  },
   "implementation": {
     "snap_resolution_active_guides": true,
     "editing_overlay_transient_guides": true,
@@ -14,8 +17,28 @@
     "snap_policy_changed": false
   },
   "verification": {
-    "focused_ctest": {"G46BViewportConstraints": "PASS", "G46EditingOverlay": "PASS", "G46PlaygroundTransform": "PASS"},
-    "full_focused_matrix": {"passed": 11, "failed": 0, "tests": ["G46BViewportConstraints", "G3SkiaSurfaceProvider", "G3PreviewSurface", "G3SurfacePresentation", "G3FrameState", "G46EditingOverlay", "DUI20DebugUiContracts", "G46BViewportFitHost", "G46PlaygroundTransform", "G46CQualificationBundle", "G45BrushRuntimePipeline"]},
+    "focused_ctest": {
+      "G46BViewportConstraints": "PASS",
+      "G46EditingOverlay": "PASS",
+      "G46PlaygroundTransform": "PASS"
+    },
+    "full_focused_matrix": {
+      "passed": 11,
+      "failed": 0,
+      "tests": [
+        "G46BViewportConstraints",
+        "G3SkiaSurfaceProvider",
+        "G3PreviewSurface",
+        "G3SurfacePresentation",
+        "G3FrameState",
+        "G46EditingOverlay",
+        "DUI20DebugUiContracts",
+        "G46BViewportFitHost",
+        "G46PlaygroundTransform",
+        "G46CQualificationBundle",
+        "G45BrushRuntimePipeline"
+      ]
+    },
     "windows_target_build": "PASS",
     "git_diff_check": "PASS"
   },
@@ -27,5 +50,8 @@
     ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/evidence-contract.json"
   ],
   "terminal_state": "READY_FOR_CONTROL_REVIEW",
-  "producer_may_claim_gate_pass": false
+  "producer_may_claim_gate_pass": false,
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/codex/g4-6-b-guide-repair",
+  "evidence_materialization_revision": "2afd9024",
+  "provider_refs": []
 }
