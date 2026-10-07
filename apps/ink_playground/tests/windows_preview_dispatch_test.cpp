@@ -187,6 +187,78 @@ void run() {
   assert(s.host->canonicalFrameCount() == pinchFirstStrokeBaseline + 1U);
   assert(s.host->pendingCanonicalHandoffCount() == 0U);
   assert(!s.host->previewActive() && !p->overlayVisible());
+  // A partial erase after a settled zoom must retire its transient session
+  // without leaving the Windows deferred-presentation gate closed for the
+  // next brush stroke. This is the production sequence reported on the
+  // physical host: zoom, erase, canonical tick, then draw again.
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(s.host->eraserBegin(440U));
+  assert(s.host->eraserSample(440U, 96.0, 64.0));
+  assert(s.host->eraserFinish(440U));
+  assert(!s.host->previewActive());
+  s.canonicalFrameReady = false;
+  s.canonicalPending = true;
+  stopPreviewPresentation(s);
+  tick(s);
+  assert(!s.canonicalPending);
+  assert(!s.host->previewActive() && !p->overlayVisible());
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->selectBrushProfile("vector-solid-v1", 1U));
+  const auto afterErasePreviewBaseline = s.host->previewPresentCount();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                           MAKELPARAM(30, 90)));
+  assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                           MAKELPARAM(110, 150)));
+  waitForPreview(s, afterErasePreviewBaseline + 1U);
+  assert(s.host->previewActive());
+  assert(s.host->previewPresentCount() > afterErasePreviewBaseline);
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                           MAKELPARAM(130, 170)));
+  tick(s);
+  assert(!s.host->previewActive() && !p->overlayVisible());
+  // Repeat with an object transform so the erase mask is built in local
+  // coordinates while the Windows preview lifecycle remains deferred.
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->beginBrushSession(441U, 1U));
+  assert(s.host->appendBrushSample(441U, 32.0, 64.0, 0.5, 1U));
+  assert(s.host->appendBrushSample(441U, 160.0, 64.0, 0.5, 2U));
+  assert(s.host->finishBrushSession(441U));
+  assert(s.host->presentCanonicalFrame(s.host->canonicalFrameCount() + 1U, 0.0));
+  assert(s.host->setSelectionMode(true));
+  assert(s.host->selectAtViewPoint(80.0F, 64.0F));
+  const auto transformHandle = s.host->selectionOverlay()->handle(
+      canvas::render::HandleKind::kRight).center;
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kDown,
+                                  transformHandle.x, transformHandle.y));
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kMove,
+                                  transformHandle.x + 40.0F, transformHandle.y));
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kUp,
+                                  transformHandle.x + 40.0F, transformHandle.y));
+  assert(s.host->setSelectionMode(false));
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(s.host->eraserBegin(442U));
+  assert(s.host->eraserSample(442U, 120.0, 96.0));
+  assert(s.host->eraserFinish(442U));
+  assert(!s.host->previewActive());
+  s.canonicalFrameReady = false;
+  s.canonicalPending = true;
+  stopPreviewPresentation(s);
+  tick(s);
+  assert(!s.canonicalPending);
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->selectBrushProfile("vector-solid-v1", 1U));
+  const auto afterTransformedErasePreviewBaseline = s.host->previewPresentCount();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                           MAKELPARAM(34, 94)));
+  assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                           MAKELPARAM(104, 154)));
+  waitForPreview(s, afterTransformedErasePreviewBaseline + 1U);
+  assert(s.host->previewActive());
+  assert(s.host->previewPresentCount() > afterTransformedErasePreviewBaseline);
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                           MAKELPARAM(130, 180)));
+  tick(s);
+  assert(!s.host->previewActive() && !p->overlayVisible());
   const auto baseAcquire = p->acquisitions;
   assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(10, 80)));
   for (int i=0;i<100;++i)
@@ -248,7 +320,7 @@ void run() {
     assert(s.host->pendingCanonicalHandoffCount() == 0U);
     assert(!p->overlayVisible());
   }
-  assert(s.host->semanticObjectCount() == 8U);
+  assert(s.host->semanticObjectCount() == 11U);
   stopPreviewRenderPump(s);
   DestroyWindow(s.window);
 }

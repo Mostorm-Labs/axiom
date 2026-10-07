@@ -448,6 +448,13 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
   brushSessionPackages_[pointerId] = package;
   brushSessionSeeds_[pointerId] = seed;
   brushPreviews_.erase(pointerId);
+  // Partial eraser uses a white presentation-only override. A subsequent
+  // brush session must start with the normal transient tint; otherwise the
+  // preview surface is submitted but visually indistinguishable from the
+  // canvas background after a zoomed erase.
+  if (previewController_ != nullptr) {
+    previewController_->setPresentationStyle(render::PreviewStyleOverride{});
+  }
   if (arcPreviewSink_ != nullptr) {
     ink::BrushPreviewDelta initial;
     const auto disposition = arcPreviewSink_->begin(
