@@ -4,7 +4,96 @@
   "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
   "PackageBindingPreflight": "PASS",
   "EvidenceContractPreflight": "PASS",
-  "current_flow": "selection pointer -> selectAtViewPoint; no transform",
   "target_flow": "selection pointer -> RuntimeFacade -> application owner -> TransformHandleDrag/TransientSceneOverride -> OperationEngine + EditorHistory on release; frame-local render projection only",
-  "unresolved_semantic_decisions": []
+  "unresolved_semantic_decisions": [],
+  "observed_revision": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+  "repository_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "origin": "https://github.com/Mostorm-Labs/Axiom.git",
+    "remote_package_ref_verified": true
+  },
+  "execution_position": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "package_bindings": [
+    {
+      "binding": "authority_lock_ref",
+      "path": ".aegis/packages/GT-G4.6-E/authority.lock.json",
+      "sha256": "72e6c22aa6725a957dc0021e23f3719bc9dae6e298b2541e9da1bf44b2eed063",
+      "status": "PASS"
+    },
+    {
+      "binding": "verification_lock_ref",
+      "path": ".aegis/packages/GT-G4.6-E/verification.lock.json",
+      "sha256": "785d2d04c72ed269ab6d786d907f410478a94f048a04efd85fdc764f6fdb4a7b",
+      "status": "PASS"
+    },
+    {
+      "binding": "execution_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-E/execution-contract.json",
+      "sha256": "babffb5a12386cd57b9b21d26e4cd148b742a79c27c2e080e38624c0a7879f30",
+      "status": "PASS"
+    },
+    {
+      "binding": "evidence_contract_ref",
+      "path": ".aegis/packages/GT-G4.6-E/evidence-contract.json",
+      "sha256": "64b8b21b8b63eca34c86768c6c7a5d8e0a2751ae6daa5bac5abf32a91f17b338",
+      "status": "PASS"
+    },
+    {
+      "binding": "implementation_context_ref",
+      "path": ".aegis/packages/GT-G4.6-E/implementation-context.md",
+      "sha256": "83093519a765a293c192711af12ba827517df796404e2dd15b4afa03994ce29d",
+      "status": "PASS"
+    }
+  ],
+  "trusted_basis": [
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": ".aegis/packages/GT-G4.6-A/authority.lock.json",
+      "sha256": "4149a98ff8e31f9a7026af1ddc5b0120bc6b7b7bedd80c2ac9ec036bd2338070",
+      "status": "PASS"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": ".aegis/packages/GT-G4.6-D/authority.lock.json",
+      "sha256": "1116ca7ca6319f2d6c31e26556c9e416799da473a07c9844523634750f9fe020",
+      "status": "PASS"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "docs/adr/0012-coordinate-spaces-dpi-transforms.md",
+      "sha256": "f27c39fa582d29ee0e11a6d1f011c69f284e1dad2f5c8a5e84f268b4fd74d238",
+      "status": "PASS"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+      "sha256": "80b1fe84f261f6803af80940bf9e4afb7893489654b2c95a9eaf9ae153daf0b4",
+      "status": "PASS"
+    },
+    {
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+      "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "sha256": "cc1fd6850cb91c27f04f2430bdd38ab5bc27517b12ba5222984e89f3cd752dd8",
+      "status": "PASS"
+    }
+  ],
+  "anchor_ancestry": "PASS",
+  "package_ancestry": "PASS",
+  "reconciliation": {
+    "completed_through": [
+      "transform host integration",
+      "transformed partial erase coordinates",
+      "post-erase brush preview tint restoration",
+      "current-result local verification"
+    ],
+    "first_incomplete_step": "reviewer-accessible evidence materialization and hosted verification on evidence head"
+  },
+  "baseline_flow": "selection pointer -> selectAtViewPoint; no transform",
+  "current_flow": "selection pointer -> RuntimeFacade -> TransformHandleDrag/TransientSceneOverride -> existing OperationEngine/EditorHistory on release; post-erase brush preview tint restored at new brush session"
 }

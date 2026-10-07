@@ -1,20 +1,25 @@
 {
   "task_id": "GT-G4.6-E",
   "stage": "P32",
-  "state": "AWAITING_HOSTED_VERIFICATION",
-  "result_revision": "3e2457b7a79a342ff018b1c3b73d4e0f2639a27b",
+  "state": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+  "materialized_ref": "refs/heads/codex/g4-6-e-transform-host",
   "package_materialization_ref": "0460c6b2a3ca63c13cf3595592275cee2ea43c17",
   "execution_ref": "codex/g4-6-e-transform-host",
   "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
   "package_ref": ".aegis/packages/GT-G4.6-E/package.json",
   "local_verification": {
-    "target_build": "PASS",
+    "target_build": "PASS (fresh current-head rebuild; build.log)",
     "focused_ctest": {
       "passed": 56,
       "total": 56,
       "log": "ctest.log",
       "command": "ctest --test-dir build-windows-real -C RelWithDebInfo -R ^(G46.*|G4.*|G45.*|DUI20.*|G3HeadlessSkia)$ --output-on-failure"
     },
+    "input_and_transform": "PASS (fresh current-head host executable; input-and-transform.log)",
+    "windows_dispatch": "PASS (fresh axiom_windows_preview_dispatch_tests.exe; windows-selection.log)",
+    "module_boundaries": "PASS (fresh check_runtime_boundaries.py --root .; boundary.log)",
+    "diff_check": "PASS (fresh git diff --check HEAD; git-diff-check.log)",
     "full_ctest": {
       "passed": 123,
       "total": 124,
@@ -23,101 +28,87 @@
         {
           "name": "G3HeadlessCanvasDemo",
           "classification": "pre-existing Windows test command quoting defect outside authorized scope",
-          "detail": "std::system uses POSIX single quotes; cmd treats them as filename characters; fixture unavailable at headless_canvas_demo_test.cpp:202"
+          "detail": "std::system uses POSIX single quotes; cmd treats them as filename characters; fixture unavailable at headless_canvas_demo_test.cpp:202",
+          "exit_code": "0xc0000409"
         }
       ]
-    },
-    "input_and_transform": "PASS (fresh after capture-release fix)",
-    "module_boundaries": "PASS",
-    "diff_check": "PASS",
-    "locked_sdk_offline": "PASS",
-    "final_build_log": "build-final.log"
+    }
   },
   "physical_verification": "NOT_PERFORMED",
-  "hosted_verification": "required on exact evidence head before READY_FOR_CONTROL_REVIEW",
+  "hosted_verification": {
+    "status": "PASS_ON_IMPLEMENTATION_HEAD",
+    "head_sha": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+    "runs": [
+      {
+        "workflow": "G3-09 Windows canonical surface reference host",
+        "run_id": 37574482320,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482320"
+      },
+      {
+        "workflow": "G3-10 Web WASM/WebGL2 canonical surface reference host",
+        "run_id": 37574482401,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482401"
+      },
+      {
+        "workflow": "RF-01 Scene Foundation",
+        "run_id": 37574482402,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482402"
+      },
+      {
+        "workflow": "G4.5 Programmable Brush Qualification",
+        "run_id": 37574482470,
+        "status": "success",
+        "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37574482470"
+      }
+    ]
+  },
   "official_gate_pass_claimed": false,
   "evidence_refs": [
     {
       "path": ".aegis/results/GT-G4.6-E/preflight.json",
-      "sha256": "8617614bd0e73c7111176ed65ef05ebbfcf29f8bd1c6c0d6ef3b3bf59cfc41bf"
+      "sha256": "319af096e50ec3b93a1afc24d03d255e38826b15c448f00bf2e7d4b181364e12"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/build.log",
-      "sha256": "b849fbe5fcb30d56d4a10f1ddb3e31fe75c3d7e8e9a3d8f5b8e7014b9ddb4fa1"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/build-codec.log",
-      "sha256": "098c58c4421d95b7ebe6240c85cf0a089bca3fd672f52609048ff23b5c48bff3"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/build-proof.log",
-      "sha256": "f0b52053ceab2e5dbd1b16efc62dca8865cc5a7219939f40661e33097b227f2d"
+      "sha256": "fd8da01759e6d1775e40cd072296d9ae48176845b2908f8f89b7487ea7df9d64"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/ctest.log",
-      "sha256": "3d9653fc930e0a21edf1561181ab15db9f1550cf3254f7f1754caaec7e917922"
+      "sha256": "6f0982a2bb2646daa555d015eb71e65fd2bea9b86b446471d716c64051636ab5"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/ctest-full-codec.log",
-      "sha256": "1488fd80d68d3d9914a7af594efa3e45b24d2e9fa0fa58f545741ebb7b14d76a"
+      "sha256": "f711afa87143faa9ec044ead8d8044904da2901a110627caa169e11aef244edd"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/input-and-transform.log",
-      "sha256": "6c073a02219454a7cc7b48debac6b934a60284161a29c89a089f7ff6c70a6ca9"
+      "sha256": "ed6a60b64d61a49254c0d18b3a9c91d886bdcce73746c3dcc83d073dc625392c"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/scope-audit.json",
-      "sha256": "7b2e3c3f265ad289b6a182bf1b7272488e29b51e494cf0f97fb1db68ebfa4021"
+      "sha256": "a4452fd1d4a123b11236135d15b3b44142dfaf95221013163dfefaf7391efa1e"
     },
     {
       "path": ".aegis/results/GT-G4.6-E/boundary.log",
       "sha256": "8702f579cb3b160cf0840f3df9a68d37a477a2a8d42922b8a7456fc2c07178da"
     },
     {
+      "path": ".aegis/results/GT-G4.6-E/windows-selection.log",
+      "sha256": "503625ece6a9c4d5b6372078d1d6265fe1163816cdde8f8a15844213d86d51d8"
+    },
+    {
       "path": ".aegis/results/GT-G4.6-E/git-diff-check.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/red.log",
-      "sha256": "792e9efb800b51b39649003cc1ad059f32fb38fd1b1fa99951587bc926c44630"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/windows-red.log",
-      "sha256": "c89e427833ac7f44a0a15f47085d48cc63401680e3b3497e3e03e5684121269b"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/lifecycle-red.log",
-      "sha256": "e0869264cd5d34dd26b8fd5d180a91e18bdf9f0ebfbb0c7bf5715b55360fa183"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/surface-mode-red.log",
-      "sha256": "ba544c2709440f266e2d0fac2f110af3a3b5ef99c517a9c45cb71eefe0f6af0b"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/headless-demo.log",
-      "sha256": "b0a91a28d0c2bb260bf7eb1c5e924dc04f4980193bd469e07867005faa01df5a"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/sdk-offline.log",
-      "sha256": "8b55025fa4f21af106c631f64ce5e2dd64c3b627a2ba1e229953951ae9c94bc0"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/build-final.log",
-      "sha256": "754634769ff78152ac92c190a7ee6259f4660c6acf332fc495d6adb8950d1eaf"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/windows-selection.log",
-      "sha256": "28dc618390dd505b8d098fc0db9dd283dfbd84b3a0570d4d5cb6c69e48bab974"
-    },
-    {
-      "path": ".aegis/results/GT-G4.6-E/tool-capture-red.log",
-      "sha256": "20a7ec661d281fad69c49f285738045499b76d525cb04168033ba205d18c44ca"
     }
   ],
-  "implementation_result_revision": "3e2457b7a79a342ff018b1c3b73d4e0f2639a27b",
-  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI; no G4.6/P34 PASS",
+  "implementation_result_revision": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+  "review_boundary": "exact implementation result_revision + exact evidence materialized_ref + applicable hosted CI on implementation head; no G4.6/P34 PASS",
   "reviewer_materialization": {
     "pull_request": "https://github.com/Mostorm-Labs/axiom/pull/142",
+    "materialized_ref": "refs/heads/codex/g4-6-e-transform-host",
     "rule": "Evidence commit and hosted check head are reported externally after durable push; this artifact has no self-referential SHA requirement."
   }
 }

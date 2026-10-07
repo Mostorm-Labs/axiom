@@ -1,7 +1,7 @@
 {
   "task_id": "GT-G4.6-E",
   "anchor": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
-  "result_revision": "3e2457b7a79a342ff018b1c3b73d4e0f2639a27b",
+  "result_revision": "ee06d1c7b0f21b603475a9cf35288b6aa878d638",
   "status": "PASS",
   "changed_files": [
     ".aegis/packages/GT-G4.6-E/authority.lock.json",
@@ -12,6 +12,7 @@
     ".aegis/packages/GT-G4.6-E/verification.lock.json",
     ".aegis/results/GT-G4.6-E/boundary.log",
     ".aegis/results/GT-G4.6-E/build-codec.log",
+    ".aegis/results/GT-G4.6-E/build-final.log",
     ".aegis/results/GT-G4.6-E/build-proof.log",
     ".aegis/results/GT-G4.6-E/build.log",
     ".aegis/results/GT-G4.6-E/ctest-full-codec.log",
@@ -26,12 +27,14 @@
     ".aegis/results/GT-G4.6-E/scope-audit.json",
     ".aegis/results/GT-G4.6-E/sdk-offline.log",
     ".aegis/results/GT-G4.6-E/surface-mode-red.log",
+    ".aegis/results/GT-G4.6-E/tool-capture-red.log",
     ".aegis/results/GT-G4.6-E/windows-red.log",
     ".aegis/results/GT-G4.6-E/windows-selection.log",
     "apps/ink_playground/CMakeLists.txt",
     "apps/ink_playground/common/ink_playground_host.cpp",
     "apps/ink_playground/common/ink_playground_host.hpp",
     "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/brush_runtime_pipeline_test.cpp",
     "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
     "apps/ink_playground/tests/selection_transform_test.cpp",
     "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
@@ -59,5 +62,23 @@
     "CMAKE_C_STANDARD=11 for existing Arc C11 test",
     "published Semantic SDK codec enabled",
     "MSVC /wd4100 /wd4189 for generated code"
+  ],
+  "scope_command": "git diff --name-only cdf9cf631ce86c7b6b6da4376cb9e25a65f44718 ee06d1c7b0f21b603475a9cf35288b6aa878d638",
+  "authorized_mutation_scope": [
+    "apps/ink_playground/common/**",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/**",
+    "apps/ink_playground/CMakeLists.txt",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/tests/skia_headless_backend_test.cpp",
+    "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+    ".aegis/packages/GT-G4.6-E/**",
+    ".aegis/results/GT-G4.6-E/**"
+  ],
+  "evidence_refresh_scope": ".aegis/results/GT-G4.6-E/**",
+  "post_transform_repairs": [
+    "world-to-local partial erase mask projection at application/render adapter",
+    "restore transient preview tint on each new brush session"
   ]
 }

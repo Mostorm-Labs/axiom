@@ -1,8 +1,3 @@
-PASS: real selection-pointer resize preview/commit/history
-PASS: cancel/tool/resize/loss/invalid/focus leave zero mutations
-PASS: secondary cannot steal; no-op/rejected release mutate zero
-PASS: viewport zoom/pan, repeated side/corner/rotate/move and exact history pixels
-PASS: accepted commit remains in history when derived publication fails
 [axiom] finish begin pointer=700 objects=0 scene_gen=0
 [axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
@@ -99,40 +94,73 @@ PASS: accepted commit remains in history when derived publication fails
 [axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
 [axiom] present begin frame=2 objects=1 scene_records=1
-Input preview acquisitions=45
-cancel message=256
-cancel message=8
-cancel message=533
-cancel message=5
-PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale
-[axiom] present begin frame=1 objects=0 scene_records=0
-[axiom] present begin frame=2 objects=0 scene_records=0
-[axiom] present begin frame=3 objects=0 scene_records=0
-[axiom] finish begin pointer=43 objects=0 scene_gen=0
-[axiom] scene apply pointer=43 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
 [axiom] present begin frame=4 objects=1 scene_records=1
 [axiom] present begin frame=5 objects=1 scene_records=1
-[axiom] finish begin pointer=4294967295 objects=1 scene_gen=1
-[axiom] scene apply pointer=4294967295 ok=1 objects=2 scene_gen=2
-[axiom] present begin frame=6 objects=2 scene_records=2
-[axiom] finish begin pointer=4294967295 objects=2 scene_gen=2
-[axiom] scene apply pointer=4294967295 ok=1 objects=3 scene_gen=3
-[axiom] present begin frame=7 objects=3 scene_records=3
-[axiom] finish begin pointer=4294967295 objects=3 scene_gen=3
-[axiom] scene apply pointer=4294967295 ok=1 objects=4 scene_gen=4
-[axiom] present begin frame=8 objects=4 scene_records=4
-[axiom] finish begin pointer=4294967295 objects=4 scene_gen=4
-[axiom] scene apply pointer=4294967295 ok=1 objects=5 scene_gen=5
-[axiom] present begin frame=9 objects=5 scene_records=5
-[axiom] finish begin pointer=4294967295 objects=5 scene_gen=5
-[axiom] scene apply pointer=4294967295 ok=1 objects=6 scene_gen=6
-[axiom] present begin frame=10 objects=6 scene_records=6
-[axiom] finish begin pointer=4294967295 objects=6 scene_gen=6
-[axiom] scene apply pointer=4294967295 ok=1 objects=7 scene_gen=7
-[axiom] present begin frame=11 objects=7 scene_records=7
-[axiom] finish begin pointer=4294967295 objects=7 scene_gen=7
-[axiom] scene apply pointer=4294967295 ok=1 objects=8 scene_gen=8
-[axiom] present begin frame=12 objects=8 scene_records=8
-[axiom] finish begin pointer=900 objects=0 scene_gen=0
-[axiom] scene apply pointer=900 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+PASS: real selection-pointer resize preview/commit/history
+PASS: cancel/tool/resize/loss/invalid/focus leave zero mutations
+PASS: secondary cannot steal; no-op/rejected release mutate zero
+PASS: viewport zoom/pan, repeated side/corner/rotate/move and exact history pixels
+PASS: accepted commit remains in history when derived publication fails
+PASS: moved Vector partial erase uses local mask coordinates and exact history pixels
+PASS: partial erase world footprint after scale/rotate/shear/reflection
