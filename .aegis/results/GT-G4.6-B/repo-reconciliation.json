@@ -3,7 +3,7 @@
   "repository": "Mostorm-Labs/axiom",
   "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
   "execution_ref": "codex/g4-6-b-view-constraint",
-  "observed_revision": "2389cb6221345d5ef3ef078a7d111aa3556d7695",
+  "observed_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
   "anchor": "cc985b174cafc5d5dd743bd66701cfe117278de8",
   "anchor_relation": "ancestor",
   "predecessor": {
@@ -14,5 +14,12 @@
     "result_in_ancestry": true
   },
   "status": "RECONCILED",
-  "b_repair": "Snap candidate collection now uses Scene::query(WorldRect) and RuntimeScene::find(ObjectId); no RuntimeScene::records() scan remains in selectionPointer."
+  "b_repair": "Snap candidate collection now uses Scene::query(WorldRect) and RuntimeScene::find(ObjectId); no RuntimeScene::records() scan remains in selectionPointer.",
+  "hosted_runs": {
+    "rf01": 37596639205,
+    "qualification": 37596639249,
+    "windows_reference": 37596639175,
+    "web_reference": 37596639188,
+    "head": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4"
+  }
 }

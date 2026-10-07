@@ -1,7 +1,8 @@
 {
   "task_id": "GT-G4.6-B",
   "terminal_state": "READY_FOR_CONTROL_REVIEW",
-  "result_revision": "2389cb6221345d5ef3ef078a7d111aa3556d7695",
+  "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/pull/143",
   "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
   "execution_ref": "codex/g4-6-b-view-constraint",
   "implementation": {
@@ -17,7 +18,10 @@
     "affected_targets_build": "PASS",
     "focused_ctest": "18/18 passed",
     "query_structure_red_green": "PASS",
-    "git_diff_check": "PASS"
+    "git_diff_check": "PASS",
+    "hosted_required_checks": "9/9 passed",
+    "hosted_head": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+    "provider_runs": [37596639205, 37596639249, 37596639175, 37596639188]
   },
   "predecessor": {
     "task_id": "GT-G4.6-A",
