@@ -189,4 +189,89 @@ void failedPublication() {
   std::cout << "PASS: accepted commit remains in history when derived publication fails\n";
 }
 
-int main() { resizeHistory(); lifecycle(); noOpSecondaryAndReject(); zoomPanRepeatedHandles(); failedPublication(); }
+void partialEraseAfterMove() {
+  Host host; prepare(host);
+  // This is inside the selected stroke, away from the handle hit slop.
+  pointer(host,1,80,64,Phase::kDown);
+  pointer(host,2,120,96,Phase::kMove);
+  pointer(host,3,120,96,Phase::kUp);
+  const auto moved=Access::objects(host);
+  assert(moved.front().transform.tx==40 && moved.front().transform.ty==32);
+  assert(host.setSelectionMode(false));
+  const auto before=pixels(host);
+  assert(before[(96U*256U+120U)*4U+3U]==255U);
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(88U));
+  assert(host.eraserSample(88U,120,96));
+  assert(host.eraserFinish(88U));
+  const auto erased=Access::objects(host);
+  assert(erased.front().content==moved.front().content);
+  assert(erased.front().transform==moved.front().transform);
+  assert(erased.front().erase_masks.size()==1U);
+  const auto& mask=std::get<canvas::semantic::SweptCircleMask>(
+      erased.front().erase_masks.front().geometry);
+  // World (120,96), minus the committed object translation (40,32).
+  assert(mask.segments.front().p0.position==canvas::semantic::Vec2(80,64));
+  assert(mask.segments.front().p0.radius==18.0);
+  const auto after=pixels(host);
+  assert(after[(96U*256U+120U)*4U+3U]==0U);
+  assert(after[(96U*256U+80U)*4U+3U]==255U);
+  assert(host.undo() && Access::objects(host)==moved && pixels(host)==before);
+  assert(host.redo() && Access::objects(host)==erased && pixels(host)==after);
+  std::cout << "PASS: moved Vector partial erase uses local mask coordinates and exact history pixels\n";
+}
+
+void partialEraseAffineFootprint() {
+  using T=canvas::semantic::Transform2D;
+  // Every literal transform maps local (80,64) to world (120,96).
+  struct Fixture { T transform; bool swept; double radius; };
+  const Fixture fixtures[]={{{2,0,0,2,-40,-32},true,9},
+      {{2,0,0,1,-40,32},false,0},{{1,0,0,2,40,-32},false,0},
+      {{0,1,-1,0,184,16},true,18},{{1,0,0.5,1,8,32},false,0},
+      {{-1,0,0,1,200,32},true,18}};
+  for (const auto& fixture:fixtures) {
+    const auto& transform=fixture.transform;
+    Host host; prepare(host);
+    assert(host.selectionPointer(90U,Phase::kDown,80,64));
+    auto& port=static_cast<canvas::interaction::TransformSubmitPort&>(host);
+    assert(port.submit({{{host.selectedPrimaryObject(),transform}}}).accepted);
+    host.cancelSelectionTransform();
+    assert(host.setSelectionMode(false));
+    const auto before=pixels(host);
+    assert(before[(96U*256U+120U)*4U+3U]!=0U);
+    assert(host.selectTool(Host::ToolMode::kPartialEraser));
+    assert(host.eraserBegin(89U));
+    assert(host.eraserSample(89U,108,96));
+    assert(host.eraserSample(89U,132,96));
+    assert(host.eraserFinish(89U));
+    const auto erased=pixels(host);
+    assert(erased[(96U*256U+120U)*4U+3U]==0U);
+    // A radius-18 world capsule from (108,96) to (132,96) must
+    // retain its footprint even when inverse mapping requires an ellipse.
+    for (const auto p: {canvas::semantic::Vec2{120,112},{120,80},
+                       {92,96},{148,96}}) {
+      assert(erased[(static_cast<std::size_t>(p.y)*256U+
+                     static_cast<std::size_t>(p.x))*4U+3U]==0U);
+    }
+    for (const auto p: {canvas::semantic::Vec2{120,120},{120,72},
+                       {84,96},{156,96}}) {
+      assert(erased[(static_cast<std::size_t>(p.y)*256U+
+                     static_cast<std::size_t>(p.x))*4U+3U]==255U);
+    }
+    const auto records=Access::objects(host);
+    const auto& mask=records.front().erase_masks.front();
+    assert(fixture.swept == std::holds_alternative<canvas::semantic::SweptCircleMask>(mask.geometry));
+    if (fixture.swept) {
+      assert(std::get<canvas::semantic::SweptCircleMask>(mask.geometry)
+          .segments.front().p0.radius==fixture.radius);
+    } else {
+      const auto& filled=std::get<canvas::semantic::FilledPathMask>(mask.geometry);
+      assert(!filled.path.commands.empty());
+    }
+    assert(host.undo() && pixels(host)==before);
+    assert(host.redo() && pixels(host)==erased);
+  }
+  std::cout << "PASS: partial erase world footprint after scale/rotate/shear/reflection\n";
+}
+
+int main() { resizeHistory(); lifecycle(); noOpSecondaryAndReject(); zoomPanRepeatedHandles(); failedPublication(); partialEraseAfterMove(); partialEraseAffineFootprint(); }

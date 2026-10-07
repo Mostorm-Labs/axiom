@@ -409,6 +409,21 @@ void sweptCircleEraseMaskIsRendered() {
     assert(pixel(observation, 20U, 12U) == (Rgba{255U, 0U, 0U, 255U}));
 }
 
+void fractionalLocalEraseMaskIsRendered() {
+    const FrameState frame = fixtureFrame(FrameId{914});
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {shapeEntry()};
+    list.visibleRecords = 1U;
+    list.candidatesExamined = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    list.entries[0].record.eraseMasks = {{ObjectId::fromUint64(1503U),
+        canvas::semantic::FilledPathMask{rectanglePath(16.5, 16.5, 8.0, 8.0)}}};
+    SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
+    assert(backend.submit(FramePlan{frame, list}).code == BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(), 20U, 20U)[3] == 0U);
+    assert(pixel(*backend.observation(), 15U, 20U) == (Rgba{255U, 0U, 0U, 255U}));
+}
+
 void orthogonalConnectorUsesDeterministicElbow() {
     const FrameState frame = fixtureFrame(FrameId{916});
     ReferenceTraversalEntry entry = connectorEntry();
@@ -547,6 +562,7 @@ int main() {
     exactNineKindGoldenIsIndependentAndDeterministic();
     transformClipAndEraseAreObservable();
     sweptCircleEraseMaskIsRendered();
+    fractionalLocalEraseMaskIsRendered();
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
     return 0;
