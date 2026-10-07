@@ -40,6 +40,8 @@ if(BUILD_TESTING)
   add_test(NAME G46BViewportFitHost COMMAND axiom_ink_playground_tests viewport-fit)
   add_executable(axiom_g46b_query_structure_tests tests/viewport_query_structure_test.cpp)
   target_link_libraries(axiom_g46b_query_structure_tests PRIVATE axiom_ink_playground_common)
+  target_compile_definitions(axiom_g46b_query_structure_tests PRIVATE
+    AXIOM_INK_PLAYGROUND_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
   target_compile_features(axiom_g46b_query_structure_tests PRIVATE cxx_std_20)
   if(MSVC)
     target_compile_options(axiom_g46b_query_structure_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)

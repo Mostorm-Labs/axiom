@@ -677,12 +677,26 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     if (sceneCoordinator_ != nullptr) {
       const auto viewport = viewportController_->state();
       const auto sourceWorld = transformedBounds(editingLocalBounds_, next);
+      const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+          ? viewport.scale : 1.0F;
+      const float snapWorldRadius = interaction::SnapResolver::kEngageThresholdLogicalPx /
+          std::max(zoom, 1.0e-6F);
+      const canvas::foundation::WorldRect queryBounds{
+          sourceWorld.left - snapWorldRadius,
+          sourceWorld.top - snapWorldRadius,
+          sourceWorld.right + snapWorldRadius,
+          sourceWorld.bottom + snapWorldRadius};
       std::vector<interaction::SnapTarget> targets;
-      targets.reserve(sceneCoordinator_->runtimeScene().records().size());
-      for (const auto& record : sceneCoordinator_->runtimeScene().records()) {
-        if (record.objectId == selection_.primary()) continue;
-        targets.push_back({record.objectId, viewBounds(record.worldBounds, viewport),
-                           false, transformOverrides_.find(record.objectId) != nullptr});
+      const auto queried = runtimeSceneHost_->query(canvas::SceneQuery{queryBounds});
+      if (queried) {
+        targets.reserve(queried.value().backToFront.size());
+      }
+      if (queried) for (const auto objectId : queried.value().backToFront) {
+        const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
+        if (record == nullptr) continue;
+        if (record->objectId == selection_.primary()) continue;
+        targets.push_back({record->objectId, viewBounds(record->worldBounds, viewport),
+                           false, transformOverrides_.find(record->objectId) != nullptr});
       }
       const auto resolved = snapResolver_.resolve(
           interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);
