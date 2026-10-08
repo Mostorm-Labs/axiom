@@ -3,8 +3,8 @@
   "task_id": "GT-G4.7",
   "stage": "P32",
   "terminal_state": "TASK_PACKAGE_DEFECT",
-  "result_revision": "2df0d1d2f407e7927064f9fb171e7e4e5121d771",
-  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/6240cb7ef6f184a51057081b7e3f9136e333b58a",
+  "result_revision": "5303eda9e937fc7a8f8664c985804e342217786a",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/5303eda9e937fc7a8f8664c985804e342217786a",
   "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
   "execution_ref": "codex/g4-7-development",
   "evidence_input_refs": [
@@ -17,7 +17,8 @@
     ".aegis/results/GT-G4.7/blocker-report.json",
     ".aegis/results/GT-G4.7/execution-skip.json",
     ".aegis/results/GT-G4.7/evidence-manifest.json",
-    ".aegis/results/GT-G4.7/repository-observations.json"
+    ".aegis/results/GT-G4.7/repository-observations.json",
+    ".aegis/results/GT-G4.7/ownership-handoff.json"
   ],
   "provider_refs": [],
   "automated_status": {
@@ -43,5 +44,5 @@
   "return_surface": "CONTROL_REVIEW",
   "next_owner": "P31/Control and Verification owner",
   "next_action": "Publish corrected/reconciled package; preserve this result as an audit record; rerun binding preflight before production mutation.",
-  "revision_note": "result_revision is the immutable blocker audit commit; materialized_ref is its immutable evidence/result descendant. Neither revision contains G4.7 production implementation."
+  "revision_note": "result_revision is the immutable blocker audit revision. The execution return identifies the final immutable reviewer-accessible materialization containing this record and its manifest; no self-referential commit SHA is embedded."
 }
