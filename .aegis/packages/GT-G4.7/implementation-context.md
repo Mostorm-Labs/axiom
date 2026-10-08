@@ -19,7 +19,7 @@ The old roadmap required formal G4.6 Gate PASS before G4.7. The accepted executi
 - POC-04 under `pocs/rich_text/**` is reference implementation/test material only; reuse lessons/fixtures, do not promote its G6 TextEditSession/IME ownership into production G4.7
 
 ## First incomplete action
-Run PackageBindingPreflight/EvidenceContractPreflight, then inspect the anchor descendant for exact production module seams and execute G47-A. Ordinary file/API uncertainty must be resolved from the repo; only true Authority/scope/verification conflicts may block.
+Run PackageBindingPreflight/EvidenceContractPreflight, then execute G47-I0 image/resource closure before G47-A. The package binds exact local hashes, Authority snapshots, and render parity thresholds. Ordinary file/API uncertainty must be resolved from the repo; only true Authority/scope/verification conflicts may block.
 
 ## Continuous execution
 Do not stop after G47-A/B/C intermediate success. Continue through G47-D automated qualification-artifact readiness in the same P32 unless an explicit frozen terminal blocker occurs.

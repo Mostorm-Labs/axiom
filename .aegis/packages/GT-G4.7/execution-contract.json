@@ -19,11 +19,12 @@
     ],
     "required_changes": [
       "Run repository reconciliation at the exact anchor/descendant and record current RichText semantic, scene, render, resource, POC-04 reference and build seams before production mutation.",
-      "Run Pre-G5 Primitive Inventory first. If the current Image/Resource decode-materialization requirement is structurally missing under Current Authority, return the frozen blocker instead of hiding it.",
+      "Run Pre-G5 Primitive Inventory first, then execute the frozen G47-I0 Image/Resource primitive closure before G47-A. If the I0 oracle cannot be satisfied, return the explicit frozen blocker.",
+      "Implement G47-I0: explicit ResourceId image provider/resolver, deterministic bundled PNG bytes, SkCodec decode/materialization, missing/ready generation observations, source_rect/content_mode behavior, cold/warm replay and zero canonical mutation on resource transition.",
       "Materialize a renderer-neutral production RichText layout runtime/service consuming canonical RichText read projection, explicit LayoutContext/Constraint, exact font resource state and the locked text-stack profile.",
       "Define a derived/discardable TextLayoutSnapshot/equivalent carrying local bounds, paragraph/line fragments, shaped render runs, future-editing geometry seam, dependency/resource observations and revision/generation metadata without Skia/native font handles in stable contracts.",
       "Implement exact FontResource resolver/materialization behavior using TextStyle.font_resource_id and the pinned deterministic font corpus; prohibit implicit OS/browser fallback, nearest-weight and synthetic style substitution.",
-      "Replace heuristic RichText bounds with layout-derived Scene/Bounds/Spatial contribution. EditRichText must update only affected derived layout/bounds; SetTransforms must reuse local layout; camera/zoom must not relayout; Font Missing→Ready is resource-driven derived invalidation with zero canonical mutation.",
+      "Replace heuristic RichText bounds with layout-derived Scene/Bounds/Spatial contribution. EditRichText must update only affected derived layout/bounds; SetTransforms must reuse local layout; camera/zoom must not relayout; Font Missing\u2192Ready is resource-driven derived invalidation with zero canonical mutation.",
       "Make the same TextLayoutSnapshot consumable by Direct/NonTiled reference and production Skia text rendering. Production frame rendering must not read SemanticDocument directly.",
       "Implement EditRichText locality workload cases: insert/delete, split/merge paragraph, inline style, paragraph style, one-among-many, repeated small edits, resource-ready transition, transform-only and camera-only negative controls.",
       "Build Text Performance Playground 0.1 with deterministic scenarios: text-many-small, text-long, text-style-mixed, text-edit-local, text-font-cold-warm, text-transform, text-camera and structured-grid-proxy.",
@@ -43,6 +44,11 @@
     ]
   },
   "work_packages": [
+    {
+      "id": "G47-I0",
+      "name": "Image + Resource Primitive Closure",
+      "scope": "ResourceId provider/resolver, deterministic bundled image, SkCodec decode/materialization, source_rect/content_mode, cold/warm replay and derived resource transition"
+    },
     {
       "id": "G47-A",
       "name": "Entry + Text Runtime",

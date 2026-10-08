@@ -3,6 +3,28 @@
   "task_id": "GT-G4.7",
   "obligations": [
     {
+      "id": "G47-IMAGE-000",
+      "requirement": "Canonical ImageContent resolves ResourceId to deterministic encoded bytes and materializes a renderable decoded image; missing/ready transition is derived only.",
+      "oracle": "bundled PNG cold/warm decode replay with source_rect and content_mode coverage",
+      "acceptance": {
+        "cold_decode": "one successful decode and non-empty RGBA image",
+        "warm_decode": "same resource generation yields identical digest without semantic mutation",
+        "missing": "explicit unavailable diagnostic and no pixels",
+        "source_rect": "source rectangle changes rendered sample region",
+        "content_modes": [
+          "fit",
+          "fill",
+          "stretch"
+        ],
+        "canonical_mutation": "operation count and SemanticGeneration unchanged on missing->ready"
+      },
+      "evidence_required": [
+        "image-resource-fixtures.json",
+        "image-resource-replay.json",
+        "image-render-parity.json"
+      ]
+    },
+    {
       "id": "G47-LAYOUT-001",
       "requirement": "Canonical RichText produces a renderer-neutral derived TextLayoutSnapshot with deterministic local bounds/fragments/shaped runs under fixed input/font/layout context/profile.",
       "oracle": "fixed-font deterministic layout fixtures + rebuild/replay equivalence",
@@ -36,7 +58,20 @@
       "id": "G47-RENDER-004",
       "requirement": "The same TextLayoutSnapshot feeds Direct/NonTiled reference and production Skia rendering with no normal-frame SemanticDocument read.",
       "oracle": "reference vs production render-plan parity + zoom/DPR automated matrix",
-      "acceptance": "layout semantics match reference; raster AA differences may be tolerated by frozen visual thresholds",
+      "acceptance": {
+        "layout_semantics": "exact same TextLayoutSnapshot digest between Direct/NonTiled and production render plan",
+        "raster_profile": {
+          "canvas": "256x256 RGBA8888 premul sRGB",
+          "dpr": [
+            "1.0",
+            "2.0"
+          ],
+          "max_channel_abs_diff": 8,
+          "max_changed_pixels": 256,
+          "digest": "SHA-256 recorded; exact digest required for render-plan bytes"
+        },
+        "no_semantic_read": "normal production frame path does not read SemanticDocument"
+      },
       "evidence_required": [
         "reference-production-parity.json",
         "render-path-trace.json"
