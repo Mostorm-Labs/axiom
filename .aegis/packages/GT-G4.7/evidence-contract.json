@@ -1,0 +1,41 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.7",
+  "output_root": ".aegis/results/GT-G4.7/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "implementation-design-preflight.json",
+    "pre-g5-primitive-inventory.json",
+    "layout-fixtures.json",
+    "layout-digest.json",
+    "font-resolution.json",
+    "resource-transition.json",
+    "scene-bounds.json",
+    "invalidation-trace.json",
+    "reference-production-parity.json",
+    "render-path-trace.json",
+    "edit-locality.json",
+    "negative-controls.json",
+    "workload-corpus-manifest.json",
+    "playground-metrics.json",
+    "qualification-bundle-manifest.json",
+    "platform-readiness.json",
+    "build.log",
+    "ctest.log",
+    "scope-audit.json",
+    "result.json"
+  ],
+  "blocking_evidence": [
+    "all G47-LAYOUT/FONT/SCENE/RENDER/LOCALITY/CORPUS/QUAL/PREG5 obligation artifacts",
+    "exact result revision and reviewer-accessible materialized ref",
+    "applicable hosted CI/provider refs"
+  ],
+  "corroborative_evidence": [
+    "human/device physical observations",
+    "final Windows/Web/Android screenshots beyond automated qualification capture",
+    "combined G4 physical Gate verdict"
+  ],
+  "physical_observation_deferred_to": "Combined G4.6 + G4.7 Physical Qualification",
+  "review_boundary": "exact result revision + same-repository reviewer-accessible materialized ref + exact hosted provider refs where applicable",
+  "producer_may_claim_gate_pass": false
+}
