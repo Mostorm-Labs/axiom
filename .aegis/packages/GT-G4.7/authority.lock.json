@@ -1,0 +1,110 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.7",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "68b925e53b092657f3415c3d3992a451a8515598",
+    "relation": "ancestor"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "url": "https://app.notion.com/p/3e04c57a590c81b9b775e7e18fe8439d",
+      "title": "G4.7 RichText Rendering Foundation Architecture v0.1"
+    },
+    {
+      "stage": "Roadmap",
+      "url": "https://app.notion.com/p/3e04c57a590c81a79192f567356d1046",
+      "title": "G4.7 RichText Rendering Foundation Implementation Plan v0.1"
+    },
+    {
+      "stage": "ExecutionOrderAmendment",
+      "url": "https://app.notion.com/p/3f34c57a590c8169af22eabaaef2bf4f",
+      "title": "G4.6 → G4.7 Combined Physical Qualification Execution-Order Amendment v0.1"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:68b925e53b092657f3415c3d3992a451a8515598",
+      "title": "post-G4.6 automated/evidence boundary"
+    }
+  ],
+  "upstream_boundary": {
+    "g4_6_result_revision": "5194d5ccf186e49a45311b39a831d1c9460e043e",
+    "g4_6_status": "PASS_AUTOMATION_WITH_PHYSICAL_BLOCKERS",
+    "g4_6_official_gate_pass_claimed": false,
+    "allowed_g4_7_start": true,
+    "preserved_deferred_physical_obligations": [
+      "G46C-PHYS-002 Windows fixed physical checklist",
+      "G46C-PHYS-002 Web fixed physical checklist",
+      "G46C-PHYS-002 Android fixed physical checklist",
+      "G46C-COEXIST-004 platform Pen/Laser + editing-overlay coexistence observations"
+    ]
+  },
+  "frozen_text_stack": {
+    "sdk_lock": "r1-full-skia-sdk.lock.json",
+    "profile": "r1-full-v1",
+    "internal_stack": [
+      "SkParagraph",
+      "SkShaper",
+      "SkUnicode ICU",
+      "bundled HarfBuzz",
+      "bundled ICU"
+    ],
+    "no_skia_rebuild": true,
+    "stable_contract_renderer_neutral": true
+  },
+  "frozen_font_policy": {
+    "semantic_identity": "TextStyle.font_resource_id",
+    "deterministic_fonts": [
+      {
+        "name": "Roboto Regular",
+        "lock": "deps.lock.json",
+        "sha256": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f"
+      },
+      {
+        "name": "Noto Sans CJK subset",
+        "lock": "deps.lock.json",
+        "sha256": "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a"
+      }
+    ],
+    "forbidden": [
+      "OS/browser implicit fallback",
+      "nearest-weight substitution",
+      "synthetic bold",
+      "synthetic italic"
+    ]
+  },
+  "frozen_layout_policy": {
+    "canonical_width_height_fields_added": false,
+    "textbox_schema_added": false,
+    "layout_input": "explicit runtime LayoutContext/Constraint",
+    "verification_fixed_width_context_allowed": true,
+    "product_shell_state_inference_forbidden": true
+  },
+  "unicode_scope": {
+    "blocking": [
+      "Latin",
+      "numbers/punctuation",
+      "CJK",
+      "mixed Latin+CJK",
+      "combining marks"
+    ],
+    "emoji": "required only where exact glyph exists in pinned corpus; otherwise explicit degraded-resource diagnostics",
+    "deferred": [
+      "new bidi paragraph-direction schema",
+      "full RTL product semantics unless already required by accepted canonical input"
+    ]
+  },
+  "terminal_implementation_state": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
+  "frozen_boundaries": [
+    "G4.7 does not implement TextEditSession, caret/selection interaction, IME composition, platform editor overlays, Clipboard, ExternalSurface, Table semantics or new RichText sizing schema.",
+    "Font Missing/Ready and exact-face materialization are derived resource state and must not create canonical Operations or SemanticGeneration mutation.",
+    "Transform-only and camera-only changes must not trigger local text relayout.",
+    "Direct/NonTiled remains the correctness oracle while production Skia rendering is added.",
+    "G4.7 implementation may complete before physical observation, but G5 remains blocked until combined G4 physical qualification and formal Gate closure."
+  ]
+}
