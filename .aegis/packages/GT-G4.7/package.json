@@ -1,0 +1,35 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.7",
+  "title": "G4.7 RichText Rendering Foundation — Combined Physical Qualification Order",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-7-development",
+  "task_anchor": {
+    "revision": "68b925e53b092657f3415c3d3992a451a8515598",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json"
+  },
+  "terminal_target": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION"
+}
