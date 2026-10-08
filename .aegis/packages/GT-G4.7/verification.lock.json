@@ -1,0 +1,85 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.7",
+  "obligations": [
+    {
+      "id": "G47-LAYOUT-001",
+      "requirement": "Canonical RichText produces a renderer-neutral derived TextLayoutSnapshot with deterministic local bounds/fragments/shaped runs under fixed input/font/layout context/profile.",
+      "oracle": "fixed-font deterministic layout fixtures + rebuild/replay equivalence",
+      "acceptance": "same accepted semantic input + font bytes + LayoutContext + text profile yields reference-equivalent layout",
+      "evidence_required": [
+        "layout-fixtures.json",
+        "layout-digest.json"
+      ]
+    },
+    {
+      "id": "G47-FONT-002",
+      "requirement": "FontResourceId resolves exact face identity without implicit platform fallback or synthetic substitution; missing/ready transitions remain derived only.",
+      "oracle": "deterministic mock resolver + pinned Roboto/Noto resource tests",
+      "acceptance": "exact face or explicit degraded/unavailable state; zero canonical mutation on resource transition",
+      "evidence_required": [
+        "font-resolution.json",
+        "resource-transition.json"
+      ]
+    },
+    {
+      "id": "G47-SCENE-003",
+      "requirement": "Production text layout replaces heuristic RichText bounds in Scene/Bounds/Spatial integration and publishes conservative old/new visual contribution.",
+      "oracle": "Scene/Bounds/Spatial focused tests",
+      "acceptance": "EditRichText updates affected text contribution; SetTransforms reuses local layout; camera/zoom causes zero relayout",
+      "evidence_required": [
+        "scene-bounds.json",
+        "invalidation-trace.json"
+      ]
+    },
+    {
+      "id": "G47-RENDER-004",
+      "requirement": "The same TextLayoutSnapshot feeds Direct/NonTiled reference and production Skia rendering with no normal-frame SemanticDocument read.",
+      "oracle": "reference vs production render-plan parity + zoom/DPR automated matrix",
+      "acceptance": "layout semantics match reference; raster AA differences may be tolerated by frozen visual thresholds",
+      "evidence_required": [
+        "reference-production-parity.json",
+        "render-path-trace.json"
+      ]
+    },
+    {
+      "id": "G47-LOCALITY-005",
+      "requirement": "EditRichText invalidation is local; unrelated RichText objects do not relayout; resource-ready, transform-only and camera-only negative controls behave as frozen.",
+      "oracle": "deterministic edit traces + layout request counters",
+      "acceptance": "affected object/paragraph counts match trace expectations and negative controls produce zero local relayout where required",
+      "evidence_required": [
+        "edit-locality.json",
+        "negative-controls.json"
+      ]
+    },
+    {
+      "id": "G47-CORPUS-006",
+      "requirement": "Deterministic G5 text workload corpus and structured-grid proxy are replayable and expose text/layout/font/render metrics.",
+      "oracle": "Text Performance Playground scenario replay",
+      "acceptance": "all frozen workload families produce durable manifests/digests/metrics",
+      "evidence_required": [
+        "workload-corpus-manifest.json",
+        "playground-metrics.json"
+      ]
+    },
+    {
+      "id": "G47-QUAL-007",
+      "requirement": "Windows/Web/Android qualification hooks, bundled font/resource package, scenario selector, screenshot/trace export and exact build identity are ready for combined physical qualification.",
+      "oracle": "qualification bundle self-check; no human/device observation required in P32",
+      "acceptance": "bundle is reviewer-accessible and terminal status may be READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
+      "evidence_required": [
+        "qualification-bundle-manifest.json",
+        "platform-readiness.json"
+      ]
+    },
+    {
+      "id": "G47-PREG5-008",
+      "requirement": "Pre-G5 primitive inventory is completed and no hidden production primitive gap is silently ignored.",
+      "oracle": "pre-G5 primitive inventory audit",
+      "acceptance": "Image/Resource decode-materialization row is either proven replayable or returns an explicit blocker/follow-up per current G4.7 authority",
+      "evidence_required": [
+        "pre-g5-primitive-inventory.json"
+      ]
+    }
+  ]
+}
