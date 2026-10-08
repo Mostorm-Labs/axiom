@@ -1,0 +1,26 @@
+{
+  "format": "aegis-implementation-design-preflight-v1",
+  "task_id": "GT-G4.7",
+  "status": "BLOCKED",
+  "current_flow": [
+    "canonical ImageContent uses ResourceId",
+    "production headless ImageReferenceCommand paints deterministic checkerboard",
+    "production Skia scene renderer decodes only embedded brush textures",
+    "RichText bounds use UTF-8 byte heuristic and reference rendering paints scalar rectangles"
+  ],
+  "target_flow_required_by_readiness": [
+    "ImageResource provider/resolver and deterministic decode/materialization",
+    "renderer-neutral RichText layout snapshot",
+    "exact font resolver",
+    "derived Scene/Bounds/Spatial invalidation",
+    "reference and production renderer parity"
+  ],
+  "unresolved_semantic_decisions": [
+    "Whether G47-I0 is in this package or requires a corrected package",
+    "Concrete frozen visual thresholds/tolerances for G47-RENDER-004"
+  ],
+  "authority_conflict": true,
+  "verification_conflict": true,
+  "package_scope_conflict": true,
+  "disposition": "Return to P31/Control; do not mutate production code."
+}

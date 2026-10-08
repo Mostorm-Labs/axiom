@@ -1,0 +1,26 @@
+{
+  "format": "aegis-scope-audit-v1",
+  "task_id": "GT-G4.7",
+  "observed_revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "authorized_scope_from_package": [
+    "runtime/text/**",
+    "runtime/scene/**",
+    "runtime/render/**",
+    "runtime/foundation/**",
+    "apps/**",
+    "verification/**",
+    "CMakeLists.txt",
+    "CMakePresets.json",
+    "runtime/**/CMakeLists.txt",
+    "apps/**/CMakeLists.txt",
+    ".github/workflows/**",
+    ".aegis/packages/GT-G4.7/**",
+    ".aegis/results/GT-G4.7/**"
+  ],
+  "production_files_changed": [],
+  "result_files_written": [
+    ".aegis/results/GT-G4.7/**"
+  ],
+  "unauthorized_changes_detected": false,
+  "preexisting_untracked_files_preserved": true
+}

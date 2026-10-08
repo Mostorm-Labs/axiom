@@ -1,0 +1,26 @@
+{
+  "format": "aegis-repo-reconciliation-v1",
+  "task_id": "GT-G4.7",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "origin": "https://github.com/Mostorm-Labs/axiom.git"
+  },
+  "execution_ref": "codex/g4-7-development",
+  "observed_revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "task_anchor": {
+    "revision": "68b925e53b092657f3415c3d3992a451a8515598",
+    "relation": "ancestor",
+    "verified": true
+  },
+  "tracked_delta_from_anchor": "package-only",
+  "production_mutation_performed": false,
+  "preexisting_untracked_preserved": true,
+  "current_state": "PACKAGE_BINDING_PRECHECK_FAILED",
+  "notes": [
+    "The package materialization is the current HEAD and remote execution branch.",
+    "No production source/test/build/workflow files were changed in this execution.",
+    "Historical untracked builds/logs were left untouched."
+  ]
+}

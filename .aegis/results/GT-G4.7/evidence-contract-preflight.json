@@ -1,0 +1,28 @@
+{
+  "format": "aegis-evidence-contract-preflight-v1",
+  "task_id": "GT-G4.7",
+  "status": "BLOCKED",
+  "output_root": ".aegis/results/GT-G4.7/",
+  "required_artifacts_declared": true,
+  "reviewer_accessible_materialization_required": true,
+  "satisfied": [
+    "repository identity",
+    "same-repository materialization ref",
+    "task anchor ancestry",
+    "observed source snapshots"
+  ],
+  "unsatisfied": [
+    "package.json local SHA-256 bindings absent for five local refs",
+    "authority.lock trusted basis has no frozen source revision/content hash",
+    "G47-RENDER-004 visual threshold/tolerance values absent",
+    "G47-I0 readiness obligation conflicts with materialized package closure/work package set"
+  ],
+  "staged_observation_files": [
+    "sources/architecture.json",
+    "sources/roadmap.json",
+    "sources/execution-order-amendment.json",
+    "sources/targeted-readiness.json",
+    "sources/p31-package-page.json"
+  ],
+  "evidence_status": "BLOCKED_PACKAGE_BINDING"
+}
