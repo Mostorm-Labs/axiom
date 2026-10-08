@@ -21,6 +21,8 @@
   ],
   "authority_conflict": true,
   "verification_conflict": true,
-  "package_scope_conflict": true,
-  "disposition": "Return to P31/Control; do not mutate production code."
+  "package_scope_conflict": false,
+  "disposition": "Return to P31/Control; do not mutate production code.",
+  "closure_obligation_conflict": true,
+  "scope_note": "The authorized directories are broad; the conflict is the missing I0 closure obligations and explicit fail-closed requirement, not a path allowlist conflict."
 }

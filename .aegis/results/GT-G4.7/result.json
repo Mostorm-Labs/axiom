@@ -4,51 +4,6 @@
   "stage": "P32",
   "terminal_state": "TASK_PACKAGE_DEFECT",
   "result_revision": "2df0d1d2f407e7927064f9fb171e7e4e5121d771",
-  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/codex/g4-7-development",
-  "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
-  "execution_ref": "codex/g4-7-development",
-  "evidence_input_refs": [
-    ".aegis/results/GT-G4.7/repo-reconciliation.json",
-    ".aegis/results/GT-G4.7/package-binding-preflight.json",
-    ".aegis/results/GT-G4.7/evidence-contract-preflight.json",
-    ".aegis/results/GT-G4.7/pre-g5-primitive-inventory.json",
-    ".aegis/results/GT-G4.7/implementation-design-preflight.json",
-    ".aegis/results/GT-G4.7/scope-audit.json",
-    ".aegis/results/GT-G4.7/blocker-report.json",
-    ".aegis/results/GT-G4.7/execution-skip.json",
-    ".aegis/results/GT-G4.7/evidence-manifest.json"
-  ],
-  "provider_refs": [],
-  "automated_status": {
-    "repository_identity": "PASS",
-    "materialization_resolution": "PASS",
-    "task_anchor_ancestry": "PASS",
-    "package_binding_preflight": "BLOCKED",
-    "evidence_contract_preflight": "BLOCKED",
-    "production_mutation": "NOT_RUN",
-    "required_builds_and_ctest": "NOT_RUN_AFTER_PREFLIGHT_BLOCKER",
-    "git_diff_check": "PASS"
-  },
-  "explicit_blockers": [
-    "TASK_PACKAGE_DEFECT: package.json lacks SHA-256 for five local package refs.",
-    "TASK_PACKAGE_DEFECT/AUTHORITY_CONFLICT: authority.lock trusted basis lacks frozen source revision/content hashes.",
-    "AUTHORITY_CONFLICT: targeted readiness embeds G47-I0 Image/Resource closure while materialized package required_changes/work_packages omit I0, and required_changes mandates fail-closed on the structural gap.",
-    "VERIFICATION_DESIGN_DEFECT: G47-RENDER-004/G47-T5 references frozen visual thresholds/tolerances without concrete values or exact oracle binding."
-  ],
-  "official_g4_6_gate_pass": false,
-  "official_g4_7_gate_pass": false,
-  "g5_authorization": false,
-  "production_mutation_performed": false,
-  "return_surface": "CONTROL_REVIEW",
-  "next_owner": "P31/Control and Verification owner",
-  "next_action": "Publish corrected/reconciled package; preserve this result as an audit record; rerun binding preflight before production mutation."
-}
-{
-  "schema_version": "aegis-execution-result-v1",
-  "task_id": "GT-G4.7",
-  "stage": "P32",
-  "terminal_state": "TASK_PACKAGE_DEFECT",
-  "result_revision": "6240cb7ef6f184a51057081b7e3f9136e333b58a",
   "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/6240cb7ef6f184a51057081b7e3f9136e333b58a",
   "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
   "execution_ref": "codex/g4-7-development",
@@ -61,7 +16,8 @@
     ".aegis/results/GT-G4.7/scope-audit.json",
     ".aegis/results/GT-G4.7/blocker-report.json",
     ".aegis/results/GT-G4.7/execution-skip.json",
-    ".aegis/results/GT-G4.7/evidence-manifest.json"
+    ".aegis/results/GT-G4.7/evidence-manifest.json",
+    ".aegis/results/GT-G4.7/repository-observations.json"
   ],
   "provider_refs": [],
   "automated_status": {
@@ -86,5 +42,6 @@
   "production_mutation_performed": false,
   "return_surface": "CONTROL_REVIEW",
   "next_owner": "P31/Control and Verification owner",
-  "next_action": "Publish corrected/reconciled package; preserve this result as an audit record; rerun binding preflight before production mutation."
+  "next_action": "Publish corrected/reconciled package; preserve this result as an audit record; rerun binding preflight before production mutation.",
+  "revision_note": "result_revision is the immutable blocker audit commit; materialized_ref is its immutable evidence/result descendant. Neither revision contains G4.7 production implementation."
 }
