@@ -41,7 +41,9 @@ jobs:
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ github.event.pull_request.head.sha || github.sha }}, persist-credentials: false}
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - uses: ilammy/msvc-dev-cmd@v1
@@ -84,7 +86,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ github.event.pull_request.head.sha || github.sha }}, persist-credentials: false}
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - name: Install CMake and Ninja
@@ -116,7 +120,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ github.event.pull_request.head.sha || github.sha }}, persist-credentials: false}
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - uses: actions/setup-java@v4
