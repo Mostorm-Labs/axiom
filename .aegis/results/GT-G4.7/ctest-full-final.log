@@ -1,0 +1,206 @@
+Test project D:/GitRepos/mostorm-labs/canvas/build-windows-real
+        Start   1: G47TextLayout
+  1/134 Test   #1: G47TextLayout ..................................................   Passed    0.07 sec
+        Start   2: canvas_rf01_scene_atomicity
+  2/134 Test   #2: canvas_rf01_scene_atomicity ....................................   Passed    0.03 sec
+        Start   3: canvas_rf01_full_rebuild
+  3/134 Test   #3: canvas_rf01_full_rebuild .......................................   Passed    0.04 sec
+        Start   4: canvas_rf01_scene_binding
+  4/134 Test   #4: canvas_rf01_scene_binding ......................................   Passed    0.03 sec
+        Start   5: canvas_g2_a0_semantic_generation_binding
+  5/134 Test   #5: canvas_g2_a0_semantic_generation_binding .......................   Passed    0.03 sec
+        Start   6: canvas_g2_a1_runtime_record_projection
+  6/134 Test   #6: canvas_g2_a1_runtime_record_projection .........................   Passed    0.03 sec
+        Start   7: canvas_g2_a2_bounds_system
+  7/134 Test   #7: canvas_g2_a2_bounds_system .....................................   Passed    0.02 sec
+        Start   8: canvas_g2_a2_reference_geometry
+  8/134 Test   #8: canvas_g2_a2_reference_geometry ................................   Passed    0.02 sec
+        Start   9: canvas_g2_a2_scene_impact
+  9/134 Test   #9: canvas_g2_a2_scene_impact ......................................   Passed    0.02 sec
+        Start  10: canvas_g2_a2_dependency_closure
+ 10/134 Test  #10: canvas_g2_a2_dependency_closure ................................   Passed    0.02 sec
+        Start  11: canvas_g2_a3_full_incremental_equivalence
+ 11/134 Test  #11: canvas_g2_a3_full_incremental_equivalence ......................Exit code 0xc0000409***Exception:   2.36 sec
+Assertion failed: actual.geometryBounds == expected.geometry, file D:\GitRepos\mostorm-labs\canvas\runtime\scene\tests\full_incremental_equivalence_test.cpp, line 53
+
+        Start  12: canvas_g2_a4_scene_delta
+ 12/134 Test  #12: canvas_g2_a4_scene_delta .......................................   Passed    0.53 sec
+        Start  13: canvas_g2_a6_incremental_equivalence
+ 13/134 Test  #13: canvas_g2_a6_incremental_equivalence ...........................   Passed    1.40 sec
+        Start  14: canvas_g2_a6_atomic_publication
+ 14/134 Test  #14: canvas_g2_a6_atomic_publication ................................   Passed    0.03 sec
+        Start  15: canvas_g2_a6_recovery
+ 15/134 Test  #15: canvas_g2_a6_recovery ..........................................   Passed    0.03 sec
+        Start  16: canvas_g2_a5_spatial_index_differential
+ 16/134 Test  #16: canvas_g2_a5_spatial_index_differential ........................   Passed    0.02 sec
+        Start  17: canvas_g2_a5_d6_spatial_index_benchmark
+ 17/134 Test  #17: canvas_g2_a5_d6_spatial_index_benchmark ........................   Passed    6.96 sec
+        Start  18: canvas_rf01_damage_view
+ 18/134 Test  #18: canvas_rf01_damage_view ........................................   Passed    0.04 sec
+        Start  19: canvas_rf01_module_boundaries
+ 19/134 Test  #19: canvas_rf01_module_boundaries ..................................   Passed    0.17 sec
+        Start  20: canvas_rf01_public_abi_manifest
+ 20/134 Test  #20: canvas_rf01_public_abi_manifest ................................   Passed    0.12 sec
+        Start  21: arc_windows_preview_backend_tests
+ 21/134 Test  #21: arc_windows_preview_backend_tests ..............................   Passed    0.27 sec
+        Start  22: arc_core_tests
+ 22/134 Test  #22: arc_core_tests .................................................   Passed    0.02 sec
+        Start  23: arc_host_adapter_tests
+ 23/134 Test  #23: arc_host_adapter_tests .........................................   Passed    0.02 sec
+        Start  24: arc_temporal_transient_tests
+ 24/134 Test  #24: arc_temporal_transient_tests ...................................   Passed    0.03 sec
+        Start  25: arc_protocol_c_smoke
+ 25/134 Test  #25: arc_protocol_c_smoke ...........................................   Passed    0.02 sec
+        Start  26: arc_platform_targets_tests
+ 26/134 Test  #26: arc_platform_targets_tests .....................................   Passed    0.03 sec
+        Start  27: G4InteractionSessionManager
+ 27/134 Test  #27: G4InteractionSessionManager ....................................   Passed    0.02 sec
+        Start  28: G4SelectionSession
+ 28/134 Test  #28: G4SelectionSession .............................................   Passed    0.02 sec
+        Start  29: G4TransformSession
+ 29/134 Test  #29: G4TransformSession .............................................   Passed    0.02 sec
+        Start  30: G46TransformHandleDrag
+ 30/134 Test  #30: G46TransformHandleDrag .........................................   Passed    0.02 sec
+        Start  31: G4EraserSession
+ 31/134 Test  #31: G4EraserSession ................................................   Passed    0.02 sec
+        Start  32: G4EditorHistory
+ 32/134 Test  #32: G4EditorHistory ................................................   Passed    0.02 sec
+        Start  33: G4SessionConflict
+ 33/134 Test  #33: G4SessionConflict ..............................................   Passed    0.02 sec
+        Start  34: G4SessionLifecycle
+ 34/134 Test  #34: G4SessionLifecycle .............................................   Passed    0.02 sec
+        Start  35: G4GestureArbiter
+ 35/134 Test  #35: G4GestureArbiter ...............................................   Passed    0.02 sec
+        Start  36: G4MultiContactCoordinator
+ 36/134 Test  #36: G4MultiContactCoordinator ......................................   Passed    0.02 sec
+        Start  37: G4ViewportGesture
+ 37/134 Test  #37: G4ViewportGesture ..............................................   Passed    0.02 sec
+        Start  38: C0CanvasInteractionCoordinator
+ 38/134 Test  #38: C0CanvasInteractionCoordinator .................................   Passed    0.02 sec
+        Start  39: C0ViewportInteractionController
+ 39/134 Test  #39: C0ViewportInteractionController ................................   Passed    0.03 sec
+        Start  40: G46BViewportConstraints
+ 40/134 Test  #40: G46BViewportConstraints ........................................   Passed    0.03 sec
+        Start  41: G4InputRouter
+ 41/134 Test  #41: G4InputRouter ..................................................   Passed    0.03 sec
+        Start  42: G4MultiPointerFoundation
+ 42/134 Test  #42: G4MultiPointerFoundation .......................................   Passed    0.02 sec
+        Start  43: G4PlatformNormalization
+ 43/134 Test  #43: G4PlatformNormalization ........................................   Passed    0.04 sec
+        Start  44: C1CommonIngress
+ 44/134 Test  #44: C1CommonIngress ................................................   Passed    0.03 sec
+        Start  45: C1CrossPlatformFixtureParity
+ 45/134 Test  #45: C1CrossPlatformFixtureParity ...................................   Passed    0.03 sec
+        Start  46: G4InkEngine
+ 46/134 Test  #46: G4InkEngine ....................................................   Passed    0.03 sec
+        Start  47: G4PointerTrace
+ 47/134 Test  #47: G4PointerTrace .................................................   Passed    0.03 sec
+        Start  48: G4PreviewModel
+ 48/134 Test  #48: G4PreviewModel .................................................   Passed    0.03 sec
+        Start  49: G4MultiPointerReplay
+ 49/134 Test  #49: G4MultiPointerReplay ...........................................   Passed    0.04 sec
+        Start  50: G45BrushPackage
+ 50/134 Test  #50: G45BrushPackage ................................................   Passed    0.03 sec
+        Start  51: G45BrushPackageCatalog
+ 51/134 Test  #51: G45BrushPackageCatalog .........................................   Passed    0.03 sec
+        Start  52: G45BrushPlan
+ 52/134 Test  #52: G45BrushPlan ...................................................   Passed    0.02 sec
+        Start  53: G45BrushSession
+ 53/134 Test  #53: G45BrushSession ................................................   Passed    0.03 sec
+        Start  54: G45BrushOperationIntent
+ 54/134 Test  #54: G45BrushOperationIntent ........................................   Passed    0.03 sec
+        Start  55: G45BrushPreviewHandoff
+ 55/134 Test  #55: G45BrushPreviewHandoff .........................................   Passed    0.02 sec
+        Start  56: G45BrushComplexity
+ 56/134 Test  #56: G45BrushComplexity .............................................   Passed    1.53 sec
+        Start  57: G45ProgrammableBrush
+ 57/134 Test  #57: G45ProgrammableBrush ...........................................   Passed    0.02 sec
+        Start  58: G45PerfectFreehandReference
+ 58/134 Test  #58: G45PerfectFreehandReference ....................................   Passed    0.04 sec
+        Start  59: G45CanonicalBrushCommit
+ 59/134 Test  #59: G45CanonicalBrushCommit ........................................   Passed    0.02 sec
+        Start  60: G47ImageResource
+ 60/134 Test  #60: G47ImageResource ...............................................   Passed    0.04 sec
+        Start  61: G47TextPipeline
+ 61/134 Test  #61: G47TextPipeline ................................................   Passed    0.28 sec
+        Start  62: G45BrushOutlineSkiaPath
+ 62/134 Test  #62: G45BrushOutlineSkiaPath ........................................   Passed    0.02 sec
+        Start  63: G4WindowsSkiaInkViewport
+ 63/134 Test  #63: G4WindowsSkiaInkViewport .......................................   Passed    0.02 sec
+        Start  64: G4SkiaBrushPrimitiveDab
+ 64/134 Test  #64: G4SkiaBrushPrimitiveDab ........................................   Passed    0.02 sec
+        Start  65: G4SkiaChalkTexture
+ 65/134 Test  #65: G4SkiaChalkTexture .............................................   Passed    0.09 sec
+        Start  66: G4SkiaChalkContinuousTexture
+ 66/134 Test  #66: G4SkiaChalkContinuousTexture ...................................   Passed    0.03 sec
+        Start  67: G3RuntimeAppBinding
+ 67/134 Test  #67: G3RuntimeAppBinding ............................................   Passed    0.02 sec
+        Start  68: G3HeadlessCanvasDemo
+ 68/134 Test  #68: G3HeadlessCanvasDemo ...........................................   Passed    2.55 sec
+        Start  69: G3HeadlessSkia
+ 69/134 Test  #69: G3HeadlessSkia .................................................   Passed    0.03 sec
+        Start  70: G3RenderTargetSwitching
+ 70/134 Test  #70: G3RenderTargetSwitching ........................................   Passed    0.02 sec
+        Start  71: G3SkiaSurfaceProvider
+ 71/134 Test  #71: G3SkiaSurfaceProvider ..........................................   Passed    0.02 sec
+        Start  72: G3PreviewSurface
+ 72/134 Test  #72: G3PreviewSurface ...............................................   Passed    0.02 sec
+        Start  73: G3SurfacePresentation
+ 73/134 Test  #73: G3SurfacePresentation ..........................................   Passed    0.02 sec
+        Start  74: G3FrameState
+ 74/134 Test  #74: G3FrameState ...................................................   Passed    0.02 sec
+        Start  75: G46EditingOverlay
+ 75/134 Test  #75: G46EditingOverlay ..............................................   Passed    0.02 sec
+        Start  76: G3Visibility
+ 76/134 Test  #76: G3Visibility ...................................................   Passed    0.90 sec
+        Start  77: G3DirectReference
+ 77/134 Test  #77: G3DirectReference ..............................................   Passed    3.46 sec
+        Start  78: G3FrameOrchestration
+ 78/134 Test  #78: G3FrameOrchestration ...........................................   Passed    0.02 sec
+        Start  79: G4CanonicalHandoff
+ 79/134 Test  #79: G4CanonicalHandoff .............................................   Passed    0.02 sec
+        Start  80: DUI20DebugUiContracts
+ 80/134 Test  #80: DUI20DebugUiContracts ..........................................   Passed    0.02 sec
+        Start  81: G3Camera
+ 81/134 Test  #81: G3Camera .......................................................   Passed    0.02 sec
+        Start  82: G3DemoHitSelect
+ 82/134 Test  #82: G3DemoHitSelect ................................................   Passed    0.03 sec
+        Start  83: G3WindowsSurfaceAdapter
+ 83/134 Test  #83: G3WindowsSurfaceAdapter ........................................   Passed    0.02 sec
+        Start  84: G3WebSurfaceHost
+ 84/134 Test  #84: G3WebSurfaceHost ...............................................   Passed    0.02 sec
+        Start  85: G4InkPlaygroundComposition
+ 85/134 Test  #85: G4InkPlaygroundComposition .....................................   Passed    0.03 sec
+        Start  86: G4InkPlaygroundHud
+ 86/134 Test  #86: G4InkPlaygroundHud .............................................   Passed    0.03 sec
+        Start  87: G4InkPlaygroundSurface
+ 87/134 Test  #87: G4InkPlaygroundSurface .........................................   Passed    0.03 sec
+        Start  88: G4InkPlaygroundPreview
+ 88/134 Test  #88: G4InkPlaygroundPreview .........................................   Passed    0.03 sec
+        Start  89: G4InkPlaygroundRepeatedStrokes
+ 89/134 Test  #89: G4InkPlaygroundRepeatedStrokes .................................   Passed    0.03 sec
+        Start  90: G4InkPlaygroundPlatform
+ 90/134 Test  #90: G4InkPlaygroundPlatform ........................................   Passed    0.03 sec
+        Start  91: G4MultiPointerPlayground
+ 91/134 Test  #91: G4MultiPointerPlayground .......................................   Passed    0.03 sec
+        Start  92: G4ProvisionalZeroMutation
+ 92/134 Test  #92: G4ProvisionalZeroMutation ......................................   Passed    0.03 sec
+        Start  93: G4ViewportGestureState
+ 93/134 Test  #93: G4ViewportGestureState .........................................   Passed    0.03 sec
+        Start  94: G46BViewportFitHost
+ 94/134 Test  #94: G46BViewportFitHost ............................................   Passed    0.03 sec
+        Start  95: G46BQueryStructure
+ 95/134 Test  #95: G46BQueryStructure .............................................   Passed    0.04 sec
+        Start  96: G4AndroidPointerIdentity
+ 96/134 Test  #96: G4AndroidPointerIdentity .......................................   Passed    0.03 sec
+        Start  97: G4MultiContactPolicySelection
+ 97/134 Test  #97: G4MultiContactPolicySelection ..................................   Passed    0.03 sec
+        Start  98: G4InkPlaygroundSelection
+ 98/134 Test  #98: G4InkPlaygroundSelection .......................................   Passed    0.03 sec
+        Start  99: G46PlaygroundTransform
+ 99/134 Test  #99: G46PlaygroundTransform .........................................   Passed    0.15 sec
+        Start 100: G47TextHost
+100/134 Test #100: G47TextHost ....................................................   Passed    0.08 sec
+        Start 101: G47QualificationReplay
+101/134 Test #101: G47QualificationReplay .........................................   Passed    5.28 sec
+        Start 102: G46CQualificationBundle

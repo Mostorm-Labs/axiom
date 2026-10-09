@@ -1,66 +1,43 @@
 {
-  "format": "aegis-package-binding-preflight-v1",
   "task_id": "GT-G4.7",
-  "repository_identity": {
-    "provider": "github",
-    "full_name": "Mostorm-Labs/axiom",
-    "origin": "https://github.com/Mostorm-Labs/axiom.git",
-    "repository_identity_status": "PASS",
-    "execution_ref": "codex/g4-7-development",
-    "observed_revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
-    "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
-    "anchor": {
-      "revision": "68b925e53b092657f3415c3d3992a451a8515598",
-      "relation": "ancestor",
+  "observed_revision": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "repository": "Mostorm-Labs/axiom",
+  "origin": "https://github.com/Mostorm-Labs/axiom.git",
+  "status": "PASS",
+  "package_file_sha256": {
+    "authority.lock.json": "bfbe6cf831a2758bf1ad27cf44273b6767074ba38d9e5cba6003cda01d00feb8",
+    "verification.lock.json": "85e3d1ded3a0502d00bd8d7c5160ed68ce89c1bcf01252b61d761676ab610bba",
+    "execution-contract.json": "dd82c16038d01bfd6899a89e10bf1b7e06afd6b24455c0fc7545ddb0f9d0ad52",
+    "implementation-context.md": "9bf0d0e94602f8ab6254e295dd0c35babb6559fab006ac48dc762c476e7379a7",
+    "evidence-contract.json": "7438c511089d49a87a2182b841de554a18f2efa147c1d929aa97b19f88417f31"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "sha256": "c60524257d7a14514a07f14b5b913d8065929aa3fc50f90f2512f50644808ed6",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "Roadmap",
+      "sha256": "e61b412b5c2d3fd06a825db3ec29ee2d7f48c06105be9260987bc23cb2aae55f",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "ExecutionOrderAmendment",
+      "sha256": "6e2a0f693c4a215e307742d6f1db15ecc8393a1ac5ec3e6d240fa6788b1fc049",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "TargetedReadiness",
+      "sha256": "d14c4899513c97e95b22ebb39954fecca0ef049bb1c4fed7174bd55e4ccdac14",
+      "encoding": "UTF-8 metadata.text",
       "status": "PASS"
     }
-  },
-  "package_binding": {
-    "execution_authority_mode": "repo_materialized",
-    "package_files_present": true,
-    "package_local_ref_sha256_status": "FAIL",
-    "missing_bindings": [
-      "package.json authority_lock_ref.sha256",
-      "package.json verification_lock_ref.sha256",
-      "package.json execution_contract_ref.sha256",
-      "package.json implementation_context_ref.sha256",
-      "package.json evidence_contract_ref.sha256"
-    ],
-    "observed_package_file_sha256": {
-      "authority.lock.json": "43510200854bdd9521b70cec01bca90afa50e99ae74fe21c232c4bba31edb32c",
-      "evidence-contract.json": "385601bd43c83e2f7f3acb82f410b0269b853c243d2bee576237d8cc727c8330",
-      "execution-contract.json": "f722b37f3f535067409eb2c5c1a5afcead763f307053e86c13dc088466aa1204",
-      "implementation-context.md": "6e5e013be0e5bbaf8141ec45d9eeacf9934a4c3cea46fb352723fd2354bf0ca0",
-      "package.json": "a099eb08ec6316c21df29395e064b9d7f66e722a8c8d28cdd321b16602cdd965",
-      "verification.lock.json": "1d7b2d2a1eb51438a9c101b679a325d56aeb08b0f8fc6daf649c716859340fb8"
-    },
-    "status": "BLOCKED"
-  },
-  "authority_binding": {
-    "status": "BLOCKED",
-    "authority_lock_current": true,
-    "trusted_basis_source_revisions_or_content_hashes_present": false,
-    "trusted_basis_entries": [
-      "P14-P18 Notion URL/title only",
-      "Roadmap Notion URL/title only",
-      "ExecutionOrderAmendment Notion URL/title only"
-    ],
-    "connector_snapshots_materialized_under_results": true,
-    "snapshots_are_observational_not_frozen_binding": true
-  },
-  "verification_binding": {
-    "status": "BLOCKED",
-    "obligations_structurally_separated": true,
-    "unresolved_acceptance_input": [
-      "G47-RENDER-004 frozen visual thresholds/tolerances not specified"
-    ],
-    "missing_required_input": "Concrete visual threshold/tolerance oracle"
-  },
-  "execution_scope": {
-    "status": "PASS",
-    "authorized_mutation_scope_from_package": true,
-    "tracked_source_diff_from_materialization": [],
-    "unrelated_untracked_files_preserved": true
-  },
-  "overall_status": "BLOCKED_PACKAGE_BINDING"
+  ],
+  "anchor_ancestry": "PASS",
+  "resume_classification": "EXACT_CURSOR"
 }

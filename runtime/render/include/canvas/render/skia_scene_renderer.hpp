@@ -8,6 +8,8 @@
 #include <span>
 
 class SkCanvas;
+namespace canvas::render { class ImageResourceResolver; }
+namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
 
@@ -15,7 +17,8 @@ namespace canvas::render::internal {
 // SkiaRenderer/provider production path. The implementation is kept in the
 // render target so there is one validation and nine-command mapping.
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
-    SkCanvas& canvas, const FramePlan& plan);
+    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
+    SkiaTextResources* textResources = nullptr);
 
 void drawDabInstancesToSkCanvas(
     SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,

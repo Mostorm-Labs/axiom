@@ -1,4 +1,6 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/render/image_resource.hpp"
+#include "canvas/runtime/resource_provider.hpp"
 
 #include "canvas/foundation/object_id.hpp"
 #include "canvas/render/frame_plan.hpp"
@@ -50,6 +52,8 @@ using canvas::render::VectorPathReferenceCommand;
 using canvas::render::VectorStrokeReferenceCommand;
 using canvas::render::ViewId;
 using canvas::render::WorldToViewAffine;
+using canvas::render::ImageResourceResolver;
+using canvas::runtime::MemoryResourceProvider;
 using canvas::semantic::ColorValue;
 using canvas::semantic::ObjectKind;
 using canvas::semantic::SemanticGeneration;
@@ -57,6 +61,18 @@ using canvas::semantic::SemanticGeneration;
 constexpr std::uint32_t kWidth = 256U;
 constexpr std::uint32_t kHeight = 256U;
 using Rgba = std::array<std::uint8_t, 4>;
+
+std::vector<std::uint8_t> checkerboardPng() {
+    return {
+        0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
+        0x00,0x00,0x00,0x18,0x00,0x00,0x00,0x18,0x08,0x06,0x00,0x00,0x00,0xe0,0x77,0x3d,
+        0xf8,0x00,0x00,0x00,0x30,0x49,0x44,0x41,0x54,0x78,0xda,0x63,0x60,0xf8,0x8f,0x06,
+        0x1b,0xd0,0x30,0xa5,0xf2,0xa3,0x16,0x10,0xb6,0x80,0xda,0x06,0xa2,0xc3,0x51,0x0b,
+        0x08,0x5b,0x30,0x9a,0x4c,0x47,0xf3,0xc1,0xa8,0x05,0xa3,0xc9,0x74,0x34,0x1f,0x8c,
+        0x5a,0xc0,0xf0,0x1f,0x00,0x76,0xf2,0xec,0xce,0x5a,0x24,0x42,0x67,0x00,0x00,0x00,
+        0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82,
+    };
+}
 
 FrameState fixtureFrame(FrameId id = FrameId{901}) {
     return FrameState{
@@ -286,8 +302,8 @@ std::vector<std::uint8_t> independentExpectedPixels() {
         }
     }
     fill(pixels, 72U, 8U, 24U, 24U, {0U, 0U, 255U, 255U});
-    fill(pixels, 104U, 8U, 8U, 12U, {255U, 255U, 0U, 255U});
-    fill(pixels, 114U, 8U, 8U, 12U, {255U, 255U, 0U, 255U});
+    // This historical fixture has no font/layout binding. G4.7 explicitly
+    // removes fabricated text pixels; real shaped text has its own oracle.
     fill(pixels, 8U, 46U, 24U, 4U, {255U, 0U, 255U, 255U});
     fill(pixels, 46U, 42U, 12U, 12U, {0U, 255U, 255U, 255U});
     fill(pixels, 72U, 46U, 24U, 4U, {255U, 128U, 0U, 255U});
@@ -323,7 +339,10 @@ void exactNineKindGoldenIsIndependentAndDeterministic() {
     const auto expected = independentExpectedPixels();
     const std::string expectedDigest = independentDigest(expected);
 
-    SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight});
+    MemoryResourceProvider resources;
+    resources.publish(ObjectId::fromUint64(130U), checkerboardPng());
+    ImageResourceResolver resolver(resources);
+    SkiaHeadlessBackend backend(HeadlessRasterConfig{kWidth, kHeight}, &resolver);
     assert(backend.submit(plan).code == BackendSubmissionCode::kAccepted);
     assert(backend.lastIssue() == HeadlessSubmissionIssue::kNone);
     assert(backend.observation().has_value());
@@ -344,7 +363,7 @@ void exactNineKindGoldenIsIndependentAndDeterministic() {
     assert(pixel(first, 16U, 16U) == (Rgba{0U, 0U, 0U, 0U}));
     assert(pixel(first, 40U, 8U) == (Rgba{0U, 255U, 0U, 255U}));
     assert(pixel(first, 72U, 8U) == (Rgba{0U, 0U, 255U, 255U}));
-    assert(pixel(first, 104U, 8U) == (Rgba{255U, 255U, 0U, 255U}));
+    assert(pixel(first, 104U, 8U) == (Rgba{0U, 0U, 0U, 0U}));
     assert(pixel(first, 8U, 46U) == (Rgba{255U, 0U, 255U, 255U}));
     assert(pixel(first, 46U, 42U) == (Rgba{0U, 255U, 255U, 255U}));
     assert(pixel(first, 72U, 46U) == (Rgba{255U, 128U, 0U, 255U}));
@@ -356,7 +375,7 @@ void exactNineKindGoldenIsIndependentAndDeterministic() {
 
     const ReferenceDrawList noGroupList = fixtureDrawList(frame, false);
     const FramePlan noGroupPlan{frame, noGroupList};
-    SkiaHeadlessBackend noGroupBackend(HeadlessRasterConfig{kWidth, kHeight});
+    SkiaHeadlessBackend noGroupBackend(HeadlessRasterConfig{kWidth, kHeight}, &resolver);
     assert(noGroupBackend.submit(noGroupPlan).code == BackendSubmissionCode::kAccepted);
     assert(noGroupBackend.observation()->rgba == first.rgba);
 }

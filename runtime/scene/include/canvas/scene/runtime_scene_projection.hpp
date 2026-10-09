@@ -4,6 +4,7 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <cstdint>
 #include <string>
@@ -25,6 +26,7 @@ struct InspectionRecord final {
     foundation::WorldRect worldBounds{};
     std::string referenceGeometryDigest;
     std::vector<semantic::ObjectId> directDependencies;
+    std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
     bool operator==(const InspectionRecord&) const = default;
 };
 
@@ -36,7 +38,7 @@ struct RuntimeSceneProjection final {
 };
 
 [[nodiscard]] foundation::Result<RuntimeSceneProjection> projectSemanticScene(
-    const semantic::SemanticReadView& view);
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr);
 
 } // namespace canvas::scene
 

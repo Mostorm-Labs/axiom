@@ -1,8 +1,8 @@
 {
   "format": "aegis-pre-g5-primitive-inventory-v1",
   "task_id": "GT-G4.7",
-  "revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
-  "status": "BLOCKED",
+  "revision": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "status": "INVENTORIED_PENDING_IMPLEMENTATION",
   "rows": [
     {
       "primitive": "Shape/Vector",
@@ -61,14 +61,13 @@
     },
     {
       "primitive": "Image/Resource decode-materialization",
-      "owner": "GT-G4.7-I0 per targeted readiness; absent from materialized required_changes/work_packages",
-      "observed_state": "BLOCKER",
+      "owner": "G47-I0 frozen package",
+      "observed_state": "IMPLEMENTATION_PENDING",
       "evidence": [
         "runtime/render/src/skia_headless_backend.cpp:ImageReferenceCommand draws checkerboard",
         "runtime/render/src/skia_scene_renderer.cpp only decodes embedded brush textures",
         "pocs/shared_engine/platform/skia/skia_scene_renderer.cpp historical AssetRegistry decode"
-      ],
-      "conflict": "readiness requires G47-I0, repo-local package lacks I0 obligations/oracles/artifacts"
+      ]
     },
     {
       "primitive": "ExternalSurface",
@@ -86,7 +85,5 @@
         "readiness snapshot"
       ]
     }
-  ],
-  "blocker_class": "TASK_PACKAGE_DEFECT",
-  "follow_up": "P31/Control must reconcile I0 inclusion vs fail-closed rule, add exact package bindings, and freeze visual thresholds before P32 mutation."
+  ]
 }

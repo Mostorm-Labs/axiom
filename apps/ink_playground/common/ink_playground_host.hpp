@@ -33,6 +33,7 @@
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/scene_binding.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -124,6 +125,15 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   InkPlaygroundHost();
+  [[nodiscard]] bool configureTextResources(std::vector<std::uint8_t>,std::vector<std::uint8_t>,text::LayoutContext);
+  [[nodiscard]] bool seedTextScenario(std::string_view,std::size_t);
+  [[nodiscard]] bool editTextScenario(std::size_t);
+  [[nodiscard]] bool applyTextScenarioEdit(std::size_t,std::string_view);
+  [[nodiscard]] bool transformTextScenario(std::size_t);
+  [[nodiscard]] bool configureBundledTextResources();
+  [[nodiscard]] std::string textQualificationJson() const;
+  [[nodiscard]] bool setTextFontsAvailable(bool);
+  [[nodiscard]] text::LayoutMetrics textLayoutMetrics() const noexcept;
 
   [[nodiscard]] bool beginStroke(std::uint64_t strokeId) noexcept;
   [[nodiscard]] bool beginStroke(const input::PointerKey& key, std::uint64_t strokeId) noexcept;
@@ -460,6 +470,14 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
+  runtime::MemoryResourceProvider textResources_;
+  std::unique_ptr<text::RichTextLayoutService> textLayoutService_;
+  std::vector<std::uint8_t> latinTextFont_,cjkTextFont_;
+  std::vector<foundation::ObjectId> textScenarioObjects_;
+  std::vector<foundation::ObjectId> textScenarioFixtureObjects_;
+  std::string textScenarioName_;
+  std::uint64_t textScenarioSerial_ = 0;
+  bool submitTextScenarioOperation(semantic::OperationPayload);
   std::unique_ptr<render::RenderViewRuntime> selectionView_;
   interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;

@@ -5,6 +5,7 @@
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
+#include "canvas/text/text_layout.hpp"
 
 namespace canvas::internal {
 
@@ -24,11 +25,12 @@ struct FullMaterializedScene final {
         foundation::WorldRect worldBounds{};
         std::string referenceGeometryDigest;
         std::vector<semantic::ObjectId> directDependencies;
+        std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
     };
     std::vector<Record> records;
 };
 
 foundation::Result<FullMaterializedScene> materializeFullScene(
-    const semantic::SemanticReadView& view);
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr);
 
 } // namespace canvas::internal

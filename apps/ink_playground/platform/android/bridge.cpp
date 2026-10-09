@@ -74,6 +74,23 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
 }
 
 extern "C" {
+int axiom_ink_android_text_scenario(void* handle,const char* name,std::uint32_t count) {
+  auto* value=asHost(handle);
+  if(!value || !name || !value->host->configureBundledTextResources() || !value->host->seedTextScenario(name,count)) return 0;
+  return value->host->presentCanonicalFrame(value->host->canonicalFrameCount()+1,0,false)?1:0;
+}
+int axiom_ink_android_text_action(void* handle,const char* action) {
+  auto* value=asHost(handle); if(!value || !action) return 0;
+  auto& host=*value->host; const std::string_view kind(action);
+  const bool ok=kind=="missing"?host.setTextFontsAvailable(false):kind=="ready"?host.setTextFontsAvailable(true):
+      kind=="transform"?host.transformTextScenario(0):kind=="camera"?host.applyViewportNavigation(
+        {canvas::interaction::ViewportNavigationKind::kBrowserGesture,0,0,128,128,1.25F}):host.applyTextScenarioEdit(0,kind);
+  return ok && host.presentCanonicalFrame(host.canonicalFrameCount()+1,0,false)?1:0;
+}
+const char* axiom_ink_android_text_metrics(void* handle) {
+  static std::string json; const auto* value=asHost(handle);
+  json=value?value->host->textQualificationJson():"{}"; return json.c_str();
+}
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height) {
   if (width == 0U || height == 0U) return nullptr; auto value = std::make_unique<AndroidHost>();
   if (!initPrograms(*value) || !value->host->bindSurface(width, height)) return nullptr;

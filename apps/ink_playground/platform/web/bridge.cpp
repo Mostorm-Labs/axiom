@@ -319,6 +319,23 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
 }
 
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int axiom_ink_text_scenario(std::uint32_t value,const char* name,std::uint32_t count) {
+  auto* target=host(value);
+  if(!target || !name || !target->configureBundledTextResources() || !target->seedTextScenario(name,count)) return 0;
+  return target->presentCanonicalFrame(target->canonicalFrameCount()+1,0,false)?1:0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_text_action(std::uint32_t value,const char* action) {
+  auto* target=host(value); if(!target || !action) return 0;
+  const std::string_view kind(action);
+  const bool applied=kind=="missing"?target->setTextFontsAvailable(false):
+      kind=="ready"?target->setTextFontsAvailable(true):kind=="transform"?target->transformTextScenario(0):
+      target->applyTextScenarioEdit(0,kind);
+  return applied && target->presentCanonicalFrame(target->canonicalFrameCount()+1,0,false)?1:0;
+}
+EMSCRIPTEN_KEEPALIVE const char* axiom_ink_text_metrics(std::uint32_t value) {
+  static std::string json;
+  json=host(value)?host(value)->textQualificationJson():"{}"; return json.c_str();
+}
 EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
     std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
     std::uint64_t sequence, std::uint64_t timestampNs, float x, float y,

@@ -37,6 +37,22 @@
 
 namespace {
 using canvas::ink_playground::InkPlaygroundHost;
+constexpr std::array<const char*,8> kTextScenarios{"text-many-small","text-long","text-style-mixed",
+  "text-edit-local","text-font-cold-warm","text-transform","text-camera","structured-grid-proxy"};
+void exportTextQualification(InkPlaygroundHost& host) {
+  wchar_t directory[32768]{};
+  const auto length=GetEnvironmentVariableW(L"AXIOM_G47_EVIDENCE_DIR",directory,32768);
+  const auto output=length>0 && length<32768?std::filesystem::path(directory):std::filesystem::path(L"g47-windows-evidence");
+  std::error_code error; std::filesystem::create_directories(output,error); if(error) return;
+  std::ofstream(output/"text-metrics.json",std::ios::binary)<<host.textQualificationJson()<<'\n';
+  const auto surface=host.surface(); std::vector<std::uint8_t> pixels(static_cast<std::size_t>(surface.width)*surface.height*4);
+  if(host.activeSurfaceProvider()->readbackRgba(pixels).code==canvas::render::BackendSubmissionCode::kAccepted) {
+    std::ofstream capture(output/"canonical.rgba",std::ios::binary);
+    capture.write(reinterpret_cast<const char*>(pixels.data()),pixels.size());
+    std::ofstream(output/"capture.json")<<"{\"width\":"<<surface.width<<",\"height\":"<<surface.height
+      <<",\"format\":\"RGBA8888-premul\",\"surface_generation\":"<<surface.generation<<"}\n";
+  }
+}
 using canvas::ink_playground::PreviewPresentationCapture;
 class WindowsArcRuntimeSinks;
 class WindowsRuntimeFacade;
@@ -1299,6 +1315,9 @@ void paint(HWND window, State& value) {
          << L" | Arc preview: Skia layered"
          << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
          << L" | SPACE = preview | P = pointer mode";
+  const auto textMetrics=value.host->textLayoutMetrics();
+  status<<L" | text layouts: "<<textMetrics.objectLayouts<<L" paragraphs: "<<textMetrics.paragraphLayouts
+    <<L" font faces: "<<textMetrics.fontMaterializations<<L" layout ms: "<<textMetrics.layoutCpuMs;
   const auto text = status.str();
   SetTextColor(dc, RGB(30, 30, 30));
   TextOutW(dc, 16, 34, text.c_str(), static_cast<int>(text.size()));
@@ -1345,6 +1364,23 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_COMMAND && value != nullptr && HIWORD(wParam) == BN_CLICKED) {
+    const auto command=LOWORD(wParam);
+    if(command>=0x4700 && command<0x4708) {
+      if(value->host->configureBundledTextResources() &&
+         value->host->seedTextScenario(kTextScenarios[command-0x4700],command==0x4707?50000:128)) {
+        value->canonicalFrameReady=false; InvalidateRect(window,nullptr,FALSE);
+      }
+      return 0;
+    }
+    if(command>=0x4710 && command<=0x471a) {
+      constexpr std::array<const char*,6> edits{"insert","delete","split","merge","inline-style","paragraph-style"};
+      if(command<0x4716) (void)value->host->applyTextScenarioEdit(0,edits[command-0x4710]);
+      else if(command==0x4716) (void)value->host->transformTextScenario(0);
+      else if(command==0x4717 || command==0x4718) (void)value->host->setTextFontsAvailable(command==0x4718);
+      else if(command==0x4719) exportTextQualification(*value->host);
+      else (void)value->host->applyViewportNavigation({canvas::interaction::ViewportNavigationKind::kBrowserGesture,0,0,128,128,1.25F});
+      value->canonicalFrameReady=false; InvalidateRect(window,nullptr,FALSE); return 0;
+    }
     selectWindowsTool(*value, LOWORD(wParam));
     return 0;
   }
@@ -1930,6 +1966,17 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
       WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
       CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, instance, &value);
   if (value.window == nullptr) return 1;
+  const auto menu=CreateMenu(),textMenu=CreatePopupMenu(),actionMenu=CreatePopupMenu();
+  for(std::size_t i=0;i<kTextScenarios.size();++i) {
+    const std::string name(kTextScenarios[i]); const std::wstring label(name.begin(),name.end());
+    AppendMenuW(textMenu,MF_STRING,0x4700+i,label.c_str());
+  }
+  constexpr std::array<const wchar_t*,11> actions{L"Insert",L"Delete",L"Split paragraph",L"Merge paragraph",
+    L"Inline underline",L"Paragraph alignment",L"Transform",L"Font Missing",L"Font Ready",L"Export capture/metrics",L"Camera zoom 125%"};
+  for(std::size_t i=0;i<actions.size();++i) AppendMenuW(actionMenu,MF_STRING,0x4710+i,actions[i]);
+  AppendMenuW(menu,MF_POPUP,reinterpret_cast<UINT_PTR>(textMenu),L"G4.7 Text scenarios");
+  AppendMenuW(menu,MF_POPUP,reinterpret_cast<UINT_PTR>(actionMenu),L"Text qualification actions");
+  SetMenu(value.window,menu);
   value.debugUi = std::make_unique<canvas::debug_ui::WindowsDebugUiHost>();
   if (!value.debugUi->initialize(value.window)) return 1;
   value.debugUi->setInputCaptureGate(&value.inputCapture);

@@ -1,7 +1,6 @@
 {
   "format": "aegis-scope-audit-v1",
   "task_id": "GT-G4.7",
-  "observed_revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
   "authorized_scope_from_package": [
     "runtime/text/**",
     "runtime/scene/**",
@@ -17,10 +16,172 @@
     ".aegis/packages/GT-G4.7/**",
     ".aegis/results/GT-G4.7/**"
   ],
-  "production_files_changed": [],
-  "result_files_written": [
-    ".aegis/results/GT-G4.7/**"
+  "intentional_source_paths": [
+    ".github/workflows/g4-7-qualification.yml",
+    "CMakeLists.txt",
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/common/text_qualification_resources.cpp",
+    "apps/ink_playground/platform/android/android_jni.cpp",
+    "apps/ink_playground/platform/android/app/build.gradle.kts",
+    "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/InkPlaygroundView.java",
+    "apps/ink_playground/platform/android/app/src/main/java/dev/mostorm/axiom/inkplayground/MainActivity.java",
+    "apps/ink_playground/platform/android/bridge.cpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/web/index.html",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/g47_qualification_runner.cpp",
+    "apps/ink_playground/tests/g47_text_host_test.cpp",
+    "runtime/foundation/include/canvas/runtime/resource_provider.hpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json",
+    "runtime/render/include/canvas/render/image_resource.hpp",
+    "runtime/render/include/canvas/render/reference_draw_list.hpp",
+    "runtime/render/include/canvas/render/skia_headless_backend.hpp",
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+    "runtime/render/include/canvas/render/skia_text_resources.hpp",
+    "runtime/render/src/direct_reference_source.cpp",
+    "runtime/render/src/image_resource.cpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/skia_surface_provider.cpp",
+    "runtime/render/src/skia_text_resources.cpp",
+    "runtime/render/tests/headless_canvas_demo_test.cpp",
+    "runtime/render/tests/image_resource_test.cpp",
+    "runtime/render/tests/skia_headless_backend_test.cpp",
+    "runtime/render/tests/text_pipeline_test.cpp",
+    "runtime/render/tools/headless_canvas_demo.cpp",
+    "runtime/scene/CMakeLists.txt",
+    "runtime/scene/include/canvas/scene/bounds_system.hpp",
+    "runtime/scene/include/canvas/scene/full_scene_compiler.hpp",
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp",
+    "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp",
+    "runtime/scene/include/canvas/scene/scene_types.hpp",
+    "runtime/scene/src/bounds_system.cpp",
+    "runtime/scene/src/full_scene_compiler.cpp",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp",
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp",
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.hpp",
+    "runtime/scene/src/runtime_scene_projection.cpp",
+    "runtime/scene/src/scene.cpp",
+    "runtime/scene/tests/CMakeLists.txt",
+    "runtime/scene/tests/bounds_system_test.cpp",
+    "runtime/scene/tests/rich_text_layout_red_test.cpp",
+    "runtime/text/CMakeLists.txt",
+    "runtime/text/include/canvas/text/text_layout.hpp",
+    "runtime/text/src/sha256.cpp",
+    "runtime/text/src/sha256.h",
+    "runtime/text/src/skia_font_materialization.hpp",
+    "runtime/text/src/text_layout.cpp",
+    "runtime/text/tests/text_layout_test.cpp",
+    "verification/fixtures/g47/image-stripes.png",
+    "verification/tools/g47_configure.py"
   ],
-  "unauthorized_changes_detected": false,
-  "preexisting_untracked_files_preserved": true
+  "required_evidence_paths": [
+    {
+      "path": ".aegis/results/GT-G4.7/repo-reconciliation.json",
+      "sha256": "4b00b1bb742496aef35814fd49e32a44ab4722ff9030a96672bb3f6f53e027d3"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/implementation-design-preflight.json",
+      "sha256": "2381e7b3de6b6ab8ac952da281c21257a079c58627dbc14897c8addeda416b91"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/pre-g5-primitive-inventory.json",
+      "sha256": "be7133d380d686067bef98244cba9501cfbb2ab0245cc452070b483bad1cdc20"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/image-render-parity.json",
+      "sha256": "cf6c085fadffe601701cbba304ce3560e78b3154094d22ec183f4198d5edeca0"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/image-resource-replay.json",
+      "sha256": "1fa3185a986bd9143167de2da9e7d0b0adabb382bb0c095e4b408879ce4c6c64"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/image-resource-fixtures.json",
+      "sha256": "f59be4fe55e672876c4c7dc278ec95e1e568d86aaad2036d7c42c7fc2ed30e6f"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/layout-fixtures.json",
+      "sha256": "7d1bca8e28cf701e0c1cc55382e8afa1990e1b56b54ba5d67d812d34071d1a3e"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/layout-digest.json",
+      "sha256": "6b6059e5688b157baaf7e786c0a3fa7c8f14403324b533bf5f0736310ed4fb9e"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/font-resolution.json",
+      "sha256": "73019453af800e5f839025568357f34b90a4eb228d22885a78ff8f9fd755be93"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/resource-transition.json",
+      "sha256": "8ba82f2344ade44155a05d87e8187a1935e15d8bcc07751f6d6c7d925a160106"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/scene-bounds.json",
+      "sha256": "add52b80795c39565709d08b86abd180b78b70c161505a1ae01deeeaef8d7f5a"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/invalidation-trace.json",
+      "sha256": "b54e9e89b7a4cdb61f53e236f4930d312148c7664d0a12192422f70280f98b0c"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/reference-production-parity.json",
+      "sha256": "dd927f56f03ec5bf0071f9a0503a0a80622c166909cad43ebb1ca6a3784b3a4c"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/render-path-trace.json",
+      "sha256": "33ce7f9a023cb31bcbf6db0813d28a0bea5a1a8aaaeef7463bfadf6203f5bc62"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/edit-locality.json",
+      "sha256": "bc14298d052470d2c327d52fce0a95729c07894c714608cbcb3257b99210d70b"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/negative-controls.json",
+      "sha256": "ba024cdf06867312ef56894db73b3c8c76fd6441e0b41be7e867f02f90127710"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/workload-corpus-manifest.json",
+      "sha256": "2028e60032cb2e313233a6071420e60b9d418f3a1bb970709df5b22b2ff437fd"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/playground-metrics.json",
+      "sha256": "88417eabf24ba788e19338ccfc0beab6a52c85018c53915a16f5aa5f7ba39d32"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/qualification-bundle-manifest.json",
+      "sha256": "d9ef83149f512f25ef605f7eab2aa1f55ccd44e582af433cbb8e3f25d63f1f41"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/platform-readiness.json",
+      "sha256": "ff315dfca4f98d3bc860f03ba76a19f13fef3a87eabdef1995062681c2507547"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/build.log",
+      "sha256": "dc4f66049283f453c4a89464825efbb7723c3491c9b9acbae4ec7573fcf1a8f7"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/ctest.log",
+      "sha256": "730caaba7a5eac8cd33c60f901a79758b7fa7c83b8498e05285cdd43683d3912"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/scope-audit.json",
+      "sha256": "e6ca8e987f7dc7f2e4114f7067e560aaf144bb81ee4ec94a092fc8e7ad53f015"
+    },
+    {
+      "path": ".aegis/results/GT-G4.7/result.json",
+      "sha256": "444c6ebe4942bd8bc4f361a29cb4a0c9e15f820d3ccd26b26bcf29ff33692028"
+    }
+  ],
+  "excluded_staging_paths": [
+    "build-*",
+    "out/**",
+    "imgui.ini",
+    "historical .aegis/results outside GT-G4.7"
+  ],
+  "status": "PASS"
 }

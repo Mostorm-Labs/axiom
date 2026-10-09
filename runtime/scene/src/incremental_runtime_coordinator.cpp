@@ -2,12 +2,57 @@
 
 #include "incremental_runtime_full_materialization_bridge.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 
 namespace canvas {
 
 namespace {
+// The accepted compiler still owns Scene records. This adapter contributes
+// derived text bounds and maps Scene revisions after resource-only updates.
+class TextBoundsCompiler final : public ISemanticSceneCompiler {
+  public:
+    TextBoundsCompiler(const ISemanticSceneCompiler& delegate,const RuntimeSceneProjection& projection,
+                       const Scene& scene) : delegate_(delegate), projection_(projection), scene_(scene), before_(scene.revision()) {}
+    foundation::Result<CompiledSceneSnapshot> compileFull(const semantic::SemanticReadView& view) const override {
+        auto result=delegate_.compileFull(view);
+        if(result) {
+            result.value().sourceRevision=SceneRevision(std::max(before_.value()+1,view.generation().value()));
+            for(auto& record:result.value().records) contribute(record);
+        }
+        return result;
+    }
+    foundation::Result<CompiledSceneDelta> compileDelta(const semantic::SemanticReadView& view,
+                                                       const semantic::ChangeSet& changes) const override {
+        auto result=delegate_.compileDelta(view,changes);
+        if(result) {
+            result.value().beforeRevision=before_;
+            result.value().afterRevision=SceneRevision(std::max(before_.value()+1,view.generation().value()));
+            // Resource generations can advance derived bounds without changing
+            // canonical state. Only the published Scene owns that before image.
+            const auto published=scene_.read();
+            for(auto& mutation:result.value().mutations) {
+                if(mutation.before && mutation.before->kind==SceneObjectKind::kRichText)
+                    if(const auto* before=published.find(mutation.objectId))
+                        mutation.before->worldBounds=before->worldBounds;
+                if(mutation.after) contribute(*mutation.after);
+            }
+            if(result.value().hints) {
+                result.value().hints->beforeRevision=before_;
+                result.value().hints->afterRevision=result.value().afterRevision;
+            }
+        }
+        return result;
+    }
+  private:
+    void contribute(SceneRecord& record) const {
+        if(const auto* source=projection_.find(record.objectId);source && source->textLayout)
+            record.worldBounds=source->worldBounds;
+    }
+    const ISemanticSceneCompiler& delegate_; const RuntimeSceneProjection& projection_;
+    const Scene& scene_; SceneRevision before_;
+};
 RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScene materialized) {
     RuntimeSceneProjection projection;
     projection.generation = materialized.generation;
@@ -27,6 +72,7 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
             .worldBounds = record.worldBounds,
             .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
             .directDependencies = std::move(record.directDependencies),
+            .textLayout = std::move(record.textLayout),
         });
     }
     return projection;
@@ -188,7 +234,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
                 {foundation::ErrorCode::kParticipantRejected, "Bounds checkpoint failure"});
         }
         if (const auto* object = input.post_state.find(change.object_id)) {
-            const auto bounds = computeBounds(*object);
+            const auto* derived=runtimePrepared.value().projection.find(object->id);
+            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr);
             if (!bounds.finite) {
                 abortPublication();
                 return foundation::Result<SceneSyncReceipt>::failure(
@@ -208,8 +255,10 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     pendingPublication_ = std::move(runtimePrepared.value());
     pendingGeneration_ = input.after_generation;
     pendingRevision_ = SceneRevision(input.after_generation.value());
+    const TextBoundsCompiler textCompiler(compiler,pendingPublication_->projection,binding_._scene);
     auto incremental = binding_.synchronize(
-        compiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
+        textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
+        input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
     if (incremental) {
         return incremental;
@@ -238,7 +287,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kInvalidRevision,
              "Full runtime recovery must not carry a ChangeSet"});
     }
-    auto materialized = internal::materializeFullScene(input.post_state);
+    auto materialized = internal::materializeFullScene(input.post_state,textLayoutService_);
     if (!materialized) {
         return foundation::Result<SceneSyncReceipt>::failure(materialized.error());
     }
@@ -264,7 +313,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kParticipantRejected, "Recovery publication checkpoint failure"});
     }
-    auto result = binding_.rebuild(compiler, input);
+    const TextBoundsCompiler textCompiler(compiler,runtimePrepared.value().projection,binding_._scene);
+    auto result = binding_.rebuild(textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler, input);
     if (!result) {
         abortPublication();
         return result;
@@ -282,6 +332,54 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     publicationGate_.observation = nullptr;
     publicationGate_.observationContext = nullptr;
     return result;
+}
+
+foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextResources() {
+    if(!textLayoutService_) return foundation::Result<SceneSyncReceipt>::failure(
+        {foundation::ErrorCode::kInvalidArgument,"No application text layout service is bound"});
+    auto next=runtimeScene_._projection;
+    CompiledSceneDelta delta{binding_._scene.revision(),SceneRevision(binding_._scene.revision().value()+1),{},std::nullopt};
+    const auto published=binding_._scene.read();
+    for(auto& record:next.records) {
+        if(record.kind!=semantic::ObjectKind::kRichText) continue;
+        auto layout=textLayoutService_->resolve(record.objectId,std::get<semantic::RichTextContent>(record.content));
+        if(record.textLayout && record.textLayout->digest==layout->digest) continue;
+        semantic::ObjectRecord source{}; source.id=record.objectId; source.kind=record.kind;
+        source.transform=record.transform; source.properties=record.properties; source.content=record.content;
+        const auto bounds=computeBounds(source,layout.get());
+        if(!bounds.finite) return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kInvalidRecord,"Resource-derived text bounds are non-finite"});
+        record.textLayout=std::move(layout); record.geometryBounds=bounds.geometry;
+        record.visualBounds=bounds.visual; record.worldBounds=bounds.world;
+        record.referenceGeometryDigest=record.textLayout->digest;
+        const auto* before=published.find(record.objectId);
+        if(!before) return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kMissingObject,"Text contribution missing from published Scene"});
+        auto after=*before; after.worldBounds=bounds.world;
+        delta.mutations.push_back({SceneMutationKind::kUpdate,record.objectId,*before,after});
+    }
+    if(delta.mutations.empty()) return foundation::Result<SceneSyncReceipt>::success(
+        {published.revision(),runtimeScene_.generation(),SceneSyncDisposition::kAppliedIncremental,
+         SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
+    publicationGate_.previousGeneration=runtimeScene_.generation();
+    publicationGate_.previousRevision=published.revision();
+    publicationGate_.generation=next.generation; publicationGate_.revision=delta.afterRevision;
+    publicationGate_.transactionActive=true;
+    publicationGate_.observation=&IncrementalRuntimeCoordinator::observePublication;
+    publicationGate_.observationContext=this;
+    runtimeScene_._stableProjection=runtimeScene_._projection;
+    binding_._scene._stablePublishedRecords=binding_._scene._publishedRecords;
+    binding_._scene._stablePublishedBounds=binding_._scene._publishedBounds;
+    binding_._scene._stableInvalidationGeneration=binding_._scene._invalidationGeneration;
+    binding_._scene._stablePublishedInvalidation=binding_._scene._publishedInvalidation;
+    pendingGeneration_=next.generation; pendingRevision_=delta.afterRevision;
+    pendingPublication_=RuntimeScene::PreparedPublication{std::move(next)};
+    auto applied=binding_._scene.applyPreparedDelta(std::move(delta),
+        &IncrementalRuntimeCoordinator::transactionCheckpoint,this,
+        &IncrementalRuntimeCoordinator::publishPending,this);
+    if(!applied) { abortPublication(); return foundation::Result<SceneSyncReceipt>::failure(applied.error()); }
+    return foundation::Result<SceneSyncReceipt>::success({applied.value().afterRevision,pendingGeneration_,
+        SceneSyncDisposition::kAppliedIncremental,std::move(applied.value()),std::nullopt});
 }
 
 } // namespace canvas

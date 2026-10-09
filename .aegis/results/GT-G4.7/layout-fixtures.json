@@ -1,0 +1,27 @@
+{
+  "format": "g47-layout-fixtures-v1",
+  "profile": "r1-full-v1/skparagraph/icu-v1",
+  "font_sha256": {
+    "Roboto": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f",
+    "NotoCJK": "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a"
+  },
+  "contexts": [
+    {
+      "width": 128,
+      "revision": 1
+    },
+    {
+      "width": 128,
+      "revision": 2
+    }
+  ],
+  "cases": [
+    "latin",
+    "numbers-punctuation",
+    "cjk",
+    "mixed-latin-cjk",
+    "combining-mark"
+  ],
+  "exact_face_policy": "no-os-browser-fallback-nearest-weight-or-synthetic-style",
+  "source_test": "runtime/text/tests/text_layout_test.cpp"
+}

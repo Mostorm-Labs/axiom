@@ -42,7 +42,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         return provider.present();
     }
     const auto result = internal::drawReferencePlanToSkCanvas(
-        *acquired.frame.surface->getCanvas(), plan);
+        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr &&
         selectionOverlay->selectionOutline().visible) {
         auto* canvas = acquired.frame.surface->getCanvas();
