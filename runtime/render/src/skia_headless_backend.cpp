@@ -49,6 +49,8 @@ bool pointInScalarRange(const semantic::Vec2& point) noexcept {
     return scalarRange(point.x) && scalarRange(point.y);
 }
 
+float skScalar(double value) noexcept { return static_cast<float>(value); }
+
 bool validAffine(const WorldToViewAffine& affine) noexcept {
     return scalarRange(affine.a) && scalarRange(affine.b) &&
            scalarRange(affine.c) && scalarRange(affine.d) &&
@@ -139,10 +141,10 @@ void drawPath(SkCanvas& canvas, const semantic::VectorPathGeometry& geometry,
     for (const auto& command : geometry.commands) {
         std::visit([&](const auto& value) {
             using T = std::decay_t<decltype(value)>;
-            if constexpr (std::is_same_v<T, semantic::MoveTo>) path.moveTo(value.point.x, value.point.y);
-            else if constexpr (std::is_same_v<T, semantic::LineTo>) path.lineTo(value.end.x, value.end.y);
-            else if constexpr (std::is_same_v<T, semantic::QuadTo>) path.quadTo(value.control.x, value.control.y, value.end.x, value.end.y);
-            else if constexpr (std::is_same_v<T, semantic::CubicTo>) path.cubicTo(value.control1.x, value.control1.y, value.control2.x, value.control2.y, value.end.x, value.end.y);
+            if constexpr (std::is_same_v<T, semantic::MoveTo>) path.moveTo(skScalar(value.point.x), skScalar(value.point.y));
+            else if constexpr (std::is_same_v<T, semantic::LineTo>) path.lineTo(skScalar(value.end.x), skScalar(value.end.y));
+            else if constexpr (std::is_same_v<T, semantic::QuadTo>) path.quadTo(skScalar(value.control.x), skScalar(value.control.y), skScalar(value.end.x), skScalar(value.end.y));
+            else if constexpr (std::is_same_v<T, semantic::CubicTo>) path.cubicTo(skScalar(value.control1.x), skScalar(value.control1.y), skScalar(value.control2.x), skScalar(value.control2.y), skScalar(value.end.x), skScalar(value.end.y));
             else if constexpr (std::is_same_v<T, semantic::ClosePath>) path.close();
         }, command);
     }
@@ -333,7 +335,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             auto strokeColor = stroke.brush.color;
             strokeColor.a *= stroke.brush.opacity;
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(strokeColor)); paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(static_cast<float>(stroke.brush.nominal_size)); paint.setStrokeCap(SkPaint::kButt_Cap);
-            for (std::size_t i = 1; i < data->samples.size(); ++i) canvas.drawLine(data->samples[i - 1].position.x, data->samples[i - 1].position.y, data->samples[i].position.x, data->samples[i].position.y, paint);
+            for (std::size_t i = 1; i < data->samples.size(); ++i) canvas.drawLine(skScalar(data->samples[i - 1].position.x), skScalar(data->samples[i - 1].position.y), skScalar(data->samples[i].position.x), skScalar(data->samples[i].position.y), paint);
         } else if constexpr (std::is_same_v<T, DabStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             const auto* data = std::get_if<semantic::DabStrokeData>(&stroke.data);
@@ -394,13 +396,13 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             if (start == nullptr || end == nullptr) return;
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000101U, {1.0F, 128.0F / 255.0F, 0.0F, 1.0F}))); paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(4.0F); paint.setStrokeCap(SkPaint::kButt_Cap);
             if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
-                canvas.drawLine(start->point.x, start->point.y, end->point.x,
-                                start->point.y, paint);
-                canvas.drawLine(end->point.x, start->point.y, end->point.x,
-                                end->point.y, paint);
+                canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(start->point.y), paint);
+                canvas.drawLine(skScalar(end->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(end->point.y), paint);
             } else {
-                canvas.drawLine(start->point.x, start->point.y, end->point.x,
-                                end->point.y, paint);
+                canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(end->point.y), paint);
             }
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
             drawSolidRect(canvas, foundation::WorldRect{record.visualBounds.left, record.visualBounds.top, record.visualBounds.left + static_cast<float>(command.content.width), record.visualBounds.top + static_cast<float>(command.content.height)}, {1.0F, 1.0F, 0.5F, 1.0F});
