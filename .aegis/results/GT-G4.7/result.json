@@ -3,8 +3,8 @@
   "task_id": "GT-G4.7",
   "stage": "P32",
   "terminal_state": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
-  "result_revision": "60edf2c321fda6398850def02462a6ff2762f0ea",
-  "materialized_ref": "60edf2c321fda6398850def02462a6ff2762f0ea",
+  "result_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "materialized_ref": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
   "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
   "execution_ref": "codex/g4-7-development",
   "evidence_input_refs": [
@@ -38,25 +38,13 @@
     ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
   ],
   "provider_refs": {
-    "workflow_run": 37934458014,
-    "workflow_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37934458014",
-    "head_sha": "60edf2c321fda6398850def02462a6ff2762f0ea",
+    "workflow_run": 37978210023,
+    "workflow_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023",
+    "head_sha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
     "jobs": {
-      "windows": {
-        "job_id": 113832909261,
-        "artifact_id": 11618350909,
-        "conclusion": "success"
-      },
-      "web": {
-        "job_id": 113832909625,
-        "artifact_id": 11617936053,
-        "conclusion": "success"
-      },
-      "android": {
-        "job_id": 113832909574,
-        "artifact_id": 11618011184,
-        "conclusion": "success"
-      }
+      "windows": {"job_id": 113981772583, "artifact_id": 11639489588, "conclusion": "success"},
+      "web": {"job_id": 113981772556, "artifact_id": 11639459027, "conclusion": "success"},
+      "android": {"job_id": 113981773154, "artifact_id": 11640555388, "conclusion": "success"}
     },
     "evidence_file": ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
   },
@@ -74,7 +62,7 @@
     "workload_100k": "PASS structured-grid-proxy count=50000 total_objects=100000",
     "android_apk": "PASS assembleDebug + apksigner v2",
     "android_offline_sdk": "PASS network_used=false",
-    "hosted_qualification": "Windows/Web/Android PASS (run 37934458014)"
+    "hosted_qualification": "Windows/Web/Android PASS (run 37978210023)"
   },
   "official_g4_6_gate_pass": false,
   "official_g4_7_gate_pass": false,
