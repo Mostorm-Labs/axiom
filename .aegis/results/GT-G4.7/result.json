@@ -3,8 +3,8 @@
   "task_id": "GT-G4.7",
   "stage": "P32",
   "terminal_state": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
-  "result_revision": "f7ead1184c4de3569d03046b774f00e2fe53f231",
-  "materialized_ref": "f7ead1184c4de3569d03046b774f00e2fe53f231",
+  "result_revision": "60edf2c321fda6398850def02462a6ff2762f0ea",
+  "materialized_ref": "60edf2c321fda6398850def02462a6ff2762f0ea",
   "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
   "execution_ref": "codex/g4-7-development",
   "evidence_input_refs": [
@@ -34,9 +34,32 @@
     ".aegis/results/GT-G4.7/ctest-final-focused.log",
     ".aegis/results/GT-G4.7/workload-100k.log",
     ".aegis/results/GT-G4.7/android-app-verified-build.log",
-    ".aegis/results/GT-G4.7/font-edge-ctest.log"
+    ".aegis/results/GT-G4.7/font-edge-ctest.log",
+    ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
   ],
-  "provider_refs": [],
+  "provider_refs": {
+    "workflow_run": 37934458014,
+    "workflow_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37934458014",
+    "head_sha": "60edf2c321fda6398850def02462a6ff2762f0ea",
+    "jobs": {
+      "windows": {
+        "job_id": 113832909261,
+        "artifact_id": 11618350909,
+        "conclusion": "success"
+      },
+      "web": {
+        "job_id": 113832909625,
+        "artifact_id": 11617936053,
+        "conclusion": "success"
+      },
+      "android": {
+        "job_id": 113832909574,
+        "artifact_id": 11618011184,
+        "conclusion": "success"
+      }
+    },
+    "evidence_file": ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
+  },
   "automated_status": {
     "package_binding": "PASS",
     "evidence_contract": "PASS",
@@ -50,7 +73,8 @@
     "font_edge_ctest": "PASS",
     "workload_100k": "PASS structured-grid-proxy count=50000 total_objects=100000",
     "android_apk": "PASS assembleDebug + apksigner v2",
-    "android_offline_sdk": "PASS network_used=false"
+    "android_offline_sdk": "PASS network_used=false",
+    "hosted_qualification": "Windows/Web/Android PASS (run 37934458014)"
   },
   "official_g4_6_gate_pass": false,
   "official_g4_7_gate_pass": false,

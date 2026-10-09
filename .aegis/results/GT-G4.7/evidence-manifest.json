@@ -93,14 +93,29 @@
     },
     {
       "path": ".aegis/results/GT-G4.7/scope-audit.json",
-      "sha256": "98da86e89f3c12b9c0adfc1df8e6988df53573e184f0abd53fe7eeb499e82cf2"
+      "sha256": "7b7ebb038b5bb2714d5acc0b27fbf95a2a14afceb97cf215d87bb0e5a06ef8be"
     },
     {
       "path": ".aegis/results/GT-G4.7/result.json",
-      "sha256": "13dc073a7ca5012a1893af80fb16d8201ed48a0b54a636845f43158ae29a47ef"
+      "sha256": "5a5af5c668e2beaeb98e0dc7d466262c729228dbe3cf78f6839fba6425a02f53"
     }
   ],
   "workload_100k": "workload-100k.log",
   "focused_ctest": "ctest.log",
-  "android_app": "android-app-verified-build.log"
+  "android_app": "android-app-verified-build.log",
+  "hosted_provider_evidence": "hosted-provider-evidence.json",
+  "provider_refs": {
+    "workflow_run": 37934458014,
+    "head_sha": "60edf2c321fda6398850def02462a6ff2762f0ea",
+    "jobs": {
+      "windows": 113832909261,
+      "web": 113832909625,
+      "android": 113832909574
+    },
+    "artifacts": {
+      "windows": 11618350909,
+      "web": 11617936053,
+      "android": 11618011184
+    }
+  }
 }

@@ -184,7 +184,8 @@ ReferenceTraversalEntry richTextEntry() {
     paragraph.runs = {{"A9", style}};
     canvas::semantic::RichTextContent content{{{paragraph}}};
     record.content = content;
-    return {.record = std::move(record), .command = RichTextReferenceCommand{content}};
+    return {.record = std::move(record),
+            .command = RichTextReferenceCommand{.content = content, .layout = nullptr}};
 }
 
 canvas::semantic::BrushDescriptor brush(ColorValue color, double size) {
