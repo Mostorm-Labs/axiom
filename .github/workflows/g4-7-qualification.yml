@@ -1,6 +1,21 @@
 name: GT-G4.7 Qualification
 
 on:
+  push:
+    branches: [codex/g4-7-development]
+    paths:
+      - "CMakeLists.txt"
+      - "runtime/**"
+      - "apps/ink_playground/**"
+      - "verification/**"
+      - ".aegis/packages/GT-G4.7/**"
+      - ".aegis/results/GT-G4.7/**"
+      - "r1-full-skia-sdk.lock.json"
+      - "semantic-sdk.lock.json"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic/**"
+      - "tools/skia/**"
+      - ".github/workflows/g4-7-qualification.yml"
   workflow_dispatch:
   pull_request:
     paths:
