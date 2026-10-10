@@ -54,63 +54,68 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         {"Pan", 4107},
     }};
     static std::uint64_t nextRequestId = 1;
-    const auto capabilityLabel = [&](Capability capability) {
-        const auto state = snapshot.capability(capability);
-        return state == CapabilityState::kAvailable ? "Available" :
-            (state == CapabilityState::kDegraded ? "Degraded" : "Unavailable");
+    const auto availabilityLabel = [](DebugAvailability state) {
+        return state == DebugAvailability::kAvailable ? "Available" :
+            state == DebugAvailability::kDegraded ? "Degraded" :
+            state == DebugAvailability::kUnsupported ? "Unsupported" : "Unavailable";
     };
     if (ImGui::BeginTabBar("##debug_tabs")) {
       if (ImGui::BeginTabItem("Overview")) {
         ImGui::Text("Input: %s  Canvas: %s  Surface: %s",
-                    capabilityLabel(Capability::kInput),
-                    capabilityLabel(Capability::kCanonicalSurface),
-                    capabilityLabel(Capability::kSurfaceMode));
+                    availabilityLabel(snapshot.arc.availability),
+                    availabilityLabel(snapshot.platform.availability),
+                    availabilityLabel(snapshot.platform.availability));
         ImGui::Text("Arc Preview: %s  Telemetry: %s  Inspection: %s",
-                    capabilityLabel(Capability::kArcPreviewSurface),
-                    capabilityLabel(Capability::kTelemetry),
-                    capabilityLabel(Capability::kInspection));
+                    availabilityLabel(snapshot.arc.availability),
+                    availabilityLabel(snapshot.telemetry.availability),
+                    "Unsupported");
         ImGui::Text("runtime gen %llu / document gen %llu / view gen %llu",
                     static_cast<unsigned long long>(snapshot.stamp.runtimeGeneration),
                     static_cast<unsigned long long>(snapshot.stamp.documentGeneration),
                     static_cast<unsigned long long>(snapshot.stamp.viewGeneration));
+        ImGui::Text("coherence: %s / snapshot #%llu",
+                    snapshot.coherence == SnapshotCoherence::kCoherent ? "Coherent" :
+                    snapshot.coherence == SnapshotCoherence::kMixedGeneration ? "MixedGeneration" : "Stale",
+                    static_cast<unsigned long long>(snapshot.stamp.snapshotSequence));
         ImGui::Text("canonical %llu / preview %llu / presents %llu",
-                    static_cast<unsigned long long>(snapshot.canonicalRevision),
-                    static_cast<unsigned long long>(snapshot.previewRevision),
-                    static_cast<unsigned long long>(snapshot.presentCount));
+                    static_cast<unsigned long long>(snapshot.axiom.value.document.canonicalOperationCount),
+                    static_cast<unsigned long long>(snapshot.arc.value.previewRevision),
+                    static_cast<unsigned long long>(snapshot.platform.value.presentCount));
         ImGui::EndTabItem();
       }
       if (ImGui::BeginTabItem("Canvas / Selection")) {
-        bool selectionMode = snapshot.selectionMode;
+        bool selectionMode = snapshot.product.value.selection.enabled;
         if (ImGui::Checkbox("Selection mode", &selectionMode) && runtime != nullptr) {
             (void)runtime->setSelectionMode(selectionMode, nextRequestId++,
-                                            snapshot.stamp.runtimeGeneration);
+                                            snapshot.product.value.identity.runtimeGeneration);
             submittedControl = true;
         }
-        ImGui::Text("selected objects: %u", snapshot.selectedObjectCount);
+        ImGui::Text("selected objects: %u", snapshot.product.value.selection.selectedObjectCount);
         ImGui::Text("primary object: %llu",
-                    static_cast<unsigned long long>(snapshot.selectedPrimaryObject));
+                    static_cast<unsigned long long>(snapshot.product.value.selection.primaryObject));
         ImGui::Text("Click the canvas to select the frontmost eligible object.");
         ImGui::Text("EditingOverlay is per-view and transient.");
         ImGui::EndTabItem();
       }
       if (ImGui::BeginTabItem("RuntimeFacade")) {
         ImGui::Text("Product controls are submitted through RuntimeFacade.");
-        ImGui::BeginDisabled(runtime == nullptr || !snapshot.canUndo);
+        ImGui::BeginDisabled(runtime == nullptr || !snapshot.product.value.history.canUndo);
         if (ImGui::Button("Undo (Ctrl+Z)")) {
-            (void)runtime->undo(nextRequestId++, snapshot.stamp.runtimeGeneration);
+            (void)runtime->undo(nextRequestId++, snapshot.product.value.identity.runtimeGeneration);
             submittedControl = true;
         }
         ImGui::EndDisabled();
         ImGui::SameLine();
-        ImGui::BeginDisabled(runtime == nullptr || !snapshot.canRedo);
+        ImGui::BeginDisabled(runtime == nullptr || !snapshot.product.value.history.canRedo);
         if (ImGui::Button("Redo (Ctrl+Y)")) {
-            (void)runtime->redo(nextRequestId++, snapshot.stamp.runtimeGeneration);
+            (void)runtime->redo(nextRequestId++, snapshot.product.value.identity.runtimeGeneration);
             submittedControl = true;
         }
         ImGui::EndDisabled();
-        if (snapshot.productControlRequestId != 0U) {
+        if (snapshot.activity.productControl.has_value()) {
+            const auto& receipt = *snapshot.activity.productControl;
             const char* state = "rejected";
-            switch (snapshot.productControlState) {
+            switch (receipt.state) {
             case canvas::runtime::ProductControlState::kApplied: state = "applied"; break;
             case canvas::runtime::ProductControlState::kQueued: state = "queued"; break;
             case canvas::runtime::ProductControlState::kUnsupported: state = "unsupported"; break;
@@ -118,7 +123,7 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
             case canvas::runtime::ProductControlState::kRejected: state = "rejected"; break;
             }
             ImGui::Text("product request %llu: %s",
-                        static_cast<unsigned long long>(snapshot.productControlRequestId), state);
+                        static_cast<unsigned long long>(receipt.requestId), state);
         }
         ImGui::EndTabItem();
       }
@@ -160,11 +165,11 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         ImGui::EndTabItem();
       }
       if (ImGui::BeginTabItem("Input")) {
-        ImGui::Text("active pointers: %u", snapshot.activePointerCount);
+        ImGui::Text("active pointers: %llu", static_cast<unsigned long long>(snapshot.arc.value.activePointerCount));
         ImGui::Text("input batches: %llu / sample %.1f Hz",
-                    static_cast<unsigned long long>(snapshot.inputBatchCount), snapshot.sampleHz);
+                    static_cast<unsigned long long>(snapshot.arc.value.inputBatchCount), snapshot.telemetry.value.sampleHz);
         ImGui::Text("queue age %.2f ms / frame %.2f ms",
-                    snapshot.queueAgeMs, snapshot.frameMs);
+                    snapshot.telemetry.value.queueAgeMs, snapshot.telemetry.value.frameMs);
         ImGui::EndTabItem();
       }
       if (ImGui::BeginTabItem("Surface")) {
@@ -175,7 +180,7 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         request.requestId = nextRequestId++;
         request.target = canvas::runtime::SurfaceRole::kCanonicalCanvas;
         request.mode = mode;
-        request.expectedGeneration = snapshot.stamp.surfaceGeneration;
+        request.expectedGeneration = snapshot.product.value.identity.surfaceGeneration;
         request.deadlineSequence = snapshot.stamp.sequence + 120U;
         (void)platform->enqueueSurfaceMode(request);
         submittedControl = true;
@@ -185,14 +190,15 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
     if (ImGui::Button("CPU reference")) requestSurface(canvas::runtime::SurfaceMode::kCpuReference);
     ImGui::SameLine();
     if (ImGui::Button("GPU default")) requestSurface(canvas::runtime::SurfaceMode::kGpuDefault);
-    const char* mode = snapshot.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kCpuReference
-        ? "CPU reference" : (snapshot.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kGpuDefault
+    const char* mode = snapshot.platform.value.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kCpuReference
+        ? "CPU reference" : (snapshot.platform.value.canonicalSurfaceMode == canvas::runtime::SurfaceMode::kGpuDefault
         ? "GPU default" : "Platform default");
     ImGui::Text("resolved: %s / canonical generation %llu", mode,
-                static_cast<unsigned long long>(snapshot.stamp.surfaceGeneration));
-    if (snapshot.surfaceControlRequestId != 0U) {
+                static_cast<unsigned long long>(snapshot.platform.value.canonicalSurfaceGeneration));
+    if (snapshot.activity.surfaceControl.has_value()) {
+        const auto& surfaceReceipt = *snapshot.activity.surfaceControl;
         const char* receipt = "failed";
-        switch (snapshot.surfaceControlState) {
+        switch (surfaceReceipt.state) {
         case canvas::runtime::SurfaceControlState::kQueued: receipt = "queued"; break;
         case canvas::runtime::SurfaceControlState::kApplied: receipt = "applied"; break;
         case canvas::runtime::SurfaceControlState::kUnsupported: receipt = "unsupported"; break;
@@ -203,23 +209,23 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         case canvas::runtime::SurfaceControlState::kFailed: receipt = "failed"; break;
         }
         ImGui::Text("surface request %llu: %s / generation %llu",
-                    static_cast<unsigned long long>(snapshot.surfaceControlRequestId), receipt,
-                    static_cast<unsigned long long>(snapshot.surfaceControlGeneration));
+                    static_cast<unsigned long long>(surfaceReceipt.requestId), receipt,
+                    static_cast<unsigned long long>(surfaceReceipt.generation));
       }
       ImGui::EndTabItem();
       }
       if (ImGui::BeginTabItem("Diagnostics")) {
         ImGui::Text("canonical %llu / preview %llu",
-                    static_cast<unsigned long long>(snapshot.canonicalRevision),
-                    static_cast<unsigned long long>(snapshot.previewRevision));
+                    static_cast<unsigned long long>(snapshot.axiom.value.document.canonicalOperationCount),
+                    static_cast<unsigned long long>(snapshot.arc.value.previewRevision));
         ImGui::Text("handoffs %llu / presents %llu / lost %llu",
-                    static_cast<unsigned long long>(snapshot.handoffCount),
-                    static_cast<unsigned long long>(snapshot.presentCount),
-                    static_cast<unsigned long long>(snapshot.surfaceLostCount));
+                    static_cast<unsigned long long>(snapshot.arc.value.handoffCount),
+                    static_cast<unsigned long long>(snapshot.platform.value.presentCount),
+                    static_cast<unsigned long long>(snapshot.platform.value.lostCount));
         ImGui::Text("surface: %s / Arc presenter: %s",
-                    snapshot.surfaceAvailable ? "available" : "unavailable",
-                    snapshot.arcPresenterActive ? "active" : "idle");
-        ImGui::Text("overlay selection: %u object(s)", snapshot.selectedObjectCount);
+                    snapshot.platform.value.surfaceAvailable ? "available" : "unavailable",
+                    snapshot.arc.value.previewActive ? "active" : "idle");
+        ImGui::Text("overlay selection: %u object(s)", snapshot.product.value.selection.selectedObjectCount);
       ImGui::EndTabItem();
       }
       ImGui::EndTabBar();

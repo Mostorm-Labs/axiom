@@ -229,8 +229,8 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   impl_->rendering = true;
   if (snapshotRefresh_) {
     snapshot_ = snapshotRefresh_();
-    if (snapshot_.selectedTool != 0U) {
-      selectedTool_ = static_cast<int>(snapshot_.selectedTool);
+    if (snapshot_.product.value.tool.toolId != 0U) {
+      selectedTool_ = static_cast<int>(snapshot_.product.value.tool.toolId);
     }
   }
   ImGui::SetCurrentContext(context_);
@@ -265,8 +265,8 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   // input dispatch, without waiting for canvas WM_PAINT or the next timer.
   if (submitted && snapshotRefresh_) {
     snapshot_ = snapshotRefresh_();
-    if (snapshot_.selectedTool != 0U) {
-      selectedTool_ = static_cast<int>(snapshot_.selectedTool);
+    if (snapshot_.product.value.tool.toolId != 0U) {
+      selectedTool_ = static_cast<int>(snapshot_.product.value.tool.toolId);
     }
     (void)drawPanels();
   }
@@ -282,7 +282,7 @@ void WindowsDebugUiHost::refresh() noexcept {
 
 void WindowsDebugUiHost::frame(const DebugSnapshot& s) {
   snapshot_ = s;
-  if (snapshot_.selectedTool != 0U) selectedTool_ = static_cast<int>(snapshot_.selectedTool);
+  if (snapshot_.product.value.tool.toolId != 0U) selectedTool_ = static_cast<int>(snapshot_.product.value.tool.toolId);
   if (!initialized_) return;
   syncOverlay();
   if (visible_) { renderFrame(); raise(); InvalidateRect(overlay_, nullptr, FALSE); }

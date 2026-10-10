@@ -17,7 +17,8 @@ DebugPanelModel::describe(const DebugSnapshot& snapshot) noexcept {
 }
 
 bool DebugPanelModel::canSubmitProductControl(const DebugSnapshot& snapshot) noexcept {
-  return snapshot.capability(Capability::kCanonicalSurface) == CapabilityState::kAvailable &&
+  return snapshot.product.availability == DebugAvailability::kAvailable &&
+         snapshot.platform.availability == DebugAvailability::kAvailable &&
          snapshot.stamp.runtimeGeneration != 0U;
 }
 

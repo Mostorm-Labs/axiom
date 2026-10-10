@@ -9,6 +9,7 @@
 #include "canvas/runtime/diagnostics.hpp"
 #include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
+#include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "imgui.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
@@ -187,6 +188,18 @@ class WebTelemetry final : public canvas::runtime::ITelemetry {
   const Host& host_;
 };
 
+class WebArcDiagnostics final : public canvas::runtime::IArcDiagnostics {
+ public:
+  explicit WebArcDiagnostics(const Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::ArcDiagnosticsSnapshot readArcDiagnostics() const noexcept override {
+    const auto& hud = host_.hud();
+    return {host_.previewPresentCount(), 0U, hud.batch, hud.pendingHandoffCount,
+            host_.previewActive()};
+  }
+ private:
+  const Host& host_;
+};
+
 struct DebugUiState final {
   std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider;
   std::unique_ptr<WebRuntimeFacade> runtime;
@@ -200,65 +213,29 @@ struct DebugUiState final {
   bool ctrlDown = false;
   std::uint64_t nextRequestId = 1;
   canvas::debug_ui::InputCaptureGate capture;
+  std::unique_ptr<WebPlatformDiagnostics> platformDiagnostics;
+  std::unique_ptr<WebTelemetry> telemetry;
+  std::unique_ptr<WebArcDiagnostics> arcDiagnostics;
+  canvas::debug_ui::DebugSnapshotAssembler snapshotAssembler;
 };
 std::unordered_map<Handle, DebugUiState>& debugUi() {
   static std::unordered_map<Handle, DebugUiState> values;
   return values;
 }
 
-canvas::debug_ui::DebugSnapshot debugSnapshot(Host& target, DebugUiState& state) {
-  canvas::debug_ui::DebugSnapshot snapshot{};
-  const auto runtime = state.runtime->readRuntimeState();
-  const auto telemetry = WebTelemetry(target).readTelemetry();
-  snapshot.stamp.sequence = target.hud().batch;
-  snapshot.stamp.snapshotSequence = snapshot.stamp.sequence;
-  snapshot.stamp.frameId = target.canonicalFrameCount();
-  snapshot.stamp.runtimeGeneration = runtime.identity.runtimeGeneration;
-  snapshot.stamp.documentGeneration = runtime.identity.documentGeneration;
-  snapshot.stamp.viewGeneration = runtime.identity.viewGeneration;
-  snapshot.stamp.surfaceGeneration = runtime.identity.surfaceGeneration;
-  snapshot.stamp.generation = runtime.identity.surfaceGeneration;
-  snapshot.canonicalSurfaceGeneration = runtime.identity.surfaceGeneration;
-  snapshot.previewSurfaceGeneration = target.previewSurfaceGeneration();
-  snapshot.canonicalRevision = target.submittedOperationCount();
-  snapshot.previewRevision = target.previewPresentCount();
-  snapshot.inputBatchCount = target.hud().batch;
-  snapshot.handoffCount = target.hud().pendingHandoffCount;
-  snapshot.presentCount = target.canonicalFrameCount();
-  snapshot.surfaceLostCount = target.surfaceLostCount();
-  snapshot.sampleHz = telemetry.sampleHz;
-  snapshot.frameMs = telemetry.frameMs;
-  snapshot.queueAgeMs = telemetry.queueAgeMs;
-  snapshot.surfaceAvailable = target.surface().available;
-  snapshot.arcPresenterActive = target.previewActive();
-  if (target.toolMode() == Host::ToolMode::kObjectEraser) {
-    snapshot.selectedTool = 4105;
-  } else if (target.toolMode() == Host::ToolMode::kPartialEraser) {
-    snapshot.selectedTool = 4106;
-  } else {
-    const auto& profile = target.selectedBrushProfile();
-    snapshot.selectedTool = profile == "vector-solid-v1" ? 4101U
-        : profile == "marker-flat-v1" ? 4102U
-        : profile == "chalk-grain-v1" ? 4103U : 4104U;
-  }
-  snapshot.canUndo = runtime.history.canUndo;
-  snapshot.canRedo = runtime.history.canRedo;
-  snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kInput)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kCanonicalSurface)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kArcPreviewSurface)] =
-      target.previewSurfaceProvider() == nullptr ? canvas::debug_ui::CapabilityState::kUnavailable
-                                                  : canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kTelemetry)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  return snapshot;
+canvas::debug_ui::DebugSnapshot captureDebugSnapshot(Host& target, DebugUiState& state) {
+  const canvas::debug_ui::DebugSnapshotSources sources{
+      state.runtime.get(), state.runtime.get(), state.arcDiagnostics.get(),
+      state.platformDiagnostics.get(), state.telemetry.get(), nullptr};
+  return state.snapshotAssembler.capture(sources);
 }
 
 bool initializeDebugUi(Handle value, Host& target, int width, int height) {
   auto& state = debugUi()[value];
   state.runtime = std::make_unique<WebRuntimeFacade>(target);
+  state.platformDiagnostics = std::make_unique<WebPlatformDiagnostics>(target);
+  state.telemetry = std::make_unique<WebTelemetry>(target);
+  state.arcDiagnostics = std::make_unique<WebArcDiagnostics>(target);
   state.provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
       canvas::render::WebGlSurfaceConfig{"#debugUi", static_cast<std::uint32_t>(width),
                                          static_cast<std::uint32_t>(height), 0});
@@ -302,7 +279,8 @@ bool renderDebugUi(Handle value) {
   io.DeltaTime = 1.0F / 60.0F;
   io.DisplaySize = ImVec2(static_cast<float>(state.width), static_cast<float>(state.height));
   const auto drawFrame = [&](const canvas::debug_ui::DebugSnapshot& snapshot) {
-    state.selectedTool = snapshot.selectedTool == 0U ? state.selectedTool : snapshot.selectedTool;
+    const auto selectedTool = snapshot.product.value.tool.toolId;
+    state.selectedTool = selectedTool == 0U ? state.selectedTool : selectedTool;
     const bool submitted = canvas::debug_ui::buildImGuiPanels(
         snapshot, static_cast<int>(state.selectedTool), state.runtime.get(), nullptr, nullptr);
     ImGui::Render();
@@ -317,14 +295,14 @@ bool renderDebugUi(Handle value) {
     return std::pair<bool, bool>{true, submitted};
   };
   ImGui::NewFrame();
-  const auto first = drawFrame(debugSnapshot(*hostIt->second, state));
+  const auto first = drawFrame(captureDebugSnapshot(*hostIt->second, state));
   if (!first.first) return false;
   // Product controls are committed while building the first frame. Redraw
   // once from the owner snapshot so a brush/eraser click is visible without
   // waiting for a canvas stroke or the next unrelated animation tick.
   if (first.second) {
     ImGui::NewFrame();
-    const auto second = drawFrame(debugSnapshot(*hostIt->second, state));
+    const auto second = drawFrame(captureDebugSnapshot(*hostIt->second, state));
     if (!second.first) return false;
   }
   return true;

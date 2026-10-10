@@ -23,7 +23,7 @@ def test_web_debug_ui_has_independent_imgui_surface_and_toggle():
     assert "_axiom_ink_debug_ui_key" in page
     assert "ImGui::CreateContext" in bridge
     assert "buildImGuiPanels" in bridge
-    assert "snapshot.selectedTool" in bridge
+    assert "snapshot.product.value.tool.toolId" in bridge
     assert "axiom_ink_playground_web.js?v=web-debug-ui-physical" in page
     assert "axiom_ink_selected_tool" in bridge
     assert "_axiom_ink_selected_tool" in page
@@ -36,6 +36,9 @@ def test_web_debug_ui_has_independent_imgui_surface_and_toggle():
     assert "AddMousePosEvent" in bridge
     assert "AddMouseButtonEvent" in bridge
     assert "InputCaptureGate" in bridge
+    assert "DebugSnapshotAssembler" in bridge
+    assert "captureDebugSnapshot" in bridge
+    assert "debugSnapshot(" not in bridge
     assert "canvas_debug_ui" in app_cmake
     assert "CanvasSkia::Skia" in debug_cmake
     assert "CANVAS_DEBUG_UI_HAS_SKIA" in debug_cmake

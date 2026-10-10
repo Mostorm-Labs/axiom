@@ -146,6 +146,13 @@ def test_overlay_refreshes_snapshot_before_panel_render():
     assert "debugUi->refresh();" in main
 
 
+def test_windows_uses_common_snapshot_assembler_without_local_mapping():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "DebugSnapshotAssembler" in source
+    assert "captureDebugSnapshot" in source
+    assert "buildDebugSnapshot(" not in source
+
+
 def test_overlay_uses_one_imgui_new_frame_per_render_pass():
     source = HOST.read_text(encoding="utf-8")
     render = source.split("void WindowsDebugUiHost::renderFrame()", 1)[1].split(

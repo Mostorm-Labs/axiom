@@ -38,7 +38,8 @@ int main() {
   static_assert(kDefaultDebugCommandQueueCapacity == 256);
   static_assert(kDefaultDebugCommandReceiptCapacity == 1024);
   MutexCopySnapshotChannel channel;
-  DebugSnapshot snapshot; snapshot.stamp = {4, 9}; snapshot.canonicalRevision = 12; channel.publish(snapshot);
+  DebugSnapshot snapshot; snapshot.stamp.generation = 4; snapshot.stamp.sequence = 9;
+  snapshot.axiom.value.document.canonicalOperationCount = 12; channel.publish(snapshot);
   const auto stamp = channel.read().stamp; assert(stamp.generation == 4 && stamp.sequence == 9);
   BoundedCommandQueue queue(1, 4);
   auto accepted = queue.admit(DebugCommand{1, 2, 10, DebugCommandKind::kInvalidatePreview, {}});
@@ -67,7 +68,8 @@ int main() {
   assert(gate.begin(seq, DebugInputOwner::kCanvas) == DebugInputOwner::kDebug);
   assert(gate.route(seq) == DebugInputOwner::kDebug); assert(gate.terminal(seq)); assert(!gate.route(seq));
   RollingTelemetry telemetry(2); telemetry.push({1,1,1,0,1.0}); telemetry.push({2,1,1,1,2.0}); telemetry.push({3,1,2,1,2.5}); assert(telemetry.size()==2);
-  DebugSnapshot panelSnapshot; panelSnapshot.capabilities.fill(CapabilityState::kAvailable); assert(panelAvailable(panelSnapshot, PanelCapability::kArcPreview));
+  DebugSnapshot panelSnapshot; panelSnapshot.arc.availability = DebugAvailability::kAvailable;
+  assert(panelAvailable(panelSnapshot, PanelCapability::kArcPreview));
   BoundedTraceSession trace(4); assert(trace.start()); assert(trace.append(4)); assert(!trace.append(1)); assert(trace.state()==TraceState::kOverflow);
   TestPlatformDebugControl surfaces;
   const auto receipt = surfaces.requestSurfaceMode({1, SurfaceRole::kCanonicalCanvas,

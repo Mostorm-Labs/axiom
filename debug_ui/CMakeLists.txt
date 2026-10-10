@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 add_library(canvas_debug_ui STATIC
-  src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp src/panel_model.cpp
+  src/snapshot.cpp src/snapshot_assembler.cpp src/command.cpp src/input_capture.cpp src/controller.cpp src/panel_model.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
@@ -68,3 +68,12 @@ if(BUILD_TESTING)
  endif()
  add_test(NAME DUIM1PanelModel COMMAND axiom_dui_m1_panel_model_tests)
 endif()
+ add_executable(axiom_debug_ui_snapshot_tests tests/snapshot_assembler_test.cpp)
+ target_link_libraries(axiom_debug_ui_snapshot_tests PRIVATE canvas_debug_ui)
+ target_compile_features(axiom_debug_ui_snapshot_tests PRIVATE cxx_std_20)
+ if(MSVC)
+  target_compile_options(axiom_debug_ui_snapshot_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+ else()
+  target_compile_options(axiom_debug_ui_snapshot_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+ endif()
+ add_test(NAME PX0DebugSnapshot COMMAND axiom_debug_ui_snapshot_tests)
