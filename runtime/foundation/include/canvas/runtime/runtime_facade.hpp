@@ -1,8 +1,12 @@
 #pragma once
 
 #include "canvas/runtime/diagnostics.hpp"
+#include "canvas/runtime/canvas_control_types.hpp"
 
 #include <cstdint>
+#include <array>
+#include <optional>
+#include <vector>
 
 namespace canvas::runtime {
 
@@ -14,6 +18,7 @@ enum class ProductControlAction : std::uint8_t {
   kSetCamera,
   kUndo,
   kRedo,
+  kCanvasControl,
 };
 
 enum class ProductControlState : std::uint8_t {
@@ -100,12 +105,17 @@ struct ProductControlRequest final {
   bool selectionMode = false;
   CameraFitTarget cameraFitTarget = CameraFitTarget::kDocument;
   std::uint64_t cameraObjectId = 0;
+  // All new controls use this value payload through the existing intent lane.
+  std::optional<CanvasControlRequest> canvasControl;
+  std::optional<foundation::ObjectId> fullCameraObjectId;
+  std::array<float, 4> cameraWorldRect{};
 };
 
 struct ProductControlReceipt final {
   std::uint64_t requestId = 0;
   ProductControlState state = ProductControlState::kRejected;
   std::uint64_t runtimeGeneration = 0;
+  std::optional<CanvasControlReceipt> control;
 };
 
 enum class SelectionPointerPhase : std::uint8_t { kDown, kMove, kUp, kCancel };
@@ -123,7 +133,11 @@ class RuntimeFacade : public RuntimeDiagnostics {
   virtual ~RuntimeFacade() = default;
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {
-    return {request.requestId, ProductControlState::kUnsupported, request.runtimeGeneration};
+    ProductControlReceipt receipt{};
+    receipt.requestId = request.requestId;
+    receipt.state = ProductControlState::kUnsupported;
+    receipt.runtimeGeneration = request.runtimeGeneration;
+    return receipt;
   }
   [[nodiscard]] virtual RuntimeStateSnapshot readRuntimeState() const noexcept {
     const auto diagnostics = readDiagnostics();
@@ -135,6 +149,40 @@ class RuntimeFacade : public RuntimeDiagnostics {
   }
   [[nodiscard]] virtual ProductControlReceipt submitProductControl(
       const ProductControlRequest& request) noexcept = 0;
+  // Typed canvas controls still use the single RuntimeFacade intent lane.
+  // Platform facades may adapt this request to their mounted common owner;
+  // they must not interpret the payload in a second UI-owned lane.
+  [[nodiscard]] virtual ProductControlReceipt submitCanvasControl(
+      const CanvasControlRequest& request) noexcept {
+    ProductControlRequest product{};
+    product.action = ProductControlAction::kCanvasControl;
+    product.requestId = request.requestId;
+    product.runtimeGeneration = request.target.runtimeEpoch;
+    product.canvasControl = request;
+    auto receipt = submitProductControl(product);
+    if (!receipt.control.has_value()) {
+      CanvasControlReceipt fallback{};
+      fallback.key = {request.clientId, request.requestId};
+      fallback.state = receipt.state == ProductControlState::kApplied
+                           ? CanvasControlReceiptState::kApplied
+                           : CanvasControlReceiptState::kFailed;
+      fallback.error = receipt.state == ProductControlState::kApplied
+                           ? CanvasControlError::kNone
+                           : CanvasControlError::kUnsupported;
+      receipt.control = std::move(fallback);
+    }
+    return receipt;
+  }
+  [[nodiscard]] virtual CanvasControlSnapshot readCanvasControlSnapshot(
+      const CanvasTargetKey& target) const noexcept {
+    CanvasControlSnapshot snapshot{};
+    snapshot.target = target;
+    return snapshot;
+  }
+  [[nodiscard]] virtual std::vector<CanvasTargetKey> mountedCanvasTargets() const { return {}; }
+  [[nodiscard]] virtual std::vector<BrushPresetRef> brushPresets() const { return {}; }
+  [[nodiscard]] virtual std::optional<CanvasControlReceipt> canvasControlReceipt(
+      CanvasControlReceiptKey) const { return std::nullopt; }
 
   // These typed entry points are the shared product control plane.  They are
   // implemented in terms of the single owner submission seam so Product Shell
@@ -142,8 +190,12 @@ class RuntimeFacade : public RuntimeDiagnostics {
   [[nodiscard]] virtual ProductControlReceipt setTool(
       std::uint32_t toolId, std::uint64_t requestId,
       std::uint64_t runtimeGeneration) noexcept {
-    return submitProductControl({ProductControlAction::kSetTool, requestId,
-                                 runtimeGeneration, 0U, toolId});
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetTool;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.toolId = toolId;
+    return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt setBrush(
       std::uint32_t brushId, std::uint32_t revision, std::uint64_t requestId,
@@ -180,13 +232,19 @@ class RuntimeFacade : public RuntimeDiagnostics {
   }
   [[nodiscard]] virtual ProductControlReceipt undo(
       std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
-    return submitProductControl({ProductControlAction::kUndo, requestId,
-                                 runtimeGeneration});
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kUndo;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt redo(
       std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
-    return submitProductControl({ProductControlAction::kRedo, requestId,
-                                 runtimeGeneration});
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kRedo;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt setCamera(
       CameraControlAction cameraAction, float anchorX, float anchorY,

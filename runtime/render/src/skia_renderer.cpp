@@ -126,40 +126,47 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     paint.setColor4f({style.overrideColor ? style.red : 0.20F,
                       style.overrideColor ? style.green : 0.78F,
                       style.overrideColor ? style.blue : 0.72F, alpha}, nullptr);
-    auto drawOutline = [&](const auto& outline) {
+    auto drawOutline = [&](const auto& outline, const SkPaint& outlinePaint) {
         if (outline.empty()) return;
         canvas->drawPath(buildVectorBrushOutlineSkPath(
             std::span<const std::remove_cvref_t<decltype(outline.front())>>(
-                outline.data(), outline.size())), paint);
+                outline.data(), outline.size())), outlinePaint);
     };
-    auto drawDabs = [&](const auto& dabs) {
+    auto drawDabs = [&](const auto& dabs, const SkPaint& dabPaint) {
         if constexpr (std::is_same_v<std::decay_t<decltype(dabs)>,
                                      std::vector<canvas::ink::BrushDab>>) {
             const auto materialRevision = dabs.empty() ? 0U : dabs.front().materialRevision;
             const auto materialMode = dabs.empty() ? 0U : dabs.front().materialMode;
             if (materialMode == 4U) {
                 internal::drawPreviewMembraneDabsToSkCanvas(*canvas, dabs,
-                    paint.getColor4f().fR, paint.getColor4f().fG,
-                    paint.getColor4f().fB, alpha);
+                    dabPaint.getColor4f().fR, dabPaint.getColor4f().fG,
+                    dabPaint.getColor4f().fB, dabPaint.getColor4f().fA);
             } else if (materialRevision >= 3U) {
                 internal::drawPreviewChalkDabsToSkCanvas(*canvas, dabs,
-                    paint.getColor4f().fR, paint.getColor4f().fG,
-                    paint.getColor4f().fB, alpha, materialRevision);
+                    dabPaint.getColor4f().fR, dabPaint.getColor4f().fG,
+                    dabPaint.getColor4f().fB, dabPaint.getColor4f().fA, materialRevision);
             } else {
                 internal::drawPreviewDabsToSkCanvas(*canvas, dabs,
-                    paint.getColor4f().fR, paint.getColor4f().fG,
-                    paint.getColor4f().fB, alpha);
+                    dabPaint.getColor4f().fR, dabPaint.getColor4f().fG,
+                    dabPaint.getColor4f().fB, dabPaint.getColor4f().fA);
             }
         }
     };
-    if (!geometry.contours.empty()) {
-        for (const auto& contour : geometry.contours) {
-            if (contour.dabs.empty()) drawOutline(contour.outline);
-            else drawDabs(contour.dabs);
+    auto drawContour = [&](const PreviewGeometry::Contour& contour) {
+        SkPaint contourPaint = paint;
+        if (contour.hasPaint && style.preferCapturedPaint) {
+            const float effectiveAlpha = std::clamp(contour.alpha * contour.opacity, 0.0F, 1.0F);
+            contourPaint.setColor4f({contour.red, contour.green, contour.blue,
+                                     effectiveAlpha}, nullptr);
         }
+        if (contour.dabs.empty()) drawOutline(contour.outline, contourPaint);
+        else drawDabs(contour.dabs, contourPaint);
+    };
+    if (!geometry.contours.empty()) {
+        for (const auto& contour : geometry.contours) drawContour(contour);
     } else {
-        if (geometry.dabs.empty()) drawOutline(geometry.outline);
-        else drawDabs(geometry.dabs);
+        if (geometry.dabs.empty()) drawOutline(geometry.outline, paint);
+        else drawDabs(geometry.dabs, paint);
     }
     canvas->restore();
     provider.release();

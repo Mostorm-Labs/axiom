@@ -27,6 +27,7 @@ struct PreviewStyleOverride final {
     // SkBlendMode::kClear is 0; kSrcOver is 1. Keep the wire value explicit
     // so the amber overlay cannot silently erase its own surface.
     std::uint8_t blendMode = 1U; // SkBlendMode::kSrcOver
+    bool preferCapturedPaint = true;
 };
 
 struct PreviewGeometry final {
@@ -42,6 +43,12 @@ struct PreviewGeometry final {
     struct Contour final {
         std::uint64_t session = 0;
         std::uint64_t revision = 0;
+        bool hasPaint = false;
+        float red = 0.0F;
+        float green = 0.0F;
+        float blue = 0.0F;
+        float alpha = 1.0F;
+        float opacity = 1.0F;
         std::vector<ink::reference::StrokeOutlinePoint> outline;
         std::vector<ink::BrushDab> dabs;
     };

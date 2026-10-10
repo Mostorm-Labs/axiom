@@ -8,6 +8,7 @@
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "windows_d3d12_skia_surface_provider.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
+#include "../common/canvas_runtime_facade_adapter.hpp"
 #include "canvas/debug_ui/surface_debug_queue.hpp"
 #include "canvas/debug_ui/debug_command_queue.hpp"
 #if defined(CANVAS_RENDER_HAS_SKIA)
@@ -228,9 +229,10 @@ void clearCanvasInput(State& value) noexcept {
   if (hadSelectionPointers && GetCapture() == value.window) ReleaseCapture();
 }
 
-class WindowsRuntimeFacade final : public canvas::runtime::RuntimeFacade {
+class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter {
  public:
-  explicit WindowsRuntimeFacade(State& state) : state_(state) {}
+  explicit WindowsRuntimeFacade(State& state)
+      : CanvasRuntimeFacadeAdapter(*state.host, {1U, 1U, 1U, 1U}), state_(state) {}
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitSelectionPointer(
       const canvas::runtime::SelectionPointerRequest& request) noexcept override {
     using P = canvas::runtime::SelectionPointerPhase;

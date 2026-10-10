@@ -460,6 +460,29 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routed.normalized.samples) {
     if (!sample.key.valid()) continue;
+    if (panTool_) {
+      if (sample.phase == input::PointerPhase::kDown) {
+        panPointers_[sample.key.pointer] = {sample.x, sample.y};
+      } else if (sample.phase == input::PointerPhase::kMove) {
+        const auto it = panPointers_.find(sample.key.pointer);
+        if (it != panPointers_.end()) {
+          const float dx = sample.x - it->second.first;
+          const float dy = sample.y - it->second.second;
+          if ((dx != 0.0F || dy != 0.0F) && !applyViewportNavigation(
+                  {interaction::ViewportNavigationKind::kWheelPan, -dx, -dy,
+                   sample.x, sample.y, 1.0F})) return false;
+          it->second = {sample.x, sample.y};
+        }
+      } else if (sample.phase == input::PointerPhase::kUp ||
+                 sample.phase == input::PointerPhase::kCancel) {
+        panPointers_.erase(sample.key.pointer);
+      }
+      baselineTrace_.push_back({sample.sequence, sample.timestampNs, sample.x, sample.y,
+                                sample.x, sample.y, sample.pressure, sample.key,
+                                sample.phase, interaction::ContactDisposition::kViewportGesture,
+                                true, 0U, 0U});
+      continue;
+    }
     auto routing = coordinator_->route(sample);
     if (routing.endedViewport) viewportController_->endGesture();
     // Preserve the original AutoIntent handoff boundary: once Runtime claims
@@ -633,7 +656,14 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
        package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1") ||
       package.packageId.empty() ||
       brushSessions_.contains(pointerId)) return false;
-  auto state = ink::resolveBrushState(package, seed);
+  auto capturedPackage = package;
+  capturedPackage.vector.size = inkSize_;
+  capturedPackage.paint.red = inkRed_;
+  capturedPackage.paint.green = inkGreen_;
+  capturedPackage.paint.blue = inkBlue_;
+  capturedPackage.paint.alpha = inkAlpha_;
+  capturedPackage.paint.opacity = inkOpacity_;
+  auto state = ink::resolveBrushState(capturedPackage, seed);
   brushPackageDigest_ = ink::brushPackageCanonicalDigest(package);
   brushResolvedStateDigest_ = kFnvOffset;
   brushResolvedStateDigest_ = hashBytes(brushResolvedStateDigest_, package.packageId.data(),
@@ -647,7 +677,7 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
   auto session = std::make_unique<ink::BrushSession>(pointerId, std::move(state));
   if (!session->begin()) return false;
   brushSessions_.emplace(pointerId, std::move(session));
-  brushSessionPackages_[pointerId] = package;
+  brushSessionPackages_[pointerId] = capturedPackage;
   brushSessionSeeds_[pointerId] = seed;
   brushPreviews_.erase(pointerId);
   // Partial eraser uses a white presentation-only override. A subsequent
@@ -678,6 +708,17 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
 bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
   if (!brushSessions_.empty()) return false;
   toolMode_ = mode;
+  panTool_ = false;
+  return true;
+}
+
+bool InkPlaygroundHost::setPanTool(bool enabled) noexcept {
+  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) return false;
+  panTool_ = enabled;
+  if (enabled) {
+    toolMode_ = ToolMode::kBrush;
+    if (selectionMode_) (void)setSelectionMode(false);
+  }
   return true;
 }
 
@@ -1028,7 +1069,75 @@ bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
   if (!loaded) return false;
   selectedBrushProfile_ = std::string(profileId);
   selectedBrushRevision_ = revision;
+  if (!inkSizeOverride_) inkSize_ = static_cast<float>(loaded.package.vector.size);
+  if (!inkColorOverride_) {
+    inkRed_ = static_cast<float>(loaded.package.paint.red);
+    inkGreen_ = static_cast<float>(loaded.package.paint.green);
+    inkBlue_ = static_cast<float>(loaded.package.paint.blue);
+    inkAlpha_ = static_cast<float>(loaded.package.paint.alpha);
+  }
+  if (!inkOpacityOverride_) inkOpacity_ = static_cast<float>(loaded.package.paint.opacity);
   return true;
+}
+
+bool InkPlaygroundHost::setInkOptions(float size, float red, float green, float blue,
+                                      float alpha, float opacity) noexcept {
+  if (!std::isfinite(size) || size <= 0.0F || !std::isfinite(red) ||
+      !std::isfinite(green) || !std::isfinite(blue) || !std::isfinite(alpha) ||
+      !std::isfinite(opacity) || red < 0.0F || red > 1.0F || green < 0.0F ||
+      green > 1.0F || blue < 0.0F || blue > 1.0F || alpha < 0.0F || alpha > 1.0F ||
+      opacity < 0.0F || opacity > 1.0F || !brushSessions_.empty()) return false;
+  inkSize_ = size;
+  inkRed_ = red;
+  inkGreen_ = green;
+  inkBlue_ = blue;
+  inkAlpha_ = alpha;
+  inkOpacity_ = opacity;
+  inkSizeOverride_ = true;
+  inkColorOverride_ = true;
+  inkOpacityOverride_ = true;
+  return true;
+}
+
+void InkPlaygroundHost::clearInkSizeOverride() noexcept { inkSizeOverride_ = false; }
+void InkPlaygroundHost::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
+void InkPlaygroundHost::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
+
+bool InkPlaygroundHost::setEraserDiameterLogicalPx(float diameter) noexcept {
+  if (!std::isfinite(diameter) || diameter <= 0.0F || !eraserTraces_.empty()) return false;
+  eraserDiameterLogicalPx_ = diameter;
+  return true;
+}
+
+bool InkPlaygroundHost::setEraserMode(std::uint32_t mode) noexcept {
+  if (mode != 1U && mode != 2U) return false;
+  if (!brushSessions_.empty() || !eraserTraces_.empty()) return false;
+  eraserMode_ = mode;
+  toolMode_ = mode == 1U ? ToolMode::kObjectEraser : ToolMode::kPartialEraser;
+  panTool_ = false;
+  return true;
+}
+
+bool InkPlaygroundHost::setEraserOptions(std::uint32_t mode, float diameter) noexcept {
+  if (mode != 1U && mode != 2U) return false;
+  if (!std::isfinite(diameter) || diameter <= 0.0F ||
+      !brushSessions_.empty() || !eraserTraces_.empty()) return false;
+  eraserMode_ = mode;
+  eraserDiameterLogicalPx_ = diameter;
+  toolMode_ = mode == 1U ? ToolMode::kObjectEraser : ToolMode::kPartialEraser;
+  panTool_ = false;
+  return true;
+}
+
+std::optional<InkPlaygroundHost::InkDefaults> InkPlaygroundHost::brushCatalogDefaults(
+    std::string_view profile, std::uint32_t revision) const noexcept {
+  const auto loaded = brushCatalog_.loadDefault(profile, revision);
+  if (!loaded) return std::nullopt;
+  const auto& paint = loaded.package.paint;
+  return InkDefaults{static_cast<float>(loaded.package.vector.size),
+                     static_cast<float>(paint.red), static_cast<float>(paint.green),
+                     static_cast<float>(paint.blue), static_cast<float>(paint.alpha),
+                     static_cast<float>(paint.opacity)};
 }
 
 bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
@@ -1051,7 +1160,7 @@ bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
   constexpr std::size_t kSegments = 24U;
-  constexpr double kRadius = 18.0;
+  const double kRadius = static_cast<double>(eraserDiameterLogicalPx_) * 0.5;
   ink::BrushPreviewDelta delta;
   delta.revision = ++eraserPreviewRevisions_[pointerId];
   const auto& trace = it->second;
@@ -1104,6 +1213,7 @@ bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y
     style.opacityMultiplier = 1.0F;
     style.overrideColor = true;
     style.overrideOpacity = true;
+    style.preferCapturedPaint = false;
   }
   previewController_->setPresentationStyle(style);
   return previewController_->updateForSession(pointerId, delta, viewport.scale,
@@ -1128,7 +1238,7 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
   std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
   for (const auto& point : it->second) {
     const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-        point, 18.0F, canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
+        point, eraserDiameterLogicalPx_ * 0.5F, canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
             static_cast<std::uint32_t>(canvas::HitTestKindMask::kVectorStroke) |
             static_cast<std::uint32_t>(canvas::HitTestKindMask::kDabStroke)), false}, 64U});
     if (!tested) {
@@ -1165,7 +1275,7 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
     std::sort(payload.object_ids.begin(), payload.object_ids.end());
     operation.payload = std::move(payload);
   } else {
-    constexpr double radius = 18.0;
+    const double radius = static_cast<double>(eraserDiameterLogicalPx_) * 0.5;
     semantic::AddEraseMasksOp maskPayload;
     std::size_t replacementOrdinal = 0U;
     for (const auto id : hit) {
@@ -1555,6 +1665,35 @@ bool InkPlaygroundHost::applyViewportNavigation(
   // brush input arrives.  Treat it as an independent canonical-surface
   // invalidation so the Web/Android/Windows display cannot remain at the old
   // transform until the next pointer sample happens to trigger a frame.
+  if (surface_.available && activeSurfaceProvider() != nullptr) {
+    if (platformPresentationDeferred_) {
+      canonicalPresentationDirty_ = true;
+      return true;
+    }
+    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::setViewportZoomAt(float zoom, float anchorX,
+                                          float anchorY) noexcept {
+  std::lock_guard lock(previewStateMutex_);
+  if (viewportController_ == nullptr || !std::isfinite(zoom) || zoom <= 0.0F ||
+      !std::isfinite(anchorX) || !std::isfinite(anchorY)) {
+    return false;
+  }
+  const auto current = viewportController_->state();
+  if (current.scale <= 0.0F || !std::isfinite(current.scale)) return false;
+  const float ratio = zoom / current.scale;
+  const float translationX = anchorX - ratio * (anchorX - current.translationX);
+  const float translationY = anchorY - ratio * (anchorY - current.translationY);
+  if (!viewportController_->setCamera(zoom, translationX, translationY)) return false;
+  const auto viewport = viewportController_->state();
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+                                           viewport.translationY)) {
+    return false;
+  }
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;

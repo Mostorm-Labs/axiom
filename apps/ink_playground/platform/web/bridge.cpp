@@ -1,4 +1,5 @@
 #include "ink_playground_host.hpp"
+#include "../common/canvas_runtime_facade_adapter.hpp"
 #include "platform_brush_baseline_observation.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "canvas/render/skia_renderer.hpp"
@@ -55,9 +56,10 @@ std::unordered_map<Handle, BrushState>& brushes() {
 }
 
 #if AXIOM_WEB_DEBUG_UI
-class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
+class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter {
  public:
-  explicit WebRuntimeFacade(Host& host) : host_(host) {}
+  explicit WebRuntimeFacade(Host& host)
+      : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto view = host_.viewportGesture();
     return {1U, host_.semanticGeneration().value(),

@@ -38,7 +38,7 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
                            return contour.session == session;
                        }),
         geometry_.contours.end());
-    geometry_.contours.push_back({session, 0U, {}, {}});
+    geometry_.contours.push_back({session, 0U, false, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, {}, {}});
     defaultSession_ = session;
     state_.generation = surfaceGeneration;
     state_.dirty = true;
@@ -76,6 +76,12 @@ bool PreviewSurfaceController::updateForSession(
     if (contour == geometry_.contours.end()) return false;
     if (delta.revision == contour->revision && !viewportChanged) return true;
     contour->revision = delta.revision;
+    contour->hasPaint = delta.hasPaint;
+    contour->red = delta.red;
+    contour->green = delta.green;
+    contour->blue = delta.blue;
+    contour->alpha = delta.alpha;
+    contour->opacity = delta.opacity;
     contour->outline = delta.outline;
     contour->dabs = delta.dabs;
     geometry_.revision = std::max(geometry_.revision, delta.revision);

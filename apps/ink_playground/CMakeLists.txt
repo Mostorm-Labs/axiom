@@ -1,5 +1,7 @@
 add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
+    common/canvas_control_binding.cpp
+    common/canvas_runtime_facade_adapter.cpp
     common/text_qualification_resources.cpp
     common/brush_commit_adapter.cpp
     common/platform_brush_baseline_observation.cpp
@@ -10,7 +12,7 @@ target_include_directories(axiom_ink_playground_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/common
     ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
-    canvas_runtime_foundation canvas_runtime_input canvas_runtime_ink
+    canvas_runtime_foundation canvas_runtime_control canvas_runtime_input canvas_runtime_ink
     canvas_runtime_interaction canvas_runtime_render)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
 
@@ -68,6 +70,35 @@ if(BUILD_TESTING)
   add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
   add_test(NAME G46BViewportFitHost COMMAND axiom_ink_playground_tests viewport-fit)
+  add_executable(axiom_dui_m1_tool_tests tests/dui_m1_tool_options_test.cpp)
+  target_link_libraries(axiom_dui_m1_tool_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_dui_m1_tool_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_dui_m1_tool_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  endif()
+  add_test(NAME DUIM1ToolOptions COMMAND axiom_dui_m1_tool_tests)
+  add_executable(axiom_dui_m1_view_tests tests/dui_m1_view_controls_test.cpp)
+  target_link_libraries(axiom_dui_m1_view_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_dui_m1_view_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_dui_m1_view_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  endif()
+  add_test(NAME DUIM1ViewControls COMMAND axiom_dui_m1_view_tests)
+  add_executable(axiom_dui_m1_platform_tests tests/dui_m1_platform_control_test.cpp)
+  target_link_libraries(axiom_dui_m1_platform_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_dui_m1_platform_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_dui_m1_platform_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  endif()
+  add_test(NAME DUIM1PlatformControl COMMAND axiom_dui_m1_platform_tests)
+  add_executable(axiom_dui_m1_qualification_runner tests/dui_m1_qualification_runner.cpp)
+  target_link_libraries(axiom_dui_m1_qualification_runner PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_dui_m1_qualification_runner PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_dui_m1_qualification_runner PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  endif()
+  add_test(NAME DUIM1Qualification COMMAND axiom_dui_m1_qualification_runner
+    "${CMAKE_BINARY_DIR}/dui-m1-qualification")
   add_executable(axiom_g46b_query_structure_tests tests/viewport_query_structure_test.cpp)
   target_link_libraries(axiom_g46b_query_structure_tests PRIVATE axiom_ink_playground_common)
   target_compile_definitions(axiom_g46b_query_structure_tests PRIVATE
@@ -283,3 +314,10 @@ if(EMSCRIPTEN)
       "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']"
       "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_select_tool','_axiom_ink_select_brush_profile','_axiom_ink_eraser_begin','_axiom_ink_eraser_sample','_axiom_ink_eraser_finish','_axiom_ink_eraser_cancel','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y','_axiom_ink_selected_tool','_axiom_ink_debug_ui_init','_axiom_ink_debug_ui_toggle','_axiom_ink_debug_ui_visible','_axiom_ink_debug_ui_wants_capture_mouse','_axiom_ink_debug_ui_wants_capture_keyboard','_axiom_ink_debug_ui_render','_axiom_ink_debug_ui_pointer','_axiom_ink_debug_ui_key','_axiom_ink_debug_ui_capture_begin','_axiom_ink_debug_ui_capture_route','_axiom_ink_debug_ui_capture_terminal','_axiom_ink_debug_ui_resize']")
 endif()
+  add_executable(axiom_dui_m1_runtime_facade_tests tests/dui_m1_runtime_facade_test.cpp)
+  target_link_libraries(axiom_dui_m1_runtime_facade_tests PRIVATE axiom_ink_playground_common)
+  target_compile_features(axiom_dui_m1_runtime_facade_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_dui_m1_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  endif()
+  add_test(NAME DUIM1RuntimeFacade COMMAND axiom_dui_m1_runtime_facade_tests)

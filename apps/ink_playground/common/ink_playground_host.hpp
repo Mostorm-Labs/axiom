@@ -160,6 +160,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool beginBrushSession(std::uint64_t pointerId,
                                        std::uint32_t profile = 1U) noexcept;
   [[nodiscard]] bool selectTool(ToolMode mode) noexcept;
+  [[nodiscard]] bool setPanTool(bool enabled) noexcept;
+  [[nodiscard]] bool panTool() const noexcept { return panTool_; }
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
@@ -214,6 +216,32 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
+  [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
+                                   float alpha, float opacity) noexcept;
+  void clearInkSizeOverride() noexcept;
+  void clearInkColorOverride() noexcept;
+  void clearInkOpacityOverride() noexcept;
+  [[nodiscard]] bool inkSizeOverridden() const noexcept { return inkSizeOverride_; }
+  [[nodiscard]] bool inkColorOverridden() const noexcept { return inkColorOverride_; }
+  [[nodiscard]] bool inkOpacityOverridden() const noexcept { return inkOpacityOverride_; }
+  void setInkOverrideState(bool size, bool color, bool opacity) noexcept {
+    inkSizeOverride_ = size; inkColorOverride_ = color; inkOpacityOverride_ = opacity;
+  }
+  [[nodiscard]] bool setEraserDiameterLogicalPx(float diameter) noexcept;
+  [[nodiscard]] bool setEraserMode(std::uint32_t mode) noexcept;
+  [[nodiscard]] bool setEraserOptions(std::uint32_t mode, float diameter) noexcept;
+  [[nodiscard]] std::uint32_t eraserMode() const noexcept { return eraserMode_; }
+  struct InkDefaults final { float size, red, green, blue, alpha, opacity; };
+  [[nodiscard]] std::optional<InkDefaults> brushCatalogDefaults(
+      std::string_view profile, std::uint32_t revision) const noexcept;
+  [[nodiscard]] float inkSize() const noexcept { return inkSize_; }
+  [[nodiscard]] float inkOpacity() const noexcept { return inkOpacity_; }
+  [[nodiscard]] std::array<float, 4> inkColor() const noexcept {
+    return {inkRed_, inkGreen_, inkBlue_, inkAlpha_};
+  }
+  [[nodiscard]] float eraserDiameterLogicalPx() const noexcept {
+    return eraserDiameterLogicalPx_;
+  }
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
@@ -291,6 +319,11 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] bool applyViewportNavigation(
       const interaction::ViewportNavigationSample& sample) noexcept;
+  // Set an absolute logical zoom while preserving the content point under a
+  // view-space anchor.  This is the owner seam for numeric/anchored UI zoom;
+  // gesture navigation continues to use applyViewportNavigation().
+  [[nodiscard]] bool setViewportZoomAt(float zoom, float anchorX,
+                                       float anchorY) noexcept;
   [[nodiscard]] bool fitViewportToContent(
       const std::optional<foundation::WorldRect>& target = std::nullopt) noexcept;
   [[nodiscard]] bool fitViewportToSelection() noexcept;
@@ -435,8 +468,21 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::uint64_t> brushSessionSeeds_;
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
+  bool panTool_ = false;
+  std::uint32_t eraserMode_ = 2U;
+  std::unordered_map<std::uint64_t, std::pair<float, float>> panPointers_;
   std::string selectedBrushProfile_ = "vector-solid-v1";
   std::uint32_t selectedBrushRevision_ = 1U;
+  float inkSize_ = 16.0F;
+  float inkRed_ = 0.05F;
+  float inkGreen_ = 0.10F;
+  float inkBlue_ = 0.20F;
+  float inkAlpha_ = 1.0F;
+  float inkOpacity_ = 1.0F;
+  bool inkSizeOverride_ = false;
+  bool inkColorOverride_ = false;
+  bool inkOpacityOverride_ = false;
+  float eraserDiameterLogicalPx_ = 18.0F;
   std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
   std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
   std::vector<render::BrushRenderPoint> committedBrushPoints_;

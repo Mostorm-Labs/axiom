@@ -48,9 +48,10 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
                        "Axiom Debug UI / common ImGui + Skia");
     ImGui::Text("P32 controller / reference profile");
     ImGui::Separator();
-    const std::array<std::pair<const char*, int>, 6> tools{{
+    const std::array<std::pair<const char*, int>, 7> tools{{
         {"Vector", 4101}, {"Marker", 4102}, {"Chalk", 4103},
         {"Membrane", 4104}, {"Object Eraser", 4105}, {"Partial Eraser", 4106},
+        {"Pan", 4107},
     }};
     static std::uint64_t nextRequestId = 1;
     const auto capabilityLabel = [&](Capability capability) {
@@ -125,17 +126,34 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         for (const auto& tool : tools) {
             const bool selected = selectedTool == tool.second;
             if (ImGui::Selectable(tool.first, selected) && runtime != nullptr) {
-                canvas::runtime::ProductControlRequest request{};
-                request.action = tool.second >= 4105
-                    ? canvas::runtime::ProductControlAction::kSetEraser
-                    : canvas::runtime::ProductControlAction::kSetBrush;
+                canvas::runtime::CanvasControlRequest request{};
+                request.clientId = 1U;
                 request.requestId = nextRequestId++;
-                request.runtimeGeneration = snapshot.stamp.runtimeGeneration;
                 request.deadlineSequence = snapshot.stamp.sequence + 120U;
-                request.toolId = static_cast<std::uint32_t>(tool.second);
-                request.brushId = static_cast<std::uint32_t>(tool.second - 4100);
-                request.eraserId = static_cast<std::uint32_t>(tool.second - 4104);
-                (void)runtime->submitProductControl(request);
+                const auto targets = runtime->mountedCanvasTargets();
+                request.target = targets.empty()
+                    ? canvas::runtime::CanvasTargetKey{snapshot.stamp.runtimeGeneration, 1U,
+                                                       snapshot.stamp.viewGeneration, snapshot.stamp.surfaceGeneration}
+                    : targets.front();
+                request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectTool;
+                request.payload.tool = tool.second == 4107
+                    ? canvas::runtime::CanvasToolKind::kPan
+                    : tool.second == 4105 || tool.second == 4106
+                        ? canvas::runtime::CanvasToolKind::kEraser
+                        : canvas::runtime::CanvasToolKind::kInk;
+                if (tool.second >= 4105 && tool.second <= 4106) {
+                    request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kEraserOptions;
+                    request.payload.eraser.mode = canvas::runtime::OptionPatch<std::uint32_t>::set(
+                        tool.second == 4105 ? 1U : 2U);
+                    request.payload.eraser.diameterLogicalPx = canvas::runtime::OptionPatch<float>::keep();
+                } else if (tool.second != 4107 && tool.second >= 4101 && tool.second <= 4104) {
+                    request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectPreset;
+                    request.payload.preset = {tool.second == 4101 ? "vector-solid-v1" :
+                                              tool.second == 4102 ? "marker-flat-v1" :
+                                              tool.second == 4103 ? "chalk-grain-v1" : "membrane-v1",
+                                              tool.second == 4103 ? 4U : 1U};
+                }
+                (void)runtime->submitCanvasControl(request);
                 submittedControl = true;
             }
         }

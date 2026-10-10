@@ -21,7 +21,19 @@ struct ObjectId final {
     [[nodiscard]] constexpr bool isZero() const {
         return *this == ObjectId{};
     }
-    auto operator<=>(const ObjectId&) const = default;
+    friend constexpr bool operator==(const ObjectId&, const ObjectId&) = default;
+
+    constexpr std::strong_ordering operator<=>(const ObjectId& other) const noexcept {
+        for (std::size_t index = 0; index < bytes.size(); ++index) {
+            if (bytes[index] < other.bytes[index]) {
+                return std::strong_ordering::less;
+            }
+            if (bytes[index] > other.bytes[index]) {
+                return std::strong_ordering::greater;
+            }
+        }
+        return std::strong_ordering::equal;
+    }
 };
 
 struct ObjectIdHash final {

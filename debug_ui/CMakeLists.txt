@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 add_library(canvas_debug_ui STATIC
-  src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp
+  src/snapshot.cpp src/command.cpp src/input_capture.cpp src/controller.cpp src/panel_model.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
@@ -51,4 +51,11 @@ if(BUILD_TESTING)
   target_compile_options(axiom_debug_ui_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
  endif()
  add_test(NAME DUI20DebugUiContracts COMMAND axiom_debug_ui_tests)
+ add_executable(axiom_dui_m1_panel_model_tests tests/dui_m1_panel_model_test.cpp)
+ target_link_libraries(axiom_dui_m1_panel_model_tests PRIVATE canvas_debug_ui)
+ target_compile_features(axiom_dui_m1_panel_model_tests PRIVATE cxx_std_20)
+ if(MSVC)
+  target_compile_options(axiom_dui_m1_panel_model_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+ endif()
+ add_test(NAME DUIM1PanelModel COMMAND axiom_dui_m1_panel_model_tests)
 endif()

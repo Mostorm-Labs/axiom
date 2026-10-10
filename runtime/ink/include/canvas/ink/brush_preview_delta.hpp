@@ -25,6 +25,15 @@ struct BrushDab final {
 // confirmed samples or commit state.
 struct BrushPreviewDelta final {
     std::uint64_t revision = 0;
+    // Captured presentation paint for this brush session.  It is optional so
+    // diagnostic overlays (eraser/legacy callers) can continue to provide an
+    // explicit PreviewStyleOverride without changing their geometry path.
+    bool hasPaint = false;
+    float red = 0.0F;
+    float green = 0.0F;
+    float blue = 0.0F;
+    float alpha = 1.0F;
+    float opacity = 1.0F;
     std::vector<reference::StrokeOutlinePoint> outline;
     std::vector<BrushDab> dabs;
 };
