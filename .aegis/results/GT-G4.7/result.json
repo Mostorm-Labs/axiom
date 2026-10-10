@@ -4,7 +4,7 @@
   "stage": "P32",
   "terminal_state": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
   "result_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
-  "materialized_ref": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "materialized_ref": "refs/tags/codex/gt-g4-7-evidence-repair-20261010-v1",
   "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
   "execution_ref": "codex/g4-7-development",
   "evidence_input_refs": [
@@ -35,18 +35,33 @@
     ".aegis/results/GT-G4.7/workload-100k.log",
     ".aegis/results/GT-G4.7/android-app-verified-build.log",
     ".aegis/results/GT-G4.7/font-edge-ctest.log",
-    ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
+    ".aegis/results/GT-G4.7/hosted-provider-evidence.json",
+    ".aegis/results/GT-G4.7/evidence-repair.json",
+    ".aegis/results/GT-G4.7/repair-focused-ctest.log"
   ],
   "provider_refs": {
     "workflow_run": 37978210023,
     "workflow_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023",
     "head_sha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
     "jobs": {
-      "windows": {"job_id": 113981772583, "artifact_id": 11639489588, "conclusion": "success"},
-      "web": {"job_id": 113981772556, "artifact_id": 11639459027, "conclusion": "success"},
-      "android": {"job_id": 113981773154, "artifact_id": 11640555388, "conclusion": "success"}
+      "windows": {
+        "job_id": 113981772583,
+        "artifact_id": 11639489588,
+        "conclusion": "success"
+      },
+      "web": {
+        "job_id": 113981772556,
+        "artifact_id": 11639459027,
+        "conclusion": "success"
+      },
+      "android": {
+        "job_id": 113981773154,
+        "artifact_id": 11640555388,
+        "conclusion": "success"
+      }
     },
-    "evidence_file": ".aegis/results/GT-G4.7/hosted-provider-evidence.json"
+    "evidence_file": ".aegis/results/GT-G4.7/hosted-provider-evidence.json",
+    "run_attempt": 1
   },
   "automated_status": {
     "package_binding": "PASS",
@@ -69,5 +84,18 @@
   "g5_authorization": false,
   "producer_may_claim_gate_pass": false,
   "return_surface": "CONTROL_REVIEW",
-  "next_action": "Independent Control Review; then combined G4.6 + G4.7 physical qualification"
+  "next_action": "Independent Control Review; then combined G4.6 + G4.7 physical qualification",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "materialization": {
+    "kind": "annotated_git_tag",
+    "resolution": "Resolve materialized_ref in the declared repository; the annotated tag is created once on the evidence-only commit and never moved or reused.",
+    "policy": "Create once for this evidence payload; never move or reuse this tag. The commit does not embed its own SHA.",
+    "evidence_base_revision": "324b0cc43c1fd67969c58d7acc2be65c22f51817",
+    "evidence_manifest_ref": ".aegis/results/GT-G4.7/evidence-manifest.json",
+    "content_identity": "SHA-256 of exact Git blob bytes; no checkout newline normalization"
+  }
 }

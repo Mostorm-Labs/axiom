@@ -77,105 +77,36 @@
     "runtime/text/src/text_layout.cpp",
     "runtime/text/tests/text_layout_test.cpp",
     "verification/fixtures/g47/image-stripes.png",
-    "verification/tools/g47_configure.py"
+    "verification/tools/g47_configure.py",
+    "runtime/render/tests/direct_reference_source_test.cpp",
+    "runtime/render/tests/frame_orchestration_test.cpp",
+    "runtime/scene/tests/full_incremental_equivalence_test.cpp"
   ],
   "required_evidence_paths": [
-    {
-      "path": ".aegis/results/GT-G4.7/repo-reconciliation.json",
-      "sha256": "4b00b1bb742496aef35814fd49e32a44ab4722ff9030a96672bb3f6f53e027d3"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/implementation-design-preflight.json",
-      "sha256": "2381e7b3de6b6ab8ac952da281c21257a079c58627dbc14897c8addeda416b91"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/pre-g5-primitive-inventory.json",
-      "sha256": "be7133d380d686067bef98244cba9501cfbb2ab0245cc452070b483bad1cdc20"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/image-render-parity.json",
-      "sha256": "cf6c085fadffe601701cbba304ce3560e78b3154094d22ec183f4198d5edeca0"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/image-resource-replay.json",
-      "sha256": "1fa3185a986bd9143167de2da9e7d0b0adabb382bb0c095e4b408879ce4c6c64"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/image-resource-fixtures.json",
-      "sha256": "f59be4fe55e672876c4c7dc278ec95e1e568d86aaad2036d7c42c7fc2ed30e6f"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/layout-fixtures.json",
-      "sha256": "7d1bca8e28cf701e0c1cc55382e8afa1990e1b56b54ba5d67d812d34071d1a3e"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/layout-digest.json",
-      "sha256": "6b6059e5688b157baaf7e786c0a3fa7c8f14403324b533bf5f0736310ed4fb9e"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/font-resolution.json",
-      "sha256": "73019453af800e5f839025568357f34b90a4eb228d22885a78ff8f9fd755be93"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/resource-transition.json",
-      "sha256": "8ba82f2344ade44155a05d87e8187a1935e15d8bcc07751f6d6c7d925a160106"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/scene-bounds.json",
-      "sha256": "add52b80795c39565709d08b86abd180b78b70c161505a1ae01deeeaef8d7f5a"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/invalidation-trace.json",
-      "sha256": "b54e9e89b7a4cdb61f53e236f4930d312148c7664d0a12192422f70280f98b0c"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/reference-production-parity.json",
-      "sha256": "dd927f56f03ec5bf0071f9a0503a0a80622c166909cad43ebb1ca6a3784b3a4c"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/render-path-trace.json",
-      "sha256": "33ce7f9a023cb31bcbf6db0813d28a0bea5a1a8aaaeef7463bfadf6203f5bc62"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/edit-locality.json",
-      "sha256": "bc14298d052470d2c327d52fce0a95729c07894c714608cbcb3257b99210d70b"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/negative-controls.json",
-      "sha256": "ba024cdf06867312ef56894db73b3c8c76fd6441e0b41be7e867f02f90127710"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/workload-corpus-manifest.json",
-      "sha256": "2028e60032cb2e313233a6071420e60b9d418f3a1bb970709df5b22b2ff437fd"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/playground-metrics.json",
-      "sha256": "88417eabf24ba788e19338ccfc0beab6a52c85018c53915a16f5aa5f7ba39d32"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/qualification-bundle-manifest.json",
-      "sha256": "d9ef83149f512f25ef605f7eab2aa1f55ccd44e582af433cbb8e3f25d63f1f41"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/platform-readiness.json",
-      "sha256": "ff315dfca4f98d3bc860f03ba76a19f13fef3a87eabdef1995062681c2507547"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/build.log",
-      "sha256": "dc4f66049283f453c4a89464825efbb7723c3491c9b9acbae4ec7573fcf1a8f7"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/ctest.log",
-      "sha256": "730caaba7a5eac8cd33c60f901a79758b7fa7c83b8498e05285cdd43683d3912"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/scope-audit.json",
-      "sha256": "e6ca8e987f7dc7f2e4114f7067e560aaf144bb81ee4ec94a092fc8e7ad53f015"
-    },
-    {
-      "path": ".aegis/results/GT-G4.7/result.json",
-      "sha256": "444c6ebe4942bd8bc4f361a29cb4a0c9e15f820d3ccd26b26bcf29ff33692028"
-    }
+    ".aegis/results/GT-G4.7/repo-reconciliation.json",
+    ".aegis/results/GT-G4.7/implementation-design-preflight.json",
+    ".aegis/results/GT-G4.7/pre-g5-primitive-inventory.json",
+    ".aegis/results/GT-G4.7/image-render-parity.json",
+    ".aegis/results/GT-G4.7/image-resource-replay.json",
+    ".aegis/results/GT-G4.7/image-resource-fixtures.json",
+    ".aegis/results/GT-G4.7/layout-fixtures.json",
+    ".aegis/results/GT-G4.7/layout-digest.json",
+    ".aegis/results/GT-G4.7/font-resolution.json",
+    ".aegis/results/GT-G4.7/resource-transition.json",
+    ".aegis/results/GT-G4.7/scene-bounds.json",
+    ".aegis/results/GT-G4.7/invalidation-trace.json",
+    ".aegis/results/GT-G4.7/reference-production-parity.json",
+    ".aegis/results/GT-G4.7/render-path-trace.json",
+    ".aegis/results/GT-G4.7/edit-locality.json",
+    ".aegis/results/GT-G4.7/negative-controls.json",
+    ".aegis/results/GT-G4.7/workload-corpus-manifest.json",
+    ".aegis/results/GT-G4.7/playground-metrics.json",
+    ".aegis/results/GT-G4.7/qualification-bundle-manifest.json",
+    ".aegis/results/GT-G4.7/platform-readiness.json",
+    ".aegis/results/GT-G4.7/build.log",
+    ".aegis/results/GT-G4.7/ctest.log",
+    ".aegis/results/GT-G4.7/scope-audit.json",
+    ".aegis/results/GT-G4.7/result.json"
   ],
   "excluded_staging_paths": [
     "build-*",
@@ -183,5 +114,22 @@
     "imgui.ini",
     "historical .aegis/results outside GT-G4.7"
   ],
-  "status": "PASS"
+  "status": "PASS",
+  "evidence_hash_manifest": ".aegis/results/GT-G4.7/evidence-manifest.json",
+  "evidence_hash_policy": "Path inventory only; hashes live solely in evidence-manifest.json. This inventory may name scope-audit.json but does not hash itself.",
+  "evidence_repair_scope": {
+    "base_revision": "324b0cc43c1fd67969c58d7acc2be65c22f51817",
+    "result_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+    "allowed_paths": [
+      ".aegis/results/GT-G4.7/result.json",
+      ".aegis/results/GT-G4.7/hosted-provider-evidence.json",
+      ".aegis/results/GT-G4.7/scope-audit.json",
+      ".aegis/results/GT-G4.7/evidence-manifest.json",
+      ".aegis/results/GT-G4.7/evidence-repair.json",
+      ".aegis/results/GT-G4.7/repair-focused-ctest.log"
+    ],
+    "production_source_changed": false,
+    "package_authority_changed": false,
+    "verification": "git diff base..materialized_ref outside .aegis/results/GT-G4.7 must be empty"
+  }
 }
