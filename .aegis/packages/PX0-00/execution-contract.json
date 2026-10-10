@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-00",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create docs/engineering/px0-debug-control-plane-baseline-reconciliation.md containing the exact PX0-00 reconciliation result."
+      ],
+      "authorized_mutation_scope": [
+        "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md"
+      ],
+      "forbidden_changes": [
+        "Any path outside docs/engineering/px0-debug-control-plane-baseline-reconciliation.md",
+        "runtime/**",
+        "debug_ui/**",
+        "apps/**",
+        "tests/**",
+        "CMakeLists.txt or CMakePresets.json",
+        ".aegis/packages/PX0-00/**",
+        "PX0-01 or successor implementation",
+        "Shape/RichText/Connector/Snap/Image product behavior"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-00-T1-repository-identity",
+          "command_or_oracle": "Resolve github:Mostorm-Labs/axiom and record git remote -v / git rev-parse HEAD before any mutation.",
+          "expected_result": "Declared repository resolves and actual starting revision is captured.",
+          "blocking_reason": "Repository identity must be established before package/anchor handling."
+        },
+        {
+          "id": "PX0-00-T2-task-anchor",
+          "command_or_oracle": "git merge-base --is-ancestor a077aff9ec7c64cd587a0c2643d283e135bba8dd <actual-starting-revision>",
+          "expected_result": "Exit code 0.",
+          "blocking_reason": "Execution must descend from the approved PX0 Spec/Plan control revision."
+        },
+        {
+          "id": "PX0-00-T3-required-file-inventory",
+          "command_or_oracle": "Inspect every path listed in implementation-context.md at the actual starting revision and capture exact symbol/path observations.",
+          "expected_result": "All paths are present/missing explicitly and all four required architecture-reality questions are answered.",
+          "blocking_reason": "PX0-01 cannot start from guessed implementation reality."
+        },
+        {
+          "id": "PX0-00-T4-scope-diff",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD",
+          "expected_result": "Exactly docs/engineering/px0-debug-control-plane-baseline-reconciliation.md.",
+          "blocking_reason": "PX0-00 is reconciliation-only."
+        },
+        {
+          "id": "PX0-00-T5-diff-check",
+          "command_or_oracle": "git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Exit code 0.",
+          "blocking_reason": "The durable record must be cleanly materialized."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md",
+        "exact result_revision",
+        "reviewer-resolvable materialized_ref on the declared execution branch"
+      ],
+      "corroborative": [
+        "git status --short showing a clean worktree after commit"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Repository identity and task-anchor ancestry are valid.",
+        "All required implementation-reality paths/questions are reconciled.",
+        "No material Authority conflict is found.",
+        "The reconciliation record is committed with status READY and next action PX0-01.",
+        "Execution delta contains only the authorized reconciliation record.",
+        "The exact result is pushed/materialized on a reviewer-resolvable ref."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_EVIDENCE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
