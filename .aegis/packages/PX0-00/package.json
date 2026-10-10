@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-00-P31-v0.1",
+  "task_id": "PX0-00",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Read-only PX0 Debug Control Plane baseline reconciliation before any PX0 code mutation",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-00-baseline-reconciliation"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "6fe6262f7ea2a666703926cf9f18572b2e20ea3e385eed3c2bb2e4ef4cad0d80"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "a5136a78df43179323341107c8faa8ef04b783c68aff5c3fb23cc85e7312ac9f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "3c244ae93240d3f070b50125554ae3ab7cf72d7c35f8a0ee493079f547b47c85"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "865e9c2346ed6a6f8152d6cfdf58abe344a978c91062486e275de430dd7a9998"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4747d59bfd66f9fffbbac8749b323fb0904dc377063532a26579fe27488617fd"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-00/",
+    "base_revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Perform repository/ancestry preflight, inspect the frozen PX0-00 inventory, and create only the baseline reconciliation record."
+  }
+}
