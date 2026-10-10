@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P34_GATE_REVIEW",
+  "reviewed_result_revision": "0941891536952bf944ebf9c5c4593c6ae4e9feb6",
+  "materialized_ref": "refs/heads/codex/px0-02-structured-snapshot-assembler",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "frozen_requirements": {
+    "passed": [
+      "PX0-02-V1-structured-snapshot-envelope",
+      "PX0-02-V5-common-platform-assembly",
+      "PX0-02-V8-no-premature-layers-or-evidence-claims"
+    ],
+    "failed": [
+      {
+        "id": "PX0-02-V2-section-local-availability",
+        "failure": "Legacy Surface panel is not inspectable when Platform availability is Degraded. panels.hpp treats all Platform-domain panels as Available-only, while the frozen mapping requires Canvas=Available-only and Surface=Available-or-Degraded."
+      }
+    ],
+    "incomplete_evidence": [
+      {
+        "id": "PX0-02-V3-coherence-and-retry",
+        "gap": "PX0DebugSnapshot does not cover first-attempt-change then second-attempt-stable -> Coherent."
+      },
+      {
+        "id": "PX0-02-V2-section-local-availability",
+        "gap": "PX0DebugSnapshot does not cover absent Arc with other sections usable or Platform surfaceAvailable=false -> Degraded."
+      },
+      {
+        "id": "PX0-02-V4-stamp-and-sequence-semantics",
+        "gap": "PX0DebugSnapshot does not cover multi-capture snapshotSequence increment or telemetry-absent frameId fallback to platform.presentCount."
+      },
+      {
+        "id": "PX0-02-V7-activity-transport-only",
+        "gap": "PX0DebugSnapshot does not explicitly assert Product/Surface receipt passthrough from DebugActivitySource."
+      }
+    ]
+  },
+  "repository_reality": {
+    "structured_snapshot": "PRESENT",
+    "global_capability_array": "REMOVED",
+    "common_snapshot_assembler": "PRESENT",
+    "windows_buildDebugSnapshot": "REMOVED",
+    "web_debugSnapshot": "REMOVED",
+    "px0_03_layers": "ABSENT"
+  },
+  "official_gate_pass_claimed": false,
+  "next_stage": "P35_DEFECT_CLASSIFICATION"
+}
