@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "PX0-01-P31-v0.1",
+  "package_id": "PX0-01-P31-v0.2",
   "task_id": "PX0-01",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "PX0 Contract Boundary Cleanup: product-only RuntimeFacade, separate read-only diagnostics, structured product state, and preservation of DUI-M1 common CanvasRuntimeFacadeAdapter",
@@ -8,7 +8,7 @@
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
     "canonical_branch": "main",
-    "execution_ref": "codex/px0-01-contract-boundary-cleanup"
+    "execution_ref": "codex/px0-01-contract-boundary-cleanup-v2"
   },
   "execution_authority_mode": "repo_materialized",
   "task_anchor": {
@@ -28,11 +28,11 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "ebfa7b446380174cfa15f0f6163bf46881b454c4b54b9261aa6ea7f683f33cd6"
+    "sha256": "191a279be7cc83f533cc369671b04a01dae30fb4bb226ad45b1782b7554bb8ae"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "43fdb2694a948d903754fd847918ddef9f210b9ac2e8c1df8f0efbaecc426f1b"
+    "sha256": "0447604641636f77c5a5ccfafb6249455709a8cb7b5626fa396ffa4a7855de7c"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -42,6 +42,11 @@
     "same_repository": true,
     "path": ".aegis/packages/PX0-01/",
     "base_revision": "25e5bcead21976f906333582ea4c0a80df7b2e20"
+  },
+  "supersedes": {
+    "package_id": "PX0-01-P31-v0.1",
+    "materialization_ref": "3a1569f461ba365230ee605cbccfdb321b6cebb1",
+    "reason": "TASK_PACKAGE_DEFECT: legacy DUI20 RuntimeFacade inheritance/probe assertions had to change for the frozen RuntimeFacade/Diagnostics split, but debug_ui/tests/debug_ui_test.cpp was omitted from authorized mutation scope."
   },
   "handoff": {
     "preferred_executor": "codex",
