@@ -1,0 +1,186 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-01",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create runtime/foundation/include/canvas/runtime/product_control.hpp and move the existing core product-control request/receipt/enum types there while preserving numeric enum values.",
+        "Create runtime/foundation/include/canvas/runtime/runtime_state.hpp and restructure RuntimeStateSnapshot into identity/tool/camera/history/selection product-safe projections.",
+        "Modify runtime_facade.hpp so RuntimeFacade no longer inherits RuntimeDiagnostics and product consumers no longer require readDiagnostics().",
+        "Correct setBrush()/setEraser() request construction so toolId is not overloaded with brush/eraser identity.",
+        "Create feature_diagnostics.hpp and extend the read-only Axiom diagnostics contract with a typed feature diagnostics seam without defining successor-feature semantics.",
+        "Extend PlatformDiagnosticsSnapshot with resolved canonical Surface mode and TelemetrySnapshot with sampleHz/frameMs/queueAgeMs using existing owner/HUD truth.",
+        "Migrate WindowsRuntimeFacade and WebRuntimeFacade to preserve CanvasRuntimeFacadeAdapter inheritance while separately implementing IAxiomDiagnostics.",
+        "Make only the mechanical common-adapter/include/test changes required by the contract split; preserve CanvasRuntimeFacadeAdapter/CanvasControlService routing semantics.",
+        "Add focused PX0 RuntimeFacade contract tests and update affected existing structural tests only where the intentional interface split changes assertions."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/foundation/include/canvas/runtime/product_control.hpp",
+        "runtime/foundation/include/canvas/runtime/runtime_state.hpp",
+        "runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp",
+        "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+        "runtime/foundation/include/canvas/runtime/diagnostics.hpp",
+        "runtime/foundation/include/canvas/runtime/telemetry.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/tests/dui_m1_runtime_facade_test.cpp",
+        "debug_ui/tests/runtime_contract_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py"
+      ],
+      "preserve_unchanged_unless_compile_requires_include_only_adjustment": [
+        "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+        "debug_ui/src/panel_model.cpp",
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/src/windows_host.cpp"
+      ],
+      "forbidden_changes": [
+        "Stable Runtime C ABI",
+        "CanvasControlService behavior or queue semantics",
+        "Creation of a second Canvas product-control service/path",
+        "Common DebugSnapshotAssembler or snapshot ownership migration",
+        "DebugControlRouter or Activity Log",
+        "Workspace/PanelRegistry/Workbench architecture",
+        "Generic debug_ui::DebugCommand retirement",
+        "Windows/Web host convergence beyond compile-compatible diagnostics inheritance changes",
+        "Shape/RichText/Connector/Snap/Image product semantics",
+        "G5 implementation",
+        "Deferred Windows preview visibility behavior",
+        ".aegis/results/GT-DUI-M1/**",
+        ".aegis/results/GT-G4-05-WIN-ARC-PREVIEW/**",
+        "Any physical PASS or Gate PASS claim"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current RuntimeFacade -> RuntimeDiagnostics inheritance and CanvasRuntimeFacadeAdapter/Windows/Web inheritance flow",
+        "target product-only RuntimeFacade plus separate IAxiomDiagnostics flow",
+        "exact affected types/files",
+        "mapping from each verification obligation to implementation/test",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The new PX0RuntimeFacadeContract static assertion/probe fails against the starting implementation because RuntimeFacade still inherits RuntimeDiagnostics.",
+      "observation_seam": "debug_ui/tests/runtime_contract_test.cpp compiled as axiom_debug_ui_runtime_contract_tests"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-01-T1-red-contract",
+          "command_or_oracle": "Before production mutation, add the focused contract test and build axiom_debug_ui_runtime_contract_tests.",
+          "expected_result": "RED specifically because RuntimeFacade still inherits RuntimeDiagnostics / product-only probe lacks readDiagnostics.",
+          "blocking_reason": "Confirms the frozen boundary failure is observed through the intended oracle before implementation."
+        },
+        {
+          "id": "PX0-01-T2-runtime-contract",
+          "command_or_oracle": "Build and run PX0RuntimeFacadeContract after implementation.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Primary proof of product/diagnostics separation, structured state, request semantics, and feature diagnostics seam."
+        },
+        {
+          "id": "PX0-01-T3-dui-runtime-regression",
+          "command_or_oracle": "Run DUIM1RuntimeFacade and DUIM1ViewControls.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects the accepted DUI-M1 common CanvasRuntimeFacadeAdapter and camera-control behavior."
+        },
+        {
+          "id": "PX0-01-T4-debug-ui-regression",
+          "command_or_oracle": "Run DUI20DebugUiContracts and DUIM1PanelModel.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Ensures the contract split does not prematurely redesign current Debug UI/panel behavior."
+        },
+        {
+          "id": "PX0-01-T5-structural-platform-contracts",
+          "command_or_oracle": "python -m pytest apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py -q",
+          "expected_result": "PASS after only intentional interface-split assertion updates.",
+          "blocking_reason": "Protects Windows/Web composition and Debug UI integration without requiring physical hosted evidence."
+        },
+        {
+          "id": "PX0-01-T6-diff-scope",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Only authorized mutation-scope paths are changed and diff check exits 0.",
+          "blocking_reason": "Prevents PX0-02+ or deferred preview/evidence work from leaking into this package."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-01-H1-windows-build",
+          "oracle": "If the locked Windows Skia/Arc environment is available, build axiom_ink_playground_windows.",
+          "classification": "corroborative only; absence does not block PX0-01 because physical/hosted closure belongs later PX0 packages"
+        },
+        {
+          "id": "PX0-01-H2-web-build",
+          "oracle": "If the locked Emscripten environment is healthy, build axiom_ink_playground_web.",
+          "classification": "corroborative only; known DUI-M1 Web environment issues must not move the PX0-01 finish line"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on codex/px0-01-contract-boundary-cleanup",
+        "reviewer-resolvable materialized_ref for that exact result",
+        "rerunnable required tests/oracles bound to the exact source result"
+      ],
+      "corroborative": [
+        "optional Windows/Web hosted build results",
+        "git status --short clean after commit"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "RuntimeFacade is product-only and independent from RuntimeDiagnostics.",
+        "RuntimeStateSnapshot is grouped into product-safe identity/tool/camera/history/selection projections.",
+        "IAxiomDiagnostics is separately implementable and exposes the typed FeatureDiagnosticsSnapshot seam.",
+        "CanvasRuntimeFacadeAdapter remains the shared CanvasControlService-backed Windows/Web product-control path.",
+        "Brush/Eraser helpers no longer overload ProductControlRequest.toolId.",
+        "Existing DUI-M1 runtime/view and current Debug UI/platform structural regressions pass.",
+        "No PX0-02+ architecture or deferred preview/evidence work is included.",
+        "The exact result is pushed/materialized for independent Control Review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
