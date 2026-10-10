@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "origin_revision": "0941891536952bf944ebf9c5c4593c6ae4e9feb6",
+  "authorized_paths": [
+    "debug_ui/include/canvas/debug_ui/panels.hpp",
+    "debug_ui/tests/dui_m1_panel_model_test.cpp",
+    "debug_ui/tests/snapshot_assembler_test.cpp"
+  ],
+  "verification": {
+    "PX0DebugSnapshot": "PASS",
+    "DUI20DebugUiContracts": "PASS",
+    "DUIM1PanelModel": "PASS",
+    "PX0RuntimeFacadeContract": "PASS",
+    "DUIM1RuntimeFacade": "PASS",
+    "DUIM1ViewControls": "PASS",
+    "windows_web_structural_pytest": "23 passed",
+    "git_diff_check": "PASS"
+  },
+  "scope_audit": "PASS",
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass_claim": false,
+  "preview_repair_claim": false
+}

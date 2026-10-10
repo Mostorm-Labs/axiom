@@ -14,7 +14,12 @@ inline bool panelAvailable(const DebugSnapshot& snapshot, PanelCapability panel)
   switch (descriptor.domain) {
   case PanelDomain::kProduct: return snapshot.product.availability == DebugAvailability::kAvailable;
   case PanelDomain::kArc: return snapshot.arc.availability == DebugAvailability::kAvailable;
-  case PanelDomain::kPlatform: return snapshot.platform.availability == DebugAvailability::kAvailable;
+  case PanelDomain::kPlatform:
+    if (panel == PanelCapability::kSurface) {
+      return snapshot.platform.availability == DebugAvailability::kAvailable ||
+             snapshot.platform.availability == DebugAvailability::kDegraded;
+    }
+    return snapshot.platform.availability == DebugAvailability::kAvailable;
   case PanelDomain::kTelemetry: return snapshot.telemetry.availability == DebugAvailability::kAvailable;
   case PanelDomain::kUnsupported: return false;
   }

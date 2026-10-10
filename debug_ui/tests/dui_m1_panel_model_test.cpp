@@ -10,8 +10,14 @@ int main() {
   const auto panels = canvas::debug_ui::DebugPanelModel::describe(snapshot);
   assert(panels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kInput)].available);
   assert(panels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kCanvas)].available);
+  assert(panels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kSurface)].available);
   assert(!panels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kTelemetry)].available);
   assert(!panels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kInspection)].available);
+  snapshot.platform.availability = canvas::debug_ui::DebugAvailability::kDegraded;
+  const auto degradedPanels = canvas::debug_ui::DebugPanelModel::describe(snapshot);
+  assert(!degradedPanels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kCanvas)].available);
+  assert(degradedPanels[static_cast<std::size_t>(canvas::debug_ui::DebugPanel::kSurface)].available);
+  snapshot.platform.availability = canvas::debug_ui::DebugAvailability::kAvailable;
   snapshot.product.availability = canvas::debug_ui::DebugAvailability::kAvailable;
   assert(canvas::debug_ui::DebugPanelModel::canSubmitProductControl(snapshot));
   snapshot.stamp.runtimeGeneration = 0;

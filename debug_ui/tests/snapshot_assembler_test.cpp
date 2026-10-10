@@ -92,6 +92,45 @@ int main() {
   channel.publish(snapshot);
   assert(channel.read().product.value.tool.toolId == 4101);
 
+  RuntimeProbe retrying;
+  retrying.first.identity = {20, 21, 22, 23, 24};
+  retrying.second.identity = retrying.first.identity;
+  retrying.second.tool.toolId = 4202;
+  canvas::debug_ui::DebugSnapshotSources retryingSources{&retrying, &axiom, nullptr, &platform, &telemetry, &activity};
+  const auto retryingSnapshot = assembler.capture(retryingSources);
+  assert(retryingSnapshot.coherence == canvas::debug_ui::SnapshotCoherence::kCoherent);
+  assert(retryingSnapshot.product.value.tool.toolId == 4202);
+  assert(retrying.reads == 2);
+
+  platform.value.surfaceAvailable = false;
+  const auto degradedPlatform = assembler.capture(
+      canvas::debug_ui::DebugSnapshotSources{&runtime, &axiom, nullptr, &platform, &telemetry, &activity});
+  assert(degradedPlatform.platform.availability == canvas::debug_ui::DebugAvailability::kDegraded);
+  assert(degradedPlatform.product.availability == canvas::debug_ui::DebugAvailability::kAvailable);
+  assert(degradedPlatform.axiom.availability == canvas::debug_ui::DebugAvailability::kAvailable);
+  assert(degradedPlatform.telemetry.availability == canvas::debug_ui::DebugAvailability::kAvailable);
+
+  platform.value.surfaceAvailable = true;
+  activity.value.productControl = canvas::runtime::ProductControlReceipt{77,
+      canvas::runtime::ProductControlState::kApplied, 7};
+  activity.value.surfaceControl = canvas::runtime::SurfaceModeReceipt{88,
+      canvas::runtime::SurfaceControlState::kApplied,
+      canvas::runtime::SurfaceRole::kCanonicalCanvas,
+      canvas::runtime::SurfaceMode::kGpuDefault, 12};
+  const auto activitySnapshot = assembler.capture(
+      canvas::debug_ui::DebugSnapshotSources{&runtime, &axiom, nullptr, &platform, &telemetry, &activity});
+  assert(activitySnapshot.activity.productControl.has_value());
+  assert(activitySnapshot.activity.productControl->requestId == 77);
+  assert(activitySnapshot.activity.surfaceControl.has_value());
+  assert(activitySnapshot.activity.surfaceControl->requestId == 88);
+  assert(activitySnapshot.stamp.snapshotSequence == 4);
+
+  const auto fallbackFrame = assembler.capture(
+      canvas::debug_ui::DebugSnapshotSources{&runtime, &axiom, nullptr, &platform, nullptr, nullptr});
+  assert(fallbackFrame.telemetry.availability == canvas::debug_ui::DebugAvailability::kUnsupported);
+  assert(fallbackFrame.stamp.frameId == platform.value.presentCount);
+  assert(fallbackFrame.stamp.snapshotSequence == 5);
+
   AlwaysChangingRuntime changing;
   canvas::debug_ui::DebugSnapshotSources changingSources{&changing, nullptr, nullptr, nullptr, nullptr, nullptr};
   const auto stale = assembler.capture(changingSources);
