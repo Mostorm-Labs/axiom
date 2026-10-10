@@ -1495,6 +1495,13 @@ bool InkPlaygroundHost::renderPreviewPresentation(
   const auto result = previewRenderer_.renderPreview(*provider, capture.geometry,
                                                   capture.style);
   if (result.code != render::BackendSubmissionCode::kAccepted) return false;
+  // Windows deferred presentation submits the preview directly from the
+  // platform render pump, bypassing PreviewSurfaceController::renderIfDirty.
+  // Make the successfully submitted frame visible at this boundary; the
+  // later UI-thread acknowledgement only records the presentation receipt
+  // and must not be the sole visibility transition because CanonicalVisible
+  // can race that message.
+  provider->setOverlayVisible(true);
   if (presentCount != nullptr) *presentCount = provider->presentCount();
   return true;
 }

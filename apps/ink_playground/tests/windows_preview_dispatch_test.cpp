@@ -134,13 +134,33 @@ void run() {
   s.runtimeSinks = std::make_unique<WindowsArcRuntimeSinks>(s);
   s.host->setArcPreviewSink(s.runtimeSinks.get());
   s.host->setCanonicalVisibilitySink(s.runtimeSinks.get());
-  startPreviewRenderPump(s);
+  // Regression: a worker can finish the preview render just before pointer-up
+  // closes the presentation gate. The UI completion message must still make
+  // that matching frame visible until CanonicalVisible retires it.
+  assert(s.host->beginBrushSession(700U, 1U));
+  assert(s.host->appendBrushSample(700U, 24.0, 24.0, 0.5, 1U));
+  PreviewPresentationCapture racedCapture{};
+  assert(s.host->capturePreviewPresentation(racedCapture));
+  assert(s.host->renderPreviewPresentation(racedCapture));
+  s.host->setPreviewOverlayVisible(false);
+  s.canonicalPending = true;
+  stopPreviewPresentation(s);
+  {
+    std::lock_guard completionLock(s.previewCompletionMutex);
+    s.previewCompletion = racedCapture;
+    s.previewCompletionPresentCount = s.host->previewPresentCount();
+  }
+  WindowProc(s.window, State::kPreviewPresentedMessage, 0, 0);
+  assert(p->overlayVisible());
+  assert(s.host->cancelBrushSession(700U));
+  s.canonicalPending = false;
   tick(s);
   // Reproduce the real Runtime multi-contact sequence rather than calling
   // applyViewportNavigation directly. A settled pinch must not leave the
   // Windows canonical-pending gate blocking the first post-pinch preview.
   deliverRuntimeSample(s, 41U, 1U, 1'000'000U, 24.0F, 24.0F,
                        canvas::input::PointerPhase::kDown);
+  startPreviewRenderPump(s);
   deliverRuntimeSample(s, 42U, 2U, 100'000'000U, 64.0F, 24.0F,
                        canvas::input::PointerPhase::kDown);
   deliverRuntimeSample(s, 42U, 3U, 120'000'000U, 96.0F, 24.0F,
@@ -156,6 +176,13 @@ void run() {
                        canvas::input::PointerPhase::kDown);
   deliverRuntimeSample(s, 43U, 7U, 510'000'000U, 96.0F, 96.0F,
                        canvas::input::PointerPhase::kMove);
+  // A successful render must make the transient platform surface visible
+  // before the UI-thread acknowledgement message is serviced.
+  s.host->setPreviewOverlayVisible(false);
+  PreviewPresentationCapture directCapture{};
+  assert(s.host->capturePreviewPresentation(directCapture));
+  assert(s.host->renderPreviewPresentation(directCapture));
+  assert(p->overlayVisible());
   waitForPreview(s, postPinchPreviewBaseline + 1U);
   assert(s.host->previewPresentCount() > postPinchPreviewBaseline);
   deliverRuntimeSample(s, 43U, 8U, 520'000'000U, 128.0F, 128.0F,

@@ -621,6 +621,16 @@ void startPreviewRenderPump(State& value) {
           value.previewPresentationEnabled;
       const bool captured = gateOpen && value.host->capturePreviewPresentation(capture);
       const bool rendered = captured && value.host->renderPreviewPresentation(capture, &presentCount);
+      if (value.pointerDiagnostic && (gateOpen || value.previewDirty)) {
+        value.pointerDiagnostic << "preview-pump gate=" << gateOpen
+            << " captured=" << captured << " rendered=" << rendered
+            << " canonical_pending=" << value.canonicalPending
+            << " presentation_enabled=" << value.previewPresentationEnabled
+            << " dirty=" << value.previewDirty
+            << " provider_generation="
+            << (value.previewProvider == nullptr ? 0ULL : value.previewProvider->generation())
+            << " present_count=" << presentCount << '\n';
+      }
       if (rendered) {
         {
           std::lock_guard completionLock(value.previewCompletionMutex);
@@ -1398,8 +1408,25 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       presentCount = value->previewCompletionPresentCount;
       value->previewCompletion.reset();
     }
-    if (!value->canonicalPending && capture.has_value() && value->host != nullptr &&
-        value->host->acknowledgePreviewPresentation(*capture, presentCount)) {
+    const bool acknowledged = !value->canonicalPending && capture.has_value() &&
+        value->host != nullptr &&
+        value->host->acknowledgePreviewPresentation(*capture, presentCount);
+    if (value->pointerDiagnostic) {
+      value->pointerDiagnostic << "preview-presented capture=" << capture.has_value()
+          << " acknowledged=" << acknowledged
+          << " canonical_pending=" << value->canonicalPending
+          << " dirty=" << value->previewDirty
+          << " present_count=" << presentCount << '\n';
+    }
+    if (capture.has_value() && value->canonicalPending && value->host != nullptr &&
+        value->host->previewActive()) {
+      // The worker may have submitted just before pointer-up closed the gate.
+      // Keep that already-rendered frame visible until CanonicalVisible; the
+      // acknowledgement is still useful for diagnostics, but must not hide a
+      // valid transient frame merely because the handoff is now pending.
+      value->host->setPreviewOverlayVisible(true);
+    }
+    if (acknowledged) {
       value->previewDirty = false;
     } else if (value->previewDirty) {
       requestPreviewRender(*value);
