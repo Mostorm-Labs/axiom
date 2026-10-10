@@ -73,7 +73,8 @@ RuntimeFacade no longer inherits diagnostics capability. The same concrete platf
 7. Keep `RuntimeDiagnostics`/the `IAxiomDiagnostics` alias as a read-only owner contract if that minimizes source churn, but RuntimeFacade must not derive from it.
 8. Add a typed `FeatureDiagnosticsSnapshot` seam with empty/default successor payloads; do not design Shape/RichText/Connector/Snap/Image diagnostics fields here.
 9. Extend Platform diagnostics with the currently resolved canonical Surface mode and Telemetry with the already-observed `sampleHz/frameMs/queueAgeMs` values needed by later PX0-02 assembly. Source these values from existing owner/HUD truth only.
-10. Do not move `buildDebugSnapshot` / `debugSnapshot`, remove `DebugCommand`, or build Workbench/PanelRegistry in this package.
+10. Update `debug_ui/tests/debug_ui_test.cpp` only for the intentional RuntimeFacade/diagnostics split: remove the legacy requirement that `RuntimeProbe` implement `readDiagnostics()`, invert/remove the stale inheritance assertion so the test expects RuntimeFacade to be independent from RuntimeDiagnostics, and preserve the rest of DUI20 coverage unchanged.
+11. Do not move `buildDebugSnapshot` / `debugSnapshot`, remove `DebugCommand`, or build Workbench/PanelRegistry in this package.
 
 ## Existing files that are implementation reality, not new Authority
 
@@ -85,6 +86,10 @@ RuntimeFacade no longer inherits diagnostics capability. The same concrete platf
 
 Preserve their valid behavior. If an implementation conflict is genuinely semantic rather than mechanical, fail closed instead of redesigning the approved PX0 contracts.
 
+## P31 package repair note
+
+PX0-01-P31-v0.1 was correctly failed closed before source mutation because `DUI20DebugUiContracts` still asserted the old `RuntimeFacade : RuntimeDiagnostics` relationship while `debug_ui/tests/debug_ui_test.cpp` was omitted from the authorized mutation scope. PX0-01-P31-v0.2 repairs only that task-package omission. The frozen architecture target, Verification obligations, required regression set, and finish line are unchanged.
+
 ## First incomplete action
 
-Run repository/package/anchor preflights, record the actual starting revision, perform the required ImplementationDesignPreflight, then add the focused RED contract test before touching production code.
+Run repository/package/anchor preflights against the amended package, record the actual starting revision, perform the required ImplementationDesignPreflight, then add the focused RED contract test before touching production code.
