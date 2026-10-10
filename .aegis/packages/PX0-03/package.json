@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-03-P31-v0.1",
+  "task_id": "PX0-03",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "PX0 Control Router + Bounded Activity: unify Debug UI control adaptation, normalized bounded activity, asynchronous engineering receipt observation, and retire the duplicate generic UI command queue",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-03-control-router-activity"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "0eab5dea1570f9b8ae7535aea0eef6b1135061a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "540b4fad0e4bc15e6c7e6639a28593bc4fe36c0630cc4d5a8a9292d5717608a8"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "53a37052fa69f36b7608a6e857df703bebe93ce8a5d59f56c0cec468d22e501d"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "1a80adcbc3f8e20d9d68e021815fe7f92452c5ed492b77a2dc67c724df74bb23"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "06b4a07a391df6be669f47642beb5199abb9f869d36f45c903ed626041d72f13"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4fa92632fd0ed761cfaaecc4c7cc1304629d165e46d31bd7ed291247dde2f547"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-03/",
+    "base_revision": "0eab5dea1570f9b8ae7535aea0eef6b1135061a7"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run repository/package/anchor/binding preflights, perform the required ImplementationDesignPreflight, observe the PX0ControlRouter RED oracle, then execute the full Control Router + Bounded Activity closure contract without entering PX0-04."
+  }
+}
