@@ -229,7 +229,8 @@ void clearCanvasInput(State& value) noexcept {
   if (hadSelectionPointers && GetCapture() == value.window) ReleaseCapture();
 }
 
-class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter {
+class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter,
+                                   public canvas::runtime::IAxiomDiagnostics {
  public:
   explicit WindowsRuntimeFacade(State& state)
       : CanvasRuntimeFacadeAdapter(*state.host, {1U, 1U, 1U, 1U}), state_(state) {}
@@ -252,34 +253,39 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
   }
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto viewport = state_.host->viewportGesture();
-    return {1U, state_.host->semanticGeneration().value(),
-            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), state_.host->cameraGeneration(),
-            static_cast<std::uint32_t>(state_.selectedTool),
-            state_.host->surface().generation, viewport.scale,
-            viewport.translationX, viewport.translationY,
-            state_.host->canUndo(), state_.host->canRedo(),
-            state_.host->selectionOverlay() == nullptr ? 0U : state_.host->selectionOverlay()->updateCount(),
-            static_cast<std::uint64_t>(state_.host->transientTransformCount()),
-            static_cast<std::uint64_t>(state_.host->submittedOperationCount()), state_.host->cameraGeneration(),
-            state_.host->selectionMode(),
-            static_cast<std::uint32_t>(state_.host->selectedObjectCount()),
-            state_.host->selectedPrimaryObjectValue(), state_.host->snapCandidateCount()};
+    return {{1U, state_.host->semanticGeneration().value(),
+             static_cast<std::uint64_t>(state_.host->submittedOperationCount()),
+             state_.host->cameraGeneration(), state_.host->surface().generation},
+            {static_cast<std::uint64_t>(state_.host->submittedOperationCount())},
+            {viewport.scale, viewport.translationX, viewport.translationY,
+             state_.host->cameraGeneration()},
+            {state_.host->canUndo(), state_.host->canRedo()},
+            {static_cast<std::uint32_t>(state_.selectedTool), state_.host->selectionMode(),
+             static_cast<std::uint32_t>(state_.host->selectedObjectCount()),
+             state_.host->selectedPrimaryObjectValue(), state_.host->snapCandidateCount(),
+             state_.host->selectionOverlay() == nullptr ? 0U
+                 : state_.host->selectionOverlay()->updateCount(),
+             static_cast<std::uint64_t>(state_.host->transientTransformCount())}};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
-    return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,
-            diagnostics.documentRevision, diagnostics.viewGeneration,
-            diagnostics.surfaceGeneration, diagnostics.toolId,
-            state_.host->selectedBrushProfile() == "vector-solid-v1" ? 1U :
-                state_.host->selectedBrushProfile() == "marker-flat-v1" ? 2U :
-                state_.host->selectedBrushProfile() == "chalk-grain-v1" ? 3U : 4U,
-            state_.host->selectedBrushRevision(),
-            state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
-                state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U,
-            diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo,
-            diagnostics.selectionMode, diagnostics.selectedObjectCount,
-            diagnostics.selectedPrimaryObject, diagnostics.snapCandidateCount};
+    return {{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
+             diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
+             diagnostics.identity.surfaceGeneration},
+            {diagnostics.interaction.toolId,
+             state_.host->selectedBrushProfile() == "vector-solid-v1" ? 1U :
+                 state_.host->selectedBrushProfile() == "marker-flat-v1" ? 2U :
+                 state_.host->selectedBrushProfile() == "chalk-grain-v1" ? 3U : 4U,
+             state_.host->selectedBrushRevision(),
+             state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
+                 state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U},
+            {diagnostics.camera.scale, diagnostics.camera.translationX,
+             diagnostics.camera.translationY},
+            {diagnostics.history.canUndo, diagnostics.history.canRedo},
+            {diagnostics.interaction.selectionMode,
+             diagnostics.interaction.selectedObjectCount,
+             diagnostics.interaction.selectedPrimaryObject,
+             diagnostics.interaction.snapCandidateCount}};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -296,7 +302,7 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
       if (profile != nullptr && state_.host->setSelectionMode(false) &&
           state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
           state_.host->selectBrushProfile(profile, revision)) {
-        state_.selectedTool = static_cast<int>(request.toolId);
+        state_.selectedTool = 4100 + static_cast<int>(request.brushId);
         clearCanvasInput(state_);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
       }
@@ -363,10 +369,10 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
                                    : InkPlaygroundHost::ToolMode::kBrush;
       if (request.eraserId != 0U && state_.host->setSelectionMode(false) &&
           state_.host->selectTool(mode)) {
-        state_.selectedTool = static_cast<int>(request.toolId);
+        state_.selectedTool = request.eraserId == 1U ? 4105 : 4106;
         clearCanvasInput(state_);
         for (const auto& [id, button] : state_.toolButtons) {
-          SendMessageW(button, BM_SETCHECK, id == request.toolId ? BST_CHECKED : BST_UNCHECKED, 0);
+          SendMessageW(button, BM_SETCHECK, id == state_.selectedTool ? BST_CHECKED : BST_UNCHECKED, 0);
         }
         InvalidateRect(state_.window, nullptr, FALSE);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
@@ -409,7 +415,11 @@ class WindowsPlatformDiagnostics final : public canvas::runtime::PlatformDiagnos
     return {canonical != nullptr ? canonical->generation() : 0U,
             preview != nullptr ? preview->generation() : 0U,
             binding.width, binding.height, 1.0F,
-            state_.presentCount, state_.host->surfaceLostCount(), binding.available};
+            state_.presentCount, state_.host->surfaceLostCount(), binding.available,
+            canonical == nullptr ? canvas::runtime::SurfaceMode::kPlatformDefault
+                : canonical->describe().capabilities.gpuAccelerated
+                    ? canvas::runtime::SurfaceMode::kGpuDefault
+                    : canvas::runtime::SurfaceMode::kCpuReference};
   }
  private:
   const State& state_;
@@ -424,7 +434,7 @@ class WindowsTelemetry final : public canvas::runtime::Telemetry {
             static_cast<std::uint64_t>(state_.host->hud().batch),
             state_.host->previewPresentCount(),
             state_.host->canonicalFrameCount(),
-            hud.inkMs};
+            hud.inkMs, hud.sampleHz, hud.frameMs, hud.queueAgeMs};
   }
  private:
   const State& state_;
@@ -1213,16 +1223,16 @@ canvas::debug_ui::DebugSnapshot buildDebugSnapshot(State& value) {
   snapshot.stamp.generation = snapshot.stamp.surfaceGeneration;
   if (value.runtimeFacade != nullptr) {
     const auto runtimeState = value.runtimeFacade->readRuntimeState();
-    snapshot.stamp.runtimeGeneration = runtimeState.runtimeGeneration;
-    snapshot.stamp.documentGeneration = runtimeState.documentGeneration;
-    snapshot.stamp.viewGeneration = runtimeState.viewGeneration;
-    snapshot.selectedTool = runtimeState.toolId != 0U
-        ? runtimeState.toolId : snapshot.selectedTool;
-    snapshot.canUndo = runtimeState.canUndo;
-    snapshot.canRedo = runtimeState.canRedo;
-    snapshot.selectionMode = runtimeState.selectionMode;
-    snapshot.selectedObjectCount = runtimeState.selectedObjectCount;
-    snapshot.selectedPrimaryObject = runtimeState.selectedPrimaryObject;
+    snapshot.stamp.runtimeGeneration = runtimeState.identity.runtimeGeneration;
+    snapshot.stamp.documentGeneration = runtimeState.identity.documentGeneration;
+    snapshot.stamp.viewGeneration = runtimeState.identity.viewGeneration;
+    snapshot.selectedTool = runtimeState.tool.toolId != 0U
+        ? runtimeState.tool.toolId : snapshot.selectedTool;
+    snapshot.canUndo = runtimeState.history.canUndo;
+    snapshot.canRedo = runtimeState.history.canRedo;
+    snapshot.selectionMode = runtimeState.selection.enabled;
+    snapshot.selectedObjectCount = runtimeState.selection.selectedObjectCount;
+    snapshot.selectedPrimaryObject = runtimeState.selection.primaryObject;
     if (value.hasProductReceipt) {
       snapshot.productControlRequestId = value.lastProductReceipt.requestId;
       snapshot.productControlState = value.lastProductReceipt.state;
@@ -1910,7 +1920,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       (wParam == L'Z' || wParam == L'Y')) {
     if (value != nullptr && value->runtimeFacade != nullptr &&
         (lParam & (1LL << 30)) == 0) {
-      const auto generation = value->runtimeFacade->readRuntimeState().runtimeGeneration;
+      const auto generation = value->runtimeFacade->readRuntimeState().identity.runtimeGeneration;
       static std::uint64_t nextHistoryRequestId = 0x100000U;
       const auto receipt = wParam == L'Z'
           ? value->runtimeFacade->undo(nextHistoryRequestId++, generation)

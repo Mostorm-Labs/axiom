@@ -6,6 +6,8 @@
 #if AXIOM_WEB_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/runtime/diagnostics.hpp"
+#include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #include "imgui.h"
 #include "include/core/SkImage.h"
@@ -56,34 +58,41 @@ std::unordered_map<Handle, BrushState>& brushes() {
 }
 
 #if AXIOM_WEB_DEBUG_UI
-class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter {
+class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter,
+                               public canvas::runtime::IAxiomDiagnostics {
  public:
   explicit WebRuntimeFacade(Host& host)
       : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto view = host_.viewportGesture();
-    return {1U, host_.semanticGeneration().value(),
-            static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
-            static_cast<std::uint32_t>(host_.toolMode()), host_.surface().generation,
-            view.scale, view.translationX, view.translationY,
-            host_.canUndo(), host_.canRedo(),
-            0U, 0U, static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
-            false, 0U, 0U, host_.snapCandidateCount()};
+    return {{1U, host_.semanticGeneration().value(),
+             static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
+             host_.surface().generation},
+            {static_cast<std::uint64_t>(host_.submittedOperationCount())},
+            {view.scale, view.translationX, view.translationY, host_.cameraGeneration()},
+            {host_.canUndo(), host_.canRedo()},
+            {static_cast<std::uint32_t>(host_.toolMode()), false, 0U, 0U,
+             host_.snapCandidateCount(), 0U, 0U}};
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
     const auto& profile = host_.selectedBrushProfile();
-    return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,
-            diagnostics.documentRevision, diagnostics.viewGeneration,
-            diagnostics.surfaceGeneration, diagnostics.toolId,
-            profile == "vector-solid-v1" ? 1U : profile == "marker-flat-v1" ? 2U
-            : profile == "chalk-grain-v1" ? 3U : 4U,
-            host_.selectedBrushRevision(),
-            host_.toolMode() == Host::ToolMode::kObjectEraser ? 1U
-            : host_.toolMode() == Host::ToolMode::kPartialEraser ? 2U : 0U,
-            diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo,
-            false, 0U, 0U, diagnostics.snapCandidateCount};
+    return {{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
+             diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
+             diagnostics.identity.surfaceGeneration},
+            {diagnostics.interaction.toolId,
+             profile == "vector-solid-v1" ? 1U : profile == "marker-flat-v1" ? 2U
+             : profile == "chalk-grain-v1" ? 3U : 4U,
+             host_.selectedBrushRevision(),
+             host_.toolMode() == Host::ToolMode::kObjectEraser ? 1U
+             : host_.toolMode() == Host::ToolMode::kPartialEraser ? 2U : 0U},
+            {diagnostics.camera.scale, diagnostics.camera.translationX,
+             diagnostics.camera.translationY},
+            {diagnostics.history.canUndo, diagnostics.history.canRedo},
+            {diagnostics.interaction.selectionMode,
+             diagnostics.interaction.selectedObjectCount,
+             diagnostics.interaction.selectedPrimaryObject,
+             diagnostics.interaction.snapCandidateCount}};
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -145,6 +154,39 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
   Host& host_;
 };
 
+class WebPlatformDiagnostics final : public canvas::runtime::IPlatformDiagnostics {
+ public:
+  explicit WebPlatformDiagnostics(Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::PlatformDiagnosticsSnapshot readPlatformDiagnostics() const noexcept override {
+    const auto* canonical = host_.activeSurfaceProvider();
+    const auto* preview = host_.previewSurfaceProvider();
+    const auto& binding = host_.surface();
+    return {canonical == nullptr ? 0U : canonical->generation(),
+            preview == nullptr ? 0U : preview->generation(),
+            binding.width, binding.height, 1.0F,
+            host_.canonicalFrameCount(), host_.surfaceLostCount(), binding.available,
+            canonical == nullptr ? canvas::runtime::SurfaceMode::kPlatformDefault
+                : canonical->describe().capabilities.gpuAccelerated
+                    ? canvas::runtime::SurfaceMode::kGpuDefault
+                    : canvas::runtime::SurfaceMode::kCpuReference};
+  }
+ private:
+  Host& host_;
+};
+
+class WebTelemetry final : public canvas::runtime::ITelemetry {
+ public:
+  explicit WebTelemetry(const Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::TelemetrySnapshot readTelemetry() const noexcept override {
+    const auto& hud = host_.hud();
+    return {hud.batch, hud.batch, host_.previewPresentCount(),
+            host_.canonicalFrameCount(), hud.inkMs,
+            hud.sampleHz, hud.frameMs, hud.queueAgeMs};
+  }
+ private:
+  const Host& host_;
+};
+
 struct DebugUiState final {
   std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider;
   std::unique_ptr<WebRuntimeFacade> runtime;
@@ -167,15 +209,16 @@ std::unordered_map<Handle, DebugUiState>& debugUi() {
 canvas::debug_ui::DebugSnapshot debugSnapshot(Host& target, DebugUiState& state) {
   canvas::debug_ui::DebugSnapshot snapshot{};
   const auto runtime = state.runtime->readRuntimeState();
+  const auto telemetry = WebTelemetry(target).readTelemetry();
   snapshot.stamp.sequence = target.hud().batch;
   snapshot.stamp.snapshotSequence = snapshot.stamp.sequence;
   snapshot.stamp.frameId = target.canonicalFrameCount();
-  snapshot.stamp.runtimeGeneration = runtime.runtimeGeneration;
-  snapshot.stamp.documentGeneration = runtime.documentGeneration;
-  snapshot.stamp.viewGeneration = runtime.viewGeneration;
-  snapshot.stamp.surfaceGeneration = runtime.surfaceGeneration;
-  snapshot.stamp.generation = runtime.surfaceGeneration;
-  snapshot.canonicalSurfaceGeneration = runtime.surfaceGeneration;
+  snapshot.stamp.runtimeGeneration = runtime.identity.runtimeGeneration;
+  snapshot.stamp.documentGeneration = runtime.identity.documentGeneration;
+  snapshot.stamp.viewGeneration = runtime.identity.viewGeneration;
+  snapshot.stamp.surfaceGeneration = runtime.identity.surfaceGeneration;
+  snapshot.stamp.generation = runtime.identity.surfaceGeneration;
+  snapshot.canonicalSurfaceGeneration = runtime.identity.surfaceGeneration;
   snapshot.previewSurfaceGeneration = target.previewSurfaceGeneration();
   snapshot.canonicalRevision = target.submittedOperationCount();
   snapshot.previewRevision = target.previewPresentCount();
@@ -183,9 +226,9 @@ canvas::debug_ui::DebugSnapshot debugSnapshot(Host& target, DebugUiState& state)
   snapshot.handoffCount = target.hud().pendingHandoffCount;
   snapshot.presentCount = target.canonicalFrameCount();
   snapshot.surfaceLostCount = target.surfaceLostCount();
-  snapshot.sampleHz = target.hud().sampleHz;
-  snapshot.frameMs = target.hud().frameMs;
-  snapshot.queueAgeMs = target.hud().queueAgeMs;
+  snapshot.sampleHz = telemetry.sampleHz;
+  snapshot.frameMs = telemetry.frameMs;
+  snapshot.queueAgeMs = telemetry.queueAgeMs;
   snapshot.surfaceAvailable = target.surface().available;
   snapshot.arcPresenterActive = target.previewActive();
   if (target.toolMode() == Host::ToolMode::kObjectEraser) {
@@ -198,8 +241,8 @@ canvas::debug_ui::DebugSnapshot debugSnapshot(Host& target, DebugUiState& state)
         : profile == "marker-flat-v1" ? 4102U
         : profile == "chalk-grain-v1" ? 4103U : 4104U;
   }
-  snapshot.canUndo = runtime.canUndo;
-  snapshot.canRedo = runtime.canRedo;
+  snapshot.canUndo = runtime.history.canUndo;
+  snapshot.canRedo = runtime.history.canRedo;
   snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
   snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kInput)] =
       canvas::debug_ui::CapabilityState::kAvailable;
@@ -486,9 +529,11 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_debug_ui_key(std::uint32_t value,
   }
   ImGui::GetIO().AddKeyEvent(imguiKey, isDown);
   if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Z) {
-    (void)state.runtime->undo(state.nextRequestId++, state.runtime->readDiagnostics().runtimeGeneration);
+    (void)state.runtime->undo(state.nextRequestId++,
+                              state.runtime->readRuntimeState().identity.runtimeGeneration);
   } else if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Y) {
-    (void)state.runtime->redo(state.nextRequestId++, state.runtime->readDiagnostics().runtimeGeneration);
+    (void)state.runtime->redo(state.nextRequestId++,
+                              state.runtime->readRuntimeState().identity.runtimeGeneration);
   }
   return renderDebugUi(value) ? 1 : 0;
 }

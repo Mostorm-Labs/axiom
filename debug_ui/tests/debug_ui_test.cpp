@@ -109,14 +109,14 @@ int main() {
   assert(!receiptQueue.receipt(21));
 
   struct RuntimeProbe final : canvas::runtime::RuntimeFacade {
-    canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override { return {}; }
+    canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override { return {}; }
     canvas::runtime::ProductControlReceipt submitProductControl(
         const canvas::runtime::ProductControlRequest& request) noexcept override {
       return {request.requestId, canvas::runtime::ProductControlState::kUnsupported, 1};
     }
   } runtime;
-  static_assert(std::is_base_of_v<canvas::runtime::RuntimeDiagnostics,
-                                  canvas::runtime::RuntimeFacade>);
+  static_assert(!std::is_base_of_v<canvas::runtime::RuntimeDiagnostics,
+                                   canvas::runtime::RuntimeFacade>);
   static_assert(std::is_base_of_v<canvas::runtime::DiagnosticsProvider,
                                   canvas::runtime::PlatformDiagnostics>);
   static_assert(std::is_same_v<canvas::runtime::IAxiomDiagnostics,
