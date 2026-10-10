@@ -1,0 +1,99 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-DUI-M1",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "runtime/control/**",
+      "runtime/foundation/include/canvas/runtime/**",
+      "runtime/foundation/CMakeLists.txt",
+      "runtime/interaction/**",
+      "runtime/input/**",
+      "runtime/ink/**",
+      "runtime/render/**",
+      "apps/ink_playground/**",
+      "debug_ui/**",
+      "CMakeLists.txt",
+      "CMakePresets.json",
+      "cmake/AxiomBuildInfo.cmake",
+      ".github/workflows/dui-m1-qualification.yml",
+      "verification/tools/dui_m1_configure.py",
+      "verification/corpus/golden/dui-m1/**",
+      ".aegis/results/GT-DUI-M1/**"
+    ],
+    "required_changes": [
+      "Execute approved implementation-context T1-T5 and M1-01..07.",
+      "Preserve one RuntimeFacade submission lane and existing semantic/session/camera owners.",
+      "Implement actual common Tool/Options/View/State UI on Windows/Web/Android; publish runnable bundles.",
+      "Use per-session resolved options in preview, canonical capture and replay; preserve vector and dab behavior.",
+      "If M1 directly exercises an existing source-lifecycle defect within allowed paths, fix narrowly with regression evidence; do not claim unrelated Facade findings closed."
+    ],
+    "forbidden_changes": [
+      "No M2 background schema/rendering, export or object-list feature.",
+      "No entire synchronization workflow, server/auth/Outbox/Inbox/WAL product or pre-G5 network extraction.",
+      "No canonical schema/Operation vocabulary or brush algorithm redesign.",
+      "No deep BrushAuthoring editor, TextEdit/IME or new public C ABI.",
+      "No G5 Tile/Scheduler/ResourceBudget optimization.",
+      "No edits to frozen package inputs, old task results or gates; no force-push/reset or integration into main.",
+      "No SDK lock changes or rebuilding locked Semantic/Skia dependencies."
+    ],
+    "scope_rule": "Glob membership is necessary, not sufficient; only M1 changes and directly triggered correctness fixes are authorized. Report out-of-scope defects without silently fixing or hiding them."
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "M1-AUTOMATED",
+        "command_or_oracle": "implementation-context.md frozen command interface + exact test inventory",
+        "expected_result": "all seven DUIM1 tests and nine named regressions present and pass; affected additional tests pass; assertions active; git diff --check clean",
+        "blocking_reason": "behavior and regression correctness"
+      },
+      {
+        "id": "M1-PLATFORM",
+        "command_or_oracle": "three-platform build jobs + real binding/control-path automated traces",
+        "expected_result": "runnable exe, page/WASM and APK at same code revision; truthful coverage and pending physical status",
+        "blocking_reason": "cross-platform deliverability"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "independent dui-m1-qualification jobs for Windows/Web/Android using locked SDKs and exact checkout",
+      "applicable existing required CI checks"
+    ],
+    "optional": [
+      "human-operated physical checks before control return"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "M1-01..07 code and automation complete, not placeholders.",
+      "Required tests, source/scope audit and platform builds are green.",
+      "Reviewer-accessible exact source and artifact/evidence identities provided.",
+      "Return READY_FOR_CONTROL_REVIEW; physical acceptance explicitly pending when not observed.",
+      "M2/background/Sync/G4/G5 status not self-issued."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ],
+    "not_blockers": [
+      "M2 background schema not implemented",
+      "No production network Sync or complete Data Runtime",
+      "Human physical observation not yet performed",
+      "Files or tests explicitly planned for creation do not yet exist"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "checkpoint_policy": "Publish real UI milestones without stopping solely for interim approval; do not skip actual blockers."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-DUI-M1",
+  "output_root": ".aegis/results/GT-DUI-M1/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "package-binding-preflight.json",
+    "coverage-map.json",
+    "control-trace.json",
+    "tool-options-proof.json",
+    "view-proof.json",
+    "platform-readiness.json",
+    "build-info.json",
+    "build.log",
+    "ctest.log",
+    "scope-audit.json",
+    "artifact-manifest.json",
+    "result.json"
+  ],
+  "identity_rule": "Bind product source revision separately from later evidence-only commit/materialized ref. Use existing commit/tag; never embed an unknowable self commit SHA. Hash exact Git blob bytes without checkout newline conversion.",
+  "blocking": [
+    "all frozen automated tests and affected regressions",
+    "runnable Windows/Web/Android artifacts and exact source/build identity",
+    "actual binding/control-path automated evidence, separately labeled from human UI observations",
+    "scope and package integrity"
+  ],
+  "physical_observations": "Retain as pending until actually observed; no fake physical PASS or implementation-complete claim based on declarations only.",
+  "producer_may_claim_gate_pass": false
+}
