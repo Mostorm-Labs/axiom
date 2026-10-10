@@ -17,11 +17,14 @@
 #include <cstdio>
 #include <array>
 #include <unordered_set>
+#include <chrono>
+#include <sstream>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
 class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
  public:
+  explicit PlaygroundSceneCompiler(const canvas::Scene& scene) : scene_(scene) {}
   foundation::Result<canvas::CompiledSceneSnapshot> compileFull(
       const semantic::SemanticReadView& view) const override {
     canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
@@ -53,10 +56,35 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
   }
   foundation::Result<canvas::CompiledSceneDelta> compileDelta(
-      const semantic::SemanticReadView&, const semantic::ChangeSet&) const override {
-    return foundation::Result<canvas::CompiledSceneDelta>::failure(
-        {foundation::ErrorCode::kRequiresFullRebuild, "playground uses full scene recovery"});
+      const semantic::SemanticReadView& view, const semantic::ChangeSet& changes) const override {
+    // Preserve the accepted full recovery for ink and interaction. Text-only
+    // changes use existing Scene mutation/spatial participants for locality.
+    for(const auto& change:changes.objects()) {
+      const auto* object=view.find(change.object_id);
+      if(!object || object->kind!=semantic::ObjectKind::kRichText)
+        return foundation::Result<canvas::CompiledSceneDelta>::failure(
+          {foundation::ErrorCode::kRequiresFullRebuild,"non-text playground change uses full recovery"});
+    }
+    canvas::CompiledSceneDelta delta{scene_.revision(),canvas::SceneRevision(scene_.revision().value()+1),{},std::nullopt};
+    const auto published=scene_.read();
+    for(const auto& change:changes.objects()) {
+      const auto* object=view.find(change.object_id);
+      const auto* before=published.find(change.object_id);
+      std::uint64_t order=0;
+      for(const auto byte:object->placement.order_key.bytes()) order=(order<<8)|byte;
+      const auto flags=static_cast<canvas::SceneRecordFlags>(
+        static_cast<unsigned>(canvas::SceneRecordFlags::kVisible)|static_cast<unsigned>(canvas::SceneRecordFlags::kHitTestable));
+      const canvas::SceneRecord after{object->id,canvas::SceneOrderKey(order),canvas::SceneObjectKind::kRichText,flags,
+        canvas::computeBounds(*object).world,canvas::ContentRevision(object->kind_version),
+        {static_cast<std::uint32_t>(object->id.bytes[0]),object->kind_version},
+        {static_cast<std::uint32_t>(object->id.bytes[0]),object->kind_version}};
+      delta.mutations.push_back({before?canvas::SceneMutationKind::kUpdate:canvas::SceneMutationKind::kInsert,
+        object->id,before?std::optional<canvas::SceneRecord>(*before):std::nullopt,after});
+    }
+    return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
   }
+ private:
+  const canvas::Scene& scene_;
 };
 }  // namespace canvas::ink_playground
 
@@ -93,6 +121,40 @@ std::uint64_t hashOutline(const std::vector<canvas::ink::reference::StrokeOutlin
   return hash;
 }
 
+canvas::foundation::WorldRect transformedBounds(
+    const canvas::foundation::WorldRect& bounds,
+    const canvas::semantic::Transform2D& transform) noexcept {
+  const std::array<canvas::foundation::WorldPoint, 4> corners{{
+      {static_cast<float>(transform.a * bounds.left + transform.c * bounds.top + transform.tx),
+       static_cast<float>(transform.b * bounds.left + transform.d * bounds.top + transform.ty)},
+      {static_cast<float>(transform.a * bounds.right + transform.c * bounds.top + transform.tx),
+       static_cast<float>(transform.b * bounds.right + transform.d * bounds.top + transform.ty)},
+      {static_cast<float>(transform.a * bounds.right + transform.c * bounds.bottom + transform.tx),
+       static_cast<float>(transform.b * bounds.right + transform.d * bounds.bottom + transform.ty)},
+      {static_cast<float>(transform.a * bounds.left + transform.c * bounds.bottom + transform.tx),
+       static_cast<float>(transform.b * bounds.left + transform.d * bounds.bottom + transform.ty)},
+  }};
+  canvas::foundation::WorldRect result{corners[0].x, corners[0].y, corners[0].x, corners[0].y};
+  for (const auto& corner : corners) {
+    result.left = std::min(result.left, corner.x);
+    result.top = std::min(result.top, corner.y);
+    result.right = std::max(result.right, corner.x);
+    result.bottom = std::max(result.bottom, corner.y);
+  }
+  return result;
+}
+
+canvas::foundation::WorldRect viewBounds(
+    const canvas::foundation::WorldRect& world,
+    const canvas::interaction::ViewportGesture& viewport) noexcept {
+  const float scale = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+      ? viewport.scale : 1.0F;
+  return {world.left * scale + viewport.translationX,
+          world.top * scale + viewport.translationY,
+          world.right * scale + viewport.translationX,
+          world.bottom * scale + viewport.translationY};
+}
+
 }  // namespace
 
 namespace canvas::ink_playground {
@@ -123,8 +185,148 @@ InkPlaygroundHost::InkPlaygroundHost()
           std::make_unique<canvas::UniformGridSpatialIndex>())),
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
-      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>()),
+      sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>(*runtimeSceneHost_)),
       history_(*this) {}
+
+bool InkPlaygroundHost::configureTextResources(std::vector<std::uint8_t> latin,
+    std::vector<std::uint8_t> cjk,text::LayoutContext context) {
+  if(latin.empty() || cjk.empty() || !std::isfinite(context.width) || context.width<=0) return false;
+  latinTextFont_=std::move(latin); cjkTextFont_=std::move(cjk);
+  textResources_.publish(foundation::ObjectId::fromUint64(0x470001),latinTextFont_);
+  textResources_.publish(foundation::ObjectId::fromUint64(0x470002),cjkTextFont_);
+  textLayoutService_=std::make_unique<text::RichTextLayoutService>(textResources_,context);
+  textLayoutService_->registerFont({{foundation::ObjectId::fromUint64(0x470001)},std::string(text::kRobotoSha256),0});
+  textLayoutService_->registerFont({{foundation::ObjectId::fromUint64(0x470002)},std::string(text::kNotoSha256),0});
+  sceneCoordinator_->setTextLayoutService(textLayoutService_.get());
+  return true;
+}
+bool InkPlaygroundHost::seedTextScenario(std::string_view scenario,std::size_t count) {
+  if(!textLayoutService_ || count==0 || !historySceneReady() ||
+     !brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) return false;
+  const std::array<std::string_view,8> scenarios{"text-many-small","text-long","text-style-mixed","text-edit-local",
+    "text-font-cold-warm","text-transform","text-camera","structured-grid-proxy"};
+  if(std::find(scenarios.begin(),scenarios.end(),scenario)==scenarios.end()) return false;
+  if(count>50000 || textScenarioSerial_>=100000) return false;
+  if(!textScenarioFixtureObjects_.empty()) {
+    clearSelection();
+    if(!submitTextScenarioOperation(semantic::DeleteObjectsOp{textScenarioFixtureObjects_})) return false;
+  }
+  const auto idBase=0x480000ULL+(++textScenarioSerial_)*0x200000ULL;
+  semantic::InsertObjectsOp payload; payload.objects.reserve(count*2);
+  std::vector<foundation::ObjectId> textIds,fixtureIds;
+  const semantic::TextStyle latin{semantic::ResourceId{foundation::ObjectId::fromUint64(0x470001)},16,400,false,false,{0.08F,0.13F,0.19F,1}};
+  const semantic::TextStyle cjk{semantic::ResourceId{foundation::ObjectId::fromUint64(0x470002)},16,400,false,false,{0.05F,0.35F,0.45F,1}};
+  for(std::size_t i=0;i<count;++i) {
+    semantic::ObjectRecord object; object.id=foundation::ObjectId::fromUint64(idBase+i*2+1);
+    object.kind=semantic::ObjectKind::kRichText; object.kind_version=1;
+    object.placement.order_key=semantic::OrderKey{{static_cast<std::uint8_t>(1+i/(254*254)),
+      static_cast<std::uint8_t>(1+(i/254)%254),static_cast<std::uint8_t>(1+i%254)}};
+    object.transform.tx=12+static_cast<double>((i%8)*160); object.transform.ty=12+static_cast<double>((i/8)*36);
+    std::string value="Canvas "+std::to_string(i)+" A\xcc\x81";
+    if(scenario=="text-long") for(int j=0;j<12;++j) value+=" punctuation 0123456789, line wrapping. ";
+    semantic::Paragraph paragraph{foundation::ObjectId::fromUint64(idBase+0x100000+i),
+      {semantic::ParagraphAlignment::kLeft,1.2,0,0},{{value,latin}}};
+    if(scenario=="text-style-mixed" || scenario=="structured-grid-proxy") {
+      auto underlined=latin; underlined.underline=true; underlined.color={0.6F,0.1F,0.2F,1};
+      // The pinned CJK subset has the CJK glyph, but no space glyph.
+      // Assign each run to its explicit resource instead of invoking fallback.
+      paragraph.runs.front().text += " ";
+      paragraph.runs.push_back({"\xe6\x98\xaf",cjk}); paragraph.runs.push_back({" underline",underlined});
+    }
+    object.content=semantic::RichTextContent{{{paragraph}}}; textIds.push_back(object.id); fixtureIds.push_back(object.id);
+    payload.objects.push_back(object);
+    if(scenario=="structured-grid-proxy") {
+      object.id=foundation::ObjectId::fromUint64(idBase+i*2+2); object.kind=semantic::ObjectKind::kShape;
+      object.content=semantic::ShapeContent{1,144,28}; object.transform.ty+=24;
+      object.placement.order_key=semantic::OrderKey{{1,static_cast<std::uint8_t>(1+(i/254)%254),
+        static_cast<std::uint8_t>(1+i%254),1}};
+      fixtureIds.push_back(object.id);
+      payload.objects.push_back(std::move(object));
+    }
+  }
+  if(!submitTextScenarioOperation(std::move(payload))) return false;
+  textScenarioObjects_=std::move(textIds); textScenarioFixtureObjects_=std::move(fixtureIds);
+  textScenarioName_=scenario;
+  return true;
+}
+bool InkPlaygroundHost::submitTextScenarioOperation(semantic::OperationPayload payload) {
+  const auto ordinal=localOperationOrdinal(); if(!ordinal) return false;
+  semantic::Operation operation{semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),documentId_,1,1,std::move(payload)};
+  const auto applied=operationEngine_.apply(operation,semantic::ApplySource::kLocalCommand,semanticObjects_,
+    appliedOperations_,semanticGeneration_,canonicalCommitClock_);
+  if(applied.disposition!=semantic::ApplyDisposition::kApplied || !applied.commit_record) return false;
+  const semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());
+  const auto& changes=applied.commit_record->change_set;
+  if(!sceneCoordinator_->apply(*sceneCompiler_,canvas::SceneCommitInput(changes.beforeGeneration(),changes.afterGeneration(),view,&changes))) return false;
+  ++submittedOperationCount_; canonicalPresentationDirty_=true; return true;
+}
+bool InkPlaygroundHost::editTextScenario(std::size_t index) {
+  return applyTextScenarioEdit(index,"insert");
+}
+bool InkPlaygroundHost::applyTextScenarioEdit(std::size_t index,std::string_view action) {
+  if(index>=textScenarioObjects_.size() || !historySceneReady()) return false;
+  const auto objectId=textScenarioObjects_[index]; const auto* object=semanticObjects_.find(objectId);
+  if(!object) return false;
+  const auto& paragraph=std::get<semantic::RichTextContent>(object->content).document.paragraphs.front();
+  semantic::RichTextStep step;
+  if(action=="insert") step=semantic::InsertTextStep{paragraph.id,0,"!",paragraph.runs.front().style};
+  else if(action=="delete") step=semantic::DeleteTextStep{paragraph.id,0,1};
+  else if(action=="split") step=semantic::SplitParagraphStep{paragraph.id,1,
+    foundation::ObjectId::fromUint64(0x790000000000ULL+nextHistoryOperationOrdinal_)};
+  else if(action=="merge") {
+    const auto& paragraphs=std::get<semantic::RichTextContent>(object->content).document.paragraphs;
+    if(paragraphs.size()<2) return false;
+    step=semantic::MergeParagraphStep{paragraph.id,paragraphs[1].id};
+  } else if(action=="inline-style") {
+    auto style=paragraph.runs.front().style; style.underline=!style.underline;
+    step=semantic::SetInlineStyleStep{paragraph.id,0,1,style};
+  } else if(action=="paragraph-style") {
+    auto style=paragraph.style;
+    style.alignment=style.alignment==semantic::ParagraphAlignment::kCenter
+        ?semantic::ParagraphAlignment::kLeft:semantic::ParagraphAlignment::kCenter;
+    step=semantic::SetParagraphStyleStep{paragraph.id,style};
+  } else return false;
+  return submitTextScenarioOperation(semantic::EditRichTextOp{objectId,semantic::RichTextDelta{1,{std::move(step)}}});
+}
+bool InkPlaygroundHost::transformTextScenario(std::size_t index) {
+  if(index>=textScenarioObjects_.size() || !historySceneReady()) return false;
+  const auto* object=semanticObjects_.find(textScenarioObjects_[index]); if(!object) return false;
+  auto transform=object->transform; transform.tx+=5; transform.a*=1.05; transform.d*=1.05;
+  return submitTextScenarioOperation(semantic::SetTransformsOp{{{object->id,transform}}});
+}
+std::string InkPlaygroundHost::textQualificationJson() const {
+  const auto metrics=textLayoutMetrics(); std::size_t glyphs=0,diagnostics=0;
+  std::ostringstream out; out.precision(17);
+  out<<"{\"scenario\":\""<<textScenarioName_<<"\",\"objects\":"<<textScenarioObjects_.size()
+     <<",\"semantic_generation\":"<<semanticGeneration_.current().value()
+     <<",\"scene_revision\":"<<sceneRevision()<<",\"canonical_operations\":"<<submittedOperationCount_
+     <<",\"object_layouts\":"<<metrics.objectLayouts<<",\"paragraph_layouts\":"<<metrics.paragraphLayouts
+     <<",\"cache_hits\":"<<metrics.cacheHits<<",\"font_materializations\":"<<metrics.fontMaterializations
+     <<",\"layout_cpu_ms\":"<<metrics.layoutCpuMs<<",\"layout_digests\":[";
+  bool first=true;
+  for(const auto& record:sceneCoordinator_->runtimeScene().records()) if(record.textLayout) {
+    if(!first) out<<','; first=false; out<<'\"'<<record.textLayout->digest<<'\"';
+    for(const auto& run:record.textLayout->runs) glyphs+=run.glyphs.size();
+    diagnostics+=record.textLayout->diagnostics.size();
+  }
+  out<<"],\"glyphs\":"<<glyphs<<",\"diagnostics\":"<<diagnostics<<",\"profile\":\""<<text::kTextStackProfile<<"\"}";
+  return out.str();
+}
+bool InkPlaygroundHost::setTextFontsAvailable(bool available) {
+  if(!textLayoutService_) return false;
+  if(available) {
+    textResources_.publish(foundation::ObjectId::fromUint64(0x470001),latinTextFont_);
+    textResources_.publish(foundation::ObjectId::fromUint64(0x470002),cjkTextFont_);
+  } else {
+    textResources_.markMissing(foundation::ObjectId::fromUint64(0x470001));
+    textResources_.markMissing(foundation::ObjectId::fromUint64(0x470002));
+  }
+  const auto refreshed=sceneCoordinator_->refreshTextResources(); canonicalPresentationDirty_=true;
+  return static_cast<bool>(refreshed);
+}
+text::LayoutMetrics InkPlaygroundHost::textLayoutMetrics() const noexcept {
+  return textLayoutService_ ? textLayoutService_->metrics() : text::LayoutMetrics{};
+}
 
 bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
   strokeStartNs_ = 0;
@@ -247,6 +449,13 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       !appBinding_->registerInputSource({source, "platform"})) return false;
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  if (selectionMode_) {
+    for (const auto& sample : routed.normalized.samples) {
+      if (!sample.predicted) (void)selectionPointer(sample.key.pointer, sample.phase, sample.x, sample.y);
+    }
+    if (routed.terminalCancel) cancelSelectionTransform();
+    return routed.accepted || routed.terminalCancel;
+  }
   bool previewDirty = false;
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routed.normalized.samples) {
@@ -381,6 +590,7 @@ bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
 }
 
 void InkPlaygroundHost::cancelAllPointers() noexcept {
+  cancelSelectionTransform();
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);
     preview_->cancelKeyed(strokeId);
@@ -440,6 +650,13 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
   brushSessionPackages_[pointerId] = package;
   brushSessionSeeds_[pointerId] = seed;
   brushPreviews_.erase(pointerId);
+  // Partial eraser uses a white presentation-only override. A subsequent
+  // brush session must start with the normal transient tint; otherwise the
+  // preview surface is submitted but visually indistinguishable from the
+  // canvas background after a zoomed erase.
+  if (previewController_ != nullptr) {
+    previewController_->setPresentationStyle(render::PreviewStyleOverride{});
+  }
   if (arcPreviewSink_ != nullptr) {
     ink::BrushPreviewDelta initial;
     const auto disposition = arcPreviewSink_->begin(
@@ -462,6 +679,344 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
   if (!brushSessions_.empty()) return false;
   toolMode_ = mode;
   return true;
+}
+
+bool InkPlaygroundHost::setSelectionMode(bool enabled) noexcept {
+  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) {
+    return false;
+  }
+  selectionMode_ = enabled;
+  if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
+  if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+      foundation::WorldPoint{content.first, content.second}, 4.0F,
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+  if (!tested || tested.value().frontToBack.empty()) {
+    selection_.cancel();
+    selectionView_.reset();
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+    return true;
+  }
+  const bool selected = selection_.click(tested.value().frontToBack.front());
+  if (selected) {
+    snapGuides_.clear();
+    canonicalPresentationDirty_ = true;
+  }
+  return selected && renderSelectionOverlay();
+}
+
+bool InkPlaygroundHost::toggleSelectionAtViewPoint(float x, float y) noexcept {
+  if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+      foundation::WorldPoint{content.first, content.second}, 4.0F,
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+  if (!tested || tested.value().frontToBack.empty()) return false;
+  if (!selection_.toggle(tested.value().frontToBack.front())) return false;
+  snapGuides_.clear();
+  canonicalPresentationDirty_ = true;
+  if (selection_.primary().isZero()) {
+    selectionView_.reset();
+    return true;
+  }
+  return renderSelectionOverlay();
+}
+
+bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
+  if (!selectionMode_ || selection_.primary().isZero() ||
+      sceneCoordinator_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
+    selectionView_.reset();
+    return false;
+  }
+  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
+  if (record == nullptr || !record->worldBounds.isFiniteAndOrdered()) {
+    selectionView_.reset();
+    return false;
+  }
+  const auto viewport = viewportController_->state();
+  const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+      ? viewport.scale : 1.0F;
+  const auto center = foundation::WorldPoint{
+      (static_cast<float>(surface_.width) * 0.5F - viewport.translationX) / zoom,
+      (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
+  const auto frame = render::FrameState{
+      render::ViewId{1},
+      render::CameraState{center, zoom, 0.0F,
+                          render::CameraGeneration{cameraGeneration()}},
+      foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
+      render::SurfaceMetrics{static_cast<float>(surface_.width),
+                             static_cast<float>(surface_.height), surface_.width,
+                             surface_.height, 1.0F, 1.0F},
+      semanticGeneration_.current(), runtimeSceneHost_->revision(),
+      render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation},
+      render::FrameId{canonicalFrameCount_ + 1U},
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}};
+  selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+  const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
+      record->objectId, record->visualBounds,
+      transformOverrides_.find(record->objectId) == nullptr ? record->transform
+          : *transformOverrides_.find(record->objectId),
+      true, false, transformDrag_.active(),
+      render::HandleCapabilities{true, true, true}, snapGuides_});
+  if (updated) ++selectionOverlayUpdates_;
+  return updated;
+}
+
+bool InkPlaygroundHost::seedQualificationFixture(std::size_t objectCount) noexcept {
+  if (objectCount == 0U || !brushSessions_.empty() || !eraserTraces_.empty() ||
+      !keyedStrokeIds_.empty() || !historySceneReady()) return false;
+  const auto ordinal = localOperationOrdinal();
+  if (ordinal == 0U) return false;
+  semantic::InsertObjectsOp payload;
+  payload.objects.reserve(objectCount);
+  for (std::size_t index = 0; index < objectCount; ++index) {
+    semantic::ObjectRecord object;
+    object.id = foundation::ObjectId::fromUint64(0x400000ULL + index + 1U);
+    object.kind = semantic::ObjectKind::kShape;
+    object.kind_version = 1U;
+    object.placement.order_key = semantic::OrderKey{
+        {static_cast<std::uint8_t>(1U + (index / (254U * 254U))),
+         static_cast<std::uint8_t>(1U + ((index / 254U) % 254U)),
+         static_cast<std::uint8_t>(1U + (index % 254U))}};
+    object.transform.tx = static_cast<double>((index % 8U) * 32U);
+    object.transform.ty = static_cast<double>((index / 8U) * 32U);
+    object.content = semantic::ShapeContent{1U, 24.0, 24.0};
+    payload.objects.push_back(std::move(object));
+  }
+  semantic::Operation operation{
+      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),
+      documentId_, 1U, 1U, std::move(payload)};
+  const auto applied = operationEngine_.apply(
+      operation, semantic::ApplySource::kLocalCommand, semanticObjects_,
+      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied ||
+      !applied.commit_record.has_value()) return false;
+  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+  const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+      applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+  if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+  const auto queryStart = std::chrono::steady_clock::now();
+  const auto query = runtimeSceneHost_->query(canvas::SceneQuery{
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}});
+  const auto queryEnd = std::chrono::steady_clock::now();
+  if (!query) return false;
+  ++submittedOperationCount_;
+  qualificationObservation_.sceneGeneration = runtimeSceneHost_->revision().value();
+  qualificationObservation_.cameraGeneration = cameraGeneration();
+  qualificationObservation_.candidatesExamined = query.value().diagnostics.candidatesExamined;
+  const auto& invalidation = runtimeSceneHost_->invalidationOutput();
+  qualificationObservation_.invalidationRectCount = invalidation.rects.size();
+  qualificationObservation_.fullSceneInvalidation = invalidation.fullScene;
+  qualificationObservation_.queryMs = std::chrono::duration<double, std::milli>(
+      queryEnd - queryStart).count();
+  qualificationObservation_.canonicalOperationCount = submittedOperationCount_;
+  const auto renderStart = std::chrono::steady_clock::now();
+  const bool rendered = presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  const auto renderEnd = std::chrono::steady_clock::now();
+  if (!rendered) return false;
+  qualificationObservation_.renderMs = std::chrono::duration<double, std::milli>(
+      renderEnd - renderStart).count();
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+void InkPlaygroundHost::cancelSelectionTransform() noexcept {
+  transformDrag_.cancel();
+  snapResolver_.reset();
+  snapCandidateCount_ = 0;
+  snapGuides_.clear();
+  if (selectionMode_ && !selection_.primary().isZero()) {
+    (void)renderSelectionOverlay();
+  }
+  editingPointer_ = 0;
+  editingChanged_ = false;
+  canonicalPresentationDirty_ = true;
+}
+
+bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
+                                         float x, float y) noexcept {
+  if (!selectionMode_ || pointer == 0U) return false;
+  if (phase == input::PointerPhase::kCancel) {
+    if (editingPointer_ == pointer) cancelSelectionTransform();
+    return true;
+  }
+  if (!std::isfinite(x) || !std::isfinite(y)) {
+    if (editingPointer_ == pointer) cancelSelectionTransform();
+    return false;
+  }
+  const auto world = viewportController_->viewToContent(x, y);
+  if (phase == input::PointerPhase::kDown) {
+    if (editingPointer_ != 0U) return true;
+    (void)renderSelectionOverlay();
+    editingHandle_ = selectionOverlay() == nullptr ? render::HandleKind::kNone
+        : selectionOverlay()->hitTest({x,y});
+    bool moveSelected = false;
+    if (editingHandle_ == render::HandleKind::kNone && runtimeSceneHost_ != nullptr) {
+      const auto hit = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+          {world.first,world.second},4.0F,{canvas::HitTestKindMask::kAll,false},1U});
+      moveSelected = hit && !hit.value().frontToBack.empty() &&
+          hit.value().frontToBack.front() == selection_.primary();
+    }
+    if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
+      (void)selectAtViewPoint(x,y);
+      editingPointer_ = pointer;
+      return true;
+    }
+    const auto* object = semanticObjects_.find(selection_.primary());
+    if (object == nullptr) return false;
+    const auto bounds = canvas::computeBounds(*object);
+    const auto& t = object->transform;
+    if (!bounds.finite || std::abs(t.a*t.d-t.b*t.c) < 1e-12) return false;
+    const std::array targets{std::pair{object->id,t}};
+    if (!transformDrag_.begin(targets)) return false;
+    editingPointer_ = pointer;
+    editingInitial_ = t;
+    editingLocalBounds_ = bounds.visual;
+    editingDownWorld_ = {world.first,world.second};
+    editingGeneration_ = semanticGeneration_.current();
+    editingChanged_ = false;
+    return true;
+  }
+  if (pointer != editingPointer_) return true;
+  if (transformDrag_.active()) {
+    if (editingGeneration_ != semanticGeneration_.current()) {
+      cancelSelectionTransform(); return false;
+    }
+    const auto& t = editingInitial_;
+    semantic::Transform2D next=t;
+    if (editingHandle_ == render::HandleKind::kNone) {
+      next.tx += world.first-editingDownWorld_.x;
+      next.ty += world.second-editingDownWorld_.y;
+    } else if (editingHandle_ == render::HandleKind::kRotation) {
+      const double cx=(editingLocalBounds_.left+editingLocalBounds_.right)*0.5;
+      const double cy=(editingLocalBounds_.top+editingLocalBounds_.bottom)*0.5;
+      const double wx=t.a*cx+t.c*cy+t.tx, wy=t.b*cx+t.d*cy+t.ty;
+      const double angle=std::atan2(world.second-wy,world.first-wx) -
+          std::atan2(editingDownWorld_.y-wy,editingDownWorld_.x-wx);
+      // Preserve the exact initial transform for a no-op release. Computing
+      // center + (translation - center) can introduce rounding-only edits.
+      if (angle != 0.0) {
+        const double c=std::cos(angle),s=std::sin(angle);
+        next={c*t.a-s*t.b,s*t.a+c*t.b,c*t.c-s*t.d,s*t.c+c*t.d,
+              wx+c*(t.tx-wx)-s*(t.ty-wy),wy+s*(t.tx-wx)+c*(t.ty-wy)};
+      }
+    } else {
+      using H=render::HandleKind;
+      const bool left=editingHandle_==H::kLeft||editingHandle_==H::kTopLeft||editingHandle_==H::kBottomLeft;
+      const bool right=editingHandle_==H::kRight||editingHandle_==H::kTopRight||editingHandle_==H::kBottomRight;
+      const bool top=editingHandle_==H::kTop||editingHandle_==H::kTopLeft||editingHandle_==H::kTopRight;
+      const bool bottom=editingHandle_==H::kBottom||editingHandle_==H::kBottomLeft||editingHandle_==H::kBottomRight;
+      const double ax=left?editingLocalBounds_.right:editingLocalBounds_.left;
+      const double ay=top?editingLocalBounds_.bottom:editingLocalBounds_.top;
+      const double det=t.a*t.d-t.b*t.c;
+      const double dx=world.first-editingDownWorld_.x,dy=world.second-editingDownWorld_.y;
+      const double localDx=(t.d*dx-t.c*dy)/det, localDy=(-t.b*dx+t.a*dy)/det;
+      const double width=editingLocalBounds_.right-editingLocalBounds_.left;
+      const double height=editingLocalBounds_.bottom-editingLocalBounds_.top;
+      const double sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
+      const double sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
+      next={t.a*sx,t.b*sx,t.c*sy,t.d*sy,t.tx+t.a*ax*(1-sx)+t.c*ay*(1-sy),
+                                         t.ty+t.b*ax*(1-sx)+t.d*ay*(1-sy)};
+    }
+    if (sceneCoordinator_ != nullptr) {
+      const auto viewport = viewportController_->state();
+      const auto sourceWorld = transformedBounds(editingLocalBounds_, next);
+      const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+          ? viewport.scale : 1.0F;
+      const float snapWorldRadius = interaction::SnapResolver::kEngageThresholdLogicalPx /
+          std::max(zoom, 1.0e-6F);
+      const canvas::foundation::WorldRect queryBounds{
+          sourceWorld.left - snapWorldRadius,
+          sourceWorld.top - snapWorldRadius,
+          sourceWorld.right + snapWorldRadius,
+          sourceWorld.bottom + snapWorldRadius};
+      std::vector<interaction::SnapTarget> targets;
+      const auto queried = runtimeSceneHost_->query(canvas::SceneQuery{queryBounds});
+      if (queried) {
+        targets.reserve(queried.value().backToFront.size());
+      }
+      if (queried) for (const auto objectId : queried.value().backToFront) {
+        const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
+        if (record == nullptr) continue;
+        if (record->objectId == selection_.primary()) continue;
+        targets.push_back({record->objectId, viewBounds(record->worldBounds, viewport),
+                           false, transformOverrides_.find(record->objectId) != nullptr});
+      }
+      const auto resolved = snapResolver_.resolve(
+          interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);
+      snapCandidateCount_ = resolved.candidatesExamined;
+      snapGuides_.clear();
+      const auto appendGuide = [&](const auto& guide) {
+        if (!guide.has_value()) return;
+        if (guide->axis == interaction::SnapGuideAxis::kVertical) {
+          snapGuides_.push_back({render::SnapGuideAxis::kVertical,
+                                 {guide->position, guide->spanStart},
+                                 {guide->position, guide->spanEnd}});
+        } else {
+          snapGuides_.push_back({render::SnapGuideAxis::kHorizontal,
+                                 {guide->spanStart, guide->position},
+                                 {guide->spanEnd, guide->position}});
+        }
+      };
+      appendGuide(resolved.xGuide);
+      appendGuide(resolved.yGuide);
+      const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
+      if (resolved.x.has_value()) next.tx += resolved.x->correction / scale;
+      if (resolved.y.has_value()) next.ty += resolved.y->correction / scale;
+    }
+    editingChanged_ = !(next==editingInitial_);
+    const std::array values{std::pair{selection_.primary(),next}};
+    if (!transformDrag_.preview(values)) { cancelSelectionTransform(); return false; }
+    // Refresh the transient overlay immediately so a guide appears/disappears
+    // in the same interaction frame as the resolved snap, without waiting for
+    // a canonical operation or a later unrelated repaint.
+    (void)renderSelectionOverlay();
+    canonicalPresentationDirty_ = true;
+    if (phase == input::PointerPhase::kUp) {
+      const bool accepted=!editingChanged_ || transformDrag_.commit();
+      cancelSelectionTransform();
+      return accepted;
+    }
+  }
+  if (phase == input::PointerPhase::kUp) editingPointer_=0;
+  return true;
+}
+
+interaction::SubmitResult InkPlaygroundHost::submit(const semantic::SetTransformsOp& transforms) {
+  if (transforms.items.size()!=1U || !historySceneReady() ||
+      editingGeneration_!=semanticGeneration_.current()) return interaction::SubmitResult::rejected();
+  const auto* before=semanticObjects_.find(transforms.items.front().object_id);
+  if (before==nullptr || before->id!=selection_.primary()) return interaction::SubmitResult::rejected();
+  const auto forwardId=allocateOperationId(), inverseId=allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return interaction::SubmitResult::rejected();
+  const semantic::Operation operation{forwardId,documentId_,1U,1U,transforms};
+  semantic::Operation inverse{inverseId,documentId_,1U,1U,
+      semantic::SetTransformsOp{{{before->id,before->transform}}}};
+  const auto applied=operationEngine_.apply(operation,semantic::ApplySource::kLocalInteraction,
+      semanticObjects_,appliedOperations_,semanticGeneration_,canonicalCommitClock_);
+  if (applied.disposition!=semantic::ApplyDisposition::kApplied) return interaction::SubmitResult::rejected();
+  (void)history_.record(operation,{std::move(inverse)});
+  ++submittedOperationCount_;
+  if (applied.commit_record.has_value()) {
+    const semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());
+    const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+        applied.commit_record->after_generation,view,&applied.commit_record->change_set);
+    (void)sceneCoordinator_->apply(*sceneCompiler_,input);
+  }
+  canonicalPresentationDirty_=true;
+  return interaction::SubmitResult::acceptedResult();
 }
 
 bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
@@ -621,6 +1176,19 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
       // clipper; until that authority exists, fail over to the same mask
       // representation used by marker/chalk.
       if (it->second.empty()) continue;
+      const auto* object = semanticObjects_.find(id);
+      if (object == nullptr) return false;
+      const auto& transform = object->transform;
+      const double determinant = transform.a * transform.d - transform.b * transform.c;
+      if (!std::isfinite(determinant) || determinant == 0.0) return false;
+      const auto localPoint = [&](const semantic::Vec2& point) {
+        const double x = point.x - transform.tx;
+        const double y = point.y - transform.ty;
+        return semantic::Vec2{(transform.d * x - transform.c * y) / determinant,
+                              (transform.a * y - transform.b * x) / determinant};
+      };
+      // EraseMaskGeometry is object-local. The retained trace and preview
+      // are world-space; convert at this operation construction boundary.
       semantic::SweptCircleMask swept;
       for (std::size_t i = 1; i < it->second.size(); ++i) {
         const auto& a = it->second[i - 1U];
@@ -635,8 +1203,63 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
         swept.segments.push_back({{{p.x, p.y}, radius}, {{p.x, p.y}, radius},
                                   {p.x, p.y}, {p.x, p.y}});
       }
+      semantic::EraseMaskGeometry geometry;
+      const double scaleX = std::hypot(transform.a, transform.b);
+      const double scaleY = std::hypot(transform.c, transform.d);
+      const double scale = std::max(scaleX, scaleY);
+      const bool similarity = std::abs(scaleX - scaleY) <= 1e-12 * scale &&
+          std::abs((transform.a / scale) * (transform.c / scale) +
+                   (transform.b / scale) * (transform.d / scale)) <= 1e-12;
+      if (similarity) {
+        for (auto& segment : swept.segments) {
+          segment.p0.position = localPoint(segment.p0.position);
+          segment.p1.position = localPoint(segment.p1.position);
+          segment.control1 = localPoint(segment.control1);
+          segment.control2 = localPoint(segment.control2);
+          segment.p0.radius /= scaleX;
+          segment.p1.radius /= scaleX;
+        }
+        geometry = std::move(swept);
+      } else {
+        // A world circle is an ellipse in a nonuniformly scaled/sheared
+        // object's local space. Use the existing FilledPathMask variant for
+        // the inverse-mapped union of round caps and connecting rectangles.
+        // Never approximate it with a single local radius.
+        semantic::FilledPathMask filled;
+        auto& commands = filled.path.commands;
+        constexpr double kCircleControl = 0.5522847498307936;
+        for (const auto& point : it->second) {
+          const double x = point.x, y = point.y;
+          const double k = radius * kCircleControl;
+          commands.push_back(semantic::MoveTo{localPoint({x + radius, y})});
+          commands.push_back(semantic::CubicTo{localPoint({x + radius, y + k}),
+              localPoint({x + k, y + radius}), localPoint({x, y + radius})});
+          commands.push_back(semantic::CubicTo{localPoint({x - k, y + radius}),
+              localPoint({x - radius, y + k}), localPoint({x - radius, y})});
+          commands.push_back(semantic::CubicTo{localPoint({x - radius, y - k}),
+              localPoint({x - k, y - radius}), localPoint({x, y - radius})});
+          commands.push_back(semantic::CubicTo{localPoint({x + k, y - radius}),
+              localPoint({x + radius, y - k}), localPoint({x + radius, y})});
+          commands.push_back(semantic::ClosePath{});
+        }
+        for (std::size_t i = 1; i < it->second.size(); ++i) {
+          const auto& a = it->second[i - 1U];
+          const auto& b = it->second[i];
+          const double dx = static_cast<double>(b.x) - a.x;
+          const double dy = static_cast<double>(b.y) - a.y;
+          const double length = std::hypot(dx, dy);
+          if (length == 0.0) continue;
+          const double nx = -dy * radius / length, ny = dx * radius / length;
+          commands.push_back(semantic::MoveTo{localPoint({a.x + nx, a.y + ny})});
+          commands.push_back(semantic::LineTo{localPoint({a.x - nx, a.y - ny})});
+          commands.push_back(semantic::LineTo{localPoint({b.x - nx, b.y - ny})});
+          commands.push_back(semantic::LineTo{localPoint({b.x + nx, b.y + ny})});
+          commands.push_back(semantic::ClosePath{});
+        }
+        geometry = std::move(filled);
+      }
       maskPayload.items.push_back({id, {{foundation::ObjectId::fromUint64(
-          operationOrdinal * 1000U + ++replacementOrdinal), swept}}});
+          operationOrdinal * 1000U + ++replacementOrdinal), std::move(geometry)}}});
     }
     operation.payload = std::move(maskPayload);
   }
@@ -942,6 +1565,56 @@ bool InkPlaygroundHost::applyViewportNavigation(
   return true;
 }
 
+bool InkPlaygroundHost::fitViewportToContent(
+    const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
+  if (viewportController_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
+    return false;
+  }
+  std::optional<foundation::WorldRect> target = requestedTarget;
+  if (!target.has_value() && runtimeSceneHost_ != nullptr) {
+    const auto bounds = runtimeSceneHost_->publishedBounds();
+    if (!runtimeSceneHost_->read().records().empty() && bounds.isFiniteAndOrdered()) {
+      target = bounds;
+    }
+  }
+  if (!target.has_value()) return false;
+  const auto fit = interaction::computeViewportFit(
+      target, static_cast<float>(surface_.width), static_cast<float>(surface_.height),
+      0.0F, 1.0F);
+  if (!fit.accepted) return false;
+  const float translationX = static_cast<float>(surface_.width) * 0.5F - fit.zoom * fit.centerX;
+  const float translationY = static_cast<float>(surface_.height) * 0.5F - fit.zoom * fit.centerY;
+  if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
+  const auto viewport = viewportController_->state();
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+                                          viewport.translationY)) {
+    return false;
+  }
+  if (surface_.available && activeSurfaceProvider() != nullptr) {
+    if (platformPresentationDeferred_) {
+      canonicalPresentationDirty_ = true;
+      return true;
+    }
+    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::fitViewportToSelection() noexcept {
+  if (selection_.primary().isZero() || sceneCoordinator_ == nullptr) return false;
+  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
+  if (record == nullptr) return false;
+  return fitViewportToContent(record->worldBounds);
+}
+
+bool InkPlaygroundHost::fitViewportToObject(foundation::ObjectId objectId) noexcept {
+  if (objectId.isZero() || sceneCoordinator_ == nullptr) return false;
+  const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
+  if (record == nullptr) return false;
+  return fitViewportToContent(record->worldBounds);
+}
+
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   const auto committedPoints = preview_->snapshot().confirmed;
@@ -1102,6 +1775,7 @@ bool InkPlaygroundHost::bindSurface(std::uint32_t width,
 
 bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
                                       std::uint32_t height) noexcept {
+  if (editingPointer_ != 0U) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
   std::lock_guard lock(previewStateMutex_);
   if (width == 0U || height == 0U || surface_.generation == 0U ||
@@ -1139,6 +1813,7 @@ bool InkPlaygroundHost::resizeSurface(std::uint32_t width,
 }
 
 bool InkPlaygroundHost::loseSurface() noexcept {
+  if (editingPointer_ != 0U) cancelSelectionTransform();
   std::lock_guard lock(previewStateMutex_);
   if (surface_.generation == 0U) return false;
   if (appBinding_ == nullptr ||
@@ -1155,6 +1830,7 @@ bool InkPlaygroundHost::loseSurface() noexcept {
 }
 
 bool InkPlaygroundHost::rebindSurface() noexcept {
+  if (editingPointer_ != 0U) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
   std::lock_guard lock(previewStateMutex_);
   if (appBinding_ == nullptr ||
@@ -1164,6 +1840,9 @@ bool InkPlaygroundHost::rebindSurface() noexcept {
   }
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
   surface_.available = true;
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(
+      appBinding_->surfaces().lifecycle().current());
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
   if (previewController_ != nullptr && !previewController_->rebind(previewProvider_->generation())) return false;
   ++rebindEvents_;
   return true;
@@ -1208,6 +1887,7 @@ bool InkPlaygroundHost::selectCanonicalSurfaceProfile(
   if (appBinding_ == nullptr || profileId.empty()) return false;
   if (appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
       expectedGeneration) return false;
+  if (editingPointer_ != 0U) cancelSelectionTransform();
   if (appBinding_->selectRenderProfile(profileId, format) !=
       render::SurfaceProviderDisposition::kCommitted) return false;
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
@@ -1221,6 +1901,7 @@ bool InkPlaygroundHost::rebindCanonicalSurface(std::uint64_t expectedGeneration)
   if (appBinding_ == nullptr ||
       appBinding_->surfaces().lifecycle().current().surfaceGeneration.value() !=
           expectedGeneration) return false;
+  if (editingPointer_ != 0U) cancelSelectionTransform();
   if (appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted) return false;
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
   surface_.available = true;
@@ -1332,7 +2013,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
                               (centerX - viewport.translationX) / zoom,
                               (centerY - viewport.translationY) / zoom},
                           zoom, 0.0F,
-                          render::CameraGeneration{1}},
+                              render::CameraGeneration{cameraGeneration()}},
       // ReferenceDrawList's clip is a view-space contract in the current
       // renderer authority. Keep it covering the physical target; the
       // camera above carries the actual pinch transform.
@@ -1345,14 +2026,39 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
-  const auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
-  const auto references = render::DirectReferenceSource::build(
+  // A selected object can be dragged into view from outside the canonical
+  // visibility set. Extend only this view's transient traversal, never Scene.
+  if (transformDrag_.active() &&
+      std::find(visibility.value().backToFront.begin(),visibility.value().backToFront.end(),
+                selection_.primary())==visibility.value().backToFront.end()) {
+    auto& ids=visibility.value().backToFront;
+    ids.push_back(selection_.primary());
+    std::sort(ids.begin(),ids.end(),[&](auto a,auto b) {
+      return sceneCoordinator_->runtimeScene().find(a)->placement.order_key <
+             sceneCoordinator_->runtimeScene().find(b)->placement.order_key;
+    });
+    visibility.value().visibleRecords=ids.size();
+  }
+  auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  // The copy belongs to this frame only. Canonical storage and the shared
+  // RuntimeScene retain their original records throughout a drag.
+  for (auto& entry: references.value().entries) {
+    if (const auto* transform=transformOverrides_.find(entry.record.objectId)) {
+      entry.record.transform=*transform;
+      // Canonical digest/encoding does not describe transient editor pixels.
+      references.value().canonicalBytes.clear();
+      references.value().digest.clear();
+    }
+  }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
-  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value());
+  if (selectionMode_) (void)renderSelectionOverlay();
+  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
+                                                  selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),

@@ -1,6 +1,7 @@
 // Run production Win32 dispatch and Runtime rendering. Synthetic messages are
 // regression tests, not physical mouse/touch qualification.
 #include "../platform/windows/main.cpp"
+#include "ink_playground_history_test_access.hpp"
 #include <cassert>
 #include <chrono>
 #include <iostream>
@@ -186,6 +187,78 @@ void run() {
   assert(s.host->canonicalFrameCount() == pinchFirstStrokeBaseline + 1U);
   assert(s.host->pendingCanonicalHandoffCount() == 0U);
   assert(!s.host->previewActive() && !p->overlayVisible());
+  // A partial erase after a settled zoom must retire its transient session
+  // without leaving the Windows deferred-presentation gate closed for the
+  // next brush stroke. This is the production sequence reported on the
+  // physical host: zoom, erase, canonical tick, then draw again.
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(s.host->eraserBegin(440U));
+  assert(s.host->eraserSample(440U, 96.0, 64.0));
+  assert(s.host->eraserFinish(440U));
+  assert(!s.host->previewActive());
+  s.canonicalFrameReady = false;
+  s.canonicalPending = true;
+  stopPreviewPresentation(s);
+  tick(s);
+  assert(!s.canonicalPending);
+  assert(!s.host->previewActive() && !p->overlayVisible());
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->selectBrushProfile("vector-solid-v1", 1U));
+  const auto afterErasePreviewBaseline = s.host->previewPresentCount();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                           MAKELPARAM(30, 90)));
+  assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                           MAKELPARAM(110, 150)));
+  waitForPreview(s, afterErasePreviewBaseline + 1U);
+  assert(s.host->previewActive());
+  assert(s.host->previewPresentCount() > afterErasePreviewBaseline);
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                           MAKELPARAM(130, 170)));
+  tick(s);
+  assert(!s.host->previewActive() && !p->overlayVisible());
+  // Repeat with an object transform so the erase mask is built in local
+  // coordinates while the Windows preview lifecycle remains deferred.
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->beginBrushSession(441U, 1U));
+  assert(s.host->appendBrushSample(441U, 32.0, 64.0, 0.5, 1U));
+  assert(s.host->appendBrushSample(441U, 160.0, 64.0, 0.5, 2U));
+  assert(s.host->finishBrushSession(441U));
+  assert(s.host->presentCanonicalFrame(s.host->canonicalFrameCount() + 1U, 0.0));
+  assert(s.host->setSelectionMode(true));
+  assert(s.host->selectAtViewPoint(80.0F, 64.0F));
+  const auto transformHandle = s.host->selectionOverlay()->handle(
+      canvas::render::HandleKind::kRight).center;
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kDown,
+                                  transformHandle.x, transformHandle.y));
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kMove,
+                                  transformHandle.x + 40.0F, transformHandle.y));
+  assert(s.host->selectionPointer(443U, canvas::input::PointerPhase::kUp,
+                                  transformHandle.x + 40.0F, transformHandle.y));
+  assert(s.host->setSelectionMode(false));
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser));
+  assert(s.host->eraserBegin(442U));
+  assert(s.host->eraserSample(442U, 120.0, 96.0));
+  assert(s.host->eraserFinish(442U));
+  assert(!s.host->previewActive());
+  s.canonicalFrameReady = false;
+  s.canonicalPending = true;
+  stopPreviewPresentation(s);
+  tick(s);
+  assert(!s.canonicalPending);
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+  assert(s.host->selectBrushProfile("vector-solid-v1", 1U));
+  const auto afterTransformedErasePreviewBaseline = s.host->previewPresentCount();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                           MAKELPARAM(34, 94)));
+  assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                           MAKELPARAM(104, 154)));
+  waitForPreview(s, afterTransformedErasePreviewBaseline + 1U);
+  assert(s.host->previewActive());
+  assert(s.host->previewPresentCount() > afterTransformedErasePreviewBaseline);
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                           MAKELPARAM(130, 180)));
+  tick(s);
+  assert(!s.host->previewActive() && !p->overlayVisible());
   const auto baseAcquire = p->acquisitions;
   assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(10, 80)));
   for (int i=0;i<100;++i)
@@ -247,9 +320,93 @@ void run() {
     assert(s.host->pendingCanonicalHandoffCount() == 0U);
     assert(!p->overlayVisible());
   }
-  assert(s.host->semanticObjectCount() == 8U);
+  assert(s.host->semanticObjectCount() == 11U);
   stopPreviewRenderPump(s);
   DestroyWindow(s.window);
 }
+void selectionDispatch() {
+  State s;
+  s.host = std::make_unique<InkPlaygroundHost>();
+  assert(s.host->bindSurface(256, 256));
+  s.window = CreateWindowExW(0, L"AxiomPreviewDispatchTest", L"transform dispatch",
+      WS_POPUP, 0, 0, 256, 312, nullptr, nullptr, GetModuleHandleW(nullptr), &s);
+  assert(s.window);
+  s.runtimeFacade = std::make_unique<WindowsRuntimeFacade>(s);
+  assert(s.host->beginBrushSession(900U));
+  assert(s.host->appendBrushSample(900U, 32, 64, 0.5, 1U));
+  assert(s.host->appendBrushSample(900U, 160, 64, 0.5, 2U));
+  assert(s.host->finishBrushSession(900U));
+  assert(s.runtimeFacade->setSelectionMode(true, 1U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(s.host->selectAtViewPoint(80, 64));
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  const auto original = Access::objects(*s.host);
+  const auto operations = s.host->submittedOperationCount();
+  const auto handle = s.host->selectionOverlay()->handle(canvas::render::HandleKind::kRight).center;
+  const auto point = [&](int dx) { return MAKELPARAM(static_cast<short>(handle.x + dx),
+      static_cast<short>(handle.y + State::kToolbarHeight)); };
+  const auto beginDrag = [&] {
+    assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON, point(0)));
+    assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON, point(40)));
+    assert(s.host->selectionTransformActive());
+    assert(s.host->transientTransformCount() == 1U);
+    assert(Access::objects(*s.host) == original);
+  };
+  beginDrag();
+  assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0, point(40)));
+  assert(s.host->submittedOperationCount() == operations + 1U);
+  assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+  assert(s.host->undo());
+  const auto afterUndoOperations = s.host->submittedOperationCount();
+  for (const auto message : {WM_KEYDOWN, WM_KILLFOCUS, WM_CAPTURECHANGED, WM_SIZE}) {
+    beginDrag();
+    std::cout << "cancel message=" << message << std::endl;
+    WindowProc(s.window, message, message == WM_KEYDOWN ? VK_ESCAPE : 0U, 0);
+    assert(!s.host->selectionTransformActive());
+    assert(s.host->transientTransformCount() == 0U);
+    assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+    assert(GetCapture() != s.window);
+    assert(Access::objects(*s.host) == original);
+  }
+  beginDrag();
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 77U, reinterpret_cast<LPARAM>(s.window));
+  assert(s.host->selectionTransformActive());
+  WindowProc(s.window, WM_CAPTURECHANGED, 0U, 0);
+  assert(!s.host->selectionTransformActive());
+  beginDrag();
+  assert(s.runtimeFacade->setSelectionMode(false, 2U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(!s.host->selectionTransformActive());
+  assert(GetCapture() != s.window);
+  assert(s.host->submittedOperationCount() == afterUndoOperations);
+  assert(s.runtimeFacade->submitSelectionPointer({77U,
+      canvas::runtime::SelectionPointerPhase::kDown, 80, 64, 3U, 999U}).state ==
+         canvas::runtime::ProductControlState::kRejected);
+  assert(s.runtimeFacade->setSelectionMode(true, 4U, 1U).state ==
+         canvas::runtime::ProductControlState::kApplied);
+  assert(s.host->selectAtViewPoint(80, 64));
+  using P = canvas::runtime::SelectionPointerPhase;
+  // The production native touch/pen and legacy touch adapters use this same
+  // sequence owner. IDs are independent of the mouse and cannot steal a drag.
+  assert(submitSelectionSample(s, 71U, P::kDown, handle.x, handle.y));
+  assert(submitSelectionSample(s, 72U, P::kDown, handle.x, handle.y));
+  assert(submitSelectionSample(s, 71U, P::kMove, handle.x + 30, handle.y));
+  assert(submitSelectionSample(s, 72U, P::kUp, handle.x + 100, handle.y));
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 72U, 0);
+  assert(s.host->selectionTransformActive());
+  WindowProc(s.window, WM_POINTERCAPTURECHANGED, 71U, 0);
+  assert(!s.host->selectionTransformActive());
+  assert(s.selectionPointers.empty() && s.canvasInputSequences.empty());
+  assert(Access::objects(*s.host) == original);
+  const canvas::debug_ui::DebugInputSequence debugSequence{91U, 1000U};
+  assert(s.inputCapture.begin(debugSequence, canvas::debug_ui::DebugInputOwner::kDebug) ==
+         canvas::debug_ui::DebugInputOwner::kDebug);
+  s.canvasInputSequences[91U] = debugSequence;
+  assert(!submitSelectionSample(s, 91U, P::kDown, handle.x, handle.y));
+  assert(!s.host->selectionTransformActive());
+  clearCanvasInput(s);
+  std::cout << "PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale\n";
+  DestroyWindow(s.window);
 }
-int main() { run(); }
+}
+int main() { run(); selectionDispatch(); }

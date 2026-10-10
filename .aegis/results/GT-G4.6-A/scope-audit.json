@@ -1,0 +1,22 @@
+{
+  "task_id": "GT-G4.6-A",
+  "authorized_scope": ["runtime/render/**", "runtime/interaction/**", "runtime/foundation/**", "apps/ink_playground/**", ".aegis/packages/GT-G4.6-A/**", ".aegis/results/GT-G4.6-A/**"],
+  "included_source_files": [
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+    "runtime/interaction/include/canvas/interaction/transform_handle_drag.hpp",
+    "runtime/interaction/src/transform_handle_drag.cpp",
+    "runtime/interaction/tests/transform_handle_drag_test.cpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/render_view_runtime.hpp",
+    "runtime/render/include/canvas/render/editing_overlay.hpp",
+    "runtime/render/src/editing_overlay.cpp",
+    "runtime/render/tests/editing_overlay_test.cpp"
+  ],
+  "excluded_unrelated_worktree_entries": ["build-windows-clang/", "build-windows-dab-qualification/", "build-windows-real/", "evidence/", "imgui.ini", ".aegis/results/GT-G4.5-FINAL-VECTOR-CLOSURE/"],
+  "forbidden_semantics_checked": ["canonical ObjectKind/Operation", "Selection/Transform/Undo/Redo/InputRouter/BrushEngine/Arc redesign", "G5 cache/tile/scheduler"],
+  "status": "IN_SCOPE"
+}

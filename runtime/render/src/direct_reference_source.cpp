@@ -1,4 +1,5 @@
 #include "canvas/render/direct_reference_source.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <bit>
 #include <cmath>
@@ -292,6 +293,8 @@ void encodeRecord(CanonicalWriter& out, const RuntimeSceneRecord& record) {
     out.string(record.referenceGeometryDigest);
     out.u64(record.directDependencies.size());
     for (const auto& dependency : record.directDependencies) out.id(dependency);
+    if(record.kind==semantic::ObjectKind::kRichText && record.textLayout)
+        out.string(record.textLayout->digest);
 }
 
 void encodeFrame(CanonicalWriter& out, const FrameState& frame) {
@@ -382,7 +385,7 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
         break;
     case semantic::ObjectKind::kRichText:
         if (const auto* value = std::get_if<semantic::RichTextContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(RichTextReferenceCommand{*value});
+            return foundation::Result<ReferenceCommand>::success(RichTextReferenceCommand{*value,record.textLayout});
         break;
     case semantic::ObjectKind::kVectorStroke:
         if (record.kindVersion == 2U) {

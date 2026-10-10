@@ -1,0 +1,155 @@
+name: GT-G4.7 Qualification
+
+on:
+  push:
+    branches: [codex/g4-7-development]
+    paths:
+      - "CMakeLists.txt"
+      - "runtime/**"
+      - "apps/ink_playground/**"
+      - "verification/**"
+      - ".aegis/packages/GT-G4.7/**"
+      - ".aegis/results/GT-G4.7/**"
+      - "r1-full-skia-sdk.lock.json"
+      - "semantic-sdk.lock.json"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic/**"
+      - "tools/skia/**"
+      - ".github/workflows/g4-7-qualification.yml"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "CMakeLists.txt"
+      - "runtime/**"
+      - "apps/ink_playground/**"
+      - "verification/**"
+      - ".aegis/packages/GT-G4.7/**"
+      - ".aegis/results/GT-G4.7/**"
+      - "r1-full-skia-sdk.lock.json"
+      - "semantic-sdk.lock.json"
+      - "tools/setup_build_environment.py"
+      - "tools/semantic/**"
+      - "tools/skia/**"
+      - ".github/workflows/g4-7-qualification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: g4.7/windows-qualification
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: ilammy/msvc-dev-cmd@v1
+        with: { arch: x64 }
+      - name: Resolve locked Semantic SDK
+        shell: pwsh
+        run: python tools/setup_build_environment.py --core --semantic --target windows-x64-msvc-static --facts-output out/g47-windows-environment.json --github-env "$env:GITHUB_ENV" --status
+      - name: Fetch locked Skia SDK
+        shell: pwsh
+        run: python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release
+      - name: Configure and build G4.7 targets
+        shell: pwsh
+        run: |
+          $sdk=(Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release).Path
+          cmake -S . -B out/g47-windows -G Ninja `
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCANVAS_BUILD_POC01=OFF `
+            -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_ARC=ON `
+            -DCANVAS_BUILD_INK_PLAYGROUND=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON `
+            -DAXIOM_BUILD_DEBUG_UI=ON -DAXIOM_DEBUG_UI_PROFILE=full `
+            -DCMAKE_CXX_FLAGS="/wd4100 /wd4702" `
+            -DCANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH=ON `
+            -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_RENDER_BUILD_TESTS=ON `
+            -DCANVAS_SKIA_SDK_ROOT="$sdk" -DAXIOM_PROTOC="$env:AXIOM_PROTOC" `
+            -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DBUILD_TESTING=ON
+          cmake --build out/g47-windows --config RelWithDebInfo --target axiom_text_layout_tests axiom_image_resource_tests axiom_text_pipeline_tests axiom_g47_text_host_tests axiom_g47_qualification_runner axiom_ink_playground_windows --parallel 2
+          ctest --test-dir out/g47-windows -C RelWithDebInfo -R "^(G47TextLayout|G47ImageResource|G47TextPipeline|G47TextHost|G47QualificationReplay)$" --output-on-failure
+          out/g47-windows/apps/ink_playground/axiom_g47_qualification_runner.exe out/g47-windows/qualification-100k 50000
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-7-windows-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g47-windows-environment.json
+            out/g47-windows/Testing/Temporary/LastTest.log
+            out/g47-windows/qualification-100k/
+            out/g47-windows/apps/ink_playground/axiom_ink_playground_windows.exe
+            out/g47-windows/apps/ink_playground/icudtl.dat
+          if-no-files-found: error
+
+  web:
+    name: g4.7/web-qualification
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install CMake and Ninja
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
+      - name: Resolve locked Web Semantic SDK
+        run: python tools/setup_build_environment.py --core --semantic --target web-wasm32 --facts-output out/g47-web-environment.json --status
+      - name: Install locked Emscripten and Skia
+        run: |
+          python tools/bootstrap_deps.py --web
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target web-wasm-webgl2 --variant release
+      - name: Build Web qualification target
+        shell: bash
+        run: |
+          source .deps/emsdk/emsdk_env.sh
+          python verification/tools/g47_configure.py web --facts out/g47-web-environment.json --build out/g47-web --skia .deps/skia-sdk/web-wasm-webgl2/release
+          cmake --build out/g47-web --target axiom_ink_playground_web --parallel 2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-7-web-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g47-web-environment.json
+            out/g47-web/apps/ink_playground/axiom_ink_playground_web.js
+            out/g47-web/apps/ink_playground/axiom_ink_playground_web.wasm
+            apps/ink_playground/platform/web/index.html
+          if-no-files-found: error
+
+  android:
+    name: g4.7/android-qualification
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.11.1" }
+      - name: Install CMake, Ninja and Android NDK
+        run: |
+          python -m pip install cmake==3.30.5 ninja==1.11.1.4
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" "cmake;3.30.5" || [[ "${PIPESTATUS[1]}" -eq 0 ]]
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - name: Resolve locked Android SDKs
+        run: |
+          python tools/setup_build_environment.py --core --semantic --target android-arm64-v8a --facts-output out/g47-android-environment.json --status
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target android-arm64-v8a-gles3 --variant release
+      - name: Build Android qualification target
+        run: |
+          python verification/tools/g47_configure.py android --facts out/g47-android-environment.json --build out/g47-android --skia .deps/skia-sdk/android-arm64-v8a-gles3/release --ndk "$ANDROID_NDK_ROOT"
+          cmake --build out/g47-android --target axiom_ink_playground_android --parallel 2
+          python verification/tools/g47_configure.py android --facts out/g47-android-environment.json --build out/g47-android --skia .deps/skia-sdk/android-arm64-v8a-gles3/release --ndk "$ANDROID_NDK_ROOT" --gradle-arguments-output out/g47-android-gradle-arguments.json
+          gradle -p apps/ink_playground/platform/android assembleDebug -PaxiomCmakeArguments="$PWD/out/g47-android-gradle-arguments.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g4-7-android-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            out/g47-android-environment.json
+            out/g47-android/apps/ink_playground/libaxiom_ink_playground_android.so
+            apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

@@ -1,0 +1,87 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-E",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "apps/ink_playground/common/**",
+      "apps/ink_playground/platform/windows/main.cpp",
+      "apps/ink_playground/tests/**",
+      "apps/ink_playground/CMakeLists.txt",
+      "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "runtime/render/src/skia_headless_backend.cpp",
+      "runtime/render/tests/skia_headless_backend_test.cpp",
+      "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+      ".aegis/packages/GT-G4.6-E/**",
+      ".aegis/results/GT-G4.6-E/**"
+    ],
+    "required_changes": [
+      "Wire existing selection handles to transform begin/preview/release/cancel; corner and side scale, selected-body move and rotation handle.",
+      "Read TransientSceneOverride for render-only transform projection without writing shared RuntimeScene.",
+      "Use local visual bounds for EditingOverlay to avoid double-transforming world AABB.",
+      "Commit through existing OperationEngine and record inverse SetTransforms in EditorHistory; reject invalid/stale input before mutation.",
+      "Add typed selection-pointer RuntimeFacade entry with safe unsupported default; use it for Windows mouse/touch/pen selection paths.",
+      "Cancel on Escape, focus/capture loss, mode switch and surface lifecycle; keep Canvas drawing branch unchanged.",
+      "Produce real regression evidence and materialize exact revision."
+    ],
+    "forbidden_changes": [
+      "No new ObjectKind/Operation/PropertyBag/schema or transform/history redesign.",
+      "No replacement of SelectionSession/TransformSession/InputRouter/BrushEngine/Arc.",
+      "No drawing-mode touch/AutoIntent redesign, DAB/vector morphology changes, surface-provider redesign, new debug UI architecture, G5 optimization.",
+      "No source rebuilding accepted Semantic/Skia SDKs."
+    ]
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "selection-mode move does not change real rendered pixels",
+    "observation_seam": "PlatformPointerBatch to real host Skia readback"
+  },
+  "tests": {
+    "required": [
+      "new common and Windows transform integration tests",
+      "G46EditingOverlay/G46TransformHandleDrag/G4SelectionSession/G4TransformSession/G4EditorHistory",
+      "affected targets build, focused G4/G45/DebugUI regressions, git diff --check"
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "existing applicable PR required checks bound to exact result/evidence head"
+    ],
+    "optional": [
+      "hardware interaction smoke"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "preflight.json",
+      "build.log",
+      "ctest.log",
+      "input-and-transform.log",
+      "scope-audit.json",
+      "result.json"
+    ],
+    "corroborative": [
+      "screenshots/video"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "All frozen automated obligations pass and evidence is reviewer accessible on exact remote commit/PR.",
+      "Return READY_FOR_CONTROL_REVIEW; no G4.6/P34 Gate PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "AUTHORITY_CONFLICT",
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

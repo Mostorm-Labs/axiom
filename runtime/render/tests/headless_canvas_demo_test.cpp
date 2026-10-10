@@ -35,7 +35,33 @@ std::uint64_t fnv(const Bytes& value) {
 
 std::string text(const fs::path& path) {
     const auto value = bytes(path);
-    return {value.begin(), value.end()};
+    std::string result;
+    result.reserve(value.size());
+    for (const auto byte : value) {
+        if (byte != '\r') result.push_back(static_cast<char>(byte));
+    }
+    return result;
+}
+
+std::string shellQuote(const std::string& value) {
+#if defined(_WIN32)
+    if (value.find_first_of(" \t&()[]{}^=;!'+,") == std::string::npos) return value;
+    std::string quoted = "\"";
+    for (const char character : value) {
+        if (character == '\"') quoted += "\\\"";
+        else quoted.push_back(character);
+    }
+    quoted += "\"";
+    return quoted;
+#else
+    std::string quoted = "'";
+    for (const char character : value) {
+        if (character == '\'') quoted += "'\\''";
+        else quoted.push_back(character);
+    }
+    quoted += "'";
+    return quoted;
+#endif
 }
 
 std::string sha256(const fs::path& path) {
@@ -132,7 +158,15 @@ std::array<std::uint8_t, 4> pixel(const Bytes& value, std::size_t x, std::size_t
 void expectFailure(const std::string& binary, const std::string& arguments, const fs::path& output) {
     std::error_code error;
     fs::remove_all(output, error);
-    assert(std::system((binary + arguments).c_str()) != 0);
+    std::string command = shellQuote(binary) + arguments;
+#if defined(_WIN32)
+    for (auto& character : command) {
+        if (character == '\'') character = '\"';
+    }
+#endif
+    const int status = std::system(command.c_str());
+    if (status == 0) std::fprintf(stderr, "unexpected success: %s\\n", command.c_str());
+    assert(status != 0);
     assert(!fs::exists(output));
 }
 
@@ -199,16 +233,19 @@ int main() {
     const fs::path first = scratch / "first";
     const fs::path second = scratch / "second";
 
-    assert(std::system((binary + " --fixture '" + fixture_arg + "' --output-dir '" + first.string() + "'").c_str()) == 0);
-    assert(std::system((binary + " --fixture '" + fixture_arg + "' --output-dir '" + second.string() + "'").c_str()) == 0);
+    const auto first_command = shellQuote(binary) + " --fixture " + shellQuote(fixture_arg) +
+                               " --output-dir " + shellQuote(first.string());
+    assert(std::system(first_command.c_str()) == 0);
+    assert(std::system((shellQuote(binary) + " --fixture " + shellQuote(fixture_arg) +
+                        " --output-dir " + shellQuote(second.string())).c_str()) == 0);
     for (const char* name : {"render.rgba", "render-digest.txt", "render-evidence.json"}) {
         assert(bytes(first / name) == bytes(second / name));
     }
 
     const auto raster = bytes(first / "render.rgba");
     assert(raster.size() == 256U * 256U * 4U);
-    assert(sha256(first / "render.rgba") == "81d2314034d0fcb0152daa33f5706ac8d519c1affba9c646c2b99145bfbdf042");
-    assert(text(first / "render-digest.txt") == "fnv1a64:7b8eb8c70c65afe5\n");
+    assert(sha256(first / "render.rgba") == "fff3316ca7bb6314d39df56a731b770ff8d4fd6b03355171c56c8e3a03f6bc82");
+    assert(text(first / "render-digest.txt") == "fnv1a64:b7010d5cc67f6de5\n");
 
     const auto expected_text = text(expected);
     const auto evidence_text = text(first / "render-evidence.json");
@@ -227,9 +264,11 @@ int main() {
     }
 
     const fs::path existing = scratch / "existing";
-    assert(std::system((binary + " --fixture '" + fixture_arg + "' --output-dir '" + existing.string() + "'").c_str()) == 0);
+    assert(std::system((shellQuote(binary) + " --fixture " + shellQuote(fixture_arg) +
+                        " --output-dir " + shellQuote(existing.string())).c_str()) == 0);
     const auto existing_before = bytes(existing / "render.rgba");
-    assert(std::system((binary + " --fixture '" + fixture_arg + "' --output-dir '" + existing.string() + "'").c_str()) != 0);
+    assert(std::system((shellQuote(binary) + " --fixture " + shellQuote(fixture_arg) +
+                        " --output-dir " + shellQuote(existing.string())).c_str()) != 0);
     assert(bytes(existing / "render.rgba") == existing_before);
 
     const fs::path clean_output = scratch / "negative-output";
@@ -251,9 +290,10 @@ int main() {
     const fs::path unsupported = scratch / "unsupported.axsnap";
     auto unsupported_bytes = fixture_bytes;
     bool changed_schema = false;
-    for (std::size_t index = 0; index + 1U < unsupported_bytes.size(); ++index) {
-        if (unsupported_bytes[index] == 0x10U && unsupported_bytes[index + 1U] == 0x01U) {
-            unsupported_bytes[index + 1U] = 0x02U;
+    for (std::size_t index = 0; index + 2U < unsupported_bytes.size(); ++index) {
+        if (unsupported_bytes[index] == 0x10U && unsupported_bytes[index + 1U] == 0x01U &&
+            unsupported_bytes[index + 2U] == 0x1aU) {
+            unsupported_bytes[index + 1U] = 0x03U;
             changed_schema = true;
             break;
         }

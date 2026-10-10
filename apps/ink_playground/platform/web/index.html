@@ -30,6 +30,19 @@
 <div id="surfaceStack"><canvas id="ink" width="1024" height="768"></canvas><canvas id="arcPreview" width="1024" height="768"></canvas><canvas id="debugUi" width="410" height="560" tabindex="0"></canvas></div>
 <pre id="hud">loading</pre>
 <button id="evidence" type="button" disabled>导出 Web 证据</button>
+<div id="textQualification">
+  <label>Text scenario <select id="textScenario">
+    <option>text-many-small</option><option>text-long</option><option>text-style-mixed</option>
+    <option>text-edit-local</option><option>text-font-cold-warm</option><option>text-transform</option>
+    <option>text-camera</option><option>structured-grid-proxy</option>
+  </select></label>
+  <label>Text objects <input id="textCount" type="number" min="1" max="50000" value="128"></label>
+  <button id="loadText">Load scenario</button>
+  <select id="textAction"><option>insert</option><option>delete</option><option>split</option><option>merge</option>
+    <option>inline-style</option><option>paragraph-style</option><option>transform</option><option>missing</option><option>ready</option></select>
+  <button id="applyText">Apply action</button><button id="exportText">Export text evidence</button>
+  <pre id="textMetrics"></pre>
+</div>
 <script type="module">
   const canvas = document.getElementById("ink");
   const previewCanvas = document.getElementById("arcPreview");
@@ -303,6 +316,30 @@
     renderPending = true;
     requestAnimationFrame(render);
   }
+  const textMetrics=()=>JSON.parse(module.UTF8ToString(module._axiom_ink_text_metrics(host)));
+  const refreshTextMetrics=()=>{
+    const value=textMetrics(); const {layout_digests,...hudValue}=value;
+    document.getElementById("textMetrics").textContent=JSON.stringify(hudValue,null,2);
+  };
+  const textCall=(fn,value,...args)=>{
+    const ptr=module.stringToNewUTF8(value);
+    try { return fn(host,ptr,...args); } finally { module._free(ptr); }
+  };
+  document.getElementById("loadText").onclick=()=>{
+    const ok=textCall(module._axiom_ink_text_scenario,document.getElementById("textScenario").value,
+      Number(document.getElementById("textCount").value));
+    if(!ok) document.getElementById("textMetrics").textContent="Scenario unavailable or operation rejected";
+    else { refreshTextMetrics(); requestRender(); }
+  };
+  document.getElementById("applyText").onclick=()=>{
+    if(textCall(module._axiom_ink_text_action,document.getElementById("textAction").value)) {
+      refreshTextMetrics(); requestRender();
+    }
+  };
+  document.getElementById("exportText").onclick=()=>{
+    const evidence={...textMetrics(),dpr:devicePixelRatio,zoom:viewportScale(),capture:canvas.toDataURL("image/png")};
+    download(new Blob([JSON.stringify(evidence,null,2)],{type:"application/json"}),"g47-web-text-evidence.json");
+  };
   const snapshotEvidence = () => ({
     version: ++evidenceVersion,
     width: canvas.width,

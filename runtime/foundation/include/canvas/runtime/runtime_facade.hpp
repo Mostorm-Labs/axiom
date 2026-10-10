@@ -10,6 +10,7 @@ enum class ProductControlAction : std::uint8_t {
   kSetTool,
   kSetBrush,
   kSetEraser,
+  kSetSelectionMode,
   kSetCamera,
   kUndo,
   kRedo,
@@ -24,6 +25,7 @@ enum class ProductControlState : std::uint8_t {
 };
 
 enum class CameraControlAction : std::uint8_t { kPan, kZoomAt, kFitToContent };
+enum class CameraFitTarget : std::uint8_t { kDocument, kSelection, kObject, kWorldRect };
 
 // Product-safe state exposed to Product Shell and the Debug Controller.  The
 // values are an aggregate projection; they never expose RuntimeScene or
@@ -43,6 +45,10 @@ struct RuntimeStateSnapshot final {
   float cameraTranslationY = 0.0F;
   bool canUndo = false;
   bool canRedo = false;
+  bool selectionMode = false;
+  std::uint32_t selectedObjectCount = 0;
+  std::uint64_t selectedPrimaryObject = 0;
+  std::uint64_t snapCandidateCount = 0;
 };
 
 struct RuntimeDiagnosticsSnapshot final {
@@ -57,6 +63,14 @@ struct RuntimeDiagnosticsSnapshot final {
   float cameraTranslationY = 0.0F;
   bool canUndo = false;
   bool canRedo = false;
+  std::uint64_t overlayUpdateCount = 0;
+  std::uint64_t transientTransformCount = 0;
+  std::uint64_t canonicalOperationCount = 0;
+  std::uint64_t cameraGeneration = 0;
+  bool selectionMode = false;
+  std::uint32_t selectedObjectCount = 0;
+  std::uint64_t selectedPrimaryObject = 0;
+  std::uint64_t snapCandidateCount = 0;
 };
 
 class RuntimeDiagnostics : public DiagnosticsProvider {
@@ -83,6 +97,9 @@ struct ProductControlRequest final {
   float anchorX = 0.0F;
   float anchorY = 0.0F;
   float scaleDelta = 1.0F;
+  bool selectionMode = false;
+  CameraFitTarget cameraFitTarget = CameraFitTarget::kDocument;
+  std::uint64_t cameraObjectId = 0;
 };
 
 struct ProductControlReceipt final {
@@ -91,9 +108,23 @@ struct ProductControlReceipt final {
   std::uint64_t runtimeGeneration = 0;
 };
 
+enum class SelectionPointerPhase : std::uint8_t { kDown, kMove, kUp, kCancel };
+struct SelectionPointerRequest final {
+  std::uint64_t pointerId = 0;
+  SelectionPointerPhase phase = SelectionPointerPhase::kMove;
+  float viewX = 0.0F;
+  float viewY = 0.0F;
+  std::uint64_t requestId = 0;
+  std::uint64_t runtimeGeneration = 0;
+};
+
 class RuntimeFacade : public RuntimeDiagnostics {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
+      const SelectionPointerRequest& request) noexcept {
+    return {request.requestId, ProductControlState::kUnsupported, request.runtimeGeneration};
+  }
   [[nodiscard]] virtual RuntimeStateSnapshot readRuntimeState() const noexcept {
     const auto diagnostics = readDiagnostics();
     return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,
@@ -135,6 +166,16 @@ class RuntimeFacade : public RuntimeDiagnostics {
     request.runtimeGeneration = runtimeGeneration;
     request.toolId = eraserId;
     request.eraserId = eraserId;
+    return submitProductControl(request);
+  }
+  [[nodiscard]] virtual ProductControlReceipt setSelectionMode(
+      bool enabled, std::uint64_t requestId,
+      std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetSelectionMode;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.selectionMode = enabled;
     return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt undo(
@@ -179,6 +220,28 @@ class RuntimeFacade : public RuntimeDiagnostics {
       std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
     return setCamera(CameraControlAction::kFitToContent, 0.0F, 0.0F, 0.0F,
                      0.0F, 1.0F, requestId, runtimeGeneration);
+  }
+  [[nodiscard]] ProductControlReceipt fitToSelection(
+      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetCamera;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);
+    request.cameraFitTarget = CameraFitTarget::kSelection;
+    return submitProductControl(request);
+  }
+  [[nodiscard]] ProductControlReceipt fitToObject(
+      std::uint64_t objectId, std::uint64_t requestId,
+      std::uint64_t runtimeGeneration) noexcept {
+    ProductControlRequest request{};
+    request.action = ProductControlAction::kSetCamera;
+    request.requestId = requestId;
+    request.runtimeGeneration = runtimeGeneration;
+    request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);
+    request.cameraFitTarget = CameraFitTarget::kObject;
+    request.cameraObjectId = objectId;
+    return submitProductControl(request);
   }
 };
 

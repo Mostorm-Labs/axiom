@@ -1,0 +1,89 @@
+{
+  "format": "aegis-pre-g5-primitive-inventory-v1",
+  "task_id": "GT-G4.7",
+  "revision": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "status": "INVENTORIED_PENDING_IMPLEMENTATION",
+  "rows": [
+    {
+      "primitive": "Shape/Vector",
+      "owner": "existing production render/reference path",
+      "observed_state": "present",
+      "evidence": [
+        "runtime/render/src/skia_headless_backend.cpp",
+        "runtime/render/src/skia_renderer.cpp"
+      ]
+    },
+    {
+      "primitive": "Ink/Brush",
+      "owner": "runtime/ink + production Skia path",
+      "observed_state": "present",
+      "evidence": [
+        "runtime/ink/src/brush_session.cpp",
+        "runtime/render/src/skia_scene_renderer.cpp"
+      ]
+    },
+    {
+      "primitive": "Laser",
+      "owner": "G4.6 interaction/presentation boundary",
+      "observed_state": "existing temporal brush path observed; physical obligations preserved",
+      "evidence": [
+        "runtime/ink/src/programmable_brush.cpp:115 Laser representation branch",
+        "runtime/ink/tests/programmable_brush_test.cpp:157 laserIsTemporalAndNeverCanonical",
+        ".aegis/packages/GT-G4.7/authority.lock.json upstream_boundary"
+      ]
+    },
+    {
+      "primitive": "Selection/Transform Overlay",
+      "owner": "runtime/render + runtime/interaction",
+      "observed_state": "present",
+      "evidence": [
+        "runtime/render/src/editing_overlay.cpp",
+        "runtime/interaction/src/transform_session.cpp"
+      ]
+    },
+    {
+      "primitive": "Camera/Zoom",
+      "owner": "runtime/interaction viewport",
+      "observed_state": "present",
+      "evidence": [
+        "runtime/interaction/src/viewport_interaction_controller.cpp"
+      ]
+    },
+    {
+      "primitive": "RichText",
+      "owner": "GT-G4.7",
+      "observed_state": "production layout/render gap remains",
+      "evidence": [
+        "runtime/scene/src/bounds_system.cpp",
+        "runtime/render/src/skia_headless_backend.cpp"
+      ],
+      "gap": "heuristic bounds and scalar rectangles"
+    },
+    {
+      "primitive": "Image/Resource decode-materialization",
+      "owner": "G47-I0 frozen package",
+      "observed_state": "IMPLEMENTATION_PENDING",
+      "evidence": [
+        "runtime/render/src/skia_headless_backend.cpp:ImageReferenceCommand draws checkerboard",
+        "runtime/render/src/skia_scene_renderer.cpp only decodes embedded brush textures",
+        "pocs/shared_engine/platform/skia/skia_scene_renderer.cpp historical AssetRegistry decode"
+      ]
+    },
+    {
+      "primitive": "ExternalSurface",
+      "owner": "deferred boundary",
+      "observed_state": "deferred",
+      "evidence": [
+        "authority.lock.json frozen_boundaries"
+      ]
+    },
+    {
+      "primitive": "Table/structured-grid proxy",
+      "owner": "GT-G4.7 workload only",
+      "observed_state": "semantic table deferred; structured-grid proxy required by G47-D and not yet implemented",
+      "evidence": [
+        "readiness snapshot"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-D",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "debug_ui/**",
+      "apps/ink_playground/platform/windows/**",
+      "apps/ink_playground/common/**",
+      "runtime/foundation/**",
+      "runtime/interaction/**",
+      "runtime/render/**",
+      "apps/ink_playground/tests/**",
+      "debug_ui/tests/**",
+      "runtime/**/tests/**",
+      ".aegis/packages/GT-G4.6-D/**",
+      ".aegis/results/GT-G4.6-D/**"
+    ],
+    "required_changes": [
+      "Add a common ImGui tab bar with capability-aware Overview, Canvas/Selection, RuntimeFacade, Input, Surface, Brush and Diagnostics views.",
+      "Add a typed selection-tool product control through the existing RuntimeFacade owner seam.",
+      "Route Windows canvas clicks in selection mode through the existing Scene::hitTest and SelectionSession, with no brush session or canonical operation on selection clicks.",
+      "Expose selected-object and selection-mode diagnostics through immutable snapshots.",
+      "Project the selected object into the existing per-view EditingOverlay and render transient selection chrome without changing canonical semantics.",
+      "Emit focused evidence and preserve all existing brush, Arc, input, transform and history behavior."
+    ],
+    "forbidden_changes": [
+      "Do not add or change canonical ObjectKind, Operation, PropertyBag, selection schema or transform semantics.",
+      "Do not replace SelectionSession, Scene::hitTest, InputRouter, BrushEngine, Arc, EditorHistory or TransformSession.",
+      "Do not submit canonical operations for selection clicks or move selection state into SemanticDocument/RuntimeScene.",
+      "Do not implement G4.7, G5 optimization, new viewport policy or a second RuntimeFacade/DebugControl."
+    ]
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "G46D-T1",
+        "command_or_oracle": "build affected targets and run focused tab/selection/overlay CTests",
+        "expected_result": "all affected targets/tests pass",
+        "blocking_reason": "compile and feature behavior"
+      },
+      {
+        "id": "G46D-T2",
+        "command_or_oracle": "Debug UI tab contract",
+        "expected_result": "all required tabs are capability-aware and submit only through owner seams",
+        "blocking_reason": "Debug UI ownership"
+      },
+      {
+        "id": "G46D-T3",
+        "command_or_oracle": "selection click trace",
+        "expected_result": "hitTest and SelectionSession select the frontmost eligible object; brush/canonical counts remain unchanged",
+        "blocking_reason": "selection/input isolation"
+      },
+      {
+        "id": "G46D-T4",
+        "command_or_oracle": "EditingOverlay ownership and camera-follow test",
+        "expected_result": "selection chrome is transient per-view state and follows view changes",
+        "blocking_reason": "presentation ownership"
+      },
+      {
+        "id": "G46D-T5",
+        "command_or_oracle": "G4/G4.5/G4.6-A focused regressions + git diff --check",
+        "expected_result": "green",
+        "blocking_reason": "upstream preservation"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": ["repository required CI for affected C++/Windows/debug_ui targets"],
+    "optional": ["Windows physical selection and tab interaction smoke"]
+  },
+  "evidence": {
+    "blocking": [
+      "repo-reconciliation.json",
+      "scope-audit.json",
+      "build.log",
+      "ctest.log",
+      "tab-contract.json",
+      "selection-trace.json",
+      "overlay-ownership.json",
+      "result.json"
+    ],
+    "corroborative": ["Windows screenshots or video"]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Debug UI tabs and selection host integration are implemented on an exact reviewer-accessible result revision.",
+      "All frozen automated obligations pass.",
+      "No canonical, brush, Arc, input or transform semantics changed.",
+      "Return READY_FOR_CONTROL_REVIEW; do not claim G4.6 Gate PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

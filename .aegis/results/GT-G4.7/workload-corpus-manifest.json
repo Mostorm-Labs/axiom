@@ -1,0 +1,69 @@
+{
+  "fonts": {
+    "NotoCJK": "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a",
+    "Roboto": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f"
+  },
+  "format": "g47-workload-corpus-v1",
+  "grid_total_objects": 100000,
+  "layout_context": {
+    "revision": 1,
+    "width": 128
+  },
+  "profile": "r1-full-v1/skparagraph/icu-v1",
+  "workloads": [
+    {
+      "canonical_sha256": "8d0c7488d2901b07bb448f3b09499ad67119cbddd98a3285bad707d82b6c341e",
+      "independent_replays": 2,
+      "raster_sha256": "4b882f62156d6d63a8564b4073e7daa376cde277a1ca59ff0554b237eb677ae1",
+      "scenario": "text-many-small"
+    },
+    {
+      "canonical_sha256": "f7099f5be22fa9d49d706ad4807de933dea62ce59ef148a39cf821b287c54f5d",
+      "independent_replays": 2,
+      "raster_sha256": "062705edffac6f7d94c676263a071c71b48415fdfed1e384a57fb947d7b11a47",
+      "scenario": "text-long"
+    },
+    {
+      "canonical_sha256": "40820aaba7e05604ccd650904b01bb6fdb5dcf22c81379c25b5d233fbce198c7",
+      "independent_replays": 2,
+      "raster_sha256": "89b723357863b0a2a12625bb623eff07c40beaed4aae8b9a45ec88df8453820c",
+      "scenario": "text-style-mixed"
+    },
+    {
+      "canonical_sha256": "f5d309b11f5b9602c9633a03ed0ec1a31dca0201d22f468a7c7eea2d9db527a9",
+      "independent_replays": 2,
+      "raster_sha256": "4b882f62156d6d63a8564b4073e7daa376cde277a1ca59ff0554b237eb677ae1",
+      "scenario": "text-edit-local"
+    },
+    {
+      "canonical_sha256": "8d0c7488d2901b07bb448f3b09499ad67119cbddd98a3285bad707d82b6c341e",
+      "independent_replays": 2,
+      "raster_sha256": "4b882f62156d6d63a8564b4073e7daa376cde277a1ca59ff0554b237eb677ae1",
+      "scenario": "text-font-cold-warm"
+    },
+    {
+      "canonical_sha256": "1bbd8a3f4bfa9d9fda304b52379024fbc1d7fb27e44870437d9b765765b406b7",
+      "independent_replays": 2,
+      "raster_sha256": "44d44130589636ea1b2fd21cdd078f4a9f41e746ca49159e11c282f076656594",
+      "scenario": "text-transform"
+    },
+    {
+      "canonical_sha256": "8d0c7488d2901b07bb448f3b09499ad67119cbddd98a3285bad707d82b6c341e",
+      "independent_replays": 2,
+      "raster_sha256": "014602c03ac93a224fcea72f3057a1e60f231e7fbd24cc41ec55642d7f3816da",
+      "scenario": "text-camera"
+    },
+    {
+      "canonical_sha256": "e3909bb38c9f9d3a62c0af16a5830a41f29ea03fac06a3c7a9af635fa13d24a3",
+      "independent_replays": 2,
+      "raster_sha256": "735a6824c4ed6786df3247e581c0579b29d235879c3967ff7aaaa50ca1415038",
+      "scenario": "structured-grid-proxy"
+    }
+  ],
+  "source_evidence": "workload-100k.log",
+  "structured_grid_replay": {
+    "count": 50000,
+    "total_objects": 100000,
+    "status": "PASS"
+  }
+}

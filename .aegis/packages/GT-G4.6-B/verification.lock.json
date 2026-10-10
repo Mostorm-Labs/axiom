@@ -1,0 +1,36 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-B",
+  "obligations": [
+    {
+      "id": "G46B-CAMERA-001",
+      "requirement": "Pan/zoom/fit changes view/camera generation only and does not change SemanticGeneration or rebuild shared RuntimeScene.",
+      "oracle": "camera generation trace + scene generation negative control"
+    },
+    {
+      "id": "G46B-ZOOM-002",
+      "requirement": "zoomAt preserves the world point under the specified view-space anchor within deterministic tolerance.",
+      "oracle": "anchor invariance tests"
+    },
+    {
+      "id": "G46B-FIT-003",
+      "requirement": "Document/Selection/Object/WorldRect fit obeys frozen padding/clamp/empty/degenerate/rotation/DPR policy.",
+      "oracle": "fit policy table tests"
+    },
+    {
+      "id": "G46B-SNAP-004",
+      "requirement": "Snap candidate resolution obeys frozen view-space thresholds, hysteresis and deterministic tie-break; guide/highlight cause zero canonical mutation.",
+      "oracle": "deterministic snap traces"
+    },
+    {
+      "id": "G46B-QUERY-005",
+      "requirement": "Snap uses accepted scene/spatial query seam and does not scan SemanticDocument per pointer move.",
+      "oracle": "query instrumentation / structural test"
+    },
+    {
+      "id": "G46B-PREDECESSOR-006",
+      "requirement": "GT-G4.6-A accepted behavior remains green.",
+      "oracle": "A regression subset"
+    }
+  ]
+}

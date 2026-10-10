@@ -1,6 +1,7 @@
 #include "canvas/scene/bounds_system.hpp"
 
 #include "canvas/scene/reference_geometry.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -36,12 +37,9 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
             geometry.kind = ReferenceGeometry::Kind::kPath;
             return geometryBounds(geometry);
         } else if constexpr (std::is_same_v<T, semantic::RichTextContent>) {
-            double width = 0.0; double height = 0.0;
-            for (const auto& paragraph : content.document.paragraphs) {
-                height += paragraph.style.line_height > 0.0 ? paragraph.style.line_height : 1.0;
-                for (const auto& run : paragraph.runs) width += run.text.size() * (run.style.font_size > 0.0 ? run.style.font_size * 0.5 : 0.5);
-            }
-            return {0.0F, 0.0F, static_cast<float>(width), static_cast<float>(height)};
+            // Without an admitted layout/resource context, text contributes no
+            // fabricated geometry. Application/Scene supplies the derived snapshot.
+            return {};
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
             const auto* data = std::get_if<semantic::VectorStrokeData>(&content.stroke.data);
             if (data == nullptr || data->samples.empty()) return {};
@@ -116,10 +114,11 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
 bool finiteRect(const foundation::WorldRect& r) noexcept { return r.isFiniteAndOrdered(); }
 } // namespace
 
-BoundsResult computeBounds(const semantic::ObjectRecord& record) noexcept {
+BoundsResult computeBounds(const semantic::ObjectRecord& record, const text::TextLayoutSnapshot* textLayout) noexcept {
     BoundsResult result;
     if (record.kind == semantic::ObjectKind::kGroup) { result.geometry = {}; result.visual = {}; result.world = {}; return result; }
-    result.geometry = shapeRect(record);
+    result.geometry = record.kind == semantic::ObjectKind::kRichText && textLayout != nullptr
+        ? textLayout->localBounds : shapeRect(record);
     const float stroke = [&] {
         for (const auto& entry : record.properties.entries) {
             if (entry.field_id == 0x101U) {

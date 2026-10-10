@@ -1,0 +1,43 @@
+{
+  "task_id": "GT-G4.7",
+  "observed_revision": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "repository": "Mostorm-Labs/axiom",
+  "origin": "https://github.com/Mostorm-Labs/axiom.git",
+  "status": "PASS",
+  "package_file_sha256": {
+    "authority.lock.json": "bfbe6cf831a2758bf1ad27cf44273b6767074ba38d9e5cba6003cda01d00feb8",
+    "verification.lock.json": "85e3d1ded3a0502d00bd8d7c5160ed68ce89c1bcf01252b61d761676ab610bba",
+    "execution-contract.json": "dd82c16038d01bfd6899a89e10bf1b7e06afd6b24455c0fc7545ddb0f9d0ad52",
+    "implementation-context.md": "9bf0d0e94602f8ab6254e295dd0c35babb6559fab006ac48dc762c476e7379a7",
+    "evidence-contract.json": "7438c511089d49a87a2182b841de554a18f2efa147c1d929aa97b19f88417f31"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "sha256": "c60524257d7a14514a07f14b5b913d8065929aa3fc50f90f2512f50644808ed6",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "Roadmap",
+      "sha256": "e61b412b5c2d3fd06a825db3ec29ee2d7f48c06105be9260987bc23cb2aae55f",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "ExecutionOrderAmendment",
+      "sha256": "6e2a0f693c4a215e307742d6f1db15ecc8393a1ac5ec3e6d240fa6788b1fc049",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    },
+    {
+      "stage": "TargetedReadiness",
+      "sha256": "d14c4899513c97e95b22ebb39954fecca0ef049bb1c4fed7174bd55e4ccdac14",
+      "encoding": "UTF-8 metadata.text",
+      "status": "PASS"
+    }
+  ],
+  "anchor_ancestry": "PASS",
+  "resume_classification": "EXACT_CURSOR"
+}

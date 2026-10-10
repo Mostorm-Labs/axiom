@@ -103,6 +103,13 @@ public final class InkPlaygroundView extends View {
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!textHud.isEmpty()) {
+            try {
+                org.json.JSONObject state = new org.json.JSONObject(textHud);
+                canvas.drawText(String.format(Locale.US, "Text: %s layouts %d glyphs %d fonts %d", state.optString("scenario"),
+                        state.optLong("object_layouts"), state.optLong("glyphs"), state.optLong("font_materializations")), 24f, 114f, hud);
+            } catch (org.json.JSONException ignored) { }
+        }
         // The production path presents directly through the two GLES-backed
         // SurfaceViews below this transparent input/HUD view. Pixel readback
         // is reserved for the explicit evidence capture path.
@@ -349,12 +356,47 @@ public final class InkPlaygroundView extends View {
         if (family >= 1 && family <= 7) { selectedBrushFamily = family; activeBrushFamily = family; invalidate(); }
     }
     public int selectedBrushFamily() { return selectedBrushFamily; }
+    private String textHud = "";
+    public boolean loadTextScenario(String scenario) {
+        ensureNativeHost(getWidth(), getHeight());
+        boolean ok = handle != 0 && nativeTextScenario(handle, scenario,
+                scenario.equals("structured-grid-proxy") ? 50000 : 128) != 0;
+        refreshTextHud(); return ok;
+    }
+    public boolean applyTextAction(String action) {
+        boolean ok = handle != 0 && nativeTextAction(handle, action) != 0;
+        refreshTextHud(); return ok;
+    }
+    private void refreshTextHud() {
+        textHud = handle == 0 ? "Text unavailable" : nativeTextMetrics(handle);
+        invalidate();
+    }
+    public void exportTextEvidence() {
+        if (handle == 0) return;
+        try {
+            File directory = new File(getContext().getFilesDir(), "g47-text"); directory.mkdirs();
+            write(new File(directory, "metrics.json"), nativeTextMetrics(handle).getBytes(StandardCharsets.UTF_8));
+            byte[] pixels = nativeBrushRgba(handle, getWidth(), getHeight());
+            if (pixels == null) throw new IllegalStateException("Text capture unavailable");
+            Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(pixels));
+            try (FileOutputStream output = new FileOutputStream(new File(directory, "canonical.png"))) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            }
+            bitmap.recycle();
+        } catch (Exception error) {
+            android.widget.Toast.makeText(getContext(), error.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
 
     private static void write(File file, byte[] bytes) throws Exception { try (FileOutputStream out = new FileOutputStream(file)) { out.write(bytes); } }
     private static String sha256(File file) throws Exception { MessageDigest digest = MessageDigest.getInstance("SHA-256"); byte[] data = java.nio.file.Files.readAllBytes(file.toPath()); byte[] hash = digest.digest(data); StringBuilder value = new StringBuilder(); for (byte b : hash) value.append(String.format("%02x", b)); return value.toString(); }
     public void close() { if (handle != 0) { nativeDestroy(handle); handle = 0; } evidenceExecutor.shutdown(); }
 
     private static native long nativeCreate(int width, int height);
+    private static native int nativeTextScenario(long handle, String scenario, int count);
+    private static native int nativeTextAction(long handle, String action);
+    private static native String nativeTextMetrics(long handle);
     private static native void nativeDestroy(long handle);
     private static native int nativePlatformBatch(long handle, int pointerId, long[] sequences, long[] times, float[] xs, float[] ys, float[] pressures, int[] phases, int family);
     private static native int nativeAttachSurface(long handle, Surface surface, boolean preview, int width, int height);

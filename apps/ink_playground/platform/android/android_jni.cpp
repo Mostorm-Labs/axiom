@@ -5,6 +5,26 @@
 #include <vector>
 
 extern "C" {
+int axiom_ink_android_text_scenario(void*,const char*,std::uint32_t);
+int axiom_ink_android_text_action(void*,const char*);
+const char* axiom_ink_android_text_metrics(void*);
+JNIEXPORT jint JNICALL Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeTextScenario(
+    JNIEnv* env,jclass,jlong handle,jstring name,jint count) {
+  if(!name || count<=0) return 0;
+  const auto* chars=env->GetStringUTFChars(name,nullptr); if(!chars) return 0;
+  const auto result=axiom_ink_android_text_scenario(reinterpret_cast<void*>(handle),chars,static_cast<std::uint32_t>(count));
+  env->ReleaseStringUTFChars(name,chars); return result;
+}
+JNIEXPORT jint JNICALL Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeTextAction(
+    JNIEnv* env,jclass,jlong handle,jstring action) {
+  if(!action) return 0; const auto* chars=env->GetStringUTFChars(action,nullptr); if(!chars) return 0;
+  const auto result=axiom_ink_android_text_action(reinterpret_cast<void*>(handle),chars);
+  env->ReleaseStringUTFChars(action,chars); return result;
+}
+JNIEXPORT jstring JNICALL Java_dev_mostorm_axiom_inkplayground_InkPlaygroundView_nativeTextMetrics(
+    JNIEnv* env,jclass,jlong handle) {
+  return env->NewStringUTF(axiom_ink_android_text_metrics(reinterpret_cast<void*>(handle)));
+}
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height);
 void axiom_ink_android_destroy_host(void* handle);
 int axiom_ink_android_platform_batch(void* handle, std::uint64_t pointerId,

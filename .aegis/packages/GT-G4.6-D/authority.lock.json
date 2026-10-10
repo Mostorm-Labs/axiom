@@ -1,0 +1,41 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-D",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_basis": [
+    {
+      "stage": "G4.6-A",
+      "ref": "git:38c3f0b3b7b635abec8e41bc578131b6c47117b3",
+      "title": "G4.6 editing presentation implementation result"
+    },
+    {
+      "stage": "P15-P18",
+      "title": "Debug UI contract, runtime data flow, platform contract, engineering optimization"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:38c3f0b3b7b635abec8e41bc578131b6c47117b3"
+    }
+  ],
+  "entry_control": {
+    "statement": "The user authorized a new bounded package for Debug UI control surface and Windows selection host integration on 2026-10-06.",
+    "repository_anchor": "38c3f0b3b7b635abec8e41bc578131b6c47117b3"
+  },
+  "frozen_statements": [
+    "Debug UI is a consumer of RuntimeFacade, diagnostics snapshots and typed platform controls; it does not own runtime truth.",
+    "Selection is per-view transient interaction state and reuses the existing SelectionSession and Scene::hitTest seams.",
+    "Selection clicks do not create canonical operations and do not enter the brush input path.",
+    "EditingOverlay remains presentation-only; transform preview and commit continue to use the existing TransformHandleDrag/TransformSession path.",
+    "Debug UI is organized into capability-aware tabs without changing Canvas, BrushEngine, Arc, Canonical or Undo/Redo semantics."
+  ],
+  "forbidden_authority_expansion": [
+    "No new canonical ObjectKind, Operation, property or selection schema.",
+    "No replacement of SelectionSession, Scene::hitTest, InputRouter, BrushEngine, Arc or EditorHistory.",
+    "No G4.7 RichText, G5 tile/cache/scheduler or new viewport policy.",
+    "No second RuntimeFacade or DebugControl ownership path."
+  ]
+}

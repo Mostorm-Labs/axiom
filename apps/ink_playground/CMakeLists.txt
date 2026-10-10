@@ -1,5 +1,6 @@
 add_library(axiom_ink_playground_common STATIC
     common/ink_playground_host.cpp
+    common/text_qualification_resources.cpp
     common/brush_commit_adapter.cpp
     common/platform_brush_baseline_observation.cpp
     common/platform_contract.cpp
@@ -12,6 +13,35 @@ target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_input canvas_runtime_ink
     canvas_runtime_interaction canvas_runtime_render)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
+
+# Resolve the published SDK in this directory as well as runtime/render: the
+# imported target there is directory-scoped, and qualification uses its headers.
+if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+  if(CANVAS_SKIA_SDK_ROOT AND NOT TARGET CanvasSkia::Skia)
+    list(APPEND CMAKE_PREFIX_PATH "${CANVAS_SKIA_SDK_ROOT}")
+    find_package(CanvasSkia CONFIG REQUIRED
+      PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  endif()
+endif()
+
+if(TARGET CanvasSkia::Skia)
+  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  set(G47_RESOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/g47")
+  foreach(pair IN ITEMS "latin|${CanvasSkia_FONT_PATH}|kG47LatinFont" "cjk|${CanvasSkia_CJK_FONT_PATH}|kG47CjkFont")
+    string(REPLACE "|" ";" fields "${pair}")
+    list(GET fields 0 name)
+    list(GET fields 1 font)
+    list(GET fields 2 symbol)
+    add_custom_command(OUTPUT "${G47_RESOURCE_DIR}/g47_${name}_font.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/runtime/render/tools/embed_binary.py"
+        "${G47_RESOURCE_DIR}/g47_${name}_font.hpp" "${symbol}" "${font}"
+      DEPENDS "${font}" "${PROJECT_SOURCE_DIR}/runtime/render/tools/embed_binary.py")
+    target_sources(axiom_ink_playground_common PRIVATE "${G47_RESOURCE_DIR}/g47_${name}_font.hpp")
+  endforeach()
+  target_include_directories(axiom_ink_playground_common PRIVATE "${G47_RESOURCE_DIR}")
+  target_compile_definitions(axiom_ink_playground_common PRIVATE AXIOM_G47_BUNDLED_RESOURCES=1)
+endif()
 
 if(MSVC)
   target_compile_options(axiom_ink_playground_common PRIVATE /W4 /permissive- /WX /EHsc)
@@ -37,8 +67,32 @@ if(BUILD_TESTING)
   add_test(NAME G4MultiPointerPlayground COMMAND axiom_ink_playground_tests multipointer)
   add_test(NAME G4ProvisionalZeroMutation COMMAND axiom_ink_playground_tests provisional)
   add_test(NAME G4ViewportGestureState COMMAND axiom_ink_playground_tests viewport)
+  add_test(NAME G46BViewportFitHost COMMAND axiom_ink_playground_tests viewport-fit)
+  add_executable(axiom_g46b_query_structure_tests tests/viewport_query_structure_test.cpp)
+  target_link_libraries(axiom_g46b_query_structure_tests PRIVATE axiom_ink_playground_common)
+  target_compile_definitions(axiom_g46b_query_structure_tests PRIVATE
+    AXIOM_INK_PLAYGROUND_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+  target_compile_features(axiom_g46b_query_structure_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_g46b_query_structure_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_g46b_query_structure_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G46BQueryStructure COMMAND axiom_g46b_query_structure_tests)
   add_test(NAME G4AndroidPointerIdentity COMMAND axiom_ink_playground_tests android-pointer-identity)
   add_test(NAME G4MultiContactPolicySelection COMMAND axiom_ink_playground_tests multi-contact-policy)
+  add_test(NAME G4InkPlaygroundSelection COMMAND axiom_ink_playground_tests selection)
+  if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+    add_executable(axiom_playground_transform_tests tests/selection_transform_test.cpp)
+    target_link_libraries(axiom_playground_transform_tests PRIVATE axiom_ink_playground_common)
+    target_compile_features(axiom_playground_transform_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_playground_transform_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_playground_transform_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME G46PlaygroundTransform COMMAND axiom_playground_transform_tests)
+  endif()
   add_executable(axiom_platform_brush_baseline_runner tests/platform_brush_baseline_runner.cpp)
   target_link_libraries(axiom_platform_brush_baseline_runner PRIVATE axiom_ink_playground_common)
   target_compile_features(axiom_platform_brush_baseline_runner PRIVATE cxx_std_20)
@@ -46,6 +100,53 @@ if(BUILD_TESTING)
     target_compile_options(axiom_platform_brush_baseline_runner PRIVATE /W4 /permissive- /WX /EHsc)
   else()
     target_compile_options(axiom_platform_brush_baseline_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  if((CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
+      AND CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  add_executable(axiom_g47_text_host_tests tests/g47_text_host_test.cpp)
+  target_link_libraries(axiom_g47_text_host_tests PRIVATE axiom_ink_playground_common)
+  target_compile_definitions(axiom_g47_text_host_tests PRIVATE
+    G47_LATIN_FONT="${CanvasSkia_FONT_PATH}" G47_CJK_FONT="${CanvasSkia_CJK_FONT_PATH}")
+  if(MSVC)
+    target_compile_options(axiom_g47_text_host_tests PRIVATE /UNDEBUG)
+  else()
+    target_compile_options(axiom_g47_text_host_tests PRIVATE -UNDEBUG)
+  endif()
+  if(WIN32 AND CanvasSkia_ICU_DATA_PATH)
+    add_custom_command(TARGET axiom_g47_text_host_tests POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_ICU_DATA_PATH}"
+        "$<TARGET_FILE_DIR:axiom_g47_text_host_tests>/icudtl.dat")
+  endif()
+  add_test(NAME G47TextHost COMMAND axiom_g47_text_host_tests)
+  add_executable(axiom_g47_qualification_runner tests/g47_qualification_runner.cpp)
+  target_link_libraries(axiom_g47_qualification_runner PRIVATE axiom_ink_playground_common)
+  if(WIN32 AND CanvasSkia_ICU_DATA_PATH)
+    add_custom_command(TARGET axiom_g47_qualification_runner POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_ICU_DATA_PATH}"
+        "$<TARGET_FILE_DIR:axiom_g47_qualification_runner>/icudtl.dat")
+  endif()
+  add_test(NAME G47QualificationReplay COMMAND axiom_g47_qualification_runner "${CMAKE_BINARY_DIR}/g47-qualification" 32)
+  add_executable(axiom_g46c_qualification_runner tests/g46c_qualification_runner.cpp)
+  target_link_libraries(axiom_g46c_qualification_runner PRIVATE axiom_ink_playground_common)
+  if(TARGET CanvasSkia::Skia)
+    target_link_libraries(axiom_g46c_qualification_runner PRIVATE CanvasSkia::Skia)
+  endif()
+  target_compile_features(axiom_g46c_qualification_runner PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_g46c_qualification_runner PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_g46c_qualification_runner PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME G46CQualificationBundle
+    COMMAND axiom_g46c_qualification_runner
+      "${CMAKE_BINARY_DIR}/g46c-qualification" "$<CONFIG>")
+  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  add_test(NAME G46CQualificationBehavior
+    COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/g46c_qualification_behavior_test.py"
+      "$<TARGET_FILE:axiom_g46c_qualification_runner>")
+  else()
+    message(STATUS "G4.6-C qualification unavailable: requires published Skia and Semantic codec profiles")
   endif()
   add_executable(axiom_brush_runtime_pipeline_tests tests/brush_runtime_pipeline_test.cpp)
   target_link_libraries(axiom_brush_runtime_pipeline_tests PRIVATE axiom_ink_playground_common)
@@ -102,6 +203,11 @@ if(WIN32 AND TARGET arc_Windows)
     platform/windows/main.cpp
     platform/windows/windows_d3d12_skia_surface_provider.cpp
     platform/windows/windows_smoke_evidence.cpp)
+  if(CanvasSkia_ICU_DATA_PATH)
+    add_custom_command(TARGET axiom_ink_playground_windows POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_ICU_DATA_PATH}"
+        "$<TARGET_FILE_DIR:axiom_ink_playground_windows>/icudtl.dat")
+  endif()
   target_include_directories(axiom_ink_playground_windows PRIVATE
       ${CMAKE_SOURCE_DIR}/debug_ui/include)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
@@ -170,6 +276,7 @@ if(EMSCRIPTEN)
   configure_file(tests/web_preview_lifecycle_test.html
       ${CMAKE_CURRENT_BINARY_DIR}/web_preview_lifecycle_test.html COPYONLY)
   target_link_options(axiom_ink_playground_web PRIVATE
+      "-sEXPORTED_FUNCTIONS+=['_axiom_ink_text_scenario','_axiom_ink_text_action','_axiom_ink_text_metrics']"
       "-sMODULARIZE=1" "-sEXPORT_ES6=1"
       "-sEXPORT_NAME=createAxiomInkPlayground"
       "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sUSE_WEBGL2=1"

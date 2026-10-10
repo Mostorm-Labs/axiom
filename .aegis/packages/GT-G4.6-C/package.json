@@ -1,0 +1,101 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.6-C",
+  "title": "G4.6 Playground / Qualification / Downstream Workload Freeze",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-6-c-qualification",
+  "task_anchor": {
+    "revision": "cc985b174cafc5d5dd743bd66701cfe117278de8",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "predecessor_requirements": [
+    "GT-G4.6-A accepted result in ancestry",
+    "GT-G4.6-B accepted result in ancestry"
+  ],
+  "authority_lock_ref": {
+    "sha256": "b5b86347b5380b0d7e248a0dfbdb8d40e5dbf5a266eae5acca7b77a49106e289",
+    "path": "authority.lock.json"
+  },
+  "verification_lock_ref": {
+    "sha256": "81052e744df96d801efff18a051d9d50a15f44e3846a71cc38cce7a1142e4ced",
+    "path": "verification.lock.json"
+  },
+  "execution_contract_ref": {
+    "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+    "path": "execution-contract.json"
+  },
+  "evidence_contract_ref": {
+    "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+    "path": "evidence-contract.json"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "53cde8ca4627d74ecde6ab6af063bf248f3113d6ff5f681c2aac01e0499a1242"
+  },
+  "accepted_predecessors": [
+    {
+      "task_id": "GT-G4.6-A",
+      "result_revision": "58868e060d3c0327bcff7823c924188cd808ee6b",
+      "reviewed_head": "38c3f0b3b7b635abec8e41bc578131b6c47117b3",
+      "control_review_ref": {
+        "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+        "path": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json",
+        "sha256": "0ab60b0077332e59de257b961390dfec02c4b655a65a24b601bb5e3b74eb764f"
+      },
+      "accepted_capability": "PASS_G4_6_A_EDITING_PRESENTATION"
+    },
+    {
+      "task_id": "GT-G4.6-B",
+      "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "reviewed_head": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+      "materialized_revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+      "control_review_ref": {
+        "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+        "path": ".aegis/results/GT-G4.6-B/p34-control-review.json",
+        "sha256": "659f314fcca638522e3164d2da41bad61fc5ee46b6e1920161404e04a19b340f"
+      },
+      "result_ref": {
+        "revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+        "path": ".aegis/results/GT-G4.6-B/result.json",
+        "sha256": "7ec4c9c5d865206e1f002664508bc97084396be07bc0ff6a22b931ca2e0349e8"
+      },
+      "accepted_capability": "PASS_G4_6_B_VIEW_CONSTRAINT_PRESENTATION",
+      "materialization_note": "The reviewed implementation is d9423fe9. The later 7de87160 descendant changes only B result/evidence records; it is the C baseline, not a newly reviewed implementation. The older review pull_request.head is historical metadata, not an equality predicate for the moving PR."
+    }
+  ],
+  "package_revision": "v0.2-p31-binding-repair",
+  "stage": "P31",
+  "package_control_state": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "origin_package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "execution_baseline_revision": "7de87160aa5586d2cbf53a0fafeef1eea7d5b7d0",
+  "source_snapshot_refs": [
+    {
+      "path": "sources/architecture.json",
+      "sha256": "c2cb3afa406c67d07d5aa9a69a0a37cc1cab703a0b1730dd861f63070408f815"
+    },
+    {
+      "path": "sources/roadmap.json",
+      "sha256": "0c1ba8bab53f2ddab217c0c7f69949fda37332a71ea56db42e034eaa50c32948"
+    },
+    {
+      "path": "sources/compressed-p31.json",
+      "sha256": "d7c4f28b072a5facc3a828b99916a57aca4c22a581d76e7ebe25cbb9a4aa5872"
+    }
+  ],
+  "scope_contract_ref": {
+    "sha256": "8187c38b5e18c332676f03ef3841ce107dea6e558f83318cfa8975f0e48c40cc",
+    "path": "execution-contract.json"
+  },
+  "evidence_compilation_contract_ref": {
+    "sha256": "3345ee7aecd0ac4c58dc9c360e93d91f60c80b053ae8b13e0ccceacfab390932",
+    "path": "evidence-contract.json"
+  }
+}

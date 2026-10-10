@@ -2,6 +2,8 @@
 #include "canvas/scene/scene_delta.hpp"
 #include "canvas/scene/spatial_delta.hpp"
 #include "canvas/scene/scene_impact.hpp"
+#include "canvas/scene/bounds_system.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -12,6 +14,45 @@
 #include <utility>
 
 namespace canvas {
+RuntimeSceneProjection projectRuntimeScene(
+    std::span<const semantic::ObjectRecord> source,
+    semantic::SemanticGeneration generation, text::RichTextLayoutService* textService) {
+    RuntimeSceneProjection projection;
+    projection.generation = generation;
+    projection.records.reserve(source.size());
+    for (const semantic::ObjectRecord& record : source) {
+        projection.records.push_back(RuntimeSceneRecord{
+            .objectId = record.id,
+            .kind = record.kind,
+            .kindVersion = record.kind_version,
+            .placement = record.placement,
+            .transform = record.transform,
+            .properties = record.properties,
+            .content = record.content,
+            .eraseMasks = record.erase_masks,
+            .textLayout = nullptr,
+        });
+        if (textService != nullptr && record.kind == semantic::ObjectKind::kRichText) {
+            auto& derived = projection.records.back();
+            derived.textLayout = textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content));
+            const auto bounds = computeBounds(record,derived.textLayout.get());
+            derived.geometryBounds=bounds.geometry; derived.visualBounds=bounds.visual; derived.worldBounds=bounds.world;
+            derived.referenceGeometryDigest=derived.textLayout->digest;
+            for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
+            std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
+            derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
+        }
+    }
+    std::sort(projection.records.begin(), projection.records.end(),
+              [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
+                  if (left.placement.order_key != right.placement.order_key) {
+                      return left.placement.order_key < right.placement.order_key;
+                  }
+                  return left.objectId < right.objectId;
+              });
+    return projection;
+}
+
 namespace {
 
 foundation::Error makeError(foundation::ErrorCode code, const char* message) {
@@ -118,7 +159,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             }
         }
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{projectRuntimeScene(source, post_state.generation())});
+            PreparedPublication{projectRuntimeScene(source, post_state.generation(), _textLayoutService)});
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -159,7 +200,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 continue;
             }
             auto projected = projectRuntimeScene(std::span<const semantic::ObjectRecord>(current, 1),
-                                                 post_state.generation());
+                                                 post_state.generation(), _textLayoutService);
             if (existing == next.records.end()) {
                 next.records.push_back(std::move(projected.records.front()));
             } else {

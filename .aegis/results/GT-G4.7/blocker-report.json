@@ -1,0 +1,98 @@
+{
+  "format": "aegis-terminal-blocker-report-v1",
+  "task_id": "GT-G4.7",
+  "stage": "P32",
+  "terminal_state": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "next_substantive_owner": "P31/Control; Verification owns render oracle repair",
+  "inspected_revision": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "package_materialization_ref": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "blockers": [
+    {
+      "id": "G47-PREFLIGHT-001",
+      "class": "TASK_PACKAGE_DEFECT",
+      "owner": "P31",
+      "finding": "Five package-local refs carry paths but no SHA-256.",
+      "package_ref": ".aegis/packages/GT-G4.7/package.json",
+      "locations": [
+        "authority_lock_ref",
+        "verification_lock_ref",
+        "execution_contract_ref",
+        "implementation_context_ref",
+        "evidence_contract_ref"
+      ],
+      "rule": "Repo-local Execution Authority: each local ref must bind same-directory path and SHA-256.",
+      "resolution_required": "Publish a corrected package with accepted content-addressed bindings. Observation hashes in this result are not authority repair."
+    },
+    {
+      "id": "G47-PREFLIGHT-002",
+      "class": "TASK_PACKAGE_DEFECT",
+      "owner": "P31/Authority",
+      "finding": "The three Notion TrustedBasis entries provide URL/title but no frozen source revision/content hash.",
+      "package_ref": ".aegis/packages/GT-G4.7/authority.lock.json",
+      "locations": [
+        "trusted_basis[0]",
+        "trusted_basis[1]",
+        "trusted_basis[2]"
+      ],
+      "rule": "Authority lock contains source provider/id/revision/content hash and trusted sections.",
+      "resolution_required": "Freeze exact sources/sections and supersession status; observational connector snapshots cannot be treated as an accepted frozen lock."
+    },
+    {
+      "id": "G47-PREG5-003",
+      "class": "AUTHORITY_CONFLICT",
+      "owner": "P31/Control",
+      "finding": "Production canonical Image rendering is a checkerboard and has no replayable ResourceId decode/materialization workload. The exact materialized closure mandates a blocker for this structural gap, while targeted readiness says G47-I0 is included.",
+      "package_ref": ".aegis/packages/GT-G4.7/execution-contract.json",
+      "location": "implementation.required_changes[1]",
+      "frozen_clause": "Run Pre-G5 Primitive Inventory first. If the current Image/Resource decode-materialization requirement is structurally missing under Current Authority, return the frozen blocker instead of hiding it.",
+      "source_refs": [
+        "sources/architecture.json",
+        "sources/roadmap.json",
+        "sources/targeted-readiness.json",
+        "sources/p31-package-page.json"
+      ],
+      "source_code": [
+        "runtime/render/src/skia_headless_backend.cpp:283-298",
+        "runtime/render/src/skia_renderer.cpp:44",
+        "runtime/render/src/skia_scene_renderer.cpp:30-77",
+        "pocs/shared_engine/platform/skia/skia_scene_renderer.cpp:73"
+      ],
+      "readiness_clause": "READY_FOR_P31_WITH_EMBEDDED_I0; G47-I0 image/resource closure precedes G47-A.",
+      "materialized_package_work_packages": [
+        "G47-A",
+        "G47-B",
+        "G47-C",
+        "G47-D"
+      ],
+      "resolution_required": "Control must decide and freeze whether I0 belongs in this task, with required changes, missing/ready/source-rect/content-mode/cold-warm/zero-canonical-mutation oracles and evidence. Alternatively bind a separately accepted image closure. P32 cannot silently add either."
+    },
+    {
+      "id": "G47-VERIFY-004",
+      "class": "VERIFICATION_DESIGN_DEFECT",
+      "owner": "Verification/P31",
+      "finding": "G47-T5/G47-RENDER-004 refer to frozen visual tolerances/thresholds without concrete values or exact oracle refs.",
+      "package_refs": [
+        ".aegis/packages/GT-G4.7/execution-contract.json tests.required G47-T5",
+        ".aegis/packages/GT-G4.7/verification.lock.json obligations G47-RENDER-004"
+      ],
+      "resolution_required": "Freeze the render parity acceptance oracle, including explicit zero-tolerance if exact parity is intended, or exact permitted tolerances and metric/corpus/profile bindings."
+    }
+  ],
+  "implementation_completed": false,
+  "production_mutation_performed": false,
+  "gate_pass_claimed": false,
+  "preflight_correction": "Earlier conversational statements that preflight passed were incorrect. Actual repository identity passed; PackageBindingPreflight and EvidenceContractPreflight did not pass. No production mutation followed.",
+  "completed_read_only_actions": [
+    "Repository identity",
+    "Exact materialization resolution",
+    "Anchor ancestry",
+    "Descendant/package delta reconciliation",
+    "Current production seams inspection",
+    "Pre-G5 primitive inventory",
+    "Upstream reconciliation for missing bindings",
+    "Blocker evidence materialization"
+  ],
+  "next_action_after_repaired_package": "Reconcile descendant state and rerun PackageBindingPreflight/EvidenceContractPreflight before the first authorized production mutation; preserve these valid observations."
+}

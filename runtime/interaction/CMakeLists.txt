@@ -5,6 +5,7 @@ add_library(canvas_runtime_interaction STATIC
     src/interaction_runtime.cpp
     src/selection_session.cpp
     src/transform_session.cpp
+    src/transform_handle_drag.cpp
     src/session_manager.cpp
     src/editor_history.cpp
     src/interaction_dependency_footprint.cpp)
@@ -12,6 +13,7 @@ target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/multi_contact_coordinator.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/canvas_interaction_coordinator.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/viewport_interaction_controller.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/viewport_constraints.cpp)
 
 target_include_directories(canvas_runtime_interaction PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -55,6 +57,16 @@ if(BUILD_TESTING)
         target_compile_options(axiom_transform_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4TransformSession COMMAND axiom_transform_session_tests)
+    add_executable(axiom_transform_handle_drag_tests
+        tests/transform_handle_drag_test.cpp)
+    target_link_libraries(axiom_transform_handle_drag_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_transform_handle_drag_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46TransformHandleDrag COMMAND axiom_transform_handle_drag_tests)
     add_executable(axiom_eraser_session_tests tests/eraser_session_test.cpp)
     target_link_libraries(axiom_eraser_session_tests PRIVATE canvas_runtime_interaction)
     target_compile_features(axiom_eraser_session_tests PRIVATE cxx_std_20)
@@ -141,4 +153,13 @@ if(BUILD_TESTING)
       target_compile_options(axiom_c0_viewport_interaction_controller_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME C0ViewportInteractionController COMMAND axiom_c0_viewport_interaction_controller_tests)
+    add_executable(axiom_g46_viewport_constraints_tests tests/viewport_constraints_test.cpp)
+    target_link_libraries(axiom_g46_viewport_constraints_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_g46_viewport_constraints_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_g46_viewport_constraints_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_g46_viewport_constraints_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46BViewportConstraints COMMAND axiom_g46_viewport_constraints_tests)
 endif()

@@ -1,0 +1,51 @@
+{
+  "format": "g47-platform-readiness-v1",
+  "status": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
+  "physical_observation_deferred": true,
+  "platforms": {
+    "windows": {
+      "profile": "windows-x64-d3d12",
+      "artifact": "build-windows-real\\apps\\ink_playground\\RelWithDebInfo\\axiom_ink_playground_windows.exe",
+      "sha256": "0bd46a6e782490099c5846146f4eda4f6622425eb00f7ceb4793b6ebfeb70a84",
+      "build_log": "final-windows-build.log",
+      "ctest_log": "final-ctest.log"
+    },
+    "web": {
+      "profile": "web-wasm-webgl2",
+      "artifacts": [
+        {
+          "path": "out\\g47-web-r1\\apps\\ink_playground\\axiom_ink_playground_web.js",
+          "sha256": "9201361a54bb561f18941b8b659828200ea0629511e30b1304e4cf4b5b82ad15"
+        },
+        {
+          "path": "out\\g47-web-r1\\apps\\ink_playground\\axiom_ink_playground_web.wasm",
+          "sha256": "0c77cb4036c38ae596bf012246bcfccd517d330ce29c3d86a64dbec9123d3743"
+        }
+      ],
+      "build_log": "final-web-build.log"
+    },
+    "android": {
+      "profile": "android-arm64-v8a-gles3",
+      "artifact": "out\\g47-android-r1\\apps\\ink_playground\\libaxiom_ink_playground_android.so",
+      "sha256": "7e6630480d28efa899316d54426ef0de0522fb8039545ea63c2f77614448e5d5",
+      "build_log": "final-android-build.log"
+    }
+  },
+  "locked_ndk": "27.2.12479018",
+  "locked_sdk_profile": "r1-full-v1",
+  "semantic_runtime_facts": [
+    "out/g47-web-environment.json",
+    "out/g47-android-environment.json"
+  ],
+  "artifacts_verified_at": "2026-10-09T19:05:00+08:00",
+  "artifacts_local_sha256": {
+    "windows": "0bd46a6e782490099c5846146f4eda4f6622425eb00f7ceb4793b6ebfeb70a84",
+    "web_js": "9201361a54bb561f18941b8b659828200ea0629511e30b1304e4cf4b5b82ad15",
+    "web_wasm": "0c77cb4036c38ae596bf012246bcfccd517d330ce29c3d86a64dbec9123d3743",
+    "android_so": "7e6630480d28efa899316d54426ef0de0522fb8039545ea63c2f77614448e5d5",
+    "android_apk": "031f94af628af1893786f1107e8335c555c73a9d80f23338bb14a78f091bc30d"
+  },
+  "android_apk": "apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk",
+  "android_apk_signing": "apksigner v2 verified",
+  "semantic_offline_resolution": "android-offline-resolution.log"
+}

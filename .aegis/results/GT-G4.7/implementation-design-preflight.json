@@ -1,0 +1,36 @@
+{
+  "task_id": "GT-G4.7",
+  "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "status": "READY_TO_EXECUTE",
+  "current_flow": [
+    "ResourceId -> Image checkerboard placeholder",
+    "RichTextContent -> byte-count heuristic bounds -> scalar rectangle renderer"
+  ],
+  "target_flow": [
+    "application resource provider -> immutable encoded byte observations -> SkCodec decoded image -> shared reference/production renderer",
+    "RichText read projection + explicit LayoutContext + exact fonts -> SkParagraph internally -> renderer-neutral immutable TextLayoutSnapshot",
+    "derived local layout -> Scene bounds/spatial publication -> DirectReferenceSource -> Skia glyph rendering"
+  ],
+  "owners": {
+    "resource_bytes": "Runtime/application provider; no network in renderer",
+    "layout": "runtime/text; private SkParagraph/font handles",
+    "canonical": "existing SemanticDocument/OperationEngine unchanged",
+    "surface": "existing platform provider unchanged"
+  },
+  "prepare_publication_abort": "Layout/resource preparation produces discardable snapshots. Scene publication continues through existing coordinator transaction. Missing/error reports explicit derived diagnostics; it creates no canonical operation.",
+  "verification_mapping": {
+    "G47-IMAGE-000": "cold/warm encoded PNG; missing/ready; region and content modes; semantic negative controls",
+    "G47-LAYOUT-001": "fixed input/font/context replay and shaped glyph/line geometry",
+    "G47-FONT-002": "exact resource hash/face/style, missing glyph and missing/ready",
+    "G47-SCENE-003": "layout-derived local/world bounds and resource invalidation",
+    "G47-RENDER-004": "same snapshot digest and 256x256 zoom/DPR raster matrix",
+    "G47-LOCALITY-005": "edit counters; unrelated, transform and camera negative controls",
+    "G47-CORPUS-006": "eight text workloads and 100K structured-grid proxy",
+    "G47-QUAL-007": "portable executable/host hook and export bundle",
+    "G47-PREG5-008": "primitive inventory and I0 closure"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

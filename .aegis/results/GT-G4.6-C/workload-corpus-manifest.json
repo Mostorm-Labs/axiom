@@ -1,0 +1,133 @@
+{
+  "schema_version": "GT-G4.6-C-P32-workloads-v2",
+  "result_revision": "ab0848d49bdc3d39394dcbeee063802ffbf2b975",
+  "corpus_source": "apps/ink_playground/tests/g46c_qualification_runner.cpp",
+  "replay_1_root": "qualification-replay-1",
+  "replay_2_root": "qualification-replay-2",
+  "workloads": [
+    {
+      "scenario_id": "select-deselect",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/select-deselect-input.json",
+      "trace": "qualification-replay-2/select-deselect-trace.json",
+      "workload_input_digest": "13cae472cc66b434",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "5b22ae98ba9b5d03",
+      "replay_digest": "4ca6130d7069612e",
+      "passed": true
+    },
+    {
+      "scenario_id": "multi-select",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/multi-select-input.json",
+      "trace": "qualification-replay-2/multi-select-trace.json",
+      "workload_input_digest": "768f0e628aba0f26",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "93452fd30ed07f9",
+      "replay_digest": "f13158cb391baa27",
+      "passed": true
+    },
+    {
+      "scenario_id": "handle-hover",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/handle-hover-input.json",
+      "trace": "qualification-replay-2/handle-hover-trace.json",
+      "workload_input_digest": "c85fb75f0e189e2e",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "53034ae6edfecbc3",
+      "replay_digest": "bf39640897bbcd94",
+      "passed": true
+    },
+    {
+      "scenario_id": "move-resize-rotate",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/move-resize-rotate-input.json",
+      "trace": "qualification-replay-2/move-resize-rotate-trace.json",
+      "workload_input_digest": "b48aa04ba026bbfd",
+      "semantic_digest": "d43f10d317b40876",
+      "presentation_digest": "e4497031bb73b665",
+      "replay_digest": "9adb8152d832f880",
+      "passed": true
+    },
+    {
+      "scenario_id": "move-snap-guide",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/move-snap-guide-input.json",
+      "trace": "qualification-replay-2/move-snap-guide-trace.json",
+      "workload_input_digest": "e1730ad424f15734",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "53034ae6edfecbc3",
+      "replay_digest": "4b1297bbc0d88b65",
+      "passed": true
+    },
+    {
+      "scenario_id": "slow-fast-pan-zoom-fit",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/slow-fast-pan-zoom-fit-input.json",
+      "trace": "qualification-replay-2/slow-fast-pan-zoom-fit-trace.json",
+      "workload_input_digest": "bd6d1ce49b4b7756",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "1114c13ee85fa19b",
+      "replay_digest": "f9e02b871126a1e2",
+      "passed": true
+    },
+    {
+      "scenario_id": "continuous-zoom",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/continuous-zoom-input.json",
+      "trace": "qualification-replay-2/continuous-zoom-trace.json",
+      "workload_input_digest": "63c0d99bd6c520db",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "8e556234368d0383",
+      "replay_digest": "cf41fa85ae9ffb9b",
+      "passed": true
+    },
+    {
+      "scenario_id": "zoom-settle",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/zoom-settle-input.json",
+      "trace": "qualification-replay-2/zoom-settle-trace.json",
+      "workload_input_digest": "af932a1260fa0cad",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "8e556234368d0383",
+      "replay_digest": "4ef40a9b45809810",
+      "passed": true
+    },
+    {
+      "scenario_id": "zoom-to-fit",
+      "objects": 3,
+      "input_trace": "qualification-replay-2/zoom-to-fit-input.json",
+      "trace": "qualification-replay-2/zoom-to-fit-trace.json",
+      "workload_input_digest": "d54254dd7fd2c4f6",
+      "semantic_digest": "6eb1f3e76778c00b",
+      "presentation_digest": "f7edd30e84780147",
+      "replay_digest": "80173ed799a8915f",
+      "passed": true
+    },
+    {
+      "scenario_id": "100K-transform-overlay",
+      "objects": 100000,
+      "input_trace": "qualification-replay-2/100K-transform-overlay-input.json",
+      "trace": "qualification-replay-2/100K-transform-overlay-trace.json",
+      "workload_input_digest": "545d9ce77a929274",
+      "semantic_digest": "621888ab729955fb",
+      "presentation_digest": "11af2279668ea944",
+      "replay_digest": "c4412b9121a75d5b",
+      "passed": true
+    },
+    {
+      "scenario_id": "100K-active-ink-laser",
+      "objects": 100000,
+      "input_trace": "qualification-replay-2/100K-active-ink-laser-input.json",
+      "trace": "qualification-replay-2/100K-active-ink-laser-trace.json",
+      "workload_input_digest": "c57ac027f69fe82d",
+      "semantic_digest": "edc9e9ed1e8dddac",
+      "presentation_digest": "517ee8ead6ca568f",
+      "replay_digest": "ccd93260ba0850bb",
+      "passed": true
+    }
+  ],
+  "replay_comparison": "replay-comparison.json",
+  "replay_status": "PASS_11_OF_11_DETERMINISTIC_FIELDS_EQUAL",
+  "timings_are_non_deterministic_observations": true
+}

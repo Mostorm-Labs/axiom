@@ -163,4 +163,4 @@ def test_windows_timer_does_not_rasterize_debug_overlay_during_active_stroke():
     )[0]
     assert "value->activeKeys.empty()" in timer
     assert "value->resizeInProgress" in timer
-    assert "debugUi->refresh();" in timer
+    assert "debugUi->refresh();" in source

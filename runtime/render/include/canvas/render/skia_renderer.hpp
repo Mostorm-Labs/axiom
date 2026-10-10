@@ -1,9 +1,11 @@
 #pragma once
+#include "canvas/render/skia_text_resources.hpp"
 
 #include "canvas/render/brush_render_point.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/render/preview_surface.hpp"
+#include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
@@ -22,8 +24,11 @@ struct CanonicalViewportTransform;
 // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.
 class SkiaRenderer final {
   public:
+    SkiaRenderer() = default;
+    explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
     [[nodiscard]] BackendSubmissionResult renderFrame(
-        SkiaSurfaceProvider& provider, const FramePlan& plan);
+        SkiaSurfaceProvider& provider, const FramePlan& plan,
+        const EditingOverlay* selectionOverlay = nullptr);
     [[nodiscard]] BackendSubmissionResult renderPreview(
         SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
         const PreviewStyleOverride& style = {});
@@ -49,6 +54,8 @@ class SkiaRenderer final {
     [[nodiscard]] std::uint64_t rasterizationCount() const noexcept { return rasterizations_; }
 
   private:
+    ImageResourceResolver* images_ = nullptr;
+    SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;
     std::uint64_t rasterizations_ = 0;
 };

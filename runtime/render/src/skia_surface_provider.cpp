@@ -58,7 +58,10 @@ BackendSubmissionResult RasterSkiaSurfaceProvider::resize(
     if (impl_->surface && width_ == width && height_ == height && !lost_) {
         return BackendSubmissionResult::accepted();
     }
-    const auto info = SkImageInfo::MakeN32Premul(static_cast<int>(width), static_cast<int>(height));
+    // Match the published RGBA8/sRGB readback and reference profile at the
+    // drawing target, avoiding a color conversion after glyph rasterization.
+    const auto info = SkImageInfo::Make(static_cast<int>(width), static_cast<int>(height),
+        kRGBA_8888_SkColorType,kPremul_SkAlphaType,SkColorSpace::MakeSRGB());
     auto surface = SkSurfaces::Raster(info);
     if (!surface) return BackendSubmissionResult::rejected("Skia raster surface creation failed");
     impl_->surface = std::move(surface);

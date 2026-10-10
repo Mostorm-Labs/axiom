@@ -1,0 +1,10 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-B-GUIDE-REPAIR",
+  "obligations": [
+    { "id": "G46B-GUIDE-001", "requirement": "Active X/Y guide geometry is deterministic and matches resolved target feature." },
+    { "id": "G46B-GUIDE-002", "requirement": "Guides are transient per-view overlay state and clear on release/cancel/deselect." },
+    { "id": "G46B-GUIDE-003", "requirement": "Common SkiaRenderer is the only guide drawing owner." },
+    { "id": "G46B-GUIDE-004", "requirement": "Existing B snap/viewport and G4/G4.5 regressions remain green." }
+  ]
+}

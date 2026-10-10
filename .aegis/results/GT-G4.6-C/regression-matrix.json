@@ -1,0 +1,19 @@
+{
+  "result_revision": "ab0848d49bdc3d39394dcbeee063802ffbf2b975",
+  "command": "ctest --test-dir build-windows-real -C RelWithDebInfo -R \"^(G4|G45|G46|C0|C1|DUI20|G3PreviewSurface|G3FrameState|G3SurfacePresentation|G3SkiaSurfaceProvider)\" --output-on-failure --no-tests=error",
+  "configured_test_count": 69,
+  "passed": 69,
+  "failed": 0,
+  "not_run": 0,
+  "log": "ctest-frozen-rerun.log",
+  "log_sha256": "c7d8693b9ac8414b48306d8443b1f6925365a3b1174db33bfcc6be2db7f6f4b6",
+  "contract_tests": {
+    "count": 14,
+    "passed": 14,
+    "log": "platform-contract-tests-rerun-utf8.log",
+    "log_sha256": "dde67c14c31579be9c15d62b1da450d0cddb07302e324f57fd75e25284614b4e"
+  },
+  "git_diff_check": "PASS",
+  "hosted_c_qualification": "PENDING_DEDICATED_PROVIDER_JOB",
+  "physical_observations": "BLOCKING_PENDING"
+}

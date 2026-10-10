@@ -1,0 +1,10 @@
+{
+  "targets": ["Document", "Selection", "Object", "WorldRect"],
+  "padding_logical_px": 32,
+  "clamp": [0.05, 32.0],
+  "empty_target": "reject_without_camera_change",
+  "degenerate_extent": "epsilon_extent_then_max_clamp",
+  "rotation": "camera_rotation_preserved_by_projected_bounds",
+  "dpr": "logical_fit_unchanged",
+  "evidence": ["G46BViewportConstraints", "G46BViewportFitHost"]
+}

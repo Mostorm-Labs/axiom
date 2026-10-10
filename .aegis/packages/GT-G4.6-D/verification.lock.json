@@ -1,0 +1,26 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-D",
+  "obligations": [
+    {
+      "id": "G46D-TAB-001",
+      "requirement": "Debug UI exposes capability-aware tabs for overview, canvas/selection, RuntimeFacade controls, input, surface, brush and diagnostics.",
+      "oracle": "common controller contract test and Windows host smoke"
+    },
+    {
+      "id": "G46D-SELECT-002",
+      "requirement": "Selection tool requests flow through RuntimeFacade and a canvas click uses Scene::hitTest plus SelectionSession without creating a brush or canonical operation.",
+      "oracle": "selection host trace and no-mutation test"
+    },
+    {
+      "id": "G46D-OVERLAY-003",
+      "requirement": "Selected-object presentation is per-view EditingOverlay state and follows the current camera/view without mutating SemanticDocument or RuntimeScene.",
+      "oracle": "overlay presentation/ownership test"
+    },
+    {
+      "id": "G46D-REGRESS-004",
+      "requirement": "G4/G4.5 and accepted G4.6-A behavior remains green, including brush, Arc, input and transform regressions.",
+      "oracle": "focused CTest matrix plus diff check"
+    }
+  ]
+}

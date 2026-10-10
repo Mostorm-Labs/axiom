@@ -1,0 +1,21 @@
+{
+  "task_id": "GT-G4.6-C",
+  "result_revision": "5194d5ccf186e49a45311b39a831d1c9460e043e",
+  "authorized_scope": "apps/ink_playground/**, verification/**, debug_ui/**, .github/workflows/**, .aegis/packages/GT-G4.6-C/**, .aegis/results/GT-G4.6-C/**, runtime/**/tests/**",
+  "changed_paths": [
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/tests/g46c_qualification_runner.cpp",
+    "apps/ink_playground/tests/g46c_qualification_behavior_test.py",
+    "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+    "apps/ink_playground/tests/windows_d3d12_surface_contract_test.py",
+    "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+    "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+    ".github/workflows/g4-6-c-qualification.yml"
+  ],
+  "out_of_scope_production_runtime_changes": [],
+  "forbidden_semantics_changed": false,
+  "git_diff_check": "PASS",
+  "status": "PASS"
+}

@@ -1,0 +1,32 @@
+{
+  "task_id": "GT-G4.7",
+  "execution_ref": "codex/g4-7-development",
+  "revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "completed_through": [
+    "P31 repair",
+    "RepositoryIdentityPreflight",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "Repository reconciliation",
+    "ImplementationDesignPreflight",
+    "Pre-G5 inventory",
+    "G47-I0 image/resource implementation and regression",
+    "G47-A/B/C text/layout/font/scene/render implementation",
+    "G47-D workload runner implementation",
+    "Final Windows/Web/Android qualification builds",
+    "Final focused CTest and evidence materialization",
+    "100K structured-grid replay, Android APK packaging, edge-font regression",
+    "Hosted Windows/Web/Android qualification run 37934458014",
+    "Hosted Windows/Web/Android qualification run 37978210023"
+  ],
+  "next_action": "Independent Control Review; then combined G4.6 + G4.7 physical qualification",
+  "cursor_is_gate_evidence": false,
+  "preserved_dirty_work": false,
+  "last_verified_tests": [
+    "G47TextPipeline",
+    "G3HeadlessSkia",
+    "G3DirectReference",
+    "18-test focused regression after Skia scalar fix"
+  ]
+}
