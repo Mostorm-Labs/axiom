@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-00",
+  "artifacts": [
+    {
+      "id": "baseline-reconciliation-record",
+      "path": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md",
+      "blocking": true,
+      "owner": "P32 execution"
+    }
+  ],
+  "review_boundary": "Exact pushed result revision on codex/px0-00-baseline-reconciliation plus the reconciliation record and the execution delta from the executor-recorded actual starting revision.",
+  "hosted_verification_required": false,
+  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue P34 PASS or authorize PX0-01 by itself beyond reporting the PX0-00 READY result.",
+  "materialization_requirement": "The exact result commit must be reviewer-resolvable from the declared GitHub repository/ref before returning READY_FOR_CONTROL_REVIEW."
+}
