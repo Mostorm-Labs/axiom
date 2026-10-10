@@ -94,13 +94,13 @@ int main() {
 
   RuntimeProbe retrying;
   retrying.first.identity = {20, 21, 22, 23, 24};
-  retrying.second.identity = retrying.first.identity;
+  retrying.second.identity = {20, 21, 23, 23, 24};
   retrying.second.tool.toolId = 4202;
   canvas::debug_ui::DebugSnapshotSources retryingSources{&retrying, &axiom, nullptr, &platform, &telemetry, &activity};
   const auto retryingSnapshot = assembler.capture(retryingSources);
   assert(retryingSnapshot.coherence == canvas::debug_ui::SnapshotCoherence::kCoherent);
   assert(retryingSnapshot.product.value.tool.toolId == 4202);
-  assert(retrying.reads == 2);
+  assert(retrying.reads == 4);
 
   platform.value.surfaceAvailable = false;
   const auto degradedPlatform = assembler.capture(
@@ -109,6 +109,7 @@ int main() {
   assert(degradedPlatform.product.availability == canvas::debug_ui::DebugAvailability::kAvailable);
   assert(degradedPlatform.axiom.availability == canvas::debug_ui::DebugAvailability::kAvailable);
   assert(degradedPlatform.telemetry.availability == canvas::debug_ui::DebugAvailability::kAvailable);
+  assert(degradedPlatform.arc.availability == canvas::debug_ui::DebugAvailability::kUnsupported);
 
   platform.value.surfaceAvailable = true;
   activity.value.productControl = canvas::runtime::ProductControlReceipt{77,
