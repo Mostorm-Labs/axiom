@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-00",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": ["1-18"]
+    },
+    {
+      "role": "approved_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": ["Global Constraints", "Work Package PX0-00 - Baseline Reconciliation"]
+    },
+    {
+      "role": "current_architecture_authority",
+      "provider": "repo",
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+      "content_hash": "git-blob-sha1:01aefc728d0b0b81cc389f40868336619cfeddce",
+      "trusted_sections": ["Canonical truth", "Runtime ownership", "Arc boundary", "Platform boundary"]
+    },
+    {
+      "role": "current_runtime_capability_authority",
+      "provider": "repo",
+      "path": "docs/notion/authority/05-runtime-architecture/runtime-capability-architecture-v0.1.md",
+      "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+      "content_hash": "git-blob-sha1:ad73ac24127a9b6e663097dd8f955cb42253c026",
+      "trusted_sections": ["Top-level capability domains", "Ownership negative contract", "Public/cross-module boundaries"]
+    },
+    {
+      "role": "accepted_product_shell_runtime_boundary",
+      "provider": "repo",
+      "path": "docs/adr/0025-product-shell-page-operation-data-runtime.md",
+      "revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+      "content_hash": "git-blob-sha1:74475695f222dcd248e9d9d16a84ec1e8d3d8b38",
+      "trusted_sections": ["Decision", "Validation"]
+    }
+  ],
+  "trusted_statements": {
+    "task_purpose": "Perform a read-only implementation/authority reconciliation before PX0 code mutation begins.",
+    "design_baseline_revision": "9760a8ad910aaa1d1232c9cf24723e4d311d9816",
+    "approved_control_revision": "a077aff9ec7c64cd587a0c2643d283e135bba8dd",
+    "required_answers": [
+      "Whether RuntimeFacade still inherits RuntimeDiagnostics at the actual starting revision.",
+      "Whether Windows still assembles DebugSnapshot locally.",
+      "Whether Web still assembles DebugSnapshot locally.",
+      "Whether any newer G4.7/runtime/debug-ui changes materially invalidate the approved PX0 Spec or implementation plan assumptions."
+    ],
+    "mutation_boundary": "PX0-00 may create only docs/engineering/px0-debug-control-plane-baseline-reconciliation.md during P32 execution.",
+    "fail_closed_rule": "Any material Authority conflict or implementation-reality contradiction that changes the approved PX0 design/plan is terminal for PX0-00 and must be returned to CONTROL_REVIEW; the executor must not redesign PX0.",
+    "canonical_invariants": [
+      "SemanticDocument remains the sole canonical Canvas truth.",
+      "Operation remains the only canonical mutation unit.",
+      "Product Shell must not access RuntimeScene, SpatialIndex, Tile, Skia, or raw GPU ownership.",
+      "Platform Host remains composition root without regaining subsystem semantic authority."
+    ]
+  },
+  "forbidden_interpretations": [
+    "Repository code is not promoted to Current Authority merely because it differs from the approved Spec.",
+    "PX0-00 does not authorize fixing discovered drift.",
+    "PX0-00 does not authorize PX0-01 or any feature implementation."
+  ]
+}
