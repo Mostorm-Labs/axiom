@@ -252,8 +252,8 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   const auto drawPanels = [&]() {
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    const bool submitted = buildImGuiPanels(snapshot_, selectedTool_, runtime_,
-                                            axiomDebug_, platform_);
+    if (router_ != nullptr) router_->beginFrame(snapshot_);
+    const bool submitted = buildImGuiPanels(snapshot_, selectedTool_, router_);
     ImGui::Render();
     (void)renderer.render(ImGui::GetDrawData(), impl_->surface.get(),
                           impl_->fontTexture.get());
@@ -270,6 +270,7 @@ void WindowsDebugUiHost::renderFrame() noexcept {
     }
     (void)drawPanels();
   }
+  if (router_ != nullptr) router_->refreshReceipts();
   impl_->rendering = false;
 }
 

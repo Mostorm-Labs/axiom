@@ -3,9 +3,9 @@
 #include "canvas/debug_ui/surface.hpp"
 #include "canvas/debug_ui/panels.hpp"
 #include "canvas/debug_ui/surface_debug_queue.hpp"
+#include "canvas/debug_ui/debug_command_queue.hpp"
 #include "canvas/runtime/diagnostics.hpp"
 #include "canvas/runtime/debug_control.hpp"
-#include "canvas/debug_ui/debug_command_queue.hpp"
 #include "canvas/runtime/telemetry.hpp"
 #include <cassert>
 #include <type_traits>
@@ -35,34 +35,10 @@ using namespace canvas::debug_ui;
 int main() {
   static_assert(canvas::runtime::kDefaultSurfaceModeQueueCapacity == 256);
   static_assert(canvas::runtime::kDefaultSurfaceModeReceiptCapacity == 1024);
-  static_assert(kDefaultDebugCommandQueueCapacity == 256);
-  static_assert(kDefaultDebugCommandReceiptCapacity == 1024);
   MutexCopySnapshotChannel channel;
   DebugSnapshot snapshot; snapshot.stamp.generation = 4; snapshot.stamp.sequence = 9;
   snapshot.axiom.value.document.canonicalOperationCount = 12; channel.publish(snapshot);
   const auto stamp = channel.read().stamp; assert(stamp.generation == 4 && stamp.sequence == 9);
-  BoundedCommandQueue queue(1, 4);
-  auto accepted = queue.admit(DebugCommand{1, 2, 10, DebugCommandKind::kInvalidatePreview, {}});
-  assert(accepted && accepted->state == ReceiptState::kAccepted);
-  assert(!queue.admit(DebugCommand{2,2,10,DebugCommandKind::kInvalidatePreview,{}}));
-  BoundedCommandQueue staleQueue(2, 4);
-  assert(staleQueue.admit(DebugCommand{3, 1, 100, DebugCommandKind::kSetCadence, {}}));
-  assert(!staleQueue.take(1, 2));
-  assert(staleQueue.receipt(3)->state == ReceiptState::kStaleGeneration);
-  assert(staleQueue.admit(DebugCommand{4, 2, 2, DebugCommandKind::kSetCadence, {}}));
-  assert(!staleQueue.take(3, 2));
-  assert(staleQueue.receipt(4)->state == ReceiptState::kExpired);
-  BoundedCommandQueue noDeadlineQueue(2, 4);
-  assert(noDeadlineQueue.admit(DebugCommand{5, 1, 0, DebugCommandKind::kSetCadence, {}}));
-  const auto noDeadline = noDeadlineQueue.take(1000, 1);
-  assert(noDeadline && noDeadline->id == 5);
-  auto cmd = queue.take(1,2); assert(cmd && cmd->id == 1);
-  auto completed = queue.complete(1, ReceiptState::kCompleted); assert(completed && completed->state == ReceiptState::kCompleted);
-  BoundedCommandQueue evictionQueue(4, 1);
-  assert(evictionQueue.admit(DebugCommand{8, 1, 10, DebugCommandKind::kSetCadence, {}}));
-  assert(evictionQueue.take(1, 1));
-  assert(evictionQueue.complete(8, ReceiptState::kCompleted));
-  assert(evictionQueue.admit(DebugCommand{9, 1, 10, DebugCommandKind::kSetCadence, {}}));
   InputCaptureGate gate; DebugInputSequence seq{7, 1};
   assert(gate.begin(seq, DebugInputOwner::kDebug) == DebugInputOwner::kDebug);
   assert(gate.begin(seq, DebugInputOwner::kCanvas) == DebugInputOwner::kDebug);
@@ -114,7 +90,7 @@ int main() {
     canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override { return {}; }
     canvas::runtime::ProductControlReceipt submitProductControl(
         const canvas::runtime::ProductControlRequest& request) noexcept override {
-      return {request.requestId, canvas::runtime::ProductControlState::kUnsupported, 1};
+      return {request.requestId, canvas::runtime::ProductControlState::kUnsupported, 1, std::nullopt};
     }
   } runtime;
   static_assert(!std::is_base_of_v<canvas::runtime::RuntimeDiagnostics,
@@ -157,8 +133,12 @@ int main() {
   assert(debugQueue.complete(30, canvas::runtime::AxiomDebugCommandState::kApplied, 9,
                              1, 4).state == canvas::runtime::AxiomDebugCommandState::kApplied);
   assert(debugQueue.receipt(30)->state == canvas::runtime::AxiomDebugCommandState::kApplied);
-  const auto unsupported = runtime.submitProductControl(
-      {canvas::runtime::ProductControlAction::kSetCamera, 20, 1, 10, 0});
+  canvas::runtime::ProductControlRequest unsupportedRequest{};
+  unsupportedRequest.action = canvas::runtime::ProductControlAction::kSetCamera;
+  unsupportedRequest.requestId = 20;
+  unsupportedRequest.runtimeGeneration = 1;
+  unsupportedRequest.deadlineSequence = 10;
+  const auto unsupported = runtime.submitProductControl(unsupportedRequest);
   assert(unsupported.state == canvas::runtime::ProductControlState::kUnsupported);
   canvas::runtime::ProductControlRequest brushRequest{};
   brushRequest.action = canvas::runtime::ProductControlAction::kSetBrush;

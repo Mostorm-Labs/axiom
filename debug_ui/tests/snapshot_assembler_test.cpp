@@ -22,7 +22,7 @@ struct RuntimeProbe final : canvas::runtime::RuntimeFacade {
   canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
     return {request.requestId, canvas::runtime::ProductControlState::kApplied,
-            request.runtimeGeneration};
+            request.runtimeGeneration, std::nullopt};
   }
 };
 struct AlwaysChangingRuntime final : canvas::runtime::RuntimeFacade {
@@ -36,7 +36,7 @@ struct AlwaysChangingRuntime final : canvas::runtime::RuntimeFacade {
   canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
     return {request.requestId, canvas::runtime::ProductControlState::kApplied,
-            request.runtimeGeneration};
+            request.runtimeGeneration, std::nullopt};
   }
 };
 struct AxiomProbe final : canvas::runtime::IAxiomDiagnostics {
@@ -113,7 +113,7 @@ int main() {
 
   platform.value.surfaceAvailable = true;
   activity.value.productControl = canvas::runtime::ProductControlReceipt{77,
-      canvas::runtime::ProductControlState::kApplied, 7};
+      canvas::runtime::ProductControlState::kApplied, 7, std::nullopt};
   activity.value.surfaceControl = canvas::runtime::SurfaceModeReceipt{88,
       canvas::runtime::SurfaceControlState::kApplied,
       canvas::runtime::SurfaceRole::kCanonicalCanvas,

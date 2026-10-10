@@ -1,5 +1,6 @@
 #pragma once
 #include "canvas/debug_ui/controller.hpp"
+#include "canvas/debug_ui/activity_log.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -59,6 +60,7 @@ class WindowsDebugUiHost final {
   void setAxiomDebugControl(canvas::runtime::AxiomDebugControl* control) noexcept {
     axiomDebug_ = control;
   }
+  void setControlRouter(DebugControlRouter* router) noexcept { router_ = router; }
  private:
   static LRESULT CALLBACK overlayWindowProc(HWND window, UINT message,
                                             WPARAM wParam, LPARAM lParam);
@@ -89,6 +91,7 @@ class WindowsDebugUiHost final {
   std::function<DebugSnapshot()> snapshotRefresh_;
   canvas::runtime::AxiomDebugControl* axiomDebug_ = nullptr;
   canvas::runtime::PlatformDebugControl* platform_ = nullptr;
+  DebugControlRouter* router_ = nullptr;
   int selectedTool_ = 4101;
   InputCaptureGate ownedInputCapture_;
   InputCaptureGate* inputCapture_ = &ownedInputCapture_;

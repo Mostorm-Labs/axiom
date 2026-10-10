@@ -10,6 +10,8 @@
 #include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
+#include "canvas/debug_ui/activity_log.hpp"
+#include "canvas/debug_ui/control_router.hpp"
 #include "imgui.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
@@ -217,6 +219,8 @@ struct DebugUiState final {
   std::unique_ptr<WebTelemetry> telemetry;
   std::unique_ptr<WebArcDiagnostics> arcDiagnostics;
   canvas::debug_ui::DebugSnapshotAssembler snapshotAssembler;
+  canvas::debug_ui::DebugActivityLog activityLog;
+  std::unique_ptr<canvas::debug_ui::DebugControlRouter> controlRouter;
 };
 std::unordered_map<Handle, DebugUiState>& debugUi() {
   static std::unordered_map<Handle, DebugUiState> values;
@@ -226,13 +230,21 @@ std::unordered_map<Handle, DebugUiState>& debugUi() {
 canvas::debug_ui::DebugSnapshot captureDebugSnapshot(Host& target, DebugUiState& state) {
   const canvas::debug_ui::DebugSnapshotSources sources{
       state.runtime.get(), state.runtime.get(), state.arcDiagnostics.get(),
-      state.platformDiagnostics.get(), state.telemetry.get(), nullptr};
-  return state.snapshotAssembler.capture(sources);
+      state.platformDiagnostics.get(), state.telemetry.get(), &state.activityLog};
+  auto snapshot = state.snapshotAssembler.capture(sources);
+  if (state.controlRouter != nullptr) {
+    state.controlRouter->beginFrame(snapshot);
+    state.controlRouter->refreshReceipts();
+    snapshot.activity = state.activityLog.snapshot();
+  }
+  return snapshot;
 }
 
 bool initializeDebugUi(Handle value, Host& target, int width, int height) {
   auto& state = debugUi()[value];
   state.runtime = std::make_unique<WebRuntimeFacade>(target);
+  state.controlRouter = std::make_unique<canvas::debug_ui::DebugControlRouter>(
+      state.runtime.get(), nullptr, nullptr, &state.activityLog);
   state.platformDiagnostics = std::make_unique<WebPlatformDiagnostics>(target);
   state.telemetry = std::make_unique<WebTelemetry>(target);
   state.arcDiagnostics = std::make_unique<WebArcDiagnostics>(target);
@@ -281,8 +293,9 @@ bool renderDebugUi(Handle value) {
   const auto drawFrame = [&](const canvas::debug_ui::DebugSnapshot& snapshot) {
     const auto selectedTool = snapshot.product.value.tool.toolId;
     state.selectedTool = selectedTool == 0U ? state.selectedTool : selectedTool;
+    if (state.controlRouter != nullptr) state.controlRouter->beginFrame(snapshot);
     const bool submitted = canvas::debug_ui::buildImGuiPanels(
-        snapshot, static_cast<int>(state.selectedTool), state.runtime.get(), nullptr, nullptr);
+        snapshot, static_cast<int>(state.selectedTool), state.controlRouter.get());
     ImGui::Render();
     const auto acquired = state.provider->acquire();
     if (acquired.code != canvas::render::SkiaSurfaceAcquireCode::kAcquired) return std::pair<bool, bool>{false, submitted};

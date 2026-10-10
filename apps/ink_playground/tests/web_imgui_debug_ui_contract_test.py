@@ -77,3 +77,16 @@ def test_web_debug_ui_requests_host_render_after_product_control_input():
     pointerup_handler = page.split('debugCanvas.addEventListener("pointerup"', 1)[1].split(
         'debugCanvas.addEventListener("pointercancel"', 1)[0]
     assert "requestRender();" in pointerup_handler
+
+
+def test_web_debug_ui_owns_common_activity_log_and_router():
+    bridge = BRIDGE.read_text(encoding="utf-8")
+    assert "DebugActivityLog activityLog" in bridge
+    assert "DebugControlRouter" in bridge
+    capture = bridge.split("canvas::debug_ui::DebugSnapshot captureDebugSnapshot", 1)[1].split(
+        "bool initializeDebugUi", 1
+    )[0]
+    assert "snapshotAssembler.capture" in capture
+    assert "controlRouter->beginFrame" in capture
+    assert "controlRouter->refreshReceipts" in capture
+    assert "snapshot.activity = state.activityLog.snapshot()" in capture

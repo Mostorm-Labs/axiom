@@ -9,6 +9,8 @@
 #include "windows_d3d12_skia_surface_provider.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
+#include "canvas/debug_ui/activity_log.hpp"
+#include "canvas/debug_ui/control_router.hpp"
 #include "../common/canvas_runtime_facade_adapter.hpp"
 #include "canvas/debug_ui/surface_debug_queue.hpp"
 #include "canvas/debug_ui/debug_command_queue.hpp"
@@ -63,7 +65,6 @@ class WindowsPlatformDebugControl;
 class WindowsArcDiagnostics;
 class WindowsPlatformDiagnostics;
 class WindowsTelemetry;
-class WindowsDebugActivitySource;
 
 struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   static constexpr int kToolbarHeight = 56;
@@ -143,12 +144,9 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::unique_ptr<WindowsArcDiagnostics> arcDiagnostics;
   std::unique_ptr<WindowsPlatformDiagnostics> platformDiagnostics;
   std::unique_ptr<WindowsTelemetry> telemetry;
-  std::unique_ptr<WindowsDebugActivitySource> activitySource;
+  std::unique_ptr<canvas::debug_ui::DebugActivityLog> activityLog;
+  std::unique_ptr<canvas::debug_ui::DebugControlRouter> controlRouter;
   canvas::debug_ui::DebugSnapshotAssembler snapshotAssembler;
-  canvas::runtime::SurfaceModeReceipt lastSurfaceReceipt{};
-  bool hasSurfaceReceipt = false;
-  canvas::runtime::ProductControlReceipt lastProductReceipt{};
-  bool hasProductReceipt = false;
   int selectedTool = 4101;
   int selectionPreviousTool = 4101;
   std::unordered_set<std::uint64_t> selectionPointers;
@@ -346,8 +344,6 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
         clearCanvasInput(state_);
         state_.canonicalFrameReady = false;
         receipt.state = canvas::runtime::ProductControlState::kApplied;
-        state_.lastProductReceipt = receipt;
-        state_.hasProductReceipt = true;
         InvalidateRect(state_.window, nullptr, FALSE);
       }
       return receipt;
@@ -358,8 +354,6 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
           ? state_.host->undo() : state_.host->redo();
       receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
                               : canvas::runtime::ProductControlState::kRejected;
-      state_.lastProductReceipt = receipt;
-      state_.hasProductReceipt = true;
       if (applied) {
         state_.canonicalFrameReady = false;
         InvalidateRect(state_.window, nullptr, FALSE);
@@ -444,21 +438,6 @@ class WindowsTelemetry final : public canvas::runtime::Telemetry {
   const State& state_;
 };
 
-class WindowsDebugActivitySource final : public canvas::debug_ui::DebugActivitySource {
- public:
-  explicit WindowsDebugActivitySource(const State& state) : state_(state) {}
-  [[nodiscard]] canvas::debug_ui::DebugActivitySnapshot readActivity() const noexcept override {
-    canvas::debug_ui::DebugActivitySnapshot snapshot{};
-    if (state_.hasProductReceipt) snapshot.productControl = state_.lastProductReceipt;
-    if (state_.hasSurfaceReceipt) {
-      snapshot.surfaceControl = state_.lastSurfaceReceipt;
-    }
-    return snapshot;
-  }
- private:
-  const State& state_;
-};
-
 class WindowsAxiomDebugControl final : public canvas::runtime::AxiomDebugControl {
  public:
   explicit WindowsAxiomDebugControl(State& state) : state_(state), queue_() {}
@@ -505,17 +484,18 @@ class WindowsPlatformDebugControl final : public canvas::runtime::PlatformDebugC
         ? 0U : state_.host->activeSurfaceProvider()->generation();
     const auto request = queue_.take(generation, state_.pointerSampleSequence);
     if (!request) {
-      if (const auto latest = queue_.latestReceipt()) {
-        state_.lastSurfaceReceipt = *latest;
-        state_.hasSurfaceReceipt = true;
-      }
       return;
     }
     const auto receipt = requestSurfaceMode(*request);
     state_.canonicalSurfaceMode = receipt.state == canvas::runtime::SurfaceControlState::kApplied
         ? request->mode : state_.canonicalSurfaceMode;
-    state_.lastSurfaceReceipt = queue_.complete(request->requestId, receipt.state, receipt.generation);
-    state_.hasSurfaceReceipt = true;
+    (void)queue_.complete(request->requestId, receipt.state, receipt.generation);
+  }
+  [[nodiscard]] canvas::runtime::SurfaceModeReceipt receipt(
+      std::uint64_t requestId) const noexcept override {
+    const auto value = queue_.receipt(requestId);
+    return value.value_or(canvas::runtime::SurfaceModeReceipt{
+        requestId, canvas::runtime::SurfaceControlState::kUnsupported});
   }
   [[nodiscard]] canvas::runtime::SurfaceModeReceipt requestSurfaceMode(
       const canvas::runtime::SurfaceModeRequest& request) noexcept override {
@@ -1218,8 +1198,14 @@ void persistEvidence(const State& value) {
 canvas::debug_ui::DebugSnapshot captureDebugSnapshot(State& value) {
   const canvas::debug_ui::DebugSnapshotSources sources{
       value.runtimeFacade.get(), value.runtimeFacade.get(), value.arcDiagnostics.get(),
-      value.platformDiagnostics.get(), value.telemetry.get(), value.activitySource.get()};
-  return value.snapshotAssembler.capture(sources);
+      value.platformDiagnostics.get(), value.telemetry.get(), value.activityLog.get()};
+  auto snapshot = value.snapshotAssembler.capture(sources);
+  if (value.controlRouter != nullptr) {
+    value.controlRouter->beginFrame(snapshot);
+    value.controlRouter->refreshReceipts();
+    if (value.activityLog != nullptr) snapshot.activity = value.activityLog->snapshot();
+  }
+  return snapshot;
 }
 
 void paint(HWND window, State& value) {
@@ -1954,11 +1940,15 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   value.arcDiagnostics = std::make_unique<WindowsArcDiagnostics>(value);
   value.platformDiagnostics = std::make_unique<WindowsPlatformDiagnostics>(value);
   value.telemetry = std::make_unique<WindowsTelemetry>(value);
-  value.activitySource = std::make_unique<WindowsDebugActivitySource>(value);
+  value.activityLog = std::make_unique<canvas::debug_ui::DebugActivityLog>();
+  value.controlRouter = std::make_unique<canvas::debug_ui::DebugControlRouter>(
+      value.runtimeFacade.get(), value.axiomDebugControl.get(),
+      value.platformDebugControl.get(), value.activityLog.get());
   value.debugUi->setRuntimeFacade(value.runtimeFacade.get());
   value.debugUi->setDiagnostics(value.runtimeFacade.get());
   value.debugUi->setAxiomDebugControl(value.axiomDebugControl.get());
   value.debugUi->setPlatformDebugControl(value.platformDebugControl.get());
+  value.debugUi->setControlRouter(value.controlRouter.get());
   value.debugUi->setArcDiagnostics(value.arcDiagnostics.get());
   value.debugUi->setPlatformDiagnostics(value.platformDiagnostics.get());
   value.debugUi->setTelemetry(value.telemetry.get());

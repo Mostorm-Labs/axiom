@@ -25,15 +25,8 @@ std::array<PanelState, static_cast<std::size_t>(DebugPanel::kCount)> DebugContro
              {DebugPanel::kSurface, true, "Surface"}, {DebugPanel::kBrush, true, "Brush"},
              {DebugPanel::kTelemetry, true, "Telemetry"}, {DebugPanel::kInspection, false, "Inspection (Unavailable)"}}};
 }
-std::optional<CommandReceipt> DebugController::submit(DebugCommand command) {
-    return context_.commands == nullptr ? std::nullopt : context_.commands->admit(std::move(command));
-}
-
 bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
-                      canvas::runtime::RuntimeFacade* runtime,
-                      canvas::runtime::AxiomDebugControl* axiomDebug,
-                      canvas::runtime::PlatformDebugControl* platform) {
-    static_cast<void>(axiomDebug);
+                      DebugControlRouter* router) {
     bool submittedControl = false;
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(410.0f, 560.0f), ImGuiCond_Always);
@@ -53,7 +46,6 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
         {"Membrane", 4104}, {"Object Eraser", 4105}, {"Partial Eraser", 4106},
         {"Pan", 4107},
     }};
-    static std::uint64_t nextRequestId = 1;
     const auto availabilityLabel = [](DebugAvailability state) {
         return state == DebugAvailability::kAvailable ? "Available" :
             state == DebugAvailability::kDegraded ? "Degraded" :
@@ -85,9 +77,8 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
       }
       if (ImGui::BeginTabItem("Canvas / Selection")) {
         bool selectionMode = snapshot.product.value.selection.enabled;
-        if (ImGui::Checkbox("Selection mode", &selectionMode) && runtime != nullptr) {
-            (void)runtime->setSelectionMode(selectionMode, nextRequestId++,
-                                            snapshot.product.value.identity.runtimeGeneration);
+        if (ImGui::Checkbox("Selection mode", &selectionMode) && router != nullptr) {
+            (void)router->setSelectionMode(selectionMode);
             submittedControl = true;
         }
         ImGui::Text("selected objects: %u", snapshot.product.value.selection.selectedObjectCount);
@@ -99,16 +90,16 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
       }
       if (ImGui::BeginTabItem("RuntimeFacade")) {
         ImGui::Text("Product controls are submitted through RuntimeFacade.");
-        ImGui::BeginDisabled(runtime == nullptr || !snapshot.product.value.history.canUndo);
+        ImGui::BeginDisabled(router == nullptr || !snapshot.product.value.history.canUndo);
         if (ImGui::Button("Undo (Ctrl+Z)")) {
-            (void)runtime->undo(nextRequestId++, snapshot.product.value.identity.runtimeGeneration);
+            (void)router->undo();
             submittedControl = true;
         }
         ImGui::EndDisabled();
         ImGui::SameLine();
-        ImGui::BeginDisabled(runtime == nullptr || !snapshot.product.value.history.canRedo);
+        ImGui::BeginDisabled(router == nullptr || !snapshot.product.value.history.canRedo);
         if (ImGui::Button("Redo (Ctrl+Y)")) {
-            (void)runtime->redo(nextRequestId++, snapshot.product.value.identity.runtimeGeneration);
+            (void)router->redo();
             submittedControl = true;
         }
         ImGui::EndDisabled();
@@ -130,35 +121,15 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
       if (ImGui::BeginTabItem("Brush / Eraser")) {
         for (const auto& tool : tools) {
             const bool selected = selectedTool == tool.second;
-            if (ImGui::Selectable(tool.first, selected) && runtime != nullptr) {
-                canvas::runtime::CanvasControlRequest request{};
-                request.clientId = 1U;
-                request.requestId = nextRequestId++;
-                request.deadlineSequence = snapshot.stamp.sequence + 120U;
-                const auto targets = runtime->mountedCanvasTargets();
-                request.target = targets.empty()
-                    ? canvas::runtime::CanvasTargetKey{snapshot.stamp.runtimeGeneration, 1U,
-                                                       snapshot.stamp.viewGeneration, snapshot.stamp.surfaceGeneration}
-                    : targets.front();
-                request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectTool;
-                request.payload.tool = tool.second == 4107
-                    ? canvas::runtime::CanvasToolKind::kPan
-                    : tool.second == 4105 || tool.second == 4106
-                        ? canvas::runtime::CanvasToolKind::kEraser
-                        : canvas::runtime::CanvasToolKind::kInk;
-                if (tool.second >= 4105 && tool.second <= 4106) {
-                    request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kEraserOptions;
-                    request.payload.eraser.mode = canvas::runtime::OptionPatch<std::uint32_t>::set(
-                        tool.second == 4105 ? 1U : 2U);
-                    request.payload.eraser.diameterLogicalPx = canvas::runtime::OptionPatch<float>::keep();
-                } else if (tool.second != 4107 && tool.second >= 4101 && tool.second <= 4104) {
-                    request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectPreset;
-                    request.payload.preset = {tool.second == 4101 ? "vector-solid-v1" :
-                                              tool.second == 4102 ? "marker-flat-v1" :
-                                              tool.second == 4103 ? "chalk-grain-v1" : "membrane-v1",
-                                              tool.second == 4103 ? 4U : 1U};
+            if (ImGui::Selectable(tool.first, selected) && router != nullptr) {
+                if (tool.second == 4105 || tool.second == 4106) {
+                    (void)router->setEraser(tool.second == 4105 ? 1U : 2U);
+                } else if (tool.second == 4107) {
+                    (void)router->setTool(4107U);
+                } else {
+                    (void)router->setBrush(static_cast<std::uint32_t>(tool.second - 4100),
+                                           tool.second == 4103 ? 4U : 1U);
                 }
-                (void)runtime->submitCanvasControl(request);
                 submittedControl = true;
             }
         }
@@ -175,14 +146,8 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
       if (ImGui::BeginTabItem("Surface")) {
         ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f), "Canonical surface mode");
     const auto requestSurface = [&](canvas::runtime::SurfaceMode mode) {
-        if (platform == nullptr) return;
-        canvas::runtime::SurfaceModeRequest request{};
-        request.requestId = nextRequestId++;
-        request.target = canvas::runtime::SurfaceRole::kCanonicalCanvas;
-        request.mode = mode;
-        request.expectedGeneration = snapshot.product.value.identity.surfaceGeneration;
-        request.deadlineSequence = snapshot.stamp.sequence + 120U;
-        (void)platform->enqueueSurfaceMode(request);
+        if (router == nullptr) return;
+        (void)router->setCanonicalSurfaceMode(mode);
         submittedControl = true;
     };
     if (ImGui::Button("Platform default")) requestSurface(canvas::runtime::SurfaceMode::kPlatformDefault);

@@ -7,6 +7,8 @@ RENDERER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "controller.h
 RENDERER_IMPL = ROOT / "debug_ui" / "src" / "controller.cpp"
 RUNTIME_FACADE = ROOT / "runtime" / "foundation" / "include" / "canvas" / "runtime" / "runtime_facade.hpp"
 SURFACE = ROOT / "runtime" / "foundation" / "include" / "canvas" / "runtime" / "surface_debug_control.hpp"
+ROUTER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "control_router.hpp"
+ROUTER_IMPL = ROOT / "debug_ui" / "src" / "control_router.cpp"
 HOST_HEADER = ROOT / "apps" / "ink_playground" / "common" / "ink_playground_host.hpp"
 WINDOWS_MAIN = ROOT / "apps" / "ink_playground" / "platform" / "windows" / "main.cpp"
 
@@ -98,10 +100,12 @@ def test_surface_control_is_an_owner_interface_with_target_and_expected_generati
 def test_common_controller_only_submits_to_runtime_and_platform_owner():
     header = RENDERER.read_text(encoding="utf-8")
     impl = RENDERER_IMPL.read_text(encoding="utf-8")
+    router = ROUTER.read_text(encoding="utf-8")
+    router_impl = ROUTER_IMPL.read_text(encoding="utf-8")
     assert "canvas/runtime/runtime_facade.hpp" in header
-    assert "canvas::runtime::RuntimeFacade" in header
-    assert "PlatformDebugControl*" in header
-    assert "enqueueSurfaceMode" in impl
+    assert "DebugControlRouter*" in header
+    assert "DebugControlRouter" in router
+    assert "enqueueSurfaceMode" in router_impl
     assert "platform->requestSurfaceMode" not in impl
     assert "generation_" not in impl
 
@@ -161,6 +165,29 @@ def test_overlay_uses_one_imgui_new_frame_per_render_pass():
     assert render.count("ImGui::NewFrame();") == 1
     assert render.count("ImGui_ImplWin32_NewFrame();") == 1
     assert "const bool submitted = drawPanels();" in render
+
+
+def test_windows_activity_log_and_router_refresh_before_publish():
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    assert "DebugActivityLog" in source
+    assert "DebugControlRouter" in source
+    capture = source.split("canvas::debug_ui::DebugSnapshot captureDebugSnapshot", 1)[1].split(
+        "void paint", 1
+    )[0]
+    assert "snapshotAssembler.capture" in capture
+    assert "controlRouter->beginFrame" in capture
+    assert "controlRouter->refreshReceipts" in capture
+    assert "snapshot.activity = value.activityLog->snapshot()" in capture
+
+
+def test_generic_debug_ui_command_queue_is_retired_but_owner_queues_remain():
+    debug_dir = ROOT / "debug_ui"
+    cmake = (debug_dir / "CMakeLists.txt").read_text(encoding="utf-8")
+    assert not (debug_dir / "include" / "canvas" / "debug_ui" / "command.hpp").exists()
+    assert not (debug_dir / "src" / "command.cpp").exists()
+    assert "src/command.cpp" not in cmake
+    assert (debug_dir / "include" / "canvas" / "debug_ui" / "debug_command_queue.hpp").exists()
+    assert (debug_dir / "include" / "canvas" / "debug_ui" / "surface_debug_queue.hpp").exists()
 
 
 def test_windows_timer_does_not_rasterize_debug_overlay_during_active_stroke():
