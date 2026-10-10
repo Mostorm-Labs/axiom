@@ -263,6 +263,8 @@ The following product-safe controls are part of the PX0 workbench baseline.
 
 PX0 MUST NOT make brush preset changes retroactively mutate already-committed strokes unless that behavior is separately part of the product contract.
 
+Selection control in PX0 is limited to product-safe selection mode/state plus camera fit actions. Existing direct-on-canvas selection/transform interaction remains exercised through the real Canvas interaction path; PX0 does not duplicate it as ad hoc button/property mutation when no corresponding product-safe control contract exists.
+
 ### 5.7.3 View / Camera control baseline
 
 View/Camera receives an explicit contract because it is both a real product behavior and an important engineering diagnostic surface.
@@ -407,9 +409,9 @@ If Reset Canvas / Empty Canvas / Ink Baseline cannot be expressed through an aut
 
 Evidence export remains governed by the existing Gate/evidence contracts; PX0 does not redefine an evidence artifact merely because Scenarios provides a button.
 
-### 5.7.8 UI-local workbench controls
+### 5.7.8 UI-local and host-presentation controls
 
-The following controls belong only to DebugUiSessionState and never reach Runtime owners:
+The following controls are non-Runtime presentation state. Most belong to DebugUiSessionState; Debug UI show/hide may remain owned by the platform host because it controls overlay/canvas presentation. None of them reach Runtime semantic owners:
 
 ```text
 workspace navigation
@@ -418,7 +420,7 @@ search/filter
 metric view selection
 activity auto-scroll
 local activity-filter selection
-workbench show/hide presentation state
+workbench show/hide presentation state (host/session presentation only)
 ```
 
 A local "clear visible activity" action, if provided, only clears the Debug UI's bounded presentation log; it does not clear canonical history, telemetry owned by Runtime, or evidence artifacts.
