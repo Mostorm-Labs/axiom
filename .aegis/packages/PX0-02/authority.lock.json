@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "05451bbf7141f515612bf7942445d625d0419a92",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": [
+        "7.7 Structured immutable DebugSnapshot",
+        "7.8 Section-local availability",
+        "7.9 Snapshot coherence",
+        "7.10 Common DebugSnapshotAssembler",
+        "12 Failure and degraded-state behavior",
+        "14 Work-package decomposition"
+      ]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "05451bbf7141f515612bf7942445d625d0419a92",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": [
+        "Work Package PX0-02 - Structured Snapshot + Common Assembler"
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Replace the flat DebugSnapshot/global Capability bag with a bounded structured domain envelope and make one common DebugSnapshotAssembler the Windows/Web semantic snapshot assembly path.",
+    "entry_revision": "05451bbf7141f515612bf7942445d625d0419a92",
+    "snapshot_domains": [
+      "product",
+      "axiom",
+      "arc",
+      "platform",
+      "telemetry",
+      "activity"
+    ],
+    "availability_states": [
+      "Available",
+      "Degraded",
+      "Unavailable",
+      "Unsupported",
+      "Error"
+    ],
+    "coherence_states": [
+      "Coherent",
+      "MixedGeneration",
+      "Stale"
+    ],
+    "coherence_rule": "Capture is best-effort and non-blocking: read leading RuntimeState identity, read Product/Axiom/Arc/Platform/Telemetry/Activity sources, read trailing RuntimeState identity, retry the full capture at most once if the product identity changed, and publish MixedGeneration rather than blocking if the second attempt is still unstable.",
+    "identity_fields": [
+      "runtimeGeneration",
+      "documentGeneration",
+      "documentRevision",
+      "viewGeneration",
+      "surfaceGeneration"
+    ],
+    "stamp_rule": "snapshotSequence is assembler-local and monotonic per capture call; stamp.sequence preserves the current owner/control sequencing seam by using TelemetrySnapshot.sequence when telemetry is available, otherwise snapshotSequence; monotonicTimeNs uses steady_clock; frameId uses telemetry.canonicalFrames when available, otherwise platform.presentCount.",
+    "availability_rule": "Absent provider means Unsupported. A present Runtime/Axiom/Arc/Telemetry provider is Available. A present Platform provider is Available when surfaceAvailable is true and Degraded when surfaceAvailable is false. Current provider interfaces do not expose a distinct provider-error channel, so PX0-02 must not invent Error/Unavailable states without owner evidence.",
+    "activity_transition_rule": "DebugSnapshot already contains the Activity domain in PX0-02, but the bounded DebugActivityLog is PX0-03. PX0-02 may define a minimal read-only DebugActivitySource and DebugActivitySnapshot that preserve the existing last Product/Surface receipt display. The assembler attaches that bounded snapshot. PX0-03 may make DebugActivityLog implement this source without changing snapshot ownership.",
+    "platform_convergence_rule": "Windows buildDebugSnapshot(...) and Web debugSnapshot(...) semantic field assembly are removed. Platform composition roots provide owner providers to the common assembler; they may retain a tiny capture/publish call but may not map snapshot fields themselves.",
+    "legacy_ui_rule": "PX0-02 adapts the existing tab/panel renderer and DUI-M1 PanelModel to the structured sections only as required to preserve current behavior. It does not introduce Workspace/PanelRegistry/Workbench or redesign the layout.",
+    "latency_rule": "Assembler/provider reads must not take a global Runtime lock, synchronously mutate owners, or add Debug UI raster work to the active-pointer Canvas hot path. Existing Windows active-stroke overlay throttling/input-capture behavior remains intact.",
+    "preserved_boundaries": [
+      "RuntimeFacade/IAxiomDiagnostics split from PX0-01 remains unchanged.",
+      "CanvasRuntimeFacadeAdapter/CanvasControlService product-control lane remains unchanged.",
+      "Generic debug_ui::DebugCommand remains until PX0-03.",
+      "DebugPanelModel/PanelCapability remain until PX0-04.",
+      "WindowsDebugUiHost host convergence remains PX0-06.",
+      "DUI-M1 physical evidence remains BLOCKED_EVIDENCE/PHYSICAL_PENDING."
+    ]
+  },
+  "forbidden_interpretations": [
+    "PX0-02 does not authorize DebugControlRouter, DebugActivityLog, generic DebugCommand retirement, Workbench/PanelRegistry, final panel migration, or host thinning.",
+    "PX0-02 does not authorize changes to Runtime product/diagnostics contracts established by PX0-01 unless a compile-only include correction is strictly required and already source-compatible.",
+    "Repository-local snapshot assembly helpers may not survive under a renamed function if they still perform domain mapping.",
+    "A mixed-generation snapshot is diagnostic data, not a reason to lock or block the Runtime."
+  ]
+}
