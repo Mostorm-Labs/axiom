@@ -1,7 +1,7 @@
 # PX0 Debug Control Plane Baseline Design
 
 Date: 2026-10-10  
-Status: Proposed / design-approved in chat; written-spec review pending  
+Status: Approved / written-spec review passed  
 Stage family: Aegis P14-P18 architecture design  
 Repository baseline: `Mostorm-Labs/axiom@9760a8ad910aaa1d1232c9cf24723e4d311d9816` (`codex/g4-7-development`)  
 Scope: Pre-G5 Debug Control Plane baseline for the pre-productization track
