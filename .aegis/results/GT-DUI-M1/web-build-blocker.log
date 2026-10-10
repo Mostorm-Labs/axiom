@@ -1,7 +1,7 @@
 [0/2] Re-checking globbed directories...
 [1/126] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_specific_validation.cpp.o
 [2/126] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
-FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o 
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
 C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/out/dui-m1-web4/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -c C:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/src/codec.cpp
 PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
 Stack dump:
@@ -60,14 +60,14 @@ clang version 16.0.0 (https://github.com/llvm/llvm-project dee009d3b5c71a340eb4e
 Target: wasm32-unknown-emscripten
 Thread model: posix
 InstalledDir: C:\Developer\emsdk\upstream\bin
-clang++: note: diagnostic msg: 
+clang++: note: diagnostic msg:
 ********************
 
 PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:
 Preprocessed source(s) and associated run script(s) are located at:
 clang++: note: diagnostic msg: C:\Users\Chado\AppData\Local\Temp\codec-5fe6d5.cpp
 clang++: note: diagnostic msg: C:\Users\Chado\AppData\Local\Temp\codec-5fe6d5.sh
-clang++: note: diagnostic msg: 
+clang++: note: diagnostic msg:
 
 ********************
 em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fignore-exceptions -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/out/dui-m1-web4/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.o.d -c C:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/src/codec.cpp -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o' failed (returned 1)

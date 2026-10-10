@@ -1,10 +1,14 @@
 {
   "task_id": "GT-DUI-M1",
-  "result_revision": "1faeacd3e469ee4d94f8d755cdf4a772b21295b3",
+  "result_revision": "d9ceb6ee0798cc95a3ca40f3b9bc92fda0ac59d7",
   "files": [
     {
+      "path": "android-native-build.log",
+      "sha256": "88fa546f76a08f055970440a75020476dfdf80f940881ac927a084d9a2f5cb57"
+    },
+    {
       "path": "artifact-manifest.json",
-      "sha256": "60918729b0c9f9e60253e4448b702196a055ea0ef6e6eed06a181ef6628d39f9"
+      "sha256": "b61b11f05fcf3002c33d859b754d8efbebdf0688f9dc6c14b45942b11ad057bf"
     },
     {
       "path": "build-info.json",
@@ -12,7 +16,7 @@
     },
     {
       "path": "build.log",
-      "sha256": "b5e96a6e3accd41dd658d675a673e635cab200a88d2ee251c0347406db2a681e"
+      "sha256": "ff0d8df30c5c1beab85e0bec935e7f246af434a48922fe81f68a569d6b1d76b7"
     },
     {
       "path": "control-trace.json",
@@ -35,6 +39,10 @@
       "sha256": "3854e28e91e4666d47a29d100ca0f0cedba3a1b0139f55a43743cd0c0459cfcd"
     },
     {
+      "path": "repo-reconciliation.json",
+      "sha256": "ba176af97b0a6a2cc3072f46c1bcce1c22fbc86cb4dcb2f738ff5bd0cea292f6"
+    },
+    {
       "path": "result.json",
       "sha256": "0f387861d47b464d7ec6e98e54393b9aaaf76c58f15284828c43933a95cb29b7"
     },
@@ -49,7 +57,11 @@
     {
       "path": "view-proof.json",
       "sha256": "ab074ce4783209fcee6768e9532da06a97af9cee104fda23341653891024fa33"
+    },
+    {
+      "path": "web-build-blocker.log",
+      "sha256": "2a878030809304939485c34588c5926b042c267b06b05dc66df2cd79d5586b5b"
     }
   ],
-  "note": "Manifest hashes are generated before final manifest/result updates; reviewer should verify exact blobs at materialized ref."
+  "self_reference": "evidence-manifest excludes itself; verify artifact-manifest digest list at materialized ref"
 }
