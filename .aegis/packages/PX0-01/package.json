@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-01-P31-v0.1",
+  "task_id": "PX0-01",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "PX0 Contract Boundary Cleanup: product-only RuntimeFacade, separate read-only diagnostics, structured product state, and preservation of DUI-M1 common CanvasRuntimeFacadeAdapter",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-01-contract-boundary-cleanup"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "25e5bcead21976f906333582ea4c0a80df7b2e20",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "3584811c8a59971cb09c2eedf0ddeb928f07218ec81a8c848de1dd6dde43ff38"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "e6453591d04cb7440f5f358178b346164c791e4acd4260cc0288b7396f1005f2"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ebfa7b446380174cfa15f0f6163bf46881b454c4b54b9261aa6ea7f683f33cd6"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "43fdb2694a948d903754fd847918ddef9f210b9ac2e8c1df8f0efbaecc426f1b"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "85740dfa29fa6f349e5bb93b55f39dd605e897e8aad3fdba826150fed0c00397"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-01/",
+    "base_revision": "25e5bcead21976f906333582ea4c0a80df7b2e20"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run repository/package/anchor preflights, perform the required ImplementationDesignPreflight, observe the frozen RED RuntimeFacade contract oracle, then execute the full PX0-01 closure contract without entering PX0-02."
+  }
+}
