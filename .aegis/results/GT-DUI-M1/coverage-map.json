@@ -1,0 +1,66 @@
+{
+  "task_id": "GT-DUI-M1",
+  "result_revision": "1faeacd3e469ee4d94f8d755cdf4a772b21295b3",
+  "map": [
+    {
+      "obligation": "M1-01",
+      "sources": [
+        "runtime/control/tests/canvas_control_service_test.cpp"
+      ],
+      "tests": "DUIM1Control",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-02",
+      "sources": [
+        "apps/ink_playground/tests/dui_m1_tool_options_test.cpp"
+      ],
+      "tests": "DUIM1ToolOptions",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-03",
+      "sources": [
+        "runtime/ink/src/brush_package_catalog.cpp"
+      ],
+      "tests": "DUIM1ToolOptions",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-04",
+      "sources": [
+        "apps/ink_playground/common/brush_commit_adapter.cpp",
+        "runtime/ink/src/brush_session.cpp"
+      ],
+      "tests": "DUIM1ToolOptions",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-05",
+      "sources": [
+        "apps/ink_playground/tests/dui_m1_view_controls_test.cpp"
+      ],
+      "tests": "DUIM1ViewControls",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-06",
+      "sources": [
+        "debug_ui/src/panel_model.cpp",
+        "apps/ink_playground/tests/dui_m1_platform_control_test.cpp"
+      ],
+      "tests": "DUIM1PanelModel,DUIM1PlatformControl",
+      "status": "PASS"
+    },
+    {
+      "obligation": "M1-07",
+      "sources": [
+        "runtime/control/tests/build_info_test.cpp",
+        "apps/ink_playground/tests/dui_m1_qualification_runner.cpp"
+      ],
+      "tests": "DUIM1BuildInfo,DUIM1Qualification",
+      "status": "PASS"
+    }
+  ],
+  "note": "Automated source/control-path coverage; physical UI remains pending."
+}

@@ -1,0 +1,74 @@
+[0/2] Re-checking globbed directories...
+[1/126] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_specific_validation.cpp.o
+[2/126] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/out/dui-m1-web4/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -c C:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/src/codec.cpp
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: C:/Developer/emsdk/upstream/bin\\clang++.exe -target wasm32-unknown-emscripten -fignore-exceptions -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\\Developer\\emsdk\\upstream\\emscripten\\cache\\sysroot\\include\\SDL --sysroot=C:\\Developer\\emsdk\\upstream\\emscripten\\cache\\sysroot -Xclang -iwithsysroot/include\\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/out/dui-m1-web4/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -MF runtime\\semantic\\CMakeFiles\\canvas_runtime_semantic.dir\\src\\codec.cpp.o.d -c C:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/src/codec.cpp -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
+1.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:413:5: current parser token 'size'
+2.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:50:1: parsing namespace 'google'
+3.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:51:1: parsing namespace 'google::protobuf'
+4.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:57:1: parsing namespace 'google::protobuf::internal'
+5.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:117:1: parsing struct/union/class body 'google::protobuf::internal::EpsCopyInputStream'
+6.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:386:72: parsing function body 'google::protobuf::internal::EpsCopyInputStream::AdvancePtrMaybeFlush'
+7.	C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include\google/protobuf/parse_context.h:386:72: in compound statement ('{}')
+Exception Code: 0xC0000005
+ #0 0x00007ff77395c020 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x348c020)
+ #1 0x00007ff772cd6a11 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x2806a11)
+ #2 0x00007ff773bb03d5 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36e03d5)
+ #3 0x00007ff773bbc3d8 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36ec3d8)
+ #4 0x00007ff773bbd647 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36ed647)
+ #5 0x00007ff773bc4d50 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36f4d50)
+ #6 0x00007ff773bc358a (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36f358a)
+ #7 0x00007ff773b6eacf (C:\Developer\emsdk\upstream\bin\clang++.exe+0x369eacf)
+ #8 0x00007ff773b94580 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36c4580)
+ #9 0x00007ff7739ae4ef (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34de4ef)
+#10 0x00007ff7739ae2c1 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34de2c1)
+#11 0x00007ff7739acb03 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34dcb03)
+#12 0x00007ff773b63e36 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693e36)
+#13 0x00007ff773b63a13 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693a13)
+#14 0x00007ff773b8cbcb (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36bcbcb)
+#15 0x00007ff7739ac3b7 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34dc3b7)
+#16 0x00007ff773b63e36 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693e36)
+#17 0x00007ff773b63a13 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693a13)
+#18 0x00007ff773b8cbcb (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36bcbcb)
+#19 0x00007ff7739ac3b7 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34dc3b7)
+#20 0x00007ff773b63e36 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693e36)
+#21 0x00007ff773b63a13 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x3693a13)
+#22 0x00007ff773b8cbcb (C:\Developer\emsdk\upstream\bin\clang++.exe+0x36bcbcb)
+#23 0x00007ff7739ac3b7 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34dc3b7)
+#24 0x00007ff7739aa2ee (C:\Developer\emsdk\upstream\bin\clang++.exe+0x34da2ee)
+#25 0x00007ff772d1926e (C:\Developer\emsdk\upstream\bin\clang++.exe+0x284926e)
+#26 0x00007ff7718d59cb (C:\Developer\emsdk\upstream\bin\clang++.exe+0x14059cb)
+#27 0x00007ff770ba858d (C:\Developer\emsdk\upstream\bin\clang++.exe+0x6d858d)
+#28 0x00007ff770c4e06b (C:\Developer\emsdk\upstream\bin\clang++.exe+0x77e06b)
+#29 0x00007ff7704da176 (C:\Developer\emsdk\upstream\bin\clang++.exe+0xa176)
+#30 0x00007ff7704d5711 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x5711)
+#31 0x00007ff7716ab7c6 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x11db7c6)
+#32 0x00007ff770a04b5d (C:\Developer\emsdk\upstream\bin\clang++.exe+0x534b5d)
+#33 0x00007ff7716ab159 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x11db159)
+#34 0x00007ff770b5d5b1 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x68d5b1)
+#35 0x00007ff770b5d93e (C:\Developer\emsdk\upstream\bin\clang++.exe+0x68d93e)
+#36 0x00007ff770b7ffbf (C:\Developer\emsdk\upstream\bin\clang++.exe+0x6affbf)
+#37 0x00007ff7704d492e (C:\Developer\emsdk\upstream\bin\clang++.exe+0x492e)
+#38 0x00007ff773c6e9b8 (C:\Developer\emsdk\upstream\bin\clang++.exe+0x379e9b8)
+#39 0x00007ffae55f7374 (C:\WINDOWS\System32\KERNEL32.DLL+0x17374)
+#40 0x00007ffae5b1cc91 (C:\WINDOWS\SYSTEM32\ntdll.dll+0x4cc91)
+clang++: error: clang frontend command failed due to signal (use -v to see invocation)
+clang version 16.0.0 (https://github.com/llvm/llvm-project dee009d3b5c71a340eb4ebb3cfb49f6015a789cc)
+Target: wasm32-unknown-emscripten
+Thread model: posix
+InstalledDir: C:\Developer\emsdk\upstream\bin
+clang++: note: diagnostic msg: 
+********************
+
+PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:
+Preprocessed source(s) and associated run script(s) are located at:
+clang++: note: diagnostic msg: C:\Users\Chado\AppData\Local\Temp\codec-5fe6d5.cpp
+clang++: note: diagnostic msg: C:\Users\Chado\AppData\Local\Temp\codec-5fe6d5.sh
+clang++: note: diagnostic msg: 
+
+********************
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fignore-exceptions -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/out/dui-m1-web4/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.o.d -c C:/Users/Chado/.codex/worktrees/dui-m1-canvas-control/canvas/runtime/semantic/src/codec.cpp -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o' failed (returned 1)
+ninja: build stopped: subcommand failed.

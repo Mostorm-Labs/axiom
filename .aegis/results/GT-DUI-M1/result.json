@@ -1,0 +1,37 @@
+{
+  "task_id": "GT-DUI-M1",
+  "result_revision": "1faeacd3e469ee4d94f8d755cdf4a772b21295b3",
+  "branch": "codex/dui-m1-canvas-control",
+  "anchor": "9760a8ad910aaa1d1232c9cf24723e4d311d9816",
+  "materialization_ref": "1faeacd3e469ee4d94f8d755cdf4a772b21295b3",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "physical_status": {
+    "Windows": "PHYSICAL_PENDING",
+    "Web": "PHYSICAL_PENDING",
+    "Android": "PHYSICAL_PENDING"
+  },
+  "windows": {
+    "qualification": "C:\\Users\\Chado\\.codex\\worktrees\\dui-m1-canvas-control\\canvas\\out\\dui-m1-windows\\qualification-final2\\qualification.json",
+    "build_ready": true,
+    "executable": "C:\\Users\\Chado\\.codex\\worktrees\\dui-m1-canvas-control\\canvas\\out\\dui-m1-windows\\apps\\ink_playground\\RelWithDebInfo\\axiom_ink_playground_windows.exe"
+  },
+  "web": {
+    "status": "ENVIRONMENT_BLOCKER",
+    "build_ready": false,
+    "detail": "Locked Emscripten clang frontend crashes while compiling locked Semantic protobuf codec/snapshot; serial retry reproduced.",
+    "evidence": "C:\\Users\\Chado\\.codex\\worktrees\\dui-m1-canvas-control\\canvas\\out\\dui-m1-web4\\build-serial.log"
+  },
+  "android": {
+    "native_build_ready": true,
+    "apk_build_ready": false,
+    "so": "C:\\Users\\Chado\\.codex\\worktrees\\dui-m1-canvas-control\\canvas\\out\\dui-m1-android-native\\apps\\ink_playground\\libaxiom_ink_playground_android.so",
+    "detail": "No Gradle or Gradle wrapper available in repository/host; APK assembly cannot be executed.",
+    "status": "ENVIRONMENT_BLOCKER"
+  },
+  "tests": {
+    "diff_check": "passed",
+    "duim1": "8/8 passed",
+    "regressions": "9/9 passed"
+  },
+  "scope": "M1 only; M2/G4/G5 not claimed"
+}
