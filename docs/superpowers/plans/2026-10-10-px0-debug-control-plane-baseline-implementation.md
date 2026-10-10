@@ -43,7 +43,8 @@
 - Create `runtime/foundation/include/canvas/runtime/runtime_state.hpp` — structured product-safe Runtime state projection.
 - Create `runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp` — typed built-in feature diagnostics aggregate with PX0 availability only; future feature WPs populate payloads.
 - Modify `runtime/foundation/include/canvas/runtime/runtime_facade.hpp` — product-safe RuntimeFacade only; no Diagnostics inheritance.
-- Modify `runtime/foundation/include/canvas/runtime/diagnostics.hpp` — read-only Axiom/Arc/Platform diagnostics and structured Axiom diagnostics.
+- Modify `runtime/foundation/include/canvas/runtime/diagnostics.hpp` — read-only Axiom/Arc/Platform diagnostics and structured Axiom diagnostics, including resolved canonical Surface mode in Platform diagnostics.
+- Modify `runtime/foundation/include/canvas/runtime/telemetry.hpp` — carry the currently displayed sample Hz, frame ms, and queue-age ms through the common telemetry provider instead of platform snapshot assembly.
 - Modify `runtime/foundation/include/canvas/runtime/surface_debug_control.hpp` — add read-only receipt lookup needed for queued Surface activity observation.
 
 ### Debug UI core
@@ -206,7 +207,7 @@ struct RuntimeStateSnapshot final {
 };
 ```
 
-- `product_control.hpp` retains the current core enums/requests/receipts and typed RuntimeFacade helper methods retain their current semantics.
+- `product_control.hpp` retains the current core enums/requests/receipts. Brush/eraser identity is no longer encoded by overloading `ProductControlRequest::toolId`: `setBrush()` sets `brushId/brushRevision`, `setEraser()` sets `eraserId`, and concrete adapters derive their temporary host command-button selection from those fields. `toolId` is used only by `kSetTool`.
 
 - [ ] **Step 1: Write the failing RuntimeFacade boundary test**
 
@@ -255,7 +256,7 @@ class RuntimeFacade {
 };
 ```
 
-Do not change command semantics or numeric enum values.
+Do not change existing enum numeric values. Correct the current Brush/Eraser request-field conflation described above without inventing new product tool IDs.
 
 - [ ] **Step 4: Build and run the focused test**
 
@@ -281,6 +282,7 @@ git commit -m "refactor(runtime): separate product facade contracts"
 **Files:**
 - Create: `runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp`
 - Modify: `runtime/foundation/include/canvas/runtime/diagnostics.hpp`
+- Modify: `runtime/foundation/include/canvas/runtime/telemetry.hpp`
 - Modify: `apps/ink_playground/platform/windows/main.cpp`
 - Modify: `apps/ink_playground/platform/web/bridge.cpp`
 - Modify: `debug_ui/tests/runtime_contract_test.cpp`
@@ -294,7 +296,83 @@ virtual AxiomDiagnosticsSnapshot readDiagnostics() const noexcept = 0;
 virtual FeatureDiagnosticsSnapshot readFeatureDiagnostics() const noexcept;
 ```
 
-- `FeatureDiagnosticsSnapshot` has typed built-in sections for Ink, Shape, RichText, Connector, Snap, and Image. PX0 may use empty/default payloads for unsupported successor features; it does not invent feature semantics.
+- The structured Axiom snapshot is exactly:
+
+```cpp
+struct AxiomDiagnosticsIdentityState final {
+  std::uint64_t runtimeGeneration = 0;
+  std::uint64_t documentGeneration = 0;
+  std::uint64_t documentRevision = 0;
+  std::uint64_t viewGeneration = 0;
+  std::uint64_t surfaceGeneration = 0;
+};
+
+struct AxiomDiagnosticsDocumentState final {
+  std::uint64_t canonicalOperationCount = 0;
+};
+
+struct AxiomDiagnosticsCameraState final {
+  float scale = 1.0F;
+  float translationX = 0.0F;
+  float translationY = 0.0F;
+  std::uint64_t generation = 0;
+};
+
+struct AxiomDiagnosticsHistoryState final {
+  bool canUndo = false;
+  bool canRedo = false;
+};
+
+struct AxiomDiagnosticsInteractionState final {
+  std::uint32_t toolId = 0;
+  bool selectionMode = false;
+  std::uint32_t selectedObjectCount = 0;
+  std::uint64_t selectedPrimaryObject = 0;
+  std::uint64_t snapCandidateCount = 0;
+  std::uint64_t overlayUpdateCount = 0;
+  std::uint64_t transientTransformCount = 0;
+};
+
+struct AxiomDiagnosticsSnapshot final {
+  AxiomDiagnosticsIdentityState identity;
+  AxiomDiagnosticsDocumentState document;
+  AxiomDiagnosticsCameraState camera;
+  AxiomDiagnosticsHistoryState history;
+  AxiomDiagnosticsInteractionState interaction;
+};
+```
+
+- Feature diagnostics use a typed built-in aggregate without inventing future payload semantics:
+
+```cpp
+template <typename T>
+struct FeatureDiagnosticsSection final {
+  bool supported = false;
+  bool available = false;
+  T value{};
+};
+
+struct InkDiagnosticsSnapshot final {};
+struct ShapeDiagnosticsSnapshot final {};
+struct RichTextDiagnosticsSnapshot final {};
+struct ConnectorDiagnosticsSnapshot final {};
+struct SnapDiagnosticsSnapshot final {};
+struct ImageDiagnosticsSnapshot final {};
+
+struct FeatureDiagnosticsSnapshot final {
+  FeatureDiagnosticsSection<InkDiagnosticsSnapshot> ink;
+  FeatureDiagnosticsSection<ShapeDiagnosticsSnapshot> shape;
+  FeatureDiagnosticsSection<RichTextDiagnosticsSnapshot> richText;
+  FeatureDiagnosticsSection<ConnectorDiagnosticsSnapshot> connector;
+  FeatureDiagnosticsSection<SnapDiagnosticsSnapshot> snap;
+  FeatureDiagnosticsSection<ImageDiagnosticsSnapshot> image;
+};
+```
+
+PX0 leaves successor-feature payloads empty and unsupported/unavailable. Later feature WPs add fields to their typed payload without changing platform hosts or snapshot-assembler topology.
+
+- Extend `PlatformDiagnosticsSnapshot` with `SurfaceMode canonicalSurfaceMode` so resolved mode comes from the Platform diagnostics owner.
+- Extend `TelemetrySnapshot` by appending `double sampleHz`, `double frameMs`, and `double queueAgeMs`; Windows/Web providers populate them from their existing host/HUD observations.
 
 - [ ] **Step 1: Extend the failing contract test**
 
@@ -320,7 +398,7 @@ class WindowsRuntimeFacade final
 
 and the equivalent Web class.
 
-Update all product-state construction to the nested `RuntimeStateSnapshot` fields. Do not change host behavior.
+Update all product-state construction to the nested `RuntimeStateSnapshot` fields. For `kSetBrush`/`kSetEraser`, adapters derive temporary host selection IDs from `brushId`/`eraserId`; they do not consume an overloaded `toolId`. Do not otherwise change host behavior.
 
 - [ ] **Step 4: Run contract and existing Debug UI tests**
 
@@ -347,6 +425,7 @@ Expected: PASS after updating only assertions invalidated by the intentional int
 ```bash
 git add runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp \
         runtime/foundation/include/canvas/runtime/diagnostics.hpp \
+        runtime/foundation/include/canvas/runtime/telemetry.hpp \
         apps/ink_playground/platform/windows/main.cpp \
         apps/ink_playground/platform/web/bridge.cpp \
         debug_ui/tests/runtime_contract_test.cpp \
@@ -875,12 +954,15 @@ Preserve A8 font atlas and `SkBlendMode::kModulate` behavior.
 Controller order is:
 
 ```text
-capture snapshot
+snapshot = assembler.capture()
 -> router.beginFrame(snapshot)
 -> router.refreshReceipts()
--> capture/attach latest activity as required
--> render workbench
+-> snapshot.activity = activity.snapshot()
+-> publish/store that one immutable snapshot
+-> render workbench from that snapshot
 ```
+
+Receipt refresh may change only the Activity section for the current frame; it does not re-query Runtime diagnostics a second time and therefore does not manufacture a new coherence identity.
 
 No panel may receive raw owner pointers.
 
@@ -986,14 +1068,14 @@ git commit -m "feat(debug-ui): migrate existing controls into workbench"
 - Modify: `debug_ui/tests/workbench_state_test.cpp`
 
 **Interfaces:**
-- Scenarios may register only sanctioned existing scenario/fixture actions.
-- If no safe Reset/Empty/Ink Baseline seam exists, show them as Unsupported; do not add a Document/Scene mutation API.
+- PX0 Scenarios is deliberately non-mutating: register `Reset Canvas`, `Empty Canvas`, and `Ink Baseline` entries as `Unsupported` placeholders plus status text. Do not wire existing G4.7 text qualification menus into this new workspace and do not create a Document/Scene mutation API.
+- A later feature/evidence WP may activate a scenario only after a sanctioned runner/fixture boundary is explicitly available.
 
 - [ ] **Step 1: Write test that unsupported scenario controls do not call RuntimeFacade or any raw owner**
 
 - [ ] **Step 2: Verify failure**
 
-- [ ] **Step 3: Implement the Scenarios shell and only the sanctioned actions found in PX0-00**
+- [ ] **Step 3: Implement the non-mutating Scenarios shell with the three baseline entries shown as Unsupported**
 
 - [ ] **Step 4: Run workbench tests**
 
@@ -1223,16 +1305,16 @@ git commit -m "test(debug-ui): close PX0 architecture contracts"
 
 From a Windows environment with the locked Skia SDK available:
 
-```bash
-cmake -S . -B out/px0-windows-debug-ui -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCANVAS_BUILD_POC01=OFF \
-  -DCANVAS_BUILD_RENDER=ON \
-  -DCANVAS_BUILD_ARC=ON \
-  -DCANVAS_BUILD_INK_PLAYGROUND=ON \
-  -DAXIOM_BUILD_DEBUG_UI=ON \
-  -DAXIOM_DEBUG_UI_PROFILE=full \
-  -DCANVAS_SKIA_SDK_ROOT="$env:AXIOM_SKIA_WINDOWS_SDK_ROOT" \
+```powershell
+cmake -S . -B out/px0-windows-debug-ui -G Ninja `
+  -DCMAKE_BUILD_TYPE=Release `
+  -DCANVAS_BUILD_POC01=OFF `
+  -DCANVAS_BUILD_RENDER=ON `
+  -DCANVAS_BUILD_ARC=ON `
+  -DCANVAS_BUILD_INK_PLAYGROUND=ON `
+  -DAXIOM_BUILD_DEBUG_UI=ON `
+  -DAXIOM_DEBUG_UI_PROFILE=full `
+  -DCANVAS_SKIA_SDK_ROOT="$env:AXIOM_SKIA_WINDOWS_SDK_ROOT" `
   -DBUILD_TESTING=ON
 cmake --build out/px0-windows-debug-ui --target axiom_ink_playground_windows
 ```
