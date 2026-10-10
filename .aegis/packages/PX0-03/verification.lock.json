@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "obligations": [
+    {
+      "id": "PX0-03-V1-bounded-activity-log",
+      "requirement": "DebugActivityLog is bounded, implements DebugActivitySource, preserves transition order, and retains only the newest entries when capacity is exceeded.",
+      "oracle": "PX0ControlRouter tests create capacity 2, record at least three transitions, assert size == 2, retained request IDs/states are the two newest, and readActivity()/snapshot() expose the same bounded entries.",
+      "acceptance": "No unbounded request/history container is introduced and default capacity is 64.",
+      "evidence_required": "PX0ControlRouter plus exact source diff"
+    },
+    {
+      "id": "PX0-03-V2-owner-routing",
+      "requirement": "Product, Axiom engineering, and Surface engineering intents are routed only to their owning contracts.",
+      "oracle": "Fake owners count calls. setBrush/setEraser/selection/history/camera touch RuntimeFacade only; submitAxiom touches AxiomDebugControl only; setCanonicalSurfaceMode touches PlatformDebugControl only. The current Pan tool path goes through RuntimeFacade CanvasControl and never touches engineering owners.",
+      "acceptance": "No product action is routed through DebugControl and no engineering Surface/Axiom action is routed through RuntimeFacade.",
+      "evidence_required": "PX0ControlRouter"
+    },
+    {
+      "id": "PX0-03-V3-context-fencing-and-local-rejection",
+      "requirement": "Router requests use frame identity/deadline context and invalid Fit Selection/Fit Primary Object are rejected locally without fallback.",
+      "oracle": "Tests call beginFrame with known generations/sequence/selection, assert Axiom and Surface requests carry expected generations and deadline=sequence+120, Fit Selection with zero selection and Fit Primary with primaryObject=0 return Rejected and produce zero RuntimeFacade mutation calls.",
+      "acceptance": "No fallback from Fit Selection to Fit Content and no raw ObjectId guessing occurs.",
+      "evidence_required": "PX0ControlRouter"
+    },
+    {
+      "id": "PX0-03-V4-normalized-control-states",
+      "requirement": "Activity states preserve owner-reported distinctions for Pending/Applied/Rejected/Unsupported/Unavailable/StaleGeneration/Expired/QueueFull/Failed.",
+      "oracle": "PX0ControlRouter covers representative Product/CanvasControl/Axiom/Surface receipts, including stale, expired, queue-full, unavailable/destroyed, unsupported, rejected and failed mappings.",
+      "acceptance": "No stale/expired/queue-full result is collapsed into generic Failed/Rejected when the owner reports it distinctly.",
+      "evidence_required": "PX0ControlRouter"
+    },
+    {
+      "id": "PX0-03-V5-async-receipt-refresh",
+      "requirement": "Queued Axiom and Surface requests transition from Pending to their owner terminal state through receipt lookup without diagnostics re-query.",
+      "oracle": "Fake Axiom/Platform owners initially return Queued and later Applied; refreshReceipts appends Applied, stops tracking terminal requests, and does not call RuntimeFacade/read diagnostics. Repeated refresh while still Queued does not invent a terminal result.",
+      "acceptance": "Activity reflects owner truth and router polling remains read-only.",
+      "evidence_required": "PX0ControlRouter"
+    },
+    {
+      "id": "PX0-03-V6-platform-receipt-query",
+      "requirement": "PlatformDebugControl exposes a read-only receipt(requestId) lookup without changing Surface mutation semantics.",
+      "oracle": "Contract test proves the interface default returns Unsupported for owners without retained receipts and WindowsPlatformDebugControl resolves retained BoundedSurfaceModeQueue receipts.",
+      "acceptance": "Existing PlatformDebugControl implementations remain source-compatible and queued Windows Surface completion is observable.",
+      "evidence_required": "PX0ControlRouter plus Windows structural/source review"
+    },
+    {
+      "id": "PX0-03-V7-activity-snapshot-integration",
+      "requirement": "Windows and Web attach the common DebugActivityLog to DebugSnapshotAssembler and refresh engineering receipts before rendering without a second diagnostics capture.",
+      "oracle": "Structural tests assert both compositions own DebugActivityLog/DebugControlRouter, pass activityLog as DebugActivitySource, call assembler.capture then router.beginFrame/refreshReceipts then replace snapshot.activity from the log, and do not restore a platform-local activity-history implementation.",
+      "acceptance": "Current same-dispatch redraw behavior remains and activity updates are visible through the next immutable snapshot without provider re-query during receipt refresh.",
+      "evidence_required": "Windows/Web structural pytest contracts plus exact source diff"
+    },
+    {
+      "id": "PX0-03-V8-current-panel-routing",
+      "requirement": "Current legacy tabs preserve behavior while submitting supported control intents through DebugControlRouter rather than raw owner pointers.",
+      "oracle": "Source/structural tests show buildImGuiPanels receives DebugControlRouter, Selection/Undo/Redo/Brush/Eraser/Pan/Surface actions invoke router methods, and current tab/layout/input-capture/same-dispatch redraw behavior remains.",
+      "acceptance": "No Workbench/layout redesign is introduced and product tool behavior remains source-compatible.",
+      "evidence_required": "DUI20DebugUiContracts plus Windows/Web structural tests"
+    },
+    {
+      "id": "PX0-03-V9-generic-ui-queue-retired",
+      "requirement": "The duplicate generic debug_ui DebugCommand/BoundedCommandQueue is retired while owner-side queues remain.",
+      "oracle": "command.hpp/command.cpp are absent, canvas_debug_ui CMake no longer compiles command.cpp, tests fail if command.hpp is available, and debug_command_queue.hpp/surface_debug_queue.hpp remain present and covered.",
+      "acceptance": "No new DebugCommandKind or replacement generic UI queue is introduced.",
+      "evidence_required": "DUI20DebugUiContracts, PX0ControlRouter, exact tree/diff"
+    },
+    {
+      "id": "PX0-03-V10-no-premature-workbench-or-evidence-claims",
+      "requirement": "PX0-03 does not implement PX0-04+ UI architecture, Preview repair, or physical/Gate closure.",
+      "oracle": "Exact diff contains no WorkspaceId/PanelRegistry/Workbench/UI-session implementation, no Shape/RichText/Connector/Snap/Image product semantics, no preview repair, and no GT-DUI-M1 result mutation.",
+      "acceptance": "Only control routing/activity infrastructure and mechanically required host/test integration are present.",
+      "evidence_required": "exact result diff"
+    }
+  ]
+}
