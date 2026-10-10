@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-01",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "25e5bcead21976f906333582ea4c0a80df7b2e20",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": ["7 Layer 2 - Control, diagnostics, and snapshot ownership", "9 Runtime-side contract organization", "14 Work-package decomposition", "16 Explicit invariants for successor features"]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "25e5bcead21976f906333582ea4c0a80df7b2e20",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": ["Global Constraints", "Work Package PX0-01 - Contract Boundary Cleanup"]
+    },
+    {
+      "role": "accepted_px0_00_reconciliation",
+      "provider": "repo",
+      "path": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md",
+      "revision": "25e5bcead21976f906333582ea4c0a80df7b2e20",
+      "content_hash": "git-blob-sha1:f50896fb3261617dd754209a53ce38ffdab61af6",
+      "trusted_sections": ["Inspected implementation reality", "Required answers", "Authority and scope conclusion", "Next action"]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Decouple RuntimeFacade product control/state from Runtime diagnostics while preserving the DUI-M1 common Canvas control adapter and current product behavior.",
+    "entry_revision": "25e5bcead21976f906333582ea4c0a80df7b2e20",
+    "preserved_dui_nodes": [
+      "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+      "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+      "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+      "debug_ui/src/panel_model.cpp"
+    ],
+    "preserved_semantics": [
+      "CanvasRuntimeFacadeAdapter remains the common Windows/Web product CanvasControl adapter backed by CanvasControlService; PX0-01 must not recreate or bypass that lane.",
+      "RuntimeFacade remains the product-safe mutation/state boundary but no longer inherits RuntimeDiagnostics.",
+      "RuntimeDiagnostics/IAxiomDiagnostics remains a read-only diagnostics owner contract independent of RuntimeFacade.",
+      "WindowsRuntimeFacade and WebRuntimeFacade continue to derive from CanvasRuntimeFacadeAdapter and separately implement IAxiomDiagnostics.",
+      "Windows/Web local DebugSnapshot assembly remains in place until PX0-02; PX0-01 must not move snapshot ownership.",
+      "DebugPanelModel remains in place until PX0-04; PX0-01 must not redesign panel/workbench structure.",
+      "Generic debug_ui::DebugCommand remains in place until PX0-03.",
+      "Stable Runtime C ABI must not change as an incidental consequence."
+    ],
+    "runtime_state_target": {
+      "shape": "RuntimeStateSnapshot grouped as identity/tool/camera/history/selection product-safe projections",
+      "forbidden_exposure": ["RuntimeScene pointers", "SpatialIndex internals", "SkSurface/Skia objects", "GPU resource ownership"]
+    },
+    "product_request_rule": "ProductControlRequest core action semantics and existing enum numeric values are preserved. setBrush() must encode brushId/brushRevision without overloading toolId; setEraser() must encode eraserId without overloading toolId. Platform adapters derive temporary host/UI selection identity from brushId/eraserId or current CanvasControl state rather than relying on overloaded toolId.",
+    "feature_diagnostics_rule": "Introduce a typed built-in FeatureDiagnosticsSnapshot seam for Ink, Shape, RichText, Connector, Snap, and Image. PX0-01 does not invent successor-feature payload semantics; unsupported successor sections remain empty/default.",
+    "diagnostic_ownership_rule": "Axiom/Arc/Platform/Telemetry diagnostics remain read-only owner seams. Product Shell consumers can compile against RuntimeFacade without diagnostics capability.",
+    "dui_evidence_boundary": "GT-DUI-M1 physical status remains BLOCKED_EVIDENCE/PHYSICAL_PENDING and is not modified or reinterpreted by PX0-01."
+  },
+  "forbidden_interpretations": [
+    "DUI-M1 CanvasRuntimeFacadeAdapter is not obsolete merely because RuntimeFacade changes shape.",
+    "PX0-01 does not authorize common DebugSnapshotAssembler, DebugControlRouter, Activity Log, Workbench shell, feature panels, or host convergence.",
+    "PX0-01 does not authorize Shape/RichText/Connector/Snap/Image product behavior.",
+    "PX0-01 does not authorize fixing deferred Windows preview visibility or changing GT-DUI-M1 evidence."
+  ]
+}
