@@ -1,0 +1,165 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "0eab5dea1570f9b8ae7535aea0eef6b1135061a7",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": [
+        "5.7.9 Control/readback rule",
+        "7.5 DebugControl is engineering-only",
+        "7.6 Generic debug_ui::DebugCommand is retired",
+        "7.11 Activity log",
+        "8.3 DebugController",
+        "8.6 Panel contract",
+        "8.10 DebugControlRouter",
+        "11 Runtime data flow",
+        "12 Failure and degraded-state behavior"
+      ]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "0eab5dea1570f9b8ae7535aea0eef6b1135061a7",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": [
+        "Work Package PX0-03 - Control Router + Activity",
+        "Task 6: Add bounded Activity Log and normalized control states",
+        "Task 7: Add DebugControlRouter for product, Axiom-debug, and Surface owners",
+        "Task 8: Retire the generic Debug UI command queue"
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Introduce one Debug UI control router and bounded activity log, route existing Debug UI control intents to their owning product/engineering contracts, observe asynchronous engineering receipt transitions, and retire the duplicate generic debug_ui command queue.",
+    "predecessor_result": {
+      "task_id": "PX0-02",
+      "revision": "0eab5dea1570f9b8ae7535aea0eef6b1135061a7",
+      "status": "accepted_by_control_review"
+    },
+    "owner_boundaries": [
+      "Product behavior routes only through RuntimeFacade.",
+      "Axiom engineering actions route only through AxiomDebugControl.",
+      "Canonical Surface engineering mode routes only through PlatformDebugControl.",
+      "Product UI does not depend on DebugControlRouter.",
+      "DebugControlRouter contains adaptation/routing only and must not own feature business logic."
+    ],
+    "router_context": {
+      "request_ids": "Router-local monotonically increasing non-zero request IDs.",
+      "begin_frame": "beginFrame(snapshot) freezes the Debug UI request context for the frame: runtime/document/surface identity, sequence, frameId, selection count, and primary selection.",
+      "deadline": "Debug UI-originated queued owner requests use current snapshot stamp.sequence + 120.",
+      "generation_fencing": "Axiom requests use runtime/document generation from the current frame; Surface requests use canonical Surface generation from Platform diagnostics when present, otherwise snapshot surfaceGeneration."
+    },
+    "product_routing": {
+      "setBrush": "Use RuntimeFacade product control only; no Axiom/Platform owner and no platform-specific profile string inside the router.",
+      "setEraser": "Use RuntimeFacade product control only.",
+      "setSelectionMode": "Use RuntimeFacade product control only.",
+      "undo_redo": "Use RuntimeFacade product control only.",
+      "camera": "Pan/Zoom/Fit route through RuntimeFacade product control only.",
+      "setTool": "For the current legacy Pan selector, setTool accepts the underlying CanvasToolKind numeric value and submits a typed CanvasControl request through RuntimeFacade so the existing CanvasRuntimeFacadeAdapter/CanvasControlService lane remains valid.",
+      "fit_selection_guard": "Fit Selection with selectedObjectCount == 0 returns a local Rejected ProductControlReceipt and does not call RuntimeFacade or fall back to Fit Content.",
+      "fit_primary_guard": "Fit Primary Object with primaryObject == 0 returns a local Rejected ProductControlReceipt and does not call RuntimeFacade."
+    },
+    "activity_contract": {
+      "default_capacity": 64,
+      "semantics": "The activity log stores bounded Debug UI-originated request/receipt transitions, not canonical Operations and not Gate evidence.",
+      "transition_model": "A new bounded activity entry is appended for admission and for each observed terminal transition; oldest entries are discarded when capacity is exceeded.",
+      "compatibility": "DebugActivitySnapshot may retain the PX0-02 latest ProductControlReceipt and SurfaceModeReceipt fields while adding normalized bounded entries, so current tabs remain source-compatible until the Workbench migration.",
+      "normalized_states": [
+        "Pending",
+        "Applied",
+        "Rejected",
+        "Unsupported",
+        "Unavailable",
+        "StaleGeneration",
+        "Expired",
+        "QueueFull",
+        "Failed"
+      ]
+    },
+    "normalized_mapping": {
+      "ProductControl": {
+        "Applied": "Applied",
+        "Queued": "Pending",
+        "Unsupported": "Unsupported",
+        "Rejected": "Rejected",
+        "Failed": "Failed"
+      },
+      "CanvasControl_when_present": {
+        "Queued": "Pending",
+        "Applied": "Applied",
+        "Expired": "Expired",
+        "StaleTarget": "StaleGeneration",
+        "TargetDestroyed": "Unavailable",
+        "QueueFull": "QueueFull",
+        "Busy": "Unavailable",
+        "Unsupported": "Unsupported",
+        "Rejected": "Rejected",
+        "Duplicate": "Rejected",
+        "Failed": "Failed"
+      },
+      "AxiomDebug": {
+        "Queued": "Pending",
+        "Applied": "Applied",
+        "Rejected": "Rejected",
+        "Failed": "Failed",
+        "StaleGeneration": "StaleGeneration",
+        "Expired": "Expired",
+        "Destroyed": "Unavailable",
+        "QueueFull": "QueueFull",
+        "Unsupported": "Unsupported"
+      },
+      "SurfaceDebug": {
+        "Queued": "Pending",
+        "Applied": "Applied",
+        "Unsupported": "Unsupported",
+        "StaleGeneration": "StaleGeneration",
+        "QueueFull": "QueueFull",
+        "Expired": "Expired",
+        "Unavailable": "Unavailable",
+        "Failed": "Failed"
+      }
+    },
+    "receipt_refresh": [
+      "refreshReceipts polls only outstanding queued AxiomDebug and PlatformDebug requests.",
+      "Queued receipts remain outstanding; terminal receipts append a normalized transition and are removed from the outstanding set.",
+      "Receipt refresh must not re-read Runtime/Axiom/Arc/Platform/Telemetry diagnostics.",
+      "PlatformDebugControl gains a read-only receipt(requestId) query with a source-compatible default Unsupported result."
+    ],
+    "integration": [
+      "DebugActivityLog implements DebugActivitySource and becomes the activity provider supplied to DebugSnapshotAssembler on Windows and Web.",
+      "Capture flow is: assembler.capture -> router.beginFrame -> router.refreshReceipts -> replace snapshot.activity with activityLog.snapshot -> publish/render. Receipt refresh does not cause a second diagnostics capture.",
+      "Existing Debug UI controls migrate to DebugControlRouter where the equivalent typed intent already exists: Selection, Undo/Redo, Brush, Eraser, Pan tool, and Surface mode.",
+      "buildImGuiPanels no longer receives RuntimeFacade/AxiomDebugControl/PlatformDebugControl pointers directly; it receives DebugControlRouter.",
+      "Axiom routing is implemented and tested but PX0-03 does not add new Workbench controls merely to expose it.",
+      "WindowsDebugUiHost may temporarily retain legacy owner setter fields until PX0-06, but panel rendering must not use them after PX0-03."
+    ],
+    "retirement": [
+      "Delete debug_ui/include/canvas/debug_ui/command.hpp and debug_ui/src/command.cpp.",
+      "Remove BoundedCommandQueue/DebugCommand/DebugCommandKind from DebugController and tests.",
+      "Preserve owner-side canvas/debug_ui/debug_command_queue.hpp and surface_debug_queue.hpp."
+    ],
+    "preserved_boundaries": [
+      "PX0-02 structured DebugSnapshot and common DebugSnapshotAssembler remain the observation boundary.",
+      "RuntimeFacade/IAxiomDiagnostics split from PX0-01 remains unchanged.",
+      "CanvasRuntimeFacadeAdapter and CanvasControlService remain valid product-control infrastructure.",
+      "Current fixed tab layout remains until PX0-04.",
+      "Workspace/PanelRegistry/Workbench remains PX0-04.",
+      "Existing capability migration and full Debug UI control surface remains PX0-05.",
+      "Windows/Web host thinning remains PX0-06.",
+      "DUI-M1 remains PHYSICAL_PENDING/BLOCKED_EVIDENCE."
+    ]
+  },
+  "forbidden_interpretations": [
+    "DebugControlRouter is not a product business-logic owner.",
+    "PX0-03 does not authorize new Shape/RichText/Connector/Snap/Image semantics.",
+    "PX0-03 does not authorize Workbench, WorkspaceId, PanelRegistry, PanelSlot, or final panel extension architecture.",
+    "PX0-03 does not authorize Preview repair, physical qualification, or Gate PASS claims.",
+    "The bounded activity log is not canonical history, telemetry persistence, or evidence storage."
+  ]
+}
