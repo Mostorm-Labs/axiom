@@ -8,7 +8,7 @@ Scope: Pre-G5 Debug Control Plane baseline for the pre-productization track
 
 ## 1. Purpose
 
-PX0 establishes a long-lived Axiom engineering control plane before PX1 Shape, PX2 RichText editing, PX4 Connector, PX5 Snap, PX6 Image, and G5 performance work continue.
+PX0 establishes a long-lived Axiom engineering control plane before PX1 Shape, PX2 RichText editing, PX3 Shape+Text composition, PX4 Connector, PX5 Snap, PX6 Image, PX7 Product UI Projection, PX8 Mixed Whiteboard Closure, and G5 performance work continue.
 
 The goal is not to make the current Debug UI cosmetically richer. The goal is to turn the existing common ImGui + Skia Debug UI, RuntimeFacade, diagnostics providers, debug controls, input-capture gate, Surface controls, and telemetry into a stable engineering workbench with explicit ownership and extension contracts.
 
@@ -168,7 +168,7 @@ Feature Diagnostics
 Advanced Actions
 ```
 
-Advanced Actions contains engineering-only controls such as force redraw, scene recompile, cache eviction, background-raster pause, memory-budget experiments, and metrics reset when supported.
+Advanced Actions contains engineering-only Runtime controls such as force redraw, scene recompile, cache eviction, background-raster pause, and memory-budget experiments when supported. Metrics-reset controls are presented under Performance / Metrics while still routing to their engineering owner.
 
 ### 5.5 Performance
 
@@ -771,8 +771,9 @@ During PX0, Windows native toolbar, Web HTML toolbar, and common Debug UI may al
 Their mutation flow MUST converge:
 
 ```text
-Windows temporary toolbar --Web temporary toolbar -------+--> RuntimeFacade
-Debug UI --------------------/
+Windows temporary toolbar ----\\
+Web temporary toolbar ---------+--> RuntimeFacade
+Debug UI ----------------------/
 ```
 
 They MUST NOT retain host-internal parallel mutation semantics.
@@ -784,8 +785,9 @@ PX0 does not remove all temporary product controls. Their final retirement belon
 ### 11.1 Product mutation
 
 ```text
-Product UI ---------------------                                 -> RuntimeFacade -> Runtime owners
-Debug UI -> DebugControlRouter -/
+Product UI ----------------------\\
+                                  +--> RuntimeFacade -> Runtime owners
+Debug UI -> DebugControlRouter --/
 ```
 
 A product action has one semantic mutation path regardless of which UI triggered it.
@@ -804,9 +806,13 @@ Owner safe-point/queue semantics remain responsible for avoiding synchronous hea
 ### 11.3 Observation
 
 ```text
-Runtime  -> IAxiomDiagnostics -----Arc      -> IArcDiagnostics --------Platform -> IPlatformDiagnostics ----> DebugSnapshotAssembler
-Telemetry-> ITelemetry -------------/           |
-Activity ---------------------------/            v
+Runtime   -> IAxiomDiagnostics ------\\
+Arc       -> IArcDiagnostics ---------\\
+Platform  -> IPlatformDiagnostics ----+--> DebugSnapshotAssembler
+Telemetry -> ITelemetry --------------/
+Activity ----------------------------/
+                                              |
+                                              v
                                          DebugSnapshot
                                               |
                                               v
