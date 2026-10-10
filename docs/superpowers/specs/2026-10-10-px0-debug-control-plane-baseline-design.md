@@ -196,6 +196,255 @@ At PX0, scenario entries may invoke only already-authorized public/test-fixture 
 
 Future work may register PX1 Shape Grid, PX2 RichText Samples, PX3 Shape+Text, PX4 Connector Network, PX5 Snap Playground, PX6 Image Board, PX8 Mixed Whiteboard, and G5 stress workloads.
 
+## 5.7 PX0 control-surface contract
+
+PX0 makes the control inventory explicit so later work does not confuse "a value is visible" with "a value is safely mutable".
+
+Every control is classified as one of:
+
+- **Product control** — a user-visible behavior that must route through RuntimeFacade or a typed product capability owned by the Runtime product control plane.
+- **Engineering control** — a debug-only mutation that must route through AxiomDebugControl, PlatformDebugControl, or another explicit engineering owner.
+- **UI-local control** — navigation/filter/presentation state owned only by DebugUiSessionState.
+- **Successor feature control** — a reserved extension slot. PX0 may display Unsupported/Not Implemented, but MUST NOT invent the feature's product semantics.
+
+### 5.7.1 Control-state presentation
+
+Every mutable control MUST have an explicit UI state:
+
+```text
+Available
+DisabledByContext
+Pending
+Applied
+Rejected/Failed
+Unsupported
+Unavailable
+StaleGeneration
+Expired/QueueFull        # when the owner contract can report these states
+```
+
+The Debug UI may normalize these for presentation, but the raw owner receipt/state remains inspectable.
+
+Rules:
+
+1. a control is **Unsupported** when the owner/build does not implement it;
+2. a control is **Unavailable** when it is supported but cannot currently execute;
+3. a control is **DisabledByContext** when product context makes the action invalid, such as Redo with no redo entry or Fit Selection with no selection;
+4. a queued action is **Pending** until the owning contract reports a terminal state;
+5. stale-generation/expired/queue-full failures are displayed explicitly and MUST NOT silently retry through a bypass path;
+6. persistent settings and modes MUST be read back from Runtime/diagnostics after submission; local widget state is never treated as canonical truth;
+7. one-shot engineering actions may be represented by receipt/activity without a persistent readback value;
+8. controls MUST NOT become enabled merely because a Panel can construct a request. Availability comes from owner capability/context.
+
+### 5.7.2 Product control baseline
+
+The following product-safe controls are part of the PX0 workbench baseline.
+
+| Area | Control | Runtime owner/path | PX0 behavior |
+| --- | --- | --- | --- |
+| Tool | active tool selection | RuntimeFacade product control | show the currently resolved tool model; only expose tool choices actually supported by the Runtime |
+| Ink | Vector Solid | RuntimeFacade::setBrush | preserve existing brush choice |
+| Ink | Marker Flat | RuntimeFacade::setBrush | preserve existing brush choice |
+| Ink | Chalk Grain | RuntimeFacade::setBrush | preserve existing brush choice |
+| Ink | Membrane | RuntimeFacade::setBrush | preserve existing brush choice |
+| Ink | brush revision | RuntimeFacade::setBrush + RuntimeState readback | always display resolved revision; only make revision selectable when the Runtime intentionally exposes more than one supported revision |
+| Ink | size / opacity / other brush parameters | future product-safe brush parameter contract | do not create a DebugControl-only mutation; show Unsupported until a product-safe contract exists |
+| Eraser | Object Eraser | RuntimeFacade::setEraser | preserve existing mode |
+| Eraser | Partial Eraser | RuntimeFacade::setEraser | preserve existing mode |
+| Selection | selection mode on/off | RuntimeFacade::setSelectionMode | preserve current selection-mode behavior and read back the resolved mode |
+| History | Undo | RuntimeFacade::undo | enabled only when `canUndo` |
+| History | Redo | RuntimeFacade::redo | enabled only when `canRedo` |
+| View | Pan | RuntimeFacade camera control | relative camera translation through the existing product camera path |
+| View | Zoom At | RuntimeFacade camera control | zoom by scale delta around an explicit/derived viewport anchor |
+| View | Fit Content | RuntimeFacade camera control | fit the current document/content bounds |
+| View | Fit Selection | RuntimeFacade camera control | enabled only when a valid selection exists |
+| View | Fit Primary Object | RuntimeFacade camera control | uses the current primary selection/object identity when valid |
+| Future Feature | Shape/Text/Connector/Snap/Image controls | typed successor product capability | reserved extension slot only; not implemented by PX0 |
+
+PX0 MUST NOT make brush preset changes retroactively mutate already-committed strokes unless that behavior is separately part of the product contract.
+
+### 5.7.3 View / Camera control baseline
+
+View/Camera receives an explicit contract because it is both a real product behavior and an important engineering diagnostic surface.
+
+The Control / View panel MUST expose or display:
+
+```text
+Camera State
+- scale
+- translation X
+- translation Y
+- view generation
+- camera generation when diagnostics provides it
+
+Camera Commands
+- Pan
+- Zoom At
+- Fit Content
+- Fit Selection
+- Fit Primary Object
+```
+
+#### Pan
+
+Pan is a relative camera operation.
+
+The Debug UI may offer directional nudge buttons and/or delta-X / delta-Y inputs, but it MUST submit the same product camera operation used by other product surfaces. It MUST NOT directly edit viewport internals.
+
+Absolute X/Y text editing is not part of PX0 unless a separately authorized absolute-camera product contract already exists at PX0-00 reconciliation.
+
+#### Zoom At
+
+Zoom uses a scale delta and an anchor.
+
+The panel MUST expose the resolved scale and the anchor used for a submitted Zoom At action. A convenience zoom-in/zoom-out control may choose the current viewport center only when that center is available from the common host/view contract; otherwise the panel uses explicit anchor input.
+
+The Debug UI MUST NOT invent a platform-specific zoom rule that differs from Canvas interaction behavior.
+
+#### Fit Content
+
+Fit Content uses the existing RuntimeFacade fit-to-content path and is distinct from any future "Reset View" command.
+
+#### Fit Selection
+
+Fit Selection is disabled when there is no valid selection. It MUST NOT silently fall back to Fit Content.
+
+#### Fit Primary Object
+
+Fit Primary Object uses the currently projected primary selected object when one exists. It is disabled otherwise. PX0 does not require a raw editable ObjectId field.
+
+#### Reset View / 100%
+
+PX0 does **not** define Reset View as a product semantic.
+
+In particular:
+
+```text
+Reset View != Fit Content
+100% zoom != automatically Fit Content
+```
+
+If the product later requires "100% at default center" or another canonical reset-camera behavior, it receives an explicit product contract rather than being inferred inside Debug UI.
+
+### 5.7.4 Surface engineering controls
+
+Surface mode is an engineering control and does not belong to Product UI semantics.
+
+Required PX0 Surface controls:
+
+| Control | Owner | Required presentation |
+| --- | --- | --- |
+| Platform Default | PlatformDebugControl | request + resolved mode + generation + receipt |
+| CPU Reference | PlatformDebugControl | request + resolved mode + generation + receipt |
+| GPU Default | PlatformDebugControl | request + resolved mode + generation + receipt |
+
+The canonical Canvas Surface is the required PX0 target because it is already used by qualification. A separate Debug Controller Surface target may be surfaced when the platform provider genuinely supports it, but is not a PX0 closure requirement.
+
+Surface panel state includes, when available:
+
+```text
+requested mode
+resolved mode
+canonical surface generation
+preview surface generation
+width / height
+device pixel ratio
+surface available
+present count
+lost count
+last control receipt
+```
+
+A stale generation, queue-full, expired, unavailable, unsupported, or failed Surface request is surfaced directly; the UI MUST NOT apply an alternate platform shortcut.
+
+### 5.7.5 Runtime engineering controls
+
+The current AxiomDebugControl command family is represented explicitly under Runtime / Advanced Actions or, for metric-specific actions, Performance / Metrics.
+
+| Control | UI location | Interaction model |
+| --- | --- | --- |
+| Set Overlay Flags | Runtime / Advanced Actions | persistent engineering setting; enable only when named/defined overlay semantics and owner support are available |
+| Force Full Redraw | Runtime / Advanced Actions | one-shot action |
+| Force Scene Recompile | Runtime / Advanced Actions | one-shot action |
+| Evict Tile Cache | Runtime / Advanced Actions | one-shot action; Unsupported is valid before G5 cache implementation |
+| Evict Raster Cache | Runtime / Advanced Actions | one-shot action; Unsupported is valid before G5 cache implementation |
+| Pause Background Raster | Runtime / Advanced Actions | persistent mode only when readback/diagnostics can report the resolved state; otherwise use explicit command/result presentation rather than a misleading local toggle |
+| Runtime Memory Budget | Runtime / Advanced Actions | numeric engineering input only when the owner exposes support and unit/range semantics |
+| Reset Rolling Metrics | Performance / Metrics | one-shot engineering action; does not reset canonical/runtime product state |
+
+PX0 does not invent overlay-flag names, memory units/ranges, or cache semantics that are absent from Current Authority/implementation contract. Unsupported controls remain visible as such where useful for engineering discoverability.
+
+### 5.7.6 Performance and telemetry controls
+
+Performance data is primarily read-only. PX0 control behavior is deliberately narrow.
+
+Allowed controls include:
+
+```text
+Reset Rolling Metrics        -> engineering owner
+Metric view/filter selection -> DebugUiSessionState only
+Activity/trace filtering     -> DebugUiSessionState only
+```
+
+Trace and GPU Timing remain explicit capability sections. If they are not implemented, they render Unsupported. PX0 MUST NOT add a fake Enable Trace or GPU Timing toggle without an owner contract.
+
+### 5.7.7 Scenario controls
+
+Scenarios may expose:
+
+```text
+Select Scenario
+Run
+Cancel                    # when the runner is asynchronous
+Reset to sanctioned fixture/baseline
+Capture/Export evidence   # only through an already-authorized evidence path
+Status / last result
+```
+
+Scenario execution MUST use RuntimeFacade, real input/interaction paths, or an already-authorized test-fixture boundary. It MUST NOT write SemanticDocument, RuntimeScene, Selection, or renderer state directly.
+
+If Reset Canvas / Empty Canvas / Ink Baseline cannot be expressed through an authorized existing boundary at PX0-00, those controls are marked Unsupported instead of introducing a new semantic bypass.
+
+Evidence export remains governed by the existing Gate/evidence contracts; PX0 does not redefine an evidence artifact merely because Scenarios provides a button.
+
+### 5.7.8 UI-local workbench controls
+
+The following controls belong only to DebugUiSessionState and never reach Runtime owners:
+
+```text
+workspace navigation
+section expand/collapse
+search/filter
+metric view selection
+activity auto-scroll
+local activity-filter selection
+workbench show/hide presentation state
+```
+
+A local "clear visible activity" action, if provided, only clears the Debug UI's bounded presentation log; it does not clear canonical history, telemetry owned by Runtime, or evidence artifacts.
+
+### 5.7.9 Control/readback rule
+
+For any persistent product or engineering mode, the Debug UI follows:
+
+```text
+user intent
+-> owner request
+-> receipt
+-> new owner/runtime snapshot
+-> UI reflects resolved state
+```
+
+It MUST NOT use:
+
+```text
+user intent
+-> mutate local checkbox/value
+-> assume Runtime matched it
+```
+
+This rule applies especially to Brush/Eraser mode, Selection mode, Camera, Surface mode, background-raster pause, and future Shape/RichText/Connector property controls.
+
 ## 6. Existing capability migration
 
 Existing engineering capability is migrated rather than discarded.
@@ -879,7 +1128,7 @@ Physical validation covers:
 - Brush/Eraser switching;
 - selection mode;
 - Undo/Redo;
-- camera controls that are exposed;
+- Camera Pan, Zoom At, Fit Content, Fit Selection, and Fit Primary Object with correct context disabling and state readback;
 - Surface mode controls where supported;
 - current Arc/Surface/Telemetry state visibility;
 - Activity updates;
@@ -950,7 +1199,7 @@ Migrate existing:
 
 - Brush/Eraser;
 - selection;
-- View/History controls that exist;
+- View/Camera controls: Pan, Zoom At, Fit Content, Fit Selection, Fit Primary Object, plus camera state/readback; and History controls;
 - Arc;
 - Surface;
 - telemetry;
@@ -1001,7 +1250,7 @@ PX0 is ready for Gate review only when all are true:
 ### Workbench
 
 - Dashboard, Control, Inspect, Runtime, Performance, Scenarios exist;
-- current Brush/Eraser/selection/history/Surface/Arc/telemetry capabilities are preserved and reorganized;
+- current Brush/Eraser/selection/history/View-Camera/Surface/Arc/telemetry capabilities are preserved and reorganized;
 - recent control activity is observable.
 
 ### Platform
