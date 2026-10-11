@@ -16,13 +16,17 @@ using namespace canvas;
 struct RuntimeProbe final : runtime::RuntimeFacade {
   int productCalls = 0;
   int canvasCalls = 0;
+  mutable int runtimeStateReads = 0;
   runtime::ProductControlState productState = runtime::ProductControlState::kApplied;
   runtime::CanvasControlReceiptState canvasState = runtime::CanvasControlReceiptState::kApplied;
   runtime::RuntimeStateSnapshot state{};
   runtime::ProductControlRequest lastProduct{};
   runtime::CanvasControlRequest lastCanvas{};
 
-  runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override { return state; }
+  runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
+    ++runtimeStateReads;
+    return state;
+  }
   runtime::ProductControlReceipt submitProductControl(
       const runtime::ProductControlRequest& request) noexcept override {
     ++productCalls;
@@ -163,6 +167,19 @@ void checkSurface(canvas::debug_ui::DebugControlRouter& router,
 }  // namespace
 
 int main() {
+  canvas::debug_ui::DebugActivityLog defaultCapacity;
+  for (std::uint64_t requestId = 1; requestId <= 65; ++requestId) {
+    defaultCapacity.record({0, requestId, canvas::debug_ui::DebugControlOwner::kProduct,
+                            "default-capacity", requestId % 2 == 0
+                                ? canvas::debug_ui::DebugActivityState::kApplied
+                                : canvas::debug_ui::DebugActivityState::kPending,
+                            0, 0, 0, 0, std::nullopt, std::nullopt});
+  }
+  assert(defaultCapacity.size() == 64);
+  const auto defaultSnapshot = defaultCapacity.snapshot();
+  assert(defaultSnapshot.entries.front().requestId == 2);
+  assert(defaultSnapshot.entries.back().requestId == 65);
+
   canvas::debug_ui::DebugActivityLog bounded(2);
   bounded.record({0, 1, canvas::debug_ui::DebugControlOwner::kProduct, "one",
                   canvas::debug_ui::DebugActivityState::kApplied, 0, 0, 0, 0,
@@ -181,6 +198,12 @@ int main() {
          boundedSnapshot.entries.back().requestId == 3);
   assert(boundedRead.entries.front().requestId == 2 &&
          boundedRead.entries.back().requestId == 3);
+  assert(boundedSnapshot.entries.front().state ==
+             canvas::debug_ui::DebugActivityState::kRejected &&
+         boundedSnapshot.entries.back().state ==
+             canvas::debug_ui::DebugActivityState::kPending);
+  assert(boundedRead.entries.front().state == boundedSnapshot.entries.front().state &&
+         boundedRead.entries.back().state == boundedSnapshot.entries.back().state);
 
   RuntimeProbe runtime;
   AxiomProbe axiom;
@@ -197,6 +220,10 @@ int main() {
   snapshot.platform.value.canonicalSurfaceGeneration = 17;
   router.beginFrame(snapshot);
 
+  const int productOnlyProductBefore = runtime.productCalls;
+  const int productOnlyCanvasBefore = runtime.canvasCalls;
+  const int productOnlyAxiomBefore = axiom.enqueueCalls;
+  const int productOnlySurfaceBefore = platform.enqueueCalls;
   const auto brush = router.setBrush(2, 3);
   assert(brush.state == runtime::ProductControlState::kApplied);
   assert(runtime.productCalls == 1 && runtime.canvasCalls == 0);
@@ -207,13 +234,70 @@ int main() {
   (void)router.panBy(2.0F, 3.0F);
   (void)router.zoomAt(4.0F, 5.0F, 1.2F);
   (void)router.fitToContent();
-  assert(runtime.productCalls == 8 && runtime.canvasCalls == 0);
+  assert(runtime.productCalls == productOnlyProductBefore + 8 &&
+         runtime.canvasCalls == productOnlyCanvasBefore &&
+         axiom.enqueueCalls == productOnlyAxiomBefore &&
+         platform.enqueueCalls == productOnlySurfaceBefore);
 
+  const int panProductBefore = runtime.productCalls;
+  const int panCanvasBefore = runtime.canvasCalls;
+  const int panAxiomBefore = axiom.enqueueCalls;
+  const int panSurfaceBefore = platform.enqueueCalls;
   const auto pan = router.setTool(runtime::CanvasToolKind::kPan);
   assert(pan.state == runtime::ProductControlState::kApplied);
-  assert(runtime.canvasCalls == 1);
+  assert(runtime.productCalls == panProductBefore &&
+         runtime.canvasCalls == panCanvasBefore + 1 &&
+         axiom.enqueueCalls == panAxiomBefore &&
+         platform.enqueueCalls == panSurfaceBefore);
   assert(runtime.lastCanvas.payload.tool == runtime::CanvasToolKind::kPan);
   assert(runtime.lastCanvas.deadlineSequence == 170);
+
+  const auto initialAxiomQueued = router.submitAxiom(
+      runtime::AxiomDebugCommandKind::kForceFullRedraw);
+  const auto initialSurfaceQueued = router.setCanonicalSurfaceMode(runtime::SurfaceMode::kGpuDefault);
+  assert(initialAxiomQueued.state == runtime::AxiomDebugCommandState::kQueued);
+  assert(initialSurfaceQueued.state == runtime::SurfaceControlState::kQueued);
+  assert(initialAxiomQueued.requestId != 0 && initialSurfaceQueued.requestId > initialAxiomQueued.requestId);
+  assert(axiom.lastCommand.expectedRuntimeGeneration == 7);
+  assert(axiom.lastCommand.expectedDocumentGeneration == 11);
+  assert(axiom.lastCommand.deadlineSequence == 170);
+  assert(platform.lastRequest.expectedGeneration == 17);
+  assert(platform.lastRequest.deadlineSequence == 170);
+
+  const int axiomBeforeProduct = axiom.enqueueCalls;
+  const int platformBeforeProduct = platform.enqueueCalls;
+  const int productBeforeProduct = runtime.productCalls;
+  const int canvasBeforeProduct = runtime.canvasCalls;
+  (void)router.setBrush(9, 4);
+  assert(runtime.productCalls == productBeforeProduct + 1 &&
+         runtime.canvasCalls == canvasBeforeProduct &&
+         axiom.enqueueCalls == axiomBeforeProduct &&
+         platform.enqueueCalls == platformBeforeProduct);
+
+  const int productBeforeAxiom = runtime.productCalls;
+  const int canvasBeforeAxiom = runtime.canvasCalls;
+  const int platformBeforeAxiom = platform.enqueueCalls;
+  const int axiomBeforeAxiom = axiom.enqueueCalls;
+  (void)router.submitAxiom(runtime::AxiomDebugCommandKind::kForceFullRedraw);
+  assert(runtime.productCalls == productBeforeAxiom &&
+         runtime.canvasCalls == canvasBeforeAxiom &&
+         platform.enqueueCalls == platformBeforeAxiom &&
+         axiom.enqueueCalls == axiomBeforeAxiom + 1);
+  const int productBeforeSurface = runtime.productCalls;
+  const int canvasBeforeSurface = runtime.canvasCalls;
+  const int platformBeforeSurface = platform.enqueueCalls;
+  const int axiomBeforeSurface = axiom.enqueueCalls;
+  (void)router.setCanonicalSurfaceMode(runtime::SurfaceMode::kCpuReference);
+  assert(runtime.productCalls == productBeforeSurface &&
+         runtime.canvasCalls == canvasBeforeSurface &&
+         platform.enqueueCalls == platformBeforeSurface + 1 &&
+         axiom.enqueueCalls == axiomBeforeSurface);
+
+  // The owner-isolation probes above are independent of the two requests whose
+  // terminal refresh is counted below; keep their queues drained first.
+  axiom.terminalState = runtime::AxiomDebugCommandState::kApplied;
+  platform.terminalState = runtime::SurfaceControlState::kApplied;
+  router.refreshReceipts();
 
   const auto axiomQueued = router.submitAxiom(
       runtime::AxiomDebugCommandKind::kForceFullRedraw);
@@ -227,16 +311,35 @@ int main() {
   assert(platform.lastRequest.expectedGeneration == 17);
   assert(platform.lastRequest.deadlineSequence == 170);
 
+  assert(brush.requestId != 0 && pan.requestId > brush.requestId &&
+         initialAxiomQueued.requestId > pan.requestId &&
+         initialSurfaceQueued.requestId > initialAxiomQueued.requestId &&
+         axiomQueued.requestId > initialSurfaceQueued.requestId &&
+         surfaceQueued.requestId > axiomQueued.requestId);
+
   const auto beforeQueuedRefresh = log.size();
+  const int productBeforeQueuedRefresh = runtime.productCalls;
+  const int canvasBeforeQueuedRefresh = runtime.canvasCalls;
+  const int runtimeReadsBeforeQueuedRefresh = runtime.runtimeStateReads;
   axiom.terminalState = runtime::AxiomDebugCommandState::kQueued;
   platform.terminalState = runtime::SurfaceControlState::kQueued;
   router.refreshReceipts();
   assert(log.size() == beforeQueuedRefresh);
+  assert(runtime.productCalls == productBeforeQueuedRefresh &&
+         runtime.canvasCalls == canvasBeforeQueuedRefresh &&
+         runtime.runtimeStateReads == runtimeReadsBeforeQueuedRefresh);
+  const int productBeforeTerminalRefresh = runtime.productCalls;
+  const int canvasBeforeTerminalRefresh = runtime.canvasCalls;
+  const int runtimeReadsBeforeTerminalRefresh = runtime.runtimeStateReads;
   axiom.terminalState = runtime::AxiomDebugCommandState::kApplied;
   platform.terminalState = runtime::SurfaceControlState::kApplied;
   router.refreshReceipts();
   const auto afterTerminalRefresh = log.size();
+  assert(afterTerminalRefresh == beforeQueuedRefresh + 2);
   assert(lastState(log) == canvas::debug_ui::DebugActivityState::kApplied);
+  assert(runtime.productCalls == productBeforeTerminalRefresh &&
+         runtime.canvasCalls == canvasBeforeTerminalRefresh &&
+         runtime.runtimeStateReads == runtimeReadsBeforeTerminalRefresh);
   router.refreshReceipts();
   assert(log.size() == afterTerminalRefresh);
 
