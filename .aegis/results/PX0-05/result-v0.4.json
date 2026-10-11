@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P33",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "1e21856316ea93de3a1782f5cbab3d0291d81ded",
+  "materialized_ref": "PENDING_EVIDENCE_COMMIT",
+  "repository": "github:Mostorm-Labs/axiom",
+  "package_id": "PX0-05-P31-v0.4",
+  "package_ref": "repo:.aegis/packages/PX0-05/package.json@832750b2c8952a79cec377ecb0731b74e154e915",
+  "p33_authorization_ref": "repo:.aegis/results/PX0-05/p33-v0.4-resume-authorization.json@832750b2c8952a79cec377ecb0731b74e154e915",
+  "task_anchor": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+  "execution_ref": "codex/px0-05-p33-v0-4-runtime-contract-test",
+  "starting_revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "classification": "DESCENDANT_CURSOR",
+  "preserved_valid_work": true,
+  "implementation": [
+    "test-only ProductControlReceipt aggregate repair: explicit std::nullopt control field; no production/runtime/platform changes"
+  ],
+  "verification": {
+    "red_oracle": {
+      "status": "PASS",
+      "log": "v0.4-red-runtime-contract.log",
+      "expected": "missing field control initializer under clang-cl /W4 /WX"
+    },
+    "green_runtime_contract": {
+      "status": "PASS",
+      "build_log": "v0.4-green-runtime-contract-build.log",
+      "run_log": "v0.4-green-runtime-contract-run.log"
+    },
+    "focused_ctest": {
+      "status": "PASS",
+      "total": 9,
+      "passed": [
+        "PX0PanelRegistry",
+        "PX0Workbench",
+        "DUI20DebugUiContracts",
+        "PX0RuntimeFacadeContract",
+        "DUIM1PanelModel",
+        "PX0ControlRouter",
+        "PX0DebugSnapshot",
+        "DUIM1ViewControls",
+        "DUIM1RuntimeFacade"
+      ],
+      "log": "v0.4-ctest-focused.log"
+    },
+    "structural": {
+      "status": "PASS",
+      "runner": "direct importlib Python runner over three plain test modules",
+      "total": 34,
+      "failed": 0,
+      "log": "v0.4-structural-contracts.log"
+    },
+    "native_build": {
+      "status": "PASS",
+      "fresh_tree": "out/px0-05-native-v0.4",
+      "targets": [
+        "canvas_debug_ui",
+        "axiom_ink_playground_windows"
+      ],
+      "configure_log": "v0.4-configure-native.log",
+      "build_log": "v0.4-build-native.log",
+      "profile": {
+        "generator": "Ninja",
+        "build_type": "Release",
+        "compiler": "locked clang-cl 22.1.8",
+        "skia": "locked windows-x64-d3d12 release",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_BUILD_INK_PLAYGROUND": "ON",
+        "CANVAS_BUILD_ARC": "ON",
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "controller",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "ON",
+        "CANVAS_RF01_BUILD_TESTS": "ON",
+        "CANVAS_BUILD_SEMANTIC": "OFF",
+        "CANVAS_SEMANTIC_ENABLE_PROTOBUF": "OFF"
+      }
+    },
+    "scope_audit": "v0.4-scope-audit.json",
+    "git_diff_check": "PASS",
+    "manual_visual": "NOT_RUN; no physical qualification claim",
+    "optional_web_build": "NOT_RUN"
+  },
+  "artifacts": [
+    {
+      "type": "Windows exe",
+      "local_path": "C:\\Users\\Chado\\.codex\\worktrees\\px0-05-existing-capability-migration-clean\\out\\px0-05-native-v0.4\\apps\\ink_playground\\axiom_ink_playground_windows.exe",
+      "sha256": "69ffa8e4f43f5fb10bb4d84edebe8b7628880c42de4a97cea0e13d89d38b4838",
+      "size": 11290112,
+      "classification": "local output; build log is durable evidence"
+    }
+  ],
+  "official_gate_pass_claimed": false,
+  "return_surface": "CONTROL_REVIEW"
+}
