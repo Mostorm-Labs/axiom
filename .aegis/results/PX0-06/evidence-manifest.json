@@ -1,34 +1,14 @@
 {
   "schema_version": "0.1",
   "task_id": "PX0-06",
-  "result_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "result_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+  "materialized_ref": "refs/heads/codex/px0-06-p36-web-debug-off-compat",
   "artifacts": [
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/red-oracle.log"
-    },
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/structural-contracts.log"
-    },
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/ctest-focused.log"
-    },
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/windows-native-build.log"
-    },
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/web-physical-build.log"
-    },
-    {
-      "classification": "blocking",
-      "path": ".aegis/results/PX0-06/scope-audit.json"
-    }
+    ".aegis/results/PX0-06/p36-web-debug-off-build.log",
+    ".aegis/results/PX0-06/p36-structural-contracts.log",
+    ".aegis/results/PX0-06/p36-ctest-focused.log",
+    ".aegis/results/PX0-06/p36-scope-audit.json"
   ],
   "manual_physical": "PENDING",
-  "official_gate_pass_claimed": false,
-  "materialized_ref": "refs/heads/codex/px0-06-host-convergence"
+  "official_gate_pass_claimed": false
 }

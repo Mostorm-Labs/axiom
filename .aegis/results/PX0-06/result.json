@@ -1,71 +1,36 @@
 {
   "schema_version": "0.1",
   "task_id": "PX0-06",
-  "stage": "P32",
+  "stage": "P36_FIX_REVERIFICATION",
   "status": "READY_FOR_CONTROL_REVIEW",
-  "result_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
-  "materialized_ref": "refs/heads/codex/px0-06-host-convergence",
+  "result_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+  "materialized_ref": "refs/heads/codex/px0-06-p36-web-debug-off-compat",
   "repository": "github:Mostorm-Labs/axiom",
-  "package_ref": "repo:.aegis/packages/PX0-06/package.json@3d18d030abea60b991fc7436fb8524a44760c979",
+  "package_ref": "repo:.aegis/packages/PX0-06/p36-repair.json@d9a13af091a9123435f3eb740784807068100fb9",
   "task_anchor": "9d771820f25b98b6922663eed53f58abc0088a8c",
-  "execution_ref": "codex/px0-06-host-convergence",
-  "implementation": [
-    "WindowsDebugUiHost now exposes one DebugController setter plus shared InputCaptureGate and keeps presentation/input lifecycle only",
-    "Windows main composes one DebugController from RuntimeFacade, diagnostics and debug owners; local snapshot/router/activity composition removed",
-    "Windows temporary toolbar routes brush/eraser/selection mutations through RuntimeFacade typed controls with monotonic request ids",
-    "Web DebugUiState uses one shared DebugController and a per-host RuntimeFacade lifetime independent of Debug UI visibility",
-    "Web temporary toolbar exports route brush/tool mutation through the RuntimeFacade product path",
-    "Temporary Windows/Web toolbars and G4.7 qualification hooks remain present"
-  ],
+  "resume_cursor": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "execution_ref": "codex/px0-06-p36-web-debug-off-compat",
+  "repair": "Moved WebRuntimeFacade and runtime facade map/accessors outside AXIOM_WEB_DEBUG_UI; kept Debug UI presentation and diagnostics under the feature guard.",
   "verification": {
-    "pre_mutation_red": {
-      "windows_failures": 4,
-      "web_failures": 3,
-      "log": "red-oracle.log"
-    },
-    "structural": {
-      "runner": "direct importlib Python runner",
-      "passed": 36,
-      "total": 36,
-      "log": "structural-contracts.log"
-    },
-    "focused_ctest": {
-      "passed": 9,
-      "total": 9,
-      "log": "ctest-focused.log"
-    },
-    "windows_native": {
-      "targets": [
-        "canvas_debug_ui",
-        "axiom_ink_playground_windows"
-      ],
-      "result": "PASS",
-      "log": "windows-native-build.log"
-    },
-    "web_physical": {
-      "target": "axiom_ink_playground_web",
-      "result": "PASS",
-      "log": "web-physical-build.log"
-    },
-    "scope_audit": {
-      "path": ".aegis/results/PX0-06/scope-audit.json",
-      "diff_check": "PASS",
-      "result": "PASS"
-    },
-    "manual_physical": "PENDING; not performed in this execution"
+    "web_debug_off": "PASS",
+    "web_debug_on": "PASS",
+    "structural": "4/4 PASS",
+    "focused_ctest": "9/9 PASS",
+    "scope": "PASS",
+    "diff_check": "PASS"
   },
   "artifacts": [
     {
-      "type": "Windows exe",
-      "path": "out/px0-06-windows/apps/ink_playground/axiom_ink_playground_windows.exe"
+      "type": "web-debug-off",
+      "path": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js"
     },
     {
-      "type": "Web page/WASM",
-      "path": "out/g4-5-web-debug-ui-physical/apps/ink_playground/index.html"
+      "type": "web-debug-on",
+      "path": "out/g4-5-web-debug-ui-physical/apps/ink_playground/axiom_ink_playground_web.js"
     }
   ],
-  "continue_execution": false,
-  "return_surface": "CONTROL_REVIEW",
+  "manual_physical": "PENDING",
   "official_gate_pass_claimed": false,
-  "evidence_manifest": ".aegis/results/PX0-06/evidence-manifest.json"
+  "return_surface": "CONTROL_REVIEW",
+  "continue_execution": false
 }
