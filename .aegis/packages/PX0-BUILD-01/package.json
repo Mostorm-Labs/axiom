@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-BUILD-01-P31-v0.1",
+  "task_id": "PX0-BUILD-01",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "Independent build unblocker for the Runtime/Render -> Scene public include boundary discovered during PX0-05 native verification",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-build-01-render-scene-include"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "e6371751f11fc78c7ca3f3a55591968338fea344300aa0e445d51a8f1e16d2ed"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "5f5581e7ada3c39e08f257809068a45cdc4a5773886c996717e1eb3594f0abb8"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "73bfb5d0083cbbe430d9f7b121ef883aa8c182de3eecb8b9d800800ff10186a0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e4c26b2c755acdeac52c1ae7807113db97979c5eb995672f8df577c179b7b496"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "66b75186c5a3efaa30928f8de125808a1e1f71aad2f1431ddf757c1f6ea83e6b"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-BUILD-01/",
+    "base_revision": "5aa2afa4442d0254f2412b7b625173f36b57354f"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run clean reproduction first. If the missing scene_types.hpp error reproduces and is repository-owned, make the minimal target-scoped CMake repair and complete render + Windows native verification. If it does not reproduce, return BLOCKED_ENVIRONMENT without changing repository source."
+  }
+}
