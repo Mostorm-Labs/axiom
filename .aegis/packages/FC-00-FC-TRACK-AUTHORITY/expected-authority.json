@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "status": "P31_FROZEN_EXPECTED_NOT_YET_EFFECTIVE",
+  "source": {
+    "repository": "Mostorm-Labs/axiom",
+    "baseline": "35f42b54dd29b6844953de83ac54dc1321479b3c",
+    "official_tool": {
+      "repository": "Mostorm-Labs/aegis",
+      "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+    },
+    "FC_current": {
+      "ref": "notion://3f64c57a590c815da4f1df83aa0c1255",
+      "url": "https://app.notion.com/p/3f64c57a590c815da4f1df83aa0c1255",
+      "revision": "2026-10-11T21:34:23.927Z",
+      "sha256": "sha256:6454b0f5702cdf352b1f7aa86a66fc8bf598388577720336f7ffc6616184ce9b"
+    },
+    "roadmap_P23": {
+      "ref": "notion://3f64c57a590c81faa2c8ea0097aad6c5",
+      "url": "https://app.notion.com/p/3f64c57a590c81faa2c8ea0097aad6c5",
+      "revision": "2026-10-11T14:04:09.470Z",
+      "sha256": "sha256:7cbc8c47f3dd4a41a36f82f474d37f93bd4006a5f2dd87e48a2b9e3f22f53e96"
+    },
+    "prior_import_P34": {
+      "ref": "notion://3f64c57a590c81da80a8dd8edf6a0b45",
+      "url": "https://app.notion.com/p/3f64c57a590c81da80a8dd8edf6a0b45",
+      "revision": "2026-10-11T21:34:05.830Z",
+      "sha256": "sha256:251ec28e9b24b8e46f31a6137ec5b8b0f224a177e29318947b908b2183a13678"
+    }
+  },
+  "append": {
+    "id": "fc-feature-completion-execution-v0.1",
+    "scope": "execution:FC/feature-completion",
+    "kind": "execution-policy",
+    "version": "v0.1",
+    "status": "Current",
+    "ref": "notion://3f64c57a590c815da4f1df83aa0c1255",
+    "depends_on": [
+      "g4-capability-authority-v0.3"
+    ],
+    "content": {
+      "owner": "FC Feature Completion Track",
+      "objective": "Complete FC-01..FC-12 product features before G5, retaining original multi-platform physical Gate debt until FC-13",
+      "source_basis": [
+        "notion://3f64c57a590c815da4f1df83aa0c1255",
+        "notion://3f64c57a590c81faa2c8ea0097aad6c5"
+      ],
+      "stage_order": [
+        "FC-00",
+        "FC-01",
+        "FC-01A",
+        "FC-02..FC-12",
+        "FC-13",
+        "G5-v0.3"
+      ],
+      "gated_execution": "FC-01..FC-12 each require own frozen P20/P31 and independently reviewed FC-N-DEV; FC-01A follows FC-01",
+      "physical_obligations": "FC-13 has exact original PX0-07, G4.6-C, G4.7 physical profiles and final FC-12 integration; every original Gate remains separately reviewed",
+      "original_px0_subject": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+      "fc01_entry": "FC-00 Closure and exact FC-01 feature definition/verification/P31 required before any FC-01 P32",
+      "g5_entry": "original applicable Gates + FC-12 DEV + FC-13 PHYS accepted before G5",
+      "nonclaims": [
+        "No original PX0/G4.6/G4.7 P34 or physical PASS",
+        "No release-grade physical Gate from FC-N DEV",
+        "No FC-01 P31/P32 or G5 authorization from this Authority record",
+        "G4 v0.3 dependency is functional development lineage only"
+      ]
+    }
+  },
+  "historical_cohort": {
+    "authorities_before": 4,
+    "authorities_after": 5,
+    "gate_decisions": 25,
+    "integrations_bound": 29,
+    "evidence": 34
+  },
+  "preservation": {
+    "project_unchanged": true,
+    "gates_unchanged": true,
+    "evidence_unchanged": true,
+    "integrations_unchanged": true,
+    "old_four_authorities_unchanged": true,
+    "lifecycle_hint_unchanged": true,
+    "no_original_physical_gate_pass_change": true
+  },
+  "expected_current_ids": [
+    "g2-canonical-main",
+    "g3-capability-authority",
+    "g4-capability-authority-v0.3",
+    "fc-feature-completion-execution-v0.1"
+  ],
+  "gate_claim": "P31 fixture is execution expectation only; no new authored FC Authority until authorized P32 and independent P34"
+}

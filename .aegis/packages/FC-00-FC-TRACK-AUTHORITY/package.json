@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "package_id": "FC-00-FC-TRACK-AUTHORITY-P31-v0.1",
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "status": "CURRENT_EXECUTABLE_P31_PACKAGE_ONLY",
+  "purpose": "Append accepted FC Track Current execution-policy Authority in a separate scope to canonical Axiom v0.6, preserving all historic Gate/Integration evidence.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/fc-00-fc-track-authority-p31"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "35f42b54dd29b6844953de83ac54dc1321479b3c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "7101cd28ded4e83dc47666844e0f755e9d9131e299c40b1998ec6cc17354af98"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "5d239e2d57f3ce642602f9dc7b5819d7bfd82cc07710f55cf704bff06a5de3b6"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "d59fe86eb4d588d28ca026e6541b02533914bf32d076993082bbac53939a5a52"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "4affb0f5b86c8d4922a9ed6b45636e768777b3ae7056d6da57e6474748796a98"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "b9b92cf762fd5ba2a2b9b6e85807623e94385d943007ae04f122aafddfd78440"
+  },
+  "expected_authority_ref": {
+    "path": "expected-authority.json",
+    "sha256": "563222c95af2723f10dd50b36f0f6bdb93dcc1b070aeb578c996439c7c4e6b24"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00-FC-TRACK-AUTHORITY/",
+    "base_revision": "35f42b54dd29b6844953de83ac54dc1321479b3c",
+    "execution_branch_ref": "refs/heads/codex/fc-00-fc-track-authority-p31",
+    "package_subject_revision": "Resolve exact GitHub commit after ref advancement"
+  },
+  "official_tool": {
+    "repository": "Mostorm-Labs/aegis",
+    "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+  },
+  "handoff": {
+    "stage": "P32",
+    "preferred_executor": "codex",
+    "next_action": "Append expected Authority and run official v0.6->v0.6 transition/validate/recompute/check with preservation and evidence until terminal return"
+  }
+}
