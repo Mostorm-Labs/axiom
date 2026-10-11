@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P31_TASK_PACKAGE_RECONCILIATION",
+  "prior_package": {
+    "package_id": "PX0-05-P31-v0.1",
+    "materialization_ref": "5aa2afa4442d0254f2412b7b625173f36b57354f"
+  },
+  "executor_return": "BLOCKED_AUTHORITY",
+  "findings": [
+    {
+      "type": "TASK_PACKAGE_DEFECT",
+      "blocking": true,
+      "issue": "v0.1 preserved windows_debug_ui_selection_contract_test.py unchanged while the frozen test still required the exact legacy tab architecture that PX0-05 V1 requires removing.",
+      "resolution": "v0.2 authorizes migrating only the obsolete Debug UI layout assertions to final Control/Inspect panel architecture and keeps selection pointer/facade invariants."
+    },
+    {
+      "type": "DEPENDENCY_BLOCKER",
+      "blocking": true,
+      "issue": "Locked native build cannot resolve canvas/scene/scene_types.hpp at the pre-existing Runtime/Render -> Scene include boundary outside PX0-05 scope.",
+      "resolution": "Route to independent PX0-BUILD-01; do not widen PX0-05 Runtime scope."
+    }
+  ],
+  "partial_work": {
+    "durable": false,
+    "accepted_resume_cursor": false,
+    "location_context": "C:/Users/Chado/.codex/worktrees/px0-05-existing-capability-migration-clean",
+    "policy": "Preserve locally. After dependency closure, P33 must reconcile it against the corrected current package as ANCHOR_DESCENDANT_WITHOUT_CURSOR; local-only work is not Gate evidence."
+  },
+  "next_action": "Execute PX0-BUILD-01 first. Then materialize PX0-05 P31 v0.3 with exact dependency result and resume via P33 reconciliation.",
+  "official_gate_pass_claimed": false
+}
