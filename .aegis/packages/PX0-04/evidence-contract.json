@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-04",
+  "review_boundary": "Independent P34 resolves the exact pushed PX0-04 result, the repo-local package, focused registry/workbench tests, inherited PX0/DUI regressions, renderer-link native build evidence, structural Windows/Web contracts, and exact authorized diff.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    "reviewer-resolvable exact result revision/ref",
+    "PX0PanelRegistry",
+    "PX0Workbench",
+    "DUI20DebugUiContracts",
+    "PX0ControlRouter",
+    "PX0DebugSnapshot",
+    "PX0RuntimeFacadeContract",
+    "DUIM1PanelModel when retained",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "Windows/Web structural contract set",
+    "native renderer-link build evidence or allowed environment-only classification",
+    "authorized-scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "optional Web build",
+    "manual screenshot/visual confirmation of six-workspace shell",
+    "clean git status"
+  ],
+  "known_non_blocking_environment_note": "Existing MSVC warning-policy diagnostics are not a license to modify unrelated Runtime/app source. A pre-existing warning-only environment issue may be classified separately if the PX0-04 focused/native link target remains otherwise valid.",
+  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-04/PX0/DUI-M1/Preview/physical/Gate PASS.",
+  "materialization_requirement": "The exact implementation result must be pushed to refs/heads/codex/px0-04-workbench-shell-registry or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW."
+}
