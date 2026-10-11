@@ -1,0 +1,219 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-04",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "19840c78064ac7b73bf59daa64ddb45559b93db0",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": [
+        "3 Success criteria",
+        "4 Non-goals",
+        "5 Layer 1 - Workbench information architecture",
+        "5.1 Dashboard",
+        "5.2 Control",
+        "5.3 Inspect",
+        "5.4 Runtime",
+        "5.5 Performance",
+        "5.6 Scenarios",
+        "8.2 Target package structure",
+        "8.3 DebugController",
+        "8.5 DebugUiSessionState",
+        "8.6 Panel contract",
+        "8.7 Workspace and panel contribution model",
+        "8.8 Stable extension slots",
+        "8.11 Workbench layout contract",
+        "13 Verification strategy"
+      ]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "19840c78064ac7b73bf59daa64ddb45559b93db0",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": [
+        "Work Package PX0-04 - Workbench Shell + Panel Registry",
+        "Task 9: Add stable workspace, slot, registry, and UI-session contracts",
+        "Task 10: Split renderer from controller and add the six-workspace shell"
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Establish the stable six-workspace Debug UI shell, panel contribution registry, UI-local session state, controller orchestration boundary, and renderer split without migrating the full existing capability inventory or entering PX0-05/06 behavior.",
+    "predecessor": {
+      "task_id": "PX0-03",
+      "accepted_code_revision": "172ef085cc68b66258e535779b3df15cc0bbadbd",
+      "accepted_evidence_head": "19840c78064ac7b73bf59daa64ddb45559b93db0",
+      "gate": "PASS_WITH_FINDINGS"
+    },
+    "workspaces": [
+      "Dashboard",
+      "Control",
+      "Inspect",
+      "Runtime",
+      "Performance",
+      "Scenarios"
+    ],
+    "workspace_rule": "Exactly these six top-level workspaces exist. PX0-04 must not add a seventh workspace.",
+    "panel_slots": {
+      "Dashboard": [
+        "RuntimeIdentity",
+        "CurrentProductState",
+        "Health",
+        "LivePerformance",
+        "RecentActivity"
+      ],
+      "Control": [
+        "Tools",
+        "Ink",
+        "View",
+        "History",
+        "Feature"
+      ],
+      "Inspect": [
+        "Selection",
+        "Object",
+        "Interaction",
+        "Relationship"
+      ],
+      "Runtime": [
+        "Document",
+        "Scene",
+        "ARC",
+        "Render",
+        "Surface",
+        "Resources",
+        "FeatureDiagnostics",
+        "AdvancedActions"
+      ],
+      "Performance": [
+        "LiveMetrics",
+        "InputARC",
+        "Rendering",
+        "MemoryCache",
+        "Trace",
+        "GPUTiming",
+        "FeatureMetrics"
+      ],
+      "Scenarios": [
+        "Smoke",
+        "FeatureScenario",
+        "Stress",
+        "Evidence"
+      ]
+    },
+    "registry_contract": {
+      "panel_context": "DebugPanelContext contains only const DebugSnapshot&, DebugControlRouter&, and DebugUiSessionState&.",
+      "contribution_fields": [
+        "WorkspaceId workspace",
+        "PanelSlot slot",
+        "int order",
+        "bool (*visible)(const DebugSnapshot&) noexcept",
+        "void (*render)(DebugPanelContext&)"
+      ],
+      "add_rules": [
+        "Reject an invalid WorkspaceId.",
+        "Reject a PanelSlot that does not belong to the declared workspace.",
+        "Reject a null render callback.",
+        "A null visible callback means visible.",
+        "Multiple contributions in one valid slot are allowed."
+      ],
+      "ordering": "Within one workspace, contributions are returned in deterministic PanelSlot enum order, then ascending contribution.order, with stable insertion order for ties.",
+      "registration": "Registration is explicit at composition time. Static-global registration, reflection and dynamic plugin discovery are forbidden."
+    },
+    "ui_session_contract": {
+      "owner": "DebugUiSessionState owns UI-local state only.",
+      "minimum_state": [
+        "selected workspace",
+        "activity auto-scroll preference",
+        "frame-local control-submission marker used only for presentation refresh"
+      ],
+      "default_workspace": "Dashboard",
+      "invariant": "Changing DebugUiSessionState must not mutate Runtime state, Document generation, history, owner queues, or canonical operations."
+    },
+    "workbench_contract": {
+      "layout": [
+        "header with runtime/document/coherence/frame health",
+        "left sidebar with exactly six workspaces",
+        "active-workspace content region sourced from PanelRegistry",
+        "footer with latest bounded Debug Control Plane activity"
+      ],
+      "docking": false,
+      "geometry": "Common Workbench code uses available ImGui display geometry with common minimum/preferred sizing rules; it must not retain 410x560 as the semantic layout contract.",
+      "empty_workspace": "A workspace with no registered contributions renders an explicit empty/not-yet-migrated engineering state, not a crash or hidden workspace."
+    },
+    "transitional_compatibility": {
+      "reason": "PX0-04 establishes the shell before PX0-05 migrates the full capability inventory.",
+      "rule": "Current Windows/Web callers may keep the existing common buildImGuiPanels entrypoint until PX0-06. That entrypoint must render the new common Workbench shell, not the old top-level fixed tab window.",
+      "legacy_controls": "Preserve the current Selection, Undo/Redo, Brush/Eraser, Surface and diagnostic controls as one explicitly transitional legacy compatibility contribution under Control/Tools. It may keep its internal legacy tab grouping temporarily, but it is not a new stable slot and must not invent new controls.",
+      "selected_tool": "The compatibility renderer should derive resolved tool presentation from DebugSnapshot product state. The old selectedTool parameter may remain source-compatible but is not Runtime truth.",
+      "persistence": "The compatibility entrypoint may hydrate/persist selected workspace through the current ImGui context storage for this temporary host path; it must not use a process-global/static registry or process-global session singleton.",
+      "future": "PX0-05 replaces the compatibility contribution with final Dashboard/Control/Inspect/Runtime/Performance built-in panel contributions. PX0-06 replaces the compatibility host entrypoint with common DebugController composition."
+    },
+    "controller_contract": {
+      "context_fields": [
+        "RuntimeFacade* runtime",
+        "const IAxiomDiagnostics* axiom",
+        "const IArcDiagnostics* arc",
+        "const IPlatformDiagnostics* platformDiagnostics",
+        "const ITelemetry* telemetry",
+        "AxiomDebugControl* axiomDebug",
+        "PlatformDebugControl* platformDebug"
+      ],
+      "ownership": [
+        "DebugSnapshotAssembler",
+        "DebugActivityLog",
+        "DebugControlRouter",
+        "PanelRegistry",
+        "DebugUiSessionState",
+        "DebugWorkbench",
+        "latest immutable DebugSnapshot"
+      ],
+      "frame_order": [
+        "assembler.capture",
+        "router.beginFrame(snapshot)",
+        "router.refreshReceipts",
+        "snapshot.activity = activity.snapshot",
+        "store/publish the one immutable snapshot identity",
+        "render workbench from that snapshot"
+      ],
+      "single_capture_rule": "Receipt refresh must not re-query Runtime/Axiom/Arc/Platform/Telemetry providers or manufacture a second coherence identity in the same controller frame.",
+      "integration_boundary": "PX0-04 implements and tests the controller orchestration object, but Windows/Web host ownership is not thinned to the controller until PX0-06."
+    },
+    "renderer_contract": {
+      "move": "ImGuiSkiaRenderer moves out of controller.hpp/controller.cpp into imgui_skia_renderer.hpp/imgui_skia_renderer.cpp.",
+      "preserve": [
+        "A8 ImGui font atlas",
+        "normalized UV mapping",
+        "white font paint",
+        "SkBlendMode::kModulate",
+        "existing Skia draw-data semantics"
+      ]
+    },
+    "legacy_abstraction_reconciliation": {
+      "panels_hpp": "Delete the old panels.hpp PanelCapability taxonomy.",
+      "debug_panel_enum": "Remove the old DebugPanel/PanelState taxonomy from controller.hpp.",
+      "panel_model": "DebugPanelModel must not remain as a parallel panel taxonomy. It may remain only as a temporary compatibility helper for canSubmitProductControl if needed by an existing regression target; describe()/old enum mapping must be removed."
+    },
+    "preserved_boundaries": [
+      "PX0-01 RuntimeFacade/Diagnostics ownership split",
+      "PX0-02 structured DebugSnapshot and common assembler",
+      "PX0-03 DebugControlRouter and bounded activity behavior",
+      "Current Windows/Web host presentation/input ownership until PX0-06",
+      "Current product and engineering owner semantics",
+      "DUI-M1 PHYSICAL_PENDING/BLOCKED_EVIDENCE status"
+    ]
+  },
+  "forbidden_interpretations": [
+    "PX0-04 does not migrate the complete capability inventory into final workspace panels; that is PX0-05.",
+    "PX0-04 does not add Scenario runner semantics; PX0-05 Task 12 owns the bounded unsupported scenario entries.",
+    "PX0-04 does not thin Windows/Web hosts or move their composition root to DebugController; that is PX0-06.",
+    "PX0-04 does not add Shape, RichText editing, Connector, Snap or Image product behavior.",
+    "PX0-04 does not add ImGui docking, dynamic plugins, static registration, a RuntimeScene tree browser, raw Document editing, an Operation timeline or a GPU profiler.",
+    "PX0-04 does not change RuntimeFacade, owner queue semantics, stable Runtime C ABI, Preview, physical qualification or Gate status."
+  ]
+}
