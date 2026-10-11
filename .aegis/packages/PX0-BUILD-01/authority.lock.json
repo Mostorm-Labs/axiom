@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-BUILD-01",
+  "current": true,
+  "sources": [
+    {
+      "role": "repository_build_topology",
+      "provider": "repo",
+      "path": "runtime/render/CMakeLists.txt",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "content_hash": "git-blob-sha1:cbe798885b54b75c239fac1f06ddb89c75741bf6",
+      "trusted_statements": [
+        "canvas_runtime_render is a build target that publicly depends on canvas_runtime_scene.",
+        "canvas_runtime_render exposes runtime/render/include as its public include root.",
+        "The task is build-graph/include visibility only; render or scene semantics are not authorized to change."
+      ]
+    },
+    {
+      "role": "repository_scene_public_interface",
+      "provider": "repo",
+      "path": "runtime/scene/CMakeLists.txt",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "content_hash": "git-blob-sha1:7e4bf59a0d693eaca40c0b25f6f415bf0c733dca",
+      "trusted_statements": [
+        "canvas_runtime_scene exposes runtime/scene/include as a PUBLIC include directory.",
+        "canvas/scene/scene_types.hpp is a public scene header and is expected to be resolvable by consumers of the declared scene dependency."
+      ]
+    },
+    {
+      "role": "public_header_dependency",
+      "provider": "repo",
+      "path": "runtime/render/include/canvas/render/reference_draw_list.hpp",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "trusted_statements": [
+        "reference_draw_list.hpp includes canvas/scene/scene_types.hpp as part of the current render public-header dependency graph.",
+        "PX0-BUILD-01 must not rewrite this semantic header relationship unless a separate Authority change is explicitly approved."
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Reproduce and, only if repository build metadata is at fault, minimally repair the Runtime/Render -> Scene include-boundary so the locked native build can resolve canvas/scene/scene_types.hpp without widening PX0-05 semantic scope.",
+    "boundary": "Build-system dependency/include propagation only.",
+    "expected_invariant": "A clean target that compiles canvas_runtime_render or a consumer linked through the declared render/scene target graph can resolve canvas/scene/scene_types.hpp through target usage requirements rather than ad-hoc global include-directory injection.",
+    "diagnostic_first": true,
+    "no_source_semantic_change": true,
+    "px0_relation": "This is an independent unblocker for PX0-05 native evidence. It is not a new productization feature WP and does not change PX0 capability semantics."
+  },
+  "forbidden_interpretations": [
+    "Do not change runtime/render or runtime/scene C++ headers/sources to silence the include error.",
+    "Do not copy or duplicate scene_types.hpp into render.",
+    "Do not add repository-global include_directories(...) as a shortcut.",
+    "Do not modify Debug UI, Product Shell, Preview, Runtime semantics, stable ABI, or G5 behavior.",
+    "If the failure cannot be reproduced in a clean locked configuration, do not invent a CMake change; classify the issue as environment/build-tree specific."
+  ]
+}
