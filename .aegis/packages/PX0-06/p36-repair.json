@@ -1,0 +1,120 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-06-P36-v0.1",
+  "task_id": "PX0-06",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "CURRENT_EXECUTABLE",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/px0-06-p36-web-debug-off-compat"
+  },
+  "governing_p31": {
+    "package_id": "PX0-06-P31-v0.1",
+    "materialization_ref": "3d18d030abea60b991fc7436fb8524a44760c979"
+  },
+  "p34_p35": {
+    "control_ref": "84ec960ff463bd4874edb46133e2914f3004a1df",
+    "p34_artifact": ".aegis/results/PX0-06/p34-review-host-convergence.json",
+    "p35_artifact": ".aegis/results/PX0-06/p35-web-debug-ui-off-classification.json",
+    "classification": "IMPLEMENTATION_DEFECT"
+  },
+  "task_anchor": {
+    "revision": "9d771820f25b98b6922663eed53f58abc0088a8c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "codex/px0-06-host-convergence",
+    "revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+    "completed_through": [
+      "Windows thin-host convergence",
+      "Windows RuntimeFacade toolbar routing",
+      "Web DebugController convergence for AXIOM_WEB_DEBUG_UI=1",
+      "Web RuntimeFacade toolbar routing for AXIOM_WEB_DEBUG_UI=1",
+      "36/36 structural contracts",
+      "9/9 focused CTest",
+      "fresh Windows native build",
+      "debug-enabled Web physical build",
+      "scope audit and diff check"
+    ],
+    "next_action": "Reproduce the AXIOM_WEB_DEBUG_UI=0 Web compile failure, repair bridge.cpp so the product RuntimeFacade lifetime is independent of Debug UI compilation, then execute the frozen P36 reverification set."
+  },
+  "defect": {
+    "id": "PX0-06-LF1-web-debug-ui-off-build-break",
+    "failure_mode": "WebRuntimeFacade/runtimeFacades()/runtimeFacade() are compiled only under AXIOM_WEB_DEBUG_UI while unconditional product exports and create/destroy reference them.",
+    "impact": "axiom_ink_playground_web is not compilable in the supported/default AXIOM_BUILD_DEBUG_UI=OFF configuration."
+  },
+  "repair_contract": {
+    "authorized_source_paths": [
+      "apps/ink_playground/platform/web/bridge.cpp"
+    ],
+    "evidence_paths": [
+      ".aegis/results/PX0-06/**"
+    ],
+    "required_changes": [
+      "Move the WebRuntimeFacade product adapter and per-host runtimeFacades()/runtimeFacade() lifetime outside the AXIOM_WEB_DEBUG_UI conditional so product toolbar exports and create/destroy compile and work when Debug UI is disabled.",
+      "Move only the runtime/diagnostics include dependencies needed by WebRuntimeFacade outside the AXIOM_WEB_DEBUG_UI conditional; keep DebugController, ImGui, Skia Debug UI presentation, InputCaptureGate, WebPlatformDiagnostics, WebTelemetry, WebArcDiagnostics and DebugUiState/controller rendering under AXIOM_WEB_DEBUG_UI.",
+      "When Debug UI is enabled, initialize DebugController with the same per-host WebRuntimeFacade instance used by the temporary product toolbar exports.",
+      "Do not change ProductControl semantics, request mapping, request-id behavior, Host mutation semantics, CMake feature flags or exported JavaScript function names."
+    ],
+    "forbidden_changes": [
+      "runtime/**",
+      "debug_ui/**",
+      "apps/ink_playground/CMakeLists.txt",
+      "CMakePresets.json",
+      "Windows platform files",
+      "Web index.html",
+      "structural test source",
+      "warning policy",
+      "PX0-07 or physical qualification work"
+    ]
+  },
+  "preflight": {
+    "repository_identity_first": true,
+    "expected_position": "DESCENDANT_CURSOR",
+    "require_red_before_mutation": true,
+    "red_oracle": {
+      "command": "cmake --preset g3-web-release && cmake --build --preset g3-web-release --target axiom_ink_playground_web",
+      "expected": "FAIL at the accepted PX0-06 result because AXIOM_WEB_DEBUG_UI=0 removes WebRuntimeFacade/runtimeFacade(s) while unconditional exports reference them."
+    }
+  },
+  "reverification": [
+    {
+      "id": "P36-V1-web-debug-off",
+      "command": "cmake --preset g3-web-release && cmake --build --preset g3-web-release --target axiom_ink_playground_web",
+      "expected": "PASS with AXIOM_BUILD_DEBUG_UI=OFF / AXIOM_WEB_DEBUG_UI=0."
+    },
+    {
+      "id": "P36-V2-web-debug-on",
+      "command": "cmake --preset g4-5-web-debug-ui-physical && cmake --build --preset g4-5-web-debug-ui-physical --target axiom_ink_playground_web",
+      "expected": "PASS."
+    },
+    {
+      "id": "P36-V3-web-structural",
+      "command": "Run apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py with pytest or the previously accepted direct plain-Python runner.",
+      "expected": "PASS."
+    },
+    {
+      "id": "P36-V4-focused-regressions",
+      "command": "Run PX0PanelRegistry, PX0Workbench, DUI20DebugUiContracts, PX0RuntimeFacadeContract, DUIM1PanelModel, PX0ControlRouter, PX0DebugSnapshot, DUIM1ViewControls and DUIM1RuntimeFacade.",
+      "expected": "9/9 PASS."
+    },
+    {
+      "id": "P36-V5-scope",
+      "command": "Compare 57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff to the final result and run git diff --check.",
+      "expected": "The only source file changed after the accepted result is apps/ink_playground/platform/web/bridge.cpp; evidence metadata is under .aegis/results/PX0-06/**; git diff --check passes."
+    }
+  ],
+  "terminal_success": [
+    "AXIOM_WEB_DEBUG_UI=0 Web target compiles and links.",
+    "AXIOM_WEB_DEBUG_UI=1 physical Web target still compiles and links.",
+    "Web structural contract passes.",
+    "Nine focused PX0/DUI regressions pass.",
+    "Only bridge.cpp changes in source after the accepted result.",
+    "Exact repaired result and evidence are pushed to a reviewer-resolvable ref.",
+    "Return READY_FOR_CONTROL_REVIEW without claiming PX0-06/PX0/DUI-M1/physical/Gate PASS."
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_forbidden": true
+}

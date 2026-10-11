@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "stage": "P36_FIX_REVERIFICATION",
+  "owner": "aegis-gate-review",
+  "repair_package": {
+    "path": ".aegis/packages/PX0-06/p36-repair.json",
+    "materialization_ref": "b7b9fe26c63379f340d60f0938d80d71f7555dae"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "codex/px0-06-p36-web-debug-off-compat",
+  "task_anchor": {
+    "revision": "9d771820f25b98b6922663eed53f58abc0088a8c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "codex/px0-06-host-convergence",
+    "revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+    "next_action": "Reproduce AXIOM_WEB_DEBUG_UI=0 Web build failure, repair bridge.cpp only, then reverify."
+  },
+  "expected_position_classification": "DESCENDANT_CURSOR",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_forbidden": true
+}
