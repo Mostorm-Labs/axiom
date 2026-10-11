@@ -1,0 +1,278 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-07",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Run repository/package/binding preflights and record an ImplementationDesignPreflight that maps each existing PX0 boundary test to Task 15. Do not rewrite already-sufficient tests merely for churn.",
+        "Add a test-only synthetic extension proof: one contribution at Control/Feature and one at Inspect/Object or Inspect/Interaction. Prove registry acceptance/discovery/order and renderability through the existing DebugPanelContext/Workbench contract without production Workbench/host changes.",
+        "Strengthen only missing architecture-boundary regressions across panel_registry_test.cpp, runtime_contract_test.cpp, snapshot_assembler_test.cpp, control_router_test.cpp, workbench_state_test.cpp and debug_ui_test.cpp. Existing sufficient assertions may remain unchanged.",
+        "Pin bounded DebugActivityLog behavior with a deterministic capacity/eviction test.",
+        "Pin the no-generic-debug-command boundary by exact source/tree audit: canvas::debug_ui::DebugCommand and a generic canvas::debug_ui::BoundedCommandQueue must be absent. canvas::runtime::AxiomDebugCommand and BoundedAxiomDebugCommandQueue remain allowed typed owner contracts. Do not delete typed owner queues merely because the legacy header path contains the words debug_command_queue.",
+        "Update debug_ui/CMakeLists.txt only when mechanically required to compile/register Task 15 closure tests. Do not change production library composition or warning policy.",
+        "Create a fresh Windows native qualification build using the accepted locked PX0 profile with RF01=ON, POC01=OFF, Debug UI enabled and BUILD_TESTING=ON. Build the required Debug UI/Windows targets and run the complete DUI/PX0 CTest set.",
+        "Run all four accepted Windows/Web structural platform contract files without modifying them.",
+        "Commit/materialize a qualification_subject_revision after all Task 15 test/CMake changes and automated verification are green. No physical evidence README content may be used as the subject identity.",
+        "Build axiom_ink_playground_windows from the exact qualification_subject_revision using the locked Windows clang-cl + Skia environment and physically validate the full applicable Windows checklist.",
+        "Build g4-5-web-debug-ui-physical from the exact qualification_subject_revision, serve the output, open it in a real browser and physically validate the full applicable Web checklist.",
+        "Create docs/quality/evidence/px0-debug-control-plane/README.md recording package ID, qualification_subject_revision, exact build commands/profiles, environment identity, per-check status, expected Unsupported/DisabledByContext distinctions and evidence/log locations. Do not write an official Gate/PX0 PASS verdict.",
+        "Materialize .aegis/results/PX0-07/result.json and evidence metadata that distinguish qualification_subject_revision from evidence_head. Push the evidence head to refs/heads/codex/px0-07-closure-evidence or an equivalently reviewer-resolvable ref.",
+        "Run final authorized-scope audit and git diff --check from task anchor through evidence head."
+      ],
+      "authorized_mutation_scope": [
+        "debug_ui/tests/panel_registry_test.cpp",
+        "debug_ui/tests/runtime_contract_test.cpp",
+        "debug_ui/tests/snapshot_assembler_test.cpp",
+        "debug_ui/tests/control_router_test.cpp",
+        "debug_ui/tests/workbench_state_test.cpp",
+        "debug_ui/tests/debug_ui_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "docs/quality/evidence/px0-debug-control-plane/README.md",
+        ".aegis/results/PX0-07/**"
+      ],
+      "preserve_unchanged": [
+        "runtime/**",
+        "arc/**",
+        "apps/ink_playground/common/**",
+        "apps/ink_playground/platform/**",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_encoding_contract_test.py",
+        "debug_ui/include/**",
+        "debug_ui/src/**",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Any Runtime, Arc, Debug UI production, platform host/bridge or common adapter source change.",
+        "Any RuntimeFacade/DebugSnapshot/DebugControlRouter/Workbench/PanelRegistry production contract change.",
+        "Any structural platform test weakening or mutation.",
+        "Any Shape/RichText/Connector/Snap/Image/Product UI implementation.",
+        "Any CMake compiler/warning-policy relaxation or unrelated build-system repair.",
+        "Any attempt to turn Unsupported controls into implemented controls to satisfy physical qualification.",
+        "Any Android/iOS physical parity work.",
+        "Any PX1 or G5 implementation.",
+        "Any official PX0/DUI-M1/physical/Gate PASS claim from executor/evidence prose."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "which Task 15 boundaries are already covered at task anchor and exact file/assertion locations",
+        "which Task 15 boundaries require new test assertions",
+        "synthetic Control/Feature + Inspect extension fixture design and why it is product-semantic-free",
+        "bounded activity test location",
+        "generic DebugCommand absence audit method",
+        "fresh Windows test/build profile",
+        "qualification_subject_revision versus evidence_head identity flow",
+        "Windows physical checklist and expected owner-availability states",
+        "Web physical checklist and expected owner-availability states",
+        "evidence README schema/fields",
+        "mapping from V1-V8 to exact tests/builds/physical observations",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "At least the synthetic dual-slot extension proof and bounded-activity closure oracle are absent from the PX0-06 baseline. Updated closure tests must fail before the test-only implementation is completed. If all new frozen closure assertions already pass without test mutation, classify the redundant item during preflight rather than manufacturing a false RED.",
+      "observation_seam": "PX0PanelRegistry / PX0Workbench / PX0ControlRouter / DUI20DebugUiContracts closure tests"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-07-T1-extension-and-boundary-red",
+          "command_or_oracle": "Add only the missing Task 15 closure assertions first, then run the affected native PX0/DUI targets before any supporting test-fixture/CMake adjustment.",
+          "expected_result": "RED only for newly asserted missing synthetic-extension/bounded-activity/boundary closure behavior. Existing already-covered boundaries need not be made artificially red.",
+          "blocking_reason": "Proves new Task 15 proof has observation value without rewriting production behavior."
+        },
+        {
+          "id": "PX0-07-T2-complete-native-suite",
+          "command_or_oracle": "Fresh Windows native RF01=ON / POC01=OFF / AXIOM_BUILD_DEBUG_UI=ON / BUILD_TESTING=ON configure/build, then ctest --test-dir <fresh-build> --output-on-failure -R \"DUI|PX0\".",
+          "expected_result": "All discovered DUI/PX0 tests PASS.",
+          "blocking_reason": "Primary deterministic closure proof."
+        },
+        {
+          "id": "PX0-07-T3-platform-structural",
+          "command_or_oracle": "Run web_imgui_debug_ui_contract_test.py, windows_imgui_skia_debug_ui_contract_test.py, windows_debug_ui_selection_contract_test.py and windows_debug_ui_encoding_contract_test.py using pytest or the accepted equivalent direct-Python runner.",
+          "expected_result": "All PASS.",
+          "blocking_reason": "Protects the accepted PX0-06 host/control/input boundaries."
+        },
+        {
+          "id": "PX0-07-T4-windows-build",
+          "command_or_oracle": "Build axiom_ink_playground_windows from the exact qualification_subject_revision with the fresh accepted Windows native profile.",
+          "expected_result": "PASS through application link.",
+          "blocking_reason": "Physical Windows evidence must be tied to a buildable exact subject."
+        },
+        {
+          "id": "PX0-07-T5-web-build",
+          "command_or_oracle": "At qualification_subject_revision run cmake --preset g4-5-web-debug-ui-physical && cmake --build --preset g4-5-web-debug-ui-physical --target axiom_ink_playground_web.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Physical Web evidence must be tied to a buildable exact subject."
+        },
+        {
+          "id": "PX0-07-T6-final-scope",
+          "command_or_oracle": "git diff --name-only 7e3772d747cf3f7e158fb0917e5169a56065a08b..<evidence_head> and git diff --check 7e3772d747cf3f7e158fb0917e5169a56065a08b..<evidence_head>.",
+          "expected_result": "Only authorized Task 15 tests/CMake, PX0 README and PX0-07 result metadata changed; no production source or structural platform test source changed; diff check exits 0.",
+          "blocking_reason": "Ensures closure/evidence-only scope."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [
+        {
+          "id": "PX0-07-H1-windows-physical",
+          "oracle": "Launch the exact qualification_subject_revision Windows build in a real Windows GUI session and record every applicable approved checklist observation in docs/quality/evidence/px0-debug-control-plane/README.md.",
+          "required_rows": [
+            "show/hide",
+            "workspace navigation",
+            "Vector",
+            "Marker",
+            "Chalk",
+            "Membrane",
+            "Object Eraser",
+            "Partial Eraser",
+            "selection mode",
+            "Undo",
+            "Redo",
+            "Pan",
+            "Zoom At",
+            "Fit Content",
+            "Fit Selection",
+            "Fit Primary Object",
+            "Surface Platform/CPU/GPU where supported",
+            "ARC diagnostics visibility",
+            "Surface diagnostics visibility",
+            "telemetry visibility",
+            "Activity request/receipt updates",
+            "hidden Debug UI does not consume Canvas input",
+            "Debug-owned pointer/keyboard sequence does not leak to Canvas"
+          ],
+          "blocking_reason": "PX0 success criterion explicitly requires Windows physical validation."
+        },
+        {
+          "id": "PX0-07-H2-web-physical",
+          "oracle": "Serve the exact qualification_subject_revision g4-5-web-debug-ui-physical output in a real browser and record every applicable approved checklist observation in docs/quality/evidence/px0-debug-control-plane/README.md.",
+          "required_rows": [
+            "show/hide",
+            "workspace navigation",
+            "Vector",
+            "Marker",
+            "Chalk",
+            "Membrane",
+            "Object Eraser",
+            "Partial Eraser",
+            "selection mode",
+            "Undo",
+            "Redo",
+            "Pan",
+            "Zoom At",
+            "Fit Content",
+            "Fit Selection",
+            "Fit Primary Object",
+            "Surface controls as actual owner state (often Unsupported without Web engineering owner)",
+            "ARC diagnostics visibility",
+            "Surface diagnostics visibility",
+            "telemetry visibility",
+            "Activity request/receipt updates",
+            "hidden Debug UI does not consume Canvas input",
+            "Debug-owned pointer/keyboard sequence does not leak to Canvas"
+          ],
+          "blocking_reason": "PX0 success criterion explicitly requires Web physical validation."
+        }
+      ],
+      "optional": [
+        {
+          "id": "PX0-07-H3-screenshots",
+          "oracle": "Capture representative Windows/Web Workbench screenshots linked from the evidence README.",
+          "classification": "corroborative; not required when the complete physical observation matrix and exact build/environment identity are present"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact qualification_subject_revision after Task 15 test/CMake closure",
+        "reviewer-resolvable evidence_head on refs/heads/codex/px0-07-closure-evidence or equivalent",
+        "complete native DUI/PX0 CTest log",
+        "four platform structural contract results",
+        "Windows application build identity/result",
+        "Web physical target build identity/result",
+        "Windows physical observation matrix",
+        "Web physical observation matrix",
+        "README with exact subject/build/platform/browser identities and Available/Unsupported distinctions",
+        "generic DebugCommand absence source/tree audit",
+        "authorized-scope diff and git diff --check"
+      ],
+      "corroborative": [
+        "representative screenshots",
+        "clean worktree"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Synthetic Control + Inspect feature extension proof passes without production changes or successor feature semantics.",
+        "All Task 15 architecture boundary obligations are directly covered and green.",
+        "Complete native DUI/PX0 suite passes at the qualification subject.",
+        "All four Windows/Web structural contracts pass at the qualification subject.",
+        "Windows and Web hosted targets build successfully from the exact qualification subject.",
+        "Every required Windows physical row is recorded with no FAIL on an expected available behavior.",
+        "Every required Web physical row is recorded with no FAIL on an expected available behavior; intentional Unsupported/DisabledByContext states are explicit.",
+        "README records qualification_subject_revision, build/environment identities, control availability states and evidence locations without claiming official Gate PASS.",
+        "Evidence head is reviewer-resolvable and contains no production source change after qualification_subject_revision.",
+        "Only authorized tests/CMake/evidence files changed from task anchor and git diff --check passes.",
+        "Return READY_FOR_CONTROL_REVIEW with exact subject/evidence identities; do not self-issue PX0/P34/DUI-M1/physical/G5 PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true,
+      "manual_physical_unavailable_rule": "If the execution surface cannot perform required GUI/browser physical observations, complete all remaining automated Task 15/build/evidence-preparation work that does not depend on those observations, materialize the exact qualification_subject_revision, then return BLOCKED_MISSING_INPUT with the subject revision, built artifact locations and untouched physical checklist. Do not fabricate physical PASS."
+    },
+    "native_verification_profile": {
+      "source": "accepted PX0-05/PX0-06 environment resolution",
+      "generator": "Ninja",
+      "build_type": "Release",
+      "compiler_family": "clang-cl",
+      "clean_build_required": true,
+      "required_cache_values": {
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_BUILD_ARC": "ON",
+        "CANVAS_BUILD_INK_PLAYGROUND": "ON",
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "full",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "BUILD_TESTING": "ON"
+      }
+    }
+  }
+}
