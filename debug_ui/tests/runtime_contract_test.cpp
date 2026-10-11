@@ -18,7 +18,8 @@ struct RuntimeProbe : RuntimeFacade {
   [[nodiscard]] ProductControlReceipt submitProductControl(
       const ProductControlRequest& request) noexcept override {
     submitted = request;
-    return {request.requestId, ProductControlState::kApplied, request.runtimeGeneration};
+    return {request.requestId, ProductControlState::kApplied, request.runtimeGeneration,
+            std::nullopt};
   }
 };
 
