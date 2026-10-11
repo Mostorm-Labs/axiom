@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-07",
+  "stage": "P32",
+  "status": "BLOCKED_MISSING_INPUT",
+  "result_revision": "c4abfc26e8b530bf105906a2a0a50451c1faf6df",
+  "qualification_subject_revision": "c4abfc26e8b530bf105906a2a0a50451c1faf6df",
+  "materialized_ref": "refs/heads/codex/px0-07-closure-evidence",
+  "package_ref": "repo:.aegis/packages/PX0-07/package.json@dbaf86065b61027b6e75d9f3a8d9b8a266f8b253",
+  "task_anchor": "7e3772d747cf3f7e158fb0917e5169a56065a08b",
+  "execution_ref": "codex/px0-07-closure-evidence",
+  "verification": {
+    "native_dui_px0_ctest": "14/14 PASS",
+    "structural_contracts": "4/4 PASS",
+    "windows_build": "PASS",
+    "web_build": "PASS",
+    "generic_debug_command_audit": "PASS",
+    "diff_check": "PASS",
+    "windows_physical": "PENDING",
+    "web_physical": "PENDING"
+  },
+  "artifacts": [
+    ".aegis/results/PX0-07/native-ctest.log",
+    ".aegis/results/PX0-07/structural-contracts.log",
+    ".aegis/results/PX0-07/source-audit.log",
+    ".aegis/results/PX0-07/diff-check.log",
+    "docs/quality/evidence/px0-debug-control-plane/README.md",
+    "out/px0-07-native-vs2/apps/ink_playground/axiom_ink_playground_windows.exe",
+    "out/g4-5-web-debug-ui-physical/apps/ink_playground/index.html",
+    "out/g4-5-web-debug-ui-physical/apps/ink_playground/axiom_ink_playground_web.js",
+    "out/g4-5-web-debug-ui-physical/apps/ink_playground/axiom_ink_playground_web.wasm"
+  ],
+  "official_gate_pass_claimed": false,
+  "continue_execution": false,
+  "blocker": "This execution surface cannot perform or attest real Windows GUI and served browser physical observations. The physical matrices remain untouched/pending."
+}
