@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "package_id": "PX0-05-P31-v0.3",
+  "package_id": "PX0-05-P31-v0.4",
   "task_id": "PX0-05",
   "status": "CURRENT_EXECUTABLE",
   "purpose": "PX0 Existing Capability Migration: replace the transitional legacy contribution with explicit Dashboard/Control/Inspect/Runtime/Performance/Scenarios built-ins while preserving Runtime/control ownership and unsupported boundaries",
@@ -8,14 +8,31 @@
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
     "canonical_branch": "main",
-    "execution_ref": "codex/px0-05-existing-capability-migration"
+    "execution_ref": "codex/px0-05-p33-v0-4-runtime-contract-test"
   },
   "execution_authority_mode": "repo_materialized",
   "task_anchor": {
     "revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
     "relation": "ancestor"
   },
-  "resume_cursor": null,
+  "resume_cursor": {
+    "execution_ref": "codex/px0-05-existing-capability-migration",
+    "revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+    "completed_through": [
+      "six-workspace built-in panel migration",
+      "legacy Transitional panel removal",
+      "snapshot-backed product/control readback",
+      "Router owner-presence and engineering owner gating",
+      "UI-local camera drafts and View controls",
+      "Surface/Axiom actions and Unsupported placeholders",
+      "migrated Windows selection structural oracle",
+      "34 structural tests",
+      "fresh RF01=ON / POC01=OFF native canvas_debug_ui and Windows app build",
+      "eight focused CTest targets",
+      "scope audit and git diff --check"
+    ],
+    "next_action": "Repair debug_ui/tests/runtime_contract_test.cpp to fully initialize ProductControlReceipt::control, then rerun the complete v0.4 frozen reverification set."
+  },
   "continue_until_terminal_state": true,
   "return_surface": "CONTROL_REVIEW",
   "authority_lock_ref": {
@@ -28,15 +45,15 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "8f255edcccbce543a3917424bcc9613f407f3c27def9ba732fa4f4253fcebb4c"
+    "sha256": "e2abf169e5be46001dc30ae07ab1c2ef7e97ad59e8cbac475236ecce81ff2037"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "6593a6dd2fdd441c6d421a7aa13c47924a12bcffcee774dc39f9313b76e76ff1"
+    "sha256": "9d41ad1dcc7de94c9c9ad9d605bdea39a602660ee768219b95d796710e65aaa1"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "bcf12a2b408b6c85e051a12f5e4736368d1d19f97c799562e59161225a737206"
+    "sha256": "81fc5c8a8344ebc8720218cd3a7c83cd50bd786a7d91514336b171ae6eb761e4"
   },
   "materialization": {
     "same_repository": true,
@@ -48,7 +65,7 @@
     "next_surface": "CODE_EXECUTION",
     "stage": "P33",
     "official_gate_pass_forbidden_during_p33": true,
-    "next_action": "Resolve v0.3 package, inspect the preserved local worktree, classify ANCHOR_DESCENDANT_WITHOUT_CURSOR, reconcile and preserve valid work, migrate the obsolete Windows selection structural oracle if needed, then complete all remaining frozen verification using a fresh RF01=ON / POC01=OFF native build."
+    "next_action": "Resolve v0.4, classify the observed execution branch as DESCENDANT_CURSOR from 9c5e3587..., reproduce the frozen RuntimeFacade test compile failure, apply the narrow test-only initializer repair, then complete the frozen reverification and materialize an exact reviewer-resolvable result."
   },
   "dependencies": [
     {
@@ -62,9 +79,25 @@
   ],
   "resume_policy": {
     "stage": "P33",
-    "classification_expected": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
-    "accepted_resume_cursor": null,
-    "local_candidate_worktree_hint": "C:/Users/Chado/.codex/worktrees/px0-05-existing-capability-migration-clean",
-    "rule": "Local-only work is candidate state, not trusted evidence. Reconcile it against v0.3 scope and task_anchor, preserve only conforming changes, establish a continuation point, then resume at the first incomplete frozen obligation."
+    "classification_expected": "DESCENDANT_CURSOR",
+    "accepted_resume_cursor": {
+      "execution_ref": "codex/px0-05-existing-capability-migration",
+      "revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+      "completed_through": [
+        "six-workspace built-in panel migration",
+        "legacy Transitional panel removal",
+        "snapshot-backed product/control readback",
+        "Router owner-presence and engineering owner gating",
+        "UI-local camera drafts and View controls",
+        "Surface/Axiom actions and Unsupported placeholders",
+        "migrated Windows selection structural oracle",
+        "34 structural tests",
+        "fresh RF01=ON / POC01=OFF native canvas_debug_ui and Windows app build",
+        "eight focused CTest targets",
+        "scope audit and git diff --check"
+      ],
+      "next_action": "Repair debug_ui/tests/runtime_contract_test.cpp to fully initialize ProductControlReceipt::control, then rerun the complete v0.4 frozen reverification set."
+    },
+    "rule": "Treat 9c5e3587... as the accepted continuation point. Inspect only the descendant delta, preserve prior PX0-05 production work, allow only runtime_contract_test.cpp plus PX0-05 evidence metadata to change, and resume at the single failing frozen RuntimeFacade contract oracle."
   }
 }
