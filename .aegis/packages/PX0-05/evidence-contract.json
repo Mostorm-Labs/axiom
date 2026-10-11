@@ -2,23 +2,23 @@
   "schema_version": "0.1",
   "task_id": "PX0-05",
   "artifacts": [],
-  "review_boundary": "Independent P34 resolves the exact pushed PX0-05 result, the repo-local package, focused Workbench/Router evidence, inherited PX0/DUI regressions, Windows/Web structural control-state contracts, native common-ui/Windows build evidence, and exact authorized diff.",
+  "review_boundary": "Independent P34 resolves the exact PX0-05 v0.4 package, accepted resume cursor 9c5e3587..., exact repaired result/evidence boundary, PX0RuntimeFacadeContract repair evidence, relevant PX0/DUI regressions, Windows/Web structural contracts, fresh locked native build, and cursor-relative authorized diff.",
   "hosted_verification_required": false,
   "blocking_evidence": [
-    "reviewer-resolvable exact result revision/ref",
-    "PX0Workbench",
-    "PX0ControlRouter",
+    "reviewer-resolvable exact repaired result revision/ref",
+    "PX0RuntimeFacadeContract PASS after the test-only ProductControlReceipt initializer repair",
     "PX0PanelRegistry",
+    "PX0Workbench",
     "DUI20DebugUiContracts",
+    "PX0ControlRouter",
     "PX0DebugSnapshot",
     "PX0RuntimeFacadeContract",
     "DUIM1PanelModel",
     "DUIM1RuntimeFacade",
     "DUIM1ViewControls",
     "Windows/Web structural contract set",
-    "native canvas_debug_ui + Windows application build from a fresh RF01=ON / POC01=OFF locked clang-cl + Skia build tree",
-    "authorized-scope diff and git diff --check",
-    "migrated windows_debug_ui_selection_contract_test.py proving final Control/Inspect selection UI architecture while retaining Windows selection-pointer invariants"
+    "fresh RF01=ON / POC01=OFF native canvas_debug_ui + Windows application build",
+    "cursor-relative authorized-scope diff and git diff --check"
   ],
   "corroborative_evidence": [
     "optional Web build",
@@ -27,13 +27,25 @@
   ],
   "known_non_blocking_environment_note": "The pre-existing runtime/semantic/src/normalizer.cpp MSVC C4702 promoted by /WX remains outside PX0-05. Do not modify unrelated warning policy or semantic source to satisfy a full-tree MSVC build when the locked native/clang-cl common UI and Windows app targets pass.",
   "structural_runner_note": "If pytest is unavailable and the three structural files remain plain Python test_* functions without pytest fixtures/decorators/parametrization, direct Python invocation is an acceptable equivalent oracle; record the runner precisely.",
-  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-05/PX0/DUI-M1/Preview/physical/Gate PASS.",
-  "materialization_requirement": "The exact implementation result must be pushed to refs/heads/codex/px0-05-existing-capability-migration or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW.",
+  "official_claim_boundary": "P33 v0.4 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-05/PX0/DUI-M1/Preview/physical/Gate PASS.",
+  "materialization_requirement": "The exact repaired result must be pushed to refs/heads/codex/px0-05-p33-v0-4-runtime-contract-test or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW.",
   "environment_resolution": {
     "diagnostic_task_id": "PX0-BUILD-01",
     "source_result_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
     "evidence_head": "def8f6deebc54af72e109fb9ad0875fbbf4949e4",
     "accepted_fact": "The previously reported scene_types.hpp error is configuration drift from CANVAS_BUILD_RF01=OFF, not a repository Runtime/Render include defect under the locked PX0 profile.",
     "execution_consequence": "PX0-05 native evidence must use a fresh RF01=ON / POC01=OFF build tree; no Runtime CMake repair is required or authorized."
+  },
+  "corrobative_evidence": [
+    "clean worktree",
+    "optional Web build",
+    "manual Windows/Web visual confirmation/screenshots"
+  ],
+  "repair_boundary": {
+    "accepted_resume_cursor": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+    "only_authorized_source_delta": "debug_ui/tests/runtime_contract_test.cpp",
+    "semantic_change_allowed": false,
+    "warning_policy_change_allowed": false,
+    "production_code_change_allowed": false
   }
 }
