@@ -145,3 +145,15 @@ No sanctioned PX0 fixture/reset boundary exists in the frozen baseline. Therefor
 ## First incomplete action
 
 Run repository/package/binding preflights and ImplementationDesignPreflight. Then update the focused Workbench/Router/structural oracles and observe the required RED before adding panel production code. Continue through the full frozen closure contract unless an explicit terminal blocker is encountered.
+
+
+## P31 reconciliation after blocked P32
+
+The first P32 attempt correctly failed closed on two independent blockers.
+
+1. `TASK_PACKAGE_DEFECT`: the v0.1 package froze `windows_debug_ui_selection_contract_test.py` as unchanged even though its first test still required the PX0-04 legacy `ImGui::BeginTabBar`, `Canvas / Selection`, and `RuntimeFacade` tabs that PX0-05 V1 requires removing. v0.2 authorizes migrating only that obsolete Debug UI structural assertion to the final Control/Inspect panel architecture. Its Windows selection-pointer and terminal-clear/facade-synchronization assertions remain required.
+2. `DEPENDENCY_BLOCKER`: the locked native build hits a pre-existing Runtime/Render include-boundary failure resolving `canvas/scene/scene_types.hpp`. That boundary is outside PX0-05 mutation scope and is handled by separate task `PX0-BUILD-01`.
+
+The executor's current PX0-05 implementation exists only in a local worktree and has not been durably materialized. It is therefore **not** an accepted `resume_cursor`. Preserve it physically, but do not treat it as trusted completed work until a later P33 reconciliation compares it against the corrected current package after PX0-BUILD-01 closes.
+
+This v0.2 package is intentionally `BLOCKED_DEPENDENCY` and MUST NOT be used as a P32/P33 execution handoff. After PX0-BUILD-01 produces an exact accepted result, materialize a new current PX0-05 package binding that exact dependency, then reconcile the existing local worktree as `ANCHOR_DESCENDANT_WITHOUT_CURSOR` and preserve only conforming valid changes.
