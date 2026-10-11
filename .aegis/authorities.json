@@ -1,14 +1,6 @@
 {
-  "schema_version": "0.6",
   "authorities": [
     {
-      "id": "g2-canonical-main",
-      "scope": "gate:G2/runtime-foundation",
-      "kind": "closure-baseline",
-      "version": "canonical-main-2026-09-16",
-      "status": "Current",
-      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
-      "depends_on": [],
       "content": {
         "lifecycle_status": "CLOSED",
         "owns": [
@@ -30,19 +22,33 @@
           "docs/planning/AXIOM_GATES_AND_STAGES.md#8-g2-runtime-scene-foundation",
           "docs/gates/GT-G2-00-A6-P31-MATERIALIZED-EXECUTION-PACKAGE.md"
         ]
-      }
+      },
+      "depends_on": [],
+      "id": "g2-canonical-main",
+      "kind": "closure-baseline",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "scope": "gate:G2/runtime-foundation",
+      "status": "Current",
+      "version": "canonical-main-2026-09-16"
     },
     {
-      "id": "g3-capability-authority",
-      "scope": "capability:G3/basic-canonical-canvas",
-      "kind": "capability",
-      "version": "v0.2",
-      "status": "Current",
-      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
-      "depends_on": ["g2-canonical-main"],
       "content": {
-        "owner": "G3",
+        "depends_on_g2": "g2-canonical-main",
+        "forbidden": [
+          "duplicate_RuntimeScene",
+          "reimplement_G2_canonical_scene_state",
+          "modify_G2_frozen_contracts_without_escalation",
+          "Tile",
+          "RenderGroup",
+          "RasterCache",
+          "production_scheduler",
+          "G3_implementation_before_P31",
+          "SemanticDocument_direct_render",
+          "G4_Arc_or_ink",
+          "G5_tile_cache_raster_cache_optimization"
+        ],
         "objective": "renderer-neutral canonical canvas and basic product shell",
+        "owner": "G3",
         "owns": [
           "RenderTarget",
           "RenderFrame",
@@ -59,20 +65,6 @@
           "headless_windows_web_reference_hosts",
           "cross_platform_G3_evidence"
         ],
-        "depends_on_g2": "g2-canonical-main",
-        "forbidden": [
-          "duplicate_RuntimeScene",
-          "reimplement_G2_canonical_scene_state",
-          "modify_G2_frozen_contracts_without_escalation",
-          "Tile",
-          "RenderGroup",
-          "RasterCache",
-          "production_scheduler",
-          "G3_implementation_before_P31",
-          "SemanticDocument_direct_render",
-          "G4_Arc_or_ink",
-          "G5_tile_cache_raster_cache_optimization"
-        ],
         "source_basis": [
           "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
           "notion://3da4c57a-590c-8160-a895-e71681e78860",
@@ -81,49 +73,101 @@
           "notion://3da4c57a-590c-811a-963c-f294cf8e4009",
           "notion://3da4c57a-590c-8175-9945-d6cadcc95e74"
         ]
-      }
-    }
-    ,{
-      "id": "g4-capability-authority",
-      "scope": "capability:G4/interaction-ink",
-      "kind": "capability",
-      "version": "v0.2",
-      "status": "Superseded",
-      "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
-      "superseded_by": "g4-capability-authority-v0.3",
-      "depends_on": ["g3-capability-authority"],
-      "content": {
-        "owner": "G4",
-        "objective": "interaction and ink production vertical slice with Ink Playground 0.1",
-        "canonical_truth": "SemanticDocument",
-        "canonical_mutation_path": "G1 Operation Engine",
-        "owns": ["InteractionRuntime", "EditorSession", "InteractionSessionManager", "InputRouter", "InkEngine", "PreviewModel", "CanonicalVisible_handoff", "Selection", "TransformSession", "EraserSession_V1", "EditorHistory", "Ink_Playground_0.1"],
-        "forbidden": ["duplicate_canonical_write_path", "SemanticWritePort_from_interaction", "POC02_StrokeDocument_as_production_authority", "G5_tile_render_group_raster_cache_scheduler", "G6_rich_text_ime_external_surface", "invent_open_conflict_rebase_semantics", "invent_partial_erase_strategy", "invent_arc_token_binary_representation"],
-        "source_basis": ["notion://3c84c57a-590c-8112-8f21-c0494d187cdb", "git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "repo:.aegis/results/GT-G3-11/g3-gate-report.json"]
       },
-      "supersession_record": ".aegis/results/GT-G4-12/authority-supersession-v0.3.json"
+      "depends_on": [
+        "g2-canonical-main"
+      ],
+      "id": "g3-capability-authority",
+      "kind": "capability",
+      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+      "scope": "capability:G3/basic-canonical-canvas",
+      "status": "Current",
+      "version": "v0.2"
     },
     {
-      "id": "g4-capability-authority-v0.3",
-      "scope": "capability:G4/interaction-ink",
+      "content": {
+        "canonical_mutation_path": "G1 Operation Engine",
+        "canonical_truth": "SemanticDocument",
+        "forbidden": [
+          "duplicate_canonical_write_path",
+          "SemanticWritePort_from_interaction",
+          "POC02_StrokeDocument_as_production_authority",
+          "G5_tile_render_group_raster_cache_scheduler",
+          "G6_rich_text_ime_external_surface",
+          "invent_open_conflict_rebase_semantics",
+          "invent_partial_erase_strategy",
+          "invent_arc_token_binary_representation"
+        ],
+        "objective": "interaction and ink production vertical slice with Ink Playground 0.1",
+        "owner": "G4",
+        "owns": [
+          "InteractionRuntime",
+          "EditorSession",
+          "InteractionSessionManager",
+          "InputRouter",
+          "InkEngine",
+          "PreviewModel",
+          "CanonicalVisible_handoff",
+          "Selection",
+          "TransformSession",
+          "EraserSession_V1",
+          "EditorHistory",
+          "Ink_Playground_0.1"
+        ],
+        "source_basis": [
+          "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+          "git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
+          "repo:.aegis/results/GT-G3-11/g3-gate-report.json"
+        ]
+      },
+      "depends_on": [
+        "g3-capability-authority"
+      ],
+      "id": "g4-capability-authority",
       "kind": "capability",
-      "version": "v0.3",
-      "status": "Current",
-      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
-      "depends_on": ["g3-capability-authority"],
-      "supersedes": "g4-capability-authority",
+      "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+      "scope": "capability:G4/interaction-ink",
+      "status": "Superseded",
+      "superseded_by": "g4-capability-authority-v0.3",
+      "supersession_record": ".aegis/results/GT-G4-12/authority-supersession-v0.3.json",
+      "version": "v0.2"
+    },
+    {
       "change_class": "semantic",
       "content": {
-        "owner": "G4",
-        "objective": "three-platform functional interaction and ink integration completion with Ink Playground 0.1",
-        "current_completion_profile": ["PASS_WEB_BROWSER_SMOKE", "PASS_WINDOWS_FUNCTIONAL_SMOKE", "PASS_ANDROID_FUNCTIONAL_SMOKE"],
-        "deferred_successor": "pressure-qualified pen evidence and capture-bound physical latency",
-        "canonical_truth": "SemanticDocument",
         "canonical_mutation_path": "G1 Operation Engine",
+        "canonical_truth": "SemanticDocument",
+        "current_completion_profile": [
+          "PASS_WEB_BROWSER_SMOKE",
+          "PASS_WINDOWS_FUNCTIONAL_SMOKE",
+          "PASS_ANDROID_FUNCTIONAL_SMOKE"
+        ],
+        "deferred_successor": "pressure-qualified pen evidence and capture-bound physical latency",
+        "forbidden": [
+          "synthetic_or_non_pressure_input_presented_as_pressure_evidence",
+          "PASS_PHYSICAL_from_functional_smoke_only",
+          "G5_tile_render_group_raster_cache_scheduler",
+          "G6_rich_text_ime_external_surface"
+        ],
+        "objective": "three-platform functional interaction and ink integration completion with Ink Playground 0.1",
+        "owner": "G4",
         "production_semantics_change": false,
-        "forbidden": ["synthetic_or_non_pressure_input_presented_as_pressure_evidence", "PASS_PHYSICAL_from_functional_smoke_only", "G5_tile_render_group_raster_cache_scheduler", "G6_rich_text_ime_external_surface"],
-        "source_basis": ["repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json", "user-confirmed:defer-pressure-and-accept-three-platform-functional-evidence"]
-      }
+        "source_basis": [
+          "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+          "user-confirmed:defer-pressure-and-accept-three-platform-functional-evidence"
+        ]
+      },
+      "depends_on": [
+        "g3-capability-authority"
+      ],
+      "id": "g4-capability-authority-v0.3",
+      "kind": "capability",
+      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "scope": "capability:G4/interaction-ink",
+      "status": "Current",
+      "supersedes": "g4-capability-authority",
+      "version": "v0.3"
     }
-  ]
+  ],
+  "schema_version": "0.6"
 }

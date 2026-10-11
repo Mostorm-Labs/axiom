@@ -1,0 +1,777 @@
+{
+  "absent_bindings": 0,
+  "authority_records_exact": true,
+  "closed_unmerged_representation": "canonical integrated_revision omitted; exact original value preserved in immutable source archive and occurrence crosswalk",
+  "cohort": {
+    "approved_decisions": 25,
+    "approved_gate_contracts": 25,
+    "authorities": 4,
+    "binding_kind_bound": 29,
+    "closed_unmerged": 2,
+    "evidence": 34,
+    "integrated": 27,
+    "integrations": 29,
+    "legacy_readiness": 2
+  },
+  "errors": [],
+  "evidence_all_fields_preserved_except_kind_to_type": true,
+  "gate_decision_bijection": [
+    {
+      "authority_ids": [
+        "g2-canonical-main"
+      ],
+      "evidence_ids": [
+        "ev-g2-canonical-main"
+      ],
+      "gate_id": "g2-final-convergence",
+      "legacy_decision_id": "g2-closure-2026-09-16",
+      "normalized_decision_id": "g2-final-convergence::decision::0001",
+      "stage": "G2_FINAL_CONVERGENCE_REVIEW",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-01-p34"
+      ],
+      "gate_id": "gt-g3-01",
+      "legacy_decision_id": "gt-g3-01-p34-2026-09-17",
+      "normalized_decision_id": "gt-g3-01::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-02-p34"
+      ],
+      "gate_id": "gt-g3-02",
+      "legacy_decision_id": "gt-g3-02-p34-2026-09-17",
+      "normalized_decision_id": "gt-g3-02::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-03-p34"
+      ],
+      "gate_id": "gt-g3-03",
+      "legacy_decision_id": "gt-g3-03-p34-2026-09-18",
+      "normalized_decision_id": "gt-g3-03::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-04-p34"
+      ],
+      "gate_id": "gt-g3-04",
+      "legacy_decision_id": "gt-g3-04-p34-2026-09-18",
+      "normalized_decision_id": "gt-g3-04::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-05-p34"
+      ],
+      "gate_id": "gt-g3-05",
+      "legacy_decision_id": "gt-g3-05-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-05::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-06-p34"
+      ],
+      "gate_id": "gt-g3-06",
+      "legacy_decision_id": "gt-g3-06-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-06::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-07-p34"
+      ],
+      "gate_id": "gt-g3-07",
+      "legacy_decision_id": "gt-g3-07-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-07::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-08-p34"
+      ],
+      "gate_id": "gt-g3-08",
+      "legacy_decision_id": "gt-g3-08-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-08::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-09-p34"
+      ],
+      "gate_id": "gt-g3-09",
+      "legacy_decision_id": "gt-g3-09-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-09::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g3-10-p34"
+      ],
+      "gate_id": "gt-g3-10",
+      "legacy_decision_id": "gt-g3-10-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-10::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g3-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-g3-completion"
+      ],
+      "gate_id": "g3-completion",
+      "legacy_decision_id": "g3-completion-2026-09-19",
+      "normalized_decision_id": "g3-completion::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-01-p34"
+      ],
+      "gate_id": "gt-g4-01",
+      "legacy_decision_id": "gt-g4-01-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-01::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-02-p34"
+      ],
+      "gate_id": "gt-g4-02",
+      "legacy_decision_id": "gt-g4-02-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-02::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-03-p34"
+      ],
+      "gate_id": "gt-g4-03",
+      "legacy_decision_id": "gt-g4-03-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-03::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-04-p34"
+      ],
+      "gate_id": "gt-g4-04",
+      "legacy_decision_id": "gt-g4-04-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-04::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-05-p34"
+      ],
+      "gate_id": "gt-g4-05",
+      "legacy_decision_id": "gt-g4-05-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-05::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-06-p34"
+      ],
+      "gate_id": "gt-g4-06",
+      "legacy_decision_id": "gt-g4-06-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-06::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-07-p34"
+      ],
+      "gate_id": "gt-g4-07",
+      "legacy_decision_id": "gt-g4-07-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-07::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-08-p34"
+      ],
+      "gate_id": "gt-g4-08",
+      "legacy_decision_id": "gt-g4-08-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-08::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-09-p34"
+      ],
+      "gate_id": "gt-g4-09",
+      "legacy_decision_id": "gt-g4-09-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-09::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-10-p34"
+      ],
+      "gate_id": "gt-g4-10",
+      "legacy_decision_id": "gt-g4-10-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-10::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-11-p34"
+      ],
+      "gate_id": "gt-g4-11",
+      "legacy_decision_id": "gt-g4-11-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-11::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority-v0.3"
+      ],
+      "evidence_ids": [
+        "ev-gt-g4-12-p34"
+      ],
+      "gate_id": "gt-g4-12",
+      "legacy_decision_id": "gt-g4-12-p34-2026-09-20",
+      "normalized_decision_id": "gt-g4-12::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "authority_ids": [
+        "g4-capability-authority-v0.3"
+      ],
+      "evidence_ids": [
+        "ev-g4-completion"
+      ],
+      "gate_id": "g4-completion",
+      "legacy_decision_id": "g4-completion-2026-09-20",
+      "normalized_decision_id": "g4-completion::decision::0001",
+      "stage": "P34",
+      "verdict": "PASS_WITH_FINDINGS"
+    }
+  ],
+  "historical_physical_and_pressure_flags_preserved": true,
+  "integration_occurrences": [
+    {
+      "integration_id": "int-pr84-g2-canonical-main",
+      "legacy_decision_id": "g2-closure-2026-09-16",
+      "normalized_decision_id": "g2-final-convergence::decision::0001",
+      "original_evidence_ids": [
+        "ev-g2-canonical-main"
+      ],
+      "original_integrated_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#84",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr85-g3-01",
+      "legacy_decision_id": "gt-g3-01-p34-2026-09-17",
+      "normalized_decision_id": "gt-g3-01::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-01-p34"
+      ],
+      "original_integrated_revision": "47ffe5b69d7dda457d16203e41803086c880c174",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#85",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr86-g3-02",
+      "legacy_decision_id": "gt-g3-02-p34-2026-09-17",
+      "normalized_decision_id": "gt-g3-02::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-02-p34"
+      ],
+      "original_integrated_revision": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#86",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr87-g3-03",
+      "legacy_decision_id": "gt-g3-03-p34-2026-09-18",
+      "normalized_decision_id": "gt-g3-03::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-03-p34"
+      ],
+      "original_integrated_revision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#87",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-branch-g3-04-p34-review",
+      "legacy_decision_id": "gt-g3-04-p34-2026-09-18",
+      "normalized_decision_id": "gt-g3-04::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-04-p34"
+      ],
+      "original_integrated_revision": "250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+      "original_kind": "github-branch-review",
+      "original_ref": "github:Mostorm-Labs/axiom@codex/g3-04-frame-orchestration-backend",
+      "original_status": "closed_unmerged",
+      "original_target_ref": "refs/heads/codex/g3-04-frame-orchestration-backend"
+    },
+    {
+      "integration_id": "int-pr88-g3-04",
+      "legacy_decision_id": "gt-g3-04-p34-2026-09-18",
+      "normalized_decision_id": "gt-g3-04::decision::0001",
+      "original_evidence_ids": [
+        "ev-int-pr88-g3-04",
+        "ev-gt-g3-04-p34"
+      ],
+      "original_integrated_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#88",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr91-g3-05",
+      "legacy_decision_id": "gt-g3-05-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-05::decision::0001",
+      "original_evidence_ids": [
+        "ev-int-pr91-g3-05",
+        "ev-gt-g3-05-p34"
+      ],
+      "original_integrated_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#91",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-branch-g3-06-p34-review",
+      "legacy_decision_id": "gt-g3-06-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-06::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-06-p34"
+      ],
+      "original_integrated_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+      "original_kind": "github-branch-review",
+      "original_ref": "github:Mostorm-Labs/axiom@codex/g3-06-surface-presentation-tracker",
+      "original_status": "closed_unmerged",
+      "original_target_ref": "refs/heads/codex/g3-06-surface-presentation-tracker"
+    },
+    {
+      "integration_id": "int-pr92-g3-06",
+      "legacy_decision_id": "gt-g3-06-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-06::decision::0001",
+      "original_evidence_ids": [
+        "ev-int-pr92-g3-06",
+        "ev-gt-g3-06-p34"
+      ],
+      "original_integrated_revision": "4ea688da42da0005eaed5cae4931f5c44936697e",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#92",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-branch-g3-07-awaiting-integration",
+      "legacy_decision_id": "gt-g3-07-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-07::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-07-p34",
+        "ev-int-pr94-g3-07"
+      ],
+      "original_integrated_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#94",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-branch-g3-08-awaiting-integration",
+      "legacy_decision_id": "gt-g3-08-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-08::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-08-p34",
+        "ev-int-pr96-g3-08"
+      ],
+      "original_integrated_revision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#96",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-branch-g3-09-awaiting-integration",
+      "legacy_decision_id": "gt-g3-09-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-09::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-09-p34",
+        "ev-int-pr98-g3-09"
+      ],
+      "original_integrated_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#98",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr100-g3-10",
+      "legacy_decision_id": "gt-g3-10-p34-2026-09-19",
+      "normalized_decision_id": "gt-g3-10::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g3-10-p34"
+      ],
+      "original_integrated_revision": "40f806e6199c3bda520fb434d16428d12642c955",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#100",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr102-g3-11",
+      "legacy_decision_id": "g3-completion-2026-09-19",
+      "normalized_decision_id": "g3-completion::decision::0001",
+      "original_evidence_ids": [
+        "ev-g3-completion"
+      ],
+      "original_integrated_revision": "20ddb28108367fce35744d4f991a07516318eb92",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#102",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr104-g3-completion-record",
+      "legacy_decision_id": "g3-completion-2026-09-19",
+      "normalized_decision_id": "g3-completion::decision::0001",
+      "original_evidence_ids": [
+        "ev-g3-completion"
+      ],
+      "original_integrated_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#104",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr105-g4-01",
+      "legacy_decision_id": "gt-g4-01-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-01::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-01-p34"
+      ],
+      "original_integrated_revision": "4698e9c530efd06b84cb6a037267bfb61cffcd88",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#105",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr106-g4-02",
+      "legacy_decision_id": "gt-g4-02-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-02::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-02-p34"
+      ],
+      "original_integrated_revision": "e0b2749f1c1bd3addd22897cfadd201b51d95246",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#106",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr108-g4-03",
+      "legacy_decision_id": "gt-g4-03-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-03::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-03-p34"
+      ],
+      "original_integrated_revision": "4a165c34413687484940cf60e57f46de1ae4e3ec",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#108",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr109-g4-03",
+      "legacy_decision_id": "gt-g4-03-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-03::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-03-p34"
+      ],
+      "original_integrated_revision": "893d0d450a6682ec5d498c761deb653ea6a7c21b",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#109",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr111-g4-04",
+      "legacy_decision_id": "gt-g4-04-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-04::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-04-p34"
+      ],
+      "original_integrated_revision": "f277f32a3a54bfeb095972d7bf2ff066e1ff4961",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#111",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr113-g4-05",
+      "legacy_decision_id": "gt-g4-05-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-05::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-05-p34"
+      ],
+      "original_integrated_revision": "3615a9898a694710e432c93b28ffc96d87532338",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#113",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr115-g4-06",
+      "legacy_decision_id": "gt-g4-06-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-06::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-06-p34"
+      ],
+      "original_integrated_revision": "a7abd85b54c5671dcab8ee964315a1eb522a9b8f",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#115",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr117-g4-07",
+      "legacy_decision_id": "gt-g4-07-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-07::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-07-p34"
+      ],
+      "original_integrated_revision": "f6f44591bfae51767d4cdff80714981a23e34aae",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#117",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr119-g4-08",
+      "legacy_decision_id": "gt-g4-08-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-08::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-08-p34"
+      ],
+      "original_integrated_revision": "34c7269ed69d02fc12ca3cbcc19e15815d028deb",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#119",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr121-g4-09",
+      "legacy_decision_id": "gt-g4-09-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-09::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-09-p34"
+      ],
+      "original_integrated_revision": "3c6adadd40f8972cff96550a4d29e3b944bfc153",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#121",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr123-g4-10",
+      "legacy_decision_id": "gt-g4-10-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-10::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-10-p34"
+      ],
+      "original_integrated_revision": "8e4543b670c1aaad65dac666fe67b2b5365d6d2d",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#123",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr125-g4-11",
+      "legacy_decision_id": "gt-g4-11-p34-2026-09-19",
+      "normalized_decision_id": "gt-g4-11::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-11-p34"
+      ],
+      "original_integrated_revision": "0565c2a05b6b333e45b637753ff890c0f9802746",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#125",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-pr127-g4-12",
+      "legacy_decision_id": "gt-g4-12-p34-2026-09-20",
+      "normalized_decision_id": "gt-g4-12::decision::0001",
+      "original_evidence_ids": [
+        "ev-gt-g4-12-p34",
+        "ev-g4-completion"
+      ],
+      "original_integrated_revision": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
+      "original_kind": "github-pull-request",
+      "original_ref": "github:Mostorm-Labs/axiom#127",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    },
+    {
+      "integration_id": "int-g4-completion",
+      "legacy_decision_id": "g4-completion-2026-09-20",
+      "normalized_decision_id": "g4-completion::decision::0001",
+      "original_evidence_ids": [
+        "ev-g4-completion"
+      ],
+      "original_integrated_revision": "4924139d1d8a4bd380c01b618155cca2c4f23abe",
+      "original_kind": "gate-closure-record",
+      "original_ref": "repo:.aegis/results/GT-G4-13/g4-gate-report.json",
+      "original_status": "integrated",
+      "original_target_ref": "refs/heads/main"
+    }
+  ],
+  "new_pass_events": 0,
+  "oracle": "tests/project_state/test_fc00_legacy_import.py::compare_import",
+  "oracle_sha256": "54119272008c913f299083e278357b503f245d450f54bd26c1471cdff72e1250",
+  "package_revision": "06bcf8348f7898ddfb3a327a81ba1874857e47e1",
+  "readiness": {
+    "records": [
+      {
+        "boundary_review_ref": "notion://3da4c57a-590c-8175-9945-d6cadcc95e74",
+        "decision": {
+          "authority_ref": "g3-capability-authority",
+          "id": "g3-entry-readiness-2026-09-16",
+          "official_gate_pass_claimed": false,
+          "verdict": "READY_FOR_P31"
+        },
+        "evidence_ids": [
+          "ev-g3-entry-readiness"
+        ],
+        "findings": [],
+        "id": "g3-entry-readiness",
+        "next_action": "issue_CODE_EXECUTION_handoff_for_GT-G3-01-P31-v0.1_at_e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+        "scope": "G3",
+        "status": "READY_FOR_P31"
+      },
+      {
+        "decision": {
+          "authority_ref": "g4-capability-authority",
+          "id": "g4-entry-readiness-2026-09-19",
+          "official_gate_pass_claimed": false,
+          "verdict": "READY_FOR_P31"
+        },
+        "evidence_ids": [
+          "ev-g4-entry-readiness"
+        ],
+        "findings": [],
+        "id": "g4-entry-readiness",
+        "next_action": "materialize_and_review_GT-G4-01-P31",
+        "scope": "G4",
+        "status": "READY_FOR_P31"
+      }
+    ],
+    "source_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "source_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+  "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+}

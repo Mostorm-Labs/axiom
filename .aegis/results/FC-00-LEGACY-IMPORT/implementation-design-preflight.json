@@ -1,0 +1,38 @@
+{
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "source": {
+    "read": "git show 6fc1508f1a971abc5a90e068d0cc5f6ae82c064b:.aegis/<manifest>",
+    "parse": "independent JSON parse of six immutable legacy pseudo-v0.6 manifests",
+    "archive": ".aegis/legacy/FC-00-LEGACY-IMPORT/legacy-source/6fc1508f1a971abc5a90e068d0cc5f6ae82c064b"
+  },
+  "target": {
+    "representation": "official Aegis v0.6 authored project, authorities, gates/decisions, evidence and integrations",
+    "state_owner": "pinned Aegis v0.6 recompute --write",
+    "publication_boundary": "canonical manifests are published only after independent crosswalk comparison and official validate"
+  },
+  "importer": {
+    "path": "tools/aegis_compat/fc00_legacy_import.py",
+    "owner": "FC-00 one-time legacy compatibility importer",
+    "abort_path": "raise on missing immutable blob, crosswalk identity, or invalid source shape",
+    "independent_oracle": "tests/project_state/test_fc00_legacy_import.py"
+  },
+  "mapping": {
+    "decisions": "legacy decision id -> <gate-id>::decision::0001",
+    "integrations": "29 occurrences remain bound to their mapped decision; closed_unmerged omits canonical integrated_revision",
+    "readiness": "two READY_FOR_P31 raw Gate objects archived and excluded from official Gate contracts",
+    "stage": "G2_FINAL_CONVERGENCE_REVIEW for G2; P34 for formal G3/G4 records"
+  },
+  "obligation_map": {
+    "FC00-LI-01": "source-blob-identities.json",
+    "FC00-LI-02": "legacy-import-equivalence.json",
+    "FC00-LI-03": "legacy-import-equivalence.json and negative-oracle.json",
+    "FC00-LI-04": "legacy-readiness.json and legacy-import-equivalence.json",
+    "FC00-LI-05": "official-v06-cli.json",
+    "FC00-LI-06": "negative-oracle.json",
+    "FC00-LI-07": "scope-identity.json"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

@@ -1,238 +1,521 @@
 {
-  "schema_version": "0.6",
-  "generator_version": "manual-deterministic-v0.1",
-  "project_id": "axiom",
-  "active_stage": "G4_FUNCTIONAL_COMPLETION_RECORDED",
-  "current_owner": "aegis",
-  "earliest_untrusted_layer": null,
-  "status": "READY",
-  "g2": {
-    "status": "CLOSED",
-    "canonical_revision": "07654767eac7b021ca6e89004e36448ccebb727d",
-    "official_pass_claimed": true,
-    "closure_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
-  },
-  "g3": {
-    "status": "G3_CLOSED_GATE_PASS",
-    "ingress": "CLOSED",
-    "implementation_authorized": false,
-    "p31_materialized": true,
-    "p31_materialized_ref": "a64ee96f8d9ead4630b13f1180164cd9406d5729",
-    "superseded_package": "GT-G3-10-P31-v0.3",
-    "current_package": "GT-G3-10-P31-v0.4",
-    "current_package_materialized_ref": "a64ee96f8d9ead4630b13f1180164cd9406d5729",
-    "current_result_revision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
-    "current_reviewed_branch_head": "3b5708c1d2ffa779dd750671965de193b72bf742",
-    "current_integration_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
-    "completion_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b",
-    "completion_decision_id": "g3-completion-2026-09-19"
-  },
-  "g4": {
-    "status": "G4_FUNCTIONAL_INTEGRATION_CLOSED_WITH_FINDINGS",
-    "ingress": "READY_FOR_SUCCESSOR_ROUTING",
-    "implementation_authorized": false,
-    "current_work_package": "GT-G4-13",
-    "current_authority": "g4-capability-authority-v0.3",
-    "task_anchor": "0a1e074013521fe42a9430bfe707af5a4705d7bc",
-    "plan_ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
-    "result_revision": "bf2c83ba0847bfc05b82f9a93b6e5a74f4fbf21d",
-    "reviewed_branch_head": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
-    "integration_revision": "4924139d1d8a4bd380c01b618155cca2c4f23abe",
-    "gate_decision_id": "g4-completion-2026-09-20"
-  },
-  "current_authorities": [
-    "g2-canonical-main",
-    "g3-capability-authority",
-    "g4-capability-authority"
-  ],
+  "active_stage": null,
+  "awaiting_integrations": [],
+  "blocking_findings": [],
+  "blocking_gate_decisions": [],
+  "blocking_gates": [],
   "current_gate_decisions": [
     {
+      "decision_id": "g2-final-convergence::decision::0001",
       "gate_id": "g2-final-convergence",
-      "decision_id": "g2-closure-2026-09-16",
       "verdict": "PASS"
     },
     {
-      "gate_id": "g3-entry-readiness",
-      "decision_id": "g3-entry-readiness-2026-09-16",
-      "verdict": "READY_FOR_P31"
+      "decision_id": "g3-completion::decision::0001",
+      "gate_id": "g3-completion",
+      "verdict": "PASS"
     },
     {
+      "decision_id": "g4-completion::decision::0001",
+      "gate_id": "g4-completion",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "decision_id": "gt-g3-01::decision::0001",
       "gate_id": "gt-g3-01",
-      "decision_id": "gt-g3-01-p34-2026-09-17",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-02::decision::0001",
       "gate_id": "gt-g3-02",
-      "decision_id": "gt-g3-02-p34-2026-09-17",
       "verdict": "PASS_WITH_FINDINGS"
     },
     {
+      "decision_id": "gt-g3-03::decision::0001",
       "gate_id": "gt-g3-03",
-      "decision_id": "gt-g3-03-p34-2026-09-18",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-04::decision::0001",
       "gate_id": "gt-g3-04",
-      "decision_id": "gt-g3-04-p34-2026-09-18",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-05::decision::0001",
       "gate_id": "gt-g3-05",
-      "decision_id": "gt-g3-05-p34-2026-09-19",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-06::decision::0001",
       "gate_id": "gt-g3-06",
-      "decision_id": "gt-g3-06-p34-2026-09-19",
       "verdict": "PASS_WITH_FINDINGS"
     },
     {
+      "decision_id": "gt-g3-07::decision::0001",
       "gate_id": "gt-g3-07",
-      "decision_id": "gt-g3-07-p34-2026-09-19",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-08::decision::0001",
       "gate_id": "gt-g3-08",
-      "decision_id": "gt-g3-08-p34-2026-09-19",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-09::decision::0001",
       "gate_id": "gt-g3-09",
-      "decision_id": "gt-g3-09-p34-2026-09-19",
       "verdict": "PASS"
     },
     {
+      "decision_id": "gt-g3-10::decision::0001",
       "gate_id": "gt-g3-10",
-      "decision_id": "gt-g3-10-p34-2026-09-19",
       "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-01::decision::0001",
+      "gate_id": "gt-g4-01",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-02::decision::0001",
+      "gate_id": "gt-g4-02",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-03::decision::0001",
+      "gate_id": "gt-g4-03",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-04::decision::0001",
+      "gate_id": "gt-g4-04",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-05::decision::0001",
+      "gate_id": "gt-g4-05",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-06::decision::0001",
+      "gate_id": "gt-g4-06",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-07::decision::0001",
+      "gate_id": "gt-g4-07",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-08::decision::0001",
+      "gate_id": "gt-g4-08",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-09::decision::0001",
+      "gate_id": "gt-g4-09",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-10::decision::0001",
+      "gate_id": "gt-g4-10",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-11::decision::0001",
+      "gate_id": "gt-g4-11",
+      "verdict": "PASS"
+    },
+    {
+      "decision_id": "gt-g4-12::decision::0001",
+      "gate_id": "gt-g4-12",
+      "verdict": "PASS_WITH_FINDINGS"
     }
   ],
-  "blocking_findings": [],
+  "earliest_untrusted_layer": null,
+  "generator_version": "0.6",
+  "historical_gates": [
+    "gt-g4-01",
+    "gt-g4-02",
+    "gt-g4-03",
+    "gt-g4-04",
+    "gt-g4-05",
+    "gt-g4-06",
+    "gt-g4-07",
+    "gt-g4-08",
+    "gt-g4-09",
+    "gt-g4-10",
+    "gt-g4-11"
+  ],
   "integration_applicability": [
     {
-      "integration_id": "int-pr84-g2-canonical-main",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-branch-g3-04-p34-review"
     },
     {
-      "integration_id": "int-pr85-g3-01",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-branch-g3-06-p34-review"
     },
     {
-      "integration_id": "int-pr86-g3-02",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-branch-g3-07-awaiting-integration"
     },
     {
-      "integration_id": "int-pr87-g3-03",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-branch-g3-08-awaiting-integration"
     },
     {
-      "integration_id": "int-branch-g3-04-p34-review",
-      "applicability": "historical"
+      "applicability": "current",
+      "integration_id": "int-branch-g3-09-awaiting-integration"
     },
     {
-      "integration_id": "int-pr88-g3-04",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-g4-completion"
     },
     {
-      "integration_id": "int-pr91-g3-05",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr100-g3-10"
     },
     {
-      "integration_id": "int-branch-g3-06-p34-review",
-      "applicability": "historical"
+      "applicability": "current",
+      "integration_id": "int-pr102-g3-11"
     },
     {
-      "integration_id": "int-pr92-g3-06",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr104-g3-completion-record"
     },
     {
-      "integration_id": "int-branch-g3-07-awaiting-integration",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr105-g4-01"
     },
     {
-      "integration_id": "int-branch-g3-08-awaiting-integration",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr106-g4-02"
     },
     {
-      "integration_id": "int-branch-g3-09-awaiting-integration",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr108-g4-03"
     },
     {
-      "integration_id": "int-pr100-g3-10",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr109-g4-03"
     },
     {
-      "integration_id": "int-pr102-g3-11",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr111-g4-04"
     },
     {
-      "integration_id": "int-pr104-g3-completion-record",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr113-g4-05"
     },
     {
-      "integration_id": "int-pr105-g4-01",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr115-g4-06"
     },
     {
-      "integration_id": "int-pr106-g4-02",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr117-g4-07"
     },
     {
-      "integration_id": "int-pr108-g4-03",
-      "applicability": "historical"
+      "applicability": "historical",
+      "integration_id": "int-pr119-g4-08"
     },
     {
-      "integration_id": "int-pr109-g4-03",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr121-g4-09"
     },
     {
-      "integration_id": "int-pr111-g4-04",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr123-g4-10"
     },
     {
-      "integration_id": "int-pr113-g4-05",
-      "applicability": "current"
+      "applicability": "historical",
+      "integration_id": "int-pr125-g4-11"
     },
     {
-      "integration_id": "int-pr115-g4-06",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr127-g4-12"
     },
     {
-      "integration_id": "int-pr117-g4-07",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr84-g2-canonical-main"
     },
     {
-      "integration_id": "int-pr119-g4-08",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr85-g3-01"
     },
     {
-      "integration_id": "int-pr121-g4-09",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr86-g3-02"
     },
     {
-      "integration_id": "int-pr123-g4-10",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr87-g3-03"
     },
     {
-      "integration_id": "int-pr125-g4-11",
-      "applicability": "current"
+      "applicability": "current",
+      "integration_id": "int-pr88-g3-04"
+    },
+    {
+      "applicability": "current",
+      "integration_id": "int-pr91-g3-05"
+    },
+    {
+      "applicability": "current",
+      "integration_id": "int-pr92-g3-06"
     }
   ],
-  "recommended_next_stage": "G4_PHYSICAL_PRESSURE_EXTENSION_OR_SUCCESSOR_ROUTING",
-  "handoff": {
-    "next_surface": "CONTROL_REASONING",
-    "next_action": "G4 current functional profile is closed with findings at 0a1e074013521fe42a9430bfe707af5a4705d7bc. Pressure/physical latency and coverage hardening remain deferred successor capabilities.",
-    "p31_package": ".aegis/packages/GT-G4-13/package.json",
-    "p31_package_id": "GT-G4-13-P31-v0.1",
-    "p31_materialized": true,
-    "package_materialization_ref": "32a113f639a9b798155724a17bca584c095e895e",
-    "result_revision": "bf2c83ba0847bfc05b82f9a93b6e5a74f4fbf21d",
-    "reviewed_branch_head": "1488f516ce2595261bf0b5f3ce95cdfd0d29f334",
-    "integration_revision": "4924139d1d8a4bd380c01b618155cca2c4f23abe",
-    "gate_decision_id": "g4-completion-2026-09-20",
-    "g2_reopen": false,
-    "g3_implementation_start": false,
-    "g4_implementation_start": false,
-    "g4_p31_package": ".aegis/packages/GT-G4-13/package.json"
-  }
+  "integration_conformance": [
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-07::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-07::decision::0001",
+      "integration_id": "int-branch-g3-07-awaiting-integration"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-08::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-08::decision::0001",
+      "integration_id": "int-branch-g3-08-awaiting-integration"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-09::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-09::decision::0001",
+      "integration_id": "int-branch-g3-09-awaiting-integration"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "g4-completion::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "g4-completion::decision::0001",
+      "integration_id": "int-g4-completion"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-10::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-10::decision::0001",
+      "integration_id": "int-pr100-g3-10"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "g3-completion::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "g3-completion::decision::0001",
+      "integration_id": "int-pr102-g3-11"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "g3-completion::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "g3-completion::decision::0001",
+      "integration_id": "int-pr104-g3-completion-record"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-01::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-01::decision::0001",
+      "integration_id": "int-pr105-g4-01"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-02::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-02::decision::0001",
+      "integration_id": "int-pr106-g4-02"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-03::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-03::decision::0001",
+      "integration_id": "int-pr108-g4-03"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-03::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-03::decision::0001",
+      "integration_id": "int-pr109-g4-03"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-04::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-04::decision::0001",
+      "integration_id": "int-pr111-g4-04"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-05::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-05::decision::0001",
+      "integration_id": "int-pr113-g4-05"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-06::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-06::decision::0001",
+      "integration_id": "int-pr115-g4-06"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-07::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-07::decision::0001",
+      "integration_id": "int-pr117-g4-07"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-08::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-08::decision::0001",
+      "integration_id": "int-pr119-g4-08"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-09::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-09::decision::0001",
+      "integration_id": "int-pr121-g4-09"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-10::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-10::decision::0001",
+      "integration_id": "int-pr123-g4-10"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-11::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-11::decision::0001",
+      "integration_id": "int-pr125-g4-11"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g4-12::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g4-12::decision::0001",
+      "integration_id": "int-pr127-g4-12"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "g2-final-convergence::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "g2-final-convergence::decision::0001",
+      "integration_id": "int-pr84-g2-canonical-main"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-01::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-01::decision::0001",
+      "integration_id": "int-pr85-g3-01"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-02::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-02::decision::0001",
+      "integration_id": "int-pr86-g3-02"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-03::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-03::decision::0001",
+      "integration_id": "int-pr87-g3-03"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-04::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-04::decision::0001",
+      "integration_id": "int-pr88-g3-04"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-05::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-05::decision::0001",
+      "integration_id": "int-pr91-g3-05"
+    },
+    {
+      "conformance": "conforming",
+      "gate_decision_binding": {
+        "gate_decision_id": "gt-g3-06::decision::0001",
+        "kind": "bound"
+      },
+      "gate_decision_id": "gt-g3-06::decision::0001",
+      "integration_id": "int-pr92-g3-06"
+    }
+  ],
+  "manifest_digest": "9087231349a29e0d0de116cd26fc1286183eb18e9fcd249829c372cef4108817",
+  "needs_review_authorities": [],
+  "needs_review_gates": [],
+  "nonconforming_integrations": [],
+  "recommended_handoff": null,
+  "recommended_next_stage": null,
+  "schema_version": "0.6",
+  "stale_authorities": [],
+  "stale_gates": []
 }
