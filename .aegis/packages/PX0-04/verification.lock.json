@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-04",
+  "obligations": [
+    {
+      "id": "PX0-04-V1-six-workspace-contract",
+      "requirement": "The common Debug UI exposes exactly Dashboard, Control, Inspect, Runtime, Performance and Scenarios as top-level workspaces.",
+      "oracle": "PX0PanelRegistry asserts WorkspaceId::kCount == 6 and exact labels/order. PX0Workbench renders/declares all six navigation items and no seventh workspace.",
+      "acceptance": "No legacy DebugPanel top-level taxonomy remains as an independent navigation model.",
+      "evidence_required": "PX0PanelRegistry + PX0Workbench + exact source diff"
+    },
+    {
+      "id": "PX0-04-V2-stable-panel-slots-and-validation",
+      "requirement": "PanelSlot encodes the approved core sections and stable feature slots with a deterministic valid workspace/slot relation.",
+      "oracle": "PX0PanelRegistry attempts valid registrations in every workspace, explicitly registers synthetic Control/Feature and Inspect/Object contributions, rejects cross-workspace slot pairs, rejects null render callbacks, and verifies null visible means visible.",
+      "acceptance": "Feature extension proof does not require modifying Workbench core.",
+      "evidence_required": "PX0PanelRegistry"
+    },
+    {
+      "id": "PX0-04-V3-deterministic-explicit-registry",
+      "requirement": "PanelRegistry uses explicit composition-time registration and deterministic ordering.",
+      "oracle": "PX0PanelRegistry registers mixed slots/orders and asserts returned order is slot enum order then ascending order with stable insertion ties. Structural/source review finds no static-global registry, reflection or plugin discovery.",
+      "acceptance": "contributions(workspace) returns a bounded span/view over that workspace's explicitly registered contributions.",
+      "evidence_required": "PX0PanelRegistry + exact source review"
+    },
+    {
+      "id": "PX0-04-V4-panel-context-boundary",
+      "requirement": "Panels receive only DebugSnapshot, DebugControlRouter and DebugUiSessionState.",
+      "oracle": "Compile-time contract test constructs DebugPanelContext with exactly those references. panel.hpp contains no SemanticDocument, RuntimeScene, SpatialIndex, SkSurface, InkPlaygroundHost, RuntimeFacade, diagnostics-provider or owner-control pointer members.",
+      "acceptance": "Panel = Snapshot -> UI -> Intent remains enforceable by the common contract.",
+      "evidence_required": "PX0PanelRegistry + exact source review"
+    },
+    {
+      "id": "PX0-04-V5-ui-session-is-local",
+      "requirement": "Workspace navigation and other PX0-04 session state are UI-local and do not mutate Runtime/Debug owners.",
+      "oracle": "PX0Workbench changes selected workspace through DebugUiSessionState while fake RuntimeFacade/AxiomDebugControl/PlatformDebugControl call counts remain zero. Default selected workspace is Dashboard.",
+      "acceptance": "No Runtime/Document generation or owner request is produced by workspace navigation.",
+      "evidence_required": "PX0Workbench"
+    },
+    {
+      "id": "PX0-04-V6-workbench-shell-layout",
+      "requirement": "The common renderer presents header/sidebar/content/footer Workbench structure without docking and without 410x560 as semantic layout.",
+      "oracle": "PX0Workbench/structural test proves common Workbench owns the six-item sidebar, active workspace content, header health summary and latest-activity footer; workbench.cpp contains no ImGui docking API and does not set 410x560 as fixed semantic size.",
+      "acceptance": "Empty workspaces render explicit empty/not-yet-migrated content.",
+      "evidence_required": "PX0Workbench + Windows structural contract"
+    },
+    {
+      "id": "PX0-04-V7-legacy-capability-preservation",
+      "requirement": "Before PX0-05 capability migration, existing Debug UI controls remain reachable through one transitional legacy compatibility contribution without creating new product/debug semantics.",
+      "oracle": "DUI20DebugUiContracts and structural review show Selection, Undo/Redo, Brush/Eraser, Pan and Surface controls still call DebugControlRouter, the top-level UI is the Workbench shell, and the legacy compatibility body is not registered as a new top-level workspace.",
+      "acceptance": "No existing control silently falls back to raw owner mutation and no new Shape/RichText/Connector/Snap/Image control appears.",
+      "evidence_required": "DUI20DebugUiContracts + PX0ControlRouter + Windows/Web structural contracts"
+    },
+    {
+      "id": "PX0-04-V8-renderer-split-is-semantic-no-op",
+      "requirement": "ImGuiSkiaRenderer is moved out of controller without changing Skia rendering behavior.",
+      "oracle": "Structural test verifies renderer declaration/implementation moved to imgui_skia_renderer.hpp/.cpp; A8 atlas, normalized UV transform, white paint and SkBlendMode::kModulate remain present; controller.cpp no longer owns Skia renderer implementation.",
+      "acceptance": "Windows app build or equivalent native target compiles against the moved renderer.",
+      "evidence_required": "Windows structural contract + native build target"
+    },
+    {
+      "id": "PX0-04-V9-controller-orchestration",
+      "requirement": "DebugController owns the common assembler/router/activity/registry/session/workbench composition and observes one diagnostics capture identity per controller frame.",
+      "oracle": "PX0Workbench controller test uses counting fake providers: buildImGuiFrame performs the approved capture->beginFrame->refreshReceipts->activity replacement->store->render order, snapshot identity comes from one assembler capture sequence, and receipt refresh does not add provider reads.",
+      "acceptance": "Controller exposes snapshot() and uiState() while panels receive no raw owners.",
+      "evidence_required": "PX0Workbench"
+    },
+    {
+      "id": "PX0-04-V10-retire-old-panel-taxonomy-without-host-convergence",
+      "requirement": "PanelCapability/panels.hpp and DebugPanel/PanelState are retired, while platform host convergence remains deferred.",
+      "oracle": "Exact tree shows panels.hpp absent and controller.hpp has no DebugPanel/PanelState taxonomy. If DebugPanelModel remains, it has no describe()/old taxonomy. Windows/Web platform production files are unchanged from task anchor.",
+      "acceptance": "New WorkspaceId/PanelSlot is the only common top-level panel taxonomy and PX0-06 work is not pulled forward.",
+      "evidence_required": "exact tree/diff + structural tests"
+    },
+    {
+      "id": "PX0-04-V11-no-premature-px0-05-06",
+      "requirement": "PX0-04 proves the shell/extension architecture only.",
+      "oracle": "Exact diff has no final per-workspace panel source split under debug_ui/src/panels/, no Scenario runner activation, no Windows/Web host composition-root migration, no new product feature contracts, no Preview/DUI-M1 evidence mutation.",
+      "acceptance": "Only shell, registry, session, renderer split, controller orchestration and transitional compatibility work are present.",
+      "evidence_required": "exact result diff"
+    }
+  ]
+}
