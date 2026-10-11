@@ -22,7 +22,16 @@
     "debug_ui/tests/workbench_state_test.cpp"
   ],
   "out_of_scope": [],
-  "diff_check": "PASS",
+  "diff_check": {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+      "9c5e3587358ad982ddab56ca2369cd285e330c5d"
+    ],
+    "exit_code": 0
+  },
   "notes": "All source changes are within v0.3 scope. Untracked .aegis results are evidence only.",
   "forbidden_preserved": [
     "runtime/foundation/**",
@@ -34,5 +43,37 @@
   "forbidden_touched": [],
   "source_diff_base": "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
   "package_ancestry_base": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
-  "evidence_byte_convention": "UTF-8 without BOM, LF; command logs trim trailing whitespace without removing diagnostics"
+  "evidence_byte_convention": "UTF-8 without BOM, LF; command logs trim trailing whitespace without removing diagnostics",
+  "result_revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "changed_paths": [
+    ".aegis/results/PX0-05/blocker-v0.3.json",
+    ".aegis/results/PX0-05/build-native-v0.3.log",
+    ".aegis/results/PX0-05/build-tests-remaining-v0.3.log",
+    ".aegis/results/PX0-05/build-tests-v0.3.log",
+    ".aegis/results/PX0-05/configure-native-v0.3.log",
+    ".aegis/results/PX0-05/ctest-focused-v0.3.log",
+    ".aegis/results/PX0-05/git-diff-check-v0.3.log",
+    ".aegis/results/PX0-05/p33-v0.3/package-preflight.json",
+    ".aegis/results/PX0-05/p33-v0.3/reconciliation.json",
+    ".aegis/results/PX0-05/scope-audit-v0.3.json",
+    ".aegis/results/PX0-05/structural-contracts-v0.3.log",
+    "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+    "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+    "debug_ui/CMakeLists.txt",
+    "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp",
+    "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+    "debug_ui/src/builtin_panels.cpp",
+    "debug_ui/src/controller.cpp",
+    "debug_ui/src/panels/control.cpp",
+    "debug_ui/src/panels/dashboard.cpp",
+    "debug_ui/src/panels/features/ink.cpp",
+    "debug_ui/src/panels/inspect.cpp",
+    "debug_ui/src/panels/performance.cpp",
+    "debug_ui/src/panels/runtime.cpp",
+    "debug_ui/src/panels/scenarios.cpp",
+    "debug_ui/tests/control_router_test.cpp",
+    "debug_ui/tests/workbench_state_test.cpp"
+  ],
+  "selection_invariants_unchanged": true
 }
