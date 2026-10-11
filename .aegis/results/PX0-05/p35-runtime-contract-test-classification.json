@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "reviewed_code_revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "defect": {
+    "type": "TASK_PACKAGE_DEFECT",
+    "blocking": true,
+    "owning_layer": "P31",
+    "issue": "PX0-05-P31-v0.3 freezes PX0RuntimeFacadeContract as blocking evidence but does not authorize mutation of debug_ui/tests/runtime_contract_test.cpp, whose pre-existing aggregate initializer cannot compile under the same frozen clang-cl /WX profile.",
+    "why_not_implementation_defect": "PX0-05 did not modify runtime_contract_test.cpp or ProductControlReceipt; both blobs are identical at task anchor and result.",
+    "why_not_environment_defect": "The compiler invocation is the explicitly frozen native/test profile and deterministically diagnoses a source-level test fixture warning promoted by /WX.",
+    "why_not_verification_design_defect": "The RuntimeFacade regression remains a valid oracle; only the test fixture needs a narrow mechanical initialization repair so the existing oracle can run.",
+    "required_route": "Return to P31. Issue a corrected current PX0-05 package that adds debug_ui/tests/runtime_contract_test.cpp to authorized mutation scope for a test-only receipt initialization repair, preserves result 9c5e3587... as valid candidate work, and resumes/reverifies the original frozen evidence."
+  },
+  "suggested_narrow_repair": {
+    "file": "debug_ui/tests/runtime_contract_test.cpp",
+    "intent": "Make RuntimeProbe::submitProductControl fully initialize ProductControlReceipt, including the existing optional control field, without changing RuntimeFacade/ProductControl semantics or warning policy.",
+    "production_code_change": false,
+    "warning_policy_change": false
+  },
+  "official_gate_pass_claimed": false,
+  "ownership_handoff": {
+    "from_owner": "aegis-gate-review",
+    "to": "aegis",
+    "reason": "earlier_untrusted_layer",
+    "requested_stage": "P31",
+    "earliest_untrusted_layer": "TASK_PACKAGE",
+    "status": "BLOCKED_AUTHORITY",
+    "suggested_next_stage": "P31_TASK_PACKAGE_RECONCILIATION"
+  }
+}
