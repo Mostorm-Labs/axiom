@@ -144,7 +144,7 @@ No sanctioned PX0 fixture/reset boundary exists in the frozen baseline. Therefor
 
 ## First incomplete action
 
-Run repository/package/binding preflights and ImplementationDesignPreflight. Then update the focused Workbench/Router/structural oracles and observe the required RED before adding panel production code. Continue through the full frozen closure contract unless an explicit terminal blocker is encountered.
+This package resumes interrupted work through P33. Resolve repository/package identity first, inspect the preserved local PX0-05 worktree, classify it against the task anchor as `ANCHOR_DESCENDANT_WITHOUT_CURSOR`, and reconcile its existing diff against the v0.3 authorized scope. Preserve conforming work, migrate the obsolete Windows selection structural oracle if still incomplete, establish a reconciled continuation point, then resume at the first incomplete frozen obligation. Do not replay already-valid panel migration work.
 
 
 ## P31 reconciliation after blocked P32
@@ -157,3 +157,33 @@ The first P32 attempt correctly failed closed on two independent blockers.
 The executor's current PX0-05 implementation exists only in a local worktree and has not been durably materialized. It is therefore **not** an accepted `resume_cursor`. Preserve it physically, but do not treat it as trusted completed work until a later P33 reconciliation compares it against the corrected current package after PX0-BUILD-01 closes.
 
 This v0.2 package is intentionally `BLOCKED_DEPENDENCY` and MUST NOT be used as a P32/P33 execution handoff. After PX0-BUILD-01 produces an exact accepted result, materialize a new current PX0-05 package binding that exact dependency, then reconcile the existing local worktree as `ANCHOR_DESCENDANT_WITHOUT_CURSOR` and preserve only conforming valid changes.
+
+
+## P31 v0.3 build-environment resolution
+
+PX0-BUILD-01 ended with an accepted `BLOCKED_ENVIRONMENT` diagnosis rather than a repository repair.
+
+Exact diagnostic identities:
+
+- source/result revision: `beaccca42b3587b19daf981b93587fd6322f2d26`
+- reviewer-accessible evidence head: `def8f6deebc54af72e109fb9ad0875fbbf4949e4`
+
+The clean PX0-04-equivalent configuration used `CANVAS_BUILD_RF01=ON` and `CANVAS_BUILD_POC01=OFF`; `canvas_runtime_render` built successfully and its compile commands contained both `runtime/scene/include` and `runtime/text/include`. The earlier PX0-05 cache used `CANVAS_BUILD_RF01=OFF`, which omitted the Scene/Text targets and produced the misleading `scene_types.hpp` failure.
+
+Therefore:
+
+- there is no Runtime/Render CMake repair dependency;
+- PX0-05 MUST use a fresh native build tree;
+- native verification MUST set `CANVAS_BUILD_RF01=ON` and `CANVAS_BUILD_POC01=OFF` and otherwise follow the accepted locked clang-cl + Skia profile;
+- the earlier PX0-05 native cache MUST NOT be reused;
+- if the missing-header failure returns under the exact clean v0.3 profile, fail closed as `BLOCKED_ENVIRONMENT` rather than widening Runtime scope.
+
+## P33 resume posture
+
+The prior PX0-05 implementation remains local-only at:
+
+`C:/Users/Chado/.codex/worktrees/px0-05-existing-capability-migration-clean`
+
+It is candidate work, not accepted Gate evidence and not an accepted resume cursor. The P33 executor must inspect and reconcile it against this v0.3 package. Candidate work reported from the interrupted execution includes the six workspace registrations, legacy-panel removal, snapshot-backed control readback, owner-presence handling, camera drafts, Surface/Axiom actions, Unsupported placeholders, focused Workbench/Router evidence, the new PX0-05 structural contract, and real ImGui widget activation. Preserve only what repository inspection proves conforms to v0.3.
+
+The selection structural oracle correction from v0.2 remains mandatory: the first test in `windows_debug_ui_selection_contract_test.py` must validate the final Control/Inspect architecture rather than requiring `BeginTabBar`, `Canvas / Selection`, or a `RuntimeFacade` tab. Its pointer-path and terminal-clear/facade synchronization assertions remain unchanged.
