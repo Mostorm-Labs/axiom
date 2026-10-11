@@ -1,8 +1,8 @@
 {
   "schema_version": "0.1",
-  "package_id": "PX0-05-P31-v0.2",
+  "package_id": "PX0-05-P31-v0.3",
   "task_id": "PX0-05",
-  "status": "BLOCKED_DEPENDENCY",
+  "status": "CURRENT_EXECUTABLE",
   "purpose": "PX0 Existing Capability Migration: replace the transitional legacy contribution with explicit Dashboard/Control/Inspect/Runtime/Performance/Scenarios built-ins while preserving Runtime/control ownership and unsupported boundaries",
   "repository": {
     "provider": "github",
@@ -28,15 +28,15 @@
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "07eefefc90b830870909235fbe77e484e1c815bbd771165ed19d34221af91fed"
+    "sha256": "8f255edcccbce543a3917424bcc9613f407f3c27def9ba732fa4f4253fcebb4c"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "9faaff831d024a02761a465111dafd709a02ddd0002e31f862d5cad49d8a57cf"
+    "sha256": "6593a6dd2fdd441c6d421a7aa13c47924a12bcffcee774dc39f9313b76e76ff1"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "d582c74f97defc1530306752dad5efde742b5faa7ed7567f7bf8fd6d1ca71823"
+    "sha256": "bcf12a2b408b6c85e051a12f5e4736368d1d19f97c799562e59161225a737206"
   },
   "materialization": {
     "same_repository": true,
@@ -44,17 +44,27 @@
     "base_revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806"
   },
   "handoff": {
-    "preferred_executor": null,
-    "next_surface": "CONTROL_REASONING",
-    "official_gate_pass_forbidden_during_p32": true,
-    "next_action": "Execute and independently review PX0-BUILD-01. Then materialize PX0-05 P31 v0.3 binding the exact accepted build-repair result before resuming the local implementation through P33 reconciliation."
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "stage": "P33",
+    "official_gate_pass_forbidden_during_p33": true,
+    "next_action": "Resolve v0.3 package, inspect the preserved local worktree, classify ANCHOR_DESCENDANT_WITHOUT_CURSOR, reconcile and preserve valid work, migrate the obsolete Windows selection structural oracle if needed, then complete all remaining frozen verification using a fresh RF01=ON / POC01=OFF native build."
   },
   "dependencies": [
     {
       "task_id": "PX0-BUILD-01",
-      "status": "UNRESOLVED_EXACT_RESULT",
-      "required_before_execution": true,
-      "bind_in_next_current_package": true
+      "status": "RESOLVED_ENVIRONMENT_CONFIGURATION",
+      "source_result_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+      "reviewer_accessible_evidence_head": "def8f6deebc54af72e109fb9ad0875fbbf4949e4",
+      "required_before_execution": false,
+      "consequence": "No Runtime/Render repair dependency remains. Native verification must use a fresh RF01=ON / POC01=OFF locked clang-cl + Skia build tree."
     }
-  ]
+  ],
+  "resume_policy": {
+    "stage": "P33",
+    "classification_expected": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+    "accepted_resume_cursor": null,
+    "local_candidate_worktree_hint": "C:/Users/Chado/.codex/worktrees/px0-05-existing-capability-migration-clean",
+    "rule": "Local-only work is candidate state, not trusted evidence. Reconcile it against v0.3 scope and task_anchor, preserve only conforming changes, establish a continuation point, then resume at the first incomplete frozen obligation."
+  }
 }
