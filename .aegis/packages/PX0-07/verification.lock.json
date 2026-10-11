@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-07",
+  "obligations": [
+    {
+      "id": "PX0-07-V1-synthetic-extension-proof",
+      "requirement": "A synthetic successor feature can contribute to Control/Feature and Inspect/Object or Inspect/Interaction using existing PanelRegistry/Workbench contracts without production Workbench or host changes.",
+      "oracle": "Test-only contributions are registered at both approved extension surfaces, discovered in deterministic slot/order position, and rendered through DebugPanelContext. The test fixture changes only debug_ui tests/CMake and contains no product mutation or successor feature semantics.",
+      "acceptance": "Both synthetic contributions are independently observable through existing registry/workbench contracts and no production source changes are needed.",
+      "evidence_required": "native PX0 panel/workbench tests + exact source diff"
+    },
+    {
+      "id": "PX0-07-V2-architecture-boundary-regressions",
+      "requirement": "The final PX0 architecture boundaries remain pinned by deterministic tests/source audit.",
+      "oracle": "The closure suite proves RuntimeFacade/RuntimeDiagnostics independence; exact DebugPanelContext boundary; absence of DebugSnapshot global capabilities; absence of generic debug_ui::DebugCommand/BoundedCommandQueue lane by source/tree audit; independent provider degradation; no Fit Selection/Object fallback; bounded activity; and explicit MixedGeneration coherence.",
+      "acceptance": "Every listed boundary has a direct deterministic oracle or exact source/tree audit and none requires production mutation.",
+      "evidence_required": "PX0/DUI native tests + repository tree/source audit"
+    },
+    {
+      "id": "PX0-07-V3-complete-native-debug-ui-suite",
+      "requirement": "The complete native Debug UI/PX0 contract suite passes on the accepted clean Windows native profile.",
+      "oracle": "Build the Debug UI test targets and run ctest --output-on-failure -R \"DUI|PX0\" in a fresh RF01=ON / POC01=OFF locked clang-cl + Skia build.",
+      "acceptance": "All discovered DUI/PX0 tests pass; no warning-policy relaxation or unrelated runtime repair is introduced.",
+      "evidence_required": "native configure/build log + ctest log"
+    },
+    {
+      "id": "PX0-07-V4-all-platform-structural-contracts",
+      "requirement": "The accepted Windows/Web host/control/input structural contracts remain green at the qualification subject revision.",
+      "oracle": "Run web_imgui_debug_ui_contract_test.py, windows_imgui_skia_debug_ui_contract_test.py, windows_debug_ui_selection_contract_test.py and windows_debug_ui_encoding_contract_test.py with pytest or the previously accepted equivalent direct Python runner.",
+      "acceptance": "All structural tests pass without modifying those structural test files in PX0-07.",
+      "evidence_required": "structural test log"
+    },
+    {
+      "id": "PX0-07-V5-windows-physical-closure",
+      "requirement": "The exact qualification subject revision is physically validated in the real Windows Ink Playground/Debug UI host for the approved PX0 control, diagnostics, activity and input-isolation checklist.",
+      "oracle": "Launch the freshly built Windows application on Windows, exercise each applicable physical checklist item, record actual owner state as PASS / DISABLED_BY_CONTEXT / UNSUPPORTED / FAIL, and record environment/build identity. Hidden Debug UI and Debug-owned pointer/keyboard isolation must be observed directly.",
+      "acceptance": "Every checklist row has an observation. All controls that are Available in the exercised context behave correctly; intentional Unsupported/DisabledByContext states are explicitly recorded and not relabeled PASS; there is no FAIL on an expected available behavior.",
+      "evidence_required": "docs/quality/evidence/px0-debug-control-plane/README.md Windows matrix + exact subject revision/build identity"
+    },
+    {
+      "id": "PX0-07-V6-web-physical-closure",
+      "requirement": "The exact qualification subject revision is physically validated in the served Web Ink Playground/Debug UI host for the applicable PX0 control, diagnostics, activity and input-isolation checklist.",
+      "oracle": "Build/serve g4-5-web-debug-ui-physical, open the page in a real browser, exercise each applicable checklist item, and record PASS / DISABLED_BY_CONTEXT / UNSUPPORTED / FAIL plus browser/WebGL/build identity. Product toolbar and Debug UI controls must share resolved RuntimeFacade state; unsupported engineering controls remain Unsupported.",
+      "acceptance": "Every applicable Web row has an observation; expected product behavior works, Unsupported owner capability is recorded as such, and no FAIL remains on an expected available behavior or input-isolation rule.",
+      "evidence_required": "docs/quality/evidence/px0-debug-control-plane/README.md Web matrix + exact subject revision/build/browser identity"
+    },
+    {
+      "id": "PX0-07-V7-evidence-index-and-identity",
+      "requirement": "PX0 physical evidence is durably indexed without self-referential result identity and without issuing the official Gate verdict.",
+      "oracle": "README records package ID, exact qualification_subject_revision, exact build commands/profiles, Windows/Web environment identity, Available vs Unsupported/Disabled rows, physical observations, and evidence/log locations. The evidence head is a descendant containing docs/evidence metadata only and clearly distinguishes itself from the subject revision.",
+      "acceptance": "Independent P34 can resolve the exact subject code/tests and later evidence envelope unambiguously; README contains no official PX0/Gate PASS claim.",
+      "evidence_required": "README + .aegis PX0-07 result/evidence metadata + git history"
+    },
+    {
+      "id": "PX0-07-V8-closure-scope",
+      "requirement": "PX0-07 remains tests/evidence only and does not pull PX1, production fixes or physical claims for untested platforms forward.",
+      "oracle": "Exact task diff contains only authorized debug_ui test/CMake files, PX0 evidence README, and .aegis/results/PX0-07 metadata; production runtime/debug_ui/platform sources and existing structural test sources remain unchanged; git diff --check passes.",
+      "acceptance": "No production source or successor feature mutation is present and Android/iOS remain non-blocking/unclaimed.",
+      "evidence_required": "authorized-scope audit + git diff --check"
+    }
+  ]
+}
