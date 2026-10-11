@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-BUILD-01",
+  "artifacts": [],
+  "review_boundary": "Independent review resolves the exact package, clean pre-mutation reproduction, exact CMake diff if any, render build, Windows consumer build, and authorized scope.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    "clean pre-mutation reproduction outcome",
+    "verbose render compile/build observation",
+    "exact result revision/ref if repository mutation occurs",
+    "canvas_runtime_render build",
+    "axiom_ink_playground_windows locked native build",
+    "authorized-scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "compile command include-path excerpt",
+    "clean worktree"
+  ],
+  "official_claim_boundary": "Execution may return READY_FOR_CONTROL_REVIEW on repaired success or BLOCKED_ENVIRONMENT when the clean RED precondition cannot be reproduced. It must not claim PX0-05/PX0/Gate PASS.",
+  "materialization_requirement": "Any repository repair must be committed and pushed to refs/heads/codex/px0-build-01-render-scene-include or an equivalently reviewer-resolvable exact ref."
+}
