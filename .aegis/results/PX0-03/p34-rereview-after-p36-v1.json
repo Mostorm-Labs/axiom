@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P34_GATE_REVIEW",
+  "reviewed_code_revision": "5c64fc5844420d783f9bf0377d9202e7d263aef8",
+  "reviewed_materialized_ref": "refs/heads/codex/px0-03-p36-router-oracle-repair",
+  "reviewed_evidence_head": "007b541f5ab365cccd2938a7145afa10be9e37ca",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "frozen_requirement_audit": {
+    "passed": [
+      "PX0-03-V1-bounded-activity-log implementation",
+      "PX0-03-V2-owner-routing production boundary",
+      "PX0-03-V3-context-fencing production behavior",
+      "PX0-03-V4-normalized-state production behavior",
+      "PX0-03-V5-async-receipt production behavior",
+      "PX0-03-V6-platform-receipt-query",
+      "PX0-03-V7-activity-snapshot-integration",
+      "PX0-03-V8-current-panel semantic Pan routing",
+      "PX0-03-V9-generic-ui-queue-retired",
+      "PX0-03-V10-no-premature-workbench-or-evidence-claims"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "semantic CanvasToolKind router boundary",
+      "legacy 4107 limited to controller presentation mapping",
+      "generation/deadline fencing assertions",
+      "Fit Selection/Fit Primary local rejection",
+      "normalized state matrix",
+      "queued refresh does not create a terminal transition",
+      "terminal refresh de-duplicates on later refresh",
+      "PlatformDebugControl default receipt Unsupported",
+      "generic command queue retirement",
+      "owner-side queue preservation"
+    ],
+    "failed": [
+      {
+        "id": "PX0ControlRouter_full_P36_oracle_completion",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure": "The P36-v1 test still omits explicit proof for default DebugActivityLog capacity 64, retained bounded entry states and full snapshot/readActivity parity, owner non-interference counters across product/Axiom/Surface lanes, strict cross-owner request-ID monotonicity, exactly one terminal transition for each queued Axiom and Surface request, and refreshReceipts causing zero RuntimeFacade product/canvas/readRuntimeState calls."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "production_router_boundary": "CORRECT",
+    "production_repair_required": false,
+    "generic_debug_ui_command_queue": "ABSENT",
+    "owner_side_queues": "PRESERVED",
+    "px0_04_workbench": "ABSENT",
+    "dui_m1_physical_status": "UNCHANGED"
+  },
+  "defect_classification": {
+    "remaining": "TEST_DEFECT",
+    "implementation_defect": "CLOSED",
+    "spec_defect": false,
+    "verification_design_defect": false,
+    "task_package_defect": false
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Existing MSVC warning-policy diagnostics remain outside the PX0-03 closure target."
+    ]
+  },
+  "official_gate_pass_claimed": false,
+  "next_stage": "P36_FIX_REVERIFICATION_V2"
+}
