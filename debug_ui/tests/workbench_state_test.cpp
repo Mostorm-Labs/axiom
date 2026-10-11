@@ -102,10 +102,18 @@ void feature(DebugPanelContext& context) {
     (void)context.controls.undo();
     context.ui.markControlSubmitted();
 }
-int syntheticObjectRenders = 0;
+std::vector<int> syntheticExtensionRenders;
+void syntheticBefore(DebugPanelContext&) {
+    syntheticExtensionRenders.push_back(0);
+    ImGui::TextUnformatted("Synthetic preceding contribution");
+}
+void syntheticFeature(DebugPanelContext&) {
+    syntheticExtensionRenders.push_back(1);
+    ImGui::TextUnformatted("Synthetic feature extension");
+}
 void syntheticObject(DebugPanelContext&) {
-  ++syntheticObjectRenders;
-  ImGui::TextUnformatted("Synthetic object panel");
+    syntheticExtensionRenders.push_back(2);
+    ImGui::TextUnformatted("Synthetic object extension");
 }
 bool hidden(const DebugSnapshot&) noexcept {
     return false;
@@ -236,8 +244,6 @@ int main() {
     PanelRegistry registry;
     assert(registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 0, nullptr, feature}));
     assert(registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 1, hidden, mustNotRender}));
-    assert(registry.add({WorkspaceId::kInspect, PanelSlot::kObject, 0, nullptr, syntheticObject}));
-    assert(registry.contributions(WorkspaceId::kInspect).size() == 1);
     DebugUiSessionState ui;
     ui.setWorkspace(WorkspaceId::kControl);
     DebugWorkbench workbench;
@@ -246,10 +252,6 @@ int main() {
     assert(finishFrame().find("Synthetic feature panel") != std::string::npos);
     assert(visibleRenders == 1 && providers.mutations == 1);
     assert(activity.snapshot().entries.back().state == DebugActivityState::kApplied);
-    const auto syntheticInspect = renderPanel(
-        registry, WorkspaceId::kInspect, PanelSlot::kObject, snapshot, router, ui);
-    assert(syntheticInspect.find("Synthetic object panel") != std::string::npos);
-    assert(syntheticObjectRenders == 1);
     snapshot.activity = activity.snapshot();
     ui.setWorkspace(WorkspaceId::kScenarios);
     startFrame();
@@ -258,6 +260,40 @@ int main() {
     assert(empty.find("No panels registered") != std::string::npos);
     assert(empty.find("undo") != std::string::npos && empty.find("Applied") != std::string::npos);
     assert(!ui.controlSubmittedThisFrame() && providers.mutations == 1);
+
+    // Extension callbacks only display test-local data. The real registry must
+    // discover/order both approved slots, and Workbench must render them without
+    // submitting product controls or adding Activity entries.
+    PanelRegistry extensions;
+    assert(extensions.add(
+        {WorkspaceId::kControl, PanelSlot::kFeature, 20, nullptr, syntheticFeature}));
+    assert(extensions.add(
+        {WorkspaceId::kControl, PanelSlot::kFeature, -1, nullptr, syntheticBefore}));
+    assert(extensions.add(
+        {WorkspaceId::kInspect, PanelSlot::kObject, 20, nullptr, syntheticObject}));
+    assert(extensions.add(
+        {WorkspaceId::kInspect, PanelSlot::kObject, -1, nullptr, syntheticBefore}));
+    const int mutationsBeforeExtensions = providers.mutations;
+    const auto activityBeforeExtensions = activity.size();
+    for (const auto workspace : {WorkspaceId::kControl, WorkspaceId::kInspect}) {
+        const auto contributions = extensions.contributions(workspace);
+        assert(contributions.size() == 2);
+        assert(contributions[0].order == -1 && contributions[0].render == syntheticBefore);
+        assert(contributions[1].order == 20);
+        const bool control = workspace == WorkspaceId::kControl;
+        assert(contributions[1].slot == (control ? PanelSlot::kFeature : PanelSlot::kObject));
+        assert(contributions[1].render == (control ? syntheticFeature : syntheticObject));
+        syntheticExtensionRenders.clear();
+        ui.setWorkspace(workspace);
+        startFrame();
+        assert(!workbench.render(snapshot, router, ui, extensions));
+        const auto text = finishFrame();
+        assert(text.find(control ? "Synthetic feature extension" : "Synthetic object extension") !=
+               std::string::npos);
+        assert(syntheticExtensionRenders == std::vector<int>({0, control ? 1 : 2}));
+        assert(providers.mutations == mutationsBeforeExtensions);
+        assert(activity.size() == activityBeforeExtensions && !ui.controlSubmittedThisFrame());
+    }
 
     PanelRegistry builtins;
     registerBuiltinPanels(builtins);
