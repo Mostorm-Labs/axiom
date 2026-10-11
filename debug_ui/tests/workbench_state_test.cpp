@@ -102,6 +102,11 @@ void feature(DebugPanelContext& context) {
     (void)context.controls.undo();
     context.ui.markControlSubmitted();
 }
+int syntheticObjectRenders = 0;
+void syntheticObject(DebugPanelContext&) {
+  ++syntheticObjectRenders;
+  ImGui::TextUnformatted("Synthetic object panel");
+}
 bool hidden(const DebugSnapshot&) noexcept {
     return false;
 }
@@ -231,6 +236,8 @@ int main() {
     PanelRegistry registry;
     assert(registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 0, nullptr, feature}));
     assert(registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 1, hidden, mustNotRender}));
+    assert(registry.add({WorkspaceId::kInspect, PanelSlot::kObject, 0, nullptr, syntheticObject}));
+    assert(registry.contributions(WorkspaceId::kInspect).size() == 1);
     DebugUiSessionState ui;
     ui.setWorkspace(WorkspaceId::kControl);
     DebugWorkbench workbench;
@@ -239,6 +246,10 @@ int main() {
     assert(finishFrame().find("Synthetic feature panel") != std::string::npos);
     assert(visibleRenders == 1 && providers.mutations == 1);
     assert(activity.snapshot().entries.back().state == DebugActivityState::kApplied);
+    const auto syntheticInspect = renderPanel(
+        registry, WorkspaceId::kInspect, PanelSlot::kObject, snapshot, router, ui);
+    assert(syntheticInspect.find("Synthetic object panel") != std::string::npos);
+    assert(syntheticObjectRenders == 1);
     snapshot.activity = activity.snapshot();
     ui.setWorkspace(WorkspaceId::kScenarios);
     startFrame();
