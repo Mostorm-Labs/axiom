@@ -3,8 +3,8 @@
   "task_id": "PX0-06",
   "stage": "P32",
   "status": "READY_FOR_CONTROL_REVIEW",
-  "result_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
-  "materialized_ref": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "result_revision": "2993b0bd3646b34055b4246b91b39a02e9d29182",
+  "materialized_ref": "2993b0bd3646b34055b4246b91b39a02e9d29182",
   "repository": "github:Mostorm-Labs/axiom",
   "package_ref": "repo:.aegis/packages/PX0-06/package.json@3d18d030abea60b991fc7436fb8524a44760c979",
   "task_anchor": "9d771820f25b98b6922663eed53f58abc0088a8c",
@@ -48,8 +48,9 @@
       "log": "web-physical-build.log"
     },
     "scope_audit": {
-      "result": "PASS",
-      "diff_check": "PASS"
+      "path": ".aegis/results/PX0-06/scope-audit.json",
+      "diff_check": "PASS",
+      "result": "PASS"
     },
     "manual_physical": "PENDING; not performed in this execution"
   },
