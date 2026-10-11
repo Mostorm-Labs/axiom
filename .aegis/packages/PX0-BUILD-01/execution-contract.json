@@ -1,0 +1,145 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-BUILD-01",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Start with a clean-build reproduction. Do not modify repository files unless the exact missing canvas/scene/scene_types.hpp error reproduces under the locked native/clang-cl + Skia configuration.",
+        "If reproduced and the compile command for canvas_runtime_render lacks the scene public include usage requirement, minimally correct target-scoped CMake dependency/include propagation at the owning Runtime/Render or Runtime/Scene target boundary.",
+        "Prefer expressing the dependency through target_link_libraries/target_include_directories usage requirements on the owning targets; do not patch consumers or add repository-global include paths.",
+        "Preserve runtime/render/include/canvas/render/reference_draw_list.hpp and runtime/scene/include/canvas/scene/scene_types.hpp semantic contents unchanged.",
+        "If the clean build already resolves the header and the reported failure is attributable to a stale/misconfigured build tree, return BLOCKED_ENVIRONMENT with exact reproduction facts and no code change."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/render/CMakeLists.txt",
+        "runtime/scene/CMakeLists.txt",
+        ".aegis/results/PX0-BUILD-01/**"
+      ],
+      "preserve_unchanged": [
+        "runtime/render/include/**",
+        "runtime/render/src/**",
+        "runtime/scene/include/**",
+        "runtime/scene/src/**",
+        "runtime/foundation/**",
+        "debug_ui/**",
+        "apps/ink_playground/**",
+        ".aegis/packages/PX0-05/**",
+        ".aegis/results/PX0-05/**"
+      ],
+      "forbidden_changes": [
+        "Global include_directories workaround.",
+        "Copying/duplicating scene headers into render.",
+        "Any runtime semantic or API change.",
+        "Any Debug UI or platform host change.",
+        "Any warning-policy cleanup.",
+        "Any PX0-05 implementation continuation within this task."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "exact clean configure/build command and generator/toolchain",
+        "exact failing translation unit and include chain",
+        "compile command include paths before mutation",
+        "current canvas_runtime_render -> canvas_runtime_scene target relation",
+        "current canvas_runtime_scene PUBLIC include usage requirements",
+        "minimal owning CMake boundary if repository-owned",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "A clean locked native build reproduces the missing canvas/scene/scene_types.hpp failure before repository mutation.",
+      "observation_seam": "verbose build of canvas_runtime_render"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-BUILD-01-T1-clean-red",
+          "command_or_oracle": "Clean configure using the same locked native/clang-cl + Skia configuration family used for PX0-04/PX0-05, then build canvas_runtime_render verbosely.",
+          "expected_result": "RED on the reported scene_types.hpp include boundary before mutation. If not RED, terminate BLOCKED_ENVIRONMENT without source changes.",
+          "blocking_reason": "Prevents speculative CMake edits."
+        },
+        {
+          "id": "PX0-BUILD-01-T2-render-build",
+          "command_or_oracle": "After authorized repair, rebuild canvas_runtime_render from the clean build tree.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Primary proof that the include boundary is repaired."
+        },
+        {
+          "id": "PX0-BUILD-01-T3-windows-build",
+          "command_or_oracle": "Build axiom_ink_playground_windows in the same locked native/clang-cl + Skia configuration.",
+          "expected_result": "The Runtime/Render -> Scene missing-header failure is absent and the target reaches successful link, unless a distinct pre-existing environment failure is precisely isolated after this boundary.",
+          "blocking_reason": "PX0-05 requires a real native consumer build."
+        },
+        {
+          "id": "PX0-BUILD-01-T4-scope",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Only runtime/render/CMakeLists.txt, runtime/scene/CMakeLists.txt and PX0-BUILD-01 evidence metadata change; diff check passes.",
+          "blocking_reason": "Prevents semantic/source scope expansion."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "exact clean reproduction or exact BLOCKED_ENVIRONMENT non-reproduction",
+        "exact pushed result_revision when a repository repair is made",
+        "reviewer-resolvable materialized_ref",
+        "render target build evidence",
+        "Windows consumer build evidence",
+        "authorized-scope diff"
+      ],
+      "corroborative": [
+        "verbose compile command showing scene include usage requirement",
+        "clean worktree"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "The clean pre-mutation failure was reproduced and classified as repository-owned.",
+        "The minimal CMake repair stays within the Runtime/Render -> Scene target boundary.",
+        "canvas_runtime_render builds successfully.",
+        "axiom_ink_playground_windows no longer fails on scene_types.hpp and reaches successful link in the locked native/clang-cl + Skia configuration.",
+        "No C++ semantic source/header, Debug UI, platform host, warning policy or PX0-05 implementation file changes.",
+        "The exact repair result is pushed/materialized for independent review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
