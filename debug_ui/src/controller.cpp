@@ -125,7 +125,7 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
                 if (tool.second == 4105 || tool.second == 4106) {
                     (void)router->setEraser(tool.second == 4105 ? 1U : 2U);
                 } else if (tool.second == 4107) {
-                    (void)router->setTool(4107U);
+                    (void)router->setTool(canvas::runtime::CanvasToolKind::kPan);
                 } else {
                     (void)router->setBrush(static_cast<std::uint32_t>(tool.second - 4100),
                                            tool.second == 4103 ? 4U : 1U);

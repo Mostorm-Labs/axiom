@@ -190,6 +190,15 @@ def test_generic_debug_ui_command_queue_is_retired_but_owner_queues_remain():
     assert (debug_dir / "include" / "canvas" / "debug_ui" / "surface_debug_queue.hpp").exists()
 
 
+def test_router_accepts_semantic_pan_without_legacy_presentation_ids():
+    header = (ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "control_router.hpp").read_text(encoding="utf-8")
+    implementation = (ROOT / "debug_ui" / "src" / "control_router.cpp").read_text(encoding="utf-8")
+    assert "CanvasToolKind tool" in header
+    assert "4107" not in header
+    assert "4107" not in implementation
+    assert "request.payload.tool = tool" in implementation
+
+
 def test_windows_timer_does_not_rasterize_debug_overlay_during_active_stroke():
     source = WINDOWS_MAIN.read_text(encoding="utf-8")
     timer = source.split("if (message == WM_TIMER", 1)[1].split(

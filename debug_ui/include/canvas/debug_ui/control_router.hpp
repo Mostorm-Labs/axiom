@@ -23,7 +23,8 @@ class DebugControlRouter final {
   void beginFrame(const DebugSnapshot& snapshot) noexcept;
   void refreshReceipts() noexcept;
 
-  canvas::runtime::ProductControlReceipt setTool(std::uint32_t toolId) noexcept;
+  canvas::runtime::ProductControlReceipt setTool(
+      canvas::runtime::CanvasToolKind tool) noexcept;
   canvas::runtime::ProductControlReceipt setBrush(std::uint32_t brushId,
                                                    std::uint32_t revision) noexcept;
   canvas::runtime::ProductControlReceipt setEraser(std::uint32_t eraserId) noexcept;

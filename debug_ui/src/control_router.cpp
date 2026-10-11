@@ -103,15 +103,11 @@ void DebugControlRouter::recordSurface(const std::string& action,
   }
 }
 
-canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(std::uint32_t toolId) noexcept {
+canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(
+    canvas::runtime::CanvasToolKind tool) noexcept {
   const auto requestId = nextRequestId();
   if (runtime_ == nullptr) {
     auto receipt = unsupportedReceipt<canvas::runtime::ProductControlReceipt>(requestId);
-    recordProduct("set-tool", receipt);
-    return receipt;
-  }
-  if (toolId != 4107U) {
-    auto receipt = runtime_->setTool(toolId, requestId, frame_.stamp.runtimeGeneration);
     recordProduct("set-tool", receipt);
     return receipt;
   }
@@ -125,9 +121,9 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(std::uint32_t
                                          frame_.stamp.viewGeneration, frame_.stamp.surfaceGeneration}
       : targets.front();
   request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectTool;
-  request.payload.tool = canvas::runtime::CanvasToolKind::kPan;
+  request.payload.tool = tool;
   auto receipt = runtime_->submitCanvasControl(request);
-  recordProduct("set-pan-tool", receipt);
+  recordProduct("set-tool", receipt);
   return receipt;
 }
 
