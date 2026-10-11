@@ -5,7 +5,7 @@
     {
       "id": "PX0-05-V1-explicit-workspace-capability-placement",
       "requirement": "Existing capability is explicitly registered into the approved Dashboard, Control, Inspect, Runtime, Performance and Scenarios slots, and the PX0-04 Transitional legacy controls contribution is removed.",
-      "oracle": "PX0Workbench renders each workspace and asserts the expected migrated section labels/content. Structural review proves controller.cpp contains no Transitional legacy controls string and no legacy ##debug_tabs tab bar, while registerBuiltinPanels explicitly invokes the six workspace registration families plus Ink.",
+      "oracle": "PX0Workbench renders each workspace and asserts the expected migrated section labels/content. Structural review proves controller.cpp contains no Transitional legacy controls string and no legacy ##debug_tabs tab bar, while registerBuiltinPanels explicitly invokes the six workspace registration families plus Ink. The legacy Windows selection structural oracle must be migrated in this task: its Debug UI architecture assertion reads the final Control/Inspect panel sources and must reject the removed BeginTabBar/Canvas / Selection/RuntimeFacade tab model, while its separate Windows selection-pointer and terminal-clear assertions remain unchanged.",
       "acceptance": "The Workbench is no longer a shell wrapped around one legacy tab contribution.",
       "evidence_required": "PX0Workbench + Windows structural contract + exact source diff"
     },
@@ -68,7 +68,7 @@
     {
       "id": "PX0-05-V10-regression-and-scope-closure",
       "requirement": "PX0-01..04 control/snapshot/workbench contracts remain valid and PX0-06+ work does not leak into this package.",
-      "oracle": "All frozen PX0/DUI regressions and Windows/Web structural contracts pass; exact diff has no runtime/foundation mutation, platform production host mutation, Workbench/PanelRegistry redesign, Preview repair, GT-DUI-M1 evidence mutation, Shape/RichText/Connector/Snap/Image behavior, or PX0-06 host convergence.",
+      "oracle": "All frozen PX0/DUI regressions and Windows/Web structural contracts pass; exact diff has no runtime/foundation mutation, platform production host mutation, Workbench/PanelRegistry redesign, Preview repair, GT-DUI-M1 evidence mutation, Shape/RichText/Connector/Snap/Image behavior, or PX0-06 host convergence. windows_debug_ui_selection_contract_test.py is an intentionally migrated structural oracle in PX0-05; changing its obsolete tab-layout assertion to the final panel architecture is within verification scope and is not a platform production-host change.",
       "acceptance": "Only existing-capability panel migration, UI-local draft state, read-only Router owner-presence support and mechanically required tests/CMake changes are present.",
       "evidence_required": "full regression set + exact authorized-scope diff"
     }
