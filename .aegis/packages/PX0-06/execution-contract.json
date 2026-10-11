@@ -1,0 +1,237 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Update Windows structural oracles first so the old multi-setter/local-snapshot host fails the frozen PX0-06 boundary.",
+        "Refactor WindowsDebugUiHost to expose setController(DebugController*) plus existing InputCaptureGate sharing and presentation/input lifecycle only. Remove RuntimeFacade, diagnostics, telemetry, AxiomDebugControl, PlatformDebugControl, DebugControlRouter and snapshot-refresh setters/members and remove platform snapshot/selected-tool truth from the host.",
+        "Inside WindowsDebugUiHost::renderFrame, invoke DebugController::buildImGuiFrame after ImGui::NewFrame and before ImGui::Render. Preserve the current same-dispatch second redraw when the controller reports a submitted control, but the second frame must also come only from DebugController.",
+        "In Windows main, keep concrete RuntimeFacade/diagnostics/debug-control provider ownership but replace platform-local DebugSnapshotAssembler/DebugActivityLog/DebugControlRouter/debug snapshot-channel composition with one DebugController constructed from DebugControllerContext. Pass only that controller and the shared InputCaptureGate to WindowsDebugUiHost.",
+        "Remove the Windows captureDebugSnapshot helper and any host-side snapshot publish/refresh callback used only for Debug UI. Preserve active-stroke/resize gating by scheduling WindowsDebugUiHost::refresh only at the same safe points as before.",
+        "Route the Windows temporary native toolbar through RuntimeFacade product controls. Map Vector/Marker/Chalk/Membrane to setBrush, Object/Partial Eraser to setEraser, and Selection to setSelectionMode. Use nonzero monotonic product request IDs and current Runtime generation readback. Do not call Host product mutation methods directly from the toolbar adapter. Separate the concrete RuntimeFacade Host-application helper from the toolbar adapter so RuntimeFacade never recursively calls selectWindowsTool.",
+        "Preserve Windows temporary toolbar presentation and G4.7 text qualification menu/action behavior; do not migrate text qualification actions into RuntimeFacade.",
+        "Update Web structural oracle first so the old captureDebugSnapshot/buildImGuiPanels/local router path fails.",
+        "Refactor Web DebugUiState to own/use one DebugController and remove local DebugSnapshotAssembler/DebugActivityLog/DebugControlRouter/selected-tool panel construction state. Keep WebGL debug surface, ImGui context, input mapping, visibility and resize ownership unchanged.",
+        "Make the Web RuntimeFacade adapter lifecycle independent of Debug UI visibility and use the same product adapter for both temporary exported toolbar functions and DebugController context. Existing exports axiom_ink_select_brush_profile and axiom_ink_select_tool remain source-compatible where practical but must route through RuntimeFacade product controls rather than direct Host::selectBrushProfile/selectTool mutation.",
+        "In Web renderDebugUi, invoke DebugController::buildImGuiFrame between ImGui::NewFrame and ImGui::Render; retain one same-dispatch second common-controller frame after a submitted product control so resolved readback is visible.",
+        "Modify Web index.html only if required to preserve existing toolbar/debug-canvas sizing/input behavior or the existing product bridge call sequence; do not remove toolPalette/brushBar or text qualification UI.",
+        "Update Windows common/selection/encoding and Web structural tests to prove controller convergence, RuntimeFacade toolbar routing and preserved input/lifecycle boundaries without weakening existing assertions.",
+        "Run focused PX0/DUI regressions, fresh Windows native build, Web physical target build, structural contracts, scope audit and git diff --check.",
+        "Materialize exact result/evidence on the execution branch and return READY_FOR_CONTROL_REVIEW only."
+      ],
+      "authorized_mutation_scope": [
+        "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+        "debug_ui/src/windows_host.cpp",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/platform/web/index.html",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_encoding_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+        ".aegis/results/PX0-06/**"
+      ],
+      "preserve_unchanged": [
+        "runtime/**",
+        "apps/ink_playground/common/**",
+        "debug_ui/include/canvas/debug_ui/controller.hpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp",
+        "debug_ui/src/snapshot_assembler.cpp",
+        "debug_ui/include/canvas/debug_ui/activity.hpp",
+        "debug_ui/include/canvas/debug_ui/activity_log.hpp",
+        "debug_ui/src/activity_log.cpp",
+        "debug_ui/include/canvas/debug_ui/control_router.hpp",
+        "debug_ui/src/control_router.cpp",
+        "debug_ui/include/canvas/debug_ui/workbench.hpp",
+        "debug_ui/src/workbench.cpp",
+        "debug_ui/include/canvas/debug_ui/panel.hpp",
+        "debug_ui/include/canvas/debug_ui/panel_registry.hpp",
+        "debug_ui/src/panel_registry.cpp",
+        "debug_ui/src/panels/**",
+        "debug_ui/tests/**",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_encoding_contract_test.py",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Runtime/foundation contracts or stable Runtime C ABI.",
+        "DebugController, DebugSnapshot, DebugControlRouter, Workbench, PanelRegistry or panel capability behavior.",
+        "New product semantics or product-control request fields.",
+        "Shape/RichText editing/Connector/Snap/Image behavior.",
+        "Removal of Windows native toolbar or Web HTML toolbar.",
+        "Conversion of G4.7 qualification menus/actions into product APIs.",
+        "Preview repair, DUI-M1 physical evidence mutation, PX0-07 physical closure, PX1+ feature work or G5 work.",
+        "Warning-policy changes or unrelated CMake/build-system cleanup."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current Windows provider/router/snapshot ownership and WindowsDebugUiHost setter graph",
+        "target Windows State provider ownership -> one DebugController -> thin WindowsDebugUiHost flow",
+        "current Windows temporary toolbar direct Host mutation and target RuntimeFacade product request mapping without recursion",
+        "current Web DebugUiState local assembler/router/activity/buildImGuiPanels flow",
+        "target Web per-handle RuntimeFacade lifetime shared by toolbar and DebugController",
+        "Web DebugController context owner availability (AxiomDebug/PlatformDebug remain null unless already provided)",
+        "same-dispatch second-frame behavior on Windows and Web",
+        "input capture/show-hide/resize/render-scheduling preservation",
+        "mapping from each PX0-06 frozen obligation to code/test/build evidence",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "Updated Windows/Web structural contracts fail against the PX0-05 baseline because WindowsDebugUiHost still exposes provider/control/snapshot-refresh setters, Windows main and Web bridge still own local snapshot/router/activity composition, Web still calls buildImGuiPanels, and temporary toolbar exports/helpers still mutate Host directly.",
+      "observation_seam": "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py + windows_debug_ui_selection_contract_test.py + windows_debug_ui_encoding_contract_test.py + web_imgui_debug_ui_contract_test.py"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-06-T1-red-host-convergence",
+          "command_or_oracle": "Update the frozen structural host-convergence oracles before production mutation and run them.",
+          "expected_result": "RED on the old Windows multi-setter/local-snapshot path and old Web local snapshot/buildImGuiPanels/direct-toolbar path.",
+          "blocking_reason": "Proves the host-convergence boundary is actually observed."
+        },
+        {
+          "id": "PX0-06-T2-windows-structural",
+          "command_or_oracle": "Run windows_imgui_skia_debug_ui_contract_test.py, windows_debug_ui_selection_contract_test.py and windows_debug_ui_encoding_contract_test.py.",
+          "expected_result": "PASS: thin setController host, common controller composition, RuntimeFacade toolbar mutation, shared input capture and existing encoding/selection invariants.",
+          "blocking_reason": "Primary Windows ownership/input proof."
+        },
+        {
+          "id": "PX0-06-T3-web-structural",
+          "command_or_oracle": "Run web_imgui_debug_ui_contract_test.py.",
+          "expected_result": "PASS: Web common DebugController, no local assembler/router/activity/buildImGuiPanels path, RuntimeFacade-backed toolbar exports, preserved debug canvas/input mapping.",
+          "blocking_reason": "Primary Web ownership/product-path proof."
+        },
+        {
+          "id": "PX0-06-T4-focused-regressions",
+          "command_or_oracle": "Build and run PX0PanelRegistry, PX0Workbench, DUI20DebugUiContracts, PX0RuntimeFacadeContract, DUIM1PanelModel, PX0ControlRouter, PX0DebugSnapshot, DUIM1ViewControls and DUIM1RuntimeFacade.",
+          "expected_result": "9/9 PASS.",
+          "blocking_reason": "Protects accepted PX0-01..05 common contracts."
+        },
+        {
+          "id": "PX0-06-T5-windows-native",
+          "command_or_oracle": "Use a fresh Ninja Release clang-cl + locked Windows x64 D3D12 Release Skia build tree with CANVAS_BUILD_RF01=ON, CANVAS_BUILD_POC01=OFF and the accepted PX0 native profile; build canvas_debug_ui and axiom_ink_playground_windows.",
+          "expected_result": "PASS through Windows application link.",
+          "blocking_reason": "Windows host/main ownership changed materially and must compile/link in the real native target."
+        },
+        {
+          "id": "PX0-06-T6-web-build",
+          "command_or_oracle": "cmake --preset g4-5-web-debug-ui-physical && cmake --build --preset g4-5-web-debug-ui-physical --target axiom_ink_playground_web",
+          "expected_result": "PASS.",
+          "blocking_reason": "Task 14 requires the converged Web bridge to build in the physical Web target."
+        },
+        {
+          "id": "PX0-06-T7-scope",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Only authorized PX0-06 host/bridge/index/structural-test/evidence paths changed and diff check exits 0.",
+          "blocking_reason": "Prevents Runtime/common-core/PX0-07/successor leakage."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-06-H1-manual-windows",
+          "oracle": "Launch the Windows application and spot-check controller-backed Workbench show/hide/navigation and temporary toolbar routing.",
+          "classification": "corroborative only; PX0-07 owns physical closure"
+        },
+        {
+          "id": "PX0-06-H2-manual-web",
+          "oracle": "Serve the Web target and spot-check Debug UI visibility/input plus temporary toolbar operation.",
+          "classification": "corroborative only; PX0-07 owns physical closure"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on refs/heads/codex/px0-06-host-convergence",
+        "reviewer-resolvable materialized_ref",
+        "Windows common/selection/encoding structural evidence",
+        "Web structural evidence",
+        "nine focused PX0/DUI regression targets",
+        "fresh locked Windows native canvas_debug_ui + axiom_ink_playground_windows build",
+        "g4-5-web-debug-ui-physical axiom_ink_playground_web build",
+        "authorized-scope diff and git diff --check"
+      ],
+      "corroborative": [
+        "manual Windows/Web spot-check",
+        "clean worktree"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "WindowsDebugUiHost is presentation/input only and exposes one DebugController setter plus InputCaptureGate sharing.",
+        "Windows main composes one DebugController from the provider owners and contains no platform-local Debug UI snapshot/router/activity composition.",
+        "Windows temporary toolbar product mutation enters RuntimeFacade with no direct Host mutation or facade-toolbar recursion.",
+        "Web DebugUiState uses one common DebugController and contains no local Debug UI snapshot/router/activity/buildImGuiPanels path.",
+        "Web temporary toolbar exports mutate through the same RuntimeFacade product path used by the controller and remain usable independently of Debug UI visibility.",
+        "Windows/Web temporary toolbar presentation and G4.7 qualification harness remain present.",
+        "Input capture/show-hide/resize/render-scheduling invariants remain intact.",
+        "All frozen structural/focused/native/Web build evidence passes.",
+        "No Runtime/common-core/PX0-07/successor/physical/G5 scope is introduced.",
+        "Exact result/evidence is pushed and reviewer-resolvable.",
+        "Executor returns READY_FOR_CONTROL_REVIEW without claiming PX0-06/PX0/DUI-M1/physical/Gate PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    },
+    "native_verification_profile": {
+      "source": "accepted PX0-05 / PX0-BUILD-01 environment resolution",
+      "generator": "Ninja",
+      "build_type": "Release",
+      "compiler_family": "clang-cl",
+      "clean_build_required": true,
+      "required_cache_values": {
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_BUILD_INK_PLAYGROUND": "ON",
+        "CANVAS_BUILD_ARC": "ON",
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "controller",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "ON",
+        "CANVAS_RF01_BUILD_TESTS": "ON",
+        "CANVAS_BUILD_SEMANTIC": "OFF",
+        "CANVAS_SEMANTIC_ENABLE_PROTOBUF": "OFF"
+      }
+    }
+  }
+}
