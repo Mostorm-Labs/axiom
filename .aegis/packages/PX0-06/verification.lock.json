@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "obligations": [
+    {
+      "id": "PX0-06-V1-windows-host-thin-controller-boundary",
+      "requirement": "WindowsDebugUiHost is presentation/input only and depends on one DebugController rather than Runtime/diagnostic/debug-control providers or platform-owned snapshot refresh.",
+      "oracle": "Windows structural contract proves setController(DebugController*) exists; provider/control/snapshot-refresh setters and corresponding owner members are absent; renderFrame invokes controller->buildImGuiFrame between ImGui::NewFrame and ImGui::Render; InputCaptureGate sharing remains.",
+      "acceptance": "WindowsDebugUiHost contains no DebugSnapshotAssembler/DebugControlRouter/DebugActivityLog or selected-tool/snapshot truth used for panel construction.",
+      "evidence_required": "Windows structural tests + exact source review"
+    },
+    {
+      "id": "PX0-06-V2-windows-common-controller-composition",
+      "requirement": "Windows composition root owns the providers and one DebugController; platform-local snapshot assembly/router/activity ownership is removed.",
+      "oracle": "Structural review proves State owns DebugController; constructs DebugControllerContext from RuntimeFacade, Axiom/ARC/Platform/Telemetry and engineering owners; calls debugUi->setController(...); captureDebugSnapshot/local DebugSnapshotAssembler/DebugActivityLog/DebugControlRouter/DebugSnapshot channel used only for Debug UI are absent.",
+      "acceptance": "The only Debug UI orchestration path is the common controller.",
+      "evidence_required": "Windows structural tests + Windows native build"
+    },
+    {
+      "id": "PX0-06-V3-windows-toolbar-runtimefacade-path",
+      "requirement": "Windows temporary product toolbar remains visible but its brush/eraser/selection mutations enter RuntimeFacade product controls.",
+      "oracle": "Structural source audit proves selectWindowsTool/toolbar handler calls RuntimeFacade setBrush/setEraser/setSelectionMode or equivalent product-safe helpers and contains no direct Host::setSelectionMode/selectTool/selectBrushProfile mutation; host mutation remains inside the concrete RuntimeFacade adapter only; no toolbar-to-facade recursion exists.",
+      "acceptance": "Toolbar state is synchronized from RuntimeFacade readback/receipts rather than an independent mutation lane.",
+      "evidence_required": "Windows structural tests + selection structural tests"
+    },
+    {
+      "id": "PX0-06-V4-windows-input-lifecycle-preserved",
+      "requirement": "Windows Debug UI convergence preserves overlay lifecycle, active-stroke render gating and shared input-capture sequence ownership.",
+      "oracle": "Existing Windows structural/selection/encoding contracts remain green and source still contains shared InputCaptureGate, debug pointer terminal handling, hidden/visible gating, and activeKeys/resize guards around overlay refresh.",
+      "acceptance": "No Debug input leaks into Canvas and no overlay render-loop regression is introduced.",
+      "evidence_required": "Windows structural + selection + encoding contract set"
+    },
+    {
+      "id": "PX0-06-V5-web-common-controller-composition",
+      "requirement": "Web DebugUiState composes one common DebugController and has no Web-local snapshot/router/activity/panel-construction path.",
+      "oracle": "Web structural test proves DebugController ownership/context construction and absence of captureDebugSnapshot, DebugSnapshotAssembler, DebugActivityLog, DebugControlRouter, and buildImGuiPanels in bridge.cpp; renderDebugUi invokes controller->buildImGuiFrame between ImGui::NewFrame and ImGui::Render.",
+      "acceptance": "Web canvas/context/provider/input realization remains platform-owned while common controller owns Debug UI orchestration.",
+      "evidence_required": "Web structural contract + Web physical build"
+    },
+    {
+      "id": "PX0-06-V6-web-toolbar-runtimefacade-path",
+      "requirement": "Web temporary product toolbar exports mutate through a RuntimeFacade adapter independent of Debug UI visibility.",
+      "oracle": "Structural source audit proves axiom_ink_select_brush_profile and axiom_ink_select_tool use the Web RuntimeFacade product path and do not directly call Host::selectBrushProfile/selectTool; the same RuntimeFacade instance/path is supplied to DebugController; request IDs are nonzero/monotonic within the host adapter path.",
+      "acceptance": "Existing JavaScript export names remain source-compatible where practical and toolbar remains usable when Debug UI is hidden.",
+      "evidence_required": "Web structural contract + Web build"
+    },
+    {
+      "id": "PX0-06-V7-temporary-toolbar-and-g47-boundary",
+      "requirement": "PX0-06 converges mutation paths without prematurely deleting temporary toolbars or absorbing G4.7 qualification menus into product semantics.",
+      "oracle": "Windows main still creates native temporary tool buttons; Web index still contains toolPalette/brushBar; G4.7 text scenario/action hooks remain present; no new RuntimeFacade request schema or product feature contract is added.",
+      "acceptance": "Presentation cleanup is bounded to ownership/convergence; final toolbar retirement is deferred.",
+      "evidence_required": "exact source review + structural tests"
+    },
+    {
+      "id": "PX0-06-V8-common-controller-regression",
+      "requirement": "Controller convergence preserves PX0-01..05 product/snapshot/router/workbench contracts.",
+      "oracle": "Run PX0PanelRegistry, PX0Workbench, DUI20DebugUiContracts, PX0RuntimeFacadeContract, DUIM1PanelModel, PX0ControlRouter, PX0DebugSnapshot, DUIM1ViewControls and DUIM1RuntimeFacade.",
+      "acceptance": "All nine focused targets pass.",
+      "evidence_required": "focused CTest evidence"
+    },
+    {
+      "id": "PX0-06-V9-host-builds",
+      "requirement": "Both modified platform host paths compile/link in their locked build environments.",
+      "oracle": "Fresh RF01=ON/POC01=OFF locked clang-cl + Skia build of canvas_debug_ui and axiom_ink_playground_windows passes; g4-5-web-debug-ui-physical builds axiom_ink_playground_web successfully.",
+      "acceptance": "No platform-local workaround changes Runtime/Render semantics or warning policy.",
+      "evidence_required": "Windows native build + Web physical-target build"
+    },
+    {
+      "id": "PX0-06-V10-scope-and-successor-boundary",
+      "requirement": "Only host-convergence/temporary-toolbar routing files and their structural tests change.",
+      "oracle": "Exact diff from task anchor contains only authorized mutation paths and PX0-06 evidence metadata; runtime/foundation, common adapter, controller/workbench/panels, Preview, GT-DUI-M1 evidence and PX0-07 files remain unchanged; git diff --check passes.",
+      "acceptance": "PX0-07 physical qualification and successor feature work are not pulled forward.",
+      "evidence_required": "authorized-scope diff + git diff --check"
+    }
+  ]
+}
