@@ -1,0 +1,64 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P34_GATE_REVIEW",
+  "reviewed_result_revision": "9938e1f712015ef7f7a1ff7461d69d9a2e959d5d",
+  "materialized_ref": "refs/heads/codex/px0-03-control-router-activity",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "frozen_requirement_audit": {
+    "passed": [
+      "PX0-03-V1-bounded-activity-log implementation is present and bounded",
+      "PX0-03-V6-platform-receipt-query",
+      "PX0-03-V7-activity-snapshot-integration",
+      "PX0-03-V9-generic-ui-queue-retired",
+      "PX0-03-V10-no-premature-workbench-or-evidence-claims"
+    ],
+    "failed": [
+      {
+        "id": "PX0-03-V2-owner-routing",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure": "DebugControlRouter contains the legacy presentation identifier 4107 and branches on it to discover Pan. The frozen contract requires the UI adapter to convert the legacy presentation identity to CanvasToolKind::kPan before entering the router; the router must route semantic typed product intent only."
+      },
+      {
+        "id": "PX0-03-V8-current-panel-routing",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure": "The current Brush/Eraser panel calls router.setTool(4107U), leaking the legacy UI presentation ID into the control-router boundary instead of passing CanvasToolKind::kPan."
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "exact_result_identity",
+      "reviewer_resolvable_materialized_ref",
+      "authorized_scope_diff",
+      "generic_command_queue_retirement",
+      "windows_web_router_activity_composition",
+      "owner_side_queue_retention"
+    ],
+    "failed": [
+      {
+        "id": "PX0ControlRouter_frozen_oracle_completeness",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure": "control_router_test.cpp does not implement the complete P31-frozen oracle matrix for product owner routing, frame generation/deadline fencing, normalized state preservation, local Fit Primary rejection, queued receipt lifecycle, bounded readActivity parity, and PlatformDebugControl default/Windows retained receipt behavior."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "debug_activity_log": "PRESENT",
+    "debug_control_router": "PRESENT",
+    "generic_debug_ui_command_queue": "REMOVED",
+    "owner_axiom_queue": "PRESERVED",
+    "owner_surface_queue": "PRESERVED",
+    "workbench_panel_registry": "ABSENT",
+    "preview_repair": "ABSENT",
+    "dui_m1_physical_status_mutation": "ABSENT"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Existing MSVC C4702 promoted by /WX remains a build-profile issue and is outside the PX0-03 source closure target."
+    ]
+  },
+  "official_gate_pass_claimed": false,
+  "next_stage": "P35_DEFECT_CLASSIFICATION"
+}
