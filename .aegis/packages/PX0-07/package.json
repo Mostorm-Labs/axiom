@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-07-P31-v0.1",
+  "task_id": "PX0-07",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "PX0 Closure / Evidence: complete test-only extension and architecture-boundary proof, then bind exact Windows/Web physical observations to an immutable qualification subject revision",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-07-closure-evidence"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "7e3772d747cf3f7e158fb0917e5169a56065a08b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "a735e6605f443ea46454606a80fad252f620b44f93e8c3c4aac7b982a0f2b04e"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "8d6ed43d099e48402c25c99f4a8219e5d55e4a56e2bfe86b2769375f534afe75"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "8393270f4dbb9e6d1032665ffd8b201b9173ce26bfdfc763b289e3e8890739e0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "45aa68d2465f289d1f463d768ab3c010970e67aeb3f6afbe229ced0b8a8bbd08"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "87e9b1fe90311537680f3cae2686704e9b3f7dd58d860302f5b1809da4382aa4"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-07/",
+    "base_revision": "7e3772d747cf3f7e158fb0917e5169a56065a08b"
+  },
+  "dependencies": [
+    {
+      "task_id": "PX0-06",
+      "status": "CLOSED",
+      "accepted_production_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+      "accepted_evidence_head": "06964a48400d748bf22a8fef3818bd7c428fe388",
+      "p34_closure_ref": "7e3772d747cf3f7e158fb0917e5169a56065a08b"
+    }
+  ],
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "stage": "P32",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run package/authority/verification preflights, inventory existing Task 15 proof, add only missing test-only closure assertions, establish the exact qualification_subject_revision, run automated/native/structural builds, then perform required Windows/Web physical observations if the execution surface has real GUI/browser access. If it does not, materialize the qualification subject and return BLOCKED_MISSING_INPUT with exact artifact paths and the untouched physical checklist."
+  }
+}
