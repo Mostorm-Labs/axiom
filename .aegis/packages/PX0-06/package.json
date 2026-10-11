@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-06-P31-v0.1",
+  "task_id": "PX0-06",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "PX0 Host Convergence + Temporary Toolbar Cleanup: converge Windows/Web Debug UI composition onto DebugController and route temporary toolbar product mutation through RuntimeFacade while preserving platform input/presentation behavior",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-06-host-convergence"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "9d771820f25b98b6922663eed53f58abc0088a8c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "2c2ec1056a522555245b2053f143faa3adb76852731b937ebb4200758ffd873c"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "7521c24752bf460b9daea53247a05560565f3aa9560850166d399ad388aa625c"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ee5f5f8706429ed34103e104abeb6c73970ea68fe0457bde07a8ba6f5f64634d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "39de6945d9876c33dd007a04ff9be90c51883d2d036ec40156dc3ac2a9754982"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "a97bd83ec8a4ed87234338d69054ce492c54aa782388b83593c11a149a34fda7"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-06/",
+    "base_revision": "9d771820f25b98b6922663eed53f58abc0088a8c"
+  },
+  "dependencies": [
+    {
+      "task_id": "PX0-05",
+      "status": "CLOSED",
+      "accepted_code_revision": "1e21856316ea93de3a1782f5cbab3d0291d81ded",
+      "accepted_evidence_head": "b855df91de34ef66ec876885c2c665ca9f820af7",
+      "p34_closure_ref": "9d771820f25b98b6922663eed53f58abc0088a8c"
+    }
+  ],
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "stage": "P32",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run identity/package/binding and ImplementationDesignPreflight, update Windows/Web structural oracles and observe the required RED, then complete both Windows and Web host convergence, temporary toolbar RuntimeFacade routing, focused regressions, fresh Windows native build, Web physical-target build, scope audit and durable materialization."
+  }
+}
