@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P34_GATE_REVIEW",
+  "governing_package": {
+    "package_id": "PX0-05-P31-v0.4",
+    "materialization_ref": "832750b2c8952a79cec377ecb0731b74e154e915"
+  },
+  "accepted_resume_cursor": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "reviewed_code_revision": "1e21856316ea93de3a1782f5cbab3d0291d81ded",
+  "reviewed_materialized_ref": "refs/heads/codex/px0-05-p33-v0-4-runtime-contract-test",
+  "reviewed_evidence_head": "b855df91de34ef66ec876885c2c665ca9f820af7",
+  "frozen_requirement_audit": {
+    "passed": [
+      "test-only ProductControlReceipt initializer repair",
+      "PX0RuntimeFacadeContract warning-as-error compile/run closure",
+      "nine focused PX0/DUI regressions",
+      "34 Windows/Web structural contracts",
+      "fresh RF01=ON / POC01=OFF native canvas_debug_ui build",
+      "fresh RF01=ON / POC01=OFF native axiom_ink_playground_windows build",
+      "cursor-relative source-scope closure",
+      "git diff --check",
+      "preservation of PX0-05 production implementation at the accepted resume cursor"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "exact reviewer-resolvable result/evidence boundary",
+      "expected RED oracle for the pre-existing runtime contract fixture defect",
+      "green PX0RuntimeFacadeContract build and run",
+      "focused CTest evidence",
+      "structural contract evidence",
+      "fresh locked native build evidence",
+      "cursor-relative authorized-scope audit"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "package_to_result_source_delta": [
+      "debug_ui/tests/runtime_contract_test.cpp"
+    ],
+    "result_to_evidence_delta_class": "PX0-05 evidence metadata only",
+    "repair": "ProductControlReceipt.control explicitly initialized to std::nullopt in RuntimeProbe test fixture",
+    "runtime_changed": false,
+    "runtime_facade_changed": false,
+    "production_panels_changed_after_cursor": false,
+    "platform_hosts_changed_after_cursor": false,
+    "warning_policy_changed": false,
+    "physical_qualification_claimed": false
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Pre-existing MSVC full-tree runtime/semantic normalizer C4702 promoted by /WX remains outside PX0-05; the frozen clang-cl native targets required by PX0-05 pass.",
+      "Manual Windows/Web visual observation was not run; it is corroborative only and physical qualification remains owned by PX0-07 / existing DUI-M1 physical evidence flow."
+    ]
+  },
+  "verdict": "PASS_WITH_FINDINGS",
+  "closure": {
+    "px0_05_closed": true,
+    "px0_closed": false,
+    "dui_m1_physical_status_changed": false,
+    "physical_qualification_changed": false,
+    "next_work_package": "PX0-06"
+  },
+  "official_claim_boundary": "This is the PX0-05 work-package P34 decision only. It is not PX0, DUI-M1, Preview, physical qualification, combined G4, or G5 authorization."
+}
