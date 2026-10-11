@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "artifacts": [],
+  "review_boundary": "Independent P34 resolves the exact pushed PX0-05 result, the repo-local package, focused Workbench/Router evidence, inherited PX0/DUI regressions, Windows/Web structural control-state contracts, native common-ui/Windows build evidence, and exact authorized diff.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    "reviewer-resolvable exact result revision/ref",
+    "PX0Workbench",
+    "PX0ControlRouter",
+    "PX0PanelRegistry",
+    "DUI20DebugUiContracts",
+    "PX0DebugSnapshot",
+    "PX0RuntimeFacadeContract",
+    "DUIM1PanelModel",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "Windows/Web structural contract set",
+    "native canvas_debug_ui + Windows application build",
+    "authorized-scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "optional Web build",
+    "manual Windows/Web visual confirmation/screenshots",
+    "clean git status"
+  ],
+  "known_non_blocking_environment_note": "The pre-existing runtime/semantic/src/normalizer.cpp MSVC C4702 promoted by /WX remains outside PX0-05. Do not modify unrelated warning policy or semantic source to satisfy a full-tree MSVC build when the locked native/clang-cl common UI and Windows app targets pass.",
+  "structural_runner_note": "If pytest is unavailable and the three structural files remain plain Python test_* functions without pytest fixtures/decorators/parametrization, direct Python invocation is an acceptable equivalent oracle; record the runner precisely.",
+  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-05/PX0/DUI-M1/Preview/physical/Gate PASS.",
+  "materialization_requirement": "The exact implementation result must be pushed to refs/heads/codex/px0-05-existing-capability-migration or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW."
+}
