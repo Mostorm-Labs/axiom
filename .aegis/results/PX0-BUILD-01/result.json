@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-BUILD-01",
+  "stage": "P32",
+  "status": "BLOCKED_ENVIRONMENT",
+  "return_surface": "CONTROL_REVIEW",
+  "continue_execution": false,
+  "package_ref": "repo:.aegis/packages/PX0-BUILD-01/package.json@beaccca42b3587b19daf981b93587fd6322f2d26",
+  "result_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+  "result_revision_kind": "exact unchanged source revision tested; no repair produced",
+  "execution_ref": "codex/px0-build-01-render-scene-include",
+  "materialization": {
+    "ref": "refs/heads/codex/px0-build-01-render-scene-include",
+    "kind": "reviewer-accessible evidence branch",
+    "source_result_revision": "beaccca42b3587b19daf981b93587fd6322f2d26"
+  },
+  "production_changes": [],
+  "checks": [
+    {
+      "id": "PX0-BUILD-01-T1-clean-red",
+      "status": "EXPECTED_RED_NOT_REPRODUCED",
+      "configure_exit_code": 0,
+      "render_build_exit_code": 0,
+      "source_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+      "all_20_render_compile_commands_have_scene_and_text_includes": true
+    },
+    {
+      "id": "PX0-BUILD-01-T2-render-build",
+      "status": "NOT_APPLICABLE_NO_AUTHORIZED_REPAIR",
+      "unmodified_render_build": "PASS",
+      "library_local_path": "C:\\Users\\Chado\\.codex\\worktrees\\px0-build-01-render-scene-include\\out\\px0-build-01-native\\runtime\\render\\canvas_runtime_render.lib",
+      "library_sha256": "d77e29134a31e0323daad1b966eedc7a2237db8215bbfaa1e34c1c8f6e2672f2"
+    },
+    {
+      "id": "PX0-BUILD-01-T3-windows-build",
+      "status": "NOT_RUN_TERMINAL_NON_REPRODUCTION_RULE",
+      "reason": "Package context decision rule 3 stops after scene_types.hpp resolves; no Windows link or physical PASS is claimed."
+    },
+    {
+      "id": "PX0-BUILD-01-T4-scope",
+      "status": "PASS",
+      "changed_paths": [
+        ".aegis/results/PX0-BUILD-01/**"
+      ],
+      "production_source_diff": [],
+      "git_diff_check": "PASS, confirmed before commit"
+    }
+  ],
+  "evidence_refs": [
+    ".aegis/results/PX0-BUILD-01/blocker.json",
+    ".aegis/results/PX0-BUILD-01/build-render-clean.log",
+    ".aegis/results/PX0-BUILD-01/configuration-comparison.json",
+    ".aegis/results/PX0-BUILD-01/configure-clean.log",
+    ".aegis/results/PX0-BUILD-01/configure-command.json",
+    ".aegis/results/PX0-BUILD-01/configure-command.txt",
+    ".aegis/results/PX0-BUILD-01/evidence-manifest.json",
+    ".aegis/results/PX0-BUILD-01/implementation-design-preflight.json",
+    ".aegis/results/PX0-BUILD-01/preflight.json",
+    ".aegis/results/PX0-BUILD-01/render-command.txt",
+    ".aegis/results/PX0-BUILD-01/render-compile-commands.json",
+    ".aegis/results/PX0-BUILD-01/result.json",
+    ".aegis/results/PX0-BUILD-01/scope-audit.json",
+    ".aegis/results/PX0-BUILD-01/transcript-provenance.json"
+  ],
+  "official_gate_pass": false,
+  "px0_05_worktree_preserved": true
+}

@@ -1,0 +1,77 @@
+{
+  "task_id": "PX0-BUILD-01",
+  "repository": "github:Mostorm-Labs/axiom",
+  "package_ref": "repo:.aegis/packages/PX0-BUILD-01/package.json@beaccca42b3587b19daf981b93587fd6322f2d26",
+  "package_materialization_ref": "beaccca42b3587b19daf981b93587fd6322f2d26",
+  "starting_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+  "task_anchor": {
+    "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+    "relation": "ancestor"
+  },
+  "classification": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "hash_byte_convention": "SHA-256 of raw Git blob bytes",
+  "bindings": {
+    "authority_lock_ref": {
+      "path": ".aegis/packages/PX0-BUILD-01/authority.lock.json",
+      "expected": "e6371751f11fc78c7ca3f3a55591968338fea344300aa0e445d51a8f1e16d2ed",
+      "actual": "e6371751f11fc78c7ca3f3a55591968338fea344300aa0e445d51a8f1e16d2ed",
+      "matches": true
+    },
+    "verification_lock_ref": {
+      "path": ".aegis/packages/PX0-BUILD-01/verification.lock.json",
+      "expected": "5f5581e7ada3c39e08f257809068a45cdc4a5773886c996717e1eb3594f0abb8",
+      "actual": "5f5581e7ada3c39e08f257809068a45cdc4a5773886c996717e1eb3594f0abb8",
+      "matches": true
+    },
+    "execution_contract_ref": {
+      "path": ".aegis/packages/PX0-BUILD-01/execution-contract.json",
+      "expected": "73bfb5d0083cbbe430d9f7b121ef883aa8c182de3eecb8b9d800800ff10186a0",
+      "actual": "73bfb5d0083cbbe430d9f7b121ef883aa8c182de3eecb8b9d800800ff10186a0",
+      "matches": true
+    },
+    "implementation_context_ref": {
+      "path": ".aegis/packages/PX0-BUILD-01/implementation-context.md",
+      "expected": "e4c26b2c755acdeac52c1ae7807113db97979c5eb995672f8df577c179b7b496",
+      "actual": "e4c26b2c755acdeac52c1ae7807113db97979c5eb995672f8df577c179b7b496",
+      "matches": true
+    },
+    "evidence_contract_ref": {
+      "path": ".aegis/packages/PX0-BUILD-01/evidence-contract.json",
+      "expected": "66b75186c5a3efaa30928f8de125808a1e1f71aad2f1431ddf757c1f6ea83e6b",
+      "actual": "66b75186c5a3efaa30928f8de125808a1e1f71aad2f1431ddf757c1f6ea83e6b",
+      "matches": true
+    }
+  },
+  "sources": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "expected": "git-blob-sha1:cbe798885b54b75c239fac1f06ddb89c75741bf6",
+      "actual": "git-blob-sha1:cbe798885b54b75c239fac1f06ddb89c75741bf6",
+      "materialization_blob": "git-blob-sha1:cbe798885b54b75c239fac1f06ddb89c75741bf6",
+      "matches": true
+    },
+    {
+      "path": "runtime/scene/CMakeLists.txt",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "expected": "git-blob-sha1:7e4bf59a0d693eaca40c0b25f6f415bf0c733dca",
+      "actual": "git-blob-sha1:7e4bf59a0d693eaca40c0b25f6f415bf0c733dca",
+      "materialization_blob": "git-blob-sha1:7e4bf59a0d693eaca40c0b25f6f415bf0c733dca",
+      "matches": true
+    },
+    {
+      "path": "runtime/render/include/canvas/render/reference_draw_list.hpp",
+      "revision": "5aa2afa4442d0254f2412b7b625173f36b57354f",
+      "expected": "git-blob-sha1:124b9c2d4411c8b1433c010b6b20fe28e4906891",
+      "actual": "git-blob-sha1:124b9c2d4411c8b1433c010b6b20fe28e4906891",
+      "materialization_blob": "git-blob-sha1:124b9c2d4411c8b1433c010b6b20fe28e4906891",
+      "matches": true
+    }
+  ],
+  "PackageBindingPreflight": "PASS",
+  "EvidenceContractPreflight": "PASS",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

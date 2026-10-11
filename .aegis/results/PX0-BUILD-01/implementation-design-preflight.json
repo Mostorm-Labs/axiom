@@ -1,0 +1,28 @@
+{
+  "task_id": "PX0-BUILD-01",
+  "source_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+  "configure_command_ref": "configure-command.json",
+  "build_command_ref": "render-command.txt",
+  "generator": "Ninja",
+  "compiler": "locked clang-cl 22.1.8",
+  "skia": "locked windows-x64-d3d12 release SDK",
+  "current_target_relation": "canvas_runtime_render PUBLIC links canvas_runtime_scene; scene PUBLIC exposes runtime/scene/include and PUBLIC links canvas_runtime_text",
+  "scene_creation_condition": "CMakeLists.txt:123-126 creates runtime/text and runtime/scene only when CANVAS_BUILD_RF01=ON",
+  "observed_failing_translation_unit": null,
+  "observed_failing_include_chain": null,
+  "reported_previous_chain": [
+    "runtime/render/src/render_backend.cpp",
+    "runtime/render/include/canvas/render/render_backend.hpp",
+    "runtime/render/include/canvas/render/frame_plan.hpp",
+    "runtime/render/include/canvas/render/reference_draw_list.hpp",
+    "canvas/scene/scene_types.hpp"
+  ],
+  "compile_commands_ref": "render-compile-commands.json",
+  "configuration_comparison_ref": "configuration-comparison.json",
+  "minimal_repair": null,
+  "decision": "Clean RF01=ON render build succeeds; repository source mutation not authorized under frozen non-reproduction rule.",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

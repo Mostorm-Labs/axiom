@@ -1,0 +1,23 @@
+{
+  "task_id": "PX0-BUILD-01",
+  "stage": "P32",
+  "status": "BLOCKED_ENVIRONMENT",
+  "blocker_class": "ENVIRONMENT_BLOCKER",
+  "continue_execution": false,
+  "reason": "Frozen clean RED precondition did not reproduce: canvas_runtime_render built successfully without any production mutation in the locked PX0-04 native configuration.",
+  "diagnosis": "Prior PX0-05 cache had CANVAS_BUILD_RF01=OFF, so the root CMake did not create scene/text targets. With RF01=ON as used in PX0-04, declared PUBLIC usage requirements propagate scene/text include directories normally.",
+  "authority_rule_refs": [
+    ".aegis/packages/PX0-BUILD-01/verification.lock.json#PX0-BUILD-01-V1-clean-reproduction",
+    ".aegis/packages/PX0-BUILD-01/execution-contract.json#execution_closure_contract.oracle_precondition",
+    ".aegis/packages/PX0-BUILD-01/implementation-context.md#Decision-rule-3"
+  ],
+  "evidence_refs": [
+    "configure-clean.log",
+    "build-render-clean.log",
+    "render-compile-commands.json",
+    "configuration-comparison.json"
+  ],
+  "source_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+  "production_mutation": false,
+  "next_control_action": "Accept non-reproduction facts; remove the speculative include-boundary repair prerequisite for PX0-05 and require its native configure to include CANVAS_BUILD_RF01=ON. Resolve PX0-05 package/oracle reconciliation separately."
+}
