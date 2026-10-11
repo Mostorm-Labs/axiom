@@ -1,0 +1,231 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-04",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create workspace.hpp with exactly six WorkspaceId values in Dashboard, Control, Inspect, Runtime, Performance, Scenarios order and stable labels.",
+        "Create panel.hpp with the approved PanelSlot values, valid workspace/slot mapping helpers, DebugPanelContext and PanelContribution contract.",
+        "Create panel_registry.hpp/panel_registry.cpp implementing explicit bounded-by-registration PanelRegistry storage, validation, deterministic ordering and per-workspace span retrieval.",
+        "Create ui_session_state.hpp with selected workspace defaulting to Dashboard, activity auto-scroll preference, and a frame-local control-submission marker used only to preserve same-dispatch presentation refresh.",
+        "Create workbench.hpp/workbench.cpp. DebugWorkbench owns one non-docking header/sidebar/content/footer shell, renders exactly six workspace navigation items, renders registered contributions for the selected workspace, shows an explicit empty state for workspaces with no contributions, and shows the latest bounded Activity entry in the footer.",
+        "Create builtin_panels.hpp declaring explicit built-in registration. In PX0-04 register one transitional legacy compatibility contribution under Control/Tools so the existing controls remain reachable without pretending they are the final PX0-05 panel layout.",
+        "Refactor the existing buildImGuiPanels compatibility entrypoint to render the new Workbench shell. It may rebuild the small explicit registry per frame and persist the selected workspace through the active ImGui context storage; it must not use a process-global/static registry/session singleton. Keep the function source-compatible for current Windows/Web callers until PX0-06.",
+        "Move the current legacy panel body under the transitional contribution, remove its top-level ImGui window ownership, preserve Selection, Undo/Redo, Brush/Eraser, Pan, Surface and current diagnostic readouts, and mark frame-local control submission after router intents so existing same-dispatch redraw behavior remains.",
+        "Move ImGuiSkiaRenderer declaration/implementation unchanged into imgui_skia_renderer.hpp/imgui_skia_renderer.cpp. Preserve A8 atlas/normalized UV/white paint/kModulate behavior.",
+        "Replace controller.hpp/controller.cpp with the approved DebugControllerContext/DebugController orchestration boundary. DebugController owns DebugSnapshotAssembler, DebugActivityLog, DebugControlRouter, PanelRegistry, DebugUiSessionState, DebugWorkbench and latest DebugSnapshot. buildImGuiFrame follows the frozen single-capture order and returns whether panel intents requested a presentation refresh.",
+        "Delete panels.hpp and remove DebugPanel/PanelState/DebugController::panels taxonomy. Reconcile panel_model.hpp/panel_model.cpp so DebugPanelModel cannot remain a parallel taxonomy: remove describe()/old enum mapping; retain only canSubmitProductControl temporarily if the DUI-M1 regression target needs it.",
+        "Add panel_registry_test.cpp and workbench_state_test.cpp and wire PX0PanelRegistry/PX0Workbench CTest targets.",
+        "Update debug_ui_test.cpp, dui_m1_panel_model_test.cpp and CMake only as mechanically required by the intentional taxonomy/renderer/controller change.",
+        "Update windows_imgui_skia_debug_ui_contract_test.py so renderer-path assertions point to imgui_skia_renderer files and shell structural assertions prove common Workbench ownership. Do not change Windows/Web production hosts in PX0-04."
+      ],
+      "authorized_mutation_scope": [
+        "debug_ui/include/canvas/debug_ui/workspace.hpp",
+        "debug_ui/include/canvas/debug_ui/panel.hpp",
+        "debug_ui/include/canvas/debug_ui/panel_registry.hpp",
+        "debug_ui/src/panel_registry.cpp",
+        "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+        "debug_ui/include/canvas/debug_ui/workbench.hpp",
+        "debug_ui/src/workbench.cpp",
+        "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
+        "debug_ui/include/canvas/debug_ui/imgui_skia_renderer.hpp",
+        "debug_ui/src/imgui_skia_renderer.cpp",
+        "debug_ui/include/canvas/debug_ui/controller.hpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/include/canvas/debug_ui/panels.hpp",
+        "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+        "debug_ui/src/panel_model.cpp",
+        "debug_ui/tests/panel_registry_test.cpp",
+        "debug_ui/tests/workbench_state_test.cpp",
+        "debug_ui/tests/debug_ui_test.cpp",
+        "debug_ui/tests/dui_m1_panel_model_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py"
+      ],
+      "preserve_unchanged": [
+        "runtime/foundation/**",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp",
+        "debug_ui/src/snapshot_assembler.cpp",
+        "debug_ui/include/canvas/debug_ui/activity.hpp",
+        "debug_ui/include/canvas/debug_ui/activity_log.hpp",
+        "debug_ui/src/activity_log.cpp",
+        "debug_ui/include/canvas/debug_ui/control_router.hpp",
+        "debug_ui/src/control_router.cpp",
+        "debug_ui/include/canvas/debug_ui/input_capture.hpp",
+        "debug_ui/src/input_capture.cpp",
+        "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+        "debug_ui/src/windows_host.cpp",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Stable Runtime C ABI or Runtime semantic contracts.",
+        "RuntimeFacade/Diagnostics owner split or PX0-03 router/activity semantics.",
+        "Windows/Web host composition-root thinning or DebugController host ownership migration.",
+        "Final Dashboard/Control/Inspect/Runtime/Performance panel migration under debug_ui/src/panels/.",
+        "Scenario runner activation or sanctioned fixture invention.",
+        "New Shape/RichText/Connector/Snap/Image product/debug controls.",
+        "ImGui docking or dynamic plugin/reflection/static-global registration.",
+        "Preview repair or DUI-M1 physical evidence mutation.",
+        "G5 work.",
+        "Unrelated MSVC warning-policy cleanup."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current common buildImGuiPanels top-level fixed-window flow and current host call sites",
+        "target WorkspaceId/PanelSlot/PanelRegistry ownership and valid slot matrix",
+        "target compatibility flow preserving current controls under one transitional Control/Tools contribution",
+        "DebugUiSessionState persistence for the temporary common host entrypoint without global/static session ownership",
+        "DebugController owner graph and exact one-capture frame sequence",
+        "renderer move with exact Skia behavior preservation",
+        "old panels.hpp/DebugPanel/DebugPanelModel reconciliation",
+        "mapping from each PX0-04 frozen obligation to implementation and tests",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "PX0PanelRegistry/PX0Workbench targets fail against the starting revision because WorkspaceId, PanelSlot, PanelRegistry, DebugUiSessionState and DebugWorkbench do not yet exist and the old PanelCapability/DebugPanel taxonomy plus in-controller renderer are still present.",
+      "observation_seam": "debug_ui/tests/panel_registry_test.cpp and debug_ui/tests/workbench_state_test.cpp"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-04-T1-red-registry-workbench",
+          "command_or_oracle": "Before production mutation, add the focused panel_registry_test.cpp/workbench_state_test.cpp targets and build them.",
+          "expected_result": "RED specifically on missing PX0-04 workspace/registry/session/workbench contracts.",
+          "blocking_reason": "Confirms the new extension/shell boundary is observed before implementation."
+        },
+        {
+          "id": "PX0-04-T2-panel-registry",
+          "command_or_oracle": "Build and run PX0PanelRegistry.",
+          "expected_result": "PASS for six workspaces, stable slot validation, synthetic Control/Feature + Inspect/Object registration, invalid-pair rejection, null-render rejection, null-visible handling and deterministic ordering.",
+          "blocking_reason": "Primary proof for Task 9."
+        },
+        {
+          "id": "PX0-04-T3-workbench",
+          "command_or_oracle": "Build and run PX0Workbench.",
+          "expected_result": "PASS for UI-local workspace selection, header/sidebar/content/footer shell state, empty-workspace state, controller single-capture orchestration and no owner mutations from navigation.",
+          "blocking_reason": "Primary proof for Task 10 shell/controller boundary."
+        },
+        {
+          "id": "PX0-04-T4-existing-debug-ui-regressions",
+          "command_or_oracle": "Run DUI20DebugUiContracts, PX0ControlRouter, PX0DebugSnapshot, PX0RuntimeFacadeContract and DUIM1PanelModel if that compatibility target remains.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects accepted PX0-01/02/03 behavior while the shell/taxonomy changes."
+        },
+        {
+          "id": "PX0-04-T5-product-regressions",
+          "command_or_oracle": "Run DUIM1RuntimeFacade and DUIM1ViewControls.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects accepted product/view control paths."
+        },
+        {
+          "id": "PX0-04-T6-windows-web-structural",
+          "command_or_oracle": "Run apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py, windows_debug_ui_selection_contract_test.py and web_imgui_debug_ui_contract_test.py using pytest when available or direct plain-Python invocation when the files remain pytest-runtime-independent.",
+          "expected_result": "PASS with moved renderer, common Workbench shell, current host call sites preserved, input capture preserved and no host convergence leakage.",
+          "blocking_reason": "Proves current platform hosts still consume the common Debug UI without pulling PX0-06 forward."
+        },
+        {
+          "id": "PX0-04-T7-native-build",
+          "command_or_oracle": "Build canvas_debug_ui and the normal Windows application target using the repository's locked native environment, without changing warning policy.",
+          "expected_result": "PASS, or a pre-existing environment-only diagnostic explicitly classified without source workaround when the focused required targets and structural evidence remain valid.",
+          "blocking_reason": "The renderer physically moved between translation units and must link in the native target."
+        },
+        {
+          "id": "PX0-04-T8-taxonomy-tree",
+          "command_or_oracle": "Inspect exact tree/source: panels.hpp absent; no DebugPanel/PanelState taxonomy in controller.hpp; PanelCapability absent from common Debug UI core; panel_model, if retained, has no describe()/parallel taxonomy; no debug_ui/src/panels final migration exists.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Closes the old/new navigation model boundary without entering PX0-05."
+        },
+        {
+          "id": "PX0-04-T9-scope-and-diff",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Only authorized mutation-scope paths changed and diff check exits 0.",
+          "blocking_reason": "Prevents host convergence/product-feature/Preview work from leaking into PX0-04."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-04-H1-web-build",
+          "oracle": "If the locked Emscripten environment is available, build axiom_ink_playground_web and render the common shell.",
+          "classification": "corroborative"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on codex/px0-04-workbench-shell-registry",
+        "reviewer-resolvable materialized_ref for that exact result",
+        "rerunnable PX0PanelRegistry and PX0Workbench evidence",
+        "rerunnable PX0/DUI regression and Windows/Web structural evidence",
+        "native renderer-link build evidence or explicit pre-existing environment-only classification",
+        "exact authorized-scope diff"
+      ],
+      "corroborative": [
+        "optional Web build",
+        "manual screenshot/visual confirmation of six-workspace shell",
+        "clean git status"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "WorkspaceId exposes exactly six approved workspaces and PanelSlot exposes the approved stable core/feature slots.",
+        "PanelRegistry validates workspace/slot pairs, explicitly registers contributions and returns deterministic per-workspace ordering.",
+        "DebugPanelContext contains only snapshot/router/UI-session references and no raw Runtime/host/internal owner pointers.",
+        "DebugUiSessionState navigation is UI-local.",
+        "The common buildImGuiPanels compatibility entrypoint visibly renders the new six-workspace Workbench shell while keeping current controls reachable through one transitional legacy contribution.",
+        "ImGuiSkiaRenderer is moved intact out of controller.",
+        "DebugController implements the approved common orchestration ownership and one-capture frame order.",
+        "The old PanelCapability/DebugPanel top-level taxonomy is retired without creating a replacement parallel taxonomy.",
+        "All frozen focused tests/regressions/structural contracts pass or an allowed pre-existing environment-only native-build diagnostic is precisely classified.",
+        "No PX0-05 final panel migration, PX0-06 host convergence, successor product features, Preview repair or physical/Gate claim is introduced.",
+        "The exact result is pushed/materialized for independent P34 Control Review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
