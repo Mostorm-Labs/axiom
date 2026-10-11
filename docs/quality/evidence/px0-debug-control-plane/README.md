@@ -3,7 +3,7 @@
 - Package: PX0-07-P31-v0.1
 - Task anchor: 7e3772d747cf3f7e158fb0917e5169a56065a08b
 - Qualification subject revision: c4abfc26e8b530bf105906a2a0a50451c1faf6df
-- Evidence head: this descendant commit (to be recorded after commit)
+- Evidence head: `refs/heads/codex/px0-07-closure-evidence` (evidence-only descendant)
 - Repository: github:Mostorm-Labs/axiom
 
 ## Automated qualification
@@ -75,4 +75,5 @@ Web: python -m http.server 8000 --directory out/g4-5-web-debug-ui-physical/apps/
 ## Scope and claim boundary
 
 This evidence index contains no production changes and does not issue PX0, P34, DUI-M1, physical, Gate, or G5 PASS. Android and iOS are outside the PX0 blocking physical scope.
+
 
