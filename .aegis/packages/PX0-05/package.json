@@ -1,8 +1,8 @@
 {
   "schema_version": "0.1",
-  "package_id": "PX0-05-P31-v0.1",
+  "package_id": "PX0-05-P31-v0.2",
   "task_id": "PX0-05",
-  "status": "CURRENT_EXECUTABLE",
+  "status": "BLOCKED_DEPENDENCY",
   "purpose": "PX0 Existing Capability Migration: replace the transitional legacy contribution with explicit Dashboard/Control/Inspect/Runtime/Performance/Scenarios built-ins while preserving Runtime/control ownership and unsupported boundaries",
   "repository": {
     "provider": "github",
@@ -24,19 +24,19 @@
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "dc6ba0740e017c605fca991254d6b61ce7b7fb0d72d824222a9d5e92b0ecda1e"
+    "sha256": "c24e85cc2e47c789008943c4b9323f898ca03b7ddaa606c0b3826473a794daf9"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "e430e78bacbfcfa0d830da0524e48c7f26a9377a2d55c84e860933fb0c9f0017"
+    "sha256": "07eefefc90b830870909235fbe77e484e1c815bbd771165ed19d34221af91fed"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "3bf4c9f91f2f788da664d9a270fc87d67a0390ff78fad45beaf8efb264e42917"
+    "sha256": "9faaff831d024a02761a465111dafd709a02ddd0002e31f862d5cad49d8a57cf"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "392cd4db76bc9ff1344923972f6e96c39b6034dbcfc02292d778c60cad983009"
+    "sha256": "d582c74f97defc1530306752dad5efde742b5faa7ed7567f7bf8fd6d1ca71823"
   },
   "materialization": {
     "same_repository": true,
@@ -44,9 +44,17 @@
     "base_revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806"
   },
   "handoff": {
-    "preferred_executor": "codex",
-    "next_surface": "CODE_EXECUTION",
+    "preferred_executor": null,
+    "next_surface": "CONTROL_REASONING",
     "official_gate_pass_forbidden_during_p32": true,
-    "next_action": "Run repository/package/anchor/binding preflights, perform the required ImplementationDesignPreflight, observe the PX0-05 RED capability-migration oracles, then execute the full existing-capability migration closure contract without entering PX0-06/PX0-07."
-  }
+    "next_action": "Execute and independently review PX0-BUILD-01. Then materialize PX0-05 P31 v0.3 binding the exact accepted build-repair result before resuming the local implementation through P33 reconciliation."
+  },
+  "dependencies": [
+    {
+      "task_id": "PX0-BUILD-01",
+      "status": "UNRESOLVED_EXACT_RESULT",
+      "required_before_execution": true,
+      "bind_in_next_current_package": true
+    }
+  ]
 }
