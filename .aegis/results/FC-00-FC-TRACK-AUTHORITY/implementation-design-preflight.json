@@ -1,0 +1,23 @@
+{
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "old_root": "35f42b54dd29b6844953de83ac54dc1321479b3c",
+  "new_root": "same v0.6 manifests plus expected-authority.append",
+  "publish": "append exactly one authority object to .aegis/authorities.json; official CLI owns state.json",
+  "abort": [
+    "source/package/tool identity mismatch",
+    "baseline validate/check failure",
+    "expected-authority mismatch or duplicate Current",
+    "transition-check/validate/recompute/check failure",
+    "history or scope preservation failure"
+  ],
+  "coverage": {
+    "FA01": "source-identity.json",
+    "FA02": "authority-append-audit.json",
+    "FA03": "history-preservation.json",
+    "FA04": "official-v06-transition.json and state-qualification.json",
+    "FA05": "scope-identity.json"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false
+}

@@ -1,0 +1,51 @@
+{
+  "baseline_check": {
+    "command": [
+      "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-m",
+      "tools.aegis_state.cli",
+      "check",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+    ],
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "STATE_OK\n"
+  },
+  "baseline_validate": {
+    "command": [
+      "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-m",
+      "tools.aegis_state.cli",
+      "validate",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+    ],
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "VALID\n"
+  },
+  "current_validate": {
+    "command": [
+      "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-m",
+      "tools.aegis_state.cli",
+      "validate",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+    ],
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "VALID\n"
+  },
+  "transition_check": {
+    "command": [
+      "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-m",
+      "tools.aegis_state.cli",
+      "transition-check",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\fc00-fa-old-fbo7clri",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+    ],
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "TRANSITION_OK\n"
+  }
+}\n

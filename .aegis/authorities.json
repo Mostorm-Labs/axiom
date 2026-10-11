@@ -167,6 +167,44 @@
       "status": "Current",
       "supersedes": "g4-capability-authority",
       "version": "v0.3"
+    },
+    {
+      "content": {
+        "fc01_entry": "FC-00 Closure and exact FC-01 feature definition/verification/P31 required before any FC-01 P32",
+        "g5_entry": "original applicable Gates + FC-12 DEV + FC-13 PHYS accepted before G5",
+        "gated_execution": "FC-01..FC-12 each require own frozen P20/P31 and independently reviewed FC-N-DEV; FC-01A follows FC-01",
+        "nonclaims": [
+          "No original PX0/G4.6/G4.7 P34 or physical PASS",
+          "No release-grade physical Gate from FC-N DEV",
+          "No FC-01 P31/P32 or G5 authorization from this Authority record",
+          "G4 v0.3 dependency is functional development lineage only"
+        ],
+        "objective": "Complete FC-01..FC-12 product features before G5, retaining original multi-platform physical Gate debt until FC-13",
+        "original_px0_subject": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+        "owner": "FC Feature Completion Track",
+        "physical_obligations": "FC-13 has exact original PX0-07, G4.6-C, G4.7 physical profiles and final FC-12 integration; every original Gate remains separately reviewed",
+        "source_basis": [
+          "notion://3f64c57a590c815da4f1df83aa0c1255",
+          "notion://3f64c57a590c81faa2c8ea0097aad6c5"
+        ],
+        "stage_order": [
+          "FC-00",
+          "FC-01",
+          "FC-01A",
+          "FC-02..FC-12",
+          "FC-13",
+          "G5-v0.3"
+        ]
+      },
+      "depends_on": [
+        "g4-capability-authority-v0.3"
+      ],
+      "id": "fc-feature-completion-execution-v0.1",
+      "kind": "execution-policy",
+      "ref": "notion://3f64c57a590c815da4f1df83aa0c1255",
+      "scope": "execution:FC/feature-completion",
+      "status": "Current",
+      "version": "v0.1"
     }
   ],
   "schema_version": "0.6"
