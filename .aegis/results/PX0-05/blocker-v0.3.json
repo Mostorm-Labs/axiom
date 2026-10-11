@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "blocker_class": "FROZEN_VERIFICATION_FAILURE",
+  "package_ref": "repo:.aegis/packages/PX0-05/package.json@361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "task_anchor": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+  "observed_start_revision": "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "failing_obligation": "PX0-05-T4/PX0RuntimeFacadeContract",
+  "failure": "Fresh RF01=ON/POC01=OFF clang-cl build of debug_ui/tests/runtime_contract_test.cpp fails at line 21 with -Wmissing-field-initializers promoted to error: ProductControlReceipt return omits control field.",
+  "baseline_check": "git show 4a35e8fc041e90040d05fe8e8d55766fa8014806:debug_ui/tests/runtime_contract_test.cpp contains the same initializer; no PX0-05 diff touches this file or runtime/foundation.",
+  "authorized_response": "Do not modify runtime_contract_test.cpp, RuntimeFacade, Runtime/Render/Scene, or warning policy under PX0-05. Requires separate authorized test-boundary repair or corrected package scope.",
+  "evidence": {
+    "structural": "structural-contracts-v0.3.log",
+    "focused_ctest": "ctest-focused-v0.3.log",
+    "native_build": "build-native-v0.3.log",
+    "test_build": "build-tests-v0.3.log",
+    "test_build_remaining": "build-tests-remaining-v0.3.log",
+    "configure": "configure-native-v0.3.log"
+  },
+  "root_cause": "PREEXISTING_TEST_ARTIFACT_COMPILATION_DEFECT",
+  "continue_execution": false,
+  "supersedes_historical_local_blocker": "blocker.json from v0.1 is retained locally for history only; superseded by this v0.3 result"
+}

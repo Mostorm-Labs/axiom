@@ -225,17 +225,49 @@ def test_common_workbench_owns_shell_and_workspace_navigation():
     assert "DockSpace" not in source and "DockBuilder" not in source
 
 
-def test_compatibility_entrypoint_renders_workbench_and_preserves_one_legacy_contribution():
+def test_compatibility_entrypoint_renders_final_builtin_workbench_without_legacy_body():
     source = CONTROLLER_IMPL.read_text(encoding="utf-8")
     assert "workbench.render" in source
-    assert "WorkspaceId::kControl, PanelSlot::kTools" in source
-    assert "Transitional legacy controls" in source
-    assert "context.ui.markControlSubmitted()" in source
+    assert "registerBuiltinPanels(registry)" in source
+    assert "Transitional legacy controls" not in source
+    assert "##debug_tabs" not in source
+    assert "buildLegacyCompatibilityPanel" not in source
+    assert "context.ui.markControlSubmitted()" not in source
     assert "StateStorage" in source
-    assert "context.snapshot.product.value.tool.toolId" in source
     assert "ImGui::Begin(\"Axiom Debug UI\"" not in source
     assert "ImGuiSkiaRenderer::render" not in source
     assert "static PanelRegistry" not in source and "static DebugUiSessionState" not in source
+    for relative in (
+        "debug_ui/src/builtin_panels.cpp",
+        "debug_ui/src/panels/dashboard.cpp",
+        "debug_ui/src/panels/control.cpp",
+        "debug_ui/src/panels/features/ink.cpp",
+        "debug_ui/src/panels/inspect.cpp",
+        "debug_ui/src/panels/runtime.cpp",
+        "debug_ui/src/panels/performance.cpp",
+        "debug_ui/src/panels/scenarios.cpp",
+    ):
+        assert (ROOT / relative).exists(), relative
+
+
+def test_final_panels_keep_unsupported_boundaries_and_snapshot_readback():
+    source = "\n".join(
+        (ROOT / relative).read_text(encoding="utf-8")
+        for relative in (
+            "debug_ui/src/panels/dashboard.cpp",
+            "debug_ui/src/panels/control.cpp",
+            "debug_ui/src/panels/features/ink.cpp",
+            "debug_ui/src/panels/inspect.cpp",
+            "debug_ui/src/panels/runtime.cpp",
+            "debug_ui/src/panels/performance.cpp",
+            "debug_ui/src/panels/scenarios.cpp",
+        )
+    )
+    for token in ("Unsupported", ".product.value", "DebugPanelContext"):
+        assert token in source
+    assert "Reset View" not in source and "100%" not in source
+    assert "Enable Trace" not in source and "Enable GPU Timing" not in source
+    assert "RuntimeFacade*" not in source and "PlatformDebugControl*" not in source
 
 
 def test_controller_single_capture_orchestration_and_retired_taxonomy():
@@ -251,4 +283,4 @@ def test_controller_single_capture_orchestration_and_retired_taxonomy():
     assert not (ROOT / "debug_ui/include/canvas/debug_ui/panels.hpp").exists()
     model = (ROOT / "debug_ui/src/panel_model.cpp").read_text(encoding="utf-8")
     assert "describe(" not in model and "PanelCapability" not in model
-    assert not (ROOT / "debug_ui/src/panels").exists()
+    assert (ROOT / "debug_ui/src/panels").is_dir()

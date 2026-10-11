@@ -1,0 +1,38 @@
+{
+  "task_id": "PX0-05",
+  "scope": "PX0-05-P31-v0.3 authorized mutation scope",
+  "status": "PASS",
+  "changed_authorized": [
+    "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+    "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+    "debug_ui/CMakeLists.txt",
+    "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp",
+    "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+    "debug_ui/src/controller.cpp",
+    "debug_ui/src/builtin_panels.cpp",
+    "debug_ui/src/panels/dashboard.cpp",
+    "debug_ui/src/panels/control.cpp",
+    "debug_ui/src/panels/inspect.cpp",
+    "debug_ui/src/panels/runtime.cpp",
+    "debug_ui/src/panels/performance.cpp",
+    "debug_ui/src/panels/scenarios.cpp",
+    "debug_ui/src/panels/features/ink.cpp",
+    "debug_ui/tests/control_router_test.cpp",
+    "debug_ui/tests/workbench_state_test.cpp"
+  ],
+  "out_of_scope": [],
+  "diff_check": "PASS",
+  "notes": "All source changes are within v0.3 scope. Untracked .aegis results are evidence only.",
+  "forbidden_preserved": [
+    "runtime/foundation/**",
+    "runtime/render/**",
+    "apps/ink_playground/platform/windows/**",
+    "apps/ink_playground/platform/web/**",
+    "debug_ui/tests/runtime_contract_test.cpp"
+  ],
+  "forbidden_touched": [],
+  "source_diff_base": "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "package_ancestry_base": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+  "evidence_byte_convention": "UTF-8 without BOM, LF; command logs trim trailing whitespace without removing diagnostics"
+}

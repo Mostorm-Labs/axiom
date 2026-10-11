@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 add_library(canvas_debug_ui STATIC
   src/snapshot.cpp src/snapshot_assembler.cpp src/activity_log.cpp src/control_router.cpp src/input_capture.cpp src/controller.cpp src/workbench.cpp src/imgui_skia_renderer.cpp src/panel_registry.cpp src/panel_model.cpp
+  src/builtin_panels.cpp src/panels/dashboard.cpp src/panels/control.cpp
+  src/panels/inspect.cpp src/panels/runtime.cpp src/panels/performance.cpp
+  src/panels/scenarios.cpp src/panels/features/ink.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp

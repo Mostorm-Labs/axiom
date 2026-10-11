@@ -408,5 +408,13 @@ int main() {
   const auto defaultReceipt = minimal.receipt(99);
   assert(defaultReceipt.requestId == 99 &&
          defaultReceipt.state == runtime::SurfaceControlState::kUnsupported);
+  canvas::debug_ui::DebugControlRouter unbound(nullptr, nullptr, nullptr, nullptr);
+  assert(!unbound.hasRuntimeOwner());
+  assert(!unbound.hasAxiomDebugOwner());
+  assert(!unbound.hasPlatformDebugOwner());
+  canvas::debug_ui::DebugControlRouter bound(&runtime, &axiom, &platform, nullptr);
+  assert(bound.hasRuntimeOwner());
+  assert(bound.hasAxiomDebugOwner());
+  assert(bound.hasPlatformDebugOwner());
   return 0;
 }

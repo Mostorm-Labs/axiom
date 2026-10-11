@@ -1,0 +1,18 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.6.3
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x64'
+[1/18] Building CXX object debug_ui\CMakeFiles\axiom_debug_ui_runtime_contract_tests.dir\tests\runtime_contract_test.cpp.obj
+FAILED: debug_ui/CMakeFiles/axiom_debug_ui_runtime_contract_tests.dir/tests/runtime_contract_test.cpp.obj
+D:\GitRepos\mostorm-labs\canvas\.deps\llvm\bin\clang-cl.exe  /nologo -TP -DAXIOM_DEBUG_UI_PROFILE=\"controller\" -DCANVAS_DEBUG_UI_HAS_SKIA=1 -IC:\Users\Chado\.codex\worktrees\px0-05-existing-capability-migration-clean\debug_ui\include -IC:\Users\Chado\.codex\worktrees\px0-05-existing-capability-migration-clean\runtime\foundation\include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /UNDEBUG -clang:-MD -clang:-MTdebug_ui\CMakeFiles\axiom_debug_ui_runtime_contract_tests.dir\tests\runtime_contract_test.cpp.obj -clang:-MFdebug_ui\CMakeFiles\axiom_debug_ui_runtime_contract_tests.dir\tests\runtime_contract_test.cpp.obj.d /Fodebug_ui\CMakeFiles\axiom_debug_ui_runtime_contract_tests.dir\tests\runtime_contract_test.cpp.obj /Fddebug_ui\CMakeFiles\axiom_debug_ui_runtime_contract_tests.dir\ -c -- C:\Users\Chado\.codex\worktrees\px0-05-existing-capability-migration-clean\debug_ui\tests\runtime_contract_test.cpp
+C:\Users\Chado\.codex\worktrees\px0-05-existing-capability-migration-clean\debug_ui\tests\runtime_contract_test.cpp(21,88): error: missing field 'control' initializer [-Werror,-Wmissing-field-initializers]
+   21 |     return {request.requestId, ProductControlState::kApplied, request.runtimeGeneration};
+      |                                                                                        ^
+1 error generated.
+[2/18] Building CXX object debug_ui\CMakeFiles\axiom_dui_m1_panel_model_tests.dir\tests\dui_m1_panel_model_test.cpp.obj
+[3/18] Building CXX object debug_ui\CMakeFiles\axiom_debug_ui_snapshot_tests.dir\tests\snapshot_assembler_test.cpp.obj
+[4/18] Building CXX object debug_ui\CMakeFiles\axiom_debug_ui_panel_registry_tests.dir\tests\panel_registry_test.cpp.obj
+[5/18] Building CXX object debug_ui\CMakeFiles\axiom_debug_ui_workbench_tests.dir\tests\workbench_state_test.cpp.obj
+[6/18] Building CXX object debug_ui\CMakeFiles\axiom_debug_ui_tests.dir\tests\debug_ui_test.cpp.obj
+ninja: build stopped: subcommand failed.

@@ -42,6 +42,10 @@ class DebugControlRouter final {
   canvas::runtime::SurfaceModeReceipt setCanonicalSurfaceMode(
       canvas::runtime::SurfaceMode mode) noexcept;
 
+  [[nodiscard]] bool hasRuntimeOwner() const noexcept { return runtime_ != nullptr; }
+  [[nodiscard]] bool hasAxiomDebugOwner() const noexcept { return axiomDebug_ != nullptr; }
+  [[nodiscard]] bool hasPlatformDebugOwner() const noexcept { return platformDebug_ != nullptr; }
+
  private:
   struct FrameContext final {
     DebugSnapshotStamp stamp{};
