@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-07",
+  "artifacts": [],
+  "review_boundary": "Independent P34 resolves the exact PX0-07 package, qualification_subject_revision, later evidence_head, native/structural closure logs, Windows/Web physical observation matrices, exact platform/build/browser identities, and authorized scope before deciding whether PX0 may close.",
+  "hosted_verification_required": true,
+  "blocking_evidence": [
+    "exact qualification_subject_revision",
+    "reviewer-resolvable evidence_head",
+    "complete native DUI/PX0 closure test evidence",
+    "four Windows/Web structural contract results",
+    "Windows application build result bound to the qualification subject",
+    "Web physical-target build result bound to the qualification subject",
+    "Windows physical observation matrix",
+    "Web physical observation matrix",
+    "README evidence index with exact subject/environment identities",
+    "generic debug command absence source/tree audit",
+    "authorized-scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "representative screenshots",
+    "clean worktree"
+  ],
+  "identity_contract": {
+    "qualification_subject_revision": "Exact commit containing Task 15 test/CMake closure and no Task 16 evidence README.",
+    "evidence_head": "Reviewer-resolvable descendant containing README/.aegis evidence only; no production or test mutation after the qualification subject.",
+    "rule": "README and result metadata point to qualification_subject_revision; they do not recursively require evidence_head to equal the subject."
+  },
+  "physical_observation_contract": {
+    "allowed_statuses": [
+      "PASS",
+      "DISABLED_BY_CONTEXT",
+      "UNSUPPORTED",
+      "FAIL",
+      "NOT_APPLICABLE"
+    ],
+    "blocking_failure_rule": "Any FAIL on an expected available behavior or required input-isolation invariant is a frozen verification failure.",
+    "unsupported_rule": "Unsupported is acceptable only when current approved owner/build genuinely does not implement the control; evidence must identify the owner/availability basis.",
+    "disabled_rule": "DisabledByContext is acceptable only when the UI accurately reflects invalid current product context and the evidence records that context."
+  },
+  "known_non_blocking_findings": [
+    "Existing unrelated MSVC runtime/semantic C4702 /WX full-tree issue remains outside PX0.",
+    "PX0-06 result metadata had evidence-revision lag; PX0-07 uses explicit qualification subject versus evidence head identities to avoid repeating it."
+  ],
+  "official_claim_boundary": "P32/P33 may return READY_FOR_CONTROL_REVIEW after all blocking evidence is materialized, but may not issue PX0/P34/DUI-M1/physical/G5 PASS. If physical observations cannot be performed, return BLOCKED_MISSING_INPUT instead of review readiness.",
+  "materialization_requirement": "Push qualification_subject_revision and final evidence_head to refs/heads/codex/px0-07-closure-evidence or equivalently reviewer-resolvable refs. P34 must be able to resolve both identities independently."
+}
