@@ -3,8 +3,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 HOST = ROOT / "debug_ui" / "src" / "windows_host.cpp"
-RENDERER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "controller.hpp"
-RENDERER_IMPL = ROOT / "debug_ui" / "src" / "controller.cpp"
+RENDERER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "imgui_skia_renderer.hpp"
+CONTROLLER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "controller.hpp"
+CONTROLLER_IMPL = ROOT / "debug_ui" / "src" / "controller.cpp"
+WORKBENCH = ROOT / "debug_ui" / "src" / "workbench.cpp"
+RENDERER_IMPL = ROOT / "debug_ui" / "src" / "imgui_skia_renderer.cpp"
 RUNTIME_FACADE = ROOT / "runtime" / "foundation" / "include" / "canvas" / "runtime" / "runtime_facade.hpp"
 SURFACE = ROOT / "runtime" / "foundation" / "include" / "canvas" / "runtime" / "surface_debug_control.hpp"
 ROUTER = ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "control_router.hpp"
@@ -98,11 +101,11 @@ def test_surface_control_is_an_owner_interface_with_target_and_expected_generati
 
 
 def test_common_controller_only_submits_to_runtime_and_platform_owner():
-    header = RENDERER.read_text(encoding="utf-8")
-    impl = RENDERER_IMPL.read_text(encoding="utf-8")
+    header = CONTROLLER.read_text(encoding="utf-8")
+    impl = CONTROLLER_IMPL.read_text(encoding="utf-8")
     router = ROUTER.read_text(encoding="utf-8")
     router_impl = ROUTER_IMPL.read_text(encoding="utf-8")
-    assert "canvas/runtime/runtime_facade.hpp" in header
+    assert "RuntimeFacade* runtime" in header
     assert "DebugControlRouter*" in header
     assert "DebugControlRouter" in router
     assert "enqueueSurfaceMode" in router_impl
@@ -207,3 +210,45 @@ def test_windows_timer_does_not_rasterize_debug_overlay_during_active_stroke():
     assert "value->activeKeys.empty()" in timer
     assert "value->resizeInProgress" in timer
     assert "debugUi->refresh();" in source
+
+
+def test_common_workbench_owns_shell_and_workspace_navigation():
+    source = WORKBENCH.read_text(encoding="utf-8")
+    for region in ("##header", "##sidebar", "##content", "##footer"):
+        assert region in source
+    assert "kWorkspaceLabels" in source
+    assert "registry.contributions(ui.workspace())" in source
+    assert "No panels registered" in source
+    assert "snapshot.activity.entries.back()" in source
+    assert "io.DisplaySize" in source or "GetIO().DisplaySize" in source
+    assert "410.0f" not in source and "560.0f" not in source
+    assert "DockSpace" not in source and "DockBuilder" not in source
+
+
+def test_compatibility_entrypoint_renders_workbench_and_preserves_one_legacy_contribution():
+    source = CONTROLLER_IMPL.read_text(encoding="utf-8")
+    assert "workbench.render" in source
+    assert "WorkspaceId::kControl, PanelSlot::kTools" in source
+    assert "Transitional legacy controls" in source
+    assert "context.ui.markControlSubmitted()" in source
+    assert "StateStorage" in source
+    assert "context.snapshot.product.value.tool.toolId" in source
+    assert "ImGui::Begin(\"Axiom Debug UI\"" not in source
+    assert "ImGuiSkiaRenderer::render" not in source
+    assert "static PanelRegistry" not in source and "static DebugUiSessionState" not in source
+
+
+def test_controller_single_capture_orchestration_and_retired_taxonomy():
+    header = CONTROLLER.read_text(encoding="utf-8")
+    source = CONTROLLER_IMPL.read_text(encoding="utf-8")
+    frame = source.split("bool DebugController::buildImGuiFrame()", 1)[1].split("bool buildImGuiPanels", 1)[0]
+    ordered = ["assembler_.capture", "router_.beginFrame", "router_.refreshReceipts",
+               "captured.activity = activity_.snapshot()", "latest_ =", "workbench_.render"]
+    offsets = [frame.index(token) for token in ordered]
+    assert offsets == sorted(offsets)
+    assert frame.count("assembler_.capture") == 1
+    assert "DebugPanel" not in header and "PanelState" not in header
+    assert not (ROOT / "debug_ui/include/canvas/debug_ui/panels.hpp").exists()
+    model = (ROOT / "debug_ui/src/panel_model.cpp").read_text(encoding="utf-8")
+    assert "describe(" not in model and "PanelCapability" not in model
+    assert not (ROOT / "debug_ui/src/panels").exists()

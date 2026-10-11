@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 add_library(canvas_debug_ui STATIC
-  src/snapshot.cpp src/snapshot_assembler.cpp src/activity_log.cpp src/control_router.cpp src/input_capture.cpp src/controller.cpp src/panel_model.cpp
+  src/snapshot.cpp src/snapshot_assembler.cpp src/activity_log.cpp src/control_router.cpp src/input_capture.cpp src/controller.cpp src/workbench.cpp src/imgui_skia_renderer.cpp src/panel_registry.cpp src/panel_model.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_draw.cpp
   ${CMAKE_SOURCE_DIR}/.deps/imgui/imgui_tables.cpp
@@ -42,6 +42,25 @@ else()
   target_compile_options(canvas_debug_ui PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 if(BUILD_TESTING)
+ add_executable(axiom_debug_ui_panel_registry_tests tests/panel_registry_test.cpp)
+ target_link_libraries(axiom_debug_ui_panel_registry_tests PRIVATE canvas_debug_ui)
+ target_compile_features(axiom_debug_ui_panel_registry_tests PRIVATE cxx_std_20)
+ if(MSVC)
+  target_compile_options(axiom_debug_ui_panel_registry_tests PRIVATE /W4 /WX /EHsc /UNDEBUG)
+ else()
+  target_compile_options(axiom_debug_ui_panel_registry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+ endif()
+ add_test(NAME PX0PanelRegistry COMMAND axiom_debug_ui_panel_registry_tests)
+ add_executable(axiom_debug_ui_workbench_tests tests/workbench_state_test.cpp)
+ target_link_libraries(axiom_debug_ui_workbench_tests PRIVATE canvas_debug_ui)
+ target_compile_features(axiom_debug_ui_workbench_tests PRIVATE cxx_std_20)
+ target_include_directories(axiom_debug_ui_workbench_tests PRIVATE ${CMAKE_SOURCE_DIR}/.deps/imgui)
+ if(MSVC)
+  target_compile_options(axiom_debug_ui_workbench_tests PRIVATE /W4 /WX /EHsc /UNDEBUG)
+ else()
+  target_compile_options(axiom_debug_ui_workbench_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+ endif()
+ add_test(NAME PX0Workbench COMMAND axiom_debug_ui_workbench_tests)
  add_executable(axiom_debug_ui_tests tests/debug_ui_test.cpp)
  target_link_libraries(axiom_debug_ui_tests PRIVATE canvas_debug_ui)
  target_compile_features(axiom_debug_ui_tests PRIVATE cxx_std_20)

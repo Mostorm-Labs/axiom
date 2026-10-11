@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-04",
+  "stage": "P32",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "execution_ref": "codex/px0-04-workbench-shell-registry",
+  "base_revision": "86c2ad6c8a18e3a34d26303903910840f6ed6e42",
+  "result_revision": null,
+  "materialized_ref": null,
+  "package_ref": "86c2ad6c8a18e3a34d26303903910840f6ed6e42",
+  "verification": {
+    "PX0-04-T1-red-registry-workbench": {
+      "result": "PASS",
+      "observation": "initial focused targets failed before production contracts were added"
+    },
+    "PX0-04-T2-panel-registry": {
+      "result": "PASS",
+      "command": "ctest --test-dir out/px0-04-native --output-on-failure -R ^PX0PanelRegistry$"
+    },
+    "PX0-04-T3-workbench": {
+      "result": "PASS",
+      "command": "ctest --test-dir out/px0-04-native --output-on-failure -R ^PX0Workbench$"
+    },
+    "PX0-04-T4-regressions": {
+      "result": "PASS",
+      "tests": [
+        "DUI20DebugUiContracts",
+        "PX0ControlRouter",
+        "PX0DebugSnapshot",
+        "PX0RuntimeFacadeContract",
+        "DUIM1PanelModel"
+      ],
+      "build": "out/px0-04-msvc"
+    },
+    "PX0-04-T5-product-regressions": {
+      "result": "PASS",
+      "tests": [
+        "DUIM1RuntimeFacade",
+        "DUIM1ViewControls"
+      ],
+      "build": "out/px0-04-native"
+    },
+    "PX0-04-T6-windows-web-structural": {
+      "result": "PASS",
+      "runner": "direct Python invocation",
+      "files": [
+        "windows_imgui_skia_debug_ui_contract_test.py",
+        "windows_debug_ui_selection_contract_test.py",
+        "web_imgui_debug_ui_contract_test.py"
+      ]
+    },
+    "PX0-04-T7-native-build": {
+      "result": "PASS",
+      "target": "axiom_ink_playground_windows",
+      "build": "out/px0-04-native",
+      "toolchain": "clang-cl + locked Skia SDK"
+    },
+    "PX0-04-T8-taxonomy-tree": {
+      "result": "PASS",
+      "panels_hpp_absent": true,
+      "old_controller_taxonomy_absent": true,
+      "final_panels_tree_absent": true
+    },
+    "PX0-04-T9-scope-and-diff": {
+      "result": "PASS",
+      "authorized_paths_only": true,
+      "git_diff_check": "PASS"
+    },
+    "rerun_2026_10_11_native": {
+      "result": "PASS",
+      "count": 9,
+      "tests": [
+        "PX0PanelRegistry",
+        "PX0Workbench",
+        "DUI20DebugUiContracts",
+        "PX0RuntimeFacadeContract",
+        "DUIM1PanelModel",
+        "PX0ControlRouter",
+        "PX0DebugSnapshot",
+        "DUIM1ViewControls",
+        "DUIM1RuntimeFacade"
+      ]
+    }
+  },
+  "scope_audit": {
+    "allowed_paths_only": true,
+    "changed_paths": [
+      "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+      "debug_ui/CMakeLists.txt",
+      "debug_ui/include/canvas/debug_ui/controller.hpp",
+      "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+      "debug_ui/include/canvas/debug_ui/panels.hpp",
+      "debug_ui/src/controller.cpp",
+      "debug_ui/src/panel_model.cpp",
+      "debug_ui/tests/debug_ui_test.cpp",
+      "debug_ui/tests/dui_m1_panel_model_test.cpp",
+      "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
+      "debug_ui/include/canvas/debug_ui/imgui_skia_renderer.hpp",
+      "debug_ui/include/canvas/debug_ui/panel.hpp",
+      "debug_ui/include/canvas/debug_ui/panel_registry.hpp",
+      "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+      "debug_ui/include/canvas/debug_ui/workbench.hpp",
+      "debug_ui/include/canvas/debug_ui/workspace.hpp",
+      "debug_ui/src/imgui_skia_renderer.cpp",
+      "debug_ui/src/panel_registry.cpp",
+      "debug_ui/src/workbench.cpp",
+      "debug_ui/tests/panel_registry_test.cpp",
+      "debug_ui/tests/workbench_state_test.cpp"
+    ],
+    "outside_authorized_scope": []
+  },
+  "environment_notes": [
+    "MSVC full-tree build was separately attempted; pre-existing runtime/semantic/src/normalizer.cpp C4702 /WX diagnostic stopped that unrelated path. Focused PX0-04 targets and clang-cl Windows application link passed.",
+    "pytest is unavailable; structural contract functions were invoked directly.",
+    "No physical validation, Preview repair, PX0-05/PX0-06 work, or official Gate PASS is claimed."
+  ],
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

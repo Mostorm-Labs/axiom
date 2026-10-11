@@ -1,0 +1,59 @@
+{
+  "PX0-04-T1-red-registry-workbench": {
+    "result": "PASS",
+    "observation": "initial focused targets failed before production contracts were added"
+  },
+  "PX0-04-T2-panel-registry": {
+    "result": "PASS",
+    "command": "ctest --test-dir out/px0-04-native --output-on-failure -R ^PX0PanelRegistry$"
+  },
+  "PX0-04-T3-workbench": {
+    "result": "PASS",
+    "command": "ctest --test-dir out/px0-04-native --output-on-failure -R ^PX0Workbench$"
+  },
+  "PX0-04-T4-regressions": {
+    "result": "PASS",
+    "tests": [
+      "DUI20DebugUiContracts",
+      "PX0ControlRouter",
+      "PX0DebugSnapshot",
+      "PX0RuntimeFacadeContract",
+      "DUIM1PanelModel"
+    ],
+    "build": "out/px0-04-msvc"
+  },
+  "PX0-04-T5-product-regressions": {
+    "result": "PASS",
+    "tests": [
+      "DUIM1RuntimeFacade",
+      "DUIM1ViewControls"
+    ],
+    "build": "out/px0-04-native"
+  },
+  "PX0-04-T6-windows-web-structural": {
+    "result": "PASS",
+    "runner": "direct Python invocation",
+    "files": [
+      "windows_imgui_skia_debug_ui_contract_test.py",
+      "windows_debug_ui_selection_contract_test.py",
+      "web_imgui_debug_ui_contract_test.py"
+    ]
+  },
+  "PX0-04-T7-native-build": {
+    "result": "PASS",
+    "target": "axiom_ink_playground_windows",
+    "build": "out/px0-04-native",
+    "toolchain": "clang-cl + locked Skia SDK"
+  },
+  "PX0-04-T8-taxonomy-tree": {
+    "result": "PASS",
+    "panels_hpp_absent": true,
+    "old_controller_taxonomy_absent": true,
+    "final_panels_tree_absent": true
+  },
+  "PX0-04-T9-scope-and-diff": {
+    "result": "PASS",
+    "authorized_paths_only": true,
+    "git_diff_check": "PASS"
+  }
+}

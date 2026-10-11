@@ -1,7 +1,7 @@
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/telemetry.hpp"
 #include "canvas/debug_ui/surface.hpp"
-#include "canvas/debug_ui/panels.hpp"
+#include "canvas/debug_ui/panel_registry.hpp"
 #include "canvas/debug_ui/surface_debug_queue.hpp"
 #include "canvas/debug_ui/debug_command_queue.hpp"
 #include "canvas/runtime/diagnostics.hpp"
@@ -45,7 +45,7 @@ int main() {
   assert(gate.route(seq) == DebugInputOwner::kDebug); assert(gate.terminal(seq)); assert(!gate.route(seq));
   RollingTelemetry telemetry(2); telemetry.push({1,1,1,0,1.0}); telemetry.push({2,1,1,1,2.0}); telemetry.push({3,1,2,1,2.5}); assert(telemetry.size()==2);
   DebugSnapshot panelSnapshot; panelSnapshot.arc.availability = DebugAvailability::kAvailable;
-  assert(panelAvailable(panelSnapshot, PanelCapability::kArcPreview));
+  assert(panelSnapshot.arc.availability == DebugAvailability::kAvailable);
   BoundedTraceSession trace(4); assert(trace.start()); assert(trace.append(4)); assert(!trace.append(1)); assert(trace.state()==TraceState::kOverflow);
   TestPlatformDebugControl surfaces;
   const auto receipt = surfaces.requestSurfaceMode({1, SurfaceRole::kCanonicalCanvas,

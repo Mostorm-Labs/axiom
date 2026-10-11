@@ -1,46 +1,16 @@
 #include "canvas/debug_ui/controller.hpp"
+#include "canvas/debug_ui/builtin_panels.hpp"
 #include "imgui.h"
-#if defined(CANVAS_DEBUG_UI_HAS_SKIA)
-#include "include/core/SkCanvas.h"
-#include "include/core/SkColor.h"
-#include "include/core/SkImage.h"
-#include "include/core/SkImageInfo.h"
-#include "include/core/SkPixmap.h"
-#include "include/core/SkMatrix.h"
-#include "include/core/SkSurface.h"
-#include "include/core/SkVertices.h"
-#include "include/effects/SkImageFilters.h"
-#include "include/core/SkSamplingOptions.h"
-#include <algorithm>
-#include <cmath>
-#include <cstddef>
-#include <cstdint>
-#include <limits>
-#include <vector>
-#endif
+#include "imgui_internal.h"
+
+#include <array>
+#include <utility>
+
 namespace canvas::debug_ui {
-std::array<PanelState, static_cast<std::size_t>(DebugPanel::kCount)> DebugController::panels() const {
-    return {{{DebugPanel::kOverview, true, "Overview"}, {DebugPanel::kInput, true, "Input"},
-             {DebugPanel::kCanvas, true, "Canvas"}, {DebugPanel::kArcPreview, true, "Arc Preview"},
-             {DebugPanel::kSurface, true, "Surface"}, {DebugPanel::kBrush, true, "Brush"},
-             {DebugPanel::kTelemetry, true, "Telemetry"}, {DebugPanel::kInspection, false, "Inspection (Unavailable)"}}};
-}
-bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
+namespace {
+bool buildLegacyCompatibilityPanel(const DebugSnapshot& snapshot, int selectedTool,
                       DebugControlRouter* router) {
     bool submittedControl = false;
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(410.0f, 560.0f), ImGuiCond_Always);
-    constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
-    if (!ImGui::Begin("Axiom Debug UI", nullptr, flags)) {
-        ImGui::End();
-        return false;
-    }
-    ImGui::TextColored(ImVec4(0.96f, 0.73f, 0.27f, 1.0f),
-                       "Axiom Debug UI / common ImGui + Skia");
-    ImGui::Text("P32 controller / reference profile");
-    ImGui::Separator();
     const std::array<std::pair<const char*, int>, 7> tools{{
         {"Vector", 4101}, {"Marker", 4102}, {"Chalk", 4103},
         {"Membrane", 4104}, {"Object Eraser", 4105}, {"Partial Eraser", 4106},
@@ -195,88 +165,65 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool,
       }
       ImGui::EndTabBar();
     }
-    ImGui::End();
     return submittedControl;
 }
 
-#if defined(CANVAS_DEBUG_UI_HAS_SKIA)
-namespace {
-SkColor toSkColor(ImU32 color) noexcept {
-    return SkColorSetARGB(static_cast<U8CPU>((color >> IM_COL32_A_SHIFT) & 0xffU),
-                          static_cast<U8CPU>((color >> IM_COL32_R_SHIFT) & 0xffU),
-                          static_cast<U8CPU>((color >> IM_COL32_G_SHIFT) & 0xffU),
-                          static_cast<U8CPU>((color >> IM_COL32_B_SHIFT) & 0xffU));
+
+void renderLegacy(DebugPanelContext& context) {
+  ImGui::TextUnformatted("Transitional legacy controls");
+  if (buildLegacyCompatibilityPanel(context.snapshot,
+      static_cast<int>(context.snapshot.product.value.tool.toolId), &context.controls)) {
+    context.ui.markControlSubmitted();
+  }
 }
+bool visibleAlways(const DebugSnapshot&) noexcept { return true; }
+}  // namespace
+
+void registerBuiltinPanels(PanelRegistry& registry) noexcept {
+  (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 0, visibleAlways, renderLegacy});
 }
 
-bool ImGuiSkiaRenderer::render(ImDrawData* drawData, SkSurface* surface,
-                               SkImage* fontTexture) noexcept {
-    if (drawData == nullptr || surface == nullptr || fontTexture == nullptr) return false;
-    SkCanvas* canvas = surface->getCanvas();
-    if (canvas == nullptr) return false;
-    canvas->clear(SK_ColorTRANSPARENT);
-    const float sx = drawData->FramebufferScale.x > 0.0f ? drawData->FramebufferScale.x : 1.0f;
-    const float sy = drawData->FramebufferScale.y > 0.0f ? drawData->FramebufferScale.y : 1.0f;
-    canvas->save();
-    canvas->scale(sx, sy);
-    canvas->translate(-drawData->DisplayPos.x, -drawData->DisplayPos.y);
-    for (int listIndex = 0; listIndex < drawData->CmdListsCount; ++listIndex) {
-        const ImDrawList* list = drawData->CmdLists[listIndex];
-        for (const ImDrawCmd& command : list->CmdBuffer) {
-            if (command.UserCallback != nullptr) continue;
-            const ImVec4 clip = command.ClipRect;
-            const float clipWidth = clip.z - clip.x;
-            const float clipHeight = clip.w - clip.y;
-            if (clipWidth <= 0.0f || clipHeight <= 0.0f || command.ElemCount == 0) continue;
-            canvas->save();
-            canvas->clipRect(SkRect::MakeLTRB(clip.x, clip.y, clip.z, clip.w));
-            const unsigned int first = command.IdxOffset;
-            const unsigned int end = first + command.ElemCount;
-            constexpr unsigned int kMaxTrianglesPerBatch = 20000;
-            for (unsigned int cursor = first; cursor < end;) {
-                const unsigned int remaining = end - cursor;
-                const unsigned int triangles = (std::min)(remaining / 3U, kMaxTrianglesPerBatch);
-                if (triangles == 0U) break;
-                const unsigned int vertexCount = triangles * 3U;
-                std::vector<SkPoint> positions(vertexCount);
-                std::vector<SkPoint> texCoords(vertexCount);
-                std::vector<SkColor> colors(vertexCount);
-                std::vector<std::uint16_t> indices(vertexCount);
-                for (unsigned int i = 0; i < vertexCount; ++i) {
-                    const ImDrawIdx index = list->IdxBuffer[cursor + i];
-                    const ImDrawVert& vertex = list->VtxBuffer[command.VtxOffset + index];
-                    positions[i] = SkPoint::Make(vertex.pos.x, vertex.pos.y);
-                    // Skia Viewer keeps ImGui UVs normalized and maps them into
-                    // the A8 atlas through the shader's local matrix.
-                    texCoords[i] = SkPoint::Make(vertex.uv.x, vertex.uv.y);
-                    colors[i] = toSkColor(vertex.col);
-                    indices[i] = static_cast<std::uint16_t>(i);
-                }
-                SkPaint paint;
-                paint.setAntiAlias(false);
-                paint.setColor(SK_ColorWHITE);
-                // ImGui stores normalized UVs; the local matrix maps them into
-                // the atlas image's normalized shader space, as in Skia's
-                // Viewer ImGuiLayer.
-                const SkMatrix atlasMatrix = SkMatrix::Scale(
-                    1.0f / static_cast<float>(fontTexture->width()),
-                    1.0f / static_cast<float>(fontTexture->height()));
-                paint.setShader(fontTexture->makeShader(
-                    SkTileMode::kClamp, SkTileMode::kClamp,
-                    SkSamplingOptions(SkFilterMode::kLinear), atlasMatrix));
-                auto vertices = SkVertices::MakeCopy(SkVertices::kTriangles_VertexMode,
-                                                      static_cast<int>(vertexCount),
-                                                      positions.data(), texCoords.data(),
-                                                      colors.data(), static_cast<int>(vertexCount),
-                                                      indices.data());
-                if (vertices) canvas->drawVertices(vertices, SkBlendMode::kModulate, paint);
-                cursor += triangles * 3U;
-            }
-            canvas->restore();
-        }
-    }
-    canvas->restore();
-    return true;
+DebugController::DebugController(DebugControllerContext context)
+    : context_(context), router_(context.runtime, context.axiomDebug, context.platformDebug, &activity_) {
+  registerBuiltinPanels(registry_);
 }
-#endif
+
+DebugSnapshot DebugController::snapshot() const { return latest_; }
+DebugUiSessionState& DebugController::uiState() noexcept { return ui_; }
+
+bool DebugController::buildImGuiFrame() {
+  DebugSnapshotSources sources{context_.runtime, context_.axiom, context_.arc,
+      context_.platformDiagnostics, context_.telemetry, nullptr};
+  auto captured = assembler_.capture(sources);
+  router_.beginFrame(captured);
+  router_.refreshReceipts();
+  captured.activity = activity_.snapshot();
+  latest_ = std::move(captured);
+  return workbench_.render(latest_, router_, ui_, registry_);
+}
+
+bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool, DebugControlRouter* router) {
+  (void)selectedTool;
+  PanelRegistry registry;
+  DebugUiSessionState ui;
+  // The temporary host path persists UI-local navigation in this ImGui
+  // context's Workbench window, never in a process-global session/registry.
+  const ImGuiID workspaceKey = ImHashStr("PX0.SelectedWorkspace");
+  const ImGuiID scrollKey = ImHashStr("PX0.ActivityAutoScroll");
+  if (auto* window = ImGui::FindWindowByName("Axiom Debug Workbench")) {
+    ui.setWorkspace(static_cast<WorkspaceId>(window->StateStorage.GetInt(workspaceKey, 0)));
+    ui.setActivityAutoScroll(window->StateStorage.GetBool(scrollKey, true));
+  }
+  registerBuiltinPanels(registry);
+  DebugControlRouter unavailable(nullptr, nullptr, nullptr, nullptr);
+  if (router == nullptr) unavailable.beginFrame(snapshot);
+  DebugWorkbench workbench;
+  const bool submitted = workbench.render(snapshot, router != nullptr ? *router : unavailable,
+                                           ui, registry);
+  if (auto* window = ImGui::FindWindowByName("Axiom Debug Workbench")) {
+    window->StateStorage.SetInt(workspaceKey, static_cast<int>(ui.workspace()));
+    window->StateStorage.SetBool(scrollKey, ui.activityAutoScroll());
+  }
+  return submitted;
+}
 }  // namespace canvas::debug_ui
