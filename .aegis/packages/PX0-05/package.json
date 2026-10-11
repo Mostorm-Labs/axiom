@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "package_id": "PX0-05-P31-v0.1",
+  "task_id": "PX0-05",
+  "status": "CURRENT_EXECUTABLE",
+  "purpose": "PX0 Existing Capability Migration: replace the transitional legacy contribution with explicit Dashboard/Control/Inspect/Runtime/Performance/Scenarios built-ins while preserving Runtime/control ownership and unsupported boundaries",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/px0-05-existing-capability-migration"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "a7661535ed86edeaca201e088a7b4078473c166e7096c4b27885fee140805850"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "dc6ba0740e017c605fca991254d6b61ce7b7fb0d72d824222a9d5e92b0ecda1e"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e430e78bacbfcfa0d830da0524e48c7f26a9377a2d55c84e860933fb0c9f0017"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3bf4c9f91f2f788da664d9a270fc87d67a0390ff78fad45beaf8efb264e42917"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "392cd4db76bc9ff1344923972f6e96c39b6034dbcfc02292d778c60cad983009"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/PX0-05/",
+    "base_revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806"
+  },
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "Run repository/package/anchor/binding preflights, perform the required ImplementationDesignPreflight, observe the PX0-05 RED capability-migration oracles, then execute the full existing-capability migration closure contract without entering PX0-06/PX0-07."
+  }
+}
