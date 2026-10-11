@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P33_RESUME_INTERRUPTED_WORK",
+  "authorization_revision": "v0.4",
+  "governing_package": {
+    "package_id": "PX0-05-P31-v0.4",
+    "path": ".aegis/packages/PX0-05/package.json"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "codex/px0-05-existing-capability-migration",
+    "revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+    "completed_through": [
+      "all accepted PX0-05 production implementation",
+      "migrated Windows selection structural oracle",
+      "v0.3 structural/native/focused evidence except PX0RuntimeFacadeContract"
+    ],
+    "next_action": "Reproduce PX0RuntimeFacadeContract compile failure, repair only runtime_contract_test.cpp initializer, and complete v0.4 reverification."
+  },
+  "expected_position_classification": "DESCENDANT_CURSOR",
+  "execution_ref": "codex/px0-05-p33-v0-4-runtime-contract-test",
+  "effective_mutation_scope": [
+    "debug_ui/tests/runtime_contract_test.cpp",
+    ".aegis/results/PX0-05/**"
+  ],
+  "frozen_source_after_cursor": [
+    "all runtime/**",
+    "all debug_ui/include/**",
+    "all debug_ui/src/**",
+    "debug_ui/CMakeLists.txt",
+    "all PX0-05 production panel/control files",
+    "all Windows/Web production host files",
+    "all structural test source files except runtime_contract_test.cpp is not a structural test"
+  ],
+  "repair_contract": {
+    "old_failure": "runtime_contract_test.cpp:21 -Wmissing-field-initializers for ProductControlReceipt::control under clang-cl /W4 /WX",
+    "required_change": "Explicitly initialize the existing optional control field while preserving its empty semantic value.",
+    "forbidden": [
+      "ProductControlReceipt type changes",
+      "RuntimeFacade changes",
+      "warning suppression or /WX relaxation",
+      "panel/UI behavior changes",
+      "platform host changes"
+    ]
+  },
+  "reverification_contract": [
+    "PX0RuntimeFacadeContract",
+    "nine focused PX0/DUI regression targets",
+    "Windows/Web structural contracts",
+    "fresh RF01=ON / POC01=OFF native canvas_debug_ui + Windows application build",
+    "cursor-relative authorized diff",
+    "git diff --check"
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_forbidden": true
+}
