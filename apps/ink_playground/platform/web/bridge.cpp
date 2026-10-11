@@ -3,10 +3,10 @@
 #include "platform_brush_baseline_observation.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "canvas/render/skia_renderer.hpp"
-#if AXIOM_WEB_DEBUG_UI
-#include "canvas/debug_ui/controller.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 #include "canvas/runtime/diagnostics.hpp"
+#if AXIOM_WEB_DEBUG_UI
+#include "canvas/debug_ui/controller.hpp"
 #include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #include "imgui.h"
@@ -57,7 +57,6 @@ std::unordered_map<Handle, BrushState>& brushes() {
   return values;
 }
 
-#if AXIOM_WEB_DEBUG_UI
 class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter,
                                public canvas::runtime::IAxiomDiagnostics {
  public:
@@ -180,6 +179,17 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
   std::uint64_t nextRequest_ = 1U;
 };
 
+std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>>& runtimeFacades() {
+  static std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>> values;
+  return values;
+}
+WebRuntimeFacade* runtimeFacade(Handle value) {
+  const auto it = runtimeFacades().find(value);
+  return it == runtimeFacades().end() ? nullptr : it->second.get();
+}
+
+#if AXIOM_WEB_DEBUG_UI
+
 class WebPlatformDiagnostics final : public canvas::runtime::IPlatformDiagnostics {
  public:
   explicit WebPlatformDiagnostics(Host& host) : host_(host) {}
@@ -242,14 +252,6 @@ struct DebugUiState final {
   std::unique_ptr<WebTelemetry> telemetry;
   std::unique_ptr<WebArcDiagnostics> arcDiagnostics;
 };
-std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>>& runtimeFacades() {
-  static std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>> values;
-  return values;
-}
-WebRuntimeFacade* runtimeFacade(Handle value) {
-  const auto it = runtimeFacades().find(value);
-  return it == runtimeFacades().end() ? nullptr : it->second.get();
-}
 std::unordered_map<Handle, DebugUiState>& debugUi() {
   static std::unordered_map<Handle, DebugUiState> values;
   return values;
