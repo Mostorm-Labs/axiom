@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-BUILD-01",
+  "obligations": [
+    {
+      "id": "PX0-BUILD-01-V1-clean-reproduction",
+      "requirement": "The reported missing canvas/scene/scene_types.hpp failure must be reproduced from a clean configured build using the same locked native/clang-cl + Skia configuration family used by PX0-04/PX0-05 before any source mutation.",
+      "oracle": "Record configure command/preset and build canvas_runtime_render with verbose compile output. The failure must show an exact translation unit/header chain ending at runtime/render/include/canvas/render/reference_draw_list.hpp -> canvas/scene/scene_types.hpp, or an equivalent exact repository path within the same declared dependency boundary.",
+      "acceptance": "If the missing-header failure is not reproducible, no repository mutation is authorized; return BLOCKED_ENVIRONMENT with the observed clean build facts.",
+      "evidence_required": "clean configure/build transcript summary bound to exact revision"
+    },
+    {
+      "id": "PX0-BUILD-01-V2-target-usage-requirements",
+      "requirement": "When the failure is repository-owned, the minimal repair must make the render/scene target usage requirements sufficient to resolve the public scene include.",
+      "oracle": "After repair, verbose compilation for canvas_runtime_render contains the required scene public include through target-scoped CMake usage requirements. No app/debug_ui target adds a private workaround include solely for scene_types.hpp.",
+      "acceptance": "Repair is target-scoped and preserves the existing render -> scene architectural dependency.",
+      "evidence_required": "exact CMake diff + verbose build"
+    },
+    {
+      "id": "PX0-BUILD-01-V3-render-target-build",
+      "requirement": "canvas_runtime_render compiles successfully in the clean locked native configuration after any authorized repair.",
+      "oracle": "cmake --build <clean-build> --target canvas_runtime_render succeeds.",
+      "acceptance": "No missing canvas/scene/scene_types.hpp error remains.",
+      "evidence_required": "native build result"
+    },
+    {
+      "id": "PX0-BUILD-01-V4-windows-consumer-build",
+      "requirement": "The real Windows consumer path used by PX0-05 no longer fails on the Runtime/Render -> Scene include boundary.",
+      "oracle": "Build axiom_ink_playground_windows in the same locked native/clang-cl + Skia configuration. It must pass the include boundary. A separate previously known MSVC /WX C4702 full-tree issue is not part of this oracle.",
+      "acceptance": "If another unrelated pre-existing failure appears after the include boundary is passed, record it distinctly; do not widen this task.",
+      "evidence_required": "Windows target build result"
+    },
+    {
+      "id": "PX0-BUILD-01-V5-scope",
+      "requirement": "Only build metadata needed for the include boundary changes.",
+      "oracle": "Exact diff contains only authorized CMake paths and PX0-BUILD-01 result metadata; git diff --check passes.",
+      "acceptance": "No C++ source/header semantic change and no PX0-05 UI file change.",
+      "evidence_required": "authorized-scope diff"
+    }
+  ]
+}
