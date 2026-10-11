@@ -7,8 +7,8 @@ Allowed typed owner symbols:
 .\debug_ui\tests\workbench_state_test.cpp:63:        return {command.requestId, canvas::runtime::AxiomDebugCommandState::kQueued};
 .\debug_ui\tests\workbench_state_test.cpp:65:    canvas::runtime::AxiomDebugCommandReceipt receipt(std::uint64_t id) const noexcept override {
 .\debug_ui\tests\workbench_state_test.cpp:66:        return {id, canvas::runtime::AxiomDebugCommandState::kApplied};
-.\debug_ui\tests\workbench_state_test.cpp:345:           providers.lastAxiom.kind == canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw);
-.\debug_ui\tests\workbench_state_test.cpp:355:               canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics);
+.\debug_ui\tests\workbench_state_test.cpp:381:           providers.lastAxiom.kind == canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw);
+.\debug_ui\tests\workbench_state_test.cpp:391:               canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics);
 .\debug_ui\tests\debug_ui_test.cpp:107:    canvas::runtime::AxiomDebugCommandReceipt enqueue(
 .\debug_ui\tests\debug_ui_test.cpp:108:        const canvas::runtime::AxiomDebugCommand& command) noexcept override {
 .\debug_ui\tests\debug_ui_test.cpp:109:      return {command.requestId, canvas::runtime::AxiomDebugCommandState::kUnsupported};
@@ -26,10 +26,16 @@ Allowed typed owner symbols:
 .\debug_ui\tests\debug_ui_test.cpp:133:  assert(debugQueue.complete(30, canvas::runtime::AxiomDebugCommandState::kApplied, 9,
 .\debug_ui\tests\debug_ui_test.cpp:134:                             1, 4).state == canvas::runtime::AxiomDebugCommandState::kApplied);
 .\debug_ui\tests\debug_ui_test.cpp:135:  assert(debugQueue.receipt(30)->state == canvas::runtime::AxiomDebugCommandState::kApplied);
-.\debug_ui\include\canvas\debug_ui\control_router.hpp:40:  canvas::runtime::AxiomDebugCommandReceipt submitAxiom(
-.\debug_ui\include\canvas\debug_ui\control_router.hpp:41:      canvas::runtime::AxiomDebugCommandKind kind, std::uint64_t value = 0) noexcept;
-.\debug_ui\include\canvas\debug_ui\control_router.hpp:63:                   const canvas::runtime::AxiomDebugCommandReceipt& receipt) noexcept;
-.\debug_ui\include\canvas\debug_ui\control_router.hpp:68:  [[nodiscard]] static DebugActivityState mapAxiom(canvas::runtime::AxiomDebugCommandState state) noexcept;
+.\apps\ink_playground\platform\windows\main.cpp:470:  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt enqueue(
+.\apps\ink_playground\platform\windows\main.cpp:471:      const canvas::runtime::AxiomDebugCommand& command) noexcept override {
+.\apps\ink_playground\platform\windows\main.cpp:475:  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt receipt(
+.\apps\ink_playground\platform\windows\main.cpp:478:    return result.value_or(canvas::runtime::AxiomDebugCommandReceipt{
+.\apps\ink_playground\platform\windows\main.cpp:479:        requestId, canvas::runtime::AxiomDebugCommandState::kRejected});
+.\apps\ink_playground\platform\windows\main.cpp:486:        canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw ||
+.\apps\ink_playground\platform\windows\main.cpp:487:        command->kind == canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics;
+.\apps\ink_playground\platform\windows\main.cpp:490:        supported ? canvas::runtime::AxiomDebugCommandState::kApplied
+.\apps\ink_playground\platform\windows\main.cpp:491:                  : canvas::runtime::AxiomDebugCommandState::kUnsupported,
+.\apps\ink_playground\platform\windows\main.cpp:496:  canvas::runtime::BoundedAxiomDebugCommandQueue queue_;
 .\debug_ui\src\panels\runtime.cpp:140:        (void)c.controls.submitAxiom(canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw);
 .\debug_ui\src\panels\performance.cpp:20:        (void)c.controls.submitAxiom(canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics);
 .\debug_ui\src\control_router.cpp:17:canvas::runtime::AxiomDebugCommandReceipt unsupportedReceipt(std::uint64_t requestId) noexcept {
@@ -43,15 +49,9 @@ Allowed typed owner symbols:
 .\debug_ui\src\control_router.cpp:268:      if (receipt.state == canvas::runtime::AxiomDebugCommandState::kQueued) {
 .\debug_ui\src\control_router.cpp:317:DebugActivityState DebugControlRouter::mapAxiom(canvas::runtime::AxiomDebugCommandState state) noexcept {
 .\debug_ui\src\control_router.cpp:318:  using S = canvas::runtime::AxiomDebugCommandState;
+.\debug_ui\include\canvas\debug_ui\control_router.hpp:40:  canvas::runtime::AxiomDebugCommandReceipt submitAxiom(
+.\debug_ui\include\canvas\debug_ui\control_router.hpp:41:      canvas::runtime::AxiomDebugCommandKind kind, std::uint64_t value = 0) noexcept;
+.\debug_ui\include\canvas\debug_ui\control_router.hpp:63:                   const canvas::runtime::AxiomDebugCommandReceipt& receipt) noexcept;
+.\debug_ui\include\canvas\debug_ui\control_router.hpp:68:  [[nodiscard]] static DebugActivityState mapAxiom(canvas::runtime::AxiomDebugCommandState state) noexcept;
 .\docs\superpowers\plans\2026-10-10-px0-debug-control-plane-baseline-implementation.md:722:  canvas::runtime::AxiomDebugCommandReceipt submitAxiom(
 .\docs\superpowers\plans\2026-10-10-px0-debug-control-plane-baseline-implementation.md:723:      canvas::runtime::AxiomDebugCommandKind kind,
-.\apps\ink_playground\platform\windows\main.cpp:470:  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt enqueue(
-.\apps\ink_playground\platform\windows\main.cpp:471:      const canvas::runtime::AxiomDebugCommand& command) noexcept override {
-.\apps\ink_playground\platform\windows\main.cpp:475:  [[nodiscard]] canvas::runtime::AxiomDebugCommandReceipt receipt(
-.\apps\ink_playground\platform\windows\main.cpp:478:    return result.value_or(canvas::runtime::AxiomDebugCommandReceipt{
-.\apps\ink_playground\platform\windows\main.cpp:479:        requestId, canvas::runtime::AxiomDebugCommandState::kRejected});
-.\apps\ink_playground\platform\windows\main.cpp:486:        canvas::runtime::AxiomDebugCommandKind::kForceFullRedraw ||
-.\apps\ink_playground\platform\windows\main.cpp:487:        command->kind == canvas::runtime::AxiomDebugCommandKind::kResetRollingMetrics;
-.\apps\ink_playground\platform\windows\main.cpp:490:        supported ? canvas::runtime::AxiomDebugCommandState::kApplied
-.\apps\ink_playground\platform\windows\main.cpp:491:                  : canvas::runtime::AxiomDebugCommandState::kUnsupported,
-.\apps\ink_playground\platform\windows\main.cpp:496:  canvas::runtime::BoundedAxiomDebugCommandQueue queue_;
