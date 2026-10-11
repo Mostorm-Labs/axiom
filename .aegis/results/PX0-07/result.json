@@ -17,7 +17,7 @@
     "generic_debug_command_audit": "PASS",
     "diff_check": "PASS",
     "windows_physical": "PENDING",
-    "web_physical": "PENDING"
+    "web_physical": "PARTIAL_PENDING"
   },
   "artifacts": [
     ".aegis/results/PX0-07/native-ctest.log",
@@ -32,5 +32,16 @@
   ],
   "official_gate_pass_claimed": false,
   "continue_execution": false,
+  "physical_observations": {
+    "web": {
+      "pass": ["show/hide", "workspace navigation", "Vector / Marker / Chalk / Membrane", "Object / Partial Eraser"],
+      "pending": ["selection mode", "Undo / Redo", "Pan", "Zoom At", "Fit Content", "Fit Selection", "Fit Primary Object", "Surface controls", "ARC diagnostics visibility", "Surface diagnostics visibility", "telemetry visibility", "Activity request/receipt updates", "hidden Debug UI input isolation", "Debug-owned pointer/keyboard isolation"],
+      "identity": "Axiom Ink Playground at http://127.0.0.1:8765/index.html; served from out/g4-5-web-debug-ui-physical/apps/ink_playground"
+    },
+    "windows": {
+      "status": "PENDING",
+      "identity": "axiom_ink_playground_windows.exe process started and remained responsive; no bindable GUI observation was available"
+    }
+  },
   "blocker": "This execution surface cannot perform or attest real Windows GUI and served browser physical observations. The physical matrices remain untouched/pending."
 }

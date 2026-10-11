@@ -47,10 +47,10 @@ Status remains pending until observed in a served browser session with the exact
 
 | Check | Status | Observation basis |
 |---|---|---|
-| show/hide | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
-| workspace navigation | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
-| Vector / Marker / Chalk / Membrane | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
-| Object / Partial Eraser | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
+| show/hide | PASS | Browser observation: Debug UI toggled visible and hidden |
+| workspace navigation | PASS | Browser observation: Dashboard/Control workspace switch rendered distinct panels |
+| Vector / Marker / Chalk / Membrane | PASS | Browser observation: each control updated selected brush and status JSON |
+| Object / Partial Eraser | PASS | Browser observation: each control updated selected tool and status JSON |
 | selection mode | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
 | Undo / Redo | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
 | Pan | PENDING_PHYSICAL_OBSERVATION | Requires served browser/WebGL session |
