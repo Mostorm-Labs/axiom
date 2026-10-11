@@ -1,0 +1,243 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Create debug_ui/src/builtin_panels.cpp as the explicit built-in registration aggregator; register Dashboard, Control, Inspect, Runtime, Performance, Scenarios and Ink contribution families with no static-global registration.",
+        "Create debug_ui/src/panels/dashboard.cpp implementing Dashboard/RuntimeIdentity, CurrentProductState, Health, LivePerformance and RecentActivity from the existing DebugSnapshot only.",
+        "Create debug_ui/src/panels/control.cpp implementing Control/Tools, View, History and Feature. Tools owns selection-mode and eraser presentation/actions. View owns camera readback plus explicit pan/zoom drafts and Fit actions. Feature is a successor-owned Unsupported placeholder.",
+        "Create debug_ui/src/panels/features/ink.cpp implementing Control/Ink with Vector Solid, Marker Flat, Chalk Grain and Membrane, resolved brushId/revision readback, and explicit Unsupported rows for size/opacity/other parameter mutation.",
+        "Create debug_ui/src/panels/inspect.cpp implementing Inspect/Selection and Inspect/Interaction from existing product/Axiom/ARC data plus Unsupported Object and Relationship placeholders.",
+        "Create debug_ui/src/panels/runtime.cpp implementing Runtime/Document, ARC, Render, Surface, FeatureDiagnostics, Scene/Resources placeholders and AdvancedActions. Surface requests use DebugControlRouter only. Force Full Redraw is the only actionable advanced action when an AxiomDebug owner is bound; all other current Axiom command rows are visible Unsupported and do not submit.",
+        "Create debug_ui/src/panels/performance.cpp implementing LiveMetrics, InputARC and Rendering from Telemetry/ARC/Platform, Reset Rolling Metrics through DebugControlRouter when an AxiomDebug owner is bound, and explicit Unsupported MemoryCache/Trace/GPUTiming/FeatureMetrics sections with no fake toggles.",
+        "Create debug_ui/src/panels/scenarios.cpp implementing Reset Canvas, Empty Canvas and Ink Baseline as Unsupported non-mutating entries under Scenarios/Smoke.",
+        "Expand builtin_panels.hpp with explicit registration declarations for each built-in panel family and registerBuiltinPanels.",
+        "Remove the PX0-04 buildLegacyCompatibilityPanel/renderLegacy body, Transitional legacy controls contribution, legacy ##debug_tabs and legacy tool-presentation table from controller.cpp. Keep DebugController orchestration and buildImGuiPanels host-compatibility entrypoint; that entrypoint now registers the final PX0-05 built-ins.",
+        "Extend DebugUiSessionState with a bounded UI-local camera draft structure for panDeltaX/panDeltaY/zoomAnchorX/zoomAnchorY/zoomScaleDelta. Draft changes never submit until an explicit button intent.",
+        "Add read-only DebugControlRouter hasRuntimeOwner/hasAxiomDebugOwner/hasPlatformDebugOwner queries that expose binding presence only. Do not expose raw pointers or add command/business logic.",
+        "Every actionable product control must be gated by current snapshot context and owner presence, submit only through DebugControlRouter, mark ui.controlSubmittedThisFrame on actual submission, and render persistent selected/resolved state from the next snapshot rather than local widget truth.",
+        "Surface mode controls must render Platform Default/CPU Reference/GPU Default with resolved mode/generation from snapshot. Disable/show Unsupported when no PlatformDebug owner is bound or platform state lacks a usable canonical generation.",
+        "Control/View must use explicit UI-local pan/zoom inputs. Do not add Reset View/100%, do not infer a viewport-center anchor, and do not interpret legacy toolId==4107 as Pan.",
+        "Scenarios entries must not call RuntimeFacade, Router, owners, Document/Scene internals or evidence APIs.",
+        "Update workbench_state_test.cpp to exercise all six migrated workspaces, owner-unbound states, UI-local camera drafts, scenario non-mutation and expected section content.",
+        "Update control_router_test.cpp to prove the three owner-presence queries for bound/null combinations without changing existing routing semantics.",
+        "Update the Windows common structural contract so it proves the legacy transitional/tab body is gone, final panel source files exist, persistent controls read from snapshot fields, Reset View/100% and fake Trace/GPU toggles are absent, and no platform production host convergence occurred.",
+        "Update CMake to compile the new built-in/panel translation units and retain PX0PanelRegistry/PX0Workbench plus all inherited test targets."
+      ],
+      "authorized_mutation_scope": [
+        "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
+        "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+        "debug_ui/include/canvas/debug_ui/control_router.hpp",
+        "debug_ui/src/builtin_panels.cpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/src/panels/dashboard.cpp",
+        "debug_ui/src/panels/control.cpp",
+        "debug_ui/src/panels/inspect.cpp",
+        "debug_ui/src/panels/runtime.cpp",
+        "debug_ui/src/panels/performance.cpp",
+        "debug_ui/src/panels/scenarios.cpp",
+        "debug_ui/src/panels/features/ink.cpp",
+        "debug_ui/tests/workbench_state_test.cpp",
+        "debug_ui/tests/control_router_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        ".aegis/results/PX0-05/**"
+      ],
+      "preserve_unchanged": [
+        "runtime/foundation/**",
+        "apps/ink_playground/common/**",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "debug_ui/include/canvas/debug_ui/workspace.hpp",
+        "debug_ui/include/canvas/debug_ui/panel.hpp",
+        "debug_ui/include/canvas/debug_ui/panel_registry.hpp",
+        "debug_ui/src/panel_registry.cpp",
+        "debug_ui/include/canvas/debug_ui/workbench.hpp",
+        "debug_ui/src/workbench.cpp",
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp",
+        "debug_ui/src/snapshot_assembler.cpp",
+        "debug_ui/include/canvas/debug_ui/activity.hpp",
+        "debug_ui/include/canvas/debug_ui/activity_log.hpp",
+        "debug_ui/src/activity_log.cpp",
+        "debug_ui/include/canvas/debug_ui/imgui_skia_renderer.hpp",
+        "debug_ui/src/imgui_skia_renderer.cpp",
+        "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+        "debug_ui/src/panel_model.cpp",
+        "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+        "debug_ui/src/windows_host.cpp",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Any Runtime/foundation semantic contract or stable C ABI change.",
+        "DebugSnapshot schema/assembler/coherence changes.",
+        "DebugControlRouter routing/state mapping/deadline/generation semantics beyond read-only owner-presence queries.",
+        "WorkspaceId, PanelSlot, PanelRegistry or Workbench layout architecture redesign.",
+        "Windows/Web production host or composition-root changes.",
+        "New brush size/opacity/color parameter mutation.",
+        "Legacy toolId reinterpretation or new stable tool-ID contract.",
+        "Reset View or 100% zoom semantics.",
+        "Scenario runner, fixture, Reset Canvas implementation, direct Document/Scene mutation or evidence export.",
+        "Shape/RichText/Connector/Snap/Image product behavior.",
+        "Trace/GPU profiler enablement, overlay flag schema, memory-budget unit/range semantics, cache implementation or background-raster state mutation.",
+        "Preview repair, DUI-M1 physical status mutation, PX0-06 host convergence, PX0-07 closure work, G5 work.",
+        "Unrelated MSVC warning-policy cleanup."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current PX0-04 registerBuiltinPanels -> transitional Control/Tools legacy contribution flow",
+        "target explicit per-workspace registration graph and exact PanelSlot placement",
+        "product persistent-state readback source for brush/eraser/selection/history/camera",
+        "UI-local camera draft ownership and explicit Pan/Zoom command flow",
+        "Surface owner-presence/context gating and resolved-state readback",
+        "Axiom advanced-action availability policy: Force Full Redraw + Reset Rolling Metrics only; unsupported rows do not submit",
+        "Scenarios non-mutating placeholder flow",
+        "legacy toolId handling and proof that 4107 is not interpreted as semantic Pan",
+        "mapping from every frozen verification obligation to code/test/source oracle",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "PX0Workbench/structural contracts fail against the PX0-04 start because the six final capability panel translation units do not exist, controller.cpp still contains Transitional legacy controls/##debug_tabs, Scenarios has no three Unsupported entries, and Router has no owner-presence queries.",
+      "observation_seam": "debug_ui/tests/workbench_state_test.cpp, debug_ui/tests/control_router_test.cpp, apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-05-T1-red-capability-migration",
+          "command_or_oracle": "Before production mutation, update focused Workbench/Router/structural oracles for the frozen PX0-05 panel map and run them.",
+          "expected_result": "RED specifically because final panel sources/registrations, owner-presence queries and scenario placeholders are absent while Transitional legacy controls remain.",
+          "blocking_reason": "Proves the migration target is observable before implementation."
+        },
+        {
+          "id": "PX0-05-T2-workbench-capability-map",
+          "command_or_oracle": "Build and run PX0Workbench.",
+          "expected_result": "PASS: all six workspaces render the frozen section/content map; UI-local camera draft mutation causes zero owner calls; Scenarios renders Reset Canvas/Empty Canvas/Ink Baseline Unsupported with zero owner calls; owner-unbound engineering controls remain Unsupported/disabled.",
+          "blocking_reason": "Primary behavioral/render proof for Tasks 11-12."
+        },
+        {
+          "id": "PX0-05-T3-router-owner-presence-and-regression",
+          "command_or_oracle": "Build and run PX0ControlRouter.",
+          "expected_result": "PASS: owner-presence queries report exact bound/null state and all PX0-03 routing/activity/context/state oracles remain green.",
+          "blocking_reason": "Proves UI availability support does not alter router semantics."
+        },
+        {
+          "id": "PX0-05-T4-panel-registry-and-core-regressions",
+          "command_or_oracle": "Run PX0PanelRegistry, DUI20DebugUiContracts, PX0DebugSnapshot, PX0RuntimeFacadeContract and DUIM1PanelModel.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects PX0-01/02/04 extension and snapshot contracts."
+        },
+        {
+          "id": "PX0-05-T5-product-regressions",
+          "command_or_oracle": "Run DUIM1RuntimeFacade and DUIM1ViewControls.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects product/view behavior while Debug UI presentation is reorganized."
+        },
+        {
+          "id": "PX0-05-T6-structural-control-contract",
+          "command_or_oracle": "Run windows_imgui_skia_debug_ui_contract_test.py plus existing Windows selection and Web Debug UI structural tests using pytest when available or direct plain-Python invocation when they remain pytest-runtime-independent.",
+          "expected_result": "PASS: final built-in panel sources exist; Transitional legacy controls/##debug_tabs are absent; snapshot-backed control state, context disabling, owner-presence gating, Unsupported Trace/GPU/Scenario rows and absence of Reset View/100% are structurally proven; current host call sites remain unchanged.",
+          "blocking_reason": "Provides source-level UI state/orchestration proof that is difficult to observe through Dear ImGui click simulation."
+        },
+        {
+          "id": "PX0-05-T7-native-common-ui-build",
+          "command_or_oracle": "Build canvas_debug_ui and axiom_ink_playground_windows with the repository's locked native/clang-cl + Skia environment used successfully by PX0-04.",
+          "expected_result": "PASS. A pre-existing unrelated MSVC full-tree C4702 /WX diagnostic may be recorded separately but must not trigger scope expansion.",
+          "blocking_reason": "New common panel translation units must compile and link into a real host."
+        },
+        {
+          "id": "PX0-05-T8-tree-and-scope",
+          "command_or_oracle": "Inspect exact tree/diff and run git diff --check from the actual starting revision.",
+          "expected_result": "debug_ui/src/panels/{dashboard,control,inspect,runtime,performance,scenarios}.cpp and features/ink.cpp exist; controller.cpp has no legacy tab body; only authorized paths changed; no runtime/platform production/PX0-06+ paths changed; diff check exits 0.",
+          "blocking_reason": "Prevents successor semantics or host convergence from leaking into PX0-05."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-05-H1-web-build",
+          "oracle": "If the locked Emscripten environment is healthy, build axiom_ink_playground_web against the migrated common panel set.",
+          "classification": "corroborative"
+        },
+        {
+          "id": "PX0-05-H2-manual-visual",
+          "oracle": "Open the Windows/Web Debug UI and visually confirm that Dashboard/Control/Inspect/Runtime/Performance/Scenarios contain the new migrated content rather than the Transitional legacy controls block.",
+          "classification": "corroborative; physical qualification remains PX0-07"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on refs/heads/codex/px0-05-existing-capability-migration",
+        "reviewer-resolvable materialized_ref for that exact result",
+        "PX0Workbench and PX0ControlRouter focused evidence",
+        "PX0PanelRegistry and inherited PX0/DUI regression evidence",
+        "Windows/Web structural control-state evidence",
+        "native common-ui/Windows app build evidence",
+        "exact authorized-scope diff and git diff --check"
+      ],
+      "corroborative": [
+        "optional Web build",
+        "manual visual screenshots",
+        "clean git status"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "The Transitional legacy controls contribution and legacy internal tab bar are removed.",
+        "All already-authorized capability is placed into explicit Dashboard/Control/Inspect/Runtime/Performance/Scenarios contributions using only DebugPanelContext.",
+        "Brush/eraser/selection/history/camera/surface persistent UI state is rendered from owner snapshot readback, not local widget truth.",
+        "Control/View exposes only Pan/Zoom At/Fit Content/Fit Selection/Fit Primary Object with context guards and no Reset View/100% semantics.",
+        "Surface controls use PlatformDebug through Router and correctly render Unsupported when the owner is unbound.",
+        "Force Full Redraw and Reset Rolling Metrics use AxiomDebug through Router only when an owner is bound; unsupported engineering capability remains explicit and non-mutating.",
+        "Trace/GPU Timing/MemoryCache/Feature placeholders are explicit Unsupported and no fake controls exist.",
+        "Reset Canvas, Empty Canvas and Ink Baseline render Unsupported and cause zero owner/runtime mutation.",
+        "Router owner-presence queries are read-only and all PX0-03 routing regressions remain green.",
+        "All focused/regression/structural/native build evidence passes.",
+        "No Runtime semantic change, host convergence, successor product feature, Preview repair, physical claim or G5 work is introduced.",
+        "The exact result is pushed/materialized for independent P34 Control Review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}
