@@ -187,3 +187,34 @@ The prior PX0-05 implementation remains local-only at:
 It is candidate work, not accepted Gate evidence and not an accepted resume cursor. The P33 executor must inspect and reconcile it against this v0.3 package. Candidate work reported from the interrupted execution includes the six workspace registrations, legacy-panel removal, snapshot-backed control readback, owner-presence handling, camera drafts, Surface/Axiom actions, Unsupported placeholders, focused Workbench/Router evidence, the new PX0-05 structural contract, and real ImGui widget activation. Preserve only what repository inspection proves conforms to v0.3.
 
 The selection structural oracle correction from v0.2 remains mandatory: the first test in `windows_debug_ui_selection_contract_test.py` must validate the final Control/Inspect architecture rather than requiring `BeginTabBar`, `Canvas / Selection`, or a `RuntimeFacade` tab. Its pointer-path and terminal-clear/facade synchronization assertions remain unchanged.
+
+
+## P31 v0.4 package correction
+
+P34/P35 independently reviewed the P33 v0.3 result and classified the remaining blocker as a `TASK_PACKAGE_DEFECT`, not a PX0-05 production implementation defect.
+
+Accepted continuation point:
+
+- implementation result: `9c5e3587358ad982ddab56ca2369cd285e330c5d`
+- evidence head: `4b7ca8856a2c94b5fcdd2569009a9be669405955`
+- P34/P35 materialization: `6f703b60cbcc7ea3587b946d5c2962bf1e8db59b`
+
+Repository reality proved both the failing `debug_ui/tests/runtime_contract_test.cpp` blob and the `ProductControlReceipt` definition were unchanged from the PX0-05 task anchor through the v0.3 result. The frozen clang-cl `/W4 /WX` profile rejects this existing test fixture because `RuntimeProbe::submitProductControl` omits the existing optional `ProductControlReceipt::control` aggregate field.
+
+v0.4 therefore adds exactly one new source authorization:
+
+`debug_ui/tests/runtime_contract_test.cpp`
+
+The only allowed source repair is to fully initialize `ProductControlReceipt`, preserving `control == std::nullopt` for this non-canvas product receipt. Do not modify RuntimeFacade, ProductControlReceipt, warning policy, any panel code, or any platform host.
+
+## P33 v0.4 resume
+
+The v0.3 implementation result `9c5e3587358ad982ddab56ca2369cd285e330c5d` is now the accepted resume cursor. All six-workspace capability migration work is preserved and must not be replayed.
+
+Expected execution position:
+
+`DESCENDANT_CURSOR`
+
+The execution branch may contain evidence/control/package descendants after the cursor. Inspect only the delta after `9c5e3587...`, verify that it is control/evidence/package materialization, apply the single test-file repair, and rerun the frozen closure evidence.
+
+The native profile remains the clean RF01=ON / POC01=OFF locked Ninja Release clang-cl + Skia profile established in v0.3. A fresh build tree is required.
