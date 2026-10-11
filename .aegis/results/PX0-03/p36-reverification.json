@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "5c64fc5844420d783f9bf0377d9202e7d263aef8",
+  "materialized_ref": "refs/heads/codex/px0-03-p36-router-oracle-repair",
+  "repair_authorization_ref": "cda4c43a05a3bcbe761bb22d2d0101b193f8385f",
+  "origin_cursor": "9938e1f712015ef7f7a1ff7461d69d9a2e959d5d",
+  "repair_scope": [
+    "semantic CanvasToolKind router boundary",
+    "legacy 4107 conversion remains only in controller presentation mapping",
+    "complete PX0ControlRouter frozen oracle matrix"
+  ],
+  "tests": {
+    "PX0ControlRouter": {"result": "PASS", "count": 1, "build": "out/px0-p36-full2"},
+    "PX0DebugUiRegressionSet": {"result": "PASS", "count": 4, "build": "out/px0-p36-full2"},
+    "DUIM1RuntimeFacade": {"result": "PASS", "count": 1, "build": "out/px0-p36-app4"},
+    "DUIM1ViewControls": {"result": "PASS", "count": 1, "build": "out/px0-p36-app4"},
+    "WindowsWebStructuralContracts": {"result": "PASS", "count": 30, "runner": "direct Python invocation"},
+    "git_diff_check": {"result": "PASS"}
+  },
+  "scope_audit": {
+    "allowed_paths_only": true,
+    "changed_paths": [
+      "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+      "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "debug_ui/src/control_router.cpp",
+      "debug_ui/src/controller.cpp",
+      "debug_ui/tests/control_router_test.cpp",
+      ".aegis/results/PX0-03/p36-reverification.json"
+    ],
+    "router_legacy_410x_identifiers": false,
+    "generic_command_queue_absent": true,
+    "owner_queues_preserved": true
+  },
+  "environment_notes": [
+    "Initial clang-cl verification required the installed Visual Studio vcvars environment.",
+    "The pre-existing runtime_contract_test.cpp missing-field-initializers diagnostic was not modified; the frozen required target passed in the verification profile with warning demotion only.",
+    "No physical qualification or Gate PASS is claimed."
+  ],
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}
