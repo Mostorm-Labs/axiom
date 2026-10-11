@@ -23,7 +23,8 @@
         "Update workbench_state_test.cpp to exercise all six migrated workspaces, owner-unbound states, UI-local camera drafts, scenario non-mutation and expected section content.",
         "Update control_router_test.cpp to prove the three owner-presence queries for bound/null combinations without changing existing routing semantics.",
         "Update the Windows common structural contract so it proves the legacy transitional/tab body is gone, final panel source files exist, persistent controls read from snapshot fields, Reset View/100% and fake Trace/GPU toggles are absent, and no platform production host convergence occurred.",
-        "Update CMake to compile the new built-in/panel translation units and retain PX0PanelRegistry/PX0Workbench plus all inherited test targets."
+        "Update CMake to compile the new built-in/panel translation units and retain PX0PanelRegistry/PX0Workbench plus all inherited test targets.",
+        "Migrate apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py away from the obsolete PX0-04 legacy-tab oracle. Replace only the Debug UI architecture assertions that require ImGui::BeginTabBar / Canvas / Selection / RuntimeFacade in controller.cpp with assertions against the final PX0-05 Control/Tools and Inspect/Selection panel sources and Router-based selection action. Preserve the separate Windows selection-pointer-path and terminal-clear/facade synchronization assertions."
       ],
       "authorized_mutation_scope": [
         "debug_ui/include/canvas/debug_ui/builtin_panels.hpp",
@@ -42,7 +43,8 @@
         "debug_ui/tests/control_router_test.cpp",
         "debug_ui/CMakeLists.txt",
         "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
-        ".aegis/results/PX0-05/**"
+        ".aegis/results/PX0-05/**",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py"
       ],
       "preserve_unchanged": [
         "runtime/foundation/**",
@@ -67,7 +69,6 @@
         "debug_ui/src/panel_model.cpp",
         "debug_ui/include/canvas/debug_ui/windows_host.hpp",
         "debug_ui/src/windows_host.cpp",
-        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
         "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
         ".aegis/results/GT-DUI-M1/**"
       ],
@@ -148,7 +149,7 @@
         {
           "id": "PX0-05-T6-structural-control-contract",
           "command_or_oracle": "Run windows_imgui_skia_debug_ui_contract_test.py plus existing Windows selection and Web Debug UI structural tests using pytest when available or direct plain-Python invocation when they remain pytest-runtime-independent.",
-          "expected_result": "PASS: final built-in panel sources exist; Transitional legacy controls/##debug_tabs are absent; snapshot-backed control state, context disabling, owner-presence gating, Unsupported Trace/GPU/Scenario rows and absence of Reset View/100% are structurally proven; current host call sites remain unchanged.",
+          "expected_result": "PASS: final built-in panel sources exist; Transitional legacy controls/##debug_tabs are absent; snapshot-backed control state, context disabling, owner-presence gating, Unsupported Trace/GPU/Scenario rows and absence of Reset View/100% are structurally proven; current host call sites remain unchanged. The migrated Windows selection contract must assert the new panel architecture and must no longer require controller.cpp BeginTabBar/Canvas / Selection/RuntimeFacade legacy tab strings, while preserving pointer-path ownership assertions in windows/main.cpp.",
           "blocking_reason": "Provides source-level UI state/orchestration proof that is difficult to observe through Dear ImGui click simulation."
         },
         {
@@ -237,7 +238,15 @@
     "return_policy": {
       "continue_until_terminal_state": true,
       "return_surface": "CONTROL_REVIEW",
-      "official_gate_pass_forbidden": true
+      "official_gate_pass_forbidden": true,
+      "execution_enabled": false,
+      "blocked_until": "PX0-BUILD-01 exact accepted result is bound by a subsequent current PX0-05 package revision."
+    },
+    "external_dependency": {
+      "task_id": "PX0-BUILD-01",
+      "state": "BLOCKING_BEFORE_PX0_05_RESUME",
+      "exact_result_revision": null,
+      "reason": "The locked native build evidence currently fails before PX0-05 sources are evaluated because a pre-existing Runtime/Render -> Scene include-boundary failure cannot resolve canvas/scene/scene_types.hpp. This must be independently reproduced/classified/repaired before a corrected executable PX0-05 package can be issued."
     }
   }
 }
