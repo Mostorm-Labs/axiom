@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "obligations": [
+    {
+      "id": "PX0-05-V1-explicit-workspace-capability-placement",
+      "requirement": "Existing capability is explicitly registered into the approved Dashboard, Control, Inspect, Runtime, Performance and Scenarios slots, and the PX0-04 Transitional legacy controls contribution is removed.",
+      "oracle": "PX0Workbench renders each workspace and asserts the expected migrated section labels/content. Structural review proves controller.cpp contains no Transitional legacy controls string and no legacy ##debug_tabs tab bar, while registerBuiltinPanels explicitly invokes the six workspace registration families plus Ink.",
+      "acceptance": "The Workbench is no longer a shell wrapped around one legacy tab contribution.",
+      "evidence_required": "PX0Workbench + Windows structural contract + exact source diff"
+    },
+    {
+      "id": "PX0-05-V2-product-controls-use-snapshot-readback",
+      "requirement": "Selection, eraser, brush and history UI state is derived from DebugSnapshot and product actions route through DebugControlRouter only.",
+      "oracle": "Focused tests/render-source audit prove selected brush uses brushId/revision, eraser uses eraserId, selection uses selection.enabled, Undo/Redo disable from canUndo/canRedo, and handlers call router setBrush/setEraser/setSelectionMode/undo/redo. No static selected brush/eraser/selection truth exists in panel sources.",
+      "acceptance": "Persistent product state follows owner snapshot readback and no raw RuntimeFacade mutation path is introduced.",
+      "evidence_required": "PX0Workbench + PX0ControlRouter + exact source review"
+    },
+    {
+      "id": "PX0-05-V3-view-camera-contract",
+      "requirement": "Control/View exposes current camera state and only Pan, Zoom At, Fit Content, Fit Selection and Fit Primary Object commands using the frozen product path/context rules.",
+      "oracle": "PX0Workbench/source audit proves camera scale/translation/view generation/camera generation are displayed; pan/zoom drafts live in DebugUiSessionState; handlers call panBy/zoomAt/fitToContent/fitToSelection/fitPrimaryObject; Fit Selection is disabled for zero selection; Fit Primary Object is disabled for no primary; Reset View and 100% controls are absent.",
+      "acceptance": "No fallback from Fit Selection/Object and no platform-specific center/zoom rule is invented.",
+      "evidence_required": "PX0Workbench + PX0ControlRouter + exact source review"
+    },
+    {
+      "id": "PX0-05-V4-surface-and-runtime-engineering-controls",
+      "requirement": "Runtime panels expose current Document/ARC/Render/Surface state, Surface modes route through PlatformDebugControl via Router, and only frozen supported/unsupported Advanced Actions are presented.",
+      "oracle": "PX0Workbench/source audit proves Surface display includes resolved mode, generations, dimensions, DPR, availability, present/lost and latest receipt; Surface buttons are disabled/Unsupported without a bound PlatformDebug owner; Force Full Redraw uses submitAxiom only when an AxiomDebug owner is bound; other advanced rows are explicitly Unsupported and do not submit.",
+      "acceptance": "No engineering action falls back to product or platform-direct mutation and no missing semantics are invented.",
+      "evidence_required": "PX0Workbench + PX0ControlRouter + structural source review"
+    },
+    {
+      "id": "PX0-05-V5-performance-and-unsupported-capabilities",
+      "requirement": "Performance presents current bounded telemetry and ARC/render counters; Reset Rolling Metrics uses the Axiom engineering owner; Memory/Cache, Trace, GPU Timing and Feature Metrics unsupported capabilities remain explicit.",
+      "oracle": "PX0Workbench/source audit finds telemetry values and Reset Rolling Metrics routing, explicit Unsupported text for Memory & Cache/Trace/GPU Timing/Feature Metrics, and no fake Enable Trace/GPU toggle.",
+      "acceptance": "Performance stays primarily read-only and unsupported capability is not misrepresented as implemented.",
+      "evidence_required": "PX0Workbench + exact source review"
+    },
+    {
+      "id": "PX0-05-V6-inspect-and-feature-placeholders",
+      "requirement": "Inspect renders current Selection/Interaction state while unsupported Object/Relationship and successor Feature/Feature Diagnostics areas remain explicit placeholders.",
+      "oracle": "PX0Workbench renders selection count/primary/selection mode, ARC interaction counters and Axiom transient/overlay counters; Object, Relationship, Control/Feature and Runtime/Feature Diagnostics show Unsupported/Not implemented and contain no product requests.",
+      "acceptance": "No raw ObjectId editor or future feature semantics are introduced.",
+      "evidence_required": "PX0Workbench + exact source review"
+    },
+    {
+      "id": "PX0-05-V7-scenarios-no-semantic-bypass",
+      "requirement": "Scenarios shows Reset Canvas, Empty Canvas and Ink Baseline as Unsupported placeholders only.",
+      "oracle": "PX0Workbench switches to Scenarios, renders all three names plus Unsupported, and fake Runtime/Axiom/Platform owner call counters remain unchanged. Source audit finds no Document/Scene/selection/evidence mutation or scenario runner.",
+      "acceptance": "Task 12 establishes presentation only; no sanctioned fixture is invented.",
+      "evidence_required": "PX0Workbench + exact source review"
+    },
+    {
+      "id": "PX0-05-V8-owner-presence-and-control-state",
+      "requirement": "Common panels can distinguish unbound Runtime/AxiomDebug/PlatformDebug owners without receiving raw owner pointers.",
+      "oracle": "PX0ControlRouter asserts owner-presence queries for fully bound and null-owner routers. PX0Workbench renders engineering controls as Unsupported/disabled when corresponding owner presence is false while product/diagnostic readouts remain visible.",
+      "acceptance": "Owner-presence queries remain read-only Router adaptation and are not a generalized capability registry.",
+      "evidence_required": "PX0ControlRouter + PX0Workbench"
+    },
+    {
+      "id": "PX0-05-V9-ui-local-draft-state",
+      "requirement": "Camera input drafts and any PX0-05 panel-local presentation state live only in DebugUiSessionState.",
+      "oracle": "PX0Workbench mutates pan/zoom draft state without any Runtime/Axiom/Platform call count or snapshot identity change; no process-global/static panel state is introduced.",
+      "acceptance": "UI drafts cannot become canonical Runtime truth.",
+      "evidence_required": "PX0Workbench + exact source review"
+    },
+    {
+      "id": "PX0-05-V10-regression-and-scope-closure",
+      "requirement": "PX0-01..04 control/snapshot/workbench contracts remain valid and PX0-06+ work does not leak into this package.",
+      "oracle": "All frozen PX0/DUI regressions and Windows/Web structural contracts pass; exact diff has no runtime/foundation mutation, platform production host mutation, Workbench/PanelRegistry redesign, Preview repair, GT-DUI-M1 evidence mutation, Shape/RichText/Connector/Snap/Image behavior, or PX0-06 host convergence.",
+      "acceptance": "Only existing-capability panel migration, UI-local draft state, read-only Router owner-presence support and mechanically required tests/CMake changes are present.",
+      "evidence_required": "full regression set + exact authorized-scope diff"
+    }
+  ]
+}
