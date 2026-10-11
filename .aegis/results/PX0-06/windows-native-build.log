@@ -1,0 +1,6 @@
+PX0-06 Windows native build
+profile: locked clang-cl + prebuilt Skia, Ninja Release, VS x64 environment
+configure: out/px0-06-windows
+cache: RF01=ON, POC01=OFF, ARC=ON, DEBUG_UI=ON, PROFILE=controller, SKIA_HEADLESS=ON, SEMANTIC=OFF
+build targets: canvas_debug_ui, axiom_ink_playground_windows
+result: successful link

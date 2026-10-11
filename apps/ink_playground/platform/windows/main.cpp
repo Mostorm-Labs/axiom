@@ -8,9 +8,7 @@
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "windows_d3d12_skia_surface_provider.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
-#include "canvas/debug_ui/snapshot_assembler.hpp"
-#include "canvas/debug_ui/activity_log.hpp"
-#include "canvas/debug_ui/control_router.hpp"
+#include "canvas/debug_ui/controller.hpp"
 #include "../common/canvas_runtime_facade_adapter.hpp"
 #include "canvas/debug_ui/surface_debug_queue.hpp"
 #include "canvas/debug_ui/debug_command_queue.hpp"
@@ -122,6 +120,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::mutex previewCompletionMutex;
   std::optional<PreviewPresentationCapture> previewCompletion;
   std::uint64_t previewCompletionPresentCount = 0;
+  std::uint64_t toolbarRequestId = 1;
   bool debugF12Down = false;
   canvas::runtime::SurfaceMode canonicalSurfaceMode =
       canvas::runtime::SurfaceMode::kPlatformDefault;
@@ -137,16 +136,13 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   canvas::ink_playground::WindowsD3D12SkiaSurfaceProvider* previewProvider = nullptr;
 #endif
   std::unique_ptr<canvas::debug_ui::WindowsDebugUiHost> debugUi;
-  canvas::debug_ui::MutexCopySnapshotChannel debugSnapshots;
+  std::unique_ptr<canvas::debug_ui::DebugController> debugController;
   std::unique_ptr<WindowsRuntimeFacade> runtimeFacade;
   std::unique_ptr<WindowsAxiomDebugControl> axiomDebugControl;
   std::unique_ptr<WindowsPlatformDebugControl> platformDebugControl;
   std::unique_ptr<WindowsArcDiagnostics> arcDiagnostics;
   std::unique_ptr<WindowsPlatformDiagnostics> platformDiagnostics;
   std::unique_ptr<WindowsTelemetry> telemetry;
-  std::unique_ptr<canvas::debug_ui::DebugActivityLog> activityLog;
-  std::unique_ptr<canvas::debug_ui::DebugControlRouter> controlRouter;
-  canvas::debug_ui::DebugSnapshotAssembler snapshotAssembler;
   int selectedTool = 4101;
   int selectionPreviousTool = 4101;
   std::unordered_set<std::uint64_t> selectionPointers;
@@ -158,7 +154,7 @@ enum : int {
   kToolObjectEraser, kToolPartialEraser, kToolSelection
 };
 
-bool selectWindowsTool(State& value, int command) {
+bool applyWindowsToolToHost(State& value, int command) {
   bool selected = false;
   if (command == kToolVector || command == kToolMarker ||
       command == kToolChalk || command == kToolMembrane) {
@@ -189,6 +185,16 @@ bool selectWindowsTool(State& value, int command) {
   }
   InvalidateRect(value.window, nullptr, FALSE);
   return true;
+}
+
+bool selectWindowsTool(State& value, int command);
+
+void syncWindowsToolPresentation(State& value, int command) {
+  value.selectedTool = command;
+  for (const auto& [id, button] : value.toolButtons) {
+    SendMessageW(button, BM_SETCHECK, id == command ? BST_CHECKED : BST_UNCHECKED, 0);
+  }
+  InvalidateRect(value.window, nullptr, FALSE);
 }
 
 bool beginCanvasInput(State& value, std::uint64_t pointerId) noexcept {
@@ -304,7 +310,7 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
       if (profile != nullptr && state_.host->setSelectionMode(false) &&
           state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
           state_.host->selectBrushProfile(profile, revision)) {
-        state_.selectedTool = 4100 + static_cast<int>(request.brushId);
+        syncWindowsToolPresentation(state_, 4100 + static_cast<int>(request.brushId));
         clearCanvasInput(state_);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
       }
@@ -367,12 +373,8 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
                                    : InkPlaygroundHost::ToolMode::kBrush;
       if (request.eraserId != 0U && state_.host->setSelectionMode(false) &&
           state_.host->selectTool(mode)) {
-        state_.selectedTool = request.eraserId == 1U ? 4105 : 4106;
+        syncWindowsToolPresentation(state_, request.eraserId == 1U ? 4105 : 4106);
         clearCanvasInput(state_);
-        for (const auto& [id, button] : state_.toolButtons) {
-          SendMessageW(button, BM_SETCHECK, id == state_.selectedTool ? BST_CHECKED : BST_UNCHECKED, 0);
-        }
-        InvalidateRect(state_.window, nullptr, FALSE);
         receipt.state = canvas::runtime::ProductControlState::kApplied;
       }
       return receipt;
@@ -381,13 +383,37 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
       receipt.state = canvas::runtime::ProductControlState::kUnsupported;
       return receipt;
     }
-    if (!selectWindowsTool(state_, static_cast<int>(request.toolId))) return receipt;
+    if (!applyWindowsToolToHost(state_, static_cast<int>(request.toolId))) return receipt;
     receipt.state = canvas::runtime::ProductControlState::kApplied;
     return receipt;
   }
  private:
   State& state_;
 };
+
+bool selectWindowsTool(State& value, int command) {
+  if (value.runtimeFacade == nullptr) return false;
+  const auto generation = value.runtimeFacade->readRuntimeState().identity.runtimeGeneration;
+  const auto requestId = value.toolbarRequestId++;
+  canvas::runtime::ProductControlReceipt receipt{};
+  if (command == kToolVector || command == kToolMarker ||
+      command == kToolChalk || command == kToolMembrane) {
+    const auto brushId = static_cast<std::uint32_t>(command - kToolVector + 1);
+    const auto revision = command == kToolChalk ? 4U : 1U;
+    receipt = value.runtimeFacade->setBrush(brushId, revision, requestId, generation);
+  } else if (command == kToolObjectEraser || command == kToolPartialEraser) {
+    receipt = value.runtimeFacade->setEraser(
+        static_cast<std::uint32_t>(command == kToolObjectEraser ? 1U : 2U),
+        requestId, generation);
+  } else if (command == kToolSelection) {
+    receipt = value.runtimeFacade->setSelectionMode(true, requestId, generation);
+  } else {
+    return false;
+  }
+  if (receipt.state != canvas::runtime::ProductControlState::kApplied) return false;
+  syncWindowsToolPresentation(value, command);
+  return true;
+}
 
 class WindowsArcDiagnostics final : public canvas::runtime::ArcDiagnostics {
  public:
@@ -1195,29 +1221,14 @@ void persistEvidence(const State& value) {
       renderPath);
 }
 
-canvas::debug_ui::DebugSnapshot captureDebugSnapshot(State& value) {
-  const canvas::debug_ui::DebugSnapshotSources sources{
-      value.runtimeFacade.get(), value.runtimeFacade.get(), value.arcDiagnostics.get(),
-      value.platformDiagnostics.get(), value.telemetry.get(), value.activityLog.get()};
-  auto snapshot = value.snapshotAssembler.capture(sources);
-  if (value.controlRouter != nullptr) {
-    value.controlRouter->beginFrame(snapshot);
-    value.controlRouter->refreshReceipts();
-    if (value.activityLog != nullptr) snapshot.activity = value.activityLog->snapshot();
-  }
-  return snapshot;
-}
-
 void paint(HWND window, State& value) {
   if (value.debugUi != nullptr) {
-    const auto snapshot = captureDebugSnapshot(value);
-    value.debugSnapshots.publish(snapshot);
     // Do not rebuild the full ImGui/Skia overlay from a canvas paint while a
     // pointer is active. WM_PAINT shares the input thread and can otherwise
     // delay coalesced pointer delivery. The pointer-up path and the next idle
     // timer refresh the panel after the stroke is complete.
     if (value.activeKeys.empty() && !value.resizeInProgress) {
-      value.debugUi->frame(snapshot);
+      value.debugUi->frame();
     }
   }
   PAINTSTRUCT ps{};
@@ -1940,23 +1951,12 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   value.arcDiagnostics = std::make_unique<WindowsArcDiagnostics>(value);
   value.platformDiagnostics = std::make_unique<WindowsPlatformDiagnostics>(value);
   value.telemetry = std::make_unique<WindowsTelemetry>(value);
-  value.activityLog = std::make_unique<canvas::debug_ui::DebugActivityLog>();
-  value.controlRouter = std::make_unique<canvas::debug_ui::DebugControlRouter>(
-      value.runtimeFacade.get(), value.axiomDebugControl.get(),
-      value.platformDebugControl.get(), value.activityLog.get());
-  value.debugUi->setRuntimeFacade(value.runtimeFacade.get());
-  value.debugUi->setDiagnostics(value.runtimeFacade.get());
-  value.debugUi->setAxiomDebugControl(value.axiomDebugControl.get());
-  value.debugUi->setPlatformDebugControl(value.platformDebugControl.get());
-  value.debugUi->setControlRouter(value.controlRouter.get());
-  value.debugUi->setArcDiagnostics(value.arcDiagnostics.get());
-  value.debugUi->setPlatformDiagnostics(value.platformDiagnostics.get());
-  value.debugUi->setTelemetry(value.telemetry.get());
-  value.debugUi->setSnapshotRefresh([&value]() {
-    const auto snapshot = captureDebugSnapshot(value);
-    value.debugSnapshots.publish(snapshot);
-    return snapshot;
-  });
+  value.debugController = std::make_unique<canvas::debug_ui::DebugController>(
+      canvas::debug_ui::DebugControllerContext{
+          value.runtimeFacade.get(), value.runtimeFacade.get(), value.arcDiagnostics.get(),
+          value.platformDiagnostics.get(), value.telemetry.get(),
+          value.axiomDebugControl.get(), value.platformDebugControl.get()});
+  value.debugUi->setController(value.debugController.get());
   const BOOL touchRegistered = RegisterTouchWindow(value.window, TWF_WANTPALM);
   const BOOL pointerTouchRegistered = RegisterPointerInputTarget(value.window, PT_TOUCH);
   const BOOL pointerPenRegistered = RegisterPointerInputTarget(value.window, PT_PEN);

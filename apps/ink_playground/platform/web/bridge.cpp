@@ -9,9 +9,6 @@
 #include "canvas/runtime/diagnostics.hpp"
 #include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
-#include "canvas/debug_ui/snapshot_assembler.hpp"
-#include "canvas/debug_ui/activity_log.hpp"
-#include "canvas/debug_ui/control_router.hpp"
 #include "imgui.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
@@ -66,6 +63,10 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
  public:
   explicit WebRuntimeFacade(Host& host)
       : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
+  [[nodiscard]] std::uint64_t nextRequestId() noexcept {
+    if (nextRequest_ == 0U) nextRequest_ = 1U;
+    return nextRequest_++;
+  }
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto view = host_.viewportGesture();
     return {{1U, host_.semanticGeneration().value(),
@@ -122,6 +123,27 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
       }
       return receipt;
     }
+    if (request.action == canvas::runtime::ProductControlAction::kSetTool) {
+      bool applied = false;
+      if (request.toolId == 0U) {
+        applied = host_.setSelectionMode(false) && host_.selectTool(Host::ToolMode::kBrush);
+      } else if (request.toolId == 1U) {
+        applied = host_.setSelectionMode(false) &&
+            host_.selectTool(Host::ToolMode::kObjectEraser);
+      } else if (request.toolId == 2U) {
+        applied = host_.setSelectionMode(false) &&
+            host_.selectTool(Host::ToolMode::kPartialEraser);
+      }
+      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
+                              : canvas::runtime::ProductControlState::kRejected;
+      return receipt;
+    }
+    if (request.action == canvas::runtime::ProductControlAction::kSetSelectionMode) {
+      receipt.state = host_.setSelectionMode(request.selectionMode)
+          ? canvas::runtime::ProductControlState::kApplied
+          : canvas::runtime::ProductControlState::kRejected;
+      return receipt;
+    }
     if (request.action == canvas::runtime::ProductControlAction::kUndo ||
         request.action == canvas::runtime::ProductControlAction::kRedo) {
       const bool applied = request.action == canvas::runtime::ProductControlAction::kUndo
@@ -155,6 +177,7 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
   }
  private:
   Host& host_;
+  std::uint64_t nextRequest_ = 1U;
 };
 
 class WebPlatformDiagnostics final : public canvas::runtime::IPlatformDiagnostics {
@@ -204,7 +227,8 @@ class WebArcDiagnostics final : public canvas::runtime::IArcDiagnostics {
 
 struct DebugUiState final {
   std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider;
-  std::unique_ptr<WebRuntimeFacade> runtime;
+  WebRuntimeFacade* runtime = nullptr;
+  std::unique_ptr<canvas::debug_ui::DebugController> controller;
   sk_sp<SkImage> fontTexture;
   ImGuiContext* context = nullptr;
   bool visible = false;
@@ -213,41 +237,35 @@ struct DebugUiState final {
   int height = 0;
   std::uint32_t selectedTool = 4101;
   bool ctrlDown = false;
-  std::uint64_t nextRequestId = 1;
   canvas::debug_ui::InputCaptureGate capture;
   std::unique_ptr<WebPlatformDiagnostics> platformDiagnostics;
   std::unique_ptr<WebTelemetry> telemetry;
   std::unique_ptr<WebArcDiagnostics> arcDiagnostics;
-  canvas::debug_ui::DebugSnapshotAssembler snapshotAssembler;
-  canvas::debug_ui::DebugActivityLog activityLog;
-  std::unique_ptr<canvas::debug_ui::DebugControlRouter> controlRouter;
 };
+std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>>& runtimeFacades() {
+  static std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>> values;
+  return values;
+}
+WebRuntimeFacade* runtimeFacade(Handle value) {
+  const auto it = runtimeFacades().find(value);
+  return it == runtimeFacades().end() ? nullptr : it->second.get();
+}
 std::unordered_map<Handle, DebugUiState>& debugUi() {
   static std::unordered_map<Handle, DebugUiState> values;
   return values;
 }
 
-canvas::debug_ui::DebugSnapshot captureDebugSnapshot(Host& target, DebugUiState& state) {
-  const canvas::debug_ui::DebugSnapshotSources sources{
-      state.runtime.get(), state.runtime.get(), state.arcDiagnostics.get(),
-      state.platformDiagnostics.get(), state.telemetry.get(), &state.activityLog};
-  auto snapshot = state.snapshotAssembler.capture(sources);
-  if (state.controlRouter != nullptr) {
-    state.controlRouter->beginFrame(snapshot);
-    state.controlRouter->refreshReceipts();
-    snapshot.activity = state.activityLog.snapshot();
-  }
-  return snapshot;
-}
-
 bool initializeDebugUi(Handle value, Host& target, int width, int height) {
   auto& state = debugUi()[value];
-  state.runtime = std::make_unique<WebRuntimeFacade>(target);
-  state.controlRouter = std::make_unique<canvas::debug_ui::DebugControlRouter>(
-      state.runtime.get(), nullptr, nullptr, &state.activityLog);
+  state.runtime = runtimeFacade(value);
+  if (state.runtime == nullptr) return false;
   state.platformDiagnostics = std::make_unique<WebPlatformDiagnostics>(target);
   state.telemetry = std::make_unique<WebTelemetry>(target);
   state.arcDiagnostics = std::make_unique<WebArcDiagnostics>(target);
+  state.controller = std::make_unique<canvas::debug_ui::DebugController>(
+      canvas::debug_ui::DebugControllerContext{
+          state.runtime, state.runtime, state.arcDiagnostics.get(),
+          state.platformDiagnostics.get(), state.telemetry.get(), nullptr, nullptr});
   state.provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
       canvas::render::WebGlSurfaceConfig{"#debugUi", static_cast<std::uint32_t>(width),
                                          static_cast<std::uint32_t>(height), 0});
@@ -290,12 +308,8 @@ bool renderDebugUi(Handle value) {
   auto& io = ImGui::GetIO();
   io.DeltaTime = 1.0F / 60.0F;
   io.DisplaySize = ImVec2(static_cast<float>(state.width), static_cast<float>(state.height));
-  const auto drawFrame = [&](const canvas::debug_ui::DebugSnapshot& snapshot) {
-    const auto selectedTool = snapshot.product.value.tool.toolId;
-    state.selectedTool = selectedTool == 0U ? state.selectedTool : selectedTool;
-    if (state.controlRouter != nullptr) state.controlRouter->beginFrame(snapshot);
-    const bool submitted = canvas::debug_ui::buildImGuiPanels(
-        snapshot, static_cast<int>(state.selectedTool), state.controlRouter.get());
+  const auto drawFrame = [&]() {
+    const bool submitted = state.controller != nullptr && state.controller->buildImGuiFrame();
     ImGui::Render();
     const auto acquired = state.provider->acquire();
     if (acquired.code != canvas::render::SkiaSurfaceAcquireCode::kAcquired) return std::pair<bool, bool>{false, submitted};
@@ -308,14 +322,14 @@ bool renderDebugUi(Handle value) {
     return std::pair<bool, bool>{true, submitted};
   };
   ImGui::NewFrame();
-  const auto first = drawFrame(captureDebugSnapshot(*hostIt->second, state));
+  const auto first = drawFrame();
   if (!first.first) return false;
   // Product controls are committed while building the first frame. Redraw
   // once from the owner snapshot so a brush/eraser click is visible without
   // waiting for a canvas stroke or the next unrelated animation tick.
   if (first.second) {
     ImGui::NewFrame();
-    const auto second = drawFrame(captureDebugSnapshot(*hostIt->second, state));
+    const auto second = drawFrame();
     if (!second.first) return false;
   }
   return true;
@@ -381,12 +395,25 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_brush_profile(
     std::uint32_t value, const char* profile, std::uint32_t revision) {
-  return host(value) != nullptr && profile != nullptr &&
-         host(value)->selectBrushProfile(profile, revision) ? 1 : 0;
+  auto* facade = runtimeFacade(value);
+  if (facade == nullptr || profile == nullptr) return 0;
+  static constexpr const char* profiles[] = {
+      "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
+  std::uint32_t brushId = 0;
+  for (std::uint32_t i = 0; i < 4U; ++i) {
+    if (std::string_view(profile) == profiles[i]) { brushId = i + 1U; break; }
+  }
+  if (brushId == 0U) return 0;
+  const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
+  return facade->setBrush(brushId, revision, facade->nextRequestId(), generation).state ==
+      canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_tool(std::uint32_t value, int tool) {
-  if (host(value) == nullptr || tool < 0 || tool > 2) return 0;
-  return host(value)->selectTool(static_cast<Host::ToolMode>(tool)) ? 1 : 0;
+  auto* facade = runtimeFacade(value);
+  if (facade == nullptr || tool < 0 || tool > 2) return 0;
+  const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
+  return facade->setTool(static_cast<std::uint32_t>(tool), facade->nextRequestId(), generation).state ==
+      canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_begin(std::uint32_t value, std::uint32_t pointer) {
   return host(value) != nullptr && host(value)->eraserBegin(pointer) ? 1 : 0;
@@ -406,6 +433,7 @@ EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_ink_create() {
   while (nextHandle == 0U || hosts().contains(nextHandle)) ++nextHandle;
   const Handle value = nextHandle++;
   hosts().emplace(value, std::make_unique<Host>());
+  runtimeFacades().emplace(value, std::make_unique<WebRuntimeFacade>(*hosts().at(value)));
   if (!initBrushes(value)) { hosts().erase(value); return 0; }
   return value;
 }
@@ -413,6 +441,7 @@ EMSCRIPTEN_KEEPALIVE void axiom_ink_destroy(std::uint32_t value) {
 #if AXIOM_WEB_DEBUG_UI
   destroyDebugUi(value);
 #endif
+  runtimeFacades().erase(value);
   brushes().erase(value);
   hosts().erase(value);
 }
@@ -520,10 +549,10 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_debug_ui_key(std::uint32_t value,
   }
   ImGui::GetIO().AddKeyEvent(imguiKey, isDown);
   if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Z) {
-    (void)state.runtime->undo(state.nextRequestId++,
+    (void)state.runtime->undo(state.runtime->nextRequestId(),
                               state.runtime->readRuntimeState().identity.runtimeGeneration);
   } else if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Y) {
-    (void)state.runtime->redo(state.nextRequestId++,
+    (void)state.runtime->redo(state.runtime->nextRequestId(),
                               state.runtime->readRuntimeState().identity.runtimeGeneration);
   }
   return renderDebugUi(value) ? 1 : 0;

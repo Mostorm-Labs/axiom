@@ -1,0 +1,3 @@
+PX0-06 focused CTest
+command: ctest --test-dir out/px0-06-windows --output-on-failure -R ^(PX0PanelRegistry|PX0Workbench|DUI20DebugUiContracts|PX0RuntimeFacadeContract|DUIM1PanelModel|PX0ControlRouter|PX0DebugSnapshot|DUIM1ViewControls|DUIM1RuntimeFacade)$
+result: 9/9 passed

@@ -115,7 +115,7 @@ def test_common_controller_only_submits_to_runtime_and_platform_owner():
 
 def test_windows_host_does_not_own_surface_mode_truth():
     source = (ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "windows_host.hpp").read_text(encoding="utf-8")
-    assert "PlatformDebugControl*" in source
+    assert "PlatformDebugControl*" not in source
     assert "PlatformDebugControl surfaceControl_" not in source
 
 
@@ -129,8 +129,9 @@ def test_windows_composition_root_implements_platform_owner_and_runtime_facade()
     source = WINDOWS_MAIN.read_text(encoding="utf-8")
     assert "PlatformDebugControl" in source
     assert "RuntimeFacade" in source
-    assert "setRuntimeFacade" in source
-    assert "setPlatformDebugControl" in source
+    assert "DebugController" in source
+    assert "DebugControllerContext" in source
+    assert "setController" in source
 
 
 def test_windows_composition_root_shares_input_capture_gate_with_debug_host():
@@ -146,18 +147,19 @@ def test_overlay_refreshes_snapshot_before_panel_render():
     host = HOST.read_text(encoding="utf-8")
     header = (ROOT / "debug_ui" / "include" / "canvas" / "debug_ui" / "windows_host.hpp").read_text(encoding="utf-8")
     main = WINDOWS_MAIN.read_text(encoding="utf-8")
-    assert "std::function<DebugSnapshot()> snapshotRefresh_" in header
-    assert "if (snapshotRefresh_)" in host
-    assert "snapshot_ = snapshotRefresh_();" in host
-    assert "value.debugUi->setSnapshotRefresh" in main
+    assert "DebugController* controller_" in header
+    assert "controller_->buildImGuiFrame()" in host
+    assert "value.debugUi->setController(value.debugController.get())" in main
     assert "debugUi->refresh();" in main
 
 
 def test_windows_uses_common_snapshot_assembler_without_local_mapping():
     source = WINDOWS_MAIN.read_text(encoding="utf-8")
-    assert "DebugSnapshotAssembler" in source
-    assert "captureDebugSnapshot" in source
-    assert "buildDebugSnapshot(" not in source
+    assert "DebugSnapshotAssembler" not in source
+    assert "DebugActivityLog" not in source
+    assert "DebugControlRouter" not in source
+    assert "captureDebugSnapshot" not in source
+    assert "DebugController" in source
 
 
 def test_overlay_uses_one_imgui_new_frame_per_render_pass():
@@ -172,15 +174,9 @@ def test_overlay_uses_one_imgui_new_frame_per_render_pass():
 
 def test_windows_activity_log_and_router_refresh_before_publish():
     source = WINDOWS_MAIN.read_text(encoding="utf-8")
-    assert "DebugActivityLog" in source
-    assert "DebugControlRouter" in source
-    capture = source.split("canvas::debug_ui::DebugSnapshot captureDebugSnapshot", 1)[1].split(
-        "void paint", 1
-    )[0]
-    assert "snapshotAssembler.capture" in capture
-    assert "controlRouter->beginFrame" in capture
-    assert "controlRouter->refreshReceipts" in capture
-    assert "snapshot.activity = value.activityLog->snapshot()" in capture
+    assert "DebugActivityLog" not in source
+    assert "DebugControlRouter" not in source
+    assert "debugController" in source
 
 
 def test_generic_debug_ui_command_queue_is_retired_but_owner_queues_remain():
