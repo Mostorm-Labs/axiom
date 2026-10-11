@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "stage": "P34_GATE_REVIEW_AFTER_P36",
+  "governing_package": {
+    "package_id": "PX0-06-P31-v0.1",
+    "materialization_ref": "3d18d030abea60b991fc7436fb8524a44760c979"
+  },
+  "repair_package": {
+    "package_id": "PX0-06-P36-v0.1",
+    "materialization_ref": "d9a13af091a9123435f3eb740784807068100fb9",
+    "classification": "IMPLEMENTATION_DEFECT",
+    "repaired_finding": "PX0-06-LF1-web-debug-ui-off-build-break"
+  },
+  "accepted_resume_cursor": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "reviewed_code_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+  "reviewed_materialized_ref": "refs/heads/codex/px0-06-p36-web-debug-off-compat",
+  "reviewed_evidence_head": "06964a48400d748bf22a8fef3818bd7c428fe388",
+  "frozen_requirement_audit": {
+    "passed": [
+      "PX0-06 Windows thin-host convergence",
+      "PX0-06 Windows RuntimeFacade temporary-toolbar routing",
+      "PX0-06 Web common DebugController convergence when Debug UI is enabled",
+      "PX0-06 Web temporary-toolbar RuntimeFacade routing",
+      "PX0-06 input/lifecycle and temporary-toolbar preservation",
+      "P36 repair: WebRuntimeFacade and per-host facade lifetime remain available when AXIOM_WEB_DEBUG_UI=0",
+      "P36 repair: DebugController/ImGui/Web Debug UI presentation remains conditional",
+      "nine focused PX0/DUI regressions",
+      "Windows/Web structural contracts",
+      "fresh Windows native build from P32",
+      "Debug-UI-enabled Web physical-target build from P32 with post-repair structural/source equivalence",
+      "Debug-UI-off Web target compatibility repaired",
+      "authorized cursor-relative source scope",
+      "git diff --check"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "exact reviewer-resolvable P36 branch head",
+      "cursor-to-repair source diff proving bridge.cpp is the only production source delta",
+      "P36 Web Debug-OFF build observation",
+      "P36 structural contract evidence",
+      "P36 9/9 focused CTest evidence",
+      "P36 scope audit",
+      "P32 Windows native build evidence",
+      "P32 Debug-UI-enabled Web physical build evidence"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "source_delta_after_p32_result": [
+      "apps/ink_playground/platform/web/bridge.cpp"
+    ],
+    "repair_shape": [
+      "canvas/runtime/runtime_facade.hpp and canvas/runtime/diagnostics.hpp are available outside AXIOM_WEB_DEBUG_UI",
+      "WebRuntimeFacade is outside AXIOM_WEB_DEBUG_UI",
+      "runtimeFacades()/runtimeFacade() are outside AXIOM_WEB_DEBUG_UI",
+      "DebugController/ImGui/platform Debug UI diagnostics and DebugUiState remain inside AXIOM_WEB_DEBUG_UI"
+    ],
+    "no_runtime_change": true,
+    "no_debug_ui_common_change": true,
+    "no_windows_change_after_cursor": true,
+    "no_cmake_or_preset_change": true,
+    "no_warning_policy_change": true,
+    "no_px0_07_or_physical_change": true,
+    "result_boundary_resolution": {
+      "production_repair_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+      "evidence_head": "06964a48400d748bf22a8fef3818bd7c428fe388",
+      "source_changes_after_production_repair": false
+    }
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "PX0-06-NF1-result-metadata-revision-lag",
+        "finding": "At the evidence head, result.json/evidence-manifest.json name an evidence-only descendant rather than the production repair revision; p36-scope-audit and repository diff independently resolve the production repair at 6c734f76... and prove no source change afterward.",
+        "rationale": "Reviewer-resolvable source/evidence identity is unambiguous, so this is evidence-hygiene hardening rather than a residual correctness or proof-capability gap."
+      },
+      {
+        "id": "PX0-06-NF2-manual-physical-pending",
+        "finding": "Manual Windows/Web spot-check remains PENDING.",
+        "rationale": "The governing P31 package classifies manual observation as corroborative; PX0-07 owns physical closure."
+      },
+      {
+        "id": "PX0-06-NF3-existing-msvc-full-tree-warning",
+        "finding": "The unrelated existing MSVC runtime/semantic C4702 promoted by /WX remains outside PX0-06.",
+        "rationale": "Frozen PX0-06 native evidence uses the accepted clang-cl profile and passed."
+      }
+    ]
+  },
+  "verdict": "PASS_WITH_FINDINGS",
+  "closure": {
+    "px0_06_closed": true,
+    "px0_closed": false,
+    "dui_m1_physical_status_changed": false,
+    "physical_qualification_changed": false,
+    "next_work_package": "PX0-07"
+  },
+  "official_claim_boundary": "This is the PX0-06 work-package P34 decision only. It is not PX0, DUI-M1, Preview, physical qualification, combined G4, or G5 authorization."
+}
