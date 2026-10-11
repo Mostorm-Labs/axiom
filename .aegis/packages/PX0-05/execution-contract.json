@@ -100,7 +100,8 @@
         "Scenarios non-mutating placeholder flow",
         "legacy toolId handling and proof that 4107 is not interpreted as semantic Pan",
         "mapping from every frozen verification obligation to code/test/source oracle",
-        "unresolved_semantic_decisions"
+        "unresolved_semantic_decisions",
+        "native verification uses a fresh build tree with CANVAS_BUILD_RF01=ON and CANVAS_BUILD_POC01=OFF; prior PX0-05 cache reuse is forbidden"
       ],
       "continue_only_if": {
         "unresolved_semantic_decisions": [],
@@ -154,8 +155,8 @@
         },
         {
           "id": "PX0-05-T7-native-common-ui-build",
-          "command_or_oracle": "Build canvas_debug_ui and axiom_ink_playground_windows with the repository's locked native/clang-cl + Skia environment used successfully by PX0-04.",
-          "expected_result": "PASS. A pre-existing unrelated MSVC full-tree C4702 /WX diagnostic may be recorded separately but must not trigger scope expansion.",
+          "command_or_oracle": "Create a fresh native Ninja Release build tree using the frozen PX0-05 native_verification_profile (clang-cl + locked Skia, CANVAS_BUILD_RF01=ON, CANVAS_BUILD_POC01=OFF). Build canvas_debug_ui and axiom_ink_playground_windows. Do not reuse the earlier PX0-05 cache that had RF01=OFF.",
+          "expected_result": "PASS through successful Windows application link. The Runtime/Render -> Scene scene_types.hpp failure must not occur under the frozen profile. If it does recur under this exact clean profile, return BLOCKED_ENVIRONMENT without Runtime/Render/Scene mutation. The unrelated known MSVC full-tree C4702 /WX issue remains outside this target.",
           "blocking_reason": "New common panel translation units must compile and link into a real host."
         },
         {
@@ -188,7 +189,7 @@
         "PX0Workbench and PX0ControlRouter focused evidence",
         "PX0PanelRegistry and inherited PX0/DUI regression evidence",
         "Windows/Web structural control-state evidence",
-        "native common-ui/Windows app build evidence",
+        "native canvas_debug_ui + Windows application build evidence from a fresh build tree matching native_verification_profile",
         "exact authorized-scope diff and git diff --check"
       ],
       "corroborative": [
@@ -208,7 +209,7 @@
         "Trace/GPU Timing/MemoryCache/Feature placeholders are explicit Unsupported and no fake controls exist.",
         "Reset Canvas, Empty Canvas and Ink Baseline render Unsupported and cause zero owner/runtime mutation.",
         "Router owner-presence queries are read-only and all PX0-03 routing regressions remain green.",
-        "All focused/regression/structural/native build evidence passes.",
+        "All focused/regression/structural evidence passes and the fresh RF01=ON / POC01=OFF locked native profile builds canvas_debug_ui plus axiom_ink_playground_windows successfully.",
         "No Runtime semantic change, host convergence, successor product feature, Preview repair, physical claim or G5 work is introduced.",
         "The exact result is pushed/materialized for independent P34 Control Review."
       ]
@@ -238,15 +239,33 @@
     "return_policy": {
       "continue_until_terminal_state": true,
       "return_surface": "CONTROL_REVIEW",
-      "official_gate_pass_forbidden": true,
-      "execution_enabled": false,
-      "blocked_until": "PX0-BUILD-01 exact accepted result is bound by a subsequent current PX0-05 package revision."
+      "official_gate_pass_forbidden": true
     },
-    "external_dependency": {
-      "task_id": "PX0-BUILD-01",
-      "state": "BLOCKING_BEFORE_PX0_05_RESUME",
-      "exact_result_revision": null,
-      "reason": "The locked native build evidence currently fails before PX0-05 sources are evaluated because a pre-existing Runtime/Render -> Scene include-boundary failure cannot resolve canvas/scene/scene_types.hpp. This must be independently reproduced/classified/repaired before a corrected executable PX0-05 package can be issued."
+    "native_verification_profile": {
+      "source": "PX0-BUILD-01 accepted environment diagnosis",
+      "diagnostic_source_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+      "diagnostic_evidence_head": "def8f6deebc54af72e109fb9ad0875fbbf4949e4",
+      "clean_build_required": true,
+      "reuse_previous_px0_05_cache_forbidden": true,
+      "generator": "Ninja",
+      "build_type": "Release",
+      "compiler_family": "clang-cl",
+      "required_cache_values": {
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_BUILD_INK_PLAYGROUND": "ON",
+        "CANVAS_BUILD_ARC": "ON",
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "controller",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "ON",
+        "CANVAS_RF01_BUILD_TESTS": "ON",
+        "CANVAS_BUILD_SEMANTIC": "OFF",
+        "CANVAS_SEMANTIC_ENABLE_PROTOBUF": "OFF"
+      },
+      "sdk_rule": "Use the same locked Windows x64 D3D12 Release Skia SDK used by the accepted PX0-04 native build / PX0-BUILD-01 clean reproduction.",
+      "environment_rule": "If scene_types.hpp is missing again under this exact clean profile, return BLOCKED_ENVIRONMENT; do not modify Runtime/Render/Scene source or CMake inside PX0-05."
     }
   }
 }
