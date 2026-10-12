@@ -66,15 +66,32 @@ PlatformInteractionIngressResult PlatformInteractionIngress::submit(
 
 PlatformInteractionIngressResult PlatformInteractionIngress::sourceLost(
     InputSourceId source, std::uint64_t sequence, std::uint64_t timestampNs) noexcept {
-  PlatformPointerBatch batch{};
-  batch.sourceLost = true;
+  PlatformInteractionIngressResult result{};
+  bool matched = false;
   for (const auto& [identity, key] : active_) {
     if (identity.source != source) continue;
-    batch.samples.push_back({source, key.pointer, sequence, timestampNs, 0.0F, 0.0F,
-                             0.0F, 0.0F, 0.0F, {}, {},
-                             SampleProvenance::kConfirmedCurrent, PointerPhase::kCancel});
+    matched = true;
+    PointerSample cancelled{};
+    cancelled.sequence = sequence;
+    cancelled.timestampNs = timestampNs;
+    cancelled.key = key;
+    cancelled.phase = PointerPhase::kCancel;
+    result.normalized.samples.push_back(cancelled);
+    if (registry_.end(key)) ++result.ended;
   }
-  return submit(batch);
+  for (auto it = active_.begin(); it != active_.end();) {
+    if (it->first.source == source) it = active_.erase(it);
+    else ++it;
+  }
+  // A source loss is a keyed cancel when another source is still active.  A
+  // terminal cancel is reserved for the legacy all-input boundary, which
+  // preserves the existing single-source cancellation behavior without
+  // cascading A's loss into B's live session.
+  const bool terminal = matched && active_.empty();
+  result.normalized.terminalCancel = terminal;
+  result.terminalCancel = terminal;
+  result.accepted = !result.normalized.samples.empty() || result.terminalCancel;
+  return result;
 }
 
 }  // namespace canvas::input
