@@ -1,0 +1,357 @@
+{
+  "schema": "fc01-shape2-independently-authored-expected-v0.1",
+  "status": "CANDIDATE_PENDING_INDEPENDENT_REVIEW",
+  "authority_ref": "notion://3f74c57a590c8128b936d7491884ffb7",
+  "p12_seed_ref": "notion://3f74c57a590c819987e9e07dd14eb9b4",
+  "p20_ref": "notion://3f74c57a590c81268d2fc9bea7860064",
+  "not_candidate_derived": "All expectations manually mapped from P12/P20 authority and frozen proto schema, not observed candidate implementation output.",
+  "cases": {
+    "SH2-G01": {
+      "status": "ACCEPT",
+      "tuple": [
+        1,
+        2,
+        3
+      ],
+      "shape": {
+        "width": 100,
+        "height": 80
+      },
+      "vertices": [
+        [
+          50,
+          0
+        ],
+        [
+          100,
+          80
+        ],
+        [
+          0,
+          80
+        ]
+      ],
+      "bbox": [
+        0,
+        0,
+        100,
+        80
+      ]
+    },
+    "SH2-G02": {
+      "status": "ACCEPT",
+      "local_geometry": "SH2-G01",
+      "inside": [
+        [
+          50,
+          40
+        ],
+        [
+          50,
+          80
+        ]
+      ],
+      "outside": [
+        [
+          5,
+          10
+        ],
+        [
+          50,
+          -1
+        ]
+      ],
+      "boundary_inclusive": true
+    },
+    "SH2-G03": {
+      "status": "ACCEPT",
+      "bbox_center": [
+        50,
+        40
+      ],
+      "centroid": [
+        50,
+        53.333333333333336
+      ],
+      "centroid_formula": "(50,160/3)",
+      "semantic_centroid_cached": false
+    },
+    "SH2-G04": {
+      "status": "ACCEPT",
+      "same_original_object_id": true,
+      "tuple_unchanged": [
+        1,
+        2,
+        3
+      ],
+      "intrinsic_size": [
+        200,
+        40
+      ],
+      "vertices": [
+        [
+          100,
+          0
+        ],
+        [
+          200,
+          40
+        ],
+        [
+          0,
+          40
+        ]
+      ]
+    },
+    "SH2-G05": {
+      "status": "ACCEPT",
+      "tuples": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2
+        ]
+      ],
+      "old_shape1_expected": "all_SH-G01_to_SH-G18_semantic_baselines_unchanged"
+    },
+    "SH2-G06": {
+      "status": "REJECT",
+      "tuples": [
+        [
+          1,
+          1,
+          3
+        ]
+      ],
+      "negative_control": "SH-G06",
+      "semantic_generation_delta": 0
+    },
+    "SH2-G07": {
+      "status": "REJECT",
+      "tuples": [
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          2
+        ]
+      ],
+      "no_shape1_alias": true
+    },
+    "SH2-G08": {
+      "status": "REJECT",
+      "tuples": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          2,
+          4
+        ],
+        [
+          1,
+          3,
+          3
+        ]
+      ],
+      "unknown_version_fails_closed": true
+    },
+    "SH2-G09": {
+      "status": "REJECT",
+      "invalid_extents": [
+        [
+          "width",
+          0
+        ],
+        [
+          "height",
+          0
+        ],
+        [
+          "width",
+          -1
+        ],
+        [
+          "height",
+          -1
+        ]
+      ],
+      "whole_operation_rejected": true
+    },
+    "SH2-G10": {
+      "status": "REJECT",
+      "invalid_numeric": [
+        "NaN",
+        "Infinity",
+        "-Infinity",
+        "-0"
+      ],
+      "negative_zero_then_zero_rejected": true
+    },
+    "SH2-G11": {
+      "status": "REJECT",
+      "must_have_explicit": [
+        "shape_kind",
+        "width",
+        "height"
+      ],
+      "no_scalar_default_inference": true
+    },
+    "SH2-G12": {
+      "status": "REJECT",
+      "invalid_cases": [
+        "wrong_ObjectKind",
+        "wrong_kind_version",
+        "wrong_content_oneof"
+      ],
+      "whole_record_invalid": true
+    },
+    "SH2-G13": {
+      "status": "ACCEPT",
+      "fill": "None",
+      "stroke": "None",
+      "geometry_retained": true,
+      "opacity": "existing_canonical_default"
+    },
+    "SH2-G14": {
+      "status": "ACCEPT",
+      "transforms": [
+        "translation",
+        "rotation",
+        "reflection"
+      ],
+      "shape_content_unchanged": true,
+      "derived_vertices_from_original_shape": true
+    },
+    "SH2-G15": {
+      "status": "ACCEPT",
+      "tuple": [
+        1,
+        2,
+        3
+      ],
+      "operation_envelope": [
+        1,
+        1
+      ],
+      "wire": {
+        "shapecontent": {
+          "byte_length": 20,
+          "sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1"
+        },
+        "objectrecord": {
+          "byte_length": 113,
+          "sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc"
+        },
+        "insertoperation": {
+          "byte_length": 163,
+          "sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24"
+        }
+      },
+      "explicit_shape_fields": [
+        1,
+        2,
+        3
+      ],
+      "proto_tags_unchanged": true
+    },
+    "SH2-G16": {
+      "status": "ACCEPT",
+      "input": "legacy_V1_stream",
+      "projection_unchanged": true,
+      "where_canonical_exact_required_bytes_unchanged": true
+    },
+    "SH2-G17": {
+      "status": "ACCEPT",
+      "snapshot_schema_version": 2,
+      "capability": "Shape2_read",
+      "fields_preserved": [
+        "full_128bit_ObjectId",
+        "kind_id",
+        "kind_version",
+        "shape_kind",
+        "width",
+        "height",
+        "properties"
+      ],
+      "replay_digest_stable": true
+    },
+    "SH2-G18": {
+      "status": "REJECT",
+      "snapshot_schema_version": 1,
+      "contains": "Shape2_Triangle",
+      "applied_ops": 0,
+      "ready": false
+    },
+    "SH2-G19": {
+      "status": "REJECT",
+      "reader": "V1_only",
+      "contains": "Shape2_Triangle",
+      "applied_ops": 0,
+      "writable_ready": false,
+      "lossy_conversion": false
+    },
+    "SH2-G20": {
+      "status": "ACCEPT",
+      "scenario": [
+        "InsertObjects",
+        "Undo_via_existing_inverse",
+        "RestoreObjects"
+      ],
+      "object_id_preserved": true,
+      "inverse_operation_id_fresh": true,
+      "full_preimage_restored": true
+    },
+    "SH2-G21": {
+      "status": "REJECT",
+      "connector_kind_version": 1,
+      "endpoint": "AttachedEndpoint_to_Shape2_Triangle",
+      "no_auto_anchor_extension": true
+    },
+    "SH2-G22": {
+      "status": "ACCEPT",
+      "historical_cases": "SH-G01..SH-G18 unchanged",
+      "historical_descriptor_unchanged": true,
+      "semantic_registry_bundle_changes": true,
+      "old_v1_binary_goldens_must_not_be_assumed_implemented": true
+    },
+    "SH2-G23": {
+      "status": "REJECT",
+      "writer_profile": "unsupported_Triangle_or_incompatible_peer",
+      "partial_commit": false,
+      "downgrade": false,
+      "explicit_capability_error": true
+    },
+    "SH2-G24": {
+      "status": "NO_SUBMISSION",
+      "event": "pre_Up_preview_cancel",
+      "semantic_operations": 0,
+      "new_object_records": 0,
+      "semantic_generation_delta": 0,
+      "new_history_entries": 0,
+      "new_axis_publications": 0
+    },
+    "SH2-G25": {
+      "status": "REJECT",
+      "invalid_wire": [
+        "invalid_length",
+        "duplicate_singular",
+        "forbidden_unknown_field"
+      ],
+      "preflight": "strict_canonical_profile",
+      "no_partial_state": true
+    }
+  }
+}
