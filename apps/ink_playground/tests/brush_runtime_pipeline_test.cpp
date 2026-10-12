@@ -394,9 +394,14 @@ void brushPreviewRestoresTintAfterPartialErase() {
                canvas::render::BackendSubmissionCode::kAccepted);
         bool visibleTint = false;
         for (std::size_t i = 0; i < rgba.size(); i += 4U) {
-          visibleTint |= rgba[i + 3U] != 0U && rgba[i + 1U] > rgba[i] + 10U;
+          // Vector uses pale tint; dab packages retain their captured paint.
+          // Both must produce real nonwhite pixels after the white eraser.
+          visibleTint |= rgba[i + 3U] != 0U &&
+              (rgba[i] < 245U || rgba[i + 1U] < 245U || rgba[i + 2U] < 245U);
         }
         assert(visibleTint && "brush preview must regain its tint after partial erase");
+        // A presentation-only preview never invalidates the commit intent;
+        // finish must remain authoritative even when the provider is deferred.
         assert(host.finishBrushSession(390U));
         assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
         assert(!host.previewActive());

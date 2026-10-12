@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <span>
 #include <vector>
+#include <optional>
 
 namespace canvas::render {
 
@@ -77,6 +78,15 @@ class EditingOverlay final {
 
     [[nodiscard]] bool update(const EditingOverlayInput& input) noexcept;
     void clear() noexcept;
+    void setCreationPreview(const semantic::ObjectRecord& record,
+                            std::span<const SnapGuideGeometry> guides) {
+        clear();
+        creationPreview_ = record;
+        guides_.assign(guides.begin(), guides.end());
+    }
+    [[nodiscard]] const std::optional<semantic::ObjectRecord>& creationPreview() const noexcept {
+        return creationPreview_;
+    }
 
     [[nodiscard]] foundation::ObjectId selectedObject() const noexcept {
         return input_.selectedObject;
@@ -107,6 +117,7 @@ class EditingOverlay final {
     std::array<HandleGeometry, kHandleCount> handles_{};
     std::vector<SnapGuideGeometry> guides_{};
     std::uint64_t updateCount_ = 0;
+    std::optional<semantic::ObjectRecord> creationPreview_;
 };
 
 } // namespace canvas::render

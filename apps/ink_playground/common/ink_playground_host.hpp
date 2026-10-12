@@ -34,6 +34,8 @@
 #include "canvas/scene/scene_binding.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "creation_session.hpp"
+#include "canvas/runtime/canvas_control_types.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -141,6 +143,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                             std::uint64_t observationTimeNs);
   [[nodiscard]] bool acceptPlatformBatch(const input::PlatformPointerBatch& batch,
                                          std::uint64_t observationTimeNs);
+  [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
+  [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
+                                     float x, float y) noexcept;
+  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty(); }
+  [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
+  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
   [[nodiscard]] std::optional<input::PointerKey> platformKey(
       input::InputSourceId source, input::PointerId pointer) const noexcept {
       return appBinding_ == nullptr ? std::nullopt : appBinding_->keyFor(source, pointer);
@@ -165,6 +173,19 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  [[nodiscard]] bool setSelectedObjectSize(double width, double height) noexcept;
+  [[nodiscard]] bool patchSelectedProperty(std::uint32_t fieldId,
+                                            semantic::PropertyValue value) noexcept;
+  [[nodiscard]] bool deleteSelectedObjects() noexcept;
+  [[nodiscard]] bool selectedObjectLocked() const noexcept;
+  [[nodiscard]] std::optional<semantic::ObjectRecord> selectedObjectRecord() const;
+  [[nodiscard]] bool setSelectedTransform(const semantic::Transform2D&) noexcept;
+  [[nodiscard]] bool setSelectedOrder(bool front) noexcept;
+  [[nodiscard]] bool setFutureAppearance(const runtime::CanvasAppearance&) noexcept;
+  [[nodiscard]] bool setSelectedAppearance(const runtime::CanvasAppearance&) noexcept;
+  [[nodiscard]] runtime::CanvasAppearance futureAppearance() const noexcept { return futureAppearance_; }
+  [[nodiscard]] bool creationMode() const noexcept { return creationMode_; }
+  [[nodiscard]] bool unlockSelectedObjects() noexcept;
   // Qualification/composition seam: toggle an already hit object without
   // introducing a second selection model or changing production pointer
   // routing semantics.
@@ -438,10 +459,15 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] semantic::OperationId allocateOperationId() override;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
+  [[nodiscard]] bool applyLocalHistoryOperation(
+      semantic::Operation forward, semantic::Operation inverse) noexcept;
   [[nodiscard]] bool recoverHistoryScene() noexcept;
   [[nodiscard]] interaction::SubmitResult submit(
       std::span<const semantic::Operation> operations,
       semantic::ApplySource source) override;
+  [[nodiscard]] interaction::SubmitResult submitConditional(
+      std::span<const semantic::Operation> operations, semantic::ApplySource source,
+      std::span<const interaction::HistoryExpectation> expectations) override;
   void cancel(std::uint64_t) noexcept override;
 
   std::unique_ptr<input::InputRouter> input_;
@@ -555,6 +581,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::vector<render::SnapGuideGeometry> snapGuides_;
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
+  std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
+  input::PointerKey latestCreationPointer_{};
+  CreationPreset creationPreset_ = CreationPreset::kRectangle;
+  runtime::CanvasAppearance futureAppearance_{};
+  std::uint64_t creationSerial_ = 0;
+  bool creationMode_ = false;
 };
 
 }  // namespace canvas::ink_playground

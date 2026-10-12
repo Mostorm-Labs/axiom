@@ -49,7 +49,20 @@ int main(int argc, char** argv) {
     record.kind = semantic::ObjectKind::kImage;
     record.content = image;
     record.visualBounds = {0, 0, 32, 32};
-    ReferenceDrawList list{.frame = frame};
+    ReferenceDrawList list{
+        .frame = frame,
+        .queryWorldRect = {},
+        .candidatesExamined = 0,
+        .visibleRecords = 0,
+        .worldToView = {},
+        .viewportClip = {},
+        .entries = {},
+        .diagnostics = {},
+        .canonicalEncodingVersion = ReferenceDrawList::kCanonicalEncodingVersion,
+        .canonicalByteOrder = CanonicalByteOrder::kLittleEndian,
+        .canonicalBytes = {},
+        .digest = {},
+    };
     list.viewportClip = frame.worldViewport;
     list.entries.push_back({record, true, ImageReferenceCommand{image}});
     runtime::MemoryResourceProvider resources;

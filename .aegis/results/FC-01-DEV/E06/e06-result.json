@@ -1,0 +1,34 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B06",
+  "requirement_ref": "Selected actions and conditional history",
+  "invariant_ref": "FC01-B06",
+  "high_impact_failure_mode": "Selected actions and conditional history",
+  "residual_detection_gap": [
+    "complete delete closure, multi-selection, placement/style matrix incomplete"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "focused_tests": "out/fc01/runs/i3-i4-focused-final/test.log"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+    "materialized_ref": "PENDING_COMMIT_PUSH",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "creation_insert_undo_redo": "passed",
+    "remote_size_conflict": "passed",
+    "lock_control": "RED observed"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": true,
+  "blocking_justification": [
+    "complete delete closure, multi-selection, placement/style matrix incomplete"
+  ],
+  "physical_claim_false": true
+}

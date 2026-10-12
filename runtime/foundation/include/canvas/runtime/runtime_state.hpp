@@ -37,12 +37,26 @@ struct SelectionState final {
   std::uint64_t snapCandidateCount = 0;
 };
 
+struct RuntimeControlState final {
+  std::uint32_t selectedKind = 0;
+  std::uint32_t selectedVersion = 0;
+  std::uint32_t selectedShapeKind = 0;
+  bool selectedLocked = false;
+  bool selectedVisible = true;
+  bool selectedSizeSupported = false;
+  double selectedWidth = 0.0;
+  double selectedHeight = 0.0;
+  double selectedTransform[6] = {1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
+  std::uint64_t semanticGeneration = 0;
+};
+
 struct RuntimeStateSnapshot final {
   RuntimeIdentityState identity{};
   ToolState tool{};
   CameraState camera{};
   HistoryState history{};
   SelectionState selection{};
+  RuntimeControlState control{};
 };
 
 }  // namespace canvas::runtime

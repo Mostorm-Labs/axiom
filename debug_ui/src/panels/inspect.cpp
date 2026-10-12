@@ -1,4 +1,5 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
+#include "canvas/debug_ui/ui_session_state.hpp"
 #include "imgui.h"
 
 namespace canvas::debug_ui {
@@ -13,9 +14,43 @@ void selection(DebugPanelContext& c) {
                 static_cast<unsigned long long>(s.product.value.selection.primaryObject),
                 static_cast<unsigned long long>(s.product.value.selection.snapCandidateCount));
 }
-void object(DebugPanelContext&) {
+void object(DebugPanelContext& c) {
     ImGui::SeparatorText("Object");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
+    const auto& s = c.snapshot;
+    if (!panel_detail::hasReadback(s.product.availability) ||
+        s.product.value.selection.selectedObjectCount == 0) {
+        ImGui::TextUnformatted("No selected object readback");
+        return;
+    }
+    const auto& object = s.product.value.control;
+    ImGui::Text("kind %u/%u shape %u / locked %s / visible %s",
+                object.selectedKind, object.selectedVersion, object.selectedShapeKind,
+                object.selectedLocked ? "yes" : "no", object.selectedVisible ? "yes" : "no");
+    if (object.selectedSizeSupported)
+        ImGui::Text("size %.2f x %.2f", object.selectedWidth, object.selectedHeight);
+    ImGui::Text("transform [%.2f %.2f %.2f %.2f %.2f %.2f]",
+                object.selectedTransform[0], object.selectedTransform[1],
+                object.selectedTransform[2], object.selectedTransform[3],
+                object.selectedTransform[4], object.selectedTransform[5]);
+    const bool enabled = panel_detail::canSubmitProduct(c);
+    ImGui::BeginDisabled(!enabled);
+    if (ImGui::Button(object.selectedLocked ? "Unlock" : "Lock")) {
+        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
+                                        !object.selectedLocked);
+        c.ui.markControlSubmitted();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Delete selected")) {
+        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected);
+        c.ui.markControlSubmitted();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Bring front")) {
+        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true);
+        c.ui.markControlSubmitted();
+    }
+    ImGui::EndDisabled();
+    ImGui::TextUnformatted("Advanced text/copy/duplicate controls remain unsupported by FC-01");
 }
 void interaction(DebugPanelContext& c) {
     const auto& s = c.snapshot;

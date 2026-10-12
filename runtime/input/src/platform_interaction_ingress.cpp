@@ -59,7 +59,15 @@ PlatformInteractionIngressResult PlatformInteractionIngress::submit(
       active_.erase(identity);
     }
   }
-  if (batch.terminalCancel || batch.sourceLost) cancelAll(result);
+  if (batch.sourceLost && !batch.samples.empty()) {
+    const auto& first = batch.samples.front();
+    auto cancelled = sourceLost(first.source, first.sequence, first.timestampNs);
+    result.normalized.samples.insert(result.normalized.samples.end(),
+        cancelled.normalized.samples.begin(), cancelled.normalized.samples.end());
+    result.terminalCancel = cancelled.terminalCancel;
+    result.normalized.terminalCancel = cancelled.terminalCancel;
+    result.ended += cancelled.ended;
+  } else if (batch.terminalCancel) cancelAll(result);
   result.accepted = !result.normalized.samples.empty() || result.terminalCancel;
   return result;
 }

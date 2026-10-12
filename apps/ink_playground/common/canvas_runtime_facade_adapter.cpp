@@ -5,17 +5,10 @@ namespace canvas::ink_playground {
 runtime::ProductControlReceipt CanvasRuntimeFacadeAdapter::submitCanvasControl(
     const runtime::CanvasControlRequest& request) noexcept {
   auto receipt = service_.enqueue(request);
-  if (receipt.state == runtime::CanvasControlReceiptState::kQueued) {
-    (void)service_.processPending(request.deadlineSequence == 0U ? request.requestId
-                                                                  : request.deadlineSequence);
-    if (const auto applied = service_.receipt(receipt.key); applied.has_value()) {
-      receipt = *applied;
-    }
-  }
-  const auto applied = receipt.state == runtime::CanvasControlReceiptState::kApplied;
-  const auto state = applied ? runtime::ProductControlState::kApplied
-      : receipt.state == runtime::CanvasControlReceiptState::kQueued
-          ? runtime::ProductControlState::kQueued
+  const auto state = receipt.state == runtime::CanvasControlReceiptState::kQueued
+      ? runtime::ProductControlState::kQueued
+      : receipt.state == runtime::CanvasControlReceiptState::kApplied
+          ? runtime::ProductControlState::kApplied
           : runtime::ProductControlState::kRejected;
   return {request.requestId, state, request.target.runtimeEpoch, receipt};
 }

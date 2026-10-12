@@ -13,6 +13,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from tools.semantic.cmake_consumer import consumer_cmake_arguments
+from tools.semantic.toolchain import target_cmake_arguments
+from tools.semantic.contract import load_profile
 
 
 def digest(path: Path) -> str:
@@ -46,14 +48,40 @@ def main() -> int:
     parser.add_argument("--no-protobuf", action="store_true")
     parser.add_argument("--configure-only", action="store_true")
     parser.add_argument("--scene", action="store_true")
+    parser.add_argument("--playground", action="store_true",
+                        help="Enable the common Ink Playground host and its focused tests")
+    parser.add_argument("--skia-root", type=Path)
+    parser.add_argument("--emscripten-root", type=Path,
+                        help="Pinned Emscripten root for the web-wasm profile")
+    parser.add_argument("--android-ndk", type=Path,
+                        help="Pinned Android NDK root for the android-native profile")
+    parser.add_argument("--windows-host", action="store_true")
+    parser.add_argument("--debug-ui", action="store_true")
     parser.add_argument("--build-only", action="store_true")
     args = parser.parse_args()
-    if args.profile != "core":
-        raise RuntimeError("Host profiles require their FC01-I5 configuration; not yet implemented or qualified")
+    if args.profile == "windows-host" and not args.windows_host:
+        args.windows_host = True
+    if args.profile == "web-wasm" and args.emscripten_root is None:
+        raise RuntimeError("web-wasm requires --emscripten-root for the pinned Emscripten toolchain")
+    if args.profile == "android-native" and args.android_ndk is None:
+        raise RuntimeError("android-native requires --android-ndk for the pinned NDK")
     build = args.build_dir.resolve()
     logs = ROOT / "out/fc01/runs" / args.label
     logs.mkdir(parents=True, exist_ok=True)
     env = windows_environment()
+    if args.profile == "web-wasm":
+        emsdk = args.emscripten_root.resolve().parent.parent
+        emscripten = args.emscripten_root.resolve()
+        env["EMSDK"] = str(emsdk)
+        env["EMSDK_PYTHON"] = str(emsdk / "python/3.13.3_64bit/python.exe")
+        env["PATH"] = str(emscripten) + os.pathsep + str(emsdk / "upstream/bin") + os.pathsep + env["PATH"]
+        env["CC"] = str(emscripten / "emcc.exe")
+        env["CXX"] = str(emscripten / "em++.exe")
+    elif args.profile == "android-native":
+        env["ANDROID_NDK_ROOT"] = str(args.android_ndk.resolve())
+        host_bin = args.android_ndk.resolve() / "toolchains/llvm/prebuilt/windows-x86_64/bin"
+        env["CC"] = str(host_bin / "clang.exe")
+        env["CXX"] = str(host_bin / "clang++.exe")
     cmake = shutil.which("cmake", path=env["PATH"]) or r"D:\Softwares\CMake\bin\cmake.exe"
     ninja = shutil.which("ninja", path=env["PATH"]) or r"D:\git\depot_tools\ninja.exe"
     ctest = str(Path(cmake).with_name("ctest.exe"))
@@ -73,22 +101,54 @@ def main() -> int:
             print(tail.encode("ascii", "backslashreplace").decode("ascii"), flush=True)
         return p.returncode
 
+    cxx_flags = "/UNDEBUG" if args.profile in {"core", "windows-host"} else "-fexceptions"
+    release_flags = "/O2 /Ob2" if args.profile in {"core", "windows-host"} else "-O3"
     configure = [cmake, "-S", str(ROOT), "-B", str(build), "-G", "Ninja",
-                 "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_CXX_FLAGS=/UNDEBUG", f"-DCMAKE_MAKE_PROGRAM={ninja}",
-                 f"-DCMAKE_C_COMPILER={env['CC']}", f"-DCMAKE_CXX_COMPILER={env['CXX']}",
+                 "-DCMAKE_BUILD_TYPE=Release", f"-DCMAKE_CXX_FLAGS={cxx_flags}",
+                 f"-DCMAKE_CXX_FLAGS_RELEASE={release_flags}", f"-DCMAKE_MAKE_PROGRAM={ninja}",
                  "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_POC02=OFF", "-DCANVAS_BUILD_POC03=OFF",
-                 "-DCANVAS_BUILD_POC05=OFF", "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+                 "-DCANVAS_BUILD_POC05=OFF",
+                 "-DCANVAS_BUILD_INK_PLAYGROUND=" + ("ON" if args.playground else "OFF"),
                  "-DCANVAS_BUILD_RF01=" + ("ON" if args.scene else "OFF"), "-DCANVAS_BUILD_RENDER=OFF", "-DCANVAS_BUILD_SEMANTIC=ON",
                  "-DBUILD_TESTING=ON", "-DCANVAS_SKIA_SDK_VARIANT=release",
                  "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=" + ("OFF" if args.no_protobuf else "ON")]
+    if args.profile in {"core", "windows-host"}:
+        configure += [f"-DCMAKE_C_COMPILER={env['CC']}", f"-DCMAKE_CXX_COMPILER={env['CXX']}"]
+    else:
+        configure += ["-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_ARC=ON",
+                      "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_RENDER=ON",
+                      "-DCANVAS_BUILD_INK_PLAYGROUND=ON",
+                      "-DAXIOM_BUILD_DEBUG_UI=" + ("ON" if args.debug_ui else "OFF"),
+                      "-DAXIOM_DEBUG_UI_PROFILE=" + ("full" if args.debug_ui else "off")]
+    if args.skia_root:
+        configure += [f"-DCANVAS_SKIA_SDK_ROOT={args.skia_root.resolve().as_posix()}",
+                      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON"]
+    if args.windows_host:
+        configure += ["-DCANVAS_BUILD_ARC=ON", "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_RENDER=ON",
+                      "-DCANVAS_BUILD_INK_PLAYGROUND=ON", "-DAXIOM_BUILD_DEBUG_UI=ON",
+                      "-DAXIOM_DEBUG_UI_PROFILE=full"]
     rc = 0
     if not args.no_protobuf:
         facts_path = logs / "semantic-environment.json"
-        rc = run([sys.executable, "tools/setup_build_environment.py", "--semantic", "--offline",
-                  "--facts-output", str(facts_path)], "sdk-resolution")
+        target = "web-wasm32" if args.profile == "web-wasm" else \
+            "android-arm64-v8a" if args.profile == "android-native" else None
+        resolution = [sys.executable, "tools/setup_build_environment.py", "--semantic", "--offline"]
+        if target:
+            resolution += ["--target", target]
+        resolution += ["--facts-output", str(facts_path)]
+        rc = run(resolution,
+                 "sdk-resolution")
         if rc == 0:
             facts = json.loads(facts_path.read_bytes())["environment"]
             configure += consumer_cmake_arguments(Path(facts["AXIOM_SEMANTIC_RUNTIME_ROOT"]), Path(facts["AXIOM_PROTOC"]))
+            if args.profile == "web-wasm":
+                configure += target_cmake_arguments(
+                    load_profile(), "web-wasm32",
+                    emscripten=args.emscripten_root.resolve())
+            elif args.profile == "android-native":
+                configure += target_cmake_arguments(
+                    load_profile(), "android-arm64-v8a",
+                    ndk=args.android_ndk.resolve())
     if rc == 0:
         rc = run(configure, "configure")
     if rc == 0 and not args.configure_only:

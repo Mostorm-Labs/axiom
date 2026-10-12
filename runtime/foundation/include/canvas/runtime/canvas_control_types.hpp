@@ -27,6 +27,13 @@ struct CanvasTargetKeyHash final {
 };
 
 enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan };
+enum class CanvasCreationPreset : std::uint8_t {
+  kRectangle,
+  kEllipse,
+  kTriangle,
+  kLine,
+  kArrow,
+};
 enum class BrushPresetError : std::uint8_t { kNone, kUnknownPreset, kResourceUnavailable };
 enum class OptionPatchKind : std::uint8_t { kKeep, kSet, kClearOverride };
 
@@ -53,6 +60,16 @@ struct BrushPresetRef final {
   friend bool operator==(const BrushPresetRef&, const BrushPresetRef&) = default;
 };
 
+struct CanvasAppearance final {
+  bool fillEnabled = true;
+  RgbaColor fill{0.25F, 0.55F, 0.85F, 1.0F};
+  bool strokeEnabled = true;
+  RgbaColor stroke{0.10F, 0.20F, 0.30F, 1.0F};
+  float strokeWidth = 2.0F;
+  float opacity = 1.0F;
+  friend constexpr bool operator==(const CanvasAppearance&, const CanvasAppearance&) = default;
+};
+
 struct InkOptionsPatch final {
   OptionPatch<float> size;
   OptionPatch<RgbaColor> color;
@@ -75,6 +92,16 @@ enum class CanvasControlPayloadKind : std::uint8_t {
   kFit,
   kUndo,
   kRedo,
+  kSelectCreationPreset,
+  kFutureAppearance,
+  kSelectedAppearance,
+  kSelectedSize,
+  kSelectedTransform,
+  kSelectedOrder,
+  kSelectedLock,
+  kSelectedVisible,
+  kDeleteSelected,
+  kUnlockSelected,
 };
 
 enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorldRect };
@@ -82,7 +109,13 @@ enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorl
 struct CanvasControlPayload final {
   CanvasControlPayloadKind kind = CanvasControlPayloadKind::kSelectTool;
   CanvasToolKind tool = CanvasToolKind::kInk;
+  CanvasCreationPreset creationPreset = CanvasCreationPreset::kRectangle;
   BrushPresetRef preset{};
+  CanvasAppearance appearance{};
+  std::array<double, 6> transform{1,0,0,1,0,0};
+  double width = 100;
+  double height = 80;
+  bool flag = false;
   InkOptionsPatch ink{};
   EraserOptionsPatch eraser{};
   float x = 0.0F;
@@ -171,6 +204,25 @@ struct CanvasControlSnapshot final {
   bool canRedo = false;
   std::uint32_t selectedObjectCount = 0;
   std::optional<foundation::ObjectId> selectedObject;
+  CanvasCreationPreset creationPreset = CanvasCreationPreset::kRectangle;
+  bool creationActive = false;
+  bool creationPreviewValid = false;
+  bool creationSnapped = false;
+  bool creationMode = false;
+  CanvasAppearance futureAppearance{};
+  CanvasAppearance selectedAppearance{};
+  std::uint32_t selectedKind = 0;
+  std::uint32_t selectedVersion = 0;
+  std::uint32_t selectedShapeKind = 0;
+  bool selectedLocked = false;
+  bool selectedVisible = true;
+  bool selectedSizeSupported = false;
+  double selectedWidth = 0;
+  double selectedHeight = 0;
+  std::array<double,6> selectedTransform{1,0,0,1,0,0};
+  std::string selectedOrderKey;
+  std::uint64_t semanticGeneration = 0;
+  std::string unsupportedReason;
   std::optional<CanvasControlReceipt> lastReceipt;
 };
 

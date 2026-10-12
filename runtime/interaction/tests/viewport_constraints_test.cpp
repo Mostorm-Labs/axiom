@@ -23,6 +23,14 @@ void fitPolicy() {
   assert(rotated.zoom < normal.zoom);
 }
 
+void snapPolicyBProfile() {
+  SnapResolver resolver; resolver.setPolicy({3.0F,5.0F});
+  const SnapSource source{WorldRect{94,40,114,60}};
+  const std::vector<SnapTarget> targets{{ObjectId::fromUint64(9),WorldRect{100,0,200,100}}};
+  const auto near=resolver.resolve(source,targets,1.0F); assert(near.x.has_value());
+  const auto held=resolver.resolve(SnapSource{WorldRect{104,40,124,60}},targets,1.0F); assert(held.x.has_value());
+  const auto released=resolver.resolve(SnapSource{WorldRect{106,40,126,60}},targets,1.0F); assert(!released.x.has_value());
+}
 void snapPolicy() {
   SnapResolver resolver;
   const SnapSource source{WorldRect{94, 40, 114, 60}};
@@ -51,4 +59,4 @@ void snapPolicy() {
   assert(tie.x.has_value() && tie.x->targetObjectId == ObjectId::fromUint64(3));
 }
 
-int main() { fitPolicy(); snapPolicy(); }
+int main() { fitPolicy(); snapPolicy(); snapPolicyBProfile(); }

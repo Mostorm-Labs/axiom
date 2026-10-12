@@ -1,4 +1,5 @@
 add_library(canvas_runtime_interaction STATIC
+    src/creation_session.cpp
     src/eraser_session.cpp
     src/editor_session.cpp
     src/hit_test_service.cpp

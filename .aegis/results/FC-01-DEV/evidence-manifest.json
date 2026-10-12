@@ -2,150 +2,19 @@
   "schema_id": "fc01-dev-evidence-v0.1",
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
-  "status": "BLOCKED_ENVIRONMENT",
-  "exact_source_sha_and_ref": {
-    "revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-    "ref": "codex/fc-01-creation-tools-p32"
+  "source_revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+  "materialized_ref": "PENDING_COMMIT_PUSH",
+  "physical_claim": false,
+  "obligations": {
+    "E03": true,
+    "E04": false,
+    "E05": true,
+    "E06": true,
+    "E07": true,
+    "E08": true,
+    "E09": false,
+    "E10": true
   },
-  "package_ref_and_lock_sha256": {
-    "materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
-    "package_path": ".aegis/packages/FC-01/package.json",
-    "sha256": "0d44a6c67b5dadf5eb8ce08bf9715323c5899ac8ac4827f79ac6f07378a9a184",
-    "locks": [
-      {
-        "role": "authority_lock_ref",
-        "path": ".aegis/packages/FC-01/authority.lock.json",
-        "bytes": 7372,
-        "sha256": "b0753dff1729c3b0e320dc9989cad121e168b14f6e816f265cc89db7c2896535",
-        "expected_sha256": "b0753dff1729c3b0e320dc9989cad121e168b14f6e816f265cc89db7c2896535",
-        "match": true,
-        "candidate_blob_unchanged": true,
-        "byte_scope": "Git blob bytes"
-      },
-      {
-        "role": "verification_lock_ref",
-        "path": ".aegis/packages/FC-01/verification.lock.json",
-        "bytes": 15679,
-        "sha256": "7160d86677cc9ee3657ec1c725ee997ac54d13655e55356a21d75c86bbe14e25",
-        "expected_sha256": "7160d86677cc9ee3657ec1c725ee997ac54d13655e55356a21d75c86bbe14e25",
-        "match": true,
-        "candidate_blob_unchanged": true,
-        "byte_scope": "Git blob bytes"
-      },
-      {
-        "role": "execution_contract_ref",
-        "path": ".aegis/packages/FC-01/execution-contract.json",
-        "bytes": 26660,
-        "sha256": "fd63e503e2fc93900d05ede9c3cac1021583f8309606e37c9aec313edb5e63b7",
-        "expected_sha256": "fd63e503e2fc93900d05ede9c3cac1021583f8309606e37c9aec313edb5e63b7",
-        "match": true,
-        "candidate_blob_unchanged": true,
-        "byte_scope": "Git blob bytes"
-      },
-      {
-        "role": "implementation_context_ref",
-        "path": ".aegis/packages/FC-01/implementation-context.md",
-        "bytes": 4630,
-        "sha256": "e63307ec332447ad161e5742c9654f5e75b7fe5be87280adc055d70b8e3ec06b",
-        "expected_sha256": "e63307ec332447ad161e5742c9654f5e75b7fe5be87280adc055d70b8e3ec06b",
-        "match": true,
-        "candidate_blob_unchanged": true,
-        "byte_scope": "Git blob bytes"
-      },
-      {
-        "role": "evidence_contract_ref",
-        "path": ".aegis/packages/FC-01/evidence-contract.json",
-        "bytes": 8318,
-        "sha256": "05211ff131d124ce409f864eb0bd3364700a8d9c0398bd6ba2ba49e5d62edf1b",
-        "expected_sha256": "05211ff131d124ce409f864eb0bd3364700a8d9c0398bd6ba2ba49e5d62edf1b",
-        "match": true,
-        "candidate_blob_unchanged": true,
-        "byte_scope": "Git blob bytes"
-      }
-    ]
-  },
-  "each_required_obligation_status": [
-    {
-      "id": "FC01-B01",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E01/semantic-shape2-corpus-results.json",
-      "gap": "Native semantic regression and exact three Golden binding checks pass; all 25 authored-case mapping is not yet materialized."
-    },
-    {
-      "id": "FC01-B02",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E02/ingress-snapshot-replay-compat.json",
-      "gap": "Typed admission/capability/snapshot/replay native tests pass; live host/collaboration and complete ingress coverage remain."
-    },
-    {
-      "id": "FC01-B03",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E03/source-loss-continuation.json",
-      "gap": "Prospective preflight RED-before-reimplementation chain and fresh source-loss differential pass; full creation gesture schedule absent from delivered source."
-    },
-    {
-      "id": "FC01-B04",
-      "status": "NOT_CLOSED_DRAFT_QUARANTINED",
-      "evidence_ref": "E04/snap-guide-independent-differential.json",
-      "gap": "Finite viewport strips, both logical pixel profiles, guide/preview publication and independent differential remain incomplete."
-    },
-    {
-      "id": "FC01-B05",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E05/scene-geometry-hit-render.json",
-      "gap": "Six analytic Scene regressions pass; pinned Skia raster probes cannot execute without locked SDK."
-    },
-    {
-      "id": "FC01-B06",
-      "status": "NOT_IMPLEMENTED",
-      "evidence_ref": "E06/history-preimage-closure.json",
-      "gap": "Selected actions/conditional History not delivered."
-    },
-    {
-      "id": "FC01-B07",
-      "status": "NOT_CLOSED_DRAFT_QUARANTINED",
-      "evidence_ref": "E07/facade-owner-queue-readback.json",
-      "gap": "Draft queue/preset wiring archived; pure service/router regressions do not close Facade owner/off-owner/reentrant/full-ID/two-view matrix."
-    },
-    {
-      "id": "FC01-B08",
-      "status": "BLOCKED_ENVIRONMENT",
-      "evidence_ref": "E08/host-profile-build-and-simulation.json",
-      "gap": "No qualified Windows/Web/Android host output on this source; locked SDK transport failed; I5 adapters/runner remain."
-    },
-    {
-      "id": "FC01-B09",
-      "status": "NOT_IMPLEMENTED",
-      "evidence_ref": "E09/publication-presentation-axis-truth.json",
-      "gap": "Source-aware Scene/Axis/Presented evidence remains."
-    },
-    {
-      "id": "FC01-B10",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E10/subject-authority-scope-regression.json",
-      "gap": "Anchor/locks/source projections/Golden/protected scope match; 528 core and 6 Scene regressions pass. Host and complete interaction regression remain."
-    }
-  ],
-  "provider_run_refs_or_durable_logs": [
-    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json",
-    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json",
-    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/result.json",
-    "continuation-logs/sdk-investigation/final-locked-fetch/result.json"
-  ],
-  "independent_oracle_refs": [
-    "verification/fc01/red_source_loss_test.cpp",
-    "runtime/semantic/tests/fc01_shape2_apply_test.cpp",
-    "runtime/semantic/tests/fc01_shape2_validation_test.cpp",
-    "runtime/scene/tests/derived_geometry_test.cpp"
-  ],
-  "subject_binary_hashes_ref": "provider-runs.json",
-  "expected_actual_first_divergence": {
-    "preflight": "Historical first mutation order still unproven; prospective correction separately recorded",
-    "environment": "Skia consumer transport WinError10060 / curl35; no locked manifest",
-    "implementation": "I3 incomplete draft quarantined; I4-I6 remain"
-  },
-  "historical_prior_record": "historical/pre-continuation-8854b093/evidence-manifest.json",
-  "full_closure_claim": false,
-  "physical_claim_false": true,
-  "materialized_ref_resolution": "The exact pushed evidence commit is returned in the CONTROL_REVIEW handoff; it is not the draft source test identity."
+  "status": "BLOCKED_EVIDENCE",
+  "note": "I3-I5 implementation and target builds progressed; complete E01/E02/E03/E04/E05/E06/E07/E08/E09/E10 closure remains subject to independent Control Review."
 }

@@ -1,0 +1,32 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B04",
+  "requirement_ref": "Far-axis snap independent differential",
+  "invariant_ref": "FC01-B04",
+  "high_impact_failure_mode": "Far-axis snap independent differential",
+  "residual_detection_gap": [
+    "independent exhaustive viewport differential, P-B profile, rotation/DPR matrix incomplete"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "creation_session": "apps/ink_playground/tests/creation_session_test.cpp"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+    "materialized_ref": "PENDING_COMMIT_PUSH",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "bounded_offscreen_and_fixed_edge": "covered"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": false,
+  "blocking_justification": [
+    "independent exhaustive viewport differential, P-B profile, rotation/DPR matrix incomplete"
+  ],
+  "physical_claim_false": true
+}

@@ -1,0 +1,35 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B10",
+  "requirement_ref": "Authority/subject/scope regression",
+  "invariant_ref": "FC01-B10",
+  "high_impact_failure_mode": "Authority/subject/scope regression",
+  "residual_detection_gap": [
+    "final result revision not committed/pushed"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "scope_audit": ".aegis/results/FC-01-DEV/scope-audit.json",
+    "package": "continuation-preflight-20261013.json"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+    "materialized_ref": "PENDING_COMMIT_PUSH",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "protected_delta": "empty",
+    "package_locks": "match",
+    "historical_gate_records": "unchanged"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": true,
+  "blocking_justification": [
+    "final result revision not committed/pushed"
+  ],
+  "physical_claim_false": true
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I4",
+  "owner": "existing EditorHistory with same canonical owner HistorySubmitPort",
+  "current_flow": "record forward/inverse -> fresh IDs -> submit; no postimage/dependency conditional",
+  "target_flow": "capture touched-field pre/post expectations at accepted local operation; submit fresh undo/redo with expectations; same owner checks and prepares DeleteClosure before apply; conflict preserves cursor/store/ledger",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "oracle_mapping": [
+    "FC01-B06",
+    "FC01-B07"
+  ],
+  "physical_claim": false,
+  "gate_claim": "none"
+}

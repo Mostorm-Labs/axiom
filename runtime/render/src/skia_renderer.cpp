@@ -34,18 +34,12 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         provider.release();
         return BackendSubmissionResult::rejected("inconsistent FramePlan identity");
     }
-    if (plan.referenceDrawList.entries.empty()) {
-        acquired.frame.surface->getCanvas()->clear(SK_ColorWHITE);
-        provider.release();
-        ++submissions_;
-        ++rasterizations_;
-        return provider.present();
-    }
     const auto result = internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_);
-    if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr &&
-        selectionOverlay->selectionOutline().visible) {
+    if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
+        if (selectionOverlay->creationPreview())
+            internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview());
         SkPaint guidePaint;
         guidePaint.setAntiAlias(true);
         guidePaint.setStyle(SkPaint::kStroke_Style);
@@ -55,6 +49,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
                              guidePaint);
         }
+        if (selectionOverlay->selectionOutline().visible) {
         SkPaint chrome;
         chrome.setAntiAlias(true);
         chrome.setStyle(SkPaint::kStroke_Style);
@@ -78,6 +73,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             if (handle.kind == HandleKind::kNone) continue;
             canvas->drawCircle(handle.center.x, handle.center.y,
                                handle.visualRadius, chrome);
+        }
         }
     }
     provider.release();

@@ -1,0 +1,34 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B07",
+  "requirement_ref": "Common RuntimeFacade owner queue/readback",
+  "invariant_ref": "FC01-B07",
+  "high_impact_failure_mode": "Common RuntimeFacade owner queue/readback",
+  "residual_detection_gap": [
+    "full selected readback and Debug UI controls still need panel wiring"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "owner_queue": "out/fc01/runs/i3-i4-focused-final/test.log"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+    "materialized_ref": "PENDING_COMMIT_PUSH",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "owner_affinity": "passed",
+    "queued_not_applied": "passed",
+    "creation_presets": "passed"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": true,
+  "blocking_justification": [
+    "full selected readback and Debug UI controls still need panel wiring"
+  ],
+  "physical_claim_false": true
+}

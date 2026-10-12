@@ -19,6 +19,10 @@ namespace canvas::render::internal {
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
     SkiaTextResources* textResources = nullptr);
+// Reuse the canonical renderer command mapping for a view-owned provisional
+// object. This value never enters Semantic or RuntimeScene storage.
+void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const semantic::ObjectRecord& object);
 
 void drawDabInstancesToSkCanvas(
     SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,

@@ -168,6 +168,31 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::redo() noexcept {
   return receipt;
 }
 
+canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
+    canvas::runtime::CanvasCreationPreset preset) noexcept {
+  const auto requestId = nextRequestId();
+  if (runtime_ == nullptr) {
+    auto receipt = unsupportedReceipt<canvas::runtime::ProductControlReceipt>(requestId);
+    recordProduct("set-creation-preset", receipt);
+    return receipt;
+  }
+  const auto targets = runtime_->mountedCanvasTargets();
+  canvas::runtime::CanvasControlRequest request{};
+  request.clientId = 1U;
+  request.requestId = requestId;
+  request.deadlineSequence = deadline();
+  request.target = targets.empty()
+      ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1U,
+                                         frame_.stamp.viewGeneration,
+                                         frame_.stamp.surfaceGeneration}
+      : targets.front();
+  request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  request.payload.creationPreset = preset;
+  auto receipt = runtime_->submitCanvasControl(request);
+  recordProduct("set-creation-preset", receipt);
+  return receipt;
+}
+
 canvas::runtime::ProductControlReceipt DebugControlRouter::panBy(float dx, float dy) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
@@ -222,6 +247,31 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() no
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->fitToObject(frame_.primaryObject, id, frame_.stamp.runtimeGeneration);
   recordProduct("fit-primary", receipt);
+  return receipt;
+}
+
+canvas::runtime::ProductControlReceipt DebugControlRouter::selectedAction(
+    canvas::runtime::CanvasControlPayloadKind kind, bool flag) noexcept {
+  const auto requestId = nextRequestId();
+  if (runtime_ == nullptr || frame_.selectedObjectCount == 0) {
+    const auto receipt = localRejected(requestId);
+    recordProduct("selected-action", receipt);
+    return receipt;
+  }
+  const auto targets = runtime_->mountedCanvasTargets();
+  canvas::runtime::CanvasControlRequest request{};
+  request.clientId = 1U;
+  request.requestId = requestId;
+  request.deadlineSequence = deadline();
+  request.target = targets.empty()
+      ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1U,
+                                         frame_.stamp.viewGeneration,
+                                         frame_.stamp.surfaceGeneration}
+      : targets.front();
+  request.payload.kind = kind;
+  request.payload.flag = flag;
+  auto receipt = runtime_->submitCanvasControl(request);
+  recordProduct("selected-action", receipt);
   return receipt;
 }
 

@@ -20,6 +20,7 @@ using canvas::ink_playground::InkPlaygroundHost;
 struct AndroidHost final {
   std::unique_ptr<InkPlaygroundHost> host = std::make_unique<InkPlaygroundHost>();
   std::uint64_t serial = 0, digest = 0, primitiveCount = 0, family = 1;
+  std::uint64_t sourceEpoch = 1;
   bool canonicalMutation = false;
   std::uint64_t cpuCopyCount = 0;
   std::uint64_t presentCount = 0;
@@ -49,7 +50,7 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
   for (std::size_t index = 0; index < count; ++index) {
     auto phase = phases[index];
     if (phase == 1 && value.activePointers.contains(logicalPointer)) phase = 2;
-    batch.samples.push_back({1U, *identity, sequences[index], timestampNs[index],
+    batch.samples.push_back({sourceEpoch, *identity, sequences[index], timestampNs[index],
       x[index], y[index], pressure[index], 0.0F, 0.0F, {}, {},
       canvas::input::SampleProvenance::kConfirmedCurrent,
       phase == 1 ? canvas::input::PointerPhase::kDown :
@@ -59,7 +60,7 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
   if (!accepted) return false;
   for (const auto& sample : batch.samples) {
     if (sample.phase == canvas::input::PointerPhase::kDown) value.activePointers.insert(logicalPointer);
-    if (sample.phase == canvas::input::PointerPhase::kUp) value.activePointers.erase(logicalPointer);
+    if (sample.phase == canvas::input::PointerPhase::kUp || sample.phase == canvas::input::PointerPhase::kCancel) value.activePointers.erase(logicalPointer);
   }
   value.family = static_cast<std::uint64_t>(family);
   if (batch.samples.back().phase == canvas::input::PointerPhase::kUp) {
@@ -252,8 +253,8 @@ const char* axiom_ink_android_baseline_observation(void* handle, const char* rea
 #endif
   json = canvas::ink_playground::platformBrushBaselineObservationJson(
       "android", reality, artifactIdentity, *value->host,
-      {"MotionEvent.history→JNI→PlatformPointerBatch", "C++ InkPlaygroundHost",
-       "Skia raster", "CPU raster buffer→Java byte[]→Bitmap→Canvas", submissions,
+      {"MotionEvent.history鈫扟NI鈫扨latformPointerBatch", "C++ InkPlaygroundHost",
+       "Skia raster", "CPU raster buffer鈫扟ava byte[]鈫払itmap鈫扖anvas", submissions,
        readbacks, copies, value->presentCount, "true"});
   return json.c_str();
 }

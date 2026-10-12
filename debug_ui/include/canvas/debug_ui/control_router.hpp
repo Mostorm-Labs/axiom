@@ -31,12 +31,16 @@ class DebugControlRouter final {
   canvas::runtime::ProductControlReceipt setSelectionMode(bool enabled) noexcept;
   canvas::runtime::ProductControlReceipt undo() noexcept;
   canvas::runtime::ProductControlReceipt redo() noexcept;
+  canvas::runtime::ProductControlReceipt setCreationPreset(
+      canvas::runtime::CanvasCreationPreset preset) noexcept;
   canvas::runtime::ProductControlReceipt panBy(float dx, float dy) noexcept;
   canvas::runtime::ProductControlReceipt zoomAt(float anchorX, float anchorY,
                                                  float scaleDelta) noexcept;
   canvas::runtime::ProductControlReceipt fitToContent() noexcept;
   canvas::runtime::ProductControlReceipt fitToSelection() noexcept;
   canvas::runtime::ProductControlReceipt fitPrimaryObject() noexcept;
+  canvas::runtime::ProductControlReceipt selectedAction(
+      canvas::runtime::CanvasControlPayloadKind kind, bool flag = false) noexcept;
   canvas::runtime::AxiomDebugCommandReceipt submitAxiom(
       canvas::runtime::AxiomDebugCommandKind kind, std::uint64_t value = 0) noexcept;
   canvas::runtime::SurfaceModeReceipt setCanonicalSurfaceMode(

@@ -47,7 +47,16 @@ struct SnapTarget final {
   bool transformed = false;
 };
 
-struct SnapSource final { foundation::WorldRect viewBounds{}; };
+struct SnapSource final {
+  foundation::WorldRect viewBounds{};
+  // Bit per SnapFeatureKind. Creation excludes its immutable Down edges.
+  std::uint8_t xFeatures = 7;
+  std::uint8_t yFeatures = 7;
+};
+struct SnapPolicy final {
+  float engageLogicalPx = 6.0F;
+  float releaseLogicalPx = 10.0F;
+};
 
 struct SnapCandidate final {
   foundation::ObjectId targetObjectId{};
@@ -73,13 +82,15 @@ class SnapResolver final {
                                        std::span<const SnapTarget> targets,
                                        float dpr = 1.0F) noexcept;
   void reset() noexcept;
+  void setPolicy(SnapPolicy policy) noexcept { policy_ = policy; reset(); }
 
  private:
   [[nodiscard]] std::optional<SnapCandidate> resolveAxis(
       float sourceMin, float sourceCenter, float sourceMax,
-      std::span<const SnapTarget> targets, bool horizontal, float dpr) noexcept;
+      std::span<const SnapTarget> targets, bool horizontal, float dpr, std::uint8_t features) noexcept;
   [[nodiscard]] static bool sameCandidate(const SnapCandidate& left,
                                           const SnapCandidate& right) noexcept;
+  SnapPolicy policy_{};
   std::optional<SnapCandidate> activeX_;
   std::optional<SnapCandidate> activeY_;
 };

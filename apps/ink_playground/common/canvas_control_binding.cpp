@@ -59,6 +59,29 @@ runtime::CanvasControlApplyResult CanvasControlBinding::apply(
     case runtime::CanvasControlPayloadKind::kRedo:
       applied = host_.redo();
       break;
+    case runtime::CanvasControlPayloadKind::kSelectCreationPreset:
+      applied = host_.setSelectionMode(false) && host_.selectCreationPreset(
+          static_cast<CreationPreset>(p.creationPreset));
+      break;
+    case runtime::CanvasControlPayloadKind::kFutureAppearance:
+      applied=host_.setFutureAppearance(p.appearance); break;
+    case runtime::CanvasControlPayloadKind::kSelectedAppearance:
+      applied=host_.setSelectedAppearance(p.appearance); break;
+    case runtime::CanvasControlPayloadKind::kSelectedSize:
+      applied=host_.setSelectedObjectSize(p.width,p.height); break;
+    case runtime::CanvasControlPayloadKind::kSelectedTransform:
+      applied=host_.setSelectedTransform({p.transform[0],p.transform[1],p.transform[2],
+          p.transform[3],p.transform[4],p.transform[5]}); break;
+    case runtime::CanvasControlPayloadKind::kSelectedOrder:
+      applied=host_.setSelectedOrder(p.flag);break;
+    case runtime::CanvasControlPayloadKind::kSelectedLock:
+      applied=host_.patchSelectedProperty(2U,semantic::PropertyValue{p.flag});break;
+    case runtime::CanvasControlPayloadKind::kSelectedVisible:
+      applied=host_.patchSelectedProperty(1U,semantic::PropertyValue{p.flag});break;
+    case runtime::CanvasControlPayloadKind::kDeleteSelected:
+      applied=host_.deleteSelectedObjects();break;
+    case runtime::CanvasControlPayloadKind::kUnlockSelected:
+      applied=host_.unlockSelectedObjects();break;
     case runtime::CanvasControlPayloadKind::kInkOptions:
       {
         const auto preset = host_.selectedBrushProfile();
@@ -144,6 +167,43 @@ runtime::CanvasControlSnapshot CanvasControlBinding::snapshot(
   out.canRedo = host_.canRedo();
   out.selectedObjectCount = static_cast<std::uint32_t>(host_.selectedObjectCount());
   if (out.selectedObjectCount != 0U) out.selectedObject = host_.selectedPrimaryObject();
+  out.creationActive = host_.creationActive();
+  out.creationPreviewValid = host_.creationPreview().valid;
+  out.creationSnapped = host_.creationPreview().snapped;
+  out.creationPreset = static_cast<runtime::CanvasCreationPreset>(host_.creationPreset());
+  out.creationMode=host_.creationMode();
+  out.futureAppearance=host_.futureAppearance();
+  out.semanticGeneration=host_.semanticGeneration().value();
+  out.unsupportedReason="Text, Copy, Duplicate and advanced Connector controls await their feature packages";
+  if(const auto record=host_.selectedObjectRecord()) {
+    out.selectedKind=static_cast<std::uint32_t>(record->kind);out.selectedVersion=record->kind_version;
+    out.selectedLocked=host_.selectedObjectLocked();
+    const auto& t=record->transform;out.selectedTransform={t.a,t.b,t.c,t.d,t.tx,t.ty};
+    if(const auto* shape=std::get_if<semantic::ShapeContent>(&record->content)) {
+      out.selectedSizeSupported=true;out.selectedWidth=shape->width;out.selectedHeight=shape->height;
+      out.selectedShapeKind=shape->shape_kind;
+    }
+    out.selectedAppearance.fillEnabled=false;out.selectedAppearance.strokeEnabled=false;
+    out.selectedAppearance.opacity=1;
+    for(const auto& entry:record->properties.entries) {
+      if(entry.field_id==1)if(const auto* v=std::get_if<bool>(&entry.value))out.selectedVisible=*v;
+      if(entry.field_id==3)if(const auto* v=std::get_if<float>(&entry.value))out.selectedAppearance.opacity=*v;
+      if(entry.field_id==0x100)if(const auto* v=std::get_if<semantic::FillStyleValue>(&entry.value))
+        if(const auto* fill=std::get_if<semantic::SolidFill>(v)) {
+          out.selectedAppearance.fillEnabled=true;const auto c=fill->color;
+          out.selectedAppearance.fill={c.r,c.g,c.b,c.a};
+        }
+      if(entry.field_id==0x101)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&entry.value))
+        if(const auto* stroke=std::get_if<semantic::SolidStroke>(v)) {
+          out.selectedAppearance.strokeEnabled=true;const auto c=stroke->color;
+          out.selectedAppearance.stroke={c.r,c.g,c.b,c.a};out.selectedAppearance.strokeWidth=static_cast<float>(stroke->width);
+        }
+    }
+    constexpr char hex[]="0123456789abcdef";
+    for(const auto byte:record->placement.order_key.bytes()) {
+      out.selectedOrderKey.push_back(hex[byte>>4]);out.selectedOrderKey.push_back(hex[byte&15]);
+    }
+  }
   return out;
 }
 

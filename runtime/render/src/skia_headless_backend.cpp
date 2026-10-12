@@ -485,6 +485,26 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 
 namespace internal {
 
+void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const semantic::ObjectRecord& object) {
+    RuntimeSceneRecord record{};
+    record.objectId = object.id; record.kind = object.kind; record.kindVersion = object.kind_version;
+    record.transform = object.transform; record.properties = object.properties; record.content = object.content;
+    ReferenceTraversalEntry entry{}; entry.record = record;
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&object.content))
+        entry.command = ShapeReferenceCommand{*shape};
+    else if (const auto* connector = std::get_if<semantic::ConnectorContent>(&object.content))
+        entry.command = ConnectorReferenceCommand{*connector};
+    else return;
+    canvas.save(); scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const WorldToViewAffine transform{object.transform.a, object.transform.b, object.transform.c,
+                                      object.transform.d, object.transform.tx, object.transform.ty};
+    canvas.concat(SkMatrix::Concat(matrix(plan.referenceDrawList.worldToView), matrix(transform)));
+    drawCommand(canvas, entry, nullptr, nullptr);
+    canvas.restore();
+}
+
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
     SkiaTextResources* textResources) {

@@ -62,6 +62,9 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
  public:
   explicit WebRuntimeFacade(Host& host)
       : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
+  void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
+    (void)processCanvasControls(sequence);
+  }
   [[nodiscard]] std::uint64_t nextRequestId() noexcept {
     if (nextRequest_ == 0U) nextRequest_ = 1U;
     return nextRequest_++;
@@ -80,7 +83,7 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
     const auto& profile = host_.selectedBrushProfile();
-    return {{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
+    auto result = canvas::runtime::RuntimeStateSnapshot{{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
              diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
              diagnostics.identity.surfaceGeneration},
             {diagnostics.interaction.toolId,
@@ -95,7 +98,19 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
             {diagnostics.interaction.selectionMode,
              diagnostics.interaction.selectedObjectCount,
              diagnostics.interaction.selectedPrimaryObject,
-             diagnostics.interaction.snapCandidateCount}};
+             diagnostics.interaction.snapCandidateCount}, {}};
+    const auto control = readCanvasControlSnapshot(canvasTarget());
+    result.control.selectedKind = control.selectedKind;
+    result.control.selectedVersion = control.selectedVersion;
+    result.control.selectedShapeKind = control.selectedShapeKind;
+    result.control.selectedLocked = control.selectedLocked;
+    result.control.selectedVisible = control.selectedVisible;
+    result.control.selectedSizeSupported = control.selectedSizeSupported;
+    result.control.selectedWidth = control.selectedWidth;
+    result.control.selectedHeight = control.selectedHeight;
+    for (int i = 0; i < 6; ++i) result.control.selectedTransform[i] = control.selectedTransform[i];
+    result.control.semanticGeneration = control.semanticGeneration;
+    return result;
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -347,6 +362,9 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
   (void)contentX;
   (void)contentY;
   auto* target = host(value);
+  if (auto* facade = runtimeFacade(value); facade != nullptr) {
+    facade->processCanvasControlsAtSafePoint(sequence);
+  }
   const auto brushIt = brushes().find(value);
   if (target == nullptr || brushIt == brushes().end()) return 0;
   canvas::input::PlatformPointerBatch batch;

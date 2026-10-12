@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <optional>
 #include <vector>
+#include <thread>
+#include <atomic>
 
 namespace canvas::ink_playground {
 
@@ -30,6 +32,16 @@ class CanvasRuntimeFacadeAdapter : public runtime::RuntimeFacade {
     return service_.receipt(key);
   }
 
+ public:
+  // Called only by the platform/runtime owner at its serialized safe point.
+  // Submission never executes the queue inline or re-enters the owner.
+  [[nodiscard]] std::size_t processCanvasControls(std::uint64_t ownerSequence) noexcept {
+    if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;
+    const auto result = service_.processPending(ownerSequence);
+    processing_ = false;
+    return result;
+  }
+
  protected:
   [[nodiscard]] runtime::CanvasControlService& canvasControlService() noexcept {
     return service_;
@@ -37,13 +49,11 @@ class CanvasRuntimeFacadeAdapter : public runtime::RuntimeFacade {
   [[nodiscard]] const runtime::CanvasTargetKey& canvasTarget() const noexcept {
     return binding_.target();
   }
-  [[nodiscard]] std::size_t processCanvasControls(std::uint64_t ownerSequence) noexcept {
-    return service_.processPending(ownerSequence);
-  }
-
  private:
   CanvasControlBinding binding_;
   runtime::CanvasControlService service_;
+  const std::thread::id ownerThread_ = std::this_thread::get_id();
+  std::atomic_bool processing_{false};
 };
 
 }  // namespace canvas::ink_playground

@@ -4,15 +4,52 @@
 
 namespace canvas::interaction {
 
+bool historyExpectationsMatch(const semantic::ObjectStore& store,
+                               std::span<const HistoryExpectation> expectations) noexcept {
+    for (const auto& expected : expectations) {
+        const auto* current = store.find(expected.objectId);
+        if (!expected.record) { if (current != nullptr) return false; continue; }
+        if (!current || current->kind != expected.record->kind ||
+            current->kind_version != expected.record->kind_version) return false;
+        const auto& record = *expected.record;
+        switch (expected.aspect) {
+            case HistoryAspect::kWholeRecord: if (*current != record) return false; break;
+            case HistoryAspect::kTransform: if (current->transform != record.transform) return false; break;
+            case HistoryAspect::kPlacement: if (current->placement != record.placement) return false; break;
+            case HistoryAspect::kSize: {
+                const auto* a=std::get_if<semantic::ShapeContent>(&current->content);
+                const auto* b=std::get_if<semantic::ShapeContent>(&record.content);
+                if (!a || !b || a->width!=b->width || a->height!=b->height) return false;
+                break;
+            }
+            case HistoryAspect::kProperties:
+                for (const auto field:expected.fields) {
+                    const auto find=[field](const semantic::PropertyBag& bag)->const semantic::PropertyValue* {
+                        for (const auto& entry:bag.entries) if(entry.field_id==field)return &entry.value;
+                        return nullptr;
+                    };
+                    const auto* a=find(current->properties);const auto* b=find(record.properties);
+                    if ((a==nullptr)!=(b==nullptr) || (a && *a!=*b)) return false;
+                }
+                break;
+        }
+    }
+    return true;
+}
+
 namespace {
 bool supportedForward(const semantic::Operation& operation) noexcept {
     using semantic::OperationKind;
     switch (operation.kind()) {
         case OperationKind::kAddStroke:
+        case OperationKind::kInsertObjects:
         case OperationKind::kSetTransforms:
         case OperationKind::kDeleteObjects:
         case OperationKind::kSplitStrokes:
         case OperationKind::kAddEraseMasks:
+        case OperationKind::kSetPlacements:
+        case OperationKind::kPatchProperties:
+        case OperationKind::kSetObjectSize:
             return true;
         default:
             return false;
@@ -26,6 +63,9 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
         case OperationKind::kRestoreObjects:
         case OperationKind::kSetTransforms:
         case OperationKind::kRemoveEraseMasks:
+        case OperationKind::kSetPlacements:
+        case OperationKind::kPatchProperties:
+        case OperationKind::kSetObjectSize:
             return true;
         default:
             return false;
@@ -35,6 +75,12 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
 
 bool EditorHistory::record(semantic::Operation forward,
                            std::vector<semantic::Operation> inverse) {
+    return recordConditional(std::move(forward),std::move(inverse),{},{});
+}
+
+bool EditorHistory::recordConditional(semantic::Operation forward,
+    std::vector<semantic::Operation> inverse, std::vector<HistoryExpectation> before,
+    std::vector<HistoryExpectation> after) {
     if (!supportedForward(forward) || inverse.empty() || forward.id.isZero()) {
         return false;
     }
@@ -44,7 +90,7 @@ bool EditorHistory::record(semantic::Operation forward,
         }
     }
     entries_.resize(cursor_);
-    entries_.push_back({std::move(forward), std::move(inverse)});
+    entries_.push_back({std::move(forward), std::move(inverse),std::move(before),std::move(after)});
     cursor_ = entries_.size();
     return true;
 }
@@ -63,7 +109,8 @@ bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcep
     return false;
 }
 
-bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations) {
+bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
+                               std::span<const HistoryExpectation> expectations) {
     std::vector<semantic::Operation> fresh(operations.begin(), operations.end());
     std::vector<semantic::OperationId> allocated;
     allocated.reserve(fresh.size());
@@ -76,13 +123,13 @@ bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations)
         operation.id = id;
         allocated.push_back(id);
     }
-    if (!submit_.submit(fresh, semantic::ApplySource::kUndoRedo).accepted) return false;
+    if (!submit_.submitConditional(fresh, semantic::ApplySource::kUndoRedo, expectations).accepted) return false;
     emittedOperationIds_.insert(emittedOperationIds_.end(), allocated.begin(), allocated.end());
     return true;
 }
 
 bool EditorHistory::undo() {
-    if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse)) return false;
+    if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after)) return false;
     --cursor_;
     return true;
 }
@@ -90,7 +137,7 @@ bool EditorHistory::undo() {
 bool EditorHistory::redo() {
     if (!canRedo()) return false;
     const auto& forward = entries_[cursor_].forward;
-    if (!submitFresh(std::span<const semantic::Operation>(&forward, 1))) return false;
+    if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
     ++cursor_;
     return true;
 }

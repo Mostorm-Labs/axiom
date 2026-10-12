@@ -242,6 +242,9 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
  public:
   explicit WindowsRuntimeFacade(State& state)
       : CanvasRuntimeFacadeAdapter(*state.host, {1U, 1U, 1U, 1U}), state_(state) {}
+  void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
+    (void)processCanvasControls(sequence);
+  }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitSelectionPointer(
       const canvas::runtime::SelectionPointerRequest& request) noexcept override {
     using P = canvas::runtime::SelectionPointerPhase;
@@ -277,7 +280,7 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
   }
   [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     const auto diagnostics = readDiagnostics();
-    return {{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
+    auto result = canvas::runtime::RuntimeStateSnapshot{{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
              diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
              diagnostics.identity.surfaceGeneration},
             {diagnostics.interaction.toolId,
@@ -293,7 +296,19 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
             {diagnostics.interaction.selectionMode,
              diagnostics.interaction.selectedObjectCount,
              diagnostics.interaction.selectedPrimaryObject,
-             diagnostics.interaction.snapCandidateCount}};
+             diagnostics.interaction.snapCandidateCount}, {}};
+    const auto control = readCanvasControlSnapshot(canvasTarget());
+    result.control.selectedKind = control.selectedKind;
+    result.control.selectedVersion = control.selectedVersion;
+    result.control.selectedShapeKind = control.selectedShapeKind;
+    result.control.selectedLocked = control.selectedLocked;
+    result.control.selectedVisible = control.selectedVisible;
+    result.control.selectedSizeSupported = control.selectedSizeSupported;
+    result.control.selectedWidth = control.selectedWidth;
+    result.control.selectedHeight = control.selectedHeight;
+    for (int i = 0; i < 6; ++i) result.control.selectedTransform[i] = control.selectedTransform[i];
+    result.control.semanticGeneration = control.semanticGeneration;
+    return result;
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
       const canvas::runtime::ProductControlRequest& request) noexcept override {
@@ -1375,6 +1390,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   }
   if ((message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) ||
       (message == State::kRenderWakeMessage && value != nullptr)) {
+    if (value->runtimeFacade != nullptr) {
+      value->runtimeFacade->processCanvasControlsAtSafePoint(value->pointerSampleSequence);
+    }
     if (value->axiomDebugControl != nullptr) value->axiomDebugControl->process();
     if (value->platformDebugControl != nullptr) {
       value->platformDebugControl->processPendingSurfaceModes();

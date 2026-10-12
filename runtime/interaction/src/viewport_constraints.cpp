@@ -81,13 +81,13 @@ bool SnapResolver::sameCandidate(const SnapCandidate& left,
 
 std::optional<SnapCandidate> SnapResolver::resolveAxis(
     float sourceMin, float sourceCenter, float sourceMax,
-    std::span<const SnapTarget> targets, bool horizontal, float dpr) noexcept {
+    std::span<const SnapTarget> targets, bool horizontal, float dpr, std::uint8_t features) noexcept {
   const std::array sourceFeatures{
       std::pair{SnapFeatureKind::kMinEdge, sourceMin},
       std::pair{SnapFeatureKind::kCenter, sourceCenter},
       std::pair{SnapFeatureKind::kMaxEdge, sourceMax}};
   std::optional<SnapCandidate> best;
-  const float engage = kEngageThresholdLogicalPx / std::max(dpr, 1.0F);
+  const float engage = policy_.engageLogicalPx / std::max(dpr, 1.0F);
   for (const auto& target : targets) {
     if (target.selected || target.transformed || !target.viewBounds.isFiniteAndOrdered()) {
       continue;
@@ -96,6 +96,7 @@ std::optional<SnapCandidate> SnapResolver::resolveAxis(
                                      SnapFeatureKind::kCenter,
                                      SnapFeatureKind::kMaxEdge}) {
       for (const auto& [sourceFeature, sourceValue] : sourceFeatures) {
+        if ((features & (1U << static_cast<unsigned>(sourceFeature))) == 0U) continue;
         const float correction = featureValue(target.viewBounds, targetFeature, horizontal) -
                                  sourceValue;
         SnapCandidate candidate{target.objectId, targetFeature, sourceFeature, correction};
@@ -111,7 +112,9 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
                                      std::span<const SnapTarget> targets,
                                      float dpr) noexcept {
   SnapResolution result{};
-  if (!source.viewBounds.isFiniteAndOrdered() || !std::isfinite(dpr) || dpr <= 0.0F) {
+  if (!source.viewBounds.isFiniteAndOrdered() || !std::isfinite(dpr) || dpr <= 0.0F ||
+      !std::isfinite(policy_.engageLogicalPx) || !std::isfinite(policy_.releaseLogicalPx) ||
+      policy_.engageLogicalPx <= 0 || policy_.releaseLogicalPx < policy_.engageLogicalPx) {
     reset();
     return result;
   }
@@ -123,14 +126,16 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
 
   const auto x = resolveAxis(source.viewBounds.left,
                              (source.viewBounds.left + source.viewBounds.right) * 0.5F,
-                             source.viewBounds.right, targets, true, dpr);
+                             source.viewBounds.right, targets, true, dpr, source.xFeatures);
   const auto y = resolveAxis(source.viewBounds.top,
                              (source.viewBounds.top + source.viewBounds.bottom) * 0.5F,
-                             source.viewBounds.bottom, targets, false, dpr);
-  const float release = kReleaseThresholdLogicalPx / std::max(dpr, 1.0F);
+                             source.viewBounds.bottom, targets, false, dpr, source.yFeatures);
+  const float release = policy_.releaseLogicalPx / std::max(dpr, 1.0F);
   auto currentCorrection = [&](const std::optional<SnapCandidate>& active,
                                bool horizontal) -> std::optional<SnapCandidate> {
     if (!active.has_value()) return std::nullopt;
+    const auto features = horizontal ? source.xFeatures : source.yFeatures;
+    if ((features & (1U << static_cast<unsigned>(active->sourceFeature))) == 0U) return std::nullopt;
     const auto target = std::find_if(targets.begin(), targets.end(), [&](const SnapTarget& item) {
       return item.objectId == active->targetObjectId && !item.selected &&
              !item.transformed && item.viewBounds.isFiniteAndOrdered();

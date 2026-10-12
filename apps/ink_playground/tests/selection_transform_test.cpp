@@ -82,8 +82,12 @@ void lifecycle() {
           std::numeric_limits<float>::quiet_NaN(),p.y)); break;
       case 5: host.cancelAllPointers(); break;
       case 6: {
-        auto& port=static_cast<canvas::interaction::OperationSubmitPort&>(host);
-        assert(port.submit(canvas::interaction::OperationRequest{555U}).accepted);
+        // A valid remote no-op still advances the canonical generation;
+        // the active transient edit must be fenced without changing pixels.
+        auto remoteTransform = original.front().transform;
+        remoteTransform.tx += 1.0;
+        assert(Access::applyRemote(host, canvas::semantic::SetTransformsOp{{
+            {original.front().id, remoteTransform}}}));
         assert(!host.selectionPointer(77U,Phase::kMove,p.x+40,p.y));
         break;
       }
@@ -91,7 +95,7 @@ void lifecycle() {
           host.surface().generation,canvas::render::RenderTargetFormat::kRgba8888)); break;
     }
     assert(!host.selectionTransformActive() && host.transientTransformCount()==0U);
-    assert(host.submittedOperationCount()==operations+(action==6?1U:0U) && Access::objects(host)==original);
+    assert(host.submittedOperationCount()==operations && Access::objects(host)==original);
     const auto after = pixels(host);
     if (after != before) std::cerr << "lifecycle pixel mismatch action=" << action << "\n";
     assert(after==before);

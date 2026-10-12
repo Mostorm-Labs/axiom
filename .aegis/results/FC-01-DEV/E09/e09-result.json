@@ -1,0 +1,32 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B09",
+  "requirement_ref": "Canonical/Presented/Axis truth",
+  "invariant_ref": "FC01-B09",
+  "high_impact_failure_mode": "Canonical/Presented/Axis truth",
+  "residual_detection_gap": [
+    "source-aware Axis recorder and no-echo differential not materialized"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "presentation_source": "apps/ink_playground/common/ink_playground_host.cpp"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "8cae0a179207e3285f5cb040e8ce7a123b2aa576",
+    "materialized_ref": "PENDING_COMMIT_PUSH",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "canonical_present": "existing tracker path"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": false,
+  "blocking_justification": [
+    "source-aware Axis recorder and no-echo differential not materialized"
+  ],
+  "physical_claim_false": true
+}

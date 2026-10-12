@@ -23,6 +23,37 @@
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::ink_playground {
+namespace {
+bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallback) {
+  for (const auto& entry : bag.entries) if (entry.field_id == id)
+    if (const auto* value = std::get_if<bool>(&entry.value)) return *value;
+  return fallback;
+}
+}
+namespace {
+bool validAppearance(const runtime::CanvasAppearance& a) {
+  const auto validColor=[](runtime::RgbaColor c){
+    for(const auto f:{c.r,c.g,c.b,c.a})if(!std::isfinite(f)||f<0||f>1)return false;
+    return true;
+  };
+  return validColor(a.fill)&&validColor(a.stroke)&&std::isfinite(a.strokeWidth)&&
+      a.strokeWidth>0&&std::isfinite(a.opacity)&&a.opacity>=0&&a.opacity<=1;
+}
+semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bool shape) {
+  const auto color=[](runtime::RgbaColor c){return semantic::ColorValue{c.r,c.g,c.b,c.a};};
+  semantic::PropertyBag bag;
+  bag.entries.push_back({3U,a.opacity});
+  if(shape)bag.entries.push_back({0x100U,semantic::FillStyleValue{
+      a.fillEnabled?semantic::FillStyleValue{semantic::SolidFill{color(a.fill)}}:
+                    semantic::FillStyleValue{semantic::NoFill{}}}});
+  bag.entries.push_back({0x101U,semantic::StrokeStyleValue{
+      a.strokeEnabled?semantic::StrokeStyleValue{semantic::SolidStroke{
+          color(a.stroke),a.strokeWidth,semantic::StrokeCap::kButt,
+          semantic::MiterJoin{4.0},semantic::SolidDash{}}}:
+          semantic::StrokeStyleValue{semantic::NoStroke{}}}});
+  return bag;
+}
+}
 class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
  public:
   explicit PlaygroundSceneCompiler(const canvas::Scene& scene) : scene_(scene) {}
@@ -48,13 +79,14 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
       std::uint64_t order = 0;
       for (const auto byte : record.placement.order_key.bytes()) order = (order << 8U) | byte;
       const auto flags = static_cast<canvas::SceneRecordFlags>(
-          static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible) |
-          static_cast<std::uint32_t>(canvas::SceneRecordFlags::kHitTestable));
+          (propertyBool(record.properties, 1U, true) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible) : 0U) |
+          static_cast<std::uint32_t>(canvas::SceneRecordFlags::kHitTestable) |
+          (propertyBool(record.properties, 2U, false) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kLocked) : 0U));
       result.records.push_back({record.id, canvas::SceneOrderKey(order), kind, flags,
                                 bounds.world, canvas::ContentRevision(record.kind_version),
                                 canvas::RenderPayloadRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version},
                                 canvas::HitGeometryRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version}, record.transform,
-                                canvas::scene::deriveGeometry(record)});
+                                canvas::scene::deriveGeometry(record), record.properties});
     }
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
   }
@@ -459,6 +491,13 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
     if (routed.terminalCancel) cancelSelectionTransform();
     return routed.accepted || routed.terminalCancel;
   }
+  if (creationMode_ || creationActive()) {
+    for (const auto& sample : routed.normalized.samples) {
+      if (!sample.key.valid() || sample.predicted) continue;
+      if (!creationPointer(sample.key, sample.phase, sample.x, sample.y)) return false;
+    }
+    return routed.accepted || routed.terminalCancel;
+  }
   bool previewDirty = false;
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routed.normalized.samples) {
@@ -592,6 +631,76 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
   return true;
 }
 
+bool InkPlaygroundHost::selectCreationPreset(CreationPreset preset) noexcept {
+  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
+      selectionMode_ || panTool_ || creationActive()) return false;
+  creationPreset_ = preset;
+  creationMode_ = true;
+  return true;
+}
+
+bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
+                                        float x, float y) noexcept {
+  if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
+      surface_.height == 0U) return false;
+  const auto content = viewportController_->viewToContent(x, y);
+  const auto viewportTopLeft = viewportController_->viewToContent(0.0F, 0.0F);
+  const auto viewportBottomRight = viewportController_->viewToContent(
+      static_cast<float>(surface_.width), static_cast<float>(surface_.height));
+  const foundation::WorldRect viewport{
+      (std::min)(viewportTopLeft.first, viewportBottomRight.first),
+      (std::min)(viewportTopLeft.second, viewportBottomRight.second),
+      (std::max)(viewportTopLeft.first, viewportBottomRight.first),
+      (std::max)(viewportTopLeft.second, viewportBottomRight.second)};
+  if (phase == input::PointerPhase::kDown) {
+    if (creations_.contains(key)) return false;
+    auto& creation = creations_[key];
+    latestCreationPointer_ = key;
+    if (runtimeSceneHost_ != nullptr) {
+      std::vector<interaction::SnapTarget> targets;
+      const auto camera = viewportController_->state();
+      for (const auto& record : runtimeSceneHost_->read().records()) {
+        if (record.objectId == selection_.primary()) continue;
+        if ((static_cast<std::uint32_t>(record.flags) &
+             static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible)) == 0U) continue;
+        targets.push_back({record.objectId, record.worldBounds, false, false});
+      }
+      creation.setSnapTargets(std::move(targets));
+      creation.setSnapScale(camera.scale > 0.0F ? camera.scale : 1.0F);
+    }
+    const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
+    if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
+                        creationPreset_<=CreationPreset::kTriangle)},
+                        {content.first, content.second}, viewport, seed)) { creations_.erase(key); return false; }
+    canonicalPresentationDirty_ = true;
+    return true;
+  }
+  const auto session = creations_.find(key);
+  if (session == creations_.end()) return true;
+  auto& creation = session->second;
+  latestCreationPointer_ = key;
+  canonicalPresentationDirty_ = true;
+  if (phase == input::PointerPhase::kMove) {
+    if (!creation.move(key, {content.first, content.second})) creations_.erase(session);
+    return true;
+  }
+  if (phase == input::PointerPhase::kCancel) { creations_.erase(session); return true; }
+  if (phase != input::PointerPhase::kUp) return false;
+  if (!creation.move(key, {content.first, content.second})) { creations_.erase(session); return true; }
+  const auto commit = creation.finish(key);
+  creations_.erase(session);
+  if (!commit.has_value()) return true;
+  const auto ordinal = localOperationOrdinal();
+  if (ordinal == 0U) return false;
+  semantic::Operation operation{
+      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)), documentId_,
+      1U, 1U, semantic::InsertObjectsOp{{commit->record}}};
+  const auto inverseId = allocateOperationId();
+  if (inverseId.isZero()) return false;
+  return applyLocalHistoryOperation(std::move(operation),
+      {inverseId, documentId_, 1U, 1U, semantic::DeleteObjectsOp{{commit->record.id}}});
+}
+
 bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   if (!keyedStrokeIds_.contains(key)) return false;
@@ -616,6 +725,7 @@ bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
 }
 
 void InkPlaygroundHost::cancelAllPointers() noexcept {
+  creations_.clear();
   cancelSelectionTransform();
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);
@@ -712,12 +822,16 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
   if (!brushSessions_.empty()) return false;
   toolMode_ = mode;
   panTool_ = false;
+  creationMode_ = false;
+  creations_.clear();
   return true;
 }
 
 bool InkPlaygroundHost::setPanTool(bool enabled) noexcept {
   if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) return false;
   panTool_ = enabled;
+  creationMode_ = false;
+  creations_.clear();
   if (enabled) {
     toolMode_ = ToolMode::kBrush;
     if (selectionMode_) (void)setSelectionMode(false);
@@ -730,6 +844,10 @@ bool InkPlaygroundHost::setSelectionMode(bool enabled) noexcept {
     return false;
   }
   selectionMode_ = enabled;
+  if (enabled) {
+    creationMode_ = false;
+    creations_.clear();
+  }
   if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
   canonicalPresentationDirty_ = true;
   return true;
@@ -741,7 +859,7 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
   const auto content = viewportController_->viewToContent(x, y);
   const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
       foundation::WorldPoint{content.first, content.second}, 4.0F,
-      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
   if (!tested || tested.value().frontToBack.empty()) {
     selection_.cancel();
     selectionView_.reset();
@@ -757,13 +875,176 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
   return selected && renderSelectionOverlay();
 }
 
+bool InkPlaygroundHost::applyLocalHistoryOperation(
+    semantic::Operation forward, semantic::Operation inverse) noexcept {
+  if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
+  const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
+  if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
+  interaction::HistoryAspect aspect=interaction::HistoryAspect::kWholeRecord;
+  if(forward.kind()==semantic::OperationKind::kSetTransforms) aspect=interaction::HistoryAspect::kTransform;
+  if(forward.kind()==semantic::OperationKind::kSetObjectSize) aspect=interaction::HistoryAspect::kSize;
+  if(forward.kind()==semantic::OperationKind::kSetPlacements) aspect=interaction::HistoryAspect::kPlacement;
+  if(forward.kind()==semantic::OperationKind::kPatchProperties) aspect=interaction::HistoryAspect::kProperties;
+  std::vector<interaction::HistoryExpectation> before,after;
+  const auto capture=[&](semantic::ObjectId id,const semantic::ObjectRecord* post) {
+    const auto* prior=semanticObjects_.find(id);
+    std::vector<std::uint32_t> fields;
+    if(const auto* patches=std::get_if<semantic::PatchPropertiesOp>(&forward.payload))
+      for(const auto& patch:patches->patches)if(patch.object_id==id)fields.push_back(patch.field_id);
+    before.push_back({id,prior?std::optional<semantic::ObjectRecord>(*prior):std::nullopt,aspect,fields});
+    after.push_back({id,post?std::optional<semantic::ObjectRecord>(*post):std::nullopt,aspect,fields});
+  };
+  for(const auto& object:prepared.plan->creates)capture(object.id,&object);
+  for(const auto& object:prepared.plan->replacements)capture(object.id,&object);
+  for(const auto id:prepared.plan->deletes)capture(id,nullptr);
+  const auto applied = operationEngine_.apply(
+      forward, semantic::ApplySource::kLocalInteraction, semanticObjects_,
+      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  if (!history_.recordConditional(forward, {inverse},std::move(before),std::move(after))) std::terminate();
+  if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
+      sceneCompiler_ != nullptr) {
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+    const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+        applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+  }
+  ++submittedOperationCount_;
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool InkPlaygroundHost::setSelectedObjectSize(double width, double height) noexcept {
+  if (selection_.primary().isZero() || !std::isfinite(width) || !std::isfinite(height) ||
+      width <= 0.0 || height <= 0.0) return false;
+  const auto* before = semanticObjects_.find(selection_.primary());
+  if (before == nullptr) return false;
+  for (const auto& entry : before->properties.entries)
+    if (entry.field_id == 0x00000002U && std::get_if<bool>(&entry.value) != nullptr &&
+        std::get<bool>(entry.value)) return false;
+  const auto* shape = std::get_if<semantic::ShapeContent>(&before->content);
+  if (shape == nullptr) return false;
+  const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return false;
+  return applyLocalHistoryOperation(
+      {forwardId, documentId_, 1U, 1U,
+       semantic::SetObjectSizeOp{{{before->id, width, height}}}},
+      {inverseId, documentId_, 1U, 1U,
+       semantic::SetObjectSizeOp{{{before->id, shape->width, shape->height}}}});
+}
+
+bool InkPlaygroundHost::patchSelectedProperty(std::uint32_t fieldId,
+                                               semantic::PropertyValue value) noexcept {
+  if (selection_.primary().isZero() ||
+      (selectedObjectLocked() && !(fieldId == 2U && std::get_if<bool>(&value) && !std::get<bool>(value)))) return false;
+  const auto* before = semanticObjects_.find(selection_.primary());
+  if (before == nullptr) return false;
+  const auto it = std::find_if(before->properties.entries.begin(), before->properties.entries.end(),
+      [fieldId](const auto& entry) { return entry.field_id == fieldId; });
+  const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return false;
+  semantic::PropertyPatch inversePatch{before->id, fieldId,
+      it == before->properties.entries.end() ? semantic::PropertyPatchAction::kClear
+                                              : semantic::PropertyPatchAction::kSet,
+      it == before->properties.entries.end() ? std::variant<std::monostate, semantic::PropertyValue>{}
+                                             : std::variant<std::monostate, semantic::PropertyValue>{it->value}};
+  return applyLocalHistoryOperation(
+      {forwardId, documentId_, 1U, 1U,
+       semantic::PatchPropertiesOp{{{before->id, fieldId, semantic::PropertyPatchAction::kSet, value}}}},
+      {inverseId, documentId_, 1U, 1U, semantic::PatchPropertiesOp{{inversePatch}}});
+}
+
+bool InkPlaygroundHost::unlockSelectedObjects() noexcept {
+  return patchSelectedProperty(0x00000002U, semantic::PropertyValue{false});
+}
+
+bool InkPlaygroundHost::setFutureAppearance(const runtime::CanvasAppearance& appearance) noexcept {
+  if(!validAppearance(appearance))return false;
+  futureAppearance_=appearance; return true;
+}
+bool InkPlaygroundHost::setSelectedAppearance(const runtime::CanvasAppearance& appearance) noexcept {
+  const auto* before=semanticObjects_.find(selection_.primary());
+  if(!before || selectedObjectLocked() || !validAppearance(appearance) ||
+      (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector))return false;
+  semantic::PatchPropertiesOp forward,inverse;
+  for(const auto& entry:appearanceProperties(appearance,before->kind==semantic::ObjectKind::kShape).entries) {
+    forward.patches.push_back({before->id,entry.field_id,semantic::PropertyPatchAction::kSet,entry.value});
+    const auto prior=std::find_if(before->properties.entries.begin(),before->properties.entries.end(),
+        [&](const auto& item){return item.field_id==entry.field_id;});
+    inverse.patches.push_back({before->id,entry.field_id,
+      prior==before->properties.entries.end()?semantic::PropertyPatchAction::kClear:semantic::PropertyPatchAction::kSet,
+      prior==before->properties.entries.end()?std::variant<std::monostate,semantic::PropertyValue>{}:
+                                             std::variant<std::monostate,semantic::PropertyValue>{prior->value}});
+  }
+  const auto f=allocateOperationId(),i=allocateOperationId();
+  return applyLocalHistoryOperation({f,documentId_,1,1,std::move(forward)},
+      {i,documentId_,1,1,std::move(inverse)});
+}
+bool InkPlaygroundHost::selectedObjectLocked() const noexcept {
+  const auto* object=semanticObjects_.find(selection_.primary());
+  return object && propertyBool(object->properties,2U,false);
+}
+std::optional<semantic::ObjectRecord> InkPlaygroundHost::selectedObjectRecord() const {
+  const auto* object=semanticObjects_.find(selection_.primary());
+  return object ? std::optional<semantic::ObjectRecord>(*object) : std::nullopt;
+}
+bool InkPlaygroundHost::setSelectedTransform(const semantic::Transform2D& transform) noexcept {
+  const auto* before=semanticObjects_.find(selection_.primary());
+  if(!before || selectedObjectLocked()) return false;
+  const auto forward=allocateOperationId(),inverse=allocateOperationId();
+  return applyLocalHistoryOperation({forward,documentId_,1,1,semantic::SetTransformsOp{{{before->id,transform}}}},
+      {inverse,documentId_,1,1,semantic::SetTransformsOp{{{before->id,before->transform}}}});
+}
+bool InkPlaygroundHost::setSelectedOrder(bool front) noexcept {
+  const auto* before=semanticObjects_.find(selection_.primary());
+  if(!before || selectedObjectLocked()) return false;
+  auto siblings=semanticObjects_.children(before->placement.parent_id);
+  if(siblings.size()<2) return true;
+  auto placement=before->placement;
+  if(front) {
+    const auto bytes=siblings.back().placement.order_key.bytes();
+    std::vector<std::uint8_t> key(bytes.begin(),bytes.end());
+    if(key.size()>=semantic::OrderKey::kMaxSize) return false;
+    key.push_back(128); placement.order_key=semantic::OrderKey(std::move(key));
+  } else {
+    const auto bytes=siblings.front().placement.order_key.bytes();
+    std::vector<std::uint8_t> key;
+    bool bounded=false;
+    for(const auto byte:bytes) {
+      if(byte>0) { key.push_back(static_cast<std::uint8_t>(byte/2));
+        if(key.back()==0) key.push_back(128); bounded=true;break; }
+      key.push_back(0);
+    }
+    if(!bounded || key.size()>semantic::OrderKey::kMaxSize) return false;
+    placement.order_key=semantic::OrderKey(std::move(key));
+  }
+  const auto forward=allocateOperationId(),inverse=allocateOperationId();
+  return applyLocalHistoryOperation({forward,documentId_,1,1,semantic::SetPlacementsOp{{{before->id,placement}}}},
+      {inverse,documentId_,1,1,semantic::SetPlacementsOp{{{before->id,before->placement}}}});
+}
+bool InkPlaygroundHost::deleteSelectedObjects() noexcept {
+  if(selection_.primary().isZero() || selectedObjectLocked()) return false;
+  const auto forwardId=allocateOperationId(),inverseId=allocateOperationId();
+  semantic::Operation operation{forwardId,documentId_,1,1,
+      semantic::DeleteObjectsOp{{selection_.selected().begin(),selection_.selected().end()}}};
+  const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+  if(plan.disposition!=semantic::PrepareDisposition::kPrepared || !plan.plan) return false;
+  semantic::RestoreObjectsOp inverse;
+  for(const auto id:plan.plan->deletes) {
+    const auto* object=semanticObjects_.find(id); if(!object) return false;
+    inverse.objects.push_back(*object);
+  }
+  if(!applyLocalHistoryOperation(std::move(operation),{inverseId,documentId_,1,1,std::move(inverse)})) return false;
+  selection_.cancel(); selectionView_.reset(); return true;
+}
+
 bool InkPlaygroundHost::toggleSelectionAtViewPoint(float x, float y) noexcept {
   if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
       !std::isfinite(x) || !std::isfinite(y)) return false;
   const auto content = viewportController_->viewToContent(x, y);
   const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
       foundation::WorldPoint{content.first, content.second}, 4.0F,
-      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 1U});
+      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
   if (!tested || tested.value().frontToBack.empty()) return false;
   if (!selection_.toggle(tested.value().frontToBack.front())) return false;
   snapGuides_.clear();
@@ -812,7 +1093,8 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
-      render::HandleCapabilities{true, true, true}, snapGuides_});
+      render::HandleCapabilities{
+          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked()}, snapGuides_});
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }
@@ -909,7 +1191,7 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     bool moveSelected = false;
     if (editingHandle_ == render::HandleKind::kNone && runtimeSceneHost_ != nullptr) {
       const auto hit = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-          {world.first,world.second},4.0F,{canvas::HitTestKindMask::kAll,false},1U});
+          {world.first,world.second},4.0F,{canvas::HitTestKindMask::kAll,true},1U});
       moveSelected = hit && !hit.value().frontToBack.empty() &&
           hit.value().frontToBack.front() == selection_.primary();
     }
@@ -920,6 +1202,7 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     }
     const auto* object = semanticObjects_.find(selection_.primary());
     if (object == nullptr) return false;
+    if (propertyBool(object->properties, 2U, false)) return true;
     const auto bounds = canvas::computeBounds(*object);
     const auto& t = object->transform;
     if (!bounds.finite || std::abs(t.a*t.d-t.b*t.c) < 1e-12) return false;
@@ -1042,25 +1325,14 @@ interaction::SubmitResult InkPlaygroundHost::submit(const semantic::SetTransform
   if (transforms.items.size()!=1U || !historySceneReady() ||
       editingGeneration_!=semanticGeneration_.current()) return interaction::SubmitResult::rejected();
   const auto* before=semanticObjects_.find(transforms.items.front().object_id);
-  if (before==nullptr || before->id!=selection_.primary()) return interaction::SubmitResult::rejected();
+  if (before==nullptr || before->id!=selection_.primary() || selectedObjectLocked()) return interaction::SubmitResult::rejected();
   const auto forwardId=allocateOperationId(), inverseId=allocateOperationId();
   if (forwardId.isZero() || inverseId.isZero()) return interaction::SubmitResult::rejected();
   const semantic::Operation operation{forwardId,documentId_,1U,1U,transforms};
   semantic::Operation inverse{inverseId,documentId_,1U,1U,
       semantic::SetTransformsOp{{{before->id,before->transform}}}};
-  const auto applied=operationEngine_.apply(operation,semantic::ApplySource::kLocalInteraction,
-      semanticObjects_,appliedOperations_,semanticGeneration_,canonicalCommitClock_);
-  if (applied.disposition!=semantic::ApplyDisposition::kApplied) return interaction::SubmitResult::rejected();
-  (void)history_.record(operation,{std::move(inverse)});
-  ++submittedOperationCount_;
-  if (applied.commit_record.has_value()) {
-    const semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());
-    const canvas::SceneCommitInput input(applied.commit_record->before_generation,
-        applied.commit_record->after_generation,view,&applied.commit_record->change_set);
-    (void)sceneCoordinator_->apply(*sceneCompiler_,input);
-  }
-  canonicalPresentationDirty_=true;
-  return interaction::SubmitResult::acceptedResult();
+  return applyLocalHistoryOperation(operation, std::move(inverse))
+      ? interaction::SubmitResult::acceptedResult() : interaction::SubmitResult::rejected();
 }
 
 bool InkPlaygroundHost::selectBrushProfile(std::string_view profileId,
@@ -1800,6 +2072,25 @@ interaction::SubmitResult InkPlaygroundHost::submit(
   return interaction::SubmitResult::acceptedResult();
 }
 
+interaction::SubmitResult InkPlaygroundHost::submitConditional(
+    std::span<const semantic::Operation> operations, semantic::ApplySource source,
+    std::span<const interaction::HistoryExpectation> expectations) {
+  if(!interaction::historyExpectationsMatch(semanticObjects_,expectations))
+    return interaction::SubmitResult::rejected();
+  // Resolve the actual deletion closure in this same owner phase. A remote
+  // child or dependent connector that was not part of the captured postimage
+  // makes compensation conflict, before any canonical apply or publication.
+  for(const auto& operation:operations)if(operation.kind()==semantic::OperationKind::kDeleteObjects && !expectations.empty()) {
+    const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+    if(!plan.plan || plan.disposition!=semantic::PrepareDisposition::kPrepared)
+      return interaction::SubmitResult::rejected();
+    for(const auto id:plan.plan->deletes)
+      if(std::none_of(expectations.begin(),expectations.end(),[id](const auto& item){
+           return item.objectId==id && item.record.has_value();})) return interaction::SubmitResult::rejected();
+  }
+  return submit(operations,source);
+}
+
 semantic::OperationId InkPlaygroundHost::allocateOperationId() {
   while (nextHistoryOperationOrdinal_ != 0U) {
     const auto id = semantic::OperationId(
@@ -2206,6 +2497,21 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   if (selectionMode_) (void)renderSelectionOverlay();
+  if (creationActive() && creationPreview().valid) {
+    selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+    std::vector<render::SnapGuideGeometry> guides;
+    for (const auto& guide : creationPreview().guides) {
+      const auto screen = [&](float x, float y) {
+        return render::ScreenPoint{x * zoom + viewport.translationX, y * zoom + viewport.translationY};
+      };
+      if (guide.axis == interaction::SnapGuideAxis::kVertical)
+        guides.push_back({render::SnapGuideAxis::kVertical, screen(guide.position, guide.spanStart),
+                         screen(guide.position, guide.spanEnd)});
+      else guides.push_back({render::SnapGuideAxis::kHorizontal, screen(guide.spanStart, guide.position),
+                            screen(guide.spanEnd, guide.position)});
+    }
+    selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
+  } else if (!selectionMode_) selectionView_.reset();
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
                                                   selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {

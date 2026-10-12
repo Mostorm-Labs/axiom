@@ -43,5 +43,15 @@ class InkPlaygroundHistoryTestAccess final {
   static void exhaustOperationIds(InkPlaygroundHost& host) noexcept {
     host.nextHistoryOperationOrdinal_ = 0U;
   }
+  static bool applyRemote(InkPlaygroundHost& host, semantic::OperationPayload payload) {
+    const semantic::Operation op{host.allocateOperationId(),host.documentId_,1,1,std::move(payload)};
+    const auto applied=host.operationEngine_.apply(op,semantic::ApplySource::kRemoteSync,
+        host.semanticObjects_,host.appliedOperations_,host.semanticGeneration_,host.canonicalCommitClock_);
+    if(applied.disposition!=semantic::ApplyDisposition::kApplied) return false;
+    const semantic::SemanticReadView view(host.semanticObjects_,host.semanticGeneration_.current());
+    const SceneCommitInput input(applied.commit_record->before_generation,applied.commit_record->after_generation,
+                                 view,&applied.commit_record->change_set);
+    return static_cast<bool>(host.sceneCoordinator_->apply(*host.sceneCompiler_,input));
+  }
 };
 }  // namespace canvas::ink_playground

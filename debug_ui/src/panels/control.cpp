@@ -3,6 +3,8 @@
 #include "imgui.h"
 
 #include <cmath>
+#include <array>
+#include <utility>
 
 namespace canvas::debug_ui {
 namespace {
@@ -26,6 +28,23 @@ void tools(DebugPanelContext& context) {
     if (ImGui::Selectable("Partial Eraser", eraserId == 2U)) {
         (void)context.controls.setEraser(2U);
         context.ui.markControlSubmitted();
+    }
+    ImGui::EndDisabled();
+    ImGui::SeparatorText("Create");
+    const std::array<std::pair<const char*, canvas::runtime::CanvasCreationPreset>, 5> presets{{
+        {"Rectangle", canvas::runtime::CanvasCreationPreset::kRectangle},
+        {"Ellipse", canvas::runtime::CanvasCreationPreset::kEllipse},
+        {"Triangle", canvas::runtime::CanvasCreationPreset::kTriangle},
+        {"Line", canvas::runtime::CanvasCreationPreset::kLine},
+        {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
+    }};
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
+    for (std::size_t i = 0; i < presets.size(); ++i) {
+      if (ImGui::Button(presets[i].first)) {
+        (void)context.controls.setCreationPreset(presets[i].second);
+        context.ui.markControlSubmitted();
+      }
+      if (i + 1U < presets.size()) ImGui::SameLine();
     }
     ImGui::EndDisabled();
     if (panel_detail::hasReadback(snapshot.product.availability)) {
