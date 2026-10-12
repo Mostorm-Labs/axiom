@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-01",
+  "stage": "P31_TASK_PACKAGING",
+  "authority_status": "CURRENT_REPO_LOCAL_ACCEPTED",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_control_subject": {
+    "revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "branch": "control/fc-01-authority-golden-reconciliation",
+    "base_branch": "codex/fc-00-fc-track-authority-p31",
+    "base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+    "review": "https://app.notion.com/p/3f74c57a590c8123ba7fcf4ddb4c951f",
+    "review_last_edited_at": "2026-10-12T07:07:37.155Z",
+    "control_review_status": "READY_WITH_FINDINGS",
+    "pr": 146,
+    "pr_merged": false
+  },
+  "authority_manifest": {
+    "path": ".aegis/authorities.json",
+    "revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "git_blob_sha1": "f0c068e9cc0666c5b63152bb2da44eeb38bd938f",
+    "project_state_path": ".aegis/state.json",
+    "project_state_git_blob_sha1": "1b9219c119d8044f523f25e56388992845ce5a3a",
+    "official_aegis_tool": "Mostorm-Labs/aegis@00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+  },
+  "current_authorities": [
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "kind": "execution-policy",
+      "scope": "execution:FC/feature-completion",
+      "status": "Current",
+      "supersedes": "fc-feature-completion-execution-v0.1",
+      "provider": "notion",
+      "page_id": "3f74c57a590c8139b903f14f0aae0c57",
+      "source_snapshot": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+      "source_snapshot_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3"
+    },
+    {
+      "id": "fc01-shape-triangle-semantic-v0.1",
+      "kind": "semantic-schema-compatibility",
+      "scope": "semantic:axiom/shape-content-version2-triangle",
+      "status": "Current",
+      "provider": "notion",
+      "page_id": "3f74c57a590c8128b936d7491884ffb7",
+      "source_snapshot": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/0-3f74c57a590c8128b936d7491884ffb7.json",
+      "source_snapshot_sha256": "d9b006b61b7bf18ab45705928d300beab5aa7a2b2d7c733aecf1bfdfbdfcbebd"
+    }
+  ],
+  "accepted_decisions": {
+    "page_id": "3f74c57a590c819ebc62dba091371f17",
+    "snapshot_sha256": "145c6cd143e9d46e44e5d899e26487870ef0c5161d0b7f69aa4876b01a2596a1",
+    "ids": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7"
+    ]
+  },
+  "design_contracts": [
+    {
+      "stage": "P14",
+      "page_id": "3f74c57a590c81929ad8c501814ab970",
+      "last_edited_at": "2026-10-12T02:43:13.174Z",
+      "source_sha256": "d8de1f94634282a13754a49d7e78d78d491bd2bbc7d07b198bd71927b9633f56"
+    },
+    {
+      "stage": "P15",
+      "page_id": "3f74c57a590c8125967bcfce14ca950f",
+      "last_edited_at": "2026-10-12T02:48:27.717Z",
+      "source_sha256": "f3b139aaeeda8ad8d25ac0619730dc9e535705f0276a73f859325a5dbe507d57"
+    },
+    {
+      "stage": "P16",
+      "page_id": "3f74c57a590c81b1a931edb09052fe72",
+      "last_edited_at": "2026-10-12T02:53:33.185Z",
+      "source_sha256": "1d7b837c9757fd21036ee59e7560a9335341f074be7daf8c9871ea6290790933"
+    },
+    {
+      "stage": "P17",
+      "page_id": "3f74c57a590c81a8b26aea2d84814ea9",
+      "last_edited_at": "2026-10-12T03:00:46.476Z",
+      "source_sha256": "9d6197ef0f5580ddcd996fe4ca7d739101753d89235ca8380f3ee9abfdf4ced7"
+    }
+  ],
+  "source_sha256_conventions": "FC execution/Shape2/P23 hashes are exact reviewed UTF-8 Git source snapshot blobs; P14-P17 hashes are UTF-8 of Notion fetch <content> block after trim, bound to listed last_edited_at. Source text is not a separate mutable implementation authority.",
+  "frozen_semantics": {
+    "creation_presets": [
+      "Rectangle",
+      "Ellipse",
+      "Triangle",
+      "Line",
+      "Arrow"
+    ],
+    "shape_allowlist": [
+      {
+        "kind_id": 1,
+        "kind_version": 1,
+        "shape_kind": 1,
+        "name": "Rectangle"
+      },
+      {
+        "kind_id": 1,
+        "kind_version": 1,
+        "shape_kind": 2,
+        "name": "Ellipse"
+      },
+      {
+        "kind_id": 1,
+        "kind_version": 2,
+        "shape_kind": 3,
+        "name": "Triangle"
+      }
+    ],
+    "triangle": "upright isosceles, width/height finite strictly positive, local closed vertices (W/2,0),(W,H),(0,H), bbox center used for Snap, not centroid",
+    "legacy_shape1_kind3": "SH-G06 REJECT",
+    "legacy_v1_unchanged": true,
+    "mutation_carrier": {
+      "operation_schema_version": 1,
+      "payload_version": 1,
+      "existing_operation_kinds": 15,
+      "new_operation_kinds": 0,
+      "brush_v2_payload2_exception": "UNCHANGED_BRUSH_SPECIFIC_ONLY"
+    },
+    "snapshots": {
+      "triangle_min_schema_version": 2,
+      "triangle_reader_feature_capability_required": true,
+      "snapshot1_triangle": "REJECT",
+      "legacy_v1_compatible": true,
+      "old_writer": "REFUSE_UNSUPPORTED_WRITABLE_AND_LOSSY_SERIALIZE",
+      "failed_replay_loading": "NEVER_READY"
+    },
+    "connector": "Connector/1 FreePoint-FreePoint Straight Line and Arrow(endDecoration Arrow); no attached target/route extension",
+    "geometry_and_style": "Shape/2 derived Scene/bounds/hit/raster; preexisting Field Registry Fill/Stroke/Opacity/Lock; no SkPath persisted; preview/guide are per-view transient",
+    "creation_flow": "same InputRouter/Interaction Session, one InsertObjects of exactly one object per valid confirmed Up; pending semantic outcome retains identity; no Operation on Move/Cancel",
+    "far_axis_snap": "visible finite viewport-bounded axis strips; deterministic center/edge ranking and hysteresis in logical pixels; no canonical guide; no silent Up jump",
+    "commands": "typed Common Facade future-create options separated from selected-object changes, coherent revisioned readback; Product Shell and Debug UI are clients of one owner",
+    "editor_history": "single Op per edit; handle resize one SetTransforms, numeric size one SetObjectSize, style/lock one PatchProperties, order SetPlacements, delete DeleteObjects; conditional same-lane inverse preimage and complete dependent closure",
+    "locked": "visible locked object selectable/unlockable but ordinary local editor manipulation blocked; no global canonical parser ban",
+    "platform": "Windows/Web/Android adapters share C++ semantic/interaction owner; preserve ICF binding/surface/metrics generation and four separate Applied/Presented/Axis LocalDurable/CloudSynced facts",
+    "mixed_clients": "explicit reader/writer capability gate, fail closed for unsupported writable peers, no lossy downgrade/read-only claim without proof"
+  },
+  "forbidden_decisions": [
+    "selected ShapeKind conversion",
+    "new OperationKind",
+    "new protobuf tags or frozen V1 descriptor edits",
+    "Shape/1 kind3 acceptance",
+    "generic Operation payload2",
+    "FC-06 attached anchors/routing",
+    "FC-07 full align/distribute",
+    "FC-10 clipboard/history suite",
+    "Text/Image/FC-02/FC-05",
+    "G5 optimizer or new perf Gate",
+    "old Gate/PHYS status rewrite"
+  ],
+  "preserved_historical_controls": {
+    "gate_decisions": 25,
+    "integrations": 29,
+    "evidence": 34,
+    "original_px0_windows_rows": 23,
+    "original_px0_web_rows": 23,
+    "fc13_physical": "DEFERRED_NOT_WAIVED"
+  }
+}
