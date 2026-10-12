@@ -72,5 +72,13 @@
     "not validator/recompute/check PASS",
     "not P31/P32 authorization",
     "no physical gate result"
-  ]
+  ],
+  "authoring": {
+    "cases": "authoring/cases.json",
+    "expected": "authoring/expected.json",
+    "case_count": 25,
+    "review": "REVIEW_REQUIRED_BEFORE_P31"
+  },
+  "gesture_cancel_semantics": "SH2-G24 NO_SUBMISSION (not OperationEngine REJECT)",
+  "notional_verification_method": "manual authoring + independent descriptor/wire comparison; does not replace independent authority/golden acceptance or full P20 runnable corpus"
 }
