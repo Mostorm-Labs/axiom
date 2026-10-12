@@ -1,0 +1,76 @@
+{
+  "schema": "fc01-shape2-golden-candidate-v0.1",
+  "status": "AUTHORING_AND_WIRE_CANDIDATE_PENDING_INDEPENDENT_REVIEW",
+  "source_authority": [
+    "notion://3f74c57a590c819ebc62dba091371f17",
+    "notion://3f74c57a590c8128b936d7491884ffb7"
+  ],
+  "historical_v1_source": {
+    "authority": "notion://3c44c57a590c81c0ab80d6a8d6aa0778",
+    "cases": "SH-G01..SH-G18",
+    "status": "authority_expected_table_present; physical binary fixture suite NOT established",
+    "repo_placeholder": "verification/corpus/semantic/v1/suites/shape-kind-v1.json",
+    "placeholder_status": "candidate vectors=[]"
+  },
+  "golden_example": {
+    "object_id_128_hex": "00000000000000000000000000000001",
+    "operation_id_128_hex": "00000000000000000000000000000002",
+    "document_id_128_hex": "00000000000000000000000000000003",
+    "order_key_hex": "80",
+    "kind_id": 1,
+    "kind_version": 2,
+    "shape_kind": 3,
+    "width": 100,
+    "height": 80,
+    "transform": {
+      "a": 1,
+      "b": 0,
+      "c": 0,
+      "d": 1,
+      "tx": 0,
+      "ty": 0
+    },
+    "property_bag": "empty present",
+    "operation": {
+      "schema_version": 1,
+      "payload_version": 1,
+      "kind": "InsertObjects",
+      "objects": 1
+    }
+  },
+  "vectors": [
+    {
+      "name": "ShapeContent",
+      "path": "wire/SH2-G15-shapecontent.hex",
+      "byte_length": 20,
+      "sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1"
+    },
+    {
+      "name": "ObjectRecord",
+      "path": "wire/SH2-G15-objectrecord.hex",
+      "byte_length": 113,
+      "sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc"
+    },
+    {
+      "name": "Operation",
+      "path": "wire/SH2-G15-insertoperation.hex",
+      "byte_length": 163,
+      "sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24"
+    }
+  ],
+  "derivation": "manually assembled protobuf field-key varints + length-delimited Id128, content, properties, placement, transform; little-endian binary64; cross-checked independently using a minimal hand-declared proto2 equivalent descriptor with deterministic serialization, not candidate runtime output",
+  "review_requirements": [
+    "validate exact frozen Edition2024 .proto presence and ordering",
+    "verify canonical property defaults and order key validity",
+    "verify independent expected vs candidate runtime serializer after source update",
+    "preserve old Shape/1 unknown kind3 negative control",
+    "verify original SH-G01..18 authority expected outcomes rather than empty candidate suite"
+  ],
+  "nonclaims": [
+    "not accepted golden",
+    "no production code changed",
+    "not validator/recompute/check PASS",
+    "not P31/P32 authorization",
+    "no physical gate result"
+  ]
+}
