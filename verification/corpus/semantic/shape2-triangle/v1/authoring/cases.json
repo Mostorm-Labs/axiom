@@ -150,8 +150,8 @@
     {
       "id": "SH2-G24",
       "input": "Cancel create preview before submit",
-      "expected": "reject",
-      "oracle": "no canonical insert, no generation/history/Axis publication"
+      "expected": "no_submission",
+      "oracle": "Preview+pre-submit Cancel is not a rejected Operation: no canonical Operation admission, ObjectRecord, Snapshot entry, History record, publication, or SemanticGeneration advance."
     },
     {
       "id": "SH2-G25",
