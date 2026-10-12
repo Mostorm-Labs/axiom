@@ -203,8 +203,129 @@
       "kind": "execution-policy",
       "ref": "notion://3f64c57a590c815da4f1df83aa0c1255",
       "scope": "execution:FC/feature-completion",
-      "status": "Current",
+      "status": "Superseded",
+      "superseded_by": "fc-feature-completion-execution-v0.2",
       "version": "v0.1"
+    },
+    {
+      "id": "fc01-shape-triangle-semantic-v0.1",
+      "scope": "semantic:axiom/shape-content-version2-triangle",
+      "kind": "semantic-schema-compatibility",
+      "version": "v0.1",
+      "status": "Current",
+      "ref": "notion://3f74c57a590c8128b936d7491884ffb7",
+      "depends_on": [],
+      "content": {
+        "owner": "FC-01 Semantic / G1 canonical validator",
+        "accepted_by": "FC-01 P23 D1-D3 D7",
+        "authority_page": "notion://3f74c57a590c8128b936d7491884ffb7",
+        "object_kind_id": 1,
+        "kind_version": 2,
+        "shape_kind": 3,
+        "geometry": "upright local Triangle: (W/2,0),(W,H),(0,H); finite W>0,H>0",
+        "shape_allowlist": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "legacy_negative": "Shape/1 shapeKind3 remains SH-G06 REJECT",
+        "operation_envelope": [
+          1,
+          1
+        ],
+        "new_operation_kinds": 0,
+        "snapshot_min_schema_version": 2,
+        "snapshot2_requires_feature_capability": true,
+        "old_writer_policy": "fail closed; no lossy downgrade/partial READY",
+        "attached_endpoint_triangle": "DEFERRED_FC-06",
+        "selected_shape_kind_conversion": "FORBIDDEN",
+        "source_basis": [
+          "notion://3f74c57a590c819ebc62dba091371f17",
+          "notion://3f74c57a590c8128b936d7491884ffb7",
+          "notion://3c44c57a590c81c0ab80d6a8d6aa0778"
+        ]
+      }
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "scope": "execution:FC/feature-completion",
+      "kind": "execution-policy",
+      "version": "v0.2",
+      "status": "Current",
+      "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
+      "depends_on": [
+        "g4-capability-authority-v0.3",
+        "fc01-shape-triangle-semantic-v0.1"
+      ],
+      "supersedes": "fc-feature-completion-execution-v0.1",
+      "change_class": "semantic",
+      "content": {
+        "owner": "FC Feature Completion Track",
+        "objective": "Deliver FC-01..FC-12 functional development before G5; retain original physical Gates for FC-13",
+        "source_basis": [
+          "notion://3f74c57a590c8139b903f14f0aae0c57",
+          "notion://3f74c57a590c819ebc62dba091371f17",
+          "notion://3f64c57a590c810c82aee0166056b73d"
+        ],
+        "accepted_decisions": [
+          "FC01-P23-D1",
+          "FC01-P23-D2",
+          "FC01-P23-D3",
+          "FC01-P23-D4",
+          "FC01-P23-D5",
+          "FC01-P23-D6",
+          "FC01-P23-D7"
+        ],
+        "stage_order": [
+          "FC-00",
+          "FC-01",
+          "FC-01A",
+          "FC-02..FC-12",
+          "FC-13",
+          "G5-v0.3"
+        ],
+        "fc01_scope": [
+          "Shape/1 Rectangle/Ellipse",
+          "Shape/2 Triangle",
+          "Connector/1 FreePoint Straight Line/Arrow",
+          "transient creation-only far-axis center/edge Snap/Guide",
+          "selected-object basic style/size/transform/order/lock/delete",
+          "minimum safe local Undo/Redo via existing History",
+          "shared typed RuntimeFacade and Debug UI"
+        ],
+        "fc06_deferred": "AttachedEndpoint/auto-anchor/route/perimeter and Triangle attachment",
+        "fc07_deferred": "full align/distribute/layout",
+        "fc10_deferred": "general history/clipboard/duplicate/cut/copy/paste",
+        "schema_policy": "Shape2 additive, 15 Operations unchanged, no new Proto field/selected ShapeKind conversion",
+        "resize_policy": "handle SetTransforms OR numeric SetObjectSize each one Operation",
+        "locked_policy": "editor-control only, not universal semantic wire mutation ban",
+        "cross_version": "unsupported Shape2 writable participant must fail closed; snapshot2 alone does not imply reader support",
+        "fc01_dev": "Own independently reviewed FC-01-DEV Gate after P20/P31; development_only",
+        "gated_execution": "FC-01..FC-12 each require frozen P20/P31 and independently reviewed DEV Gate; FC-01A follows FC-01",
+        "physical_obligations": "FC-13 retains original PX0-07 (H1 Windows 23 + H2 Web 23), G4.6-C, G4.7 original-source physical Gates and final FC-12 build, each independently reviewed",
+        "original_px0_subject": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+        "g5_entry": "original applicable Gates + FC-12 DEV + FC-13 PHYS independently accepted before G5",
+        "fc01_entry": "FC-00 conditional developer baseline + P23 + P14-P17 + P20 + repo-local successor independent review + P31 before P32",
+        "nonclaims": [
+          "Notion P23 approval is not P31/P32 authorization",
+          "No original PX0/G4.6/G4.7 or FC-13 physical Gate PASS from this change",
+          "No new Operation/Protobuf field or selected Shape conversion",
+          "No G5 authorization",
+          "No historical Gate/Evidence/Integration outcome rewriting"
+        ]
+      }
     }
   ],
   "schema_version": "0.6"
