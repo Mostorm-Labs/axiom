@@ -1,0 +1,46 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B03",
+  "status": "PARTIAL_NOT_CLOSED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B03",
+  "requirement": "One confirmed Create gesture maps to at most one Insert, pre-submit cancel makes zero Operation and sourceLost(A) does not cancel B",
+  "oracle": "Deterministic two-source PointerKey/session schedule with independent ledger+object counts; pre-change RED-01 proves old sourceLost global-cancel known defect",
+  "acceptance": "Baseline RED-01 fails expected B-alive oracle before code edits; candidate isolates A/B, duplicate Up/late ACK/tool switch and invalid-extents produce exact 0/1 unique commits with no ghost sessions",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "Prospective preflight RED-before-reimplementation chain and fresh source-loss differential pass; full creation gesture schedule absent from delivered source.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/result.json"
+  ],
+  "prospective_correction_chain": [
+    {
+      "revision": "b96332006c9732ff3eff028fef04897fc2d78448",
+      "subject": "docs(fc01): define prospective preflight-order correction"
+    },
+    {
+      "revision": "ac4f02411e19f8a56cda4821e757da1302b4896b",
+      "subject": "test(fc01): restore frozen source-loss baseline for red oracle"
+    },
+    {
+      "revision": "e18a72f29fb22c86f9bba433e5d71e52145ab073",
+      "subject": "test(fc01): record corrected preimplementation red oracle"
+    },
+    {
+      "revision": "4162b121f19cfaf57ff8af546ad119fb0159b80e",
+      "subject": "fix(input): restore source-scoped cancellation after corrected red"
+    },
+    {
+      "revision": "fb78d530cb904964333291b1ae6a9a1eee4a67c5",
+      "subject": "test(fc01): preserve corrected red-green logs and geometry design"
+    }
+  ],
+  "historical_first_mutation_order_proven": false,
+  "corrected_order_observed": true,
+  "acceptance_owner": "Independent Control Review",
+  "original_history_ref": "historical/pre-continuation-8854b093/execution-result.json"
+}

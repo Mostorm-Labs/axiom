@@ -1,0 +1,36 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B08",
+  "status": "BLOCKED_ENVIRONMENT",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B08",
+  "requirement": "FC-01 changed Windows, Web/WASM and Android native host/bridge surfaces compile/link and satisfy common logical pointer/epoch/capture/camera semantics",
+  "oracle": "Exact target build+link with native/TS/WASM/JNI deterministic host samples, independent viewport math and precision tokens; platform-native physical-only risks logged separately",
+  "acceptance": "All applicable supported changed host variants built and deterministic input/target/epoch scenarios match; missing required toolchain explicitly BLOCKED_ENVIRONMENT, never reported green by mock/native substitute",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "No qualified Windows/Web/Android host output on this source; locked SDK transport failed; I5 adapters/runner remain.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [],
+  "environment_blockers": [
+    {
+      "class": "BLOCKED_ENVIRONMENT",
+      "frozen_obligations": [
+        "FC01-B05",
+        "FC01-B08"
+      ],
+      "reason": "The locked r1-full-v1 windows-x64-d3d12 release SDK did not materialize. Official strict installer with socket timeout returns URLError/WinError 10060; curl returns 35 (connection reset); incomplete archives cannot satisfy size/SHA/manifest checks.",
+      "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
+      "evidence_refs": [
+        "continuation-logs/sdk-investigation/final-locked-fetch/result.json",
+        "continuation-logs/sdk-investigation/final-locked-fetch/fetch.log",
+        "continuation-logs/sdk-investigation/curl-fetch/result.json",
+        "continuation-logs/sdk-investigation/curl-fetch/download.log"
+      ],
+      "required_next_action": "Resolve the published SDK transport/store path; consume and verify the locked package. Do not rebuild Skia/Protobuf or alter locks."
+    }
+  ]
+}

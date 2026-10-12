@@ -1,0 +1,512 @@
+diff --git a/apps/ink_playground/CMakeLists.txt b/apps/ink_playground/CMakeLists.txt
+index e02d99b8..a3082ffd 100644
+--- a/apps/ink_playground/CMakeLists.txt
++++ b/apps/ink_playground/CMakeLists.txt
+@@ -52,6 +52,20 @@ else()
+ endif()
+ 
+ if(BUILD_TESTING)
++  add_executable(axiom_fc01_creation_session_tests tests/creation_session_test.cpp)
++  target_link_libraries(axiom_fc01_creation_session_tests PRIVATE axiom_ink_playground_common)
++  target_compile_features(axiom_fc01_creation_session_tests PRIVATE cxx_std_20)
++  if(MSVC)
++    target_compile_options(axiom_fc01_creation_session_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
++  endif()
++  add_test(NAME FC01CreationSession COMMAND axiom_fc01_creation_session_tests)
++  add_executable(axiom_fc01_creation_control_binding_tests tests/creation_control_binding_test.cpp)
++  target_link_libraries(axiom_fc01_creation_control_binding_tests PRIVATE axiom_ink_playground_common)
++  target_compile_features(axiom_fc01_creation_control_binding_tests PRIVATE cxx_std_20)
++  if(MSVC)
++    target_compile_options(axiom_fc01_creation_control_binding_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
++  endif()
++  add_test(NAME FC01CreationControlBinding COMMAND axiom_fc01_creation_control_binding_tests)
+   add_executable(axiom_ink_playground_tests tests/ink_playground_test.cpp)
+   target_link_libraries(axiom_ink_playground_tests PRIVATE axiom_ink_playground_common)
+   target_compile_features(axiom_ink_playground_tests PRIVATE cxx_std_20)
+@@ -314,10 +328,10 @@ if(EMSCRIPTEN)
+       "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']"
+       "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_ink_create','_axiom_ink_destroy','_axiom_ink_platform_batch','_axiom_ink_select_tool','_axiom_ink_select_brush_profile','_axiom_ink_eraser_begin','_axiom_ink_eraser_sample','_axiom_ink_eraser_finish','_axiom_ink_eraser_cancel','_axiom_ink_brush_render','_axiom_ink_brush_size','_axiom_ink_brush_opacity','_axiom_ink_brush_representation','_axiom_ink_render_submission_count','_axiom_ink_render_flush_count','_axiom_ink_run_baseline_observation','_axiom_ink_viewport_claimed','_axiom_ink_viewport_scale','_axiom_ink_viewport_translation_x','_axiom_ink_viewport_translation_y','_axiom_ink_apply_viewport_wheel_pan','_axiom_ink_apply_viewport_ctrl_wheel_zoom','_axiom_ink_apply_viewport_gesture','_axiom_ink_bind_surface','_axiom_ink_bind_preview_surface','_axiom_ink_resize_surface','_axiom_ink_lose_surface','_axiom_ink_rebind_surface','_axiom_ink_point_count','_axiom_ink_point_x','_axiom_ink_point_y','_axiom_ink_selected_tool','_axiom_ink_debug_ui_init','_axiom_ink_debug_ui_toggle','_axiom_ink_debug_ui_visible','_axiom_ink_debug_ui_wants_capture_mouse','_axiom_ink_debug_ui_wants_capture_keyboard','_axiom_ink_debug_ui_render','_axiom_ink_debug_ui_pointer','_axiom_ink_debug_ui_key','_axiom_ink_debug_ui_capture_begin','_axiom_ink_debug_ui_capture_route','_axiom_ink_debug_ui_capture_terminal','_axiom_ink_debug_ui_resize']")
+ endif()
+-  add_executable(axiom_dui_m1_runtime_facade_tests tests/dui_m1_runtime_facade_test.cpp)
+-  target_link_libraries(axiom_dui_m1_runtime_facade_tests PRIVATE axiom_ink_playground_common)
+-  target_compile_features(axiom_dui_m1_runtime_facade_tests PRIVATE cxx_std_20)
+-  if(MSVC)
+-    target_compile_options(axiom_dui_m1_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+-  endif()
++  add_executable(axiom_dui_m1_runtime_facade_tests tests/dui_m1_runtime_facade_test.cpp)
++  target_link_libraries(axiom_dui_m1_runtime_facade_tests PRIVATE axiom_ink_playground_common)
++  target_compile_features(axiom_dui_m1_runtime_facade_tests PRIVATE cxx_std_20)
++  if(MSVC)
++    target_compile_options(axiom_dui_m1_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
++  endif()
+   add_test(NAME DUIM1RuntimeFacade COMMAND axiom_dui_m1_runtime_facade_tests)
+diff --git a/apps/ink_playground/common/canvas_control_binding.cpp b/apps/ink_playground/common/canvas_control_binding.cpp
+index 46ee855b..1aa6f924 100644
+--- a/apps/ink_playground/common/canvas_control_binding.cpp
++++ b/apps/ink_playground/common/canvas_control_binding.cpp
+@@ -59,6 +59,10 @@ runtime::CanvasControlApplyResult CanvasControlBinding::apply(
+     case runtime::CanvasControlPayloadKind::kRedo:
+       applied = host_.redo();
+       break;
++    case runtime::CanvasControlPayloadKind::kSelectCreationPreset:
++      applied = host_.setSelectionMode(false) && host_.selectCreationPreset(
++          static_cast<CreationPreset>(p.creationPreset));
++      break;
+     case runtime::CanvasControlPayloadKind::kInkOptions:
+       {
+         const auto preset = host_.selectedBrushProfile();
+@@ -144,6 +148,10 @@ runtime::CanvasControlSnapshot CanvasControlBinding::snapshot(
+   out.canRedo = host_.canRedo();
+   out.selectedObjectCount = static_cast<std::uint32_t>(host_.selectedObjectCount());
+   if (out.selectedObjectCount != 0U) out.selectedObject = host_.selectedPrimaryObject();
++  out.creationActive = host_.creationActive();
++  out.creationPreviewValid = host_.creationPreview().valid;
++  out.creationSnapped = host_.creationPreview().snapped;
++  out.creationPreset = static_cast<runtime::CanvasCreationPreset>(host_.creationPreset());
+   return out;
+ }
+ 
+diff --git a/apps/ink_playground/common/canvas_runtime_facade_adapter.cpp b/apps/ink_playground/common/canvas_runtime_facade_adapter.cpp
+index ab752427..910899e4 100644
+--- a/apps/ink_playground/common/canvas_runtime_facade_adapter.cpp
++++ b/apps/ink_playground/common/canvas_runtime_facade_adapter.cpp
+@@ -5,17 +5,10 @@ namespace canvas::ink_playground {
+ runtime::ProductControlReceipt CanvasRuntimeFacadeAdapter::submitCanvasControl(
+     const runtime::CanvasControlRequest& request) noexcept {
+   auto receipt = service_.enqueue(request);
+-  if (receipt.state == runtime::CanvasControlReceiptState::kQueued) {
+-    (void)service_.processPending(request.deadlineSequence == 0U ? request.requestId
+-                                                                  : request.deadlineSequence);
+-    if (const auto applied = service_.receipt(receipt.key); applied.has_value()) {
+-      receipt = *applied;
+-    }
+-  }
+-  const auto applied = receipt.state == runtime::CanvasControlReceiptState::kApplied;
+-  const auto state = applied ? runtime::ProductControlState::kApplied
+-      : receipt.state == runtime::CanvasControlReceiptState::kQueued
+-          ? runtime::ProductControlState::kQueued
++  const auto state = receipt.state == runtime::CanvasControlReceiptState::kQueued
++      ? runtime::ProductControlState::kQueued
++      : receipt.state == runtime::CanvasControlReceiptState::kApplied
++          ? runtime::ProductControlState::kApplied
+           : runtime::ProductControlState::kRejected;
+   return {request.requestId, state, request.target.runtimeEpoch, receipt};
+ }
+diff --git a/apps/ink_playground/common/canvas_runtime_facade_adapter.hpp b/apps/ink_playground/common/canvas_runtime_facade_adapter.hpp
+index b1cce9dc..a151e8e5 100644
+--- a/apps/ink_playground/common/canvas_runtime_facade_adapter.hpp
++++ b/apps/ink_playground/common/canvas_runtime_facade_adapter.hpp
+@@ -30,6 +30,13 @@ class CanvasRuntimeFacadeAdapter : public runtime::RuntimeFacade {
+     return service_.receipt(key);
+   }
+ 
++ public:
++  // Called only by the platform/runtime owner at its serialized safe point.
++  // Submission never executes the queue inline or re-enters the owner.
++  [[nodiscard]] std::size_t processCanvasControls(std::uint64_t ownerSequence) noexcept {
++    return service_.processPending(ownerSequence);
++  }
++
+  protected:
+   [[nodiscard]] runtime::CanvasControlService& canvasControlService() noexcept {
+     return service_;
+@@ -37,10 +44,6 @@ class CanvasRuntimeFacadeAdapter : public runtime::RuntimeFacade {
+   [[nodiscard]] const runtime::CanvasTargetKey& canvasTarget() const noexcept {
+     return binding_.target();
+   }
+-  [[nodiscard]] std::size_t processCanvasControls(std::uint64_t ownerSequence) noexcept {
+-    return service_.processPending(ownerSequence);
+-  }
+-
+  private:
+   CanvasControlBinding binding_;
+   runtime::CanvasControlService service_;
+diff --git a/apps/ink_playground/common/ink_playground_host.cpp b/apps/ink_playground/common/ink_playground_host.cpp
+index 077bf379..851dc56c 100644
+--- a/apps/ink_playground/common/ink_playground_host.cpp
++++ b/apps/ink_playground/common/ink_playground_host.cpp
+@@ -54,7 +54,7 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
+                                 bounds.world, canvas::ContentRevision(record.kind_version),
+                                 canvas::RenderPayloadRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version},
+                                 canvas::HitGeometryRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version}, record.transform,
+-                                canvas::scene::deriveGeometry(record)});
++                                canvas::scene::deriveGeometry(record), record.properties});
+     }
+     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
+   }
+@@ -459,6 +459,13 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
+     if (routed.terminalCancel) cancelSelectionTransform();
+     return routed.accepted || routed.terminalCancel;
+   }
++  if (creationMode_ || creation_.active()) {
++    for (const auto& sample : routed.normalized.samples) {
++      if (!sample.key.valid()) continue;
++      if (!creationPointer(sample.key, sample.phase, sample.x, sample.y)) return false;
++    }
++    return routed.accepted || routed.terminalCancel;
++  }
+   bool previewDirty = false;
+   const auto viewportBefore = viewportController_->state();
+   for (const auto& sample : routed.normalized.samples) {
+@@ -592,6 +599,85 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
+   return true;
+ }
+ 
++bool InkPlaygroundHost::selectCreationPreset(CreationPreset preset) noexcept {
++  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
++      selectionMode_ || panTool_ || creation_.active()) return false;
++  creationPreset_ = preset;
++  creationMode_ = true;
++  return true;
++}
++
++bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
++                                        float x, float y) noexcept {
++  if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
++      surface_.height == 0U) return false;
++  const auto content = viewportController_->viewToContent(x, y);
++  const auto viewportTopLeft = viewportController_->viewToContent(0.0F, 0.0F);
++  const auto viewportBottomRight = viewportController_->viewToContent(
++      static_cast<float>(surface_.width), static_cast<float>(surface_.height));
++  const foundation::WorldRect viewport{
++      (std::min)(viewportTopLeft.first, viewportBottomRight.first),
++      (std::min)(viewportTopLeft.second, viewportBottomRight.second),
++      (std::max)(viewportTopLeft.first, viewportBottomRight.first),
++      (std::max)(viewportTopLeft.second, viewportBottomRight.second)};
++  if (phase == input::PointerPhase::kDown) {
++    if (creation_.active()) return false;
++    if (runtimeSceneHost_ != nullptr) {
++      std::vector<interaction::SnapTarget> targets;
++      const auto camera = viewportController_->state();
++      for (const auto& record : runtimeSceneHost_->read().records()) {
++        if (record.objectId == selection_.primary()) continue;
++        if ((static_cast<std::uint32_t>(record.flags) &
++             static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible)) == 0U) continue;
++        targets.push_back({record.objectId, record.worldBounds, false, false});
++      }
++      creation_.setSnapTargets(std::move(targets));
++      creation_.setSnapScale(camera.scale > 0.0F ? camera.scale : 1.0F);
++    }
++    const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
++    return creation_.begin(key, creationPreset_, CreationStyle{},
++                           {content.first, content.second}, viewport, seed);
++  }
++  if (phase == input::PointerPhase::kMove) {
++    const bool moved = creation_.move(key, {content.first, content.second});
++    if (!moved && !creation_.active()) {
++      creationMode_ = false;
++      snapGuides_.clear();
++      return true;
++    }
++    return moved;
++  }
++  if (phase == input::PointerPhase::kCancel)
++    return creation_.cancel(key);
++  if (phase != input::PointerPhase::kUp) return false;
++  if (!creation_.move(key, {content.first, content.second})) {
++    creationMode_ = false;
++    snapGuides_.clear();
++    return true;
++  }
++  const auto commit = creation_.finish(key);
++  creationMode_ = false;
++  if (!commit.has_value()) return true;
++  const auto ordinal = localOperationOrdinal();
++  if (ordinal == 0U) return false;
++  semantic::Operation operation{
++      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)), documentId_,
++      1U, 1U, semantic::InsertObjectsOp{{commit->record}}};
++  const auto applied = operationEngine_.apply(
++      operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
++      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
++  if (applied.disposition != semantic::ApplyDisposition::kApplied ||
++      !applied.commit_record.has_value()) return false;
++  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
++  const canvas::SceneCommitInput input(applied.commit_record->before_generation,
++      applied.commit_record->after_generation, view, &applied.commit_record->change_set);
++  if (sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr ||
++      !sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
++  ++submittedOperationCount_;
++  canonicalPresentationDirty_ = true;
++  return true;
++}
++
+ bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
+                                      std::uint64_t operationId) noexcept {
+   if (!keyedStrokeIds_.contains(key)) return false;
+@@ -712,12 +798,16 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
+   if (!brushSessions_.empty()) return false;
+   toolMode_ = mode;
+   panTool_ = false;
++  creationMode_ = false;
++  if (creation_.active()) creation_.clear();
+   return true;
+ }
+ 
+ bool InkPlaygroundHost::setPanTool(bool enabled) noexcept {
+   if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) return false;
+   panTool_ = enabled;
++  creationMode_ = false;
++  if (creation_.active()) creation_.clear();
+   if (enabled) {
+     toolMode_ = ToolMode::kBrush;
+     if (selectionMode_) (void)setSelectionMode(false);
+@@ -730,6 +820,10 @@ bool InkPlaygroundHost::setSelectionMode(bool enabled) noexcept {
+     return false;
+   }
+   selectionMode_ = enabled;
++  if (enabled) {
++    creationMode_ = false;
++    if (creation_.active()) creation_.clear();
++  }
+   if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
+   canonicalPresentationDirty_ = true;
+   return true;
+diff --git a/apps/ink_playground/common/ink_playground_host.hpp b/apps/ink_playground/common/ink_playground_host.hpp
+index 71141b1b..275be564 100644
+--- a/apps/ink_playground/common/ink_playground_host.hpp
++++ b/apps/ink_playground/common/ink_playground_host.hpp
+@@ -34,6 +34,7 @@
+ #include "canvas/scene/scene_binding.hpp"
+ #include "canvas/scene/incremental_runtime_coordinator.hpp"
+ #include "canvas/text/text_layout.hpp"
++#include "creation_session.hpp"
+ 
+ #include <cstddef>
+ #include <cstdint>
+@@ -141,6 +142,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
+                             std::uint64_t observationTimeNs);
+   [[nodiscard]] bool acceptPlatformBatch(const input::PlatformPointerBatch& batch,
+                                          std::uint64_t observationTimeNs);
++  [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
++  [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
++                                     float x, float y) noexcept;
++  [[nodiscard]] bool creationActive() const noexcept { return creation_.active(); }
++  [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
++  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { return creation_.preview(); }
+   [[nodiscard]] std::optional<input::PointerKey> platformKey(
+       input::InputSourceId source, input::PointerId pointer) const noexcept {
+       return appBinding_ == nullptr ? std::nullopt : appBinding_->keyFor(source, pointer);
+@@ -555,6 +562,10 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
+   std::vector<render::SnapGuideGeometry> snapGuides_;
+   std::uint64_t selectionOverlayUpdates_ = 0;
+   QualificationObservation qualificationObservation_{};
++  CreationSession creation_{};
++  CreationPreset creationPreset_ = CreationPreset::kRectangle;
++  std::uint64_t creationSerial_ = 0;
++  bool creationMode_ = false;
+ };
+ 
+ }  // namespace canvas::ink_playground
+diff --git a/apps/ink_playground/platform/web/bridge.cpp b/apps/ink_playground/platform/web/bridge.cpp
+index 13f3b078..94b807f9 100644
+--- a/apps/ink_playground/platform/web/bridge.cpp
++++ b/apps/ink_playground/platform/web/bridge.cpp
+@@ -62,6 +62,9 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
+  public:
+   explicit WebRuntimeFacade(Host& host)
+       : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
++  void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
++    (void)processCanvasControls(sequence);
++  }
+   [[nodiscard]] std::uint64_t nextRequestId() noexcept {
+     if (nextRequest_ == 0U) nextRequest_ = 1U;
+     return nextRequest_++;
+@@ -347,6 +350,9 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
+   (void)contentX;
+   (void)contentY;
+   auto* target = host(value);
++  if (auto* facade = runtimeFacade(value); facade != nullptr) {
++    facade->processCanvasControlsAtSafePoint(sequence);
++  }
+   const auto brushIt = brushes().find(value);
+   if (target == nullptr || brushIt == brushes().end()) return 0;
+   canvas::input::PlatformPointerBatch batch;
+diff --git a/apps/ink_playground/platform/windows/main.cpp b/apps/ink_playground/platform/windows/main.cpp
+index 44e956b6..9938e1a7 100644
+--- a/apps/ink_playground/platform/windows/main.cpp
++++ b/apps/ink_playground/platform/windows/main.cpp
+@@ -242,6 +242,9 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
+  public:
+   explicit WindowsRuntimeFacade(State& state)
+       : CanvasRuntimeFacadeAdapter(*state.host, {1U, 1U, 1U, 1U}), state_(state) {}
++  void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
++    (void)processCanvasControls(sequence);
++  }
+   [[nodiscard]] canvas::runtime::ProductControlReceipt submitSelectionPointer(
+       const canvas::runtime::SelectionPointerRequest& request) noexcept override {
+     using P = canvas::runtime::SelectionPointerPhase;
+@@ -1375,6 +1378,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
+   }
+   if ((message == WM_TIMER && value != nullptr && wParam == State::kRenderTimerId) ||
+       (message == State::kRenderWakeMessage && value != nullptr)) {
++    if (value->runtimeFacade != nullptr) {
++      value->runtimeFacade->processCanvasControlsAtSafePoint(value->pointerSampleSequence);
++    }
+     if (value->axiomDebugControl != nullptr) value->axiomDebugControl->process();
+     if (value->platformDebugControl != nullptr) {
+       value->platformDebugControl->processPendingSurfaceModes();
+diff --git a/debug_ui/include/canvas/debug_ui/control_router.hpp b/debug_ui/include/canvas/debug_ui/control_router.hpp
+index 55937256..c5cd4b8c 100644
+--- a/debug_ui/include/canvas/debug_ui/control_router.hpp
++++ b/debug_ui/include/canvas/debug_ui/control_router.hpp
+@@ -31,6 +31,8 @@ class DebugControlRouter final {
+   canvas::runtime::ProductControlReceipt setSelectionMode(bool enabled) noexcept;
+   canvas::runtime::ProductControlReceipt undo() noexcept;
+   canvas::runtime::ProductControlReceipt redo() noexcept;
++  canvas::runtime::ProductControlReceipt setCreationPreset(
++      canvas::runtime::CanvasCreationPreset preset) noexcept;
+   canvas::runtime::ProductControlReceipt panBy(float dx, float dy) noexcept;
+   canvas::runtime::ProductControlReceipt zoomAt(float anchorX, float anchorY,
+                                                  float scaleDelta) noexcept;
+diff --git a/debug_ui/src/control_router.cpp b/debug_ui/src/control_router.cpp
+index 5c2ee284..f6770231 100644
+--- a/debug_ui/src/control_router.cpp
++++ b/debug_ui/src/control_router.cpp
+@@ -168,6 +168,31 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::redo() noexcept {
+   return receipt;
+ }
+ 
++canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
++    canvas::runtime::CanvasCreationPreset preset) noexcept {
++  const auto requestId = nextRequestId();
++  if (runtime_ == nullptr) {
++    auto receipt = unsupportedReceipt<canvas::runtime::ProductControlReceipt>(requestId);
++    recordProduct("set-creation-preset", receipt);
++    return receipt;
++  }
++  const auto targets = runtime_->mountedCanvasTargets();
++  canvas::runtime::CanvasControlRequest request{};
++  request.clientId = 1U;
++  request.requestId = requestId;
++  request.deadlineSequence = deadline();
++  request.target = targets.empty()
++      ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1U,
++                                         frame_.stamp.viewGeneration,
++                                         frame_.stamp.surfaceGeneration}
++      : targets.front();
++  request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
++  request.payload.creationPreset = preset;
++  auto receipt = runtime_->submitCanvasControl(request);
++  recordProduct("set-creation-preset", receipt);
++  return receipt;
++}
++
+ canvas::runtime::ProductControlReceipt DebugControlRouter::panBy(float dx, float dy) noexcept {
+   const auto id = nextRequestId();
+   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
+diff --git a/debug_ui/src/panels/control.cpp b/debug_ui/src/panels/control.cpp
+index eda9d772..f237782a 100644
+--- a/debug_ui/src/panels/control.cpp
++++ b/debug_ui/src/panels/control.cpp
+@@ -3,6 +3,8 @@
+ #include "imgui.h"
+ 
+ #include <cmath>
++#include <array>
++#include <utility>
+ 
+ namespace canvas::debug_ui {
+ namespace {
+@@ -28,6 +30,23 @@ void tools(DebugPanelContext& context) {
+         context.ui.markControlSubmitted();
+     }
+     ImGui::EndDisabled();
++    ImGui::SeparatorText("Create");
++    const std::array<std::pair<const char*, canvas::runtime::CanvasCreationPreset>, 5> presets{{
++        {"Rectangle", canvas::runtime::CanvasCreationPreset::kRectangle},
++        {"Ellipse", canvas::runtime::CanvasCreationPreset::kEllipse},
++        {"Triangle", canvas::runtime::CanvasCreationPreset::kTriangle},
++        {"Line", canvas::runtime::CanvasCreationPreset::kLine},
++        {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
++    }};
++    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
++    for (std::size_t i = 0; i < presets.size(); ++i) {
++      if (ImGui::Button(presets[i].first)) {
++        (void)context.controls.setCreationPreset(presets[i].second);
++        context.ui.markControlSubmitted();
++      }
++      if (i + 1U < presets.size()) ImGui::SameLine();
++    }
++    ImGui::EndDisabled();
+     if (panel_detail::hasReadback(snapshot.product.availability)) {
+         ImGui::Text("resolved eraserId: %u / selection: %s",
+                     eraserId,
+diff --git a/runtime/foundation/include/canvas/runtime/canvas_control_types.hpp b/runtime/foundation/include/canvas/runtime/canvas_control_types.hpp
+index b6b6624b..e41a28d6 100644
+--- a/runtime/foundation/include/canvas/runtime/canvas_control_types.hpp
++++ b/runtime/foundation/include/canvas/runtime/canvas_control_types.hpp
+@@ -27,6 +27,13 @@ struct CanvasTargetKeyHash final {
+ };
+ 
+ enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan };
++enum class CanvasCreationPreset : std::uint8_t {
++  kRectangle,
++  kEllipse,
++  kTriangle,
++  kLine,
++  kArrow,
++};
+ enum class BrushPresetError : std::uint8_t { kNone, kUnknownPreset, kResourceUnavailable };
+ enum class OptionPatchKind : std::uint8_t { kKeep, kSet, kClearOverride };
+ 
+@@ -75,6 +82,7 @@ enum class CanvasControlPayloadKind : std::uint8_t {
+   kFit,
+   kUndo,
+   kRedo,
++  kSelectCreationPreset,
+ };
+ 
+ enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorldRect };
+@@ -82,6 +90,7 @@ enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorl
+ struct CanvasControlPayload final {
+   CanvasControlPayloadKind kind = CanvasControlPayloadKind::kSelectTool;
+   CanvasToolKind tool = CanvasToolKind::kInk;
++  CanvasCreationPreset creationPreset = CanvasCreationPreset::kRectangle;
+   BrushPresetRef preset{};
+   InkOptionsPatch ink{};
+   EraserOptionsPatch eraser{};
+@@ -171,6 +180,10 @@ struct CanvasControlSnapshot final {
+   bool canRedo = false;
+   std::uint32_t selectedObjectCount = 0;
+   std::optional<foundation::ObjectId> selectedObject;
++  CanvasCreationPreset creationPreset = CanvasCreationPreset::kRectangle;
++  bool creationActive = false;
++  bool creationPreviewValid = false;
++  bool creationSnapped = false;
+   std::optional<CanvasControlReceipt> lastReceipt;
+ };
+ 
+diff --git a/runtime/interaction/CMakeLists.txt b/runtime/interaction/CMakeLists.txt
+index 6a7ababa..594521fd 100644
+--- a/runtime/interaction/CMakeLists.txt
++++ b/runtime/interaction/CMakeLists.txt
+@@ -1,4 +1,5 @@
+ add_library(canvas_runtime_interaction STATIC
++    src/creation_session.cpp
+     src/eraser_session.cpp
+     src/editor_session.cpp
+     src/hit_test_service.cpp
+diff --git a/verification/fc01/run_dev.py b/verification/fc01/run_dev.py
+index 145d3558..d604b57c 100644
+--- a/verification/fc01/run_dev.py
++++ b/verification/fc01/run_dev.py
+@@ -46,6 +46,8 @@ def main() -> int:
+     parser.add_argument("--no-protobuf", action="store_true")
+     parser.add_argument("--configure-only", action="store_true")
+     parser.add_argument("--scene", action="store_true")
++    parser.add_argument("--playground", action="store_true",
++                        help="Enable the common Ink Playground host and its focused tests")
+     parser.add_argument("--build-only", action="store_true")
+     args = parser.parse_args()
+     if args.profile != "core":
+@@ -77,7 +79,8 @@ def main() -> int:
+                  "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_CXX_FLAGS=/UNDEBUG", f"-DCMAKE_MAKE_PROGRAM={ninja}",
+                  f"-DCMAKE_C_COMPILER={env['CC']}", f"-DCMAKE_CXX_COMPILER={env['CXX']}",
+                  "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_POC02=OFF", "-DCANVAS_BUILD_POC03=OFF",
+-                 "-DCANVAS_BUILD_POC05=OFF", "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
++                 "-DCANVAS_BUILD_POC05=OFF",
++                 "-DCANVAS_BUILD_INK_PLAYGROUND=" + ("ON" if args.playground else "OFF"),
+                  "-DCANVAS_BUILD_RF01=" + ("ON" if args.scene else "OFF"), "-DCANVAS_BUILD_RENDER=OFF", "-DCANVAS_BUILD_SEMANTIC=ON",
+                  "-DBUILD_TESTING=ON", "-DCANVAS_SKIA_SDK_VARIANT=release",
+                  "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=" + ("OFF" if args.no_protobuf else "ON")]

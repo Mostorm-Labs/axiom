@@ -1,0 +1,61 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B01",
+  "status": "PARTIAL_NOT_CLOSED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B01",
+  "requirement": "Admit only exact Shape/1 Rectangle/Ellipse and Shape/2 Triangle tuple, preserve V1 SH-G06 REJECT, canonical Operation1/payload1/Brush2 exception, byte presence and whole-batch reject",
+  "oracle": "Independently authored strict wire parser/manual tuple reference vs production codec and typed semantic entry; immutable decoded-hex SH2-G15 and historical V1 expected; check ledger/store/generation zero on reject",
+  "acceptance": "All required SH2 positive/negative cases exact, raw ShapeContent 20B/ObjectRecord 113B/InsertOperation 163B SHA256 match, old SH-G06 and Brush2 negatives preserved, no fallback or partial commit",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "Native semantic regression and exact three Golden binding checks pass; all 25 authored-case mapping is not yet materialized.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json"
+  ],
+  "golden_binding_checks": [
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/authoring/cases.json",
+      "git_blob_sha1": "5ec1abc2e168f4c9ae5752e1474343290c69f728",
+      "expected_git_blob_sha1": "5ec1abc2e168f4c9ae5752e1474343290c69f728",
+      "match": true
+    },
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/authoring/expected.json",
+      "git_blob_sha1": "2ddaabad36fe5bea3a3b80deb1f2eaadca4d56f8",
+      "expected_git_blob_sha1": "2ddaabad36fe5bea3a3b80deb1f2eaadca4d56f8",
+      "match": true
+    },
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/manifest.json",
+      "git_blob_sha1": "f2e5ebdd5319f7695b944815da7c651a5c0f23b2",
+      "expected_git_blob_sha1": "f2e5ebdd5319f7695b944815da7c651a5c0f23b2",
+      "match": true
+    },
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-shapecontent.hex",
+      "git_blob_sha1": "8c18206d003f13d7bd408701031300bdbe583c00",
+      "raw_bytes": 20,
+      "raw_sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1",
+      "match": true
+    },
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-objectrecord.hex",
+      "git_blob_sha1": "12b2f159f397cc9c4a4a2737751fe779c2c6dcc4",
+      "raw_bytes": 113,
+      "raw_sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc",
+      "match": true
+    },
+    {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-insertoperation.hex",
+      "git_blob_sha1": "fb8a4356516d044fb1314959d64a8df38e6454ec",
+      "raw_bytes": 163,
+      "raw_sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24",
+      "match": true
+    }
+  ]
+}

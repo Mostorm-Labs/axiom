@@ -1,0 +1,93 @@
+{
+  "task_id": "FC-01",
+  "profile": "core",
+  "source_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "working_tree_dirty": true,
+  "commands": [
+    {
+      "name": "sdk-resolution",
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/setup_build_environment.py",
+        "--semantic",
+        "--offline",
+        "--facts-output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\runs\\i3-behavior-red\\semantic-environment.json"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\runs\\i3-behavior-red\\sdk-resolution.log",
+      "log_sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "name": "configure",
+      "command": [
+        "D:\\Softwares\\CMake\\bin\\cmake.EXE",
+        "-S",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas",
+        "-B",
+        "D:\\axbuild\\fc01-i3-playground",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_FLAGS=/UNDEBUG",
+        "-DCMAKE_MAKE_PROGRAM=D:\\git\\depot_tools\\ninja.EXE",
+        "-DCMAKE_C_COMPILER=D:\\ax8\\.deps\\llvm\\bin\\clang-cl.exe",
+        "-DCMAKE_CXX_COMPILER=D:\\ax8\\.deps\\llvm\\bin\\clang-cl.exe",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_POC02=OFF",
+        "-DCANVAS_BUILD_POC03=OFF",
+        "-DCANVAS_BUILD_POC05=OFF",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=ON",
+        "-DCANVAS_BUILD_RF01=ON",
+        "-DCANVAS_BUILD_RENDER=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\runs\\i3-behavior-red\\configure.log",
+      "log_sha256": "94cc307ece5c80753aee0d604c2200d62d717db6b6780c1f6f819b489bf0b3b4"
+    },
+    {
+      "name": "build",
+      "command": [
+        "D:\\Softwares\\CMake\\bin\\cmake.EXE",
+        "--build",
+        "D:\\axbuild\\fc01-i3-playground",
+        "--parallel",
+        "4",
+        "--target",
+        "axiom_fc01_creation_session_tests"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\runs\\i3-behavior-red\\build.log",
+      "log_sha256": "435e5e59bacb339d600c117049061c16cc321543b310aeba533ea2150a54500b"
+    },
+    {
+      "name": "test",
+      "command": [
+        "D:\\Softwares\\CMake\\bin\\ctest.exe",
+        "--test-dir",
+        "D:\\axbuild\\fc01-i3-playground",
+        "--output-on-failure",
+        "-R",
+        "^FC01CreationSession$"
+      ],
+      "exit_code": 8,
+      "log": "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\runs\\i3-behavior-red\\test.log",
+      "log_sha256": "70d14a219862ced1200725fd1d607c1f2ef170136a92289f8a41b3c7db885dfc"
+    }
+  ],
+  "exit_code": 8,
+  "physical_claim": false,
+  "full_closure_claim": false,
+  "compiler": "D:\\ax8\\.deps\\llvm\\bin\\clang-cl.exe",
+  "compiler_sha256": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8"
+}

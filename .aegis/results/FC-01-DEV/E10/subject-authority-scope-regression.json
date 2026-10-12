@@ -1,0 +1,21 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B10",
+  "status": "PARTIAL_NOT_CLOSED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B10",
+  "requirement": "Exact accepted Authority, P31 bindings, source subject, original negative cohorts and narrow code scope/regression preserved",
+  "oracle": "Independent Git ancestry/ref/content digest/diff audit and affected G1/G2/G3/G4/Ink/Selection/Viewport/History regression plus old V1/Brush2/Connector controls",
+  "acceptance": "Subject descends accepted FC-00 and reviewed control commit; all package refs hash-match, CI/provider subject exact, zero unauthorized Proto/old Authority/Golden/Gate changes and applicable tests pass",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "Anchor/locks/source projections/Golden/protected scope match; 528 core and 6 Scene regressions pass. Host and complete interaction regression remain.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json",
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json"
+  ]
+}

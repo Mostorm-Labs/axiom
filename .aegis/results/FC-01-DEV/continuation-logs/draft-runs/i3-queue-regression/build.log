@@ -1,0 +1,80 @@
+[0/2] Re-checking globbed directories...
+[1/4] Building CXX object apps\ink_playground\CMakeFiles\axiom_ink_playground_common.dir\common\canvas_runtime_facade_adapter.cpp.obj
+[2/4] Linking CXX static library apps\ink_playground\axiom_ink_playground_common.lib
+[3/4] Building CXX object apps\ink_playground\CMakeFiles\axiom_fc01_creation_control_binding_tests.dir\tests\creation_control_binding_test.cpp.obj
+[4/4] Linking CXX executable apps\ink_playground\axiom_fc01_creation_control_binding_tests.exe
+FAILED: apps/ink_playground/axiom_fc01_creation_control_binding_tests.exe 
+C:\WINDOWS\system32\cmd.exe /C "cd . && D:\Softwares\CMake\bin\cmake.exe -E vs_link_exe --msvc-ver=1944 --intdir=apps\ink_playground\CMakeFiles\axiom_fc01_creation_control_binding_tests.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=D:\ax8\.deps\llvm\bin\llvm-mt.exe --manifests  -- D:\ax8\.deps\llvm\bin\lld-link.exe /nologo @CMakeFiles\axiom_fc01_creation_control_binding_tests.rsp  /out:apps\ink_playground\axiom_fc01_creation_control_binding_tests.exe /implib:apps\ink_playground\axiom_fc01_creation_control_binding_tests.lib /pdb:apps\ink_playground\axiom_fc01_creation_control_binding_tests.pdb /version:0.0 /machine:x64 /INCREMENTAL:NO /subsystem:console && cd ."
+LINK: command "D:\ax8\.deps\llvm\bin\lld-link.exe /nologo @CMakeFiles\axiom_fc01_creation_control_binding_tests.rsp /out:apps\ink_playground\axiom_fc01_creation_control_binding_tests.exe /implib:apps\ink_playground\axiom_fc01_creation_control_binding_tests.lib /pdb:apps\ink_playground\axiom_fc01_creation_control_binding_tests.pdb /version:0.0 /machine:x64 /INCREMENTAL:NO /subsystem:console /MANIFEST:EMBED,ID=1" failed (exit code 1) with the following output:
+lld-link: error: undefined symbol: public: __cdecl canvas::render::SkiaTextResources::~SkiaTextResources(void)
+>>> referenced by apps\ink_playground\CMakeFiles\axiom_fc01_creation_control_binding_tests.dir\tests\creation_control_binding_test.cpp.obj:(public: virtual __cdecl canvas::ink_playground::InkPlaygroundHost::~InkPlaygroundHost(void))
+>>> referenced by apps\ink_playground\CMakeFiles\axiom_fc01_creation_control_binding_tests.dir\tests\creation_control_binding_test.cpp.obj:(public: virtual __cdecl canvas::ink_playground::InkPlaygroundHost::~InkPlaygroundHost(void))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(int `public: __cdecl canvas::ink_playground::InkPlaygroundHost::InkPlaygroundHost(void)'::`1'::dtor$53)
+>>> referenced 1 more times
+
+lld-link: error: undefined symbol: public: __cdecl canvas::render::SkiaTextResources::SkiaTextResources(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: __cdecl canvas::ink_playground::InkPlaygroundHost::InkPlaygroundHost(void))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: __cdecl canvas::ink_playground::InkPlaygroundHost::InkPlaygroundHost(void))
+
+lld-link: error: undefined symbol: public: virtual __cdecl canvas::render::RasterSkiaSurfaceProvider::~RasterSkiaSurfaceProvider(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: __cdecl std::unique_ptr<class canvas::render::RasterSkiaSurfaceProvider, struct std::default_delete<class canvas::render::RasterSkiaSurfaceProvider>>::~unique_ptr<class canvas::render::RasterSkiaSurfaceProvider, struct std::default_delete<class canvas::render::RasterSkiaSurfaceProvider>>(void))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: bool __cdecl canvas::ink_playground::InkPlaygroundHost::bindSurface(unsigned int, unsigned int))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: virtual void * __cdecl canvas::render::RasterSkiaSurfaceProvider::`scalar deleting dtor'(unsigned int))
+>>> referenced 1 more times
+
+lld-link: error: undefined symbol: public: struct canvas::render::BackendSubmissionResult __cdecl canvas::render::SkiaRenderer::renderFrame(class canvas::render::SkiaSurfaceProvider &, struct canvas::render::FramePlan const &, class canvas::render::EditingOverlay const *)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: bool __cdecl canvas::ink_playground::InkPlaygroundHost::presentCanonicalFrame(unsigned __int64, double, bool))
+
+lld-link: error: undefined symbol: public: struct canvas::render::BackendSubmissionResult __cdecl canvas::render::SkiaRenderer::renderPreview(class canvas::render::SkiaSurfaceProvider &, struct canvas::render::PreviewGeometry const &, struct canvas::render::PreviewStyleOverride const &)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: bool __cdecl canvas::ink_playground::InkPlaygroundHost::renderPreviewPresentation(struct canvas::ink_playground::PreviewPresentationCapture const &, unsigned __int64 *))
+>>> referenced by canvas_runtime_render.lib(preview_surface.cpp.obj):(public: bool __cdecl canvas::render::PreviewSurfaceController::renderIfDirty(struct canvas::render::PreviewStyleOverride const &))
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::TransparentOverlaySkiaSurfaceProvider::resize(unsigned int, unsigned int)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: bool __cdecl canvas::ink_playground::InkPlaygroundHost::bindSurface(unsigned int, unsigned int))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::TransparentOverlaySkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::RenderTargetInfo __cdecl canvas::render::TransparentOverlaySkiaSurfaceProvider::describe(void) const
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(public: bool __cdecl canvas::ink_playground::InkPlaygroundHost::bindSurface(unsigned int, unsigned int))
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::TransparentOverlaySkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::RenderTargetInfo __cdecl canvas::render::RasterSkiaSurfaceProvider::describe(void) const
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::SkiaSurfaceAcquireResult __cdecl canvas::render::RasterSkiaSurfaceProvider::acquire(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual void __cdecl canvas::render::RasterSkiaSurfaceProvider::release(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::RasterSkiaSurfaceProvider::lose(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::RasterSkiaSurfaceProvider::present(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::RasterSkiaSurfaceProvider::resize(unsigned int, unsigned int)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::RasterSkiaSurfaceProvider::readbackRgba(class std::span<unsigned char, -1>)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::BackendSubmissionResult __cdecl canvas::render::RasterSkiaSurfaceProvider::advanceGeneration(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual unsigned __int64 __cdecl canvas::render::RasterSkiaSurfaceProvider::readbackCount(void) const
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual unsigned __int64 __cdecl canvas::render::RasterSkiaSurfaceProvider::cpuCopyCount(void) const
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual unsigned __int64 __cdecl canvas::render::RasterSkiaSurfaceProvider::presentCount(void) const
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::RasterSkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual struct canvas::render::SkiaSurfaceAcquireResult __cdecl canvas::render::TransparentOverlaySkiaSurfaceProvider::acquire(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::TransparentOverlaySkiaSurfaceProvider::`vftable')
+
+lld-link: error: undefined symbol: public: virtual void __cdecl canvas::render::TransparentOverlaySkiaSurfaceProvider::release(void)
+>>> referenced by axiom_ink_playground_common.lib(ink_playground_host.cpp.obj):(const canvas::render::TransparentOverlaySkiaSurfaceProvider::`vftable')
+
+lld-link: error: too many errors emitted, stopping now (use /errorlimit:0 to see all errors)
+ninja: build stopped: subcommand failed.

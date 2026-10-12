@@ -1,6 +1,502 @@
 {
-  "byte_scope": "raw file bytes; verified against staged Git blobs",
+  "schema_id": "fc01-dev-evidence-index-v0.2",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "byte_scope": "raw working-tree bytes staged into the evidence result commit; recompute after commit for reviewer materialization",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "status": "BLOCKED_ENVIRONMENT",
+  "physical_claim": false,
   "files": [
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-core/build.log",
+      "bytes": 18974,
+      "sha256": "3cba3771e5f864c2ffc4b13d2bb4642c3820e7d30d9aca341c08c967020aad99"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-core/configure.log",
+      "bytes": 111,
+      "sha256": "b73b42fcf3027f12cef5b40ef81c50a4e42e2a34b9bf4de86b162ce62c653b93"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-core/result.json",
+      "bytes": 3406,
+      "sha256": "42fff92f0b9f3d4f1e59b4ce42c42bf053d2a0949363c85631cbe6c57ad61f41"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-core/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-core/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/build.log",
+      "bytes": 65,
+      "sha256": "7716162f3cd3b99cf3b8a8dd6decf324e08c7e941aae7e730baba5e4fc8c075b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/configure.log",
+      "bytes": 123,
+      "sha256": "90e3b4b5ac843c51f30ed06fcb38780dd0e7ef42e60fd619e8863664f0ce3564"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json",
+      "bytes": 4388,
+      "sha256": "43a40f2c30c44692a30334a6d77a1e90486518212530a3d42463e15fd9f2327f"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/test.log",
+      "bytes": 886,
+      "sha256": "b1282bb3278c233289d7a4e9d673b6a196045e8c303a6225e45f1ac0f44e2946"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/baseline-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/baseline-run.log",
+      "bytes": 168,
+      "sha256": "b39d9933da352b43c373d073a0110eda956818add3fae0566a0d34a33f022c4d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/c1_platform_fixture_test.log",
+      "bytes": 116,
+      "sha256": "360f796c30ac41c767cf4e891600b2619d51e97130181623915041114d8cb54c"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/candidate-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/candidate-run.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/compiler-version.log",
+      "bytes": 1350,
+      "sha256": "28265212eb4a37e566543488603c6b9eb922112c965a7a68fb07621ba50ac207"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/platform_interaction_ingress_test.log",
+      "bytes": 125,
+      "sha256": "1ac51d508a62c544895d692afedc18e21cdc0054176e823cb8441a1eea33da07"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/result.json",
+      "bytes": 6794,
+      "sha256": "9fc00479991285dbc15b477c6b5f1c3106b22e97e51bf79de37b9d9a0f4a2160"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/build.log",
+      "bytes": 36816,
+      "sha256": "cb11e8a2e6b4b8aba2362c742546ba10db9768c3b4b7fb9e9b79f1731f10347f"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/configure.log",
+      "bytes": 1174,
+      "sha256": "1a9e850a576502f354d0919e902b019caf16191be54c1fd2037737c9c82bb90b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json",
+      "bytes": 3839,
+      "sha256": "da182f38f109e21a362d10d596f331a703930258635d624ad22ce917effbf306"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/test.log",
+      "bytes": 134608,
+      "sha256": "9ba70d21a248dd5d48834d7f6292f69a58b28aa42d0a41ed13aaa7642b9f54d6"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/build.log",
+      "bytes": 543,
+      "sha256": "456ea523c67fe89e65b14661e85afe04d163f4dd228042bc7ae93439884cdc3d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/configure.log",
+      "bytes": 111,
+      "sha256": "98e4ec0e9cdacd10d16bf8a5e843d0fa57c0a276b1983aed1c6b661905c074dd"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/result.json",
+      "bytes": 3946,
+      "sha256": "89bf4b2e13daea73daf3351a30d216f150920ad63790eaa789fd4d02122250ad"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/control-service-queue3/test.log",
+      "bytes": 210,
+      "sha256": "89b475154171378188b9b5963adf2c5f8e11b66e2022af20f471fe4a9185bb8e"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/build.log",
+      "bytes": 2443,
+      "sha256": "e6ea91d8d2d442654eca45940e7694481efb8d78e721910f61f4f96d2ccf3d15"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/configure.log",
+      "bytes": 565,
+      "sha256": "39288749aac8188973de200b47f6f3108d4b361596f73ecd6524a125187fa325"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/result.json",
+      "bytes": 3983,
+      "sha256": "b3b8cf0c37befa0fb4383763c1813943340da450be8330aa30ef74251d00dd60"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/debug-router-regression/test.log",
+      "bytes": 222,
+      "sha256": "f72af50f8d1610769663e0361a309fc66b5b6e19ee1f3923f398273011bdade2"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/build.log",
+      "bytes": 14192,
+      "sha256": "435e5e59bacb339d600c117049061c16cc321543b310aeba533ea2150a54500b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/configure.log",
+      "bytes": 209,
+      "sha256": "94cc307ece5c80753aee0d604c2200d62d717db6b6780c1f6f819b489bf0b3b4"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/result.json",
+      "bytes": 3951,
+      "sha256": "80c197c0b75d7ffb5e375a960afc0a6df5c8fbcb4ef77fcbd4006afe6600f19d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-behavior-red/test.log",
+      "bytes": 525,
+      "sha256": "70d14a219862ced1200725fd1d607c1f2ef170136a92289f8a41b3c7db885dfc"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/build.log",
+      "bytes": 1286,
+      "sha256": "7249981719c39da598005dab65ff4f791c5ce989dfd4872733eca0381174a05b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/configure.log",
+      "bytes": 209,
+      "sha256": "37e79ed8ccf846f9668825e59c8262a07342bd36a7dddb2aaa401f318789e335"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/result.json",
+      "bytes": 3956,
+      "sha256": "af199060276878939fa81b812e84f1ae0e81b67b114c79edeb4c4500b477cd32"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-current-final/test.log",
+      "bytes": 230,
+      "sha256": "33b9121ff9a1ff3cc01f2373c5b0ed3e44e626eb12f01443d44fcd8c10abd1d5"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-queue-regression/build.log",
+      "bytes": 10360,
+      "sha256": "f52cfe4fa7a3be7c4f7f0684b7782adde56a9150774c5b18e735f603c5fa7d80"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-queue-regression/configure.log",
+      "bytes": 209,
+      "sha256": "43b0c6acddea35cd6188886e77fbe00122efff0be5a59d7d8291015d37d09e78"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-queue-regression/result.json",
+      "bytes": 3483,
+      "sha256": "4150f5a35b8444f855f179051f930d4adccc2e031bf2b152eb3d25f9604953d4"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-queue-regression/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-queue-regression/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/build.log",
+      "bytes": 338,
+      "sha256": "d45c92a36dc6a7f769628d3594d45c0dea1165f117a3dff3ab6e025fa98b061b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/configure.log",
+      "bytes": 209,
+      "sha256": "37e79ed8ccf846f9668825e59c8262a07342bd36a7dddb2aaa401f318789e335"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/result.json",
+      "bytes": 3914,
+      "sha256": "2d927a175f17464f066dcc297d7683dec613c1c2c2ccc031733515096e4fac41"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/sdk-resolution.log",
+      "bytes": 3856,
+      "sha256": "7d2b338158c7e3f9d0562a290b7182bdcff93df3b1954499972a55d621bf0ed8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/semantic-environment.json",
+      "bytes": 4630,
+      "sha256": "59fb7a6b9c30990288f4efca02277849aa8b05c7b79a719dbf51e3d1c951a142"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/draft-runs/i3-session-green2/test.log",
+      "bytes": 244631,
+      "sha256": "97296b888c03757b8a14611a187fda19f932a2f725b2be6093d6bf46f4d566e8"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/bounded-fetch/fetch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/bounded-fetch/result.json",
+      "bytes": 1802,
+      "sha256": "82a190f7009a69173f2b9251f79641280457ed4cf788aa2ff70792edd9ca1309"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/curl-fetch/download.log",
+      "bytes": 3638,
+      "sha256": "d5094be06b879b1f6961ef993ae1510f87ccb226a38bb704f29f98c7c46d5c6f"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/curl-fetch/result.json",
+      "bytes": 673,
+      "sha256": "05f41d363e88978de9e05e8d99b5c072418f5ab8c71cdffb096e523da8ec9885"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/final-locked-fetch/fetch.log",
+      "bytes": 3578,
+      "sha256": "e8377dac27ad0152ab94c7eb65b1ebc6acadab96cd21794dce4edb90dfaac571"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/final-locked-fetch/result.json",
+      "bytes": 494,
+      "sha256": "ee8b357fae4d6d367939c55e8c43cf1bd6123d875a557b6336928f9c26423507"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/release-api.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/release-api.stdout.json",
+      "bytes": 74746,
+      "sha256": "d7cad0211f21b0a3a4b00272c5a8fa06d19a61b7996d986acf4a33c286e9f2bd"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-logs/sdk-investigation/result.json",
+      "bytes": 1228,
+      "sha256": "9bde54f8ce85444ffe0d8ce5a1e68b0f3cf5c6579a9fcdfb888ff0a7de8c1a78"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-preflight-20261013.json",
+      "bytes": 5979,
+      "sha256": "d2b8f2cc0efa33d7bf71b1140fa6b1667bd34202ac47d565f4107f527ac49a97"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/continuation-preflight.json",
+      "bytes": 2323,
+      "sha256": "f9d3fe50118e37cf10852f4b67332834b8bc663347b6acea73ef4f06477630eb"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/archive.json",
+      "bytes": 3565,
+      "sha256": "3a3d53d7d767af523c7a6065c219477c7e7828d2259202bc12aa7af8c3b2053d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/common/creation_session.hpp.txt",
+      "bytes": 327,
+      "sha256": "828938eea8f9460cb600b21e52aaddcd916f7425b6d181c08c6fbbed92c2d9ae"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/tests/creation_control_binding_test.cpp.txt",
+      "bytes": 1794,
+      "sha256": "dd1665974d4af5a3a1ca648aca39b96a405d0e183513ed75f0e49e6bee1eb6fc"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/tests/creation_session_test.cpp.txt",
+      "bytes": 4358,
+      "sha256": "28b47b17934c57ec4db5f3d9dbe4626a5db8ea7a76c0a730549ce2e460a4c928"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/runtime/interaction/include/canvas/interaction/creation_session.hpp.txt",
+      "bytes": 2408,
+      "sha256": "8971f19c092f97ff0162e5682938d28ae73fe7fbb38682872d96f25d4735b533"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/runtime/interaction/src/creation_session.cpp.txt",
+      "bytes": 6451,
+      "sha256": "adeb5cae555880e060f7d5e68ef6db4785a1687ae9955cb559161309f91021ae"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/prior-draft-records/E03/creation-session-red.json",
+      "bytes": 510,
+      "sha256": "ce100728b6fb6ec2b99041dcaaf74208dbb9b197b9d02438633214f10fc37531"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/prior-draft-records/i3-creation-design.json",
+      "bytes": 1732,
+      "sha256": "c9b4d30209ee7b135907557ddaa7560a0d7ee8242d66b8dff804e6749d7ae380"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/prior-draft-records/i3-creation-session.json",
+      "bytes": 1703,
+      "sha256": "13d8d73d9d00dc3454dc28f245863e10edc5345c5f76cdcba2535f49561c93c3"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/drafts/i3/tracked-changes.patch",
+      "bytes": 27630,
+      "sha256": "4c04382c19d5852542ea73ff3e7d6bf281f25ffe69624e6d190c0f302a92ebaf"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E01/semantic-shape2-corpus-results.json",
+      "bytes": 3269,
+      "sha256": "22586dab23bbbefd6cd51b40a3566c27c19bf3b29accd333b1997ecfb2d0900b"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E02/ingress-snapshot-replay-compat.json",
+      "bytes": 1546,
+      "sha256": "11aaedc06a1cd04768d8fde21c2fdaabd0565f44a45f5675ed841a93a31dd0ab"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/green.json",
+      "bytes": 6928,
+      "sha256": "7fac1d0ebedb6f9844dae441891e52b5610f5c8e0321b5aa05675c7f85c3ddef"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-baseline-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-baseline-run.log",
+      "bytes": 168,
+      "sha256": "b39d9933da352b43c373d073a0110eda956818add3fae0566a0d34a33f022c4d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-c1_platform_fixture_test.log",
+      "bytes": 116,
+      "sha256": "360f796c30ac41c767cf4e891600b2619d51e97130181623915041114d8cb54c"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-candidate-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-candidate-run.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-compiler-version.log",
+      "bytes": 1350,
+      "sha256": "28265212eb4a37e566543488603c6b9eb922112c965a7a68fb07621ba50ac207"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-green-platform_interaction_ingress_test.log",
+      "bytes": 125,
+      "sha256": "1ac51d508a62c544895d692afedc18e21cdc0054176e823cb8441a1eea33da07"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-baseline-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-baseline-run.log",
+      "bytes": 168,
+      "sha256": "b39d9933da352b43c373d073a0110eda956818add3fae0566a0d34a33f022c4d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-c1_platform_fixture_test.log",
+      "bytes": 116,
+      "sha256": "360f796c30ac41c767cf4e891600b2619d51e97130181623915041114d8cb54c"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-candidate-build.log",
+      "bytes": 112,
+      "sha256": "3eb23d7a5bc4f1772a1ebef33bdff64bc5e4ce489bc2d75f11468b5ccb8a3d57"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-candidate-run.log",
+      "bytes": 168,
+      "sha256": "b39d9933da352b43c373d073a0110eda956818add3fae0566a0d34a33f022c4d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-compiler-version.log",
+      "bytes": 1350,
+      "sha256": "28265212eb4a37e566543488603c6b9eb922112c965a7a68fb07621ba50ac207"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E03/corrected-order/source-loss-corrected-red-platform_interaction_ingress_test.log",
+      "bytes": 125,
+      "sha256": "1ac51d508a62c544895d692afedc18e21cdc0054176e823cb8441a1eea33da07"
+    },
     {
       "path": ".aegis/results/FC-01-DEV/E03/interaction-create-red-and-green.json",
       "bytes": 6471,
@@ -42,19 +538,104 @@
       "sha256": "1ac51d508a62c544895d692afedc18e21cdc0054176e823cb8441a1eea33da07"
     },
     {
+      "path": ".aegis/results/FC-01-DEV/E03/source-loss-continuation.json",
+      "bytes": 2523,
+      "sha256": "029ddf7baf3d720b9bafa04fb150c66344299e51510f6aee414ed90a2a6819c4"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E04/snap-guide-independent-differential.json",
+      "bytes": 1455,
+      "sha256": "4d878b47e4dfcd9a52ab7ca1feb363ca4ecc75f0a65e0d41a351746b019c5195"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E05/scene-geometry-hit-render.json",
+      "bytes": 1490,
+      "sha256": "844477268308160632e501362611e83ce5c13d75e02f11f14354607103d6cc6d"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E06/history-preimage-closure.json",
+      "bytes": 1279,
+      "sha256": "d6806f511bbdd46bd1e5e229857f0b3796e53b9a35585df51badf173664182d3"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E07/facade-owner-queue-readback.json",
+      "bytes": 1438,
+      "sha256": "54599c17f78783cf02b833a1513ff0fd20f4639154e4025ebe7f7317c5a39664"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E08/host-profile-build-and-simulation.json",
+      "bytes": 2382,
+      "sha256": "4a8513a18d67a7c4b8d9db3acb722e551c195a8f61a4c9492d403b17a56f6ec6"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E09/publication-presentation-axis-truth.json",
+      "bytes": 1254,
+      "sha256": "c209476a564e9d34c4ae5df5c88645df30e8c72da31b59ca4294840cb838fe42"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/E10/subject-authority-scope-regression.json",
+      "bytes": 1551,
+      "sha256": "7de1d4fbbc8625b00d2e6faab87d806df2298f1f6cff95f7d9b8ab2e2b1a7201"
+    },
+    {
       "path": ".aegis/results/FC-01-DEV/evidence-manifest.json",
+      "bytes": 6798,
+      "sha256": "5c93a802d86c0e35d54e1c5e5205e40ba6ce79f16c1976e42cc212368ff36490"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/execution-result.json",
+      "bytes": 8213,
+      "sha256": "9437ef42d2717ae94192ef8ac7ca081a138f2e2deaf6b3569ded33a59011eec5"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/historical/pre-continuation-8854b093/evidence-manifest.json",
       "bytes": 4739,
       "sha256": "1fcb5b54d2c6f5d4637945e1d2ff972921fd58be5a7a4f8cbbb3c138893acf0f"
     },
     {
-      "path": ".aegis/results/FC-01-DEV/execution-result.json",
+      "path": ".aegis/results/FC-01-DEV/historical/pre-continuation-8854b093/execution-result.json",
       "bytes": 3286,
       "sha256": "15dc25e10d70c8f5220aceb250dae1e5231406f62cbac8ba13a861cf44f614a9"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/historical/pre-continuation-8854b093/scope-audit.json",
+      "bytes": 881,
+      "sha256": "dcefda0c7e67393e5ad404d1c12fbc3c5a311bdc70034fdcac235e187839722e"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/i1-admission-design.json",
+      "bytes": 3523,
+      "sha256": "2349b821d9f4af5e983c46bf31b1a9c19ec9f536fae101d17c9d4887ebe391bb"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/i2-geometry-design.json",
+      "bytes": 1895,
+      "sha256": "9dcbc59a2ead33da02ad28dcabef223d34d9bfc143d11898a3b0e8b98e8b8942"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/i2-scene-geometry.json",
+      "bytes": 10106,
+      "sha256": "27b11f4da247cfc15c5a20d85ed6bf1af48f99d7e0358163923bc8aecc5b8de7"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/preflight-order-correction.json",
+      "bytes": 2601,
+      "sha256": "893354015346e6dfecb458dd73ebc5a5a410230b3febc5ee4cf778110cc0dd7f"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/provider-runs.json",
+      "bytes": 21695,
+      "sha256": "51d92cca9cd9af5e7a70f499c37c7773f7d5c76c8c0a92c1f3835ee478f577ec"
     },
     {
       "path": ".aegis/results/FC-01-DEV/recovery-preflight.json",
       "bytes": 5066,
       "sha256": "39a91e007cd2a4163cecf9b93e781aadda8e1559d80a2ba7f16964c245507907"
+    },
+    {
+      "path": ".aegis/results/FC-01-DEV/red-preflight-corrected-order.json",
+      "bytes": 6908,
+      "sha256": "af807ded88b6f49bb82de4ff2b9673467e25010b3989d0d36b96678598e585cd"
     },
     {
       "path": ".aegis/results/FC-01-DEV/red-preflight.json",
@@ -63,8 +644,8 @@
     },
     {
       "path": ".aegis/results/FC-01-DEV/scope-audit.json",
-      "bytes": 881,
-      "sha256": "dcefda0c7e67393e5ad404d1c12fbc3c5a311bdc70034fdcac235e187839722e"
+      "bytes": 6896,
+      "sha256": "48441c1064682a03411056f846450dae4f05e024042bac38618458499f2842cb"
     }
   ]
 }

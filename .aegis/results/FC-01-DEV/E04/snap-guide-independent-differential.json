@@ -1,0 +1,19 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B04",
+  "status": "NOT_CLOSED_DRAFT_QUARANTINED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B04",
+  "requirement": "Far-axis visible Shape center/edge Snap uses deterministic finite-viewport candidates, logical-pixel latch/release and per-view transient preview with zero canonical side effects",
+  "oracle": "Independent exhaustive viewport-limited reference candidate selector plus analytic world/logical camera projections; compare indexed query, preview/final geometry and 100-Move negative",
+  "acceptance": "Distant orthogonal candidates found, ties deterministic, hidden/invalid excluded, identical preview/Up or explicit rejection, no semantic generation/tile/Axis updates from Move/Cancel",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "Finite viewport strips, both logical pixel profiles, guide/preview publication and independent differential remain incomplete.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [],
+  "quarantined_draft_ref": "drafts/i3/archive.json"
+}

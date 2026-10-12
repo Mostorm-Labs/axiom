@@ -1,0 +1,488 @@
+{
+  "task_id": "FC-01",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "core_run": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json",
+  "scene_run": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json",
+  "source_loss_run": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/result.json",
+  "vcvars": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Auxiliary/Build/vcvars64.bat",
+  "vcvars_sha256": "6b516d8fcf543c14b2d861e1f45661e0029230fe0dc48e86ce78522801822209",
+  "semantic_sdk_identity": {
+    "abseil": {
+      "sourceSha256": "9b7a064305e9fd94d124ffa6cc358592eb42b5da588fb4e07d09254aa40086db",
+      "version": "20250512.1"
+    },
+    "contractVersion": 2,
+    "format": "axiom-semantic-runtime-identity-v2",
+    "key": "windows-x64-msvc-static",
+    "protobuf": {
+      "edition": "2024",
+      "sourceSha256": "399931c793f4ac6db81045b00b06dd07c877b48aeecf36c797f65c541fb533e7",
+      "version": "36.0"
+    },
+    "target": {
+      "abi": {
+        "buildType": "Release",
+        "crt": "static-release",
+        "cxxRuntime": "msvc",
+        "cxxStandard": 20,
+        "exceptions": true,
+        "iteratorDebugLevel": 0,
+        "linkage": "static",
+        "pic": true,
+        "rtti": true,
+        "sanitizer": "none"
+      },
+      "arch": "x64",
+      "platform": "windows",
+      "toolchain": {
+        "compilerFamily": "clang-cl",
+        "llvm": "22.1.8"
+      }
+    },
+    "toolchain": {
+      "cmakeVersion": "cmake version 3.30.5",
+      "compiler": "clang-cl",
+      "compilerTarget": "x86_64-pc-windows-msvc",
+      "compilerVersion": "clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)",
+      "cxxRuntime": "msvc",
+      "llvmVersion": "22.1.8",
+      "msvcVersion": "14.51.36231",
+      "ninjaVersion": "1.11.1.git.kitware.jobserver-1",
+      "windowsSdkVersion": "10.0.26100.0"
+    }
+  },
+  "semantic_sdk_manifest_sha256": "90f1268385c475d542d9eb0ac50bd8e775c4c361a209abc28c1a465a82b44982",
+  "compiler": "D:\\ax8\\.deps\\llvm\\bin\\clang-cl.exe",
+  "compiler_sha256": "986af49c2d1eefeac324f724ff54597753d1053927fa5d58a37a457f578e1cf8",
+  "binary_digests": [
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\canvas_semantic_read_view_contract_test.exe",
+      "bytes": 998400,
+      "sha256": "b9e47528c8549541a435224df7cc92d83430dceda78196ca6aaa0c8b6cc3dd5b"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_a_lane_no_mutation_test.exe",
+      "bytes": 1217536,
+      "sha256": "1c0aeb71698ec5155dc2e95f6d32233cfbb9e35357eb315d2c7c3359e61df798"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_apply_plan_test.exe",
+      "bytes": 1467392,
+      "sha256": "28b726ffec03c1e4ead4f1cd6fb9228ff1acff95c5058999e1b7d18ce785701c"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_atomic_apply_differential_test.exe",
+      "bytes": 1095168,
+      "sha256": "5f8902bc86374573922764e50e3bc680efb1f63030ad2647b7ef466b0b6cb405"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_atomic_apply_test.exe",
+      "bytes": 1153536,
+      "sha256": "a0af0a877580f56e729f30ad9c86871a4c48041037117c3dda66747537da6771"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_brush_engine_codec_test.exe",
+      "bytes": 2952192,
+      "sha256": "2a7d0cfb079ede84f54642711ec1b1a43534d0faa1a12112a40304f81378bd99"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_brush_snapshot_v2_test.exe",
+      "bytes": 2783232,
+      "sha256": "633745c4654f51e295a0e1bd8123d20aa1818ecc40cb8d4d0068d4547aec8794"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_canonical_commit_clock_test.exe",
+      "bytes": 989184,
+      "sha256": "9fca46790e1b61e76cd24709989a890c3af2c5f5e93a6f4d3e6daaf993f8a468"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_codec_operation_ingress_test.exe",
+      "bytes": 3132416,
+      "sha256": "358e591b8b32f7c58e8ee0e30b7a6116365acec54f83387a68ac484f91630ba4"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_codec_test.exe",
+      "bytes": 3219456,
+      "sha256": "836b186a85aff11d69e5818efef559d2b2171a8ee2e81f6f26e3dcec02265991"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_connector_stateful_validation_test.exe",
+      "bytes": 1166336,
+      "sha256": "a5ac665c506f7f41673d47d4dad2b2c212ddd4c5792eaf0e162be2d2c1280d11"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_delete_closure_test.exe",
+      "bytes": 1297920,
+      "sha256": "a548f9934b1ad6062cf4c04465f67fc9eae421d2c6405c8c87d4b3be182de98e"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_envelope_validation_test.exe",
+      "bytes": 965632,
+      "sha256": "5e9beba13e87e0ef103a331f867a447b63d06d4414d62020dcebe308f8d02490"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_fc01_shape2_apply_test.exe",
+      "bytes": 3320832,
+      "sha256": "7ebfbce5d9ab77b3eccdb9a853c133bfea82218fad3b8402e23facd4409a9c9e"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_fc01_shape2_validation_test.exe",
+      "bytes": 993280,
+      "sha256": "6b0af8bd81dbb4a04da1976a53b6ead71b9ef93a20ae2575e42060494ab99539"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_b_no_mutation_test.exe",
+      "bytes": 1377280,
+      "sha256": "3a1402b17e3c66fecfca93de0bd4c30daa35db4549b12a4ddf7d3fa398cbcfa1"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_b_operation_matrix_test.exe",
+      "bytes": 1682944,
+      "sha256": "d1c4ca1e2f74f5ad7467eb7a50e3ea36583570d4c611b5cec5d259743069b714"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_fixture_decoder_test.exe",
+      "bytes": 1373696,
+      "sha256": "5fd9a9cce2c9717d4b4fea7aff855e8b5c930310f6e6fcfb101f84fa5b4f3c48"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_geometry_overflow_source_test.exe",
+      "bytes": 937472,
+      "sha256": "203239d220b5047e28fdea97e265ae0d9b7148e183d6ef8cbf1102780f778c25"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_observation_export.exe",
+      "bytes": 1132032,
+      "sha256": "f6c598726bf79c3d9b6376fff3f84c781105673bfc06ae8b6cc07e08a0925c9d"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_observer_contract_test.exe",
+      "bytes": 1730560,
+      "sha256": "e88f35c3896f2ad7671551d788b973d50f9af05fca96695bc37c6630525d3800"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_observer_coverage_test.exe",
+      "bytes": 1746944,
+      "sha256": "31adcf85e40cc27fd1f35b835356b724e0503bc257a079ac4930c8ae756692c0"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_04_c_projection_test.exe",
+      "bytes": 1728512,
+      "sha256": "90fecf791710e6156ab05c25de598ab7169a1a88c13e668b9d6b03903c67237a"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_digest_test.exe",
+      "bytes": 1641472,
+      "sha256": "066a26b73f2078073f795042a1c5446627cb5fc0ec08d0efa2dd540c2fe11e0b"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_integration_test.exe",
+      "bytes": 3395072,
+      "sha256": "1af048f5673f788f5ab711c2d73e9b7151e4631f4a79f3b305487eaf52de7498"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_projection_differential_test.exe",
+      "bytes": 1252864,
+      "sha256": "9a8d98a5487e9fd3959cce8b1935f230de35f6bf46af823b1ad5b42855967c90"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_projection_test.exe",
+      "bytes": 1525760,
+      "sha256": "61c5ff2725af8ef4e0c7fa6da7e8886339fdebd88171cf8b48c7d669517475b7"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_replay_differential_test.exe",
+      "bytes": 1577984,
+      "sha256": "6cba0de2190f084eec0de3649824d04d632aeeeb1b0a7229a7fa9654f0535332"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_replay_test.exe",
+      "bytes": 1600000,
+      "sha256": "ae430a411115d2a0d05ca50507876e41af43c0842bc05dc1a5e3b1d5352a8fff"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_snapshot_bootstrap_test.exe",
+      "bytes": 1382400,
+      "sha256": "3480fa2b1261f7592951f4c56eff1b8c1aa6f46a67a040e42d3229edbf12b7e8"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_06_snapshot_test.exe",
+      "bytes": 3064320,
+      "sha256": "e43a23b167942d8ad47348c1af38de35bdf51ba7cbd7bbb69b4060fe7d8b469c"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_07_replay_inspector_cli_test.exe",
+      "bytes": 3521024,
+      "sha256": "425c65eace0f7bdff9fff38eda067690d5614971a3d39f263753b316eacbc2b1"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_07_replay_inspector_test.exe",
+      "bytes": 3637760,
+      "sha256": "0f1432fedc657755fb2f8d4d50854a95ca691f90f5c77bb3ece45700503ae72c"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_08_locality_test.exe",
+      "bytes": 1458688,
+      "sha256": "cd7eced979923b217600ee13b44445dfb4a4348949f03ccf2dd394e7390ebd7e"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_g1_08_reference_differential_test.exe",
+      "bytes": 3215872,
+      "sha256": "93e0a49659c4b048ec97d945c77182d8f4a794615a4edfffdc5d5ee5ec551068"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_hierarchy_capability_validation_test.exe",
+      "bytes": 1163264,
+      "sha256": "52a46eee2e45227927af37c52428ad3a62d82b185b877fbf66f3c2ac49065e6d"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_hierarchy_stateful_validation_test.exe",
+      "bytes": 1207808,
+      "sha256": "1f4c06a779a230609510b99d6a59e0b77c5b53c11eec05e5f046cbe5e83b233f"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_idempotency_test.exe",
+      "bytes": 1035776,
+      "sha256": "addc931e1546d2f71f2cdf588483919484a0056c8f444809927b15a3103d54de"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_indexed_object_store_test.exe",
+      "bytes": 1031680,
+      "sha256": "952a67db2724841a9103fe2745d16b9dc5bcf61c7dc729bfc21ea38ae6fe635e"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_leaf_structure_validation_test.exe",
+      "bytes": 1177600,
+      "sha256": "6fd085bf7648f99e12061a0eab510e70b8b9aba560c257f70790316f2cbedddd"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_normalization_test.exe",
+      "bytes": 1226752,
+      "sha256": "603cfd250f98c9d83efe099a93b28a5554234f24e1e08a4b6b835e8ab1f71639"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_object_store_differential_test.exe",
+      "bytes": 1108992,
+      "sha256": "5d375f3c6f30fd6a1a64f91a04b3ff79469a6ccc758036b0f845f17c4e223726"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_15_operation_conformance_test.exe",
+      "bytes": 2022400,
+      "sha256": "bdddeadfda65f0a1dc25d78ef5515e5ea5b0e36e21b424dd0a013c095c7bfb7a"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_apply_differential_test.exe",
+      "bytes": 1522688,
+      "sha256": "41c0ad889c5c335b16f64f9fed830bfe7d5e3f0cc3c84826446f161b14e12a29"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_apply_test.exe",
+      "bytes": 1538048,
+      "sha256": "0ee8874c1348d12a78efa81f86cfea85b3f2f12d634c13ca9da2fbeffd182a7a"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_boundary_test.exe",
+      "bytes": 1319424,
+      "sha256": "00a54954544461a5163d15cd385c79431a5c146c706a1275129512f0f00a4983"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_canonical_commit_differential_test.exe",
+      "bytes": 1457152,
+      "sha256": "3bcf20e0c2350845c6b741388a0c5266dc0ae0f5df40800d8c3afd9820603687"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_canonical_commit_test.exe",
+      "bytes": 1502208,
+      "sha256": "cc8d4f83199760447458f786941e324734f5ca36b6847669877fcf8253382e76"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_generation_change_set_differential_test.exe",
+      "bytes": 1457152,
+      "sha256": "a440c749c58b170a9e3f87a2cf33be9de7e183517001434b2ac53bcb73a68099"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_generation_change_set_test.exe",
+      "bytes": 1593856,
+      "sha256": "23bb544aa020519aa22707e2688fe6e30854b0279b1df377544aaafc127f0bba"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_publication_projection_test.exe",
+      "bytes": 1465344,
+      "sha256": "d0fa9fae296e473039f558301de315e3095c88d842752c0c3f239a892db82bf8"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_operation_specific_stateful_validation_test.exe",
+      "bytes": 2424832,
+      "sha256": "ae865565c516fbad1a22c4c1207dedb5aeee4e2610b9832c13aa160a369f993c"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_payload_structure_test.exe",
+      "bytes": 1135104,
+      "sha256": "60f8ef2b924102072c562079382594be90ecf8bbc0377cf6e26aeb0806014cbf"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_reference_object_store_test.exe",
+      "bytes": 1060864,
+      "sha256": "26252b94f1b7d9aaa5c899e49696c67d88042ed7476320cd6d6c88a2ed9e9aa4"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_restore_stateful_validation_test.exe",
+      "bytes": 1328640,
+      "sha256": "5e9ea46e101abc9e72d7012bde1acedc4dbc40c084993314a7d37dab103b2b0d"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_rich_text_state_plan_test.exe",
+      "bytes": 1060864,
+      "sha256": "c4fcc7b547bfeceb3481ea2238348ed9549e5c3ca7b3b70d263cce4de2099fbd"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_staged_object_view_test.exe",
+      "bytes": 1173504,
+      "sha256": "07a094e565ca6ae237c8a550158b743e3db5f8b0b19317eebfeb24e0a24f8b32"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_stateful_context_test.exe",
+      "bytes": 1080320,
+      "sha256": "37272766d81a3dbc46984bdf6b231b1e9c9765b3c34501fa32129b0de838afc4"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_stateful_kind_applicability_test.exe",
+      "bytes": 1161216,
+      "sha256": "c5e0b9e82c468421a118982e056302476db3e0313ae37a078fc4290edc0a6e16"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_stateful_validation_differential_test.exe",
+      "bytes": 1489408,
+      "sha256": "a130ca9779d57269b1d45f9db78301476ca56dac94abbf26c4a661ab80e41246"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tests\\canvas_semantic_types_test.exe",
+      "bytes": 1081344,
+      "sha256": "8aa09b13d0c61bb1444aae5ec0721ab2d1b77654e685e7435cb7a76026a57362"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tools\\canvas_semantic_g1_07_replay_inspector.exe",
+      "bytes": 2789376,
+      "sha256": "b934a6921708f0669991d65ab12a1a155638d1f40d654f59983b7ea6132d4dfc"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tools\\canvas_semantic_g1_08_verifier.exe",
+      "bytes": 701440,
+      "sha256": "54dd0e49b2db6bbe4e4c4519276b7567ed42a8b14b2b109f30064fe513804041"
+    },
+    {
+      "profile": "core-vs18",
+      "path": "D:\\axbuild\\fc01-core-vs18\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+      "bytes": 2396160,
+      "sha256": "dccd7752060b5128e00cf51f3d273cff212a2471a137e76654b834c19b19dfab"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_fc01_derived_geometry_test.exe",
+      "bytes": 386048,
+      "sha256": "5df055cb5744925d42f9735417945e3e891ce5282ffe33a5fd505c117db88ec6"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a2_bounds_system_test.exe",
+      "bytes": 139264,
+      "sha256": "52eac7c82bee0537e6d527a4e74e5313ab8b8ab9862e19ce888c47214677c413"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a3_full_incremental_equivalence.exe",
+      "bytes": 415232,
+      "sha256": "d874e28b5c0f91b51fd279b811cb8250d26fcfe7696eff688ebb978152f37136"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a5_spatial_index_differential_test.exe",
+      "bytes": 357376,
+      "sha256": "69302f1a2d31b96bef803b9763da6b21571441eb8ad9beb5cef1e14cd37c6037"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a6_atomic_publication.exe",
+      "bytes": 650752,
+      "sha256": "4fd91eb2c8fb3aff9648854b74effcf5f08a19432e19007fb2726a541845f406"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a6_incremental_equivalence.exe",
+      "bytes": 655872,
+      "sha256": "02325dcda2edc85223849e26c7217071b2c21c06bef4be87ec24b2e2a13bb653"
+    },
+    {
+      "profile": "scene-focused",
+      "path": "D:\\axbuild\\fc01-scene-regression\\runtime\\scene\\tests\\canvas_g2_a6_recovery.exe",
+      "bytes": 641536,
+      "sha256": "e4d99b0bd9c54765ea91b922b432516f1835cfe8fb31b6a3c05d234a419ffaf7"
+    }
+  ],
+  "working_tree_dirty_interpretation": "Runner sees untracked evidence/archives. Production source was byte-equivalent to subject; checked separately in scope-audit.json.",
+  "physical_claim": false,
+  "gate_claim": "none"
+}

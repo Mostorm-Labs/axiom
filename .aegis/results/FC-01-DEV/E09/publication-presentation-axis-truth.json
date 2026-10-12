@@ -1,0 +1,18 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B09",
+  "status": "NOT_IMPLEMENTED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B09",
+  "requirement": "Canonical Applied publishes one Scene/Axis event by source, remote operations do not echo; Presented and Axis durability status never guessed from control success",
+  "oracle": "Independent local/remote publication recorder, qualified present feedback current-surface token and Axis provider/frontier state simulator",
+  "acceptance": "0 publication for Preview/reject/AlreadyApplied, 0 remote Outbox echo, genuine current qualified Presented only, Axis pending/failed honest, Render/Axis failures do not rollback Applied",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "residual_detection_gap": "Source-aware Scene/Axis/Presented evidence remains.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": []
+}
