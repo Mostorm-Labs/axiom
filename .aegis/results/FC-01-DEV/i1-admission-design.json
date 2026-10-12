@@ -1,0 +1,51 @@
+{
+  "task_id": "FC-01",
+  "subject_before_new_mutation": "9161d68dcbe2e6f00f77f8ff90e9ad384ef63273",
+  "scope": "FC01-I0/I1 shared semantic admission continuation",
+  "reconciliation": {
+    "completed": [
+      "exact Shape2 tuple structural validation",
+      "Snapshot1 Triangle refusal",
+      "source-scoped ingress cancellation unit seam"
+    ],
+    "pending": [
+      "typed envelope and normalization",
+      "explicit Snapshot reader/writer capability",
+      "strict Golden codec roots and operation serialization",
+      "replay and atomic idempotency regression",
+      "host lifecycle/source integration"
+    ],
+    "correction_to_continuation_preflight": "Snapshot/Replay use shared structural validators in some paths, but typed planner lacked envelope admission; no full I1 closure claim."
+  },
+  "owner": "OperationEngine prepare/apply canonical lane; SnapshotBootstrapper private Loading store; existing SemanticCodec mapping and strict wire preflight",
+  "prepare": "Typed input: explicit envelope versions/IDs, normalize collections/leaf scalars, validate structure, then idempotency and state validation. Wire decode preserves presence; caller validates before apply. Snapshot reader/writer capability checked before data access or mutation.",
+  "commit": "Existing atomic plan, store/ledger/generation/clock commit; no alternative reducer",
+  "publication": "Existing CanonicalCommitRecord only on Applied, no publication on reject/AlreadyApplied; Replay private until Ready",
+  "abort": "Whole operation rejected with store/ledger/generation/clock unchanged; failed snapshot/replay remains Failed and never Ready",
+  "capability": "Explicit Shape2 Triangle reader/writer feature; legacy defaults refuse Triangle Snapshot2 and unsupported writable collaboration; no lossy downgrade",
+  "affected_files": [
+    "runtime/semantic/src/apply_plan.cpp",
+    "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+    "runtime/semantic/src/snapshot.cpp",
+    "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp",
+    "runtime/semantic/src/snapshot_bootstrap.cpp",
+    "runtime/semantic/include/canvas/semantic/replay.hpp",
+    "runtime/semantic/src/replay.cpp",
+    "runtime/semantic/src/codec.cpp",
+    "runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+    "runtime/semantic/tests/fc01_shape2_validation_test.cpp",
+    "verification/fc01/run_dev.py"
+  ],
+  "oracles": [
+    "FC01-B01",
+    "FC01-B02",
+    "FC01-B10"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "chronology": "This record precedes the next production changes at this continuation boundary; inherited work is not backdated.",
+  "physical_claim": false,
+  "gate_claim": "none"
+}
