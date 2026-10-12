@@ -1,0 +1,464 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-01",
+  "stage": "P31_TASK_PACKAGING",
+  "task_title": "FC-01 Five Creation Presets and Core Product Shape/Connector Completion",
+  "gate_id": "FC-01-DEV",
+  "execution_base": {
+    "repository": "Mostorm-Labs/axiom",
+    "accepted_control_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "task_anchor": {
+      "revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "relation": "ancestor"
+    },
+    "p31_branch": "control/fc-01-p31-materialized-execution-package",
+    "p32_intended_branch": "codex/fc-01-creation-tools-p32",
+    "p32_branch_must_descend_from": "P31_PACKAGE_MATERIALIZATION_COMMIT",
+    "pr146_should_remain_unmerged": true
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "Perform repository/package/Authority/Golden/Verification preflight before first code mutation; freeze ImplementationDesignPreflight including owner, prepare/commit/publication/abort and any unresolved semantic choice.",
+        "Run pre-change RED-01 on anchored old code. If old known-bad source unexpectedly passes, return VERIFICATION_DESIGN_DEFECT; do not rewrite oracle to match code.",
+        "FC01-I0: Entry preflight, independent RED and typed validator baseline. Inspect accepted package/repo identity and in-flight work; ImplementationDesignPreflight; materialize independent RED-01 against old anchored source before code changes; Fix existing sourceLost(sourceA) global cancel without altering sourceB or prior Ink/Viewport contracts; Establish semantic A/B validation provenance so typed/direct and replay cannot bypass new version checks.",
+        "FC01-I1: Versioned semantic + Snapshot/mixed clients. Admit exactly Shape/2 Triangle tuple while retaining Shape/1 and Brush2 exception; Atomic Insert/Restore/typed apply/History entry guard, Snapshot2+capability and replay Loading quarantine, no generic payload2; Fail-closed unsupported reader/writer and current collaboration host admission; no lossy downgrade.",
+        "FC01-I2: Scene geometry and minimal Connector hit. Implement derived exact Triangle geometry/bounds/fill/stroke/hit/Skia dispatch without canonical path storage; Implement Connector/1 FreePoint Straight Line/Arrow render and precise segment/arrowhead hit; extend SceneQuery mask additively; Preserve Full/Incremental scene equivalence, view generation and renderer-neutral derived geometry.",
+        "FC01-I3: Facade/Interaction Create + Snap/Preview. Internal typed five CreationPreset + effective future style and selected-control/readback; single Product/Debug Facade owner; Create Input claim/gesture/session with frozen Down preset/style and one stable InsertObjects on confirmed valid Up; Add finite viewport-bounded far-axis center/edge Snap, deterministic hysteresis, per-view preview/guide with 0 canonical Move; Proof owner-safe-point control queue execution and no fake selectedObjectID creation.",
+        "FC01-I4: Selected actions and conditional local History. Single-Operation PatchProperties/SetTransforms/SetObjectSize/SetPlacements/Delete selected actions plus Unlock; Extend EditorHistory Insert/Delete/Transform/Size/Patch/Placement exact preimage and conditional same-lane inverse/redo; Guard later remote child/dependent DeleteClosure and no cursor advance on Conflict.",
+        "FC01-I5: Windows/Web/Android host and publication integration. Bind changed Windows native, Web PointerEvent/WASM and Android MotionEvent/JNI host paths to common typed Facade and normalized input with source generations; Web capture/unmount/visibility, Android distinct source ID + ACTION_CANCEL semantics, Windows pointer/promoted mouse and target fences; Preserve Canonical Applied/qualified Presented/Axis durable separation and local-vs-remote NoEcho; use trusted in-repo Axis seam or faithful deterministic adapter where actual external Axis is unavailable.",
+        "FC01-I6: Regression, evidence and remote materialization. Implement runner verification/fc01/run_dev.py and referenced scenario inputs; do not generate Expected from production output; Run all B01-B10 on exact candidate; required host target builds or explicit environment blocker; affected V1, Brush2, Connector, Ink/Selection/Viewport/History regression; Materialize E01-E10 immutable evidence/report and precise source/CI refs; return READY_FOR_CONTROL_REVIEW only on complete closure.",
+        "Maintain one owner serialized canonical mutation lane and versioned Shape2 admission on all local/direct/remote/History/Replay/Snapshot paths; do not replace existing semantic kernel.",
+        "Complete P20 B01..B10 and relevant old-area regressions, source-qualified Windows/Web/Android changed-target build/link, and exact E01..E10 durable evidence.",
+        "Continue from first incomplete slice through terminal complete or an explicit permitted blocker; do not stop for repeated approval after each slice."
+      ],
+      "work_packages": [
+        {
+          "id": "FC01-I0",
+          "name": "Entry preflight, independent RED and typed validator baseline",
+          "deps": [],
+          "required": [
+            "Inspect accepted package/repo identity and in-flight work; ImplementationDesignPreflight; materialize independent RED-01 against old anchored source before code changes",
+            "Fix existing sourceLost(sourceA) global cancel without altering sourceB or prior Ink/Viewport contracts",
+            "Establish semantic A/B validation provenance so typed/direct and replay cannot bypass new version checks"
+          ],
+          "verification": [
+            "FC01-B01",
+            "FC01-B02",
+            "FC01-B03"
+          ]
+        },
+        {
+          "id": "FC01-I1",
+          "name": "Versioned semantic + Snapshot/mixed clients",
+          "deps": [
+            "FC01-I0"
+          ],
+          "required": [
+            "Admit exactly Shape/2 Triangle tuple while retaining Shape/1 and Brush2 exception",
+            "Atomic Insert/Restore/typed apply/History entry guard, Snapshot2+capability and replay Loading quarantine, no generic payload2",
+            "Fail-closed unsupported reader/writer and current collaboration host admission; no lossy downgrade"
+          ],
+          "verification": [
+            "FC01-B01",
+            "FC01-B02"
+          ]
+        },
+        {
+          "id": "FC01-I2",
+          "name": "Scene geometry and minimal Connector hit",
+          "deps": [
+            "FC01-I1"
+          ],
+          "required": [
+            "Implement derived exact Triangle geometry/bounds/fill/stroke/hit/Skia dispatch without canonical path storage",
+            "Implement Connector/1 FreePoint Straight Line/Arrow render and precise segment/arrowhead hit; extend SceneQuery mask additively",
+            "Preserve Full/Incremental scene equivalence, view generation and renderer-neutral derived geometry"
+          ],
+          "verification": [
+            "FC01-B05"
+          ]
+        },
+        {
+          "id": "FC01-I3",
+          "name": "Facade/Interaction Create + Snap/Preview",
+          "deps": [
+            "FC01-I0",
+            "FC01-I2"
+          ],
+          "required": [
+            "Internal typed five CreationPreset + effective future style and selected-control/readback; single Product/Debug Facade owner",
+            "Create Input claim/gesture/session with frozen Down preset/style and one stable InsertObjects on confirmed valid Up",
+            "Add finite viewport-bounded far-axis center/edge Snap, deterministic hysteresis, per-view preview/guide with 0 canonical Move",
+            "Proof owner-safe-point control queue execution and no fake selectedObjectID creation"
+          ],
+          "verification": [
+            "FC01-B03",
+            "FC01-B04",
+            "FC01-B07"
+          ]
+        },
+        {
+          "id": "FC01-I4",
+          "name": "Selected actions and conditional local History",
+          "deps": [
+            "FC01-I1",
+            "FC01-I3"
+          ],
+          "required": [
+            "Single-Operation PatchProperties/SetTransforms/SetObjectSize/SetPlacements/Delete selected actions plus Unlock",
+            "Extend EditorHistory Insert/Delete/Transform/Size/Patch/Placement exact preimage and conditional same-lane inverse/redo",
+            "Guard later remote child/dependent DeleteClosure and no cursor advance on Conflict"
+          ],
+          "verification": [
+            "FC01-B06",
+            "FC01-B07"
+          ]
+        },
+        {
+          "id": "FC01-I5",
+          "name": "Windows/Web/Android host and publication integration",
+          "deps": [
+            "FC01-I2",
+            "FC01-I3",
+            "FC01-I4"
+          ],
+          "required": [
+            "Bind changed Windows native, Web PointerEvent/WASM and Android MotionEvent/JNI host paths to common typed Facade and normalized input with source generations",
+            "Web capture/unmount/visibility, Android distinct source ID + ACTION_CANCEL semantics, Windows pointer/promoted mouse and target fences",
+            "Preserve Canonical Applied/qualified Presented/Axis durable separation and local-vs-remote NoEcho; use trusted in-repo Axis seam or faithful deterministic adapter where actual external Axis is unavailable"
+          ],
+          "verification": [
+            "FC01-B07",
+            "FC01-B08",
+            "FC01-B09"
+          ]
+        },
+        {
+          "id": "FC01-I6",
+          "name": "Regression, evidence and remote materialization",
+          "deps": [
+            "FC01-I1",
+            "FC01-I2",
+            "FC01-I3",
+            "FC01-I4",
+            "FC01-I5"
+          ],
+          "required": [
+            "Implement runner verification/fc01/run_dev.py and referenced scenario inputs; do not generate Expected from production output",
+            "Run all B01-B10 on exact candidate; required host target builds or explicit environment blocker; affected V1, Brush2, Connector, Ink/Selection/Viewport/History regression",
+            "Materialize E01-E10 immutable evidence/report and precise source/CI refs; return READY_FOR_CONTROL_REVIEW only on complete closure"
+          ],
+          "verification": [
+            "FC01-B01",
+            "FC01-B02",
+            "FC01-B03",
+            "FC01-B04",
+            "FC01-B05",
+            "FC01-B06",
+            "FC01-B07",
+            "FC01-B08",
+            "FC01-B09",
+            "FC01-B10"
+          ]
+        }
+      ],
+      "authorized_mutation_scope": [
+        "runtime/foundation/** (typed internal control/semantic DTO boundary only)",
+        "runtime/control/** (CanvasControlService, ownership/readback/receipts)",
+        "runtime/input/** (InputRouter, GestureArbiter, source scoped cancellation)",
+        "runtime/interaction/** (CreateSession, Snap adapter, History/Lock/Selection)",
+        "runtime/semantic/** (version validation, codec, OperationEngine, Snapshot, Replay)",
+        "runtime/scene/** (Shape/2 & Connector geometry, SceneQuery, hit)",
+        "runtime/render/** (Skia versioned geometry & per-view transient overlay)",
+        "debug_ui/** (one Facade client)",
+        "apps/ink_playground/common/** (RuntimeFacade/host controller adapters)",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "apps/ink_playground/platform/android/**",
+        "verification/fc01/** (planned runner and independent tests)",
+        "verification/corpus/fc01/v1/** (new authored input scenarios; expected reviewed)",
+        "tests/** (affected regression and reference harness)",
+        "CMakeLists.txt, CMakePresets.json, cmake/** and runtime/**/CMakeLists.txt (minimal new targets)",
+        ".github/workflows/** (only focused changed-target build wiring if actually needed)",
+        ".aegis/results/FC-01-DEV/** (exact DEV evidence, not gate decision)"
+      ],
+      "preserve_unchanged": [
+        ".aegis/authorities.json",
+        ".aegis/state.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json",
+        ".aegis/packages/FC-01/**",
+        "verification/corpus/semantic/shape2-triangle/v1/**",
+        "verification/corpus/semantic/v1/**",
+        "schema/axiom/v1/proto/**",
+        "schema/axiom/v1/descriptor/**",
+        "arc/**",
+        "docs/notion/**",
+        "unrelated .aegis/packages and old Gate results"
+      ],
+      "forbidden_changes": [
+        "No new OperationKind, Protobuf Shape field, ObjectKind Line/Arrow, SetShapeKind or original V1 Shape/1 registry/descriptor/Golden rewrite.",
+        "No mutation to reviewed Shape2 source corpus expected/hex under any implementation-derived auto-golden; if authoritative conflict discovered, fail closed to control.",
+        "No FC-06 attached endpoint/auto-anchor/routing, FC-07 full distribute/layout, FC-10 Clipboard/general History or Text/Image/FC-02/05 implementation.",
+        "No new canonical Snap/Guide/transient fields and no second platform/UI Shape engine or direct Document apply path.",
+        "No G5 Tile/Cache/Frame scheduling optimization, new frame/p95/FPS Gate or unapproved experimental Brush/Arc redesign.",
+        "No false FC-13/PX0/G4.6/G4.7 PHYS PASS, no old Gate verdict change, no P32-issued P34 PASS.",
+        "Do not merge PR #146 or rewrite accepted FC-00 control base as part of implementation."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current modules/data flow at actual P32 start",
+        "typed direct admission A+B and state mutation owner",
+        "gesture Down/Move/Up/Cancel/pending identity and overlay publish/clear",
+        "conditional History check at same canonical owner phase",
+        "Snapshot/Replay Loading/capability refusal",
+        "remote/Axis no-echo and readback/Presentation",
+        "exact affected source files, oracle mapping and abort/no-op paths"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "red_oracle_precondition": {
+      "red_required": true,
+      "id": "FC01-RED-01",
+      "baseline": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "observation": "PlatformInteractionIngress sourceA pen+sourceB touch active: sourceLost(A) must preserve B InputRegistry/key and B terminal; expected old RED on global-cancel defect",
+      "on_unexpected_green": "VERIFICATION_DESIGN_DEFECT"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "FC01-T01",
+          "frozen_obligation": "FC01-B01",
+          "command_or_oracle": "Execute FC01-B01 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E01",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B01"
+        },
+        {
+          "id": "FC01-T02",
+          "frozen_obligation": "FC01-B02",
+          "command_or_oracle": "Execute FC01-B02 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E02",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B02"
+        },
+        {
+          "id": "FC01-T03",
+          "frozen_obligation": "FC01-B03",
+          "command_or_oracle": "Execute FC01-B03 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E03",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B03"
+        },
+        {
+          "id": "FC01-T04",
+          "frozen_obligation": "FC01-B04",
+          "command_or_oracle": "Execute FC01-B04 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E04",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B04"
+        },
+        {
+          "id": "FC01-T05",
+          "frozen_obligation": "FC01-B05",
+          "command_or_oracle": "Execute FC01-B05 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E05",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B05"
+        },
+        {
+          "id": "FC01-T06",
+          "frozen_obligation": "FC01-B06",
+          "command_or_oracle": "Execute FC01-B06 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E06",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B06"
+        },
+        {
+          "id": "FC01-T07",
+          "frozen_obligation": "FC01-B07",
+          "command_or_oracle": "Execute FC01-B07 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E07",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B07"
+        },
+        {
+          "id": "FC01-T08",
+          "frozen_obligation": "FC01-B08",
+          "command_or_oracle": "Execute FC01-B08 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E08",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B08"
+        },
+        {
+          "id": "FC01-T09",
+          "frozen_obligation": "FC01-B09",
+          "command_or_oracle": "Execute FC01-B09 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E09",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B09"
+        },
+        {
+          "id": "FC01-T10",
+          "frozen_obligation": "FC01-B10",
+          "command_or_oracle": "Execute FC01-B10 independent oracle from verification.lock.json through planned verification/fc01/run_dev.py or source-pinned equivalent compiled target; materialize exact E10",
+          "expected_result": "PASS against independently frozen expectation; no required scenario skipped, evidence bound to actual subject revision",
+          "blocking_reason": "Distinct high-impact failure mode frozen by FC-01 P20 FC01-B10"
+        }
+      ],
+      "runner_contract": {
+        "path": "verification/fc01/run_dev.py",
+        "present_at_package_anchor": false,
+        "author_in_P32": true,
+        "profiles": [
+          "core",
+          "windows-host",
+          "web-wasm",
+          "android-native"
+        ],
+        "frozen_expected": "verification/corpus/semantic/shape2-triangle/v1/authoring/expected.json",
+        "scenario_path": "verification/corpus/fc01/v1/scenarios.json"
+      },
+      "regression": "Affected old V1 G1/Scene G2/G3, G4 Input/Ink/Selection/History/Viewport, Brush2 and Connector negative controls; no unrelated blanket test requirements"
+    },
+    "hosted_verification": {
+      "required": [
+        {
+          "id": "FC01-HOST-BUILD",
+          "profile": "Windows/Web/Android supported changed host targets",
+          "oracle": "Compile/link under declared actual provider toolchain and run deterministic host fixtures; local or CI source-qualified proof",
+          "on_no_provider": "BLOCKED_ENVIRONMENT",
+          "physical_required": false
+        }
+      ],
+      "optional": [
+        {
+          "id": "FC13-PHYS",
+          "description": "Real devices and physical presentation/pen/capture, inherited original PX0/G4.6/G4.7",
+          "classification": "DEFERRED_TO_FC13"
+        },
+        {
+          "id": "REPEAT-CI",
+          "classification": "CORROBORATIVE",
+          "description": "Second identical runner with same oracle"
+        },
+        {
+          "id": "PERF-FPS",
+          "classification": "CORROBORATIVE",
+          "description": "G5 workload/performance tuning"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        {
+          "obligation_id": "FC01-B01",
+          "artifact": ".aegis/results/FC-01-DEV/E01/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B02",
+          "artifact": ".aegis/results/FC-01-DEV/E02/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B03",
+          "artifact": ".aegis/results/FC-01-DEV/E03/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B04",
+          "artifact": ".aegis/results/FC-01-DEV/E04/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B05",
+          "artifact": ".aegis/results/FC-01-DEV/E05/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B06",
+          "artifact": ".aegis/results/FC-01-DEV/E06/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B07",
+          "artifact": ".aegis/results/FC-01-DEV/E07/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B08",
+          "artifact": ".aegis/results/FC-01-DEV/E08/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B09",
+          "artifact": ".aegis/results/FC-01-DEV/E09/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        },
+        {
+          "obligation_id": "FC01-B10",
+          "artifact": ".aegis/results/FC-01-DEV/E10/",
+          "why": "Only independent evidence closes the distinct high-impact failure mode in verification.lock"
+        }
+      ],
+      "corroborative": [
+        "manual same-screen screenshots",
+        "duplicate identical CTest provider",
+        "G5 frame-rate/latency measurements",
+        "FC-13 deferred physical tests",
+        "generator/provenance-of-provenance redundant checks"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "All required FC-01 five tools and selected actions implemented under exact approved semantics without Scope/Authority divergence.",
+        "Pre-change RED-01 expected failure observed before production mutation; valid independent Golden and frozen V1 negatives preserved.",
+        "All ten FC01-B01..B10 individually satisfy requirement, oracle, acceptance, evidence_required under frozen verification.lock; no required scenario skipped or unreasonably borrowed from same implementation output.",
+        "Required changed-target Windows/Web/Android compile/link and deterministic host profile verification recorded with exact toolchain/build identities; no mock passes as physical evidence.",
+        "One origin-correct canonical Applied per accepted gesture/intent and truthful multi-view/Axis/Presented readback and History conflict behavior.",
+        "Targeted regressions and exact-source / scope/protected file review pass; original FC-00/PX0/G4.6/G4.7 Gate/history preserved.",
+        "Push exact P32 source revision and E01-E10 reviewer-accessible durable artifact refs; return source SHA/ref/provider identities under CONTROL_REVIEW only, no P34/PHYS PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "VERIFICATION_DESIGN_DEFECT",
+        "PACKAGE_SCOPE_CONFLICT"
+      ],
+      "return_statuses": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_AUTHORITY",
+        "BLOCKED_MISSING_INPUT",
+        "BLOCKED_ENVIRONMENT",
+        "BLOCKED_IMPLEMENTATION",
+        "BLOCKED_EVIDENCE",
+        "BLOCKED_UNRESOLVED_DECISION"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "terminal_success_status": "READY_FOR_CONTROL_REVIEW",
+      "return_surface": "CONTROL_REVIEW",
+      "emitted_fields": [
+        "result_revision",
+        "materialized_ref",
+        "evidence_input_refs",
+        "provider_run_refs",
+        "remaining_blockers"
+      ],
+      "not_allowed": [
+        "P34_PASS",
+        "FC13_PHYSICAL_PASS",
+        "G5_AUTHORIZED"
+      ]
+    }
+  }
+}
