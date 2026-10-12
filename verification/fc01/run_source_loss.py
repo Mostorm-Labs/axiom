@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 import shutil
+import argparse
 
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = "2942c63b375366ed977b834aa0a48fe2fb551c6e"
@@ -15,7 +16,11 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def main() -> int:
-    output = ROOT / "out/fc01/source-loss"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--label", default="source-loss")
+    parser.add_argument("--expect-candidate-red", action="store_true")
+    args = parser.parse_args()
+    output = ROOT / "out/fc01" / args.label
     output.mkdir(parents=True, exist_ok=True)
     environment = subprocess.run(
         f'call "{VCVARS}" >nul && set', shell=True, capture_output=True,
@@ -90,6 +95,7 @@ def main() -> int:
                             "binary_sha256": sha(binary) if compiled.returncode == 0 else None})
         print(test, regressions[-1]["build_exit_code"], regressions[-1]["run_exit_code"])
     baseline_log = (output / "baseline-run.log").read_bytes()
+    candidate_red = rows[1]["run_exit_code"] != 0 and b"Assertion failed: ingress.activeCount() == 1" in (output / "candidate-run.log").read_bytes()
     report = {"id": "FC01-RED-01", "baseline": BASELINE, "runs": rows, "regressions": regressions,
               "provider": {"kind": "local-windows-native", "compiler": compiler,
                            "compiler_sha256": sha(Path(compiler)),
@@ -99,10 +105,12 @@ def main() -> int:
               "expected_baseline_red": rows[0]["run_exit_code"] != 0 and
                  b"Assertion failed: ingress.activeCount() == 1" in baseline_log,
               "candidate_green": rows[1]["run_exit_code"] == 0,
+              "candidate_expected": "RED" if args.expect_candidate_red else "GREEN",
+              "candidate_expected_red_observed": candidate_red,
               "full_FC01_B03_closed": False, "red_before_first_production_mutation_proven": False,
               "physical_claim": False}
     (output / "result.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    return 0 if (report["expected_baseline_red"] and report["candidate_green"] and
+    return 0 if (report["expected_baseline_red"] and (candidate_red if args.expect_candidate_red else report["candidate_green"]) and
                  all(r["build_exit_code"] == 0 and r["run_exit_code"] == 0 for r in regressions)) else 1
 
 if __name__ == "__main__":

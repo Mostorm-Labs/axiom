@@ -1,0 +1,27 @@
+{
+  "task_id": "FC-01",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "starting_revision": "b992dedca2340f24c53a3a438bca37df6ac4e379",
+  "authorization": "User requested correction of the preflight-order blocker and continuation of development.",
+  "historical_first_mutation_order_proven": false,
+  "historical_evidence_preserved": ["recovery-preflight.json", "red-preflight.json", "E03/interaction-create-red-and-green.json"],
+  "correction": "Restore the source-loss implementation to the exact frozen old-source bytes in an additive commit. Observe the independent B-alive RED against that corrected execution baseline before reimplementing source loss. Commit RED evidence before the new production implementation. Preserve all unrelated I1/I2 work and Git history.",
+  "implementation_design_preflight": {
+    "current_flow": "PlatformInteractionIngress owns the source/pointer map and ActivePointerRegistry owns generation validity. submit normalizes samples; a sourceLost flag currently invokes global cancellation in the frozen baseline.",
+    "owner": "Existing PlatformInteractionIngress and ActivePointerRegistry; no new input registry or session owner.",
+    "prepare": "Find only active entries belonging to the lost InputSourceId and emit keyed Cancel samples carrying their original PointerKeys.",
+    "commit": "End those keys in ActivePointerRegistry and erase those entries, preserving other sources and their generations.",
+    "publication": "Return source-keyed normalized cancellations. Retain the existing final-source terminal cancellation behavior only after at least one key was cancelled and no active sources remain.",
+    "abort_noop": "Unknown source loss has no accepted samples and no terminal cancellation; invalid pointer input remains governed by submit.",
+    "affected_files": ["runtime/input/src/platform_interaction_ingress.cpp", "verification/fc01/run_source_loss.py"],
+    "oracle": "verification/fc01/red_source_loss_test.cpp: sourceA pen and sourceB touch live; sourceLost(A) must preserve B's key, Move and Up.",
+    "regressions": ["platform_interaction_ingress_test", "c1_platform_fixture_test"],
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false,
+    "verification_conflict": false,
+    "package_scope_conflict": false
+  },
+  "review_boundary": "The correction is a new verifiable RED-before-reimplementation sequence. It does not backdate or erase the original evidence-order deviation, and independent Control Review decides its acceptance.",
+  "gate_claim": "none",
+  "physical_claim": false
+}
