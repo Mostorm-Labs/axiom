@@ -24,6 +24,7 @@ foundation::Result<FullMaterializedScene> materializeFullScene(
                 .properties = source.properties,
                 .content = source.content,
                 .eraseMasks = source.eraseMasks,
+                .derivedGeometry = source.derivedGeometry,
                 .geometryBounds = source.geometryBounds,
                 .visualBounds = source.visualBounds,
                 .worldBounds = source.worldBounds,

@@ -4,6 +4,7 @@
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 #include "canvas/render/visibility_resolver.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/frame_plan.hpp"
@@ -38,6 +39,7 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
         case semantic::ObjectKind::kRichText: kind = canvas::SceneObjectKind::kRichText; break;
         case semantic::ObjectKind::kVectorStroke: kind = canvas::SceneObjectKind::kVectorStroke; break;
         case semantic::ObjectKind::kDabStroke: kind = canvas::SceneObjectKind::kDabStroke; break;
+        case semantic::ObjectKind::kConnector: kind = canvas::SceneObjectKind::kConnector; break;
         default: break;
       }
       const auto bounds = canvas::computeBounds(record);
@@ -51,7 +53,8 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
       result.records.push_back({record.id, canvas::SceneOrderKey(order), kind, flags,
                                 bounds.world, canvas::ContentRevision(record.kind_version),
                                 canvas::RenderPayloadRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version},
-                                canvas::HitGeometryRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version}});
+                                canvas::HitGeometryRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version}, record.transform,
+                                canvas::scene::deriveGeometry(record)});
     }
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
   }

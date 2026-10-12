@@ -40,6 +40,9 @@ class DirectRenderScene final : public IRenderScene {
         SceneOrderKey orderKey;
         WorldRect worldBounds;
         RenderPayloadRef renderPayload;
+        scene::DerivedGeometry derivedGeometry;
+        semantic::Transform2D localTransform{};
+        semantic::PropertyBag properties{};
     };
 
     foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>

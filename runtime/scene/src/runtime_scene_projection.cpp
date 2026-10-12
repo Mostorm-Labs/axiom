@@ -1,6 +1,7 @@
 #include "canvas/scene/runtime_scene_projection.hpp"
 
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -156,6 +157,7 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         const auto bounds = computeBounds(record,layout.get());
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, record.transform, record.properties, record.content, record.erase_masks,
+            deriveGeometry(record),
             bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
     }
     std::sort(out.records.begin(), out.records.end(), [](const auto& a, const auto& b) {

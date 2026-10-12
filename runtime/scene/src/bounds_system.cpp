@@ -1,6 +1,7 @@
 #include "canvas/scene/bounds_system.hpp"
 
 #include "canvas/scene/reference_geometry.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
@@ -12,7 +13,7 @@
 namespace canvas::scene {
 namespace {
 foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
-    return std::visit([](const auto& content) -> foundation::WorldRect {
+    return std::visit([&record](const auto& content) -> foundation::WorldRect {
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
@@ -106,7 +107,10 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
                         }
                     }
                 }
-            }; add(content.start); add(content.end); return result;
+            }; add(content.start); add(content.end);
+            bool arrow=false; for(const auto& entry:record.properties.entries) if(entry.field_id==0x201U) if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&entry.value)) arrow=*v==semantic::ConnectorDecorationValue::kArrow;
+            if(arrow && have) { const auto start=std::get_if<semantic::FreePointEndpoint>(&content.start.value); const auto end=std::get_if<semantic::FreePointEndpoint>(&content.end.value); if(start&&end) { const ConnectorGeometry g{{static_cast<float>(start->point.x),static_cast<float>(start->point.y)},{static_cast<float>(end->point.x),static_cast<float>(end->point.y)},true}; const auto h=arrowHead(g); result=foundation::unionRects(result,{h.left.x,h.left.y,h.left.x,h.left.y}); result=foundation::unionRects(result,{h.right.x,h.right.y,h.right.x,h.right.y}); } }
+            return result;
         } else { return {}; }
     }, record.content);
 }

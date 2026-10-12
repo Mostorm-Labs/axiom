@@ -67,6 +67,7 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
             .properties = std::move(record.properties),
             .content = std::move(record.content),
             .eraseMasks = std::move(record.eraseMasks),
+            .derivedGeometry = record.derivedGeometry,
             .geometryBounds = record.geometryBounds,
             .visualBounds = record.visualBounds,
             .worldBounds = record.worldBounds,

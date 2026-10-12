@@ -30,6 +30,7 @@ RuntimeSceneProjection projectRuntimeScene(
             .properties = record.properties,
             .content = record.content,
             .eraseMasks = record.erase_masks,
+            .derivedGeometry = scene::deriveGeometry(record),
             .textLayout = nullptr,
         });
         if (textService != nullptr && record.kind == semantic::ObjectKind::kRichText) {
@@ -127,6 +128,8 @@ std::uint32_t kindBit(SceneObjectKind kind) {
         return static_cast<std::uint32_t>(HitTestKindMask::kVectorStroke);
     case SceneObjectKind::kDabStroke:
         return static_cast<std::uint32_t>(HitTestKindMask::kDabStroke);
+    case SceneObjectKind::kConnector:
+        return static_cast<std::uint32_t>(HitTestKindMask::kConnector);
     }
     return 0U;
 }

@@ -9,6 +9,7 @@
 #include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -54,6 +55,7 @@ enum class SceneObjectKind : std::uint8_t {
     kRichText = 4,
     kVectorStroke = 5,
     kDabStroke = 6,
+    kConnector = 7,
 };
 
 // Renderer-neutral projection consumed by Scene Core and inspection tooling.
@@ -68,6 +70,7 @@ struct RuntimeSceneRecord final {
     semantic::PropertyBag properties{};
     semantic::ObjectContent content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
+    scene::DerivedGeometry derivedGeometry{};
     foundation::WorldRect geometryBounds{};
     foundation::WorldRect visualBounds{};
     foundation::WorldRect worldBounds{};
@@ -197,6 +200,9 @@ struct SceneRecord final {
     ContentRevision contentRevision;
     RenderPayloadRef renderPayload;
     HitGeometryRef hitGeometry;
+    semantic::Transform2D localTransform{};
+    scene::DerivedGeometry derivedGeometry{};
+    semantic::PropertyBag properties{};
 
     bool operator==(const SceneRecord&) const = default;
 };

@@ -249,3 +249,11 @@ add_test(
     NAME canvas_rf01_public_abi_manifest
     COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tools/check_runtime_abi_manifest.py
             --root ${PROJECT_SOURCE_DIR})
+
+add_executable(canvas_fc01_derived_geometry_test derived_geometry_test.cpp)
+target_link_libraries(canvas_fc01_derived_geometry_test PRIVATE canvas_runtime_scene)
+target_compile_features(canvas_fc01_derived_geometry_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_fc01_derived_geometry_test PRIVATE /W4 /permissive- /WX /EHsc)
+endif()
+add_test(NAME canvas_fc01_derived_geometry COMMAND canvas_fc01_derived_geometry_test)

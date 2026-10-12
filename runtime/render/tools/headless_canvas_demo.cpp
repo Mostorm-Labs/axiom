@@ -9,6 +9,7 @@
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/scene/scene_binding.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/semantic/snapshot.hpp"
@@ -58,9 +59,10 @@ class DemoCompiler final : public ISemanticSceneCompiler {
     out.records.reserve(projection.value().records.size());
     for (const auto& s : projection.value().records) {
       SceneObjectKind k=SceneObjectKind::kShape;
-      switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;default:break;}
+      switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;case semantic::ObjectKind::kConnector:k=SceneObjectKind::kConnector;break;default:break;}
       const auto flags=static_cast<SceneRecordFlags>(static_cast<std::uint32_t>(SceneRecordFlags::kVisible)|static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable));
-      out.records.push_back({s.objectId,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,s.worldBounds,ContentRevision(s.kindVersion),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion}});
+      semantic::ObjectRecord source{}; source.id=s.objectId; source.kind=s.kind; source.kind_version=s.kindVersion; source.placement=s.placement; source.transform=s.transform; source.properties=s.properties; source.content=s.content;
+      out.records.push_back({s.objectId,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,s.worldBounds,ContentRevision(s.kindVersion),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},s.transform,scene::deriveGeometry(source)});
     }
     return foundation::Result<CompiledSceneSnapshot>::success(std::move(out));
   }

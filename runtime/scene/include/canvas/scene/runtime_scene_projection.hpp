@@ -5,6 +5,7 @@
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <cstdint>
 #include <string>
@@ -21,6 +22,7 @@ struct InspectionRecord final {
     semantic::PropertyBag properties{};
     semantic::ObjectContent content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
+    DerivedGeometry derivedGeometry{};
     foundation::WorldRect geometryBounds{};
     foundation::WorldRect visualBounds{};
     foundation::WorldRect worldBounds{};

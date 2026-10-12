@@ -122,6 +122,7 @@ semantic::ColorValue propertyColor(const RuntimeSceneRecord& record,
         if (fieldId == 0x00000100U) {
             if (const auto* fill = std::get_if<semantic::FillStyleValue>(&property.value)) {
                 if (const auto* solid = std::get_if<semantic::SolidFill>(fill)) return solid->color;
+                if (std::holds_alternative<semantic::NoFill>(*fill)) return {0.0F, 0.0F, 0.0F, 0.0F};
             }
         }
         if (fieldId == 0x00000101U) {
@@ -293,8 +294,19 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
         if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
-            drawSolidRect(canvas, record.visualBounds,
-                          propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F}));
+            const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
+            if (command.content.shape_kind == 3U) {
+                SkPathBuilder path;
+                path.moveTo(skScalar(command.content.width * 0.5), 0.0F);
+                path.lineTo(skScalar(command.content.width), skScalar(command.content.height));
+                path.lineTo(0.0F, skScalar(command.content.height));
+                path.close();
+                SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(fill));
+                paint.setStyle(SkPaint::kFill_Style); canvas.drawPath(path.detach(), paint);
+            } else if (fill.a > 0.0F) {
+                drawSolidRect(canvas, foundation::WorldRect{0.0F, 0.0F,
+                    static_cast<float>(command.content.width), static_cast<float>(command.content.height)}, fill);
+            }
         } else if constexpr (std::is_same_v<T, ImageReferenceCommand>) {
             if (images == nullptr) return;
             const auto decoded = images->resolve(command.content.resource_id);
@@ -403,6 +415,30 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             } else {
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
                                 skScalar(end->point.y), paint);
+            }
+            bool arrow = false;
+            for (const auto& property : record.properties.entries) {
+                if (property.field_id != 0x201U) continue;
+                if (const auto* decoration = std::get_if<semantic::ConnectorDecorationValue>(&property.value))
+                    arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
+            }
+            if (arrow) {
+                const float dx = skScalar(end->point.x - start->point.x);
+                const float dy = skScalar(end->point.y - start->point.y);
+                const float length = std::hypot(dx, dy);
+                if (length > 0.0F) {
+                    const float ux = dx / length, uy = dy / length;
+                    const float px = -uy, py = ux;
+                    SkPathBuilder head;
+                    head.moveTo(skScalar(end->point.x), skScalar(end->point.y));
+                    head.lineTo(skScalar(end->point.x - ux * 12.0F + px * 6.0F),
+                                skScalar(end->point.y - uy * 12.0F + py * 6.0F));
+                    head.lineTo(skScalar(end->point.x - ux * 12.0F - px * 6.0F),
+                                skScalar(end->point.y - uy * 12.0F - py * 6.0F));
+                    head.close();
+                    paint.setStyle(SkPaint::kFill_Style);
+                    canvas.drawPath(head.detach(), paint);
+                }
             }
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
             drawSolidRect(canvas, foundation::WorldRect{record.visualBounds.left, record.visualBounds.top, record.visualBounds.left + static_cast<float>(command.content.width), record.visualBounds.top + static_cast<float>(command.content.height)}, {1.0F, 1.0F, 0.5F, 1.0F});

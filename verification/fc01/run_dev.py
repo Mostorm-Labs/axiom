@@ -45,6 +45,7 @@ def main() -> int:
     parser.add_argument("--label", default="run")
     parser.add_argument("--no-protobuf", action="store_true")
     parser.add_argument("--configure-only", action="store_true")
+    parser.add_argument("--scene", action="store_true")
     parser.add_argument("--build-only", action="store_true")
     args = parser.parse_args()
     if args.profile != "core":
@@ -73,11 +74,11 @@ def main() -> int:
         return p.returncode
 
     configure = [cmake, "-S", str(ROOT), "-B", str(build), "-G", "Ninja",
-                 "-DCMAKE_BUILD_TYPE=Release", f"-DCMAKE_MAKE_PROGRAM={ninja}",
+                 "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_CXX_FLAGS=/UNDEBUG", f"-DCMAKE_MAKE_PROGRAM={ninja}",
                  f"-DCMAKE_C_COMPILER={env['CC']}", f"-DCMAKE_CXX_COMPILER={env['CXX']}",
                  "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_POC02=OFF", "-DCANVAS_BUILD_POC03=OFF",
                  "-DCANVAS_BUILD_POC05=OFF", "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
-                 "-DCANVAS_BUILD_RF01=OFF", "-DCANVAS_BUILD_RENDER=OFF", "-DCANVAS_BUILD_SEMANTIC=ON",
+                 "-DCANVAS_BUILD_RF01=" + ("ON" if args.scene else "OFF"), "-DCANVAS_BUILD_RENDER=OFF", "-DCANVAS_BUILD_SEMANTIC=ON",
                  "-DBUILD_TESTING=ON", "-DCANVAS_SKIA_SDK_VARIANT=release",
                  "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=" + ("OFF" if args.no_protobuf else "ON")]
     rc = 0

@@ -6,6 +6,7 @@
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 namespace canvas::internal {
 
@@ -20,6 +21,7 @@ struct FullMaterializedScene final {
         semantic::PropertyBag properties{};
         semantic::ObjectContent content{};
         std::vector<semantic::EraseMaskRecord> eraseMasks;
+        scene::DerivedGeometry derivedGeometry{};
         foundation::WorldRect geometryBounds{};
         foundation::WorldRect visualBounds{};
         foundation::WorldRect worldBounds{};
