@@ -1,0 +1,163 @@
+{
+  "schema": "fc01-shape2-independent-authoring-v0.1",
+  "authority": [
+    "notion://3f74c57a590c819ebc62dba091371f17",
+    "notion://3f74c57a590c8128b936d7491884ffb7"
+  ],
+  "historical_v1": "notion://3c44c57a590c81c0ab80d6a8d6aa0778",
+  "status": "review_candidate_NOT_independently_accepted",
+  "historical_v1_golden": "SH-G01..SH-G18 historical semantic expected only; do not claim executed binary suite",
+  "scenario_count": 25,
+  "cases": [
+    {
+      "id": "SH2-G01",
+      "input": "Triangle versioned (1,2,3) W100 H80",
+      "expected": "accept",
+      "oracle": "vertices=(50,0),(100,80),(0,80); bbox=(0,0,100,80)"
+    },
+    {
+      "id": "SH2-G02",
+      "input": "Triangle hit probes",
+      "expected": "accept",
+      "oracle": "inside=(50,40),(50,80); outside=(5,10),(50,-1); boundary included"
+    },
+    {
+      "id": "SH2-G03",
+      "input": "Triangle snap center",
+      "expected": "accept",
+      "oracle": "bbox_center=(50,40); centroid=(50,160/3) not snap feature"
+    },
+    {
+      "id": "SH2-G04",
+      "input": "Shape2 intrinsic W200 H40",
+      "expected": "accept",
+      "oracle": "derived vertices=(100,0),(200,40),(0,40); stable ObjectId/shape kind"
+    },
+    {
+      "id": "SH2-G05",
+      "input": "Old Shape/1 kinds1,2",
+      "expected": "accept",
+      "oracle": "same historical valid bytes/semantics; old SH-G01..18 unchanged"
+    },
+    {
+      "id": "SH2-G06",
+      "input": "Shape/1 shapeKind3",
+      "expected": "reject",
+      "oracle": "original SH-G06 reject unchanged"
+    },
+    {
+      "id": "SH2-G07",
+      "input": "Shape/2 kind1 and kind2",
+      "expected": "reject",
+      "oracle": "no version2 Rectangle/Ellipse aliases"
+    },
+    {
+      "id": "SH2-G08",
+      "input": "Shape/2 0/4+ or kindVersion3",
+      "expected": "reject",
+      "oracle": "unknown version/kind fail closed"
+    },
+    {
+      "id": "SH2-G09",
+      "input": "Shape2 zero and negative W/H",
+      "expected": "reject",
+      "oracle": "no clamp/absolute fallback"
+    },
+    {
+      "id": "SH2-G10",
+      "input": "Shape2 NaN/Infinity/-0 W/H",
+      "expected": "reject",
+      "oracle": "nonfinite fail; -0 canonicalizes to 0 then rejects"
+    },
+    {
+      "id": "SH2-G11",
+      "input": "Missing required ShapeContent scalar presence",
+      "expected": "reject",
+      "oracle": "missing shape_kind/width/height rejected even when implicit defaults parse"
+    },
+    {
+      "id": "SH2-G12",
+      "input": "Wrong oneof/ObjectKind/kind_version",
+      "expected": "reject",
+      "oracle": "whole record/operation rejected"
+    },
+    {
+      "id": "SH2-G13",
+      "input": "Fill None Stroke None opacity default",
+      "expected": "accept",
+      "oracle": "existing field defaults; geometry unchanged"
+    },
+    {
+      "id": "SH2-G14",
+      "input": "Triangle translation/rotation/reflection",
+      "expected": "accept",
+      "oracle": "derived transform only; stored ShapeContent unchanged"
+    },
+    {
+      "id": "SH2-G15",
+      "input": "Independently authored Shape2 canonical wire bytes",
+      "expected": "accept",
+      "oracle": "see golden hex files; hand-encoded TLV and independent protobuf descriptor comparison"
+    },
+    {
+      "id": "SH2-G16",
+      "input": "New reader old V1 snapshot/operation stream",
+      "expected": "accept",
+      "oracle": "semantic equality and exact applicable canonical bytes preserved"
+    },
+    {
+      "id": "SH2-G17",
+      "input": "Snapshot2 Triangle with capable reader",
+      "expected": "accept",
+      "oracle": "same ID/version/content/properties replay digest"
+    },
+    {
+      "id": "SH2-G18",
+      "input": "Snapshot1 carrying Triangle",
+      "expected": "reject",
+      "oracle": "reject before bootstrap publish"
+    },
+    {
+      "id": "SH2-G19",
+      "input": "Legacy reader Triangle insertion/snapshot",
+      "expected": "reject",
+      "oracle": "fail closed; no writable READY or downgrade"
+    },
+    {
+      "id": "SH2-G20",
+      "input": "Insert -> Undo -> Restore Triangle",
+      "expected": "accept",
+      "oracle": "same ObjectId; fresh inverse OperationId; checked current-state closure"
+    },
+    {
+      "id": "SH2-G21",
+      "input": "Connector AttachedEndpoint target Shape/2",
+      "expected": "reject",
+      "oracle": "still not connectable in FC01"
+    },
+    {
+      "id": "SH2-G22",
+      "input": "Historical shape regression",
+      "expected": "accept",
+      "oracle": "SH-G01..18 unchanged; descriptor unchanged; new semantic bundle differs"
+    },
+    {
+      "id": "SH2-G23",
+      "input": "Incompatible writer/reader in mixed-version session",
+      "expected": "reject",
+      "oracle": "no new Triangle writer commit while old editable writer remains; explicit refusal"
+    },
+    {
+      "id": "SH2-G24",
+      "input": "Cancel create preview before submit",
+      "expected": "no_submission",
+      "oracle": "Preview+pre-submit Cancel is not a rejected Operation: no canonical Operation admission, ObjectRecord, Snapshot entry, History record, publication, or SemanticGeneration advance."
+    },
+    {
+      "id": "SH2-G25",
+      "input": "Malformed wire len/duplicate singular/unknown field",
+      "expected": "reject",
+      "oracle": "reject under original strict canonical profile"
+    }
+  ]
+}

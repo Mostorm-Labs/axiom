@@ -1,0 +1,59 @@
+{
+  "authority_current_scope_kind_count": 5,
+  "authority_key_statuses": {
+    "fc-feature-completion-execution-v0.1": "Superseded",
+    "fc-feature-completion-execution-v0.2": "Current",
+    "fc01-shape-triangle-semantic-v0.1": "Current"
+  },
+  "base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "candidate_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "descriptor_sha256": "8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d",
+  "golden": {
+    "case_count": 25,
+    "g06": "REJECT",
+    "g15": {
+      "SH2-G15-insertoperation.hex": {
+        "bytes": 163,
+        "independent_wire_match": true,
+        "sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24"
+      },
+      "SH2-G15-objectrecord.hex": {
+        "bytes": 113,
+        "independent_wire_match": true,
+        "sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc"
+      },
+      "SH2-G15-shapecontent.hex": {
+        "bytes": 20,
+        "independent_wire_match": true,
+        "sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1"
+      }
+    },
+    "g24": "NO_SUBMISSION",
+    "independent_acceptance": "PENDING_CONTROL_REVIEW"
+  },
+  "historical_control": {
+    ".aegis/evidence.json": {
+      "byte_equal": true,
+      "count": 34,
+      "sha256": "3b05501a11ec2f33b05cce27856015d808faba66eee2b8bf42a5e7ef136df50a"
+    },
+    ".aegis/gates.json": {
+      "byte_equal": true,
+      "count": 25,
+      "sha256": "93142da782f0d74ac6da696a6a76909f6750f4db9d47202be7da96339b252074"
+    },
+    ".aegis/integrations.json": {
+      "byte_equal": true,
+      "count": 29,
+      "sha256": "a985409362b1e6526778c0efc9d50742cb9ace19113f69846b7f639c70f725ef"
+    }
+  },
+  "nonclaims": [
+    "no product/runtime changes",
+    "no FC-01 P31/P32",
+    "no Gate PASS",
+    "no Golden acceptance by producer"
+  ],
+  "schema": "fc01-control-qualification-v0.1",
+  "status": "READY_FOR_CONTROL_REVIEW_NO_INDEPENDENT_ACCEPTANCE"
+}

@@ -1,0 +1,349 @@
+{
+  "schema": "fc01-evidence-index-v0.1",
+  "task_id": "FC-01",
+  "stage": "REPO_LOCAL_AUTHORITY_GOLDEN_CLOSURE",
+  "base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "candidate_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "result_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "evidence_materialization_revision": "control/fc-01-authority-golden-reconciliation (final pushed branch head)",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/control/fc-01-authority-golden-reconciliation/.aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE",
+  "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "independent_golden_acceptance": "PENDING_CONTROL_REVIEW",
+  "files": [
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/base-check.log",
+      "bytes": 10,
+      "sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+      "git_blob_oid": "37eb6a72180a82489d5181d2560e6988e8fff1c4",
+      "verification": {
+        "observed_bytes": 10,
+        "observed_sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/base-validate.log",
+      "bytes": 7,
+      "sha256": "3856809f2353658bbb66f3faac61db4870f7e66361cd8335a16ffaa6e2b671a1",
+      "git_blob_oid": "8912a77f864ff5649fc9f3f8e50069239d91e55c",
+      "verification": {
+        "observed_bytes": 7,
+        "observed_sha256": "3856809f2353658bbb66f3faac61db4870f7e66361cd8335a16ffaa6e2b671a1",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/case-source-map.json",
+      "bytes": 2034,
+      "sha256": "9f2e599e3c054c6bd64df960f5a1e57bfc0962ad3919ee76706710b9dee4530b",
+      "git_blob_oid": "fc5578f04173483c1457ac91ae8a8737730b0d11",
+      "verification": {
+        "observed_bytes": 2034,
+        "observed_sha256": "9f2e599e3c054c6bd64df960f5a1e57bfc0962ad3919ee76706710b9dee4530b",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/check-1.log",
+      "bytes": 10,
+      "sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+      "git_blob_oid": "37eb6a72180a82489d5181d2560e6988e8fff1c4",
+      "verification": {
+        "observed_bytes": 10,
+        "observed_sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/check-2.log",
+      "bytes": 10,
+      "sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+      "git_blob_oid": "37eb6a72180a82489d5181d2560e6988e8fff1c4",
+      "verification": {
+        "observed_bytes": 10,
+        "observed_sha256": "1bce076b6a7e1a8ddca3ca75d7ddfb5888fb2ddc104fbe2312f72cb596d4f239",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/descriptor-audit.json",
+      "bytes": 2095,
+      "sha256": "1a9b917e848a792257e4ad410cd398d2676203149108ac3f8c8da5ec3426d628",
+      "git_blob_oid": "2d6c2f939442d650b1145a0eead0939a056ac283",
+      "verification": {
+        "observed_bytes": 2095,
+        "observed_sha256": "1a9b917e848a792257e4ad410cd398d2676203149108ac3f8c8da5ec3426d628",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/head-validate.log",
+      "bytes": 7,
+      "sha256": "3856809f2353658bbb66f3faac61db4870f7e66361cd8335a16ffaa6e2b671a1",
+      "git_blob_oid": "8912a77f864ff5649fc9f3f8e50069239d91e55c",
+      "verification": {
+        "observed_bytes": 7,
+        "observed_sha256": "3856809f2353658bbb66f3faac61db4870f7e66361cd8335a16ffaa6e2b671a1",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/official-cli-final.json",
+      "bytes": 5314,
+      "sha256": "884c4fedec925f8b1a10f90a2d51d2a607ed72b6257e27f7634fe9180917f46a",
+      "git_blob_oid": "041c278794dde4289900dadab88f83d219bcf716",
+      "verification": {
+        "observed_bytes": 5314,
+        "observed_sha256": "884c4fedec925f8b1a10f90a2d51d2a607ed72b6257e27f7634fe9180917f46a",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/official-cli.json",
+      "bytes": 5523,
+      "sha256": "49ebb833cc528a755da7f0814903682109f0dd440049c4db58fc9a59c27502d0",
+      "git_blob_oid": "b48e99b586660c7413d1ef4d0c9e611d04a036c6",
+      "verification": {
+        "observed_bytes": 5523,
+        "observed_sha256": "49ebb833cc528a755da7f0814903682109f0dd440049c4db58fc9a59c27502d0",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualification-report.json",
+      "bytes": 2046,
+      "sha256": "dd1997d703fd8e7e896159f7bd4cfdcb4af789a5a40ab91c48fd0bdcfce01373",
+      "git_blob_oid": "9e26893ee493df3fa1e7015c11673ddc2163ba0f",
+      "verification": {
+        "observed_bytes": 2046,
+        "observed_sha256": "dd1997d703fd8e7e896159f7bd4cfdcb4af789a5a40ab91c48fd0bdcfce01373",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualify_control.py",
+      "bytes": 9662,
+      "sha256": "8936d9139226b329f8e07324bdc4f7845667ea942e36373f7db93cb6753f7483",
+      "git_blob_oid": "c80dbfe9a49e3c2c3420efd13f9b84a49adacda3",
+      "verification": {
+        "observed_bytes": 9662,
+        "observed_sha256": "8936d9139226b329f8e07324bdc4f7845667ea942e36373f7db93cb6753f7483",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/recompute-1.log",
+      "bytes": 96,
+      "sha256": "5bd32742ad98857a5b87b8dbb2de8549e16d0471837703d1e44f06e3a2493127",
+      "git_blob_oid": "dabd036840dc518cf55d0a266089c6d466ee76c8",
+      "verification": {
+        "observed_bytes": 96,
+        "observed_sha256": "5bd32742ad98857a5b87b8dbb2de8549e16d0471837703d1e44f06e3a2493127",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/recompute-2.log",
+      "bytes": 96,
+      "sha256": "5bd32742ad98857a5b87b8dbb2de8549e16d0471837703d1e44f06e3a2493127",
+      "git_blob_oid": "dabd036840dc518cf55d0a266089c6d466ee76c8",
+      "verification": {
+        "observed_bytes": 96,
+        "observed_sha256": "5bd32742ad98857a5b87b8dbb2de8549e16d0471837703d1e44f06e3a2493127",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/result.json",
+      "bytes": 2207,
+      "sha256": "b11eb2d3af95275aa8a229f407c396c51a0aebcf5593a57b5b545a7acb140beb",
+      "git_blob_oid": "ee19c2f97581c946e9f4af872f1bf905d03b8644",
+      "verification": {
+        "observed_bytes": 2207,
+        "observed_sha256": "b11eb2d3af95275aa8a229f407c396c51a0aebcf5593a57b5b545a7acb140beb",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/0-3f74c57a590c8128b936d7491884ffb7.json",
+      "bytes": 11854,
+      "sha256": "d9b006b61b7bf18ab45705928d300beab5aa7a2b2d7c733aecf1bfdfbdfcbebd",
+      "git_blob_oid": "325684d4bf4bd5c9d34b2f0e5fac9b1e378ac40b",
+      "verification": {
+        "observed_bytes": 11854,
+        "observed_sha256": "d9b006b61b7bf18ab45705928d300beab5aa7a2b2d7c733aecf1bfdfbdfcbebd",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/1-3f74c57a590c81268d2fc9bea7860064.json",
+      "bytes": 68319,
+      "sha256": "f7189f0fc6e9e520a23712ad8aded27c918dbb572737470465d7c3024d6afb20",
+      "git_blob_oid": "4045d38ecc3b1d77e7a9d209bf361ea78b6284ad",
+      "verification": {
+        "observed_bytes": 68319,
+        "observed_sha256": "f7189f0fc6e9e520a23712ad8aded27c918dbb572737470465d7c3024d6afb20",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/2-3c44c57a590c81c0ab80d6a8d6aa0778.json",
+      "bytes": 23712,
+      "sha256": "60d41140f29052b647a6682af417d544f39733534b93cd181e30fa38de504b5a",
+      "git_blob_oid": "f2ece7af9550e9fb8b4fa496f2b407412678fc0b",
+      "verification": {
+        "observed_bytes": 23712,
+        "observed_sha256": "60d41140f29052b647a6682af417d544f39733534b93cd181e30fa38de504b5a",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/3-3f74c57a590c819ebc62dba091371f17.json",
+      "bytes": 12220,
+      "sha256": "145c6cd143e9d46e44e5d899e26487870ef0c5161d0b7f69aa4876b01a2596a1",
+      "git_blob_oid": "772b8967fe3ecaf0f5deeca4fa794a4ec93f7b98",
+      "verification": {
+        "observed_bytes": 12220,
+        "observed_sha256": "145c6cd143e9d46e44e5d899e26487870ef0c5161d0b7f69aa4876b01a2596a1",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+      "bytes": 15665,
+      "sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+      "git_blob_oid": "0375203a27eccaefff48379dac6b1f4d200f64fa",
+      "verification": {
+        "observed_bytes": 15665,
+        "observed_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/5-3c44c57a590c81d9a77dc51bd00419e1.json",
+      "bytes": 26281,
+      "sha256": "8560aa810ba3faf2b7e22da375eda2ed7da57f07d6d56bd7afb47b06ac86eb8c",
+      "git_blob_oid": "712203a2ebc5c7f59e90cc710894d15c19bbebc6",
+      "verification": {
+        "observed_bytes": 26281,
+        "observed_sha256": "8560aa810ba3faf2b7e22da375eda2ed7da57f07d6d56bd7afb47b06ac86eb8c",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/6-3c44c57a590c81c29b93c774869cff99.json",
+      "bytes": 54037,
+      "sha256": "28ce7141c2909a597704308f8e061ecc2c6982368147c6c6b2f01131193ba408",
+      "git_blob_oid": "d95124c2f2d6a0eea49abf65939f3d48fe9af3de",
+      "verification": {
+        "observed_bytes": 54037,
+        "observed_sha256": "28ce7141c2909a597704308f8e061ecc2c6982368147c6c6b2f01131193ba408",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    },
+    {
+      "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/transition-check.log",
+      "bytes": 15,
+      "sha256": "4ae3f29cbe8cfc11e44fc6841fdb7a2484bc9ce7ee4536b3a512cf941547854a",
+      "git_blob_oid": "c2cb06fcbb849b679aad58b5ee6f8654ca6bb2d4",
+      "verification": {
+        "observed_bytes": 15,
+        "observed_sha256": "4ae3f29cbe8cfc11e44fc6841fdb7a2484bc9ce7ee4536b3a512cf941547854a",
+        "bytes_match": true,
+        "sha256_match": true
+      }
+    }
+  ],
+  "refs": {
+    "qualification": "qualification-report.json",
+    "official_cli": "official-cli-final.json",
+    "verifier": "qualify_control.py",
+    "sources": "sources/",
+    "logs": "*.log"
+  },
+  "verification": {
+    "schema": "fc01-evidence-byte-verification-v0.1",
+    "repository": "Mostorm-Labs/axiom",
+    "source_branch": "control/fc-01-authority-golden-reconciliation",
+    "source_revision": "8847f214e485fced4e44070c1009b5e7ab941024",
+    "review_comment": "https://github.com/Mostorm-Labs/axiom/pull/146#issuecomment-6119147998",
+    "scope": "All tracked blobs under .aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE, except evidence-index.json itself.",
+    "byte_domain": "Raw Git blob bytes, without decoding, newline normalization or working-tree filters.",
+    "enumeration_command": [
+      "git",
+      "ls-tree",
+      "-r",
+      "-z",
+      "8847f214e485fced4e44070c1009b5e7ab941024",
+      "--",
+      ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE"
+    ],
+    "generation_command": [
+      "git",
+      "cat-file",
+      "blob",
+      "<git_blob_oid>"
+    ],
+    "verification_command": [
+      "git",
+      "show",
+      "8847f214e485fced4e44070c1009b5e7ab941024:<path>"
+    ],
+    "hash_algorithm": "SHA-256",
+    "indexed_file_count": 22,
+    "verified_file_count": 22,
+    "bytes_match_count": 22,
+    "sha256_match_count": 22,
+    "mismatch_count": 0,
+    "excluded_files": [
+      {
+        "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/evidence-index.json",
+        "reason": "Self-hashing would be recursive; the final index is bound by its enclosing Git commit."
+      }
+    ],
+    "previous_index_audit": {
+      "stale_entries": [
+        {
+          "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualification-report.json",
+          "previous_bytes": 2043,
+          "previous_sha256": "60eec80cc9eaf23b9be395654ed9f257054bd08170caf4ee46735758add3cdd1",
+          "actual_bytes": 2046,
+          "actual_sha256": "dd1997d703fd8e7e896159f7bd4cfdcb4af789a5a40ab91c48fd0bdcfce01373"
+        },
+        {
+          "path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualify_control.py",
+          "previous_bytes": 6695,
+          "previous_sha256": "05f16760b11b4e96fe06c11d12234119b3511ba079c836ae0481c9c34f088541",
+          "actual_bytes": 9662,
+          "actual_sha256": "8936d9139226b329f8e07324bdc4f7845667ea942e36373f7db93cb6753f7483"
+        }
+      ],
+      "previously_unindexed_files": [
+        ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/result.json"
+      ]
+    },
+    "result": "PASS"
+  }
+}
