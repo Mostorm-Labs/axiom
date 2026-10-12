@@ -101,6 +101,13 @@ bool validShape(const ShapeContent& value) noexcept {
            std::isfinite(value.height) && value.height > 0.0;
 }
 
+bool validShapeForVersion(const ShapeContent& value, std::uint32_t version) noexcept {
+    if (version == 1U) return validShape(value);
+    if (!std::isfinite(value.width) || value.width <= 0.0 ||
+        !std::isfinite(value.height) || value.height <= 0.0) return false;
+    return version == 2U && value.shape_kind == 3U;
+}
+
 bool validImage(const ImageContent& value) noexcept {
     if (!validId(value.resource_id.value) || !std::isfinite(value.intrinsic_width) ||
         value.intrinsic_width <= 0.0 || !std::isfinite(value.intrinsic_height) ||
@@ -530,6 +537,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U) {
         return std::holds_alternative<DabBrushStrokeContent>(object.content);
     }
+    if (object.kind == ObjectKind::kShape && object.kind_version == 2U) {
+        return std::holds_alternative<ShapeContent>(object.content);
+    }
     if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
@@ -579,7 +589,7 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
         if (!validVectorPath(path->geometry)) return false;
     }
     if (const auto* shape = std::get_if<ShapeContent>(&object.content)) {
-        if (!validShape(*shape)) return false;
+        if (!validShapeForVersion(*shape, object.kind_version)) return false;
     }
     if (const auto* image = std::get_if<ImageContent>(&object.content)) {
         if (!validImage(*image)) return false;

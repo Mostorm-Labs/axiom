@@ -18,6 +18,13 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
     return version == 1U || version == 2U;
 }
 
+bool snapshotObjectSupported(std::uint32_t schema_version, const ObjectRecord& object) noexcept {
+    if (schema_version != 1U || object.kind != ObjectKind::kShape ||
+        object.kind_version != 2U) return true;
+    const auto* shape = std::get_if<ShapeContent>(&object.content);
+    return shape == nullptr || shape->shape_kind != 3U;
+}
+
 SnapshotBootstrapResult rejectWithoutFailure(StatefulIssue issue) {
     SnapshotBootstrapResult result;
     result.semantic_error = StatefulResult{issue};
@@ -50,6 +57,9 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
         return left.id < right.id;
     });
     for (std::size_t index = 0U; index < ordered.size(); ++index) {
+        if (!snapshotObjectSupported(snapshot.schema_version, ordered[index])) {
+            return rejectLoading(state, StatefulIssue::kInvalidKindVersion);
+        }
         if (!internal::validateObjectRecord(ordered[index])) {
             return rejectLoading(state, StatefulIssue::kInvalidApplicability);
         }

@@ -16,6 +16,13 @@ namespace {
 bool supportedSnapshotVersion(std::uint32_t version) noexcept {
     return version == 1U || version == 2U;
 }
+
+bool snapshotObjectSupported(std::uint32_t schema_version, const ObjectRecord& object) noexcept {
+    if (schema_version != 1U || object.kind != ObjectKind::kShape ||
+        object.kind_version != 2U) return true;
+    const auto* shape = std::get_if<ShapeContent>(&object.content);
+    return shape == nullptr || shape->shape_kind != 3U;
+}
 #endif
 }
 
@@ -28,6 +35,9 @@ CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot) {
     if (snapshot.document_id.isZero()) return {SemanticError::kInvalidSemanticValue, {}};
     std::vector<ObjectRecord> objects = snapshot.objects;
     for (auto& object : objects) {
+        if (!snapshotObjectSupported(snapshot.schema_version, object)) {
+            return {SemanticError::kUnsupportedVersion, {}};
+        }
         if (!internal::normalizeObjectRecord(object) || !internal::validateObjectRecord(object)) {
             return {SemanticError::kInvalidSemanticValue, {}};
         }
@@ -75,6 +85,9 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     for (const auto& object : wire.objects()) {
         ObjectRecord mapped;
         if (!internal::fromProtobufObjectRecord(object, mapped)) return {SemanticError::kInvalidSemanticValue, std::nullopt};
+        if (!snapshotObjectSupported(result.schema_version, mapped)) {
+            return {SemanticError::kUnsupportedVersion, std::nullopt};
+        }
         if (!internal::normalizeObjectRecord(mapped) || !internal::validateObjectRecord(mapped)) {
             return {SemanticError::kInvalidSemanticValue, std::nullopt};
         }

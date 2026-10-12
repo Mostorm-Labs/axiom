@@ -32,6 +32,13 @@ ObjectRecord shape(std::uint64_t value, std::optional<ObjectId> parent = std::nu
     return record;
 }
 
+ObjectRecord triangle(std::uint64_t value) {
+    ObjectRecord record = shape(value);
+    record.kind_version = 2U;
+    record.content = ShapeContent{3U, 100.0, 80.0};
+    return record;
+}
+
 ObjectRecord group(std::uint64_t value, std::optional<ObjectId> parent = std::nullopt) {
     ObjectRecord record;
     record.id = id(value);
@@ -265,6 +272,19 @@ TEST(G106SnapshotBootstrap, RejectsZeroDocumentAndUnsupportedSchema) {
     SemanticSnapshot version = emptySnapshot();
     version.schema_version = 3U;
     expectLoadingFailure<IndexedObjectStore>(version, StatefulIssue::kInvalidApplicability);
+}
+
+TEST(G106SnapshotBootstrap, SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt) {
+    SemanticSnapshot legacy = emptySnapshot();
+    legacy.schema_version = 1U;
+    legacy.objects = {triangle(1U)};
+    expectLoadingFailureOnBothProviders(legacy, EmptyTargetSeed{});
+
+    SemanticSnapshot capable = emptySnapshot();
+    capable.schema_version = 2U;
+    capable.objects = {triangle(1U)};
+    expectRestored<ReferenceObjectStore>(capable);
+    expectRestored<IndexedObjectStore>(capable);
 }
 
 TEST(G106SnapshotBootstrap, NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders) {

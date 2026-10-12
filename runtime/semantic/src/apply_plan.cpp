@@ -2,6 +2,7 @@
 
 #include "canvas/semantic/idempotency.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
+#include "canvas/semantic/validator.hpp"
 
 #include <utility>
 #include <variant>
@@ -12,6 +13,8 @@ PrepareResult rejected(StatefulResult e) { return PrepareResult{PrepareDispositi
 }
 
 PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidationContext& context) {
+    const ValidationResult structure = validatePayloadStructure(operation);
+    if (!structure.ok()) return rejected({StatefulIssue::kInvalidApplicability});
     const auto idempotency = classifyOperation(operation, context.applied_operations);
     if (idempotency.disposition == IdempotencyDisposition::kAlreadyApplied)
         return {PrepareDisposition::kAlreadyApplied, {}, std::nullopt};
