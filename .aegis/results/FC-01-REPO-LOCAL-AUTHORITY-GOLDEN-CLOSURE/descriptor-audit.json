@@ -1,0 +1,19 @@
+{
+  "schema": "fc01-descriptor-audit-v0.1",
+  "descriptor_path": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+  "descriptor_sha256": "8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d",
+  "edition": "2024",
+  "presence": "Edition 2024 singular scalar, bytes, enum, and message fields use explicit presence under the frozen descriptor; semantic requiredness remains validator policy.",
+  "messages": {
+    "ShapeContent": {"fields": {"shape_kind": 1, "width": 2, "height": 3}, "field_types": {"shape_kind": "uint32", "width": "double", "height": "double"}},
+    "Placement": {"fields": {"parent_id": 1, "order_key": 2}, "root_semantics": "parent_id absent means document root"},
+    "Transform2D": {"fields": {"a": 1, "b": 2, "c": 3, "d": 4, "tx": 5, "ty": 6}, "scalar_presence": "explicit"},
+    "PropertyBag": {"fields": {"entries": 1}, "canonical": "field_id ascending unique"},
+    "ObjectRecord": {"fields": {"id": 1, "kind_id": 2, "kind_version": 3, "placement": 4, "transform": 5, "properties": 6, "content": 7, "erase_masks": 8}},
+    "ObjectContent": {"oneof": {"shape": 1, "image": 2, "vector_path": 3, "rich_text": 4, "vector_stroke": 5, "dab_stroke": 6, "connector": 7, "sticky": 8, "group": 9, "brush_stroke": 10, "dab_brush_stroke": 11}},
+    "InsertObjectsOp": {"fields": {"objects": 1}},
+    "OperationPayload": {"oneof": {"insert_objects": 1, "delete_objects": 2, "restore_objects": 3, "set_placements": 4, "set_transforms": 5, "patch_properties": 6, "set_object_size": 7, "set_vector_path_geometry": 8, "set_image_content": 9, "add_stroke": 10, "split_strokes": 11, "add_erase_masks": 12, "remove_erase_masks": 13, "edit_rich_text": 14, "set_connector_content": 15}},
+    "Operation": {"fields": {"operation_id": 1, "document_id": 2, "schema_version": 3, "payload_version": 4, "payload": 5}, "envelope": [1, 1]}
+  },
+  "independent_method": "Parsed the locked FileDescriptorSet with a standard-library protobuf TLV reader and compared names, tags, oneof membership, and field types to the unchanged .proto source; no generated runtime serializer was used."
+}

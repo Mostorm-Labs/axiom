@@ -1,0 +1,23 @@
+{
+  "schema": "fc01-golden-source-map-v0.1",
+  "mapping_basis": "Manual case-by-case comparison of the authored candidate against the saved frozen P20/P23/V1 source responses; this map records provenance, not independent acceptance.",
+  "sources": {
+    "shape2_authority": "0-3f74c57a590c8128b936d7491884ffb7.json",
+    "p20": "1-3f74c57a590c81268d2fc9bea7860064.json",
+    "v1_shape_registry": "2-3c44c57a590c81c0ab80d6a8d6aa0778.json",
+    "p23_acceptance": "3-3f74c57a590c819ebc62dba091371f17.json",
+    "fc_execution_v02": "4-3f74c57a590c8139b903f14f0aae0c57.json",
+    "field_registry": "5-3c44c57a590c81d9a77dc51bd00419e1.json",
+    "proto_codec_freeze": "6-3c44c57a590c81c29b93c774869cff99.json"
+  },
+  "case_groups": [
+    {"ids": "SH2-G01..SH2-G04", "sources": ["shape2_authority", "p20"], "checks": "geometry, hit, bbox-center snap, intrinsic resize"},
+    {"ids": "SH2-G05..SH2-G08", "sources": ["shape2_authority", "v1_shape_registry", "p20"], "checks": "V1 acceptance, SH-G06 rejection, Shape/2 allowlist and unknown-version rejection"},
+    {"ids": "SH2-G09..SH2-G14", "sources": ["shape2_authority", "p20", "field_registry"], "checks": "extent/presence/nonfinite validation, oneof and default paint semantics, transform projection"},
+    {"ids": "SH2-G15..SH2-G16", "sources": ["p20", "proto_codec_freeze", "field_registry"], "checks": "canonical wire bytes, explicit presence, default equivalence and V1 compatibility"},
+    {"ids": "SH2-G17..SH2-G19", "sources": ["shape2_authority", "p20", "p23_acceptance"], "checks": "Snapshot v1/v2 capability and fail-closed legacy reader behavior"},
+    {"ids": "SH2-G20..SH2-G23", "sources": ["shape2_authority", "p20", "p23_acceptance", "fc_execution_v02"], "checks": "Insert/Undo/Restore identity, attachment exclusion, historical regression and mixed-client refusal"},
+    {"ids": "SH2-G24..SH2-G25", "sources": ["p20", "p23_acceptance"], "checks": "pre-submit NO_SUBMISSION and strict malformed-wire rejection"}
+  ],
+  "independent_acceptance": "PENDING_CONTROL_REVIEW"
+}
