@@ -1,10 +1,12 @@
 #pragma once
 
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/operation.hpp"
 
-namespace auditoryworks::axiom::v1 { class ObjectRecord; }
+namespace auditoryworks::axiom::v1 { class ObjectRecord; class Operation; }
 
 namespace canvas::semantic::internal {
+[[nodiscard]] bool toProtobufOperation(const Operation&, auditoryworks::axiom::v1::Operation&);
 [[nodiscard]] bool toProtobufObjectRecord(const ObjectRecord&, auditoryworks::axiom::v1::ObjectRecord&);
 [[nodiscard]] bool fromProtobufObjectRecord(const auditoryworks::axiom::v1::ObjectRecord&, ObjectRecord&);
 #if defined(CANVAS_SEMANTIC_PROTOBUF)

@@ -1,6 +1,8 @@
 #include "canvas/semantic/codec.hpp"
 #include "canvas/semantic/object_content.hpp"
 #include "canvas/semantic/validator.hpp"
+#include "canvas/semantic/normalizer.hpp"
+#include "object_record_semantics_internal.hpp"
 
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
@@ -1407,26 +1409,15 @@ CodecResult SemanticCodec::encodeProtobufOperation(const Operation& operation) {
     (void)operation;
     return {SemanticError::kRuntimeUnavailable, {}};
 #else
-    OperationFieldPresence presence{true, true};
-    const auto envelope = validateEnvelope(operation, presence);
-    if (!envelope.ok()) return {SemanticError::kUnsupportedVersion, {}};
-    const auto structure = validatePayloadStructure(operation);
-    if (!structure.ok()) return {SemanticError::kInvalidSemanticValue, {}};
+    const auto normalized = normalizeOperation(operation);
+    if (!normalized.ok()) return {SemanticError::kInvalidSemanticValue, {}};
+    if (!validateEnvelope(normalized.value, OperationFieldPresence{true, true}).ok()) return {SemanticError::kUnsupportedVersion, {}};
+    if (!validatePayloadStructure(normalized.value).ok()) return {SemanticError::kInvalidSemanticValue, {}};
     auditoryworks::axiom::v1::Operation wire;
-    wire.mutable_operation_id()->set_value(std::string(reinterpret_cast<const char*>(operation.id.value().bytes.data()), 16));
-    wire.mutable_document_id()->set_value(std::string(reinterpret_cast<const char*>(operation.document_id.value().bytes.data()), 16));
-    wire.set_schema_version(operation.schema_version);
-    wire.set_payload_version(operation.payload_version);
-    auto* payload = wire.mutable_payload();
-    if (const auto* add = std::get_if<AddStrokeOp>(&operation.payload)) {
-        if (!internal::toProtobufObjectRecord(add->object, *payload->mutable_add_stroke()->mutable_object()))
-            return {SemanticError::kInvalidSemanticValue, {}};
-    } else {
-        return encodeProtobufOperation(operation.kind());
-    }
-    std::string bytes;
-    if (!wire.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
-    return {SemanticError::kNone, {bytes.begin(), bytes.end()}};
+    if (!internal::toProtobufOperation(normalized.value, wire)) return {SemanticError::kInvalidSemanticValue, {}};
+    std::vector<std::uint8_t> bytes;
+    if (!canonicalEncodeMessage(wire, bytes)) return {SemanticError::kMalformedWire, {}};
+    return {SemanticError::kNone, std::move(bytes)};
 #endif
 }
 
@@ -1445,6 +1436,10 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
     }
     if (exceedsObjectRecordLimit(bytes)) {
         return DecodedOperation({}, {}, {}, SemanticError::kLimitExceeded);
+    }
+    SnapshotPreflightFailure wire_failure = SnapshotPreflightFailure::kNone;
+    if (!preflightSnapshotMessage(bytes, *auditoryworks::axiom::v1::Operation::descriptor(), wire_failure, false)) {
+        return DecodedOperation({}, {}, {}, wire_failure == SnapshotPreflightFailure::kLimit ? SemanticError::kLimitExceeded : SemanticError::kMalformedWire);
     }
     std::vector<WireField> fields;
     if (!scanWire(bytes, fields)) {
@@ -1615,11 +1610,36 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
     return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kRuntimeUnavailable, "RUNTIME_UNAVAILABLE", {}};
 #else
     const std::string input{bytes.begin(), bytes.end()};
-    const auto preflight = preflightCategory(root_type, bytes, strict_canonical);
-    if (!preflight.empty()) {
-        return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kWirePreflight, preflight, {}};
-    }
     std::vector<std::uint8_t> canonical;
+    if (root_type == "ShapeContent" || root_type == "ObjectRecord" || root_type == "Operation") {
+        const auto* descriptor = root_type == "ShapeContent" ? auditoryworks::axiom::v1::ShapeContent::descriptor()
+            : root_type == "ObjectRecord" ? auditoryworks::axiom::v1::ObjectRecord::descriptor()
+            : auditoryworks::axiom::v1::Operation::descriptor();
+        SnapshotPreflightFailure failure = SnapshotPreflightFailure::kNone;
+        if (!preflightSnapshotMessage(bytes, *descriptor, failure, false)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kWirePreflight, "MALFORMED_WIRE", {}};
+        if (root_type == "ShapeContent") {
+            auditoryworks::axiom::v1::ShapeContent value;
+            if (!value.ParseFromString(input) || !value.has_shape_kind() || !value.has_width() || !value.has_height() ||
+                value.shape_kind() < 1U || value.shape_kind() > 3U || !std::isfinite(value.width()) || value.width() <= 0 || !std::isfinite(value.height()) || value.height() <= 0)
+                return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_SEMANTIC_VALUE", {}};
+            if (!canonicalEncodeMessage(value, canonical)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kCanonicalEncode, "MALFORMED_WIRE", {}};
+        } else if (root_type == "ObjectRecord") {
+            auditoryworks::axiom::v1::ObjectRecord value, normalized;
+            ObjectRecord mapped;
+            if (!value.ParseFromString(input) || !internal::fromProtobufObjectRecord(value, mapped) || !internal::normalizeObjectRecord(mapped) || !internal::validateObjectRecord(mapped))
+                return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_SEMANTIC_VALUE", {}};
+            if (!internal::toProtobufObjectRecord(mapped, normalized) || !canonicalEncodeMessage(normalized, canonical)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kCanonicalEncode, "MALFORMED_WIRE", {}};
+        } else {
+            const auto decoded = decodeProtobufOperation(bytes);
+            if (!decoded.ok() || !validateEnvelope(decoded.operation, decoded.presence).ok()) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_ENVELOPE", {}};
+            const auto encoded = encodeProtobufOperation(decoded.operation);
+            if (!encoded.ok()) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_SEMANTIC_VALUE", {}};
+            canonical = encoded.bytes;
+        }
+        return {true, bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput, GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical)};
+    }
+    const auto preflight = preflightCategory(root_type, bytes, strict_canonical);
+    if (!preflight.empty()) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kWirePreflight, preflight, {}};
     if (root_type == "Id128") {
         auditoryworks::axiom::v1::Id128 value;
         if (!value.ParseFromString(input)) return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kProtoDecode, "MALFORMED_WIRE", {}};

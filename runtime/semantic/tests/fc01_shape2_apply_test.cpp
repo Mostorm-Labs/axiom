@@ -165,5 +165,47 @@ TEST(FC01Shape2Apply, CapableSnapshotRoundTripAndLegacyWriterRefusal) {
     EXPECT_FALSE(SnapshotCodec::encode(legacy, SnapshotCapability::kShape2Triangle).ok());
 }
 
+
+std::vector<std::uint8_t> manualHex(const char* input) {
+    auto nibble = [](char c) -> unsigned { return c <= '9' ? static_cast<unsigned>(c - '0') : static_cast<unsigned>(c - 'a' + 10); };
+    std::vector<std::uint8_t> result;
+    for (std::size_t i = 0; input[i] != '\0'; i += 2U)
+        result.push_back(static_cast<std::uint8_t>((nibble(input[i]) << 4U) | nibble(input[i + 1U])));
+    return result;
+}
+
+TEST(FC01Shape2Apply, FrozenIndependentOperationGoldenMatchesProductionEncoding) {
+    const auto expected = manualHex("0a120a100000000000000000000000000000000212120a1000000000000000000000000000000003180120012a750a730a710a120a100000000000000000000000000000000110011802220512030a01802a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f29000000000000000031000000000000000032003a160a140803110000000000005940190000000000005440");
+    ASSERT_EQ(expected.size(), 163U);
+    const auto decoded = SemanticCodec::decodeProtobufOperation(expected);
+    ASSERT_TRUE(decoded.ok());
+    const auto encoded = SemanticCodec::encodeProtobufOperation(decoded.operation);
+    ASSERT_TRUE(encoded.ok());
+    EXPECT_EQ(encoded.bytes, expected);
+    const auto observed = SemanticCodec::observeGoldenFixture("Operation", expected, true);
+    EXPECT_TRUE(observed.accepted);
+    EXPECT_EQ(observed.canonical_bytes, expected);
+}
+
+TEST(FC01Shape2Apply, GoldenRootsAndNestedUnknownWireFailClosed) {
+    const auto shapeBytes = manualHex("0803110000000000005940190000000000005440");
+    const auto objectBytes = manualHex("0a120a100000000000000000000000000000000110011802220512030a01802a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f29000000000000000031000000000000000032003a160a140803110000000000005940190000000000005440");
+    const auto shapeObserved = SemanticCodec::observeGoldenFixture("ShapeContent", shapeBytes, true);
+    EXPECT_TRUE(shapeObserved.accepted);
+    EXPECT_EQ(shapeObserved.canonical_bytes, shapeBytes);
+    const auto objectObserved = SemanticCodec::observeGoldenFixture("ObjectRecord", objectBytes, true);
+    EXPECT_TRUE(objectObserved.accepted);
+    EXPECT_EQ(objectObserved.canonical_bytes, objectBytes);
+    auto unknown = shapeBytes;
+    unknown.insert(unknown.end(), {0x20U, 0x01U});
+    EXPECT_FALSE(SemanticCodec::observeGoldenFixture("ShapeContent", unknown, true).accepted);
+    auto missing = shapeBytes;
+    missing.erase(missing.begin(), missing.begin() + 2);
+    EXPECT_FALSE(SemanticCodec::observeGoldenFixture("ShapeContent", missing, true).accepted);
+    auto duplicate = shapeBytes;
+    duplicate.insert(duplicate.end(), {0x08U, 0x03U});
+    EXPECT_FALSE(SemanticCodec::observeGoldenFixture("ShapeContent", duplicate, true).accepted);
+}
+
 }  // namespace
 }  // namespace canvas::semantic
