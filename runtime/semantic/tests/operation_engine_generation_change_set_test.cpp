@@ -26,7 +26,7 @@ ObjectRecord shape(std::uint64_t value, std::uint8_t tag) {
     record.kind_version = 1U;
     record.placement = Placement{std::nullopt, OrderKey({tag})};
     record.transform = Transform2D{1.0, 0.0, 0.0, 1.0, static_cast<double>(tag), 0.0};
-    record.content = ShapeContent{tag, static_cast<double>(tag), static_cast<double>(tag + 1U)};
+    record.content = ShapeContent{1U, static_cast<double>(tag), static_cast<double>(tag + 1U)};
     return record;
 }
 
@@ -325,8 +325,7 @@ TEST(OperationEngineGenerationChangeSet, PatchPropertiesCarriesSortedDistinctFie
 
     const PatchPropertiesOp patch{
         {{created.id, 2U, PropertyPatchAction::kSet, PropertyValue{true}},
-         {created.id, 1U, PropertyPatchAction::kSet, PropertyValue{false}},
-         {created.id, 2U, PropertyPatchAction::kSet, PropertyValue{true}}}};
+         {created.id, 1U, PropertyPatchAction::kSet, PropertyValue{false}}}};
     const ApplyResult result = engine.apply(
         operation(patch, 308U),
         ApplySource::kLocalInteraction,

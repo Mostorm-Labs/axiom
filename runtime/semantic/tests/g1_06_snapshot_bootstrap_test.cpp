@@ -62,12 +62,12 @@ ObjectRecord connector(std::uint64_t value, ObjectId target) {
 }
 
 template <typename Store>
-void expectRestored(const SemanticSnapshot& snapshot) {
+void expectRestored(const SemanticSnapshot& snapshot, SnapshotCapability capability = SnapshotCapability::kLegacyV1) {
     Store objects;
     DocumentRuntimeState state = DocumentRuntimeState::kLoading;
     SemanticGenerationState generation(SemanticGeneration(9U));
     const auto before = generation.current();
-    const auto result = SnapshotBootstrapper::restore(snapshot, state, objects, generation);
+    const auto result = SnapshotBootstrapper::restore(snapshot, capability, state, objects, generation);
     ASSERT_TRUE(result.restored);
     EXPECT_TRUE(result.semantic_error.ok());
     EXPECT_EQ(state, DocumentRuntimeState::kLoading);
@@ -283,8 +283,8 @@ TEST(G106SnapshotBootstrap, SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt) 
     SemanticSnapshot capable = emptySnapshot();
     capable.schema_version = 2U;
     capable.objects = {triangle(1U)};
-    expectRestored<ReferenceObjectStore>(capable);
-    expectRestored<IndexedObjectStore>(capable);
+    expectRestored<ReferenceObjectStore>(capable, SnapshotCapability::kShape2Triangle);
+    expectRestored<IndexedObjectStore>(capable, SnapshotCapability::kShape2Triangle);
 }
 
 TEST(G106SnapshotBootstrap, NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders) {

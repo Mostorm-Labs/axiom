@@ -18,11 +18,11 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
     return version == 1U || version == 2U;
 }
 
-bool snapshotObjectSupported(std::uint32_t schema_version, const ObjectRecord& object) noexcept {
-    if (schema_version != 1U || object.kind != ObjectKind::kShape ||
-        object.kind_version != 2U) return true;
+bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;
     const auto* shape = std::get_if<ShapeContent>(&object.content);
-    return shape == nullptr || shape->shape_kind != 3U;
+    return shape == nullptr || shape->shape_kind != 3U ||
+           (schema_version == 2U && capability == SnapshotCapability::kShape2Triangle);
 }
 
 SnapshotBootstrapResult rejectWithoutFailure(StatefulIssue issue) {
@@ -38,6 +38,7 @@ SnapshotBootstrapResult rejectLoading(DocumentRuntimeState& state, StatefulIssue
 
 template <typename Store>
 SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
+                                    SnapshotCapability capability,
                                     DocumentRuntimeState& state,
                                     Store& objects,
                                     SemanticGenerationState& generation) {
@@ -57,7 +58,7 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
         return left.id < right.id;
     });
     for (std::size_t index = 0U; index < ordered.size(); ++index) {
-        if (!snapshotObjectSupported(snapshot.schema_version, ordered[index])) {
+        if (!snapshotObjectSupported(snapshot.schema_version, capability, ordered[index])) {
             return rejectLoading(state, StatefulIssue::kInvalidKindVersion);
         }
         if (!internal::validateObjectRecord(ordered[index])) {
@@ -129,7 +130,7 @@ SnapshotBootstrapResult SnapshotBootstrapper::restore(
     DocumentRuntimeState& state,
     ReferenceObjectStore& objects,
     SemanticGenerationState& generation) {
-    return restoreImpl(snapshot, state, objects, generation);
+    return restoreImpl(snapshot, SnapshotCapability::kLegacyV1, state, objects, generation);
 }
 
 SnapshotBootstrapResult SnapshotBootstrapper::restore(
@@ -137,7 +138,21 @@ SnapshotBootstrapResult SnapshotBootstrapper::restore(
     DocumentRuntimeState& state,
     IndexedObjectStore& objects,
     SemanticGenerationState& generation) {
-    return restoreImpl(snapshot, state, objects, generation);
+    return restoreImpl(snapshot, SnapshotCapability::kLegacyV1, state, objects, generation);
+}
+
+SnapshotBootstrapResult SnapshotBootstrapper::restore(
+    const SemanticSnapshot& snapshot, SnapshotCapability capability,
+    DocumentRuntimeState& state, ReferenceObjectStore& objects,
+    SemanticGenerationState& generation) {
+    return restoreImpl(snapshot, capability, state, objects, generation);
+}
+
+SnapshotBootstrapResult SnapshotBootstrapper::restore(
+    const SemanticSnapshot& snapshot, SnapshotCapability capability,
+    DocumentRuntimeState& state, IndexedObjectStore& objects,
+    SemanticGenerationState& generation) {
+    return restoreImpl(snapshot, capability, state, objects, generation);
 }
 
 } // namespace canvas::semantic

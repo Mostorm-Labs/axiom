@@ -3,6 +3,8 @@
 #include "canvas/semantic/applied_operation_ledger.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "canvas/semantic/normalizer.hpp"
+#include "canvas/semantic/validator.hpp"
 
 #include "atomic_apply.hpp"
 #include "change_set_builder.hpp"
@@ -11,9 +13,17 @@
 #include <utility>
 
 namespace canvas::semantic {
-
 PrepareResult OperationEngine::prepare(const Operation& operation, const StatefulValidationContext& context) const {
-    return prepareApplyPlan(operation, context);
+    // Typed/direct/replay mutation uses the same envelope, normalization and
+    // structural admission before the stateful planner. There is no V1 bypass.
+    if (!validateEnvelope(operation, OperationFieldPresence{true, true}).ok()) {
+        return {PrepareDisposition::kRejected, {StatefulIssue::kInvalidApplicability}, std::nullopt};
+    }
+    const NormalizeResult normalized = normalizeOperation(operation);
+    if (!normalized.ok() || !validatePayloadStructure(normalized.value).ok()) {
+        return {PrepareDisposition::kRejected, {StatefulIssue::kInvalidApplicability}, std::nullopt};
+    }
+    return prepareApplyPlan(normalized.value, context);
 }
 
 ApplyResult OperationEngine::apply(
@@ -23,7 +33,7 @@ ApplyResult OperationEngine::apply(
     AppliedOperationLedger& applied_operations,
     SemanticGenerationState& generation,
     CanonicalCommitClock& canonical_commit_clock) const {
-    const PrepareResult prepared = prepareApplyPlan(
+    const PrepareResult prepared = prepare(
         operation, StatefulValidationContext{objects, applied_operations});
     if (prepared.disposition == PrepareDisposition::kAlreadyApplied) {
         return {ApplyDisposition::kAlreadyApplied, {}, CommitBlockReason::kNone, std::nullopt};
@@ -83,7 +93,7 @@ ApplyResult OperationEngine::apply(
     AppliedOperationLedger& applied_operations,
     SemanticGenerationState& generation,
     CanonicalCommitClock& canonical_commit_clock) const {
-    const PrepareResult prepared = prepareApplyPlan(
+    const PrepareResult prepared = prepare(
         operation, StatefulValidationContext{objects, applied_operations});
     if (prepared.disposition == PrepareDisposition::kAlreadyApplied) {
         return {ApplyDisposition::kAlreadyApplied, {}, CommitBlockReason::kNone, std::nullopt};

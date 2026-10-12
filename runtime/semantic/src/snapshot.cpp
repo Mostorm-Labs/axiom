@@ -17,25 +17,26 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
     return version == 1U || version == 2U;
 }
 
-bool snapshotObjectSupported(std::uint32_t schema_version, const ObjectRecord& object) noexcept {
-    if (schema_version != 1U || object.kind != ObjectKind::kShape ||
-        object.kind_version != 2U) return true;
+bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;
     const auto* shape = std::get_if<ShapeContent>(&object.content);
-    return shape == nullptr || shape->shape_kind != 3U;
+    return shape == nullptr || shape->shape_kind != 3U ||
+           (schema_version == 2U && capability == SnapshotCapability::kShape2Triangle);
 }
 #endif
 }
 
-CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot) {
+CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot, SnapshotCapability capability) {
 #if !defined(CANVAS_SEMANTIC_PROTOBUF)
     (void)snapshot;
+    (void)capability;
     return {SemanticError::kRuntimeUnavailable, {}};
 #else
     if (!supportedSnapshotVersion(snapshot.schema_version)) return {SemanticError::kUnsupportedVersion, {}};
     if (snapshot.document_id.isZero()) return {SemanticError::kInvalidSemanticValue, {}};
     std::vector<ObjectRecord> objects = snapshot.objects;
     for (auto& object : objects) {
-        if (!snapshotObjectSupported(snapshot.schema_version, object)) {
+        if (!snapshotObjectSupported(snapshot.schema_version, capability, object)) {
             return {SemanticError::kUnsupportedVersion, {}};
         }
         if (!internal::normalizeObjectRecord(object) || !internal::validateObjectRecord(object)) {
@@ -60,9 +61,10 @@ CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot) {
 #endif
 }
 
-SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& bytes) {
+SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& bytes, SnapshotCapability capability) {
 #if !defined(CANVAS_SEMANTIC_PROTOBUF)
     (void)bytes;
+    (void)capability;
     return {SemanticError::kRuntimeUnavailable, std::nullopt};
 #else
     const auto preflight = internal::preflightDocumentSnapshotV1(bytes);
@@ -85,7 +87,7 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     for (const auto& object : wire.objects()) {
         ObjectRecord mapped;
         if (!internal::fromProtobufObjectRecord(object, mapped)) return {SemanticError::kInvalidSemanticValue, std::nullopt};
-        if (!snapshotObjectSupported(result.schema_version, mapped)) {
+        if (!snapshotObjectSupported(result.schema_version, capability, mapped)) {
             return {SemanticError::kUnsupportedVersion, std::nullopt};
         }
         if (!internal::normalizeObjectRecord(mapped) || !internal::validateObjectRecord(mapped)) {

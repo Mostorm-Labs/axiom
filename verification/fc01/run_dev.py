@@ -21,7 +21,7 @@ def digest(path: Path) -> str:
 
 def windows_environment() -> dict[str, str]:
     env = {k.upper(): v for k, v in os.environ.items()}
-    vcvars = Path(env.get("FC01_VCVARS", r"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"))
+    vcvars = Path(env.get("FC01_VCVARS", r"C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat"))
     p = subprocess.run(f'call "{vcvars}" >nul && set', shell=True, check=True, capture_output=True)
     for line in p.stdout.decode("mbcs").splitlines():
         if "=" in line and not line.startswith("="):

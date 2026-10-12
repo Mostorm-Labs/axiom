@@ -25,6 +25,20 @@ class SnapshotBootstrapper final {
 
     [[nodiscard]] static SnapshotBootstrapResult restore(
         const SemanticSnapshot& snapshot,
+        SnapshotCapability capability,
+        DocumentRuntimeState& state,
+        ReferenceObjectStore& objects,
+        SemanticGenerationState& generation);
+
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot& snapshot,
+        DocumentRuntimeState& state,
+        IndexedObjectStore& objects,
+        SemanticGenerationState& generation);
+
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot& snapshot,
+        SnapshotCapability capability,
         DocumentRuntimeState& state,
         IndexedObjectStore& objects,
         SemanticGenerationState& generation);

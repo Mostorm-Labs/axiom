@@ -10,6 +10,11 @@
 
 namespace canvas::semantic {
 
+enum class SnapshotCapability : std::uint8_t {
+    kLegacyV1 = 0,
+    kShape2Triangle = 1,
+};
+
 struct SemanticSnapshot final {
     DocumentId document_id{};
     std::uint32_t schema_version = 0;
@@ -29,8 +34,8 @@ struct SnapshotDecodeResult final {
 
 class SnapshotCodec final {
   public:
-    [[nodiscard]] static CodecResult encode(const SemanticSnapshot& snapshot);
-    [[nodiscard]] static SnapshotDecodeResult decode(const std::vector<std::uint8_t>& bytes);
+    [[nodiscard]] static CodecResult encode(const SemanticSnapshot& snapshot, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
+    [[nodiscard]] static SnapshotDecodeResult decode(const std::vector<std::uint8_t>& bytes, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
 };
 
 } // namespace canvas::semantic

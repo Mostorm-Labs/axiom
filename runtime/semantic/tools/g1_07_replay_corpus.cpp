@@ -72,7 +72,12 @@ ObjectRecord richText(std::uint64_t value, ObjectId parent) {
     Paragraph paragraph{};
     paragraph.id = id(value * 10U);
     paragraph.style = ParagraphStyle{ParagraphAlignment::kCenter, 1.2, 0.1, 0.2};
-    paragraph.runs = {TextRun{"replay inspector", TextStyle{}}};
+    TextStyle style{};
+    style.font_resource_id = ResourceId{id(700U)};
+    style.font_size = 12.0;
+    style.weight = 400U;
+    style.color = ColorValue{0, 0, 0, 1};
+    paragraph.runs = {TextRun{"replay inspector", style}};
     record.content = RichTextContent{RichTextDocument{{paragraph}}};
     return record;
 }
@@ -156,7 +161,7 @@ ReplayTrace makeAllOperationFamiliesTrace() {
         operation(SplitStrokesOp{{StrokeSplit{added_stroke.id, {split_a, split_b}}}}, 6111U),
         operation(AddEraseMasksOp{{EraseMaskAddItem{vector_stroke_record.id, {added_mask}}}}, 6112U),
         operation(RemoveEraseMasksOp{{EraseMaskRemoveItem{vector_stroke_record.id, {added_mask.id}}}}, 6113U),
-        operation(EditRichTextOp{rich_text_record.id, RichTextDelta{}}, 6114U),
+        operation(EditRichTextOp{rich_text_record.id, RichTextDelta{1U, {SetParagraphStyleStep{std::get<RichTextContent>(rich_text_record.content).document.paragraphs.front().id, std::get<RichTextContent>(rich_text_record.content).document.paragraphs.front().style}}}}, 6114U),
         operation(SetConnectorContentOp{connector_record.id, changed_connector}, 6115U)};
     return result;
 }
