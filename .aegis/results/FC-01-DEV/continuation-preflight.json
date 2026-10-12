@@ -1,0 +1,41 @@
+{
+  "task_id": "FC-01",
+  "continuation_from": "7fd288d0b3a0cf198e8fcb00d7302fc5619e096f",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "task_anchor": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "trusted_control_subject_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+  "repository": "Mostorm-Labs/axiom",
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "implementation_design_preflight": {
+    "current_flow": "Platform input normalizes into PointerSample; Interaction owns sessions; OperationEngine validates and commits canonical operations; Snapshot/Replay use the same semantic validators; Scene/Render derive view state; hosts and Debug UI remain thin clients.",
+    "i1_owner": "runtime/semantic validator, protobuf mapping, snapshot bootstrap and replay; no second semantic store",
+    "prepare": "validate exact Shape/2 tuple and required scalar presence before any store/generation mutation",
+    "commit": "reuse OperationEngine atomic prepare/apply and existing generation/ledger/clock",
+    "publication": "reuse existing canonical commit/readback path; no publication for rejected input",
+    "abort": "reject whole operation or leave replay Loading/Failed according to existing Snapshot/Replay contracts; no partial store mutation",
+    "unresolved_semantic_decisions": [],
+    "affected_files": [
+      "runtime/semantic/src/validator.cpp",
+      "runtime/semantic/src/operation_state_validator.cpp",
+      "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "runtime/semantic/tests/fc01_shape2_validation_test.cpp",
+      "runtime/semantic/tests/CMakeLists.txt"
+    ],
+    "oracle_mapping": ["FC01-B01", "FC01-B02"],
+    "preflight_status": "PASS_FOR_NEW_WORK"
+  },
+  "inherited_i0": {
+    "source_loss_revision": "cd2b61cb743c5aa2abeec59988d780e1d3937c4f",
+    "evidence": ".aegis/results/FC-01-DEV/E03/interaction-create-red-and-green.json",
+    "status": "verified_inherited; not_replayed_as_new_mutation"
+  },
+  "red_order": {
+    "new_work_requires_red_first": true,
+    "old_source_red_evidence": ".aegis/results/FC-01-DEV/red-preflight.json",
+    "candidate_green_evidence": ".aegis/results/FC-01-DEV/E03/interaction-create-red-and-green.json"
+  },
+  "physical_claim": false,
+  "gate_claim": "none"
+}
