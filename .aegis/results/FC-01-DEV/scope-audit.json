@@ -1,0 +1,28 @@
+{
+  "task_id": "FC-01",
+  "source_revision": "cd2b61cb743c5aa2abeec59988d780e1d3937c4f",
+  "package_revision": "c98110c015f975012f25db5efa66c9679da35630",
+  "protected_paths": [
+    ".aegis/authorities.json",
+    ".aegis/state.json",
+    ".aegis/gates.json",
+    ".aegis/evidence.json",
+    ".aegis/integrations.json",
+    ".aegis/packages/FC-01",
+    "verification/corpus/semantic/shape2-triangle/v1",
+    "verification/corpus/semantic/v1",
+    "schema/axiom/v1/proto",
+    "schema/axiom/v1/descriptor",
+    "arc",
+    "docs/notion"
+  ],
+  "protected_delta": [],
+  "source_changed_files": [
+    "runtime/input/src/platform_interaction_ingress.cpp",
+    "verification/fc01/red_source_loss_test.cpp",
+    "verification/fc01/run_source_loss.py"
+  ],
+  "full_FC01_B10_closed": false,
+  "remaining_regressions": "NOT_EXECUTED; source-loss focused tests only",
+  "gate_claim": "none"
+}
