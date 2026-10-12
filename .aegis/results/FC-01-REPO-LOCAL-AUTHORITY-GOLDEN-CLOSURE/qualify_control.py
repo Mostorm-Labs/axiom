@@ -41,9 +41,12 @@ def P(b):
  return out
 def only(x,t):assert [a[0] for a in x]==t
 allowed={'.aegis/authorities.json','verification/corpus/semantic/shape2-triangle/v1/authoring/cases.json','verification/corpus/semantic/shape2-triangle/v1/authoring/expected.json','verification/corpus/semantic/shape2-triangle/v1/manifest.json','verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-insertoperation.hex','verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-objectrecord.hex','verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-shapecontent.hex'}
-BASE_SHA='2942c63b375366ed977b834aa0a48fe2fb551c6e'; HEAD_SHA='19ec3483240ab03152678b3ea7fb9f568da39852'
-assert subprocess.check_output(['git','merge-base',BASE_SHA,HEAD_SHA],cwd=ROOT,text=True).strip()==BASE_SHA
-assert set(subprocess.check_output(['git','diff','--name-only',BASE_SHA,HEAD_SHA],cwd=ROOT,text=True).splitlines())==allowed
+BASE_SHA='2942c63b375366ed977b834aa0a48fe2fb551c6e'; CANDIDATE_SHA='19ec3483240ab03152678b3ea7fb9f568da39852'
+assert subprocess.check_output(['git','merge-base',BASE_SHA,CANDIDATE_SHA],cwd=ROOT,text=True).strip()==BASE_SHA
+candidate_names=set(subprocess.check_output(['git','diff','--name-only',BASE_SHA,CANDIDATE_SHA],cwd=ROOT,text=True).splitlines())
+assert candidate_names==allowed,candidate_names
+current_names=set(subprocess.check_output(['git','diff','--name-only',BASE_SHA,'HEAD'],cwd=ROOT,text=True).splitlines())
+assert all(n in allowed or n=='.aegis/state.json' or n.startswith('.aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/') for n in current_names),current_names
 history={}
 for n,key,count in [('.aegis/gates.json','decisions',25),('.aegis/integrations.json','integrations',29),('.aegis/evidence.json','evidence',34)]:
  b=(BASE/n).read_bytes();h=(ROOT/n).read_bytes();assert b==h
@@ -84,9 +87,29 @@ pf=P(operation);only(pf,[1,2,3,4,5]);assert P(pf[0][2])[0][2]==id2 and P(pf[1][2
 cases=J(ROOT/'verification/corpus/semantic/shape2-triangle/v1/authoring/cases.json');expected=J(ROOT/'verification/corpus/semantic/shape2-triangle/v1/authoring/expected.json')
 ids=[f'SH2-G{i:02d}' for i in range(1,26)]
 assert [x['id'] for x in cases['cases']]==ids and list(expected['cases'])==ids
-assert expected['cases']['SH2-G24']['status']=='NO_SUBMISSION' and expected['cases']['SH2-G06']['status']=='REJECT'
+e=expected['cases']
+assert e['SH2-G01']['status']=='ACCEPT' and e['SH2-G01']['tuple']==[1,2,3] and e['SH2-G01']['shape']=={'width':100,'height':80} and e['SH2-G01']['bbox']==[0,0,100,80]
+assert e['SH2-G02']['inside']==[[50,40],[50,80]] and e['SH2-G02']['outside']==[[5,10],[50,-1]] and e['SH2-G02']['boundary_inclusive'] is True
+assert e['SH2-G03']['bbox_center']==[50,40] and e['SH2-G03']['centroid_formula']=='(50,160/3)' and e['SH2-G03']['semantic_centroid_cached'] is False
+assert e['SH2-G04']['same_original_object_id'] is True and e['SH2-G04']['intrinsic_size']==[200,40] and e['SH2-G04']['tuple_unchanged']==[1,2,3]
+assert e['SH2-G05']['tuples']==[[1,1,1],[1,1,2]] and e['SH2-G06']['status']=='REJECT' and e['SH2-G06']['negative_control']=='SH-G06'
+assert e['SH2-G07']['tuples']==[[1,2,1],[1,2,2]] and e['SH2-G07']['no_shape1_alias'] is True
+assert e['SH2-G08']['unknown_version_fails_closed'] is True and e['SH2-G09']['whole_operation_rejected'] is True
+assert e['SH2-G10']['negative_zero_then_zero_rejected'] is True and e['SH2-G11']['must_have_explicit']==['shape_kind','width','height']
+assert e['SH2-G12']['whole_record_invalid'] is True and e['SH2-G13']['geometry_retained'] is True
+assert e['SH2-G14']['shape_content_unchanged'] is True and e['SH2-G14']['derived_vertices_from_original_shape'] is True
+assert e['SH2-G15']['tuple']==[1,2,3] and e['SH2-G15']['operation_envelope']==[1,1] and e['SH2-G15']['explicit_shape_fields']==[1,2,3]
+assert e['SH2-G16']['projection_unchanged'] is True and e['SH2-G17']['snapshot_schema_version']==2 and e['SH2-G17']['capability']=='Shape2_read'
+assert e['SH2-G18']['status']=='REJECT' and e['SH2-G18']['snapshot_schema_version']==1 and e['SH2-G18']['applied_ops']==0
+assert e['SH2-G19']['status']=='REJECT' and e['SH2-G19']['writable_ready'] is False and e['SH2-G19']['lossy_conversion'] is False
+assert e['SH2-G20']['object_id_preserved'] is True and e['SH2-G20']['inverse_operation_id_fresh'] is True and e['SH2-G20']['full_preimage_restored'] is True
+assert e['SH2-G21']['status']=='REJECT' and e['SH2-G21']['no_auto_anchor_extension'] is True
+assert e['SH2-G22']['historical_cases']=='SH-G01..SH-G18 unchanged' and e['SH2-G22']['historical_descriptor_unchanged'] is True
+assert e['SH2-G23']['status']=='REJECT' and e['SH2-G23']['partial_commit'] is False and e['SH2-G23']['downgrade'] is False
+assert e['SH2-G24']['status']=='NO_SUBMISSION' and e['SH2-G24']['semantic_operations']==0 and e['SH2-G24']['new_object_records']==0 and e['SH2-G24']['semantic_generation_delta']==0 and e['SH2-G24']['new_history_entries']==0 and e['SH2-G24']['new_axis_publications']==0
+assert e['SH2-G25']['status']=='REJECT' and e['SH2-G25']['no_partial_state'] is True
 g15=expected['cases']['SH2-G15']['wire'];assert (g15['shapecontent']['byte_length'],g15['objectrecord']['byte_length'],g15['insertoperation']['byte_length'])==(20,113,163)
 old=ROOT/'verification/corpus/semantic/v1/suites/shape-kind-v1.json';assert old.read_bytes()==(BASE/'verification/corpus/semantic/v1/suites/shape-kind-v1.json').read_bytes() and J(old)['vectors']==[]
-report={'schema':'fc01-control-qualification-v0.1','status':'READY_FOR_CONTROL_REVIEW_NO_INDEPENDENT_ACCEPTANCE','base_revision':BASE_SHA,'result_revision':HEAD_SHA,'historical_control':history,'authority_current_scope_kind_count':len(cur),'authority_key_statuses':{k:by[k]['status'] for k in ['fc-feature-completion-execution-v0.1','fc-feature-completion-execution-v0.2','fc01-shape-triangle-semantic-v0.1']},'descriptor_sha256':H(desc.read_bytes()),'golden':{'case_count':25,'g24':'NO_SUBMISSION','g06':'REJECT','g15':wr,'independent_acceptance':'PENDING_CONTROL_REVIEW'},'nonclaims':['no product/runtime changes','no FC-01 P31/P32','no Gate PASS','no Golden acceptance by producer']}
+report={'schema':'fc01-control-qualification-v0.1','status':'READY_FOR_CONTROL_REVIEW_NO_INDEPENDENT_ACCEPTANCE','base_revision':BASE_SHA,'candidate_revision':CANDIDATE_SHA,'historical_control':history,'authority_current_scope_kind_count':len(cur),'authority_key_statuses':{k:by[k]['status'] for k in ['fc-feature-completion-execution-v0.1','fc-feature-completion-execution-v0.2','fc01-shape-triangle-semantic-v0.1']},'descriptor_sha256':H(desc.read_bytes()),'golden':{'case_count':25,'g24':'NO_SUBMISSION','g06':'REJECT','g15':wr,'independent_acceptance':'PENDING_CONTROL_REVIEW'},'nonclaims':['no product/runtime changes','no FC-01 P31/P32','no Gate PASS','no Golden acceptance by producer']}
 (EV/'qualification-report.json').write_text(json.dumps(report,indent=2,sort_keys=True)+'\n',encoding='utf-8');print(json.dumps(report,indent=2))
 
