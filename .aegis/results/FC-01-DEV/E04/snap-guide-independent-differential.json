@@ -3,17 +3,53 @@
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
   "obligation_id": "FC01-B04",
-  "status": "NOT_CLOSED_DRAFT_QUARANTINED",
+  "status": "PARTIAL_NOT_CLOSED",
   "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B04",
   "requirement": "Far-axis visible Shape center/edge Snap uses deterministic finite-viewport candidates, logical-pixel latch/release and per-view transient preview with zero canonical side effects",
   "oracle": "Independent exhaustive viewport-limited reference candidate selector plus analytic world/logical camera projections; compare indexed query, preview/final geometry and 100-Move negative",
   "acceptance": "Distant orthogonal candidates found, ties deterministic, hidden/invalid excluded, identical preview/Up or explicit rejection, no semantic generation/tile/Axis updates from Move/Cancel",
-  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
-  "residual_detection_gap": "Finite viewport strips, both logical pixel profiles, guide/preview publication and independent differential remain incomplete.",
+  "source_subject_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+  "materialized_ref_resolution": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+  "residual_detection_gap": [
+    "full creation-session spatial differential",
+    "rotation matrix",
+    "100-Move preview/canonical negative"
+  ],
   "pass_from_frozen_comparator": false,
   "physical_claim_false": true,
   "gate_claim": "none",
   "provider_run_refs": [],
-  "quarantined_draft_ref": "drafts/i3/archive.json"
+  "quarantined_draft_ref": "drafts/i3/archive.json",
+  "independent_oracle_ref_and_sha": {
+    "reference_selector": "runtime/interaction/tests/viewport_constraints_test.cpp",
+    "reference_selector_sha256": "36608e28a529f6b2a8e17e6d33fbf7f99ccb3128e75e9c0a343df46ad670b68c",
+    "production_target": "runtime/interaction/src/viewport_constraints.cpp"
+  },
+  "expected_observed_result": {
+    "focused_reference_differential": "PASS",
+    "profiles": [
+      "P-A",
+      "P-B"
+    ],
+    "dpr_cases": [
+      1,
+      2,
+      3
+    ],
+    "far_axis_offscreen_exclusion": "PASS",
+    "hidden_and_transformed_exclusion": "PASS",
+    "deterministic_tie_break": "PASS",
+    "hysteresis_latch_release": "PASS"
+  },
+  "provider_run_identity": {
+    "ctest": "D:/axbuild/fc01-windows-host-final",
+    "tests": [
+      "G46BViewportConstraints"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "d68c108ffe27029cf948d2ddebd54e019958267729e0b213abaa469b730ba847"
+  },
+  "blocking_justification": [
+    "full creation-session spatial differential with indexed query, preview/final geometry, rotation/DPR matrix and 100-Move negative remains incomplete"
+  ]
 }

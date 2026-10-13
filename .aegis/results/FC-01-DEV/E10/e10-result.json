@@ -7,7 +7,7 @@
   "invariant_ref": "FC01-B10",
   "high_impact_failure_mode": "Authority/subject/scope regression",
   "residual_detection_gap": [
-    "final result revision not committed/pushed"
+    "full FC01 source subject result must be committed/pushed with refreshed evidence index"
   ],
   "independent_oracle_ref_and_sha": {
     "scope_audit": ".aegis/results/FC-01-DEV/scope-audit.json",
@@ -15,8 +15,8 @@
   },
   "fixture_ref_sha": {},
   "result_repository_revision_and_materialized_ref": {
-    "revision": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
-    "materialized_ref": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+    "materialized_ref": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
     "branch": "codex/fc-01-creation-tools-p32"
   },
   "binary_digest_and_profile": {},
@@ -27,9 +27,11 @@
     "historical_gate_records": "unchanged"
   },
   "first_divergence_or_null": null,
-  "pass_from_frozen_comparator": true,
+  "pass_from_frozen_comparator": false,
   "blocking_justification": [
-    "final result revision not committed/pushed"
+    "final evidence update commit not yet materialized"
   ],
-  "physical_claim_false": true
+  "physical_claim_false": true,
+  "source_subject_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+  "materialized_ref_resolution": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad"
 }

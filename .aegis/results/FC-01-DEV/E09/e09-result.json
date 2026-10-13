@@ -7,26 +7,46 @@
   "invariant_ref": "FC01-B09",
   "high_impact_failure_mode": "Canonical/Presented/Axis truth",
   "residual_detection_gap": [
-    "source-aware Axis recorder and no-echo differential not materialized"
+    "source-aware Axis recorder",
+    "host-level outbox/no-echo differential",
+    "Axis pending/failed durability truth"
   ],
   "independent_oracle_ref_and_sha": {
-    "presentation_source": "apps/ink_playground/common/ink_playground_host.cpp"
+    "semantic_projection": "runtime/semantic/tests/operation_engine_publication_projection_test.cpp",
+    "semantic_projection_sha256": "b7bac84f48bd96f1979fa95c11c26bba62498d1215cecd7ad34c35e071d74239",
+    "presentation_tracker": "runtime/render/tests/surface_presentation_test.cpp",
+    "presentation_tracker_sha256": "cda1c01d6a61d4012c56c57e62cec8dd8e118dbfb66d564b42479afd051d0e9d"
   },
   "fixture_ref_sha": {},
   "result_repository_revision_and_materialized_ref": {
-    "revision": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
-    "materialized_ref": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+    "materialized_ref": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
     "branch": "codex/fc-01-creation-tools-p32"
   },
   "binary_digest_and_profile": {},
-  "provider_run_identity": {},
+  "provider_run_identity": {
+    "ctest": "D:/axbuild/fc01-windows-host-final",
+    "tests": [
+      "OperationEnginePublicationProjection.*",
+      "G3SurfacePresentation"
+    ],
+    "exit_code": 0
+  },
   "expected_observed_result": {
-    "canonical_present": "existing tracker path"
+    "local_sources_eligible": "PASS",
+    "remote_and_replay_no_echo": "PASS",
+    "already_applied_and_rejected_no_publication": "PASS",
+    "commit_blocked_no_publication": "PASS",
+    "stale_surface_feedback_rejected": "PASS",
+    "qualified_presented_feedback_only": "PASS"
   },
   "first_divergence_or_null": null,
   "pass_from_frozen_comparator": false,
   "blocking_justification": [
-    "source-aware Axis recorder and no-echo differential not materialized"
+    "source-aware Axis recorder/frontier simulator and host-level local-vs-remote no-echo evidence remain unmaterialized"
   ],
-  "physical_claim_false": true
+  "physical_claim_false": true,
+  "status": "NOT_CLOSED",
+  "source_subject_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+  "materialized_ref_resolution": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad"
 }

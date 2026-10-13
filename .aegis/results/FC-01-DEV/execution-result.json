@@ -1,15 +1,15 @@
 {
   "task_id": "FC-01",
   "stage": "P32_IMPLEMENTATION",
-  "status": "BLOCKED_ENVIRONMENT",
+  "status": "BLOCKED_EVIDENCE",
   "return_surface": "CONTROL_REVIEW",
   "execution_ref": "codex/fc-01-creation-tools-p32",
   "package_ref": ".aegis/packages/FC-01/package.json",
   "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
   "task_anchor": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
   "trusted_control_subject_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
-  "result_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-  "materialized_ref_resolution": "Exact pushed containing evidence commit returned to reviewer after normal push.",
+  "result_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
+  "materialized_ref_resolution": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
   "original_preflight_order": "UNPROVEN_PRESERVED",
   "prospective_correction_chain": [
     {
@@ -60,20 +60,25 @@
   },
   "remaining_blockers": [
     {
-      "class": "BLOCKED_ENVIRONMENT",
+      "class": "BLOCKED_EVIDENCE",
       "frozen_obligations": [
-        "FC01-B05",
-        "FC01-B08"
+        "FC01-B04"
       ],
-      "reason": "The locked r1-full-v1 windows-x64-d3d12 release SDK did not materialize. Official strict installer with socket timeout returns URLError/WinError 10060; curl returns 35 (connection reset); incomplete archives cannot satisfy size/SHA/manifest checks.",
-      "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
-      "evidence_refs": [
-        "continuation-logs/sdk-investigation/final-locked-fetch/result.json",
-        "continuation-logs/sdk-investigation/final-locked-fetch/fetch.log",
-        "continuation-logs/sdk-investigation/curl-fetch/result.json",
-        "continuation-logs/sdk-investigation/curl-fetch/download.log"
+      "reason": "Full independent creation-session spatial differential, rotation/DPR matrix and 100-Move negative remain incomplete."
+    },
+    {
+      "class": "BLOCKED_EVIDENCE",
+      "frozen_obligations": [
+        "FC01-B09"
       ],
-      "required_next_action": "Resolve the published SDK transport/store path; consume and verify the locked package. Do not rebuild Skia/Protobuf or alter locks."
+      "reason": "Source-aware Axis recorder/frontier and host-level local-vs-remote no-echo evidence remain unmaterialized."
+    },
+    {
+      "class": "BLOCKED_IMPLEMENTATION",
+      "frozen_obligations": [
+        "FC01-B10"
+      ],
+      "reason": "Existing G45 legacy OperationRequest compatibility test still expects empty InsertObjects acceptance, which conflicts with frozen non-empty collection validation; no canonical validator relaxation applied."
     }
   ],
   "remaining_obligation_states": [
