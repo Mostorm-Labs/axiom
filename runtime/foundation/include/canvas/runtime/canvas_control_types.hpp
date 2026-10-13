@@ -222,6 +222,13 @@ struct CanvasControlSnapshot final {
   std::array<double,6> selectedTransform{1,0,0,1,0,0};
   std::string selectedOrderKey;
   std::uint64_t semanticGeneration = 0;
+  std::optional<foundation::ObjectId> lastAppliedOperation;
+  std::uint64_t appliedCommitEpoch = 0;
+  std::uint64_t appliedCommitOrdinal = 0;
+  std::uint64_t presentedSemanticGeneration = 0;
+  // 0 Unavailable, 1 Pending, 2 Failed, 3 Confirmed; reported by Axis owner.
+  std::uint8_t axisLocalDurable = 0;
+  std::uint8_t axisCloudSynced = 0;
   std::string unsupportedReason;
   std::optional<CanvasControlReceipt> lastReceipt;
 };

@@ -174,6 +174,15 @@ runtime::CanvasControlSnapshot CanvasControlBinding::snapshot(
   out.creationMode=host_.creationMode();
   out.futureAppearance=host_.futureAppearance();
   out.semanticGeneration=host_.semanticGeneration().value();
+  const auto outcome=host_.operationOutcome();
+  if(outcome.applied) {
+    out.lastAppliedOperation=outcome.applied->operation_id.value();
+    out.appliedCommitEpoch=outcome.applied->commit_stamp.runtime_epoch.value();
+    out.appliedCommitOrdinal=outcome.applied->commit_stamp.ordinal.value();
+  }
+  out.presentedSemanticGeneration=outcome.presentedGeneration.value();
+  out.axisLocalDurable=static_cast<std::uint8_t>(outcome.axis.localDurable);
+  out.axisCloudSynced=static_cast<std::uint8_t>(outcome.axis.cloudSynced);
   out.unsupportedReason="Text, Copy, Duplicate and advanced Connector controls await their feature packages";
   if(const auto record=host_.selectedObjectRecord()) {
     out.selectedKind=static_cast<std::uint32_t>(record->kind);out.selectedVersion=record->kind_version;

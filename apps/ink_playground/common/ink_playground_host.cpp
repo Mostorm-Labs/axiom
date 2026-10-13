@@ -286,6 +286,7 @@ bool InkPlaygroundHost::seedTextScenario(std::string_view scenario,std::size_t c
   return true;
 }
 bool InkPlaygroundHost::submitTextScenarioOperation(semantic::OperationPayload payload) {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   const auto ordinal=localOperationOrdinal(); if(!ordinal) return false;
   semantic::Operation operation{semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),documentId_,1,1,std::move(payload)};
   const auto applied=operationEngine_.apply(operation,semantic::ApplySource::kLocalCommand,semanticObjects_,
@@ -365,12 +366,14 @@ text::LayoutMetrics InkPlaygroundHost::textLayoutMetrics() const noexcept {
 }
 
 bool InkPlaygroundHost::beginStroke(std::uint64_t strokeId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   strokeStartNs_ = 0;
   return ink_->begin(strokeId) && preview_->begin(strokeId) &&
          interaction_->startSession(strokeId);
 }
 
 bool InkPlaygroundHost::beginStroke(const input::PointerKey& key, std::uint64_t strokeId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || keyedStrokeIds_.contains(key)) return false;
   if (!ink_->begin(key, strokeId) || !preview_->beginKeyed(strokeId) ||
       !interaction_->startSession(key, strokeId)) return false;
@@ -477,6 +480,7 @@ bool InkPlaygroundHost::accept(const input::PointerSampleBatch& batch,
 
 bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
                                             std::uint64_t observationTimeNs) {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
   const auto source = batch.samples.front().source;
@@ -642,6 +646,7 @@ bool InkPlaygroundHost::selectCreationPreset(CreationPreset preset) noexcept {
 
 bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                         float x, float y) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
       surface_.height == 0U) return false;
   const auto content = viewportController_->viewToContent(x, y);
@@ -719,6 +724,7 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
 
 bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!keyedStrokeIds_.contains(key)) return false;
   const auto* state = preview_->snapshot(strokeId);
   const auto finished = ink_->finish(key);
@@ -769,6 +775,7 @@ void InkPlaygroundHost::cancelAllPointers() noexcept {
 
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           std::uint32_t profile) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   const auto profileId = profile == 1U ? "vector-solid-v1"
       : profile == 2U ? "marker-flat-v1"
       : profile == 3U ? "chalk-grain-v1" : profile == 4U ? "membrane-v1" : "";
@@ -782,6 +789,7 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
 bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
                                           const ink::BrushPackage& package,
                                           std::uint64_t seed) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
@@ -904,13 +912,16 @@ void InkPlaygroundHost::observeApplied(const semantic::Operation& operation,
   if (localOperationSink_ != nullptr &&
       semantic::localBridgePublicationDisposition(*result.commit_record) ==
           semantic::LocalBridgePublicationDisposition::kEligible) {
+    if (publicationCallbackActive_) return;
+    publicationCallbackActive_ = true;
     localOperationSink_->applied(operation, *result.commit_record);
+    publicationCallbackActive_ = false;
   }
 }
 
 semantic::ApplyResult InkPlaygroundHost::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) {
-  if (std::this_thread::get_id() != ownerThread_) return {};
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
   if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
       operation.document_id != documentId_) return {};
   const auto result = operationEngine_.apply(operation, source, semanticObjects_,
@@ -928,6 +939,7 @@ semantic::ApplyResult InkPlaygroundHost::applyExternalOperation(
 
 bool InkPlaygroundHost::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
@@ -1152,6 +1164,7 @@ bool InkPlaygroundHost::renderSelectionOverlay() noexcept {
 }
 
 bool InkPlaygroundHost::seedQualificationFixture(std::size_t objectCount) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (objectCount == 0U || !brushSessions_.empty() || !eraserTraces_.empty() ||
       !keyedStrokeIds_.empty() || !historySceneReady()) return false;
   const auto ordinal = localOperationOrdinal();
@@ -1475,6 +1488,7 @@ std::optional<InkPlaygroundHost::InkDefaults> InkPlaygroundHost::brushCatalogDef
 }
 
 bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
   eraserTraces_[pointerId] = {};
@@ -1557,6 +1571,7 @@ bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y
 }
 
 bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end()) return false;
@@ -1864,6 +1879,7 @@ void InkPlaygroundHost::setPlatformPresentationDeferred(bool deferred) noexcept 
 }
 
 bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
@@ -2099,6 +2115,7 @@ bool InkPlaygroundHost::fitViewportToObject(foundation::ObjectId objectId) noexc
 
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   const auto committedPoints = preview_->snapshot().confirmed;
   const auto finished = ink_->finish();
   if (!finished.has_value()) return false;
@@ -2132,6 +2149,8 @@ semantic::Operation InkPlaygroundHost::legacyStrokeOperation(
 
 interaction::SubmitResult InkPlaygroundHost::submit(
     const interaction::OperationRequest& request) {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
+    return interaction::SubmitResult::rejected();
   if (request.operationId == 0U) return interaction::SubmitResult::rejected();
   // Identity alone carries no semantic intent. Legacy Ink supplies its
   // actual confirmed VectorStroke; ordinary BrushSession uses its adapter.
@@ -2220,6 +2239,8 @@ bool InkPlaygroundHost::recoverHistoryScene() noexcept {
 
 interaction::SubmitResult InkPlaygroundHost::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
+  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
+    return interaction::SubmitResult::rejected();
   // This host records only one-operation compensation entries. Reject larger
   // batches before mutation; other EditorHistory owners may support them.
   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
@@ -2622,6 +2643,8 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
   recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
   presentedSemanticGeneration_ = frame.sceneGeneration;
+  presentedSurfaceGeneration_ = frame.surfaceGeneration;
+  presentedMetricsGeneration_ = frame.metricsGeneration;
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
   if (retirePreview && semanticObjects_.size() != 0U) {

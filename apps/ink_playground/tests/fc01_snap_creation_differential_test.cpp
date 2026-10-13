@@ -195,6 +195,20 @@ void creation_session_indexed_reference_camera_matrix() {
             viewport,canvas::render::SurfaceMetrics{256,256,static_cast<unsigned>(256*dpr),static_cast<unsigned>(256*dpr),dpr,1},
             host.semanticGeneration(),canvas::foundation::SceneRevision{host.sceneRevision()},
             canvas::render::SurfaceGeneration{host.surface().generation},canvas::render::MetricsGeneration{1},canvas::render::FrameId{1}};
+        canvas::render::VisibilityResult visible{host.semanticGeneration(),
+            canvas::foundation::SceneRevision{host.sceneRevision()},viewport,
+            indexed.value().diagnostics.candidatesExamined,
+            indexed.value().backToFront.size(),indexed.value().backToFront};
+        const auto draw=canvas::render::DirectReferenceSource::build(frame,visible,Access::runtimeScene(host));
+        assert(draw);
+        const auto& affine=draw.value().worldToView;
+        const auto project=[&](WorldPoint point) {
+          return WorldPoint{static_cast<float>(affine.a*point.x+affine.c*point.y+affine.tx),
+                            static_cast<float>(affine.b*point.x+affine.d*point.y+affine.ty)};
+        };
+        const auto actualStart=project(start),actualEnd=project(expectedEnd);
+        assert(std::abs(actualStart.x-beginView.x)<1e-4 && std::abs(actualStart.y-beginView.y)<1e-4);
+        assert(std::abs(actualEnd.x-endView.x)<1e-4 && std::abs(actualEnd.y-endView.y)<1e-4);
         canvas::render::RenderViewRuntime view(frame);
         view.editingOverlay().setCreationPreview(preview.record,{});
         assert(view.editingOverlay().creationPreview()==preview.record);
@@ -285,6 +299,70 @@ void indexed_scene_query_matches_linear_visible_shape_reference() {
   assert(indexed.value().diagnostics.candidatesExamined >= actual.size());
 }
 
+void invalid_targets_and_two_view_preview_are_isolated() {
+  const PointerKey key{11,42,1};
+  CreationSession a,b;
+  const float nan=std::numeric_limits<float>::quiet_NaN();
+  a.setSnapTargets({{ObjectId::fromUint64(7),{nan,20,140,80}},
+                    {ObjectId::fromUint64(8),{140,20,80,80}},
+                    {ObjectId::fromUint64(9),{80,20,140,80},true,false},
+                    {ObjectId::fromUint64(10),{80,20,140,80},false,true}});
+  b.setSnapTargets({{ObjectId::fromUint64(12),{80,20,140,80}}});
+  assert(a.begin(key,CreationPreset::kTriangle,{}, {20,20},{0,0,256,256},100));
+  assert(b.begin(key,CreationPreset::kArrow,{}, {20,20},{0,0,256,256},200));
+  assert(a.move(key,{77,80}) && b.move(key,{77,80}));
+  assert(!a.preview().snapped && b.preview().snapped);
+  const auto before=b.preview().record;
+  assert(a.cancel(key));
+  assert(b.active() && b.preview().record==before);
+  assert(b.finish(key)->record==before);
+}
+
+void moved_target_refresh_and_camera_fence() {
+  using Access=canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  for(bool cameraChange:{false,true}) {
+    canvas::ink_playground::InkPlaygroundHost host;assert(host.bindSurface(256,256));
+    auto target=authoredShape(7,{100,180,140,220});
+    assert(Access::applyRemote(host,canvas::semantic::InsertObjectsOp{{target}}));
+    assert(host.selectCreationPreset(CreationPreset::kRectangle));
+    const PointerKey key{11,42,1};
+    assert(host.creationPointer(key,canvas::input::PointerPhase::kDown,20,20));
+    assert(host.creationPointer(key,canvas::input::PointerPhase::kMove,97,80));
+    assert(host.creationPreview().snapped);
+    if(cameraChange) assert(host.setViewportZoomAt(2,128,128));
+    else {
+      auto transform=target.transform;transform.tx=150;
+      assert(Access::applyRemote(host,canvas::semantic::SetTransformsOp{{{target.id,transform}}}));
+    }
+    const auto generation=host.semanticGeneration();const auto count=host.submittedOperationCount();
+    assert(!host.creationPointer(key,canvas::input::PointerPhase::kUp,97,80));
+    assert(host.semanticGeneration()==generation && host.submittedOperationCount()==count);
+  }
+  canvas::ink_playground::InkPlaygroundHost host;assert(host.bindSurface(256,256));
+  auto target=authoredShape(7,{100,180,140,220});
+  assert(Access::applyRemote(host,canvas::semantic::InsertObjectsOp{{target}}));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  const PointerKey key{11,42,1};
+  assert(host.creationPointer(key,canvas::input::PointerPhase::kDown,20,20));
+  assert(host.creationPointer(key,canvas::input::PointerPhase::kMove,97,80));
+  auto transform=target.transform;transform.tx=150;
+  assert(Access::applyRemote(host,canvas::semantic::SetTransformsOp{{{target.id,transform}}}));
+  assert(host.creationPointer(key,canvas::input::PointerPhase::kMove,147,80));
+  const auto preview=host.creationPreview();assert(preview.snapped && preview.end.x==150);
+  assert(host.creationPointer(key,canvas::input::PointerPhase::kUp,147,80));
+  const auto objects=Access::objects(host);
+  const auto found=std::find_if(objects.begin(),objects.end(),[&](const auto& r){return r.id==preview.record.id;});
+  assert(found!=objects.end());
+  auto expected=preview.record;
+  // Frozen PropertyBag normalization omits explicit opacity=1. This
+  // literal reference does not invoke the production normalizer.
+  std::erase_if(expected.properties.entries,[](const auto& entry) {
+    const auto* value=std::get_if<float>(&entry.value);
+    return entry.field_id==3 && value && *value==1;
+  });
+  assert(*found==expected);
+}
+
 void creation_preview_and_final_commit_are_identical() {
   CreationSession session;
   const PointerKey key{11U, 42U, 1U};
@@ -336,5 +414,8 @@ int main(int argc,char** argv) {
   creation_preview_and_final_commit_are_identical();
   hundred_move_preview_has_zero_canonical_side_effects();
   changed_target_at_up_cannot_commit_stale_snap();
+  invalid_targets_and_two_view_preview_are_isolated();
+  moved_target_refresh_and_camera_fence();
+  std::cout<<"PASS E04 invalid/selected/transient targets excluded; two sessions isolated; moved target refresh and camera/target Up fences\n";
   return 0;
 }

@@ -48,6 +48,11 @@ struct RuntimeControlState final {
   double selectedHeight = 0.0;
   double selectedTransform[6] = {1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
   std::uint64_t semanticGeneration = 0;
+  std::uint64_t appliedCommitEpoch = 0;
+  std::uint64_t appliedCommitOrdinal = 0;
+  std::uint64_t presentedSemanticGeneration = 0;
+  std::uint8_t axisLocalDurable = 0;
+  std::uint8_t axisCloudSynced = 0;
 };
 
 struct RuntimeStateSnapshot final {

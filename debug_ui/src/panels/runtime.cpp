@@ -15,6 +15,16 @@ void document(DebugPanelContext& c) {
                 static_cast<unsigned long long>(s.stamp.documentGeneration),
                 static_cast<unsigned long long>(s.stamp.documentRevision),
                 static_cast<unsigned long long>(s.axiom.value.document.canonicalOperationCount));
+    const auto& control=s.product.value.control;
+    const auto label=[](std::uint8_t state) {
+      switch(state) {case 1:return "Pending";case 2:return "Failed";case 3:return "Confirmed";default:return "Unavailable";}
+    };
+    ImGui::Text("Applied commit %llu:%llu / qualified Presented generation %llu",
+        static_cast<unsigned long long>(control.appliedCommitEpoch),
+        static_cast<unsigned long long>(control.appliedCommitOrdinal),
+        static_cast<unsigned long long>(control.presentedSemanticGeneration));
+    ImGui::Text("Axis LocalDurable: %s / CloudSynced: %s",
+        label(control.axisLocalDurable),label(control.axisCloudSynced));
 }
 void scene(DebugPanelContext&) {
     ImGui::SeparatorText("Scene");

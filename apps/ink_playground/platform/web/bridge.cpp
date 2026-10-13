@@ -110,6 +110,11 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
     result.control.selectedHeight = control.selectedHeight;
     for (int i = 0; i < 6; ++i) result.control.selectedTransform[i] = control.selectedTransform[i];
     result.control.semanticGeneration = control.semanticGeneration;
+    result.control.appliedCommitEpoch = control.appliedCommitEpoch;
+    result.control.appliedCommitOrdinal = control.appliedCommitOrdinal;
+    result.control.presentedSemanticGeneration = control.presentedSemanticGeneration;
+    result.control.axisLocalDurable = control.axisLocalDurable;
+    result.control.axisCloudSynced = control.axisCloudSynced;
     return result;
   }
   [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(

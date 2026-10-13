@@ -336,7 +336,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                          lastAppliedCommit_->commit_stamp);
     }
     if (!surface_.available || lifecycle_ == nullptr ||
-        lifecycle_->current().surfaceGeneration.value() != surface_.generation) {
+        lifecycle_->current().surfaceGeneration != presentedSurfaceGeneration_ ||
+        lifecycle_->current().metricsGeneration != presentedMetricsGeneration_) {
       return {lastAppliedCommit_, semantic::SemanticGeneration{}, axis};
     }
     return {lastAppliedCommit_, presentedSemanticGeneration_, axis};
@@ -563,6 +564,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   LocalOperationSink* localOperationSink_ = nullptr;
   std::optional<semantic::CanonicalCommitRecord> lastAppliedCommit_;
   semantic::SemanticGeneration presentedSemanticGeneration_{};
+  render::SurfaceGeneration presentedSurfaceGeneration_{};
+  render::MetricsGeneration presentedMetricsGeneration_{};
   std::unique_ptr<canvas::Scene> runtimeSceneHost_;
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
@@ -618,6 +621,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::uint64_t creationSerial_ = 0;
   bool creationMode_ = false;
   std::thread::id ownerThread_{};
+  bool publicationCallbackActive_ = false;
 };
 
 }  // namespace canvas::ink_playground

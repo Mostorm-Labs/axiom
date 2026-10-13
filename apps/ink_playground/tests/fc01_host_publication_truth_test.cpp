@@ -1,6 +1,7 @@
 #include "../common/ink_playground_host.hpp"
 #include "ink_playground_history_test_access.hpp"
 #include "canvas/semantic/codec.hpp"
+#include "../common/canvas_control_binding.hpp"
 
 #include <cassert>
 #include <cstdint>
@@ -100,6 +101,12 @@ void five_presets_publish_exactly_once_and_four_domains_remain_separate() {
     assert(host.creationPointer({11,42,1},input::PointerPhase::kUp,100,80));
     assert(host.presentCanonicalFrame(2,0,false));
     assert(axis.events.size()==1 && host.semanticGeneration()==gen);
+    ink_playground::CanvasControlBinding binding(host,{1,1,1,1});
+    const auto snapshot=binding.snapshot({1,1,1,1});
+    assert(snapshot.lastAppliedOperation==event.operation.id.value());
+    assert(snapshot.appliedCommitOrdinal==event.commit.commit_stamp.ordinal.value());
+    assert(snapshot.presentedSemanticGeneration==gen.value());
+    assert(snapshot.axisLocalDurable==3 && snapshot.axisCloudSynced==3);
   }
   std::cout<<"PASS E09 five presets; Applied/Presented/LocalDurable/CloudSynced, delayed/failed ACKs\n";
 }
@@ -145,6 +152,29 @@ void off_owner_external_apply_is_rejected() {
   assert(result.disposition==semantic::ApplyDisposition::kRejected && host.semanticObjectCount()==0);
 }
 
+struct ReentrantSink final : ink_playground::LocalOperationSink {
+  Host& host; semantic::ApplyResult nested; bool nestedFixture=true; bool nestedPointer=true;
+  explicit ReentrantSink(Host& owner):host(owner){}
+  void applied(const semantic::Operation&,const semantic::CanonicalCommitRecord&) noexcept override {
+    const semantic::Operation operation{semantic::OperationId{foundation::ObjectId::fromUint64(850)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{shape(850)}}};
+    nested=host.applyExternalOperation(operation,semantic::ApplySource::kRemoteSync);
+    nestedFixture=host.seedQualificationFixture(1);
+    nestedPointer=host.creationPointer({11,99,1},input::PointerPhase::kDown,20,20);
+  }
+  ink_playground::AxisOperationStatus status(const semantic::OperationId&,const semantic::CanonicalCommitStamp&) const noexcept override {return {};}
+};
+void publication_callback_cannot_reenter_apply_and_old_surface_is_not_presented() {
+  Host host;assert(host.bindSurface(256,256));ReentrantSink sink(host);host.setLocalOperationSink(&sink);
+  create(host,ink_playground::CreationPreset::kRectangle);
+  assert(sink.nested.disposition==semantic::ApplyDisposition::kRejected && host.semanticObjectCount()==1);
+  assert(!sink.nestedFixture && !sink.nestedPointer && !host.creationActive());
+  assert(host.presentCanonicalFrame(1,0,false));
+  assert(host.operationOutcome().presentedGeneration==host.semanticGeneration());
+  assert(host.resizeSurface(300,256));
+  assert(host.operationOutcome().presentedGeneration.value()==0);
+}
+
 void edits_history_and_failures_preserve_committed_truth() {
   Host host;assert(host.bindSurface(256,256));host.setPlatformPresentationDeferred(true);
   AxisRecorder axis;host.setLocalOperationSink(&axis);create(host,ink_playground::CreationPreset::kTriangle);
@@ -184,9 +214,11 @@ void edits_history_and_failures_preserve_committed_truth() {
   std::cout<<"PASS E09 selected operation family and Undo/Redo source stamps; Render/Axis failure retains Applied\n";
 }
 }  // namespace
-int main(int argc,char**) {
+int main(int argc,char** argv) {
+  if(argc>1 && std::string_view(argv[1])=="reentrant"){publication_callback_cannot_reenter_apply_and_old_surface_is_not_presented();return 0;}
   if(argc>1){off_owner_external_apply_is_rejected();return 0;}
   off_owner_external_apply_is_rejected();
+  publication_callback_cannot_reenter_apply_and_old_surface_is_not_presented();
   five_presets_publish_exactly_once_and_four_domains_remain_separate();
   remote_replay_reject_duplicate_and_cancel_have_no_local_outbox();
   edits_history_and_failures_preserve_committed_truth();

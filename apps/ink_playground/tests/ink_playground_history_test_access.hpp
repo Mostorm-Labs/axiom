@@ -38,6 +38,9 @@ class InkPlaygroundHistoryTestAccess final {
     const auto records = host.runtimeSceneHost_->read().records();
     return {records.begin(), records.end()};
   }
+  static const RuntimeScene& runtimeScene(const InkPlaygroundHost& host) {
+    return host.sceneCoordinator_->runtimeScene();
+  }
   static auto query(const InkPlaygroundHost& host, WorldRect bounds) {
     return host.runtimeSceneHost_->query(SceneQuery{bounds});
   }
