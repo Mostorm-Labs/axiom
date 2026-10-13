@@ -14,6 +14,7 @@
 #include "include/core/SkPath.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
+#include "include/effects/SkDashPathEffect.h"
 
 #include <algorithm>
 #include <bit>
@@ -288,6 +289,41 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
     }, entry.command);
 }
 
+const semantic::SolidStroke* objectStroke(const RuntimeSceneRecord& record) {
+    for (const auto& entry : record.properties.entries) {
+        if (entry.field_id == 0x101U)
+            if (const auto* style=std::get_if<semantic::StrokeStyleValue>(&entry.value))
+                return std::get_if<semantic::SolidStroke>(style);
+    }
+    return nullptr;
+}
+float objectOpacity(const RuntimeSceneRecord& record) {
+    for (const auto& entry : record.properties.entries)
+        if (entry.field_id==3U) if (const auto* value=std::get_if<float>(&entry.value)) return *value;
+    return 1.0F;
+}
+SkPaint strokePaint(const semantic::SolidStroke& stroke) {
+    SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(stroke.color));
+    paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(skScalar(stroke.width));
+    switch(stroke.cap) {
+        case semantic::StrokeCap::kButt: paint.setStrokeCap(SkPaint::kButt_Cap); break;
+        case semantic::StrokeCap::kRound: paint.setStrokeCap(SkPaint::kRound_Cap); break;
+        case semantic::StrokeCap::kSquare: paint.setStrokeCap(SkPaint::kSquare_Cap); break;
+    }
+    std::visit([&](const auto& join) {
+        using Join=std::decay_t<decltype(join)>;
+        if constexpr(std::is_same_v<Join,semantic::RoundJoin>) paint.setStrokeJoin(SkPaint::kRound_Join);
+        else if constexpr(std::is_same_v<Join,semantic::BevelJoin>) paint.setStrokeJoin(SkPaint::kBevel_Join);
+        else {paint.setStrokeJoin(SkPaint::kMiter_Join);paint.setStrokeMiter(skScalar(join.limit));}
+    },stroke.join);
+    if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke.dash)) {
+        std::vector<SkScalar> intervals;intervals.reserve(dash->segments.size());
+        for(const auto value:dash->segments) intervals.push_back(skScalar(value));
+        paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals.data(),intervals.size()),skScalar(dash->offset)));
+    }
+    return paint;
+}
+
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources) {
     const auto& record = entry.record;
@@ -301,8 +337,16 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 path.lineTo(skScalar(command.content.width), skScalar(command.content.height));
                 path.lineTo(0.0F, skScalar(command.content.height));
                 path.close();
-                SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(fill));
-                paint.setStyle(SkPaint::kFill_Style); canvas.drawPath(path.detach(), paint);
+                const auto geometry=path.detach();
+                SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
+                const auto triangleFill=propertyColor(record,0x100U,{0,0,0,0});
+                if(triangleFill.a>0) {
+                    SkPaint paint;paint.setAntiAlias(false);paint.setColor4f(color(triangleFill));
+                    paint.setStyle(SkPaint::kFill_Style);canvas.drawPath(geometry,paint);
+                }
+                if(const auto* stroke=objectStroke(record);stroke && stroke->width>0 && stroke->color.a>0)
+                    canvas.drawPath(geometry,strokePaint(*stroke));
+                canvas.restore();
             } else if (fill.a > 0.0F) {
                 drawSolidRect(canvas, record.visualBounds, fill);
             }
@@ -405,7 +449,17 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
             if (start == nullptr || end == nullptr) return;
-            SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000101U, {1.0F, 128.0F / 255.0F, 0.0F, 1.0F}))); paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(4.0F); paint.setStrokeCap(SkPaint::kButt_Cap);
+            const bool hasStroke=std::any_of(record.properties.entries.begin(),record.properties.entries.end(),
+                [](const auto& entry){return entry.field_id==0x101U;});
+            const auto* stroke=objectStroke(record);
+            if(hasStroke && (!stroke || stroke->width<=0 || stroke->color.a<=0)) return;
+            // Keep the historical unstyled Connector fixture's draw bytes.
+            // Explicit styles always use the same Field Registry values as Preview.
+            const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
+            auto paint=strokePaint(stroke ? *stroke : legacy);
+            const auto opacity=objectOpacity(record);
+            if(opacity==1.0F) canvas.save();
+            else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
             if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
                                 skScalar(start->point.y), paint);
@@ -435,10 +489,11 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                     head.lineTo(skScalar(end->point.x - ux * 12.0F - px * 6.0F),
                                 skScalar(end->point.y - uy * 12.0F - py * 6.0F));
                     head.close();
-                    paint.setStyle(SkPaint::kFill_Style);
+                    paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
                     canvas.drawPath(head.detach(), paint);
                 }
             }
+            canvas.restore();
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
             drawSolidRect(canvas, foundation::WorldRect{record.visualBounds.left, record.visualBounds.top, record.visualBounds.left + static_cast<float>(command.content.width), record.visualBounds.top + static_cast<float>(command.content.height)}, {1.0F, 1.0F, 0.5F, 1.0F});
         } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {

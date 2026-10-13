@@ -11,6 +11,7 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <limits>
 #include <optional>
 #include <string>
@@ -576,9 +577,57 @@ void deterministicRejectionsPreservePriorObservation() {
     assert(*backend.observation() == stable);
 }
 
+void fc01TriangleAndConnectorStyleProbes() {
+    const FrameState frame = fixtureFrame();
+    RuntimeSceneRecord triangle = baseRecord(700, ObjectKind::kShape, {0,0,100,80});
+    triangle.kindVersion=2;
+    triangle.transform.tx=60; triangle.transform.ty=40;
+    triangle.content=canvas::semantic::ShapeContent{3,100,80};
+    triangle.properties.entries={
+        {3,0.5F},
+        {0x100U,canvas::semantic::FillStyleValue{canvas::semantic::SolidFill{{1,0,0,1}}}},
+        {0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,0,1,1},8}}}};
+    ReferenceDrawList list{.frame=frame,.queryWorldRect=frame.worldViewport,
+        .candidatesExamined=1,.visibleRecords=1,.worldToView={},.viewportClip=frame.worldViewport,
+        .entries={{triangle,true,ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(triangle.content)}},},
+        .diagnostics={},.canonicalBytes={},.digest={}};
+    SkiaHeadlessBackend backend({256,256});
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    const auto& pixels=*backend.observation();
+    assert(pixel(pixels,110,80)==(Rgba{128,0,0,128}));
+    assert(pixel(pixels,110,121)==(Rgba{0,0,128,128}));
+    assert(pixel(pixels,65,45)==(Rgba{0,0,0,0}));
+    list.entries[0].record.properties.entries={{0x100U,canvas::semantic::FillStyleValue{canvas::semantic::NoFill{}}},
+        {0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,0,1,1},8}}}};
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(),110,80)==(Rgba{0,0,0,0}));
+    assert(pixel(*backend.observation(),110,121)==(Rgba{0,0,255,255}));
+    auto connector=connectorEntry();
+    connector.record.properties.entries={{3,0.5F},
+        {0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,1,0,1},12}}}};
+    list.entries={connector};
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(),84,52)==(Rgba{0,128,0,128}));
+    list.entries[0].record.properties.entries={{0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::NoStroke{}}}};
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(),84,48)==(Rgba{0,0,0,0}));
+    auto arrow=connector;
+    auto content=std::get<ConnectorReferenceCommand>(arrow.command).content;
+    content.start.value=canvas::semantic::FreePointEndpoint{{40,100}};
+    content.end.value=canvas::semantic::FreePointEndpoint{{140,100}};
+    arrow.command=ConnectorReferenceCommand{content};arrow.record.content=content;
+    arrow.record.visualBounds={40,94,140,106};
+    arrow.record.properties.entries={{0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,1,0,1},4}}},
+        {0x201U,canvas::semantic::ConnectorDecorationValue::kArrow}};
+    list.entries={arrow};assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}));
+    std::cout<<"PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity\n";
+}
+
 } // namespace
 
-int main() {
+int main(int argc,char**) {
+    if(argc>1){fc01TriangleAndConnectorStyleProbes();return 0;}
     exactNineKindGoldenIsIndependentAndDeterministic();
     transformClipAndEraseAreObservable();
     sweptCircleEraseMaskIsRendered();

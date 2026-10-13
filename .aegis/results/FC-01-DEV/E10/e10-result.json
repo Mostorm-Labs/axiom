@@ -7,32 +7,40 @@
   "invariant_ref": "FC01-B10",
   "high_impact_failure_mode": "Authority/subject/scope regression",
   "residual_detection_gap": [
-    "full FC01 source subject result must be committed/pushed with refreshed evidence index"
+    "historical first-mutation ImplementationDesignPreflight/RED order is explicitly not retroactively proven",
+    "complete E01-E09 evidence closure remains pending",
+    "Android host verification deferred by user"
   ],
   "independent_oracle_ref_and_sha": {
-    "scope_audit": ".aegis/results/FC-01-DEV/scope-audit.json",
-    "package": "continuation-preflight-20261013.json"
+    "scope_audit": "scope-audit.json",
+    "package_locks": "continuation-preflight-20261013.json",
+    "windows_provider": "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json",
+    "web_provider": "continuation-logs/committed-runs/fc3d448e-web-qualified/result.json"
   },
   "fixture_ref_sha": {},
   "result_repository_revision_and_materialized_ref": {
-    "revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-    "materialized_ref": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-    "branch": "codex/fc-01-creation-tools-p32",
-    "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result."
+    "revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+    "materialized_ref": "exact-containing-evidence-commit-returned"
   },
   "binary_digest_and_profile": {},
   "provider_run_identity": {},
   "expected_observed_result": {
     "protected_delta": "empty",
     "package_locks": "match",
-    "historical_gate_records": "unchanged"
+    "historical_gate_records": "unchanged",
+    "full_windows_ctest": "664/664",
+    "web_wasm_link": "success"
   },
   "first_divergence_or_null": null,
   "pass_from_frozen_comparator": false,
   "blocking_justification": [
-    "final evidence update commit not yet materialized"
+    "FC01-RED-01 historical first-mutation chronology remains unproven and is preserved as recovery-only evidence",
+    "E01/E02/E03/E05/E06/E07 are not fully materialized against every frozen scenario",
+    "E08 Android is deferred by user"
   ],
   "physical_claim_false": true,
-  "source_subject_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-  "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result; no self/future SHA asserted in artifact."
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "materialized_ref_resolution": "Exact containing evidence commit returned with this result; no future/self SHA asserted.",
+  "status": "PARTIAL_NOT_CLOSED",
+  "gate_claim": "none"
 }

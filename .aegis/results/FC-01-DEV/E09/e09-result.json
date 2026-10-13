@@ -3,51 +3,43 @@
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
   "obligation_id": "FC01-B09",
-  "requirement_ref": "Canonical/Presented/Axis truth",
-  "invariant_ref": "FC01-B09",
-  "high_impact_failure_mode": "Canonical/Presented/Axis truth",
-  "residual_detection_gap": [
-    "source-aware Axis recorder",
-    "host-level outbox/no-echo differential",
-    "Axis pending/failed durability truth"
-  ],
-  "independent_oracle_ref_and_sha": {
-    "semantic_projection": "runtime/semantic/tests/operation_engine_publication_projection_test.cpp",
-    "semantic_projection_sha256": "b7bac84f48bd96f1979fa95c11c26bba62498d1215cecd7ad34c35e071d74239",
-    "presentation_tracker": "runtime/render/tests/surface_presentation_test.cpp",
-    "presentation_tracker_sha256": "cda1c01d6a61d4012c56c57e62cec8dd8e118dbfb66d564b42479afd051d0e9d"
+  "status": "PASS_PENDING_CONTROL_REVIEW",
+  "requirement_ref": "verification.lock.json#FC01-B09",
+  "oracle": "independent Axis recorder/provider status + host LocalOperationSink + PresentationTracker",
+  "acceptance": {
+    "five_presets_one_commit_each": true,
+    "applied_presented_local_durable_cloud_synced_separate": true,
+    "remote_restore_already_applied_collision_invalid_no_echo": true,
+    "cancel_and_100_move_no_echo": true,
+    "selected_size_style_transform_order_lock_delete": true,
+    "undo_redo_fresh_source_stamps": true,
+    "render_failure_does_not_rollback_applied": true,
+    "owner_thread_rejection": true,
+    "publication_callback_reentry_rejection": true,
+    "nested_pointer_and_fixture_rejection": true
   },
-  "fixture_ref_sha": {},
-  "result_repository_revision_and_materialized_ref": {
-    "revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-    "materialized_ref": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-    "branch": "codex/fc-01-creation-tools-p32",
-    "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result."
+  "provider_run_refs": {
+    "host": "continuation-logs/blocker-closure/e09-host-exact-source.log",
+    "semantic": "continuation-logs/blocker-closure/e09-semantic-exact-source.log",
+    "windows_ctest": "continuation-logs/committed-runs/fc3d448e-windows-qualified/test.log"
   },
-  "binary_digest_and_profile": {},
-  "provider_run_identity": {
-    "ctest": "D:/axbuild/fc01-windows-host-final",
-    "tests": [
-      "OperationEnginePublicationProjection.*",
-      "G3SurfacePresentation"
-    ],
-    "exit_code": 0
+  "logs": {
+    "continuation-logs/blocker-closure/e09-host-exact-source.log": {
+      "bytes": 997,
+      "sha256": "b070a57a05d1b44f595e082c47acc33bde5f9514b704e6ad358373ba349723ef"
+    },
+    "continuation-logs/blocker-closure/e09-semantic-exact-source.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e09-nested-ingress-green.log": {
+      "bytes": 997,
+      "sha256": "b070a57a05d1b44f595e082c47acc33bde5f9514b704e6ad358373ba349723ef"
+    }
   },
-  "expected_observed_result": {
-    "local_sources_eligible": "PASS",
-    "remote_and_replay_no_echo": "PASS",
-    "already_applied_and_rejected_no_publication": "PASS",
-    "commit_blocked_no_publication": "PASS",
-    "stale_surface_feedback_rejected": "PASS",
-    "qualified_presented_feedback_only": "PASS"
-  },
-  "first_divergence_or_null": null,
-  "pass_from_frozen_comparator": false,
-  "blocking_justification": [
-    "source-aware Axis recorder/frontier simulator and host-level local-vs-remote no-echo evidence remain unmaterialized"
-  ],
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
   "physical_claim_false": true,
-  "status": "NOT_CLOSED",
-  "source_subject_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-  "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result; no self/future SHA asserted in artifact."
+  "gate_claim": "none",
+  "pass_from_frozen_comparator": true,
+  "materialized_ref_resolution": "Exact containing evidence commit returned with this result; no future/self SHA asserted."
 }

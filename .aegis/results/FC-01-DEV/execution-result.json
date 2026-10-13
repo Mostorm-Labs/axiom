@@ -2,180 +2,60 @@
   "task_id": "FC-01",
   "stage": "P32_IMPLEMENTATION",
   "status": "BLOCKED_EVIDENCE",
-  "return_surface": "CONTROL_REVIEW",
   "execution_ref": "codex/fc-01-creation-tools-p32",
   "package_ref": ".aegis/packages/FC-01/package.json",
   "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
-  "task_anchor": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
-  "trusted_control_subject_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
-  "result_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-  "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result.",
-  "original_preflight_order": "UNPROVEN_PRESERVED",
-  "prospective_correction_chain": [
-    {
-      "revision": "b96332006c9732ff3eff028fef04897fc2d78448",
-      "subject": "docs(fc01): define prospective preflight-order correction"
-    },
-    {
-      "revision": "ac4f02411e19f8a56cda4821e757da1302b4896b",
-      "subject": "test(fc01): restore frozen source-loss baseline for red oracle"
-    },
-    {
-      "revision": "e18a72f29fb22c86f9bba433e5d71e52145ab073",
-      "subject": "test(fc01): record corrected preimplementation red oracle"
-    },
-    {
-      "revision": "4162b121f19cfaf57ff8af546ad119fb0159b80e",
-      "subject": "fix(input): restore source-scoped cancellation after corrected red"
-    },
-    {
-      "revision": "fb78d530cb904964333291b1ae6a9a1eee4a67c5",
-      "subject": "test(fc01): preserve corrected red-green logs and geometry design"
-    }
-  ],
-  "prospective_corrected_order_observed": true,
-  "preflight_correction_acceptance": "PENDING_INDEPENDENT_CONTROL_REVIEW",
-  "retained_progress": [
-    "I0 source-loss behavior fix and prospective corrected RED chronology",
-    "I1 versioned Shape/2 admission, typed validation, Snapshot capability/codec implementation; B01/B02 partial",
-    "I2 renderer-neutral Triangle/Connector Scene geometry; B05 partial"
-  ],
-  "quarantined_work": [
-    "I3 incomplete creation/session/snap/preset/queue draft saved under drafts/i3"
-  ],
-  "not_completed": [
-    "I3 full creation/Snap/Preview/Facade matrix",
-    "I4 selected actions/conditional History",
-    "I5 Windows/Web/Android host+publication",
-    "I6 E01-E10 full DEV qualification"
-  ],
-  "test_observations": {
-    "semantic_core_ref": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json",
-    "scene_ref": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json",
-    "source_loss_ref": ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-source-loss/result.json",
-    "core_exit_code": 0,
-    "scene_exit_code": 0,
-    "source_loss_baseline_red": true,
-    "source_loss_candidate_green": true
+  "source_revision_before": "6cc8b9aa67684cd02276d8ba2fc95f3bac504219",
+  "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "materialized_ref": "exact-containing-evidence-commit-returned",
+  "physical_claim": false,
+  "android": "DEFERRED_BY_USER_NO_APK",
+  "verification": {
+    "windows_build": 0,
+    "windows_full_ctest": "664/664",
+    "web_wasm_build": 0,
+    "e04_exact_source": 0,
+    "e09_host_exact_source": 0,
+    "e09_semantic_exact_source": 0
+  },
+  "obligations": {
+    "E01": "PARTIAL_NOT_CLOSED",
+    "E02": "PARTIAL_NOT_CLOSED",
+    "E03": "PARTIAL_NOT_CLOSED",
+    "E04": "PASS_PENDING_CONTROL_REVIEW",
+    "E05": "PARTIAL_NOT_CLOSED",
+    "E06": "PARTIAL_NOT_CLOSED",
+    "E07": "PARTIAL_NOT_CLOSED",
+    "E08": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+    "E09": "PASS_PENDING_CONTROL_REVIEW",
+    "E10": "PARTIAL_NOT_CLOSED"
   },
   "remaining_blockers": [
     {
       "class": "BLOCKED_EVIDENCE",
       "frozen_obligations": [
-        "FC01-B04"
-      ],
-      "reason": "Full independent creation-session spatial differential, rotation/DPR matrix and 100-Move negative remain incomplete."
-    },
-    {
-      "class": "BLOCKED_EVIDENCE",
-      "frozen_obligations": [
-        "FC01-B09"
-      ],
-      "reason": "Source-aware Axis recorder/frontier and host-level local-vs-remote no-echo evidence remain unmaterialized."
-    },
-    {
-      "class": "BLOCKED_IMPLEMENTATION",
-      "frozen_obligations": [
+        "FC01-B01",
+        "FC01-B02",
+        "FC01-B03",
+        "FC01-B05",
+        "FC01-B06",
+        "FC01-B07",
+        "FC01-B08",
         "FC01-B10"
       ],
-      "reason": "Existing G45 legacy OperationRequest compatibility test still expects empty InsertObjects acceptance, which conflicts with frozen non-empty collection validation; no canonical validator relaxation applied."
+      "reason": "Complete frozen E01/E02/E03/E05/E06/E07/E08/E10 evidence is not yet materialized; historical first-mutation chronology remains recovery-only; Android was explicitly deferred."
     }
   ],
-  "remaining_obligation_states": [
-    {
-      "id": "FC01-B01",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E01/semantic-shape2-corpus-results.json",
-      "gap": "Native semantic regression and exact three Golden binding checks pass; all 25 authored-case mapping is not yet materialized."
-    },
-    {
-      "id": "FC01-B02",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E02/ingress-snapshot-replay-compat.json",
-      "gap": "Typed admission/capability/snapshot/replay native tests pass; live host/collaboration and complete ingress coverage remain."
-    },
-    {
-      "id": "FC01-B03",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E03/source-loss-continuation.json",
-      "gap": "Prospective preflight RED-before-reimplementation chain and fresh source-loss differential pass; full creation gesture schedule absent from delivered source."
-    },
-    {
-      "id": "FC01-B04",
-      "status": "NOT_CLOSED_DRAFT_QUARANTINED",
-      "evidence_ref": "E04/snap-guide-independent-differential.json",
-      "gap": "Finite viewport strips, both logical pixel profiles, guide/preview publication and independent differential remain incomplete."
-    },
-    {
-      "id": "FC01-B05",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E05/scene-geometry-hit-render.json",
-      "gap": "Six analytic Scene regressions pass; pinned Skia raster probes cannot execute without locked SDK."
-    },
-    {
-      "id": "FC01-B06",
-      "status": "NOT_IMPLEMENTED",
-      "evidence_ref": "E06/history-preimage-closure.json",
-      "gap": "Selected actions/conditional History not delivered."
-    },
-    {
-      "id": "FC01-B07",
-      "status": "NOT_CLOSED_DRAFT_QUARANTINED",
-      "evidence_ref": "E07/facade-owner-queue-readback.json",
-      "gap": "Draft queue/preset wiring archived; pure service/router regressions do not close Facade owner/off-owner/reentrant/full-ID/two-view matrix."
-    },
-    {
-      "id": "FC01-B08",
-      "status": "BLOCKED_ENVIRONMENT",
-      "evidence_ref": "E08/host-profile-build-and-simulation.json",
-      "gap": "No qualified Windows/Web/Android host output on this source; locked SDK transport failed; I5 adapters/runner remain."
-    },
-    {
-      "id": "FC01-B09",
-      "status": "NOT_IMPLEMENTED",
-      "evidence_ref": "E09/publication-presentation-axis-truth.json",
-      "gap": "Source-aware Scene/Axis/Presented evidence remains."
-    },
-    {
-      "id": "FC01-B10",
-      "status": "PARTIAL_NOT_CLOSED",
-      "evidence_ref": "E10/subject-authority-scope-regression.json",
-      "gap": "Anchor/locks/source projections/Golden/protected scope match; 528 core and 6 Scene regressions pass. Host and complete interaction regression remain."
-    }
-  ],
-  "environment_correction": {
-    "superseded_failure": "closure-committed-core used VS2022 MSVC14.44 and failed __std_unique_4/__std_rotate link",
-    "resolution": "Use published SDK manifest-compatible VS18 MSVC14.51.36231. Fresh closure-vs18-core build and test exit0; failure preserved as diagnostic only.",
-    "remaining_toolchain_blocker": false
-  },
-  "resume_cursor": {
-    "execution_ref": "codex/fc-01-creation-tools-p32",
-    "revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-    "completed_through": [
-      "source-loss prospective correction sequence",
-      "partial I1 semantic implementation verified by native core suite",
-      "partial I2 analytic Scene implementation verified by focused suite"
-    ],
-    "next_action": "Resolve locked Skia transport, reconcile quarantined I3 against frozen B03/B04/B07, author behavioral RED and resume complete I3 through I6. No earlier accepted Gate/P34 outcome implied."
-  },
   "evidence_input_refs": [
-    "E01/semantic-shape2-corpus-results.json",
-    "E02/ingress-snapshot-replay-compat.json",
-    "E03/source-loss-continuation.json",
+    "E04/e04-result.json",
     "E04/snap-guide-independent-differential.json",
-    "E05/scene-geometry-hit-render.json",
-    "E06/history-preimage-closure.json",
-    "E07/facade-owner-queue-readback.json",
     "E08/host-profile-build-and-simulation.json",
+    "E09/e09-result.json",
     "E09/publication-presentation-axis-truth.json",
-    "E10/subject-authority-scope-regression.json",
-    "continuation-preflight-20261013.json",
-    "preflight-order-correction.json",
-    "red-preflight-corrected-order.json",
-    "provider-runs.json",
-    "scope-audit.json",
-    "drafts/i3/archive.json"
+    "E10/e10-result.json",
+    "blocker-closure-provider.json",
+    "evidence-manifest.json",
+    "scope-audit.json"
   ],
-  "physical_claim": false,
   "gate_claim": "none"
 }

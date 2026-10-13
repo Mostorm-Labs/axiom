@@ -3,30 +3,47 @@
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
   "obligation_id": "FC01-B04",
-  "requirement_ref": "Far-axis snap independent differential",
-  "invariant_ref": "FC01-B04",
-  "high_impact_failure_mode": "Far-axis snap independent differential",
-  "residual_detection_gap": [
-    "independent exhaustive viewport differential, P-B profile, rotation/DPR matrix incomplete"
-  ],
-  "independent_oracle_ref_and_sha": {
-    "creation_session": "apps/ink_playground/tests/creation_session_test.cpp"
+  "status": "PASS_PENDING_CONTROL_REVIEW",
+  "requirement_ref": "verification.lock.json#FC01-B04",
+  "oracle": "independent linear candidate reference + finite SceneQuery-backed CreationSession + camera matrix",
+  "acceptance": {
+    "differential_cases": 360,
+    "indexed_scene_query_matches_independent_linear_reference": true,
+    "five_presets_preview_final_match": true,
+    "logical_dpr_threshold_invariant": true,
+    "invalid_hidden_selected_offscreen_locked_targets_excluded": true,
+    "two_session_preview_isolation": true,
+    "moved_target_refresh": true,
+    "camera_and_target_fence_reject_stale_up": true,
+    "hundred_move_zero_canonical_side_effects": true,
+    "direct_reference_camera_projection_match": true
   },
-  "fixture_ref_sha": {},
-  "result_repository_revision_and_materialized_ref": {
-    "revision": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
-    "materialized_ref": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
-    "branch": "codex/fc-01-creation-tools-p32"
+  "provider_run_refs": {
+    "windows_build": "continuation-logs/committed-runs/fc3d448e-windows-qualified/build.log",
+    "windows_ctest": "continuation-logs/committed-runs/fc3d448e-windows-qualified/test.log",
+    "exact_oracle": "continuation-logs/blocker-closure/e04-exact-source.log",
+    "exact_oracle_binary": "D:/axbuild/fc01-windows-host-final/apps/ink_playground/axiom_fc01_snap_creation_differential_tests.exe"
   },
-  "binary_digest_and_profile": {},
-  "provider_run_identity": {},
-  "expected_observed_result": {
-    "bounded_offscreen_and_fixed_edge": "covered"
+  "logs": {
+    "continuation-logs/blocker-closure/e04-exact-source.log": {
+      "bytes": 281,
+      "sha256": "dad7972c7f38a59add6915ac0be2c7192bb1e9fb650135fe4c9063f9250d52b6"
+    },
+    "continuation-logs/blocker-closure/e04-projection-green.log": {
+      "bytes": 281,
+      "sha256": "dad7972c7f38a59add6915ac0be2c7192bb1e9fb650135fe4c9063f9250d52b6"
+    },
+    "continuation-logs/committed-runs/fc3d448e-windows-qualified/test.log": {
+      "bytes": 162791,
+      "sha256": "5cb7e6aa251a83f588202e04f3f6f53e3c244b35d61fe255b7a24be70f91f359"
+    }
   },
-  "first_divergence_or_null": null,
-  "pass_from_frozen_comparator": false,
-  "blocking_justification": [
-    "independent exhaustive viewport differential, P-B profile, rotation/DPR matrix incomplete"
-  ],
-  "physical_claim_false": true
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "pass_from_frozen_comparator": true,
+  "materialized_ref_resolution": "Exact containing evidence commit returned with this result; no future/self SHA asserted.",
+  "current_source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
 }

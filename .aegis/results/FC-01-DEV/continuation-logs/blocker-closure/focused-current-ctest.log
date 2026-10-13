@@ -1,0 +1,147 @@
+Test project D:/axbuild/fc01-windows-host-final
+      Start   1: DUIM1Control
+ 1/71 Test   #1: DUIM1Control ................................................................   Passed    0.13 sec
+      Start   2: DUIM1BuildInfo
+ 2/71 Test   #2: DUIM1BuildInfo ..............................................................   Passed    0.10 sec
+      Start 166: FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple
+ 3/71 Test #166: FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple .......................   Passed    0.03 sec
+      Start 167: FC01Shape2Validation.KeepsLegacyShapeKindsValid
+ 4/71 Test #167: FC01Shape2Validation.KeepsLegacyShapeKindsValid .............................   Passed    0.02 sec
+      Start 168: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation
+ 5/71 Test #168: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation .....................   Passed    0.03 sec
+      Start 169: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation
+ 6/71 Test #169: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation ....................   Passed    0.02 sec
+      Start 170: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency
+ 7/71 Test #170: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency .....................   Passed    0.02 sec
+      Start 171: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady
+ 8/71 Test #171: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady ........   Passed    0.02 sec
+      Start 172: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability
+ 9/71 Test #172: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability ............   Passed    0.02 sec
+      Start 173: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal
+10/71 Test #173: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal ..............   Passed    0.02 sec
+      Start 174: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding
+11/71 Test #174: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding ...   Passed    0.02 sec
+      Start 175: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed
+12/71 Test #175: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed ...................   Passed    0.02 sec
+      Start 531: FC01AxisPublicationTruth
+13/71 Test #531: FC01AxisPublicationTruth ....................................................   Passed    0.02 sec
+      Start 533: G47TextLayout
+14/71 Test #533: G47TextLayout ...............................................................   Passed    0.41 sec
+      Start 563: G46TransformHandleDrag
+15/71 Test #563: G46TransformHandleDrag ......................................................   Passed    0.10 sec
+      Start 573: G46BViewportConstraints
+16/71 Test #573: G46BViewportConstraints .....................................................   Passed    0.07 sec
+      Start 583: G45BrushPackage
+17/71 Test #583: G45BrushPackage .............................................................   Passed    0.10 sec
+      Start 584: G45BrushPackageCatalog
+18/71 Test #584: G45BrushPackageCatalog ......................................................   Passed    0.10 sec
+      Start 585: G45BrushPlan
+19/71 Test #585: G45BrushPlan ................................................................   Passed    0.07 sec
+      Start 586: G45BrushSession
+20/71 Test #586: G45BrushSession .............................................................   Passed    0.11 sec
+      Start 587: G45BrushOperationIntent
+21/71 Test #587: G45BrushOperationIntent .....................................................   Passed    0.08 sec
+      Start 588: G45BrushPreviewHandoff
+22/71 Test #588: G45BrushPreviewHandoff ......................................................   Passed    0.10 sec
+      Start 589: G45BrushComplexity
+23/71 Test #589: G45BrushComplexity ..........................................................   Passed    0.24 sec
+      Start 590: G45ProgrammableBrush
+24/71 Test #590: G45ProgrammableBrush ........................................................   Passed    0.07 sec
+      Start 591: G45PerfectFreehandReference
+25/71 Test #591: G45PerfectFreehandReference .................................................   Passed    0.09 sec
+      Start 592: G45CanonicalBrushCommit
+26/71 Test #592: G45CanonicalBrushCommit .....................................................   Passed    0.09 sec
+      Start 593: G47ImageResource
+27/71 Test #593: G47ImageResource ............................................................   Passed    0.04 sec
+      Start 594: G47TextPipeline
+28/71 Test #594: G47TextPipeline .............................................................   Passed    0.17 sec
+      Start 595: G45BrushOutlineSkiaPath
+29/71 Test #595: G45BrushOutlineSkiaPath .....................................................   Passed    0.13 sec
+      Start 600: G3RuntimeAppBinding
+30/71 Test #600: G3RuntimeAppBinding .........................................................   Passed    0.10 sec
+      Start 601: G3HeadlessCanvasDemo
+31/71 Test #601: G3HeadlessCanvasDemo ........................................................   Passed    2.10 sec
+      Start 602: G3HeadlessSkia
+32/71 Test #602: G3HeadlessSkia ..............................................................   Passed    0.04 sec
+      Start 603: G3RenderTargetSwitching
+33/71 Test #603: G3RenderTargetSwitching .....................................................   Passed    0.11 sec
+      Start 604: G3SkiaSurfaceProvider
+34/71 Test #604: G3SkiaSurfaceProvider .......................................................   Passed    0.16 sec
+      Start 605: G3PreviewSurface
+35/71 Test #605: G3PreviewSurface ............................................................   Passed    0.17 sec
+      Start 606: G3SurfacePresentation
+36/71 Test #606: G3SurfacePresentation .......................................................   Passed    0.10 sec
+      Start 607: G3FrameState
+37/71 Test #607: G3FrameState ................................................................   Passed    0.10 sec
+      Start 608: G46EditingOverlay
+38/71 Test #608: G46EditingOverlay ...........................................................   Passed    0.11 sec
+      Start 609: G3Visibility
+39/71 Test #609: G3Visibility ................................................................   Passed    0.41 sec
+      Start 610: G3DirectReference
+40/71 Test #610: G3DirectReference ...........................................................   Passed    0.75 sec
+      Start 611: G3FrameOrchestration
+41/71 Test #611: G3FrameOrchestration ........................................................   Passed    0.11 sec
+      Start 617: DUIM1PanelModel
+42/71 Test #617: DUIM1PanelModel .............................................................   Passed    0.10 sec
+      Start 620: G3Camera
+43/71 Test #620: G3Camera ....................................................................   Passed    0.10 sec
+      Start 621: G3DemoHitSelect
+44/71 Test #621: G3DemoHitSelect .............................................................   Passed    0.11 sec
+      Start 622: G3WindowsSurfaceAdapter
+45/71 Test #622: G3WindowsSurfaceAdapter .....................................................   Passed    0.10 sec
+      Start 623: G3WebSurfaceHost
+46/71 Test #623: G3WebSurfaceHost ............................................................   Passed    0.11 sec
+      Start 624: FC01CreationSession
+47/71 Test #624: FC01CreationSession .........................................................   Passed    0.07 sec
+      Start 625: FC01CreationControlBinding
+48/71 Test #625: FC01CreationControlBinding ..................................................   Passed    0.11 sec
+      Start 626: FC01CreationPreview
+49/71 Test #626: FC01CreationPreview .........................................................   Passed    0.02 sec
+      Start 627: FC01CreationSources
+50/71 Test #627: FC01CreationSources .........................................................   Passed    0.02 sec
+      Start 628: FC01CreationOwnerQueue
+51/71 Test #628: FC01CreationOwnerQueue ......................................................   Passed    0.02 sec
+      Start 629: FC01SnapCreationDifferential
+52/71 Test #629: FC01SnapCreationDifferential ................................................   Passed    0.04 sec
+      Start 630: FC01HostPublicationTruth
+53/71 Test #630: FC01HostPublicationTruth ....................................................   Passed    0.09 sec
+      Start 631: FC01SelectedActions
+54/71 Test #631: FC01SelectedActions .........................................................   Passed    0.14 sec
+      Start 632: FC01SelectedRemoteConflict
+55/71 Test #632: FC01SelectedRemoteConflict ..................................................   Passed    0.02 sec
+      Start 633: FC01InsertHistory
+56/71 Test #633: FC01InsertHistory ...........................................................   Passed    0.02 sec
+      Start 643: G46BViewportFitHost
+57/71 Test #643: G46BViewportFitHost .........................................................   Passed    0.12 sec
+      Start 644: DUIM1ToolOptions
+58/71 Test #644: DUIM1ToolOptions ............................................................   Passed    0.11 sec
+      Start 645: DUIM1ViewControls
+59/71 Test #645: DUIM1ViewControls ...........................................................   Passed    0.11 sec
+      Start 646: DUIM1PlatformControl
+60/71 Test #646: DUIM1PlatformControl ........................................................   Passed    0.11 sec
+      Start 647: DUIM1Qualification
+61/71 Test #647: DUIM1Qualification ..........................................................   Passed    0.12 sec
+      Start 648: G46BQueryStructure
+62/71 Test #648: G46BQueryStructure ..........................................................   Passed    0.12 sec
+      Start 652: G46PlaygroundTransform
+63/71 Test #652: G46PlaygroundTransform ......................................................   Passed    0.22 sec
+      Start 653: G47TextHost
+64/71 Test #653: G47TextHost .................................................................   Passed    0.14 sec
+      Start 654: G47QualificationReplay
+65/71 Test #654: G47QualificationReplay ......................................................   Passed    1.17 sec
+      Start 655: G46CQualificationBundle
+66/71 Test #655: G46CQualificationBundle .....................................................   Passed   13.15 sec
+      Start 656: G46CQualificationBehavior
+67/71 Test #656: G46CQualificationBehavior ...................................................   Passed    0.59 sec
+      Start 657: G45BrushRuntimePipeline
+68/71 Test #657: G45BrushRuntimePipeline .....................................................   Passed    0.98 sec
+      Start 658: G45BrushCommitAdapter
+69/71 Test #658: G45BrushCommitAdapter .......................................................   Passed    0.12 sec
+      Start 663: DUIM1RuntimeFacade
+70/71 Test #663: DUIM1RuntimeFacade ..........................................................   Passed    0.12 sec
+      Start 664: G45BrushLab
+71/71 Test #664: G45BrushLab .................................................................   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 71
+
+Total Test time (real) =  26.93 sec

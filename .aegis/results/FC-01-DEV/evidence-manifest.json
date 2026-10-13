@@ -2,19 +2,34 @@
   "schema_id": "fc01-dev-evidence-v0.1",
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
-  "source_revision": "ed1d9dda2516da04e6e3f859d852c3e76d8aebad",
-  "materialized_ref": "Exact containing evidence commit returned in the P32 result.",
-  "physical_claim": false,
-  "obligations": {
-    "E03": true,
-    "E04": false,
-    "E05": true,
-    "E06": true,
-    "E07": true,
-    "E08": true,
-    "E09": false,
-    "E10": true
+  "exact_source_sha": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "package_ref": ".aegis/packages/FC-01/package.json@c98110c015f975012f25db5efa66c9679da35630",
+  "result_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "materialized_ref": "exact-containing-evidence-commit-returned",
+  "required_obligations": {
+    "E01": "PARTIAL_NOT_CLOSED",
+    "E02": "PARTIAL_NOT_CLOSED",
+    "E03": "PARTIAL_NOT_CLOSED",
+    "E04": "PASS_PENDING_CONTROL_REVIEW",
+    "E05": "PARTIAL_NOT_CLOSED",
+    "E06": "PARTIAL_NOT_CLOSED",
+    "E07": "PARTIAL_NOT_CLOSED",
+    "E08": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+    "E09": "PASS_PENDING_CONTROL_REVIEW",
+    "E10": "PARTIAL_NOT_CLOSED"
   },
-  "status": "BLOCKED_EVIDENCE",
-  "note": "Focused Brush2 and Snap differential evidence refreshed at current source; E04 remains incomplete for full spatial matrix and E09 remains incomplete for Axis/no-echo recorder."
+  "android": {
+    "status": "DEFERRED_BY_USER",
+    "apk_built": false
+  },
+  "physical_claim_false": true,
+  "provider_run_refs": [
+    "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json",
+    "continuation-logs/committed-runs/fc3d448e-web-qualified/result.json",
+    "continuation-logs/blocker-closure/e04-exact-source.log",
+    "continuation-logs/blocker-closure/e09-host-exact-source.log",
+    "continuation-logs/blocker-closure/e09-semantic-exact-source.log"
+  ],
+  "chronology": "Recovery verification only; does not retroactively establish pre-first-mutation design/RED.",
+  "gate_claim": "none"
 }

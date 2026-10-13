@@ -3,16 +3,64 @@
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
   "obligation_id": "FC01-B09",
-  "status": "NOT_IMPLEMENTED",
-  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B09",
-  "requirement": "Canonical Applied publishes one Scene/Axis event by source, remote operations do not echo; Presented and Axis durability status never guessed from control success",
-  "oracle": "Independent local/remote publication recorder, qualified present feedback current-surface token and Axis provider/frontier state simulator",
-  "acceptance": "0 publication for Preview/reject/AlreadyApplied, 0 remote Outbox echo, genuine current qualified Presented only, Axis pending/failed honest, Render/Axis failures do not rollback Applied",
-  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
-  "residual_detection_gap": "Source-aware Scene/Axis/Presented evidence remains.",
-  "pass_from_frozen_comparator": false,
+  "status": "PASS_PENDING_CONTROL_REVIEW",
+  "requirement_ref": "verification.lock.json#FC01-B09",
+  "oracle": "independent Axis recorder/provider status + host LocalOperationSink + PresentationTracker",
+  "acceptance": {},
+  "provider_run_refs": [
+    "continuation-logs/blocker-closure/e09-host-exact-source.log",
+    "continuation-logs/blocker-closure/e09-semantic-exact-source.log",
+    "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json"
+  ],
+  "logs": {
+    "continuation-logs/blocker-closure/e09-final.log": {
+      "bytes": 57,
+      "sha256": "5b7d38d87bd4d010a05cc09c869f9d3cde55a189b0319a7c454a0cc711d2c1f6"
+    },
+    "continuation-logs/blocker-closure/e09-host-final-r2.log": {
+      "bytes": 57,
+      "sha256": "5b7d38d87bd4d010a05cc09c869f9d3cde55a189b0319a7c454a0cc711d2c1f6"
+    },
+    "continuation-logs/blocker-closure/e09-host-publication-green.log": {
+      "bytes": 193,
+      "sha256": "8f23b66063d202bfe5ada681fd5a8b7a9d0017d62f2727748a43f31303d7499a"
+    },
+    "continuation-logs/blocker-closure/e09-host-publication-green2.log": {
+      "bytes": 248,
+      "sha256": "5551e924d6d60720b01a10ec4dfcc85a4e0b8d99f1847d9fe5ec31cee49d2ac7"
+    },
+    "continuation-logs/blocker-closure/e09-host-publication-green3.log": {
+      "bytes": 248,
+      "sha256": "a63af9c29dcdc1bae1e0cf7c1a0a21e319130244ec2c7c1bef7ead8cefda784d"
+    },
+    "continuation-logs/blocker-closure/e09-host-publication-green4.log": {
+      "bytes": 57,
+      "sha256": "5b7d38d87bd4d010a05cc09c869f9d3cde55a189b0319a7c454a0cc711d2c1f6"
+    },
+    "continuation-logs/blocker-closure/e09-host-publication-red.log": {
+      "bytes": 193,
+      "sha256": "8f23b66063d202bfe5ada681fd5a8b7a9d0017d62f2727748a43f31303d7499a"
+    },
+    "continuation-logs/blocker-closure/e09-primitive-green.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e09-semantic-final-r2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e09-semantic-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/focused-final-r2.log": {
+      "bytes": 6390,
+      "sha256": "07cd41b910c2f7dddb03507d91b07afff1ece26930c4d8d0952699ba6538b9a4"
+    }
+  },
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
   "physical_claim_false": true,
   "gate_claim": "none",
-  "provider_run_refs": []
+  "pass_from_frozen_comparator": false,
+  "materialized_ref_resolution": "Exact containing evidence commit returned with this result; no future/self SHA asserted."
 }

@@ -1,0 +1,24 @@
+{
+  "task_id": "FC-01",
+  "starting_revision": "6cc8b9aa67684cd02276d8ba2fc95f3bac504219",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "scope": [
+    "FC01-B04",
+    "FC01-B09",
+    "FC01-B10 affected regression"
+  ],
+  "owner_flow": {
+    "B04": "existing CreationSession/SnapResolver and SceneQuery own target selection; move refreshes indexed visible Shape set; Up rejects if canonical generation or camera differs from last preview; no canonical mutation on Move/Cancel",
+    "B09": "existing OperationEngine commit_record is the sole Applied fact; optional host LocalOperationSink consumes only Eligible commits after semantic apply independent of Scene success; external Remote/Replay applies share owner admission and do not echo; deterministic test sink owns provider durability states, no second Axis product implementation",
+    "abort": "reject invalid query/camera/stale Up before operation construction; renderer/provider failure never rolls back canonical Applied"
+  },
+  "pre_mutation_red_observed": {
+    "logical_dpr": "continuation-logs/blocker-closure/e04-logical-dpr-red.log",
+    "stale_target": "continuation-logs/blocker-closure/e04-stale-target-red.log"
+  },
+  "android_build": "DEFERRED_BY_USER_2026-10-13_NO_APK_RUN",
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "unresolved_semantic_decisions": []
+}

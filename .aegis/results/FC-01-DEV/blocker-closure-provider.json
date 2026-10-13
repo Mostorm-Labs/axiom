@@ -1,0 +1,80 @@
+{
+  "task_id": "FC-01",
+  "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "source_diff_at_run": [
+    ".aegis/results/FC-01-DEV/E04/e04-result.json",
+    ".aegis/results/FC-01-DEV/E04/snap-guide-independent-differential.json",
+    ".aegis/results/FC-01-DEV/E09/e09-result.json",
+    ".aegis/results/FC-01-DEV/E09/publication-presentation-axis-truth.json",
+    ".aegis/results/FC-01-DEV/E10/e10-result.json",
+    ".aegis/results/FC-01-DEV/evidence-index.json",
+    ".aegis/results/FC-01-DEV/evidence-manifest.json",
+    ".aegis/results/FC-01-DEV/execution-result.json"
+  ],
+  "all_dirty_paths_are_evidence": true,
+  "runs": [
+    {
+      "label": "e04-exact-source",
+      "command": [
+        "D:/axbuild/fc01-windows-host-final/apps/ink_playground/axiom_fc01_snap_creation_differential_tests.exe"
+      ],
+      "exit_code": 0,
+      "log": "continuation-logs/blocker-closure/e04-exact-source.log",
+      "bytes": 281,
+      "sha256": "dad7972c7f38a59add6915ac0be2c7192bb1e9fb650135fe4c9063f9250d52b6",
+      "binary_sha256": "bb33d7c5f4f1947814f0460e1db7b73054668b89b58a061b7b52102d8d6e7105"
+    },
+    {
+      "label": "e09-host-exact-source",
+      "command": [
+        "D:/axbuild/fc01-windows-host-final/apps/ink_playground/axiom_fc01_host_publication_truth_tests.exe"
+      ],
+      "exit_code": 0,
+      "log": "continuation-logs/blocker-closure/e09-host-exact-source.log",
+      "bytes": 997,
+      "sha256": "b070a57a05d1b44f595e082c47acc33bde5f9514b704e6ad358373ba349723ef",
+      "binary_sha256": "f0933fb1db1db42cd398fcfbaf53c6e37822dd8277d80cfbf2bb6eaa976dd133"
+    },
+    {
+      "label": "e09-semantic-exact-source",
+      "command": [
+        "D:/axbuild/fc01-windows-host-final/runtime/semantic/tests/canvas_semantic_operation_engine_axis_publication_truth_test.exe"
+      ],
+      "exit_code": 0,
+      "log": "continuation-logs/blocker-closure/e09-semantic-exact-source.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "binary_sha256": "d915689ec1360f33651950d4d4d089dd06f616fd6a971150a39545083a40f2b1"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "D:/axbuild/fc01-windows-host-final/apps/ink_playground/axiom_ink_playground_windows.exe",
+      "bytes": 11548160,
+      "sha256": "420bb8e347e49144d7960b480f4ba8e6abe4af807162b1ec1a195fac1ea2a6b2",
+      "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+      "physical_claim": false
+    },
+    {
+      "path": "D:/axbuild/fc01-web-correct-v2/apps/ink_playground/axiom_ink_playground_web.js",
+      "bytes": 135530,
+      "sha256": "7edf954e2bc782b646c5a3d66acc2aefe1d7b928d94fe6725b6ba9824d5d90ab",
+      "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+      "physical_claim": false
+    },
+    {
+      "path": "D:/axbuild/fc01-web-correct-v2/apps/ink_playground/axiom_ink_playground_web.wasm",
+      "bytes": 9521475,
+      "sha256": "2d26fee0e41500336031dc48c75fc64d221c4eb5059e322ccba2cb91eea6f3b5",
+      "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+      "physical_claim": false
+    }
+  ],
+  "android": {
+    "status": "DEFERRED_BY_USER",
+    "build_executed": false,
+    "apk_generated": false
+  },
+  "gate_claim": "none",
+  "physical_claim": false
+}
