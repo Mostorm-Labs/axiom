@@ -122,17 +122,33 @@ void deferredViewportNavigationStillPresentsCanonical() {
   assert(!host.canonicalPresentationDirty());
 }
 
+canvas::interaction::OperationRequest realLegacyRequest(std::uint64_t operationId,
+                                                       std::uint64_t objectId) {
+  canvas::semantic::ObjectRecord record{};
+  record.id = canvas::foundation::ObjectId::fromUint64(objectId);
+  record.kind = canvas::semantic::ObjectKind::kShape;
+  record.kind_version = 1;
+  record.placement.order_key = canvas::semantic::OrderKey{{0x10}};
+  record.content = canvas::semantic::ShapeContent{1, 20, 20};
+  return {operationId, canvas::semantic::Operation{
+      canvas::semantic::OperationId{canvas::foundation::ObjectId::fromUint64(operationId)},
+      canvas::semantic::DocumentId{canvas::foundation::ObjectId::fromUint64(1)},
+      1, 1, canvas::semantic::InsertObjectsOp{{record}}}};
+}
+
 void legacyIdentitiesCannotCollideWithNewBrushOrHistory() {
   Host host;
   assert(host.bindSurface(256, 256));
   auto& port = static_cast<canvas::interaction::OperationSubmitPort&>(host);
-  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  assert(!port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  const auto request = realLegacyRequest(2, 0x97001);
+  assert(port.submit(request).accepted);
   const auto count = host.submittedOperationCount();
   const auto generation = host.semanticGeneration();
-  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  assert(port.submit(request).accepted);
   assert(host.submittedOperationCount() == count);
   assert(host.semanticGeneration() == generation);
-  assert(port.submit(canvas::interaction::OperationRequest{(std::uint64_t{1} << 63U) + 1U}).accepted);
+  assert(port.submit(realLegacyRequest((std::uint64_t{1} << 63U) + 1U, 0x97002)).accepted);
   drawHistoryStroke(host, 970U);
   const auto records = HistoryAccess::objects(host);
   assert(host.undo() && host.redo());
@@ -143,9 +159,10 @@ void localBrushSkipsIdentityAlreadyUsedByLegacySubmit() {
   Host host;
   assert(host.bindSurface(256, 256));
   auto& port = static_cast<canvas::interaction::OperationSubmitPort&>(host);
-  assert(port.submit(canvas::interaction::OperationRequest{2U}).accepted);
+  assert(port.submit(realLegacyRequest(2, 0x97501)).accepted);
+  const auto objectsBeforeBrush = host.semanticObjectCount();
   drawHistoryStroke(host, 975U);
-  assert(host.semanticObjectCount() == 1U);
+  assert(host.semanticObjectCount() == objectsBeforeBrush + 1);
   assert(host.undo() && host.redo());
 }
 

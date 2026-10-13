@@ -35,6 +35,7 @@
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "creation_session.hpp"
+#include "local_operation_sink.hpp"
 #include "canvas/runtime/canvas_control_types.hpp"
 
 #include <cstddef>
@@ -45,6 +46,7 @@
 #include <mutex>
 #include <optional>
 #include <span>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -322,6 +324,23 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   void setCanonicalVisibilitySink(ink::CanonicalVisibilitySink* sink) noexcept {
     canonicalVisibilitySink_ = sink;
   }
+  void setLocalOperationSink(LocalOperationSink* sink) noexcept { localOperationSink_ = sink; }
+  [[nodiscard]] semantic::ApplyResult applyExternalOperation(
+      const semantic::Operation&, semantic::ApplySource);
+  [[nodiscard]] OperationOutcomeSnapshot operationOutcome() const noexcept {
+    AxisOperationStatus axis{};
+    if (localOperationSink_ != nullptr && lastAppliedCommit_.has_value() &&
+        lastAppliedCommit_->source != semantic::ApplySource::kRemoteSync &&
+        lastAppliedCommit_->source != semantic::ApplySource::kRestoreReplay) {
+      axis = localOperationSink_->status(lastAppliedCommit_->operation_id,
+                                         lastAppliedCommit_->commit_stamp);
+    }
+    if (!surface_.available || lifecycle_ == nullptr ||
+        lifecycle_->current().surfaceGeneration.value() != surface_.generation) {
+      return {lastAppliedCommit_, semantic::SemanticGeneration{}, axis};
+    }
+    return {lastAppliedCommit_, presentedSemanticGeneration_, axis};
+  }
   [[nodiscard]] const std::vector<BaselineTraceSample>& baselineTrace() const noexcept {
     return baselineTrace_;
   }
@@ -457,8 +476,11 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
       const interaction::OperationRequest&) override;
   [[nodiscard]] interaction::SubmitResult submit(const semantic::SetTransformsOp&) override;
   [[nodiscard]] semantic::OperationId allocateOperationId() override;
+  [[nodiscard]] semantic::Operation legacyStrokeOperation(
+      const ink::StrokeRecord&, std::uint64_t operationId) const;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
+  void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
       semantic::Operation forward, semantic::Operation inverse) noexcept;
   [[nodiscard]] bool recoverHistoryScene() noexcept;
@@ -538,6 +560,9 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;
+  LocalOperationSink* localOperationSink_ = nullptr;
+  std::optional<semantic::CanonicalCommitRecord> lastAppliedCommit_;
+  semantic::SemanticGeneration presentedSemanticGeneration_{};
   std::unique_ptr<canvas::Scene> runtimeSceneHost_;
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
@@ -582,11 +607,17 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
   std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
+  struct CreationFence final {
+    semantic::SemanticGeneration semantic{};
+    std::uint64_t camera = 0;
+  };
+  std::unordered_map<input::PointerKey, CreationFence, input::PointerKeyHash> creationFences_;
   input::PointerKey latestCreationPointer_{};
   CreationPreset creationPreset_ = CreationPreset::kRectangle;
   runtime::CanvasAppearance futureAppearance_{};
   std::uint64_t creationSerial_ = 0;
   bool creationMode_ = false;
+  std::thread::id ownerThread_{};
 };
 
 }  // namespace canvas::ink_playground

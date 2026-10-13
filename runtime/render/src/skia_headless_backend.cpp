@@ -304,8 +304,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(fill));
                 paint.setStyle(SkPaint::kFill_Style); canvas.drawPath(path.detach(), paint);
             } else if (fill.a > 0.0F) {
-                drawSolidRect(canvas, foundation::WorldRect{0.0F, 0.0F,
-                    static_cast<float>(command.content.width), static_cast<float>(command.content.height)}, fill);
+                drawSolidRect(canvas, record.visualBounds, fill);
             }
         } else if constexpr (std::is_same_v<T, ImageReferenceCommand>) {
             if (images == nullptr) return;

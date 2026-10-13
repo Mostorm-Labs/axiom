@@ -87,7 +87,9 @@ std::optional<SnapCandidate> SnapResolver::resolveAxis(
       std::pair{SnapFeatureKind::kCenter, sourceCenter},
       std::pair{SnapFeatureKind::kMaxEdge, sourceMax}};
   std::optional<SnapCandidate> best;
-  const float engage = policy_.engageLogicalPx / std::max(dpr, 1.0F);
+  // viewBounds and policy thresholds are already in logical pixels.
+  (void)dpr;
+  const float engage = policy_.engageLogicalPx;
   for (const auto& target : targets) {
     if (target.selected || target.transformed || !target.viewBounds.isFiniteAndOrdered()) {
       continue;
@@ -130,7 +132,7 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
   const auto y = resolveAxis(source.viewBounds.top,
                              (source.viewBounds.top + source.viewBounds.bottom) * 0.5F,
                              source.viewBounds.bottom, targets, false, dpr, source.yFeatures);
-  const float release = policy_.releaseLogicalPx / std::max(dpr, 1.0F);
+  const float release = policy_.releaseLogicalPx;
   auto currentCorrection = [&](const std::optional<SnapCandidate>& active,
                                bool horizontal) -> std::optional<SnapCandidate> {
     if (!active.has_value()) return std::nullopt;

@@ -1,11 +1,22 @@
 #include "brush_lab.hpp"
 
 #include <array>
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <sstream>
 #include <string_view>
 
+std::string logicalText(std::string bytes) {
+  // Git text checkout may use CRLF. Compare the authored SVG/JSON text,
+  // retaining every character except the carriage return of a CRLF pair.
+  std::string text;
+  for (std::size_t i=0;i<bytes.size();++i) {
+    if(bytes[i]=='\r' && i+1<bytes.size() && bytes[i+1]=='\n') continue;
+    text.push_back(bytes[i]);
+  }
+  return text;
+}
 int main() {
   const std::array families{
       canvas::ink::BrushFamily::kPen, canvas::ink::BrushFamily::kPencil,
@@ -30,7 +41,7 @@ int main() {
     std::ostringstream expected;
     expected << golden.rdbuf();
     assert(golden.good() || golden.eof());
-    assert(expected.str() == scenario.svg + "\n");
+    assert(logicalText(expected.str()) == scenario.svg + "\n");
     if (family == canvas::ink::BrushFamily::kLaser) {
       assert(!scenario.canonicalMutation);
       assert(scenario.commitDigest != 0);
@@ -50,6 +61,6 @@ int main() {
   std::ostringstream expectedManifest;
   expectedManifest << goldenManifest.rdbuf();
   assert(goldenManifest.good() || goldenManifest.eof());
-  assert(expectedManifest.str() == manifest + "\n");
+  assert(logicalText(expectedManifest.str()) == manifest + "\n");
   return 0;
 }

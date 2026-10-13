@@ -94,7 +94,8 @@ std::optional<ReferenceCandidate> referenceResolveAxis(
                                                        : (source.top + source.bottom) * 0.5F},
       std::pair{SnapFeatureKind::kMaxEdge, horizontal ? source.right : source.bottom}};
   std::optional<ReferenceCandidate> best;
-  const float threshold = engage / std::max(dpr, 1.0F);
+  (void)dpr;
+  const float threshold = engage;
   for (const auto& target : targets) {
     if (target.selected || target.transformed || !target.viewBounds.isFiniteAndOrdered()) continue;
     for (const auto targetFeature : {SnapFeatureKind::kMinEdge, SnapFeatureKind::kCenter,
@@ -155,8 +156,8 @@ void independentHysteresisDifferential() {
   assert(!resolver.resolve(SnapSource{WorldRect{106, 40, 126, 60}}, targets, 1.0F).x.has_value());
   resolver.reset();
   assert(resolver.resolve(SnapSource{WorldRect{99, 40, 119, 60}}, targets, 2.0F).x.has_value());
-  assert(resolver.resolve(SnapSource{WorldRect{102, 40, 122, 60}}, targets, 2.0F).x.has_value());
-  assert(!resolver.resolve(SnapSource{WorldRect{103, 40, 123, 60}}, targets, 2.0F).x.has_value());
+  assert(resolver.resolve(SnapSource{WorldRect{104, 40, 124, 60}}, targets, 2.0F).x.has_value());
+  assert(!resolver.resolve(SnapSource{WorldRect{106, 40, 126, 60}}, targets, 2.0F).x.has_value());
 }
 
 int main() {

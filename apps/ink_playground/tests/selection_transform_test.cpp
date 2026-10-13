@@ -25,6 +25,7 @@ std::vector<std::uint8_t> pixels(Host& host) {
 }
 void prepare(Host& host) {
   assert(host.bindSurface(256,256));
+  assert(host.setEraserDiameterLogicalPx(36));
   assert(host.beginBrushSession(700U));
   assert(host.appendBrushSample(700U,32,64,0.5,1U));
   assert(host.appendBrushSample(700U,160,64,0.5,2U));
@@ -85,7 +86,7 @@ void lifecycle() {
         // A valid remote no-op still advances the canonical generation;
         // the active transient edit must be fenced without changing pixels.
         auto remoteTransform = original.front().transform;
-        remoteTransform.tx += 1.0;
+
         assert(Access::applyRemote(host, canvas::semantic::SetTransformsOp{{
             {original.front().id, remoteTransform}}}));
         assert(!host.selectionPointer(77U,Phase::kMove,p.x+40,p.y));

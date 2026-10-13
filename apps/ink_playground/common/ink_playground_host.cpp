@@ -1,6 +1,7 @@
 #include "ink_playground_host.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
+#include "canvas/semantic/commit_publication_projection.hpp"
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
 #include "canvas/scene/bounds_system.hpp"
@@ -221,7 +222,7 @@ InkPlaygroundHost::InkPlaygroundHost()
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
       sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>(*runtimeSceneHost_)),
-      history_(*this) {}
+      history_(*this), ownerThread_(std::this_thread::get_id()) {}
 
 bool InkPlaygroundHost::configureTextResources(std::vector<std::uint8_t> latin,
     std::vector<std::uint8_t> cjk,text::LayoutContext context) {
@@ -652,26 +653,37 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
       (std::min)(viewportTopLeft.second, viewportBottomRight.second),
       (std::max)(viewportTopLeft.first, viewportBottomRight.first),
       (std::max)(viewportTopLeft.second, viewportBottomRight.second)};
+  const auto eraseSession = [&] {
+    creations_.erase(key);
+    creationFences_.erase(key);
+  };
+  const auto refreshTargets = [&](CreationSession& creation) {
+    if (!historySceneReady()) return false;
+    const auto queried = runtimeSceneHost_->query(canvas::SceneQuery{viewport});
+    if (!queried) return false;
+    std::vector<interaction::SnapTarget> targets;
+    const auto view = runtimeSceneHost_->read();
+    for (const auto id : queried.value().backToFront) {
+      const auto* record = view.find(id);
+      if (record == nullptr || record->kind != canvas::SceneObjectKind::kShape ||
+          std::find(selection_.selected().begin(), selection_.selected().end(), id) !=
+              selection_.selected().end()) continue;
+      targets.push_back({id, record->worldBounds, false, false});
+    }
+    creation.setSnapTargets(std::move(targets));
+    creation.setSnapScale(viewportController_->state().scale);
+    creationFences_[key] = {semanticGeneration_.current(), cameraGeneration()};
+    return true;
+  };
   if (phase == input::PointerPhase::kDown) {
     if (creations_.contains(key)) return false;
     auto& creation = creations_[key];
     latestCreationPointer_ = key;
-    if (runtimeSceneHost_ != nullptr) {
-      std::vector<interaction::SnapTarget> targets;
-      const auto camera = viewportController_->state();
-      for (const auto& record : runtimeSceneHost_->read().records()) {
-        if (record.objectId == selection_.primary()) continue;
-        if ((static_cast<std::uint32_t>(record.flags) &
-             static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible)) == 0U) continue;
-        targets.push_back({record.objectId, record.worldBounds, false, false});
-      }
-      creation.setSnapTargets(std::move(targets));
-      creation.setSnapScale(camera.scale > 0.0F ? camera.scale : 1.0F);
-    }
+    if (!refreshTargets(creation)) { eraseSession(); return false; }
     const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
     if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
                         creationPreset_<=CreationPreset::kTriangle)},
-                        {content.first, content.second}, viewport, seed)) { creations_.erase(key); return false; }
+                        {content.first, content.second}, viewport, seed)) { eraseSession(); return false; }
     canonicalPresentationDirty_ = true;
     return true;
   }
@@ -681,14 +693,18 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
   latestCreationPointer_ = key;
   canonicalPresentationDirty_ = true;
   if (phase == input::PointerPhase::kMove) {
-    if (!creation.move(key, {content.first, content.second})) creations_.erase(session);
+    if (!refreshTargets(creation) || !creation.move(key, {content.first, content.second})) eraseSession();
     return true;
   }
-  if (phase == input::PointerPhase::kCancel) { creations_.erase(session); return true; }
+  if (phase == input::PointerPhase::kCancel) { eraseSession(); return true; }
   if (phase != input::PointerPhase::kUp) return false;
-  if (!creation.move(key, {content.first, content.second})) { creations_.erase(session); return true; }
+  // Never silently re-snap at Up after the last visible preview became stale.
+  const auto fence = creationFences_.find(key);
+  if (fence == creationFences_.end() || fence->second.semantic != semanticGeneration_.current() ||
+      fence->second.camera != cameraGeneration()) { eraseSession(); return false; }
+  if (!creation.move(key, {content.first, content.second})) { eraseSession(); return true; }
   const auto commit = creation.finish(key);
-  creations_.erase(session);
+  eraseSession();
   if (!commit.has_value()) return true;
   const auto ordinal = localOperationOrdinal();
   if (ordinal == 0U) return false;
@@ -705,9 +721,11 @@ bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t
                                      std::uint64_t operationId) noexcept {
   if (!keyedStrokeIds_.contains(key)) return false;
   const auto* state = preview_->snapshot(strokeId);
-  if (state == nullptr || !ink_->finish(key).has_value()) return false;
+  const auto finished = ink_->finish(key);
+  if (state == nullptr || !finished.has_value()) return false;
   const auto committedPoints = state->confirmed;
-  if (!interaction_->commit(key, strokeId, interaction::OperationRequest{operationId})) return false;
+  const auto operation = legacyStrokeOperation(*finished, operationId);
+  if (!interaction_->commit(key, strokeId, interaction::OperationRequest{operationId, operation})) return false;
   if (!committedPoints.empty()) committedStrokes_.push_back(committedPoints);
   preview_->cancelKeyed(strokeId);
   keyedStrokeIds_.erase(key);
@@ -726,6 +744,7 @@ bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
 
 void InkPlaygroundHost::cancelAllPointers() noexcept {
   creations_.clear();
+  creationFences_.clear();
   cancelSelectionTransform();
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);
@@ -824,6 +843,7 @@ bool InkPlaygroundHost::selectTool(ToolMode mode) noexcept {
   panTool_ = false;
   creationMode_ = false;
   creations_.clear();
+  creationFences_.clear();
   return true;
 }
 
@@ -832,6 +852,7 @@ bool InkPlaygroundHost::setPanTool(bool enabled) noexcept {
   panTool_ = enabled;
   creationMode_ = false;
   creations_.clear();
+  creationFences_.clear();
   if (enabled) {
     toolMode_ = ToolMode::kBrush;
     if (selectionMode_) (void)setSelectionMode(false);
@@ -847,6 +868,7 @@ bool InkPlaygroundHost::setSelectionMode(bool enabled) noexcept {
   if (enabled) {
     creationMode_ = false;
     creations_.clear();
+    creationFences_.clear();
   }
   if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
   canonicalPresentationDirty_ = true;
@@ -873,6 +895,35 @@ bool InkPlaygroundHost::selectAtViewPoint(float x, float y) noexcept {
     canonicalPresentationDirty_ = true;
   }
   return selected && renderSelectionOverlay();
+}
+
+void InkPlaygroundHost::observeApplied(const semantic::Operation& operation,
+                                           const semantic::ApplyResult& result) noexcept {
+  if (result.disposition != semantic::ApplyDisposition::kApplied || !result.commit_record) return;
+  lastAppliedCommit_ = *result.commit_record;
+  if (localOperationSink_ != nullptr &&
+      semantic::localBridgePublicationDisposition(*result.commit_record) ==
+          semantic::LocalBridgePublicationDisposition::kEligible) {
+    localOperationSink_->applied(operation, *result.commit_record);
+  }
+}
+
+semantic::ApplyResult InkPlaygroundHost::applyExternalOperation(
+    const semantic::Operation& operation, semantic::ApplySource source) {
+  if (std::this_thread::get_id() != ownerThread_) return {};
+  if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
+      operation.document_id != documentId_) return {};
+  const auto result = operationEngine_.apply(operation, source, semanticObjects_,
+      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (result.disposition == semantic::ApplyDisposition::kApplied && result.commit_record) {
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+    const canvas::SceneCommitInput input(result.commit_record->before_generation,
+        result.commit_record->after_generation, view, &result.commit_record->change_set);
+    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    observeApplied(operation, result);
+    canonicalPresentationDirty_ = true;
+  }
+  return result;
 }
 
 bool InkPlaygroundHost::applyLocalHistoryOperation(
@@ -909,6 +960,7 @@ bool InkPlaygroundHost::applyLocalHistoryOperation(
         applied.commit_record->after_generation, view, &applied.commit_record->change_set);
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
   }
+  observeApplied(forward, applied);
   ++submittedOperationCount_;
   canonicalPresentationDirty_ = true;
   return true;
@@ -1120,25 +1172,32 @@ bool InkPlaygroundHost::seedQualificationFixture(std::size_t objectCount) noexce
     object.content = semantic::ShapeContent{1U, 24.0, 24.0};
     payload.objects.push_back(std::move(object));
   }
-  semantic::Operation operation{
-      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)),
-      documentId_, 1U, 1U, std::move(payload)};
-  const auto applied = operationEngine_.apply(
-      operation, semantic::ApplySource::kLocalCommand, semanticObjects_,
-      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied ||
-      !applied.commit_record.has_value()) return false;
-  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
-  const canvas::SceneCommitInput input(applied.commit_record->before_generation,
-      applied.commit_record->after_generation, view, &applied.commit_record->change_set);
-  if (!sceneCoordinator_->apply(*sceneCompiler_, input)) return false;
+  // A qualification corpus is authored in legal Operation batches. The
+  // structural 65535 item limit remains unchanged for actual user intents.
+  constexpr std::size_t kFixtureBatchSize = 50000;
+  for (std::size_t offset=0;offset<payload.objects.size();offset+=kFixtureBatchSize) {
+    const auto end=std::min(offset+kFixtureBatchSize,payload.objects.size());
+    semantic::InsertObjectsOp batch;
+    batch.objects.insert(batch.objects.end(),payload.objects.begin()+offset,payload.objects.begin()+end);
+    const auto operationOrdinal=localOperationOrdinal();
+    if(operationOrdinal==0) return false;
+    const semantic::Operation operation{
+        semantic::OperationId(foundation::ObjectId::fromUint64(operationOrdinal)),
+        documentId_,1,1,std::move(batch)};
+    const auto applied=operationEngine_.apply(operation,semantic::ApplySource::kLocalCommand,
+        semanticObjects_,appliedOperations_,semanticGeneration_,canonicalCommitClock_);
+    if(applied.disposition!=semantic::ApplyDisposition::kApplied || !applied.commit_record) return false;
+    ++submittedOperationCount_;
+  }
+  const semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());
+  const canvas::SceneCommitInput recovery(semanticGeneration_.current(),view);
+  if(!sceneCoordinator_->recover(*sceneCompiler_,recovery)) return false;
   const auto queryStart = std::chrono::steady_clock::now();
   const auto query = runtimeSceneHost_->query(canvas::SceneQuery{
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}});
   const auto queryEnd = std::chrono::steady_clock::now();
   if (!query) return false;
-  ++submittedOperationCount_;
   qualificationObservation_.sceneGeneration = runtimeSceneHost_->revision().value();
   qualificationObservation_.cameraGeneration = cameraGeneration();
   qualificationObservation_.candidatesExamined = query.value().diagnostics.candidatesExamined;
@@ -1676,6 +1735,7 @@ bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
   eraserTraces_.erase(it);
   eraserPreviewRevisions_.erase(pointerId);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  observeApplied(operation, applied);
   if (!history_.record(operation, {std::move(inverse)})) return false;
   ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
@@ -1845,6 +1905,7 @@ bool InkPlaygroundHost::finishBrushSession(std::uint64_t pointerId) noexcept {
   if (applied.disposition != semantic::ApplyDisposition::kApplied) {
     return false;
   }
+  observeApplied(operation, applied);
   if (!history_.record(operation, {std::move(inverse)})) return false;
   ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
@@ -2039,23 +2100,46 @@ bool InkPlaygroundHost::fitViewportToObject(foundation::ObjectId objectId) noexc
 bool InkPlaygroundHost::commitStroke(std::uint64_t strokeId,
                                      std::uint64_t operationId) noexcept {
   const auto committedPoints = preview_->snapshot().confirmed;
-  if (!ink_->finish().has_value()) return false;
-  if (!interaction_->commit(strokeId, interaction::OperationRequest{operationId})) return false;
+  const auto finished = ink_->finish();
+  if (!finished.has_value()) return false;
+  const auto operation = legacyStrokeOperation(*finished, operationId);
+  if (!interaction_->commit(strokeId, interaction::OperationRequest{operationId, operation})) return false;
   if (!committedPoints.empty()) committedStrokes_.push_back(committedPoints);
   preview_->cancel();
   return true;
 }
 
+semantic::Operation InkPlaygroundHost::legacyStrokeOperation(
+    const ink::StrokeRecord& stroke, std::uint64_t operationId) const {
+  semantic::ObjectRecord object{};
+  object.id = foundation::ObjectId::fromUint64(stroke.id);
+  object.kind = semantic::ObjectKind::kVectorStroke;
+  object.kind_version = 1;
+  object.placement.order_key = semantic::OrderKey{{1U, static_cast<std::uint8_t>(1U + (stroke.id % 254U))}};
+  semantic::StrokeRecord content{};
+  content.brush.brush_family_id = 1;
+  content.brush.brush_version = 1;
+  content.brush.nominal_size = 1;
+  content.brush.opacity = 1;
+  content.brush.color = {0, 0, 0, 1};
+  semantic::VectorStrokeData data;
+  for (const auto& point : stroke.points) data.samples.push_back({{point.x, point.y}, 1, {0, 0}});
+  content.data = std::move(data);
+  object.content = semantic::VectorStrokeContent{std::move(content)};
+  return {semantic::OperationId{foundation::ObjectId::fromUint64(operationId)}, documentId_,
+          1, 1, semantic::InsertObjectsOp{{std::move(object)}}};
+}
+
 interaction::SubmitResult InkPlaygroundHost::submit(
     const interaction::OperationRequest& request) {
   if (request.operationId == 0U) return interaction::SubmitResult::rejected();
-  // Legacy interaction callers remain accepted only after they have supplied
-  // a real operation identity. BrushSession production commits use the typed
-  // adapter above and never pass through this compatibility port.
-  const auto operation = semantic::Operation{
-      semantic::OperationId(canvas::foundation::ObjectId::fromUint64(request.operationId)),
-      documentId_, 1U, 1U,
-      semantic::InsertObjectsOp{}};
+  // Identity alone carries no semantic intent. Legacy Ink supplies its
+  // actual confirmed VectorStroke; ordinary BrushSession uses its adapter.
+  if (!request.operation.has_value()) return interaction::SubmitResult::rejected();
+  const auto& operation = *request.operation;
+  if (operation.document_id != documentId_ ||
+      operation.id != semantic::OperationId(canvas::foundation::ObjectId::fromUint64(request.operationId)))
+    return interaction::SubmitResult::rejected();
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -2067,7 +2151,14 @@ interaction::SubmitResult InkPlaygroundHost::submit(
   // but it is not a new local document revision and must not advance the
   // host's product revision counter.
   if (applied.disposition == semantic::ApplyDisposition::kApplied) {
+    if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+      const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+      const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+          applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+      (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    }
     ++submittedOperationCount_;
+    observeApplied(operation, applied);
   }
   return interaction::SubmitResult::acceptedResult();
 }
@@ -2140,6 +2231,7 @@ interaction::SubmitResult InkPlaygroundHost::submit(
     if (applied.disposition != semantic::ApplyDisposition::kApplied) {
       return interaction::SubmitResult::rejected();
     }
+    observeApplied(operation, applied);
     if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
         sceneCompiler_ != nullptr) {
       semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
@@ -2529,6 +2621,7 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       std::nullopt});
   if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
   recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
+  presentedSemanticGeneration_ = frame.sceneGeneration;
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
   if (retirePreview && semanticObjects_.size() != 0U) {

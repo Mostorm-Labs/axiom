@@ -196,7 +196,7 @@ void assertStageCorrelation(const std::string& evidence) {
            "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Connector\",\"Sticky\",\"Group\"]");
     assert(field(evidence, "runtime_kinds") == field(evidence, "canonical_kinds"));
     assert(field(evidence, "scene_kinds") ==
-           "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Shape\",\"Shape\",\"Shape\"]");
+           "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Connector\",\"Shape\",\"Shape\"]");
     assert(field(evidence, "reference_kinds") ==
            "[\"Shape\",\"Image\",\"VectorPath\",\"RichText\",\"VectorStroke\",\"DabStroke\",\"Connector\",\"Sticky\"]");
     assert(field(evidence, "backend_kinds") == field(evidence, "reference_kinds"));

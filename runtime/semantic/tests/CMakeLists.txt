@@ -643,6 +643,21 @@ else()
   target_compile_options(canvas_semantic_operation_engine_publication_projection_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_operation_engine_publication_projection_test)
+if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
+add_executable(canvas_semantic_operation_engine_axis_publication_truth_test
+  operation_engine_axis_publication_truth_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_axis_publication_truth_test
+  PRIVATE canvas_runtime_semantic canvas_runtime_render GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_axis_publication_truth_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+target_compile_features(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME FC01AxisPublicationTruth COMMAND canvas_semantic_operation_engine_axis_publication_truth_test)
+endif()
 
 add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
 target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)

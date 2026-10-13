@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
                            .surfaceGeneration = SurfaceGeneration{1}};
     semantic::ImageContent image{};
     image.resource_id.value = foundation::ObjectId::fromUint64(42);
+    image.intrinsic_width = 32; image.intrinsic_height = 32;
     image.width = 32; image.height = 32;
     semantic::ReferenceObjectStore objects;
     semantic::AppliedOperationLedger ledger;
