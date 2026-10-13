@@ -34,6 +34,52 @@ template<class Store> void applyInsert(){Store s;AppliedOperationLedger l;Semant
 namespace canvas::semantic {
 TEST(OperationEngine15OperationConformance, AuthorityFirstIndependentTableHasExactlyFifteenKinds){ASSERT_EQ(kExpectedKinds.size(),15U);EXPECT_EQ(kExpectedKinds.front(),"kInsertObjects");EXPECT_EQ(kExpectedKinds.back(),"kSetConnectorContent");}
 TEST(OperationEngine15OperationConformance, AppliedInsertHasExactCanonicalCommitForBothProviders){applyInsert<ReferenceObjectStore>();applyInsert<IndexedObjectStore>();}
+TEST(OperationEngine15OperationConformance, PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush) {
+    ObjectRecord record;
+    record.id = id(600U);
+    record.kind = ObjectKind::kDabStroke;
+    record.kind_version = 2U;
+    record.placement.order_key = OrderKey({1U});
+    DabBrushStrokeContent content;
+    content.stroke.snapshot.snapshot_version = 2U;
+    content.stroke.snapshot.profile_id = 3U;
+    content.stroke.snapshot.package_revision = 4U;
+    content.stroke.confirmed_samples = {{{10.0, 20.0}, 0.5}};
+    content.stroke.dab_output.dabs = {{{10.0, 20.0}, 8.0, 0.0F, 0.5F}};
+    content.stroke.dab_digest = 123U;
+    record.content = content;
+    auto incoming = op(AddStrokeOp{record}, 6001U);
+    incoming.payload_version = 2U;
+    ASSERT_TRUE(validatePayloadStructure(incoming).ok());
+    EXPECT_TRUE(validateEnvelope(incoming, OperationFieldPresence{true, true}).ok());
+    ReferenceObjectStore store;
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(42U));
+    const auto result = OperationEngine{}.apply(incoming, ApplySource::kLocalInteraction,
+        store, ledger, generation, clock);
+    EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
+    EXPECT_EQ(store.allObjects(), std::vector<ObjectRecord>({record}));
+    EXPECT_EQ(generation.current(), SemanticGeneration(1U));
+
+    // A Brush2 record cannot lend its payload-version exception to a Shape
+    // in the same batch. Shape/2 remains Operation payloadVersion=1.
+    incoming.id = OperationId{id(6002U)};
+    auto triangle = shape(601U, 2U);
+    triangle.kind_version = 2U;
+    triangle.content = ShapeContent{3U, 100.0, 80.0};
+    incoming.payload = InsertObjectsOp{{record, triangle}};
+    ReferenceObjectStore emptyStore;
+    AppliedOperationLedger emptyLedger;
+    EXPECT_EQ(OperationEngine{}.prepare(incoming, {emptyStore, emptyLedger}).disposition,
+              PrepareDisposition::kRejected);
+    EXPECT_FALSE(validateEnvelope(incoming, OperationFieldPresence{true, true}).ok());
+    const auto before = store.allObjects();
+    EXPECT_EQ(OperationEngine{}.apply(incoming, ApplySource::kLocalInteraction,
+        store, ledger, generation, clock).disposition, ApplyDisposition::kRejected);
+    EXPECT_EQ(store.allObjects(), before);
+    EXPECT_EQ(generation.current(), SemanticGeneration(1U));
+}
 TEST(OperationEngine15OperationConformance, CollisionAndNegativeFixtureAreSideEffectFree){ReferenceObjectStore s;AppliedOperationLedger l;SemanticGenerationState g;CanonicalCommitClock c(RuntimeEpoch(42));OperationEngine e;auto first=op(InsertObjectsOp{{shape(2,8)}},1002);ASSERT_EQ(e.apply(first,ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);auto col=op(DeleteObjectsOp{{id(2)}},1002);auto cr=e.apply(col,ApplySource::kLocalInteraction,s,l,g,c);EXPECT_EQ(cr.disposition,ApplyDisposition::kRejected);EXPECT_EQ(cr.error.issue,StatefulIssue::kOperationIdCollision);auto bad=e.apply(op(SetTransformsOp{{TransformItem{id(99),Transform2D{2,0,0,2,0,0}}}},1003),ApplySource::kLocalInteraction,s,l,g,c);EXPECT_EQ(bad.disposition,ApplyDisposition::kRejected);EXPECT_EQ(bad.error.issue,StatefulIssue::kObjectMissing);EXPECT_EQ(g.current(),SemanticGeneration(1));EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(1));}
 
 TEST(OperationEngine15OperationConformance, LiteralAuthorityTableDrivesAllFifteenOperationFixtures) {

@@ -685,16 +685,22 @@ ValidationResult validateEnvelope(
         return {ValidationIssue::kInvalidId};
     }
     const auto isNewBrush = [](const ObjectRecord& object) noexcept {
-        return object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
-               std::holds_alternative<BrushStrokeContent>(object.content);
+        return (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
+                std::holds_alternative<BrushStrokeContent>(object.content)) ||
+               (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U &&
+                std::holds_alternative<DabBrushStrokeContent>(object.content));
     };
     bool containsNewBrush = false;
     bool containsLegacyStroke = false;
+    bool containsOther = false;
     const auto classify = [&](const ObjectRecord& object) noexcept {
-        containsNewBrush |= isNewBrush(object);
-        containsLegacyStroke |= object.kind == ObjectKind::kVectorStroke &&
-                                object.kind_version == 1U &&
-                                std::holds_alternative<VectorStrokeContent>(object.content);
+        const bool newBrush = isNewBrush(object);
+        const bool legacyStroke = object.kind == ObjectKind::kVectorStroke &&
+                                  object.kind_version == 1U &&
+                                  std::holds_alternative<VectorStrokeContent>(object.content);
+        containsNewBrush |= newBrush;
+        containsLegacyStroke |= legacyStroke;
+        containsOther |= !newBrush && !legacyStroke;
     };
     std::visit([&](const auto& payload) {
         using Payload = std::decay_t<decltype(payload)>;
@@ -709,7 +715,9 @@ ValidationResult validateEnvelope(
         }
     }, operation.payload);
     if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
-        (operation.payload_version != 1U && !(containsNewBrush && !containsLegacyStroke && operation.payload_version == 2U))) {
+        (operation.payload_version != 1U &&
+         !(containsNewBrush && !containsLegacyStroke && !containsOther &&
+           operation.payload_version == 2U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};
