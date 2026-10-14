@@ -1,0 +1,44 @@
+{
+  "schema_id": "fc01-dev-current-run-v0.2",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "package_ref": ".aegis/packages/FC-01/package.json@c98110c015f975012f25db5efa66c9679da35630",
+  "materialized_ref": "refs/heads/codex/fc-01-creation-tools-p32",
+  "status": "BLOCKED_EVIDENCE",
+  "gate_claim": "none",
+  "physical_claim": false,
+  "android": {
+    "status": "DEFERRED_BY_USER",
+    "compile": false,
+    "apk": false,
+    "physical_device": false
+  },
+  "windows": {
+    "configure": 0,
+    "build": 0,
+    "focused_fc01_ctest": "29/29 passed",
+    "full_ctest": "661/665 passed; 4 failed"
+  },
+  "windows_full_ctest_failures": [
+    "G3HeadlessCanvasDemo",
+    "G3HeadlessSkia",
+    "PX0Workbench",
+    "G46PlaygroundTransform"
+  ],
+  "web": {
+    "emscripten_python": "3.13.3",
+    "playground_link": 0,
+    "artifacts": [
+      "axiom_ink_playground_web.js",
+      "axiom_ink_playground_web.wasm"
+    ]
+  },
+  "semantic": {
+    "shape2_validation": 2,
+    "shape2_apply": 8,
+    "all_passed": true
+  },
+  "evidence_scope": "Current source and focused verification only; frozen E01/E02/E03/E05/E06/E07/E10 remain partial and require independent scenario closure.",
+  "provider_run_ref": "continuation-logs/committed-runs/130a15b9-current"
+}

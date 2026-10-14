@@ -9,7 +9,7 @@
   "oracle": "Exact target build+link with native/TS/WASM/JNI deterministic host samples, independent viewport math and precision tokens; platform-native physical-only risks logged separately",
   "acceptance": "All applicable supported changed host variants built and deterministic input/target/epoch scenarios match; missing required toolchain explicitly BLOCKED_ENVIRONMENT, never reported green by mock/native substitute",
   "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
-  "materialized_ref_resolution": "Exact containing evidence commit returned with this result; no future/self SHA asserted.",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
   "residual_detection_gap": "Android native build/APK was explicitly deferred by the user; no Android claim is made. Windows native and Web/WASM source-qualified builds completed successfully; deterministic host simulation and physical device observation remain separate evidence.",
   "pass_from_frozen_comparator": false,
   "physical_claim_false": true,
@@ -53,5 +53,7 @@
       "build_executed": false,
       "apk_generated": false
     }
-  }
+  },
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false
 }

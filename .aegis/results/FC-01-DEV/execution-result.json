@@ -5,18 +5,18 @@
   "execution_ref": "codex/fc-01-creation-tools-p32",
   "package_ref": ".aegis/packages/FC-01/package.json",
   "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
-  "source_revision_before": "6cc8b9aa67684cd02276d8ba2fc95f3bac504219",
-  "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
-  "materialized_ref": "exact-containing-evidence-commit-returned",
+  "source_revision_before": "dec5761676b32e165cb7d2ca51f130bc9db65086",
+  "source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "materialized_ref": "refs/heads/codex/fc-01-creation-tools-p32",
   "physical_claim": false,
-  "android": "DEFERRED_BY_USER_NO_APK",
+  "android": "DEFERRED_BY_USER_NO_COMPILE_OR_APK",
   "verification": {
     "windows_build": 0,
-    "windows_full_ctest": "664/664",
-    "web_wasm_build": 0,
-    "e04_exact_source": 0,
-    "e09_host_exact_source": 0,
-    "e09_semantic_exact_source": 0
+    "windows_focused_fc01_ctest": "29/29",
+    "windows_full_ctest": "661/665",
+    "web_playground_build": 0,
+    "semantic_shape2": "10/10",
+    "connector_aa": 0
   },
   "obligations": {
     "E01": "PARTIAL_NOT_CLOSED",
@@ -40,20 +40,31 @@
         "FC01-B05",
         "FC01-B06",
         "FC01-B07",
-        "FC01-B08",
         "FC01-B10"
       ],
-      "reason": "Complete frozen E01/E02/E03/E05/E06/E07/E08/E10 evidence is not yet materialized; historical first-mutation chronology remains recovery-only; Android was explicitly deferred."
+      "reason": "Independent full frozen scenario evidence remains partial; current focused tests do not close all E01/E02/E03/E05/E06/E07/E10 rows."
+    },
+    {
+      "class": "BLOCKED_REGRESSION",
+      "tests": [
+        "G3HeadlessCanvasDemo",
+        "G3HeadlessSkia",
+        "PX0Workbench",
+        "G46PlaygroundTransform"
+      ],
+      "reason": "Current Windows full CTest has 4 failures out of 665."
+    },
+    {
+      "class": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+      "reason": "User explicitly deferred Android compilation/APK and it is not treated as physical-device evidence."
     }
   ],
   "evidence_input_refs": [
-    "E04/e04-result.json",
-    "E04/snap-guide-independent-differential.json",
-    "E08/host-profile-build-and-simulation.json",
-    "E09/e09-result.json",
-    "E09/publication-presentation-axis-truth.json",
-    "E10/e10-result.json",
-    "blocker-closure-provider.json",
+    "continuation-logs/committed-runs/130a15b9-current/result.json",
+    "continuation-logs/committed-runs/130a15b9-current/windows-full-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/windows-fc01-focused-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/web/axiom_ink_playground_web.js",
+    "continuation-logs/committed-runs/130a15b9-current/web/axiom_ink_playground_web.wasm",
     "evidence-manifest.json",
     "scope-audit.json"
   ],

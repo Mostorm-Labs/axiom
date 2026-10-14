@@ -1,6 +1,6 @@
 {
   "task_id": "FC-01",
-  "source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
   "package_revision": "c98110c015f975012f25db5efa66c9679da35630",
   "protected_paths": [
     ".aegis/authorities.json",
@@ -121,10 +121,16 @@
   "full_FC01_B10_closed": false,
   "gate_claim": "none",
   "physical_claim": false,
-  "materialized_ref_resolution": "Exact containing evidence commit returned in the P32 result.",
+  "materialized_ref_resolution": "Reviewer resolves exact pushed branch tip; evidence commit is reviewer-accessible.",
   "remaining_scope_findings": [
     "apps/brush_lab/tests/brush_lab_test.cpp is an affected regression path outside the nominal package list and must remain visible to review",
     "evidence-only files are the only uncommitted changes after source commit",
     "historical preflight chronology is preserved but not backdated"
-  ]
+  ],
+  "current_verification": {
+    "windows_focused_fc01": "29/29",
+    "windows_full_ctest": "661/665",
+    "web_playground": "linked",
+    "android": "deferred_by_user"
+  }
 }

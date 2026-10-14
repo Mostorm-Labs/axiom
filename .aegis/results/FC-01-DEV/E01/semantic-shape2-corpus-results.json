@@ -9,7 +9,7 @@
   "oracle": "Independently authored strict wire parser/manual tuple reference vs production codec and typed semantic entry; immutable decoded-hex SH2-G15 and historical V1 expected; check ledger/store/generation zero on reject",
   "acceptance": "All required SH2 positive/negative cases exact, raw ShapeContent 20B/ObjectRecord 113B/InsertOperation 163B SHA256 match, old SH-G06 and Brush2 negatives preserved, no fallback or partial commit",
   "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
-  "materialized_ref_resolution": "Resolve this artifact at the exact evidence commit returned by CONTROL_REVIEW handoff. No future/self SHA is asserted here.",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
   "residual_detection_gap": "Native semantic regression and exact three Golden binding checks pass; all 25 authored-case mapping is not yet materialized.",
   "pass_from_frozen_comparator": false,
   "physical_claim_false": true,
@@ -58,7 +58,7 @@
       "match": true
     }
   ],
-  "current_source_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
   "qualified_for_current_result": false,
   "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
 }

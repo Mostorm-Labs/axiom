@@ -1,0 +1,38 @@
+[0/2] Re-checking globbed directories...
+[1/78] Building CXX object runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o
+FAILED: runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o 
+D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -DCANVAS_TEXT_HAS_SKIA=1 -DSK_ENABLE_PARAGRAPH -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -isystem D:/axbuild/fc01-skia-sdk/web-wasm-webgl2/release -fexceptions -O3 -std=c++20 -fPIC -MD -MT runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o -MF runtime\text\CMakeFiles\canvas_runtime_text.dir\src\sha256.cpp.o.d -o runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/src/sha256.cpp
+Traceback (most recent call last):
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.py", line 9, in <module>
+    import emcc
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+    assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+AssertionError: emscripten requires python 3.10 or above (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)])
+[2/78] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/rich_text.pb.cc.o
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/rich_text.pb.cc.o 
+D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -ID:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -fexceptions -O3 -std=c++20 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-nullability-extension -Wno-deprecated-declarations -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/rich_text.pb.cc.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/rich_text.pb.cc.o -c D:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated/auditoryworks/axiom/v1/rich_text.pb.cc
+Traceback (most recent call last):
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.py", line 9, in <module>
+    import emcc
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+    assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+AssertionError: emscripten requires python 3.10 or above (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)])
+[3/78] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/vector_path.pb.cc.o
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/vector_path.pb.cc.o 
+D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -ID:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -fexceptions -O3 -std=c++20 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-nullability-extension -Wno-deprecated-declarations -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/vector_path.pb.cc.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/vector_path.pb.cc.o -c D:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated/auditoryworks/axiom/v1/vector_path.pb.cc
+Traceback (most recent call last):
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.py", line 9, in <module>
+    import emcc
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+    assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+AssertionError: emscripten requires python 3.10 or above (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)])
+[4/78] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/property.pb.cc.o
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/property.pb.cc.o 
+D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -ID:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -fexceptions -O3 -std=c++20 -fPIC -Wall -Wextra -Wpedantic -Werror -Wno-nullability-extension -Wno-deprecated-declarations -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/property.pb.cc.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/property.pb.cc.o -c D:/axbuild/fc01-web-current-130a15b9/runtime/semantic/generated/auditoryworks/axiom/v1/property.pb.cc
+Traceback (most recent call last):
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\em++.py", line 9, in <module>
+    import emcc
+  File "D:\axbuild\fc01-emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+    assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+AssertionError: emscripten requires python 3.10 or above (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)])
+ninja: build stopped: subcommand failed.

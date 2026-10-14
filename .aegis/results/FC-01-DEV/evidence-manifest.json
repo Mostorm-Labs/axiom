@@ -2,10 +2,10 @@
   "schema_id": "fc01-dev-evidence-v0.1",
   "task_id": "FC-01",
   "gate_id": "FC-01-DEV",
-  "exact_source_sha": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "exact_source_sha": "130a15b9dc286f654138cf4891f02304259f88af",
   "package_ref": ".aegis/packages/FC-01/package.json@c98110c015f975012f25db5efa66c9679da35630",
-  "result_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
-  "materialized_ref": "exact-containing-evidence-commit-returned",
+  "result_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "materialized_ref": "refs/heads/codex/fc-01-creation-tools-p32",
   "required_obligations": {
     "E01": "PARTIAL_NOT_CLOSED",
     "E02": "PARTIAL_NOT_CLOSED",
@@ -20,16 +20,23 @@
   },
   "android": {
     "status": "DEFERRED_BY_USER",
-    "apk_built": false
+    "compile": false,
+    "apk_built": false,
+    "physical_claim": false
   },
-  "physical_claim_false": true,
   "provider_run_refs": [
-    "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json",
-    "continuation-logs/committed-runs/fc3d448e-web-qualified/result.json",
-    "continuation-logs/blocker-closure/e04-exact-source.log",
-    "continuation-logs/blocker-closure/e09-host-exact-source.log",
-    "continuation-logs/blocker-closure/e09-semantic-exact-source.log"
+    "continuation-logs/committed-runs/130a15b9-current/result.json",
+    "continuation-logs/committed-runs/130a15b9-current/windows-full-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/windows-fc01-focused-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/web/playground-build-python313.log"
   ],
   "chronology": "Recovery verification only; does not retroactively establish pre-first-mutation design/RED.",
-  "gate_claim": "none"
+  "gate_claim": "none",
+  "physical_claim_false": true,
+  "notes": [
+    "Windows focused FC01 matrix 29/29 passed.",
+    "Windows full CTest 661/665 with four named regressions.",
+    "Web playground JS/WASM linked with Emscripten Python 3.13.3.",
+    "Android compile/APK deferred by explicit user instruction."
+  ]
 }
