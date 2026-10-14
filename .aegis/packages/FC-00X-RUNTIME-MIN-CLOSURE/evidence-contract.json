@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "output_root": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/",
+  "required_artifacts": [
+    "repository-reconciliation.json",
+    "package-binding-preflight.json",
+    "implementation-design-preflight.json",
+    "red-preflight.json",
+    "s1-input-session.json",
+    "s2-frame-coordinator.json",
+    "s3-control-truth.json",
+    "runtime-isolation.json",
+    "render-lifecycle-regressions.json",
+    "control-regressions.json",
+    "scope-audit.json",
+    "test-inventory.json",
+    "result.json"
+  ],
+  "identity_rule": "Bind source revision separately from the later implementation/evidence commit. Hash exact Git bytes; do not embed an unknowable self commit SHA or use checkout newline conversion.",
+  "blocking": [
+    "All FC00X focused tests and frozen regressions with active assertions",
+    "ImplementationDesignPreflight and both required RED observations",
+    "Exact authorized-scope and protected-path audit",
+    "Reviewer-resolvable exact result_revision/materialized_ref after P32"
+  ],
+  "corroborative": [
+    "Windows/Web build logs when toolchains are available",
+    "human physical observations, retained as PHYSICAL_PENDING until observed",
+    "optional performance traces without invented metrics"
+  ],
+  "materialization_requirement": "P31 returns this package as a reviewer-resolvable commit on codex/fc00x-runtime-minimum-closure. P32 must push its exact implementation result and result/evidence ref before READY_FOR_CONTROL_REVIEW.",
+  "physical_status": "Windows/Web physical observation is pending unless actually performed; Android build/APK is explicitly deferred.",
+  "producer_may_claim_gate_pass": false
+}

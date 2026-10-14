@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "PACKAGE_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Close the shared Runtime input/session, frame preview/canonical, and control/diagnostics boundaries needed for repeatable Windows/Web verification without entering FC-01 feature implementation.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-runtime-minimum-closure",
+    "execution_ref": "codex/fc00x-runtime-minimum-closure"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "relation": "ancestor"
+  },
+  "starting_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "0ca2639186e121adcaabc08aebe7775a520a5d837f5bb2c87d2dc8f73e466f09"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "2d3162045c993faf58c1edc6c8b773be3a2a9b45d058540e10904e7b67b5b5fd"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "4ecb8a6611caa42d804f7fc2d9dbb6f018e6a8169739a57e36e6bed5da803feb"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3949796709730da5bbc55e36d7f74a55601a2fb0fca1241b5f46c45e90056bee"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "7f567ca772a6c6011a4a2bd9daf6c131246e529a8c250fbb37a0b8d32c48f170"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/",
+    "base_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "exact_ref_rule": "Use the immutable package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "fc01_protection": "FC-01 worktree, branch, Authority, Gate, Evidence and historical results remain untouched and are not an input mutation surface."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC00X-RED-S1-source-cancel-delivery",
+    "FC00X-RED-S3-control-readback-truth"
+  ],
+  "terminal_target": "PACKAGE_READY_FOR_CONTROL_REVIEW before P32; after acceptance, READY_FOR_CONTROL_REVIEW with exact implementation result and evidence refs",
+  "nonclaims": [
+    "No FC-01 P31/P32 or FC-01 DEV/P34 result",
+    "No PX0, G4.6, G4.7, FC-13 or G5 status change",
+    "No Android APK or Android physical evidence in this package",
+    "No public C ABI delivery; docs/api remains implementation input",
+    "No new OperationKind, ObjectKind, FieldId, Protobuf field, or canonical product policy",
+    "No complete Editor composition extraction, dynamic capability registry, Inspector, Sync, background schema or export feature"
+  ]
+}
