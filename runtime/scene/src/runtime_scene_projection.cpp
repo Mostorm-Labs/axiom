@@ -9,10 +9,6 @@
 
 namespace canvas::scene {
 namespace {
-bool runtimeInk(const InspectionRecord& record) noexcept {
-    return record.kind == semantic::ObjectKind::kVectorStroke ||
-           record.kind == semantic::ObjectKind::kDabStroke;
-}
 void encodeBrush(std::ostringstream& out, const semantic::BrushDescriptor& brush) {
     out << ":brush:" << brush.brush_family_id << ':' << brush.brush_version << ':'
         << brush.color.r << ',' << brush.color.g << ',' << brush.color.b << ',' << brush.color.a
@@ -165,7 +161,6 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
             bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
     }
     std::sort(out.records.begin(), out.records.end(), [](const auto& a, const auto& b) {
-        if (runtimeInk(a) != runtimeInk(b)) return !runtimeInk(a);
         if (a.placement.order_key != b.placement.order_key) return a.placement.order_key < b.placement.order_key;
         return a.objectId < b.objectId;
     });

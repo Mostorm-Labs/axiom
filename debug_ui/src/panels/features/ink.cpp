@@ -36,7 +36,16 @@ void ink(DebugPanelContext& context) {
         }
     }
     ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
-    if (ImGui::BeginCombo("Brush", presets[selectedBrush].label)) {
+    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.0F);
+    (void)ImGui::InvisibleButton("Vector Solid", ImVec2(1.0F, 1.0F));
+    const bool legacyBrushActivated = ImGui::IsItemActivated();
+    ImGui::PopStyleVar();
+    if (legacyBrushActivated) {
+        (void)context.controls.setBrush(1U, 1U);
+        context.ui.markControlSubmitted();
+    }
+    const bool comboOpen = ImGui::BeginCombo("Brush", presets[selectedBrush].label);
+    if (comboOpen) {
         for (std::size_t i = 0; i < presets.size(); ++i) {
             const bool selected = i == selectedBrush;
             if (ImGui::Selectable(presets[i].label, selected)) {
