@@ -17,17 +17,17 @@ struct PreviewStyleOverride final {
     // Presentation-only tint for the transient Arc layer.  Keep it light
     // enough to distinguish it from canonical ink while remaining visible on
     // the white canvas during fast input.
-    float red = 0.20F;
-    float green = 0.78F;
-    float blue = 0.72F;
-    float alpha = 0.46F;
-    float opacityMultiplier = 0.46F;
+    float red = 1.0F;
+    float green = 0.62F;
+    float blue = 0.04F;
+    float alpha = 0.92F;
+    float opacityMultiplier = 0.92F;
     bool overrideColor = true;
     bool overrideOpacity = true;
     // SkBlendMode::kClear is 0; kSrcOver is 1. Keep the wire value explicit
     // so the amber overlay cannot silently erase its own surface.
     std::uint8_t blendMode = 1U; // SkBlendMode::kSrcOver
-    bool preferCapturedPaint = true;
+    bool preferCapturedPaint = false;
 };
 
 struct PreviewGeometry final {

@@ -1,4 +1,5 @@
 #include "ink_playground_host.hpp"
+#include "ink_playground_history_test_access.hpp"
 #include "platform_contract.hpp"
 #include "platform/android/android_pointer_identity.hpp"
 
@@ -89,6 +90,20 @@ void repeated_strokes_test() {
   assert(strokes.size() == 2);
   assert(strokes[0].front().x == 10.0F);
   assert(strokes[1].front().x == 100.0F);
+}
+
+void legacy_lines_use_top_draw_lane_test() {
+  canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginStroke(41U));
+  canvas::input::PointerSampleBatch batch;
+  batch.samples.push_back({1U, 1'000'000U, 32.0F, 64.0F, 0.5F, false});
+  batch.samples.push_back({2U, 2'000'000U, 160.0F, 64.0F, 0.5F, false});
+  assert(host.accept(batch, 2'000'000U));
+  assert(host.commitStroke(41U, 141U));
+  const auto object = canvas::ink_playground::InkPlaygroundHistoryTestAccess::objects(host).front();
+  assert(!object.placement.order_key.bytes().empty());
+  assert(object.placement.order_key.bytes().front() >= 0xFEU);
 }
 
 void platform_test() {
@@ -302,6 +317,7 @@ int main(int argc, char** argv) {
   else if (mode == "surface") surface_test();
   else if (mode == "preview") preview_points_test();
   else if (mode == "repeated") repeated_strokes_test();
+  else if (mode == "legacy-line-order") legacy_lines_use_top_draw_lane_test();
   else if (mode == "platform") platform_test();
   else if (mode == "multipointer") multipointer_test();
   else if (mode == "provisional") provisional_zero_mutation_test();

@@ -38,8 +38,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
-        if (selectionOverlay->creationPreview())
+        if (selectionOverlay->creationPreview()) {
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview());
+            internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+        }
         SkPaint guidePaint;
         guidePaint.setAntiAlias(true);
         guidePaint.setStyle(SkPaint::kStroke_Style);
@@ -83,6 +85,76 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     return provider.present();
 }
 
+BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+    SkiaSurfaceProvider& provider, const FramePlan& plan,
+    const EditingOverlay* selectionOverlay) {
+    if (selectionOverlay == nullptr) {
+        return clearPreview(provider, SurfaceGeneration{provider.generation()});
+    }
+    const auto acquired = provider.acquire();
+    if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
+        return BackendSubmissionResult::rejected(acquired.message);
+    }
+    auto* canvas = acquired.frame.surface->getCanvas();
+    // Selection/creation transient presentation is a complete replacement
+    // frame for the overlay window.  Drawing only the moved object on a
+    // transparent surface leaves the old canonical pixels visible underneath
+    // it, which looks like a duplicated object during a drag.  The reference
+    // plan already contains any transient transform overrides, so render the
+    // whole scene first and then add the editing chrome.
+    const auto scene = internal::drawReferencePlanToSkCanvas(
+        *canvas, plan, images_, &textResources_,
+        !selectionOverlay->creationPreview().has_value());
+    if (scene.code != BackendSubmissionCode::kAccepted) {
+        provider.release();
+        return scene;
+    }
+    if (selectionOverlay->creationPreview()) {
+        internal::drawTransientObjectToSkCanvas(*canvas, plan,
+                                                 *selectionOverlay->creationPreview());
+        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+    }
+    SkPaint guidePaint;
+    guidePaint.setAntiAlias(true);
+    guidePaint.setStyle(SkPaint::kStroke_Style);
+    guidePaint.setStrokeWidth(1.0F);
+    guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
+    for (const auto& guide : selectionOverlay->guides()) {
+        canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
+                         guidePaint);
+    }
+    if (selectionOverlay->selectionOutline().visible) {
+        SkPaint chrome;
+        chrome.setAntiAlias(true);
+        chrome.setStyle(SkPaint::kStroke_Style);
+        chrome.setStrokeWidth(2.0F);
+        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
+        const auto& outline = selectionOverlay->selectionOutline();
+        SkPathBuilder path;
+        path.moveTo(outline.corners[0].x, outline.corners[0].y);
+        path.lineTo(outline.corners[1].x, outline.corners[1].y);
+        path.lineTo(outline.corners[2].x, outline.corners[2].y);
+        path.lineTo(outline.corners[3].x, outline.corners[3].y);
+        path.close();
+        canvas->drawPath(path.detach(), chrome);
+        chrome.setStyle(SkPaint::kFill_Style);
+        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
+                                HandleKind::kTopRight, HandleKind::kRight,
+                                HandleKind::kBottomRight, HandleKind::kBottom,
+                                HandleKind::kBottomLeft, HandleKind::kLeft,
+                                HandleKind::kRotation}) {
+            const auto& handle = selectionOverlay->handle(kind);
+            if (handle.kind == HandleKind::kNone) continue;
+            canvas->drawCircle(handle.center.x, handle.center.y,
+                               handle.visualRadius, chrome);
+        }
+    }
+    provider.release();
+    ++submissions_;
+    ++rasterizations_;
+    return provider.present();
+}
+
 BackendSubmissionResult SkiaRenderer::renderPreview(
     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
     const PreviewStyleOverride& style) {
@@ -117,11 +189,11 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     const float alpha = style.overrideOpacity
         ? std::clamp(style.opacityMultiplier, 0.0F, 1.0F)
         : 1.0F;
-    // The default PreviewStyleOverride is a pale blue-green transient tint;
+    // The default PreviewStyleOverride is an amber transient tint;
     // callers such as the partial eraser can still provide an explicit color.
-    paint.setColor4f({style.overrideColor ? style.red : 0.20F,
-                      style.overrideColor ? style.green : 0.78F,
-                      style.overrideColor ? style.blue : 0.72F, alpha}, nullptr);
+    paint.setColor4f({style.overrideColor ? style.red : 1.0F,
+                      style.overrideColor ? style.green : 0.62F,
+                      style.overrideColor ? style.blue : 0.04F, alpha}, nullptr);
     auto drawOutline = [&](const auto& outline, const SkPaint& outlinePaint) {
         if (outline.empty()) return;
         canvas->drawPath(buildVectorBrushOutlineSkPath(

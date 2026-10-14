@@ -23,6 +23,192 @@ void drawHistoryStroke(Host& host, std::uint64_t pointer, double y = 64.0) {
   assert(host.finishBrushSession(pointer));
 }
 
+void brush_commit_renders_above_created_shape() {
+  Host lineOnly;
+  assert(lineOnly.bindSurface(256U, 256U));
+  assert(lineOnly.beginBrushSession(700U, 1U));
+  assert(lineOnly.appendBrushSample(700U, 32.0, 55.0, 0.5, 1U));
+  assert(lineOnly.appendBrushSample(700U, 160.0, 55.0, 0.5, 2U));
+  assert(lineOnly.finishBrushSession(700U));
+  assert(lineOnly.presentCanonicalFrame(1U, 0.0, false));
+  std::vector<std::uint8_t> linePixels(256U * 256U * 4U);
+  assert(lineOnly.activeSurfaceProvider()->readbackRgba(linePixels).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey shapeKey{11U, 701U, 1U};
+  assert(host.creationPointer(shapeKey, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(shapeKey, canvas::input::PointerPhase::kMove, 160.0F, 90.0F));
+  assert(host.creationPointer(shapeKey, canvas::input::PointerPhase::kUp, 160.0F, 90.0F));
+  assert(host.presentCanonicalFrame(1U, 0.0, false));
+  std::vector<std::uint8_t> shapeOnly(256U * 256U * 4U);
+  assert(host.activeSurfaceProvider()->readbackRgba(shapeOnly).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  assert(host.beginBrushSession(702U, 1U));
+  assert(host.appendBrushSample(702U, 32.0, 55.0, 0.5, 1U));
+  assert(host.appendBrushSample(702U, 160.0, 55.0, 0.5, 2U));
+  assert(host.finishBrushSession(702U));
+  assert(host.presentCanonicalFrame(2U, 0.0, false));
+  std::vector<std::uint8_t> withLine(256U * 256U * 4U);
+  assert(host.activeSurfaceProvider()->readbackRgba(withLine).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  std::size_t differingLinePixels = 0U;
+  bool hasInkOverShape = false;
+  for (std::size_t pixel = 0; pixel < withLine.size(); pixel += 4U) {
+    const bool linePresent = linePixels[pixel + 0U] != 255U ||
+        linePixels[pixel + 1U] != 255U || linePixels[pixel + 2U] != 255U ||
+        linePixels[pixel + 3U] != 255U;
+    if (!linePresent) continue;
+    if (shapeOnly[pixel + 0U] != withLine[pixel + 0U] ||
+        shapeOnly[pixel + 1U] != withLine[pixel + 1U] ||
+        shapeOnly[pixel + 2U] != withLine[pixel + 2U] ||
+        shapeOnly[pixel + 3U] != withLine[pixel + 3U]) {
+      ++differingLinePixels;
+      // The stroke uses the captured black brush paint. At least one overlap
+      // pixel must therefore be dark after the shape has already been drawn.
+      if (withLine[pixel + 0U] < 80U && withLine[pixel + 1U] < 80U &&
+          withLine[pixel + 2U] < 80U) hasInkOverShape = true;
+    }
+  }
+  assert(differingLinePixels > 0U &&
+         "committed line pixels must remain visible over a created shape");
+  assert(hasInkOverShape && "line must be the topmost overlapping paint");
+}
+
+void creation_preview_rasterizes_live_rectangle() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.presentCanonicalFrame(1U, 0.0, false));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{11U, 1701U, 1U};
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kMove, 160.0F, 120.0F));
+  assert(host.presentTransientOverlayFrame(host.canonicalFrameCount() + 1U));
+  std::vector<std::uint8_t> preview(256U * 256U * 4U);
+  assert(host.previewSurfaceProvider()->readbackRgba(preview).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  const auto center = static_cast<std::size_t>((70U * 256U + 90U) * 4U);
+  const auto border = static_cast<std::size_t>((20U * 256U + 90U) * 4U);
+  assert(preview[border] < 100U && preview[border + 1U] < 100U &&
+         preview[border + 2U] < 100U && preview[center + 3U] != 0U &&
+         "live rectangle creation must rasterize before pointer-up");
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kCancel, 160.0F, 120.0F));
+}
+
+void creation_pointer_up_keeps_preview_until_canonical_frame() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.presentCanonicalFrame(1U, 0.0, false));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{11U, 1702U, 1U};
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kMove, 160.0F, 120.0F));
+  assert(host.previewSurfaceProvider()->overlayVisible());
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kUp, 160.0F, 120.0F));
+  assert(host.previewSurfaceProvider()->overlayVisible() &&
+         "creation pointer-up must retain the last transient frame until canonical handoff");
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(!host.previewSurfaceProvider()->overlayVisible());
+}
+
+void brush_preview_uses_distinct_amber_tint() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginBrushSession(1703U, 1U));
+  assert(host.appendBrushSample(1703U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(1703U, 160.0, 96.0, 0.5, 2U));
+  assert(host.presentBrushPreview());
+  std::vector<std::uint8_t> preview(256U * 256U * 4U);
+  assert(host.previewSurfaceProvider()->readbackRgba(preview).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  bool foundAmber = false;
+  for (std::size_t i = 0; i < preview.size(); i += 4U) {
+    const auto r = preview[i + 0U];
+    const auto g = preview[i + 1U];
+    const auto b = preview[i + 2U];
+    const auto a = preview[i + 3U];
+    if (a > 32U && r > g && g > b) {
+      foundAmber = true;
+      break;
+    }
+  }
+  assert(foundAmber && "brush preview must use an amber tint distinct from canonical ink");
+  assert(host.cancelBrushSession(1703U));
+}
+
+void ink_remains_visible_after_shape_brought_to_front() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.setInkOptions(12.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F));
+  drawHistoryStroke(host, 1801U);
+  auto appearance = host.futureAppearance();
+  appearance.fillEnabled = true;
+  appearance.fill = {1.0F, 0.0F, 0.0F, 1.0F};
+  assert(host.setFutureAppearance(appearance));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{11U, 1802U, 1U};
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kMove, 180.0F, 120.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kUp, 180.0F, 120.0F));
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(80.0F, 100.0F));
+  assert(host.setSelectedOrder(true));
+  const auto pixels = canonicalPixels(host);
+  const auto overlap = (64U * 256U + 80U) * 4U;
+  assert(pixels[overlap] < 80U && pixels[overlap + 1U] < 80U &&
+         pixels[overlap + 2U] < 80U && "ink must remain above a frontmost shape");
+}
+
+void partial_erase_reveals_shape_without_mutating_it() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  auto appearance = host.futureAppearance();
+  appearance.fillEnabled = true;
+  appearance.fill = {1.0F, 0.0F, 0.0F, 1.0F};
+  assert(host.setFutureAppearance(appearance));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{11U, 1811U, 1U};
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kMove, 180.0F, 120.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kUp, 180.0F, 120.0F));
+  const auto shape = HistoryAccess::objects(host).front();
+  assert(host.selectTool(Host::ToolMode::kBrush));
+  assert(host.setInkOptions(12.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F));
+  drawHistoryStroke(host, 1812U);
+  (void)canonicalPixels(host);
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(1813U));
+  assert(host.eraserSample(1813U, 80.0, 64.0));
+  assert(host.eraserFinish(1813U));
+  const auto records = HistoryAccess::objects(host);
+  const auto unchangedShape = std::find_if(records.begin(), records.end(),
+      [&](const auto& object) { return object.id == shape.id; });
+  assert(unchangedShape != records.end() && *unchangedShape == shape);
+  const auto pixels = canonicalPixels(host);
+  const auto overlap = (64U * 256U + 80U) * 4U;
+  assert(pixels[overlap] == 255U && pixels[overlap + 1U] == 0U &&
+         pixels[overlap + 2U] == 0U && pixels[overlap + 3U] == 255U &&
+         "erasing ink must reveal the intact red shape underneath");
+}
+
+void partial_eraser_clear_hides_overlay_before_present() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginBrushSession(1702U, 1U));
+  assert(host.appendBrushSample(1702U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(1702U, 160.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(1702U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(1703U));
+  assert(host.eraserSample(1703U, 90.0, 96.0));
+  assert(host.previewSurfaceProvider()->overlayVisible());
+  assert(host.eraserCancel(1703U));
+  assert(!host.previewSurfaceProvider()->overlayVisible() &&
+         "partial eraser cancellation must hide stale overlay immediately");
+}
+
 void allBrushHistoryRestoresExactRecordsAndPixels() {
   const char* profiles[] = {"vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
   for (const auto* profile : profiles) {
@@ -241,7 +427,8 @@ void partialEraserCommitsRendererNeutralMask() {
   assert(host.activeSurfaceProvider()->readbackRgba(pixels).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   const auto center = static_cast<std::size_t>((64U * 256U + 64U) * 4U);
-  assert(pixels[center + 3U] == 0U);
+  assert(pixels[center] == 255U && pixels[center + 1U] == 255U &&
+         pixels[center + 2U] == 255U && pixels[center + 3U] == 255U);
   const auto far = static_cast<std::size_t>((24U * 256U + 24U) * 4U);
   assert(pixels[far + 3U] != 0U);
 }
@@ -357,6 +544,52 @@ void partialEraserPublishesRealtimePreview() {
   assert(previewPixels[previewCenter + 3U] == 255U);
   assert(host.eraserCancel(388U));
   assert(!host.previewActive());
+}
+
+void partialEraserDoesNotPreviewEraseShape() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{11U, 1201U, 1U};
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kMove, 160.0F, 120.0F));
+  assert(host.creationPointer(key, canvas::input::PointerPhase::kUp, 160.0F, 120.0F));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+  assert(host.eraserBegin(1202U));
+  assert(host.eraserSample(1202U, 80.0, 70.0));
+  assert(!host.previewSurfaceProvider()->overlayVisible());
+  assert(host.eraserCancel(1202U));
+}
+
+void partialEraserPointerUpDoesNotSubmitBlankingFrame() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginBrushSession(1203U, 1U));
+  assert(host.appendBrushSample(1203U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(1203U, 160.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(1203U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+
+  canvas::input::PlatformPointerBatch down;
+  down.samples.push_back({11U, 1204U, 1U, 1'000U, 64.0F, 96.0F, 0.5F, 0.0F,
+                          0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch move;
+  move.samples.push_back({11U, 1204U, 2U, 2'000U, 96.0F, 96.0F, 0.5F, 0.0F,
+                          0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kMove});
+  canvas::input::PlatformPointerBatch up;
+  up.samples.push_back({11U, 1204U, 3U, 3'000U, 128.0F, 96.0F, 0.5F, 0.0F,
+                        0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                        canvas::input::PointerPhase::kUp});
+  assert(host.acceptPlatformBatch(down, 1'000U));
+  assert(host.acceptPlatformBatch(move, 2'000U));
+  const auto beforeUp = host.previewPresentCount();
+  assert(host.acceptPlatformBatch(up, 3'000U));
+  assert(host.previewPresentCount() == beforeUp &&
+         "pointer-up must not submit a final blanking preview frame");
 }
 
 void brushPreviewRestoresTintAfterPartialErase() {
@@ -544,7 +777,8 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
   assert(host.activeSurfaceProvider()->readbackRgba(erased).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   const auto erasedPixel = static_cast<std::size_t>((96U * 256U + 80U) * 4U);
-  assert(erased[erasedPixel + 3U] == 0U);
+  assert(erased[erasedPixel] == 255U && erased[erasedPixel + 1U] == 255U &&
+         erased[erasedPixel + 2U] == 255U && erased[erasedPixel + 3U] == 255U);
 
   assert(host.undo());
   std::vector<std::uint8_t> restored(256U * 256U * 4U);
@@ -560,12 +794,20 @@ void partialEraserUndoRedoRestoresMaskSemantics() {
   assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
   assert(host.activeSurfaceProvider()->readbackRgba(redone).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
-  assert(redone[erasedPixel + 3U] == 0U);
+  assert(redone[erasedPixel] == 255U && redone[erasedPixel + 1U] == 255U &&
+         redone[erasedPixel + 2U] == 255U && redone[erasedPixel + 3U] == 255U);
   assert(HistoryAccess::objects(host) == erasedRecords);
   assert(redone == erased);
 }
 
 int main() {
+  partial_erase_reveals_shape_without_mutating_it();
+  ink_remains_visible_after_shape_brought_to_front();
+  brush_commit_renders_above_created_shape();
+  creation_preview_rasterizes_live_rectangle();
+  creation_pointer_up_keeps_preview_until_canonical_frame();
+  brush_preview_uses_distinct_amber_tint();
+  partial_eraser_clear_hides_overlay_before_present();
   brushPreviewRestoresTintAfterPartialErase();
   activeViewportGestureBlocksHistoryUntilAllContactsEnd();
   deferredViewportNavigationStillPresentsCanonical();
@@ -582,6 +824,8 @@ int main() {
   partialEraserWorksForAllBrushPackages();
   objectEraserClearsCanonicalSurfaceImmediately();
   partialEraserPublishesRealtimePreview();
+  partialEraserDoesNotPreviewEraseShape();
+  partialEraserPointerUpDoesNotSubmitBlankingFrame();
   undoRedoReplaysCanonicalBrushCommit();
   freshCommitClearsRedoHistory();
   undoRemainsAcceptedWhenPresentationIsUnavailable();

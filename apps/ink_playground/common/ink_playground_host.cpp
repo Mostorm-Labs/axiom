@@ -30,6 +30,17 @@ bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallb
     if (const auto* value = std::get_if<bool>(&entry.value)) return *value;
   return fallback;
 }
+
+bool isInkRecord(const semantic::ObjectRecord& record) noexcept {
+  return record.kind == semantic::ObjectKind::kVectorStroke ||
+         record.kind == semantic::ObjectKind::kDabStroke;
+}
+
+semantic::OrderKey renderOrderKey(const semantic::ObjectRecord& record) {
+  if (!isInkRecord(record)) return record.placement.order_key;
+  return semantic::OrderKey{{0xFFU, 0xFFU,
+      static_cast<std::uint8_t>((record.id.bytes.back() % 254U) + 1U)}};
+}
 }
 namespace {
 bool validAppearance(const runtime::CanvasAppearance& a) {
@@ -78,7 +89,7 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
       if (!bounds.finite) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(
           {foundation::ErrorCode::kInvalidRecord, "non-finite brush scene bounds"});
       std::uint64_t order = 0;
-      for (const auto byte : record.placement.order_key.bytes()) order = (order << 8U) | byte;
+      for (const auto byte : renderOrderKey(record).bytes()) order = (order << 8U) | byte;
       const auto flags = static_cast<canvas::SceneRecordFlags>(
           (propertyBool(record.properties, 1U, true) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible) : 0U) |
           static_cast<std::uint32_t>(canvas::SceneRecordFlags::kHitTestable) |
@@ -107,7 +118,7 @@ class PlaygroundSceneCompiler final : public canvas::ISemanticSceneCompiler {
       const auto* object=view.find(change.object_id);
       const auto* before=published.find(change.object_id);
       std::uint64_t order=0;
-      for(const auto byte:object->placement.order_key.bytes()) order=(order<<8)|byte;
+      for(const auto byte:renderOrderKey(*object).bytes()) order=(order<<8)|byte;
       const auto flags=static_cast<canvas::SceneRecordFlags>(
         static_cast<unsigned>(canvas::SceneRecordFlags::kVisible)|static_cast<unsigned>(canvas::SceneRecordFlags::kHitTestable));
       const canvas::SceneRecord after{object->id,canvas::SceneOrderKey(order),canvas::SceneObjectKind::kRichText,flags,
@@ -501,6 +512,7 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       if (!sample.key.valid() || sample.predicted) continue;
       if (!creationPointer(sample.key, sample.phase, sample.x, sample.y)) return false;
     }
+    if (routed.terminalCancel) cancelAllPointers();
     return routed.accepted || routed.terminalCancel;
   }
   bool previewDirty = false;
@@ -591,7 +603,13 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
     }
     if (routing.routesToInk && toolMode_ != ToolMode::kBrush &&
         sample.phase != input::PointerPhase::kCancel) {
-      if (!eraserSample(sample.key.pointer, routing.routedSample.x, routing.routedSample.y)) return false;
+      // Pointer-up contributes the final canonical erase point, but must not
+      // submit a second transient frame immediately before the canonical
+      // handoff. That last preview/retire pair is the one-frame flash seen on
+      // Windows when the overlay compositor races the canonical present.
+      const bool renderPreview = sample.phase != input::PointerPhase::kUp;
+      if (!eraserSample(sample.key.pointer, routing.routedSample.x,
+                        routing.routedSample.y, renderPreview)) return false;
     }
     if (sample.phase == input::PointerPhase::kUp) {
       if (brushSessions_.contains(sample.key.pointer) &&
@@ -690,6 +708,8 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
                         creationPreset_<=CreationPreset::kTriangle)},
                         {content.first, content.second}, viewport, seed)) { eraseSession(); return false; }
     canonicalPresentationDirty_ = true;
+    if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+    else (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
     return true;
   }
   const auto session = creations_.find(key);
@@ -699,9 +719,18 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
   canonicalPresentationDirty_ = true;
   if (phase == input::PointerPhase::kMove) {
     if (!refreshTargets(creation) || !creation.move(key, {content.first, content.second})) eraseSession();
+    // The transient object and snap guides are part of the next display
+    // frame, so make the owner host repaint immediately after every move.
+    canonicalPresentationDirty_ = true;
+    if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+    else (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
     return true;
   }
-  if (phase == input::PointerPhase::kCancel) { eraseSession(); return true; }
+  if (phase == input::PointerPhase::kCancel) {
+    eraseSession();
+    (void)clearTransientOverlay();
+    return true;
+  }
   if (phase != input::PointerPhase::kUp) return false;
   // Never silently re-snap at Up after the last visible preview became stale.
   const auto fence = creationFences_.find(key);
@@ -710,7 +739,16 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
   if (!creation.move(key, {content.first, content.second})) { eraseSession(); return true; }
   const auto commit = creation.finish(key);
   eraseSession();
-  if (!commit.has_value()) return true;
+  // Keep the last transient shape/guide visible until the canonical frame
+  // containing the committed object is accepted. Hiding it here exposes the
+  // previous canonical frame for one compositor refresh, which is the
+  // pointer-up flash seen on Windows.
+  transientOverlayDirty_ = false;
+  transientOverlayHandoffPending_ = true;
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+  if (!commit.has_value()) {
+    return true;
+  }
   const auto ordinal = localOperationOrdinal();
   if (ordinal == 0U) return false;
   semantic::Operation operation{
@@ -718,8 +756,12 @@ bool InkPlaygroundHost::creationPointer(const input::PointerKey& key, input::Poi
       1U, 1U, semantic::InsertObjectsOp{{commit->record}}};
   const auto inverseId = allocateOperationId();
   if (inverseId.isZero()) return false;
-  return applyLocalHistoryOperation(std::move(operation),
+  const bool applied = applyLocalHistoryOperation(std::move(operation),
       {inverseId, documentId_, 1U, 1U, semantic::DeleteObjectsOp{{commit->record.id}}});
+  // Keep the last transient creation frame visible until the canonical frame
+  // containing the committed object is accepted. Clearing here exposes one
+  // blank/old frame between pointer-up and the render-pump handoff.
+  return applied;
 }
 
 bool InkPlaygroundHost::commitStroke(const input::PointerKey& key, std::uint64_t strokeId,
@@ -823,9 +865,18 @@ bool InkPlaygroundHost::beginBrushSession(std::uint64_t pointerId,
   // Partial eraser uses a white presentation-only override. A subsequent
   // brush session must start with the normal transient tint; otherwise the
   // preview surface is submitted but visually indistinguishable from the
-  // canvas background after a zoomed erase.
+  // canonical stroke unless the host supplies a presentation tint.
   if (previewController_ != nullptr) {
-    previewController_->setPresentationStyle(render::PreviewStyleOverride{});
+    render::PreviewStyleOverride style;
+    style.red = 1.0F;
+    style.green = 0.62F;
+    style.blue = 0.04F;
+    style.alpha = 0.92F;
+    style.opacityMultiplier = 0.92F;
+    style.overrideColor = true;
+    style.overrideOpacity = true;
+    style.preferCapturedPaint = false;
+    previewController_->setPresentationStyle(style);
   }
   if (arcPreviewSink_ != nullptr) {
     ink::BrushPreviewDelta initial;
@@ -1248,6 +1299,7 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
   if (!selectionMode_ || pointer == 0U) return false;
   if (phase == input::PointerPhase::kCancel) {
     if (editingPointer_ == pointer) cancelSelectionTransform();
+    (void)clearTransientOverlay();
     return true;
   }
   if (!std::isfinite(x) || !std::isfinite(y)) {
@@ -1270,6 +1322,7 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
       (void)selectAtViewPoint(x,y);
       editingPointer_ = pointer;
+      (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
       return true;
     }
     const auto* object = semanticObjects_.find(selection_.primary());
@@ -1286,6 +1339,7 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
     editingChanged_ = false;
+    (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
     return true;
   }
   if (pointer != editingPointer_) return true;
@@ -1295,6 +1349,14 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     }
     const auto& t = editingInitial_;
     semantic::Transform2D next=t;
+    using H=render::HandleKind;
+    const bool left=editingHandle_==H::kLeft||editingHandle_==H::kTopLeft||editingHandle_==H::kBottomLeft;
+    const bool right=editingHandle_==H::kRight||editingHandle_==H::kTopRight||editingHandle_==H::kBottomRight;
+    const bool top=editingHandle_==H::kTop||editingHandle_==H::kTopLeft||editingHandle_==H::kTopRight;
+    const bool bottom=editingHandle_==H::kBottom||editingHandle_==H::kBottomLeft||editingHandle_==H::kBottomRight;
+    const double ax=left?editingLocalBounds_.right:editingLocalBounds_.left;
+    const double ay=top?editingLocalBounds_.bottom:editingLocalBounds_.top;
+    double sx=1.0, sy=1.0;
     if (editingHandle_ == render::HandleKind::kNone) {
       next.tx += world.first-editingDownWorld_.x;
       next.ty += world.second-editingDownWorld_.y;
@@ -1312,20 +1374,13 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
               wx+c*(t.tx-wx)-s*(t.ty-wy),wy+s*(t.tx-wx)+c*(t.ty-wy)};
       }
     } else {
-      using H=render::HandleKind;
-      const bool left=editingHandle_==H::kLeft||editingHandle_==H::kTopLeft||editingHandle_==H::kBottomLeft;
-      const bool right=editingHandle_==H::kRight||editingHandle_==H::kTopRight||editingHandle_==H::kBottomRight;
-      const bool top=editingHandle_==H::kTop||editingHandle_==H::kTopLeft||editingHandle_==H::kTopRight;
-      const bool bottom=editingHandle_==H::kBottom||editingHandle_==H::kBottomLeft||editingHandle_==H::kBottomRight;
-      const double ax=left?editingLocalBounds_.right:editingLocalBounds_.left;
-      const double ay=top?editingLocalBounds_.bottom:editingLocalBounds_.top;
       const double det=t.a*t.d-t.b*t.c;
       const double dx=world.first-editingDownWorld_.x,dy=world.second-editingDownWorld_.y;
       const double localDx=(t.d*dx-t.c*dy)/det, localDy=(-t.b*dx+t.a*dy)/det;
       const double width=editingLocalBounds_.right-editingLocalBounds_.left;
       const double height=editingLocalBounds_.bottom-editingLocalBounds_.top;
-      const double sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
-      const double sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
+      sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
+      sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
       next={t.a*sx,t.b*sx,t.c*sy,t.d*sy,t.tx+t.a*ax*(1-sx)+t.c*ay*(1-sy),
                                          t.ty+t.b*ax*(1-sx)+t.d*ay*(1-sy)};
     }
@@ -1372,8 +1427,54 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
       appendGuide(resolved.xGuide);
       appendGuide(resolved.yGuide);
       const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
-      if (resolved.x.has_value()) next.tx += resolved.x->correction / scale;
-      if (resolved.y.has_value()) next.ty += resolved.y->correction / scale;
+      const auto featureValue = [](const foundation::WorldRect& rect,
+                                   interaction::SnapFeatureKind feature,
+                                   bool horizontal) {
+        const double minimum = horizontal ? rect.left : rect.top;
+        const double maximum = horizontal ? rect.right : rect.bottom;
+        if (feature == interaction::SnapFeatureKind::kCenter) {
+          return (minimum + maximum) * 0.5;
+        }
+        return feature == interaction::SnapFeatureKind::kMinEdge ? minimum : maximum;
+      };
+      const auto rebuildScaled = [&](double sxValue, double syValue) {
+        return semantic::Transform2D{
+            t.a * sxValue, t.b * sxValue, t.c * syValue, t.d * syValue,
+            t.tx + t.a * ax * (1.0 - sxValue) + t.c * ay * (1.0 - syValue),
+            t.ty + t.b * ax * (1.0 - sxValue) + t.d * ay * (1.0 - syValue)};
+      };
+      double snappedSx = sx;
+      double snappedSy = sy;
+      const auto solveScaleForSnap = [&](const interaction::SnapCandidate& candidate,
+                                         bool horizontal, double& factor) {
+        const auto current = transformedBounds(editingLocalBounds_,
+            rebuildScaled(snappedSx, snappedSy));
+        const double currentValue = featureValue(current, candidate.sourceFeature, horizontal);
+        const double targetValue = currentValue +
+            static_cast<double>(candidate.correction) / static_cast<double>(scale);
+        const double epsilon = 1.0e-4;
+        const double probe = std::clamp(factor + epsilon, 0.01, 100.0);
+        const auto probed = horizontal
+            ? transformedBounds(editingLocalBounds_, rebuildScaled(probe, snappedSy))
+            : transformedBounds(editingLocalBounds_, rebuildScaled(snappedSx, probe));
+        const double derivative =
+            (featureValue(probed, candidate.sourceFeature, horizontal) - currentValue) /
+            (probe - factor);
+        if (!std::isfinite(derivative) || std::abs(derivative) < 1.0e-8) return;
+        factor = std::clamp(factor + (targetValue - currentValue) / derivative,
+                            0.01, 100.0);
+      };
+      const bool resizeX = left || right;
+      const bool resizeY = top || bottom;
+      if (resolved.x.has_value()) {
+        if (resizeX) solveScaleForSnap(*resolved.x, true, snappedSx);
+        else next.tx += resolved.x->correction / scale;
+      }
+      if (resolved.y.has_value()) {
+        if (resizeY) solveScaleForSnap(*resolved.y, false, snappedSy);
+        else next.ty += resolved.y->correction / scale;
+      }
+      if (resizeX || resizeY) next = rebuildScaled(snappedSx, snappedSy);
     }
     editingChanged_ = !(next==editingInitial_);
     const std::array values{std::pair{selection_.primary(),next}};
@@ -1383,13 +1484,17 @@ bool InkPlaygroundHost::selectionPointer(std::uint64_t pointer, input::PointerPh
     // a canonical operation or a later unrelated repaint.
     (void)renderSelectionOverlay();
     canonicalPresentationDirty_ = true;
+    (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
       cancelSelectionTransform();
       return accepted;
     }
   }
-  if (phase == input::PointerPhase::kUp) editingPointer_=0;
+  if (phase == input::PointerPhase::kUp) {
+    editingPointer_=0;
+    (void)clearTransientOverlay();
+  }
   return true;
 }
 
@@ -1489,6 +1594,20 @@ std::optional<InkPlaygroundHost::InkDefaults> InkPlaygroundHost::brushCatalogDef
 
 bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  // A selection/creation frame uses the same transient provider as the
+  // eraser. Hide and clear that frame before starting a new eraser session;
+  // otherwise a just-moved Shape can remain composited at its former
+  // position for one refresh while the canonical frame is handed off.
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
+  if (transientOverlayDirty_ || selectionOverlay() != nullptr) {
+    (void)clearTransientOverlay();
+  }
+  // A transform commit leaves the canonical surface dirty until the platform
+  // render pump presents it. Do that handoff before starting an eraser so the
+  // overlay cannot expose the shape's former location for one frame.
+  if (canonicalPresentationDirty_ && surface_.available && activeSurfaceProvider() != nullptr) {
+    if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+  }
   std::lock_guard lock(previewStateMutex_);
   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
   eraserTraces_[pointerId] = {};
@@ -1502,7 +1621,8 @@ bool InkPlaygroundHost::eraserBegin(std::uint64_t pointerId) noexcept {
   return true;
 }
 
-bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y) noexcept {
+bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y,
+                                     bool renderPreview) noexcept {
   std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
@@ -1562,17 +1682,55 @@ bool InkPlaygroundHost::eraserSample(std::uint64_t pointerId, double x, double y
     style.overrideColor = true;
     style.overrideOpacity = true;
     style.preferCapturedPaint = false;
+
+    // A partial eraser is a stroke-only operation.  Do not paint the white
+    // preview mask over a non-ink object: that transparent overlay would
+    // otherwise make a Shape appear partially erased even though the commit
+    // path correctly excludes Shapes.  When the trace is over a Shape (or
+    // another non-ink object), keep the preview surface clear and leave the
+    // canonical object untouched.
+    bool overlapsNonInk = false;
+    bool overlapsInk = false;
+    if (runtimeSceneHost_ != nullptr) {
+      for (const auto& point : trace) {
+        const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+            {point.x, point.y}, static_cast<float>(kRadius),
+            canvas::HitTestFilter{canvas::HitTestKindMask::kAll, false}, 16U});
+        if (!tested) continue;
+        for (const auto id : tested.value().frontToBack) {
+          const auto* object = semanticObjects_.find(id);
+          if (object == nullptr) continue;
+          if (object->kind != semantic::ObjectKind::kVectorStroke &&
+              object->kind != semantic::ObjectKind::kDabStroke) {
+            overlapsNonInk = true;
+          } else {
+            overlapsInk = true;
+          }
+        }
+        if (overlapsNonInk && overlapsInk) break;
+      }
+    }
+    // The preview layer is a presentation-only mask and cannot clip itself
+    // against canonical object coverage. Never paint it when the trace is
+    // outside ink, or when it crosses a non-ink object: otherwise a moved
+    // Shape exposes a white/purple ghost along its former path.
+    if (!overlapsInk || overlapsNonInk) {
+      delta.outline.clear();
+      delta.dabs.clear();
+    }
   }
   previewController_->setPresentationStyle(style);
   return previewController_->updateForSession(pointerId, delta, viewport.scale,
                                                viewport.translationX,
                                                viewport.translationY) &&
-         (platformPresentationDeferred_ ? true : previewController_->renderIfDirty(style));
+         (!renderPreview || platformPresentationDeferred_
+              ? true : previewController_->renderIfDirty(style));
 }
 
 bool InkPlaygroundHost::eraserFinish(std::uint64_t pointerId) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end()) return false;
   if (it->second.empty() || runtimeSceneHost_ == nullptr) {
@@ -1775,6 +1933,9 @@ bool InkPlaygroundHost::eraserCancel(std::uint64_t pointerId) noexcept {
   std::lock_guard lock(previewStateMutex_);
   const bool erased = eraserTraces_.erase(pointerId) != 0U;
   eraserPreviewRevisions_.erase(pointerId);
+  // Hide the platform overlay before any clear/retire present. DirectComposition
+  // can otherwise expose the last white eraser frame for one refresh interval.
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   if (previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
@@ -2132,7 +2293,12 @@ semantic::Operation InkPlaygroundHost::legacyStrokeOperation(
   object.id = foundation::ObjectId::fromUint64(stroke.id);
   object.kind = semantic::ObjectKind::kVectorStroke;
   object.kind_version = 1;
-  object.placement.order_key = semantic::OrderKey{{1U, static_cast<std::uint8_t>(1U + (stroke.id % 254U))}};
+  // Legacy/native stroke commits share the same top drawing lane as the
+  // BrushCommitAdapter.  Keeping this path in the old low lane makes a line
+  // render underneath a subsequently created shape even though the current
+  // brush path is ordered correctly.
+  object.placement.order_key = semantic::OrderKey{{0xFFU,
+      static_cast<std::uint8_t>(1U + (stroke.id % 254U))}};
   semantic::StrokeRecord content{};
   content.brush.brush_family_id = 1;
   content.brush.brush_version = 1;
@@ -2650,24 +2816,170 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
   if (retirePreview && semanticObjects_.size() != 0U) {
     std::lock_guard providerLock(previewProviderMutex_);
     std::lock_guard previewLock(previewStateMutex_);
-    if (previewController_ == nullptr || !previewController_->active()) return true;
-    std::vector<std::uint64_t> retired;
-    for (const auto& [pointer, identity] : pendingCanonicalIdentities_) {
-      if (canonicalVisibilitySink_ != nullptr) {
-        const auto handoff = canonicalVisibilitySink_->canonicalVisible(identity, frame);
-        if (handoff == ink::HandoffResult::kRejected) return false;
-        if (handoff != ink::HandoffResult::kAccepted) continue;
+    if (previewController_ != nullptr && previewController_->active()) {
+      std::vector<std::uint64_t> retired;
+      for (const auto& [pointer, identity] : pendingCanonicalIdentities_) {
+        if (canonicalVisibilitySink_ != nullptr) {
+          const auto handoff = canonicalVisibilitySink_->canonicalVisible(identity, frame);
+          if (handoff == ink::HandoffResult::kRejected) return false;
+          if (handoff != ink::HandoffResult::kAccepted) continue;
+        }
+        if (!previewController_->retireSession(identity.session,
+                                               previewProvider_->generation())) {
+          return false;
+        }
+        retired.push_back(pointer);
       }
-      if (!previewController_->retireSession(identity.session,
-                                             previewProvider_->generation())) {
-        return false;
+      for (const auto pointer : retired) {
+        pendingCanonicalIdentities_.erase(pointer);
       }
-      retired.push_back(pointer);
-    }
-    for (const auto pointer : retired) {
-      pendingCanonicalIdentities_.erase(pointer);
     }
   }
+  // Selection transforms commit through the semantic history lane and do not
+  // create a brush/ARC handoff identity. Retire their last transient frame
+  // only after this canonical frame has been accepted, so the compositor
+  // never exposes the old canonical position between pointer-up and redraw.
+  if (retirePreview && !selectionTransformActive() && !creationActive()) {
+    (void)clearTransientOverlay();
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::presentTransientOverlayFrame(std::uint64_t frameId) noexcept {
+  std::lock_guard renderLock(previewRenderMutex_);
+  std::lock_guard providerLock(previewProviderMutex_);
+  transientOverlayDirty_ = true;
+  if (!surface_.available || frameId == 0U || previewProvider_ == nullptr ||
+      runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
+      (!creationActive() && !selectionTransformActive() && selectionOverlay() == nullptr)) {
+    return false;
+  }
+  if (!recoverHistoryScene()) return false;
+  const auto viewport = viewportController_->state();
+  const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
+      ? viewport.scale : 1.0F;
+  const float centerX = static_cast<float>(surface_.width) * 0.5F;
+  const float centerY = static_cast<float>(surface_.height) * 0.5F;
+  const auto viewToWorld = [&](float viewX, float viewY) {
+    return foundation::WorldPoint{
+        (viewX - viewport.translationX) / zoom,
+        (viewY - viewport.translationY) / zoom};
+  };
+  const std::array<foundation::WorldPoint, 4> worldCorners{
+      viewToWorld(0.0F, 0.0F),
+      viewToWorld(static_cast<float>(surface_.width), 0.0F),
+      viewToWorld(0.0F, static_cast<float>(surface_.height)),
+      viewToWorld(static_cast<float>(surface_.width), static_cast<float>(surface_.height))};
+  foundation::WorldRect worldViewport{worldCorners[0].x, worldCorners[0].y,
+                                      worldCorners[0].x, worldCorners[0].y};
+  for (std::size_t i = 1; i < worldCorners.size(); ++i) {
+    worldViewport.left = std::min(worldViewport.left, worldCorners[i].x);
+    worldViewport.top = std::min(worldViewport.top, worldCorners[i].y);
+    worldViewport.right = std::max(worldViewport.right, worldCorners[i].x);
+    worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
+  }
+  const render::FrameState frame{
+      render::ViewId{1},
+      render::CameraState{foundation::WorldPoint{
+                              (centerX - viewport.translationX) / zoom,
+                              (centerY - viewport.translationY) / zoom},
+                          zoom, 0.0F,
+                          render::CameraGeneration{cameraGeneration()}},
+      worldViewport,
+      render::SurfaceMetrics{static_cast<float>(surface_.width),
+                             static_cast<float>(surface_.height), surface_.width,
+                             surface_.height, 1.0F, 1.0F},
+      semanticGeneration_.current(), runtimeSceneHost_->revision(),
+      render::SurfaceGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
+      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
+                            static_cast<float>(surface_.height)}};
+  auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  if (!visibility) return false;
+  if (transformDrag_.active() &&
+      std::find(visibility.value().backToFront.begin(), visibility.value().backToFront.end(),
+                selection_.primary()) == visibility.value().backToFront.end()) {
+    auto& ids = visibility.value().backToFront;
+    ids.push_back(selection_.primary());
+    std::sort(ids.begin(), ids.end(), [&](auto a, auto b) {
+      return sceneCoordinator_->runtimeScene().find(a)->placement.order_key <
+             sceneCoordinator_->runtimeScene().find(b)->placement.order_key;
+    });
+    visibility.value().visibleRecords = ids.size();
+  }
+  auto references = render::DirectReferenceSource::build(
+      frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  if (!references) return false;
+  for (auto& entry : references.value().entries) {
+    if (const auto* transform = transformOverrides_.find(entry.record.objectId)) {
+      entry.record.transform = *transform;
+      references.value().canonicalBytes.clear();
+      references.value().digest.clear();
+    }
+  }
+  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  if (!plan) return false;
+  if (selectionMode_) (void)renderSelectionOverlay();
+  if (creationActive() && creationPreview().valid) {
+    selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+    std::vector<render::SnapGuideGeometry> guides;
+    for (const auto& guide : creationPreview().guides) {
+      const auto screen = [&](float x, float y) {
+        return render::ScreenPoint{x * zoom + viewport.translationX,
+                                   y * zoom + viewport.translationY};
+      };
+      if (guide.axis == interaction::SnapGuideAxis::kVertical) {
+        guides.push_back({render::SnapGuideAxis::kVertical,
+                          screen(guide.position, guide.spanStart),
+                          screen(guide.position, guide.spanEnd)});
+      } else {
+        guides.push_back({render::SnapGuideAxis::kHorizontal,
+                          screen(guide.spanStart, guide.position),
+                          screen(guide.spanEnd, guide.position)});
+      }
+    }
+    selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
+  }
+  const auto rendered = previewRenderer_.renderTransientOverlay(
+      *previewProvider_, plan.value(), selectionOverlay());
+  if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
+  previewProvider_->setOverlayVisible(true);
+  transientOverlayDirty_ = false;
+  return true;
+}
+
+bool InkPlaygroundHost::retryTransientOverlayFrame() noexcept {
+  if (!transientOverlayDirty_) return true;
+  if (!creationActive() && !selectionTransformActive()) return clearTransientOverlay();
+  return presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+}
+
+bool InkPlaygroundHost::clearTransientOverlay() noexcept {
+  std::lock_guard renderLock(previewRenderMutex_);
+  std::lock_guard providerLock(previewProviderMutex_);
+  // Retire the logical overlay state before touching the platform surface.
+  // A D3D12/DirectComposition acquire can be temporarily unavailable; that
+  // must not keep a completed creation session in the retry loop.
+  transientOverlayDirty_ = false;
+  transientOverlayHandoffPending_ = false;
+  if (previewProvider_ == nullptr) {
+    selectionView_.reset();
+    return false;
+  }
+  // DirectComposition may present the previous swap-chain buffer while the
+  // transparent clear is queued. Hide first so the stale frame cannot flash
+  // during a shape move or eraser handoff.
+  previewProvider_->setOverlayVisible(false);
+  if (!previewActive() && !selectionTransformActive() && !creationActive()) {
+    selectionView_.reset();
+  }
+  const auto result = previewRenderer_.clearPreview(
+      *previewProvider_, render::SurfaceGeneration{previewProvider_->generation()});
+  if (result.code != render::BackendSubmissionCode::kAccepted) return false;
+  // TransparentOverlaySkiaSurfaceProvider marks a successful present visible;
+  // a clear frame is a retirement operation, so hide again after the present
+  // rather than leaving the just-cleared swap-chain buffer exposed.
+  previewProvider_->setOverlayVisible(false);
   return true;
 }
 

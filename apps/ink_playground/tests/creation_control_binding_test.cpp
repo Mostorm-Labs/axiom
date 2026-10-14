@@ -42,6 +42,141 @@ void one_gesture_one_operation() {
   assert(!snapshot.creationActive);
 }
 
+void arrow_then_second_creation_remains_usable() {
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  const CanvasTargetKey target{1U, 1U, 1U, 1U};
+  CanvasControlBinding binding(host, target);
+  auto select = [&](CanvasCreationPreset preset, std::uint64_t requestId) {
+    CanvasControlRequest request{};
+    request.clientId = 7U;
+    request.requestId = requestId;
+    request.target = target;
+    request.payload.kind = CanvasControlPayloadKind::kSelectCreationPreset;
+    request.payload.creationPreset = preset;
+    assert(binding.apply(request).error == CanvasControlError::kNone);
+  };
+  auto draw = [&](std::uint64_t pointer, float x0, float y0, float x1, float y1) {
+    PlatformPointerBatch down;
+    down.samples.push_back({11U, pointer, 1U, 1000U, x0, y0, 0.5F, 0.0F, 0.0F,
+                            {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+    PlatformPointerBatch move;
+    move.samples.push_back({11U, pointer, 2U, 2000U, x1, y1, 0.5F, 0.0F, 0.0F,
+                            {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+    PlatformPointerBatch up;
+    up.samples.push_back({11U, pointer, 3U, 3000U, x1, y1, 0.5F, 0.0F, 0.0F,
+                          {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kUp});
+    assert(host.acceptPlatformBatch(down, 1000U));
+    assert(host.acceptPlatformBatch(move, 2000U));
+    assert(host.acceptPlatformBatch(up, 3000U));
+  };
+  select(CanvasCreationPreset::kArrow, 1U);
+  draw(71U, 20.0F, 30.0F, 120.0F, 30.0F);
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  select(CanvasCreationPreset::kRectangle, 2U);
+  draw(72U, 40.0F, 60.0F, 160.0F, 140.0F);
+  assert(host.semanticObjectCount() == 2U &&
+         "creating an Arrow must not block the next creation gesture");
+}
+
+void arrow_then_arrow_remains_usable() {
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  const CanvasTargetKey target{1U, 1U, 1U, 1U};
+  CanvasControlBinding binding(host, target);
+  auto selectArrow = [&](std::uint64_t requestId) {
+    CanvasControlRequest request{};
+    request.clientId = 7U;
+    request.requestId = requestId;
+    request.target = target;
+    request.payload.kind = CanvasControlPayloadKind::kSelectCreationPreset;
+    request.payload.creationPreset = CanvasCreationPreset::kArrow;
+    assert(binding.apply(request).error == CanvasControlError::kNone);
+  };
+  auto draw = [&](std::uint64_t pointer, float x0, float y0, float x1, float y1) {
+    PlatformPointerBatch down;
+    down.samples.push_back({11U, pointer, 1U, 1000U, x0, y0, 0.5F, 0.0F, 0.0F,
+                            {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+    PlatformPointerBatch move;
+    move.samples.push_back({11U, pointer, 2U, 2000U, x1, y1, 0.5F, 0.0F, 0.0F,
+                            {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+    PlatformPointerBatch up;
+    up.samples.push_back({11U, pointer, 3U, 3000U, x1, y1, 0.5F, 0.0F, 0.0F,
+                          {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kUp});
+    assert(host.acceptPlatformBatch(down, 1000U));
+    assert(host.acceptPlatformBatch(move, 2000U));
+    assert(host.acceptPlatformBatch(up, 3000U));
+  };
+  selectArrow(1U);
+  draw(81U, 20.0F, 30.0F, 120.0F, 30.0F);
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  // The product keeps the selected creation preset active after a commit;
+  // a second gesture must therefore work without another control request.
+  draw(82U, 40.0F, 60.0F, 160.0F, 60.0F);
+  assert(host.semanticObjectCount() == 2U &&
+         "creating an Arrow must not block another Arrow gesture");
+}
+
+void arrow_then_arrow_reuses_platform_pointer() {
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.selectCreationPreset(CreationPreset::kArrow));
+  auto draw = [&](std::uint64_t sequence, float y) {
+    PlatformPointerBatch down;
+    down.samples.push_back({11U, 1U, sequence, sequence * 1000U, 20.0F, y,
+                            0.5F, 0.0F, 0.0F, {}, {},
+                            SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+    PlatformPointerBatch move;
+    move.samples.push_back({11U, 1U, sequence + 1U, (sequence + 1U) * 1000U,
+                            120.0F, y, 0.5F, 0.0F, 0.0F, {}, {},
+                            SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+    PlatformPointerBatch up;
+    up.samples.push_back({11U, 1U, sequence + 2U, (sequence + 2U) * 1000U,
+                          120.0F, y, 0.5F, 0.0F, 0.0F, {}, {},
+                          SampleProvenance::kConfirmedCurrent, PointerPhase::kUp});
+    assert(host.acceptPlatformBatch(down, sequence * 1000U));
+    assert(host.acceptPlatformBatch(move, (sequence + 1U) * 1000U));
+    assert(host.acceptPlatformBatch(up, (sequence + 2U) * 1000U));
+  };
+  draw(1U, 30.0F);
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  draw(4U, 60.0F);
+  assert(host.semanticObjectCount() == 2U &&
+         "a stable Windows mouse pointer must be reusable for Arrow creation");
+}
+
+void line_then_line_reuses_platform_pointer() {
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.selectCreationPreset(CreationPreset::kLine));
+  auto draw = [&](std::uint64_t sequence, float y) {
+    PlatformPointerBatch down;
+    down.samples.push_back({11U, 1U, sequence, sequence * 1000U, 20.0F, y,
+                            0.5F, 0.0F, 0.0F, {}, {},
+                            SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+    PlatformPointerBatch move;
+    move.samples.push_back({11U, 1U, sequence + 1U, (sequence + 1U) * 1000U,
+                            120.0F, y, 0.5F, 0.0F, 0.0F, {}, {},
+                            SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+    PlatformPointerBatch up;
+    up.samples.push_back({11U, 1U, sequence + 2U, (sequence + 2U) * 1000U,
+                          120.0F, y, 0.5F, 0.0F, 0.0F, {}, {},
+                          SampleProvenance::kConfirmedCurrent, PointerPhase::kUp});
+    assert(host.acceptPlatformBatch(down, sequence * 1000U));
+    assert(host.acceptPlatformBatch(move, (sequence + 1U) * 1000U));
+    assert(host.acceptPlatformBatch(up, (sequence + 2U) * 1000U));
+  };
+  draw(1U, 30.0F);
+  assert(host.semanticObjectCount() == 1U);
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  draw(4U, 60.0F);
+  assert(host.semanticObjectCount() == 2U &&
+         "Line must remain reusable for a second connector gesture");
+}
+
 void create_move_changes_real_pixels_without_canonical_mutation() {
   InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
@@ -54,17 +189,18 @@ void create_move_changes_real_pixels_without_canonical_mutation() {
   const PointerKey key{11U, 42U, 1U};
   assert(host.creationPointer(key, PointerPhase::kDown, 20, 20));
   assert(host.creationPointer(key, PointerPhase::kMove, 120, 100));
-  assert(host.presentCanonicalFrame(2U, 0.0, false));
-  assert(host.activeSurfaceProvider()->readbackRgba(preview).code ==
+  assert(host.presentTransientOverlayFrame(2U));
+  assert(host.previewSurfaceProvider()->readbackRgba(preview).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
-  assert(preview != before && "creation Move must render real transient pixels");
+  assert(preview != std::vector<std::uint8_t>(preview.size(), 0U) &&
+         "creation Move must render real transient pixels");
   assert(host.semanticGeneration() == generation && host.semanticObjectCount() == 0U);
   assert(host.selectedObjectCount() == 0U);
   assert(host.creationPointer(key, PointerPhase::kCancel, 120, 100));
-  assert(host.presentCanonicalFrame(3U, 0.0, false));
-  assert(host.activeSurfaceProvider()->readbackRgba(preview).code ==
+  assert(host.clearTransientOverlay());
+  assert(host.previewSurfaceProvider()->readbackRgba(preview).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
-  assert(preview == before);
+  assert(preview == std::vector<std::uint8_t>(preview.size(), 0U));
 }
 
 void repeated_gestures_and_other_source_cancellation() {
@@ -115,6 +251,10 @@ int main(int argc, char** argv) {
   if (argc > 1 && std::string_view(argv[1])=="preview") create_move_changes_real_pixels_without_canonical_mutation();
   else if(argc>1 && std::string_view(argv[1])=="sources") repeated_gestures_and_other_source_cancellation();
   else if(argc>1) queue_never_applies_off_owner();
+  else if (argc > 1 && std::string_view(argv[1]) == "arrow") arrow_then_second_creation_remains_usable();
+  else if (argc > 1 && std::string_view(argv[1]) == "arrow-arrow") arrow_then_arrow_remains_usable();
+  else if (argc > 1 && std::string_view(argv[1]) == "arrow-arrow-pointer") arrow_then_arrow_reuses_platform_pointer();
+  else if (argc > 1 && std::string_view(argv[1]) == "line-line-pointer") line_then_line_reuses_platform_pointer();
   else one_gesture_one_operation();
   return 0;
 }

@@ -112,6 +112,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   std::atomic_bool renderWakePosted{false};
   bool evidenceDirty = false;
   std::atomic_bool canonicalPending{false};
+  std::uint32_t canonicalRetryCount = 0;
   std::mutex previewPumpMutex;
   std::condition_variable previewPumpCv;
   bool previewPumpPending = false;
@@ -128,6 +129,7 @@ struct State { HWND window = nullptr; std::unique_ptr<InkPlaygroundHost> host;
   bool canonicalFrameReady = false;
   bool resizePosted = false;
   bool resizeInProgress = false;
+  std::uint32_t resizeRetryCount = 0;
   std::uint32_t pendingWidth = 0;
   std::uint32_t pendingHeight = 0;
 #if defined(CANVAS_RENDER_HAS_SKIA)
@@ -672,8 +674,8 @@ void startPreviewRenderPump(State& value) {
       lock.unlock();
       PreviewPresentationCapture capture{};
       std::uint64_t presentCount = 0;
-      const bool gateOpen = value.host != nullptr && !value.canonicalPending &&
-          value.previewPresentationEnabled;
+       const bool gateOpen = value.host != nullptr && !value.canonicalPending &&
+           value.previewPresentationEnabled;
       const bool captured = gateOpen && value.host->capturePreviewPresentation(capture);
       const bool rendered = captured && value.host->renderPreviewPresentation(capture, &presentCount);
       if (value.pointerDiagnostic && (gateOpen || value.previewDirty)) {
@@ -686,18 +688,18 @@ void startPreviewRenderPump(State& value) {
             << (value.previewProvider == nullptr ? 0ULL : value.previewProvider->generation())
             << " present_count=" << presentCount << '\n';
       }
-      if (rendered) {
+       if (rendered) {
         {
           std::lock_guard completionLock(value.previewCompletionMutex);
           value.previewCompletion = capture;
           value.previewCompletionPresentCount = presentCount;
-        }
-        if (value.window != nullptr) {
-          (void)PostMessageW(value.window, State::kPreviewPresentedMessage, 0, 0);
-        }
-      }
-    }
-  });
+         }
+         if (value.window != nullptr) {
+           (void)PostMessageW(value.window, State::kPreviewPresentedMessage, 0, 0);
+         }
+       }
+     }
+   });
 }
 
 void stopPreviewRenderPump(State& value) noexcept {
@@ -905,9 +907,25 @@ bool renderCanonical(State& value) {
   // completion can make the just-retired overlay visible again.
   if (accepted && value.host->pendingCanonicalHandoffCount() == 0U) {
     value.canonicalPending = false;
+    value.canonicalRetryCount = 0U;
   }
   if (accepted && !value.host->previewActive()) {
     retireVisiblePreviewPresentation(value);
+  }
+  if (!accepted) {
+    value.canonicalRetryCount = (std::min)(value.canonicalRetryCount + 1U, 8U);
+    // A transient D3D12/DComp rejection must not permanently close the
+    // preview gate. Keep canonicalPresentationDirty_ set so the committed
+    // frame is retried, but allow the next pointer session to keep producing
+    // visible preview frames after a few failed render ticks.
+    if (value.canonicalRetryCount >= 3U && value.canonicalPending) {
+      value.canonicalPending = false;
+      value.previewPresentationEnabled = true;
+      if (value.pointerDiagnostic) {
+        value.pointerDiagnostic << "canonical-recovery retry="
+            << value.canonicalRetryCount << " pending=0\n";
+      }
+    }
   }
   return accepted;
 #else
@@ -932,6 +950,14 @@ bool submitSelectionSample(State& value, std::uint64_t pointer,
   const auto receipt = value.runtimeFacade->submitSelectionPointer(
       {pointer, phase, x, y, ++value.pointerSampleSequence, 1U});
   const bool accepted = receipt.state == canvas::runtime::ProductControlState::kApplied;
+  if (accepted && phase == canvas::runtime::SelectionPointerPhase::kMove) {
+    // Selection transforms and snap guides live in the transient overlay. A
+    // pointer move must invalidate the canvas immediately; waiting for a
+    // canonical commit leaves the object frozen visually during the drag.
+    RECT canvasRect{}; GetClientRect(value.window, &canvasRect);
+    canvasRect.top = State::kToolbarHeight;
+    InvalidateRect(value.window, &canvasRect, FALSE);
+  }
   if (!accepted || phase == P::kUp || phase == P::kCancel) {
     value.selectionPointers.erase(pointer);
     endCanvasInput(value, pointer);
@@ -1019,6 +1045,25 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
     value.activeKeys[kMousePointerId] = *key;
     value.pointerStrokes[kMousePointerId] = value.host->platformStrokeId(*key).value_or(value.stroke);
     value.maxConcurrentPointers = (std::max)(value.maxConcurrentPointers, value.activeKeys.size());
+  }
+  // Creation gestures are keyed by Runtime's PointerKey but do not create a
+  // brush stroke. Do not read pointerStrokes/activeKeys as a brush-only
+  // invariant after Runtime has already committed an Arrow/Shape.
+  if (value.host->creationMode() || value.host->creationActive()) {
+    if (end) {
+      value.activeKeys.erase(kMousePointerId);
+      value.pointerStrokes.erase(kMousePointerId);
+      endCanvasInput(value, kMousePointerId);
+      if (GetCapture() == window) ReleaseCapture();
+      value.canonicalFrameReady = false;
+      value.canonicalPending = false;
+      value.previewDirty = false;
+      enablePreviewPresentation(value);
+      InvalidateRect(window, nullptr, FALSE);
+    }
+    value.previewDirty = true;
+    wakeRenderPump(value);
+    return true;
   }
   value.deviceId = kMousePointerId;
   const auto key = value.activeKeys.at(kMousePointerId);
@@ -1255,8 +1300,17 @@ void paint(HWND window, State& value) {
   HDC dc = BeginPaint(window, &ps);
   RECT rect{};
   GetClientRect(window, &rect);
-  FillRect(dc, &rect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
-  if (!value.resizeInProgress && value.activeKeys.empty() &&
+  // The canvas band is owned by the DComp canonical visual. Repainting the
+  // full owner client during WM_SIZE briefly covers that visual and causes a
+  // maximize/restore flash. Keep the canvas latched and paint only the host
+  // toolbar/status band.
+  RECT toolbarRect{0, 0, rect.right, State::kToolbarHeight};
+  FillRect(dc, &toolbarRect, static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)));
+  const bool transientInputActive = !value.activeKeys.empty() ||
+      !value.selectionPointers.empty() ||
+      (value.host != nullptr && (value.host->creationActive() ||
+                                 value.host->selectionTransformActive()));
+  if (!value.resizeInProgress && !transientInputActive &&
       (value.host->canonicalPresentationDirty() || !value.canonicalFrameReady)) {
     // A resize can invalidate the D3D12 surface before the deferred resize
     // message has rebuilt it.  Only mark the canonical frame ready after the
@@ -1411,7 +1465,8 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     // active stroke, let input and preview presentation own the thread; the
     // next idle tick and the pointer-up invalidation refresh diagnostics.
     if (value->debugUi != nullptr && value->debugUi->visible() &&
-        value->activeKeys.empty() && !value->host->selectionTransformActive() &&
+        value->activeKeys.empty() && value->selectionPointers.empty() &&
+        !value->host->creationActive() && !value->host->selectionTransformActive() &&
         !value->resizeInProgress) {
       value->debugUi->refresh();
     }
@@ -1430,10 +1485,22 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       persistEvidence(*value);
       value->evidenceDirty = false;
     }
+    const bool transientInputActive = !value->activeKeys.empty() ||
+        !value->selectionPointers.empty() ||
+        (value->host != nullptr && (value->host->creationActive() ||
+                                    value->host->selectionTransformActive()));
+    // A transient selection/creation frame is allowed to be rejected by the
+    // non-owner D3D12 preview provider while its backbuffer is in flight. Keep
+    // the latest frame dirty and retry it from the render timer; otherwise the
+    // popup continues showing the previous transform, which looks like a
+    // rubber-band or rebound during a drag.
+    if (value->host != nullptr &&
+        value->host->transientOverlayDirty()) {
+      (void)value->host->retryTransientOverlayFrame();
+    }
     if (!value->resizeInProgress &&
-        (value->activeKeys.empty() ||
-         value->host->pendingCanonicalHandoffCount() != 0U ||
-         value->host->canonicalPresentationDirty()) &&
+        (!transientInputActive ||
+         value->host->pendingCanonicalHandoffCount() != 0U) &&
         (value->host->canonicalPresentationDirty() || !value->canonicalFrameReady)) {
       value->canonicalFrameReady = renderCanonical(*value);
     }
@@ -1441,7 +1508,23 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     return 0;
   }
   if (message == WM_SIZE && value != nullptr) {
-    if (!value->selectionPointers.empty()) clearCanvasInput(*value);
+    // A maximize/restore is a surface lifecycle boundary.  Terminate every
+    // canvas-owned transient session before the old surface is detached;
+    // leaving activeKeys/pointerStrokes alive here keeps the render gate
+    // closed forever and makes the next post-resize pointer look stale.
+    const bool hasTransientInput = !value->activeKeys.empty() ||
+        !value->pointerStrokes.empty() || !value->selectionPointers.empty() ||
+        (value->host != nullptr && (value->host->creationActive() ||
+                                    value->host->selectionTransformActive()));
+    if (hasTransientInput) {
+      cancelAllPointers(*value, static_cast<std::uint64_t>(GetMessageTime()));
+    } else {
+      clearCanvasInput(*value);
+    }
+    value->canonicalPending = false;
+    value->previewDirty = false;
+    value->previewPresentationEnabled = true;
+    if (value->host != nullptr) value->host->setPreviewOverlayVisible(false);
 #if defined(CANVAS_RENDER_HAS_SKIA)
     const auto width = static_cast<std::uint32_t>(LOWORD(lParam));
     const auto canvasHeight = static_cast<int>(HIWORD(lParam)) - State::kToolbarHeight;
@@ -1515,7 +1598,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       RECT canvasRect{}; GetClientRect(window, &canvasRect);
       canvasRect.top = State::kToolbarHeight;
       InvalidateRect(window, &canvasRect, FALSE);
-      resized = true;
+      resized = value->canonicalFrameReady;
     }
     if (value->pointerDiagnostic) {
       value->pointerDiagnostic << "deferred-resize result host=" << hostResized
@@ -1524,11 +1607,16 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     value->resizeInProgress = false;
     if (!resized) {
-      // Keep the retry bounded to the message loop.  A transient DXGI/DComp
-      // rejection during a maximize must not leave canonicalFrameReady false
-      // forever (which used to make the canonical document appear to vanish).
+      // A failed canonical handoff must not recursively rebuild the D3D12
+      // providers on every timer tick. Rebuilding increments the provider
+      // generation while the failed frame is still in flight, creating a
+      // resize storm that starves all pointer input. Keep the surface bound,
+      // leave the frame dirty, and let the normal render timer retry it.
       value->canonicalFrameReady = false;
+      value->resizeRetryCount = (std::min)(value->resizeRetryCount + 1U, 3U);
       InvalidateRect(window, nullptr, FALSE);
+    } else {
+      value->resizeRetryCount = 0U;
     }
 #endif
     return 0;

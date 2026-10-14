@@ -29,6 +29,9 @@ class SkiaRenderer final {
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay = nullptr);
+    [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
+        SkiaSurfaceProvider& provider, const FramePlan& plan,
+        const EditingOverlay* selectionOverlay);
     [[nodiscard]] BackendSubmissionResult renderPreview(
         SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
         const PreviewStyleOverride& style = {});

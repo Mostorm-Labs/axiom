@@ -27,14 +27,25 @@ void ink(DebugPanelContext& context) {
                     panel_detail::availabilityLabel(snapshot.product.availability));
     if (!context.controls.hasRuntimeOwner())
         ImGui::TextUnformatted("Brush controls: Unsupported (Runtime owner unbound)");
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
-    for (const auto& preset : presets) {
-        const bool selected = snapshot.product.value.tool.brushId == preset.id &&
-                              snapshot.product.value.tool.brushRevision == preset.revision;
-        if (ImGui::Selectable(preset.label, selected)) {
-            (void)context.controls.setBrush(preset.id, preset.revision);
-            context.ui.markControlSubmitted();
+    std::size_t selectedBrush = 0U;
+    for (std::size_t i = 0; i < presets.size(); ++i) {
+        if (snapshot.product.value.tool.brushId == presets[i].id &&
+            snapshot.product.value.tool.brushRevision == presets[i].revision) {
+            selectedBrush = i;
+            break;
         }
+    }
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
+    if (ImGui::BeginCombo("Brush", presets[selectedBrush].label)) {
+        for (std::size_t i = 0; i < presets.size(); ++i) {
+            const bool selected = i == selectedBrush;
+            if (ImGui::Selectable(presets[i].label, selected)) {
+                (void)context.controls.setBrush(presets[i].id, presets[i].revision);
+                context.ui.markControlSubmitted();
+            }
+            if (selected) ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
     }
     ImGui::EndDisabled();
     ImGui::TextUnformatted("Size: Unsupported");

@@ -91,8 +91,13 @@ semantic::Operation BrushCommitAdapter::build(
                            package.profileId == "membrane-v1";
   object.kind = texturedDab ? semantic::ObjectKind::kDabStroke : semantic::ObjectKind::kVectorStroke;
   object.kind_version = 2U;
-  object.placement.order_key = semantic::OrderKey(
-      {static_cast<std::uint8_t>((operationId % 254U) + 1U)});
+  // Brush commits are appended to the document lane.  A one-byte key derived
+  // from the operation id can sort below pre-existing shapes (and wraps every
+  // 254 operations), making a freshly drawn line render underneath them.
+  // Use a valid high-range two-byte key so ordinary brush strokes stay above
+  // existing content while preserving deterministic ordering between strokes.
+  object.placement.order_key = semantic::OrderKey({0xFFU,
+      static_cast<std::uint8_t>((operationId % 254U) + 1U)});
   if (texturedDab) {
     semantic::DabBrushStrokeContent content;
     content.stroke.snapshot = snapshot(intent, package);

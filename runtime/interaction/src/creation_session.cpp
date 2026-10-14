@@ -9,7 +9,14 @@ namespace canvas::interaction {
 namespace {
 bool finitePoint(foundation::WorldPoint p) noexcept { return std::isfinite(p.x) && std::isfinite(p.y); }
 semantic::ObjectId makeId(std::uint64_t seed) noexcept { return foundation::ObjectId::fromUint64(seed == 0 ? 1 : seed); }
-semantic::OrderKey makeOrder(std::uint64_t seed) { return semantic::OrderKey{{1U, static_cast<std::uint8_t>(1U + ((seed >> 8U) & 0xFEU)), static_cast<std::uint8_t>(1U + (seed & 0xFEU))}}; }
+semantic::OrderKey makeOrder(std::uint64_t seed) {
+  // Creation tools append user-authored objects above existing content. Keep
+  // the key deterministic and valid while reserving the high lane for new
+  // brush/shape commits.
+  return semantic::OrderKey{{0xFEU,
+      static_cast<std::uint8_t>(1U + ((seed >> 8U) & 0xFEU)),
+      static_cast<std::uint8_t>(1U + (seed & 0xFEU))}};
+}
 }
 
 bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, CreationStyle style,

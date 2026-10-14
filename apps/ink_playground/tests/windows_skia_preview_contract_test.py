@@ -153,7 +153,7 @@ def test_windows_preview_is_three_buffered_and_busy_acquire_is_nonblocking():
     assert "std::array<ComPtr<ID3D12Resource>, 3>" in provider
     assert "std::array<sk_sp<SkSurface>, 3>" in provider
     assert "desc.BufferCount = static_cast<UINT>(impl_->buffers.size())" in provider
-    assert '"preview backbuffer busy"' in provider
+    assert '"D3D12 backbuffer busy"' in provider
 
 
 def test_windows_input_only_marks_dirty_and_wakes_single_render_pump():

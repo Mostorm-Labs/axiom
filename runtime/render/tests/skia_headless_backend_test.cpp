@@ -1,4 +1,6 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/runtime/resource_provider.hpp"
 
@@ -577,6 +579,81 @@ void deterministicRejectionsPreservePriorObservation() {
     assert(*backend.observation() == stable);
 }
 
+void productionRendererAcceptsFractionalSnapBounds() {
+    const FrameState frame = fixtureFrame(FrameId{923});
+    auto entry = shapeEntry();
+    entry.record.visualBounds = WorldRect{8.0F, 8.0F, 32.00001F, 32.00001F};
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {std::move(entry)};
+    list.candidatesExamined = 1U;
+    list.visibleRecords = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    canvas::render::RasterSkiaSurfaceProvider provider;
+    assert(provider.resize(kWidth, kHeight).code == BackendSubmissionCode::kAccepted);
+    for (std::uint64_t generation = provider.generation(); generation < frame.surfaceGeneration.value(); ++generation)
+        assert(provider.advanceGeneration().code == BackendSubmissionCode::kAccepted);
+    canvas::render::SkiaRenderer renderer;
+    const auto result = renderer.renderFrame(provider, FramePlan{frame, list});
+    if (result.code != BackendSubmissionCode::kAccepted) std::cerr << "fractional renderer: " << result.message << "\n";
+    assert(result.code == BackendSubmissionCode::kAccepted &&
+           "snap-generated fractional shape bounds must not poison canonical production rendering");
+}
+
+void productionRendererAcceptsFractionalConnectorEndpoints() {
+    const FrameState frame = fixtureFrame(FrameId{924});
+    auto entry = connectorEntry();
+    auto connector = std::get<ConnectorReferenceCommand>(entry.command);
+    connector.content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.0}};
+    connector.content.end.value = canvas::semantic::FreePointEndpoint{{96.25, 48.0}};
+    entry.command = connector;
+    entry.record.content = connector.content;
+    entry.record.visualBounds = WorldRect{72.25F, 46.0F, 96.25F, 50.0F};
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {std::move(entry)};
+    list.candidatesExamined = 1U;
+    list.visibleRecords = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    canvas::render::RasterSkiaSurfaceProvider provider;
+    assert(provider.resize(kWidth, kHeight).code == BackendSubmissionCode::kAccepted);
+    for (std::uint64_t generation = provider.generation(); generation < frame.surfaceGeneration.value(); ++generation)
+        assert(provider.advanceGeneration().code == BackendSubmissionCode::kAccepted);
+    canvas::render::SkiaRenderer renderer;
+    const auto result = renderer.renderFrame(provider, FramePlan{frame, list});
+    assert(result.code == BackendSubmissionCode::kAccepted);
+}
+
+void productionConnectorUsesAntialiasedEdges() {
+    FrameState frame = fixtureFrame(FrameId{925});
+    auto entry = connectorEntry();
+    auto connector = std::get<ConnectorReferenceCommand>(entry.command);
+    connector.content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.25}};
+    connector.content.end.value = canvas::semantic::FreePointEndpoint{{112.25, 72.25}};
+    entry.command = connector;
+    entry.record.content = connector.content;
+    entry.record.visualBounds = WorldRect{70.0F, 46.0F, 115.0F, 75.0F};
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {std::move(entry)};
+    list.candidatesExamined = 1U;
+    list.visibleRecords = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    canvas::render::RasterSkiaSurfaceProvider provider;
+    assert(provider.resize(kWidth, kHeight).code == BackendSubmissionCode::kAccepted);
+    for (std::uint64_t generation = provider.generation(); generation < frame.surfaceGeneration.value(); ++generation)
+        assert(provider.advanceGeneration().code == BackendSubmissionCode::kAccepted);
+    canvas::render::SkiaRenderer renderer;
+    assert(renderer.renderFrame(provider, FramePlan{frame, list}).code == BackendSubmissionCode::kAccepted);
+    std::vector<std::uint8_t> pixels(static_cast<std::size_t>(kWidth) * kHeight * 4U);
+    assert(provider.readbackRgba(pixels).code == BackendSubmissionCode::kAccepted);
+    std::size_t mixed = 0U;
+    for (std::size_t i = 0; i + 3U < pixels.size(); i += 4U) {
+        const auto r = pixels[i], g = pixels[i + 1U], b = pixels[i + 2U];
+        const bool background = r == 255U && g == 255U && b == 255U;
+        const bool solidStroke = r == 255U && g == 128U && b == 0U;
+        if (!background && !solidStroke) ++mixed;
+    }
+    assert(mixed > 0U && "production Connector edges must use Skia anti-aliasing");
+}
+
 void fc01TriangleAndConnectorStyleProbes() {
     const FrameState frame = fixtureFrame();
     RuntimeSceneRecord triangle = baseRecord(700, ObjectKind::kShape, {0,0,100,80});
@@ -624,15 +701,48 @@ void fc01TriangleAndConnectorStyleProbes() {
     std::cout<<"PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity\n";
 }
 
+void ellipseUsesLocalOvalGeometryAfterTransform() {
+    const FrameState frame = fixtureFrame();
+    RuntimeSceneRecord ellipse = baseRecord(701, ObjectKind::kShape, {0, 0, 100, 80});
+    ellipse.kindVersion = 1;
+    ellipse.transform.tx = 60;
+    ellipse.transform.ty = 40;
+    ellipse.content = canvas::semantic::ShapeContent{2, 100, 80};
+    ellipse.properties.entries = {
+        {0x100U, canvas::semantic::FillStyleValue{
+            canvas::semantic::SolidFill{{1, 0, 0, 1}}}},
+    };
+    ReferenceDrawList list{.frame=frame,.queryWorldRect=frame.worldViewport,
+        .candidatesExamined=1,.visibleRecords=1,.worldToView={},.viewportClip=frame.worldViewport,
+        .entries={{ellipse,true,ShapeReferenceCommand{
+            std::get<canvas::semantic::ShapeContent>(ellipse.content)}}},
+        .diagnostics={},.canonicalBytes={},.digest={}};
+    SkiaHeadlessBackend backend({256,256});
+    assert(backend.submit({frame,list}).code == BackendSubmissionCode::kAccepted);
+    const auto& pixels = *backend.observation();
+    // The transformed ellipse has its bounding box at [60,160]x[40,120].
+    // Its center is filled while the top-left corner remains transparent.
+    assert(pixel(pixels,110,80) == (Rgba{255,0,0,255}));
+    assert(pixel(pixels,61,41) == (Rgba{0,0,0,0}));
+}
+
 } // namespace
 
-int main(int argc,char**) {
-    if(argc>1){fc01TriangleAndConnectorStyleProbes();return 0;}
+int main(int argc,char** argv) {
+    if(argc>1){
+        if (std::string_view(argv[1]) == "ellipse") ellipseUsesLocalOvalGeometryAfterTransform();
+        else if (std::string_view(argv[1]) == "production-fractional") productionRendererAcceptsFractionalSnapBounds();
+        else if (std::string_view(argv[1]) == "production-connector-fractional") productionRendererAcceptsFractionalConnectorEndpoints();
+        else if (std::string_view(argv[1]) == "production-connector-aa") productionConnectorUsesAntialiasedEdges();
+        else fc01TriangleAndConnectorStyleProbes();
+        return 0;
+    }
     exactNineKindGoldenIsIndependentAndDeterministic();
     transformClipAndEraseAreObservable();
     sweptCircleEraseMaskIsRendered();
     fractionalLocalEraseMaskIsRendered();
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
+    productionRendererAcceptsFractionalSnapBounds();
     return 0;
 }

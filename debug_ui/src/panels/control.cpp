@@ -38,13 +38,25 @@ void tools(DebugPanelContext& context) {
         {"Line", canvas::runtime::CanvasCreationPreset::kLine},
         {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
     }};
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
+    std::size_t selectedPreset = 0U;
     for (std::size_t i = 0; i < presets.size(); ++i) {
-      if (ImGui::Button(presets[i].first)) {
-        (void)context.controls.setCreationPreset(presets[i].second);
-        context.ui.markControlSubmitted();
-      }
-      if (i + 1U < presets.size()) ImGui::SameLine();
+        if (presets[i].second == context.ui.creationPresetDraft()) {
+            selectedPreset = i;
+            break;
+        }
+    }
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
+    if (ImGui::BeginCombo("Creation", presets[selectedPreset].first)) {
+        for (std::size_t i = 0; i < presets.size(); ++i) {
+            const bool selected = i == selectedPreset;
+            if (ImGui::Selectable(presets[i].first, selected)) {
+                (void)context.controls.setCreationPreset(presets[i].second);
+                context.ui.setCreationPresetDraft(presets[i].second);
+                context.ui.markControlSubmitted();
+            }
+            if (selected) ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
     }
     ImGui::EndDisabled();
     if (panel_detail::hasReadback(snapshot.product.availability)) {

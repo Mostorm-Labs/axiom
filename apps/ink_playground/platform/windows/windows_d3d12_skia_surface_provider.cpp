@@ -134,22 +134,29 @@ canvas::render::SkiaSurfaceAcquireResult WindowsD3D12SkiaSurfaceProvider::acquir
         canvas::render::SkiaSurfaceAcquireCode::kUnavailable, "D3D12 back buffer unavailable");
   }
   // Flip-model composition can hand back a buffer that is still being
-  // consumed by DWM.  Wait for that specific buffer before Skia records into
-  // it; a single device-wide fence is insufficient when the swap chain is
-  // resized or maximized while frames are in flight.
+  // consumed by DWM.  Never wait on the UI/message thread for that buffer:
+  // after a snap-guide or connector commit this path can be reached from the
+  // render timer, and a fence wait here makes the whole canvas appear frozen.
+  // The owner retries the dirty canonical frame on the next render tick.
   const auto ready = impl_->bufferFenceValues[index];
   if (ready != 0U && impl_->fence && impl_->fenceEvent &&
       impl_->fence->GetCompletedValue() < ready) {
-    // Preview is transient. Never block the input/message thread while DWM
-    // consumes a backbuffer; the render pump retries its latest dirty frame.
-    // Canonical retains the strict wait so committed frames remain correct.
     if (!attachToOwner_) {
       return canvas::render::SkiaSurfaceAcquireResult::rejected(
           canvas::render::SkiaSurfaceAcquireCode::kUnavailable,
-          "preview backbuffer busy");
+          "D3D12 backbuffer busy");
     }
+    // The owner surface must eventually acquire this buffer to advance the
+    // flip-model swapchain. Wait only a single short render slice; the caller
+    // is the render tick (never the pointer callback), and a timeout remains
+    // retryable instead of freezing the window for seconds.
     if (SUCCEEDED(impl_->fence->SetEventOnCompletion(ready, impl_->fenceEvent))) {
-      (void)WaitForSingleObject(impl_->fenceEvent, 5000);
+      (void)WaitForSingleObject(impl_->fenceEvent, 8);
+    }
+    if (impl_->fence->GetCompletedValue() < ready) {
+      return canvas::render::SkiaSurfaceAcquireResult::rejected(
+          canvas::render::SkiaSurfaceAcquireCode::kUnavailable,
+          "D3D12 backbuffer busy");
     }
   }
   impl_->currentBufferIndex = index;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/debug_ui/workspace.hpp"
+#include "canvas/runtime/canvas_control_types.hpp"
 
 namespace canvas::debug_ui {
 
@@ -25,6 +26,12 @@ class DebugUiSessionState final {
   };
   [[nodiscard]] CameraDraft& cameraDraft() noexcept { return cameraDraft_; }
   [[nodiscard]] const CameraDraft& cameraDraft() const noexcept { return cameraDraft_; }
+  [[nodiscard]] canvas::runtime::CanvasCreationPreset creationPresetDraft() const noexcept {
+    return creationPresetDraft_;
+  }
+  void setCreationPresetDraft(canvas::runtime::CanvasCreationPreset preset) noexcept {
+    creationPresetDraft_ = preset;
+  }
   void beginFrame() noexcept { controlSubmittedThisFrame_ = false; }
 
  private:
@@ -32,6 +39,8 @@ class DebugUiSessionState final {
   bool activityAutoScroll_ = true;
   bool controlSubmittedThisFrame_ = false;
   CameraDraft cameraDraft_{};
+  canvas::runtime::CanvasCreationPreset creationPresetDraft_ =
+      canvas::runtime::CanvasCreationPreset::kRectangle;
 };
 
 }  // namespace canvas::debug_ui

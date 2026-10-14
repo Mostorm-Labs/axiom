@@ -23,6 +23,13 @@ std::vector<std::uint8_t> pixels(Host& host) {
          canvas::render::BackendSubmissionCode::kAccepted);
   return out;
 }
+std::vector<std::uint8_t> previewPixels(Host& host) {
+  std::vector<std::uint8_t> out(256U * 256U * 4U);
+  assert(host.previewSurfaceProvider() != nullptr);
+  assert(host.previewSurfaceProvider()->readbackRgba(out).code ==
+         canvas::render::BackendSubmissionCode::kAccepted);
+  return out;
+}
 void prepare(Host& host) {
   assert(host.bindSurface(256,256));
   assert(host.setEraserDiameterLogicalPx(36));
@@ -61,6 +68,48 @@ void resizeHistory() {
   assert(host.redo());
   assert(Access::objects(host)==committed);
   std::cout << "PASS: real selection-pointer resize preview/commit/history\n";
+}
+
+void selectionPreviewCoversOriginalLocation() {
+  Host host;
+  prepare(host);
+  const auto overlay = host.selectionOverlay()->selectionOutline();
+  const canvas::render::ScreenPoint interior{
+      overlay.corners[0].x + (overlay.corners[1].x - overlay.corners[0].x) / 3.0F +
+          (overlay.corners[3].x - overlay.corners[0].x) * 0.5F,
+      overlay.corners[0].y + (overlay.corners[1].y - overlay.corners[0].y) / 3.0F +
+          (overlay.corners[3].y - overlay.corners[0].y) * 0.5F};
+  assert(host.selectionPointer(701U, Phase::kDown, interior.x, interior.y));
+  assert(host.selectionPointer(701U, Phase::kMove, interior.x + 32.0F,
+                              interior.y + 18.0F));
+  const auto transient = previewPixels(host);
+  const auto oldX = static_cast<std::size_t>(80U);
+  const auto oldY = static_cast<std::size_t>(64U);
+  const auto oldAlpha = transient[(oldY * 256U + oldX) * 4U + 3U];
+  assert(oldAlpha == 255U &&
+         "selection transient frame must cover the old canonical object location");
+  assert(host.selectionPointer(701U, Phase::kCancel, interior.x + 32.0F,
+                              interior.y + 18.0F));
+  std::cout << "PASS: selection transient frame covers original location\n";
+}
+
+void releaseKeepsTransientVisibleUntilCanonical() {
+  Host host;
+  prepare(host);
+  const auto handle = host.selectionOverlay()->handle(
+      canvas::render::HandleKind::kRight).center;
+  pointer(host, 702U, handle.x, handle.y, Phase::kDown);
+  pointer(host, 703U, handle.x + 32.0F, handle.y, Phase::kMove);
+  assert(host.previewSurfaceProvider()->overlayVisible());
+  pointer(host, 704U, handle.x + 32.0F, handle.y, Phase::kUp);
+  // The committed transform is not canonical-visible yet. The last transient
+  // frame must remain in front of the old canonical frame until the next
+  // successful canonical present retires it.
+  assert(host.previewSurfaceProvider()->overlayVisible());
+  assert(host.canonicalPresentationDirty());
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(!host.previewSurfaceProvider()->overlayVisible());
+  std::cout << "PASS: selection release keeps transient until canonical\n";
 }
 
 void lifecycle() {
@@ -226,6 +275,33 @@ void partialEraseAfterMove() {
   std::cout << "PASS: moved Vector partial erase uses local mask coordinates and exact history pixels\n";
 }
 
+void cornerResizeSnapKeepsOppositeAnchorStable() {
+  Host host;
+  assert(host.bindSurface(256, 256));
+  assert(host.selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  pointer(host, 1U, 20.0F, 20.0F, Phase::kDown);
+  pointer(host, 2U, 120.0F, 100.0F, Phase::kMove);
+  pointer(host, 3U, 120.0F, 100.0F, Phase::kUp);
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(70.0F, 60.0F));
+  const auto before = host.selectionOverlay()->selectionOutline();
+  const auto handle = host.selectionOverlay()->handle(
+      canvas::render::HandleKind::kTopLeft).center;
+  assert(host.selectionPointer(800U, Phase::kDown, handle.x, handle.y));
+  assert(host.selectionPointer(800U, Phase::kMove, handle.x + 4.0F, handle.y + 4.0F));
+  const auto first = host.selectionOverlay()->selectionOutline();
+  assert(host.selectionPointer(800U, Phase::kMove, handle.x + 4.5F, handle.y + 4.5F));
+  const auto second = host.selectionOverlay()->selectionOutline();
+  // The bottom-right anchor is opposite the dragged top-left corner. Once a
+  // snap is engaged it must remain stable across adjacent move samples.
+  assert(std::abs(first.corners[2].x - before.corners[2].x) < 0.01F);
+  assert(std::abs(first.corners[2].y - before.corners[2].y) < 0.01F);
+  assert(std::abs(second.corners[2].x - before.corners[2].x) < 0.01F);
+  assert(std::abs(second.corners[2].y - before.corners[2].y) < 0.01F);
+  assert(host.selectionPointer(800U, Phase::kCancel, handle.x + 4.5F,
+                               handle.y + 4.5F));
+}
+
 void partialEraseAffineFootprint() {
   using T=canvas::semantic::Transform2D;
   // Every literal transform maps local (80,64) to world (120,96).
@@ -279,4 +355,4 @@ void partialEraseAffineFootprint() {
   std::cout << "PASS: partial erase world footprint after scale/rotate/shear/reflection\n";
 }
 
-int main() { resizeHistory(); lifecycle(); noOpSecondaryAndReject(); zoomPanRepeatedHandles(); failedPublication(); partialEraseAfterMove(); partialEraseAffineFootprint(); }
+int main() { resizeHistory(); selectionPreviewCoversOriginalLocation(); releaseKeepsTransientVisibleUntilCanonical(); lifecycle(); noOpSecondaryAndReject(); zoomPanRepeatedHandles(); failedPublication(); partialEraseAfterMove(); cornerResizeSnapKeepsOppositeAnchorStable(); partialEraseAffineFootprint(); }

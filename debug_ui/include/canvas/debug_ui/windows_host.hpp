@@ -27,6 +27,9 @@ class WindowsDebugUiHost final {
   void reposition() noexcept;
   void raise() noexcept;
   void paint(HDC dc) const;
+  // Test seam for the Windows input scheduling contract.
+  [[nodiscard]] std::uint64_t renderCountForTesting() const noexcept;
+  [[nodiscard]] HWND overlayForTesting() const noexcept { return overlay_; }
   void setController(DebugController* controller) noexcept { controller_ = controller; }
   // The product host owns the gate so Debug and Canvas input sequences are
   // latched in one place. A private fallback keeps standalone qualification
@@ -60,6 +63,7 @@ class WindowsDebugUiHost final {
   InputCaptureGate* inputCapture_ = &ownedInputCapture_;
   std::uint64_t inputSequence_ = 0;
   std::optional<DebugInputSequence> activeInputSequence_;
+  bool refreshPending_ = false;
 };
 }  // namespace canvas::debug_ui
 #endif

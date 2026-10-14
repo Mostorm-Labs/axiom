@@ -33,6 +33,17 @@ def test_windows_d3d12_preview_present_does_not_wait_for_vsync():
     assert "swapChain->Present(1, 0)" not in source
 
 
+def test_windows_d3d12_canonical_acquire_never_blocks_message_thread_on_fence():
+    source = SOURCE.read_text(encoding="utf-8")
+    acquire = source[
+        source.index("WindowsD3D12SkiaSurfaceProvider::acquire") :
+        source.index("void WindowsD3D12SkiaSurfaceProvider::release")
+    ]
+    assert "WaitForSingleObject(impl_->fenceEvent, 8)" in acquire
+    assert "WaitForSingleObject(impl_->fenceEvent, 5000)" not in acquire
+    assert '"D3D12 backbuffer busy"' in acquire
+
+
 def test_windows_d3d12_preview_rebinds_popup_target_around_resize():
     """Resize must fence and detach the provider before creating new resources."""
     source = SOURCE.read_text(encoding="utf-8")

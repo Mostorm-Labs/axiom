@@ -266,7 +266,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
     return eraserDiameterLogicalPx_;
   }
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
-  [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y) noexcept;
+  [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
+                                  bool renderPreview = true) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserCancel(std::uint64_t pointerId) noexcept;
   [[nodiscard]] ToolMode toolMode() const noexcept { return toolMode_; }
@@ -418,6 +419,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
                                            double frameMs,
                                            bool retirePreview = true) noexcept;
+  [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId) noexcept;
+  [[nodiscard]] bool retryTransientOverlayFrame() noexcept;
+  [[nodiscard]] bool clearTransientOverlay() noexcept;
+  [[nodiscard]] bool transientOverlayDirty() const noexcept {
+    return transientOverlayDirty_;
+  }
   // A deferred platform presenter uses this bit to schedule a Canonical
   // redraw after a viewport-only change.  It is cleared only after the
   // current viewport has been successfully presented.
@@ -586,6 +593,11 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   mutable std::mutex previewProviderMutex_;
   std::uint64_t canonicalFrameCount_ = 0;
   bool canonicalPresentationDirty_ = false;
+  bool transientOverlayDirty_ = false;
+  // A completed creation/selection gesture keeps its last transient frame
+  // visible until the replacement canonical frame is accepted. This avoids
+  // exposing the old canonical surface for one compositor refresh.
+  bool transientOverlayHandoffPending_ = false;
   bool platformPresentationDeferred_ = false;
   std::uint64_t resizeEvents_ = 0;
   std::uint64_t surfaceLostEvents_ = 0;

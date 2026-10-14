@@ -5,6 +5,7 @@
 #include "include/core/SkData.h"
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "canvas/scene/bounds_system.hpp"
 
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkCanvas.h"
@@ -66,6 +67,16 @@ bool validRect(const foundation::WorldRect& rect) noexcept {
 bool validBrushRect(const foundation::WorldRect& value) noexcept {
     return value.isFiniteAndOrdered() && scalarRange(value.left) && scalarRange(value.top) &&
            scalarRange(value.right) && scalarRange(value.bottom);
+}
+
+// Production Skia targets render in logical coordinates and must accept the
+// fractional bounds produced while a creation endpoint is held on a snap
+// guide.  The headless backend keeps its stricter integral fixture contract
+// in submit(); this predicate is only for the shared production draw path.
+bool validProductionRect(const foundation::WorldRect& value) noexcept {
+    return value.isFiniteAndOrdered() && scalarRange(value.left) &&
+           scalarRange(value.top) && scalarRange(value.right) &&
+           scalarRange(value.bottom);
 }
 
 bool validUtf8(const std::string& text) noexcept {
@@ -289,6 +300,21 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
     }, entry.command);
 }
 
+HeadlessSubmissionIssue validateProductionCommand(const ReferenceTraversalEntry& entry) noexcept {
+    return std::visit([&](const auto& command) -> HeadlessSubmissionIssue {
+        using T = std::decay_t<decltype(command)>;
+        if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
+            const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
+            const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point))
+                return HeadlessSubmissionIssue::kOverflow;
+            return HeadlessSubmissionIssue::kNone;
+        }
+        return validateCommand(entry);
+    }, entry.command);
+}
+
 const semantic::SolidStroke* objectStroke(const RuntimeSceneRecord& record) {
     for (const auto& entry : record.properties.entries) {
         if (entry.field_id == 0x101U)
@@ -302,8 +328,8 @@ float objectOpacity(const RuntimeSceneRecord& record) {
         if (entry.field_id==3U) if (const auto* value=std::get_if<float>(&entry.value)) return *value;
     return 1.0F;
 }
-SkPaint strokePaint(const semantic::SolidStroke& stroke) {
-    SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(stroke.color));
+SkPaint strokePaint(const semantic::SolidStroke& stroke, bool antiAlias = false) {
+    SkPaint paint; paint.setAntiAlias(antiAlias); paint.setColor4f(color(stroke.color));
     paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(skScalar(stroke.width));
     switch(stroke.cap) {
         case semantic::StrokeCap::kButt: paint.setStrokeCap(SkPaint::kButt_Cap); break;
@@ -325,7 +351,7 @@ SkPaint strokePaint(const semantic::SolidStroke& stroke) {
 }
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
-                 SkiaTextResources* textResources) {
+                 SkiaTextResources* textResources, bool antiAliasConnectors = false) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -346,6 +372,49 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 }
                 if(const auto* stroke=objectStroke(record);stroke && stroke->width>0 && stroke->color.a>0)
                     canvas.drawPath(geometry,strokePaint(*stroke));
+                canvas.restore();
+            } else if (command.content.shape_kind == 2U) {
+                // Shape geometry is local to the record transform.  Using
+                // visualBounds here turns an ellipse into a transformed
+                // rectangle (and also bakes stroke expansion into its fill),
+                // which is why the Windows host previously displayed a box.
+                const auto oval = SkRect::MakeXYWH(
+                    0.0F, 0.0F, skScalar(command.content.width),
+                    skScalar(command.content.height));
+                SkPaint layer;
+                layer.setAlphaf(objectOpacity(record));
+                canvas.saveLayer(nullptr, &layer);
+                const auto ellipseFill = propertyColor(record, 0x100U, fill);
+                if (ellipseFill.a > 0.0F) {
+                    SkPaint paint;
+                    paint.setAntiAlias(true);
+                    paint.setColor4f(color(ellipseFill));
+                    paint.setStyle(SkPaint::kFill_Style);
+                    canvas.drawOval(oval, paint);
+                }
+                if (const auto* stroke = objectStroke(record);
+                    stroke != nullptr && stroke->width > 0.0 && stroke->color.a > 0.0F) {
+                    canvas.drawOval(oval, strokePaint(*stroke));
+                }
+                canvas.restore();
+            } else if (command.content.shape_kind == 1U) {
+                const auto rectangle = SkRect::MakeXYWH(
+                    0.0F, 0.0F, skScalar(command.content.width),
+                    skScalar(command.content.height));
+                SkPaint layer;
+                layer.setAlphaf(objectOpacity(record));
+                canvas.saveLayer(nullptr, &layer);
+                if (fill.a > 0.0F) {
+                    SkPaint paint;
+                    paint.setAntiAlias(true);
+                    paint.setColor4f(color(propertyColor(record, 0x100U, fill)));
+                    paint.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(rectangle, paint);
+                }
+                if (const auto* stroke = objectStroke(record);
+                    stroke != nullptr && stroke->width > 0.0 && stroke->color.a > 0.0F) {
+                    canvas.drawRect(rectangle, strokePaint(*stroke));
+                }
                 canvas.restore();
             } else if (fill.a > 0.0F) {
                 drawSolidRect(canvas, record.visualBounds, fill);
@@ -456,7 +525,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             // Keep the historical unstyled Connector fixture's draw bytes.
             // Explicit styles always use the same Field Registry values as Preview.
             const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
-            auto paint=strokePaint(stroke ? *stroke : legacy);
+            auto paint=strokePaint(stroke ? *stroke : legacy, antiAliasConnectors);
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
@@ -526,6 +595,13 @@ void eraseMasks(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
     }
 }
 
+bool isInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+}
+
 std::string digest(const std::vector<std::uint8_t>& bytes) {
     std::uint64_t value = 0xcbf29ce484222325ULL;
     for (std::uint8_t byte : bytes) { value ^= byte; value *= 0x100000001b3ULL; }
@@ -544,24 +620,38 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     RuntimeSceneRecord record{};
     record.objectId = object.id; record.kind = object.kind; record.kindVersion = object.kind_version;
     record.transform = object.transform; record.properties = object.properties; record.content = object.content;
+    // Transient creation records are not compiled through RuntimeScene yet.
+    // Populate the same derived bounds that canonical records carry; without
+    // this, rectangle/ellipse previews reach the renderer with a zero visual
+    // rect and appear only after pointer-up commits them.
+    const auto bounds = canvas::scene::computeBounds(object);
+    record.geometryBounds = bounds.geometry;
+    record.visualBounds = bounds.visual;
+    record.worldBounds = bounds.world;
     ReferenceTraversalEntry entry{}; entry.record = record;
     if (const auto* shape = std::get_if<semantic::ShapeContent>(&object.content))
         entry.command = ShapeReferenceCommand{*shape};
     else if (const auto* connector = std::get_if<semantic::ConnectorContent>(&object.content))
         entry.command = ConnectorReferenceCommand{*connector};
     else return;
+    drawTransientEntryToSkCanvas(canvas, plan, entry);
+}
+
+void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const ReferenceTraversalEntry& entry) {
     canvas.save(); scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
-    const WorldToViewAffine transform{object.transform.a, object.transform.b, object.transform.c,
-                                      object.transform.d, object.transform.tx, object.transform.ty};
+    const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
+                                      entry.record.transform.c, entry.record.transform.d,
+                                      entry.record.transform.tx, entry.record.transform.ty};
     canvas.concat(SkMatrix::Concat(matrix(plan.referenceDrawList.worldToView), matrix(transform)));
-    drawCommand(canvas, entry, nullptr, nullptr);
+    drawCommand(canvas, entry, nullptr, nullptr, true);
     canvas.restore();
 }
 
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
-    SkiaTextResources* textResources) {
+    SkiaTextResources* textResources, bool includeInk) {
     if (!(plan.referenceDrawList.frame == plan.frame)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
@@ -580,13 +670,13 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
                                 std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command) ||
                                 std::holds_alternative<RichTextReferenceCommand>(entry.command);
         if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
-                         : validRect(entry.record.visualBounds))) {
+                         : validProductionRect(entry.record.visualBounds))) {
             return BackendSubmissionResult::rejected("non-integral visual bounds");
         }
         const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
                                           entry.record.transform.c, entry.record.transform.d,
                                           entry.record.transform.tx, entry.record.transform.ty};
-        if (!validAffine(transform) || validateCommand(entry) != HeadlessSubmissionIssue::kNone) {
+        if (!validAffine(transform) || validateProductionCommand(entry) != HeadlessSubmissionIssue::kNone) {
             return BackendSubmissionResult::rejected("unsupported command geometry");
         }
         for (const auto& mask : entry.record.eraseMasks) {
@@ -610,14 +700,39 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
     for (const auto& entry : plan.referenceDrawList.entries) {
+        if (!includeInk && isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = isInkReferenceEntry(entry) && !entry.record.eraseMasks.empty();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.save();
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
-        drawCommand(canvas, entry, images, textResources);
+        drawCommand(canvas, entry, images, textResources, true);
         eraseMasks(canvas, entry);
         canvas.restore();
+        if (isolatedInk) canvas.restore();
     }
     canvas.restore();
     return BackendSubmissionResult::accepted();
+}
+
+void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                              ImageResourceResolver* images,
+                              SkiaTextResources* textResources) {
+    canvas.save();
+    scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        if (!isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = !entry.record.eraseMasks.empty();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
+        canvas.save();
+        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+        drawCommand(canvas, entry, images, textResources, true);
+        eraseMasks(canvas, entry);
+        canvas.restore();
+        if (isolatedInk) canvas.restore();
+    }
+    canvas.restore();
 }
 
 } // namespace internal
@@ -678,11 +793,14 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     std::vector<semantic::ObjectKind> kinds;
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
+        const bool isolatedInk = isInkReferenceEntry(entry) && !entry.record.eraseMasks.empty();
+        if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
         canvas->save();
         canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(*canvas, entry, _images, &_textResources);
         eraseMasks(*canvas, entry);
         canvas->restore();
+        if (isolatedInk) canvas->restore();
         kinds.push_back(entry.record.kind);
     }
     canvas->restore();

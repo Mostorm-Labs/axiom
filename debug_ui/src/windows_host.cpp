@@ -65,10 +65,15 @@ struct WindowsDebugUiHost::Impl final {
   int height = 0;
   std::chrono::steady_clock::time_point lastFrame{};
   bool rendering = false;
+  std::uint64_t renderCount = 0;
 };
 
 WindowsDebugUiHost::WindowsDebugUiHost() = default;
 WindowsDebugUiHost::~WindowsDebugUiHost() { shutdown(); }
+
+std::uint64_t WindowsDebugUiHost::renderCountForTesting() const noexcept {
+  return impl_ == nullptr ? 0U : impl_->renderCount;
+}
 
 bool WindowsDebugUiHost::initialize(HWND w) {
   if (initialized_ || !w) return initialized_;
@@ -107,6 +112,7 @@ bool WindowsDebugUiHost::initialize(HWND w) {
   syncOverlay();
   return ensureSurface();
 }
+
 
 void WindowsDebugUiHost::shutdown() noexcept {
   releaseInputCapture();
@@ -152,6 +158,7 @@ bool WindowsDebugUiHost::ensureSurface() noexcept {
 void WindowsDebugUiHost::toggle() noexcept {
   visible_ = !visible_;
   placementValid_ = false;
+  refreshPending_ = visible_;
   syncOverlay();
   if (visible_) renderFrame();
   if (overlay_) InvalidateRect(overlay_, nullptr, FALSE);
@@ -173,13 +180,13 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
   }
   ImGui::SetCurrentContext(context_);
   const LRESULT handled = ImGui_ImplWin32_WndProcHandler(source, message, wParam, lParam);
-  // Win32 backend events are queued until the next NewFrame. Consume the
-  // queue before reading capture state; otherwise WantCaptureMouse describes
-  // the previous frame and hover/click handling becomes intermittent.
-  if (impl_ != nullptr && !impl_->rendering) renderFrame();
-  // Hover is useful even when ImGui does not request capture. Always repaint
-  // the overlay after consuming an input event, then decide ownership from
-  // the capture state produced by the new frame.
+  // Win32 backend events are queued until the next NewFrame. Do not consume
+  // that queue by rendering synchronously from this message handler: the
+  // owner canvas and the debug overlay share the same UI thread, and a full
+  // ImGui/Skia frame here can block pointer delivery long enough for Windows
+  // to report an AppHang. The normal timer/idle refresh consumes the queued
+  // input and produces the next frame.
+  refreshPending_ = true;
   InvalidateRect(overlay_, nullptr, FALSE);
   const ImGuiIO& io = ImGui::GetIO();
   if (handled != 0 || io.WantCaptureMouse || io.WantCaptureKeyboard) {
@@ -228,6 +235,7 @@ void WindowsDebugUiHost::renderFrame() noexcept {
   if (!visible_ || !context_ || controller_ == nullptr || !ensureSurface() ||
       impl_ == nullptr || impl_->rendering) return;
   impl_->rendering = true;
+  ++impl_->renderCount;
   ImGui::SetCurrentContext(context_);
   RECT client{};
   if (!GetClientRect(overlay_, &client)) {
@@ -253,16 +261,18 @@ void WindowsDebugUiHost::renderFrame() noexcept {
                           impl_->fontTexture.get());
     return submitted;
   };
-  const bool submitted = drawPanels();
-  // Controls are submitted while building the ImGui frame. Refresh the
-  // owner snapshot and redraw once so the result is visible in the same
-  // input dispatch, without waiting for canvas WM_PAINT or the next timer.
-  if (submitted) (void)drawPanels();
+  // The owner snapshot is refreshed on the next timer tick. Rendering the
+  // entire ImGui tree twice for every control click was expensive enough to
+  // stall the shared Win32 input thread and made the panel unusable while
+  // drawing. Keep one bounded frame per dispatch.
+  (void)drawPanels();
   impl_->rendering = false;
+  refreshPending_ = false;
 }
 
 void WindowsDebugUiHost::refresh() noexcept {
   if (!initialized_ || !visible_ || impl_ == nullptr || impl_->rendering) return;
+  if (!refreshPending_ && controller_ == nullptr) return;
   renderFrame();
   raise();
   if (overlay_) InvalidateRect(overlay_, nullptr, FALSE);

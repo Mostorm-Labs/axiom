@@ -41,6 +41,106 @@ class BusyPreview final : public canvas::render::SkiaSurfaceProvider {
 
 void tick(State& s) { WindowProc(s.window, WM_TIMER, State::kRenderTimerId, 0); }
 
+void transientOverlayRetriesAfterBusySurface(State& s, BusyPreview& preview) {
+  assert(s.host->selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  preview.busy = true;
+  const canvas::input::PointerKey key{7U, 901U, 1U};
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kMove, 120.0F, 100.0F));
+  assert(s.host->transientOverlayDirty());
+  preview.busy = false;
+  tick(s);
+  assert(!s.host->transientOverlayDirty());
+  assert(preview.presentCount() > 0U);
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kCancel, 120.0F, 100.0F));
+}
+
+void creationReleaseRetiresBusyGuideWithoutBlockingNextGesture(State& s,
+                                                               BusyPreview& preview) {
+  assert(s.host->setSelectionMode(false));
+  assert(s.host->selectCreationPreset(canvas::ink_playground::CreationPreset::kRectangle));
+  const canvas::input::PointerKey key{7U, 902U, 1U};
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kDown, 20.0F, 20.0F));
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kMove, 120.0F, 100.0F));
+  preview.busy = false;
+  tick(s);
+  assert(!s.host->transientOverlayDirty());
+  preview.busy = true;
+  assert(s.host->creationPointer(key, canvas::input::PointerPhase::kUp, 120.0F, 100.0F));
+  assert(!s.host->creationActive());
+  assert(!s.host->transientOverlayDirty());
+  assert(preview.overlayVisible());
+  assert(s.host->presentCanonicalFrame(s.host->canonicalFrameCount() + 1U, 0.0));
+  assert(!preview.overlayVisible());
+  preview.busy = false;
+  const canvas::input::PointerKey next{7U, 903U, 1U};
+  assert(s.host->creationPointer(next, canvas::input::PointerPhase::kDown, 40.0F, 40.0F));
+  assert(s.host->creationPointer(next, canvas::input::PointerPhase::kMove, 160.0F, 140.0F));
+  assert(s.host->creationPointer(next, canvas::input::PointerPhase::kUp, 160.0F, 140.0F));
+  assert(s.host->semanticObjectCount() == 2U);
+  assert(s.host->selectTool(InkPlaygroundHost::ToolMode::kBrush));
+}
+
+void connectorCreationCanRepeatThroughWin32Mouse(State& s,
+    canvas::ink_playground::CreationPreset preset) {
+  assert(s.host->bindSurface(256U, 256U));
+  assert(s.host->selectCreationPreset(preset));
+  const auto draw = [&](int x0, int y0, int x1, int y1) {
+    assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                             MAKELPARAM(x0, y0 + State::kToolbarHeight)));
+    assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                             MAKELPARAM(x1, y1 + State::kToolbarHeight)));
+    assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                             MAKELPARAM(x1, y1 + State::kToolbarHeight)));
+  };
+  draw(20, 30, 120, 30);
+  assert(s.host->semanticObjectCount() == 1U);
+  tick(s);
+  draw(40, 60, 160, 60);
+  assert(s.host->semanticObjectCount() == 2U &&
+         "Connector must remain reusable through the Win32 mouse adapter");
+  tick(s);
+  draw(60, 90, 180, 90);
+  assert(s.host->semanticObjectCount() == 3U &&
+         "Connector must remain reusable for a third Win32 mouse gesture");
+}
+
+// Regression for the physical failure path: while creating a connector, the
+// endpoint snaps to a rectangle's vertical centre guide.  The guide must not
+// poison the pointer/canonical handoff for the next connector gesture.
+void connectorCreationCanRepeatAfterCenterGuide(State& s,
+    canvas::ink_playground::CreationPreset preset) {
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  assert(s.host->bindSurface(256U, 256U));
+  canvas::semantic::ObjectRecord target{};
+  target.id = canvas::foundation::ObjectId::fromUint64(0x5001U);
+  target.kind = canvas::semantic::ObjectKind::kShape;
+  target.kind_version = 1U;
+  target.placement.order_key = canvas::semantic::OrderKey{{0x20U}};
+  target.transform.tx = 100.0;
+  target.transform.ty = 40.0;
+  target.content = canvas::semantic::ShapeContent{1U, 40.0, 40.0};
+  assert(Access::applyRemote(*s.host, canvas::semantic::InsertObjectsOp{{target}}));
+  assert(s.host->selectCreationPreset(preset));
+  const auto draw = [&](int y, int x1) {
+    assert(submitMouseSample(s.window, s, WM_LBUTTONDOWN, MK_LBUTTON,
+                             MAKELPARAM(20, y + State::kToolbarHeight)));
+    assert(submitMouseSample(s.window, s, WM_MOUSEMOVE, MK_LBUTTON,
+                             MAKELPARAM(x1, y + State::kToolbarHeight)));
+    assert(submitMouseSample(s.window, s, WM_LBUTTONUP, 0,
+                             MAKELPARAM(x1, y + State::kToolbarHeight)));
+  };
+  // x=120 is the target's vertical centre.  Leave the guide engaged through
+  // the release, then immediately start two more gestures.
+  draw(20, 120);
+  tick(s);
+  draw(80, 120);
+  tick(s);
+  draw(140, 120);
+  assert(s.host->semanticObjectCount() == 4U &&
+         "A centre snap guide must not block subsequent Line/Arrow gestures");
+}
+
 void waitForPreview(State& s, std::uint64_t minimum) {
   for (int i = 0; i < 100 && s.host->previewPresentCount() < minimum; ++i) {
     wakeRenderPump(s);
@@ -432,8 +532,88 @@ void selectionDispatch() {
   assert(!submitSelectionSample(s, 91U, P::kDown, handle.x, handle.y));
   assert(!s.host->selectionTransformActive());
   clearCanvasInput(s);
+  // Maximize/restore must also terminate an ordinary drawing session. A
+  // stale active key used to survive WM_SIZE and keep the render gate closed
+  // after the deferred surface rebuild.
+  assert(s.host->setSelectionMode(false));
+  const canvas::input::PointerKey resizeKey{7U, 992U, 1U};
+  s.activeKeys.emplace(992U, resizeKey);
+  s.pointerStrokes.emplace(992U, 17U);
+  s.canonicalPending = true;
+  SetCapture(s.window);
+  WindowProc(s.window, WM_SIZE, SIZE_MAXIMIZED, MAKELPARAM(512U, 412U));
+  assert(s.activeKeys.empty());
+  assert(s.pointerStrokes.empty());
+  assert(!s.canonicalPending);
+  assert(GetCapture() != s.window);
   std::cout << "PASS: Windows mouse RuntimeFacade commit/Escape/focus/capture/resize/tool/stale\n";
   DestroyWindow(s.window);
 }
 }
-int main() { run(); selectionDispatch(); }
+int main() {
+  if (__argc > 1 && std::string_view(__argv[1]) == "guide-release") {
+    State s;
+    s.host = std::make_unique<InkPlaygroundHost>();
+    s.canonicalRenderer = std::make_unique<canvas::render::SkiaRenderer>();
+    assert(s.host->bindSurface(256U, 256U));
+    auto preview = std::make_unique<BusyPreview>();
+    assert(preview->resize(256U, 256U).code == canvas::render::BackendSubmissionCode::kAccepted);
+    auto* p = preview.get();
+    assert(s.host->registerPreviewSurfaceProvider("guide-release", std::move(preview)));
+    s.host->setPlatformPresentationDeferred(true);
+    WNDCLASSW klass{};
+    klass.hInstance = GetModuleHandleW(nullptr);
+    klass.lpfnWndProc = WindowProc;
+    klass.lpszClassName = L"AxiomGuideReleaseTest";
+    RegisterClassW(&klass);
+    s.window = CreateWindowExW(0, klass.lpszClassName, L"guide release", WS_POPUP,
+                               0, 0, 256, 312, nullptr, nullptr, klass.hInstance, &s);
+    assert(s.window);
+    creationReleaseRetiresBusyGuideWithoutBlockingNextGesture(s, *p);
+    DestroyWindow(s.window);
+    return 0;
+  }
+  run();
+  selectionDispatch();
+  State creation;
+  creation.host = std::make_unique<InkPlaygroundHost>();
+  creation.canonicalRenderer = std::make_unique<canvas::render::SkiaRenderer>();
+  creation.previewBridge = std::make_unique<arc::Bridge>(arc::CreateNullBackend(),
+                                                           arc::CreateNullBackend());
+  WNDCLASSW klass{};
+  klass.hInstance = GetModuleHandleW(nullptr);
+  klass.lpfnWndProc = WindowProc;
+  klass.lpszClassName = L"AxiomPreviewCreationDispatchTest";
+  RegisterClassW(&klass);
+  creation.window = CreateWindowExW(0, klass.lpszClassName, L"creation dispatch",
+      WS_POPUP, 0, 0, 256, 312, nullptr, nullptr, klass.hInstance, &creation);
+  assert(creation.window);
+  connectorCreationCanRepeatThroughWin32Mouse(creation,
+      canvas::ink_playground::CreationPreset::kArrow);
+  assert(creation.host->setSelectionMode(false));
+  assert(creation.host->selectCreationPreset(
+      canvas::ink_playground::CreationPreset::kLine));
+  const auto drawLine = [&] (int y) {
+    assert(submitMouseSample(creation.window, creation, WM_LBUTTONDOWN, MK_LBUTTON,
+                             MAKELPARAM(20, y + State::kToolbarHeight)));
+    assert(submitMouseSample(creation.window, creation, WM_MOUSEMOVE, MK_LBUTTON,
+                             MAKELPARAM(120, y + State::kToolbarHeight)));
+    assert(submitMouseSample(creation.window, creation, WM_LBUTTONUP, 0,
+                             MAKELPARAM(120, y + State::kToolbarHeight)));
+  };
+  drawLine(90);
+  drawLine(120);
+  assert(creation.host->semanticObjectCount() == 5U);
+  State centerGuide;
+  centerGuide.host = std::make_unique<InkPlaygroundHost>();
+  centerGuide.canonicalRenderer = std::make_unique<canvas::render::SkiaRenderer>();
+  centerGuide.previewBridge = std::make_unique<arc::Bridge>(arc::CreateNullBackend(),
+                                                             arc::CreateNullBackend());
+  centerGuide.window = CreateWindowExW(0, klass.lpszClassName, L"center guide dispatch",
+      WS_POPUP, 0, 0, 256, 312, nullptr, nullptr, klass.hInstance, &centerGuide);
+  assert(centerGuide.window);
+  connectorCreationCanRepeatAfterCenterGuide(centerGuide,
+      canvas::ink_playground::CreationPreset::kArrow);
+  DestroyWindow(centerGuide.window);
+  DestroyWindow(creation.window);
+}
