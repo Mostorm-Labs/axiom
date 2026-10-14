@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.3",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_P32",
+  "purpose": "Close shared Runtime input/session, frame preview/canonical, and control/diagnostics boundaries for repeatable Windows/Web verification without entering FC-01 feature implementation.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-runtime-minimum-closure",
+    "execution_ref": "codex/fc00x-runtime-minimum-closure"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "relation": "ancestor"
+  },
+  "starting_revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "gate_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b9c620c5c0977d7e99dbd8f7690599758344d195674408c25071d21878c8101a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f3d72c50eab43460c97c359ddf96a197bb3747062816a76e22947b668feb1c69"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "00a886bd0f33a33b39dd466008b07b78761dd56b3d32d61d3bc17c56cf5bf08e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e79834577130fa22f27bb1ba7f9ea3fcb6b3b11a9c917fe79a082f92ceeecb83"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "fdeaff4c9baa2e49da9ec5d4e371d4d5d3f6a1e33990d0d7f32af412d5b525e0"
+  },
+  "p20_correction_ref": {
+    "revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+    "source_package_commit": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+    "source_package_path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/package.json",
+    "package_sha256": "9f1e73dc1cd919d9cb2f31a0e12f005af26e5bddf917b0632ad4259c69198fdd"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/",
+    "base_revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+    "exact_ref_rule": "Use immutable P31 package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "fc01_protection": "FC-01 worktree, branch, Authority, Gate, Evidence and historical results remain untouched."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC00X-RED-S1-source-cancel-delivery",
+    "FC00X-RED-S3-control-readback-truth"
+  ],
+  "terminal_target": "READY_FOR_CONTROL_REVIEW with exact implementation result/evidence refs; P32 must continue until success or explicit blocker",
+  "nonclaims": [
+    "No FC-01 P31/P32 or FC-01 DEV/P34 result",
+    "No PX0, G4.6, G4.7, FC-13 or G5 status change",
+    "No Android APK or Android physical evidence; Android deferred",
+    "No public C ABI delivery",
+    "No new OperationKind/ObjectKind/FieldId/Protobuf field",
+    "No complete Editor extraction, dynamic capability registry, Inspector, Sync, background schema or export",
+    "No Gate/P34 PASS claim"
+  ]
+}
