@@ -1,6 +1,6 @@
 {
   "task_id": "FC-01",
-  "source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "source_revision": "9ef47bb773c526ef9df0799ee5bb5291b3593fec",
   "package_revision": "c98110c015f975012f25db5efa66c9679da35630",
   "protected_paths": [
     ".aegis/authorities.json",
@@ -106,7 +106,7 @@
     "verification/fc01/run_dev.py",
     "verification/fc01/run_source_loss.py"
   ],
-  "production_worktree_diff_at_final_run": "clean after fc3d448e source commit; evidence-only working changes follow",
+  "production_worktree_diff_at_final_run": "clean after source commit 9ef47bb7; evidence-only P36 files follow",
   "production_worktree_matches_source_subject": true,
   "draft_quarantine_ref": "drafts/i3/archive.json",
   "core_regression": {
@@ -128,9 +128,16 @@
     "historical preflight chronology is preserved but not backdated"
   ],
   "current_verification": {
-    "windows_focused_fc01": "29/29",
-    "windows_full_ctest": "661/665",
-    "web_playground": "linked",
+    "windows_focused_fc01": "prior 29/29 plus P36 four-regression repair 4/4",
+    "windows_full_ctest": "665/665",
+    "web_playground": "linked at prior qualified source; no post-P36 web source changes",
     "android": "deferred_by_user"
+  },
+  "materialized_ref": "9ef47bb773c526ef9df0799ee5bb5291b3593fec",
+  "materialized_ref_name": "refs/heads/codex/fc-01-creation-tools-p32",
+  "p36_reverification": {
+    "focused_four_regressions": "4/4",
+    "windows_full_ctest": "665/665",
+    "ref": "continuation-logs/committed-runs/p36-9ef47bb7"
   }
 }
