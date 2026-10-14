@@ -3,6 +3,16 @@
 
 #include <cassert>
 #include <memory>
+#include <vector>
+
+struct CancelSink final : canvas::render::SessionCancelSink {
+    int calls = 0;
+    std::vector<canvas::input::PointerKey> keys;
+    void onSessionCancel(const canvas::input::PlatformInteractionIngressResult& result) noexcept override {
+        ++calls;
+        for (const auto& sample : result.normalized.samples) keys.push_back(sample.key);
+    }
+};
 
 namespace {
 canvas::render::RenderTargetInfo info(const char* id) {
@@ -18,6 +28,8 @@ int main() {
     using namespace canvas::render;
     RuntimeAppBinding binding{ViewId{1}, SurfaceProfile{info("cpu"),
                                                         std::make_unique<RasterSkiaSurfaceProvider>()}};
+    CancelSink sink;
+    binding.setSessionCancelSink(&sink);
     assert(binding.registerInputSource({7U, "android"}));
     assert(!binding.registerInputSource({7U, "android"}));
     canvas::input::PlatformPointerBatch batch;
@@ -28,6 +40,7 @@ int main() {
     assert(result.accepted && result.normalized.samples.size() == 1U);
     assert(result.normalized.samples.front().key.valid());
     assert(binding.notifySourceLost(7U, 2U, 2U));
+    assert(sink.calls == 1 && sink.keys.size() == 1U && sink.keys.front() == result.normalized.samples.front().key);
     assert(binding.registerSurfaceProfile(
                SurfaceProfile{info("second"), std::make_unique<RasterSkiaSurfaceProvider>()}) ==
            SurfaceProviderDisposition::kCommitted);

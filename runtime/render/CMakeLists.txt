@@ -12,6 +12,7 @@ add_library(canvas_runtime_render STATIC
     src/surface_lifecycle.cpp
     src/render_target.cpp
     src/runtime_app_binding.cpp
+    src/runtime_frame_coordinator.cpp
     src/presentation_tracker.cpp
     src/canonical_handoff.cpp
     src/preview_surface.cpp)
@@ -274,6 +275,17 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(axiom_runtime_frame_coordinator_tests
+        tests/runtime_frame_coordinator_test.cpp)
+    target_link_libraries(axiom_runtime_frame_coordinator_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_runtime_frame_coordinator_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_runtime_frame_coordinator_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_runtime_frame_coordinator_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME FC00XFrameCoordinator COMMAND axiom_runtime_frame_coordinator_tests)
+
     add_executable(axiom_render_target_tests tests/render_target_test.cpp)
     target_link_libraries(axiom_render_target_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_render_target_tests PRIVATE cxx_std_20)

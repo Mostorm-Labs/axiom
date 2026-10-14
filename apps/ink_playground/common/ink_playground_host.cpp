@@ -233,7 +233,9 @@ InkPlaygroundHost::InkPlaygroundHost()
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
       sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>(*runtimeSceneHost_)),
-      history_(*this), ownerThread_(std::this_thread::get_id()) {}
+      history_(*this), ownerThread_(std::this_thread::get_id()) {
+  appBinding_->setSessionCancelSink(this);
+}
 
 bool InkPlaygroundHost::configureTextResources(std::vector<std::uint8_t> latin,
     std::vector<std::uint8_t> cjk,text::LayoutContext context) {
@@ -788,6 +790,16 @@ bool InkPlaygroundHost::cancelStroke(const input::PointerKey& key) noexcept {
   if (!interaction_->cancel(key, entry->second)) return false;
   keyedStrokeIds_.erase(entry);
   return true;
+}
+
+void InkPlaygroundHost::onSessionCancel(
+    const input::PlatformInteractionIngressResult& result) noexcept {
+  for (const auto& sample : result.normalized.samples) {
+    if (!sample.key.valid()) continue;
+    (void)cancelStroke(sample.key);
+    creations_.erase(sample.key);
+    creationFences_.erase(sample.key);
+  }
 }
 
 void InkPlaygroundHost::cancelAllPointers() noexcept {
@@ -2745,6 +2757,14 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
+  const render::RuntimeFrameCapture canonicalCapture{
+      {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
+       frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
+      frame.metrics, render::FrameRole::kCanonical};
+  if (frameCoordinator_.request(canonicalCapture) != render::RuntimeFrameDisposition::kAccepted) {
+    AXIOM_ANDROID_DIAG("frame coordinator rejected canonical capture");
+    return false;
+  }
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
   // A selected object can be dragged into view from outside the canonical
@@ -2800,6 +2820,11 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
                        static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
     return false;
   }
+  if (frameCoordinator_.submit(render::FrameRole::kCanonical, frame.frameId, false) !=
+      render::RuntimeFrameDisposition::kAccepted) {
+    AXIOM_ANDROID_DIAG("frame coordinator rejected canonical submit");
+    return false;
+  }
   const auto trackerSubmit = tracker_->submit(frame);
   if (trackerSubmit != render::PresentFeedbackDisposition::kSubmitted) { AXIOM_ANDROID_DIAG("present tracker submit failed code=%d framegen=%llu livegen=%llu metrics=%ux%u", static_cast<int>(trackerSubmit), static_cast<unsigned long long>(frame.surfaceGeneration.value()), static_cast<unsigned long long>(lifecycle_->current().surfaceGeneration.value()), frame.metrics.physicalWidth, frame.metrics.physicalHeight); return false; }
   const auto feedback = tracker_->receive(render::PresentedFeedback{
@@ -2807,6 +2832,12 @@ bool InkPlaygroundHost::presentCanonicalFrame(std::uint64_t frameId,
       render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified,
       std::nullopt});
   if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
+  if (frameCoordinator_.receive({canonicalCapture.identity, render::FrameRole::kCanonical,
+                                 true, render::RuntimePresentEvidence::kPlatformQualified}) !=
+      render::RuntimeFrameDisposition::kAccepted) {
+    AXIOM_ANDROID_DIAG("frame coordinator rejected canonical feedback");
+    return false;
+  }
   recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
   presentedSemanticGeneration_ = frame.sceneGeneration;
   presentedSurfaceGeneration_ = frame.surfaceGeneration;
@@ -2894,6 +2925,11 @@ bool InkPlaygroundHost::presentTransientOverlayFrame(std::uint64_t frameId) noex
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
+  const render::RuntimeFrameCapture previewCapture{
+      {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
+       frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
+      frame.metrics, render::FrameRole::kPreview};
+  if (frameCoordinator_.request(previewCapture) != render::RuntimeFrameDisposition::kAccepted) return false;
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
   if (!visibility) return false;
   if (transformDrag_.active() &&
@@ -2943,6 +2979,11 @@ bool InkPlaygroundHost::presentTransientOverlayFrame(std::uint64_t frameId) noex
   const auto rendered = previewRenderer_.renderTransientOverlay(
       *previewProvider_, plan.value(), selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
+  if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=
+      render::RuntimeFrameDisposition::kAccepted) return false;
+  if (frameCoordinator_.receive({previewCapture.identity, render::FrameRole::kPreview,
+                                 true, render::RuntimePresentEvidence::kApproximate}) !=
+      render::RuntimeFrameDisposition::kAccepted) return false;
   previewProvider_->setOverlayVisible(true);
   transientOverlayDirty_ = false;
   return true;

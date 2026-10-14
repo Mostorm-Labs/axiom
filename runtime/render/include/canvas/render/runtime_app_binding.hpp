@@ -15,6 +15,13 @@ struct InputSourceRegistration final {
     std::string platform;
 };
 
+class SessionCancelSink {
+  public:
+    virtual ~SessionCancelSink() = default;
+    virtual void onSessionCancel(
+        const input::PlatformInteractionIngressResult& result) noexcept = 0;
+};
+
 // Platform-facing composition root. It owns registration and lifecycle
 // routing only; interaction/Brush/Scene semantics remain in their runtime
 // owners and consume the normalized ingress result.
@@ -23,7 +30,10 @@ class RuntimeAppBinding final {
     RuntimeAppBinding(ViewId viewId, SurfaceProfile initialSurface);
 
     [[nodiscard]] bool registerInputSource(InputSourceRegistration registration);
-    [[nodiscard]] bool unregisterInputSource(input::InputSourceId source);
+    [[nodiscard]] bool unregisterInputSource(input::InputSourceId source,
+                                             std::uint64_t sequence = 0,
+                                             std::uint64_t timestampNs = 0);
+    void setSessionCancelSink(SessionCancelSink* sink) noexcept { cancelSink_ = sink; }
     [[nodiscard]] bool notifySourceLost(input::InputSourceId source,
                                         std::uint64_t sequence,
                                         std::uint64_t timestampNs) noexcept;
@@ -62,6 +72,7 @@ class RuntimeAppBinding final {
   private:
     input::PlatformInteractionIngress ingress_;
     std::unordered_set<input::InputSourceId> sources_;
+    SessionCancelSink* cancelSink_ = nullptr;
     ViewId viewId_{};
     SurfaceProviderRegistry surfaces_;
     std::unique_ptr<SurfaceProviderRegistry> previewSurfaces_;

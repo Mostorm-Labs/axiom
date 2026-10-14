@@ -17,6 +17,7 @@
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/render/runtime_app_binding.hpp"
+#include "canvas/render/runtime_frame_coordinator.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/render_view_runtime.hpp"
@@ -124,7 +125,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                 public interaction::OperationSubmitPort,
                                 public interaction::HistorySubmitPort,
                                 public interaction::TransformSubmitPort,
-                                public interaction::TransientPresentationPort {
+                                public interaction::TransientPresentationPort,
+                                public render::SessionCancelSink {
   friend class InkPlaygroundHistoryTestAccess;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
@@ -351,6 +353,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   }
   [[nodiscard]] bool cancelStroke(const input::PointerKey& key) noexcept;
   void cancelAllPointers() noexcept;
+  void onSessionCancel(
+      const input::PlatformInteractionIngressResult& result) noexcept override;
   [[nodiscard]] interaction::ContactDisposition pointerDisposition(
       const input::PointerKey& key) const noexcept;
   [[nodiscard]] bool viewportGestureClaimed() const noexcept {
@@ -506,6 +510,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   std::unique_ptr<interaction::InteractionRuntime> interaction_;
   std::unique_ptr<render::SurfaceLifecycle> lifecycle_;
   std::unique_ptr<render::PresentationTracker> tracker_;
+  render::RuntimeFrameCoordinator frameCoordinator_;
   HudSnapshot hud_;
   std::size_t submittedOperationCount_ = 0;
   std::uint64_t strokeStartNs_ = 0;

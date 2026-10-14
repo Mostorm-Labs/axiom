@@ -1,0 +1,55 @@
+{
+  "schema": "fc00x-implementation-design-preflight-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P32_S0",
+  "source_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "task_anchor": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+  "production_mutation_performed_before_preflight": false,
+  "owners": {
+    "host": "apps/ink_playground/common/ink_playground_host.*",
+    "document": "existing semantic IndexedObjectStore/OperationEngine owner inside host composition",
+    "selection": "existing SelectionSession owner",
+    "session": "existing InputRouter/InteractionSessionManager/CreationSession/BrushSession owners",
+    "scene": "existing RuntimeScene/IncrementalRuntimeCoordinator owner",
+    "frame": "runtime/render SurfaceLifecycle/PresentationTracker/PreviewSurfaceController plus new narrow RuntimeFrameCoordinator",
+    "control": "CanvasControlService queue with CanvasControlBinding owner readback",
+    "platform": "Windows/Web adapters own surface/GPU acquire/present/context and return real metrics/feedback"
+  },
+  "current_flows": {
+    "input": "platform adapter -> RuntimeAppBinding -> PlatformInteractionIngress -> Host InputRouter -> InteractionSessionManager -> session owner",
+    "frame": "Host -> SurfaceLifecycle/RenderTarget -> provider acquire/present -> PresentationTracker/CanonicalHandoffEvaluator; PreviewSurfaceController owns transient geometry",
+    "control": "Debug/Product facade -> CanvasControlService -> CanvasControlBinding -> Host owners"
+  },
+  "required_changes": {
+    "S1": "Add narrow SessionCancelSink to RuntimeAppBinding; forward keyed source-scoped normalized Cancel for notifySourceLost/unregister; preserve PointerKey and no canonical operation on cancel.",
+    "S2": "Add narrow RuntimeFrameCoordinator using existing lifecycle/tracker/handoff/preview contracts; own dirty/stale/retry/retirement state; pass immutable captures and real metrics/generations.",
+    "S3": "Add narrow CanvasControlOwnerState/target context port used by binding snapshot and request fence; preserve primary/selection intent and style leaf merge."
+  },
+  "abort_close_order": [
+    "stop accepting new platform input",
+    "source-scoped cancel delivery",
+    "invalidate session/frame/control generations",
+    "mark canonical and preview surfaces independently unavailable",
+    "drop immutable queued captures",
+    "destroy platform bindings",
+    "release host owner references"
+  ],
+  "async_capture_rule": "Capture owns value copies of document/view/surface/metrics/generation identity; callbacks revalidate target and owner generation before publication and never retain Host/Surface pointers.",
+  "obligation_map": {
+    "FC00X-S1-01": "FC00XRuntimeOwnerClosure + RuntimeAppBinding sink test",
+    "FC00X-S1-02": "same-source/generation schedule",
+    "FC00X-S2-01": "FC00XFrameCoordinator stale/retry/handoff test",
+    "FC00X-S2-02": "metrics/DPR and independent role lifecycle test",
+    "FC00X-S2-03": "PresentationTracker/Handoff qualified feedback test",
+    "FC00X-S3-01": "FC00XControlTruth target/context fence test",
+    "FC00X-S3-02": "style leaf merge test",
+    "FC00X-S3-03": "degraded owner readback test",
+    "FC00X-ISO-01": "two Runtime/View instance schedule",
+    "FC00X-SCOPE-01": "scope/protected-path audit"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "status": "PASS_READY_FOR_IMPLEMENTATION"
+}

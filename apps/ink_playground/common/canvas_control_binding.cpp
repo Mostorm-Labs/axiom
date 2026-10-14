@@ -155,9 +155,12 @@ runtime::CanvasControlSnapshot CanvasControlBinding::snapshot(
   out.opacity = host_.inkOpacity();
   out.eraserDiameterLogicalPx = host_.eraserDiameterLogicalPx();
   out.eraserMode = host_.eraserMode();
-  out.targetAvailable = true;
-  out.writable = true;
-  out.busy = false;
+  // Availability and editability are owner facts.  Do not publish an
+  // unconditional PASS while the surface is detached or an owner-safe-point
+  // gesture is still active.
+  out.targetAvailable = host_.surface().available;
+  out.busy = host_.creationActive() || host_.selectionTransformActive();
+  out.writable = out.targetAvailable && !out.busy;
   out.viewportWidth = static_cast<float>(host_.surface().width);
   out.viewportHeight = static_cast<float>(host_.surface().height);
   out.cameraScale = host_.viewportGesture().scale;

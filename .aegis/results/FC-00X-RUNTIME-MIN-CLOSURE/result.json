@@ -1,0 +1,28 @@
+{
+  "schema": "fc00x-runtime-min-closure-result-v0.1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "BLOCKED_ENVIRONMENT",
+  "result_revision": "__PENDING_COMMIT__",
+  "materialized_ref": "__PENDING_PUSH__",
+  "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json@6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "completed_slices": [
+    "S0 ImplementationDesignPreflight",
+    "S1 source-scoped cancel owner delivery",
+    "S2 RuntimeFrameCoordinator and focused oracle",
+    "S3 owner-derived CanvasControlBinding availability/busy readback"
+  ],
+  "pending_slices": [
+    "full CTest graph with Skia-backed render target",
+    "Windows/Web hosted builds and physical observations"
+  ],
+  "evidence_refs": [
+    "implementation-design-preflight.json",
+    "focused-tests.json",
+    "environment-blocker.json",
+    "scope-audit.json"
+  ],
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass": false
+}

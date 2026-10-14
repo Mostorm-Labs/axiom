@@ -11,15 +11,22 @@ bool RuntimeAppBinding::registerInputSource(InputSourceRegistration registration
            sources_.insert(registration.source).second;
 }
 
-bool RuntimeAppBinding::unregisterInputSource(input::InputSourceId source) {
-    return sources_.erase(source) != 0U;
+bool RuntimeAppBinding::unregisterInputSource(input::InputSourceId source,
+                                               std::uint64_t sequence,
+                                               std::uint64_t timestampNs) {
+    if (!sources_.contains(source)) return false;
+    const auto result = ingress_.sourceLost(source, sequence, timestampNs);
+    if (cancelSink_ != nullptr && result.accepted) cancelSink_->onSessionCancel(result);
+    sources_.erase(source);
+    return true;
 }
 
 bool RuntimeAppBinding::notifySourceLost(input::InputSourceId source,
                                          std::uint64_t sequence,
                                          std::uint64_t timestampNs) noexcept {
     if (!sources_.contains(source)) return false;
-    (void)ingress_.sourceLost(source, sequence, timestampNs);
+    const auto result = ingress_.sourceLost(source, sequence, timestampNs);
+    if (cancelSink_ != nullptr && result.accepted) cancelSink_->onSessionCancel(result);
     return true;
 }
 
