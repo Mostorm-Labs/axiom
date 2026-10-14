@@ -2,8 +2,8 @@
   "schema_version": "0.1",
   "format": "aegis-verification-lock-v1",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
-  "stage": "P31_TASK_PACKAGING",
-  "status": "FROZEN_CANDIDATE_FOR_CONTROL_REVIEW",
+  "stage": "P20_VERIFICATION_DESIGN_CORRECTION",
+  "status": "P20_CORRECTED_READY_FOR_CONTROL_REVIEW",
   "trusted_basis": {
     "repository_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
     "authority_lock": "authority.lock.json",
@@ -16,7 +16,9 @@
       "requirement": "Freeze one-owner Document/View/Runtime composition, narrow Host ports, async capture lifetime, close order and platform execution context before production mutation.",
       "oracle": "ImplementationDesignPreflight records current Host -> Runtime -> owner flow, target owner/prepare/commit/publication/abort flow, exact affected files, and no unresolved semantic decisions; independent scope reviewer checks the record against current headers and ADRs.",
       "acceptance": "The preflight has unresolved_semantic_decisions=[], authority_conflict=false, verification_conflict=false, package_scope_conflict=false, and maps every S1-S3 obligation to an oracle.",
-      "evidence_required": ["implementation-design-preflight.json"],
+      "evidence_required": [
+        "implementation-design-preflight.json"
+      ],
       "classification": "BLOCKING"
     },
     {
@@ -24,55 +26,10 @@
       "requirement": "Source loss/unregister delivers a keyed Cancel to the real Session owner and does not cancel another source sharing the same pointerId.",
       "oracle": "Counting SessionOwner adapter receives normalized Cancel for source A; source B remains live; unregister and sourceLost are both exercised; old-generation events are submitted after cancel.",
       "acceptance": "RED on the untouched baseline because RuntimeAppBinding discards sourceLost output and unregister has no cancellation delivery; GREEN has exactly one keyed Cancel, B alive, no canonical commit, and next Down starts a fresh generation.",
-      "evidence_required": ["s1-input-session.json", "red-preflight.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S1-02",
-      "requirement": "PointerKey identity and late-generation fencing remain intact through InputRouter, CreationSession, BrushSession, selection, pan and eraser paths.",
-      "oracle": "Two-source same-pointer schedule plus late Move/Up/Cancel and next Down; compare owner session ledger, canonical operation count and per-source traces.",
-      "acceptance": "No cross-source cancellation, no duplicate/ghost operation, stale generation rejected, and valid next gesture accepted.",
-      "evidence_required": ["s1-input-session.json", "runtime-isolation.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S2-01",
-      "requirement": "Runtime coordinates dirty/stale/retry and keeps Preview alive until matching Canonical handoff; resize/rebind/loss/close invalidate old captures.",
-      "oracle": "Immutable frame/preview capture schedule with busy/retry, matching and mismatched document/surface/metrics generations, resize, loss, rebind and close; inspect visible-role and retirement state.",
-      "acceptance": "No flashback to old canonical, stale capture never presents, preview retires only after qualified matching canonical visibility, close leaves no pending task or borrowed owner pointer.",
-      "evidence_required": ["s2-frame-coordinator.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S2-02",
-      "requirement": "Frame requests use real logical/physical size, DPR and metrics generation; Canonical and Preview lifecycle remain independent.",
-      "oracle": "Non-1 DPR metrics update and independent canonical/preview loss/restored schedule; verify FrameState, SurfaceSnapshot and provider calls.",
-      "acceptance": "Coordinate conversion uses supplied metrics exactly, roles do not cross-invalidate, and no fixed DPR=1 or stale target is emitted.",
-      "evidence_required": ["s2-frame-coordinator.json", "render-lifecycle-regressions.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S2-03",
-      "requirement": "Accepted/flush/fence feedback is not reported as physical Presented without qualifying platform evidence.",
-      "oracle": "PresentationTracker and CanonicalHandoffEvaluator schedule accepted, approximate and platform-qualified feedback, including duplicate/conflict/stale generation cases.",
-      "acceptance": "Only matching platform-qualified feedback enables the contractually eligible handoff; unknown/approximate evidence remains visible and non-qualified.",
-      "evidence_required": ["s2-frame-coordinator.json", "render-lifecycle-regressions.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S3-01",
-      "requirement": "Control requests retain their original target and context fence through queueing and owner-safe-point application.",
-      "oracle": "Queue request against target A, switch selection to B, then process; delete/restore/rebind/session/permission/resource invalidation schedules are exercised.",
-      "acceptance": "A is modified only when its fence is valid; B is never accidentally modified; stale/expired/invalidated receipts are explicit.",
-      "evidence_required": ["s3-control-truth.json", "control-regressions.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-S3-02",
-      "requirement": "Primary-only and selection-set intent remain distinct; a leaf strokeWidth edit preserves each target's other canonical style fields.",
-      "oracle": "Two selected objects with different color/cap/join/dash receive a width-only patch and a primary-only command; compare before/after canonical records and operation payload.",
-      "acceptance": "Exactly one existing operation per accepted edit, all non-target style leaves preserved, no compound draft overwrites remote color changes, Clear reset remains unimplemented/open.",
-      "evidence_required": ["s3-control-truth.json"],
+      "evidence_required": [
+        "s1-input-session.json",
+        "red-preflight.json"
+      ],
       "classification": "BLOCKING"
     },
     {
@@ -80,15 +37,10 @@
       "requirement": "Control snapshot/readback reports real availability, writable, busy, permission, resource, revision, receipt and confirmed values; it does not hard-code PASS.",
       "oracle": "Counting/fake owner drives unavailable, busy, locked, stale, applied and failed states through the binding; compare snapshot and receipt to owner state.",
       "acceptance": "RED on the untouched baseline because CanvasControlBinding hard-codes targetAvailable/writable/busy; GREEN mirrors owner truth and separates pending draft from confirmed Runtime values.",
-      "evidence_required": ["s3-control-truth.json", "red-preflight.json"],
-      "classification": "BLOCKING"
-    },
-    {
-      "id": "FC00X-ISO-01",
-      "requirement": "Two independent Runtime/View instances do not share input, session, frame, control, preview or canonical state.",
-      "oracle": "Run identical and interleaved source/frame/control schedules against two instances and compare instance-local ledgers, surface generations and snapshots.",
-      "acceptance": "No cross-instance event, generation, receipt or presentation state is observed.",
-      "evidence_required": ["runtime-isolation.json"],
+      "evidence_required": [
+        "s3-control-truth.json",
+        "red-preflight.json"
+      ],
       "classification": "BLOCKING"
     },
     {
@@ -96,7 +48,10 @@
       "requirement": "Only the authorized runtime/host/test/evidence paths change, and FC-01 worktree and historical controls remain untouched.",
       "oracle": "Exact diff from 201cc8841a0e6de4cd4b8a3dfc6c337820d35704, protected-path audit, git diff --check, and comparison of FC-01 worktree/status before and after.",
       "acceptance": "No product feature expansion, public ABI rewrite, package-input mutation, FC-01/PX0/G4 result mutation, or unauthorized path; clean diff check.",
-      "evidence_required": ["scope-audit.json", "repository-reconciliation.json"],
+      "evidence_required": [
+        "scope-audit.json",
+        "repository-reconciliation.json"
+      ],
       "classification": "BLOCKING"
     }
   ],
@@ -133,5 +88,23 @@
     "FC00XFrameCoordinator",
     "FC00XControlTruth",
     "FC00XRuntimeIsolation"
-  ]
+  ],
+  "p31_p32_authorized": false,
+  "red_oracle_contract": [
+    {
+      "id": "FC00X-RED-S1-source-cancel-delivery",
+      "mechanism": "read-only source/contract oracle",
+      "expected_exit": 1,
+      "evidence": "p20-red-preflight.json",
+      "post_fix_acceptance": "separate owner-adapter test in future accepted P32 package"
+    },
+    {
+      "id": "FC00X-RED-S3-control-readback-truth",
+      "mechanism": "read-only source/contract oracle",
+      "expected_exit": 1,
+      "evidence": "p20-red-preflight.json",
+      "post_fix_acceptance": "separate degraded-owner test in future accepted P32 package"
+    }
+  ],
+  "design_note": "The remaining S1/S2/S3 implementation obligations are preserved as candidate future P31 inputs, not executable P32 requirements in this correction."
 }

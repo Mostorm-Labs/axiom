@@ -1,4 +1,4 @@
-# FC-00X Runtime Minimum Closure — P31 implementation context
+# FC-00X Runtime Minimum Closure — P20 verification-design correction context
 
 ## Execution identity
 
@@ -45,9 +45,9 @@ Reuse `SurfaceLifecycle`, `PresentationTracker`, `CanonicalHandoffEvaluator` and
 
 Reuse `CanvasControlService` queue/receipt and existing facade. Preserve the request target/context fence, distinguish primary-only and selection-set intents, invalidate deleted/restored/rebound targets, merge style leaves without overwriting unrelated canonical values, and make snapshot/readback reflect real owner availability/permission/resource/busy/confirmed state. Keep Clear-style reset OPEN.
 
-## First incomplete execution step
+## Current P20 correction boundary
 
-After Control Review accepts the exact package, P32 starts with RepositoryIdentity, PackageBindingPreflight, EvidenceContractPreflight, then S0 ImplementationDesignPreflight and the two frozen RED oracles. No production mutation is authorized before those observations are durable.
+This revision is a verification-design correction only. Run the exact Authority binding validator and the read-only RED oracle against the untouched anchor. No production mutation, P31 authorization, or P32 handoff is allowed until independent Control Review accepts this correction. After acceptance, a separate P31 package must freeze the implementation closure and future owner-adapter GREEN tests.
 
 ## Non-goals
 

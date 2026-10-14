@@ -1,11 +1,11 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.1",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P20-v0.2",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
-  "stage": "P31_TASK_PACKAGING",
-  "status": "PACKAGE_READY_FOR_CONTROL_REVIEW",
-  "purpose": "Close the shared Runtime input/session, frame preview/canonical, and control/diagnostics boundaries needed for repeatable Windows/Web verification without entering FC-01 feature implementation.",
+  "stage": "P20_VERIFICATION_DESIGN_CORRECTION",
+  "status": "P20_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Repair exact Authority bindings and zero-mutation RED oracle design before any P31/P32 implementation.",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
@@ -24,23 +24,23 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "0ca2639186e121adcaabc08aebe7775a520a5d837f5bb2c87d2dc8f73e466f09"
+    "sha256": "b5aaff7f3bcf6cc3da99eb12e6500392a84657fa8bca25408ffb5696a3ce1bb0"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "2d3162045c993faf58c1edc6c8b773be3a2a9b45d058540e10904e7b67b5b5fd"
+    "sha256": "157b0937425cc589a0b306e3a73aba613658fe2fb16091bae1b765f0de2db56e"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "4ecb8a6611caa42d804f7fc2d9dbb6f018e6a8169739a57e36e6bed5da803feb"
+    "sha256": "c5fe32f8d3ba288a957c23e6958baf45373faa0f3265b9bdef640c2d7dccaa7d"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "3949796709730da5bbc55e36d7f74a55601a2fb0fca1241b5f46c45e90056bee"
+    "sha256": "981b3dbfc90720474602dc1fac5ebe04e76541cfd215c75ea99f3915b274fc27"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "7f567ca772a6c6011a4a2bd9daf6c131246e529a8c250fbb37a0b8d32c48f170"
+    "sha256": "d6e843595231611cb694d1051476523a013a8bc23b4262bc165141ee8e5a764a"
   },
   "materialization": {
     "same_repository": true,
@@ -51,19 +51,30 @@
   },
   "preflights": [
     "RepositoryIdentity",
-    "PackageBindingPreflight",
-    "EvidenceContractPreflight",
-    "ImplementationDesignPreflight",
-    "FC00X-RED-S1-source-cancel-delivery",
-    "FC00X-RED-S3-control-readback-truth"
+    "P20AuthorityBindingPreflight",
+    "P20RedOraclePreflight"
   ],
-  "terminal_target": "PACKAGE_READY_FOR_CONTROL_REVIEW before P32; after acceptance, READY_FOR_CONTROL_REVIEW with exact implementation result and evidence refs",
+  "terminal_target": "P20_READY_FOR_CONTROL_REVIEW; P31/P32 remain unauthorized until this correction is independently accepted.",
   "nonclaims": [
     "No FC-01 P31/P32 or FC-01 DEV/P34 result",
     "No PX0, G4.6, G4.7, FC-13 or G5 status change",
     "No Android APK or Android physical evidence in this package",
     "No public C ABI delivery; docs/api remains implementation input",
     "No new OperationKind, ObjectKind, FieldId, Protobuf field, or canonical product policy",
-    "No complete Editor composition extraction, dynamic capability registry, Inspector, Sync, background schema or export feature"
-  ]
+    "No complete Editor composition extraction, dynamic capability registry, Inspector, Sync, background schema or export feature",
+    "P31/P32 are NOT_AUTHORIZED until P20 correction acceptance",
+    "No production source mutation was performed by this correction"
+  ],
+  "verification_design_ref": {
+    "path": "p20-verification-design.json",
+    "sha256": "5bd15f814b3696dc547d840a6bb6d1abe3b4cbaa06c2f08c841e1add75ca56f1"
+  },
+  "red_oracle_ref": {
+    "path": "p20-red-oracle.py",
+    "sha256": "6e6ef4826ca15d843431a3b9026ae90d808791f575a6da4a45ecf452f18b805f"
+  },
+  "authority_binding_oracle_ref": {
+    "path": "p20-authority-binding.py",
+    "sha256": "d501d36f6fc945e3012027c0943edd7445aaaaa5d6f4f58fb3d74e6d8cbcdb7d"
+  }
 }
