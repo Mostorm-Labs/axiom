@@ -1,6 +1,6 @@
 {
   "schema": "fc00x-focused-tests-v1",
-  "source_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "source_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
   "records": [
     {
       "id": "FC00X-OWNER-CLOSURE",
@@ -36,6 +36,13 @@
       "status": "PASS",
       "exit_code": 0,
       "notes": "All changed production translation units compile individually with MSVC 19.51."
+    },
+    {
+      "id": "FC00X-G46-G45-RENDERER-CONFLICT",
+      "command": "ctest --test-dir out/fc00x-windows -C Release --output-on-failure -R \"G3HeadlessSkia|G46PlaygroundTransform|G45BrushRuntimePipeline\"",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "3/3 passed after conditional ink-layer isolation; standalone legacy ink erase stays transparent, Brush-v2 and shape-overlap semantics remain intact."
     }
   ]
 }

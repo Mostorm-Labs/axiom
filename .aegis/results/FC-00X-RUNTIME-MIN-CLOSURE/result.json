@@ -2,9 +2,9 @@
   "schema": "fc00x-runtime-min-closure-result-v0.1",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
   "stage": "P32_IMPLEMENTATION",
-  "status": "BLOCKED_IMPLEMENTATION",
-  "result_revision": "2087bb28aaf2dd929165a5fd77e7c59a4ca14d9c",
-  "materialized_ref": "e645184274125629a254e3e3a4492729b6c4604f",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
+  "materialized_ref": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
   "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json@6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "completed_slices": [
@@ -13,10 +13,8 @@
     "S2 RuntimeFrameCoordinator with focused oracle",
     "S3 owner-derived CanvasControlBinding availability/busy readback"
   ],
-  "pending_slices": [
-    "renderer-neutral partial erase isolation must preserve both transformed-ink transparent-clear and shape-preserving erase semantics"
-  ],
-  "focused_regression": "24/25 passed; G46PlaygroundTransform fails after renderer isolation change",
+  "pending_slices": [],
+  "focused_regression": "PASS: G3HeadlessSkia, G46PlaygroundTransform, and G45BrushRuntimePipeline (3/3)",
   "full_build": "PASS 587/587",
   "skia_materialization": "PASS locked Windows release archive SHA and SDK identity",
   "imgui_materialization": "PASS commit f1cc2ae15e53a861a874c3034aae6798fde194ab",
@@ -30,7 +28,8 @@
     "scope-audit.json"
   ],
   "remaining_blockers": [
-    "BLOCKED_IMPLEMENTATION: current per-entry mask isolation fixes shape erasure but conflicts with transformed-ink transparent-clear oracle; ink-group experiment also conflicts with both pixel contracts; requires renderer-owner design decision"
+    "BLOCKED_ENVIRONMENT: full unrelated CMake graph hits existing MSVC /WX unreachable-code failure in runtime/semantic; not caused by this renderer change",
+    "PHYSICAL_PENDING: no physical host acceptance claimed"
   ],
   "nonclaims": [
     "No Gate/P34 PASS",
