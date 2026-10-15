@@ -1,0 +1,223 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Complete S0 ImplementationDesignPreflight and retain it as durable evidence before production mutation.",
+        "S1: close source cancel/unregister delivery to the actual Session owner while retaining PointerKey source/pointer/generation identity and late-event rejection.",
+        "S2: add the smallest common Runtime frame/preview/canonical coordinator needed to own dirty, stale, retry, handoff and retirement qualification; reuse existing SurfaceLifecycle, PresentationTracker, CanonicalHandoffEvaluator and PreviewSurfaceController.",
+        "S2: route real surface metrics/DPR/generation and independent Canonical/Preview lifecycle feedback through the coordinator; Platform remains acquire/present/context owner.",
+        "S3: preserve target/context fences, primary-only versus selection-set intent, leaf-style merge and real owner snapshot/readback through the existing CanvasControlService/Binding lane.",
+        "Add focused C++ oracle tests and only the narrow host/platform adapters required to exercise the shared runtime path on Windows and Web.",
+        "Materialize source identity, preflight, test logs, scope audit and result under .aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/ after accepted implementation execution."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/input/include/canvas/input/**",
+        "runtime/input/src/**",
+        "runtime/input/tests/**",
+        "runtime/interaction/include/canvas/interaction/**",
+        "runtime/interaction/src/**",
+        "runtime/interaction/tests/**",
+        "runtime/render/include/canvas/render/**",
+        "runtime/render/src/**",
+        "runtime/render/tests/**",
+        "runtime/control/include/canvas/control/**",
+        "runtime/control/src/**",
+        "runtime/control/tests/**",
+        "runtime/foundation/include/canvas/runtime/**",
+        "runtime/foundation/tests/**",
+        "apps/ink_playground/common/ink_playground_host.*",
+        "apps/ink_playground/common/platform_interaction_controller.*",
+        "apps/ink_playground/common/canvas_control_binding.*",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.*",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "apps/ink_playground/tests/**",
+        "CMakeLists.txt",
+        "runtime/*/CMakeLists.txt",
+        "apps/ink_playground/CMakeLists.txt",
+        ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**"
+      ],
+      "preserve_unchanged": [
+        ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/**",
+        ".aegis/packages/FC-01/**",
+        ".aegis/results/FC-01-DEV/**",
+        ".aegis/results/GT-*/**",
+        ".aegis/results/PX0-*/**",
+        ".aegis/authorities.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json",
+        "verification/**",
+        "docs/api/**",
+        "semantic-sdk.lock.json",
+        "r1-full-skia-sdk.lock.json"
+      ],
+      "forbidden_changes": [
+        "FC-01 Shape/Connector/Triangle implementation or package-input change.",
+        "Any new OperationKind, ObjectKind, FieldId, Protobuf tag, canonical schema or selected Shape conversion.",
+        "A second Document, Selection, Session, Frame, RuntimeScene or canonical write owner.",
+        "A public C ABI implementation, docs/api rewrite, or platform-specific public ABI symbol.",
+        "Full Editor composition extraction, dynamic capability registry, Inspector, background schema, object list, PNG export or Sync workflow.",
+        "Core-created OS threads/system message loop, JSON event bus, network/file/database I/O or SDK lock changes.",
+        "Any rewrite of existing Gate, Evidence, Integration, PX0, G4.6, G4.7, FC-01 or G5 status."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current Host -> Runtime -> Document/Selection/Session/Scene/Frame/Control owner flow",
+        "target narrow ports and owner-safe event order",
+        "source cancel, surface loss, retry, close and async capture abort paths",
+        "exact file and test mapping for S0-S3",
+        "obligation-to-oracle/evidence map",
+        "unresolved semantic decisions",
+        "P20 correction acceptance and exact Authority binding manifest"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_preconditions": [
+      {
+        "id": "FC00X-RED-S1-source-cancel-delivery",
+        "red_required": true,
+        "expected_failure": "Untouched baseline source oracle exits 1 because RuntimeAppBinding discards sourceLost output and unregister has no owner cancel path.",
+        "observation_seam": "p20-red-oracle.py plus .aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-preflight.json",
+        "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/p20-red-oracle.py --root . --expect baseline-red",
+        "expected_exit_code": 1
+      },
+      {
+        "id": "FC00X-RED-S3-control-readback-truth",
+        "red_required": true,
+        "expected_failure": "Untouched baseline source oracle exits 1 because CanvasControlBinding hard-codes targetAvailable/writable/busy.",
+        "observation_seam": "p20-red-oracle.py plus .aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-preflight.json",
+        "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/p20-red-oracle.py --root . --expect baseline-red",
+        "expected_exit_code": 1
+      }
+    ],
+    "tests": {
+      "required": [
+        {
+          "id": "FC00X-OWNER-CLOSURE",
+          "command_or_oracle": "ctest --test-dir <exact-build> -R 'FC00XRuntimeOwnerClosure|FC00XRuntimeIsolation' --output-on-failure",
+          "expected_result": "PASS with assertions active; RED evidence captured against the untouched baseline before production mutation.",
+          "blocking_reason": "Input/session ownership and instance isolation are foundational correctness boundaries."
+        },
+        {
+          "id": "FC00X-FRAME-COORDINATOR",
+          "command_or_oracle": "ctest --test-dir <exact-build> -R 'FC00XFrameCoordinator|G3SurfacePresentation|G4CanonicalHandoff|G3PreviewSurface' --output-on-failure",
+          "expected_result": "PASS for stale/retry/handoff/metrics/role separation with no fabricated Presented feedback.",
+          "blocking_reason": "Preview/canonical lifecycle correctness is required for cross-platform verification."
+        },
+        {
+          "id": "FC00X-CONTROL-TRUTH",
+          "command_or_oracle": "ctest --test-dir <exact-build> -R 'FC00XControlTruth|PX0ControlRouter|DUIM1Control|DUIM1RuntimeFacade' --output-on-failure",
+          "expected_result": "PASS with target/context fence, leaf-style merge and real snapshot/readback; RED captured before mutation.",
+          "blocking_reason": "Diagnostics must describe the real owner state rather than hard-coded PASS."
+        },
+        {
+          "id": "FC00X-REGRESSIONS",
+          "command_or_oracle": "ctest --test-dir <exact-build> -R 'G3RuntimeAppBinding|C1CommonIngress|G4MultiContactCoordinator|G4ViewportGesture|C0CanvasInteractionCoordinator|C0ViewportInteractionController|G4PlatformNormalization|C1CrossPlatformFixtureParity|G3RenderTargetSwitching|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G4CanonicalHandoff|G45BrushRuntimePipeline|G46EditingOverlay|G4InkPlaygroundComposition|G4InkPlaygroundSurface|G4InkPlaygroundPreview|G4InkPlaygroundSelection|G46PlaygroundTransform|PX0RuntimeFacadeContract|PX0DebugSnapshot|DUIM1RuntimeFacade|DUIM1Control' --output-on-failure",
+          "expected_result": "Every current FC-00X regression exists and passes; legacy POC-06/Arc Windows preview tests are explicitly excluded.",
+          "blocking_reason": "Protects accepted G2/G3/G4/PX0/DUI behavior while the common runtime boundary changes."
+        },
+        {
+          "id": "FC00X-SCOPE",
+          "command_or_oracle": "git diff --name-only 201cc8841a0e6de4cd4b8a3dfc6c337820d35704..HEAD; git diff --check 201cc8841a0e6de4cd4b8a3dfc6c337820d35704..HEAD",
+          "expected_result": "Only authorized runtime/host/test/result paths changed and diff check exits 0.",
+          "blocking_reason": "Prevents leakage into FC-01, product semantics or historical control records."
+        }
+      ],
+      "optional": [
+        "Windows native build at exact result revision when locked Skia/toolchain is available",
+        "Web debug-on and debug-off build at exact result revision when locked Emscripten is available",
+        "Android build/APK remains explicitly deferred and is not a blocking P32 item"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Reviewer-accessible Windows/Web build artifacts and traces",
+        "Human physical observations, retained as PHYSICAL_PENDING until actually performed"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "p20-red-preflight.json",
+        "implementation-design-preflight.json",
+        "repository-reconciliation.json",
+        "package-binding-preflight.json",
+        "implementation-design-preflight.json",
+        "red-preflight.json",
+        "s1-input-session.json",
+        "s2-frame-coordinator.json",
+        "s3-control-truth.json",
+        "runtime-isolation.json",
+        "render-lifecycle-regressions.json",
+        "control-regressions.json",
+        "scope-audit.json",
+        "result.json",
+        "exact pushed result revision/materialized_ref"
+      ],
+      "corroborative": [
+        "Windows/Web build logs",
+        "optional screenshots or human observations",
+        "performance traces without invented numeric claims"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "S0 preflight is complete with no unresolved decisions.",
+        "S1 source/session cancellation and generation fencing are owner-delivered and independently tested.",
+        "S2 common frame/preview/canonical coordinator and real lifecycle feedback are implemented and tested.",
+        "S3 target/context-fenced control and real owner readback are implemented and tested.",
+        "Required focused and regression tests pass with active assertions.",
+        "Scope/protected-path audit is clean and FC-01 work remains unchanged.",
+        "Exact result revision and reviewer-accessible materialized_ref are pushed.",
+        "Return READY_FOR_CONTROL_REVIEW without any Gate/P34/PASS claim; unobserved physical checks remain PHYSICAL_PENDING."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "BLOCKED_AUTHORITY",
+        "BLOCKED_MISSING_INPUT",
+        "BLOCKED_ENVIRONMENT",
+        "BLOCKED_IMPLEMENTATION",
+        "BLOCKED_EVIDENCE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ],
+      "rules": [
+        "If package-local hashes, repository identity, or anchor ancestry fail, stop before mutation.",
+        "If an S0 decision, target/context fence or presentation qualification is not frozen, return to P31/P20 rather than inventing policy.",
+        "If a required frozen test fails after implementation, classify the defect and stop at the terminal blocker; do not weaken the oracle.",
+        "If result/evidence cannot be pushed and reviewer-resolved, return BLOCKED_EVIDENCE.",
+        "Android build/APK absence alone is not a blocker in this package because it is explicitly deferred."
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  },
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "correction": {
+    "type": "TASK_PACKAGE_CORRECTION",
+    "supersedes": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.3",
+    "removed_legacy_poc06_tests": [
+      "G4WindowsPreviewDispatch",
+      "G4InkPlaygroundWindowsPreviewPopup"
+    ],
+    "scope": "Do not build or run the legacy Arc/POC-06 Windows preview test targets; retain shared Runtime and Windows host code."
+  }
+}
