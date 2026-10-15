@@ -64,7 +64,8 @@
     "base_revision": "4f30db1b736deffa23700ddb9e44c2faa8253d66",
     "exact_ref_rule": "Use immutable P31 package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
     "fc01_protection": "FC-01 worktree, branch, Authority, Gate, Evidence and historical results remain untouched.",
-    "correction_commit_rule": "Commit this corrected package and implementation deletion first; bind result evidence to that immutable package commit."
+    "correction_commit_rule": "Commit this corrected package and implementation deletion first; bind result evidence to that immutable package commit.",
+    "finalization_note": "Final corrected P31 package commit is the immutable package binding for the following P36 evidence-only descendant."
   },
   "preflights": [
     "RepositoryIdentity",
