@@ -2,27 +2,39 @@
   "schema": "fc00x-runtime-min-closure-result-v0.1",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
   "stage": "P32_IMPLEMENTATION",
-  "status": "BLOCKED_ENVIRONMENT",
-  "result_revision": "200e6ca44c8b8c46e084be33825716a171c544d6",
-  "materialized_ref": "200e6ca44c8b8c46e084be33825716a171c544d6",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "result_revision": "2087bb28aaf2dd929165a5fd77e7c59a4ca14d9c",
+  "materialized_ref": "2087bb28aaf2dd929165a5fd77e7c59a4ca14d9c",
   "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json@6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "completed_slices": [
     "S0 ImplementationDesignPreflight",
     "S1 source-scoped cancel owner delivery",
-    "S2 RuntimeFrameCoordinator and focused oracle",
+    "S2 RuntimeFrameCoordinator with focused oracle",
     "S3 owner-derived CanvasControlBinding availability/busy readback"
   ],
   "pending_slices": [
-    "full CTest graph with Skia-backed render target",
-    "Windows/Web hosted builds and physical observations"
+    "renderer-neutral partial erase isolation must preserve both transformed-ink transparent-clear and shape-preserving erase semantics"
   ],
+  "focused_regression": "24/25 passed; G46PlaygroundTransform fails after renderer isolation change",
+  "full_build": "PASS 587/587",
+  "skia_materialization": "PASS locked Windows release archive SHA and SDK identity",
+  "imgui_materialization": "PASS commit f1cc2ae15e53a861a874c3034aae6798fde194ab",
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass": false,
   "evidence_refs": [
     "implementation-design-preflight.json",
-    "focused-tests.json",
-    "environment-blocker.json",
+    "p20-red-preflight.json",
+    "windows-build.log",
+    "frozen-regressions.log",
     "scope-audit.json"
   ],
-  "physical_status": "PHYSICAL_PENDING",
-  "official_gate_pass": false
+  "remaining_blockers": [
+    "BLOCKED_IMPLEMENTATION: current per-entry mask isolation fixes shape erasure but conflicts with transformed-ink transparent-clear oracle; ink-group experiment also conflicts with both pixel contracts; requires renderer-owner design decision"
+  ],
+  "nonclaims": [
+    "No Gate/P34 PASS",
+    "No FC-01/PX0/G4/G5 status change",
+    "Android deferred"
+  ]
 }
