@@ -1,171 +1,311 @@
 Test project C:/fc00x-runtime-build
       Start   1: DUIM1Control
- 1/27 Test   #1: DUIM1Control ......................   Passed    0.03 sec
+ 1/25 Test   #1: DUIM1Control ......................   Passed    0.04 sec
       Start 543: G4MultiContactCoordinator
- 2/27 Test #543: G4MultiContactCoordinator .........   Passed    0.03 sec
+ 2/25 Test #543: G4MultiContactCoordinator .........   Passed    0.03 sec
       Start 544: G4ViewportGesture
- 3/27 Test #544: G4ViewportGesture .................   Passed    0.04 sec
+ 3/25 Test #544: G4ViewportGesture .................   Passed    0.03 sec
       Start 545: C0CanvasInteractionCoordinator
- 4/27 Test #545: C0CanvasInteractionCoordinator ....   Passed    0.03 sec
+ 4/25 Test #545: C0CanvasInteractionCoordinator ....   Passed    0.04 sec
       Start 546: C0ViewportInteractionController
- 5/27 Test #546: C0ViewportInteractionController ...   Passed    0.03 sec
+ 5/25 Test #546: C0ViewportInteractionController ...   Passed    0.03 sec
       Start 550: G4PlatformNormalization
- 6/27 Test #550: G4PlatformNormalization ...........   Passed    0.03 sec
+ 6/25 Test #550: G4PlatformNormalization ...........   Passed    0.04 sec
       Start 551: C1CommonIngress
- 7/27 Test #551: C1CommonIngress ...................   Passed    0.03 sec
+ 7/25 Test #551: C1CommonIngress ...................   Passed    0.04 sec
       Start 552: C1CrossPlatformFixtureParity
- 8/27 Test #552: C1CrossPlatformFixtureParity ......   Passed    0.03 sec
+ 8/25 Test #552: C1CrossPlatformFixtureParity ......   Passed    0.03 sec
       Start 574: G3RuntimeAppBinding
- 9/27 Test #574: G3RuntimeAppBinding ...............   Passed    0.07 sec
-      Start 577: FC00XFrameCoordinator
-10/27 Test #577: FC00XFrameCoordinator .............   Passed    0.06 sec
+ 9/25 Test #574: G3RuntimeAppBinding ...............   Passed    0.05 sec
       Start 578: G3RenderTargetSwitching
-11/27 Test #578: G3RenderTargetSwitching ...........   Passed    0.07 sec
+10/25 Test #578: G3RenderTargetSwitching ...........   Passed    0.03 sec
       Start 579: G3SkiaSurfaceProvider
-12/27 Test #579: G3SkiaSurfaceProvider .............   Passed    0.10 sec
+11/25 Test #579: G3SkiaSurfaceProvider .............   Passed    0.03 sec
       Start 580: G3PreviewSurface
-13/27 Test #580: G3PreviewSurface ..................   Passed    0.08 sec
+12/25 Test #580: G3PreviewSurface ..................   Passed    0.05 sec
       Start 581: G3SurfacePresentation
-14/27 Test #581: G3SurfacePresentation .............   Passed    0.05 sec
+13/25 Test #581: G3SurfacePresentation .............   Passed    0.04 sec
       Start 583: G46EditingOverlay
-15/27 Test #583: G46EditingOverlay .................   Passed    0.07 sec
+14/25 Test #583: G46EditingOverlay .................   Passed    0.03 sec
       Start 587: G4CanonicalHandoff
-16/27 Test #587: G4CanonicalHandoff ................   Passed    0.08 sec
+15/25 Test #587: G4CanonicalHandoff ................   Passed    0.03 sec
       Start 592: PX0RuntimeFacadeContract
-17/27 Test #592: PX0RuntimeFacadeContract ..........   Passed    0.04 sec
-      Start 594: PX0ControlRouter
-18/27 Test #594: PX0ControlRouter ..................   Passed    0.09 sec
+16/25 Test #592: PX0RuntimeFacadeContract ..........   Passed    0.03 sec
       Start 595: PX0DebugSnapshot
-19/27 Test #595: PX0DebugSnapshot ..................   Passed    0.04 sec
+17/25 Test #595: PX0DebugSnapshot ..................   Passed    0.05 sec
       Start 610: G4InkPlaygroundComposition
-20/27 Test #610: G4InkPlaygroundComposition ........   Passed    0.11 sec
+18/25 Test #610: G4InkPlaygroundComposition ........   Passed    0.03 sec
       Start 612: G4InkPlaygroundSurface
-21/27 Test #612: G4InkPlaygroundSurface ............   Passed    0.02 sec
+19/25 Test #612: G4InkPlaygroundSurface ............   Passed    0.03 sec
       Start 613: G4InkPlaygroundPreview
-22/27 Test #613: G4InkPlaygroundPreview ............   Passed    0.02 sec
+20/25 Test #613: G4InkPlaygroundPreview ............   Passed    0.05 sec
       Start 618: G4ViewportGestureState
-23/27 Test #618: G4ViewportGestureState ............   Passed    0.02 sec
+21/25 Test #618: G4ViewportGestureState ............   Passed    0.03 sec
       Start 627: G4InkPlaygroundSelection
-24/27 Test #627: G4InkPlaygroundSelection ..........   Passed    0.02 sec
+22/25 Test #627: G4InkPlaygroundSelection ..........   Passed    0.02 sec
       Start 628: G46PlaygroundTransform
-25/27 Test #628: G46PlaygroundTransform ............Exit code 0xc0000409***Exception:   3.63 sec
+23/25 Test #628: G46PlaygroundTransform ............   Passed    0.14 sec
+      Start 633: G45BrushRuntimePipeline
+24/25 Test #633: G45BrushRuntimePipeline ...........Exit code 0xc0000409***Exception:   4.15 sec
+[axiom] finish begin pointer=1812 objects=1 scene_gen=1
+[axiom] scene apply pointer=1812 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=2 scene_records=2
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=3 objects=2 scene_records=2
+[axiom] finish begin pointer=1801 objects=0 scene_gen=0
+[axiom] scene apply pointer=1801 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=2 scene_records=2
 [axiom] finish begin pointer=700 objects=0 scene_gen=0
 [axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] finish begin pointer=702 objects=1 scene_gen=1
+[axiom] scene apply pointer=702 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=1702 objects=0 scene_gen=0
+[axiom] scene apply pointer=1702 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
 [axiom] present begin frame=2 objects=1 scene_records=1
 [axiom] present begin frame=3 objects=1 scene_records=1
 [axiom] present begin frame=4 objects=1 scene_records=1
 [axiom] present begin frame=5 objects=1 scene_records=1
-[axiom] present begin frame=6 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] present begin frame=3 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
 [axiom] present begin frame=2 objects=1 scene_records=1
 [axiom] present begin frame=3 objects=1 scene_records=1
 [axiom] present begin frame=4 objects=1 scene_records=1
 [axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=2
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=3
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=389 objects=0 scene_gen=0
+[axiom] scene apply pointer=389 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=390 objects=1 scene_gen=1
+[axiom] scene apply pointer=390 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=4 objects=2 scene_records=2
+[axiom] finish begin pointer=963 objects=0 scene_gen=0
+[axiom] scene apply pointer=963 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=964 objects=1 scene_gen=1
+[axiom] scene apply pointer=964 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] finish begin pointer=965 objects=0 scene_gen=0
+[axiom] scene apply pointer=965 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=985 objects=0 scene_gen=0
+[axiom] scene apply pointer=985 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=986 objects=1 scene_gen=1
+[axiom] finish begin pointer=985 objects=0 scene_gen=0
+[axiom] scene apply pointer=985 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=985 objects=0 scene_gen=0
+[axiom] scene apply pointer=985 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=975 objects=1 scene_gen=1
+[axiom] scene apply pointer=975 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] finish begin pointer=970 objects=2 scene_gen=2
+[axiom] scene apply pointer=970 ok=1 objects=3 scene_gen=3
+[axiom] present begin frame=1 objects=2 scene_records=2
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] finish begin pointer=980 objects=0 scene_gen=0
+[axiom] scene apply pointer=980 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=0 scene_records=1
+[axiom] present reject scene generation
+[axiom] present begin frame=1 objects=0 scene_records=1
+[axiom] present reject scene generation
+[axiom] present begin frame=1 objects=0 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=950 objects=0 scene_gen=0
+[axiom] scene apply pointer=950 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=0 scene_records=0
 [axiom] present begin frame=6 objects=1 scene_records=1
 [axiom] present begin frame=7 objects=1 scene_records=1
-[axiom] present begin frame=8 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=0 scene_records=0
 [axiom] present begin frame=9 objects=1 scene_records=1
 [axiom] present begin frame=10 objects=1 scene_records=1
-[axiom] present begin frame=11 objects=1 scene_records=1
-[axiom] present begin frame=12 objects=1 scene_records=1
-[axiom] present begin frame=13 objects=1 scene_records=1
-[axiom] present begin frame=14 objects=1 scene_records=1
-[axiom] present begin frame=15 objects=1 scene_records=1
-[axiom] present begin frame=16 objects=1 scene_records=1
-[axiom] present begin frame=17 objects=1 scene_records=1
-[axiom] present begin frame=18 objects=1 scene_records=1
-[axiom] present begin frame=19 objects=1 scene_records=1
-[axiom] present begin frame=20 objects=1 scene_records=1
-[axiom] present begin frame=21 objects=1 scene_records=1
-[axiom] present begin frame=22 objects=1 scene_records=1
-[axiom] present begin frame=23 objects=1 scene_records=1
-[axiom] present begin frame=24 objects=1 scene_records=1
-[axiom] present begin frame=25 objects=1 scene_records=1
-[axiom] present begin frame=26 objects=1 scene_records=1
-[axiom] present begin frame=27 objects=1 scene_records=1
-[axiom] present begin frame=28 objects=1 scene_records=1
-[axiom] present begin frame=29 objects=1 scene_records=1
-[axiom] present begin frame=30 objects=1 scene_records=1
-[axiom] present begin frame=31 objects=1 scene_records=1
-[axiom] present begin frame=32 objects=1 scene_records=1
-[axiom] present begin frame=33 objects=1 scene_records=1
-[axiom] present begin frame=34 objects=1 scene_records=1
-[axiom] present begin frame=35 objects=1 scene_records=1
-[axiom] present begin frame=36 objects=1 scene_records=1
-[axiom] present begin frame=37 objects=1 scene_records=1
-[axiom] present begin frame=38 objects=1 scene_records=1
-[axiom] present begin frame=39 objects=1 scene_records=1
-[axiom] present begin frame=40 objects=1 scene_records=1
-[axiom] present begin frame=41 objects=1 scene_records=1
-[axiom] present begin frame=42 objects=1 scene_records=1
-[axiom] present begin frame=43 objects=1 scene_records=1
-[axiom] present begin frame=44 objects=1 scene_records=1
-[axiom] present begin frame=45 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=950 objects=0 scene_gen=0
+[axiom] scene apply pointer=950 ok=1 objects=1 scene_gen=1
 [axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
-[axiom] finish begin pointer=700 objects=0 scene_gen=0
-[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
-[axiom] present begin frame=1 objects=1 scene_records=1
-[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=0 scene_records=0
 [axiom] present begin frame=3 objects=1 scene_records=1
-Assertion failed: after[(96U*256U+120U)*4U+3U]==0U, file C:\Users\Chado\.codex\worktrees\fc00x-runtime-minimum-closure\canvas\apps\ink_playground\tests\selection_transform_test.cpp, line 271
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=9 objects=1 scene_records=1
+[axiom] present begin frame=10 objects=1 scene_records=1
+[axiom] finish begin pointer=950 objects=0 scene_gen=0
+[axiom] scene apply pointer=950 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=9 objects=1 scene_records=1
+[axiom] present begin frame=10 objects=1 scene_records=1
+[axiom] finish begin pointer=950 objects=0 scene_gen=0
+[axiom] scene apply pointer=950 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=1 scene_records=1
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=9 objects=1 scene_records=1
+[axiom] present begin frame=10 objects=1 scene_records=1
+[axiom] finish begin pointer=960 objects=0 scene_gen=0
+[axiom] scene apply pointer=960 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=77 objects=0 scene_gen=0
+[axiom] scene apply pointer=77 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+Assertion failed: pixels[center] == 255U && pixels[center + 1U] == 255U && pixels[center + 2U] == 255U && pixels[center + 3U] == 255U, file C:\Users\Chado\.codex\worktrees\fc00x-runtime-minimum-closure\canvas\apps\ink_playground\tests\brush_runtime_pipeline_test.cpp, line 431
 
-      Start 633: G45BrushRuntimePipeline
-26/27 Test #633: G45BrushRuntimePipeline ...........   Passed    2.20 sec
       Start 636: DUIM1RuntimeFacade
-27/27 Test #636: DUIM1RuntimeFacade ................   Passed    0.21 sec
+25/25 Test #636: DUIM1RuntimeFacade ................   Passed    0.02 sec
 
-96% tests passed, 1 tests failed out of 27
+96% tests passed, 1 tests failed out of 25
 
-Total Test time (real) =   8.32 sec
+Total Test time (real) =   5.21 sec
 
 The following tests FAILED:
-	628 - G46PlaygroundTransform (Exit code 0xc0000409)
+	633 - G45BrushRuntimePipeline (Exit code 0xc0000409)
 Errors while running CTest
