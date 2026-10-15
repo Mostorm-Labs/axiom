@@ -105,8 +105,6 @@ jobs:
             "axiom_ink_playground_windows",
             "axiom_ink_playground_tests",
             "axiom_ink_playground_windows_pointer_utils_tests",
-            "axiom_windows_preview_dispatch_tests",
-            "axiom_ink_playground_windows_preview_popup_tests",
             "axiom_brush_runtime_pipeline_tests",
             "axiom_render_preview_surface_tests",
             "axiom_canonical_handoff_tests",
@@ -117,7 +115,7 @@ jobs:
           $buildOutput | Tee-Object -FilePath out/g4-5-windows-qualification-build.log
           if ($buildExit -ne 0) { exit $buildExit }
           New-Item -ItemType Directory -Force out/g4-5-windows-qualification | Out-Null
-          $ctestRegex = "^(G4InkPlayground.*|G45BrushRuntimePipeline|G4WindowsPreviewDispatch|G3PreviewSurface|G4CanonicalHandoff)$"
+          $ctestRegex = "^(G4InkPlayground.*|G45BrushRuntimePipeline|G3PreviewSurface|G4CanonicalHandoff)$"
           $ctestOutput = & ctest --test-dir out/g4-5-windows -R $ctestRegex --output-on-failure --no-tests=error --output-junit out/g4-5-windows-qualification/ctest.xml 2>&1
           $ctestExit = $LASTEXITCODE
           $ctestOutput | Tee-Object -FilePath out/g4-5-windows-qualification-ctest.log

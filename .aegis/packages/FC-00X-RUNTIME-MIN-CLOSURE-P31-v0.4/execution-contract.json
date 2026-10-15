@@ -38,7 +38,8 @@
         "CMakeLists.txt",
         "runtime/*/CMakeLists.txt",
         "apps/ink_playground/CMakeLists.txt",
-        ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**"
+        ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**",
+        ".github/workflows/g4-5-programmable-brush.yml"
       ],
       "preserve_unchanged": [
         ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/**",
@@ -218,6 +219,7 @@
       "G4WindowsPreviewDispatch",
       "G4InkPlaygroundWindowsPreviewPopup"
     ],
-    "scope": "Do not build or run the legacy Arc/POC-06 Windows preview test targets; retain shared Runtime and Windows host code."
+    "scope": "Do not build or run the legacy Arc/POC-06 Windows preview test targets; retain shared Runtime and Windows host code.",
+    "authorized_ci_change": "Remove deleted legacy Arc/POC-06 Windows preview targets from the active G4.5 workflow only."
   }
 }
