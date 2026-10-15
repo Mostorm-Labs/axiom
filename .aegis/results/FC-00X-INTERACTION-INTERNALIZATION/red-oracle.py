@@ -23,4 +23,3 @@ red=any(v["baseline_defect_observed"] for v in obs.values())
 payload={"oracle":"FC-00X-INTERACTION-INTERNALIZATION-RED-v1","expect":"baseline-red","status":"RED" if red else "GREEN","observations":obs}
 print(json.dumps(payload,indent=2))
 raise SystemExit(1 if red else 0)
-
