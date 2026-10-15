@@ -9,8 +9,21 @@ RuntimeFrameCapture capture(FrameRole role, std::uint64_t frame) {
           {320.0F, 240.0F, 640, 480, 2.0F, 2.0F}, role};
 }
 
+RuntimeFrameCapture emptyDocumentCapture(FrameRole role, std::uint64_t frame) {
+  return {{ViewId{1}, FrameId{frame}, 0, 0, SurfaceGeneration{3}, MetricsGeneration{4}},
+          {320.0F, 240.0F, 640, 480, 2.0F, 2.0F}, role};
+}
+
 int main() {
   RuntimeFrameCoordinator coordinator;
+  assert(coordinator.request(emptyDocumentCapture(FrameRole::kCanonical, 1)) ==
+         RuntimeFrameDisposition::kAccepted);
+  assert(coordinator.submit(FrameRole::kCanonical, FrameId{1}, false) ==
+         RuntimeFrameDisposition::kAccepted);
+  assert(coordinator.receive({emptyDocumentCapture(FrameRole::kCanonical, 1).identity,
+                             FrameRole::kCanonical, true,
+                             RuntimePresentEvidence::kPlatformQualified}) ==
+         RuntimeFrameDisposition::kAccepted);
   assert(coordinator.request(capture(FrameRole::kPreview, 10)) == RuntimeFrameDisposition::kAccepted);
   assert(coordinator.submit(FrameRole::kPreview, FrameId{10}, true) == RuntimeFrameDisposition::kRetry);
   assert(coordinator.submit(FrameRole::kPreview, FrameId{10}, false) == RuntimeFrameDisposition::kAccepted);

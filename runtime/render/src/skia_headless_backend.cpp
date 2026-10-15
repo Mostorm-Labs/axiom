@@ -702,10 +702,13 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
     for (const auto& entry : plan.referenceDrawList.entries) {
         if (!includeInk && isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = isInkReferenceEntry(entry);
         canvas.save();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry, images, textResources, true);
         eraseMasks(canvas, entry);
+        if (isolatedInk) canvas.restore();
         canvas.restore();
     }
     canvas.restore();
@@ -788,10 +791,13 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     std::vector<semantic::ObjectKind> kinds;
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
+        const bool isolatedInk = isInkReferenceEntry(entry);
         canvas->save();
+        if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
         canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(*canvas, entry, _images, &_textResources, false, true);
         eraseMasks(*canvas, entry);
+        if (isolatedInk) canvas->restore();
         canvas->restore();
         kinds.push_back(entry.record.kind);
     }

@@ -6,8 +6,7 @@ RuntimeFrameDisposition RuntimeFrameCoordinator::request(RuntimeFrameCapture cap
   if (closed_) return RuntimeFrameDisposition::kUnavailable;
   if (capture.identity.viewId.value() == 0U ||
       capture.identity.frameId.value() == 0U || capture.identity.surfaceGeneration.value() == 0U ||
-      capture.identity.metricsGeneration.value() == 0U || capture.identity.documentRevision == 0U ||
-      capture.identity.sceneGeneration == 0U) {
+      capture.identity.metricsGeneration.value() == 0U) {
     return RuntimeFrameDisposition::kRejected;
   }
   auto& target = slot(capture.role);
