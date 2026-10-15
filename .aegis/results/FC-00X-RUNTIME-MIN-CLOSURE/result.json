@@ -3,9 +3,9 @@
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
   "stage": "P32_IMPLEMENTATION",
   "status": "READY_FOR_CONTROL_REVIEW",
-  "result_revision": "24968c2b9a3f3fd8e6e4a2afaa7c68133ad558d4",
-  "materialized_ref": "24968c2b9a3f3fd8e6e4a2afaa7c68133ad558d4",
-  "implementation_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
+  "result_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "materialized_ref": "refs/heads/codex/fc00x-runtime-minimum-closure",
+  "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
   "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json@6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "completed_slices": [
@@ -15,26 +15,38 @@
     "S3 owner-derived CanvasControlBinding availability/busy readback"
   ],
   "pending_slices": [],
-  "focused_regression": "PASS: G3HeadlessSkia, G46PlaygroundTransform, and G45BrushRuntimePipeline (3/3)",
-  "full_build": "PASS 587/587",
+  "focused_regression": "PASS: 28/28 fresh CTest regression matrix including FC00XRuntimeIsolation, G3HeadlessSkia, G46PlaygroundTransform, and G45BrushRuntimePipeline",
+  "full_build": "BLOCKED_ENVIRONMENT: full graph reaches unrelated MSVC standard-header resolution failures in existing runtime/semantic and runtime/control targets; required focused matrix is complete",
   "skia_materialization": "PASS locked Windows release archive SHA and SDK identity",
   "imgui_materialization": "PASS commit f1cc2ae15e53a861a874c3034aae6798fde194ab",
   "physical_status": "PHYSICAL_PENDING",
   "official_gate_pass": false,
   "evidence_refs": [
-    "implementation-design-preflight.json",
     "p20-red-preflight.json",
+    "implementation-design-preflight.json",
+    "repository-reconciliation.json",
+    "package-binding-preflight.json",
+    "red-preflight.json",
+    "s1-input-session.json",
+    "s2-frame-coordinator.json",
+    "s3-control-truth.json",
+    "runtime-isolation.json",
+    "render-lifecycle-regressions.json",
+    "control-regressions.json",
+    "scope-audit.json",
+    "test-inventory.json",
     "windows-build.log",
     "frozen-regressions.log",
-    "scope-audit.json"
+    "control-regressions.log"
   ],
   "remaining_blockers": [
-    "BLOCKED_ENVIRONMENT: full unrelated CMake graph hits existing MSVC /WX unreachable-code failure in runtime/semantic; not caused by this renderer change",
+    "BLOCKED_ENVIRONMENT: full unrelated CMake graph hits existing MSVC standard-header resolution failures in runtime/semantic and runtime/control; not caused by this runtime closure change",
     "PHYSICAL_PENDING: no physical host acceptance claimed"
   ],
   "nonclaims": [
     "No Gate/P34 PASS",
     "No FC-01/PX0/G4/G5 status change",
     "Android deferred"
-  ]
+  ],
+  "evidence_integrity": "package locks and exact frozen regression log SHA-256 verified"
 }

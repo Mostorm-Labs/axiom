@@ -1,0 +1,13 @@
+{
+  "schema": "fc00x-red-preflight-v1",
+  "baseline_artifact": "p20-red-preflight.json",
+  "baseline_expected_exit": 1,
+  "baseline_observed": "PASS_AT_P20_ANCHOR",
+  "candidate_replay": {
+    "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/p20-red-oracle.py --root . --expect baseline-red",
+    "exit_code": 0,
+    "interpretation": "Expected after S1/S3 repair; candidate no longer exhibits the frozen baseline defects."
+  },
+  "production_mutation_before_baseline": false,
+  "qualification": "RED preserved as historical pre-mutation evidence; post-fix green is not substituted for baseline RED."
+}

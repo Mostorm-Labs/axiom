@@ -1,0 +1,9 @@
+{
+  "schema": "fc00x-s3-control-truth-v1",
+  "obligations": ["FC00X-S3-01", "FC00X-S3-02", "FC00X-S3-03"],
+  "tests": ["PX0RuntimeFacadeContract", "PX0DebugSnapshot", "DUIM1RuntimeFacade", "DUIM1Control"],
+  "result": "PASS",
+  "assertions": ["target/context fencing", "owner-derived availability and busy readback", "leaf style merge", "receipt and confirmed state separation"],
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc"
+}

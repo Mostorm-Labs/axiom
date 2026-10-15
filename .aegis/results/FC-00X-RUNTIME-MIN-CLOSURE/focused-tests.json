@@ -1,6 +1,6 @@
 {
   "schema": "fc00x-focused-tests-v1",
-  "source_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
   "records": [
     {
       "id": "FC00X-OWNER-CLOSURE",
@@ -43,6 +43,13 @@
       "status": "PASS",
       "exit_code": 0,
       "notes": "3/3 passed after conditional ink-layer isolation; standalone legacy ink erase stays transparent, Brush-v2 and shape-overlap semantics remain intact."
+    },
+    {
+      "id": "FC00X-ISO-01",
+      "command": "ctest --test-dir C:/fc00x-runtime-build -R FC00XRuntimeIsolation --output-on-failure",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "Two RuntimeAppBinding and two RuntimeFrameCoordinator instances remain independent across source loss, source reuse, surface resize and close."
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "schema": "fc00x-control-regressions-v1",
+  "result": "PASS",
+  "count": 28,
+  "passed": 28,
+  "failed": 0,
+  "command": "ctest --test-dir C:/fc00x-runtime-build --output-on-failure -R FC00XRuntimeIsolation|FC00XFrameCoordinator|G3HeadlessSkia|G3RuntimeAppBinding|G3RenderTargetSwitching|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G46EditingOverlay|G4CanonicalHandoff|G45BrushRuntimePipeline|G46PlaygroundTransform|PX0RuntimeFacadeContract|PX0DebugSnapshot|DUIM1RuntimeFacade|DUIM1Control plus inherited input/host regressions",
+  "log": "control-regressions.log",
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "log_sha256": "2e62a3575eb538f41324cc624132f562e21e71e67e5c3e2d258fe6a70766f727",
+  "log_bytes": 3346,
+  "verification_status": "PASS: 28/28 exact frozen matrix"
+}

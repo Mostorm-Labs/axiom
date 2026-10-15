@@ -1,0 +1,9 @@
+{
+  "schema": "fc00x-s1-input-session-v1",
+  "obligations": ["FC00X-S1-01", "FC00X-S1-02"],
+  "tests": ["G3RuntimeAppBinding", "C1CommonIngress", "G4PlatformNormalization", "G4MultiContactCoordinator", "G4InkPlaygroundSelection"],
+  "result": "PASS",
+  "observed": ["keyed source cancel delivered to SessionCancelSink", "source generation increments after reuse", "late/source-loss path leaves no cross-source cancel", "multi-contact normalization preserved"],
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc"
+}
