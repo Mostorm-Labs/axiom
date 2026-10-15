@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "stage": "P31_TASK_PACKAGING",
+  "authority_status": "CURRENT_REPO_LOCAL_ACCEPTED_INPUT",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "source_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "source_manifest_sha256": "2806d617e086b9294cf8b174de54ccbe29d022805393b1f9f832879416aa84b2"
+  },
+  "trusted_authorities": [
+    {
+      "id": "g2-canonical-main",
+      "scope": "gate:G2/runtime-foundation",
+      "status": "Current",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "materialized_path": ".aegis/packages/GT-G3-00/authority.lock.json",
+      "materialized_sha256": "7ca1477afcc23f59b4f4e4d8c8bd0228f4ffcf2f2c81d029aa427d99857288d5",
+      "constraints": [
+        "one RuntimeScene owner",
+        "atomic publication",
+        "no duplicate canonical scene"
+      ]
+    },
+    {
+      "id": "g3-capability-authority",
+      "scope": "capability:G3/basic-canonical-canvas",
+      "status": "Current",
+      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+      "materialized_path": ".aegis/packages/GT-G3-03/authority.lock.json",
+      "materialized_sha256": "44f3a70e0e8e3968b59993ab5ee51c3510fc59ff00e03db8f5afb2b5b19b45c9",
+      "constraints": [
+        "RenderTarget/RenderFrame ownership",
+        "per-view RenderCore",
+        "platform owns acquire and present"
+      ]
+    },
+    {
+      "id": "g4-capability-authority-v0.3",
+      "scope": "capability:G4/interaction-ink",
+      "status": "Current",
+      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "materialized_path": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "materialized_sha256": "19f37395b0d7b506059b730c6ee5dc38a9f9ee5466d91f5d5363d32818fc2bf8",
+      "constraints": [
+        "InteractionRuntime/InputRouter/Session owners",
+        "PreviewModel and CanonicalVisible handoff",
+        "Selection/Transform/Eraser/EditorHistory ownership",
+        "no duplicate canonical write path",
+        "no invented partial erase strategy"
+      ]
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "scope": "execution:FC/feature-completion",
+      "status": "Current",
+      "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
+      "materialized_path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+      "materialized_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+      "constraints": [
+        "FC-00 precedes FC-01",
+        "each FC task needs own P20/P31 and independent DEV review",
+        "no FC-01 authorization from this package",
+        "no historical Gate/Evidence rewrite"
+      ]
+    }
+  ],
+  "previous_package": {
+    "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+    "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+    "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/package.json@f2fcc0e3152337cf88caee7ba7afa0306389d6da",
+    "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+    "result_ref": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/result.json",
+    "review_findings_ref": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p35-defect-classification.json",
+    "materialized_result_branch_head": "965612f6a37e102e94c2d2fa1120ff9d9a9e1565",
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "findings": [
+      "full graph BLOCKED_ENVIRONMENT due existing MSVC header failures",
+      "physical host observation PHYSICAL_PENDING",
+      "no implementation defect; P35 required false"
+    ]
+  },
+  "frozen_constraints": [
+    "Keep one Document, one View, one Session owner set, one Frame owner and one RuntimeScene per View.",
+    "Runtime is manual-poll/single-owner and creates no OS thread or system message loop.",
+    "Platform adapters own native decoding, capture, surface/GPU acquire/present/context and report facts.",
+    "Runtime owns PointerKey identity, session lifecycle, preview/canonical handoff qualification, control fences and owner readback.",
+    "Do not add ObjectKind, FieldId, OperationKind, Protobuf tag, canonical serializer/golden or public C ABI.",
+    "Do not modify FC-01, PX0, G4.6/G4.7 or historical Gate/Evidence/Integration records."
+  ]
+}
