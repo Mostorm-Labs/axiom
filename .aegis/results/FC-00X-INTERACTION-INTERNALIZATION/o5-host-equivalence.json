@@ -1,6 +1,9 @@
 {
-  "schema": "fc00x-o5-host-equivalence-v1",
-  "status": "BLOCKED_ENVIRONMENT",
-  "minimal_host": "not yet materialized; no second host truth added",
-  "blocker": "Windows/Ink Playground graph cannot configure because .deps/imgui is absent; locked Skia/Semantic profiles are not materialized."
+  "schema": "fc00x-o5-host-equivalence-v2",
+  "status": "PASS_FOCUSED",
+  "minimal_host": "apps/minimal_runtime_host",
+  "minimal_host_ctest": "FC00XMinimalRuntimeHost PASS",
+  "adapter_contract": "Windows/Web Playground artifacts built",
+  "protected_path_audit": "PASS",
+  "physical_status": "PHYSICAL_PENDING"
 }

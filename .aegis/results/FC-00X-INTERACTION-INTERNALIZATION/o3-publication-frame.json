@@ -1,6 +1,6 @@
 {
-  "schema": "fc00x-o3-publication-frame-v1",
-  "status": "PARTIAL",
+  "schema": "fc00x-o3-publication-frame-v2",
+  "status": "PASS_FOCUSED",
   "preserved_owners": [
     "OperationEngine",
     "EditorHistory",
@@ -9,5 +9,12 @@
     "PreviewSurfaceController",
     "CanonicalHandoff"
   ],
-  "notes": "Web direct platform commit/cancel removed; full frame build blocked by missing SDKs."
+  "tests": [
+    "FC00XFrameCoordinator PASS",
+    "G3PreviewSurface PASS",
+    "G3SurfacePresentation PASS",
+    "G4CanonicalHandoff PASS",
+    "G46EditingOverlay PASS"
+  ],
+  "notes": "Windows/Web builds completed with shared Runtime path."
 }

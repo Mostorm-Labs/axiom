@@ -1,10 +1,13 @@
 {
-  "schema": "fc00x-o1-input-identity-v1",
-  "status": "PASS_FOCUSED",
+  "schema": "fc00x-o1-input-identity-v2",
+  "status": "PASS_FOCUSED_AND_MATRIX",
   "evidence": [
-    "existing PlatformInteractionIngress and InputRouter retain PointerKey source/pointer/generation",
-    "C0CanvasInteractionCoordinator PASS"
+    "PlatformInteractionIngress source/pointer/generation preservation",
+    "G4InputRouter PASS",
+    "G4MultiPointerFoundation PASS",
+    "C1CommonIngress PASS",
+    "C1CrossPlatformFixtureParity PASS",
+    "FC00XMinimalRuntimeHost PASS"
   ],
-  "test": "ctest tmp-build-fc00x -R ^C0CanvasInteractionCoordinator$",
-  "notes": "Full cross-source matrix remains required after package implementation."
+  "notes": "PointerKey remains the normalized identity; source loss and late generation handling remain in Runtime ingress."
 }

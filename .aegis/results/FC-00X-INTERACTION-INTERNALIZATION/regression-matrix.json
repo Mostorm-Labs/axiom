@@ -1,27 +1,26 @@
 {
-  "schema": "fc00x-regression-matrix-v1",
-  "status": "PARTIAL",
-  "tests": [
-    {
-      "id": "C0CanvasInteractionCoordinator",
-      "command": "ctest --test-dir D:/GitRepos/mostorm-labs/canvas/tmp-build-fc00x -R ^C0CanvasInteractionCoordinator$ --output-on-failure",
-      "status": "PASS",
-      "result": "1/1"
-    },
-    {
-      "id": "interaction_internalization_contract_test",
-      "command": "python contract test runner",
-      "status": "PASS",
-      "result": "3/3"
-    },
-    {
-      "id": "host_translation_unit",
-      "command": "MSVC 19.51 cl ink_playground_host.cpp",
-      "status": "PASS",
-      "result": "exit 0"
-    }
+  "schema": "fc00x-regression-matrix-v3",
+  "status": "PASS_WINDOWS_WEB_BUILD",
+  "tests": {
+    "windows_frozen_targets": "36/36 PASS (35 package targets + FC00XMinimalRuntimeHost)",
+    "web_playground_debug_on": "BUILD PASS",
+    "red_baseline": "RED expected exit 1",
+    "current_source_contract": "PASS",
+    "contract_runner": "PASS",
+    "web_playground_debug_off": "BUILD PASS"
+  },
+  "commands": [
+    "ctest --test-dir out/g3-windows-release -R frozen-matrix --output-on-failure",
+    "python apps/ink_playground/tests/interaction_internalization_contract_test.py",
+    "cmake --build out/g3-web-release (AXIOM_BUILD_DEBUG_UI=ON, CANVAS_BUILD_INK_PLAYGROUND=ON)",
+    "cmake --build out/g3-web-release (AXIOM_BUILD_DEBUG_UI=OFF, CANVAS_BUILD_INK_PLAYGROUND=ON)"
   ],
-  "blocked_tests": [
-    "Windows/Web build and full host matrix: missing .deps/imgui, Skia and Emscripten SDK materialization"
-  ]
+  "logs": [
+    "out/fc00x-windows-ctest-final.log",
+    "out/fc00x-contract.log",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.wasm"
+  ],
+  "android": "DEFERRED_NOT_BLOCKING",
+  "physical_status": "PHYSICAL_PENDING"
 }
