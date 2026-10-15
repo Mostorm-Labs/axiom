@@ -603,6 +603,35 @@ bool isInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
            std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
 }
 
+bool isDrawableNonInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    // Group entries describe traversal only and have no pixels of their own.
+    // They must not force an ink layer, otherwise kClear erases composite
+    // against the layer's opaque backdrop in an ink-only frame.
+    return entry.contributesPixels && !isInkReferenceEntry(entry) &&
+           !std::holds_alternative<GroupReferenceCommand>(entry.command);
+}
+
+bool isBrushReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    return std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+}
+
+bool hasNonIdentityTransform(const ReferenceTraversalEntry& entry) noexcept {
+    const auto& transform = entry.record.transform;
+    return transform.a != 1.0 || transform.b != 0.0 || transform.c != 0.0 ||
+           transform.d != 1.0 || transform.tx != 0.0 || transform.ty != 0.0;
+}
+
+bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
+                           bool hasDrawableNonInk) noexcept {
+    // BrushSession canonical content has always used the opaque white target
+    // semantics. Preserve that behavior even for an ink-only frame. Legacy
+    // VectorStroke/DabStroke content uses direct kClear when it is standalone,
+    // but needs isolation when a real shape/image/etc. is underneath it.
+    return hasDrawableNonInk && isInkReferenceEntry(entry) ||
+           (isBrushReferenceEntry(entry) && !hasNonIdentityTransform(entry));
+}
+
 std::string digest(const std::vector<std::uint8_t>& bytes) {
     std::uint64_t value = 0xcbf29ce484222325ULL;
     for (std::uint8_t byte : bytes) { value ^= byte; value *= 0x100000001b3ULL; }
@@ -700,9 +729,12 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
         if (!includeInk && isInkReferenceEntry(entry)) continue;
-        const bool isolatedInk = isInkReferenceEntry(entry);
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
@@ -722,12 +754,18 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
         if (!isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
         canvas.save();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry, images, textResources, true);
         eraseMasks(canvas, entry);
+        if (isolatedInk) canvas.restore();
         canvas.restore();
     }
     canvas.restore();
@@ -788,10 +826,13 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     scaleToDevice(*canvas, plan.frame.metrics);
     canvas->clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
     std::vector<semantic::ObjectKind> kinds;
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool isolatedInk = isInkReferenceEntry(entry);
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
         canvas->save();
         if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
         canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));

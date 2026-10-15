@@ -447,6 +447,23 @@ void fractionalLocalEraseMaskIsRendered() {
     assert(pixel(*backend.observation(), 15U, 20U) == (Rgba{255U, 0U, 0U, 255U}));
 }
 
+void standaloneInkEraseRemainsTransparentOnOpaqueSurface() {
+    const FrameState frame = fixtureFrame(FrameId{915});
+    auto ink = vectorStrokeEntry();
+    ink.record.eraseMasks = {{ObjectId::fromUint64(1504U),
+        canvas::semantic::FilledPathMask{rectanglePath(12.0, 46.0, 12.0, 4.0)}}};
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {std::move(ink)};
+    list.candidatesExamined = 1U;
+    list.visibleRecords = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    SkiaHeadlessBackend backend(HeadlessRasterConfig{256U, 256U, 0xffffffffU});
+    assert(backend.submit(FramePlan{frame, list}).code == BackendSubmissionCode::kAccepted);
+    const auto& observation = *backend.observation();
+    assert(pixel(observation, 16U, 48U)[3] == 0U);
+    assert(pixel(observation, 8U, 48U)[3] == 255U);
+}
+
 void orthogonalConnectorUsesDeterministicElbow() {
     const FrameState frame = fixtureFrame(FrameId{916});
     ReferenceTraversalEntry entry = connectorEntry();
@@ -741,6 +758,7 @@ int main(int argc,char** argv) {
     transformClipAndEraseAreObservable();
     sweptCircleEraseMaskIsRendered();
     fractionalLocalEraseMaskIsRendered();
+    standaloneInkEraseRemainsTransparentOnOpaqueSurface();
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
     productionRendererAcceptsFractionalSnapBounds();
