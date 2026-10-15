@@ -248,8 +248,15 @@ interaction::DispatchMode InkPlaygroundHost::dispatchMode() const noexcept {
 }
 
 bool InkPlaygroundHost::selection(const input::PointerSample& sample) noexcept {
-  return sample.predicted || selectionPointer(sample.key.pointer, sample.phase,
-                                               sample.x, sample.y);
+  // Selection releases may legitimately reject their canonical commit (for
+  // example when the operation-id frontier is exhausted) while the platform
+  // input batch itself remains accepted.  The pre-dispatch Host path ignored
+  // that commit result; keep the same boundary after routing through the
+  // shared Runtime so a rejected no-op release cannot poison the input lane.
+  if (!sample.predicted) {
+    (void)selectionPointer(sample.key.pointer, sample.phase, sample.x, sample.y);
+  }
+  return true;
 }
 
 bool InkPlaygroundHost::creation(const input::PointerSample& sample) noexcept {
