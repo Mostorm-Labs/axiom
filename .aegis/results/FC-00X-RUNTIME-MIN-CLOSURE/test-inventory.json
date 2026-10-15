@@ -1,9 +1,16 @@
 {
-  "schema": "fc00x-test-inventory-v1",
+  "schema": "fc00x-test-inventory-v2",
   "build_directory": "C:/fc00x-runtime-build",
   "required_matrix_discovered": 28,
   "required_matrix_passed": 28,
   "unmatched_required_names": [],
   "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
-  "inventory_log": "test-inventory.log"
+  "inventory_log": "test-inventory.log",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "package_commit": "a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
+  "excluded_legacy_names": [
+    "G4WindowsPreviewDispatch",
+    "G4InkPlaygroundWindowsPreviewPopup"
+  ],
+  "legacy_names_discovered": 0
 }

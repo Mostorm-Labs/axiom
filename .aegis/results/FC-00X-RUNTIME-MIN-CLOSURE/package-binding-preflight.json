@@ -1,21 +1,20 @@
 {
-  "schema": "fc00x-package-binding-preflight-v1",
-  "package_path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json",
-  "package_commit": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
-  "package_sha256": "C51523C7A0872744C7284F5EB97ADC5CAA7FBC304A2DEE6F69052FFDB5CADE3B",
+  "schema": "fc00x-package-binding-preflight-v2",
+  "package_path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/package.json",
+  "package_commit": "a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
+  "package_sha256": "F431D770D1D8D30D11DD3B638AD0073E86AD343C331266864A6551A7846EE346",
   "authority_lock_sha256": "B9C620C5C0977D7E99DBD8F7690599758344D195674408C25071D21878C8101A",
-  "verification_lock_sha256": "F3D72C50EAB43460C97C359DDF96A197BB3747062816A76E22947B668FEB1C69",
-  "execution_contract_sha256": "00A886BD0F33A33B39DD466008B07B78761DD56B3D32D61D3BC17C56CF5BF08E",
-  "implementation_context_sha256": "E79834577130FA22F27BB1BA7F9EA3FCB6B3B11A9C917FE79A082F92CEEECB83",
-  "evidence_contract_sha256": "FDEAFF4C9BAA2E49DA9EC5D4E371D4D5D3F6A1E33990D0D7F32AF412D5B525E0",
+  "verification_lock_sha256": "B2727D7E01E9ABC1B0F9386DF8697B654BE00898ABE9446E38D3B65E0B1F2370",
+  "execution_contract_sha256": "9C31E9F843DA85812511DF8A02BC2EAEDADCBCF1343F2C3E56E010B76717D920",
+  "implementation_context_sha256": "B9411B54DD35A34427E848CD7651D204BF256D13ACE22C4D65A1D7423A7526CE",
+  "evidence_contract_sha256": "49109BA12FBB86226CC3572A5D3855F8D4A9013DC2D60A79C6F1AE7D5375ACC0",
   "repository_identity": "PASS",
   "anchor_relation": "PASS",
   "scope_binding": "PASS",
   "lock_verification": {
     "package.json": {
-      "sha256": "c51523c7a0872744c7284f5eb97adc5caa7fbc304a2dee6f69052ffdb5cade3b",
-      "bytes": 3499,
-      "status": "PASS"
+      "sha256": "f431d770d1d8d30d11dd3b638ad0073e86ad343c331266864a6551a7846ee346",
+      "bytes": 4449
     },
     "authority.lock.json": {
       "sha256": "b9c620c5c0977d7e99dbd8f7690599758344d195674408c25071d21878c8101a",
@@ -24,37 +23,35 @@
       "status": "PASS"
     },
     "verification.lock.json": {
-      "sha256": "f3d72c50eab43460c97c359ddf96a197bb3747062816a76e22947b668feb1c69",
-      "bytes": 10071,
-      "expected_sha256": "f3d72c50eab43460c97c359ddf96a197bb3747062816a76e22947b668feb1c69",
+      "sha256": "b2727d7e01e9abc1b0f9386df8697b654be00898abe9446e38d3b65e0b1f2370",
+      "bytes": 10539,
+      "expected_sha256": "b2727d7e01e9abc1b0f9386df8697b654be00898abe9446e38d3b65e0b1f2370",
       "status": "PASS"
     },
     "execution-contract.json": {
-      "sha256": "00a886bd0f33a33b39dd466008b07b78761dd56b3d32d61d3bc17c56cf5bf08e",
-      "bytes": 12240,
-      "expected_sha256": "00a886bd0f33a33b39dd466008b07b78761dd56b3d32d61d3bc17c56cf5bf08e",
+      "sha256": "9c31e9f843da85812511df8a02bc2eaedadcbcf1343f2c3e56e010b76717d920",
+      "bytes": 12866,
+      "expected_sha256": "9c31e9f843da85812511df8a02bc2eaedadcbcf1343f2c3e56e010b76717d920",
       "status": "PASS"
     },
     "implementation-context.md": {
-      "sha256": "e79834577130fa22f27bb1ba7f9ea3fcb6b3b11a9c917fe79a082f92ceeecb83",
-      "bytes": 4554,
-      "expected_sha256": "e79834577130fa22f27bb1ba7f9ea3fcb6b3b11a9c917fe79a082f92ceeecb83",
+      "sha256": "b9411b54dd35a34427e848cd7651d204bf256d13ace22c4d65a1d7423a7526ce",
+      "bytes": 4982,
+      "expected_sha256": "b9411b54dd35a34427e848cd7651d204bf256d13ace22c4d65a1d7423a7526ce",
       "status": "PASS"
     },
     "evidence-contract.json": {
-      "sha256": "fdeaff4c9baa2e49da9ec5d4e371d4d5d3f6a1e33990d0d7f32af412d5b525e0",
-      "bytes": 2381,
-      "expected_sha256": "fdeaff4c9baa2e49da9ec5d4e371d4d5d3f6a1e33990d0d7f32af412d5b525e0",
+      "sha256": "49109ba12fbb86226cc3572a5d3855f8d4a9013dc2d60a79c6f1ae7d5375acc0",
+      "bytes": 2683,
+      "expected_sha256": "49109ba12fbb86226cc3572a5d3855f8d4a9013dc2d60a79c6f1ae7d5375acc0",
       "status": "PASS"
     }
   },
-  "verified_at_source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
-  "verification_status": "PASS",
-  "p20_correction_source_verification": {
-    "revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
-    "path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/package.json",
-    "sha256": "9f1e73dc1cd919d9cb2f31a0e12f005af26e5bddf917b0632ad4259c69198fdd",
-    "expected_sha256": "9f1e73dc1cd919d9cb2f31a0e12f005af26e5bddf917b0632ad4259c69198fdd",
-    "status": "PASS"
-  }
+  "correction_type": "TASK_PACKAGE_CORRECTION",
+  "supersedes_package": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.3",
+  "removed_legacy_tests": [
+    "G4WindowsPreviewDispatch",
+    "G4InkPlaygroundWindowsPreviewPopup"
+  ],
+  "verification_status": "PASS"
 }

@@ -1,12 +1,12 @@
 {
-  "schema": "fc00x-runtime-min-closure-result-v0.1",
+  "schema": "fc00x-runtime-min-closure-result-v0.2",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
   "stage": "P32_IMPLEMENTATION",
   "status": "READY_FOR_CONTROL_REVIEW",
   "result_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
   "materialized_ref": "refs/heads/codex/fc00x-runtime-minimum-closure",
   "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
-  "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31/package.json@6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/package.json@a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
   "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
   "completed_slices": [
     "S0 ImplementationDesignPreflight",
@@ -15,8 +15,8 @@
     "S3 owner-derived CanvasControlBinding availability/busy readback"
   ],
   "pending_slices": [],
-  "focused_regression": "PASS: 28/28 fresh CTest regression matrix including FC00XRuntimeIsolation, G3HeadlessSkia, G46PlaygroundTransform, and G45BrushRuntimePipeline",
-  "full_build": "BLOCKED_ENVIRONMENT: full graph reaches unrelated MSVC standard-header resolution failures in existing runtime/semantic and runtime/control targets; required focused matrix is complete",
+  "focused_regression": "PASS: 28/28 corrected FC-00X matrix; legacy POC-06/Arc Windows preview tests excluded by corrected package",
+  "full_build": "BLOCKED_ENVIRONMENT: existing MSVC standard-header resolution failures after CMake reconfigure; focused matrix remains complete",
   "skia_materialization": "PASS locked Windows release archive SHA and SDK identity",
   "imgui_materialization": "PASS commit f1cc2ae15e53a861a874c3034aae6798fde194ab",
   "physical_status": "PHYSICAL_PENDING",
@@ -37,10 +37,11 @@
     "test-inventory.json",
     "windows-build.log",
     "frozen-regressions.log",
-    "control-regressions.log"
+    "control-regressions.log",
+    "p36-poc06-test-removal.json"
   ],
   "remaining_blockers": [
-    "BLOCKED_ENVIRONMENT: full unrelated CMake graph hits existing MSVC standard-header resolution failures in runtime/semantic and runtime/control; not caused by this runtime closure change",
+    "BLOCKED_ENVIRONMENT: full/incremental graph reaches existing MSVC standard-header resolution failures; not caused by POC-06 test removal",
     "PHYSICAL_PENDING: no physical host acceptance claimed"
   ],
   "nonclaims": [
@@ -48,5 +49,5 @@
     "No FC-01/PX0/G4/G5 status change",
     "Android deferred"
   ],
-  "evidence_integrity": "package locks and exact frozen regression log SHA-256 verified"
+  "evidence_integrity": "corrected P31 package locks, deletion scope and exact 28-test log SHA-256 verified"
 }

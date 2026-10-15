@@ -1,5 +1,5 @@
 {
-  "schema": "fc00x-scope-audit-v2",
+  "schema": "fc00x-scope-audit-v3",
   "anchor": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
   "current_head": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
   "merge_base": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
@@ -23,5 +23,25 @@
     "apps/ink_playground/common/ink_playground_host.hpp",
     "runtime/render/CMakeLists.txt",
     "runtime/render/tests/runtime_isolation_test.cpp"
+  ],
+  "package_correction_commit": "a277eaf6",
+  "legacy_poc06_tests_removed": [
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    "apps/ink_playground/tests/windows_preview_popup_test.cpp"
+  ],
+  "legacy_poc06_ctest_names_removed": [
+    "G4WindowsPreviewDispatch",
+    "G4InkPlaygroundWindowsPreviewPopup"
+  ],
+  "historical_results_modified": false,
+  "git_diff_check": "PASS",
+  "correction_scope": "PASS",
+  "authorized_correction_paths": [
+    ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/**",
+    ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**",
+    ".github/workflows/g4-5-programmable-brush.yml",
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    "apps/ink_playground/tests/windows_preview_popup_test.cpp"
   ]
 }

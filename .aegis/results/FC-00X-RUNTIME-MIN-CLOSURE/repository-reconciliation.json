@@ -1,5 +1,5 @@
 {
-  "schema": "fc00x-repository-reconciliation-v1",
+  "schema": "fc00x-repository-reconciliation-v2",
   "repository": "Mostorm-Labs/axiom",
   "branch": "codex/fc00x-runtime-minimum-closure",
   "anchor": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
@@ -9,5 +9,10 @@
   "ancestry": "PASS",
   "working_tree": "CLEAN_BEFORE_EVIDENCE_MATERIALIZATION",
   "protected_fc01_and_historical_controls": "UNCHANGED",
-  "git_diff_check": "PASS"
+  "git_diff_check": "PASS",
+  "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "package_correction_commit": "a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
+  "materialized_ref": "refs/heads/codex/fc00x-runtime-minimum-closure",
+  "correction_scope": "PASS",
+  "legacy_poc06_tests_removed": "PASS"
 }

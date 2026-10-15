@@ -1,5 +1,5 @@
 {
-  "schema": "fc00x-control-regressions-v1",
+  "schema": "fc00x-control-regressions-v2",
   "result": "PASS",
   "count": 28,
   "passed": 28,
@@ -8,7 +8,10 @@
   "log": "control-regressions.log",
   "provider": "C:/fc00x-runtime-build",
   "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
-  "log_sha256": "2e62a3575eb538f41324cc624132f562e21e71e67e5c3e2d258fe6a70766f727",
+  "log_sha256": "8f89b52cf74ac6273a53949bebde316cc437e1f00d0bf29e4524cfc043ebdff6",
   "log_bytes": 3346,
-  "verification_status": "PASS: 28/28 exact frozen matrix"
+  "verification_status": "PASS: 28/28 corrected frozen matrix",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "package_commit": "a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
+  "legacy_poc06_tests": "EXCLUDED_BY_CORRECTED_P31"
 }

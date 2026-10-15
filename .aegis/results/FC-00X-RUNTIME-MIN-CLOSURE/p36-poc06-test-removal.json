@@ -1,0 +1,35 @@
+{
+  "schema": "fc00x-poc06-test-removal-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P36_REVERIFY",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "package_commit": "a277eaf6f08052ba4f6cc27d568ed4857b8337c4",
+  "removed_files": [
+    "apps/ink_playground/tests/windows_preview_dispatch_test.cpp",
+    "apps/ink_playground/tests/windows_preview_popup_test.cpp"
+  ],
+  "removed_ctest_names": [
+    "G4WindowsPreviewDispatch",
+    "G4InkPlaygroundWindowsPreviewPopup"
+  ],
+  "removed_targets": [
+    "axiom_windows_preview_dispatch_tests",
+    "axiom_ink_playground_windows_preview_popup_tests"
+  ],
+  "reason": "Legacy POC-06/Arc Windows preview tests are outside FC-00X shared Runtime S0-S3 closure.",
+  "retained": [
+    "arc/**",
+    "apps/ink_playground/platform/windows/**",
+    "apps/ink_playground/common/**",
+    "runtime/**",
+    "historical .aegis/results/GT-*/**"
+  ],
+  "verification": {
+    "cmake_reconfigure": "PASS",
+    "ctest_legacy_names": "0 tests discovered",
+    "corrected_matrix": "28/28 PASS",
+    "full_incremental_build": "BLOCKED_ENVIRONMENT existing MSVC standard-header resolution failures"
+  },
+  "historical_results_modified": false,
+  "official_gate_pass": false
+}
