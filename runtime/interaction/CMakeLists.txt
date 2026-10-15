@@ -4,6 +4,7 @@ add_library(canvas_runtime_interaction STATIC
     src/editor_session.cpp
     src/hit_test_service.cpp
     src/interaction_runtime.cpp
+    src/interaction_dispatch_runtime.cpp
     src/selection_session.cpp
     src/transform_session.cpp
     src/transform_handle_drag.cpp

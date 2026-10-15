@@ -218,6 +218,7 @@ InkPlaygroundHost::InkPlaygroundHost()
           render::SurfaceMetrics{1.0F, 1.0F, 1, 1, 1.0F, 1.0F}})),
       tracker_(std::make_unique<render::PresentationTracker>(*lifecycle_)),
       coordinator_(std::make_unique<interaction::CanvasInteractionCoordinator>()),
+      dispatchRuntime_(*this),
       viewportController_(std::make_unique<interaction::ViewportInteractionController>()),
       appBinding_(std::make_unique<render::RuntimeAppBinding>(
           render::ViewId{1}, render::SurfaceProfile{
@@ -235,6 +236,85 @@ InkPlaygroundHost::InkPlaygroundHost()
       sceneCompiler_(std::make_unique<PlaygroundSceneCompiler>(*runtimeSceneHost_)),
       history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
+}
+
+interaction::DispatchMode InkPlaygroundHost::dispatchMode() const noexcept {
+  if (selectionMode_) return interaction::DispatchMode::kSelection;
+  if (creationMode_ || creationActive()) return interaction::DispatchMode::kCreation;
+  if (panTool_) return interaction::DispatchMode::kPan;
+  if (toolMode_ == ToolMode::kObjectEraser) return interaction::DispatchMode::kObjectEraser;
+  if (toolMode_ == ToolMode::kPartialEraser) return interaction::DispatchMode::kPartialEraser;
+  return interaction::DispatchMode::kBrush;
+}
+
+bool InkPlaygroundHost::selection(const input::PointerSample& sample) noexcept {
+  return sample.predicted || selectionPointer(sample.key.pointer, sample.phase,
+                                               sample.x, sample.y);
+}
+
+bool InkPlaygroundHost::creation(const input::PointerSample& sample) noexcept {
+  return sample.predicted || creationPointer(sample.key, sample.phase, sample.x, sample.y);
+}
+
+bool InkPlaygroundHost::pan(const input::PointerSample& sample) noexcept {
+  if (!sample.key.valid()) return false;
+  if (sample.phase == input::PointerPhase::kDown) {
+    panPointers_[sample.key.pointer] = {sample.x, sample.y};
+    return true;
+  }
+  if (sample.phase == input::PointerPhase::kMove) {
+    const auto it = panPointers_.find(sample.key.pointer);
+    if (it == panPointers_.end()) return true;
+    const float dx = sample.x - it->second.first;
+    const float dy = sample.y - it->second.second;
+    if ((dx != 0.0F || dy != 0.0F) && !applyViewportNavigation(
+            {interaction::ViewportNavigationKind::kWheelPan, -dx, -dy,
+             sample.x, sample.y, 1.0F})) return false;
+    it->second = {sample.x, sample.y};
+    return true;
+  }
+  if (sample.phase == input::PointerPhase::kUp ||
+      sample.phase == input::PointerPhase::kCancel) {
+    panPointers_.erase(sample.key.pointer);
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::brush(const input::PointerSample& sample) noexcept {
+  if (!sample.key.valid()) return false;
+  if (sample.phase == input::PointerPhase::kDown && !sample.predicted) {
+    const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
+        : selectedBrushProfile_ == "marker-flat-v1" ? 2U
+        : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
+    return beginBrushSession(sample.key.pointer, profile);
+  }
+  if (sample.phase != input::PointerPhase::kCancel) {
+    if (!appendBrushSample(sample.key.pointer, sample.x, sample.y, sample.pressure,
+                           sample.sequence, sample.predicted, false)) return false;
+  }
+  if (sample.phase == input::PointerPhase::kUp && !sample.predicted) {
+    return finishBrushSession(sample.key.pointer);
+  }
+  if (sample.phase == input::PointerPhase::kCancel && !sample.predicted) {
+    (void)cancelBrushSession(sample.key.pointer);
+  }
+  return true;
+}
+
+bool InkPlaygroundHost::eraser(const input::PointerSample& sample) noexcept {
+  if (!sample.key.valid()) return false;
+  if (sample.phase == input::PointerPhase::kDown && !sample.predicted &&
+      !eraserBegin(sample.key.pointer)) return false;
+  if (sample.phase != input::PointerPhase::kCancel &&
+      !eraserSample(sample.key.pointer, sample.x, sample.y,
+                    sample.phase != input::PointerPhase::kUp)) return false;
+  if (sample.phase == input::PointerPhase::kUp && !sample.predicted) {
+    return eraserFinish(sample.key.pointer);
+  }
+  if (sample.phase == input::PointerPhase::kCancel && !sample.predicted) {
+    (void)eraserCancel(sample.key.pointer);
+  }
+  return true;
 }
 
 bool InkPlaygroundHost::configureTextResources(std::vector<std::uint8_t> latin,
@@ -502,17 +582,10 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       !appBinding_->registerInputSource({source, "platform"})) return false;
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
-  if (selectionMode_) {
+  if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routed.normalized.samples) {
-      if (!sample.predicted) (void)selectionPointer(sample.key.pointer, sample.phase, sample.x, sample.y);
-    }
-    if (routed.terminalCancel) cancelSelectionTransform();
-    return routed.accepted || routed.terminalCancel;
-  }
-  if (creationMode_ || creationActive()) {
-    for (const auto& sample : routed.normalized.samples) {
-      if (!sample.key.valid() || sample.predicted) continue;
-      if (!creationPointer(sample.key, sample.phase, sample.x, sample.y)) return false;
+      if (!sample.key.valid()) continue;
+      if (!dispatchRuntime_.submit(sample)) return false;
     }
     if (routed.terminalCancel) cancelAllPointers();
     return routed.accepted || routed.terminalCancel;
@@ -557,17 +630,6 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
       (void)cancelBrushSession(sample.key.pointer);
       continue;
     }
-    if (sample.phase == input::PointerPhase::kDown && routing.routesToInk) {
-      if (toolMode_ != ToolMode::kBrush) {
-        if (!eraserBegin(sample.key.pointer)) return false;
-        // Let the down sample publish the initial eraser footprint below.
-      } else {
-        const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
-            : selectedBrushProfile_ == "marker-flat-v1" ? 2U
-            : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
-        if (!beginBrushSession(sample.key.pointer, profile)) { AXIOM_ANDROID_DIAG("begin failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
-      }
-    }
     if (sample.phase == input::PointerPhase::kDown) {
       baselineDownTimestamps_[sample.key] = sample.timestampNs;
     }
@@ -597,30 +659,12 @@ bool InkPlaygroundHost::acceptPlatformBatch(const input::PlatformPointerBatch& b
                                  viewportController_->state().scale,
                                  viewportController_->state().translationX,
                                  viewportController_->state().translationY});
-    if (routing.routesToInk && toolMode_ == ToolMode::kBrush && sample.phase != input::PointerPhase::kCancel) {
-      if (!appendBrushSample(sample.key.pointer, routing.routedSample.x,
-                             routing.routedSample.y, sample.pressure,
-                             sample.sequence, sample.predicted, false)) { AXIOM_ANDROID_DIAG("append failed pointer=%llu seq=%llu phase=%d", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence), static_cast<int>(sample.phase)); return false; }
+    if (routing.routesToInk) {
+      if (!dispatchRuntime_.submit(routing.routedSample)) return false;
       previewDirty = true;
     }
-    if (routing.routesToInk && toolMode_ != ToolMode::kBrush &&
-        sample.phase != input::PointerPhase::kCancel) {
-      // Pointer-up contributes the final canonical erase point, but must not
-      // submit a second transient frame immediately before the canonical
-      // handoff. That last preview/retire pair is the one-frame flash seen on
-      // Windows when the overlay compositor races the canonical present.
-      const bool renderPreview = sample.phase != input::PointerPhase::kUp;
-      if (!eraserSample(sample.key.pointer, routing.routedSample.x,
-                        routing.routedSample.y, renderPreview)) return false;
-    }
-    if (sample.phase == input::PointerPhase::kUp) {
-      if (brushSessions_.contains(sample.key.pointer) &&
-          !finishBrushSession(sample.key.pointer)) { AXIOM_ANDROID_DIAG("finish failed pointer=%llu seq=%llu", static_cast<unsigned long long>(sample.key.pointer), static_cast<unsigned long long>(sample.sequence)); return false; }
-      if (eraserTraces_.contains(sample.key.pointer) && !eraserFinish(sample.key.pointer)) return false;
-      baselineDownTimestamps_.erase(sample.key);
-    } else if (sample.phase == input::PointerPhase::kCancel) {
-      (void)cancelBrushSession(sample.key.pointer);
-      (void)eraserCancel(sample.key.pointer);
+    if (sample.phase == input::PointerPhase::kUp ||
+        sample.phase == input::PointerPhase::kCancel) {
       baselineDownTimestamps_.erase(sample.key);
     }
   }

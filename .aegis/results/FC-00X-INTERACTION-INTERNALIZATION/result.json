@@ -1,0 +1,46 @@
+{
+  "schema": "fc00x-interaction-internalization-result-v1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "BLOCKED_ENVIRONMENT",
+  "result_revision": "PENDING_COMMIT",
+  "starting_revision": "bb38a2bf46d825989443bb28da878846efc44477",
+  "package_ref": ".aegis/packages/FC-00X-INTERACTION-INTERNALIZATION/package.json@bb38a2bf46d825989443bb28da878846efc44477",
+  "completed_slices": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "O0 ImplementationDesignPreflight",
+    "RED oracle",
+    "shared Runtime dispatch boundary",
+    "Web platform commit/cancel retirement",
+    "Windows independent HUD retirement"
+  ],
+  "pending_slices": [
+    "full O2/O3/O4/O5 host and cross-platform closure",
+    "Windows native build",
+    "Web debug-on/off build",
+    "full regression matrix"
+  ],
+  "evidence_refs": [
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/package-binding-preflight.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/implementation-design-preflight.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/red-preflight.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/o1-input-identity.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/o2-session-lifecycle.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/o3-publication-frame.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/o4-platform-control.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/o5-host-equivalence.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/regression-matrix.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/scope-audit.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/repository-reconciliation.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/environment-blocker.json"
+  ],
+  "blockers": [
+    "BLOCKED_ENVIRONMENT: .deps/imgui absent; locked Skia/Semantic/Emscripten host dependencies not materialized"
+  ],
+  "official_gate_pass_claimed": false,
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "next_surface": "CONTROL_REVIEW"
+}

@@ -1318,31 +1318,6 @@ void paint(HWND window, State& value) {
     // transient resize failure permanently suppresses all later redraws.
     value.canonicalFrameReady = renderCanonical(value);
   }
-  SetBkMode(dc, TRANSPARENT);
-  const auto& hud = value.host->hud();
-  std::wstringstream status;
-  const wchar_t* qualificationState = value.host->previewActive()
-                                          ? L"PREVIEW_OR_OVERLAP"
-                                          : L"CANONICAL_ONLY";
-  status << L"Axiom Ink Playground | HWND ready | WM_POINTER enabled | samples: "
-         << value.trace.size() << L" | batch: " << hud.batch
-         << L" | pointers: " << value.activeKeys.size()
-         << L" | mode: " << canvas::ink_playground::windows_input::multiContactPolicyName(
-                                value.host->multiContactPolicy())
-         << L" | viewport: " << value.host->viewportGesture().scale << L"x @ "
-         << value.host->viewportGesture().translationX << L","
-         << value.host->viewportGesture().translationY
-         << L" | preview_present: " << value.host->previewPresentCount()
-         << L" | state: " << qualificationState
-         << L" | Arc preview: Skia layered"
-         << L" | runtime preview: " << (value.runtimePreviewVisible ? L"ON" : L"OFF")
-         << L" | SPACE = preview | P = pointer mode";
-  const auto textMetrics=value.host->textLayoutMetrics();
-  status<<L" | text layouts: "<<textMetrics.objectLayouts<<L" paragraphs: "<<textMetrics.paragraphLayouts
-    <<L" font faces: "<<textMetrics.fontMaterializations<<L" layout ms: "<<textMetrics.layoutCpuMs;
-  const auto text = status.str();
-  SetTextColor(dc, RGB(30, 30, 30));
-  TextOutW(dc, 16, 34, text.c_str(), static_cast<int>(text.size()));
   if (value.debugUi != nullptr) value.debugUi->paint(dc);
   EndPaint(window, &ps);
 }

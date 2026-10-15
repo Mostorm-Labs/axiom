@@ -8,6 +8,7 @@
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/render/brush_render_point.hpp"
 #include "canvas/interaction/interaction_runtime.hpp"
+#include "canvas/interaction/interaction_dispatch_runtime.hpp"
 #include "canvas/interaction/editor_history.hpp"
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
@@ -126,7 +127,8 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                                 public interaction::HistorySubmitPort,
                                 public interaction::TransformSubmitPort,
                                 public interaction::TransientPresentationPort,
-                                public render::SessionCancelSink {
+                                public render::SessionCancelSink,
+                                public interaction::InteractionDispatchPort {
   friend class InkPlaygroundHistoryTestAccess;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
@@ -481,6 +483,12 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
                           double frameMs);
 
  private:
+  [[nodiscard]] interaction::DispatchMode dispatchMode() const noexcept override;
+  [[nodiscard]] bool selection(const input::PointerSample&) noexcept override;
+  [[nodiscard]] bool creation(const input::PointerSample&) noexcept override;
+  [[nodiscard]] bool pan(const input::PointerSample&) noexcept override;
+  [[nodiscard]] bool brush(const input::PointerSample&) noexcept override;
+  [[nodiscard]] bool eraser(const input::PointerSample&) noexcept override;
   [[nodiscard]] bool attached() const noexcept override { return true; }
   [[nodiscard]] bool available() const noexcept override { return true; }
   [[nodiscard]] std::uint64_t generation() const noexcept override { return 1; }
@@ -519,6 +527,7 @@ class InkPlaygroundHost final : public interaction::SemanticReadPort,
   bool runtimePreviewVisible_ = true;
   std::unordered_map<input::PointerKey, std::uint64_t, input::PointerKeyHash> keyedStrokeIds_;
   std::unique_ptr<interaction::CanvasInteractionCoordinator> coordinator_;
+  interaction::InteractionDispatchRuntime dispatchRuntime_;
   std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
   std::unique_ptr<render::RuntimeAppBinding> appBinding_;
   render::SkiaSurfaceProvider* previewProvider_ = nullptr;

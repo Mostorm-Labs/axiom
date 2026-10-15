@@ -1,0 +1,19 @@
+{
+  "schema": "fc00x-interaction-internalization-red-preflight-v1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "status": "RED",
+  "command": "read-only source boundary oracle: Host dispatch, Windows HUD, Web platform commit/cancel",
+  "observations": {
+    "INT-RED-HOST-DISPATCH": [
+      "acceptPlatformBatch contains selection/creation/brush/eraser dispatch before fix"
+    ],
+    "INT-RED-WINDOWS-HUD": [
+      "TextOutW and independent status fields before fix"
+    ],
+    "INT-RED-WEB-PLATFORM-COMMIT": [
+      "submitPlatformBatch directly called presentCanonicalFrame/cancelBrushSession before fix"
+    ]
+  },
+  "exit_code": 1,
+  "production_mutation_before_observation": false
+}

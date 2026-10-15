@@ -1,0 +1,27 @@
+{
+  "schema": "fc00x-regression-matrix-v1",
+  "status": "PARTIAL",
+  "tests": [
+    {
+      "id": "C0CanvasInteractionCoordinator",
+      "command": "ctest --test-dir D:/GitRepos/mostorm-labs/canvas/tmp-build-fc00x -R ^C0CanvasInteractionCoordinator$ --output-on-failure",
+      "status": "PASS",
+      "result": "1/1"
+    },
+    {
+      "id": "interaction_internalization_contract_test",
+      "command": "python contract test runner",
+      "status": "PASS",
+      "result": "3/3"
+    },
+    {
+      "id": "host_translation_unit",
+      "command": "MSVC 19.51 cl ink_playground_host.cpp",
+      "status": "PASS",
+      "result": "exit 0"
+    }
+  ],
+  "blocked_tests": [
+    "Windows/Web build and full host matrix: missing .deps/imgui, Skia and Emscripten SDK materialization"
+  ]
+}

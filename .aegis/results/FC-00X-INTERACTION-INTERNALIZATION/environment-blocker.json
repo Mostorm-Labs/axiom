@@ -1,0 +1,23 @@
+{
+  "schema": "fc00x-environment-blocker-v1",
+  "status": "BLOCKED_ENVIRONMENT",
+  "blockers": [
+    {
+      "id": "IMGUIL_NOT_MATERIALIZED",
+      "observed": "debug_ui/CMakeLists.txt requires .deps/imgui/imgui.cpp; file absent in independent worktree."
+    },
+    {
+      "id": "SKIA_SEMANTIC_NOT_MATERIALIZED",
+      "observed": "locked Skia/Semantic profiles not materialized for Windows/Web host graph."
+    },
+    {
+      "id": "PYTEST_UNAVAILABLE",
+      "observed": "pytest module unavailable; direct Python contract runner used instead."
+    }
+  ],
+  "commands": [
+    "cmake -S <worktree> -B tmp-build-fc00x-host ... -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_INK_PLAYGROUND=ON",
+    "cmake --build ... --target axiom_ink_playground_common"
+  ],
+  "logs": "configuration failed before generate due missing .deps/imgui"
+}

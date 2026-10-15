@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_interaction_coordinator.hpp"
+#include "canvas/interaction/interaction_dispatch_runtime.hpp"
 #include "canvas/interaction/viewport_interaction_controller.hpp"
 
 #include <cassert>
@@ -46,5 +47,38 @@ int main() {
   assert(coordinator.route(sample(a, PointerPhase::kMove, 20.0F, 0.0F, 7)).route == InteractionRoute::kInk);
   assert(coordinator.route(sample(b, PointerPhase::kDown, 20.0F, 0.0F, 8)).route == InteractionRoute::kInk);
   assert(!coordinator.viewportClaimed());
+
+  struct DispatchPort final : InteractionDispatchPort {
+    DispatchMode mode = DispatchMode::kBrush;
+    std::vector<DispatchEvent> events;
+    DispatchMode dispatchMode() const noexcept override { return mode; }
+    bool selection(const canvas::input::PointerSample&) noexcept override {
+      events.push_back(DispatchEvent::kSelection); return true;
+    }
+    bool creation(const canvas::input::PointerSample&) noexcept override {
+      events.push_back(DispatchEvent::kCreation); return true;
+    }
+    bool pan(const canvas::input::PointerSample&) noexcept override {
+      events.push_back(DispatchEvent::kPan); return true;
+    }
+    bool brush(const canvas::input::PointerSample&) noexcept override {
+      events.push_back(DispatchEvent::kBrush); return true;
+    }
+    bool eraser(const canvas::input::PointerSample&) noexcept override {
+      events.push_back(DispatchEvent::kEraser); return true;
+    }
+  } port;
+  InteractionDispatchRuntime dispatch(port);
+  assert(dispatch.submit(sample(a, PointerPhase::kDown, 1.0F, 2.0F, 9)));
+  assert(port.events.back() == DispatchEvent::kBrush);
+  port.mode = DispatchMode::kSelection;
+  assert(dispatch.submit(sample(a, PointerPhase::kMove, 3.0F, 4.0F, 10)));
+  assert(port.events.back() == DispatchEvent::kSelection);
+  port.mode = DispatchMode::kCreation;
+  assert(dispatch.submit(sample(a, PointerPhase::kMove, 5.0F, 6.0F, 11)));
+  assert(port.events.back() == DispatchEvent::kCreation);
+  port.mode = DispatchMode::kPan;
+  assert(dispatch.submit(sample(a, PointerPhase::kMove, 7.0F, 8.0F, 12)));
+  assert(port.events.back() == DispatchEvent::kPan);
   return 0;
 }

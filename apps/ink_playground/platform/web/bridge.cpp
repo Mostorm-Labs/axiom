@@ -385,9 +385,6 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
   if (phase == 2) {
     state.digest = target->brushDigest();
     state.primitiveCount = target->brushPrimitiveCount();
-    if (!target->presentCanonicalFrame(target->canonicalFrameCount() + 1U, 0.0)) return 0;
-  } else if (phase == 3) {
-    (void)target->cancelBrushSession(pointer);
   }
   return 1;
 }
