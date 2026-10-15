@@ -1,7 +1,8 @@
 {
   "schema": "fc00x-renderer-conflict-repair-v1",
   "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
-  "result_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
+  "result_revision": "24968c2b9a3f3fd8e6e4a2afaa7c68133ad558d4",
+  "implementation_revision": "74943ac95d53c97ac9d055fd63d82e53498dbe74",
   "root_cause": "Per-entry saveLayer isolated all ink entries, including standalone/transformed ink and non-pixel group references; kClear then composited against an opaque layer backdrop.",
   "repair": "Detect real non-ink pixel contributors, exclude GroupReferenceCommand, and conditionally isolate Brush-v2 versus legacy Vector/Dab ink according to transform and scene overlap.",
   "contracts": {
