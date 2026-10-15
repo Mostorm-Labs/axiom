@@ -1,0 +1,66 @@
+{
+  "schema": "fc00x-p35-defect-classification-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "review_surface": "CONTROL_REVIEW",
+  "reviewer_role": "aegis-gate-review",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "package_materialization_ref": "f2fcc0e3152337cf88caee7ba7afa0306389d6da",
+  "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "result_status": "READY_FOR_CONTROL_REVIEW",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "passed": [
+      "S0-S3 obligations",
+      "corrected FC-00X regression matrix 28/28",
+      "scope/protected-path audit",
+      "result/evidence identity"
+    ],
+    "failed": []
+  },
+  "defects": [
+    {
+      "id": "FC00X-P35-01",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "status": "RESOLVED_BY_CORRECTED_P31",
+      "failure_mode": "The former P31 regression set bound legacy POC-06/Arc Windows preview tests G4WindowsPreviewDispatch and G4InkPlaygroundWindowsPreviewPopup to the FC-00X shared Runtime closure.",
+      "impact": "The required CTest name could not be discovered in the non-ARC FC-00X build, falsely preventing independent review of the actual S0-S3 closure.",
+      "existing_independent_coverage": "The corrected package removes these tests; shared Runtime frame/preview lifecycle remains covered by FC00XFrameCoordinator, G3PreviewSurface, G3SurfacePresentation and G4CanonicalHandoff.",
+      "unique_detection_value": "The correction isolates the actual FC-00X boundary and prevents ARC/POC-06 build dependencies from masquerading as Runtime failures.",
+      "why_frozen_evidence_missed_it": "The original package inherited a historical G4.5/POC-06 regression name without reconciling its target ownership against FC-00X scope.",
+      "routing": "P31 correction; corrected package v0.4 accepted for re-verification.",
+      "implementation_defect": false
+    },
+    {
+      "id": "FC00X-P35-02",
+      "classification": "BLOCKED_ENVIRONMENT",
+      "status": "RETAINED_FINDING",
+      "failure_mode": "The full/incremental Windows graph cannot resolve existing MSVC standard headers such as cstdint/array/compare in unrelated runtime/semantic and runtime/control targets.",
+      "impact": "A complete graph build cannot be claimed from this host.",
+      "existing_independent_coverage": "The exact FC-00X focused matrix passes 28/28 from the configured build; changed runtime translation units and required regression targets execute successfully.",
+      "unique_detection_value": "Full graph compilation would detect unrelated toolchain/header failures beyond the focused closure.",
+      "why_frozen_evidence_missed_it": "The P31 contract made full build optional/corroborative; required focused tests were independently executable.",
+      "routing": "Environment follow-up; no P36 implementation repair.",
+      "implementation_defect": false
+    },
+    {
+      "id": "FC00X-P35-03",
+      "classification": "PHYSICAL_PENDING",
+      "status": "NON_BLOCKING_FINDING",
+      "failure_mode": "No physical Windows/Web host observation was performed in this review.",
+      "impact": "Human visual/physical acceptance remains unproven.",
+      "existing_independent_coverage": "Automated runtime and headless lifecycle oracles pass; package explicitly marks physical host verification as pending and hosted verification is optional.",
+      "unique_detection_value": "Physical observation would detect platform-specific presentation defects not represented in headless tests.",
+      "why_frozen_evidence_missed_it": "P31 explicitly made physical observation corroborative and non-blocking for this closure.",
+      "routing": "Future physical qualification; no P36 implementation repair.",
+      "implementation_defect": false
+    }
+  ],
+  "implementation_defect": false,
+  "p36_required": false,
+  "p20_reopen": false,
+  "p31_reopen": false,
+  "verdict": "READY_FOR_CONTROL_REVIEW",
+  "official_gate_pass": false,
+  "next_route": "Independent P34 Control Review may finalize against corrected package; retain environment and physical findings without expanding FC-00X scope."
+}
