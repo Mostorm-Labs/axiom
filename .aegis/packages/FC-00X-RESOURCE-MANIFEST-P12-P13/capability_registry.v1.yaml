@@ -10,7 +10,8 @@ capabilities:
       - malformed_present_manifest_fallback
       - new_snapshot_without_explicit_manifest
       - provider_metadata_filling_manifest
-    migration_window: until_explicit_manifest_rewrite
+    migration_window: legacy_snapshot_schema_version_1_without_manifest_only
+    expiry_rule: reader_must_emit_explicit_manifest_on_next_write
   - id: resource-manifest-v1
     mode: canonical_read_write
     requires:

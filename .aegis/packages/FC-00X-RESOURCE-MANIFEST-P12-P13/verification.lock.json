@@ -3,7 +3,7 @@
   "format": "aegis-verification-lock-v1",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
   "stage": "P12_P13_MODELING",
-  "status": "CANDIDATE_V0_2_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
+  "status": "CANDIDATE_V0_3_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
   "obligations": [
     {
       "id": "RM-ID",
@@ -15,14 +15,14 @@
     {
       "id": "RM-VALUE",
       "requirement": "ResourceRevision, ContentHash, length, kind and decode/layout metadata have canonical validation.",
-      "oracle": "candidate field/registry normalization matrix including explicit schema/presence, ResourceKind registry, metadata limits and ContentHash",
+      "oracle": "candidate field/registry normalization matrix including explicit schema/presence, ResourceKind metadata schemas/limits and ContentHash",
       "acceptance": "invalid values reject atomically",
       "classification": "BLOCKING"
     },
     {
       "id": "RM-DIGEST",
       "requirement": "Manifest binding changes affect Document digest while availability does not.",
-      "oracle": "digest_projection.v1 candidate stream differential plus availability exclusion, gated by independent acceptance",
+      "oracle": "digest_projection.v1 candidate stream differential with exact domain length, manifest_revision and explicit presence, plus availability exclusion",
       "acceptance": "digest changes only for semantic binding; projection equality remains primary oracle",
       "classification": "BLOCKING"
     },
@@ -36,7 +36,7 @@
     {
       "id": "RM-SNAPSHOT",
       "requirement": "Snapshot/restore atomically binds manifest and digest, with explicit legacy compatibility.",
-      "oracle": "snapshot_binding.v1 fields 4..9, tombstones, atomic restore and capability matrix",
+      "oracle": "snapshot_binding.v1 fields 4..9, schema-version legacy matrix, tombstones, atomic restore and capability admission",
       "acceptance": "no partial publication; digest/revision/frontier/capability bindings agree",
       "classification": "BLOCKING"
     },
@@ -48,9 +48,9 @@
       "classification": "BLOCKING"
     }
   ],
-  "terminal_blocker": "UNRESOLVED_DECISION or AUTHORITY_CONFLICT if v0.2 candidates remain unaccepted or conflict with an accepted P12/P13 input.",
+  "terminal_blocker": "UNRESOLVED_DECISION or AUTHORITY_CONFLICT if v0.3 candidates remain unaccepted or conflict with an accepted P12/P13 input.",
   "producer_may_claim_authority_pass": false,
-  "blocking_authority_findings": ["RM-V02-CANDIDATE", "RM-LEGACY-CAPABILITY", "RM-NON-REUSE", "RM-CHANGESET"],
+  "blocking_authority_findings": ["RM-V03-CANDIDATE", "RM-LEGACY-CAPABILITY", "RM-TOMBSTONE-UNDO", "RM-ATOMIC-REFERENCE-REMOVE", "RM-CHANGESET"],
   "candidate_binding_oracles": [
     {
       "id": "RM-FIELD-NUMBERS",

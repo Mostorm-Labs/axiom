@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "format": "aegis-p12-candidate-binding-audit-v1",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
-  "source_revision": "ab3073344c88da04e01a01172cc360ae38310ea3",
+  "source_revision": "b07f4cd2196f04a947165ec47a52d2ecb9553947",
   "scope": "candidate-only; no product source mutation",
   "checks": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "id": "RM-KIND-REGISTRY",
-      "result": "CANDIDATE_V0_2_REQUIRES_REVIEW",
+      "result": "CANDIDATE_V0_3_REQUIRES_REVIEW",
       "observations": [
         "No accepted ResourceKind registry source was found for Image=1, Font=2, Brush=3 or the 4..255 reservation.",
         "ADR-0013 requires kind validation but does not assign these numeric values."
@@ -71,7 +71,7 @@
   "terminal_classification": "READY_FOR_CONTROL_REVIEW",
   "implementation_allowed": false,
   "historical_state_mutated": false,
-  "candidate_version": "v0.2",
+  "candidate_version": "v0.3",
   "previous_review": "independent-control-review-v0.1.json",
   "new_candidate_inputs": [
     "snapshot_binding.v1.md",

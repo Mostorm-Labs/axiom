@@ -11,7 +11,12 @@
     "capability_registry.v1.yaml",
     "digest_projection.v1.md",
     "candidate-binding-audit.json",
-    "independent-control-review-v0.1.json"
+    "independent-control-review-v0.1.json",
+    "independent-control-review-v0.2.json",
+    "resource_manifest_operation.v1.md",
+    "change_set_contract.v1.md",
+    "candidate_binding_oracle_matrix.v1.md",
+    "drafts/resource_manifest_v1.proto.txt"
   ],
   "blocking": [
     "exact package commit",
@@ -20,10 +25,10 @@
   "producer_may_claim_authority_pass": false,
   "return_status": "PACKAGE_READY_FOR_CONTROL_REVIEW or BLOCKED_*",
   "independent_review": {
-    "path": "independent-control-review.json",
+    "path": "independent-control-review-v0.2.json",
     "required_verdict": "BLOCKED_UNRESOLVED_DECISION or accepted successor review",
-    "sha256": "c94bd4580c0007506dbeaad96e5bfaac53b30a7fcbfa93c9c1181152bb6e1f90"
+    "sha256": "5a818de77112cddebfcadf463b4c370004c16ffa7ae7c6c7a704ca30225f082f"
   },
-  "candidate_version": "v0.2",
-  "next_review_output": "independent-control-review-v0.2.json"
+  "candidate_version": "v0.3",
+  "next_review_output": "independent-control-review-v0.3.json"
 }

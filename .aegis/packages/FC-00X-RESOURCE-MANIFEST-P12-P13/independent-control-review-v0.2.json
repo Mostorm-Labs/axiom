@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-independent-control-review-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "reviewed_revision": "b07f4cd2196f04a947165ec47a52d2ecb9553947",
+  "reviewer_role": "independent-p21-review",
+  "reviewer_identity": "/root/resource_manifest_p21_v02_review",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom", "branch": "codex/fc00x-resource-manifest-p12"},
+  "package_path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/",
+  "verdict": "BLOCKED_UNRESOLVED_DECISION",
+  "identity_findings": [
+    {
+      "id": "RM-V02-EXECUTION-REF-DRIFT",
+      "classification": "BLOCKED_EVIDENCE",
+      "failure_mode": "Package execution_ref names codex/fc00x-resource-manifest-p12-v0-2, but that ref does not exist; the reviewed branch is codex/fc00x-resource-manifest-p12.",
+      "impact": "A later executor could resolve the wrong checkout or fail to reproduce the reviewed package.",
+      "resolution": "Use the exact existing branch/ref or create the named ref under the authorized repository before relying on the package."
+    }
+  ],
+  "findings": [
+    {
+      "id": "P12-RM-V02-DIGEST-LENGTH-PRESENCE",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "The digest stream cannot be uniquely encoded: u32(32) precedes a 28-byte domain string, manifest_revision inclusion is unspecified, and entry/tombstone presence bytes are incomplete.",
+      "impact": "Cross-platform replay, Snapshot restore and corruption detection can produce different Document identities.",
+      "existing_independent_coverage": "ADR-0020 requires verifiable digest and atomic restore; G1 projection-first verification does not freeze product digest bytes.",
+      "unique_detection_value": "Independent byte-stream differential over legacy-empty, explicit-empty, revision-only, tombstone and metadata-presence cases.",
+      "why_not_covered": "v0.2 added prose without byte-level closure.",
+      "owner": "P12/P13 and G1 digest authority",
+      "path_lines": ["digest_projection.v1.md:3-35", "implementation-context.md:127-148"]
+    },
+    {
+      "id": "P12-RM-V02-SNAPSHOT-SEMANTICS",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "Snapshot fields 4..9 can form contradictory accepted states; revision/frontier/digest ownership and legacy omission rules are incomplete.",
+      "impact": "Restore may accept different checkpoints or reject legitimate legacy snapshots.",
+      "existing_independent_coverage": "ADR-0020 requires revision/frontier joint validation and atomic publication.",
+      "unique_detection_value": "Field-presence matrix for absent/empty/malformed manifest, omitted fields 5..9, digest mismatch and revision/frontier permutations.",
+      "why_not_covered": "Current snapshot.proto has only fields 1..3 and the v0.2 binding remained candidate-only.",
+      "owner": "P12/P13 Snapshot/recovery authority",
+      "path_lines": ["snapshot_binding.v1.md:5-31", "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto:7-11"]
+    },
+    {
+      "id": "P12-RM-V02-KIND-METADATA",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "Registry names metadata schemas but defines no fields, required presence, canonicalization, count limits or per-kind validation.",
+      "impact": "Malformed metadata can enter canonical state and cause cross-platform decode/layout divergence or resource exhaustion.",
+      "existing_independent_coverage": "RM-VALUE requires registry normalization; no accepted ResourceKind registry exists.",
+      "unique_detection_value": "Per-kind schema and malformed/oversize boundary corpus.",
+      "why_not_covered": "v0.2 registry only listed names, versions and maximum metadata bytes.",
+      "owner": "P12/P13 ResourceKind authority",
+      "path_lines": ["resource_kind_registry.v1.yaml:1-11", "verification.lock.json:RM-VALUE"]
+    },
+    {
+      "id": "P12-RM-V02-TOMBSTONE-UNDO",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "A removed ResourceId can be recreated or Undo/Redo can restore a different preimage because lineage format, preimage retention, concurrent undo and compaction are unspecified.",
+      "impact": "Identity aliasing, replay divergence and recovery/collaboration corruption.",
+      "existing_independent_coverage": "ADR-0013 stable identity and ADR-0014 controlled preimage/compensating Operations.",
+      "unique_detection_value": "Remove/recreate, concurrent update/undo, redo-after-undo and compaction/recovery corpus.",
+      "why_not_covered": "v0.2 added tombstone prose but no executable lineage/preimage fields or oracle.",
+      "owner": "P12/P13 and ADR-0014 history authority",
+      "path_lines": ["implementation-context.md:180-190", "snapshot_binding.v1.md:16-20", "docs/adr/0014-history-undo-compensating-operations.md:15-28"]
+    },
+    {
+      "id": "P12-RM-V02-ATOMIC-REFERENCE-REMOVE",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "The candidate requires removing object references and a manifest entry in one staged atomic operation, but UpdateResourceManifest has no reference-removal payload or cross-object transaction contract.",
+      "impact": "Dangling references, partial remove and mixed semantic generations.",
+      "existing_independent_coverage": "07-03 freezes whole-operation atomicity, not a global multi-operation transaction.",
+      "unique_detection_value": "Live-reference removal and same-intent reference+manifest delete rejection/no-partial-publication tests.",
+      "why_not_covered": "v0.2 asserted staged atomicity without defining an executable payload or owner.",
+      "owner": "P12/P13 Operation authority reconciled with 07 runtime data flow",
+      "path_lines": ["implementation-context.md:61-78,187-189", "docs/notion/authority/07-runtime-data-flow/07-03-operation-semantic-document-v0.1.md:37-41"]
+    },
+    {
+      "id": "P12-RM-V02-CHANGESET",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "ResourceId ChangeSet flags, before/after nullability, ordering, merge and consumer handling are not frozen.",
+      "impact": "Incremental refresh can miss resources, publish mixed revisions or diverge from full/recovery Scene.",
+      "existing_independent_coverage": "ADR-0019 separation and current ObjectSemanticChange model.",
+      "unique_detection_value": "Multi-operation same-generation merge/order corpus plus full/delta/recovery equivalence.",
+      "why_not_covered": "v0.2 explicitly left exact fields and merge/order open.",
+      "owner": "P13 ChangeSet/Scene authority",
+      "path_lines": ["implementation-context.md:192-200", "runtime/semantic/include/canvas/semantic/change_set.hpp:23-79"]
+    },
+    {
+      "id": "P12-RM-V02-LEGACY-CAPABILITY",
+      "classification": "UNRESOLVED_DECISION",
+      "failure_mode": "Legacy capability name/window and schema field omission rules differ between context, registry and readers.",
+      "impact": "Readers can disagree on absent/empty/malformed manifests or retain legacy mode indefinitely.",
+      "existing_independent_coverage": "RM-LEGACY matrix and candidate capability registry.",
+      "unique_detection_value": "Absent/explicit-empty/malformed, unknown capability and rewrite-boundary tests.",
+      "why_not_covered": "The registry remained candidate-only and lacked per-schema expiry semantics.",
+      "owner": "P12/P13 compatibility authority",
+      "path_lines": ["implementation-context.md:86-92,150-152", "capability_registry.v1.yaml:1-20"]
+    }
+  ],
+  "authority_boundary": {
+    "candidate_only": true,
+    "product_source_modified": false,
+    "authority_accepted": false,
+    "gate_pass_issued": false,
+    "third_package_p32_authorized": false
+  }
+}

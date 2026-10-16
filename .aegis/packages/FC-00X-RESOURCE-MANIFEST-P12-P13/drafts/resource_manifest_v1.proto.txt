@@ -1,0 +1,80 @@
+// P12/P13 v0.3 CANDIDATE ONLY. Not compiled or accepted production schema.
+// Existing edition=2024 explicit presence profile applies to every singular field.
+// Names below are new candidate messages in auditoryworks.axiom.v1.
+message ImageResourceMetadataV1 {
+  uint32 schema_version = 1; // required, 1
+  uint32 pixel_width = 2; // required, >=1
+  uint32 pixel_height = 3; // required, >=1
+  uint32 color_policy = 4; // required, 1 = sRGB RGBA premultiplied decode
+}
+message FontResourceMetadataV1 {
+  uint32 schema_version = 1; // required, 1
+  uint32 collection_index = 2; // required, 0..65535, including present zero
+  uint32 layout_profile = 3; // required, 1 = r1-full-v1/skparagraph/icu-v1
+}
+message BrushResourceMetadataV1 {
+  uint32 schema_version = 1; // required, 1
+  uint32 asset_role = 2; // required, 1 = shape, 2 = grain; distinct from ResourceKind
+  uint32 pixel_width = 3; // required, >=1
+  uint32 pixel_height = 4; // required, >=1
+  uint32 color_policy = 5; // required, 1 = sRGB RGBA premultiplied decode
+}
+message ResourceManifestEntry {
+  Id128 resource_id = 1; // required, nonzero 16-byte Id128.value
+  uint32 resource_kind = 2; // required: Image=1, Font=2, Brush=3
+  uint64 resource_revision = 3; // required, 1..UINT64_MAX
+  string content_hash = 4; // required, sha256:<64 lowercase hex>, 71 ASCII bytes
+  uint64 byte_length = 5; // required, 1..UINT64_MAX; availability not required
+  uint32 decode_version = 6; // required, 1
+  uint32 layout_version = 7; // required, Font=1, Image/Brush=0, present zero
+  bytes metadata = 8; // required, complete canonical kind-specific message above
+}
+message ResourceManifestTombstone {
+  Id128 resource_id = 1; // required, matches preimage.resource_id
+  uint64 retired_revision = 2; // required, preimage.resource_revision + 1
+  string last_content_hash = 3; // required, equals preimage.content_hash
+  Id128 removal_operation_id = 4; // required, OpId that performed removal
+  ResourceManifestEntry preimage = 5; // required, full immutable last active entry
+}
+message ResourceManifest {
+  uint32 schema_version = 1; // required, 1
+  repeated ResourceManifestEntry entries = 2; // sorted complete ResourceId
+  uint64 manifest_revision = 3; // required, starts 0, +1 per Applied manifest op
+  repeated ResourceManifestTombstone retired_entries = 4; // sorted, disjoint from entries
+}
+message ResourceExpectation {
+  Id128 resource_id = 1; // required
+  uint32 state = 2; // required, 0=never-used, 1=active, 2=retired
+  uint64 revision = 3; // required, 0 for never, entry revision or retired_revision
+}
+message ReactivateResource {
+  ResourceManifestEntry entry = 1; // required, current retired_revision + 1
+  Id128 expected_removal_operation_id = 2; // required, exact tombstone OpId
+  ResourceManifestEntry expected_preimage = 3; // required, exactly tombstone.preimage
+}
+message UpdateResourceManifestOp {
+  repeated ResourceManifestEntry upserts = 1;
+  repeated Id128 removes = 2;
+  repeated ResourceExpectation expectations = 3;
+  repeated ReactivateResource reactivations = 4;
+  uint64 expected_manifest_revision = 5; // required, exact compare before prepare
+}
+// OperationKind/OperationPayload tag16. schema_version=1/payload_version=1 unchanged.
+// Append to OperationPayload: UpdateResourceManifestOp update_resource_manifest = 16;
+message CapabilityRequirementsV1 {
+  repeated string required_ids = 1; // UTF-8 ASCII registry IDs, sorted unique
+}
+message RecoveryFrontierV1 {
+  uint32 version = 1; // required, 1
+  uint32 kind = 2; // required, 1 = local ordered RecoverySequence profile
+  uint64 sequence = 3; // required, including present zero; independent of runtime counters
+}
+// New writer uses DocumentSnapshot.schema_version=3.
+// Existing DocumentSnapshot fields 1..3 unchanged; append:
+// ResourceManifest manifest = 4;
+// uint64 document_revision = 5;
+// bytes recovery_frontier = 6; // canonical RecoveryFrontierV1
+// uint32 digest_algorithm = 7; // 1=SHA256_SEMANTIC_PROJECTION_V1
+// bytes document_digest = 8; // 32 raw bytes
+// bytes capability_requirements = 9; // canonical CapabilityRequirementsV1
+// bytes checkpoint_digest = 10; // 32 raw bytes; see snapshot_binding.v1.md

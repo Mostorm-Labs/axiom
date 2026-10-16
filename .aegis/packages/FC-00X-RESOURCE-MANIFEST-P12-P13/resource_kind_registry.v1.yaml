@@ -9,3 +9,13 @@ resource_kind_registry:
   unknown_policy: fail_closed_for_required_entries
   metadata_encoding: canonical-protobuf-bytes-with-explicit-schema-version
   content_hash: sha256-lowercase-hex-with-algorithm-prefix
+  entry_limits:
+    max_entries: 65535
+    max_tombstones: 65535
+    max_metadata_total_bytes: 8388608
+    max_lineage_token_bytes: 32
+  metadata_rules:
+    schema_version_field_required: true
+    unknown_fields: reject
+    duplicate_fields: reject
+    absent_vs_default: distinct_unless_registry_declares_equal
