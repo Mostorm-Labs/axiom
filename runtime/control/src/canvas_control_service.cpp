@@ -190,9 +190,11 @@ void CanvasControlService::destroyTarget(const CanvasTargetKey& target) {
   destroyed_.insert(target);
   for (auto it = queue_.begin(); it != queue_.end();) {
     if (it->target == target) {
-      remember(makeReceipt({it->clientId, it->requestId},
+      const CanvasControlReceiptKey key{it->clientId, it->requestId};
+      remember(makeReceipt(key,
                            CanvasControlReceiptState::kTargetDestroyed,
                            CanvasControlError::kStaleTarget));
+      capturedSnapshots_.erase(key);
       it = queue_.erase(it);
     } else {
       ++it;
