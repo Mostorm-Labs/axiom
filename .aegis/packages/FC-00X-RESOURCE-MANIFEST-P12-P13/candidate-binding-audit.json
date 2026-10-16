@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "format": "aegis-p12-candidate-binding-audit-v1",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
-  "source_revision": "6a7c709695f5e7aa8981e77521c723e4657a8237",
+  "source_revision": "78c9769da070427814df9052a0dadfb3220ff617",
   "scope": "candidate-only; no product source mutation",
   "checks": [
     {
@@ -53,7 +53,7 @@
       "id": "RM-SNAPSHOT-BINDING",
       "result": "CANDIDATE_V0_4_REQUIRES_REVIEW",
       "observations": [
-        "The candidate adds only DocumentSnapshot.manifest=4.",
+        "The v0.4 candidate proposes schema3 DocumentSnapshot fields4..10; current production snapshot.proto still uses only fields1..3.",
         "ADR-0020 requires the same atomic checkpoint to bind Document revision, RecoveryFrontier, digest algorithm/version and digest, but current snapshot.proto has no accepted fields for those bindings."
       ],
       "required_resolution": "Freeze the exact Snapshot revision/frontier/digest representation and field ownership before claiming atomic manifest binding."
@@ -104,8 +104,9 @@
     "command": "python .aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/oracles/check_candidate.py",
     "exit_code": 0,
     "status": "PASS",
-    "subject_revision": "WORKTREE_PENDING_MATERIALIZATION",
-    "reference_vector_sha256": "a00a34b0ec0294dea13fc36f7401721952e4f612b02dec76490773911d976e91",
-    "result_sha256": "cd5e2107b3f9c81f89f0e24bc20658b19e5564c075cf40bf49ecb9b4b10ab9fe"
-  }
+    "subject_revision": "78c9769da070427814df9052a0dadfb3220ff617",
+    "result_sha256": "3ff5cb2f85aa12cf3b641fa328ad7b2f00463e9a7e54a85695a86a17488d0662",
+    "script_sha256": "ecd0dbad3b3d3c451490cf3c83ae5f86138bc88e570eacafc392b4ead9019bd8"
+  },
+  "source_revision_role": "exact oracle/script and candidate contract input revision; final package/evidence records are materialized in a descendant commit; accepted/current-source observations use authority.lock.json source_revision"
 }

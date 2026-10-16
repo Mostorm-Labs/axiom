@@ -14,19 +14,32 @@
   "format": "aegis-candidate-oracle-result-v1",
   "oracle": "FC-00X-RM-CANDIDATE-V0.4",
   "reference_vectors": {
-    "absent_sha256": "62a85484734730572a3c47bad8e43f8125f552cef310068c771edf00e9818452",
+    "absent_sha256": "648e226d9e152dc165ec9ea0e6cec5d6903faf9950facda432ab4327ac58b1df",
     "domain_prefix_length": 28,
-    "explicit_empty_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
-    "order_a_sha256": "e50fa0ede684125c216fe4ac6025e529d73cd51f93a253a7a2b97a003d82fc4f",
-    "order_b_sha256": "e50fa0ede684125c216fe4ac6025e529d73cd51f93a253a7a2b97a003d82fc4f",
-    "revision_a_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
-    "revision_b_sha256": "31564561ea40c7a866b32530071ff60e2194bd2bd05d7fb9e13a9cff6177d46f",
-    "runtime_a_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
-    "runtime_b_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
-    "tombstone_sha256": "83999b8a10b2803270f621f30efd9916ffe2a4cc4714757913239466237cfad6"
+    "explicit_empty_sha256": "eb2b0f00dafc9993f6a1c86e91a0ba455db9d156eaef7742e3abddbfb6e7b0fe",
+    "order_a_sha256": "999c602e926deed59fcbba5034b72582aa0e95970db64840e730eb580b581b7b",
+    "order_b_sha256": "999c602e926deed59fcbba5034b72582aa0e95970db64840e730eb580b581b7b",
+    "revision_a_sha256": "eb2b0f00dafc9993f6a1c86e91a0ba455db9d156eaef7742e3abddbfb6e7b0fe",
+    "revision_b_sha256": "a7aa67f6a13cc4a0032cb5bdb020e27f1018164370914cfe4cf5bbac02a27424",
+    "runtime_a_sha256": "eb2b0f00dafc9993f6a1c86e91a0ba455db9d156eaef7742e3abddbfb6e7b0fe",
+    "runtime_b_sha256": "eb2b0f00dafc9993f6a1c86e91a0ba455db9d156eaef7742e3abddbfb6e7b0fe",
+    "tombstone_sha256": "14a10155ed0b8565222a6e7ff495581c617f8d9706d98ff15518f163d4ffdacf"
   },
   "schema_version": "0.1",
+  "scope": {
+    "not_claimed": [
+      "production serializer conformance",
+      "runtime Operation/Snapshot implementation",
+      "Scene Full/Delta/Recovery behavior",
+      "accepted Authority or Gate/P34 status"
+    ],
+    "pass_claims": [
+      "cross-file candidate contract consistency",
+      "reference digest stream vectors using fixed-width LE and canonical capability varints",
+      "ordering/presence/revision/tombstone/nonsemantic runtime differential"
+    ]
+  },
   "status": "PASS",
-  "subject_revision": "WORKTREE_PENDING_MATERIALIZATION",
+  "subject_revision": "78c9769da070427814df9052a0dadfb3220ff617",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13"
 }
