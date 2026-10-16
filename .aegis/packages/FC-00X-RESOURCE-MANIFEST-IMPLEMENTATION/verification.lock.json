@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "FROZEN_FOR_CONTROL_REVIEW",
+  "trusted_basis": {
+    "repository_revision":"02078a36818e7722309aefe679089a48212a424d",
+    "accepted_authority_revision":"057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "review_boundary":"Independent Control Review must accept this exact package before P32 mutation"
+  },
+  "obligations": [
+    {"id":"RM-SEMANTIC-TYPES","requirement":"Expose typed ResourceManifest, ResourceManifestEntry, ResourceManifestTombstone, ResourceRevision/ContentHash validation and deterministic ordering.","oracle":"resource_manifest_unit_test plus negative metadata/hash/id/revision vectors","acceptance":"Invalid values fail closed; complete 128-bit ResourceId and explicit presence are preserved.","evidence_required":["rm-types.json"],"classification":"BLOCKING"},
+    {"id":"RM-OPERATION-16","requirement":"Implement UpdateResourceManifest with exact accepted payload/action/fence semantics, atomic prepare/apply, idempotency, collision, reference removal, tombstone and reactivation rules.","oracle":"resource_manifest_operation_test and operation protobuf round-trip/negative matrix","acceptance":"One valid operation advances manifest and semantic generation once; rejected/collision/late operations produce no mutation.","evidence_required":["rm-operation.json"],"classification":"BLOCKING"},
+    {"id":"RM-CHANGESET","requirement":"Expose immutable resourceChanges with single Created/Updated/Removed flags and complete before/after values while preserving existing object changes.","oracle":"resource_manifest_changeset_test and existing generation/change-set regression","acceptance":"Applied emits one ordered event; AlreadyApplied/Rejected emit none; availability is not semantic ChangeSet.","evidence_required":["rm-changeset.json"],"classification":"BLOCKING"},
+    {"id":"RM-SNAPSHOT","requirement":"Implement schema=3 Snapshot manifest fields 4..10, semantic/checkpoint digest projections, explicit presence and atomic restore.","oracle":"resource_manifest_snapshot_test, digest fixed vectors, malformed/mixed-profile/recovery negative matrix","acceptance":"Schema3 requires all fields; schema1/2 only explicit legacy read-only admission; restore never publishes partial state.","evidence_required":["rm-snapshot.json"],"classification":"BLOCKING"},
+    {"id":"RM-COMPATIBILITY","requirement":"Preserve existing operations 1..15, historical schema1/2 fixtures and Shape2Triangle behavior without silently accepting mixed profiles.","oracle":"full semantic regression matrix and protected Golden tests","acceptance":"No historical fixture or operation changes behavior; unknown operation16 is rejected by old profile.","evidence_required":["rm-compatibility.json"],"classification":"BLOCKING"},
+    {"id":"RM-SCOPE","requirement":"Only semantic schema/operation implementation, tests, CMake and task evidence change.","oracle":"exact diff/protected hash audit/git diff --check","acceptance":"No Scene/composition/interaction/product or historical control changes.","evidence_required":["scope-audit.json"],"classification":"BLOCKING"}
+  ],
+  "required_regression_targets":["canvas_semantic_g1_06_snapshot_test","canvas_semantic_g1_06_snapshot_bootstrap_test","canvas_semantic_codec_test","canvas_semantic_codec_negative_test","canvas_semantic_operation_engine_apply_test","canvas_semantic_operation_engine_generation_change_set_test","canvas_semantic_operation_engine_15_operation_conformance_test","canvas_semantic_fc01_shape2_apply_test"],
+  "physical_status":"PHYSICAL_PENDING; this package is semantic/headless only",
+  "producer_may_claim_gate_pass":false
+}

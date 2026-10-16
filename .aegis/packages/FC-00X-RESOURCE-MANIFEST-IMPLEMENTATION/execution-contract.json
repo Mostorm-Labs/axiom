@@ -1,0 +1,63 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-execution-closure-contract-v1",
+  "task_id":"FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes":[
+        "Add canonical semantic ResourceManifest schema=1 types with ResourceManifestEntry/Tombstone, ResourceRevision/ContentHash normalization, kind registry and complete ResourceId ordering.",
+        "Add accepted UpdateResourceManifest OperationKind=16 and OperationPayload tag=16 with exact upsert/remove/reactivate/expectation/revision-fence semantics.",
+        "Integrate manifest state into OperationEngine prepare/apply atomically, idempotency and reference validation without a second Document owner.",
+        "Extend ChangeSet with immutable resourceChanges before/after values and single Created/Updated/Removed flags.",
+        "Extend protobuf Snapshot schema=3 fields 4..10, canonical semantic/checkpoint digests, explicit presence and atomic recovery/legacy admission.",
+        "Add production tests and evidence for positive, negative, replay, compatibility, digest, mixed-profile and recovery cases."
+      ],
+      "forbidden_changes":[
+        "Scene/resource composition implementation or consumer migration",
+        "New semantic ids/kinds/fields/operations beyond accepted OperationKind=16 and fields 4..10",
+        "Provider/Host/composition-owned manifest authority",
+        "Historical Authority/Gate/Evidence/Golden/PHYS changes",
+        "Public C ABI/SDK, POC-06/Arc, Android delivery, G5 optimization"
+      ]
+    },
+    "authorized_mutation_scope":[
+      "runtime/semantic/include/canvas/semantic/**",
+      "runtime/semantic/src/**",
+      "runtime/semantic/tests/**",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "schema/axiom/v1/registry/operation_registry_v1.yaml",
+      "runtime/semantic/CMakeLists.txt",
+      "runtime/semantic/tests/CMakeLists.txt",
+      ".aegis/results/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/**"
+    ],
+    "preserve_unchanged":[
+      ".aegis/authorities.json",".aegis/gates.json",".aegis/evidence.json",".aegis/integrations.json",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/**",".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/**",
+      ".aegis/packages/FC-00X-INTERACTION-INTERNALIZATION/**",".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/**",
+      ".aegis/packages/FC-01/**",".aegis/results/FC-01-DEV/**",".aegis/results/GT-*/**",".aegis/results/PX0-*/**",
+      "verification/corpus/**","docs/api/**","semantic-sdk.lock.json","r1-full-skia-sdk.lock.json"
+    ]
+  },
+  "preflights": {
+    "implementation_design": {
+      "required":true,
+      "owner_graph":"SemanticSnapshot/Manifest state -> OperationEngine/atomic apply -> ChangeSet/SemanticReadView -> SnapshotCodec/Bootstrap; provider/resource availability remains derived.",
+      "failure_order":"validate envelope/payload -> normalize -> expected revision/reference/idempotency fences -> stage complete manifest -> apply object+manifest atomically -> generation/ledger/ChangeSet -> publish.",
+      "unresolved_semantic_decisions":[],"authority_conflict":false,"verification_conflict":false,"package_scope_conflict":false
+    },
+    "red_oracle":{"required":true,"command":"python .aegis/packages/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/oracles/resource_manifest_red.py --root . --expect baseline-red","expected_exit_code":1,"expected_failure":"Typed ResourceManifest, OperationKind=16 and Snapshot schema3 are absent at the anchor.","observation_seam":".aegis/results/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/red-preflight.json"}
+  },
+  "tests": {
+    "required":[
+      {"id":"RM-UNIT","command_or_oracle":"ctest --test-dir <exact-build> -R 'ResourceManifest|resource_manifest' --output-on-failure","expected_result":"all discovered ResourceManifest targets pass","blocking_reason":"canonical semantic values and validation"},
+      {"id":"RM-OPERATION","command_or_oracle":"ctest --test-dir <exact-build> -R 'OperationEngine|Codec|ChangeSet|Snapshot|Bootstrap' --output-on-failure","expected_result":"accepted operations, rejection matrix, idempotency, digest and recovery pass","blocking_reason":"mutation and persistence correctness"},
+      {"id":"RM-HISTORICAL","command_or_oracle":"ctest --test-dir <exact-build> -R 'G1|FC01|Shape2|operation_engine_15' --output-on-failure","expected_result":"protected historical targets pass unchanged","blocking_reason":"compatibility and history protection"},
+      {"id":"RM-SCOPE","command_or_oracle":"git diff --name-only 02078a36818e7722309aefe679089a48212a424d..HEAD; git diff --check","expected_result":"authorized paths only and diff check zero","blocking_reason":"scope protection"}
+    ]
+  },
+  "evidence":{"blocking":["package-binding-preflight.json","implementation-design-preflight.json","red-preflight.json","rm-types.json","rm-operation.json","rm-changeset.json","rm-snapshot.json","rm-compatibility.json","scope-audit.json","result.json","exact pushed result revision/materialized_ref"],"corroborative":["build/CTest logs","digest vector summaries"]},
+  "terminal_success":{"all_of":["all required semantic implementation changes complete","all frozen resource and historical regression tests pass","scope/protected audit passes","exact result/evidence pushed and reviewer-resolvable","return READY_FOR_CONTROL_REVIEW only"]},
+  "terminal_blockers":{"explicit_classes":["BLOCKED_REPOSITORY_IDENTITY","BLOCKED_EXECUTION_DIVERGENCE","BLOCKED_AUTHORITY","BLOCKED_MISSING_INPUT","BLOCKED_ENVIRONMENT","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","FROZEN_VERIFICATION_FAILURE","NEW_HIGH_IMPACT_FAILURE_MODE","TASK_PACKAGE_DEFECT","VERIFICATION_DESIGN_DEFECT"]},
+  "return_policy":{"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW","official_gate_pass_forbidden":true}
+}

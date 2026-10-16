@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION-P31-v0.1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Implement the accepted P12/P13 ResourceManifest semantic model so FC-00X Scene/resource composition can consume a real canonical binding.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-interaction-internalization-p31",
+    "execution_ref": "codex/fc00x-resource-manifest-implementation"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "02078a36818e7722309aefe679089a48212a424d",
+    "relation": "ancestor"
+  },
+  "starting_revision": "02078a36818e7722309aefe679089a48212a424d",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "29b1da7dbf1166c039d47dd33c91552037f18dc661d4a2d6bdc2bc9a025f2f73"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "bd9cea93804c1a231dd9ee320643b20e423c9559516fa505c96cbfec77cd0d9b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "f709cb28b930e29b6c3211a63f35cfd7ce26b40828819425fffde112977e001d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "c043e42fe7801d9fc173ef15d7b3ec72621279d5aabe77ae545924cd8ced36f3"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4ca9184638e1bb42ec808791135a78071f325a3fe34c1e17077000aa10d3da72"
+  },
+  "oracle_refs": [
+    {
+      "path": "oracles/resource_manifest_red.py",
+      "sha256": "4ddaeeca4e2e4a93d18b2758ca1b37e896ca01235a0f68819b1406407f9d5cac"
+    },
+    {
+      "path": "oracles/package_binding.py",
+      "sha256": "be3cf1d9fb10cf8086021d425c08dcba9c020c5585864cb2a9e3383afe468352"
+    }
+  ],
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/",
+    "base_revision": "02078a36818e7722309aefe679089a48212a424d",
+    "exact_ref_rule": "Use the immutable P31 package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "protected_work": "Existing FC-00X interaction/runtime packages and results, FC-00X scene composition package, FC-01/PX0/G4 history and user checkouts remain untouched."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "RESOURCE-MANIFEST-RED",
+    "HISTORICAL-SEMANTIC-REGRESSION-AUDIT"
+  ],
+  "upstream_authority": {
+    "id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "scope": "semantic:axiom/resource-manifest-p12-p13",
+    "kind": "semantic-schema-operation",
+    "version": "v0.4",
+    "status": "Current",
+    "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1"
+  },
+  "correction": {
+    "supersedes_package_commit": "none",
+    "reason": "New implementation package created after independent Control Review classified the downstream Scene package BLOCKED_IMPLEMENTATION because the accepted semantic contract had no typed product representation.",
+    "resolved": [
+      "Binds the exact accepted P12/P13 Authority revision and acceptance record.",
+      "Authorizes only the accepted ResourceManifest semantic model and its production verification.",
+      "Explicitly forbids composition-owned manifest, provider metadata authority, and unapproved schema drift."
+    ],
+    "requires_new_independent_control_review": true
+  }
+}
