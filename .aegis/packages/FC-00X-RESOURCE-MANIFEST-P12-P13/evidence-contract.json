@@ -14,5 +14,10 @@
     "independent review of canonical field/operation/digest/compatibility decisions"
   ],
   "producer_may_claim_authority_pass": false,
-  "return_status": "BLOCKED_AUTHORITY or PACKAGE_READY_FOR_CONTROL_REVIEW"
+  "return_status": "BLOCKED_AUTHORITY or PACKAGE_READY_FOR_CONTROL_REVIEW",
+  "independent_review": {
+    "path": "independent-control-review.json",
+    "required_verdict": "BLOCKED_UNRESOLVED_DECISION or accepted successor review",
+    "sha256": "c94bd4580c0007506dbeaad96e5bfaac53b30a7fcbfa93c9c1181152bb6e1f90"
+  }
 }

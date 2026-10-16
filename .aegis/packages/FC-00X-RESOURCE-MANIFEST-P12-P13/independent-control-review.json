@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-independent-control-review-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "reviewed_revision": "9ede3e3253bc42a2cdd0370aadf5aaafe38068ec",
+  "reviewer_role": "independent-p21-review",
+  "reviewer_identity": "/root/resource_manifest_p21_review",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "branch": "codex/fc00x-resource-manifest-p12"
+  },
+  "package_path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/",
+  "verdict": "BLOCKED_UNRESOLVED_DECISION",
+  "authority_baseline": {
+    "accepted_inputs": [
+      "ADR-0013 ResourceId/ResourceManifest/ContentHash separation",
+      "ADR-0019 SemanticChanges versus InvalidationHints",
+      "ADR-0020 Snapshot/Operation recovery boundary",
+      "ADR-0016 numeric/digest encoding boundary",
+      "current canonical codec and semantic verification authorities"
+    ],
+    "candidate_is_not_accepted_authority": true,
+    "product_source_modified": false,
+    "historical_gate_authority_modified": false,
+    "gate_pass_issued": false
+  },
+  "accepted_facts": [
+    "ResourceId is a complete 128-bit semantic identity distinct from ObjectId namespace use.",
+    "ResourceManifest binding is semantic state; blob availability and decode/cache/GPU state are derived.",
+    "Manifest binding mutations must use Operation-only canonical mutation and availability must not advance semantic generation.",
+    "SemanticChanges and InvalidationHints remain separate.",
+    "Snapshot restore must validate identity/capability/frontier/digest atomically before publication.",
+    "Candidate Snapshot field 4 and Operation payload field 16 are structurally unused by the current proto files."
+  ],
+  "candidate_decisions": {
+    "schema_fields": {
+      "classification": "ACCEPTABLE_CANDIDATE_SHAPE",
+      "decision": "Candidate manifest field 4 and entry fields 1..8 have no structural number collision.",
+      "blocker": "The package does not yet bind manifest presence/revision to the required Document revision, RecoveryFrontier, digest and capability fields in one exact Snapshot contract."
+    },
+    "operation_16": {
+      "classification": "OPEN_PENDING_AUTHORITY",
+      "decision": "Candidate OperationKind/payload field 16 is structurally unused and may remain a candidate.",
+      "blocker": "The frozen operation registry and runtime recognizer currently stop at 15; a successor registry/version and supersession relation are required."
+    },
+    "resource_kind_registry": {
+      "classification": "UNRESOLVED_DECISION",
+      "decision": "Image=1, Font=2, Brush=3 has no demonstrated numeric collision with current ObjectKind or brush identifiers.",
+      "blocker": "No accepted ResourceKind registry, metadata schema/version, or per-kind limits bind these values."
+    },
+    "document_digest": {
+      "classification": "UNRESOLVED_DECISION",
+      "decision": "The semantic boundary that manifest binding enters the digest and availability does not is supported by ADR-0013.",
+      "blocker": "Exact product digest algorithm, width, output bytes, manifest_revision/presence/capability inclusion, and the referenced G1 projection bytes are not frozen. G1 FNV-1a and verification-only hashes cannot be promoted implicitly."
+    },
+    "legacy_capability": {
+      "classification": "UNRESOLVED_DECISION",
+      "decision": "Absent-versus-malformed manifest behavior is internally coherent as a candidate.",
+      "blocker": "legacy-no-manifest-v1 is not bound to an accepted SnapshotCapability registry or migration window."
+    }
+  },
+  "findings": [
+    {
+      "id": "P12-RM-001",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "A ResourceId removed from the manifest can be recreated or an Undo can resurrect it without a canonical non-reuse rule.",
+      "impact": "Identity aliasing can make old references resolve to different bytes and invalidate replay, collaboration and recovery semantics.",
+      "existing_independent_coverage": "ADR-0013 establishes stable non-reusable identity, but no candidate tombstone/retired-set or resurrection rule is bound.",
+      "unique_detection_value": "Checks lifecycle identity reuse and compensating Undo/Redo behavior across remove and recreate sequences.",
+      "why_not_covered": "The package says upsert absent creates and only says Undo/Redo use compensating operations; it does not define tombstones, preimages or remove ordering.",
+      "owner": "P12/P13 semantic authority, with ADR-0014 Undo contract",
+      "path_lines": [".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/implementation-context.md:25-28", ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/implementation-context.md:45-47", ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/implementation-context.md:73-77"]
+    },
+    {
+      "id": "P12-RM-002",
+      "classification": "MISSING_CONTRACT",
+      "failure_mode": "A manifest ChangeSet is interpreted differently by full, delta or recovery Scene consumers because its identity and impact collection shape are undefined.",
+      "impact": "Incremental refresh can miss resources, publish mixed revisions or diverge from full compile.",
+      "existing_independent_coverage": "ADR-0019 separates SemanticChanges and hints; current ChangeSet only exposes ObjectSemanticChange records.",
+      "unique_detection_value": "Validates ResourceId-level impact ordering, merge rules and full/delta/recovery equivalence.",
+      "why_not_covered": "The candidate calls the impact both an object-level manifest record and a separate ResourceId collection without defining fields, ordering or consumers.",
+      "owner": "P12/P13 ChangeSet authority before Scene composition",
+      "path_lines": [".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/implementation-context.md:76-80", "runtime/semantic/include/canvas/semantic/change_set.hpp:21-79"]
+    },
+    {
+      "id": "P12-RM-003",
+      "classification": "UNRESOLVED_DECISION",
+      "failure_mode": "Implementations choose incompatible digest, Snapshot or compatibility encodings while all appear consistent with the candidate prose.",
+      "impact": "Cross-platform replay, persistence and resource refresh lose deterministic semantic identity.",
+      "existing_independent_coverage": "Canonical corpus gives projection/bytes priority and treats hash as acceleration unless separately frozen.",
+      "unique_detection_value": "Forces exact algorithm, presence, field ownership and compatibility authority before code can diverge.",
+      "why_not_covered": "The current source and accepted verification authorities intentionally leave these exact choices open.",
+      "owner": "P12/P13 plus owning digest/Snapshot compatibility authority",
+      "path_lines": [".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/implementation-context.md:113-152", "docs/notion/authority/10-verification/semantic-conformance-golden-corpus-v0.1.md:19", "docs/adr/0020-document-snapshot-operation-recovery.md:34-39"]
+    }
+  ],
+  "required_resolution_before_third_package": [
+    "Bind Snapshot manifest/presence, Document revision, RecoveryFrontier, capability and digest fields to exact canonical field paths.",
+    "Bind or explicitly defer the product digest algorithm/width/bytes while preserving projection-first verification authority.",
+    "Create an accepted versioned ResourceKind registry with metadata/version/limits and unknown-kind policy.",
+    "Define non-reuse/tombstone and compensating manifest Undo/Redo preimage semantics.",
+    "Define the ResourceId-level ChangeSet impact shape and full/delta/recovery consumer contract.",
+    "Bind legacy-no-manifest-v1 to a capability and migration authority."
+  ],
+  "downstream": {
+    "third_package_p32_authorized": false,
+    "next_owner": "P12/P13 Authority owner, then re-materialize the third package and repeat independent Control Review"
+  }
+}
