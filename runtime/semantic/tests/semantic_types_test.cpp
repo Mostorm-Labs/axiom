@@ -77,7 +77,7 @@ TEST(SemanticTypes, RegistryIsExplicitAndClosed) {
         EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(value)));
     }
     EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(0)));
-    EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(16)));
+    EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(16)));
 }
 
 TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
@@ -117,7 +117,7 @@ TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {
 TEST(SemanticTypes, OperationCarriesClosedTypedPayloadAndStrongDocumentId) {
     static_assert(!std::is_convertible_v<DocumentId, ObjectId>);
     static_assert(!std::is_convertible_v<ObjectId, DocumentId>);
-    static_assert(std::variant_size_v<OperationPayload> == 15);
+    static_assert(std::variant_size_v<OperationPayload> == 16);
 
     Operation operation{};
     operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(7U)}};

@@ -427,9 +427,13 @@ bool validRichTextStep(const RichTextStep& step) noexcept {
                                  std::is_same_v<Step, SetInlineStyleStep> ||
                                  std::is_same_v<Step, SetParagraphStyleStep>) {
                 if (!validId(value.paragraph_id)) return false;
-                if constexpr (std::is_same_v<Step, SetInlineStyleStep>) return validTextStyle(value.style);
-                if constexpr (std::is_same_v<Step, SetParagraphStyleStep>) return validParagraphStyle(value.style);
-                return true;
+                if constexpr (std::is_same_v<Step, SetInlineStyleStep>) {
+                    return validTextStyle(value.style);
+                } else if constexpr (std::is_same_v<Step, SetParagraphStyleStep>) {
+                    return validParagraphStyle(value.style);
+                } else {
+                    return true;
+                }
             } else if constexpr (std::is_same_v<Step, SplitParagraphStep>) {
                 return validId(value.paragraph_id) && validId(value.new_paragraph_id);
             } else {
@@ -797,6 +801,12 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, UpdateResourceManifestOp>) {
+                if (payload.upserts.empty() && payload.removes.empty() && payload.reactivations.empty()) return invalidCollection();
+                if (payload.upserts.size() > kMaxKeyedBatchItems || payload.removes.size() > kMaxKeyedBatchItems || payload.reactivations.size() > kMaxKeyedBatchItems) return invalidCollection();
+                for (const auto& entry : payload.upserts) if (!validateResourceManifestEntry(entry)) return {ValidationIssue::kInvalidLeaf};
+                for (const auto& id : payload.removes) if (!validId(id.value)) return invalidCollection();
+                // Continue to the common success return below.
             } else if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
                 if (!internal::validateObjectRecord(payload.object)) return invalidObjectKind();
             } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {

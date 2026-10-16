@@ -10,6 +10,7 @@
 #include "auditoryworks/axiom/v1/paint.pb.h"
 #include "auditoryworks/axiom/v1/property.pb.h"
 #include "auditoryworks/axiom/v1/rich_text.pb.h"
+#include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include "auditoryworks/axiom/v1/vector_path.pb.h"
 
 #include <algorithm>
@@ -31,6 +32,88 @@ void setVec(const Vec2& source, p::Vec2* destination) { destination->set_x(sourc
 bool getVec(const p::Vec2& source, Vec2& destination) { if (!source.has_x() || !source.has_y()) return false; destination={source.x(),source.y()}; return true; }
 void setColor(const ColorValue& source, p::ColorValue* destination) { destination->set_r(source.r);destination->set_g(source.g);destination->set_b(source.b);destination->set_a(source.a); }
 bool getColor(const p::ColorValue& source, ColorValue& destination) { if(!source.has_r()||!source.has_g()||!source.has_b()||!source.has_a())return false; destination={source.r(),source.g(),source.b(),source.a()}; return true; }
+
+bool mapToProtobufResourceManifestEntry(const ResourceManifestEntry& source, p::ResourceManifestEntry& destination) {
+    if (source.resource_id.value.isZero() || !validateResourceManifestEntry(source)) return false;
+    setId(source.resource_id.value, destination.mutable_resource_id());
+    destination.set_resource_kind(static_cast<std::uint32_t>(source.resource_kind));
+    destination.set_resource_revision(source.resource_revision);
+    destination.set_content_hash(source.content_hash);
+    destination.set_byte_length(source.byte_length);
+    destination.set_decode_version(source.decode_version);
+    destination.set_layout_version(source.layout_version);
+    destination.set_metadata(std::string(reinterpret_cast<const char*>(source.metadata.data()), source.metadata.size()));
+    return true;
+}
+
+bool mapFromProtobufResourceManifestEntry(const p::ResourceManifestEntry& source, ResourceManifestEntry& destination) {
+    ObjectId id;
+    if (!source.has_resource_id() || !getId(source.resource_id(), id) || id.isZero() ||
+        !source.has_resource_kind() || !source.has_resource_revision() || !source.has_content_hash() ||
+        !source.has_byte_length() || !source.has_decode_version() || !source.has_layout_version() ||
+        !source.has_metadata()) return false;
+    destination.resource_id = ResourceId{id};
+    destination.resource_kind = static_cast<ResourceKind>(source.resource_kind());
+    destination.resource_revision = source.resource_revision();
+    destination.content_hash = source.content_hash();
+    destination.byte_length = source.byte_length();
+    destination.decode_version = source.decode_version();
+    destination.layout_version = source.layout_version();
+    const auto metadata = source.metadata();
+    destination.metadata.assign(metadata.begin(), metadata.end());
+    return validateResourceManifestEntry(destination);
+}
+
+bool mapToProtobufResourceManifest(const ResourceManifest& source, p::ResourceManifest& destination) {
+    if (!validateResourceManifest(source)) return false;
+    destination.set_schema_version(source.schema_version);
+    destination.set_manifest_revision(source.manifest_revision);
+    for (const auto& entry : source.entries) {
+        if (!mapToProtobufResourceManifestEntry(entry, *destination.add_entries())) return false;
+    }
+    for (const auto& tombstone : source.retired_entries) {
+        if (tombstone.resource_id.value.isZero() || tombstone.removal_operation_id.isZero() ||
+            tombstone.lineage_token.size() != 32U || !validateResourceManifestEntry(tombstone.preimage)) return false;
+        auto* out = destination.add_retired_entries();
+        setId(tombstone.resource_id.value, out->mutable_resource_id());
+        out->set_retired_revision(tombstone.retired_revision);
+        out->set_last_content_hash(tombstone.last_content_hash);
+        setId(tombstone.removal_operation_id.value(), out->mutable_removal_operation_id());
+        if (!mapToProtobufResourceManifestEntry(tombstone.preimage, *out->mutable_preimage())) return false;
+        out->set_lineage_token(std::string(reinterpret_cast<const char*>(tombstone.lineage_token.data()), tombstone.lineage_token.size()));
+    }
+    return true;
+}
+
+bool mapFromProtobufResourceManifest(const p::ResourceManifest& source, ResourceManifest& destination) {
+    if (!source.has_schema_version() || !source.has_manifest_revision()) return false;
+    destination = ResourceManifest{};
+    destination.schema_version = source.schema_version();
+    destination.manifest_revision = source.manifest_revision();
+    for (const auto& wire : source.entries()) {
+        ResourceManifestEntry entry;
+        if (!mapFromProtobufResourceManifestEntry(wire, entry)) return false;
+        destination.entries.push_back(std::move(entry));
+    }
+    for (const auto& wire : source.retired_entries()) {
+        ResourceManifestTombstone tombstone;
+        ObjectId id;
+        ObjectId removal;
+        if (!wire.has_resource_id() || !getId(wire.resource_id(), id) || id.isZero() ||
+            !wire.has_retired_revision() || !wire.has_last_content_hash() ||
+            !wire.has_removal_operation_id() || !getId(wire.removal_operation_id(), removal) || removal.isZero() ||
+            !wire.has_preimage() || !wire.has_lineage_token()) return false;
+        tombstone.resource_id = ResourceId{id};
+        tombstone.retired_revision = wire.retired_revision();
+        tombstone.last_content_hash = wire.last_content_hash();
+        tombstone.removal_operation_id = OperationId{removal};
+        if (!mapFromProtobufResourceManifestEntry(wire.preimage(), tombstone.preimage)) return false;
+        const auto token = wire.lineage_token();
+        tombstone.lineage_token.assign(token.begin(), token.end());
+        destination.retired_entries.push_back(std::move(tombstone));
+    }
+    return normalizeResourceManifest(destination);
+}
 
 void setGeometry(const VectorPathGeometry& source, p::VectorPathGeometry* destination) {
     destination->set_fill_rule(static_cast<p::FillRule>(source.fill_rule));
@@ -205,7 +288,7 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
             ObjectRecord record{};record.id=value.object_id;record.kind=ObjectKind::kImage;record.kind_version=1;record.placement.order_key=OrderKey({1});record.content=value.content;
             p::ObjectRecord mapped; if(!toProtobufObjectRecord(record,mapped)) return false;*out->mutable_content()=mapped.content().image();
         } else if constexpr (std::is_same_v<T, AddStrokeOp>) {
-            return toProtobufObjectRecord(value.object,*payload->mutable_add_stroke()->mutable_object());
+            if (!toProtobufObjectRecord(value.object, *payload->mutable_add_stroke()->mutable_object())) return false;
         } else if constexpr (std::is_same_v<T, SplitStrokesOp>) {
             for(const auto& item:value.splits) {auto* out=payload->mutable_split_strokes()->add_splits();setId(item.source_stroke_id,out->mutable_source_stroke_id());for(const auto& record:item.replacements) if(!toProtobufObjectRecord(record,*out->add_replacements()))return false;}
         } else if constexpr (std::is_same_v<T, AddEraseMasksOp>) {
@@ -228,9 +311,42 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
             },step);
         } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) {
             auto* out=payload->mutable_set_connector_content();setId(value.object_id,out->mutable_object_id());setEndpoint(value.content.start,out->mutable_content()->mutable_start());setEndpoint(value.content.end,out->mutable_content()->mutable_end());out->mutable_content()->set_routing(static_cast<p::ConnectorRouting>(value.content.routing));
+        } else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
+            auto* out = payload->mutable_update_resource_manifest();
+            out->set_expected_manifest_revision(value.expected_manifest_revision);
+            for (const auto& entry : value.upserts) {
+                if (!mapToProtobufResourceManifestEntry(entry, *out->add_upserts())) return false;
+            }
+            for (const auto& id : value.removes) setId(id.value, out->add_removes());
+            for (const auto& expectation : value.expectations) {
+                auto* item = out->add_expectations();
+                setId(expectation.resource_id.value, item->mutable_resource_id());
+                item->set_state(static_cast<std::uint32_t>(expectation.state));
+                item->set_revision(expectation.revision);
+            }
+            for (const auto& reactivation : value.reactivations) {
+                auto* item = out->add_reactivations();
+                if (!mapToProtobufResourceManifestEntry(reactivation.entry, *item->mutable_entry()) ||
+                    !mapToProtobufResourceManifestEntry(reactivation.expected_preimage, *item->mutable_expected_preimage())) return false;
+                setId(reactivation.expected_removal_operation_id.value(), item->mutable_expected_removal_operation_id());
+                item->set_expected_lineage_token(std::string(reinterpret_cast<const char*>(reactivation.expected_lineage_token.data()), reactivation.expected_lineage_token.size()));
+            }
         }
         return true;
     }, source.payload);
+}
+
+bool toProtobufResourceManifestEntry(const ResourceManifestEntry& source, p::ResourceManifestEntry& destination) {
+    return mapToProtobufResourceManifestEntry(source, destination);
+}
+bool fromProtobufResourceManifestEntry(const p::ResourceManifestEntry& source, ResourceManifestEntry& destination) {
+    return mapFromProtobufResourceManifestEntry(source, destination);
+}
+bool toProtobufResourceManifest(const ResourceManifest& source, p::ResourceManifest& destination) {
+    return mapToProtobufResourceManifest(source, destination);
+}
+bool fromProtobufResourceManifest(const p::ResourceManifest& source, ResourceManifest& destination) {
+    return mapFromProtobufResourceManifest(source, destination);
 }
 
 bool roundTripProtobufObjectRecord(const ObjectRecord& source, ObjectRecord& destination) {

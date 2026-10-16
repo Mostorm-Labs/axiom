@@ -4,6 +4,7 @@
 #include "canvas/semantic/operation.hpp"
 #include "canvas/semantic/restore_planner.hpp"
 #include "canvas/semantic/operation_specific_validation.hpp"
+#include "canvas/semantic/change_set.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -23,6 +24,8 @@ struct PreparedApplyPlan final {
     std::vector<ObjectRecord> replacements;
     std::vector<ObjectId> deletes;
     std::optional<DeleteClosure> delete_closure;
+    std::optional<ResourceManifest> manifest;
+    std::vector<ResourceManifestSemanticChange> resource_changes;
 };
 
 struct PrepareResult final {

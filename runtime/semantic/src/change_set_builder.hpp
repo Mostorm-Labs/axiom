@@ -13,6 +13,7 @@ namespace canvas::semantic::internal {
 // A1 ledger write have succeeded.
 struct PreparedChangeSet final {
     std::vector<ObjectSemanticChange> changes;
+    std::vector<ResourceManifestSemanticChange> resource_changes;
 };
 
 [[nodiscard]] std::optional<PreparedChangeSet> prepareChangeSet(

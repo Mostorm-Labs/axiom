@@ -510,7 +510,7 @@ bool allowsField(const std::string& root_type, std::uint32_t field) {
     if (root_type == "ColorValue") return field >= 1U && field <= 4U;
     if (root_type == "Placement") return field == 1U || field == 2U;
     if (root_type == "DashPattern") return field == 1U || field == 2U;
-    if (root_type == "DocumentSnapshot") return field >= 1U && field <= 3U;
+    if (root_type == "DocumentSnapshot") return field >= 1U && field <= 10U;
     if (root_type == "ParagraphStyle") return field >= 1U && field <= 4U;
     if (root_type == "RichTextDocument") return field == 1U;
     if (root_type == "RichTextDelta") return field == 1U || field == 2U;
@@ -529,7 +529,7 @@ bool hasExpectedWireType(const std::string& root_type, std::uint32_t field, std:
     if (root_type == "ColorValue") return type == 5U;
     if (root_type == "Placement") return type == 2U;
     if (root_type == "DashPattern") return (field == 1U && type == 2U) || (field == 2U && type == 1U);
-    if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U);
+    if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U) || (field == 4U && type == 2U) || (field == 5U && type == 0U) || (field == 6U && type == 2U) || (field == 7U && type == 0U) || (field >= 8U && field <= 10U && type == 2U);
     if (root_type == "ParagraphStyle") return (field == 1U && type == 0U) || (field >= 2U && type == 1U);
     if (root_type == "RichTextDocument") return field == 1U && type == 2U;
     if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || (field == 2U && type == 2U);
@@ -1392,6 +1392,7 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         case OperationKind::kRemoveEraseMasks: operation.mutable_payload()->mutable_remove_erase_masks(); break;
         case OperationKind::kEditRichText: operation.mutable_payload()->mutable_edit_rich_text(); break;
         case OperationKind::kSetConnectorContent: operation.mutable_payload()->mutable_set_connector_content(); break;
+        case OperationKind::kUpdateResourceManifest: operation.mutable_payload()->mutable_update_resource_manifest(); break;
     }
     std::string bytes;
     if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
@@ -1512,6 +1513,15 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
         { EditRichTextOp value; if(!mapId(decoded.payload().edit_rich_text().object_id(),value.object_id)||!mapRichTextDelta(decoded.payload().edit_rich_text().delta(),value.delta)) payload_ok=false; operation.payload=std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::kSetConnectorContent:
         { SetConnectorContentOp value; if(!mapId(decoded.payload().set_connector_content().object_id(),value.object_id)||!mapConnector(decoded.payload().set_connector_content().content(),value.content)) payload_ok=false; operation.payload=std::move(value); break; }
+         case auditoryworks::axiom::v1::OperationPayload::kUpdateResourceManifest:
+         { UpdateResourceManifestOp value; const auto& item = decoded.payload().update_resource_manifest();
+           if (!item.has_expected_manifest_revision()) payload_ok = false;
+           value.expected_manifest_revision = item.expected_manifest_revision();
+           for (const auto& wire : item.upserts()) { ResourceManifestEntry entry; if (!internal::fromProtobufResourceManifestEntry(wire, entry)) { payload_ok = false; break; } value.upserts.push_back(std::move(entry)); }
+           for (const auto& wire_id : item.removes()) { ObjectId id; if (!mapId(wire_id, id)) { payload_ok = false; break; } value.removes.push_back(ResourceId{id}); }
+           if (payload_ok) for (const auto& wire : item.expectations()) { ResourceExpectation expectation; ObjectId id; if (!wire.has_resource_id() || !mapId(wire.resource_id(), id) || !wire.has_state() || !wire.has_revision()) { payload_ok = false; break; } expectation.resource_id = ResourceId{id}; expectation.state = static_cast<ResourceExpectationState>(wire.state()); expectation.revision = wire.revision(); value.expectations.push_back(std::move(expectation)); }
+           if (payload_ok) for (const auto& wire : item.reactivations()) { ReactivateResource reactivation; ObjectId removal; if (!wire.has_entry() || !internal::fromProtobufResourceManifestEntry(wire.entry(), reactivation.entry) || !wire.has_expected_removal_operation_id() || !mapId(wire.expected_removal_operation_id(), removal) || !wire.has_expected_preimage() || !internal::fromProtobufResourceManifestEntry(wire.expected_preimage(), reactivation.expected_preimage) || !wire.has_expected_lineage_token()) { payload_ok = false; break; } reactivation.expected_removal_operation_id = OperationId{removal}; const auto token = wire.expected_lineage_token(); reactivation.expected_lineage_token.assign(token.begin(), token.end()); value.reactivations.push_back(std::move(reactivation)); }
+           operation.payload = std::move(value); break; }
         case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
             return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
     }
@@ -1568,6 +1578,7 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         case OperationKind::kRemoveEraseMasks: operation.payload = RemoveEraseMasksOp{}; break;
         case OperationKind::kEditRichText: operation.payload = EditRichTextOp{}; break;
         case OperationKind::kSetConnectorContent: operation.payload = SetConnectorContentOp{}; break;
+        case OperationKind::kUpdateResourceManifest: operation.payload = UpdateResourceManifestOp{}; break;
     }
     return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }

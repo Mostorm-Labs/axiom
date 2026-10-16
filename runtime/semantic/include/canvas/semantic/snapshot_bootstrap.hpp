@@ -42,6 +42,22 @@ class SnapshotBootstrapper final {
         DocumentRuntimeState& state,
         IndexedObjectStore& objects,
         SemanticGenerationState& generation);
+
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot& snapshot,
+        SnapshotCapability capability,
+        DocumentRuntimeState& state,
+        ReferenceObjectStore& objects,
+        ResourceManifest& manifest,
+        SemanticGenerationState& generation);
+
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot& snapshot,
+        SnapshotCapability capability,
+        DocumentRuntimeState& state,
+        IndexedObjectStore& objects,
+        ResourceManifest& manifest,
+        SemanticGenerationState& generation);
 };
 
 } // namespace canvas::semantic

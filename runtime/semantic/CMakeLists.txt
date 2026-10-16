@@ -1,6 +1,8 @@
 add_library(canvas_runtime_semantic STATIC
     src/applied_operation_ledger.cpp
     src/change_set.cpp
+    src/resource_manifest.cpp
+    src/sha256_internal.cpp
     src/indexed_object_store.cpp
     src/idempotency.cpp
     src/object_index.cpp
@@ -64,10 +66,15 @@ if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
       -Wno-nullability-extension
       -Wno-deprecated-declarations)
     if(MSVC)
-      list(APPEND AXIOM_PROTO_GENERATED_COMPILE_OPTIONS -Wno-invalid-offsetof)
+      list(APPEND AXIOM_PROTO_GENERATED_COMPILE_OPTIONS
+        -Wno-invalid-offsetof
+        /wd4100)
     endif()
     set_source_files_properties(${AXIOM_PROTO_GENERATED_CC}
       PROPERTIES COMPILE_OPTIONS "${AXIOM_PROTO_GENERATED_COMPILE_OPTIONS}")
+  elseif(MSVC)
+    set_source_files_properties(${AXIOM_PROTO_GENERATED_CC}
+      PROPERTIES COMPILE_OPTIONS "/wd4100")
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set_source_files_properties(${AXIOM_PROTO_GENERATED_CC}
       PROPERTIES COMPILE_OPTIONS "-Wno-deprecated-declarations")

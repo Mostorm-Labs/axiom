@@ -78,4 +78,15 @@ AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, const PreparedApp
     return applyPreparedPlanInternal(store, plan);
 }
 
+AtomicApplyResult applyPreparedPlan(ReferenceObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan) {
+    auto result = applyPreparedPlan(store, plan);
+    if (result.status == AtomicApplyStatus::kApplied && plan.manifest.has_value()) manifest = *plan.manifest;
+    return result;
+}
+AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan) {
+    auto result = applyPreparedPlan(store, plan);
+    if (result.status == AtomicApplyStatus::kApplied && plan.manifest.has_value()) manifest = *plan.manifest;
+    return result;
+}
+
 } // namespace canvas::semantic::internal

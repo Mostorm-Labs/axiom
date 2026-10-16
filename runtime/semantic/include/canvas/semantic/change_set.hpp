@@ -1,9 +1,11 @@
 #pragma once
 
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/resource_manifest.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <vector>
 
@@ -43,6 +45,10 @@ struct ObjectSemanticChange final {
     std::vector<FieldId> changed_fields;
 };
 
+enum class ResourceManifestChangeFlags : std::uint8_t { kCreated=1, kUpdated=2, kRemoved=4 };
+struct ResourceManifestStateValue final { std::optional<ResourceManifestEntry> entry; std::optional<ResourceManifestTombstone> tombstone; bool operator==(const ResourceManifestStateValue&) const = default; };
+struct ResourceManifestSemanticChange final { ResourceId resource_id{}; ResourceManifestChangeFlags flags=ResourceManifestChangeFlags::kCreated; ResourceManifestStateValue before{}; ResourceManifestStateValue after{}; bool operator==(const ResourceManifestSemanticChange&) const = default; };
+
 // Immutable post-commit semantic-impact event. It intentionally carries no
 // derived scene, renderer, tile, GPU, or visual-contribution information.
 class ChangeSet final {
@@ -51,6 +57,11 @@ class ChangeSet final {
         SemanticGeneration before_generation,
         SemanticGeneration after_generation,
         std::vector<ObjectSemanticChange> objects);
+    [[nodiscard]] static ChangeSet fromChanges(
+        SemanticGeneration before_generation,
+        SemanticGeneration after_generation,
+        std::vector<ObjectSemanticChange> objects,
+        std::vector<ResourceManifestSemanticChange> resources);
 
     [[nodiscard]] constexpr const SemanticGeneration& beforeGeneration() const noexcept {
         return before_generation_;
@@ -61,6 +72,7 @@ class ChangeSet final {
     [[nodiscard]] std::span<const ObjectSemanticChange> objects() const noexcept {
         return objects_;
     }
+    [[nodiscard]] std::span<const ResourceManifestSemanticChange> resourceChanges() const noexcept { return resource_changes_; }
 
   private:
     friend ChangeSet internal::finalizeChangeSet(
@@ -71,11 +83,13 @@ class ChangeSet final {
     ChangeSet(
         SemanticGeneration before_generation,
         SemanticGeneration after_generation,
-        std::vector<ObjectSemanticChange> objects) noexcept;
+        std::vector<ObjectSemanticChange> objects,
+        std::vector<ResourceManifestSemanticChange> resources = {}) noexcept;
 
     SemanticGeneration before_generation_{};
     SemanticGeneration after_generation_{};
     std::vector<ObjectSemanticChange> objects_;
+    std::vector<ResourceManifestSemanticChange> resource_changes_;
 };
 
 } // namespace canvas::semantic

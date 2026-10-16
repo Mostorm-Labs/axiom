@@ -3,6 +3,7 @@
 #include "canvas/semantic/codec.hpp"
 #include "canvas/semantic/document_id.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/resource_manifest.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -19,6 +20,14 @@ struct SemanticSnapshot final {
     DocumentId document_id{};
     std::uint32_t schema_version = 0;
     std::vector<ObjectRecord> objects;
+    ResourceManifest manifest{};
+    bool manifest_present = false;
+    std::uint64_t document_revision = 0;
+    std::vector<std::uint8_t> recovery_frontier;
+    std::uint32_t digest_algorithm = 0;
+    std::vector<std::uint8_t> document_digest;
+    std::vector<std::uint8_t> capability_requirements;
+    std::vector<std::uint8_t> checkpoint_digest;
 
     bool operator==(const SemanticSnapshot&) const = default;
 };

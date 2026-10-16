@@ -15,7 +15,7 @@ namespace canvas::semantic {
 namespace {
 
 bool supportedSnapshotVersion(std::uint32_t version) noexcept {
-    return version == 1U || version == 2U;
+    return version == 1U || version == 2U || version == 3U;
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
@@ -52,6 +52,15 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     if (!supportedSnapshotVersion(snapshot.schema_version) || snapshot.document_id.isZero()) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
+    if (snapshot.schema_version >= 3U && (!snapshot.manifest_present || !validateResourceManifest(snapshot.manifest) ||
+        snapshot.digest_algorithm != 1U || snapshot.document_digest.size() != 32U ||
+        snapshot.checkpoint_digest.size() != 32U || snapshot.recovery_frontier.empty() ||
+        snapshot.capability_requirements.empty())) {
+        return rejectLoading(state, StatefulIssue::kInvalidApplicability);
+    }
+    if (snapshot.schema_version < 3U && snapshot.manifest_present) {
+        return rejectLoading(state, StatefulIssue::kInvalidApplicability);
+    }
 
     std::vector<ObjectRecord> ordered = snapshot.objects;
     std::sort(ordered.begin(), ordered.end(), [](const ObjectRecord& left, const ObjectRecord& right) {
@@ -82,6 +91,8 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
         hierarchy_edits.push_back(HierarchyEdit{object.id, object.placement});
         affected_ids.push_back(object.id);
     }
+    // Resource availability is derived; the canonical manifest is restored as a
+    // complete value only after every object and manifest invariant has passed.
 
     const StatefulResult hierarchy = validateStagedHierarchy(staged, hierarchy_edits);
     if (!hierarchy.ok()) return rejectLoading(state, hierarchy.issue);
@@ -123,6 +134,19 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     return result;
 }
 
+template <typename Store>
+SnapshotBootstrapResult restoreWithManifestImpl(const SemanticSnapshot& snapshot,
+    SnapshotCapability capability, DocumentRuntimeState& state, Store& objects,
+    ResourceManifest& manifest, SemanticGenerationState& generation) {
+    if (snapshot.schema_version < 3U || !snapshot.manifest_present) return rejectWithoutFailure(StatefulIssue::kInvalidApplicability);
+    const auto before = manifest;
+    const auto result = restoreImpl(snapshot, capability, state, objects, generation);
+    if (!result.restored) return result;
+    manifest = snapshot.manifest;
+    if (!validateResourceManifest(manifest)) { manifest = before; return rejectLoading(state, StatefulIssue::kInvalidApplicability); }
+    return result;
+}
+
 } // namespace
 
 SnapshotBootstrapResult SnapshotBootstrapper::restore(
@@ -131,6 +155,20 @@ SnapshotBootstrapResult SnapshotBootstrapper::restore(
     ReferenceObjectStore& objects,
     SemanticGenerationState& generation) {
     return restoreImpl(snapshot, SnapshotCapability::kLegacyV1, state, objects, generation);
+}
+
+SnapshotBootstrapResult SnapshotBootstrapper::restore(
+    const SemanticSnapshot& snapshot, SnapshotCapability capability,
+    DocumentRuntimeState& state, ReferenceObjectStore& objects,
+    ResourceManifest& manifest, SemanticGenerationState& generation) {
+    return restoreWithManifestImpl(snapshot, capability, state, objects, manifest, generation);
+}
+
+SnapshotBootstrapResult SnapshotBootstrapper::restore(
+    const SemanticSnapshot& snapshot, SnapshotCapability capability,
+    DocumentRuntimeState& state, IndexedObjectStore& objects,
+    ResourceManifest& manifest, SemanticGenerationState& generation) {
+    return restoreWithManifestImpl(snapshot, capability, state, objects, manifest, generation);
 }
 
 SnapshotBootstrapResult SnapshotBootstrapper::restore(

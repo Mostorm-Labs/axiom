@@ -24,6 +24,7 @@ enum class OperationKind : std::uint8_t {
     kRemoveEraseMasks = 13,
     kEditRichText = 14,
     kSetConnectorContent = 15,
+    kUpdateResourceManifest = 16,
 };
 
 struct Operation final {
