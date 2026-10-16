@@ -1,0 +1,16 @@
+{
+  "task_id":"FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "review_revision":"aa79b7f21a4f51b1e46cf0ecf147c82afc15e0f7",
+  "package_ref":"repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/package.json@aa79b7f21a4f51b1e46cf0ecf147c82afc15e0f7",
+  "repository":"Mostorm-Labs/axiom",
+  "task_anchor":"02078a36818e7722309aefe679089a48212a424d",
+  "authority_audit":{"status":"PASS","accepted_revision":"057464f9fab2db4b67c032134cce3f5f417a64e0","package_sha256":"f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5","acceptance_ref":"repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680","acceptance_sha256":"b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1"},
+  "package_binding":{"status":"PASS","all_local_refs_match":true,"json_parse":"PASS","git_diff_check":"PASS"},
+  "frozen_requirement_audit":{"passed":["typed semantic model scope is explicit","OperationKind=16 and Snapshot schema3 scope are explicit","atomic/idempotent/compatibility requirements are explicit","forbidden composition/provider/history changes are explicit"],"failed":[]},
+  "frozen_evidence_audit":{"passed":["package binding oracle exit 0","RED oracle exits 1 at baseline as required","exact task anchor ancestry","reviewer-accessible pushed branch"],"failed":[]},
+  "repository_reality_audit":{"head_is_descendant_of_anchor":true,"changed_paths_only_package":true,"product_implementation_present_at_anchor":false,"red_output":"RED: typed ResourceManifest, OperationKind=16, ChangeSet resourceChanges and Snapshot schema3 are absent at baseline"},
+  "findings":{"blocking_high_impact":[],"non_blocking":["P32 implementation and all semantic build/test evidence remain pending by design"]},
+  "verdict":"READY_FOR_P32_ACCEPTANCE",
+  "route":"User must explicitly accept this exact package before any production semantic mutation. After acceptance, P32 may implement the frozen closure and return READY_FOR_CONTROL_REVIEW or a classified blocker.",
+  "nonclaims":["No P32 authorization","No production implementation","No Gate/P34 PASS","No Scene composition authorization"]
+}
