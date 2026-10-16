@@ -7,8 +7,9 @@ RuntimeAppBinding::RuntimeAppBinding(ViewId viewId, SurfaceProfile initialSurfac
     : viewId_(viewId), surfaces_(viewId, std::move(initialSurface)) {}
 
 bool RuntimeAppBinding::registerInputSource(InputSourceRegistration registration) {
-    return registration.source != 0U && !registration.platform.empty() &&
-           sources_.insert(registration.source).second;
+    if (registration.source == 0U || registration.platform.empty()) return false;
+    retiredSources_.erase(registration.source);
+    return sources_.insert(registration.source).second;
 }
 
 bool RuntimeAppBinding::unregisterInputSource(input::InputSourceId source,
@@ -18,6 +19,8 @@ bool RuntimeAppBinding::unregisterInputSource(input::InputSourceId source,
     const auto result = ingress_.sourceLost(source, sequence, timestampNs);
     if (cancelSink_ != nullptr && result.accepted) cancelSink_->onSessionCancel(result);
     sources_.erase(source);
+    retiredSources_.insert(source);
+    sourceSequenceFloor_[source] = sequence;
     return true;
 }
 
@@ -35,8 +38,19 @@ input::PlatformInteractionIngressResult RuntimeAppBinding::submit(
     if (!sources_.contains(source)) return {};
     for (const auto& sample : batch.samples) {
         if (sample.source != source) return {};
+        if (sample.phase == input::PointerPhase::kDown) {
+            const auto floor = sourceSequenceFloor_.find(source);
+            if (floor != sourceSequenceFloor_.end() && sample.sequence <= floor->second) return {};
+        }
     }
     return ingress_.submit(batch);
+}
+
+input::PlatformInteractionIngressResult RuntimeAppBinding::cancelPointer(
+    const input::PointerKey& key, std::uint64_t sequence,
+    std::uint64_t timestampNs) noexcept {
+    if (!sources_.contains(key.source)) return {};
+    return ingress_.cancelPointer(key, sequence, timestampNs);
 }
 
 std::optional<input::PointerKey> RuntimeAppBinding::keyFor(

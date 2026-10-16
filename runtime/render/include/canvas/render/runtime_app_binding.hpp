@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 
 namespace canvas::render {
 
@@ -40,10 +41,16 @@ class RuntimeAppBinding final {
     [[nodiscard]] input::PlatformInteractionIngressResult submit(
         input::InputSourceId source,
         const input::PlatformPointerBatch& batch) noexcept;
+    [[nodiscard]] input::PlatformInteractionIngressResult cancelPointer(
+        const input::PointerKey& key, std::uint64_t sequence,
+        std::uint64_t timestampNs) noexcept;
     [[nodiscard]] std::optional<input::PointerKey> keyFor(
         input::InputSourceId source, input::PointerId pointer) const noexcept;
     [[nodiscard]] bool hasInputSource(input::InputSourceId source) const noexcept {
         return sources_.contains(source);
+    }
+    [[nodiscard]] bool isRetiredInputSource(input::InputSourceId source) const noexcept {
+        return retiredSources_.contains(source);
     }
 
     [[nodiscard]] SurfaceProviderDisposition registerSurfaceProfile(
@@ -72,6 +79,8 @@ class RuntimeAppBinding final {
   private:
     input::PlatformInteractionIngress ingress_;
     std::unordered_set<input::InputSourceId> sources_;
+    std::unordered_set<input::InputSourceId> retiredSources_;
+    std::unordered_map<input::InputSourceId, std::uint64_t> sourceSequenceFloor_;
     SessionCancelSink* cancelSink_ = nullptr;
     ViewId viewId_{};
     SurfaceProviderRegistry surfaces_;

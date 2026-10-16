@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <thread>
+#include <limits>
 
 using namespace canvas::ink_playground;
 using namespace canvas::runtime;
@@ -227,6 +228,98 @@ void repeated_gestures_and_other_source_cancellation() {
   assert(host.semanticObjectCount()==2 && host.submittedOperationCount()==2);
 }
 
+void source_unregister_closes_coordinator_contact() {
+  InkPlaygroundHost host; assert(host.bindSurface(256,256));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  assert(host.registerInputSource(11, "test"));
+  PlatformPointerBatch a;
+  a.samples.push_back({11, 7, 1, 1000, 20, 20, 0.5F, 0, 0, {}, {},
+                       SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+  assert(host.acceptPlatformBatch(a, 1000));
+  assert(host.unregisterInputSource(11, 2, 2000));
+  assert(!host.creationActive());
+  assert(!host.transientOverlayDirty());
+  assert(!host.acceptPlatformBatch(a, 3000));
+  assert(host.registerInputSource(11, "test"));
+  PlatformPointerBatch b;
+  b.samples.push_back({11, 8, 3, 4000, 40, 40, 0.5F, 0, 0, {}, {},
+                       SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+  assert(host.acceptPlatformBatch(b, 4000));
+  assert(!host.viewportGestureClaimed());
+}
+
+void failed_brush_down_rolls_back_session() {
+  InkPlaygroundHost host; assert(host.bindSurface(256,256));
+  PlatformPointerBatch invalid;
+  invalid.samples.push_back({11, 9, 1, 1000,
+                             std::numeric_limits<float>::quiet_NaN(), 20.0F,
+                             .5F, 0, 0, {}, {}, SampleProvenance::kConfirmedCurrent,
+                             PointerPhase::kDown});
+  assert(!host.acceptPlatformBatch(invalid, 1000));
+  assert(host.setSelectionMode(true));
+  assert(!host.previewActive());
+}
+
+void queued_width_patch_preserves_remote_style() {
+  InkPlaygroundHost host; assert(host.bindSurface(256,256));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  PlatformPointerBatch down;
+  down.samples.push_back({11, 7, 1, 1000, 20, 20, .5F, 0, 0, {}, {},
+                          SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+  PlatformPointerBatch up = down;
+  up.samples.front().sequence = 2; up.samples.front().timestampNs = 2000;
+  up.samples.front().phase = PointerPhase::kUp; up.samples.front().x = 100; up.samples.front().y = 80;
+  assert(host.acceptPlatformBatch(down, 1000)); assert(host.acceptPlatformBatch(up, 2000));
+  assert(host.setSelectionMode(true)); assert(host.selectAtViewPoint(50, 45));
+  const CanvasTargetKey target{1,1,1,1}; CanvasControlBinding binding(host, target);
+  CanvasControlService service(binding);
+  const auto draft = binding.snapshot(target).selectedAppearance;
+  using namespace canvas::semantic;
+  const auto id = host.selectedPrimaryObject();
+  const SolidStroke remote{{.9F,.1F,.2F,1},2,StrokeCap::kRound,RoundJoin{},DashPattern{{3,4},1}};
+  assert(canvas::ink_playground::InkPlaygroundHistoryTestAccess::applyRemote(host,
+      PatchPropertiesOp{{{id,0x101,PropertyPatchAction::kSet,
+          PropertyValue{StrokeStyleValue{remote}}}}}));
+  CanvasControlRequest request{}; request.clientId=1; request.requestId=1; request.target=target;
+  request.payload.kind=CanvasControlPayloadKind::kSelectedAppearance;
+  request.payload.appearance=draft; request.payload.appearance.strokeWidth=9;
+  assert(service.enqueue(request).state == CanvasControlReceiptState::kQueued);
+  assert(service.processPending(1) == 1);
+  const auto actual = host.selectedObjectRecord(); assert(actual.has_value());
+  const auto entry = std::find_if(actual->properties.entries.begin(), actual->properties.entries.end(),
+      [](const auto& item){ return item.field_id == 0x101U; });
+  assert(entry != actual->properties.entries.end());
+  const auto result = std::get<SolidStroke>(std::get<StrokeStyleValue>(entry->value));
+  assert(result.width == 9 && result.color == remote.color && result.cap == remote.cap &&
+         result.join == remote.join && result.dash == remote.dash);
+}
+
+void queued_selected_size_keeps_original_target() {
+  InkPlaygroundHost host; assert(host.bindSurface(256,256));
+  const CanvasTargetKey target{1,1,1,1}; CanvasControlBinding binding(host, target);
+  CanvasControlService service(binding);
+  auto draw = [&](std::uint64_t pointer, float x, float y) {
+    assert(host.selectCreationPreset(CreationPreset::kRectangle));
+    PlatformPointerBatch d;
+    d.samples.push_back({11,pointer,1,1000,x,y,.5F,0,0,{}, {},
+                         SampleProvenance::kConfirmedCurrent,PointerPhase::kDown});
+    PlatformPointerBatch u=d; u.samples.front().sequence=2; u.samples.front().timestampNs=2000;
+    u.samples.front().phase=PointerPhase::kUp; u.samples.front().x=x+60; u.samples.front().y=y+50;
+    assert(host.acceptPlatformBatch(d,1000)); assert(host.acceptPlatformBatch(u,2000));
+  };
+  draw(31,20,20); draw(32,160,20);
+  assert(host.setSelectionMode(true)); assert(host.selectAtViewPoint(50,45));
+  const auto first = host.selectedPrimaryObject();
+  CanvasControlRequest request{}; request.clientId=9; request.requestId=1; request.target=target;
+  request.payload.kind=CanvasControlPayloadKind::kSelectedSize; request.payload.width=120; request.payload.height=90;
+  assert(service.enqueue(request).state == CanvasControlReceiptState::kQueued);
+  assert(host.selectAtViewPoint(190,45));
+  const auto second = host.selectedPrimaryObject(); assert(first != second);
+  assert(service.processPending(1) == 1);
+  const auto receipt = service.receipt({9,1}); assert(receipt.has_value());
+  assert(receipt->state == CanvasControlReceiptState::kStaleTarget);
+}
+
 struct Facade final : CanvasRuntimeFacadeAdapter {
   Facade(InkPlaygroundHost& h,CanvasTargetKey t):CanvasRuntimeFacadeAdapter(h,t){}
   RuntimeStateSnapshot readRuntimeState() const noexcept override {return {};}
@@ -250,6 +343,10 @@ void queue_never_applies_off_owner() {
 int main(int argc, char** argv) {
   if (argc > 1 && std::string_view(argv[1])=="preview") create_move_changes_real_pixels_without_canonical_mutation();
   else if(argc>1 && std::string_view(argv[1])=="sources") repeated_gestures_and_other_source_cancellation();
+  else if(argc>1 && std::string_view(argv[1])=="unregister") source_unregister_closes_coordinator_contact();
+  else if(argc>1 && std::string_view(argv[1])=="width-style") queued_width_patch_preserves_remote_style();
+  else if(argc>1 && std::string_view(argv[1])=="failed-down") failed_brush_down_rolls_back_session();
+  else if(argc>1 && std::string_view(argv[1])=="target-capture") queued_selected_size_keeps_original_target();
   else if(argc>1) queue_never_applies_off_owner();
   else if (argc > 1 && std::string_view(argv[1]) == "arrow") arrow_then_second_creation_remains_usable();
   else if (argc > 1 && std::string_view(argv[1]) == "arrow-arrow") arrow_then_arrow_remains_usable();

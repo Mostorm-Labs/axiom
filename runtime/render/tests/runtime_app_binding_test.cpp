@@ -39,8 +39,13 @@ int main() {
     const auto result = binding.submit(7U, batch);
     assert(result.accepted && result.normalized.samples.size() == 1U);
     assert(result.normalized.samples.front().key.valid());
-    assert(binding.notifySourceLost(7U, 2U, 2U));
+    assert(binding.unregisterInputSource(7U, 2U, 2U));
     assert(sink.calls == 1 && sink.keys.size() == 1U && sink.keys.front() == result.normalized.samples.front().key);
+    assert(binding.submit(7U, batch).accepted == false);
+    assert(binding.registerInputSource({7U, "android"}));
+    assert(!binding.submit(7U, batch).accepted);
+    batch.samples.front().sequence = 3U;
+    assert(binding.submit(7U, batch).accepted);
     assert(binding.registerSurfaceProfile(
                SurfaceProfile{info("second"), std::make_unique<RasterSkiaSurfaceProvider>()}) ==
            SurfaceProviderDisposition::kCommitted);

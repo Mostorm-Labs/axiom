@@ -367,6 +367,8 @@ bool CanvasEditingRuntime::cancel(interaction::DispatchMode mode,
     case interaction::DispatchMode::kCreation:
       creations_.erase(sample.key);
       creationFences_.erase(sample.key);
+      if (creations_.empty() && !selectionTransformActive()) (void)clearTransientOverlay();
+      canonicalPresentationDirty_ = true;
       return true;
     case interaction::DispatchMode::kPan:
       panPointers_.erase(sample.key);
@@ -495,8 +497,10 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   if (batch.samples.empty()) return false;
   const auto source = batch.samples.front().source;
   if (appBinding_ == nullptr) return false;
-  if (!appBinding_->hasInputSource(source) &&
-      !appBinding_->registerInputSource({source, "platform"})) return false;
+  if (!appBinding_->hasInputSource(source)) {
+    if (appBinding_->isRetiredInputSource(source)) return false;
+    if (!appBinding_->registerInputSource({source, "platform"})) return false;
+  }
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
@@ -623,12 +627,11 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
                                                   std::uint64_t sequence,
                                                   std::uint64_t timestampNs) noexcept {
   if (!key.valid() || sequence == 0U) return false;
-  input::PlatformPointerBatch batch;
-  batch.samples.push_back({key.source, key.pointer, sequence, timestampNs,
-                           0.0F, 0.0F, 0.0F, 0.0F, 0.0F, {}, {},
-                           input::SampleProvenance::kConfirmedCurrent,
-                           input::PointerPhase::kCancel});
-  return acceptPlatformBatch(batch, timestampNs);
+  if (appBinding_ == nullptr) return false;
+  const auto result = appBinding_->cancelPointer(key, sequence, timestampNs);
+  if (!result.accepted) return false;
+  onSessionCancel(result);
+  return true;
 }
 
 bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept {
@@ -771,11 +774,14 @@ void CanvasEditingRuntime::onSessionCancel(
     const input::PlatformInteractionIngressResult& result) noexcept {
   for (const auto& sample : result.normalized.samples) {
     if (!sample.key.valid()) continue;
+    (void)coordinator_->route(sample);
     (void)cancelStroke(sample.key);
     (void)dispatchRuntime_.cancel(sample);
     panPointers_.erase(sample.key);
     creations_.erase(sample.key);
     creationFences_.erase(sample.key);
+    if (creations_.empty() && !selectionTransformActive()) (void)clearTransientOverlay();
+    canonicalPresentationDirty_ = true;
   }
 }
 
@@ -882,6 +888,12 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
   }
   if (previewProvider_ == nullptr || previewController_ == nullptr ||
       !previewController_->begin(1U, pointerId, 1U, previewProvider_->generation())) {
+    if (arcPreviewSink_ != nullptr)
+      (void)arcPreviewSink_->cancel(ink::PreviewIdentity{1U, pointerId, 1U});
+    brushSessions_.erase(pointerId);
+    brushSessionPackages_.erase(pointerId);
+    brushSessionSeeds_.erase(pointerId);
+    brushPreviews_.erase(pointerId);
     return false;
   }
   return true;
@@ -1076,7 +1088,23 @@ bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance
   if(!before || selectedObjectLocked() || !validAppearance(appearance) ||
       (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector))return false;
   semantic::PatchPropertiesOp forward,inverse;
-  for(const auto& entry:appearanceProperties(appearance,before->kind==semantic::ObjectKind::kShape).entries) {
+  auto desiredProperties = appearanceProperties(appearance,before->kind==semantic::ObjectKind::kShape);
+  for (auto& entry : desiredProperties.entries) {
+    if (entry.field_id == 0x101U && appearance.strokeEnabled) {
+      const auto current = std::find_if(before->properties.entries.begin(),
+          before->properties.entries.end(), [](const auto& item) { return item.field_id == 0x101U; });
+      if (current != before->properties.entries.end()) {
+        const auto* currentStyle = std::get_if<semantic::StrokeStyleValue>(&current->value);
+        if (currentStyle != nullptr && std::holds_alternative<semantic::SolidStroke>(*currentStyle)) {
+          auto merged = std::get<semantic::SolidStroke>(std::get<semantic::StrokeStyleValue>(entry.value));
+          const auto& preserved = std::get<semantic::SolidStroke>(*currentStyle);
+          merged.cap = preserved.cap;
+          merged.join = preserved.join;
+          merged.dash = preserved.dash;
+          entry.value = semantic::StrokeStyleValue{std::move(merged)};
+        }
+      }
+    }
     forward.patches.push_back({before->id,entry.field_id,semantic::PropertyPatchAction::kSet,entry.value});
     const auto prior=std::find_if(before->properties.entries.begin(),before->properties.entries.end(),
         [&](const auto& item){return item.field_id==entry.field_id;});
@@ -1088,6 +1116,33 @@ bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance
   const auto f=allocateOperationId(),i=allocateOperationId();
   return applyLocalHistoryOperation({f,documentId_,1,1,std::move(forward)},
       {i,documentId_,1,1,std::move(inverse)});
+}
+bool CanvasEditingRuntime::setSelectedStrokeWidth(double width) noexcept {
+  if (!std::isfinite(width) || width <= 0.0 || selection_.primary().isZero() || selectedObjectLocked()) return false;
+  const auto* before = semanticObjects_.find(selection_.primary());
+  if (before == nullptr) return false;
+  const auto it = std::find_if(before->properties.entries.begin(), before->properties.entries.end(),
+      [](const auto& entry) { return entry.field_id == 0x101U; });
+  if (it == before->properties.entries.end()) return false;
+  const auto* style = std::get_if<semantic::StrokeStyleValue>(&it->value);
+  if (style == nullptr || !std::holds_alternative<semantic::SolidStroke>(*style)) return false;
+  auto patched = std::get<semantic::SolidStroke>(*style);
+  if (patched.width == width) return true;
+  const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return false;
+  patched.width = width;
+  semantic::PropertyPatch forwardPatch{before->id, 0x101U,
+      semantic::PropertyPatchAction::kSet,
+      semantic::PropertyValue{semantic::StrokeStyleValue{patched}}};
+  semantic::PropertyPatch inversePatch{before->id, 0x101U,
+      semantic::PropertyPatchAction::kSet, it->value};
+  semantic::PatchPropertiesOp forwardPayload;
+  forwardPayload.patches.push_back(std::move(forwardPatch));
+  semantic::PatchPropertiesOp inversePayload;
+  inversePayload.patches.push_back(std::move(inversePatch));
+  return applyLocalHistoryOperation(
+      {forwardId, documentId_, 1U, 1U, std::move(forwardPayload)},
+      {inverseId, documentId_, 1U, 1U, std::move(inversePayload)});
 }
 bool CanvasEditingRuntime::selectedObjectLocked() const noexcept {
   const auto* object=semanticObjects_.find(selection_.primary());
@@ -2062,20 +2117,20 @@ bool CanvasEditingRuntime::cancelBrushSession(std::uint64_t pointerId) noexcept 
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
   it->second->cancel();
-  if (arcPreviewSink_ != nullptr &&
-      arcPreviewSink_->cancel(ink::PreviewIdentity{1U, pointerId, 1U}) ==
-          ink::PreviewSubmitResult::kRejected) {
-    return false;
-  }
-  if (previewController_ == nullptr || previewProvider_ == nullptr ||
-      !previewController_->cancelSession(pointerId) ||
-      !previewController_->retireSession(pointerId, previewProvider_->generation()) ||
-      (!platformPresentationDeferred_ && !previewController_->renderIfDirty())) return false;
   brushSessions_.erase(it);
   brushSessionPackages_.erase(pointerId);
   brushSessionSeeds_.erase(pointerId);
   brushPreviews_.erase(pointerId);
-  return true;
+  bool cleaned = true;
+  if (arcPreviewSink_ != nullptr)
+    cleaned = arcPreviewSink_->cancel(ink::PreviewIdentity{1U, pointerId, 1U}) !=
+        ink::PreviewSubmitResult::kRejected && cleaned;
+  if (previewController_ != nullptr && previewProvider_ != nullptr) {
+    cleaned = previewController_->cancelSession(pointerId) && cleaned;
+    cleaned = previewController_->retireSession(pointerId, previewProvider_->generation()) && cleaned;
+    if (!platformPresentationDeferred_) cleaned = previewController_->renderIfDirty() && cleaned;
+  }
+  return cleaned;
 }
 
 std::vector<render::BrushRenderPoint> CanvasEditingRuntime::brushRenderPoints() const {

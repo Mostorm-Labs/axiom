@@ -36,7 +36,12 @@ bool InteractionDispatchRuntime::submit(const input::PointerSample& sample) noex
       accepted = port_.brush(sample, id); break;
   }
   if (!accepted) {
-    if (sample.phase == input::PointerPhase::kDown) sessions_.erase(sample.key);
+    if (sample.phase == input::PointerPhase::kDown) {
+      input::PointerSample cancelled = sample;
+      cancelled.phase = input::PointerPhase::kCancel;
+      (void)port_.cancel(mode, cancelled, id);
+      sessions_.erase(sample.key);
+    }
     return false;
   }
   if (sample.phase == input::PointerPhase::kUp) sessions_.erase(sample.key);

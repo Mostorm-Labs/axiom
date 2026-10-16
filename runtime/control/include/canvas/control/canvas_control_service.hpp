@@ -25,12 +25,15 @@ class CanvasControlService final {
  private:
   void remember(CanvasControlReceipt receipt);
   [[nodiscard]] bool wasDestroyed(const CanvasTargetKey& target) const;
+  [[nodiscard]] static bool isSelectionScoped(CanvasControlPayloadKind kind) noexcept;
 
   CanvasControlPort& port_;
   const std::size_t queueCapacity_;
   const std::size_t receiptCapacity_;
   mutable std::mutex mutex_;
   std::deque<CanvasControlRequest> queue_;
+  std::unordered_map<CanvasControlReceiptKey, CanvasControlSnapshot,
+                     CanvasControlReceiptKeyHash> capturedSnapshots_;
   std::deque<CanvasControlReceiptKey> receiptOrder_;
   std::unordered_map<CanvasControlReceiptKey, CanvasControlReceipt,
                      CanvasControlReceiptKeyHash> receipts_;

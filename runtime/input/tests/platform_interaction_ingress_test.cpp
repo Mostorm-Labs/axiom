@@ -35,13 +35,20 @@ int main() {
   const auto reused = ingress.submit(down);
   assert(reused.normalized.samples.front().key.generation == key.generation + 1);
 
+  // A stale cancellation retains its full generation and must not end the
+  // freshly reused contact.
+  const auto staleCancel = ingress.cancelPointer(key, 4, 400);
+  assert(!staleCancel.accepted && ingress.activeCount() == 1);
+  const auto exactCancel = ingress.cancelPointer(reused.normalized.samples.front().key, 5, 500);
+  assert(exactCancel.accepted && exactCancel.ended == 1 && ingress.activeCount() == 0);
+
   PlatformPointerBatch stale{};
   stale.samples.push_back({11, 7, 2, 250, 99, 99, 0.6F, 0.0F, 0.0F, {}, {},
                            SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
   const auto staleResult = ingress.submit(stale);
   assert(!staleResult.accepted && staleResult.normalized.samples.empty());
 
-  const auto lost = ingress.sourceLost(11, 4, 400);
-  assert(lost.accepted && lost.terminalCancel && ingress.activeCount() == 0);
+  const auto lost = ingress.sourceLost(11, 6, 600);
+  assert(!lost.accepted && !lost.terminalCancel && ingress.activeCount() == 0);
   return 0;
 }

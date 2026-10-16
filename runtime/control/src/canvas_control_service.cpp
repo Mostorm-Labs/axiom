@@ -44,6 +44,22 @@ bool CanvasControlService::wasDestroyed(const CanvasTargetKey& target) const {
   return destroyed_.find(target) != destroyed_.end();
 }
 
+bool CanvasControlService::isSelectionScoped(CanvasControlPayloadKind kind) noexcept {
+  switch (kind) {
+    case CanvasControlPayloadKind::kSelectedAppearance:
+    case CanvasControlPayloadKind::kSelectedSize:
+    case CanvasControlPayloadKind::kSelectedTransform:
+    case CanvasControlPayloadKind::kSelectedOrder:
+    case CanvasControlPayloadKind::kSelectedLock:
+    case CanvasControlPayloadKind::kSelectedVisible:
+    case CanvasControlPayloadKind::kDeleteSelected:
+    case CanvasControlPayloadKind::kUnlockSelected:
+      return true;
+    default:
+      return false;
+  }
+}
+
 CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& request) {
   std::scoped_lock lock(mutex_);
   const CanvasControlReceiptKey key{request.clientId, request.requestId};
@@ -60,6 +76,7 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
     return makeReceipt(key, CanvasControlReceiptState::kQueueFull,
                        CanvasControlError::kQueueFull, 0U, "client registry full");
   }
+  const auto capture = port_.snapshot(request.target);
   if (wasDestroyed(request.target) || !port_.isTargetCurrent(request.target)) {
     CanvasControlReceipt receipt = makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
                                                CanvasControlError::kStaleTarget);
@@ -76,6 +93,7 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
   }
   clientHighWater_[request.clientId] = request.requestId;
   queue_.push_back(request);
+  if (isSelectionScoped(request.payload.kind)) capturedSnapshots_[key] = capture;
   CanvasControlReceipt receipt = makeReceipt(key, CanvasControlReceiptState::kQueued);
   remember(receipt);
   return receipt;
@@ -85,37 +103,71 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence) {
   std::size_t processed = 0;
   for (;;) {
     CanvasControlRequest request{};
+    std::optional<CanvasControlSnapshot> capturedSnapshot;
     {
       std::scoped_lock lock(mutex_);
       if (queue_.empty()) break;
       request = queue_.front();
       queue_.pop_front();
       const CanvasControlReceiptKey key{request.clientId, request.requestId};
+      const auto captured = capturedSnapshots_.find(key);
+      if (captured != capturedSnapshots_.end()) capturedSnapshot = captured->second;
       if (wasDestroyed(request.target)) {
         remember(makeReceipt(key, CanvasControlReceiptState::kTargetDestroyed,
                              CanvasControlError::kStaleTarget));
+        capturedSnapshots_.erase(key);
         continue;
       }
       if (request.deadlineSequence != 0 && ownerSequence > request.deadlineSequence) {
         remember(makeReceipt(key, CanvasControlReceiptState::kExpired));
+        capturedSnapshots_.erase(key);
         continue;
       }
       if (!port_.isTargetCurrent(request.target)) {
         remember(makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
                              CanvasControlError::kStaleTarget));
+        capturedSnapshots_.erase(key);
         continue;
+      }
+      if (capturedSnapshot.has_value()) {
+        const auto current = port_.snapshot(request.target);
+        if (capturedSnapshot->selectedObject != current.selectedObject) {
+          capturedSnapshots_.erase(key);
+          remember(makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
+                               CanvasControlError::kStaleTarget));
+          continue;
+        }
+        if (request.payload.kind == CanvasControlPayloadKind::kSelectedAppearance) {
+          auto desired = request.payload.appearance;
+          const auto& base = capturedSnapshot->selectedAppearance;
+          if (desired.fillEnabled == base.fillEnabled && desired.fill == base.fill) {
+            desired.fillEnabled = current.selectedAppearance.fillEnabled;
+            desired.fill = current.selectedAppearance.fill;
+          }
+          if (desired.strokeEnabled == base.strokeEnabled && desired.stroke == base.stroke) {
+            desired.strokeEnabled = current.selectedAppearance.strokeEnabled;
+            desired.stroke = current.selectedAppearance.stroke;
+          }
+          if (desired.opacity == base.opacity) desired.opacity = current.selectedAppearance.opacity;
+          request.payload.appearance = desired;
+        }
       }
     }
     const auto result = port_.apply(request);
     const CanvasControlReceiptKey key{request.clientId, request.requestId};
+    const auto state = result.error == CanvasControlError::kNone
+        ? CanvasControlReceiptState::kApplied
+        : result.error == CanvasControlError::kStaleTarget
+            ? CanvasControlReceiptState::kStaleTarget
+            : CanvasControlReceiptState::kFailed;
     CanvasControlReceipt receipt = makeReceipt(
-        key, result.error == CanvasControlError::kNone ? CanvasControlReceiptState::kApplied
-                                                       : CanvasControlReceiptState::kFailed,
+        key, state,
         result.error);
     receipt.detail = result.detail == nullptr ? "" : result.detail;
     receipt.appliedRevision = port_.snapshot(request.target).controlRevision;
     {
       std::scoped_lock lock(mutex_);
+      capturedSnapshots_.erase(key);
       remember(std::move(receipt));
     }
     ++processed;

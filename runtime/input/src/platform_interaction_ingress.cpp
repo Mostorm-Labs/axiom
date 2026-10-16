@@ -45,6 +45,7 @@ PlatformInteractionIngressResult PlatformInteractionIngress::submit(
     const Identity identity{sample.source, sample.pointer};
     PointerKey key{};
     if (sample.phase == PointerPhase::kDown) {
+      if (active_.contains(identity)) continue;
       key = registry_.begin(sample.source, sample.pointer);
       if (!key.valid()) continue;
       active_[identity] = key;
@@ -109,6 +110,26 @@ PlatformInteractionIngressResult PlatformInteractionIngress::sourceLost(
   result.normalized.terminalCancel = terminal;
   result.terminalCancel = terminal;
   result.accepted = !result.normalized.samples.empty() || result.terminalCancel;
+  return result;
+}
+
+PlatformInteractionIngressResult PlatformInteractionIngress::cancelPointer(
+    const PointerKey& key, std::uint64_t sequence, std::uint64_t timestampNs) noexcept {
+  PlatformInteractionIngressResult result{};
+  if (!key.valid() || !registry_.accepts(key)) return result;
+  const Identity identity{key.source, key.pointer};
+  const auto active = active_.find(identity);
+  if (active == active_.end() || active->second != key) return result;
+  PointerSample cancelled{};
+  cancelled.sequence = sequence;
+  cancelled.timestampNs = timestampNs;
+  cancelled.key = key;
+  cancelled.phase = PointerPhase::kCancel;
+  result.normalized.samples.push_back(cancelled);
+  if (registry_.end(key)) ++result.ended;
+  active_.erase(active);
+  lastSequence_.erase(identity);
+  result.accepted = true;
   return result;
 }
 

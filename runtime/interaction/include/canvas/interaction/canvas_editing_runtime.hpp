@@ -189,6 +189,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectedOrder(bool front) noexcept;
   [[nodiscard]] bool setFutureAppearance(const runtime::CanvasAppearance&) noexcept;
   [[nodiscard]] bool setSelectedAppearance(const runtime::CanvasAppearance&) noexcept;
+  [[nodiscard]] bool setSelectedStrokeWidth(double width) noexcept;
   [[nodiscard]] runtime::CanvasAppearance futureAppearance() const noexcept { return futureAppearance_; }
   [[nodiscard]] bool creationMode() const noexcept { return creationMode_; }
   [[nodiscard]] bool unlockSelectedObjects() noexcept;
