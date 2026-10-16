@@ -7,7 +7,7 @@
       "required_changes": [
         "R0: materialize implementation design preflight, owner graph, lifecycle table, dependency direction, failure/rollback order, and contract-to-source-to-owner-to-consumer-to-oracle map.",
         "R1: add the narrow shared Semantic-to-Scene adapters/ports needed to connect existing ISemanticSceneCompiler/SceneBinding and FullSceneCompiler/RuntimeSceneProjection through one atomic publication boundary; preserve complete identity/order/content/dependency/invalidation semantics.",
-        "R2: add one pull-plus-notify resource port and typed internal binding/version checks; reuse ResourceProvider, ImageResourceResolver and RichTextLayoutService; refresh derived scene/frame state only at owner safe points.",
+        "R2: first resolve the accepted Document ResourceManifest authority. If unavailable at the accepted revision, stop BLOCKED_AUTHORITY and route to P12/P13; if available, add one pull-plus-notify resource port and typed internal binding/version checks using a copied manifest snapshot, never a second canonical manifest.",
         "R3: add per-instance internal Runtime composition and staged lifecycle/close wiring above existing owners; expose real narrow ingress and readback receipts without duplicating canonical state.",
         "R4: migrate Windows then Web debug-on/off Minimal consumers to the same composition; deliver runnable Windows and Web entrypoints and keep Debug UI optional.",
         "Materialize all P32 evidence under .aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/."
@@ -75,6 +75,7 @@
       "record": [
         "current and target owner graph for Document, View, Interaction, Scene, RuntimeScene, Resources, Frame and Host",
         "Scene A/B derivation mapping and atomic publication boundary",
+        "accepted Document ResourceManifest type/field/source and its operation/recovery binding",
         "pull-plus-notify resource token fields, trusted metadata sources and state transitions",
         "create/open through detach/close lifecycle acceptance/rejection table",
         "owner pump, queue, borrow, no-reentry and failure rollback rules",
@@ -87,7 +88,8 @@
         "authority_conflict": false,
         "verification_conflict": false,
         "package_scope_conflict": false,
-        "upstream_dependency_conflict": false
+        "upstream_dependency_conflict": false,
+        "resource_manifest_authority_conflict": false
       }
     },
     "oracle_preconditions": [
@@ -104,6 +106,14 @@
         "red_required": false,
         "expected_failure": "If any F01-F08 remains open at the accepted starting revision, stop before Scene/resource production mutation and return a classified upstream blocker.",
         "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/upstream-dependency-audit.json"
+      },
+      {
+        "id": "SCENE-R2-MANIFEST-AUTHORITY",
+        "red_required": false,
+        "expected_failure": "At the task anchor, SemanticSnapshot/ObjectRecord/protobuf snapshot expose ResourceId references but no ResourceManifest entry/revision/hash/length/decode-layout source; implementation must stop BLOCKED_AUTHORITY rather than inventing a schema or composition-owned manifest.",
+        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
+        "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/resource_manifest_authority.py --root . --expect baseline",
+        "expected_exit_code": 2
       }
     ],
     "tests": {
@@ -186,6 +196,7 @@
         "package-binding-preflight.json",
         "implementation-design-preflight.json",
         "red-preflight.json",
+        "r2-authority-binding.json",
         "upstream-dependency-audit.json",
         "r1-scene-derivation.json",
         "r2-resource-port.json",

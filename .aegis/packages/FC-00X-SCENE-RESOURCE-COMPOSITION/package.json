@@ -1,10 +1,10 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.2",
+  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.3",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
-  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
+  "status": "BLOCKED_AUTHORITY",
   "purpose": "Public Scene adaptation, trusted resource ports, internal Runtime instance composition, and Windows/Web Minimal consumers for repeatable cross-platform verification.",
   "repository": {
     "provider": "github",
@@ -24,32 +24,36 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "c39ba1007bf8e22c3cd24e18c1fc89422c481dc33836b3472e3f4709365fb38a"
+    "sha256": "d31795d17f7fdb9cefb5e6c18a32e8502f65b921660f4c16dd4f55ac11a86db2"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "49ff756858101ec4462431ffbce1adb58dd289e60f2d3510ffbc6d535336b577"
+    "sha256": "ece548219b54eb5ceb300119cc50b7315d51cff522b48c12ee220f2e05a46ee0"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "f2d6738a3e89561cd8e61a744d021cb462bfdeaee255cd7fcf6d4d3043b2307e"
+    "sha256": "a61810865ac887689bdc718991514cc1aef4dad97e325058a424d070881d80a7"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "419ee8a34a3cd7d54e0d6bf2b3520f6d3bbae4eec25496224335516b7f391e41"
+    "sha256": "f39293eb6e7e4e2395967e826fb8c2b1c2e236f991c7963587257635e206db95"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "7349ae08b24c64b22644cc9827d6fc6dcc71e8291b1a44e2cfd76cc4db199099"
+    "sha256": "771d0a2537a43eaf42c7a00d5700d34dc66f50056d2b43dc397276a3ea3cebf4"
   },
   "oracle_refs": [
     {
       "path": "oracles/scene_composition_red.py",
-      "sha256": "bc3b4596b763de0849f032902d803d4cdea024560cc1b59b3f3a54305f80905d"
+      "sha256": "c6e6f0d5165630094b9514d6963dd95bbb020108703c4b81ca4b86f1e2765e48"
     },
     {
       "path": "r0-contract-map.md",
-      "sha256": "931c0da1f467e44ded7f31cda54c8beffdaec3622eeaca8898dfa2a159591427"
+      "sha256": "6d955d721ffa9f6e4807b5b94df278fc72a984e35d684d653fe4272560a19b88"
+    },
+    {
+      "path": "oracles/resource_manifest_authority.py",
+      "sha256": "a642506cf646c15bf681a4943ad5a8d0a3bdf2a4b98a0693c700b8637ad52748"
     }
   ],
   "preparation_inputs": [
@@ -100,12 +104,24 @@
     "next_action": "After independent Control Review acceptance, resolve exact package bindings, audit upstream F01-F08 on the accepted implementation, run the RED oracle, then execute R0-R4 to terminal success or a classified blocker."
   },
   "correction": {
-    "supersedes_package_commit": "02e905874e81038ac42b86c15499831699637cbb",
+    "supersedes_package_commit": "bec09cc2378189fb49003cbadecdabdc9552024c",
     "reason": "P34 review found composition mutation scope/RED oracle mismatch and unbound image/font expected metadata authority.",
     "resolved": [
       "Exact runtime/composition CMake/include/src/tests scope is authorized and the RED oracle checks those exact paths.",
-      "Attach-time ResourceBindingManifest is the trusted Image/Font metadata source; canonical BrushResourceBinding remains the brush source; provider self-report cannot authorize Ready."
+      "Resource metadata authority is explicitly bound to ADR-0013 Document ResourceManifest; the current anchor has no typed manifest representation, so P32 must stop BLOCKED_AUTHORITY before R2 production mutation rather than inventing schema or a second manifest.",
+      "A separate authority oracle records the expected BLOCKED_AUTHORITY result at the current anchor."
     ],
     "requires_new_independent_control_review": true
+  },
+  "upstream_authority_blocker": {
+    "classification": "BLOCKED_AUTHORITY",
+    "reason": "No typed ResourceManifest exists at anchor; P32 must route to P12/P13 before R2 mutation."
+  },
+  "terminal_blocker": {
+    "class": "BLOCKED_AUTHORITY",
+    "owner": "P12/P13 semantic modeling/authority",
+    "reason": "ADR-0013 requires a Document ResourceManifest, but the accepted anchor implementation has no typed manifest representation in SemanticSnapshot/ObjectRecord/snapshot.proto.",
+    "continue_execution": false,
+    "required_next_action": "Bind or accept the existing ResourceManifest representation at the semantic authority layer, then materialize a new package revision and repeat independent Control Review."
   }
 }

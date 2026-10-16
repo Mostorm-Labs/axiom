@@ -3,7 +3,7 @@
   "format": "aegis-authority-lock-v1",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
-  "authority_status": "CURRENT_REPO_LOCAL_ACCEPTED_INPUT_AFTER_R0_RECONCILIATION",
+  "authority_status": "BLOCKED_AUTHORITY_INPUT_REQUIRES_P12_P13_MANIFEST_BINDING",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
@@ -138,6 +138,21 @@
       "path": "runtime/text/include/canvas/text/text_layout.hpp",
       "sha256": "7815d94b41aa477c4caff9cd09db76cf533b39c2fd3e55c9321a0bee206052bc",
       "role": "current-source"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "sha256": "29d4eb14f0c9bbff6733e8f777197a0f827bb6faf3eab18e6393b4db69f19c4e",
+      "role": "current-source-observation"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "sha256": "69f4321dc2d7663808a414958df324c67696f89d17ce858503e3a4403a01c0e9",
+      "role": "current-source-observation"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "sha256": "25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032",
+      "role": "current-source-observation"
     }
   ],
   "upstream_dependency": {
@@ -159,7 +174,7 @@
   },
   "frozen_scope": {
     "scene": "Reuse existing SceneBinding, IncrementalRuntimeCoordinator, FullSceneCompiler and RuntimeSceneProjection; add adapters/ports only where required for one shared composition.",
-    "resources": "Use one pull-plus-notify model. The attach/bind document resource binding supplies a trusted ResourceBindingManifest for Image/Font resources (resource id, kind, expected sha256, decode/layout version); the manifest is an internal composition input and does not add canonical schema fields. Brush resources use the existing canonical BrushResourceBinding metadata. Provider bytes never self-authorize. Missing manifest or mismatched metadata keeps a resource unverified/missing and cannot publish Ready. Runtime validates at the owner safe point.",
+    "resources": "Use one pull-plus-notify model. The Document ResourceManifest is the authority for Image/Font/Brush resource id, kind, ResourceRevision, expected sha256 content hash, byte length and decode/layout metadata. At attach/open, composition receives a copied internal ResourceBindingSnapshot derived from that manifest; Host/provider supplies immutable bytes/results only and never becomes the metadata authority. Existing canonical BrushResourceBinding metadata must agree with the manifest entry. Missing manifest representation, missing expected hash, or mismatched metadata keeps a resource unverified/missing and cannot publish Ready. Runtime validates at the owner safe point.",
     "composition": "Per-instance manual-poll Runtime composition with full lifecycle and close protocol; no duplicate Document, Session, History, RuntimeScene or canonical write owner.",
     "consumers": "Windows first, then Web debug-on/off, using the same composition; Minimal core must not link Playground or Debug UI.",
     "android": "Build/APK/physical evidence deferred and non-blocking."
@@ -173,26 +188,50 @@
     "modification of Authority, Gate, Evidence, Integration, Golden or historical PHYS records"
   ],
   "resource_metadata_authority": {
-    "manifest": {
-      "path": "runtime/composition/include/canvas/runtime/resource_binding.hpp",
-      "owner": "Host/Document binding at attach/open",
+    "document_manifest": {
+      "authority": "Accepted ADR-0013 ResourceManifest in Document semantic state",
+      "source": "NOT PRESENT as a typed field/type in the accepted repository implementation at task anchor",
+      "observed_paths": [
+        "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+        "runtime/semantic/include/canvas/semantic/object_content.hpp",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+        "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp"
+      ],
+      "observation": "SemanticSnapshot contains only document_id, schema_version and objects; ImageContent/TextStyle/Brush bindings contain ResourceId references, but no ResourceManifest entry/revision/hash/length/decode-layout representation.",
+      "required_resolution": "P12/P13 semantic Authority must bind an existing manifest representation or explicitly authorize one before R2 production mutation.",
       "fields": [
         "resource_id",
         "kind",
-        "expected_sha256",
-        "decode_version",
-        "layout_version",
-        "binding_generation"
+        "resource_revision",
+        "content_hash",
+        "byte_length",
+        "decode_layout_metadata"
       ],
-      "trust_rule": "Provider response hash/version is not an authority; absent or mismatched manifest prevents Ready."
+      "trust_rule": "Provider response hash/version is not an authority; composition must stop BLOCKED_AUTHORITY until the canonical source is bound."
+    },
+    "composition_snapshot": {
+      "path": "runtime/composition/include/canvas/runtime/resource_binding.hpp",
+      "owner": "composition attach/open copies the Document ResourceManifest entry into an internal binding snapshot",
+      "trust_rule": "Derived snapshot is not a second canonical owner and cannot invent entries or change Document digest."
     },
     "brush": {
-      "source": "semantic::BrushResourceBinding in canonical BrushExecutionSnapshot",
-      "trust_rule": "content_sha256/kind/decode_version are read from the canonical brush binding and must match the manifest/provider result."
+      "source": "semantic::BrushResourceBinding in canonical BrushExecutionSnapshot, cross-checked against Document ResourceManifest",
+      "trust_rule": "content_sha256/kind/decode_version must agree with the manifest and provider result."
     },
     "image_font": {
-      "source": "attach-time ResourceBindingManifest supplied by the document/host binding",
+      "source": "Document ResourceManifest entry referenced by ImageContent/TextStyle ResourceId",
       "trust_rule": "ImageContent and TextStyle ResourceId alone do not authorize bytes; no manifest means unverified/missing."
     }
+  },
+  "upstream_authority_blocker": {
+    "classification": "BLOCKED_AUTHORITY",
+    "owner": "P12/P13 semantic modeling/authority",
+    "reason": "ADR-0013 requires ResourceManifest semantic state, but the accepted repository implementation has no manifest representation consumable by composition.",
+    "forbidden_local_workaround": [
+      "new protobuf fields",
+      "new canonical snapshot fields",
+      "Host/provider promoted to semantic authority",
+      "composition-owned second manifest"
+    ]
   }
 }

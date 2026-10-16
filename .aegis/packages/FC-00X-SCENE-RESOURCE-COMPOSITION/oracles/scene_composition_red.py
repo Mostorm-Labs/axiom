@@ -28,7 +28,7 @@ def main() -> int:
         if present:
             print("VERIFICATION_DESIGN_DEFECT: composition boundary already exists:", ", ".join(present))
             return 2
-        print("RED: no authorized runtime/composition target or typed pull+notify resource binding port at baseline")
+        print("RED: no authorized runtime/composition target or typed pull+notify resource binding snapshot port at baseline")
         return 1
     if len(present) != len(candidates):
         print("FAIL: implemented oracle missing:", ", ".join(str(p.relative_to(root)) for p in candidates if not p.exists()))

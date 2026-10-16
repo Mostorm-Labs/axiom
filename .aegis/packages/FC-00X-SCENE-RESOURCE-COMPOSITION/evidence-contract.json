@@ -9,6 +9,7 @@
     "package-binding-preflight.json",
     "implementation-design-preflight.json",
     "red-preflight.json",
+    "r2-authority-binding.json",
     "upstream-dependency-audit.json",
     "r1-scene-derivation.json",
     "r2-resource-port.json",
@@ -25,6 +26,7 @@
   "identity_rule": "Hash exact Git/file bytes with lowercase SHA-256; bind preparation/source revision separately from later implementation/result revision; never embed an unknowable self commit SHA.",
   "blocking": [
     "R0-R4 obligation evidence with active assertions",
+    "r2-authority-binding.json",
     "upstream F01-F08 dependency audit",
     "Windows native and Web debug-on/off build outcomes or explicit classified environment blocker",
     "minimal target dependency audit proving no Playground/Debug UI link in core",
@@ -40,5 +42,6 @@
   "physical_status": "PHYSICAL_PENDING unless actual Windows/Web observation is performed",
   "android_status": "DEFERRED_NOT_BLOCKING",
   "producer_may_claim_gate_pass": false,
-  "materialization_requirement": "P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW."
+  "materialization_requirement": "P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW.",
+  "authority_boundary": "P32 must resolve a typed accepted Document ResourceManifest source. If unavailable at the task anchor, return BLOCKED_AUTHORITY before R2 production mutation."
 }

@@ -37,10 +37,11 @@
     {
       "id": "SCENE-R2-RESOURCES",
       "slice": "R2",
-      "requirement": "One pull-plus-notify resource port validates the attach-time ResourceBindingManifest or existing canonical BrushResourceBinding for binding/epoch/version/hash/request lifetime and refreshes image/text/brush derived state at owner safe points without Document Operation/Undo.",
-      "oracle": "Resource schedule covering missing/bytes-accepted/decode-ready/layout-ready/fail/evict/retry/provider-replace, shared resources, same ObjectId/ResourceId value, wrong hash/version/binding, late completion and resource refresh followed by operation/Undo/Recovery.",
-      "acceptance": "Only manifest/canonical binding metadata authorizes bytes; provider self-reported hash/version is insufficient. Missing or mismatched image/font manifest remains unverified/missing; stale/late completions cannot satisfy a new binding; dependent Scene/query/hit/render/readback/frame revisions update atomically while semantic generation and history remain unchanged.",
+      "requirement": "One pull-plus-notify resource port validates a copied binding snapshot derived from the Document ResourceManifest (and existing canonical BrushResourceBinding cross-check) for binding/epoch/version/hash/request lifetime and refreshes image/text/brush derived state at owner safe points without Document Operation/Undo.",
+      "oracle": "First resolve the accepted Document ResourceManifest source. If no typed manifest is present at the accepted implementation revision, emit BLOCKED_AUTHORITY and stop before production mutation; otherwise run the pull-plus-notify resource schedule covering missing/bytes-accepted/decode-ready/layout-ready/fail/evict/retry/provider-replace, shared resources, same ObjectId/ResourceId value, wrong hash/version/binding, late completion and resource refresh followed by operation/Undo/Recovery.",
+      "acceptance": "The accepted semantic implementation must expose a canonical ResourceManifest binding before R2 implementation. Provider bytes or a composition-owned manifest cannot substitute. Once bound, only Document ResourceManifest/canonical BrushResourceBinding metadata authorizes bytes; missing or mismatched image/font manifest remains unverified/missing; stale/late completions cannot satisfy a new binding; dependent Scene/query/hit/render/readback/frame revisions update atomically while semantic generation and history remain unchanged.",
       "evidence_required": [
+        "r2-authority-binding.json",
         "r2-resource-port.json"
       ],
       "classification": "BLOCKING"
@@ -133,5 +134,14 @@
     "G4InkPlaygroundWindowsPreviewPopup"
   ],
   "physical_status": "PHYSICAL_PENDING until actual Windows/Web observation; Android deferred",
-  "producer_may_claim_gate_pass": false
+  "producer_may_claim_gate_pass": false,
+  "authority_preconditions": [
+    {
+      "id": "SCENE-R2-MANIFEST-AUTHORITY",
+      "required": true,
+      "source": "ADR-0013 plus accepted semantic snapshot/operation representation",
+      "expected": "A typed ResourceManifest source is resolvable at the accepted anchor revision",
+      "failure": "BLOCKED_AUTHORITY; route to P12/P13; do not add schema fields or implement a second manifest in composition"
+    }
+  ]
 }
