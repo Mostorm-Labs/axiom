@@ -1,0 +1,57 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "stage": "P12_P13_MODELING",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Freeze the canonical ResourceManifest semantic model and Operation/Snapshot binding required before FC-00X Scene/Resource composition R2.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/fc00x-resource-manifest-p12",
+    "base_lineage_branch": "codex/fc00x-interaction-internalization-p31"
+  },
+  "task_anchor": {
+    "revision": "02078a36818e7722309aefe679089a48212a424d",
+    "relation": "ancestor"
+  },
+  "starting_revision": "02078a36818e7722309aefe679089a48212a424d",
+  "execution_authority_mode": "repo_materialized",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "4b0c6a4085c63b5c154c97f4d1fe7911488c58c6bd5f2416a80a5c5201752c15"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f27bb3da6e33c87671bb8a59e485310ce66f7d82039918b8c2b236db8a2ff409"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "cc74555e9aea7af35376385f99ffa9e2ff1b22222b2271e451baaccd86c7a4f4"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "de3bd22ede463a0b0dc1f768e94bb04692981cd9dda60dc25e13b589f9381da4"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "6f849deb7ac5448aa9079bf57faa5ca6403a373bb9fc710db6c6049ecfcf4a13"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/",
+    "exact_ref_rule": "Use immutable package commit SHA in any later handoff; no product source mutation in this package."
+  },
+  "downstream_unblock": "After independent acceptance, update FC-00X-SCENE-RESOURCE-COMPOSITION package with exact accepted P12/P13 ref and repeat Control Review before P32.",
+  "nonclaims": [
+    "No product source implementation",
+    "No public ABI",
+    "No Gate/P34 PASS",
+    "No third-package P32 authorization"
+  ]
+}

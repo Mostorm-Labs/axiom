@@ -1,0 +1,17 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-verification-lock-v1",
+  "task_id":"FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "stage":"P12_P13_MODELING",
+  "status":"FROZEN_CANDIDATE_REQUIRES_CONTROL_REVIEW",
+  "obligations":[
+    {"id":"RM-ID","requirement":"ResourceId and ResourceManifest entry identity is complete and collision-safe.","oracle":"full 128-bit equal-prefix IDs, duplicate IDs and canonical ordering","acceptance":"no truncation/aliasing/reorder","classification":"BLOCKING"},
+    {"id":"RM-VALUE","requirement":"ResourceRevision, ContentHash, length, kind and decode/layout metadata have canonical validation.","oracle":"normalization, malformed hash, revision conflict, length/version mismatch matrix","acceptance":"invalid values reject atomically","classification":"BLOCKING"},
+    {"id":"RM-DIGEST","requirement":"Manifest binding changes affect Document digest while availability does not.","oracle":"same graph+manifest, changed binding, missing/ready/corrupt availability","acceptance":"digest changes only for semantic binding","classification":"BLOCKING"},
+    {"id":"RM-OP","requirement":"Manifest mutation uses one atomic Operation family with replay/idempotency/Undo/Redo.","oracle":"upsert/remove/revision conflict/duplicate/replay/compensating operation","acceptance":"one generation advance or no mutation","classification":"BLOCKING"},
+    {"id":"RM-SNAPSHOT","requirement":"Snapshot/restore atomically binds manifest and digest, with explicit legacy compatibility.","oracle":"round-trip, legacy capability, digest mismatch, malformed manifest, failure injection","acceptance":"no partial publication","classification":"BLOCKING"},
+    {"id":"RM-SCENE","requirement":"Scene Full/Delta/Recovery and resource refresh remain equivalent.","oracle":"manifest operation then full/delta/recovery and missing→ready refresh","acceptance":"derived refresh without semantic generation change","classification":"BLOCKING"}
+  ],
+  "terminal_blocker":"AUTHORITY_CONFLICT if exact field numbers, OperationKind allocation, registry or digest bytes conflict with accepted P12/P13 input.",
+  "producer_may_claim_authority_pass":false
+}

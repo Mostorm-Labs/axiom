@@ -1,0 +1,92 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "stage": "P12_P13_MODELING",
+  "authority_status": "CANDIDATE_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "source_revision": "02078a36818e7722309aefe679089a48212a424d"
+  },
+  "accepted_inputs": [
+    {
+      "id": "adr-0013-resource-identity-content-addressing",
+      "path": "docs/adr/0013-resource-identity-content-addressing.md",
+      "sha256": "fee55590abf916c475c1e01d59bc4cf32e5d782de19ccab65ceaef252903afc8"
+    },
+    {
+      "id": "adr-0019-semantic-changes-invalidation-hints",
+      "path": "docs/adr/0019-semantic-changes-invalidation-hints.md",
+      "sha256": "082382e2eae4214526c2750c69e90b5f3794a3290259a7b5c2b2ec6bcb325225"
+    },
+    {
+      "id": "adr-0020-document-snapshot-operation-recovery",
+      "path": "docs/adr/0020-document-snapshot-operation-recovery.md",
+      "sha256": "5f3e1edd89e7920c28f809abc0a1eea6d4af7fcc571d32af19e8145f9944ab3b"
+    },
+    {
+      "id": "g1-semantic-kernel-plan",
+      "path": "docs/superpowers/plans/2026-08-26-g1-semantic-kernel-codex-package.md",
+      "sha256": "151c0e99dd891dbad915bfe14ebb3a610beff3076d086453173d2308058f5e48"
+    },
+    {
+      "id": "verification-strategy",
+      "path": "docs/quality/VERIFICATION_STRATEGY.md",
+      "sha256": "f85a402d50dd4c412872e1de8fa102fa32349e25df1819b732609b3fbbd2d820"
+    }
+  ],
+  "current_source_observations": [
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "sha256": "29d4eb14f0c9bbff6733e8f777197a0f827bb6faf3eab18e6393b4db69f19c4e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/change_set.hpp",
+      "sha256": "63cee37d86a68489591556aeefe22c390911897b3b15c4d99a072f81714a8879"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation.hpp",
+      "sha256": "91465d13fc316294a958dc6c5b411af6719c3311741af9e0e1f7a93ac28f3b6e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "sha256": "9345ecb89984be2a292d557ec8ddfdfbe99cc27bb7cb822bf0bf3161649c991f"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "sha256": "25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032"
+    }
+  ],
+  "frozen_candidate": {
+    "manifest_schema_version": 1,
+    "content_hash": "sha256:<64 lowercase hex>",
+    "entry_fields": [
+      "resource_id",
+      "resource_kind",
+      "resource_revision",
+      "content_hash",
+      "byte_length",
+      "decode_version",
+      "layout_version",
+      "metadata"
+    ],
+    "canonical_order": "complete ResourceId bytes",
+    "operation": "UpdateResourceManifest with sorted upserts/removes, existing operation envelope schema/payload version 1",
+    "changeset": [
+      "kResourceManifestCreated",
+      "kResourceManifestUpdated",
+      "kResourceManifestRemoved"
+    ],
+    "snapshot": "manifest section is atomically bound to document identity/revision/frontier/digest; legacy-no-manifest requires explicit capability",
+    "availability": "missing/corrupt/evicted are derived and do not change Document generation/digest"
+  },
+  "conflicts": [],
+  "requires_review": [
+    "canonical schema field numbering",
+    "OperationKind numeric allocation",
+    "metadata kind registry",
+    "digest encoding exact bytes",
+    "legacy capability name and compatibility window"
+  ]
+}
