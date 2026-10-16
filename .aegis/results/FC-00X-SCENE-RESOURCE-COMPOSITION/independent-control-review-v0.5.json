@@ -1,0 +1,67 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "review_revision": "84bbe3c7c33679823db25ffe61b8b3391904b142",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@84bbe3c7c33679823db25ffe61b8b3391904b142",
+  "repository": "Mostorm-Labs/axiom",
+  "repository_url": "https://github.com/Mostorm-Labs/axiom.git",
+  "task_anchor": "02078a36818e7722309aefe679089a48212a424d",
+  "authority_review": {
+    "status": "PASS",
+    "accepted_authority_id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1"
+  },
+  "package_binding": {
+    "status": "PASS",
+    "all_local_locks_match": true,
+    "git_diff_check": "PASS",
+    "scope": "package-only; no product/runtime or historical control files changed"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "P31 package preserves non-null anchor and repo_materialized execution mode",
+      "exact P12/P13 accepted Authority and acceptance record are bound",
+      "R2 forbids schema invention and composition-owned second manifest",
+      "P32 authorization remains withheld until independent acceptance"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "package-local lock and oracle hashes",
+      "exact pushed head and ancestry",
+      "authority binding oracle output is reviewer-resolvable"
+    ],
+    "failed": [
+      {
+        "id": "SCENE-R2-MANIFEST-AUTHORITY",
+        "classification": "BLOCKED_IMPLEMENTATION",
+        "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/resource_manifest_authority.py --root . --expect baseline",
+        "exit_code": 2,
+        "output": "BLOCKED_IMPLEMENTATION: accepted P12/P13 Authority is bound, but no typed ResourceManifest product source is present at the anchor"
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "head_is_descendant_of_anchor": true,
+    "merge_base": "02078a36818e7722309aefe679089a48212a424d",
+    "composition_red_oracle": {
+      "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/scene_composition_red.py --root . --expect baseline-red",
+      "exit_code": 1,
+      "expected": "RED",
+      "status": "PASS"
+    },
+    "typed_manifest_source_at_anchor": false,
+    "changed_paths_outside_package": []
+  },
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "route": "P32 may not begin. The accepted P12/P13 Authority is valid, but the typed semantic ResourceManifest product implementation must be materialized by its owning implementation task before this composition package can proceed. Re-materialize/update this package after that implementation revision and repeat independent Control Review.",
+  "nonclaims": [
+    "No P32 authorization",
+    "No Gate/P34 PASS",
+    "No product implementation accepted",
+    "No Android or physical evidence decision"
+  ]
+}
