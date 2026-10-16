@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-p12-candidate-binding-audit-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "source_revision": "91c9b3c9d3d8f39762cb54e59c8a1044933d2050",
+  "scope": "candidate-only; no product source mutation",
+  "checks": [
+    {
+      "id": "RM-FIELD-NUMBERS",
+      "result": "NO_COLLISION",
+      "observations": [
+        "DocumentSnapshot currently uses fields 1..3; candidate manifest field 4 is append-only.",
+        "OperationPayload currently uses oneof fields 1..15; candidate update_resource_manifest field 16 is unused."
+      ],
+      "evidence_inputs": [
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto"
+      ]
+    },
+    {
+      "id": "RM-OP16",
+      "result": "OPEN_PENDING_AUTHORITY",
+      "observations": [
+        "The frozen operation registry currently defines ids/tags 1..15 only.",
+        "OperationKind is inferred from the payload variant index and currently accepts 1..15; reserving 16 requires accepted P13 registry and implementation review."
+      ],
+      "evidence_inputs": [
+        "schema/axiom/v1/registry/operation_registry_v1.yaml",
+        "runtime/semantic/include/canvas/semantic/operation.hpp",
+        "runtime/semantic/src/semantic_types.cpp"
+      ]
+    },
+    {
+      "id": "RM-KIND-REGISTRY",
+      "result": "AUTHORITY_CONFLICT",
+      "observations": [
+        "No accepted ResourceKind registry source was found for Image=1, Font=2, Brush=3 or the 4..255 reservation.",
+        "ADR-0013 requires kind validation but does not assign these numeric values."
+      ],
+      "required_resolution": "P12/P13 Authority must bind a versioned ResourceKind registry path and exact values before implementation."
+    },
+    {
+      "id": "RM-DIGEST-V1",
+      "result": "AUTHORITY_CONFLICT",
+      "observations": [
+        "The candidate proposes a SHA-256 product digest stream.",
+        "The accepted G1 plan explicitly says digest algorithm/width must come from current authority; when product digest is not frozen, G1 uses projection bytes plus verification-only SHA-256 and makes no product compatibility promise.",
+        "The current g1_06 verification tool uses FNV-1a 64 for verification projection comparison, not a product Document digest authority."
+      ],
+      "required_resolution": "P12/P13 must either bind an accepted product digest algorithm/byte stream or remove the product digest claim and defer it to the owning authority."
+    },
+    {
+      "id": "RM-SNAPSHOT-BINDING",
+      "result": "AUTHORITY_CONFLICT",
+      "observations": [
+        "The candidate adds only DocumentSnapshot.manifest=4.",
+        "ADR-0020 requires the same atomic checkpoint to bind Document revision, RecoveryFrontier, digest algorithm/version and digest, but current snapshot.proto has no accepted fields for those bindings."
+      ],
+      "required_resolution": "Freeze the exact Snapshot revision/frontier/digest representation and field ownership before claiming atomic manifest binding."
+    },
+    {
+      "id": "RM-LEGACY",
+      "result": "OPEN_PENDING_AUTHORITY",
+      "observations": [
+        "No current SnapshotCapability registry entry or accepted migration record names legacy-no-manifest-v1.",
+        "The proposed absent-versus-malformed behavior is coherent but remains a candidate compatibility contract."
+      ],
+      "required_resolution": "Bind the capability name, scope, and migration window to an accepted compatibility authority."
+    }
+  ],
+  "terminal_classification": "BLOCKED_AUTHORITY",
+  "implementation_allowed": false,
+  "historical_state_mutated": false
+}

@@ -56,6 +56,26 @@
     {
       "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
       "sha256": "25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "sha256": "71b57785543c08c36148a89103cdf7b88cc646aecf1ace5b0531a1a9006fdeaf"
+    },
+    {
+      "path": "schema/axiom/v1/registry/operation_registry_v1.yaml",
+      "sha256": "58b0c60ee3abcd2fd54f82df6fd927d1bc5a0ee4d40e31a85c3e9e3c18ff00ed"
+    },
+    {
+      "path": "runtime/semantic/src/semantic_types.cpp",
+      "sha256": "42a0a6b799ecd37b7b56af9fd9f91fc49b69bb3843324958d938f44308622815"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_06_digest.cpp",
+      "sha256": "e0740b1cf56fb068ed2593201d5a7475af956ca496c1ff623e654500f2d0b6bf"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-26-g1-semantic-kernel-codex-package.md",
+      "sha256": "151c0e99dd891dbad915bfe14ebb3a610beff3076d086453173d2308058f5e48"
     }
   ],
   "frozen_candidate": {
@@ -79,14 +99,64 @@
       "kResourceManifestRemoved"
     ],
     "snapshot": "manifest section is atomically bound to document identity/revision/frontier/digest; legacy-no-manifest requires explicit capability",
-    "availability": "missing/corrupt/evicted are derived and do not change Document generation/digest"
+    "availability": "missing/corrupt/evicted are derived and do not change Document generation/digest",
+    "snapshot_field": "DocumentSnapshot.manifest = 4, append-only optional legacy presence",
+    "manifest_fields": {
+      "ResourceManifest": [
+        "schema_version=1",
+        "entries=2",
+        "manifest_revision=3"
+      ],
+      "ResourceManifestEntry": [
+        "resource_id=1",
+        "resource_kind=2",
+        "resource_revision=3",
+        "content_hash=4",
+        "byte_length=5",
+        "decode_version=6",
+        "layout_version=7",
+        "metadata=8"
+      ]
+    },
+    "operation_kind": "UpdateResourceManifest = 16; OperationPayload.update_resource_manifest = 16; payload upserts=1/removes=2; schema_version=1/payload_version=1",
+    "resource_kind_registry": {
+      "Image": 1,
+      "Font": 2,
+      "Brush": 3,
+      "reserved": "4..255"
+    },
+    "digest": "OPEN_PENDING_AUTHORITY: candidate stream is non-authoritative until P12/P13 binds the product digest algorithm, width and bytes; G1 verification-only SHA-256/FNV evidence must not be promoted implicitly",
+    "legacy_capability": "legacy-no-manifest-v1; read-only decode compatibility; new writes always emit explicit manifest"
   },
-  "conflicts": [],
+  "conflicts": [
+    {
+      "id": "RM-DIGEST-AUTHORITY",
+      "classification": "AUTHORITY_CONFLICT",
+      "reason": "Accepted G1 input leaves product digest algorithm/width open and explicitly forbids treating verification-only SHA-256 as product authority."
+    },
+    {
+      "id": "RM-SNAPSHOT-BINDING",
+      "classification": "AUTHORITY_CONFLICT",
+      "reason": "ADR-0020 requires revision/frontier/digest binding, but the candidate only allocates manifest field 4 and no exact authoritative fields exist."
+    },
+    {
+      "id": "RM-KIND-REGISTRY",
+      "classification": "AUTHORITY_CONFLICT",
+      "reason": "Image/Font/Brush numeric values have no accepted ResourceKind registry source."
+    },
+    {
+      "id": "RM-LEGACY-CAPABILITY",
+      "classification": "OPEN_PENDING_AUTHORITY",
+      "reason": "legacy-no-manifest-v1 is not bound to an accepted SnapshotCapability or migration authority."
+    }
+  ],
   "requires_review": [
-    "canonical schema field numbering",
-    "OperationKind numeric allocation",
-    "metadata kind registry",
-    "digest encoding exact bytes",
-    "legacy capability name and compatibility window"
+    "all candidate field presence/numbering",
+    "OperationKind 16 and payload field 16",
+    "resource kind registry values",
+    "digest algorithm/width/byte stream must be accepted by the owning P12/G1 authority",
+    "Snapshot revision/frontier/digest fields and atomic binding",
+    "ResourceKind registry source and values",
+    "legacy-no-manifest-v1 compatibility window and migration semantics"
   ]
 }

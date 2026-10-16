@@ -1,17 +1,85 @@
 {
-  "schema_version":"0.1",
-  "format":"aegis-verification-lock-v1",
-  "task_id":"FC-00X-RESOURCE-MANIFEST-P12-P13",
-  "stage":"P12_P13_MODELING",
-  "status":"FROZEN_CANDIDATE_REQUIRES_CONTROL_REVIEW",
-  "obligations":[
-    {"id":"RM-ID","requirement":"ResourceId and ResourceManifest entry identity is complete and collision-safe.","oracle":"full 128-bit equal-prefix IDs, duplicate IDs and canonical ordering","acceptance":"no truncation/aliasing/reorder","classification":"BLOCKING"},
-    {"id":"RM-VALUE","requirement":"ResourceRevision, ContentHash, length, kind and decode/layout metadata have canonical validation.","oracle":"normalization, malformed hash, revision conflict, length/version mismatch matrix","acceptance":"invalid values reject atomically","classification":"BLOCKING"},
-    {"id":"RM-DIGEST","requirement":"Manifest binding changes affect Document digest while availability does not.","oracle":"same graph+manifest, changed binding, missing/ready/corrupt availability","acceptance":"digest changes only for semantic binding","classification":"BLOCKING"},
-    {"id":"RM-OP","requirement":"Manifest mutation uses one atomic Operation family with replay/idempotency/Undo/Redo.","oracle":"upsert/remove/revision conflict/duplicate/replay/compensating operation","acceptance":"one generation advance or no mutation","classification":"BLOCKING"},
-    {"id":"RM-SNAPSHOT","requirement":"Snapshot/restore atomically binds manifest and digest, with explicit legacy compatibility.","oracle":"round-trip, legacy capability, digest mismatch, malformed manifest, failure injection","acceptance":"no partial publication","classification":"BLOCKING"},
-    {"id":"RM-SCENE","requirement":"Scene Full/Delta/Recovery and resource refresh remain equivalent.","oracle":"manifest operation then full/delta/recovery and missing→ready refresh","acceptance":"derived refresh without semantic generation change","classification":"BLOCKING"}
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "stage": "P12_P13_MODELING",
+  "status": "FROZEN_CANDIDATE_REQUIRES_CONTROL_REVIEW",
+  "obligations": [
+    {
+      "id": "RM-ID",
+      "requirement": "ResourceId and ResourceManifest entry identity is complete and collision-safe.",
+      "oracle": "full 128-bit equal-prefix IDs, duplicate IDs and canonical ordering",
+      "acceptance": "no truncation/aliasing/reorder",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "RM-VALUE",
+      "requirement": "ResourceRevision, ContentHash, length, kind and decode/layout metadata have canonical validation.",
+      "oracle": "candidate field/registry normalization matrix including explicit schema/presence and ContentHash",
+      "acceptance": "invalid values reject atomically",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "RM-DIGEST",
+      "requirement": "Manifest binding changes affect Document digest while availability does not.",
+      "oracle": "candidate stream differential plus availability exclusion, gated by an accepted product digest algorithm/width/byte authority",
+      "acceptance": "digest changes only for semantic binding; otherwise classify AUTHORITY_CONFLICT and do not implement",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "RM-OP",
+      "requirement": "Manifest mutation uses one atomic Operation family with replay/idempotency/Undo/Redo.",
+      "oracle": "candidate OperationKind/payload field 16 descriptor check plus atomic replay/idempotency/Undo/Redo",
+      "acceptance": "one generation advance or no mutation",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "RM-SNAPSHOT",
+      "requirement": "Snapshot/restore atomically binds manifest and digest, with explicit legacy compatibility.",
+      "oracle": "candidate DocumentSnapshot.manifest field 4 plus exact revision/frontier/digest binding and legacy capability matrix",
+      "acceptance": "no partial publication; missing authoritative checkpoint fields classify AUTHORITY_CONFLICT",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "RM-SCENE",
+      "requirement": "Scene Full/Delta/Recovery and resource refresh remain equivalent.",
+      "oracle": "manifest operation then full/delta/recovery and missing→ready refresh",
+      "acceptance": "derived refresh without semantic generation change",
+      "classification": "BLOCKING"
+    }
   ],
-  "terminal_blocker":"AUTHORITY_CONFLICT if exact field numbers, OperationKind allocation, registry or digest bytes conflict with accepted P12/P13 input.",
-  "producer_may_claim_authority_pass":false
+  "terminal_blocker": "AUTHORITY_CONFLICT if exact field numbers, OperationKind allocation, registry or digest bytes conflict with accepted P12/P13 input.",
+  "producer_may_claim_authority_pass": false,
+  "blocking_authority_findings": [
+    "RM-DIGEST-AUTHORITY",
+    "RM-SNAPSHOT-BINDING",
+    "RM-KIND-REGISTRY"
+  ],
+  "candidate_binding_oracles": [
+    {
+      "id": "RM-FIELD-NUMBERS",
+      "oracle": "parse current proto descriptors and assert candidate fields 1-4/1-8 append-only with explicit presence",
+      "expected": "no collision and legacy absence distinguishable"
+    },
+    {
+      "id": "RM-OP16",
+      "oracle": "parse operation descriptor and enum registry",
+      "expected": "field/value 16 unused and candidate reserved only for this operation"
+    },
+    {
+      "id": "RM-KIND-REGISTRY",
+      "oracle": "candidate registry collision/reservation check",
+      "expected": "Image=1 Font=2 Brush=3; 4..255 reserved"
+    },
+    {
+      "id": "RM-DIGEST-V1",
+      "oracle": "independent canonical byte encoder differential against G1 object projection",
+      "expected": "same bytes across permutations and binding availability"
+    },
+    {
+      "id": "RM-LEGACY",
+      "oracle": "snapshot decode matrix absent/empty/malformed manifest",
+      "expected": "legacy capability only absent field; malformed field fails closed"
+    }
+  ]
 }

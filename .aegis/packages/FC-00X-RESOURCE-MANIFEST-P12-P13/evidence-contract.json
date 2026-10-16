@@ -1,9 +1,18 @@
 {
-  "schema_version":"0.1",
-  "format":"aegis-evidence-contract-v1",
-  "task_id":"FC-00X-RESOURCE-MANIFEST-P12-P13",
-  "required_artifacts":["authority.lock.json","verification.lock.json","implementation-context.md","independent-control-review.json"],
-  "blocking":["exact package commit","independent review of canonical field/operation/digest/compatibility decisions"],
-  "producer_may_claim_authority_pass":false,
-  "return_status":"PACKAGE_READY_FOR_CONTROL_REVIEW or BLOCKED_*"
+  "schema_version": "0.1",
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "required_artifacts": [
+    "authority.lock.json",
+    "verification.lock.json",
+    "implementation-context.md",
+    "candidate-binding-audit.json",
+    "independent-control-review.json"
+  ],
+  "blocking": [
+    "exact package commit",
+    "independent review of canonical field/operation/digest/compatibility decisions"
+  ],
+  "producer_may_claim_authority_pass": false,
+  "return_status": "BLOCKED_AUTHORITY or PACKAGE_READY_FOR_CONTROL_REVIEW"
 }

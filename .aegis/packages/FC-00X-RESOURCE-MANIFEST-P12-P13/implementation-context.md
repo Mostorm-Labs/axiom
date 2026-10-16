@@ -104,3 +104,61 @@ The Runtime composition receives an immutable copy of the committed manifest at 
 ## Stop conditions
 
 If any proposed field, Operation family, compatibility behavior or digest encoding conflicts with current Authority, stop with `AUTHORITY_CONFLICT` and route to the owning P12/P13 review. Do not silently implement a private manifest in Runtime composition.
+## Exact candidate bindings for independent review
+
+This section turns the five remaining review questions into explicit candidates. They remain candidates until P12/P13 Control Review accepts them.
+
+### 1. Schema fields and presence
+
+Keep existing `DocumentSnapshot` fields 1–3 unchanged. Add a single optional `ResourceManifest manifest = 4` field to `DocumentSnapshot`; absence is distinguishable from an explicit empty manifest. `ResourceManifest` fields: `uint32 schema_version = 1` (required semantic value 1), repeated `ResourceManifestEntry entries = 2`, and `uint64 manifest_revision = 3`. `ResourceManifestEntry` fields: `Id128 resource_id = 1`, `uint32 resource_kind = 2`, `uint64 resource_revision = 3`, `string content_hash = 4`, `uint64 byte_length = 5`, `uint32 decode_version = 6`, `uint32 layout_version = 7`, `bytes metadata = 8`. All required scalar/message presence is validated explicitly; entries are sorted by complete ResourceId bytes and duplicate IDs reject.
+
+No existing snapshot field is renumbered or reused. The manifest section is optional only for legacy snapshots gated by capability; newly encoded snapshots always emit an explicit manifest, including empty.
+
+### 2. OperationKind allocation
+
+Existing operation payload oneof fields 1–15 and existing OperationKind values 1–15 remain unchanged. Candidate allocation: `UpdateResourceManifest = 16`, with protobuf `OperationPayload.update_resource_manifest = 16`; payload has `repeated ResourceManifestEntry upserts = 1` and `repeated Id128 removes = 2`. Operation schema_version remains 1 and payload_version is 1 for this family.
+
+### 3. Resource kind registry
+
+Candidate V1 numeric values: `Image = 1`, `Font = 2`, `Brush = 3`. Values 4–255 are reserved. An entry with an unknown kind is rejected when required by the document capability; optional/unused entries remain diagnostic/unavailable under the existing capability policy. Kind-specific metadata is canonical bytes, and `layout_version = 0` for Image/Brush unless the accepted kind registry says otherwise; Font layout_version is required and non-zero.
+
+### 4. Digest encoding
+
+Candidate digest input is a versioned length-delimited canonical stream:
+
+```text
+"axiom.document.digest.v1" (UTF-8 bytes, length u32 LE)
+document_id (16 raw bytes)
+document_schema_version (u32 LE)
+object_projection_count (u64 LE)
+canonical object projection bytes (existing G1 projection order/encoding)
+manifest_schema_version (u32 LE)
+manifest_entry_count (u64 LE)
+for each entry sorted by complete ResourceId:
+  resource_id (16 bytes)
+  resource_kind (u32 LE)
+  resource_revision (u64 LE)
+  content_hash (u32 LE length + ASCII bytes)
+  byte_length (u64 LE)
+  decode_version (u32 LE)
+  layout_version (u32 LE)
+  metadata (u64 LE length + canonical bytes)
+```
+
+The digest stream above is a non-authoritative candidate only. The accepted G1 plan explicitly leaves product digest algorithm/width to current authority and permits verification-only SHA-256 when no product digest is frozen; its current verification tool uses FNV-1a 64 for projection evidence. This package therefore cannot claim `axiom.document.digest.v1` or SHA-256 as a product compatibility contract until the owning P12/G1 authority binds exact algorithm, width and bytes. Blob bytes, availability, URL/path, provider epoch, decode/cache/GPU state remain excluded by ADR-0013.
+
+### 5. Legacy capability and compatibility window
+
+Candidate capability name: `legacy-no-manifest-v1`. It permits decoding existing snapshots with no field 4 as an empty manifest and preserves existing object semantics. Such a document is readable but any ResourceId reference is unverified/missing until an accepted manifest Operation supplies an entry. New writes always emit field 4. A snapshot with field 4 present but malformed never falls back to legacy behavior. The capability is read-only migration compatibility; it does not authorize providers or Host metadata to fill the manifest silently.
+
+### Candidate conflict checks
+
+- Snapshot field 4 is unused in the current proto and append-only.
+- Operation payload field 16 is unused in the current proto and append-only; OperationKind 16 is unused in the current enum.
+- ChangeSet currently has no resource flags; candidate flags use a separate resource impact collection rather than consuming the seven existing object flag bits.
+- Resource kind values are a new P12/P13 registry candidate, not inferred from ObjectKind.
+- Digest bytes are a candidate and must be accepted together with G1 numeric/canonical projection authority; no implementation may assume these bytes before acceptance.
+
+## Authority conflict audit
+
+The package-local `candidate-binding-audit.json` records the reproducible source audit. Field 4 and payload field 16 are structurally unused, but that is not semantic acceptance. The audit classifies the missing product digest authority, missing Snapshot revision/frontier/digest field binding, missing ResourceKind registry source, and unbound legacy capability as `AUTHORITY_CONFLICT` or `OPEN_PENDING_AUTHORITY`. No product/runtime source is modified while these remain open.

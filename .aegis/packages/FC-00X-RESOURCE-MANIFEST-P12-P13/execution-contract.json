@@ -1,13 +1,71 @@
 {
-  "schema_version":"0.1",
-  "format":"aegis-execution-closure-contract-v1",
-  "task_id":"FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
   "execution_closure_contract": {
-    "implementation": {"required_changes":["Freeze canonical ResourceManifest model, ResourceRevision/ContentHash values, digest projection, UpdateResourceManifest Operation, ChangeSet resource impact, Snapshot/restore and compatibility semantics as a P12/P13 candidate only."],"forbidden_changes":["Any product/runtime source mutation before independent acceptance","private Runtime composition manifest","unapproved protobuf field or OperationKind number","Authority/Gate/Golden/history changes"]},
-    "tests":{"required":[{"id":"RM-DESIGN","command_or_oracle":"independent review of implementation-context and authority lock","expected_result":"all decisions explicit and no unresolved conflicts","blocking_reason":"semantic authority boundary"},{"id":"RM-ORACLES","command_or_oracle":"review frozen oracle matrix","expected_result":"each obligation has independent oracle and evidence","blocking_reason":"verification completeness"}]},
-    "evidence":{"blocking":["authority.lock.json","verification.lock.json","implementation-context.md","independent Control Review"],"corroborative":["current source hash audit"]},
-    "terminal_success":{"all_of":["P12/P13 candidate accepted by independent Control Review","exact package pushed and reviewer-resolvable","no product code mutation"]},
-    "terminal_blockers":{"explicit_classes":["AUTHORITY_CONFLICT","VERIFICATION_DESIGN_DEFECT","TASK_PACKAGE_DEFECT","BLOCKED_EVIDENCE"]},
-    "return_policy":{"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW","official_authority_pass_forbidden":true}
+    "implementation": {
+      "required_changes": [
+        "Freeze canonical ResourceManifest model, ResourceRevision/ContentHash values, digest projection, UpdateResourceManifest Operation, ChangeSet resource impact, Snapshot/restore and compatibility semantics as a P12/P13 candidate only."
+      ],
+      "forbidden_changes": [
+        "Any product/runtime source mutation before independent acceptance",
+        "private Runtime composition manifest",
+        "unapproved protobuf field or OperationKind number",
+        "Authority/Gate/Golden/history changes"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "RM-DESIGN",
+          "command_or_oracle": "independent review of implementation-context and authority lock",
+          "expected_result": "all decisions explicit and no unresolved conflicts",
+          "blocking_reason": "semantic authority boundary"
+        },
+        {
+          "id": "RM-ORACLES",
+          "command_or_oracle": "review frozen oracle matrix",
+          "expected_result": "each obligation has independent oracle and evidence",
+          "blocking_reason": "verification completeness"
+        },
+        {
+          "id": "RM-CANDIDATE-BINDING",
+          "command_or_oracle": "independent descriptor and digest candidate review defined in verification.lock.json",
+          "expected_result": "all five candidate bindings are internally consistent and conflict-free or classified AUTHORITY_CONFLICT",
+          "blocking_reason": "P12/P13 authority acceptance"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "authority.lock.json",
+        "verification.lock.json",
+        "implementation-context.md",
+        "independent Control Review"
+      ],
+      "corroborative": [
+        "current source hash audit"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "P12/P13 candidate accepted by independent Control Review",
+        "exact package pushed and reviewer-resolvable",
+        "no product code mutation"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "TASK_PACKAGE_DEFECT",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_authority_pass_forbidden": true
+    }
   }
 }
