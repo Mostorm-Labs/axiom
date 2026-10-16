@@ -108,3 +108,7 @@ The implementation target is `runtime/composition/` with `CMakeLists.txt`, publi
 ## Current R2 authority blocker
 
 At anchor `02078a36818e7722309aefe679089a48212a424d`, `SemanticSnapshot` contains only `document_id`, `schema_version`, and `objects`; `ImageContent`, `TextStyle`, and brush bindings expose ResourceId references but no ResourceManifest entry. `snapshot.proto` likewise has no manifest field. This is an upstream P12/P13 authority gap. P32 must record `r2-authority-binding.json` and return `BLOCKED_AUTHORITY` before production mutation unless a newer accepted semantic authority explicitly binds an existing manifest representation.
+
+## P12/P13 modeling input
+
+`p12-p13-resource-manifest-authority-input.md` records the rules confirmed by ADR-0013/0019/0020 and the exact missing implementation bindings. It is not an accepted Authority record. R2 remains blocked until P12/P13 accepts and materializes the canonical type, ResourceRevision/ContentHash normalization, manifest Operation, ChangeSet flag, Snapshot/recovery binding and compatibility behavior.

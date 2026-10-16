@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.3",
+  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.4",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
   "status": "BLOCKED_AUTHORITY",
@@ -24,23 +24,23 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "d31795d17f7fdb9cefb5e6c18a32e8502f65b921660f4c16dd4f55ac11a86db2"
+    "sha256": "6463a142fd18d0bff37803d784bee134232096d11c6e4d9b652f80cea853cfda"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "ece548219b54eb5ceb300119cc50b7315d51cff522b48c12ee220f2e05a46ee0"
+    "sha256": "c77243ad08b8357e98688c34f3bc54a0f55ee402d69bea66942c62fe7a61d598"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "a61810865ac887689bdc718991514cc1aef4dad97e325058a424d070881d80a7"
+    "sha256": "39e08f6de953967b08bee64545b6873f64a1777203236725a1b99aa23998b02a"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "f39293eb6e7e4e2395967e826fb8c2b1c2e236f991c7963587257635e206db95"
+    "sha256": "746794bd6f86b3a75d5cade5a3dcd0ddc09e8c19a792421d9d05086ec19753d3"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "771d0a2537a43eaf42c7a00d5700d34dc66f50056d2b43dc397276a3ea3cebf4"
+    "sha256": "8fc4fd1a6e10a77433c54c3a4b910eef3869f29661d42d53544efb1d8542f7de"
   },
   "oracle_refs": [
     {
@@ -54,6 +54,10 @@
     {
       "path": "oracles/resource_manifest_authority.py",
       "sha256": "a642506cf646c15bf681a4943ad5a8d0a3bdf2a4b98a0693c700b8637ad52748"
+    },
+    {
+      "path": "p12-p13-resource-manifest-authority-input.md",
+      "sha256": "8a50bf64e8141b46c89d9f4e22006d74673f161c74c6549e31a72fe6d2252fd2"
     }
   ],
   "preparation_inputs": [
@@ -104,12 +108,12 @@
     "next_action": "After independent Control Review acceptance, resolve exact package bindings, audit upstream F01-F08 on the accepted implementation, run the RED oracle, then execute R0-R4 to terminal success or a classified blocker."
   },
   "correction": {
-    "supersedes_package_commit": "bec09cc2378189fb49003cbadecdabdc9552024c",
+    "supersedes_package_commit": "a600620bfb2bc1d3fdde3ddcd70a2283849d2e60",
     "reason": "P34 review found composition mutation scope/RED oracle mismatch and unbound image/font expected metadata authority.",
     "resolved": [
       "Exact runtime/composition CMake/include/src/tests scope is authorized and the RED oracle checks those exact paths.",
-      "Resource metadata authority is explicitly bound to ADR-0013 Document ResourceManifest; the current anchor has no typed manifest representation, so P32 must stop BLOCKED_AUTHORITY before R2 production mutation rather than inventing schema or a second manifest.",
-      "A separate authority oracle records the expected BLOCKED_AUTHORITY result at the current anchor."
+      "ADR-0013/0019/0020 resource semantic rules are captured in a reviewable P12/P13 modeling input.",
+      "The current anchor still lacks a canonical ResourceManifest type/operation/snapshot binding; the package therefore remains BLOCKED_AUTHORITY and P32 cannot begin."
     ],
     "requires_new_independent_control_review": true
   },

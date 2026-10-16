@@ -81,7 +81,8 @@
         "owner pump, queue, borrow, no-reentry and failure rollback rules",
         "Windows/Web Minimal target dependency graph and debug-on/off build map",
         "obligation-to-source/test/evidence mapping",
-        "upstream F01-F08 audit and unresolved semantic decisions"
+        "upstream F01-F08 audit and unresolved semantic decisions",
+        "P12/P13 resource-manifest authority input and exact accepted semantic binding"
       ],
       "continue_only_if": {
         "unresolved_semantic_decisions": [],
@@ -111,7 +112,7 @@
         "id": "SCENE-R2-MANIFEST-AUTHORITY",
         "red_required": false,
         "expected_failure": "At the task anchor, SemanticSnapshot/ObjectRecord/protobuf snapshot expose ResourceId references but no ResourceManifest entry/revision/hash/length/decode-layout source; implementation must stop BLOCKED_AUTHORITY rather than inventing a schema or composition-owned manifest.",
-        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
+        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json plus p12-p13-resource-manifest-authority-input.md",
         "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/resource_manifest_authority.py --root . --expect baseline",
         "expected_exit_code": 2
       }
@@ -192,6 +193,7 @@
     },
     "evidence": {
       "blocking": [
+        "p12-p13-resource-manifest-authority-input.md",
         "repository-reconciliation.json",
         "package-binding-preflight.json",
         "implementation-design-preflight.json",

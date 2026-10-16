@@ -9,7 +9,8 @@
     "authority_lock": "authority.lock.json",
     "preparation_sha256": "94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd",
     "review_boundary": "Independent Control Review must accept this exact package before P32 mutation.",
-    "test_cli_rule": "Resolve exact CTest targets from discovery; unmatched names are failures, never PASS."
+    "test_cli_rule": "Resolve exact CTest targets from discovery; unmatched names are failures, never PASS.",
+    "p12_p13_modeling_input": "p12-p13-resource-manifest-authority-input.md"
   },
   "obligations": [
     {
@@ -139,7 +140,7 @@
     {
       "id": "SCENE-R2-MANIFEST-AUTHORITY",
       "required": true,
-      "source": "ADR-0013 plus accepted semantic snapshot/operation representation",
+      "source": "ADR-0013/0019/0020 plus p12-p13-resource-manifest-authority-input.md and an accepted semantic snapshot/operation representation",
       "expected": "A typed ResourceManifest source is resolvable at the accepted anchor revision",
       "failure": "BLOCKED_AUTHORITY; route to P12/P13; do not add schema fields or implement a second manifest in composition"
     }

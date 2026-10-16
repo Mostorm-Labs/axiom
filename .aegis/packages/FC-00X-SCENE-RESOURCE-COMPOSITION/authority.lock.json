@@ -195,10 +195,13 @@
         "runtime/semantic/include/canvas/semantic/snapshot.hpp",
         "runtime/semantic/include/canvas/semantic/object_content.hpp",
         "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
-        "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp"
+        "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp",
+        "runtime/semantic/include/canvas/semantic/change_set.hpp",
+        "runtime/semantic/include/canvas/semantic/operation.hpp",
+        "runtime/semantic/include/canvas/semantic/operation_payload.hpp"
       ],
       "observation": "SemanticSnapshot contains only document_id, schema_version and objects; ImageContent/TextStyle/Brush bindings contain ResourceId references, but no ResourceManifest entry/revision/hash/length/decode-layout representation.",
-      "required_resolution": "P12/P13 semantic Authority must bind an existing manifest representation or explicitly authorize one before R2 production mutation.",
+      "required_resolution": "P12/P13 must accept and materialize the canonical type, value normalization, manifest-binding Operation, ChangeSet flag, Snapshot/recovery binding and compatibility behavior described in p12-p13-resource-manifest-authority-input.md.",
       "fields": [
         "resource_id",
         "kind",
@@ -233,5 +236,11 @@
       "Host/provider promoted to semantic authority",
       "composition-owned second manifest"
     ]
+  },
+  "p12_p13_modeling_input": {
+    "path": "p12-p13-resource-manifest-authority-input.md",
+    "sha256": "",
+    "status": "CONFIRMED_RULES_UNBOUND_IMPLEMENTATION",
+    "authority_owner": "aegis-modeling P12/P13"
   }
 }

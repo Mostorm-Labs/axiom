@@ -5,6 +5,7 @@
   "stage": "P31_TASK_PACKAGING",
   "output_root": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/",
   "required_artifacts": [
+    "p12-p13-resource-manifest-authority-input.md",
     "repository-reconciliation.json",
     "package-binding-preflight.json",
     "implementation-design-preflight.json",
@@ -43,5 +44,5 @@
   "android_status": "DEFERRED_NOT_BLOCKING",
   "producer_may_claim_gate_pass": false,
   "materialization_requirement": "P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW.",
-  "authority_boundary": "P32 must resolve a typed accepted Document ResourceManifest source. If unavailable at the task anchor, return BLOCKED_AUTHORITY before R2 production mutation."
+  "authority_boundary": "ADR rules are confirmed, but canonical ResourceManifest implementation binding is absent. P32 must resolve P12/P13 acceptance before R2 mutation."
 }
