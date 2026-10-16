@@ -363,7 +363,7 @@ bool initBrushes(Handle handle) { (void)handle; return true; }
 int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointer,
                         std::uint64_t sequence, std::uint64_t timestampNs,
                         float x, float y, float pressure, int phase, int family,
-                        float contentX, float contentY) {
+                        int pointerTool, float contentX, float contentY) {
   (void)contentX;
   (void)contentY;
   auto* target = host(value);
@@ -373,8 +373,13 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
   const auto brushIt = brushes().find(value);
   if (target == nullptr || brushIt == brushes().end()) return 0;
   canvas::input::PlatformPointerBatch batch;
+  canvas::input::PointerCapabilities capabilities{};
+  capabilities.tool = pointerTool == 2 ? canvas::input::PointerTool::kPen
+      : pointerTool == 3 ? canvas::input::PointerTool::kFinger
+                         : canvas::input::PointerTool::kUnknown;
+  capabilities.pressure = pointerTool == 2;
   batch.samples.push_back({source, pointer, sequence, timestampNs, x, y, pressure,
-                           0.0F, 0.0F, {}, {},
+                           0.0F, 0.0F, {}, capabilities,
                            canvas::input::SampleProvenance::kConfirmedCurrent,
                            phase == 0 ? canvas::input::PointerPhase::kDown
                            : phase == 2 ? canvas::input::PointerPhase::kUp
@@ -411,9 +416,10 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_ink_text_metrics(std::uint32_t value) {
 EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
     std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
     std::uint64_t sequence, std::uint64_t timestampNs, float x, float y,
-    float pressure, int phase, int family, float contentX, float contentY) {
+    float pressure, int phase, int family, int pointerTool,
+    float contentX, float contentY) {
   return submitPlatformBatch(value, source, pointer, sequence, timestampNs, x, y,
-                             pressure, phase, family, contentX, contentY);
+                             pressure, phase, family, pointerTool, contentX, contentY);
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_brush_profile(
     std::uint32_t value, const char* profile, std::uint32_t revision) {

@@ -3,7 +3,6 @@ add_library(axiom_ink_playground_common STATIC
     common/canvas_control_binding.cpp
     common/canvas_runtime_facade_adapter.cpp
     common/text_qualification_resources.cpp
-    common/brush_commit_adapter.cpp
     common/platform_brush_baseline_observation.cpp
     common/platform_contract.cpp
     common/platform_interaction_controller.cpp
@@ -13,7 +12,7 @@ target_include_directories(axiom_ink_playground_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_control canvas_runtime_input canvas_runtime_ink
-    canvas_runtime_interaction canvas_runtime_render)
+    canvas_runtime_editor canvas_runtime_interaction canvas_runtime_render)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
 
 # Resolve the published SDK in this directory as well as runtime/render: the

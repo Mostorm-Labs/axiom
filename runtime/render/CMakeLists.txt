@@ -96,7 +96,9 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
 endif()
 target_include_directories(canvas_runtime_render PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/text/include)
 target_link_libraries(canvas_runtime_render PUBLIC
     canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene
     canvas_runtime_ink canvas_runtime_input)

@@ -257,7 +257,12 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
         : request.phase == P::kUp ? canvas::input::PointerPhase::kUp
         : request.phase == P::kCancel ? canvas::input::PointerPhase::kCancel
                                      : canvas::input::PointerPhase::kMove;
-    if (state_.host->selectionPointer(request.pointerId, phase, request.viewX, request.viewY)) {
+    canvas::input::PlatformPointerBatch batch;
+    batch.samples.push_back({1U, request.pointerId, request.requestId,
+        request.requestId * 1'000'000ULL, request.viewX, request.viewY, 0.0F,
+        0.0F, 0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+        phase});
+    if (state_.host->acceptPlatformBatch(batch, batch.samples.front().timestampNs)) {
       receipt.state = canvas::runtime::ProductControlState::kApplied;
     }
     state_.canonicalFrameReady = false;
@@ -1061,8 +1066,10 @@ bool submitMouseSample(HWND window, State& value, UINT message, WPARAM wParam, L
       enablePreviewPresentation(value);
       InvalidateRect(window, nullptr, FALSE);
     }
-    value.previewDirty = true;
-    wakeRenderPump(value);
+    // Creation uses the Runtime transient-overlay path.  It has no BrushSession
+    // preview to capture, so do not feed the brush worker or leave its dirty bit
+    // set; doing so spins capturePreviewPresentation() while creation is active
+    // and can starve the owner message loop after a single-point down.
     return true;
   }
   value.deviceId = kMousePointerId;
@@ -1183,7 +1190,8 @@ void cancelPointer(State& value, std::uint64_t pointerId, std::uint64_t timestam
   const auto key = keyEntry->second;
   const auto strokeEntry = value.pointerStrokes.find(pointerId);
   if (strokeEntry != value.pointerStrokes.end()) {
-    (void)value.host->cancelBrushSession(pointerId);
+    (void)value.host->cancelPlatformPointer(key, ++value.pointerSampleSequence,
+                                             timestampMs * 1'000'000ULL);
   }
   value.trace.push_back({key.source, static_cast<std::uint32_t>(pointerId), key.generation,
                          timestampMs, "unknown", "cancel", 0.0F, 0.0F, 0.0F, 0U,
@@ -1479,7 +1487,10 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         (value->host->canonicalPresentationDirty() || !value->canonicalFrameReady)) {
       value->canonicalFrameReady = renderCanonical(*value);
     }
-    if (value->previewDirty && value->previewPresentationEnabled) requestPreviewRender(*value);
+    if (value->previewDirty && value->previewPresentationEnabled &&
+        value->host->previewActive()) {
+      requestPreviewRender(*value);
+    }
     return 0;
   }
   if (message == WM_SIZE && value != nullptr) {

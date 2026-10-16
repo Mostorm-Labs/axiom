@@ -411,12 +411,15 @@
       const phaseCode = phase === "down" && sample === list[0] ? 0
         : phase === "up" && sample === list[list.length - 1] ? 2
         : phase === "cancel" ? 3 : 1;
-      const pressure = sample.pressure || 0.5;
+      const pressure = Number.isFinite(sample.pressure) ? sample.pressure : 0.5;
+      const pointerTool = sample.pointerType === "pen" ? 2
+        : sample.pointerType === "touch" ? 3 : 0;
       const timeNs = Math.round(sample.timeStamp * 1000000);
       const sequence = ++sampleSequence;
       module._axiom_ink_platform_batch(host, webSource, event.pointerId,
         BigInt(sequence), BigInt(timeNs),
         point.viewX, point.viewY, pressure, phaseCode, selectedBrushFamily,
+        pointerTool,
         point.x, point.y);
       trace.push({ pointer_id: event.pointerId, sequence: sampleSequence,
         x: point.x, y: point.y, pressure, tool: sample.pointerType || "mouse",
@@ -431,9 +434,6 @@
       started.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     } else if (phase === "cancel") {
-      module._axiom_ink_platform_batch(host, webSource, event.pointerId,
-        BigInt(++sampleSequence), BigInt(nowNs()), 0, 0, 0, 3,
-        selectedBrushFamily, 0, 0);
       started.delete(event.pointerId);
       scheduleEvidenceSnapshot();
     }

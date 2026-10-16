@@ -58,6 +58,7 @@ class PlatformInteractionIngress final {
 
   ActivePointerRegistry registry_;
   std::unordered_map<Identity, PointerKey, IdentityHash> active_;
+  std::unordered_map<Identity, std::uint64_t, IdentityHash> lastSequence_;
   PassThroughInputCaptureGate captureGate_;
 };
 

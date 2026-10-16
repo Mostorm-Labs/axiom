@@ -29,6 +29,7 @@ void PlatformInteractionIngress::cancelAll(
     if (registry_.end(key)) ++result.ended;
   }
   active_.clear();
+  lastSequence_.clear();
   result.normalized.terminalCancel = true;
   result.terminalCancel = true;
 }
@@ -47,16 +48,21 @@ PlatformInteractionIngressResult PlatformInteractionIngress::submit(
       key = registry_.begin(sample.source, sample.pointer);
       if (!key.valid()) continue;
       active_[identity] = key;
+      lastSequence_[identity] = sample.sequence;
       ++result.began;
     } else {
       const auto it = active_.find(identity);
       if (it == active_.end() || !registry_.accepts(it->second)) continue;
+      const auto sequence = lastSequence_.find(identity);
+      if (sequence != lastSequence_.end() && sample.sequence <= sequence->second) continue;
       key = it->second;
+      lastSequence_[identity] = sample.sequence;
     }
     result.normalized.samples.push_back(normalize(sample, key));
     if (sample.phase == PointerPhase::kUp || sample.phase == PointerPhase::kCancel) {
       if (registry_.end(key)) ++result.ended;
       active_.erase(identity);
+      lastSequence_.erase(identity);
     }
   }
   if (batch.sourceLost && !batch.samples.empty()) {
@@ -89,6 +95,10 @@ PlatformInteractionIngressResult PlatformInteractionIngress::sourceLost(
   }
   for (auto it = active_.begin(); it != active_.end();) {
     if (it->first.source == source) it = active_.erase(it);
+    else ++it;
+  }
+  for (auto it = lastSequence_.begin(); it != lastSequence_.end();) {
+    if (it->first.source == source) it = lastSequence_.erase(it);
     else ++it;
   }
   // A source loss is a keyed cancel when another source is still active.  A

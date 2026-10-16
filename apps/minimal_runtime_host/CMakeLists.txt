@@ -1,6 +1,6 @@
 add_library(axiom_minimal_runtime_host STATIC minimal_runtime_host.cpp)
 target_include_directories(axiom_minimal_runtime_host PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(axiom_minimal_runtime_host PUBLIC canvas_runtime_interaction)
+target_link_libraries(axiom_minimal_runtime_host PUBLIC canvas_runtime_editor)
 target_compile_features(axiom_minimal_runtime_host PUBLIC cxx_std_20)
 
 if(MSVC)

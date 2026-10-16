@@ -1,35 +1,19 @@
 #pragma once
 
-#include "canvas/input/platform_interaction_ingress.hpp"
-#include "canvas/interaction/interaction_dispatch_runtime.hpp"
-
-#include <array>
-#include <cstddef>
-#include <unordered_set>
+#include "canvas/interaction/canvas_editing_runtime.hpp"
 
 namespace canvas::minimal_runtime_host {
-
-class MinimalRuntimeHost final : private interaction::InteractionDispatchPort {
+// No tool callbacks or private editor state: only input registration and an
+// execution opportunity delegated to the same Runtime used by Playground.
+class MinimalRuntimeHost final {
  public:
-  bool registerSource(input::InputSourceId source) noexcept;
-  void setMode(interaction::DispatchMode mode) noexcept { mode_ = mode; }
+  [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
+  [[nodiscard]] bool unregisterSource(input::InputSourceId source,
+                                      std::uint64_t sequence,
+                                      std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
-  [[nodiscard]] std::size_t eventCount(interaction::DispatchEvent event) const noexcept;
-
+  [[nodiscard]] interaction::CanvasEditingRuntime& runtime() noexcept { return runtime_; }
  private:
-  [[nodiscard]] interaction::DispatchMode dispatchMode() const noexcept override { return mode_; }
-  [[nodiscard]] bool selection(const input::PointerSample&) noexcept override;
-  [[nodiscard]] bool creation(const input::PointerSample&) noexcept override;
-  [[nodiscard]] bool pan(const input::PointerSample&) noexcept override;
-  [[nodiscard]] bool brush(const input::PointerSample&) noexcept override;
-  [[nodiscard]] bool eraser(const input::PointerSample&) noexcept override;
-  [[nodiscard]] bool record(interaction::DispatchEvent event) noexcept;
-
-  input::PlatformInteractionIngress ingress_;
-  interaction::InteractionDispatchRuntime dispatch_{*this};
-  interaction::DispatchMode mode_ = interaction::DispatchMode::kBrush;
-  std::unordered_set<input::InputSourceId> sources_;
-  std::array<std::size_t, 5> counts_{};
+  interaction::CanvasEditingRuntime runtime_;
 };
-
 }  // namespace canvas::minimal_runtime_host

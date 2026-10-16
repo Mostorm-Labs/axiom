@@ -30,8 +30,16 @@ int main() {
   const auto third = ingress.submit(up);
   assert(third.accepted && third.ended == 1 && ingress.activeCount() == 0);
 
+  down.samples.front().sequence = 3;
+  down.samples.front().timestampNs = 350;
   const auto reused = ingress.submit(down);
   assert(reused.normalized.samples.front().key.generation == key.generation + 1);
+
+  PlatformPointerBatch stale{};
+  stale.samples.push_back({11, 7, 2, 250, 99, 99, 0.6F, 0.0F, 0.0F, {}, {},
+                           SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+  const auto staleResult = ingress.submit(stale);
+  assert(!staleResult.accepted && staleResult.normalized.samples.empty());
 
   const auto lost = ingress.sourceLost(11, 4, 400);
   assert(lost.accepted && lost.terminalCancel && ingress.activeCount() == 0);

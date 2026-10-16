@@ -176,6 +176,26 @@ def test_windows_input_only_marks_dirty_and_wakes_single_render_pump():
     assert "pendingCanonicalHandoffCount()" in source
 
 
+def test_windows_creation_gesture_does_not_feed_brush_preview_pump():
+    """Creation previews use the transient overlay path, never the brush pump."""
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    creation_branch = source.split(
+        "if (value.host->creationMode() || value.host->creationActive())", 1
+    )[1].split("value.deviceId = kMousePointerId", 1)[0]
+    assert "value.previewDirty = true" not in creation_branch
+    assert "wakeRenderPump(value)" not in creation_branch
+
+
+def test_windows_preview_timer_requires_an_active_runtime_preview():
+    """A stale dirty bit cannot spin the worker when no preview session exists."""
+    source = WINDOWS_MAIN.read_text(encoding="utf-8")
+    timer = source.split(
+        "if ((message == WM_TIMER && value != nullptr &&", 1
+    )[1].split("if (message == WM_SIZE", 1)[0]
+    assert "value->host->previewActive()" in timer
+    assert "requestPreviewRender(*value)" in timer
+
+
 def test_windows_present_keeps_transient_dxgi_busy_as_retryable():
     provider = (ROOT / "apps" / "ink_playground" / "platform" / "windows" /
                 "windows_d3d12_skia_surface_provider.cpp").read_text(encoding="utf-8")

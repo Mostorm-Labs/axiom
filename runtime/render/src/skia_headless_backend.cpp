@@ -628,7 +628,7 @@ bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
     // semantics. Preserve that behavior even for an ink-only frame. Legacy
     // VectorStroke/DabStroke content uses direct kClear when it is standalone,
     // but needs isolation when a real shape/image/etc. is underneath it.
-    return hasDrawableNonInk && isInkReferenceEntry(entry) ||
+    return (hasDrawableNonInk && isInkReferenceEntry(entry)) ||
            (isBrushReferenceEntry(entry) && !hasNonIdentityTransform(entry));
 }
 

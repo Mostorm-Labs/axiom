@@ -28,6 +28,25 @@ else()
     target_compile_options(canvas_runtime_interaction PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 
+# Runtime editor composition is separate from the leaf interaction library so
+# Scene/Render remain consumers of interaction primitives without a dependency
+# cycle. It never includes Playground or Debug UI.
+add_library(canvas_runtime_editor STATIC
+    src/canvas_editing_runtime.cpp
+    src/brush_commit_adapter.cpp)
+target_include_directories(canvas_runtime_editor PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/text/include)
+target_link_libraries(canvas_runtime_editor PUBLIC canvas_runtime_interaction
+    canvas_runtime_render canvas_runtime_ink canvas_runtime_scene)
+target_compile_features(canvas_runtime_editor PUBLIC cxx_std_20)
+if(MSVC)
+    target_compile_options(canvas_runtime_editor PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_runtime_editor PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 if(BUILD_TESTING)
     add_executable(axiom_interaction_session_tests
         tests/session_manager_test.cpp)
