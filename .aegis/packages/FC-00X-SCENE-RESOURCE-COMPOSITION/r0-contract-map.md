@@ -5,7 +5,7 @@
 | Canonical semantic state and operation clock | existing `semantic::IndexedObjectStore`, `OperationEngine`, `CanonicalCommitClock` | existing editor/semantic owners | composition input/control/operation ingress | `r3-runtime-composition.json` and protected interaction regressions |
 | Incremental Scene query/spatial | `ISemanticSceneCompiler`, `SceneBinding`, `Scene`, `IncrementalRuntimeCoordinator` | Scene and coordinator | query, hit, draw list, reference render | `r1-scene-derivation.json` |
 | Full reference/inspection projection | `FullSceneCompiler`, `scene::RuntimeSceneProjection`, `RuntimeScene` | coordinator-owned derived projection | inspection/reference render | `r1-scene-derivation.json` |
-| Resource bytes and trusted binding | `ResourceProvider`, `ImageResourceResolver`, `RichTextLayoutService`, new internal typed port | composition owner pump | image/text/brush derived refresh | `r2-resource-port.json` |
+| Resource bytes and trusted binding | `ResourceProvider`, `ImageResourceResolver`, `RichTextLayoutService`, `runtime/composition` `ResourceBindingManifest` typed port | composition owner pump | image/text/brush derived refresh | `r2-resource-port.json` |
 | Frame identity and retirement | `RuntimeFrameCoordinator`, `SurfaceLifecycle`, `PresentationTracker` | Runtime frame owner; platform supplies execution evidence | Canonical and Preview surfaces | `r3-runtime-composition.json`, `runtime-isolation.json` |
 | Input/control/close | `RuntimeAppBinding`, `CanvasEditingRuntime`, control/facade lane | Runtime owners; Host supplies facts | Windows/Web Minimal and optional Debug UI | `r4-consumer-equivalence.json` |
 
@@ -25,3 +25,8 @@ At `ready`, owner-pump ingress is accepted; at `lost`, normal input and present 
 - Resource interaction is pull plus notify only. The document/resource binding supplies expected hash/kind/decode metadata; provider bytes cannot self-authorize. Resource refresh changes derived Scene/frame revisions but not Document generation, Operation or Undo.
 - Runtime is single-owner/manual-poll. The Host owns OS thread/lock/GPU affinity and platform execution feedback. No callback retains a raw Host/Surface pointer after close.
 - Windows and Web Minimal consumers use one composition entry. Minimal core does not link Playground or Debug UI. Android build/APK/physical evidence is deferred.
+
+
+## Exact composition mutation boundary
+
+The new internal composition is authorized only under `runtime/composition/CMakeLists.txt`, `runtime/composition/include/canvas/runtime/**`, `runtime/composition/src/**`, and `runtime/composition/tests/**`. The RED oracle and focused CTest target must use these exact paths.

@@ -18,16 +18,17 @@ def main() -> int:
     args = parser.parse_args()
     root = args.root.resolve()
     candidates = [
+        root / "runtime/composition/CMakeLists.txt",
         root / "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+        root / "runtime/composition/include/canvas/runtime/resource_binding.hpp",
         root / "runtime/composition/src/runtime_composition.cpp",
-        root / "runtime/foundation/include/canvas/runtime/resource_port.hpp",
     ]
     present = [str(p.relative_to(root)) for p in candidates if p.exists()]
     if args.expect == "baseline-red":
         if present:
             print("VERIFICATION_DESIGN_DEFECT: composition boundary already exists:", ", ".join(present))
             return 2
-        print("RED: no shared composition target or typed pull+notify resource port at baseline")
+        print("RED: no authorized runtime/composition target or typed pull+notify resource binding port at baseline")
         return 1
     if len(present) != len(candidates):
         print("FAIL: implemented oracle missing:", ", ".join(str(p.relative_to(root)) for p in candidates if not p.exists()))

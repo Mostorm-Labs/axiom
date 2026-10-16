@@ -23,58 +23,143 @@
       "scope": "gate:G2/runtime-foundation",
       "status": "Current",
       "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
-      "owns": ["one RuntimeScene owner", "SceneRecordStore", "atomic publication", "recovery contract"],
-      "forbids": ["duplicate canonical scene", "SemanticDocument direct render", "G5 raster scheduler"]
+      "owns": [
+        "one RuntimeScene owner",
+        "SceneRecordStore",
+        "atomic publication",
+        "recovery contract"
+      ],
+      "forbids": [
+        "duplicate canonical scene",
+        "SemanticDocument direct render",
+        "G5 raster scheduler"
+      ]
     },
     {
       "id": "g3-canonical-canvas",
       "scope": "capability:G3/basic-canonical-canvas",
       "status": "Current",
       "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
-      "owns": ["RenderTarget", "RenderFrame", "camera/viewport/DPR metrics", "per-view RenderCore", "platform acquire/present"],
-      "forbids": ["duplicate canonical state", "Core-owned GPU/OS execution"]
+      "owns": [
+        "RenderTarget",
+        "RenderFrame",
+        "camera/viewport/DPR metrics",
+        "per-view RenderCore",
+        "platform acquire/present"
+      ],
+      "forbids": [
+        "duplicate canonical state",
+        "Core-owned GPU/OS execution"
+      ]
     },
     {
       "id": "g4-interaction-ink",
       "scope": "capability:G4/interaction-ink",
       "status": "Current",
       "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
-      "owns": ["InteractionRuntime", "Session owners", "Selection", "Transform", "Eraser", "History", "Preview/Canonical handoff"],
-      "forbids": ["duplicate canonical write path", "invented partial erase", "Host-owned generic tool dispatch"]
+      "owns": [
+        "InteractionRuntime",
+        "Session owners",
+        "Selection",
+        "Transform",
+        "Eraser",
+        "History",
+        "Preview/Canonical handoff"
+      ],
+      "forbids": [
+        "duplicate canonical write path",
+        "invented partial erase",
+        "Host-owned generic tool dispatch"
+      ]
     },
     {
       "id": "fc-feature-completion-execution-v0.2",
       "scope": "execution:FC/feature-completion",
       "status": "Current",
       "ref": "notion://3f74c57a-590c-8139b903f14f0aae0c57",
-      "depends_on": ["g4-interaction-ink"],
+      "depends_on": [
+        "g4-interaction-ink"
+      ],
       "relevant_constraint": "FC-00X is shared infrastructure and does not authorize FC-01 or any feature task."
     }
   ],
   "repository_contracts": [
-    {"path":"docs/adr/0003-semantic-document-runtime-scene.md","sha256":"b273285200bafa661b7654438442ddc7b97901d846b333fe45747696bb80769b","role":"implementation-input"},
-    {"path":"docs/adr/0013-resource-identity-content-addressing.md","sha256":"fee55590abf916c475c1e01d59bc4cf32e5d782de19ccab65ceaef252903afc8","role":"implementation-input"},
-    {"path":"docs/adr/0022-runtime-public-c-api-and-cpp-style.md","sha256":"4f7246e781634c07e338de4cfd30f54a4f6143a85c3044366c6624a376a4aac3","role":"implementation-input"},
-    {"path":"docs/api/RUNTIME_C_API_CONTRACT.md","sha256":"fbcf538a4f7f9cf8490211b0d4289d58ada215ebb528893dc286e22e8799a82f","role":"implementation-input-only"},
-    {"path":"runtime/foundation/include/canvas/runtime/resource_provider.hpp","sha256":"d3b7e79fd3ac19f00d8a56542b2eb36fec4b37ece7e4b4ef5a6c569a1b4e3d5c","role":"current-source"},
-    {"path":"runtime/scene/include/canvas/scene/scene_types.hpp","sha256":"68c52028f0d042f1e4f7fca6763bf4283c19d86e3d63fcadaad052dcfe2da434","role":"current-source"},
-    {"path":"runtime/scene/include/canvas/scene/full_scene_compiler.hpp","sha256":"dfa8c993626e26f3c7a1c95bb222121376155c07ced5c7aafb833d6d98b1c3c6","role":"current-source"},
-    {"path":"runtime/scene/include/canvas/scene/runtime_scene_projection.hpp","sha256":"535a571e5ab1c2381e18b36b9f0759f1130fa1a9974cdc1d0fba64ccc5e3cccb","role":"current-source"},
-    {"path":"runtime/render/include/canvas/render/runtime_app_binding.hpp","sha256":"73f19dc75586e7fd43e4ed8eb1596fff3358c9349e21758e5f6fe0ec3e86698e","role":"current-source"},
-    {"path":"runtime/render/include/canvas/render/runtime_frame_coordinator.hpp","sha256":"1630894ac7b68c60f6c3381516c72f395bb61acabcb09d00c5a6b40cc7be2028","role":"current-source"},
-    {"path":"runtime/text/include/canvas/text/text_layout.hpp","sha256":"7815d94b41aa477c4caff9cd09db76cf533b39c2fd3e55c9321a0bee206052bc","role":"current-source"}
+    {
+      "path": "docs/adr/0003-semantic-document-runtime-scene.md",
+      "sha256": "b273285200bafa661b7654438442ddc7b97901d846b333fe45747696bb80769b",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/adr/0013-resource-identity-content-addressing.md",
+      "sha256": "fee55590abf916c475c1e01d59bc4cf32e5d782de19ccab65ceaef252903afc8",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/adr/0022-runtime-public-c-api-and-cpp-style.md",
+      "sha256": "4f7246e781634c07e338de4cfd30f54a4f6143a85c3044366c6624a376a4aac3",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "sha256": "fbcf538a4f7f9cf8490211b0d4289d58ada215ebb528893dc286e22e8799a82f",
+      "role": "implementation-input-only"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/resource_provider.hpp",
+      "sha256": "d3b7e79fd3ac19f00d8a56542b2eb36fec4b37ece7e4b4ef5a6c569a1b4e3d5c",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/scene_types.hpp",
+      "sha256": "68c52028f0d042f1e4f7fca6763bf4283c19d86e3d63fcadaad052dcfe2da434",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/full_scene_compiler.hpp",
+      "sha256": "dfa8c993626e26f3c7a1c95bb222121376155c07ced5c7aafb833d6d98b1c3c6",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp",
+      "sha256": "535a571e5ab1c2381e18b36b9f0759f1130fa1a9974cdc1d0fba64ccc5e3cccb",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/runtime_app_binding.hpp",
+      "sha256": "73f19dc75586e7fd43e4ed8eb1596fff3358c9349e21758e5f6fe0ec3e86698e",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/runtime_frame_coordinator.hpp",
+      "sha256": "1630894ac7b68c60f6c3381516c72f395bb61acabcb09d00c5a6b40cc7be2028",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/text/include/canvas/text/text_layout.hpp",
+      "sha256": "7815d94b41aa477c4caff9cd09db76cf533b39c2fd3e55c9321a0bee206052bc",
+      "role": "current-source"
+    }
   ],
   "upstream_dependency": {
     "review_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/review.txt",
     "review_sha256": "46187573a34b362024cf3b9d998a050bd6dd482284f47eec22322ba32edfab13",
     "repair_checklist_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/repair-checklist.txt",
     "repair_checklist_sha256": "c94cda71a69c196c0499154a58f48316d43f5515f6fa13ed7b3127df04a6b9c3",
-    "required_before_scene_implementation": ["F01 keyed cancel", "F02 source lifetime", "F03 arbitration cleanup", "F04 failed-session rollback", "F05 creation cancel repaint", "F06 target fence", "F07 style leaf merge", "F08 truthful frame qualification"],
+    "required_before_scene_implementation": [
+      "F01 keyed cancel",
+      "F02 source lifetime",
+      "F03 arbitration cleanup",
+      "F04 failed-session rollback",
+      "F05 creation cancel repaint",
+      "F06 target fence",
+      "F07 style leaf merge",
+      "F08 truthful frame qualification"
+    ],
     "classification": "upstream_dependency_not_silently_included"
   },
   "frozen_scope": {
     "scene": "Reuse existing SceneBinding, IncrementalRuntimeCoordinator, FullSceneCompiler and RuntimeSceneProjection; add adapters/ports only where required for one shared composition.",
-    "resources": "Use one pull-plus-notify model with typed internal binding/version tokens; external providers supply immutable bytes/results and Runtime performs safe-point validation and publication.",
+    "resources": "Use one pull-plus-notify model. The attach/bind document resource binding supplies a trusted ResourceBindingManifest for Image/Font resources (resource id, kind, expected sha256, decode/layout version); the manifest is an internal composition input and does not add canonical schema fields. Brush resources use the existing canonical BrushResourceBinding metadata. Provider bytes never self-authorize. Missing manifest or mismatched metadata keeps a resource unverified/missing and cannot publish Ready. Runtime validates at the owner safe point.",
     "composition": "Per-instance manual-poll Runtime composition with full lifecycle and close protocol; no duplicate Document, Session, History, RuntimeScene or canonical write owner.",
     "consumers": "Windows first, then Web debug-on/off, using the same composition; Minimal core must not link Playground or Debug UI.",
     "android": "Build/APK/physical evidence deferred and non-blocking."
@@ -86,5 +171,28 @@
     "dynamic registry, implicit network/file I/O, Core-created OS thread/message loop",
     "POC-06/Arc revival, G5 performance engineering, Android delivery",
     "modification of Authority, Gate, Evidence, Integration, Golden or historical PHYS records"
-  ]
+  ],
+  "resource_metadata_authority": {
+    "manifest": {
+      "path": "runtime/composition/include/canvas/runtime/resource_binding.hpp",
+      "owner": "Host/Document binding at attach/open",
+      "fields": [
+        "resource_id",
+        "kind",
+        "expected_sha256",
+        "decode_version",
+        "layout_version",
+        "binding_generation"
+      ],
+      "trust_rule": "Provider response hash/version is not an authority; absent or mismatched manifest prevents Ready."
+    },
+    "brush": {
+      "source": "semantic::BrushResourceBinding in canonical BrushExecutionSnapshot",
+      "trust_rule": "content_sha256/kind/decode_version are read from the canonical brush binding and must match the manifest/provider result."
+    },
+    "image_font": {
+      "source": "attach-time ResourceBindingManifest supplied by the document/host binding",
+      "trust_rule": "ImageContent and TextStyle ResourceId alone do not authorize bytes; no manifest means unverified/missing."
+    }
+  }
 }

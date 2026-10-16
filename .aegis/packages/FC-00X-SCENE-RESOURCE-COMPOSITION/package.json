@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.1",
+  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.2",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
   "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
@@ -24,19 +24,19 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "39da2db7e2ecd113b6aa54591f6604782c19688874c732a6535ea550495c784b"
+    "sha256": "c39ba1007bf8e22c3cd24e18c1fc89422c481dc33836b3472e3f4709365fb38a"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "6aa5ec21ed596695514aa918f1c64e3449e9f93c44dda1219f3c29385eb76aa1"
+    "sha256": "49ff756858101ec4462431ffbce1adb58dd289e60f2d3510ffbc6d535336b577"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "f42b71f2684ad5c685d3d06ff1c83eabd9a8bacf1d28d4c2e808abb6704e80a4"
+    "sha256": "f2d6738a3e89561cd8e61a744d021cb462bfdeaee255cd7fcf6d4d3043b2307e"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "742bf88ff7585f24ab52c66302c39fbb26df71e574a89f64088d092c11701450"
+    "sha256": "419ee8a34a3cd7d54e0d6bf2b3520f6d3bbae4eec25496224335516b7f391e41"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
@@ -45,11 +45,11 @@
   "oracle_refs": [
     {
       "path": "oracles/scene_composition_red.py",
-      "sha256": "23a7bf87d3248520afe292030773d3ea3db106119eaf2c44dae3e02012de7b46"
+      "sha256": "bc3b4596b763de0849f032902d803d4cdea024560cc1b59b3f3a54305f80905d"
     },
     {
       "path": "r0-contract-map.md",
-      "sha256": "f916e0c37130ec89e36786bb8dfbe3ba112db63c193f6e34e552c4729de35cce"
+      "sha256": "931c0da1f467e44ded7f31cda54c8beffdaec3622eeaca8898dfa2a159591427"
     }
   ],
   "preparation_inputs": [
@@ -98,5 +98,14 @@
     "next_surface": "CODE_EXECUTION",
     "official_gate_pass_forbidden_during_p32": true,
     "next_action": "After independent Control Review acceptance, resolve exact package bindings, audit upstream F01-F08 on the accepted implementation, run the RED oracle, then execute R0-R4 to terminal success or a classified blocker."
+  },
+  "correction": {
+    "supersedes_package_commit": "02e905874e81038ac42b86c15499831699637cbb",
+    "reason": "P34 review found composition mutation scope/RED oracle mismatch and unbound image/font expected metadata authority.",
+    "resolved": [
+      "Exact runtime/composition CMake/include/src/tests scope is authorized and the RED oracle checks those exact paths.",
+      "Attach-time ResourceBindingManifest is the trusted Image/Font metadata source; canonical BrushResourceBinding remains the brush source; provider self-report cannot authorize Ready."
+    ],
+    "requires_new_independent_control_review": true
   }
 }

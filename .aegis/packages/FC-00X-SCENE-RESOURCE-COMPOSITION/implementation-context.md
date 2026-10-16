@@ -17,9 +17,9 @@ The post-246cd1d0 review remains an upstream dependency. F01-F08 (keyed cancella
 
 ## Current flow and owners
 
-`semantic::SemanticReadView` is the canonical read source. `SceneBinding` and `IncrementalRuntimeCoordinator` own Scene/RuntimeScene prepare and atomic publication. `Scene` owns query, hit, draw-list, spatial and damage state. `RuntimeSceneProjection` is an inspection/reference projection, not a second Document. `FullSceneCompiler` is the full materialization path; the existing `ISemanticSceneCompiler` path remains the incremental/query path. `RichTextLayoutService` owns immutable text snapshots and consumes an explicit `LayoutContext`. `ResourceProvider` supplies immutable bytes; image and text consumers own decode/layout caches. `RuntimeFrameCoordinator` owns frame identity, stale/retry decisions, and preview retirement qualification; platform providers own acquire/present/GPU facts. Existing `CanvasEditingRuntime` owns interaction/session/history and remains the one canonical mutation owner.
+`semantic::SemanticReadView` is the canonical read source. `SceneBinding` and `IncrementalRuntimeCoordinator` own Scene/RuntimeScene prepare and atomic publication. `Scene` owns query, hit, draw-list, spatial and damage state. `RuntimeSceneProjection` is an inspection/reference projection, not a second Document. `FullSceneCompiler` is the full materialization path; the existing `ISemanticSceneCompiler` path remains the incremental/query path. `RichTextLayoutService` owns immutable text snapshots and consumes an explicit `LayoutContext`. `ResourceProvider` supplies immutable bytes; image and text consumers own decode/layout caches. Attach/bind supplies the internal `ResourceBindingManifest` for Image/Font expected metadata; Brush uses canonical `BrushResourceBinding`. `RuntimeFrameCoordinator` owns frame identity, stale/retry decisions, and preview retirement qualification; platform providers own acquire/present/GPU facts. Existing `CanvasEditingRuntime` owns interaction/session/history and remains the one canonical mutation owner.
 
-The new composition layer is a narrow owner-side assembly above these components. It may own per-instance bindings and queues, but it must not duplicate Document, Selection, Session, History, RuntimeScene, or canonical write state. It must not call Playground to perform generic business behavior.
+The new composition layer is a narrow owner-side assembly above these components. It is a separate `runtime/composition` target with explicit include/src/test scope; it is not a public ABI. It may own per-instance bindings and queues, but it must not duplicate Document, Selection, Session, History, RuntimeScene, or canonical write state. It must not call Playground to perform generic business behavior.
 
 ## Frozen R0 decisions
 
@@ -96,3 +96,11 @@ The internal entrance must have real implementations and readback for `create/op
 ## R4 Minimal consumer contract
 
 The Windows executable and Web HTML/JS/WASM/service entry use the same composition entry. The core target does not link `axiom_ink_playground_common`, `canvas_debug_ui`, or Playground/Debug UI source. Playground remains a same-revision comparison consumer. Web debug-on and debug-off must both operate; Android is explicitly deferred. Real tests cover create/select/modify/cancel/Undo/Redo/query/readback, missing-to-ready resource refresh, close with late completion, resize/loss/rebind, and two-instance isolation.
+
+## Resource metadata authority
+
+`runtime/composition/include/canvas/runtime/resource_binding.hpp` defines the internal attach-time `ResourceBindingManifest`. Its expected hash, kind, decode/layout version and binding generation come from the Host/Document binding, not from provider bytes. Existing `semantic::BrushResourceBinding` remains the canonical source for brush package metadata. ImageContent and TextStyle ResourceId values alone are insufficient to authorize bytes; without a matching manifest entry the resource remains missing/unverified and cannot become Ready. This is an internal binding contract and does not add ObjectKind, FieldId, OperationKind, protobuf fields or public ABI.
+
+## Composition target
+
+The implementation target is `runtime/composition/` with `CMakeLists.txt`, public-internal headers under `include/canvas/runtime/`, sources under `src/`, and focused tests under `tests/`. It may depend on existing foundation, semantic, text, scene, render, interaction/editor and control targets; no lower target may depend back on composition or on apps/debug UI.
