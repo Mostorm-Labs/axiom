@@ -1,54 +1,20 @@
 {
-  "web_debug_off": {
-    "configure": "tmp_fc00x_web_off_final.bat",
-    "build_exit": 0,
-    "artifacts": [
-      {
-        "path": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
-        "bytes": 301996,
-        "sha256": "c3a46d3ff97550556dd04b7e1221019c522c260a445a6c57dc6893567875682b"
-      },
-      {
-        "path": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.wasm",
-        "bytes": 12207277,
-        "sha256": "151e707ff5740e30be8f34323f6226985b7081d0412a2e53236e6b0f9bcfca3f"
-      }
-    ]
+  "schema": "fc00x-build-artifacts-v3",
+  "implementation_revision": "246cd1d0b0183d665458846eb775a378d3e6cc07",
+  "windows": {
+    "status": "PASS",
+    "artifact": "out/fc00x-windows-playground-v2/apps/ink_playground/axiom_ink_playground_windows.exe"
   },
   "web_debug_on": {
-    "configure": "tmp_fc00x_web_on_final.bat",
-    "build_exit": 0,
-    "artifacts": [
-      {
-        "path": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
-        "bytes": 304025,
-        "sha256": "e4d55b08f8ff950236bedb81025f44938b46bc202f626e71ed94885b59006317"
-      },
-      {
-        "path": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.wasm",
-        "bytes": 13056829,
-        "sha256": "35d10572e37f3f91babbe7dbe0f310dc66d37a636e22981da1704573858c9270"
-      }
-    ]
+    "status": "PASS",
+    "artifact": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js"
   },
-  "sdk": {
-    "emscripten": "6.0.6",
-    "emscripten_commit": "9981799f744be74ac67b1c1813ff172f63be0630",
-    "skia_windows_sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
-    "semantic_facts": "C:\\Users\\Chado\\.codex\\worktrees\\fc00x-interaction-internalization-p31\\canvas\\out\\fc00x-web-environment.json",
-    "skia_web_sdk_id": "8c5326038b9082ec2171a03ade3c953390fa7557dc7fd1f79196693a70fcda16",
-    "web_environment": ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/web-environment.json",
-    "windows_environment": ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/windows-environment.json"
+  "web_debug_off": {
+    "status": "PASS",
+    "artifact": "out/fc00x-web-debug-off/apps/ink_playground/axiom_ink_playground_web.js"
   },
-  "windows": {
-    "ctest_exit": 0,
-    "build_exit": 0,
-    "target_count": 351,
-    "ctest_log": ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/windows-ctest.log",
-    "configure": "C:\\Users\\Chado\\.codex\\tmp_fc00x_windows_tests_config4.bat",
-    "ctest_discovered_and_run": 36,
-    "ctest_passed": 36,
-    "build_log": "C:\\Users\\Chado\\.codex\\fc00x-build-final.log",
-    "contract_log": ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/contract-runner.log"
-  }
+  "android": {
+    "status": "DEFERRED_NOT_BLOCKING"
+  },
+  "physical_status": "PHYSICAL_PENDING"
 }

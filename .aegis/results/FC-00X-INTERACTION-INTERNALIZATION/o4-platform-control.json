@@ -1,13 +1,20 @@
 {
   "schema": "fc00x-o4-platform-control-v2",
   "status": "PASS_BUILD_AND_CONTRACT",
-  "web_platform_commit_removed": true,
-  "windows_independent_hud_removed": true,
-  "debug_ui_snapshot_owner_unchanged": true,
-  "contract_checks": "3/3 PASS",
-  "builds": [
-    "Web Debug ON PASS",
-    "Web Debug OFF PASS",
-    "Windows PASS"
-  ]
+  "windows_build": "out/fc00x-windows-playground-v2/apps/ink_playground/axiom_ink_playground_windows.exe",
+  "web_debug_on": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
+  "web_debug_off": "out/fc00x-web-debug-off/apps/ink_playground/axiom_ink_playground_web.js",
+  "contract_tests": [
+    "interaction_internalization_contract_test.py PASS",
+    "web_host_page_test.py PASS",
+    "windows_skia_preview_contract_test.py PASS",
+    "windows_imgui_skia_debug_ui_contract_test.py PASS"
+  ],
+  "changes": [
+    "Web preserves zero pressure and pointer tool provenance",
+    "Web removes duplicate cancel submission",
+    "Windows selection and cancel enter Runtime batch boundary",
+    "HUD remains owned by Debug UI path"
+  ],
+  "physical_status": "PHYSICAL_PENDING"
 }

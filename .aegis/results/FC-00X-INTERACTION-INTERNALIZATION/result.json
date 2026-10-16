@@ -4,7 +4,7 @@
   "stage": "P32_IMPLEMENTATION",
   "status": "READY_FOR_CONTROL_REVIEW",
   "starting_revision": "965612f6a37e102e94c2d2fa1120ff9d9a9e1565",
-  "result_revision": "890f09718b98258d736b232e7d02a0634aaf6fb3",
+  "result_revision": "246cd1d0b0183d665458846eb775a378d3e6cc07",
   "package_ref": ".aegis/packages/FC-00X-INTERACTION-INTERNALIZATION/package.json@bb38a2bf46d825989443bb28da878846efc44477",
   "materialized_ref": "refs/heads/codex/fc00x-interaction-internalization-p31",
   "completed_slices": [
@@ -34,6 +34,7 @@
   },
   "evidence_refs": [
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/build-artifacts.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/contract-runner.log",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/environment-blocker.json",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/evidence-boundary.json",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/implementation-design-preflight.json",
@@ -51,10 +52,13 @@
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/repository-reconciliation.json",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/result.json",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/scope-audit.json",
+    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/web-environment.json",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/windows-ctest.log",
-    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/contract-runner.log",
     ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/windows-environment.json",
-    ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/web-environment.json"
+    "D:/axreview/fc00x-20261016/interaction-code-review/behavior-checks.json",
+    "out/fc00x-windows-playground-v2/apps/ink_playground/axiom_ink_playground_windows.exe",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.wasm"
   ],
   "blockers": [],
   "official_gate_pass_claimed": false,
@@ -65,5 +69,6 @@
     "No Android physical PASS",
     "No G5 work"
   ],
-  "next_surface": "CONTROL_REVIEW"
+  "next_surface": "CONTROL_REVIEW",
+  "implementation_revision": "246cd1d0b0183d665458846eb775a378d3e6cc07"
 }

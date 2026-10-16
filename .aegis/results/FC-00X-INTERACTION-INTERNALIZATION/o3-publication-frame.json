@@ -1,20 +1,15 @@
 {
   "schema": "fc00x-o3-publication-frame-v2",
   "status": "PASS_FOCUSED",
-  "preserved_owners": [
-    "OperationEngine",
-    "EditorHistory",
-    "RuntimeScene",
-    "RuntimeFrameCoordinator",
-    "PreviewSurfaceController",
-    "CanonicalHandoff"
-  ],
+  "runtime_owner": "CanvasEditingRuntime plus existing OperationEngine/EditorHistory/Scene/RuntimeFrameCoordinator",
   "tests": [
     "FC00XFrameCoordinator PASS",
+    "G3RuntimeAppBinding PASS",
     "G3PreviewSurface PASS",
     "G3SurfacePresentation PASS",
     "G4CanonicalHandoff PASS",
-    "G46EditingOverlay PASS"
+    "G46EditingOverlay PASS",
+    "G46PlaygroundTransform PASS"
   ],
-  "notes": "Windows/Web builds completed with shared Runtime path."
+  "notes": "No second canonical write path introduced; preview/canonical retirement remains frame-qualified."
 }
