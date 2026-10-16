@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Public Scene adaptation, trusted resource ports, internal Runtime instance composition, and Windows/Web Minimal consumers for repeatable cross-platform verification.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-interaction-internalization-p31",
+    "execution_ref": "codex/fc00x-scene-resource-composition-p31"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "02078a36818e7722309aefe679089a48212a424d",
+    "relation": "ancestor"
+  },
+  "starting_revision": "02078a36818e7722309aefe679089a48212a424d",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "39da2db7e2ecd113b6aa54591f6604782c19688874c732a6535ea550495c784b"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "6aa5ec21ed596695514aa918f1c64e3449e9f93c44dda1219f3c29385eb76aa1"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "f42b71f2684ad5c685d3d06ff1c83eabd9a8bacf1d28d4c2e808abb6704e80a4"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "742bf88ff7585f24ab52c66302c39fbb26df71e574a89f64088d092c11701450"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "7349ae08b24c64b22644cc9827d6fc6dcc71e8291b1a44e2cfd76cc4db199099"
+  },
+  "oracle_refs": [
+    {
+      "path": "oracles/scene_composition_red.py",
+      "sha256": "23a7bf87d3248520afe292030773d3ea3db106119eaf2c44dae3e02012de7b46"
+    },
+    {
+      "path": "r0-contract-map.md",
+      "sha256": "f916e0c37130ec89e36786bb8dfbe3ba112db63c193f6e34e552c4729de35cce"
+    }
+  ],
+  "preparation_inputs": [
+    {
+      "path": "D:/axreview/fc00x-20261016/scene-resources-composition-handoff-v0.3.txt",
+      "sha256": "94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd"
+    },
+    {
+      "path": "D:/axreview/fc00x-20261016/third-handoff-v0.3-change-notes.txt",
+      "sha256": "f82d36756247ce5773e1253bbaa549da9766e5b3c57d1e1610d2d56b35072ea0"
+    }
+  ],
+  "upstream_dependency": {
+    "review_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/review.txt",
+    "review_sha256": "46187573a34b362024cf3b9d998a050bd6dd482284f47eec22322ba32edfab13",
+    "repair_checklist_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/repair-checklist.txt",
+    "repair_checklist_sha256": "c94cda71a69c196c0499154a58f48316d43f5515f6fa13ed7b3127df04a6b9c3",
+    "must_reaudit_before_mutation": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08"
+    ]
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/",
+    "base_revision": "02078a36818e7722309aefe679089a48212a424d",
+    "exact_ref_rule": "Use the immutable P31 package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "protected_work": "Existing FC-00X interaction/runtime packages and results, FC-01/PX0/G4 history and user checkouts remain untouched."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "SCENE-RED-COMPOSITION-BOUNDARY",
+    "SCENE-UPSTREAM-DEPENDENCY-AUDIT"
+  ],
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "official_gate_pass_forbidden_during_p32": true,
+    "next_action": "After independent Control Review acceptance, resolve exact package bindings, audit upstream F01-F08 on the accepted implementation, run the RED oracle, then execute R0-R4 to terminal success or a classified blocker."
+  }
+}

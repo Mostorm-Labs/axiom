@@ -1,0 +1,121 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "R0: materialize implementation design preflight, owner graph, lifecycle table, dependency direction, failure/rollback order, and contract-to-source-to-owner-to-consumer-to-oracle map.",
+        "R1: add the narrow shared Semantic-to-Scene adapters/ports needed to connect existing ISemanticSceneCompiler/SceneBinding and FullSceneCompiler/RuntimeSceneProjection through one atomic publication boundary; preserve complete identity/order/content/dependency/invalidation semantics.",
+        "R2: add one pull-plus-notify resource port and typed internal binding/version checks; reuse ResourceProvider, ImageResourceResolver and RichTextLayoutService; refresh derived scene/frame state only at owner safe points.",
+        "R3: add per-instance internal Runtime composition and staged lifecycle/close wiring above existing owners; expose real narrow ingress and readback receipts without duplicating canonical state.",
+        "R4: migrate Windows then Web debug-on/off Minimal consumers to the same composition; deliver runnable Windows and Web entrypoints and keep Debug UI optional.",
+        "Materialize all P32 evidence under .aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/scene/include/canvas/scene/**",
+        "runtime/scene/src/**",
+        "runtime/scene/tests/**",
+        "runtime/foundation/include/canvas/runtime/**",
+        "runtime/foundation/src/**",
+        "runtime/foundation/tests/**",
+        "runtime/render/include/canvas/render/**",
+        "runtime/render/src/**",
+        "runtime/render/tests/**",
+        "runtime/text/include/canvas/text/**",
+        "runtime/text/src/**",
+        "runtime/text/tests/**",
+        "runtime/interaction/include/canvas/interaction/**",
+        "runtime/interaction/src/**",
+        "runtime/interaction/tests/**",
+        "apps/minimal_runtime_host/**",
+        "apps/axiom_canvas_demo/**",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "apps/ink_playground/tests/**",
+        "CMakeLists.txt",
+        "runtime/*/CMakeLists.txt",
+        "apps/minimal_runtime_host/CMakeLists.txt",
+        "apps/axiom_canvas_demo/CMakeLists.txt",
+        ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/**"
+      ],
+      "preserve_unchanged": [
+        ".aegis/authorities.json", ".aegis/gates.json", ".aegis/evidence.json", ".aegis/integrations.json",
+        ".aegis/packages/FC-00X-INTERACTION-INTERNALIZATION/**", ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/**",
+        ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/**", ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**",
+        ".aegis/packages/FC-01/**", ".aegis/results/FC-01-DEV/**", ".aegis/results/GT-*/**", ".aegis/results/PX0-*/**",
+        "verification/corpus/**", "docs/api/**", "semantic-sdk.lock.json", "r1-full-skia-sdk.lock.json"
+      ],
+      "forbidden_changes": [
+        "FC-01 Shape/Connector/product semantics or any semantic Golden/Authority change.",
+        "New ObjectKind, FieldId, OperationKind, protobuf tag, canonical schema or stable public C ABI/SDK.",
+        "Second Document, Selection, Session, History, RuntimeScene or canonical write owner.",
+        "Dynamic registry, implicit network/file/database I/O, Core-created OS thread/message loop, G5 optimization.",
+        "POC-06/Arc build/test logic revival, Android build/APK/product delivery, or historical Gate/Evidence/PHYS mutation.",
+        "Rebuilding or changing locked Semantic/Skia SDKs."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current and target owner graph for Document, View, Interaction, Scene, RuntimeScene, Resources, Frame and Host",
+        "Scene A/B derivation mapping and atomic publication boundary",
+        "pull-plus-notify resource token fields, trusted metadata sources and state transitions",
+        "create/open through detach/close lifecycle acceptance/rejection table",
+        "owner pump, queue, borrow, no-reentry and failure rollback rules",
+        "Windows/Web Minimal target dependency graph and debug-on/off build map",
+        "obligation-to-source/test/evidence mapping",
+        "upstream F01-F08 audit and unresolved semantic decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false,
+        "upstream_dependency_conflict": false
+      }
+    },
+    "oracle_preconditions": [
+      {
+        "id": "SCENE-RED-COMPOSITION-BOUNDARY",
+        "red_required": true,
+        "expected_failure": "At the task anchor, no shared Scene/resource/composition instance target exposes the frozen lifecycle and pull-plus-notify contracts; the old path remains split across SceneBinding/RuntimeScene, ResourceProvider consumers and Playground/platform assembly.",
+        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/red-preflight.json",
+        "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/scene_composition_red.py --root . --expect baseline-red",
+        "expected_exit_code": 1
+      },
+      {
+        "id": "SCENE-UPSTREAM-DEPENDENCY-AUDIT",
+        "red_required": false,
+        "expected_failure": "If any F01-F08 remains open at the accepted starting revision, stop before Scene/resource production mutation and return a classified upstream blocker.",
+        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/upstream-dependency-audit.json"
+      }
+    ],
+    "tests": {
+      "required": [
+        {"id":"SCENE-R1-DERIVATION","command_or_oracle":"ctest --test-dir <exact-build> -R 'FullIncrementalEquivalence|IncrementalRuntimeRecovery|IncrementalRuntimeAtomicPublication|RuntimeRecordProjection|SceneBinding|SceneDelta|SceneFullRebuild' --output-on-failure","expected_result":"all discovered targets pass with identity/order/content/dependency assertions active","blocking_reason":"shared Scene derivation and publication"},
+        {"id":"SCENE-R2-RESOURCE","command_or_oracle":"ctest --test-dir <exact-build> -R 'G47ImageResource|G47TextLayout|G47TextPipeline|SceneResourceRefresh|RuntimeResourcePort' --output-on-failure","expected_result":"all discovered targets pass; resource state and refresh oracle is present","blocking_reason":"resource binding and derived refresh"},
+        {"id":"SCENE-R3-COMPOSITION","command_or_oracle":"ctest --test-dir <exact-build> -R 'FC00XRuntimeComposition|FC00XRuntimeIsolation|FC00XFrameCoordinator|G3RuntimeAppBinding' --output-on-failure","expected_result":"lifecycle, two-instance isolation, role separation and close/late completion pass","blocking_reason":"internal Runtime instance assembly"},
+        {"id":"SCENE-R4-CONSUMERS","command_or_oracle":"ctest --test-dir <exact-build> -R 'FC00XMinimalRuntimeHost|G3WindowsSurfaceAdapter|G3WebSurfaceHost|FC00XConsumerEquivalence' --output-on-failure","expected_result":"Minimal consumers execute real shared composition without Playground/Debug UI dependency","blocking_reason":"consumer boundary"},
+        {"id":"SCENE-PREVIOUS-REGRESSIONS","command_or_oracle":"ctest --test-dir <exact-build> -R 'G3RuntimeAppBinding|FC00XRuntimeIsolation|FC00XFrameCoordinator|G3PreviewSurface|G3SurfacePresentation|G4CanonicalHandoff|G46EditingOverlay|G45BrushRuntimePipeline|G4InkPlaygroundComposition|G4InkPlaygroundSurface|G4InkPlaygroundPreview|G46PlaygroundTransform|PX0RuntimeFacadeContract|PX0DebugSnapshot|DUIM1RuntimeFacade|DUIM1Control|FC01CreationSession|FC01CreationControlBinding' --output-on-failure","expected_result":"every discovered protected target exists and passes; unmatched names are failure","blocking_reason":"protect prior accepted interaction/control/render behavior"},
+        {"id":"SCENE-SCOPE","command_or_oracle":"git diff --name-only 02078a36818e7722309aefe679089a48212a424d..HEAD; git diff --check 02078a36818e7722309aefe679089a48212a424d..HEAD","expected_result":"authorized paths only and diff check zero","blocking_reason":"scope protection"}
+      ],
+      "hosted_builds": [
+        {"id":"WINDOWS-MINIMAL","blocking":true,"command":"locked Semantic/Skia environment; cmake configure/build exact Windows Minimal target","expected_result":"runnable exe produced at exact result revision"},
+        {"id":"WEB-MINIMAL-DEBUG-ON","blocking":true,"command":"locked Emscripten environment; build Web Minimal with AXIOM_BUILD_DEBUG_UI=ON","expected_result":"HTML/JS/WASM/resources and local service entry produced"},
+        {"id":"WEB-MINIMAL-DEBUG-OFF","blocking":true,"command":"locked Emscripten environment; build Web Minimal with AXIOM_BUILD_DEBUG_UI=OFF","expected_result":"usable build without Debug UI/HUD symbols"}
+      ],
+      "deferred": [
+        {"id":"ANDROID","command_or_oracle":"Android build/APK/physical observation","reason":"explicitly deferred; non-blocking"}
+      ]
+    },
+    "hosted_verification": {"required":[],"optional":["reviewer-accessible Windows/Web artifacts","manual physical observations retained PHYSICAL_PENDING until observed"]},
+    "evidence": {
+      "blocking": ["repository-reconciliation.json","package-binding-preflight.json","implementation-design-preflight.json","red-preflight.json","upstream-dependency-audit.json","r1-scene-derivation.json","r2-resource-port.json","r3-runtime-composition.json","runtime-isolation.json","r4-windows-minimal.json","r4-web-minimal-debug-on.json","r4-web-minimal-debug-off.json","r4-consumer-equivalence.json","regression-matrix.json","scope-audit.json","result.json","exact pushed result revision/materialized_ref"],
+      "corroborative": ["Windows/Web build logs","exe/wasm/js/resource SHA-256 summaries","manual observations","Playground comparison","performance traces without invented metrics"]
+    },
+    "terminal_success": {"all_of":["R0-R4 complete with no unresolved decisions","all discovered blocking oracles pass with active assertions","Windows native and Web debug-on/off builds pass or an explicit classified environment blocker is returned","Minimal core does not link Playground/Debug UI","protected history/Authority/Golden/PHYS records unchanged","exact result/evidence is pushed and reviewer-resolvable","return READY_FOR_CONTROL_REVIEW only; no Gate/P34/physical PASS claim"]},
+    "terminal_blockers": {"explicit_classes":["BLOCKED_REPOSITORY_IDENTITY","BLOCKED_EXECUTION_DIVERGENCE","BLOCKED_AUTHORITY","BLOCKED_MISSING_INPUT","BLOCKED_ENVIRONMENT","BLOCKED_IMPLEMENTATION","BLOCKED_EVIDENCE","TASK_PACKAGE_DEFECT","VERIFICATION_DESIGN_DEFECT","NEW_HIGH_IMPACT_FAILURE_MODE"]},
+    "return_policy": {"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW","official_gate_pass_forbidden":true}
+  }
+}

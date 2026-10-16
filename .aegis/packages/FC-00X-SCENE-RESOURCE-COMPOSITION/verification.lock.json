@@ -1,0 +1,94 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "FROZEN_FOR_CONTROL_REVIEW",
+  "trusted_basis": {
+    "repository_revision": "02078a36818e7722309aefe679089a48212a424d",
+    "authority_lock": "authority.lock.json",
+    "preparation_sha256": "94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd",
+    "review_boundary": "Independent Control Review must accept this exact package before P32 mutation.",
+    "test_cli_rule": "Resolve exact CTest targets from discovery; unmatched names are failures, never PASS."
+  },
+  "obligations": [
+    {
+      "id": "SCENE-R0-OWNER",
+      "slice": "R0",
+      "requirement": "Freeze one canonical Document/Session/Scene/Frame owner, narrow ports, lifecycle, failure recovery and composition dependency direction.",
+      "oracle": "implementation-design-preflight.json plus source call-chain review against existing SceneBinding, IncrementalRuntimeCoordinator, CanvasEditingRuntime and RuntimeFrameCoordinator.",
+      "acceptance": "No unresolved semantic/authority/verification/scope decisions; every R1-R4 obligation maps to an executable oracle.",
+      "evidence_required": ["implementation-design-preflight.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-R1-DERIVATIONS",
+      "slice": "R1",
+      "requirement": "Both incremental Scene query/spatial and full RuntimeScene reference/inspection derivations preserve complete identity, kind/version, transforms, properties, content, erase masks, placement, bounds, dependencies and explicit invalidation domains.",
+      "oracle": "Full/Delta/Recovery/Remove/Restore/reparent equivalence fixture with complete ObjectId and long OrderKey collision/tie-break cases, content/style/erase/resource invalidations and failure injection.",
+      "acceptance": "Atomic publication exposes either the previous complete snapshot or the new complete snapshot; no truncated identity/order or kind_version-only invalidation.",
+      "evidence_required": ["r1-scene-derivation.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-R2-RESOURCES",
+      "slice": "R2",
+      "requirement": "One pull-plus-notify resource port validates binding/epoch/version/hash/request lifetime and refreshes image/text/brush derived state at owner safe points without Document Operation/Undo.",
+      "oracle": "Resource schedule covering missing/bytes-accepted/decode-ready/layout-ready/fail/evict/retry/provider-replace, shared resources, same ObjectId/ResourceId value, wrong hash/version/binding, late completion and resource refresh followed by operation/Undo/Recovery.",
+      "acceptance": "Only trusted expected metadata authorizes bytes; stale/late completions cannot satisfy a new binding; dependent Scene/query/hit/render/readback/frame revisions update atomically while semantic generation and history remain unchanged.",
+      "evidence_required": ["r2-resource-port.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-R3-COMPOSITION",
+      "slice": "R3",
+      "requirement": "Per-instance internal Runtime composition owns create/open, bind, input/control/operation/resource/frame ingress, owner pump, query/readback and staged close through quiescence.",
+      "oracle": "Lifecycle matrix plus two-instance interleaving, lost/recover/rebind, close with late completion, callback no-reentry and independent Canonical/Preview role generations.",
+      "acceptance": "No half-published instance or borrowed owner pointer after close; instance state and pending receipts are isolated; platform retains threads/locks/GPU affinity and execution feedback.",
+      "evidence_required": ["r3-runtime-composition.json", "runtime-isolation.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-R4-CONSUMERS",
+      "slice": "R4",
+      "requirement": "Windows and Web Minimal consumers use the same composition, do not link Playground/Debug UI in core, support debug-on/off Web and real resource/input/surface lifecycle.",
+      "oracle": "Target dependency inventory, Windows native build/exe identity, Web debug-on/off build and local service entry, Minimal consumer end-to-end create/select/modify/cancel/Undo/Redo/query/readback plus resource refresh and close/late completion.",
+      "acceptance": "Both consumers execute the same semantic intentions and isolation checks; no duplicate Host business logic or HUD-only path; Android remains deferred.",
+      "evidence_required": ["r4-windows-minimal.json", "r4-web-minimal-debug-on.json", "r4-web-minimal-debug-off.json", "r4-consumer-equivalence.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-ORACLE-ID-ORDER",
+      "slice": "R1",
+      "requirement": "Complete ObjectId and OrderKey identities remain collision-safe and stable.",
+      "oracle": "Two IDs with equal first bytes, two resource requests with same numeric value but different binding/version, long common-prefix OrderKeys and equal-key stable tie-break.",
+      "acceptance": "No collision, deletion, eviction or reorder aliasing.",
+      "evidence_required": ["r1-scene-derivation.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-ORACLE-PREVIOUS-REGRESSIONS",
+      "slice": "all",
+      "requirement": "Accepted interaction, Preview/Canonical, control/readback and resource/scene regressions remain active; upstream F01-F08 are re-audited without being silently absorbed.",
+      "oracle": "Exact discovered CTest matrix plus upstream dependency audit against the accepted implementation revision.",
+      "acceptance": "No protected test is weakened or omitted; unresolved upstream defect returns a classified blocker.",
+      "evidence_required": ["regression-matrix.json", "upstream-dependency-audit.json"],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "SCENE-SCOPE",
+      "slice": "all",
+      "requirement": "Only authorized Scene/resource/composition/Minimal consumer/test/evidence paths change; historical control records and protected packages remain byte-identical.",
+      "oracle": "Exact diff from task anchor, protected manifest hash audit and git diff --check.",
+      "acceptance": "No Authority/Gate/Evidence/Integration/Golden/PHYS or FC-01/PX0/Poc06 mutation.",
+      "evidence_required": ["scope-audit.json", "repository-reconciliation.json"],
+      "classification": "BLOCKING"
+    }
+  ],
+  "required_regression_targets": [
+    "G3RuntimeAppBinding", "FC00XRuntimeIsolation", "FC00XFrameCoordinator", "G3RenderTargetSwitching", "G3PreviewSurface", "G3SurfacePresentation", "G4CanonicalHandoff", "G46EditingOverlay", "G45BrushRuntimePipeline", "G4InkPlaygroundComposition", "G4InkPlaygroundSurface", "G4InkPlaygroundPreview", "G46PlaygroundTransform", "PX0RuntimeFacadeContract", "PX0DebugSnapshot", "DUIM1RuntimeFacade", "DUIM1Control", "FC01CreationSession", "FC01CreationControlBinding"
+  ],
+  "forbidden_legacy_targets": ["G4WindowsPreviewDispatch", "G4InkPlaygroundWindowsPreviewPopup"],
+  "physical_status": "PHYSICAL_PENDING until actual Windows/Web observation; Android deferred",
+  "producer_may_claim_gate_pass": false
+}
