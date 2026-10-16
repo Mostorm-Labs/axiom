@@ -1,15 +1,15 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.1",
+  "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.2",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
   "stage": "P12_P13_MODELING",
-  "status": "BLOCKED_AUTHORITY",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
   "purpose": "Freeze the canonical ResourceManifest semantic model and Operation/Snapshot binding required before FC-00X Scene/Resource composition R2.",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
-    "execution_ref": "codex/fc00x-resource-manifest-p12",
+    "execution_ref": "codex/fc00x-resource-manifest-p12-v0-2",
     "base_lineage_branch": "codex/fc00x-interaction-internalization-p31"
   },
   "task_anchor": {
@@ -24,11 +24,11 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "276d8e00015bd938b6d6169ba3b1cccab4abe7cfded912acdfc9ed1922dc9b1e"
+    "sha256": "c76c4aa650cffbee50eada01cd7f56faf6313782b4a72b26b173d4be927ee0a9"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "9d94df253b4c4a1c7eb027829ea8b300a4a75b59f0a71cff1c4c02bc4afcd64c"
+    "sha256": "837aa8f5026ff223cdf88599749997be94f4e273e0fec720f661659eaae0c68d"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
@@ -36,11 +36,11 @@
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "5467e2db16ab738777283a35536e4762d7588f819a7b3c7ccf7d9eeff5a02996"
+    "sha256": "4a9d925b9784abc9e985723841a03d9d95b45a89bb50e7decac93b3ce096f2cf"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "c6ec33cd655a551b17ade3ccbfa4dc7fad761e8916d62191f8a3bed04702b0d2"
+    "sha256": "73fc60b6618b73fd33846dc14729c8c80df4381597a6a93dd27b8f0b16b9252c"
   },
   "materialization": {
     "same_repository": true,
@@ -56,10 +56,33 @@
   ],
   "candidate_binding_audit_ref": {
     "path": "candidate-binding-audit.json",
-    "sha256": "4677cb5a8a0b850dd9617d437dfa24e374e5a0d639f012108e2f00804e640fcf"
+    "sha256": "78be5ae739d7a26cb6e3803ec0241b964457fcd14c254e639f82325c12d35f31"
   },
   "independent_control_review_ref": {
-    "path": "independent-control-review.json",
+    "path": "independent-control-review-v0.1.json",
     "sha256": "c94bd4580c0007506dbeaad96e5bfaac53b30a7fcbfa93c9c1181152bb6e1f90"
+  },
+  "candidate_version": "v0.2",
+  "previous_candidate_ref": {
+    "revision": "ab3073344c88da04e01a01172cc360ae38310ea3",
+    "review": "independent-control-review-v0.1.json"
+  },
+  "candidate_binding_refs": {
+    "snapshot_binding": {
+      "path": "snapshot_binding.v1.md",
+      "sha256": "e8afdf893a13d05c60fd601e9c21d6435bd0dd76a7966c95fd0c1f9ebd17e2b9"
+    },
+    "resource_kind_registry": {
+      "path": "resource_kind_registry.v1.yaml",
+      "sha256": "0e51f6785f02c9bc0348cae9f1028a139254212e8cab8026a1a086c0d1584e55"
+    },
+    "capability_registry": {
+      "path": "capability_registry.v1.yaml",
+      "sha256": "829110471c9471db64461a1de043904e2396b4be915076faf24b29148620616a"
+    },
+    "digest_projection": {
+      "path": "digest_projection.v1.md",
+      "sha256": "7c12d4e3f0f98d975d75e5d9bb2eca2de7c4cab33a2ed49894fbbc8a4fcc24b5"
+    }
   }
 }

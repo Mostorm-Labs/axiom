@@ -1,0 +1,20 @@
+schema: axiom.snapshot-capability-registry.v1
+status: candidate_requires_independent_control_review
+capabilities:
+  - id: legacy-no-manifest-v1
+    mode: read_only_compatibility
+    allows:
+      - absent_resource_manifest_field
+      - empty_manifest_projection
+    forbids:
+      - malformed_present_manifest_fallback
+      - new_snapshot_without_explicit_manifest
+      - provider_metadata_filling_manifest
+    migration_window: until_explicit_manifest_rewrite
+  - id: resource-manifest-v1
+    mode: canonical_read_write
+    requires:
+      - explicit_resource_manifest
+      - digest_algorithm_1
+      - snapshot_revision_frontier_digest_binding
+unknown_policy: fail_closed

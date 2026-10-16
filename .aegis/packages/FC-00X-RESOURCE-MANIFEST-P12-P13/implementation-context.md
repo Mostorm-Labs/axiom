@@ -161,4 +161,40 @@ Candidate capability name: `legacy-no-manifest-v1`. It permits decoding existing
 
 ## Authority conflict audit
 
-The package-local `candidate-binding-audit.json` records the reproducible source audit. Field 4 and payload field 16 are structurally unused, but that is not semantic acceptance. The audit classifies the missing product digest authority, missing Snapshot revision/frontier/digest field binding, missing ResourceKind registry source, and unbound legacy capability as `AUTHORITY_CONFLICT` or `OPEN_PENDING_AUTHORITY`. No product/runtime source is modified while these remain open.
+The package-local `candidate-binding-audit.json` records the reproducible source audit. Field 4 and payload field 16 are structurally unused, but that is not semantic acceptance. The independent v0.1 review classified the missing digest, checkpoint, registry, tombstone and ChangeSet decisions as `MISSING_CONTRACT` or `UNRESOLVED_DECISION`; v0.2 below supplies explicit candidate material for review without claiming acceptance. No product/runtime source is modified while these remain open.
+
+## v0.2 candidate closure after independent review
+
+The following files make every previously missing choice explicit while preserving the
+candidate-only boundary:
+
+- `snapshot_binding.v1.md`: exact candidate Snapshot fields 4–9, atomic restore order,
+  manifest tombstones, and legacy presence semantics.
+- `resource_kind_registry.v1.yaml`: candidate Image/Font/Brush values, metadata schema
+  versions, decode/layout versions, limits and unknown policy.
+- `capability_registry.v1.yaml`: candidate `legacy-no-manifest-v1` read-only migration
+  capability and `resource-manifest-v1` canonical read/write capability.
+- `digest_projection.v1.md`: candidate digest algorithm registry value, exact byte stream,
+  inclusion/exclusion rules and projection-first oracle boundary.
+
+### Non-reuse and compensating manifest operations
+
+An absent ResourceId may be created only when it has never appeared in the active or retired
+set. Removing an entry atomically appends a tombstone containing the last accepted revision,
+hash and lineage token; an ordinary later upsert for that ID is rejected. A compensating
+Undo operation may restore the exact preimage only by referencing the tombstone lineage and
+using a strictly greater manifest revision. Redo applies a new operation against the new
+revision. A remove that still has an object/content reference rejects the whole operation;
+removing the reference and manifest entry together requires one explicitly staged atomic
+operation. Tombstones remain in snapshots and digest projection until an accepted migration
+or compaction authority defines safe retirement.
+
+### ResourceId-level ChangeSet
+
+The candidate adds a separate sorted `ResourceManifestSemanticChange` collection to the
+ChangeSet, keyed by complete ResourceId, with `{created, updated, removed}` flags and
+before/after entry or tombstone references. It is not represented as an ObjectId change and
+never consumes ObjectSemanticChange flags. Full, delta and recovery Scene consumers consume
+this collection; equal-revision full compile remains the correctness oracle. If no resource
+impact exists, the collection is empty. This shape remains a candidate until P13 accepts the
+exact wire-free C++ fields and merge/order rules.

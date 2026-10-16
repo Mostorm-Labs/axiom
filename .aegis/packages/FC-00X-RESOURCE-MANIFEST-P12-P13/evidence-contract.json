@@ -6,18 +6,24 @@
     "authority.lock.json",
     "verification.lock.json",
     "implementation-context.md",
+    "snapshot_binding.v1.md",
+    "resource_kind_registry.v1.yaml",
+    "capability_registry.v1.yaml",
+    "digest_projection.v1.md",
     "candidate-binding-audit.json",
-    "independent-control-review.json"
+    "independent-control-review-v0.1.json"
   ],
   "blocking": [
     "exact package commit",
     "independent review of canonical field/operation/digest/compatibility decisions"
   ],
   "producer_may_claim_authority_pass": false,
-  "return_status": "BLOCKED_AUTHORITY or PACKAGE_READY_FOR_CONTROL_REVIEW",
+  "return_status": "PACKAGE_READY_FOR_CONTROL_REVIEW or BLOCKED_*",
   "independent_review": {
     "path": "independent-control-review.json",
     "required_verdict": "BLOCKED_UNRESOLVED_DECISION or accepted successor review",
     "sha256": "c94bd4580c0007506dbeaad96e5bfaac53b30a7fcbfa93c9c1181152bb6e1f90"
-  }
+  },
+  "candidate_version": "v0.2",
+  "next_review_output": "independent-control-review-v0.2.json"
 }

@@ -1,0 +1,11 @@
+resource_kind_registry:
+  schema: axiom.resource-kind-registry.v1
+  status: candidate_requires_independent_control_review
+  values:
+    - {id: 1, symbol: Image, metadata_schema: image-resource-metadata-v1, decode_version: 1, layout_version: 0, max_metadata_bytes: 4096}
+    - {id: 2, symbol: Font, metadata_schema: font-resource-metadata-v1, decode_version: 1, layout_version: 1, max_metadata_bytes: 8192}
+    - {id: 3, symbol: Brush, metadata_schema: brush-resource-metadata-v1, decode_version: 1, layout_version: 0, max_metadata_bytes: 4096}
+  reserved: 4..255
+  unknown_policy: fail_closed_for_required_entries
+  metadata_encoding: canonical-protobuf-bytes-with-explicit-schema-version
+  content_hash: sha256-lowercase-hex-with-algorithm-prefix
