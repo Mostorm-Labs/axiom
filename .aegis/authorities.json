@@ -326,6 +326,33 @@
           "No historical Gate/Evidence/Integration outcome rewriting"
         ]
       }
+    },
+    {
+      "id": "fc00x-resource-manifest-p12-p13-v0.4",
+      "scope": "semantic:axiom/resource-manifest-p12-p13",
+      "kind": "semantic-schema-operation",
+      "version": "v0.4",
+      "status": "Current",
+      "ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+      "depends_on": [],
+      "change_class": "semantic",
+      "content": {
+        "owner": "P12/P13 Semantic Schema and Operation Authority",
+        "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+        "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.4",
+        "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+        "independent_review_ref": "file:D:/axreview/fc00x-20261016/resource-manifest-review/review-final.json",
+        "independent_review_sha256": "dfbf9b72197c17335f51c7013594e9bfdd6469935030eba2719e4c685b61dabf",
+        "accepted_by": "user-explicit-control-acceptance",
+        "accepted_on": "2026-10-17 Asia/Shanghai",
+        "model": "ResourceManifest schema1 with active entries and tombstones; explicit ResourceRevision/ContentHash/kind/length/decode/layout/metadata",
+        "operation": "UpdateResourceManifest candidate operation registry profile id/tag16; existing operations1..15 unchanged; expectations/reactivations/revision fence; exact lineage/preimage checks",
+        "snapshot": "DocumentSnapshot schema3 candidate fields4..10; schema1/2 legacy absence only under explicit legacy capability; atomic digest/checkpoint validation",
+        "digest": "SHA256_SEMANTIC_PROJECTION_V1 fixed-width little-endian projection; manifest presence/revision/entries/tombstones/capabilities included; nonsemantic runtime/checkpoint fields excluded",
+        "capabilities": "legacy-no-manifest-v1, resource-manifest-v1, shape2-triangle-v1 mapping retained as explicit candidate registry decisions",
+        "changeset": "ResourceManifestChangeFlags kCreated=1, kUpdated=2, kRemoved=4; resourceChanges separate from persisted Operation/Snapshot",
+        "implementation_boundary": "Acceptance authorizes downstream package binding and later separately authorized implementation; it does not authorize production code mutation in this transition"
+      }
     }
   ],
   "schema_version": "0.6"

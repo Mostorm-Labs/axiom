@@ -1147,6 +1147,30 @@
         "int-g4-completion"
       ],
       "type": "g4-gate-report"
+    },
+    {
+      "id": "ev-fc00x-resource-manifest-p12-p13-p23-acceptance",
+      "type": "authority-acceptance-and-independent-review",
+      "ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+      "status": "available",
+      "supports": [
+        "fc00x-resource-manifest-p12-p13-v0.4"
+      ],
+      "inputs": [
+        "git:057464f9fab2db4b67c032134cce3f5f417a64e0",
+        "file:D:/axreview/fc00x-20261016/resource-manifest-review/review-final.json",
+        "file:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json"
+      ],
+      "conclusion": {
+        "authority_status": "Current",
+        "authority_id": "fc00x-resource-manifest-p12-p13-v0.4",
+        "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+        "review_verdict": "READY_FOR_INDEPENDENT_AUTHORITY_OWNER_ACCEPTANCE",
+        "review_sha256": "dfbf9b72197c17335f51c7013594e9bfdd6469935030eba2719e4c685b61dabf",
+        "product_source_modified": false,
+        "historical_control_preserved": true,
+        "p32_authorized": false
+      }
     }
   ],
   "schema_version": "0.6"

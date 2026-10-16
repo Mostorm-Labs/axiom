@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-p23-authority-acceptance-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "stage": "P23_AUTHORITY_SUPERSESSION",
+  "status": "ACCEPTED_CURRENT_AUTHORITY",
+  "accepted_authority_id": "fc00x-resource-manifest-p12-p13-v0.4",
+  "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+  "package_path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json",
+  "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+  "independent_review": {
+    "path": "D:/axreview/fc00x-20261016/resource-manifest-review/review-final.json",
+    "sha256": "dfbf9b72197c17335f51c7013594e9bfdd6469935030eba2719e4c685b61dabf",
+    "verdict": "READY_FOR_INDEPENDENT_AUTHORITY_OWNER_ACCEPTANCE"
+  },
+  "acceptance": {
+    "actor": "user-explicit-control-acceptance",
+    "message": "½ÓÊÜ FC-00X-RESOURCE-MANIFEST-P12-P13 v0.4 revision `057464f9fab2db4b67c032134cce3f5f417a64e0` Îª P12/P13 Current Authority¡£",
+    "accepted_scope": "semantic:axiom/resource-manifest-p12-p13",
+    "accepted_kind": "semantic-schema-operation",
+    "accepted_version": "v0.4"
+  },
+  "supersession": {
+    "previous_candidate_status_preserved": true,
+    "historical_reviews_preserved": [
+      "independent-control-review-v0.1.json",
+      "independent-control-review-v0.2.json",
+      "independent-control-review-v0.3.json"
+    ],
+    "product_source_modified": false,
+    "historical_gate_evidence_modified": false,
+    "third_package_p32_authorized": false
+  },
+  "nonclaims": [
+    "No production serializer/Operation/Snapshot/Scene implementation proof",
+    "No third-package P32 authorization",
+    "No Gate/P34 PASS"
+  ],
+  "official_aegis_cli": {
+    "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+    "repository": "https://github.com/Mostorm-Labs/aegis.git",
+    "validate": "exit 0 / VALID",
+    "transition_check": "exit 0 / TRANSITION_OK",
+    "recompute_1": "exit 0 / STATE_WRITTEN",
+    "check_1": "exit 0 / STATE_OK",
+    "recompute_2": "exit 0 / STATE_WRITTEN",
+    "check_2": "exit 0 / STATE_OK",
+    "second_recompute_stable": true
+  },
+  "post_transition": {
+    "authority_count": 8,
+    "gate_decision_count": 25,
+    "integration_count": 29,
+    "evidence_count": 35,
+    "old_authorities_preserved": true,
+    "historical_gate_evidence_modified": false,
+    "historical_integration_modified": false,
+    "product_source_modified": false,
+    "authority_file_sha256": "19901b8408f38a49fae96ac25b695054a22040f0eed4c8253e7fbb8efc05aef5",
+    "state_file_sha256": "5d276b9a34052a640ce9aa3600583395cfff0098e08ba3b9fb9f9697a36d6658"
+  }
+}
