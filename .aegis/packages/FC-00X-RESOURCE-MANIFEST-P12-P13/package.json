@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.3",
+  "package_id": "FC-00X-RESOURCE-MANIFEST-P12-P13-P31-v0.4",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
   "stage": "P12_P13_MODELING",
   "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
@@ -16,7 +16,7 @@
     "revision": "02078a36818e7722309aefe679089a48212a424d",
     "relation": "ancestor"
   },
-  "starting_revision": "02078a36818e7722309aefe679089a48212a424d",
+  "starting_revision": "6a7c709695f5e7aa8981e77521c723e4657a8237",
   "execution_authority_mode": "repo_materialized",
   "resume_cursor": null,
   "continue_until_terminal_state": true,
@@ -24,11 +24,11 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "c76c4aa650cffbee50eada01cd7f56faf6313782b4a72b26b173d4be927ee0a9"
+    "sha256": "4a1510bf6e9b000a7861c827ac7fe2e643c52618ee93d6f95c372e5280a566ff"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "82c5ee13f9f7a75aaab8114f2b5f7759430a3d05142f38aacba16cd87ae66ade"
+    "sha256": "c2f18bb21cce8045f893e143c0ab0909e62223b6a49382882545aca614c4fdbf"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
@@ -36,18 +36,18 @@
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "f7b7c982a0c8234efdab826ea4bc667d8f4b4d9fd2685b1ab361187b1997c273"
+    "sha256": "dc466e1d5401768526c4859ed8d4b8f3b4e8ff8734ce95bcb9c490e444c397db"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "75719555e6d12cb8c68cc1ea4c51c2b8bc29081043b26618d04ffc722b1fcc73"
+    "sha256": "85b5f73ba7b1db426dc9e1a743d8fd9a06f25f8ff018d34923bc05df772dbb1c"
   },
   "materialization": {
     "same_repository": true,
     "path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/",
     "exact_ref_rule": "Use immutable package commit SHA in any later handoff; no product source mutation in this package."
   },
-  "downstream_unblock": "After independent acceptance, update FC-00X-SCENE-RESOURCE-COMPOSITION package with exact accepted P12/P13 ref and repeat Control Review before P32.",
+  "downstream_unblock": "After independent acceptance of this v0.4 candidate, update FC-00X-SCENE-RESOURCE-COMPOSITION package with the exact accepted P12/P13 ref and repeat Control Review before P32.",
   "nonclaims": [
     "No product source implementation",
     "No public ABI",
@@ -56,49 +56,49 @@
   ],
   "candidate_binding_audit_ref": {
     "path": "candidate-binding-audit.json",
-    "sha256": "ecc48200a56d29253f91d27d3e183033c97f17c5abf2c475f125299be7846125"
+    "sha256": "6ec570b0665321e4a4ed785b8bf7d98cd525d782c4f5253344edd66687f00234"
   },
   "independent_control_review_ref": {
-    "path": "independent-control-review-v0.2.json",
-    "sha256": "5a818de77112cddebfcadf463b4c370004c16ffa7ae7c6c7a704ca30225f082f"
+    "path": "independent-control-review-v0.3.json",
+    "sha256": "ee3933777beb2c014757aa97ce8a1ec04fd2fc12d3f2a0d63acb5b480b35258e"
   },
-  "candidate_version": "v0.3",
+  "candidate_version": "v0.4",
   "previous_candidate_ref": {
-    "revision": "b07f4cd2196f04a947165ec47a52d2ecb9553947",
-    "review": "independent-control-review-v0.2.json"
+    "revision": "6a7c709695f5e7aa8981e77521c723e4657a8237",
+    "review": "independent-control-review-v0.3.json"
   },
   "candidate_binding_refs": {
     "snapshot_binding": {
       "path": "snapshot_binding.v1.md",
-      "sha256": "6eaa4569f4d94fd309c93b4b2e0ec3991e05643dce330b900ca67e81de36bc4e"
+      "sha256": "f5910884956a77bcc8cd4ca60de3712518179bf90d74ce8a1e8a50e816ff892d"
     },
     "resource_kind_registry": {
       "path": "resource_kind_registry.v1.yaml",
-      "sha256": "7a8f91b64dbe8eb69bfffbd2eaf0eb8c75002663cd37a0799551f6475661a8e1"
+      "sha256": "0571e24acf07c4de401d88ced8d071b958d2939becc1455ddd120d0292d3aa35"
     },
     "capability_registry": {
       "path": "capability_registry.v1.yaml",
-      "sha256": "fa069b03ea9db258119a5088084eb6077c6d0ebf9f81e2a680dfab0db3fa15e7"
+      "sha256": "10c11a1210a0b1814c8febf482985f880933b9189547c1d66c334aca36a5ee98"
     },
     "digest_projection": {
       "path": "digest_projection.v1.md",
-      "sha256": "d261e55e6034fe47381c614256d202356af78c109cad511e841bc632566d93ba"
+      "sha256": "42bf16537bb2fe313bc908a4b822ff77dee2fe705d8b7e5ad05a9135c6df1974"
     },
     "operation_contract": {
       "path": "resource_manifest_operation.v1.md",
-      "sha256": "573d7497fff9fdec57535adfe0056b512a20f5ed15780ac4bd1b390d6f887d5f"
+      "sha256": "b89b17831a04095b4be1ce88b7784fd6edf64289b9556f35882ba636db5e8f4a"
     },
     "change_set_contract": {
       "path": "change_set_contract.v1.md",
-      "sha256": "a839bb238f99ea9504b64f81e70afe4904c10b0efd4ebef25f3fa5bf134d7df9"
+      "sha256": "79e36f1b9f4cb62ac0cc87a232570fff40d939bae339ea0ce544feec66d19054"
     },
     "oracle_matrix": {
       "path": "candidate_binding_oracle_matrix.v1.md",
-      "sha256": "0c4571c214639a0b10a04040101b6c76037d8acd51f8f2f870a0ad2055d1c271"
+      "sha256": "8cb6c7f1cdd58eae5e022b70ee35dde558715ca468c25e51140e4fd3930338af"
     },
     "candidate_proto": {
       "path": "drafts/resource_manifest_v1.proto.txt",
-      "sha256": "c3c032626f4e843a97724ba36205c43eeda79cf1e96cc4d57d07daf476e77957"
+      "sha256": "54c3a6504c01360d83653e805cb0f6ef3642278574b18b2e5df655bc206bcc37"
     }
   }
 }

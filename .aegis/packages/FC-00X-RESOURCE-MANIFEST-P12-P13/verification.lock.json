@@ -3,7 +3,7 @@
   "format": "aegis-verification-lock-v1",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
   "stage": "P12_P13_MODELING",
-  "status": "CANDIDATE_V0_3_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
+  "status": "CANDIDATE_V0_4_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
   "obligations": [
     {
       "id": "RM-ID",
@@ -36,7 +36,7 @@
     {
       "id": "RM-SNAPSHOT",
       "requirement": "Snapshot/restore atomically binds manifest and digest, with explicit legacy compatibility.",
-      "oracle": "snapshot_binding.v1 fields 4..9, schema-version legacy matrix, tombstones, atomic restore and capability admission",
+      "oracle": "snapshot_binding.v1 fields 4..10, schema-version legacy matrix, tombstones including lineage token, atomic restore and capability admission",
       "acceptance": "no partial publication; digest/revision/frontier/capability bindings agree",
       "classification": "BLOCKING"
     },
@@ -48,9 +48,15 @@
       "classification": "BLOCKING"
     }
   ],
-  "terminal_blocker": "UNRESOLVED_DECISION or AUTHORITY_CONFLICT if v0.3 candidates remain unaccepted or conflict with an accepted P12/P13 input.",
+  "terminal_blocker": "UNRESOLVED_DECISION or AUTHORITY_CONFLICT if v0.4 candidates remain unaccepted or conflict with an accepted P12/P13 input.",
   "producer_may_claim_authority_pass": false,
-  "blocking_authority_findings": ["RM-V03-CANDIDATE", "RM-LEGACY-CAPABILITY", "RM-TOMBSTONE-UNDO", "RM-ATOMIC-REFERENCE-REMOVE", "RM-CHANGESET"],
+  "blocking_authority_findings": [
+    "RM-V04-CANDIDATE",
+    "RM-LEGACY-CAPABILITY",
+    "RM-TOMBSTONE-UNDO",
+    "RM-ATOMIC-REFERENCE-REMOVE",
+    "RM-CHANGESET"
+  ],
   "candidate_binding_oracles": [
     {
       "id": "RM-FIELD-NUMBERS",
@@ -74,8 +80,13 @@
     },
     {
       "id": "RM-LEGACY",
-      "oracle": "snapshot decode matrix absent/empty/malformed manifest",
+      "oracle": "snapshot_binding.v1 fields 4..10, schema-version legacy matrix, tombstones including lineage token, atomic restore and capability admission",
       "expected": "legacy capability only absent field; malformed field fails closed"
+    },
+    {
+      "id": "RM-CROSS-FILE",
+      "oracle": "cross-file parser over candidate proto, operation, snapshot and digest contracts",
+      "expected": "ReactivateResource lineage field, tombstone field6, schema3 fields4..10 and digest inclusion agree"
     }
   ]
 }

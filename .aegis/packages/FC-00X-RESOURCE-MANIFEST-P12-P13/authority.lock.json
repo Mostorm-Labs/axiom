@@ -96,15 +96,15 @@
       "metadata"
     ],
     "canonical_order": "complete ResourceId bytes",
-    "operation": "UpdateResourceManifest with sorted upserts/removes, existing operation envelope schema/payload version 1",
+    "operation": "UpdateResourceManifest with sorted upserts/removes/expectations/reactivations and expected_manifest_revision, existing operation envelope schema/payload version 1",
     "changeset": [
-      "kResourceManifestCreated",
-      "kResourceManifestUpdated",
-      "kResourceManifestRemoved"
+      "ResourceManifestChangeFlags::kCreated=1",
+      "ResourceManifestChangeFlags::kUpdated=2",
+      "ResourceManifestChangeFlags::kRemoved=4"
     ],
-    "snapshot": "candidate fields 4..9 bind manifest, document revision, opaque recovery frontier, digest algorithm/digest and capabilities atomically; exact wire acceptance pending review",
+    "snapshot": "v0.4 candidate DocumentSnapshot schema 3 fields 4..10 bind manifest, document revision, opaque recovery frontier, digest algorithm/digest, capabilities and checkpoint_digest atomically; exact wire acceptance pending review",
     "availability": "missing/corrupt/evicted are derived and do not change Document generation/digest",
-    "snapshot_field": "DocumentSnapshot.manifest = 4, append-only optional legacy presence",
+    "snapshot_field": "DocumentSnapshot schema_version=3 requires fields4..10; schemas1/2 may omit all extension fields only under explicit legacy capability",
     "manifest_fields": {
       "ResourceManifest": [
         "schema_version=1",
@@ -123,33 +123,35 @@
       ],
       "ResourceManifestTombstone": [
         "resource_id=1",
-        "last_resource_revision=2",
+        "retired_revision=2",
         "last_content_hash=3",
-        "lineage_token=4"
+        "removal_operation_id=4",
+        "preimage=5",
+        "lineage_token=6"
       ]
     },
-    "operation_kind": "UpdateResourceManifest = 16; OperationPayload.update_resource_manifest = 16; payload upserts=1/removes=2; schema_version=1/payload_version=1",
+    "operation_kind": "UpdateResourceManifest = 16; OperationPayload.update_resource_manifest = 16; payload upserts=1/removes=2/expectations=3/reactivations=4/expected_manifest_revision=5; schema_version=1/payload_version=1",
     "resource_kind_registry": {
       "Image": 1,
       "Font": 2,
       "Brush": 3,
       "reserved": "4..255"
     },
-    "snapshot_binding": "candidate snapshot_binding.v1.md fields 4..9; document_revision and recovery_frontier excluded from digest; capability requirements included",
+    "snapshot_binding": "v0.4 candidate snapshot_binding.v1.md fields4..10; document_revision and recovery_frontier excluded from semantic digest; checkpoint_digest binds fields1..9 checkpoint bytes",
     "digest": "candidate digest_projection.v1.md; SHA256_SEMANTIC_PROJECTION_V1 registry value 1, 32-byte SHA-256 over exact length-delimited stream; projection equality remains primary oracle",
     "legacy_capability": "candidate capability_registry.v1.yaml: legacy-no-manifest-v1 read-only compatibility; resource-manifest-v1 canonical read/write",
-    "non_reuse": "candidate tombstones prevent ordinary ResourceId recreation; compensating operations require lineage token and strictly greater revision"
+    "non_reuse": "v0.4 candidate tombstones prevent ordinary ResourceId recreation; compensating operations require expected removal OpId, exact preimage, expected lineage token and strictly greater revision"
   },
   "conflicts": [
     {
       "id": "RM-LEGACY-CAPABILITY",
       "classification": "UNRESOLVED_DECISION",
-      "reason": "Candidate capability registry is now explicit but remains unaccepted."
+      "reason": "Candidate capability registry is explicit in v0.4 but remains unaccepted."
     },
     {
-      "id": "RM-V02-CANDIDATE",
+      "id": "RM-V04-CANDIDATE",
       "classification": "CANDIDATE_REQUIRES_INDEPENDENT_CONTROL_REVIEW",
-      "reason": "v0.2 closes the previously missing design choices as explicit candidates; it does not silently supersede current Authority."
+      "reason": "v0.4 reconciles the v0.3 review findings as explicit candidates; it does not silently supersede current Authority."
     }
   ],
   "requires_review": [

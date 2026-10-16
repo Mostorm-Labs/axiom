@@ -1,4 +1,4 @@
-// P12/P13 v0.3 CANDIDATE ONLY. Not compiled or accepted production schema.
+// P12/P13 v0.4 CANDIDATE ONLY. Not compiled or accepted production schema.
 // Existing edition=2024 explicit presence profile applies to every singular field.
 // Names below are new candidate messages in auditoryworks.axiom.v1.
 message ImageResourceMetadataV1 {
@@ -35,6 +35,7 @@ message ResourceManifestTombstone {
   string last_content_hash = 3; // required, equals preimage.content_hash
   Id128 removal_operation_id = 4; // required, OpId that performed removal
   ResourceManifestEntry preimage = 5; // required, full immutable last active entry
+  bytes lineage_token = 6; // required, 32-byte derived SHA256 token
 }
 message ResourceManifest {
   uint32 schema_version = 1; // required, 1
@@ -51,6 +52,7 @@ message ReactivateResource {
   ResourceManifestEntry entry = 1; // required, current retired_revision + 1
   Id128 expected_removal_operation_id = 2; // required, exact tombstone OpId
   ResourceManifestEntry expected_preimage = 3; // required, exactly tombstone.preimage
+  bytes expected_lineage_token = 4; // required, exactly tombstone.lineage_token, 32 bytes
 }
 message UpdateResourceManifestOp {
   repeated ResourceManifestEntry upserts = 1;

@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "format": "aegis-p12-candidate-binding-audit-v1",
   "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
-  "source_revision": "b07f4cd2196f04a947165ec47a52d2ecb9553947",
+  "source_revision": "6a7c709695f5e7aa8981e77521c723e4657a8237",
   "scope": "candidate-only; no product source mutation",
   "checks": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "id": "RM-KIND-REGISTRY",
-      "result": "CANDIDATE_V0_3_REQUIRES_REVIEW",
+      "result": "CANDIDATE_V0_4_REQUIRES_REVIEW",
       "observations": [
         "No accepted ResourceKind registry source was found for Image=1, Font=2, Brush=3 or the 4..255 reservation.",
         "ADR-0013 requires kind validation but does not assign these numeric values."
@@ -41,7 +41,7 @@
     },
     {
       "id": "RM-DIGEST-V1",
-      "result": "CANDIDATE_V0_2_REQUIRES_REVIEW",
+      "result": "CANDIDATE_V0_4_REQUIRES_REVIEW",
       "observations": [
         "The candidate proposes a SHA-256 product digest stream.",
         "The accepted G1 plan explicitly says digest algorithm/width must come from current authority; when product digest is not frozen, G1 uses projection bytes plus verification-only SHA-256 and makes no product compatibility promise.",
@@ -51,7 +51,7 @@
     },
     {
       "id": "RM-SNAPSHOT-BINDING",
-      "result": "CANDIDATE_V0_2_REQUIRES_REVIEW",
+      "result": "CANDIDATE_V0_4_REQUIRES_REVIEW",
       "observations": [
         "The candidate adds only DocumentSnapshot.manifest=4.",
         "ADR-0020 requires the same atomic checkpoint to bind Document revision, RecoveryFrontier, digest algorithm/version and digest, but current snapshot.proto has no accepted fields for those bindings."
@@ -60,19 +60,34 @@
     },
     {
       "id": "RM-LEGACY",
-      "result": "CANDIDATE_V0_2_REQUIRES_REVIEW",
+      "result": "CANDIDATE_V0_4_REQUIRES_REVIEW",
       "observations": [
         "No current SnapshotCapability registry entry or accepted migration record names legacy-no-manifest-v1.",
         "The proposed absent-versus-malformed behavior is coherent but remains a candidate compatibility contract."
       ],
       "required_resolution": "Bind the capability name, scope, and migration window to an accepted compatibility authority."
+    },
+    {
+      "id": "RM-CROSS-FILE",
+      "result": "PASS",
+      "observations": [
+        "ReactivateResource.expected_lineage_token=4 matches operation contract and tombstone.lineage_token=6.",
+        "Snapshot candidate uses schema3 and requires fields4..10; digest contract includes manifest presence, revision, active entries, tombstones and capabilities.",
+        "Legacy schema1/2 absent extension and schema3 required presence rules are aligned."
+      ],
+      "evidence_inputs": [
+        "drafts/resource_manifest_v1.proto.txt",
+        "resource_manifest_operation.v1.md",
+        "snapshot_binding.v1.md",
+        "digest_projection.v1.md"
+      ]
     }
   ],
   "terminal_classification": "READY_FOR_CONTROL_REVIEW",
   "implementation_allowed": false,
   "historical_state_mutated": false,
-  "candidate_version": "v0.3",
-  "previous_review": "independent-control-review-v0.1.json",
+  "candidate_version": "v0.4",
+  "previous_review": "independent-control-review-v0.3.json",
   "new_candidate_inputs": [
     "snapshot_binding.v1.md",
     "resource_kind_registry.v1.yaml",

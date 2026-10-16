@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-independent-control-review-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13",
+  "reviewed_revision": "6a7c709695f5e7aa8981e77521c723e4657a8237",
+  "reviewer_role": "independent-p21-review",
+  "reviewer_identity": "/root/resource_manifest_p21_v03_review",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom", "branch": "codex/fc00x-resource-manifest-p12"},
+  "package_path": ".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/",
+  "verdict": "BLOCKED_UNRESOLVED_DECISION",
+  "identity_review": {
+    "repository_identity": "PASS",
+    "head_branch_remote": "PASS",
+    "task_anchor_ancestor": "PASS",
+    "package_refs_and_sha256": "PASS",
+    "blocked_evidence": false,
+    "accepted_authority_conflict": false
+  },
+  "findings": [
+    {"id":"RM-V03-SNAPSHOT-SCHEMA-CHECKPOINT","classification":"MISSING_CONTRACT","failure_mode":"snapshot_binding prose, draft proto and authority lock disagree on schema version, fields 4..10 and checkpoint_digest presence","impact":"Readers disagree on accepted checkpoints and atomic restore","existing_independent_coverage":"ADR-0020 and RM-SNAPSHOT","unique_detection_value":"schema3 fields4..10 presence matrix","why_not_covered":"v0.3 added field10 without reconciling older prose and lock","owner":"P12/P13 Snapshot authority","path_lines":["snapshot_binding.v1.md:5-40","drafts/resource_manifest_v1.proto.txt:72-80","authority.lock.json:105-145"]},
+    {"id":"RM-V03-TOMBSTONE-SHAPE","classification":"MISSING_CONTRACT","failure_mode":"lineage_token prose conflicts with draft tombstone fields that omit it","impact":"Digest and reactivation preimage encoding diverge","existing_independent_coverage":"RM-TOMBSTONE-UNDO and ADR-0014","unique_detection_value":"descriptor and tombstone byte-shape comparison","why_not_covered":"v0.3 closed the gap in separate documents without cross-document reconciliation","owner":"P12/P13 plus ADR-0014","path_lines":["snapshot_binding.v1.md:16-20","drafts/resource_manifest_v1.proto.txt:32-44","resource_manifest_operation.v1.md:27-36"]},
+    {"id":"RM-V03-OPERATION-CONTEXT-DRIFT","classification":"MISSING_CONTRACT","failure_mode":"implementation-context freezes only upserts/removes while proto and operation contract add expectations/reactivations/revision fence","impact":"Stale operations may be accepted or replay fingerprints differ","existing_independent_coverage":"RM-OP","unique_detection_value":"schema consistency lint and stale expectation matrix","why_not_covered":"No cross-document contract consistency check","owner":"P12/P13 Operation authority","path_lines":["implementation-context.md:61-78,119-123","drafts/resource_manifest_v1.proto.txt:45-66","resource_manifest_operation.v1.md:9-18"]},
+    {"id":"RM-V03-DIGEST-LEGACY-CANONICAL","classification":"MISSING_CONTRACT","failure_mode":"legacy absent manifest branch does not specify manifest schema/revision/count bytes","impact":"Legacy and explicit-empty snapshots hash differently across readers","existing_independent_coverage":"RM-DIGEST","unique_detection_value":"independent absent-versus-explicit-empty byte encoder","why_not_covered":"v0.3 fixed domain length but left legacy zero encoding implicit","owner":"P12/G1 digest authority","path_lines":["digest_projection.v1.md:8-36","candidate_binding_oracle_matrix.v1.md:5-7"]},
+    {"id":"RM-V03-CHANGESET-INTEGRATION","classification":"MISSING_CONTRACT","failure_mode":"ChangeSet flags and ResourceId collection are not aligned with existing ChangeSet or operation merge boundary","impact":"Full/delta/recovery consumers may ignore resource impacts","existing_independent_coverage":"ADR-0019 and RM-SCENE","unique_detection_value":"same-operation collection and consumer equivalence corpus","why_not_covered":"v0.3 defined abstract fields but not exact logical ChangeSet field or one-operation boundary","owner":"P13 ChangeSet/Scene authority","path_lines":["implementation-context.md:76-80,203-224","change_set_contract.v1.md:7-32","runtime/semantic/include/canvas/semantic/change_set.hpp:40-79"]},
+    {"id":"RM-V03-REMOVE-PRECONDITION-WORDING","classification":"UNRESOLVED_DECISION","failure_mode":"older prose can be read as a hidden cross-operation transaction while operation contract requires prior reference removal","impact":"Callers may expect atomicity that 07-03 does not provide","existing_independent_coverage":"07-03 whole-operation atomicity","unique_detection_value":"same-intent reference+manifest delete sequence","why_not_covered":"Terminology was not normalized","owner":"07 data-flow plus P12/P13 Operation authority","path_lines":["implementation-context.md:74,187-200","resource_manifest_operation.v1.md:16-23"]},
+    {"id":"RM-V03-DIGEST-TOMBSTONE-INCLUSION","classification":"MISSING_CONTRACT","failure_mode":"summary digest prose omits tombstones while detailed candidate includes them","impact":"Remove/reactivate digest differs across readers","existing_independent_coverage":"RM-DIGEST and RM-TOMBSTONE-UNDO","unique_detection_value":"same active entries with and without retired tombstone differential","why_not_covered":"v0.3 appended tombstone rules without updating earlier digest summary","owner":"P12/G1 digest authority","path_lines":["implementation-context.md:53-57,187-201","digest_projection.v1.md:23-31"]}
+  ],
+  "authority_boundary": {"candidate_only": true,"product_source_modified": false,"authority_accepted": false,"gate_pass_issued": false,"third_package_p32_authorized": false}
+}

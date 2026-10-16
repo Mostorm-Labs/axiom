@@ -8,6 +8,10 @@ resource_kind_registry:
   reserved: 4..255
   unknown_policy: fail_closed_for_required_entries
   metadata_encoding: canonical-protobuf-bytes-with-explicit-schema-version
+  metadata_schemas:
+    image-resource-metadata-v1: [schema_version=1, pixel_width>=1, pixel_height>=1, color_policy=1]
+    font-resource-metadata-v1: [schema_version=1, collection_index=0..65535-present, layout_profile=1]
+    brush-resource-metadata-v1: [schema_version=1, asset_role=1|2, pixel_width>=1, pixel_height>=1, color_policy=1]
   content_hash: sha256-lowercase-hex-with-algorithm-prefix
   entry_limits:
     max_entries: 65535

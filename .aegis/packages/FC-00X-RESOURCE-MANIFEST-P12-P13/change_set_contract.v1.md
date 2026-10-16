@@ -1,35 +1,61 @@
-# ResourceManifest ChangeSet v1 candidate
+# ResourceManifest ChangeSet v1 candidate (v0.4)
 
-This is a separate semantic collection from existing ObjectSemanticChange. It is post-commit
-data in the immutable ChangeSet and contains no renderer/cache/invalidation state.
+This is an immutable runtime event under ADR-0019 and 07-11, not a serialized Operation,
+Undo preimage, persistence diff or new public ABI. Exact proposed C++ logical extension to
+runtime/semantic/include/canvas/semantic/change_set.hpp (no implementation in this package):
 
-```text
-ResourceManifestSemanticChange {
-  ResourceId resource_id;
-  uint8 flags; // Created=1, Updated=2, Removed=4
-  optional ResourceManifestEntry before_entry;
-  optional ResourceManifestEntry after_entry;
-  optional ResourceManifestTombstone tombstone;
-}
+```cpp
+enum class ResourceManifestChangeFlags : std::uint8_t {
+    kCreated = 1, kUpdated = 2, kRemoved = 4
+};
+struct ResourceManifestStateValue {
+    std::optional<ResourceManifestEntry> entry;
+    std::optional<ResourceManifestTombstone> tombstone;
+};
+struct ResourceManifestSemanticChange {
+    ResourceId resource_id;
+    ResourceManifestChangeFlags flags;
+    ResourceManifestStateValue before;
+    ResourceManifestStateValue after;
+};
+// Append private std::vector<ResourceManifestSemanticChange> resource_changes_ to ChangeSet.
+// Add const accessor: std::span<const ResourceManifestSemanticChange> resourceChanges() const;
+// Preserve existing fromChanges(before, after, objects) as empty resource_changes_.
+// Add fromChanges(before, after, objects, resources); internal finalize uses same validation.
 ```
 
-Invariants:
+Each field is a full immutable owned value; no pointers into mutable state. Existing object
+flags/names are untouched. Every record has exactly ONE resource flag; OR combinations and
+unknown values reject in constructing/validating the event. Values follow operation states:
 
-- `resource_id` is nonzero and entries sort by complete 128-bit bytes.
-- One ResourceId occurs once in a ChangeSet. Multiple staged mutations in one Operation are
-  merged before publication: Created+Updated collapses to Created with the final after entry;
-  Updated+Removed becomes Removed with the original before entry and final tombstone;
-  Created+Removed is rejected as a duplicate contradictory target.
-- Created requires `after_entry` and forbids `before_entry`/`tombstone`; Updated requires both
-  before and after and forbids tombstone; Removed requires before and tombstone and forbids
-  after. Flags and presence are validated together.
-- `before_entry`/`after_entry` are immutable canonical values, not pointers into mutable
-  Document state. Tombstone is the post-state retired record.
-- Full, Delta and Recovery Scene consumers consume the same sorted collection. If the
-  collection is absent or cannot be proven safe, the consumer uses a same-generation full
-  compile. Equal-revision full compile is the correctness oracle.
-- Resource availability changes produce no ChangeSet. A manifest Operation produces one
-  SemanticGeneration successor and one ChangeSet, even when a batch contains multiple IDs.
+| action | flag | before | after |
+|---|---|---|---|
+| never-used create | kCreated=1 | neither field present | active entry, no tombstone |
+| active update | kUpdated=2 | old entry, optional historic tombstone | new entry, same historic tombstone |
+| remove | kRemoved=4 | old entry, optional historic tombstone | no entry, NEW tombstone |
+| reactivate | kCreated=1 | no entry, exact tombstone | new entry, SAME tombstone |
 
-The collection is not an Operation diff, Undo record, or persistence log. History uses the
-Operation payload and preimage; Scene uses this post-commit view.
+All contained IDs must match resource_id and the operation state/counter rules. Sorted full
+ResourceId bytes, one record per targeted ID. Action collections are disjoint; repeated or
+contradictory same-ID actions REJECT the Operation, never merge flags. Internal helpers may
+replace a staged value for that one action but cannot introduce additional semantic actions.
+Thus no same-Operation Created+Updated/Removed merge rule exists.
+
+One true Applied Operation yields one event Gbefore -> Gafter. AlreadyApplied/Rejected yield
+none. Multiple Operations have DISTINCT events and generation boundaries; do not merge them
+into one synthetic ChangeSet or assert same generation. Scene may consume an ordered span
+of events only with contiguous before/after generations and a matching final read view.
+
+SemanticReadView additionally exposes the immutable manifest at captured generation. The
+shared Semantic->Scene adapter examines resourceChanges(): update all dependent Image/Text/
+Brush records, bounds and hit data by full ResourceId, preserving captured expected hashes.
+Missing/untrusted collection, generation gap, unavailable matching view or failed incremental
+prepare triggers compileFull from the latest complete read view. Recovery also uses the same
+full compiler. Publish Scene/bounds/spatial atomically via the existing coordinator gate;
+on failure keep old complete Scene and dirty retry state. Query/render use the same published
+Scene revision. Document generation is not reset by resource-only derived refresh.
+
+Availability changes emit NO ChangeSet and use the separate runtime resource-refresh input.
+The future shared adapter must compare Full/Delta/Recovery at the same semantic and resource
+binding snapshot. The exact internal collection is now specified; no persistence serialization
+is appropriate for this derived event. Operation/Snapshot bytes are the durable source.

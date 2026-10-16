@@ -1,4 +1,4 @@
-# ResourceManifest v0.3 candidate oracle matrix
+# ResourceManifest v0.4 candidate oracle matrix
 
 | id | input | expected independent result |
 |---|---|---|
@@ -12,4 +12,5 @@
 | RM-REMOVE-REACTIVATE | remove, ordinary upsert, exact reactivation | upsert rejected; exact reactivation creates new revision and keeps tombstone |
 | RM-UNDO-CONFLICT | remove, concurrent update, stale compensation | conflict/rejected, no partial mutation |
 | RM-CHANGESET-MERGE | multiple IDs and same-ID staged changes | sorted unique output, before/after/tombstone presence rules |
-| RM-LEGACY | schema1 absent field4 versus schema3 omitted field5..10 | only schema1 legacy accepted; schema3 fails closed |
+| RM-LEGACY | schema1/2 absent fields4..10 versus schema3 omitted required fields | only explicit legacy admission accepts absent extension; schema3 fails closed |
+| RM-CROSS-FILE | proto, operation, snapshot and digest contracts | field numbers, lineage token, schema3 fields4..10 and digest inclusion agree byte-for-byte |

@@ -1,45 +1,51 @@
-# Semantic document digest v1 candidate
+# Semantic document digest v1 candidate (v0.4)
 
-The product digest candidate is `SHA256_SEMANTIC_PROJECTION_V1` (registry value `1`),
-with a 32-byte SHA-256 output rendered as lowercase hexadecimal only at textual API
-boundaries. It is a candidate binding for independent review; it does not promote the
-G1 verification-only FNV-1a value or an evidence SHA-256 into product authority.
+Candidate algorithm registry1 is SHA256_SEMANTIC_PROJECTION_V1, output32 raw bytes, lowercase
+hex64 only for presentation. It is a new P12 proposal, not promotion of verification-only
+G1 FNV/SHA evidence. Projection bytes/semantic equality remain the primary proof oracle.
 
-The hash input is the following length-delimited little-endian byte stream:
+`u32`/`u64` below are checked unsigned little-endian fixed-width values; bytes16 is the raw
+Id128.value (no protobuf wrapper). Domain length is computed from ASCII bytes (28). Each
+protobuf blob has canonical numeric tag order, minimum varints, explicit required presence,
+sorted keyed collections, existing finite numeric normalization, no map/unknown/duplicate
+singular fields. Candidate messages/metadata use the exact draft proto and registry fields.
+Do not hash native object memory or the G1 JSON projection; existing ObjectRecord protobuf
+bytes are the complete accepted canonical representation, including full Brush snapshots.
 
 ```text
-u32(28) + UTF-8("axiom.semantic.projection.v1")
+u32(28) + ASCII("axiom.semantic.projection.v1")
 bytes16(document_id)
 u32(document_schema_version)
-u32(capability_requirements_length) + capability_requirements
-u8(manifest_presence)                 # 0 legacy-empty, 1 explicit
-u64(active_object_count)
-for each canonical ObjectRecord sorted by complete ObjectId bytes:
-  u32(object_record_bytes_length) + canonical ObjectRecord protobuf bytes
+u32(capability_requirements_length) + canonical CapabilityRequirementsV1 bytes
+u8(manifest_presence)                   # 0 legacy absent, 1 explicit
+u64(object_count)
+for each normalized ObjectRecord sorted by full ObjectId:
+  u32(object_length) + complete canonical ObjectRecord protobuf bytes
 u32(manifest_schema_version)
 u64(manifest_revision)
-u64(active_manifest_entry_count)
-for each ResourceManifestEntry sorted by complete ResourceId bytes:
-  u32(entry_bytes_length) + canonical ResourceManifestEntry bytes
-u64(retired_tombstone_count)
-for each ResourceManifestTombstone sorted by complete ResourceId bytes:
-  u32(tombstone_bytes_length) + canonical ResourceManifestTombstone bytes
+u64(active_entry_count)
+for each active ResourceManifestEntry sorted by full ResourceId:
+  u32(entry_length) + complete canonical ResourceManifestEntry protobuf bytes
+u64(tombstone_count)
+for each latest ResourceManifestTombstone sorted by full ResourceId:
+  u32(tombstone_length) + complete canonical ResourceManifestTombstone protobuf bytes
 ```
 
-`document_revision`, `recovery_frontier`, provider epoch, URL/path, blob bytes,
-availability, decode/cache/GPU state and transport metadata are excluded. Manifest
-presence, manifest_revision, active bindings, tombstones and capability requirements are included. The
-canonical protobuf bytes use the existing profile: numeric tag order, explicit presence,
-finite f64 normalization, sorted keyed collections and no protobuf map iteration.
+For manifest_presence=0 EXACTLY: schema_version=0, manifest_revision=0, both counts=0,
+capability_requirements_length=0 (empty bytes); all four scalars/counts are STILL ENCODED,
+not omitted. document_schema_version is the old snapshot1 or2. This is a comparison projection
+for admitted legacy data, not a claim old files carried a digest. Explicit empty profile has
+manifest_presence=1, manifest_schema_version=1, manifest_revision=0, counts0 and schema3
+required capability bytes. The two projections intentionally differ. No aliasing migration.
 
-The digest is recomputed before Snapshot publication and compared on restore. Projection
-bytes and semantic field equality remain the primary oracle; the hash accelerates equality
-and detects corruption after the algorithm is accepted.
+Manifest_revision and all active/tombstone content, preimage, removal ID and token affect
+semantic digest. Canonical capabilities include resource-manifest-v1 for schema3 and
+shape2-triangle-v1 when needed. Required message scalars, including present zero decode/layout
+or collection_index, never default-elide. Missing required metadata fails validation, not a
+second hash encoding. Empty repeated collections omit protobuf occurrences, but stream counts
+above remain present. No optional candidate entry scalars exist.
 
-The `u32` before the domain string is the exact UTF-8 byte length, not a character count.
-Every length-delimited field uses unsigned little-endian byte length; zero-length metadata
-is represented by an explicit zero length and is distinct from an absent optional field.
-`ResourceManifestEntry` and `ResourceManifestTombstone` bytes are canonical protobuf
-encodings under the accepted profile, with all semantically required scalar/message
-presence validated before encoding. A present default is never elided unless a future
-accepted registry explicitly declares it equivalent to absence.
+document_revision, recovery_frontier, checkpoint_digest, URLs/paths, blob bytes, availability,
+provider epoch and decode/cache/GPU state are excluded. Their runtime changes cannot mutate
+the semantic projection. checkpoint_digest separately binds nonsemantic checkpoint fields
+as defined in snapshot_binding.v1.md. Verify semantic digest before publishing any restore.

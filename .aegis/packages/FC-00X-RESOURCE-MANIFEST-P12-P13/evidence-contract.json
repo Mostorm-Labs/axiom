@@ -13,6 +13,7 @@
     "candidate-binding-audit.json",
     "independent-control-review-v0.1.json",
     "independent-control-review-v0.2.json",
+    "independent-control-review-v0.3.json",
     "resource_manifest_operation.v1.md",
     "change_set_contract.v1.md",
     "candidate_binding_oracle_matrix.v1.md",
@@ -25,10 +26,10 @@
   "producer_may_claim_authority_pass": false,
   "return_status": "PACKAGE_READY_FOR_CONTROL_REVIEW or BLOCKED_*",
   "independent_review": {
-    "path": "independent-control-review-v0.2.json",
+    "path": "independent-control-review-v0.3.json",
     "required_verdict": "BLOCKED_UNRESOLVED_DECISION or accepted successor review",
-    "sha256": "5a818de77112cddebfcadf463b4c370004c16ffa7ae7c6c7a704ca30225f082f"
+    "sha256": "ee3933777beb2c014757aa97ce8a1ec04fd2fc12d3f2a0d63acb5b480b35258e"
   },
-  "candidate_version": "v0.3",
-  "next_review_output": "independent-control-review-v0.3.json"
+  "candidate_version": "v0.4",
+  "next_review_output": "independent-control-review-v0.4.json"
 }
