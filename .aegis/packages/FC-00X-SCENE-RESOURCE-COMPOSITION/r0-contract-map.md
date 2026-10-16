@@ -29,9 +29,9 @@ At `ready`, owner-pump ingress is accepted; at `lost`, normal input and present 
 
 ## Exact composition mutation boundary
 
-The Document ResourceManifest is the intended canonical metadata authority under ADR-0013, but is absent at the current anchor and must be resolved by P12/P13 before R2; the new internal composition is authorized only under `runtime/composition/CMakeLists.txt`, `runtime/composition/include/canvas/runtime/**`, `runtime/composition/src/**`, and `runtime/composition/tests/**`. The RED oracle and focused CTest target must use these exact paths.
+The accepted P12/P13 ResourceManifest Authority is bound at revision `057464f9fab2db4b67c032134cce3f5f417a64e0`, but its typed product representation is absent at the current anchor and must be resolved by the semantic implementation owner before R2; the new internal composition is authorized only under `runtime/composition/CMakeLists.txt`, `runtime/composition/include/canvas/runtime/**`, `runtime/composition/src/**`, and `runtime/composition/tests/**`. The RED oracle and focused CTest target must use these exact paths.
 
 
 ## R2 authority stop
 
-`r2-authority-binding.json` must prove a typed accepted Document ResourceManifest source. At the current anchor the oracle is expected to return exit 2 / `BLOCKED_AUTHORITY`; provider bytes, Host metadata, or a composition-owned second manifest are not valid substitutes.
+`r2-authority-binding.json` must prove the exact accepted Authority binding and the typed Document ResourceManifest source. At the current anchor the oracle is expected to return exit 2 / `BLOCKED_IMPLEMENTATION`; provider bytes, Host metadata, or a composition-owned second manifest are not valid substitutes.

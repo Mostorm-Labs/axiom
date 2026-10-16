@@ -3,7 +3,7 @@
   "format": "aegis-authority-lock-v1",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
-  "authority_status": "BLOCKED_AUTHORITY_INPUT_REQUIRES_P12_P13_MANIFEST_BINDING",
+  "authority_status": "CURRENT_ACCEPTED_UPSTREAM_AUTHORITY_BOUND",
   "repository": {
     "provider": "github",
     "full_name": "Mostorm-Labs/axiom",
@@ -189,8 +189,8 @@
   ],
   "resource_metadata_authority": {
     "document_manifest": {
-      "authority": "Accepted ADR-0013 ResourceManifest in Document semantic state",
-      "source": "NOT PRESENT as a typed field/type in the accepted repository implementation at task anchor",
+      "authority": "Current Authority fc00x-resource-manifest-p12-p13-v0.4 (accepted revision 057464f9fab2db4b67c032134cce3f5f417a64e0)",
+      "source": "Accepted semantic contract is bound above; typed product representation is not present at the third-package task anchor.",
       "observed_paths": [
         "runtime/semantic/include/canvas/semantic/snapshot.hpp",
         "runtime/semantic/include/canvas/semantic/object_content.hpp",
@@ -201,7 +201,7 @@
         "runtime/semantic/include/canvas/semantic/operation_payload.hpp"
       ],
       "observation": "SemanticSnapshot contains only document_id, schema_version and objects; ImageContent/TextStyle/Brush bindings contain ResourceId references, but no ResourceManifest entry/revision/hash/length/decode-layout representation.",
-      "required_resolution": "P12/P13 must accept and materialize the canonical type, value normalization, manifest-binding Operation, ChangeSet flag, Snapshot/recovery binding and compatibility behavior described in p12-p13-resource-manifest-authority-input.md.",
+      "required_resolution": "P32 must resolve the typed implementation representation against this accepted Authority before R2 production mutation; composition must not invent schema fields or a second manifest.",
       "fields": [
         "resource_id",
         "kind",
@@ -227,9 +227,9 @@
     }
   },
   "upstream_authority_blocker": {
-    "classification": "BLOCKED_AUTHORITY",
-    "owner": "P12/P13 semantic modeling/authority",
-    "reason": "ADR-0013 requires ResourceManifest semantic state, but the accepted repository implementation has no manifest representation consumable by composition.",
+    "classification": "BLOCKED_IMPLEMENTATION",
+    "owner": "P12/P13 semantic implementation boundary",
+    "reason": "The accepted v0.4 Authority is now bound, but the accepted product anchor still has no typed ResourceManifest representation consumable by composition.",
     "forbidden_local_workaround": [
       "new protobuf fields",
       "new canonical snapshot fields",
@@ -239,8 +239,22 @@
   },
   "p12_p13_modeling_input": {
     "path": "p12-p13-resource-manifest-authority-input.md",
-    "sha256": "",
-    "status": "CONFIRMED_RULES_UNBOUND_IMPLEMENTATION",
-    "authority_owner": "aegis-modeling P12/P13"
+    "sha256": "e8e7e5cc5c44c234ac489ad241e269c0855d4e4528102219f91b7698e6679e8a",
+    "status": "SUPERSEDED_BY_ACCEPTED_AUTHORITY_BINDING",
+    "authority_owner": "aegis-governance P23",
+    "accepted_authority_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0"
+  },
+  "accepted_upstream_authority": {
+    "id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "scope": "semantic:axiom/resource-manifest-p12-p13",
+    "kind": "semantic-schema-operation",
+    "version": "v0.4",
+    "status": "Current",
+    "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1",
+    "product_source_status_at_anchor": "NOT_IMPLEMENTED"
   }
 }

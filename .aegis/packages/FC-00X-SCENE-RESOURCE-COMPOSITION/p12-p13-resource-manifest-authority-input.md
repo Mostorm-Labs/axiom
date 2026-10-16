@@ -1,6 +1,10 @@
 # P12/P13 ResourceManifest authority binding input
 
-This file is a modeling input and evidence boundary. It is not an accepted Authority record and does not authorize product mutation.
+This file preserves the modeling input and evidence boundary. The accepted Authority is now bound separately by the exact P12/P13 package and acceptance refs below; this file still does not authorize product mutation.
+
+Accepted Authority binding: `repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0`
+Acceptance record: `repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680`
+The accepted Authority resolves the semantic decisions; the typed product representation remains absent at the third-package anchor and is therefore an implementation precondition for R2.
 
 ## Confirmed semantic rules from accepted ADRs
 
@@ -23,7 +27,7 @@ This file is a modeling input and evidence boundary. It is not an accepted Autho
 - `schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto`: `DocumentSnapshot` has fields 1–3 only (`document_id`, `schema_version`, `objects`).
 - `runtime/semantic/include/canvas/semantic/change_set.hpp`: `SemanticChangeFlags` has no resource-manifest flag.
 - `runtime/semantic/include/canvas/semantic/operation.hpp` and `operation_payload.hpp`: the current OperationKind/payload set has no manifest-binding operation.
-- No accepted branch or repo-local package in this repository exposes a typed `ResourceManifest` representation that the composition package can consume.
+- The accepted P12/P13 package defines the canonical contract, but no typed `ResourceManifest` product representation is present at the third-package anchor for composition to consume.
 
 ## P12/P13 decisions still required
 
@@ -34,4 +38,4 @@ This file is a modeling input and evidence boundary. It is not an accepted Autho
 5. Extend Snapshot/restore atomically to carry manifest bindings while preserving missing-blob semantics.
 6. Define compatibility/version behavior for snapshots and operations that do not contain a manifest.
 
-Until these decisions are accepted and materialized, R2 must stop with `BLOCKED_AUTHORITY`. Provider bytes, Host metadata, or a private `runtime/composition` manifest cannot substitute for the missing canonical semantic binding.
+The decisions are now accepted at the control layer. Until the typed product representation is materialized at the accepted implementation revision, R2 must stop with `BLOCKED_IMPLEMENTATION`. Provider bytes, Host metadata, or a private `runtime/composition` manifest cannot substitute for the missing canonical semantic binding.

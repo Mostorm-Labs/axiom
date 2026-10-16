@@ -10,7 +10,15 @@
     "preparation_sha256": "94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd",
     "review_boundary": "Independent Control Review must accept this exact package before P32 mutation.",
     "test_cli_rule": "Resolve exact CTest targets from discovery; unmatched names are failures, never PASS.",
-    "p12_p13_modeling_input": "p12-p13-resource-manifest-authority-input.md"
+    "p12_p13_modeling_input": "p12-p13-resource-manifest-authority-input.md (historical input; accepted binding above is authoritative)",
+    "accepted_authority": {
+      "id": "fc00x-resource-manifest-p12-p13-v0.4",
+      "revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+      "package_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+      "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+      "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+      "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1"
+    }
   },
   "obligations": [
     {
@@ -39,8 +47,8 @@
       "id": "SCENE-R2-RESOURCES",
       "slice": "R2",
       "requirement": "One pull-plus-notify resource port validates a copied binding snapshot derived from the Document ResourceManifest (and existing canonical BrushResourceBinding cross-check) for binding/epoch/version/hash/request lifetime and refreshes image/text/brush derived state at owner safe points without Document Operation/Undo.",
-      "oracle": "First resolve the accepted Document ResourceManifest source. If no typed manifest is present at the accepted implementation revision, emit BLOCKED_AUTHORITY and stop before production mutation; otherwise run the pull-plus-notify resource schedule covering missing/bytes-accepted/decode-ready/layout-ready/fail/evict/retry/provider-replace, shared resources, same ObjectId/ResourceId value, wrong hash/version/binding, late completion and resource refresh followed by operation/Undo/Recovery.",
-      "acceptance": "The accepted semantic implementation must expose a canonical ResourceManifest binding before R2 implementation. Provider bytes or a composition-owned manifest cannot substitute. Once bound, only Document ResourceManifest/canonical BrushResourceBinding metadata authorizes bytes; missing or mismatched image/font manifest remains unverified/missing; stale/late completions cannot satisfy a new binding; dependent Scene/query/hit/render/readback/frame revisions update atomically while semantic generation and history remain unchanged.",
+      "oracle": "First verify the exact accepted P12/P13 Authority binding above. Then resolve the typed Document ResourceManifest source at the accepted product implementation revision. If the binding is missing, emit BLOCKED_AUTHORITY; if the binding is present but the typed source is absent, emit BLOCKED_IMPLEMENTATION and stop before R2 production mutation; otherwise run the pull-plus-notify resource schedule covering missing/bytes-accepted/decode-ready/layout-ready/fail/evict/retry/provider-replace, shared resources, same ObjectId/ResourceId value, wrong hash/version/binding, late completion and resource refresh followed by operation/Undo/Recovery.",
+      "acceptance": "Only the accepted P12/P13 ResourceManifest Authority and the product semantic implementation bound to that Authority may authorize resource metadata. Provider bytes or a composition-owned manifest cannot substitute. If the accepted Authority is present but the typed product representation is absent, classify BLOCKED_IMPLEMENTATION before R2; once bound, missing or mismatched image/font manifest remains unverified/missing and stale/late completions cannot satisfy a new binding.",
       "evidence_required": [
         "r2-authority-binding.json",
         "r2-resource-port.json"
@@ -140,9 +148,9 @@
     {
       "id": "SCENE-R2-MANIFEST-AUTHORITY",
       "required": true,
-      "source": "ADR-0013/0019/0020 plus p12-p13-resource-manifest-authority-input.md and an accepted semantic snapshot/operation representation",
-      "expected": "A typed ResourceManifest source is resolvable at the accepted anchor revision",
-      "failure": "BLOCKED_AUTHORITY; route to P12/P13; do not add schema fields or implement a second manifest in composition"
+      "source": "Accepted P12/P13 Authority fc00x-resource-manifest-p12-p13-v0.4 at 057464f9fab2db4b67c032134cce3f5f417a64e0 plus the typed semantic implementation representation",
+      "expected": "A typed ResourceManifest source is resolvable at the accepted product implementation revision and is governed by the accepted Authority binding.",
+      "failure": "BLOCKED_AUTHORITY when the exact Authority binding is absent; BLOCKED_IMPLEMENTATION when the binding exists but the typed product source is absent; do not add schema fields or implement a second manifest in composition."
     }
   ]
 }

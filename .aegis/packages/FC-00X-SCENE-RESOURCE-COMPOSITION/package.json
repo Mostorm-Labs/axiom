@@ -1,10 +1,10 @@
 {
   "schema_version": "0.1",
   "format": "aegis-execution-package-v1",
-  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.4",
+  "package_id": "FC-00X-SCENE-RESOURCE-COMPOSITION-P31-v0.5",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P31_TASK_PACKAGING",
-  "status": "BLOCKED_AUTHORITY",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
   "purpose": "Public Scene adaptation, trusted resource ports, internal Runtime instance composition, and Windows/Web Minimal consumers for repeatable cross-platform verification.",
   "repository": {
     "provider": "github",
@@ -24,23 +24,23 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "6463a142fd18d0bff37803d784bee134232096d11c6e4d9b652f80cea853cfda"
+    "sha256": "8aaf15aaa615b7b129fc18fcddfa4e6515295d110e5f08f1c9d8eb18d76c0aa9"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
-    "sha256": "c77243ad08b8357e98688c34f3bc54a0f55ee402d69bea66942c62fe7a61d598"
+    "sha256": "06c0cb098515024f131d4a6805411f7403d02af7f571940f6c3ea71f7cedb19e"
   },
   "execution_contract_ref": {
     "path": "execution-contract.json",
-    "sha256": "39e08f6de953967b08bee64545b6873f64a1777203236725a1b99aa23998b02a"
+    "sha256": "08840af74792620536997b0a070ceeb1d034a44184deeeb3cc73665fdd905eb9"
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "746794bd6f86b3a75d5cade5a3dcd0ddc09e8c19a792421d9d05086ec19753d3"
+    "sha256": "412ceb33031002290f633bf2a958d9e723726234032f0dc67879c300fc9bac52"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "8fc4fd1a6e10a77433c54c3a4b910eef3869f29661d42d53544efb1d8542f7de"
+    "sha256": "5a5dfe1bbcabdc66735607c08c77df1dd6353252c6bcd99cde835d0407077e16"
   },
   "oracle_refs": [
     {
@@ -49,15 +49,15 @@
     },
     {
       "path": "r0-contract-map.md",
-      "sha256": "6d955d721ffa9f6e4807b5b94df278fc72a984e35d684d653fe4272560a19b88"
+      "sha256": "67a7184947b4d25366887c913b327d9cf645269471d3c23ec14023b5cb455ef6"
     },
     {
       "path": "oracles/resource_manifest_authority.py",
-      "sha256": "a642506cf646c15bf681a4943ad5a8d0a3bdf2a4b98a0693c700b8637ad52748"
+      "sha256": "f2230864b2c5afbff36efbef39934de57bdaa43cb33710702d7c586c0848ba48"
     },
     {
       "path": "p12-p13-resource-manifest-authority-input.md",
-      "sha256": "8a50bf64e8141b46c89d9f4e22006d74673f161c74c6549e31a72fe6d2252fd2"
+      "sha256": "e8e7e5cc5c44c234ac489ad241e269c0855d4e4528102219f91b7698e6679e8a"
     }
   ],
   "preparation_inputs": [
@@ -108,24 +108,43 @@
     "next_action": "After independent Control Review acceptance, resolve exact package bindings, audit upstream F01-F08 on the accepted implementation, run the RED oracle, then execute R0-R4 to terminal success or a classified blocker."
   },
   "correction": {
-    "supersedes_package_commit": "a600620bfb2bc1d3fdde3ddcd70a2283849d2e60",
-    "reason": "P34 review found composition mutation scope/RED oracle mismatch and unbound image/font expected metadata authority.",
+    "supersedes_package_commit": "6a1cddd26d488ff7e4a28562227e137c902d6feb",
+    "reason": "User-accepted P12/P13 v0.4 Authority is now bound exactly; the prior package blocker is replaced by an explicit product-implementation precondition for R2.",
     "resolved": [
-      "Exact runtime/composition CMake/include/src/tests scope is authorized and the RED oracle checks those exact paths.",
-      "ADR-0013/0019/0020 resource semantic rules are captured in a reviewable P12/P13 modeling input.",
-      "The current anchor still lacks a canonical ResourceManifest type/operation/snapshot binding; the package therefore remains BLOCKED_AUTHORITY and P32 cannot begin."
+      "Exact P12/P13 Authority, accepted revision, package bytes and acceptance record are bound.",
+      "The package continues to forbid semantic schema invention or a composition-owned second manifest.",
+      "The accepted product anchor still lacks the typed ResourceManifest implementation; P32 must classify BLOCKED_IMPLEMENTATION at R2 if that remains absent."
     ],
     "requires_new_independent_control_review": true
   },
   "upstream_authority_blocker": {
-    "classification": "BLOCKED_AUTHORITY",
-    "reason": "No typed ResourceManifest exists at anchor; P32 must route to P12/P13 before R2 mutation."
+    "classification": "BLOCKED_IMPLEMENTATION",
+    "reason": "Accepted P12/P13 Authority is bound, but no typed ResourceManifest product representation exists at the accepted implementation anchor; P32 must stop before R2 production mutation if unchanged."
   },
   "terminal_blocker": {
-    "class": "BLOCKED_AUTHORITY",
-    "owner": "P12/P13 semantic modeling/authority",
-    "reason": "ADR-0013 requires a Document ResourceManifest, but the accepted anchor implementation has no typed manifest representation in SemanticSnapshot/ObjectRecord/snapshot.proto.",
+    "class": "BLOCKED_IMPLEMENTATION",
+    "owner": "P12/P13 semantic implementation boundary",
+    "reason": "The accepted P12/P13 Authority is bound, but the accepted product anchor has no typed ResourceManifest representation in SemanticSnapshot/ObjectRecord/snapshot.proto.",
     "continue_execution": false,
-    "required_next_action": "Bind or accept the existing ResourceManifest representation at the semantic authority layer, then materialize a new package revision and repeat independent Control Review."
+    "required_next_action": "At P32, run the exact authority-binding oracle. If the typed product representation is absent, return BLOCKED_IMPLEMENTATION with the source audit; do not add schema fields or a second manifest in composition."
+  },
+  "upstream_authority": {
+    "id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "scope": "semantic:axiom/resource-manifest-p12-p13",
+    "kind": "semantic-schema-operation",
+    "version": "v0.4",
+    "status": "Current",
+    "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1",
+    "product_source_status_at_anchor": "NOT_IMPLEMENTED"
+  },
+  "r2_implementation_precondition": {
+    "class": "BLOCKED_IMPLEMENTATION",
+    "owner": "P12/P13 semantic implementation boundary",
+    "continue_execution": false,
+    "required_next_action": "At P32, run the exact authority-binding oracle. If the typed product representation is absent, return BLOCKED_IMPLEMENTATION with the source audit; do not add schema fields or a second manifest in composition."
   }
 }

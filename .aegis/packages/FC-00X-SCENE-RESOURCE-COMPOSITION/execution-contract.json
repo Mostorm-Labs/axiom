@@ -7,7 +7,7 @@
       "required_changes": [
         "R0: materialize implementation design preflight, owner graph, lifecycle table, dependency direction, failure/rollback order, and contract-to-source-to-owner-to-consumer-to-oracle map.",
         "R1: add the narrow shared Semantic-to-Scene adapters/ports needed to connect existing ISemanticSceneCompiler/SceneBinding and FullSceneCompiler/RuntimeSceneProjection through one atomic publication boundary; preserve complete identity/order/content/dependency/invalidation semantics.",
-        "R2: first resolve the accepted Document ResourceManifest authority. If unavailable at the accepted revision, stop BLOCKED_AUTHORITY and route to P12/P13; if available, add one pull-plus-notify resource port and typed internal binding/version checks using a copied manifest snapshot, never a second canonical manifest.",
+        "R2: first verify the exact accepted P12/P13 ResourceManifest Authority binding. If the typed product representation is unavailable at the accepted implementation revision, stop BLOCKED_IMPLEMENTATION and route to the semantic implementation owner; if available, add one pull-plus-notify resource port and typed internal binding/version checks using a copied manifest snapshot, never a second canonical manifest.",
         "R3: add per-instance internal Runtime composition and staged lifecycle/close wiring above existing owners; expose real narrow ingress and readback receipts without duplicating canonical state.",
         "R4: migrate Windows then Web debug-on/off Minimal consumers to the same composition; deliver runnable Windows and Web entrypoints and keep Debug UI optional.",
         "Materialize all P32 evidence under .aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/."
@@ -111,8 +111,8 @@
       {
         "id": "SCENE-R2-MANIFEST-AUTHORITY",
         "red_required": false,
-        "expected_failure": "At the task anchor, SemanticSnapshot/ObjectRecord/protobuf snapshot expose ResourceId references but no ResourceManifest entry/revision/hash/length/decode-layout source; implementation must stop BLOCKED_AUTHORITY rather than inventing a schema or composition-owned manifest.",
-        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json plus p12-p13-resource-manifest-authority-input.md",
+        "expected_failure": "The exact P12/P13 Authority binding is present, but the accepted product implementation revision still exposes ResourceId references without a typed ResourceManifest source; classify BLOCKED_IMPLEMENTATION and stop before R2 production mutation.",
+        "observation_seam": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json plus authority.lock.json",
         "command": "python .aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/resource_manifest_authority.py --root . --expect baseline",
         "expected_exit_code": 2
       }

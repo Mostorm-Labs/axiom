@@ -7,7 +7,7 @@
 - Task anchor: `02078a36818e7722309aefe679089a48212a424d` (`ancestor`)
 - Preparation input: `D:/axreview/fc00x-20261016/scene-resources-composition-handoff-v0.3.txt`
 - Preparation SHA-256: `94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd`
-- This package is P30/P31 materialization only. It authorizes no production mutation until an independent Control Review accepts the exact package commit.
+- This package is P30/P31 materialization only. It authorizes no production mutation until an independent Control Review accepts the exact package commit. The exact accepted P12/P13 Authority dependency is bound below; this does not authorize third-package P32.
 
 ## Baseline reconciliation
 
@@ -17,7 +17,7 @@ The post-246cd1d0 review remains an upstream dependency. F01-F08 (keyed cancella
 
 ## Current flow and owners
 
-`semantic::SemanticReadView` is the canonical read source. `SceneBinding` and `IncrementalRuntimeCoordinator` own Scene/RuntimeScene prepare and atomic publication. `Scene` owns query, hit, draw-list, spatial and damage state. `RuntimeSceneProjection` is an inspection/reference projection, not a second Document. `FullSceneCompiler` is the full materialization path; the existing `ISemanticSceneCompiler` path remains the incremental/query path. `RichTextLayoutService` owns immutable text snapshots and consumes an explicit `LayoutContext`. `ResourceProvider` supplies immutable bytes; image and text consumers own decode/layout caches. Document ResourceManifest is the intended trusted Image/Font/Brush metadata source under ADR-0013; attach/bind may copy entries into an internal ResourceBindingSnapshot only after that source is resolvable. At the current anchor, SemanticSnapshot/ObjectRecord/protobuf snapshot expose no ResourceManifest representation, so P32 must stop BLOCKED_AUTHORITY before R2 production mutation. Host/provider supplies bytes only; Brush cross-checks canonical `BrushResourceBinding`. `RuntimeFrameCoordinator` owns frame identity, stale/retry decisions, and preview retirement qualification; platform providers own acquire/present/GPU facts. Existing `CanvasEditingRuntime` owns interaction/session/history and remains the one canonical mutation owner.
+`semantic::SemanticReadView` is the canonical read source. `SceneBinding` and `IncrementalRuntimeCoordinator` own Scene/RuntimeScene prepare and atomic publication. `Scene` owns query, hit, draw-list, spatial and damage state. `RuntimeSceneProjection` is an inspection/reference projection, not a second Document. `FullSceneCompiler` is the full materialization path; the existing `ISemanticSceneCompiler` path remains the incremental/query path. `RichTextLayoutService` owns immutable text snapshots and consumes an explicit `LayoutContext`. `ResourceProvider` supplies immutable bytes; image and text consumers own decode/layout caches. Document ResourceManifest is the intended trusted Image/Font/Brush metadata source under ADR-0013; attach/bind may copy entries into an internal ResourceBindingSnapshot only after that source is resolvable. At the current anchor, SemanticSnapshot/ObjectRecord/protobuf snapshot expose no ResourceManifest representation. The accepted P12/P13 Authority is now bound, but P32 must stop BLOCKED_IMPLEMENTATION before R2 production mutation if that typed product representation remains absent. Host/provider supplies bytes only; Brush cross-checks canonical `BrushResourceBinding`. `RuntimeFrameCoordinator` owns frame identity, stale/retry decisions, and preview retirement qualification; platform providers own acquire/present/GPU facts. Existing `CanvasEditingRuntime` owns interaction/session/history and remains the one canonical mutation owner.
 
 The new composition layer is a narrow owner-side assembly above these components. It is a separate `runtime/composition` target with explicit include/src/test scope; it is not a public ABI. It may own per-instance bindings and queues, but it must not duplicate Document, Selection, Session, History, RuntimeScene, or canonical write state. It must not call Playground to perform generic business behavior.
 
@@ -107,8 +107,18 @@ The implementation target is `runtime/composition/` with `CMakeLists.txt`, publi
 
 ## Current R2 authority blocker
 
-At anchor `02078a36818e7722309aefe679089a48212a424d`, `SemanticSnapshot` contains only `document_id`, `schema_version`, and `objects`; `ImageContent`, `TextStyle`, and brush bindings expose ResourceId references but no ResourceManifest entry. `snapshot.proto` likewise has no manifest field. This is an upstream P12/P13 authority gap. P32 must record `r2-authority-binding.json` and return `BLOCKED_AUTHORITY` before production mutation unless a newer accepted semantic authority explicitly binds an existing manifest representation.
+At anchor `02078a36818e7722309aefe679089a48212a424d`, `SemanticSnapshot` contains only `document_id`, `schema_version`, and `objects`; `ImageContent`, `TextStyle`, and brush bindings expose ResourceId references but no ResourceManifest entry. `snapshot.proto` likewise has no manifest field. The upstream P12/P13 Authority gap is resolved at the control layer, but the product implementation is not present at the anchor. P32 must record `r2-authority-binding.json` and return `BLOCKED_IMPLEMENTATION` before production mutation if the typed source is still absent.
 
 ## P12/P13 modeling input
 
-`p12-p13-resource-manifest-authority-input.md` records the rules confirmed by ADR-0013/0019/0020 and the exact missing implementation bindings. It is not an accepted Authority record. R2 remains blocked until P12/P13 accepts and materializes the canonical type, ResourceRevision/ContentHash normalization, manifest Operation, ChangeSet flag, Snapshot/recovery binding and compatibility behavior.
+`p12-p13-resource-manifest-authority-input.md` records the rules and historical implementation gap. The accepted P12/P13 Authority is bound by exact revision `057464f9fab2db4b67c032134cce3f5f417a64e0`; R2 remains blocked only until the typed product implementation is present at the accepted implementation revision.
+
+## Exact upstream Authority binding
+
+- Authority: `fc00x-resource-manifest-p12-p13-v0.4`
+- Accepted revision: `057464f9fab2db4b67c032134cce3f5f417a64e0`
+- Package: `repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0`
+- Package SHA-256: `f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5`
+- Acceptance: `repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680`
+- Acceptance SHA-256: `b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1`
+- Product implementation at anchor: not present; this is an execution precondition, not a license to add semantic fields in this package.

@@ -44,5 +44,5 @@
   "android_status": "DEFERRED_NOT_BLOCKING",
   "producer_may_claim_gate_pass": false,
   "materialization_requirement": "P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW.",
-  "authority_boundary": "ADR rules are confirmed, but canonical ResourceManifest implementation binding is absent. P32 must resolve P12/P13 acceptance before R2 mutation."
+  "authority_boundary": "Accepted P12/P13 Authority fc00x-resource-manifest-p12-p13-v0.4 at 057464f9fab2db4b67c032134cce3f5f417a64e0 is bound by exact package and acceptance refs. P32 must still resolve the typed product implementation at the accepted anchor; absence is BLOCKED_IMPLEMENTATION before R2 mutation."
 }
