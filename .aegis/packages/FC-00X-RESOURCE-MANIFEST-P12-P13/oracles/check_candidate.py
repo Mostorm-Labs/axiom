@@ -45,14 +45,23 @@ for review in ("independent-control-review-v0.1.json", "independent-control-revi
 # for ObjectRecord/manifest records and never imports the product serializer.
 def u32(value): return struct.pack("<I", value)
 def u64(value): return struct.pack("<Q", value)
+def varint(value):
+    if value < 0: raise ValueError("negative varint")
+    out = bytearray()
+    while value >= 0x80:
+        out.append((value & 0x7f) | 0x80)
+        value >>= 7
+    out.append(value)
+    return bytes(out)
 def capability_bytes(ids):
     out = bytearray()
     for item in sorted(ids):
         raw = item.encode("ascii")
-        out += b"\x0a" + bytes([len(raw)]) + raw
+        out += b"\x0a" + varint(len(raw)) + raw
     return bytes(out)
 def projection(*, schema, capabilities=b"", presence=0, objects=(), manifest_revision=0, entries=(), tombstones=(), runtime_revision=None):
-    out = bytearray(b"\x1caxiom.semantic.projection.v1")
+    domain = b"axiom.semantic.projection.v1"
+    out = bytearray(u32(len(domain)) + domain)
     out += bytes(16) + u32(schema) + u32(len(capabilities)) + capabilities + bytes([presence])
     ordered_objects = sorted(objects)
     out += u64(len(ordered_objects))
