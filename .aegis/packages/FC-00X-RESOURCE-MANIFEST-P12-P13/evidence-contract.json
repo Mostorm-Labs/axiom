@@ -17,7 +17,10 @@
     "resource_manifest_operation.v1.md",
     "change_set_contract.v1.md",
     "candidate_binding_oracle_matrix.v1.md",
-    "drafts/resource_manifest_v1.proto.txt"
+    "drafts/resource_manifest_v1.proto.txt",
+    "operation_registry.resource_manifest.v1.yaml",
+    "oracles/check_candidate.py",
+    "oracles/check_candidate.result.json"
   ],
   "blocking": [
     "exact package commit",
@@ -31,5 +34,18 @@
     "sha256": "ee3933777beb2c014757aa97ce8a1ec04fd2fc12d3f2a0d63acb5b480b35258e"
   },
   "candidate_version": "v0.4",
-  "next_review_output": "independent-control-review-v0.4.json"
+  "next_review_output": "independent-control-review-v0.4.json",
+  "oracle_execution": {
+    "script": "oracles/check_candidate.py",
+    "result": "oracles/check_candidate.result.json",
+    "blocking": true,
+    "expected_exit_code": 0,
+    "expected_status": "PASS",
+    "coverage": [
+      "cross-file contract consistency",
+      "reference digest byte vectors",
+      "legacy/presence differential"
+    ],
+    "result_sha256": "cd5e2107b3f9c81f89f0e24bc20658b19e5564c075cf40bf49ecb9b4b10ab9fe"
+  }
 }

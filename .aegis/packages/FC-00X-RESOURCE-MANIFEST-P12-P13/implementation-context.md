@@ -16,7 +16,8 @@ Snapshot schema 3 and OperationKind 16 are proposals here, not facts inferred fr
 The G1 verification FNV/SHA hashes remain verification tools only.
 
 Read package.json, this context, execution-contract.json, then these precise candidate
-contracts: drafts/resource_manifest_v1.proto.txt, resource_kind_registry.v1.yaml,
+contracts: drafts/resource_manifest_v1.proto.txt, operation_registry.resource_manifest.v1.yaml,
+resource_kind_registry.v1.yaml,
 resource_manifest_operation.v1.md, snapshot_binding.v1.md, capability_registry.v1.yaml,
 digest_projection.v1.md and change_set_contract.v1.md. The proto text defines field
 numbers/types; the corresponding named contract defines validation and behavior. They
@@ -50,7 +51,7 @@ and checkpoint_digest. Both digests have separately specified exact byte streams
 digest includes manifest presence, revision, active bindings, retirement tombstones and
 required capabilities; checkpoint_digest additionally binds runtime revision and the recovery
 frontier. Runtime generation, source checkpoint revision and RecoverySequence do not alias.
-Legacy Snapshot schemas 1 AND 2 with no extension fields retain their existing admitted
+The candidate capability registry maps existing SnapshotCapability::kShape2Triangle (numeric 1) to shape2-triangle-v1. For schema3 it is encoded in required_ids when needed; for legacy schemas it remains external admission. Legacy Snapshot schemas 1 AND 2 with no extension fields retain their existing admitted
 object semantics, including existing Shape/2 capability checks; legacy import requires
 explicit permission and has no validated old checkpoint claim. Migration is an explicit
 Loading-only bootstrap, never ordinary editing/Undo or provider-supplied metadata.
@@ -77,7 +78,7 @@ and implementation prerequisites are independently established.
 ## Candidate verification
 
 candidate_binding_oracle_matrix.v1.md distinguishes runnable design checks from future
-production tests. oracles/check_candidate.py executes stdlib reference byte encoders,
+production tests. oracles/check_candidate.py is the package-local read-only design oracle; it executes stdlib reference byte encoders,
 state-transition examples, legacy/presence and cross-file checks with no production import
 or serializer. A design check passing is not proof of product correctness or acceptance.
 Independent review must resolve the exact candidate revision. Do not manufacture accepted

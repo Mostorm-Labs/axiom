@@ -1,0 +1,21 @@
+schema: auditoryworks.axiom.v1.operation-registry.resource-manifest-v1
+version: 1
+status: candidate_requires_independent_control_review
+profile_id: axiom.operation-registry.resource-manifest-v1
+base_registry:
+  path: schema/axiom/v1/registry/operation_registry_v1.yaml
+  sha256: 58b0c60ee3abcd2fd54f82df6fd927d1bc5a0ee4d40e31a85c3e9e3c18ff00ed
+  version: 1
+  imported_operations: 1..15
+  import_rule: exact symbol/tag/payload/validation preservation; no reinterpretation
+extension:
+  operations:
+    - {id: 16, tag: 16, symbol: UpdateResourceManifest, payload: UpdateResourceManifestOp}
+  envelope_schema_version: 1
+  payload_version: 1
+compatibility:
+  old_registry_version_1: reject_unknown_operation_16_before_mutation
+  resource_manifest_profile: explicit_opt_in_required
+  collision_rule: reject_if_base_or_successor_descriptor_reuses_id_or_tag
+  supersession_rule: this candidate successor does not modify the frozen base registry
+validation_pipeline: [wire_preflight, envelope_validation, payload_validation, prepare_apply_plan, atomic_apply, revision_advance_and_changeset]

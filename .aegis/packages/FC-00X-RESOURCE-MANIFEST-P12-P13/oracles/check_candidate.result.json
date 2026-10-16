@@ -1,0 +1,32 @@
+{
+  "checked_files": {
+    "capability": "917b220fe7386e3220a79e6995152acfc26d3775b2c7bc55b0c7d3023725b408",
+    "digest": "79d821b2601f2128368a07d67ca72f606e0646d2efbf02533f8d824532684e67",
+    "operation": "489b5002de3ec5093e26a207a246078c1be9f75c79531caf9dc9cae02e618388",
+    "operation_registry": "4353f3b857a7d8becfe0f8e205a139d4bfc83e969d2a3db2fbb04731850b01a0",
+    "proto": "2d0594e844f73881569c4df1f390f182e155cb49c6c23b7782c4f8020c0b0046",
+    "resource_kind": "0571e24acf07c4de401d88ced8d071b958d2939becc1455ddd120d0292d3aa35",
+    "snapshot": "f5910884956a77bcc8cd4ca60de3712518179bf90d74ce8a1e8a50e816ff892d"
+  },
+  "command": "python .aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/oracles/check_candidate.py",
+  "errors": [],
+  "exit_code": 0,
+  "format": "aegis-candidate-oracle-result-v1",
+  "oracle": "FC-00X-RM-CANDIDATE-V0.4",
+  "reference_vectors": {
+    "absent_sha256": "62a85484734730572a3c47bad8e43f8125f552cef310068c771edf00e9818452",
+    "domain_prefix_length": 28,
+    "explicit_empty_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
+    "order_a_sha256": "e50fa0ede684125c216fe4ac6025e529d73cd51f93a253a7a2b97a003d82fc4f",
+    "order_b_sha256": "e50fa0ede684125c216fe4ac6025e529d73cd51f93a253a7a2b97a003d82fc4f",
+    "revision_a_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
+    "revision_b_sha256": "31564561ea40c7a866b32530071ff60e2194bd2bd05d7fb9e13a9cff6177d46f",
+    "runtime_a_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
+    "runtime_b_sha256": "2850460bdf41a91e46bc16a178c3ef667b2eb7941f1a6d3dc83deb83c7a2b6ed",
+    "tombstone_sha256": "83999b8a10b2803270f621f30efd9916ffe2a4cc4714757913239466237cfad6"
+  },
+  "schema_version": "0.1",
+  "status": "PASS",
+  "subject_revision": "WORKTREE_PENDING_MATERIALIZATION",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-P12-P13"
+}

@@ -24,7 +24,7 @@
   "preferred_executor": "codex",
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "4a1510bf6e9b000a7861c827ac7fe2e643c52618ee93d6f95c372e5280a566ff"
+    "sha256": "adacbab1ce8b9e140774999ec727d37fe8ec8f0bb7fc0e175e5e4cc10b6cd0aa"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
@@ -36,11 +36,11 @@
   },
   "implementation_context_ref": {
     "path": "implementation-context.md",
-    "sha256": "dc466e1d5401768526c4859ed8d4b8f3b4e8ff8734ce95bcb9c490e444c397db"
+    "sha256": "9ac50ec37a7cb92a18f8938d7d585c7cb9a940c6214391b657d078a39886d686"
   },
   "evidence_contract_ref": {
     "path": "evidence-contract.json",
-    "sha256": "85b5f73ba7b1db426dc9e1a743d8fd9a06f25f8ff018d34923bc05df772dbb1c"
+    "sha256": "421a72cd1054c7bccada7d99f58bf0b2c8ab3749c22a4f74d3436d0f80f58f0e"
   },
   "materialization": {
     "same_repository": true,
@@ -56,7 +56,7 @@
   ],
   "candidate_binding_audit_ref": {
     "path": "candidate-binding-audit.json",
-    "sha256": "6ec570b0665321e4a4ed785b8bf7d98cd525d782c4f5253344edd66687f00234"
+    "sha256": "be6262e50688c358a76f532311fd0adf9de77337fa27f6437d8d3436f802bf2e"
   },
   "independent_control_review_ref": {
     "path": "independent-control-review-v0.3.json",
@@ -78,15 +78,15 @@
     },
     "capability_registry": {
       "path": "capability_registry.v1.yaml",
-      "sha256": "10c11a1210a0b1814c8febf482985f880933b9189547c1d66c334aca36a5ee98"
+      "sha256": "917b220fe7386e3220a79e6995152acfc26d3775b2c7bc55b0c7d3023725b408"
     },
     "digest_projection": {
       "path": "digest_projection.v1.md",
-      "sha256": "42bf16537bb2fe313bc908a4b822ff77dee2fe705d8b7e5ad05a9135c6df1974"
+      "sha256": "79d821b2601f2128368a07d67ca72f606e0646d2efbf02533f8d824532684e67"
     },
     "operation_contract": {
       "path": "resource_manifest_operation.v1.md",
-      "sha256": "b89b17831a04095b4be1ce88b7784fd6edf64289b9556f35882ba636db5e8f4a"
+      "sha256": "489b5002de3ec5093e26a207a246078c1be9f75c79531caf9dc9cae02e618388"
     },
     "change_set_contract": {
       "path": "change_set_contract.v1.md",
@@ -94,11 +94,23 @@
     },
     "oracle_matrix": {
       "path": "candidate_binding_oracle_matrix.v1.md",
-      "sha256": "8cb6c7f1cdd58eae5e022b70ee35dde558715ca468c25e51140e4fd3930338af"
+      "sha256": "35be26f162c23b331d972d5c0fd451a03fa4b32a3405d6476e7c15b5b0bb8c22"
     },
     "candidate_proto": {
       "path": "drafts/resource_manifest_v1.proto.txt",
-      "sha256": "54c3a6504c01360d83653e805cb0f6ef3642278574b18b2e5df655bc206bcc37"
+      "sha256": "2d0594e844f73881569c4df1f390f182e155cb49c6c23b7782c4f8020c0b0046"
+    },
+    "operation_registry": {
+      "path": "operation_registry.resource_manifest.v1.yaml",
+      "sha256": "4353f3b857a7d8becfe0f8e205a139d4bfc83e969d2a3db2fbb04731850b01a0"
+    },
+    "oracle_script": {
+      "path": "oracles/check_candidate.py",
+      "sha256": "d3fc917244e113a8a0466e29afdbf1e346286f7a9a844a507cdc1f489eb57144"
+    },
+    "oracle_result": {
+      "path": "oracles/check_candidate.result.json",
+      "sha256": "cd5e2107b3f9c81f89f0e24bc20658b19e5564c075cf40bf49ecb9b4b10ab9fe"
     }
   }
 }

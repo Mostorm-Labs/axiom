@@ -2,8 +2,8 @@
 
 The candidate payload and all canonical field numbers/types are in
 `drafts/resource_manifest_v1.proto.txt`. OperationKind and OperationPayload tag16 extend a
-successor registry profile named `axiom.operation-registry.resource-manifest-v1` which
-imports existing frozen operations 1..15 unchanged. No old registry or descriptor is edited
+successor registry profile named `axiom.operation-registry.resource-manifest-v1`, materialized in
+`operation_registry.resource_manifest.v1.yaml`, which imports existing frozen operations 1..15 unchanged. No old registry or descriptor is edited
 by this design package. Old clients do not understand operation16 and must fail closed;
 manifest-capable callers explicitly opt into `resource-manifest-v1`. Envelope schema/payload
 versions remain 1/1. No hidden transaction is added.

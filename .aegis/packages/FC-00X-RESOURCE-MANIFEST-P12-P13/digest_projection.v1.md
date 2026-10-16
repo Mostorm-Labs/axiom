@@ -39,8 +39,11 @@ manifest_presence=1, manifest_schema_version=1, manifest_revision=0, counts0 and
 required capability bytes. The two projections intentionally differ. No aliasing migration.
 
 Manifest_revision and all active/tombstone content, preimage, removal ID and token affect
-semantic digest. Canonical capabilities include resource-manifest-v1 for schema3 and
-shape2-triangle-v1 when needed. Required message scalars, including present zero decode/layout
+semantic digest. For schema3, canonical capabilities MUST include resource-manifest-v1 and MUST include
+shape2-triangle-v1 exactly when the admitted object set requires Shape2Triangle. Legacy
+schema1/2 projections keep capability_requirements_length=0 because their SnapshotCapability
+admission is external to the old wire bytes; the registry maps that external value to
+shape2-triangle-v1 but does not invent a legacy capability field. Required message scalars, including present zero decode/layout
 or collection_index, never default-elide. Missing required metadata fails validation, not a
 second hash encoding. Empty repeated collections omit protobuf occurrences, but stream counts
 above remain present. No optional candidate entry scalars exist.

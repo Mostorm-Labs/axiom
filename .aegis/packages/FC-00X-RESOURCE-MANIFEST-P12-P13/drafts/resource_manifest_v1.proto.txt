@@ -41,7 +41,7 @@ message ResourceManifest {
   uint32 schema_version = 1; // required, 1
   repeated ResourceManifestEntry entries = 2; // sorted complete ResourceId
   uint64 manifest_revision = 3; // required, starts 0, +1 per Applied manifest op
-  repeated ResourceManifestTombstone retired_entries = 4; // sorted, disjoint from entries
+  repeated ResourceManifestTombstone retired_entries = 4; // sorted by ResourceId; same-ID coexistence allowed only when active revision > retired_revision
 }
 message ResourceExpectation {
   Id128 resource_id = 1; // required

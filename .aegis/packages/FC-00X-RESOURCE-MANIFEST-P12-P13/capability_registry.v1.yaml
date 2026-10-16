@@ -18,4 +18,12 @@ capabilities:
       - explicit_resource_manifest
       - digest_algorithm_1
       - snapshot_revision_frontier_digest_binding
+  - id: shape2-triangle-v1
+    mode: inherited_snapshot_admission
+    source: SnapshotCapability::kShape2Triangle
+    numeric_value: 1
+    applies_to:
+      - legacy_schema2_external_admission
+      - schema3_required_ids_when_object_set_uses_shape2_triangle
+    encoding: ASCII capability id in sorted CapabilityRequirementsV1.required_ids
 unknown_policy: fail_closed

@@ -140,7 +140,13 @@
     "snapshot_binding": "v0.4 candidate snapshot_binding.v1.md fields4..10; document_revision and recovery_frontier excluded from semantic digest; checkpoint_digest binds fields1..9 checkpoint bytes",
     "digest": "candidate digest_projection.v1.md; SHA256_SEMANTIC_PROJECTION_V1 registry value 1, 32-byte SHA-256 over exact length-delimited stream; projection equality remains primary oracle",
     "legacy_capability": "candidate capability_registry.v1.yaml: legacy-no-manifest-v1 read-only compatibility; resource-manifest-v1 canonical read/write",
-    "non_reuse": "v0.4 candidate tombstones prevent ordinary ResourceId recreation; compensating operations require expected removal OpId, exact preimage, expected lineage token and strictly greater revision"
+    "non_reuse": "v0.4 candidate tombstones prevent ordinary ResourceId recreation; compensating operations require expected removal OpId, exact preimage, expected lineage token and strictly greater revision",
+    "operation_registry": "candidate operation_registry.resource_manifest.v1.yaml imports frozen base 1..15 and adds UpdateResourceManifest id/tag16; old clients reject unknown 16",
+    "capabilities": {
+      "legacy-no-manifest-v1": "schemas1/2 absent extension under explicit read-only admission",
+      "resource-manifest-v1": "schema3 canonical read/write",
+      "shape2-triangle-v1": "existing SnapshotCapability::kShape2Triangle numeric 1; schema3 required_ids when needed"
+    }
   },
   "conflicts": [
     {
@@ -156,12 +162,13 @@
   ],
   "requires_review": [
     "all candidate field presence/numbering and Snapshot binding",
-    "OperationKind 16 and payload field 16",
     "resource kind registry values",
     "digest algorithm/width/byte stream must be accepted by the owning P12/G1 authority",
     "ResourceKind registry source, metadata schema and limits",
     "legacy-no-manifest-v1 capability and migration semantics",
     "ResourceId tombstone/non-reuse and compensating preimage rules",
-    "ResourceId-level ChangeSet shape and Scene consumer merge rules"
+    "ResourceId-level ChangeSet shape and Scene consumer merge rules",
+    "successor operation registry profile and tag16 compatibility",
+    "Shape2Triangle capability registry mapping and encoding"
   ]
 }

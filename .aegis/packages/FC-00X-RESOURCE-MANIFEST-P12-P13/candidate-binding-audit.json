@@ -72,14 +72,18 @@
       "result": "PASS",
       "observations": [
         "ReactivateResource.expected_lineage_token=4 matches operation contract and tombstone.lineage_token=6.",
+        "Active entries may coexist with latest tombstones only when active revision exceeds retired revision; proto, operation and ChangeSet agree.",
         "Snapshot candidate uses schema3 and requires fields4..10; digest contract includes manifest presence, revision, active entries, tombstones and capabilities.",
-        "Legacy schema1/2 absent extension and schema3 required presence rules are aligned."
+        "Shape2Triangle capability maps to shape2-triangle-v1 with numeric value 1 and schema3 required_ids encoding.",
+        "Successor operation registry imports frozen 1..15 and adds candidate id/tag16 without modifying the base registry."
       ],
       "evidence_inputs": [
         "drafts/resource_manifest_v1.proto.txt",
         "resource_manifest_operation.v1.md",
         "snapshot_binding.v1.md",
-        "digest_projection.v1.md"
+        "digest_projection.v1.md",
+        "capability_registry.v1.yaml",
+        "operation_registry.resource_manifest.v1.yaml"
       ]
     }
   ],
@@ -93,5 +97,15 @@
     "resource_kind_registry.v1.yaml",
     "capability_registry.v1.yaml",
     "digest_projection.v1.md"
-  ]
+  ],
+  "oracle_execution": {
+    "path": "oracles/check_candidate.py",
+    "result_path": "oracles/check_candidate.result.json",
+    "command": "python .aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/oracles/check_candidate.py",
+    "exit_code": 0,
+    "status": "PASS",
+    "subject_revision": "WORKTREE_PENDING_MATERIALIZATION",
+    "reference_vector_sha256": "a00a34b0ec0294dea13fc36f7401721952e4f612b02dec76490773911d976e91",
+    "result_sha256": "cd5e2107b3f9c81f89f0e24bc20658b19e5564c075cf40bf49ecb9b4b10ab9fe"
+  }
 }
