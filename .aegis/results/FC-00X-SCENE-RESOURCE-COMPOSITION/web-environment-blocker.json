@@ -1,0 +1,21 @@
+{
+  "schema": "fc00x-scene-web-environment-blocker-v0.1",
+  "result_revision": "fd5654af99d31b5d1c581ccfe1e664a7e3a68e62",
+  "status": "BLOCKED_ENVIRONMENT",
+  "attempted_profiles": [
+    "WEB-MINIMAL-DEBUG-ON",
+    "WEB-MINIMAL-DEBUG-OFF"
+  ],
+  "observed": [
+    "Emscripten emcc.py resolves to Python 3.9.2 from D:/GitRepos/skia/third_party/externals/emsdk/python/3.9.2-nuget_64bit/python.exe",
+    "Emscripten requires Python >=3.10",
+    "Ninja build program unavailable"
+  ],
+  "locked_store": [
+    "semantic-sdk-v2 web-wasm32 store resolution available",
+    "Skia web-wasm2 release directory available"
+  ],
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "official_gate_pass_claimed": false
+}

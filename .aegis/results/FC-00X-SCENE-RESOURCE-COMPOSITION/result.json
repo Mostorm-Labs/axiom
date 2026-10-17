@@ -2,9 +2,9 @@
   "schema": "fc00x-scene-resource-composition-result-v0.6",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P32_IMPLEMENTATION",
-  "status": "READY_FOR_CONTROL_REVIEW",
+  "status": "BLOCKED_ENVIRONMENT",
   "starting_revision": "1df43ee3d35fac7a2893458643dec714a3f8762d",
-  "result_revision": "ee661df6cc99e62fbf944f76384773ddbf92b385",
+  "result_revision": "fd5654af99d31b5d1c581ccfe1e664a7e3a68e62",
   "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
   "materialized_ref": "refs/heads/codex/fc00x-scene-resource-composition-p32-f08-resume",
   "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
@@ -29,7 +29,9 @@
     "FC00XMinimalRuntimeHost": "PASS_FINAL",
     "G3WindowsSurfaceAdapter": "PASS_FINAL",
     "G3WebSurfaceHost": "PASS_FINAL",
-    "WindowsMinimalBuild": "PASS"
+    "WindowsMinimalBuild": "PASS",
+    "WebMinimalDebugOn": "BLOCKED_ENVIRONMENT_EMSCRIPTEN_PYTHON_3_9_AND_NINJA_MISSING",
+    "WebMinimalDebugOff": "BLOCKED_ENVIRONMENT_EMSCRIPTEN_PYTHON_3_9_AND_NINJA_MISSING"
   },
   "artifacts": {
     "windows_exe": "build-final/apps/axiom_canvas_demo/RelWithDebInfo/axiom_canvas_demo_windows.exe",
