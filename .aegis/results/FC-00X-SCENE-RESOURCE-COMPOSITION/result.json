@@ -4,9 +4,9 @@
   "stage": "P32_IMPLEMENTATION",
   "status": "BLOCKED_IMPLEMENTATION",
   "starting_revision": "1df43ee3d35fac7a2893458643dec714a3f8762d",
-  "result_revision": "6039bdf3619e90d1aa76f4dbc50cd843bbd4d822",
+  "result_revision": "dbe625a9",
   "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
-  "materialized_ref": "refs/heads/codex/fc00x-scene-resource-composition-p32-f08-resume",
+  "materialized_ref": "dbe625a9",
   "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
   "f08_repair_revision": "1df43ee3d35fac7a2893458643dec714a3f8762d",
   "completed_slices": [
@@ -16,11 +16,10 @@
     "F08 upstream repair and reverify",
     "R0 ImplementationDesignPreflight resumed",
     "Composition RED baseline RED",
-    "R1 Scene adapter",
-    "R2 pull+notify ResourcePort",
-    "R3 RuntimeComposition lifecycle/isolation",
-    "R4 Minimal Host/Windows Demo composition wiring",
-    "Resource binding rejection, rebinding and close-owner repair"
+    "R1 Scene adapter public FullSceneCompiler path",
+    "R2 resource lifecycle token/queue/rebind repair",
+    "R3 RuntimeComposition lifecycle/isolation and close fencing",
+    "R4 Minimal Host composition wiring"
   ],
   "tests": {
     "F08FrameQualification": "PASS",
@@ -67,6 +66,7 @@
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/red-preflight.json",
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.7-resource-lifecycle.json",
-    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.8-close-resource-token.json"
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.8-close-resource-token.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.9-resource-scene.json"
   ]
 }
