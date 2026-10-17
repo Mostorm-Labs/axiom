@@ -24,6 +24,7 @@ enum class ResourceBindingState : std::uint8_t {
 };
 
 struct ResourceBindingToken final {
+  foundation::ObjectId resourceId{};
   std::uint64_t documentBinding = 0;
   std::uint64_t providerEpoch = 0;
   semantic::ResourceRevision resourceVersion = 0;

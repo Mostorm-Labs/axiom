@@ -22,6 +22,8 @@ int main() {
   assert(composition.ownerPump());
   assert(composition.readback().pendingNotifications == 0U);
   assert(composition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(7U)).has_value());
+  const auto firstToken = composition.resources().token(canvas::foundation::ObjectId::fromUint64(7U), 0U, 99U);
+  assert(firstToken.has_value());
   const auto validated = composition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(7U));
   assert(validated->state == canvas::runtime::ResourceBindingState::kBytesValidated);
   assert(!composition.notifyResource(canvas::foundation::ObjectId::fromUint64(99U)));
@@ -32,6 +34,8 @@ int main() {
   assert(composition.bindManifest(rebound, 2U));
   assert(composition.readback().lifetimeGeneration == 2U);
   assert(!composition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(7U)).has_value());
+  assert(!composition.publishResource(*firstToken, {0x01U}));
+  assert(composition.lastResourceError() == canvas::runtime::ResourcePortError::kStaleBinding);
   assert(composition.loseSurface());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kLost);
   assert(!composition.notifyResource(canvas::foundation::ObjectId::fromUint64(7U)));

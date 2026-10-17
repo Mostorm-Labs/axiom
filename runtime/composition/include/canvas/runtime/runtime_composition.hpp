@@ -51,6 +51,8 @@ class RuntimeComposition final {
   [[nodiscard]] bool notifyResource(foundation::ObjectId resourceId) noexcept;
   [[nodiscard]] bool publishResource(foundation::ObjectId resourceId,
                                      std::vector<std::uint8_t> bytes) noexcept;
+  [[nodiscard]] bool publishResource(const ResourceBindingToken& token,
+                                     std::vector<std::uint8_t> bytes) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
   [[nodiscard]] bool requestCanonicalFrame(std::uint64_t frameId) noexcept;
   [[nodiscard]] bool loseSurface() noexcept;

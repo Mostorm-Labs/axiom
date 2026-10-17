@@ -477,12 +477,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return submittedOperationCount_;
   }
   [[nodiscard]] bool canUndo() const noexcept {
-    return historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !closed_ && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canUndo();
   }
   [[nodiscard]] bool canRedo() const noexcept {
-    return historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !closed_ && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canRedo();
   }

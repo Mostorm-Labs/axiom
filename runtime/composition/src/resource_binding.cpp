@@ -18,7 +18,7 @@ std::optional<ResourceBindingToken> ResourceBindingSnapshot::token(
     std::uint64_t requestId) const {
   const auto* entry = find(id);
   if (entry == nullptr) return std::nullopt;
-  return ResourceBindingToken{documentBinding, providerEpoch,
+  return ResourceBindingToken{id, documentBinding, providerEpoch,
                               entry->resource_revision, entry->content_hash,
                               requestId, lifetimeGeneration};
 }

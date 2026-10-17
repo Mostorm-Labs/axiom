@@ -965,7 +965,7 @@ void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,
 
 semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
   if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
       operation.document_id != documentId_) return {};
   const auto result = operationEngine_.apply(operation, source, semanticObjects_,
@@ -983,7 +983,7 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
@@ -2381,7 +2381,7 @@ bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
     return interaction::SubmitResult::rejected();
   // This host records only one-operation compensation entries. Reject larger
   // batches before mutation; other EditorHistory owners may support them.

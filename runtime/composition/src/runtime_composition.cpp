@@ -23,6 +23,8 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
   if ((state_ != RuntimeCompositionState::kBound && !canMutate()) || !resources_.bind(manifest, binding)) {
     lastResourceError_ = ResourcePortError::kValidationFailed; return false;
   }
+  notifications_.clear();
+  resourceReceipts_.clear();
   for (auto it = resourceReceipts_.begin(); it != resourceReceipts_.end();) {
     if (resources_.find(it->first) == nullptr) it = resourceReceipts_.erase(it);
     else ++it;
@@ -59,13 +61,25 @@ bool RuntimeComposition::notifyResource(foundation::ObjectId id) noexcept {
 bool RuntimeComposition::publishResource(foundation::ObjectId id, std::vector<std::uint8_t> bytes) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
-  if (resources_.find(id) == nullptr) { lastResourceError_ = ResourcePortError::kUnknownResource; return false; }
+  const auto token = resources_.token(id, providerEpoch_, nextRequestId_);
+  if (!token) { lastResourceError_ = ResourcePortError::kUnknownResource; return false; }
+  return publishResource(*token, std::move(bytes));
+}
+bool RuntimeComposition::publishResource(const ResourceBindingToken& token,
+                                         std::vector<std::uint8_t> bytes) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
+  if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
+  bool tokenMatches = token.documentBinding == resources_.documentBinding &&
+      token.lifetimeGeneration == resources_.lifetimeGeneration &&
+      resources_.find(token.resourceId) != nullptr;
+  if (!tokenMatches) { lastResourceError_ = ResourcePortError::kStaleBinding; return false; }
   if (notifications_.size() >= 256U) { lastResourceError_ = ResourcePortError::kQueueFull; return false; }
-  provider_->publish(id, std::move(bytes));
+  provider_->publish(token.resourceId, std::move(bytes));
   ++providerEpoch_;
-  const auto token = resources_.token(id, providerEpoch_, nextRequestId_++);
-  if (!token) { lastResourceError_ = ResourcePortError::kStaleBinding; return false; }
-  notifications_.push_back({id, *token});
+  auto completion = token;
+  completion.providerEpoch = providerEpoch_;
+  completion.requestId = nextRequestId_++;
+  notifications_.push_back({token.resourceId, completion});
   lastResourceError_ = ResourcePortError::kNone;
   return true;
 }
