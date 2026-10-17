@@ -49,11 +49,24 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
 bool RuntimeComposition::notifyResource(foundation::ObjectId id) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
-  if (resources_.find(id) == nullptr) { lastResourceError_ = ResourcePortError::kUnknownResource; return false; }
-  for (const auto& notification : notifications_) if (notification.resourceId == id) return true;
-  if (notifications_.size() >= 256U) { lastResourceError_ = ResourcePortError::kQueueFull; return false; }
   const auto token = resources_.token(id, providerEpoch_, nextRequestId_++);
-  if (!token) { lastResourceError_ = ResourcePortError::kStaleBinding; return false; }
+  if (!token) { lastResourceError_ = ResourcePortError::kUnknownResource; return false; }
+  for (auto& notification : notifications_) {
+    if (notification.resourceId != id) continue;
+    const auto currentToken = resources_.token(id, notification.token.providerEpoch,
+                                               notification.token.requestId);
+    if (currentToken && notification.token == *currentToken &&
+        notification.token.documentBinding == token->documentBinding &&
+        notification.token.resourceVersion == token->resourceVersion &&
+        notification.token.expectedSha256 == token->expectedSha256) {
+      lastResourceError_ = ResourcePortError::kNone;
+      return true;
+    }
+    notification.token = *token;
+    lastResourceError_ = ResourcePortError::kNone;
+    return true;
+  }
+  if (notifications_.size() >= 256U) { lastResourceError_ = ResourcePortError::kQueueFull; return false; }
   notifications_.push_back({id, *token});
   lastResourceError_ = ResourcePortError::kNone;
   return true;
@@ -69,10 +82,19 @@ bool RuntimeComposition::publishResource(const ResourceBindingToken& token,
                                          std::vector<std::uint8_t> bytes) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
-  bool tokenMatches = token.documentBinding == resources_.documentBinding &&
-      token.lifetimeGeneration == resources_.lifetimeGeneration &&
-      resources_.find(token.resourceId) != nullptr;
+  const auto* entry = resources_.find(token.resourceId);
+  const bool tokenMatches = token.documentBinding == resources_.documentBinding &&
+      token.lifetimeGeneration == resources_.lifetimeGeneration && entry != nullptr &&
+      token.providerEpoch == providerEpoch_ &&
+      token.resourceVersion == entry->resource_revision &&
+      token.expectedSha256 == entry->content_hash;
   if (!tokenMatches) { lastResourceError_ = ResourcePortError::kStaleBinding; return false; }
+  const EncodedResource candidate{
+      0U, std::make_shared<const std::vector<std::uint8_t>>(bytes)};
+  if (!validateResourceBytes(*entry, candidate)) {
+    lastResourceError_ = ResourcePortError::kValidationFailed;
+    return false;
+  }
   if (notifications_.size() >= 256U) { lastResourceError_ = ResourcePortError::kQueueFull; return false; }
   provider_->publish(token.resourceId, std::move(bytes));
   ++providerEpoch_;

@@ -4,6 +4,7 @@
 #include "canvas/semantic/commit_publication_projection.hpp"
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/scene/full_scene_compiler.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/derived_geometry.hpp"
 #include "canvas/render/visibility_resolver.hpp"
@@ -21,6 +22,7 @@
 #include <unordered_set>
 #include <chrono>
 #include <sstream>
+#include <type_traits>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::interaction {
@@ -31,16 +33,6 @@ bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallb
   return fallback;
 }
 
-bool isInkRecord(const semantic::ObjectRecord& record) noexcept {
-  return record.kind == semantic::ObjectKind::kVectorStroke ||
-         record.kind == semantic::ObjectKind::kDabStroke;
-}
-
-semantic::OrderKey renderOrderKey(const semantic::ObjectRecord& record) {
-  if (!isInkRecord(record)) return record.placement.order_key;
-  return semantic::OrderKey{{0xFFU, 0xFFU,
-      static_cast<std::uint8_t>((record.id.bytes.back() % 254U) + 1U)}};
-}
 }
 namespace {
 bool validAppearance(const runtime::CanvasAppearance& a) {
@@ -65,16 +57,86 @@ semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bo
           semantic::StrokeStyleValue{semantic::NoStroke{}}}});
   return bag;
 }
+
+std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
+  std::ostringstream out;
+  out.precision(17);
+  out << record.referenceGeometryDigest << '|';
+  for (const auto& entry : record.properties.entries) {
+    out << entry.field_id << ':' << entry.value.index() << ':';
+    std::visit([&](const auto& value) {
+      using T = std::decay_t<decltype(value)>;
+      if constexpr (std::is_same_v<T, bool> || std::is_same_v<T, float>) {
+        out << value;
+      } else if constexpr (std::is_same_v<T, semantic::BlendModeValue> ||
+                           std::is_same_v<T, semantic::ConnectorDecorationValue>) {
+        out << static_cast<unsigned>(value);
+      } else if constexpr (std::is_same_v<T, semantic::ColorValue>) {
+        out << value.r << ',' << value.g << ',' << value.b << ',' << value.a;
+      } else if constexpr (std::is_same_v<T, semantic::FillStyleValue>) {
+        out << value.index();
+        std::visit([&](const auto& fill) {
+          using F = std::decay_t<decltype(fill)>;
+          if constexpr (std::is_same_v<F, semantic::SolidFill>) {
+            out << fill.color.r << ',' << fill.color.g << ',' << fill.color.b << ',' << fill.color.a;
+          }
+        }, value);
+      } else if constexpr (std::is_same_v<T, semantic::StrokeStyleValue>) {
+        out << value.index();
+        std::visit([&](const auto& stroke) {
+          using S = std::decay_t<decltype(stroke)>;
+          if constexpr (std::is_same_v<S, semantic::SolidStroke>) {
+            out << stroke.color.r << ',' << stroke.color.g << ',' << stroke.color.b << ','
+                << stroke.color.a << ':' << stroke.width << ':'
+                << static_cast<unsigned>(stroke.cap) << ':' << stroke.join.index() << ':'
+                << stroke.dash.index();
+          }
+        }, value);
+      }
+    }, entry.value);
+    out << '|';
+  }
+  for (const auto& mask : record.eraseMasks) {
+    out << ':';
+    for (const auto byte : mask.id.bytes) out << static_cast<unsigned>(byte) << ',';
+    out << ':' << mask.geometry.index();
+    std::visit([&](const auto& geometry) {
+      using G = std::decay_t<decltype(geometry)>;
+      if constexpr (std::is_same_v<G, semantic::SweptCircleMask>) {
+        for (const auto& segment : geometry.segments) {
+          for (const auto* knot : {&segment.p0, &segment.p1})
+            out << knot->position.x << ',' << knot->position.y << ',' << knot->radius << ';';
+          out << segment.control1.x << ',' << segment.control1.y << ','
+              << segment.control2.x << ',' << segment.control2.y << '|';
+        }
+      } else {
+        out << geometry.path.commands.size();
+      }
+    }, mask.geometry);
+  }
+  return out.str();
+}
+
+std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& record) {
+  constexpr std::uint32_t kOffset = 2166136261U;
+  constexpr std::uint32_t kPrime = 16777619U;
+  auto hash = kOffset;
+  for (const auto byte : sceneContentStamp(record)) {
+    hash ^= static_cast<std::uint8_t>(byte);
+    hash *= kPrime;
+  }
+  return hash == 0U ? 1U : hash;
+}
 }
 class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
  public:
-  explicit EditingSceneCompiler(const canvas::Scene& scene) : scene_(scene) {}
   foundation::Result<canvas::CompiledSceneSnapshot> compileFull(
       const semantic::SemanticReadView& view) const override {
+    const auto projection = canvas::scene::FullSceneCompiler::compile(view);
+    if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
     canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
-    const auto records = view.allObjects();
-    result.records.reserve(records.size());
-    for (const auto& record : records) {
+    result.records.reserve(projection.value().records.size());
+    for (const auto& record : projection.value().records) {
       canvas::SceneObjectKind kind = canvas::SceneObjectKind::kShape;
       switch (record.kind) {
         case semantic::ObjectKind::kImage: kind = canvas::SceneObjectKind::kImage; break;
@@ -85,20 +147,18 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
         case semantic::ObjectKind::kConnector: kind = canvas::SceneObjectKind::kConnector; break;
         default: break;
       }
-      const auto bounds = canvas::computeBounds(record);
-      if (!bounds.finite) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(
-          {foundation::ErrorCode::kInvalidRecord, "non-finite brush scene bounds"});
       const auto flags = static_cast<canvas::SceneRecordFlags>(
           (propertyBool(record.properties, 1U, true) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible) : 0U) |
           static_cast<std::uint32_t>(canvas::SceneRecordFlags::kHitTestable) |
           (propertyBool(record.properties, 2U, false) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kLocked) : 0U));
-      std::uint64_t order = 0;
-      for (const auto byte : renderOrderKey(record).bytes()) order = (order << 8U) | byte;
-      result.records.push_back({record.id, canvas::SceneOrderKey(order), kind, flags,
-                                bounds.world, canvas::ContentRevision(record.kind_version),
-                                canvas::RenderPayloadRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version},
-                                canvas::HitGeometryRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version}, record.transform,
-                                canvas::scene::deriveGeometry(record), record.properties});
+      std::uint64_t slot = 1469598103934665603ULL;
+      for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
+      const auto generation = sceneContentGeneration(record);
+      result.records.push_back({record.objectId, canvas::SceneOrderKey(record.placement.order_key.bytes()), kind, flags,
+                                record.worldBounds, canvas::ContentRevision(generation),
+                                canvas::RenderPayloadRef{static_cast<std::uint32_t>(slot), generation},
+                                canvas::HitGeometryRef{static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), generation}, record.transform,
+                                record.derivedGeometry, record.properties});
     }
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
   }
@@ -109,8 +169,6 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     return foundation::Result<canvas::CompiledSceneDelta>::failure(
         {foundation::ErrorCode::kRequiresFullRebuild, "editor scene changes use the shared full projection"});
   }
- private:
-  const canvas::Scene& scene_;
 };
 }  // namespace canvas::interaction
 
@@ -212,7 +270,7 @@ CanvasEditingRuntime::CanvasEditingRuntime()
           std::make_unique<canvas::UniformGridSpatialIndex>())),
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
-      sceneCompiler_(std::make_unique<EditingSceneCompiler>(*runtimeSceneHost_)),
+      sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
       history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
 }

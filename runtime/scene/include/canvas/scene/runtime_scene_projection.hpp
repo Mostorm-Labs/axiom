@@ -44,4 +44,4 @@ struct RuntimeSceneProjection final {
 
 } // namespace canvas::scene
 
-namespace canvas { using scene::InspectionRecord; using scene::RuntimeSceneProjection; using scene::projectSemanticScene; }
+namespace canvas { using scene::InspectionRecord; using scene::projectSemanticScene; }
