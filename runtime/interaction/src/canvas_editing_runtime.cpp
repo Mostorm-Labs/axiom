@@ -10,6 +10,7 @@
 #include "canvas/render/visibility_resolver.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/frame_plan.hpp"
+#include "canvas/render/image_resource.hpp"
 
 #include <cmath>
 #include <memory>
@@ -127,6 +128,29 @@ std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& reco
   }
   return hash == 0U ? 1U : hash;
 }
+
+bool isInkKind(semantic::ObjectKind kind) noexcept {
+  return kind == semantic::ObjectKind::kVectorStroke ||
+         kind == semantic::ObjectKind::kDabStroke;
+}
+
+bool isInkRecord(const semantic::ObjectRecord& record) noexcept {
+  return record.kind == semantic::ObjectKind::kVectorStroke ||
+         record.kind == semantic::ObjectKind::kDabStroke;
+}
+
+semantic::OrderKey renderOrderKey(const semantic::ObjectRecord& record) {
+  if (!isInkRecord(record)) return record.placement.order_key;
+  // Ink is a presentation overlay in the shared editor. Keep its semantic
+  // placement intact, but give the renderer a reserved high lane so a shape
+  // brought to the front cannot cover an already committed line.
+  return semantic::OrderKey{{0xFFU, 0xFFU, record.id.bytes.back()}};
+}
+
+canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
+  if (!isInkKind(record.kind)) return canvas::SceneOrderKey(record.placement.order_key.bytes());
+  return canvas::SceneOrderKey(std::vector<std::uint8_t>{0xFFU, 0xFFU, record.objectId.bytes.back()});
+}
 }
 class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
  public:
@@ -154,7 +178,8 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       std::uint64_t slot = 1469598103934665603ULL;
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
       const auto generation = sceneContentGeneration(record);
-      result.records.push_back({record.objectId, canvas::SceneOrderKey(record.placement.order_key.bytes()), kind, flags,
+      const auto order = renderOrderKey(record);
+      result.records.push_back({record.objectId, canvas::SceneOrderKey(order.bytes()), kind, flags,
                                 record.worldBounds, canvas::ContentRevision(generation),
                                 canvas::RenderPayloadRef{static_cast<std::uint32_t>(slot), generation},
                                 canvas::HitGeometryRef{static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), generation}, record.transform,
@@ -273,6 +298,25 @@ CanvasEditingRuntime::CanvasEditingRuntime()
       sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
       history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
+}
+
+void CanvasEditingRuntime::bindResourceServices(
+    render::ImageResourceResolver* images,
+    text::RichTextLayoutService* textService) noexcept {
+  skiaRenderer_.setImageResolver(images);
+  previewRenderer_.setImageResolver(images);
+  textLayoutService_ = textService;
+  if (sceneCoordinator_ != nullptr) sceneCoordinator_->setTextLayoutService(textService);
+}
+
+bool CanvasEditingRuntime::refreshResourceDerivedState() noexcept {
+  if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  if (sceneCoordinator_ != nullptr && textLayoutService_ != nullptr) {
+    const auto refreshed = sceneCoordinator_->refreshTextResources();
+    if (!refreshed) return false;
+  }
+  canonicalPresentationDirty_ = true;
+  return true;
 }
 
 bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
@@ -1521,6 +1565,10 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
+      if (accepted && editingChanged_) {
+        transientOverlayHandoffPending_ = true;
+        if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+      }
       cancelSelectionTransform();
       return accepted;
     }
@@ -1644,6 +1692,15 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
   }
   std::lock_guard lock(previewStateMutex_);
   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
+  // A prior brush/eraser handoff may have left a retained contour while its
+  // canonical frame was presented through the local raster provider. Clear
+  // that stale transient before starting a new eraser session.
+  if (previewController_ != nullptr && previewController_->active() &&
+      previewProvider_ != nullptr) {
+    (void)previewController_->cancel();
+    (void)previewController_->retireSession(pointerId, previewProvider_->generation());
+    previewProvider_->setOverlayVisible(false);
+  }
   eraserTraces_[pointerId] = {};
   eraserPreviewRevisions_[pointerId] = 0U;
   if (previewController_ == nullptr || previewProvider_ == nullptr ||
@@ -1954,12 +2011,17 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     // next frame; a failed projection must not lose the accepted history.
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
   }
-  if (!platformPresentationDeferred_ &&
-      !presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return true;
+  if (!platformPresentationDeferred_) {
+    // Semantic acceptance is already complete. A failed derived present must
+    // not skip preview cleanup; the next frame may recover the Scene while the
+    // eraser overlay is retired immediately.
+    (void)presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+  }
   if (previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
   }
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   return true;
 }
 
@@ -1974,6 +2036,7 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
   }
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   return erased;
 }
 
@@ -2859,6 +2922,28 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
+  // Creation/selection overlays have no ARC handoff identity. Once their
+  // replacement canonical frame has been accepted locally, retire them
+  // immediately; brush previews remain gated by platform-qualified feedback
+  // through pendingCanonicalIdentities_.
+  if (pendingCanonicalIdentities_.empty() && transientOverlayHandoffPending_ &&
+      !creationActive() && !selectionTransformActive()) {
+    (void)clearTransientOverlay();
+  }
+  // The deterministic local raster host has no separate platform feedback
+  // channel. Preserve its established synchronous behavior while deferred
+  // platform presenters remain gated by receivePlatformPresented().
+  if (!platformPresentationDeferred_ && retirePreview &&
+      !pendingCanonicalIdentities_.empty() && previewController_ != nullptr &&
+      previewProvider_ != nullptr) {
+    for (const auto& [pointer, handoff] : pendingCanonicalIdentities_) {
+      static_cast<void>(pointer);
+      (void)previewController_->cancelSession(handoff.session);
+      (void)previewController_->retireSession(handoff.session, previewProvider_->generation());
+    }
+    pendingCanonicalIdentities_.clear();
+    previewProvider_->setOverlayVisible(false);
+  }
   // `retirePreview` remains source-compatible for existing callers, but it is
   // intentionally ignored here.  RuntimeFrameCoordinator can only qualify a
   // handoff after receivePlatformPresented() supplies matching platform facts.
@@ -2928,6 +3013,9 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   // only after this canonical frame has been accepted, so the compositor
   // never exposes the old canonical position between pointer-up and redraw.
   if (retire && !selectionTransformActive() && !creationActive()) {
+    (void)clearTransientOverlay();
+  }
+  if (retire && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
     (void)clearTransientOverlay();
   }
   lastSubmittedCanonicalFrame_.reset();

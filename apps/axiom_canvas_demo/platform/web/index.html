@@ -46,17 +46,24 @@
         };
       },
     };
-    canvas.addEventListener("pointermove", (event) => {
+    const forwardPointer = (event, phase) => {
+      if (phase === 0) canvas.setPointerCapture?.(event.pointerId);
+      if (phase === 2 || phase === 3) canvas.releasePointerCapture?.(event.pointerId);
       const samples = typeof event.getCoalescedEvents === "function" && event.getCoalescedEvents().length
         ? event.getCoalescedEvents() : [event];
       for (const sample of samples) {
-        if (!module._axiom_web_pointer_sample(handle, sample.clientX, sample.clientY,
-                                               sample.pressure, event.pointerId)) {
+        if (!module._axiom_web_pointer_sample_phase(handle, sample.offsetX ?? sample.clientX,
+              sample.offsetY ?? sample.clientY, sample.pressure || 0.5, event.pointerId,
+              phase, Math.floor((sample.timeStamp || performance.now()) * 1000000))) {
           throw new Error("pointer sample rejected");
         }
       }
       record("POINTER_BATCH_FORWARDED", { count: samples.length });
-    });
+    };
+    canvas.addEventListener("pointerdown", (event) => forwardPointer(event, 0));
+    canvas.addEventListener("pointermove", (event) => forwardPointer(event, 1));
+    canvas.addEventListener("pointerup", (event) => forwardPointer(event, 2));
+    canvas.addEventListener("pointercancel", (event) => forwardPointer(event, 3));
     globalThis.axiomWebHost = Object.freeze(host);
     record("HOST_READY");
     return host;

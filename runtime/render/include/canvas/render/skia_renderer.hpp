@@ -26,6 +26,7 @@ class SkiaRenderer final {
   public:
     SkiaRenderer() = default;
     explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
+    void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; }
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay = nullptr);

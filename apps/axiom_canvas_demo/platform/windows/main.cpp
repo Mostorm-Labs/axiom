@@ -77,9 +77,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR commandLine, int) {
         std::cerr << error << '\n';
         return 1;
     }
-    for (int frame = 0; frame < 3; ++frame) {
+    for (;;) {
         if (!host.pumpOnce(&error)) return 1;
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        std::this_thread::sleep_for(std::chrono::milliseconds(8));
     }
     return 0;
 }

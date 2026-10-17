@@ -1,11 +1,24 @@
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/render/image_resource.hpp"
+#include "canvas/text/text_layout.hpp"
 
 namespace canvas::runtime {
 
 RuntimeComposition::RuntimeComposition()
     : runtime_(std::make_unique<interaction::CanvasEditingRuntime>()),
       provider_(std::make_unique<MemoryResourceProvider>()),
-      ownerThread_(std::this_thread::get_id()) {}
+      textLayoutService_(std::make_unique<canvas::text::RichTextLayoutService>(
+          *provider_, canvas::text::LayoutContext{128.0F, 1U})),
+      ownerThread_(std::this_thread::get_id()) {
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
+#endif
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
+#else
+  runtime_->bindResourceServices(nullptr, textLayoutService_.get());
+#endif
+}
 RuntimeComposition::~RuntimeComposition() { (void)close(); }
 bool RuntimeComposition::transition(RuntimeCompositionState next) noexcept {
   if (state_ == RuntimeCompositionState::kClosed) return false;
@@ -17,6 +30,10 @@ bool RuntimeComposition::open() noexcept {
 }
 bool RuntimeComposition::bindSurface(std::uint32_t width, std::uint32_t height) noexcept {
   return state_ == RuntimeCompositionState::kBound && runtime_->bindSurface(width, height) && transition(RuntimeCompositionState::kReady);
+}
+bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height) noexcept {
+  if (!canMutate() || width == 0U || height == 0U) return false;
+  return runtime_->resizeSurface(width, height);
 }
 bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest, std::uint64_t binding) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
@@ -74,6 +91,15 @@ bool RuntimeComposition::notifyResource(foundation::ObjectId id) noexcept {
 bool RuntimeComposition::publishResource(foundation::ObjectId id, std::vector<std::uint8_t> bytes) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
+  // An id-only completion is safe only for the first publication. Once the
+  // provider has bytes, callers must retain and present the binding token so
+  // a late completion from an older manifest cannot overwrite the current
+  // resource under a new binding.
+  const auto existing = provider_->resolve(id);
+  if (existing.generation != 0U) {
+    lastResourceError_ = ResourcePortError::kStaleBinding;
+    return false;
+  }
   const auto token = resources_.token(id, providerEpoch_, nextRequestId_);
   if (!token) { lastResourceError_ = ResourcePortError::kUnknownResource; return false; }
   return publishResource(*token, std::move(bytes));
@@ -109,6 +135,7 @@ bool RuntimeComposition::ownerPump() noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
+  bool derivedRefresh = false;
   for (const auto& notification : notifications_) {
     const auto* entry = resources_.find(notification.resourceId);
     const auto pulled = provider_->resolve(notification.resourceId);
@@ -124,9 +151,16 @@ bool RuntimeComposition::ownerPump() noexcept {
                                                 : ResourceBindingState::kFailed;
     const auto old = resourceReceipts_.find(notification.resourceId);
     receipt.changed = old == resourceReceipts_.end() || old->second.providerGeneration != receipt.providerGeneration || old->second.state != receipt.state || old->second.token != receipt.token;
+    const bool changed = receipt.changed;
     resourceReceipts_[notification.resourceId] = std::move(receipt);
+    derivedRefresh = derivedRefresh || changed;
   }
   notifications_.clear();
+  if (derivedRefresh) {
+    // Resource publication is derived state. It must request a canonical
+    // redraw at the owner safe point without creating a document operation.
+    if (!runtime_->refreshResourceDerivedState()) return false;
+  }
   return true;
 }
 bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept { return canMutate() && runtime_->presentCanonicalFrame(frameId, 0.0, false); }
@@ -154,7 +188,7 @@ bool RuntimeComposition::detach() noexcept {
 bool RuntimeComposition::close() noexcept { if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 RuntimeCompositionReceipt RuntimeComposition::readback() const noexcept {
   const auto& runtime = *runtime_;
-  return {state_, resources_.lifetimeGeneration, ownerPumpCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value()};
+  return {state_, resources_.lifetimeGeneration, ownerPumpCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value(), runtime.canonicalPresentationDirty()};
 }
 std::optional<ResourcePortReceipt> RuntimeComposition::resourceReceipt(
     foundation::ObjectId id) const noexcept {

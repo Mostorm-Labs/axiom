@@ -1,4 +1,5 @@
 #include "windows_canonical_surface_host.hpp"
+#include "canvas/input/platform_input_contract.hpp"
 
 #if defined(_WIN32)
 
@@ -22,6 +23,26 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         DestroyWindow(window);
         PostQuitMessage(0);
         return 0;
+    }
+    if (message == WM_LBUTTONDOWN || message == WM_MOUSEMOVE || message == WM_LBUTTONUP) {
+        auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
+            GetWindowLongPtrW(window, GWLP_USERDATA));
+        if (host != nullptr) {
+            if (message == WM_MOUSEMOVE && (wParam & MK_LBUTTON) == 0) {
+                return DefWindowProcW(window, message, wParam, lParam);
+            }
+            const auto phase = message == WM_LBUTTONDOWN ? canvas::input::PointerPhase::kDown
+                : message == WM_LBUTTONUP ? canvas::input::PointerPhase::kUp
+                                           : canvas::input::PointerPhase::kMove;
+            canvas::input::PlatformPointerBatch batch;
+            const auto sequence = host->nextInputSequence();
+            batch.samples.push_back({1U, 1U, sequence,
+                sequence * 1'000'000U,
+                static_cast<float>(static_cast<short>(LOWORD(lParam))),
+                static_cast<float>(static_cast<short>(HIWORD(lParam))), 0.5F, 0.0F, 0.0F,
+                {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent, phase});
+            (void)host->composition().submit(batch);
+        }
     }
     return DefWindowProcW(window, message, wParam, lParam);
 }
@@ -68,6 +89,8 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
                  std::to_string(static_cast<unsigned long>(GetLastError()));
         return false;
     }
+    SetWindowLongPtrW(impl_->window, GWLP_USERDATA,
+                      reinterpret_cast<LONG_PTR>(this));
     ShowWindow(impl_->window, SW_SHOWNOACTIVATE);
     render::SurfaceMetrics metrics{static_cast<float>(width), static_cast<float>(height),
                                    width, height, 1.0F, 1.0F};
@@ -76,7 +99,7 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
         render::MetricsGeneration{1}, metrics});
     observation_.surfaceGeneration = 1;
     observation_.metricsGeneration = 1;
-    if (!composition_.bindSurface(width, height)) { if (error) *error = "Runtime composition surface bind failed"; return false; }
+    if (!composition_.bindSurface(width, height) || !composition_.registerSource(1U)) { if (error) *error = "Runtime composition surface bind failed"; return false; }
     return true;
 }
 
@@ -117,6 +140,10 @@ bool WindowsCanonicalSurfaceHost::resizeForSmoke(std::uint32_t width,
                                width, height, 1.0F, 1.0F}};
     if (surface_->bind(replacement) != WindowsSurfaceDisposition::kRebound) {
         *error = "Windows surface resize did not produce a fresh generation";
+        return false;
+    }
+    if (!composition_.resizeSurface(width, height)) {
+        *error = "Runtime composition resize did not produce a fresh surface";
         return false;
     }
     impl_->width = width;

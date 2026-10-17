@@ -8,7 +8,13 @@ WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
 WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replacement) {
     const auto before = lifecycle_.current();
     const auto result = lifecycle_.replace(replacement);
-    if (result == render::SurfaceLifecycleDisposition::kReplaced) return WebSurfaceDisposition::kRebound;
+    if (result == render::SurfaceLifecycleDisposition::kReplaced) {
+        if (!composition_.resizeSurface(replacement.metrics.physicalWidth,
+                                        replacement.metrics.physicalHeight)) {
+            return WebSurfaceDisposition::kRejectedInvalid;
+        }
+        return WebSurfaceDisposition::kRebound;
+    }
     if (result == render::SurfaceLifecycleDisposition::kStaleGeneration ||
         result == render::SurfaceLifecycleDisposition::kNoGenerationAdvance ||
         replacement.surfaceGeneration.value() < before.surfaceGeneration.value() ||

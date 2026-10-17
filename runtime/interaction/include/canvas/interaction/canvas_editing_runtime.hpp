@@ -53,6 +53,7 @@
 #include <utility>
 
 namespace canvas::ink_playground { class InkPlaygroundHistoryTestAccess; }
+namespace canvas::render { class ImageResourceResolver; }
 
 namespace canvas::interaction {
 
@@ -450,6 +451,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
     return canonicalPresentationDirty_;
   }
+  // Owner-side derived resources can invalidate the current pixels without
+  // mutating the semantic document or history.
+  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; }
+  void bindResourceServices(render::ImageResourceResolver* images,
+                            text::RichTextLayoutService* textService) noexcept;
+  [[nodiscard]] bool refreshResourceDerivedState() noexcept;
   [[nodiscard]] std::uint64_t canonicalFrameCount() const noexcept {
     return canonicalFrameCount_;
   }
@@ -606,6 +613,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::SceneBinding> sceneBinding_;
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
+  text::RichTextLayoutService* textLayoutService_ = nullptr;
   std::unique_ptr<render::RenderViewRuntime> selectionView_;
   interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;

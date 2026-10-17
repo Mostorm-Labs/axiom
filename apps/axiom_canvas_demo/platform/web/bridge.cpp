@@ -1,6 +1,7 @@
 #include "web_surface_host.hpp"
 
 #include "canvas/render/webgl_surface_backend.hpp"
+#include "canvas/input/platform_input_contract.hpp"
 
 #include <emscripten/emscripten.h>
 
@@ -15,6 +16,7 @@ struct WebInstance final {
     std::uint64_t surfaceGeneration = 1;
     std::uint64_t metricsGeneration = 1;
     std::uint64_t pointerSamples = 0;
+    std::uint64_t pointerSequence = 0;
     std::uint64_t presentedFrames = 0;
     float logicalWidth = 0.0F;
     float logicalHeight = 0.0F;
@@ -34,6 +36,9 @@ WebInstance* instance(std::uintptr_t handle) { return reinterpret_cast<WebInstan
 }
 
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int axiom_web_pointer_sample_phase(
+    std::uintptr_t handle, float x, float y, float pressure,
+    std::uint32_t pointerId, std::uint32_t phase, std::uint64_t timestampNs);
 EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     const char* selector, float lw, float lh, std::uint32_t pw, std::uint32_t ph, float dpr) {
     if (selector == nullptr || lw <= 0.0F || lh <= 0.0F || pw == 0U || ph == 0U || dpr <= 0.0F) return 0;
@@ -41,6 +46,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     value->backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
         canvas::render::WebGlSurfaceConfig{selector, pw, ph});
     if (!value->backend->ready()) return 0;
+    if (!value->lifecycle.composition().registerSource(1U)) return 0;
     return reinterpret_cast<std::uintptr_t>(value.release());
 }
 EMSCRIPTEN_KEEPALIVE void axiom_web_destroy(std::uintptr_t handle) { delete instance(handle); }
@@ -86,9 +92,23 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_backend_ready(std::uintptr_t handle) {
 }
 EMSCRIPTEN_KEEPALIVE int axiom_web_pointer_sample(
     std::uintptr_t handle, float x, float y, float pressure, std::uint32_t) {
+    return axiom_web_pointer_sample_phase(handle, x, y, pressure, 1U, 1U, 0U);
+}
+EMSCRIPTEN_KEEPALIVE int axiom_web_pointer_sample_phase(
+    std::uintptr_t handle, float x, float y, float pressure,
+    std::uint32_t pointerId, std::uint32_t phase, std::uint64_t timestampNs) {
     auto* value = instance(handle);
     if (value == nullptr || !std::isfinite(x) || !std::isfinite(y) ||
         !std::isfinite(pressure) || pressure < 0.0F || pressure > 1.0F) return 0;
+    if (phase > static_cast<std::uint32_t>(canvas::input::PointerPhase::kCancel)) return 0;
+    const auto sequence = ++value->pointerSequence;
+    const auto timestamp = timestampNs == 0U ? sequence * 1'000'000U : timestampNs;
+    canvas::input::PlatformPointerBatch batch;
+    batch.samples.push_back(canvas::input::PlatformPointerSample{
+        1U, pointerId, sequence, timestamp, x, y, pressure, 0.0F, 0.0F,
+        {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+        static_cast<canvas::input::PointerPhase>(phase)});
+    if (!value->lifecycle.composition().submit(batch)) return 0;
     ++value->pointerSamples;
     return 1;
 }

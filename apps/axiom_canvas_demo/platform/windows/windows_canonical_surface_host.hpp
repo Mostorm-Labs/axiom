@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <string>
+#include <atomic>
 
 namespace canvas::windows_demo {
 
@@ -41,6 +42,7 @@ class WindowsCanonicalSurfaceHost final {
                                const render::FramePlan& plan,
                                std::string* error);
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
+    [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
     [[nodiscard]] const WindowsSmokeObservation& observation() const noexcept {
         return observation_;
     }
@@ -51,6 +53,7 @@ class WindowsCanonicalSurfaceHost final {
     WindowsSmokeObservation observation_{};
     WindowsSurfaceAdapter* surface_ = nullptr;
     runtime::RuntimeComposition composition_;
+    std::atomic<std::uint64_t> inputSequence_{0};
 };
 
 } // namespace canvas::windows_demo

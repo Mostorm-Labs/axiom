@@ -26,6 +26,11 @@ if(WIN32)
     target_compile_features(axiom_canvas_demo_windows PRIVATE cxx_std_20)
     target_compile_definitions(axiom_canvas_demo_windows PRIVATE
         NOMINMAX WIN32_LEAN_AND_MEAN)
+    if(MSVC)
+        target_compile_options(axiom_canvas_demo_windows PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_canvas_demo_windows PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
     target_link_libraries(axiom_canvas_demo_windows PRIVATE user32)
 endif()
 
@@ -79,6 +84,6 @@ if(EMSCRIPTEN)
     target_link_options(axiom_canvas_demo_web PRIVATE
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
-        "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_create','_axiom_web_destroy','_axiom_web_resize','_axiom_web_lose_surface','_axiom_web_surface_generation','_axiom_web_metrics_generation','_axiom_web_backend_ready','_axiom_web_pointer_sample','_axiom_web_pointer_samples','_axiom_web_present_smoke','_axiom_web_presented_frames']"
+        "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_create','_axiom_web_destroy','_axiom_web_resize','_axiom_web_lose_surface','_axiom_web_surface_generation','_axiom_web_metrics_generation','_axiom_web_backend_ready','_axiom_web_pointer_sample','_axiom_web_pointer_sample_phase','_axiom_web_pointer_samples','_axiom_web_present_smoke','_axiom_web_presented_frames']"
         "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']")
 endif()

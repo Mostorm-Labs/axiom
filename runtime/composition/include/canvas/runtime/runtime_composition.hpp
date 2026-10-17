@@ -11,6 +11,9 @@
 #include <vector>
 #include <thread>
 
+namespace canvas::render { class ImageResourceResolver; }
+namespace canvas::text { class RichTextLayoutService; }
+
 namespace canvas::runtime {
 
 enum class RuntimeCompositionState : std::uint8_t {
@@ -33,6 +36,7 @@ struct RuntimeCompositionReceipt final {
   std::uint64_t semanticGeneration = 0;
   std::size_t pendingNotifications = 0;
   bool canonicalSubmitted = false;
+  bool canonicalDemand = false;
 };
 
 class RuntimeComposition final {
@@ -44,6 +48,7 @@ class RuntimeComposition final {
 
   [[nodiscard]] bool open() noexcept;
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool bindManifest(const semantic::ResourceManifest& manifest,
                                   std::uint64_t documentBinding) noexcept;
   [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
@@ -92,6 +97,10 @@ class RuntimeComposition final {
                      foundation::ObjectIdHash> resourceReceipts_;
   ResourceBindingSnapshot resources_;
   std::unique_ptr<MemoryResourceProvider> provider_;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  std::unique_ptr<canvas::render::ImageResourceResolver> imageResolver_;
+#endif
+  std::unique_ptr<canvas::text::RichTextLayoutService> textLayoutService_;
   ResourcePortError lastResourceError_ = ResourcePortError::kNone;
   std::thread::id ownerThread_;
 };

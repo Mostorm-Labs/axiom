@@ -1,5 +1,6 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include <cassert>
+#include <algorithm>
 #include <string>
 
 namespace {
@@ -21,6 +22,19 @@ canvas::semantic::ResourceManifest makeManifest(std::uint64_t count) {
   value.manifest_revision = 1U;
   value.entries.reserve(static_cast<std::size_t>(count));
   for (std::uint64_t id = 1U; id <= count; ++id) value.entries.push_back(entry(id));
+  std::sort(value.entries.begin(), value.entries.end(), [](const auto& left, const auto& right) {
+    return left.resource_id.value < right.resource_id.value;
+  });
+  return value;
+}
+
+canvas::semantic::ObjectRecord shape(std::uint64_t id) {
+  canvas::semantic::ObjectRecord value;
+  value.id = canvas::foundation::ObjectId::fromUint64(id);
+  value.kind = canvas::semantic::ObjectKind::kShape;
+  value.kind_version = 1U;
+  value.placement.order_key = canvas::semantic::OrderKey{{static_cast<std::uint8_t>(id)}};
+  value.content = canvas::semantic::ShapeContent{1U, 10.0, 10.0};
   return value;
 }
 }
@@ -45,6 +59,9 @@ int main() {
   assert(composition.publishResource(canvas::foundation::ObjectId::fromUint64(7U), {0x01U}));
   assert(composition.ownerPump());
   assert(composition.readback().pendingNotifications == 0U);
+  // A validated provider update must cross the composition boundary as a
+  // derived refresh/frame demand, rather than stopping at a receipt.
+  assert(composition.readback().canonicalDemand);
   assert(composition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(7U)).has_value());
   const auto firstToken = composition.resources().token(canvas::foundation::ObjectId::fromUint64(7U), 0U, 99U);
   assert(firstToken.has_value());
@@ -64,16 +81,19 @@ int main() {
   canvas::runtime::RuntimeComposition queueComposition;
   assert(queueComposition.open());
   assert(queueComposition.bindSurface(256U, 256U));
-  assert(queueComposition.bindManifest(makeManifest(257U), 7U));
+  assert(queueComposition.bindManifest(makeManifest(256U), 7U));
   assert(queueComposition.publishResource(canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
   assert(queueComposition.ownerPump());
+  const auto queueToken = queueComposition.resources().token(
+      canvas::foundation::ObjectId::fromUint64(1U), 1U, 500U);
+  assert(queueToken.has_value());
   const auto beforeQueueFull = queueComposition.resourceReceipt(
       canvas::foundation::ObjectId::fromUint64(1U));
   assert(beforeQueueFull.has_value());
-  for (std::uint64_t id = 2U; id <= 257U; ++id) {
+  for (std::uint64_t id = 1U; id <= 256U; ++id) {
     assert(queueComposition.notifyResource(canvas::foundation::ObjectId::fromUint64(id)));
   }
-  assert(!queueComposition.publishResource(canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
+  assert(!queueComposition.publishResource(*queueToken, {0x01U}));
   assert(queueComposition.lastResourceError() == canvas::runtime::ResourcePortError::kQueueFull);
   assert(queueComposition.ownerPump());
   const auto afterQueueFull = queueComposition.resourceReceipt(
@@ -88,8 +108,13 @@ int main() {
   auto sameResource = makeManifest(1U);
   assert(rebindComposition.bindManifest(sameResource, 11U));
   assert(rebindComposition.publishResource(canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
+  const auto lateToken = rebindComposition.resources().token(
+      canvas::foundation::ObjectId::fromUint64(1U), 0U, 100U);
+  assert(lateToken.has_value());
   assert(rebindComposition.ownerPump());
   assert(rebindComposition.bindManifest(sameResource, 12U));
+  assert(!rebindComposition.publishResource(*lateToken, {0x01U}));
+  assert(rebindComposition.lastResourceError() == canvas::runtime::ResourcePortError::kStaleBinding);
   assert(rebindComposition.notifyResource(canvas::foundation::ObjectId::fromUint64(1U)));
   assert(rebindComposition.ownerPump());
   const auto reboundReceipt = rebindComposition.resourceReceipt(
@@ -113,5 +138,43 @@ int main() {
   assert(composition.close());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kClosed);
   assert(!composition.runtime().selectCreationPreset(canvas::interaction::CreationPreset::kRectangle));
+  assert(!composition.runtime().undo());
+  assert(!composition.runtime().redo());
+
+  // Every canonical mutation ingress remains fenced after close, including
+  // history compensation and remote replay.  This guards the shared owner
+  // boundary instead of only testing UI-facing controls.
+  canvas::runtime::RuntimeComposition closedMutation;
+  assert(closedMutation.open());
+  assert(closedMutation.bindSurface(256U, 256U));
+  assert(closedMutation.runtime().selectCreationPreset(
+      canvas::interaction::CreationPreset::kRectangle));
+  canvas::input::PlatformPointerBatch down;
+  down.samples.push_back({1U, 1U, 1U, 1'000U, 10.0F, 10.0F, 0.5F, 0.0F, 0.0F,
+                          {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch up = down;
+  up.samples.front().sequence = 2U;
+  up.samples.front().timestampNs = 2'000U;
+  up.samples.front().x = 40.0F;
+  up.samples.front().y = 40.0F;
+  up.samples.front().phase = canvas::input::PointerPhase::kUp;
+  assert(closedMutation.registerSource(1U));
+  assert(closedMutation.submit(down));
+  assert(closedMutation.submit(up));
+  assert(closedMutation.runtime().semanticObjectCount() == 1U);
+  assert(closedMutation.runtime().canUndo());
+  assert(closedMutation.close());
+  const auto beforeClosedRemote = closedMutation.runtime().semanticObjectCount();
+  assert(!closedMutation.runtime().undo());
+  assert(!closedMutation.runtime().redo());
+  canvas::semantic::Operation remote{
+      canvas::semantic::OperationId{canvas::foundation::ObjectId::fromUint64(900U)},
+      canvas::semantic::DocumentId{canvas::foundation::ObjectId::fromUint64(1U)}, 1U, 1U,
+      canvas::semantic::InsertObjectsOp{{shape(901U)}}};
+  const auto remoteResult = closedMutation.runtime().applyExternalOperation(
+      remote, canvas::semantic::ApplySource::kRemoteSync);
+  assert(remoteResult.disposition != canvas::semantic::ApplyDisposition::kApplied);
+  assert(closedMutation.runtime().semanticObjectCount() == beforeClosedRemote);
   return 0;
 }
