@@ -1,0 +1,47 @@
+{
+  "schema": "fc00x-scene-resource-composition-repair-v0.14",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "result_revision": "31c1fae753e0d689462ceebd074da7b9327ef9df",
+  "materialized_ref": "31c1fae753e0d689462ceebd074da7b9327ef9df",
+  "base_revision": "ec1ee7e22062f796f22e92df1db74b6b7f3c4a5d",
+  "changes": [
+    "Windows pointer-up submits the terminal sample before synchronous capture release; unexpected capture loss still cancels active sessions.",
+    "Windows canonical frame requests use one monotonic frame-id helper for input and resize; idle paint no longer self-invalidates.",
+    "Manifest operations rebuild current font descriptors instead of clearing valid fonts after unrelated resource changes.",
+    "Raw Runtime platform input rejects unavailable/lost surfaces.",
+    "Scene compiler slot maps persist across recompiles and never reuse retired slots.",
+    "Web invalid surface test constructs immutable metrics correctly."
+  ],
+  "verification": {
+    "package_lock_sha256": "PASS: authority, verification, execution, implementation-context and evidence locks match package.json",
+    "git_diff_check": "PASS",
+    "runtime_editor_compile": "PASS: out/p32-compile canvas_runtime_editor",
+    "scene_regression_matrix": "PASS: 7/7 independently built Scene tests exit 0",
+    "windows_surface_adapter": "PASS: axiom_demo_windows_surface_tests exit 0",
+    "windows_minimal_link": "BLOCKED_ENVIRONMENT: locked Skia archives expose unresolved MSVC/ABI render symbols",
+    "web_surface_link": "BLOCKED_ENVIRONMENT: same locked Skia/MSVC ABI boundary",
+    "composition_link": "BLOCKED_ENVIRONMENT: same locked Skia/MSVC ABI boundary",
+    "manual_physical_observation": "PHYSICAL_PENDING"
+  },
+  "remaining_blockers": [
+    "Locked prebuilt Skia libraries do not link with the available MSVC toolchain; use the accepted compatible clang-cl/MSVC ABI environment.",
+    "No manual Windows/Web physical observation was performed.",
+    "R1-2 complete 32-byte ink OrderKey preservation remains open; no unstable SceneRecord layout change was submitted.",
+    "Android remains explicitly deferred."
+  ],
+  "official_gate_pass_claimed": false,
+  "scope_preservation": [
+    ".aegis/authorities.json unchanged",
+    ".aegis/gates.json unchanged",
+    ".aegis/evidence.json unchanged",
+    "semantic Golden/Authority and Android unchanged"
+  ],
+  "evidence_input_refs": [
+    "out/p32-final-closure/runtime-editor-build.log",
+    "out/p32-final-closure/scene-tests.log",
+    "out/p32-final-closure/windows-surface-test.log",
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/reverify-ec1ee7e2/review.txt",
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/reverify-ec1ee7e2/probe-output.log"
+  ],
+  "status": "BLOCKED_ENVIRONMENT"
+}
