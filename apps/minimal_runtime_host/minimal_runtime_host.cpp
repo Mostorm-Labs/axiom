@@ -1,16 +1,17 @@
 #include "minimal_runtime_host.hpp"
 
 namespace canvas::minimal_runtime_host {
+MinimalRuntimeHost::MinimalRuntimeHost() noexcept { (void)composition_.open(); }
 bool MinimalRuntimeHost::registerSource(input::InputSourceId source) noexcept {
-  return runtime_.registerInputSource(source, "minimal");
+  return composition_.registerSource(source);
 }
 bool MinimalRuntimeHost::unregisterSource(input::InputSourceId source,
                                           std::uint64_t sequence,
                                           std::uint64_t timestampNs) noexcept {
-  return runtime_.unregisterInputSource(source, sequence, timestampNs);
+  return composition_.runtime().unregisterInputSource(source, sequence, timestampNs);
 }
 bool MinimalRuntimeHost::submit(const input::PlatformPointerBatch& batch) noexcept {
   if (batch.samples.empty()) return false;
-  return runtime_.acceptPlatformBatch(batch, batch.samples.back().timestampNs);
+  return composition_.submit(batch);
 }
 }  // namespace canvas::minimal_runtime_host
