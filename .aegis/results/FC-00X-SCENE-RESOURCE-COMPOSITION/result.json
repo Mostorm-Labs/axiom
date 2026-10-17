@@ -1,5 +1,5 @@
 {
-  "status": "READY_FOR_CONTROL_REVIEW",
+  "status": "BLOCKED_ENVIRONMENT",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
   "stage": "P32_IMPLEMENTATION",
   "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
@@ -22,7 +22,9 @@
     "protected_render_scene_resource_matrix": "13/13 PASS",
     "web_debug_off_build": "PASS",
     "web_debug_on_build": "PASS",
-    "windows_minimal_build": "PASS"
+    "windows_minimal_build": "PASS",
+    "latest_reverify_source_compile": "PASS",
+    "latest_reverify_link_run": "BLOCKED_ENVIRONMENT"
   },
   "artifacts": {
     "windows_exe": "out/p32-skia-msvc1951/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe",
@@ -41,14 +43,16 @@
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
     "out/final-brush.log",
     "out/p32-web-debug-off/",
-    "out/p32-web-debug-on/"
+    "out/p32-web-debug-on/",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.12-runtime-composition.json"
   ],
   "physical_status": "PHYSICAL_PENDING",
   "android_status": "DEFERRED_NOT_BLOCKING",
   "blockers": [
-    "No manual Windows/Web physical observation performed; retain PHYSICAL_PENDING."
+    "Locked prebuilt Skia libraries do not link with available MSVC toolchain.",
+    "No manual Windows/Web physical observation; Android deferred."
   ],
   "official_gate_pass_claimed": false,
-  "result_revision": "2c94c5d794a734092eb27a609a9710de9d92a493",
-  "materialized_ref": "2c94c5d794a734092eb27a609a9710de9d92a493"
+  "result_revision": "f37511d6325052fe0811e872ea3a64631b2736a9",
+  "materialized_ref": "f37511d6325052fe0811e872ea3a64631b2736a9"
 }
