@@ -1,0 +1,60 @@
+{
+  "schema": "fc00x-scene-web-build-evidence-v0.2",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "toolchain": {
+    "emscripten": "6.0.6",
+    "llvm": "22.1.8",
+    "semantic_target": "web-wasm32",
+    "skia_root": ".deps/skia-sdk/web-wasm-webgl2/release",
+    "network_used": false
+  },
+  "build_commands": {
+    "debug_off": "cmake -S . -B out/p32-web-debug-off -G Ninja ... -DAXIOM_BUILD_DEBUG_UI=OFF && cmake --build out/p32-web-debug-off -j 4",
+    "debug_on": "cmake -S . -B out/p32-web-debug-on -G Ninja ... -DAXIOM_BUILD_DEBUG_UI=ON -DAXIOM_DEBUG_UI_PROFILE=full && cmake --build out/p32-web-debug-on -j 4"
+  },
+  "warning_policy": "Existing upstream dangling-else/sign-compare warnings were downgraded for this consumer build; no upstream source was modified.",
+  "debug_off": {
+    "directory": "out/p32-web-debug-off/apps/axiom_canvas_demo",
+    "files": [
+      {
+        "name": "axiom_canvas_demo_web.js",
+        "bytes": 109610,
+        "sha256": "53900934CA61415A057833FD3B4A4669310CF3DE72ABD7399BE5599A51D6E015"
+      },
+      {
+        "name": "axiom_canvas_demo_web.wasm",
+        "bytes": 8769849,
+        "sha256": "C355E8C2F274603D680682766419F81046866C09E8769B45D8A15F41A1070F38"
+      },
+      {
+        "name": "index.html",
+        "bytes": 3591,
+        "sha256": "C50DC95CAC085C66F176843EF54F15848C32B2A7A5CBFBC520F2225C74373AD0"
+      }
+    ],
+    "status": "PASS"
+  },
+  "debug_on": {
+    "directory": "out/p32-web-debug-on/apps/axiom_canvas_demo",
+    "files": [
+      {
+        "name": "axiom_canvas_demo_web.js",
+        "bytes": 109610,
+        "sha256": "53900934CA61415A057833FD3B4A4669310CF3DE72ABD7399BE5599A51D6E015"
+      },
+      {
+        "name": "axiom_canvas_demo_web.wasm",
+        "bytes": 8769849,
+        "sha256": "C355E8C2F274603D680682766419F81046866C09E8769B45D8A15F41A1070F38"
+      },
+      {
+        "name": "index.html",
+        "bytes": 3591,
+        "sha256": "C50DC95CAC085C66F176843EF54F15848C32B2A7A5CBFBC520F2225C74373AD0"
+      }
+    ],
+    "status": "PASS"
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass_claimed": false
+}
