@@ -1,0 +1,270 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P31_TASK_PACKAGING",
+  "authority_status": "CURRENT_ACCEPTED_UPSTREAM_AUTHORITY_BOUND",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "source_revision": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a"
+  },
+  "preparation_input": {
+    "path": "D:/axreview/fc00x-20261016/scene-resources-composition-handoff-v0.3.txt",
+    "sha256": "94ed26bb7dafadb2ab2eec46df2e40ef1b7fb52c09ba89ff75f803095d2314fd"
+  },
+  "change_notes_input": {
+    "path": "D:/axreview/fc00x-20261016/third-handoff-v0.3-change-notes.txt",
+    "sha256": "f82d36756247ce5773e1253bbaa549da9766e5b3c57d1e1610d2d56b35072ea0"
+  },
+  "trusted_authorities": [
+    {
+      "id": "g2-runtime-foundation",
+      "scope": "gate:G2/runtime-foundation",
+      "status": "Current",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "owns": [
+        "one RuntimeScene owner",
+        "SceneRecordStore",
+        "atomic publication",
+        "recovery contract"
+      ],
+      "forbids": [
+        "duplicate canonical scene",
+        "SemanticDocument direct render",
+        "G5 raster scheduler"
+      ]
+    },
+    {
+      "id": "g3-canonical-canvas",
+      "scope": "capability:G3/basic-canonical-canvas",
+      "status": "Current",
+      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+      "owns": [
+        "RenderTarget",
+        "RenderFrame",
+        "camera/viewport/DPR metrics",
+        "per-view RenderCore",
+        "platform acquire/present"
+      ],
+      "forbids": [
+        "duplicate canonical state",
+        "Core-owned GPU/OS execution"
+      ]
+    },
+    {
+      "id": "g4-interaction-ink",
+      "scope": "capability:G4/interaction-ink",
+      "status": "Current",
+      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "owns": [
+        "InteractionRuntime",
+        "Session owners",
+        "Selection",
+        "Transform",
+        "Eraser",
+        "History",
+        "Preview/Canonical handoff"
+      ],
+      "forbids": [
+        "duplicate canonical write path",
+        "invented partial erase",
+        "Host-owned generic tool dispatch"
+      ]
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "scope": "execution:FC/feature-completion",
+      "status": "Current",
+      "ref": "notion://3f74c57a-590c-8139b903f14f0aae0c57",
+      "depends_on": [
+        "g4-interaction-ink"
+      ],
+      "relevant_constraint": "FC-00X is shared infrastructure and does not authorize FC-01 or any feature task."
+    }
+  ],
+  "repository_contracts": [
+    {
+      "path": "docs/adr/0003-semantic-document-runtime-scene.md",
+      "sha256": "b273285200bafa661b7654438442ddc7b97901d846b333fe45747696bb80769b",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/adr/0013-resource-identity-content-addressing.md",
+      "sha256": "fee55590abf916c475c1e01d59bc4cf32e5d782de19ccab65ceaef252903afc8",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/adr/0022-runtime-public-c-api-and-cpp-style.md",
+      "sha256": "4f7246e781634c07e338de4cfd30f54a4f6143a85c3044366c6624a376a4aac3",
+      "role": "implementation-input"
+    },
+    {
+      "path": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "sha256": "fbcf538a4f7f9cf8490211b0d4289d58ada215ebb528893dc286e22e8799a82f",
+      "role": "implementation-input-only"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/resource_provider.hpp",
+      "sha256": "d3b7e79fd3ac19f00d8a56542b2eb36fec4b37ece7e4b4ef5a6c569a1b4e3d5c",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/scene_types.hpp",
+      "sha256": "68c52028f0d042f1e4f7fca6763bf4283c19d86e3d63fcadaad052dcfe2da434",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/full_scene_compiler.hpp",
+      "sha256": "dfa8c993626e26f3c7a1c95bb222121376155c07ced5c7aafb833d6d98b1c3c6",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp",
+      "sha256": "535a571e5ab1c2381e18b36b9f0759f1130fa1a9974cdc1d0fba64ccc5e3cccb",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/runtime_app_binding.hpp",
+      "sha256": "73f19dc75586e7fd43e4ed8eb1596fff3358c9349e21758e5f6fe0ec3e86698e",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/runtime_frame_coordinator.hpp",
+      "sha256": "1630894ac7b68c60f6c3381516c72f395bb61acabcb09d00c5a6b40cc7be2028",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/text/include/canvas/text/text_layout.hpp",
+      "sha256": "7815d94b41aa477c4caff9cd09db76cf533b39c2fd3e55c9321a0bee206052bc",
+      "role": "current-source"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "sha256": "29d4eb14f0c9bbff6733e8f777197a0f827bb6faf3eab18e6393b4db69f19c4e",
+      "role": "current-source-observation"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "sha256": "69f4321dc2d7663808a414958df324c67696f89d17ce858503e3a4403a01c0e9",
+      "role": "current-source-observation"
+    },
+    {
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "sha256": "25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032",
+      "role": "current-source-observation"
+    }
+  ],
+  "upstream_dependency": {
+    "review_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/review.txt",
+    "review_sha256": "46187573a34b362024cf3b9d998a050bd6dd482284f47eec22322ba32edfab13",
+    "repair_checklist_path": "D:/axreview/fc00x-20261016/post-246cd1d0-review/repair-checklist.txt",
+    "repair_checklist_sha256": "c94cda71a69c196c0499154a58f48316d43f5515f6fa13ed7b3127df04a6b9c3",
+    "required_before_scene_implementation": [
+      "F01 keyed cancel",
+      "F02 source lifetime",
+      "F03 arbitration cleanup",
+      "F04 failed-session rollback",
+      "F05 creation cancel repaint",
+      "F06 target fence",
+      "F07 style leaf merge",
+      "F08 truthful frame qualification"
+    ],
+    "classification": "upstream_dependency_not_silently_included"
+  },
+  "frozen_scope": {
+    "scene": "Reuse existing SceneBinding, IncrementalRuntimeCoordinator, FullSceneCompiler and RuntimeSceneProjection; add adapters/ports only where required for one shared composition.",
+    "resources": "Use one pull-plus-notify model. The Document ResourceManifest is the authority for Image/Font/Brush resource id, kind, ResourceRevision, expected sha256 content hash, byte length and decode/layout metadata. At attach/open, composition receives a copied internal ResourceBindingSnapshot derived from that manifest; Host/provider supplies immutable bytes/results only and never becomes the metadata authority. Existing canonical BrushResourceBinding metadata must agree with the manifest entry. Missing manifest representation, missing expected hash, or mismatched metadata keeps a resource unverified/missing and cannot publish Ready. Runtime validates at the owner safe point.",
+    "composition": "Per-instance manual-poll Runtime composition with full lifecycle and close protocol; no duplicate Document, Session, History, RuntimeScene or canonical write owner.",
+    "consumers": "Windows first, then Web debug-on/off, using the same composition; Minimal core must not link Playground or Debug UI.",
+    "android": "Build/APK/physical evidence deferred and non-blocking."
+  },
+  "forbidden_decisions": [
+    "new ObjectKind, FieldId, OperationKind, protobuf tag or canonical schema field",
+    "duplicate Document, Selection, Session, History, RuntimeScene or canonical write owner",
+    "public C ABI/SDK or docs/api normative rewrite",
+    "dynamic registry, implicit network/file I/O, Core-created OS thread/message loop",
+    "POC-06/Arc revival, G5 performance engineering, Android delivery",
+    "modification of Authority, Gate, Evidence, Integration, Golden or historical PHYS records"
+  ],
+  "resource_metadata_authority": {
+    "document_manifest": {
+      "authority": "Current Authority fc00x-resource-manifest-p12-p13-v0.4 (accepted revision 057464f9fab2db4b67c032134cce3f5f417a64e0)",
+      "source": "Accepted semantic implementation bound to revision 4bef9d6e222d156a79a8358f7d88908a48e39f67 and materialized at 601304425870ceb5715ae34a6da3b6ef1dfdd7e5.",
+      "observed_paths": [
+        "runtime/semantic/include/canvas/semantic/resource_manifest.hpp",
+        "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "observation": "Typed ResourceManifest representation is present in SemanticSnapshot/ObjectRecord/snapshot.proto at the bound implementation revision.",
+      "required_resolution": "R2 must consume this accepted typed source; composition must not invent schema fields or a second manifest.",
+      "fields": [
+        "resource_id",
+        "kind",
+        "resource_revision",
+        "content_hash",
+        "byte_length",
+        "decode_layout_metadata"
+      ],
+      "trust_rule": "Provider response hash/version is not an authority; composition must stop BLOCKED_AUTHORITY until the canonical source is bound."
+    },
+    "composition_snapshot": {
+      "path": "runtime/composition/include/canvas/runtime/resource_binding.hpp",
+      "owner": "composition attach/open copies the Document ResourceManifest entry into an internal binding snapshot",
+      "trust_rule": "Derived snapshot is not a second canonical owner and cannot invent entries or change Document digest."
+    },
+    "brush": {
+      "source": "semantic::BrushResourceBinding in canonical BrushExecutionSnapshot, cross-checked against Document ResourceManifest",
+      "trust_rule": "content_sha256/kind/decode_version must agree with the manifest and provider result."
+    },
+    "image_font": {
+      "source": "Document ResourceManifest entry referenced by ImageContent/TextStyle ResourceId",
+      "trust_rule": "ImageContent and TextStyle ResourceId alone do not authorize bytes; no manifest means unverified/missing."
+    }
+  },
+  "upstream_authority_blocker": {
+    "classification": "RESOLVED_IMPLEMENTATION_PRECONDITION",
+    "owner": "P12/P13 semantic implementation boundary",
+    "authority_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "implementation_revision": "4bef9d6e222d156a79a8358f7d88908a48e39f67",
+    "materialized_ref": "601304425870ceb5715ae34a6da3b6ef1dfdd7e5",
+    "reason": "Typed ResourceManifest product representation is present at the re-materialized anchor."
+  },
+  "p12_p13_modeling_input": {
+    "path": "p12-p13-resource-manifest-authority-input.md",
+    "sha256": "e8e7e5cc5c44c234ac489ad241e269c0855d4e4528102219f91b7698e6679e8a",
+    "status": "SUPERSEDED_BY_ACCEPTED_AUTHORITY_BINDING",
+    "authority_owner": "aegis-governance P23",
+    "accepted_authority_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0"
+  },
+  "accepted_upstream_authority": {
+    "id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "scope": "semantic:axiom/resource-manifest-p12-p13",
+    "kind": "semantic-schema-operation",
+    "version": "v0.4",
+    "status": "Current",
+    "accepted_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_ref": "repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256": "f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref": "repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256": "b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1",
+    "product_source_status_at_anchor": "IMPLEMENTED",
+    "typed_product_implementation": {
+      "repository": "Mostorm-Labs/axiom",
+      "branch": "codex/fc00x-resource-manifest-implementation",
+      "implementation_revision": "4bef9d6e222d156a79a8358f7d88908a48e39f67",
+      "materialized_ref": "601304425870ceb5715ae34a6da3b6ef1dfdd7e5",
+      "source_paths": [
+        "runtime/semantic/include/canvas/semantic/resource_manifest.hpp",
+        "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+        "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "source_contract": "ResourceManifest typed semantic representation, OperationKind=16, ChangeSet resourceChanges, Snapshot schema 3."
+    }
+  },
+  "terminal_blocker": {
+    "class": "NONE",
+    "reason": "R2 typed ResourceManifest implementation precondition resolved at the bound anchor.",
+    "continue_execution": true
+  }
+}

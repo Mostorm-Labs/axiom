@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P31_TASK_PACKAGING",
+  "output_root": ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/",
+  "required_artifacts": [
+    "p12-p13-resource-manifest-authority-input.md",
+    "repository-reconciliation.json",
+    "package-binding-preflight.json",
+    "implementation-design-preflight.json",
+    "red-preflight.json",
+    "r2-authority-binding.json",
+    "upstream-dependency-audit.json",
+    "r1-scene-derivation.json",
+    "r2-resource-port.json",
+    "r3-runtime-composition.json",
+    "runtime-isolation.json",
+    "r4-windows-minimal.json",
+    "r4-web-minimal-debug-on.json",
+    "r4-web-minimal-debug-off.json",
+    "r4-consumer-equivalence.json",
+    "regression-matrix.json",
+    "scope-audit.json",
+    "result.json"
+  ],
+  "identity_rule": "Hash exact Git/file bytes with lowercase SHA-256; bind preparation/source revision separately from later implementation/result revision; never embed an unknowable self commit SHA.",
+  "blocking": [
+    "R0-R4 obligation evidence with active assertions",
+    "r2-authority-binding.json",
+    "upstream F01-F08 dependency audit",
+    "Windows native and Web debug-on/off build outcomes or explicit classified environment blocker",
+    "minimal target dependency audit proving no Playground/Debug UI link in core",
+    "scope/protected-path audit",
+    "reviewer-resolvable exact result revision/materialized_ref"
+  ],
+  "corroborative": [
+    "Windows/Web artifact hashes and start instructions",
+    "manual physical observations retained as PHYSICAL_PENDING until performed",
+    "Playground comparison",
+    "performance traces without invented metrics"
+  ],
+  "physical_status": "PHYSICAL_PENDING unless actual Windows/Web observation is performed",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "producer_may_claim_gate_pass": false,
+  "materialization_requirement": "P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW.",
+  "authority_boundary": "Accepted P12/P13 Authority fc00x-resource-manifest-p12-p13-v0.4 at 057464f9fab2db4b67c032134cce3f5f417a64e0 is bound by exact package and acceptance refs. Typed product implementation is bound to 4bef9d6e222d156a79a8358f7d88908a48e39f67 and materialized at 601304425870ceb5715ae34a6da3b6ef1dfdd7e5; R2 must consume it and must not invent a second manifest."
+}
