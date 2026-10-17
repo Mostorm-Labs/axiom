@@ -1,0 +1,86 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "review_revision": "e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "package_sha256": "02888850e58d697efea3ac52e8e0dad50f3d5c92ec5e9079daf7f2eb8f384838",
+  "repository": "Mostorm-Labs/axiom",
+  "repository_url": "https://github.com/Mostorm-Labs/axiom.git",
+  "execution_branch": "codex/fc00x-scene-resource-composition-p31-v2",
+  "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
+  "implementation_binding": {
+    "authority_id": "fc00x-resource-manifest-p12-p13-v0.4",
+    "authority_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "implementation_revision": "4bef9d6e222d156a79a8358f7d88908a48e39f67",
+    "implementation_materialized_ref": "601304425870ceb5715ae34a6da3b6ef1dfdd7e5",
+    "implementation_branch": "codex/fc00x-resource-manifest-implementation",
+    "source_paths": [
+      "runtime/semantic/include/canvas/semantic/resource_manifest.hpp",
+      "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto"
+    ]
+  },
+  "package_binding": {
+    "authority_lock_sha256": "5b734157d844b1ab9bf18b12daef777b2aea393a5d72f387da9ead8954cbb8ac",
+    "verification_lock_sha256": "e96ebb7120fa1c12b3c8db539d64bb9186fe354748159160069b82621b656354",
+    "execution_contract_sha256": "2bbed55a17332ae72d1c4853479ce6c5f48ded6fb9d16090d2da4806e8e6710b",
+    "implementation_context_sha256": "8e5820b3eca6609f989b17434618fd40a9cb6c48bac13384ec70400913517dad",
+    "evidence_contract_sha256": "328bb876397e2cfd7563a8c0114b610f7187cc41514c42dafe4fcb1cbf22a506",
+    "all_package_refs_match": true
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "P31 package is anchored at the accepted ResourceManifest implementation descendant",
+      "Exact accepted P12/P13 Authority and acceptance record remain bound",
+      "R2 now binds the typed implementation revision and reviewer-resolvable materialized ref",
+      "Composition remains forbidden from inventing a second manifest or semantic schema",
+      "P32 remains gated on this independent review"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "All package-local lock hashes match declared refs",
+      "ResourceManifest authority oracle PASS: ",
+      "PASS: exact P12/P13 Authority binding, typed implementation revision and typed manifest source are present",
+      "Composition boundary RED oracle returns expected baseline RED: ",
+      "RED: no authorized runtime/composition target or typed pull+notify resource binding snapshot port at baseline",
+      "Anchor ancestry and scope checks pass"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "head": "e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+    "merge_base": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
+    "head_descends_from_implementation_anchor": true,
+    "changed_paths": [
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/authority.lock.json",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/evidence-contract.json",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/execution-contract.json",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/implementation-context.md",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/resource_manifest_authority.py",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/oracles/scene_composition_red.py",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/p12-p13-resource-manifest-authority-input.md",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/r0-contract-map.md",
+      ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/verification.lock.json"
+    ],
+    "diff_check": "PASS",
+    "product_composition_present_at_anchor": false,
+    "typed_manifest_present_at_anchor": true
+  },
+  "late_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Windows/Web physical evidence remains P32 scope and PHYSICAL_PENDING",
+      "F01-F08 upstream audit remains a P32 preflight as frozen by the package"
+    ]
+  },
+  "verdict": "ACCEPTED_FOR_P32",
+  "nonclaims": [
+    "No P34 Gate PASS",
+    "No product implementation accepted by this review",
+    "No Windows/Web physical acceptance",
+    "Android remains deferred"
+  ],
+  "next_action": "Issue a P32 surface handoff using this exact package ref; at P32 run upstream F01-F08 audit, implementation-design-preflight, composition RED precondition, then execute R0-R4 to READY_FOR_CONTROL_REVIEW or a classified blocker."
+}
