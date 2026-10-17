@@ -1,8 +1,8 @@
 {
   "schema": "fc00x-scene-resource-composition-repair-v0.14",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
-  "result_revision": "31c1fae753e0d689462ceebd074da7b9327ef9df",
-  "materialized_ref": "31c1fae753e0d689462ceebd074da7b9327ef9df",
+  "result_revision": "c86796d80c1119c9f988ecbedd9fd445d1d485f6",
+  "materialized_ref": "c86796d80c1119c9f988ecbedd9fd445d1d485f6",
   "base_revision": "ec1ee7e22062f796f22e92df1db74b6b7f3c4a5d",
   "changes": [
     "Windows pointer-up submits the terminal sample before synchronous capture release; unexpected capture loss still cancels active sessions.",
@@ -10,7 +10,10 @@
     "Manifest operations rebuild current font descriptors instead of clearing valid fonts after unrelated resource changes.",
     "Raw Runtime platform input rejects unavailable/lost surfaces.",
     "Scene compiler slot maps persist across recompiles and never reuse retired slots.",
-    "Web invalid surface test constructs immutable metrics correctly."
+    "Web invalid surface test constructs immutable metrics correctly.",
+    "Scene traversal preserves full canonical OrderKey while keeping ink above non-ink for draw and hit ordering.",
+    "Lost canonical mutation, Web loss propagation, Windows capture identity retirement, and Runtime frame-id high-water allocation are closed.",
+    "Raw Runtime manifest operations refresh font descriptors through the same owner path as Composition binding."
   ],
   "verification": {
     "package_lock_sha256": "PASS: authority, verification, execution, implementation-context and evidence locks match package.json",
@@ -21,13 +24,20 @@
     "windows_minimal_link": "BLOCKED_ENVIRONMENT: locked Skia archives expose unresolved MSVC/ABI render symbols",
     "web_surface_link": "BLOCKED_ENVIRONMENT: same locked Skia/MSVC ABI boundary",
     "composition_link": "BLOCKED_ENVIRONMENT: same locked Skia/MSVC ABI boundary",
-    "manual_physical_observation": "PHYSICAL_PENDING"
+    "manual_physical_observation": "PHYSICAL_PENDING",
+    "strict_release_windows_build": "PASS: axiom_canvas_demo_windows linked with locked Skia SDK using MSVC 19.51",
+    "scene_ink_order_regression": "PASS: RF01 full rebuild test including ink-over-shape draw/hit ordering",
+    "composition_resource_lifecycle": "PASS: axiom_fc00x_runtime_composition_tests exit 0",
+    "windows_surface_regression": "PASS: axiom_demo_windows_surface_tests exit 0",
+    "web_surface_regression": "PASS: axiom_demo_web_surface_tests exit 0",
+    "selection_transform_regression": "PASS: axiom_playground_transform_tests exit 0",
+    "windows_manual_process": "PASS: current exe running with title Axiom G3-09 Canonical Surface",
+    "windows_exe_sha256": "98E5D9FD67142CB3935B972B55A0F9DEF2D70B4A4AFC648A4A2FC9A6A64EEB41"
   },
   "remaining_blockers": [
-    "Locked prebuilt Skia libraries do not link with the available MSVC toolchain; use the accepted compatible clang-cl/MSVC ABI environment.",
-    "No manual Windows/Web physical observation was performed.",
-    "R1-2 complete 32-byte ink OrderKey preservation remains open; no unstable SceneRecord layout change was submitted.",
-    "Android remains explicitly deferred."
+    "No browser WebAssembly physical observation was performed.",
+    "Android remains explicitly deferred.",
+    "Independent Control Review and any Gate/P34 decision remain external."
   ],
   "official_gate_pass_claimed": false,
   "scope_preservation": [
@@ -41,7 +51,11 @@
     "out/p32-final-closure/scene-tests.log",
     "out/p32-final-closure/windows-surface-test.log",
     "D:/axreview/fc00x-20261017/third-handoff-code-review/reverify-ec1ee7e2/review.txt",
-    "D:/axreview/fc00x-20261017/third-handoff-code-review/reverify-ec1ee7e2/probe-output.log"
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/reverify-ec1ee7e2/probe-output.log",
+    "out/p32-full-msvc1951/post-sort-build.log",
+    "out/p32-full-msvc1951/post-sort-build.log (composition/windows/web/transform regression runs)",
+    "out/p32-scene-tests/final-build.log",
+    "out/p32-full-msvc1951/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe"
   ],
-  "status": "BLOCKED_ENVIRONMENT"
+  "status": "READY_FOR_CONTROL_REVIEW"
 }
