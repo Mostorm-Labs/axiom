@@ -22,8 +22,14 @@ int main() {
   assert(composition.ownerPump());
   assert(composition.readback().pendingNotifications == 0U);
   assert(composition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(7U)).has_value());
+  assert(composition.loseSurface());
+  assert(composition.state() == canvas::runtime::RuntimeCompositionState::kLost);
+  assert(!composition.notifyResource(canvas::foundation::ObjectId::fromUint64(7U)));
+  assert(composition.rebindSurface());
+  assert(composition.state() == canvas::runtime::RuntimeCompositionState::kReady);
   assert(composition.stop());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kQuiescent);
+  assert(composition.detach());
   assert(composition.close());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kClosed);
   return 0;

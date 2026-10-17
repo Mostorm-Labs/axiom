@@ -3,7 +3,7 @@
 namespace canvas::web_demo {
 
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
-    : lifecycle_(initial), presentation_(lifecycle_) {}
+    : lifecycle_(initial), presentation_(lifecycle_) { (void)composition_.open(); (void)composition_.bindSurface(initial.metrics.physicalWidth, initial.metrics.physicalHeight); }
 
 WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replacement) {
     const auto before = lifecycle_.current();

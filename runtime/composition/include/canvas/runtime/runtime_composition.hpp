@@ -52,9 +52,12 @@ class RuntimeComposition final {
                                      std::vector<std::uint8_t> bytes) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
   [[nodiscard]] bool requestCanonicalFrame(std::uint64_t frameId) noexcept;
+  [[nodiscard]] bool loseSurface() noexcept;
+  [[nodiscard]] bool rebindSurface() noexcept;
   [[nodiscard]] bool receivePlatformPresented(
       const render::PresentedFeedback& feedback) noexcept;
   [[nodiscard]] bool stop() noexcept;
+  [[nodiscard]] bool detach() noexcept;
   [[nodiscard]] bool close() noexcept;
   [[nodiscard]] RuntimeCompositionReceipt readback() const noexcept;
   [[nodiscard]] RuntimeCompositionState state() const noexcept { return state_; }

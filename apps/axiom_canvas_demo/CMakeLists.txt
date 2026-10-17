@@ -5,7 +5,8 @@ add_library(axiom_canvas_demo_common STATIC
     platform/web/web_surface_host.cpp)
 target_include_directories(axiom_canvas_demo_common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_canvas_demo_common PUBLIC
-    canvas_runtime_foundation canvas_runtime_scene canvas_runtime_render)
+    canvas_runtime_foundation canvas_runtime_scene canvas_runtime_render
+    canvas_runtime_composition)
 target_compile_features(axiom_canvas_demo_common PUBLIC cxx_std_20)
 
 if(MSVC)

@@ -41,6 +41,7 @@ WindowsCanonicalSurfaceHost::~WindowsCanonicalSurfaceHost() {
 bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
                                              std::uint32_t height,
                                              std::string* error) {
+    if (!composition_.open()) { if (error) *error = "Runtime composition open failed"; return false; }
     if (width == 0U || height == 0U || error == nullptr) {
         if (error != nullptr) *error = "invalid Windows surface dimensions";
         return false;
@@ -75,6 +76,7 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
         render::MetricsGeneration{1}, metrics});
     observation_.surfaceGeneration = 1;
     observation_.metricsGeneration = 1;
+    if (!composition_.bindSurface(width, height)) { if (error) *error = "Runtime composition surface bind failed"; return false; }
     return true;
 }
 

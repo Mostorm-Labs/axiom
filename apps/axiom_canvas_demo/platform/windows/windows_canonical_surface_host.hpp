@@ -4,6 +4,7 @@
 
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_backend.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
 
 #include <cstdint>
 #include <string>
@@ -39,6 +40,7 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] bool submit(render::IRenderBackend& backend,
                                const render::FramePlan& plan,
                                std::string* error);
+    [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
     [[nodiscard]] const WindowsSmokeObservation& observation() const noexcept {
         return observation_;
     }
@@ -48,6 +50,7 @@ class WindowsCanonicalSurfaceHost final {
     Impl* impl_ = nullptr;
     WindowsSmokeObservation observation_{};
     WindowsSurfaceAdapter* surface_ = nullptr;
+    runtime::RuntimeComposition composition_;
 };
 
 } // namespace canvas::windows_demo

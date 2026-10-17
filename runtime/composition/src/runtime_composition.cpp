@@ -65,7 +65,26 @@ bool RuntimeComposition::ownerPump() noexcept {
 }
 bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept { return canMutate() && runtime_->presentCanonicalFrame(frameId, 0.0, false); }
 bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept { return canMutate() && runtime_->receivePlatformPresented(feedback); }
+bool RuntimeComposition::loseSurface() noexcept {
+  if (state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;
+  resources_.invalidate();
+  notifications_.clear();
+  return transition(RuntimeCompositionState::kLost);
+}
+bool RuntimeComposition::rebindSurface() noexcept {
+  if (state_ != RuntimeCompositionState::kLost) return false;
+  const auto& surface = runtime_->surface();
+  if (!runtime_->rebindSurface() && !surface.available) return false;
+  ++providerEpoch_;
+  return transition(RuntimeCompositionState::kReady);
+}
 bool RuntimeComposition::stop() noexcept { if (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost) return false; resources_.invalidate(); notifications_.clear(); runtime_->cancelAllPointers(); return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent); }
+bool RuntimeComposition::detach() noexcept {
+  if (state_ != RuntimeCompositionState::kQuiescent) return false;
+  resources_.invalidate();
+  notifications_.clear();
+  return true;
+}
 bool RuntimeComposition::close() noexcept { if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 RuntimeCompositionReceipt RuntimeComposition::readback() const noexcept {
   const auto& runtime = *runtime_;
