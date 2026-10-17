@@ -898,7 +898,17 @@ bool renderCanonical(State& value) {
   // can see it.
   const auto accepted = value.host->presentCanonicalFrame(
       value.host->canonicalFrameCount() + 1U, 0.0,
-      value.activeKeys.empty() || value.host->pendingCanonicalHandoffCount() != 0U);
+      false);
+  bool qualified = false;
+  if (accepted) {
+    const auto submitted = value.host->lastSubmittedCanonicalFrame();
+    if (submitted.has_value()) {
+      qualified = value.host->receivePlatformPresented(canvas::render::PresentedFeedback{
+          submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
+          submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
+          canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt});
+    }
+  }
   if (value.pointerDiagnostic) {
     value.pointerDiagnostic << "canonical-present accepted=" << accepted
         << " provider-generation="
@@ -910,7 +920,7 @@ bool renderCanonical(State& value) {
   // CanonicalVisible receipt has retired.  Only clear that gate after the
   // host reports no pending handoffs; otherwise an in-flight worker
   // completion can make the just-retired overlay visible again.
-  if (accepted && value.host->pendingCanonicalHandoffCount() == 0U) {
+  if (qualified && value.host->pendingCanonicalHandoffCount() == 0U) {
     value.canonicalPending = false;
     value.canonicalRetryCount = 0U;
   }

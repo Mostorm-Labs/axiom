@@ -48,6 +48,10 @@ else()
 endif()
 
 if(BUILD_TESTING)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME F08FrameQualificationBoundary
+        COMMAND "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/f08_frame_qualification_boundary_test.py")
     add_executable(axiom_interaction_session_tests
         tests/session_manager_test.cpp)
     target_link_libraries(axiom_interaction_session_tests PRIVATE canvas_runtime_interaction)

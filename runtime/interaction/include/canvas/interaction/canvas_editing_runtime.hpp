@@ -427,6 +427,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
                                            double frameMs,
                                            bool retirePreview = true) noexcept;
+  // Platform execution feedback is an explicit boundary.  A renderer/provider
+  // submission only proves that work was accepted by the local backend; it
+  // cannot qualify a frame as physically presented or retire a preview.  The
+  // platform must call this seam with the exact frame and live generations
+  // after it has an independent PresentedFeedback observation.
+  [[nodiscard]] bool receivePlatformPresented(
+      const render::PresentedFeedback& feedback) noexcept;
+  [[nodiscard]] std::optional<render::RuntimeFrameIdentity>
+      lastSubmittedCanonicalFrame() const noexcept;
   [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId) noexcept;
   [[nodiscard]] bool retryTransientOverlayFrame() noexcept;
   [[nodiscard]] bool clearTransientOverlay() noexcept;
@@ -602,6 +611,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   mutable std::mutex previewRenderMutex_;
   mutable std::mutex previewProviderMutex_;
   std::uint64_t canonicalFrameCount_ = 0;
+  std::optional<render::RuntimeFrameIdentity> lastSubmittedCanonicalFrame_;
+  std::unique_ptr<render::FrameState> lastSubmittedCanonicalFrameState_;
   bool canonicalPresentationDirty_ = false;
   bool transientOverlayDirty_ = false;
   // A completed creation/selection gesture keeps its last transient frame

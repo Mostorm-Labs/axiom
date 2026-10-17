@@ -360,6 +360,13 @@ bool renderDebugUi(Handle value) {
 
 bool initBrushes(Handle handle) { (void)handle; return true; }
 
+bool submitCanonicalForWeb(Host& target) {
+  // WebGL submission is not a presentation proof. The browser must provide a
+  // later, generation-matched PresentedFeedback observation before Runtime can
+  // qualify or retire a preview.
+  return target.presentCanonicalFrame(target.canonicalFrameCount() + 1U, 0.0, false);
+}
+
 int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointer,
                         std::uint64_t sequence, std::uint64_t timestampNs,
                         float x, float y, float pressure, int phase, int family,
@@ -399,7 +406,7 @@ extern "C" {
 EMSCRIPTEN_KEEPALIVE int axiom_ink_text_scenario(std::uint32_t value,const char* name,std::uint32_t count) {
   auto* target=host(value);
   if(!target || !name || !target->configureBundledTextResources() || !target->seedTextScenario(name,count)) return 0;
-  return target->presentCanonicalFrame(target->canonicalFrameCount()+1,0,false)?1:0;
+  return submitCanonicalForWeb(*target) ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_text_action(std::uint32_t value,const char* action) {
   auto* target=host(value); if(!target || !action) return 0;
@@ -407,7 +414,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_text_action(std::uint32_t value,const char* a
   const bool applied=kind=="missing"?target->setTextFontsAvailable(false):
       kind=="ready"?target->setTextFontsAvailable(true):kind=="transform"?target->transformTextScenario(0):
       target->applyTextScenarioEdit(0,kind);
-  return applied && target->presentCanonicalFrame(target->canonicalFrameCount()+1,0,false)?1:0;
+  return applied && submitCanonicalForWeb(*target) ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE const char* axiom_ink_text_metrics(std::uint32_t value) {
   static std::string json;
@@ -816,6 +823,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_surface(
   if (!provider || !provider->ready()) return 0;
   state.renderer = std::make_unique<canvas::render::SkiaRenderer>();
   if (!host(value)->registerSurfaceProvider("webgl-window", std::move(provider))) return 0;
+  host(value)->setPlatformPresentationDeferred(true);
 #endif
   return 1;
 }

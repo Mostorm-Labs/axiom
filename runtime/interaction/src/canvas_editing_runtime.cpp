@@ -2804,35 +2804,70 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   }
   const auto trackerSubmit = tracker_->submit(frame);
   if (trackerSubmit != render::PresentFeedbackDisposition::kSubmitted) { AXIOM_ANDROID_DIAG("present tracker submit failed code=%d framegen=%llu livegen=%llu metrics=%ux%u", static_cast<int>(trackerSubmit), static_cast<unsigned long long>(frame.surfaceGeneration.value()), static_cast<unsigned long long>(lifecycle_->current().surfaceGeneration.value()), frame.metrics.physicalWidth, frame.metrics.physicalHeight); return false; }
-  const auto feedback = tracker_->receive(render::PresentedFeedback{
-      frame.viewId, frame.frameId, frame.surfaceGeneration, frame.metricsGeneration,
-      render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified,
-      std::nullopt});
-  if (feedback != render::PresentFeedbackDisposition::kPresented) { AXIOM_ANDROID_DIAG("present feedback failed"); return false; }
-  if (frameCoordinator_.receive({canonicalCapture.identity, render::FrameRole::kCanonical,
-                                 true, render::RuntimePresentEvidence::kPlatformQualified}) !=
-      render::RuntimeFrameDisposition::kAccepted) {
-    AXIOM_ANDROID_DIAG("frame coordinator rejected canonical feedback");
-    return false;
-  }
-  recordPresentation("canonical-presented-platform-qualified", 0U, frameMs);
-  presentedSemanticGeneration_ = frame.sceneGeneration;
-  presentedSurfaceGeneration_ = frame.surfaceGeneration;
-  presentedMetricsGeneration_ = frame.metricsGeneration;
+  // The renderer/provider submission is intentionally only a local submit
+  // observation.  Physical presentation is reported later by the platform
+  // through receivePlatformPresented(), with the exact frame identity and
+  // independent PresentedFeedback evidence.  Keep the submitted frame bound
+  // so stale or unrelated feedback cannot qualify it.
+  lastSubmittedCanonicalFrame_ = canonicalCapture.identity;
+  lastSubmittedCanonicalFrameState_ = std::make_unique<render::FrameState>(frame);
+  recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
-  if (retirePreview && semanticObjects_.size() != 0U) {
+  // `retirePreview` remains source-compatible for existing callers, but it is
+  // intentionally ignored here.  RuntimeFrameCoordinator can only qualify a
+  // handoff after receivePlatformPresented() supplies matching platform facts.
+  (void)retirePreview;
+  return true;
+}
+
+std::optional<render::RuntimeFrameIdentity>
+CanvasEditingRuntime::lastSubmittedCanonicalFrame() const noexcept {
+  return lastSubmittedCanonicalFrame_;
+}
+
+bool CanvasEditingRuntime::receivePlatformPresented(
+    const render::PresentedFeedback& feedback) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || lifecycle_ == nullptr ||
+      tracker_ == nullptr || frameCoordinator_.capture(render::FrameRole::kCanonical) == nullptr ||
+      !lastSubmittedCanonicalFrame_.has_value()) {
+    return false;
+  }
+  const auto& identity = *lastSubmittedCanonicalFrame_;
+  if (feedback.viewId != identity.viewId || feedback.frameId != identity.frameId ||
+      feedback.surfaceGeneration != identity.surfaceGeneration ||
+      feedback.metricsGeneration != identity.metricsGeneration) {
+    return false;
+  }
+  if (tracker_->receive(feedback) != render::PresentFeedbackDisposition::kPresented) {
+    return false;
+  }
+  if (frameCoordinator_.receive({identity, render::FrameRole::kCanonical, true,
+                                 render::RuntimePresentEvidence::kPlatformQualified}) !=
+      render::RuntimeFrameDisposition::kAccepted) {
+    return false;
+  }
+  const auto* capture = frameCoordinator_.capture(render::FrameRole::kCanonical);
+  if (capture == nullptr) return false;
+  const auto canonical = capture->identity;
+  recordPresentation("canonical-presented-platform-qualified", pendingCanonicalIdentities_.size(), 0.0);
+  presentedSemanticGeneration_ = semantic::SemanticGeneration{canonical.sceneGeneration};
+  presentedSurfaceGeneration_ = canonical.surfaceGeneration;
+  presentedMetricsGeneration_ = canonical.metricsGeneration;
+  const bool retire = frameCoordinator_.retirePreview(canonical);
+  if (retire && semanticObjects_.size() != 0U) {
     std::lock_guard providerLock(previewProviderMutex_);
     std::lock_guard previewLock(previewStateMutex_);
     if (previewController_ != nullptr && previewController_->active()) {
       std::vector<std::uint64_t> retired;
-      for (const auto& [pointer, identity] : pendingCanonicalIdentities_) {
+      for (const auto& [pointer, handoffIdentity] : pendingCanonicalIdentities_) {
         if (canonicalVisibilitySink_ != nullptr) {
-          const auto handoff = canonicalVisibilitySink_->canonicalVisible(identity, frame);
+          const auto handoff = canonicalVisibilitySink_->canonicalVisible(
+              handoffIdentity, *lastSubmittedCanonicalFrameState_);
           if (handoff == ink::HandoffResult::kRejected) return false;
           if (handoff != ink::HandoffResult::kAccepted) continue;
         }
-        if (!previewController_->retireSession(identity.session,
+        if (!previewController_->retireSession(handoffIdentity.session,
                                                previewProvider_->generation())) {
           return false;
         }
@@ -2847,9 +2882,11 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // create a brush/ARC handoff identity. Retire their last transient frame
   // only after this canonical frame has been accepted, so the compositor
   // never exposes the old canonical position between pointer-up and redraw.
-  if (retirePreview && !selectionTransformActive() && !creationActive()) {
+  if (retire && !selectionTransformActive() && !creationActive()) {
     (void)clearTransientOverlay();
   }
+  lastSubmittedCanonicalFrame_.reset();
+  lastSubmittedCanonicalFrameState_.reset();
   return true;
 }
 

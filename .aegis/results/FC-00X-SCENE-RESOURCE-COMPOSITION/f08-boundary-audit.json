@@ -1,0 +1,42 @@
+{
+  "schema": "fc00x-f08-boundary-audit-v0.1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "upstream_issue": "F08",
+  "classification": "IMPLEMENTATION_REPAIRED_PENDING_CONTROL_REVIEW",
+  "old_behavior": {
+    "status": "RED",
+    "oracle": "runtime/interaction/tests/f08_frame_qualification_boundary_test.py",
+    "observed": [
+      "CanvasEditingRuntime synthesized Presented + PlatformQualified after local renderer/provider acceptance",
+      "Windows supplied retirePreview eligibility from host input state",
+      "No explicit platform-presented ingress existed"
+    ]
+  },
+  "repaired_behavior": {
+    "status": "GREEN",
+    "observed": [
+      "presentCanonicalFrame records submission only",
+      "receivePlatformPresented requires exact frame/view/surface/metrics identity",
+      "RuntimeFrameCoordinator owns qualification and preview retirement",
+      "Windows submits explicit matching platform feedback and no longer decides retirePreview",
+      "Web bridge records submission only; browser feedback remains an explicit later ingress"
+    ],
+    "source_refs": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "apps/ink_playground/platform/windows/main.cpp",
+      "apps/ink_playground/platform/web/bridge.cpp"
+    ],
+    "oracle_ref": "apps/ink_playground/tests/f08_frame_qualification_test.cpp"
+  },
+  "verification": {
+    "F08FrameQualification": "PASS",
+    "FC00XFrameCoordinator": "PASS",
+    "G3SurfacePresentation": "PASS",
+    "G4InkPlaygroundComposition": "PASS",
+    "scope_diff_check": "PENDING_FINAL_COMMIT"
+  },
+  "platform_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "official_gate_pass_claimed": false
+}
