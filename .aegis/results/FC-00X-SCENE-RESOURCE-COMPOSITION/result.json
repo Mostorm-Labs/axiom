@@ -1,0 +1,52 @@
+{
+  "schema": "fc00x-scene-resource-composition-result-v0.6",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "starting_revision": "b3e0209033eb3146a77eae506ee25c45c2ec3876",
+  "observed_revision": "b3e0209033eb3146a77eae506ee25c45c2ec3876",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
+  "completed_preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "R2 authority binding PASS",
+    "Composition RED baseline expected RED",
+    "Scope audit with no product composition mutation"
+  ],
+  "blocked_preflight": "SCENE-UPSTREAM-DEPENDENCY-AUDIT",
+  "blocking_defect": {
+    "classification": "IMPLEMENTATION_DEFECT",
+    "owner": "upstream interaction/frame/platform boundary",
+    "id": "F08",
+    "failure_mode": "Runtime and Windows call path promote accepted renderer/provider submission to PlatformQualified and use host-owned retirePreview eligibility.",
+    "impact": "Preview can retire or be reported as physically qualified without independent platform execution evidence; stale/not-yet-visible content may be handed off.",
+    "evidence_refs": [
+      ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/upstream-dependency-audit.json",
+      "runtime/interaction/src/canvas_editing_runtime.cpp:2809-2814",
+      "runtime/render/src/skia_surface_provider.cpp:present",
+      "apps/ink_playground/platform/windows/main.cpp:899-901"
+    ],
+    "required_next_action": "Repair F08 in the upstream interaction/frame/platform owner task, rerun F08 and protected frame regressions, then resume this package from R0 without replaying completed P31 binding."
+  },
+  "tests": {
+    "current_revision_frame_coordinator": "PASS",
+    "current_revision_runtime_app_binding": "PASS",
+    "skia_headless_build": "BLOCKED_BY_EXISTING_TEST_WARNING_C4244_IN_HEADLESS_CANVAS_DEMO_TEST",
+    "composition_tests": "NOT_RUN_PRODUCTION_MUTATION_STOPPED"
+  },
+  "evidence_input_refs": [
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/implementation-design-preflight.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/upstream-dependency-audit.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/red-preflight.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/scope-audit.json"
+  ],
+  "product_mutation_performed": false,
+  "official_gate_pass_claimed": false,
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "next_surface": "CONTROL_REVIEW",
+  "continue_execution": false
+}
