@@ -156,6 +156,18 @@ int main() {
   assert(independent.publishResource(*tokenA, {0x01U}));
   assert(independent.publishResource(*tokenB, {0x01U}));
 
+  // Raw Runtime ingress must honor the same Lost fence as Composition::submit.
+  canvas::runtime::RuntimeComposition lostRaw;
+  assert(lostRaw.open());
+  assert(lostRaw.bindSurface(256U, 256U));
+  assert(lostRaw.registerSource(17U));
+  assert(lostRaw.loseSurface());
+  canvas::input::PlatformPointerBatch lostBatch;
+  lostBatch.samples.push_back({17U, 1U, 1U, 1'000U, 10.0F, 10.0F, 0.5F, 0.0F, 0.0F,
+                               {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                               canvas::input::PointerPhase::kDown});
+  assert(!lostRaw.runtime().acceptPlatformBatch(lostBatch, 1'000U));
+
   assert(composition.loseSurface());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kLost);
   assert(!composition.notifyResource(canvas::foundation::ObjectId::fromUint64(7U)));

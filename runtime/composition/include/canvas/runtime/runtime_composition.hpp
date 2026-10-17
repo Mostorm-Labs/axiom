@@ -88,6 +88,7 @@ class RuntimeComposition final {
   };
   bool canMutate() const noexcept;
   bool transition(RuntimeCompositionState next) noexcept;
+  bool refreshManifestDerivedState() noexcept;
 
   std::unique_ptr<interaction::CanvasEditingRuntime> runtime_;
   RuntimeCompositionState state_ = RuntimeCompositionState::kCreated;

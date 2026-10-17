@@ -76,6 +76,19 @@ bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height
   if (!canMutate() || width == 0U || height == 0U) return false;
   return runtime_->resizeSurface(width, height);
 }
+bool RuntimeComposition::refreshManifestDerivedState() noexcept {
+  if (textLayoutService_ != nullptr) {
+    textLayoutService_->clearFonts();
+    for (const auto& entry : resources_.manifest.entries) {
+      if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
+      textLayoutService_->registerFont({entry.resource_id,
+                                        entry.content_hash.substr(7U),
+                                        fontCollectionIndex(entry.metadata)});
+    }
+  }
+  runtime_->bindResourceManifest(&resources_.manifest);
+  return runtime_->refreshResourceDerivedState();
+}
 bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest, std::uint64_t binding) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   const auto previous = resources_.manifest;
@@ -94,17 +107,7 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
     if (resources_.find(it->first) == nullptr) it = resourceReceipts_.erase(it);
     else ++it;
   }
-  if (textLayoutService_ != nullptr) {
-    textLayoutService_->clearFonts();
-    for (const auto& entry : resources_.manifest.entries) {
-      if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
-      textLayoutService_->registerFont({entry.resource_id,
-                                        entry.content_hash.substr(7U),
-                                        fontCollectionIndex(entry.metadata)});
-    }
-  }
-  runtime_->bindResourceManifest(&resources_.manifest);
-  (void)runtime_->refreshResourceDerivedState();
+  (void)refreshManifestDerivedState();
   lastResourceError_ = ResourcePortError::kNone;
   return true;
 }
@@ -128,7 +131,7 @@ semantic::ApplyResult RuntimeComposition::applyExternalOperation(
   const auto result = runtime_->applyExternalOperation(operation, source);
   if (result.disposition == semantic::ApplyDisposition::kApplied &&
       operation.kind() == semantic::OperationKind::kUpdateResourceManifest) {
-    runtime_->refreshResourceManifestServices();
+    (void)refreshManifestDerivedState();
   }
   return result;
 }

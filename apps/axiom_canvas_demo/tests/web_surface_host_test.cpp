@@ -112,10 +112,16 @@ void invalidReplacementHasNoRuntimeSideEffect() {
     WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
     const auto before = host.composition().runtime().surface();
     const auto lifecycleBefore = host.lifecycle().current();
-    auto invalid = lifecycleBefore;
-    invalid.surfaceGeneration = SurfaceGeneration{2};
-    invalid.metricsGeneration = MetricsGeneration{2};
-    invalid.metrics.devicePixelRatio = 0.0F;
+    auto invalid = SurfaceSnapshot{
+        lifecycleBefore.viewId,
+        SurfaceGeneration{2},
+        MetricsGeneration{2},
+        SurfaceMetrics{lifecycleBefore.metrics.logicalWidth,
+                       lifecycleBefore.metrics.logicalHeight,
+                       lifecycleBefore.metrics.physicalWidth,
+                       lifecycleBefore.metrics.physicalHeight,
+                       0.0F,
+                       lifecycleBefore.metrics.displayScale}};
     assert(host.bind(invalid) == WebSurfaceDisposition::kRejectedInvalid);
     const auto after = host.composition().runtime().surface();
     assert(after.generation == before.generation);

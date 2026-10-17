@@ -54,6 +54,17 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] bool paintCanonical(HDC dc, std::string* error);
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
     [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
+    [[nodiscard]] std::uint64_t nextCanonicalFrameId() noexcept {
+        const auto submitted = composition_.runtime().lastSubmittedCanonicalFrame();
+        const auto submittedNext = submitted.has_value() ? submitted->frameId.value() + 1U : 1U;
+        const auto countNext = composition_.runtime().canonicalFrameCount() + 1U;
+        if (nextFrameId_ < submittedNext) nextFrameId_ = submittedNext;
+        if (nextFrameId_ < countNext) nextFrameId_ = countNext;
+        return nextFrameId_++;
+    }
+    [[nodiscard]] bool releasingCaptureForPointerUp() const noexcept;
+    void beginPointerUpCaptureRelease() noexcept;
+    void endPointerUpCaptureRelease() noexcept;
     [[nodiscard]] const WindowsSmokeObservation& observation() const noexcept {
         return observation_;
     }

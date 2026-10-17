@@ -20,6 +20,7 @@
 #include <functional>
 #include <cstdio>
 #include <array>
+#include <iterator>
 #include <unordered_set>
 #include <unordered_map>
 #include <chrono>
@@ -149,11 +150,7 @@ bool isInkKind(semantic::ObjectKind kind) noexcept {
 }
 
 canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
-  if (!isInkKind(record.kind)) return canvas::SceneOrderKey(record.placement.order_key.bytes());
-  std::vector<std::uint8_t> key{0xFFU, 0xFFU};
-  const auto canonical = record.placement.order_key.bytes();
-  key.insert(key.end(), canonical.begin(), canonical.end());
-  return canvas::SceneOrderKey(std::move(key));
+  return canvas::SceneOrderKey(record.placement.order_key.bytes());
 }
 }
 class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
@@ -164,14 +161,21 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
     canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
     result.records.reserve(projection.value().records.size());
-    std::unordered_map<std::uint32_t, foundation::ObjectId> renderSlots;
-    std::unordered_map<std::uint32_t, foundation::ObjectId> hitSlots;
-    const auto allocateSlot = [](auto& slots, std::uint32_t candidate,
+    std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> activeIds;
+    activeIds.reserve(projection.value().records.size());
+    for (const auto& record : projection.value().records) activeIds.insert(record.objectId);
+    for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
+      it = activeIds.contains(it->first) ? std::next(it) : renderSlots_.erase(it);
+    }
+    for (auto it = hitSlots_.begin(); it != hitSlots_.end();) {
+      it = activeIds.contains(it->first) ? std::next(it) : hitSlots_.erase(it);
+    }
+    const auto allocateSlot = [](auto& slots, auto& used, std::uint32_t candidate,
                                  foundation::ObjectId id) {
+      if (const auto existing = slots.find(id); existing != slots.end()) return existing->second;
       for (;;) {
-        const auto found = slots.find(candidate);
-        if (found == slots.end() || found->second == id) {
-          slots[candidate] = id;
+        if (used.insert(candidate).second) {
+          slots.emplace(id, candidate);
           return candidate;
         }
         ++candidate;
@@ -196,8 +200,8 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
       const auto generation = sceneContentGeneration(record);
       const auto order = renderOrderKey(record);
-      const auto renderSlot = allocateSlot(renderSlots, static_cast<std::uint32_t>(slot), record.objectId);
-      const auto hitSlot = allocateSlot(hitSlots,
+      const auto renderSlot = allocateSlot(renderSlots_, renderSlotsUsed_, static_cast<std::uint32_t>(slot), record.objectId);
+      const auto hitSlot = allocateSlot(hitSlots_, hitSlotsUsed_,
           static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), record.objectId);
       result.records.push_back({record.objectId, canvas::SceneOrderKey(order.bytes()), kind, flags,
                                 record.worldBounds, canvas::ContentRevision(generation),
@@ -214,6 +218,13 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     return foundation::Result<canvas::CompiledSceneDelta>::failure(
         {foundation::ErrorCode::kRequiresFullRebuild, "editor scene changes use the shared full projection"});
   }
+ private:
+  mutable std::unordered_map<foundation::ObjectId, std::uint32_t,
+                             foundation::ObjectIdHash> renderSlots_;
+  mutable std::unordered_map<foundation::ObjectId, std::uint32_t,
+                             foundation::ObjectIdHash> hitSlots_;
+  mutable std::unordered_set<std::uint32_t> renderSlotsUsed_;
+  mutable std::unordered_set<std::uint32_t> hitSlotsUsed_;
 };
 }  // namespace canvas::interaction
 
@@ -310,13 +321,14 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
                {1.0F, 1.0F, 1U, 1U, 1.0F, 1.0F},
                {false, false, false, true, false, false}},
               std::make_unique<render::RasterSkiaSurfaceProvider>()})),
+      viewId_(viewId),
       runtimeSceneHost_(std::make_unique<canvas::Scene>(
           std::make_unique<canvas::DirectRenderScene>(),
           std::make_unique<canvas::UniformGridSpatialIndex>())),
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
       sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
-      history_(*this), viewId_(viewId), ownerThread_(std::this_thread::get_id()) {
+      history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
 }
 
@@ -330,9 +342,6 @@ void CanvasEditingRuntime::bindResourceServices(
 }
 
 void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
-  if (textLayoutService_ != nullptr) {
-    textLayoutService_->clearFonts();
-  }
   (void)refreshResourceDerivedState();
 }
 
@@ -609,7 +618,8 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
 
 bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
                                             std::uint64_t observationTimeNs) {
-  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ ||
+      publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
   const auto source = batch.samples.front().source;

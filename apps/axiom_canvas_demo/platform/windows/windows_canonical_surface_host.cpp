@@ -16,6 +16,7 @@ struct WindowsCanonicalSurfaceHost::Impl {
     HWND window = nullptr;
     std::uint32_t width = 0;
     std::uint32_t height = 0;
+    bool releasingCaptureForPointerUp = false;
 };
 
 namespace {
@@ -41,7 +42,7 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     if (message == WM_CAPTURECHANGED) {
         auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
             GetWindowLongPtrW(window, GWLP_USERDATA));
-        if (host != nullptr) {
+        if (host != nullptr && !host->releasingCaptureForPointerUp()) {
             host->composition().runtime().cancelAllPointers();
             InvalidateRect(window, nullptr, FALSE);
         }
@@ -58,7 +59,6 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
                 : message == WM_LBUTTONUP ? canvas::input::PointerPhase::kUp
                                            : canvas::input::PointerPhase::kMove;
             if (phase == canvas::input::PointerPhase::kDown) SetCapture(window);
-            if (phase == canvas::input::PointerPhase::kUp) ReleaseCapture();
             canvas::input::PlatformPointerBatch batch;
             const auto sequence = host->nextInputSequence();
             batch.samples.push_back({1U, 1U, sequence,
@@ -67,7 +67,12 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
                 static_cast<float>(static_cast<short>(HIWORD(lParam))), 0.5F, 0.0F, 0.0F,
                 {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent, phase});
             (void)host->composition().submit(batch);
-            (void)host->composition().requestCanonicalFrame(host->nextInputSequence());
+            (void)host->composition().requestCanonicalFrame(host->nextCanonicalFrameId());
+            if (phase == canvas::input::PointerPhase::kUp) {
+                host->beginPointerUpCaptureRelease();
+                ReleaseCapture();
+                host->endPointerUpCaptureRelease();
+            }
             InvalidateRect(window, nullptr, FALSE);
         }
     }
@@ -211,7 +216,7 @@ bool WindowsCanonicalSurfaceHost::resizeForWindow(std::uint32_t width,
     ++observation_.resizeEvents;
     observation_.surfaceGeneration = live.generation;
     observation_.metricsGeneration = live.generation;
-    if (!composition_.requestCanonicalFrame(nextFrameId_++)) {
+    if (!composition_.requestCanonicalFrame(nextCanonicalFrameId())) {
         *error = "Runtime composition resize did not request a canonical redraw";
         return false;
     }
@@ -335,10 +340,19 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
             return false;
         }
     }
-    if (!composition_.runtime().previewActive()) {
-        InvalidateRect(impl_->window, nullptr, FALSE);
-    }
     return true;
+}
+
+bool WindowsCanonicalSurfaceHost::releasingCaptureForPointerUp() const noexcept {
+    return impl_ != nullptr && impl_->releasingCaptureForPointerUp;
+}
+
+void WindowsCanonicalSurfaceHost::beginPointerUpCaptureRelease() noexcept {
+    if (impl_ != nullptr) impl_->releasingCaptureForPointerUp = true;
+}
+
+void WindowsCanonicalSurfaceHost::endPointerUpCaptureRelease() noexcept {
+    if (impl_ != nullptr) impl_->releasingCaptureForPointerUp = false;
 }
 
 } // namespace canvas::windows_demo
