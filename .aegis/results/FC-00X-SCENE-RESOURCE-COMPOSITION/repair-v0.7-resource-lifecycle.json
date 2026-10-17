@@ -1,0 +1,30 @@
+{
+  "schema": "fc00x-scene-composition-repair-v0.7",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "source_revision": "3a5967b4",
+  "classification": "PARTIAL_REPAIR",
+  "fixed": [
+    "publishResource rejects a full notification queue before mutating provider bytes",
+    "resource notifications capture the exact binding token and duplicate notifications are coalesced",
+    "resource binding lifetime generation is monotonic across rebind",
+    "manifest rebind removes receipts for resources no longer present",
+    "resource receipt readback returns no stale receipt for a removed manifest entry",
+    "resource completion is owner-thread constrained and exposes a classified error",
+    "RuntimeComposition closes the owned CanvasEditingRuntime and post-close editing is rejected"
+  ],
+  "verification": {
+    "FC00XRuntimeComposition": "PASS",
+    "F08FrameQualification": "PASS",
+    "scene_composition_oracle": "PASS",
+    "resource_manifest_authority_oracle": "PASS",
+    "diff_check": "PASS"
+  },
+  "remaining_blockers": [
+    "F1: Windows/Web Minimal consumers still lack a sustained real editing loop",
+    "F2: CanvasEditingRuntime still contains the legacy private Scene compiler path",
+    "F3/F4: resource bytes are not yet wired through image/text producers and full downstream refresh",
+    "F6: brush canonical handoff retirement remains open"
+  ],
+  "android": "DEFERRED_NOT_BLOCKING",
+  "official_gate_pass_claimed": false
+}
