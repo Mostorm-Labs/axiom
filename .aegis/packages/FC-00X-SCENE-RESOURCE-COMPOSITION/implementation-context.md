@@ -122,4 +122,3 @@ At the bound implementation revision `4bef9d6e222d156a79a8358f7d88908a48e39f67` 
 - Acceptance: `repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680`
 - Acceptance SHA-256: `b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1`
 - Product implementation at anchor: present at 4bef9d6e222d156a79a8358f7d88908a48e39f67 (materialized 601304425870ceb5715ae34a6da3b6ef1dfdd7e5); this is an execution precondition, not a license to add semantic fields in this package.
-
