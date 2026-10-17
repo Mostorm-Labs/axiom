@@ -45,6 +45,9 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] bool resizeForSmoke(std::uint32_t width,
                                       std::uint32_t height,
                                       std::string* error);
+    [[nodiscard]] bool resizeForWindow(std::uint32_t width,
+                                       std::uint32_t height,
+                                       std::string* error);
     [[nodiscard]] bool submit(render::IRenderBackend& backend,
                                const render::FramePlan& plan,
                                std::string* error);
@@ -63,6 +66,7 @@ class WindowsCanonicalSurfaceHost final {
     runtime::RuntimeComposition composition_;
     std::atomic<std::uint64_t> inputSequence_{0};
     std::uint64_t nextFrameId_ = 1;
+    std::uint64_t lastPresentedFrame_ = 0;
 };
 
 } // namespace canvas::windows_demo

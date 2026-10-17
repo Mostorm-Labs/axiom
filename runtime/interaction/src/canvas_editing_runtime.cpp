@@ -268,14 +268,14 @@ canvas::foundation::WorldRect viewBounds(
 
 namespace canvas::interaction {
 
-CanvasEditingRuntime::CanvasEditingRuntime()
+CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
     : input_(std::make_unique<input::InputRouter>()),
       ink_(std::make_unique<ink::InkEngine>(ink::BrushDescriptor{1.0F})),
       preview_(std::make_unique<ink::PreviewModel>()),
       interaction_(std::make_unique<interaction::InteractionRuntime>(
           *this, *this, *this, *this, *this)),
       lifecycle_(std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-          render::ViewId{1}, render::SurfaceGeneration{1},
+          viewId, render::SurfaceGeneration{1},
           render::MetricsGeneration{1},
           render::SurfaceMetrics{1.0F, 1.0F, 1, 1, 1.0F, 1.0F}})),
       tracker_(std::make_unique<render::PresentationTracker>(*lifecycle_)),
@@ -283,7 +283,7 @@ CanvasEditingRuntime::CanvasEditingRuntime()
       dispatchRuntime_(*this),
       viewportController_(std::make_unique<interaction::ViewportInteractionController>()),
       appBinding_(std::make_unique<render::RuntimeAppBinding>(
-          render::ViewId{1}, render::SurfaceProfile{
+          viewId, render::SurfaceProfile{
               {"cpu-raster", render::RenderTargetKind::kCpuRaster,
                render::RenderTargetBackend::kRaster,
                render::RenderTargetFormat::kRgba8888,
@@ -296,7 +296,7 @@ CanvasEditingRuntime::CanvasEditingRuntime()
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
       sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
-      history_(*this), ownerThread_(std::this_thread::get_id()) {
+      history_(*this), ownerThread_(std::this_thread::get_id()), viewId_(viewId) {
   appBinding_->setSessionCancelSink(this);
 }
 
@@ -1327,7 +1327,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       (static_cast<float>(surface_.width) * 0.5F - viewport.translationX) / zoom,
       (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
   const auto frame = render::FrameState{
-      render::ViewId{1},
+      viewId_,
       render::CameraState{center, zoom, 0.0F,
                           render::CameraGeneration{cameraGeneration()}},
       foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
@@ -2589,7 +2589,7 @@ bool CanvasEditingRuntime::bindSurface(std::uint32_t width,
   }
   surface_ = SurfaceBinding{appBinding_->surfaces().lifecycle().current().surfaceGeneration.value(), width, height, true};
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      render::ViewId{1}, render::SurfaceGeneration{surface_.generation},
+      viewId_, render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
       render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
                              width, height, 1.0F, 1.0F}});
@@ -2638,7 +2638,7 @@ bool CanvasEditingRuntime::resizeSurface(std::uint32_t width,
   surface_.height = height;
   surface_.available = true;
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      render::ViewId{1}, render::SurfaceGeneration{surface_.generation},
+      viewId_, render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
       render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
                              width, height, 1.0F, 1.0F}});
@@ -2669,7 +2669,7 @@ bool CanvasEditingRuntime::loseSurface() noexcept {
   if (appBinding_->markPreviewSurfaceLost() != render::SurfaceProviderDisposition::kCommitted) {
     return false;
   }
-  (void)lifecycle_->markLost(render::ViewId{1});
+  (void)lifecycle_->markLost(viewId_);
   ++surfaceLostEvents_;
   return true;
 }
@@ -2719,7 +2719,7 @@ bool CanvasEditingRuntime::registerSurfaceProvider(
   surface_.height = appBinding_->surfaces().activeInfo().metrics.physicalHeight;
   surface_.available = true;
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      render::ViewId{1}, render::SurfaceGeneration{surface_.generation},
+      viewId_, render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
       appBinding_->surfaces().activeInfo().metrics});
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
@@ -2853,7 +2853,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
   }
   const render::FrameState frame{
-      render::ViewId{1},
+      viewId_,
       render::CameraState{foundation::WorldPoint{
                               (centerX - viewport.translationX) / zoom,
                               (centerY - viewport.translationY) / zoom},
@@ -3101,7 +3101,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
   }
   const render::FrameState frame{
-      render::ViewId{1},
+      viewId_,
       render::CameraState{foundation::WorldPoint{
                               (centerX - viewport.translationX) / zoom,
                               (centerY - viewport.translationY) / zoom},

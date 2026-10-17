@@ -134,7 +134,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
-  CanvasEditingRuntime();
+  explicit CanvasEditingRuntime(render::ViewId viewId = render::ViewId{1});
   virtual ~CanvasEditingRuntime() = default;
   void close() noexcept;
   [[nodiscard]] bool closed() const noexcept { return closed_; }
@@ -552,6 +552,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   interaction::InteractionDispatchRuntime dispatchRuntime_;
   std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
   std::unique_ptr<render::RuntimeAppBinding> appBinding_;
+  render::ViewId viewId_{render::ViewId{1}};
   render::SkiaSurfaceProvider* previewProvider_ = nullptr;
   std::unique_ptr<render::PreviewSurfaceController> previewController_;
   std::unordered_map<std::uint64_t, std::unique_ptr<ink::BrushSession>> brushSessions_;

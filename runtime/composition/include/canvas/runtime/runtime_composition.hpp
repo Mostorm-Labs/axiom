@@ -41,7 +41,7 @@ struct RuntimeCompositionReceipt final {
 
 class RuntimeComposition final {
  public:
-  RuntimeComposition();
+  explicit RuntimeComposition(render::ViewId viewId = render::ViewId{1});
   ~RuntimeComposition();
   RuntimeComposition(const RuntimeComposition&) = delete;
   RuntimeComposition& operator=(const RuntimeComposition&) = delete;
@@ -103,6 +103,7 @@ class RuntimeComposition final {
   std::unique_ptr<canvas::text::RichTextLayoutService> textLayoutService_;
   ResourcePortError lastResourceError_ = ResourcePortError::kNone;
   std::thread::id ownerThread_;
+  render::ViewId viewId_{render::ViewId{1}};
 };
 
 }  // namespace canvas::runtime

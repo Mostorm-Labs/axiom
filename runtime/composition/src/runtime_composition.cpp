@@ -43,12 +43,12 @@ int fontCollectionIndex(const std::vector<std::uint8_t>& metadata) noexcept {
 }
 }
 
-RuntimeComposition::RuntimeComposition()
-    : runtime_(std::make_unique<interaction::CanvasEditingRuntime>()),
+RuntimeComposition::RuntimeComposition(render::ViewId viewId)
+    : runtime_(std::make_unique<interaction::CanvasEditingRuntime>(viewId)),
       provider_(std::make_unique<MemoryResourceProvider>()),
       textLayoutService_(std::make_unique<canvas::text::RichTextLayoutService>(
           *provider_, canvas::text::LayoutContext{128.0F, 1U})),
-      ownerThread_(std::this_thread::get_id()) {
+      ownerThread_(std::this_thread::get_id()), viewId_(viewId) {
 #if defined(CANVAS_RENDER_HAS_SKIA)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif

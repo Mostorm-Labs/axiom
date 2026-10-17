@@ -3,7 +3,7 @@
 namespace canvas::web_demo {
 
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
-    : lifecycle_(initial), presentation_(lifecycle_) {
+    : lifecycle_(initial), presentation_(lifecycle_), composition_(initial.viewId) {
     (void)composition_.open();
     (void)composition_.bindSurface(initial.metrics.physicalWidth,
                                    initial.metrics.physicalHeight);
@@ -28,14 +28,35 @@ WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
 
 WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replacement) {
     const auto before = lifecycle_.current();
-    const auto result = lifecycle_.replace(replacement);
-    if (result == render::SurfaceLifecycleDisposition::kReplaced) {
-        const auto runtimeSurface = composition_.runtime().surface();
-        if (runtimeSurface.generation != replacement.surfaceGeneration.value() ||
-            runtimeSurface.width != replacement.metrics.physicalWidth ||
-            runtimeSurface.height != replacement.metrics.physicalHeight) {
+    if (replacement.viewId != before.viewId ||
+        replacement.surfaceGeneration.value() < before.surfaceGeneration.value() ||
+        replacement.metricsGeneration.value() < before.metricsGeneration.value()) {
+        return WebSurfaceDisposition::kRejectedStale;
+    }
+    auto runtimeSurface = composition_.runtime().surface();
+    if (!runtimeSurface.available ||
+        runtimeSurface.generation > replacement.surfaceGeneration.value()) {
+        return WebSurfaceDisposition::kRejectedStale;
+    }
+    while (runtimeSurface.generation < replacement.surfaceGeneration.value()) {
+        if (!composition_.resizeSurface(replacement.metrics.physicalWidth,
+                                        replacement.metrics.physicalHeight)) {
             return WebSurfaceDisposition::kRejectedStale;
         }
+        runtimeSurface = composition_.runtime().surface();
+    }
+    if (runtimeSurface.generation != replacement.surfaceGeneration.value() ||
+        runtimeSurface.width != replacement.metrics.physicalWidth ||
+        runtimeSurface.height != replacement.metrics.physicalHeight) {
+        return WebSurfaceDisposition::kRejectedStale;
+    }
+    if (replacement.surfaceGeneration == before.surfaceGeneration &&
+        replacement.metricsGeneration == before.metricsGeneration &&
+        replacement.metrics == before.metrics) {
+        return WebSurfaceDisposition::kRebound;
+    }
+    const auto result = lifecycle_.replace(replacement);
+    if (result == render::SurfaceLifecycleDisposition::kReplaced) {
         return WebSurfaceDisposition::kRebound;
     }
     if (result == render::SurfaceLifecycleDisposition::kStaleGeneration ||
@@ -81,6 +102,7 @@ render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::Presen
     auto runtimeFeedback = value;
     if (const auto submitted = composition_.runtime().lastSubmittedCanonicalFrame();
         submitted.has_value() && submitted->frameId == value.frameId) {
+        runtimeFeedback.viewId = submitted->viewId;
         runtimeFeedback.surfaceGeneration = submitted->surfaceGeneration;
         runtimeFeedback.metricsGeneration = submitted->metricsGeneration;
     }

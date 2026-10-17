@@ -1,8 +1,12 @@
 <!doctype html>
 <meta charset="utf-8">
 <title>Axiom G3-10 Web Reference Host</title>
-<style>#axiom-canvas { width: 320px; height: 180px; }</style>
-<canvas id="axiom-canvas" width="320" height="180"></canvas>
+<style>#axiom-canvas, #axiom-preview { width: 320px; height: 180px; }</style>
+<div style="position:relative;width:320px;height:180px">
+  <canvas id="axiom-canvas" width="320" height="180"></canvas>
+  <canvas id="axiom-preview" width="320" height="180"
+          style="position:absolute;inset:0;pointer-events:none"></canvas>
+</div>
 <script type="module">
   import createAxiomCanvasModule from "./axiom_canvas_demo_web.js";
   const canvas = document.getElementById("axiom-canvas");

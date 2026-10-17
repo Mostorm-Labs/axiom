@@ -50,6 +50,7 @@ FrameState frame(std::uint64_t id, std::uint64_t generation,
 
 void rejectsStaleSurfaceAndAcceptsFreshDprMetrics() {
     WebSurfaceHost host{surface(10, 20)};
+    assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
     assert(host.bind(surface(9, 20)) == WebSurfaceDisposition::kRejectedStale);
     assert(host.bind(surface(11, 21, metrics(1200U, 900U, 1.5F))) ==
            WebSurfaceDisposition::kRebound);
