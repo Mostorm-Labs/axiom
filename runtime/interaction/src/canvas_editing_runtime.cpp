@@ -88,12 +88,12 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       const auto bounds = canvas::computeBounds(record);
       if (!bounds.finite) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(
           {foundation::ErrorCode::kInvalidRecord, "non-finite brush scene bounds"});
-      std::uint64_t order = 0;
-      for (const auto byte : renderOrderKey(record).bytes()) order = (order << 8U) | byte;
       const auto flags = static_cast<canvas::SceneRecordFlags>(
           (propertyBool(record.properties, 1U, true) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kVisible) : 0U) |
           static_cast<std::uint32_t>(canvas::SceneRecordFlags::kHitTestable) |
           (propertyBool(record.properties, 2U, false) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kLocked) : 0U));
+      std::uint64_t order = 0;
+      for (const auto byte : renderOrderKey(record).bytes()) order = (order << 8U) | byte;
       result.records.push_back({record.id, canvas::SceneOrderKey(order), kind, flags,
                                 bounds.world, canvas::ContentRevision(record.kind_version),
                                 canvas::RenderPayloadRef{static_cast<std::uint32_t>(record.id.bytes[0]), record.kind_version},
@@ -104,31 +104,10 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
   }
   foundation::Result<canvas::CompiledSceneDelta> compileDelta(
       const semantic::SemanticReadView& view, const semantic::ChangeSet& changes) const override {
-    // Preserve the accepted full recovery for ink and interaction. Text-only
-    // changes use existing Scene mutation/spatial participants for locality.
-    for(const auto& change:changes.objects()) {
-      const auto* object=view.find(change.object_id);
-      if(!object || object->kind!=semantic::ObjectKind::kRichText)
-        return foundation::Result<canvas::CompiledSceneDelta>::failure(
-          {foundation::ErrorCode::kRequiresFullRebuild,"non-text editor change uses full recovery"});
-    }
-    canvas::CompiledSceneDelta delta{scene_.revision(),canvas::SceneRevision(scene_.revision().value()+1),{},std::nullopt};
-    const auto published=scene_.read();
-    for(const auto& change:changes.objects()) {
-      const auto* object=view.find(change.object_id);
-      const auto* before=published.find(change.object_id);
-      std::uint64_t order=0;
-      for(const auto byte:renderOrderKey(*object).bytes()) order=(order<<8)|byte;
-      const auto flags=static_cast<canvas::SceneRecordFlags>(
-        static_cast<unsigned>(canvas::SceneRecordFlags::kVisible)|static_cast<unsigned>(canvas::SceneRecordFlags::kHitTestable));
-      const canvas::SceneRecord after{object->id,canvas::SceneOrderKey(order),canvas::SceneObjectKind::kRichText,flags,
-        canvas::computeBounds(*object).world,canvas::ContentRevision(object->kind_version),
-        {static_cast<std::uint32_t>(object->id.bytes[0]),object->kind_version},
-        {static_cast<std::uint32_t>(object->id.bytes[0]),object->kind_version}};
-      delta.mutations.push_back({before?canvas::SceneMutationKind::kUpdate:canvas::SceneMutationKind::kInsert,
-        object->id,before?std::optional<canvas::SceneRecord>(*before):std::nullopt,after});
-    }
-    return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
+    (void)view;
+    (void)changes;
+    return foundation::Result<canvas::CompiledSceneDelta>::failure(
+        {foundation::ErrorCode::kRequiresFullRebuild, "editor scene changes use the shared full projection"});
   }
  private:
   const canvas::Scene& scene_;
@@ -240,7 +219,15 @@ CanvasEditingRuntime::CanvasEditingRuntime()
 
 bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
                                                std::string_view platform) noexcept {
-  return appBinding_ != nullptr && appBinding_->registerInputSource({source, std::string(platform)});
+  return !closed_ && appBinding_ != nullptr && appBinding_->registerInputSource({source, std::string(platform)});
+}
+
+void CanvasEditingRuntime::close() noexcept {
+  if (closed_) return;
+  cancelAllPointers();
+  if (previewController_ != nullptr) (void)previewController_->cancel();
+  frameCoordinator_.close();
+  closed_ = true;
 }
 
 bool CanvasEditingRuntime::unregisterInputSource(input::InputSourceId source,
@@ -492,7 +479,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
 
 bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
                                             std::uint64_t observationTimeNs) {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
   const auto source = batch.samples.front().source;
@@ -635,7 +622,7 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
 }
 
 bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept {
-  if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
+  if (closed_ || !brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
       selectionMode_ || panTool_ || creationActive()) return false;
   creationPreset_ = preset;
   creationMode_ = true;
@@ -644,7 +631,7 @@ bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept 
 
 bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                         float x, float y) noexcept {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
       surface_.height == 0U) return false;
   const auto content = viewportController_->viewToContent(x, y);
@@ -814,7 +801,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
 
 bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
                                           std::uint32_t profile) noexcept {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   const auto profileId = profile == 1U ? "vector-solid-v1"
       : profile == 2U ? "marker-flat-v1"
       : profile == 3U ? "chalk-grain-v1" : profile == 4U ? "membrane-v1" : "";
@@ -828,7 +815,7 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
 bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
                                           const ink::BrushPackage& package,
                                           std::uint64_t seed) noexcept {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
@@ -900,7 +887,7 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
 }
 
 bool CanvasEditingRuntime::selectTool(ToolMode mode) noexcept {
-  if (!brushSessions_.empty()) return false;
+  if (closed_ || !brushSessions_.empty()) return false;
   dispatchRuntime_.cancelAll();
   toolMode_ = mode;
   panTool_ = false;
@@ -2443,7 +2430,7 @@ void CanvasEditingRuntime::recordPresentation(std::string evidenceKind,
 
 bool CanvasEditingRuntime::bindSurface(std::uint32_t width,
                                     std::uint32_t height) noexcept {
-  if (width == 0U || height == 0U) return false;
+  if (closed_ || width == 0U || height == 0U) return false;
   if (appBinding_ == nullptr ||
       appBinding_->resizeSurface(render::SurfaceMetrics{
           static_cast<float>(width), static_cast<float>(height), width, height,

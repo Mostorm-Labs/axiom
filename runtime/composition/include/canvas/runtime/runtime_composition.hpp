@@ -9,6 +9,7 @@
 #include <optional>
 #include <unordered_map>
 #include <vector>
+#include <thread>
 
 namespace canvas::runtime {
 
@@ -67,11 +68,14 @@ class RuntimeComposition final {
   }
   [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(
       foundation::ObjectId id) const noexcept;
+  [[nodiscard]] ResourcePortError lastResourceError() const noexcept {
+    return lastResourceError_;
+  }
 
  private:
   struct Notification final {
     foundation::ObjectId resourceId{};
-    std::uint64_t sequence = 0;
+    ResourceBindingToken token{};
   };
   bool canMutate() const noexcept;
   bool transition(RuntimeCompositionState next) noexcept;
@@ -86,6 +90,8 @@ class RuntimeComposition final {
                      foundation::ObjectIdHash> resourceReceipts_;
   ResourceBindingSnapshot resources_;
   std::unique_ptr<MemoryResourceProvider> provider_;
+  ResourcePortError lastResourceError_ = ResourcePortError::kNone;
+  std::thread::id ownerThread_;
 };
 
 }  // namespace canvas::runtime

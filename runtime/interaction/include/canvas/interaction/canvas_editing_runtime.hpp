@@ -135,6 +135,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   CanvasEditingRuntime();
   virtual ~CanvasEditingRuntime() = default;
+  void close() noexcept;
+  [[nodiscard]] bool closed() const noexcept { return closed_; }
   [[nodiscard]] bool registerInputSource(input::InputSourceId source,
                                          std::string_view platform) noexcept;
   [[nodiscard]] bool unregisterInputSource(input::InputSourceId source,
@@ -620,6 +622,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // exposing the old canonical surface for one compositor refresh.
   bool transientOverlayHandoffPending_ = false;
   bool platformPresentationDeferred_ = false;
+  bool closed_ = false;
   std::uint64_t resizeEvents_ = 0;
   std::uint64_t surfaceLostEvents_ = 0;
   std::uint64_t rebindEvents_ = 0;

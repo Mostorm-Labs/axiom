@@ -57,6 +57,16 @@ struct ResourcePortReceipt final {
   bool changed = false;
 };
 
+enum class ResourcePortError : std::uint8_t {
+  kNone,
+  kWrongThread,
+  kNotReady,
+  kUnknownResource,
+  kQueueFull,
+  kStaleBinding,
+  kValidationFailed,
+};
+
 class ResourcePort {
  public:
   virtual ~ResourcePort() = default;

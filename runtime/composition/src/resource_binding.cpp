@@ -26,9 +26,10 @@ std::optional<ResourceBindingToken> ResourceBindingSnapshot::token(
 bool ResourceBindingSnapshot::bind(const semantic::ResourceManifest& source,
                                    std::uint64_t binding) noexcept {
   if (!semantic::validateResourceManifest(source) || binding == 0U) return false;
+  const bool wasBound = documentBinding != 0U || !manifest.entries.empty();
   manifest = source;
   documentBinding = binding;
-  lifetimeGeneration = 1U;
+  if (wasBound) ++lifetimeGeneration;
   return true;
 }
 
