@@ -191,6 +191,7 @@ bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) 
     ++state_.submissionCount;
     state_.presentCount = provider_.presentCount();
     state_.submittedRevision = state_.contentRevision;
+    state_.platformQualifiedRevision = 0;
     state_.dirty = false;
     return true;
 }
@@ -203,6 +204,7 @@ bool PreviewSurfaceController::markPresented(std::uint64_t contentRevision,
         return false;
     }
     state_.submittedRevision = contentRevision;
+    state_.platformQualifiedRevision = contentRevision;
     state_.generation = surfaceGeneration;
     state_.presentCount = presentCount;
     state_.submissionCount += 1U;
@@ -226,6 +228,7 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     active_ = false;
     state_.dirty = false;
     state_.submittedRevision = state_.contentRevision;
+    state_.platformQualifiedRevision = 0;
     return true;
 }
 

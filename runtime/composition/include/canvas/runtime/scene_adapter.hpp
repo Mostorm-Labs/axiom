@@ -8,9 +8,8 @@ namespace canvas::runtime {
 
 class SceneAdapter final {
  public:
-  SceneAdapter(canvas::SceneBinding& binding,
-               canvas::IncrementalRuntimeCoordinator& coordinator) noexcept
-      : binding_(binding), coordinator_(coordinator) {}
+  explicit SceneAdapter(canvas::IncrementalRuntimeCoordinator& coordinator) noexcept
+      : coordinator_(coordinator) {}
 
   [[nodiscard]] foundation::Result<canvas::SceneSyncReceipt> recover(
       const canvas::ISemanticSceneCompiler& compiler,
@@ -30,7 +29,6 @@ class SceneAdapter final {
   }
 
  private:
-  canvas::SceneBinding& binding_;
   canvas::IncrementalRuntimeCoordinator& coordinator_;
 };
 

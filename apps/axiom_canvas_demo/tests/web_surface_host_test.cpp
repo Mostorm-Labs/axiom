@@ -77,10 +77,25 @@ void lossRequiresRebindAndPresentedFeedbackIsGenerationBound() {
            PresentFeedbackDisposition::kPresented);
 }
 
+void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
+    WebSurfaceHost host{surface(50, 60)};
+    auto& composition = host.composition();
+    assert(composition.requestCanonicalFrame(1U));
+    const auto submitted = composition.runtime().lastSubmittedCanonicalFrame();
+    assert(submitted.has_value());
+    assert(composition.readback().canonicalSubmitted);
+    assert(composition.receivePlatformPresented(PresentedFeedback{
+        submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
+        submitted->metricsGeneration, PresentOutcome::kPresented,
+        PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+    assert(!composition.readback().canonicalSubmitted);
+}
+
 } // namespace
 
 int main() {
     rejectsStaleSurfaceAndAcceptsFreshDprMetrics();
     lossRequiresRebindAndPresentedFeedbackIsGenerationBound();
+    runtimeCompositionCanonicalFeedbackClosesTheHandoff();
     return 0;
 }

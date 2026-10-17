@@ -654,10 +654,42 @@ void brushPreviewRestoresTintAfterPartialErase() {
         // finish must remain authoritative even when the provider is deferred.
         assert(host.finishBrushSession(390U));
         assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+        if (deferred) {
+          const auto submitted = host.lastSubmittedCanonicalFrame();
+          assert(submitted.has_value());
+          assert(host.receivePlatformPresented(canvas::render::PresentedFeedback{
+              submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
+              submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
+              canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+        }
         assert(!host.previewActive());
       }
     }
   }
+}
+
+void canonicalFeedbackMayPrecedeBrushPreviewFeedback() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  host.setPlatformPresentationDeferred(true);
+  assert(host.beginBrushSession(391U, 1U));
+  assert(host.appendBrushSample(391U, 32.0, 120.0, 0.5, 1U));
+  assert(host.appendBrushSample(391U, 120.0, 120.0, 0.5, 2U));
+  canvas::ink_playground::PreviewPresentationCapture preview;
+  assert(host.capturePreviewPresentation(preview));
+  std::uint64_t previewPresentCount = 0U;
+  assert(host.renderPreviewPresentation(preview, &previewPresentCount));
+  assert(host.finishBrushSession(391U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  const auto canonical = host.lastSubmittedCanonicalFrame();
+  assert(canonical.has_value());
+  assert(host.receivePlatformPresented(canvas::render::PresentedFeedback{
+      canonical->viewId, canonical->frameId, canonical->surfaceGeneration,
+      canonical->metricsGeneration, canvas::render::PresentOutcome::kPresented,
+      canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(host.previewActive());
+  assert(host.acknowledgePreviewPresentation(preview, previewPresentCount));
+  assert(!host.previewActive());
 }
 
 void undoRedoReplaysCanonicalBrushCommit() {
@@ -826,6 +858,7 @@ int main() {
   partialEraserPublishesRealtimePreview();
   partialEraserDoesNotPreviewEraseShape();
   partialEraserPointerUpDoesNotSubmitBlankingFrame();
+  canonicalFeedbackMayPrecedeBrushPreviewFeedback();
   undoRedoReplaysCanonicalBrushCommit();
   freshCommitClearsRedoHistory();
   undoRemainsAcceptedWhenPresentationIsUnavailable();

@@ -64,6 +64,9 @@ struct SurfaceRenderState final {
     std::uint64_t generation = 0;
     std::uint64_t submissionCount = 0;
     std::uint64_t presentCount = 0;
+    // Set only by the explicit platform acknowledgement seam. A local
+    // provider submission is not sufficient to qualify a deferred preview.
+    std::uint64_t platformQualifiedRevision = 0;
 };
 
 class PreviewSurfaceController final {

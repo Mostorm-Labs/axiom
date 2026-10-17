@@ -28,10 +28,20 @@ render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
     return lifecycle_.markLost(lifecycle_.current().viewId);
 }
 render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameState& frame) {
-    return presentation_.submit(frame);
+    const auto disposition = presentation_.submit(frame);
+    if (disposition != render::PresentFeedbackDisposition::kSubmitted) return disposition;
+    if (!composition_.requestCanonicalFrame(frame.frameId.value())) {
+        return render::PresentFeedbackDisposition::kUnavailable;
+    }
+    return disposition;
 }
 render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::PresentedFeedback& value) {
-    return presentation_.receive(value);
+    const auto disposition = presentation_.receive(value);
+    if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
+    if (!composition_.receivePlatformPresented(value)) {
+        return render::PresentFeedbackDisposition::kUnavailable;
+    }
+    return disposition;
 }
 
 } // namespace canvas::web_demo

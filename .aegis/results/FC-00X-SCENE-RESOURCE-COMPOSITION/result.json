@@ -1,44 +1,52 @@
 {
-  "status": "BLOCKED_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
   "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
-  "tests": {
-    "minimal": "PASS",
-    "brush_sync": "PASS",
-    "brush_deferred": "BLOCKED_IMPLEMENTATION",
-    "f08": "PASS",
-    "web_debug_off": "BLOCKED_ENVIRONMENT",
-    "web_debug_on": "BLOCKED_ENVIRONMENT",
-    "resources": "PASS",
-    "scene": "PASS",
-    "web_surface": "PASS",
-    "protected_interaction": "PASS",
-    "frame": "PASS",
-    "composition": "PASS",
-    "windows_surface": "PASS"
-  },
+  "stage": "P32_IMPLEMENTATION",
   "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
-  "schema": "fc00x-scene-resource-composition-result-v0.7",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "starting_revision": "1f3a8a8589e6b51f196b1463fd75a786236903b6",
   "completed_slices": [
     "R1 Scene adapter and identity/order/content derivation",
     "R2 resource refresh, image/text service binding and owner pump",
     "R3 RuntimeComposition lifecycle, close fencing and resize",
-    "R4 Windows/Web Minimal input loops and surface adapters",
-    "Windows native Skia build with MSVC 19.51"
+    "R4 Windows/Web Minimal input loops, surface adapters and canonical feedback",
+    "Brush preview platform qualification and canonical-first/preview-first handoff closure",
+    "Windows native and Web debug-on/off builds"
   ],
+  "tests": {
+    "brush_runtime_pipeline": "PASS",
+    "brush_canonical_first_feedback_order": "PASS",
+    "runtime_composition": "PASS",
+    "web_surface_host": "PASS",
+    "minimal_runtime_host": "PASS",
+    "protected_render_scene_resource_matrix": "13/13 PASS",
+    "web_debug_off_build": "PASS",
+    "web_debug_on_build": "PASS",
+    "windows_minimal_build": "PASS"
+  },
+  "artifacts": {
+    "windows_exe": "out/p32-skia-msvc1951/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe",
+    "windows_exe_sha256": "D725C6C600CD8088879B4B115252C395C408D5E89323B3B99852262C3A9B7B4C",
+    "web_debug_off": "out/p32-web-debug-off/apps/axiom_canvas_demo/",
+    "web_debug_on": "out/p32-web-debug-on/apps/axiom_canvas_demo/",
+    "web_js_sha256": "53900934CA61415A057833FD3B4A4669310CF3DE72ABD7399BE5599A51D6E015",
+    "web_wasm_sha256": "C355E8C2F274603D680682766419F81046866C09E8769B45D8A15F41A1070F38",
+    "web_html_sha256": "C50DC95CAC085C66F176843EF54F15848C32B2A7A5CBFBC520F2225C74373AD0"
+  },
   "evidence_input_refs": [
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.10-resource-consumer-brush.json",
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/repair-v0.11-presentation-web.json",
     ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/f08-boundary-audit.json",
-    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json"
+    ".aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/r2-authority-binding.json",
+    "out/final-brush.log",
+    "out/p32-web-debug-off/",
+    "out/p32-web-debug-on/"
   ],
   "physical_status": "PHYSICAL_PENDING",
-  "starting_revision": "ed1d8a4f6d8762d98ca1f69396cbf59f74623c4c",
+  "android_status": "DEFERRED_NOT_BLOCKING",
   "blockers": [
-    "Delayed platform presentation feedback closure remains unresolved in existing brush pipeline fixture; runtime intentionally retains preview until platform-qualified PresentedFeedback.",
-    "Emscripten debug-on/off build and physical observation remain unavailable."
+    "No manual Windows/Web physical observation performed; retain PHYSICAL_PENDING."
   ],
   "official_gate_pass_claimed": false,
-  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
-  "stage": "P32_IMPLEMENTATION",
-  "result_revision": "564e27ea5252cf3197b2e4ac9ea83b7aa8784292",
-  "materialized_ref": "564e27ea5252cf3197b2e4ac9ea83b7aa8784292"
+  "materialized_ref": "PENDING_COMMIT"
 }

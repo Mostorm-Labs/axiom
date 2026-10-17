@@ -47,9 +47,9 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     foreach(target axiom_demo_camera_tests axiom_demo_hit_select_tests)
         if(MSVC)
-            target_compile_options(${target} PRIVATE /W4 /permissive- /WX /EHsc)
+            target_compile_options(${target} PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
         else()
-            target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
         endif()
     endforeach()
 

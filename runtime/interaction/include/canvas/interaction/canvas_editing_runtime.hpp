@@ -623,6 +623,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t canonicalFrameCount_ = 0;
   std::optional<render::RuntimeFrameIdentity> lastSubmittedCanonicalFrame_;
   std::unique_ptr<render::FrameState> lastSubmittedCanonicalFrameState_;
+  std::optional<render::RuntimeFrameIdentity> lastPresentedCanonicalFrame_;
+  std::unique_ptr<render::FrameState> lastPresentedCanonicalFrameState_;
   bool canonicalPresentationDirty_ = false;
   bool transientOverlayDirty_ = false;
   // A completed creation/selection gesture keeps its last transient frame

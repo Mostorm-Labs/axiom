@@ -134,19 +134,6 @@ bool isInkKind(semantic::ObjectKind kind) noexcept {
          kind == semantic::ObjectKind::kDabStroke;
 }
 
-bool isInkRecord(const semantic::ObjectRecord& record) noexcept {
-  return record.kind == semantic::ObjectKind::kVectorStroke ||
-         record.kind == semantic::ObjectKind::kDabStroke;
-}
-
-semantic::OrderKey renderOrderKey(const semantic::ObjectRecord& record) {
-  if (!isInkRecord(record)) return record.placement.order_key;
-  // Ink is a presentation overlay in the shared editor. Keep its semantic
-  // placement intact, but give the renderer a reserved high lane so a shape
-  // brought to the front cannot cover an already committed line.
-  return semantic::OrderKey{{0xFFU, 0xFFU, record.id.bytes.back()}};
-}
-
 canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
   if (!isInkKind(record.kind)) return canvas::SceneOrderKey(record.placement.order_key.bytes());
   return canvas::SceneOrderKey(std::vector<std::uint8_t>{0xFFU, 0xFFU, record.objectId.bytes.back()});
@@ -2123,6 +2110,35 @@ bool CanvasEditingRuntime::acknowledgePreviewPresentation(
   const bool accepted = previewController_->markPresented(
       capture.contentRevision, capture.surfaceGeneration, presentCount);
   if (accepted) previewProvider_->setOverlayVisible(true);
+  if (!accepted || pendingCanonicalIdentities_.empty()) {
+    return accepted;
+  }
+  const auto* canonical = lastSubmittedCanonicalFrame_.has_value()
+      ? &*lastSubmittedCanonicalFrame_ : lastPresentedCanonicalFrame_.has_value()
+          ? &*lastPresentedCanonicalFrame_ : nullptr;
+  const auto* canonicalState = lastSubmittedCanonicalFrameState_ != nullptr
+      ? lastSubmittedCanonicalFrameState_.get()
+      : lastPresentedCanonicalFrameState_.get();
+  if (canonical == nullptr || canonicalState == nullptr) return accepted;
+  const bool canonicalQualified = presentedSemanticGeneration_.value() ==
+      canonical->sceneGeneration && presentedSurfaceGeneration_ == canonical->surfaceGeneration &&
+      presentedMetricsGeneration_ == canonical->metricsGeneration;
+  if (!canonicalQualified || !previewController_->active()) return accepted;
+  std::vector<std::uint64_t> retired;
+  for (const auto& [pointer, handoffIdentity] : pendingCanonicalIdentities_) {
+    if (canonicalVisibilitySink_ != nullptr) {
+      const auto handoff = canonicalVisibilitySink_->canonicalVisible(
+          handoffIdentity, *canonicalState);
+      if (handoff == ink::HandoffResult::kRejected) return false;
+      if (handoff != ink::HandoffResult::kAccepted) continue;
+    }
+    if (!previewController_->retireSession(handoffIdentity.session,
+                                           previewProvider_->generation())) {
+      return false;
+    }
+    retired.push_back(pointer);
+  }
+  for (const auto pointer : retired) pendingCanonicalIdentities_.erase(pointer);
   return accepted;
 }
 
@@ -2980,11 +2996,26 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   const auto* capture = frameCoordinator_.capture(render::FrameRole::kCanonical);
   if (capture == nullptr) return false;
   const auto canonical = capture->identity;
+  lastPresentedCanonicalFrame_ = canonical;
+  lastPresentedCanonicalFrameState_ =
+      std::make_unique<render::FrameState>(*lastSubmittedCanonicalFrameState_);
   recordPresentation("canonical-presented-platform-qualified", pendingCanonicalIdentities_.size(), 0.0);
   presentedSemanticGeneration_ = semantic::SemanticGeneration{canonical.sceneGeneration};
   presentedSurfaceGeneration_ = canonical.surfaceGeneration;
   presentedMetricsGeneration_ = canonical.metricsGeneration;
-  const bool retire = frameCoordinator_.retirePreview(canonical);
+  bool brushPreviewQualified = false;
+  {
+    std::lock_guard providerLock(previewProviderMutex_);
+    std::lock_guard previewLock(previewStateMutex_);
+    if (previewController_ != nullptr && previewController_->active()) {
+      const auto& previewState = previewController_->state();
+      brushPreviewQualified = !previewState.dirty &&
+          previewState.presentCount != 0U &&
+          previewState.platformQualifiedRevision == previewState.contentRevision;
+    }
+  }
+  const bool retire = frameCoordinator_.retirePreview(canonical) ||
+      brushPreviewQualified;
   if (retire && semanticObjects_.size() != 0U) {
     std::lock_guard providerLock(previewProviderMutex_);
     std::lock_guard previewLock(previewStateMutex_);
@@ -2997,8 +3028,8 @@ bool CanvasEditingRuntime::receivePlatformPresented(
           if (handoff == ink::HandoffResult::kRejected) return false;
           if (handoff != ink::HandoffResult::kAccepted) continue;
         }
-        if (!previewController_->retireSession(handoffIdentity.session,
-                                               previewProvider_->generation())) {
+        if (!previewController_->retireSession(
+                handoffIdentity.session, previewProvider_->generation())) {
           return false;
         }
         retired.push_back(pointer);
