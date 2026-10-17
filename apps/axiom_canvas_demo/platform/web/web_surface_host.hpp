@@ -15,6 +15,7 @@ class WebSurfaceHost final {
     [[nodiscard]] render::SurfaceLifecycleDisposition markLost() noexcept;
     [[nodiscard]] render::PresentFeedbackDisposition submit(const render::FrameState& frame);
     [[nodiscard]] render::PresentFeedbackDisposition feedback(const render::PresentedFeedback& value);
+    [[nodiscard]] bool syncRuntimeSurfaceIdentity() noexcept;
     [[nodiscard]] const render::SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
 

@@ -34,6 +34,15 @@
         if (!module._axiom_web_present_smoke(handle)) throw new Error("present feedback rejected");
         record("PRESENTED");
       },
+      startFrameLoop() {
+        const tick = () => {
+          if (handle && module._axiom_web_backend_ready(handle)) {
+            try { host.present(); } catch (error) { record("PRESENT_ERROR", { message: String(error) }); }
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
       observation() {
         return {
           facts: facts.map((fact) => ({ ...fact })),
@@ -66,6 +75,7 @@
     canvas.addEventListener("pointercancel", (event) => forwardPointer(event, 3));
     globalThis.axiomWebHost = Object.freeze(host);
     record("HOST_READY");
+    host.startFrameLoop();
     return host;
   })();
 </script>

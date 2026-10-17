@@ -9,6 +9,13 @@
 #include <cstdint>
 #include <string>
 #include <atomic>
+#include <vector>
+
+#if defined(_WIN32)
+#include <windows.h>
+#else
+using HDC = void*;
+#endif
 
 namespace canvas::windows_demo {
 
@@ -41,6 +48,7 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] bool submit(render::IRenderBackend& backend,
                                const render::FramePlan& plan,
                                std::string* error);
+    [[nodiscard]] bool paintCanonical(HDC dc, std::string* error);
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
     [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
     [[nodiscard]] const WindowsSmokeObservation& observation() const noexcept {
@@ -54,6 +62,7 @@ class WindowsCanonicalSurfaceHost final {
     WindowsSurfaceAdapter* surface_ = nullptr;
     runtime::RuntimeComposition composition_;
     std::atomic<std::uint64_t> inputSequence_{0};
+    std::uint64_t nextFrameId_ = 1;
 };
 
 } // namespace canvas::windows_demo

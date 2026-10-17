@@ -5,8 +5,10 @@
 
 #include <windows.h>
 
+#include <algorithm>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 namespace canvas::windows_demo {
 
@@ -42,7 +44,21 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
                 static_cast<float>(static_cast<short>(HIWORD(lParam))), 0.5F, 0.0F, 0.0F,
                 {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent, phase});
             (void)host->composition().submit(batch);
+            (void)host->composition().requestCanonicalFrame(host->nextInputSequence());
+            InvalidateRect(window, nullptr, FALSE);
         }
+    }
+    if (message == WM_PAINT) {
+        PAINTSTRUCT paint{};
+        const auto dc = BeginPaint(window, &paint);
+        auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
+            GetWindowLongPtrW(window, GWLP_USERDATA));
+        if (host != nullptr) {
+            std::string ignored;
+            (void)host->paintCanonical(dc, &ignored);
+        }
+        EndPaint(window, &paint);
+        return 0;
     }
     return DefWindowProcW(window, message, wParam, lParam);
 }
@@ -100,6 +116,8 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
     observation_.surfaceGeneration = 1;
     observation_.metricsGeneration = 1;
     if (!composition_.bindSurface(width, height) || !composition_.registerSource(1U)) { if (error) *error = "Runtime composition surface bind failed"; return false; }
+    observation_.surfaceGeneration = composition_.runtime().surface().generation;
+    observation_.metricsGeneration = composition_.runtime().surface().generation;
     return true;
 }
 
@@ -184,6 +202,47 @@ bool WindowsCanonicalSurfaceHost::submit(render::IRenderBackend& backend,
     return true;
 }
 
+bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
+    if (dc == nullptr || error == nullptr) {
+        if (error != nullptr) *error = "Windows paint target is unavailable";
+        return false;
+    }
+    auto* provider = composition_.runtime().activeSurfaceProvider();
+    if (provider == nullptr) { *error = "Runtime canonical provider is unavailable"; return false; }
+    const auto info = provider->describe();
+    std::vector<std::uint8_t> rgba(static_cast<std::size_t>(info.metrics.physicalWidth) *
+                                   info.metrics.physicalHeight * 4U);
+    if (provider->readbackRgba(rgba).code != render::BackendSubmissionCode::kAccepted) {
+        *error = "Runtime canonical readback failed";
+        return false;
+    }
+    for (std::size_t i = 0; i + 3U < rgba.size(); i += 4U) std::swap(rgba[i], rgba[i + 2U]);
+    BITMAPINFO bitmap{};
+    bitmap.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bitmap.bmiHeader.biWidth = static_cast<LONG>(info.metrics.physicalWidth);
+    bitmap.bmiHeader.biHeight = -static_cast<LONG>(info.metrics.physicalHeight);
+    bitmap.bmiHeader.biPlanes = 1;
+    bitmap.bmiHeader.biBitCount = 32;
+    bitmap.bmiHeader.biCompression = BI_RGB;
+    const int width = static_cast<int>(info.metrics.physicalWidth);
+    const int height = static_cast<int>(info.metrics.physicalHeight);
+    if (StretchDIBits(dc, 0, 0, width, height, 0, 0, width, height,
+                      rgba.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == GDI_ERROR) {
+        *error = "Windows canonical DIB presentation failed";
+        return false;
+    }
+    if (const auto frame = composition_.runtime().lastSubmittedCanonicalFrame(); frame.has_value()) {
+        if (!composition_.receivePlatformPresented({
+                frame->viewId, frame->frameId, frame->surfaceGeneration,
+                frame->metricsGeneration, render::PresentOutcome::kPresented,
+                render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) {
+            *error = "Windows canonical feedback rejected";
+            return false;
+        }
+    }
+    return true;
+}
+
 } // namespace canvas::windows_demo
 
 #else
@@ -213,6 +272,10 @@ bool WindowsCanonicalSurfaceHost::resizeForSmoke(std::uint32_t,
 bool WindowsCanonicalSurfaceHost::submit(render::IRenderBackend&,
                                          const render::FramePlan&,
                                          std::string* error) {
+    if (error != nullptr) *error = "Windows host is only available on Windows";
+    return false;
+}
+bool WindowsCanonicalSurfaceHost::paintCanonical(void*, std::string* error) {
     if (error != nullptr) *error = "Windows host is only available on Windows";
     return false;
 }

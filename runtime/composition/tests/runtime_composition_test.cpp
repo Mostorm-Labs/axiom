@@ -85,7 +85,7 @@ int main() {
   assert(queueComposition.publishResource(canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
   assert(queueComposition.ownerPump());
   const auto queueToken = queueComposition.resources().token(
-      canvas::foundation::ObjectId::fromUint64(1U), 1U, 500U);
+      canvas::foundation::ObjectId::fromUint64(1U), 0U, 500U);
   assert(queueToken.has_value());
   const auto beforeQueueFull = queueComposition.resourceReceipt(
       canvas::foundation::ObjectId::fromUint64(1U));
@@ -126,6 +126,20 @@ int main() {
   sameResource.manifest_revision = 2U;
   assert(rebindComposition.bindManifest(sameResource, 13U));
   assert(!rebindComposition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(1U)).has_value());
+
+  // Publishing one resource must not invalidate a token issued for another.
+  canvas::runtime::RuntimeComposition independent;
+  assert(independent.open());
+  assert(independent.bindSurface(256U, 256U));
+  auto pairManifest = makeManifest(2U);
+  assert(independent.bindManifest(pairManifest, 21U));
+  const auto tokenA = independent.resources().token(
+      canvas::foundation::ObjectId::fromUint64(1U), 0U, 700U);
+  const auto tokenB = independent.resources().token(
+      canvas::foundation::ObjectId::fromUint64(2U), 0U, 701U);
+  assert(tokenA.has_value() && tokenB.has_value());
+  assert(independent.publishResource(*tokenA, {0x01U}));
+  assert(independent.publishResource(*tokenB, {0x01U}));
 
   assert(composition.loseSurface());
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kLost);

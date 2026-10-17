@@ -89,8 +89,21 @@ std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
           if constexpr (std::is_same_v<S, semantic::SolidStroke>) {
             out << stroke.color.r << ',' << stroke.color.g << ',' << stroke.color.b << ','
                 << stroke.color.a << ':' << stroke.width << ':'
-                << static_cast<unsigned>(stroke.cap) << ':' << stroke.join.index() << ':'
-                << stroke.dash.index();
+                  << static_cast<unsigned>(stroke.cap) << ':' << stroke.join.index() << ':';
+                std::visit([&](const auto& join) {
+                  using J = std::decay_t<decltype(join)>;
+                  if constexpr (std::is_same_v<J, semantic::MiterJoin>) {
+                    out << join.limit;
+                  }
+                }, stroke.join);
+                out << ':' << stroke.dash.index() << ':';
+                std::visit([&](const auto& dash) {
+                  using D = std::decay_t<decltype(dash)>;
+                  if constexpr (std::is_same_v<D, semantic::DashPattern>) {
+                    out << dash.offset << ':' << dash.segments.size();
+                    for (const auto segment : dash.segments) out << ':' << segment;
+                  }
+                }, stroke.dash);
           }
         }, value);
       }

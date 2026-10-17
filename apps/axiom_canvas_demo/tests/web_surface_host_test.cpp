@@ -91,11 +91,28 @@ void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
     assert(!composition.readback().canonicalSubmitted);
 }
 
+void compositionAndPlatformShareSurfaceIdentity() {
+    WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
+    const auto runtimeGeneration = host.composition().runtime().surface().generation;
+    assert(runtimeGeneration != 0U);
+    assert(host.lifecycle().current().surfaceGeneration.value() == runtimeGeneration);
+    const auto frameValue = frame(70U, runtimeGeneration,
+                                  host.lifecycle().current().metricsGeneration.value(),
+                                  host.lifecycle().current().metrics);
+    assert(host.submit(frameValue) == PresentFeedbackDisposition::kSubmitted);
+    assert(host.feedback(PresentedFeedback{
+               frameValue.viewId, frameValue.frameId, frameValue.surfaceGeneration,
+               frameValue.metricsGeneration, PresentOutcome::kPresented,
+               PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
+           PresentFeedbackDisposition::kPresented);
+}
+
 } // namespace
 
 int main() {
     rejectsStaleSurfaceAndAcceptsFreshDprMetrics();
     lossRequiresRebindAndPresentedFeedbackIsGenerationBound();
     runtimeCompositionCanonicalFeedbackClosesTheHandoff();
+    compositionAndPlatformShareSurfaceIdentity();
     return 0;
 }

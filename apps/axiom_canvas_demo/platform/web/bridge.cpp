@@ -9,6 +9,7 @@
 #include <cmath>
 #include <memory>
 #include <optional>
+#include <string>
 
 namespace {
 struct WebInstance final {
@@ -46,6 +47,13 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     value->backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
         canvas::render::WebGlSurfaceConfig{selector, pw, ph});
     if (!value->backend->ready()) return 0;
+    auto surfaceProvider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(pw, ph);
+    if (surfaceProvider == nullptr ||
+        !value->lifecycle.composition().runtime().registerSurfaceProvider(
+            "webgl-window", std::move(surfaceProvider)) ||
+        !value->lifecycle.syncRuntimeSurfaceIdentity()) return 0;
+    value->surfaceGeneration = value->lifecycle.lifecycle().current().surfaceGeneration.value();
+    value->metricsGeneration = value->lifecycle.lifecycle().current().metricsGeneration.value();
     if (!value->lifecycle.composition().registerSource(1U)) return 0;
     return reinterpret_cast<std::uintptr_t>(value.release());
 }
@@ -58,13 +66,19 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
     const auto surface = value->surfaceGeneration + 1U;
     const auto metricsGeneration = value->metricsGeneration + 1U;
     const canvas::render::SurfaceMetrics metrics{lw, lh, pw, ph, dpr, 1.0F};
+    auto backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
+        canvas::render::WebGlSurfaceConfig{selector, pw, ph});
+    if (!backend->ready()) return 0;
+    auto surfaceProvider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(pw, ph);
+    if (surfaceProvider == nullptr ||
+        !value->lifecycle.composition().runtime().registerSurfaceProvider(
+            std::string("webgl-window-") + std::to_string(surface),
+            std::move(surfaceProvider)) ||
+        !value->lifecycle.syncRuntimeSurfaceIdentity()) return 0;
     if (value->lifecycle.bind(canvas::render::SurfaceSnapshot{
             value->view, canvas::render::SurfaceGeneration{surface},
             canvas::render::MetricsGeneration{metricsGeneration}, metrics}) !=
         canvas::web_demo::WebSurfaceDisposition::kRebound) return 0;
-    auto backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
-        canvas::render::WebGlSurfaceConfig{selector, pw, ph});
-    if (!backend->ready()) return 0;
     value->surfaceGeneration = surface;
     value->metricsGeneration = metricsGeneration;
     value->logicalWidth = lw;
@@ -82,10 +96,12 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_lose_surface(std::uintptr_t handle) {
     return value->lifecycle.markLost() == canvas::render::SurfaceLifecycleDisposition::kLost;
 }
 EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_web_surface_generation(std::uintptr_t handle) {
-    const auto* value = instance(handle); return value == nullptr ? 0U : value->surfaceGeneration;
+    const auto* value = instance(handle);
+    return value == nullptr ? 0U : value->lifecycle.lifecycle().current().surfaceGeneration.value();
 }
 EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_web_metrics_generation(std::uintptr_t handle) {
-    const auto* value = instance(handle); return value == nullptr ? 0U : value->metricsGeneration;
+    const auto* value = instance(handle);
+    return value == nullptr ? 0U : value->lifecycle.lifecycle().current().metricsGeneration.value();
 }
 EMSCRIPTEN_KEEPALIVE int axiom_web_backend_ready(std::uintptr_t handle) {
     const auto* value = instance(handle); return value != nullptr && value->backend && value->backend->ready();
@@ -119,30 +135,15 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
     auto* value = instance(handle);
     if (value == nullptr || !value->backend || !value->backend->ready()) return 0;
     const auto frameId = canvas::render::FrameId{value->presentedFrames + 1U};
-    const canvas::render::FrameState frame{
-        .viewId = value->view,
-        .camera = canvas::render::CameraState{
-            canvas::foundation::WorldPoint{0.0F, 0.0F}, 1.0F, 0.0F,
-            canvas::render::CameraGeneration{1}},
-        .worldViewport = canvas::foundation::WorldRect{
-            0.0F, 0.0F, value->logicalWidth, value->logicalHeight},
-        .metrics = canvas::render::SurfaceMetrics{
-            value->logicalWidth, value->logicalHeight, value->physicalWidth,
-            value->physicalHeight, value->devicePixelRatio, 1.0F},
-        .sceneGeneration = canvas::semantic::SemanticGeneration{1},
-        .sceneReadToken = canvas::foundation::SceneRevision{1},
-        .surfaceGeneration = canvas::render::SurfaceGeneration{value->surfaceGeneration},
-        .metricsGeneration = canvas::render::MetricsGeneration{value->metricsGeneration},
-        .frameId = frameId,
-    };
-    if (value->lifecycle.submit(frame) != canvas::render::PresentFeedbackDisposition::kSubmitted) return 0;
-    if (value->lifecycle.feedback(canvas::render::PresentedFeedback{
-            value->view, frameId,
-            canvas::render::SurfaceGeneration{value->surfaceGeneration},
-            canvas::render::MetricsGeneration{value->metricsGeneration},
-            canvas::render::PresentOutcome::kPresented,
+    auto& composition = value->lifecycle.composition();
+    if (!composition.requestCanonicalFrame(frameId.value())) return 0;
+    const auto submitted = composition.runtime().lastSubmittedCanonicalFrame();
+    if (!submitted.has_value() || submitted->frameId != frameId) return 0;
+    if (!composition.receivePlatformPresented({
+            submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
+            submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
             canvas::render::PresentEvidenceKind::kPlatformQualified,
-            std::nullopt}) != canvas::render::PresentFeedbackDisposition::kPresented) return 0;
+            std::nullopt})) return 0;
     ++value->presentedFrames;
     return 1;
 }
