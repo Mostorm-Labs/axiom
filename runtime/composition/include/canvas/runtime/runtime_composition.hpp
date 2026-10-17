@@ -53,6 +53,8 @@ class RuntimeComposition final {
                                   std::uint64_t documentBinding) noexcept;
   [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
+  [[nodiscard]] semantic::ApplyResult applyExternalOperation(
+      const semantic::Operation& operation, semantic::ApplySource source) noexcept;
   [[nodiscard]] bool notifyResource(foundation::ObjectId resourceId) noexcept;
   [[nodiscard]] bool publishResource(foundation::ObjectId resourceId,
                                      std::vector<std::uint8_t> bytes) noexcept;

@@ -92,6 +92,7 @@ class RichTextLayoutService final {
     RichTextLayoutService(const RichTextLayoutService&) = delete;
     RichTextLayoutService& operator=(const RichTextLayoutService&) = delete;
     void registerFont(FontResourceDescriptor);
+    void clearFonts() noexcept;
     void setContext(LayoutContext);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot> resolve(
         foundation::ObjectId, const semantic::RichTextContent&);

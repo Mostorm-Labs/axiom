@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <climits>
+#include <algorithm>
 
 namespace canvas::runtime {
 
@@ -49,6 +50,7 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
       textLayoutService_(std::make_unique<canvas::text::RichTextLayoutService>(
           *provider_, canvas::text::LayoutContext{128.0F, 1U})),
       ownerThread_(std::this_thread::get_id()), viewId_(viewId) {
+  runtime_->bindResourceManifest(&resources_.manifest);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif
@@ -76,8 +78,15 @@ bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height
 }
 bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest, std::uint64_t binding) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
+  const auto previous = resources_.manifest;
   if ((state_ != RuntimeCompositionState::kBound && !canMutate()) || !resources_.bind(manifest, binding)) {
     lastResourceError_ = ResourcePortError::kValidationFailed; return false;
+  }
+  for (const auto& oldEntry : previous.entries) {
+    if (manifest.entries.end() == std::find_if(manifest.entries.begin(), manifest.entries.end(),
+        [&](const auto& entry) { return entry.resource_id == oldEntry.resource_id; })) {
+      provider_->markMissing(oldEntry.resource_id.value);
+    }
   }
   notifications_.clear();
   resourceReceipts_.clear();
@@ -86,6 +95,7 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
     else ++it;
   }
   if (textLayoutService_ != nullptr) {
+    textLayoutService_->clearFonts();
     for (const auto& entry : resources_.manifest.entries) {
       if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
       textLayoutService_->registerFont({entry.resource_id,
@@ -93,6 +103,8 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
                                         fontCollectionIndex(entry.metadata)});
     }
   }
+  runtime_->bindResourceManifest(&resources_.manifest);
+  (void)runtime_->refreshResourceDerivedState();
   lastResourceError_ = ResourcePortError::kNone;
   return true;
 }
@@ -109,6 +121,16 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
   }
   return canMutate() && !batch.samples.empty() &&
       runtime_->acceptPlatformBatch(batch, batch.samples.back().timestampNs);
+}
+semantic::ApplyResult RuntimeComposition::applyExternalOperation(
+    const semantic::Operation& operation, semantic::ApplySource source) noexcept {
+  if (!canMutate() || std::this_thread::get_id() != ownerThread_) return {};
+  const auto result = runtime_->applyExternalOperation(operation, source);
+  if (result.disposition == semantic::ApplyDisposition::kApplied &&
+      operation.kind() == semantic::OperationKind::kUpdateResourceManifest) {
+    runtime_->refreshResourceManifestServices();
+  }
+  return result;
 }
 bool RuntimeComposition::notifyResource(foundation::ObjectId id) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }

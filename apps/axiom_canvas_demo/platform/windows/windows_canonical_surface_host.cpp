@@ -38,6 +38,15 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         }
         return DefWindowProcW(window, message, wParam, lParam);
     }
+    if (message == WM_CAPTURECHANGED) {
+        auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
+            GetWindowLongPtrW(window, GWLP_USERDATA));
+        if (host != nullptr) {
+            host->composition().runtime().cancelAllPointers();
+            InvalidateRect(window, nullptr, FALSE);
+        }
+        return 0;
+    }
     if (message == WM_LBUTTONDOWN || message == WM_MOUSEMOVE || message == WM_LBUTTONUP) {
         auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
             GetWindowLongPtrW(window, GWLP_USERDATA));
@@ -48,6 +57,8 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
             const auto phase = message == WM_LBUTTONDOWN ? canvas::input::PointerPhase::kDown
                 : message == WM_LBUTTONUP ? canvas::input::PointerPhase::kUp
                                            : canvas::input::PointerPhase::kMove;
+            if (phase == canvas::input::PointerPhase::kDown) SetCapture(window);
+            if (phase == canvas::input::PointerPhase::kUp) ReleaseCapture();
             canvas::input::PlatformPointerBatch batch;
             const auto sequence = host->nextInputSequence();
             batch.samples.push_back({1U, 1U, sequence,
@@ -200,6 +211,11 @@ bool WindowsCanonicalSurfaceHost::resizeForWindow(std::uint32_t width,
     ++observation_.resizeEvents;
     observation_.surfaceGeneration = live.generation;
     observation_.metricsGeneration = live.generation;
+    if (!composition_.requestCanonicalFrame(nextFrameId_++)) {
+        *error = "Runtime composition resize did not request a canonical redraw";
+        return false;
+    }
+    InvalidateRect(impl_->window, nullptr, FALSE);
     return true;
 }
 
@@ -243,8 +259,11 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
     const auto info = provider->describe();
     interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresentCount = 0;
-    const bool havePreview = composition_.runtime().capturePreviewPresentation(previewCapture) &&
-        composition_.runtime().renderPreviewPresentation(previewCapture, &previewPresentCount);
+    const bool hadPreview = composition_.runtime().previewActive();
+    const bool havePreview = hadPreview &&
+        ((composition_.runtime().capturePreviewPresentation(previewCapture) &&
+          composition_.runtime().renderPreviewPresentation(previewCapture, &previewPresentCount)) ||
+         (composition_.runtime().previewSurfaceProvider() != nullptr));
     std::vector<std::uint8_t> rgba(static_cast<std::size_t>(info.metrics.physicalWidth) *
                                    info.metrics.physicalHeight * 4U);
     if (provider->readbackRgba(rgba).code != render::BackendSubmissionCode::kAccepted) {
@@ -294,10 +313,30 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         }
         lastPresentedFrame_ = frame->frameId.value();
     }
-    if (havePreview && !composition_.runtime().acknowledgePreviewPresentation(
+    if (havePreview && previewCapture.contentRevision != 0U &&
+        composition_.runtime().previewActive() &&
+        !composition_.runtime().acknowledgePreviewPresentation(
             previewCapture, previewPresentCount)) {
         *error = "Windows preview acknowledgement rejected";
         return false;
+    }
+    if (hadPreview && !composition_.runtime().previewActive()) {
+        std::vector<std::uint8_t> canonical(rgba.size());
+        if (provider->readbackRgba(canonical).code != render::BackendSubmissionCode::kAccepted) {
+            *error = "Windows canonical redraw after preview retirement failed";
+            return false;
+        }
+        for (std::size_t i = 0; i + 3U < canonical.size(); i += 4U) {
+            std::swap(canonical[i], canonical[i + 2U]);
+        }
+        if (StretchDIBits(dc, 0, 0, width, height, 0, 0, width, height,
+                          canonical.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == GDI_ERROR) {
+            *error = "Windows canonical redraw after preview retirement failed";
+            return false;
+        }
+    }
+    if (!composition_.runtime().previewActive()) {
+        InvalidateRect(impl_->window, nullptr, FALSE);
     }
     return true;
 }

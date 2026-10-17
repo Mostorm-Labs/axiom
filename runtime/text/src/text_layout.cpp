@@ -268,6 +268,14 @@ RichTextLayoutService::RichTextLayoutService(const runtime::ResourceProvider& r,
     : impl_(std::make_unique<Impl>(r,c)) {}
 RichTextLayoutService::~RichTextLayoutService() = default;
 void RichTextLayoutService::registerFont(FontResourceDescriptor d) { impl_->descriptors[d.resourceId.value]=std::move(d); }
+void RichTextLayoutService::clearFonts() noexcept {
+    impl_->descriptors.clear();
+    impl_->objects.clear();
+    impl_->paragraphs.clear();
+#ifdef CANVAS_TEXT_HAS_SKIA
+    impl_->faces.clear();
+#endif
+}
 void RichTextLayoutService::setContext(LayoutContext c) { impl_->context=c; }
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     foundation::ObjectId id, const semantic::RichTextContent& content) {

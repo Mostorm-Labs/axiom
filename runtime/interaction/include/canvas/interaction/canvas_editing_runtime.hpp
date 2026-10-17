@@ -456,6 +456,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; }
   void bindResourceServices(render::ImageResourceResolver* images,
                             text::RichTextLayoutService* textService) noexcept;
+  void bindResourceManifest(semantic::ResourceManifest* manifest) noexcept {
+    resourceManifestPort_ = manifest == nullptr ? &resourceManifest_ : manifest;
+  }
+  void refreshResourceManifestServices() noexcept;
   [[nodiscard]] bool refreshResourceDerivedState() noexcept;
   [[nodiscard]] std::uint64_t canonicalFrameCount() const noexcept {
     return canonicalFrameCount_;
@@ -484,12 +488,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return submittedOperationCount_;
   }
   [[nodiscard]] bool canUndo() const noexcept {
-    return !closed_ && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canUndo();
   }
   [[nodiscard]] bool canRedo() const noexcept {
-    return !closed_ && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canRedo();
   }
@@ -600,6 +604,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::SemanticGenerationState semanticGeneration_{semantic::SemanticGeneration{0}};
   semantic::CanonicalCommitClock canonicalCommitClock_{semantic::RuntimeEpoch{1}};
   semantic::OperationEngine operationEngine_;
+  semantic::ResourceManifest resourceManifest_{};
+  semantic::ResourceManifest* resourceManifestPort_ = &resourceManifest_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;

@@ -1,5 +1,7 @@
 #include "web_surface_host.hpp"
 
+#include <cmath>
+
 namespace canvas::web_demo {
 
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
@@ -28,10 +30,33 @@ WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
 
 WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replacement) {
     const auto before = lifecycle_.current();
+    const auto& metrics = replacement.metrics;
+    if (!std::isfinite(metrics.logicalWidth) || !std::isfinite(metrics.logicalHeight) ||
+        !std::isfinite(metrics.devicePixelRatio) || !std::isfinite(metrics.displayScale) ||
+        metrics.logicalWidth <= 0.0F || metrics.logicalHeight <= 0.0F ||
+        metrics.devicePixelRatio <= 0.0F || metrics.displayScale <= 0.0F ||
+        metrics.physicalWidth == 0U || metrics.physicalHeight == 0U) {
+        return WebSurfaceDisposition::kRejectedInvalid;
+    }
     if (replacement.viewId != before.viewId ||
         replacement.surfaceGeneration.value() < before.surfaceGeneration.value() ||
         replacement.metricsGeneration.value() < before.metricsGeneration.value()) {
         return WebSurfaceDisposition::kRejectedStale;
+    }
+    auto plannedLifecycle = lifecycle_;
+    const auto planned = plannedLifecycle.replace(replacement);
+    if (planned == render::SurfaceLifecycleDisposition::kWrongView ||
+        planned == render::SurfaceLifecycleDisposition::kInvalidGeneration ||
+        planned == render::SurfaceLifecycleDisposition::kGenerationExhausted ||
+        planned == render::SurfaceLifecycleDisposition::kInvalidMetrics ||
+        planned == render::SurfaceLifecycleDisposition::kMetricsMismatch) {
+        return WebSurfaceDisposition::kRejectedInvalid;
+    }
+    if (planned == render::SurfaceLifecycleDisposition::kStaleGeneration) {
+        return WebSurfaceDisposition::kRejectedStale;
+    }
+    if (planned == render::SurfaceLifecycleDisposition::kNoGenerationAdvance) {
+        return WebSurfaceDisposition::kRebound;
     }
     auto runtimeSurface = composition_.runtime().surface();
     if (!runtimeSurface.available ||

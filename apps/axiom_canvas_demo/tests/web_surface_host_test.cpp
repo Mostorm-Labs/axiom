@@ -108,6 +108,21 @@ void compositionAndPlatformShareSurfaceIdentity() {
            PresentFeedbackDisposition::kPresented);
 }
 
+void invalidReplacementHasNoRuntimeSideEffect() {
+    WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
+    const auto before = host.composition().runtime().surface();
+    const auto lifecycleBefore = host.lifecycle().current();
+    auto invalid = lifecycleBefore;
+    invalid.surfaceGeneration = SurfaceGeneration{2};
+    invalid.metricsGeneration = MetricsGeneration{2};
+    invalid.metrics.devicePixelRatio = 0.0F;
+    assert(host.bind(invalid) == WebSurfaceDisposition::kRejectedInvalid);
+    const auto after = host.composition().runtime().surface();
+    assert(after.generation == before.generation);
+    assert(after.width == before.width && after.height == before.height);
+    assert(host.lifecycle().current() == lifecycleBefore);
+}
+
 } // namespace
 
 int main() {
@@ -115,5 +130,6 @@ int main() {
     lossRequiresRebindAndPresentedFeedbackIsGenerationBound();
     runtimeCompositionCanonicalFeedbackClosesTheHandoff();
     compositionAndPlatformShareSurfaceIdentity();
+    invalidReplacementHasNoRuntimeSideEffect();
     return 0;
 }

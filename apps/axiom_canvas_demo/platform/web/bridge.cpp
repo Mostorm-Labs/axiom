@@ -53,7 +53,11 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
             "webgl-window", std::move(surfaceProvider)) ||
         !value->lifecycle.syncRuntimeSurfaceIdentity()) return 0;
     auto previewProvider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
-        canvas::render::WebGlSurfaceConfig{"#axiom-preview", pw, ph});
+        canvas::render::WebGlSurfaceConfig{"#axiom-preview", pw, ph, 0,
+            [](bool visible) { EM_ASM({
+                const canvas = document.querySelector('#axiom-preview');
+                if (canvas) canvas.style.visibility = $0 ? 'visible' : 'hidden';
+            }, visible ? 1 : 0); }});
     if (!previewProvider || !previewProvider->ready() ||
         !value->lifecycle.composition().runtime().registerPreviewSurfaceProvider(
             "webgl-preview", std::move(previewProvider))) return 0;
@@ -79,7 +83,11 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
             std::string("webgl-window-") + std::to_string(value->surfaceGeneration + 1U),
             std::move(surfaceProvider))) return 0;
     auto previewProvider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
-        canvas::render::WebGlSurfaceConfig{"#axiom-preview", pw, ph});
+        canvas::render::WebGlSurfaceConfig{"#axiom-preview", pw, ph, 0,
+            [](bool visible) { EM_ASM({
+                const canvas = document.querySelector('#axiom-preview');
+                if (canvas) canvas.style.visibility = $0 ? 'visible' : 'hidden';
+            }, visible ? 1 : 0); }});
     if (!previewProvider || !previewProvider->ready() ||
         !value->lifecycle.composition().runtime().registerPreviewSurfaceProvider(
             "webgl-preview-" + std::to_string(value->surfaceGeneration + 1U),

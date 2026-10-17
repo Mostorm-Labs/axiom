@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <array>
 #include <unordered_set>
+#include <unordered_map>
 #include <chrono>
 #include <sstream>
 #include <type_traits>
@@ -149,7 +150,10 @@ bool isInkKind(semantic::ObjectKind kind) noexcept {
 
 canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
   if (!isInkKind(record.kind)) return canvas::SceneOrderKey(record.placement.order_key.bytes());
-  return canvas::SceneOrderKey(std::vector<std::uint8_t>{0xFFU, 0xFFU, record.objectId.bytes.back()});
+  std::vector<std::uint8_t> key{0xFFU, 0xFFU};
+  const auto canonical = record.placement.order_key.bytes();
+  key.insert(key.end(), canonical.begin(), canonical.end());
+  return canvas::SceneOrderKey(std::move(key));
 }
 }
 class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
@@ -160,6 +164,19 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
     canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
     result.records.reserve(projection.value().records.size());
+    std::unordered_map<std::uint32_t, foundation::ObjectId> renderSlots;
+    std::unordered_map<std::uint32_t, foundation::ObjectId> hitSlots;
+    const auto allocateSlot = [](auto& slots, std::uint32_t candidate,
+                                 foundation::ObjectId id) {
+      for (;;) {
+        const auto found = slots.find(candidate);
+        if (found == slots.end() || found->second == id) {
+          slots[candidate] = id;
+          return candidate;
+        }
+        ++candidate;
+      }
+    };
     for (const auto& record : projection.value().records) {
       canvas::SceneObjectKind kind = canvas::SceneObjectKind::kShape;
       switch (record.kind) {
@@ -179,10 +196,13 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
       const auto generation = sceneContentGeneration(record);
       const auto order = renderOrderKey(record);
+      const auto renderSlot = allocateSlot(renderSlots, static_cast<std::uint32_t>(slot), record.objectId);
+      const auto hitSlot = allocateSlot(hitSlots,
+          static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), record.objectId);
       result.records.push_back({record.objectId, canvas::SceneOrderKey(order.bytes()), kind, flags,
                                 record.worldBounds, canvas::ContentRevision(generation),
-                                canvas::RenderPayloadRef{static_cast<std::uint32_t>(slot), generation},
-                                canvas::HitGeometryRef{static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), generation}, record.transform,
+                                canvas::RenderPayloadRef{renderSlot, generation},
+                                canvas::HitGeometryRef{hitSlot, generation}, record.transform,
                                 record.derivedGeometry, record.properties});
     }
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
@@ -296,7 +316,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
       sceneBinding_(std::make_unique<canvas::SceneBinding>(*runtimeSceneHost_)),
       sceneCoordinator_(std::make_unique<canvas::IncrementalRuntimeCoordinator>(*sceneBinding_)),
       sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
-      history_(*this), ownerThread_(std::this_thread::get_id()), viewId_(viewId) {
+      history_(*this), viewId_(viewId), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
 }
 
@@ -307,6 +327,13 @@ void CanvasEditingRuntime::bindResourceServices(
   previewRenderer_.setImageResolver(images);
   textLayoutService_ = textService;
   if (sceneCoordinator_ != nullptr) sceneCoordinator_->setTextLayoutService(textService);
+}
+
+void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
+  if (textLayoutService_ != nullptr) {
+    textLayoutService_->clearFonts();
+  }
+  (void)refreshResourceDerivedState();
 }
 
 bool CanvasEditingRuntime::refreshResourceDerivedState() noexcept {
@@ -329,6 +356,7 @@ void CanvasEditingRuntime::close() noexcept {
   cancelAllPointers();
   if (previewController_ != nullptr) (void)previewController_->cancel();
   frameCoordinator_.close();
+  surface_.available = false;
   closed_ = true;
 }
 
@@ -1067,13 +1095,13 @@ void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,
 
 semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) {
-  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
+  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
   if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
       operation.document_id != documentId_) return {};
   const auto result = operationEngine_.apply(operation, source, semanticObjects_,
-      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+      *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (result.disposition == semantic::ApplyDisposition::kApplied && result.commit_record) {
-    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
     const canvas::SceneCommitInput input(result.commit_record->before_generation,
         result.commit_record->after_generation, view, &result.commit_record->change_set);
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
@@ -1113,7 +1141,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   if (!history_.recordConditional(forward, {inverse},std::move(before),std::move(after))) std::terminate();
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
       sceneCompiler_ != nullptr) {
-    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
     const canvas::SceneCommitInput input(applied.commit_record->before_generation,
         applied.commit_record->after_generation, view, &applied.commit_record->change_set);
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
@@ -2620,6 +2648,7 @@ bool CanvasEditingRuntime::bindSurface(std::uint32_t width,
 
 bool CanvasEditingRuntime::resizeSurface(std::uint32_t width,
                                       std::uint32_t height) noexcept {
+  if (closed_ || !surface_.available) return false;
   if (editingPointer_.valid()) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
   std::lock_guard lock(previewStateMutex_);

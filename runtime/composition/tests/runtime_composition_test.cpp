@@ -56,6 +56,21 @@ int main() {
   manifest.entries.push_back(entry);
   manifest.manifest_revision = 1U;
   assert(composition.bindManifest(manifest, 1U));
+  auto addedEntry = entry;
+  addedEntry.resource_id = canvas::semantic::ResourceId{
+      canvas::foundation::ObjectId::fromUint64(8U)};
+  canvas::semantic::Operation manifestOperation{
+      canvas::semantic::OperationId{canvas::foundation::ObjectId::fromUint64(700U)},
+      canvas::semantic::DocumentId{canvas::foundation::ObjectId::fromUint64(1U)},
+      1U, 1U,
+      canvas::semantic::UpdateResourceManifestOp{
+          {addedEntry}, {},
+          {{canvas::semantic::ResourceId{canvas::foundation::ObjectId::fromUint64(8U)},
+            canvas::semantic::ResourceExpectationState::kNeverUsed, 0U}}, {}, 1U}};
+  assert(composition.applyExternalOperation(
+      manifestOperation, canvas::semantic::ApplySource::kRemoteSync).disposition ==
+      canvas::semantic::ApplyDisposition::kApplied);
+  assert(composition.resources().find(canvas::foundation::ObjectId::fromUint64(8U)) != nullptr);
   assert(composition.publishResource(canvas::foundation::ObjectId::fromUint64(7U), {0x01U}));
   assert(composition.ownerPump());
   assert(composition.readback().pendingNotifications == 0U);
