@@ -1,0 +1,52 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION_REVERIFY",
+  "scope": "R4 platform consumer closure only",
+  "implementation_revision": "3719924d13dcd07e19c0dc40f7b06e39a60ae21c",
+  "base_revision": "02fdb6feb9ddc88dc732d2ade8fbe6ad4306da7f",
+  "changes": [
+    "Windows WM_SIZE forwards live dimensions through RuntimeComposition and WindowsSurfaceAdapter",
+    "Windows WM_PAINT consumes Runtime preview capture/render/readback and acknowledges preview after canonical feedback",
+    "Runtime ViewId is injected per composition instance and preserved through frames, lifecycle and feedback",
+    "WebSurfaceHost maps platform feedback to the Runtime submitted frame identity",
+    "Web provider replacement and outer bind are generation-consistent and same-identity bind is idempotent",
+    "Web Minimal bridge registers a separate preview provider and drives preview capture/render/ack",
+    "Web Minimal HTML provides a separate preview canvas"
+  ],
+  "changed_files": [
+    {"path": "apps/axiom_canvas_demo/platform/web/bridge.cpp", "sha256": "D1485A46E03BD3FF9FCE6EE9F68161EB8E3B6D075DA6A325D385B757D8D42093"},
+    {"path": "apps/axiom_canvas_demo/platform/web/index.html", "sha256": "B8C906BCA5A5559373FCDD0205FD73D9A310641B4BBD753624D20BE17E7A07A3"},
+    {"path": "apps/axiom_canvas_demo/platform/web/web_surface_host.cpp", "sha256": "480AD4CD979F23DCE0CA6FCCA41BCECEF50193B3FC7E04689861ABFC5500DBDD"},
+    {"path": "apps/axiom_canvas_demo/platform/web/web_surface_host.hpp", "sha256": "28DC4A80E43C8E9C5583835346FF208F20A675AED831200C16E2C5790E23D52C"},
+    {"path": "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.cpp", "sha256": "3C6993D1B3EE6672914620B371CD7A33E71688D20C69C4754306EAD71551354C"},
+    {"path": "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.hpp", "sha256": "2A342A09CB4B1175752B4AF614AA4F2FA27FC4969733154D1628EB03BBFD8EE0"},
+    {"path": "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp", "sha256": "7FAD410FCFD52A64A09ED71D878C7FDAC5E970E7CA2A7C81310F2D0EAB13D396"},
+    {"path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp", "sha256": "6CF471975ADF3698D10236BDE2055AAFFCA90C7B299414D5BEA8BA79297C08AB"},
+    {"path": "runtime/composition/src/runtime_composition.cpp", "sha256": "C21D45AD3D35BBC533609D7222FB4B73FD197E455B6F6C2253EC00C8835A7DA0"},
+    {"path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp", "sha256": "1290BA3E809C417257CB7EA39CFD6C0BABD543BE5CCFF86C0CD8CA9DBD68257E"},
+    {"path": "runtime/interaction/src/canvas_editing_runtime.cpp", "sha256": "BC2C8DEE8A33DFB1DE4F3A17D69AFA91C03E96F06607FE6F118C37A2DD0A0DA6"}
+  ],
+  "verification": {
+    "git_diff_check": "PASS",
+    "windows_surface_adapter": "PASS; executable exit 0; CTest 1/1",
+    "windows_sources": "COMPILE_PASS",
+    "windows_demo_link": "BLOCKED_ENVIRONMENT: locked Skia/MSVC __std_* unresolved symbols",
+    "web_host_sources": "COMPILE_PASS",
+    "web_surface_host_assertion_link": "BLOCKED_ENVIRONMENT: locked Skia/MSVC __std_* unresolved symbols",
+    "web_release_artifacts": "PHYSICAL_PENDING; prior debug-on/off artifacts unchanged",
+    "manual_windows_observation": "PHYSICAL_PENDING",
+    "manual_web_observation": "PHYSICAL_PENDING"
+  },
+  "evidence_input_refs": [
+    "out/p32-skia-reverify2/apps/axiom_canvas_demo/axiom_demo_windows_surface_tests.exe",
+    "out/p32-skia-reverify2/CTestTestfile.cmake",
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/current-wip-reverify/review.txt",
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/current-wip-reverify/probe-output.log"
+  ],
+  "status": "BLOCKED_ENVIRONMENT",
+  "remaining_blockers": [
+    "Locked prebuilt Skia libraries require a compatible clang-cl/MSVC ABI for final Windows/Web executable links.",
+    "No manual Windows/Web physical observation was performed."
+  ],
+  "official_gate_pass_claimed": false
+}
