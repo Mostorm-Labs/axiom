@@ -241,7 +241,7 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
     auto* provider = composition_.runtime().activeSurfaceProvider();
     if (provider == nullptr) { *error = "Runtime canonical provider is unavailable"; return false; }
     const auto info = provider->describe();
-    render::PreviewPresentationCapture previewCapture{};
+    interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresentCount = 0;
     const bool havePreview = composition_.runtime().capturePreviewPresentation(previewCapture) &&
         composition_.runtime().renderPreviewPresentation(previewCapture, &previewPresentCount);
