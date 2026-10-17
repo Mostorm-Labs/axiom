@@ -415,6 +415,38 @@ void testTwoStageHitTestIsOrderIndependentAndFiltered(TestContext& context) {
     }
 }
 
+void testInkStaysAboveShapesWithoutChangingCanonicalKeys(TestContext& context) {
+    Scene scene(std::make_unique<DirectRenderScene>(),
+                std::make_unique<UniformGridSpatialIndex>());
+    auto shape = makeRecord(10U, 0xFFFFFFFFFFFFFFFFULL,
+                            WorldRect{0.0F, 0.0F, 10.0F, 10.0F});
+    shape.kind = canvas::SceneObjectKind::kShape;
+    shape.flags = static_cast<SceneRecordFlags>(
+        static_cast<std::uint32_t>(shape.flags) |
+        static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable));
+    auto ink = makeRecord(11U, 1U, WorldRect{0.0F, 0.0F, 10.0F, 10.0F});
+    ink.kind = canvas::SceneObjectKind::kVectorStroke;
+    ink.flags = static_cast<SceneRecordFlags>(
+        static_cast<std::uint32_t>(ink.flags) |
+        static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable));
+    EXPECT(context, scene.replace(CompiledSceneSnapshot{
+        .sourceRevision = SceneRevision(1U), .records = {shape, ink}}).hasValue());
+    const auto query = scene.query(SceneQuery{WorldRect{-1.0F, -1.0F, 11.0F, 11.0F}});
+    EXPECT(context, query.hasValue());
+    if (query) {
+        const std::vector<ObjectId> expected{shape.objectId, ink.objectId};
+        EXPECT(context, query.value().backToFront == expected);
+    }
+    const auto hit = scene.hitTest(HitTestRequest{
+        .worldPoint = WorldPoint{5.0F, 5.0F}, .tolerance = 0.0F,
+        .filter = {}, .maximumResults = 2U});
+    EXPECT(context, hit.hasValue());
+    if (hit) {
+        const std::vector<ObjectId> expected{ink.objectId, shape.objectId};
+        EXPECT(context, hit.value().frontToBack == expected);
+    }
+}
+
 void testHitTestToleranceAndInvalidRequests(TestContext& context) {
     Scene scene(std::make_unique<DirectRenderScene>(),
                 std::make_unique<UniformGridSpatialIndex>());
@@ -553,6 +585,7 @@ int main() {
     testDeltaSpatialPrepareFailurePreservesScene(context);
     testFrameInputUsesOneSceneRevision(context);
     testTwoStageHitTestIsOrderIndependentAndFiltered(context);
+    testInkStaysAboveShapesWithoutChangingCanonicalKeys(context);
     testHitTestToleranceAndInvalidRequests(context);
     testShadowRenderSceneKeepsParticipantsAtomic(context);
     testShadowPrepareFailureDoesNotCommitEitherParticipant(context);

@@ -59,6 +59,11 @@ WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replac
         return WebSurfaceDisposition::kRebound;
     }
     auto runtimeSurface = composition_.runtime().surface();
+    if (!runtimeSurface.available &&
+        composition_.state() == runtime::RuntimeCompositionState::kLost) {
+        if (!composition_.rebindSurface()) return WebSurfaceDisposition::kRejectedStale;
+        runtimeSurface = composition_.runtime().surface();
+    }
     if (!runtimeSurface.available ||
         runtimeSurface.generation > replacement.surfaceGeneration.value()) {
         return WebSurfaceDisposition::kRejectedStale;
@@ -111,6 +116,10 @@ bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
 }
 
 render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
+    if (composition_.state() == runtime::RuntimeCompositionState::kReady &&
+        !composition_.loseSurface()) {
+        return render::SurfaceLifecycleDisposition::kUnavailable;
+    }
     return lifecycle_.markLost(lifecycle_.current().viewId);
 }
 render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameState& frame) {

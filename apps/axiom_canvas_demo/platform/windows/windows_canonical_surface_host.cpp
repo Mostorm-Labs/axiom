@@ -43,7 +43,11 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         auto* host = reinterpret_cast<WindowsCanonicalSurfaceHost*>(
             GetWindowLongPtrW(window, GWLP_USERDATA));
         if (host != nullptr && !host->releasingCaptureForPointerUp()) {
+            const auto sequence = host->nextInputSequence();
+            (void)host->composition().runtime().unregisterInputSource(
+                1U, sequence, sequence * 1'000'000U);
             host->composition().runtime().cancelAllPointers();
+            (void)host->composition().registerSource(1U);
             InvalidateRect(window, nullptr, FALSE);
         }
         return 0;

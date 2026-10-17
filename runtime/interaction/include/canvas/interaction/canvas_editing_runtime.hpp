@@ -41,6 +41,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <string>
 #include <string_view>
 #include <memory>
@@ -439,6 +440,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       const render::PresentedFeedback& feedback) noexcept;
   [[nodiscard]] std::optional<render::RuntimeFrameIdentity>
       lastSubmittedCanonicalFrame() const noexcept;
+  [[nodiscard]] std::uint64_t nextCanonicalFrameId() const noexcept {
+    return frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()
+               ? 0U : frameIdHighWater_ + 1U;
+  }
   [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId) noexcept;
   [[nodiscard]] bool retryTransientOverlayFrame() noexcept;
   [[nodiscard]] bool clearTransientOverlay() noexcept;
@@ -628,6 +633,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   mutable std::mutex previewRenderMutex_;
   mutable std::mutex previewProviderMutex_;
   std::uint64_t canonicalFrameCount_ = 0;
+  std::uint64_t frameIdHighWater_ = 0;
   std::optional<render::RuntimeFrameIdentity> lastSubmittedCanonicalFrame_;
   std::unique_ptr<render::FrameState> lastSubmittedCanonicalFrameState_;
   std::optional<render::RuntimeFrameIdentity> lastPresentedCanonicalFrame_;

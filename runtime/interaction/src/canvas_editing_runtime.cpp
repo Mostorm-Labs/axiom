@@ -26,6 +26,7 @@
 #include <chrono>
 #include <sstream>
 #include <type_traits>
+#include <climits>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
 namespace canvas::interaction {
@@ -144,13 +145,52 @@ std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& reco
   return hash == 0U ? 1U : hash;
 }
 
-bool isInkKind(semantic::ObjectKind kind) noexcept {
-  return kind == semantic::ObjectKind::kVectorStroke ||
-         kind == semantic::ObjectKind::kDabStroke;
-}
-
 canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
   return canvas::SceneOrderKey(record.placement.order_key.bytes());
+}
+
+bool runtimeTraversalLess(const canvas::RuntimeSceneRecord& left,
+                          const canvas::RuntimeSceneRecord& right) noexcept {
+  const auto isInk = [](semantic::ObjectKind kind) noexcept {
+    return kind == semantic::ObjectKind::kVectorStroke ||
+           kind == semantic::ObjectKind::kDabStroke;
+  };
+  const bool leftInk = isInk(left.kind);
+  const bool rightInk = isInk(right.kind);
+  if (leftInk != rightInk) return !leftInk;
+  if (left.placement.order_key != right.placement.order_key) {
+    return left.placement.order_key < right.placement.order_key;
+  }
+  return left.objectId < right.objectId;
+}
+
+int fontCollectionIndex(const std::vector<std::uint8_t>& metadata) noexcept {
+  std::size_t offset = 0U;
+  while (offset < metadata.size()) {
+    std::uint64_t key = 0U;
+    unsigned shift = 0U;
+    bool complete = false;
+    while (offset < metadata.size() && shift < 64U) {
+      const auto byte = metadata[offset++];
+      key |= static_cast<std::uint64_t>(byte & 0x7FU) << shift;
+      if ((byte & 0x80U) == 0U) { complete = true; break; }
+      shift += 7U;
+    }
+    if (!complete || key == 0U || (key & 7U) != 0U) return 0;
+    std::uint64_t value = 0U;
+    shift = 0U; complete = false;
+    while (offset < metadata.size() && shift < 64U) {
+      const auto byte = metadata[offset++];
+      value |= static_cast<std::uint64_t>(byte & 0x7FU) << shift;
+      if ((byte & 0x80U) == 0U) { complete = true; break; }
+      shift += 7U;
+    }
+    if (!complete) return 0;
+    if ((key >> 3U) == 2U) {
+      return value > static_cast<std::uint64_t>(INT_MAX) ? 0 : static_cast<int>(value);
+    }
+  }
+  return 0;
 }
 }
 class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
@@ -342,6 +382,15 @@ void CanvasEditingRuntime::bindResourceServices(
 }
 
 void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
+  if (textLayoutService_ != nullptr && resourceManifestPort_ != nullptr) {
+    textLayoutService_->clearFonts();
+    for (const auto& entry : resourceManifestPort_->entries) {
+      if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
+      textLayoutService_->registerFont({entry.resource_id,
+                                        entry.content_hash.substr(7U),
+                                        fontCollectionIndex(entry.metadata)});
+    }
+  }
   (void)refreshResourceDerivedState();
 }
 
@@ -1116,6 +1165,9 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
         result.commit_record->after_generation, view, &result.commit_record->change_set);
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
     observeApplied(operation, result);
+    if (operation.kind() == semantic::OperationKind::kUpdateResourceManifest) {
+      refreshResourceManifestServices();
+    }
     canonicalPresentationDirty_ = true;
   }
   return result;
@@ -1123,7 +1175,7 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
-  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
@@ -2859,6 +2911,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                                               bool retirePreview) noexcept {
   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
   if (!surface_.available || frameId == 0U) { AXIOM_ANDROID_DIAG("present reject surface=%d frame=%llu", surface_.available ? 1 : 0, static_cast<unsigned long long>(frameId)); return false; }
+  if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
+  if (frameId <= frameIdHighWater_) frameId = frameIdHighWater_ + 1U;
+  frameIdHighWater_ = frameId;
   if (runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
       activeSurfaceProvider() == nullptr) { AXIOM_ANDROID_DIAG("present reject missing deps"); return false; }
   const auto semanticGeneration = semanticGeneration_.current();
@@ -2928,8 +2983,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     auto& ids=visibility.value().backToFront;
     ids.push_back(selection_.primary());
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b) {
-      return sceneCoordinator_->runtimeScene().find(a)->placement.order_key <
-             sceneCoordinator_->runtimeScene().find(b)->placement.order_key;
+      return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),
+                                  *sceneCoordinator_->runtimeScene().find(b));
     });
     visibility.value().visibleRecords=ids.size();
   }
@@ -3115,6 +3170,9 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
       (!creationActive() && !selectionTransformActive() && selectionOverlay() == nullptr)) {
     return false;
   }
+  if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
+  if (frameId <= frameIdHighWater_) frameId = frameIdHighWater_ + 1U;
+  frameIdHighWater_ = frameId;
   if (!recoverHistoryScene()) return false;
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
@@ -3168,8 +3226,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     auto& ids = visibility.value().backToFront;
     ids.push_back(selection_.primary());
     std::sort(ids.begin(), ids.end(), [&](auto a, auto b) {
-      return sceneCoordinator_->runtimeScene().find(a)->placement.order_key <
-             sceneCoordinator_->runtimeScene().find(b)->placement.order_key;
+      return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),
+                                  *sceneCoordinator_->runtimeScene().find(b));
     });
     visibility.value().visibleRecords = ids.size();
   }

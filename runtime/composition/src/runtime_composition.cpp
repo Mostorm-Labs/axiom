@@ -4,45 +4,9 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <climits>
 #include <algorithm>
 
 namespace canvas::runtime {
-
-namespace {
-// Font manifest metadata is the canonical, renderer-neutral protobuf
-// descriptor.  The collection index is field 2 (all fields are varints in the
-// frozen v1 descriptor); unknown fields are ignored here because semantic
-// validation already owns structural acceptance.
-int fontCollectionIndex(const std::vector<std::uint8_t>& metadata) noexcept {
-  std::size_t offset = 0U;
-  while (offset < metadata.size()) {
-    std::uint64_t key = 0U;
-    unsigned shift = 0U;
-    bool complete = false;
-    while (offset < metadata.size() && shift < 64U) {
-      const auto byte = metadata[offset++];
-      key |= static_cast<std::uint64_t>(byte & 0x7FU) << shift;
-      if ((byte & 0x80U) == 0U) { complete = true; break; }
-      shift += 7U;
-    }
-    if (!complete || key == 0U || (key & 7U) != 0U) return 0;
-    std::uint64_t value = 0U;
-    shift = 0U; complete = false;
-    while (offset < metadata.size() && shift < 64U) {
-      const auto byte = metadata[offset++];
-      value |= static_cast<std::uint64_t>(byte & 0x7FU) << shift;
-      if ((byte & 0x80U) == 0U) { complete = true; break; }
-      shift += 7U;
-    }
-    if (!complete) return 0;
-    if ((key >> 3U) == 2U) {
-      return value > static_cast<std::uint64_t>(INT_MAX) ? 0 : static_cast<int>(value);
-    }
-  }
-  return 0;
-}
-}
 
 RuntimeComposition::RuntimeComposition(render::ViewId viewId)
     : runtime_(std::make_unique<interaction::CanvasEditingRuntime>(viewId)),
@@ -77,17 +41,9 @@ bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height
   return runtime_->resizeSurface(width, height);
 }
 bool RuntimeComposition::refreshManifestDerivedState() noexcept {
-  if (textLayoutService_ != nullptr) {
-    textLayoutService_->clearFonts();
-    for (const auto& entry : resources_.manifest.entries) {
-      if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
-      textLayoutService_->registerFont({entry.resource_id,
-                                        entry.content_hash.substr(7U),
-                                        fontCollectionIndex(entry.metadata)});
-    }
-  }
   runtime_->bindResourceManifest(&resources_.manifest);
-  return runtime_->refreshResourceDerivedState();
+  runtime_->refreshResourceManifestServices();
+  return true;
 }
 bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest, std::uint64_t binding) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
@@ -128,12 +84,7 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
 semantic::ApplyResult RuntimeComposition::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) noexcept {
   if (!canMutate() || std::this_thread::get_id() != ownerThread_) return {};
-  const auto result = runtime_->applyExternalOperation(operation, source);
-  if (result.disposition == semantic::ApplyDisposition::kApplied &&
-      operation.kind() == semantic::OperationKind::kUpdateResourceManifest) {
-    (void)refreshManifestDerivedState();
-  }
-  return result;
+  return runtime_->applyExternalOperation(operation, source);
 }
 bool RuntimeComposition::notifyResource(foundation::ObjectId id) noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
