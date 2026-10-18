@@ -410,6 +410,15 @@ bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
 
 void CanvasEditingRuntime::close() noexcept {
   if (closed_) return;
+  if (surfaceTransitionActive_) {
+    surfaceAbortRequested_ = true;
+    surface_.available = false;
+    closed_ = true;
+    frameCoordinator_.close();
+    return;
+  }
+  pendingCanonicalProvider_.reset();
+  pendingPreviewProvider_.reset();
   cancelAllPointers();
   if (previewController_ != nullptr) (void)previewController_->cancel();
   frameCoordinator_.close();
@@ -666,7 +675,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
 
 bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
                                             std::uint64_t observationTimeNs) {
-  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ ||
+  if (closed_ || surfaceTransitionActive_ || !surface_.available || std::this_thread::get_id() != ownerThread_ ||
       publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
@@ -825,7 +834,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   const auto content = viewportController_->viewToContent(x, y);
   const auto viewportTopLeft = viewportController_->viewToContent(0.0F, 0.0F);
   const auto viewportBottomRight = viewportController_->viewToContent(
-      static_cast<float>(surface_.width), static_cast<float>(surface_.height));
+      surface_.logicalWidth, surface_.logicalHeight);
   const foundation::WorldRect viewport{
       (std::min)(viewportTopLeft.first, viewportBottomRight.first),
       (std::min)(viewportTopLeft.second, viewportBottomRight.second),
@@ -1173,13 +1182,13 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 }
 
 bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
-  return !closed_ && surface_.available &&
+  return !closed_ && !surfaceTransitionActive_ && surface_.available &&
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
 }
 
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
-  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+  if (!canonicalWriteAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
@@ -1418,22 +1427,22 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
   const auto center = foundation::WorldPoint{
-      (static_cast<float>(surface_.width) * 0.5F - viewport.translationX) / zoom,
-      (static_cast<float>(surface_.height) * 0.5F - viewport.translationY) / zoom};
+      (surface_.logicalWidth * 0.5F - viewport.translationX) / zoom,
+      (surface_.logicalHeight * 0.5F - viewport.translationY) / zoom};
   const auto frame = render::FrameState{
       viewId_,
       render::CameraState{center, zoom, 0.0F,
                           render::CameraGeneration{cameraGeneration()}},
       foundation::WorldRect{-1.0e9F, -1.0e9F, 1.0e9F, 1.0e9F},
-      render::SurfaceMetrics{static_cast<float>(surface_.width),
-                             static_cast<float>(surface_.height), surface_.width,
-                             surface_.height, 1.0F, 1.0F},
+      render::SurfaceMetrics{surface_.logicalWidth, surface_.logicalHeight,
+                             surface_.width, surface_.height,
+                             surface_.devicePixelRatio, surface_.displayScale},
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation},
+      render::MetricsGeneration{surface_.metricsGeneration},
       render::FrameId{nextCanonicalFrameId()},
-      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
-                            static_cast<float>(surface_.height)}};
+      foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
+                            surface_.logicalHeight}};
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, record->visualBounds,
@@ -2462,11 +2471,11 @@ bool CanvasEditingRuntime::fitViewportToContent(
   }
   if (!target.has_value()) return false;
   const auto fit = interaction::computeViewportFit(
-      target, static_cast<float>(surface_.width), static_cast<float>(surface_.height),
+      target, surface_.logicalWidth, surface_.logicalHeight,
       0.0F, 1.0F);
   if (!fit.accepted) return false;
-  const float translationX = static_cast<float>(surface_.width) * 0.5F - fit.zoom * fit.centerX;
-  const float translationY = static_cast<float>(surface_.height) * 0.5F - fit.zoom * fit.centerY;
+  const float translationX = surface_.logicalWidth * 0.5F - fit.zoom * fit.centerX;
+  const float translationY = surface_.logicalHeight * 0.5F - fit.zoom * fit.centerY;
   if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
   const auto viewport = viewportController_->state();
   if (previewController_ != nullptr && previewController_->active() &&
@@ -2677,198 +2686,175 @@ void CanvasEditingRuntime::recordPresentation(std::string evidenceKind,
   hud_.frameMs = frameMs;
 }
 
-bool CanvasEditingRuntime::bindSurface(std::uint32_t width,
-                                    std::uint32_t height) noexcept {
-  if (closed_ || width == 0U || height == 0U) return false;
-  if (appBinding_ == nullptr ||
-      appBinding_->resizeSurface(render::SurfaceMetrics{
-          static_cast<float>(width), static_cast<float>(height), width, height,
-          1.0F, 1.0F}) != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
-  const auto& initialMetrics = appBinding_->surfaces().lifecycle().current().metrics;
-  surface_ = SurfaceBinding{appBinding_->surfaces().lifecycle().current().surfaceGeneration.value(),
-                            initialMetrics.logicalWidth, initialMetrics.logicalHeight,
-                            width, height, true, initialMetrics.devicePixelRatio,
-                            initialMetrics.displayScale};
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      viewId_, render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation},
-      initialMetrics});
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-#if !defined(__EMSCRIPTEN__)
-  // Native hosts use the deterministic transparent overlay until their
-  // platform provider is registered. Web owns both canvas/context resources
-  // and registers its preview provider explicitly after the canonical one.
-  // A platform consumer may have already registered a real preview provider
-  // (for example the Windows D3D12/DirectComposition adapter). Preserve that
-  // provider and only create the raster overlay for legacy hosts with no
-  // preview surface profile yet.
-  if (appBinding_->previewSurfaces() == nullptr) {
-    auto previewProvider = std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
-    if (previewProvider->resize(width, height).code != render::BackendSubmissionCode::kAccepted) {
-      return false;
-    }
-    auto* previewRaw = previewProvider.get();
-    auto previewInfo = previewProvider->describe();
-    previewInfo.profileId = "arc-preview-surface";
-    if (appBinding_->registerPreviewSurfaceProfile(
-            render::SurfaceProfile{previewInfo, std::move(previewProvider)}) !=
-        render::SurfaceProviderDisposition::kCommitted) {
-      return false;
-    }
-    previewProvider_ = previewRaw;
-  } else {
-    previewProvider_ = appBinding_->previewSurfaces()->activeProvider();
-  }
-  if (previewProvider_ == nullptr) return false;
-  previewController_ = std::make_unique<render::PreviewSurfaceController>(
-      skiaRenderer_, *previewProvider_);
-#endif
-  ++resizeEvents_;
-  canonicalPresentationDirty_ = true;
+bool CanvasEditingRuntime::stageSurfaceProvider(
+    std::string profileId, std::unique_ptr<render::SkiaSurfaceProvider> provider,
+    bool preview) noexcept {
+  if (closed_ || surfaceTransitionActive_ || std::this_thread::get_id() != ownerThread_ ||
+      profileId.empty() || !provider) return false;
+  auto info = provider->describe();
+  info.profileId = std::move(profileId);
+  if (info.metrics.physicalWidth == 0U || info.metrics.physicalHeight == 0U) return false;
+  auto& pending = preview ? pendingPreviewProvider_ : pendingCanonicalProvider_;
+  pending.emplace(std::move(info), std::move(provider));
   return true;
 }
 
-bool CanvasEditingRuntime::resizeSurface(std::uint32_t width,
-                                      std::uint32_t height) noexcept {
-  if (closed_ || !surface_.available) return false;
+void CanvasEditingRuntime::publishSurfaceBinding() noexcept {
+  const auto& snapshot = appBinding_->surfaces().lifecycle().current();
+  const auto& metrics = snapshot.metrics;
+  surface_ = SurfaceBinding{snapshot.surfaceGeneration.value(), snapshot.metricsGeneration.value(),
+      metrics.logicalWidth, metrics.logicalHeight, metrics.physicalWidth,
+      metrics.physicalHeight, appBinding_->surfaces().lifecycle().available(),
+      metrics.devicePixelRatio, metrics.displayScale};
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(snapshot);
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
+  frameCoordinator_.invalidate(render::FrameRole::kCanonical);
+  frameCoordinator_.invalidate(render::FrameRole::kPreview);
+  lastSubmittedCanonicalFrame_.reset();
+  lastSubmittedCanonicalFrameState_.reset();
+  lastPresentedCanonicalFrame_.reset();
+  lastPresentedCanonicalFrameState_.reset();
+  presentedSurfaceGeneration_ = {};
+  presentedMetricsGeneration_ = {};
+  canonicalPresentationDirty_ = true;
+}
+
+bool CanvasEditingRuntime::commitSurfaceBinding(
+    const render::SurfaceMetrics& metrics, bool restoring) noexcept {
+  if (closed_ || surfaceTransitionActive_ || std::this_thread::get_id() != ownerThread_ ||
+      appBinding_ == nullptr || !std::isfinite(metrics.logicalWidth) ||
+      !std::isfinite(metrics.logicalHeight) || metrics.logicalWidth <= 0.0F ||
+      metrics.logicalHeight <= 0.0F || metrics.physicalWidth == 0U ||
+      metrics.physicalHeight == 0U || !std::isfinite(metrics.devicePixelRatio) ||
+      metrics.devicePixelRatio <= 0.0F || !std::isfinite(metrics.displayScale) ||
+      metrics.displayScale <= 0.0F) return false;
+  const bool unchanged = !restoring && !hasStagedSurfaceProviders() && surface_.available &&
+      metrics == appBinding_->surfaces().lifecycle().current().metrics;
+  if (unchanged) return true;
+  if (appBinding_->surfaces().validateUpdate(metrics, pendingCanonicalProvider_) !=
+      render::SurfaceProviderDisposition::kCommitted ||
+      (appBinding_->previewSurfaces() &&
+       appBinding_->previewSurfaces()->validateUpdate(metrics, pendingPreviewProvider_) !=
+           render::SurfaceProviderDisposition::kCommitted)) return false;
   if (editingPointer_.valid()) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
-  std::lock_guard lock(previewStateMutex_);
-  if (width == 0U || height == 0U || surface_.generation == 0U ||
-      surface_.generation == std::numeric_limits<std::uint64_t>::max()) {
+  std::lock_guard stateLock(previewStateMutex_);
+  surfaceTransitionActive_ = true;
+  surfaceAbortRequested_ = false;
+  std::optional<render::PreviewGeometry> retainedPreview;
+  if (previewController_ && previewController_->active()) retainedPreview = previewController_->geometry();
+  const auto previewStyle = previewController_ ? previewController_->presentationStyle()
+                                               : render::PreviewStyleOverride{};
+  // The fallback is also a separate provider. Its initial prepared generation
+  // is retained; no repeated resize is used to manufacture an identity.
+  if (appBinding_->previewSurfaces() == nullptr) {
+    auto provider = std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
+    if (provider->resize(metrics.physicalWidth, metrics.physicalHeight).code !=
+        render::BackendSubmissionCode::kAccepted) {
+      surfaceTransitionActive_ = false;
+      return false;
+    }
+    auto info = provider->describe();
+    info.profileId = "runtime-preview";
+    if (appBinding_->registerPreviewSurfaceProfile({info, std::move(provider)}) !=
+        render::SurfaceProviderDisposition::kCommitted) {
+      surfaceTransitionActive_ = false;
+      return false;
+    }
+  }
+  const auto result = appBinding_->updateSurfacePair(metrics,
+      pendingCanonicalProvider_, pendingPreviewProvider_, restoring, surface_.generation == 0U,
+      [this] { return !closed_ && !surfaceAbortRequested_; });
+  surfaceTransitionActive_ = false;
+  if (result != render::SurfaceProviderDisposition::kCommitted) {
+    pendingCanonicalProvider_.reset();
+    pendingPreviewProvider_.reset();
+    if (surfaceAbortRequested_ || closed_) appBinding_->invalidateSurfacePair();
+    if (!appBinding_->surfaces().lifecycle().available()) {
+      surface_.available = false;
+      if (lifecycle_) (void)lifecycle_->markLost(viewId_);
+      frameCoordinator_.invalidate(render::FrameRole::kCanonical);
+      frameCoordinator_.invalidate(render::FrameRole::kPreview);
+      lastSubmittedCanonicalFrame_.reset();
+      lastSubmittedCanonicalFrameState_.reset();
+    }
     return false;
   }
-  if (appBinding_ == nullptr ||
-      appBinding_->resizeSurface(render::SurfaceMetrics{
-          static_cast<float>(width), static_cast<float>(height), width, height,
-          1.0F, 1.0F}) != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
+  pendingCanonicalProvider_.reset();
+  pendingPreviewProvider_.reset();
+  auto* nextPreview = appBinding_->previewSurfaces()->activeProvider();
+  if (previewProvider_ != nextPreview || !previewController_) {
+    previewProvider_ = nextPreview;
+    previewController_ = std::make_unique<render::PreviewSurfaceController>(skiaRenderer_, *previewProvider_);
+    previewController_->setPresentationDeferred(platformPresentationDeferred_);
+    previewController_->setPresentationStyle(previewStyle);
+    if (retainedPreview) previewController_->retainGeometry(*retainedPreview);
+  } else if (previewController_->active()) {
+    (void)previewController_->rebind(previewProvider_->generation());
   }
-  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
-  surface_.width = width;
-  surface_.height = height;
-  surface_.available = true;
-  const auto& resizedMetrics = appBinding_->surfaces().activeInfo().metrics;
-  surface_.logicalWidth = resizedMetrics.logicalWidth;
-  surface_.logicalHeight = resizedMetrics.logicalHeight;
-  surface_.devicePixelRatio = resizedMetrics.devicePixelRatio;
-  surface_.displayScale = resizedMetrics.displayScale;
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      viewId_, render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation},
-      resizedMetrics});
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  if (previewProvider_ == nullptr || appBinding_->previewSurfaces() == nullptr ||
-      appBinding_->resizePreviewSurface(render::SurfaceMetrics{
-      static_cast<float>(width), static_cast<float>(height), width, height,
-          1.0F, 1.0F}) != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->rebind(previewProvider_->generation())) {
-    return false;
-  }
+  previewController_->setSurfaceMetrics(metrics);
+  publishSurfaceBinding();
+  return true;
+}
+
+bool CanvasEditingRuntime::bindSurface(std::uint32_t width, std::uint32_t height) noexcept {
+  return bindSurface(render::SurfaceMetrics{static_cast<float>(width),
+      static_cast<float>(height), width, height, 1.0F, 1.0F});
+}
+
+bool CanvasEditingRuntime::bindSurface(const render::SurfaceMetrics& metrics) noexcept {
+  if (!commitSurfaceBinding(metrics, false)) return false;
   ++resizeEvents_;
-  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool CanvasEditingRuntime::resizeSurface(std::uint32_t width, std::uint32_t height) noexcept {
+  return resizeSurface(render::SurfaceMetrics{static_cast<float>(width),
+      static_cast<float>(height), width, height, 1.0F, 1.0F});
+}
+
+bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) noexcept {
+  if (!surface_.available || !commitSurfaceBinding(metrics, false)) return false;
+  ++resizeEvents_;
   return true;
 }
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
+  if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  if (surfaceTransitionActive_) {
+    surfaceAbortRequested_ = true;
+    surface_.available = false;
+    return true;
+  }
   if (editingPointer_.valid()) cancelSelectionTransform();
-  std::lock_guard lock(previewStateMutex_);
-  if (surface_.generation == 0U) return false;
-  if (appBinding_ == nullptr ||
-      appBinding_->markSurfaceLost() != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard stateLock(previewStateMutex_);
+  appBinding_->invalidateSurfacePair();
+  pendingCanonicalProvider_.reset();
+  pendingPreviewProvider_.reset();
   surface_.available = false;
-  if (appBinding_->markPreviewSurfaceLost() != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
   (void)lifecycle_->markLost(viewId_);
+  frameCoordinator_.invalidate(render::FrameRole::kCanonical);
+  frameCoordinator_.invalidate(render::FrameRole::kPreview);
+  lastSubmittedCanonicalFrame_.reset();
+  lastSubmittedCanonicalFrameState_.reset();
   ++surfaceLostEvents_;
   return true;
 }
 
 bool CanvasEditingRuntime::rebindSurface() noexcept {
-  if (editingPointer_.valid()) cancelSelectionTransform();
-  std::lock_guard providerLock(previewProviderMutex_);
-  std::lock_guard lock(previewStateMutex_);
-  if (appBinding_ == nullptr ||
-      appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted ||
-      appBinding_->rebindPreviewSurface() != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
-  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
-  const auto& reboundMetrics = appBinding_->surfaces().lifecycle().current().metrics;
-  surface_.width = reboundMetrics.physicalWidth;
-  surface_.height = reboundMetrics.physicalHeight;
-  surface_.available = true;
-  surface_.logicalWidth = reboundMetrics.logicalWidth;
-  surface_.logicalHeight = reboundMetrics.logicalHeight;
-  surface_.devicePixelRatio = reboundMetrics.devicePixelRatio;
-  surface_.displayScale = reboundMetrics.displayScale;
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(
-      appBinding_->surfaces().lifecycle().current());
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->rebind(previewProvider_->generation())) return false;
-  ++rebindEvents_;
-  return true;
+  if (!appBinding_) return false;
+  return rebindSurface(appBinding_->surfaces().lifecycle().current().metrics);
 }
 
 bool CanvasEditingRuntime::rebindSurface(const render::SurfaceMetrics& metrics) noexcept {
-  if (editingPointer_.valid()) cancelSelectionTransform();
-  std::lock_guard providerLock(previewProviderMutex_);
-  std::lock_guard lock(previewStateMutex_);
-  if (appBinding_ == nullptr ||
-      appBinding_->rebindSurface(metrics) != render::SurfaceProviderDisposition::kCommitted ||
-      (previewProvider_ != nullptr && appBinding_->resizePreviewSurface(metrics) !=
-           render::SurfaceProviderDisposition::kCommitted)) {
-    return false;
-  }
-  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
-  surface_.width = metrics.physicalWidth;
-  surface_.height = metrics.physicalHeight;
-  surface_.logicalWidth = metrics.logicalWidth;
-  surface_.logicalHeight = metrics.logicalHeight;
-  surface_.available = true;
-  surface_.devicePixelRatio = metrics.devicePixelRatio;
-  surface_.displayScale = metrics.displayScale;
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(
-      appBinding_->surfaces().lifecycle().current());
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  if (previewController_ != nullptr && previewProvider_ != nullptr &&
-      previewController_->active() &&
-      !previewController_->rebind(previewProvider_->generation())) return false;
+  if (!commitSurfaceBinding(metrics, true)) return false;
   ++rebindEvents_;
-  canonicalPresentationDirty_ = true;
   return true;
 }
 
 bool CanvasEditingRuntime::adoptPreparedSurface(const render::SurfaceMetrics& metrics) noexcept {
-  std::lock_guard providerLock(previewProviderMutex_);
-  std::lock_guard lock(previewStateMutex_);
-  if (appBinding_ == nullptr ||
-      appBinding_->adoptPreparedSurface(metrics) != render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
-  if (previewProvider_ != nullptr &&
-      previewController_ != nullptr && previewController_->active() &&
-      !previewController_->rebind(previewProvider_->generation())) return false;
-  surface_.width = metrics.physicalWidth;
-  surface_.height = metrics.physicalHeight;
-  surface_.logicalWidth = metrics.logicalWidth;
-  surface_.logicalHeight = metrics.logicalHeight;
-  surface_.available = true;
-  surface_.devicePixelRatio = metrics.devicePixelRatio;
-  surface_.displayScale = metrics.displayScale;
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(appBinding_->surfaces().lifecycle().current());
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  canonicalPresentationDirty_ = true;
-  return true;
+  return commitSurfaceBinding(metrics, !surface_.available);
 }
 
 bool CanvasEditingRuntime::rebindPreviewSurface() noexcept {
@@ -2885,23 +2871,7 @@ bool CanvasEditingRuntime::rebindPreviewSurface() noexcept {
 
 bool CanvasEditingRuntime::registerSurfaceProvider(
     std::string profileId, std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
-  if (appBinding_ == nullptr || provider == nullptr || profileId.empty()) return false;
-  auto info = provider->describe();
-  info.profileId = profileId;
-  if (appBinding_->registerSurfaceProfile(render::SurfaceProfile{info, std::move(provider)}) !=
-      render::SurfaceProviderDisposition::kCommitted) return false;
-  if (appBinding_->selectRenderProfile(profileId, info.format) !=
-      render::SurfaceProviderDisposition::kCommitted) return false;
-  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
-  surface_.width = appBinding_->surfaces().activeInfo().metrics.physicalWidth;
-  surface_.height = appBinding_->surfaces().activeInfo().metrics.physicalHeight;
-  surface_.available = true;
-  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
-      viewId_, render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation},
-      appBinding_->surfaces().activeInfo().metrics});
-  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  return true;
+  return stageSurfaceProvider(std::move(profileId), std::move(provider), false);
 }
 
 bool CanvasEditingRuntime::selectCanonicalSurfaceProfile(
@@ -2914,8 +2884,14 @@ bool CanvasEditingRuntime::selectCanonicalSurfaceProfile(
   if (appBinding_->selectRenderProfile(profileId, format) !=
       render::SurfaceProviderDisposition::kCommitted) return false;
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
-  surface_.width = appBinding_->surfaces().activeInfo().metrics.physicalWidth;
-  surface_.height = appBinding_->surfaces().activeInfo().metrics.physicalHeight;
+  surface_.metricsGeneration = appBinding_->surfaces().lifecycle().current().metricsGeneration.value();
+  const auto& accepted = appBinding_->surfaces().activeInfo().metrics;
+  surface_.width = accepted.physicalWidth;
+  surface_.height = accepted.physicalHeight;
+  surface_.logicalWidth = accepted.logicalWidth;
+  surface_.logicalHeight = accepted.logicalHeight;
+  surface_.devicePixelRatio = accepted.devicePixelRatio;
+  surface_.displayScale = accepted.displayScale;
   surface_.available = true;
   return true;
 }
@@ -2927,35 +2903,14 @@ bool CanvasEditingRuntime::rebindCanonicalSurface(std::uint64_t expectedGenerati
   if (editingPointer_.valid()) cancelSelectionTransform();
   if (appBinding_->rebindSurface() != render::SurfaceProviderDisposition::kCommitted) return false;
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.metricsGeneration = appBinding_->surfaces().lifecycle().current().metricsGeneration.value();
   surface_.available = true;
   return true;
 }
 
 bool CanvasEditingRuntime::registerPreviewSurfaceProvider(
     std::string profileId, std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
-  if (appBinding_ == nullptr || provider == nullptr || profileId.empty()) {
-    AXIOM_ANDROID_DIAG("preview registration missing binding/provider/profile");
-    return false;
-  }
-  auto info = provider->describe();
-  info.profileId = profileId;
-  const auto registered = appBinding_->registerPreviewSurfaceProfile(
-      render::SurfaceProfile{info, std::move(provider)});
-  if (registered != render::SurfaceProviderDisposition::kCommitted) {
-    AXIOM_ANDROID_DIAG("preview registration rejected code=%u",
-                       static_cast<unsigned>(registered));
-    return false;
-  }
-  const auto selection = appBinding_->selectPreviewRenderProfile(profileId, info.format);
-  if (selection != render::SurfaceProviderDisposition::kCommitted) {
-    AXIOM_ANDROID_DIAG("preview selection rejected code=%u", static_cast<unsigned>(selection));
-    return false;
-  }
-  auto* selected = appBinding_->previewSurfaces()->activeProvider();
-  if (selected == nullptr) return false;
-  previewProvider_ = selected;
-  previewController_ = std::make_unique<render::PreviewSurfaceController>(skiaRenderer_, *previewProvider_);
-  return true;
+  return stageSurfaceProvider(std::move(profileId), std::move(provider), true);
 }
 
 render::SkiaSurfaceProvider* CanvasEditingRuntime::activeSurfaceProvider() noexcept {
@@ -3008,8 +2963,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
-  const float centerX = static_cast<float>(surface_.width) * 0.5F;
-  const float centerY = static_cast<float>(surface_.height) * 0.5F;
+  const float centerX = surface_.logicalWidth * 0.5F;
+  const float centerY = surface_.logicalHeight * 0.5F;
   // Visibility queries are expressed in world space, while the platform
   // surface bounds are view-space pixels.  Convert all four view corners
   // through the inverse camera transform before querying the Scene.  Using
@@ -3022,9 +2977,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         (viewY - viewport.translationY) / zoom};
   };
   const std::array<foundation::WorldPoint, 4> worldCorners{
-      viewToWorld(0.0F, 0.0F), viewToWorld(static_cast<float>(surface_.width), 0.0F),
-      viewToWorld(0.0F, static_cast<float>(surface_.height)),
-      viewToWorld(static_cast<float>(surface_.width), static_cast<float>(surface_.height))};
+      viewToWorld(0.0F, 0.0F), viewToWorld(surface_.logicalWidth, 0.0F),
+      viewToWorld(0.0F, surface_.logicalHeight),
+      viewToWorld(surface_.logicalWidth, surface_.logicalHeight)};
   foundation::WorldRect worldViewport{worldCorners[0].x, worldCorners[0].y,
                                       worldCorners[0].x, worldCorners[0].y};
   for (std::size_t i = 1; i < worldCorners.size(); ++i) {
@@ -3049,9 +3004,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                              surface_.devicePixelRatio, surface_.displayScale},
       semanticGeneration, runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
-      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
-                            static_cast<float>(surface_.height)}};
+       render::MetricsGeneration{surface_.metricsGeneration}, render::FrameId{frameId},
+      foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
+                            surface_.logicalHeight}};
   const render::RuntimeFrameCapture canonicalCapture{
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
@@ -3264,8 +3219,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
-  const float centerX = static_cast<float>(surface_.width) * 0.5F;
-  const float centerY = static_cast<float>(surface_.height) * 0.5F;
+  const float centerX = surface_.logicalWidth * 0.5F;
+  const float centerY = surface_.logicalHeight * 0.5F;
   const auto viewToWorld = [&](float viewX, float viewY) {
     return foundation::WorldPoint{
         (viewX - viewport.translationX) / zoom,
@@ -3273,9 +3228,9 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
   };
   const std::array<foundation::WorldPoint, 4> worldCorners{
       viewToWorld(0.0F, 0.0F),
-      viewToWorld(static_cast<float>(surface_.width), 0.0F),
-      viewToWorld(0.0F, static_cast<float>(surface_.height)),
-      viewToWorld(static_cast<float>(surface_.width), static_cast<float>(surface_.height))};
+      viewToWorld(surface_.logicalWidth, 0.0F),
+      viewToWorld(0.0F, surface_.logicalHeight),
+      viewToWorld(surface_.logicalWidth, surface_.logicalHeight)};
   foundation::WorldRect worldViewport{worldCorners[0].x, worldCorners[0].y,
                                       worldCorners[0].x, worldCorners[0].y};
   for (std::size_t i = 1; i < worldCorners.size(); ++i) {
@@ -3298,9 +3253,9 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
                               surface_.displayScale},
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
-      render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
-      foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
-                            static_cast<float>(surface_.height)}};
+       render::MetricsGeneration{surface_.metricsGeneration}, render::FrameId{frameId},
+      foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
+                            surface_.logicalHeight}};
   const render::RuntimeFrameCapture previewCapture{
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},

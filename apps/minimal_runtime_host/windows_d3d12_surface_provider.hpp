@@ -37,6 +37,8 @@ class WindowsD3D12SurfaceProvider final
     return generation_.load(std::memory_order_acquire);
   }
   [[nodiscard]] canvas::render::BackendSubmissionResult advanceGeneration() noexcept override;
+  [[nodiscard]] canvas::render::BackendSubmissionResult activateBinding() noexcept override;
+  void deactivateBinding() noexcept override;
   [[nodiscard]] std::uint64_t readbackCount() const noexcept override { return 0; }
   [[nodiscard]] std::uint64_t cpuCopyCount() const noexcept override { return 0; }
   [[nodiscard]] std::uint64_t presentCount() const noexcept override {

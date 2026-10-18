@@ -86,6 +86,43 @@ SurfaceProviderDisposition RuntimeAppBinding::adoptPreparedSurface(SurfaceMetric
     return surfaces_.adoptPrepared(metrics);
 }
 
+SurfaceProviderDisposition RuntimeAppBinding::updateSurfacePair(
+    SurfaceMetrics metrics, std::optional<SurfaceProfile>& canonical,
+    std::optional<SurfaceProfile>& preview, bool restoring, bool initialBinding,
+    const std::function<bool()>& commitAdmission) noexcept {
+    if (!previewSurfaces_) return SurfaceProviderDisposition::kProviderUnavailable;
+    const auto canonicalCheck = surfaces_.validateUpdate(metrics, canonical);
+    if (canonicalCheck != SurfaceProviderDisposition::kCommitted) return canonicalCheck;
+    const auto previewCheck = previewSurfaces_->validateUpdate(metrics, preview);
+    if (previewCheck != SurfaceProviderDisposition::kCommitted) return previewCheck;
+    bool touchedActive = false;
+    const bool replacingPair = canonical.has_value() || preview.has_value();
+    auto result = surfaces_.prepareUpdate(metrics, canonical, restoring, replacingPair, initialBinding, touchedActive);
+    if (result == SurfaceProviderDisposition::kCommitted) {
+        result = previewSurfaces_->prepareUpdate(metrics, preview, restoring, replacingPair, initialBinding, touchedActive);
+    }
+    if (result == SurfaceProviderDisposition::kCommitted && commitAdmission() &&
+        (!surfaces_.activateUpdate(touchedActive) ||
+         !previewSurfaces_->activateUpdate(touchedActive))) {
+        result = SurfaceProviderDisposition::kProviderUnavailable;
+    }
+    if (result != SurfaceProviderDisposition::kCommitted || !commitAdmission()) {
+        surfaces_.abortUpdate();
+        previewSurfaces_->abortUpdate();
+        if (touchedActive) invalidateSurfacePair();
+        return result == SurfaceProviderDisposition::kCommitted
+                   ? SurfaceProviderDisposition::kStaleFrame : result;
+    }
+    surfaces_.commitUpdate();
+    previewSurfaces_->commitUpdate();
+    return SurfaceProviderDisposition::kCommitted;
+}
+
+void RuntimeAppBinding::invalidateSurfacePair() noexcept {
+    surfaces_.invalidate();
+    if (previewSurfaces_) previewSurfaces_->invalidate();
+}
+
 SurfaceProviderDisposition RuntimeAppBinding::registerPreviewSurfaceProfile(
     SurfaceProfile profile) {
     if (previewSurfaces_ == nullptr) {

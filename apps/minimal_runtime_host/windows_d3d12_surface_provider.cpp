@@ -221,7 +221,7 @@ canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::resize(
   // wrapped surface/context, then create a new swap chain and wrappers.
   destroyGpuSurface();
   if (!attachToOwner_) destroyOverlay();
-  if (!createGpuSurface() || !ensureOverlay()) {
+  if (!createGpuSurface()) {
     std::fprintf(stderr, "[d3d12] resize failed owner=%d new=%ux%u\\n",
                  attachToOwner_ ? 1 : 0, width, height);
     return canvas::render::BackendSubmissionResult::rejected("D3D12 surface creation failed");
@@ -245,6 +245,19 @@ canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::advanceGene
   generation_.fetch_add(1U, std::memory_order_acq_rel);
   lost_ = false;
   return canvas::render::BackendSubmissionResult::accepted();
+}
+canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::activateBinding() noexcept {
+  if (!ensureOverlay()) return canvas::render::BackendSubmissionResult::rejected("D3D12 visual activation failed");
+  return canvas::render::BackendSubmissionResult::accepted();
+}
+void WindowsD3D12SurfaceProvider::deactivateBinding() noexcept {
+  setOverlayVisible(false);
+  if (impl_->visual) (void)impl_->visual->SetContent(nullptr);
+  if (impl_->target) (void)impl_->target->SetRoot(nullptr);
+  if (impl_->composition) (void)impl_->composition->Commit();
+  impl_->visual.Reset();
+  impl_->target.Reset();
+  impl_->composition.Reset();
 }
 void WindowsD3D12SurfaceProvider::setOverlayVisible(bool visible) noexcept {
   visible_.store(visible, std::memory_order_release);
@@ -511,6 +524,8 @@ canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::present() n
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::resize(std::uint32_t, std::uint32_t) noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::readbackRgba(std::span<std::uint8_t>) noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::advanceGeneration() noexcept { return {}; }
+canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::activateBinding() noexcept { return {}; }
+void WindowsD3D12SurfaceProvider::deactivateBinding() noexcept {}
 void WindowsD3D12SurfaceProvider::setOverlayVisible(bool visible) noexcept {
   visible_.store(visible, std::memory_order_release);
 }

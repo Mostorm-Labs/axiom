@@ -53,30 +53,32 @@ void rejectsStaleSurfaceAndAcceptsFreshDprMetrics() {
     WebSurfaceHost host{surface(10, 20)};
     assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
     assert(host.bind(surface(9, 20)) == WebSurfaceDisposition::kRejectedStale);
-    assert(host.bind(surface(11, 21, metrics(1200U, 900U, 1.5F))) ==
-           WebSurfaceDisposition::kRebound);
-    assert(host.lifecycle().current().surfaceGeneration == SurfaceGeneration{11});
-    assert(host.lifecycle().current().metricsGeneration == MetricsGeneration{21});
+    const auto before = host.lifecycle().current();
+    assert(host.bind({before.viewId, before.surfaceGeneration, before.metricsGeneration,
+                      metrics(1200U, 900U, 1.5F)}) == WebSurfaceDisposition::kRebound);
+    assert(host.lifecycle().current().surfaceGeneration.value() > before.surfaceGeneration.value());
+    assert(host.lifecycle().current().metricsGeneration.value() > before.metricsGeneration.value());
 }
 
 void lossRequiresRebindAndPresentedFeedbackIsGenerationBound() {
     WebSurfaceHost host{surface(30, 40)};
+    const auto before = host.lifecycle().current();
     assert(host.markLost() == SurfaceLifecycleDisposition::kLost);
-    assert(host.submit(frame(60, 30, 40)) == PresentFeedbackDisposition::kUnavailable);
-    assert(host.bind(surface(31, 41, metrics(1600U, 1200U, 2.0F))) ==
-           WebSurfaceDisposition::kRebound);
-    assert(host.submit(frame(61, 31, 41, metrics(1600U, 1200U, 2.0F))) ==
-           PresentFeedbackDisposition::kSubmitted);
+    assert(host.submit(frame(60, before.surfaceGeneration.value(), before.metricsGeneration.value())) ==
+           PresentFeedbackDisposition::kUnavailable);
+    assert(host.bind({before.viewId, before.surfaceGeneration, before.metricsGeneration,
+                      metrics(1600U, 1200U, 2.0F)}) == WebSurfaceDisposition::kRebound);
+    const auto accepted = host.lifecycle().current();
+    assert(host.submit(frame(61, accepted.surfaceGeneration.value(), accepted.metricsGeneration.value(),
+                             accepted.metrics)) == PresentFeedbackDisposition::kSubmitted);
     assert(host.feedback(PresentedFeedback{
-               kView, FrameId{61}, SurfaceGeneration{31}, MetricsGeneration{40},
+               kView, FrameId{61}, accepted.surfaceGeneration, before.metricsGeneration,
                PresentOutcome::kPresented, PresentEvidenceKind::kPlatformQualified,
-               std::optional<std::uint64_t>{100}}) ==
-           PresentFeedbackDisposition::kStaleGeneration);
+               std::optional<std::uint64_t>{100}}) == PresentFeedbackDisposition::kStaleGeneration);
     assert(host.feedback(PresentedFeedback{
-               kView, FrameId{61}, SurfaceGeneration{31}, MetricsGeneration{41},
+               kView, FrameId{61}, accepted.surfaceGeneration, accepted.metricsGeneration,
                PresentOutcome::kPresented, PresentEvidenceKind::kPlatformQualified,
-               std::optional<std::uint64_t>{101}}) ==
-           PresentFeedbackDisposition::kPresented);
+               std::optional<std::uint64_t>{101}}) == PresentFeedbackDisposition::kPresented);
 }
 
 void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
@@ -151,8 +153,8 @@ void invalidReplacementHasNoRuntimeSideEffect() {
     const auto lifecycleBefore = host.lifecycle().current();
     auto invalid = SurfaceSnapshot{
         lifecycleBefore.viewId,
-        SurfaceGeneration{2},
-        MetricsGeneration{2},
+        lifecycleBefore.surfaceGeneration,
+        lifecycleBefore.metricsGeneration,
         SurfaceMetrics{lifecycleBefore.metrics.logicalWidth,
                        lifecycleBefore.metrics.logicalHeight,
                        lifecycleBefore.metrics.physicalWidth,
@@ -178,11 +180,16 @@ void preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance() {
     assert(host.composition().registerPreviewSurfaceProvider(
         "prepared-web-preview", std::move(preview)));
     const auto prepared = host.composition().surfaceSnapshot();
-    assert(prepared.available);
-    assert(host.bind(surface(prepared.surfaceGeneration, prepared.metricsGeneration,
-                             metrics(640U, 360U))) == WebSurfaceDisposition::kRebound);
+    assert(!prepared.available);
+    assert(host.bind({kView, SurfaceGeneration{prepared.surfaceGeneration},
+                     MetricsGeneration{prepared.metricsGeneration}, metrics(640U, 360U)}) ==
+           WebSurfaceDisposition::kRebound);
     assert(host.composition().state() == canvas::runtime::RuntimeCompositionState::kReady);
-    assert(host.composition().surfaceSnapshot().surfaceGeneration == prepared.surfaceGeneration);
+    const auto committed = host.composition().surfaceSnapshot();
+    assert(committed.surfaceGeneration == prepared.surfaceGeneration + 1U);
+    assert(committed.width == 640U && committed.height == 360U);
+    assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
+    assert(host.composition().surfaceSnapshot().surfaceGeneration == committed.surfaceGeneration);
 }
 
 void mappingCapacityRejectsBeforeRuntimeSubmission() {
@@ -212,6 +219,14 @@ void mappingCapacityRejectsBeforeRuntimeSubmission() {
 } // namespace
 
 int main() {
+    {
+        WebSurfaceHost host{surface(1U, 1U, SurfaceMetrics{100.0F, 80.0F, 200U, 160U, 2.0F, 1.25F})};
+        const auto accepted = host.composition().surfaceSnapshot();
+        assert(accepted.logicalWidth == 100.0F && accepted.logicalHeight == 80.0F);
+        assert(accepted.width == 200U && accepted.height == 160U);
+        assert(accepted.devicePixelRatio == 2.0F && accepted.displayScale == 1.25F);
+        assert(host.lifecycle().current().metrics == SurfaceMetrics(100.0F, 80.0F, 200U, 160U, 2.0F, 1.25F));
+    }
     rejectsStaleSurfaceAndAcceptsFreshDprMetrics();
     lossRequiresRebindAndPresentedFeedbackIsGenerationBound();
     runtimeCompositionCanonicalFeedbackClosesTheHandoff();

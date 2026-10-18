@@ -42,6 +42,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview());
             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
         }
+        canvas->save();
+        canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
+                      plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
         SkPaint guidePaint;
         guidePaint.setAntiAlias(true);
         guidePaint.setStyle(SkPaint::kStroke_Style);
@@ -77,6 +80,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                                handle.visualRadius, chrome);
         }
         }
+        canvas->restore();
     }
     provider.release();
     if (result.code != BackendSubmissionCode::kAccepted) return result;
@@ -114,6 +118,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                                                  *selectionOverlay->creationPreview());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
     }
+    canvas->save();
+    canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
+                  plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
     SkPaint guidePaint;
     guidePaint.setAntiAlias(true);
     guidePaint.setStyle(SkPaint::kStroke_Style);
@@ -149,6 +156,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                                handle.visualRadius, chrome);
         }
     }
+    canvas->restore();
     provider.release();
     ++submissions_;
     ++rasterizations_;
@@ -162,6 +170,8 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         !std::isfinite(geometry.viewport.scale) || geometry.viewport.scale <= 0.0F ||
         !std::isfinite(geometry.viewport.translationX) ||
         !std::isfinite(geometry.viewport.translationY) ||
+        !std::isfinite(geometry.logicalToPhysicalX) || geometry.logicalToPhysicalX <= 0.0F ||
+        !std::isfinite(geometry.logicalToPhysicalY) || geometry.logicalToPhysicalY <= 0.0F ||
         provider.generation() != geometry.surfaceGeneration.value()) {
         return BackendSubmissionResult::rejected("invalid preview geometry or surface generation");
     }
@@ -176,6 +186,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     auto* canvas = acquired.frame.surface->getCanvas();
     canvas->clear(SK_ColorTRANSPARENT);
     canvas->save();
+    canvas->scale(geometry.logicalToPhysicalX, geometry.logicalToPhysicalY);
     canvas->translate(geometry.viewport.translationX, geometry.viewport.translationY);
     canvas->scale(geometry.viewport.scale, geometry.viewport.scale);
     SkPaint paint;

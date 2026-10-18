@@ -54,9 +54,13 @@ struct RuntimeFrameOpportunity final {
   std::optional<render::RuntimeFrameIdentity> canonicalFrame;
   bool previewRendered = false;
   struct PreviewWork final {
+    std::uint64_t runtimeInstanceId = 0;
+    std::uint64_t viewId = 0;
+    std::uint64_t lifetimeGeneration = 0;
     std::uint64_t workId = 0;
     std::uint64_t contentRevision = 0;
     std::uint64_t surfaceGeneration = 0;
+    std::uint64_t metricsGeneration = 0;
     bool operator==(const PreviewWork&) const = default;
   };
   std::optional<PreviewWork> previewWork;
@@ -92,11 +96,17 @@ class RuntimeComposition final {
   RuntimeComposition& operator=(const RuntimeComposition&) = delete;
 
   [[nodiscard]] bool open() noexcept;
+  // Reference compatibility only: these overloads mean logical=physical,
+  // DPR=1. Platform consumers pass the complete accepted measurements.
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool bindSurface(const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool resizeSurface(const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool registerSurfaceProvider(
       std::string profileId,
       std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
+  // Both registration methods stage candidates. bind/resize/rebind commits
+  // the complete pair; registration never changes the accepted snapshot.
   [[nodiscard]] bool registerPreviewSurfaceProvider(
       std::string profileId,
       std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
@@ -226,7 +236,13 @@ class RuntimeComposition final {
   std::optional<interaction::PreviewPresentationCapture> pendingPreviewCapture_;
   std::uint64_t pendingPreviewPresentCount_ = 0;
   std::uint64_t pendingPreviewWorkId_ = 0;
+  std::optional<RuntimeFrameOpportunity::PreviewWork> pendingPreviewIdentity_;
   std::uint64_t nextPreviewWorkId_ = 1;
+  std::uint64_t runtimeInstanceId_ = 0;
+  std::uint64_t attachmentEpoch_ = 1;
+  bool surfaceTransitionActive_ = false;
+  [[nodiscard]] bool canAdvanceSurfaceBinding() const noexcept;
+  void surfaceBindingChanged() noexcept;
   void refreshControlTarget() noexcept;
 };
 

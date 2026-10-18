@@ -50,6 +50,9 @@ class SurfaceLifecycle final {
     [[nodiscard]] bool available() const noexcept { return _available; }
 
   private:
+    friend class SurfaceProviderRegistry;
+    [[nodiscard]] SurfaceLifecycleDisposition publishPrepared(
+        const SurfaceSnapshot& snapshot, bool initialBinding) noexcept;
     std::optional<SurfaceSnapshot> _current;
     bool _available = false;
 };

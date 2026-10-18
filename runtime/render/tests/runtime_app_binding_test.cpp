@@ -4,6 +4,7 @@
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <limits>
 
 struct CancelSink final : canvas::render::SessionCancelSink {
     int calls = 0;
@@ -56,5 +57,22 @@ int main() {
     assert(binding.selectRenderProfile("cpu", RenderTargetFormat::kRgba8888) ==
            SurfaceProviderDisposition::kCommitted);
     assert(binding.surfaces().activeInfo().profileId == "cpu");
+    assert(binding.registerPreviewSurfaceProfile(SurfaceProfile{
+        info("preview"), std::make_unique<RasterSkiaSurfaceProvider>()}) ==
+        SurfaceProviderDisposition::kCommitted);
+    const auto previewBefore = binding.previewSurfaces()->lifecycle().current();
+    assert(binding.previewSurfaces()->lifecycle().replace({previewBefore.viewId,
+        SurfaceGeneration{std::numeric_limits<std::uint64_t>::max() - 1U},
+        previewBefore.metricsGeneration, previewBefore.metrics}) == SurfaceLifecycleDisposition::kReplaced);
+    auto* canonical = binding.surfaces().activeProvider();
+    const auto physicalBefore = canonical->describe().metrics.physicalWidth;
+    const auto generationBefore = canonical->generation();
+    std::optional<SurfaceProfile> noCanonical, noPreview;
+    assert(binding.updateSurfacePair({64.0F, 64.0F, 64U, 64U, 1.0F, 1.0F},
+        noCanonical, noPreview, false, false, [] { return true; }) ==
+        SurfaceProviderDisposition::kGenerationExhausted);
+    assert(canonical->describe().metrics.physicalWidth == physicalBefore);
+    assert(canonical->generation() == generationBefore);
+    assert(binding.surfaces().lifecycle().available());
     return 0;
 }

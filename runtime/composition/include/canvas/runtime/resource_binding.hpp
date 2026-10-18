@@ -5,6 +5,7 @@
 #include "canvas/semantic/resource_manifest.hpp"
 
 #include <cstdint>
+#include <limits>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -46,7 +47,9 @@ struct ResourceBindingSnapshot final {
       std::uint64_t requestId) const;
   [[nodiscard]] bool bind(const semantic::ResourceManifest& source,
                           std::uint64_t binding) noexcept;
-  void invalidate() noexcept { ++lifetimeGeneration; }
+  void invalidate() noexcept {
+    if (lifetimeGeneration != std::numeric_limits<std::uint64_t>::max()) ++lifetimeGeneration;
+  }
 };
 
 struct ResourcePortReceipt final {

@@ -25,7 +25,7 @@ template<class Host>
 static void realEditingWithoutHostToolCallbacks(Host& host) {
   {
     auto& runtime = host.composition().runtime();
-    assert(runtime.bindSurface(256, 256));
+    assert(host.composition().surfaceSnapshot().available);
     assert(runtime.selectCreationPreset(canvas::interaction::CreationPreset::kRectangle));
     auto d = down(10U);
     d.samples.front().x = 20; d.samples.front().y = 20;
@@ -65,6 +65,7 @@ static void realEditingWithoutHostToolCallbacks(Host& host) {
 
 int main() {
   canvas::minimal_runtime_host::MinimalRuntimeHost realHost;
+  assert(realHost.composition().bindSurface(256U, 256U));
   assert(realHost.registerSource(9U));
   realEditingWithoutHostToolCallbacks(realHost);
 

@@ -37,6 +37,8 @@ struct PreviewGeometry final {
     std::uint64_t revision = 0;
     SurfaceGeneration surfaceGeneration{};
     CanonicalViewportTransform viewport{};
+    float logicalToPhysicalX = 1.0F;
+    float logicalToPhysicalY = 1.0F;
     // Multiple active BrushSessions share one transparent preview surface.
     // Each contour remains owned by its session so a second contact cannot
     // replace the first contact's retained geometry.
@@ -98,6 +100,8 @@ class PreviewSurfaceController final {
     // Rebind retains the latest geometry but makes the new provider generation
     // the only valid target.  The retained preview is dirty until presented.
     [[nodiscard]] bool rebind(std::uint64_t surfaceGeneration) noexcept;
+    void setSurfaceMetrics(const SurfaceMetrics& metrics) noexcept;
+    void retainGeometry(const PreviewGeometry& geometry) noexcept;
     [[nodiscard]] bool renderIfDirty(
         const PreviewStyleOverride& style = {}) noexcept;
     void setPresentationStyle(const PreviewStyleOverride& style) noexcept {

@@ -45,8 +45,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       case CanvasControlPayloadKind::kZoomAt:
       case CanvasControlPayloadKind::kSetZoom:
         applied = p.scale > 0.0F && runtime.setViewportZoomAt(
-            p.scale, p.x == 0.0F ? runtime.surface().width * 0.5F : p.x,
-            p.y == 0.0F ? runtime.surface().height * 0.5F : p.y);
+            p.scale, p.x == 0.0F ? runtime.surface().logicalWidth * 0.5F : p.x,
+            p.y == 0.0F ? runtime.surface().logicalHeight * 0.5F : p.y);
         break;
       case CanvasControlPayloadKind::kFit:
         applied = p.fitTarget == CanvasFitTarget::kSelection ? runtime.fitViewportToSelection()
@@ -113,8 +113,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     const auto& runtime = runtime_;
     out.targetAvailable = runtime.surface().available;
     out.writable = out.targetAvailable && !runtime.closed();
-    out.viewportWidth = static_cast<float>(runtime.surface().width);
-    out.viewportHeight = static_cast<float>(runtime.surface().height);
+    out.viewportWidth = runtime.surface().logicalWidth;
+    out.viewportHeight = runtime.surface().logicalHeight;
     out.cameraScale = runtime.viewportGesture().scale;
     out.cameraTranslationX = runtime.viewportGesture().translationX;
     out.cameraTranslationY = runtime.viewportGesture().translationY;
@@ -316,8 +316,8 @@ ProductControlReceipt CanvasRuntimeFacade::submitProductControl(const ProductCon
 }
 RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   RuntimeStateSnapshot out{};
-  out.identity = {1U, runtime_.semanticGeneration().value(),
-                  static_cast<std::uint64_t>(runtime_.submittedOperationCount()), 1U,
+  out.identity = {target().runtimeEpoch, runtime_.semanticGeneration().value(),
+                  static_cast<std::uint64_t>(runtime_.submittedOperationCount()), target().viewEpoch,
                   runtime_.surface().generation};
   out.tool = {runtime_.selectionMode() ? 2U : runtime_.panTool() ? 3U :
                 (runtime_.toolMode() == interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||

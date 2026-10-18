@@ -14,8 +14,9 @@ enum class WebSurfaceDisposition : unsigned char { kRebound, kRejectedStale, kRe
 
 class WebSurfaceHost final {
   public:
-    explicit WebSurfaceHost(render::SurfaceSnapshot initial) noexcept;
+    explicit WebSurfaceHost(render::SurfaceSnapshot initial, bool deferPlatformBinding = false) noexcept;
     [[nodiscard]] WebSurfaceDisposition bind(const render::SurfaceSnapshot& replacement);
+    [[nodiscard]] WebSurfaceDisposition bindMetrics(const render::SurfaceMetrics& metrics);
     [[nodiscard]] render::SurfaceLifecycleDisposition markLost() noexcept;
     [[nodiscard]] render::PresentFeedbackDisposition submit(const render::FrameState& frame);
     [[nodiscard]] render::PresentFeedbackDisposition feedback(const render::PresentedFeedback& value);

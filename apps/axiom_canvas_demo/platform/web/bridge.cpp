@@ -31,7 +31,7 @@ struct WebInstance final {
           devicePixelRatio(dpr), lifecycle(canvas::render::SurfaceSnapshot{
               view, canvas::render::SurfaceGeneration{surfaceGeneration},
               canvas::render::MetricsGeneration{metricsGeneration},
-              canvas::render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1.0F}}) {}
+              canvas::render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1.0F}}, true) {}
 };
 WebInstance* instance(std::uintptr_t handle) { return reinterpret_cast<WebInstance*>(handle); }
 }
@@ -49,9 +49,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     if (!value->backend->ready()) return 0;
     auto surfaceProvider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(pw, ph);
     if (surfaceProvider == nullptr ||
-        !value->lifecycle.composition().registerSurfaceProvider(
-            "webgl-window", std::move(surfaceProvider)) ||
-        !value->lifecycle.syncRuntimeSurfaceIdentity()) return 0;
+        !value->lifecycle.composition().registerSurfaceProvider("webgl-window", std::move(surfaceProvider))) return 0;
     auto previewProvider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
         canvas::render::WebGlSurfaceConfig{"#axiom-preview", pw, ph, 0,
             [](bool visible) { EM_ASM({
@@ -61,6 +59,8 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     if (!previewProvider || !previewProvider->ready() ||
         !value->lifecycle.composition().registerPreviewSurfaceProvider(
             "webgl-preview", std::move(previewProvider))) return 0;
+    if (value->lifecycle.bindMetrics(canvas::render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1.0F}) !=
+        canvas::web_demo::WebSurfaceDisposition::kRebound) return 0;
     (void)value->lifecycle.composition().setPlatformPresentationDeferred(true);
     value->surfaceGeneration = value->lifecycle.lifecycle().current().surfaceGeneration.value();
     value->metricsGeneration = value->lifecycle.lifecycle().current().metricsGeneration.value();
@@ -74,6 +74,22 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
     auto* value = instance(handle);
     if (value == nullptr || selector == nullptr || lw <= 0.0F || lh <= 0.0F || pw == 0U || ph == 0U || dpr <= 0.0F) return 0;
     const canvas::render::SurfaceMetrics metrics{lw, lh, pw, ph, dpr, 1.0F};
+    if (!std::isfinite(lw) || !std::isfinite(lh) || !std::isfinite(dpr)) return 0;
+    const auto before = value->lifecycle.composition().surfaceSnapshot();
+    if (before.available && before.width == pw && before.height == ph && value->backend && value->backend->ready()) {
+        if (value->lifecycle.bindMetrics(metrics) != canvas::web_demo::WebSurfaceDisposition::kRebound) return 0;
+        const auto accepted = value->lifecycle.composition().surfaceSnapshot();
+        value->surfaceGeneration = accepted.surfaceGeneration;
+        value->metricsGeneration = accepted.metricsGeneration;
+        value->logicalWidth = accepted.logicalWidth;
+        value->logicalHeight = accepted.logicalHeight;
+        value->devicePixelRatio = accepted.devicePixelRatio;
+        return 1;
+    }
+    // Resizing a DOM canvas destroys its framebuffer. Invalidate the complete
+    // accepted pair before this native side effect; failure remains Lost.
+    if (value->lifecycle.composition().state() == canvas::runtime::RuntimeCompositionState::kReady &&
+        value->lifecycle.markLost() != canvas::render::SurfaceLifecycleDisposition::kLost) return 0;
     auto backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
         canvas::render::WebGlSurfaceConfig{selector, pw, ph});
     if (!backend->ready()) return 0;
@@ -93,16 +109,10 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
             "webgl-preview-" + std::to_string(value->surfaceGeneration + 1U),
             std::move(previewProvider))) return 0;
     (void)value->lifecycle.composition().setPlatformPresentationDeferred(true);
+    if (value->lifecycle.bindMetrics(metrics) != canvas::web_demo::WebSurfaceDisposition::kRebound) return 0;
     const auto current = value->lifecycle.composition().surfaceSnapshot();
-    const auto surface = current.surfaceGeneration;
-    const auto metricsGeneration = current.metricsGeneration;
-    if (!value->lifecycle.composition().surfaceSnapshot().available ||
-        value->lifecycle.bind(canvas::render::SurfaceSnapshot{
-            value->view, canvas::render::SurfaceGeneration{surface},
-            canvas::render::MetricsGeneration{metricsGeneration}, metrics}) !=
-            canvas::web_demo::WebSurfaceDisposition::kRebound) return 0;
-    value->surfaceGeneration = surface;
-    value->metricsGeneration = metricsGeneration;
+    value->surfaceGeneration = current.surfaceGeneration;
+    value->metricsGeneration = current.metricsGeneration;
     value->logicalWidth = lw;
     value->logicalHeight = lh;
     value->physicalWidth = pw;
@@ -114,8 +124,9 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
 EMSCRIPTEN_KEEPALIVE int axiom_web_lose_surface(std::uintptr_t handle) {
     auto* value = instance(handle);
     if (value == nullptr) return 0;
-    value->backend.reset();
-    return value->lifecycle.markLost() == canvas::render::SurfaceLifecycleDisposition::kLost;
+    const auto lost = value->lifecycle.markLost();
+    if (lost == canvas::render::SurfaceLifecycleDisposition::kLost) value->backend.reset();
+    return lost == canvas::render::SurfaceLifecycleDisposition::kLost;
 }
 EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_web_surface_generation(std::uintptr_t handle) {
     const auto* value = instance(handle);

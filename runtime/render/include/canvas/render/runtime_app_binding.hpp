@@ -62,6 +62,11 @@ class RuntimeAppBinding final {
     [[nodiscard]] SurfaceProviderDisposition rebindSurface() noexcept;
     [[nodiscard]] SurfaceProviderDisposition rebindSurface(SurfaceMetrics metrics) noexcept;
     [[nodiscard]] SurfaceProviderDisposition adoptPreparedSurface(SurfaceMetrics metrics) noexcept;
+    [[nodiscard]] SurfaceProviderDisposition updateSurfacePair(
+        SurfaceMetrics metrics, std::optional<SurfaceProfile>& canonical,
+        std::optional<SurfaceProfile>& preview, bool restoring, bool initialBinding,
+        const std::function<bool()>& commitAdmission) noexcept;
+    void invalidateSurfacePair() noexcept;
     [[nodiscard]] SurfaceProviderDisposition registerPreviewSurfaceProfile(
         SurfaceProfile profile);
     [[nodiscard]] SurfaceProviderDisposition selectPreviewRenderProfile(

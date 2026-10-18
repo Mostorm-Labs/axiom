@@ -91,6 +91,35 @@ SurfaceLifecycleDisposition SurfaceLifecycle::adoptPrepared(
     return SurfaceLifecycleDisposition::kReplaced;
 }
 
+SurfaceLifecycleDisposition SurfaceLifecycle::publishPrepared(
+    const SurfaceSnapshot& snapshot, bool initialBinding) noexcept {
+    if (!_current || snapshot.viewId != _current->viewId || !validMetrics(snapshot.metrics) ||
+        snapshot.surfaceGeneration.value() == 0U || snapshot.metricsGeneration.value() == 0U ||
+        exhausted(snapshot.surfaceGeneration) || exhausted(snapshot.metricsGeneration)) {
+        return SurfaceLifecycleDisposition::kInvalidMetrics;
+    }
+    const auto currentSurface = _current->surfaceGeneration.value();
+    const auto currentMetrics = _current->metricsGeneration.value();
+    if (snapshot.surfaceGeneration.value() < currentSurface ||
+        snapshot.metricsGeneration.value() < currentMetrics ||
+        (!_available && snapshot.surfaceGeneration.value() <= currentSurface &&
+         snapshot.metricsGeneration.value() <= currentMetrics)) {
+        return SurfaceLifecycleDisposition::kStaleGeneration;
+    }
+    if (snapshot.surfaceGeneration.value() == currentSurface &&
+        snapshot.metricsGeneration.value() == currentMetrics) {
+        if (snapshot.metrics != _current->metrics && !initialBinding) {
+            return SurfaceLifecycleDisposition::kMetricsMismatch;
+        }
+        _current.emplace(snapshot);
+        _available = true;
+        return SurfaceLifecycleDisposition::kNoGenerationAdvance;
+    }
+    _current.emplace(snapshot);
+    _available = true;
+    return SurfaceLifecycleDisposition::kReplaced;
+}
+
 SurfaceLifecycleDisposition SurfaceLifecycle::markLost(ViewId viewId) noexcept {
     if (viewId != _current->viewId) {
         return SurfaceLifecycleDisposition::kWrongView;

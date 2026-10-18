@@ -65,6 +65,20 @@ if(WIN32)
 endif()
 
 if(BUILD_TESTING)
+  if(WIN32)
+    add_executable(axiom_minimal_windows_surface_binding_tests
+      tests/windows_surface_binding_test.cpp)
+    target_link_libraries(axiom_minimal_windows_surface_binding_tests PRIVATE
+      axiom_minimal_runtime_host axiom_minimal_windows_surface user32 libcpmt)
+    target_compile_features(axiom_minimal_windows_surface_binding_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_minimal_windows_surface_binding_tests PRIVATE NOMINMAX)
+    if(MSVC)
+      target_compile_options(axiom_minimal_windows_surface_binding_tests PRIVATE
+        /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267)
+    endif()
+    add_test(NAME FC00XS2WindowsSurfaceBinding COMMAND axiom_minimal_windows_surface_binding_tests)
+    set_tests_properties(FC00XS2WindowsSurfaceBinding PROPERTIES SKIP_RETURN_CODE 77)
+  endif()
   add_executable(axiom_minimal_runtime_host_tests tests/minimal_runtime_host_test.cpp)
   target_link_libraries(axiom_minimal_runtime_host_tests PRIVATE axiom_minimal_runtime_host)
   target_compile_definitions(axiom_minimal_runtime_host_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)

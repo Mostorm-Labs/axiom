@@ -365,10 +365,10 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     if(MSVC)
         target_compile_options(axiom_render_frame_state_tests
-            PRIVATE /W4 /permissive- /WX /EHsc)
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_render_frame_state_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
 
     add_test(NAME G3FrameState COMMAND axiom_render_frame_state_tests)

@@ -17,7 +17,7 @@ std::optional<ResourceBindingToken> ResourceBindingSnapshot::token(
     foundation::ObjectId id, std::uint64_t providerEpoch,
     std::uint64_t requestId) const {
   const auto* entry = find(id);
-  if (entry == nullptr) return std::nullopt;
+  if (entry == nullptr || lifetimeGeneration == std::numeric_limits<std::uint64_t>::max()) return std::nullopt;
   return ResourceBindingToken{id, documentBinding, providerEpoch,
                               entry->resource_revision, entry->content_hash,
                               requestId, lifetimeGeneration};
@@ -27,6 +27,7 @@ bool ResourceBindingSnapshot::bind(const semantic::ResourceManifest& source,
                                    std::uint64_t binding) noexcept {
   if (!semantic::validateResourceManifest(source) || binding == 0U) return false;
   const bool wasBound = documentBinding != 0U || !manifest.entries.empty();
+  if (lifetimeGeneration == std::numeric_limits<std::uint64_t>::max()) return false;
   manifest = source;
   documentBinding = binding;
   if (wasBound) ++lifetimeGeneration;

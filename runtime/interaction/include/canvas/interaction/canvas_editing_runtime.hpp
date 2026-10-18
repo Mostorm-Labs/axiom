@@ -84,6 +84,7 @@ struct QualificationObservation final {
 
 struct SurfaceBinding final {
   std::uint64_t generation = 0;
+  std::uint64_t metricsGeneration = 0;
   float logicalWidth = 0.0F;
   float logicalHeight = 0.0F;
   std::uint32_t width = 0;
@@ -408,7 +409,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   }
 
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool bindSurface(const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool resizeSurface(const render::SurfaceMetrics& metrics) noexcept;
+  [[nodiscard]] bool stageSurfaceProvider(std::string profileId,
+      std::unique_ptr<render::SkiaSurfaceProvider> provider, bool preview) noexcept;
+  [[nodiscard]] bool hasStagedSurfaceProviders() const noexcept {
+    return pendingCanonicalProvider_.has_value() || pendingPreviewProvider_.has_value();
+  }
   [[nodiscard]] bool loseSurface() noexcept;
   [[nodiscard]] bool rebindSurface() noexcept;
   [[nodiscard]] bool rebindSurface(const render::SurfaceMetrics& metrics) noexcept;
@@ -575,6 +583,13 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   interaction::InteractionDispatchRuntime dispatchRuntime_;
   std::unique_ptr<interaction::ViewportInteractionController> viewportController_;
   std::unique_ptr<render::RuntimeAppBinding> appBinding_;
+  std::optional<render::SurfaceProfile> pendingCanonicalProvider_;
+  std::optional<render::SurfaceProfile> pendingPreviewProvider_;
+  bool surfaceTransitionActive_ = false;
+  bool surfaceAbortRequested_ = false;
+  [[nodiscard]] bool commitSurfaceBinding(const render::SurfaceMetrics& metrics,
+                                           bool restoring) noexcept;
+  void publishSurfaceBinding() noexcept;
   render::ViewId viewId_{render::ViewId{1}};
   render::SkiaSurfaceProvider* previewProvider_ = nullptr;
   std::unique_ptr<render::PreviewSurfaceController> previewController_;

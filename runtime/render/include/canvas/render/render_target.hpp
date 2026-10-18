@@ -152,6 +152,15 @@ class SurfaceProviderRegistry final {
     [[nodiscard]] SurfaceProviderDisposition rebind() noexcept;
     [[nodiscard]] SurfaceProviderDisposition rebind(SurfaceMetrics metrics) noexcept;
     [[nodiscard]] SurfaceProviderDisposition adoptPrepared(SurfaceMetrics metrics) noexcept;
+    [[nodiscard]] SurfaceProviderDisposition prepareUpdate(
+        SurfaceMetrics metrics, std::optional<SurfaceProfile>& replacement,
+        bool restoring, bool replacingPair, bool initialBinding, bool& touchedActive) noexcept;
+    [[nodiscard]] SurfaceProviderDisposition validateUpdate(
+        const SurfaceMetrics& metrics, const std::optional<SurfaceProfile>& replacement) const noexcept;
+    void commitUpdate() noexcept;
+    [[nodiscard]] bool activateUpdate(bool& touchedActive) noexcept;
+    void abortUpdate() noexcept;
+    void invalidate() noexcept;
     [[nodiscard]] const RenderTargetInfo& activeInfo() const noexcept { return *activeInfo_; }
     [[nodiscard]] SkiaSurfaceProvider* activeProvider() const noexcept { return activeProvider_.get(); }
     [[nodiscard]] const SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
@@ -171,6 +180,13 @@ class SurfaceProviderRegistry final {
     std::optional<RenderTargetInfo> activeInfo_;
     std::string activeProfileId_;
     SurfaceLifecycle lifecycle_;
+    struct PreparedUpdate final {
+        RenderTargetInfo info;
+        SurfaceSnapshot snapshot;
+        std::unique_ptr<SkiaSurfaceProvider> replacement;
+        bool initialBinding = false;
+    };
+    std::optional<PreparedUpdate> preparedUpdate_;
 };
 
 } // namespace canvas::render

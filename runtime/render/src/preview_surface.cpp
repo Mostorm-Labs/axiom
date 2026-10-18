@@ -23,7 +23,11 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
         return false;
     }
     if (!active_) {
+        const auto sx = geometry_.logicalToPhysicalX;
+        const auto sy = geometry_.logicalToPhysicalY;
         geometry_ = {};
+        geometry_.logicalToPhysicalX = sx;
+        geometry_.logicalToPhysicalY = sy;
         geometry_.documentEpoch = documentEpoch;
         geometry_.session = session;
         geometry_.sessionGeneration = sessionGeneration;
@@ -173,8 +177,29 @@ bool PreviewSurfaceController::rebind(std::uint64_t surfaceGeneration) noexcept 
         provider_.generation() != surfaceGeneration) return false;
     geometry_.surfaceGeneration = SurfaceGeneration{surfaceGeneration};
     state_.generation = surfaceGeneration;
+    state_.platformQualifiedRevision = 0U;
     state_.dirty = true;
     return true;
+}
+
+void PreviewSurfaceController::setSurfaceMetrics(const SurfaceMetrics& metrics) noexcept {
+    const auto sx = metrics.physicalWidth / metrics.logicalWidth;
+    const auto sy = metrics.physicalHeight / metrics.logicalHeight;
+    if (geometry_.logicalToPhysicalX == sx && geometry_.logicalToPhysicalY == sy) return;
+    geometry_.logicalToPhysicalX = sx;
+    geometry_.logicalToPhysicalY = sy;
+    if (active_) state_.dirty = true;
+}
+
+void PreviewSurfaceController::retainGeometry(const PreviewGeometry& geometry) noexcept {
+    geometry_ = geometry;
+    geometry_.surfaceGeneration = SurfaceGeneration{provider_.generation()};
+    defaultSession_ = geometry_.session;
+    active_ = !geometry_.contours.empty();
+    state_.generation = provider_.generation();
+    state_.contentRevision = geometry_.revision;
+    state_.platformQualifiedRevision = 0U;
+    state_.dirty = active_;
 }
 
 bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) noexcept {
