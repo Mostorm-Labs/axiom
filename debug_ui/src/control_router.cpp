@@ -31,6 +31,14 @@ DebugControlRouter::DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                                        DebugActivityLog* activity) noexcept
     : runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
 
+std::uint64_t DebugControlRouter::productDeadline() const noexcept {
+  // Product/Canvas requests are consumed by the Runtime owner sequence. The
+  // UI snapshot sequence is only a UI observation counter and can lag far
+  // behind after the panel was hidden while the owner kept pumping.
+  const auto ownerSequence = runtime_ == nullptr ? 0U : runtime_->controlSequence();
+  return (ownerSequence != 0U ? ownerSequence : frame_.stamp.sequence) + 120U;
+}
+
 void DebugControlRouter::beginFrame(const DebugSnapshot& snapshot) noexcept {
   frame_.stamp = snapshot.stamp;
   if (snapshot.platform.availability != DebugAvailability::kUnsupported &&
@@ -64,6 +72,17 @@ void DebugControlRouter::recordProduct(const std::string& action,
     activity_->record(std::move(entry));
   } catch (...) {
   }
+}
+
+namespace {
+canvas::runtime::ProductControlState productStateFromCanvas(
+    canvas::runtime::CanvasControlReceiptState state) noexcept {
+  return state == canvas::runtime::CanvasControlReceiptState::kApplied
+      ? canvas::runtime::ProductControlState::kApplied
+      : state == canvas::runtime::CanvasControlReceiptState::kQueued
+          ? canvas::runtime::ProductControlState::kQueued
+          : canvas::runtime::ProductControlState::kRejected;
+}
 }
 
 void DebugControlRouter::recordAxiom(const std::string& action,
@@ -114,7 +133,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(
   canvas::runtime::CanvasControlRequest request{};
   request.clientId = 0xD001U;
   request.requestId = requestId;
-  request.deadlineSequence = deadline();
+  request.deadlineSequence = productDeadline();
   const auto targets = runtime_->mountedCanvasTargets();
   request.target = targets.empty()
       ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1,
@@ -124,6 +143,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(
   request.payload.tool = tool;
   auto receipt = runtime_->submitCanvasControl(request);
   recordProduct("set-tool", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued &&
+      receipt.control.has_value()) pendingProduct_.emplace(receipt.control->key, "set-tool");
   return receipt;
 }
 
@@ -133,6 +154,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setBrush(std::uint32_
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->setBrush(brushId, revision, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-brush", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "set-brush");
   return receipt;
 }
 
@@ -141,6 +164,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setEraser(std::uint32
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->setEraser(eraserId, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-eraser", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "set-eraser");
   return receipt;
 }
 
@@ -149,6 +174,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionMode(bool
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->setSelectionMode(enabled, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-selection-mode", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "set-selection-mode");
   return receipt;
 }
 
@@ -157,6 +184,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::undo() noexcept {
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->undo(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("undo", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "undo");
   return receipt;
 }
 
@@ -165,6 +194,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::redo() noexcept {
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
                                      : runtime_->redo(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("redo", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "redo");
   return receipt;
 }
 
@@ -180,7 +211,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
   canvas::runtime::CanvasControlRequest request{};
   request.clientId = 0xD001U;
   request.requestId = requestId;
-  request.deadlineSequence = deadline();
+  request.deadlineSequence = productDeadline();
   request.target = targets.empty()
       ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1U,
                                          frame_.stamp.viewGeneration,
@@ -190,6 +221,8 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
   request.payload.creationPreset = preset;
   auto receipt = runtime_->submitCanvasControl(request);
   recordProduct("set-creation-preset", receipt);
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
+    pendingProduct_.emplace(receipt.control->key, "set-creation-preset");
   return receipt;
 }
 
@@ -262,7 +295,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::selectedAction(
   canvas::runtime::CanvasControlRequest request{};
   request.clientId = 0xD001U;
   request.requestId = requestId;
-  request.deadlineSequence = deadline();
+  request.deadlineSequence = productDeadline();
   request.target = targets.empty()
       ? canvas::runtime::CanvasTargetKey{frame_.stamp.runtimeGeneration, 1U,
                                          frame_.stamp.viewGeneration,
@@ -282,7 +315,7 @@ canvas::runtime::AxiomDebugCommandReceipt DebugControlRouter::submitAxiom(
   command.kind = kind;
   command.expectedRuntimeGeneration = frame_.stamp.runtimeGeneration;
   command.expectedDocumentGeneration = frame_.stamp.documentGeneration;
-  command.deadlineSequence = deadline();
+  command.deadlineSequence = uiDeadline();
   command.value = value;
   const auto receipt = axiomDebug_ == nullptr
       ? unsupportedReceipt<canvas::runtime::AxiomDebugCommandReceipt>(command.requestId)
@@ -300,7 +333,7 @@ canvas::runtime::SurfaceModeReceipt DebugControlRouter::setCanonicalSurfaceMode(
   request.target = canvas::runtime::SurfaceRole::kCanonicalCanvas;
   request.mode = mode;
   request.expectedGeneration = frame_.stamp.surfaceGeneration;
-  request.deadlineSequence = deadline();
+  request.deadlineSequence = uiDeadline();
   if (frame_.stamp.surfaceGeneration == 0) request.expectedGeneration = 0;
   const auto receipt = platformDebug_ == nullptr
       ? unsupportedReceipt<canvas::runtime::SurfaceModeReceipt>(request.requestId)
@@ -312,6 +345,22 @@ canvas::runtime::SurfaceModeReceipt DebugControlRouter::setCanonicalSurfaceMode(
 }
 
 void DebugControlRouter::refreshReceipts() noexcept {
+  if (runtime_ != nullptr) {
+    for (auto it = pendingProduct_.begin(); it != pendingProduct_.end();) {
+      const auto terminal = runtime_->canvasControlReceipt(it->first);
+      if (!terminal.has_value() || terminal->state == canvas::runtime::CanvasControlReceiptState::kQueued) {
+        ++it;
+        continue;
+      }
+      canvas::runtime::ProductControlReceipt receipt{};
+      receipt.requestId = it->first.requestId;
+      receipt.runtimeGeneration = frame_.stamp.runtimeGeneration;
+      receipt.control = *terminal;
+      receipt.state = productStateFromCanvas(terminal->state);
+      recordProduct(it->second, receipt);
+      it = pendingProduct_.erase(it);
+    }
+  }
   if (axiomDebug_ != nullptr) {
     for (auto it = pendingAxiom_.begin(); it != pendingAxiom_.end();) {
       const auto receipt = axiomDebug_->receipt(it->first);

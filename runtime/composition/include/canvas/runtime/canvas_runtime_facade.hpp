@@ -41,6 +41,9 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] std::vector<BrushPresetRef> brushPresets() const override;
   [[nodiscard]] std::optional<CanvasControlReceipt> canvasControlReceipt(
       CanvasControlReceiptKey key) const noexcept override;
+  [[nodiscard]] std::uint64_t controlSequence() const noexcept override {
+    return controlSequence_.load(std::memory_order_acquire);
+  }
 
   // Only the serialized Runtime owner calls this method.
   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
@@ -65,6 +68,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   const std::thread::id ownerThread_ = std::this_thread::get_id();
   mutable std::atomic_bool processing_{false};
   std::uint64_t revision_ = 1;
+  std::atomic_uint64_t controlSequence_{0};
 };
 
 }  // namespace canvas::runtime

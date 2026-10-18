@@ -1,5 +1,8 @@
 #include "canvas/debug_ui/activity_log.hpp"
 #include "canvas/debug_ui/control_router.hpp"
+#include "canvas/debug_ui/snapshot_assembler.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/debug_control.hpp"
 #include "canvas/runtime/surface_debug_control.hpp"
 
@@ -416,5 +419,55 @@ int main() {
   assert(bound.hasRuntimeOwner());
   assert(bound.hasAxiomDebugOwner());
   assert(bound.hasPlatformDebugOwner());
+
+  // The UI may be hidden while the Runtime owner keeps pumping. The request
+  // deadline must use the owner's clock, not the first UI snapshot sequence.
+  canvas::runtime::RuntimeComposition composition;
+  assert(composition.open() && composition.bindSurface(256U, 256U));
+  canvas::runtime::CanvasRuntimeFacade facade(composition.runtime(), {1U, 1U, 1U, 1U});
+  composition.attachControlFacade(&facade);
+  for (std::uint64_t i = 0; i < 300U; ++i) assert(composition.ownerPump());
+  canvas::debug_ui::DebugSnapshotAssembler assembler;
+  canvas::debug_ui::DebugSnapshotSources sources{};
+  sources.runtime = &facade;
+  const auto snapshotAfterHiddenUi = assembler.capture(sources);
+  canvas::debug_ui::DebugControlRouter realRouter(&facade, nullptr, nullptr, nullptr);
+  realRouter.beginFrame(snapshotAfterHiddenUi);
+  const auto shapeRequest = realRouter.setCreationPreset(
+      canvas::runtime::CanvasCreationPreset::kRectangle);
+  assert(shapeRequest.state == canvas::runtime::ProductControlState::kQueued);
+  assert(composition.ownerPump());
+  assert(facade.canvasControlReceipt(shapeRequest.control->key).has_value());
+  assert(facade.canvasControlReceipt(shapeRequest.control->key)->state ==
+         canvas::runtime::CanvasControlReceiptState::kApplied);
+  assert(composition.runtime().creationMode());
+  assert(facade.readRuntimeState().control.creationMode);
+  assert(facade.readRuntimeState().control.creationPreset ==
+         static_cast<std::uint8_t>(canvas::runtime::CanvasCreationPreset::kRectangle));
+  assert(composition.registerSource(1U));
+  canvas::input::PlatformPointerBatch down;
+  down.samples.push_back({1U, 7U, 1U, 1'000U, 20.0F, 20.0F, 0.5F, 0.0F, 0.0F,
+                          {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kDown});
+  auto move = down;
+  move.samples.front().sequence = 2U;
+  move.samples.front().timestampNs = 2'000U;
+  move.samples.front().x = 120.0F;
+  move.samples.front().y = 100.0F;
+  move.samples.front().phase = canvas::input::PointerPhase::kMove;
+  auto up = move;
+  up.samples.front().sequence = 3U;
+  up.samples.front().timestampNs = 3'000U;
+  up.samples.front().phase = canvas::input::PointerPhase::kUp;
+  assert(composition.submit(down));
+  assert(composition.submit(move));
+  assert(composition.submit(up));
+  assert(composition.runtime().setSelectionMode(true));
+  assert(composition.runtime().selectAtViewPoint(70.0F, 60.0F));
+  const auto object = composition.runtime().selectedObjectRecord();
+  assert(composition.runtime().semanticObjectCount() == 1U);
+  assert(object.has_value());
+  assert(object->kind == canvas::semantic::ObjectKind::kShape);
+  composition.attachControlFacade(nullptr);
   return 0;
 }

@@ -60,7 +60,10 @@ class DebugControlRouter final {
   struct PendingSurface final { std::string action; };
 
   [[nodiscard]] std::uint64_t nextRequestId() noexcept;
-  [[nodiscard]] std::uint64_t deadline() const noexcept { return frame_.stamp.sequence + 120U; }
+  [[nodiscard]] std::uint64_t productDeadline() const noexcept;
+  [[nodiscard]] std::uint64_t uiDeadline() const noexcept {
+    return frame_.stamp.sequence + 120U;
+  }
   void recordProduct(const std::string& action,
                      const canvas::runtime::ProductControlReceipt& receipt) noexcept;
   void recordAxiom(const std::string& action,
@@ -82,6 +85,8 @@ class DebugControlRouter final {
   std::uint64_t nextRequest_ = 1;
   std::unordered_map<std::uint64_t, PendingAxiom> pendingAxiom_;
   std::unordered_map<std::uint64_t, PendingSurface> pendingSurface_;
+  std::unordered_map<canvas::runtime::CanvasControlReceiptKey, std::string,
+                     canvas::runtime::CanvasControlReceiptKeyHash> pendingProduct_;
 };
 
 }  // namespace canvas::debug_ui

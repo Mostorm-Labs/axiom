@@ -24,6 +24,7 @@ int main() {
   assert(runtime.selectedBrushProfile() != "marker-flat-v1");
   assert(facade.process(1U) == 1U);
   assert(runtime.selectedBrushProfile() == "marker-flat-v1");
+  assert(facade.controlSequence() == 1U);
   const auto brushReceipt = facade.canvasControlReceipt({1U, 1U});
   assert(brushReceipt.has_value());
   assert(brushReceipt->state == canvas::runtime::CanvasControlReceiptState::kApplied);

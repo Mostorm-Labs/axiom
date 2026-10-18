@@ -54,6 +54,9 @@ class RuntimeFacade {
   }
   [[nodiscard]] virtual std::vector<CanvasTargetKey> mountedCanvasTargets() const { return {}; }
   [[nodiscard]] virtual std::vector<BrushPresetRef> brushPresets() const { return {}; }
+  // Owner sequence used by queued product/canvas controls. Implementations
+  // that do not expose an owner clock return zero and retain legacy UI timing.
+  [[nodiscard]] virtual std::uint64_t controlSequence() const noexcept { return 0U; }
   [[nodiscard]] virtual std::optional<CanvasControlReceipt> canvasControlReceipt(
       CanvasControlReceiptKey) const { return std::nullopt; }
 

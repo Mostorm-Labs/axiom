@@ -38,6 +38,8 @@ struct SelectionState final {
 };
 
 struct RuntimeControlState final {
+  std::uint8_t creationPreset = 0;
+  bool creationMode = false;
   std::uint32_t selectedKind = 0;
   std::uint32_t selectedVersion = 0;
   std::uint32_t selectedShapeKind = 0;

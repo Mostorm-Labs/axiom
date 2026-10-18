@@ -329,6 +329,8 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.selection = {runtime_.selectionMode(), static_cast<std::uint32_t>(runtime_.selectedObjectCount()),
                    runtime_.selectedPrimaryObjectValue(), runtime_.snapCandidateCount()};
   const auto snapshot = readCanvasControlSnapshot(target());
+  out.control.creationPreset = static_cast<std::uint8_t>(snapshot.creationPreset);
+  out.control.creationMode = snapshot.creationMode;
   out.control.semanticGeneration = snapshot.semanticGeneration;
   out.control.selectedKind = snapshot.selectedKind; out.control.selectedVersion = snapshot.selectedVersion;
   out.control.selectedShapeKind = snapshot.selectedShapeKind; out.control.selectedLocked = snapshot.selectedLocked;
@@ -356,6 +358,7 @@ std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(Ca
 }
 std::size_t CanvasRuntimeFacade::process(std::uint64_t ownerSequence) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;
+  controlSequence_.store(ownerSequence, std::memory_order_release);
   const auto result = service_->processPending(ownerSequence);
   processing_ = false;
   return result;

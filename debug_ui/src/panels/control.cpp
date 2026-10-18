@@ -39,8 +39,12 @@ void tools(DebugPanelContext& context) {
         {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
     }};
     std::size_t selectedPreset = 0U;
+    const auto runtimePreset = static_cast<canvas::runtime::CanvasCreationPreset>(
+        snapshot.product.value.control.creationPreset);
     for (std::size_t i = 0; i < presets.size(); ++i) {
-        if (presets[i].second == context.ui.creationPresetDraft()) {
+        if (panel_detail::hasReadback(snapshot.product.availability)
+                ? presets[i].second == runtimePreset
+                : presets[i].second == context.ui.creationPresetDraft()) {
             selectedPreset = i;
             break;
         }
@@ -50,8 +54,10 @@ void tools(DebugPanelContext& context) {
         for (std::size_t i = 0; i < presets.size(); ++i) {
             const bool selected = i == selectedPreset;
             if (ImGui::Selectable(presets[i].first, selected)) {
-                (void)context.controls.setCreationPreset(presets[i].second);
-                context.ui.setCreationPresetDraft(presets[i].second);
+                const auto receipt = context.controls.setCreationPreset(presets[i].second);
+                if (receipt.state == canvas::runtime::ProductControlState::kApplied) {
+                    context.ui.setCreationPresetDraft(presets[i].second);
+                }
                 context.ui.markControlSubmitted();
             }
             if (selected) ImGui::SetItemDefaultFocus();
