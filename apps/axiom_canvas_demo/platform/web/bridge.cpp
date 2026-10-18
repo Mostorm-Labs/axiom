@@ -165,10 +165,6 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
         !opportunity.canonicalFrame.has_value()) return 0;
     const auto frameId = canvas::render::FrameId{
         opportunity.canonicalFrame->frameId.value()};
-    canvas::interaction::PreviewPresentationCapture previewCapture{};
-    std::uint64_t previewPresents = 0U;
-    const bool havePreview = composition.capturePreviewPresentation(previewCapture) &&
-        composition.renderPreviewPresentation(previewCapture, &previewPresents);
     const auto submitted = composition.lastSubmittedCanonicalFrame();
     if (!submitted.has_value() || submitted->frameId != frameId) return 0;
     if (!composition.receivePlatformPresented({
@@ -176,8 +172,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
             submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
             canvas::render::PresentEvidenceKind::kPlatformQualified,
             std::nullopt})) return 0;
-    if (havePreview && !composition.acknowledgePreviewPresentation(
-            previewCapture, previewPresents)) return 0;
+    if (!composition.finishFrameOpportunity(true)) return 0;
     ++value->presentedFrames;
     return 1;
 }

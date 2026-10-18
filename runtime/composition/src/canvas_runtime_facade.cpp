@@ -213,7 +213,12 @@ bool CanvasRuntimeFacade::ownerThread() const noexcept {
 void CanvasRuntimeFacade::refreshTarget() const noexcept {
   if (binding_) binding_->setTarget(binding_->target());
 }
-void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept { binding_->setTarget(target); }
+void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
+  if (binding_ == nullptr) return;
+  const auto previous = binding_->target();
+  if (previous != target && service_ != nullptr) service_->destroyTarget(previous);
+  binding_->setTarget(target);
+}
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }
 bool CanvasRuntimeFacade::isTargetCurrent(const CanvasTargetKey& target) const noexcept {
   return binding_->isTargetCurrent(target);

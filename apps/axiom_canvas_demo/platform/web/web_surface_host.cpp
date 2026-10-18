@@ -1,5 +1,6 @@
 #include "web_surface_host.hpp"
 
+#include <algorithm>
 #include <cmath>
 
 namespace canvas::web_demo {
@@ -18,6 +19,7 @@ WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
                                         initial.metrics.physicalHeight)) break;
     }
     const auto runtimeSurface = composition_.surfaceSnapshot();
+    submittedRuntimeFrames_.reserve(8U);
     (void)lifecycle_.replace(render::SurfaceSnapshot{
         initial.viewId, render::SurfaceGeneration{runtimeSurface.surfaceGeneration},
         render::MetricsGeneration{runtimeSurface.metricsGeneration},
@@ -130,6 +132,7 @@ bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
 }
 
 render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
+    submittedRuntimeFrames_.clear();
     if (composition_.state() == runtime::RuntimeCompositionState::kReady &&
         !composition_.loseSurface()) {
         return render::SurfaceLifecycleDisposition::kUnavailable;
@@ -146,23 +149,37 @@ render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameSta
         opportunity.canonicalFrame->surfaceGeneration != frame.surfaceGeneration) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
-    submittedRuntimeFrame_ = opportunity.canonicalFrame;
+    if (submittedRuntimeFrames_.size() >= 8U) {
+        return render::PresentFeedbackDisposition::kUnavailable;
+    }
+    submittedRuntimeFrames_.push_back({frame.frameId, *opportunity.canonicalFrame});
     return disposition;
 }
 render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::PresentedFeedback& value) {
+    const auto mapping = std::find_if(
+        submittedRuntimeFrames_.begin(), submittedRuntimeFrames_.end(),
+        [&](const FrameMapping& item) { return item.platformFrame == value.frameId; });
+    if (mapping == submittedRuntimeFrames_.end()) {
+        return render::PresentFeedbackDisposition::kUnknownFrame;
+    }
+    const auto current = composition_.lastSubmittedCanonicalFrame();
+    if (!current.has_value() || current.value() != mapping->runtimeFrame) {
+        // A replaced/late platform frame cannot acknowledge the newer Runtime
+        // frame. Leave the newer mapping and Runtime handoff untouched.
+        submittedRuntimeFrames_.erase(mapping);
+        return render::PresentFeedbackDisposition::kStaleGeneration;
+    }
     const auto disposition = presentation_.receive(value);
     if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
     auto runtimeFeedback = value;
-    if (submittedRuntimeFrame_.has_value()) {
-        runtimeFeedback.viewId = submittedRuntimeFrame_->viewId;
-        runtimeFeedback.frameId = submittedRuntimeFrame_->frameId;
-        runtimeFeedback.surfaceGeneration = submittedRuntimeFrame_->surfaceGeneration;
-        runtimeFeedback.metricsGeneration = submittedRuntimeFrame_->metricsGeneration;
-    }
+    runtimeFeedback.viewId = mapping->runtimeFrame.viewId;
+    runtimeFeedback.frameId = mapping->runtimeFrame.frameId;
+    runtimeFeedback.surfaceGeneration = mapping->runtimeFrame.surfaceGeneration;
+    runtimeFeedback.metricsGeneration = mapping->runtimeFrame.metricsGeneration;
     if (!composition_.receivePlatformPresented(runtimeFeedback)) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
-    submittedRuntimeFrame_.reset();
+    submittedRuntimeFrames_.erase(mapping);
     return disposition;
 }
 

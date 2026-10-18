@@ -6,6 +6,7 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 
 #include <optional>
+#include <vector>
 
 namespace canvas::web_demo {
 
@@ -27,7 +28,11 @@ class WebSurfaceHost final {
     render::SurfaceLifecycle lifecycle_;
     render::PresentationTracker presentation_;
     runtime::RuntimeComposition composition_;
-    std::optional<render::RuntimeFrameIdentity> submittedRuntimeFrame_;
+    struct FrameMapping final {
+        render::FrameId platformFrame{};
+        render::RuntimeFrameIdentity runtimeFrame{};
+    };
+    std::vector<FrameMapping> submittedRuntimeFrames_;
 };
 
 } // namespace canvas::web_demo

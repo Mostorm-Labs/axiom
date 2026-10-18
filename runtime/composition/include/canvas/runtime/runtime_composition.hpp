@@ -52,6 +52,7 @@ struct RuntimeFrameOpportunity final {
   std::uint64_t previewSurfaceGeneration = 0;
   std::uint64_t previewRevision = 0;
   std::optional<render::RuntimeFrameIdentity> canonicalFrame;
+  bool previewRendered = false;
 };
 
 // Composition-owned, read-only surface identity.  This deliberately mirrors
@@ -107,6 +108,10 @@ class RuntimeComposition final {
   // frame identity; platform hosts only execute/observe the returned work.
   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
                                               RuntimeFrameOpportunity& out) noexcept;
+  // Completes the Runtime-owned preview handoff after the platform has
+  // supplied its real presentation observation. Hosts do not capture or
+  // acknowledge preview sessions themselves.
+  [[nodiscard]] bool finishFrameOpportunity(bool platformPresented) noexcept;
   // The composition owns the single control facade and its queue.  Consumers
   // may borrow the stable interface, but must not construct a second facade or
   // attach an alternate owner.
@@ -205,6 +210,8 @@ class RuntimeComposition final {
   std::thread::id ownerThread_;
   render::ViewId viewId_{render::ViewId{1}};
   std::unique_ptr<CanvasRuntimeFacade> controlFacade_;
+  std::optional<interaction::PreviewPresentationCapture> pendingPreviewCapture_;
+  std::uint64_t pendingPreviewPresentCount_ = 0;
   void refreshControlTarget() noexcept;
 };
 

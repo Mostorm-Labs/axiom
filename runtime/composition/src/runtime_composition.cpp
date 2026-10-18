@@ -282,6 +282,16 @@ bool RuntimeComposition::serviceFrameOpportunity(
   }
   out.previewActive = runtime_->previewActive();
   out.previewDirty = runtime_->previewRenderState().dirty;
+  if (out.previewActive && out.previewDirty && !pendingPreviewCapture_.has_value()) {
+    interaction::PreviewPresentationCapture capture{};
+    if (runtime_->capturePreviewPresentation(capture)) {
+      std::uint64_t presentCount = 0U;
+      if (!runtime_->renderPreviewPresentation(capture, &presentCount)) return false;
+      pendingPreviewCapture_ = capture;
+      pendingPreviewPresentCount_ = presentCount;
+    }
+  }
+  out.previewRendered = pendingPreviewCapture_.has_value();
   out.pendingCanonicalHandoff = runtime_->pendingCanonicalHandoffCount();
   out.previewSurfaceGeneration = runtime_->previewSurfaceGeneration();
   out.previewRevision = runtime_->previewRenderState().contentRevision;
@@ -289,6 +299,18 @@ bool RuntimeComposition::serviceFrameOpportunity(
   out.needsPaint = out.canonicalRequested || out.previewDirty ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
   return true;
+}
+bool RuntimeComposition::finishFrameOpportunity(bool platformPresented) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  if (!pendingPreviewCapture_.has_value()) return true;
+  if (!platformPresented) return false;
+  const bool accepted = runtime_->acknowledgePreviewPresentation(
+      *pendingPreviewCapture_, pendingPreviewPresentCount_);
+  if (accepted) {
+    pendingPreviewCapture_.reset();
+    pendingPreviewPresentCount_ = 0U;
+  }
+  return accepted;
 }
 bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept {
   return std::this_thread::get_id() == ownerThread_ && canMutate() &&
@@ -306,13 +328,17 @@ bool RuntimeComposition::rebindSurface() noexcept {
   const auto& surface = runtime_->surface();
   if (!runtime_->rebindSurface() && !surface.available) return false;
   ++providerEpoch_;
-  return transition(RuntimeCompositionState::kReady);
+  if (!transition(RuntimeCompositionState::kReady)) return false;
+  refreshControlTarget();
+  return true;
 }
 bool RuntimeComposition::rebindSurface(const render::SurfaceMetrics& metrics) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || state_ != RuntimeCompositionState::kLost ||
       !runtime_->rebindSurface(metrics)) return false;
   ++providerEpoch_;
-  return transition(RuntimeCompositionState::kReady);
+  if (!transition(RuntimeCompositionState::kReady)) return false;
+  refreshControlTarget();
+  return true;
 }
 bool RuntimeComposition::adoptPreparedSurface(
     std::uint64_t expectedGeneration, const render::SurfaceMetrics& metrics) noexcept {
@@ -328,7 +354,9 @@ bool RuntimeComposition::adoptPreparedSurface(
   // canonical generation.
   if (!runtime_->adoptPreparedSurface(metrics)) return false;
   ++providerEpoch_;
-  return transition(RuntimeCompositionState::kReady);
+  if (!transition(RuntimeCompositionState::kReady)) return false;
+  refreshControlTarget();
+  return true;
 }
 bool RuntimeComposition::stop() noexcept { if (std::this_thread::get_id() != ownerThread_ || (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost)) return false; resources_.invalidate(); notifications_.clear(); runtime_->cancelAllPointers(); runtime_->close(); return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent); }
 bool RuntimeComposition::detach() noexcept {

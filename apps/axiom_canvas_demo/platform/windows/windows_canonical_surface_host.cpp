@@ -269,13 +269,13 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
     }
     if (!composition_.canonicalProviderAvailable()) { *error = "Runtime canonical provider is unavailable"; return false; }
     const auto surfaceInfo = composition_.surfaceSnapshot();
-    interaction::PreviewPresentationCapture previewCapture{};
-    std::uint64_t previewPresentCount = 0;
-    const bool hadPreview = composition_.previewActive();
-    const bool havePreview = hadPreview &&
-        ((composition_.capturePreviewPresentation(previewCapture) &&
-          composition_.renderPreviewPresentation(previewCapture, &previewPresentCount)) ||
-         composition_.previewProviderAvailable());
+    runtime::RuntimeFrameOpportunity opportunity{};
+    if (!composition_.serviceFrameOpportunity(false, opportunity)) {
+        *error = "Runtime frame opportunity failed";
+        return false;
+    }
+    const bool hadPreview = opportunity.previewActive;
+    const bool havePreview = hadPreview && composition_.previewProviderAvailable();
     std::vector<std::uint8_t> rgba(static_cast<std::size_t>(surfaceInfo.width) *
                                    surfaceInfo.height * 4U);
     if (!composition_.readCanonicalRgba(rgba)) {
@@ -324,11 +324,8 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         }
         lastPresentedFrame_ = frame->frameId.value();
     }
-    if (havePreview && previewCapture.contentRevision != 0U &&
-        composition_.previewActive() &&
-        !composition_.acknowledgePreviewPresentation(
-            previewCapture, previewPresentCount)) {
-        *error = "Windows preview acknowledgement rejected";
+    if (!composition_.finishFrameOpportunity(true)) {
+        *error = "Windows preview completion rejected";
         return false;
     }
     if (hadPreview && !composition_.previewActive()) {

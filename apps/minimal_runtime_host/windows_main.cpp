@@ -41,20 +41,15 @@ struct State final {
   std::uint64_t lastPresentedFrame = 0;
   bool releasingPointerUp = false;
   canvas::minimal_runtime_host::WindowsPresentationCache presentationCache;
+  canvas::runtime::RuntimeFrameOpportunity frameOpportunity{};
 };
 
 void paintCanvas(State& state, HDC dc) {
   auto& composition = state.host->composition();
   const auto surface = composition.surfaceSnapshot();
-  canvas::interaction::PreviewPresentationCapture previewCapture{};
-  std::uint64_t previewPresentCount = 0U;
-  const bool hadPreview = composition.previewActive();
-  bool previewRenderedThisPaint = false;
-  if (hadPreview && composition.previewRenderState().dirty &&
-      composition.capturePreviewPresentation(previewCapture)) {
-    previewRenderedThisPaint =
-        composition.renderPreviewPresentation(previewCapture, &previewPresentCount);
-  }
+  const auto& opportunity = state.frameOpportunity;
+  const bool hadPreview = opportunity.previewActive;
+  const bool previewRenderedThisPaint = opportunity.previewRendered;
   if (!composition.canonicalProviderAvailable()) return;
   if (surface.width == 0U || surface.height == 0U) return;
   if (composition.canonicalBackend() == canvas::render::RenderTargetBackend::kD3D12) {
@@ -67,9 +62,7 @@ void paintCanvas(State& state, HDC dc) {
         state.lastPresentedFrame = frame->frameId.value();
       }
     }
-    if (previewRenderedThisPaint && composition.previewActive()) {
-      (void)composition.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
-    }
+    (void)composition.finishFrameOpportunity(true);
     return;
   }
   const auto byteCount = static_cast<std::size_t>(surface.width) * surface.height * 4U;
@@ -87,9 +80,8 @@ void paintCanvas(State& state, HDC dc) {
   }
 
   const bool previewProviderAvailable = composition.previewProviderAvailable();
-  const auto previewState = composition.previewRenderState();
-  const auto previewGeneration = hadPreview ? composition.previewSurfaceGeneration() : 0U;
-  const auto previewRevision = hadPreview ? previewState.contentRevision : 0U;
+  const auto previewGeneration = hadPreview ? opportunity.previewSurfaceGeneration : 0U;
+  const auto previewRevision = hadPreview ? opportunity.previewRevision : 0U;
   if (!hadPreview) {
     state.presentationCache.clearPreview();
   } else if (previewProviderAvailable &&
@@ -140,9 +132,7 @@ void paintCanvas(State& state, HDC dc) {
       state.lastPresentedFrame = frame->frameId.value();
     }
   }
-  if (previewRenderedThisPaint && composition.previewActive()) {
-    (void)composition.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
-  }
+  (void)composition.finishFrameOpportunity(true);
 }
 
 void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase) {
@@ -170,9 +160,9 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #endif
   switch (message) {
     case WM_TIMER: {
-      canvas::runtime::RuntimeFrameOpportunity opportunity{};
-      const bool frameReady = state->host->composition().serviceFrameOpportunity(false, opportunity);
-      const bool needsCanvasPaint = frameReady && opportunity.needsPaint;
+      const bool frameReady = state->host->composition().serviceFrameOpportunity(
+          false, state->frameOpportunity);
+      const bool needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->refresh();
 #endif

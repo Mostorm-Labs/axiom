@@ -111,6 +111,40 @@ void compositionAndPlatformShareSurfaceIdentity() {
            PresentFeedbackDisposition::kPresented);
 }
 
+void feedbackMappingKeepsConcurrentRuntimeFramesIndependent() {
+    WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
+    const auto runtimeSurface = host.composition().surfaceSnapshot();
+    const auto first = frame(101U, runtimeSurface.surfaceGeneration,
+                             runtimeSurface.metricsGeneration,
+                             metrics(runtimeSurface.width, runtimeSurface.height));
+    const auto second = frame(102U, runtimeSurface.surfaceGeneration,
+                              runtimeSurface.metricsGeneration,
+                              metrics(runtimeSurface.width, runtimeSurface.height));
+    assert(host.submit(first) == PresentFeedbackDisposition::kSubmitted);
+    const auto runtimeFirst = host.composition().lastSubmittedCanonicalFrame();
+    assert(runtimeFirst.has_value());
+    assert(host.submit(second) == PresentFeedbackDisposition::kSubmitted);
+    const auto runtimeSecond = host.composition().lastSubmittedCanonicalFrame();
+    assert(runtimeSecond.has_value() && runtimeSecond->frameId != runtimeFirst->frameId);
+
+    assert(host.feedback(PresentedFeedback{
+               first.viewId, first.frameId, first.surfaceGeneration,
+               first.metricsGeneration, PresentOutcome::kPresented,
+               PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
+           PresentFeedbackDisposition::kStaleGeneration);
+    // The late first-frame observation must not consume the second runtime
+    // frame's handoff. The second frame remains pending until its own feedback.
+    assert(host.composition().lastSubmittedCanonicalFrame().has_value());
+    assert(host.composition().lastSubmittedCanonicalFrame()->frameId ==
+           runtimeSecond->frameId);
+    assert(host.feedback(PresentedFeedback{
+               second.viewId, second.frameId, second.surfaceGeneration,
+               second.metricsGeneration, PresentOutcome::kPresented,
+               PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
+           PresentFeedbackDisposition::kPresented);
+    assert(!host.composition().lastSubmittedCanonicalFrame().has_value());
+}
+
 void invalidReplacementHasNoRuntimeSideEffect() {
     WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
     const auto before = host.composition().surfaceSnapshot();
@@ -158,6 +192,7 @@ int main() {
     lossRequiresRebindAndPresentedFeedbackIsGenerationBound();
     runtimeCompositionCanonicalFeedbackClosesTheHandoff();
     compositionAndPlatformShareSurfaceIdentity();
+    feedbackMappingKeepsConcurrentRuntimeFramesIndependent();
     invalidReplacementHasNoRuntimeSideEffect();
     preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance();
     return 0;

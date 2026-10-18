@@ -212,6 +212,43 @@ int main() {
   assert(!composition.runtime().undo());
   assert(!composition.runtime().redo());
 
+  // A restore publishes a new control attachment and fences requests queued
+  // against the lost surface. Requests using the new target remain usable.
+  canvas::runtime::RuntimeComposition restored;
+  assert(restored.open());
+  assert(restored.bindSurface(256U, 256U));
+  auto& restoredFacade = restored.controlFacade();
+  const auto oldTarget = restoredFacade.mountedCanvasTargets().front();
+  canvas::runtime::CanvasControlRequest oldRequest{};
+  oldRequest.clientId = 0xE001U;
+  oldRequest.requestId = 1U;
+  oldRequest.target = oldTarget;
+  oldRequest.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  oldRequest.payload.creationPreset = canvas::runtime::CanvasCreationPreset::kEllipse;
+  assert(restoredFacade.submitCanvasControl(oldRequest).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  assert(restored.loseSurface());
+  assert(restored.rebindSurface());
+  const auto newTarget = restoredFacade.mountedCanvasTargets().front();
+  assert(newTarget != oldTarget);
+  assert(restored.ownerPump());
+  const auto oldReceipt = restoredFacade.canvasControlReceipt({0xE001U, 1U});
+  assert(oldReceipt.has_value());
+  assert(oldReceipt->state == canvas::runtime::CanvasControlReceiptState::kTargetDestroyed ||
+         oldReceipt->state == canvas::runtime::CanvasControlReceiptState::kStaleTarget);
+  assert(restored.runtime().creationPreset() !=
+         canvas::interaction::CreationPreset::kEllipse);
+  canvas::runtime::CanvasControlRequest newRequest = oldRequest;
+  newRequest.requestId = 2U;
+  newRequest.target = newTarget;
+  assert(restoredFacade.submitCanvasControl(newRequest).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  assert(restored.ownerPump());
+  assert(restoredFacade.canvasControlReceipt({0xE001U, 2U})->state ==
+         canvas::runtime::CanvasControlReceiptState::kApplied);
+  assert(restored.runtime().creationPreset() ==
+         canvas::interaction::CreationPreset::kEllipse);
+
   // Every canonical mutation ingress remains fenced after close, including
   // history compensation and remote replay.  This guards the shared owner
   // boundary instead of only testing UI-facing controls.
