@@ -66,6 +66,12 @@ void tools(DebugPanelContext& context) {
     }
     ImGui::EndDisabled();
     if (panel_detail::hasReadback(snapshot.product.availability)) {
+        if (!snapshot.product.value.control.creationMode) {
+            ImGui::Text("Creation mode: disabled (last preset: %s)",
+                        presets[selectedPreset].first);
+        } else {
+            ImGui::Text("Creation mode: %s", presets[selectedPreset].first);
+        }
         ImGui::Text("resolved eraserId: %u / selection: %s",
                     eraserId,
                     snapshot.product.value.selection.enabled ? "enabled" : "disabled");

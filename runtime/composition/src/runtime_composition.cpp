@@ -38,6 +38,8 @@ void RuntimeComposition::refreshControlTarget() noexcept {
       surface.generation == 0U ? 1U : surface.generation});
 }
 RuntimeComposition::~RuntimeComposition() { (void)close(); }
+RuntimeFacade& RuntimeComposition::controlFacade() noexcept { return *controlFacade_; }
+const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { return *controlFacade_; }
 bool RuntimeComposition::transition(RuntimeCompositionState next) noexcept {
   if (state_ == RuntimeCompositionState::kClosed) return false;
   state_ = next; return true;
@@ -63,7 +65,8 @@ bool RuntimeComposition::registerSurfaceProvider(
     std::string profileId,
     std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
-      (state_ != RuntimeCompositionState::kBound && !canMutate()) ||
+      (state_ != RuntimeCompositionState::kBound &&
+       state_ != RuntimeCompositionState::kLost && !canMutate()) ||
       provider == nullptr || profileId.empty()) return false;
   return runtime_->registerSurfaceProvider(std::move(profileId), std::move(provider));
 }
@@ -71,7 +74,8 @@ bool RuntimeComposition::registerPreviewSurfaceProvider(
     std::string profileId,
     std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
-      (state_ != RuntimeCompositionState::kBound && !canMutate()) ||
+      (state_ != RuntimeCompositionState::kBound &&
+       state_ != RuntimeCompositionState::kLost && !canMutate()) ||
       provider == nullptr || profileId.empty()) return false;
   return runtime_->registerPreviewSurfaceProvider(std::move(profileId), std::move(provider));
 }
@@ -267,13 +271,14 @@ bool RuntimeComposition::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
   out = {};
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  // Consume controls and resource notifications first. Their application may
+  // create a new canonical demand during this same frame opportunity.
+  if (!ownerPump()) return false;
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (shouldCanonical) {
     const auto frameId = runtime_->nextCanonicalFrameId();
-    if (frameId == 0U || !requestCanonicalFrame(frameId)) return false;
+    if (frameId == 0U || !runtime_->presentCanonicalFrame(frameId, 0.0, false)) return false;
     out.canonicalRequested = true;
-  } else if (!ownerPump()) {
-    return false;
   }
   out.previewActive = runtime_->previewActive();
   out.previewDirty = runtime_->previewRenderState().dirty;
@@ -285,29 +290,34 @@ bool RuntimeComposition::serviceFrameOpportunity(
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
   return true;
 }
-bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept { return canMutate() && runtime_->receivePlatformPresented(feedback); }
+bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept {
+  return std::this_thread::get_id() == ownerThread_ && canMutate() &&
+      runtime_->receivePlatformPresented(feedback);
+}
 bool RuntimeComposition::loseSurface() noexcept {
-  if (state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;
+  if (std::this_thread::get_id() != ownerThread_ ||
+      state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;
   resources_.invalidate();
   notifications_.clear();
   return transition(RuntimeCompositionState::kLost);
 }
 bool RuntimeComposition::rebindSurface() noexcept {
-  if (state_ != RuntimeCompositionState::kLost) return false;
+  if (std::this_thread::get_id() != ownerThread_ || state_ != RuntimeCompositionState::kLost) return false;
   const auto& surface = runtime_->surface();
   if (!runtime_->rebindSurface() && !surface.available) return false;
   ++providerEpoch_;
   return transition(RuntimeCompositionState::kReady);
 }
 bool RuntimeComposition::rebindSurface(const render::SurfaceMetrics& metrics) noexcept {
-  if (state_ != RuntimeCompositionState::kLost ||
+  if (std::this_thread::get_id() != ownerThread_ || state_ != RuntimeCompositionState::kLost ||
       !runtime_->rebindSurface(metrics)) return false;
   ++providerEpoch_;
   return transition(RuntimeCompositionState::kReady);
 }
 bool RuntimeComposition::adoptPreparedSurface(
     std::uint64_t expectedGeneration, const render::SurfaceMetrics& metrics) noexcept {
-  if (state_ != RuntimeCompositionState::kLost || expectedGeneration == 0U) return false;
+  if (std::this_thread::get_id() != ownerThread_ ||
+      state_ != RuntimeCompositionState::kLost || expectedGeneration == 0U) return false;
   const auto& surface = runtime_->surface();
   if (!surface.available || surface.generation != expectedGeneration ||
       surface.width != metrics.physicalWidth || surface.height != metrics.physicalHeight) {
@@ -320,14 +330,18 @@ bool RuntimeComposition::adoptPreparedSurface(
   ++providerEpoch_;
   return transition(RuntimeCompositionState::kReady);
 }
-bool RuntimeComposition::stop() noexcept { if (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost) return false; resources_.invalidate(); notifications_.clear(); runtime_->cancelAllPointers(); runtime_->close(); return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent); }
+bool RuntimeComposition::stop() noexcept { if (std::this_thread::get_id() != ownerThread_ || (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost)) return false; resources_.invalidate(); notifications_.clear(); runtime_->cancelAllPointers(); runtime_->close(); return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent); }
 bool RuntimeComposition::detach() noexcept {
-  if (state_ != RuntimeCompositionState::kQuiescent) return false;
+  if (std::this_thread::get_id() != ownerThread_ || state_ != RuntimeCompositionState::kQuiescent) return false;
   resources_.invalidate();
   notifications_.clear();
   return true;
 }
-bool RuntimeComposition::close() noexcept { if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+bool RuntimeComposition::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+std::uint64_t RuntimeComposition::canonicalPresentCount() const noexcept {
+  const auto* provider = runtime_->activeSurfaceProvider();
+  return provider == nullptr ? 0U : provider->presentCount();
+}
 RuntimeCompositionReceipt RuntimeComposition::readback() const noexcept {
   const auto& runtime = *runtime_;
   return {state_, resources_.lifetimeGeneration, ownerPumpCount_, lastOwnerControlCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value(), runtime.canonicalPresentationDirty()};

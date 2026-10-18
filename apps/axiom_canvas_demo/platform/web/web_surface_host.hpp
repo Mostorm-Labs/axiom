@@ -5,6 +5,8 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 
+#include <optional>
+
 namespace canvas::web_demo {
 
 enum class WebSurfaceDisposition : unsigned char { kRebound, kRejectedStale, kRejectedInvalid };
@@ -19,12 +21,13 @@ class WebSurfaceHost final {
     [[nodiscard]] bool syncRuntimeSurfaceIdentity() noexcept;
     [[nodiscard]] const render::SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
-    [[nodiscard]] runtime::CanvasRuntimeFacade& facade() noexcept { return composition_.controlFacade(); }
+    [[nodiscard]] runtime::RuntimeFacade& facade() noexcept { return composition_.controlFacade(); }
 
   private:
     render::SurfaceLifecycle lifecycle_;
     render::PresentationTracker presentation_;
     runtime::RuntimeComposition composition_;
+    std::optional<render::RuntimeFrameIdentity> submittedRuntimeFrame_;
 };
 
 } // namespace canvas::web_demo

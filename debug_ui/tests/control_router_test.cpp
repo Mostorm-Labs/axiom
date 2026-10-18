@@ -424,8 +424,7 @@ int main() {
   // deadline must use the owner's clock, not the first UI snapshot sequence.
   canvas::runtime::RuntimeComposition composition;
   assert(composition.open() && composition.bindSurface(256U, 256U));
-  canvas::runtime::CanvasRuntimeFacade facade(composition.runtime(), {1U, 1U, 1U, 1U});
-  composition.attachControlFacade(&facade);
+  auto& facade = composition.controlFacade();
   for (std::uint64_t i = 0; i < 300U; ++i) assert(composition.ownerPump());
   canvas::debug_ui::DebugSnapshotAssembler assembler;
   canvas::debug_ui::DebugSnapshotSources sources{};
@@ -440,7 +439,6 @@ int main() {
   assert(facade.canvasControlReceipt(shapeRequest.control->key).has_value());
   assert(facade.canvasControlReceipt(shapeRequest.control->key)->state ==
          canvas::runtime::CanvasControlReceiptState::kApplied);
-  assert(composition.runtime().creationMode());
   assert(facade.readRuntimeState().control.creationMode);
   assert(facade.readRuntimeState().control.creationPreset ==
          static_cast<std::uint8_t>(canvas::runtime::CanvasCreationPreset::kRectangle));
@@ -462,12 +460,12 @@ int main() {
   assert(composition.submit(down));
   assert(composition.submit(move));
   assert(composition.submit(up));
-  assert(composition.runtime().setSelectionMode(true));
-  assert(composition.runtime().selectAtViewPoint(70.0F, 60.0F));
-  const auto object = composition.runtime().selectedObjectRecord();
-  assert(composition.runtime().semanticObjectCount() == 1U);
-  assert(object.has_value());
-  assert(object->kind == canvas::semantic::ObjectKind::kShape);
-  composition.attachControlFacade(nullptr);
+  const auto select = facade.setSelectionMode(true, 4U,
+                                              facade.readRuntimeState().identity.runtimeGeneration);
+  assert(select.state == canvas::runtime::ProductControlState::kQueued);
+  assert(composition.ownerPump());
+  const auto state = facade.readRuntimeState();
+  assert(state.selection.enabled);
+  assert(state.control.semanticGeneration != 0U);
   return 0;
 }

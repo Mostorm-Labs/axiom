@@ -3,6 +3,7 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/runtime/resource_binding.hpp"
 #include "canvas/runtime/scene_adapter.hpp"
+#include "canvas/runtime/runtime_facade.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -109,11 +110,11 @@ class RuntimeComposition final {
   // The composition owns the single control facade and its queue.  Consumers
   // may borrow the stable interface, but must not construct a second facade or
   // attach an alternate owner.
-  [[nodiscard]] CanvasRuntimeFacade& controlFacade() noexcept { return *controlFacade_; }
-  [[nodiscard]] const CanvasRuntimeFacade& controlFacade() const noexcept {
-    return *controlFacade_;
-  }
+  [[nodiscard]] RuntimeFacade& controlFacade() noexcept;
+  [[nodiscard]] const RuntimeFacade& controlFacade() const noexcept;
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
   [[nodiscard]] bool requestCanonicalFrame(std::uint64_t frameId) noexcept;
+#endif
   [[nodiscard]] bool loseSurface() noexcept;
   [[nodiscard]] bool rebindSurface() noexcept;
   [[nodiscard]] bool rebindSurface(const render::SurfaceMetrics& metrics) noexcept;
@@ -127,11 +128,14 @@ class RuntimeComposition final {
   [[nodiscard]] bool stop() noexcept;
   [[nodiscard]] bool detach() noexcept;
   [[nodiscard]] bool close() noexcept;
+  [[nodiscard]] std::uint64_t canonicalPresentCount() const noexcept;
   [[nodiscard]] RuntimeCompositionReceipt readback() const noexcept;
   [[nodiscard]] RuntimeSurfaceSnapshot surfaceSnapshot() const noexcept;
   [[nodiscard]] std::uint64_t previewSurfaceGeneration() const noexcept;
   [[nodiscard]] render::RenderTargetBackend canonicalBackend() const noexcept;
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
   [[nodiscard]] std::uint64_t nextCanonicalFrameId() const noexcept;
+#endif
   [[nodiscard]] std::uint64_t canonicalContentSerial() const noexcept;
   [[nodiscard]] std::optional<render::RuntimeFrameIdentity> lastSubmittedCanonicalFrame() const noexcept;
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept;
@@ -151,7 +155,19 @@ class RuntimeComposition final {
   [[nodiscard]] bool previewProviderAvailable() const noexcept;
   [[nodiscard]] bool setPlatformPresentationDeferred(bool deferred) noexcept;
   [[nodiscard]] RuntimeCompositionState state() const noexcept { return state_; }
-  [[nodiscard]] interaction::CanvasEditingRuntime& runtime() noexcept { return *runtime_; }
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
+  // White-box qualification only. Ordinary consumers must use RuntimeFacade,
+  // Composition snapshots and platform execution ports.
+  [[nodiscard]] interaction::CanvasEditingRuntime& qualificationRuntime() noexcept {
+    return *runtime_;
+  }
+  [[nodiscard]] const interaction::CanvasEditingRuntime& qualificationRuntime() const noexcept {
+    return *runtime_;
+  }
+  [[nodiscard]] interaction::CanvasEditingRuntime& runtime() noexcept {
+    return *runtime_;
+  }
+#endif
   [[nodiscard]] const ResourceBindingSnapshot& resources() const noexcept {
     return resources_;
   }

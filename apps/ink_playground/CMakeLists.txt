@@ -15,6 +15,11 @@ target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_editor canvas_runtime_interaction canvas_runtime_render
     canvas_runtime_composition)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
+# Ink Playground retains explicit qualification-only construction paths for
+# legacy fixture and platform qualification. Ordinary hosts use the public
+# RuntimeComposition/RuntimeFacade boundary instead.
+target_compile_definitions(axiom_ink_playground_common PUBLIC
+  AXIOM_RUNTIME_QUALIFICATION=1)
 
 # Resolve the published SDK in this directory as well as runtime/render: the
 # imported target there is directory-scoped, and qualification uses its headers.

@@ -82,8 +82,10 @@ void lossRequiresRebindAndPresentedFeedbackIsGenerationBound() {
 void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
     WebSurfaceHost host{surface(50, 60)};
     auto& composition = host.composition();
-    assert(composition.requestCanonicalFrame(1U));
-    const auto submitted = composition.runtime().lastSubmittedCanonicalFrame();
+    canvas::runtime::RuntimeFrameOpportunity opportunity{};
+    assert(composition.serviceFrameOpportunity(true, opportunity));
+    assert(opportunity.canonicalRequested);
+    const auto submitted = composition.lastSubmittedCanonicalFrame();
     assert(submitted.has_value());
     assert(composition.readback().canonicalSubmitted);
     assert(composition.receivePlatformPresented(PresentedFeedback{
@@ -95,7 +97,7 @@ void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
 
 void compositionAndPlatformShareSurfaceIdentity() {
     WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
-    const auto runtimeGeneration = host.composition().runtime().surface().generation;
+    const auto runtimeGeneration = host.composition().surfaceSnapshot().surfaceGeneration;
     assert(runtimeGeneration != 0U);
     assert(host.lifecycle().current().surfaceGeneration.value() == runtimeGeneration);
     const auto frameValue = frame(70U, runtimeGeneration,
@@ -111,7 +113,7 @@ void compositionAndPlatformShareSurfaceIdentity() {
 
 void invalidReplacementHasNoRuntimeSideEffect() {
     WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
-    const auto before = host.composition().runtime().surface();
+    const auto before = host.composition().surfaceSnapshot();
     const auto lifecycleBefore = host.lifecycle().current();
     auto invalid = SurfaceSnapshot{
         lifecycleBefore.viewId,
@@ -124,8 +126,8 @@ void invalidReplacementHasNoRuntimeSideEffect() {
                        0.0F,
                        lifecycleBefore.metrics.displayScale}};
     assert(host.bind(invalid) == WebSurfaceDisposition::kRejectedInvalid);
-    const auto after = host.composition().runtime().surface();
-    assert(after.generation == before.generation);
+    const auto after = host.composition().surfaceSnapshot();
+    assert(after.surfaceGeneration == before.surfaceGeneration);
     assert(after.width == before.width && after.height == before.height);
     assert(host.lifecycle().current() == lifecycleBefore);
 }
@@ -135,18 +137,18 @@ void preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance() {
     assert(host.markLost() == SurfaceLifecycleDisposition::kLost);
     auto canonical = std::make_unique<RasterSkiaSurfaceProvider>();
     assert(canonical->resize(640U, 360U).code == BackendSubmissionCode::kAccepted);
-    assert(host.composition().runtime().registerSurfaceProvider(
+    assert(host.composition().registerSurfaceProvider(
         "prepared-web-canonical", std::move(canonical)));
     auto preview = std::make_unique<RasterSkiaSurfaceProvider>();
     assert(preview->resize(640U, 360U).code == BackendSubmissionCode::kAccepted);
-    assert(host.composition().runtime().registerPreviewSurfaceProvider(
+    assert(host.composition().registerPreviewSurfaceProvider(
         "prepared-web-preview", std::move(preview)));
-    const auto prepared = host.composition().runtime().surface();
+    const auto prepared = host.composition().surfaceSnapshot();
     assert(prepared.available);
-    assert(host.bind(surface(prepared.generation, prepared.generation,
+    assert(host.bind(surface(prepared.surfaceGeneration, prepared.metricsGeneration,
                              metrics(640U, 360U))) == WebSurfaceDisposition::kRebound);
     assert(host.composition().state() == canvas::runtime::RuntimeCompositionState::kReady);
-    assert(host.composition().runtime().surface().generation == prepared.generation);
+    assert(host.composition().surfaceSnapshot().surfaceGeneration == prepared.surfaceGeneration);
 }
 
 } // namespace

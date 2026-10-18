@@ -19,19 +19,22 @@ namespace canvas::runtime {
 // CanvasEditingRuntime; it never creates a second document or history owner.
 class CanvasRuntimeFacade : public RuntimeFacade {
  public:
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target) noexcept;
+#else
+ private:
+  friend class RuntimeComposition;
+  CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+                      CanvasTargetKey target) noexcept;
+ public:
+#endif
   ~CanvasRuntimeFacade() override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
   [[nodiscard]] ProductControlReceipt submitCanvasControl(
       const CanvasControlRequest& request) noexcept override;
-  [[nodiscard]] CanvasControlApplyResult applyControl(
-      const CanvasControlRequest& request);
-  [[nodiscard]] CanvasControlSnapshot snapshotControl(
-      const CanvasTargetKey& target) const;
-  [[nodiscard]] CanvasControlPort& controlPort() noexcept;
   [[nodiscard]] ProductControlReceipt submitProductControl(
       const ProductControlRequest& request) noexcept override;
   [[nodiscard]] RuntimeStateSnapshot readRuntimeState() const noexcept override;
@@ -45,19 +48,33 @@ class CanvasRuntimeFacade : public RuntimeFacade {
     return controlSequence_.load(std::memory_order_acquire);
   }
 
-  // Only the serialized Runtime owner calls this method.
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
+ public:
+  // White-box qualification only. RuntimeComposition is the only production
+  // owner that invokes these execution seams; ordinary consumers receive the
+  // RuntimeFacade base interface from RuntimeComposition::controlFacade().
+#else
+ private:
+  // Internal RuntimeComposition execution seam; ordinary consumers cannot
+  // reach the concrete binding or editor.
+#endif
+  friend class RuntimeComposition;
+  [[nodiscard]] CanvasControlApplyResult applyControl(
+      const CanvasControlRequest& request);
+  [[nodiscard]] CanvasControlSnapshot snapshotControl(
+      const CanvasTargetKey& target) const;
+  [[nodiscard]] CanvasControlPort& controlPort() noexcept;
   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
   void setTarget(CanvasTargetKey target) noexcept;
   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
   [[nodiscard]] bool isTargetCurrent(const CanvasTargetKey& target) const noexcept;
+  [[nodiscard]] bool ownerThread() const noexcept;
   [[nodiscard]] interaction::CanvasEditingRuntime& editingRuntime() noexcept {
     return runtime_;
   }
-  [[nodiscard]] bool ownerThread() const noexcept;
   [[nodiscard]] const interaction::CanvasEditingRuntime& editingRuntime() const noexcept {
     return runtime_;
   }
-
  private:
   struct Binding;
   void refreshTarget() const noexcept;

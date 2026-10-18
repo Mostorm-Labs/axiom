@@ -139,24 +139,30 @@ render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
 render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameState& frame) {
     const auto disposition = presentation_.submit(frame);
     if (disposition != render::PresentFeedbackDisposition::kSubmitted) return disposition;
-    if (!composition_.requestCanonicalFrame(frame.frameId.value())) {
+    runtime::RuntimeFrameOpportunity opportunity{};
+    if (!composition_.serviceFrameOpportunity(true, opportunity) ||
+        !opportunity.canonicalFrame.has_value() ||
+        opportunity.canonicalFrame->viewId != frame.viewId ||
+        opportunity.canonicalFrame->surfaceGeneration != frame.surfaceGeneration) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
+    submittedRuntimeFrame_ = opportunity.canonicalFrame;
     return disposition;
 }
 render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::PresentedFeedback& value) {
     const auto disposition = presentation_.receive(value);
     if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
     auto runtimeFeedback = value;
-    if (const auto submitted = composition_.lastSubmittedCanonicalFrame();
-        submitted.has_value() && submitted->frameId == value.frameId) {
-        runtimeFeedback.viewId = submitted->viewId;
-        runtimeFeedback.surfaceGeneration = submitted->surfaceGeneration;
-        runtimeFeedback.metricsGeneration = submitted->metricsGeneration;
+    if (submittedRuntimeFrame_.has_value()) {
+        runtimeFeedback.viewId = submittedRuntimeFrame_->viewId;
+        runtimeFeedback.frameId = submittedRuntimeFrame_->frameId;
+        runtimeFeedback.surfaceGeneration = submittedRuntimeFrame_->surfaceGeneration;
+        runtimeFeedback.metricsGeneration = submittedRuntimeFrame_->metricsGeneration;
     }
     if (!composition_.receivePlatformPresented(runtimeFeedback)) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
+    submittedRuntimeFrame_.reset();
     return disposition;
 }
 

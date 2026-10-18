@@ -11,6 +11,10 @@ target_link_libraries(canvas_runtime_composition PUBLIC
     canvas_runtime_control
     canvas_runtime_text canvas_runtime_foundation)
 target_compile_features(canvas_runtime_composition PUBLIC cxx_std_20)
+# The composition library itself must emit the qualification-only execution
+# seam so white-box tests link against the same declaration shape. Ordinary
+# consumers compile without this definition and only see RuntimeFacade.
+target_compile_definitions(canvas_runtime_composition PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
 if(MSVC)
   target_compile_options(canvas_runtime_composition PRIVATE /W4 /permissive- /WX /EHsc)
 else()
@@ -21,6 +25,7 @@ if(BUILD_TESTING)
   add_executable(axiom_fc00x_runtime_composition_tests
       tests/runtime_composition_test.cpp)
   target_link_libraries(axiom_fc00x_runtime_composition_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_fc00x_runtime_composition_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
   target_compile_features(axiom_fc00x_runtime_composition_tests PRIVATE cxx_std_20)
   if(MSVC)
     target_compile_options(axiom_fc00x_runtime_composition_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
@@ -32,6 +37,7 @@ if(BUILD_TESTING)
   add_executable(axiom_fc00x_runtime_facade_tests
       tests/canvas_runtime_facade_test.cpp)
   target_link_libraries(axiom_fc00x_runtime_facade_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_fc00x_runtime_facade_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
   target_compile_features(axiom_fc00x_runtime_facade_tests PRIVATE cxx_std_20)
   if(MSVC)
     target_compile_options(axiom_fc00x_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)

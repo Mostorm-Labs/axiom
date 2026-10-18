@@ -36,7 +36,10 @@ std::optional<runtime::CanvasControlReceipt> MinimalRuntimeFacade::canvasControl
   return host_.composition().controlFacade().canvasControlReceipt(key);
 }
 const runtime::CanvasTargetKey& MinimalRuntimeFacade::target() const noexcept {
-  return host_.composition().controlFacade().target();
+  static thread_local runtime::CanvasTargetKey value{};
+  const auto targets = host_.composition().controlFacade().mountedCanvasTargets();
+  value = targets.empty() ? runtime::CanvasTargetKey{} : targets.front();
+  return value;
 }
 
 std::size_t MinimalRuntimeFacade::process() noexcept {
@@ -53,7 +56,7 @@ MinimalRuntimeFacade::readPlatformDiagnostics() const noexcept {
   out.width = surface.width;
   out.height = surface.height;
   out.devicePixelRatio = surface.devicePixelRatio;
-  out.presentCount = host_.composition().readback().ownerPumpCount;
+  out.presentCount = host_.composition().canonicalPresentCount();
   out.surfaceAvailable = surface.available;
   out.canonicalSurfaceMode = surface.available &&
       host_.composition().canonicalBackend() == render::RenderTargetBackend::kD3D12

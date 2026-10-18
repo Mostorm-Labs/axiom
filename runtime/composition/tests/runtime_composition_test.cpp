@@ -52,7 +52,7 @@ int main() {
   canvas::runtime::CanvasControlRequest presetRequest{};
   presetRequest.clientId = 0xD001U;
   presetRequest.requestId = 1U;
-  presetRequest.target = controlFacade.target();
+  presetRequest.target = controlFacade.mountedCanvasTargets().front();
   presetRequest.payload.kind =
       canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
   presetRequest.payload.creationPreset =
@@ -332,6 +332,31 @@ int main() {
   assert(idleFrameComposition.readback().pendingNotifications == 0U);
   assert(idleFrameComposition.resourceReceipt(
       canvas::foundation::ObjectId::fromUint64(1U)).has_value());
+
+  // A resource notification accepted immediately before a public frame
+  // opportunity must be consumed by that same opportunity; hosts must not
+  // need a second timer tick to discover the canonical demand.
+  canvas::runtime::RuntimeComposition sameOpportunity;
+  assert(sameOpportunity.open());
+  assert(sameOpportunity.bindSurface(256U, 256U));
+  assert(sameOpportunity.bindManifest(idleManifest, 32U));
+  sameOpportunity.runtime().setPlatformPresentationDeferred(true);
+  canvas::runtime::RuntimeFrameOpportunity firstOpportunity{};
+  assert(sameOpportunity.serviceFrameOpportunity(true, firstOpportunity));
+  assert(firstOpportunity.canonicalRequested);
+  assert(firstOpportunity.canonicalFrame.has_value());
+  const auto firstIdentity = *firstOpportunity.canonicalFrame;
+  assert(sameOpportunity.receivePlatformPresented({
+      firstIdentity.viewId, firstIdentity.frameId, firstIdentity.surfaceGeneration,
+      firstIdentity.metricsGeneration, canvas::render::PresentOutcome::kPresented,
+      canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(sameOpportunity.publishResource(
+      canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
+  canvas::runtime::RuntimeFrameOpportunity resourceOpportunity{};
+  assert(sameOpportunity.serviceFrameOpportunity(false, resourceOpportunity));
+  assert(resourceOpportunity.canonicalRequested);
+  assert(resourceOpportunity.needsPaint);
+  assert(sameOpportunity.readback().pendingNotifications == 0U);
 
   // Automatic and deferred presentation modes must share the same public
   // frame contract. An automatic control application must not consume the

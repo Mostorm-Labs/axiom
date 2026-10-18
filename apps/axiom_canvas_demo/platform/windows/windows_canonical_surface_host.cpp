@@ -71,7 +71,8 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
                 static_cast<float>(static_cast<short>(HIWORD(lParam))), 0.5F, 0.0F, 0.0F,
                 {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent, phase});
             (void)host->composition().submit(batch);
-            (void)host->composition().requestCanonicalFrame(host->nextCanonicalFrameId());
+            runtime::RuntimeFrameOpportunity opportunity{};
+            (void)host->composition().serviceFrameOpportunity(true, opportunity);
             if (phase == canvas::input::PointerPhase::kUp) {
                 host->beginPointerUpCaptureRelease();
                 ReleaseCapture();
@@ -221,7 +222,9 @@ bool WindowsCanonicalSurfaceHost::resizeForWindow(std::uint32_t width,
     ++observation_.resizeEvents;
     observation_.surfaceGeneration = live.surfaceGeneration;
     observation_.metricsGeneration = live.metricsGeneration;
-    if (!composition_.requestCanonicalFrame(nextCanonicalFrameId())) {
+    runtime::RuntimeFrameOpportunity opportunity{};
+    if (!composition_.serviceFrameOpportunity(true, opportunity) ||
+        !opportunity.canonicalRequested) {
         *error = "Runtime composition resize did not request a canonical redraw";
         return false;
     }
