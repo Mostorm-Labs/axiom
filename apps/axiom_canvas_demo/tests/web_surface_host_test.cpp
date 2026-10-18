@@ -185,6 +185,30 @@ void preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance() {
     assert(host.composition().surfaceSnapshot().surfaceGeneration == prepared.surfaceGeneration);
 }
 
+void mappingCapacityRejectsBeforeRuntimeSubmission() {
+    WebSurfaceHost host{surface(90, 90, metrics(320U, 180U))};
+    const auto runtimeSurface = host.composition().surfaceSnapshot();
+    for (std::uint64_t id = 1U; id <= 8U; ++id) {
+        assert(host.submit(frame(id, runtimeSurface.surfaceGeneration,
+                                runtimeSurface.metricsGeneration,
+                                metrics(runtimeSurface.width, runtimeSurface.height))) ==
+               PresentFeedbackDisposition::kSubmitted);
+    }
+    const auto pendingBefore = host.composition().lastSubmittedCanonicalFrame();
+    assert(pendingBefore.has_value());
+    assert(host.submit(frame(9U, runtimeSurface.surfaceGeneration,
+                            runtimeSurface.metricsGeneration,
+                            metrics(runtimeSurface.width, runtimeSurface.height))) ==
+           PresentFeedbackDisposition::kUnavailable);
+    const auto pendingAfter = host.composition().lastSubmittedCanonicalFrame();
+    assert(pendingAfter == pendingBefore);
+    assert(host.feedback(PresentedFeedback{
+               kView, FrameId{8U}, SurfaceGeneration{runtimeSurface.surfaceGeneration},
+               MetricsGeneration{runtimeSurface.metricsGeneration}, PresentOutcome::kPresented,
+               PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
+           PresentFeedbackDisposition::kPresented);
+}
+
 } // namespace
 
 int main() {
@@ -195,5 +219,6 @@ int main() {
     feedbackMappingKeepsConcurrentRuntimeFramesIndependent();
     invalidReplacementHasNoRuntimeSideEffect();
     preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance();
+    mappingCapacityRejectsBeforeRuntimeSubmission();
     return 0;
 }

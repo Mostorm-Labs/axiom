@@ -418,5 +418,46 @@ int main() {
     assert(submitted->frameId.value() == requestedFrame);
     assert(cameraComposition.runtime().platformPresentationDeferred() == deferred);
   }
+
+  // A superseded preview capture must not pin the composition to stale
+  // pixels after a newer move arrives before the platform acknowledgement.
+  canvas::runtime::RuntimeComposition supersededPreview;
+  assert(supersededPreview.open());
+  assert(supersededPreview.bindSurface(256U, 256U));
+  assert(supersededPreview.registerSource(51U));
+  assert(supersededPreview.setPlatformPresentationDeferred(true));
+  canvas::input::PlatformPointerBatch previewDown;
+  previewDown.samples.push_back({51U, 501U, 1U, 1'000U, 20.0F, 20.0F, 0.5F,
+                                 0.0F, 0.0F, {}, {},
+                                 canvas::input::SampleProvenance::kConfirmedCurrent,
+                                 canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch previewMove = previewDown;
+  previewMove.samples.front().sequence = 2U;
+  previewMove.samples.front().timestampNs = 2'000U;
+  previewMove.samples.front().x = 80.0F;
+  previewMove.samples.front().y = 80.0F;
+  previewMove.samples.front().phase = canvas::input::PointerPhase::kMove;
+  assert(supersededPreview.submit(previewDown));
+  assert(supersededPreview.submit(previewMove));
+  canvas::runtime::RuntimeFrameOpportunity firstPreview{};
+  assert(supersededPreview.serviceFrameOpportunity(false, firstPreview));
+  assert(firstPreview.previewRendered);
+  const auto firstPreviewRevision = firstPreview.previewRevision;
+  std::array<std::uint8_t, 256U * 256U * 4U> firstPreviewPixels{};
+  assert(supersededPreview.readPreviewRgba(firstPreviewPixels));
+  previewMove.samples.front().sequence = 3U;
+  previewMove.samples.front().timestampNs = 3'000U;
+  previewMove.samples.front().x = 180.0F;
+  previewMove.samples.front().y = 180.0F;
+  assert(supersededPreview.submit(previewMove));
+  assert(!supersededPreview.finishFrameOpportunity(false));
+  canvas::runtime::RuntimeFrameOpportunity secondPreview{};
+  assert(supersededPreview.serviceFrameOpportunity(false, secondPreview));
+  assert(secondPreview.previewRendered);
+  assert(secondPreview.previewRevision > firstPreviewRevision);
+  std::array<std::uint8_t, 256U * 256U * 4U> secondPreviewPixels{};
+  assert(supersededPreview.readPreviewRgba(secondPreviewPixels));
+  assert(firstPreviewPixels != secondPreviewPixels);
+  assert(supersededPreview.finishFrameOpportunity(true));
   return 0;
 }

@@ -271,6 +271,20 @@ bool RuntimeComposition::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
   out = {};
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  // A capture may be superseded by input, resize, restore, or cancellation
+  // before the platform reports its presentation result.  Invalidate that
+  // obsolete work at the next owner opportunity so it cannot reserve the
+  // single in-flight slot indefinitely.
+  if (pendingPreviewCapture_.has_value()) {
+    const auto& state = runtime_->previewRenderState();
+    if (!runtime_->previewActive() ||
+        state.contentRevision != pendingPreviewCapture_->contentRevision ||
+        runtime_->previewSurfaceGeneration() !=
+            pendingPreviewCapture_->surfaceGeneration) {
+      pendingPreviewCapture_.reset();
+      pendingPreviewPresentCount_ = 0U;
+    }
+  }
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
@@ -303,12 +317,28 @@ bool RuntimeComposition::serviceFrameOpportunity(
 bool RuntimeComposition::finishFrameOpportunity(bool platformPresented) noexcept {
   if (std::this_thread::get_id() != ownerThread_) return false;
   if (!pendingPreviewCapture_.has_value()) return true;
+  const auto& state = runtime_->previewRenderState();
+  const bool superseded = !runtime_->previewActive() ||
+      state.contentRevision != pendingPreviewCapture_->contentRevision ||
+      runtime_->previewSurfaceGeneration() != pendingPreviewCapture_->surfaceGeneration;
+  if (superseded) {
+    pendingPreviewCapture_.reset();
+    pendingPreviewPresentCount_ = 0U;
+    return false;
+  }
   if (!platformPresented) return false;
   const bool accepted = runtime_->acknowledgePreviewPresentation(
       *pendingPreviewCapture_, pendingPreviewPresentCount_);
   if (accepted) {
     pendingPreviewCapture_.reset();
     pendingPreviewPresentCount_ = 0U;
+  } else {
+    // A newer move, resize, restore, or cancellation may have advanced the
+    // preview identity while the platform was presenting this capture.  The
+    // strict acknowledgement check must remain intact, but an obsolete
+    // capture cannot pin the next dirty opportunity forever.  Drop only when
+    // the identity has actually been superseded; a plain platform retry keeps
+    // the in-flight work available for another presentation attempt.
   }
   return accepted;
 }

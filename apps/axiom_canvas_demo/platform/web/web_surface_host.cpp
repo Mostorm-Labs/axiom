@@ -140,6 +140,16 @@ render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
     return lifecycle_.markLost(lifecycle_.current().viewId);
 }
 render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameState& frame) {
+    // Reserve a bounded platform-to-runtime identity slot before touching the
+    // presentation tracker or Runtime.  A rejected submission must be a true
+    // no-op so the last accepted Runtime frame keeps its feedback path.
+    const bool alreadyMapped = std::find_if(
+        submittedRuntimeFrames_.begin(), submittedRuntimeFrames_.end(),
+        [&](const FrameMapping& item) { return item.platformFrame == frame.frameId; }) !=
+        submittedRuntimeFrames_.end();
+    if (!alreadyMapped && submittedRuntimeFrames_.size() >= 8U) {
+        return render::PresentFeedbackDisposition::kUnavailable;
+    }
     const auto disposition = presentation_.submit(frame);
     if (disposition != render::PresentFeedbackDisposition::kSubmitted) return disposition;
     runtime::RuntimeFrameOpportunity opportunity{};
@@ -147,9 +157,6 @@ render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameSta
         !opportunity.canonicalFrame.has_value() ||
         opportunity.canonicalFrame->viewId != frame.viewId ||
         opportunity.canonicalFrame->surfaceGeneration != frame.surfaceGeneration) {
-        return render::PresentFeedbackDisposition::kUnavailable;
-    }
-    if (submittedRuntimeFrames_.size() >= 8U) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
     submittedRuntimeFrames_.push_back({frame.frameId, *opportunity.canonicalFrame});
