@@ -43,6 +43,24 @@ struct RuntimeCompositionReceipt final {
   bool canonicalDemand = false;
 };
 
+// Platform echoes the original work value; per-view frame counters alone
+// cannot identify an execution across Runtime instances or binding lifetimes.
+struct CanonicalWork final {
+  std::uint64_t runtimeInstanceId = 0;
+  std::uint64_t lifetimeGeneration = 0;
+  std::uint64_t attachmentEpoch = 0;
+  std::uint64_t workId = 0;
+  render::RuntimeFrameIdentity frame{};
+  bool operator==(const CanonicalWork&) const = default;
+};
+
+struct CanonicalCompletion final {
+  CanonicalWork work{};
+  render::PresentOutcome outcome = render::PresentOutcome::kUnknown;
+  render::PresentEvidenceKind evidence = render::PresentEvidenceKind::kNone;
+  std::optional<std::uint64_t> presentedTimeNs;
+};
+
 struct RuntimeFrameOpportunity final {
   bool needsPaint = false;
   bool canonicalRequested = false;
@@ -52,6 +70,7 @@ struct RuntimeFrameOpportunity final {
   std::uint64_t previewSurfaceGeneration = 0;
   std::uint64_t previewRevision = 0;
   std::optional<render::RuntimeFrameIdentity> canonicalFrame;
+  std::optional<CanonicalWork> canonicalWork;
   bool previewRendered = false;
   struct PreviewWork final {
     std::uint64_t runtimeInstanceId = 0;
@@ -152,7 +171,7 @@ class RuntimeComposition final {
   [[nodiscard]] bool adoptPreparedSurface(std::uint64_t expectedGeneration,
                                           const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool receivePlatformPresented(
-      const render::PresentedFeedback& feedback) noexcept;
+      const CanonicalCompletion& completion) noexcept;
   [[nodiscard]] bool stop() noexcept;
   [[nodiscard]] bool detach() noexcept;
   [[nodiscard]] bool close() noexcept;
@@ -166,6 +185,7 @@ class RuntimeComposition final {
 #endif
   [[nodiscard]] std::uint64_t canonicalContentSerial() const noexcept;
   [[nodiscard]] std::optional<render::RuntimeFrameIdentity> lastSubmittedCanonicalFrame() const noexcept;
+  [[nodiscard]] std::optional<CanonicalWork> lastSubmittedCanonicalWork() const noexcept;
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept;
   [[nodiscard]] bool previewActive() const noexcept;
   [[nodiscard]] const render::SurfaceRenderState& previewRenderState() const noexcept;
@@ -239,6 +259,9 @@ class RuntimeComposition final {
   std::optional<RuntimeFrameOpportunity::PreviewWork> pendingPreviewIdentity_;
   std::uint64_t nextPreviewWorkId_ = 1;
   std::uint64_t runtimeInstanceId_ = 0;
+  std::optional<CanonicalWork> pendingCanonicalWork_;
+  std::uint64_t nextCanonicalWorkId_ = 1;
+  [[nodiscard]] bool captureCanonicalWork() noexcept;
   std::uint64_t attachmentEpoch_ = 1;
   bool surfaceTransitionActive_ = false;
   [[nodiscard]] bool canAdvanceSurfaceBinding() const noexcept;

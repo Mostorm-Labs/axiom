@@ -153,8 +153,7 @@ void brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace() {
     assert(changed.surfaceGeneration == old.surfaceGeneration);
     assert(changed.metricsGeneration == old.metricsGeneration + 1U);
     assert(!composition.finishFrameOpportunity({a.previewWork, true}));
-    assert(!composition.receivePlatformPresented({a.canonicalFrame->viewId, a.canonicalFrame->frameId,
-        a.canonicalFrame->surfaceGeneration, a.canonicalFrame->metricsGeneration,
+    assert(!composition.receivePlatformPresented({*a.canonicalWork,
         render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
     runtime::RuntimeFrameOpportunity b{};
     assert(composition.serviceFrameOpportunity(false, b) && b.previewWork);
@@ -204,9 +203,7 @@ void logicalInputMatchesCanonicalAndPreviewPixels() {
   assert(composition.serviceFrameOpportunity(false, opportunity));
   assert(composition.readCanonicalRgba(pixels));
   assert(coloredAt(80U, 80U));
-  const auto identity = *opportunity.canonicalFrame;
-  assert(composition.receivePlatformPresented({identity.viewId, identity.frameId,
-      identity.surfaceGeneration, identity.metricsGeneration,
+  assert(composition.receivePlatformPresented({*opportunity.canonicalWork,
       canvas::render::PresentOutcome::kPresented,
       canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
   request.requestId = 2U;
@@ -263,9 +260,7 @@ void bindingReplacementKeepsPendingBrushHandoff() {
     assert(composition.serviceFrameOpportunity(false, fresh));
     assert(fresh.previewWork && fresh.canonicalFrame && fresh.pendingCanonicalHandoff == 1U);
     const auto presentCanonical = [&] {
-      const auto& frame = *fresh.canonicalFrame;
-      assert(composition.receivePlatformPresented({frame.viewId, frame.frameId,
-          frame.surfaceGeneration, frame.metricsGeneration, render::PresentOutcome::kPresented,
+      assert(composition.receivePlatformPresented({*fresh.canonicalWork, render::PresentOutcome::kPresented,
           render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
     };
     if (canonicalFirst) presentCanonical();
@@ -385,7 +380,190 @@ canvas::semantic::ObjectRecord shape(std::uint64_t id) {
 }
 }
 
-int main() {
+void canonicalFeedbackCannotQualifyAnotherInstance() {
+  using namespace canvas;
+  runtime::RuntimeComposition a(render::ViewId{1U}), b(render::ViewId{1U});
+  for (auto* c : {&a, &b}) {
+    assert(c->open() && c->bindSurface(128U, 128U) && c->registerSource(94U));
+    assert(c->setPlatformPresentationDeferred(true));
+    input::PlatformPointerBatch batch;
+    batch.samples.push_back({94U, 1U, 1U, 1000U, 20.0F, 30.0F, 0.5F, 0.0F, 0.0F,
+        {}, {}, input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    assert(c->submit(batch));
+    batch.samples.front().phase = input::PointerPhase::kMove;
+    batch.samples.front().sequence = 2U; batch.samples.front().x = 70.0F;
+    assert(c->submit(batch));
+    batch.samples.front().phase = input::PointerPhase::kUp;
+    batch.samples.front().sequence = 3U;
+    assert(c->submit(batch));
+  }
+  runtime::RuntimeFrameOpportunity fa{}, fb{};
+  assert(a.serviceFrameOpportunity(false, fa) && b.serviceFrameOpportunity(false, fb));
+  assert(fa.canonicalFrame && fb.canonicalFrame && fb.previewWork);
+  assert(b.finishFrameOpportunity({fb.previewWork, true}));
+  const auto before = b.lastSubmittedCanonicalFrame();
+  const auto qualified = b.previewRenderState().platformQualifiedRevision;
+  assert(!b.receivePlatformPresented({*fa.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(b.lastSubmittedCanonicalFrame() == before && b.previewActive());
+  assert(b.previewRenderState().platformQualifiedRevision == qualified);
+  assert(b.qualificationRuntime().pendingCanonicalHandoffCount() == 1U);
+  assert(b.receivePlatformPresented({*fb.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(!b.previewActive() && !b.lastSubmittedCanonicalFrame());
+  assert(b.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
+  assert(!b.receivePlatformPresented({*fb.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(a.receivePlatformPresented({*fa.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  // Canonical-first remains pending until this instance's preview is qualified.
+  assert(a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 1U);
+  assert(a.finishFrameOpportunity({fa.previewWork, true}));
+  assert(!a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
+
+  assert(b.close());
+  runtime::RuntimeComposition recreated(render::ViewId{1U});
+  assert(recreated.open() && recreated.bindSurface(128U, 128U));
+  assert(recreated.setPlatformPresentationDeferred(true));
+  runtime::RuntimeFrameOpportunity fresh{};
+  assert(recreated.serviceFrameOpportunity(true, fresh) && fresh.canonicalWork);
+  assert(!recreated.receivePlatformPresented({*fb.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(recreated.lastSubmittedCanonicalWork() == fresh.canonicalWork);
+  assert(recreated.receivePlatformPresented({*fresh.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+}
+
+void canonicalWorkRejectsOldUnknownAndFailedQualification() {
+  using namespace canvas;
+  runtime::RuntimeComposition c;
+  assert(c.open() && c.bindSurface(128U, 128U) && c.setPlatformPresentationDeferred(true));
+  runtime::RuntimeFrameOpportunity a{}, b{}, retry{};
+  assert(c.serviceFrameOpportunity(true, a) && a.canonicalWork);
+  assert(c.serviceFrameOpportunity(true, b) && b.canonicalWork);
+  assert(!c.receivePlatformPresented({*a.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(c.lastSubmittedCanonicalWork() == b.canonicalWork);
+  auto unknown = *b.canonicalWork;
+  ++unknown.workId;
+  assert(!c.receivePlatformPresented({unknown, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  auto mismatched = *b.canonicalWork;
+  ++mismatched.lifetimeGeneration;
+  assert(!c.receivePlatformPresented({mismatched, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(!c.receivePlatformPresented({*b.canonicalWork, render::PresentOutcome::kUnknown,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(!c.receivePlatformPresented({*b.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kApproximate, std::nullopt}));
+  assert(c.serviceFrameOpportunity(false, retry) && retry.canonicalWork == b.canonicalWork);
+  assert(c.receivePlatformPresented({*retry.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(!c.receivePlatformPresented({*retry.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  for (const bool physical : {false, true}) {
+    assert(c.serviceFrameOpportunity(true, a) && a.canonicalWork);
+    const auto s = c.surfaceSnapshot();
+    assert(c.resizeSurface({s.logicalWidth, s.logicalHeight,
+        physical ? 192U : s.width, physical ? 192U : s.height,
+        s.devicePixelRatio, s.displayScale + 0.25F}));
+    assert(!c.receivePlatformPresented({*a.canonicalWork, render::PresentOutcome::kPresented,
+        render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+    assert(c.serviceFrameOpportunity(false, b) && b.canonicalWork);
+    assert(c.receivePlatformPresented({*b.canonicalWork, render::PresentOutcome::kPresented,
+        render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  }
+  assert(c.serviceFrameOpportunity(true, a) && a.canonicalWork);
+  assert(c.loseSurface() && c.rebindSurface());
+  assert(!c.receivePlatformPresented({*a.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+  assert(c.serviceFrameOpportunity(true, b) && b.canonicalWork);
+  assert(c.receivePlatformPresented({*b.canonicalWork, render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+}
+
+void reentrantCloseCannotBecomeLost() {
+  using namespace canvas;
+  runtime::RuntimeComposition c;
+  assert(c.open() && c.bindSurface(128U, 128U));
+  auto provider = std::make_unique<ResizeFailureProvider>();
+  auto* raw = provider.get();
+  assert(provider->resize(128U, 128U).code == render::BackendSubmissionCode::kAccepted);
+  assert(c.registerSurfaceProvider("close-then-resize", std::move(provider)));
+  assert(c.resizeSurface(128U, 128U));
+  raw->duringResize = [&] {
+    assert(c.close());
+    const auto lifetime = c.readback().lifetimeGeneration;
+    assert(!c.resizeSurface(500U, 500U));
+    assert(c.state() == runtime::RuntimeCompositionState::kClosed);
+    assert(c.readback().lifetimeGeneration == lifetime);
+  };
+  assert(!c.resizeSurface(256U, 256U));
+  assert(c.state() == runtime::RuntimeCompositionState::kClosed);
+  assert(!c.surfaceSnapshot().available && c.surfaceSnapshot().width == 128U);
+}
+
+void terminalEventsCannotPublishOrAdvanceBindings() {
+  using namespace canvas;
+  for (const bool close : {false, true}) {
+    runtime::RuntimeComposition c;
+    assert(c.open() && c.bindSurface(128U, 128U) && c.registerSource(95U));
+    assert(c.setPlatformPresentationDeferred(true));
+    auto provider = std::make_unique<ResizeFailureProvider>();
+    auto* raw = provider.get();
+    assert(provider->resize(128U, 128U).code == render::BackendSubmissionCode::kAccepted);
+    assert(c.registerSurfaceProvider("terminal-events", std::move(provider)));
+    assert(c.resizeSurface(128U, 128U));
+    runtime::RuntimeFrameOpportunity old{};
+    assert(c.serviceFrameOpportunity(true, old) && old.canonicalWork);
+    const auto binding = c.surfaceSnapshot();
+    const auto target = c.controlFacade().mountedCanvasTargets().front();
+    raw->duringResize = [&] {
+      assert(close ? c.close() : c.stop());
+      const auto terminal = c.state();
+      assert(terminal == (close ? runtime::RuntimeCompositionState::kClosed
+                               : runtime::RuntimeCompositionState::kQuiescent));
+      const auto lifetime = c.readback().lifetimeGeneration;
+      assert(!c.resizeSurface(500U, 500U));
+      assert(!c.loseSurface() && !c.rebindSurface());
+      assert(c.state() == terminal && c.readback().lifetimeGeneration == lifetime);
+      assert(!c.receivePlatformPresented({*old.canonicalWork, render::PresentOutcome::kPresented,
+          render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
+      runtime::CanvasControlRequest request{};
+      request.clientId = 95U; request.requestId = 1U; request.target = target;
+      request.payload.kind = runtime::CanvasControlPayloadKind::kSelectTool;
+      request.payload.tool = runtime::CanvasToolKind::kSelect;
+      assert(c.controlFacade().submitCanvasControl(request).state != runtime::ProductControlState::kApplied);
+      assert(!c.ownerPump());
+    };
+    assert(!c.resizeSurface(256U, 256U));
+    assert(c.state() == (close ? runtime::RuntimeCompositionState::kClosed
+                              : runtime::RuntimeCompositionState::kQuiescent));
+    assert(c.surfaceSnapshot().surfaceGeneration == binding.surfaceGeneration);
+    assert(c.surfaceSnapshot().metricsGeneration == binding.metricsGeneration);
+    assert(c.surfaceSnapshot().width == 128U && !c.surfaceSnapshot().available);
+    // A terminal event in the first role must prevent starting preparation
+    // of the second role; invalidation may release it but cannot resize it.
+    assert(c.qualificationRuntime().previewSurfaceProvider()->describe().metrics.physicalWidth == 128U);
+    input::PlatformPointerBatch down;
+    down.samples.push_back({95U, 1U, 1U, 1000U, 20.0F, 30.0F, 0.5F, 0.0F, 0.0F,
+        {}, {}, input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    assert(!c.submit(down));
+    assert(!c.serviceFrameOpportunity(true, old));
+    assert(c.close() && c.state() == runtime::RuntimeCompositionState::kClosed);
+    const auto lifetime = c.readback().lifetimeGeneration;
+    assert(!c.resizeSurface(500U, 500U) && !c.loseSurface());
+    assert(c.readback().lifetimeGeneration == lifetime);
+  }
+}
+
+int main(int argc, char** argv) {
+  if (argc > 1 && std::string(argv[1]) == "r1") { canonicalFeedbackCannotQualifyAnotherInstance(); return 0; }
+  if (argc > 1 && std::string(argv[1]) == "r2") { reentrantCloseCannotBecomeLost(); return 0; }
+  canonicalFeedbackCannotQualifyAnotherInstance();
+  canonicalWorkRejectsOldUnknownAndFailedQualification();
+  reentrantCloseCannotBecomeLost();
+  terminalEventsCannotPublishOrAdvanceBindings();
   canvas::runtime::RuntimeComposition composition;
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kCreated);
   assert(composition.open());
@@ -773,10 +951,8 @@ int main() {
   assert(sameOpportunity.serviceFrameOpportunity(true, firstOpportunity));
   assert(firstOpportunity.canonicalRequested);
   assert(firstOpportunity.canonicalFrame.has_value());
-  const auto firstIdentity = *firstOpportunity.canonicalFrame;
   assert(sameOpportunity.receivePlatformPresented({
-      firstIdentity.viewId, firstIdentity.frameId, firstIdentity.surfaceGeneration,
-      firstIdentity.metricsGeneration, canvas::render::PresentOutcome::kPresented,
+      *firstOpportunity.canonicalWork, canvas::render::PresentOutcome::kPresented,
       canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
   assert(sameOpportunity.publishResource(
       canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));

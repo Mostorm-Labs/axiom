@@ -61,13 +61,12 @@ void paintCanvas(State& state, HDC dc) {
   if (!composition.canonicalProviderAvailable()) return;
   if (surface.width == 0U || surface.height == 0U) return;
   if (composition.canonicalBackend() == canvas::render::RenderTargetBackend::kD3D12) {
-    if (const auto frame = composition.lastSubmittedCanonicalFrame(); frame.has_value() &&
-        frame->frameId.value() != state.lastPresentedFrame) {
+    if (const auto& frame = opportunity.canonicalWork; frame.has_value() &&
+        frame->frame.frameId.value() != state.lastPresentedFrame) {
       if (composition.receivePlatformPresented({
-              frame->viewId, frame->frameId, frame->surfaceGeneration,
-              frame->metricsGeneration, canvas::render::PresentOutcome::kPresented,
+              *frame, canvas::render::PresentOutcome::kPresented,
               canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) {
-        state.lastPresentedFrame = frame->frameId.value();
+        state.lastPresentedFrame = frame->frame.frameId.value();
       }
     }
     (void)composition.finishFrameOpportunity({opportunity.previewWork, true});
@@ -131,13 +130,12 @@ void paintCanvas(State& state, HDC dc) {
                 static_cast<int>(surface.width), static_cast<int>(surface.height),
                 state.presentationCache.compositePixels().data(), &info,
                 DIB_RGB_COLORS, SRCCOPY);
-  if (const auto frame = composition.lastSubmittedCanonicalFrame(); frame.has_value() &&
-      frame->frameId.value() != state.lastPresentedFrame) {
+  if (const auto& frame = opportunity.canonicalWork; frame.has_value() &&
+      frame->frame.frameId.value() != state.lastPresentedFrame) {
     if (composition.receivePlatformPresented({
-            frame->viewId, frame->frameId, frame->surfaceGeneration,
-            frame->metricsGeneration, canvas::render::PresentOutcome::kPresented,
+            *frame, canvas::render::PresentOutcome::kPresented,
             canvas::render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) {
-      state.lastPresentedFrame = frame->frameId.value();
+      state.lastPresentedFrame = frame->frame.frameId.value();
     }
   }
   (void)composition.finishFrameOpportunity({opportunity.previewWork, true});

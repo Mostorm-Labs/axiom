@@ -98,12 +98,22 @@ SurfaceProviderDisposition RuntimeAppBinding::updateSurfacePair(
     bool touchedActive = false;
     const bool replacingPair = canonical.has_value() || preview.has_value();
     auto result = surfaces_.prepareUpdate(metrics, canonical, restoring, replacingPair, initialBinding, touchedActive);
+    if (result == SurfaceProviderDisposition::kCommitted && !commitAdmission()) {
+        result = SurfaceProviderDisposition::kStaleFrame;
+    }
     if (result == SurfaceProviderDisposition::kCommitted) {
         result = previewSurfaces_->prepareUpdate(metrics, preview, restoring, replacingPair, initialBinding, touchedActive);
     }
-    if (result == SurfaceProviderDisposition::kCommitted && commitAdmission() &&
-        (!surfaces_.activateUpdate(touchedActive) ||
-         !previewSurfaces_->activateUpdate(touchedActive))) {
+    if (result == SurfaceProviderDisposition::kCommitted && !commitAdmission()) {
+        result = SurfaceProviderDisposition::kStaleFrame;
+    }
+    if (result == SurfaceProviderDisposition::kCommitted && !surfaces_.activateUpdate(touchedActive)) {
+        result = SurfaceProviderDisposition::kProviderUnavailable;
+    }
+    if (result == SurfaceProviderDisposition::kCommitted && !commitAdmission()) {
+        result = SurfaceProviderDisposition::kStaleFrame;
+    }
+    if (result == SurfaceProviderDisposition::kCommitted && !previewSurfaces_->activateUpdate(touchedActive)) {
         result = SurfaceProviderDisposition::kProviderUnavailable;
     }
     if (result != SurfaceProviderDisposition::kCommitted || !commitAdmission()) {

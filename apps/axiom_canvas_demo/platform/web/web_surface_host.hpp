@@ -19,7 +19,10 @@ class WebSurfaceHost final {
     [[nodiscard]] WebSurfaceDisposition bindMetrics(const render::SurfaceMetrics& metrics);
     [[nodiscard]] render::SurfaceLifecycleDisposition markLost() noexcept;
     [[nodiscard]] render::PresentFeedbackDisposition submit(const render::FrameState& frame);
-    [[nodiscard]] render::PresentFeedbackDisposition feedback(const render::PresentedFeedback& value);
+    [[nodiscard]] render::PresentFeedbackDisposition feedback(
+        const render::PresentedFeedback& value, const runtime::CanonicalWork& work);
+    [[nodiscard]] std::optional<runtime::CanonicalWork> submittedCanonicalWork(
+        render::FrameId platformFrame) const noexcept;
     [[nodiscard]] bool syncRuntimeSurfaceIdentity() noexcept;
     [[nodiscard]] const render::SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
@@ -32,6 +35,7 @@ class WebSurfaceHost final {
     struct FrameMapping final {
         render::FrameId platformFrame{};
         render::RuntimeFrameIdentity runtimeFrame{};
+        runtime::CanonicalWork runtimeWork{};
     };
     std::vector<FrameMapping> submittedRuntimeFrames_;
 };

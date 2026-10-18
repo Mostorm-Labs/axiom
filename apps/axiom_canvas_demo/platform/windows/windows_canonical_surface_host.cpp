@@ -313,16 +313,15 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         *error = "Windows canonical DIB presentation failed";
         return false;
     }
-    if (const auto frame = composition_.lastSubmittedCanonicalFrame(); frame.has_value() &&
-        frame->frameId.value() != lastPresentedFrame_) {
+    if (const auto& frame = opportunity.canonicalWork; frame.has_value() &&
+        frame->frame.frameId.value() != lastPresentedFrame_) {
         if (!composition_.receivePlatformPresented({
-                frame->viewId, frame->frameId, frame->surfaceGeneration,
-                frame->metricsGeneration, render::PresentOutcome::kPresented,
+                *frame, render::PresentOutcome::kPresented,
                 render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) {
             *error = "Windows canonical feedback rejected";
             return false;
         }
-        lastPresentedFrame_ = frame->frameId.value();
+        lastPresentedFrame_ = frame->frame.frameId.value();
     }
     if (!composition_.finishFrameOpportunity({opportunity.previewWork, true})) {
         *error = "Windows preview completion rejected";

@@ -49,6 +49,11 @@ FrameState frame(std::uint64_t id, std::uint64_t generation,
     };
 }
 
+PresentFeedbackDisposition mappedFeedback(WebSurfaceHost& host, const PresentedFeedback& feedback) {
+    const auto work = host.submittedCanonicalWork(feedback.frameId);
+    return host.feedback(feedback, work.value_or(canvas::runtime::CanonicalWork{}));
+}
+
 void rejectsStaleSurfaceAndAcceptsFreshDprMetrics() {
     WebSurfaceHost host{surface(10, 20)};
     assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
@@ -71,11 +76,11 @@ void lossRequiresRebindAndPresentedFeedbackIsGenerationBound() {
     const auto accepted = host.lifecycle().current();
     assert(host.submit(frame(61, accepted.surfaceGeneration.value(), accepted.metricsGeneration.value(),
                              accepted.metrics)) == PresentFeedbackDisposition::kSubmitted);
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                kView, FrameId{61}, accepted.surfaceGeneration, before.metricsGeneration,
                PresentOutcome::kPresented, PresentEvidenceKind::kPlatformQualified,
                std::optional<std::uint64_t>{100}}) == PresentFeedbackDisposition::kStaleGeneration);
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                kView, FrameId{61}, accepted.surfaceGeneration, accepted.metricsGeneration,
                PresentOutcome::kPresented, PresentEvidenceKind::kPlatformQualified,
                std::optional<std::uint64_t>{101}}) == PresentFeedbackDisposition::kPresented);
@@ -90,9 +95,8 @@ void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
     const auto submitted = composition.lastSubmittedCanonicalFrame();
     assert(submitted.has_value());
     assert(composition.readback().canonicalSubmitted);
-    assert(composition.receivePlatformPresented(PresentedFeedback{
-        submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
-        submitted->metricsGeneration, PresentOutcome::kPresented,
+    assert(composition.receivePlatformPresented(canvas::runtime::CanonicalCompletion{
+        *opportunity.canonicalWork, PresentOutcome::kPresented,
         PresentEvidenceKind::kPlatformQualified, std::nullopt}));
     assert(!composition.readback().canonicalSubmitted);
 }
@@ -106,7 +110,7 @@ void compositionAndPlatformShareSurfaceIdentity() {
                                   host.lifecycle().current().metricsGeneration.value(),
                                   host.lifecycle().current().metrics);
     assert(host.submit(frameValue) == PresentFeedbackDisposition::kSubmitted);
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                frameValue.viewId, frameValue.frameId, frameValue.surfaceGeneration,
                frameValue.metricsGeneration, PresentOutcome::kPresented,
                PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
@@ -129,7 +133,7 @@ void feedbackMappingKeepsConcurrentRuntimeFramesIndependent() {
     const auto runtimeSecond = host.composition().lastSubmittedCanonicalFrame();
     assert(runtimeSecond.has_value() && runtimeSecond->frameId != runtimeFirst->frameId);
 
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                first.viewId, first.frameId, first.surfaceGeneration,
                first.metricsGeneration, PresentOutcome::kPresented,
                PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
@@ -139,7 +143,7 @@ void feedbackMappingKeepsConcurrentRuntimeFramesIndependent() {
     assert(host.composition().lastSubmittedCanonicalFrame().has_value());
     assert(host.composition().lastSubmittedCanonicalFrame()->frameId ==
            runtimeSecond->frameId);
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                second.viewId, second.frameId, second.surfaceGeneration,
                second.metricsGeneration, PresentOutcome::kPresented,
                PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
@@ -209,16 +213,40 @@ void mappingCapacityRejectsBeforeRuntimeSubmission() {
            PresentFeedbackDisposition::kUnavailable);
     const auto pendingAfter = host.composition().lastSubmittedCanonicalFrame();
     assert(pendingAfter == pendingBefore);
-    assert(host.feedback(PresentedFeedback{
+    assert(mappedFeedback(host, PresentedFeedback{
                kView, FrameId{8U}, SurfaceGeneration{runtimeSurface.surfaceGeneration},
                MetricsGeneration{runtimeSurface.metricsGeneration}, PresentOutcome::kPresented,
                PresentEvidenceKind::kPlatformQualified, std::nullopt}) ==
            PresentFeedbackDisposition::kPresented);
 }
 
+void mappedFeedbackCannotRelabelAnotherRuntimeWork() {
+    WebSurfaceHost a{surface(1U, 1U, metrics(128U, 128U))};
+    WebSurfaceHost b{surface(1U, 1U, metrics(128U, 128U))};
+    const auto sa = a.lifecycle().current();
+    const auto sb = b.lifecycle().current();
+    const auto fa = frame(1U, sa.surfaceGeneration.value(), sa.metricsGeneration.value(), sa.metrics);
+    const auto fb = frame(1U, sb.surfaceGeneration.value(), sb.metricsGeneration.value(), sb.metrics);
+    assert(a.submit(fa) == PresentFeedbackDisposition::kSubmitted);
+    assert(b.submit(fb) == PresentFeedbackDisposition::kSubmitted);
+    const auto wa = a.submittedCanonicalWork(FrameId{1U});
+    const auto wb = b.submittedCanonicalWork(FrameId{1U});
+    assert(wa && wb && wa != wb);
+    const PresentedFeedback feedback{kView, FrameId{1U}, sb.surfaceGeneration,
+        sb.metricsGeneration, PresentOutcome::kPresented, PresentEvidenceKind::kPlatformQualified,
+        std::nullopt};
+    const auto before = b.composition().lastSubmittedCanonicalWork();
+    assert(b.feedback(feedback, *wa) == PresentFeedbackDisposition::kStaleGeneration);
+    assert(b.composition().lastSubmittedCanonicalWork() == before);
+    assert(b.feedback(feedback, *wb) == PresentFeedbackDisposition::kPresented);
+    assert(!b.composition().lastSubmittedCanonicalWork());
+    assert(b.feedback(feedback, *wb) == PresentFeedbackDisposition::kUnknownFrame);
+}
+
 } // namespace
 
 int main() {
+    mappedFeedbackCannotRelabelAnotherRuntimeWork();
     {
         WebSurfaceHost host{surface(1U, 1U, SurfaceMetrics{100.0F, 80.0F, 200U, 160U, 2.0F, 1.25F})};
         const auto accepted = host.composition().surfaceSnapshot();

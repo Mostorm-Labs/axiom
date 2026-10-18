@@ -67,6 +67,7 @@ void RuntimeComposition::surfaceBindingChanged() noexcept {
   pendingPreviewPresentCount_ = 0U;
   pendingPreviewWorkId_ = 0U;
   pendingPreviewIdentity_.reset();
+  pendingCanonicalWork_.reset();
   refreshControlTarget();
 }
 RuntimeComposition::~RuntimeComposition() { (void)close(); }
@@ -116,10 +117,15 @@ bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height
 }
 bool RuntimeComposition::resizeSurface(const render::SurfaceMetrics& metrics) noexcept {
   if (std::this_thread::get_id() != ownerThread_) return false;
+  if (state_ == RuntimeCompositionState::kClosed ||
+      state_ == RuntimeCompositionState::kStopping ||
+      state_ == RuntimeCompositionState::kQuiescent) return false;
   if (surfaceTransitionActive_) {
     (void)runtime_->loseSurface();
-    state_ = RuntimeCompositionState::kLost;
-    surfaceBindingChanged();
+    if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kBound) {
+      state_ = RuntimeCompositionState::kLost;
+      surfaceBindingChanged();
+    }
     return false;
   }
   if (!canMutate() || !canAdvanceSurfaceBinding() ||
@@ -128,7 +134,8 @@ bool RuntimeComposition::resizeSurface(const render::SurfaceMetrics& metrics) no
   surfaceTransitionActive_ = true;
   const bool resized = runtime_->resizeSurface(metrics);
   surfaceTransitionActive_ = false;
-  if (state_ == RuntimeCompositionState::kClosed) return false;
+  if (state_ != RuntimeCompositionState::kReady &&
+      state_ != RuntimeCompositionState::kLost) return false;
   if (resized && (before.generation != runtime_->surface().generation ||
                  before.metricsGeneration != runtime_->surface().metricsGeneration)) surfaceBindingChanged();
   else if (!resized && !runtime_->surface().available && state_ != RuntimeCompositionState::kLost) {
@@ -319,7 +326,8 @@ bool RuntimeComposition::ownerPump() noexcept {
   return true;
 }
 bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept {
-  if (!canMutate() || std::this_thread::get_id() != ownerThread_) return false;
+  if (!canMutate() || std::this_thread::get_id() != ownerThread_ ||
+      nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   // A frame opportunity is also the shared owner safe point. This advances
   // accepted controls and resource notifications even when the surface is
   // idle and no pointer batch arrives (for example Web rAF/present).
@@ -332,7 +340,7 @@ bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept {
   const bool pumped = ownerPump();
   runtime_->setPlatformPresentationDeferred(wasDeferred);
   if (!pumped) return false;
-  return runtime_->presentCanonicalFrame(frameId, 0.0, false);
+  return runtime_->presentCanonicalFrame(frameId, 0.0, false) && captureCanonicalWork();
 }
 bool RuntimeComposition::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
@@ -361,11 +369,13 @@ bool RuntimeComposition::serviceFrameOpportunity(
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
+  if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   if (shouldCanonical) {
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U || !runtime_->presentCanonicalFrame(frameId, 0.0, false)) return false;
     out.canonicalRequested = true;
   }
+  if (!captureCanonicalWork()) return false;
   out.previewActive = runtime_->previewActive();
   out.previewDirty = runtime_->previewRenderState().dirty;
   if (out.previewActive && out.previewDirty && !pendingPreviewCapture_.has_value()) {
@@ -391,6 +401,7 @@ bool RuntimeComposition::serviceFrameOpportunity(
   out.previewSurfaceGeneration = runtime_->previewSurfaceGeneration();
   out.previewRevision = runtime_->previewRenderState().contentRevision;
   out.canonicalFrame = runtime_->lastSubmittedCanonicalFrame();
+  out.canonicalWork = lastSubmittedCanonicalWork();
   out.needsPaint = out.canonicalRequested || out.previewDirty ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
   return true;
@@ -439,9 +450,35 @@ bool RuntimeComposition::finishFrameOpportunity(
   }
   return accepted;
 }
-bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept {
-  return std::this_thread::get_id() == ownerThread_ && canMutate() &&
-      runtime_->receivePlatformPresented(feedback);
+bool RuntimeComposition::captureCanonicalWork() noexcept {
+  const auto frame = runtime_->lastSubmittedCanonicalFrame();
+  if (!frame) { pendingCanonicalWork_.reset(); return true; }
+  if (lastSubmittedCanonicalWork()) return true;
+  if (runtimeInstanceId_ == 0U ||
+      nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
+  pendingCanonicalWork_ = CanonicalWork{runtimeInstanceId_, resources_.lifetimeGeneration,
+      attachmentEpoch_, nextCanonicalWorkId_++, *frame};
+  return true;
+}
+std::optional<CanonicalWork> RuntimeComposition::lastSubmittedCanonicalWork() const noexcept {
+  if (!canMutate() || !pendingCanonicalWork_ ||
+      pendingCanonicalWork_->runtimeInstanceId != runtimeInstanceId_ ||
+      pendingCanonicalWork_->lifetimeGeneration != resources_.lifetimeGeneration ||
+      pendingCanonicalWork_->attachmentEpoch != attachmentEpoch_) return std::nullopt;
+  const auto current = runtime_->lastSubmittedCanonicalFrame();
+  if (!current || *current != pendingCanonicalWork_->frame) return std::nullopt;
+  return pendingCanonicalWork_;
+}
+bool RuntimeComposition::receivePlatformPresented(const CanonicalCompletion& completion) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  const auto current = lastSubmittedCanonicalWork();
+  if (!current || completion.work != *current) return false;
+  const auto& frame = current->frame;
+  const bool accepted = runtime_->receivePlatformPresented({frame.viewId, frame.frameId,
+      frame.surfaceGeneration, frame.metricsGeneration, completion.outcome,
+      completion.evidence, completion.presentedTimeNs});
+  if (accepted) pendingCanonicalWork_.reset();
+  return accepted;
 }
 bool RuntimeComposition::loseSurface() noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
@@ -480,6 +517,7 @@ bool RuntimeComposition::stop() noexcept {
   notifications_.clear();
   pendingPreviewCapture_.reset();
   pendingPreviewIdentity_.reset();
+  pendingCanonicalWork_.reset();
   runtime_->close();
   return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent);
 }

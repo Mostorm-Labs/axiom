@@ -99,24 +99,36 @@ render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameSta
     if (disposition != render::PresentFeedbackDisposition::kSubmitted) return disposition;
     runtime::RuntimeFrameOpportunity opportunity{};
     if (!composition_.serviceFrameOpportunity(true, opportunity) ||
-        !opportunity.canonicalFrame.has_value() ||
+        !opportunity.canonicalFrame.has_value() || !opportunity.canonicalWork ||
         opportunity.canonicalFrame->viewId != frame.viewId ||
         opportunity.canonicalFrame->surfaceGeneration != frame.surfaceGeneration ||
         opportunity.canonicalFrame->metricsGeneration != frame.metricsGeneration) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
-    submittedRuntimeFrames_.push_back({frame.frameId, *opportunity.canonicalFrame});
+    submittedRuntimeFrames_.push_back({frame.frameId, *opportunity.canonicalFrame,
+                                      *opportunity.canonicalWork});
     return disposition;
 }
-render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::PresentedFeedback& value) {
+std::optional<runtime::CanonicalWork> WebSurfaceHost::submittedCanonicalWork(
+    render::FrameId platformFrame) const noexcept {
+    const auto mapping = std::find_if(submittedRuntimeFrames_.begin(), submittedRuntimeFrames_.end(),
+        [&](const FrameMapping& item) { return item.platformFrame == platformFrame; });
+    return mapping == submittedRuntimeFrames_.end() ? std::nullopt
+        : std::optional<runtime::CanonicalWork>{mapping->runtimeWork};
+}
+render::PresentFeedbackDisposition WebSurfaceHost::feedback(
+    const render::PresentedFeedback& value, const runtime::CanonicalWork& work) {
     const auto mapping = std::find_if(
         submittedRuntimeFrames_.begin(), submittedRuntimeFrames_.end(),
         [&](const FrameMapping& item) { return item.platformFrame == value.frameId; });
     if (mapping == submittedRuntimeFrames_.end()) {
         return render::PresentFeedbackDisposition::kUnknownFrame;
     }
-    const auto current = composition_.lastSubmittedCanonicalFrame();
-    if (!current.has_value() || current.value() != mapping->runtimeFrame) {
+    // Never relabel a bare or another instance's callback with this host's
+    // current Runtime work. The platform must retain the original token.
+    if (mapping->runtimeWork != work) return render::PresentFeedbackDisposition::kStaleGeneration;
+    const auto current = composition_.lastSubmittedCanonicalWork();
+    if (!current.has_value() || current.value() != mapping->runtimeWork) {
         // A replaced/late platform frame cannot acknowledge the newer Runtime
         // frame. Leave the newer mapping and Runtime handoff untouched.
         submittedRuntimeFrames_.erase(mapping);
@@ -124,12 +136,8 @@ render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::Presen
     }
     const auto disposition = presentation_.receive(value);
     if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
-    auto runtimeFeedback = value;
-    runtimeFeedback.viewId = mapping->runtimeFrame.viewId;
-    runtimeFeedback.frameId = mapping->runtimeFrame.frameId;
-    runtimeFeedback.surfaceGeneration = mapping->runtimeFrame.surfaceGeneration;
-    runtimeFeedback.metricsGeneration = mapping->runtimeFrame.metricsGeneration;
-    if (!composition_.receivePlatformPresented(runtimeFeedback)) {
+    if (!composition_.receivePlatformPresented({mapping->runtimeWork,
+            value.outcome, value.evidence, value.presentedTimeNs})) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }
     submittedRuntimeFrames_.erase(mapping);
