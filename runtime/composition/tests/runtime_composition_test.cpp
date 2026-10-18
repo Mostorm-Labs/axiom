@@ -336,5 +336,32 @@ int main() {
   assert(idleFrameComposition.readback().pendingNotifications == 0U);
   assert(idleFrameComposition.resourceReceipt(
       canvas::foundation::ObjectId::fromUint64(1U)).has_value());
+
+  // Automatic and deferred presentation modes must share the same public
+  // frame contract. An automatic control application must not consume the
+  // frame id that the surrounding frame opportunity is about to submit.
+  for (const bool deferred : {false, true}) {
+    canvas::runtime::RuntimeComposition cameraComposition;
+    assert(cameraComposition.open());
+    assert(cameraComposition.bindSurface(256U, 256U));
+    cameraComposition.runtime().setPlatformPresentationDeferred(deferred);
+    canvas::runtime::CanvasRuntimeFacade cameraFacade(
+        cameraComposition.runtime(), {1U, 1U, 1U, 1U});
+    cameraComposition.attachControlFacade(&cameraFacade);
+    const auto queued = cameraFacade.zoomAt(20.0F, 20.0F, 2.0F, 1U, 1U);
+    assert(queued.state == canvas::runtime::ProductControlState::kQueued);
+    const auto requestedFrame = cameraComposition.runtime().nextCanonicalFrameId();
+    assert(cameraComposition.requestCanonicalFrame(requestedFrame));
+    const auto terminal = cameraFacade.canvasControlReceipt({1U, 1U});
+    assert(terminal.has_value());
+    assert(terminal->state ==
+           canvas::runtime::CanvasControlReceiptState::kApplied);
+    assert(cameraComposition.runtime().viewportGesture().scale == 2.0F);
+    const auto submitted = cameraComposition.runtime().lastSubmittedCanonicalFrame();
+    assert(submitted.has_value());
+    assert(submitted->frameId.value() == requestedFrame);
+    assert(cameraComposition.runtime().platformPresentationDeferred() == deferred);
+    cameraComposition.attachControlFacade(nullptr);
+  }
   return 0;
 }

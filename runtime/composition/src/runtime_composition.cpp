@@ -202,7 +202,15 @@ bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept {
   // A frame opportunity is also the shared owner safe point. This advances
   // accepted controls and resource notifications even when the surface is
   // idle and no pointer batch arrives (for example Web rAF/present).
-  if (!ownerPump()) return false;
+  // Suppress implicit automatic presents while the owner pump applies those
+  // controls. The public frame opportunity owns the frame identity and must
+  // submit it exactly once, regardless of the Runtime's normal presentation
+  // mode. Restore the mode before the public submission and on failure.
+  const bool wasDeferred = runtime_->platformPresentationDeferred();
+  runtime_->setPlatformPresentationDeferred(true);
+  const bool pumped = ownerPump();
+  runtime_->setPlatformPresentationDeferred(wasDeferred);
+  if (!pumped) return false;
   return runtime_->presentCanonicalFrame(frameId, 0.0, false);
 }
 bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept { return canMutate() && runtime_->receivePlatformPresented(feedback); }

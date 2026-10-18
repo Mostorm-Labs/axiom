@@ -309,6 +309,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       std::uint64_t presentCount) noexcept;
   void setPreviewOverlayVisible(bool visible) noexcept;
   void setPlatformPresentationDeferred(bool deferred) noexcept;
+  [[nodiscard]] bool platformPresentationDeferred() const noexcept {
+    return platformPresentationDeferred_;
+  }
   [[nodiscard]] bool finishBrushSession(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool cancelBrushSession(std::uint64_t pointerId) noexcept;
   [[nodiscard]] std::vector<render::BrushRenderPoint> brushRenderPoints() const;
