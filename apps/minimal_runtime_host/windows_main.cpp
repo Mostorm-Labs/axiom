@@ -62,7 +62,7 @@ void paintCanvas(State& state, HDC dc) {
         state.lastPresentedFrame = frame->frameId.value();
       }
     }
-    (void)composition.finishFrameOpportunity(true);
+    (void)composition.finishFrameOpportunity({opportunity.previewWork, true});
     return;
   }
   const auto byteCount = static_cast<std::size_t>(surface.width) * surface.height * 4U;
@@ -132,7 +132,7 @@ void paintCanvas(State& state, HDC dc) {
       state.lastPresentedFrame = frame->frameId.value();
     }
   }
-  (void)composition.finishFrameOpportunity(true);
+  (void)composition.finishFrameOpportunity({opportunity.previewWork, true});
 }
 
 void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase) {

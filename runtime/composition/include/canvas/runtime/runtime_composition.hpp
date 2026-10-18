@@ -53,6 +53,18 @@ struct RuntimeFrameOpportunity final {
   std::uint64_t previewRevision = 0;
   std::optional<render::RuntimeFrameIdentity> canonicalFrame;
   bool previewRendered = false;
+  struct PreviewWork final {
+    std::uint64_t workId = 0;
+    std::uint64_t contentRevision = 0;
+    std::uint64_t surfaceGeneration = 0;
+    bool operator==(const PreviewWork&) const = default;
+  };
+  std::optional<PreviewWork> previewWork;
+};
+
+struct RuntimeFrameCompletion final {
+  std::optional<RuntimeFrameOpportunity::PreviewWork> previewWork;
+  bool platformPresented = false;
 };
 
 // Composition-owned, read-only surface identity.  This deliberately mirrors
@@ -111,7 +123,8 @@ class RuntimeComposition final {
   // Completes the Runtime-owned preview handoff after the platform has
   // supplied its real presentation observation. Hosts do not capture or
   // acknowledge preview sessions themselves.
-  [[nodiscard]] bool finishFrameOpportunity(bool platformPresented) noexcept;
+  [[nodiscard]] bool finishFrameOpportunity(
+      const RuntimeFrameCompletion& completion) noexcept;
   // The composition owns the single control facade and its queue.  Consumers
   // may borrow the stable interface, but must not construct a second facade or
   // attach an alternate owner.
@@ -146,14 +159,6 @@ class RuntimeComposition final {
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept;
   [[nodiscard]] bool previewActive() const noexcept;
   [[nodiscard]] const render::SurfaceRenderState& previewRenderState() const noexcept;
-  [[nodiscard]] bool capturePreviewPresentation(
-      interaction::PreviewPresentationCapture& capture) const noexcept;
-  [[nodiscard]] bool renderPreviewPresentation(
-      const interaction::PreviewPresentationCapture& capture,
-      std::uint64_t* presentCount) noexcept;
-  [[nodiscard]] bool acknowledgePreviewPresentation(
-      const interaction::PreviewPresentationCapture& capture,
-      std::uint64_t presentCount) noexcept;
   [[nodiscard]] bool readCanonicalRgba(std::span<std::uint8_t> destination) noexcept;
   [[nodiscard]] bool readPreviewRgba(std::span<std::uint8_t> destination) noexcept;
   [[nodiscard]] bool canonicalProviderAvailable() const noexcept;
@@ -183,6 +188,14 @@ class RuntimeComposition final {
   }
 
  private:
+  [[nodiscard]] bool capturePreviewPresentation(
+      interaction::PreviewPresentationCapture& capture) const noexcept;
+  [[nodiscard]] bool renderPreviewPresentation(
+      const interaction::PreviewPresentationCapture& capture,
+      std::uint64_t* presentCount) noexcept;
+  [[nodiscard]] bool acknowledgePreviewPresentation(
+      const interaction::PreviewPresentationCapture& capture,
+      std::uint64_t presentCount) noexcept;
   struct Notification final {
     foundation::ObjectId resourceId{};
     ResourceBindingToken token{};
@@ -212,6 +225,8 @@ class RuntimeComposition final {
   std::unique_ptr<CanvasRuntimeFacade> controlFacade_;
   std::optional<interaction::PreviewPresentationCapture> pendingPreviewCapture_;
   std::uint64_t pendingPreviewPresentCount_ = 0;
+  std::uint64_t pendingPreviewWorkId_ = 0;
+  std::uint64_t nextPreviewWorkId_ = 1;
   void refreshControlTarget() noexcept;
 };
 

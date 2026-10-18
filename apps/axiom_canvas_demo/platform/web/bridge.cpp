@@ -172,7 +172,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
             submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
             canvas::render::PresentEvidenceKind::kPlatformQualified,
             std::nullopt})) return 0;
-    if (!composition.finishFrameOpportunity(true)) return 0;
+    if (!composition.finishFrameOpportunity({opportunity.previewWork, true})) return 0;
     ++value->presentedFrames;
     return 1;
 }

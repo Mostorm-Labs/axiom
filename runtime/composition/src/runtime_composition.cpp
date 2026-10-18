@@ -283,6 +283,7 @@ bool RuntimeComposition::serviceFrameOpportunity(
             pendingPreviewCapture_->surfaceGeneration) {
       pendingPreviewCapture_.reset();
       pendingPreviewPresentCount_ = 0U;
+      pendingPreviewWorkId_ = 0U;
     }
   }
   // Consume controls and resource notifications first. Their application may
@@ -303,9 +304,16 @@ bool RuntimeComposition::serviceFrameOpportunity(
       if (!runtime_->renderPreviewPresentation(capture, &presentCount)) return false;
       pendingPreviewCapture_ = capture;
       pendingPreviewPresentCount_ = presentCount;
+      pendingPreviewWorkId_ = nextPreviewWorkId_++;
+      if (pendingPreviewWorkId_ == 0U) pendingPreviewWorkId_ = nextPreviewWorkId_++;
     }
   }
   out.previewRendered = pendingPreviewCapture_.has_value();
+  if (pendingPreviewCapture_.has_value()) {
+    out.previewWork = RuntimeFrameOpportunity::PreviewWork{
+        pendingPreviewWorkId_, pendingPreviewCapture_->contentRevision,
+        pendingPreviewCapture_->surfaceGeneration};
+  }
   out.pendingCanonicalHandoff = runtime_->pendingCanonicalHandoffCount();
   out.previewSurfaceGeneration = runtime_->previewSurfaceGeneration();
   out.previewRevision = runtime_->previewRenderState().contentRevision;
@@ -314,9 +322,16 @@ bool RuntimeComposition::serviceFrameOpportunity(
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
   return true;
 }
-bool RuntimeComposition::finishFrameOpportunity(bool platformPresented) noexcept {
+bool RuntimeComposition::finishFrameOpportunity(
+    const RuntimeFrameCompletion& completion) noexcept {
   if (std::this_thread::get_id() != ownerThread_) return false;
   if (!pendingPreviewCapture_.has_value()) return true;
+  if (!completion.previewWork.has_value() ||
+      completion.previewWork->workId != pendingPreviewWorkId_ ||
+      completion.previewWork->contentRevision != pendingPreviewCapture_->contentRevision ||
+      completion.previewWork->surfaceGeneration != pendingPreviewCapture_->surfaceGeneration) {
+    return false;
+  }
   const auto& state = runtime_->previewRenderState();
   const bool superseded = !runtime_->previewActive() ||
       state.contentRevision != pendingPreviewCapture_->contentRevision ||
@@ -324,14 +339,16 @@ bool RuntimeComposition::finishFrameOpportunity(bool platformPresented) noexcept
   if (superseded) {
     pendingPreviewCapture_.reset();
     pendingPreviewPresentCount_ = 0U;
+    pendingPreviewWorkId_ = 0U;
     return false;
   }
-  if (!platformPresented) return false;
+  if (!completion.platformPresented) return false;
   const bool accepted = runtime_->acknowledgePreviewPresentation(
       *pendingPreviewCapture_, pendingPreviewPresentCount_);
   if (accepted) {
     pendingPreviewCapture_.reset();
     pendingPreviewPresentCount_ = 0U;
+    pendingPreviewWorkId_ = 0U;
   } else {
     // A newer move, resize, restore, or cancellation may have advanced the
     // preview identity while the platform was presenting this capture.  The

@@ -324,7 +324,7 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         }
         lastPresentedFrame_ = frame->frameId.value();
     }
-    if (!composition_.finishFrameOpportunity(true)) {
+    if (!composition_.finishFrameOpportunity({opportunity.previewWork, true})) {
         *error = "Windows preview completion rejected";
         return false;
     }

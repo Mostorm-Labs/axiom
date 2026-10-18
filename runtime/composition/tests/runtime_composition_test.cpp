@@ -450,7 +450,7 @@ int main() {
   previewMove.samples.front().x = 180.0F;
   previewMove.samples.front().y = 180.0F;
   assert(supersededPreview.submit(previewMove));
-  assert(!supersededPreview.finishFrameOpportunity(false));
+  assert(!supersededPreview.finishFrameOpportunity({firstPreview.previewWork, false}));
   canvas::runtime::RuntimeFrameOpportunity secondPreview{};
   assert(supersededPreview.serviceFrameOpportunity(false, secondPreview));
   assert(secondPreview.previewRendered);
@@ -458,6 +458,42 @@ int main() {
   std::array<std::uint8_t, 256U * 256U * 4U> secondPreviewPixels{};
   assert(supersededPreview.readPreviewRgba(secondPreviewPixels));
   assert(firstPreviewPixels != secondPreviewPixels);
-  assert(supersededPreview.finishFrameOpportunity(true));
+  assert(supersededPreview.finishFrameOpportunity({secondPreview.previewWork, true}));
+
+  // A completion for superseded work A must not qualify replacement work B.
+  canvas::runtime::RuntimeComposition delayedPreview;
+  assert(delayedPreview.open());
+  assert(delayedPreview.bindSurface(256U, 256U));
+  assert(delayedPreview.registerSource(52U));
+  assert(delayedPreview.setPlatformPresentationDeferred(true));
+  auto delayedDown = previewDown;
+  delayedDown.samples.front().source = 52U;
+  delayedDown.samples.front().pointer = 502U;
+  auto delayedMove = delayedDown;
+  delayedMove.samples.front().sequence = 2U;
+  delayedMove.samples.front().timestampNs = 2'000U;
+  delayedMove.samples.front().phase = canvas::input::PointerPhase::kMove;
+  delayedMove.samples.front().x = 80.0F;
+  delayedMove.samples.front().y = 80.0F;
+  assert(delayedPreview.submit(delayedDown));
+  assert(delayedPreview.submit(delayedMove));
+  canvas::runtime::RuntimeFrameOpportunity delayedA{};
+  assert(delayedPreview.serviceFrameOpportunity(false, delayedA));
+  assert(delayedA.previewWork.has_value());
+  auto delayedBMove = delayedMove;
+  delayedBMove.samples.front().sequence = 3U;
+  delayedBMove.samples.front().timestampNs = 3'000U;
+  delayedBMove.samples.front().x = 180.0F;
+  delayedBMove.samples.front().y = 180.0F;
+  assert(delayedPreview.submit(delayedBMove));
+  canvas::runtime::RuntimeFrameOpportunity delayedB{};
+  assert(delayedPreview.serviceFrameOpportunity(false, delayedB));
+  assert(delayedB.previewWork.has_value() && delayedB.previewWork != delayedA.previewWork);
+  const auto qualifiedBefore = delayedPreview.previewRenderState().platformQualifiedRevision;
+  assert(!delayedPreview.finishFrameOpportunity({delayedA.previewWork, true}));
+  assert(delayedPreview.previewRenderState().platformQualifiedRevision == qualifiedBefore);
+  assert(delayedPreview.previewRenderState().dirty);
+  assert(delayedPreview.finishFrameOpportunity({delayedB.previewWork, true}));
+  assert(!delayedPreview.previewRenderState().dirty);
   return 0;
 }
